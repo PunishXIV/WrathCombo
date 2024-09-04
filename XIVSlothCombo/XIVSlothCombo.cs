@@ -22,6 +22,7 @@ using XIVSlothCombo.Attributes;
 using XIVSlothCombo.AutoRotation;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.Combos.PvE;
+using XIVSlothCombo.Combos.PvE.Configs;
 using XIVSlothCombo.Combos.PvP;
 using XIVSlothCombo.Core;
 using XIVSlothCombo.Data;
@@ -519,7 +520,7 @@ namespace XIVSlothCombo
                                     32 => typeof(DRK.Config),
                                     33 => typeof(AST.Config),
                                     34 => typeof(SAM.Config),
-                                    35 => typeof(XIVSlothCombo.Combos.PvE.Configs.RDMConfig),
+                                    35 => typeof(RDMConfig),
                                     //36 => typeof(BLU.Config),
                                     37 => typeof(GNB.Config),
                                     38 => typeof(DNC.Config),
