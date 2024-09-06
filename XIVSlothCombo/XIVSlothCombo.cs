@@ -96,6 +96,14 @@ namespace XIVSlothCombo
             pluginInterface.Create<Service>();
             ECommonsMain.Init(pluginInterface, this);
 
+            // Detect Sloth users coming over, and handle settings transition
+            var movingFromSloth = Transition.HasSlothSettings(pluginInterface);
+            var settingsFromSloth = false;
+            if (movingFromSloth)
+                settingsFromSloth = Transition.ConvertSlothSettings(pluginInterface);
+            // todo: movingFromSloth could be used to display a migration message to the user
+            // todo: settingsFromSloth could be used to display a success/failure message to the user during migration process
+
             Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
             Service.Address = new PluginAddressResolver();
             Service.Address.Setup(Svc.SigScanner);
