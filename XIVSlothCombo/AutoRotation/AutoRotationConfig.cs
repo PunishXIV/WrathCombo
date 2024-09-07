@@ -19,8 +19,8 @@ namespace XIVSlothCombo.AutoRotation
 
     public class HealerSettings
     {
-        public int SingleTargetHPP = 70;
+        public int SingleTargetHPP = 80;
         public int AoETargetHPP = 60;
-        public int SingleTargetRegenHPP = 80;
+        public int SingleTargetRegenHPP = 70;
     }
 }
