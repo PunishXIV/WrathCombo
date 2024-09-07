@@ -265,32 +265,48 @@ namespace XIVSlothCombo.AutoRotation
 
         public static class HealerTargeting
         {
+            private static bool checkGoodToHeal(IGameObject? target)
+            {
+                if (target == null) return false;
+
+                // Check health is below user-defined thresholds
+                var healthToCheck = TargetHasRegen(target)
+                    ? Service.Configuration.RotationConfig.HealerSettings.SingleTargetRegenHPP
+                    : Service.Configuration.RotationConfig.HealerSettings.SingleTargetHPP;
+                var healthLowEnough = CustomComboFunctions.GetTargetHPPercent(target) <= healthToCheck;
+
+                // Check if the target is dead
+                var isAlive = !target.IsDead;
+
+                // Check if target is in range
+                // todo: check if target is in range of the ability.
+                //       This would require getting the action sooner, or getting it
+                //       a second time - and I do not want to do the latter.
+
+                return healthLowEnough && isAlive;
+            }
+
             internal static IGameObject? ManualTarget()
             {
                 if (Svc.Targets.Target == null) return null;
                 var t = Svc.Targets.Target;
-                bool goodToHeal = CustomComboFunctions.GetTargetHPPercent(t) <= (TargetHasRegen(t) ? Service.Configuration.RotationConfig.HealerSettings.SingleTargetRegenHPP : Service.Configuration.RotationConfig.HealerSettings.SingleTargetHPP);
-                if (goodToHeal)
-                {
-                    return t;
-                }
-                return null;
+
+                return checkGoodToHeal(t) ? t : null;
             }
+
             internal static IGameObject? GetHighestCurrent()
             {
                 if (CustomComboFunctions.GetPartyMembers().Count == 0) return Player.Object;
-                var target = CustomComboFunctions.GetPartyMembers()
-                    .Where(x => CustomComboFunctions.GetTargetHPPercent(x) <= (TargetHasRegen(x) ? Service.Configuration.RotationConfig.HealerSettings.SingleTargetRegenHPP : Service.Configuration.RotationConfig.HealerSettings.SingleTargetHPP))
-                    .OrderByDescending(x => CustomComboFunctions.GetTargetHPPercent(x)).FirstOrDefault();
+                var target = CustomComboFunctions.GetPartyMembers().Where(checkGoodToHeal)
+                    .OrderByDescending(CustomComboFunctions.GetTargetHPPercent).FirstOrDefault();
                 return target;
             }
 
             internal static IGameObject? GetLowestCurrent()
             {
                 if (CustomComboFunctions.GetPartyMembers().Count == 0) return Player.Object;
-                var target = CustomComboFunctions.GetPartyMembers()
-                    .Where(x => CustomComboFunctions.GetTargetHPPercent(x) <= (TargetHasRegen(x) ? Service.Configuration.RotationConfig.HealerSettings.SingleTargetRegenHPP : Service.Configuration.RotationConfig.HealerSettings.SingleTargetHPP))
-                    .OrderBy(x => CustomComboFunctions.GetTargetHPPercent(x)).FirstOrDefault();
+                var target = CustomComboFunctions.GetPartyMembers().Where(checkGoodToHeal)
+                    .OrderBy(CustomComboFunctions.GetTargetHPPercent).FirstOrDefault();
                 return target;
             }
 
