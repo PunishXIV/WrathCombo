@@ -96,6 +96,8 @@ namespace XIVSlothCombo
             pluginInterface.Create<Service>();
             ECommonsMain.Init(pluginInterface, this);
 
+            var existingConfig = TryGetConfig(pluginInterface);
+
             // Detect Sloth users coming over, and handle settings transition
             var movingFromSloth = Transition.HasSlothSettings(pluginInterface);
             var settingsFromSloth = false;
@@ -104,7 +106,7 @@ namespace XIVSlothCombo
             // todo: movingFromSloth could be used to display a migration message to the user
             // todo: settingsFromSloth could be used to display a success/failure message to the user during migration process
 
-            Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
+            Service.Configuration = existingConfig ?? new PluginConfiguration();
             Service.Address = new PluginAddressResolver();
             Service.Address.Setup(Svc.SigScanner);
             PresetStorage.Init();
@@ -141,6 +143,19 @@ namespace XIVSlothCombo
 #if DEBUG
             ConfigWindow.IsOpen = true;
 #endif
+        }
+
+        private static PluginConfiguration? TryGetConfig(IDalamudPluginInterface plugin)
+        {
+            try
+            {
+                var config = plugin.GetPluginConfig() as PluginConfiguration;
+                return config;
+            }
+            catch (Exception _)
+            {
+                return null;
+            }
         }
 
         private static void HandleConflictedCombos()
