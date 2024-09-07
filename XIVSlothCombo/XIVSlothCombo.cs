@@ -101,8 +101,11 @@ namespace XIVSlothCombo
             // Detect Sloth users coming over, and handle settings transition
             var movingFromSloth = Transition.HasSlothSettings(pluginInterface);
             var settingsFromSloth = false;
-            if (movingFromSloth)
+            if (movingFromSloth && existingConfig is null)
+            {
                 settingsFromSloth = Transition.ConvertSlothSettings(pluginInterface);
+                existingConfig = TryGetConfig(pluginInterface);
+            }
             // todo: movingFromSloth could be used to display a migration message to the user
             // todo: settingsFromSloth could be used to display a success/failure message to the user during migration process
 
