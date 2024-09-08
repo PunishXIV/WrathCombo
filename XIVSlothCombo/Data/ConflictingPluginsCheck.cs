@@ -11,6 +11,7 @@ public static class ConflictingPluginsCheck
         "xivcomboexpanded",
         "xivcomboexpandedest",
         "xivcombovx",
+        "xivslothcombo",
     };
 
     public static string[]? TryGetConflictingPlugins()
