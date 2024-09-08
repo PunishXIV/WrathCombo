@@ -420,15 +420,21 @@ namespace XIVSlothCombo
                         {
                             string? specificJob = argumentsParts.Length == 2 ? argumentsParts[1].ToLower() : "";
 
-                            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                            string[]? conflictingPlugins = ConflictingPluginsCheck.TryGetConflictingPlugins();
+                            int conflictingPluginsCount = conflictingPlugins?.Length ?? 0;
 
+                            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                             using StreamWriter file = new($"{desktopPath}/SlothDebug.txt", append: false);  // Output path
 
                             file.WriteLine("START DEBUG LOG");
                             file.WriteLine("");
-                            file.WriteLine($"Plugin Version: {GetType().Assembly.GetName().Version}");                          // Plugin version
-                            file.WriteLine("");
-                            file.WriteLine($"Installation Repo: {RepoCheckFunctions.FetchCurrentRepo()?.InstalledFromUrl}");    // Installation Repo
+                            file.WriteLine($"Plugin Version: {Svc.PluginInterface.InternalName} " +                           // Plugin name
+                                           $"v{GetType().Assembly.GetName().Version}");                                       // Plugin version
+                            file.WriteLine($"Installation Repo: {RepoCheckFunctions.FetchCurrentRepo()?.InstalledFromUrl}");  // Installation Repo
+                            file.WriteLine($"Conflicting Plugins: {conflictingPluginsCount}");                                // Conflicting Plugins
+                            if (conflictingPlugins != null)
+                                foreach (var plugin in conflictingPlugins)
+                                    file.WriteLine($"- {plugin}");                                                            // Listing Conflicting Plugin
                             file.WriteLine("");
                             file.WriteLine($"Current Job: " +                                                                 // Current Job
                                 $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.Name} / " +                                  // - Client Name
@@ -438,7 +444,7 @@ namespace XIVSlothCombo
                             file.WriteLine($"Current Job Level: {Svc.ClientState.LocalPlayer.Level}");                        // Job Level
                             file.WriteLine("");
                             file.WriteLine($"Current Zone: {Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.TerritoryType>()?.FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType).PlaceName.Value.Name}");   // Current zone location
-                            file.WriteLine($"Current Party Size: {Svc.Party.Length}");                                  // Current party size
+                            file.WriteLine($"Current Party Size: {Svc.Party.Length}");                                        // Current party size
                             file.WriteLine("");
                             file.WriteLine($"START ENABLED FEATURES");
 
