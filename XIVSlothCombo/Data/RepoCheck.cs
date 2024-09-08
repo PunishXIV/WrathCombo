@@ -15,7 +15,17 @@ namespace XIVSlothCombo.Data
         {
             FileInfo? f = Svc.PluginInterface.AssemblyLocation;
 
+            // Flag as self-built if in dev mode
+            if (Svc.PluginInterface.IsDev)
+            {
+                return new RepoCheck
+                {
+                    InstalledFromUrl = "!! Self-Built !!"
+                };
+            }
+
             string[] listOfNamesToCheck = [
+                Svc.PluginInterface.InternalName,
                 "XIVSlothCombo",
                 "WrathCombo",
             ];
@@ -24,7 +34,7 @@ namespace XIVSlothCombo.Data
             foreach (var name in listOfNamesToCheck)
             {
                 // Check if a manifest of this name exists
-                var manifest = Path.Join(f.DirectoryName, Svc.PluginInterface.InternalName + ".json");
+                var manifest = Path.Join(f.DirectoryName, name + ".json");
                 if (!File.Exists(manifest)) continue;
 
                 // Load the manifest
@@ -40,12 +50,7 @@ namespace XIVSlothCombo.Data
                 catch { }
             }
 
-            // Default to the loaded manifest, whatever it was called
-            var defaultRepoCheck = new RepoCheck
-            {
-                InstalledFromUrl = Svc.PluginInterface.Manifest.RepoUrl
-            };
-            return defaultRepoCheck;
+            return null;
 
         }
 
