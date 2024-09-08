@@ -13,7 +13,7 @@ namespace XIVSlothCombo.AutoRotation
         public DPSRotationMode DPSRotationMode;
         public HealerRotationMode HealerRotationMode;
         public TankRotationMode TankRotationMode;
-        public int? DPSAoETargets = 2;
+        public int? DPSAoETargets = 3;
         public HealerSettings HealerSettings = new();
     }
 
