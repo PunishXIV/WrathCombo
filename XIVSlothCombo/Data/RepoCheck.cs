@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using ECommons.DalamudServices;
+﻿using ECommons.DalamudServices;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -16,13 +15,13 @@ namespace XIVSlothCombo.Data
         {
             FileInfo? f = Svc.PluginInterface.AssemblyLocation;
 
-            List<string> listOfNamesToCheck = [
+            string[] listOfNamesToCheck = [
                 "XIVSlothCombo",
                 "WrathCombo",
             ];
 
             // Iterate over each name in the list
-            foreach (string name in listOfNamesToCheck)
+            foreach (var name in listOfNamesToCheck)
             {
                 // Check if a manifest of this name exists
                 var manifest = Path.Join(f.DirectoryName, Svc.PluginInterface.InternalName + ".json");
