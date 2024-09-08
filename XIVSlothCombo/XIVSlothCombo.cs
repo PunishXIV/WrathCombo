@@ -430,12 +430,12 @@ namespace XIVSlothCombo
                             file.WriteLine("");
                             file.WriteLine($"Installation Repo: {RepoCheckFunctions.FetchCurrentRepo()?.InstalledFromUrl}");    // Installation Repo
                             file.WriteLine("");
-                            file.WriteLine($"Current Job: " +                                                                   // Current Job
-                                $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.Name} / " +                                // - Client Name
-                                $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.NameEnglish} / " +                         // - EN Name
-                                $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.Abbreviation}");                           // - Abbreviation
-                            file.WriteLine($"Current Job Index: {Svc.ClientState.LocalPlayer.ClassJob.Id}");                // Job Index
-                            file.WriteLine($"Current Job Level: {Svc.ClientState.LocalPlayer.Level}");                      // Job Level
+                            file.WriteLine($"Current Job: " +                                                                 // Current Job
+                                $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.Name} / " +                                  // - Client Name
+                                $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.NameEnglish} / " +                           // - EN Name
+                                $"{Svc.ClientState.LocalPlayer.ClassJob.GameData.Abbreviation}");                             // - Abbreviation
+                            file.WriteLine($"Current Job Index: {Svc.ClientState.LocalPlayer.ClassJob.Id}");                  // Job Index
+                            file.WriteLine($"Current Job Level: {Svc.ClientState.LocalPlayer.Level}");                        // Job Level
                             file.WriteLine("");
                             file.WriteLine($"Current Zone: {Svc.Data.GetExcelSheet<Lumina.Excel.GeneratedSheets.TerritoryType>()?.FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType).PlaceName.Value.Name}");   // Current zone location
                             file.WriteLine($"Current Party Size: {Svc.Party.Length}");                                  // Current party size
