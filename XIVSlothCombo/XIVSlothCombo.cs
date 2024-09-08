@@ -423,6 +423,8 @@ namespace XIVSlothCombo
                             string[]? conflictingPlugins = ConflictingPluginsCheck.TryGetConflictingPlugins();
                             int conflictingPluginsCount = conflictingPlugins?.Length ?? 0;
 
+                            string repoURL = RepoCheckFunctions.FetchCurrentRepo()?.InstalledFromUrl ?? "Unknown";
+
                             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                             using StreamWriter file = new($"{desktopPath}/SlothDebug.txt", append: false);  // Output path
 
@@ -430,7 +432,8 @@ namespace XIVSlothCombo
                             file.WriteLine("");
                             file.WriteLine($"Plugin Version: {Svc.PluginInterface.InternalName} " +                           // Plugin name
                                            $"v{GetType().Assembly.GetName().Version}");                                       // Plugin version
-                            file.WriteLine($"Installation Repo: {RepoCheckFunctions.FetchCurrentRepo()?.InstalledFromUrl}");  // Installation Repo
+                            file.WriteLine($"Installation Repo: {repoURL}");                                                  // Installation Repo
+                            file.WriteLine("");
                             file.WriteLine($"Conflicting Plugins: {conflictingPluginsCount}");                                // Conflicting Plugins
                             if (conflictingPlugins != null)
                                 foreach (var plugin in conflictingPlugins)
