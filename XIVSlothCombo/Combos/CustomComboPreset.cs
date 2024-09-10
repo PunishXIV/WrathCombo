@@ -1,7 +1,6 @@
 ﻿using XIVSlothCombo.Attributes;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.Combos.PvP;
-using static XIVSlothCombo.Combos.PvE.BRD;
 
 namespace XIVSlothCombo.Combos
 {
@@ -3093,10 +3092,17 @@ namespace XIVSlothCombo.Combos
         If more than 10 sub features, use the next feature number if available
         The three digets after RDM.JobID can be used to reorder items in the list
         */
+
         #region Single Target DPS
         [AutoAction(false, false)]
+        [ConflictingCombos(RDM_ST_DPS)]
+        [ReplaceSkill(RDM.Jolt, RDM.Jolt2, RDM.Jolt3)]
+        [CustomComboInfo("Simple Mode - Single Target", "Replaces Jolts with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", RDM.JobID, -1)]
+        RDM_ST_SimpleMode = 13837,
+
+        [AutoAction(false, false)]
         [ReplaceSkill(RDM.Jolt, RDM.Jolt2)]
-        [CustomComboInfo("Single Target DPS Features", "Enables various Single Target options below.", RDM.JobID, 1)]
+        [CustomComboInfo("Simple Single Target DPS", "Enables various Single Target options below.", RDM.JobID, 1)]
         RDM_ST_DPS = 13000,
 
         [ParentCombo(RDM_ST_DPS)]
@@ -3153,6 +3159,11 @@ namespace XIVSlothCombo.Combos
         #endregion
 
         #region AoE DPS
+        [AutoAction(true, false)]
+        [ReplaceSkill(BLM.Blizzard2, BLM.HighBlizzard2)]
+        [CustomComboInfo("Simple Mode - AoE", "Replaces Blizzard II with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", BLM.JobID, -8)]
+        RDM_AoE_SimpleMode = 13838,
+
         [AutoAction(true, false)]
         [ReplaceSkill(RDM.Scatter, RDM.Impact)]
         [CustomComboInfo("AoE DPS Feature", "Enables various AoE Target options below.", RDM.JobID, 310)]
@@ -3251,6 +3262,8 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Cure on Vercure Option", "Replaces Vercure with Variant Cure.", RDM.JobID)]
         RDM_Variant_Cure2 = 13833,
         #endregion
+
+        //Last Used 13838
 
         #endregion
 
