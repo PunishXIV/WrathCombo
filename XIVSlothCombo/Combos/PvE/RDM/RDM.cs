@@ -378,7 +378,8 @@ namespace XIVSlothCombo.Combos.PvE
                         if (MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, level, out uint ManaEmbolen, Config.RDM_AoE_MoulinetRange))
                             return ManaEmbolen;
 
-                        if (MeleeCombo.TryAoEMeleeCombo(actionID, lastComboMove, comboTime, out uint AoEMelee, Config.RDM_AoE_MoulinetRange))
+                        if (MeleeCombo.TryAoEMeleeCombo(actionID, lastComboMove, comboTime, out uint AoEMelee, 
+                            Config.RDM_AoE_MoulinetRange, IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_CorpsGapCloser)))
                             return AoEMelee;
                     }
                 }
