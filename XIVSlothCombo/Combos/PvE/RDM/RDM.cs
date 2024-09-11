@@ -104,13 +104,6 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                //MAIN_COMBO_VARIABLES
-
-                int blackmana = RDMMana.Black;//Gauge.BlackMana;
-                int whitemana = RDMMana.White;//Gauge.WhiteMana;
-
-                //END_MAIN_COMBO_VARIABLES
-
                 if (actionID is Jolt or Jolt2 or Jolt3)
                 {
                     //VARIANTS
@@ -301,7 +294,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (MeleeCombo.TryMeleeFinisher(lastComboMove, out uint finisherAction))
                         return finisherAction;
                 
-                    if (MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, level, out uint ManaEmbolden))
+                    if (MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, out uint ManaEmbolden))
                         return ManaEmbolden;
 
                     if (MeleeCombo.TryAoEMeleeCombo(actionID, lastComboMove, comboTime, out uint AoEMeleeID))
@@ -376,7 +369,7 @@ namespace XIVSlothCombo.Combos.PvE
                     if (ActionFound)
                     {
                         if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_ManaEmbolden) 
-                            && MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, level, out uint ManaEmbolen, Config.RDM_AoE_MoulinetRange))
+                            && MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, out uint ManaEmbolen, Config.RDM_AoE_MoulinetRange))
                             return ManaEmbolen;
 
                         if (MeleeCombo.TryAoEMeleeCombo(actionID, lastComboMove, comboTime, out uint AoEMelee, 
