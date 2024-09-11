@@ -3102,6 +3102,7 @@ namespace XIVSlothCombo.Combos
 
         [AutoAction(false, false)]
         [ReplaceSkill(RDM.Jolt, RDM.Jolt2)]
+        [ConflictingCombos(RDM_ST_SimpleMode)]
         [CustomComboInfo("Simple Single Target DPS", "Enables various Single Target options below.", RDM.JobID, 1)]
         RDM_ST_DPS = 13000,
 
@@ -3161,11 +3162,13 @@ namespace XIVSlothCombo.Combos
         #region AoE DPS
         [AutoAction(true, false)]
         [ReplaceSkill(RDM.Scatter, RDM.Impact)]
+        [ConflictingCombos(RDM_AoE_DPS)]
         [CustomComboInfo("Simple Mode - AoE", "Replaces Scatter/Impact with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", RDM.JobID, -1)]
         RDM_AoE_SimpleMode = 13838,
 
         [AutoAction(true, false)]
         [ReplaceSkill(RDM.Scatter, RDM.Impact)]
+        [ConflictingCombos(RDM_AoE_SimpleMode)]
         [CustomComboInfo("AoE DPS Feature", "Enables various AoE Target options below.", RDM.JobID, 310)]
         RDM_AoE_DPS = 13310,
 
@@ -3244,7 +3247,7 @@ namespace XIVSlothCombo.Combos
         RDM_MagickProtection = 13836,
 
         [Variant]
-        [VariantParent(RDM_ST_DPS, RDM_AoE_DPS)]
+        [VariantParent(RDM_ST_DPS, RDM_ST_SimpleMode, RDM_AoE_DPS, RDM_AoE_SimpleMode)]
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown. Replaces Jolts.", RDM.JobID)]
         RDM_Variant_Rampart = 13830,
 
@@ -3254,7 +3257,7 @@ namespace XIVSlothCombo.Combos
         RDM_Variant_Raise = 13831,
 
         [Variant]
-        [VariantParent(RDM_ST_DPS, RDM_AoE_DPS)]
+        [VariantParent(RDM_ST_DPS, RDM_ST_SimpleMode, RDM_AoE_DPS, RDM_AoE_SimpleMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold. Replaces Jolts.", RDM.JobID)]
         RDM_Variant_Cure = 13832,
 

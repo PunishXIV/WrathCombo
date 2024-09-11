@@ -375,7 +375,8 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (ActionFound)
                     {
-                        if (MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, level, out uint ManaEmbolen, Config.RDM_AoE_MoulinetRange))
+                        if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_ManaEmbolden) 
+                            && MeleeCombo.TryAoEManaEmbolden(actionID, lastComboMove, level, out uint ManaEmbolen, Config.RDM_AoE_MoulinetRange))
                             return ManaEmbolen;
 
                         if (MeleeCombo.TryAoEMeleeCombo(actionID, lastComboMove, comboTime, out uint AoEMelee, 
@@ -386,7 +387,8 @@ namespace XIVSlothCombo.Combos.PvE
 
                 if (actionID is Scatter or Impact)
                 {
-                    if (SpellCombo.TryAcceleration(actionID, lastComboMove, out uint AccelID, 
+                    if (IsEnabled(CustomComboPreset.RDM_AoE_Accel) 
+                        && SpellCombo.TryAcceleration(actionID, lastComboMove, out uint AccelID, 
                         IsEnabled(CustomComboPreset.RDM_AoE_Accel_Swiftcast), IsEnabled(CustomComboPreset.RDM_AoE_Accel_Weave)))
                         return AccelID;
                     
