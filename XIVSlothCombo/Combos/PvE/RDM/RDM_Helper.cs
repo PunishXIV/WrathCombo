@@ -494,7 +494,8 @@ namespace XIVSlothCombo.Combos.PvE
 
             internal static bool TryAoEMeleeCombo(uint actionID, uint lastComboMove, float comboTime, out uint newActionID,
                 //Simple Mode Values
-                int MoulinetRange = 6)
+                int MoulinetRange = 6,
+                bool GapCloser = true)
             {
                 //Finish the combo
                 if (LevelChecked(Moulinet)
@@ -512,7 +513,7 @@ namespace XIVSlothCombo.Combos.PvE
                     && !HasEffect(Buffs.Acceleration)
                     && RDMMana.Min >= 50)
                 {
-                    if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_CorpsGapCloser)
+                    if (GapCloser
                         && ActionReady(Corpsacorps)
                         && GetTargetDistance() > MoulinetRange)
                     {
