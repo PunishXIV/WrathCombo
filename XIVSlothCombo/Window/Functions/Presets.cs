@@ -92,7 +92,7 @@ namespace XIVSlothCombo.Window.Functions
                 ImGui.Separator();
             }
 
-            if (ImGui.Checkbox($"{info.Name}###{i}", ref enabled))
+            if (ImGui.Checkbox($"{info.Name}###{preset}{i}", ref enabled))
             {
                 if (enabled)
                 {

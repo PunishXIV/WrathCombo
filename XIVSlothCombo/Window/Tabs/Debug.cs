@@ -179,6 +179,8 @@ namespace XIVSlothCombo.Window.Tabs
                         CustomStyleText($"Can Target Friendly:", $"{debugSpell.CanTargetFriendly}");
                         CustomStyleText($"Can Target Party:", $"{debugSpell.CanTargetParty}");
                         CustomStyleText($"Can Target Area:", $"{debugSpell.TargetArea}");
+                        CustomStyleText($"Cast Type:", $"{debugSpell.CastType}");
+                        CustomStyleText($"Targets Hit:", $"{CustomComboFunctions.NumberOfEnemiesInRange(debugSpell.RowId)}");
 
                         if (ActionWatching.ActionTimestamps.ContainsKey(debugSpell.RowId))
                             CustomStyleText($"Time Since Last Use:", $"{(Environment.TickCount64 - ActionWatching.ActionTimestamps[debugSpell.RowId])/1000f:F2}");

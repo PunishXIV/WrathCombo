@@ -12,9 +12,15 @@ namespace XIVSlothCombo.AutoRotation
         public bool InCombatOnly = false;
         public DPSRotationMode DPSRotationMode;
         public HealerRotationMode HealerRotationMode;
-        public TankRotationMode TankRotationMode;
-        public int? DPSAoETargets = 3;
         public HealerSettings HealerSettings = new();
+        public DPSSettings DPSSettings = new();
+    }
+
+    public class DPSSettings
+    {
+        public bool FATEPriority = false;
+        public bool QuestPriority = false;
+        public int? DPSAoETargets = 2;
     }
 
     public class HealerSettings

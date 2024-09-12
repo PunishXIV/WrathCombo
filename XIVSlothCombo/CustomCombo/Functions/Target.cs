@@ -3,18 +3,17 @@ using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
-using ECommons.GameHelpers;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using System;
 using System.Linq;
 using System.Numerics;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Services;
+using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using StructsObject = FFXIVClientStructs.FFXIV.Client.Game.Object;
-using ECommons.GameFunctions;
-using XIVSlothCombo.Extensions;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
 {
@@ -177,7 +176,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <param name="target"> The target object to check </param>
         public static bool IsInRange(IGameObject? target)
         {
-            if (target == null || target.YalmDistanceX >= 30)
+            if (target == null || GetTargetDistance(target, LocalPlayer) >= 30)
                 return false;
 
             return true;
@@ -418,58 +417,116 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             return false;
         }
 
-        public unsafe static int NumberOfEnemiesInRange(uint aoeSpell, IGameObject? target)
+        public unsafe static int NumberOfEnemiesInRange(uint aoeSpell)
         {
-            if (target is null) return 0;
-
             ActionWatching.ActionSheet.Values.TryGetFirst(x => x.RowId == aoeSpell, out var sheetSpell);
             bool needsTarget = sheetSpell.CanTargetHostile;
 
             int count = 0;
             var enemies = Svc.Objects.Where(x => x != null && x.ObjectKind == ObjectKind.BattleNpc && x.IsTargetable && !x.IsDead).Cast<IBattleNpc>().Where(x => x.BattleNpcKind is BattleNpcSubKind.Enemy or BattleNpcSubKind.BattleNpcPart).ToList();
 
-            if (!ActionManager.CanUseActionOnTarget(7, target.Struct()))
-                return 0;
-
             for (int i = 0; i < enemies.Count(); i++)
             {
                 var enemyChara = enemies[i];
 
-                if (enemyChara is null || !enemyChara.Character()->InCombat || enemyChara.Character()->IsFriend) continue;
-
                 if (ActionManager.CanUseActionOnTarget(7, enemyChara.GameObject()))
                 {
-                    if (!needsTarget)
+                    return sheetSpell.CastType switch
                     {
-                        if (GetTargetDistance(enemyChara) <= sheetSpell.EffectRange)
-                            count++;
-                    }
-                    else
-                    {
-                        if (target != null)
-                        {
-                            for (int t = 0; t < enemies.Count(); t++)
-                            {
-                                var nearEnemy = enemies[t];
-                                var dist = GetTargetDistance(nearEnemy, target);
-                                if (dist <= sheetSpell.EffectRange)
-                                {
-                                    count++;
-                                }
-                                
-                            }
-                            return count;
-                        }
-                    }
+                        1 => 1,
+                        2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange) : CanRangedCircleAoe(sheetSpell.EffectRange, enemyChara),
+                        3 => CanConeAoe(sheetSpell.EffectRange),
+                        4 => CanLineAoe(sheetSpell.EffectRange),
+                        _ => 0
+                    };
                 }
 
 
             }
 
             return count;
-
-            return 0;
         }
 
+        #region Position
+        public static Vector3 DirectionToVec3(float direction)
+        {
+            return new(MathF.Sin(direction), 0, MathF.Cos(direction));
+        }
+
+        #region Point in Circle
+        public static bool PointInCircle(Vector3 offsetFromOrigin, float radius)
+        {
+            return offsetFromOrigin.LengthSquared() <= radius * radius;
+        }
+        #endregion
+        #region Point in Cone
+        public static bool PointInCone(Vector3 offsetFromOrigin, Vector3 direction, float halfAngle)
+        {
+            return Vector3.Dot(Vector3.Normalize(offsetFromOrigin), direction) >= MathF.Cos(halfAngle);
+        }
+        public static bool PointInCone(Vector3 offsetFromOrigin, float direction, float halfAngle)
+        {
+            return PointInCone(offsetFromOrigin, DirectionToVec3(direction), halfAngle);
+        }
+        #endregion
+        #region Point in Rect
+        public static bool PointInRect(Vector3 offsetFromOrigin, Vector3 direction, float lenFront, float lenBack, float halfWidth)
+        {
+            var normal = new Vector3(-direction.Z, 0, direction.X);
+            var dotDir = Vector3.Dot(offsetFromOrigin, direction);
+            var dotNormal = Vector3.Dot(offsetFromOrigin, normal);
+            return dotDir >= -lenBack && dotDir <= lenFront && MathF.Abs(dotNormal) <= halfWidth;
+        }
+
+        public static bool PointInRect(Vector3 offsetFromOrigin, float direction, float lenFront, float lenBack, float halfWidth)
+        {
+            return PointInRect(offsetFromOrigin, DirectionToVec3(direction), lenFront, lenBack, halfWidth);
+        }
+
+        public static bool PointInRect(Vector3 offsetFromOrigin, Vector3 startToEnd, float halfWidth)
+        {
+            var len = startToEnd.Length();
+            return PointInRect(offsetFromOrigin, startToEnd / len, len, 0, halfWidth);
+        }
+        #endregion
+
+        #endregion
+
+        // Circle Aoe
+        public static int CanCircleAoe(float effectRange)
+        {
+            return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
+                                                                 o.IsHostile() &&
+                                                                 o.IsTargetable &&
+                                                                 PointInCircle(o.Position - LocalPlayer.Position, effectRange + o.HitboxRadius));
+        }
+
+        // Ranged Circle Aoe 
+        public static int CanRangedCircleAoe(float effectRange, IGameObject target)
+        {
+            return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
+                                                                 o.IsHostile() &&
+                                                                 o.IsTargetable &&
+                                                                 PointInCircle(o.Position - target.Position, effectRange));
+        }
+
+        // Cone Aoe 
+        public static int CanConeAoe(float effectRange)
+        {
+            return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
+                                                                 o.IsHostile() &&
+                                                                 o.IsTargetable &&
+                                                                 PointInCone(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, 0 + o.HitboxRadius / 2f) &&
+                                                                 PointInCircle(o.Position - LocalPlayer.Position, effectRange + o.HitboxRadius));
+        }
+
+        // Line Aoe 
+        public static int CanLineAoe(float effectRange)
+        {
+            return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
+                                                                 o.IsHostile() &&
+                                                                 o.IsTargetable &&
+                                                                 PointInRect(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, effectRange, 1, 2));
+        }
     }
 }

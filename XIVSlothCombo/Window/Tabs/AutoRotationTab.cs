@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface.Components;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using XIVSlothCombo.AutoRotation;
 using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.Window.Tabs
@@ -22,10 +23,8 @@ namespace XIVSlothCombo.Window.Tabs
                 changed |= ImGui.Checkbox("Only in Combat", ref cfg.InCombatOnly);
             }
 
-            if (ImGui.CollapsingHeader("DPS Settings"))
+            if (ImGui.CollapsingHeader("Damage Settings"))
             {
-                ImGuiEx.LineCentered("###DPSAutoRot", () => ImGui.Text($"These settings will apply to DPS jobs and for Healers DPS actions."));
-                ImGui.Spacing();
                 ImGuiEx.TextUnderlined($"Targeting Mode");
                 changed |= ImGuiEx.EnumCombo("###DPSTargetingMode", ref cfg.DPSRotationMode);
                 ImGuiComponents.HelpMarker("Manual - Leaves all targeting decisions to you.\n" +
@@ -33,16 +32,21 @@ namespace XIVSlothCombo.Window.Tabs
                     "Lowest Max - Prioritises enemies with the lowest max HP.\n" +
                     "Highest Current - Prioritises the enemy with the highest current HP.\n" +
                     "Lowest Current - Prioritises the enemy with the lowest current HP.\n" +
-                    "Tank Target - Prioritises the same target as the first tank in your group.");
+                    "Tank Target - Prioritises the same target as the first tank in your group.\n" +
+                    "Nearest - Prioritises the closest target to you.\n" +
+                    "Furthest - Prioritises the furthest target from you.");
                 ImGui.Spacing();
-                var input = ImGuiEx.InputInt(100f.Scale(), "Targets Required for AoE Features", ref cfg.DPSAoETargets);
+                var input = ImGuiEx.InputInt(100f.Scale(), "Targets Required for AoE Damage Features", ref cfg.DPSSettings.DPSAoETargets);
                 if (input)
                 {
                     changed |= input;
-                    if (cfg.DPSAoETargets < 0)
-                        cfg.DPSAoETargets = 0;
+                    if (cfg.DPSSettings.DPSAoETargets < 0)
+                        cfg.DPSSettings.DPSAoETargets = 0;
                 }
-                ImGuiComponents.HelpMarker("Disabling this will turn off AoE DPS features. Otherwise will require the amount of targets required to be in range of an AoE feature's attack to use.");
+                ImGuiComponents.HelpMarker($"Disabling this will turn off AoE DPS features. Otherwise will require the amount of targets required to be in range of an AoE feature's attack to use. This applies to all 3 roles, and for any features that deal AoE damage.");
+
+                changed |= ImGui.Checkbox($"Prioritise FATE Targets", ref cfg.DPSSettings.FATEPriority);
+                changed |= ImGui.Checkbox($"Prioritise Quest Targets", ref cfg.DPSSettings.QuestPriority);
 
             }
             ImGui.Spacing();
@@ -62,12 +66,6 @@ namespace XIVSlothCombo.Window.Tabs
                 ImGui.SetNextItemWidth(200f.Scale());
                 changed |= ImGuiEx.SliderInt("AoE HP% Threshold", ref cfg.HealerSettings.AoETargetHPP, 1, 99, "%d%%");
                 ImGuiComponents.HelpMarker("If all party members within AoE healing ranges average HP% falls below this value it will use an AoE heal instead of single target heals.");
-            }
-            ImGui.Spacing();
-            if (ImGui.CollapsingHeader("Tank Settings"))
-            {
-                ImGuiEx.TextUnderlined($"Targeting Mode");
-                changed |= ImGuiEx.EnumCombo("###TankTargetingMode", ref cfg.TankRotationMode);
             }
 
             if (changed)

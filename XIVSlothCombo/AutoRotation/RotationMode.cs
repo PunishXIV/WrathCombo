@@ -14,6 +14,8 @@ namespace XIVSlothCombo.AutoRotation
         Highest_Current,
         Lowest_Current,
         Tank_Target,
+        Nearest,
+        Furthest,
     }
 
     public enum HealerRotationMode
@@ -25,14 +27,5 @@ namespace XIVSlothCombo.AutoRotation
         //Tank_Priority,
         //Healer_Priority,
         //DPS_Priority,
-    }
-
-    public enum TankRotationMode
-    {
-        Manual,
-        Highest_Max,
-        Lowest_Max,
-        Highest_Current,
-        Lowest_Current,
     }
 }

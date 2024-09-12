@@ -143,6 +143,24 @@ namespace XIVSlothCombo.CustomComboNS.Functions
                 };
             }
 
+            public static byte ClassToJob(uint classId)
+            {
+                return classId switch
+                {
+                    ADV.ClassID => ADV.JobID,
+                    BLM.ClassID => BLM.JobID,
+                    BRD.ClassID => BRD.JobID,
+                    DRG.ClassID => DRG.JobID,
+                    MNK.ClassID => MNK.JobID,
+                    NIN.ClassID => NIN.JobID,
+                    PLD.ClassID => PLD.JobID,
+                    SMN.ClassID => SMN.JobID,
+                    WAR.ClassID => WAR.JobID,
+                    WHM.ClassID => WHM.JobID,
+                    _ => (byte)classId,
+                };
+            }
+
         }
     }
 }
