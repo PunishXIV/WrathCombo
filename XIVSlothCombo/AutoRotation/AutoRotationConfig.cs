@@ -20,7 +20,7 @@ namespace XIVSlothCombo.AutoRotation
     {
         public bool FATEPriority = false;
         public bool QuestPriority = false;
-        public int? DPSAoETargets = 2;
+        public int? DPSAoETargets = 3;
     }
 
     public class HealerSettings
