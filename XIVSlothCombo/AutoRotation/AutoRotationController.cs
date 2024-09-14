@@ -39,7 +39,8 @@ namespace XIVSlothCombo.AutoRotation
                 var action = attributes.AutoAction;
                 var gameAct = attributes.ReplaceSkill.ActionIDs.First();
                 var sheetAct = Svc.Data.GetExcelSheet<Action>().GetRow(gameAct);
-                if ((byte)Player.Job != attributes.CustomComboInfo.JobID)
+                var classToJob = CustomComboFunctions.JobIDs.ClassToJob((byte)Player.Job);
+                if ((byte)Player.Job != attributes.CustomComboInfo.JobID && classToJob != attributes.CustomComboInfo.JobID)
                     continue;
 
                 var outAct = AutoRotationHelper.InvokeCombo(preset.Key, attributes);
@@ -143,6 +144,8 @@ namespace XIVSlothCombo.AutoRotation
                 if (attributes.AutoAction.IsHeal)
                 {
                     uint outAct = InvokeCombo(preset, attributes, Player.Object);
+                    if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0)
+                        return false;
 
                     if (HealerTargeting.GetPartyMax(outAct, out int count) <= Service.Configuration.RotationConfig.HealerSettings.AoETargetHPP && count >= 2)
                     {
@@ -157,11 +160,13 @@ namespace XIVSlothCombo.AutoRotation
                 else
                 {
                     uint outAct = InvokeCombo(preset, attributes, Player.Object);
+                    if (!CustomComboFunctions.ActionReady(outAct))
+                        return false;
+
                     var target = GetSingleTarget(mode);
                     var sheet = Svc.Data.GetExcelSheet<Action>().GetRow(outAct);
                     var mustTarget = sheet.CanTargetHostile;
                     var numEnemies = CustomComboFunctions.NumberOfEnemiesInRange(outAct);
-                    Svc.Log.Debug($"{outAct.ActionName()} {numEnemies}");
                     if (numEnemies >= Service.Configuration.RotationConfig.DPSSettings.DPSAoETargets ||
                         (sheet.EffectRange == 0 && sheet.CanTargetSelf && !mustTarget))
                     {

@@ -86,7 +86,6 @@ namespace XIVSlothCombo
                 if (jobID != value && value != null)
                 {
                     Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember = null;
-                    Svc.Log.Debug($"Switched to job {value}");
                     PvEFeatures.HasToOpenJob = true;
                 }
                 jobID = value;
@@ -129,7 +128,7 @@ namespace XIVSlothCombo
             });
 
             DtrBarEntry ??= Svc.DtrBar.Get("Wrath Combo");
-            DtrBarEntry.OnClick = () => { Service.Configuration.RotationConfig.Enabled = !Service.Configuration.RotationConfig.Enabled; };
+            DtrBarEntry.OnClick = () => { Service.Configuration.RotationConfig.Enabled = !Service.Configuration.RotationConfig.Enabled; Service.Configuration.Save(); };
             Svc.ClientState.Login += PrintLoginMessage;
             if (Svc.ClientState.IsLoggedIn) ResetFeatures();
 
@@ -525,6 +524,8 @@ namespace XIVSlothCombo
                                     38 => typeof(DNC.Config),
                                     39 => typeof(RPR.Config),
                                     40 => typeof(SGE.Config),
+                                    41 => typeof(VPR.Config),
+                                    42 => typeof(PCT.Config),
                                     _ => throw new NotImplementedException(),
                                 };
 
@@ -609,7 +610,6 @@ namespace XIVSlothCombo
                     {
                         var jobname = ConfigWindow.groupedPresets.Where(x => x.Value.Any(y => y.Info.JobShorthand.Equals(argumentsParts[0].ToLower(), StringComparison.CurrentCultureIgnoreCase))).FirstOrDefault().Key;
                         var header = $"{jobname} - {argumentsParts[0].ToUpper()}";
-                        Svc.Log.Debug($"{jobname}");
                         PvEFeatures.HeaderToOpen = header;
                     }
                     break;

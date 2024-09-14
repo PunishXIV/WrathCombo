@@ -431,7 +431,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
 
                 if (ActionManager.CanUseActionOnTarget(7, enemyChara.GameObject()))
                 {
-                    return sheetSpell.CastType switch
+                    var numHit = sheetSpell.CastType switch
                     {
                         1 => 1,
                         2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange) : CanRangedCircleAoe(sheetSpell.EffectRange, enemyChara),
@@ -439,10 +439,11 @@ namespace XIVSlothCombo.CustomComboNS.Functions
                         4 => CanLineAoe(sheetSpell.EffectRange),
                         _ => 0
                     };
+                    if (numHit > count)
+                        count = numHit;
                 }
-
-
             }
+
 
             return count;
         }
@@ -507,7 +508,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
-                                                                 PointInCircle(o.Position - target.Position, effectRange));
+                                                                 CustomComboFunctions.GetTargetDistance(target, o) <= effectRange);
         }
 
         // Cone Aoe 
