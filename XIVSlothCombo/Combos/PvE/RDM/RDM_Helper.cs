@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using System;
 using XIVSlothCombo.Combos.JobHelpers.Enums;
@@ -287,6 +288,16 @@ namespace XIVSlothCombo.Combos.PvE
                 //Simple Mode Values
                 bool MeleeEnforced = true, bool GapCloser = true, bool UnbalanceMana = true)
             {
+                //Test
+                if (GapCloser
+                        && ActionReady(Corpsacorps)
+                        && !(CurrentTarget as IBattleChara).IsCasting
+                        && GetTargetDistance() > 3)
+                {
+                    newActionID = Corpsacorps;
+                    return true;
+                }
+
                 //Normal Combo
                 if (GetTargetDistance() <= 3 || MeleeEnforced)
                 {
@@ -313,7 +324,8 @@ namespace XIVSlothCombo.Combos.PvE
                     && !HasEffect(Buffs.Dualcast))
                 {
                     if (GapCloser
-                        && LevelChecked(Corpsacorps) && HasCharges(Corpsacorps)
+                        && ActionReady(Corpsacorps)
+                        && !(CurrentTarget as IBattleChara).IsCasting
                         && GetTargetDistance() > 3)
                     {
                         newActionID = Corpsacorps;
