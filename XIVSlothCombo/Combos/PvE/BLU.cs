@@ -7,6 +7,8 @@ namespace XIVSlothCombo.Combos.PvE
     {
         public const byte JobID = 36;
 
+        #region Abilities
+
         public const uint
             RoseOfDestruction = 23275,
             ShockStrike = 11429,
@@ -49,6 +51,8 @@ namespace XIVSlothCombo.Combos.PvE
             PeatPelt = 34569,
             DeepClean = 34570;
 
+        #endregion
+
         public static class Buffs
         {
             public const ushort
@@ -78,7 +82,8 @@ namespace XIVSlothCombo.Combos.PvE
                 Lightheaded = 2501,
                 MortalFlame = 3643,
                 BreathOfMagic = 3712,
-                Begrimed = 3636;
+                Begrimed = 3636,
+                EnemyBleeding = 1714;
         }
 
         internal class BLU_BuffedSoT : CustomCombo
@@ -93,70 +98,6 @@ namespace XIVSlothCombo.Combos.PvE
                         return Bristle;
                     if (IsSpellActive(SongOfTorment))
                         return SongOfTorment;
-                }
-
-                return actionID;
-            }
-        }
-
-        internal class BLU_Opener : CustomCombo
-        {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_Opener;
-
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-            {
-                if (actionID is MoonFlute)
-                {
-                    //If Triple Trident is saved for Crit/Det builds
-                    if (GetCooldownRemainingTime(TripleTrident) <= 3 && IsSpellActive(TripleTrident))
-                    {
-                        if (!HasEffect(Buffs.Whistle) && IsSpellActive(Whistle) && !WasLastSpell(Whistle) && IsOffCooldown(JKick))
-                            return Whistle;
-                        if (!HasEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle) && IsOffCooldown(JKick))
-                            return Tingle;
-                        if (!HasEffect(Buffs.MoonFlute) && !HasEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute) && !WasLastSpell(MoonFlute))
-                            return MoonFlute;
-                        if (IsOffCooldown(JKick) && IsSpellActive(JKick))
-                            return JKick;
-                        if (IsOffCooldown(TripleTrident))
-                            return TripleTrident;
-                    }
-
-                    //If Triple Trident is used on CD for Crit/Sps builds or Triple Trident isn't active
-                    if ((GetCooldownRemainingTime(TripleTrident) > 3 && IsSpellActive(TripleTrident)) || !IsSpellActive(TripleTrident))
-                    {
-                        if (!HasEffect(Buffs.Whistle) && IsOffCooldown(JKick) && !WasLastSpell(Whistle) && IsSpellActive(Whistle) && IsOffCooldown(JKick))
-                            return Whistle;
-                        if (!HasEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle) && IsOffCooldown(JKick))
-                            return Tingle;
-                        if (!HasEffect(Buffs.MoonFlute) && !HasEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute))
-                            return MoonFlute;
-                        if (IsOffCooldown(JKick) && IsSpellActive(JKick))
-                            return JKick;
-                    }
-
-                    if (IsOffCooldown(Nightbloom) && IsSpellActive(Nightbloom))
-                        return Nightbloom;
-                    if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction))
-                        return RoseOfDestruction;
-                    if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain))
-                        return FeatherRain;
-                    if (IsOffCooldown(Eruption) && IsSpellActive(Eruption))
-                        return Eruption;
-                    if (!HasEffect(Buffs.Bristle) && IsOffCooldown(All.Swiftcast) && IsSpellActive(Bristle))
-                        return Bristle;
-                    if (IsOffCooldown(All.Swiftcast) && LevelChecked(All.Swiftcast))
-                        return All.Swiftcast;
-                    if (IsOffCooldown(GlassDance) && IsSpellActive(GlassDance))
-                        return GlassDance;
-                    if (GetCooldownRemainingTime(Surpanakha) < 95 && IsSpellActive(Surpanakha))
-                        return Surpanakha;
-                    if (IsOffCooldown(MatraMagic) && HasEffect(Buffs.DPSMimicry) && IsSpellActive(MatraMagic))
-                        return MatraMagic;
-                    if (IsOffCooldown(ShockStrike) && IsSpellActive(ShockStrike))
-                        return ShockStrike;
-                    if ((IsOffCooldown(PhantomFlurry) && IsSpellActive(PhantomFlurry)) || HasEffect(Buffs.PhantomFlurry))
-                        return PhantomFlurry;
                 }
 
                 return actionID;
@@ -395,6 +336,7 @@ namespace XIVSlothCombo.Combos.PvE
                 return actionID;
             }
         }
+
         internal class BLU_NewMoonFluteOpener : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_NewMoonFluteOpener;
@@ -493,6 +435,30 @@ namespace XIVSlothCombo.Combos.PvE
                     if (HasEffect(Buffs.MoonFlute))
                         return OriginalHook(11);
                 }
+
+                return actionID;
+            }
+        }
+
+        internal class BLU_TridentCombo : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_TridentCombo;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID is not TripleTrident) return actionID;
+
+                if (IsOnCooldown(TripleTrident))
+                    return TripleTrident;
+
+                if (!HasEffect(Buffs.Whistle) && IsSpellActive(Whistle))
+                    return Whistle;
+                if (!HasEffect(Buffs.Tingle) && IsSpellActive(Tingle) &&
+                    HasEffect(Buffs.Whistle))
+                    return Tingle;
+                if (IsSpellActive(TripleTrident) &&
+                    HasEffect(Buffs.Tingle) && HasEffect(Buffs.Whistle))
+                    return TripleTrident;
 
                 return actionID;
             }
