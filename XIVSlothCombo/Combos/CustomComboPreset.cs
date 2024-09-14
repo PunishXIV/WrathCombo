@@ -3126,7 +3126,7 @@ namespace XIVSlothCombo.Combos
         [AutoAction(false, false)]
         [ReplaceSkill(RDM.Jolt, RDM.Jolt2)]
         [ConflictingCombos(RDM_ST_SimpleMode)]
-        [CustomComboInfo("Simple Single Target DPS", "Enables various Single Target options below.", RDM.JobID, 1)]
+        [CustomComboInfo("Single Target DPS Feature", "Enables various Single Target options below.", RDM.JobID, 1)]
         RDM_ST_DPS = 13000,
 
         [ParentCombo(RDM_ST_DPS)]
