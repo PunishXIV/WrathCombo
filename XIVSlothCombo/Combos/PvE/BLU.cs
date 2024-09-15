@@ -638,10 +638,13 @@ namespace XIVSlothCombo.Combos.PvE
             protected internal override CustomComboPreset Preset { get; } =
                 CustomComboPreset.BLU_DPS_DoT;
 
+            public uint getDoT() => Invoke(BypassAction, 0, 0, 0);
+
             protected override uint Invoke(uint actionID, uint lastComboMove,
                 float comboTime, byte level)
             {
-                if (actionID is not SongofTorment_Spell9) return actionID;
+                if (actionID is not (SongofTorment_Spell9 or BypassAction))
+                    return actionID;
 
                 var dotHelper = new JobHelpers.BLU.DoTs(
                     Config.BLU_DPS_DoT_WasteProtection_HP,
@@ -696,6 +699,11 @@ namespace XIVSlothCombo.Combos.PvE
                 float comboTime, byte level)
             {
                 if (actionID is not GoblinPunch_Spell105) return actionID;
+
+                if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_JKick) &&
+                    IsOffCooldown(JKick_Spell80) &&
+                    InMeleeRange() && IsSpellActive(JKick_Spell80))
+                    return JKick_Spell80;
 
                 // Include DoTs
                 BLU_Tank_DoT DoTCheck = new();

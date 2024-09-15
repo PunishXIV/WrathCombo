@@ -582,13 +582,20 @@ namespace XIVSlothCombo.Combos
         [ParentCombo(BLU_Parent_Tank)]
         [BlueInactive(BLU.GoblinPunch_Spell105)]
         [ReplaceSkill(BLU.GoblinPunch_Spell105)]
-        [CustomComboInfo("Advanced Combo", "Combo with lots of options", BLU.JobID)]
+        [CustomComboInfo("Advanced Combo",
+            "Build a one button combo with your choice of The Balance's recommended tank spells.", BLU.JobID)]
         BLU_Tank_Advanced = 70069,
 
-        [ParentCombo(BLU_Tank_DoT)]
-        [CustomComboInfo("DoT Uptime", "Include the DoT Combo into the rotation." +
-            "\nRequires the DoT Combo below to be enabled and configured.", BLU
-            .JobID)]
+        [ParentCombo(BLU_Tank_Advanced)]
+        [CustomComboInfo("J Kick Option",
+            "Include J Kick into the rotation when in melee range.",
+            BLU.JobID)]
+        BLU_Tank_Advanced_JKick = 70071,
+
+        [ParentCombo(BLU_Tank_Advanced)]
+        [CustomComboInfo("DoT Uptime Option", "Include the DoT Combo into the rotation." +
+            "\nRequires the DoT Combo below to be enabled and configured.",
+            BLU.JobID)]
         BLU_Tank_Advanced_DoTs = 70070,
 
         [ParentCombo(BLU_Parent_Tank)]
