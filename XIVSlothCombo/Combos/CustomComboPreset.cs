@@ -580,6 +580,18 @@ namespace XIVSlothCombo.Combos
         #region Tank Combos
 
         [ParentCombo(BLU_Parent_Tank)]
+        [BlueInactive(BLU.GoblinPunch_Spell105)]
+        [ReplaceSkill(BLU.GoblinPunch_Spell105)]
+        [CustomComboInfo("Advanced Combo", "Combo with lots of options", BLU.JobID)]
+        BLU_Tank_Advanced = 70069,
+
+        [ParentCombo(BLU_Tank_DoT)]
+        [CustomComboInfo("DoT Uptime", "Include the DoT Combo into the rotation." +
+            "\nRequires the DoT Combo below to be enabled and configured.", BLU
+            .JobID)]
+        BLU_Tank_Advanced_DoTs = 70070,
+
+        [ParentCombo(BLU_Parent_Tank)]
         [BlueInactive(BLU.FeatherRain_Spell44)]
         [ReplaceSkill(BLU.FeatherRain_Spell44)]
         [CustomComboInfo("DoT Combo", "Turns Feather Rain into a one-button DoT-maintaining combo.", BLU.JobID)]

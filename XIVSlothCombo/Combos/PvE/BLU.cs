@@ -13,6 +13,8 @@ namespace XIVSlothCombo.Combos.PvE
     {
         public const byte JobID = 36;
 
+        public const byte BypassAction = 2;
+
         #region Abilities
 
         public const uint
@@ -685,15 +687,38 @@ namespace XIVSlothCombo.Combos.PvE
 
         #region Tank Combos
 
+        internal class BLU_Tank_Advanced : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.BLU_Tank_Advanced;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
+            {
+                if (actionID is not GoblinPunch_Spell105) return actionID;
+
+                // Include DoTs
+                BLU_Tank_DoT DoTCheck = new();
+                var DoTCheckOutput = DoTCheck.getDoT();
+                if (DoTCheckOutput != BypassAction)
+                    return DoTCheckOutput;
+
+                return actionID;
+            }
+        }
+
         internal class BLU_Tank_DoT : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } =
                 CustomComboPreset.BLU_Tank_DoT;
 
+            public uint getDoT() => Invoke(BypassAction, 0, 0, 0);
+
             protected override uint Invoke(uint actionID, uint lastComboMove,
                 float comboTime, byte level)
             {
-                if (actionID is not FeatherRain_Spell44) return actionID;
+                if (actionID is not (FeatherRain_Spell44 or BypassAction))
+                    return actionID;
 
                 var dotHelper = new JobHelpers.BLU.DoTs(
                     Config.BLU_Tank_DoT_WasteProtection_HP,
@@ -708,7 +733,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                 // Waste protection
                 if (IsEnabled(CustomComboPreset.BLU_Tank_DoT_WasteProtection) &&
-                    HasTarget() && !dotHelper.AnyDotsWanted())
+                    HasTarget() && !dotHelper.AnyDotsWanted() && actionID != 2)
                     return PLD.ShieldBash;
 
                 // Feather Rain
