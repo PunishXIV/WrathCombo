@@ -587,6 +587,13 @@ namespace XIVSlothCombo.Combos
         BLU_Tank_Advanced = 70069,
 
         [ParentCombo(BLU_Tank_Advanced)]
+        [BlueInactive(BLU.SonicBoom_Spell63)]
+        [CustomComboInfo("Sonic Boom Uptime Option",
+            "Include Sonic Boom into the rotation when out of melee range.",
+            BLU.JobID)]
+        BLU_Tank_Advanced_Uptime = 70073,
+
+        [ParentCombo(BLU_Tank_Advanced)]
         [BlueInactive(BLU.JKick_Spell80)]
         [CustomComboInfo("J Kick Option",
             "Include J Kick into the rotation when in melee range.",
@@ -601,7 +608,8 @@ namespace XIVSlothCombo.Combos
         BLU_Tank_Advanced_Surpanakha = 70072,
 
         [ParentCombo(BLU_Tank_Advanced)]
-        [CustomComboInfo("DoT Uptime Option", "Include the DoT Combo into the rotation." +
+        [CustomComboInfo("DoT Uptime Option",
+            "Include the DoT Combo into the rotation." +
             "\nRequires the DoT Combo below to be enabled and configured.",
             BLU.JobID)]
         BLU_Tank_Advanced_DoTs = 70070,
@@ -609,7 +617,10 @@ namespace XIVSlothCombo.Combos
         [ParentCombo(BLU_Parent_Tank)]
         [BlueInactive(BLU.FeatherRain_Spell44)]
         [ReplaceSkill(BLU.FeatherRain_Spell44)]
-        [CustomComboInfo("DoT Combo", "Turns Feather Rain into a one-button DoT-maintaining combo.", BLU.JobID)]
+        [CustomComboInfo("DoT Combo",
+            "Turns Feather Rain into a one-button DoT-maintaining combo." +
+            "\nTo be used in conjunction with Redirect/Reaction/etc",
+            BLU.JobID)]
         BLU_Tank_DoT = 70061,
 
         [ParentCombo(BLU_Tank_DoT)]

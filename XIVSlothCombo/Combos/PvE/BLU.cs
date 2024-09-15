@@ -725,6 +725,13 @@ namespace XIVSlothCombo.Combos.PvE
 
                 #endregion
 
+                // Uptime Sonic Boom
+                if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_Uptime) &&
+                    IsSpellActive(SonicBoom_Spell63) &&
+                    IsOffCooldown(SonicBoom_Spell63) &&
+                    !InMeleeRange())
+                    return SonicBoom_Spell63;
+
                 // Include DoTs
                 BLU_Tank_DoT DoTCheck = new();
                 var DoTCheckOutput = DoTCheck.getDoT();
