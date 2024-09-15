@@ -449,13 +449,14 @@ namespace XIVSlothCombo.Combos
 
         #region Organizing Parent Options
 
-        [CustomComboInfo("General Combos", "Non-specific spell combo options", BLU.JobID, 4)]
+        [CustomComboInfo("General Combos", "Non-specific spell combo options.",
+            BLU.JobID, 4)]
         BLU_Parent_General = 70005,
-        [CustomComboInfo("DPS Combos", "Combo options for The Balance's DPS spell configuration", BLU.JobID, 5)]
+        [CustomComboInfo("DPS Combos", "Combo options for The Balance's DPS spell configuration.", BLU.JobID, 5)]
         BLU_Parent_DPS = 70006,
-        [CustomComboInfo("Tank Combos", "Combo options for The Balance's Tank spell configuration", BLU.JobID, 6)]
+        [CustomComboInfo("Tank Combos", "Combo options for The Balance's Tank spell configuration.", BLU.JobID, 6)]
         BLU_Parent_Tank = 70007,
-        [CustomComboInfo("Healer Combos", "Combo options for The Balance's Healer spell configuration", BLU.JobID, 7)]
+        [CustomComboInfo("Healer Combos", "Combo options for The Balance's Healer spell configuration.", BLU.JobID, 7)]
         BLU_Parent_Healer = 70008,
 
         #endregion
@@ -552,6 +553,22 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Triple Trident Melee", "Turns Triple Trident into its buffed combo.", BLU.JobID)]
         BLU_TridentCombo = 70058,
 
+        [ParentCombo(BLU_Parent_DPS)]
+        [BlueInactive(BLU.SongOfTorment, BLU.Bristle)]
+        [ReplaceSkill(BLU.SongOfTorment)]
+        [CustomComboInfo("DoT Combo", "Turns Song of Torment into a one-button DoT-maintaining combo." +
+                                      "\nWill buff Song of Torment with Bristle.", BLU.JobID)]
+        BLU_DPS_DoT = 70050,
+
+        [ParentCombo(BLU_DPS_DoT)]
+        [CustomComboInfo("Waste Protection", "Prevents usage of the combo based on debuff remaining time or target HP.", BLU.JobID)]
+        BLU_DPS_DoT_WasteProtection = 70059,
+
+        [ParentCombo(BLU_DPS_DoT)]
+        [BlueInactive(BLU.BreathOfMagic)]
+        [CustomComboInfo("Breath of Magic", "Adds Breath of Magic to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
+        BLU_DPS_DoT_Breath = 70060,
+
         #endregion
         // last value = 700
 
@@ -583,12 +600,6 @@ namespace XIVSlothCombo.Combos
 
         [CustomComboInfo("COMBOS PENDING SORTING", "", BLU.JobID)]
         BLU_Parent_Unsorted = 70099,
-
-        [ParentCombo(BLU_Parent_Unsorted)]
-        [BlueInactive(BLU.SongOfTorment, BLU.Bristle)]
-        [ReplaceSkill(BLU.SongOfTorment)]
-        [CustomComboInfo("Buffed Song of Torment", "Turns Song of Torment into Bristle so Song of Torment is buffed.", BLU.JobID)]
-        BLU_BuffedSoT = 70050,
 
         [ParentCombo(BLU_Parent_Unsorted)]
         [BlueInactive(BLU.PeripheralSynthesis, BLU.MustardBomb)]
