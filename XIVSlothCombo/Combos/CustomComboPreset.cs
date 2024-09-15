@@ -569,6 +569,11 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Breath of Magic", "Adds Breath of Magic to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
         BLU_DPS_DoT_Breath = 70060,
 
+        [ParentCombo(BLU_DPS_DoT)]
+        [BlueInactive(BLU.MortalFlame_Spell121)]
+        [CustomComboInfo("Mortal Flame", "Adds Mortal Flame to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
+        BLU_DPS_DoT_Flame = 70068,
+
         #endregion
         // last value = 700
 
@@ -598,6 +603,11 @@ namespace XIVSlothCombo.Combos
         [BlueInactive(BLU.BreathofMagic_Spell109)]
         [CustomComboInfo("Breath of Magic", "Adds Breath of Magic to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
         BLU_Tank_DoT_Breath = 70066,
+
+        [ParentCombo(BLU_Tank_DoT)]
+        [BlueInactive(BLU.MortalFlame_Spell121)]
+        [CustomComboInfo("Mortal Flame", "Adds Mortal Flame to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
+        BLU_Tank_DoT_Flame = 70067,
 
         [ParentCombo(BLU_Parent_Tank)]
         [BlueInactive(BLU.Offguard_Spell20, BLU.BadBreath_Spell28, BLU.Devour_Spell75)]

@@ -193,6 +193,12 @@ namespace XIVSlothCombo.Combos.PvE
             DPS_BreathOfMagic,
 
             [DoTInfo(
+                Debuffs.MortalFlame,
+                MortalFlame_Spell121,
+                CustomComboPreset.BLU_DPS_DoT_Flame)]
+            DPS_MortalFlame,
+
+            [DoTInfo(
                 Debuffs.FeatherRain,
                 FeatherRain_Spell44,
                 CustomComboPreset.BLU_Tank_DoT)]
@@ -215,6 +221,12 @@ namespace XIVSlothCombo.Combos.PvE
                 BreathofMagic_Spell109,
                 CustomComboPreset.BLU_Tank_DoT_Breath)]
             Tank_BreathOfMagic,
+
+            [DoTInfo(
+                Debuffs.MortalFlame,
+                MortalFlame_Spell121,
+                CustomComboPreset.BLU_Tank_DoT_Flame)]
+            Tank_MortalFlame
         }
 
         public static class Config
@@ -634,7 +646,8 @@ namespace XIVSlothCombo.Combos.PvE
                     Config.BLU_DPS_DoT_WasteProtection_Time,
                     [
                         DoT.DPS_SongOfTorment,
-                        DoT.DPS_BreathOfMagic
+                        DoT.DPS_BreathOfMagic,
+                        DoT.DPS_MortalFlame
                     ]);
 
                 // Waste protection
@@ -656,6 +669,13 @@ namespace XIVSlothCombo.Combos.PvE
                     IsSpellActive(BreathofMagic_Spell109) &&
                     dotHelper.CheckDotWanted(DoT.DPS_BreathOfMagic))
                     return BreathofMagic_Spell109;
+
+                // Mortal Flame
+                if (IsEnabled(CustomComboPreset.BLU_DPS_DoT_Flame) &&
+                    IsSpellActive(MortalFlame_Spell121) &&
+                    dotHelper.CheckDotWanted(DoT.DPS_MortalFlame) &&
+                    InCombat())
+                    return MortalFlame_Spell121;
 
                 return actionID;
             }
@@ -682,7 +702,8 @@ namespace XIVSlothCombo.Combos.PvE
                         DoT.Tank_FeatherRain,
                         DoT.Tank_SongOfTorment,
                         DoT.Tank_BadBreath,
-                        DoT.Tank_BreathOfMagic
+                        DoT.Tank_BreathOfMagic,
+                        DoT.Tank_MortalFlame
                     ]);
 
                 // Waste protection
@@ -710,6 +731,13 @@ namespace XIVSlothCombo.Combos.PvE
                     IsSpellActive(BreathofMagic_Spell109) &&
                     dotHelper.CheckDotWanted(DoT.Tank_BreathOfMagic))
                     return BreathofMagic_Spell109;
+
+                // Mortal Flame
+                if (IsEnabled(CustomComboPreset.BLU_Tank_DoT_Flame) &&
+                    IsSpellActive(MortalFlame_Spell121) &&
+                    dotHelper.CheckDotWanted(DoT.Tank_MortalFlame) &&
+                    InCombat())
+                    return MortalFlame_Spell121;
 
                 return actionID;
             }

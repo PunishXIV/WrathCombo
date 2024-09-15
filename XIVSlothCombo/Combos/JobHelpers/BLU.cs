@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿#region
+
+using System;
 using System.Linq;
-using ECommons.Logging;
 using XIVSlothCombo.CustomComboNS.Functions;
+
+#endregion
 
 namespace XIVSlothCombo.Combos.JobHelpers;
 
@@ -20,9 +22,12 @@ internal class BLU
             CustomComboFunctions.IsEnabled(dot.GetConfigPreset()) &&
             // Check spell is ready
             CustomComboFunctions.IsSpellActive(dot.GetSpellID()) &&
+            CustomComboFunctions.ActionReady(dot.GetSpellID()) &&
+            !CustomComboFunctions.WasLastAction(dot.GetSpellID()) &&
             // Check debuff is not applied or remaining time is less than requirement
             (!CustomComboFunctions.TargetHasEffect(dot.GetDebuffID()) ||
-             CustomComboFunctions.GetDebuffRemainingTime(dot.GetDebuffID()) <= timeRequirement) &&
+             CustomComboFunctions.GetDebuffRemainingTime(dot.GetDebuffID()) <=
+             timeRequirement) &&
             // Check target HP is above requirement
             CustomComboFunctions.GetTargetHPPercent() > hpRequirement;
     }
@@ -31,7 +36,10 @@ internal class BLU
 #region DoT Attributes
 
 [AttributeUsage(AttributeTargets.Field)]
-internal class DoTInfoAttribute(ushort debuffID, uint spellID, CustomComboPreset configPreset) : Attribute
+internal class DoTInfoAttribute(
+    ushort debuffID,
+    uint spellID,
+    CustomComboPreset configPreset) : Attribute
 {
     public ushort DebuffID { get; } = debuffID;
     public uint SpellID { get; } = spellID;
@@ -44,7 +52,8 @@ internal static class DoTExtensions
     {
         var type = typeof(PvE.BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
-        var attributes = memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
+        var attributes =
+            memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
         return ((DoTInfoAttribute)attributes[0]).DebuffID;
     }
 
@@ -52,7 +61,8 @@ internal static class DoTExtensions
     {
         var type = typeof(PvE.BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
-        var attributes = memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
+        var attributes =
+            memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
         return ((DoTInfoAttribute)attributes[0]).SpellID;
     }
 
@@ -60,7 +70,8 @@ internal static class DoTExtensions
     {
         var type = typeof(PvE.BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
-        var attributes = memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
+        var attributes =
+            memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
         return ((DoTInfoAttribute)attributes[0]).Config;
     }
 }
