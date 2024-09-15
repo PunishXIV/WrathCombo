@@ -575,7 +575,7 @@ namespace XIVSlothCombo.Combos
         #region Tank Combos
 
         [ParentCombo(BLU_Parent_Tank)]
-        [BlueInactive(BLU.SongOfTorment, BLU.Bristle)]
+        [BlueInactive(BLU.FeatherRain)]
         [ReplaceSkill(BLU.FeatherRain)]
         [CustomComboInfo("DoT Combo", "Turns Feather Rain into a one-button DoT-maintaining combo.", BLU.JobID)]
         BLU_Tank_DoT = 70061,
