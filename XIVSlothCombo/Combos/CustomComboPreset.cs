@@ -575,6 +575,31 @@ namespace XIVSlothCombo.Combos
         #region Tank Combos
 
         [ParentCombo(BLU_Parent_Tank)]
+        [BlueInactive(BLU.SongOfTorment, BLU.Bristle)]
+        [ReplaceSkill(BLU.FeatherRain)]
+        [CustomComboInfo("DoT Combo", "Turns Feather Rain into a one-button DoT-maintaining combo.", BLU.JobID)]
+        BLU_Tank_DoT = 70061,
+
+        [ParentCombo(BLU_Tank_DoT)]
+        [CustomComboInfo("Waste Protection", "Prevents usage of the combo based on debuff remaining time or target HP.", BLU.JobID)]
+        BLU_Tank_DoT_WasteProtection = 70062,
+
+        [ParentCombo(BLU_Tank_DoT)]
+        [BlueInactive(BLU.SongOfTorment)]
+        [CustomComboInfo("Song of Torment", "Adds Song of Torment to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
+        BLU_Tank_DoT_Torment = 70063,
+
+        [ParentCombo(BLU_Tank_DoT)]
+        [BlueInactive(BLU.BadBreath)]
+        [CustomComboInfo("Bad Breath", "Adds Bad Breath to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
+        BLU_Tank_DoT_Bad = 70064,
+
+        [ParentCombo(BLU_Tank_DoT)]
+        [BlueInactive(BLU.BreathOfMagic)]
+        [CustomComboInfo("Breath of Magic", "Adds Breath of Magic to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
+        BLU_Tank_DoT_Breath = 70066,
+
+        [ParentCombo(BLU_Parent_Tank)]
         [BlueInactive(BLU.Offguard, BLU.BadBreath, BLU.Devour)]
         [ReplaceSkill(BLU.Devour, BLU.Offguard, BLU.BadBreath)]
         [CustomComboInfo("Tank Debuff", "Puts Devour, Off-Guard, Lucid Dreaming, and Bad Breath into one button when under Tank Mimicry.", BLU.JobID)]

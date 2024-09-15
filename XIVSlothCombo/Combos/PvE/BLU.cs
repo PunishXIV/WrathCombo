@@ -79,8 +79,11 @@ namespace XIVSlothCombo.Combos.PvE
             public const ushort
                 Slow = 9,
                 Bind = 13,
+                BadBreath = 18,
                 Stun = 142,
-                SongOfTorment = 273,
+                SongOfTorment = 1714,
+                NightBloom = 1714,
+                FeatherRain = 1723,
                 DeepFreeze = 1731,
                 Offguard = 1717,
                 Malodorous = 1715,
@@ -88,14 +91,13 @@ namespace XIVSlothCombo.Combos.PvE
                 Lightheaded = 2501,
                 MortalFlame = 3643,
                 BreathOfMagic = 3712,
-                Begrimed = 3636,
-                EnemyBleeding = 1714;
+                Begrimed = 3636;
         }
 
         internal enum DoT
         {
             [DoTInfo(
-                Debuffs.EnemyBleeding,
+                Debuffs.SongOfTorment,
                 SongOfTorment,
                 CustomComboPreset.BLU_DPS_DoT)]
             DPS_SongOfTorment,
@@ -105,6 +107,30 @@ namespace XIVSlothCombo.Combos.PvE
                 BreathOfMagic,
                 CustomComboPreset.BLU_DPS_DoT_Breath)]
             DPS_BreathOfMagic,
+
+            [DoTInfo(
+                Debuffs.FeatherRain,
+                FeatherRain,
+                CustomComboPreset.BLU_Tank_DoT)]
+            Tank_FeatherRain,
+
+            [DoTInfo(
+                Debuffs.SongOfTorment,
+                SongOfTorment,
+                CustomComboPreset.BLU_Tank_DoT_Torment)]
+            Tank_SongOfTorment,
+
+            [DoTInfo(
+                Debuffs.BadBreath,
+                BadBreath,
+                CustomComboPreset.BLU_Tank_DoT_Bad)]
+            Tank_BadBreath,
+
+            [DoTInfo(
+                Debuffs.BreathOfMagic,
+                BreathOfMagic,
+                CustomComboPreset.BLU_Tank_DoT_Breath)]
+            Tank_BreathOfMagic,
         }
 
         public static class Config
@@ -113,7 +139,11 @@ namespace XIVSlothCombo.Combos.PvE
                 BLU_DPS_DoT_WasteProtection_HP =
                     new("BLU_DPS_DoT_WasteProtection_HP", 2),
                 BLU_DPS_DoT_WasteProtection_Time =
-                    new("BLU_DPS_DoT_WasteProtection_Time", 3);
+                    new("BLU_DPS_DoT_WasteProtection_Time", 3),
+                BLU_Tank_DoT_WasteProtection_HP =
+                    new("BLU_Tank_DoT_WasteProtection_HP", 2),
+                BLU_Tank_DoT_WasteProtection_Time =
+                    new("BLU_Tank_DoT_WasteProtection_Time", 3);
         }
 
         #region Openers
@@ -516,6 +546,56 @@ namespace XIVSlothCombo.Combos.PvE
         #endregion
 
         #region Tank Combos
+
+        internal class BLU_Tank_DoT : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.BLU_Tank_DoT;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
+            {
+                if (actionID is not FeatherRain) return actionID;
+
+                var dotHelper = new JobHelpers.BLU.DoTs(
+                    Config.BLU_Tank_DoT_WasteProtection_HP,
+                    Config.BLU_Tank_DoT_WasteProtection_Time,
+                    [
+                        DoT.Tank_FeatherRain,
+                        DoT.Tank_SongOfTorment,
+                        DoT.Tank_BadBreath,
+                        DoT.Tank_BreathOfMagic
+                    ]);
+
+                // Waste protection
+                if (IsEnabled(CustomComboPreset.BLU_Tank_DoT_WasteProtection) &&
+                    HasTarget() && !dotHelper.AnyDotsWanted())
+                    return PLD.ShieldBash;
+
+                // Feather Rain
+                if (dotHelper.CheckDotWanted(DoT.Tank_FeatherRain))
+                    return FeatherRain;
+
+                // Buffed Song of Torment
+                if (dotHelper.CheckDotWanted(DoT.Tank_SongOfTorment) &&
+                    IsSpellActive(SongOfTorment))
+                    return SongOfTorment;
+
+                // Bad Breath
+                if (IsEnabled(CustomComboPreset.BLU_Tank_DoT_Bad) &&
+                    IsSpellActive(BadBreath) &&
+                    dotHelper.CheckDotWanted(DoT.Tank_BadBreath))
+                    return BadBreath;
+
+                // Breath of Magic
+                if (IsEnabled(CustomComboPreset.BLU_Tank_DoT_Breath) &&
+                    IsSpellActive(BreathOfMagic) &&
+                    dotHelper.CheckDotWanted(DoT.Tank_BreathOfMagic))
+                    return BreathOfMagic;
+
+                return actionID;
+            }
+        }
 
         internal class BLU_DebuffCombo : CustomCombo
         {

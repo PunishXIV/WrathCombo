@@ -1354,6 +1354,18 @@ namespace XIVSlothCombo.Window.Functions
                     sliderIncrement:SliderIncrements.Ones);
             }
 
+            if (preset is CustomComboPreset.BLU_Tank_DoT_WasteProtection)
+            {
+                UserConfig.DrawSliderInt(0, 20, BLU.Config.BLU_Tank_DoT_WasteProtection_HP,
+                    "Stop using at Enemy HP %. Set to Zero to disable this check.",
+                    itemWidth:100F,
+                    sliderIncrement:SliderIncrements.Ones);
+                UserConfig.DrawSliderInt(0, 10, BLU.Config.BLU_Tank_DoT_WasteProtection_Time,
+                    "Time Remaining Before Refreshing",
+                    itemWidth:100F,
+                    sliderIncrement:SliderIncrements.Ones);
+            }
+
             #endregion
             // ====================================================================================
             #region BARD
