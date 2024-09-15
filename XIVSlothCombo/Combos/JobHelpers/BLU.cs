@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using XIVSlothCombo.CustomComboNS.Functions;
+using Functions = XIVSlothCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 #endregion
 
@@ -11,25 +12,24 @@ namespace XIVSlothCombo.Combos.JobHelpers;
 internal class BLU
 {
     internal class DoTs(
-        UserInt hpRequirement,
-        UserInt timeRequirement,
+        UserInt minHp,
+        UserInt minTime,
         PvE.BLU.DoT[] dotsToUse)
     {
         public bool AnyDotsWanted() => dotsToUse.Any(CheckDotWanted);
 
         public bool CheckDotWanted(PvE.BLU.DoT dot) =>
             // Check config preset is enabled
-            CustomComboFunctions.IsEnabled(dot.GetConfigPreset()) &&
+            Functions.IsEnabled(dot.Preset()) &&
             // Check spell is ready
-            CustomComboFunctions.IsSpellActive(dot.GetSpellID()) &&
-            CustomComboFunctions.ActionReady(dot.GetSpellID()) &&
-            !CustomComboFunctions.WasLastAction(dot.GetSpellID()) &&
+            Functions.IsSpellActive(dot.Action()) &&
+            Functions.ActionReady(dot.Action()) &&
+            !Functions.WasLastAction(dot.Action()) &&
             // Check debuff is not applied or remaining time is less than requirement
-            (!CustomComboFunctions.TargetHasEffect(dot.GetDebuffID()) ||
-             CustomComboFunctions.GetDebuffRemainingTime(dot.GetDebuffID()) <=
-             timeRequirement) &&
+            (!Functions.TargetHasEffect(dot.Debuff()) ||
+             Functions.GetDebuffRemainingTime(dot.Debuff()) <= minTime) &&
             // Check target HP is above requirement
-            CustomComboFunctions.GetTargetHPPercent() > hpRequirement;
+            Functions.GetTargetHPPercent() > minHp;
     }
 }
 
@@ -48,7 +48,7 @@ internal class DoTInfoAttribute(
 
 internal static class DoTExtensions
 {
-    public static ushort GetDebuffID(this PvE.BLU.DoT dot)
+    public static ushort Debuff(this PvE.BLU.DoT dot)
     {
         var type = typeof(PvE.BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
@@ -57,7 +57,7 @@ internal static class DoTExtensions
         return ((DoTInfoAttribute)attributes[0]).DebuffID;
     }
 
-    public static uint GetSpellID(this PvE.BLU.DoT dot)
+    public static uint Action(this PvE.BLU.DoT dot)
     {
         var type = typeof(PvE.BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
@@ -66,7 +66,7 @@ internal static class DoTExtensions
         return ((DoTInfoAttribute)attributes[0]).SpellID;
     }
 
-    public static CustomComboPreset GetConfigPreset(this PvE.BLU.DoT dot)
+    public static CustomComboPreset Preset(this PvE.BLU.DoT dot)
     {
         var type = typeof(PvE.BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
