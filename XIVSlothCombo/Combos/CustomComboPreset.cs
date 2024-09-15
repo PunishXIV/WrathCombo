@@ -582,15 +582,23 @@ namespace XIVSlothCombo.Combos
         [ParentCombo(BLU_Parent_Tank)]
         [BlueInactive(BLU.GoblinPunch_Spell105)]
         [ReplaceSkill(BLU.GoblinPunch_Spell105)]
-        [CustomComboInfo("Advanced Combo",
+        [CustomComboInfo("Advanced Mode - Single Target",
             "Build a one button combo with your choice of The Balance's recommended tank spells.", BLU.JobID)]
         BLU_Tank_Advanced = 70069,
 
         [ParentCombo(BLU_Tank_Advanced)]
+        [BlueInactive(BLU.JKick_Spell80)]
         [CustomComboInfo("J Kick Option",
             "Include J Kick into the rotation when in melee range.",
             BLU.JobID)]
         BLU_Tank_Advanced_JKick = 70071,
+
+        [ParentCombo(BLU_Tank_Advanced)]
+        [BlueInactive(BLU.Surpanakha_Spell78)]
+        [CustomComboInfo("Surpanakha Option",
+            "Include Surpanakha into the rotation - will wait to dump all 4 in a row.",
+            BLU.JobID)]
+        BLU_Tank_Advanced_Surpanakha = 70072,
 
         [ParentCombo(BLU_Tank_Advanced)]
         [CustomComboInfo("DoT Uptime Option", "Include the DoT Combo into the rotation." +

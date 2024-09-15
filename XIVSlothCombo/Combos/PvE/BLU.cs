@@ -700,10 +700,30 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is not GoblinPunch_Spell105) return actionID;
 
-                if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_JKick) &&
-                    IsOffCooldown(JKick_Spell80) &&
-                    InMeleeRange() && IsSpellActive(JKick_Spell80))
-                    return JKick_Spell80;
+                // Surpanakha dump
+                if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_Surpanakha) &&
+                    WasLastAction(Surpanakha_Spell78) &&
+                    HasCharges(Surpanakha_Spell78))
+                    return Surpanakha_Spell78;
+
+                #region oGCDs
+
+                if (CanWeave(actionID))
+                {
+                    // J Kick
+                    if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_JKick) &&
+                        IsOffCooldown(JKick_Spell80) &&
+                        InMeleeRange() && IsSpellActive(JKick_Spell80))
+                        return JKick_Spell80;
+
+                    // Surpanakha
+                    if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_Surpanakha) &&
+                        CanWeave(actionID) &&
+                        GetRemainingCharges(Surpanakha_Spell78) > 3)
+                        return Surpanakha_Spell78;
+                }
+
+                #endregion
 
                 // Include DoTs
                 BLU_Tank_DoT DoTCheck = new();
