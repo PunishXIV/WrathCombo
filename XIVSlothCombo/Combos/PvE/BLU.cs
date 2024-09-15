@@ -744,9 +744,12 @@ namespace XIVSlothCombo.Combos.PvE
 
                 // Include DoTs
                 BLU_Tank_DoT DoTCheck = new();
-                var DoTCheckOutput = DoTCheck.getDoT();
-                if (DoTCheckOutput != BypassAction)
-                    return DoTCheckOutput;
+                if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_DoTs))
+                {
+                    var DoTCheckOutput = DoTCheck.getDoT();
+                    if (DoTCheckOutput != BypassAction)
+                        return DoTCheckOutput;
+                }
 
                 return actionID;
             }
