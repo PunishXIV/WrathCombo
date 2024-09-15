@@ -700,6 +700,16 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is not GoblinPunch_Spell105) return actionID;
 
+                if (!InCombat() && HasTarget())
+                {
+                    if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_DoTs) &&
+                        IsEnabled(CustomComboPreset.BLU_Tank_DoT_Torment))
+                        return SongofTorment_Spell9;
+
+                    if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_Uptime))
+                        return SonicBoom_Spell63;
+                }
+
                 // Surpanakha dump
                 if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_Surpanakha) &&
                     WasLastAction(Surpanakha_Spell78) &&
