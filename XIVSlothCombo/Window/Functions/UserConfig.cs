@@ -1342,6 +1342,8 @@ namespace XIVSlothCombo.Window.Functions
             // ====================================================================================
             #region BLUE MAGE
 
+            #region DoTs
+
             if (preset is CustomComboPreset.BLU_DPS_DoT_WasteProtection)
             {
                 UserConfig.DrawSliderInt(0, 20, BLU.Config.BLU_DPS_DoT_WasteProtection_HP,
@@ -1364,6 +1366,16 @@ namespace XIVSlothCombo.Window.Functions
                     "Time Remaining Before Refreshing",
                     itemWidth:100F,
                     sliderIncrement:SliderIncrements.Ones);
+            }
+
+            #endregion
+
+            if (preset is CustomComboPreset.BLU_Tank_Advanced_Lucid)
+            {
+                UserConfig.DrawSliderInt(4000, 9500, BLU.Config.BLU_Tank_Advanced_Lucid,
+                    "Set value for your MP to be at or under",
+                    itemWidth:100F,
+                    sliderIncrement:SliderIncrements.Hundreds);
             }
 
             #endregion

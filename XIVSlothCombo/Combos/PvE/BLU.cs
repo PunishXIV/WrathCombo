@@ -241,7 +241,9 @@ namespace XIVSlothCombo.Combos.PvE
                 BLU_Tank_DoT_WasteProtection_HP =
                     new("BLU_Tank_DoT_WasteProtection_HP", 2),
                 BLU_Tank_DoT_WasteProtection_Time =
-                    new("BLU_Tank_DoT_WasteProtection_Time", 3);
+                    new("BLU_Tank_DoT_WasteProtection_Time", 3),
+                BLU_Tank_Advanced_Lucid =
+                    new("BLU_Tank_Advanced_Lucid", 9500);
         }
 
         #region Openers
@@ -700,6 +702,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is not GoblinPunch_Spell105) return actionID;
 
+                // Pre Pull
                 if (!InCombat() && HasTarget())
                 {
                     if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_DoTs) &&
@@ -731,6 +734,13 @@ namespace XIVSlothCombo.Combos.PvE
                         CanWeave(actionID) &&
                         GetRemainingCharges(Surpanakha_Spell78) > 3)
                         return Surpanakha_Spell78;
+
+                    // Lucid Dreaming
+                    if (IsEnabled(CustomComboPreset.BLU_Tank_Advanced_Lucid) &&
+                        IsOffCooldown(All.LucidDreaming) &&
+                        LocalPlayer.CurrentMp <= Config.BLU_Tank_Advanced_Lucid &&
+                        LevelChecked(All.LucidDreaming))
+                        return All.LucidDreaming;
                 }
 
                 #endregion
@@ -827,16 +837,23 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID is not Devour_Spell75)
                     return actionID;
 
+                // Offguard
                 if (!TargetHasEffectAny(Debuffs.Offguard) &&
                     IsOffCooldown(Offguard_Spell20) &&
                     IsSpellActive(Offguard_Spell20))
                     return Offguard_Spell20;
+
+                // Bad Breath
                 if (!TargetHasEffectAny(Debuffs.Malodorous) &&
                     HasEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath_Spell28))
                     return BadBreath_Spell28;
+
+                // Devour
                 if (IsOffCooldown(Devour_Spell75) && HasEffect(Buffs.TankMimicry) &&
                     IsSpellActive(Devour_Spell75))
                     return Devour_Spell75;
+
+                // Lucid Dreaming
                 if (IsOffCooldown(All.LucidDreaming) &&
                     LocalPlayer.CurrentMp <= 9000 &&
                     LevelChecked(All.LucidDreaming))

@@ -608,6 +608,13 @@ namespace XIVSlothCombo.Combos
         BLU_Tank_Advanced_Surpanakha = 70072,
 
         [ParentCombo(BLU_Tank_Advanced)]
+        [BlueInactive(BLU.Surpanakha_Spell78)]
+        [CustomComboInfo("Lucid Dreaming Option",
+            "Include Lucid Dreaming in the rotation.",
+            BLU.JobID)]
+        BLU_Tank_Advanced_Lucid = 70074,
+
+        [ParentCombo(BLU_Tank_Advanced)]
         [CustomComboInfo("DoT Uptime Option",
             "Include the DoT Combo into the rotation." +
             "\nRequires the DoT Combo below to be enabled and configured.",
