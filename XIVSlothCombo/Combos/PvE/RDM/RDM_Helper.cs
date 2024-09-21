@@ -542,7 +542,7 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (TraitLevelChecked(Traits.EnhancedAccelerationII)
                     && HasEffect(Buffs.GrandImpactReady)
-                    && HasEffect(Buffs.Dualcast))
+                    && !HasEffect(Buffs.Dualcast))
                 {
                     newActionID = GrandImpact;
                     return true;
