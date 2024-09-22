@@ -98,6 +98,8 @@ namespace XIVSlothCombo
 
             var existingConfig = TryGetConfig(pluginInterface);
 
+            #region Sloth Settings Migration
+
             // Detect Sloth users coming over, and handle settings transition
             var movingFromSloth = Transition.HasSlothSettings(pluginInterface);
             var settingsFromSloth = false;
@@ -105,9 +107,17 @@ namespace XIVSlothCombo
             {
                 settingsFromSloth = Transition.ConvertSlothSettings(pluginInterface);
                 existingConfig = TryGetConfig(pluginInterface);
+
+                if (existingConfig is null || !settingsFromSloth)
+                    Svc.Chat.Print("Failed to migrate settings from XIVSlothCombo.");
             }
+
+            if (settingsFromSloth)
+                Svc.Chat.Print("Settings successfully migrated from XIVSlothCombo.");
+
             // todo: movingFromSloth could be used to display a migration message to the user
-            // todo: settingsFromSloth could be used to display a success/failure message to the user during migration process
+
+            #endregion
 
             Service.Configuration = existingConfig ?? new PluginConfiguration();
             Service.Address = new PluginAddressResolver();
