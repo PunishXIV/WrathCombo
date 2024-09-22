@@ -76,7 +76,7 @@ internal static class Transition // From Sloth
         try
         {
             // Rename the Sloth settings to Wrath settings
-            File.Move(slothConfigFile, wrathConfigFile);
+            File.Copy(slothConfigFile, wrathConfigFile);
             PluginLog.Information("Sloth settings transitioned successfully.");
 
             // Remove the WrathCombo folder that was created
