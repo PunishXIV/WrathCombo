@@ -115,8 +115,6 @@ namespace XIVSlothCombo
             if (settingsFromSloth)
                 Svc.Chat.Print("Settings successfully migrated from XIVSlothCombo.");
 
-            // todo: movingFromSloth could be used to display a migration message to the user
-
             #endregion
 
             Service.Configuration = existingConfig ?? new PluginConfiguration();
