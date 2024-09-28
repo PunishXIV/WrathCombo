@@ -113,28 +113,28 @@ namespace XIVSlothCombo.Data
         private unsafe static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
         {
             if (actionId is AST.Balance or AST.Spear &&
-                Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember is not null &&
-                !OutOfRange(actionId, Svc.ClientState.LocalPlayer!, Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember))
+                AST.QuickTargetCards.SelectedRandomMember is not null &&
+                !OutOfRange(actionId, Svc.ClientState.LocalPlayer!, AST.QuickTargetCards.SelectedRandomMember))
             {
                 int targetOptions = AST.Config.AST_QuickTarget_Override;
 
                 switch (targetOptions)
                 {
                     case 0:
-                        Svc.Log.Debug($"Switched to {Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.Name}");
-                        targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
+                        Svc.Log.Debug($"Switched to {AST.QuickTargetCards.SelectedRandomMember.Name}");
+                        targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 1:
                         if (CustomComboFunctions.HasFriendlyTarget())
                             targetObjectId = Svc.ClientState.LocalPlayer.TargetObject.GameObjectId;
                         else
-                            targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
+                            targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 2:
                         if (CustomComboFunctions.GetHealTarget(true, true) is not null)
                             targetObjectId = CustomComboFunctions.GetHealTarget(true, true).GameObjectId;
                         else
-                            targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
+                            targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                 }
             }

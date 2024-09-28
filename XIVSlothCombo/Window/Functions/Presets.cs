@@ -272,7 +272,7 @@ namespace XIVSlothCombo.Window.Functions
                 switch (info.JobID)
                 {
                     //case All.JobID: All.Config.Draw(preset); break;
-                    //case AST.JobID: AST.Config.Draw(preset); break;
+                    case AST.JobID: AST.Config.Draw(preset); break;
                     //case BLM.JobID: BLM.Config.Draw(preset); break;
                     //case BLU.JobID: BLU.Config.Draw(preset); break;
                     //case BRD.JobID: BRD.Config.Draw(preset); break;

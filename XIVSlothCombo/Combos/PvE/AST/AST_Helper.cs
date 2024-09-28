@@ -1,20 +1,22 @@
-﻿    using Dalamud.Game.ClientState.JobGauge.Enums;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
-using ECommons.ExcelServices;
 using System.Collections.Generic;
 using System.Linq;
 using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Extensions;
-using static XIVSlothCombo.Combos.PvE.AST;
 
-namespace XIVSlothCombo.Combos.JobHelpers
+namespace XIVSlothCombo.Combos.PvE
 {
-    internal static class AST
+    internal static partial class AST
     {
-        internal static void Init()
+        public static ASTGauge Gauge => CustomComboFunctions.GetJobGauge<ASTGauge>();
+        public static CardType DrawnCard { get; set; }
+
+        internal static void InitCheckCards()
         {
             Svc.Framework.Update += CheckCards;
         }
@@ -26,7 +28,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
             if (Svc.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.BetweenAreas] || Svc.Condition[Dalamud.Game.ClientState.Conditions.ConditionFlag.Unconscious])
             {
-                AST_QuickTargetCards.SelectedRandomMember = null;
+                QuickTargetCards.SelectedRandomMember = null;
                 return;
             }
 
@@ -36,25 +38,25 @@ namespace XIVSlothCombo.Combos.JobHelpers
             }
 
             if (CustomComboFunctions.IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards) &&
-                (AST_QuickTargetCards.SelectedRandomMember is null || BetterTargetAvailable()))
+                (QuickTargetCards.SelectedRandomMember is null || BetterTargetAvailable()))
             {
                 if (CustomComboFunctions.ActionReady(Play1))
-                    AST_QuickTargetCards.Invoke();
+                    QuickTargetCards.Invoke();
             }
 
             if (DrawnCard == CardType.NONE)
-                AST_QuickTargetCards.SelectedRandomMember = null;
+                QuickTargetCards.SelectedRandomMember = null;
 
         }
 
         private static bool BetterTargetAvailable()
         {
-            if (AST_QuickTargetCards.SelectedRandomMember is null ||
-                AST_QuickTargetCards.SelectedRandomMember.IsDead ||
-                CustomComboFunctions.OutOfRange(Balance, AST_QuickTargetCards.SelectedRandomMember))
+            if (QuickTargetCards.SelectedRandomMember is null ||
+                QuickTargetCards.SelectedRandomMember.IsDead ||
+                CustomComboFunctions.OutOfRange(Balance, QuickTargetCards.SelectedRandomMember))
                 return true;
 
-            var m = AST_QuickTargetCards.SelectedRandomMember as IBattleChara;
+            var m = QuickTargetCards.SelectedRandomMember as IBattleChara;
             if ((DrawnCard is CardType.BALANCE && CustomComboFunctions.JobIDs.Melee.Any(x => x == m.ClassJob.Id)) ||
                 (DrawnCard is CardType.SPEAR && CustomComboFunctions.JobIDs.Ranged.Any(x => x == m.ClassJob.Id)))
                 return false;
@@ -63,7 +65,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
             for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
             {
                 if (CustomComboFunctions.GetPartySlot(i) is not IBattleChara member) continue;
-                if (member.GameObjectId == AST_QuickTargetCards.SelectedRandomMember.GameObjectId) continue;
+                if (member.GameObjectId == QuickTargetCards.SelectedRandomMember.GameObjectId) continue;
                 if (member is null) continue; //Skip nulls/disconnected people
                 if (member.IsDead) continue;
                 if (CustomComboFunctions.OutOfRange(Balance, member)) continue;
@@ -83,7 +85,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
             if ((DrawnCard is CardType.BALANCE && targets.Any(x => CustomComboFunctions.JobIDs.Melee.Any(y => y == x.ClassJob.Id))) ||
                 (DrawnCard is CardType.SPEAR && targets.Any(x => CustomComboFunctions.JobIDs.Ranged.Any(y => y == x.ClassJob.Id))))
             {
-                AST_QuickTargetCards.SelectedRandomMember = null;
+                QuickTargetCards.SelectedRandomMember = null;
                 return true;
             }
 
@@ -91,7 +93,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
 
         }
 
-        internal class AST_QuickTargetCards : CustomComboFunctions
+        internal class QuickTargetCards : CustomComboFunctions
         {
 
             internal static List<IGameObject> PartyTargets = [];
@@ -214,7 +216,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
             }
         }
 
-        internal static void Dispose()
+        internal static void DisposeCheckCards()
         {
             Svc.Framework.Update -= CheckCards;
         }
