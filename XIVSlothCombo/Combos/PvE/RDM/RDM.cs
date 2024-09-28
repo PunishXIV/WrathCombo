@@ -1,4 +1,3 @@
-using Dalamud.Game.ClientState.Conditions;
 using XIVSlothCombo.Combos.PvE.Content;
 using XIVSlothCombo.CustomComboNS;
 
@@ -100,7 +99,6 @@ namespace XIVSlothCombo.Combos.PvE
         internal class RDM_ST_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_ST_SimpleMode;
-            internal static RDMOpenerLogic RDMOpener = new();
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
@@ -117,6 +115,10 @@ namespace XIVSlothCombo.Combos.PvE
                         IsOffCooldown(Variant.VariantRampart) &&
                         CanSpellWeave(actionID))
                         return Variant.VariantRampart;
+
+                    // Opener for RDM
+                    if (RDMOpenerLogic.DoFullOpener(ref actionID))
+                        return actionID;
 
                     //Lucid Dreaming
                     if (TryLucidDreaming(actionID, 6500, lastComboMove)) return All.LucidDreaming;
@@ -146,7 +148,6 @@ namespace XIVSlothCombo.Combos.PvE
         internal class RDM_ST_DPS : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_ST_DPS;
-            internal static RDMOpenerLogic RDMOpener = new();
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
@@ -167,7 +168,7 @@ namespace XIVSlothCombo.Combos.PvE
                     // Opener for RDM
                     if (IsEnabled(CustomComboPreset.RDM_Balance_Opener))
                     {
-                        if (RDMOpener.DoFullOpener(ref actionID))
+                        if (RDMOpenerLogic.DoFullOpener(ref actionID))
                             return actionID;
                     }
                 }

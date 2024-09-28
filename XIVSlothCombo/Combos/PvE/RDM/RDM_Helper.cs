@@ -718,7 +718,7 @@ namespace XIVSlothCombo.Combos.PvE
             }
         }
 
-        internal class RDMOpenerLogic
+        internal static class RDMOpenerLogic
         {
             private static bool HasCooldowns()
             {
@@ -751,17 +751,17 @@ namespace XIVSlothCombo.Combos.PvE
 
             private static uint OpenerLevel => 100;
 
-            public uint PrePullStep = 0;
+            public static uint PrePullStep = 0;
 
-            public uint OpenerStep = 0;
+            public static uint OpenerStep = 0;
 
             public static bool LevelChecked => LocalPlayer.Level >= OpenerLevel;
 
             private static bool CanOpener => HasCooldowns() && LevelChecked;
 
-            private OpenerState currentState = OpenerState.PrePull;
+            private static OpenerState currentState = OpenerState.PrePull;
 
-            public OpenerState CurrentState
+            public static OpenerState CurrentState
             {
                 get
                 {
@@ -790,7 +790,7 @@ namespace XIVSlothCombo.Combos.PvE
                 }
             }
 
-            private bool DoPrePullSteps(ref uint actionID)
+            private static bool DoPrePullSteps(ref uint actionID)
             {
                 if (!LevelChecked)
                     return false;
@@ -819,7 +819,7 @@ namespace XIVSlothCombo.Combos.PvE
                 return false;
             }
 
-            private bool DoOpener(ref uint actionID)
+            private static bool DoOpener(ref uint actionID)
             {
                 if (!LevelChecked)
                     return false;
@@ -951,13 +951,13 @@ namespace XIVSlothCombo.Combos.PvE
                 return false;
             }
 
-            private void ResetOpener()
+            private static void ResetOpener()
             {
                 PrePullStep = 0;
                 OpenerStep = 0;
             }
 
-            public bool DoFullOpener(ref uint actionID)
+            public static bool DoFullOpener(ref uint actionID)
             {
                 if (!LevelChecked)
                     return false;
