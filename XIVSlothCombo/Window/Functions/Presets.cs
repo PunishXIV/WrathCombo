@@ -288,10 +288,12 @@ namespace XIVSlothCombo.Window.Functions
                     //case RPR.JobID: RPR.Config.Draw(preset); break;
                     case RDM.JobID: RDM.Config.Draw(preset); break;
                     //case SAM.JobID: SAM.Config.Draw(preset); break;
+                    //case SCH.JobID: SGE.Config.Draw(preset); break;
                     //case SGE.JobID: SGE.Config.Draw(preset); break;
                     //case SMN.JobID: SMN.Config.Draw(preset); break;
                     //case VPR.JobID: VPR.Config.Draw(preset); break;
                     //case WAR.JobID: WAR.Config.Draw(preset); break;
+                    //case WHM.JobID: WHM.Config.Draw(preset); break;
                     default: UserConfigItems.Draw(preset, enabled); break;
                 }
             }
