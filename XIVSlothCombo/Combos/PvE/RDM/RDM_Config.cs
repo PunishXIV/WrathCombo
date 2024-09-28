@@ -4,6 +4,7 @@ using XIVSlothCombo.CustomComboNS.Functions;
 using static XIVSlothCombo.Extensions.UIntExtensions;
 using static XIVSlothCombo.Window.Functions.UserConfig;
 using static XIVSlothCombo.Window.Functions.SliderIncrements;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -54,127 +55,122 @@ namespace XIVSlothCombo.Combos.PvE
 
             internal static void Draw(CustomComboPreset preset)
             {
-                if (preset is CustomComboPreset.RDM_ST_oGCD)
+                switch (preset)
                 {
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_OnAction_Adv, "Advanced Action Options.", "Changes which action this option will replace.", isConditionalChoice: true);
-                    if (RDM_ST_oGCD_OnAction_Adv)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Jolts", "", 4, 0, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Fleche", "", 4, 1, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Riposte", "", 4, 2, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Reprise", "", 4, 3, descriptionColor: ImGuiColors.DalamudYellow);
-                        ImGui.Unindent();
-                    }
+                    case CustomComboPreset.RDM_ST_oGCD:
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_OnAction_Adv, "Advanced Action Options.", "Changes which action this option will replace.", isConditionalChoice: true);
+                        if (RDM_ST_oGCD_OnAction_Adv)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Jolts", "", 4, 0, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Fleche", "", 4, 1, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Riposte", "", 4, 2, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, "Reprise", "", 4, 3, descriptionColor: ImGuiColors.DalamudYellow);
+                            ImGui.Unindent();
+                        }
 
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_Fleche, "Fleche", "");
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_ContreSixte, "Contre Sixte", "");
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_Engagement, "Engagement", "", isConditionalChoice: true);
-                    if (RDM_ST_oGCD_Engagement)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawAdditionalBoolChoice(RDM_ST_oGCD_Engagement_Pooling, "Pool one charge for manual use.", "");
-                        ImGui.Unindent();
-                    }
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps, "Corp-a-Corps", "", isConditionalChoice: true);
-                    if (RDM_ST_oGCD_CorpACorps)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
-                        DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
-                        ImGui.Unindent();
-                    }
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_ViceOfThorns, "Vice of Thorns", "");
-                    DrawAdditionalBoolChoice(RDM_ST_oGCD_Prefulgence, "Prefulgence", "");
-                }
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_Fleche, "Fleche", "");
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_ContreSixte, "Contre Sixte", "");
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_Engagement, "Engagement", "", isConditionalChoice: true);
+                        if (RDM_ST_oGCD_Engagement)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawAdditionalBoolChoice(RDM_ST_oGCD_Engagement_Pooling, "Pool one charge for manual use.", "");
+                            ImGui.Unindent();
+                        }
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps, "Corp-a-Corps", "", isConditionalChoice: true);
+                        if (RDM_ST_oGCD_CorpACorps)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
+                            DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
+                            ImGui.Unindent();
+                        }
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_ViceOfThorns, "Vice of Thorns", "");
+                        DrawAdditionalBoolChoice(RDM_ST_oGCD_Prefulgence, "Prefulgence", "");
+                        break;
 
-                if (preset is CustomComboPreset.RDM_ST_MeleeCombo)
-                {
-                    DrawAdditionalBoolChoice(RDM_ST_MeleeCombo_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
-                    if (RDM_ST_MeleeCombo_Adv)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, "Jolts", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, "Riposte", "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
-                        ImGui.Unindent();
-                    }
-                }
+                    case CustomComboPreset.RDM_ST_MeleeCombo:
+                        DrawAdditionalBoolChoice(RDM_ST_MeleeCombo_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
+                        if (RDM_ST_MeleeCombo_Adv)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, "Jolts", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, "Riposte", "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
+                            ImGui.Unindent();
+                        }
+                        break;
 
-                if (preset is CustomComboPreset.RDM_ST_MeleeFinisher)
-                {
-                    DrawAdditionalBoolChoice(RDM_ST_MeleeFinisher_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
-                    if (RDM_ST_MeleeFinisher_Adv)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, "Jolts", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, "Riposte", "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, "VerAero & VerThunder", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
-                        ImGui.Unindent();
-                    }
-                }
+                    case CustomComboPreset.RDM_ST_MeleeFinisher:
+                        DrawAdditionalBoolChoice(RDM_ST_MeleeFinisher_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
+                        if (RDM_ST_MeleeFinisher_Adv)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, "Jolts", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, "Riposte", "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, "VerAero & VerThunder", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
+                            ImGui.Unindent();
+                        }
+                        break;
 
-                if (preset is CustomComboPreset.RDM_ST_Lucid)
-                    DrawSliderInt(0, 10000, RDM_ST_Lucid_Threshold, "Add Lucid Dreaming when below this MP", sliderIncrement: Hundreds);
+                    case CustomComboPreset.RDM_ST_Lucid:
+                        DrawSliderInt(0, 10000, RDM_ST_Lucid_Threshold, "Add Lucid Dreaming when below this MP", sliderIncrement: Hundreds);
+                        break;
 
-                // AoE
-                if (preset is CustomComboPreset.RDM_AoE_oGCD)
-                {
-                    DrawAdditionalBoolChoice(RDM_AoE_oGCD_Fleche, "Fleche", "");
-                    DrawAdditionalBoolChoice(RDM_AoE_oGCD_ContreSixte, "Contre Sixte", "");
-                    DrawAdditionalBoolChoice(RDM_AoE_oGCD_Engagement, "Engagement", "", isConditionalChoice: true);
-                    if (RDM_AoE_oGCD_Engagement)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_Engagement_Pooling, "Pool one charge for manual use.", "");
-                        ImGui.Unindent();
-                    }
-                    DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps, "Corp-a-Corps", "", isConditionalChoice: true);
-                    if (RDM_AoE_oGCD_CorpACorps)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
-                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
-                        ImGui.Unindent();
-                    }
-                    DrawAdditionalBoolChoice(RDM_AoE_oGCD_ViceOfThorns, "Vice of Thorns", "");
-                    DrawAdditionalBoolChoice(RDM_AoE_oGCD_Prefulgence, "Prefulgence", "");
-                }
+                    case CustomComboPreset.RDM_AoE_oGCD:
+                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_Fleche, "Fleche", "");
+                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_ContreSixte, "Contre Sixte", "");
+                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_Engagement, "Engagement", "", isConditionalChoice: true);
+                        if (RDM_AoE_oGCD_Engagement)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawAdditionalBoolChoice(RDM_AoE_oGCD_Engagement_Pooling, "Pool one charge for manual use.", "");
+                            ImGui.Unindent();
+                        }
+                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps, "Corp-a-Corps", "", isConditionalChoice: true);
+                        if (RDM_AoE_oGCD_CorpACorps)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
+                            DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
+                            ImGui.Unindent();
+                        }
+                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_ViceOfThorns, "Vice of Thorns", "");
+                        DrawAdditionalBoolChoice(RDM_AoE_oGCD_Prefulgence, "Prefulgence", "");
+                        break;
 
-                if (preset is CustomComboPreset.RDM_AoE_MeleeCombo)
-                {
-                    DrawSliderInt(3, 8, RDM_AoE_MoulinetRange, "Range to use first Moulinet; no range restrictions after first Moulinet",  Ones);
-                    DrawAdditionalBoolChoice(RDM_AoE_MeleeCombo_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
-                    if (RDM_AoE_MeleeCombo_Adv)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, "Scatter/Impact", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, "Moulinet", "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
-                        ImGui.Unindent();
-                    }
-                }
+                    case CustomComboPreset.RDM_AoE_MeleeCombo:
+                        DrawSliderInt(3, 8, RDM_AoE_MoulinetRange, "Range to use first Moulinet; no range restrictions after first Moulinet", Ones);
+                        DrawAdditionalBoolChoice(RDM_AoE_MeleeCombo_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
+                        if (RDM_AoE_MeleeCombo_Adv)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, "Scatter/Impact", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, "Moulinet", "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
+                            ImGui.Unindent();
+                        }
+                        DrawAdditionalBoolChoice(RDM_ST_MeleeEnforced, "Enforced Melee Check", "Once the melee combo has started, don't switch away even if target is out of range.");
+                        break;
 
-                if (preset is CustomComboPreset.RDM_AoE_MeleeFinisher)
-                {
-                    DrawAdditionalBoolChoice(RDM_AoE_MeleeFinisher_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
-                    if (RDM_AoE_MeleeFinisher_Adv)
-                    {
-                        ImGui.Indent(); ImGui.Spacing();
-                        DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, "Scatter/Impact", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, "Moulinet", "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
-                        DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, "VerAero II & VerThunder II", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
-                        ImGui.Unindent();
-                    }
-                }
+                    case CustomComboPreset.RDM_AoE_MeleeFinisher:
+                        DrawAdditionalBoolChoice(RDM_AoE_MeleeFinisher_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
+                        if (RDM_AoE_MeleeFinisher_Adv)
+                        {
+                            ImGui.Indent(); ImGui.Spacing();
+                            DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, "Scatter/Impact", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, "Moulinet", "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
+                            DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, "VerAero II & VerThunder II", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
+                            ImGui.Unindent();
+                        }
+                        break;
 
-                if (preset is CustomComboPreset.RDM_AoE_Lucid)
-                    DrawSliderInt(0, 10000, RDM_AoE_Lucid_Threshold, "Add Lucid Dreaming when below this MP", sliderIncrement: Hundreds);
+                    case CustomComboPreset.RDM_AoE_Lucid:
+                        DrawSliderInt(0, 10000, RDM_AoE_Lucid_Threshold, "Add Lucid Dreaming when below this MP", sliderIncrement: Hundreds);
+                        break;
 
-                if (preset is CustomComboPreset.RDM_Variant_Cure)
-                    DrawSliderInt(1, 100, RDM_VariantCure, "HP% to be at or under", 200);
-
-                if (preset is CustomComboPreset.RDM_ST_MeleeCombo)
-                {
-                    DrawAdditionalBoolChoice(RDM_ST_MeleeEnforced, "Enforced Melee Check", "Once the melee combo has started, don't switch away even if target is out of range.");
+                    case CustomComboPreset.RDM_Variant_Cure:
+                        DrawSliderInt(1, 100, RDM_VariantCure, "HP% to be at or under", 200);
+                        break;
                 }
             }
         }
