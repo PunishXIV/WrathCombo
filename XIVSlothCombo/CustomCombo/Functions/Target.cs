@@ -50,7 +50,7 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <returns> Bool indicating whether you are in melee range. </returns>
         public static bool InMeleeRange()
         {
-            if (LocalPlayer.TargetObject == null)
+            if (Svc.Targets.Target == null)
                 return false;
 
             float distance = GetTargetDistance();

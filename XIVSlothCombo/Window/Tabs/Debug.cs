@@ -41,6 +41,8 @@ namespace XIVSlothCombo.Window.Tabs
             DebugCombo? comboClass = new();
             IPlayerCharacter? LocalPlayer = Svc.ClientState.LocalPlayer;
             uint[] statusBlacklist = { 360, 361, 362, 363, 364, 365, 366, 367, 368 }; // Duration will not be displayed for these status effects
+            var target = Svc.Targets.Target;
+
 
             // Custom Styling
             static void CustomStyleText(string label, object? value)
@@ -97,7 +99,7 @@ namespace XIVSlothCombo.Window.Tabs
                 // Target Status Effects
                 if (ImGui.CollapsingHeader("Target Status Effects"))
                 {
-                    if (LocalPlayer.TargetObject is IBattleChara chara)
+                    if (target != null && target is IBattleChara chara)
                     {
                         foreach (Status? status in chara.StatusList)
                         {
@@ -215,12 +217,12 @@ namespace XIVSlothCombo.Window.Tabs
                 ImGui.Spacing();
                 ImGui.Text("Target Info");
                 ImGui.Separator();
-                CustomStyleText("ObjectId:", LocalPlayer.TargetObject?.GameObjectId);
-                CustomStyleText("ObjectKind:", LocalPlayer.TargetObject?.ObjectKind);
-                CustomStyleText("Is BattleChara:", LocalPlayer.TargetObject is IBattleChara);
-                CustomStyleText("Is PlayerCharacter:", LocalPlayer.TargetObject is IPlayerCharacter);
+                CustomStyleText("ObjectId:", target?.GameObjectId);
+                CustomStyleText("ObjectKind:", target?.ObjectKind);
+                CustomStyleText("Is BattleChara:", target is IBattleChara);
+                CustomStyleText("Is PlayerCharacter:", target is IPlayerCharacter);
                 CustomStyleText("Distance:", $"{Math.Round(GetTargetDistance(), 2)}y");
-                CustomStyleText("Hitbox Radius:", LocalPlayer.TargetObject?.HitboxRadius);
+                CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
                 CustomStyleText("In Melee Range:", InMeleeRange());
                 CustomStyleText("Relative Position:", AngleToTarget() is 2 ? "Rear" : (AngleToTarget() is 1 or 3) ? "Flank" : AngleToTarget() is 4 ? "Front" : "");
                 CustomStyleText("Health:", $"{EnemyHealthCurrentHp().ToString("N0")} / {EnemyHealthMaxHp().ToString("N0")} ({Math.Round(GetTargetHPPercent(), 2)}%)");

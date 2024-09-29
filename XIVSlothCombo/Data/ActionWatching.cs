@@ -137,7 +137,7 @@ namespace XIVSlothCombo.Data
                         break;
                     case 1:
                         if (CustomComboFunctions.HasFriendlyTarget())
-                            targetObjectId = Svc.ClientState.LocalPlayer.TargetObject.GameObjectId;
+                            targetObjectId = Svc.Targets.Target.GameObjectId;
                         else
                             targetObjectId = Combos.JobHelpers.AST.AST_QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
