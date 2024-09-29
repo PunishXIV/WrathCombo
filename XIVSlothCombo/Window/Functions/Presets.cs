@@ -284,7 +284,7 @@ namespace XIVSlothCombo.Window.Functions
                     //case PCT.JobID: PCT.Config.Draw(preset); break;
                     //case PLD.JobID: PLD.Config.Draw(preset); break;
                     //case RPR.JobID: RPR.Config.Draw(preset); break;
-                    //case RDM.JobID: RDM.Config.Draw(preset); break;
+                    case RDM.JobID: RDM.Config.Draw(preset); break;
                     //case SAM.JobID: SAM.Config.Draw(preset); break;
                     //case SCH.JobID: SCH.Config.Draw(preset); break;
                     //case SGE.JobID: SGE.Config.Draw(preset); break;
