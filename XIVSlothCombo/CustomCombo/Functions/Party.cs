@@ -1,7 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System.Collections.Generic;
 using System.Linq;
 using XIVSlothCombo.Services;

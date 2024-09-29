@@ -4,7 +4,7 @@
 	<PropertyGroup>
 		<Authors>Team Wrath</Authors>
 		<Company>-</Company>
-		<Version>0.0.0.3</Version>
+		<Version>0.0.0.4</Version>
 		<!-- This is the version that will be used when pushing to the repo.-->
 		<Description>XIVCombo for lazy players</Description>
 		<Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
@@ -54,7 +54,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="..\res\plugin\xivslothcombo.png" Link="images\xivslothcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+		<Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

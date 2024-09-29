@@ -16,13 +16,12 @@ using System;
 using System.Linq;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.CustomComboNS;
-using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Services;
-using static XIVSlothCombo.Combos.JobHelpers.NIN;
 using Action = Lumina.Excel.GeneratedSheets.Action;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
+using static XIVSlothCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace XIVSlothCombo.Window.Tabs
 {
@@ -78,7 +77,7 @@ namespace XIVSlothCombo.Window.Tabs
                         else CustomStyleText("", status.StatusId);
 
                         // Duration + Blacklist Check
-                        float buffDuration = CustomComboFunctions.GetBuffRemainingTime((ushort)status.StatusId, false);
+                        float buffDuration = GetBuffRemainingTime((ushort)status.StatusId, false);
                         if (buffDuration != 0 && !statusBlacklist.Contains(status.StatusId))
                         {
                             string formattedDuration;
@@ -117,7 +116,7 @@ namespace XIVSlothCombo.Window.Tabs
                             else CustomStyleText("", status.StatusId);
 
                             // Duration + Blacklist Check
-                            float debuffDuration = CustomComboFunctions.GetDebuffRemainingTime((ushort)status.StatusId, false);
+                            float debuffDuration = GetDebuffRemainingTime((ushort)status.StatusId, false);
                             if (debuffDuration != 0 && !statusBlacklist.Contains(status.StatusId))
                             {
                                 string formattedDuration;
@@ -148,7 +147,7 @@ namespace XIVSlothCombo.Window.Tabs
                                 debugSpell = null;
                             }
 
-                            var classId = CustomComboFunctions.JobIDs.JobToClass(JobID!.Value);
+                            var classId = JobIDs.JobToClass(JobID!.Value);
                             var cjc = Svc.Data.Excel.GetSheetRaw("ClassJobCategory");
                             var cjcColumIdx = cjc.Columns[JobID.Value];
                            
@@ -183,7 +182,8 @@ namespace XIVSlothCombo.Window.Tabs
                         CustomStyleText($"Can Target Party:", $"{debugSpell.CanTargetParty}");
                         CustomStyleText($"Can Target Area:", $"{debugSpell.TargetArea}");
                         CustomStyleText($"Cast Type:", $"{debugSpell.CastType}");
-                        CustomStyleText($"Targets Hit:", $"{CustomComboFunctions.NumberOfEnemiesInRange(debugSpell.RowId)}");
+                        if (debugSpell.EffectRange > 0)
+                        CustomStyleText($"Targets Hit:", $"{NumberOfEnemiesInRange(debugSpell.RowId, CurrentTarget)}");
 
                         if (ActionWatching.ActionTimestamps.ContainsKey(debugSpell.RowId))
                             CustomStyleText($"Time Since Last Use:", $"{(Environment.TickCount64 - ActionWatching.ActionTimestamps[debugSpell.RowId])/1000f:F2}");
@@ -206,8 +206,8 @@ namespace XIVSlothCombo.Window.Tabs
                 ImGui.Separator();
                 CustomStyleText("Job:", $"{LocalPlayer.ClassJob.GameData.NameEnglish} (ID: {LocalPlayer.ClassJob.Id})");
                 CustomStyleText("Zone:", $"{Svc.Data.GetExcelSheet<TerritoryType>()?.FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType).PlaceName.Value.Name} (ID: {Svc.ClientState.TerritoryType})");
-                CustomStyleText("In PvP:", CustomComboFunctions.InPvP());
-                CustomStyleText("In Combat:", CustomComboFunctions.InCombat());
+                CustomStyleText("In PvP:", InPvP());
+                CustomStyleText("In Combat:", InCombat());
                 CustomStyleText("Hitbox Radius:", LocalPlayer.HitboxRadius);
                 ImGui.Spacing();
 
@@ -219,11 +219,11 @@ namespace XIVSlothCombo.Window.Tabs
                 CustomStyleText("ObjectKind:", LocalPlayer.TargetObject?.ObjectKind);
                 CustomStyleText("Is BattleChara:", LocalPlayer.TargetObject is IBattleChara);
                 CustomStyleText("Is PlayerCharacter:", LocalPlayer.TargetObject is IPlayerCharacter);
-                CustomStyleText("Distance:", $"{Math.Round(CustomComboFunctions.GetTargetDistance(), 2)}y");
+                CustomStyleText("Distance:", $"{Math.Round(GetTargetDistance(), 2)}y");
                 CustomStyleText("Hitbox Radius:", LocalPlayer.TargetObject?.HitboxRadius);
-                CustomStyleText("In Melee Range:", CustomComboFunctions.InMeleeRange());
-                CustomStyleText("Relative Position:", CustomComboFunctions.AngleToTarget() is 2 ? "Rear" : (CustomComboFunctions.AngleToTarget() is 1 or 3) ? "Flank" : CustomComboFunctions.AngleToTarget() is 4 ? "Front" : "");
-                CustomStyleText("Health:", $"{CustomComboFunctions.EnemyHealthCurrentHp().ToString("N0")} / {CustomComboFunctions.EnemyHealthMaxHp().ToString("N0")} ({Math.Round(CustomComboFunctions.GetTargetHPPercent(), 2)}%)");
+                CustomStyleText("In Melee Range:", InMeleeRange());
+                CustomStyleText("Relative Position:", AngleToTarget() is 2 ? "Rear" : (AngleToTarget() is 1 or 3) ? "Flank" : AngleToTarget() is 4 ? "Front" : "");
+                CustomStyleText("Health:", $"{EnemyHealthCurrentHp().ToString("N0")} / {EnemyHealthMaxHp().ToString("N0")} ({Math.Round(GetTargetHPPercent(), 2)}%)");
                 ImGui.Indent();
                 if (ImGui.CollapsingHeader("Relative Target Distances"))
                 {
@@ -233,7 +233,7 @@ namespace XIVSlothCombo.Window.Tabs
                     {
                         if (enemy.GameObjectId == Svc.Targets.Target?.GameObjectId) continue;
                         if (!enemy.Character()->InCombat) continue;
-                        var dist = CustomComboFunctions.GetTargetDistance(enemy, Svc.Targets.Target);
+                        var dist = GetTargetDistance(enemy, Svc.Targets.Target);
                         CustomStyleText($"{enemy.Name} ({enemy.GameObjectId}):", $"{dist:F1}");
                     }
                 }
@@ -245,13 +245,13 @@ namespace XIVSlothCombo.Window.Tabs
                 ImGui.Text("Action Info");
                 ImGui.Separator();
                 CustomStyleText("Last Action:", ActionWatching.LastAction == 0 ? string.Empty : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(ActionWatching.LastAction)) ? "Unknown" : ActionWatching.GetActionName(ActionWatching.LastAction))} (ID: {ActionWatching.LastAction})");
-                CustomStyleText("Last Action Cost:", CustomComboFunctions.GetResourceCost(ActionWatching.LastAction));
+                CustomStyleText("Last Action Cost:", GetResourceCost(ActionWatching.LastAction));
                 CustomStyleText("Last Action Type:", ActionWatching.GetAttackType(ActionWatching.LastAction));
                 CustomStyleText("Last Weaponskill:", ActionWatching.GetActionName(ActionWatching.LastWeaponskill));
                 CustomStyleText("Last Spell:", ActionWatching.GetActionName(ActionWatching.LastSpell));
                 CustomStyleText("Last Ability:", ActionWatching.GetActionName(ActionWatching.LastAbility));
-                CustomStyleText("Combo Timer:", $"{CustomComboFunctions.ComboTimer:F1}");
-                CustomStyleText("Combo Action:", CustomComboFunctions.ComboAction == 0 ? string.Empty : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(CustomComboFunctions.ComboAction)) ? "Unknown" : ActionWatching.GetActionName(CustomComboFunctions.ComboAction))} (ID: {CustomComboFunctions.ComboAction})");
+                CustomStyleText("Combo Timer:", $"{ComboTimer:F1}");
+                CustomStyleText("Combo Action:", ComboAction == 0 ? string.Empty : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(ComboAction)) ? "Unknown" : ActionWatching.GetActionName(ComboAction))} (ID: {ComboAction})");
                 CustomStyleText("Cast Time:", $"{LocalPlayer.CurrentCastTime:F2} / {LocalPlayer.TotalCastTime:F2}");
                 CustomStyleText("Cast Action:", LocalPlayer.CastActionId == 0 ? string.Empty : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(LocalPlayer.CastActionId)) ? "Unknown" : ActionWatching.GetActionName(LocalPlayer.CastActionId))} (ID: {LocalPlayer.CastActionId})");
                 CustomStyleText("Animation Lock:", $"{ActionManager.Instance()->AnimationLock:F1}");
@@ -267,10 +267,10 @@ namespace XIVSlothCombo.Window.Tabs
                 {
                     for (int i = 1; i <= 8; i++)
                     {
-                        if (CustomComboFunctions.GetPartySlot(i) is not IBattleChara member || member is null) continue;
+                        if (GetPartySlot(i) is not IBattleChara member || member is null) continue;
                         ImGui.TextUnformatted($"Slot {i} ->");
                         ImGui.SameLine(0, 4f);
-                        CustomStyleText($"{CustomComboFunctions.GetPartySlot(i).Name}", $"({member.ClassJob.GameData.Abbreviation})");
+                        CustomStyleText($"{GetPartySlot(i).Name}", $"({member.ClassJob.GameData.Abbreviation})");
                     }
                 }
                 ImGui.Spacing();

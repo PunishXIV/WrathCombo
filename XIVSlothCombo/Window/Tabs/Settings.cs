@@ -1,8 +1,6 @@
 ﻿using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
-using System;
 using System.Numerics;
-using XIVSlothCombo.Attributes;
 using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Services;
 

@@ -1,10 +1,8 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
-using System;
 using XIVSlothCombo.Combos.JobHelpers.Enums;
 using XIVSlothCombo.CustomComboNS.Functions;
-using XIVSlothCombo.Data;
 using XIVSlothCombo.Extensions;
 
 namespace XIVSlothCombo.Combos.JobHelpers
@@ -26,12 +24,7 @@ namespace XIVSlothCombo.Combos.JobHelpers
                 return CustomComboFunctions.TargetHasEffect(Debuffs.Mug) || CustomComboFunctions.TargetHasEffect(Debuffs.Dokumori);
             }
 
-            internal static bool InMudra => GetInMudra();
-
-            private static bool GetInMudra()
-            {
-                return !CustomComboFunctions.IsOriginal(Ninjutsu);
-            }
+            internal static bool InMudra = false;
         }
 
         internal class MudraCasting : PvE.NIN

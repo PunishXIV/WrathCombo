@@ -128,7 +128,13 @@ namespace XIVSlothCombo
             });
 
             DtrBarEntry ??= Svc.DtrBar.Get("Wrath Combo");
-            DtrBarEntry.OnClick = () => { Service.Configuration.RotationConfig.Enabled = !Service.Configuration.RotationConfig.Enabled; Service.Configuration.Save(); };
+            DtrBarEntry.OnClick = () =>
+            {
+                Service.Configuration.RotationConfig.Enabled = !Service.Configuration.RotationConfig.Enabled;
+                Service.Configuration.Save();
+
+                Svc.Chat.Print("Auto-Rotation set to " + (Service.Configuration.RotationConfig.Enabled ? "ON" : "OFF"));
+            };
             Svc.ClientState.Login += PrintLoginMessage;
             if (Svc.ClientState.IsLoggedIn) ResetFeatures();
 
@@ -185,7 +191,7 @@ namespace XIVSlothCombo
             var autoOn = Service.Configuration.RotationConfig.Enabled;
             DtrBarEntry.Text = new SeString(
                 new IconPayload(autoOn ? BitmapFontIcon.SwordUnsheathed : BitmapFontIcon.SwordSheathed),
-                new TextPayload($"{(Service.Configuration.RotationConfig.Enabled ? ": On" : ": Off")}")
+                new TextPayload($"{(autoOn ? ": On" : ": Off")}")
                 );
         }
 
@@ -601,6 +607,9 @@ namespace XIVSlothCombo
                     {
                         Service.Configuration.RotationConfig.Enabled = !Service.Configuration.RotationConfig.Enabled;
                         Service.Configuration.Save();
+
+                        Svc.Chat.Print("Auto-Rotation set to " + (Service.Configuration.RotationConfig.Enabled ? "ON" : "OFF"));
+
                         break;
                     }
                 default:

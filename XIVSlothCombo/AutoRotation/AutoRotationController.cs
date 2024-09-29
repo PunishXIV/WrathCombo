@@ -6,13 +6,10 @@ using ECommons.GameHelpers;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
-using System.Collections;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.CustomComboNS.Functions;
-using XIVSlothCombo.Extensions;
 using XIVSlothCombo.Services;
 using XIVSlothCombo.Window.Functions;
 using Action = Lumina.Excel.GeneratedSheets.Action;
@@ -21,6 +18,7 @@ namespace XIVSlothCombo.AutoRotation
 {
     internal unsafe static class AutoRotationController
     {
+        static long LastHealAt = 0;
         internal static void Run()
         {
             if (!Service.Configuration.RotationConfig.Enabled || !Player.Available || Svc.Condition[ConditionFlag.Mounted] || (Service.Configuration.RotationConfig.InCombatOnly && !CustomComboFunctions.InCombat()))
@@ -29,7 +27,6 @@ namespace XIVSlothCombo.AutoRotation
             if (!EzThrottler.Throttle("AutoRotController", 150))
                 return;
 
-            var c = 0;
             foreach (var preset in Service.Configuration.AutoActions.OrderByDescending(x => Presets.Attributes[x.Key].AutoAction.IsHeal)
                                                                     .ThenByDescending(x => Presets.Attributes[x.Key].AutoAction.IsAoE))
             {
@@ -45,10 +42,13 @@ namespace XIVSlothCombo.AutoRotation
 
                 var outAct = AutoRotationHelper.InvokeCombo(preset.Key, attributes);
                 var healTarget = AutoRotationHelper.GetSingleTarget(Service.Configuration.RotationConfig.HealerRotationMode);
-                var aoeHeal = HealerTargeting.GetPartyMax(outAct, out int count) <= Service.Configuration.RotationConfig.HealerSettings.AoETargetHPP && count >= 2;
+                var aoeheal = HealerTargeting.CanAoEHeal(outAct);
+
                 if (action.IsHeal)
                 {
-                    AutomateHealing(preset.Key, attributes, gameAct);
+                    if (!AutomateHealing(preset.Key, attributes, gameAct) && Svc.Targets.Target != null && !Svc.Targets.Target.IsHostile())
+                        Svc.Targets.Target = null;
+
                     continue;
                 }
 
@@ -58,8 +58,8 @@ namespace XIVSlothCombo.AutoRotation
                     continue;
                 }
 
-                if (healTarget == null && !aoeHeal)
-                    AutomateDPS(preset.Key, attributes, gameAct);
+                if (healTarget == null && !aoeheal)
+                AutomateDPS(preset.Key, attributes, gameAct);
             }
 
 
@@ -67,6 +67,8 @@ namespace XIVSlothCombo.AutoRotation
 
         private static bool AutomateDPS(CustomComboPreset preset, Presets.PresetAttributes attributes, uint gameAct)
         {
+            if (Svc.Targets.Target != null && !Svc.Targets.Target.IsHostile()) return false;
+
             var mode = Service.Configuration.RotationConfig.DPSRotationMode;
             if (attributes.AutoAction.IsAoE)
             {
@@ -94,13 +96,23 @@ namespace XIVSlothCombo.AutoRotation
         private static bool AutomateHealing(CustomComboPreset preset, Presets.PresetAttributes attributes, uint gameAct)
         {
             var mode = Service.Configuration.RotationConfig.HealerRotationMode;
+            if (Player.Object.IsCasting()) return false;
+
             if (attributes.AutoAction.IsAoE)
             {
-                return AutoRotationHelper.ExecuteAoE(mode, preset, attributes, gameAct);
+                var ret = AutoRotationHelper.ExecuteAoE(mode, preset, attributes, gameAct);
+                if (ret)
+                    LastHealAt = Environment.TickCount64;
+
+                return ret;
             }
             else
             {
-                return AutoRotationHelper.ExecuteST(mode, preset, attributes, gameAct);
+                var ret = AutoRotationHelper.ExecuteST(mode, preset, attributes, gameAct);
+                if (ret)
+                    LastHealAt = Environment.TickCount64;
+
+                return ret;
             }
         }
 
@@ -144,17 +156,16 @@ namespace XIVSlothCombo.AutoRotation
                 if (attributes.AutoAction.IsHeal)
                 {
                     uint outAct = InvokeCombo(preset, attributes, Player.Object);
-                    if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0)
+                    if (!CustomComboFunctions.ActionReady(outAct))
                         return false;
 
-                    if (HealerTargeting.GetPartyMax(outAct, out int count) <= Service.Configuration.RotationConfig.HealerSettings.AoETargetHPP && count >= 2)
+                    if (HealerTargeting.CanAoEHeal(outAct))
                     {
                         var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
                         if (CustomComboFunctions.IsMoving && castTime > 0)
                             return false;
 
-                        ActionManager.Instance()->UseAction(ActionType.Action, outAct);
-                        return true;
+                        return ActionManager.Instance()->UseAction(ActionType.Action, outAct);
                     }
                 }
                 else
@@ -166,7 +177,7 @@ namespace XIVSlothCombo.AutoRotation
                     var target = GetSingleTarget(mode);
                     var sheet = Svc.Data.GetExcelSheet<Action>().GetRow(outAct);
                     var mustTarget = sheet.CanTargetHostile;
-                    var numEnemies = CustomComboFunctions.NumberOfEnemiesInRange(outAct);
+                    var numEnemies = CustomComboFunctions.NumberOfEnemiesInRange(outAct, target);
                     if (numEnemies >= Service.Configuration.RotationConfig.DPSSettings.DPSAoETargets ||
                         (sheet.EffectRange == 0 && sheet.CanTargetSelf && !mustTarget))
                     {
@@ -177,8 +188,7 @@ namespace XIVSlothCombo.AutoRotation
                         if (mustTarget)
                             Svc.Targets.Target = target;
 
-                        ActionManager.Instance()->UseAction(ActionType.Action, outAct, mustTarget && target != null ? target.GameObjectId : Player.Object.GameObjectId);
-                        return true;
+                        return ActionManager.Instance()->UseAction(ActionType.Action, outAct, mustTarget && target != null ? target.GameObjectId : Player.Object.GameObjectId);
                     }
                 }
                 return false;
@@ -204,9 +214,10 @@ namespace XIVSlothCombo.AutoRotation
                 var canUse = canUseSelf || canUseTarget || areaTargeted;
                 if (canUse && inRange)
                 {
-                    Svc.Targets.Target = target;
-                    ActionManager.Instance()->UseAction(ActionType.Action, outAct, canUseTarget ? target.GameObjectId : Player.Object.GameObjectId);
-                    return true;
+                    if (target.IsHostile())
+                        Svc.Targets.Target = target;
+
+                    return ActionManager.Instance()->UseAction(ActionType.Action, outAct, canUseTarget ? target.GameObjectId : Player.Object.GameObjectId);
                 }
 
                 return false;
@@ -243,7 +254,7 @@ namespace XIVSlothCombo.AutoRotation
                 bool isQuest = Service.Configuration.RotationConfig.DPSSettings.QuestPriority && namePlateIcon is 71204 or 71144 or 71224 or 71344;
                 if (Player.Object.GetRole() is CombatRole.Tank && x.TargetObjectId != Player.Object.GameObjectId)
                     return true;
-                
+
                 return isFate || isQuest;
             }
 
@@ -318,13 +329,13 @@ namespace XIVSlothCombo.AutoRotation
                 return target;
             }
 
-            internal static float GetPartyMax(uint outAct, out int count)
+            internal static bool CanAoEHeal(uint outAct)
             {
-                var members = CustomComboFunctions.GetPartyMembers().Where(x => CustomComboFunctions.InActionRange(outAct, x));
-                count = members.Count();
-                if (count == 0) return 0;
-                var avg = members.Average(x => CustomComboFunctions.GetTargetHPPercent(x));
-                return avg;
+                var members = CustomComboFunctions.GetPartyMembers().Where(x => CustomComboFunctions.InActionRange(outAct, x) && CustomComboFunctions.GetTargetHPPercent(x) <= Service.Configuration.RotationConfig.HealerSettings.AoETargetHPP);
+                if (members.Count() < Service.Configuration.RotationConfig.HealerSettings.AoEHealTargetCount)
+                    return false;
+
+                return true;
             }
 
             private static bool TargetHasRegen(IGameObject target)

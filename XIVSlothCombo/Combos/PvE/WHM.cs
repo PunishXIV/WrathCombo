@@ -319,7 +319,10 @@ namespace XIVSlothCombo.Combos.PvE
                     bool plenaryReady = ActionReady(PlenaryIndulgence) && (!Config.WHM_AoEHeals_PlenaryWeave || (Config.WHM_AoEHeals_PlenaryWeave && canWeave));
                     bool divineCaressReady = ActionReady(DivineCaress) && HasEffect(Buffs.DivineGrace);
                     bool assizeReady = ActionReady(Assize) && (!Config.WHM_AoEHeals_AssizeWeave || (Config.WHM_AoEHeals_AssizeWeave && canWeave));
-                    var healTarget = this.OptionalTarget != null ? this.OptionalTarget : GetHealTarget(Config.WHM_AoEHeals_MedicaMO);
+                    var healTarget = this.OptionalTarget ??
+                                     (Config.WHM_AoEHeals_MedicaMO
+                                         ? GetHealTarget(Config.WHM_AoEHeals_MedicaMO)
+                                         : LocalPlayer);
                     var hasMedica2 = FindEffect(Buffs.Medica2, healTarget, LocalPlayer?.GameObjectId);
                     var hasMedica3 = FindEffect(Buffs.Medica3, healTarget, LocalPlayer?.GameObjectId);
 
@@ -349,11 +352,7 @@ namespace XIVSlothCombo.Combos.PvE
                             || hasMedica2 != null && hasMedica2.RemainingTime <= Config.WHM_AoEHeals_MedicaTime // Medica buff, but falling off soon
                             || hasMedica3 != null && hasMedica3.RemainingTime <= Config.WHM_AoEHeals_MedicaTime) // ^
                         && (ActionReady(Medica2) || ActionReady(Medica3)))
-                    {
-                        return LevelChecked(Medica3)
-                            ? Medica3
-                            : Medica2;
-                    }
+                        return LevelChecked(Medica3) ? Medica3 : Medica2;
 
                     if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Cure3)
                         && ActionReady(Cure3)
@@ -375,7 +374,8 @@ namespace XIVSlothCombo.Combos.PvE
                 if (actionID is Cure)
                 {
                     WHMGauge? gauge = GetJobGauge<WHMGauge>();
-                    IGameObject? healTarget = GetHealTarget(Config.WHM_STHeals_UIMouseOver);
+                    IGameObject? healTarget = this.OptionalTarget ?? GetHealTarget(Config.WHM_STHeals_UIMouseOver);
+
                     bool canWeave = CanSpellWeave(actionID, 0.3);
                     bool thinAirReady = LevelChecked(ThinAir) && !HasEffect(Buffs.ThinAir) && GetRemainingCharges(ThinAir) > Config.WHM_STHeals_ThinAir;
                     bool lucidReady = ActionReady(All.LucidDreaming) && LocalPlayer.CurrentMp <= Config.WHM_STHeals_Lucid;

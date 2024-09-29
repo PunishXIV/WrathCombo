@@ -417,33 +417,19 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             return false;
         }
 
-        public unsafe static int NumberOfEnemiesInRange(uint aoeSpell)
+        public unsafe static int NumberOfEnemiesInRange(uint aoeSpell, IGameObject? target)
         {
             ActionWatching.ActionSheet.Values.TryGetFirst(x => x.RowId == aoeSpell, out var sheetSpell);
             bool needsTarget = sheetSpell.CanTargetHostile;
 
-            int count = 0;
-            var enemies = Svc.Objects.Where(x => x != null && x.ObjectKind == ObjectKind.BattleNpc && x.IsTargetable && !x.IsDead).Cast<IBattleNpc>().Where(x => x.BattleNpcKind is BattleNpcSubKind.Enemy or BattleNpcSubKind.BattleNpcPart).ToList();
-
-            for (int i = 0; i < enemies.Count(); i++)
+            int count = sheetSpell.CastType switch
             {
-                var enemyChara = enemies[i];
-
-                if (ActionManager.CanUseActionOnTarget(7, enemyChara.GameObject()))
-                {
-                    var numHit = sheetSpell.CastType switch
-                    {
-                        1 => 1,
-                        2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange) : CanRangedCircleAoe(sheetSpell.EffectRange, enemyChara),
-                        3 => CanConeAoe(sheetSpell.EffectRange),
-                        4 => CanLineAoe(sheetSpell.EffectRange),
-                        _ => 0
-                    };
-                    if (numHit > count)
-                        count = numHit;
-                }
-            }
-
+                1 => 1,
+                2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange) : CanRangedCircleAoe(sheetSpell.EffectRange, target),
+                3 => CanConeAoe(sheetSpell.EffectRange),
+                4 => CanLineAoe(sheetSpell.EffectRange),
+                _ => 0
+            };
 
             return count;
         }
@@ -503,12 +489,13 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         }
 
         // Ranged Circle Aoe 
-        public static int CanRangedCircleAoe(float effectRange, IGameObject target)
+        public static int CanRangedCircleAoe(float effectRange, IGameObject? target)
         {
+            if (target == null) return 0;
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
-                                                                 CustomComboFunctions.GetTargetDistance(target, o) <= effectRange);
+                                                                 PointInCircle(o.Position - target.Position, effectRange + o.HitboxRadius));
         }
 
         // Cone Aoe 

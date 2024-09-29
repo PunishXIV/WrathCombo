@@ -9,7 +9,6 @@ using XIVSlothCombo.CustomComboNS;
 using XIVSlothCombo.CustomComboNS.Functions;
 using static XIVSlothCombo.Combos.JobHelpers.SGEHelper;
 using XIVSlothCombo.Data;
-using XIVSlothCombo.Combos.JobHelpers;
 
 namespace XIVSlothCombo.Combos.PvE
 {
@@ -519,7 +518,7 @@ namespace XIVSlothCombo.Combos.PvE
                     foreach (var prio in Config.SGE_ST_Heals_Priority.Items.OrderBy(x => x))
                     {
                         var index = Config.SGE_ST_Heals_Priority.IndexOf(prio);
-                        var config = SGEHelper.GetMatchingConfigST(index, this.OptionalTarget, out var spell, out bool enabled);
+                        var config = GetMatchingConfigST(index, this.OptionalTarget, out var spell, out bool enabled);
 
                         if (enabled)
                         {
