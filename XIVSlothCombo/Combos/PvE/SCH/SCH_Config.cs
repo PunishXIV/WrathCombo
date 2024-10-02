@@ -128,7 +128,7 @@ namespace XIVSlothCombo.Combos.PvE
                         break;
 
                     case CustomComboPreset.SCH_ST_Heal_Adloquium:
-                        DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, $"Use {Adloquium.ActionName()} on targets at or below HP % even if they have Galvanize\n0 = Only ever use Adloquium on targets without Galvanize\n100 = Always use Adloquium");
+                        DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, $"Start using when below HP %. Set to 100 to disable this check.");
                         DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Ignore Shield Check", $"Warning, will force the use of {Adloquium.ActionName()}, and normal {Physick.ActionName()} maybe unavailable.", 2, 0);
                         DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, $"Check for Sage {SGE.EukrasianDiagnosis.ActionName()}/{SGE.EukrasianPrognosis.ActionName()}", "Enable to not override an existing Sage's shield.", 2, 1);
                         break;
