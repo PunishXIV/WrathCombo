@@ -8,8 +8,14 @@ namespace XIVSlothCombo.CustomComboNS.Functions
 {
     internal abstract partial class CustomComboFunctions
     {
-        /// <summary> Checks if player is in a party </summary>
-        public static bool IsInParty() => (Svc.Party.PartyId > 0);
+        /// <summary> Checks if the player is in a party. Optionally, refine by minimum party size. </summary>
+        /// <param name="partySize"> The minimum amount of party members required. </param>
+        public static bool IsInParty(int? partySize = null)
+        {
+            if (Svc.Party.PartyId > 0) return partySize == null || Svc.Party.Length >= partySize;
+
+            else return false;
+        }
 
         /// <summary> Gets the party list </summary>
         /// <returns> Current party list. </returns>

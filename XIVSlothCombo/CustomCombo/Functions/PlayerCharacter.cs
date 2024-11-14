@@ -21,6 +21,10 @@ namespace XIVSlothCombo.CustomComboNS.Functions
         /// <returns> A value indicating whether the player is in combat. </returns>
         public static bool InCombat() => Svc.Condition[ConditionFlag.InCombat];
 
+        /// <summary> Find if the player is bound by duty. </summary>
+        /// <returns> A value indicating whether the player is bound by duty. </returns>
+        public static bool InDuty() => Svc.Condition[ConditionFlag.BoundByDuty] || Svc.Condition[ConditionFlag.BoundByDuty56] || Svc.Condition[ConditionFlag.BoundByDuty95];
+
         /// <summary> Find if the player has a pet present. </summary>
         /// <returns> A value indicating whether the player has a pet (fairy/carbuncle) present. </returns>
         public static bool HasPetPresent() => Svc.Buddies.PetBuddy != null;

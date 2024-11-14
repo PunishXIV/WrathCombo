@@ -6,6 +6,7 @@ using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using XIVSlothCombo.Attributes;
@@ -110,7 +111,8 @@ namespace XIVSlothCombo.Window
 
             using (var leftChild = ImRaii.Child($"###SlothLeftSide", regionSize with { Y = topLeftSideHeight }, false, ImGuiWindowFlags.NoDecoration))
             {
-                if (ThreadLoadImageHandler.TryGetTextureWrap(@"https://github.com/Taurenkey/XIVSlothCombo/blob/main/res/plugin/xivslothcombo.png?raw=true", out var logo))
+                var imagePath = Path.Combine(Svc.PluginInterface.AssemblyLocation.Directory?.FullName!, "images\\wrathcombo.png");
+                if (ThreadLoadImageHandler.TryGetTextureWrap(imagePath ?? "", out var logo))
                 {
                     ImGuiEx.LineCentered("###SlothLogo", () =>
                     {

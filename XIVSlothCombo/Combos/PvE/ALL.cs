@@ -20,6 +20,7 @@ namespace XIVSlothCombo.Combos.PvE
             Provoke = 7533,
             Shirk = 7537,
             Reprisal = 7535,
+            ArmsLength = 7548,
             Esuna = 7568,
             Rescue = 7571,
             SolidReason = 232,
@@ -45,12 +46,14 @@ namespace XIVSlothCombo.Combos.PvE
         {
             public const ushort
                 Weakness = 43,
+                WellFed = 48,
                 Medicated = 49,
                 Bloodbath = 84,
                 Swiftcast = 167,
                 Rampart = 1191,
                 Peloton = 1199,
                 LucidDreaming = 1204,
+                ArmsLength = 1209,
                 TrueNorth = 1250,
                 Sprint = 50;
         }

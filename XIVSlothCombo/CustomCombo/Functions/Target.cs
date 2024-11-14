@@ -148,18 +148,28 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             return healTarget;
         }
 
-        /// <summary> Determines if the enemy can be interrupted if they are currently casting. </summary>
-        /// <returns> Bool indicating whether they can be interrupted or not. </returns>
-        public static bool CanInterruptEnemy()
+        /// <summary> Determines if the enemy is casting an action. Optionally, limit by total cast time. </summary>
+        /// <param name="minTotalCast"> The minimum total cast time required, in seconds. </param>
+        /// <returns> Bool indicating whether they are casting an action or not. </returns>
+        public static bool TargetIsCasting(float? minTotalCast = null)
         {
-            if (CurrentTarget is null)
-                return false;
-            if (CurrentTarget is not IBattleChara chara)
-                return false;
-            if (chara.IsCasting)
-                return chara.IsCastInterruptible;
+            if (CurrentTarget is null || CurrentTarget is not IBattleChara chara) return false;
 
-            return false;
+            if (chara.IsCasting) return minTotalCast == null || chara.TotalCastTime >= minTotalCast;
+
+            else return false;
+        }
+
+        /// <summary> Determines if the enemy is casting an action that can be interrupted. Optionally, limit by current cast time. </summary>
+        /// <param name="minCurrentCast"> The minimum current cast time required, in seconds. </param>
+        /// <returns> Bool indicating whether they can be interrupted or not. </returns>
+        public static bool CanInterruptEnemy(float? minCurrentCast = null)
+        {
+            if (CurrentTarget is null || CurrentTarget is not IBattleChara chara) return false;
+
+            if (chara.IsCasting && chara.IsCastInterruptible) return minCurrentCast == null || chara.CurrentCastTime >= minCurrentCast;
+
+            else return false;
         }
 
         /// <summary> Sets the player's target. </summary>
