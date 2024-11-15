@@ -2,6 +2,7 @@
 using ECommons.DalamudServices;
 using System.Collections.Generic;
 using System.Linq;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using XIVSlothCombo.Services;
 
 namespace XIVSlothCombo.CustomComboNS.Functions
@@ -19,23 +20,23 @@ namespace XIVSlothCombo.CustomComboNS.Functions
 
         /// <summary> Gets the party list </summary>
         /// <returns> Current party list. </returns>
-        public static List<IBattleChara> GetPartyMembers()
+        public static List<IBattleChara?> GetPartyMembers()
         {
-            var output = new List<IBattleChara>();
+            List<IBattleChara?> output = new List<IBattleChara?>();
             for (int i = 1; i <= 8; i++)
             {
-                var member = GetPartySlot(i);
+                IGameObject? member = GetPartySlot(i);
                 if (member != null)
                     output.Add(member as IBattleChara);
             }
             return output;
         }
 
-        public unsafe static IGameObject? GetPartySlot(int slot)
+        public static unsafe IGameObject? GetPartySlot(int slot)
         {
             try
             {
-                var o = slot switch
+                GameObject* o = slot switch
                 {
                     1 => GetTarget(TargetType.Self),
                     2 => GetTarget(TargetType.P2),

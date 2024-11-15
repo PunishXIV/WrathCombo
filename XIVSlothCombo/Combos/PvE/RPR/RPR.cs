@@ -64,7 +64,7 @@ internal partial class RPR
         Soulsow = 24387,
         HarvestMoon = 24388;
 
-    protected static RPRGauge? Gauge = GetJobGauge<RPRGauge>();
+    protected static RPRGauge Gauge = GetJobGauge<RPRGauge>();
 
     public static class Buffs
     {

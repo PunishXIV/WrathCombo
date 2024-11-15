@@ -36,10 +36,10 @@ namespace XIVSlothCombo.CustomComboNS.Functions
             if (LocalPlayer is null)
                 return 0;
 
-            IBattleChara chara = optionalTarget != null ? optionalTarget as IBattleChara : CurrentTarget != null ? CurrentTarget as IBattleChara : null;
+            IBattleChara? chara = optionalTarget != null ? optionalTarget as IBattleChara : CurrentTarget != null ? CurrentTarget as IBattleChara : null;
             if (chara is null) return 0;
 
-            IBattleChara sourceChara = source != null ? source as IBattleChara : LocalPlayer;
+            IBattleChara? sourceChara = source != null ? source as IBattleChara : LocalPlayer;
 
             if (chara.GameObjectId == sourceChara.GameObjectId)
                 return 0;
