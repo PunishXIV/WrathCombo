@@ -38,6 +38,7 @@ namespace XIVSlothCombo
     public sealed partial class XIVSlothCombo : IDalamudPlugin
     {
         private const string Command = "/scombo";
+        private const string CommandAlias = "/wrath";
 
         private readonly ConfigWindow ConfigWindow;
         private readonly TargetHelper TargetHelper;
@@ -124,6 +125,11 @@ namespace XIVSlothCombo
             Svc.PluginInterface.UiBuilder.OpenConfigUi += OnOpenConfigUi;
 
             Svc.Commands.AddHandler(Command, new CommandInfo(OnCommand)
+            {
+                HelpMessage = "Open a window to edit custom combo settings.",
+                ShowInHelp = true,
+            });
+            Svc.Commands.AddHandler(CommandAlias, new CommandInfo(OnCommand)
             {
                 HelpMessage = "Open a window to edit custom combo settings.",
                 ShowInHelp = true,
@@ -274,6 +280,7 @@ namespace XIVSlothCombo
             ws.RemoveAllWindows();
             Svc.DtrBar.Remove("Wrath Combo");
             Svc.Commands.RemoveHandler(Command);
+            Svc.Commands.RemoveHandler(CommandAlias);
             Svc.Framework.Update -= OnFrameworkUpdate;
             Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
             Svc.PluginInterface.UiBuilder.Draw -= DrawUI;
