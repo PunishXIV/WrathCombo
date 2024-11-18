@@ -421,7 +421,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                             // Sheltron Overcap Protection
                             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Sheltron) && LevelChecked(Sheltron) &&
-                                Gauge.OathGauge >= Config.PLD_ST_SheltronOption && PlayerHealthPercentageHp() < 100 &&
+                                Gauge.OathGauge >= Config.PLD_ST_SheltronOption && (PlayerHealthPercentageHp() < 100 || IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_SheltronHealth)) &&
                                 InCombat() && !HasEffect(Buffs.Sheltron) && !HasEffect(Buffs.HolySheltron))
                                 return OriginalHook(Sheltron);
                         }

@@ -2895,6 +2895,10 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Sheltron Option", "Adds Sheltron to Advanced Mode.\n- Uses only when taking damage.\n- Will not interrupt burst phase.\n- Required gauge threshold:", PLD.JobID, 4)]
         PLD_ST_AdvancedMode_Sheltron = 11007,
 
+        [ParentCombo(PLD_ST_AdvancedMode_Sheltron)]
+        [CustomComboInfo("Sheltron Health Ignore Option", "Ignore health check\n- Useful for offtank setup with reaction to intervention the target's target", PLD.JobID, 4)]
+        PLD_ST_AdvancedMode_SheltronHealth = 11038,
+
         [ParentCombo(PLD_ST_AdvancedMode)]
         [CustomComboInfo("Goring Blade Option", "Adds Goring Blade to Advanced Mode.\n- Prefers to use after Requiescat.", PLD.JobID, 6)]
         PLD_ST_AdvancedMode_GoringBlade = 11008,
