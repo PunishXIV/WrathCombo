@@ -4848,31 +4848,35 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Storm's Eye Combo Feature", "Replace Storm's Eye with its combo chain.", WAR.JobID, 3)]
         War_ST_StormsEye = 18025,
 
+        [ReplaceSkill(WAR.StormsPath)]
+        [CustomComboInfo("Storm's Eye Maintenance Feature", "Replace Storm's Path with Storm's Eye when the debuff is not present or less than 20s.", WAR.JobID, 4)]
+        WAR_StormsEye_Maintenance = 18026,
+
         [ReplaceSkill(WAR.InnerRelease)]
         [CustomComboInfo("Primal Combo Feature", "Turns Inner Release into the Primal combo on use.", WAR.JobID, 3)]
-        WAR_PrimalCombo_InnerRelease = 18026,
+        WAR_PrimalCombo_InnerRelease = 18027,
 
         [ParentCombo(WAR_InfuriateFellCleave)]
         [CustomComboInfo("Inner Release Priority Option", "Prevents the use of Infuriate while you have Inner Release stacks available.", WAR.JobID)]
-        WAR_InfuriateFellCleave_IRFirst = 18027,
+        WAR_InfuriateFellCleave_IRFirst = 18028,
 
         [Variant]
         [VariantParent(WAR_ST_Advanced, WAR_AoE_Advanced)]
         [CustomComboInfo("Spirit Dart Option", "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", WAR.JobID)]
-        WAR_Variant_SpiritDart = 18028,
+        WAR_Variant_SpiritDart = 18029,
 
         [Variant]
         [VariantParent(WAR_ST_Advanced, WAR_AoE_Advanced)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", WAR.JobID)]
-        WAR_Variant_Cure = 18029,
+        WAR_Variant_Cure = 18030,
 
         [Variant]
         [VariantParent(WAR_ST_Advanced, WAR_AoE_Advanced)]
         [CustomComboInfo("Ultimatum Option", "Use Variant Ultimatum on cooldown.", WAR.JobID)]
-        WAR_Variant_Ultimatum = 18030,
+        WAR_Variant_Ultimatum = 18031,
         #endregion
 
-        // Last value = 18030
+        // Last value = 18031
 
         #endregion
 
