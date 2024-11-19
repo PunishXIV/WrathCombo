@@ -85,7 +85,7 @@ namespace XIVSlothCombo.Combos.PvE
         internal static bool SongIsWandererMinuet(Song value) => value == Song.WANDERER;
         #endregion
 
-        // Replace HS/BS with SS/RA when procced, Apex feature added. 
+        // Replace HS/BS with SS/RA when procced, Apex feature added.
         internal class BRD_StraightShotUpgrade : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_StraightShotUpgrade;
@@ -97,25 +97,18 @@ namespace XIVSlothCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.BRD_DoTMaintainance))
                     {
-                        bool venomous = TargetHasEffect(Debuffs.VenomousBite);
-                        bool windbite = TargetHasEffect(Debuffs.Windbite);
-                        bool caustic = TargetHasEffect(Debuffs.CausticBite);
-                        bool stormbite = TargetHasEffect(Debuffs.Stormbite);
-                        float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
-                        float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
-                        float causticRemaining = GetDebuffRemainingTime(Debuffs.CausticBite);
-                        float stormRemaining = GetDebuffRemainingTime(Debuffs.Stormbite);
-
                         if (InCombat())
                         {
-                            if (LevelChecked(IronJaws) &&
-                                ((venomous && venomRemaining < 4) || (caustic && causticRemaining < 4)) ||
-                                (windbite && windRemaining < 4) || (stormbite && stormRemaining < 4))
-                                return IronJaws;
-                            if (!LevelChecked(IronJaws) && venomous && venomRemaining < 4)
-                                return VenomousBite;
-                            if (!LevelChecked(IronJaws) && windbite && windRemaining < 4)
-                                return Windbite;
+                            bool canIronJaws = LevelChecked(IronJaws);
+                            Status? purple = FindTargetEffect(Debuffs.CausticBite) ?? FindTargetEffect(Debuffs.VenomousBite);
+                            Status? blue = FindTargetEffect(Debuffs.Stormbite) ?? FindTargetEffect(Debuffs.Windbite);
+                            float purpleRemaining = purple?.RemainingTime ?? 0;
+                            float blueRemaining = blue?.RemainingTime ?? 0;
+
+                            if (purple is not null && purpleRemaining < 4)
+                                return canIronJaws ? IronJaws : VenomousBite;
+                            if (blue is not null && blueRemaining < 4)
+                                return canIronJaws ? IronJaws : Windbite;
                         }
                     }
 
@@ -123,16 +116,15 @@ namespace XIVSlothCombo.Combos.PvE
                     {
                         BRDGauge? gauge = GetJobGauge<BRDGauge>();
 
-                        if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
-                            return ApexArrow;
                         if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
                             return BlastArrow;
+                        if (gauge.SoulVoice == 100)
+                            return ApexArrow;
                     }
 
                     if (HasEffect(Buffs.HawksEye) || HasEffect(Buffs.Barrage))
                         return OriginalHook(StraightShot);
                 }
-
                 return actionID;
             }
         }
@@ -145,66 +137,41 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is IronJaws)
                 {
+                    Status? purple = FindTargetEffect(Debuffs.CausticBite) ?? FindTargetEffect(Debuffs.VenomousBite);
+                    Status? blue = FindTargetEffect(Debuffs.Stormbite) ?? FindTargetEffect(Debuffs.Windbite);
+                    float purpleRemaining = purple?.RemainingTime ?? 0;
+                    float blueRemaining = blue?.RemainingTime ?? 0;
 
+                    // Before Iron Jaws: Alternate between DoTs
                     if (!LevelChecked(IronJaws))
-                    {
-                        Status? venomous = FindTargetEffect(Debuffs.VenomousBite);
-                        Status? windbite = FindTargetEffect(Debuffs.Windbite);
-                        float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
-                        float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
+                        return LevelChecked(Windbite) && blueRemaining <= purpleRemaining ? Windbite : VenomousBite;
 
-                        if (venomous is not null && windbite is not null)
-                        {
-                            if (LevelChecked(VenomousBite) && venomRemaining < windRemaining)
-                                return VenomousBite;
-                            if (LevelChecked(Windbite))
-                                return Windbite;
-                        }
+                    // At least Lv56 (Iron Jaws) from here on...
 
-                        if (LevelChecked(VenomousBite) && (!LevelChecked(Windbite) || windbite is not null))
-                            return VenomousBite;
-                        if (LevelChecked(Windbite))
-                            return Windbite;
-                    }
+                    // DoT application takes priority, as Iron Jaws always cuts ticks
+                    if (blue is null)
+                        return OriginalHook(Windbite);
+                    if (purple is null)
+                        return OriginalHook(VenomousBite);
 
-                    if (!LevelChecked(Stormbite))
-                    {
-                        bool venomous = TargetHasEffect(Debuffs.VenomousBite);
-                        bool windbite = TargetHasEffect(Debuffs.Windbite);
-
-                        if (LevelChecked(IronJaws) && venomous && windbite)
-                            return IronJaws;
-                        if (LevelChecked(VenomousBite) && windbite)
-                            return VenomousBite;
-                        if (LevelChecked(Windbite))
-                            return Windbite;
-                    }
-
-                    bool caustic = TargetHasEffect(Debuffs.CausticBite);
-                    bool stormbite = TargetHasEffect(Debuffs.Stormbite);
-
-                    if (LevelChecked(IronJaws) && caustic && stormbite)
+                    // DoT refresh over Apex Option
+                    if (purpleRemaining < 4 || blueRemaining < 4)
                         return IronJaws;
-                    if (LevelChecked(CausticBite) && stormbite)
-                        return CausticBite;
-                    if (LevelChecked(Stormbite))
-                        return Stormbite;
 
-                    if (IsEnabled(CustomComboPreset.BRD_IronJawsApex) && LevelChecked(ApexArrow))
+                    // Apex Option
+                    if (IsEnabled(CustomComboPreset.BRD_IronJawsApex))
                     {
                         BRDGauge? gauge = GetJobGauge<BRDGauge>();
 
                         if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
                             return BlastArrow;
-                        if (gauge.SoulVoice == 100 && IsOffCooldown(ApexArrow))
+                        if (gauge.SoulVoice == 100)
                             return ApexArrow;
                     }
                 }
-
                 return actionID;
             }
         }
-
         internal class BRD_IronJaws_Alternate : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_IronJaws_Alternate;
@@ -213,58 +180,22 @@ namespace XIVSlothCombo.Combos.PvE
             {
                 if (actionID is IronJaws)
                 {
-                    if (!LevelChecked(IronJaws))
-                    {
-                        Status? venomous = FindTargetEffect(Debuffs.VenomousBite);
-                        Status? windbite = FindTargetEffect(Debuffs.Windbite);
+                    Status? purple = FindTargetEffect(Debuffs.CausticBite) ?? FindTargetEffect(Debuffs.VenomousBite);
+                    Status? blue = FindTargetEffect(Debuffs.Stormbite) ?? FindTargetEffect(Debuffs.Windbite);
+                    float purpleRemaining = purple?.RemainingTime ?? 0;
+                    float blueRemaining = blue?.RemainingTime ?? 0;
 
-                        if (venomous is not null && windbite is not null)
-                        {
-                            float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
-                            float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
-
-                            if (LevelChecked(VenomousBite) && venomRemaining < windRemaining)
-                                return VenomousBite;
-                            if (LevelChecked(Windbite))
-                                return Windbite;
-                        }
-
-                        if (LevelChecked(VenomousBite) && (!LevelChecked(Windbite) || windbite is not null))
-                            return VenomousBite;
-                        if (LevelChecked(Windbite))
-                            return Windbite;
-                    }
-
-                    if (!LevelChecked(Stormbite))
-                    {
-                        bool venomous = TargetHasEffect(Debuffs.VenomousBite);
-                        bool windbite = TargetHasEffect(Debuffs.Windbite);
-                        float venomRemaining = GetDebuffRemainingTime(Debuffs.VenomousBite);
-                        float windRemaining = GetDebuffRemainingTime(Debuffs.Windbite);
-
-                        if (LevelChecked(IronJaws) && venomous && windbite &&
-                            (venomRemaining < 4 || windRemaining < 4))
-                            return IronJaws;
-                        if (LevelChecked(VenomousBite) && windbite)
-                            return VenomousBite;
-                        if (LevelChecked(Windbite))
-                            return Windbite;
-                    }
-
-                    bool caustic = TargetHasEffect(Debuffs.CausticBite);
-                    bool stormbite = TargetHasEffect(Debuffs.Stormbite);
-                    float causticRemaining = GetDebuffRemainingTime(Debuffs.CausticBite);
-                    float stormRemaining = GetDebuffRemainingTime(Debuffs.Stormbite);
-
-                    if (LevelChecked(IronJaws) && caustic && stormbite &&
-                        (causticRemaining < 4 || stormRemaining < 4))
+                    // Iron Jaws only if it is applicable
+                    if (LevelChecked(IronJaws) && (
+                        (purple is not null && purpleRemaining < 4) ||
+                        (blue is not null && blueRemaining < 4)))
                         return IronJaws;
-                    if (LevelChecked(CausticBite) && stormbite)
-                        return CausticBite;
-                    if (LevelChecked(Stormbite))
-                        return Stormbite;
-                }
 
+                    // Otherwise alternate between DoTs as needed
+                    return LevelChecked(Windbite) && blueRemaining <= purpleRemaining ?
+                        OriginalHook(Windbite) :
+                        OriginalHook(VenomousBite);
+                }
                 return actionID;
             }
         }
@@ -468,7 +399,7 @@ namespace XIVSlothCombo.Combos.PvE
                             else if (rainOfDeathCharges > 0)
                                 return OriginalHook(RainOfDeath);
                         }
-                        //Moved Below ogcds as it was preventing them from happening. 
+                        //Moved Below ogcds as it was preventing them from happening.
                         if (HasEffect(Buffs.RadiantEncoreReady) && !JustUsed(RadiantFinale) && GetCooldownElapsed(BattleVoice) >= 4.2f && IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs))
                             return OriginalHook(RadiantEncore);
 
@@ -512,17 +443,14 @@ namespace XIVSlothCombo.Combos.PvE
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
                     bool songArmy = gauge.Song == Song.ARMY;
                     bool songWanderer = gauge.Song == Song.WANDERER;
-                    bool minuetReady = LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet);
-                    bool balladReady = LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad);
-                    bool paeonReady = LevelChecked(ArmysPaeon) && IsOffCooldown(ArmysPaeon);
 
                     if (gauge.SongTimer < 1 || songArmy)
                     {
-                        if (minuetReady)
+                        if (LevelChecked(WanderersMinuet) && IsOffCooldown(WanderersMinuet))
                             return WanderersMinuet;
-                        if (balladReady)
+                        if (LevelChecked(MagesBallad) && IsOffCooldown(MagesBallad))
                             return MagesBallad;
-                        if (paeonReady)
+                        if (LevelChecked(ArmysPaeon) && IsOffCooldown(ArmysPaeon))
                             return ArmysPaeon;
                     }
 
@@ -551,17 +479,15 @@ namespace XIVSlothCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.BRD_Apex))
                     {
                         BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                        bool blastReady = LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady);
 
-                        if (LevelChecked(ApexArrow) && gauge.SoulVoice == 100)
-                            return ApexArrow;
-                        if (blastReady)
+                        if (LevelChecked(BlastArrow) && HasEffect(Buffs.BlastArrowReady))
                             return BlastArrow;
+                        if (gauge.SoulVoice == 100)
+                            return ApexArrow;
                     }
 
-                    bool wideVolleyReady = LevelChecked(WideVolley) && HasEffect(Buffs.HawksEye);
-
-                    if (IsEnabled(CustomComboPreset.BRD_AoE_Combo) && wideVolleyReady)
+                    if (IsEnabled(CustomComboPreset.BRD_AoE_Combo) &&
+                        LevelChecked(WideVolley) && HasEffect(Buffs.HawksEye))
                         return OriginalHook(WideVolley);
                 }
 
@@ -619,7 +545,7 @@ namespace XIVSlothCombo.Combos.PvE
                         // Limit optimisation to when you are high enough level to benefit from it.
                         if (LevelChecked(WanderersMinuet))
                         {
-                            // 43s of Wanderer's Minute, ~36s of Mage's Ballad, and ~43s of Army's Paeon    
+                            // 43s of Wanderer's Minute, ~36s of Mage's Ballad, and ~43s of Army's Paeon
                             bool minuetReady = IsOffCooldown(WanderersMinuet);
                             bool balladReady = IsOffCooldown(MagesBallad);
                             bool paeonReady = IsOffCooldown(ArmysPaeon);
@@ -737,7 +663,7 @@ namespace XIVSlothCombo.Combos.PvE
                                         (HasEffect(Buffs.BattleVoice) || battleVoiceCD > 10) &&
                                         (HasEffect(Buffs.RadiantFinale) || radiantCD > 10 ||
                                         !LevelChecked(RadiantFinale)))
-                                        return Sidewinder;
+                                return Sidewinder;
                                 }
                                 else return Sidewinder;
                             }
@@ -1093,7 +1019,7 @@ namespace XIVSlothCombo.Combos.PvE
                             else if (rainOfDeathCharges > 0)
                                 return OriginalHook(RainOfDeath);
                         }
-                        //Moved Below ogcds as it was preventing them from happening. 
+                        //Moved Below ogcds as it was preventing them from happening.
                         if (HasEffect(Buffs.RadiantEncoreReady) && !JustUsed(RadiantFinale) && GetCooldownElapsed(BattleVoice) >= 4.2f)
                             return OriginalHook(RadiantEncore);
 
@@ -1173,7 +1099,7 @@ namespace XIVSlothCombo.Combos.PvE
                         // Limit optimisation to when you are high enough level to benefit from it.
                         if (LevelChecked(WanderersMinuet))
                         {
-                            // 43s of Wanderer's Minute, ~36s of Mage's Ballad, and ~43s of Army's Paeon    
+                            // 43s of Wanderer's Minute, ~36s of Mage's Ballad, and ~43s of Army's Paeon
                             bool minuetReady = IsOffCooldown(WanderersMinuet);
                             bool balladReady = IsOffCooldown(MagesBallad);
                             bool paeonReady = IsOffCooldown(ArmysPaeon);
@@ -1289,7 +1215,7 @@ namespace XIVSlothCombo.Combos.PvE
                                     (HasEffect(Buffs.BattleVoice) || battleVoiceCD > 10) &&
                                     (HasEffect(Buffs.RadiantFinale) || radiantCD > 10 ||
                                     !LevelChecked(RadiantFinale)))
-                                    return Sidewinder;
+                                return Sidewinder;
                             }
                             else return Sidewinder;
                         }
