@@ -1,4 +1,8 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
@@ -7,8 +11,6 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using System;
-using System.Linq;
 using XIVSlothCombo.Combos;
 using XIVSlothCombo.Combos.PvE;
 using XIVSlothCombo.CustomComboNS.Functions;
@@ -24,7 +26,9 @@ namespace XIVSlothCombo.AutoRotation
     {
         static long LastHealAt = 0;
 
-        static Func<IBattleChara, bool> RezQuery => x => x.IsDead && CustomComboFunctions.FindEffectOnMember(2648, x) == null && CustomComboFunctions.FindEffectOnMember(148, x) == null && x.IsTargetable();
+        private static Func<IBattleChara, bool> RezQuery => x =>
+            x.IsDead && CustomComboFunctions.FindEffectOnMember(2648, x) == null &&
+            CustomComboFunctions.FindEffectOnMember(148, x) == null && x.IsTargetable;
 
         internal static void Run()
         {
@@ -136,7 +140,9 @@ namespace XIVSlothCombo.AutoRotation
 
             if (regenSpell != 0 && Svc.Targets.FocusTarget != null && (!CustomComboFunctions.MemberHasEffect(regenBuff, Svc.Targets.FocusTarget, true, out var regen) || regen?.RemainingTime <= 5f))
             {
-                var query = Svc.Objects.Where(x => !x.IsDead && x.ObjectKind == Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc).Cast<IBattleNpc>().Where(x => x.BattleNpcKind == Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind.Enemy && x.IsTargetable());
+                IEnumerable<IBattleNpc> query = Svc.Objects
+                    .Where(x => !x.IsDead && x.ObjectKind == ObjectKind.BattleNpc).Cast<IBattleNpc>()
+                    .Where(x => x.BattleNpcKind == BattleNpcSubKind.Enemy && x.IsTargetable);
                 if (!query.Any())
                     return;
 
@@ -412,7 +418,7 @@ namespace XIVSlothCombo.AutoRotation
 
         public class DPSTargeting
         {
-            public static System.Collections.Generic.IEnumerable<IGameObject> BaseSelection => Svc.Objects.Any(x => x is IBattleChara chara && x.IsHostile() && CustomComboFunctions.IsInRange(x) && !x.IsDead && CustomComboFunctions.IsInLineOfSight(x) && IsPriority(x)) ? Svc.Objects.Where(x => x is IBattleChara chara && x.IsHostile() && CustomComboFunctions.IsInRange(x) && !x.IsDead && x.IsTargetable && CustomComboFunctions.IsInLineOfSight(x) && IsPriority(x)) :
+            public static IEnumerable<IGameObject> BaseSelection => Svc.Objects.Any(x => x is IBattleChara chara && x.IsHostile() && CustomComboFunctions.IsInRange(x) && !x.IsDead && CustomComboFunctions.IsInLineOfSight(x) && IsPriority(x)) ? Svc.Objects.Where(x => x is IBattleChara chara && x.IsHostile() && CustomComboFunctions.IsInRange(x) && !x.IsDead && x.IsTargetable && CustomComboFunctions.IsInLineOfSight(x) && IsPriority(x)) :
                                                                                                                                         Svc.Objects.Where(x => x is IBattleChara chara && x.IsHostile() && CustomComboFunctions.IsInRange(x) && !x.IsDead && x.IsTargetable && CustomComboFunctions.IsInLineOfSight(x));
 
             private static bool IsPriority(IGameObject x)
