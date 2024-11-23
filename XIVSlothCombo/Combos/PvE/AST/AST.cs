@@ -150,6 +150,14 @@ namespace XIVSlothCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
+
+                bool AlternateMode = GetIntOptionAsBool(Config.AST_DPS_AltMode); //(0 or 1 radio values)
+
+                if ((!AlternateMode && !MaleficList.Contains(actionID)) ||
+                    (AlternateMode && !CombustList.ContainsKey(actionID)))
+                    return actionID;
+
+
                 int spellsSinceDraw = ActionWatching.CombatActions.Any(x => x == OriginalHook(AstralDraw)) ? ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Malefic), OriginalHook(AstralDraw)) +
                     ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Combust), OriginalHook(AstralDraw)) +
                     ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Gravity), OriginalHook(AstralDraw)) : Config.AST_ST_DPS_Play_SpeedSetting;
@@ -159,22 +167,18 @@ namespace XIVSlothCombo.Combos.PvE
                     spellsSinceDraw = 1;
                 }
                 
-                bool AlternateMode = GetIntOptionAsBool(Config.AST_DPS_AltMode); //(0 or 1 radio values)
                 bool inOpener = IsEnabled(CustomComboPreset.AST_ST_DPS_Opener) && MaleficCount < 6;
 
                 // Out of combat Card Draw
-                if (((!AlternateMode && MaleficList.Contains(actionID)) ||
-                    (AlternateMode && CombustList.ContainsKey(actionID)) &&
-                    !InCombat()))
+                if (!InCombat())
                 {
                     if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
                         ActionReady(OriginalHook(AstralDraw)) && (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards)))
                         return OriginalHook(AstralDraw);
                 }
-                //In combat
-                if (((!AlternateMode && MaleficList.Contains(actionID)) ||
-                     (AlternateMode && CombustList.ContainsKey(actionID))) &&
-                     InCombat())
+
+                // In combat
+                else
                 {
                     //Variant stuff
                     if (IsEnabled(CustomComboPreset.AST_Variant_Rampart) &&
@@ -246,6 +250,7 @@ namespace XIVSlothCombo.Combos.PvE
 
                     //End opener
 
+                    // Lightspeed
                     if (IsEnabled(CustomComboPreset.AST_DPS_LightSpeed) &&
                         ActionReady(Lightspeed) &&
                         GetTargetHPPercent() > Config.AST_DPS_LightSpeedOption &&
@@ -254,30 +259,14 @@ namespace XIVSlothCombo.Combos.PvE
                         return Lightspeed;
 
 
-
+                    // Lucid Dreaming
                     if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
                         LocalPlayer.CurrentMp <= Config.AST_LucidDreaming &&
                         CanSpellWeave(actionID))
                         return All.LucidDreaming;
 
-
-                    //Play Card
-                    if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
-                        ActionReady(Play1) &&
-                        Gauge.DrawnCards[0] is not CardType.NONE &&
-                        CanSpellWeave(actionID) &&
-                        spellsSinceDraw >= Config.AST_ST_DPS_Play_SpeedSetting)
-                        return OriginalHook(Play1);
-
-                    //Card Draw
-                    if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
-                        ActionReady(OriginalHook(AstralDraw)) &&
-                        (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards)) &&
-                        CanDelayedWeave(actionID))
-                        return OriginalHook(AstralDraw);
-
-                    //Divination
+                    // Divination
                     if (IsEnabled(CustomComboPreset.AST_DPS_Divination) &&
                         ActionReady(Divination) &&
                         !HasEffectAny(Buffs.Divination) && //Overwrite protection
@@ -286,23 +275,81 @@ namespace XIVSlothCombo.Combos.PvE
                         ActionWatching.NumberOfGcdsUsed >= 3)
                         return Divination;
 
-                    //Earthly Star
+                    // Prioritize Oracle if it's about to expire
+                    if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
+                        HasEffect(Buffs.Divining) &&
+                        GetBuffRemainingTime(Buffs.Divining) <= 3f &&
+                        CanSpellWeave(actionID))
+                        return Oracle;
+
+                    // Play Card
+                    if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
+                        ActionReady(Play1) &&
+                        Gauge.DrawnCards[0] is not CardType.NONE &&
+                        CanSpellWeave(actionID) &&
+                        spellsSinceDraw >= Config.AST_ST_DPS_Play_SpeedSetting)
+                    {
+                        if (Config.AST_DPS_AutoPlay_HoldForBurst)
+                        {
+                            // false = use divination
+                            bool inBurst = GetIntOptionAsBool(Config.AST_DPS_AutoPlay_HoldForBurst_BurstIndicator) switch
+                            {
+                                true when Gauge.DrawnCards[0] is CardType.BALANCE => GetCooldownRemainingTime(OriginalHook(AstralDraw)) <= Config.AST_DPS_AutoPlay_HoldForBurst_SimpleCalculationThreshold,
+                                true when Gauge.DrawnCards[0] is CardType.SPEAR => true,
+                                false when Gauge.DrawnCards[0] is CardType.BALANCE => HasEffect(Buffs.Divination),
+                                false when Gauge.DrawnCards[0] is CardType.SPEAR => HasEffect(Buffs.Divination) || (GetCooldownRemainingTime(Divination) <= 100), // If they miss the buff window for some reason play spear immediately
+                                _ => false
+                            };
+
+                            if (inBurst)
+                                return OriginalHook(Play1);
+                        }
+                        
+                        else
+                            return OriginalHook(Play1);
+                    }
+
+                    // Minor Arcana / Lord of Crowns
+                    if (ActionReady(OriginalHook(MinorArcana)) &&
+                        IsEnabled(CustomComboPreset.AST_DPS_LazyLord) && Gauge.DrawnCrownCard is CardType.LORD &&
+                        HasBattleTarget() &&
+                        CanDelayedWeave(actionID))
+                    {
+                        if (Config.AST_DPS_LazyLord_HoldForBurst)
+                        {
+                            // false = use divination
+                            bool inBurst = GetIntOptionAsBool(Config.AST_DPS_LazyLord_HoldForBurst_BurstIndicator) switch
+                            {
+                                true  => GetCooldownRemainingTime(OriginalHook(AstralDraw)) <= Config.AST_DPS_LazyLord_HoldForBurst_SimpleCalculationThreshold,
+                                false => HasEffect(Buffs.Divination)
+                            };
+
+                            if (inBurst)
+                                return OriginalHook(MinorArcana);
+                        }
+
+                        else
+                            return OriginalHook(MinorArcana);
+                    }
+
+                    // Card Draw
+                    if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
+                        ActionReady(OriginalHook(AstralDraw)) &&
+                        (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards)) &&
+                        CanDelayedWeave(actionID))
+                        return OriginalHook(AstralDraw);
+
+                    // Earthly Star
                     if (IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar) &&
                         ActionReady(EarthlyStar) &&
                         CanSpellWeave(actionID))
                         return EarthlyStar;
 
+                    // Nomral Oracle Use
                     if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
                         HasEffect(Buffs.Divining) &&
                         CanSpellWeave(actionID))
                         return Oracle;
-
-                    //Minor Arcana / Lord of Crowns
-                    if (ActionReady(OriginalHook(MinorArcana)) &&
-                        IsEnabled(CustomComboPreset.AST_DPS_LazyLord) && Gauge.DrawnCrownCard is CardType.LORD &&
-                        HasBattleTarget() &&
-                        CanDelayedWeave(actionID))
-                        return OriginalHook(MinorArcana);                                       
 
                     if (HasBattleTarget())
                     {

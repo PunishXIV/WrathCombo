@@ -27,7 +27,11 @@ namespace XIVSlothCombo.Combos.PvE
                 AST_AOE_LightSpeedOption = new("AST_AOE_LightSpeedOption"),
                 AST_DPS_CombustOption = new("AST_DPS_CombustOption"),
                 AST_QuickTarget_Override = new("AST_QuickTarget_Override"),
-                AST_ST_DPS_Play_SpeedSetting = new("AST_ST_DPS_Play_SpeedSetting");
+                AST_ST_DPS_Play_SpeedSetting = new("AST_ST_DPS_Play_SpeedSetting"),
+                AST_DPS_AutoPlay_HoldForBurst_BurstIndicator = new("AST_DPS_AutoPlay_HoldForBurst_BurstIndicator"),
+                AST_DPS_AutoPlay_HoldForBurst_SimpleCalculationThreshold = new("AST_DPS_AutoPlay_HoldForBurst_SimpleCalculationThreshold"),
+                AST_DPS_LazyLord_HoldForBurst_BurstIndicator = new("AST_DPS_LazyLord_HoldForBurst_BurstIndicator"),
+                AST_DPS_LazyLord_HoldForBurst_SimpleCalculationThreshold = new("AST_DPS_LazyLord_HoldForBurst_SimpleCalculationThreshold");
             public static UserBool
                 AST_QuickTarget_SkipDamageDown = new("AST_QuickTarget_SkipDamageDown"),
                 AST_QuickTarget_SkipRezWeakness = new("AST_QuickTarget_SkipRezWeakness"),
@@ -46,7 +50,11 @@ namespace XIVSlothCombo.Combos.PvE
                 AST_AoE_SimpleHeals_Horoscope = new("AST_AoE_SimpleHeals_Horoscope"),
                 AST_ST_DPS_OverwriteCards = new("AST_ST_DPS_OverwriteCards"),
                 AST_AOE_DPS_OverwriteCards = new("AST_AOE_DPS_OverwriteCards"),
-                AST_ST_DPS_CombustUptime_Adv = new("AST_ST_DPS_CombustUptime_Adv");
+                AST_ST_DPS_CombustUptime_Adv = new("AST_ST_DPS_CombustUptime_Adv"),
+                AST_DPS_AutoPlay_HoldForBurst = new("AST_DPS_AutoPlay_HoldForBurst"),
+                AST_DPS_AutoPlay_HoldForBurst_Adv = new("AST_DPS_AutoPlay_HoldForBurst_Adv"),
+                AST_DPS_LazyLord_HoldForBurst = new("AST_DPS_LazyLord_HoldForBurst"),
+                AST_DPS_LazyLord_HoldForBurst_Adv = new("AST_DPS_LazyLord_HoldForBurst_Adv");
             public static UserFloat
                 AST_ST_DPS_CombustUptime_Threshold = new("AST_ST_DPS_CombustUptime_Threshold");
 
@@ -186,10 +194,63 @@ namespace XIVSlothCombo.Combos.PvE
                         DrawRadioButton(AST_ST_DPS_Play_SpeedSetting, "Medium (2 DPS GCD minimum delay)", "", 2);
                         DrawRadioButton(AST_ST_DPS_Play_SpeedSetting, "Slow (3 DPS GCD minimum delay)", "", 3);
 
+                        ImGui.Spacing();
+                        DrawAdditionalBoolChoice(AST_DPS_AutoPlay_HoldForBurst, "Hold DPS Cards for Burst", "Wait to weave DPS cards until burst window, rather than immediately. Has no effect during opener if that option is enabled.");
+                        ImGui.Spacing();
+
+                        if (AST_DPS_AutoPlay_HoldForBurst)
+                        {
+                            ImGui.Indent();
+
+                            DrawAdditionalBoolChoice(AST_DPS_AutoPlay_HoldForBurst_Adv, "Advanced Options", "", isConditionalChoice: true);
+                            if (AST_DPS_AutoPlay_HoldForBurst_Adv)
+                            {
+                                ImGui.Indent(); ImGui.Spacing();
+
+                                DrawRadioButton(AST_DPS_AutoPlay_HoldForBurst_BurstIndicator, "Use Divination to determine burst window. Recommended.", "", 0);
+                                DrawRadioButton(AST_DPS_AutoPlay_HoldForBurst_BurstIndicator, "Use a simple calculation to determine burst window. Not Recommended.", "", 1);
+
+                                if (AST_DPS_AutoPlay_HoldForBurst_BurstIndicator == 1)
+                                {
+                                    ImGui.Spacing();
+                                    DrawSliderInt(0, 55, AST_DPS_AutoPlay_HoldForBurst_SimpleCalculationThreshold, "Weaves The Balance when Umbral Draw's remaining cooldown is at or below this value. Set to Zero to only weave when Umbral Draw is off cooldown. The Spear is always played immediately.");
+                                }
+
+                                ImGui.Unindent();
+                            }
+                        }
+
                         break;
 
                     case CustomComboPreset.AST_DPS_AutoDraw:
                         DrawAdditionalBoolChoice(AST_ST_DPS_OverwriteCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
+                        break;
+
+                    case CustomComboPreset.AST_DPS_LazyLord:
+                        DrawAdditionalBoolChoice(AST_DPS_LazyLord_HoldForBurst, "Hold The Lord until Burst", "Wait to weave The Lord until burst window, rather than immediately. Has no effect during opener if that option is enabled.");
+
+                        if (AST_DPS_LazyLord_HoldForBurst)
+                        {
+                            ImGui.Indent();
+
+                            DrawAdditionalBoolChoice(AST_DPS_LazyLord_HoldForBurst_Adv, "Advanced Options", "", isConditionalChoice: true);
+                            if (AST_DPS_LazyLord_HoldForBurst_Adv)
+                            {
+                                ImGui.Indent(); ImGui.Spacing();
+
+                                DrawRadioButton(AST_DPS_LazyLord_HoldForBurst_BurstIndicator, "Use Divination to determine burst window. Recommended.", "", 0);
+                                DrawRadioButton(AST_DPS_LazyLord_HoldForBurst_BurstIndicator, "Use a simple calculation to determine burst window. Not Recommended.", "", 1);
+
+                                if (AST_DPS_LazyLord_HoldForBurst_BurstIndicator == 1)
+                                {
+                                    ImGui.Spacing();
+                                    DrawSliderInt(0, 55, AST_DPS_LazyLord_HoldForBurst_SimpleCalculationThreshold, "Weaves The Lord when Umbral Draw's remaining cooldown is at or below this value. Set to Zero to only weave when Umbral Draw is off cooldown.");
+                                }
+
+                                ImGui.Unindent();
+                            }
+                        }
+
                         break;
                 }
             }
