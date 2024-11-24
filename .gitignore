@@ -2,8 +2,10 @@
 .vs/
 
 XIVSlothCombo/obj/
-
 XIVSlothCombo/bin/Debug/
+WrathCombo/obj/
+WrathCombo/bin/Debug/
 
 *.v2
 /XIVSlothCombo/bin/Release
+/WrathCombo/bin/Release

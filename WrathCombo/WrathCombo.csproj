@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<Authors>Team Wrath</Authors>
+		<Company>-</Company>
+		<Version>1.0.0.3</Version>
+		<!-- This is the version that will be used when pushing to the repo.-->
+		<Description>XIVCombo for very lazy players</Description>
+		<Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
+		<PackageProjectUrl></PackageProjectUrl>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<Configurations>Debug;Release</Configurations>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+		<DalamudPluginPath>$(appdata)\XIVLauncher\installedPlugins\WrathCombo\$(version)</DalamudPluginPath>
+		<DalamudDevPlugins>$(appdata)\XIVLauncher\devPlugins\WrathCombo\</DalamudDevPlugins>
+		<AssemblyName>WrathCombo</AssemblyName>
+		<PackageId>WrathCombo</PackageId>
+		<Product>WrathCombo</Product>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<Platforms>x64</Platforms>
+		<Nullable>enable</Nullable>
+		<LangVersion>preview</LangVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>bin\Release</OutputPath>
+		<NoWarn>CS1591</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+		<Platforms>x64</Platforms>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<OutputPath>$(DalamudDevPlugins)</OutputPath>
+		<NoWarn>CS1591</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Documentation">
+		<DocumentationFile></DocumentationFile>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<LangVersion>preview</LangVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
+	</ItemGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+		<Optimize>True</Optimize>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\.editorconfig" Link=".editorconfig" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="DalamudPackager" Version="11.0.0" />
+		<PackageReference Include="ILRepack" Version="2.0.18" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+	  <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Dalamud">
+			<HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="FFXIVClientStructs">
+			<HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
+			<Private>False</Private>
+
+		</Reference>
+
+		<Reference Include="Newtonsoft.Json">
+			<HintPath>$(DalamudLibPath)Newtonsoft.Json.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="ImGui.NET">
+			<HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="ImGuiScene">
+			<HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="Lumina">
+			<HintPath>$(DalamudLibPath)Lumina.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="Lumina.Excel">
+			<HintPath>$(DalamudLibPath)Lumina.Excel.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
+
+		<Reference Include="InteropGenerator.Runtime">
+			<HintPath>$(DalamudLibPath)InteropGenerator.Runtime.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="WrathCombo.json">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+</Project>
