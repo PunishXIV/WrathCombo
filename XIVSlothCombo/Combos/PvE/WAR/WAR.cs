@@ -99,7 +99,7 @@ namespace XIVSlothCombo.Combos.PvE
                 Placeholder = 1;
         }
 
-       
+
 
         internal class WAR_ST_SimpleMode : CustomCombo
         {
@@ -198,14 +198,14 @@ namespace XIVSlothCombo.Combos.PvE
                     var infuriateGauge = PluginConfiguration.GetCustomIntValue(Config.WAR_InfuriateSTGauge);
                     float GCD = GetCooldown(HeavySwing).CooldownTotal;
 
-                    if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) && 
+                    if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
                     if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_RangedUptime) &&
                         LevelChecked(Tomahawk) && !InMeleeRange() && HasBattleTarget())
                         return Tomahawk;
-                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Infuriate) && 
-                        InCombat() && LevelChecked(Infuriate) && ActionReady(Infuriate) && 
+                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Infuriate) &&
+                        InCombat() && LevelChecked(Infuriate) && ActionReady(Infuriate) &&
                         !HasEffect(Buffs.NascentChaos) && !HasEffect(Buffs.InnerReleaseStacks)
                         && gauge <= infuriateGauge && CanWeave(actionID) && GetRemainingCharges(Infuriate) > infuriateChargesRemaining)
                         return Infuriate;
@@ -440,6 +440,24 @@ namespace XIVSlothCombo.Combos.PvE
                     return HeavySwing;
                 }
 
+                return actionID;
+            }
+        }
+
+        internal class WAR_StormsEye_Maintenance : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_StormsEye_Maintenance;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID == StormsPath)
+                {
+                    var surgingRemaining = GetBuffRemainingTime(Buffs.SurgingTempest);
+                    var surgingThreshold = PluginConfiguration.GetCustomIntValue(Config.WAR_SurgingRefreshRange);
+
+                    if (LevelChecked(StormsEye) && surgingRemaining <= surgingThreshold)
+                        return StormsEye;
+                }
                 return actionID;
             }
         }
