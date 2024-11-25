@@ -574,6 +574,15 @@ namespace WrathCombo.Combos.PvE
                             }
                         }
                     }
+                    if (IsGarudaAttuned)
+                    {
+                        // Use Ruin III instead of Emerald Ruin III
+                        if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3))
+                        {
+                            if (OriginalHook(Gemshine) is EmeralRuin1 or EmeralRuin2) return OriginalHook(Gemshine);
+                            return Ruin3;
+                        }
+                    }
 
                     if (IsEnabled(CustomComboPreset.SMN_SearingFlash) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                         return SearingFlash;
