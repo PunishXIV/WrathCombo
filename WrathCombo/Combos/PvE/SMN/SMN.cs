@@ -579,7 +579,7 @@ namespace WrathCombo.Combos.PvE
                         // Use Ruin III instead of Emerald Ruin III
                         if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3))
                         {
-                            if (OriginalHook(Gemshine) is EmeralRuin1 or EmeralRuin2) return OriginalHook(Gemshine);
+                            if (OriginalHook(Gemshine) is EmeralRuin1 or EmeralRuin2 or EmeraldRite) return OriginalHook(Gemshine);
                             return Ruin3;
                         }
                     }
