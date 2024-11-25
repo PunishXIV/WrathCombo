@@ -215,30 +215,73 @@ namespace WrathCombo.Combos.PvE
                 //END_RDM_MELEEFINISHER
 
                 //RDM_ST_MELEECOMBO
-                if (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo)
-                    && LocalPlayer.IsCasting == false)
+                if (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo) && 
+                    LocalPlayer.IsCasting == false)
                 {
-                    bool ActionFound =
-                        (!Config.RDM_ST_MeleeCombo_Adv && (actionID is Jolt or Jolt2 or Jolt3)) ||
-                        (Config.RDM_ST_MeleeCombo_Adv &&
-                            ((Config.RDM_ST_MeleeCombo_OnAction[0] && actionID is Jolt or Jolt2 or Jolt3) ||
-                             (Config.RDM_ST_MeleeCombo_OnAction[1] && actionID is Riposte or EnchantedRiposte)));
-
-                    if (ActionFound)
+                    if (IsNotEnabled(CustomComboPreset.RDM_ST_Adv_MeleeFill) || 
+                        (IsEnabled(CustomComboPreset.RDM_ST_Melee_Overcap_Protection) && 
+                         RDMMana.Min >= GetOptionValue(Config.RDM_ST_Melee_Combo_Overcap_Protection)))
                     {
-                        if (MeleeCombo.TrySTManaEmbolden(
-                            actionID, lastComboMove, level, out uint ManaEmboldenID,
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
-                            return ManaEmboldenID;
+                        bool ActionFound =
+                            (!Config.RDM_ST_MeleeCombo_Adv && (actionID is Jolt or Jolt2 or Jolt3)) ||
+                            (Config.RDM_ST_MeleeCombo_Adv &&
+                             ((Config.RDM_ST_MeleeCombo_OnAction[0] && actionID is Jolt or Jolt2 or Jolt3) ||
+                              (Config.RDM_ST_MeleeCombo_OnAction[1] && actionID is Riposte or EnchantedRiposte)));
 
-                        if (MeleeCombo.TrySTMeleeCombo(actionID, lastComboMove, comboTime, out uint MeleeID,
-                            Config.RDM_ST_MeleeEnforced,
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
-                            return MeleeID;
+                        if (ActionFound)
+                        {
+                            if (MeleeCombo.TrySTManaEmbolden(
+                                    actionID, lastComboMove, level, out uint ManaEmboldenID,
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                                return ManaEmboldenID;
+
+                            if (MeleeCombo.TrySTMeleeCombo(actionID, lastComboMove, comboTime, out uint MeleeID,
+                                    Config.RDM_ST_MeleeEnforced,
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                                return MeleeID;
+                        }
+                    }
+                    
+                    //Melee Fill
+                    if ((IsEnabled(CustomComboPreset.RDM_ST_Melee_Overcap_Protection) && 
+                        RDMMana.Min >= GetOptionValue(Config.RDM_ST_Melee_Combo_Overcap_Protection)) ||
+                        WasLastWeaponskill(EnchantedRiposte) ||
+                        WasLastWeaponskill(EnchantedZwerchhau) ||
+                        (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden) &&
+                         IsOffCooldown(Manafication) &&
+                         IsOffCooldown(Embolden) &&
+                         LevelChecked(Embolden) &&
+                         LevelChecked(Manafication)) ||
+                        HasEffect(Buffs.Embolden) ||
+                        HasEffect(Buffs.Manafication))
+                    {
+                        bool ActionFound =
+                            (!Config.RDM_ST_MeleeCombo_Adv && (actionID is Jolt or Jolt2 or Jolt3)) ||
+                            (Config.RDM_ST_MeleeCombo_Adv &&
+                             ((Config.RDM_ST_MeleeCombo_OnAction[0] && actionID is Jolt or Jolt2 or Jolt3) ||
+                              (Config.RDM_ST_MeleeCombo_OnAction[1] && actionID is Riposte or EnchantedRiposte)));
+
+                        if (ActionFound)
+                        {
+                            if (MeleeCombo.TrySTManaEmbolden(
+                                    actionID, lastComboMove, level, out uint ManaEmboldenID,
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                                return ManaEmboldenID;
+
+                            if (MeleeCombo.TrySTMeleeCombo(actionID, lastComboMove, comboTime, out uint MeleeID,
+                                    Config.RDM_ST_MeleeEnforced,
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                                return MeleeID;
+                            
+                        }
                     }
                 }
 

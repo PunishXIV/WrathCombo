@@ -14,6 +14,7 @@ namespace WrathCombo.Combos.PvE
             public static UserInt
                 RDM_VariantCure = new("RDM_VariantCure"),
                 RDM_ST_Lucid_Threshold = new("RDM_LucidDreaming_Threshold", 6500),
+                RDM_ST_Melee_Combo_Overcap_Protection = new("RDM_Melee_Combo_Overcap_Protection", 80),
                 RDM_AoE_Lucid_Threshold = new("RDM_AoE_Lucid_Threshold", 6500),
                 RDM_AoE_MoulinetRange = new("RDM_MoulinetRange");
             public static UserBool
@@ -114,6 +115,10 @@ namespace WrathCombo.Combos.PvE
 
                     case CustomComboPreset.RDM_ST_Lucid:
                         DrawSliderInt(0, 10000, RDM_ST_Lucid_Threshold, $"Add {All.LucidDreaming.ActionName()} when below this MP", sliderIncrement: Hundreds);
+                        break;
+                    
+                    case CustomComboPreset.RDM_ST_Melee_Overcap_Protection:
+                        DrawSliderInt(50, 100, RDM_ST_Melee_Combo_Overcap_Protection, $"Add {RDM.EnchantedRiposte.ActionName()} when at or above this Mana", sliderIncrement: Tens);
                         break;
 
                     case CustomComboPreset.RDM_AoE_oGCD:

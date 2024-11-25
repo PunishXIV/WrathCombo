@@ -3534,6 +3534,15 @@ namespace WrathCombo.Combos
         [ParentCombo(RDM_ST_DPS)]
         [CustomComboInfo("Lucid Dreaming Option", "Weaves Lucid Dreaming when your MP drops below the specified value.", RDM.JobID, 610)]
         RDM_ST_Lucid = 13610,
+        
+        [ParentCombo(RDM_ST_MeleeCombo)]
+        [CustomComboInfo("Melee combo overcap protection", "Adds melee combo to the rotation when mana is at a certain threshold.", RDM.JobID, 450)]
+        RDM_ST_Melee_Overcap_Protection = 13660,
+        
+        [ParentCombo(RDM_ST_MeleeCombo)]
+        [CustomComboInfo("Melee Combo Fill Option", "Adds the melee combo to the rotation." + "\nRiposte itself must be initiated manually when using this option.", RDM.JobID, 440)]
+        RDM_ST_Adv_MeleeFill = 13710,
+        
         #endregion
 
         #region AoE DPS
