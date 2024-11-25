@@ -176,11 +176,10 @@ internal partial class DRK
 
                 #region PVP
 
-                case CustomComboPreset.DRKPvP_Burst:
-                    UserConfig.DrawSliderInt(1, 100,
+                case CustomComboPreset.DRKPvP_Shadowbringer:
+                    UserConfig.DrawSliderInt(20, 100,
                         DRKPvP.Config.ShadowbringerThreshold,
-                        "HP% to be at or Above to use " +
-                        "(0 = Use Always)",
+                        "HP% to be at or Above to use ",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
 
                     break;

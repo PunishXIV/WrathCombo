@@ -21,7 +21,7 @@ namespace WrathCombo.Combos.PvP
         {
             public const ushort
                 Blackblood = 3033,
-                BlackestNight = 1038,
+                BlackestNight = 1308,
                 SaltedEarthDMG = 3036,
                 SaltedEarthDEF = 3037,
                 DarkArts = 3034,
@@ -60,7 +60,7 @@ namespace WrathCombo.Combos.PvP
 
                         if (canWeave)
                         {
-                            if (IsEnabled(CustomComboPreset.DRKPvP_BlackestNight) && ActionReady(BlackestNight) && !HasEffect(Buffs.BlackestNight))
+                            if (IsEnabled(CustomComboPreset.DRKPvP_BlackestNight) && ActionReady(BlackestNight) && !HasEffect(Buffs.BlackestNight) && !WasLastAbility(BlackestNight))
                                 return OriginalHook(BlackestNight);
 
                             if (IsEnabled(CustomComboPreset.DRKPvP_SaltedEarth) && ActionReady(SaltedEarth) && IsEnabled(CustomComboPreset.DRKPvP_SaltedEarth))
