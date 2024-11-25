@@ -1935,7 +1935,7 @@ namespace WrathCombo.Combos
         #endregion
 
         #region No Mercy
-        [ConflictingCombos(GNB_ST_Simple, GNB_AoE_Simple, GNB_GF_Features)]
+        [ConflictingCombos(GNB_ST_Simple, GNB_AoE_Simple, GNB_GF_NoMercy)]
         [ReplaceSkill(GNB.NoMercy)]
         [CustomComboInfo("No Mercy Features", "Collection of No Mercy related features.", GNB.JobID)]
         GNB_NM_Features = 7500,
