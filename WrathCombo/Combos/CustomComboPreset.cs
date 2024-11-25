@@ -5410,7 +5410,6 @@ namespace WrathCombo.Combos
 
         #endregion
 
-
         #region DANCER
         [PvPCustomCombo]
         [CustomComboInfo("Burst Mode", "Turns Fountain Combo into an all-in-one damage button.", DNC.JobID)]
@@ -5891,8 +5890,6 @@ namespace WrathCombo.Combos
 
         #endregion
 
-        #endregion
-
         #region SAGE
         [PvPCustomCombo]
         [CustomComboInfo("Burst Mode", "Turns Dosis III into an all-in-one damage button.", SGE.JobID)]
@@ -6137,5 +6134,6 @@ namespace WrathCombo.Combos
 
         #endregion
 
+        #endregion
     }
 }

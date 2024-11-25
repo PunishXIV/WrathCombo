@@ -78,12 +78,15 @@ namespace WrathCombo.Combos.PvE
         {
             public const ushort
                 Weakness = 43,
+                WellFed = 48,
                 Medicated = 49,
                 Bloodbath = 84,
+                Surecast = 160,
                 Swiftcast = 167,
                 Rampart = 1191,
                 Peloton = 1199,
                 LucidDreaming = 1204,
+                ArmsLength = 1209,
                 TrueNorth = 1250,
                 Sprint = 50;
         }
