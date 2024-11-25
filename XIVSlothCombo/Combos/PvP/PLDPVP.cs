@@ -52,6 +52,10 @@ namespace XIVSlothCombo.Combos.PvP
                     if (IsEnabled(CustomComboPreset.PLDPvP_Intervene) && !InMeleeRange() && IsOffCooldown(Intervene) || IsEnabled(CustomComboPreset.PLDPvP_Intervene_Melee) && InMeleeRange() && IsOffCooldown(Intervene))
                         return Intervene;
 
+                    // Check conditions for Holy Sheltron
+                    if (IsEnabled(CustomComboPreset.PLDPvP_Sheltron) && IsOffCooldown(HolySheltron) && InCombat() && InMeleeRange())
+                        return HolySheltron;
+
                     // Check conditions for ShieldSmite
                     if (IsEnabled(CustomComboPreset.PLDPvP_ShieldSmite) && IsOffCooldown(ShieldSmite) && InCombat() && InMeleeRange())
                         return ShieldSmite;

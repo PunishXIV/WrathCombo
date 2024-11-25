@@ -1,3 +1,4 @@
+using XIVSlothCombo.Combos.PvP;
 using XIVSlothCombo.CustomComboNS.Functions;
 using XIVSlothCombo.Data;
 using XIVSlothCombo.Window.Functions;
@@ -9,7 +10,8 @@ internal partial class GNB
     internal static class Config
     {
         public const string
-            GNB_VariantCure = "GNB_VariantCure";
+            GNB_VariantCure = "GNB_VariantCure",
+            GNBPvP_Corundum = "GNBPvP_Corundum";
 
         public static UserInt
             GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop"),
@@ -116,6 +118,15 @@ internal partial class GNB
                         GNB_AoE_SuperbolideTargetThreshold,
                         stopUsingAtDescription,
                         itemWidth: little, sliderIncrement: SliderIncrements.Tens);
+
+                    break;
+
+                case CustomComboPreset.GNBPvP_Corundum:
+                    UserConfig.DrawSliderInt(1, 100,
+                        GNBPvP.Config.corundumThreshold,
+                        "HP% to be at or Below to use " +
+                        "(100 = Use Always)",
+                        itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
 
                     break;
             }

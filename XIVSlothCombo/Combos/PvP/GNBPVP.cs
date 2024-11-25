@@ -23,7 +23,8 @@ namespace XIVSlothCombo.Combos.PvP
             TerminalTrigger = 29131,
             FatedCircle = 41511,
             FatedBrand = 41442,
-            BlastingZone = 29128;
+            BlastingZone = 29128,
+            HeartOfCorundum = 41443;
 
 
         internal class Debuffs
@@ -47,19 +48,29 @@ namespace XIVSlothCombo.Combos.PvP
                 ReadyToRaze = 4293;
 
         }
+        public class Config
+        {
+            public const string
+                corundumThreshold = nameof(corundumThreshold);
 
+        }
         internal class GNBPvP_Burst : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNBPvP_Burst;
 
             float GCD = GetCooldown(KeenEdge).CooldownTotal; // 2.4 base in PvP
-            bool enemyGuard = TargetHasEffect(PvPCommon.Buffs.Guard); //Guard check
-            bool inGF = JustUsed(GnashingFang, 3f) || JustUsed(SavageClaw, 3f) || JustUsed(WickedTalon, 2f);
-
+            
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 if (actionID is KeenEdge or BrutalShell or SolidBarrel)
                 {
+                    int corundumThreshold = GetOptionValue(Config.corundumThreshold);
+                    bool enemyGuard = TargetHasEffect(PvPCommon.Buffs.Guard); //Guard check
+                    bool inGF = JustUsed(GnashingFang, 3f) || JustUsed(SavageClaw, 3f) || JustUsed(WickedTalon, 2f);
+
+                    if (CanWeave(ActionWatching.LastWeaponskill) && IsEnabled(CustomComboPreset.GNBPvP_Corundum) && PlayerHealthPercentageHp() <= corundumThreshold && IsOffCooldown(HeartOfCorundum))
+                        return HeartOfCorundum;
+
                     if (!PvPCommon.IsImmuneToDamage())
                     {
 
