@@ -213,7 +213,7 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if ((actionID is BLU.AngelWhisper or RDM.Verraise)
+                if ((actionID is BLU.AngelWhisper_Spell72 or RDM.Verraise)
                     || (actionID is SMN.Resurrection && LocalPlayer.ClassJob.RowId is SMN.JobID))
                 {
                     if (HasEffect(Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast))
