@@ -240,7 +240,6 @@ namespace XIVSlothCombo.Combos.PvE
                     if ((!DoubleCombo || level < 90)
                         && ActionReady(Embolden)
                         && RDMMana.ManaStacks == 0
-                        && RDMMana.Max <= 50
                         && (IsOffCooldown(Manafication) || !LevelChecked(Manafication)))
                     {
                         if (UnBalanceMana
@@ -262,7 +261,6 @@ namespace XIVSlothCombo.Combos.PvE
                         && lastComboMove is not Verflare
                         && lastComboMove is not Verholy
                         && lastComboMove is not Scorch
-                        && RDMMana.Max <= 50
                         && (HasEffect(Buffs.Embolden) || WasLastAction(Embolden)))
                     {
                         newActionID = Manafication;
