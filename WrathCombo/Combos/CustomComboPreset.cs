@@ -6057,7 +6057,37 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Burst Mode", "Turns Dual Fang Combo into an all-in-one damage button.", VPRPvP.JobID)]
         VPRPvP_Burst = 130000,
 
-        // Last value = 130000
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Slither Option", "Adds Slither to the Burst Mode when out of melee range.", VPRPvP.JobID)]
+        VPRPvP_Burst_Slither = 130001,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Serpent's Tail Option", "Adds Serpents Tail Weaves to Burst mode.", VPRPvP.JobID)]
+        VPRPvP_Burst_Serpent = 130002,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Uncoiled Fury Option", "Adds Uncoiled Fury to Burst Mode when at full charges, Out of melee range, or enemy is under 10k health for execute.", VPRPvP.JobID)]
+        VPRPvP_Burst_Uncoiled = 130003,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Bloodcoil Option", "Adds Bloodcoil to Burst Mode", VPRPvP.JobID)]
+        VPRPvP_Burst_Bloodcoil = 130004,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Backlash Option", "Adds Backlash to Burst Mode, Snakescales is still manual", VPRPvP.JobID)]
+        VPRPvP_Burst_Backlash = 130005,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Rattling Coil Option", "Adds Rattling Coil to Burst Mode when both Snakescales and Uncoiled Fury are on cd", VPRPvP.JobID)]
+        VPRPvP_Burst_Rattling = 130006,
+
+        // Last value = 130006
         #endregion
 
         #region WARRIOR

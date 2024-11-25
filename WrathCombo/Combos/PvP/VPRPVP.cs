@@ -13,15 +13,18 @@ namespace WrathCombo.Combos.PvP
             PiercingFangs = 39158,
             SwiftskinsSting = 39160,
             RavenousBite = 39163,
-            HuntersSnap = 39166,
-            SwiftskinsCoil = 39167,
+            Bloodcoil = 39166,
             UncoiledFury = 39168,
             SerpentsTail = 39183,
             FirstGeneration = 39169,
             SecondGeneration = 39170,
             ThirdGeneration = 39171,
             FourthGeneration = 39172,
-            Ouroboros = 39173;
+            Ouroboros = 39173,
+            Slither = 39184,
+            Snakescales = 39185,
+            Backlash = 39186,
+            RattlingCoil = 39189;
 
         internal class Buffs
         {
@@ -43,30 +46,45 @@ namespace WrathCombo.Combos.PvP
 
                 if (actionID is SteelFangs or HuntersSting or BarbarousSlice or PiercingFangs or SwiftskinsSting or RavenousBite)
                 {
+                    // Serpent's Tail every ability bypasses guard. Canweave removed because gcd of 2 seconds is too fast for the needed double weave Twinfang/Twinblood
+                    if (isSerpentsTailPrimed && IsEnabled(CustomComboPreset.VPRPvP_Burst_Serpent))
+                        return OriginalHook(SerpentsTail);
+
+                    // gap closer
+                    if (ActionReady(Slither) && IsEnabled(CustomComboPreset.VPRPvP_Burst_Slither) && !inMeleeRange)
+                        return OriginalHook(Slither);
+
+                    // Snakescales backlash finisher, will not initiate the snakescales guard stance
+                    if (OriginalHook(Snakescales) == Backlash && IsEnabled(CustomComboPreset.VPRPvP_Burst_Backlash))
+                        return OriginalHook(Snakescales);
+
+                    // Rattling coil reseting cds on snakescales and uncoiled fury
+                    if (IsOnCooldown(UncoiledFury) && IsOnCooldown(Snakescales) && ActionReady(RattlingCoil) && IsEnabled(CustomComboPreset.VPRPvP_Burst_Rattling))
+                        return OriginalHook(RattlingCoil);
+
                     if (!PvPCommon.IsImmuneToDamage() && HasTarget())
                     {
-                        // Serpent's Tail
-                        if (isSerpentsTailPrimed && canWeave)
-                            return OriginalHook(SerpentsTail);
-
                         if (inMeleeRange)
                         {
-                            // Ouroboros
-                            if (OriginalHook(HuntersSnap) == Ouroboros && !inGenerationsCombo)
-                                return OriginalHook(HuntersSnap);
+                            // Ouroboros lb stuff
+                            if (OriginalHook(Bloodcoil) == Ouroboros && !inGenerationsCombo)
+                                return OriginalHook(Bloodcoil);
 
-                            // Reawakened
+                            // Reawakened lb stuff
                             if (inGenerationsCombo)
                                 return OriginalHook(actionID);
                         }
 
-                        // Uncoiled Fury
-                        if (IsOffCooldown(UncoiledFury) && (!inMeleeRange || (!HasCharges(HuntersSnap) && OriginalHook(HuntersSnap) != SwiftskinsCoil)))
+                        // Uncoiled Fury If capped, ranged, or execute
+                        if (IsEnabled(CustomComboPreset.VPRPvP_Burst_Uncoiled))
+                        {
+                            if (GetRemainingCharges(UncoiledFury) > 1 || !inMeleeRange && GetRemainingCharges(UncoiledFury) > 0 || EnemyHealthCurrentHp() < 10000 && GetRemainingCharges(UncoiledFury) > 0)
                             return OriginalHook(UncoiledFury);
+                        }
 
-                        // Hunter's Snap / Swiftskin's Coil
-                        if ((HasCharges(HuntersSnap) && OriginalHook(HuntersSnap) != Ouroboros) || OriginalHook(HuntersSnap) == SwiftskinsCoil)
-                            return OriginalHook(HuntersSnap);
+                        // Bloodcoil, its a self heal but it is also, with its weave, 11k damage. So didnt tie it to self health
+                        if (IsEnabled(CustomComboPreset.VPRPvP_Burst_Bloodcoil) && (ActionReady(Bloodcoil) || OriginalHook(Bloodcoil) != Bloodcoil))
+                            return OriginalHook(Bloodcoil);
                     }
                 }
 
