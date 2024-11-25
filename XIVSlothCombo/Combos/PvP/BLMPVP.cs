@@ -16,7 +16,6 @@ namespace XIVSlothCombo.Combos.PvP
             Flare = 29651,
             Blizzard4 = 29654,
             Freeze = 29655,
-            Foul = 29371,
             Lethargy = 41510,
             ElementalWeave = 41475,
             SoulResonance = 29662,
@@ -49,7 +48,7 @@ namespace XIVSlothCombo.Combos.PvP
         public static class Config
         {
             public const string
-                BLMPvP_WreathOfIce = "BLMPvP_WreathOfIce";
+                BLMPvP_BurstMode_WreathOfIce = "BLMPvP_BurstMode_WreathOfIce";
 
         }
 
@@ -66,7 +65,8 @@ namespace XIVSlothCombo.Combos.PvP
 
                     if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfFire))
                     {
-                        if (IsOffCooldown(ElementalWeave) && TargetHasEffectAny(PvPCommon.Buffs.Guard) && canWeave && (HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3)))
+                        if (IsOffCooldown(ElementalWeave) && (TargetHasEffectAny(PvPCommon.Buffs.Guard) || EnemyHealthCurrentHp() < 20000 && IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfFireExecute))
+                            && canWeave && (HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3)))
                             return OriginalHook(ElementalWeave);
                     }
 
@@ -104,11 +104,8 @@ namespace XIVSlothCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FrostStar) && HasEffect(Buffs.ElementalStar))
                             return OriginalHook(SoulResonance);
 
-                        if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfIce) && IsOffCooldown(ElementalWeave) && canWeave && PlayerHealthPercentageHp() <= GetOptionValue(Config.BLMPvP_WreathOfIce))
-                            return OriginalHook(ElementalWeave);
-
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_Xenoglossy) && HasCharges(Xenoglossy))
-                            return Foul;
+                            return Xenoglossy;
 
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_AetherialManip) &&
                             GetCooldown(AetherialManipulation).RemainingCharges > 0 &&
@@ -128,6 +125,8 @@ namespace XIVSlothCombo.Combos.PvP
                             return Paradox;
                     }
 
+                    if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfIce) && IsOffCooldown(ElementalWeave) && canWeave && PlayerHealthPercentageHp() <= GetOptionValue(Config.BLMPvP_BurstMode_WreathOfIce))
+                        return OriginalHook(ElementalWeave);
                 }
 
                 return actionID;

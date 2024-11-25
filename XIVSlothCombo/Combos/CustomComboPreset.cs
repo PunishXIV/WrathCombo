@@ -5357,9 +5357,14 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Wreath of Fire (Elemental Weave) Option", "Adds Wreath of Fire to Burst Mode when the target is under Guard status.", BLM.JobID)]
         BLMPvP_BurstMode_WreathOfFire = 112006,
 
+        [ParentCombo(BLMPvP_BurstMode_WreathOfFire)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Wreath of Fire (Elemental Weave) Execute Option", "Adds Wreath of Fire to Burst Mode when the target is under 20000 health", BLM.JobID)]
+        BLMPvP_BurstMode_WreathOfFireExecute = 112010,
+
         [ParentCombo(BLMPvP_BurstMode)]
         [PvPCustomCombo]
-        [CustomComboInfo("Wreath of Ice (Elemental Weave) Option", "Adds Wreath of Fire to Burst Mode when the target is under Guard status.", BLM.JobID)]
+        [CustomComboInfo("Wreath of Ice (Elemental Weave) Option", "Adds Wreath of Ice to Burst Mode when player is below set threshold", BLM.JobID)]
         BLMPvP_BurstMode_WreathOfIce = 112007,
 
         [ParentCombo(BLMPvP_BurstMode)]
@@ -5372,7 +5377,7 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Frost Star Option", "Adds Frost Star to Burst Mode.", BLM.JobID)]
         BLMPvP_BurstMode_FrostStar = 112009,
 
-        // Last value = 112009
+        // Last value = 112010
 
         #endregion
 
@@ -5426,7 +5431,17 @@ namespace XIVSlothCombo.Combos
         [CustomComboInfo("Curing Waltz Option", "Adds Curing Waltz to the combo when available, and your HP is at or below the set percentage.", DNC.JobID)]
         DNCPvP_BurstMode_CuringWaltz = 114002,
 
-        // Last value = 114002
+        [PvPCustomCombo]
+        [ParentCombo(DNCPvP_BurstMode)]
+        [CustomComboInfo("Dance Partner Reminder Option", "Adds Closed Position reminder when you have none", DNC.JobID)]
+        DNCPvP_BurstMode_Partner = 114003,
+
+        [PvPCustomCombo]
+        [ParentCombo(DNCPvP_BurstMode)]
+        [CustomComboInfo("En Avant Option", "Uses En Avant if available and buff is missing to boost 1 2 combo damage.", DNC.JobID)]
+        DNCPvP_BurstMode_Dash = 114004,
+
+        // Last value = 114004
 
         #endregion
 

@@ -1,4 +1,6 @@
+using XIVSlothCombo.Combos.PvP;
 using XIVSlothCombo.CustomComboNS.Functions;
+using XIVSlothCombo.Window.Functions;
 using static XIVSlothCombo.Window.Functions.UserConfig;
 
 namespace XIVSlothCombo.Combos.PvE;
@@ -87,6 +89,12 @@ internal partial class BLM
                 case CustomComboPreset.BLM_AoE_Thunder:
                     DrawSliderInt(0, 10, BLM_AoE_ThunderHP,
                         "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    break;
+
+                case CustomComboPreset.BLMPvP_BurstMode_WreathOfIce:
+                    UserConfig.DrawSliderInt(0, 100, BLMPvP.Config.BLMPvP_BurstMode_WreathOfIce,
+                        "Use Wreath of ice below this threshold");
 
                     break;
             }
