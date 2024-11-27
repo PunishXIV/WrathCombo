@@ -5,7 +5,6 @@ using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-
 #endregion
 
 namespace WrathCombo.Combos.PvE
@@ -123,33 +122,24 @@ namespace WrathCombo.Combos.PvE
                     var hasBreak = HasEffect(Buffs.ReadyToBreak); //Checks for Ready To Break buff
                     var hasReign = HasEffect(Buffs.ReadyToReign); //Checks for Ready To Reign buff
                     //Mitigations
-                    var hpRemainingNebula = Config.GNB_ST_GreatNebulaThreshold; 
-                    var hpRemainingBolide = Config.GNB_ST_SuperbolideSelfThreshold;
-                    var hpRemainingBolideTarget =
-                        Config.GNB_ST_SuperbolideTargetThreshold;
-                    var bossRestrictionBolide =
-                        (int)Config.GNB_ST_SuperbolideBossRestriction;
                     //Misc
                     var inOdd = bfCD is < 90 and > 20; //Odd Minute
                     var canLateWeave = GetCooldownRemainingTime(actionID) < 1 && GetCooldownRemainingTime(actionID) > 0.6; //SkS purposes
                     var GCD = GetCooldown(KeenEdge).CooldownTotal; //2.5 is base SkS, but can work with 2.4x
-                    var nmStop = PluginConfiguration.GetCustomIntValue(Config.GNB_ST_NoMercyStop);
                     #region Minimal Requirements
                     //Ammo-relative
                     var canBS = LevelChecked(BurstStrike) && //Burst Strike is unlocked
                                 Ammo > 0; //Has Ammo
                     var canGF = LevelChecked(GnashingFang) && //GnashingFang is unlocked
-                                GetCooldownRemainingTime(GnashingFang) < 0.6f && //Gnashing Fang is off cooldown
+                                gfCD < 0.6f && //Gnashing Fang is off cooldown
                                 !HasEffect(Buffs.ReadyToBlast) && //to ensure Hypervelocity is spent in case Burst Strike is used before Gnashing Fang
                                 GunStep == 0 && //Gnashing Fang or Reign combo is not already active
                                 Ammo > 0; //Has Ammo
-                    var canFC = LevelChecked(FatedCircle) && //Fated Circle is unlocked
-                                Ammo > 0; //Has Ammo
                     var canDD = LevelChecked(DoubleDown) && //Double Down is unlocked
-                                GetCooldownRemainingTime(DoubleDown) < 0.6f && //Double Down is off cooldown
+                                ddCD < 0.6f && //Double Down is off cooldown
                                 Ammo > 0; //Has Ammo
                     var canBF = LevelChecked(Bloodfest) && //Bloodfest is unlocked
-                                GetCooldownRemainingTime(Bloodfest) < 0.6f; //Bloodfest is off cooldown
+                                bfCD < 0.6f; //Bloodfest is off cooldown
                     //Cooldown-relative
                     var canZone = LevelChecked(DangerZone) && //Zone is unlocked
                                 GetCooldownRemainingTime(OriginalHook(DangerZone)) < 0.6f; //DangerZone is off cooldown
@@ -160,7 +150,7 @@ namespace WrathCombo.Combos.PvE
                     var canContinue = LevelChecked(Continuation); //Continuation is unlocked
                     var canReign = LevelChecked(ReignOfBeasts) && //Reign of Beasts is unlocked
                                 GunStep == 0 && //Gnashing Fang or Reign combo is not already active
-                                HasEffect(Buffs.ReadyToReign); //Ready To Reign is active
+                                hasReign; //Ready To Reign is active
                     #endregion
                     #endregion
 
@@ -176,76 +166,24 @@ namespace WrathCombo.Combos.PvE
                         return LightningShot; //Execute Lightning Shot if conditions are met
 
                     //Mitigations - Max Priority
-                    if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation))
-                    {
-                        //HOC
-                        if (IsEnabled(CustomComboPreset.GNB_ST_HOC)
-                            && IsOffCooldown(OriginalHook(HeartOfStone))
-                            && LevelChecked(HeartOfStone)
-                            && ShouldHOCSelf()
-                            && LocalPlayer.CurrentMp >= 3000)
-                            return OriginalHook(HeartOfStone);
+                    //HOC
+                    if (IsOffCooldown(OriginalHook(HeartOfStone))
+                        && LevelChecked(HeartOfStone)
+                        && PlayerHealthPercentageHp() <= 60)
+                        return OriginalHook(HeartOfStone);
 
-                        //GreatNebula
-                        var inGreatNebulaContent =
-                            ContentCheck.IsInConfiguredContent(
-                                Config.GNB_ST_GreatNebulaDifficulty,
-                                Config.GNB_ST_GreatNebulaDifficultyListSet
-                            );
-                        if (IsEnabled(CustomComboPreset.GNB_ST_GreatNebula)
-                            && IsOffCooldown(OriginalHook(Nebula))
-                            && LevelChecked(Nebula)
-                            && PlayerHealthPercentageHp() <= hpRemainingNebula
-                            && inGreatNebulaContent)
-                            return OriginalHook(Nebula);
+                    //GreatNebula
+                    if (IsOffCooldown(OriginalHook(Nebula))
+                        && LevelChecked(Nebula)
+                        && PlayerHealthPercentageHp() <= 50)
+                        return OriginalHook(Nebula);
 
-                        //Superbolide
-                        var inSuperbolideContent =
-                            ContentCheck.IsInConfiguredContent(
-                                Config.GNB_ST_SuperbolideDifficulty,
-                                Config.GNB_ST_SuperbolideDifficultyListSet
-                            );
-                        if (IsEnabled(CustomComboPreset.GNB_ST_Superbolide)
-                            && IsOffCooldown(Superbolide)
-                            && LevelChecked(Superbolide)
-                            && PlayerHealthPercentageHp() <= hpRemainingBolide
-                            && GetTargetHPPercent() >= hpRemainingBolideTarget
-                            && inSuperbolideContent
-                            //Checking if the target matches the boss avoidance option
-                            && ((bossRestrictionBolide is
-                                     (int)Config.BossAvoidance.On
-                                 && LocalPlayer.TargetObject is not null
-                                 && IsBoss(GNB.LocalPlayer.TargetObject!))
-                                || bossRestrictionBolide is
-                                    (int)Config.BossAvoidance.Off))
-                            return Superbolide;
-                    }
-
-                    //No Mercy
-                    if (ActionReady(NoMercy) && //No Mercy is ready
-                        CanWeave(actionID) && //Weaveable window
-                        GetTargetHPPercent() >= nmStop) //target HP is above threshold
-                    {
-                        if (LevelChecked(DoubleDown)) //Lv100
-                        {
-                            if ((inOdd && //Odd Minute window
-                                (Ammo >= 2 || (lastComboMove is BrutalShell && Ammo == 1))) || //2 Ammo or 1 Ammo with Solid Barrel next in combo
-                                (!inOdd && //Even Minute window
-                                Ammo != 3)) //Ammo is not full (3)
-                                return NoMercy; //Execute No Mercy if conditions are met
-                        }
-                        if (!LevelChecked(DoubleDown)) //Lv1-89
-                        {
-                            if (canLateWeave && //Late-weaveable
-                                Ammo == MaxCartridges(level)) //Ammo is full
-                                return NoMercy; //Execute No Mercy if conditions are met
-                        }
-                    }
-
-                    //Bloodfest - Forced to prevent combo from spazzing out due to next action possibly requiring Ammo
-                    if (canBF && //able to use Bloodfest
-                        Ammo == 0) //Only when ammo is empty
-                        return Bloodfest; //Execute Bloodfest if conditions are met
+                    //Superbolide
+                    if (IsOffCooldown(Superbolide)
+                        && LevelChecked(Superbolide)
+                        && PlayerHealthPercentageHp() <= 25
+                        && GetTargetHPPercent() >= 5)
+                        return Superbolide;
 
                     //oGCDs
                     if (CanWeave(actionID))
@@ -260,6 +198,38 @@ namespace WrathCombo.Combos.PvE
                         //Variant Ultimatum
                         if (IsEnabled(CustomComboPreset.GNB_Variant_Ultimatum) && IsEnabled(Variant.VariantUltimatum) && ActionReady(Variant.VariantUltimatum))
                             return Variant.VariantUltimatum;
+
+                        //Bloodfest
+                        if (InCombat() && //In combat
+                            HasTarget() && //Has target
+                            canBF && //able to use Bloodfest
+                            Ammo == 0) //Only when ammo is empty
+                            return Bloodfest; //Execute Bloodfest if conditions are met
+
+                        //No Mercy
+                        if (ActionReady(NoMercy) && //No Mercy is ready
+                            InCombat() && //In combat
+                            HasTarget()) //Has target
+                        {
+                            if (LevelChecked(DoubleDown)) //Lv90+
+                            {
+                                if (IsOnCooldown(Bloodfest) &&
+                                    Ammo == 3 &&
+                                    lastComboMove is KeenEdge) //3 Ammo with Keen Edge for Opener
+                                    return NoMercy; //Execute No Mercy if conditions are met
+                                if ((inOdd && //Odd Minute window
+                                    (Ammo == 2 || (lastComboMove is BrutalShell && Ammo == 1))) || //2 Ammo or 1 Ammo with Solid Barrel next in combo
+                                    (!inOdd && //Even Minute window
+                                    Ammo != 3)) //Ammo is not full (3)
+                                    return NoMercy; //Execute No Mercy if conditions are met
+                            }
+                            if (!LevelChecked(DoubleDown)) //Lv1-89
+                            {
+                                if (canLateWeave && //Late-weaveable
+                                    Ammo == MaxCartridges(level)) //Ammo is full
+                                    return NoMercy; //Execute No Mercy if conditions are met
+                            }
+                        }
 
                         //Zone
                         if (canZone && //able to use Zone
@@ -346,9 +316,9 @@ namespace WrathCombo.Combos.PvE
 
                     //Lv100 2cart forced 2min starter
                     if (LevelChecked(ReignOfBeasts) && //Lv100
-                        ((nmCD <= GCD || ActionReady(NoMercy)) && //No Mercy is ready or about to be
+                        (nmCD < 1 && //No Mercy is ready or about to be
                         Ammo is 3 && //Ammo is full
-                        (bfCD < GCD * 12 || ActionReady(Bloodfest)))) //Bloodfest is ready or about to be
+                        bfCD < GCD * 12)) //Bloodfest is ready or about to be
                         return BurstStrike;
 
                     //Gauge Combo Steps
@@ -370,8 +340,7 @@ namespace WrathCombo.Combos.PvE
                             //holds Hypervelocity if NM comes up in time
                             if (LevelChecked(Hypervelocity) && //Hypervelocity is unlocked
                                 HasEffect(Buffs.ReadyToBlast) && //Ready To Blast buff is active
-                                (nmCD is > 1 or <= 0.1f || //Priority hack to prevent Hypervelocity from being used before No Mercy
-                                GetTargetHPPercent() < nmStop)) //target HP is below threshold
+                                (nmCD is > 1 or <= 0.1f)) //Priority hack to prevent Hypervelocity from being used before No Mercy
                                 return Hypervelocity; //Execute Hypervelocity if conditions are met
 
                             //Overcap protection
@@ -431,17 +400,15 @@ namespace WrathCombo.Combos.PvE
                     var canBS = LevelChecked(BurstStrike) && //Burst Strike is unlocked
                                 Ammo > 0; //Has Ammo
                     var canGF = LevelChecked(GnashingFang) && //GnashingFang is unlocked
-                                GetCooldownRemainingTime(GnashingFang) < 0.6f && //Gnashing Fang is off cooldown
+                                gfCD < 0.6f && //Gnashing Fang is off cooldown
                                 !HasEffect(Buffs.ReadyToBlast) && //to ensure Hypervelocity is spent in case Burst Strike is used before Gnashing Fang
                                 GunStep == 0 && //Gnashing Fang or Reign combo is not already active
                                 Ammo > 0; //Has Ammo
-                    var canFC = LevelChecked(FatedCircle) && //Fated Circle is unlocked
-                                Ammo > 0; //Has Ammo
                     var canDD = LevelChecked(DoubleDown) && //Double Down is unlocked
-                                GetCooldownRemainingTime(DoubleDown) < 0.6f && //Double Down is off cooldown
+                                ddCD < 0.6f && //Double Down is off cooldown
                                 Ammo > 0; //Has Ammo
                     var canBF = LevelChecked(Bloodfest) && //Bloodfest is unlocked
-                                GetCooldownRemainingTime(Bloodfest) < 0.6f; //Bloodfest is off cooldown
+                                bfCD < 0.6f; //Bloodfest is off cooldown
                     //Cooldown-relative
                     var canZone = LevelChecked(DangerZone) && //Zone is unlocked
                                 GetCooldownRemainingTime(OriginalHook(DangerZone)) < 0.6f; //DangerZone is off cooldown
@@ -452,7 +419,7 @@ namespace WrathCombo.Combos.PvE
                     var canContinue = LevelChecked(Continuation); //Continuation is unlocked
                     var canReign = LevelChecked(ReignOfBeasts) && //Reign of Beasts is unlocked
                                 GunStep == 0 && //Gnashing Fang or Reign combo is not already active
-                                HasEffect(Buffs.ReadyToReign); //Ready To Reign is active
+                                hasReign; //Ready To Reign is active
                     #endregion
                     #endregion
 
@@ -519,36 +486,6 @@ namespace WrathCombo.Combos.PvE
                             return Superbolide;
                     }
 
-
-                    //No Mercy
-                    if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_CooldownsGroup) && //Cooldowns option is enabled
-                        IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && //No Mercy option  is enabled
-                        ActionReady(NoMercy) && //No Mercy is ready
-                        CanWeave(actionID) && //Weaveable window
-                        GetTargetHPPercent() >= nmStop) //target HP is above threshold
-                    {
-                        if (LevelChecked(DoubleDown)) //Lv100
-                        {
-                            if ((inOdd && //Odd Minute window
-                                (Ammo >= 2 || (lastComboMove is BrutalShell && Ammo == 1))) || //2 Ammo or 1 Ammo with Solid Barrel next in combo
-                                (!inOdd && //Even Minute window
-                                Ammo != 3)) //Ammo is not full (3)
-                                return NoMercy; //Execute No Mercy if conditions are met
-                        }
-                        if (!LevelChecked(DoubleDown)) //Lv1-89
-                        {
-                            if (canLateWeave && //Late-weaveable
-                                Ammo == MaxCartridges(level)) //Ammo is full
-                                return NoMercy; //Execute No Mercy if conditions are met
-                        }
-                    }
-
-                    //Bloodfest - Forced to prevent combo from spazzing out due to next action possibly requiring Ammo
-                    if (IsEnabled(CustomComboPreset.GNB_ST_Bloodfest) && //Bloodfest option is enabled
-                        canBF && //able to use Bloodfest
-                        Ammo == 0) //Only when ammo is empty
-                        return Bloodfest; //Execute Bloodfest if conditions are met
-
                     //oGCDs
                     if (CanWeave(actionID))
                     {
@@ -566,6 +503,41 @@ namespace WrathCombo.Combos.PvE
                         //Cooldowns
                         if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_CooldownsGroup)) //Cooldowns option is enabled
                         {
+                            //Bloodfest
+                            if (IsEnabled(CustomComboPreset.GNB_ST_Bloodfest) && //Bloodfest option is enabled
+                                InCombat() && //In combat
+                                HasTarget() && //Has target
+                                canBF && //able to use Bloodfest
+                                Ammo == 0) //Only when ammo is empty
+                                return Bloodfest; //Execute Bloodfest if conditions are met
+
+                            //No Mercy
+                            if (IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && //No Mercy option is enabled
+                                ActionReady(NoMercy) && //No Mercy is ready
+                                InCombat() && //In combat
+                                HasTarget() && //Has target
+                                GetTargetHPPercent() >= nmStop) //target HP is above threshold
+                            {
+                                if (LevelChecked(DoubleDown)) //Lv90+
+                                {
+                                    if (IsOnCooldown(Bloodfest) &&
+                                        Ammo == 3 &&
+                                        lastComboMove is KeenEdge) //3 Ammo with Keen Edge for Opener
+                                        return NoMercy; //Execute No Mercy if conditions are met
+                                    if ((inOdd && //Odd Minute window
+                                        (Ammo == 2 || (lastComboMove is BrutalShell && Ammo == 1))) || //2 Ammo or 1 Ammo with Solid Barrel next in combo
+                                        (!inOdd && //Even Minute window
+                                        Ammo != 3)) //Ammo is not full (3)
+                                        return NoMercy; //Execute No Mercy if conditions are met
+                                }
+                                if (!LevelChecked(DoubleDown)) //Lv1-89
+                                {
+                                    if (canLateWeave && //Late-weaveable
+                                        Ammo == MaxCartridges(level)) //Ammo is full
+                                        return NoMercy; //Execute No Mercy if conditions are met
+                                }
+                            }
+
                             //Zone
                             if (IsEnabled(CustomComboPreset.GNB_ST_BlastingZone) && //Zone option is enabled
                                 canZone && //able to use Zone
@@ -602,11 +574,11 @@ namespace WrathCombo.Combos.PvE
 
                     //TODO: code below is rather ass; refactor
                     //Lv100 - every 3rd NM window
-                    if (LevelChecked(ReignOfBeasts) && 
-                        HasEffect(Buffs.NoMercy) && 
-                        GunStep == 0 && 
-                        LevelChecked(BurstStrike) && 
-                        lastComboMove is BrutalShell && 
+                    if (LevelChecked(ReignOfBeasts) &&
+                        HasEffect(Buffs.NoMercy) &&
+                        GunStep == 0 &&
+                        LevelChecked(BurstStrike) &&
+                        lastComboMove is BrutalShell &&
                         Ammo == 1)
                         return SolidBarrel;
                     //Lv90 - every 3rd NM window
@@ -614,7 +586,7 @@ namespace WrathCombo.Combos.PvE
                         HasEffect(Buffs.NoMercy) &&
                         GunStep == 0 &&
                         LevelChecked(BurstStrike) &&
-                        (lastComboMove is BrutalShell || JustUsed(BurstStrike)) && 
+                        (lastComboMove is BrutalShell || JustUsed(BurstStrike)) &&
                         Ammo == 1)
                         return SolidBarrel;
 
@@ -668,16 +640,17 @@ namespace WrathCombo.Combos.PvE
                         IsEnabled(CustomComboPreset.GNB_ST_BurstStrike) && //Burst Strike option is enabled
                         GetTargetHPPercent() > nmStop && //target HP is above threshold
                         LevelChecked(ReignOfBeasts) && //Lv100
-                        ((nmCD <= GCD || ActionReady(NoMercy)) && //No Mercy is ready or about to be
+                        (nmCD < 1 && //No Mercy is ready or about to be
                         Ammo is 3 && //Ammo is full
-                        (bfCD < GCD * 12 || ActionReady(Bloodfest)))) //Bloodfest is ready or about to be
+                        bfCD < GCD * 12)) //Bloodfest is ready or about to be
                         return BurstStrike;
 
                     //Gauge Combo Steps
                     if (IsEnabled(CustomComboPreset.GNB_ST_Gnashing) && //Gnashing Fang option is enabled
                         GunStep is 1 or 2) //Gnashing Fang combo is only for 1 and 2
                         return OriginalHook(GnashingFang); //Execute Gnashing Fang combo if conditions are met
-                    if (GunStep is 3 or 4) //Reign of Beasts combo is only for 3 and 4
+                    if (IsEnabled(CustomComboPreset.GNB_ST_Reign) && //Reign of Beasts option is enabled
+                        GunStep is 3 or 4) //Reign of Beasts combo is only for 3 and 4
                         return OriginalHook(ReignOfBeasts); //Execute Reign of Beasts combo if conditions are met
 
                     //123 (overcap included)
@@ -736,13 +709,6 @@ namespace WrathCombo.Combos.PvE
                     var hasBreak = HasEffect(Buffs.ReadyToBreak); //Checks for Ready To Break buff
                     var hasReign = HasEffect(Buffs.ReadyToReign); //Checks for Ready To Reign buff
                     //Mitigations
-                    var hpRemainingHOC = Config.GNB_AoE_HOCThreshold;
-                    var hpRemainingNebula = Config.GNB_AoE_GreatNebulaThreshold;
-                    var hpRemainingBolide = Config.GNB_AoE_SuperbolideSelfThreshold;
-                    var hpRemainingBolideTarget =
-                        Config.GNB_AoE_SuperbolideTargetThreshold;
-                    //Misc
-                    var nmStop = PluginConfiguration.GetCustomIntValue(Config.GNB_AoE_NoMercyStop);
                     #region Minimal Requirements
                     //Ammo-relative
                     var canFC = LevelChecked(FatedCircle) && //Fated Circle is unlocked
@@ -876,12 +842,8 @@ namespace WrathCombo.Combos.PvE
                                 if (!LevelChecked(FatedCircle)) //if Fated Circle is not unlocked
                                     return BurstStrike; //execute Burst Strike
                             }
-                            if (Ammo != MaxCartridges(level) || //if gauge is not full
-                                (Ammo == MaxCartridges(level) && //if gauge is full
-                                !LevelChecked(FatedCircle))) //if Fated Circle is not unlocked
-                            {
+                            if (Ammo != MaxCartridges(level)) //if gauge is full && if Fated Circle is not unlocked
                                 return DemonSlaughter; //execute Demon Slaughter
-                            }
                         }
                     }
 
@@ -943,8 +905,8 @@ namespace WrathCombo.Combos.PvE
                     #endregion
 
                     //Variant Cure
-                    if (IsEnabled(CustomComboPreset.GNB_Variant_Cure) && 
-                        IsEnabled(Variant.VariantCure) && 
+                    if (IsEnabled(CustomComboPreset.GNB_Variant_Cure) &&
+                        IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.GNB_VariantCure))
                         return Variant.VariantCure;
 
@@ -960,8 +922,8 @@ namespace WrathCombo.Combos.PvE
                                 return Variant.VariantSpiritDart;
 
                             //Variant Ultimatum
-                            if (IsEnabled(CustomComboPreset.GNB_Variant_Ultimatum) && 
-                                IsEnabled(Variant.VariantUltimatum) && 
+                            if (IsEnabled(CustomComboPreset.GNB_Variant_Ultimatum) &&
+                                IsEnabled(Variant.VariantUltimatum) &&
                                 ActionReady(Variant.VariantUltimatum))
                                 return Variant.VariantUltimatum;
 
@@ -1002,8 +964,8 @@ namespace WrathCombo.Combos.PvE
                                 HasEffect(Buffs.NoMercy)) //if No Mercy is active
                                 return BowShock; //execute Bow Shock
                             //Zone
-                            if (IsEnabled(CustomComboPreset.GNB_AoE_DangerZone) && 
-                                canZone && 
+                            if (IsEnabled(CustomComboPreset.GNB_AoE_DangerZone) &&
+                                canZone &&
                                 nmCD is < 57.5f and > 17) //use on CD after first usage in NM
                                 return OriginalHook(DangerZone); //execute Zone
                             //Bloodfest
@@ -1038,11 +1000,11 @@ namespace WrathCombo.Combos.PvE
                         //FatedCircle - if not LevelChecked, use BurstStrike
                         if (IsEnabled(CustomComboPreset.GNB_AoE_FatedCircle) && //if Fated Circle option is enabled
                             canFC && //if Fated Circle is unlocked && gauge is not empty
-                            //Normal
+                                     //Normal
                             ((HasEffect(Buffs.NoMercy) && //if No Mercy is active
                             !ActionReady(DoubleDown) && //if Double Down is not ready
                             GunStep == 0) || //if Gnashing Fang or Reign combo is not active
-                            //Bloodfest prep
+                                             //Bloodfest prep
                             (IsEnabled(CustomComboPreset.GNB_AoE_Bloodfest) && //if Bloodfest option is enabled
                             bfCD < 6))) //if Bloodfest is about to be ready
                             return FatedCircle;
@@ -1095,7 +1057,7 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if (actionID is KeenEdge)
+                if (actionID is GnashingFang)
                 {
                     #region Variables
                     //Gauge
@@ -1121,17 +1083,15 @@ namespace WrathCombo.Combos.PvE
                     var canBS = LevelChecked(BurstStrike) && //Burst Strike is unlocked
                                 Ammo > 0; //Has Ammo
                     var canGF = LevelChecked(GnashingFang) && //GnashingFang is unlocked
-                                GetCooldownRemainingTime(GnashingFang) < 0.6f && //Gnashing Fang is off cooldown
+                                gfCD < 0.6f && //Gnashing Fang is off cooldown
                                 !HasEffect(Buffs.ReadyToBlast) && //to ensure Hypervelocity is spent in case Burst Strike is used before Gnashing Fang
                                 GunStep == 0 && //Gnashing Fang or Reign combo is not already active
                                 Ammo > 0; //Has Ammo
-                    var canFC = LevelChecked(FatedCircle) && //Fated Circle is unlocked
-                                Ammo > 0; //Has Ammo
                     var canDD = LevelChecked(DoubleDown) && //Double Down is unlocked
-                                GetCooldownRemainingTime(DoubleDown) < 0.6f && //Double Down is off cooldown
+                                ddCD < 0.6f && //Double Down is off cooldown
                                 Ammo > 0; //Has Ammo
                     var canBF = LevelChecked(Bloodfest) && //Bloodfest is unlocked
-                                GetCooldownRemainingTime(Bloodfest) < 0.6f; //Bloodfest is off cooldown
+                                bfCD < 0.6f; //Bloodfest is off cooldown
                     //Cooldown-relative
                     var canZone = LevelChecked(DangerZone) && //Zone is unlocked
                                 GetCooldownRemainingTime(OriginalHook(DangerZone)) < 0.6f; //DangerZone is off cooldown
@@ -1142,37 +1102,9 @@ namespace WrathCombo.Combos.PvE
                     var canContinue = LevelChecked(Continuation); //Continuation is unlocked
                     var canReign = LevelChecked(ReignOfBeasts) && //Reign of Beasts is unlocked
                                 GunStep == 0 && //Gnashing Fang or Reign combo is not already active
-                                HasEffect(Buffs.ReadyToReign); //Ready To Reign is active
+                                hasReign; //Ready To Reign is active
                     #endregion
                     #endregion
-
-                    //No Mercy
-                    if (IsEnabled(CustomComboPreset.GNB_GF_Features) && //Cooldowns option is enabled
-                        IsEnabled(CustomComboPreset.GNB_GF_NoMercy) && //No Mercy option  is enabled
-                        ActionReady(NoMercy) && //No Mercy is ready
-                        CanWeave(actionID)) //Weaveable window
-                    {
-                        if (LevelChecked(DoubleDown)) //Lv100
-                        {
-                            if ((inOdd && //Odd Minute window
-                                (Ammo >= 2 || (lastComboMove is BrutalShell && Ammo == 1))) || //2 Ammo or 1 Ammo with Solid Barrel next in combo
-                                (!inOdd && //Even Minute window
-                                Ammo != 3)) //Ammo is not full (3)
-                                return NoMercy; //Execute No Mercy if conditions are met
-                        }
-                        if (!LevelChecked(DoubleDown)) //Lv1-89
-                        {
-                            if (canLateWeave && //Late-weaveable
-                                Ammo == MaxCartridges(level)) //Ammo is full
-                                return NoMercy; //Execute No Mercy if conditions are met
-                        }
-                    }
-
-                    //Bloodfest - Forced to prevent combo from spazzing out due to next action possibly requiring Ammo
-                    if (IsEnabled(CustomComboPreset.GNB_GF_Bloodfest) && //Bloodfest option is enabled
-                        canBF && //able to use Bloodfest
-                        Ammo == 0) //Only when ammo is empty
-                        return Bloodfest; //Execute Bloodfest if conditions are met
 
                     //oGCDs
                     if (CanWeave(actionID))
@@ -1189,8 +1121,42 @@ namespace WrathCombo.Combos.PvE
                             return Variant.VariantUltimatum;
 
                         //Cooldowns
-                        if (IsEnabled(CustomComboPreset.GNB_GF_Features)) //Cooldowns option is enabled
+                        if (IsEnabled(CustomComboPreset.GNB_GF_Features)) //Features are enabled
                         {
+                            //Bloodfest
+                            if (IsEnabled(CustomComboPreset.GNB_GF_Bloodfest) && //Bloodfest option is enabled
+                                InCombat() && //In combat
+                                HasTarget() && //Has target
+                                canBF && //able to use Bloodfest
+                                Ammo == 0) //Only when ammo is empty
+                                return Bloodfest; //Execute Bloodfest if conditions are met
+
+                            //No Mercy
+                            if (IsEnabled(CustomComboPreset.GNB_GF_NoMercy) && //No Mercy option  is enabled
+                                ActionReady(NoMercy) && //No Mercy is ready
+                                InCombat() && //In combat
+                                HasTarget()) //Has target
+                            {
+                                if (LevelChecked(DoubleDown)) //Lv90+
+                                {
+                                    if (IsOnCooldown(Bloodfest) &&
+                                        Ammo == 3 &&
+                                        lastComboMove is KeenEdge) //3 Ammo with Keen Edge for Opener
+                                        return NoMercy; //Execute No Mercy if conditions are met
+                                    if ((inOdd && //Odd Minute window
+                                        (Ammo == 2 || (lastComboMove is BrutalShell && Ammo == 1))) || //2 Ammo or 1 Ammo with Solid Barrel next in combo
+                                        (!inOdd && //Even Minute window
+                                        Ammo != 3)) //Ammo is not full (3)
+                                        return NoMercy; //Execute No Mercy if conditions are met
+                                }
+                                if (!LevelChecked(DoubleDown)) //Lv1-89
+                                {
+                                    if (canLateWeave && //Late-weaveable
+                                        Ammo == MaxCartridges(level)) //Ammo is full
+                                        return NoMercy; //Execute No Mercy if conditions are met
+                                }
+                            }
+
                             //Zone
                             if (IsEnabled(CustomComboPreset.GNB_GF_Zone) && //Zone option is enabled
                                 canZone && //able to use Zone
@@ -1244,7 +1210,7 @@ namespace WrathCombo.Combos.PvE
                         return SolidBarrel;
 
                     //GCDs
-                    if (IsEnabled(CustomComboPreset.GNB_GF_Features)) //Cooldowns option is enabled
+                    if (IsEnabled(CustomComboPreset.GNB_GF_Features)) //Features are enabled
                     {
                         //GnashingFang
                         if (canGF && //able to use Gnashing Fang
@@ -1290,11 +1256,10 @@ namespace WrathCombo.Combos.PvE
                     //Lv100 2cart forced 2min starter
                     if (IsEnabled(CustomComboPreset.GNB_GF_Features) && //Cooldowns option is enabled
                         IsEnabled(CustomComboPreset.GNB_GF_BurstStrike) && //Burst Strike option is enabled
-                        GetTargetHPPercent() > nmStop && //target HP is above threshold
                         LevelChecked(ReignOfBeasts) && //Lv100
-                        ((nmCD <= GCD || ActionReady(NoMercy)) && //No Mercy is ready or about to be
+                        (nmCD < 1 && //No Mercy is ready or about to be
                         Ammo is 3 && //Ammo is full
-                        (bfCD < GCD * 12 || ActionReady(Bloodfest)))) //Bloodfest is ready or about to be
+                        bfCD < GCD * 12)) //Bloodfest is ready or about to be
                         return BurstStrike;
 
                     //Gauge Combo Steps
@@ -1302,8 +1267,6 @@ namespace WrathCombo.Combos.PvE
                         return OriginalHook(GnashingFang); //Execute Gnashing Fang combo if conditions are met
                     if (GunStep is 3 or 4) //Reign of Beasts combo is only for 3 and 4
                         return OriginalHook(ReignOfBeasts); //Execute Reign of Beasts combo if conditions are met
-
-                    return KeenEdge;
                 }
 
                 return actionID;
