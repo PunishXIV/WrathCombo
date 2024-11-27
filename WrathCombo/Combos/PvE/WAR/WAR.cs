@@ -99,7 +99,7 @@ namespace WrathCombo.Combos.PvE
                 Placeholder = 1;
         }
 
-       
+
 
         internal class WAR_ST_SimpleMode : CustomCombo
         {
@@ -440,6 +440,24 @@ namespace WrathCombo.Combos.PvE
                     return HeavySwing;
                 }
 
+                return actionID;
+            }
+        }
+
+        internal class WAR_StormsEye_Maintenance : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_StormsEye_Maintenance;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                if (actionID == StormsPath)
+                {
+                    var surgingRemaining = GetBuffRemainingTime(Buffs.SurgingTempest);
+                    var surgingThreshold = PluginConfiguration.GetCustomIntValue(Config.WAR_SurgingRefreshRange);
+
+                    if (LevelChecked(StormsEye) && surgingRemaining <= surgingThreshold)
+                        return StormsEye;
+                }
                 return actionID;
             }
         }
