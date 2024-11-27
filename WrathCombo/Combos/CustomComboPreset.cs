@@ -1462,7 +1462,7 @@ namespace WrathCombo.Combos
         [AutoAction(false, false)]
         [ReplaceSkill(DRG.TrueThrust)]
         [ConflictingCombos(DRG_ST_AdvancedMode)]
-        [CustomComboInfo("Simple Mode - Single Target", "Replaces True Thrust with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", DRG.JobID)]
+        [CustomComboInfo("Simple Mode - Single Target", "Replaces True Thrust with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", DRG.JobID,-2)]
         DRG_ST_SimpleMode = 6001,
 
         #region Advanced ST Dragoon
@@ -1565,10 +1565,11 @@ namespace WrathCombo.Combos
         DRG_TrueNorthDynamic = 6199,
 
         #endregion
+        
         [AutoAction(true, false)]
         [ReplaceSkill(DRG.DoomSpike)]
         [ConflictingCombos(DRG_AOE_AdvancedMode)]
-        [CustomComboInfo("Simple Mode - AoE", "Replaces Doom Spike with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", DRG.JobID)]
+        [CustomComboInfo("Simple Mode - AoE", "Replaces Doom Spike with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", DRG.JobID,-1)]
         DRG_AOE_SimpleMode = 6200,
 
         #region Advanced AoE Dragoon
@@ -1667,11 +1668,19 @@ namespace WrathCombo.Combos
         DRG_AoE_ComboHeals = 6299,
 
         #endregion
+        
+        [ReplaceSkill(DRG.FullThrust, DRG.HeavensThrust)]
+        [CustomComboInfo("FullThrust Combo", "Replace Full Thrust/Heavens' Thrust with its combo chain.", DRG.JobID)]
+        DRG_ST_FullThrustCombo = 6304,
+
+        [ReplaceSkill(DRG.ChaosThrust, DRG.ChaoticSpring)]
+        [CustomComboInfo("Chaotic Combo", "Replace Chaos Thrust /Chaotic Spring with its combo chain.", DRG.JobID)]
+        DRG_ST_ChaoticCombo = 6305,
 
         [ReplaceSkill(DRG.LanceCharge)]
         [CustomComboInfo("Lance Charge to Battle Litany Feature", "Turns Lance Charge into Battle Litany when the former is on cooldown.", DRG.JobID)]
         DRG_BurstCDFeature = 6301,
-
+        
         [Variant]
         [VariantParent(DRG_ST_AdvancedMode, DRG_AOE_AdvancedMode)]
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", DRG.JobID)]
@@ -1683,7 +1692,7 @@ namespace WrathCombo.Combos
         DRG_Variant_Rampart = 6303,
 
 
-        // Last value = 6117 - 6216 - 6303
+        // Last value = 6117 - 6216 - 6305
 
         #endregion
 
