@@ -21,7 +21,8 @@ namespace WrathCombo.Combos.PvP
             HeavensThrust = 29489,
             Nastrond = 29492,
             Purify = 29056,
-            Guard = 29054;
+            Guard = 29054,
+            Drakesbane = 41449;
 
 
         public static class Buffs
@@ -48,7 +49,7 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if (actionID is RaidenThrust or FangAndClaw or WheelingThrust)
+                if (actionID is RaidenThrust or FangAndClaw or WheelingThrust or Drakesbane)
                 {
                     bool enemyGuarded = TargetHasEffectAny(PvPCommon.Buffs.Guard);
 
@@ -79,6 +80,9 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.DRGPvP_WyrmwindThrust) && HasEffect(Buffs.FirstmindsFocus) && GetTargetDistance() >= GetOptionValue(Config.DRGPvP_Distance_Threshold))
                             return WyrmwindThrust;
                     }
+
+                    if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringExecute) && IsOffCooldown(ChaoticSpring) && EnemyHealthCurrentHp() <= 8000)
+                            return ChaoticSpring;
                 }
                 return actionID;
             }
