@@ -5845,7 +5845,7 @@ namespace WrathCombo.Combos
 
         [PvPCustomCombo]
         [ParentCombo(RPRPvP_Burst)]
-        [CustomComboInfo("Ranged Harvest Moon Option", "Adds Harvest Moon onto the main combo when you're out of melee range, the GCD is not rolling and it's available for use.", RPR.JobID)]
+        [CustomComboInfo("Ranged Harvest Moon Option", "Adds Harvest Moon onto the main combo when you're out of melee range, the GCD is not rolling and it's available for use. Will also throw it when the enemy is under 12k health for execute", RPR.JobID)]
         RPRPvP_Burst_RangedHarvest = 122007,
 
         [PvPCustomCombo]

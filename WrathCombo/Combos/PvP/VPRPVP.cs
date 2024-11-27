@@ -43,6 +43,25 @@ namespace WrathCombo.Combos.PvP
 
                 if (actionID is SteelFangs or HuntersSting or BarbarousSlice or PiercingFangs or SwiftskinsSting or RavenousBite)
                 {
+<<<<<<< HEAD
+                    // Serpent's Tail every ability bypasses guard. Canweave removed because gcd of 2 seconds is too fast for the needed double weave Twinfang/Twinblood
+                    if (isSerpentsTailPrimed && IsEnabled(CustomComboPreset.VPRPvP_Burst_Serpent))
+                        return OriginalHook(SerpentsTail);
+
+                    // gap closer
+                    if (ActionReady(Slither) && IsEnabled(CustomComboPreset.VPRPvP_Burst_Slither) && !inMeleeRange)
+                        return OriginalHook(Slither);
+
+                    // Snakescales backlash finisher, will not initiate the snakescales guard stance
+                    if (OriginalHook(Snakescales) == Backlash && IsEnabled(CustomComboPreset.VPRPvP_Burst_Backlash))
+                        return OriginalHook(Snakescales);
+
+                    // Rattling coil reseting cds on snakescales and uncoiled fury
+                    if (IsOnCooldown(UncoiledFury) && IsOnCooldown(Snakescales) && ActionReady(RattlingCoil) && IsEnabled(CustomComboPreset.VPRPvP_Burst_Rattling))
+                        return OriginalHook(RattlingCoil);
+
+=======
+>>>>>>> parent of 4510a7e8 ([PVP] Various fixes Wave 3)
                     if (!PvPCommon.IsImmuneToDamage() && HasTarget())
                     {
                         // Serpent's Tail
