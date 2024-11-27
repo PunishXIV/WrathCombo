@@ -4829,6 +4829,10 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", VPR.JobID)]
         VPR_Variant_Rampart = 30301,
 
+        [ReplaceSkill(VPR.SteelFangs , VPR.ReavingFangs , VPR.HuntersCoil , VPR.SwiftskinsCoil)]
+        [CustomComboInfo("Legacy Buttons", "Replaces Generations with the Legacys.", VPR.JobID)]
+        VPR_Legacies = 30209,
+
         #endregion
 
         #region WARRIOR
