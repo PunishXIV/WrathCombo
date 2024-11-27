@@ -1,4 +1,4 @@
-﻿using WrathCombo.Attributes;
+using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
 
@@ -4835,7 +4835,7 @@ namespace WrathCombo.Combos
 
         #region Simple ST
         [AutoAction(false, false)]
-        [ConflictingCombos(WAR_ST_Advanced)]
+        [ConflictingCombos(WAR_ST_Advanced, WAR_StormsEye_Maintenance)]
         [ReplaceSkill(WAR.StormsPath)]
         [CustomComboInfo("Simple Mode - Single Target", "Replaces Storm's Path with a one-button full single target rotation.\nThis is the ideal selection for newcomers to the job.", WAR.JobID, 1)]
         WAR_ST_Simple = 18000,
@@ -4851,7 +4851,7 @@ namespace WrathCombo.Combos
 
         #region Advanced ST
         [AutoAction(false, false)]
-        [ConflictingCombos(WAR_ST_Simple)]
+        [ConflictingCombos(WAR_ST_Simple, WAR_StormsEye_Maintenance)]
         [ReplaceSkill(WAR.StormsPath)]
         [CustomComboInfo("Advanced Mode - Single Target", "Replaces Storm's Path with a one-button full single target rotation.\nThis is the ideal selection for users experienced with the job.", WAR.JobID, 2)]
         WAR_ST_Advanced = 18002,
@@ -4954,6 +4954,11 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Storm's Eye Combo Feature", "Replace Storm's Eye with its combo chain.", WAR.JobID, 3)]
         War_ST_StormsEye = 18025,
 
+        [ConflictingCombos(WAR_ST_Advanced, WAR_ST_Simple)]
+        [ReplaceSkill(WAR.StormsPath)]
+        [CustomComboInfo("Storm's Eye Maintenance Feature", "Replace Storm's Path with Storm's Eye when the debuff is not present or less than the specified time.", WAR.JobID, 4)]
+        WAR_StormsEye_Maintenance = 18031,
+
         [ReplaceSkill(WAR.InnerRelease)]
         [CustomComboInfo("Primal Combo Feature", "Turns Inner Release into the Primal combo on use.", WAR.JobID, 3)]
         WAR_PrimalCombo_InnerRelease = 18026,
@@ -4978,7 +4983,7 @@ namespace WrathCombo.Combos
         WAR_Variant_Ultimatum = 18030,
         #endregion
 
-        // Last value = 18030
+        // Last value = 18031
 
         #endregion
 
