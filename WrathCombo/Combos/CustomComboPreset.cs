@@ -2124,6 +2124,10 @@ namespace WrathCombo.Combos
         MCH_AoE_Adv_Hypercharge = 8303,
 
         [ParentCombo(MCH_AoE_AdvancedMode)]
+        [CustomComboInfo("Blazing Shot Option", "Use Blazing shot instead of Crossbow at lvl 92+", MCH.JobID)]
+        MCH_AoE_Adv_BlazingShot = 8312,
+        
+        [ParentCombo(MCH_AoE_AdvancedMode)]
         [CustomComboInfo("Rook Autoturret/Automaton Queen Option", "Adds Rook Autoturret or Automaton Queen to the rotation.", MCH.JobID)]
         MCH_AoE_Adv_Queen = 8304,
 
@@ -2158,7 +2162,7 @@ namespace WrathCombo.Combos
         [ParentCombo(MCH_AoE_AdvancedMode)]
         [CustomComboInfo("Head Graze Option", "Uses Head Graze to interrupt during the rotation, where applicable.", MCH.JobID)]
         MCH_AoE_Adv_Interrupt = 8311,
-
+        
         #endregion
 
         #region Variant
