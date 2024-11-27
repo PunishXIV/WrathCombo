@@ -688,150 +688,154 @@ namespace WrathCombo.Combos
         [AutoAction(false, false)]
         [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
         [ConflictingCombos(BRD_ST_AdvMode)]
-        [CustomComboInfo("Simple Mode - Single Target", "Adds every single target ability to one button,\nIf there are DoTs on target, will try to maintain their uptime.", BRD.JobID)]
+        [CustomComboInfo("Simple Mode - Single Target", "Adds The entire single target rotation on Heavy Shot/Burst Shot." +
+        "\n Pools Bloodletter for Burst Window" +
+        "\n Set's Raging Jaws window to 6 seconds for dot snapshotting" +
+        "\n No waste set to 1 percent." +
+        "\n Second wind to 40 percent." +
+        "\n Auto self cleanse enabled.", BRD.JobID, 1)]
         BRD_ST_SimpleMode = 3036,
 
         [AutoAction(true, false)]
         [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_AdvMode)]
         [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
-        [CustomComboInfo("Simple Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
+        [CustomComboInfo("Simple Mode - AoE", "Adds The entire single target rotation on Quicknock/Ladonsbite." +
+        "\n Pools Rain of death for Burst Window" +
+        "\n No waste set to 5 percent. " +
+        "\n Second wind to 40 percent." +
+        "\n Auto self cleanse enabled.", BRD.JobID, 2)]
         BRD_AoE_SimpleMode = 3035,
 
         [AutoAction(false, false)]
         [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
         [ConflictingCombos(BRD_ST_SimpleMode)]
-        [CustomComboInfo("Advanced Mode - Single Target", "Adds every single target ability to one button,\nIf there are DoTs on target, will try to maintain their uptime.", BRD.JobID)]
+        [CustomComboInfo("Advanced Mode - Single Target", "Adds every single target ability to one button,\nIf there are DoTs on target, will try to maintain their uptime.", BRD.JobID, 3)]
         BRD_ST_AdvMode = 3009,
 
         [AutoAction(true, false)]
         [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_SimpleMode)]
         [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
-        [CustomComboInfo("Advanced Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
+        [CustomComboInfo("Advanced Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID, 4)]
         BRD_AoE_AdvMode = 3015,
 
         [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
         [ConflictingCombos(BRD_ST_AdvMode, BRD_ST_SimpleMode)]
-        [CustomComboInfo("Heavy Shot into Straight Shot Feature", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID)]
+        [CustomComboInfo("Heavy Shot into Straight Shot Feature", "Replaces Heavy Shot/Burst Shot with Straight Shot/Refulgent Arrow when procced.", BRD.JobID, 5)]
         BRD_StraightShotUpgrade = 3001,
                 
         [ParentCombo(BRD_StraightShotUpgrade)]
-        [CustomComboInfo("DoT Maintenance Option", "Enabling this option will make Heavy Shot into Straight Shot refresh your DoTs on your current.", BRD.JobID)]
+        [CustomComboInfo("DoT Maintenance Option", "Enabling this option will make Heavy Shot into Straight Shot refresh your DoTs on your current.", BRD.JobID, 1)]
         BRD_DoTMaintainance = 3002,
 
         [ParentCombo(BRD_StraightShotUpgrade)]
-        [CustomComboInfo("Apex Arrow Option", "Replaces Burst Shot with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID)]
+        [CustomComboInfo("Apex Arrow Option", "Replaces Burst Shot with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID, 2)]
         BRD_ApexST = 3034,
 
         [ReplaceSkill(BRD.IronJaws)]
         [ConflictingCombos(BRD_IronJaws_Alternate)]
-        [CustomComboInfo("Iron Jaws Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available.", BRD.JobID)]
+        [CustomComboInfo("Iron Jaws Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nAlternates between the two if Iron Jaws isn't available.", BRD.JobID, 7)]
         BRD_IronJaws = 3003,
 
         [ReplaceSkill(BRD.IronJaws)]
         [ConflictingCombos(BRD_IronJaws)]
-        [CustomComboInfo("Iron Jaws Alternate Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nIron Jaws will only show up when debuffs are about to expire.", BRD.JobID)]
+        [CustomComboInfo("Iron Jaws Alternate Feature", "Iron Jaws is replaced with Caustic Bite/Stormbite if one or both are not up.\nIron Jaws will only show up when debuffs are about to expire.", BRD.JobID, 8)]
         BRD_IronJaws_Alternate = 3004,
 
         [ParentCombo(BRD_AoE_Combo)]
-        [CustomComboInfo("Apex Arrow Option", "Replaces Ladonsbite and Quick Nock with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID)]
+        [CustomComboInfo("Apex Arrow Option", "Replaces Ladonsbite and Quick Nock with Apex Arrow when gauge is full and Blast Arrow when you are Blast Arrow ready.", BRD.JobID, 1)]
         BRD_Apex = 3005,
 
         [ReplaceSkill(BRD.Bloodletter)]
-        [CustomComboInfo("Single Target oGCD Feature", "All oGCD's on Bloodletter/Heartbreakshot", BRD.JobID)]
+        [CustomComboInfo("Single Target oGCD Feature", "All oGCD's on Bloodletter/Heartbreakshot", BRD.JobID, 6)]
         BRD_ST_oGCD = 3006,
 
         [ParentCombo(BRD_ST_oGCD)]
-        [CustomComboInfo("Quick song option", "Adds the songs to the oGCD feature. Wanderers > Mages > Armys", BRD.JobID)]
+        [CustomComboInfo("Quick song option", "Adds the songs to the oGCD feature. Wanderers > Mages > Armys", BRD.JobID, 1)]
         BRD_ST_oGCD_Songs = 3044,
 
         [ReplaceSkill(BRD.RainOfDeath)]       
-        [CustomComboInfo("AoE oGCD Feature", "All AoE oGCD's on Rain of Death depending on their CD.", BRD.JobID)]
+        [CustomComboInfo("AoE oGCD Feature", "All AoE oGCD's on Rain of Death depending on their CD.", BRD.JobID, 10)]
         BRD_AoE_oGCD = 3007,
 
         [ParentCombo(BRD_AoE_oGCD)]
-        [CustomComboInfo("Quick song option", "Adds the songs to the AoE oGCD feature. Wanderers > Mages > Armys", BRD.JobID)]
+        [CustomComboInfo("Quick song option", "Adds the songs to the AoE oGCD feature. Wanderers > Mages > Armys", BRD.JobID, 1)]
         BRD_AoE_oGCD_Songs = 3045,
 
         [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
         [ConflictingCombos(BRD_AoE_AdvMode, BRD_AoE_SimpleMode)]
-        [CustomComboInfo("Quick Nock Feature", "Replaces Quick Nock/Ladonsbite with Shadowbite when ready.", BRD.JobID)]
+        [CustomComboInfo("Quick Nock Feature", "Replaces Quick Nock/Ladonsbite with Shadowbite when ready.", BRD.JobID, 9)]
         BRD_AoE_Combo = 3008,
                 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Bard DoTs Option", "This option will make Bard apply DoTs if none are present on the target.", BRD.JobID)]
+        [CustomComboInfo("Bard DoTs Option", "This option will make Bard apply DoTs if none are present on the target.", BRD.JobID, 2)]
         BRD_Adv_DoT = 3010,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Bard Songs Option", "This option adds the Bard's Songs to the Advanced Bard Feature.", BRD.JobID)]
+        [CustomComboInfo("Bard Songs Option", "This option adds the Bard's Songs to the Advanced Bard Feature.", BRD.JobID, 1)]
         BRD_Adv_Song = 3011,       
 
         [ReplaceSkill(BRD.Barrage)]
-        [CustomComboInfo("Bard Buffs Feature", "Adds Raging Strikes and Battle Voice onto Barrage.", BRD.JobID)]
+        [CustomComboInfo("Bard Buffs Feature", "Adds Raging Strikes and Battle Voice onto Barrage.", BRD.JobID, 11)]
         BRD_Buffs = 3013,
 
         [ReplaceSkill(BRD.WanderersMinuet)]
-        [CustomComboInfo("One Button Songs Feature", "Add Mage's Ballad and Army's Paeon to Wanderer's Minuet depending on cooldowns.", BRD.JobID)]
+        [CustomComboInfo("One Button Songs Feature", "Add Mage's Ballad and Army's Paeon to Wanderer's Minuet depending on cooldowns.", BRD.JobID, 12)]
         BRD_OneButtonSongs = 3014,
                 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("Bard Song Option", "Weave Songs on the Advanced AoE.", BRD.JobID)]
+        [CustomComboInfo("Bard Song Option", "Weave Songs on the Advanced AoE.", BRD.JobID, 1)]
         BRD_AoE_Adv_Songs = 3016,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
+        [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID, 6)]
         BRD_AoE_Adv_Interrupt = 3043,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("oGcd Option", "Weave Sidewinder, Empyreal arrow, Rain of death, and Pitch perfect when available.", BRD.JobID)]
+        [CustomComboInfo("oGcd Option", "Weave Sidewinder, Empyreal arrow, Rain of death, and Pitch perfect when available.", BRD.JobID, 2)]
         BRD_AoE_Adv_oGCD = 3037,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("oGcd Option", "Weave Sidewinder, Empyreal arrow, Rain of death, and Pitch perfect when available.", BRD.JobID)]
+        [CustomComboInfo("oGcd Option", "Weave Sidewinder, Empyreal arrow, Rain of death, and Pitch perfect when available.", BRD.JobID, 3)]
         BRD_ST_Adv_oGCD = 3038,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature.", BRD.JobID)]
+        [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature.", BRD.JobID, 5)]
         BRD_Adv_Buffs = 3017,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Resonant Option", "Adds Resonant Arrow to the Rotation after Barrage.", BRD.JobID)]
+        [CustomComboInfo("Resonant Option", "Adds Resonant Arrow to the Rotation after Barrage.", BRD.JobID, 8)]
         BRD_Adv_BuffsResonant = 3041,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Buffs - Radiant Option", "Adds Radiant Finale to the Advanced Bard feature.", BRD.JobID)]
+        [CustomComboInfo("Buffs - Radiant Option", "Adds Radiant Finale to the Advanced Bard feature.", BRD.JobID, 6)]
         BRD_Adv_BuffsRadiant = 3018,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Encore Option", "Adds Radiant Encore to the Rotation after Finale.", BRD.JobID)]
+        [CustomComboInfo("Encore Option", "Adds Radiant Encore to the Rotation after Finale.", BRD.JobID, 9)]
         BRD_Adv_BuffsEncore = 3042,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("No Waste Option", "Adds enemy health checking on mobs for buffs, DoTs and Songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
+        [CustomComboInfo("No Waste Option", "Adds enemy health checking on mobs for buffs, DoTs and Songs.\nThey will not be reapplied if less than specified.", BRD.JobID, 12)]
         BRD_Adv_NoWaste = 3019,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
+        [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID, 11)]
         BRD_Adv_Interrupt = 3020,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
+        [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID, 10)]
         BRD_ST_ApexArrow = 3021,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
+        [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID, 5)]
         BRD_Aoe_ApexArrow = 3039,
 
-        //[ConflictingCombos(BardoGCDSingleTargetFeature)]
-        //[ParentCombo(SimpleBardFeature)]
-        //[CustomComboInfo("Simple Opener", "Adds the optimum opener to simple bard.\nThis conflicts with pretty much everything outside of simple bard options due to the nature of the opener.", BRD.JobID)]
-        //BardSimpleOpener = 3022,
-
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Pooling Option", "84+ Pools Bloodletter charges to allow for optimum burst phases.", BRD.JobID)]
+        [CustomComboInfo("Pooling Option", "84+ Pools Bloodletter charges to allow for optimum burst phases.", BRD.JobID, 4)]
         BRD_Adv_Pooling = 3023,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("Pooling Option", "84+ Pools Rain of death charges to allow for optimum burst phases.", BRD.JobID)]
+        [CustomComboInfo("Pooling Option", "84+ Pools Rain of death charges to allow for optimum burst phases.", BRD.JobID, 3)]
         BRD_AoE_Pooling = 3040,
 
         [ParentCombo(BRD_IronJaws)]
@@ -839,27 +843,23 @@ namespace WrathCombo.Combos
         BRD_IronJawsApex = 3024,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Raging Jaws Option", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID)]
-        BRD_Adv_RagingJaws = 3025,
-
-        //[ParentCombo(BRD_AoE_Simple_Songs)]
-        //[CustomComboInfo("Exclude Wanderer's Minuet Option", "Dont use Wanderer's Minuet.", BRD.JobID)]
-        //BRD_AoE_Simple_SongsExcludeWM = 3027,
+        [CustomComboInfo("Raging Jaws Option", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID, 7)]
+        BRD_Adv_RagingJaws = 3025,           
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID)]
+        [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID, 13)]
         BRD_ST_SecondWind = 3028,
 
         [ParentCombo(BRD_ST_AdvMode)]
-        [CustomComboInfo("Self Cleanse Option", "Uses Wardens Paeon when you have a cleansable debuff.", BRD.JobID)]
+        [CustomComboInfo("Self Cleanse Option", "Uses Wardens Paeon when you have a cleansable debuff.", BRD.JobID, 14)]
         BRD_ST_Wardens = 3047,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID)]
+        [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID, 8)]
         BRD_AoE_SecondWind = 3029,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("Self Cleanse Option", "Uses Wardens Paeon when you have a cleansable debuff.", BRD.JobID)]
+        [CustomComboInfo("Self Cleanse Option", "Uses Wardens Paeon when you have a cleansable debuff.", BRD.JobID, 9)]
         BRD_AoE_Wardens = 3046,
 
         [Variant]
@@ -872,12 +872,12 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", BRD.JobID)]
         BRD_Variant_Cure = 3031,
 
-        [ParentCombo(BRD_AoE_Adv_Songs)]
-        [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.", BRD.JobID)]
+        [ParentCombo(BRD_AoE_AdvMode)]
+        [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.", BRD.JobID, 4)]
         BRD_AoE_Adv_Buffs = 3032,
 
         [ParentCombo(BRD_AoE_AdvMode)]
-        [CustomComboInfo("AoE No Waste Option", "Adds enemy health checking on targetted mob for songs.\nThey will not be reapplied if less than specified.", BRD.JobID)]
+        [CustomComboInfo("AoE No Waste Option", "Adds enemy health checking on targetted mob for songs.\nThey will not be reapplied if less than specified.", BRD.JobID, 7)]
         BRD_AoE_Adv_NoWaste = 3033,
         // Last value = 3047
 
