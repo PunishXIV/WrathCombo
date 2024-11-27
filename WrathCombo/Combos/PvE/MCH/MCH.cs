@@ -146,6 +146,8 @@ internal partial class MCH
 
     internal class MCH_ST_AdvancedMode : CustomCombo
     {
+        protected internal static bool ReadyToWeaveAgainstHeatedBlast;
+
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
@@ -227,18 +229,24 @@ internal partial class MCH
 
                 // Gauss Round and Ricochet during HC
                 if (IsEnabled(CustomComboPreset.MCH_ST_Adv_GaussRicochet) &&
-                    JustUsed(OriginalHook(Heatblast), 0.6f) &&
-                    ActionWatching.GetAttackType(ActionWatching.LastAction) !=
-                    ActionWatching.ActionAttackType.Ability)
+                    WasLastAction(OriginalHook(BlazingShot)) &&
+                    !ActionWatching.HasWeaved() &&
+                    ReadyToWeaveAgainstHeatedBlast)
                 {
                     if (ActionReady(OriginalHook(GaussRound)) &&
                         GetRemainingCharges(OriginalHook(GaussRound)) >=
                         GetRemainingCharges(OriginalHook(Ricochet)))
+                    {
+                        ReadyToWeaveAgainstHeatedBlast = false;
                         return OriginalHook(GaussRound);
+                    }
 
                     if (ActionReady(OriginalHook(Ricochet)) &&
                         GetRemainingCharges(OriginalHook(Ricochet)) > GetRemainingCharges(OriginalHook(GaussRound)))
+                    {
+                        ReadyToWeaveAgainstHeatedBlast = false;
                         return OriginalHook(Ricochet);
+                    }
                 }
 
                 // Reassemble
@@ -278,7 +286,10 @@ internal partial class MCH
             // Heatblast
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Heatblast) &&
                 Gauge.IsOverheated && LevelChecked(OriginalHook(Heatblast)))
+            {
+                ReadyToWeaveAgainstHeatedBlast = true;
                 return OriginalHook(Heatblast);
+            }
 
             //Tools
             if (MCHHelper.Tools(ref actionID))
