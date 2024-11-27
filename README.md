@@ -57,7 +57,7 @@
 <img src="/res/readme_images/adding_repo.jpg" width="450" />
 
 Open the Dalamud Settings menu in game and follow the steps below.
-This can be  done through the button at the bottom of the plugin installer or by
+This can be done through the button at the bottom of the plugin installer or by
 typing `/xlsettings` in the chat.
 
 1. Under Custom Plugin Repositories, enter `https://love.puni.sh/ment.json` into the
@@ -65,8 +65,104 @@ typing `/xlsettings` in the chat.
 2. Click the "+" button.
 3. Click the "Save and Close" button.
 
+Open the Dalamud Plugin Installer menu in game and follow the steps below.
+This can be done through `/xlplugins` in the chat.
+
+1. Click the "All Plugins" tab on the left.
+2. Search for "Wrath Combo".
+3. Click the "Install" button.
+
 <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section> <br>
+
+<!-- Features -->
+<section>
+
+# Features
+
+Below you can find a small example of some of the features and options we offer in
+Wrath Combo. <br>
+Please note, this is just an excerpt and is not representative of the full
+feature-set.
+
+
+  <details><summary>PvE Features</summary> <br>
+
+ - "Simple" (one-button) Mode for many jobs
+ - "Advanced" Mode for many jobs, get as simple as you want
+ - Auto-Rotation, to execute your rotation automatically, based on your settings
+ - Variant Dungeon specific features
+<br><br>
+ - Tank Double Reprisal Protection
+ - Tank Interrupt Feature
+ - Healer Raise Feature
+ - Magical Ranged DPS Double Addle Protection
+ - Magical Ranged DPS Raise Feature
+ - Melee DPS Double Feint Protection
+ - Melee DPS True North Protection
+ - Physical Ranged DPS Double Mitigation Protection
+ - Physical Ranged DPS Interrupt Feature
+    
+ And much more!
+
+  </details>
+
+  <details><summary>PvP Features</summary> <br>
+
+ - "Burst Mode" offense features for all jobs
+ - Emergency Heals
+ - Emergency Guard
+ - Quick Purify
+ - Guard Cancellation Prevention
+    
+ And much more!
+
+  </details>
+
+  <details><summary>Miscellaneous Features</summary> <br>
+
+- Island Sanctuary Sprint Feature
+- [BTN/MIN] Eureka Feature
+- [BTN/MIN] Locate & Truth Feature
+- [FSH] Cast to Hook Feature
+- [FSH] Diving Feature
+
+ And much more!
+
+  </details>
+
+To experience the full set of features on
+offer, <a href="#installation" alt="install">install</a> the plugin or visit
+the [Discord](https://discord.gg/Zzrcc8kmvy) server for more info.
+
+## Use with Other Plugins
+
+### [AutoDuty](https://github.com/ffxivcode/AutoDuty)
+
+Wrath Combo can be used as the Rotation Engine for AutoDuty, such that Wrath Combo's
+Auto-Rotation will be used during duties.
+To enable this:
+1. Open AutoDuty's main window.
+2. Go to the "Config" tab.
+3. Expand the "Duty Config" section.
+4. Enable "Auto Manage Rotation Plugin State".
+
+You will still need to configure Wrath Combo's Auto-Rotation settings and what 
+combos you have set to be enabled in it as normal, AutoDuty will currently on enable
+or disable the Auto-Rotation feature.
+
+1. Open Wrath Combo and navigate to the "Auto-Rotation" tab.
+    - Configure your Auto-Rotation settings as desired.
+2. Navigate to the "PvE Features" tab and select your job.
+    - Enable at least 1 combo, but preferably a Single and Multi-target Combo.
+        - You can use "Simple Mode" combos, or "Advanced Mode" combos and 
+          configure them as desired.
+    - Tick the "Auto-Mode" checkbox to the right of your chosen combos.
+3. AutoDuty will enable Wrath Combo when it commences a duty, and disable it when 
+   it ends.
+
+  <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
+</section> 
 
 <!-- Commands -->
 <section>
@@ -91,69 +187,6 @@ typing `/xlsettings` in the chat.
 
 <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section>
-
-<!-- Features -->
-<section>
-
-# Features
-
-Below you can find a small example of some of the features and options we offer in
-Wrath Combo. <br>
-Please note, this is just an excerpt and is not representative of the full
-feature-set.
-
-
-  <details><summary>PvE Features</summary> <br>
-
-    "Simple" (one-button) Mode for many jobs
-    "Advanced" Mode for many jobs, get as simple as you want
-    Auto-Rotation, to execute your rotation automatically, based on your settings
-    Variant Dungeon specific features
-
-    Tank Double Reprisal Protection
-    Tank Interrupt Feature
-    Healer Raise Feature
-    Magical Ranged DPS Double Addle Protection
-    Magical Ranged DPS Raise Feature
-    Melee DPS Double Feint Protection
-    Melee DPS True North Protection
-    Physical Ranged DPS Double Mitigation Protection
-    Physical Ranged DPS Interrupt Feature
-    
-    And much more!
-
-  </details>
-
-  <details><summary>PvP Features</summary> <br>
-
-    "Burst Mode" offense features for all jobs
-    Emergency Heals
-    Emergency Guard
-    Quick Purify
-    Guard Cancellation Prevention
-    
-    And much more!
-
-  </details>
-
-  <details><summary>Miscellaneous Features</summary> <br>
-
-    Island Sanctuary Sprint Feature
-    [BTN/MIN] Eureka Feature
-    [BTN/MIN] Locate & Truth Feature
-    [FSH] Cast to Hook Feature
-    [FSH] Diving Feature
-    
-    And much more!
-
-  </details>
-
-To experience the full set of features on
-offer, <a href="#installation" alt="install">install</a> the plugin or visit
-the [Discord](https://discord.gg/Zzrcc8kmvy) server for more info.
-
-  <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
-</section> 
 
 <!-- Contributing -->
 <section>
