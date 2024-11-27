@@ -5287,10 +5287,6 @@ namespace WrathCombo.Combos
         ASTPvP_Burst = 111000,
 
         [ParentCombo(ASTPvP_Burst)]
-        [CustomComboInfo("Double Cast Option", "Adds Double Cast to Burst Mode.", AST.JobID)]
-        ASTPvP_DoubleCast = 111001,
-
-        [ParentCombo(ASTPvP_Burst)]
         [CustomComboInfo("Card Draw Option", "Adds Drawing Cards to Burst Mode.", AST.JobID)]
         ASTPvP_Burst_DrawCard = 111002,
 
@@ -5302,16 +5298,20 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Double Cast Heal Feature", "Adds Double Cast to Aspected Benefic.", AST.JobID)]
         ASTPvP_Heal = 111004,
 
-        [ParentCombo(ASTPvP_DoubleCast)]
+        [ParentCombo(ASTPvP_Burst)]
         [CustomComboInfo("Double Malefic Cast Option", "Adds Double Malefic Cast to Burst Mode.", AST.JobID)]
         ASTPvP_Burst_DoubleMalefic = 111005,
 
-        [ParentCombo(ASTPvP_DoubleCast)]
-        [CustomComboInfo("Double Gravity Cast Option", "Adds Double Gravity Cast to Burst Mode.", AST.JobID)]
+        [ParentCombo(ASTPvP_Burst_Gravity)]
+        [CustomComboInfo("Double Gravity Cast Option", "Adds Double Malefic Cast to Burst Mode.", AST.JobID)]
+        ASTPvP_Burst_DoubleGravity = 111009,
+
+        [ParentCombo(ASTPvP_Burst)]
+        [CustomComboInfo("Gravity Burst Option", "Adds Gravity Cast to Burst Mode.", AST.JobID)]
         ASTPvP_Burst_Gravity = 111006,
 
         [ParentCombo(ASTPvP_Burst)]
-        [CustomComboInfo("Macrocosmos Option", "Adds Macrocosmos to Burst Mode.", AST.JobID)]
+        [CustomComboInfo("Macrocosmos Option", "Adds Macrocosmos to Burst Mode. \n If Double Gravity is enabled, it will hold Macrocosmos for the double gravity burst.", AST.JobID)]
         ASTPvP_Burst_Macrocosmos = 111007,
 
         [PvPCustomCombo]
@@ -5319,7 +5319,7 @@ namespace WrathCombo.Combos
         ASTPvP_Epicycle = 111008,
 
 
-        // Last value = 111003
+        // Last value = 111009
         #endregion
 
         #region BLACK MAGE
