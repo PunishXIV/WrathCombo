@@ -513,7 +513,7 @@ namespace WrathCombo.Combos.PvE
                         CanSpellWeave(actionID))
                         return Variant.VariantRampart;
 
-                    if (CanWeave(ActionWatching.LastSpell))
+                    if (CanSpellWeave(ActionWatching.LastSpell))
                     {
                         // Searing Light
                         if (IsEnabled(CustomComboPreset.SMN_SearingLight) && IsOffCooldown(SearingLight) && LevelChecked(SearingLight))
@@ -573,51 +573,53 @@ namespace WrathCombo.Combos.PvE
 
                             }
                         }
+                        
+                        if (IsEnabled(CustomComboPreset.SMN_SearingFlash) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
+                            return SearingFlash;
+
+                        // Demi Nuke
+                        if (OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire)
+                        {
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsBahamutReady && (LevelChecked(SummonSolarBahamut) || DemiAttackCount >= burstDelay)
+                                && (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst) || (LevelChecked(SummonSolarBahamut) || HasEffect(Buffs.SearingLight))))
+                            {
+                                if (IsOffCooldown(OriginalHook(EnkindleBahamut)) && LevelChecked(SummonBahamut))
+                                    return OriginalHook(EnkindleBahamut);
+
+                                if (IsOffCooldown(Deathflare) && LevelChecked(Deathflare) && OriginalHook(Ruin) is AstralImpulse)
+                                    return OriginalHook(AstralFlow);
+                            }
+
+                            // Demi Nuke 2: Electric Boogaloo
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsPhoenixReady)
+                            {
+                                if (IsOffCooldown(OriginalHook(EnkindlePhoenix)) && LevelChecked(SummonPhoenix) && OriginalHook(Ruin) is FountainOfFire)
+                                    return OriginalHook(EnkindlePhoenix);
+
+                                if (IsOffCooldown(Rekindle) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Rekindle) && OriginalHook(Ruin) is FountainOfFire)
+                                    return OriginalHook(AstralFlow);
+                            }
+
+                            // Demi Nuke 3: More Boogaloo
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsSolarBahamutReady && DemiAttackCount >= burstDelay &&
+                                (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst) || HasEffect(Buffs.SearingLight)))
+                            {
+                                if (IsOffCooldown(OriginalHook(EnkindleSolarBahamut)) && LevelChecked(SummonSolarBahamut))
+                                    return OriginalHook(EnkindleSolarBahamut);
+
+                                if (IsOffCooldown(Sunflare) && LevelChecked(Sunflare) && OriginalHook(Ruin) is UmbralImpulse)
+                                    return OriginalHook(AstralFlow);
+                            }
+                        }
+
+                        // Lux Solaris 
+                        if (IsOffCooldown(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_LuxSolaris) && HasEffect(Buffs.RefulgentLux) &&
+                            (PlayerHealthPercentageHp() < 100 || GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0))
+                            return OriginalHook(LuxSolaris);
+
+                        
                     }
-
-                    if (IsEnabled(CustomComboPreset.SMN_SearingFlash) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
-                        return SearingFlash;
-
-                    // Demi Nuke
-                    if (OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire)
-                    {
-                        if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsBahamutReady && (LevelChecked(SummonSolarBahamut) || DemiAttackCount >= burstDelay)
-                            && (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst) || (LevelChecked(SummonSolarBahamut) || HasEffect(Buffs.SearingLight))))
-                        {
-                            if (IsOffCooldown(OriginalHook(EnkindleBahamut)) && LevelChecked(SummonBahamut))
-                                return OriginalHook(EnkindleBahamut);
-
-                            if (IsOffCooldown(Deathflare) && LevelChecked(Deathflare) && OriginalHook(Ruin) is AstralImpulse)
-                                return OriginalHook(AstralFlow);
-                        }
-
-                        // Demi Nuke 2: Electric Boogaloo
-                        if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsPhoenixReady)
-                        {
-                            if (IsOffCooldown(OriginalHook(EnkindlePhoenix)) && LevelChecked(SummonPhoenix) && OriginalHook(Ruin) is FountainOfFire)
-                                return OriginalHook(EnkindlePhoenix);
-
-                            if (IsOffCooldown(Rekindle) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Rekindle) && OriginalHook(Ruin) is FountainOfFire)
-                                return OriginalHook(AstralFlow);
-                        }
-
-                        // Demi Nuke 3: More Boogaloo
-                        if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks) && IsSolarBahamutReady && DemiAttackCount >= burstDelay &&
-                            (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst) || HasEffect(Buffs.SearingLight)))
-                        {
-                            if (IsOffCooldown(OriginalHook(EnkindleSolarBahamut)) && LevelChecked(SummonSolarBahamut))
-                                return OriginalHook(EnkindleSolarBahamut);
-
-                            if (IsOffCooldown(Sunflare) && LevelChecked(Sunflare) && OriginalHook(Ruin) is UmbralImpulse)
-                                return OriginalHook(AstralFlow);
-                        }
-                    }
-
-                    // Lux Solaris 
-                    if (IsOffCooldown(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_LuxSolaris) && HasEffect(Buffs.RefulgentLux) &&
-                        (PlayerHealthPercentageHp() < 100 || GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0))
-                        return OriginalHook(LuxSolaris);
-
+                    
                     // Fester
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_EDFester))
                     {
@@ -640,7 +642,7 @@ namespace WrathCombo.Combos.PvE
                     }
 
                     // Lucid Dreaming
-                    if (IsEnabled(CustomComboPreset.SMN_Lucid) && ActionReady(All.LucidDreaming) && LocalPlayer.CurrentMp <= lucidThreshold)
+                    if (IsEnabled(CustomComboPreset.SMN_Lucid) && CanSpellWeave(actionID) && ActionReady(All.LucidDreaming) && LocalPlayer.CurrentMp <= lucidThreshold)
                         return All.LucidDreaming;
 
 
@@ -810,7 +812,7 @@ namespace WrathCombo.Combos.PvE
                         CanSpellWeave(actionID))
                         return Variant.VariantRampart;
 
-                    if (CanSpellWeave(actionID))
+                    if (CanSpellWeave(ActionWatching.LastSpell))
                     {
                         // Searing Light
                         if (IsEnabled(CustomComboPreset.SMN_SearingLight_AoE) && IsOffCooldown(SearingLight) && LevelChecked(SearingLight))
@@ -870,50 +872,51 @@ namespace WrathCombo.Combos.PvE
 
                             }
                         }
+                        
+                        if (IsEnabled(CustomComboPreset.SMN_SearingFlash_AoE) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
+                            return SearingFlash;
+
+                        // Demi Nuke
+                        if (OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire)
+                        {
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks_AoE) && IsBahamutReady && (LevelChecked(SummonSolarBahamut) || DemiAttackCount >= burstDelay)
+                                && (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst_AoE) || (LevelChecked(SummonSolarBahamut) || HasEffect(Buffs.SearingLight))))
+                            {
+                                if (IsOffCooldown(OriginalHook(EnkindleBahamut)) && LevelChecked(SummonBahamut))
+                                    return OriginalHook(EnkindleBahamut);
+
+                                if (IsOffCooldown(Deathflare) && LevelChecked(Deathflare) && OriginalHook(Ruin) is AstralImpulse)
+                                    return OriginalHook(AstralFlow);
+                            }
+
+                            // Demi Nuke 2: Electric Boogaloo
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks_AoE) && IsPhoenixReady)
+                            {
+                                if (IsOffCooldown(OriginalHook(EnkindlePhoenix)) && LevelChecked(SummonPhoenix) && OriginalHook(Ruin) is FountainOfFire)
+                                    return OriginalHook(EnkindlePhoenix);
+
+                                if (IsOffCooldown(Rekindle) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Rekindle_AoE) && OriginalHook(Ruin) is FountainOfFire)
+                                    return OriginalHook(AstralFlow);
+                            }
+
+                            // Demi Nuke 3: More Boogaloo
+                            if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks_AoE) && IsSolarBahamutReady && DemiAttackCount >= burstDelay &&
+                                (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst_AoE) || HasEffect(Buffs.SearingLight)))
+                            {
+                                if (IsOffCooldown(OriginalHook(EnkindleSolarBahamut)) && LevelChecked(SummonSolarBahamut))
+                                    return OriginalHook(EnkindleSolarBahamut);
+
+                                if (IsOffCooldown(Sunflare) && LevelChecked(Sunflare) && OriginalHook(Ruin) is UmbralImpulse)
+                                    return OriginalHook(AstralFlow);
+                            }
+                        }
+
+                        // Lux Solaris 
+                        if (IsOffCooldown(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_LuxSolaris_AoE) && HasEffect(Buffs.RefulgentLux) &&
+                            (PlayerHealthPercentageHp() < 100 || GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0))
+                            return OriginalHook(LuxSolaris);
+                        
                     }
-
-                    if (IsEnabled(CustomComboPreset.SMN_SearingFlash_AoE) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
-                        return SearingFlash;
-
-                    // Demi Nuke
-                    if (OriginalHook(Ruin) is AstralImpulse or UmbralImpulse or FountainOfFire)
-                    {
-                        if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks_AoE) && IsBahamutReady && (LevelChecked(SummonSolarBahamut) || DemiAttackCount >= burstDelay)
-                            && (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst_AoE) || (LevelChecked(SummonSolarBahamut) || HasEffect(Buffs.SearingLight))))
-                        {
-                            if (IsOffCooldown(OriginalHook(EnkindleBahamut)) && LevelChecked(SummonBahamut))
-                                return OriginalHook(EnkindleBahamut);
-
-                            if (IsOffCooldown(Deathflare) && LevelChecked(Deathflare) && OriginalHook(Ruin) is AstralImpulse)
-                                return OriginalHook(AstralFlow);
-                        }
-
-                        // Demi Nuke 2: Electric Boogaloo
-                        if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks_AoE) && IsPhoenixReady)
-                        {
-                            if (IsOffCooldown(OriginalHook(EnkindlePhoenix)) && LevelChecked(SummonPhoenix) && OriginalHook(Ruin) is FountainOfFire)
-                                return OriginalHook(EnkindlePhoenix);
-
-                            if (IsOffCooldown(Rekindle) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Rekindle_AoE) && OriginalHook(Ruin) is FountainOfFire)
-                                return OriginalHook(AstralFlow);
-                        }
-
-                        // Demi Nuke 3: More Boogaloo
-                        if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_Attacks_AoE) && IsSolarBahamutReady && DemiAttackCount >= burstDelay &&
-                            (IsNotEnabled(CustomComboPreset.SMN_SearingLight_Burst_AoE) || HasEffect(Buffs.SearingLight)))
-                        {
-                            if (IsOffCooldown(OriginalHook(EnkindleSolarBahamut)) && LevelChecked(SummonSolarBahamut))
-                                return OriginalHook(EnkindleSolarBahamut);
-
-                            if (IsOffCooldown(Sunflare) && LevelChecked(Sunflare) && OriginalHook(Ruin) is UmbralImpulse)
-                                return OriginalHook(AstralFlow);
-                        }
-                    }
-
-                    // Lux Solaris 
-                    if (IsOffCooldown(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_Advanced_Combo_DemiSummons_LuxSolaris_AoE) && HasEffect(Buffs.RefulgentLux) &&
-                        (PlayerHealthPercentageHp() < 100 || GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0))
-                        return OriginalHook(LuxSolaris);
 
                     // Painflare
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_ESPainflare) && LevelChecked(Painflare))
@@ -937,7 +940,7 @@ namespace WrathCombo.Combos.PvE
                     }
 
                     // Lucid Dreaming
-                    if (IsEnabled(CustomComboPreset.SMN_Lucid_AoE) && ActionReady(All.LucidDreaming) && LocalPlayer.CurrentMp <= lucidThreshold)
+                    if (IsEnabled(CustomComboPreset.SMN_Lucid_AoE) && CanSpellWeave(actionID) && ActionReady(All.LucidDreaming) && LocalPlayer.CurrentMp <= lucidThreshold)
                         return All.LucidDreaming;
 
 
