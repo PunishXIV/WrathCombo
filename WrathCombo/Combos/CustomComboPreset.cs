@@ -3190,7 +3190,7 @@ namespace WrathCombo.Combos
         [AutoAction(false, false)]
         [ReplaceSkill(RPR.Slice)]
         [ConflictingCombos(RPR_ST_AdvancedMode)]
-        [CustomComboInfo("Simple Mode - Single Target", "Replaces Slice with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", RPR.JobID)]
+        [CustomComboInfo("Simple Mode - Single Target", "Replaces Slice with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", RPR.JobID,-2)]
         RPR_ST_SimpleMode = 12000,
 
         #endregion
@@ -3293,7 +3293,7 @@ namespace WrathCombo.Combos
         [AutoAction(true, false)]
         [ReplaceSkill(RPR.SpinningScythe)]
         [ConflictingCombos(RPR_AoE_AdvancedMode)]
-        [CustomComboInfo("Simple Mode - AoE", "Replaces Spinning Scythe with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", RPR.JobID)]
+        [CustomComboInfo("Simple Mode - AoE", "Replaces Spinning Scythe with a one-button full single target rotation.\nThis is ideal for newcomers to the job.", RPR.JobID,-1)]
         RPR_AoE_SimpleMode = 12100,
 
         #endregion
@@ -3388,11 +3388,15 @@ namespace WrathCombo.Combos
         RPR_GluttonyBloodSwathe_Enshroud = 12202,
 
         [ParentCombo(RPR_GluttonyBloodSwathe)]
+        [CustomComboInfo("OGCD's Option", "Adds Enshroud, Lemure's Slice and Sacrificium.", RPR.JobID)]
+        RPR_GluttonyBloodSwathe_OGCD = 12204,
+
+        [ParentCombo(RPR_GluttonyBloodSwathe)]
         [CustomComboInfo("Sacrificium only Option", "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
         RPR_GluttonyBloodSwathe_Sacrificium = 12203,
 
 
-        // Last value = 12202
+        // Last value = 12204
 
         #endregion
 
