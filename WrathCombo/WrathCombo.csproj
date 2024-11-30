@@ -4,7 +4,7 @@
 	<PropertyGroup>
 		<Authors>Team Wrath</Authors>
 		<Company>-</Company>
-		<Version>1.0.0.3</Version>
+		<Version>1.0.0.4</Version>
 		<!-- This is the version that will be used when pushing to the repo.-->
 		<Description>XIVCombo for very lazy players</Description>
 		<Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>

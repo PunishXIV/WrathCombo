@@ -35,15 +35,15 @@ namespace WrathCombo.Combos.PvE
                 SGE_ST_Heal_IncludeShields = new("SGE_ST_Heal_IncludeShields"),
                 SGE_AoE_Heal_KeracholeTrait = new("SGE_AoE_Heal_KeracholeTrait");
             public static UserInt
-                SGE_ST_Heal_Zoe = new("SGE_ST_Heal_Zoe"),
-                SGE_ST_Heal_Haima = new("SGE_ST_Heal_Haima"),
-                SGE_ST_Heal_Krasis = new("SGE_ST_Heal_Krasis"),
+                SGE_ST_Heal_Zoe = new("SGE_ST_Heal_Zoe", 99),
+                SGE_ST_Heal_Haima = new("SGE_ST_Heal_Haima", 99),
+                SGE_ST_Heal_Krasis = new("SGE_ST_Heal_Krasis", 99),
                 SGE_ST_Heal_Pepsis = new("SGE_ST_Heal_Pepsis"),
-                SGE_ST_Heal_Soteria = new("SGE_ST_Heal_Soteria"),
-                SGE_ST_Heal_EDiagnosisHP = new("SGE_ST_Heal_EDiagnosisHP"),
-                SGE_ST_Heal_Druochole = new("SGE_ST_Heal_Druochole"),
-                SGE_ST_Heal_Taurochole = new("SGE_ST_Heal_Taurochole"),
-                SGE_ST_Heal_Esuna = new("SGE_ST_Heal_Esuna");
+                SGE_ST_Heal_Soteria = new("SGE_ST_Heal_Soteria", 99),
+                SGE_ST_Heal_EDiagnosisHP = new("SGE_ST_Heal_EDiagnosisHP", 99),
+                SGE_ST_Heal_Druochole = new("SGE_ST_Heal_Druochole", 99),
+                SGE_ST_Heal_Taurochole = new("SGE_ST_Heal_Taurochole", 99),
+                SGE_ST_Heal_Esuna = new("SGE_ST_Heal_Esuna", 100);
             public static UserIntArray
                 SGE_ST_Heals_Priority = new("SGE_ST_Heals_Priority"),
                 SGE_AoE_Heals_Priority = new("SGE_AoE_Heals_Priority");

@@ -5,7 +5,6 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Window.Functions.SliderIncrements;
-using WrathCombo.Combos.PvP;
 
 namespace WrathCombo.Combos.PvE
 {

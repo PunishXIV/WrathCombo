@@ -47,7 +47,7 @@ internal partial class DNC
 
         public static readonly UserInt
             DNCVariantCurePercent = new("DNCVariantCurePercent"); // Variant Cure - player HP% threshold
-
+            
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -154,6 +154,11 @@ internal partial class DNC
                 case CustomComboPreset.DNCPvP_BurstMode_CuringWaltz:
                     UserConfig.DrawSliderInt(0, 90, DNCPvP.Config.DNCPvP_WaltzThreshold,
                         "Curing Waltz HP% - caps at 90 to prevent waste.");
+
+                    break;
+
+                case CustomComboPreset.DNCPvP_BurstMode_Dash:
+                    UserConfig.DrawSliderInt(0, 3, DNCPvP.Config.DNCPvP_EnAvantCharges, "How many to save for manual");
 
                     break;
             }

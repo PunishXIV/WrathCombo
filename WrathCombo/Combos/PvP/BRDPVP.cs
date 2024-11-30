@@ -32,7 +32,7 @@ namespace WrathCombo.Combos.PvP
         public static class Config
         {
             public const string
-                BRDPvP_HarmonicArrowsCharges = "BRDPvP_HarmonicArrowsCharges";
+                BRDPvP_HarmonicArrowCharges = "BRDPvP_HarmonicArrowCharges";
 
         }
 
@@ -63,7 +63,8 @@ namespace WrathCombo.Combos.PvP
 
                         if (HasEffect(Buffs.FrontlineMarch))
                         {
-                            if (IsEnabled(CustomComboPreset.BRDPvP_HarmonicArrow) && GetRemainingCharges(HarmonicArrow) >= GetOptionValue(Config.BRDPvP_HarmonicArrowsCharges))
+                            if (IsEnabled(CustomComboPreset.BRDPvP_HarmonicArrow) && 
+                               (GetRemainingCharges(HarmonicArrow) >= GetOptionValue(Config.BRDPvP_HarmonicArrowCharges) || GetRemainingCharges(HarmonicArrow) > 0 && EnemyHealthCurrentHp() <= 12000))
                                 return OriginalHook(HarmonicArrow);
 
                             if (IsEnabled(CustomComboPreset.BRDPvP_BlastArrow) && HasEffect(Buffs.BlastArrowReady))

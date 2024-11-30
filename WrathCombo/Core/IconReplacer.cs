@@ -17,7 +17,7 @@ namespace WrathCombo.Core
     {
         public readonly List<CustomCombo> CustomCombos;
         private readonly Hook<IsIconReplaceableDelegate> isIconReplaceableHook;
-        private readonly Hook<GetIconDelegate> getIconHook;
+        public readonly Hook<GetIconDelegate> getIconHook;
 
         private IntPtr actionManager = IntPtr.Zero;
         private readonly IntPtr module = IntPtr.Zero;
@@ -41,7 +41,7 @@ namespace WrathCombo.Core
 
         private delegate ulong IsIconReplaceableDelegate(uint actionID);
 
-        private delegate uint GetIconDelegate(IntPtr actionManager, uint actionID);
+        public delegate uint GetIconDelegate(IntPtr actionManager, uint actionID);
 
         /// <inheritdoc/>
         public void Dispose()

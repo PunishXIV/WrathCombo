@@ -172,7 +172,8 @@ internal partial class MNK
             if (IsEnabled(CustomComboPreset.MNK_STUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_STUseROF) &&
                 ActionReady(RiddleOfFire) &&
-                CanDelayedWeave(ActionWatching.LastWeaponskill))
+                CanDelayedWeave(ActionWatching.LastWeaponskill) &&
+                GetTargetHPPercent() >= Config.MNK_ST_RiddleOfFire_HP)
                 return RiddleOfFire;
 
             // OGCDs
@@ -187,7 +188,8 @@ internal partial class MNK
                 if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
                 {
                     if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &&
-                        ActionReady(Brotherhood))
+                        ActionReady(Brotherhood) &&
+                        GetTargetHPPercent() >= Config.MNK_ST_Brotherhood_HP)
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
@@ -439,7 +441,8 @@ internal partial class MNK
             if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
                 ActionReady(RiddleOfFire) &&
-                CanDelayedWeave(ActionWatching.LastWeaponskill))
+                CanDelayedWeave(ActionWatching.LastWeaponskill) &&
+                GetTargetHPPercent() >= Config.MNK_AoE_RiddleOfFire_HP)
                 return RiddleOfFire;
 
             // Buffs
@@ -454,7 +457,8 @@ internal partial class MNK
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
                 {
                     if (IsEnabled(CustomComboPreset.MNK_AoEUseBrotherhood) &&
-                        ActionReady(Brotherhood))
+                        ActionReady(Brotherhood) &&
+                        GetTargetHPPercent() >= Config.MNK_AoE_Brotherhood_HP)
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
