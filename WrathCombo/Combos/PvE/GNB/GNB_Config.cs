@@ -130,7 +130,7 @@ internal partial class GNB
 
                     break;
 
-                case CustomComboPreset.GNBPvP_BurstStrike:
+                case CustomComboPreset.GNBPvP_BlastingZone:
                     UserConfig.DrawSliderInt(1, 100,
                         GNBPvP.Config.blastingZoneThreshold,
                         "Hp % of target to use Blasting zone. Most powerful below 50% " +
