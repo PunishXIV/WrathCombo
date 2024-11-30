@@ -4651,7 +4651,15 @@ namespace WrathCombo.Combos
         [ParentCombo(SMN_Advanced_Combo_AoE)]
         [CustomComboInfo("Egi Summons Combo Option", "Adds Egi summons to the AoE combo.\nWill prioritise the Egi selected below.\nIf no option is selected, the feature will default to summoning Titan first.", SMN.JobID, 3)]
         SMN_DemiEgiMenu_EgiOrder_AoE = 17065,
+<<<<<<< Updated upstream
         
+=======
+
+        [ParentCombo(SMN_Advanced_Combo)]
+        [CustomComboInfo("Use Ruin III instead of Emerald Ruin III", "Replaces Emerald Ruin III with Ruin III in the rotation if Ruin Mastery III is not active.", SMN.JobID, 15)]
+        SMN_ST_Ruin3_Emerald_Ruin3 = 17067,
+
+>>>>>>> Stashed changes
         #endregion
 
         #region VIPER
