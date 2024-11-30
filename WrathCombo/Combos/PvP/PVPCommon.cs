@@ -44,9 +44,18 @@ namespace WrathCombo.Combos.PvP
                 Guard = 3054;
         }
 
-        public static bool IsImmuneToDamage()
+        /// <summary> Checks if the target is immune to damage. Optionally, include buffs that provide significant damage reduction. </summary>
+        /// <param name="includeReductions"> Includes buffs that provide significant damage reduction. </param>
+        public static bool IsImmuneToDamage(bool includeReductions = true)
         {
-            return CustomComboFunctions.TargetHasEffectAny(PvPCommon.Buffs.Guard) || CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales);
+            if (CustomComboFunctions.CurrentTarget is null || !CustomComboFunctions.InPvP()) return false;
+
+            bool targetHasReductions = CustomComboFunctions.TargetHasEffectAny(Buffs.Guard) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales);
+            bool targetHasImmunities = CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround);
+
+            return includeReductions
+                ? targetHasReductions || targetHasImmunities
+                : targetHasImmunities;
         }
 
         // Lists of Excluded skills 

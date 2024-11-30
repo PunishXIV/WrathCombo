@@ -17,7 +17,9 @@ internal partial class BLM
                    BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
                    BLM_AoE_UsePolyglot_HoldCharges = new("BLM_AoE_UsePolyglot_HoldCharges", 1),
                    BLM_AoE_UsePolyglotMoving_HoldCharges = new("BLM_AoE_UsePolyglotMoving_HoldCharges", 0),
-                   BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5);
+                   BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5),
+                   BLMPvP_BurstMode_WreathOfIce = new("BLMPvP_BurstMode_WreathOfIce", 0),
+                   BLMPvP_BurstMode_WreathOfFireExecute = new("BLMPvP_BurstMode_WreathOfFireExecute", 0);
 
         public static UserFloat
             BLM_ST_Triplecast_ChargeTime = new("BLM_ST_Triplecast_ChargeTime", 20),
@@ -87,6 +89,18 @@ internal partial class BLM
                 case CustomComboPreset.BLM_AoE_Thunder:
                     DrawSliderInt(0, 10, BLM_AoE_ThunderHP,
                         "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    break;
+
+                case CustomComboPreset.BLMPvP_BurstMode_WreathOfIce:
+                    DrawSliderInt(0, 100, BLMPvP_BurstMode_WreathOfIce,
+                        "Use Wreath of ice below this threshold");
+
+                    break;
+
+                case CustomComboPreset.BLMPvP_BurstMode_WreathOfFireExecute:
+                    DrawSliderInt(0, 100, BLMPvP_BurstMode_WreathOfFireExecute,
+                        "Use Wreath of Fire below this % threshold");
 
                     break;
             }

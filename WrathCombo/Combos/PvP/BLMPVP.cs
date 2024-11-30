@@ -16,7 +16,6 @@ namespace WrathCombo.Combos.PvP
             Flare = 29651,
             Blizzard4 = 29654,
             Freeze = 29655,
-            Foul = 29371,
             Lethargy = 41510,
             ElementalWeave = 41475,
             SoulResonance = 29662,
@@ -28,12 +27,14 @@ namespace WrathCombo.Combos.PvP
                 AstralFire1 = 3212,
                 AstralFire2 = 3213,
                 AstralFire3 = 3381,
-                UmbralIce2 = 3214,
-                UmbralIce3 = 3215,
+                UmbralIce1 = 3214,
+                UmbralIce2 = 3215,
+                UmbralIce3 = 3382,
                 Burst = 3221,
                 SoulResonance = 3222,
                 Polyglot = 3169,
                 ElementalStar = 4317,
+                WreathOfFire= 4315,
                 Paradox = 3223;
         }
 
@@ -49,7 +50,8 @@ namespace WrathCombo.Combos.PvP
         public static class Config
         {
             public const string
-                BLMPvP_WreathOfIce = "BLMPvP_WreathOfIce";
+                BLMPvP_BurstMode_WreathOfIce = "BLMPvP_BurstMode_WreathOfIce",
+                BLMPvP_BurstMode_WreathOfFireExecute = "BLMPvP_BurstMode_WreathOfFireExecute";
 
         }
 
@@ -66,20 +68,21 @@ namespace WrathCombo.Combos.PvP
 
                     if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfFire))
                     {
-                        if (IsOffCooldown(ElementalWeave) && TargetHasEffectAny(PvPCommon.Buffs.Guard) && canWeave && (HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3)))
+                        if (IsOffCooldown(ElementalWeave) && (TargetHasEffectAny(PvPCommon.Buffs.Guard) || GetTargetHPPercent() < GetOptionValue(Config.BLMPvP_BurstMode_WreathOfFireExecute) && IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfFireExecute))
+                            && canWeave && (HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3)))
                             return OriginalHook(ElementalWeave);
                     }
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.IsImmuneToDamage() || HasEffect(Buffs.WreathOfFire))
                     {
-                        if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FlareStar) && HasEffect(Buffs.ElementalStar))
+                        if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FlareStar) && HasEffect(Buffs.ElementalStar) && (HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3)))
                             return OriginalHook(SoulResonance);
 
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_Xenoglossy) && HasCharges(Xenoglossy))
                             return Xenoglossy;
 
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_AetherialManip) &&
-                            GetCooldown(AetherialManipulation).RemainingCharges > 0 &&
+                            ActionReady(AetherialManipulation) &&
                             !InMeleeRange() && IsOffCooldown(Burst) && canWeave)
                             return AetherialManipulation;
 
@@ -99,19 +102,16 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is Blizzard or Blizzard4 or Freeze)
                 {
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.IsImmuneToDamage() || HasEffect(Buffs.WreathOfFire))
                     {
-                        if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FrostStar) && HasEffect(Buffs.ElementalStar))
+                        if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FrostStar) && HasEffect(Buffs.ElementalStar) && (HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.UmbralIce2) || HasEffect(Buffs.UmbralIce3)))
                             return OriginalHook(SoulResonance);
 
-                        if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfIce) && IsOffCooldown(ElementalWeave) && canWeave && PlayerHealthPercentageHp() <= GetOptionValue(Config.BLMPvP_WreathOfIce))
-                            return OriginalHook(ElementalWeave);
-
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_Xenoglossy) && HasCharges(Xenoglossy))
-                            return Foul;
+                            return Xenoglossy;
 
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_AetherialManip) &&
-                            GetCooldown(AetherialManipulation).RemainingCharges > 0 &&
+                            ActionReady(AetherialManipulation) &&
                             !InMeleeRange() &&
                             IsOffCooldown(Burst) &&
                             canWeave)
@@ -128,6 +128,9 @@ namespace WrathCombo.Combos.PvP
                             return Paradox;
                     }
 
+                    if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_WreathOfIce) && IsOffCooldown(ElementalWeave) && canWeave && PlayerHealthPercentageHp() <= GetOptionValue(Config.BLMPvP_BurstMode_WreathOfIce)
+                        && (HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.UmbralIce2) || HasEffect(Buffs.UmbralIce3)))
+                        return OriginalHook(ElementalWeave);
                 }
 
                 return actionID;

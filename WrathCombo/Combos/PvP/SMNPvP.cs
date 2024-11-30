@@ -68,18 +68,17 @@ namespace WrathCombo.Combos.PvP
                             if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_RadiantAegis) &&
                                 IsOffCooldown(RadiantAegis) && playerHP <= radiantThreshold)
                                 return RadiantAegis;
-
-                            // Phoenix & Bahamut bursts
-                            if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_BrandofPurgatory) && phoenixBurst && IsOffCooldown(BrandofPurgatory))
-                                return BrandofPurgatory;
-
-                            if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_DeathFlare) && bahamutBurst && IsOffCooldown(DeathFlare))
-                                return DeathFlare;
-
-                            if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !HasEffect(Buffs.FurtherRuin))
-                                return Necrotize;
                         }
+                        // Phoenix & Bahamut bursts
+                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_BrandofPurgatory) && phoenixBurst && IsOffCooldown(BrandofPurgatory))
+                            return BrandofPurgatory;
 
+                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_DeathFlare) && bahamutBurst && IsOffCooldown(DeathFlare))
+                            return DeathFlare;
+
+                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !HasEffect(Buffs.FurtherRuin))
+                            return Necrotize;
+                        
                         // Ifrit (check CrimsonCyclone conditions)
                         if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_CrimsonStrike) && OriginalHook(CrimsonCyclone) is CrimsonStrike)
                             return CrimsonStrike;

@@ -6,6 +6,66 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG
 {
+    internal class DRG_ST_FullThrustCombo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_ST_FullThrustCombo;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+        {
+            if (actionID is FullThrust or HeavensThrust)
+            {
+                if (comboTime > 0)
+                {
+                    if (lastComboMove is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
+                        return OriginalHook(VorpalThrust);
+
+                    if (lastComboMove == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
+                        return OriginalHook(FullThrust);
+
+                    if (lastComboMove == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
+                        return FangAndClaw;
+
+                    if (lastComboMove is FangAndClaw && LevelChecked(Drakesbane))
+                        return Drakesbane;
+                }
+
+                return OriginalHook(TrueThrust);
+            }
+
+            return actionID;
+        }
+    }
+
+    internal class DRG_ST_ChaoticCombo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_ST_ChaoticCombo;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte levels)
+        {
+            if (actionID is ChaosThrust or ChaoticSpring)
+            {
+                if (comboTime > 0)
+                {
+                    if (lastComboMove is TrueThrust or RaidenThrust && LevelChecked(Disembowel))
+                        return OriginalHook(Disembowel);
+
+                    if (lastComboMove == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
+                        return OriginalHook(ChaosThrust);
+
+                    if (lastComboMove == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
+                        return WheelingThrust;
+
+                    if (lastComboMove is WheelingThrust && LevelChecked(Drakesbane))
+                        return Drakesbane;
+                }
+
+                return OriginalHook(TrueThrust);
+            }
+
+            return actionID;
+        }
+    }
+
     internal class DRG_ST_SimpleMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_ST_SimpleMode;

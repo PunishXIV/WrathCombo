@@ -155,6 +155,9 @@ namespace WrathCombo.Combos.PvP
                                 if (grimSwatheReady && distance <= 8)
                                     return GrimSwathe;
                             }
+                            // Harvest Moon Execute 
+                            if (IsEnabled(CustomComboPreset.RPRPvP_Burst_RangedHarvest) && EnemyHealthCurrentHp() < 12000)
+                                return HarvestMoon;
                         }
                     }
                 }

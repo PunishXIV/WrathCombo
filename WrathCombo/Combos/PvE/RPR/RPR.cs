@@ -625,6 +625,23 @@ internal partial class RPR
             {
                 case GrimSwathe:
                 {
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_OGCD))
+                    {
+                        if (Gauge.Shroud >= 50 || HasEffect(Buffs.IdealHost))
+                            return Enshroud;
+
+                        if (HasEffect(Buffs.Enshrouded))
+                        {
+                            //Sacrificium
+                            if (Gauge.LemureShroud is 2 && HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
+                                return OriginalHook(Gluttony);
+
+                            //Lemure's Slice
+                            if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresScythe))
+                                return OriginalHook(GrimSwathe);
+                        }
+                    }
+
                     if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
                         if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
@@ -669,6 +686,23 @@ internal partial class RPR
 
                 case BloodStalk:
                 {
+                    if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_OGCD))
+                    {
+                        if (Gauge.Shroud >= 50 || HasEffect(Buffs.IdealHost))
+                            return Enshroud;
+
+                        if (HasEffect(Buffs.Enshrouded))
+                        {
+                            //Sacrificium
+                            if (Gauge.LemureShroud is 2 && HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
+                                return OriginalHook(Gluttony);
+
+                            //Lemure's Slice
+                            if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
+                                return OriginalHook(BloodStalk);
+                        }
+                    }
+
                     if (IsEnabled(CustomComboPreset.RPR_GluttonyBloodSwathe_Enshroud))
                     {
                         if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))

@@ -23,7 +23,8 @@ namespace WrathCombo.Combos.PvP
             TerminalTrigger = 29131,
             FatedCircle = 41511,
             FatedBrand = 41442,
-            BlastingZone = 29128;
+            BlastingZone = 29128,
+            HeartOfCorundum = 41443;
 
 
         internal class Debuffs
@@ -47,84 +48,59 @@ namespace WrathCombo.Combos.PvP
                 ReadyToRaze = 4293;
 
         }
+        public class Config
+        {
+            public const string
+                corundumThreshold = nameof(corundumThreshold),
+                blastingZoneThreshold = nameof(blastingZoneThreshold);
 
+        }
         internal class GNBPvP_Burst : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNBPvP_Burst;
 
             float GCD = GetCooldown(KeenEdge).CooldownTotal; // 2.4 base in PvP
-            bool enemyGuard = TargetHasEffect(PvPCommon.Buffs.Guard); //Guard check
-            bool inGF = JustUsed(GnashingFang, 3f) || JustUsed(SavageClaw, 3f) || JustUsed(WickedTalon, 2f);
-
+            
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                if (actionID is KeenEdge or BrutalShell or SolidBarrel)
+                if (actionID is KeenEdge or BrutalShell or SolidBarrel or BurstStrike)
                 {
+                    int corundumThreshold = GetOptionValue(Config.corundumThreshold);
+                    int blastingZoneThreshold = GetOptionValue(Config.blastingZoneThreshold); 
+
+                    if (CanWeave(ActionWatching.LastWeaponskill) && IsEnabled(CustomComboPreset.GNBPvP_Corundum) && PlayerHealthPercentageHp() <= corundumThreshold && IsOffCooldown(HeartOfCorundum))
+                        return HeartOfCorundum;
+
                     if (!PvPCommon.IsImmuneToDamage())
                     {
-
-                        if (CanWeave(ActionWatching.LastWeaponskill))
+                        if (CanWeave(ActionWatching.LastWeaponskill)) //Weave section
                         {
                             //Continuation
-                            if (IsEnabled(CustomComboPreset.GNBPvP_ST_Continuation) &&
-                                HasEffect(Buffs.ReadyToBlast) || //Hypervelocity
-                                HasEffect(Buffs.ReadyToRip) || //GunStep1
-                                HasEffect(Buffs.ReadyToTear) || //GunStep2
-                                HasEffect(Buffs.ReadyToGouge)) //GunStep reset to 0
+                            if (IsEnabled(CustomComboPreset.GNBPvP_ST_Continuation) && OriginalHook(Continuation) != Continuation) // Weaving followup button, whenever it changes to something useable, it will fire
                                 return OriginalHook(Continuation);
 
-                            //RoughDivide
-                            if (IsEnabled(CustomComboPreset.GNBPvP_RoughDivide))
-                            {
-                                if (ActionReady(RoughDivide) && !HasEffect(Buffs.NoMercy) && //Mashing would be a waste
-                                   (GetCooldownRemainingTime(FatedCircle) <= GCD || //Keeps 1 charge always for Fated Circle usage
-                                    GetCooldownRemainingTime(GnashingFang) <= GCD)) //Keeps 1 charge always for GnashingFang usage
-                                    return RoughDivide;
-
-                            }
-
-                            if (IsEnabled(CustomComboPreset.GNBPvP_BlastingZone) && IsOffCooldown(BlastingZone) && HasEffect(Buffs.NoMercy))
+                            if (IsEnabled(CustomComboPreset.GNBPvP_BlastingZone) && IsOffCooldown(BlastingZone) && GetTargetHPPercent() < blastingZoneThreshold)  // Removed nomercy requirement bc of hp threshold.
                                 return BlastingZone;
                         }
 
                         //RoughDivide overcap protection
                         if (IsEnabled(CustomComboPreset.GNBPvP_RoughDivide))
                         {
-                            if (HasCharges(RoughDivide) &&
-                               (ActionReady(FatedCircle) && GetRemainingCharges(RoughDivide) > 1) || //force for Fated Circle
-                                GetRemainingCharges(RoughDivide) == 2) //force if at 2
+                            if (HasCharges(RoughDivide) && !HasEffect(Buffs.NoMercy) && !JustUsed(RoughDivide, 3f) &&
+                               (ActionReady(FatedCircle)|| ActionReady(GnashingFang) || GetRemainingCharges(RoughDivide) == 2)) // Will RD for for no mercy when at 2 charges, or before the fated circle or gnashing fang combo
                                 return RoughDivide;
                         }
 
-                        if (IsEnabled(CustomComboPreset.GNBPvP_FatedCircle) &&
-                            !HasEffect(Buffs.ReadyToBlast) &&
-                            !HasEffect(Buffs.ReadyToRip) &&
-                            !HasEffect(Buffs.ReadyToTear) &&
-                            !HasEffect(Buffs.ReadyToGouge) &&
-                            !WasLastWeaponskill(GnashingFang) &&
-                            !WasLastWeaponskill(WickedTalon) &&
-                            !WasLastWeaponskill(SavageClaw))
+                        //Fated Circle and Followup
+                        if (IsEnabled(CustomComboPreset.GNBPvP_FatedCircle))
                         {
-                            if (HasEffect(Buffs.ReadyToRaze))
-                                return OriginalHook(FatedBrand);
-                            if (IsOffCooldown(FatedCircle) && HasEffect(Buffs.NoMercy))
+                            if (ActionReady(FatedCircle) && HasEffect(Buffs.NoMercy) && OriginalHook(Continuation) == Continuation)
                                 return FatedCircle;
                         }
 
-                        //SavageClaw & WickedTalon
-                        if (IsEnabled(CustomComboPreset.GNBPvP_ST_GnashingFang) &&
-                            JustUsed(GnashingFang, 3f) || JustUsed(SavageClaw, 3f))
-                            return OriginalHook(GnashingFang);
-
-                        //BurstStrike
-                        if (IsEnabled(CustomComboPreset.GNBPvP_BurstStrike) && HasEffect(Buffs.PowderBarrel) &&
-                            (!HasEffect(Buffs.JugularRip) || !HasEffect(Buffs.AbdomenTear) || !HasEffect(Buffs.EyeGouge) && //Do not use when in GnashingFang combo
-                            !HasEffect(Buffs.ReadyToBlast) || !HasEffect(Buffs.ReadyToRip) || !HasEffect(Buffs.ReadyToTear) || !HasEffect(Buffs.ReadyToGouge))) //Burst Strike has prio over GnashingFang, but not Fated Circle
-                            return BurstStrike;
-
                         //GnashingFang
-                        if (IsEnabled(CustomComboPreset.GNBPvP_ST_GnashingFang) && ActionReady(GnashingFang) && !HasEffect(Buffs.PowderBarrel)) //BurstStrike first to avoid losing the buff if applicable
-                            return GnashingFang;
+                        if (IsEnabled(CustomComboPreset.GNBPvP_ST_GnashingFang) && (ActionReady(GnashingFang) || OriginalHook(GnashingFang) != GnashingFang))
+                            return OriginalHook(GnashingFang);
 
                     }
                 }

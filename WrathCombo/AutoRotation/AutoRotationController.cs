@@ -320,6 +320,7 @@ namespace WrathCombo.AutoRotation
                             DPSRotationMode.Tank_Target => Svc.Targets.Target,
                             DPSRotationMode.Nearest => DPSTargeting.GetNearestTarget(),
                             DPSRotationMode.Furthest => DPSTargeting.GetFurthestTarget(),
+                            _ => Svc.Targets.Target,
                         };
                         return target;
                     }
@@ -335,6 +336,7 @@ namespace WrathCombo.AutoRotation
                             DPSRotationMode.Tank_Target => DPSTargeting.GetTankTarget(),
                             DPSRotationMode.Nearest => DPSTargeting.GetNearestTarget(),
                             DPSRotationMode.Furthest => DPSTargeting.GetFurthestTarget(),
+                            _ => Svc.Targets.Target,
                         };
                         return target;
                     }
@@ -347,6 +349,7 @@ namespace WrathCombo.AutoRotation
                         HealerRotationMode.Manual => HealerTargeting.ManualTarget(),
                         HealerRotationMode.Highest_Current => HealerTargeting.GetHighestCurrent(),
                         HealerRotationMode.Lowest_Current => HealerTargeting.GetLowestCurrent(),
+                        _ => HealerTargeting.ManualTarget(),
                     };
 
                     return target;

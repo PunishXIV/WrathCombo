@@ -39,13 +39,13 @@ namespace WrathCombo.Combos.PvE
                 SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption"),
                 SCH_AoE_Heal_IndomitabilityOption = new("SCH_AoE_Heal_IndomitabilityOption"),
                 SCH_ST_Heal_LucidOption = new("SCH_ST_Heal_LucidOption", 6500),
-                SCH_ST_Heal_AdloquiumOption = new("SCH_ST_Heal_AdloquiumOption"),
-                SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption"),
-                SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption"),
-                SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption"),
-                SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption"),
-                SCH_ST_Heal_AetherpactFairyGauge = new("SCH_ST_Heal_AetherpactFairyGauge"),
-                SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption");
+                SCH_ST_Heal_AdloquiumOption = new("SCH_ST_Heal_AdloquiumOption", 99),
+                SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption", 99),
+                SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption", 99),
+                SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption", 99),
+                SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 99),
+                SCH_ST_Heal_AetherpactFairyGauge = new("SCH_ST_Heal_AetherpactFairyGauge", 99),
+                SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 100);
             public static UserIntArray
                 SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority"),
                 SCH_AoE_Heals_Priority = new ("SCH_AoE_Heals_Priority");

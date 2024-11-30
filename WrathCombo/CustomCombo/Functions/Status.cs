@@ -95,6 +95,7 @@ namespace WrathCombo.CustomComboNS.Functions
         ///<summary> Checks a member object for an effect. The effect may be owned by anyone or unowned. </summary>
         /// <param name="effectID"> Status effect ID. </param>
         /// <param name="obj"></param>
+        /// <param name="playerOwned"> Checks if the player created the status effect</param>
         /// <return> Status object or null. </return>
         public static Status? FindEffectOnMember(ushort effectID, IGameObject? obj, bool playerOwned = false) => Service.ComboCache.GetStatus(effectID, obj, playerOwned ? Player.Object.GameObjectId : null);
 

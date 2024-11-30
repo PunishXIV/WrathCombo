@@ -3095,10 +3095,24 @@ public enum CustomComboPreset
         PCT.JobID)]
     PCT_ST_Advanced_Openers = 20006,
 
-    [ParentCombo(PCT_ST_Advanced_Openers)]
-    [CustomComboInfo("Early Balance Opener Option",
-        "Uses Early Starry Muse Balance Opener depending on your current level.", PCT.JobID)]
-    PCT_ST_Advanced_Openers_EarlyOpener = 20007,
+        [ParentCombo(PCT_ST_Advanced_Openers)]
+        [ConflictingCombos(PCT_ST_Advanced_Openers_2, PCT_ST_Advanced_Openers_3)]
+        [CustomComboInfo("3rd GCD Opener", $"Uses 3rd GCD lvl 100 Balance Opener.", PCT.JobID)]
+        PCT_ST_Advanced_Openers_1 = 20036,
+
+        [ParentCombo(PCT_ST_Advanced_Openers)]
+        [ConflictingCombos(PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_3)]
+        [CustomComboInfo("2nd GCD Opener", $"Uses 2nd GCD lvl 100 Balance Opener.", PCT.JobID)]
+        PCT_ST_Advanced_Openers_2 = 20037,
+
+        [ParentCombo(PCT_ST_Advanced_Openers)]
+        [ConflictingCombos(PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_2)]
+        [CustomComboInfo("2nd GCD + Swiftcast Opener", $"Uses 2nd GCD lvl 100 Balance Opener with added swiftcast for Wing Motif.", PCT.JobID)]
+        PCT_ST_Advanced_Openers_3 = 20038,
+
+        [ParentCombo(PCT_ST_Advanced_Openers)]
+        [CustomComboInfo("Early Balance Opener Option", $"Uses Balance Opener. This setting only applies to when below lvl 100", PCT.JobID)]
+        PCT_ST_Advanced_Openers_EarlyOpener = 20007,
 
     [ParentCombo(PCT_ST_AdvancedMode)]
     [CustomComboInfo("Prepull Motifs Feature", "Adds missing Motifs to the combo while out of combat.", PCT.JobID)]
@@ -3212,9 +3226,8 @@ public enum CustomComboPreset
     [CustomComboInfo("Lucid Dreaming Option", "Adds Lucid Dreaming to the combo.", PCT.JobID)]
     PCT_ST_AdvancedMode_LucidDreaming = 20034,
 
-    // Last value for ST = 20035
-
-    #endregion
+        // Last value for ST = 20038
+        #endregion
 
     #region AoE
 
@@ -3855,12 +3868,16 @@ public enum CustomComboPreset
         RPR.JobID)]
     RPR_GluttonyBloodSwathe_Enshroud = 12202,
 
-    [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Sacrificium only Option",
-        "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
-    RPR_GluttonyBloodSwathe_Sacrificium = 12203,
+        [ParentCombo(RPR_GluttonyBloodSwathe)]
+        [CustomComboInfo("OGCD's Option", "Adds Enshroud, Lemure's Slice and Sacrificium.", RPR.JobID)]
+        RPR_GluttonyBloodSwathe_OGCD = 12204,
 
-    // Last value = 12202
+        [ParentCombo(RPR_GluttonyBloodSwathe)]
+        [CustomComboInfo("Sacrificium only Option", "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
+        RPR_GluttonyBloodSwathe_Sacrificium = 12203,
+
+
+        // Last value = 12204
 
     #endregion
 
@@ -5453,8 +5470,12 @@ public enum CustomComboPreset
     [VariantParent(VPR_ST_SimpleMode, VPR_AoE_SimpleMode, VPR_ST_AdvancedMode, VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", VPR.JobID)]
     VPR_Variant_Rampart = 30301,
+    
+        [ReplaceSkill(VPR.SteelFangs , VPR.ReavingFangs , VPR.HuntersCoil , VPR.SwiftskinsCoil)]
+        [CustomComboInfo("Legacy Buttons", "Replaces Generations with the Legacys.", VPR.JobID)]
+        VPR_Legacies = 30209,
 
-    #endregion
+        #endregion
 
     #region WARRIOR
 
@@ -5967,11 +5988,9 @@ public enum CustomComboPreset
     [PvPCustomCombo] [CustomComboInfo("Burst Mode", "Turns Fall Malefic into an all-in-one damage button.", AST.JobID)]
     ASTPvP_Burst = 111000,
 
-    [ParentCombo(ASTPvP_Burst)] [CustomComboInfo("Double Cast Option", "Adds Double Cast to Burst Mode.", AST.JobID)]
-    ASTPvP_DoubleCast = 111001,
-
-    [ParentCombo(ASTPvP_Burst)] [CustomComboInfo("Card Draw Option", "Adds Drawing Cards to Burst Mode.", AST.JobID)]
-    ASTPvP_Burst_DrawCard = 111002,
+        [ParentCombo(ASTPvP_Burst)]
+        [CustomComboInfo("Card Draw Option", "Adds Drawing Cards to Burst Mode.", AST.JobID)]
+        ASTPvP_Burst_DrawCard = 111002,
 
     [ParentCombo(ASTPvP_Burst)] [CustomComboInfo("Card Play Option", "Adds Playing Cards to Burst Mode.", AST.JobID)]
     ASTPvP_Burst_PlayCard = 111003,
@@ -5979,23 +5998,28 @@ public enum CustomComboPreset
     [PvPCustomCombo] [CustomComboInfo("Double Cast Heal Feature", "Adds Double Cast to Aspected Benefic.", AST.JobID)]
     ASTPvP_Heal = 111004,
 
-    [ParentCombo(ASTPvP_DoubleCast)]
-    [CustomComboInfo("Double Malefic Cast Option", "Adds Double Malefic Cast to Burst Mode.", AST.JobID)]
-    ASTPvP_Burst_DoubleMalefic = 111005,
+        [ParentCombo(ASTPvP_Burst)]
+        [CustomComboInfo("Double Malefic Cast Option", "Adds Double Malefic Cast to Burst Mode.", AST.JobID)]
+        ASTPvP_Burst_DoubleMalefic = 111005,
 
-    [ParentCombo(ASTPvP_DoubleCast)]
-    [CustomComboInfo("Double Gravity Cast Option", "Adds Double Gravity Cast to Burst Mode.", AST.JobID)]
-    ASTPvP_Burst_Gravity = 111006,
+        [ParentCombo(ASTPvP_Burst_Gravity)]
+        [CustomComboInfo("Double Gravity Cast Option", "Adds Double Gravity Cast to Burst Mode.", AST.JobID)]
+        ASTPvP_Burst_DoubleGravity = 111009,
 
-    [ParentCombo(ASTPvP_Burst)] [CustomComboInfo("Macrocosmos Option", "Adds Macrocosmos to Burst Mode.", AST.JobID)]
-    ASTPvP_Burst_Macrocosmos = 111007,
+        [ParentCombo(ASTPvP_Burst)]
+        [CustomComboInfo("Gravity Burst Option", "Adds Gravity Cast to Burst Mode.", AST.JobID)]
+        ASTPvP_Burst_Gravity = 111006,
+
+        [ParentCombo(ASTPvP_Burst)]
+        [CustomComboInfo("Macrocosmos Option", "Adds Macrocosmos to Burst Mode. \n If Double Gravity is enabled, it will hold Macrocosmos for the double gravity burst.", AST.JobID)]
+        ASTPvP_Burst_Macrocosmos = 111007,
 
     [PvPCustomCombo] [CustomComboInfo("Epicycle Burst Feature", "Turns Epicycle into burst combo.", AST.JobID)]
     ASTPvP_Epicycle = 111008,
 
-    // Last value = 111003
 
-    #endregion
+        // Last value = 111009
+        #endregion
 
     #region BLACK MAGE
 
@@ -6035,11 +6059,15 @@ public enum CustomComboPreset
         "Adds Wreath of Fire to Burst Mode when the target is under Guard status.", BLM.JobID)]
     BLMPvP_BurstMode_WreathOfFire = 112006,
 
-    [ParentCombo(BLMPvP_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Wreath of Ice (Elemental Weave) Option",
-        "Adds Wreath of Fire to Burst Mode when the target is under Guard status.", BLM.JobID)]
-    BLMPvP_BurstMode_WreathOfIce = 112007,
+        [ParentCombo(BLMPvP_BurstMode_WreathOfFire)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Wreath of Fire (Elemental Weave) Execute Option", "Adds Wreath of Fire to Burst Mode when the target is under selected %", BLM.JobID)]
+        BLMPvP_BurstMode_WreathOfFireExecute = 112010,
+
+        [ParentCombo(BLMPvP_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Wreath of Ice (Elemental Weave) Option", "Adds Wreath of Ice to Burst Mode when player is below set threshold", BLM.JobID)]
+        BLMPvP_BurstMode_WreathOfIce = 112007,
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
@@ -6051,7 +6079,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Frost Star Option", "Adds Frost Star to Burst Mode.", BLM.JobID)]
     BLMPvP_BurstMode_FrostStar = 112009,
 
-    // Last value = 112009
+        // Last value = 112010
 
     #endregion
 
@@ -6076,10 +6104,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Blast Arrow Option", "Adds Blast Arrow to Burst Mode.", BRD.JobID)]
     BRDPvP_BlastArrow = 113003,
 
-    [PvPCustomCombo]
-    [ParentCombo(BRDPvP_BurstMode)]
-    [CustomComboInfo("Harmonic Arrow Option", "Adds Harmonic Arrow to Burst Mode.", BRD.JobID)]
-    BRDPvP_HarmonicArrow = 113004,
+        [PvPCustomCombo]
+        [ParentCombo(BRDPvP_BurstMode)]
+        [CustomComboInfo("Harmonic Arrow Option", "Adds Harmonic Arrow to Burst Mode. Will use it at set number of charges AND when target is below 12000 health. ", BRD.JobID)]
+        BRDPvP_HarmonicArrow = 113004,
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
@@ -6090,11 +6118,10 @@ public enum CustomComboPreset
 
     #endregion
 
-    #region DANCER
-
-    [PvPCustomCombo]
-    [CustomComboInfo("Burst Mode", "Turns Fountain Combo into an all-in-one damage button.", DNC.JobID)]
-    DNCPvP_BurstMode = 114000,
+        #region DANCER
+        [PvPCustomCombo]
+        [CustomComboInfo("Burst Mode", "Turns Fountain Combo into an all-in-one damage button.", DNC.JobID)]
+        DNCPvP_BurstMode = 114000,
 
     [PvPCustomCombo]
     [ParentCombo(DNCPvP_BurstMode)]
@@ -6109,7 +6136,17 @@ public enum CustomComboPreset
         "Adds Curing Waltz to the combo when available, and your HP is at or below the set percentage.", DNC.JobID)]
     DNCPvP_BurstMode_CuringWaltz = 114002,
 
-    // Last value = 114002
+        [PvPCustomCombo]
+        [ParentCombo(DNCPvP_BurstMode)]
+        [CustomComboInfo("Dance Partner Reminder Option", "Adds Closed Position reminder when you have none", DNC.JobID)]
+        DNCPvP_BurstMode_Partner = 114003,
+
+        [PvPCustomCombo]
+        [ParentCombo(DNCPvP_BurstMode)]
+        [CustomComboInfo("En Avant Option", "Uses En Avant if available and buff is missing to boost 1 2 combo damage.", DNC.JobID)]
+        DNCPvP_BurstMode_Dash = 114004,
+
+        // Last value = 114004
 
     #endregion
 
@@ -6164,12 +6201,10 @@ public enum CustomComboPreset
 
     #endregion
 
-    #region DRAGOON
-
-    [PvPCustomCombo]
-    [CustomComboInfo("Burst Mode",
-        "Using Elusive Jump turns Wheeling Thrust Combo into all-in-one burst damage button.", DRG.JobID)]
-    DRGPvP_Burst = 116000,
+        #region DRAGOON
+        [PvPCustomCombo]
+        [CustomComboInfo("Burst Mode", "Using Elusive Jump turns Drakesbane Combo into all-in-one burst damage button.", DRG.JobID)]
+        DRGPvP_Burst = 116000,
 
     [ParentCombo(DRGPvP_Burst)] [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to Burst Mode.", DRG.JobID)]
     DRGPvP_Geirskogul = 116001,
@@ -6185,9 +6220,13 @@ public enum CustomComboPreset
         DRG.JobID)]
     DRGPvP_ChaoticSpringSustain = 116004,
 
-    [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to Burst Mode.", DRG.JobID)]
-    DRGPvP_WyrmwindThrust = 116006,
+        [ParentCombo(DRGPvP_Burst)]
+        [CustomComboInfo("Execute Chaos Spring Option", "Adds Chaos Spring to Burst Mode when target is below 8k health because it goes through guard.", DRG.JobID)]
+        DRGPvP_ChaoticSpringExecute = 116009,
+
+        [ParentCombo(DRGPvP_Burst)]
+        [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to Burst Mode.", DRG.JobID)]
+        DRGPvP_WyrmwindThrust = 116006,
 
     [ParentCombo(DRGPvP_Burst)] [CustomComboInfo("High Jump Weave Option", "Adds High Jump to Burst Mode.", DRG.JobID)]
     DRGPvP_HighJump = 116007,
@@ -6196,7 +6235,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Elusive Jump Burst Protection Option", "Disables Elusive Jump if Burst is not ready.", DRG.JobID)]
     DRGPvP_BurstProtection = 116008,
 
-    // Last value = 116008
+        // Last value = 116009
 
     #endregion
 
@@ -6212,9 +6251,9 @@ public enum CustomComboPreset
     [CustomComboInfo("Fated Circle Option", "Adds Fated Circle to rotation under No Mercy status.", GNB.JobID)]
     GNBPvP_FatedCircle = 117001,
 
-    [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Burst Strike Option", "Adds Burst Strike to rotation when appropriate.", GNB.JobID)]
-    GNBPvP_BurstStrike = 117002,
+        //[ParentCombo(GNBPvP_Burst)] No longer its own ability
+        //[CustomComboInfo("Burst Strike Option", "Adds Burst Strike to rotation when appropriate.", GNB.JobID)]
+        //GNBPvP_BurstStrike = 117002,
 
     [ParentCombo(GNBPvP_Burst)]
     [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang to Burst Mode.", GNB.JobID)]
@@ -6227,11 +6266,16 @@ public enum CustomComboPreset
     [CustomComboInfo("Rough Divide Option", "Adds Rough Divide to rotation when appropriate.", GNB.JobID)]
     GNBPvP_RoughDivide = 117006,
 
-    [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Blasting Zone Option", "Adds Blasting Zone to Burst Mode under No Mercy status.", GNB.JobID)]
-    GNBPvP_BlastingZone = 117007,
+        [ParentCombo(GNBPvP_Burst)]
+        [CustomComboInfo("Blasting Zone Option", "Adds Blasting Zone to Burst Mode when under Threshold.", GNB.JobID)]
+        GNBPvP_BlastingZone = 117007,
 
-    #endregion
+        [ParentCombo(GNBPvP_Burst)]
+        [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Corundum to Burst Mode under set health %.",
+            GNB.JobID)]
+        GNBPvP_Corundum = 117011,
+
+        #endregion
 
     #region Option Select
 
@@ -6240,7 +6284,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Continuation Feature", "Adds Continuation to Gnashing Fang.", GNB.JobID)]
     GNBPvP_GnashingFang = 117010,
 
-    // Last value = 117010
+        // Last value = 117011
 
     #endregion
 
@@ -6364,20 +6408,32 @@ public enum CustomComboPreset
     [CustomComboInfo("Meisui Option", "Uses Three Mudra on Meisui when HP is under the set threshold.", NINPvP.JobID)]
     NINPvP_ST_Meisui = 120002,
 
-    [ParentCombo(NINPvP_ST_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Fuma Shuriken Option", "Adds Fuma Shuriken to Burst Mode.", NINPvP.JobID)]
-    NINPvP_ST_FumaShuriken = 120003,
+        [ParentCombo(NINPvP_ST_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Automatic Mudra Mode", "Uses the mudra from three mudra, automatically on ST burst mode. " +
+           "\n Will use Hyosho Ranryu > Forked Raiju IF YOU HAVE BUNSHIN STACKS > Huton", NINPvP.JobID)]
+
+        NINPvP_ST_MudraMode = 120013,
+
+        [ParentCombo(NINPvP_ST_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Fuma Shuriken Option", "Adds Fuma Shuriken to Burst Mode.", NINPvP.JobID)]
+        NINPvP_ST_FumaShuriken = 120003,
 
     [ParentCombo(NINPvP_ST_BurstMode)]
     [PvPCustomCombo]
     [CustomComboInfo("Three Mudra Option", "Adds Three Mudra to Burst Mode.", NINPvP.JobID)]
     NINPvP_ST_ThreeMudra = 120004,
 
-    [ParentCombo(NINPvP_ST_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Dokumori Option", "Adds Dokumori to Burst Mode.", NINPvP.JobID)]
-    NINPvP_ST_Dokumori = 120005,
+        [ParentCombo(NINPvP_ST_ThreeMudra)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Three Mudra Pooling Option", "Saves Both charges for when Bunshin is up for burst", NINPvP.JobID)]
+        NINPvP_ST_ThreeMudraPool = 120014,
+
+        [ParentCombo(NINPvP_ST_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Dokumori Option", "Adds Dokumori to Burst Mode.", NINPvP.JobID)]
+        NINPvP_ST_Dokumori = 120005,
 
     [ParentCombo(NINPvP_ST_BurstMode)]
     [PvPCustomCombo]
@@ -6395,29 +6451,45 @@ public enum CustomComboPreset
     [CustomComboInfo("Meisui Option", "Uses Three Mudra on Meisui when HP is under the set threshold.", NINPvP.JobID)]
     NINPvP_AoE_Meisui = 120008,
 
-    [ParentCombo(NINPvP_AoE_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Fuma Shuriken Option", "Adds Fuma Shuriken to Burst Mode.", NINPvP.JobID)]
-    NINPvP_AoE_FumaShuriken = 120009,
+        [ParentCombo(NINPvP_AoE_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Automatic Mudra Mode", "Uses the mudra from three mudra, automatically on AoE burst mode. " +
+          "\n Will use Doton > GokaMekkyaku", NINPvP.JobID)]
+        NINPvP_AoE_MudraMode = 120016,
+
+        [ParentCombo(NINPvP_AoE_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Fuma Shuriken Option", "Adds Fuma Shuriken to Burst Mode.", NINPvP.JobID)]
+        NINPvP_AoE_FumaShuriken = 120009,
 
     [ParentCombo(NINPvP_AoE_BurstMode)]
     [PvPCustomCombo]
     [CustomComboInfo("Three Mudra Option", "Adds Three Mudra to Burst Mode.", NINPvP.JobID)]
     NINPvP_AoE_ThreeMudra = 120010,
 
-    [ParentCombo(NINPvP_AoE_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Dokumori Option", "Adds Dokumori to Burst Mode.", NINPvP.JobID)]
-    NINPvP_AoE_Dokumori = 120011,
+        [ParentCombo(NINPvP_AoE_ThreeMudra)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Three Mudra Pooling Option", "Saves Both charges for when Bunshin is up for burst", NINPvP.JobID)]
+        NINPvP_AoE_ThreeMudraPool = 120015,
+
+        [ParentCombo(NINPvP_AoE_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Dokumori Option", "Adds Dokumori to Burst Mode.", NINPvP.JobID)]
+        NINPvP_AoE_Dokumori = 120011,
 
     [ParentCombo(NINPvP_AoE_BurstMode)]
     [PvPCustomCombo]
     [CustomComboInfo("Bunshin Option", "Adds Bunshin to Burst Mode.", NINPvP.JobID)]
     NINPvP_AoE_Bunshin = 120012,
 
-    // Last value = 120003
+        [ParentCombo(NINPvP_AoE_BurstMode)]
+        [PvPCustomCombo]
+        [CustomComboInfo("Seiton Tenchu Option", "Adds SeitonTenchu to Burst Mode when the target is below threshold HP%.", NINPvP.JobID)]
+        NINPvP_AoE_SeitonTenchu = 120017,
 
-    #endregion
+        // Last value = 120016
+        
+        #endregion
 
     #region PALADIN
 
@@ -6448,7 +6520,11 @@ public enum CustomComboPreset
     [CustomComboInfo("Phalanx Combo Option", "Adds Phalanx Combo to Burst Mode.", PLD.JobID)]
     PLDPvP_PhalanxCombo = 121007,
 
-    // Last value = 121007
+        [ParentCombo(PLDPvP_Burst)]
+        [CustomComboInfo("Holy Sheltron Option", "Adds Holy Sheltron to Burst Mode in melee range.", PLD.JobID)]
+        PLDPvP_Sheltron = 121008,
+
+        // Last value = 121008
 
     #endregion
 
@@ -6546,12 +6622,10 @@ public enum CustomComboPreset
 
     #endregion
 
-    [PvPCustomCombo]
-    [ParentCombo(RPRPvP_Burst)]
-    [CustomComboInfo("Ranged Harvest Moon Option",
-        "Adds Harvest Moon onto the main combo when you're out of melee range, the GCD is not rolling and it's available for use.",
-        RPR.JobID)]
-    RPRPvP_Burst_RangedHarvest = 122007,
+        [PvPCustomCombo]
+        [ParentCombo(RPRPvP_Burst)]
+        [CustomComboInfo("Ranged Harvest Moon Option", "Adds Harvest Moon onto the main combo when you're out of melee range, the GCD is not rolling and it's available for use. Will also throw it when the enemy is under 12k health for execute", RPR.JobID)]
+        RPRPvP_Burst_RangedHarvest = 122007,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
@@ -6595,12 +6669,12 @@ public enum CustomComboPreset
 
     // Last value = 123005
 
-    #endregion
+        #endregion
 
-    #region SAGE
-
-    [PvPCustomCombo] [CustomComboInfo("Burst Mode", "Turns Dosis III into an all-in-one damage button.", SGE.JobID)]
-    SGEPvP_BurstMode = 124000,
+        #region SAGE
+        [PvPCustomCombo]
+        [CustomComboInfo("Burst Mode", "Turns Dosis III into an all-in-one damage button.", SGE.JobID)]
+        SGEPvP_BurstMode = 124000,
 
     [ParentCombo(SGEPvP_BurstMode)] [CustomComboInfo("Pneuma Option", "Adds Pneuma to Burst Mode.", SGE.JobID)]
     SGEPvP_BurstMode_Pneuma = 124001,
@@ -6629,53 +6703,37 @@ public enum CustomComboPreset
 
     #region SAMURAI
 
-    #region Burst Mode
+        [PvPCustomCombo]
+        [ReplaceSkill(SAMPvP.Yukikaze)]
+        [CustomComboInfo("Burst Mode", "Turns Kasha Combo into an all-in-one button.\n- Will not use actions with cast time while moving.", SAMPvP.JobID)]
+        SAMPvP_Burst = 125000,
 
-    [PvPCustomCombo]
-    [CustomComboInfo("Burst Mode",
-        "Adds Meikyo Shisui, Midare: Setsugekka, Ogi Namikiri, Kaeshi: Namikiri and Soten to Meikyo Shisui.\nWill only cast Midare: Setsugekka and Ogi Namikiri when you're not moving.\nWill not use if target is guarding.",
-        SAM.JobID)]
-    SAMPvP_BurstMode = 125000,
+        [PvPCustomCombo]
+        [ParentCombo(SAMPvP_Burst)]
+        [CustomComboInfo("Meikyo Shisui Option", "Uses Meikyo Shisui when available.\n- Requires target to be in melee range.", SAMPvP.JobID)]
+        SAMPvP_Meikyo = 125001,
 
-    [PvPCustomCombo]
-    [ParentCombo(SAMPvP_BurstMode)]
-    [CustomComboInfo("Chiten Option", "Adds Chiten to Burst Mode when in combat and HP is below 95%.", SAM.JobID)]
-    SAMPvP_BurstMode_Chiten = 125001,
+        [PvPCustomCombo]
+        [ParentCombo(SAMPvP_Burst)]
+        [CustomComboInfo("Chiten Option", "Uses Chiten when available.\n- Will not use outside combat.\n- Requires player's HP to be under:", SAMPvP.JobID)]
+        SAMPvP_Chiten = 125002,
 
-    [PvPCustomCombo]
-    [ParentCombo(SAMPvP_BurstMode)]
-    [CustomComboInfo("Mineuchi Option", "Adds Mineuchi to Burst Mode.", SAM.JobID)]
-    SAMPvP_BurstMode_Stun = 125002,
+        [PvPCustomCombo]
+        [ParentCombo(SAMPvP_Burst)]
+        [CustomComboInfo("Mineuchi Option", "Uses Mineuchi when available.\n- Will not use against non-players.\n- Requires target's HP to be under:", SAMPvP.JobID)]
+        SAMPvP_Mineuchi = 125003,
 
-    [PvPCustomCombo]
-    [ParentCombo(SAMPvP_BurstMode)]
-    [CustomComboInfo("Burst Mode on Kasha Combo Option", "Adds Burst Mode to Kasha Combo instead.", SAM.JobID)]
-    SAMPvP_BurstMode_MainCombo = 125003,
+        [PvPCustomCombo]
+        [ParentCombo(SAMPvP_Burst)]
+        [CustomComboInfo("Soten Option", "Uses Soten when available.\n- Must remain within maximum range.\n- Will not use if already under Kaiten's effect.", SAMPvP.JobID)]
+        SAMPvP_Soten = 125004,
 
-    [ParentCombo(SAMPvP_BurstMode)] [CustomComboInfo("Zanshin Option", "Adds Zanshin to Burst Mode.", SAM.JobID)]
-    SAMPvP_BurstMode_Zanshin = 125007,
+        [PvPCustomCombo]
+        [ParentCombo(SAMPvP_Burst)]
+        [CustomComboInfo("Zantetsuken Option", "Uses Zantetsuken when available.\n- Will not use if target is invulnerable.\n- Requires target to have player's Kuzushi.", SAMPvP.JobID)]
+        SAMPvP_Zantetsuken = 125005,
 
-    #endregion
-
-    #region Kasha Features
-
-    [PvPCustomCombo] [CustomComboInfo("Kasha Combo Features", "Collection of Features for Kasha Combo.", SAM.JobID)]
-    SAMPvP_KashaFeatures = 125004,
-
-    [PvPCustomCombo]
-    [ParentCombo(SAMPvP_KashaFeatures)]
-    [CustomComboInfo("Soten Gap Closer Option", "Adds Soten to the Kasha Combo when out of melee range.", SAM.JobID)]
-    SAMPvP_KashaFeatures_GapCloser = 125005,
-
-    [PvPCustomCombo]
-    [ParentCombo(SAMPvP_KashaFeatures)]
-    [CustomComboInfo("AoE Melee Protection Option", "Makes the AoE combos unusable if not in melee range of target.",
-        SAM.JobID)]
-    SAMPvP_KashaFeatures_AoEMeleeProtection = 125006,
-
-    #endregion
-
-    // Last value = 125007
+        // Last value = 125005
 
     #endregion
 
@@ -6758,16 +6816,44 @@ public enum CustomComboPreset
 
     #endregion
 
-    #region VIPER
+        #region VIPER
+        [PvPCustomCombo]
+        [ReplaceSkill(VPRPvP.SteelFangs)]
+        [CustomComboInfo("Burst Mode", "Turns Dual Fang Combo into an all-in-one button.", VPRPvP.JobID)]
+        VPRPvP_Burst = 130000,
 
-    [PvPCustomCombo]
-    [ReplaceSkill(VPRPvP.SteelFangs)]
-    [CustomComboInfo("Burst Mode", "Turns Dual Fang Combo into an all-in-one damage button.", VPRPvP.JobID)]
-    VPRPvP_Burst = 130000,
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Bloodcoil Option", "Uses Bloodcoil when available.\n- Requires target's or player's HP to be under:", VPRPvP.JobID)]
+        VPRPvP_Bloodcoil = 130001,
 
-    // Last value = 130000
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Uncoiled Fury Option", "Uses Uncoiled Fury when available.\n- Requires target's HP to be under:", VPRPvP.JobID)]
+        VPRPvP_UncoiledFury = 130002,
 
-    #endregion
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Backlash Option", "Uses Backlash when available.", VPRPvP.JobID)]
+        VPRPvP_Backlash = 130003,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Rattling Coil Option", "Uses Rattling Coil when any condition is met.", VPRPvP.JobID)]
+        VPRPvP_RattlingCoil = 130004,
+
+        [PvPCustomCombo]
+        [ParentCombo(VPRPvP_Burst)]
+        [CustomComboInfo("Slither Option", "Uses Slither when outside melee.\n- Must remain within maximum range.\n- Will not use if already under Slither's effect.", VPRPvP.JobID)]
+        VPRPvP_Slither = 130005,
+
+        [PvPCustomCombo]
+        [ReplaceSkill(VPRPvP.SnakeScales)]
+        [CustomComboInfo("Snake Scales Reset Feature", "Adds Rattling Coil to Snake Scales when available.\n- Requires Snake Scales to be on cooldown.", VPRPvP.JobID)]
+        VPRPvP_SnakeScales_Feature = 130006,
+
+        // Last value = 130006
+        #endregion
 
     #region WARRIOR
 
@@ -6842,7 +6928,8 @@ public enum CustomComboPreset
 
     // Last value = 129006
 
-    #endregion
+        #endregion
 
-    #endregion
+        #endregion
+    }
 }

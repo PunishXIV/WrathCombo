@@ -39,7 +39,7 @@ namespace WrathCombo.CustomComboNS
         /// <param name="newActionID"> Replacement action ID. </param>
         /// <returns> True if the action has changed, otherwise false. </returns>
 
-        public unsafe bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID, IGameObject targetOverride = null)
+        public unsafe bool TryInvoke(uint actionID, byte level, uint lastComboMove, float comboTime, out uint newActionID, IGameObject? targetOverride = null)
         {
             newActionID = 0;
 

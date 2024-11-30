@@ -87,12 +87,7 @@ internal partial class SMN
                     break;
                 }
 
-                case CustomComboPreset.SMNPvP_BurstMode:
-                    UserConfig.DrawSliderInt(50, 100, SMNPvP.Config.SMNPvP_FesterThreshold,
-                        "Target HP% to cast Fester below.\nSet to 100 use Fester as soon as it's available.");
-
-                    break;
-
+                
                 case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
                     UserConfig.DrawSliderInt(0, 90, SMNPvP.Config.SMNPvP_RadiantAegisThreshold,
                         "Caps at 90 to prevent waste.");

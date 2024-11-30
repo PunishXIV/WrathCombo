@@ -116,99 +116,223 @@ internal partial class PCT
             if (!LevelChecked)
                 return false;
 
-            bool isEarlyOpenerEnabled =
-                CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers_EarlyOpener);
-
             if (currentState == OpenerState.InOpener)
             {
-                if (CustomComboFunctions.WasLastAction(StrikingMuse) && OpenerStep == 1) OpenerStep++;
-                else if (OpenerStep == 1) actionID = StrikingMuse;
-
-                // If the early opener is not enabled, include HolyInWhite
-                if (!isEarlyOpenerEnabled)
+                if (CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers_1))
                 {
-                    if (CustomComboFunctions.WasLastAction(HolyInWhite) && OpenerStep == 2) OpenerStep++;
-                    else if (OpenerStep == 2) actionID = HolyInWhite;
+                    if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 1) OpenerStep++;
+                    else if (OpenerStep == 1) actionID = RainbowDrip;
+
+                    if (CustomComboFunctions.WasLastAction(StrikingMuse) && OpenerStep == 2) OpenerStep++;
+                    else if (OpenerStep == 2) actionID = StrikingMuse;
+
+                    if (CustomComboFunctions.WasLastAction(HolyInWhite) && OpenerStep == 3) OpenerStep++;
+                    else if (OpenerStep == 3) actionID = HolyInWhite;
+
+                    if (CustomComboFunctions.WasLastAction(PomMuse) && OpenerStep == 4) OpenerStep++;
+                    else if (OpenerStep == 4) actionID = PomMuse;
+
+                    if (CustomComboFunctions.LocalPlayer.CastActionId ==
+                        CustomComboFunctions.OriginalHook(CreatureMotif) && OpenerStep == 5) OpenerStep++;
+                    else if (OpenerStep == 5) actionID = CustomComboFunctions.OriginalHook(CreatureMotif);
+
+
+                    if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == 6) OpenerStep++;
+                    else if (OpenerStep == 6) actionID = StarryMuse;
+
+
+                    if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == 7) OpenerStep++;
+                    else if (OpenerStep == 7) actionID = HammerStamp;
+
+
+                    if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == 8)
+                        OpenerStep++;
+                    else if (OpenerStep == 8) actionID = SubtractivePalette;
+
+
+                    if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == 9) OpenerStep++;
+                    else if (OpenerStep == 9) actionID = BlizzardinCyan;
+
+
+                    if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == 10) OpenerStep++;
+                    else if (OpenerStep == 10) actionID = StoneinYellow;
+
+
+                    if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == 11)
+                        OpenerStep++;
+                    else if (OpenerStep == 11) actionID = ThunderinMagenta;
+
+
+                    if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == 12) OpenerStep++;
+                    else if (OpenerStep == 12) actionID = CometinBlack;
+
+
+                    if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == 13) OpenerStep++;
+                    else if (OpenerStep == 13) actionID = WingedMuse;
+
+
+                    if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == 14) OpenerStep++;
+                    else if (OpenerStep == 14) actionID = MogoftheAges;
+
+
+                    if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == 15) OpenerStep++;
+                    else if (OpenerStep == 15) actionID = StarPrism;
+
+
+                    if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == 16) OpenerStep++;
+                    else if (OpenerStep == 16) actionID = HammerBrush;
+
+
+                    if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == 17) OpenerStep++;
+                    else if (OpenerStep == 17) actionID = PolishingHammer;
+
+
+                    if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 18) OpenerStep++;
+                    else if (OpenerStep == 18) actionID = RainbowDrip;
                 }
 
-                // Adjust step numbers based on if HolyInWhite was skipped
-                int adjustedStep = isEarlyOpenerEnabled ? 2 : 3;
+                if (CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers_2))
+                {
+                    if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 1) OpenerStep++;
+                    else if (OpenerStep == 1) actionID = RainbowDrip;
 
-                if (CustomComboFunctions.WasLastAction(PomMuse) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = PomMuse;
+                    if (CustomComboFunctions.WasLastAction(PomMuse) && OpenerStep == 2) OpenerStep++;
+                    else if (OpenerStep == 2) actionID = PomMuse;
 
-                adjustedStep++;
+                    if (CustomComboFunctions.WasLastAction(StrikingMuse) && OpenerStep == 3) OpenerStep++;
+                    else if (OpenerStep == 3) actionID = StrikingMuse;
 
-                if (CustomComboFunctions.LocalPlayer.CastActionId ==
-                    CustomComboFunctions.OriginalHook(CreatureMotif) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = CustomComboFunctions.OriginalHook(CreatureMotif);
+                    if (CustomComboFunctions.LocalPlayer.CastActionId ==
+                        CustomComboFunctions.OriginalHook(CreatureMotif) && OpenerStep == 4) OpenerStep++;
+                    else if (OpenerStep == 4) actionID = CustomComboFunctions.OriginalHook(CreatureMotif);
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = StarryMuse;
+                    if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == 5) OpenerStep++;
+                    else if (OpenerStep == 5) actionID = StarryMuse;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = HammerStamp;
+                    if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == 6) OpenerStep++;
+                    else if (OpenerStep == 6) actionID = HammerStamp;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == adjustedStep)
-                    OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = SubtractivePalette;
+                    if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == 7)
+                        OpenerStep++;
+                    else if (OpenerStep == 7) actionID = SubtractivePalette;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = BlizzardinCyan;
+                    if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == 8) OpenerStep++;
+                    else if (OpenerStep == 8) actionID = BlizzardinCyan;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = StoneinYellow;
+                    if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == 9) OpenerStep++;
+                    else if (OpenerStep == 9) actionID = StoneinYellow;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == adjustedStep)
-                    OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = ThunderinMagenta;
+                    if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == 10)
+                        OpenerStep++;
+                    else if (OpenerStep == 10) actionID = ThunderinMagenta;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = CometinBlack;
+                    if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == 11) OpenerStep++;
+                    else if (OpenerStep == 11) actionID = CometinBlack;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = WingedMuse;
+                    if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == 12) OpenerStep++;
+                    else if (OpenerStep == 12) actionID = WingedMuse;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = MogoftheAges;
+                    if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == 13) OpenerStep++;
+                    else if (OpenerStep == 13) actionID = MogoftheAges;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = StarPrism;
+                    if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == 14) OpenerStep++;
+                    else if (OpenerStep == 14) actionID = StarPrism;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = HammerBrush;
+                    if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == 15) OpenerStep++;
+                    else if (OpenerStep == 15) actionID = HammerBrush;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = PolishingHammer;
+                    if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == 16) OpenerStep++;
+                    else if (OpenerStep == 16) actionID = PolishingHammer;
 
-                adjustedStep++;
 
-                if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == adjustedStep) OpenerStep++;
-                else if (OpenerStep == adjustedStep) actionID = RainbowDrip;
+                    if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 17) OpenerStep++;
+                    else if (OpenerStep == 17) actionID = RainbowDrip;
+                }
+
+                if (CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers_3))
+                {
+
+                    if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 1) OpenerStep++;
+                    else if (OpenerStep == 1) actionID = RainbowDrip;
+
+                    if (CustomComboFunctions.WasLastAction(PomMuse) && OpenerStep == 2) OpenerStep++;
+                    else if (OpenerStep == 2) actionID = PomMuse;
+
+                    if (CustomComboFunctions.WasLastAction(All.Swiftcast) && OpenerStep == 3) OpenerStep++;
+                    else if (OpenerStep == 3) actionID = All.Swiftcast;
+
+                    if (CustomComboFunctions.WasLastAction(WingMotif) && OpenerStep == 4) OpenerStep++;
+                    else if (OpenerStep == 4) actionID = WingMotif;
+
+                    if (CustomComboFunctions.WasLastAction(StrikingMuse) && OpenerStep == 5) OpenerStep++;
+                    else if (OpenerStep == 5) actionID = StrikingMuse;
+
+
+                    if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == 6) OpenerStep++;
+                    else if (OpenerStep == 6 && CustomComboFunctions.CanDelayedWeave(WingMotif)) actionID = StarryMuse;
+
+
+                    if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == 7) OpenerStep++;
+                    else if (OpenerStep == 7) actionID = HammerStamp;
+
+
+                    if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == 8)
+                        OpenerStep++;
+                    else if (OpenerStep == 8) actionID = SubtractivePalette;
+
+
+                    if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == 9) OpenerStep++;
+                    else if (OpenerStep == 9) actionID = BlizzardinCyan;
+
+
+                    if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == 10) OpenerStep++;
+                    else if (OpenerStep == 10) actionID = StoneinYellow;
+
+
+                    if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == 11)
+                        OpenerStep++;
+                    else if (OpenerStep == 11) actionID = ThunderinMagenta;
+
+
+                    if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == 12) OpenerStep++;
+                    else if (OpenerStep == 12) actionID = CometinBlack;
+
+
+                    if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == 13) OpenerStep++;
+                    else if (OpenerStep == 13) actionID = WingedMuse;
+
+
+                    if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == 14) OpenerStep++;
+                    else if (OpenerStep == 14) actionID = MogoftheAges;
+
+
+                    if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == 15) OpenerStep++;
+                    else if (OpenerStep == 15) actionID = StarPrism;
+
+
+                    if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == 16) OpenerStep++;
+                    else if (OpenerStep == 16) actionID = HammerBrush;
+
+
+                    if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == 17) OpenerStep++;
+                    else if (OpenerStep == 17) actionID = PolishingHammer;
+
+
+                    if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 18) OpenerStep++;
+                    else if (OpenerStep == 18) actionID = RainbowDrip;
+                }
 
                 //Svc.Log.Debug($"TimeSinceLastAction: {ActionWatching.TimeSinceLastAction.TotalSeconds}, OpenerStep: {OpenerStep}");
 
@@ -220,7 +344,7 @@ internal partial class PCT
                     return false;
                 }
 
-                if (OpenerStep > adjustedStep)
+                if (OpenerStep >= 18)
                 {
                     CurrentState = OpenerState.OpenerFinished;
                     Svc.Log.Information("Opener completed successfully.");

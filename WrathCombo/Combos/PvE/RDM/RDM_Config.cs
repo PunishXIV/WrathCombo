@@ -4,6 +4,7 @@ using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Window.Functions.SliderIncrements;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -15,7 +16,10 @@ namespace WrathCombo.Combos.PvE
                 RDM_VariantCure = new("RDM_VariantCure"),
                 RDM_ST_Lucid_Threshold = new("RDM_LucidDreaming_Threshold", 6500),
                 RDM_AoE_Lucid_Threshold = new("RDM_AoE_Lucid_Threshold", 6500),
-                RDM_AoE_MoulinetRange = new("RDM_MoulinetRange");
+                RDM_AoE_MoulinetRange = new("RDM_MoulinetRange"),
+                RDMPvP_Burst_CorpsACorps = new("RDMPvP_Burst_CorpsACorps"),
+                RDMPvP_Burst_Displacement = new("RDMPvP_Burst_Displacement");
+
             public static UserBool
                 RDM_ST_oGCD_OnAction_Adv = new("RDM_ST_oGCD_OnAction_Adv"),
                 RDM_ST_oGCD_Fleche = new("RDM_ST_oGCD_Fleche"),
@@ -169,6 +173,18 @@ namespace WrathCombo.Combos.PvE
 
                     case CustomComboPreset.RDM_Variant_Cure:
                         DrawSliderInt(1, 100, RDM_VariantCure, "HP% to be at or under", 200);
+                        break;
+
+                    case CustomComboPreset.RDMPvP_Burst_CorpsACorps:
+                        DrawSliderInt(0, 1, RDMPvP_Burst_CorpsACorps,
+                            "How many charges to keep ready? (0 = Use all)");
+
+                        break;
+
+                    case CustomComboPreset.RDMPvP_Burst_Displacement:
+                        DrawSliderInt(0, 1, RDMPvP_Burst_Displacement,
+                            "How many charges to keep ready? (0 = Use all)");
+
                         break;
                 }
             }
