@@ -95,12 +95,12 @@ namespace WrathCombo.Data
                     ActionTimestamps[actionId] = Environment.TickCount64;
 
                 CheckForChangedTarget(actionId, ref targetObjectId);
-                SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
                 TimeLastActionUsed = DateTime.Now;
                 LastAction = actionId;
                 ActionType = actionType;
 
                 UpdateHelpers(actionId);
+                SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
 
                 Svc.Log.Verbose($"{actionId} {sequence} {a5} {a6} {a7} {a8} {a9}");
             }
