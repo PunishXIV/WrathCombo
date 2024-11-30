@@ -574,15 +574,6 @@ namespace WrathCombo.Combos.PvE
                             }
                         }
                     }
-                    if (IsGarudaAttuned)
-                    {
-                        // Use Ruin III instead of Emerald Ruin III
-                        if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3))
-                        {
-                            if (OriginalHook(Gemshine) is EmeralRuin1 or EmeralRuin2 or EmeraldRite) return OriginalHook(Gemshine);
-                            return Ruin3;
-                        }
-                    }
 
                     if (IsEnabled(CustomComboPreset.SMN_SearingFlash) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                         return SearingFlash;
@@ -730,6 +721,16 @@ namespace WrathCombo.Combos.PvE
                         (Config.SMN_ST_Egi_AstralFlow[1] && HasEffect(Buffs.IfritsFavor) && Config.SMN_ST_CrimsonCycloneMelee && InMeleeRange()))  // Ifrit
                         return OriginalHook(AstralFlow);
 
+                    if (IsGarudaAttuned)
+                    {
+                        // Use Ruin III instead of Emerald Ruin III
+                        if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3))
+                        {
+                            if (OriginalHook(Gemshine) is EmeralRuin1 or EmeralRuin2 or EmeraldRite) return OriginalHook(Gemshine);
+                            return Ruin3;
+                        }
+                    }
+                    
                     // Gemshine
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_EgiSummons_Attacks) && (IsGarudaAttuned || IsTitanAttuned || IsIfritAttuned))
                         return OriginalHook(Gemshine);
