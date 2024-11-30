@@ -1133,5 +1133,37 @@ internal partial class VPR
                     return actionID;
             }
         }
+
+        internal class VPR_Legacies : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_Legacies;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                //Reawaken combo
+                if (HasEffect(Buffs.Reawakened))
+                    switch (actionID)
+                    {
+                        //With Ouroboros
+                        case SteelFangs when WasLastAction(OriginalHook(SteelFangs)) &&
+                                             gauge.AnguineTribute is 4:
+                            return OriginalHook(SerpentsTail);
+
+                        case ReavingFangs when WasLastAction(OriginalHook(ReavingFangs)) &&
+                                               gauge.AnguineTribute is 3:
+                            return OriginalHook(SerpentsTail);
+
+                        case HuntersCoil when WasLastAction(OriginalHook(HuntersCoil)) &&
+                                              gauge.AnguineTribute is 2:
+                            return OriginalHook(SerpentsTail);
+
+                        case SwiftskinsCoil when WasLastAction(OriginalHook(SwiftskinsCoil)) &&
+                                                 gauge.AnguineTribute is 1:
+                            return OriginalHook(SerpentsTail);
+                    }
+
+                return actionID;
+            }
+        }
     }
 }

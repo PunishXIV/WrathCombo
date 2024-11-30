@@ -46,6 +46,12 @@
     <br><br>
     Wrath Combo is regularly updated to include new features and to keep
     up-to-date with the latest job changes in Final Fantasy XIV.
+    <br><br>
+    <img src="/res/readme_images/demo.gif" width="450" />
+    <br>
+    In that clip, the plugin is configured to condense the entire rotation of a 
+    job onto a single button, and that button is being pressed repeatedly -
+    all actions executed are being shown on a timeline for demonstration.
 </p>
 </section>
 
@@ -57,7 +63,7 @@
 <img src="/res/readme_images/adding_repo.jpg" width="450" />
 
 Open the Dalamud Settings menu in game and follow the steps below.
-This can be  done through the button at the bottom of the plugin installer or by
+This can be done through the button at the bottom of the plugin installer or by
 typing `/xlsettings` in the chat.
 
 1. Under Custom Plugin Repositories, enter `https://love.puni.sh/ment.json` into the
@@ -65,32 +71,15 @@ typing `/xlsettings` in the chat.
 2. Click the "+" button.
 3. Click the "Save and Close" button.
 
+Open the Dalamud Plugin Installer menu in game and follow the steps below.
+This can be done through `/xlplugins` in the chat.
+
+1. Click the "All Plugins" tab on the left.
+2. Search for "Wrath Combo".
+3. Click the "Install" button.
+
 <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section> <br>
-
-<!-- Commands -->
-<section>
-
-# Commands
-
-| **Chat command &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;** | **Function**                                                                                                                                 |
-|:-------------------------------------------------------------------------|:---------------------------------------------------------------------------------------------------------------------------------------------|
-| `/wrath`                                                                 | Opens the main plugin window, where you can enable/disable features, access settings and more.                                               |
-| `/wrath auto`                                                            | Toggles Auto-Rotation **on** or **off**.                                                                                                     |
-| `/wrath auto STATE`                                                      | Sets Auto-Rotation to a specific state. Replace `STATE` with `on` or `off`.                                                                  |
-| `/wrath toggle INT`                                                      | Toggles a specific feature/option **on or off** by replacing `INT` with its internal name.<br>Does not work while in combat.                 |
-| `/wrath set INT`                                                         | Turns a specific feature/option **on** by replacing `INT` with its internal name.<br>Does not work when in combat.                           |
-| `/wrath unset INT`                                                       | Turn a specific feature/option **off** by replacing `INT` with its internal name.<br>Does not work while in combat.                          |
-| `/wrath unsetall`                                                        | Turns all features and options **off** at once.                                                                                              |
-| `/wrath list ...`                                                        | Prints lists of feature's internal names to the game chat based on filter arguments.<br>Requires an appended filter. See Below.              |
-| `/wrath list set`<br>`/wrath enabled`                                    | Prints a list of all currently enabled features & options in the game chat.                                                                  |
-| `/wrath list unset`                                                      | Prints a list of all currently disabled features & options in the game chat.                                                                 |
-| `/wrath list all`                                                        | Prints a list of every feature & option in the game chat, regardless of state.                                                               |
-| `/wrath debug`                                                           | Outputs a full debug file to your desktop that can be sent to developers for utilisation in bug-fixing.                                      |
-| `/wrath debug JOB`                                                       | Outputs a debug file to your desktop containing only job-relevant features/options. <br>Replace `JOB` with the appropriate job abbreviation. |
-
-<p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
-</section>
 
 <!-- Features -->
 <section>
@@ -105,46 +94,46 @@ feature-set.
 
   <details><summary>PvE Features</summary> <br>
 
-    "Simple" (one-button) Mode for many jobs
-    "Advanced" Mode for many jobs, get as simple as you want
-    Auto-Rotation, to execute your rotation automatically, based on your settings
-    Variant Dungeon specific features
-
-    Tank Double Reprisal Protection
-    Tank Interrupt Feature
-    Healer Raise Feature
-    Magical Ranged DPS Double Addle Protection
-    Magical Ranged DPS Raise Feature
-    Melee DPS Double Feint Protection
-    Melee DPS True North Protection
-    Physical Ranged DPS Double Mitigation Protection
-    Physical Ranged DPS Interrupt Feature
+ - "Simple" (one-button) Mode for many jobs
+ - "Advanced" Mode for many jobs, get as simple as you want
+ - Auto-Rotation, to execute your rotation automatically, based on your settings
+ - Variant Dungeon specific features
+<br><br>
+ - Tank Double Reprisal Protection
+ - Tank Interrupt Feature
+ - Healer Raise Feature
+ - Magical Ranged DPS Double Addle Protection
+ - Magical Ranged DPS Raise Feature
+ - Melee DPS Double Feint Protection
+ - Melee DPS True North Protection
+ - Physical Ranged DPS Double Mitigation Protection
+ - Physical Ranged DPS Interrupt Feature
     
-    And much more!
+ And much more!
 
   </details>
 
   <details><summary>PvP Features</summary> <br>
 
-    "Burst Mode" offense features for all jobs
-    Emergency Heals
-    Emergency Guard
-    Quick Purify
-    Guard Cancellation Prevention
+ - "Burst Mode" offense features for all jobs
+ - Emergency Heals
+ - Emergency Guard
+ - Quick Purify
+ - Guard Cancellation Prevention
     
-    And much more!
+ And much more!
 
   </details>
 
   <details><summary>Miscellaneous Features</summary> <br>
 
-    Island Sanctuary Sprint Feature
-    [BTN/MIN] Eureka Feature
-    [BTN/MIN] Locate & Truth Feature
-    [FSH] Cast to Hook Feature
-    [FSH] Diving Feature
-    
-    And much more!
+- Island Sanctuary Sprint Feature
+- [BTN/MIN] Eureka Feature
+- [BTN/MIN] Locate & Truth Feature
+- [FSH] Cast to Hook Feature
+- [FSH] Diving Feature
+
+ And much more!
 
   </details>
 
@@ -152,8 +141,61 @@ To experience the full set of features on
 offer, <a href="#installation" alt="install">install</a> the plugin or visit
 the [Discord](https://discord.gg/Zzrcc8kmvy) server for more info.
 
+<p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
+
+## Use with Other Plugins
+
+### [AutoDuty](https://github.com/ffxivcode/AutoDuty)
+
+Wrath Combo can be used as the Rotation Engine for AutoDuty, such that Wrath Combo's
+Auto-Rotation will be used during duties.
+To enable this:
+1. Open AutoDuty's main window.
+2. Go to the "Config" tab.
+3. Expand the "Duty Config" section.
+4. Enable "Auto Manage Rotation Plugin State".
+
+You will still need to configure Wrath Combo's Auto-Rotation settings and what 
+combos you have set to be enabled in it as normal, AutoDuty will currently on enable
+or disable the Auto-Rotation feature.
+
+1. Open Wrath Combo and navigate to the "Auto-Rotation" tab.
+    - Configure your Auto-Rotation settings as desired.
+2. Navigate to the "PvE Features" tab and select your job.
+    - Enable at least 1 combo, but preferably a Single and Multi-target Combo.
+        - You can use "Simple Mode" combos, or "Advanced Mode" combos and 
+          configure them as desired.
+    - Tick the "Auto-Mode" checkbox to the right of your chosen combos.
+3. AutoDuty will enable Wrath Combo when it commences a duty, and disable it when 
+   it ends.
+
   <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section> 
+
+<!-- Commands -->
+<section>
+
+# Commands
+
+| **Chat command**                       | **Function**                                                                                                                                                |
+|:---------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/wrath`                               | Opens the main plugin window, where you can enable/disable features, access settings and more.                                                              |
+| `/wrath auto`                          | Toggles Auto-Rotation **on** or **off**.                                                                                                                    |
+| `/wrath auto STATE`                    | Sets Auto-Rotation to a specific state. Replace `STATE` with `on` or `off`.                                                                                 |
+| `/wrath combo STATE`                   | When toggled off, actions will not be replaced with combos from the plugin.<br>Auto-Rotation will still work. Replace `STATE` with `on`, `off` or `toggle`. |
+| `/wrath toggle INT`                    | Toggles a specific feature/option **on or off** by replacing `INT` with its internal name.<br>Does not work while in combat.                                |
+| `/wrath set INT`                       | Turns a specific feature/option **on** by replacing `INT` with its internal name.<br>Does not work when in combat.                                          |
+| `/wrath unset INT`                     | Turn a specific feature/option **off** by replacing `INT` with its internal name.<br>Does not work while in combat.                                         |
+| `/wrath unsetall`                      | Turns all features and options **off** at once.                                                                                                             |
+| `/wrath list ...`                      | Prints lists of feature's internal names to the game chat based on filter arguments.<br>Requires an appended filter. See Below.                             |
+| `/wrath list set`<br/>`/wrath enabled` | Prints a list of all currently enabled features & options in the game chat.                                                                                 |
+| `/wrath list unset`                    | Prints a list of all currently disabled features & options in the game chat.                                                                                |
+| `/wrath list all`                      | Prints a list of every feature & option in the game chat, regardless of state.                                                                              |
+| `/wrath debug`                         | Outputs a full debug file to your desktop that can be sent to developers for utilisation in bug-fixing.                                                     |
+| `/wrath debug JOB`                     | Outputs a debug file to your desktop containing only job-relevant features/options. <br>Replace `JOB` with the appropriate job abbreviation.                |
+
+<p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
+</section>
 
 <!-- Contributing -->
 <section>

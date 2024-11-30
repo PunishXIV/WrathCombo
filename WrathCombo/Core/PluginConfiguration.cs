@@ -9,6 +9,7 @@ using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Extensions;
+using WrathCombo.Window;
 
 namespace WrathCombo.Core
 {
@@ -244,6 +245,13 @@ namespace WrathCombo.Core
 
         /// <summary> Hides the message of the day. </summary>
         public bool HideMessageOfTheDay { get; set; } = false;
+
+        /// <summary>
+        ///     Whether the Setting Change Suggestion window was hidden for a
+        ///     specific version.
+        /// </summary>
+        /// <seealso cref="SettingChangeWindow"/>
+        public string HideSettingsChangeSuggestionForVersion { get; set; } = "";
 
         /// <summary> Save the configuration to disk. </summary>
         public void Save() => Svc.PluginInterface.SavePluginConfig(this);

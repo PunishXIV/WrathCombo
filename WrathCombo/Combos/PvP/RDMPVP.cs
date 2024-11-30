@@ -17,10 +17,12 @@ namespace WrathCombo.Combos.PvP
             EnchantedRedoublement = 41490,
             Frazzle = 29698,
             SouthernCross = 29704,
+            Scorch = 41491,
             Embolden = 41494,
             Forte = 41496,
             Jolt3 = 41486,
-            ViceofThorns = 41493;
+            ViceofThorns = 41493,
+            Prefulgence = 41495;
 
         public static class Buffs
         {
@@ -33,6 +35,7 @@ namespace WrathCombo.Combos.PvP
                 EnchantedZwerchhau = 3235,
                 VermilionRadiance = 3233,
                 MagickBarrier = 3240,
+                Displacement = 3243,
                 Embolden = 2282,
                 Forte = 4320,
                 PrefulgenceReady = 4322,
@@ -44,7 +47,13 @@ namespace WrathCombo.Combos.PvP
             public const ushort
                 Monomachy = 3242;
         }
+        public static class Config
+        {
+            public const string
+                RDMPvP_Burst_CorpsACorps = "RDMPvP_Burst_CorpsACorps",
+                RDMPvP_Burst_Displacement = "RDMPvP_Burst_Displacement";
 
+        }
         internal class RDMPvP_BurstMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDMPvP_BurstMode;
@@ -53,43 +62,37 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is Jolt3)
                 {
-                    if (IsOffCooldown(Forte) && CanWeave(actionID))
+                    if (ActionReady(Forte) && CanWeave(actionID))
                         return Forte;
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Resolution) && ActionReady(Resolution) && !PvPCommon.IsImmuneToDamage())
+                        return OriginalHook(Resolution);
+
+                    if (IsEnabled(CustomComboPreset.RDMPvP_Burst_CorpsACorps) && GetRemainingCharges(CorpsACorps) > GetOptionValue(Config.RDMPvP_Burst_CorpsACorps) && ActionReady(EnchantedRiposte) && !InMeleeRange())
+                        return OriginalHook(CorpsACorps);
+
+                    if (InMeleeRange())
                     {
-                        if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Resolution) && !GetCooldown(Resolution).IsCooldown)
-                            return OriginalHook(Resolution);
-
-                        if (IsEnabled(CustomComboPreset.RDMPvP_Burst_CorpsACorps) && !InMeleeRange() && GetCooldown(CorpsACorps).RemainingCharges > 0 && !GetCooldown(EnchantedRiposte).IsCooldown)
-                            return OriginalHook(CorpsACorps);
-
-                        if (InMeleeRange())
+                        if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Embolden))
                         {
-                            if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Embolden))
-                            {
-                                if (IsOffCooldown(Embolden) && (WasLastAbility(CorpsACorps) || TargetHasEffect(Debuffs.Monomachy)) || HasEffect(Buffs.PrefulgenceReady))
-                                    return OriginalHook(Embolden);
-
-                            }
-
-                            if (IsEnabled(CustomComboPreset.RDMPvP_Burst_EnchantedRiposte))
-                            {
-                                if (!GetCooldown(EnchantedRiposte).IsCooldown || lastComboActionID == EnchantedRiposte || lastComboActionID == EnchantedZwerchhau || lastComboActionID == EnchantedRedoublement)
-                                    return OriginalHook(EnchantedRiposte);
-                            }
-
-
-                            if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Displacement) && lastComboActionID == EnchantedRedoublement && GetCooldown(Displacement).RemainingCharges > 0)
-                                return OriginalHook(Displacement);
+                            if (ActionReady(Embolden) && OriginalHook(Embolden) == Embolden && (WasLastAbility(CorpsACorps) || TargetHasEffect(Debuffs.Monomachy)))
+                                return OriginalHook(Embolden);
                         }
 
-                        if (lastComboActionID == EnchantedRedoublement)
-                            return OriginalHook(EnchantedRiposte);
+                        if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Displacement) && GetRemainingCharges(Displacement) > GetOptionValue(Config.RDMPvP_Burst_Displacement) && !ActionReady(EnchantedRiposte) && OriginalHook(EnchantedRiposte) == Scorch)
+                            return OriginalHook(Displacement);
 
-                        if (HasEffect(Buffs.VermilionRadiance))
-                            return OriginalHook(EnchantedRiposte);
+                        if (IsEnabled(CustomComboPreset.RDMPvP_Burst_EnchantedRiposte))
+                        {
+                            if (ActionReady(EnchantedRiposte) || OriginalHook(EnchantedRiposte) != EnchantedRiposte)
+                                return OriginalHook(EnchantedRiposte);
+                        }                                                
                     }
+                    if (OriginalHook(EnchantedRiposte) == Scorch)
+                        return OriginalHook(EnchantedRiposte);
+
+                    if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Embolden) && OriginalHook(Embolden) == Prefulgence)
+                        return OriginalHook(Embolden);
 
                 }
 

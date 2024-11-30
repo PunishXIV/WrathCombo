@@ -155,6 +155,9 @@ internal partial class NIN
                 case CustomComboPreset.NINPvP_ST_SeitonTenchu:
                     UserConfig.DrawSliderInt(1, 50, NINPvP.Config.NINPVP_SeitonTenchu, "Target's HP% to be at or under", 200);
                     break;
+                case CustomComboPreset.NINPvP_AoE_SeitonTenchu:
+                    UserConfig.DrawSliderInt(1, 50, NINPvP.Config.NINPVP_SeitonTenchuAoE, "Target's HP% to be at or under", 200);
+                    break;
             }
         }
     }

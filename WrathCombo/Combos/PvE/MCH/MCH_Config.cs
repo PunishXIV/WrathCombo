@@ -1,7 +1,6 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
-using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
@@ -61,9 +60,6 @@ internal partial class MCH
                         $"Use on {ActionWatching.GetActionName(SpreadShot)}/{ActionWatching.GetActionName(Scattergun)}",
                         "", 4, 0);
 
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled,
-                        $"Use on {ActionWatching.GetActionName(AutoCrossbow)}", "", 4, 1);
-
                     DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {ActionWatching.GetActionName(Chainsaw)}",
                         "", 4, 2);
 
@@ -121,17 +117,17 @@ internal partial class MCH
                 case CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite:
                     DrawSliderInt(0, 36000, MCHPvP.Config.MCHPVP_MarksmanSpite,
                         "Use Marksman's Spite when the target is below set HP");
+
                     break;
 
                 case CustomComboPreset.MCHPvP_BurstMode_FullMetalField:
-                    UserConfig.DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field Wildfire combo",
+                    DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field Wildfire combo",
                         "Uses Full Metal Field when Wildfire is ready.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field only when Overheated",
+                    DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field only when Overheated",
                         "Only uses Full Metal Field while Overheated.", 2);
 
                     break;
-
             }
         }
     }

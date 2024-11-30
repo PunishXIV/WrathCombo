@@ -13,15 +13,15 @@ namespace WrathCombo.Combos.PvE
             internal static UserInt
                 WHM_STDPS_Lucid = new("WHMLucidDreamingFeature"),
                 WHM_STDPS_MainCombo_DoT = new("WHM_ST_MainCombo_DoT"),
-                WHM_AoEDPS_Lucid = new("WHM_AoE_Lucid"),
+                WHM_AoEDPS_Lucid = new("WHM_AoE_Lucid", 6500),
                 WHM_STHeals_Lucid = new("WHM_STHeals_Lucid"),
                 WHM_STHeals_ThinAir = new("WHM_STHeals_ThinAir"),
-                WHM_STHeals_Esuna = new("WHM_Cure2_Esuna"),
-                WHM_STHeals_BenedictionHP = new("WHM_STHeals_BenedictionHP"),
-                WHM_STHeals_TetraHP = new("WHM_STHeals_TetraHP"),
-                WHM_STHeals_BenisonHP = new("WHM_STHeals_BenisonHP"),
-                WHM_STHeals_AquaveilHP = new("WHM_STHeals_AquaveilHP"),
-                WHM_AoEHeals_Lucid = new("WHM_AoEHeals_Lucid"),
+                WHM_STHeals_Esuna = new("WHM_Cure2_Esuna", 100),
+                WHM_STHeals_BenedictionHP = new("WHM_STHeals_BenedictionHP", 99),
+                WHM_STHeals_TetraHP = new("WHM_STHeals_TetraHP", 99),
+                WHM_STHeals_BenisonHP = new("WHM_STHeals_BenisonHP", 99),
+                WHM_STHeals_AquaveilHP = new("WHM_STHeals_AquaveilHP", 99),
+                WHM_AoEHeals_Lucid = new("WHM_AoEHeals_Lucid", 6500),
                 WHM_AoEHeals_ThinAir = new("WHM_AoE_ThinAir"),
                 WHM_AoEHeals_Cure3MP = new("WHM_AoE_Cure3MP");
             internal static UserBool

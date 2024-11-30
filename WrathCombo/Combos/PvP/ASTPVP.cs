@@ -40,40 +40,46 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is Malefic)
                 {
+                    // Card Draw
                     if (IsEnabled(CustomComboPreset.ASTPvP_Burst_DrawCard) && IsOffCooldown(MinorArcana) && (!HasEffect(Buffs.LadyOfCrowns) && !HasEffect(Buffs.LordOfCrowns)))
-                        return MinorArcana;
+                        return MinorArcana;                                      
+                   
+                    var cardPlayOption = PluginConfiguration.GetCustomIntValue(AST.Config.ASTPvP_Burst_PlayCardOption);
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (IsEnabled(CustomComboPreset.ASTPvP_Burst_PlayCard))
                     {
-                        var cardPlayOption = PluginConfiguration.GetCustomIntValue(AST.Config.ASTPvP_Burst_PlayCardOption);
+                        bool hasLadyOfCrowns = HasEffect(Buffs.LadyOfCrowns);
+                        bool hasLordOfCrowns = HasEffect(Buffs.LordOfCrowns);
 
-                        if (IsEnabled(CustomComboPreset.ASTPvP_Burst_PlayCard) && CanWeave(actionID))
-                        {
-                            bool hasLadyOfCrowns = HasEffect(Buffs.LadyOfCrowns);
-                            bool hasLordOfCrowns = HasEffect(Buffs.LordOfCrowns);
+                        // Card Playing Split so Lady can still be used if target is immune
+                        if ((cardPlayOption == 1 && hasLordOfCrowns && !PvPCommon.IsImmuneToDamage()) ||
+                            (cardPlayOption == 1 && hasLadyOfCrowns) ||
+                            (cardPlayOption == 2 && hasLordOfCrowns && !PvPCommon.IsImmuneToDamage()) ||
+                            (cardPlayOption == 3 && hasLadyOfCrowns))
 
-                            if ((cardPlayOption == 1 && (hasLadyOfCrowns || hasLordOfCrowns)) ||
-                                (cardPlayOption == 2 && hasLordOfCrowns) ||
-                                (cardPlayOption == 3 && hasLadyOfCrowns))
-                            {
-                                return OriginalHook(MinorArcana);
-                            }
-                        }
-
-
-                        if (IsEnabled(CustomComboPreset.ASTPvP_Burst_Macrocosmos) && lastComboMove == DoubleGravity && IsOffCooldown(Macrocosmos))
+                            return OriginalHook(MinorArcana);
+                    }    
+                        
+                    if (!PvPCommon.IsImmuneToDamage())
+                    { 
+                        // Macrocosmos only with double gravity or on coodlown when double gravity is disabled
+                        if (IsEnabled(CustomComboPreset.ASTPvP_Burst_Macrocosmos) && IsOffCooldown(Macrocosmos) &&
+                           (lastComboMove == DoubleGravity || !IsEnabled(CustomComboPreset.ASTPvP_Burst_DoubleGravity)))
                             return Macrocosmos;
 
-                        if (IsEnabled(CustomComboPreset.ASTPvP_DoubleCast) && lastComboMove == Gravity && HasCharges(DoubleCast))
+                        // Double Gravity
+                        if (IsEnabled(CustomComboPreset.ASTPvP_Burst_DoubleGravity) && lastComboMove == Gravity && HasCharges(DoubleCast))
                             return DoubleGravity;
 
+                        // Gravity on cd
                         if (IsEnabled(CustomComboPreset.ASTPvP_Burst_Gravity) && IsOffCooldown(Gravity))
                             return Gravity;
 
+                        // Double Malefic logic to not leave gravity without a charge
                         if (IsEnabled(CustomComboPreset.ASTPvP_Burst_DoubleMalefic))
                         {
                             if (lastComboMove == Malefic && (GetRemainingCharges(DoubleCast) > 1 ||
-                                GetCooldownRemainingTime(Gravity) > 7.5f) && CanWeave(actionID) && IsEnabled(CustomComboPreset.ASTPvP_DoubleCast))
+                                GetCooldownRemainingTime(Gravity) > 7.5f) && CanWeave(actionID))
                                 return DoubleMalefic;
                         }
 
