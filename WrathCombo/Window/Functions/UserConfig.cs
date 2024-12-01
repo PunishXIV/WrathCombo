@@ -528,7 +528,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.Columns(4, $"{config}", false);
 
-            if (values.Length == 0) Array.Resize(ref values, 7);
+            Array.Resize(ref values, 8);
 
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedPink);
 
@@ -581,6 +581,14 @@ namespace WrathCombo.Window.Functions
             ImGui.NextColumn();
 
             if (ImGui.Checkbox($"Silence###{config}6", ref values[6]))
+            {
+                PluginConfiguration.SetCustomBoolArrayValue(config, values);
+                Service.Configuration.Save();
+            }
+
+            ImGui.NextColumn();
+
+            if (ImGui.Checkbox($"Miracle of Nature###{config}7", ref values[7]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
