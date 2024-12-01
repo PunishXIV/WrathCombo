@@ -804,14 +804,16 @@ public enum CustomComboPreset
     [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
     [ConflictingCombos(BRD_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Adds every single target ability to one button,\nIf there are DoTs on target, will try to maintain their uptime.",
+        "Replaces Heavy Shot with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         BRD.JobID)]
     BRD_ST_AdvMode = 3009,
 
     [AutoAction(true, false)]
     [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_SimpleMode)]
     [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
-    [CustomComboInfo("Advanced Mode - AoE", "Weaves oGCDs onto Quick Nock/Ladonsbite.", BRD.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE",
+        "Replaces Quick Nock with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        BRD.JobID)]
     BRD_AoE_AdvMode = 3015,
 
     [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
@@ -1154,8 +1156,9 @@ public enum CustomComboPreset
     [ReplaceSkill(DNC.Cascade)]
     [ConflictingCombos(DNC_ST_MultiButton, DNC_AoE_MultiButton, DNC_DanceComboReplacer, DNC_FlourishingFeatures_Menu,
         DNC_Starfall_Devilment)]
-    [CustomComboInfo("Advanced Dancer (Single Target) Feature",
-        "Single button, single target. Can include songs, flourishes, overcap protections, and more.", DNC.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target",
+        "Replaces Cascade with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        DNC.JobID)]
     DNC_ST_AdvancedMode = 4050,
 
     [ParentCombo(DNC_ST_AdvancedMode)]
@@ -1286,9 +1289,9 @@ public enum CustomComboPreset
     [ReplaceSkill(DNC.Windmill)]
     [ConflictingCombos(DNC_ST_MultiButton, DNC_AoE_MultiButton, DNC_DanceComboReplacer, DNC_FlourishingFeatures_Menu,
         DNC_Starfall_Devilment)]
-    [CustomComboInfo("Advanced Dancer (AoE) Feature",
-        "Single button, AoE. Includes songs, flourishes, overcap protections, and more." +
-        "\nConflicts with all other non-Advanced toggles, except 'Dance Step Combo'.", DNC.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE",
+        "Replaces Windmill with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        DNC.JobID)]
     DNC_AoE_AdvancedMode = 4070,
 
     [ParentCombo(DNC_AoE_AdvancedMode)]
@@ -1408,8 +1411,8 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(DRK.HardSlash)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replace Hard Slash with a customizable all-in-one button rotation.\n" +
-        "Features can be toggled on or off to suit your playstyle.", DRK.JobID)]
+        "Replaces Hard Slash with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        DRK.JobID)]
     DRK_ST_Combo = 5001,
 
     #region Buff Options
@@ -1547,7 +1550,8 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(DRK.Unleash)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replace Unleash with a customizable all-in-one button rotation.\nFeatures can be toggled on or off to suit your playstyle.",
+        "Replaces Unleash with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+
         DRK.JobID)]
     DRK_AoE_Combo = 5016,
 
@@ -1817,7 +1821,7 @@ public enum CustomComboPreset
     [ReplaceSkill(DRG.DoomSpike)]
     [ConflictingCombos(DRG_AOE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Doom Spike with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Doomspike with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         DRG.JobID)]
     DRG_AOE_AdvancedMode = 6201,
 
@@ -1965,7 +1969,7 @@ public enum CustomComboPreset
     [ConflictingCombos(GNB_ST_Simple)]
     [ReplaceSkill(GNB.KeenEdge)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replace Keen Edge with its combo chain.\nThis is the ideal selection for experienced users of the job.",
+        "Replaces Keen Edge with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         GNB.JobID)]
     GNB_ST_Advanced = 7003,
 
@@ -2070,9 +2074,9 @@ public enum CustomComboPreset
     [ConflictingCombos(GNB_AoE_Simple)]
     [ReplaceSkill(GNB.DemonSlice)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replace Demon Slice with its combo chain.\nThis is the ideal selection for experienced users of the job.",
+        "Replaces Demon Slice with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         GNB.JobID)]
-    GNB_AoE_Advanced = 7200,
+GNB_AoE_Advanced = 7200,
 
     [ConflictingCombos(GNB_NM_Features)]
     [ParentCombo(GNB_AoE_Advanced)]
@@ -2334,7 +2338,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MCH.SplitShot, MCH.HeatedSplitShot)]
     [ConflictingCombos(MCH_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Split Shot with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Split Shot with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         MCH.JobID)]
     MCH_ST_AdvancedMode = 8100,
 
@@ -2416,7 +2420,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MCH.SpreadShot, MCH.Scattergun)]
     [ConflictingCombos(MCH_AoE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Spread Shot with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Spreadshot with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         MCH.JobID)]
     MCH_AoE_AdvancedMode = 8300,
 
@@ -2589,7 +2593,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MNK.Bootshine)]
     [ConflictingCombos(MNK_ST_BeastChakras, MNK_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Bootshine with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Bootshine with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         MNK.JobID)]
     MNK_ST_AdvancedMode = 9005,
 
@@ -2650,7 +2654,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer)]
     [ConflictingCombos(MNK_AOE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Arm of the Destroyer with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Arms of the Destroyer with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         MNK.JobID)]
     MNK_AOE_AdvancedMode = 9027,
 
@@ -2780,7 +2784,7 @@ public enum CustomComboPreset
     [ReplaceSkill(NIN.SpinningEdge)]
     [ConflictingCombos(NIN_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replace Spinning Edge with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Spinning Edge with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         NIN.JobID)]
     NIN_ST_AdvancedMode = 10003,
 
@@ -2808,7 +2812,6 @@ public enum CustomComboPreset
 
     [ParentCombo(NIN_ST_AdvancedMode)]
     [CustomComboInfo("Trick Attack/Kunai's Bane Option", "Adds Trick Attack/Kunai's Bane to Advanced Mode.", NIN.JobID)]
-
     //Has Config
     NIN_ST_AdvancedMode_TrickAttack = 10008,
 
@@ -2816,7 +2819,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Save Cooldowns Before Trick Attack/Kunai's Bane Option",
         "Stops using abilities with longer cooldowns up to 15 seconds before Trick Attack/Kunai's Bane comes off cooldown.",
         NIN.JobID)]
-
     //HasConfig
     NIN_ST_AdvancedMode_TrickAttack_Cooldowns = 10009,
 
@@ -2861,7 +2863,6 @@ public enum CustomComboPreset
 
     [ParentCombo(NIN_ST_AdvancedMode)]
     [CustomComboInfo("Bhavacakra Option", "Adds Bhavacakra to Advanced Mode.", NIN.JobID)]
-
     //Has Config
     NIN_ST_AdvancedMode_Bhavacakra = 10022,
 
@@ -2923,7 +2924,8 @@ public enum CustomComboPreset
     [ReplaceSkill(NIN.DeathBlossom)]
     [ConflictingCombos(NIN_AoE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replace Death Blossom with a one-button full AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Death Blossom with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
+
         NIN.JobID)]
     NIN_AoE_AdvancedMode = 10035,
 
@@ -3095,7 +3097,7 @@ public enum CustomComboPreset
     [ReplaceSkill(PCT.FireInRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Fire in Red with a one-button full single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Fire in Red with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         PCT.JobID)]
     PCT_ST_AdvancedMode = 20005,
 
@@ -3248,7 +3250,7 @@ public enum CustomComboPreset
     [ReplaceSkill(PCT.FireIIinRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_AoE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Fire II in Red with a one-button full AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Fire in Red II with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         PCT.JobID)]
     PCT_AoE_AdvancedMode = 20040,
 
@@ -3426,7 +3428,7 @@ public enum CustomComboPreset
     [ConflictingCombos(PLD_ST_SimpleMode)]
     [ReplaceSkill(PLD.FastBlade)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Fast Blade with a customizable all-in-one button rotation.\nFeatures can be toggled on or off to suit your playstyle.",
+        "Replaces Fast Blade with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         PLD.JobID)]
     PLD_ST_AdvancedMode = 11002,
 
@@ -3532,7 +3534,7 @@ public enum CustomComboPreset
     [ConflictingCombos(PLD_AoE_SimpleMode)]
     [ReplaceSkill(PLD.TotalEclipse)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Total Eclipse with a customizable all-in-one button rotation.\nFeatures can be toggled on or off to suit your playstyle.",
+        "Replaces Total Eclipse with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         PLD.JobID)]
     PLD_AoE_AdvancedMode = 11015,
 
@@ -3791,7 +3793,7 @@ public enum CustomComboPreset
     [ReplaceSkill(RPR.SpinningScythe)]
     [ConflictingCombos(RPR_AoE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         RPR.JobID)]
     RPR_AoE_AdvancedMode = 12101,
 
@@ -4009,7 +4011,9 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(RDM.Jolt, RDM.Jolt2)]
     [ConflictingCombos(RDM_ST_SimpleMode)]
-    [CustomComboInfo("Single Target DPS Feature", "Enables various Single Target options below.", RDM.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target",
+        "Replaces Jolt with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        RDM.JobID)]
     RDM_ST_DPS = 13000,
 
     [ParentCombo(RDM_ST_DPS)]
@@ -4079,7 +4083,9 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(RDM.Scatter, RDM.Impact)]
     [ConflictingCombos(RDM_AoE_SimpleMode)]
-    [CustomComboInfo("AoE DPS Feature", "Enables various AoE Target options below.", RDM.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE",
+        "Replaces Scatter with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        RDM.JobID)]
     RDM_AoE_DPS = 13310,
 
     [ParentCombo(RDM_AoE_DPS)]
@@ -4477,7 +4483,7 @@ public enum CustomComboPreset
     [ReplaceSkill(SAM.Hakaze, SAM.Gyofu)]
     [ConflictingCombos(SAM_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Hakaze/Gyofu with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Hakaze with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         SAM.JobID)]
     SAM_ST_AdvancedMode = 15003,
 
@@ -4567,7 +4573,7 @@ public enum CustomComboPreset
     [ReplaceSkill(SAM.Fuga, SAM.Fuko)]
     [ConflictingCombos(SAM_AoE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Fuga/Fuko with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Fuga with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         SAM.JobID)]
     SAM_AoE_AdvancedMode = 15103,
 
@@ -5013,8 +5019,8 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(SMN.Ruin, SMN.Ruin2)]
     [ConflictingCombos(SMN_Simple_Combo)]
-    [CustomComboInfo("Advanced Summoner Feature Single Target",
-        "Advanced combo features for a greater degree of customisation.\nAccommodates SpS builds.\nRuin III is left unchanged for mobility purposes.",
+    [CustomComboInfo("Advanced Mode - Single Target",
+        "Replaces Ruin with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         SMN.JobID)]
     SMN_Advanced_Combo = 17000,
 
@@ -5164,8 +5170,8 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(SMN.Outburst)]
     [ConflictingCombos(SMN_Simple_Combo_AoE)]
-    [CustomComboInfo("Advanced Summoner Feature AoE",
-        "Advanced combo features for a greater degree of customisation.\nAccommodates SpS builds.\nRuin III is left unchanged for mobility purposes.",
+    [CustomComboInfo("Advanced Mode - AoE",
+        "Replaces Outburst with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         SMN.JobID)]
     SMN_Advanced_Combo_AoE = 17049,
 
@@ -5363,7 +5369,7 @@ public enum CustomComboPreset
     [ReplaceSkill(VPR.SteelMaw)]
     [ConflictingCombos(VPR_AoE_SimpleMode)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Steel Maw with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
+        "Replaces Steel Maw with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         VPR.JobID)]
     VPR_AoE_AdvancedMode = 30101,
 
@@ -5520,7 +5526,7 @@ public enum CustomComboPreset
     [ConflictingCombos(WAR_ST_Simple)]
     [ReplaceSkill(WAR.StormsPath)]
     [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Storm's Path with a one-button full single target rotation.\nThis is the ideal selection for users experienced with the job.",
+        "Replaces Storm's Path with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         WAR.JobID)]
     WAR_ST_Advanced = 18002,
 
@@ -5594,7 +5600,7 @@ public enum CustomComboPreset
     [ConflictingCombos(WAR_AoE_Simple)]
     [ReplaceSkill(WAR.Overpower)]
     [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Overpower with a one-button full AoE rotation.\nThis is the ideal selection for users experienced with the job.",
+        "Replaces Overpower with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",		
         WAR.JobID)]
     WAR_AoE_Advanced = 18016,
 
