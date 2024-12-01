@@ -723,6 +723,16 @@ namespace WrathCombo.Combos.PvE
                         (Config.SMN_ST_Egi_AstralFlow[1] && HasEffect(Buffs.IfritsFavor) && Config.SMN_ST_CrimsonCycloneMelee && InMeleeRange()))  // Ifrit
                         return OriginalHook(AstralFlow);
 
+                    if (IsGarudaAttuned)
+                    {
+                        // Use Ruin III instead of Emerald Ruin III if enabled and Ruin Mastery III is not active
+                        if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3))
+                        {
+                            if (gauge.Attunement == 0) return OriginalHook(Gemshine);
+                            return Ruin3;
+                        }
+                    }
+
                     // Gemshine
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_EgiSummons_Attacks) && (IsGarudaAttuned || IsTitanAttuned || IsIfritAttuned))
                         return OriginalHook(Gemshine);
