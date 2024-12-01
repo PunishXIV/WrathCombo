@@ -24,6 +24,7 @@ internal partial class WAR
             switch (preset)
             {
                 case CustomComboPreset.WAR_ST_Advanced_StormsEye:
+                case CustomComboPreset.WAR_StormsEye_Maintenance:
                     UserConfig.DrawSliderInt(0, 30, WAR_SurgingRefreshRange,
                         "Seconds remaining before refreshing Surging Tempest.");
 
