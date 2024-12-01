@@ -440,13 +440,13 @@ internal partial class MCH
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  (IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) && reassembledAnchorST)) &&
-                LevelChecked(OriginalHook(AirAnchor)) &&
+                LevelChecked(AirAnchor) &&
                 !battery &&
-                (GetCooldownRemainingTime(OriginalHook(AirAnchor)) <=
-                    GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 || ActionReady(OriginalHook(AirAnchor))))
+                (GetCooldownRemainingTime(AirAnchor) <=
+                    GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 || ActionReady(AirAnchor)))
 
             {
-                actionID = OriginalHook(AirAnchor);
+                actionID = AirAnchor;
 
                 return true;
             }
@@ -459,6 +459,19 @@ internal partial class MCH
                  ActionReady(Drill)) && GetCooldownRemainingTime(Wildfire) is >= 20 or <= 10)
             {
                 actionID = Drill;
+
+                return true;
+            }
+
+            if (IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
+                (IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) &&
+                 LevelChecked(HotShot) &&
+                 !battery &&
+                 (GetCooldownRemainingTime(HotShot) <=
+                     GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 || ActionReady(HotShot))))
+
+            {
+                actionID = HotShot;
 
                 return true;
             }
