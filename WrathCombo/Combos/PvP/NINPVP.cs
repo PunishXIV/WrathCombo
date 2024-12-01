@@ -34,6 +34,7 @@ namespace WrathCombo.Combos.PvP
                 Hidden = 1316,
                 Bunshin = 2010,
                 ShadeShift = 2011,
+                SeitonUnsealed = 3192,
                 FleetingRaijuReady = 3211,
                 ZeshoMeppoReady = 4305;
         }
@@ -88,7 +89,9 @@ namespace WrathCombo.Combos.PvP
                     {
 
                         // Seiton Tenchu priority for targets below 50% HP
-                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) && IsLB1Ready)
+                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && 
+                            (GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) && IsLB1Ready || //Limit Break
+                            HasEffect(Buffs.SeitonUnsealed)))  // Limit Break followup not tied to health slider
                             return OriginalHook(SeitonTenchu);
 
                         // Zesho Meppo
