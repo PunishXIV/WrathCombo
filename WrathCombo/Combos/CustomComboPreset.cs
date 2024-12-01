@@ -425,7 +425,7 @@ namespace WrathCombo.Combos
         BLM_ST_Transpose = 2109,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
-        [CustomComboInfo("Thunder Option", "Add Thunder to the rotation.", BLM.JobID)]
+        [CustomComboInfo("(High) Thunder Option", "Add (High) Thunder to the rotation.", BLM.JobID)]
         BLM_ST_Thunder = 2110,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
@@ -479,7 +479,7 @@ namespace WrathCombo.Combos
         BLM_AoE_Transpose = 2208,
 
         [ParentCombo(BLM_AoE_AdvancedMode)]
-        [CustomComboInfo("Thunder Option", "Add Thunder to the rotation.", BLM.JobID)]
+        [CustomComboInfo("(High) Thunder II Option", "Add (High) Thunder II to the rotation.", BLM.JobID)]
         BLM_AoE_Thunder = 2209,
 
         [ParentCombo(BLM_AoE_AdvancedMode)]
