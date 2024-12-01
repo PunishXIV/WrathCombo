@@ -10,8 +10,10 @@ internal partial class MNK
         public static UserInt
             MNK_ST_Brotherhood_HP = new("MNK_ST_Brotherhood_HP", 0),
             MNK_ST_RiddleOfFire_HP = new("MNK_ST_RiddleOfFire_HP", 0),
-            MNK_AoE_Brotherhood_HP = new("MNK_AoE_Brotherhood_HP", 0),
-            MNK_AoE_RiddleOfFire_HP = new("MNK_AoE_RiddleOfFire_HP", 0),
+            MNK_ST_RiddleOfWind_HP = new("MNK_ST_RiddleOfWind_HP", 0),
+            MNK_AoE_Brotherhood_HP = new("MNK_AoE_Brotherhood_HP", 5),
+            MNK_AoE_RiddleOfWind_HP = new("MNK_AoE_RiddleOfWind_HP", 5),
+            MNK_AoE_RiddleOfFire_HP = new("MNK_AoE_RiddleOfFire_HP", 5),
             MNK_ST_SecondWind_Threshold = new("MNK_ST_SecondWindThreshold", 25),
             MNK_ST_Bloodbath_Threshold = new("MNK_ST_BloodbathThreshold", 40),
             MNK_AoE_SecondWind_Threshold = new("MNK_AoE_SecondWindThreshold", 25),
@@ -47,8 +49,14 @@ internal partial class MNK
 
                     break;
 
-                case CustomComboPreset.MNK_STUseROW:
+                case CustomComboPreset.MNK_STUseROF:
                     DrawSliderInt(0, 100, MNK_ST_RiddleOfFire_HP,
+                        "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    break;
+
+                case CustomComboPreset.MNK_STUseROW:
+                    DrawSliderInt(0, 100, MNK_ST_RiddleOfWind_HP,
                         "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
@@ -59,8 +67,14 @@ internal partial class MNK
 
                     break;
 
-                case CustomComboPreset.MNK_AoEUseROW:
+                case CustomComboPreset.MNK_AoEUseROF:
                     DrawSliderInt(0, 100, MNK_AoE_RiddleOfFire_HP,
+                        "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    break;
+
+                case CustomComboPreset.MNK_AoEUseROW:
+                    DrawSliderInt(0, 100, MNK_AoE_RiddleOfWind_HP,
                         "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;

@@ -193,7 +193,8 @@ internal partial class MNK
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
-                        ActionReady(RiddleOfWind))
+                        ActionReady(RiddleOfWind) &&
+                        GetTargetHPPercent() >= Config.MNK_ST_RiddleOfWind_HP)
                         return RiddleOfWind;
                 }
 
@@ -462,7 +463,8 @@ internal partial class MNK
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
-                        ActionReady(RiddleOfWind))
+                        ActionReady(RiddleOfWind) &&
+                        GetTargetHPPercent() >= Config.MNK_AoE_RiddleOfWind_HP)
                         return RiddleOfWind;
                 }
 
