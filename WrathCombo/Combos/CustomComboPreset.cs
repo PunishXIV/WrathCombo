@@ -285,7 +285,8 @@ public enum CustomComboPreset
     AST_AOE_LightSpeed = 1048,
 
     [ParentCombo(AST_AOE_DPS)]
-    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID)]
+    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID
+    )]
     AST_AOE_Lucid = 1042,
 
     [ParentCombo(AST_AOE_DPS)] [CustomComboInfo("Divination Weave Option", "Adds Divination", AST.JobID)]
@@ -785,13 +786,13 @@ public enum CustomComboPreset
     [ReplaceSkill(BRD.HeavyShot, BRD.BurstShot)]
     [ConflictingCombos(BRD_ST_AdvMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces HeavyShot with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Heavy shot with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
         BRD.JobID)]
     BRD_ST_SimpleMode = 3036,
 
     [AutoAction(true, false)]
-    [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
     [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_AdvMode)]
+    [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
     [CustomComboInfo("Simple Mode - AoE",
         "Replaces Quick Nock with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
         BRD.JobID)]
@@ -821,7 +822,8 @@ public enum CustomComboPreset
 
     [ParentCombo(BRD_StraightShotUpgrade)]
     [CustomComboInfo("DoT Maintenance Option",
-        "Enabling this option will make Heavy Shot into Straight Shot refresh your DoTs on your current.", BRD.JobID)]
+        "Enabling this option will make Heavy Shot into Straight Shot refresh your DoTs on your current.", BRD.JobID
+    )]
     BRD_DoTMaintainance = 3002,
 
     [ParentCombo(BRD_StraightShotUpgrade)]
@@ -855,7 +857,8 @@ public enum CustomComboPreset
     BRD_ST_oGCD = 3006,
 
     [ParentCombo(BRD_ST_oGCD)]
-    [CustomComboInfo("Quick song option", "Adds the songs to the oGCD feature. Wanderers > Mages > Armys", BRD.JobID)]
+    [CustomComboInfo("Quick song option", "Adds the songs to the oGCD feature. Wanderers > Mages > Armys", BRD.JobID
+    )]
     BRD_ST_oGCD_Songs = 3044,
 
     [ReplaceSkill(BRD.RainOfDeath)]
@@ -982,7 +985,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", BRD.JobID)]
     BRD_Variant_Cure = 3031,
 
-    [ParentCombo(BRD_AoE_Adv_Songs)]
+    [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.", BRD.JobID)]
     BRD_AoE_Adv_Buffs = 3032,
 
@@ -999,11 +1002,9 @@ public enum CustomComboPreset
     #region DANCER
 
     #region Simple Mode
-
     //TODO
-
     #endregion
-
+    
     #region Single Target Multibutton
 
     [AutoAction(false, false)]
@@ -1295,7 +1296,8 @@ public enum CustomComboPreset
 
     [ParentCombo(DNC_AoE_AdvancedMode)]
     [ConflictingCombos(DNC_AoE_Adv_StandardFill)]
-    [CustomComboInfo("Standard Dance Option", "Includes Standard Step (and all steps) in the AoE rotation.", DNC.JobID)]
+    [CustomComboInfo("Standard Dance Option", "Includes Standard Step (and all steps) in the AoE rotation.", DNC.JobID
+        )]
     DNC_AoE_Adv_SS = 4072,
 
     [ParentCombo(DNC_AoE_AdvancedMode)]
@@ -1398,7 +1400,7 @@ public enum CustomComboPreset
     //TODO
 
     #endregion
-
+    
     #region Advanced Single Target Combo
 
     [AutoAction(false, false)]
@@ -1806,7 +1808,7 @@ public enum CustomComboPreset
     DRG_TrueNorthDynamic = 6199,
 
     #endregion
-
+    
     #region Advanced AoE Dragoon
 
     [AutoAction(true, false)]
@@ -1906,6 +1908,14 @@ public enum CustomComboPreset
 
     #endregion
 
+    [ReplaceSkill(DRG.FullThrust, DRG.HeavensThrust)]
+    [CustomComboInfo("FullThrust Combo", "Replace Full Thrust/Heavens' Thrust with its combo chain.", DRG.JobID)]
+    DRG_ST_FullThrustCombo = 6304,
+
+    [ReplaceSkill(DRG.ChaosThrust, DRG.ChaoticSpring)]
+    [CustomComboInfo("Chaotic Combo", "Replace Chaos Thrust /Chaotic Spring with its combo chain.", DRG.JobID)]
+    DRG_ST_ChaoticCombo = 6305,
+
     [ReplaceSkill(DRG.LanceCharge)]
     [CustomComboInfo("Lance Charge to Battle Litany Feature",
         "Turns Lance Charge into Battle Litany when the former is on cooldown.", DRG.JobID)]
@@ -1921,7 +1931,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", DRG.JobID)]
     DRG_Variant_Rampart = 6303,
 
-    // Last value = 6117 - 6216 - 6303
+    // Last value = 6117 - 6216 - 6305
 
     #endregion
 
@@ -1933,19 +1943,18 @@ public enum CustomComboPreset
     [ConflictingCombos(GNB_ST_Advanced, GNB_NM_Features)]
     [ReplaceSkill(GNB.KeenEdge)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replace Keen Edge with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
-        GNB.JobID)]
+        "Replace Keen Edge with its combo chain.\n This is the ideal selection for newcomers to the job.", GNB.JobID)]
     GNB_ST_Simple = 7001,
 
     [AutoAction(true, false)]
     [ConflictingCombos(GNB_AoE_Advanced, GNB_NM_Features)]
     [ReplaceSkill(GNB.DemonSlice)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replace Demon Slice with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
-        GNB.JobID)]
+        "Replace Demon Slice with its combo chain.\n This is the ideal selection for newcomers to the job.", GNB.JobID)]
     GNB_AoE_Simple = 7002,
-
+    
     #endregion
+
 
     #region Advanced ST
 
@@ -2033,7 +2042,8 @@ public enum CustomComboPreset
     GNB_ST_Superbolide = 7022,
 
     [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID)]
+    [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID
+        )]
     GNB_AuroraProtection = 7023,
 
     #endregion
@@ -2215,7 +2225,7 @@ public enum CustomComboPreset
 
     #region No Mercy
 
-    [ConflictingCombos(GNB_ST_Simple, GNB_AoE_Simple, GNB_GF_Features)]
+    [ConflictingCombos(GNB_ST_Simple, GNB_AoE_Simple, GNB_GF_NoMercy)]
     [ReplaceSkill(GNB.NoMercy)]
     [CustomComboInfo("No Mercy Features", "Collection of No Mercy related features.", GNB.JobID)]
     GNB_NM_Features = 7500,
@@ -2301,7 +2311,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MCH.SplitShot, MCH.HeatedSplitShot)]
     [ConflictingCombos(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Split Shot with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Split Shot with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         MCH.JobID)]
     MCH_ST_SimpleMode = 8001,
 
@@ -2309,7 +2319,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MCH.SpreadShot)]
     [ConflictingCombos(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Spread Shot with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Spread Shot with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         MCH.JobID)]
     MCH_AoE_SimpleMode = 8200,
 
@@ -2396,7 +2406,7 @@ public enum CustomComboPreset
     MCH_ST_Adv_SecondWind = 8114,
 
     #endregion
-
+    
     #region Advanced AoE
 
     [AutoAction(true, false)]
@@ -2420,6 +2430,10 @@ public enum CustomComboPreset
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Hypercharge Option", "Adds Hypercharge to the rotation.", MCH.JobID)]
     MCH_AoE_Adv_Hypercharge = 8303,
+
+    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Blazing Shot Option", "Use Blazing shot instead of Crossbow at lvl 92+", MCH.JobID)]
+    MCH_AoE_Adv_BlazingShot = 8312,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Rook Autoturret/Automaton Queen Option",
@@ -2552,7 +2566,7 @@ public enum CustomComboPreset
     [ReplaceSkill(MNK.Bootshine, MNK.LeapingOpo)]
     [ConflictingCombos(MNK_ST_BeastChakras, MNK_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Bootshinewith a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Bootshine with a one - button full single target rotation.\nThis is ideal for newcomers to the job.",
         MNK.JobID)]
     MNK_ST_SimpleMode = 9004,
 
@@ -2560,12 +2574,12 @@ public enum CustomComboPreset
     [ReplaceSkill(MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer)]
     [ConflictingCombos(MNK_AOE_AdvancedMode)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Arm of the Destroyer with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Arm of the Destroyer with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         MNK.JobID)]
     MNK_AOE_SimpleMode = 9003,
 
     #endregion
-
+    
     #region Monk Advanced ST
 
     [AutoAction(false, false)]
@@ -2739,32 +2753,28 @@ public enum CustomComboPreset
     [ReplaceSkill(NIN.SpinningEdge)]
     [ConflictingCombos(NIN_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Spinning Edge with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Spinning Edge with a one-button full single target rotation.\nThis is the ideal option for newcomers to the job.",
         NIN.JobID)]
     NIN_ST_SimpleMode = 10000,
 
     [ParentCombo(NIN_ST_SimpleMode)]
-    [CustomComboInfo("Balance Opener Option", "Starts with the Balance opener." +
-                                              "\nRequires level 100, with the following requirements:" +
-                                              "\n- 2 mudra charges ready" +
-                                              "\n- Dokumori off cooldown." +
-                                              "\n- Kunai's Bane off cooldown." +
-                                              "\n- TenChiJin off cooldown." +
-                                              "\n- Phantom Kamaitachi off cooldown." +
-                                              "\n- Bunshin off cooldown." +
-                                              "\n- Dream Within a Dream off cooldown." +
-                                              "\n- Kassatsu off cooldown.", NIN.JobID)]
+    [CustomComboInfo("Balance Opener Option",
+        "Starts with the Balance opener.\nRequires level 100, with the following requirements:\n- 2 mudra charges ready\n- Dokumori off cooldown.\n- Kunai's Bane off cooldown.\n- TenChiJin off cooldown.\n- Phantom Kamaitachi off cooldown.\n- Bunshin off cooldown.\n- Dream Within a Dream off cooldown.\n- Kassatsu off cooldown.",
+        NIN.JobID)]
     NIN_ST_SimpleMode_BalanceOpener = 10001,
 
     [AutoAction(true, false)]
     [ReplaceSkill(NIN.DeathBlossom)]
     [ConflictingCombos(NIN_AoE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Death Blossom with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
-        NIN.JobID)]
+    [CustomComboInfo("Simple Mode - AoE", "Turns Death Blossom into a one-button full AoE rotation.", NIN.JobID)]
     NIN_AoE_SimpleMode = 10002,
 
     #endregion
+
+
+
+
+
 
     [AutoAction(false, false)]
     [ReplaceSkill(NIN.SpinningEdge)]
@@ -3065,20 +3075,18 @@ public enum CustomComboPreset
     [ReplaceSkill(PCT.FireInRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Fire in Red with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
-        PCT.JobID)]
+        "Consolidates the single target rotation into one button, ideal for newcomers.", PCT.JobID)]
     PCT_ST_SimpleMode = 20000,
 
     [AutoAction(true, false)]
     [ReplaceSkill(PCT.FireIIinRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_AoE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Fire II in Red with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+    [CustomComboInfo("Simple Mode - AoE", "Consolidates the AoE rotation into one button, ideal for newcomers.",
         PCT.JobID)]
     PCT_AoE_SimpleMode = 20001,
 
     #endregion
-
+    
     #region ST
 
     [AutoAction(false, false)]
@@ -3396,7 +3404,7 @@ public enum CustomComboPreset
     [ConflictingCombos(PLD_ST_AdvancedMode)]
     [ReplaceSkill(PLD.FastBlade)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Fast Blade with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Fast Blade with an all-in-one button rotation.\nThis is the ideal option for newcomers to the job.",
         PLD.JobID)]
     PLD_ST_SimpleMode = 11000,
 
@@ -3404,11 +3412,12 @@ public enum CustomComboPreset
     [ConflictingCombos(PLD_AoE_AdvancedMode)]
     [ReplaceSkill(PLD.TotalEclipse)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Total Eclipse with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Total Eclipse with an all-in-one button rotation.\nThis is the ideal option for newcomers to the job.",
         PLD.JobID)]
     PLD_AoE_SimpleMode = 11001,
 
     #endregion
+
 
     // ST Advanced Mode
 
@@ -3455,8 +3464,8 @@ public enum CustomComboPreset
     PLD_ST_AdvancedMode_HolySpirit = 11009,
 
     [ParentCombo(PLD_ST_AdvancedMode)]
-    [CustomComboInfo("Requiescat Option", "Adds Requiescat to Advanced Mode.\n- Uses after Fight or Flight.",
-        PLD.JobID)]
+    [CustomComboInfo("Requiescat Option", "Adds Requiescat to Advanced Mode.\n- Uses after Fight or Flight.", PLD.JobID
+        )]
     PLD_ST_AdvancedMode_Requiescat = 11010,
 
     [ParentCombo(PLD_ST_AdvancedMode)]
@@ -3477,7 +3486,8 @@ public enum CustomComboPreset
 
     [ParentCombo(PLD_ST_AdvancedMode)]
     [CustomComboInfo("Blade Chain Option",
-        "Adds Blade of Faith/Truth/Valor to Advanced Mode.\n- At lower levels, uses Holy Spirit instead.", PLD.JobID)]
+        "Adds Blade of Faith/Truth/Valor to Advanced Mode.\n- At lower levels, uses Holy Spirit instead.", PLD.JobID
+        )]
     PLD_ST_AdvancedMode_Blades = 11014,
 
     [ParentCombo(PLD_ST_AdvancedMode)]
@@ -3543,8 +3553,8 @@ public enum CustomComboPreset
     PLD_AoE_AdvancedMode_CircleOfScorn = 11018,
 
     [ParentCombo(PLD_AoE_AdvancedMode)]
-    [CustomComboInfo("Requiescat Option", "Adds Requiescat to Advanced Mode.\n- Uses after Fight or Flight.",
-        PLD.JobID)]
+    [CustomComboInfo("Requiescat Option", "Adds Requiescat to Advanced Mode.\n- Uses after Fight or Flight.", PLD.JobID
+        )]
     PLD_AoE_AdvancedMode_Requiescat = 11019,
 
     [ParentCombo(PLD_AoE_AdvancedMode)]
@@ -3565,7 +3575,8 @@ public enum CustomComboPreset
 
     [ParentCombo(PLD_AoE_AdvancedMode)]
     [CustomComboInfo("Blade Chain Option",
-        "Adds Blade of Faith/Truth/Valor to Advanced Mode.\n- At lower levels, uses Holy Circle instead.", PLD.JobID)]
+        "Adds Blade of Faith/Truth/Valor to Advanced Mode.\n- At lower levels, uses Holy Circle instead.", PLD.JobID
+        )]
     PLD_AoE_AdvancedMode_Blades = 11022,
 
     [ParentCombo(PLD_AoE_AdvancedMode)]
@@ -3654,7 +3665,7 @@ public enum CustomComboPreset
     [ReplaceSkill(RPR.Slice)]
     [ConflictingCombos(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Slice with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Slice with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         RPR.JobID)]
     RPR_ST_SimpleMode = 12000,
 
@@ -3662,7 +3673,7 @@ public enum CustomComboPreset
     [ReplaceSkill(RPR.SpinningScythe)]
     [ConflictingCombos(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Spinning Scythe with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         RPR.JobID)]
     RPR_AoE_SimpleMode = 12100,
 
@@ -3772,7 +3783,7 @@ public enum CustomComboPreset
     //last value = 12019
 
     #endregion
-
+    
     #region Advanced AoE
 
     [AutoAction(true, false)]
@@ -3971,7 +3982,7 @@ public enum CustomComboPreset
     If more than 10 sub features, use the next feature number if available
     The three digets after RDM.JobID can be used to reorder items in the list
     */
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -3991,9 +4002,9 @@ public enum CustomComboPreset
     RDM_AoE_SimpleMode = 13838,
 
     #endregion
-
+    
     #region Single Target DPS
-
+    
     [AutoAction(false, false)]
     [ReplaceSkill(RDM.Jolt, RDM.Jolt2)]
     [ConflictingCombos(RDM_ST_SimpleMode)]
@@ -4063,7 +4074,7 @@ public enum CustomComboPreset
     #endregion
 
     #region AoE DPS
-
+    
     [AutoAction(true, false)]
     [ReplaceSkill(RDM.Scatter, RDM.Impact)]
     [ConflictingCombos(RDM_AoE_SimpleMode)]
@@ -4187,7 +4198,8 @@ public enum CustomComboPreset
     [CustomComboInfo("Single Target DPS Feature", "Adds various options to Dosis I/II/III.", SGE.JobID)]
     SGE_ST_DPS = 14001,
 
-    [ParentCombo(SGE_ST_DPS)] [CustomComboInfo("Opener Option", "Use the Balance opener from level 92+.", SGE.JobID)]
+    [ParentCombo(SGE_ST_DPS)]
+    [CustomComboInfo("Opener Option", "Use the Balance opener from level 92+.", SGE.JobID)]
     SGE_ST_DPS_Opener = 14055,
 
     [ParentCombo(SGE_ST_DPS)]
@@ -4245,7 +4257,8 @@ public enum CustomComboPreset
     [ParentCombo(SGE_AoE_DPS)] [CustomComboInfo("Psyche Option", "Weaves Psyche if available.", SGE.JobID)]
     SGE_AoE_DPS_Psyche = 14051,
 
-    [ParentCombo(SGE_AoE_DPS)] [CustomComboInfo("Eukrasia Option", "Uses Eukrasia for Eukrasia Dyskrasia.", SGE.JobID)]
+    [ParentCombo(SGE_AoE_DPS)]
+    [CustomComboInfo("Eukrasia Option", "Uses Eukrasia for Eukrasia Dyskrasia.", SGE.JobID)]
     SGE_AoE_DPS_EDyskrasia = 14052,
 
     [ParentCombo(SGE_AoE_DPS)]
@@ -4297,7 +4310,8 @@ public enum CustomComboPreset
     [ParentCombo(SGE_ST_Heal)] [CustomComboInfo("Zoe Option", "Applies Zoe.", SGE.JobID)]
     SGE_ST_Heal_Zoe = 14019,
 
-    [ParentCombo(SGE_ST_Heal)] [CustomComboInfo("Pepsis Option", "Triggers Pepsis if a shield is present.", SGE.JobID)]
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Pepsis Option", "Triggers Pepsis if a shield is present.", SGE.JobID)]
     SGE_ST_Heal_Pepsis = 14020,
 
     [ParentCombo(SGE_ST_Heal)] [CustomComboInfo("Taurochole Option", "Adds Taurochole.", SGE.JobID)]
@@ -4306,7 +4320,8 @@ public enum CustomComboPreset
     [ParentCombo(SGE_ST_Heal)] [CustomComboInfo("Haima Option", "Applies Haima.", SGE.JobID)]
     SGE_ST_Heal_Haima = 14022,
 
-    [ParentCombo(SGE_ST_Heal)] [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
     SGE_ST_Heal_Rhizomata = 14023,
 
     [ParentCombo(SGE_ST_Heal)] [CustomComboInfo("Krasis Option", "Applies Krasis.", SGE.JobID)]
@@ -4346,7 +4361,8 @@ public enum CustomComboPreset
     [ParentCombo(SGE_AoE_Heal)] [CustomComboInfo("Panhaima Option", "Adds Panhaima.", SGE.JobID)]
     SGE_AoE_Heal_Panhaima = 14031,
 
-    [ParentCombo(SGE_AoE_Heal)] [CustomComboInfo("Pepsis Option", "Triggers Pepsis if a shield is present.", SGE.JobID)]
+    [ParentCombo(SGE_AoE_Heal)]
+    [CustomComboInfo("Pepsis Option", "Triggers Pepsis if a shield is present.", SGE.JobID)]
     SGE_AoE_Heal_Pepsis = 14032,
 
     [ParentCombo(SGE_AoE_Heal)] [CustomComboInfo("Ixochole Option", "Adds Ixochole.", SGE.JobID)]
@@ -4355,7 +4371,8 @@ public enum CustomComboPreset
     [ParentCombo(SGE_AoE_Heal)] [CustomComboInfo("Kerachole Option", "Adds Kerachole.", SGE.JobID)]
     SGE_AoE_Heal_Kerachole = 14035,
 
-    [ParentCombo(SGE_AoE_Heal)] [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
+    [ParentCombo(SGE_AoE_Heal)]
+    [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
     SGE_AoE_Heal_Rhizomata = 14036,
 
     #endregion
@@ -4445,7 +4462,7 @@ public enum CustomComboPreset
     [ReplaceSkill(SAM.Hakaze, SAM.Gyofu)]
     [ConflictingCombos(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Hakaze with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Hakaze/Gyofu with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         SAM.JobID)]
     SAM_ST_SimpleMode = 15002,
 
@@ -4453,11 +4470,13 @@ public enum CustomComboPreset
     [ReplaceSkill(SAM.Fuga, SAM.Fuko)]
     [ConflictingCombos(SAM_AoE_AdvancedMode)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Fuga with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Fuga/Fuko with a one-button full single target rotation.\nThis is ideal for newcomers to the job.",
         SAM.JobID)]
     SAM_AoE_SimpleMode = 15102,
-
+    
     #endregion
+    
+
 
     #region Advanced ST
 
@@ -4548,6 +4567,7 @@ public enum CustomComboPreset
     SAM_ST_TrueNorth = 15099,
 
     #endregion
+
 
     #region AoE Combos
 
@@ -4783,7 +4803,8 @@ public enum CustomComboPreset
         "Holds Energy Drain when Chain Stratagem is ready or has less than 10 seconds cooldown remaining.", SCH.JobID)]
     SCH_DPS_EnergyDrain_BurstSaver = 16006,
 
-    [ParentCombo(SCH_DPS)] [CustomComboInfo("Ruin II Moving Option", "Use Ruin II when you have to move.", SCH.JobID)]
+    [ParentCombo(SCH_DPS)]
+    [CustomComboInfo("Ruin II Moving Option", "Use Ruin II when you have to move.", SCH.JobID)]
     SCH_DPS_Ruin2Movement = 16007,
 
     [ParentCombo(SCH_DPS)] [CustomComboInfo("Bio / Biolysis Option", "Automatic DoT uptime.", SCH.JobID)]
@@ -4905,7 +4926,8 @@ public enum CustomComboPreset
     [CustomComboInfo("Adloquium Option", "Use Adloquium when missing Galvanize or target HP%% below:", SCH.JobID)]
     SCH_ST_Heal_Adloquium = 16027,
 
-    [ParentCombo(SCH_ST_Heal)] [CustomComboInfo("Lustrate Option", "Use Lustrate when target HP%% below:", SCH.JobID)]
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Lustrate Option", "Use Lustrate when target HP%% below:", SCH.JobID)]
     SCH_ST_Heal_Lustrate = 16028,
 
     [ParentCombo(SCH_ST_Heal)]
@@ -4983,16 +5005,16 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ConflictingCombos(SMN_Advanced_Combo)]
     [ReplaceSkill(SMN.Ruin, SMN.Ruin2)]
-    [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Ruin with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+    [CustomComboInfo("Simple Summoner Feature Single Target",
+        "General purpose one-button combo.\nBursts on Bahamut phase.\nSummons Titan, Garuda, then Ifrit.\nSwiftcasts on Slipstream unless drifted.",
         SMN.JobID)]
     SMN_Simple_Combo = 17041,
 
     [AutoAction(true, false)]
     [ConflictingCombos(SMN_Advanced_Combo_AoE)]
     [ReplaceSkill(SMN.Outburst)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Outburst with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+    [CustomComboInfo("Simple Summoner Feature AoE",
+        "General purpose one-button combo.\nBursts on Bahamut phase.\nSummons Titan, Garuda, then Ifrit.\nSwiftcasts on Slipstream unless drifted.",
         SMN.JobID)]
     SMN_Simple_Combo_AoE = 17066,
 
@@ -5149,6 +5171,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", SMN.JobID)]
     SMN_Variant_Cure = 17047,
 
+    
     [AutoAction(true, false)]
     [ReplaceSkill(SMN.Outburst)]
     [ConflictingCombos(SMN_Simple_Combo_AoE)]
@@ -5245,7 +5268,7 @@ public enum CustomComboPreset
     [ReplaceSkill(VPR.SteelFangs)]
     [ConflictingCombos(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Steel Fangs  with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Steel Fangs with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
         VPR.JobID)]
     VPR_ST_SimpleMode = 30000,
 
@@ -5258,6 +5281,7 @@ public enum CustomComboPreset
     VPR_AoE_SimpleMode = 30100,
 
     #endregion
+    
 
     #region Advanced ST Viper
 
@@ -5344,6 +5368,7 @@ public enum CustomComboPreset
     VPR_TrueNorthDynamic = 30098,
 
     #endregion
+    
 
     #region Advanced AoE Viper
 
@@ -5481,22 +5506,22 @@ public enum CustomComboPreset
     #endregion
 
     #region WARRIOR
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
     [ConflictingCombos(WAR_ST_Advanced)]
     [ReplaceSkill(WAR.StormsPath)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Storm's Pathwith a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Storm's Path with a one-button full single target rotation.\nThis is the ideal selection for newcomers to the job.",
         WAR.JobID)]
     WAR_ST_Simple = 18000,
-
+    
     [AutoAction(true, false)]
     [ConflictingCombos(WAR_AoE_Advanced)]
     [ReplaceSkill(WAR.Overpower)]
     [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Overpower with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Overpower with a one-button full AoE rotation.\nThis is the ideal selection for newcomers to the job.",
         WAR.JobID)]
     WAR_AoE_Simple = 18001,
 
@@ -5530,7 +5555,8 @@ public enum CustomComboPreset
         WAR.JobID)]
     WAR_ST_Advanced_FellCleave = 18006,
 
-    [ParentCombo(WAR_ST_Advanced)] [CustomComboInfo("Infuriate Option", "Adds Infuriate to Advanced Mode.", WAR.JobID)]
+    [ParentCombo(WAR_ST_Advanced)]
+    [CustomComboInfo("Infuriate Option", "Adds Infuriate to Advanced Mode.", WAR.JobID)]
     WAR_ST_Advanced_Infuriate = 18007,
 
     [ParentCombo(WAR_ST_Advanced)]
@@ -5973,14 +5999,14 @@ public enum CustomComboPreset
     PvP_EmergencyGuard = 1100010,
 
     [PvPCustomCombo]
-    [CustomComboInfo("Quick Purify Feature", "Uses Purify when afflicted with any selected debuff.", ADV.JobID)]
-    PvP_QuickPurify = 1100020,
-
-    [PvPCustomCombo]
     [CustomComboInfo("Prevent Mash Cancelling Feature",
         "Stops you cancelling your guard if you're pressing buttons quickly.", ADV.JobID)]
     PvP_MashCancel = 1100030,
 
+    [PvPCustomCombo]
+    [CustomComboInfo("Quick Purify Feature", "Uses Purify when afflicted with any selected debuff.", ADV.JobID)]
+    PvP_QuickPurify = 1100020,
+    
     // Last value = 1100030
     // Extra 0 on the end keeps things working the way they should be. Nothing to see here.
 
@@ -6283,8 +6309,7 @@ public enum CustomComboPreset
     GNBPvP_BlastingZone = 117007,
 
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Corundum to Burst Mode under set health %.",
-        GNB.JobID)]
+    [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Corundum to Burst Mode under set health %.", GNB.JobID)]
     GNBPvP_Corundum = 117011,
 
     #endregion

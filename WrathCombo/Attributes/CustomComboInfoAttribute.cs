@@ -21,12 +21,12 @@ namespace WrathCombo.Attributes
         /// <param name="order"> Display order. </param>
         //// <param name="memeName"> Display meme name </param>
         //// <param name="memeDescription"> Meme description. </param>
-        internal CustomComboInfoAttribute(string name, string description, byte jobID, [CallerLineNumber] int order = 0)
+        internal CustomComboInfoAttribute(string name, string description, byte jobID)
         {
             Name = name;
             Description = description;
             JobID = jobID;
-            Order = order;
+            //Order = order;
         }
 
         /// <summary> Gets the display name. </summary>
