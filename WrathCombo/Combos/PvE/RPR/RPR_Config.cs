@@ -33,15 +33,9 @@ internal partial class RPR
                     DrawSliderInt(0, 8, RPRPvP.Config.RPRPvP_ImmortalStackThreshold,
                         "Set a value of Immortal Sacrifice Stacks to hold for burst.");
 
-                    DrawSliderInt(0, 8, RPRPvP.Config.RPRPvP_ImmortalStackThreshold,
-                        "Set a value of Immortal Sacrifice Stacks to hold for burst.");
-
                     break;
 
                 case CustomComboPreset.RPRPvP_Burst_ArcaneCircle:
-                    DrawSliderInt(5, 90, RPRPvP.Config.RPRPvP_ArcaneCircleThreshold,
-                        "Set a HP percentage value. Caps at 90 to prevent waste.");
-
                     DrawSliderInt(5, 90, RPRPvP.Config.RPRPvP_ArcaneCircleThreshold,
                         "Set a HP percentage value. Caps at 90 to prevent waste.");
 
