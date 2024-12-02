@@ -22,7 +22,8 @@ namespace WrathCombo.Combos.PvP
             Nastrond = 29492,
             Purify = 29056,
             Guard = 29054,
-            Drakesbane = 41449;
+            Drakesbane = 41449,
+            Starcross = 41450;
 
 
         public static class Buffs
@@ -30,7 +31,8 @@ namespace WrathCombo.Combos.PvP
             public const ushort
             FirstmindsFocus = 3178,
             LifeOfTheDragon = 3177,
-            Heavensent = 3176;
+            Heavensent = 3176,
+            StarCrossReady = 4302;
 
 
         }
@@ -51,38 +53,47 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is RaidenThrust or FangAndClaw or WheelingThrust or Drakesbane)
                 {
-                    bool enemyGuarded = TargetHasEffectAny(PvPCommon.Buffs.Guard);
-
-                    if (!enemyGuarded)
+                    if (!TargetHasEffectAny(PvPCommon.Buffs.Guard))
                     {
                         if (CanWeave(actionID))
                         {
-                            if (IsEnabled(CustomComboPreset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && HasEffect(Buffs.LifeOfTheDragon))
+                            if (IsEnabled(CustomComboPreset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !HasEffect(Buffs.StarCrossReady) && (HasEffect(Buffs.LifeOfTheDragon) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
                                 return HighJump;
 
-                            if (IsEnabled(CustomComboPreset.DRGPvP_Nastrond) && InMeleeRange())
+                            if (IsEnabled(CustomComboPreset.DRGPvP_Nastrond)) // Nastrond Finisher logic
                             {
                                 if (HasEffect(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_LOTD_HPValue)
                                  || HasEffect(Buffs.LifeOfTheDragon) && GetBuffRemainingTime(Buffs.LifeOfTheDragon) < GetOptionValue(Config.DRGPvP_LOTD_Duration))
                                     return Nastrond;
                             }
-                            if (IsEnabled(CustomComboPreset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && InMeleeRange())
+
+                            if (IsEnabled(CustomComboPreset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && GetTargetDistance() <= 10) // HorridRoar Roar on cd
                                 return HorridRoar;
                         }
-                        if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringSustain) && IsOffCooldown(ChaoticSpring) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_CS_HP_Threshold))
+                       
+                        if (IsEnabled(CustomComboPreset.DRGPvP_Geirskogul) && IsOffCooldown(Geirskogul)) 
                         {
-                            if (!HasEffect(Buffs.FirstmindsFocus) && !HasEffect(Buffs.LifeOfTheDragon) && IsOnCooldown(Geirskogul) && IsOnCooldown(ElusiveJump)
-                             || !HasEffect(Buffs.FirstmindsFocus) && HasEffect(Buffs.LifeOfTheDragon) && IsOnCooldown(Geirskogul) && IsOnCooldown(ElusiveJump) && WasLastWeaponskill(HeavensThrust))
-                                return ChaoticSpring;
-                        }
-                        if (IsEnabled(CustomComboPreset.DRGPvP_Geirskogul) && IsOffCooldown(Geirskogul) && WasLastAbility(ElusiveJump) && HasEffect(Buffs.FirstmindsFocus))
-                            return Geirskogul;
+                            if (IsEnabled(CustomComboPreset.DRGPvP_BurstProtection) && WasLastAbility(ElusiveJump) && HasEffect(Buffs.FirstmindsFocus))  // With evasive burst mode
+                                return Geirskogul;
+                            if (!IsEnabled(CustomComboPreset.DRGPvP_BurstProtection))                                                                    // Without evasive burst mode so you can still use Gier, which will let you still use high jump
+                                return Geirskogul;
+                        }                       
+                                                   
                         if (IsEnabled(CustomComboPreset.DRGPvP_WyrmwindThrust) && HasEffect(Buffs.FirstmindsFocus) && GetTargetDistance() >= GetOptionValue(Config.DRGPvP_Distance_Threshold))
                             return WyrmwindThrust;
-                    }
 
-                    if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringExecute) && IsOffCooldown(ChaoticSpring) && EnemyHealthCurrentHp() <= 8000)
+                        if (IsEnabled(CustomComboPreset.DRGPvP_Geirskogul) && HasEffect(Buffs.StarCrossReady))
+                            return Starcross;
+                       
+                    }
+                    if (IsOffCooldown(ChaoticSpring) && InMeleeRange())
+                    {
+                        if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringSustain) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_CS_HP_Threshold)) // Chaotic Spring as a self heal option, it does not break combos of other skills
                             return ChaoticSpring;
+                        if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringExecute) && EnemyHealthCurrentHp() <= 8000) // Chaotic Spring Execute
+                            return ChaoticSpring;
+                    }
+                  
                 }
                 return actionID;
             }
