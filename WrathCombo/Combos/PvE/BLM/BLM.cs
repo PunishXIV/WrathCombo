@@ -754,12 +754,17 @@ internal static partial class BLM
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            return actionID switch
+            switch (actionID)
             {
-                Blizzard when LevelChecked(Freeze) && !Gauge.InUmbralIce => Blizzard3,
-                Freeze when !LevelChecked(Freeze) => Blizzard2,
-                var _ => actionID
-            };
+                case Blizzard when LevelChecked(Freeze) && !Gauge.InUmbralIce:
+                    return Blizzard3;
+
+                case Freeze when !LevelChecked(Freeze):
+                    return Blizzard2;
+
+                default:
+                    return actionID;
+            }
         }
     }
 
