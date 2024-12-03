@@ -14,15 +14,40 @@ internal partial class GNB
             GNBPvP_Corundum = "GNBPvP_Corundum";
 
         public static UserInt
-            GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop"),
-            GNB_AoE_NoMercyStop = new("GNB_AoE_NoMercyStop");
+            GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
+            GNB_ST_Corundum_SubOption = new("GNB_ST_Corundum_SubOption", 1),
+            GNB_ST_Aurora_Health = new("GNB_ST_Aurora_Health", 99),
+            GNB_ST_Aurora_SubOption = new("GNB_ST_Aurora_SubOption", 1),
+            GNB_ST_Rampart_Health = new("GNB_ST_Rampart_Health", 80),
+            GNB_ST_Rampart_SubOption = new("GNB_ST_Rampart_SubOption", 1),
+            GNB_ST_Camouflage_Health = new("GNB_ST_Camouflage_Health", 70),
+            GNB_ST_Camouflage_SubOption = new("GNB_ST_Camouflage_SubOption", 1),
+            GNB_ST_Nebula_Health = new("GNB_ST_Nebula_Health", 60),
+            GNB_ST_Nebula_SubOption = new("GNB_ST_Nebula_SubOption", 1),
+            GNB_ST_Superbolide_Health = new("GNB_ST_Superbolide_Health", 30),
+            GNB_ST_Superbolide_SubOption = new("GNB_ST_Superbolide_SubOption", 1),
+            GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop", 5),
+            GNB_AoE_Corundum_Health = new("GNB_AoE_CorundumOption", 90),
+            GNB_AoE_Corundum_SubOption = new("GNB_AoE_Corundum_SubOption", 1),
+            GNB_AoE_Aurora_Health = new("GNB_AoE_Aurora_Health", 99),
+            GNB_AoE_Aurora_SubOption = new("GNB_AoE_Aurora_SubOption", 1),
+            GNB_AoE_Rampart_Health = new("GNB_AoE_Rampart_Health", 80),
+            GNB_AoE_Rampart_SubOption = new("GNB_AoE_Rampart_SubOption", 1),
+            GNB_AoE_Camouflage_Health = new("GNB_AoE_Camouflage_Health", 80),
+            GNB_AoE_Camouflage_SubOption = new("GNB_AoE_Camouflage_SubOption", 1),
+            GNB_AoE_Nebula_Health = new("GNB_AoE_Nebula_Health", 60),
+            GNB_AoE_Nebula_SubOption = new("GNB_AoE_Nebula_SubOption", 1),
+            GNB_AoE_Superbolide_Health = new("GNB_AoE_Superbolide_Health", 30),
+            GNB_AoE_Superbolide_SubOption = new("GNB_AoE_Superbolide_SubOption", 1),
+            GNB_AoE_NoMercyStop = new("GNB_AoE_NoMercyStop", 5);
 
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
             {
                 case CustomComboPreset.GNB_Variant_Cure:
-                    UserConfig.DrawSliderInt(1, 100, GNB_VariantCure, "HP% to be at or under", 200);
+                    UserConfig.DrawSliderInt(1, 100, GNB_VariantCure,
+                        "Player HP% to be \nless than or equal to:", 200);
 
                     break;
 
@@ -38,329 +63,175 @@ internal partial class GNB
 
                     break;
 
-                case CustomComboPreset.GNB_ST_HOC:
-                    UserConfig.DrawDifficultyMultiChoice(
-                        GNB_ST_HOCDifficulty,
-                        GNB_ST_HOCDifficultyListSet,
-                        "Select what difficulty this should be used in:"
-                    );
-                    UserConfig.DrawSliderInt(5, 40, GNB_ST_HOCThreshold,
-                        startUsingAtDescription,
-                        itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
+                case CustomComboPreset.GNB_ST_Corundum:
+                    UserConfig.DrawSliderInt(1, 100, GNB_ST_Corundum_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(
-                        GNB_ST_HOCBossRestriction, "All Enemies",
-                        "Will use Heart of Corundum regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
-                    UserConfig.DrawHorizontalRadioButton(
-                        GNB_ST_HOCBossRestriction, "Avoid Bosses",
-                        "Will try not to use Heart of Corundum when your target is a boss.\n" +
-                        "(NOTE: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Corundum_SubOption,
+                        "All Enemies",
+                        "Uses Corundum regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Corundum_SubOption,
+                        "Bosses Only",
+                        "Only uses Corundum when the targeted enemy is a boss.", 2);
 
                     break;
 
-                case CustomComboPreset.GNB_ST_GreatNebula:
-                    UserConfig.DrawDifficultyMultiChoice(
-                        GNB_ST_GreatNebulaDifficulty,
-                        GNB_ST_GreatNebulaDifficultyListSet,
-                        "Select what difficulty this should be used in:"
-                    );
-                    UserConfig.DrawSliderInt(5, 55, GNB_ST_GreatNebulaThreshold,
-                    startUsingAtDescription,
-                        itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
+                case CustomComboPreset.GNB_AoE_Corundum:
+                    UserConfig.DrawSliderInt(1, 100, GNB_AoE_Corundum_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Corundum_SubOption,
+                        "All Enemies",
+                        "Uses Corundum regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Corundum_SubOption,
+                        "Bosses Only",
+                        "Only uses Corundum when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_ST_Aurora:
+                    UserConfig.DrawSliderInt(1, 100, GNB_ST_Aurora_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Aurora_SubOption,
+                        "All Enemies",
+                        "Uses Aurora regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Aurora_SubOption,
+                        "Bosses Only",
+                        "Only uses Aurora when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_AoE_Aurora:
+                    UserConfig.DrawSliderInt(1, 100, GNB_AoE_Aurora_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Aurora_SubOption,
+                        "All Enemies",
+                        "Uses Aurora regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Aurora_SubOption,
+                        "Bosses Only",
+                        "Only uses Aurora when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_ST_Rampart:
+                    UserConfig.DrawSliderInt(1, 100, GNB_ST_Rampart_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Rampart_SubOption,
+                        "All Enemies",
+                        "Uses Rampart regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Rampart_SubOption,
+                        "Bosses Only",
+                        "Only uses Rampart when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_AoE_Rampart:
+                    UserConfig.DrawSliderInt(1, 100, GNB_AoE_Rampart_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Rampart_SubOption,
+                        "All Enemies",
+                        "Uses Rampart regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Rampart_SubOption,
+                        "Bosses Only",
+                        "Only uses Rampart when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_ST_Camouflage:
+                    UserConfig.DrawSliderInt(1, 100, GNB_ST_Camouflage_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Camouflage_SubOption,
+                        "All Enemies",
+                        "Uses Camo regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Camouflage_SubOption,
+                        "Bosses Only",
+                        "Only uses Camo when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_AoE_Camouflage:
+                    UserConfig.DrawSliderInt(1, 100, GNB_AoE_Camouflage_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Camouflage_SubOption,
+                        "All Enemies",
+                        "Uses Camo regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Camouflage_SubOption,
+                        "Bosses Only",
+                        "Only uses Camo when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_ST_Nebula:
+                    UserConfig.DrawSliderInt(1, 100, GNB_ST_Nebula_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Nebula_SubOption,
+                        "All Enemies",
+                        "Uses Nebula regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Nebula_SubOption,
+                        "Bosses Only",
+                        "Only uses Nebula when the targeted enemy is a boss.", 2);
+
+                    break;
+
+                case CustomComboPreset.GNB_AoE_Nebula:
+                    UserConfig.DrawSliderInt(1, 100, GNB_AoE_Nebula_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Nebula_SubOption,
+                        "All Enemies",
+                        "Uses Nebula regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Nebula_SubOption,
+                        "Bosses Only",
+                        "Only uses Nebula when the targeted enemy is a boss.", 2);
 
                     break;
 
                 case CustomComboPreset.GNB_ST_Superbolide:
-                    UserConfig.DrawDifficultyMultiChoice(
-                        GNB_ST_SuperbolideDifficulty,
-                        GNB_ST_SuperbolideDifficultyListSet,
-                        "Select what difficulty this should be used in:"
-                    );
-                    UserConfig.DrawSliderInt(5, 40, GNB_ST_SuperbolideSelfThreshold,
-                        startUsingAtDescription,
-                        itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
-                    UserConfig.DrawSliderInt(0, 10, GNB_ST_SuperbolideTargetThreshold,
-                    stopUsingAtDescription,
-                        itemWidth: little, sliderIncrement: SliderIncrements.Ones);
+                    UserConfig.DrawSliderInt(1, 100, GNB_ST_Superbolide_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(
-                        GNB_ST_SuperbolideBossRestriction, "All Enemies",
-                        "Will use Superbolide regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
-                    UserConfig.DrawHorizontalRadioButton(
-                        GNB_ST_SuperbolideBossRestriction, "Avoid Bosses",
-                        "Will try not to use Superbolide when your target is a boss.\n" +
-                        "(NOTE: don't rely on this 100%, SE sometimes marks enemies inconsistently)",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Superbolide_SubOption,
+                        "All Enemies",
+                        "Uses Hallowed Ground regardless of targeted enemy type.", 1);
 
-                    break;
-
-                case CustomComboPreset.GNB_AoE_HOC:
-                    UserConfig.DrawSliderInt(5, 50, GNB_AoE_HOCThreshold,
-                        startUsingAtDescription,
-                        itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
-                    break;
-
-                case CustomComboPreset.GNB_AoE_GreatNebula:
-                    UserConfig.DrawSliderInt(5, 55, GNB_AoE_GreatNebulaThreshold,
-                        startUsingAtDescription,
-                        itemWidth: bigger, sliderIncrement: SliderIncrements.Fives);
+                    UserConfig.DrawHorizontalRadioButton(GNB_ST_Superbolide_SubOption,
+                        "Bosses Only",
+                        "Only uses Hallowed Ground when the targeted enemy is a boss.", 2);
 
                     break;
 
                 case CustomComboPreset.GNB_AoE_Superbolide:
-                    UserConfig.DrawSliderInt(5, 30, GNB_AoE_SuperbolideSelfThreshold,
-                        startUsingAtDescription,
-                        itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
-                    UserConfig.DrawSliderInt(0, 40,
-                        GNB_AoE_SuperbolideTargetThreshold,
-                        stopUsingAtDescription,
-                        itemWidth: little, sliderIncrement: SliderIncrements.Tens);
+                    UserConfig.DrawSliderInt(1, 100, GNB_AoE_Superbolide_Health,
+                        "Player HP% to be \nless than or equal to:", 200);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Superbolide_SubOption,
+                        "All Enemies",
+                        "Uses Hallowed Ground regardless of targeted enemy type.", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(GNB_AoE_Superbolide_SubOption,
+                        "Bosses Only",
+                        "Only uses Hallowed Ground when the targeted enemy is a boss.", 2);
 
                     break;
 
-                case CustomComboPreset.GNBPvP_Corundum:
-                    UserConfig.DrawSliderInt(1, 100,
-                        GNBPvP.Config.corundumThreshold,
-                        "HP% to be at or Below to use " +
-                        "(100 = Use Always)",
-                        itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
-
-                    break;
-
-                case CustomComboPreset.GNBPvP_BlastingZone:
-                    UserConfig.DrawSliderInt(1, 100,
-                        GNBPvP.Config.blastingZoneThreshold,
-                        "Hp % of target to use Blasting zone. Most powerful below 50% " +
-                        "(100 = Use Always)",
-                        itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
-
-                    break;
             }
-
-
         }
-
-        /// Smallest bar width
-        private const float little = 100f;
-
-        /// 2nd smallest bar width
-        private const float medium = 150f;
-
-        /// 2nd biggest bar width
-        private const float bigger = 175f;
-
-        /// Biggest bar width
-        private const float biggest = 200f;
-
-        /// Bar Description for HP% to stop using
-        private const string stopUsingAtDescription =
-            "Target HP% to stop using (0 = Use Always)";
-
-        /// Bar Description for HP% to start using
-        private const string startUsingAtDescription =
-            "HP% to use at or below";
-
-        /// <summary>
-        ///     Whether abilities should be restricted to Bosses or not.
-        /// </summary>
-        /// <seealso cref="Config.GNB_ST_HOCBossRestriction" />
-        /// <seealso cref="Config.GNB_ST_SuperbolideBossRestriction" />
-        internal enum BossAvoidance
-        {
-            Off = 1,
-            On = 2
-        }
-
-        #region Advanced Single Target
-
-        /// <summary>
-        ///     Self HP% to use HOC below for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 25 <br />
-        ///     <b>Range</b>: 5 - 40 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_ST_HOC" />
-        public static readonly UserInt GNB_ST_HOCThreshold =
-            new("GNB_ST_HOCThreshold", 25);
-
-        /// <summary>
-        ///     Difficulty of HOC Threshold for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
-        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
-        ///     and/or <see cref="ContentCheck.TopHalfContent" />
-        /// </value>
-        /// <seealso cref="GNB_ST_HOCThreshold" />
-        public static readonly UserBoolArray GNB_ST_HOCDifficulty =
-            new("GNB_ST_HOCDifficulty", [true, false]);
-
-        /// <summary>
-        ///     What Difficulty List Set
-        ///     <see cref="GNB_ST_HOCDifficulty" /> is set to.
-        /// </summary>
-        /// <seealso cref="GNB_ST_HOCDifficulty" />
-        public static readonly ContentCheck.ListSet
-            GNB_ST_HOCDifficultyListSet =
-                ContentCheck.ListSet.Halved;
-
-        /// <summary>
-        ///     HOC Boss Restriction for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: <see cref="BossAvoidance.Off" /> <br />
-        ///     <b>Options</b>: <see cref="BossAvoidance">BossAvoidance Enum</see>
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_ST_HOC" />
-        public static readonly UserInt GNB_ST_HOCBossRestriction =
-            new("GNB_ST_HOCBossRestriction", (int)BossAvoidance.Off);
-
-        /// <summary>
-        ///     Self HP% to use Great Nebula below for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 40 <br />
-        ///     <b>Range</b>: 5 - 55 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_ST_GreatNebula" />
-        public static readonly UserInt GNB_ST_GreatNebulaThreshold =
-            new("GNB_ST_GreatNebulaThreshold", 40);
-
-        /// <summary>
-        ///     Difficulty of Great Nebula Threshold for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
-        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
-        ///     and/or <see cref="ContentCheck.TopHalfContent" />
-        /// </value>
-        /// <seealso cref="GNB_ST_GreatNebulaThreshold" />
-        public static readonly UserBoolArray
-            GNB_ST_GreatNebulaDifficulty =
-                new("GNB_ST_GreatNebulaDifficulty", [true, false]);
-
-        /// <summary>
-        ///     What Difficulty List Set
-        ///     <see cref="GNB_ST_GreatNebulaDifficulty" /> is set to.
-        /// </summary>
-        /// <seealso cref="GNB_ST_GreatNebulaDifficulty" />
-        public static readonly ContentCheck.ListSet
-            GNB_ST_GreatNebulaDifficultyListSet =
-                ContentCheck.ListSet.Halved;
-
-        /// <summary>
-        ///     Self HP% to use Superbolide below for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 14 <br />
-        ///     <b>Range</b>: 5 - 40 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_ST_Superbolide" />
-        public static readonly UserInt GNB_ST_SuperbolideSelfThreshold =
-            new("GNB_ST_SuperbolideSelfThreshold", 15);
-
-        /// <summary>
-        ///     Target HP% to use Superbolide above for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 1 <br />
-        ///     <b>Range</b>: 0 - 10 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_ST_Superbolide" />
-        public static readonly UserInt GNB_ST_SuperbolideTargetThreshold =
-            new("GNB_ST_SuperbolideTargetThreshold", 1);
-
-        /// <summary>
-        ///     Difficulty of Superbolide Threshold for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
-        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
-        ///     and/or <see cref="ContentCheck.TopHalfContent" />
-        /// </value>
-        /// <seealso cref="GNB_ST_SuperbolideSelfThreshold" />
-        public static readonly UserBoolArray GNB_ST_SuperbolideDifficulty =
-            new("GNB_ST_SuperbolideDifficulty", [true, false]);
-
-        /// <summary>
-        ///     What Difficulty List Set
-        ///     <see cref="GNB_ST_SuperbolideDifficulty" /> is set to.
-        /// </summary>
-        /// <seealso cref="GNB_ST_SuperbolideDifficulty" />
-        public static readonly ContentCheck.ListSet
-            GNB_ST_SuperbolideDifficultyListSet =
-                ContentCheck.ListSet.Halved;
-
-        /// <summary>
-        ///     Superbolide Boss Restriction for Single Target.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: <see cref="BossAvoidance.On" /> <br />
-        ///     <b>Options</b>: <see cref="BossAvoidance">BossAvoidance Enum</see>
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_ST_Superbolide" />
-        public static readonly UserInt GNB_ST_SuperbolideBossRestriction =
-            new("GNB_ST_SuperbolideBossRestriction", (int)BossAvoidance.On);
-        #endregion
-
-        #region Advanced Mode - AoE
-
-        /// <summary>
-        ///     Self HP% to use HOC below for AoE.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 55 <br />
-        ///     <b>Range</b>: 5 - 55 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_AoE_HOC" />
-        public static readonly UserInt GNB_AoE_HOCThreshold =
-            new("GNB_AoE_HOCThreshold", 55);
-
-        /// <summary>
-        ///     Self HP% to use Great Nebula below for AoE.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 50 <br />
-        ///     <b>Range</b>: 5 - 55 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_AoE_GreatNebula" />
-        public static readonly UserInt GNB_AoE_GreatNebulaThreshold =
-            new("GNB_AoE_GreatNebulaThreshold", 50);
-
-        /// <summary>
-        ///     Self HP% to use Superbolide below for AoE.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 20 <br />
-        ///     <b>Range</b>: 5 - 30 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_AoE_Superbolide" />
-        public static readonly UserInt GNB_AoE_SuperbolideSelfThreshold =
-            new("GNB_AoE_SuperbolideSelfThreshold", 20);
-
-        /// <summary>
-        ///     Target HP% to use Superbolide above for AoE.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 15 <br />
-        ///     <b>Range</b>: 0 - 40 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Tens" />
-        /// </value>
-        /// <seealso cref="CustomComboPreset.GNB_AoE_Superbolide" />
-        public static readonly UserInt GNB_AoE_SuperbolideTargetThreshold =
-            new("GNB_AoE_SuperbolideTargetThreshold", 15);
-
-        #endregion
     }
 }

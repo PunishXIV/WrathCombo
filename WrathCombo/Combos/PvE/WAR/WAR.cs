@@ -6,12 +6,13 @@ using WrathCombo.CustomComboNS;
 
 namespace WrathCombo.Combos.PvE
 {
-    internal partial class WAR
+    internal partial class WAR 
     {
-        public const byte ClassID = 3;
-        public const byte JobID = 21;
-        public const uint
-        //Offensive
+        public const byte ClassID = 3; // Marauder (MRD) 
+        public const byte JobID = 21; // Warrior (WAR)
+        public const uint //Actions
+
+        #region Offensive
         HeavySwing = 31, //Lv1, instant, GCD, range 3, single-target, targets=Hostile
         Maim = 37, //Lv4, instant, GCD, range 3, single-target, targets=Hostile
         Berserk = 38, //Lv6, instant, 60.0s CD (group 10), range 0, single-target, targets=Self
@@ -34,8 +35,9 @@ namespace WrathCombo.Combos.PvE
         PrimalRend = 25753, //Lv90, instant, GCD, range 20, AOE 5 circle, targets=Hostile, animLock=1.150
         PrimalWrath = 36924, //Lv96, instant, 1.0s CD (group 0), range 0, AOE 5 circle, targets=Self
         PrimalRuination = 36925, //Lv100, instant, GCD, range 3, AOE 5 circle, targets=Hostile
+        #endregion
 
-        //Utility
+        #region Defensive
         Defiance = 48, //Lv10, instant, 2.0s CD (group 1), range 0, single-target, targets=Self
         ReleaseDefiance = 32066, //Lv10, instant, 1.0s CD (group 1), range 0, single-target, targets=Self
         ThrillOfBattle = 40, //Lv30, instant, 90.0s CD (group 15), range 0, single-target, targets=Self
@@ -47,6 +49,7 @@ namespace WrathCombo.Combos.PvE
         NascentFlash = 16464, //Lv76, instant, 25.0s CD (group 6), range 30, single-target, targets=Party
         Bloodwhetting = 25751, //Lv82, instant, 25.0s CD (group 6), range 0, single-target, targets=Self
         Damnation = 36923, //Lv92, instant, 120.0s CD (group 21), range 0, single-target, targets=Self
+        #endregion
 
         //Limit Break
         LandWaker = 4240; //LB3, instant, range 0, AOE 50 circle, targets=Self, animLock=3.860
@@ -54,6 +57,7 @@ namespace WrathCombo.Combos.PvE
         public static class Buffs
         {
             public const ushort
+            #region Offensive
                 SurgingTempest = 2677, //applied by Storm's Eye, Mythril Tempest to self, damage buff
                 NascentChaos = 1897, //applied by Infuriate to self, converts next FC to IC
                 Berserk = 86, //applied by Berserk to self, next 3 GCDs are crit dhit
@@ -64,11 +68,13 @@ namespace WrathCombo.Combos.PvE
                 BurgeoningFury = 3833, //applied by Fell Cleave to self, 3 stacks turns into wrathful
                 Wrathful = 3901, //3rd stack of Burgeoning Fury turns into this, allows Primal Wrath
                 PrimalRuinationReady = 3834, //applied by Primal Rend to self
+            #endregion
+
+            #region Defensive
                 VengeanceRetaliation = 89, //applied by Vengeance to self, retaliation for physical attacks
                 VengeanceDefense = 912, //applied by Vengeance to self, -30% damage taken
                 Damnation = 3832, //applied by Damnation to self, -40% damage taken and retaliation for physical attacks
                 PrimevalImpulse = 3900, //hot applied after hit under Damnation
-                Rampart = 1191, //applied by Rampart to self, -20% damage taken
                 ThrillOfBattle = 87, //applied by Thrill of Battle to self
                 Holmgang = 409, //applied by Holmgang to self
                 EquilibriumRegen = 2681, //applied by Equilibrium to self, hp regen
@@ -84,13 +90,8 @@ namespace WrathCombo.Combos.PvE
                 Defiance = 91, //applied by Defiance to self, tank stance
                 ShieldWall = 194, //applied by Shield Wall to self/target
                 Stronghold = 195, //applied by Stronghold to self/target
-                LandWaker = 863, //applied by Land Waker to self/target
-
-                //Bozja related
-                BannerOfHonoredSacrifice = 2327,
-                LostFontOfPower = 2346,
-                LostBloodRage = 2566,
-                BloodRush = 2567;
+                LandWaker = 863; //applied by Land Waker to self/target
+            #endregion
         }
 
         public static class Debuffs
@@ -99,11 +100,10 @@ namespace WrathCombo.Combos.PvE
                 Placeholder = 1;
         }
 
-       
-
+        #region Simple Mode - Single Target
         internal class WAR_ST_SimpleMode : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_ST_Simple;
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_ST_Simple; 
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
@@ -111,6 +111,47 @@ namespace WrathCombo.Combos.PvE
                 {
                     var gauge = GetJobGauge<WARGauge>().BeastGauge;
                     float GCD = GetCooldown(HeavySwing).CooldownTotal;
+                    bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) || 
+                                      JustUsed(OriginalHook(Vengeance), 5f) ||
+                                      JustUsed(ThrillOfBattle, 5f) ||
+                                      JustUsed(All.Rampart, 5f) || 
+                                      JustUsed(Holmgang, 9f);
+
+                    // Mitigation
+                    if (InCombat() && //Player is in combat
+                        IsPlayerTargeted() && //Player is being targeted by current target
+                        !justMitted) //Player has not used a mitigation ability in the last 4-9 seconds
+                    {
+                        // Holmgang
+                        if (ActionReady(Holmgang) && //Holmgang is ready
+                            PlayerHealthPercentageHp() < 30) //Player's health is below 30%
+                            return Holmgang;
+
+                        // Vengeance / Damnation
+                        if (ActionReady(OriginalHook(Vengeance)) && //Vengeance is ready
+                            PlayerHealthPercentageHp() < 60) //Player's health is below 60%
+                            return OriginalHook(Vengeance);
+
+                        // Rampart
+                        if (ActionReady(All.Rampart) && //Rampart is ready
+                            PlayerHealthPercentageHp() < 80) //Player's health is below 80%
+                            return All.Rampart;
+
+                        // Thrill
+                        if (ActionReady(ThrillOfBattle) && //Thrill is ready
+                            PlayerHealthPercentageHp() < 70) //Player's health is below 80%
+                            return ThrillOfBattle;
+
+                        // Equilibrium
+                        if (ActionReady(Equilibrium) && //Equilibrium is ready
+                            PlayerHealthPercentageHp() < 50) //Player's health is below 30%
+                            return Equilibrium;
+
+                        // Bloodwhetting
+                        if (ActionReady(OriginalHook(RawIntuition)) && //Bloodwhetting
+                            PlayerHealthPercentageHp() < 90) //Player's health is below 95%
+                            return OriginalHook(Bloodwhetting);
+                    }
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
@@ -181,7 +222,9 @@ namespace WrathCombo.Combos.PvE
                 return actionID;
             }
         }
+        #endregion
 
+        #region Advanced Mode - Single Target
         internal class WAR_ST_AdvancedMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_ST_Advanced;
@@ -197,6 +240,66 @@ namespace WrathCombo.Combos.PvE
                     var fellCleaveGaugeSpend = PluginConfiguration.GetCustomIntValue(Config.WAR_FellCleaveGauge);
                     var infuriateGauge = PluginConfiguration.GetCustomIntValue(Config.WAR_InfuriateSTGauge);
                     float GCD = GetCooldown(HeavySwing).CooldownTotal;
+                    bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
+                                      JustUsed(OriginalHook(Vengeance), 5f) ||
+                                      JustUsed(ThrillOfBattle, 5f) ||
+                                      JustUsed(All.Rampart, 5f) ||
+                                      JustUsed(Holmgang, 9f);
+
+                    // Mitigation
+                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Mitigation) && //Mitigation option is enabled
+                        InCombat() && //Player is in combat
+                        IsPlayerTargeted() && //Player is being targeted by current target
+                        !justMitted) //Player has not used a mitigation ability in the last 4-9 seconds
+                    {
+                        // Holmgang
+                        if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Holmgang) && //Holmgang option is enabled
+                            ActionReady(Holmgang) && //Holmgang is ready
+                            PlayerHealthPercentageHp() < Config.WAR_ST_Holmgang_Health && //Player's health is below selected threshold
+                            (Config.WAR_ST_Holmgang_SubOption == 1 || //Holmgang is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_ST_Holmgang_SubOption == 2))) //Holmgang is enabled for bosses only
+                            return Holmgang;
+
+                        // Vengeance / Damnation
+                        if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Vengeance) && //Vengeance option is enabled
+                            ActionReady(OriginalHook(Vengeance)) && //Vengeance is ready
+                            PlayerHealthPercentageHp() < Config.WAR_ST_Vengeance_Health && //Player's health is below selected threshold
+                            (Config.WAR_ST_Vengeance_SubOption == 1 || //Vengeance is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_ST_Vengeance_SubOption == 2))) //Vengeance is enabled for bosses only
+                            return OriginalHook(Vengeance);
+
+                        // Rampart
+                        if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Rampart) && //Rampart option is enabled
+                            ActionReady(All.Rampart) && //Rampart is ready
+                            PlayerHealthPercentageHp() < Config.WAR_ST_Rampart_Health && //Player's health is below selected threshold
+                            (Config.WAR_ST_Rampart_SubOption == 1 || //Rampart is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_ST_Rampart_SubOption == 2))) //Rampart is enabled for bosses only
+                            return All.Rampart;
+
+                        // Thrill
+                        if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Thrill) && //Thrill option is enabled
+                            ActionReady(ThrillOfBattle) && //Thrill is ready
+                            PlayerHealthPercentageHp() < Config.WAR_ST_Thrill_Health && //Player's health is below selected threshold
+                            (Config.WAR_ST_Thrill_SubOption == 1 || //Thrill is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_ST_Thrill_SubOption == 2))) //Thrill is enabled for bosses only
+                            return ThrillOfBattle;
+
+                        // Equilibrium
+                        if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Equilibrium) && //Equilibrium option is enabled
+                            ActionReady(Equilibrium) && //Equilibrium is ready
+                            PlayerHealthPercentageHp() < Config.WAR_ST_Equilibrium_Health && //Player's health is below selected threshold
+                            (Config.WAR_ST_Equilibrium_SubOption == 1 || //Equilibrium is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_ST_Equilibrium_SubOption == 2))) //Equilibrium is enabled for bosses only
+                            return Equilibrium;
+
+                        // Bloodwhetting
+                        if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Bloodwhetting) && //Bloodwhetting option is enabled
+                            ActionReady(OriginalHook(RawIntuition)) && //Bloodwhetting is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Bloodwhetting_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Bloodwhetting_SubOption == 1 || //Bloodwhetting is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Bloodwhetting_SubOption == 2))) //Bloodwhetting is enabled for bosses only
+                            return OriginalHook(RawIntuition);
+                    }
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) && 
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
@@ -295,7 +398,9 @@ namespace WrathCombo.Combos.PvE
                 return actionID;
             }
         }
+        #endregion
 
+        #region Simple Mode - AoE
         internal class WAR_AoE_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_AoE_Simple;
@@ -306,6 +411,47 @@ namespace WrathCombo.Combos.PvE
                 {
                     var gauge = GetJobGauge<WARGauge>().BeastGauge;
                     float GCD = GetCooldown(HeavySwing).CooldownTotal;
+                    bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
+                                      JustUsed(OriginalHook(Vengeance), 5f) ||
+                                      JustUsed(ThrillOfBattle, 5f) ||
+                                      JustUsed(All.Rampart, 5f) ||
+                                      JustUsed(Holmgang, 9f);
+
+                    // Mitigation
+                    if (InCombat() && //Player is in combat
+                        IsPlayerTargeted() && //Player is being targeted by current target
+                        !justMitted) //Player has not used a mitigation ability in the last 4-9 seconds
+                    {
+                        // Holmgang
+                        if (ActionReady(Holmgang) && //Holmgang is ready
+                            PlayerHealthPercentageHp() < 30) //Player's health is below 30%
+                            return Holmgang;
+
+                        // Vengeance / Damnation
+                        if (ActionReady(OriginalHook(Vengeance)) && //Vengeance is ready
+                            PlayerHealthPercentageHp() < 60) //Player's health is below 60%
+                            return OriginalHook(Vengeance);
+
+                        // Rampart
+                        if (ActionReady(All.Rampart) && //Rampart is ready
+                            PlayerHealthPercentageHp() < 80) //Player's health is below 80%
+                            return All.Rampart;
+
+                        // Thrill
+                        if (ActionReady(ThrillOfBattle) && //Thrill is ready
+                            PlayerHealthPercentageHp() < 70) //Player's health is below 80%
+                            return ThrillOfBattle;
+
+                        // Equilibrium
+                        if (ActionReady(Equilibrium) && //Equilibrium is ready
+                            PlayerHealthPercentageHp() < 50) //Player's health is below 30%
+                            return Equilibrium;
+
+                        // Bloodwhetting
+                        if (ActionReady(OriginalHook(RawIntuition)) && //Bloodwhetting
+                            PlayerHealthPercentageHp() < 90) //Player's health is below 95%
+                            return OriginalHook(Bloodwhetting);
+                    }
 
                     if (InCombat() && ActionReady(Infuriate) && !HasEffect(Buffs.NascentChaos) && !HasEffect(Buffs.InnerReleaseStacks) && gauge <= 40 && CanWeave(actionID))
                         return Infuriate;
@@ -350,7 +496,9 @@ namespace WrathCombo.Combos.PvE
                 return actionID;
             }
         }
+        #endregion
 
+        #region Advanced Mode - AoE
         internal class WAR_AoE_AdvancedMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_AoE_Advanced;
@@ -363,6 +511,66 @@ namespace WrathCombo.Combos.PvE
                     var decimateGaugeSpend = PluginConfiguration.GetCustomIntValue(Config.WAR_DecimateGauge);
                     var infuriateGauge = PluginConfiguration.GetCustomIntValue(Config.WAR_InfuriateAoEGauge);
                     float GCD = GetCooldown(HeavySwing).CooldownTotal;
+                    bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
+                                      JustUsed(OriginalHook(Vengeance), 5f) ||
+                                      JustUsed(ThrillOfBattle, 5f) ||
+                                      JustUsed(All.Rampart, 5f) ||
+                                      JustUsed(Holmgang, 9f);
+
+                    // Mitigation
+                    if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Mitigation) && //Mitigation option is enabled
+                        InCombat() && //Player is in combat
+                        IsPlayerTargeted() && //Player is being targeted by current target
+                        !justMitted) //Player has not used a mitigation ability in the last 4-9 seconds
+                    {
+                        // Holmgang
+                        if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Holmgang) && //Holmgang option is enabled
+                            ActionReady(Holmgang) && //Holmgang is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Holmgang_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Holmgang_SubOption == 1 || //Holmgang is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Holmgang_SubOption == 2))) //Holmgang is enabled for bosses only
+                            return Holmgang;
+
+                        // Vengeance / Damnation
+                        if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Vengeance) && //Vengeance option is enabled
+                            ActionReady(OriginalHook(Vengeance)) && //Vengeance is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Vengeance_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Vengeance_SubOption == 1 || //Vengeance is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Vengeance_SubOption == 2))) //Vengeance is enabled for bosses only
+                            return OriginalHook(Vengeance);
+
+                        // Rampart
+                        if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Rampart) && //Rampart option is enabled
+                            ActionReady(All.Rampart) && //Rampart is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Rampart_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Rampart_SubOption == 1 || //Rampart is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Rampart_SubOption == 2))) //Rampart is enabled for bosses only
+                            return All.Rampart;
+
+                        // Thrill
+                        if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Thrill) && //Thrill option is enabled
+                            ActionReady(ThrillOfBattle) && //Thrill is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Thrill_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Thrill_SubOption == 1 || //Thrill is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Thrill_SubOption == 2))) //Thrill is enabled for bosses only
+                            return ThrillOfBattle;
+
+                        // Equilibrium
+                        if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Equilibrium) && //Equilibrium option is enabled
+                            ActionReady(Equilibrium) && //Equilibrium is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Equilibrium_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Equilibrium_SubOption == 1 || //Equilibrium is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Equilibrium_SubOption == 2))) //Equilibrium is enabled for bosses only
+                            return Equilibrium;
+
+                        // Bloodwhetting
+                        if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Bloodwhetting) && //Bloodwhetting option is enabled
+                            ActionReady(OriginalHook(RawIntuition)) && //Bloodwhetting is ready
+                            PlayerHealthPercentageHp() < Config.WAR_AoE_Bloodwhetting_Health && //Player's health is below selected threshold
+                            (Config.WAR_AoE_Bloodwhetting_SubOption == 1 || //Bloodwhetting is enabled for all targets
+                            (IsBoss(CurrentTarget!) && Config.WAR_AoE_Bloodwhetting_SubOption == 2))) //Bloodwhetting is enabled for bosses only
+                            return OriginalHook(RawIntuition);
+                    }
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
@@ -419,6 +627,7 @@ namespace WrathCombo.Combos.PvE
                 return actionID;
             }
         }
+        #endregion
 
         internal class War_ST_StormsEye : CustomCombo
         {

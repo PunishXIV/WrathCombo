@@ -1771,26 +1771,37 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Ammo Overcap Option", "Adds Burst Strike into the rotation if you have max cartridges & your last combo action was Brutal Shell.", GNB.JobID)]
         GNB_ST_Overcap = 7018,
 
-        #region Mitigation Options
+        #region Mitigations
         [ParentCombo(GNB_ST_Advanced)]
         [CustomComboInfo("Mitigation Options", "Collection of Mitigation features.", GNB.JobID)]
         GNB_ST_Mitigation = 7019,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Heart of Corundum Option", "Uses Heart of Corundum based on Health Remaining.\n" +
-              "(Note: makes no attempt to ensure mit is optimally used)", GNB.JobID)]
-        GNB_ST_HOC = 7020,
+        [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Corundum = 7020,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Great Nebula Option", "Uses Great Nebula based on Health Remaining.", GNB.JobID)]
-        GNB_ST_GreatNebula = 7021,
+        [CustomComboInfo("Aurora Option", "Adds Aurora to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Aurora = 7024,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Superbolide Option", "Uses Superbolide based on Health Remaining.", GNB.JobID)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Rampart = 7025,
+
+        [ParentCombo(GNB_ST_Mitigation)]
+        [CustomComboInfo("Camouflage Option", "Adds Camouflage to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Camouflage = 7026,
+
+        [ParentCombo(GNB_ST_Mitigation)]
+        [CustomComboInfo("Nebula Option", "Adds Nebula to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Nebula = 7021,
+
+        [ParentCombo(GNB_ST_Mitigation)]
+        [CustomComboInfo("Superbolide Option", "Adds Superbolide to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
         GNB_ST_Superbolide = 7022,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID, 0)]
+        [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID)]
         GNB_AuroraProtection = 7023,
         #endregion
 
@@ -1856,23 +1867,35 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Ammo Overcap Burst Strike Option", "Adds Burst Strike into the AoE rotation if you have max cartridges, your last combo action was Demon Slice, & you do not have Fated Circle unlocked yet.", GNB.JobID)]
         GNB_AoE_BSOvercap = 7211,
 
-        #region Mitigation Options
+        #region Mitigations
         [ParentCombo(GNB_AoE_Advanced)]
         [CustomComboInfo("Mitigation Options", "Collection of Mitigation features.", GNB.JobID)]
         GNB_AoE_Mitigation = 7216,
 
         [ParentCombo(GNB_AoE_Mitigation)]
-        [CustomComboInfo("Heart of Corundum Option", "Uses Heart of Corundum based on Health Remaining.\n" +
-              "(Note: makes no attempt to ensure mit is optimally used)", GNB.JobID)]
-        GNB_AoE_HOC = 7213,
+        [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Corundum = 7213,
 
         [ParentCombo(GNB_AoE_Mitigation)]
-        [CustomComboInfo("Great Nebula Option", "Uses Great Nebula based on Health Remaining.", GNB.JobID)]
-        GNB_AoE_GreatNebula = 7214,
+        [CustomComboInfo("Aurora Option", "Adds Aurora to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Aurora = 7217,
 
         [ParentCombo(GNB_AoE_Mitigation)]
-        [CustomComboInfo("Superbolide Option", "Uses Superbolide based on Health Remaining.", GNB.JobID)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Rampart = 7218,
+
+        [ParentCombo(GNB_AoE_Mitigation)]
+        [CustomComboInfo("Camouflage Option", "Adds Camouflage to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Camouflage = 7219,
+
+        [ParentCombo(GNB_AoE_Mitigation)]
+        [CustomComboInfo("Nebula Option", "Adds Nebula to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Nebula = 7214,
+
+        [ParentCombo(GNB_AoE_Mitigation)]
+        [CustomComboInfo("Superbolide Option", "Adds Superbolide to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
         GNB_AoE_Superbolide = 7215,
+
         #endregion
 
         #endregion
@@ -4943,6 +4966,37 @@ namespace WrathCombo.Combos
         [ParentCombo(WAR_ST_Advanced_Onslaught)]
         [CustomComboInfo("Melee Onslaught Option", "Uses Onslaught when under Surging Tempest & in the target ring (1 yalm) & when not moving.\nWill use as many stacks as selected in the above slider.", WAR.JobID)]
         WAR_ST_Advanced_Onslaught_MeleeSpender = 18015,
+
+        #region Mitigations
+        [ParentCombo(WAR_ST_Advanced)]
+        [CustomComboInfo("Mitigation Options", "Adds defensive actions to Advanced Mode based on Health percentage remaining.", WAR.JobID, 13)]
+        WAR_ST_Advanced_Mitigation = 18040,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Bloodwhetting Option", "Adds Raw Intuition / Bloodwhetting to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_ST_Advanced_Bloodwhetting = 18031,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Equilibrium Option", "Adds Equilibrium to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_ST_Advanced_Equilibrium = 18043,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", WAR.JobID, 1)]
+        WAR_ST_Advanced_Rampart = 18032,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Thrill of Battle Option", "Adds Thrill of Battle to Advanced Mode based on Health percentage remaining.", WAR.JobID, 1)]
+        WAR_ST_Advanced_Thrill = 18042,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Vengeance Option", "Adds Vengeance / Damnation to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_ST_Advanced_Vengeance = 18033,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Holmgang Option", "Adds Holmgang to Advanced Mode based on Health percentage remaining.", WAR.JobID, 3)]
+        WAR_ST_Advanced_Holmgang = 18034,
+        #endregion
+
         #endregion
 
         #region Advanced AoE
@@ -4979,6 +5033,37 @@ namespace WrathCombo.Combos
         [ParentCombo(WAR_AoE_Advanced)]
         [CustomComboInfo("Steel Cyclone / Decimate Option", "Adds Steel Cyclone / Decimate to Advanced Mode.", WAR.JobID)]
         WAR_AoE_Advanced_Decimate = 18023,
+
+        #region Mitigations
+        [ParentCombo(WAR_AoE_Advanced)]
+        [CustomComboInfo("Mitigation Options", "Adds defensive actions to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Mitigation = 18035,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Bloodwhetting Option", "Adds Raw Intuition / Bloodwhetting to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Bloodwhetting = 18036,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Equilibrium Option", "Adds Equilibrium to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Equilibrium = 18044,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Rampart = 18037,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Thrill of Battle Option", "Adds Thrill of Battle to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Thrill = 18041,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Vengeance Option", "Adds Vengeance / Damnation to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Vengeance = 18038,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Holmgang Option", "Adds Holmgang to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Holmgang = 18039,
+        #endregion
+
         #endregion
 
         #region  Misc
@@ -5014,7 +5099,7 @@ namespace WrathCombo.Combos
         WAR_Variant_Ultimatum = 18030,
         #endregion
 
-        // Last value = 18030
+        // Last value = 18042
 
         #endregion
 
