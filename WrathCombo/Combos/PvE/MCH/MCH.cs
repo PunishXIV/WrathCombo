@@ -690,23 +690,19 @@ internal partial class MCH
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_Overdrive;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is RookAutoturret or AutomatonQueen && Gauge.IsRobotActive
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is RookAutoturret or AutomatonQueen && Gauge.IsRobotActive
                 ? OriginalHook(QueenOverdrive)
                 : actionID;
-        }
     }
 
     internal class MCH_HotShotDrillChainsawExcavator : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } =
-            CustomComboPreset.MCH_HotShotDrillChainsawExcavator;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_HotShotDrillChainsawExcavator;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            if (actionID is Drill or HotShot or AirAnchor or Chainsaw)
-                return LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady)
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is Drill or HotShot or AirAnchor or Chainsaw
+                ? LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady)
                     ? CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill)
                     : LevelChecked(Chainsaw)
                         ? CalcBestAction(actionID, Chainsaw, AirAnchor, Drill)
@@ -714,37 +710,31 @@ internal partial class MCH
                             ? CalcBestAction(actionID, AirAnchor, Drill)
                             : LevelChecked(Drill)
                                 ? CalcBestAction(actionID, Drill, HotShot)
-                                : HotShot;
-
-            return actionID;
-        }
+                                : HotShot
+                : actionID;
     }
 
     internal class MCH_DismantleTactician : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_DismantleTactician;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is Dismantle
-                   && (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle))
-                   && ActionReady(Tactician)
-                   && !HasEffect(Buffs.Tactician)
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is Dismantle
+            && (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle))
+            && ActionReady(Tactician)
+            && !HasEffect(Buffs.Tactician)
                 ? Tactician
                 : actionID;
-        }
     }
 
     internal class All_PRanged_Dismantle : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.All_PRanged_Dismantle;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is Dismantle && TargetHasEffectAny(Debuffs.Dismantled) && IsOffCooldown(Dismantle)
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is Dismantle && TargetHasEffectAny(Debuffs.Dismantled) && IsOffCooldown(Dismantle)
                 ? OriginalHook(11)
                 : actionID;
-        }
     }
 
     #region ID's
@@ -802,7 +792,7 @@ internal partial class MCH
     public static class Debuffs
     {
         public const ushort
-            Dismantled = 2887,
+            Dismantled = 860,
             Bioblaster = 1866;
     }
 
