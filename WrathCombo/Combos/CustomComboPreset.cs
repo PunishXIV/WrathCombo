@@ -5902,13 +5902,13 @@ namespace WrathCombo.Combos
 
         [PvPCustomCombo]
         [ParentCombo(RPRPvP_Burst)]
-        [CustomComboInfo("Death Warrant Option", "Adds Death Warrant onto the main combo when Plentiful Harvest is ready to use, or when Plentiful Harvest's cooldown is longer than Death Warrant's.\nRespects Immortal Sacrifice Pooling Option.", RPR.JobID)]
-        RPRPvP_Burst_DeathWarrant = 122001,
+        [CustomComboInfo("Grim Swathe Option", "Add's Grim Swathe onto the main combo on cd", RPR.JobID)]
+        RPRPvP_Burst_GrimSwathe = 122009,
 
         [PvPCustomCombo]
         [ParentCombo(RPRPvP_Burst)]
-        [CustomComboInfo("Plentiful Harvest Opener Option", "Starts combat with Plentiful Harvest to immediately begin Limit Break generation.", RPR.JobID)]
-        RPRPvP_Burst_PlentifulOpener = 122002,
+        [CustomComboInfo("Death Warrant Option", "Adds Death Warrant onto the main combo when Plentiful Harvest is ready to use, or when Plentiful Harvest's cooldown is longer than Death Warrant's.\nRespects Immortal Sacrifice Pooling Option.", RPR.JobID)]
+        RPRPvP_Burst_DeathWarrant = 122001,
 
         [PvPCustomCombo]
         [ParentCombo(RPRPvP_Burst)]
@@ -5942,7 +5942,7 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Arcane Crest Option", "Adds Arcane Crest to the main combo when under the set HP perecentage.", RPR.JobID)]
         RPRPvP_Burst_ArcaneCircle = 122008,
 
-        // Last value = 122008
+        // Last value = 122009
 
         #endregion
 
