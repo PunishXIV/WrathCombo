@@ -81,13 +81,13 @@ internal partial class DRG
 
                 case CustomComboPreset.DRGPvP_ChaoticSpringSustain:
                     DrawSliderInt(0, 101, DRGPvP.Config.DRGPvP_CS_HP_Threshold,
-                        "Chaos Spring HP percentage threshold");
+                        "Chaotic Spring HP percentage threshold. Set to 100 to use on cd");
 
                     break;
 
                 case CustomComboPreset.DRGPvP_WyrmwindThrust:
                     DrawSliderInt(0, 20, DRGPvP.Config.DRGPvP_Distance_Threshold,
-                        "Distance Treshold for Wyrmwind Thrust");
+                        "Minimum Distance to use Wyrmwind Thrust. Maximum damage at 15 or more");
 
                     break;
             }
