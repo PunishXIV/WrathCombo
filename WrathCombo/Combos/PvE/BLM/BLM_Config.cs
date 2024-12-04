@@ -8,18 +8,20 @@ internal partial class BLM
     internal static class Config
     {
         public static UserInt
-                   BLM_VariantCure = new("BLM_VariantCure"),
-                   BLM_VariantRampart = new("BLM_VariantRampart"),
-                   BLM_ST_Triplecast_HoldCharges = new("BLM_ST_Triplecast_HoldCharges", 0),
-                   BLM_ST_UsePolyglot_HoldCharges = new("BLM_ST_UsePolyglot_HoldCharges", 1),
-                   BLM_ST_UsePolyglotMoving_HoldCharges = new("BLM_ST_UsePolyglotMoving_HoldCharges", 0),
-                   BLM_ST_ThunderHP = new("BHP", 0),
-                   BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
-                   BLM_AoE_UsePolyglot_HoldCharges = new("BLM_AoE_UsePolyglot_HoldCharges", 1),
-                   BLM_AoE_UsePolyglotMoving_HoldCharges = new("BLM_AoE_UsePolyglotMoving_HoldCharges", 0),
-                   BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5),
-                   BLMPvP_BurstMode_WreathOfIce = new("BLMPvP_BurstMode_WreathOfIce", 0),
-                   BLMPvP_BurstMode_WreathOfFireExecute = new("BLMPvP_BurstMode_WreathOfFireExecute", 0);
+            BLM_VariantCure = new("BLM_VariantCure"),
+            BLM_VariantRampart = new("BLM_VariantRampart"),
+            BLM_ST_Triplecast_HoldCharges = new("BLM_ST_Triplecast_HoldCharges", 0),
+            BLM_ST_UsePolyglot_HoldCharges = new("BLM_ST_UsePolyglot_HoldCharges", 1),
+            BLM_ST_UsePolyglotMoving_HoldCharges = new("BLM_ST_UsePolyglotMoving_HoldCharges", 0),
+            BLM_ST_ThunderHP = new("BHP", 0),
+            BLM_ST_LeyLinesCharges = new("BLM_ST_LeyLinesCharges", 1),
+            BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
+            BLM_AoE_UsePolyglot_HoldCharges = new("BLM_AoE_UsePolyglot_HoldCharges", 1),
+            BLM_AoE_UsePolyglotMoving_HoldCharges = new("BLM_AoE_UsePolyglotMoving_HoldCharges", 0),
+            BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 1),
+            BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5),
+            BLMPvP_BurstMode_WreathOfIce = new("BLMPvP_BurstMode_WreathOfIce", 0),
+            BLMPvP_BurstMode_WreathOfFireExecute = new("BLMPvP_BurstMode_WreathOfFireExecute", 0);
 
         public static UserFloat
             BLM_ST_Triplecast_ChargeTime = new("BLM_ST_Triplecast_ChargeTime", 20),
@@ -59,6 +61,12 @@ internal partial class BLM
 
                     break;
 
+                case CustomComboPreset.BLM_ST_LeyLines:
+                    DrawSliderInt(0, 1, BLM_ST_LeyLinesCharges,
+                        "How many charges to keep ready? (0 = Use all)");
+
+                    break;
+
                 case CustomComboPreset.BLM_ST_Thunder:
                     DrawSliderInt(0, 10, BLM_ST_ThunderHP,
                         "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
@@ -82,6 +90,12 @@ internal partial class BLM
 
                 case CustomComboPreset.BLM_AoE_UsePolyglotMoving:
                     DrawSliderInt(0, 2, BLM_AoE_UsePolyglotMoving_HoldCharges,
+                        "How many charges to keep ready? (0 = Use all)");
+
+                    break;
+
+                case CustomComboPreset.BLM_AoE_LeyLines:
+                    DrawSliderInt(0, 1, BLM_AoE_LeyLinesCharges,
                         "How many charges to keep ready? (0 = Use all)");
 
                     break;

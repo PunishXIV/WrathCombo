@@ -1,6 +1,10 @@
+#region
+
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -110,7 +114,7 @@ internal partial class MNK
 
                 #region Open Lunar
 
-                if (solarNadi || lunarNadi || bothNadisOpen)
+                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
                     return Gauge.OpoOpoFury == 0
                         ? DragonKick
                         : OriginalHook(Bootshine);
@@ -193,7 +197,8 @@ internal partial class MNK
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
-                        ActionReady(RiddleOfWind))
+                        ActionReady(RiddleOfWind) &&
+                        GetTargetHPPercent() >= Config.MNK_ST_RiddleOfWind_HP)
                         return RiddleOfWind;
                 }
 
@@ -258,7 +263,7 @@ internal partial class MNK
 
                 #region Open Lunar
 
-                if (solarNadi || lunarNadi || bothNadisOpen)
+                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
                     return Gauge.OpoOpoFury == 0
                         ? DragonKick
                         : OriginalHook(Bootshine);
@@ -390,7 +395,7 @@ internal partial class MNK
 
                 #region Open Lunar
 
-                if (solarNadi || lunarNadi || bothNadisOpen)
+                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
                     return LevelChecked(ShadowOfTheDestroyer)
                         ? ShadowOfTheDestroyer
                         : Rockbreaker;
@@ -462,7 +467,8 @@ internal partial class MNK
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
-                        ActionReady(RiddleOfWind))
+                        ActionReady(RiddleOfWind) &&
+                        GetTargetHPPercent() >= Config.MNK_AoE_RiddleOfWind_HP)
                         return RiddleOfWind;
                 }
 
@@ -541,7 +547,7 @@ internal partial class MNK
 
                 #region Open Lunar
 
-                if (solarNadi || lunarNadi || bothNadisOpen)
+                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
                     return LevelChecked(ShadowOfTheDestroyer)
                         ? ShadowOfTheDestroyer
                         : Rockbreaker;
@@ -573,26 +579,54 @@ internal partial class MNK
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_PerfectBalance;
 
-        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
-        {
-            return actionID is PerfectBalance && OriginalHook(MasterfulBlitz) != MasterfulBlitz &&
-                   LevelChecked(MasterfulBlitz)
+        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level) =>
+            actionID is PerfectBalance && OriginalHook(MasterfulBlitz) != MasterfulBlitz &&
+            LevelChecked(MasterfulBlitz)
                 ? OriginalHook(MasterfulBlitz)
                 : actionID;
-        }
     }
 
     internal class MNK_Riddle_Brotherhood : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_Riddle_Brotherhood;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is RiddleOfFire && ActionReady(Brotherhood) && IsOnCooldown(RiddleOfFire)
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is RiddleOfFire && ActionReady(Brotherhood) && IsOnCooldown(RiddleOfFire)
                 ? Brotherhood
                 : actionID;
+    }
+
+    #region Beast Chakras
+
+    internal class MNK_BeastChakras : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;
+
+        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
+        {
+            if (IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
+                actionID is Bootshine or LeapingOpo)
+                return Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
+                    ? DragonKick
+                    : OriginalHook(Bootshine);
+
+            if (IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
+                actionID is TrueStrike or RisingRaptor)
+                return Gauge.RaptorFury == 0 && LevelChecked(TwinSnakes)
+                    ? TwinSnakes
+                    : OriginalHook(TrueStrike);
+
+            if (IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
+                actionID is SnapPunch or PouncingCoeurl)
+                return Gauge.CoeurlFury == 0 && LevelChecked(Demolish)
+                    ? Demolish
+                    : OriginalHook(SnapPunch);
+
+            return actionID;
         }
     }
+
+    #endregion
 
     #region ID's
 
@@ -652,38 +686,6 @@ internal partial class MNK
             WindsRumination = 3842,
             FiresRumination = 3843,
             Brotherhood = 1185;
-    }
-
-    #endregion
-
-    #region Beast Chakras
-
-    internal class MNK_BeastChakras : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;
-
-        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
-        {
-            if (IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
-                actionID is Bootshine or LeapingOpo)
-                return Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
-                    ? DragonKick
-                    : OriginalHook(Bootshine);
-
-            if (IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
-                actionID is TrueStrike or RisingRaptor)
-                return Gauge.RaptorFury == 0 && LevelChecked(TwinSnakes)
-                    ? TwinSnakes
-                    : OriginalHook(TrueStrike);
-
-            if (IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
-                actionID is SnapPunch or PouncingCoeurl)
-                return Gauge.CoeurlFury == 0 && LevelChecked(Demolish)
-                    ? Demolish
-                    : OriginalHook(SnapPunch);
-
-            return actionID;
-        }
     }
 
     #endregion

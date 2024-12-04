@@ -371,7 +371,7 @@ internal partial class MCH
         internal static bool Reassembled(MCHGauge gauge)
         {
             if (!JustUsed(OriginalHook(Heatblast)) &&
-                !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble))
+                !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) && !JustUsed(OriginalHook(Heatblast)))
             {
                 if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                      (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled[0])) &&
@@ -428,8 +428,7 @@ internal partial class MCH
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  (IsEnabled(CustomComboPreset.MCH_ST_Adv_Chainsaw) && reassembledChainsawST)) &&
-                LevelChecked(Chainsaw) &&
-                !battery &&
+                LevelChecked(Chainsaw) && !battery &&
                 (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
                  ActionReady(Chainsaw)))
             {
@@ -440,13 +439,11 @@ internal partial class MCH
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  (IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) && reassembledAnchorST)) &&
-                LevelChecked(OriginalHook(AirAnchor)) &&
-                !battery &&
-                (GetCooldownRemainingTime(OriginalHook(AirAnchor)) <=
-                    GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 || ActionReady(OriginalHook(AirAnchor))))
-
+                LevelChecked(AirAnchor) && !battery &&
+                (GetCooldownRemainingTime(AirAnchor) <=
+                    GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 || ActionReady(AirAnchor)))
             {
-                actionID = OriginalHook(AirAnchor);
+                actionID = AirAnchor;
 
                 return true;
             }
@@ -459,6 +456,17 @@ internal partial class MCH
                  ActionReady(Drill)) && GetCooldownRemainingTime(Wildfire) is >= 20 or <= 10)
             {
                 actionID = Drill;
+
+                return true;
+            }
+
+            if (IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
+                (IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) &&
+                 LevelChecked(HotShot) && !LevelChecked(AirAnchor) && !battery &&
+                 (GetCooldownRemainingTime(HotShot) <=
+                     GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 || ActionReady(HotShot))))
+            {
+                actionID = HotShot;
 
                 return true;
             }
