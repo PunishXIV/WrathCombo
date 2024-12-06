@@ -10,6 +10,10 @@ namespace WrathCombo.Combos.PvE
 {
     internal partial class RDM
     {
+        /// <summary>
+        /// Wrapper for the Red Mage Mana Gauge. As of 7.1 this is what needs to be read instead of RDMGauge
+        /// 
+        /// </summary>
         private class RDMMana
         {
             private static RDMGauge Gauge => GetJobGauge<RDMGauge>();
@@ -156,15 +160,26 @@ namespace WrathCombo.Combos.PvE
                 && lastComboMove != Scorch; // Change abilities to Lucid Dreaming for entire weave window
         }
 
+
         private class MeleeCombo
         {
+            /// <summary>
+            /// Basically the "Burst" Mechanic of the Melee Combo section
+            /// </summary>
+            /// <param name="actionID">Current actionID to be replaced (GCD)</param>
+            /// <param name="lastComboMove"></param>
+            /// <param name="level">Player's Level</param>
+            /// <param name="newActionID">Updated actionID if function returns true</param>
+            /// <param name="GapCloser">If outside melee range, check if we're able to close the gap with Corp-A-Corps</param>
+            /// <param name="DoubleCombo">Hold for a Double Melee Combo Burst</param>
+            /// <param name="UnBalanceMana">Use acceleration if possible to unbalance mana for the melee finishers</param>
+            /// <returns>Bool representing conditions were met, use <paramref name="newActionID"/> as the action to use</returns>
             internal static bool TrySTManaEmbolden(uint actionID, uint lastComboMove, byte level, out uint newActionID,
                 //Simple Mode Values
-                bool ManaEmbolden = true, bool GapCloser = true, bool DoubleCombo = true, bool UnBalanceMana = true )
+                bool GapCloser = false, bool DoubleCombo = true, bool UnBalanceMana = true )
             {
                 //RDM_ST_MANAFICATIONEMBOLDEN
-                if (ManaEmbolden
-                    && LevelChecked(Embolden)
+                if (LevelChecked(Embolden)
                     && HasCondition(ConditionFlag.InCombat)
                     && !HasEffect(Buffs.Dualcast)
                     && !HasEffect(All.Buffs.Swiftcast)
@@ -285,7 +300,7 @@ namespace WrathCombo.Combos.PvE
 
             internal static bool TrySTMeleeCombo(uint actionID, uint lastComboMove, float comboTime, out uint newActionID,
                 //Simple Mode Values
-                bool MeleeEnforced = true, bool GapCloser = false, bool UnbalanceMana = true)
+                bool MeleeEnforced = true, bool GapCloser = false, bool UnbalanceMana = true, bool ManualTrigger = false)
             {
                 //Normal Combo
                 if (GetTargetDistance() <= 3 || MeleeEnforced)
@@ -351,7 +366,7 @@ namespace WrathCombo.Combos.PvE
                         }
 
                     }
-                    if (GetTargetDistance() <= 3)
+                    if (GetTargetDistance() <= 3 && !ManualTrigger)
                     {
                         newActionID = OriginalHook(Riposte);
                         return true;

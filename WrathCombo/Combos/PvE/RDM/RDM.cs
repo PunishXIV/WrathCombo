@@ -226,18 +226,19 @@ namespace WrathCombo.Combos.PvE
 
                     if (ActionFound)
                     {
-                        if (MeleeCombo.TrySTManaEmbolden(
-                            actionID, lastComboMove, level, out uint ManaEmboldenID,
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                        if (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden) && 
+                            MeleeCombo.TrySTManaEmbolden(
+                                actionID, lastComboMove, level, out uint ManaEmboldenID,
+                                IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                                IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
+                                IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana))) 
                             return ManaEmboldenID;
 
                         if (MeleeCombo.TrySTMeleeCombo(actionID, lastComboMove, comboTime, out uint MeleeID,
                             Config.RDM_ST_MeleeEnforced,
                             IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
-                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                            IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana),
+                            IsEnabled(CustomComboPreset.RDM_ST_Adv_MeleeFill)))
                             return MeleeID;
                     }
                 }
