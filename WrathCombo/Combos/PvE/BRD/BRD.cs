@@ -1,10 +1,12 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE
@@ -150,9 +152,9 @@ namespace WrathCombo.Combos.PvE
                     // At least Lv56 (Iron Jaws) from here on...
 
                     // DoT application takes priority, as Iron Jaws always cuts ticks
-                    if (blue is null)
+                    if (blue is null && LevelChecked(Windbite))
                         return OriginalHook(Windbite);
-                    if (purple is null)
+                    if (purple is null && LevelChecked(VenomousBite))
                         return OriginalHook(VenomousBite);
 
                     // DoT refresh over Apex Option
@@ -370,6 +372,7 @@ namespace WrathCombo.Combos.PvE
                     bool songArmy = gauge.Song == Song.ARMY;
                     int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_AoENoWasteHPPercentage);
                     bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_AoE_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
+                    bool hasTarget = HasBattleTarget();
 
                     #region Variants
 
@@ -385,15 +388,15 @@ namespace WrathCombo.Combos.PvE
                     #endregion
                                         
                     #region Songs
-                    if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs) && canWeave)
+                    if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs))
                     {
 
                         // Limit optimisation to when you are high enough level to benefit from it.
                         if (LevelChecked(WanderersMinuet))
                         {
-                            if (canWeave)
+                            if (canWeave || !hasTarget)
                             {
-                                if (songNone)
+                                if (songNone && InCombat())
                                 {
                                     // Logic to determine first song
                                     if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
@@ -406,7 +409,7 @@ namespace WrathCombo.Combos.PvE
 
                                 if (songWanderer)
                                 {
-                                    if (songTimerInSeconds <= 3 && gauge.Repertoire > 0) // Spend any repertoire before switching to next song
+                                    if (songTimerInSeconds <= 3 && gauge.Repertoire > 0 && hasTarget) // Spend any repertoire before switching to next song
                                         return OriginalHook(PitchPerfect);
                                     if (songTimerInSeconds <= 3 && ActionReady(MagesBallad))          // Move to Mage's Ballad if <= 3 seconds left on song
                                         return MagesBallad;
@@ -419,14 +422,14 @@ namespace WrathCombo.Combos.PvE
                                     if (songTimerInSeconds <= 3 && ActionReady(ArmysPaeon))
                                     {
                                         // Special case for Empyreal Arrow: it must be cast before you change to it to avoid drift!
-                                        if (ActionReady(EmpyrealArrow))
+                                        if (ActionReady(EmpyrealArrow) && hasTarget)
                                             return EmpyrealArrow;
                                         return ArmysPaeon;
                                     }
                                 }
                             }
 
-                            if (songArmy && canWeaveDelayed)
+                            if (songArmy && (canWeaveDelayed || !hasTarget))
                             {
                                 // Move to Wanderer's Minuet if <= 12 seconds left on song or WM off CD and have 4 repertoires of AP
                                 if (songTimerInSeconds <= 12 || (ActionReady(WanderersMinuet) && gauge.Repertoire == 4))
@@ -533,6 +536,8 @@ namespace WrathCombo.Combos.PvE
                             else if (rainOfDeathCharges > 0) //Dont pool when not enabled
                                 return OriginalHook(RainOfDeath);
                         }
+                        if (!LevelChecked(RainOfDeath) && !(WasLastAction(Bloodletter) && GetRemainingCharges(Bloodletter) > 0))
+                            return OriginalHook(Bloodletter);
                     }
 
                     #endregion
@@ -624,6 +629,9 @@ namespace WrathCombo.Combos.PvE
                     int songTimerInSeconds = gauge.SongTimer / 1000;
                     int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_NoWasteHPPercentage);
                     bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
+                    bool hasTarget = HasBattleTarget();
+
+
 
                     if (!InCombat() && (inOpener || openerFinished))
                     {
@@ -654,9 +662,9 @@ namespace WrathCombo.Combos.PvE
                             if (ActionReady(EmpyrealArrow) && JustUsed(WanderersMinuet)) // Used to ensure Empyreal arrow goes off as soon as possible in opener
                                 return EmpyrealArrow;
 
-                            if (canWeave)
+                            if (canWeave || !hasTarget)
                             {
-                                if (songNone)
+                                if (songNone && InCombat())
                                 {
                                     // Logic to determine first song
                                     if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
@@ -669,7 +677,7 @@ namespace WrathCombo.Combos.PvE
 
                                 if (songWanderer)
                                 {
-                                    if (songTimerInSeconds <= 3 && gauge.Repertoire > 0) // Spend any repertoire before switching to next song
+                                    if (songTimerInSeconds <= 3 && gauge.Repertoire > 0 && hasTarget) // Spend any repertoire before switching to next song
                                         return OriginalHook(PitchPerfect);
                                     if (songTimerInSeconds <= 3 && ActionReady(MagesBallad)) // Move to Mage's Ballad if <= 3 seconds left on song
                                         return MagesBallad;
@@ -682,14 +690,14 @@ namespace WrathCombo.Combos.PvE
                                     if (songTimerInSeconds <= 3 && ActionReady(ArmysPaeon))
                                     {
                                         // Special case for Empyreal Arrow: it must be cast before you change to it to avoid drift!
-                                        if (ActionReady(EmpyrealArrow))
+                                        if (ActionReady(EmpyrealArrow) && hasTarget)
                                             return EmpyrealArrow;
                                         return ArmysPaeon;
                                     }
                                 }
                             }
 
-                            if (songArmy && canWeaveDelayed)
+                            if (songArmy && (canWeaveDelayed || !hasTarget))
                             {
                                 // Move to Wanderer's Minuet if <= 12 seconds left on song or WM off CD and have 4 repertoires of AP
                                 if (songTimerInSeconds <= 12 || (ActionReady(WanderersMinuet) && gauge.Repertoire == 4))
@@ -847,9 +855,9 @@ namespace WrathCombo.Combos.PvE
                                 return canIronJaws ? IronJaws : VenomousBite;
                             if (blue is not null && blueRemaining < 4)
                                 return canIronJaws ? IronJaws : Windbite;
-                            if (blue is null)
+                            if (blue is null && LevelChecked(Windbite))
                                 return OriginalHook(Windbite);
-                            if (purple is null)
+                            if (purple is null && LevelChecked(VenomousBite))
                                 return OriginalHook(VenomousBite);
 
                         }
@@ -921,6 +929,7 @@ namespace WrathCombo.Combos.PvE
                     bool songArmy = gauge.Song == Song.ARMY;                    
                     int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_AoENoWasteHPPercentage);
                     bool isEnemyHealthHigh = GetTargetHPPercent() > 5;
+                    bool hasTarget = HasBattleTarget();
 
                     #region Variants
 
@@ -936,61 +945,61 @@ namespace WrathCombo.Combos.PvE
 
                     #region Songs
 
-                    if (canWeave)
+                   
+                    
+                    // Limit optimisation to when you are high enough level to benefit from it.
+                    if (LevelChecked(WanderersMinuet))
                     {
-                        // Limit optimisation to when you are high enough level to benefit from it.
-                        if (LevelChecked(WanderersMinuet))
+                        if (canWeave || !hasTarget)
                         {
-                            if (canWeave)
+                            if (songNone && InCombat())
                             {
-                                if (songNone)
-                                {
-                                    // Logic to determine first song
-                                    if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
-                                        return WanderersMinuet;
-                                    if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
-                                        return MagesBallad;
-                                    if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
-                                        return ArmysPaeon;
-                                }
-
-                                if (songWanderer)
-                                {
-                                    if (songTimerInSeconds <= 3 && gauge.Repertoire > 0) // Spend any repertoire before switching to next song
-                                        return OriginalHook(PitchPerfect);
-                                    if (songTimerInSeconds <= 3 && ActionReady(MagesBallad))          // Move to Mage's Ballad if <= 3 seconds left on song
-                                        return MagesBallad;
-                                }
-
-                                if (songMage)
-                                {
-
-                                    // Move to Army's Paeon if < 3 seconds left on song
-                                    if (songTimerInSeconds <= 3 && ActionReady(ArmysPaeon))
-                                    {
-                                        // Special case for Empyreal Arrow: it must be cast before you change to it to avoid drift!
-                                        if (ActionReady(EmpyrealArrow))
-                                            return EmpyrealArrow;
-                                        return ArmysPaeon;
-                                    }
-                                }
+                                // Logic to determine first song
+                                if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
+                                    return WanderersMinuet;
+                                if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
+                                    return MagesBallad;
+                                if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
+                                    return ArmysPaeon;
                             }
 
-                            if (songArmy && canWeaveDelayed && ActionReady(WanderersMinuet))
+                            if (songWanderer)
                             {
-                                // Move to Wanderer's Minuet if <= 12 seconds left on song or WM off CD and have 4 repertoires of AP
-                                if (songTimerInSeconds <= 12 || gauge.Repertoire == 4)
-                                    return WanderersMinuet;
+                                if (songTimerInSeconds <= 3 && gauge.Repertoire > 0 && hasTarget) // Spend any repertoire before switching to next song
+                                    return OriginalHook(PitchPerfect);
+                                if (songTimerInSeconds <= 3 && ActionReady(MagesBallad))          // Move to Mage's Ballad if <= 3 seconds left on song
+                                    return MagesBallad;
+                            }
+
+                            if (songMage)
+                            {
+
+                                // Move to Army's Paeon if < 3 seconds left on song
+                                if (songTimerInSeconds <= 3 && ActionReady(ArmysPaeon))
+                                {
+                                    // Special case for Empyreal Arrow: it must be cast before you change to it to avoid drift!
+                                    if (ActionReady(EmpyrealArrow) && hasTarget)
+                                        return EmpyrealArrow;
+                                    return ArmysPaeon;
+                                }
                             }
                         }
-                        else if (songTimerInSeconds <= 3 && canWeaveDelayed) // Not high enough for wanderers Minuet yet
+
+                        if (songArmy && (canWeaveDelayed || !hasTarget))
                         {
-                            if (ActionReady(MagesBallad))
-                                return MagesBallad;
-                            if (ActionReady(ArmysPaeon))
-                                return ArmysPaeon;
+                            // Move to Wanderer's Minuet if <= 12 seconds left on song or WM off CD and have 4 repertoires of AP
+                            if ((songTimerInSeconds <= 12 || gauge.Repertoire == 4) && ActionReady(WanderersMinuet))
+                                return WanderersMinuet;
                         }
                     }
+                    else if (songTimerInSeconds <= 3 && canWeaveDelayed) // Not high enough for wanderers Minuet yet
+                    {
+                        if (ActionReady(MagesBallad))
+                            return MagesBallad;
+                        if (ActionReady(ArmysPaeon))
+                            return ArmysPaeon;
+                    }
+                    
                     #endregion
 
                     #region Buffs
@@ -1084,6 +1093,9 @@ namespace WrathCombo.Combos.PvE
                                 return OriginalHook(RainOfDeath);
                         }
 
+                        if (!LevelChecked(RainOfDeath) && !(WasLastAction(Bloodletter) && GetRemainingCharges(Bloodletter) > 0))
+                            return OriginalHook(Bloodletter);
+
                         // Self care section for healing and debuff removal
 
                         if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.SecondWind))
@@ -1142,6 +1154,7 @@ namespace WrathCombo.Combos.PvE
                     bool songArmy = gauge.Song == Song.ARMY;
                     bool isEnemyHealthHigh = GetTargetHPPercent() > 1;
                     int songTimerInSeconds = gauge.SongTimer / 1000;
+                    bool hasTarget = HasBattleTarget();
 
                     if (!InCombat() && (inOpener || openerFinished))
                     {
@@ -1160,66 +1173,64 @@ namespace WrathCombo.Combos.PvE
 
                     #region Songs
 
-                    if (isEnemyHealthHigh)
+                    // Limit optimisation to when you are high enough level to benefit from it.
+                    if (LevelChecked(WanderersMinuet))
                     {
-                        // Limit optimisation to when you are high enough level to benefit from it.
-                        if (LevelChecked(WanderersMinuet))
-                        {
-                            // 43s of Wanderer's Minute, ~36s of Mage's Ballad, and ~43s of Army's Paeon    
+                        // 43s of Wanderer's Minute, ~36s of Mage's Ballad, and ~43s of Army's Paeon    
                             
-                            if (ActionReady(EmpyrealArrow) && JustUsed(WanderersMinuet))
-                                return EmpyrealArrow;
+                        if (ActionReady(EmpyrealArrow) && JustUsed(WanderersMinuet))
+                            return EmpyrealArrow;
 
-                            if (canWeave)
+                        if (canWeave || !hasTarget)
+                        {
+                            if (songNone && InCombat())
                             {
-                                if (songNone)
-                                {
-                                    // Logic to determine first song
-                                    if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
-                                        return WanderersMinuet;
-                                    if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
-                                        return MagesBallad;
-                                    if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
-                                        return ArmysPaeon;
-                                }
-
-                                if (songWanderer)
-                                {
-                                    if (songTimerInSeconds <= 3 && gauge.Repertoire > 0) // Spend any repertoire before switching to next song
-                                        return OriginalHook(PitchPerfect);
-                                    if (songTimerInSeconds <= 3 && ActionReady(MagesBallad))          // Move to Mage's Ballad if <= 3 seconds left on song
-                                        return MagesBallad;
-                                }
-
-                                if (songMage)
-                                {
-
-                                    // Move to Army's Paeon if <= 3 seconds left on song
-                                    if (songTimerInSeconds <= 3 && ActionReady(ArmysPaeon))
-                                    {
-                                        // Special case for Empyreal Arrow: it must be cast before you change to it to avoid drift!
-                                        if (ActionReady(EmpyrealArrow))
-                                            return EmpyrealArrow;
-                                        return ArmysPaeon;
-                                    }
-                                }
+                                // Logic to determine first song
+                                if (ActionReady(WanderersMinuet) && !(JustUsed(MagesBallad) || JustUsed(ArmysPaeon)))
+                                    return WanderersMinuet;
+                                if (ActionReady(MagesBallad) && !(JustUsed(WanderersMinuet) || JustUsed(ArmysPaeon)))
+                                    return MagesBallad;
+                                if (ActionReady(ArmysPaeon) && !(JustUsed(MagesBallad) || JustUsed(WanderersMinuet)))
+                                    return ArmysPaeon;
                             }
 
-                            if (songArmy && canWeaveDelayed)
+                            if (songWanderer)
                             {
-                                // Move to Wanderer's Minuet if <= 12 seconds left on song or WM off CD and have 4 repertoires of AP
-                                if (songTimerInSeconds <= 12 || (ActionReady(WanderersMinuet) && gauge.Repertoire == 4))
-                                    return WanderersMinuet;
+                                if (songTimerInSeconds <= 3 && gauge.Repertoire > 0 && hasTarget) // Spend any repertoire before switching to next song
+                                    return OriginalHook(PitchPerfect);
+                                if (songTimerInSeconds <= 3 && ActionReady(MagesBallad))          // Move to Mage's Ballad if <= 3 seconds left on song
+                                    return MagesBallad;
+                            }
+
+                            if (songMage)
+                            {
+
+                                // Move to Army's Paeon if <= 3 seconds left on song
+                                if (songTimerInSeconds <= 3 && ActionReady(ArmysPaeon))
+                                {
+                                    // Special case for Empyreal Arrow: it must be cast before you change to it to avoid drift!
+                                    if (ActionReady(EmpyrealArrow) && hasTarget)
+                                        return EmpyrealArrow;
+                                    return ArmysPaeon;
+                                }
                             }
                         }
-                        else if (songTimerInSeconds <= 3 && canWeaveDelayed)
-                        {      
-                            if (ActionReady(MagesBallad))
-                                return MagesBallad;
-                            if (ActionReady(ArmysPaeon))
-                                return ArmysPaeon;
+
+                        if (songArmy && (canWeaveDelayed || !hasTarget))
+                        {
+                            // Move to Wanderer's Minuet if <= 12 seconds left on song or WM off CD and have 4 repertoires of AP
+                            if (songTimerInSeconds <= 12 || (ActionReady(WanderersMinuet) && gauge.Repertoire == 4))
+                                return WanderersMinuet;
                         }
                     }
+                    else if (songTimerInSeconds <= 3 && canWeaveDelayed)
+                    {      
+                        if (ActionReady(MagesBallad))
+                            return MagesBallad;
+                        if (ActionReady(ArmysPaeon))
+                            return ArmysPaeon;
+                    }
+                    
                     #endregion
 
                     #region Buffs
@@ -1347,19 +1358,19 @@ namespace WrathCombo.Combos.PvE
                             return IronJaws;
                         }
 
-                        // Irong jaws Dot refresh, or low level manaul dot refresh
+                        // Iron jaws Dot refresh, or low level manaul dot refresh
                         if (purple is not null && purpleRemaining < 4)
                             return canIronJaws ? IronJaws : VenomousBite;
                         if (blue is not null && blueRemaining < 4)
                             return canIronJaws ? IronJaws : Windbite;
 
                         // Dot application
-                        if (blue is null)
+                        if (blue is null && LevelChecked(Windbite))
                             return OriginalHook(Windbite);
-                        if (purple is null)
+                        if (purple is null && LevelChecked(VenomousBite))
                             return OriginalHook(VenomousBite);
 
-                        
+
                     }
                     #endregion
 
