@@ -3544,6 +3544,10 @@ namespace WrathCombo.Combos
         RDM_ST_MeleeCombo = 13410,
 
         [ParentCombo(RDM_ST_MeleeCombo)]
+        [CustomComboInfo("Manual Start", "The melee combo will not start until Riposte is used manually.", RDM.JobID)]
+        RDM_ST_Adv_MeleeFill = 13710,
+
+        [ParentCombo(RDM_ST_MeleeCombo)]
         [CustomComboInfo("Use Manafication and Embolden Option", "Add Manafication and Embolden.\n**Must be in melee range or have Gap close with Corps-a-corps enabled**", RDM.JobID, 411)]
         RDM_ST_MeleeCombo_ManaEmbolden = 13411,
 
