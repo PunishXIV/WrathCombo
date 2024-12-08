@@ -84,7 +84,7 @@ namespace WrathCombo.CustomComboNS.Functions
             {
                 float percent = (float)chara.CurrentHp / chara.MaxHp * 100f;
                 if (includeShield) percent += chara.ShieldPercentage;
-                return percent;
+                return Math.Clamp(percent, 0f, 100f);
             }
             else return 0;
         }
