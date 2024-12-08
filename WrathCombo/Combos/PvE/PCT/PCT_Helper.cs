@@ -118,7 +118,7 @@ internal partial class PCT
 
             if (currentState == OpenerState.InOpener)
             {
-                if (CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers_1))
+                if (CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers_1) || CustomComboFunctions.IsEnabled(CustomComboPreset.PCT_ST_SimpleMode))
                 {
                     if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 1) OpenerStep++;
                     else if (OpenerStep == 1) actionID = RainbowDrip;
@@ -136,56 +136,43 @@ internal partial class PCT
                         CustomComboFunctions.OriginalHook(CreatureMotif) && OpenerStep == 5) OpenerStep++;
                     else if (OpenerStep == 5) actionID = CustomComboFunctions.OriginalHook(CreatureMotif);
 
-
                     if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == 6) OpenerStep++;
                     else if (OpenerStep == 6) actionID = StarryMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == 7) OpenerStep++;
                     else if (OpenerStep == 7) actionID = HammerStamp;
-
 
                     if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == 8)
                         OpenerStep++;
                     else if (OpenerStep == 8) actionID = SubtractivePalette;
 
-
                     if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == 9) OpenerStep++;
                     else if (OpenerStep == 9) actionID = BlizzardinCyan;
 
-
                     if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == 10) OpenerStep++;
                     else if (OpenerStep == 10) actionID = StoneinYellow;
-
 
                     if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == 11)
                         OpenerStep++;
                     else if (OpenerStep == 11) actionID = ThunderinMagenta;
 
-
                     if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == 12) OpenerStep++;
                     else if (OpenerStep == 12) actionID = CometinBlack;
-
 
                     if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == 13) OpenerStep++;
                     else if (OpenerStep == 13) actionID = WingedMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == 14) OpenerStep++;
                     else if (OpenerStep == 14) actionID = MogoftheAges;
-
 
                     if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == 15) OpenerStep++;
                     else if (OpenerStep == 15) actionID = StarPrism;
 
-
                     if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == 16) OpenerStep++;
                     else if (OpenerStep == 16) actionID = HammerBrush;
 
-
                     if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == 17) OpenerStep++;
                     else if (OpenerStep == 17) actionID = PolishingHammer;
-
 
                     if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 18) OpenerStep++;
                     else if (OpenerStep == 18) actionID = RainbowDrip;
@@ -206,56 +193,43 @@ internal partial class PCT
                         CustomComboFunctions.OriginalHook(CreatureMotif) && OpenerStep == 4) OpenerStep++;
                     else if (OpenerStep == 4) actionID = CustomComboFunctions.OriginalHook(CreatureMotif);
 
-
                     if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == 5) OpenerStep++;
                     else if (OpenerStep == 5) actionID = StarryMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == 6) OpenerStep++;
                     else if (OpenerStep == 6) actionID = HammerStamp;
-
 
                     if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == 7)
                         OpenerStep++;
                     else if (OpenerStep == 7) actionID = SubtractivePalette;
 
-
                     if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == 8) OpenerStep++;
                     else if (OpenerStep == 8) actionID = BlizzardinCyan;
 
-
                     if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == 9) OpenerStep++;
                     else if (OpenerStep == 9) actionID = StoneinYellow;
-
 
                     if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == 10)
                         OpenerStep++;
                     else if (OpenerStep == 10) actionID = ThunderinMagenta;
 
-
                     if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == 11) OpenerStep++;
                     else if (OpenerStep == 11) actionID = CometinBlack;
-
 
                     if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == 12) OpenerStep++;
                     else if (OpenerStep == 12) actionID = WingedMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == 13) OpenerStep++;
                     else if (OpenerStep == 13) actionID = MogoftheAges;
-
 
                     if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == 14) OpenerStep++;
                     else if (OpenerStep == 14) actionID = StarPrism;
 
-
                     if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == 15) OpenerStep++;
                     else if (OpenerStep == 15) actionID = HammerBrush;
 
-
                     if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == 16) OpenerStep++;
                     else if (OpenerStep == 16) actionID = PolishingHammer;
-
 
                     if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 17) OpenerStep++;
                     else if (OpenerStep == 17) actionID = RainbowDrip;
@@ -279,56 +253,43 @@ internal partial class PCT
                     if (CustomComboFunctions.WasLastAction(StrikingMuse) && OpenerStep == 5) OpenerStep++;
                     else if (OpenerStep == 5) actionID = StrikingMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(StarryMuse) && OpenerStep == 6) OpenerStep++;
                     else if (OpenerStep == 6 && CustomComboFunctions.CanDelayedWeave(WingMotif)) actionID = StarryMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(HammerStamp) && OpenerStep == 7) OpenerStep++;
                     else if (OpenerStep == 7) actionID = HammerStamp;
-
 
                     if (CustomComboFunctions.WasLastAction(SubtractivePalette) && OpenerStep == 8)
                         OpenerStep++;
                     else if (OpenerStep == 8) actionID = SubtractivePalette;
 
-
                     if (CustomComboFunctions.WasLastAction(BlizzardinCyan) && OpenerStep == 9) OpenerStep++;
                     else if (OpenerStep == 9) actionID = BlizzardinCyan;
 
-
                     if (CustomComboFunctions.WasLastAction(StoneinYellow) && OpenerStep == 10) OpenerStep++;
                     else if (OpenerStep == 10) actionID = StoneinYellow;
-
 
                     if (CustomComboFunctions.WasLastAction(ThunderinMagenta) && OpenerStep == 11)
                         OpenerStep++;
                     else if (OpenerStep == 11) actionID = ThunderinMagenta;
 
-
                     if (CustomComboFunctions.WasLastAction(CometinBlack) && OpenerStep == 12) OpenerStep++;
                     else if (OpenerStep == 12) actionID = CometinBlack;
-
 
                     if (CustomComboFunctions.WasLastAction(WingedMuse) && OpenerStep == 13) OpenerStep++;
                     else if (OpenerStep == 13) actionID = WingedMuse;
 
-
                     if (CustomComboFunctions.WasLastAction(MogoftheAges) && OpenerStep == 14) OpenerStep++;
                     else if (OpenerStep == 14) actionID = MogoftheAges;
-
 
                     if (CustomComboFunctions.WasLastAction(StarPrism) && OpenerStep == 15) OpenerStep++;
                     else if (OpenerStep == 15) actionID = StarPrism;
 
-
                     if (CustomComboFunctions.WasLastAction(HammerBrush) && OpenerStep == 16) OpenerStep++;
                     else if (OpenerStep == 16) actionID = HammerBrush;
 
-
                     if (CustomComboFunctions.WasLastAction(PolishingHammer) && OpenerStep == 17) OpenerStep++;
                     else if (OpenerStep == 17) actionID = PolishingHammer;
-
 
                     if (CustomComboFunctions.WasLastAction(RainbowDrip) && OpenerStep == 18) OpenerStep++;
                     else if (OpenerStep == 18) actionID = RainbowDrip;
