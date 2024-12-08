@@ -1706,7 +1706,7 @@ namespace WrathCombo.Combos
         GNB_ST_Simple = 7001,
         #endregion
 
-        #region Simple AOE
+        #region Simple AoE
         [AutoAction(true, false)]
         [ConflictingCombos(GNB_AoE_Advanced, GNB_NM_Features)]
         [ReplaceSkill(GNB.DemonSlice)]
@@ -1724,30 +1724,30 @@ namespace WrathCombo.Combos
         #region Cooldowns
         [ParentCombo(GNB_ST_Advanced)]
         [CustomComboInfo("Cooldowns Option", "Adds various cooldowns into the rotation.", GNB.JobID)]
-        GNB_ST_Advanced_CooldownsGroup = 7007,
+        GNB_ST_Advanced_Cooldowns = 7007,
 
         [ConflictingCombos(GNB_NM_Features)]
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("No Mercy Option", "Adds No Mercy into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_NoMercy = 7008,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Sonic Break Option", "Adds Sonic Break into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_SonicBreak = 7012,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Danger/Blasting Zone Option", "Adds Danger/Blasting Zone into the rotation when available.", GNB.JobID)]
         GNB_ST_BlastingZone = 7009,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Bow Shock Option", "Adds Bow Shock into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_BowShock = 7010,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Bloodfest Option", "Adds Bloodfest into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_Bloodfest = 7011,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang combo into the rotation.", GNB.JobID)]
         GNB_ST_Gnashing = 7016,
 
@@ -1755,15 +1755,15 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Continuation Option", "Adds Continuation & Hypervelocity into the rotation.\n'Gnashing Fang' option must be enabled or started manually.", GNB.JobID)]
         GNB_ST_Continuation = 7005,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Double Down Option", "Adds Double Down into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_DoubleDown = 7017,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Reign Combo Option", "Adds Reign/Noble/Lionheart into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_Reign = 7014,
 
-        [ParentCombo(GNB_ST_Advanced_CooldownsGroup)]
+        [ParentCombo(GNB_ST_Advanced_Cooldowns)]
         [CustomComboInfo("Burst Strike Option", "Adds Burst Strike into the rotation when appropriate.", GNB.JobID)]
         GNB_ST_BurstStrike = 7015,
 
@@ -1771,36 +1771,46 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Ammo Overcap Option", "Adds Burst Strike into the rotation if you have max cartridges & your last combo action was Brutal Shell.", GNB.JobID)]
         GNB_ST_Overcap = 7018,
 
-        #region Mitigation Options
+        #region Mitigations
         [ParentCombo(GNB_ST_Advanced)]
         [CustomComboInfo("Mitigation Options", "Collection of Mitigation features.", GNB.JobID)]
         GNB_ST_Mitigation = 7019,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Heart of Corundum Option", "Uses Heart of Corundum based on Health Remaining.\n" +
-              "(Note: makes no attempt to ensure mit is optimally used)", GNB.JobID)]
-        GNB_ST_HOC = 7020,
+        [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Corundum = 7020,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Great Nebula Option", "Uses Great Nebula based on Health Remaining.", GNB.JobID)]
-        GNB_ST_GreatNebula = 7021,
+        [CustomComboInfo("Aurora Option", "Adds Aurora to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Aurora = 7024,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Superbolide Option", "Uses Superbolide based on Health Remaining.", GNB.JobID)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Rampart = 7025,
+
+        [ParentCombo(GNB_ST_Mitigation)]
+        [CustomComboInfo("Camouflage Option", "Adds Camouflage to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Camouflage = 7026,
+
+        [ParentCombo(GNB_ST_Mitigation)]
+        [CustomComboInfo("Nebula Option", "Adds Nebula to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_ST_Nebula = 7021,
+
+        [ParentCombo(GNB_ST_Mitigation)]
+        [CustomComboInfo("Superbolide Option", "Adds Superbolide to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
         GNB_ST_Superbolide = 7022,
 
         [ParentCombo(GNB_ST_Mitigation)]
-        [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID, 0)]
+        [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target.", GNB.JobID)]
         GNB_AuroraProtection = 7023,
-        #endregion
 
-        #endregion
-
-        #region Lightning Shot
         [ParentCombo(GNB_ST_Advanced)]
         [CustomComboInfo("Lightning Shot Uptime Option", "Adds Lightning Shot to the main combo when you are out of range.", GNB.JobID)]
         GNB_ST_RangedUptime = 7004,
         #endregion
+
+        #endregion
+
 
         #endregion 
 
@@ -1856,23 +1866,35 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Ammo Overcap Burst Strike Option", "Adds Burst Strike into the AoE rotation if you have max cartridges, your last combo action was Demon Slice, & you do not have Fated Circle unlocked yet.", GNB.JobID)]
         GNB_AoE_BSOvercap = 7211,
 
-        #region Mitigation Options
+        #region Mitigations
         [ParentCombo(GNB_AoE_Advanced)]
         [CustomComboInfo("Mitigation Options", "Collection of Mitigation features.", GNB.JobID)]
         GNB_AoE_Mitigation = 7216,
 
         [ParentCombo(GNB_AoE_Mitigation)]
-        [CustomComboInfo("Heart of Corundum Option", "Uses Heart of Corundum based on Health Remaining.\n" +
-              "(Note: makes no attempt to ensure mit is optimally used)", GNB.JobID)]
-        GNB_AoE_HOC = 7213,
+        [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Corundum = 7213,
 
         [ParentCombo(GNB_AoE_Mitigation)]
-        [CustomComboInfo("Great Nebula Option", "Uses Great Nebula based on Health Remaining.", GNB.JobID)]
-        GNB_AoE_GreatNebula = 7214,
+        [CustomComboInfo("Aurora Option", "Adds Aurora to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Aurora = 7217,
 
         [ParentCombo(GNB_AoE_Mitigation)]
-        [CustomComboInfo("Superbolide Option", "Uses Superbolide based on Health Remaining.", GNB.JobID)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Rampart = 7218,
+
+        [ParentCombo(GNB_AoE_Mitigation)]
+        [CustomComboInfo("Camouflage Option", "Adds Camouflage to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Camouflage = 7219,
+
+        [ParentCombo(GNB_AoE_Mitigation)]
+        [CustomComboInfo("Nebula Option", "Adds Nebula to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
+        GNB_AoE_Nebula = 7214,
+
+        [ParentCombo(GNB_AoE_Mitigation)]
+        [CustomComboInfo("Superbolide Option", "Adds Superbolide to Advanced Mode based on Health percentage remaining.", GNB.JobID)]
         GNB_AoE_Superbolide = 7215,
+
         #endregion
 
         #endregion
@@ -1921,32 +1943,10 @@ namespace WrathCombo.Combos
 
         #endregion
 
-        #region Burst Strike
-        [ReplaceSkill(GNB.BurstStrike)]
-        [CustomComboInfo("Burst Strike Features", "Collection of Burst Strike related features.", GNB.JobID)]
-        GNB_BS_Features = 7400,
-
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Hypervelocity Option", "Adds Continuation (Hypervelocity) to Burst Strike when available.", GNB.JobID)]
-        GNB_BS_Continuation = 7401,
-
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to Burst Strike when approrpiate.", GNB.JobID)]
-        GNB_BS_Bloodfest = 7402,
-
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Double Down Option", "Adds Double Down to Burst Strike when appropriate.", GNB.JobID)]
-        GNB_BS_DoubleDown = 7403,
-
-        [ParentCombo(GNB_BS_Features)]
-        [CustomComboInfo("Reign Combo Option", "Adds Reign/Noble/Lionheart to Burst Strike when appropriate.", GNB.JobID)]
-        GNB_BS_Reign = 7404,
-        #endregion
-
         #region No Mercy
         [ConflictingCombos(GNB_ST_Simple, GNB_AoE_Simple, GNB_GF_NoMercy)]
         [ReplaceSkill(GNB.NoMercy)]
-        [CustomComboInfo("No Mercy Features", "Collection of No Mercy related features.", GNB.JobID)]
+        [CustomComboInfo("No Mercy Features", "Collection of No Mercy related features.\n Enable all for this to be an all-in-one oGCD button.", GNB.JobID)]
         GNB_NM_Features = 7500,
 
         [ParentCombo(GNB_NM_Features)]
@@ -1959,19 +1959,41 @@ namespace WrathCombo.Combos
 
         [ParentCombo(GNB_NM_Features)]
         [CustomComboInfo("Bow Shock Option", "Adds Bow Shock to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_BS = 7503,
+        GNB_NM_BowShock = 7503,
 
         [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Sonic Break Option", "Adds Sonic Break to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_SB = 7504,
+        [CustomComboInfo("Continuation Option", "Adds all Continuation procs to No Mercy appropriately.", GNB.JobID)]
+        GNB_NM_Continuation = 7504,
+        #endregion
 
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Double Down Option", "Adds Double to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_DD = 7505,
+        #region Burst Strike
+        [ReplaceSkill(GNB.BurstStrike)]
+        [CustomComboInfo("Burst Strike Features", "Collection of Burst Strike related features.", GNB.JobID)]
+        GNB_BS_Features = 7400,
 
-        [ParentCombo(GNB_NM_Features)]
-        [CustomComboInfo("Reign Option", "Adds Reign to No Mercy appropriately after No Mercy is used.", GNB.JobID)]
-        GNB_NM_Reign = 7506,
+        [ParentCombo(GNB_BS_Features)]
+        [CustomComboInfo("Continuation Option", "Adds all Single-Target Continuation procs to Burst Strike when available.", GNB.JobID)]
+        GNB_BS_Continuation = 7401,
+
+        [ParentCombo(GNB_BS_Continuation)]
+        [CustomComboInfo("Only Hypervelocity Option", "Adds only Hypervelocity to Burst Strike when available.", GNB.JobID)]
+        GNB_BS_Hypervelocity = 7406,
+
+        [ParentCombo(GNB_BS_Features)]
+        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to Burst Strike when approrpiate.", GNB.JobID)]
+        GNB_BS_Bloodfest = 7402,
+
+        [ParentCombo(GNB_BS_Features)]
+        [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang & its combo to Burst Strike when available.", GNB.JobID)]
+        GNB_BS_GnashingFang = 7405,
+
+        [ParentCombo(GNB_BS_Features)]
+        [CustomComboInfo("Double Down Option", "Adds Double Down to Burst Strike when available.", GNB.JobID)]
+        GNB_BS_DoubleDown = 7403,
+
+        [ParentCombo(GNB_BS_Features)]
+        [CustomComboInfo("Reign Combo Option", "Adds Reign/Noble/Lionheart to Burst Strike when available.", GNB.JobID)]
+        GNB_BS_Reign = 7404,
         #endregion
 
         #region Fated Circle
@@ -1980,16 +2002,24 @@ namespace WrathCombo.Combos
         GNB_FC_Features = 7600,
 
         [ParentCombo(GNB_FC_Features)]
-        [CustomComboInfo("Fated Brand Option", "Adds Continuation (Fated Brand) on Fated Circle.", GNB.JobID)]
+        [CustomComboInfo("Fated Brand Option", "Adds Fated Brand to Fated Circle.", GNB.JobID)]
         GNB_FC_Continuation = 7601,
 
         [ParentCombo(GNB_FC_Features)]
-        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to fated Circle when appropriate.", GNB.JobID)]
+        [CustomComboInfo("Bloodfest Option", "Adds Bloodfest to Fated Circle when appropriate.", GNB.JobID)]
         GNB_FC_Bloodfest = 7602,
+
+        [ParentCombo(GNB_FC_Features)]
+        [CustomComboInfo("Bow Shock Option", "Adds Bow Shock to Fated Circle when appropriate.", GNB.JobID)]
+        GNB_FC_BowShock = 7605,
 
         [ParentCombo(GNB_FC_Features)]
         [CustomComboInfo("Double Down Option", "Adds Double Down to Fated Circle when appropriate.", GNB.JobID)]
         GNB_FC_DoubleDown = 7603,
+
+        [ParentCombo(GNB_FC_DoubleDown)]
+        [CustomComboInfo("Under No Mercy Option", "Adds Double Down to Fated Circle only when No Mercy is active.", GNB.JobID)]
+        GNB_FC_DoubleDown_NM = 7606,
 
         [ParentCombo(GNB_FC_Features)]
         [CustomComboInfo("Reign Option", "Adds Reign/Noble/LionHeart to Fated Circle when appropriate.", GNB.JobID)]
@@ -2011,6 +2041,204 @@ namespace WrathCombo.Combos
         [VariantParent(GNB_ST_Advanced, GNB_AoE_Advanced)]
         [CustomComboInfo("Ultimatum Option", "Use Variant Ultimatum on cooldown.", GNB.JobID)]
         GNB_Variant_Ultimatum = 7035,
+        #endregion
+
+        #region Bozja
+        [Bozja]
+        [CustomComboInfo("Lost Focus Option", "Use Lost Focus when available.", GNB.JobID)]
+        GNB_Bozja_LostFocus = 7070,
+
+        [Bozja]
+        [CustomComboInfo("Lost Font Of Power Option", "Use Lost Font Of Power when available.", GNB.JobID)]
+        GNB_Bozja_LostFontOfPower = 7036,
+
+        [Bozja]
+        [CustomComboInfo("Lost Slash Option", "Use Lost Slash when available.", GNB.JobID)]
+        GNB_Bozja_LostSlash = 7037,
+
+        [Bozja]
+        [CustomComboInfo("Lost Death Option", "Use Lost Death when available.", GNB.JobID)]
+        GNB_Bozja_LostDeath = 7038,
+
+        [Bozja]
+        [CustomComboInfo("Banner Of Noble Ends Option", "Use Banner Of Noble Ends when available.", GNB.JobID)]
+        GNB_Bozja_BannerOfNobleEnds = 7039,
+
+        [Bozja]
+        [ParentCombo(GNB_Bozja_BannerOfNobleEnds)]
+        [CustomComboInfo("Only with `Lost Font Of Power` Option", "Use Banner Of Noble Ends only when under Lost Font of Power.", GNB.JobID)]
+        GNB_Bozja_PowerEnds = 7040,
+
+        [Bozja]
+        [CustomComboInfo("Banner Of Honored Sacrifice Option", "Use Banner Of Honored Sacrifice when available.", GNB.JobID)]
+        GNB_Bozja_BannerOfHonoredSacrifice = 7041,
+
+        [Bozja]
+        [ParentCombo(GNB_Bozja_BannerOfHonoredSacrifice)]
+        [CustomComboInfo("Only with `Lost Font Of Power` Option", "Use Banner Of Honored Sacrifice only when under Lost Font of Power.", GNB.JobID)]
+        GNB_Bozja_PowerSacrifice = 7042,
+
+        [Bozja]
+        [CustomComboInfo("Banner Of Honed Acuity Option", "Use Banner Of Honed Acuity when available.", GNB.JobID)]
+        GNB_Bozja_BannerOfHonedAcuity = 7043,
+
+        [Bozja]
+        [CustomComboInfo("Lost Fair Trade Option", "Use Lost Fair Trade when available.", GNB.JobID)]
+        GNB_Bozja_LostFairTrade = 7044,
+
+        [Bozja]
+        [CustomComboInfo("Lost Assassination Option", "Use Lost Assassination when available.", GNB.JobID)]
+        GNB_Bozja_LostAssassination = 7045,
+
+        [Bozja]
+        [CustomComboInfo("Lost Manawall Option", "Use Lost Manawall when available.", GNB.JobID)]
+        GNB_Bozja_LostManawall = 7046,
+
+        [Bozja]
+        [CustomComboInfo("Banner Of Tireless Conviction Option", "Use Banner Of Tireless Conviction when available.", GNB.JobID)]
+        GNB_Bozja_BannerOfTirelessConviction = 7047,
+
+        [Bozja]
+        [CustomComboInfo("Lost Blood Rage Option", "Use Lost Blood Rage when available.", GNB.JobID)]
+        GNB_Bozja_LostBloodRage = 7048,
+
+        [Bozja]
+        [CustomComboInfo("Banner Of Solemn Clarity Option", "Use Banner Of Solemn Clarity when available.", GNB.JobID)]
+        GNB_Bozja_BannerOfSolemnClarity = 7049,
+
+        [Bozja]
+        [CustomComboInfo("Lost Cure Option", "Use Lost Cure when available.", GNB.JobID)]
+        GNB_Bozja_LostCure = 7050,
+
+        [Bozja]
+        [CustomComboInfo("Lost Cure II Option", "Use Lost Cure II when available.", GNB.JobID)]
+        GNB_Bozja_LostCure2 = 7051,
+
+        [Bozja]
+        [CustomComboInfo("Lost Cure III Option", "Use Lost Cure III when available.", GNB.JobID)]
+        GNB_Bozja_LostCure3 = 7052,
+
+        [Bozja]
+        [CustomComboInfo("Lost Cure IV Option", "Use Lost Cure IV when available.", GNB.JobID)]
+        GNB_Bozja_LostCure4 = 7053,
+
+        [Bozja]
+        [CustomComboInfo("Lost Arise Option", "Use Lost Arise when available.", GNB.JobID)]
+        GNB_Bozja_LostArise = 7054,
+
+        [Bozja]
+        [CustomComboInfo("Lost Sacrifice Option", "Use Lost Sacrifice when available.", GNB.JobID)]
+        GNB_Bozja_LostSacrifice = 7055,
+
+        [Bozja]
+        [CustomComboInfo("Lost Reraise Option", "Use Lost Reraise when available.", GNB.JobID)]
+        GNB_Bozja_LostReraise = 7056,
+
+        [Bozja]
+        [CustomComboInfo("Lost Spellforge Option", "Use Lost Spellforge when available.", GNB.JobID)]
+        GNB_Bozja_LostSpellforge = 7057,
+
+        [Bozja]
+        [CustomComboInfo("Lost Steel Sting Option", "Use Lost Steel Sting when available.", GNB.JobID)]
+        GNB_Bozja_LostSteelsting = 7058,
+
+        [Bozja]
+        [CustomComboInfo("Lost Protect Option", "Use Lost Protect when available.", GNB.JobID)]
+        GNB_Bozja_LostProtect = 7059,
+
+        [Bozja]
+        [CustomComboInfo("Lost Shell Option", "Use Lost Shell when available.", GNB.JobID)]
+        GNB_Bozja_LostShell = 7060,
+
+        [Bozja]
+        [CustomComboInfo("Lost Reflect Option", "Use Lost Reflect when available.", GNB.JobID)]
+        GNB_Bozja_LostReflect = 7061,
+
+        [Bozja]
+        [CustomComboInfo("Lost Bravery Option", "Use Lost Bravery when available.", GNB.JobID)]
+        GNB_Bozja_LostBravery = 7062,
+
+        [Bozja]
+        [CustomComboInfo("Lost Aethershield Option", "Use Lost Aether Shield when available.", GNB.JobID)]
+        GNB_Bozja_LostAethershield = 7063,
+
+        [Bozja]
+        [CustomComboInfo("Lost Protect II Option", "Use Lost Protect II when available.", GNB.JobID)]
+        GNB_Bozja_LostProtect2 = 7064,
+
+        [Bozja]
+        [CustomComboInfo("Lost Shell II Option", "Use Lost Shell II when available.", GNB.JobID)]
+        GNB_Bozja_LostShell2 = 7065,
+
+        [Bozja]
+        [CustomComboInfo("Lost Bubble Option", "Use Lost Bubble when available.", GNB.JobID)]
+        GNB_Bozja_LostBubble = 7066,
+
+        [Bozja]
+        [CustomComboInfo("Lost Stealth Option", "Use Lost Stealth when available.", GNB.JobID)]
+        GNB_Bozja_LostStealth = 7067,
+
+        [Bozja]
+        [CustomComboInfo("Lost Swift Option", "Use Lost Swift when available.", GNB.JobID)]
+        GNB_Bozja_LostSwift = 7068,
+
+        [Bozja]
+        [CustomComboInfo("Lost Font Of Skill Option", "Use Lost Font Of Skill when available.", GNB.JobID)]
+        GNB_Bozja_LostFontOfSkill = 7069,
+
+        [Bozja]
+        [CustomComboInfo("Lost Impetus Option", "Use Lost Impetus when available.", GNB.JobID)]
+        GNB_Bozja_LostImpetus = 7071,
+
+        [Bozja]
+        [CustomComboInfo("Lost Paralyze III Option", "Use Lost Paralyze III when available.", GNB.JobID)]
+        GNB_Bozja_LostParalyze3 = 7072,
+
+        [Bozja]
+        [CustomComboInfo("Lost Rampage Option", "Use Lost Rampage when available.", GNB.JobID)]
+        GNB_Bozja_LostRampage = 7073,
+        #endregion
+
+        #region One-Button Mitigation
+        [CustomComboInfo("One-Button Mitigation Feature", "Turns Camouflage into an all-in-one mitigation button.", GNB.JobID)]
+        GNB_Mit_OneButton = 7074,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Camouflage First Option", "Keeps Camouflage as first priority mitigation used.", GNB.JobID)]
+        GNB_Mit_CamouflageFirst = 7075,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_Rampart = 7078,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Nebula Option", "Adds Nebula to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_Nebula = 7079,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_Corundum = 7076,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Aurora Option", "Adds Aurora to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_Aurora = 7077,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Superbolide Option", "Adds Superbolide to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_Superbolide = 7080,
+
+        [ParentCombo(GNB_Mit_Superbolide)]
+        [CustomComboInfo("Superbolide Max Priority Option", "Gives max priority to Superbolide based on Health percentage remaining.", GNB.JobID)]
+        GNB_Mit_Superbolide_Max = 7081,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Reprisal Option", "Adds Reprisal to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_Reprisal = 7082,
+
+        [ParentCombo(GNB_Mit_OneButton)]
+        [CustomComboInfo("Heart Of Light Option", "Adds Heart Of Light to the one-button mitigation.", GNB.JobID)]
+        GNB_Mit_HeartOfLight = 7083,
+
         #endregion
 
         #endregion
@@ -4943,6 +5171,37 @@ namespace WrathCombo.Combos
         [ParentCombo(WAR_ST_Advanced_Onslaught)]
         [CustomComboInfo("Melee Onslaught Option", "Uses Onslaught when under Surging Tempest & in the target ring (1 yalm) & when not moving.\nWill use as many stacks as selected in the above slider.", WAR.JobID)]
         WAR_ST_Advanced_Onslaught_MeleeSpender = 18015,
+
+        #region Mitigations
+        [ParentCombo(WAR_ST_Advanced)]
+        [CustomComboInfo("Mitigation Options", "Adds defensive actions to Advanced Mode based on Health percentage remaining.", WAR.JobID, 13)]
+        WAR_ST_Advanced_Mitigation = 18040,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Bloodwhetting Option", "Adds Raw Intuition / Bloodwhetting to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_ST_Advanced_Bloodwhetting = 18031,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Equilibrium Option", "Adds Equilibrium to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_ST_Advanced_Equilibrium = 18043,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", WAR.JobID, 1)]
+        WAR_ST_Advanced_Rampart = 18032,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Thrill of Battle Option", "Adds Thrill of Battle to Advanced Mode based on Health percentage remaining.", WAR.JobID, 1)]
+        WAR_ST_Advanced_Thrill = 18042,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Vengeance Option", "Adds Vengeance / Damnation to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_ST_Advanced_Vengeance = 18033,
+
+        [ParentCombo(WAR_ST_Advanced_Mitigation)]
+        [CustomComboInfo("Holmgang Option", "Adds Holmgang to Advanced Mode based on Health percentage remaining.", WAR.JobID, 3)]
+        WAR_ST_Advanced_Holmgang = 18034,
+        #endregion
+
         #endregion
 
         #region Advanced AoE
@@ -4979,6 +5238,37 @@ namespace WrathCombo.Combos
         [ParentCombo(WAR_AoE_Advanced)]
         [CustomComboInfo("Steel Cyclone / Decimate Option", "Adds Steel Cyclone / Decimate to Advanced Mode.", WAR.JobID)]
         WAR_AoE_Advanced_Decimate = 18023,
+
+        #region Mitigations
+        [ParentCombo(WAR_AoE_Advanced)]
+        [CustomComboInfo("Mitigation Options", "Adds defensive actions to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Mitigation = 18035,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Bloodwhetting Option", "Adds Raw Intuition / Bloodwhetting to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Bloodwhetting = 18036,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Equilibrium Option", "Adds Equilibrium to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Equilibrium = 18044,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Rampart Option", "Adds Rampart to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Rampart = 18037,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Thrill of Battle Option", "Adds Thrill of Battle to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Thrill = 18041,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Vengeance Option", "Adds Vengeance / Damnation to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Vengeance = 18038,
+
+        [ParentCombo(WAR_AoE_Advanced_Mitigation)]
+        [CustomComboInfo("Holmgang Option", "Adds Holmgang to Advanced Mode based on Health percentage remaining.", WAR.JobID)]
+        WAR_AoE_Advanced_Holmgang = 18039,
+        #endregion
+
         #endregion
 
         #region  Misc
@@ -5014,7 +5304,7 @@ namespace WrathCombo.Combos
         WAR_Variant_Ultimatum = 18030,
         #endregion
 
-        // Last value = 18030
+        // Last value = 18044
 
         #endregion
 
