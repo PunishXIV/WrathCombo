@@ -630,7 +630,7 @@ internal partial class SAM
                 {
                     if (!gauge.Sen.HasFlag(Sen.GETSU) ||
                         GetBuffRemainingTime(Buffs.Fugetsu) < GetBuffRemainingTime(Buffs.Fuka) ||
-                        !HasEffect(Buffs.Fugetsu))
+                        !HasEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
                         return Mangetsu;
 
                     if (LevelChecked(Oka) &&
@@ -751,7 +751,7 @@ internal partial class SAM
                     if (IsNotEnabled(CustomComboPreset.SAM_AoE_Oka) ||
                         !gauge.Sen.HasFlag(Sen.GETSU) ||
                         GetBuffRemainingTime(Buffs.Fugetsu) < GetBuffRemainingTime(Buffs.Fuka) ||
-                        !HasEffect(Buffs.Fugetsu))
+                        !HasEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
                         return Mangetsu;
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_Oka) &&
