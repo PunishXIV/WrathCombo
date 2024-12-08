@@ -113,8 +113,9 @@ namespace WrathCombo.Window.Tabs
 
                                 if (groupedPresets[OpenJob].Any(x => PresetStorage.IsBozja(x.Preset)))
                                 {
-                                    if (ImGui.BeginTabItem("Bozja"))
+                                    if (ImGui.BeginTabItem("Field Operations"))
                                     {
+                                        DrawBozjaContents(OpenJob);
                                         ImGui.EndTabItem();
                                     }
                                 }
@@ -141,6 +142,17 @@ namespace WrathCombo.Window.Tabs
         private static void DrawVariantContents(string jobName)
         {
             foreach (var (preset, info) in groupedPresets[jobName].Where(x => PresetStorage.IsVariant(x.Preset)))
+            {
+                int i = -1;
+                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
+                presetBox.Draw();
+                ImGuiHelpers.ScaledDummy(12.0f);
+            }
+        }
+        private static void DrawBozjaContents(string jobName)
+        {
+            foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
+                    PresetStorage.IsBozja(x.Preset)))
             {
                 int i = -1;
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
