@@ -111,8 +111,13 @@ namespace WrathCombo.Combos.PvP
             {
                 if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
-                    if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    if (actionID == Guard)
+                    {
+                        if (!JustUsed(Guard, 2f) && LocalPlayer.CurrentMp >= 2500 && LocalPlayer.CurrentHp <= LocalPlayer.MaxHp - 15000) 
+                            return Recuperate;
+                        return Guard;
+                    }
+                    return OriginalHook(11);
                 }
 
                 if (Execute() &&
