@@ -5531,7 +5531,7 @@ namespace WrathCombo.Combos
 
         #region DRAGOON
         [PvPCustomCombo]
-        [CustomComboInfo("Burst Mode", "Using Elusive Jump turns Drakesbane Combo into all-in-one burst damage button.", DRG.JobID)]
+        [CustomComboInfo("Burst Mode", "Turns Drakesbane Combo into an all-in-one damage button.", DRG.JobID)]
         DRGPvP_Burst = 116000,
 
         [ParentCombo(DRGPvP_Burst)]
@@ -5563,7 +5563,7 @@ namespace WrathCombo.Combos
         DRGPvP_HighJump = 116007,
 
         [ParentCombo(DRGPvP_Burst)]
-        [CustomComboInfo("Elusive Jump Burst Protection Option", "Disables Elusive Jump if Burst is not ready.", DRG.JobID)]
+        [CustomComboInfo("Elusive Jump Burst Option", "Using Elusive Jump turns Drakesbane Combo into all-in-one burst damage button once all cooldowns are ready. \n Disables Elusive Jump if Burst is not ready.", DRG.JobID)]
         DRGPvP_BurstProtection = 116008,
 
         // Last value = 116009
