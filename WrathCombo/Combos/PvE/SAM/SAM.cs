@@ -630,7 +630,7 @@ internal partial class SAM
                 {
                     if (!gauge.Sen.HasFlag(Sen.GETSU) ||
                         GetBuffRemainingTime(Buffs.Fugetsu) < GetBuffRemainingTime(Buffs.Fuka) ||
-                        !HasEffect(Buffs.Fugetsu))
+                        !HasEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
                         return Mangetsu;
 
                     if (LevelChecked(Oka) &&
@@ -751,7 +751,7 @@ internal partial class SAM
                     if (IsNotEnabled(CustomComboPreset.SAM_AoE_Oka) ||
                         !gauge.Sen.HasFlag(Sen.GETSU) ||
                         GetBuffRemainingTime(Buffs.Fugetsu) < GetBuffRemainingTime(Buffs.Fuka) ||
-                        !HasEffect(Buffs.Fugetsu))
+                        !HasEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
                         return Mangetsu;
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_Oka) &&
@@ -929,13 +929,22 @@ internal partial class SAM
                         if (!InMeleeRange())
                             return Gyoten;
                     }
-
                     break;
                 }
             }
 
             return actionID;
         }
+    }
+
+    internal class SAM_MeikyoShisuiProtection : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SAM_MeikyoShisuiProtection;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is MeikyoShisui && HasEffect(Buffs.MeikyoShisui) && LevelChecked(MeikyoShisui)
+                ? OriginalHook(11)
+                : actionID;
     }
 
     #region ID's

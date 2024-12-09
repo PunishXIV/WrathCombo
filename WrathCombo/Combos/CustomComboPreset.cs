@@ -389,7 +389,7 @@ namespace WrathCombo.Combos
         BLM_ST_AdvancedMode = 2100,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
-        [CustomComboInfo("Level 100 Opener", "Adds the Balance opener to the rotation.", BLM.JobID)]
+        [CustomComboInfo("Level 100 Opener", "Adds the Balance opener to the rotation.\nNeed a GCD of 2.45 or lower to use.", BLM.JobID)]
         BLM_ST_Opener = 2101,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
@@ -425,7 +425,7 @@ namespace WrathCombo.Combos
         BLM_ST_Transpose = 2109,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
-        [CustomComboInfo("Thunder Option", "Add Thunder to the rotation.", BLM.JobID)]
+        [CustomComboInfo("(High) Thunder Option", "Add (High) Thunder to the rotation.", BLM.JobID)]
         BLM_ST_Thunder = 2110,
 
         [ParentCombo(BLM_ST_AdvancedMode)]
@@ -479,7 +479,7 @@ namespace WrathCombo.Combos
         BLM_AoE_Transpose = 2208,
 
         [ParentCombo(BLM_AoE_AdvancedMode)]
-        [CustomComboInfo("Thunder Option", "Add Thunder to the rotation.", BLM.JobID)]
+        [CustomComboInfo("(High) Thunder II Option", "Add (High) Thunder II to the rotation.", BLM.JobID)]
         BLM_AoE_Thunder = 2209,
 
         [ParentCombo(BLM_AoE_AdvancedMode)]
@@ -4113,25 +4113,26 @@ namespace WrathCombo.Combos
         [ReplaceSkill(SAM.Oka)]
         [CustomComboInfo("Oka Combo", "Replace Oka with its combo chain.", SAM.JobID)]
         SAM_AoE_OkaCombo = 15100,
-
-        //[ParentCombo(SAM_AoE_OkaCombo)]
-        //[CustomComboInfo("Oka Two Target Rotation Feature", "Adds the Yukikaze combo, Mangetsu combo, Senei, Shinten, and Shoha to Oka combo.\nUsed for two targets only and when Lv86 and above.", SAM.JobID)]
-        //SAM_AoE_OkaCombo_TwoTarget = 15101,
-
+        
         [ReplaceSkill(SAM.Mangetsu)]
         [CustomComboInfo("Mangetsu Combo", "Replace Mangetsu with its combo chain.", SAM.JobID)]
         SAM_AoE_MangetsuCombo = 15101,
 
         #endregion
 
-        #region Cooldown Features
+        #region Meikyo Features
 
         [ReplaceSkill(SAM.MeikyoShisui)]
         [CustomComboInfo("Jinpu/Shifu Feature", "Replace Meikyo Shisui with Jinpu, Shifu, and Yukikaze depending on what is needed.", SAM.JobID)]
         SAM_JinpuShifu = 15200,
 
-        #endregion
+        [ReplaceSkill(SAM.MeikyoShisui)]
+        [CustomComboInfo("Meikyo Shisui Protection",
+            "Replaces Meikyo Shisui with Savage Blade when u already have Meikyo Shisui active.", SAM.JobID)]
+        SAM_MeikyoShisuiProtection = 15214,
 
+        #endregion
+        
         #region Iaijutsu Features
 
         [ReplaceSkill(SAM.Iaijutsu)]
@@ -4211,11 +4212,14 @@ namespace WrathCombo.Combos
         #region Other
 
         [ReplaceSkill(SAM.Gyoten)]
-        [CustomComboInfo("Gyoten Feature", "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
+        [CustomComboInfo("Gyoten Feature",
+            "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
         SAM_GyotenYaten = 15211,
 
         #endregion
-
+        
+        // Last value = 15214
+        
         #region variant
 
         [Variant]
@@ -4228,9 +4232,9 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", SAM.JobID)]
         SAM_Variant_Rampart = 15301,
 
-        #endregion
+        // Last value = 15301
 
-        // Last value = 15050
+        #endregion
 
         #endregion
 
