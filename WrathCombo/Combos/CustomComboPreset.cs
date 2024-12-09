@@ -5690,6 +5690,11 @@ namespace WrathCombo.Combos
 
         [ParentCombo(MNKPvP_Burst)]
         [PvPCustomCombo]
+        [CustomComboInfo("Meteodrive Option", "Adds Meteodrive Limit break to Burst Mode when target is below 20k and guarded", MNK.JobID)]
+        MNKPvP_Burst_Meteodrive = 119006,
+
+        [ParentCombo(MNKPvP_Burst)]
+        [PvPCustomCombo]
         [CustomComboInfo("Thunderclap Option", "Adds Thunderclap to Burst Mode when not buffed with Wind Resonance.", MNK.JobID)]
         MNKPvP_Burst_Thunderclap = 119001,
 
@@ -5713,7 +5718,7 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to Burst Mode.", MNK.JobID)]
         MNKPvP_Burst_WindsReply = 119005,
 
-        // Last value = 119004
+        // Last value = 119006
 
         #endregion
 

@@ -17,7 +17,7 @@ namespace WrathCombo.Combos.PvP
             RiddleOfEarth = 29482,
             ThunderClap = 29484,
             EarthsReply = 29483,
-            Meteordrive = 29485,
+            Meteodrive = 29485,
             WindsReply = 41509,
             FlintsReply = 41447,
             LeapingOpo = 41444,
@@ -47,31 +47,33 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is DragonKick or TwinSnakes or Demolish or LeapingOpo or RisingRaptor or PouncingCoeurl or PhantomRush)
                 {
+                    if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Meteodrive) && PvPCommon.IsImmuneToDamage() && EnemyHealthCurrentHp() <= 20000 && IsLB1Ready) // LB options for when something is guarded and low on health. Meteo breaks thier shield and locks them in place
+                        return Meteodrive;
 
                     if (!PvPCommon.IsImmuneToDamage())
                     {
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RisingPhoenix))
                         {
-                            if (!HasEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
+                            if (!HasEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0) // Uses Rising Pheonix at 2, always retains one for use with phantom rush
                                 return OriginalHook(RisingPhoenix);
                             if (HasEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
-                                return actionID;
+                                return actionID; // makes sure it uses it on phantom rush
                         }
 
-                        if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
-                            return OriginalHook(RiddleOfEarth);
+                        if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth))
+                        {
+                            if (IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)  // Uses riddle of earth when you health starts to drop by being struck
+                                return RiddleOfEarth;
+                            if (HasEffect(Buffs.EarthResonance) && GetBuffRemainingTime(Buffs.EarthResonance) <= 2) // Uses earths reply when the buff is less than 2 secons remaining
+                                return EarthsReply; 
+                        }
+                            
 
-                        if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(ThunderClap) > 0 && !InMeleeRange())
+                        if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(ThunderClap) > 0 && !InMeleeRange()) // gap closer
                             return OriginalHook(ThunderClap);
 
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_WindsReply) && InActionRange(WindsReply) && IsOffCooldown(WindsReply))
                             return WindsReply;
-
-                        if (CanWeave(actionID))
-                        {
-                                if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth) && HasEffect(Buffs.EarthResonance) && GetBuffRemainingTime(Buffs.EarthResonance) < 6)
-                                return OriginalHook(EarthsReply);
-                        }
 
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_FlintsReply))
                         {
