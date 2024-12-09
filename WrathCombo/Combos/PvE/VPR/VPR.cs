@@ -1,6 +1,10 @@
+#region
+
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -1163,6 +1167,31 @@ internal partial class VPR
                     }
 
                 return actionID;
+            }
+        }
+
+        internal class VPR_SerpentsTail : CustomCombo
+        {
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_SerpentsTail;
+
+            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            {
+                switch (actionID)
+                {
+                    case SteelFangs or ReavingFangs when
+                        OriginalHook(SerpentsTail) is DeathRattle &&
+                        (WasLastWeaponskill(FlankstingStrike) || WasLastWeaponskill(FlanksbaneFang) ||
+                         WasLastWeaponskill(HindstingStrike) || WasLastWeaponskill(HindsbaneFang)):
+                        return OriginalHook(SerpentsTail);
+
+                    case SteelMaw or ReavingMaw when
+                        OriginalHook(SerpentsTail) is LastLash &&
+                        (WasLastWeaponskill(JaggedMaw) || WasLastWeaponskill(BloodiedMaw)):
+                        return OriginalHook(SerpentsTail);
+
+                    default:
+                        return actionID;
+                }
             }
         }
     }

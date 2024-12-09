@@ -4865,6 +4865,10 @@ namespace WrathCombo.Combos
         [CustomComboInfo("Legacy Buttons", "Replaces Generations with the Legacys.", VPR.JobID)]
         VPR_Legacies = 30209,
 
+        [ReplaceSkill(VPR.SteelFangs, VPR.ReavingFangs, VPR.SteelMaw, VPR.ReavingMaw)]
+        [CustomComboInfo("Serpents Tail", "Replaces basic combo with Death Rattle or Last Lash when applicable.", VPR.JobID)]
+        VPR_SerpentsTail = 30210,
+
         #endregion
 
         #region WARRIOR
