@@ -480,7 +480,7 @@ namespace WrathCombo.Combos.PvE
                             && ((bossRestrictionBolide is
                                      (int)Config.BossAvoidance.On
                                  && LocalPlayer.TargetObject is not null
-                                 && IsBoss(GNB.LocalPlayer.TargetObject!))
+                                 && TargetIsBoss())
                                 || bossRestrictionBolide is
                                     (int)Config.BossAvoidance.Off))
                             return Superbolide;

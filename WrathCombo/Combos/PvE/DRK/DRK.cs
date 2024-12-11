@@ -118,7 +118,7 @@ internal partial class DRK
                         && ((bossRestrictionLivingDead is
                                  (int)Config.BossAvoidance.On
                              && LocalPlayer.TargetObject is not null
-                             && IsBoss(DRK.LocalPlayer.TargetObject!))
+                             && TargetIsBoss())
                             || bossRestrictionLivingDead is
                                 (int)Config.BossAvoidance.Off))
                         return LivingDead;

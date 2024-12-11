@@ -544,7 +544,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  PointInRect(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, effectRange, 1, 2));
         }
 
-        internal unsafe static bool IsInLineOfSight(IGameObject target)
+        internal static unsafe bool IsInLineOfSight(IGameObject target)
         {
             var sourcePos = FFXIVClientStructs.FFXIV.Common.Math.Vector3.Zero;
 
@@ -571,8 +571,12 @@ namespace WrathCombo.CustomComboNS.Functions
             return isLoSBlocked == false;
         }
 
-        internal unsafe static bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
+        internal static unsafe bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
 
-        internal unsafe static bool IsBoss(IGameObject target) => Svc.Data.GetExcelSheet<BNpcBase>()?.GetRow(target.DataId).Rank is 2 or 6;
+        private static bool IsBoss(IGameObject? target) => Svc.Data.GetExcelSheet<BNpcBase>().GetRow(target.DataId).Rank is 2 or 6;
+
+        internal static bool TargetIsBoss() => IsBoss(LocalPlayer.TargetObject);
+        
+        internal static bool TargetIsHostile() => HasTarget() && CurrentTarget.IsHostile();
     }
 }

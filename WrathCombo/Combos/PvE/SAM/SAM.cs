@@ -1,3 +1,5 @@
+#region
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.Content;
@@ -5,6 +7,8 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SAM.SAMHelper;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -124,7 +128,8 @@ internal partial class SAM
                 return actionID;
 
             //Meikyo to start before combat
-            if (!HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) && !InCombat())
+            if (!HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
+                !InCombat() && TargetIsHostile())
                 return MeikyoShisui;
 
             //oGCDs
@@ -305,7 +310,8 @@ internal partial class SAM
             //Meikyo to start before combat
             if (IsEnabled(CustomComboPreset.SAM_ST_CDs) &&
                 IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
-                !HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) && !InCombat())
+                !HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
+                !InCombat() && TargetIsHostile())
                 return MeikyoShisui;
 
             //oGCDs
@@ -403,11 +409,12 @@ internal partial class SAM
                     if ((!IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) ||
                          (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) && !IsMoving)) &&
                         ((SenCount is 1 && GetTargetHPPercent() > HiganbanaThreshold &&
+                          (Config.SAM_ST_Higanbana_Suboption == 0 ||
+                           (Config.SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss())) &&
                           ((GetDebuffRemainingTime(Debuffs.Higanbana) <= 19 && JustUsed(Gekko) &&
                             JustUsed(MeikyoShisui, 15f)) || !TargetHasEffect(Debuffs.Higanbana))) ||
                          (SenCount is 2 && !LevelChecked(MidareSetsugekka)) ||
-                         (SenCount is 3 &&
-                          LevelChecked(MidareSetsugekka) && !HasEffect(Buffs.TsubameReady))))
+                         (SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasEffect(Buffs.TsubameReady))))
                         return OriginalHook(Iaijutsu);
                 }
             }
@@ -929,6 +936,7 @@ internal partial class SAM
                         if (!InMeleeRange())
                             return Gyoten;
                     }
+
                     break;
                 }
             }

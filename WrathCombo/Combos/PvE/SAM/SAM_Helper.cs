@@ -1,10 +1,15 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using WrathCombo.Combos.JobHelpers.Enums;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -15,8 +20,9 @@ internal partial class SAM
 
     internal static int MeikyoUsed => ActionWatching.CombatActions.Count(x => x == MeikyoShisui);
 
-    internal static bool trueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                           !HasEffect(All.Buffs.TrueNorth);
+    internal static bool trueNorthReady =>
+        TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
+        !HasEffect(All.Buffs.TrueNorth);
 
     internal static float GCD => GetCooldown(Hakaze).CooldownTotal;
 

@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Objects.SubKinds;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -14,12 +15,12 @@ namespace WrathCombo.Combos.PvE
         ///<summary>
         ///    Whether the player has a shield from HOC from themselves.
         ///</summary>
-        private static bool HasOwnHOC => LocalPlayer != null && CustomComboFunctions.FindEffect(Buffs.HeartOfCorundum | Buffs.HeartOfStone, LocalPlayer, LocalPlayer.GameObjectId) != null;
+        private static bool HasOwnHOC => LocalPlayer != null && FindEffect(Buffs.HeartOfCorundum | Buffs.HeartOfStone, LocalPlayer, LocalPlayer.GameObjectId) != null;
 
         ///<summary>
         ///    Whether the player has buff from HOC from anyone.
         ///</summary>
-        private static bool HasAnyHOC => LocalPlayer != null && CustomComboFunctions.FindEffect(Buffs.HeartOfCorundum | Buffs.HeartOfStone) != null;
+        private static bool HasAnyHOC => LocalPlayer != null && FindEffect(Buffs.HeartOfCorundum | Buffs.HeartOfStone) != null;
 
         ///<summary>
         ///    Decides if the player should use HOC on themselves, based on general rules and the player's configuration.
@@ -29,8 +30,8 @@ namespace WrathCombo.Combos.PvE
         private static bool ShouldHOCSelf(bool aoe = false)
         {
             // Return false if HOC is disabled or already present
-            if ((!aoe && (!CustomComboFunctions.IsEnabled(CustomComboPreset.GNB_ST_Mitigation) || !CustomComboFunctions.IsEnabled(CustomComboPreset.GNB_ST_HOC))) ||
-                (aoe && (!CustomComboFunctions.IsEnabled(CustomComboPreset.GNB_AoE_Mitigation) || !CustomComboFunctions.IsEnabled(CustomComboPreset.GNB_AoE_HOC))) ||
+            if ((!aoe && (!IsEnabled(CustomComboPreset.GNB_ST_Mitigation) || !IsEnabled(CustomComboPreset.GNB_ST_HOC))) ||
+                (aoe && (!IsEnabled(CustomComboPreset.GNB_AoE_Mitigation) || !IsEnabled(CustomComboPreset.GNB_AoE_HOC))) ||
                 HasOwnHOC || LocalPlayer == null || LocalPlayer.TargetObject == null)
             {
                 return false;
@@ -40,17 +41,16 @@ namespace WrathCombo.Combos.PvE
             var inHOCContent = aoe || ContentCheck.IsInConfiguredContent(Config.GNB_ST_HOCDifficulty, Config.GNB_ST_HOCDifficultyListSet);
             if (!inHOCContent) return false;
 
-            var hpRemaining = CustomComboFunctions.PlayerHealthPercentageHp();
+            var hpRemaining = PlayerHealthPercentageHp();
             var hpThreshold = aoe ? 90f : (float)Config.GNB_ST_HOCThreshold;
 
             // Return false if above health threshold
             if (hpRemaining > hpThreshold) return false;
-
-            var targetIsBoss = CustomComboFunctions.IsBoss(LocalPlayer.TargetObject);
+            
             var bossRestriction = aoe ? (int)Config.BossAvoidance.Off : (int)Config.GNB_ST_HOCBossRestriction;
 
             // Return false if avoiding bosses and the target is one
-            if (bossRestriction == (int)Config.BossAvoidance.On && targetIsBoss) return false;
+            if (bossRestriction == (int)Config.BossAvoidance.On && TargetIsBoss()) return false;
 
             return true;
         }
