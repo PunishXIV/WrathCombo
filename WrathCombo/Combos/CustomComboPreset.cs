@@ -2703,7 +2703,7 @@ namespace WrathCombo.Combos
 
         [AutoAction(false, false)]
         [ReplaceSkill(PCT.FireInRed)]
-        [ConflictingCombos(CombinedAetherhues, PCT_ST_AdvancedMode)]
+        [ConflictingCombos(CombinedAetherhues, PCT_ST_AdvancedMode, PCT_ST_Advanced_Openers, PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_2, PCT_ST_Advanced_Openers_3, PCT_ST_Advanced_Openers_EarlyOpener)]
         [CustomComboInfo("Simple Mode - Single Target", "Consolidates the single target rotation into one button, ideal for newcomers.", PCT.JobID)]
         PCT_ST_SimpleMode = 20000,
 
@@ -2722,25 +2722,27 @@ namespace WrathCombo.Combos
         PCT_ST_AdvancedMode = 20005,
 
         [ParentCombo(PCT_ST_AdvancedMode)]
+        [ConflictingCombos(PCT_ST_SimpleMode)]
         [CustomComboInfo("Balance Opener Option", $"Uses the Balance Opener depending on your current level. \n Supports lvl 70, 80, 90, 92, 100. \n - Requirements: \n - Starry Muse off cooldown \n - Pom. Weapon, Landscape Motif", PCT.JobID)]
         PCT_ST_Advanced_Openers = 20006,
 
         [ParentCombo(PCT_ST_Advanced_Openers)]
-        [ConflictingCombos(PCT_ST_Advanced_Openers_2, PCT_ST_Advanced_Openers_3)]
+        [ConflictingCombos(PCT_ST_Advanced_Openers_2, PCT_ST_Advanced_Openers_3, PCT_ST_SimpleMode)]
         [CustomComboInfo("3rd GCD Opener", $"Uses 3rd GCD lvl 100 Balance Opener.", PCT.JobID)]
         PCT_ST_Advanced_Openers_1 = 20036,
 
         [ParentCombo(PCT_ST_Advanced_Openers)]
-        [ConflictingCombos(PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_3)]
+        [ConflictingCombos(PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_3, PCT_ST_SimpleMode)]
         [CustomComboInfo("2nd GCD Opener", $"Uses 2nd GCD lvl 100 Balance Opener.", PCT.JobID)]
         PCT_ST_Advanced_Openers_2 = 20037,
 
         [ParentCombo(PCT_ST_Advanced_Openers)]
-        [ConflictingCombos(PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_2)]
+        [ConflictingCombos(PCT_ST_Advanced_Openers_1, PCT_ST_Advanced_Openers_2, PCT_ST_SimpleMode)]
         [CustomComboInfo("2nd GCD + Swiftcast Opener", $"Uses 2nd GCD lvl 100 Balance Opener with added swiftcast for Wing Motif.", PCT.JobID)]
         PCT_ST_Advanced_Openers_3 = 20038,
 
         [ParentCombo(PCT_ST_Advanced_Openers)]
+        [ConflictingCombos(PCT_ST_SimpleMode)]
         [CustomComboInfo("Early Balance Opener Option", $"Uses Balance Opener. This setting only applies to when below lvl 100", PCT.JobID)]
         PCT_ST_Advanced_Openers_EarlyOpener = 20007,
 
