@@ -686,30 +686,29 @@ namespace WrathCombo.Combos.PvE
                                     return All.Swiftcast;
                             }
                         }
-                    }
-
-                    // SpS Swiftcast
-                    if (swiftcastPhase == 3)
-                    {
-                        // Swiftcast Garuda Feature
-                        if (LevelChecked(Slipstream) && HasEffect(Buffs.GarudasFavor))
+                        // SpS Swiftcast
+                        if (swiftcastPhase == 3)
                         {
-                            if (CanSpellWeave(actionID) && IsGarudaAttuned && IsOffCooldown(All.Swiftcast))
-                                return All.Swiftcast;
+                            // Swiftcast Garuda Feature
+                            if (LevelChecked(Slipstream) && HasEffect(Buffs.GarudasFavor))
+                            {
+                                if (CanSpellWeave(actionID) && IsGarudaAttuned && IsOffCooldown(All.Swiftcast))
+                                    return All.Swiftcast;
 
-                            if (Config.SMN_ST_Egi_AstralFlow[2] &&
-                                ((HasEffect(Buffs.GarudasFavor) && HasEffect(All.Buffs.Swiftcast)) || (gauge.Attunement == 0)))     // Astral Flow if Swiftcast is not ready throughout Garuda
-                                return OriginalHook(AstralFlow);
+                                if (Config.SMN_ST_Egi_AstralFlow[2] &&
+                                    ((HasEffect(Buffs.GarudasFavor) && HasEffect(All.Buffs.Swiftcast)) || (gauge.Attunement == 0)))     // Astral Flow if Swiftcast is not ready throughout Garuda
+                                    return OriginalHook(AstralFlow);
+                            }
+
+                            // Swiftcast Ifrit Feature (Conditions to allow for SpS Ruins to still be under the effect of Swiftcast)
+                            if (IsOffCooldown(All.Swiftcast) && IsIfritAttuned && lastComboMove is not CrimsonCyclone)
+                            {
+                                if (!Config.SMN_ST_Egi_AstralFlow[1] || (Config.SMN_ST_Egi_AstralFlow[1] && gauge.Attunement >= 1))
+                                    return All.Swiftcast;
+                            }
                         }
 
-                        // Swiftcast Ifrit Feature (Conditions to allow for SpS Ruins to still be under the effect of Swiftcast)
-                        if (IsOffCooldown(All.Swiftcast) && IsIfritAttuned && lastComboMove is not CrimsonCyclone)
-                        {
-                            if (!Config.SMN_ST_Egi_AstralFlow[1] || (Config.SMN_ST_Egi_AstralFlow[1] && gauge.Attunement >= 1))
-                                return All.Swiftcast;
-                        }
                     }
-
 
                     // Gemshine priority casting
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_EgiSummons_Attacks) &&
@@ -984,30 +983,29 @@ namespace WrathCombo.Combos.PvE
                                     return All.Swiftcast;
                             }
                         }
-                    }
-
-                    // SpS Swiftcast
-                    if (swiftcastPhase == 3)
-                    {
-                        // Swiftcast Garuda Feature
-                        if (LevelChecked(Slipstream) && HasEffect(Buffs.GarudasFavor))
+                        
+                        // SpS Swiftcast
+                        if (swiftcastPhase == 3)
                         {
-                            if (CanSpellWeave(actionID) && IsGarudaAttuned && IsOffCooldown(All.Swiftcast))
-                                return All.Swiftcast;
+                            // Swiftcast Garuda Feature
+                            if (LevelChecked(Slipstream) && HasEffect(Buffs.GarudasFavor))
+                            {
+                                if (CanSpellWeave(actionID) && IsGarudaAttuned && IsOffCooldown(All.Swiftcast))
+                                    return All.Swiftcast;
 
-                            if (Config.SMN_ST_Egi_AstralFlow[2] &&
-                                ((HasEffect(Buffs.GarudasFavor) && HasEffect(All.Buffs.Swiftcast)) || (gauge.Attunement == 0)))     // Astral Flow if Swiftcast is not ready throughout Garuda
-                                return OriginalHook(AstralFlow);
-                        }
+                                if (Config.SMN_ST_Egi_AstralFlow[2] &&
+                                    ((HasEffect(Buffs.GarudasFavor) && HasEffect(All.Buffs.Swiftcast)) || (gauge.Attunement == 0)))     // Astral Flow if Swiftcast is not ready throughout Garuda
+                                    return OriginalHook(AstralFlow);
+                            }
 
-                        // Swiftcast Ifrit Feature (Conditions to allow for SpS Ruins to still be under the effect of Swiftcast)
-                        if (IsOffCooldown(All.Swiftcast) && IsIfritAttuned && lastComboMove is not CrimsonCyclone)
-                        {
-                            if (!Config.SMN_ST_Egi_AstralFlow[1] || (Config.SMN_ST_Egi_AstralFlow[1] && gauge.Attunement >= 1))
-                                return All.Swiftcast;
+                            // Swiftcast Ifrit Feature (Conditions to allow for SpS Ruins to still be under the effect of Swiftcast)
+                            if (IsOffCooldown(All.Swiftcast) && IsIfritAttuned && lastComboMove is not CrimsonCyclone)
+                            {
+                                if (!Config.SMN_ST_Egi_AstralFlow[1] || (Config.SMN_ST_Egi_AstralFlow[1] && gauge.Attunement >= 1))
+                                    return All.Swiftcast;
+                            }
                         }
                     }
-
 
                     // Precious Brilliance priority casting
                     if (IsEnabled(CustomComboPreset.SMN_Advanced_Combo_EgiSummons_Attacks_AoE) && LevelChecked(PreciousBrilliance) &&
