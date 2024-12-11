@@ -4377,7 +4377,7 @@ namespace WrathCombo.Combos
             SCH_ST_Heal_Dissipation = 16040,
 
             [ParentCombo(SCH_ST_Heal)]
-            [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", SGE.JobID, 4)]
+            [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", SCH.JobID, 4)]
             SCH_ST_Heal_Esuna = 16026,
 
             [ParentCombo(SCH_ST_Heal)]
