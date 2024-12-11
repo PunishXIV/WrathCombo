@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons.GameFunctions;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Services;
@@ -286,7 +287,7 @@ namespace WrathCombo.Combos.PvE
 
                 #region Pre-pull
 
-                if (!InCombat())
+                if (!InCombat() && TargetIsHostile())
                 {
                     // Dance Partner
                     if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Partner) &&
@@ -304,8 +305,7 @@ namespace WrathCombo.Combos.PvE
                         !HasEffect(Buffs.FinishingMoveReady) &&
                         !HasEffect(Buffs.TechnicalFinish) &&
                         IsOffCooldown(TechnicalStep) &&
-                        IsOffCooldown(StandardStep) &&
-                        !HasTarget())
+                        IsOffCooldown(StandardStep))
                         return StandardStep;
 
                     // ST Standard Steps (Pre-pull)
@@ -313,8 +313,7 @@ namespace WrathCombo.Combos.PvE
                          IsEnabled(CustomComboPreset.DNC_ST_Adv_StandardFill) ||
                          IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull)) &&
                         HasEffect(Buffs.StandardStep) &&
-                        gauge.CompletedSteps < 2 &&
-                        !HasTarget())
+                        gauge.CompletedSteps < 2)
                         return gauge.NextStep;
 
                     // ST Peloton
@@ -653,6 +652,7 @@ namespace WrathCombo.Combos.PvE
 
                 // Dance Partner
                 if (!InCombat() &&
+                    TargetIsHostile() &&
                     IsEnabled(CustomComboPreset.DNC_AoE_Adv_Partner) &&
                     ActionReady(ClosedPosition) &&
                     !HasEffect(Buffs.ClosedPosition) &&
