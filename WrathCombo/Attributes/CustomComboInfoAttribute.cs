@@ -67,7 +67,7 @@ namespace WrathCombo.Attributes
 
         public string JobShorthand => JobIDToShorthand(JobID);
 
-        private static string JobIDToShorthand(byte key)
+        internal static string JobIDToShorthand(byte key)
         {
             if (key == 41)
                 return "VPR";
