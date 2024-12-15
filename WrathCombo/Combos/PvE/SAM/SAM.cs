@@ -12,7 +12,7 @@ using static WrathCombo.Combos.PvE.SAM.SAMHelper;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SAM
+internal static partial class SAM
 {
     internal class SAM_ST_YukikazeCombo : CustomCombo
     {

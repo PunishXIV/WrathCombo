@@ -13,7 +13,7 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SAM
+internal static partial class SAM
 {
     internal static SAMGauge gauge = GetJobGauge<SAMGauge>();
     internal static SAMOpenerLogic SAMOpener = new();

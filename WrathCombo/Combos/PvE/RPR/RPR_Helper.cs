@@ -9,15 +9,15 @@ namespace WrathCombo.Combos.PvE;
 
 internal static partial  class RPR
 {
-    public static RPROpenerLogic RPROpener = new();
+    internal static RPROpenerLogic RPROpener = new();
 
-    public static RPRGauge Gauge = GetJobGauge<RPRGauge>();
+    internal static RPRGauge Gauge = GetJobGauge<RPRGauge>();
 
     // RPR Gauge & Extensions
-    public static float GCD => GetCooldown(Slice).CooldownTotal;
+    internal static float GCD => GetCooldown(Slice).CooldownTotal;
 
-    public static bool trueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                         !HasEffect(All.Buffs.TrueNorth);
+    internal static bool trueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
+                                           !HasEffect(All.Buffs.TrueNorth);
 
     internal class RPROpenerLogic
     {
@@ -214,21 +214,21 @@ internal static partial  class RPR
 
     internal static class RPRHelper
     {
-        public static unsafe bool IsComboExpiring(float Times)
+        internal static unsafe bool IsComboExpiring(float Times)
         {
             float GCD = GetCooldown(Slice).CooldownTotal * Times;
 
             return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < GCD;
         }
-        
-        public static bool IsDebuffExpiring(float Times)
+
+        internal static bool IsDebuffExpiring(float Times)
         {
             float GCD = GetCooldown(Slice).CooldownTotal * Times;
 
             return TargetHasEffect(Debuffs.DeathsDesign) && GetDebuffRemainingTime(Debuffs.DeathsDesign) < GCD;
         }
 
-        public static bool UseEnshroud(RPRGauge gauge)
+        internal static bool UseEnshroud(RPRGauge gauge)
         {
             if (LevelChecked(Enshroud) && (gauge.Shroud >= 50 || HasEffect(Buffs.IdealHost)) &&
                 !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Executioner) &&
@@ -266,7 +266,7 @@ internal static partial  class RPR
             return false;
         }
 
-        public static bool UseShadowOfDeath()
+        internal static bool UseShadowOfDeath()
         {
             if (LevelChecked(ShadowOfDeath) && !HasEffect(Buffs.SoulReaver) &&
                 !HasEffect(Buffs.Executioner) && !HasEffect(Buffs.PerfectioParata) &&
