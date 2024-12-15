@@ -3940,36 +3940,35 @@ public enum CustomComboPreset
     RPR_ST_Opener = 12002,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to the rotation.", RPR.JobID)]
-    RPR_ST_SoD = 12003,
-
-    [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Soul Slice Option", "Adds Soul Slice to the rotation.", RPR.JobID)]
-    RPR_ST_SoulSlice = 12004,
-
-    #region Cooldowns ST
-
-    [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the rotation.", RPR.JobID)]
-    RPR_ST_CDs = 12005,
-
-    [ParentCombo(RPR_ST_CDs)]
     [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to the rotation.", RPR.JobID)]
     RPR_ST_ArcaneCircle = 12006,
 
-    [ParentCombo(RPR_ST_CDs)]
+    [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to the rotation.", RPR.JobID)]
     RPR_ST_PlentifulHarvest = 12007,
 
-    [ParentCombo(RPR_ST_CDs)] [CustomComboInfo("Bloodstalk Option", "Adds Bloodstalk to the rotation.", RPR.JobID)]
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to the rotation.", RPR.JobID)]
+    RPR_ST_SoD = 12003,
+    
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Soul Slice Option", "Adds Soul Slice to the rotation.", RPR.JobID)]
+    RPR_ST_SoulSlice = 12004,
+    
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Bloodstalk Option", "Adds Bloodstalk to the rotation.", RPR.JobID)]
     RPR_ST_Bloodstalk = 12008,
-
-    [ParentCombo(RPR_ST_CDs)] [CustomComboInfo("Gluttony Option", "Adds Gluttony to the rotation.", RPR.JobID)]
+    
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Gluttony Option", "Adds Gluttony to the rotation.", RPR.JobID)]
     RPR_ST_Gluttony = 12009,
 
-    #endregion
-
-    [ParentCombo(RPR_ST_AdvancedMode)] [CustomComboInfo("Enshroud Option", "Adds Enshroud to the rotation.", RPR.JobID)]
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Gibbet and Gallows Option", "Adds Gibbet and Gallows to the rotation.", RPR.JobID)]
+    RPR_ST_GibbetGallows = 12016,
+    
+    [ParentCombo(RPR_ST_AdvancedMode)] 
+    [CustomComboInfo("Enshroud Option", "Adds Enshroud to the rotation.", RPR.JobID)]
     RPR_ST_Enshroud = 12010,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
@@ -3983,21 +3982,28 @@ public enum CustomComboPreset
     RPR_ST_Lemure = 12012,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Sacrificium Option", "Adds Sacrificium to the rotation.", RPR.JobID)]
-    RPR_ST_Sacrificium = 12013,
-
-    [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Communio Finisher Option", "Adds Communio to the rotation.", RPR.JobID)]
     RPR_ST_Communio = 12014,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Sacrificium Option", "Adds Sacrificium to the rotation.", RPR.JobID)]
+    RPR_ST_Sacrificium = 12013,
+    
+    [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Perfectio Option", "Adds Perfectio to the rotation.", RPR.JobID)]
     RPR_ST_Perfectio = 12015,
-
+    
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Gibbet and Gallows Option", "Adds Gibbet and Gallows to the rotation.", RPR.JobID)]
-    RPR_ST_GibbetGallows = 12016,
+    [CustomComboInfo("Dynamic True North Feature",
+        "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
+    RPR_ST_TrueNorthDynamic = 12098,
 
+    [ParentCombo(RPR_ST_TrueNorthDynamic)]
+    [CustomComboInfo("Hold True North for Gluttony Option",
+        "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.",
+        RPR.JobID)]
+    RPR_ST_TrueNorthDynamic_HoldCharge = 12099,
+    
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Ranged Filler Option",
         "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", RPR.JobID)]
@@ -4012,18 +4018,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Combo Heals Option",
         "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
     RPR_ST_ComboHeals = 12097,
-
-    [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Dynamic True North Feature",
-        "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
-    RPR_ST_TrueNorthDynamic = 12098,
-
-    [ParentCombo(RPR_ST_TrueNorthDynamic)]
-    [CustomComboInfo("Hold True North for Gluttony Option",
-        "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.",
-        RPR.JobID)]
-    RPR_ST_TrueNorthDynamic_HoldCharge = 12099,
-
+    
     //last value = 12019
 
     #endregion
@@ -4039,37 +4034,33 @@ public enum CustomComboPreset
     RPR_AoE_AdvancedMode = 12101,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to the rotation.", RPR.JobID)]
+    RPR_AoE_ArcaneCircle = 12105,
+
+    [ParentCombo(RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to the rotation.", RPR.JobID)]
+    RPR_AoE_PlentifulHarvest = 12106,
+
+    [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Whorl Of Death Option", "Adds Whorl of Death to the rotation.", RPR.JobID)]
     RPR_AoE_WoD = 12102,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Soul Scythe Option", "Adds Soul Scythe to the rotation.", RPR.JobID)]
     RPR_AoE_SoulScythe = 12103,
-
-    #region Cooldowns
-
-    [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the rotation.", RPR.JobID)]
-    RPR_AoE_CDs = 12104,
-
-    [ParentCombo(RPR_AoE_CDs)]
-    [CustomComboInfo("Arcane Circle Option", "Adds Arcane Circle to the rotation.", RPR.JobID)]
-    RPR_AoE_ArcaneCircle = 12105,
-
-    [ParentCombo(RPR_AoE_CDs)]
-    [CustomComboInfo("Plentiful Harvest Option", "Adds Plentiful Harvest to the rotation.", RPR.JobID)]
-    RPR_AoE_PlentifulHarvest = 12106,
-
-    [ParentCombo(RPR_AoE_CDs)] 
+    
+    [ParentCombo(RPR_AoE_AdvancedMode)] 
     [CustomComboInfo("Grim Swathe Option", "Adds Grim Swathe to the rotation.", RPR.JobID)]
     RPR_AoE_GrimSwathe = 12107,
 
-    [ParentCombo(RPR_AoE_CDs)] 
+    [ParentCombo(RPR_AoE_AdvancedMode)] 
     [CustomComboInfo("Gluttony Option", "Adds Gluttony to the rotation.", RPR.JobID)]
     RPR_AoE_Gluttony = 12108,
 
-    #endregion
-
+    [ParentCombo(RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Guillotine Option", "Adds Guillotine to the rotation.", RPR.JobID)]
+    RPR_AoE_Guillotine = 12115,
+    
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Enshroud Option", "Adds Enshroud to the rotation.", RPR.JobID)]
     RPR_AoE_Enshroud = 12109,
@@ -4085,21 +4076,17 @@ public enum CustomComboPreset
     RPR_AoE_Lemure = 12111,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Sacrificium Option", "Adds Sacrificium to the rotation.", RPR.JobID)]
-    RPR_AoE_Sacrificium = 12112,
-
-    [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Communio Finisher Option", "Adds Communio to the rotation.", RPR.JobID)]
     RPR_AoE_Communio = 12113,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Sacrificium Option", "Adds Sacrificium to the rotation.", RPR.JobID)]
+    RPR_AoE_Sacrificium = 12112,
+    
+    [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Perfectio Option", "Adds Perfectio to the rotation.", RPR.JobID)]
     RPR_AoE_Perfectio = 12114,
-
-    [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Guillotine Option", "Adds Guillotine to the rotation.", RPR.JobID)]
-    RPR_AoE_Guillotine = 12115,
-
+    
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option",
         "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
@@ -4141,6 +4128,20 @@ public enum CustomComboPreset
 
     #endregion
 
+    #region Variant
+
+    [Variant]
+    [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", RPR.JobID)]
+    RPR_Variant_Cure = 12311,
+
+    [Variant]
+    [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", RPR.JobID)]
+    RPR_Variant_Rampart = 12312,
+
+    #endregion
+    
     #region Miscellaneous
 
     [ReplaceSkill(RPR.ArcaneCircle)]
@@ -4196,17 +4197,7 @@ public enum CustomComboPreset
         "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.",
         RPR.JobID)]
     RPR_TrueNorthGluttony = 12310,
-
-    [Variant]
-    [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", RPR.JobID)]
-    RPR_Variant_Cure = 12311,
-
-    [Variant]
-    [VariantParent(RPR_ST_AdvancedMode, RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", RPR.JobID)]
-    RPR_Variant_Rampart = 12312,
-
+    
     // Last value = 12312
 
     #endregion
