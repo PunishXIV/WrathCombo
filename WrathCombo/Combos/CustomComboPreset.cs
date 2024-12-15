@@ -2568,44 +2568,7 @@ public enum CustomComboPreset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Level 100 Opener Option", "Uses the Balance opener.", MCH.JobID)]
     MCH_ST_Adv_Opener = 8101,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Hot Shot / Air Anchor Option", "Adds Hot Shot/Air Anchor to the rotation.", MCH.JobID)]
-    MCH_ST_Adv_AirAnchor = 8102,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Reassemble Option",
-        "Adds Reassemble to the rotation.\nWill be used priority based.\nOrder from highest to lowest priority :\nExcavator - Chainsaw - Air Anchor - Drill - Clean Shot",
-        MCH.JobID)]
-    MCH_ST_Adv_Reassemble = 8103,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate option",
-        "Adds Gauss Round and Ricochet or Double Check and Checkmate to the rotation. Will prevent overcapping.",
-        MCH.JobID)]
-    MCH_ST_Adv_GaussRicochet = 8104,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Hypercharge Option", "Adds Hypercharge to the rotation.", MCH.JobID)]
-    MCH_ST_Adv_Hypercharge = 8105,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Heat Blast / Blazing Shot Option", "Adds Heat Blast or Blazing Shot to the rotation", MCH.JobID)]
-    MCH_ST_Adv_Heatblast = 8106,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Rook Autoturret/Automaton Queen Option",
-        "Adds Rook Autoturret or Automaton Queen to the rotation.", MCH.JobID)]
-    MCH_Adv_TurretQueen = 8107,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Wildfire Option", "Adds Wildfire to the rotation.", MCH.JobID)]
-    MCH_ST_Adv_WildFire = 8108,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Drill Option", "Adds Drill to the rotation.", MCH.JobID)]
-    MCH_ST_Adv_Drill = 8109,
-
+    
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Barrel Stabilizer Option", "Adds Barrel Stabilizer to the rotation.", MCH.JobID)]
     MCH_ST_Adv_Stabilizer = 8110,
@@ -2615,16 +2578,53 @@ public enum CustomComboPreset
     MCH_ST_Adv_Stabilizer_FullMetalField = 8111,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate option",
+        "Adds Gauss Round and Ricochet or Double Check and Checkmate to the rotation. Will prevent overcapping.",
+        MCH.JobID)]
+    MCH_ST_Adv_GaussRicochet = 8104,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Wildfire Option", "Adds Wildfire to the rotation.", MCH.JobID)]
+    MCH_ST_Adv_WildFire = 8108,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Hypercharge Option", "Adds Hypercharge to the rotation.", MCH.JobID)]
+    MCH_ST_Adv_Hypercharge = 8105,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Heat Blast / Blazing Shot Option", "Adds Heat Blast or Blazing Shot to the rotation", MCH.JobID)]
+    MCH_ST_Adv_Heatblast = 8106,
+    
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Rook Autoturret/Automaton Queen Option",
+        "Adds Rook Autoturret or Automaton Queen to the rotation.", MCH.JobID)]
+    MCH_Adv_TurretQueen = 8107,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Rook / Queen Overdrive Option", "Adds Rook or Queen Overdrive to the rotation.", MCH.JobID)]
+    MCH_ST_Adv_QueenOverdrive = 8115,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Reassemble Option",
+        "Adds Reassemble to the rotation.\nWill be used priority based.\nOrder from highest to lowest priority :\nExcavator - Chainsaw - Air Anchor - Drill - Clean Shot",
+        MCH.JobID)]
+    MCH_ST_Adv_Reassemble = 8103,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Drill Option", "Adds Drill to the rotation.", MCH.JobID)]
+    MCH_ST_Adv_Drill = 8109,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Hot Shot / Air Anchor Option", "Adds Hot Shot/Air Anchor to the rotation.", MCH.JobID)]
+    MCH_ST_Adv_AirAnchor = 8102,
+    
+    [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the rotation.", MCH.JobID)]
     MCH_ST_Adv_Chainsaw = 8112,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.", MCH.JobID)]
     MCH_ST_Adv_Excavator = 8116,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Rook / Queen Overdrive Option", "Adds Rook or Queen Overdrive to the rotation.", MCH.JobID)]
-    MCH_ST_Adv_QueenOverdrive = 8115,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Head Graze Option", "Uses Head Graze to interrupt during the rotation, where applicable.",
@@ -2648,8 +2648,17 @@ public enum CustomComboPreset
     MCH_AoE_AdvancedMode = 8300,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
-    [CustomComboInfo("Reassemble Option", "Adds Reassemble to the rotation.", MCH.JobID)]
-    MCH_AoE_Adv_Reassemble = 8301,
+    [CustomComboInfo("Flamethrower Option",
+        "Adds Flamethrower to the rotation.\n Changes to Savage blade when in use to prevent cancelling.", MCH.JobID)]
+    MCH_AoE_Adv_FlameThrower = 8305,
+
+    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Barrel Stabilizer Option", "Adds Barrel Stabilizer to the rotation.", MCH.JobID)]
+    MCH_AoE_Adv_Stabilizer = 8307,
+
+    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Full Metal Field Option", "Adds Full Metal Field to the rotation.", MCH.JobID)]
+    MCH_AoE_Adv_Stabilizer_FullMetalField = 8308,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate option",
@@ -2670,21 +2679,12 @@ public enum CustomComboPreset
     MCH_AoE_Adv_Queen = 8304,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
-    [CustomComboInfo("Flamethrower Option",
-        "Adds Flamethrower to the rotation.\n Changes to Savage blade when in use to prevent cancelling.", MCH.JobID)]
-    MCH_AoE_Adv_FlameThrower = 8305,
-
+    [CustomComboInfo("Reassemble Option", "Adds Reassemble to the rotation.", MCH.JobID)]
+    MCH_AoE_Adv_Reassemble = 8301,
+    
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Bioblaster Option", "Adds Bioblaster to the rotation.", MCH.JobID)]
     MCH_AoE_Adv_Bioblaster = 8306,
-
-    [ParentCombo(MCH_AoE_AdvancedMode)]
-    [CustomComboInfo("Barrel Stabilizer Option", "Adds Barrel Stabilizer to the rotation.", MCH.JobID)]
-    MCH_AoE_Adv_Stabilizer = 8307,
-
-    [ParentCombo(MCH_AoE_AdvancedMode)]
-    [CustomComboInfo("Full Metal Field Option", "Adds Full Metal Field to the rotation.", MCH.JobID)]
-    MCH_AoE_Adv_Stabilizer_FullMetalField = 8308,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the the rotation.", MCH.JobID)]
@@ -2695,14 +2695,14 @@ public enum CustomComboPreset
     MCH_AoE_Adv_Excavator = 8310,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
-    [CustomComboInfo("Second Wind Option", "Use Second Wind when below the set HP percentage.", MCH.JobID)]
-    MCH_AoE_Adv_SecondWind = 8399,
-
-    [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Head Graze Option", "Uses Head Graze to interrupt during the rotation, where applicable.",
         MCH.JobID)]
     MCH_AoE_Adv_Interrupt = 8311,
 
+    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Second Wind Option", "Use Second Wind when below the set HP percentage.", MCH.JobID)]
+    MCH_AoE_Adv_SecondWind = 8399,
+    
     #endregion
 
     #region Variant
@@ -2719,21 +2719,17 @@ public enum CustomComboPreset
 
     #endregion
 
-    [ReplaceSkill(MCH.RookAutoturret, MCH.AutomatonQueen)]
-    [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active.",
-        MCH.JobID)]
-    MCH_Overdrive = 8002,
+    [ReplaceSkill(MCH.Dismantle)]
+    [CustomComboInfo("Physical Ranged DPS: Double Dismantle Protection",
+        "Prevents the use of Dismantle when target already has the effect.", MCH.JobID)]
+    All_PRanged_Dismantle = 8042,
 
-    [ReplaceSkill(MCH.GaussRound, MCH.Ricochet, MCH.CheckMate, MCH.DoubleCheck)]
-    [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate Feature",
-        "Replace Gauss Round and Ricochet or Double Check and Checkmate with one or the other depending on which has more charges.",
+    [ReplaceSkill(MCH.Dismantle)]
+    [CustomComboInfo("Dismantle - Tactician", "Swap dismantle with tactician when dismantle is on cooldown.",
         MCH.JobID)]
-    MCH_GaussRoundRicochet = 8003,
+    MCH_DismantleTactician = 8058,
 
-    [ReplaceSkill(MCH.Drill, MCH.AirAnchor, MCH.HotShot, MCH.Chainsaw)]
-    [CustomComboInfo("Big Hitter Feature",
-        "Replace Hot Shot, Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown.", MCH.JobID)]
-    MCH_HotShotDrillChainsawExcavator = 8004,
+    #region Heatblast
 
     [ReplaceSkill(MCH.Heatblast, MCH.BlazingShot)]
     [CustomComboInfo("Single Button Heat Blast Feature",
@@ -2755,6 +2751,10 @@ public enum CustomComboPreset
         MCH.JobID)]
     MCH_Heatblast_GaussRound = 8016,
 
+    #endregion
+
+    #region AutoCrossbow
+
     [ReplaceSkill(MCH.AutoCrossbow)]
     [CustomComboInfo("Single Button Auto Crossbow Feature",
         "Turns Auto Crossbow into Hypercharge when at or above 50 heat.", MCH.JobID)]
@@ -2770,16 +2770,26 @@ public enum CustomComboPreset
         MCH.JobID)]
     MCH_AutoCrossbow_GaussRound = 8020,
 
-    [ReplaceSkill(MCH.Dismantle)]
-    [CustomComboInfo("Physical Ranged DPS: Double Dismantle Protection",
-        "Prevents the use of Dismantle when target already has the effect.", MCH.JobID)]
-    All_PRanged_Dismantle = 8042,
-
-    [ReplaceSkill(MCH.Dismantle)]
-    [CustomComboInfo("Dismantle - Tactician", "Swap dismantle with tactician when dismantle is on cooldown.",
+    #endregion
+    
+    [ReplaceSkill(MCH.RookAutoturret, MCH.AutomatonQueen)]
+    [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active.",
         MCH.JobID)]
-    MCH_DismantleTactician = 8058,
+    MCH_Overdrive = 8002,
+    
+    [ReplaceSkill(MCH.Drill, MCH.AirAnchor, MCH.HotShot, MCH.Chainsaw)]
+    [CustomComboInfo("Big Hitter Feature",
+        "Replace Hot Shot, Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown.", MCH.JobID)]
+    MCH_HotShotDrillChainsawExcavator = 8004,
+    
+    [ReplaceSkill(MCH.GaussRound, MCH.Ricochet, MCH.CheckMate, MCH.DoubleCheck)]
+    [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate Feature",
+        "Replace Gauss Round and Ricochet or Double Check and Checkmate with one or the other depending on which has more charges.",
+        MCH.JobID)]
+    MCH_GaussRoundRicochet = 8003,
+    
 
+    
     // Last value = 8058
 
     #endregion
