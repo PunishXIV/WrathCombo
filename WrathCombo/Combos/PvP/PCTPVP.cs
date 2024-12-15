@@ -67,7 +67,7 @@ namespace WrathCombo.Combos.PvP
                             return OriginalHook(TemperaCoat);
                     }
 
-                    if (hasTarget && !PvPCommon.IsImmuneToDamage())
+                    if (hasTarget && !PvPCommon.TargetImmuneToDamage())
                     {
                         // Star Prism
                         if (IsEnabled(CustomComboPreset.PCTPvP_StarPrism))

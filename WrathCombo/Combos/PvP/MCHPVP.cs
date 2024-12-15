@@ -63,7 +63,7 @@ namespace WrathCombo.Combos.PvP
                     var overheated = HasEffect(Buffs.Overheated);
                     var FMFOption = PluginConfiguration.GetCustomIntValue(Config.MCHPVP_FMFOption);
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     {
                         // MarksmanSpite execute condition - todo add config
                         if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite) && EnemyHealthCurrentHp() < GetOptionValue(Config.MCHPVP_MarksmanSpite) && IsLB1Ready)

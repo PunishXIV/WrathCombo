@@ -71,7 +71,7 @@ namespace WrathCombo.Combos.PvP
                     if (CanWeave(ActionWatching.LastWeaponskill) && IsEnabled(CustomComboPreset.GNBPvP_Corundum) && PlayerHealthPercentageHp() <= corundumThreshold && IsOffCooldown(HeartOfCorundum))
                         return HeartOfCorundum;
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     {
                         if (CanWeave(ActionWatching.LastWeaponskill)) //Weave section
                         {

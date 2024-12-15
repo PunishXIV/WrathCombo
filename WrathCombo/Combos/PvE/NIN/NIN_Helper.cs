@@ -1,6 +1,9 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
+using System;
+using System.Collections.ObjectModel;
 using WrathCombo.Combos.JobHelpers.Enums;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -31,6 +34,10 @@ internal partial class NIN
             return CustomComboFunctions.TargetHasEffect(Debuffs.Mug) ||
                    CustomComboFunctions.TargetHasEffect(Debuffs.Dokumori);
         }
+
+        public static Status? MudraBuff => CustomComboFunctions.FindEffect(Buffs.Mudra);
+
+        public static uint CurrentNinjutsu => CustomComboFunctions.OriginalHook(Ninjutsu);
     }
 
     internal class MudraCasting
@@ -49,23 +56,7 @@ internal partial class NIN
             CastingHyoshoRanryu
         }
 
-        private MudraState currentMudra = MudraState.None;
-
-        private bool justResetMudra;
-
-        public MudraState CurrentMudra
-        {
-            get => currentMudra;
-            set
-            {
-                if (value == MudraState.None)
-                    justResetMudra = true;
-                else
-                    justResetMudra = false;
-
-                currentMudra = value;
-            }
-        }
+        public MudraState CurrentMudra = MudraState.None;
 
         ///<summary> Checks if the player is in a state to be able to cast a ninjitsu.</summary>
         private static bool CanCast()
@@ -98,7 +89,7 @@ internal partial class NIN
                     return false;
                 }
 
-                if (ActionWatching.LastAction == Ten)
+                if (ActionWatching.LastAction is Ten or TenCombo)
                 {
                     actionID = CustomComboFunctions.OriginalHook(Ninjutsu);
 
@@ -130,7 +121,7 @@ internal partial class NIN
                     return false;
                 }
 
-                if (ActionWatching.LastAction == Ten)
+                if (ActionWatching.LastAction is Ten or TenCombo)
                 {
                     actionID = CustomComboFunctions.OriginalHook(Chi);
 
@@ -169,7 +160,7 @@ internal partial class NIN
                     return false;
                 }
 
-                if (ActionWatching.LastAction == Chi)
+                if (ActionWatching.LastAction is Chi or ChiCombo)
                 {
                     actionID = CustomComboFunctions.OriginalHook(Ten);
 
@@ -247,7 +238,7 @@ internal partial class NIN
                     return false;
                 }
 
-                if (ActionWatching.LastAction == Chi)
+                if (ActionWatching.LastAction is Chi or ChiCombo)
                 {
                     actionID = CustomComboFunctions.OriginalHook(Jin);
 
@@ -293,7 +284,7 @@ internal partial class NIN
                     return false;
                 }
 
-                if (ActionWatching.LastAction == Ten)
+                if (ActionWatching.LastAction is Ten or TenCombo)
                 {
                     actionID = CustomComboFunctions.OriginalHook(Jin);
 
@@ -339,7 +330,7 @@ internal partial class NIN
                     return false;
                 }
 
-                if (ActionWatching.LastAction == Ten)
+                if (ActionWatching.LastAction is Ten or TenCombo)
                 {
                     actionID = CustomComboFunctions.OriginalHook(Chi);
 
@@ -451,6 +442,14 @@ internal partial class NIN
 
         public bool ContinueCurrentMudra(ref uint actionID)
         {
+
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds > 1 && NINHelper.CurrentNinjutsu == Ninjutsu && CurrentMudra != MudraState.None)
+            {
+                NINHelper.InMudra = false;
+                ActionWatching.LastAction = 0;
+                CurrentMudra = MudraState.None;
+            }
+
             if ((ActionWatching.LastAction == FumaShuriken ||
                  ActionWatching.LastAction == Katon ||
                  ActionWatching.LastAction == Raiton ||
@@ -459,9 +458,11 @@ internal partial class NIN
                  ActionWatching.LastAction == Doton ||
                  ActionWatching.LastAction == Suiton ||
                  ActionWatching.LastAction == GokaMekkyaku ||
-                 ActionWatching.LastAction == HyoshoRanryu) &&
-                !justResetMudra)
+                 ActionWatching.LastAction == HyoshoRanryu))
+            {
                 CurrentMudra = MudraState.None;
+                NINHelper.InMudra = false;
+            }
 
             return CurrentMudra switch
             {

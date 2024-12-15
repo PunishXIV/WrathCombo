@@ -54,6 +54,7 @@ namespace WrathCombo.Combos.PvE
         public static class Buffs
         {
             public const ushort
+                IronWill = 79,
                 Requiescat = 1368,
                 AtonementReady = 1902, // First Atonement Buff
                 SupplicationReady = 3827, // Second Atonement Buff
@@ -433,19 +434,19 @@ namespace WrathCombo.Combos.PvE
                                 // Hallowed Ground
                                 if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_HallowedGround) && ActionReady(HallowedGround) &&
                                     PlayerHealthPercentageHp() < Config.PLD_ST_HallowedGround_Health && (Config.PLD_ST_HallowedGround_SubOption == 1 ||
-                                    (IsBoss(CurrentTarget!) && Config.PLD_ST_HallowedGround_SubOption == 2)))
+                                    (TargetIsBoss() && Config.PLD_ST_HallowedGround_SubOption == 2)))
                                     return HallowedGround;
 
                                 // Sentinel / Guardian
                                 if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Sentinel) && ActionReady(OriginalHook(Sentinel)) &&
                                     PlayerHealthPercentageHp() < Config.PLD_ST_Sentinel_Health && (Config.PLD_ST_Sentinel_SubOption == 1 ||
-                                    (IsBoss(CurrentTarget!) && Config.PLD_ST_Sentinel_SubOption == 2)))
+                                    (TargetIsBoss() && Config.PLD_ST_Sentinel_SubOption == 2)))
                                     return OriginalHook(Sentinel);
 
                                 // Rampart
                                 if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Rampart) && ActionReady(All.Rampart) &&
                                     PlayerHealthPercentageHp() < Config.PLD_ST_Rampart_Health && (Config.PLD_ST_Rampart_SubOption == 1 ||
-                                    (IsBoss(CurrentTarget!) && Config.PLD_ST_Rampart_SubOption == 2)))
+                                    (TargetIsBoss() && Config.PLD_ST_Rampart_SubOption == 2)))
                                     return All.Rampart;
 
                                 // Sheltron
@@ -609,19 +610,19 @@ namespace WrathCombo.Combos.PvE
                                 // Hallowed Ground
                                 if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_HallowedGround) && ActionReady(HallowedGround) &&
                                     PlayerHealthPercentageHp() < Config.PLD_AoE_HallowedGround_Health && (Config.PLD_AoE_HallowedGround_SubOption == 1 ||
-                                    (IsBoss(CurrentTarget!) && Config.PLD_AoE_HallowedGround_SubOption == 2)))
+                                    (TargetIsBoss() && Config.PLD_AoE_HallowedGround_SubOption == 2)))
                                     return HallowedGround;
 
                                 // Sentinel / Guardian
                                 if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Sentinel) && ActionReady(OriginalHook(Sentinel)) &&
                                     PlayerHealthPercentageHp() < Config.PLD_AoE_Sentinel_Health && (Config.PLD_AoE_Sentinel_SubOption == 1 ||
-                                    (IsBoss(CurrentTarget!) && Config.PLD_AoE_Sentinel_SubOption == 2)))
+                                    (TargetIsBoss() && Config.PLD_AoE_Sentinel_SubOption == 2)))
                                     return OriginalHook(Sentinel);
 
                                 // Rampart
                                 if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Rampart) && ActionReady(All.Rampart) &&
                                     PlayerHealthPercentageHp() < Config.PLD_AoE_Rampart_Health && (Config.PLD_AoE_Rampart_SubOption == 1 ||
-                                    (IsBoss(CurrentTarget!) && Config.PLD_AoE_Rampart_SubOption == 2)))
+                                    (TargetIsBoss() && Config.PLD_AoE_Rampart_SubOption == 2)))
                                     return All.Rampart;
 
                                 // Sheltron

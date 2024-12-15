@@ -23,7 +23,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public class JobIDs
         {
-            public static int JobIDToRole(byte jobID)
+            public static int JobIDToRole(uint jobID)
             {
                 if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
                     return Svc.Data.GetExcelSheet<ClassJob>().GetRow(jobID).Role;
@@ -31,7 +31,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 return 0;
             }
 
-            public static string JobIDToShorthand(byte key)
+            public static string JobIDToShorthand(uint key)
             {
                 if (key == 0)
                     return "";
@@ -48,7 +48,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
             private static readonly Dictionary<uint, ClassJob> ClassJobs = Svc.Data.GetExcelSheet<ClassJob>()!.ToDictionary(i => i.RowId, i => i);
 
-            public static string JobIDToName(byte key)
+            public static string JobIDToName(uint key)
             {
                 if (key == 0)
                     return "General/Multiple Jobs";
@@ -77,7 +77,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 else return key == 99 ? "Global" : "Unknown";
             }
 
-            public static uint JobIDToClassJobCategory(byte jobID)
+            public static uint JobIDToClassJobCategory(uint jobID)
             {
                 if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
                     return Svc.Data.GetExcelSheet<ClassJob>().GetRow(jobID).ClassJobCategory.RowId;

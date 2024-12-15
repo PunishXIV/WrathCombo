@@ -30,7 +30,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is Glare)
                 {
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     {
                         // Afflatus Misery if enabled and off cooldown
                         if (IsEnabled(CustomComboPreset.WHMPvP_Afflatus_Misery) && IsOffCooldown(AfflatusMisery))

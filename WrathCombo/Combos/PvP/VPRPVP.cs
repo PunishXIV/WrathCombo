@@ -77,7 +77,7 @@ namespace WrathCombo.Combos.PvP
                 bool inMeleeRange = targetDistance <= 5;
                 bool hasSlither = HasEffect(Buffs.Slither);
                 bool hasBind = HasEffectAny(PvPCommon.Debuffs.Bind);
-                bool targetHasImmunity = PvPCommon.IsImmuneToDamage();
+                bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
                 bool hasBacklash = OriginalHook(SnakeScales) is Backlash;
                 bool hasOuroboros = OriginalHook(Bloodcoil) is Ouroboros;
                 bool hasSnakesBane = hasBacklash && HasEffect(Buffs.SnakesBane);

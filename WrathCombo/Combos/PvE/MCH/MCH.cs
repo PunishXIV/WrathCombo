@@ -1,11 +1,15 @@
+#region
+
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 
+#endregion
+
 namespace WrathCombo.Combos.PvE;
 
-internal partial class MCH
+internal static partial class MCH
 {
     internal class MCH_ST_SimpleMode : CustomCombo
     {
@@ -29,11 +33,13 @@ internal partial class MCH
                 return Variant.VariantRampart;
 
             // Opener
-            if (MCHOpener.DoFullOpener(ref actionID))
-                return actionID;
+            if (TargetIsHostile())
+                if (MCHOpener.DoFullOpener(ref actionID))
+                    return actionID;
 
             //Reassemble to start before combat
-            if (!HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) && !InCombat())
+            if (!HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) && 
+                !InCombat() && TargetIsHostile())
                 return Reassemble;
 
             // Interrupt
@@ -172,13 +178,14 @@ internal partial class MCH
                 return Variant.VariantRampart;
 
             // Opener
-            if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Opener))
+            if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Opener) && TargetIsHostile())
                 if (MCHOpener.DoFullOpener(ref actionID))
                     return actionID;
 
             //Reassemble to start before combat
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) &&
-                !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) && !InCombat())
+                !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
+                !InCombat() && TargetIsHostile())
                 return Reassemble;
 
             // Interrupt
@@ -367,6 +374,7 @@ internal partial class MCH
 
                         if (!HasEffect(Buffs.Wildfire) &&
                             !HasEffect(Buffs.Reassembled) && HasCharges(Reassemble) &&
+                            !JustUsed(Flamethrower, 10f) &&
                             (Scattergun.LevelChecked() ||
                              (Gauge.IsOverheated && AutoCrossbow.LevelChecked()) ||
                              (GetCooldownRemainingTime(Chainsaw) < 1 && Chainsaw.LevelChecked()) ||
@@ -492,7 +500,7 @@ internal partial class MCH
                             return Hypercharge;
 
                         if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !HasEffect(Buffs.Wildfire) &&
-                            !HasEffect(Buffs.Reassembled) && HasCharges(Reassemble) &&
+                            !HasEffect(Buffs.Reassembled) && HasCharges(Reassemble) && !JustUsed(Flamethrower, 10f) &&
                             GetRemainingCharges(Reassemble) > Config.MCH_AoE_ReassemblePool &&
                             ((Config.MCH_AoE_Reassembled[0] && Scattergun.LevelChecked()) ||
                              (Gauge.IsOverheated && Config.MCH_AoE_Reassembled[1] && AutoCrossbow.LevelChecked()) ||
@@ -705,8 +713,8 @@ internal partial class MCH
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID is Drill or HotShot or AirAnchor or Chainsaw)
-                return LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady)
+            return actionID is Drill or HotShot or AirAnchor or Chainsaw
+                ? LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady)
                     ? CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill)
                     : LevelChecked(Chainsaw)
                         ? CalcBestAction(actionID, Chainsaw, AirAnchor, Drill)
@@ -714,9 +722,8 @@ internal partial class MCH
                             ? CalcBestAction(actionID, AirAnchor, Drill)
                             : LevelChecked(Drill)
                                 ? CalcBestAction(actionID, Drill, HotShot)
-                                : HotShot;
-
-            return actionID;
+                                : HotShot
+                : actionID;
         }
     }
 
@@ -802,7 +809,7 @@ internal partial class MCH
     public static class Debuffs
     {
         public const ushort
-            Dismantled = 2887,
+            Dismantled = 860,
             Bioblaster = 1866;
     }
 

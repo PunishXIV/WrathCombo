@@ -10,6 +10,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
+using ImGuiNET;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
@@ -48,7 +49,8 @@ namespace WrathCombo.CustomComboNS.Functions
 
             Vector2 position = new(chara.Position.X, chara.Position.Z);
             Vector2 selfPosition = new(sourceChara.Position.X, sourceChara.Position.Z);
-            return Math.Max(0, Vector2.Distance(position, selfPosition) - chara.HitboxRadius);
+
+            return Math.Max(0, Vector2.Distance(position, selfPosition) - chara.HitboxRadius - sourceChara.HitboxRadius);
         }
 
         /// <summary> Gets a value indicating whether you are in melee range from the current target. </summary>
@@ -63,7 +65,7 @@ namespace WrathCombo.CustomComboNS.Functions
             if (distance == 0)
                 return true;
 
-            if (distance > 3.5 + Service.Configuration.MeleeOffset)
+            if (distance > 3.0 + Service.Configuration.MeleeOffset)
                 return false;
 
             return true;
@@ -84,7 +86,7 @@ namespace WrathCombo.CustomComboNS.Functions
             {
                 float percent = (float)chara.CurrentHp / chara.MaxHp * 100f;
                 if (includeShield) percent += chara.ShieldPercentage;
-                return percent;
+                return Math.Clamp(percent, 0f, 100f);
             }
             else return 0;
         }
@@ -113,9 +115,8 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static bool HasBattleTarget() => CurrentTarget is IBattleNpc { BattleNpcKind: BattleNpcSubKind.Enemy or (BattleNpcSubKind)1 };
 
-        /// <summary> Checks if the player's current target is also targeting the player. </summary>
-        /// <returns> Bool indicating whether the player's current target is also targeting the player. </returns>
-        public static bool IsPlayerTargeted() => CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
+        /// <summary> Checks if the player is being targeted by a hostile target. </summary>
+        public static bool IsPlayerTargeted() => Svc.Objects.Any(x => x.IsHostile() && x.IsTargetable && x.TargetObjectId == LocalPlayer.GameObjectId);
 
         public static bool HasFriendlyTarget(IGameObject? OurTarget = null)
         {
@@ -197,9 +198,10 @@ namespace WrathCombo.CustomComboNS.Functions
 
         /// <summary> Checks if target is in appropriate range for targeting </summary>
         /// <param name="target"> The target object to check </param>
-        public static bool IsInRange(IGameObject? target)
+        /// <param name="distance">Optional distance to check</param>
+        public static bool IsInRange(IGameObject? target, float distance = 25f)
         {
-            if (target == null || GetTargetDistance(target, LocalPlayer) >= 30)
+            if (target == null || GetTargetDistance(target, LocalPlayer) >= distance)
                 return false;
 
             return true;
@@ -444,7 +446,7 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
-        public unsafe static int NumberOfEnemiesInRange(uint aoeSpell, IGameObject? target)
+        public unsafe static int NumberOfEnemiesInRange(uint aoeSpell, IGameObject? target, bool checkIgnoredList = false)
         {
             ActionWatching.ActionSheet.Values.TryGetFirst(x => x.RowId == aoeSpell, out var sheetSpell);
             bool needsTarget = sheetSpell.CanTargetHostile;
@@ -452,9 +454,9 @@ namespace WrathCombo.CustomComboNS.Functions
             int count = sheetSpell.CastType switch
             {
                 1 => 1,
-                2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange) : CanRangedCircleAoe(sheetSpell.EffectRange, target),
-                3 => CanConeAoe(sheetSpell.EffectRange),
-                4 => CanLineAoe(sheetSpell.EffectRange),
+                2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange, checkIgnoredList) : CanRangedCircleAoe(sheetSpell.EffectRange, target, checkIgnoredList),
+                3 => CanConeAoe(sheetSpell.Range, sheetSpell.EffectRange, checkIgnoredList),
+                4 => CanLineAoe(sheetSpell.Range, sheetSpell.XAxisModifier, checkIgnoredList),
                 _ => 0
             };
 
@@ -476,7 +478,7 @@ namespace WrathCombo.CustomComboNS.Functions
         #region Point in Cone
         public static bool PointInCone(Vector3 offsetFromOrigin, Vector3 direction, float halfAngle)
         {
-            return Vector3.Dot(Vector3.Normalize(offsetFromOrigin), direction) >= MathF.Cos(halfAngle);
+            return Vector3.Dot(Vector3.Normalize(offsetFromOrigin), direction) > MathF.Cos(halfAngle);
         }
         public static bool PointInCone(Vector3 offsetFromOrigin, float direction, float halfAngle)
         {
@@ -484,67 +486,111 @@ namespace WrathCombo.CustomComboNS.Functions
         }
         #endregion
         #region Point in Rect
-        public static bool PointInRect(Vector3 offsetFromOrigin, Vector3 direction, float lenFront, float lenBack, float halfWidth)
+
+        public static bool HitboxInRect(IGameObject o, float direction, float lenFront, float halfWidth)
         {
-            var normal = new Vector3(-direction.Z, 0, direction.X);
-            var dotDir = Vector3.Dot(offsetFromOrigin, direction);
-            var dotNormal = Vector3.Dot(offsetFromOrigin, normal);
-            return dotDir >= -lenBack && dotDir <= lenFront && MathF.Abs(dotNormal) <= halfWidth;
+            Vector2 A = new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+            Vector2 d = new Vector2(MathF.Sin(direction), MathF.Cos(direction));
+            Vector2 n = new Vector2(d.Y, -d.X);
+            Vector2 P = new Vector2(o.Position.X, o.Position.Z);
+            float R = o.HitboxRadius;
+
+            Vector2 Q = A + d * (lenFront / 2);
+            Vector2 P2 = P - Q;
+            Vector2 Ptrans = new Vector2(Vector2.Dot(P2, n), Vector2.Dot(P2, d));
+            Vector2 Pabs = new Vector2(Math.Abs(Ptrans.X), Math.Abs(Ptrans.Y));
+            Vector2 Pcorner = new Vector2(Math.Abs(Ptrans.X) - halfWidth, Math.Abs(Ptrans.Y) - (lenFront / 2));
+            if (Svc.GameGui.WorldToScreen(o.Position, out var screenCoords))
+            {
+                var objectText = $"A = {A}\n" +
+                    $"d = {d}\n" +
+                    $"n = {n}\n" +
+                    $"P = {P}\n" +
+                    $"Q = {Q}\n" +
+                    $"P2 = {P2}\n" +
+                    $"Ptrans = {Ptrans}\n"+
+                    $"Pcorner{Pcorner}\n" +
+                    $"R = {R}, R * R = {R * R}\n" +
+                    $"PcornerSquared = {Pcorner.LengthSquared()}\n" +
+                    $"PcornerX > R = {Pcorner.X > R}, PcornerY > R = {Pcorner.Y > R}\n" +
+                    $"PcornerX <= 0 = {Pcorner.X <= 0}, PcornerY <= 0 = {Pcorner.Y <= 0}";
+
+                var screenPos = ImGui.GetMainViewport().Pos;
+
+                ImGui.SetNextWindowPos(new Vector2(screenCoords.X, screenCoords.Y));
+
+                ImGui.SetNextWindowBgAlpha(1f);
+                if (ImGui.Begin(
+                        $"Actor##ActorWindow{o.GameObjectId}",
+                        ImGuiWindowFlags.NoDecoration |
+                        ImGuiWindowFlags.AlwaysAutoResize |
+                        ImGuiWindowFlags.NoSavedSettings |
+                        ImGuiWindowFlags.NoMove |
+                        ImGuiWindowFlags.NoMouseInputs |
+                        ImGuiWindowFlags.NoDocking |
+                        ImGuiWindowFlags.NoFocusOnAppearing |
+                        ImGuiWindowFlags.NoNav))
+                    ImGui.Text(objectText);
+                ImGui.End();
+            }
+
+            if (Pcorner.X > R || Pcorner.Y > R)
+                return false;
+
+            if (Pcorner.X <= 0 || Pcorner.Y <= 0)
+                return true;
+
+            return Pcorner.LengthSquared() <= R * R;
         }
 
-        public static bool PointInRect(Vector3 offsetFromOrigin, float direction, float lenFront, float lenBack, float halfWidth)
-        {
-            return PointInRect(offsetFromOrigin, DirectionToVec3(direction), lenFront, lenBack, halfWidth);
-        }
-
-        public static bool PointInRect(Vector3 offsetFromOrigin, Vector3 startToEnd, float halfWidth)
-        {
-            var len = startToEnd.Length();
-            return PointInRect(offsetFromOrigin, startToEnd / len, len, 0, halfWidth);
-        }
         #endregion
 
         #endregion
 
         // Circle Aoe
-        public static int CanCircleAoe(float effectRange)
+        public static int CanCircleAoe(float effectRange, bool checkIgnoredList = false)
         {
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
+                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
                                                                  PointInCircle(o.Position - LocalPlayer.Position, effectRange + o.HitboxRadius));
         }
 
         // Ranged Circle Aoe 
-        public static int CanRangedCircleAoe(float effectRange, IGameObject? target)
+        public static int CanRangedCircleAoe(float effectRange, IGameObject? target, bool checkIgnoredList = false)
         {
             if (target == null) return 0;
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
+                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
                                                                  PointInCircle(o.Position - target.Position, effectRange + o.HitboxRadius));
         }
 
         // Cone Aoe 
-        public static int CanConeAoe(float effectRange)
+        public static int CanConeAoe(float range, float effectRange, bool checkIgnoredList = false)
         {
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
-                                                                 PointInCone(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, 0 + o.HitboxRadius / 2f) &&
-                                                                 PointInCircle(o.Position - LocalPlayer.Position, effectRange + o.HitboxRadius));
+                                                                 GetTargetDistance(o) <= range &&
+                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
+                                                                 PointInCone(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, 45f));
         }
 
         // Line Aoe 
-        public static int CanLineAoe(float effectRange)
+        public static int CanLineAoe(float range, float effectRange, bool checkIgnoredList = false)
         {
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
-                                                                 PointInRect(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, effectRange, 1, 2));
+                                                                 GetTargetDistance(o) <= range &&
+                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
+                                                                 HitboxInRect(o, LocalPlayer.Rotation, range, effectRange / 2));
         }
 
-        internal unsafe static bool IsInLineOfSight(IGameObject target)
+        internal static unsafe bool IsInLineOfSight(IGameObject target)
         {
             var sourcePos = FFXIVClientStructs.FFXIV.Common.Math.Vector3.Zero;
 
@@ -571,8 +617,12 @@ namespace WrathCombo.CustomComboNS.Functions
             return isLoSBlocked == false;
         }
 
-        internal unsafe static bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
+        internal static unsafe bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
 
-        internal unsafe static bool IsBoss(IGameObject target) => Svc.Data.GetExcelSheet<BNpcBase>()?.GetRow(target.DataId).Rank is 2 or 6;
+        private static bool IsBoss(IGameObject? target) => Svc.Data.GetExcelSheet<BNpcBase>().GetRow(target.DataId).Rank is 2 or 6;
+
+        internal static bool TargetIsBoss() => IsBoss(LocalPlayer.TargetObject);
+
+        internal static bool TargetIsHostile() => HasTarget() && CurrentTarget.IsHostile();
     }
 }

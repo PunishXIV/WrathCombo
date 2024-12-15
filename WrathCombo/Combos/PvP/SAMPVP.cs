@@ -74,7 +74,7 @@ namespace WrathCombo.Combos.PvP
                 bool hasKaiten = HasEffect(Buffs.Kaiten);
                 bool hasZanshin = OriginalHook(Chiten) is Zanshin;
                 bool hasBind = HasEffectAny(PvPCommon.Debuffs.Bind);
-                bool targetHasImmunity = PvPCommon.IsImmuneToDamage();
+                bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
                 bool isTargetPrimed = hasTarget && !targetHasImmunity;
                 bool targetHasKuzushi = TargetHasEffect(Debuffs.Kuzushi);
                 bool hasKaeshiNamikiri = OriginalHook(OgiNamikiri) is Kaeshi;

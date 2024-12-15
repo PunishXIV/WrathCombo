@@ -81,5 +81,7 @@ namespace WrathCombo.CustomComboNS.Functions
             }
             return PartyCount == 0 ? 0 : (float)BuffCount / PartyCount * 100f; //Div by 0 check...just in case....
         }
+
+        public static bool PartyInCombat() => PartyEngageDuration().Ticks > 0;
     }
 }

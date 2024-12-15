@@ -1,3 +1,5 @@
+#region
+
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.Content;
@@ -5,6 +7,8 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SAM.SAMHelper;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -124,7 +128,8 @@ internal partial class SAM
                 return actionID;
 
             //Meikyo to start before combat
-            if (!HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) && !InCombat())
+            if (!HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
+                !InCombat() && TargetIsHostile())
                 return MeikyoShisui;
 
             //oGCDs
@@ -305,7 +310,8 @@ internal partial class SAM
             //Meikyo to start before combat
             if (IsEnabled(CustomComboPreset.SAM_ST_CDs) &&
                 IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
-                !HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) && !InCombat())
+                !HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
+                !InCombat() && TargetIsHostile())
                 return MeikyoShisui;
 
             //oGCDs
@@ -403,11 +409,12 @@ internal partial class SAM
                     if ((!IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) ||
                          (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) && !IsMoving)) &&
                         ((SenCount is 1 && GetTargetHPPercent() > HiganbanaThreshold &&
+                          (Config.SAM_ST_Higanbana_Suboption == 0 ||
+                           (Config.SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss())) &&
                           ((GetDebuffRemainingTime(Debuffs.Higanbana) <= 19 && JustUsed(Gekko) &&
                             JustUsed(MeikyoShisui, 15f)) || !TargetHasEffect(Debuffs.Higanbana))) ||
                          (SenCount is 2 && !LevelChecked(MidareSetsugekka)) ||
-                         (SenCount is 3 &&
-                          LevelChecked(MidareSetsugekka) && !HasEffect(Buffs.TsubameReady))))
+                         (SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasEffect(Buffs.TsubameReady))))
                         return OriginalHook(Iaijutsu);
                 }
             }
@@ -630,7 +637,7 @@ internal partial class SAM
                 {
                     if (!gauge.Sen.HasFlag(Sen.GETSU) ||
                         GetBuffRemainingTime(Buffs.Fugetsu) < GetBuffRemainingTime(Buffs.Fuka) ||
-                        !HasEffect(Buffs.Fugetsu))
+                        !HasEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
                         return Mangetsu;
 
                     if (LevelChecked(Oka) &&
@@ -751,7 +758,7 @@ internal partial class SAM
                     if (IsNotEnabled(CustomComboPreset.SAM_AoE_Oka) ||
                         !gauge.Sen.HasFlag(Sen.GETSU) ||
                         GetBuffRemainingTime(Buffs.Fugetsu) < GetBuffRemainingTime(Buffs.Fuka) ||
-                        !HasEffect(Buffs.Fugetsu))
+                        !HasEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
                         return Mangetsu;
 
                     if (IsEnabled(CustomComboPreset.SAM_AoE_Oka) &&
@@ -766,26 +773,25 @@ internal partial class SAM
         }
     }
 
-    internal class SAM_JinpuShifu : CustomCombo
+    internal class SAM_MeikyoSens : CustomCombo
     {
-        protected internal override CustomComboPreset Preset => CustomComboPreset.SAM_JinpuShifu;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.SAM_MeikyoSens;
 
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
-            if (actionID is MeikyoShisui)
-                if (HasEffect(Buffs.MeikyoShisui))
-                {
-                    if (!HasEffect(Buffs.Fugetsu) ||
-                        !gauge.Sen.HasFlag(Sen.GETSU))
-                        return Gekko;
+            if (actionID is MeikyoShisui && HasEffect(Buffs.MeikyoShisui))
+            {
+                if (!HasEffect(Buffs.Fugetsu) ||
+                    !gauge.Sen.HasFlag(Sen.GETSU))
+                    return Gekko;
 
-                    if (!HasEffect(Buffs.Fuka) ||
-                        !gauge.Sen.HasFlag(Sen.KA))
-                        return Kasha;
+                if (!HasEffect(Buffs.Fuka) ||
+                    !gauge.Sen.HasFlag(Sen.KA))
+                    return Kasha;
 
-                    if (!gauge.Sen.HasFlag(Sen.SETSU))
-                        return Yukikaze;
-                }
+                if (!gauge.Sen.HasFlag(Sen.SETSU))
+                    return Yukikaze;
+            }
 
             return actionID;
         }
@@ -936,6 +942,16 @@ internal partial class SAM
 
             return actionID;
         }
+    }
+
+    internal class SAM_MeikyoShisuiProtection : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SAM_MeikyoShisuiProtection;
+
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            actionID is MeikyoShisui && HasEffect(Buffs.MeikyoShisui) && LevelChecked(MeikyoShisui)
+                ? OriginalHook(11)
+                : actionID;
     }
 
     #region ID's

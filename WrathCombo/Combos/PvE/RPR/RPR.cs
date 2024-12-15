@@ -792,12 +792,12 @@ internal partial class RPR
             bool[] soulSowOptions = Config.RPR_SoulsowOptions;
             bool soulsowReady = LevelChecked(Soulsow) && !HasEffect(Buffs.Soulsow);
 
-            return (soulSowOptions.Length > 0 && ((actionID is Harpe && soulSowOptions[0]) ||
-                                                  (actionID is Slice && soulSowOptions[1]) ||
-                                                  (actionID is SpinningScythe && soulSowOptions[2]) ||
-                                                  (actionID is ShadowOfDeath && soulSowOptions[3]) ||
-                                                  (actionID is BloodStalk && soulSowOptions[4])) && soulsowReady &&
-                    !InCombat()) ||
+            return (soulSowOptions.Length > 0 &&
+                    ((actionID is Harpe && soulSowOptions[0]) ||
+                     (actionID is Slice && soulSowOptions[1]) ||
+                     (actionID is SpinningScythe && soulSowOptions[2]) ||
+                     (actionID is ShadowOfDeath && soulSowOptions[3]) ||
+                     (actionID is BloodStalk && soulSowOptions[4])) && soulsowReady && !InCombat()) ||
                    (IsEnabled(CustomComboPreset.RPR_Soulsow_Combat) && actionID is Harpe && !HasBattleTarget())
                 ? Soulsow
                 : actionID;

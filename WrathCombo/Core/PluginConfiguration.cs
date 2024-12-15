@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using ECommons.Logging;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
@@ -55,6 +56,8 @@ namespace WrathCombo.Core
         public Dictionary<CustomComboPreset, bool> AutoActions { get; set; } = [];
 
         public AutoRotationConfig RotationConfig { get; set; } = new();
+
+        public Dictionary<uint, uint> IgnoredNPCs { get; set; } = new();
 
         #endregion
 
@@ -222,18 +225,18 @@ namespace WrathCombo.Core
 
                         if (!needToResetMessagePrinted)
                         {
-                            Svc.Chat.PrintError($"[WrathCombo] Some features have been disabled due to an internal configuration update:");
+                            DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
                             needToResetMessagePrinted = !needToResetMessagePrinted;
                         }
 
                         var info = preset.GetComboAttribute();
-                        Svc.Chat.PrintError($"[WrathCombo] - {info.JobName}: {info.Name}");
+                        DuoLog.Error($"- {info.JobName}: {info.Name}");
                         EnabledActions.Remove(preset);
                     }
                 }
 
                 if (needToResetMessagePrinted)
-                    Svc.Chat.PrintError($"[WrathCombo] Please re-enable these features to use them again. We apologise for the inconvenience");
+                    DuoLog.Error($"Please re-enable these features to use them again. We apologise for the inconvenience");
             }
             SetResetValues(config, true);
             Save();

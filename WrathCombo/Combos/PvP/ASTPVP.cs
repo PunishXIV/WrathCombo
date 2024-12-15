@@ -52,15 +52,15 @@ namespace WrathCombo.Combos.PvP
                         bool hasLordOfCrowns = HasEffect(Buffs.LordOfCrowns);
 
                         // Card Playing Split so Lady can still be used if target is immune
-                        if ((cardPlayOption == 1 && hasLordOfCrowns && !PvPCommon.IsImmuneToDamage()) ||
+                        if ((cardPlayOption == 1 && hasLordOfCrowns && !PvPCommon.TargetImmuneToDamage()) ||
                             (cardPlayOption == 1 && hasLadyOfCrowns) ||
-                            (cardPlayOption == 2 && hasLordOfCrowns && !PvPCommon.IsImmuneToDamage()) ||
+                            (cardPlayOption == 2 && hasLordOfCrowns && !PvPCommon.TargetImmuneToDamage()) ||
                             (cardPlayOption == 3 && hasLadyOfCrowns))
 
                             return OriginalHook(MinorArcana);
                     }    
                         
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     { 
                         // Macrocosmos only with double gravity or on coodlown when double gravity is disabled
                         if (IsEnabled(CustomComboPreset.ASTPvP_Burst_Macrocosmos) && IsOffCooldown(Macrocosmos) &&

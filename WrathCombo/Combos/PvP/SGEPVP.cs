@@ -45,7 +45,7 @@ namespace WrathCombo.Combos.PvP
                     if (IsEnabled(CustomComboPreset.SGEPvP_BurstMode_KardiaReminder) && !HasEffectAny(Buffs.Kardia))
                         return Kardia;
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     {
                         // Psyche after Phlegma
                         if (IsEnabled(CustomComboPreset.SGEPvP_BurstMode_Psyche) && WasLastSpell(Phlegma))

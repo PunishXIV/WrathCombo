@@ -112,7 +112,7 @@ namespace WrathCombo.Combos.PvE
                 EnhancedKasatsu = 250;
         }
 
-      
+
 
         internal class NIN_ST_AdvancedMode : CustomCombo
         {
@@ -131,7 +131,7 @@ namespace WrathCombo.Combos.PvE
                     var canDelayedWeave = CanDelayedWeave(SpinningEdge);
                     bool inTrickBurstSaveWindow = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Cooldowns) && IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) && GetCooldownRemainingTime(TrickAttack) <= GetOptionValue(Config.Advanced_Trick_Cooldown);
                     bool useBhakaBeforeTrickWindow = GetCooldownRemainingTime(TrickAttack) >= 3;
-                    bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack) ) <= GetOptionValue(Config.Trick_CooldownRemaining) && !HasEffect(Buffs.ShadowWalker);
+                    bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= GetOptionValue(Config.Trick_CooldownRemaining) && !HasEffect(Buffs.ShadowWalker);
                     bool setupKassatsuWindow = GetCooldownRemainingTime(TrickAttack) <= 10 && HasEffect(Buffs.ShadowWalker);
                     bool chargeCheck = IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_ChargeHold) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_ChargeHold) && (NINHelper.InMudra || GetRemainingCharges(Ten) == 2 || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 3)));
                     bool poolCharges = !GetOptionBool(Config.Advanced_ChargePool) || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 2) || NINHelper.TrickDebuff || NINHelper.InMudra;
@@ -150,32 +150,37 @@ namespace WrathCombo.Combos.PvE
                     bool trueNorthEdge = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrueNorth) && TargetNeedsPositionals() && IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrueNorth_ArmorCrush) && !OnTargetsRear() && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked() && !HasEffect(All.Buffs.TrueNorth) && canDelayedWeave;
                     bool dynamic = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Dynamic);
 
+                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_BalanceOpener) && NINOpenerLogic.LevelChecked && NINOpener.DoFullOpener(ref actionID, mudraState))
+                        return actionID;
 
                     if (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus) || (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat()))
                         mudraState.CurrentMudra = MudraCasting.MudraState.None;
-  
+
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_Suiton) && IsOnCooldown(TrickAttack) && mudraState.CurrentMudra == MudraCasting.MudraState.CastingSuiton && !setupSuitonWindow)
                         mudraState.CurrentMudra = MudraCasting.MudraState.None;
 
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_Suiton) && IsOnCooldown(TrickAttack) && mudraState.CurrentMudra != MudraCasting.MudraState.CastingSuiton && setupSuitonWindow)
                         mudraState.CurrentMudra = MudraCasting.MudraState.CastingSuiton;
-                   
+
+                    if (OriginalHook(Ninjutsu) is Rabbit)
+                        return OriginalHook(Ninjutsu);
+
+                    if (NINHelper.InMudra)
+                    {
+                        if (mudraState.ContinueCurrentMudra(ref actionID))
+                            return actionID;
+                    }
+
                     if (!Suiton.LevelChecked()) //For low level
                     {
                         if (Raiton.LevelChecked() && IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_Raiton)) //under 45 will only use Raiton
                         {
-                            if (mudraState.CastRaiton(ref actionID)) 
+                            if (mudraState.CastRaiton(ref actionID))
                                 return actionID;
                         }
                         else if (!Raiton.LevelChecked() && mudraState.CastFumaShuriken(ref actionID) && IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_FumaShuriken)) // 30-35 will use only fuma
                             return actionID;
                     }
-
-                    if (OriginalHook(Ninjutsu) is Rabbit)
-                        return OriginalHook(Ninjutsu);
-
-                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_BalanceOpener) && NINOpenerLogic.LevelChecked && NINOpener.DoFullOpener(ref actionID, mudraState))
-                        return actionID;
 
                     if (HasEffect(Buffs.TenChiJin))
                     {
@@ -187,14 +192,9 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Kassatsu_HyoshoRaynryu) &&
                         HasEffect(Buffs.Kassatsu) &&
                         NINHelper.TrickDebuff &&
-                        (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && IsOnCooldown(Mug))))
-                        mudraState.CurrentMudra = MudraCasting.MudraState.CastingHyoshoRanryu;
-
-                    if (NINHelper.InMudra && !NINHelper.OriginalJutsu)
-                    {
-                        if (mudraState.ContinueCurrentMudra(ref actionID))
-                            return actionID;
-                    }
+                        (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && IsOnCooldown(Mug))) &&
+                        mudraState.CastHyoshoRanryu(ref actionID))
+                        return actionID;
 
                     if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
                         return Variant.VariantCure;
@@ -254,7 +254,7 @@ namespace WrathCombo.Combos.PvE
                             return OriginalHook(TrickAttack);
 
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TenriJindo) && HasEffect(Buffs.TenriJendo) && ((NINHelper.TrickDebuff && NINHelper.MugDebuff) || GetBuffRemainingTime(Buffs.TenriJendo) <= 3))
-                            return OriginalHook(TenriJendo);    
+                            return OriginalHook(TenriJendo);
 
                         if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin) && Bunshin.LevelChecked() && IsOffCooldown(Bunshin) && gauge.Ninki >= bunshinPool)
                             return OriginalHook(Bunshin);
@@ -367,11 +367,11 @@ namespace WrathCombo.Combos.PvE
                     {
                         if (lastComboMove == SpinningEdge && GustSlash.LevelChecked())
                             return OriginalHook(GustSlash);
-                            
+
                         if (lastComboMove == GustSlash && ArmorCrush.LevelChecked())
                         {
                             if (dynamic)
-                            {                                
+                            {
                                 if (gauge.Kazematoi > 3)
                                 {
                                     if (trueNorthEdge)
@@ -379,7 +379,7 @@ namespace WrathCombo.Combos.PvE
                                     else
                                         return OriginalHook(AeolianEdge);
                                 }
-                                
+
                                 if (gauge.Kazematoi == 0)
                                 {
                                     if (trueNorthArmor)
@@ -480,6 +480,12 @@ namespace WrathCombo.Combos.PvE
                     if (OriginalHook(Ninjutsu) is Rabbit)
                         return OriginalHook(Ninjutsu);
 
+                    if (NINHelper.InMudra)
+                    {
+                        if (mudraState.ContinueCurrentMudra(ref actionID))
+                            return actionID;
+                    }
+
                     if (HasEffect(Buffs.TenChiJin))
                     {
                         if (tcjPath == 0)
@@ -497,8 +503,12 @@ namespace WrathCombo.Combos.PvE
 
                     }
 
-                    if (JustUsed(Kassatsu, 0.5f))
-                        mudraState.CurrentMudra = MudraCasting.MudraState.None;
+                    if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_GokaMekkyaku) && HasEffect(Buffs.Kassatsu))
+                        mudraState.CurrentMudra = MudraCasting.MudraState.CastingGokaMekkyaku;
+
+
+                    if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
+                        return Variant.VariantCure;
 
                     if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_KunaisBane))
                     {
@@ -508,18 +518,6 @@ namespace WrathCombo.Combos.PvE
                         if (HasEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && IsOffCooldown(KunaisBane) && canWeave)
                             return KunaisBane;
                     }
-
-                    if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_GokaMekkyaku) && HasEffect(Buffs.Kassatsu))
-                        mudraState.CurrentMudra = MudraCasting.MudraState.CastingGokaMekkyaku;
-
-                    if (NINHelper.InMudra && !NINHelper.OriginalJutsu)
-                    {
-                        if (mudraState.ContinueCurrentMudra(ref actionID))
-                            return actionID;
-                    }
-
-                    if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
-                        return Variant.VariantCure;
 
                     if (canWeave && !inMudraState)
                     {
@@ -635,16 +633,21 @@ namespace WrathCombo.Combos.PvE
                 if (actionID == SpinningEdge)
                 {
                     NINGauge gauge = GetJobGauge<NINGauge>();
-                    bool canWeave = CanWeave(SpinningEdge);
+                    bool canWeave = CanWeave(SpinningEdge, 0.6) && !ActionWatching.HasDoubleWeaved();
                     bool inTrickBurstSaveWindow = GetCooldownRemainingTime(TrickAttack) <= 15 && Suiton.LevelChecked();
                     bool useBhakaBeforeTrickWindow = GetCooldownRemainingTime(TrickAttack) >= 3;
                     var canDelayedWeave = CanDelayedWeave(SpinningEdge);
                     bool trueNorthArmor = TargetNeedsPositionals() && !OnTargetsFlank() && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked() && !HasEffect(All.Buffs.TrueNorth) && canDelayedWeave;
                     bool trueNorthEdge = TargetNeedsPositionals() && !OnTargetsRear() && GetRemainingCharges(All.TrueNorth) > 0 && All.TrueNorth.LevelChecked() && !HasEffect(All.Buffs.TrueNorth) && canDelayedWeave;
 
-
                     if (OriginalHook(Ninjutsu) is Rabbit)
                         return OriginalHook(Ninjutsu);
+
+                    if (NINHelper.InMudra)
+                    {
+                        if (mudraState.ContinueCurrentMudra(ref actionID))
+                            return actionID;
+                    }
 
                     if (IsEnabled(CustomComboPreset.NIN_ST_SimpleMode_BalanceOpener) && NINOpenerLogic.LevelChecked && NINOpener.DoFullOpener(ref actionID, mudraState))
                         return actionID;
@@ -656,17 +659,14 @@ namespace WrathCombo.Combos.PvE
                         return OriginalHook(Ten);
                     }
 
-                    if (NINHelper.InMudra && !NINHelper.OriginalJutsu)
+                    if (HasEffect(Buffs.Kassatsu))
                     {
-                        if (mudraState.ContinueCurrentMudra(ref actionID))
+                        if (mudraState.CastHyoshoRanryu(ref actionID))
                             return actionID;
                     }
 
                     if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
                         return Variant.VariantCure;
-
-                    if (mudraState.CastHyoshoRanryu(ref actionID))
-                        return actionID;
 
                     if (GetCooldownRemainingTime(TrickAttack) < 15 && TrickAttack.LevelChecked() && !HasEffect(Buffs.ShadowWalker))
                         if (mudraState.CastSuiton(ref actionID))
@@ -806,6 +806,12 @@ namespace WrathCombo.Combos.PvE
                     if (OriginalHook(Ninjutsu) is Rabbit)
                         return OriginalHook(Ninjutsu);
 
+                    if (NINHelper.InMudra)
+                    {
+                        if (mudraState.ContinueCurrentMudra(ref actionID))
+                            return actionID;
+                    }
+
                     if (HasEffect(Buffs.TenChiJin))
                     {
                         if (WasLastAction(TCJFumaShurikenJin)) return OriginalHook(Ten);
@@ -813,31 +819,25 @@ namespace WrathCombo.Combos.PvE
                         return OriginalHook(Jin);
                     }
 
-                    if (JustUsed(Kassatsu, 0.5f))
-                        mudraState.CurrentMudra = MudraCasting.MudraState.None;
-
-                    if (NINHelper.InMudra && !NINHelper.OriginalJutsu)
-                    {
-                        if (mudraState.ContinueCurrentMudra(ref actionID))
-                            return actionID;
-                    }
-
-                    if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
-                        return Variant.VariantCure;
-
                     if (HasEffect(Buffs.Kassatsu))
                     {
                         if (GokaMekkyaku.LevelChecked())
                         {
+                            mudraState.CurrentMudra = MudraCasting.MudraState.CastingGokaMekkyaku;
                             if (mudraState.CastGokaMekkyaku(ref actionID))
                                 return actionID;
                         }
                         else
                         {
+                            mudraState.CurrentMudra = MudraCasting.MudraState.CastingKaton;
                             if (mudraState.CastKaton(ref actionID))
                                 return actionID;
                         }
                     }
+
+                    if (IsEnabled(CustomComboPreset.NIN_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.NIN_VariantCure))
+                        return Variant.VariantCure;
+
 
                     if (!HasEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && mudraState.CastHuton(ref actionID))
                         return actionID;

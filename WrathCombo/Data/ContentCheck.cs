@@ -93,6 +93,8 @@ public class ContentCheck
 
     #region Halved Content Lists
 
+#pragma warning disable CS1574
+
     /// <summary>
     ///     Whether the current content is in the bottom half of the list of content
     ///     difficulties.
@@ -332,6 +334,8 @@ public class ContentCheck
         HardCoreContent.Contains(
             Content.ContentDifficulty ?? ContentDifficulty.Unknown
         );
+
+#pragma warning restore CS1574
 
     /// <summary>
     ///     A list of content difficulties that are considered soft-core.

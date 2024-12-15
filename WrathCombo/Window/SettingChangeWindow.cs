@@ -53,7 +53,7 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
     ///     As a string to reduce code-change needed for future settings changes.
     /// </summary>
     /// <remarks>UPDATE THIS VALUE</remarks>
-    private const string OptionSuggestedValue = "0.0";
+    private const string OptionSuggestedValue = "0";
 
     /// <summary>
     ///     Whether the current value is problematic.
@@ -121,6 +121,7 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
     /// <remarks>No need to update this to re-use this window.</remarks>
     public SettingChangeWindow() : base("Wrath Combo | Setting Change")
     {
+        Svc.Log.Debug($"{OptionValue}");
         if (IsVersionProblematic && IsValueProblematic &&
             !IsSuggestionHiddenForThisVersion)
             IsOpen = true;
@@ -169,6 +170,7 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
             // UPDATE THIS VALUE (the cast)
             Option =
                 double.Parse(OptionSuggestedValue, CultureInfo.InvariantCulture);
+            Service.Configuration.HideSettingsChangeSuggestionForVersion = Version;
             Service.Configuration.Save();
             IsOpen = false;
         }

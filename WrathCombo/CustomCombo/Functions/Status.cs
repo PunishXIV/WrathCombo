@@ -1,6 +1,9 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
@@ -80,10 +83,14 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> A value indicating if the effect exists. </returns>
         public static bool TargetHasEffectAny(ushort effectID) => FindTargetEffectAny(effectID) is not null;
 
+        public static bool TargetHasEffectAny(ushort effectID, IGameObject target) => FindTargetEffectAny(effectID) is not null;
+
         /// <summary> Finds an effect on the current target. The effect may be owned by anyone or unowned. </summary>
         /// <param name="effectID"> Status effect ID. </param>
         /// <returns> Status object or null. </returns>
         public static Status? FindTargetEffectAny(ushort effectID) => FindEffect(effectID, CurrentTarget, null);
+
+        public static Status? FindTargetEffectAny(ushort effectID, IGameObject target) => FindEffect(effectID, target, null);
 
         /// <summary> Finds an effect on the given object. </summary>
         /// <param name="effectID"> Status effect ID. </param>
@@ -211,5 +218,42 @@ namespace WrathCombo.CustomComboNS.Functions
 
             return true;
         }
+
+        private static List<uint> InvincibleStatuses = new()
+        {
+            151,
+            198,
+            325,
+            328,
+            385,
+            394,
+            469,
+            529,
+            592,
+            656,
+            671,
+            775,
+            776,
+            895,
+            969,
+            981,
+            1240,
+            1302,
+            1303,
+            1567,
+            1570,
+            1697,
+            1829,
+            1936,
+            2413,
+            2654,
+            3039,
+            3052,
+            3054,
+            4410,
+            4175
+        };
+
+        public static bool TargetIsInvincible(IGameObject target) => (target as IBattleChara).StatusList.Any(y => InvincibleStatuses.Any(x => x == y.StatusId));
     }
 }

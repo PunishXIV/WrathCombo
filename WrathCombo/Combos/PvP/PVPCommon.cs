@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using System.Collections.Generic;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -34,7 +35,8 @@ namespace WrathCombo.Combos.PvP
                 Sleep = 1348,
                 DeepFreeze = 3219,
                 Heavy = 1344,
-                Unguarded = 3021;
+                Unguarded = 3021,
+                MiracleOfNature = 3085;
         }
 
         internal class Buffs
@@ -46,12 +48,14 @@ namespace WrathCombo.Combos.PvP
 
         /// <summary> Checks if the target is immune to damage. Optionally, include buffs that provide significant damage reduction. </summary>
         /// <param name="includeReductions"> Includes buffs that provide significant damage reduction. </param>
-        public static bool IsImmuneToDamage(bool includeReductions = true)
+        /// <param name="optionalTarget"> Optional target to check. </param>
+        public static bool TargetImmuneToDamage(bool includeReductions = true, IGameObject? optionalTarget = null)
         {
-            if (CustomComboFunctions.CurrentTarget is null || !CustomComboFunctions.InPvP()) return false;
+            var t = optionalTarget ?? CustomComboFunctions.CurrentTarget;
+            if (t is null || !CustomComboFunctions.InPvP()) return false;
 
-            bool targetHasReductions = CustomComboFunctions.TargetHasEffectAny(Buffs.Guard) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales);
-            bool targetHasImmunities = CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround);
+            bool targetHasReductions = CustomComboFunctions.TargetHasEffectAny(Buffs.Guard, t) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales, t);
+            bool targetHasImmunities = CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption, t) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround, t);
 
             return includeReductions
                 ? targetHasReductions || targetHasImmunities
@@ -111,8 +115,13 @@ namespace WrathCombo.Combos.PvP
             {
                 if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
-                    if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    if (actionID == Guard)
+                    {
+                        if (IsEnabled(CustomComboPreset.PvP_MashCancelRecup) && !JustUsed(Guard, 2f) && LocalPlayer.CurrentMp >= 2500 && LocalPlayer.CurrentHp <= LocalPlayer.MaxHp - 15000) 
+                            return Recuperate;
+                        return Guard;
+                    }
+                    return OriginalHook(11);
                 }
 
                 if (Execute() &&
@@ -178,6 +187,7 @@ namespace WrathCombo.Combos.PvP
                 if (HasEffectAny(Debuffs.Bind) && selectedStatuses[4]) return true;
                 if (HasEffectAny(Debuffs.Heavy) && selectedStatuses[5]) return true;
                 if (HasEffectAny(Debuffs.Silence) && selectedStatuses[6]) return true;
+                if (HasEffectAny(Debuffs.MiracleOfNature) && selectedStatuses[7]) return true;
 
                 return false;
 

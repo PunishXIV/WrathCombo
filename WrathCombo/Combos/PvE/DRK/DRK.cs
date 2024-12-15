@@ -118,7 +118,7 @@ internal partial class DRK
                         && ((bossRestrictionLivingDead is
                                  (int)Config.BossAvoidance.On
                              && LocalPlayer.TargetObject is not null
-                             && IsBoss(DRK.LocalPlayer.TargetObject!))
+                             && TargetIsBoss())
                             || bossRestrictionLivingDead is
                                 (int)Config.BossAvoidance.Off))
                         return LivingDead;
@@ -604,6 +604,9 @@ internal partial class DRK
     public static class Buffs
     {
         #region Main Buffs
+
+        /// Tank Stance
+        public const ushort Grit = 743;
 
         /// The lowest level buff, before Delirium
         public const ushort BloodWeapon = 742;

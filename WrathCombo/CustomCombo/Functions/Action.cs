@@ -51,6 +51,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
         /// <summary> Checks if the player is in range to use an action. Best used with actions with irregular ranges.</summary>
         /// <param name="id"> ID of the action. </param>
+        /// <param name="optionalTarget"> Optional target to check range against. </param>
         /// <returns></returns>
         public static bool InActionRange(uint id, IGameObject? optionalTarget = null)
         {

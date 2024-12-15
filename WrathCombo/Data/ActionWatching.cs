@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using ECommons.Logging;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -241,7 +242,7 @@ namespace WrathCombo.Data
 
         public static void OutputLog()
         {
-            Svc.Chat.Print($"You just used: {CombatActions.LastOrDefault().ActionName()} x{LastActionUseCount}");
+            DuoLog.Information($"You just used: {CombatActions.LastOrDefault().ActionName()} x{LastActionUseCount}");
         }
 
         public static void Dispose()

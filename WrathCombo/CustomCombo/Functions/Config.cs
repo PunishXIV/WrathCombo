@@ -18,7 +18,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
     internal class UserData(string v)
     {
-        protected string pName = v;
+        public string pName = v;
 
         public static implicit operator string(UserData o) => (o.pName);
     }

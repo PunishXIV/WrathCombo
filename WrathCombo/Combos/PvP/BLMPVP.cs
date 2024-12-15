@@ -73,7 +73,7 @@ namespace WrathCombo.Combos.PvP
                             return OriginalHook(ElementalWeave);
                     }
 
-                    if (!PvPCommon.IsImmuneToDamage() || HasEffect(Buffs.WreathOfFire))
+                    if (!PvPCommon.TargetImmuneToDamage() || HasEffect(Buffs.WreathOfFire))
                     {
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FlareStar) && HasEffect(Buffs.ElementalStar) && (HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3)))
                             return OriginalHook(SoulResonance);
@@ -102,7 +102,7 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is Blizzard or Blizzard4 or Freeze)
                 {
 
-                    if (!PvPCommon.IsImmuneToDamage() || HasEffect(Buffs.WreathOfFire))
+                    if (!PvPCommon.TargetImmuneToDamage() || HasEffect(Buffs.WreathOfFire))
                     {
                         if (IsEnabled(CustomComboPreset.BLMPvP_BurstMode_FrostStar) && HasEffect(Buffs.ElementalStar) && (HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.UmbralIce2) || HasEffect(Buffs.UmbralIce3)))
                             return OriginalHook(SoulResonance);

@@ -1,4 +1,6 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+﻿#region
+
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -6,40 +8,42 @@ using WrathCombo.Combos.JobHelpers.Enums;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
+#endregion
+
 namespace WrathCombo.Combos.PvE;
 
-internal partial class VPR
+internal static partial class VPR
 {
-    public static VPROpenerLogic VPROpener = new();
-
-    public static VPRGauge gauge = GetJobGauge<VPRGauge>();
-
     // VPR Gauge & Extensions
+    internal static VPROpenerLogic VPROpener = new();
 
-    public static float GCD => GetCooldown(OriginalHook(ReavingFangs)).CooldownTotal;
+    internal static VPRGauge gauge = GetJobGauge<VPRGauge>();
 
-    public static float ireCD => GetCooldownRemainingTime(SerpentsIre);
+    internal static float GCD => GetCooldown(OriginalHook(ReavingFangs)).CooldownTotal;
 
-    public static bool trueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-                                         !HasEffect(All.Buffs.TrueNorth);
+    internal static float ireCD => GetCooldownRemainingTime(SerpentsIre);
 
-    public static bool VicewinderReady => gauge.DreadCombo == DreadCombo.Dreadwinder;
+    internal static bool trueNorthReady =>
+        TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
+        !HasEffect(All.Buffs.TrueNorth);
 
-    public static bool HuntersCoilReady => gauge.DreadCombo == DreadCombo.HuntersCoil;
+    internal static bool VicewinderReady => gauge.DreadCombo == DreadCombo.Dreadwinder;
 
-    public static bool SwiftskinsCoilReady => gauge.DreadCombo == DreadCombo.SwiftskinsCoil;
+    internal static bool HuntersCoilReady => gauge.DreadCombo == DreadCombo.HuntersCoil;
 
-    public static bool VicepitReady => gauge.DreadCombo == DreadCombo.PitOfDread;
+    internal static bool SwiftskinsCoilReady => gauge.DreadCombo == DreadCombo.SwiftskinsCoil;
 
-    public static bool SwiftskinsDenReady => gauge.DreadCombo == DreadCombo.SwiftskinsDen;
+    internal static bool VicepitReady => gauge.DreadCombo == DreadCombo.PitOfDread;
 
-    public static bool HuntersDenReady => gauge.DreadCombo == DreadCombo.HuntersDen;
+    internal static bool SwiftskinsDenReady => gauge.DreadCombo == DreadCombo.SwiftskinsDen;
 
-    public static bool CappedOnCoils =>
+    internal static bool HuntersDenReady => gauge.DreadCombo == DreadCombo.HuntersDen;
+
+    internal static bool CappedOnCoils =>
         (TraitLevelChecked(Traits.EnhancedVipersRattle) && gauge.RattlingCoilStacks > 2) ||
         (!TraitLevelChecked(Traits.EnhancedVipersRattle) && gauge.RattlingCoilStacks > 1);
 
-    public static bool HasRattlingCoilStack(VPRGauge Gauge) => Gauge.RattlingCoilStacks > 0;
+    internal static bool HasRattlingCoilStack(VPRGauge Gauge) => Gauge.RattlingCoilStacks > 0;
 
     internal class VPROpenerLogic
     {
@@ -279,9 +283,9 @@ internal partial class VPR
         }
     }
 
-    internal class VPRHelper
+    internal static class VPRHelper
     {
-        public static bool UseReawaken(VPRGauge gauge)
+        internal static bool UseReawaken(VPRGauge gauge)
         {
             float ireCD = GetCooldownRemainingTime(SerpentsIre);
 
@@ -300,7 +304,7 @@ internal partial class VPR
             return false;
         }
 
-        public static bool IsHoningExpiring(float Times)
+        internal static bool IsHoningExpiring(float Times)
         {
             float GCD = GetCooldown(SteelFangs).CooldownTotal * Times;
 
@@ -308,7 +312,7 @@ internal partial class VPR
                    (HasEffect(Buffs.HonedReavers) && GetBuffRemainingTime(Buffs.HonedReavers) < GCD);
         }
 
-        public static bool IsVenomExpiring(float Times)
+        internal static bool IsVenomExpiring(float Times)
         {
             float GCD = GetCooldown(SteelFangs).CooldownTotal * Times;
 
@@ -318,14 +322,14 @@ internal partial class VPR
                    (HasEffect(Buffs.HindsbaneVenom) && GetBuffRemainingTime(Buffs.HindsbaneVenom) < GCD);
         }
 
-        public static bool IsEmpowermentExpiring(float Times)
+        internal static bool IsEmpowermentExpiring(float Times)
         {
             float GCD = GetCooldown(SteelFangs).CooldownTotal * Times;
 
             return GetBuffRemainingTime(Buffs.Swiftscaled) < GCD || GetBuffRemainingTime(Buffs.HuntersInstinct) < GCD;
         }
 
-        public static unsafe bool IsComboExpiring(float Times)
+        internal static unsafe bool IsComboExpiring(float Times)
         {
             float GCD = GetCooldown(SteelFangs).CooldownTotal * Times;
 

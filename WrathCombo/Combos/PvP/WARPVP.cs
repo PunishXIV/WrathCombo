@@ -44,7 +44,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is HeavySwing or Maim or StormsPath)
                 {
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     {
                         var canWeave = CanWeave(actionID);
 

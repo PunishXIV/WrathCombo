@@ -65,7 +65,7 @@ namespace WrathCombo.Combos.PvP
                     if (ActionReady(Forte) && CanWeave(actionID))
                         return Forte;
 
-                    if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Resolution) && ActionReady(Resolution) && !PvPCommon.IsImmuneToDamage())
+                    if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Resolution) && ActionReady(Resolution) && !PvPCommon.TargetImmuneToDamage())
                         return OriginalHook(Resolution);
 
                     if (IsEnabled(CustomComboPreset.RDMPvP_Burst_CorpsACorps) && GetRemainingCharges(CorpsACorps) > GetOptionValue(Config.RDMPvP_Burst_CorpsACorps) && ActionReady(EnchantedRiposte) && !InMeleeRange())

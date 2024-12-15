@@ -3,6 +3,7 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Functions = WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Options = WrathCombo.Combos.CustomComboPreset;
 
@@ -31,7 +32,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = CustomComboFunctions.FindEffect(
+                has = FindEffect(
                     Buffs.BlackestNightShield,
                     LocalPlayer,
                     LocalPlayer.GameObjectId
@@ -51,7 +52,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = CustomComboFunctions.FindEffect(Buffs.BlackestNightShield) is not null;
+                has = FindEffect(Buffs.BlackestNightShield) is not null;
 
             return has;
         }
@@ -73,11 +74,11 @@ internal partial class DRK
     {
         // Bail if TBN is disabled
         if ((!aoe
-             && (!CustomComboFunctions.IsEnabled(CustomComboPreset.DRK_ST_Mitigation)
-                 || !CustomComboFunctions.IsEnabled(CustomComboPreset.DRK_ST_TBN)))
+             && (!IsEnabled(CustomComboPreset.DRK_ST_Mitigation)
+                 || !IsEnabled(CustomComboPreset.DRK_ST_TBN)))
             || (aoe
-                && (!CustomComboFunctions.IsEnabled(CustomComboPreset.DRK_AoE_Mitigation)
-                    || !CustomComboFunctions.IsEnabled(CustomComboPreset.DRK_AoE_TBN))))
+                && (!IsEnabled(CustomComboPreset.DRK_AoE_Mitigation)
+                    || !IsEnabled(CustomComboPreset.DRK_AoE_TBN))))
             return false;
 
         // Bail if we already have TBN
@@ -101,14 +102,14 @@ internal partial class DRK
         if (!inTBNContent)
             return false;
 
-        var hpRemaining = CustomComboFunctions.PlayerHealthPercentageHp();
+        var hpRemaining = PlayerHealthPercentageHp();
         var hpThreshold = !aoe ? (float)Config.DRK_ST_TBNThreshold : 90f;
 
         // Bail if we're above the threshold
         if (hpRemaining > hpThreshold)
             return false;
 
-        var targetIsBoss = CustomComboFunctions.IsBoss(LocalPlayer.TargetObject);
+        var targetIsBoss = TargetIsBoss();
         var bossRestriction =
             !aoe
                 ? (int)Config.DRK_ST_TBNBossRestriction
@@ -120,7 +121,7 @@ internal partial class DRK
             return false;
 
         // Bail if we already have a TBN and burst is >30s away ()
-        if (CustomComboFunctions.GetCooldownRemainingTime(LivingShadow) > 30
+        if (GetCooldownRemainingTime(LivingShadow) > 30
             && HasAnyTBN)
             return false;
 

@@ -1,10 +1,15 @@
+#region
+
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class VPR
+internal static partial class VPR
 {
     internal static class Config
     {
@@ -44,40 +49,42 @@ internal partial class VPR
 
                 case CustomComboPreset.VPR_ST_Reawaken:
                     DrawRoundedSliderFloat(0, 10, VPR_ST_Reawaken_Usage,
-                        "Stop using at Enemy HP %. Set to Zero to disable this check.", digits: 1);
+                        $"Stop using {Reawaken.ActionName()} at Enemy HP %. Set to Zero to disable this check.",
+                        digits: 1);
 
                     break;
 
                 case CustomComboPreset.VPR_AoE_Reawaken:
                     DrawRoundedSliderFloat(0, 10, VPR_AoE_Reawaken_Usage,
-                        "Stop using at Enemy HP %. Set to Zero to disable this check.", digits: 1);
+                        $"Stop using {Reawaken.ActionName()} at Enemy HP %. Set to Zero to disable this check.",
+                        digits: 1);
 
                     break;
 
                 case CustomComboPreset.VPR_ST_ComboHeals:
                     DrawSliderInt(0, 100, VPR_ST_SecondWind_Threshold,
-                        "Second Wind HP percentage threshold (0 = Disabled)");
+                        $"HP percent threshold to use {All.SecondWind.ActionName()} (0 = Disabled)");
 
                     DrawSliderInt(0, 100, VPR_ST_Bloodbath_Threshold,
-                        "Bloodbath HP percentage threshold (0 = Disabled)");
+                        $"HP percent threshold to use {All.Bloodbath.ActionName()} (0 = Disabled)");
 
                     break;
 
                 case CustomComboPreset.VPR_AoE_ComboHeals:
                     DrawSliderInt(0, 100, VPR_AoE_SecondWind_Threshold,
-                        "Second Wind HP percentage threshold (0 = Disabled)");
+                        $"HP percent threshold to use {All.SecondWind.ActionName()} (0 = Disabled)");
 
                     DrawSliderInt(0, 100, VPR_AoE_Bloodbath_Threshold,
-                        "Bloodbath HP percentage threshold (0 = Disabled)");
+                        $"HP percent threshold to use {All.Bloodbath.ActionName()} (0 = Disabled)");
 
                     break;
 
                 case CustomComboPreset.VPR_ReawakenLegacy:
-                    DrawRadioButton(VPR_ReawakenLegacyButton, "Replaces Reawaken",
-                        "Replaces Reawaken with Full Generation - Legacy combo.", 0);
+                    DrawRadioButton(VPR_ReawakenLegacyButton, $"Replaces {Reawaken.ActionName()}",
+                        $"Replaces {Reawaken.ActionName()} with Full Generation - Legacy combo.", 0);
 
-                    DrawRadioButton(VPR_ReawakenLegacyButton, "Replaces Steel Fangs",
-                        "Replaces Steel Fangs with Full Generation - Legacy combo.", 1);
+                    DrawRadioButton(VPR_ReawakenLegacyButton, $"Replaces {SteelFangs.ActionName()}",
+                        $"Replaces {SteelFangs.ActionName()} with Full Generation - Legacy combo.", 1);
 
                     break;
 
@@ -103,7 +110,8 @@ internal partial class VPR
 
                 // Backlash
                 case CustomComboPreset.VPRPvP_Backlash:
-                    DrawAdditionalBoolChoice(VPRPvP.Config.VPRPvP_Backlash_SubOption, "Empowered Only", "Also requires Snake's Bane to be present.");
+                    DrawAdditionalBoolChoice(VPRPvP.Config.VPRPvP_Backlash_SubOption, "Empowered Only",
+                        "Also requires Snake's Bane to be present.");
 
                     break;
 

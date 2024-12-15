@@ -47,7 +47,7 @@ namespace WrathCombo.Combos.PvP
                     bool canWeave = CanWeave(HardSlash);
                     int shadowBringerThreshold = GetOptionValue(Config.ShadowbringerThreshold);
 
-                    if (!PvPCommon.IsImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage())
                     {
                         if (IsEnabled(CustomComboPreset.DRKPvP_Plunge) && ActionReady(Plunge))
                         {

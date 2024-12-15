@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
@@ -6,32 +8,34 @@ using WrathCombo.Combos.JobHelpers.Enums;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
+#endregion
+
 namespace WrathCombo.Combos.PvE;
 
-internal partial class MNK
+internal static partial class MNK
 {
-    public static MNKOpenerLogic MNKOpener = new();
+    internal static MNKOpenerLogic MNKOpener = new();
 
-    public static MNKGauge Gauge = GetJobGauge<MNKGauge>();
+    internal static MNKGauge Gauge = GetJobGauge<MNKGauge>();
 
     // MNK Gauge & Extensions
-    public static float GCD => GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
+    internal static float GCD => GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
 
-    public static bool bothNadisOpen => Gauge.Nadi.ToString() == "LUNAR, SOLAR";
+    internal static bool bothNadisOpen => Gauge.Nadi.ToString() == "LUNAR, SOLAR";
 
-    public static bool solarNadi => Gauge.Nadi == Nadi.SOLAR;
+    internal static bool solarNadi => Gauge.Nadi == Nadi.SOLAR;
 
-    public static bool lunarNadi => Gauge.Nadi == Nadi.LUNAR;
+    internal static bool lunarNadi => Gauge.Nadi == Nadi.LUNAR;
 
-    public static int opoOpoChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.OPOOPO);
+    internal static int opoOpoChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.OPOOPO);
 
-    public static int raptorChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.RAPTOR);
+    internal static int raptorChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.RAPTOR);
 
-    public static int coeurlChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.COEURL);
+    internal static int coeurlChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.COEURL);
 
-    internal class MNKHelper
+    internal static class MNKHelper
     {
-        public static uint DetermineCoreAbility(uint actionId, bool useTrueNorthIfEnabled)
+        internal static uint DetermineCoreAbility(uint actionId, bool useTrueNorthIfEnabled)
         {
             if (HasEffect(Buffs.OpoOpoForm) || HasEffect(Buffs.FormlessFist))
                 return Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
@@ -73,7 +77,7 @@ internal partial class MNK
             return actionId;
         }
 
-        public static bool UsePerfectBalance()
+        internal static bool UsePerfectBalance()
         {
             if (ActionReady(PerfectBalance) && !HasEffect(Buffs.PerfectBalance) && !HasEffect(Buffs.FormlessFist))
             {
@@ -402,7 +406,7 @@ internal partial class MNK
             OpenerStep = 0;
         }
 
-        public bool DoFullOpener(ref uint actionID, int selectedOpener)
+        internal bool DoFullOpener(ref uint actionID, int selectedOpener)
         {
             if (!LevelChecked)
                 return false;
