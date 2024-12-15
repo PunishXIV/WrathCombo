@@ -4124,6 +4124,12 @@ public enum CustomComboPreset
         "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_Sacrificium = 12203,
 
+    [ParentCombo(RPR_GluttonyBloodSwathe)]
+    [CustomComboInfo("True North Feature",
+        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.",
+        RPR.JobID)]
+    RPR_TrueNorthGluttony = 12310,
+
     // Last value = 12204
 
     #endregion
@@ -4144,6 +4150,17 @@ public enum CustomComboPreset
     
     #region Miscellaneous
 
+    [ReplaceSkill(RPR.Slice, RPR.SpinningScythe, RPR.ShadowOfDeath, RPR.Harpe, RPR.BloodStalk)]
+    [CustomComboInfo("Soulsow Reminder Feature",
+        "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.",
+        RPR.JobID)]
+    RPR_Soulsow = 12302,
+    
+    [ParentCombo(RPR_Soulsow)]
+    [CustomComboInfo("Soulsow Reminder during Combat",
+        "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
+    RPR_Soulsow_Combat = 12309,
+
     [ReplaceSkill(RPR.ArcaneCircle)]
     [CustomComboInfo("Arcane Circle Harvest Feature",
         "Replaces Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
@@ -4153,17 +4170,25 @@ public enum CustomComboPreset
     [CustomComboInfo("Regress Feature",
         "Changes both Hell's Ingress and Hell's Egress turn into Regress when Threshold is active.", RPR.JobID)]
     RPR_Regress = 12301,
-
-    [ReplaceSkill(RPR.Slice, RPR.SpinningScythe, RPR.ShadowOfDeath, RPR.Harpe, RPR.BloodStalk)]
-    [CustomComboInfo("Soulsow Reminder Feature",
-        "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.",
-        RPR.JobID)]
-    RPR_Soulsow = 12302,
     
     [ReplaceSkill(RPR.Enshroud)]
+    [ConflictingCombos(RPR_EnshroudCommunio)]
     [CustomComboInfo("Enshroud Protection Feature", "Turns Enshroud into Gibbet/Gallows to protect Soul Reaver waste.",
         RPR.JobID)]
     RPR_EnshroudProtection = 12304,
+
+    [ParentCombo(RPR_EnshroudProtection)]
+    [CustomComboInfo("True North Feature",
+        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.",
+        RPR.JobID)]
+    RPR_TrueNorthEnshroud = 12308,
+
+    [ReplaceSkill(RPR.Enshroud)]
+    [ConflictingCombos(RPR_EnshroudProtection)]
+    [CustomComboInfo("Enshroud to Communio to Perfectio Feature",
+        "Turns Enshroud to Communio and Perfectio when available to use.", RPR.JobID)]
+    RPR_EnshroudCommunio = 12307,
+    
 
     [ReplaceSkill(RPR.Gibbet, RPR.Gallows, RPR.Guillotine)]
     [CustomComboInfo("Communio on Gibbet/Gallows and Guillotine Feature",
@@ -4174,29 +4199,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Lemure's Slice/Scythe Option",
         "Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.", RPR.JobID)]
     RPR_LemureOnGGG = 12306,
-
-    [ReplaceSkill(RPR.Enshroud)]
-    [CustomComboInfo("Enshroud to Communio to Perfectio Feature",
-        "Turns Enshroud to Communio and Perfectio when available to use.", RPR.JobID)]
-    RPR_EnshroudCommunio = 12307,
-
-    [ParentCombo(RPR_EnshroudProtection)]
-    [CustomComboInfo("True North Feature",
-        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.",
-        RPR.JobID)]
-    RPR_TrueNorthEnshroud = 12308,
-
-    [ReplaceSkill(RPR.Harpe)]
-    [ParentCombo(RPR_Soulsow)]
-    [CustomComboInfo("Soulsow Reminder during Combat",
-        "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
-    RPR_Soulsow_Combat = 12309,
-
-    [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("True North Feature",
-        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.",
-        RPR.JobID)]
-    RPR_TrueNorthGluttony = 12310,
     
     // Last value = 12312
 

@@ -7,7 +7,7 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class RPR
+internal static partial  class RPR
 {
     public static RPROpenerLogic RPROpener = new();
 
@@ -212,7 +212,7 @@ internal partial class RPR
         }
     }
 
-    internal class RPRHelper
+    internal static class RPRHelper
     {
         public static unsafe bool IsComboExpiring(float Times)
         {

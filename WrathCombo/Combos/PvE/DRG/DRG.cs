@@ -4,7 +4,7 @@ using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRG
+internal static partial class DRG
 {
     internal class DRG_ST_FullThrustCombo : CustomCombo
     {
