@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using Dalamud.Interface.Utility;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
@@ -314,6 +315,28 @@ namespace WrathCombo.Window.Functions
 
                     foreach (var (childPreset, childInfo) in children)
                     {
+                        var draw = (ref int i) =>
+                            DrawPreset(childPreset, childInfo, ref i);
+                        if (childInfo.Name == "Mitigation Options" && info.Role == 1)
+                        {
+                            draw = (ref int i) =>
+                            {
+                                ImGuiHelpers.ScaledDummy(12.0f);
+                                var lineA = ImGui.GetCursorScreenPos();
+                                DrawPreset(childPreset, childInfo, ref i);
+                                var lineB = ImGui.GetCursorScreenPos();
+                                ImGuiHelpers.ScaledDummy(12.0f);
+
+                                var drawing = ImGui.GetWindowDrawList();
+                                drawing.AddLine(
+                                    lineA with { X = lineA.X - 7f },
+                                    lineB with { X = lineB.X - 7f },
+                                    ImGui.GetColorU32(Colors.Grey),
+                                    2f
+                                );
+                            };
+                        }
+
                         if (Service.Configuration.HideConflictedCombos)
                         {
                             var conflictOriginals = PresetStorage.GetConflicts(childPreset);    // Presets that are contained within a ConflictedAttribute
@@ -321,7 +344,7 @@ namespace WrathCombo.Window.Functions
 
                             if (!conflictsSource.Where(x => x == childPreset || x == preset).Any() || conflictOriginals.Length == 0)
                             {
-                                DrawPreset(childPreset, childInfo, ref i);
+                                draw(ref i);
                                 continue;
                             }
 
@@ -336,13 +359,13 @@ namespace WrathCombo.Window.Functions
 
                             else
                             {
-                                DrawPreset(childPreset, childInfo, ref i);
+                                draw(ref i);
                                 continue;
                             }
                         }
                         else
                         {
-                            DrawPreset(childPreset, childInfo, ref i);
+                            draw(ref i);
                             continue;
                         }
                     }

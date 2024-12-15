@@ -1422,6 +1422,19 @@ public enum CustomComboPreset
         DRK.JobID)]
     DRK_ST_Combo = 5001,
 
+    [ParentCombo(DRK_ST_Combo)]
+    [CustomComboInfo("Unmend Uptime Option", "Adds Unmend to the rotation when you are out of range.", DRK.JobID)]
+    DRK_ST_RangedUptime = 5015,
+
+    [ParentCombo(DRK_ST_Combo)]
+    [CustomComboInfo("Blood Gauge Overcap Option",
+        "Adds Bloodspiller to the rotation when at 90 blood gauge or higher.", DRK.JobID)]
+    DRK_ST_BloodOvercap = 5014,
+
+    [ParentCombo(DRK_ST_Combo)]
+    [CustomComboInfo("Bloodspiller Option", "Adds Bloodspiller to the rotation when Delirium is active.", DRK.JobID)]
+    DRK_ST_Bloodspiller = 5013,
+
     #region Buff Options
 
     [ParentCombo(DRK_ST_Combo)]
@@ -1535,19 +1548,6 @@ public enum CustomComboPreset
 
     // Last value = 5036
 
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Bloodspiller Option", "Adds Bloodspiller to the rotation when Delirium is active.", DRK.JobID)]
-    DRK_ST_Bloodspiller = 5013,
-
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Blood Gauge Overcap Option",
-        "Adds Bloodspiller to the rotation when at 90 blood gauge or higher.", DRK.JobID)]
-    DRK_ST_BloodOvercap = 5014,
-
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Unmend Uptime Option", "Adds Unmend to the rotation when you are out of range.", DRK.JobID)]
-    DRK_ST_RangedUptime = 5015,
-
     #endregion
 
     // Last value = 5015
@@ -1560,6 +1560,11 @@ public enum CustomComboPreset
         "Replaces Unleash with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         DRK.JobID)]
     DRK_AoE_Combo = 5016,
+
+    [ParentCombo(DRK_AoE_Combo)]
+    [CustomComboInfo("Blood Gauge Overcap Option", "Adds Quietus to the rotation when at 90 blood gauge or higher.",
+        DRK.JobID)]
+    DRK_AoE_BloodOvercap = 5026,
 
     #region Buff Options
 
@@ -1644,11 +1649,6 @@ public enum CustomComboPreset
     #endregion
 
     // Last value = 5040
-
-    [ParentCombo(DRK_AoE_Combo)]
-    [CustomComboInfo("Blood Gauge Overcap Option", "Adds Quietus to the rotation when at 90 blood gauge or higher.",
-        DRK.JobID)]
-    DRK_AoE_BloodOvercap = 5026,
 
     #endregion
 

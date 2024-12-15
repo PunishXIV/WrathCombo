@@ -4,7 +4,6 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-using Options = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
@@ -78,8 +77,14 @@ internal partial class DRK
             // oGCDs
             if (CanWeave(actionID))
             {
+                var inMitigationContent =
+                    ContentCheck.IsInConfiguredContent(
+                        Config.DRK_ST_MitDifficulty,
+                        Config.DRK_ST_MitDifficultyListSet
+                    );
                 // Mitigation first
-                if (IsEnabled(CustomComboPreset.DRK_ST_Mitigation))
+                if (IsEnabled(CustomComboPreset.DRK_ST_Mitigation) &&
+                    inMitigationContent)
                 {
                     // TBN
                     if (IsEnabled(CustomComboPreset.DRK_ST_TBN)
@@ -90,30 +95,18 @@ internal partial class DRK
                         return BlackestNight;
 
                     // Shadowed Vigil
-                    var inShadowedVigilContent =
-                        ContentCheck.IsInConfiguredContent(
-                            Config.DRK_ST_ShadowedVigilDifficulty,
-                            Config.DRK_ST_ShadowedVigilDifficultyListSet
-                        );
                     if (IsEnabled(CustomComboPreset.DRK_ST_ShadowedVigil)
                         && IsOffCooldown(ShadowedVigil)
                         && LevelChecked(ShadowedVigil)
-                        && PlayerHealthPercentageHp() <= hpRemainingVigil
-                        && inShadowedVigilContent)
+                        && PlayerHealthPercentageHp() <= hpRemainingVigil)
                         return ShadowedVigil;
 
                     // Living Dead
-                    var inLivingDeadContent =
-                        ContentCheck.IsInConfiguredContent(
-                            Config.DRK_ST_LivingDeadDifficulty,
-                            Config.DRK_ST_LivingDeadDifficultyListSet
-                        );
                     if (IsEnabled(CustomComboPreset.DRK_ST_LivingDead)
                         && IsOffCooldown(LivingDead)
                         && LevelChecked(LivingDead)
                         && PlayerHealthPercentageHp() <= hpRemainingLivingDead
                         && GetTargetHPPercent() >= hpRemainingLivingDeadTarget
-                        && inLivingDeadContent
                         // Checking if the target matches the boss avoidance option
                         && ((bossRestrictionLivingDead is
                                  (int)Config.BossAvoidance.On
@@ -171,7 +164,8 @@ internal partial class DRK
                         && LevelChecked(EdgeOfDarkness)
                         && CombatEngageDuration().TotalSeconds >= 25
                         && (gauge.ShadowTimeRemaining > 0 // In Burst
-                            || (IsEnabled(CustomComboPreset.DRK_ST_DarkArtsDropPrevention)
+                            || (IsEnabled(CustomComboPreset
+                                    .DRK_ST_DarkArtsDropPrevention)
                                 && HasOwnTBN))) // TBN
                         return OriginalHook(EdgeOfDarkness);
                 }
