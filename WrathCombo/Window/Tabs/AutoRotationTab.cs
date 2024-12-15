@@ -71,6 +71,17 @@ namespace WrathCombo.Window.Tabs
                 }
                 ImGuiComponents.HelpMarker($"Disabling this will turn off AoE DPS features. Otherwise will require the amount of targets required to be in range of an AoE feature's attack to use. This applies to all 3 roles, and for any features that deal AoE damage.");
 
+                ImGui.SetNextItemWidth(100f.Scale());
+                changed |= ImGui.SliderFloat("Max Target Distance", ref cfg.DPSSettings.MaxDistance, 1, 30);
+
+                if (cfg.DPSSettings.MaxDistance < 1)
+                    cfg.DPSSettings.MaxDistance = 1;
+
+                if (cfg.DPSSettings.MaxDistance > 30)
+                    cfg.DPSSettings.MaxDistance = 30;
+
+                ImGuiComponents.HelpMarker("Max distance all targeting modes (except Manual) will look for a target. Values from 1 to 30 only.");
+
                 changed |= ImGui.Checkbox($"Prioritise FATE Targets", ref cfg.DPSSettings.FATEPriority);
                 changed |= ImGui.Checkbox($"Prioritise Quest Targets", ref cfg.DPSSettings.QuestPriority);
                 changed |= ImGui.Checkbox($"Prioritise Targets Not In Combat", ref cfg.DPSSettings.PreferNonCombat);
@@ -83,6 +94,11 @@ namespace WrathCombo.Window.Tabs
                 {
                     if (combo)
                     {
+                        if (ImGui.Selectable(""))
+                        {
+                            _selectedNpc = 0;
+                        }
+
                         foreach (var npc in npcs)
                         {
                             var npcData = Svc.Data.Excel
@@ -95,7 +111,7 @@ namespace WrathCombo.Window.Tabs
                     }
                 }
                 ImGuiComponents.HelpMarker("These NPCs will be ignored by Auto-Rotation.\n" +
-                                           "Every instance of this NPC will be excluded from automatic targeting.\n" +
+                                           "Every instance of this NPC will be excluded from automatic targeting (Manual will still work).\n" +
                                            "To remove an NPC from this list, select it and press the Delete button below.\n" +
                                            "To add an NPC to this list, target the NPC and use the command: /wrath ignore");
 

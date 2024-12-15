@@ -198,9 +198,10 @@ namespace WrathCombo.CustomComboNS.Functions
 
         /// <summary> Checks if target is in appropriate range for targeting </summary>
         /// <param name="target"> The target object to check </param>
-        public static bool IsInRange(IGameObject? target)
+        /// <param name="distance">Optional distance to check</param>
+        public static bool IsInRange(IGameObject? target, float distance = 25f)
         {
-            if (target == null || GetTargetDistance(target, LocalPlayer) >= 30)
+            if (target == null || GetTargetDistance(target, LocalPlayer) >= distance)
                 return false;
 
             return true;

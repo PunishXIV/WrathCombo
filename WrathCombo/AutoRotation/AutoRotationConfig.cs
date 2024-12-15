@@ -19,6 +19,7 @@
         public bool QuestPriority = false;
         public int? DPSAoETargets = 3;
         public bool PreferNonCombat = false;
+        public float MaxDistance = 25;
     }
 
     public class HealerSettings
