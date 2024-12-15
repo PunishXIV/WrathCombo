@@ -75,7 +75,7 @@ namespace WrathCombo.Window.Tabs
                     var id = groupedPresets[OpenJob].First().Info.JobID;
                     IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
 
-                    using (var headingTab = ImRaii.Child("PvPHeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, icon is null ? 24f.Scale() : (icon.Size.Y / 2f.Scale()) + 4f)))
+                    using (var headingTab = ImRaii.Child("PvPHeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, icon is null ? 24f.Scale() : (icon.Size.Y / 2f).Scale() + 4f)))
                     {
                         if (ImGui.Button("Back", new Vector2(0, 24f.Scale())))
                         {
@@ -123,7 +123,7 @@ namespace WrathCombo.Window.Tabs
         {
             foreach (var (preset, info) in groupedPresets[jobName].Where(x => PresetStorage.IsPvP(x.Preset)))
             {
-                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
+                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 2f.Scale(), ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
 
                 if (Service.Configuration.HideConflictedCombos)
                 {
@@ -150,7 +150,6 @@ namespace WrathCombo.Window.Tabs
                     else
                     {
                         presetBox.Draw();
-                        ImGuiHelpers.ScaledDummy(12.0f);
                         continue;
                     }
                 }
