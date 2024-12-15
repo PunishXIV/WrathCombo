@@ -2826,32 +2826,46 @@ public enum CustomComboPreset
         MNK.JobID)]
     MNK_ST_AdvancedMode = 9005,
 
-    [ParentCombo(MNK_ST_AdvancedMode)] [CustomComboInfo("Opener Option", "Uses selected opener", MNK.JobID)]
-    MNK_STUseOpener = 9006,
-
     [ParentCombo(MNK_ST_AdvancedMode)]
     [CustomComboInfo("Meditation Option", "Adds Meditation to the rotation", MNK.JobID)]
     MNK_STUseMeditation = 9007,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo("The Forbidden Chakra Option", "Adds The Forbidden Chakra to the rotation", MNK.JobID)]
+    MNK_STUseTheForbiddenChakra = 9012,
+    
+    [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo("Form Shift Option", "Adds Form Shift to the rotation", MNK.JobID)]
+    MNK_STUseFormShift = 9017,
+
+    [ParentCombo(MNK_ST_AdvancedMode)] 
+    [CustomComboInfo("Opener Option", "Uses selected opener", MNK.JobID)]
+    MNK_STUseOpener = 9006,
+
+    [ParentCombo(MNK_ST_AdvancedMode)]
     [CustomComboInfo("Buffs Option", "Adds selected buffs to the rotation", MNK.JobID)]
     MNK_STUseBuffs = 9008,
 
-    [ParentCombo(MNK_STUseBuffs)] [CustomComboInfo("Brotherhood Option", "Adds Brotherhood to the rotation", MNK.JobID)]
+    [ParentCombo(MNK_STUseBuffs)] 
+    [CustomComboInfo("Brotherhood Option", "Adds Brotherhood to the rotation", MNK.JobID)]
     MNK_STUseBrotherhood = 9009,
-
-    [ParentCombo(MNK_STUseBuffs)]
-    [CustomComboInfo("Riddle of Wind Option", "Adds Riddle of Wind to the rotation", MNK.JobID)]
-    MNK_STUseROW = 9010,
 
     [ParentCombo(MNK_STUseBuffs)]
     [CustomComboInfo("Riddle of Fire Option", "Adds Riddle of Fire to the rotation", MNK.JobID)]
     MNK_STUseROF = 9011,
 
-    [ParentCombo(MNK_ST_AdvancedMode)]
-    [CustomComboInfo("The Forbidden Chakra Option", "Adds The Forbidden Chakra to the rotation", MNK.JobID)]
-    MNK_STUseTheForbiddenChakra = 9012,
+    [ParentCombo(MNK_STUseROF)] 
+    [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to the rotation", MNK.JobID)]
+    MNK_STUseFiresReply = 9016,
 
+    [ParentCombo(MNK_STUseBuffs)]
+    [CustomComboInfo("Riddle of Wind Option", "Adds Riddle of Wind to the rotation", MNK.JobID)]
+    MNK_STUseROW = 9010,
+
+    [ParentCombo(MNK_STUseROW)]
+    [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to the rotation", MNK.JobID)]
+    MNK_STUseWindsReply = 9015,
+    
     [ParentCombo(MNK_ST_AdvancedMode)]
     [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance and Masterful Blitz to the rotation", MNK.JobID)]
     MNK_STUsePerfectBalance = 9013,
@@ -2860,16 +2874,6 @@ public enum CustomComboPreset
     [CustomComboInfo("True North Option", "Adds True North dynamically, when not in positional, to the rotation",
         MNK.JobID)]
     MNK_STUseTrueNorth = 9014,
-
-    [ParentCombo(MNK_STUseROW)] [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to the rotation", MNK.JobID)]
-    MNK_STUseWindsReply = 9015,
-
-    [ParentCombo(MNK_STUseROF)] [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to the rotation", MNK.JobID)]
-    MNK_STUseFiresReply = 9016,
-
-    [ParentCombo(MNK_ST_AdvancedMode)]
-    [CustomComboInfo("Form Shift Option", "Adds Form Shift to the rotation", MNK.JobID)]
-    MNK_STUseFormShift = 9017,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the rotation.", MNK.JobID)]
@@ -2892,6 +2896,14 @@ public enum CustomComboPreset
     MNK_AoEUseMeditation = 9028,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
+    [CustomComboInfo("Howling Fist Option", "Adds Howling Fist to the rotation", MNK.JobID)]
+    MNK_AoEUseHowlingFist = 9033,
+
+    [ParentCombo(MNK_AOE_AdvancedMode)]
+    [CustomComboInfo("Form Shift Option", "Adds Form Shift to the rotation", MNK.JobID)]
+    MNK_AoEUseFormShift = 9038,
+    
+    [ParentCombo(MNK_AOE_AdvancedMode)]
     [CustomComboInfo("Buffs Option", "Adds selected buffs to the rotation", MNK.JobID)]
     MNK_AoEUseBuffs = 9029,
 
@@ -2900,28 +2912,24 @@ public enum CustomComboPreset
     MNK_AoEUseBrotherhood = 9030,
 
     [ParentCombo(MNK_AoEUseBuffs)]
-    [CustomComboInfo("Riddle of Wind Option", "Adds Riddle of Wind to the rotation", MNK.JobID)]
-    MNK_AoEUseROW = 9031,
-
-    [ParentCombo(MNK_AoEUseBuffs)]
     [CustomComboInfo("Riddle of Fire Option", "Adds Riddle of Fire to the rotation", MNK.JobID)]
     MNK_AoEUseROF = 9032,
 
-    [ParentCombo(MNK_AOE_AdvancedMode)]
-    [CustomComboInfo("Howling Fist Option", "Adds Howling Fist to the rotation", MNK.JobID)]
-    MNK_AoEUseHowlingFist = 9033,
+    [ParentCombo(MNK_AoEUseROF)]
+    [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to the rotation", MNK.JobID)]
+    MNK_AoEUseFiresReply = 9036,
 
-    [ParentCombo(MNK_AOE_AdvancedMode)]
-    [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance and Masterful Blitz to the rotation", MNK.JobID)]
-    MNK_AoEUsePerfectBalance = 9034,
+    [ParentCombo(MNK_AoEUseBuffs)]
+    [CustomComboInfo("Riddle of Wind Option", "Adds Riddle of Wind to the rotation", MNK.JobID)]
+    MNK_AoEUseROW = 9031,
 
     [ParentCombo(MNK_AoEUseROW)]
     [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to the rotation", MNK.JobID)]
     MNK_AoEUseWindsReply = 9035,
 
-    [ParentCombo(MNK_AoEUseROF)]
-    [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to the rotation", MNK.JobID)]
-    MNK_AoEUseFiresReply = 9036,
+    [ParentCombo(MNK_AOE_AdvancedMode)]
+    [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance and Masterful Blitz to the rotation", MNK.JobID)]
+    MNK_AoEUsePerfectBalance = 9034,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the rotation.", MNK.JobID)]
@@ -2952,16 +2960,6 @@ public enum CustomComboPreset
 
     #endregion
 
-    [ReplaceSkill(MNK.PerfectBalance)]
-    [CustomComboInfo("Perfect Balance Feature",
-        "Perfect Balance becomes Masterful Blitz while you have 3 Beast Chakra.", MNK.JobID)]
-    MNK_PerfectBalance = 9023,
-
-    [ReplaceSkill(MNK.RiddleOfFire)]
-    [CustomComboInfo("Riddle of Fire/Brotherhood Feature",
-        "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
-    MNK_Riddle_Brotherhood = 9024,
-
     #region Variant
 
     [Variant]
@@ -2976,6 +2974,16 @@ public enum CustomComboPreset
 
     #endregion
 
+    [ReplaceSkill(MNK.PerfectBalance)]
+    [CustomComboInfo("Perfect Balance Feature",
+        "Perfect Balance becomes Masterful Blitz while you have 3 Beast Chakra.", MNK.JobID)]
+    MNK_PerfectBalance = 9023,
+
+    [ReplaceSkill(MNK.RiddleOfFire)]
+    [CustomComboInfo("Riddle of Fire/Brotherhood Feature",
+        "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
+    MNK_Riddle_Brotherhood = 9024,
+    
     // last value = 9037
     // End Monk
 

@@ -310,6 +310,10 @@ internal static partial class MNK
             if (!InCombat() && Gauge.Chakra < 5 && LevelChecked(Meditation))
                 return OriginalHook(Meditation);
 
+            if (!InCombat() && LevelChecked(FormShift) &&
+                !HasEffect(Buffs.FormlessFist))
+                return FormShift;
+
             //Variant Cure
             if (IsEnabled(CustomComboPreset.MNK_Variant_Cure) &&
                 IsEnabled(Variant.VariantCure) &&
@@ -436,6 +440,11 @@ internal static partial class MNK
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMeditation) &&
                 !InCombat() && Gauge.Chakra < 5 && LevelChecked(Meditation))
                 return OriginalHook(Meditation);
+
+            if (IsEnabled(CustomComboPreset.MNK_AoEUseFormShift) &&
+                !InCombat() && LevelChecked(FormShift) &&
+                !HasEffect(Buffs.FormlessFist))
+                return FormShift;
 
             //Variant Cure
             if (IsEnabled(CustomComboPreset.MNK_Variant_Cure) &&
