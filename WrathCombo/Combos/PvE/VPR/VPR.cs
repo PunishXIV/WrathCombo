@@ -291,8 +291,7 @@ internal static partial class VPR
                 }
 
                 //Vice Twin Weaves
-                if (IsEnabled(CustomComboPreset.VPR_ST_CDs) &&
-                    IsEnabled(CustomComboPreset.VPR_ST_VicewinderWeaves) &&
+                if (IsEnabled(CustomComboPreset.VPR_ST_VicewinderWeaves) &&
                     !HasEffect(Buffs.Reawakened) && in5y)
                 {
                     if (HasEffect(Buffs.HuntersVenom))
@@ -317,8 +316,7 @@ internal static partial class VPR
                     : WrithingSnap;
 
             //Vicewinder Combo
-            if (IsEnabled(CustomComboPreset.VPR_ST_CDs) &&
-                IsEnabled(CustomComboPreset.VPR_ST_VicewinderCombo) &&
+            if (IsEnabled(CustomComboPreset.VPR_ST_VicewinderCombo) &&
                 !HasEffect(Buffs.Reawakened) && LevelChecked(Vicewinder) && InMeleeRange())
             {
                 // Swiftskin's Coil
@@ -342,8 +340,7 @@ internal static partial class VPR
                 return UncoiledFury;
 
             //Vicewinder Usage
-            if (IsEnabled(CustomComboPreset.VPR_ST_CDs) &&
-                IsEnabled(CustomComboPreset.VPR_ST_Vicewinder) && HasEffect(Buffs.Swiftscaled) &&
+            if (IsEnabled(CustomComboPreset.VPR_ST_Vicewinder) && HasEffect(Buffs.Swiftscaled) &&
                 !IsComboExpiring(3) &&
                 ActionReady(Vicewinder) && !HasEffect(Buffs.Reawakened) && InMeleeRange() &&
                 (ireCD >= GCD * 5 || !LevelChecked(SerpentsIre)) &&
@@ -718,8 +715,7 @@ internal static partial class VPR
                         return OriginalHook(Twinblood);
                 }
 
-                if (IsEnabled(CustomComboPreset.VPR_AoE_CDs) &&
-                    !HasEffect(Buffs.Reawakened))
+                if (!HasEffect(Buffs.Reawakened))
                 {
                     //Vicepit weaves
                     if (IsEnabled(CustomComboPreset.VPR_AoE_VicepitWeaves) &&
@@ -740,8 +736,7 @@ internal static partial class VPR
             }
 
             //Vicepit combo
-            if (IsEnabled(CustomComboPreset.VPR_AoE_CDs) &&
-                IsEnabled(CustomComboPreset.VPR_AoE_VicepitCombo) &&
+            if (IsEnabled(CustomComboPreset.VPR_AoE_VicepitCombo) &&
                 !HasEffect(Buffs.Reawakened) &&
                 (in5y || IsEnabled(CustomComboPreset.VPR_AoE_VicepitCombo_DisableRange)))
             {
@@ -769,8 +764,7 @@ internal static partial class VPR
                 return UncoiledFury;
 
             //Vicepit Usage
-            if (IsEnabled(CustomComboPreset.VPR_AoE_CDs) &&
-                IsEnabled(CustomComboPreset.VPR_AoE_Vicepit) &&
+            if (IsEnabled(CustomComboPreset.VPR_AoE_Vicepit) &&
                 ActionReady(Vicepit) && !HasEffect(Buffs.Reawakened) &&
                 (in5y || IsEnabled(CustomComboPreset.VPR_AoE_Vicepit_DisableRange)) &&
                 (ireCD >= GCD * 5 || !LevelChecked(SerpentsIre)))

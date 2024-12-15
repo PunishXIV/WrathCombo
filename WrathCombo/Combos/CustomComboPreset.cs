@@ -5550,33 +5550,25 @@ public enum CustomComboPreset
         "Adds the Balance opener to the rotation.\n Does not check positional choice.\n Always does Hunter's Coil first ( FLANK )",
         VPR.JobID)]
     VPR_ST_Opener = 30002,
-
-    #region Cooldowns ST
-
+    
     [ParentCombo(VPR_ST_AdvancedMode)]
-    [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the rotation.", VPR.JobID)]
-    VPR_ST_CDs = 30004,
-
-    [ParentCombo(VPR_ST_CDs)]
     [CustomComboInfo("Serpents Ire", "Adds Serpents Ire to the rotation.", VPR.JobID)]
     VPR_ST_SerpentsIre = 30005,
 
-    [ParentCombo(VPR_ST_CDs)]
+    [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Vicewinder", "Adds Vicewinder to the rotation.", VPR.JobID)]
     VPR_ST_Vicewinder = 30006,
 
-    [ParentCombo(VPR_ST_CDs)]
+    [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Vicewinder Combo",
         "Adds Swiftskin's Coil and Hunter's Coil to the rotation.\nWill automatically swap depending on your position.",
         VPR.JobID)]
     VPR_ST_VicewinderCombo = 30007,
 
-    [ParentCombo(VPR_ST_CDs)]
+    [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Vicewinder Weaves", "Adds Twinfang and Bloodfang to the rotation.", VPR.JobID)]
     VPR_ST_VicewinderWeaves = 30013,
-
-    #endregion
-
+    
     [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Serpents Tail", "Adds Serpents Tail to the rotation.", VPR.JobID)]
     VPR_ST_SerpentsTail = 30008,
@@ -5599,6 +5591,11 @@ public enum CustomComboPreset
     VPR_ST_ReawakenCombo = 30012,
 
     [ParentCombo(VPR_ST_AdvancedMode)]
+    [CustomComboInfo("Dynamic True North Option",
+        "Adds True North when you are not in the correct position for the enhanced potency bonus.", VPR.JobID)]
+    VPR_TrueNorthDynamic = 30098,
+
+    [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Ranged Uptime Option", "Adds Writhing Snap to the rotation when you are out of melee range.",
         VPR.JobID)]
     VPR_ST_RangedUptime = 30095,
@@ -5612,12 +5609,7 @@ public enum CustomComboPreset
     [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the rotation.", VPR.JobID)]
     VPR_ST_ComboHeals = 30097,
-
-    [ParentCombo(VPR_ST_AdvancedMode)]
-    [CustomComboInfo("Dynamic True North Option",
-        "Adds True North when you are not in the correct position for the enhanced potency bonus.", VPR.JobID)]
-    VPR_TrueNorthDynamic = 30098,
-
+    
     #endregion
 
     #region Advanced AoE Viper
@@ -5629,18 +5621,12 @@ public enum CustomComboPreset
         "Replaces Steel Maw with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         VPR.JobID)]
     VPR_AoE_AdvancedMode = 30101,
-
-    #region Cooldowns AoE
-
+    
     [ParentCombo(VPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Cooldowns Option", "Adds various cooldowns to the rotation.", VPR.JobID)]
-    VPR_AoE_CDs = 30103,
-
-    [ParentCombo(VPR_AoE_CDs)]
     [CustomComboInfo("Serpents Ire", "Adds Serpents Ire to the rotation.", VPR.JobID)]
     VPR_AoE_SerpentsIre = 30104,
 
-    [ParentCombo(VPR_AoE_CDs)] 
+    [ParentCombo(VPR_AoE_AdvancedMode)] 
     [CustomComboInfo("Vicepit", "Adds Vicepit to the rotation.", VPR.JobID)]
     VPR_AoE_Vicepit = 30105,
 
@@ -5649,7 +5635,7 @@ public enum CustomComboPreset
         "Disables the range check for Vicepit, so it will be used even without a target selected.", VPR.JobID)]
     VPR_AoE_Vicepit_DisableRange = 30111,
 
-    [ParentCombo(VPR_AoE_CDs)]
+    [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Vicepit Combo", "Adds Swiftskin's Den and Hunter's Den to the rotation.", VPR.JobID)]
     VPR_AoE_VicepitCombo = 30106,
 
@@ -5659,12 +5645,10 @@ public enum CustomComboPreset
         VPR.JobID)]
     VPR_AoE_VicepitCombo_DisableRange = 30113,
 
-    [ParentCombo(VPR_AoE_CDs)]
+    [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Vicepit Weaves", "Adds Twinfang and Twinblood to the rotation.", VPR.JobID)]
     VPR_AoE_VicepitWeaves = 30115,
-
-    #endregion
-
+    
     [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Serpents Tail", "Adds Serpents Tail to the rotation.", VPR.JobID)]
     VPR_AoE_SerpentsTail = 30107,
@@ -5702,12 +5686,7 @@ public enum CustomComboPreset
         "Replaces Vicewinder with Hunter's/Swiftskin's Coils.\nWill automatically swap depending on your position.",
         VPR.JobID)]
     VPR_VicewinderCoils = 30200,
-
-    [ParentCombo(VPR_VicewinderCoils)]
-    [CustomComboInfo("Dynamic True North Option",
-        "Adds True North when you are not in the correct position for the enhanced potency bonus.", VPR.JobID)]
-    VPR_VicewinderCoilsTN = 30208,
-
+    
     [ReplaceSkill(VPR.Vicepit)]
     [CustomComboInfo("Vicepit - Dens", "Replaces Vicepit with Hunter's/Swiftskin's Dens.", VPR.JobID)]
     VPR_VicepitDens = 30201,
