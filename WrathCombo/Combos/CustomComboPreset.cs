@@ -468,20 +468,28 @@ public enum CustomComboPreset
     BLM_ST_Opener = 2101,
 
     [ParentCombo(BLM_ST_AdvancedMode)]
-    [CustomComboInfo("Amplifier Option", "Add Amplifier to the rotation.", BLM.JobID)]
-    BLM_ST_Amplifier = 2102,
-
-    [ParentCombo(BLM_ST_AdvancedMode)] [CustomComboInfo("Leylines Option", "Add Leylines to the rotation.", BLM.JobID)]
+    [CustomComboInfo("Leylines Option", "Add Leylines to the rotation.", BLM.JobID)]
     BLM_ST_LeyLines = 2103,
 
     [ParentCombo(BLM_ST_AdvancedMode)]
-    [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
-    BLM_ST_UsePolyglot = 2104,
+    [CustomComboInfo("Amplifier Option", "Add Amplifier to the rotation.", BLM.JobID)]
+    BLM_ST_Amplifier = 2102,
+    
+    [ParentCombo(BLM_ST_AdvancedMode)] 
+    [CustomComboInfo("Manafont Option", "Add Manafont to the rotation.", BLM.JobID)]
+    BLM_ST_Manafont = 2108,
 
     [ParentCombo(BLM_ST_AdvancedMode)]
-    [CustomComboInfo("Foul/Xenoglossy for Movement Option", "Add Foul / Xenoglossy to the rotation as movement option.",
-        BLM.JobID)]
-    BLM_ST_UsePolyglotMoving = 2105,
+    [CustomComboInfo("(High) Thunder Option", "Add (High) Thunder to the rotation.", BLM.JobID)]
+    BLM_ST_Thunder = 2110,
+
+    [ParentCombo(BLM_ST_AdvancedMode)]
+    [CustomComboInfo("Despair Option", "Add Despair to the rotation.", BLM.JobID)]
+    BLM_ST_Despair = 2111,
+
+    [ParentCombo(BLM_ST_AdvancedMode)]
+    [CustomComboInfo("Flare Star Option", "Add Flare Star to the rotation.", BLM.JobID)]
+    BLM_ST_FlareStar = 2112,
 
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Swiftcast Option", "Add Swiftcast to the rotation.", BLM.JobID)]
@@ -491,24 +499,19 @@ public enum CustomComboPreset
     [CustomComboInfo("Triplecast Option", "Add Triplecast to the rotation.", BLM.JobID)]
     BLM_ST_Triplecast = 2107,
 
-    [ParentCombo(BLM_ST_AdvancedMode)] [CustomComboInfo("Manafont Option", "Add Manafont to the rotation.", BLM.JobID)]
-    BLM_ST_Manafont = 2108,
-
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Transpose Option", "Add Transpose to the rotation.", BLM.JobID)]
     BLM_ST_Transpose = 2109,
 
     [ParentCombo(BLM_ST_AdvancedMode)]
-    [CustomComboInfo("(High) Thunder Option", "Add (High) Thunder to the rotation.", BLM.JobID)]
-    BLM_ST_Thunder = 2110,
-
-    [ParentCombo(BLM_ST_AdvancedMode)] [CustomComboInfo("Despair Option", "Add Despair to the rotation.", BLM.JobID)]
-    BLM_ST_Despair = 2111,
+    [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
+    BLM_ST_UsePolyglot = 2104,
 
     [ParentCombo(BLM_ST_AdvancedMode)]
-    [CustomComboInfo("Flare Star Option", "Add Flare Star to the rotation.", BLM.JobID)]
-    BLM_ST_FlareStar = 2112,
-
+    [CustomComboInfo("Foul/Xenoglossy for Movement Option", "Add Foul / Xenoglossy to the rotation as movement option.",
+        BLM.JobID)]
+    BLM_ST_UsePolyglotMoving = 2105,
+    
     #endregion
 
     #region AoE - Advanced
@@ -522,18 +525,28 @@ public enum CustomComboPreset
     BLM_AoE_AdvancedMode = 2200,
 
     [ParentCombo(BLM_AoE_AdvancedMode)]
+    [CustomComboInfo("Leylines Option", "Add Leylines to the rotation.", BLM.JobID)]
+    BLM_AoE_LeyLines = 2202,
+
+    [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Amplifier Option", "Add Amplifier to the rotation.", BLM.JobID)]
     BLM_AoE_Amplifier = 2201,
 
-    [ParentCombo(BLM_AoE_AdvancedMode)] [CustomComboInfo("Leylines Option", "Add Leylines to the rotation.", BLM.JobID)]
-    BLM_AoE_LeyLines = 2202,
-
-    [ParentCombo(BLM_AoE_AdvancedMode)] [CustomComboInfo("Foul Option", "Add Foul to the rotation.", BLM.JobID)]
-    BLM_AoE_UsePolyglot = 2203,
+    [ParentCombo(BLM_AoE_AdvancedMode)] 
+    [CustomComboInfo("Manafont Option", "Add Manafont to the rotation.", BLM.JobID)]
+    BLM_AoE_Manafont = 2207,
 
     [ParentCombo(BLM_AoE_AdvancedMode)]
-    [CustomComboInfo("Foul for Movement Option", "Add Foul to the rotation as movement option.", BLM.JobID)]
-    BLM_AoE_UsePolyglotMoving = 2204,
+    [CustomComboInfo("(High) Thunder II Option", "Add (High) Thunder II to the rotation.", BLM.JobID)]
+    BLM_AoE_Thunder = 2209,
+
+    [ParentCombo(BLM_AoE_AdvancedMode)] 
+    [CustomComboInfo("Flare Option", "Add Flare to the rotation.", BLM.JobID)]
+    BLM_AoE_Flare = 2210,
+
+    [ParentCombo(BLM_AoE_AdvancedMode)]
+    [CustomComboInfo("Flare Star Option", "Add Flare Star to the rotation.", BLM.JobID)]
+    BLM_AoE_FlareStar = 2211,
 
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Swiftcast Option", "Add Swiftcast to the rotation.", BLM.JobID)]
@@ -543,23 +556,17 @@ public enum CustomComboPreset
     [CustomComboInfo("Triplecast Option", "Add Triplecast to the rotation.", BLM.JobID)]
     BLM_AoE_Triplecast = 2206,
 
-    [ParentCombo(BLM_AoE_AdvancedMode)] [CustomComboInfo("Manafont Option", "Add Manafont to the rotation.", BLM.JobID)]
-    BLM_AoE_Manafont = 2207,
-
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Transpose Option", "Add Transpose to the rotation.", BLM.JobID)]
     BLM_AoE_Transpose = 2208,
 
     [ParentCombo(BLM_AoE_AdvancedMode)]
-    [CustomComboInfo("(High) Thunder II Option", "Add (High) Thunder II to the rotation.", BLM.JobID)]
-    BLM_AoE_Thunder = 2209,
-
-    [ParentCombo(BLM_AoE_AdvancedMode)] [CustomComboInfo("Flare Option", "Add Flare to the rotation.", BLM.JobID)]
-    BLM_AoE_Flare = 2210,
+    [CustomComboInfo("Foul Option", "Add Foul to the rotation.", BLM.JobID)]
+    BLM_AoE_UsePolyglot = 2203,
 
     [ParentCombo(BLM_AoE_AdvancedMode)]
-    [CustomComboInfo("Flare Star Option", "Add Flare Star to the rotation.", BLM.JobID)]
-    BLM_AoE_FlareStar = 2211,
+    [CustomComboInfo("Foul for Movement Option", "Add Foul to the rotation as movement option.", BLM.JobID)]
+    BLM_AoE_UsePolyglotMoving = 2204,
 
     #endregion
 
@@ -584,6 +591,22 @@ public enum CustomComboPreset
 
     #region Miscellaneous
 
+    [ReplaceSkill(BLM.Triplecast)]
+    [CustomComboInfo("Triplecast Protection",
+        "Replaces Triplecast with Savage Blade when u already have triplecast active.", BLM.JobID)]
+    BLM_TriplecastProtection = 2056,
+    
+    [ReplaceSkill(BLM.Fire)]
+    [CustomComboInfo("Fire I/III Feature",
+        "Replaces Fire I with Fire III outside of Astral Fire or when Firestarter is up.", BLM.JobID)]
+    BLM_Fire_1to3 = 2054,
+
+    [ReplaceSkill(BLM.Blizzard, BLM.Freeze)]
+    [CustomComboInfo("Blizzard I/III Feature",
+        "Replaces Blizzard I with Blizzard III when out of Umbral Ice.\nReplaces Freeze with Blizzard II when synced below Lv.40.",
+        BLM.JobID)]
+    BLM_Blizzard_1to3 = 2052,
+
     [ReplaceSkill(BLM.Fire4)]
     [CustomComboInfo("Fire & Ice", "Replaces Fire4 with Blizzard4 when in Umbral Ice.", BLM.JobID)]
     BLM_FireandIce = 2057,
@@ -593,37 +616,21 @@ public enum CustomComboPreset
         "Replaces Transpose with Umbral Soul when Umbral Soul is available.", BLM.JobID)]
     BLM_UmbralSoul = 2050,
 
-    [ReplaceSkill(BLM.LeyLines)]
-    [CustomComboInfo("Between the Ley Lines Feature",
-        "Replaces Ley Lines with Between the Lines when Ley Lines is active.", BLM.JobID)]
-    BLM_Between_The_LeyLines = 2051,
-
-    [ReplaceSkill(BLM.Blizzard, BLM.Freeze)]
-    [CustomComboInfo("Blizzard I/III Feature", "Replaces Blizzard I with Blizzard III when out of Umbral Ice." +
-                                               "\nReplaces Freeze with Blizzard II when synced below Lv.40.",
-        BLM.JobID)]
-    BLM_Blizzard_1to3 = 2052,
-
     [ReplaceSkill(BLM.Scathe)]
     [CustomComboInfo("Xenoglossy Feature", "Replaces Scathe with Xenoglossy when available.", BLM.JobID)]
     BLM_Scathe_Xeno = 2053,
 
-    [ReplaceSkill(BLM.Fire)]
-    [CustomComboInfo("Fire I/III Feature",
-        "Replaces Fire I with Fire III outside of Astral Fire or when Firestarter is up.", BLM.JobID)]
-    BLM_Fire_1to3 = 2054,
-
+    [ReplaceSkill(BLM.LeyLines)]
+    [CustomComboInfo("Between the Ley Lines Feature",
+        "Replaces Ley Lines with Between the Lines when Ley Lines is active.", BLM.JobID)]
+    BLM_Between_The_LeyLines = 2051,
+    
     [ReplaceSkill(BLM.AetherialManipulation)]
     [CustomComboInfo("Aetherial Manipulation Feature",
         "Replaces Aetherial Manipulation with Between the Lines when you are out of active Ley Lines and standing still.",
         BLM.JobID)]
     BLM_Aetherial_Manipulation = 2055,
-
-    [ReplaceSkill(BLM.Triplecast)]
-    [CustomComboInfo("Triplecast Protection",
-        "Replaces Triplecast with Savage Blade when u already have triplecast active.", BLM.JobID)]
-    BLM_TriplecastProtection = 2056,
-
+    
     #endregion
 
     // Last value ST = 2112
