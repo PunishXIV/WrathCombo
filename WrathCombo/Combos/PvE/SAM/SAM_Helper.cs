@@ -26,7 +26,7 @@ internal static partial class SAM
 
     internal static float GCD => GetCooldown(Hakaze).CooldownTotal;
 
-    internal class SAMHelper
+    internal static class SAMHelper
     {
         internal static int SenCount => GetSenCount();
 

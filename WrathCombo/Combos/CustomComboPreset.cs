@@ -4732,14 +4732,16 @@ public enum CustomComboPreset
     [CustomComboInfo("Yukikaze Combo", "Adds Yukikaze combo to the rotation.", SAM.JobID)]
     SAM_ST_Yukikaze = 15004,
 
-    [ParentCombo(SAM_ST_AdvancedMode)] [CustomComboInfo("Kasha Combo", "Adds Kasha combo to the rotation.", SAM.JobID)]
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("Kasha Combo", "Adds Kasha combo to the rotation.", SAM.JobID)]
     SAM_ST_Kasha = 15005,
 
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Level 100 Opener", "Adds the Balance opener to the rotation.", SAM.JobID)]
     SAM_ST_Opener = 15006,
 
-    [ParentCombo(SAM_ST_AdvancedMode)] [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation", SAM.JobID)]
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation", SAM.JobID)]
     SAM_ST_Shinten = 15008,
 
     #region cooldowns on Main Combo
@@ -4749,11 +4751,27 @@ public enum CustomComboPreset
     SAM_ST_CDs = 15011,
 
     [ParentCombo(SAM_ST_CDs)]
+    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", SAM.JobID)]
+    SAM_ST_CDs_MeikyoShisui = 15018,
+
+    [ParentCombo(SAM_ST_CDs)]
     [CustomComboInfo("Ikishoten Option",
         "Adds Ikishoten when at or below 50 Kenki.\nWill dump Kenki at 10 seconds left to allow Ikishoten to be used.",
         SAM.JobID)]
     SAM_ST_CDs_Ikishoten = 15012,
 
+    [ParentCombo(SAM_ST_CDs)]
+    [CustomComboInfo("Shoha Option", "Adds Shoha when you have three meditation stacks.", SAM.JobID)]
+    SAM_ST_CDs_Shoha = 15019,
+
+    [ParentCombo(SAM_ST_CDs)] 
+    [CustomComboInfo("Senei Option", "Adds Senei to the rotation.", SAM.JobID)]
+    SAM_ST_CDs_Senei = 15020,
+
+    [ParentCombo(SAM_ST_CDs_Senei)]
+    [CustomComboInfo("Guren Option", "Adds Guren to the rotation if Senei is not unlocked.", SAM.JobID)]
+    SAM_ST_CDs_Guren = 15021,
+    
     [ParentCombo(SAM_ST_CDs)]
     [CustomComboInfo("Iaijutsu Option", "Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation.",
         SAM.JobID)]
@@ -4773,26 +4791,16 @@ public enum CustomComboPreset
         SAM.JobID)]
     SAM_ST_CDs_OgiNamikiri_Movement = 15016,
 
-    [ParentCombo(SAM_ST_CDs)] [CustomComboInfo("Zanshin Option", "Adds Zanshin when ready to the rotation.", SAM.JobID)]
+    [ParentCombo(SAM_ST_CDs)] 
+    [CustomComboInfo("Zanshin Option", "Adds Zanshin when ready to the rotation.", SAM.JobID)]
     SAM_ST_CDs_Zanshin = 15017,
-
-    [ParentCombo(SAM_ST_CDs)]
-    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", SAM.JobID)]
-    SAM_ST_CDs_MeikyoShisui = 15018,
-
-    [ParentCombo(SAM_ST_CDs)]
-    [CustomComboInfo("Shoha Option", "Adds Shoha when you have three meditation stacks.", SAM.JobID)]
-    SAM_ST_CDs_Shoha = 15019,
-
-    [ParentCombo(SAM_ST_CDs)] [CustomComboInfo("Senei Option", "Adds Senei to the rotation.", SAM.JobID)]
-    SAM_ST_CDs_Senei = 15020,
-
-    [ParentCombo(SAM_ST_CDs_Senei)]
-    [CustomComboInfo("Guren Option", "Adds Guren to the rotation if Senei is not unlocked.", SAM.JobID)]
-    SAM_ST_CDs_Guren = 15021,
-
+    
     #endregion
 
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("True North Feature", "Adds True North if Meikyo Shisui's buff is on you.", SAM.JobID)]
+    SAM_ST_TrueNorth = 15099,
+    
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Ranged Uptime Feature", "Adds Enpi to the rotation when you are out of range.", SAM.JobID)]
     SAM_ST_RangedUptime = 15097,
@@ -4801,11 +4809,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Combo Heals Option",
         "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", SAM.JobID)]
     SAM_ST_ComboHeals = 15098,
-
-    [ParentCombo(SAM_ST_AdvancedMode)]
-    [CustomComboInfo("True North Feature", "Adds True North if Meikyo Shisui's buff is on you.", SAM.JobID)]
-    SAM_ST_TrueNorth = 15099,
-
+    
     #endregion
 
     #region AoE Combos
@@ -4827,10 +4831,8 @@ public enum CustomComboPreset
     SAM_AoE_Kyuten = 15105,
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
-    [CustomComboInfo("Iaijutsu Option",
-        "Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you're not moving to the rotation.",
-        SAM.JobID)]
-    SAM_AoE_TenkaGoken = 15107,
+    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", SAM.JobID)]
+    SAM_AoE_MeikyoShisui = 15114,
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
     [CustomComboInfo("Ikishoten Option",
@@ -4839,19 +4841,10 @@ public enum CustomComboPreset
     SAM_AOE_CDs_Ikishoten = 15108,
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
-    [CustomComboInfo("Ogi Namikiri Option",
-        "Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you're not moving to the rotation.", SAM.JobID)]
-    SAM_AoE_OgiNamikiri = 15109,
-
-    [ParentCombo(SAM_AoE_AdvancedMode)]
-    [CustomComboInfo("Zanshin Option", "Adds Zanshin to the rotation.", SAM.JobID)]
-    SAM_AoE_Zanshin = 15110,
-
-    [ParentCombo(SAM_AoE_AdvancedMode)]
     [CustomComboInfo("Shoha Option", "Adds Shoha when you have 3 meditation stacks.", SAM.JobID)]
     SAM_AoE_Shoha = 15111,
 
-    [ParentCombo(SAM_AoE_AdvancedMode)]
+    [ParentCombo(SAM_AoE_AdvancedMode)] 
     [CustomComboInfo("Guren Option", "Adds Guren to the rotation.", SAM.JobID)]
     SAM_AoE_Guren = 15112,
 
@@ -4860,8 +4853,19 @@ public enum CustomComboPreset
     SAM_AoE_Hagakure = 15113,
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
-    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", SAM.JobID)]
-    SAM_AoE_MeikyoShisui = 15114,
+    [CustomComboInfo("Iaijutsu Option",
+        "Adds Tenka Goken, Midare: Setsugekka, and Kaeshi: Goken when ready and when you're not moving to the rotation.",
+        SAM.JobID)]
+    SAM_AoE_TenkaGoken = 15107,
+    
+    [ParentCombo(SAM_AoE_AdvancedMode)]
+    [CustomComboInfo("Ogi Namikiri Option",
+        "Adds Ogi Namikiri and Kaeshi: Namikiri when ready and when you're not moving to the rotation.", SAM.JobID)]
+    SAM_AoE_OgiNamikiri = 15109,
+
+    [ParentCombo(SAM_AoE_AdvancedMode)]
+    [CustomComboInfo("Zanshin Option", "Adds Zanshin to the rotation.", SAM.JobID)]
+    SAM_AoE_Zanshin = 15110,
 
     [ParentCombo(SAM_AoE_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option",
@@ -4993,17 +4997,6 @@ public enum CustomComboPreset
 
     #endregion
 
-    #region Other
-
-    [ReplaceSkill(SAM.Gyoten)]
-    [CustomComboInfo("Gyoten Feature",
-        "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
-    SAM_GyotenYaten = 15211,
-
-    #endregion
-
-    // Last value = 15214
-
     #region variant
 
     [Variant]
@@ -5020,6 +5013,17 @@ public enum CustomComboPreset
 
     #endregion
 
+    #region Other
+
+    [ReplaceSkill(SAM.Gyoten)]
+    [CustomComboInfo("Gyoten Feature",
+        "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
+    SAM_GyotenYaten = 15211,
+
+    #endregion
+
+    // Last value = 15214
+    
     #endregion
 
     #region SCHOLAR

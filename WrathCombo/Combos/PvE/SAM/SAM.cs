@@ -567,7 +567,7 @@ internal static partial class SAM
                 return Variant.VariantRampart;
 
             //oGCD Features
-            if (CanWeave(actionID))
+            if (CanWeave(ActionWatching.LastWeaponskill))
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -675,7 +675,7 @@ internal static partial class SAM
                 return Variant.VariantRampart;
 
             //oGCD Features
-            if (CanWeave(actionID))
+            if (CanWeave(ActionWatching.LastWeaponskill))
             {
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Hagakure) &&
                     OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
