@@ -4,7 +4,7 @@ using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRG
+internal static partial class DRG
 {
     internal static class Config
     {

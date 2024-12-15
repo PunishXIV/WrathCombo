@@ -10,7 +10,7 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRG
+internal static partial class DRG
 {
     // DRG Gauge & Extensions
     public static DRGGauge Gauge => GetJobGauge<DRGGauge>();
