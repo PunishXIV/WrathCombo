@@ -1,18 +1,13 @@
-#region
-
 using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-using Options = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
 // ReSharper disable CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberHidesStaticFromOuterClass
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -27,25 +22,26 @@ internal partial class DRK
             float comboTime, byte level)
         {
             // Bail if not looking at the replaced action
-            if (actionID != HardSlash) return actionID;
+            if (actionID != HardSlash)
+                return actionID;
 
-            var gauge = GetJobGauge<DRKGauge>();
-            var inManaPoolingContent =
+            DRKGauge gauge = GetJobGauge<DRKGauge>();
+            bool inManaPoolingContent =
                 ContentCheck.IsInConfiguredContent(
                     Config.DRK_ST_ManaSpenderPoolingDifficulty,
                     Config.DRK_ST_ManaSpenderPoolingDifficultyListSet
                 );
-            var mpRemaining = inManaPoolingContent
+            int mpRemaining = inManaPoolingContent
                 ? Config.DRK_ST_ManaSpenderPooling
                 : 0;
-            var hpRemainingShadow = Config.DRK_ST_LivingShadowThreshold;
-            var hpRemainingDelirium = Config.DRK_ST_DeliriumThreshold;
-            var hpRemainingVigil = Config.DRK_ST_ShadowedVigilThreshold;
-            var hpRemainingLivingDead = Config.DRK_ST_LivingDeadSelfThreshold;
-            var hpRemainingLivingDeadTarget =
+            CustomComboNS.Functions.UserInt hpRemainingShadow = Config.DRK_ST_LivingShadowThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingDelirium = Config.DRK_ST_DeliriumThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingVigil = Config.DRK_ST_ShadowedVigilThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingLivingDead = Config.DRK_ST_LivingDeadSelfThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingLivingDeadTarget =
                 Config.DRK_ST_LivingDeadTargetThreshold;
-            var bossRestrictionLivingDead =
-                (int)Config.DRK_ST_LivingDeadBossRestriction;
+            int bossRestrictionLivingDead =
+                (int) Config.DRK_ST_LivingDeadBossRestriction;
 
             // Variant Cure - Heal: Priority to save your life
             if (IsEnabled(CustomComboPreset.DRK_Variant_Cure)
@@ -62,7 +58,8 @@ internal partial class DRK
                 return Unmend;
 
             // Bail if not in combat
-            if (!InCombat()) return HardSlash;
+            if (!InCombat())
+                return HardSlash;
 
             // Disesteem
             if (LevelChecked(LivingShadow)
@@ -90,7 +87,7 @@ internal partial class DRK
                         return BlackestNight;
 
                     // Shadowed Vigil
-                    var inShadowedVigilContent =
+                    bool inShadowedVigilContent =
                         ContentCheck.IsInConfiguredContent(
                             Config.DRK_ST_ShadowedVigilDifficulty,
                             Config.DRK_ST_ShadowedVigilDifficultyListSet
@@ -103,7 +100,7 @@ internal partial class DRK
                         return ShadowedVigil;
 
                     // Living Dead
-                    var inLivingDeadContent =
+                    bool inLivingDeadContent =
                         ContentCheck.IsInConfiguredContent(
                             Config.DRK_ST_LivingDeadDifficulty,
                             Config.DRK_ST_LivingDeadDifficultyListSet
@@ -116,16 +113,16 @@ internal partial class DRK
                         && inLivingDeadContent
                         // Checking if the target matches the boss avoidance option
                         && ((bossRestrictionLivingDead is
-                                 (int)Config.BossAvoidance.On
+                                 (int) Config.BossAvoidance.On
                              && LocalPlayer.TargetObject is not null
                              && TargetIsBoss())
                             || bossRestrictionLivingDead is
-                                (int)Config.BossAvoidance.Off))
+                                (int) Config.BossAvoidance.Off))
                         return LivingDead;
                 }
 
                 // Variant Spirit Dart - DoT
-                var sustainedDamage =
+                Dalamud.Game.ClientState.Statuses.Status? sustainedDamage =
                     FindTargetEffect(Variant.Debuffs.SustainedDamage);
                 if (IsEnabled(CustomComboPreset.DRK_Variant_SpiritDart)
                     && IsEnabled(Variant.VariantSpiritDart)
@@ -180,7 +177,7 @@ internal partial class DRK
                 if (gauge.DarksideTimeRemaining > 1)
                 {
                     // Living Shadow
-                    var inLivingShadowThresholdContent =
+                    bool inLivingShadowThresholdContent =
                         ContentCheck.IsInConfiguredContent(
                             Config.DRK_ST_LivingShadowThresholdDifficulty,
                             Config.DRK_ST_LivingShadowThresholdDifficultyListSet
@@ -195,7 +192,7 @@ internal partial class DRK
                         return LivingShadow;
 
                     // Delirium
-                    var inDeliriumThresholdContent =
+                    bool inDeliriumThresholdContent =
                         ContentCheck.IsInConfiguredContent(
                             Config.DRK_ST_DeliriumThresholdDifficulty,
                             Config.DRK_ST_DeliriumThresholdDifficultyListSet
@@ -271,7 +268,7 @@ internal partial class DRK
                 && IsEnabled(CustomComboPreset.DRK_ST_Bloodspiller))
             {
                 //Bloodspiller under Delirium
-                var deliriumBuff = TraitLevelChecked(Traits.EnhancedDelirium)
+                ushort deliriumBuff = TraitLevelChecked(Traits.EnhancedDelirium)
                     ? Buffs.EnhancedDelirium
                     : Buffs.Delirium;
                 if (GetBuffStacks(deliriumBuff) > 0)
@@ -289,7 +286,8 @@ internal partial class DRK
             }
 
             // 1-2-3 combo
-            if (!(comboTime > 0)) return HardSlash;
+            if (!(comboTime > 0))
+                return HardSlash;
             if (lastComboMove == HardSlash && LevelChecked(SyphonStrike))
                 return SyphonStrike;
             if (lastComboMove == SyphonStrike && LevelChecked(Souleater))
@@ -315,15 +313,16 @@ internal partial class DRK
             float comboTime, byte level)
         {
             // Bail if not looking at the replaced action
-            if (actionID != Unleash) return actionID;
+            if (actionID != Unleash)
+                return actionID;
 
-            var gauge = GetJobGauge<DRKGauge>();
-            var hpRemainingShadow = Config.DRK_AoE_LivingShadowThreshold;
-            var hpRemainingDelirium = Config.DRK_AoE_DeliriumThreshold;
-            var hpRemainingVigil = Config.DRK_AoE_ShadowedVigilThreshold;
-            var hpRemainingLivingDead =
+            DRKGauge gauge = GetJobGauge<DRKGauge>();
+            CustomComboNS.Functions.UserInt hpRemainingShadow = Config.DRK_AoE_LivingShadowThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingDelirium = Config.DRK_AoE_DeliriumThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingVigil = Config.DRK_AoE_ShadowedVigilThreshold;
+            CustomComboNS.Functions.UserInt hpRemainingLivingDead =
                 Config.DRK_AoE_LivingDeadSelfThreshold;
-            var hpRemainingLivingDeadTarget =
+            CustomComboNS.Functions.UserInt hpRemainingLivingDeadTarget =
                 Config.DRK_AoE_LivingDeadTargetThreshold;
 
             // Variant Cure - Heal: Priority to save your life
@@ -373,7 +372,7 @@ internal partial class DRK
                 }
 
                 // Variant Spirit Dart - DoT
-                var sustainedDamage =
+                Dalamud.Game.ClientState.Statuses.Status? sustainedDamage =
                     FindTargetEffect(Variant.Debuffs.SustainedDamage);
                 if (IsEnabled(CustomComboPreset.DRK_Variant_SpiritDart)
                     && IsEnabled(Variant.VariantSpiritDart)
@@ -402,7 +401,7 @@ internal partial class DRK
                     return OriginalHook(FloodOfDarkness);
 
                 // Living Shadow
-                var inLivingShadowThresholdContent =
+                bool inLivingShadowThresholdContent =
                     ContentCheck.IsInConfiguredContent(
                         Config.DRK_AoE_LivingShadowThresholdDifficulty,
                         Config.DRK_AoE_LivingShadowThresholdDifficultyListSet
@@ -416,7 +415,7 @@ internal partial class DRK
                     return LivingShadow;
 
                 // Delirium
-                var inDeliriumThresholdContent =
+                bool inDeliriumThresholdContent =
                     ContentCheck.IsInConfiguredContent(
                         Config.DRK_AoE_DeliriumThresholdDifficulty,
                         Config.DRK_AoE_DeliriumThresholdDifficultyListSet
@@ -469,7 +468,8 @@ internal partial class DRK
                 return OriginalHook(Quietus);
 
             // 1-2-3 combo
-            if (!(comboTime > 0)) return Unleash;
+            if (!(comboTime > 0))
+                return Unleash;
             if (lastComboMove == Unleash && LevelChecked(StalwartSoul))
             {
                 if (IsEnabled(CustomComboPreset.DRK_AoE_BloodOvercap)
@@ -491,7 +491,7 @@ internal partial class DRK
         protected override uint Invoke(uint actionID, uint lastComboMove,
             float comboTime, byte level)
         {
-            var gauge = GetJobGauge<DRKGauge>();
+            DRKGauge gauge = GetJobGauge<DRKGauge>();
 
             if (actionID == CarveAndSpit || actionID == AbyssalDrain)
             {
@@ -531,22 +531,22 @@ internal partial class DRK
 
     public const uint
 
-        #region Single-Target 1-2-3 Combo
+    #region Single-Target 1-2-3 Combo
 
         HardSlash = 3617,
         SyphonStrike = 3623,
         Souleater = 3632,
 
-        #endregion
+    #endregion
 
-        #region AoE 1-2-3 Combo
+    #region AoE 1-2-3 Combo
 
         Unleash = 3621,
         StalwartSoul = 16468,
 
-        #endregion
+    #endregion
 
-        #region Single-Target oGCDs
+    #region Single-Target oGCDs
 
         CarveAndSpit = 3643, // With AbyssalDrain
         EdgeOfDarkness = 16467, // For MP
@@ -556,9 +556,9 @@ internal partial class DRK
         Comeuppance = 36929, // Under Enhanced Delirium
         Torcleaver = 36930, // Under Enhanced Delirium
 
-        #endregion
+    #endregion
 
-        #region AoE oGCDs
+    #region AoE oGCDs
 
         AbyssalDrain = 3641, // Cooldown shared with CarveAndSpit
         FloodOfDarkness = 16466, // For MP
@@ -568,30 +568,30 @@ internal partial class DRK
         SaltAndDarkness = 25755, // Recast of Salted Earth
         Impalement = 36931, // Under Delirium
 
-        #endregion
+    #endregion
 
-        #region Buffing oGCDs
+    #region Buffing oGCDs
 
         BloodWeapon = 3625,
         Delirium = 7390,
 
-        #endregion
+    #endregion
 
-        #region Burst Window
+    #region Burst Window
 
         LivingShadow = 16472,
         Shadowbringer = 25757,
         Disesteem = 36932,
 
-        #endregion
+    #endregion
 
-        #region Ranged Option
+    #region Ranged Option
 
         Unmend = 3624,
 
-        #endregion
+    #endregion
 
-        #region Mitigation
+    #region Mitigation
 
         BlackestNight = 7393,
         LivingDead = 3638,
