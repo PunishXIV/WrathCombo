@@ -47,26 +47,26 @@ internal partial class DNC
 
         public static readonly UserInt
             DNCVariantCurePercent = new("DNCVariantCurePercent"); // Variant Cure - player HP% threshold
-            
+
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
             {
                 case CustomComboPreset.DNC_DanceComboReplacer:
                 {
-                    int[]? actions = Service.Configuration.DancerDanceCompatActionIDs.Select(x => (int)x).ToArray();
+                    int []? actions = Service.Configuration.DancerDanceCompatActionIDs.Select(x => (int) x).ToArray();
 
                     bool inputChanged = false;
 
-                    inputChanged |= ImGui.InputInt("Emboite (Red) ActionID", ref actions[0], 0);
-                    inputChanged |= ImGui.InputInt("Entrechat (Blue) ActionID", ref actions[1], 0);
-                    inputChanged |= ImGui.InputInt("Jete (Green) ActionID", ref actions[2], 0);
-                    inputChanged |= ImGui.InputInt("Pirouette (Yellow) ActionID", ref actions[3], 0);
+                    inputChanged |= ImGui.InputInt("Emboite (Red) ActionID", ref actions [0], 0);
+                    inputChanged |= ImGui.InputInt("Entrechat (Blue) ActionID", ref actions [1], 0);
+                    inputChanged |= ImGui.InputInt("Jete (Green) ActionID", ref actions [2], 0);
+                    inputChanged |= ImGui.InputInt("Pirouette (Yellow) ActionID", ref actions [3], 0);
 
                     if (inputChanged)
                     {
                         //Service.Configuration.DancerDanceCompatActionIDs = actions.Cast<uint>().ToArray();
-                        Service.Configuration.DancerDanceCompatActionIDs = actions.Select(x => (uint)x).ToArray();
+                        Service.Configuration.DancerDanceCompatActionIDs = actions.Select(x => (uint) x).ToArray();
                         Service.Configuration.Save();
                     }
 
