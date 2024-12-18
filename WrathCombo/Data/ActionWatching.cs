@@ -131,9 +131,9 @@ namespace WrathCombo.Data
         private static void UpdateHelpers(uint actionId)
         {
             if (actionId is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo)
-                NIN.NINHelper.InMudra = true;
+                NIN.InMudra = true;
             else
-                NIN.NINHelper.InMudra = false;
+                NIN.InMudra = false;
         }
 
         private unsafe static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
