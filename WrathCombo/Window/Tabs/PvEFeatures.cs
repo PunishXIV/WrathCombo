@@ -1,10 +1,12 @@
-﻿using Dalamud.Interface.Textures.TextureWraps;
+﻿using System;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Linq;
 using System.Numerics;
+using ECommons.Logging;
 using WrathCombo.Core;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
@@ -60,7 +62,16 @@ namespace WrathCombo.Window.Tabs
                                 ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
                                 ImGui.SameLine(indentwidth2);
                             }
+
                             ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
+
+                            if (!string.IsNullOrEmpty(abbreviation) &&
+                                P.IPC.UIHelper.JobControlled(id) is not null)
+                            {
+                                ImGui.SameLine();
+                                P.IPC.UIHelper
+                                    .ShowIPCControlledIndicatorIfNeeded(id, false);
+                            }
                         }
                     }
                 }
@@ -86,6 +97,13 @@ namespace WrathCombo.Window.Tabs
                             }
                             ImGuiEx.Text($"{OpenJob}");
                         });
+
+                        if (P.IPC.UIHelper.JobControlled(id) is not null)
+                        {
+                            ImGui.SameLine();
+                            P.IPC.UIHelper
+                                .ShowIPCControlledIndicatorIfNeeded(id);
+                        }
 
                     }
 

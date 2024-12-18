@@ -154,20 +154,11 @@ To enable this:
 2. Go to the "Config" tab.
 3. Expand the "Duty Config" section.
 4. Enable "Auto Manage Rotation Plugin State".
+5. (Also check "> Wrath Config Options <" -> "Auto setup jobs for autorotation")
 
-You will still need to configure Wrath Combo's Auto-Rotation settings and what 
-combos you have set to be enabled in it as normal, AutoDuty will currently on enable
-or disable the Auto-Rotation feature.
-
-1. Open Wrath Combo and navigate to the "Auto-Rotation" tab.
-    - Configure your Auto-Rotation settings as desired.
-2. Navigate to the "PvE Features" tab and select your job.
-    - Enable at least 1 combo, but preferably a Single and Multi-target Combo.
-        - You can use "Simple Mode" combos, or "Advanced Mode" combos and 
-          configure them as desired.
-    - Tick the "Auto-Mode" checkbox to the right of your chosen combos.
-3. AutoDuty will enable Wrath Combo when it commences a duty, and disable it when 
-   it ends.
+By default, AutoDuty will ensure that combos in Wrath are set up, and will lock all
+settings under those combos to `On` if combos were not set up, to ensure that the 
+rotation will run; if you already have your jobs setup, you can disable Option 5 above.
 
   <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section> 

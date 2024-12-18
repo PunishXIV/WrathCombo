@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using System.Linq;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.GameFunctions;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
@@ -290,12 +291,14 @@ namespace WrathCombo.Combos.PvE
                 if (!InCombat() && TargetIsHostile())
                 {
                     // Dance Partner
+                    var dpEnabled = P.IPC.GetComboState(
+                            CustomComboPreset.DNC_ST_AdvancedMode.ToString())!
+                        .Values.First();
                     if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Partner) &&
                         ActionReady(ClosedPosition) &&
                         !HasEffect(Buffs.ClosedPosition) &&
                         (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                        !(Service.Configuration.AutoActions[CustomComboPreset.DNC_ST_AdvancedMode] &&
-                          Service.Configuration.RotationConfig.Enabled)) // Disabled in Auto-Rotation
+                        !(dpEnabled && P.IPC.GetAutoRotationState())) // Disable feature in Auto-Rotation
                         // todo: do not disable for auto-rotation, provide targeting
                         return ClosedPosition;
 

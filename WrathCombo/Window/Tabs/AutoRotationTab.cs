@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Components;
+﻿using System;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ECommons;
 using ECommons.DalamudServices;
@@ -9,6 +10,7 @@ using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using WrathCombo.Services.IPC;
 
 namespace WrathCombo.Window.Tabs
 {
@@ -24,13 +26,23 @@ namespace WrathCombo.Window.Tabs
             var cfg = Service.Configuration.RotationConfig;
             bool changed = false;
 
-            changed |= ImGui.Checkbox($"Enable Auto-Rotation", ref cfg.Enabled);
-            if (cfg.Enabled)
+            if (P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded())
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    "Enable Auto-Rotation", ref cfg.Enabled);
+            else
+                changed |= ImGui.Checkbox($"Enable Auto-Rotation", ref cfg.Enabled);
+            if (P.IPC.GetAutoRotationState())
             {
-                ImGuiExtensions.Prefix(!cfg.InCombatOnly);
-                changed |= ImGui.Checkbox("Only in Combat", ref cfg.InCombatOnly);
+                var inCombatOnly = (bool)P.IPC.GetAutoRotationConfigState(
+                    Enum.Parse<AutoRotationConfigOption>("InCombatOnly"))!;
+                if (P.IPC.UIHelper.AutoRotationConfigControlled("InCombatOnly") is not null)
+                    ImGuiExtensions.Prefix(false);
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("InCombatOnly");
+                ImGuiExtensions.Prefix(!inCombatOnly);
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    "Only in Combat", ref cfg.InCombatOnly, "InCombatOnly");
 
-                if (cfg.InCombatOnly)
+                if (inCombatOnly)
                 {
                     ImGuiExtensions.Prefix(false);
                     changed |= ImGui.Checkbox($"Bypass Only in Combat for Quest Targets", ref cfg.BypassQuest);
@@ -52,6 +64,12 @@ namespace WrathCombo.Window.Tabs
             if (ImGui.CollapsingHeader("Damage Settings"))
             {
                 ImGuiEx.TextUnderlined($"Targeting Mode");
+
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("DPSRotationMode");
+                P.IPC.UIHelper.ShowIPCControlledComboIfNeeded(
+                    "###DPSTargetingMode", true, ref cfg.DPSRotationMode,
+                    ref cfg.HealerRotationMode, "DPSRotationMode");
+
                 changed |= ImGuiEx.EnumCombo("###DPSTargetingMode", ref cfg.DPSRotationMode);
                 ImGuiComponents.HelpMarker("Manual - Leaves all targeting decisions to you.\n" +
                     "Highest Max - Prioritises enemies with the highest max HP.\n" +
@@ -73,17 +91,17 @@ namespace WrathCombo.Window.Tabs
 
                 ImGui.SetNextItemWidth(100f.Scale());
                 changed |= ImGui.SliderFloat("Max Target Distance", ref cfg.DPSSettings.MaxDistance, 1, 30);
-
-                if (cfg.DPSSettings.MaxDistance < 1)
-                    cfg.DPSSettings.MaxDistance = 1;
-
-                if (cfg.DPSSettings.MaxDistance > 30)
-                    cfg.DPSSettings.MaxDistance = 30;
+                cfg.DPSSettings.MaxDistance =
+                    Math.Clamp(cfg.DPSSettings.MaxDistance, 1, 30);
 
                 ImGuiComponents.HelpMarker("Max distance all targeting modes (except Manual) will look for a target. Values from 1 to 30 only.");
 
-                changed |= ImGui.Checkbox($"Prioritise FATE Targets", ref cfg.DPSSettings.FATEPriority);
-                changed |= ImGui.Checkbox($"Prioritise Quest Targets", ref cfg.DPSSettings.QuestPriority);
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("FATEPriority");
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    "Prioritise FATE Targets", ref cfg.DPSSettings.FATEPriority, "FATEPriority");
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("QuestPriority");
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    "Prioritise Quest Targets", ref cfg.DPSSettings.QuestPriority, "QuestPriority");
                 changed |= ImGui.Checkbox($"Prioritise Targets Not In Combat", ref cfg.DPSSettings.PreferNonCombat);
 
                 var npcs = Service.Configuration.IgnoredNPCs.ToList();
@@ -131,18 +149,27 @@ namespace WrathCombo.Window.Tabs
             if (ImGui.CollapsingHeader("Healing Settings"))
             {
                 ImGuiEx.TextUnderlined($"Healing Targeting Mode");
-                changed |= ImGuiEx.EnumCombo("###HealerTargetingMode", ref cfg.HealerRotationMode);
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("HealerRotationMode");
+                P.IPC.UIHelper.ShowIPCControlledComboIfNeeded(
+                    "###HealerTargetingMode", false, ref cfg.DPSRotationMode,
+                    ref cfg.HealerRotationMode, "HealerRotationMode");
                 ImGuiComponents.HelpMarker("Manual - Will only heal a target if you select them manually. If the target does not meet the healing threshold settings criteria below it will skip healing in favour of DPSing (if also enabled).\n" +
                     "Highest Current - Prioritises the party member with the highest current HP%.\n" +
                     "Lowest Current - Prioritises the party member with the lowest current HP%.");
 
-                ImGui.SetNextItemWidth(200f.Scale());
-                changed |= ImGuiEx.SliderInt("Single Target HP% Threshold", ref cfg.HealerSettings.SingleTargetHPP, 1, 99, "%d%%");
-                ImGui.SetNextItemWidth(200f.Scale());
-                changed |= ImGuiEx.SliderInt("Single Target HP% Threshold (target has Regen/Aspected Benefic)", ref cfg.HealerSettings.SingleTargetRegenHPP, 1, 99, "%d%%");
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("SingleTargetHPP");
+                changed |= P.IPC.UIHelper.ShowIPCControlledSliderIfNeeded(
+                    "Single Target HP% Threshold", ref cfg.HealerSettings.SingleTargetHPP, "SingleTargetHPP");
+
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("SingleTargetRegenHPP");
+                changed |= P.IPC.UIHelper.ShowIPCControlledSliderIfNeeded(
+                    "Single Target HP% Threshold (target has Regen/Aspected Benefic)", ref cfg.HealerSettings.SingleTargetRegenHPP, "SingleTargetRegenHPP");
                 ImGuiComponents.HelpMarker("You typically want to set this lower than the above setting.");
-                ImGui.SetNextItemWidth(200f.Scale());
-                changed |= ImGuiEx.SliderInt("AoE HP% Threshold", ref cfg.HealerSettings.AoETargetHPP, 1, 99, "%d%%");
+
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("AoETargetHPP");
+                changed |= P.IPC.UIHelper.ShowIPCControlledSliderIfNeeded(
+                    "AoE HP% Threshold", ref cfg.HealerSettings.AoETargetHPP, "AoETargetHPP");
+
                 var input = ImGuiEx.InputInt(100f.Scale(), "Targets Required for AoE Healing Features", ref cfg.HealerSettings.AoEHealTargetCount);
                 if (input)
                 {
@@ -159,18 +186,29 @@ namespace WrathCombo.Window.Tabs
                 ImGuiComponents.HelpMarker("Don't set this too high! 1-2 seconds is normally comfy enough to be considered a natural reaction.");
 
                 ImGui.Spacing();
-                changed |= ImGui.Checkbox("Auto-Resurrect", ref cfg.HealerSettings.AutoRez);
+
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRez");
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    "Auto-Resurrect", ref cfg.HealerSettings.AutoRez, "AutoRez");
                 ImGuiComponents.HelpMarker($"Will attempt to resurrect dead party members. Applies to {WHM.ClassID.JobAbbreviation()}, {WHM.JobID.JobAbbreviation()}, {SCH.JobID.JobAbbreviation()}, {AST.JobID.JobAbbreviation()}, {SGE.JobID.JobAbbreviation()}");
-                if (cfg.HealerSettings.AutoRez)
+                var autoRez = (bool)P.IPC.GetAutoRotationConfigState(AutoRotationConfigOption.AutoRez)!;
+                if (autoRez)
                 {
-                    ImGuiExtensions.Prefix(cfg.HealerSettings.AutoRez);
-                    changed |= ImGui.Checkbox($"Apply to {SMN.JobID.JobAbbreviation()} & {RDM.JobID.JobAbbreviation()}", ref cfg.HealerSettings.AutoRezDPSJobs);
+                    ImGuiExtensions.Prefix(true);
+                    P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezDPSJobs");
+                    changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                        $"Apply to {SMN.JobID.JobAbbreviation()} & {RDM.JobID.JobAbbreviation()}", ref cfg.HealerSettings.AutoRezDPSJobs, "AutoRezDPSJobs");
                     ImGuiComponents.HelpMarker($"When playing as {SMN.JobID.JobAbbreviation()} or {RDM.JobID.JobAbbreviation()}, also attempt to raise a dead party member. {RDM.JobID.JobAbbreviation()} will only resurrect with {All.Buffs.Swiftcast.StatusName()} or {RDM.Buffs.Dualcast.StatusName()} active.");
                 }
-                changed |= ImGui.Checkbox($"Auto-{All.Esuna.ActionName()}", ref cfg.HealerSettings.AutoCleanse);
+
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoCleanse");
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    $"Auto-{All.Esuna.ActionName()}", ref cfg.HealerSettings.AutoCleanse, "AutoCleanse");
                 ImGuiComponents.HelpMarker($"Will {All.Esuna.ActionName()} any cleansable debuffs (Healing takes priority).");
 
-                changed |= ImGui.Checkbox($"[{SGE.JobID.JobAbbreviation()}] Automatically Manage Kardia", ref cfg.HealerSettings.ManageKardia);
+                P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded("ManageKardia");
+                changed |= P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    $"[{SGE.JobID.JobAbbreviation()}] Automatically Manage Kardia", ref cfg.HealerSettings.ManageKardia, "ManageKardia");
                 ImGuiComponents.HelpMarker($"Switches {SGE.Kardia.ActionName()} to party members currently being targeted by enemies, prioritising tanks if multiple people are being targeted.");
                 if (cfg.HealerSettings.ManageKardia)
                 {

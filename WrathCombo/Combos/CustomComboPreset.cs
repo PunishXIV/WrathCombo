@@ -321,7 +321,7 @@ public enum CustomComboPreset
 
     [AutoAction(false, true)]
     [ReplaceSkill(AST.Benefic2)]
-    [CustomComboInfo("Simple Heals (Single Target)", "Replaces Benefic II with a one button healing replacement.",
+    [CustomComboInfo("Simple Heals - Single Target", "Replaces Benefic II with a one button healing replacement.",
         AST.JobID)]
     AST_ST_SimpleHeals = 1023,
 
@@ -363,7 +363,7 @@ public enum CustomComboPreset
 
     [AutoAction(true, true)]
     [ReplaceSkill(AST.Helios, AST.AspectedHelios, AST.HeliosConjuction)]
-    [CustomComboInfo("Simple Heals (AoE)",
+    [CustomComboInfo("Simple Heals - AoE",
         "Replaces Aspected Helios/Helios Conjunction or Helios with a one button healing replacement.", AST.JobID)]
     AST_AoE_SimpleHeals_AspectedHelios = 1010,
 
@@ -4500,7 +4500,7 @@ public enum CustomComboPreset
 
     [AutoAction(false, true)]
     [ReplaceSkill(SGE.Diagnosis)]
-    [CustomComboInfo("Single Target Heal Feature", "Supports soft-targeting.\nOptions below are in priority order.",
+    [CustomComboInfo("Simple Heals - Single Target", "Supports soft-targeting.\nOptions below are in priority order.",
         SGE.JobID)]
     SGE_ST_Heal = 14014,
 
@@ -4548,7 +4548,8 @@ public enum CustomComboPreset
 
     [AutoAction(true, true)]
     [ReplaceSkill(SGE.Prognosis)]
-    [CustomComboInfo("AoE Heal Feature", "Customize your AoE healing to your liking.", SGE.JobID)]
+    [CustomComboInfo("Simple Heals - AoE", "Customize your AoE healing to your liking.", SGE
+        .JobID)]
     SGE_AoE_Heal = 14026,
 
     [ParentCombo(SGE_AoE_Heal)] [CustomComboInfo("Physis Option", "Adds Physis.", SGE.JobID)]
@@ -5076,7 +5077,7 @@ public enum CustomComboPreset
 
     [AutoAction(true, true)]
     [ReplaceSkill(SCH.Succor)]
-    [CustomComboInfo("AoE Heal Feature", "Replaces Succor with options below:", SCH.JobID)]
+    [CustomComboInfo("Simple Heals - AoE", "Replaces Succor with options below:", SCH.JobID)]
     SCH_AoE_Heal = 16018,
 
     [ParentCombo(SCH_AoE_Heal)]
@@ -5121,7 +5122,7 @@ public enum CustomComboPreset
 
     [AutoAction(false, true)]
     [ReplaceSkill(SCH.Physick)]
-    [CustomComboInfo("Single Target Heal Feature",
+    [CustomComboInfo("Simple Heals - Single Target",
         "Change Physick into Adloquium, Lustrate, then Physick with below options:", SCH.JobID)]
     SCH_ST_Heal = 16023,
 
@@ -6150,7 +6151,7 @@ public enum CustomComboPreset
 
     [AutoAction(true, true)]
     [ReplaceSkill(WHM.Medica1)]
-    [CustomComboInfo("Simple Heals (AoE)", "Replaces Medica with a one button AoE healing setup.", WHM.JobID)]
+    [CustomComboInfo("Simple Heals - AoE", "Replaces Medica with a one button AoE healing setup.", WHM.JobID)]
     WHM_AoEHeals = 19007,
 
     [ParentCombo(WHM_AoEHeals)]
@@ -6194,7 +6195,7 @@ public enum CustomComboPreset
 
     [AutoAction(false, true)]
     [ReplaceSkill(WHM.Cure)]
-    [CustomComboInfo("Simple Heals (Single Target)", "Replaces Cure with a one button single target healing setup.",
+    [CustomComboInfo("Simple Heals - Single Target", "Replaces Cure with a one button single target healing setup.",
         WHM.JobID)]
     WHM_STHeals = 19300,
 
