@@ -7,14 +7,14 @@ namespace WrathCombo.Combos.PvE;
 internal partial class BRD
 {
     public static BRDOpenerMaxLevel1 Opener1 = new();
+
     public static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked) return Opener1;
+        if (Opener1.LevelChecked)
+            return Opener1;
 
         return WrathOpener.Dummy;
     }
-
-
 
     internal class BRDOpenerMaxLevel1 : WrathOpener
     {
@@ -71,7 +71,6 @@ internal partial class BRD
 
             if (!CustomComboFunctions.ActionReady(Barrage))
                 return false;
-
 
             return true;
         }
