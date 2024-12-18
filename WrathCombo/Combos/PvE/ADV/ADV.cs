@@ -2,6 +2,8 @@
 
 internal partial class ADV
 {
+    #region ID's
+
     public const byte ClassID = 0;
     public const byte JobID = 0;
 
@@ -25,4 +27,6 @@ internal partial class ADV
         public const byte
             Placeholder = 0;
     }
+
+    #endregion
 }
