@@ -80,14 +80,13 @@ internal partial class SMN
                     UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Crimson Cyclone", "", 3, 1);
                     UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Slipstream", "", 3, 2);
 
-                    if (SMN_ST_Egi_AstralFlow[1])
+                    if (SMN_ST_Egi_AstralFlow [1])
                         UserConfig.DrawAdditionalBoolChoice(SMN_ST_CrimsonCycloneMelee,
                             "Enforced Crimson Cyclone Melee Check", "Only uses Crimson Cyclone within melee range.");
 
                     break;
                 }
 
-                
                 case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
                     UserConfig.DrawSliderInt(0, 90, SMNPvP.Config.SMNPvP_RadiantAegisThreshold,
                         "Caps at 90 to prevent waste.");
