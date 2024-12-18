@@ -1,10 +1,6 @@
-#region
-
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -23,8 +19,8 @@ internal static partial class MNK
             if ((!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
                 !HasEffect(Buffs.RiddleOfFire) &&
-                LevelChecked(Meditation))
-                return OriginalHook(Meditation);
+                LevelChecked(SteeledMeditation))
+                return OriginalHook(SteeledMeditation);
 
             if (!InCombat() && LevelChecked(FormShift) &&
                 !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance))
@@ -32,12 +28,11 @@ internal static partial class MNK
 
             if (Opener().FullOpener(ref actionID))
             {
-                if (IsOnCooldown(RiddleOfWind) &&
+                return IsOnCooldown(RiddleOfWind) &&
                     CanWeave(ActionWatching.LastWeaponskill) &&
-                    Gauge.Chakra >= 5)
-                    return TheForbiddenChakra;
-
-                return actionID;
+                    Gauge.Chakra >= 5
+                    ? TheForbiddenChakra
+                    : actionID;
             }
 
             //Variant Cure
@@ -66,7 +61,7 @@ internal static partial class MNK
                     return RiddleOfWind;
 
                 //Perfect Balance
-                if (MNKHelper.UsePerfectBalance())
+                if (UsePerfectBalance())
                     return PerfectBalance;
 
                 if (PlayerHealthPercentageHp() <= 25 &&
@@ -77,16 +72,18 @@ internal static partial class MNK
                     ActionReady(All.Bloodbath))
                     return All.Bloodbath;
 
-                if (Gauge.Chakra >= 5 &&
-                    LevelChecked(SteelPeak))
-                    return OriginalHook(Meditation);
+                if (Gauge.Chakra >= 5 && InCombat() &&
+                    LevelChecked(SteeledMeditation))
+                    return OriginalHook(SteeledMeditation);
             }
 
             // GCDs
             if (HasEffect(Buffs.FormlessFist))
+            {
                 return Gauge.OpoOpoFury == 0
                     ? DragonKick
                     : OriginalHook(Bootshine);
+            }
 
             // Masterful Blitz
             if (LevelChecked(MasterfulBlitz) &&
@@ -99,31 +96,39 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
+                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                {
                     return Gauge.OpoOpoFury == 0
                         ? DragonKick
                         : OriginalHook(Bootshine);
+                }
 
                 #endregion
 
                 #region Open Solar
 
-                if (!solarNadi && !bothNadisOpen)
+                if (!SolarNadi && !BothNadisOpen)
                 {
-                    if (coeurlChakra == 0)
+                    if (CoeurlChakra == 0)
+                    {
                         return Gauge.CoeurlFury == 0
                             ? Demolish
                             : OriginalHook(SnapPunch);
+                    }
 
-                    if (raptorChakra == 0)
+                    if (RaptorChakra == 0)
+                    {
                         return Gauge.RaptorFury == 0
                             ? TwinSnakes
                             : OriginalHook(TrueStrike);
+                    }
 
-                    if (opoOpoChakra == 0)
+                    if (OpoOpoChakra == 0)
+                    {
                         return Gauge.OpoOpoFury == 0
                             ? DragonKick
                             : OriginalHook(Bootshine);
+                    }
                 }
 
                 #endregion
@@ -144,7 +149,7 @@ internal static partial class MNK
                 return WindsReply;
 
             // Standard Beast Chakras
-            return MNKHelper.DetermineCoreAbility(actionID, true);
+            return DetermineCoreAbility(actionID, true);
         }
     }
 
@@ -162,23 +167,22 @@ internal static partial class MNK
                 (!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
                 !HasEffect(Buffs.RiddleOfFire) &&
-                LevelChecked(Meditation))
-                return OriginalHook(Meditation);
+                LevelChecked(SteeledMeditation))
+                return OriginalHook(SteeledMeditation);
 
             if (IsEnabled(CustomComboPreset.MNK_STUseFormShift) &&
                 !InCombat() && LevelChecked(FormShift) &&
-                !HasEffect(Buffs.FormlessFist))
+                !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance))
                 return FormShift;
 
             if (IsEnabled(CustomComboPreset.MNK_STUseOpener))
                 if (Opener().FullOpener(ref actionID))
                 {
-                    if (IsOnCooldown(RiddleOfWind) &&
+                    return IsOnCooldown(RiddleOfWind) &&
                         CanWeave(ActionWatching.LastWeaponskill) &&
-                        Gauge.Chakra >= 5)
-                        return TheForbiddenChakra;
-
-                    return actionID;
+                        Gauge.Chakra >= 5
+                        ? TheForbiddenChakra
+                        : actionID;
                 }
 
             //Variant Cure
@@ -218,7 +222,7 @@ internal static partial class MNK
 
                 //Perfect Balance
                 if (IsEnabled(CustomComboPreset.MNK_STUsePerfectBalance) &&
-                    MNKHelper.UsePerfectBalance())
+                    UsePerfectBalance())
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_ST_ComboHeals))
@@ -233,16 +237,18 @@ internal static partial class MNK
                 }
 
                 if (IsEnabled(CustomComboPreset.MNK_STUseTheForbiddenChakra) &&
-                    Gauge.Chakra >= 5 &&
-                    LevelChecked(SteelPeak))
-                    return OriginalHook(Meditation);
+                    Gauge.Chakra >= 5 && InCombat() &&
+                    LevelChecked(SteeledMeditation))
+                    return OriginalHook(SteeledMeditation);
             }
 
             // GCDs
             if (HasEffect(Buffs.FormlessFist))
+            {
                 return Gauge.OpoOpoFury == 0
                     ? DragonKick
                     : OriginalHook(Bootshine);
+            }
 
             // Masterful Blitz
             if (LevelChecked(MasterfulBlitz) &&
@@ -255,31 +261,39 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
+                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                {
                     return Gauge.OpoOpoFury == 0
                         ? DragonKick
                         : OriginalHook(Bootshine);
+                }
 
                 #endregion
 
                 #region Open Solar
 
-                if (!solarNadi && !bothNadisOpen)
+                if (!SolarNadi && !BothNadisOpen)
                 {
-                    if (coeurlChakra == 0)
+                    if (CoeurlChakra == 0)
+                    {
                         return Gauge.CoeurlFury == 0
                             ? Demolish
                             : OriginalHook(SnapPunch);
+                    }
 
-                    if (raptorChakra == 0)
+                    if (RaptorChakra == 0)
+                    {
                         return Gauge.RaptorFury == 0
                             ? TwinSnakes
                             : OriginalHook(TrueStrike);
+                    }
 
-                    if (opoOpoChakra == 0)
+                    if (OpoOpoChakra == 0)
+                    {
                         return Gauge.OpoOpoFury == 0
                             ? DragonKick
                             : OriginalHook(Bootshine);
+                    }
                 }
 
                 #endregion
@@ -307,7 +321,7 @@ internal static partial class MNK
             }
 
             // Standard Beast Chakras
-            return MNKHelper.DetermineCoreAbility(actionID, IsEnabled(CustomComboPreset.MNK_STUseTrueNorth));
+            return DetermineCoreAbility(actionID, IsEnabled(CustomComboPreset.MNK_STUseTrueNorth));
         }
     }
 
@@ -321,8 +335,14 @@ internal static partial class MNK
             if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
                 return actionID;
 
-            if (!InCombat() && Gauge.Chakra < 5 && LevelChecked(Meditation))
-                return OriginalHook(Meditation);
+            if (!InCombat() && Gauge.Chakra < 5 &&
+                LevelChecked(InspiritedMeditation))
+                return OriginalHook(InspiritedMeditation);
+
+            if (!InCombat() && LevelChecked(FormShift) &&
+                !HasEffect(Buffs.FormlessFist) &&
+                !HasEffect(Buffs.PerfectBalance))
+                return FormShift;
 
             //Variant Cure
             if (IsEnabled(CustomComboPreset.MNK_Variant_Cure) &&
@@ -359,9 +379,9 @@ internal static partial class MNK
                     return PerfectBalance;
 
                 if (Gauge.Chakra >= 5 &&
-                    LevelChecked(HowlingFist) &&
-                    HasBattleTarget())
-                    return OriginalHook(HowlingFist);
+                    LevelChecked(InspiritedMeditation) &&
+                    HasBattleTarget() && InCombat())
+                    return OriginalHook(InspiritedMeditation);
 
                 if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
                     return All.SecondWind;
@@ -392,16 +412,19 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
+                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                {
                     return LevelChecked(ShadowOfTheDestroyer)
                         ? ShadowOfTheDestroyer
                         : Rockbreaker;
+                }
 
                 #endregion
 
                 #region Open Solar
 
-                if (!solarNadi && !bothNadisOpen)
+                if (!SolarNadi && !BothNadisOpen)
+                {
                     switch (GetBuffStacks(Buffs.PerfectBalance))
                     {
                         case 3:
@@ -413,6 +436,7 @@ internal static partial class MNK
                         case 1:
                             return Rockbreaker;
                     }
+                }
 
                 #endregion
             }
@@ -430,10 +454,9 @@ internal static partial class MNK
                     return TwinSnakes;
             }
 
-            if (HasEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
-                return Rockbreaker;
-
-            return actionID;
+            return HasEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker)
+                ? Rockbreaker
+                : actionID;
         }
     }
 
@@ -448,8 +471,14 @@ internal static partial class MNK
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMeditation) &&
-                !InCombat() && Gauge.Chakra < 5 && LevelChecked(Meditation))
-                return OriginalHook(Meditation);
+                !InCombat() && Gauge.Chakra < 5 &&
+                LevelChecked(InspiritedMeditation))
+                return OriginalHook(InspiritedMeditation);
+
+            if (IsEnabled(CustomComboPreset.MNK_AoEUseFormShift) &&
+                !InCombat() && LevelChecked(FormShift) &&
+                !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance))
+                return FormShift;
 
             //Variant Cure
             if (IsEnabled(CustomComboPreset.MNK_Variant_Cure) &&
@@ -497,10 +526,9 @@ internal static partial class MNK
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseHowlingFist) &&
-                    Gauge.Chakra >= 5 &&
-                    LevelChecked(HowlingFist) &&
-                    HasBattleTarget())
-                    return OriginalHook(HowlingFist);
+                    Gauge.Chakra >= 5 && HasBattleTarget() && InCombat() &&
+                    LevelChecked(InspiritedMeditation))
+                    return OriginalHook(InspiritedMeditation);
 
                 if (IsEnabled(CustomComboPreset.MNK_AoE_ComboHeals))
                 {
@@ -544,16 +572,19 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!lunarNadi || bothNadisOpen || (!solarNadi && !lunarNadi))
+                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                {
                     return LevelChecked(ShadowOfTheDestroyer)
                         ? ShadowOfTheDestroyer
                         : Rockbreaker;
+                }
 
                 #endregion
 
                 #region Open Solar
 
-                if (!solarNadi && !bothNadisOpen)
+                if (!SolarNadi && !BothNadisOpen)
+                {
                     switch (GetBuffStacks(Buffs.PerfectBalance))
                     {
                         case 3:
@@ -565,6 +596,7 @@ internal static partial class MNK
                         case 1:
                             return Rockbreaker;
                     }
+                }
 
                 #endregion
             }
@@ -582,10 +614,7 @@ internal static partial class MNK
                     return TwinSnakes;
             }
 
-            if (HasEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
-                return Rockbreaker;
-
-            return actionID;
+            return HasEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker) ? Rockbreaker : actionID;
         }
     }
 
@@ -616,28 +645,22 @@ internal static partial class MNK
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;
 
-        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
-        {
-            if (IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
-                actionID is Bootshine or LeapingOpo)
-                return Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
+        protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level) => IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
+                actionID is Bootshine or LeapingOpo
+                ? Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
                     ? DragonKick
-                    : OriginalHook(Bootshine);
-
-            if (IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
-                actionID is TrueStrike or RisingRaptor)
-                return Gauge.RaptorFury == 0 && LevelChecked(TwinSnakes)
+                    : OriginalHook(Bootshine)
+                : IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
+                actionID is TrueStrike or RisingRaptor
+                ? Gauge.RaptorFury == 0 && LevelChecked(TwinSnakes)
                     ? TwinSnakes
-                    : OriginalHook(TrueStrike);
-
-            if (IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
-                actionID is SnapPunch or PouncingCoeurl)
-                return Gauge.CoeurlFury == 0 && LevelChecked(Demolish)
+                    : OriginalHook(TrueStrike)
+                : IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
+                actionID is SnapPunch or PouncingCoeurl
+                ? Gauge.CoeurlFury == 0 && LevelChecked(Demolish)
                     ? Demolish
-                    : OriginalHook(SnapPunch);
-
-            return actionID;
-        }
+                    : OriginalHook(SnapPunch)
+                : actionID;
     }
 
     #endregion
@@ -651,7 +674,7 @@ internal static partial class MNK
         Bootshine = 53,
         TrueStrike = 54,
         SnapPunch = 56,
-        Meditation = 36940,
+        SteeledMeditation = 36940,
         SteelPeak = 25761,
         TwinSnakes = 61,
         ArmOfTheDestroyer = 62,
@@ -671,6 +694,7 @@ internal static partial class MNK
         RiddleOfFire = 7395,
         Brotherhood = 7396,
         RiddleOfWind = 25766,
+        InspiritedMeditation = 36941,
         EnlightenedMeditation = 36943,
         Enlightenment = 16474,
         SixSidedStar = 16476,
