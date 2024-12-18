@@ -1,5 +1,4 @@
-﻿using ECommons.DalamudServices;
-using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -13,7 +12,7 @@ internal partial class GNB
 
     public static WrathOpener Opener()
     {
-        var gcd = ActionManager.GetAdjustedRecastTime(ActionType.Action, KeenEdge) / 1000f;
+        float gcd = ActionManager.GetAdjustedRecastTime(ActionType.Action, KeenEdge) / 1000f;
 
         if (gcd <= 2.47f && Opener1.LevelChecked)
             return Opener1;
@@ -23,7 +22,6 @@ internal partial class GNB
 
         return WrathOpener.Dummy;
     }
-
 
     internal class GNBOpenerMaxLevel1 : WrathOpener
     {
