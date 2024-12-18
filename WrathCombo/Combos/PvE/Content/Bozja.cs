@@ -1,6 +1,4 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
-using WrathCombo.CustomComboNS.Functions;
-using ContentHelper = ECommons.GameHelpers;
+﻿using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
 
 namespace WrathCombo.Combos.PvE.Content;
