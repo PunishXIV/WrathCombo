@@ -1,11 +1,7 @@
-#region
-
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 
