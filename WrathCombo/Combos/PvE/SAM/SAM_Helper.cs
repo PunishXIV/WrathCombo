@@ -1,25 +1,21 @@
-﻿#region
-
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Collections.Generic;
 using System.Linq;
-using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SAM
 {
-    internal static SAMGauge gauge = GetJobGauge<SAMGauge>();
+    internal static SAMGauge Gauge = GetJobGauge<SAMGauge>();
     internal static SAMOpenerMaxLevel1 Opener1 = new();
 
     internal static int MeikyoUsed => ActionWatching.CombatActions.Count(x => x == MeikyoShisui);
 
-    internal static bool trueNorthReady =>
+    internal static bool TrueNorthReady =>
         TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
         !HasEffect(All.Buffs.TrueNorth);
 
@@ -33,69 +29,73 @@ internal static partial class SAM
         return WrathOpener.Dummy;
     }
 
-    internal static class SAMHelper
+    internal static int SenCount => GetSenCount();
+
+    internal static bool ComboStarted => GetComboStarted();
+
+    private static int GetSenCount()
     {
-        internal static int SenCount => GetSenCount();
+        int senCount = 0;
+        if (Gauge.HasGetsu)
+            senCount++;
+        if (Gauge.HasSetsu)
+            senCount++;
+        if (Gauge.HasKa)
+            senCount++;
 
-        internal static bool ComboStarted => GetComboStarted();
+        return senCount;
+    }
 
-        private static int GetSenCount()
+    private static unsafe bool GetComboStarted()
+    {
+        uint comboAction = ActionManager.Instance()->Combo.Action;
+
+        return comboAction == OriginalHook(Hakaze) ||
+               comboAction == OriginalHook(Jinpu) ||
+               comboAction == OriginalHook(Shifu);
+    }
+
+    internal static bool UseMeikyo()
+    {
+        int usedMeikyo = MeikyoUsed % 15;
+
+        if (ActionReady(MeikyoShisui) && !ComboStarted)
         {
-            int senCount = 0;
-            if (gauge.HasGetsu) senCount++;
-            if (gauge.HasSetsu) senCount++;
-            if (gauge.HasKa) senCount++;
+            //if no opener/before lvl 100
+            if ((IsNotEnabled(CustomComboPreset.SAM_ST_Opener) || !LevelChecked(TendoSetsugekka)) &&
+                MeikyoUsed < 2 && !HasEffect(Buffs.MeikyoShisui) && !HasEffect(Buffs.TsubameReady))
+                return true;
 
-            return senCount;
-        }
-
-        private static unsafe bool GetComboStarted()
-        {
-            uint comboAction = ActionManager.Instance()->Combo.Action;
-
-            return comboAction == OriginalHook(Hakaze) ||
-                   comboAction == OriginalHook(Jinpu) ||
-                   comboAction == OriginalHook(Shifu);
-        }
-
-        internal static bool UseMeikyo()
-        {
-            int usedMeikyo = MeikyoUsed % 15;
-
-            if (ActionReady(MeikyoShisui) && !ComboStarted)
+            if (MeikyoUsed >= 2)
             {
-                //if no opener/before lvl 100
-                if ((IsNotEnabled(CustomComboPreset.SAM_ST_Opener) || !LevelChecked(TendoSetsugekka)) &&
-                    MeikyoUsed < 2 && !HasEffect(Buffs.MeikyoShisui) && !HasEffect(Buffs.TsubameReady))
-                    return true;
-
-                if (MeikyoUsed >= 2)
+                if (GetCooldownRemainingTime(Ikishoten) is > 45 and < 71) //1min windows
                 {
-                    if (GetCooldownRemainingTime(Ikishoten) is > 45 and < 71) //1min windows
-                        switch (usedMeikyo)
-                        {
-                            case 1 or 8 when SenCount is 3:
-                            case 3 or 10 when SenCount is 2:
-                            case 5 or 12 when SenCount is 1:
-                                return true;
-                        }
-
-                    if (GetCooldownRemainingTime(Ikishoten) > 80) //2min windows
-                        switch (usedMeikyo)
-                        {
-                            case 2 or 9 when SenCount is 3:
-                            case 4 or 11 when SenCount is 2:
-                            case 6 or 13 when SenCount is 1:
-                                return true;
-                        }
-
-                    if (usedMeikyo is 7 or 14 && !HasEffect(Buffs.MeikyoShisui))
-                        return true;
+                    switch (usedMeikyo)
+                    {
+                        case 1 or 8 when SenCount is 3:
+                        case 3 or 10 when SenCount is 2:
+                        case 5 or 12 when SenCount is 1:
+                            return true;
+                    }
                 }
-            }
 
-            return false;
+                if (GetCooldownRemainingTime(Ikishoten) > 80) //2min windows
+                {
+                    switch (usedMeikyo)
+                    {
+                        case 2 or 9 when SenCount is 3:
+                        case 4 or 11 when SenCount is 2:
+                        case 6 or 13 when SenCount is 1:
+                            return true;
+                    }
+                }
+
+                if (usedMeikyo is 7 or 14 && !HasEffect(Buffs.MeikyoShisui))
+                    return true;
+            }
         }
+
+        return false;
     }
 
     internal class SAMOpenerMaxLevel1 : WrathOpener
