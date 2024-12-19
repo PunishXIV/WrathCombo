@@ -14,7 +14,27 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Determine if the given preset is enabled. </summary>
         /// <param name="preset"> Preset to check. </param>
         /// <returns> A value indicating whether the preset is enabled. </returns>
-        public static bool IsEnabled(CustomComboPreset preset) => (int)preset < 100 || PresetStorage.IsEnabled(preset);
+        public static bool IsEnabled(CustomComboPreset preset)
+        {
+            if ((int)preset < 100)
+                return true;
+
+            try
+            {
+                var checkControlled = P.IPC.UIHelper.PresetControlled(preset);
+                var controlled = checkControlled is not null;
+                var controlledState = checkControlled?.enabled;
+
+                return controlled
+                    ? (bool)controlledState!
+                    : PresetStorage.IsEnabled(preset);
+            }
+            // IPC is not loaded yet
+            catch
+            {
+                return PresetStorage.IsEnabled(preset);
+            }
+        }
 
         /// <summary> Determine if the given preset is not enabled. </summary>
         /// <param name="preset"> Preset to check. </param>

@@ -30,6 +30,7 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using IPC = WrathCombo.Services.IPC;
 using WrathCombo.Window;
 using WrathCombo.Window.Functions;
 using WrathCombo.Window.Tabs;
@@ -49,6 +50,8 @@ namespace WrathCombo
         internal WindowSystem ws;
         private readonly HttpClient httpClient = new();
         private IDtrBarEntry DtrBarEntry;
+        internal IPC.Provider IPC;
+        internal IPC.Search IPCSearch = null!;
 
         private readonly TextPayload starterMotd = new("[Wrath Message of the Day] ");
         private static uint? jobID;
@@ -152,17 +155,29 @@ namespace WrathCombo
             HandleConflictedCombos();
             CustomComboFunctions.TimerSetup();
 
+            IPC = new IPC.Provider();
+
 #if DEBUG
             ConfigWindow.IsOpen = true;
 #endif
         }
+
+        private const string OptionControlledByIPC =
+            "(being overwritten by another plugin, check the setting in /wrath)";
 
         private void ToggleAutorot(bool value)
         {
             Service.Configuration.RotationConfig.Enabled = value;
             Service.Configuration.Save();
 
-            DuoLog.Information("Auto-Rotation set to " + (Service.Configuration.RotationConfig.Enabled ? "ON" : "OFF"));
+            var stateControlled =
+                IPC.UIHelper.AutoRotationStateControlled() is not null;
+
+            DuoLog.Information(
+                "Auto-Rotation set to "
+                + (Service.Configuration.RotationConfig.Enabled ? "ON" : "OFF")
+                + (stateControlled ? " " + OptionControlledByIPC : "")
+            );
         }
 
         private void CachePresets()
@@ -204,7 +219,7 @@ namespace WrathCombo
             BlueMageService.PopulateBLUSpells();
             TargetHelper.Draw();
             AutoRotationController.Run();
-            var autoOn = Service.Configuration.RotationConfig.Enabled;
+            var autoOn = IPC.GetAutoRotationState();
             DtrBarEntry.Text = new SeString(
                 new IconPayload(autoOn ? BitmapFontIcon.SwordUnsheathed : BitmapFontIcon.SwordSheathed),
                 new TextPayload($"{(autoOn ? $": On ({Presets.GetJobAutorots.Count} active)" : ": Off")}")
@@ -300,8 +315,10 @@ namespace WrathCombo
             AST.DisposeCheckCards();
             DisposeOpeners();
             CustomComboFunctions.TimerDispose();
+            IPC.Dispose();
 
             Svc.ClientState.Login -= PrintLoginMessage;
+            ECommonsMain.Dispose();
             P = null;
         }
 
@@ -340,7 +357,12 @@ namespace WrathCombo
                                 continue;
 
                             Service.Configuration.EnabledActions.Add(preset);
-                            DuoLog.Information($"{preset} SET");
+                            Service.Configuration.EnabledActions.Remove(preset);
+                            if (int.TryParse(preset.ToString(), out int pres)) continue;
+                            var controlled =
+                                IPC.UIHelper.PresetControlled(preset) is not null;
+                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+                            DuoLog.Information($"{preset} SET{ctrlText}");
                         }
 
                         Service.Configuration.Save();
@@ -355,14 +377,19 @@ namespace WrathCombo
                             if (!preset.ToString().Equals(targetPreset, StringComparison.InvariantCultureIgnoreCase))
                                 continue;
 
+                            Service.Configuration.EnabledActions.Remove(preset);
+                            if (int.TryParse(preset.ToString(), out int pres)) continue;
+                            var controlled =
+                                IPC.UIHelper.PresetControlled(preset) is not null;
+                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
                             if (!Service.Configuration.EnabledActions.Remove(preset))
                             {
                                 Service.Configuration.EnabledActions.Add(preset);
-                                DuoLog.Information($"{preset} SET");
+                                DuoLog.Information($"{preset} SET{ctrlText}");
                             }
                             else
                             {
-                                DuoLog.Information($"{preset} UNSET");
+                                DuoLog.Information($"{preset} UNSET{ctrlText}");
                             }
                         }
 
@@ -379,7 +406,11 @@ namespace WrathCombo
                                 continue;
 
                             Service.Configuration.EnabledActions.Remove(preset);
-                            DuoLog.Information($"{preset} UNSET");
+                            if (int.TryParse(preset.ToString(), out int pres)) continue;
+                            var controlled =
+                                IPC.UIHelper.PresetControlled(preset) is not null;
+                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+                            DuoLog.Information($"{preset} UNSET{ctrlText}");;
                         }
 
                         Service.Configuration.Save();
@@ -394,19 +425,23 @@ namespace WrathCombo
 
                         if (filter == "set") // list set features
                         {
-                            foreach (bool preset in Enum.GetValues<CustomComboPreset>()
-                                .Select(preset => PresetStorage.IsEnabled(preset)))
+                            foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>().Where(preset => IPC.GetComboState(preset.ToString())!.First().Value))
                             {
-                                DuoLog.Information(preset.ToString());
+                                var controlled =
+                                    IPC.UIHelper.PresetControlled(preset) is not null;
+                                var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+                                DuoLog.Information(preset + ctrlText);
                             }
                         }
 
                         else if (filter == "unset") // list unset features
                         {
-                            foreach (bool preset in Enum.GetValues<CustomComboPreset>()
-                                .Select(preset => !PresetStorage.IsEnabled(preset)))
+                            foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>().Where(preset => !IPC.GetComboState(preset.ToString())!.First().Value))
                             {
-                                DuoLog.Information(preset.ToString());
+                                var controlled =
+                                    IPC.UIHelper.PresetControlled(preset) is not null;
+                                var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+                                DuoLog.Information(preset + ctrlText);
                             }
                         }
 
@@ -414,7 +449,10 @@ namespace WrathCombo
                         {
                             foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>())
                             {
-                                DuoLog.Information(preset.ToString());
+                                var controlled =
+                                    IPC.UIHelper.PresetControlled(preset) is not null;
+                                var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+                                DuoLog.Information(preset + ctrlText);
                             }
                         }
 
@@ -431,7 +469,10 @@ namespace WrathCombo
                         foreach (CustomComboPreset preset in Service.Configuration.EnabledActions.OrderBy(x => x))
                         {
                             if (int.TryParse(preset.ToString(), out int pres)) continue;
-                            DuoLog.Information($"{(int)preset} - {preset}");
+                            var controlled =
+                                IPC.UIHelper.PresetControlled(preset) is not null;
+                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+                            DuoLog.Information($"{(int)preset} - {preset}{ctrlText}");
                         }
 
                         break;
@@ -448,6 +489,9 @@ namespace WrathCombo
                             string[]? conflictingPlugins = ConflictingPluginsCheck.TryGetConflictingPlugins();
                             int conflictingPluginsCount = conflictingPlugins?.Length ?? 0;
 
+                            int leaseesCount = P.IPC.UIHelper.ShowNumberOfLeasees();
+                            (string pluginName, int configurationsCount)[] leasees =  P.IPC.UIHelper.ShowLeasees();
+
                             string repoURL = RepoCheckFunctions.FetchCurrentRepo()?.InstalledFromUrl ?? "Unknown";
                             string currentZone = Svc.Data.GetExcelSheet<TerritoryType>()?
                                 .FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType)
@@ -460,6 +504,13 @@ namespace WrathCombo
                             file.WriteLine($"Plugin Version: {GetType().Assembly.GetName().Version}");                   // Plugin version
                             file.WriteLine($"Installation Repo: {repoURL}");                                             // Installation Repo
                             file.WriteLine("");
+                            file.WriteLine($"Plugins controlling via IPC: {leaseesCount}");                               // IPC Leasees
+                            if (leaseesCount > 0)
+                            {
+                                foreach (var leasee in leasees)
+                                    file.WriteLine($"- {leasee.pluginName} ({leasee.configurationsCount} configurations)");
+                                file.WriteLine("");
+                            }
                             file.WriteLine($"Conflicting Plugins: {conflictingPluginsCount}");                           // Conflicting Plugins
                             if (conflictingPlugins != null)
                             {
@@ -486,7 +537,11 @@ namespace WrathCombo
                                 {
                                     if (int.TryParse(preset.ToString(), out _)) { i++; continue; }
 
-                                    file.WriteLine($"{(int)preset} - {preset}");
+                                    file.Write($"{(int)preset} - {preset}");
+                                    if (leaseesCount > 0)
+                                        if (P.IPC.UIHelper.PresetControlled(preset) is not null)
+                                            file.Write(" (IPC)");
+                                    file.WriteLine();
                                 }
                             }
 
@@ -499,7 +554,13 @@ namespace WrathCombo
                                     if (preset.ToString()[..3].Equals(specificJob, StringComparison.CurrentCultureIgnoreCase) ||  // Job identifier
                                         preset.ToString()[..3].Equals("all", StringComparison.CurrentCultureIgnoreCase) ||        // Adds in Globals
                                         preset.ToString()[..3].Equals("pvp", StringComparison.CurrentCultureIgnoreCase))          // Adds in PvP Globals
-                                        file.WriteLine($"{(int)preset} - {preset}");
+                                    {
+                                        file.Write($"{(int)preset} - {preset}");
+                                        if (leaseesCount > 0)
+                                            if (P.IPC.UIHelper.PresetControlled(preset) is not null)
+                                                file.Write(" (IPC)");
+                                        file.WriteLine();
+                                    }
                                 }
                             }
 

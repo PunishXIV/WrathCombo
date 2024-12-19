@@ -67,6 +67,14 @@ namespace WrathCombo.Window.Tabs
                                 ImGui.SameLine(indentwidth2);
                             }
                             ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
+
+                            if (!string.IsNullOrEmpty(abbreviation) &&
+                                P.IPC.UIHelper.JobControlled(id) is not null)
+                            {
+                                ImGui.SameLine();
+                                P.IPC.UIHelper
+                                    .ShowIPCControlledIndicatorIfNeeded(id, false);
+                            }
                         }
                     }
                 }
@@ -91,6 +99,13 @@ namespace WrathCombo.Window.Tabs
                                 ImGui.SameLine();
                             }
                             ImGuiEx.Text($"{OpenJob}");
+
+                            if (P.IPC.UIHelper.JobControlled(id) is not null)
+                            {
+                                ImGui.SameLine();
+                                P.IPC.UIHelper
+                                    .ShowIPCControlledIndicatorIfNeeded(id);
+                            }
                         });
 
                     }
