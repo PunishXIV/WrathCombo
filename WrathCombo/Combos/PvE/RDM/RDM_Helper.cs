@@ -108,7 +108,7 @@ namespace WrathCombo.Combos.PvE
                 && HasEffect(Buffs.PrefulugenceReady))
                 placeOGCD = Prefulgence;
 
-            if (CanSpellWeave(actionID) && placeOGCD != 0)
+            if (CanSpellWeave() && placeOGCD != 0)
             {
                 newActionID = placeOGCD;
                 return true;
@@ -553,7 +553,7 @@ namespace WrathCombo.Combos.PvE
                     && lastComboMove is not Verholy
                     && lastComboMove is not Scorch
                     && !WasLastAction(Embolden)
-                    && (!AoEWeave || CanSpellWeave(actionID))
+                    && (!AoEWeave || CanSpellWeave())
                     && !HasEffect(Buffs.VerfireReady)
                     && !HasEffect(Buffs.VerstoneReady)
                     && !HasEffect(Buffs.Acceleration)
@@ -751,7 +751,7 @@ namespace WrathCombo.Combos.PvE
 
             private static bool CanOpener => HasCooldowns() && LevelChecked;
 
-            private static OpenerState currentState = OpenerState.PrePull;
+            private static OpenerState currentState = OpenerState.OpenerReady;
 
             public static OpenerState CurrentState
             {
@@ -763,7 +763,7 @@ namespace WrathCombo.Combos.PvE
                 {
                     if (value != currentState)
                     {
-                        if (value == OpenerState.PrePull)
+                        if (value == OpenerState.OpenerReady)
                         {
                             Svc.Log.Debug($"Entered PrePull Opener");
                         }
@@ -797,7 +797,7 @@ namespace WrathCombo.Combos.PvE
                     PrePullStep = 0;
                 }
 
-                if (CurrentState == OpenerState.PrePull && PrePullStep > 0)
+                if (CurrentState == OpenerState.OpenerReady && PrePullStep > 0)
                 {
                     if (LocalPlayer.CastActionId == Veraero3 && PrePullStep == 1) CurrentState = OpenerState.InOpener;
                     else if (PrePullStep == 1) actionID = Veraero3;
@@ -954,7 +954,7 @@ namespace WrathCombo.Combos.PvE
                 if (!LevelChecked)
                     return false;
 
-                if (CurrentState == OpenerState.PrePull)
+                if (CurrentState == OpenerState.OpenerReady)
                     if (DoPrePullSteps(ref actionID))
                         return true;
 
@@ -967,7 +967,7 @@ namespace WrathCombo.Combos.PvE
                 if (!InCombat())
                 {
                     ResetOpener();
-                    CurrentState = OpenerState.PrePull;
+                    CurrentState = OpenerState.OpenerReady;
                 }
                 return false;
             }

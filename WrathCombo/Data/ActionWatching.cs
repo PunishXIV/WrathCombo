@@ -11,9 +11,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using ECommons.Logging;
 using WrathCombo.Combos.PvE;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using Dalamud.Utility;
 
 namespace WrathCombo.Data
 {
@@ -29,7 +31,7 @@ namespace WrathCombo.Data
         internal static Dictionary<uint, Trait> TraitSheet = Svc.Data.GetExcelSheet<Trait>()!
             .Where(i => i.ClassJobCategory.IsValid) //All player traits are assigned to a category. Chocobo and other garbage lacks this, thus excluded.
             .ToDictionary(i => i.RowId, i => i);
-
+        private static uint lastAction = 0;
         private static readonly Dictionary<string, List<uint>> statusCache = [];
 
         internal static readonly Dictionary<uint, long> ChargeTimestamps = [];
@@ -37,6 +39,12 @@ namespace WrathCombo.Data
         internal static readonly Dictionary<uint, long> LastSuccessfulUseTime = [];
 
         internal readonly static List<uint> CombatActions = [];
+
+        public delegate void LastActionChangeDelegate();
+        public static event LastActionChangeDelegate? OnLastActionChange;
+
+        public delegate void ActionSendDelegate();
+        public static event ActionSendDelegate? OnActionSend;
 
         private delegate void ReceiveActionEffectDelegate(ulong sourceObjectId, IntPtr sourceActor, IntPtr position, IntPtr effectHeader, IntPtr effectArray, IntPtr effectTrail);
         private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
@@ -50,6 +58,7 @@ namespace WrathCombo.Data
                 header.ActionId != 8 &&
                 sourceObjectId == Svc.ClientState.LocalPlayer.GameObjectId)
             {
+                LastAction = header.ActionId;
                 TimeLastActionUsed = DateTime.Now;
                 if (header.ActionId != CombatActions.LastOrDefault())
                     LastActionUseCount = 1;
@@ -73,6 +82,9 @@ namespace WrathCombo.Data
                             LastAbility = header.ActionId;
                             break;
                     }
+
+                    if (sheet.TargetArea)
+                        WrathOpener.CurrentOpener?.ProgressOpener(header.ActionId);
                 }
 
                 if (Service.Configuration.EnabledOutputLog)
@@ -86,6 +98,8 @@ namespace WrathCombo.Data
         {
             try
             {
+                OnActionSend?.Invoke();
+
                 if (!CustomComboFunctions.InCombat())
                     CombatActions.Clear();
 
@@ -99,7 +113,7 @@ namespace WrathCombo.Data
                 TimeLastActionUsed = DateTime.Now;
                 LastAction = actionId;
                 ActionType = actionType;
-
+                WrathOpener.CurrentOpener?.ProgressOpener(actionId);
                 UpdateHelpers(actionId);
                 SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
 
@@ -112,12 +126,15 @@ namespace WrathCombo.Data
             }
         }
 
+        public unsafe delegate bool CanQueueActionDelegate(ActionManager* actionManager, uint actionType, uint actionID);
+        public static readonly Hook<CanQueueActionDelegate> canQueueAction;
+
         private static void UpdateHelpers(uint actionId)
         {
             if (actionId is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo)
-                NIN.NINHelper.InMudra = true;
+                NIN.InMudra = true;
             else
-                NIN.NINHelper.InMudra = false;
+                NIN.InMudra = false;
         }
 
         private unsafe static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
@@ -229,7 +246,18 @@ namespace WrathCombo.Data
         }
 
         public static int NumberOfGcdsUsed => CombatActions.Count(x => GetAttackType(x) == ActionAttackType.Weaponskill || GetAttackType(x) == ActionAttackType.Spell);
-        public static uint LastAction { get; set; } = 0;
+        public static uint LastAction
+        {
+            get => lastAction;
+            set
+            {
+                if (lastAction != value)
+                {
+                    OnLastActionChange?.Invoke();
+                    lastAction = value;
+                }
+            }
+        }
         public static int LastActionUseCount { get; set; } = 0;
         public static uint ActionType { get; set; } = 0;
         public static uint LastWeaponskill { get; set; } = 0;
@@ -249,14 +277,20 @@ namespace WrathCombo.Data
         {
             ReceiveActionEffectHook?.Dispose();
             SendActionHook?.Dispose();
+            canQueueAction?.Dispose();
         }
 
         static unsafe ActionWatching()
         {
             ReceiveActionEffectHook ??= Svc.Hook.HookFromSignature<ReceiveActionEffectDelegate>("40 55 56 57 41 54 41 55 41 56 48 8D AC 24", ReceiveActionEffectDetour);
             SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
+            canQueueAction ??= Svc.Hook.HookFromSignature<CanQueueActionDelegate>("E8 ?? ?? ?? ?? 84 C0 74 37 8B 84 24 ?? ?? 00 00", CanQueueDetour);
         }
 
+        private static unsafe bool CanQueueDetour(ActionManager* actionManager, uint actionType, uint actionID)
+        {
+            return canQueueAction.Original(actionManager, actionType, actionID);
+        }
 
         public static void Enable()
         {
@@ -290,7 +324,7 @@ namespace WrathCombo.Data
         public unsafe static int GetActionRange(uint id) => (int)ActionManager.GetActionRange(id);
         public static int GetActionEffectRange(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.EffectRange : -1;
         public static int GetTraitLevel(uint id) => TraitSheet.TryGetValue(id, out var trait) ? trait.Level : 255;
-        public static string GetActionName(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.Name.ToString() : "UNKNOWN ABILITY";
+        public static string GetActionName(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.Name.ToDalamudString().ToString() : "UNKNOWN ABILITY";
 
         public static string GetBLUIndex(uint id)
         {
@@ -332,20 +366,6 @@ namespace WrathCombo.Data
             Weaponskill,
             Unknown
         }
-    }
-
-    internal unsafe static class ActionManagerHelper
-    {
-        private static readonly IntPtr actionMgrPtr;
-        internal static IntPtr FpUseAction => (IntPtr)ActionManager.Addresses.UseAction.Value;
-        internal static IntPtr FpUseActionLocation => (IntPtr)ActionManager.Addresses.UseActionLocation.Value;
-        internal static IntPtr CheckActionResources => (IntPtr)ActionManager.Addresses.CheckActionResources.Value;
-        public static ushort CurrentSeq => actionMgrPtr != IntPtr.Zero ? (ushort)Marshal.ReadInt16(actionMgrPtr + 0x110) : (ushort)0;
-        public static ushort LastRecievedSeq => actionMgrPtr != IntPtr.Zero ? (ushort)Marshal.ReadInt16(actionMgrPtr + 0x112) : (ushort)0;
-        public static bool IsCasting => actionMgrPtr != IntPtr.Zero && Marshal.ReadByte(actionMgrPtr + 0x28) != 0;
-        public static uint CastingActionId => actionMgrPtr != IntPtr.Zero ? (uint)Marshal.ReadInt32(actionMgrPtr + 0x24) : 0u;
-        public static uint CastTargetObjectId => actionMgrPtr != IntPtr.Zero ? (uint)Marshal.ReadInt32(actionMgrPtr + 0x38) : 0u;
-        static ActionManagerHelper() => actionMgrPtr = (IntPtr)ActionManager.Instance();
     }
 
     [StructLayout(LayoutKind.Explicit)]

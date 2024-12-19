@@ -1,10 +1,6 @@
-﻿using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Statuses;
-using ECommons.DalamudServices;
-using System;
-using System.Collections.ObjectModel;
-using WrathCombo.Combos.JobHelpers.Enums;
+﻿using Dalamud.Game.ClientState.Statuses;
+using System.Collections.Generic;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -13,32 +9,46 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class NIN
 {
-    internal class NINHelper
+    internal static bool InMudra = false;
+    internal static NINOpenerMaxLevel4thGCDKunai Opener1 = new();
+    internal static NINOpenerMaxLevel3rdGCDDokumori Opener2 = new();
+    internal static NINOpenerMaxLevel3rdGCDKunai Opener3 = new();
+
+    internal static WrathOpener Opener()
     {
-        internal static bool InMudra = false;
-
-        internal static bool OriginalJutsu => CustomComboFunctions.IsOriginal(Ninjutsu);
-
-        internal static bool TrickDebuff => TargetHasTrickDebuff();
-
-        internal static bool MugDebuff => TargetHasMugDebuff();
-
-        private static bool TargetHasTrickDebuff()
+        if (CustomComboFunctions.IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode))
         {
-            return CustomComboFunctions.TargetHasEffect(Debuffs.TrickAttack) ||
-                   CustomComboFunctions.TargetHasEffect(Debuffs.KunaisBane);
+            if (Config.NIN_Adv_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
+            if (Config.NIN_Adv_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
+            if (Config.NIN_Adv_Opener_Selection == 2 && Opener3.LevelChecked) return Opener3;
         }
 
-        private static bool TargetHasMugDebuff()
-        {
-            return CustomComboFunctions.TargetHasEffect(Debuffs.Mug) ||
-                   CustomComboFunctions.TargetHasEffect(Debuffs.Dokumori);
-        }
-
-        public static Status? MudraBuff => CustomComboFunctions.FindEffect(Buffs.Mudra);
-
-        public static uint CurrentNinjutsu => CustomComboFunctions.OriginalHook(Ninjutsu);
+        if (Opener1.LevelChecked) return Opener1;
+        return WrathOpener.Dummy;
     }
+
+    internal static bool OriginalJutsu => CustomComboFunctions.IsOriginal(Ninjutsu);
+
+    internal static bool TrickDebuff => TargetHasTrickDebuff();
+
+    internal static bool MugDebuff => TargetHasMugDebuff();
+
+    private static bool TargetHasTrickDebuff()
+    {
+        return CustomComboFunctions.TargetHasEffect(Debuffs.TrickAttack) ||
+               CustomComboFunctions.TargetHasEffect(Debuffs.KunaisBane);
+    }
+
+    private static bool TargetHasMugDebuff()
+    {
+        return CustomComboFunctions.TargetHasEffect(Debuffs.Mug) ||
+               CustomComboFunctions.TargetHasEffect(Debuffs.Dokumori);
+    }
+
+    public static Status? MudraBuff => CustomComboFunctions.FindEffect(Buffs.Mudra);
+
+    public static uint CurrentNinjutsu => CustomComboFunctions.OriginalHook(Ninjutsu);
+
 
     internal class MudraCasting
     {
@@ -61,7 +71,7 @@ internal partial class NIN
         ///<summary> Checks if the player is in a state to be able to cast a ninjitsu.</summary>
         private static bool CanCast()
         {
-            if (NINHelper.InMudra) return true;
+            if (InMudra) return true;
 
             float gcd = CustomComboFunctions.GetCooldown(GustSlash).CooldownTotal;
 
@@ -443,9 +453,9 @@ internal partial class NIN
         public bool ContinueCurrentMudra(ref uint actionID)
         {
 
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds > 1 && NINHelper.CurrentNinjutsu == Ninjutsu && CurrentMudra != MudraState.None)
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds > 1 && CurrentNinjutsu == Ninjutsu && CurrentMudra != MudraState.None)
             {
-                NINHelper.InMudra = false;
+                InMudra = false;
                 ActionWatching.LastAction = 0;
                 CurrentMudra = MudraState.None;
             }
@@ -461,7 +471,7 @@ internal partial class NIN
                  ActionWatching.LastAction == HyoshoRanryu))
             {
                 CurrentMudra = MudraState.None;
-                NINHelper.InMudra = false;
+                InMudra = false;
             }
 
             return CurrentMudra switch
@@ -481,54 +491,55 @@ internal partial class NIN
         }
     }
 
-    internal class NINOpenerLogic
+    internal class NINOpenerMaxLevel4thGCDKunai : WrathOpener
     {
-        private OpenerState currentState = OpenerState.OpenerFinished;
+        //4th GCD Kunai
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Ten,
+            ChiCombo,
+            JinCombo,
+            Suiton,
+            Kassatsu,
+            SpinningEdge,
+            GustSlash,
+            Dokumori,
+            Bunshin,
+            PhantomKamaitachi,
+            ArmorCrush,
+            KunaisBane,
+            ChiCombo,
+            JinCombo,
+            HyoshoRanryu,
+            DreamWithinADream,
+            Ten,
+            ChiCombo,
+            Raiton,
+            TenChiJin,
+            TCJFumaShurikenTen,
+            TCJRaiton,
+            TCJSuiton,
+            Meisui,
+            FleetingRaiju,
+            ZeshoMeppo,
+            TenriJendo,
+            FleetingRaiju,
+            Bhavacakra,
+            Ten,
+            ChiCombo,
+            Raiton,
+            FleetingRaiju,
+        ];
 
-        private bool openerEventsSetup;
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            12
+        ];
 
-        private uint openerStep = 1;
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
 
-        public uint PrePullStep = 1;
-
-        private static uint OpenerLevel => 100;
-
-        public static bool LevelChecked => CustomComboFunctions.LocalPlayer.Level >= OpenerLevel;
-
-        private static bool CanOpener => HasCooldowns() && LevelChecked;
-
-        public OpenerState CurrentState
-        {
-            get => currentState;
-            set
-            {
-                if (value != currentState)
-                {
-                    if (value == OpenerState.PrePull) PrePullStep = 1;
-                    if (value == OpenerState.InOpener) OpenerStep = 1;
-
-                    if (value == OpenerState.OpenerFinished || value == OpenerState.FailedOpener)
-                    {
-                        PrePullStep = 0;
-                        OpenerStep = 0;
-                    }
-
-                    currentState = value;
-                }
-            }
-        }
-
-        public uint OpenerStep
-        {
-            get => openerStep;
-            set
-            {
-                if (value != openerStep) Svc.Log.Debug($"{value}");
-                openerStep = value;
-            }
-        }
-
-        private static bool HasCooldowns()
+        public override bool HasCooldowns()
         {
             if (CustomComboFunctions.GetRemainingCharges(Ten) < 1) return false;
             if (CustomComboFunctions.IsOnCooldown(Mug)) return false;
@@ -541,161 +552,133 @@ internal partial class NIN
 
             return true;
         }
+    }
 
-        private bool DoPrePullSteps(ref uint actionID, MudraCasting mudraState)
+    internal class NINOpenerMaxLevel3rdGCDDokumori : WrathOpener
+    {
+        //3rd GCD Dokumori
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Ten,
+            ChiCombo,
+            JinCombo,
+            Suiton,
+            Kassatsu,
+            SpinningEdge,
+            GustSlash,
+            ArmorCrush,
+            Dokumori,
+            Bunshin,
+            PhantomKamaitachi,
+            KunaisBane,
+            ChiCombo,
+            JinCombo,
+            HyoshoRanryu,
+            DreamWithinADream,
+            Ten,
+            ChiCombo,
+            Raiton,
+            TenChiJin,
+            TCJFumaShurikenTen,
+            TCJRaiton,
+            TCJSuiton,
+            Meisui,
+            FleetingRaiju,
+            ZeshoMeppo,
+            TenriJendo,
+            FleetingRaiju,
+            Ten,
+            ChiCombo,
+            Raiton,
+            FleetingRaiju,
+            Bhavacakra,
+            SpinningEdge
+        ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            12
+        ];
+
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+
+        public override bool HasCooldowns()
         {
-            if (!LevelChecked) return false;
+            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1) return false;
+            if (CustomComboFunctions.IsOnCooldown(Mug)) return false;
+            if (CustomComboFunctions.IsOnCooldown(TenChiJin)) return false;
+            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi)) return false;
+            if (CustomComboFunctions.IsOnCooldown(Bunshin)) return false;
+            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream)) return false;
+            if (CustomComboFunctions.IsOnCooldown(Kassatsu)) return false;
+            if (CustomComboFunctions.IsOnCooldown(TrickAttack)) return false;
 
-            if (CanOpener && PrePullStep == 0 && !CustomComboFunctions.InCombat()) CurrentState = OpenerState.PrePull;
-
-            if (CurrentState == OpenerState.PrePull)
-            {
-                if (CustomComboFunctions.WasLastAction(Suiton) && PrePullStep == 1) CurrentState = OpenerState.InOpener;
-                else if (PrePullStep == 1) mudraState.CastSuiton(ref actionID);
-
-                ////Failure states
-                //if (PrePullStep is (1 or 2) && CustomComboFunctions.InCombat()) { mudraState.CurrentMudra = MudraCasting.MudraState.None; ResetOpener(); }
-
-                return true;
-            }
-
-            PrePullStep = 0;
-
-            return false;
+            return true;
         }
+    }
 
-        private bool DoOpener(ref uint actionID, MudraCasting mudraState)
+    internal class NINOpenerMaxLevel3rdGCDKunai : WrathOpener
+    {
+        //3rd GCD Kunai
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Ten,
+            ChiCombo,
+            JinCombo,
+            Suiton,
+            Kassatsu,
+            SpinningEdge,
+            GustSlash,
+            Dokumori,
+            Bunshin,
+            PhantomKamaitachi,
+            KunaisBane,
+            ChiCombo,
+            JinCombo,
+            HyoshoRanryu,
+            DreamWithinADream,
+            Ten,
+            ChiCombo,
+            Raiton,
+            TenChiJin,
+            TCJFumaShurikenTen,
+            TCJRaiton,
+            TCJSuiton,
+            Meisui,
+            FleetingRaiju,
+            ZeshoMeppo,
+            TenriJendo,
+            FleetingRaiju,
+            ArmorCrush,
+            Bhavacakra,
+            Ten,
+            ChiCombo,
+            Raiton,
+            FleetingRaiju,
+        ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            11
+        ];
+
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+
+        public override bool HasCooldowns()
         {
-            if (!LevelChecked) return false;
+            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1) return false;
+            if (CustomComboFunctions.IsOnCooldown(Mug)) return false;
+            if (CustomComboFunctions.IsOnCooldown(TenChiJin)) return false;
+            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi)) return false;
+            if (CustomComboFunctions.IsOnCooldown(Bunshin)) return false;
+            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream)) return false;
+            if (CustomComboFunctions.IsOnCooldown(Kassatsu)) return false;
+            if (CustomComboFunctions.IsOnCooldown(TrickAttack)) return false;
 
-            if (CurrentState == OpenerState.InOpener)
-            {
-                bool inLateWeaveWindow = CustomComboFunctions.CanDelayedWeave(GustSlash, 1, 0);
-
-                if (CustomComboFunctions.WasLastAction(Kassatsu) && OpenerStep == 1) OpenerStep++;
-                else if (OpenerStep == 1) actionID = CustomComboFunctions.OriginalHook(Kassatsu);
-
-                if (CustomComboFunctions.WasLastAction(SpinningEdge) && OpenerStep == 2) OpenerStep++;
-                else if (OpenerStep == 2) actionID = CustomComboFunctions.OriginalHook(SpinningEdge);
-
-                if (CustomComboFunctions.WasLastAction(GustSlash) && OpenerStep == 3) OpenerStep++;
-                else if (OpenerStep == 3) actionID = CustomComboFunctions.OriginalHook(GustSlash);
-
-                if (CustomComboFunctions.WasLastAction(CustomComboFunctions.OriginalHook(Mug)) && OpenerStep == 4)
-                    OpenerStep++;
-                else if (OpenerStep == 4) actionID = CustomComboFunctions.OriginalHook(Mug);
-
-                if (CustomComboFunctions.WasLastAction(Bunshin) && OpenerStep == 5) OpenerStep++;
-                else if (OpenerStep == 5) actionID = CustomComboFunctions.OriginalHook(Bunshin);
-
-                if (CustomComboFunctions.WasLastAction(PhantomKamaitachi) && OpenerStep == 6) OpenerStep++;
-                else if (OpenerStep == 6) actionID = CustomComboFunctions.OriginalHook(PhantomKamaitachi);
-
-                if (CustomComboFunctions.WasLastAction(ArmorCrush) && OpenerStep == 7) OpenerStep++;
-                else if (OpenerStep == 7) actionID = CustomComboFunctions.OriginalHook(ArmorCrush);
-
-                if (CustomComboFunctions.WasLastAction(CustomComboFunctions.OriginalHook(TrickAttack)) &&
-                    OpenerStep == 8) OpenerStep++;
-                else if (OpenerStep == 8 && inLateWeaveWindow)
-                    actionID = CustomComboFunctions.OriginalHook(TrickAttack);
-
-                if (CustomComboFunctions.WasLastAction(HyoshoRanryu) && OpenerStep == 9) OpenerStep++;
-                else if (OpenerStep == 9) mudraState.CastHyoshoRanryu(ref actionID);
-
-                if (CustomComboFunctions.WasLastAction(DreamWithinADream) && OpenerStep == 10) OpenerStep++;
-                else if (OpenerStep == 10) actionID = CustomComboFunctions.OriginalHook(DreamWithinADream);
-
-                if (CustomComboFunctions.WasLastAction(Raiton) && OpenerStep == 11) OpenerStep++;
-                else if (OpenerStep == 11) mudraState.CastRaiton(ref actionID);
-
-                if (CustomComboFunctions.WasLastAction(TenChiJin) && OpenerStep == 12) OpenerStep++;
-                else if (OpenerStep == 12) actionID = CustomComboFunctions.OriginalHook(TenChiJin);
-
-                if (CustomComboFunctions.WasLastAction(TCJFumaShurikenTen) && OpenerStep == 13) OpenerStep++;
-                else if (OpenerStep == 13) actionID = CustomComboFunctions.OriginalHook(Ten);
-
-                if (CustomComboFunctions.WasLastAction(TCJRaiton) && OpenerStep == 14) OpenerStep++;
-                else if (OpenerStep == 14) actionID = CustomComboFunctions.OriginalHook(Chi);
-
-                if (CustomComboFunctions.WasLastAction(TCJSuiton) && OpenerStep == 15) OpenerStep++;
-                else if (OpenerStep == 15) actionID = CustomComboFunctions.OriginalHook(Jin);
-
-                if (CustomComboFunctions.WasLastAction(Meisui) && OpenerStep == 16) OpenerStep++;
-                else if (OpenerStep == 16) actionID = CustomComboFunctions.OriginalHook(Meisui);
-
-                if (CustomComboFunctions.WasLastAction(FleetingRaiju) && OpenerStep == 17) OpenerStep++;
-                else if (OpenerStep == 17) actionID = CustomComboFunctions.OriginalHook(FleetingRaiju);
-
-                if (CustomComboFunctions.WasLastAction(ZeshoMeppo) && OpenerStep == 18) OpenerStep++;
-                else if (OpenerStep == 18) actionID = CustomComboFunctions.OriginalHook(Bhavacakra);
-
-                if (CustomComboFunctions.WasLastAction(TenriJendo) && OpenerStep == 19) OpenerStep++;
-                else if (OpenerStep == 19) actionID = CustomComboFunctions.OriginalHook(TenriJendo);
-
-                if (CustomComboFunctions.WasLastAction(FleetingRaiju) && OpenerStep == 20) OpenerStep++;
-                else if (OpenerStep == 20) actionID = CustomComboFunctions.OriginalHook(FleetingRaiju);
-
-                if (CustomComboFunctions.WasLastAction(CustomComboFunctions.OriginalHook(Bhavacakra)) &&
-                    OpenerStep == 21) OpenerStep++;
-                else if (OpenerStep == 21) actionID = CustomComboFunctions.OriginalHook(Bhavacakra);
-
-                if (CustomComboFunctions.WasLastAction(Raiton) && OpenerStep == 22) OpenerStep++;
-                else if (OpenerStep == 22) mudraState.CastRaiton(ref actionID);
-
-                if (CustomComboFunctions.WasLastAction(FleetingRaiju) && OpenerStep == 23)
-                    CurrentState = OpenerState.OpenerFinished;
-                else if (OpenerStep == 23) actionID = CustomComboFunctions.OriginalHook(FleetingRaiju);
-
-                //Failure states
-                if ((OpenerStep is 8 && !CustomComboFunctions.HasEffect(Buffs.ShadowWalker)) ||
-                    (OpenerStep is 18 or 21 && CustomComboFunctions.GetJobGauge<NINGauge>().Ninki < 40) ||
-                    (OpenerStep is 17 or 20 && !CustomComboFunctions.HasEffect(Buffs.RaijuReady)) ||
-                    (OpenerStep is 9 && !CustomComboFunctions.HasEffect(Buffs.Kassatsu)))
-                    ResetOpener();
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private void ResetOpener()
-        {
-            CurrentState = OpenerState.FailedOpener;
-        }
-
-        public bool DoFullOpener(ref uint actionID, MudraCasting mudraState)
-        {
-            if (!LevelChecked) return false;
-
-            if (!openerEventsSetup)
-            {
-                Svc.Condition.ConditionChange += CheckCombatStatus;
-                openerEventsSetup = true;
-            }
-
-            if (CurrentState == OpenerState.PrePull || CurrentState == OpenerState.FailedOpener)
-                if (DoPrePullSteps(ref actionID, mudraState))
-                    return true;
-
-            if (CurrentState == OpenerState.InOpener)
-                if (DoOpener(ref actionID, mudraState))
-                    return true;
-
-            if (CurrentState == OpenerState.OpenerFinished && !CustomComboFunctions.InCombat())
-                ResetOpener();
-
-            return false;
-        }
-
-        internal void Dispose()
-        {
-            Svc.Condition.ConditionChange -= CheckCombatStatus;
-        }
-
-        private void CheckCombatStatus(ConditionFlag flag, bool value)
-        {
-            if (flag == ConditionFlag.InCombat && value == false) ResetOpener();
+            return true;
         }
     }
 }
+

@@ -1,63 +1,64 @@
-﻿using System.Linq;
+﻿#region
+
+using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.DalamudServices;
-using WrathCombo.Combos.JobHelpers.Enums;
-using WrathCombo.Data;
+using WrathCombo.CustomComboNS;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+
+#endregion
 
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SGE
 {
     // Sage Gauge & Extensions
-    internal static SGEGauge Gauge => GetJobGauge<SGEGauge>();
-
-    internal static int Dosis3Count => ActionWatching.CombatActions.Count(x => x == Dosis3);
+    internal static SGEOpenerMaxLevel1 Opener1 = new();
+    
+    internal static SGEGauge Gauge = GetJobGauge<SGEGauge>();
 
     internal static bool HasAddersgall(this SGEGauge gauge) => gauge.Addersgall > 0;
 
     internal static bool HasAddersting(this SGEGauge gauge) => gauge.Addersting > 0;
-    
-    internal class SGEOpenerLogic
+
+    internal static WrathOpener Opener()
     {
-        private OpenerState currentState = OpenerState.PrePull;
+        if (Opener1.LevelChecked)
+            return Opener1;
 
-        public uint OpenerStep = 1;
+        return WrathOpener.Dummy;
+    }
 
-        public uint PrePullStep;
 
-        private static uint OpenerLevel => 92;
+    internal class SGEOpenerMaxLevel1 : WrathOpener
+    {
+        public override int MinOpenerLevel => 92;
 
-        public static bool LevelChecked => LocalPlayer.Level >= OpenerLevel;
+        public override int MaxOpenerLevel => 109;
 
-        private static bool CanOpener => HasCooldowns() && LevelChecked;
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Eukrasia,
+            Toxikon2,
+            EukrasianDosis3,
+            Dosis3,
+            Dosis3,
+            Dosis3,
+            Phlegma3,
+            Psyche,
+            Phlegma3,
+            Dosis3,
+            Dosis3,
+            Dosis3,
+            Dosis3,
+            Eukrasia,
+            EukrasianDosis3,
+            Dosis3,
+            Dosis3,
+            Dosis3
+        ];
 
-        public OpenerState CurrentState
-        {
-            get => currentState;
-            set
-            {
-                if (value != currentState)
-                {
-                    if (value == OpenerState.PrePull) Svc.Log.Debug("Entered PrePull Opener");
-                    if (value == OpenerState.InOpener) OpenerStep = 1;
-
-                    if (value == OpenerState.OpenerFinished || value == OpenerState.FailedOpener)
-                    {
-                        if (value == OpenerState.FailedOpener)
-                            Svc.Log.Information($"Opener Failed at step {OpenerStep}");
-
-                        ResetOpener();
-                    }
-                    if (value == OpenerState.OpenerFinished) Svc.Log.Information("Opener Finished");
-
-                    currentState = value;
-                }
-            }
-        }
-
-        private static bool HasCooldowns()
+        public override bool HasCooldowns()
         {
             if (GetRemainingCharges(Phlegma3) < 2)
                 return false;
@@ -70,110 +71,9 @@ internal static partial class SGE
 
             return true;
         }
-
-        private bool DoPrePullSteps(ref uint actionID)
-        {
-            if (!LevelChecked) return false;
-
-            if (CanOpener && PrePullStep == 0) PrePullStep = 1;
-
-            if (!HasCooldowns()) PrePullStep = 0;
-
-            if (CurrentState == OpenerState.PrePull && PrePullStep > 0)
-            {
-                if (WasLastAction(Eukrasia) && HasEffect(Buffs.Eukrasia) && PrePullStep == 1) PrePullStep++;
-                else if (PrePullStep == 1) actionID = Eukrasia;
-
-                if (WasLastAction(Toxikon2) && HasEffect(Buffs.Eukrasia) && PrePullStep == 2)
-                    CurrentState = OpenerState.InOpener;
-                else if (PrePullStep == 2) actionID = Toxikon2;
-
-                if (ActionWatching.CombatActions.Count > 2 && InCombat())
-                    CurrentState = OpenerState.FailedOpener;
-
-                return true;
-            }
-
-            PrePullStep = 0;
-
-            return false;
-        }
-
-        private bool DoOpener(ref uint actionID)
-        {
-            if (!LevelChecked) return false;
-
-            if (currentState == OpenerState.InOpener)
-            {
-                if (WasLastAction(EukrasianDosis3) && OpenerStep == 1) OpenerStep++;
-                else if (OpenerStep == 1) actionID = EukrasianDosis3;
-
-                if (WasLastAction(Dosis3) && Dosis3Count == 1 && OpenerStep == 2) OpenerStep++;
-                else if (OpenerStep == 2) actionID = Dosis3;
-
-                if (WasLastAction(Dosis3) && Dosis3Count == 2 && OpenerStep == 3) OpenerStep++;
-                else if (OpenerStep == 3) actionID = Dosis3;
-
-                if (WasLastAction(Dosis3) && Dosis3Count == 3 && OpenerStep == 4) OpenerStep++;
-                else if (OpenerStep == 4) actionID = Dosis3;
-
-                if (WasLastAction(Phlegma3) && OpenerStep == 5) OpenerStep++;
-                else if (OpenerStep == 5) actionID = Phlegma3;
-
-                if (WasLastAction(Psyche) && OpenerStep == 6) OpenerStep++;
-                else if (OpenerStep == 6) actionID = Psyche;
-
-                if (WasLastAction(Phlegma3) && OpenerStep == 7) CurrentState = OpenerState.OpenerFinished;
-                else if (OpenerStep == 7) actionID = Phlegma3;
-
-                if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
-                    CurrentState = OpenerState.FailedOpener;
-
-                if (((actionID == Phlegma3 && GetRemainingCharges(Phlegma3) == 0) ||
-                     (actionID == Psyche && IsOnCooldown(Psyche))) &&
-                    ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
-                {
-                    CurrentState = OpenerState.FailedOpener;
-
-                    return false;
-                }
-
-                return true;
-            }
-
-            return false;
-        }
-
-        private void ResetOpener()
-        {
-            PrePullStep = 0;
-            OpenerStep = 0;
-        }
-
-        public bool DoFullOpener(ref uint actionID)
-        {
-            if (!LevelChecked)
-                return false;
-
-            if (CurrentState == OpenerState.PrePull)
-                if (DoPrePullSteps(ref actionID))
-                    return true;
-
-            if (CurrentState == OpenerState.InOpener)
-                if (DoOpener(ref actionID))
-                    return true;
-
-            if (!InCombat())
-            {
-                ResetOpener();
-                CurrentState = OpenerState.PrePull;
-            }
-
-            return false;
-        }
     }
 
-    internal class SGEHelper
+    internal static class SGEHelper
     {
         public static int GetMatchingConfigST(int i, IGameObject? optionalTarget, out uint action, out bool enabled)
         {
@@ -241,8 +141,8 @@ internal static partial class SGE
                     action = Kerachole;
 
                     enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Kerachole) &&
-                              (!Config.SGE_AoE_Heal_KeracholeTrait || (Config.SGE_AoE_Heal_KeracholeTrait &&
-                                                                       TraitLevelChecked(Traits.EnhancedKerachole))) &&
+                              (!Config.SGE_AoE_Heal_KeracholeTrait ||
+                               (Config.SGE_AoE_Heal_KeracholeTrait && TraitLevelChecked(Traits.EnhancedKerachole))) &&
                               Gauge.HasAddersgall();
 
                     return 0;

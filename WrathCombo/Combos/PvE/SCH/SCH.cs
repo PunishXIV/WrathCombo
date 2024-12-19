@@ -291,26 +291,26 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     // Dissipation
                     if (IsEnabled(CustomComboPreset.SCH_DPS_Dissipation_Opener) &&
                         ActionReady(Dissipation) && HasPetPresent() && !Gauge.HasAetherflow() &&
-                        (openerState == OpenerState.InOpener) && InCombat() && CanSpellWeave(actionID))
+                        (openerState == OpenerState.InOpener) && InCombat() && CanSpellWeave())
                         return Dissipation;
 
                     // Aetherflow
                     if (IsEnabled(CustomComboPreset.SCH_DPS_Aetherflow) && !WasLastAction(Dissipation) &&
                         ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
-                        InCombat() && CanSpellWeave(actionID))
+                        InCombat() && CanSpellWeave())
                         return Aetherflow;
 
                     // Lucid Dreaming
                     if (IsEnabled(CustomComboPreset.SCH_DPS_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
                         LocalPlayer.CurrentMp <= Config.SCH_ST_DPS_LucidOption &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return All.LucidDreaming;
 
                     //Target based options
@@ -324,7 +324,7 @@ namespace WrathCombo.Combos.PvE
                                 Gauge.HasAetherflow() &&
                                 GetCooldownRemainingTime(Aetherflow) <= edTime &&
                                 (!IsEnabled(CustomComboPreset.SCH_DPS_EnergyDrain_BurstSaver) || (LevelChecked(ChainStratagem) && GetCooldownRemainingTime(ChainStratagem) > 10) || (!ChainStratagem.LevelChecked())) &&
-                                CanSpellWeave(actionID))
+                                CanSpellWeave())
                                 return EnergyDrain;
                         }
 
@@ -336,13 +336,13 @@ namespace WrathCombo.Combos.PvE
                                 !TargetHasEffectAny(Debuffs.ChainStratagem) && (openerState == OpenerState.PostOpener) &&
                                 GetTargetHPPercent() > Config.SCH_ST_DPS_ChainStratagemOption &&
                                 InCombat() &&
-                                CanSpellWeave(actionID))
+                                CanSpellWeave())
                                 return ChainStratagem;
 
                             if (LevelChecked(BanefulImpaction) &&
                                 HasEffect(Buffs.ImpactImminent) &&
                                 InCombat() &&
-                                CanSpellWeave(actionID))
+                                CanSpellWeave())
                                 return BanefulImpaction;
                             // Don't use OriginalHook(ChainStratagem), because player can disable ingame action replacement
                         }
@@ -355,7 +355,7 @@ namespace WrathCombo.Combos.PvE
                             if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_SpiritDart) &&
                                 IsEnabled(Variant.VariantSpiritDart) &&
                                 GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
-                                CanSpellWeave(actionID))
+                                CanSpellWeave())
                                 return Variant.VariantSpiritDart;
 
                             float refreshtimer = Config.SCH_ST_DPS_Bio_Adv ? Config.SCH_ST_DPS_Bio_Threshold : 3;
@@ -367,7 +367,7 @@ namespace WrathCombo.Combos.PvE
                         //Ruin 2 Movement 
                         if (IsEnabled(CustomComboPreset.SCH_DPS_Ruin2Movement) &&
                             LevelChecked(Ruin2) &&
-                            IsMoving) return OriginalHook(Ruin2);
+                            IsMoving()) return OriginalHook(Ruin2);
                     }
                 }
                 return actionID;
@@ -389,7 +389,7 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
@@ -397,20 +397,20 @@ namespace WrathCombo.Combos.PvE
                         IsEnabled(Variant.VariantSpiritDart) &&
                         (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
                         HasBattleTarget() &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantSpiritDart;
 
                     // Aetherflow
                     if (IsEnabled(CustomComboPreset.SCH_AoE_Aetherflow) &&
                         ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
-                        InCombat() && CanSpellWeave(actionID))
+                        InCombat() && CanSpellWeave())
                         return Aetherflow;
 
                     // Lucid Dreaming
                     if (IsEnabled(CustomComboPreset.SCH_AoE_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
                         LocalPlayer.CurrentMp <= Config.SCH_AoE_LucidOption &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return All.LucidDreaming;
                 }
                 return actionID;
@@ -509,7 +509,7 @@ namespace WrathCombo.Combos.PvE
                     // Aetherflow
                     if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Aetherflow) &&
                         ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
-                        InCombat() && CanSpellWeave(actionID))
+                        InCombat() && CanSpellWeave())
                         return Aetherflow;
 
                     if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Dissipation) 
@@ -522,7 +522,7 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
                         LocalPlayer.CurrentMp <= Config.SCH_ST_Heal_LucidOption &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return All.LucidDreaming;
 
                     //Grab our target (Soft->Hard->Self)

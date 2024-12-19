@@ -61,7 +61,7 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                bool canWeave = CanSpellWeave(actionID);
+                bool canWeave = CanSpellWeave();
 
                 if (actionID is Fire or Fire4 or Flare)
                 {

@@ -72,7 +72,7 @@ namespace WrathCombo.Combos.PvP
                     var threeMudrasCD = GetCooldown(ThreeMudra);
                     var fumaCD = GetCooldown(FumaShuriken);
                     var bunshinStacks = HasEffect(Buffs.Bunshin) ? GetBuffStacks(Buffs.Bunshin) : 0;
-                    bool canWeave = CanWeave(SpinningEdge);
+                    bool canWeave = CanWeave();
                     bool mudraMode = HasEffect(Buffs.ThreeMudra);
                     bool inMeleeRange = InMeleeRange();
                     bool isHidden = HasEffect(Buffs.Hidden);
@@ -164,7 +164,7 @@ namespace WrathCombo.Combos.PvP
                     bool dotonLocked = HasEffect(Debuffs.SealedDoton);
                     bool gokaLocked = HasEffect(Debuffs.SealedGokaMekkyaku);
                     bool mudraMode = HasEffect(Buffs.ThreeMudra);
-                    bool canWeave = CanWeave(SpinningEdge);
+                    bool canWeave = CanWeave();
                     var jobMaxHp = LocalPlayer.MaxHp;
                     var threshold = GetOptionValue(Config.NINPvP_Meisui_AoE);
                     var maxHPThreshold = jobMaxHp - 8000;

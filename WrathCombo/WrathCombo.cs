@@ -26,6 +26,7 @@ using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -92,6 +93,7 @@ namespace WrathCombo
                 {
                     AST.QuickTargetCards.SelectedRandomMember = null;
                     PvEFeatures.HasToOpenJob = true;
+                    WrathOpener.SelectOpener(value.Value);
                 }
                 jobID = value;
             }
@@ -199,7 +201,10 @@ namespace WrathCombo
         private void OnFrameworkUpdate(IFramework framework)
         {
             if (Svc.ClientState.LocalPlayer is not null)
+            {
                 JobID = Svc.ClientState.LocalPlayer?.ClassJob.RowId;
+                CustomComboFunctions.IsMoving(); //Hacky workaround to ensure it's always running
+            }
 
             BlueMageService.PopulateBLUSpells();
             TargetHelper.Draw();
@@ -298,7 +303,6 @@ namespace WrathCombo
             Service.ComboCache?.Dispose();
             ActionWatching.Dispose();
             AST.DisposeCheckCards();
-            DisposeOpeners();
             CustomComboFunctions.TimerDispose();
 
             Svc.ClientState.Login -= PrintLoginMessage;
@@ -306,11 +310,6 @@ namespace WrathCombo
         }
 
 
-        private static void DisposeOpeners()
-        {
-            NIN.NIN_ST_SimpleMode.NINOpener.Dispose();
-            NIN.NIN_ST_AdvancedMode.NINOpener.Dispose();
-        }
         private void OnOpenConfigUi() => ConfigWindow.IsOpen = !ConfigWindow.IsOpen;
 
         private void OnCommand(string command, string arguments)

@@ -42,7 +42,6 @@ namespace WrathCombo.AutoRotation
             if (!cfg.Enabled || !Player.Available || Svc.Condition[ConditionFlag.Mounted])
                 return;
 
-
             if (!EzThrottler.Throttle("AutoRotController", 50))
                 return;
 
@@ -102,8 +101,7 @@ namespace WrathCombo.AutoRotation
                 var sheetAct = Svc.Data.GetExcelSheet<Action>().GetRow(gameAct);
 
                 var outAct = AutoRotationHelper.InvokeCombo(preset.Key, attributes);
-                if (!CustomComboFunctions.ActionReady(gameAct))
-                    continue;
+                if (!CustomComboFunctions.CanQueue(outAct)) continue;
 
                 if (action.IsHeal)
                 {
@@ -221,7 +219,7 @@ namespace WrathCombo.AutoRotation
                             }
                         }
 
-                        if (!CustomComboFunctions.IsMoving || CustomComboFunctions.HasEffect(All.Buffs.Swiftcast))
+                        if (!CustomComboFunctions.IsMoving() || CustomComboFunctions.HasEffect(All.Buffs.Swiftcast))
                         {
                             ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.GameObjectId);
                         }
@@ -375,7 +373,7 @@ namespace WrathCombo.AutoRotation
                     if (HealerTargeting.CanAoEHeal(outAct))
                     {
                         var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
-                        if (CustomComboFunctions.IsMoving && castTime > 0)
+                        if (CustomComboFunctions.IsMoving() && castTime > 0)
                             return false;
 
                         var ret = ActionManager.Instance()->UseAction(ActionType.Action, outAct);
@@ -394,7 +392,7 @@ namespace WrathCombo.AutoRotation
                 else
                 {
                     uint outAct = CustomComboFunctions.OriginalHook(InvokeCombo(preset, attributes, Player.Object));
-                    if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0) return false;
+                    if (!CustomComboFunctions.CanQueue(outAct)) return false;
                     if (!CustomComboFunctions.ActionReady(outAct))
                         return false;
 
@@ -406,7 +404,7 @@ namespace WrathCombo.AutoRotation
                     {
                         bool switched = SwitchOnDChole(attributes, outAct, ref target);
                         var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
-                        if (CustomComboFunctions.IsMoving && castTime > 0)
+                        if (CustomComboFunctions.IsMoving() && castTime > 0)
                             return false;
 
                         if (mustTarget)
@@ -425,9 +423,12 @@ namespace WrathCombo.AutoRotation
                     return false;
 
                 var outAct = CustomComboFunctions.OriginalHook(InvokeCombo(preset, attributes, target));
-                if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0) return false;
+                if (!CustomComboFunctions.CanQueue(outAct))
+                {
+                    return false;
+                }
                 var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
-                if (CustomComboFunctions.IsMoving && castTime > 0)
+                if (CustomComboFunctions.IsMoving() && castTime > 0)
                     return false;
 
                 bool switched = SwitchOnDChole(attributes, outAct, ref target);

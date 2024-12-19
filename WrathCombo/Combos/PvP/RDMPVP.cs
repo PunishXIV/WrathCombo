@@ -62,7 +62,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is Jolt3)
                 {
-                    if (ActionReady(Forte) && CanWeave(actionID))
+                    if (ActionReady(Forte) && CanWeave())
                         return Forte;
 
                     if (IsEnabled(CustomComboPreset.RDMPvP_Burst_Resolution) && ActionReady(Resolution) && !PvPCommon.TargetImmuneToDamage())

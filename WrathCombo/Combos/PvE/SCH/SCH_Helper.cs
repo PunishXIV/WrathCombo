@@ -7,7 +7,7 @@ namespace WrathCombo.Combos.PvE
     internal static partial class SCH
     {
         // Class Gauge
-        internal static SCHGauge Gauge => CustomComboFunctions.GetJobGauge<SCHGauge>();
+        internal static SCHGauge Gauge => GetJobGauge<SCHGauge>();
         internal static bool HasAetherflow(this SCHGauge gauge) => (gauge.Aetherflow > 0);
 
         internal enum OpenerState

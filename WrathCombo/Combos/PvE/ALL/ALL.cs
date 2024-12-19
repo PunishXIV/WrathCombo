@@ -91,7 +91,7 @@ internal class All
     {
         return CustomComboFunctions.ActionReady(LucidDreaming)
                && CustomComboFunctions.LocalPlayer.CurrentMp <= MPThreshold
-               && (!weave || CustomComboFunctions.CanSpellWeave(actionID));
+               && (!weave || CustomComboFunctions.CanSpellWeave());
     }
 
     public static class Buffs

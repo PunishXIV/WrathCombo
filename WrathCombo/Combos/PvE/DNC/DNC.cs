@@ -177,7 +177,7 @@ namespace WrathCombo.Combos.PvE
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 // Fan Dance 3 & 4 on Flourish
-                if (actionID is Flourish && CanWeave(actionID))
+                if (actionID is Flourish && CanWeave())
                 {
                     if (HasEffect(Buffs.ThreeFoldFanDance))
                         return FanDance3;
@@ -344,7 +344,7 @@ namespace WrathCombo.Combos.PvE
                 #region Weaves
                 // ST Devilment
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Devilment) &&
-                    CanWeave(actionID) &&
+                    CanWeave() &&
                     LevelChecked(Devilment) &&
                     GetCooldownRemainingTime(Devilment) < 0.05 &&
                     (HasEffect(Buffs.TechnicalFinish) ||
@@ -354,7 +354,7 @@ namespace WrathCombo.Combos.PvE
 
                 // ST Flourish
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Flourish) &&
-                    CanWeave(actionID) &&
+                    CanWeave() &&
                     ActionReady(Flourish) &&
                     !WasLastWeaponskill(TechnicalFinish4) &&
                     IsOnCooldown(Devilment) &&
@@ -378,7 +378,7 @@ namespace WrathCombo.Combos.PvE
                      HasEffect(Buffs.TechnicalFinish) && 
                      GetCooldownRemainingTime(Flourish) > 58)
                 {
-                    if (HasEffect(Buffs.ThreeFoldFanDance) && CanDelayedWeave(actionID))
+                    if (HasEffect(Buffs.ThreeFoldFanDance) && CanDelayedWeave())
                         return FanDance3;
                     if (HasEffect(Buffs.FourFoldFanDance))
                         return FanDance4;
@@ -401,10 +401,10 @@ namespace WrathCombo.Combos.PvE
                 if (IsEnabled(CustomComboPreset.DNC_Variant_Rampart) &&
                     IsEnabled(Variant.VariantRampart) &&
                     IsOffCooldown(Variant.VariantRampart) &&
-                    CanWeave(actionID))
+                    CanWeave())
                     return Variant.VariantRampart;
 
-                if (CanWeave(actionID) && !WasLastWeaponskill(TechnicalFinish4))
+                if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
                 {
                     if (HasEffect(Buffs.ThreeFoldFanDance))
                         return FanDance3;
@@ -574,7 +574,7 @@ namespace WrathCombo.Combos.PvE
                         gauge.Esprit >= Config.DNCEspritThreshold_ST)
                         return SaberDance;
 
-                    if (CanWeave(actionID))
+                    if (CanWeave())
                     {
                         // ST Fan Dance overcap protection
                         if (IsEnabled(CustomComboPreset.DNC_ST_FanDanceOvercap) &&
@@ -685,7 +685,7 @@ namespace WrathCombo.Combos.PvE
                 #region Weaves
                 // AoE Devilment
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Devilment) &&
-                    CanWeave(actionID) &&
+                    CanWeave() &&
                     LevelChecked(Devilment) &&
                     GetCooldownRemainingTime(Devilment) < 0.05 &&
                     (HasEffect(Buffs.TechnicalFinish) ||
@@ -695,7 +695,7 @@ namespace WrathCombo.Combos.PvE
 
                 // AoE Flourish
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Flourish) &&
-                    CanWeave(actionID) &&
+                    CanWeave() &&
                     ActionReady(Flourish) &&
                     !WasLastWeaponskill(TechnicalFinish4) &&
                     IsOnCooldown(Devilment) &&
@@ -723,10 +723,10 @@ namespace WrathCombo.Combos.PvE
                 if (IsEnabled(CustomComboPreset.DNC_Variant_Rampart) &&
                     IsEnabled(Variant.VariantRampart) &&
                     IsOffCooldown(Variant.VariantRampart) &&
-                    CanWeave(actionID))
+                    CanWeave())
                     return Variant.VariantRampart;
 
-                if (CanWeave(actionID) && !WasLastWeaponskill(TechnicalFinish4))
+                if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
                 {
                     // AoE Feathers & Fans
                     if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Feathers) &&
@@ -895,7 +895,7 @@ namespace WrathCombo.Combos.PvE
                         gauge.Esprit >= Config.DNCEspritThreshold_AoE)
                         return SaberDance;
 
-                    if (CanWeave(actionID))
+                    if (CanWeave())
                     {
                         // AoE Fan Dance overcap protection
                         if (IsEnabled(CustomComboPreset.DNC_AoE_FanDanceOvercap) &&
