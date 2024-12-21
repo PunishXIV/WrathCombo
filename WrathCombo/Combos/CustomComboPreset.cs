@@ -5475,6 +5475,12 @@ public enum CustomComboPreset
         SMN.JobID)]
     SMN_DemiEgiMenu_EgiOrder_AoE = 17065,
 
+    [ParentCombo(SMN_Advanced_Combo)]
+    [CustomComboInfo("Use Ruin III instead of Emerald Ruin III", 
+        "Replaces Emerald Ruin III with Ruin III in the rotation when Ruin Mastery III is not active.", 
+        SMN.JobID, 15)]
+    SMN_ST_Ruin3_Emerald_Ruin3 = 17066,
+
     #endregion
 
     #region VIPER
