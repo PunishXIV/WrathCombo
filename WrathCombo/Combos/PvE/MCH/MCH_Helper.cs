@@ -79,7 +79,7 @@ internal static partial class MCH
         ActionWatching.GetAttackType(ActionWatching.LastAction) !=
         ActionWatching.ActionAttackType.Ability;
 
-    public static int BSUsed => ActionWatching.CombatActions.Count(x => x == BarrelStabilizer);
+    internal static int BSUsed => ActionWatching.CombatActions.Count(x => x == BarrelStabilizer);
 
     internal class MCHOpenerLogic
     {

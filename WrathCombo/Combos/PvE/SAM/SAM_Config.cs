@@ -8,7 +8,7 @@ using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SAM
+internal static partial class SAM
 {
     internal static class Config
     {

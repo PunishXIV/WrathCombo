@@ -13,7 +13,7 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SAM
+internal static partial class SAM
 {
     internal static SAMGauge gauge = GetJobGauge<SAMGauge>();
     internal static SAMOpenerLogic SAMOpener = new();
@@ -26,7 +26,7 @@ internal partial class SAM
 
     internal static float GCD => GetCooldown(Hakaze).CooldownTotal;
 
-    internal class SAMHelper
+    internal static class SAMHelper
     {
         internal static int SenCount => GetSenCount();
 

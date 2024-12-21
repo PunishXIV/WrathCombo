@@ -12,7 +12,7 @@ using static WrathCombo.Combos.PvE.SAM.SAMHelper;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SAM
+internal static partial class SAM
 {
     internal class SAM_ST_YukikazeCombo : CustomCombo
     {
@@ -567,7 +567,7 @@ internal partial class SAM
                 return Variant.VariantRampart;
 
             //oGCD Features
-            if (CanWeave(actionID))
+            if (CanWeave(ActionWatching.LastWeaponskill))
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -675,7 +675,7 @@ internal partial class SAM
                 return Variant.VariantRampart;
 
             //oGCD Features
-            if (CanWeave(actionID))
+            if (CanWeave(ActionWatching.LastWeaponskill))
             {
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Hagakure) &&
                     OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
