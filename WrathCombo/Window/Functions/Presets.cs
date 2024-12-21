@@ -30,6 +30,7 @@ namespace WrathCombo.Window.Functions
             public CustomComboPreset[] Conflicts;
             public CustomComboPreset? Parent;
             public BlueInactiveAttribute? BlueInactive;
+            public VariantAttribute? Variant;
             public VariantParentAttribute? VariantParent;
             public BozjaParentAttribute? BozjaParent;
             public EurekaParentAttribute? EurekaParent;
@@ -44,6 +45,7 @@ namespace WrathCombo.Window.Functions
                 Conflicts = PresetStorage.GetConflicts(preset);
                 Parent = PresetStorage.GetParent(preset);
                 BlueInactive = preset.GetAttribute<BlueInactiveAttribute>();
+                Variant = preset.GetAttribute<VariantAttribute>();
                 VariantParent = preset.GetAttribute<VariantParentAttribute>();
                 BozjaParent = preset.GetAttribute<BozjaParentAttribute>();
                 EurekaParent = preset.GetAttribute<EurekaParentAttribute>();
@@ -54,7 +56,8 @@ namespace WrathCombo.Window.Functions
             }
         }
 
-        internal static Dictionary<CustomComboPreset, bool> GetJobAutorots => Service.Configuration.AutoActions.Where(x => (Player.JobId == x.Key.Attributes().CustomComboInfo.JobID || CustomComboFunctions.JobIDs.ClassToJob((byte)Player.Job) == x.Key.Attributes().CustomComboInfo.JobID) && x.Value && CustomComboFunctions.IsEnabled(x.Key)).ToDictionary();
+        internal static Dictionary<CustomComboPreset, bool> GetJobAutorots => P
+            .IPCSearch.AutoActions.Where(x => (Player.JobId == x.Key.Attributes().CustomComboInfo.JobID || CustomComboFunctions.JobIDs.ClassToJob((byte)Player.Job) == x.Key.Attributes().CustomComboInfo.JobID) && x.Value && CustomComboFunctions.IsEnabled(x.Key) && x.Key.Attributes().Parent == null).ToDictionary();
 
         internal unsafe static void DrawPreset(CustomComboPreset preset, CustomComboInfoAttribute info, ref int i)
         {
@@ -84,19 +87,23 @@ namespace WrathCombo.Window.Functions
                 var labelSize = ImGui.CalcTextSize(label);
                 ImGui.SetCursorPosX(ImGui.GetContentRegionAvail().X - labelSize.X.Scale() - 64f.Scale());
                 bool autoOn = Service.Configuration.AutoActions[preset];
-                if (ImGui.Checkbox($"###AutoAction{i}", ref autoOn))
+                if (P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded
+                        ($"###AutoAction{i}", ref autoOn, preset, false))
                 {
                     Service.Configuration.AutoActions[preset] = autoOn;
                     Service.Configuration.Save();
                 }
-                ImGui.SameLine();
-                ImGuiEx.Text(label);
                 ImGuiComponents.HelpMarker($"Add this feature to Auto-Rotation.\n" +
                     $"Auto-Rotation will automatically use the actions selected within the feature, allowing you to focus on movement. Configure the settings in the 'Auto-Rotation' section.");
                 ImGui.Separator();
             }
 
-            if (ImGui.Checkbox($"{info.Name}###{preset}{i}", ref enabled))
+            if (info.Name.Contains(" - AoE") || info.Name.Contains(" - Sin"))
+                if (P.IPC.UIHelper.PresetControlled(preset) is not null)
+                    P.IPC.UIHelper.ShowIPCControlledIndicatorIfNeeded(preset);
+
+            if (P.IPC.UIHelper.ShowIPCControlledCheckboxIfNeeded
+                    ($"{info.Name}###{preset}{i}", ref enabled, preset, true))
             {
                 if (enabled)
                 {

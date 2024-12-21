@@ -37,7 +37,8 @@ namespace WrathCombo.AutoRotation
 
         internal static void Run()
         {
-            var cfg = Service.Configuration.RotationConfig;
+            var cfg = new AutoRotationConfigIPCWrapper(
+                Service.Configuration.RotationConfig);
 
             if (!cfg.Enabled || !Player.Available || Svc.Condition[ConditionFlag.Mounted])
                 return;
