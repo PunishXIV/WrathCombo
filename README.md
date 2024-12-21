@@ -208,6 +208,9 @@ but ideally get in contact with us over on
 the [Discord](https://discord.gg/Zzrcc8kmvy) server so we can communicate with one
 another to make any necessary changes and review your submission!
 
+You may also find the [contributing guidelines](CONTRIBUTING.md) helpful in getting
+started.
+
    <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section>
 
