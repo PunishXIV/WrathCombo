@@ -1,5 +1,6 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
@@ -17,7 +18,8 @@ internal partial class RPR
             RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 25),
             RPR_STBloodbathThreshold = new("RPR_STBloodbathThreshold", 40),
             RPR_AoESecondWindThreshold = new("RPR_AoESecondWindThreshold", 25),
-            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 40);
+            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 40),
+            RPR_Balance_Content = new("RPR_Balance_Content");
 
         public static UserBoolArray
             RPR_SoulsowOptions = new("RPR_SoulsowOptions");
@@ -29,6 +31,9 @@ internal partial class RPR
         {
             switch (preset)
             {
+                case CustomComboPreset.RPR_ST_Opener:
+                    DrawBossOnlyChoice(RPR_Balance_Content);
+                    break;
                 case CustomComboPreset.RPRPvP_Burst_ImmortalPooling:
                     DrawSliderInt(0, 8, RPRPvP.Config.RPRPvP_ImmortalStackThreshold,
                         "Set a value of Immortal Sacrifice Stacks to hold for burst.");

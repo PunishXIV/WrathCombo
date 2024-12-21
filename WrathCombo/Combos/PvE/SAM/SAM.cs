@@ -22,7 +22,7 @@ internal partial class SAM
         {
             if (actionID is Yukikaze)
             {
-                if (Config.SAM_Yukaze_KenkiOvercap && CanWeave(actionID) &&
+                if (Config.SAM_Yukaze_KenkiOvercap && CanWeave() &&
                     gauge.Kenki >= Config.SAM_Yukaze_KenkiOvercapAmount && LevelChecked(Shinten))
                     return OriginalHook(Shinten);
 
@@ -48,7 +48,7 @@ internal partial class SAM
         {
             if (actionID is Kasha)
             {
-                if (Config.SAM_Kasha_KenkiOvercap && CanWeave(actionID) &&
+                if (Config.SAM_Kasha_KenkiOvercap && CanWeave() &&
                     gauge.Kenki >= Config.SAM_Kasha_KenkiOvercapAmount && LevelChecked(Shinten))
                     return OriginalHook(Shinten);
 
@@ -79,7 +79,7 @@ internal partial class SAM
         {
             if (actionID is Gekko)
             {
-                if (Config.SAM_Gekko_KenkiOvercap && CanWeave(actionID) &&
+                if (Config.SAM_Gekko_KenkiOvercap && CanWeave() &&
                     gauge.Kenki >= Config.SAM_Gekko_KenkiOvercapAmount && LevelChecked(Shinten))
                     return OriginalHook(Shinten);
 
@@ -120,11 +120,11 @@ internal partial class SAM
             if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
                 IsEnabled(Variant.VariantRampart) &&
                 IsOffCooldown(Variant.VariantRampart) &&
-                CanSpellWeave(actionID))
+                CanSpellWeave())
                 return Variant.VariantRampart;
 
             // Opener for SAM
-            if (SAMOpener.DoFullOpener(ref actionID))
+            if (Opener().FullOpener(ref actionID))
                 return actionID;
 
             //Meikyo to start before combat
@@ -133,7 +133,7 @@ internal partial class SAM
                 return MeikyoShisui;
 
             //oGCDs
-            if (CanWeave(ActionWatching.LastWeaponskill))
+            if (CanWeave())
             {
                 //Meikyo Features
                 if (UseMeikyo())
@@ -167,7 +167,7 @@ internal partial class SAM
 
                 //Zanshin Usage
                 if (LevelChecked(Zanshin) && gauge.Kenki >= 50 &&
-                    CanWeave(actionID) && HasEffect(Buffs.ZanshinReady) &&
+                    CanWeave() && HasEffect(Buffs.ZanshinReady) &&
                     (JustUsed(Higanbana, 7f) || (SenCount is 1 && HasEffect(Buffs.OgiNamikiriReady)) ||
                      GetBuffRemainingTime(Buffs.ZanshinReady) <= 6)) //Protection for scuffed runs
                     return Zanshin;
@@ -187,7 +187,7 @@ internal partial class SAM
             if (HasEffect(Buffs.Fugetsu) && HasEffect(Buffs.Fuka))
             {
                 //Ogi Namikiri Features
-                if (!IsMoving && LevelChecked(OgiNamikiri) &&
+                if (!IsMoving() && LevelChecked(OgiNamikiri) &&
                     (((JustUsed(Higanbana, 5f) || GetDebuffRemainingTime(Debuffs.Higanbana) > 30) &&
                       HasEffect(Buffs.OgiNamikiriReady)) ||
                      GetBuffRemainingTime(Buffs.OgiNamikiriReady) <= GCD) && //Protection for scuffed runs
@@ -205,7 +205,7 @@ internal partial class SAM
                             SenCount is 3)
                             return OriginalHook(TsubameGaeshi);
 
-                    if (!IsMoving &&
+                    if (!IsMoving() &&
                         ((SenCount is 1 && GetTargetHPPercent() >= 1 &&
                           ((GetDebuffRemainingTime(Debuffs.Higanbana) <= 19 && JustUsed(Gekko) &&
                             JustUsed(MeikyoShisui, 15f)) || !TargetHasEffect(Debuffs.Higanbana))) ||
@@ -218,7 +218,7 @@ internal partial class SAM
 
             if (HasEffect(Buffs.MeikyoShisui))
             {
-                if (trueNorthReady && CanDelayedWeave(ActionWatching.LastWeaponskill))
+                if (trueNorthReady && CanDelayedWeave())
                     return All.TrueNorth;
 
                 if (LevelChecked(Gekko) &&
@@ -299,12 +299,12 @@ internal partial class SAM
             if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
                 IsEnabled(Variant.VariantRampart) &&
                 IsOffCooldown(Variant.VariantRampart) &&
-                CanSpellWeave(actionID))
+                CanSpellWeave())
                 return Variant.VariantRampart;
 
             // Opener for SAM
             if (IsEnabled(CustomComboPreset.SAM_ST_Opener))
-                if (SAMOpener.DoFullOpener(ref actionID))
+                if (Opener().FullOpener(ref actionID))
                     return actionID;
 
             //Meikyo to start before combat
@@ -315,7 +315,7 @@ internal partial class SAM
                 return MeikyoShisui;
 
             //oGCDs
-            if (CanWeave(ActionWatching.LastWeaponskill))
+            if (CanWeave())
             {
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs))
                 {
@@ -359,7 +359,7 @@ internal partial class SAM
                     //Zanshin Usage
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Zanshin) &&
                         LevelChecked(Zanshin) && gauge.Kenki >= 50 &&
-                        CanWeave(actionID) && HasEffect(Buffs.ZanshinReady) &&
+                        CanWeave() && HasEffect(Buffs.ZanshinReady) &&
                         (JustUsed(Higanbana, 7f) || (SenCount is 1 && HasEffect(Buffs.OgiNamikiriReady)) ||
                          GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
                         return Zanshin;
@@ -387,7 +387,7 @@ internal partial class SAM
                 //Ogi Namikiri Features
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri) &&
                     (!IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) ||
-                     (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) && !IsMoving)) &&
+                     (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) && !IsMoving())) &&
                     ActionReady(OgiNamikiri) &&
                     (((JustUsed(Higanbana, 5f) || GetDebuffRemainingTime(Debuffs.Higanbana) > 30) &&
                       HasEffect(Buffs.OgiNamikiriReady)) ||
@@ -407,7 +407,7 @@ internal partial class SAM
                             return OriginalHook(TsubameGaeshi);
 
                     if ((!IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) ||
-                         (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) && !IsMoving)) &&
+                         (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) && !IsMoving())) &&
                         ((SenCount is 1 && GetTargetHPPercent() > HiganbanaThreshold &&
                           (Config.SAM_ST_Higanbana_Suboption == 0 ||
                            (Config.SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss())) &&
@@ -422,7 +422,7 @@ internal partial class SAM
             if (HasEffect(Buffs.MeikyoShisui))
             {
                 if (IsEnabled(CustomComboPreset.SAM_ST_TrueNorth) &&
-                    trueNorthReady && CanDelayedWeave(ActionWatching.LastWeaponskill))
+                    trueNorthReady && CanDelayedWeave())
                     return All.TrueNorth;
 
                 if (LevelChecked(Gekko) && (!HasEffect(Buffs.Fugetsu) ||
@@ -502,7 +502,7 @@ internal partial class SAM
             if (actionID is Oka)
             {
                 if (Config.SAM_Oka_KenkiOvercap && gauge.Kenki >= Config.SAM_Oka_KenkiOvercapAmount &&
-                    LevelChecked(Kyuten) && CanWeave(actionID))
+                    LevelChecked(Kyuten) && CanWeave())
                     return Kyuten;
 
                 if (HasEffect(Buffs.MeikyoShisui))
@@ -528,7 +528,7 @@ internal partial class SAM
             if (actionID is Mangetsu)
             {
                 if (Config.SAM_Mangetsu_KenkiOvercap && gauge.Kenki >= Config.SAM_Mangetsu_KenkiOvercapAmount &&
-                    LevelChecked(Kyuten) && CanWeave(actionID))
+                    LevelChecked(Kyuten) && CanWeave())
                     return Kyuten;
 
                 if (HasEffect(Buffs.MeikyoShisui))
@@ -563,11 +563,11 @@ internal partial class SAM
             if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
                 IsEnabled(Variant.VariantRampart) &&
                 IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave(actionID))
+                CanWeave())
                 return Variant.VariantRampart;
 
             //oGCD Features
-            if (CanWeave(actionID))
+            if (CanWeave())
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -600,15 +600,15 @@ internal partial class SAM
                 return OriginalHook(Ikishoten);
 
             if (LevelChecked(OgiNamikiri) &&
-                ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
+                ((!IsMoving() && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
                 return OriginalHook(OgiNamikiri);
 
             if (LevelChecked(TenkaGoken))
             {
-                if (!IsMoving && OriginalHook(Iaijutsu) is TenkaGoken)
+                if (!IsMoving() && OriginalHook(Iaijutsu) is TenkaGoken)
                     return OriginalHook(Iaijutsu);
 
-                if (!IsMoving && LevelChecked(TendoGoken) && OriginalHook(Iaijutsu) is TendoGoken)
+                if (!IsMoving() && LevelChecked(TendoGoken) && OriginalHook(Iaijutsu) is TendoGoken)
                     return OriginalHook(Iaijutsu);
 
                 if (LevelChecked(TsubameGaeshi) &&
@@ -671,11 +671,11 @@ internal partial class SAM
             if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
                 IsEnabled(Variant.VariantRampart) &&
                 IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave(actionID))
+                CanWeave())
                 return Variant.VariantRampart;
 
             //oGCD Features
-            if (CanWeave(actionID))
+            if (CanWeave())
             {
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Hagakure) &&
                     OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
@@ -716,16 +716,16 @@ internal partial class SAM
                 return OriginalHook(Ikishoten);
 
             if (IsEnabled(CustomComboPreset.SAM_AoE_OgiNamikiri) &&
-                LevelChecked(OgiNamikiri) && ((!IsMoving && HasEffect(Buffs.OgiNamikiriReady)) ||
+                LevelChecked(OgiNamikiri) && ((!IsMoving() && HasEffect(Buffs.OgiNamikiriReady)) ||
                                               gauge.Kaeshi is Kaeshi.NAMIKIRI))
                 return OriginalHook(OgiNamikiri);
 
             if (IsEnabled(CustomComboPreset.SAM_AoE_TenkaGoken) && LevelChecked(TenkaGoken))
             {
-                if (!IsMoving && OriginalHook(Iaijutsu) is TenkaGoken)
+                if (!IsMoving() && OriginalHook(Iaijutsu) is TenkaGoken)
                     return OriginalHook(Iaijutsu);
 
-                if (!IsMoving && LevelChecked(TendoGoken) && OriginalHook(Iaijutsu) is TendoGoken)
+                if (!IsMoving() && LevelChecked(TendoGoken) && OriginalHook(Iaijutsu) is TendoGoken)
                     return OriginalHook(Iaijutsu);
 
                 if (LevelChecked(TsubameGaeshi) &&
@@ -809,7 +809,7 @@ internal partial class SAM
 
             if (actionID is Iaijutsu)
             {
-                if (canAddShoha && CanWeave(actionID))
+                if (canAddShoha && CanWeave())
                     return Shoha;
 
                 if (IsEnabled(CustomComboPreset.SAM_Iaijutsu_OgiNamikiri) && (

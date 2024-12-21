@@ -1,8 +1,9 @@
 ﻿namespace WrathCombo.Combos.JobHelpers.Enums;
 
-internal enum OpenerState
+public enum OpenerState
 {
-    PrePull,
+    OpenerNotReady,
+    OpenerReady,
     InOpener,
     OpenerFinished,
     FailedOpener

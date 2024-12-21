@@ -29,6 +29,7 @@ namespace WrathCombo.Combos.PvE
                 AST_DPS_CombustOption = new("AST_DPS_CombustOption"),
                 AST_QuickTarget_Override = new("AST_QuickTarget_Override"),
                 AST_ST_DPS_Play_SpeedSetting = new("AST_ST_DPS_Play_SpeedSetting"),
+                AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
                 //PVP
                 ASTPvP_Burst_PlayCardOption = new("ASTPvP_Burst_PlayCardOption");
             public static UserBool
@@ -57,6 +58,9 @@ namespace WrathCombo.Combos.PvE
             {
                 switch (preset)
                 {
+                    case CustomComboPreset.AST_ST_DPS_Opener:
+                        DrawBossOnlyChoice(AST_ST_DPS_Balance_Content);
+                        break;
                     case CustomComboPreset.AST_ST_DPS:
                         DrawRadioButton(AST_DPS_AltMode, $"On {Malefic.ActionName()}", "", 0);
                         DrawRadioButton(AST_DPS_AltMode, $"On {Combust.ActionName()}", $"Alternative DPS Mode. Leaves {Malefic.ActionName()} alone for pure DPS, becomes {Malefic.ActionName()} when features are on cooldown", 1);
@@ -197,13 +201,13 @@ namespace WrathCombo.Combos.PvE
 
                     //PVP
                     case CustomComboPreset.ASTPvP_Burst_PlayCard:
-                        UserConfig.DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lord and Lady card play",
+                        DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lord and Lady card play",
                             "Uses Lord and Lady of Crowns when available.", 1);
 
-                        UserConfig.DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lord of Crowns card play",
+                        DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lord of Crowns card play",
                             "Only uses Lord of Crowns when available.", 2);
 
-                        UserConfig.DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lady of Crowns card play",
+                        DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lady of Crowns card play",
                             "Only uses Lady of Crowns when available.", 3);
 
                         break;

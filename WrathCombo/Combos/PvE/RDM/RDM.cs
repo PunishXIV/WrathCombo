@@ -1,5 +1,6 @@
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -113,11 +114,11 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     // Opener for RDM
-                    if (RDMOpenerLogic.DoFullOpener(ref actionID))
+                    if (Opener().FullOpener(ref actionID))
                         return actionID;
 
                     //oGCDs
@@ -162,13 +163,13 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     // Opener for RDM
-                    if (IsEnabled(CustomComboPreset.RDM_Balance_Opener))
+                    if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) && ContentCheck.IsInConfiguredContent(Config.RDM_BalanceOpener_Content, ContentCheck.ListSet.BossOnly))
                     {
-                        if (RDMOpenerLogic.DoFullOpener(ref actionID))
+                        if (Opener().FullOpener(ref actionID))
                             return actionID;
                     }
                 }
@@ -281,7 +282,7 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     //RDM_OGCD
@@ -327,7 +328,7 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     //RDM_OGCD

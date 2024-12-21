@@ -23,7 +23,8 @@ namespace WrathCombo.Combos.PvE
                 WHM_STHeals_AquaveilHP = new("WHM_STHeals_AquaveilHP", 99),
                 WHM_AoEHeals_Lucid = new("WHM_AoEHeals_Lucid", 6500),
                 WHM_AoEHeals_ThinAir = new("WHM_AoE_ThinAir"),
-                WHM_AoEHeals_Cure3MP = new("WHM_AoE_Cure3MP");
+                WHM_AoEHeals_Cure3MP = new("WHM_AoE_Cure3MP"),
+                WHM_Balance_Content = new("WHM_Balance_Content");
             internal static UserBool
                 WHM_ST_MainCombo_DoT_Adv = new("WHM_ST_MainCombo_DoT_Adv"),
                 WHM_ST_MainCombo_Adv = new("WHM_ST_MainCombo_Adv"),
@@ -52,6 +53,10 @@ namespace WrathCombo.Combos.PvE
             {
                 switch (preset)
                 {
+                    case CustomComboPreset.WHM_ST_MainCombo_Opener:
+                        DrawBossOnlyChoice(WHM_Balance_Content);
+                        break;
+
                     case CustomComboPreset.WHM_ST_MainCombo:
                         DrawAdditionalBoolChoice(WHM_ST_MainCombo_Adv, "Advanced Action Options", "Change how actions are handled", isConditionalChoice: true);
 
@@ -120,10 +125,6 @@ namespace WrathCombo.Combos.PvE
 
                     case CustomComboPreset.WHM_STHeals_Regen:
                         DrawRoundedSliderFloat(0f, 6f, WHM_STHeals_RegenTimer, "Time Remaining Before Refreshing");
-                        break;
-
-                    case CustomComboPreset.WHM_ST_MainCombo_Opener:
-                        DrawAdditionalBoolChoice(WHM_ST_MainCombo_Opener_Swiftcast, "Swiftcast Option", "Adds Swiftcast to the opener.");
                         break;
 
                     case CustomComboPreset.WHM_STHeals_Benediction:

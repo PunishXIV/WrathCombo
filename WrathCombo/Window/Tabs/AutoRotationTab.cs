@@ -86,6 +86,14 @@ namespace WrathCombo.Window.Tabs
                 changed |= ImGui.Checkbox($"Prioritise Quest Targets", ref cfg.DPSSettings.QuestPriority);
                 changed |= ImGui.Checkbox($"Prioritise Targets Not In Combat", ref cfg.DPSSettings.PreferNonCombat);
 
+                if (cfg.DPSSettings.PreferNonCombat && changed)
+                    cfg.DPSSettings.OnlyAttackInCombat = false;
+
+                changed |= ImGui.Checkbox($"Only Attack Targets Already In Combat", ref cfg.DPSSettings.OnlyAttackInCombat);
+
+                if (cfg.DPSSettings.OnlyAttackInCombat && changed)
+                    cfg.DPSSettings.PreferNonCombat = false;
+
                 var npcs = Service.Configuration.IgnoredNPCs.ToList();
                 var selected = npcs.FirstOrNull(x => x.Key == _selectedNpc);
                 var prev = selected is null ? "" : $"{Svc.Data.Excel.GetSheet<BNpcName>().GetRow(selected.Value.Value).Singular} (ID: {selected.Value.Key})";

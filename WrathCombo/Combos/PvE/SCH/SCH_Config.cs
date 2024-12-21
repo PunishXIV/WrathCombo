@@ -15,6 +15,8 @@ namespace WrathCombo.Combos.PvE
                 SCH_ST_DPS_AltMode = new("SCH_ST_DPS_AltMode"),
                 SCH_ST_DPS_LucidOption = new("SCH_ST_DPS_LucidOption", 6500),
                 SCH_ST_DPS_BioOption = new("SCH_ST_DPS_BioOption", 10),
+                SCH_ST_DPS_OpenerOption = new("SCH_ST_DPS_OpenerOption"),
+                SCH_ST_DPS_OpenerContent = new("SCH_ST_DPS_OpenerContent", 1),
                 SCH_ST_DPS_ChainStratagemOption = new("SCH_ST_DPS_ChainStratagemOption", 10);
             public static UserBool
                 SCH_ST_DPS_Adv = new("SCH_ST_DPS_Adv"),
@@ -74,6 +76,12 @@ namespace WrathCombo.Combos.PvE
             {
                 switch (preset)
                 {
+                    case CustomComboPreset.SCH_DPS_Balance_Opener:
+                        DrawHorizontalRadioButton(SCH_ST_DPS_OpenerOption, "Dissipation First", "Uses Dissipation first, then Aetherflow", 0);
+                        DrawHorizontalRadioButton(SCH_ST_DPS_OpenerOption, "Aetherflow First", "Uses Aetherflow first, then Dissipation", 1);
+                        DrawBossOnlyChoice(SCH_ST_DPS_OpenerContent);
+                        break;
+
                     case CustomComboPreset.SCH_DPS:
                         DrawAdditionalBoolChoice(SCH_ST_DPS_Adv, "Advanced Action Options", "Change how actions are handled", isConditionalChoice: true);
                         if (SCH_ST_DPS_Adv)

@@ -44,7 +44,7 @@ namespace WrathCombo.Combos.PvP
                     if (IsEnabled(CustomComboPreset.ASTPvP_Burst_DrawCard) && IsOffCooldown(MinorArcana) && (!HasEffect(Buffs.LadyOfCrowns) && !HasEffect(Buffs.LordOfCrowns)))
                         return MinorArcana;                                      
                    
-                    var cardPlayOption = PluginConfiguration.GetCustomIntValue(AST.Config.ASTPvP_Burst_PlayCardOption);
+                    var cardPlayOption = PluginConfiguration.GetCustomIntValue(Config.ASTPvP_Burst_PlayCardOption);
 
                     if (IsEnabled(CustomComboPreset.ASTPvP_Burst_PlayCard))
                     {
@@ -79,7 +79,7 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.ASTPvP_Burst_DoubleMalefic))
                         {
                             if (lastComboMove == Malefic && (GetRemainingCharges(DoubleCast) > 1 ||
-                                GetCooldownRemainingTime(Gravity) > 7.5f) && CanWeave(actionID))
+                                GetCooldownRemainingTime(Gravity) > 7.5f) && CanWeave())
                                 return DoubleMalefic;
                         }
 
@@ -120,7 +120,7 @@ namespace WrathCombo.Combos.PvP
 
                 protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
                 {
-                    if (actionID is AspectedBenefic && CanWeave(actionID) &&
+                    if (actionID is AspectedBenefic && CanWeave() &&
                         lastComboMove == AspectedBenefic &&
                         HasCharges(DoubleCast))
                         return OriginalHook(DoubleCast);

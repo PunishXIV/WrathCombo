@@ -23,7 +23,8 @@ namespace WrathCombo.Combos.PvE
                 SGE_ST_DPS_AddersgallProtect = new("SGE_ST_DPS_AddersgallProtect", 3),
                 SGE_AoE_DPS_Lucid = new("SGE_AoE_Phlegma_Lucid", 6500),
                 SGE_AoE_DPS_Rhizo = new("SGE_AoE_DPS_Rhizo"),
-                SGE_AoE_DPS_AddersgallProtect = new("SGE_AoE_DPS_AddersgallProtect", 3);
+                SGE_AoE_DPS_AddersgallProtect = new("SGE_AoE_DPS_AddersgallProtect", 3),
+                SGE_Balance_Content = new("SGE_Balance_Content");
             public static UserFloat
                 SGE_ST_DPS_EDosisThreshold = new("SGE_ST_Dosis_EDosisThreshold", 3.0f);
             #endregion
@@ -58,6 +59,10 @@ namespace WrathCombo.Combos.PvE
             {
                 switch (preset)
                 {
+                    case CustomComboPreset.SGE_ST_DPS_Opener:
+                        DrawBossOnlyChoice(SGE_Balance_Content);
+                        break;
+
                     case CustomComboPreset.SGE_ST_DPS:
                         DrawAdditionalBoolChoice(SGE_ST_DPS_Adv, $"Apply all selected options to {Dosis2.ActionName()}", $"{Dosis.ActionName()} & {Dosis3.ActionName()} will behave normally.");
                         break;

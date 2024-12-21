@@ -2,7 +2,10 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
 using System;
+using System.Collections.Generic;
 using WrathCombo.Combos.JobHelpers.Enums;
+using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -10,6 +13,14 @@ namespace WrathCombo.Combos.PvE
 {
     internal partial class RDM
     {
+        internal static RDMOpenerMaxLevel1 Opener1 = new();
+        internal static WrathOpener Opener()
+        {
+            if (Opener1.LevelChecked) return Opener1;
+
+            return WrathOpener.Dummy;
+        }
+
         private class RDMMana
         {
             private static RDMGauge Gauge => GetJobGauge<RDMGauge>();
@@ -108,7 +119,7 @@ namespace WrathCombo.Combos.PvE
                 && HasEffect(Buffs.PrefulugenceReady))
                 placeOGCD = Prefulgence;
 
-            if (CanSpellWeave(actionID) && placeOGCD != 0)
+            if (CanSpellWeave() && placeOGCD != 0)
             {
                 newActionID = placeOGCD;
                 return true;
@@ -553,7 +564,7 @@ namespace WrathCombo.Combos.PvE
                     && lastComboMove is not Verholy
                     && lastComboMove is not Scorch
                     && !WasLastAction(Embolden)
-                    && (!AoEWeave || CanSpellWeave(actionID))
+                    && (!AoEWeave || CanSpellWeave())
                     && !HasEffect(Buffs.VerfireReady)
                     && !HasEffect(Buffs.VerstoneReady)
                     && !HasEffect(Buffs.Acceleration)
@@ -710,267 +721,62 @@ namespace WrathCombo.Combos.PvE
             }
         }
 
-        internal static class RDMOpenerLogic
+        internal class RDMOpenerMaxLevel1 : WrathOpener
         {
-            private static bool HasCooldowns()
+            public override List<uint> OpenerActions { get; set; } =
+            [
+                Veraero3,
+                Verthunder3,
+                All.Swiftcast,
+                Verthunder3,
+                Fleche,
+                Acceleration,
+                Verthunder3,
+                Embolden,
+                Manafication,
+                EnchantedRiposte,
+                ContreSixte,
+                EnchantedZwerchhau,
+                Engagement,
+                EnchantedRedoublement,
+                Corpsacorps,
+                Verholy,
+                ViceOfThorns,
+                Scorch,
+                Engagement,
+                Corpsacorps,
+                Resolution,
+                Prefulgence,
+                GrandImpact,
+                Acceleration,
+                Verfire,
+                GrandImpact,
+                Verthunder3,
+                Fleche,
+                Veraero3,
+                Verfire,
+                Verthunder3,
+                Verstone,
+                Veraero3,
+                All.Swiftcast,
+                Veraero3,
+                ContreSixte
+            ];
+            public override int MinOpenerLevel => 100;
+            public override int MaxOpenerLevel => 109;
+
+            internal override UserData? ContentCheckConfig => Config.RDM_BalanceOpener_Content;
+
+            public override bool HasCooldowns()
             {
-                if (GetRemainingCharges(Acceleration) < 2)
-                    return false;
-
-                if (GetRemainingCharges(Corpsacorps) < 2)
-                    return false;
-
-                if (GetRemainingCharges(Engagement) < 2)
-                    return false;
-
-                if (!ActionReady(Embolden))
-                    return false;
-
-                if (!ActionReady(Manafication))
-                    return false;
-
-                if (!ActionReady(Fleche))
-                    return false;
-
-                if (!ActionReady(ContreSixte))
-                    return false;
-
-                if (!ActionReady(All.Swiftcast))
+                if (!ActionsReady([All.Swiftcast, Fleche, Embolden, Manafication, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
+                    GetRemainingCharges(Engagement) < 2 ||
+                    GetRemainingCharges(Corpsacorps) < 2)
                     return false;
 
                 return true;
             }
-
-            private static uint OpenerLevel => 100;
-
-            public static uint PrePullStep = 0;
-
-            public static uint OpenerStep = 0;
-
-            public static bool LevelChecked => LocalPlayer.Level >= OpenerLevel;
-
-            private static bool CanOpener => HasCooldowns() && LevelChecked;
-
-            private static OpenerState currentState = OpenerState.PrePull;
-
-            public static OpenerState CurrentState
-            {
-                get
-                {
-                    return currentState;
-                }
-                set
-                {
-                    if (value != currentState)
-                    {
-                        if (value == OpenerState.PrePull)
-                        {
-                            Svc.Log.Debug($"Entered PrePull Opener");
-                        }
-                        if (value == OpenerState.InOpener) OpenerStep = 1;
-                        if (value == OpenerState.OpenerFinished || value == OpenerState.FailedOpener)
-                        {
-                            if (value == OpenerState.FailedOpener)
-                                Svc.Log.Information($"Opener Failed at step {OpenerStep}");
-
-                            ResetOpener();
-                        }
-                        if (value == OpenerState.OpenerFinished) Svc.Log.Information("Opener Finished");
-
-                        currentState = value;
-                    }
-                }
-            }
-
-            private static bool DoPrePullSteps(ref uint actionID)
-            {
-                if (!LevelChecked)
-                    return false;
-
-                if (CanOpener && PrePullStep == 0)
-                {
-                    PrePullStep = 1;
-                }
-
-                if (!HasCooldowns())
-                {
-                    PrePullStep = 0;
-                }
-
-                if (CurrentState == OpenerState.PrePull && PrePullStep > 0)
-                {
-                    if (LocalPlayer.CastActionId == Veraero3 && PrePullStep == 1) CurrentState = OpenerState.InOpener;
-                    else if (PrePullStep == 1) actionID = Veraero3;
-
-                    if (ActionWatching.CombatActions.Count > 2 && InCombat())
-                        CurrentState = OpenerState.FailedOpener;
-
-                    return true;
-                }
-                PrePullStep = 0;
-                return false;
-            }
-
-            private static bool DoOpener(ref uint actionID)
-            {
-                if (!LevelChecked)
-                    return false;
-
-                if (currentState == OpenerState.InOpener)
-                {
-                    if (WasLastAction(Verthunder3) && OpenerStep == 1) OpenerStep++;
-                    else if (OpenerStep == 1) actionID = Verthunder3;
-
-                    if (WasLastAction(All.Swiftcast) && OpenerStep == 2) OpenerStep++;
-                    else if (OpenerStep == 2) actionID = All.Swiftcast;
-
-                    if (WasLastAction(Verthunder3) && OpenerStep == 3) OpenerStep++;
-                    else if (OpenerStep == 3) actionID = Verthunder3;
-
-                    if (WasLastAction(Fleche) && OpenerStep == 4) OpenerStep++;
-                    else if (OpenerStep == 4) actionID = Fleche;
-
-                    if (WasLastAction(Acceleration) && OpenerStep == 5) OpenerStep++;
-                    else if (OpenerStep == 5) actionID = Acceleration;
-
-                    if (WasLastAction(Verthunder3) && OpenerStep == 6) OpenerStep++;
-                    else if (OpenerStep == 6) actionID = Verthunder3;
-
-                    if (WasLastAction(Embolden) && OpenerStep == 7) OpenerStep++;
-                    else if (OpenerStep == 7) actionID = Embolden;
-
-                    if (WasLastAction(Manafication) && OpenerStep == 8) OpenerStep++;
-                    else if (OpenerStep == 8) actionID = Manafication;
-
-                    if (WasLastAction(EnchantedRiposte) && OpenerStep == 9) OpenerStep++;
-                    else if (OpenerStep == 9) actionID = EnchantedRiposte;
-
-                    if (WasLastAction(ContreSixte) && OpenerStep == 10) OpenerStep++;
-                    else if (OpenerStep == 10) actionID = ContreSixte;
-
-                    if (WasLastAction(EnchantedZwerchhau) && OpenerStep == 11) OpenerStep++;
-                    else if (OpenerStep == 11) actionID = EnchantedZwerchhau;
-
-                    if (WasLastAction(Engagement) && OpenerStep == 12) OpenerStep++;
-                    else if (OpenerStep == 12) actionID = Engagement;
-
-                    if (WasLastAction(EnchantedRedoublement) && OpenerStep == 13) OpenerStep++;
-                    else if (OpenerStep == 13) actionID = EnchantedRedoublement;
-
-                    if (WasLastAction(Corpsacorps) && OpenerStep == 14) OpenerStep++;
-                    else if (OpenerStep == 14) actionID = Corpsacorps;
-
-                    if (WasLastAction(Verholy) && OpenerStep == 15) OpenerStep++;
-                    else if (OpenerStep == 15) actionID = Verholy;
-
-                    if (WasLastAction(ViceOfThorns) && OpenerStep == 16) OpenerStep++;
-                    else if (OpenerStep == 16) actionID = ViceOfThorns;
-
-                    if (WasLastAction(Scorch) && OpenerStep == 17) OpenerStep++;
-                    else if (OpenerStep == 17) actionID = Scorch;
-
-                    if (WasLastAction(Engagement) && OpenerStep == 18) OpenerStep++;
-                    else if (OpenerStep == 18) actionID = Engagement;
-
-                    if (WasLastAction(Corpsacorps) && OpenerStep == 19) OpenerStep++;
-                    else if (OpenerStep == 19) actionID = Corpsacorps;
-
-                    if (WasLastAction(Resolution) && OpenerStep == 20) OpenerStep++;
-                    else if (OpenerStep == 20) actionID = Resolution;
-
-                    if (WasLastAction(Prefulgence) && OpenerStep == 21) OpenerStep++;
-                    else if (OpenerStep == 21) actionID = Prefulgence;
-
-                    if (WasLastAction(GrandImpact) && OpenerStep == 22) OpenerStep++;
-                    else if (OpenerStep == 22) actionID = GrandImpact;
-
-                    if (WasLastAction(Acceleration) && OpenerStep == 23) OpenerStep++;
-                    else if (OpenerStep == 23) actionID = Acceleration;
-
-                    if (WasLastAction(Verfire) && OpenerStep == 24) OpenerStep++;
-                    else if (OpenerStep == 24) actionID = Verfire;
-
-                    if (WasLastAction(GrandImpact) && OpenerStep == 25) OpenerStep++;
-                    else if (OpenerStep == 25) actionID = GrandImpact;
-
-                    if (WasLastAction(Verthunder3) && OpenerStep == 26) OpenerStep++;
-                    else if (OpenerStep == 26) actionID = Verthunder3;
-
-                    if (WasLastAction(Fleche) && OpenerStep == 27) OpenerStep++;
-                    else if (OpenerStep == 27) actionID = Fleche;
-
-                    if (WasLastAction(Veraero3) && OpenerStep == 28) OpenerStep++;
-                    else if (OpenerStep == 28) actionID = Veraero3;
-
-                    if (WasLastAction(Verfire) && OpenerStep == 29) OpenerStep++;
-                    else if (OpenerStep == 29) actionID = Verfire;
-
-                    if (WasLastAction(Verthunder3) && OpenerStep == 30) OpenerStep++;
-                    else if (OpenerStep == 30) actionID = Verthunder3;
-
-                    if (WasLastAction(Verstone) && OpenerStep == 31) OpenerStep++;
-                    else if (OpenerStep == 31) actionID = Verstone;
-
-                    if (WasLastAction(Veraero3) && OpenerStep == 32) OpenerStep++;
-                    else if (OpenerStep == 32) actionID = Veraero3;
-
-                    if (WasLastAction(All.Swiftcast) && OpenerStep == 33) OpenerStep++;
-                    else if (OpenerStep == 33) actionID = All.Swiftcast;
-
-                    if (WasLastAction(Veraero3) && OpenerStep == 34) OpenerStep++;
-                    else if (OpenerStep == 34) actionID = Veraero3;
-
-                    if (WasLastAction(ContreSixte) && OpenerStep == 35) CurrentState = OpenerState.OpenerFinished;
-                    else if (OpenerStep == 35) actionID = ContreSixte;
-
-                    if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
-                        CurrentState = OpenerState.FailedOpener;
-
-                    if (((actionID == Embolden && IsOnCooldown(Embolden)) ||
-                        (actionID == Manafication && IsOnCooldown(Manafication)) ||
-                        (actionID == Fleche && IsOnCooldown(Fleche)) ||
-                        (actionID == ContreSixte && IsOnCooldown(ContreSixte)) ||
-                        (actionID == All.Swiftcast && IsOnCooldown(All.Swiftcast)) ||
-                        (actionID == Acceleration && GetRemainingCharges(Acceleration) < 2) ||
-                        (actionID == Corpsacorps && GetRemainingCharges(Corpsacorps) < 2) ||
-                        (actionID == Engagement && GetRemainingCharges(Engagement) < 2)) && ActionWatching.TimeSinceLastAction.TotalSeconds >= 3)
-                    {
-                        CurrentState = OpenerState.FailedOpener;
-                        return false;
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            private static void ResetOpener()
-            {
-                PrePullStep = 0;
-                OpenerStep = 0;
-            }
-
-            public static bool DoFullOpener(ref uint actionID)
-            {
-                if (!LevelChecked)
-                    return false;
-
-                if (CurrentState == OpenerState.PrePull)
-                    if (DoPrePullSteps(ref actionID))
-                        return true;
-
-                if (CurrentState == OpenerState.InOpener)
-                {
-                    if (DoOpener(ref actionID))
-                        return true;
-                }
-
-                if (!InCombat())
-                {
-                    ResetOpener();
-                    CurrentState = OpenerState.PrePull;
-                }
-                return false;
-            }
         }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Utility.Raii;
+﻿using Dalamud.Interface.Components;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
@@ -133,6 +134,13 @@ namespace WrathCombo.Window.Tabs
                 if (ImGui.Checkbox($"Block spells if moving", ref Service.Configuration.BlockSpellOnMove))
                     Service.Configuration.Save();
 
+                if (ImGui.Checkbox($"Output opener status to chat", ref Service.Configuration.OutputOpenerLogs))
+                    Service.Configuration.Save();
+
+                if (ImGui.InputFloat("Movement check delay", ref Service.Configuration.MovementLeeway))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("Many features check if you are moving to decide actions. This will allow you to set a delay on how long you need to be moving before it recognizes you as moving.");
             }
         }
     }

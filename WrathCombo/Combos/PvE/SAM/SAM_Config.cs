@@ -27,7 +27,8 @@ internal partial class SAM
             SAM_ST_Higanbana_Threshold = new("SAM_ST_Higanbana_Threshold", 1),
             SAM_ST_Higanbana_Suboption = new("SAM_ST_Higanbana_Suboption"),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
-            SAM_VariantCure = new("SAM_VariantCure");
+            SAM_VariantCure = new("SAM_VariantCure"),
+            SAM_Balance_Content = new("SAM_Balance_Content", 1);
 
         public static UserBool
             SAM_Kasha_KenkiOvercap = new(nameof(SAM_Kasha_KenkiOvercap)),
@@ -40,6 +41,10 @@ internal partial class SAM
         {
             switch (preset)
             {
+                case CustomComboPreset.SAM_ST_Opener:
+                    UserConfig.DrawBossOnlyChoice(SAM_Balance_Content);
+                    break;
+
                 case CustomComboPreset.SAM_ST_CDs_Iaijutsu:
                     UserConfig.DrawSliderInt(0, 100, SAM_ST_Higanbana_Threshold,
                         "Stop using Higanbana on targets below this HP % (0% = always use).");

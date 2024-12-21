@@ -23,7 +23,8 @@ internal static partial class VPR
             VPR_ST_UncoiledFury_Threshold = new("VPR_ST_UncoiledFury_Threshold", 1),
             VPR_AoE_UncoiledFury_Threshold = new("VPR_AoE_UncoiledFury_Threshold", 1),
             VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton"),
-            VPR_VariantCure = new("VPR_VariantCure");
+            VPR_VariantCure = new("VPR_VariantCure"),
+            VPR_Balance_Content = new("VPR_Balance_Content", 1);
 
         public static UserFloat
             VPR_ST_Reawaken_Usage = new("VPR_ST_Reawaken_Usage", 2),
@@ -33,6 +34,10 @@ internal static partial class VPR
         {
             switch (preset)
             {
+                case CustomComboPreset.VPR_ST_Opener:
+                    DrawBossOnlyChoice(VPR_Balance_Content);
+                    break;
+
                 case CustomComboPreset.VPR_ST_UncoiledFury:
                     DrawSliderInt(0, 3, VPR_ST_UncoiledFury_HoldCharges,
                         "How many charges to keep ready? (0 = Use all)");

@@ -153,7 +153,7 @@ namespace WrathCombo.Window.Tabs
                                 debugSpell = null;
                             }
 
-                            var classId = CustomComboFunctions.JobIDs.JobToClass(JobID!.Value);
+                            var classId = JobIDs.JobToClass(JobID!.Value);
                             var cjc = Svc.Data.Excel.GetRawSheet("ClassJobCategory");
                             var cjcColumIdx = cjc.Columns[(int)JobID.Value];
 
@@ -179,9 +179,11 @@ namespace WrathCombo.Window.Tabs
                         if (debugSpell.Value.UnlockLink.RowId != 0)
                             CustomStyleText($"Quest:", $"{Svc.Data.GetExcelSheet<Quest>().GetRow(debugSpell.Value.UnlockLink.RowId).Name} ({(UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(debugSpell.Value.UnlockLink.RowId) ? "Completed" : "Not Completed")})");
                         CustomStyleText($"Base Recast:", $"{debugSpell.Value.Recast100ms / 10f}s");
+                        CustomStyleText($"Cooldown Total:", $"{ActionManager.Instance()->GetRecastTime(ActionType.Action, debugSpell.Value.RowId)}");
+                        CustomStyleText($"Current Cooldown:", GetCooldown(debugSpell.Value.RowId).CooldownRemaining);
                         CustomStyleText($"Current Cast Time:", ActionManager.GetAdjustedCastTime(ActionType.Action, debugSpell.Value.RowId));
                         CustomStyleText($"Max Charges:", $"{debugSpell.Value.MaxCharges}");
-                        CustomStyleText($"Range:", $"{debugSpell.Value.Range}");
+                        CustomStyleText($"Range:", $"{ActionWatching.GetActionRange(debugSpell.Value.RowId)}");
                         CustomStyleText($"Effect Range:", $"{debugSpell.Value.EffectRange}");
                         CustomStyleText($"Can Target Hostile:", $"{debugSpell.Value.CanTargetHostile}");
                         CustomStyleText($"Can Target Self:", $"{debugSpell.Value.CanTargetSelf}");
@@ -189,6 +191,7 @@ namespace WrathCombo.Window.Tabs
                         CustomStyleText($"Can Target Party:", $"{debugSpell.Value.CanTargetParty}");
                         CustomStyleText($"Can Target Area:", $"{debugSpell.Value.TargetArea}");
                         CustomStyleText($"Cast Type:", $"{debugSpell.Value.CastType}");
+                        CustomStyleText("Can Queue:", $"{ActionWatching.canQueueAction.Original(ActionManager.Instance(), 1, debugSpell.Value.RowId)}");
                         if (debugSpell.Value.EffectRange > 0)
                             CustomStyleText($"Targets Hit:", $"{NumberOfEnemiesInRange(debugSpell.Value.RowId, CurrentTarget)}");
 
@@ -220,6 +223,7 @@ namespace WrathCombo.Window.Tabs
                 CustomStyleText("Zone:", $"{Svc.Data.GetExcelSheet<TerritoryType>()?.FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType).PlaceName.Value.Name} (ID: {Svc.ClientState.TerritoryType})");
                 CustomStyleText("In PvP:", InPvP());
                 CustomStyleText("In Combat:", InCombat());
+                CustomStyleText($"Cast Time:", LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime);
                 CustomStyleText("Hitbox Radius:", LocalPlayer.HitboxRadius);
                 CustomStyleText("In FATE:", InFATE());
                 CustomStyleText("Time in Combat:", CombatEngageDuration().ToString("mm\\:ss"));
@@ -228,6 +232,9 @@ namespace WrathCombo.Window.Tabs
                 CustomStyleText("LBs Ready:", $"1.{IsLB1Ready} 2.{IsLB2Ready} 3.{IsLB3Ready}");
                 CustomStyleText("LB Level:", LimitBreakLevel);
                 CustomStyleText("LB Action:", LimitBreakAction.ActionName());
+                CustomStyleText($"Animation Lock:", ActionManager.Instance()->AnimationLock);
+                CustomStyleText($"Queued Action:", $"{ActionManager.Instance()->QueuedActionId.ActionName()}");
+                CustomStyleText($"Movement Timer:", TimeMoving.ToString("mm\\:ss\\:ff"));
                 ImGui.Spacing();
 
                 ImGui.Spacing();
@@ -383,6 +390,20 @@ namespace WrathCombo.Window.Tabs
                 if (ImGui.CollapsingHeader("Active Blue Mage Spells"))
                 {
                     ImGui.TextUnformatted($"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(x => ActionWatching.GetActionName(x)).OrderBy(x => x))}");
+                }
+
+                if (WrathOpener.CurrentOpener is not null)
+                {
+                    CustomStyleText($"Current Opener", WrathOpener.CurrentOpener?.GetType());
+                    CustomStyleText("Opener State:", WrathOpener.CurrentOpener?.CurrentState);
+                    CustomStyleText("Current Opener Action:", WrathOpener.CurrentOpener?.CurrentOpenerAction.ActionName());
+                    CustomStyleText("Current Opener Step:", WrathOpener.CurrentOpener?.OpenerStep);
+                    if (WrathOpener.CurrentOpener.OpenerActions.Count > 0)
+                    {
+                        CustomStyleText("Next Action:", WrathOpener.CurrentOpener?.OpenerActions[WrathOpener.CurrentOpener.OpenerStep].ActionName());
+                        CustomStyleText("Is Delayed Weave:", WrathOpener.CurrentOpener?.DelayedWeaveSteps.Any(x => x == WrathOpener.CurrentOpener?.OpenerStep));
+                        CustomStyleText($"Can Delayed Weave:", CanDelayedWeave(end: 0.1));
+                    }
                 }
             }
 

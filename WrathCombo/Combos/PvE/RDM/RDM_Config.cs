@@ -5,6 +5,7 @@ using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using WrathCombo.Window.Functions;
+using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -18,7 +19,8 @@ namespace WrathCombo.Combos.PvE
                 RDM_AoE_Lucid_Threshold = new("RDM_AoE_Lucid_Threshold", 6500),
                 RDM_AoE_MoulinetRange = new("RDM_MoulinetRange"),
                 RDMPvP_Burst_CorpsACorps = new("RDMPvP_Burst_CorpsACorps"),
-                RDMPvP_Burst_Displacement = new("RDMPvP_Burst_Displacement");
+                RDMPvP_Burst_Displacement = new("RDMPvP_Burst_Displacement"),
+                RDM_BalanceOpener_Content = new("RDM_BalanceOpener_Content", 1);
 
             public static UserBool
                 RDM_ST_oGCD_OnAction_Adv = new("RDM_ST_oGCD_OnAction_Adv"),
@@ -60,6 +62,10 @@ namespace WrathCombo.Combos.PvE
             {
                 switch (preset)
                 {
+                    case CustomComboPreset.RDM_Balance_Opener:
+                        DrawBossOnlyChoice(RDM_BalanceOpener_Content);
+                        break;
+
                     case CustomComboPreset.RDM_ST_oGCD:
                         DrawAdditionalBoolChoice(RDM_ST_oGCD_OnAction_Adv, "Advanced Action Options.", "Changes which action this option will replace.", isConditionalChoice: true);
                         if (RDM_ST_oGCD_OnAction_Adv)

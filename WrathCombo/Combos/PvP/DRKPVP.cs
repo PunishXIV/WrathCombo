@@ -44,7 +44,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is HardSlash or SyphonStrike or Souleater)
                 {
-                    bool canWeave = CanWeave(HardSlash);
+                    bool canWeave = CanWeave();
                     int shadowBringerThreshold = GetOptionValue(Config.ShadowbringerThreshold);
 
                     if (!PvPCommon.TargetImmuneToDamage())

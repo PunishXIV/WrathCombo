@@ -41,7 +41,7 @@ namespace WrathCombo.Combos.PvP
                             return OriginalHook(SeraphStrike);
 
                         // Weave conditions
-                        if (CanWeave(actionID))
+                        if (CanWeave())
                         {
                             // Miracle of Nature if enabled and off cooldown and inrange 
                             if (IsEnabled(CustomComboPreset.WHMPvP_Mirace_of_Nature) && IsOffCooldown(MiracleOfNature) && InActionRange(MiracleOfNature))

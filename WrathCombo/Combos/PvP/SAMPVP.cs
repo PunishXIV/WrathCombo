@@ -67,7 +67,7 @@ namespace WrathCombo.Combos.PvP
                 float targetCurrentPercentHp = GetTargetHPPercent();
                 float playerCurrentPercentHp = PlayerHealthPercentageHp();
                 uint chargesSoten = HasCharges(Soten) ? GetCooldown(Soten).RemainingCharges : 0;
-                bool isMoving = IsMoving;
+                bool isMoving = IsMoving();
                 bool inCombat = InCombat();
                 bool hasTarget = HasTarget();
                 bool inMeleeRange = targetDistance <= 5;

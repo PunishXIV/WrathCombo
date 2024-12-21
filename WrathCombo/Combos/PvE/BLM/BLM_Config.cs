@@ -23,7 +23,8 @@ internal partial class BLM
             BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 1),
             BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5),
             BLMPvP_BurstMode_WreathOfIce = new("BLMPvP_BurstMode_WreathOfIce", 0),
-            BLMPvP_BurstMode_WreathOfFireExecute = new("BLMPvP_BurstMode_WreathOfFireExecute", 0);
+            BLMPvP_BurstMode_WreathOfFireExecute = new("BLMPvP_BurstMode_WreathOfFireExecute", 0),
+            BLM_ST_Balance_Content = new("BLM_ST_Balance_Content", 1);
 
         public static UserFloat
             BLM_ST_Triplecast_ChargeTime = new("BLM_ST_Triplecast_ChargeTime", 20),
@@ -33,6 +34,9 @@ internal partial class BLM
         {
             switch (preset)
             {
+                case CustomComboPreset.BLM_ST_Opener:
+                    DrawBossOnlyChoice(BLM_ST_Balance_Content);
+                    break;
                 case CustomComboPreset.BLM_Variant_Cure:
                     DrawSliderInt(1, 100, BLM_VariantCure, "HP% to be at or under", 200);
 
