@@ -31,7 +31,7 @@ internal partial class BRD
                     break;
 
                 case CustomComboPreset.BRD_AoE_Adv_NoWaste:
-                    DrawSliderInt(1, 10, BRD_AoENoWasteHPPercentage,
+                    DrawSliderInt(1, 50, BRD_AoENoWasteHPPercentage,
                         "Remaining target HP percentage");
 
                     break;
