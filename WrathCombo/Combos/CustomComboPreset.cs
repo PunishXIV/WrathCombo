@@ -2861,6 +2861,10 @@ public enum CustomComboPreset
     MNK_AoEUseMeditation = 9028,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
+    [CustomComboInfo("Form Shift Option", "Adds Form Shift to the rotation", MNK.JobID)]
+    MNK_AoEUseFormShift = 9038,
+
+    [ParentCombo(MNK_AOE_AdvancedMode)]
     [CustomComboInfo("Buffs Option", "Adds selected buffs to the rotation", MNK.JobID)]
     MNK_AoEUseBuffs = 9029,
 
