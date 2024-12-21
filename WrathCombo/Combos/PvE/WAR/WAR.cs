@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -364,6 +365,13 @@ namespace WrathCombo.Combos.PvE
                             return OriginalHook(RawIntuition);
                     }
                     #endregion
+
+                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_BalanceOpener) && 
+                        ContentCheck.IsInConfiguredContent(Config.WAR_BalanceOpener_Content, ContentCheck.ListSet.BossOnly))
+                    {
+                        if (Opener().FullOpener(ref actionID))
+                            return actionID;
+                    }
 
                     if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_RangedUptime) && //Ranged uptime option is enabled
                         LevelChecked(Tomahawk) && //Tomahawk is available

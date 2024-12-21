@@ -78,7 +78,7 @@ namespace WrathCombo.Combos.PvP
                 float targetCurrentPercentHp = GetTargetHPPercent();
                 float playerCurrentPercentHp = PlayerHealthPercentageHp();
                 uint chargesXenoglossy = HasCharges(Xenoglossy) ? GetCooldown(Xenoglossy).RemainingCharges : 0;
-                bool isMoving = IsMoving;
+                bool isMoving = IsMoving();
                 bool inCombat = InCombat();
                 bool hasTarget = HasTarget();
                 bool isTargetNPC = HasBattleTarget();

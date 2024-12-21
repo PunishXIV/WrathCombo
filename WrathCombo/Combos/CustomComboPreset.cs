@@ -5881,6 +5881,10 @@ public enum CustomComboPreset
     WAR_ST_Advanced = 18002,
 
     [ParentCombo(WAR_ST_Advanced)]
+    [CustomComboInfo("Balance Opener", "Adds the Balance Opener at Level 100.", WAR.JobID)]
+    WAR_ST_Advanced_BalanceOpener = 18058,
+
+    [ParentCombo(WAR_ST_Advanced)]
     [CustomComboInfo("Storm's Eye Option", "Adds Storms Eye into the rotation.", WAR.JobID)]
     WAR_ST_Advanced_StormsEye = 18005,
 
@@ -6165,7 +6169,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 18056
+    // Last value = 18058
 
     #endregion
 
