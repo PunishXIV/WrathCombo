@@ -254,8 +254,9 @@ namespace WrathCombo.CustomComboNS.Functions
             bool inSlidecast = (LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime) <= 0.4f;
             bool animLocked = ActionManager.Instance()->AnimationLock > 0;
             bool recast = GetCooldown(actionID).CooldownRemaining <= 0.4f || GetCooldown(actionID).RemainingCharges > 0;
+            bool classCheck = ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) != 574;
 
-            var ret = original && !alreadyQueued && inSlidecast && !animLocked && recast;
+            var ret = original && !alreadyQueued && inSlidecast && !animLocked && recast && classCheck;
 
             return ret || ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) == 0;
         }

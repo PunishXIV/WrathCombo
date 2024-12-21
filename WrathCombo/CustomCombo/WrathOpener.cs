@@ -98,7 +98,12 @@ namespace WrathCombo.CustomComboNS
 
         public virtual List<int> DelayedWeaveSteps { get; set; } = new List<int>();
 
-        public virtual List<(int[] Steps, uint NewAction, Func<bool> Condition)> ProcSteps { get; set; } = new();
+        public virtual List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } = new();
+
+        public virtual List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } = new();
+
+        private int DelayedStep = 0;
+        private DateTime DelayedAt;
 
         public uint CurrentOpenerAction { get; set; }
 
@@ -137,7 +142,7 @@ namespace WrathCombo.CustomComboNS
                     return false;
                 }
 
-                if (OpenerStep > 1 && ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
+                if (OpenerStep > 1 && ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !PrepullDelays.Any(x => x.Steps.Any(y => y == OpenerStep)))
                 {
                     CurrentState = OpenerState.FailedOpener;
                     return false;
@@ -158,16 +163,32 @@ namespace WrathCombo.CustomComboNS
                     }
                 }
 
-                foreach (var (Steps, NewAction, Condition) in ProcSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
+                foreach (var (Steps, NewAction, Condition) in SubstitutionSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
                 {
                     if (Condition())
                     {
                         CurrentOpenerAction = actionID = NewAction;
                         return true;
                     }
+                    else
+                        CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                 }
 
-                CurrentOpenerAction = OpenerActions[OpenerStep - 1];
+                foreach (var (Steps, HoldDelay) in PrepullDelays.Where(x => x.Steps.Any(y => y == OpenerStep)))
+                {
+                    if (DelayedStep != OpenerStep)
+                    {
+                        DelayedAt = DateTime.Now;
+                        DelayedStep = OpenerStep;
+                    }
+
+                    if ((DateTime.Now - DelayedAt).TotalSeconds < HoldDelay && !CustomComboFunctions.InCombat())
+                    {
+                        actionID = 11;
+                        return true;
+                    }
+                }
+
                 actionID = CurrentOpenerAction;
                 return true;
 
@@ -179,6 +200,7 @@ namespace WrathCombo.CustomComboNS
         public void ResetOpener()
         {
             Svc.Log.Debug($"Opener Reset");
+            DelayedStep = 0;
             OpenerStep = 0;
             CurrentOpenerAction = 0;
             CurrentState = OpenerState.OpenerNotReady;

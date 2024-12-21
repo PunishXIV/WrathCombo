@@ -1,13 +1,24 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using ECommons.GameFunctions;
+﻿#region
+
+using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 using WrathCombo.Services;
 
-namespace WrathCombo.Combos.PvE
-{
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable CheckNamespace
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberHidesStaticFromOuterClass
+
+#endregion
+
+namespace WrathCombo.Combos.PvE;
+
     internal partial class DNC
     {
+
         public const byte JobID = 38;
 
         #region Actions
@@ -36,6 +47,10 @@ namespace WrathCombo.Combos.PvE
             TechnicalFinish2 = 16194,
             TechnicalFinish3 = 16195,
             TechnicalFinish4 = 16196,
+            Emboite = 15999,
+            Entrechat = 16000,
+            Jete = 16001,
+            Pirouette = 16002,
             // Fan Dances
             FanDance1 = 16007,
             FanDance2 = 16008,
@@ -60,7 +75,7 @@ namespace WrathCombo.Combos.PvE
         public static class Buffs
         {
             public const ushort
-                // Flourishing & Silken (Procs)
+                // Flourishing & Silken (procs)
                 FlourishingCascade = 1814,
                 FlourishingFountain = 1815,
                 FlourishingWindmill = 1816,
@@ -82,7 +97,7 @@ namespace WrathCombo.Combos.PvE
                 FourFoldFanDance = 2699,
                 // Other
                 Peloton = 1199,
-                ClosedPosition = 1823, 
+                ClosedPosition = 1823,
                 ShieldSamba = 1826,
                 LastDanceReady = 3867,
                 FinishingMoveReady = 3868,
@@ -92,21 +107,32 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_DanceComboReplacer : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_DanceComboReplacer;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_DanceComboReplacer;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 if (GetJobGauge<DNCGauge>().IsDancing)
                 {
-                    uint[]? actionIDs = Service.Configuration.DancerDanceCompatActionIDs;
+                    uint[] actionIDs =
+                        Service.Configuration.DancerDanceCompatActionIDs;
 
-                    if (actionID == actionIDs[0] || (actionIDs[0] == 0 && actionID == Cascade))     // Cascade replacement
+                    if (actionID == actionIDs[0] ||
+                        (actionIDs[0] == 0 &&
+                         actionID == Cascade)) // Cascade replacement
                         return OriginalHook(Cascade);
-                    if (actionID == actionIDs[1] || (actionIDs[1] == 0 && actionID == Flourish))    // Fountain replacement
+                    if (actionID == actionIDs[1] ||
+                        (actionIDs[1] == 0 &&
+                         actionID == Flourish)) // Fountain replacement
                         return OriginalHook(Fountain);
-                    if (actionID == actionIDs[2] || (actionIDs[2] == 0 && actionID == FanDance1))   // Reverse Cascade replacement
+                    if (actionID == actionIDs[2] ||
+                        (actionIDs[2] == 0 &&
+                         actionID == FanDance1)) // Reverse Cascade replacement
                         return OriginalHook(ReverseCascade);
-                    if (actionID == actionIDs[3] || (actionIDs[3] == 0 && actionID == FanDance2))   // Fountainfall replacement
+                    if (actionID == actionIDs[3] ||
+                        (actionIDs[3] == 0 &&
+                         actionID == FanDance2)) // Fountainfall replacement
                         return OriginalHook(Fountainfall);
                 }
 
@@ -116,9 +142,11 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_FanDanceCombos : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_FanDanceCombos;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_FanDanceCombos;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 // FD 1 --> 3, FD 1 --> 4
                 if (actionID is FanDance1)
@@ -148,22 +176,24 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_DanceStepCombo : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_DanceStepCombo;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_DanceStepCombo;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
-                DNCGauge? gauge = GetJobGauge<DNCGauge>();
-
                 // Standard Step
-                if (actionID is StandardStep && gauge.IsDancing && HasEffect(Buffs.StandardStep))
-                    return gauge.CompletedSteps < 2
-                        ? gauge.NextStep
+                if (actionID is StandardStep && Gauge.IsDancing &&
+                    HasEffect(Buffs.StandardStep))
+                    return Gauge.CompletedSteps < 2
+                        ? Gauge.NextStep
                         : StandardFinish2;
 
                 // Technical Step
-                if (actionID is TechnicalStep && gauge.IsDancing && HasEffect(Buffs.TechnicalStep))
-                    return gauge.CompletedSteps < 4
-                        ? gauge.NextStep
+                if (actionID is TechnicalStep && Gauge.IsDancing &&
+                    HasEffect(Buffs.TechnicalStep))
+                    return Gauge.CompletedSteps < 4
+                        ? Gauge.NextStep
                         : TechnicalFinish4;
 
                 return actionID;
@@ -172,12 +202,14 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_FlourishingFanDances : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_FlourishingFanDances;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_FlourishingFanDances;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 // Fan Dance 3 & 4 on Flourish
-                if (actionID is Flourish && CanWeave())
+                if (actionID is Flourish && CanWeave(actionID))
                 {
                     if (HasEffect(Buffs.ThreeFoldFanDance))
                         return FanDance3;
@@ -191,9 +223,11 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_Starfall_Devilment : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_Starfall_Devilment;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_Starfall_Devilment;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level) =>
                 actionID is Devilment && HasEffect(Buffs.FlourishingStarfall)
                     ? StarfallDance
                     : actionID;
@@ -201,9 +235,11 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_StandardStep_LastDance : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_StandardStep_LastDance;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_StandardStep_LastDance;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level) =>
                 actionID is StandardStep or FinishingMove &&
                 HasEffect(Buffs.LastDanceReady)
                     ? LastDance
@@ -212,9 +248,11 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_TechnicalStep_Devilment : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_TechnicalStep_Devilment;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_TechnicalStep_Devilment;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) =>
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level) =>
                 actionID is TechnicalStep &&
                 WasLastWeaponskill(TechnicalFinish4) &&
                 HasEffect(Buffs.TechnicalFinish)
@@ -224,17 +262,20 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_ST_AdvancedMode : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_ST_AdvancedMode;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_ST_AdvancedMode;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 if (actionID is not Cascade) return actionID;
 
                 #region Variables
-                DNCGauge? gauge = GetJobGauge<DNCGauge>();
 
-                var flow = HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow);
-                var symmetry = HasEffect(Buffs.SilkenSymmetry) || HasEffect(Buffs.FlourishingSymmetry);
+                var flow = HasEffect(Buffs.SilkenFlow) ||
+                           HasEffect(Buffs.FlourishingFlow);
+                var symmetry = HasEffect(Buffs.SilkenSymmetry) ||
+                               HasEffect(Buffs.FlourishingSymmetry);
                 var targetHpThresholdFeather = Config.DNC_ST_Adv_FeatherBurstPercent;
                 var targetHpThresholdStandard = Config.DNC_ST_Adv_SSBurstPercent;
                 var targetHpThresholdTechnical = Config.DNC_ST_Adv_TSBurstPercent;
@@ -243,27 +284,29 @@ namespace WrathCombo.Combos.PvE
                 // Thresholds to wait for TS/SS to come off CD
                 var longAlignmentThreshold = 0.6f;
                 var shortAlignmentThreshold = 0.3f;
-                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Flourish_ForcedTripleWeave))
+                if (Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.TripleWeave)
                 {
                     longAlignmentThreshold = 0.3f;
                     shortAlignmentThreshold = 0.1f;
                 }
 
                 var needToTech =
-                    IsEnabled(CustomComboPreset.DNC_ST_Adv_TS) && // Enabled
-                    GetCooldownRemainingTime(TechnicalStep) < longAlignmentThreshold && // Up or about to be (some anti-drift)
+                    IsEnabled(CustomComboPreset.DNC_ST_Adv_TS) &&
+                    Config.DNC_ST_ADV_TS_IncludeTS == (int)Config.IncludeStep.Yes &&
+                    GetCooldownRemainingTime(TechnicalStep) <
+                    longAlignmentThreshold && // Up or about to be (some anti-drift)
                     !HasEffect(Buffs.StandardStep) && // After Standard
                     IsOnCooldown(StandardStep) &&
-                    GetTargetHPPercent() > targetHpThresholdTechnical &&// HP% check
+                    GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                     LevelChecked(TechnicalStep);
 
                 var needToStandardOrFinish =
-                    IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) && // Enabled
+                    IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
                     GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
                     LevelChecked(StandardStep);
 
                 // More Threshold, but only for SS
-                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Hold))
+                if (Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Hold)
                 {
                     longAlignmentThreshold = gcd;
                     shortAlignmentThreshold = gcd;
@@ -272,35 +315,60 @@ namespace WrathCombo.Combos.PvE
                 var needToFinish =
                     HasEffect(Buffs.FinishingMoveReady) &&
                     !HasEffect(Buffs.LastDanceReady) &&
-                    ((GetCooldownRemainingTime(StandardStep) < longAlignmentThreshold && // About to be up - some more aggressive anti-drift
+                    ((GetCooldownRemainingTime(StandardStep) <
+                      longAlignmentThreshold && // About to be up - some more aggressive anti-drift
                       HasEffect(Buffs.TechnicalFinish)) ||
-                     (!HasEffect(Buffs.TechnicalFinish) && // Anti-Drift outside of Tech
-                      GetCooldownRemainingTime(StandardStep) < shortAlignmentThreshold));
+                     (!HasEffect(Buffs
+                          .TechnicalFinish) && // Anti-Drift outside of Tech
+                      GetCooldownRemainingTime(StandardStep) <
+                      shortAlignmentThreshold));
 
                 var needToStandard =
-                    GetCooldownRemainingTime(StandardStep) < longAlignmentThreshold && // Up or about to be (some anti-drift)
+                    Config.DNC_ST_ADV_SS_IncludeSS == (int)Config.IncludeStep.Yes &&
+                    GetCooldownRemainingTime(StandardStep) <
+                    longAlignmentThreshold && // Up or about to be (some anti-drift)
                     !HasEffect(Buffs.FinishingMoveReady) &&
                     (IsOffCooldown(Flourish) ||
                      GetCooldownRemainingTime(Flourish) > 5) &&
                     !HasEffect(Buffs.TechnicalFinish);
+
+            #endregion
+
+                #region Opener
+
+                // Opener
+                var inOpenerContent =
+                    ContentCheck.IsInConfiguredContent(
+                        Config.DNC_ST_OpenerDifficulty,
+                        Config.DNC_ST_OpenerDifficultyListSet
+                    );
+                var shouldOpen = inOpenerContent &&
+                                 IsEnabled(CustomComboPreset.DNC_ST_BalanceOpener);
+                if (shouldOpen && Opener().FullOpener(ref actionID))
+                    return actionID;
+
                 #endregion
 
                 #region Pre-pull
 
-                if (!InCombat() && TargetIsHostile())
+            if (!InCombat() && TargetIsHostile())
                 {
                     // Dance Partner
                     if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Partner) &&
                         ActionReady(ClosedPosition) &&
                         !HasEffect(Buffs.ClosedPosition) &&
                         (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                        !(Service.Configuration.AutoActions[CustomComboPreset.DNC_ST_AdvancedMode] &&
-                          Service.Configuration.RotationConfig.Enabled)) // Disabled in Auto-Rotation
+                        !(Service.Configuration.AutoActions[
+                              CustomComboPreset.DNC_ST_AdvancedMode] &&
+                          Service.Configuration.RotationConfig
+                              .Enabled)) // Disabled in Auto-Rotation
                         // todo: do not disable for auto-rotation, provide targeting
                         return ClosedPosition;
 
                     // ST Standard Step (Pre-pull)
-                    if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull) &&
+                    if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
+                        IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull) &&
+                        Config.DNC_ST_ADV_SS_IncludeSS == (int)Config.IncludeStep.Yes &&
                         ActionReady(StandardStep) &&
                         !HasEffect(Buffs.FinishingMoveReady) &&
                         !HasEffect(Buffs.TechnicalFinish) &&
@@ -309,12 +377,11 @@ namespace WrathCombo.Combos.PvE
                         return StandardStep;
 
                     // ST Standard Steps (Pre-pull)
-                    if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) ||
-                         IsEnabled(CustomComboPreset.DNC_ST_Adv_StandardFill) ||
+                    if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
                          IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull)) &&
                         HasEffect(Buffs.StandardStep) &&
-                        gauge.CompletedSteps < 2)
-                        return gauge.NextStep;
+                        Gauge.CompletedSteps < 2)
+                        return Gauge.NextStep;
 
                     // ST Peloton
                     if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Peloton) &&
@@ -322,29 +389,32 @@ namespace WrathCombo.Combos.PvE
                         GetBuffRemainingTime(Buffs.StandardStep) > 5)
                         return Peloton;
                 }
+
                 #endregion
 
                 #region Dance Fills
+
                 // ST Standard (Dance) Steps & Fill
-                if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) ||
-                     IsEnabled(CustomComboPreset.DNC_ST_Adv_StandardFill)) &&
+                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
                     HasEffect(Buffs.StandardStep))
-                    return gauge.CompletedSteps < 2
-                        ? gauge.NextStep
+                    return Gauge.CompletedSteps < 2
+                        ? Gauge.NextStep
                         : StandardFinish2;
 
                 // ST Technical (Dance) Steps & Fill
-                if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_TS) || IsEnabled(CustomComboPreset.DNC_ST_Adv_TechFill)) &&
+                if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_TS)) &&
                     HasEffect(Buffs.TechnicalStep))
-                    return gauge.CompletedSteps < 4
-                        ? gauge.NextStep
+                    return Gauge.CompletedSteps < 4
+                        ? Gauge.NextStep
                         : TechnicalFinish4;
+
                 #endregion
 
                 #region Weaves
+
                 // ST Devilment
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Devilment) &&
-                    CanWeave() &&
+                    CanWeave(actionID) &&
                     LevelChecked(Devilment) &&
                     GetCooldownRemainingTime(Devilment) < 0.05 &&
                     (HasEffect(Buffs.TechnicalFinish) ||
@@ -354,7 +424,7 @@ namespace WrathCombo.Combos.PvE
 
                 // ST Flourish
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Flourish) &&
-                    CanWeave() &&
+                    CanWeave(actionID) &&
                     ActionReady(Flourish) &&
                     !WasLastWeaponskill(TechnicalFinish4) &&
                     IsOnCooldown(Devilment) &&
@@ -371,21 +441,22 @@ namespace WrathCombo.Combos.PvE
                      CombatEngageDuration().TotalSeconds > 20))
                     return Flourish;
 
-                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Flourish_ForcedTripleWeave) &&
+                if (Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.TripleWeave &&
                     (HasEffect(Buffs.ThreeFoldFanDance) ||
                      HasEffect(Buffs.FourFoldFanDance)) &&
-                     CombatEngageDuration().TotalSeconds > 20 &&
-                     HasEffect(Buffs.TechnicalFinish) && 
-                     GetCooldownRemainingTime(Flourish) > 58)
+                    CombatEngageDuration().TotalSeconds > 20 &&
+                    HasEffect(Buffs.TechnicalFinish) &&
+                    GetCooldownRemainingTime(Flourish) > 58)
                 {
-                    if (HasEffect(Buffs.ThreeFoldFanDance) && CanDelayedWeave())
+                    if (HasEffect(Buffs.ThreeFoldFanDance) &&
+                        CanDelayedWeave(actionID))
                         return FanDance3;
                     if (HasEffect(Buffs.FourFoldFanDance))
                         return FanDance4;
                 }
 
                 // ST Interrupt
-                    if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Interrupt) &&
+                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Interrupt) &&
                     CanInterruptEnemy() &&
                     ActionReady(All.HeadGraze) &&
                     !HasEffect(Buffs.TechnicalFinish))
@@ -394,17 +465,18 @@ namespace WrathCombo.Combos.PvE
                 // Variant Cure
                 if (IsEnabled(CustomComboPreset.DNC_Variant_Cure) &&
                     IsEnabled(Variant.VariantCure) &&
-                    PlayerHealthPercentageHp() <= GetOptionValue(Config.DNCVariantCurePercent))
+                    PlayerHealthPercentageHp() <=
+                    GetOptionValue(Config.DNCVariantCurePercent))
                     return Variant.VariantCure;
 
                 // Variant Rampart
                 if (IsEnabled(CustomComboPreset.DNC_Variant_Rampart) &&
                     IsEnabled(Variant.VariantRampart) &&
                     IsOffCooldown(Variant.VariantRampart) &&
-                    CanWeave())
+                    CanWeave(actionID))
                     return Variant.VariantRampart;
 
-                if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
+                if (CanWeave(actionID) && !WasLastWeaponskill(TechnicalFinish4))
                 {
                     if (HasEffect(Buffs.ThreeFoldFanDance))
                         return FanDance3;
@@ -417,26 +489,28 @@ namespace WrathCombo.Combos.PvE
                         LevelChecked(FanDance1))
                     {
                         // FD1 HP% Dump
-                        if (GetTargetHPPercent() <= targetHpThresholdFeather && gauge.Feathers > 0)
+                        if (GetTargetHPPercent() <= targetHpThresholdFeather &&
+                            Gauge.Feathers > 0)
                             return FanDance1;
 
                         if (LevelChecked(TechnicalStep))
                         {
                             // Burst FD1
-                            if (HasEffect(Buffs.TechnicalFinish) && gauge.Feathers > 0)
+                            if (HasEffect(Buffs.TechnicalFinish) &&
+                                Gauge.Feathers > 0)
                                 return FanDance1;
 
                             // FD1 Pooling
-                            if (gauge.Feathers > 3 &&
+                            if (Gauge.Feathers > 3 &&
                                 (HasEffect(Buffs.SilkenSymmetry) ||
                                  HasEffect(Buffs.SilkenFlow))
-                                )
+                               )
 
                                 return FanDance1;
                         }
 
                         // FD1 Non-pooling & under burst level
-                        if (!LevelChecked(TechnicalStep) && gauge.Feathers > 0)
+                        if (!LevelChecked(TechnicalStep) && Gauge.Feathers > 0)
                             return FanDance1;
                     }
 
@@ -444,11 +518,13 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.DNC_ST_Adv_PanicHeals))
                     {
                         if (ActionReady(CuringWaltz) &&
-                            PlayerHealthPercentageHp() < Config.DNC_ST_Adv_PanicHealWaltzPercent)
+                            PlayerHealthPercentageHp() <
+                            Config.DNC_ST_Adv_PanicHealWaltzPercent)
                             return CuringWaltz;
 
                         if (ActionReady(All.SecondWind) &&
-                            PlayerHealthPercentageHp() < Config.DNC_ST_Adv_PanicHealWindPercent)
+                            PlayerHealthPercentageHp() <
+                            Config.DNC_ST_Adv_PanicHealWindPercent)
                             return All.SecondWind;
                     }
 
@@ -459,9 +535,11 @@ namespace WrathCombo.Combos.PvE
                         InCombat())
                         return Improvisation;
                 }
+
                 #endregion
 
                 #region GCD
+
                 // ST Technical Step
                 if (needToTech)
                     return TechnicalStep;
@@ -472,8 +550,10 @@ namespace WrathCombo.Combos.PvE
                     (HasEffect(Buffs.TechnicalFinish) || // Has Tech
                      !(IsOnCooldown(TechnicalStep) && // Or can't hold it for tech
                        GetCooldownRemainingTime(TechnicalStep) < 20 &&
-                       GetBuffRemainingTime(Buffs.LastDanceReady) > GetCooldownRemainingTime(TechnicalStep) + 4) ||
-                     GetBuffRemainingTime(Buffs.LastDanceReady) < 4)) // Or last second
+                       GetBuffRemainingTime(Buffs.LastDanceReady) >
+                       GetCooldownRemainingTime(TechnicalStep) + 4) ||
+                     GetBuffRemainingTime(Buffs.LastDanceReady) <
+                     4)) // Or last second
                     return LastDance;
 
                 // ST Standard Step (Finishing Move)
@@ -495,20 +575,26 @@ namespace WrathCombo.Combos.PvE
                     LevelChecked(DanceOfTheDawn) &&
                     (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                      IsOffCooldown(TechnicalStep)) && // Tech is up
-                    (gauge.Esprit >= Config.DNC_ST_Adv_SaberThreshold || // above esprit threshold use
+                    (Gauge.Esprit >=
+                     Config
+                         .DNC_ST_Adv_SaberThreshold || // above esprit threshold use
                      (HasEffect(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
                       IsNotEnabled(CustomComboPreset.DNC_ST_Adv_TillanaOverEsprit) &&
-                      gauge.Esprit >= 50) ||
-                     (GetBuffRemainingTime(Buffs.DanceOfTheDawnReady) < 5 && gauge.Esprit >= 50))) // emergency use
+                      Gauge.Esprit >= 50) ||
+                     (GetBuffRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
+                      Gauge.Esprit >= 50))) // emergency use
                     return OriginalHook(DanceOfTheDawn);
 
                 // ST Saber Dance (Emergency Use)
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SaberDance) &&
                     LevelChecked(SaberDance) &&
-                    (gauge.Esprit >= Config.DNC_ST_Adv_SaberThreshold || // above esprit threshold use
-                     (HasEffect(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
+                    (Gauge.Esprit >=
+                     Config
+                         .DNC_ST_Adv_SaberThreshold || // above esprit threshold use
+                     (HasEffect(Buffs
+                          .TechnicalFinish) && // will overcap with Tillana if not used
                       IsNotEnabled(CustomComboPreset.DNC_ST_Adv_TillanaOverEsprit) &&
-                      gauge.Esprit >= 50)))
+                      Gauge.Esprit >= 50)))
                     return LevelChecked(DanceOfTheDawn) &&
                            HasEffect(Buffs.DanceOfTheDawnReady)
                         ? OriginalHook(DanceOfTheDawn)
@@ -525,8 +611,10 @@ namespace WrathCombo.Combos.PvE
                 // ST Saber Dance
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SaberDance) &&
                     LevelChecked(SaberDance) &&
-                    gauge.Esprit >= Config.DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
-                    (HasEffect(Buffs.TechnicalFinish) && gauge.Esprit >= 50) && // Burst
+                    Gauge.Esprit >=
+                    Config.DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
+                    (HasEffect(Buffs.TechnicalFinish) &&
+                     Gauge.Esprit >= 50) && // Burst
                     (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                      IsOffCooldown(TechnicalStep))) // Tech is up
                     return SaberDance;
@@ -541,8 +629,10 @@ namespace WrathCombo.Combos.PvE
                     return Fountainfall;
                 if (LevelChecked(ReverseCascade) && symmetry)
                     return ReverseCascade;
-                if (LevelChecked(Fountain) && lastComboMove is Cascade && comboTime > 0)
+                if (LevelChecked(Fountain) && lastComboMove is Cascade &&
+                    comboTime > 0)
                     return Fountain;
+
                 #endregion
 
                 return actionID;
@@ -551,35 +641,41 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_ST_MultiButton : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_ST_MultiButton;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_ST_MultiButton;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 if (actionID is Cascade)
                 {
                     #region Types
-                    DNCGauge? gauge = GetJobGauge<DNCGauge>();
-                    bool flow = HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow);
-                    bool symmetry = HasEffect(Buffs.SilkenSymmetry) || HasEffect(Buffs.FlourishingSymmetry);
+
+                    bool flow = HasEffect(Buffs.SilkenFlow) ||
+                                HasEffect(Buffs.FlourishingFlow);
+                    bool symmetry = HasEffect(Buffs.SilkenSymmetry) ||
+                                    HasEffect(Buffs.FlourishingSymmetry);
+
                     #endregion
 
                     // ST Esprit overcap protection
                     if (IsEnabled(CustomComboPreset.DNC_ST_EspritOvercap) &&
                         LevelChecked(DanceOfTheDawn) &&
                         HasEffect(Buffs.DanceOfTheDawnReady) &&
-                        gauge.Esprit >= Config.DNCEspritThreshold_ST)
+                        Gauge.Esprit >= Config.DNCEspritThreshold_ST)
                         return OriginalHook(DanceOfTheDawn);
                     if (IsEnabled(CustomComboPreset.DNC_ST_EspritOvercap) &&
                         LevelChecked(SaberDance) &&
-                        gauge.Esprit >= Config.DNCEspritThreshold_ST)
+                        Gauge.Esprit >= Config.DNCEspritThreshold_ST)
                         return SaberDance;
 
-                    if (CanWeave())
+                    if (CanWeave(actionID))
                     {
                         // ST Fan Dance overcap protection
                         if (IsEnabled(CustomComboPreset.DNC_ST_FanDanceOvercap) &&
-                            LevelChecked(FanDance1) && gauge.Feathers is 4 && (HasEffect(Buffs.SilkenSymmetry) ||
-                            HasEffect(Buffs.SilkenFlow)))
+                            LevelChecked(FanDance1) && Gauge.Feathers is 4 &&
+                            (HasEffect(Buffs.SilkenSymmetry) ||
+                             HasEffect(Buffs.SilkenFlow)))
                             return FanDance1;
 
                         // ST Fan Dance 3/4 on combo
@@ -607,22 +703,26 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_AoE_AdvancedMode : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_AoE_AdvancedMode;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_AoE_AdvancedMode;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 if (actionID is not Windmill) return actionID;
 
                 #region Variables
-                DNCGauge? gauge = GetJobGauge<DNCGauge>();
 
-                bool flow = HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow);
-                bool symmetry = HasEffect(Buffs.SilkenSymmetry) || HasEffect(Buffs.FlourishingSymmetry);
+                bool flow = HasEffect(Buffs.SilkenFlow) ||
+                            HasEffect(Buffs.FlourishingFlow);
+                bool symmetry = HasEffect(Buffs.SilkenSymmetry) ||
+                                HasEffect(Buffs.FlourishingSymmetry);
                 var targetHpThresholdStandard = Config.DNC_AoE_Adv_SSBurstPercent;
                 var targetHpThresholdTechnical = Config.DNC_AoE_Adv_TSBurstPercent;
 
                 var needToTech =
-                    IsEnabled(CustomComboPreset.DNC_AoE_Adv_TS) && // Enabled
+                    IsEnabled(CustomComboPreset.DNC_AoE_Adv_TS) &&
+                    Config.DNC_AoE_Adv_TS_IncludeTS == (int)Config.IncludeStep.Yes &&
                     ActionReady(TechnicalStep) && // Up
                     !HasEffect(Buffs.StandardStep) && // After Standard
                     IsOnCooldown(StandardStep) &&
@@ -642,10 +742,12 @@ namespace WrathCombo.Combos.PvE
                     !HasEffect(Buffs.LastDanceReady);
 
                 var needToStandard =
+                    Config.DNC_AoE_Adv_SS_IncludeSS == (int)Config.IncludeStep.Yes &&
                     !HasEffect(Buffs.FinishingMoveReady) &&
                     (IsOffCooldown(Flourish) ||
                      GetCooldownRemainingTime(Flourish) > 5) &&
                     !HasEffect(Buffs.TechnicalFinish);
+
                 #endregion
 
                 #region Prepull
@@ -657,35 +759,38 @@ namespace WrathCombo.Combos.PvE
                     ActionReady(ClosedPosition) &&
                     !HasEffect(Buffs.ClosedPosition) &&
                     (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                    !(Service.Configuration.AutoActions[CustomComboPreset.DNC_AoE_AdvancedMode] &&
-                      Service.Configuration.RotationConfig.Enabled)) // Disabled in Auto-Rotation
+                    !(Service.Configuration.AutoActions[
+                          CustomComboPreset.DNC_AoE_AdvancedMode] &&
+                      Service.Configuration.RotationConfig
+                          .Enabled)) // Disabled in Auto-Rotation
                     // todo: do not disable for auto-rotation, provide targeting
                     return ClosedPosition;
 
                 #endregion
 
                 #region Dance Fills
+
                 // AoE Standard (Dance) Steps & Fill
-                if ((IsEnabled(CustomComboPreset.DNC_AoE_Adv_SS) ||
-                     IsEnabled(CustomComboPreset.DNC_AoE_Adv_StandardFill)) &&
+                if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_SS) &&
                     HasEffect(Buffs.StandardStep))
-                    return gauge.CompletedSteps < 2
-                        ? gauge.NextStep
+                    return Gauge.CompletedSteps < 2
+                        ? Gauge.NextStep
                         : StandardFinish2;
 
                 // AoE Technical (Dance) Steps & Fill
-                if ((IsEnabled(CustomComboPreset.DNC_AoE_Adv_TS) ||
-                     IsEnabled(CustomComboPreset.DNC_AoE_Adv_TechFill)) &&
+                if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_TS) &&
                     HasEffect(Buffs.TechnicalStep))
-                    return gauge.CompletedSteps < 4
-                        ? gauge.NextStep
+                    return Gauge.CompletedSteps < 4
+                        ? Gauge.NextStep
                         : TechnicalFinish4;
+
                 #endregion
 
                 #region Weaves
+
                 // AoE Devilment
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Devilment) &&
-                    CanWeave() &&
+                    CanWeave(actionID) &&
                     LevelChecked(Devilment) &&
                     GetCooldownRemainingTime(Devilment) < 0.05 &&
                     (HasEffect(Buffs.TechnicalFinish) ||
@@ -695,7 +800,7 @@ namespace WrathCombo.Combos.PvE
 
                 // AoE Flourish
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Flourish) &&
-                    CanWeave() &&
+                    CanWeave(actionID) &&
                     ActionReady(Flourish) &&
                     !WasLastWeaponskill(TechnicalFinish4) &&
                     IsOnCooldown(Devilment) &&
@@ -717,16 +822,17 @@ namespace WrathCombo.Combos.PvE
 
                 if (IsEnabled(CustomComboPreset.DNC_Variant_Cure) &&
                     IsEnabled(Variant.VariantCure) &&
-                    PlayerHealthPercentageHp() <= GetOptionValue(Config.DNCVariantCurePercent))
+                    PlayerHealthPercentageHp() <=
+                    GetOptionValue(Config.DNCVariantCurePercent))
                     return Variant.VariantCure;
 
                 if (IsEnabled(CustomComboPreset.DNC_Variant_Rampart) &&
                     IsEnabled(Variant.VariantRampart) &&
                     IsOffCooldown(Variant.VariantRampart) &&
-                    CanWeave())
+                    CanWeave(actionID))
                     return Variant.VariantRampart;
 
-                if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
+                if (CanWeave(actionID) && !WasLastWeaponskill(TechnicalFinish4))
                 {
                     // AoE Feathers & Fans
                     if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Feathers) &&
@@ -742,11 +848,11 @@ namespace WrathCombo.Combos.PvE
                             {
                                 // Burst FD2
                                 if (HasEffect(Buffs.TechnicalFinish) &&
-                                    gauge.Feathers > 0)
+                                    Gauge.Feathers > 0)
                                     return FanDance2;
 
                                 // FD2 Pooling
-                                if (gauge.Feathers > 3 &&
+                                if (Gauge.Feathers > 3 &&
                                     (HasEffect(Buffs.SilkenSymmetry) ||
                                      HasEffect(Buffs.SilkenFlow)))
                                     return FanDance2;
@@ -754,13 +860,13 @@ namespace WrathCombo.Combos.PvE
 
                             // FD2 Non-pooling & under burst level
                             if (!LevelChecked(TechnicalStep) &&
-                                gauge.Feathers > 0)
+                                Gauge.Feathers > 0)
                                 return FanDance2;
                         }
 
                         // FD1 Replacement for Lv.30-49
                         if (!LevelChecked(FanDance2) &&
-                            gauge.Feathers > 0)
+                            Gauge.Feathers > 0)
                             return FanDance1;
                     }
 
@@ -771,11 +877,13 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_PanicHeals))
                     {
                         if (ActionReady(CuringWaltz) &&
-                            PlayerHealthPercentageHp() < Config.DNC_AoE_Adv_PanicHealWaltzPercent)
+                            PlayerHealthPercentageHp() <
+                            Config.DNC_AoE_Adv_PanicHealWaltzPercent)
                             return CuringWaltz;
 
                         if (ActionReady(All.SecondWind) &&
-                            PlayerHealthPercentageHp() < Config.DNC_AoE_Adv_PanicHealWindPercent)
+                            PlayerHealthPercentageHp() <
+                            Config.DNC_AoE_Adv_PanicHealWindPercent)
                             return All.SecondWind;
                     }
 
@@ -786,9 +894,11 @@ namespace WrathCombo.Combos.PvE
                         InCombat())
                         return Improvisation;
                 }
+
                 #endregion
 
                 #region GCD
+
                 // AoE Technical Step
                 if (needToTech)
                     return TechnicalStep;
@@ -799,8 +909,10 @@ namespace WrathCombo.Combos.PvE
                     (HasEffect(Buffs.TechnicalFinish) || // Has Tech
                      !(IsOnCooldown(TechnicalStep) && // Or can't hold it for tech
                        GetCooldownRemainingTime(TechnicalStep) < 20 &&
-                       GetBuffRemainingTime(Buffs.LastDanceReady) > GetCooldownRemainingTime(TechnicalStep) + 4) ||
-                     GetBuffRemainingTime(Buffs.LastDanceReady) < 4)) // Or last second
+                       GetBuffRemainingTime(Buffs.LastDanceReady) >
+                       GetCooldownRemainingTime(TechnicalStep) + 4) ||
+                     GetBuffRemainingTime(Buffs.LastDanceReady) <
+                     4)) // Or last second
                     return LastDance;
 
                 // AoE Standard Step (Finishing Move)
@@ -822,16 +934,24 @@ namespace WrathCombo.Combos.PvE
                     LevelChecked(DanceOfTheDawn) &&
                     (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                      IsOffCooldown(TechnicalStep)) && // Tech is up
-                    (gauge.Esprit >= Config.DNC_AoE_Adv_SaberThreshold || // above esprit threshold use
-                     (HasEffect(Buffs.TechnicalFinish) && gauge.Esprit >= 50) || // will overcap with Tillana if not used
-                     (GetBuffRemainingTime(Buffs.DanceOfTheDawnReady) < 5 && gauge.Esprit >= 50))) // emergency use
+                    (Gauge.Esprit >=
+                     Config
+                         .DNC_AoE_Adv_SaberThreshold || // above esprit threshold use
+                     (HasEffect(Buffs.TechnicalFinish) &&
+                      Gauge.Esprit >= 50) || // will overcap with Tillana if not used
+                     (GetBuffRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
+                      Gauge.Esprit >= 50))) // emergency use
                     return OriginalHook(DanceOfTheDawn);
 
                 // AoE Saber Dance (Emergency Use)
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_SaberDance) &&
                     LevelChecked(SaberDance) &&
-                    (gauge.Esprit >= Config.DNC_AoE_Adv_SaberThreshold || // above esprit threshold use
-                     (HasEffect(Buffs.TechnicalFinish) && gauge.Esprit >= 50)) && // will overcap with Tillana if not used
+                    (Gauge.Esprit >=
+                     Config
+                         .DNC_AoE_Adv_SaberThreshold || // above esprit threshold use
+                     (HasEffect(Buffs.TechnicalFinish) &&
+                      Gauge.Esprit >=
+                      50)) && // will overcap with Tillana if not used
                     ActionReady(SaberDance))
                     return SaberDance;
 
@@ -846,8 +966,10 @@ namespace WrathCombo.Combos.PvE
                 // AoE Saber Dance
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_SaberDance) &&
                     LevelChecked(SaberDance) &&
-                    gauge.Esprit >= Config.DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
-                    (HasEffect(Buffs.TechnicalFinish) && gauge.Esprit >= 50) && // Burst
+                    Gauge.Esprit >=
+                    Config.DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
+                    (HasEffect(Buffs.TechnicalFinish) &&
+                     Gauge.Esprit >= 50) && // Burst
                     (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                      IsOffCooldown(TechnicalStep))) // Tech is up
                     return SaberDance;
@@ -862,8 +984,10 @@ namespace WrathCombo.Combos.PvE
                     return Bloodshower;
                 if (LevelChecked(RisingWindmill) && symmetry)
                     return RisingWindmill;
-                if (LevelChecked(Bladeshower) && lastComboMove is Windmill && comboTime > 0)
+                if (LevelChecked(Bladeshower) && lastComboMove is Windmill &&
+                    comboTime > 0)
                     return Bladeshower;
+
                 #endregion
 
                 return actionID;
@@ -872,35 +996,41 @@ namespace WrathCombo.Combos.PvE
 
         internal class DNC_AoE_MultiButton : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_AoE_MultiButton;
+            protected internal override CustomComboPreset Preset { get; } =
+                CustomComboPreset.DNC_AoE_MultiButton;
 
-            protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
+            protected override uint Invoke(uint actionID, uint lastComboMove,
+                float comboTime, byte level)
             {
                 if (actionID is Windmill)
                 {
                     #region Types
-                    DNCGauge? gauge = GetJobGauge<DNCGauge>();
-                    bool flow = HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow);
-                    bool symmetry = HasEffect(Buffs.SilkenSymmetry) || HasEffect(Buffs.FlourishingSymmetry);
+
+                    bool flow = HasEffect(Buffs.SilkenFlow) ||
+                                HasEffect(Buffs.FlourishingFlow);
+                    bool symmetry = HasEffect(Buffs.SilkenSymmetry) ||
+                                    HasEffect(Buffs.FlourishingSymmetry);
+
                     #endregion
 
                     // AoE Esprit overcap protection
                     if (IsEnabled(CustomComboPreset.DNC_AoE_EspritOvercap) &&
                         LevelChecked(DanceOfTheDawn) &&
                         HasEffect(Buffs.DanceOfTheDawnReady) &&
-                        gauge.Esprit >= Config.DNCEspritThreshold_ST)
+                        Gauge.Esprit >= Config.DNCEspritThreshold_ST)
                         return OriginalHook(DanceOfTheDawn);
                     if (IsEnabled(CustomComboPreset.DNC_AoE_EspritOvercap) &&
                         LevelChecked(SaberDance) &&
-                        gauge.Esprit >= Config.DNCEspritThreshold_AoE)
+                        Gauge.Esprit >= Config.DNCEspritThreshold_AoE)
                         return SaberDance;
 
-                    if (CanWeave())
+                    if (CanWeave(actionID))
                     {
                         // AoE Fan Dance overcap protection
                         if (IsEnabled(CustomComboPreset.DNC_AoE_FanDanceOvercap) &&
-                            LevelChecked(FanDance2) && gauge.Feathers is 4 && 
-                            (HasEffect(Buffs.SilkenSymmetry) || HasEffect(Buffs.SilkenFlow)))
+                            LevelChecked(FanDance2) && Gauge.Feathers is 4 &&
+                            (HasEffect(Buffs.SilkenSymmetry) ||
+                             HasEffect(Buffs.SilkenFlow)))
                             return FanDance2;
 
                         // AoE Fan Dance 3/4 on combo
@@ -926,4 +1056,3 @@ namespace WrathCombo.Combos.PvE
             }
         }
     }
-}

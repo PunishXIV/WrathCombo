@@ -45,7 +45,7 @@ internal partial class BRD
 
         ];
 
-        public override List<(int[], uint, Func<bool>)> ProcSteps { get; set; } =
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([6, 9, 16, 17, 20], RefulgentArrow, () => CustomComboFunctions.HasEffect(Buffs.HawksEye)),
         ];

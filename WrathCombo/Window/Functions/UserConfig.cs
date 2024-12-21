@@ -317,7 +317,8 @@ namespace WrathCombo.Window.Functions
         /// <param name="outputValue"> If the user ticks this box, this is the value the config will be set to. </param>
         /// <param name="itemWidth"></param>
         /// <param name="descriptionColor"></param>
-        public static void DrawRadioButton(string config, string checkBoxName, string checkboxDescription, int outputValue, float itemWidth = 150, Vector4 descriptionColor = new Vector4())
+        /// <param name="descriptionAsTooltip">Whether to only show the Description as a tooltip</param>
+        public static void DrawRadioButton(string config, string checkBoxName, string checkboxDescription, int outputValue, float itemWidth = 150, Vector4 descriptionColor = new Vector4(), bool descriptionAsTooltip = false)
         {
             ImGui.Indent();
             if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudYellow;
@@ -336,9 +337,21 @@ namespace WrathCombo.Window.Functions
 
             if (!checkboxDescription.IsNullOrEmpty())
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, descriptionColor);
-                ImGui.TextWrapped(checkboxDescription);
-                ImGui.PopStyleColor();
+                if (descriptionAsTooltip)
+                {
+                    if (ImGui.IsItemHovered())
+                    {
+                        ImGui.BeginTooltip();
+                        ImGui.TextUnformatted(checkboxDescription);
+                        ImGui.EndTooltip();
+                    }
+                }
+                else if (!descriptionAsTooltip)
+                {
+                    ImGui.PushStyleColor(ImGuiCol.Text, descriptionColor);
+                    ImGui.TextWrapped(checkboxDescription);
+                    ImGui.PopStyleColor();
+                }
             }
 
             ImGui.Unindent();
