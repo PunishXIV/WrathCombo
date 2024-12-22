@@ -6430,64 +6430,41 @@ public enum CustomComboPreset
     #region BLACK MAGE
 
     [PvPCustomCombo]
-    [CustomComboInfo("Burst Mode", "Turns Fire and Blizzard into all-in-one damage buttons.", BLM.JobID)]
+    [ReplaceSkill(BLMPvP.Fire)]
+    [CustomComboInfo("Burst Mode", "Turns Fire into an all-in-one button.\n- Uses Blizzard spells while moving.\n- Will use Paradox when appropriate.", BLMPvP.JobID)]
     BLMPvP_BurstMode = 112000,
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Aetherial Manipulation Option",
-        "Uses Aetherial Manipulation to gap close if Burst is off cooldown.", BLM.JobID)]
-    BLMPvP_BurstMode_AetherialManip = 112001,
+    [CustomComboInfo("Burst Option", "Uses Burst when available.\n- Requires target to be within range.", BLMPvP.JobID)]
+    BLMPvP_Burst = 112001,
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Burst cast Option", "Adds Burst to Burst Mode.", BLM.JobID)]
-    BLMPvP_BurstMode_Burst = 112002,
+    [CustomComboInfo("Xenoglossy Option", "Uses Xenoglossy when available.\n- Requires target's HP to be under:", BLMPvP.JobID)]
+    BLMPvP_Xenoglossy = 112002,
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Paradox Option", "Adds Paradox to Burst Mode.", BLM.JobID)]
-    BLMPvP_BurstMode_Paradox = 112003,
+    [CustomComboInfo("Lethargy Option", "Uses Lethargy when available.\n- Will not use against non-players.\n- Requires target's HP to be under:", BLMPvP.JobID)]
+    BLMPvP_Lethargy = 112003,
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Xenoglossy Option", "Adds Xenoglossy to Burst Mode.", BLM.JobID)]
-    BLMPvP_BurstMode_Xenoglossy = 112004,
+    [CustomComboInfo("Elemental Weave Option", "Uses Wreath of Fire when available.\n- Requires player's HP to be at or above:", BLMPvP.JobID)]
+    BLMPvP_ElementalWeave = 112004,
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Lethargy Option", "Adds Lethargy to Burst Mode.", BLM.JobID)]
-    BLMPvP_BurstMode_Lethargy = 112005,
+    [CustomComboInfo("Elemental Star Option", "Uses Elemental Star when available.\n- Prioritizes Flare Star unless expiring.", BLMPvP.JobID)]
+    BLMPvP_ElementalStar = 112005,
 
-    [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Wreath of Fire (Elemental Weave) Option",
-        "Adds Wreath of Fire to Burst Mode when the target is under Guard status.", BLM.JobID)]
-    BLMPvP_BurstMode_WreathOfFire = 112006,
+    [ReplaceSkill(BLMPvP.AetherialManipulation)]
+    [CustomComboInfo("Aetherial Manipulation Feature", "Adds Purify when affected by crowd control.\n- Requires Purify to be available.", BLMPvP.JobID)]
+    BLMPvP_Manipulation_Feature = 112006,
 
-    [ParentCombo(BLMPvP_BurstMode_WreathOfFire)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Wreath of Fire (Elemental Weave) Execute Option",
-        "Adds Wreath of Fire to Burst Mode when the target is under selected %", BLM.JobID)]
-    BLMPvP_BurstMode_WreathOfFireExecute = 112010,
-
-    [ParentCombo(BLMPvP_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Wreath of Ice (Elemental Weave) Option",
-        "Adds Wreath of Ice to Burst Mode when player is below set threshold", BLM.JobID)]
-    BLMPvP_BurstMode_WreathOfIce = 112007,
-
-    [ParentCombo(BLMPvP_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Flare Star Option", "Adds Flare Star to Burst Mode.", BLM.JobID)]
-    BLMPvP_BurstMode_FlareStar = 112008,
-
-    [ParentCombo(BLMPvP_BurstMode)]
-    [PvPCustomCombo]
-    [CustomComboInfo("Frost Star Option", "Adds Frost Star to Burst Mode.", BLM.JobID)]
-    BLMPvP_BurstMode_FrostStar = 112009,
-
-    // Last value = 112010
+    // Last value = 112006
 
     #endregion
 
