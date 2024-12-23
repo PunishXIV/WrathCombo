@@ -44,13 +44,17 @@ internal partial class WAR
             WAR_AoE_Holmgang_Health = new("WAR_AoE_Holmgang_Health", 30),
             WAR_AoE_Holmgang_SubOption = new("WAR_AoE_Holmgang_SubOption", 1),
             WAR_VariantCure = new("WAR_VariantCure"),
-            WAR_Mit_Holmgang_Health = new("WAR_Mit_Holmgang_Health", 30);
-
+            WAR_Mit_Holmgang_Health = new("WAR_Mit_Holmgang_Health", 30),
+            WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1);
 
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
             {
+                case CustomComboPreset.WAR_ST_Advanced_BalanceOpener:
+                    UserConfig.DrawBossOnlyChoice(WAR_BalanceOpener_Content);
+                    break;
+
                 case CustomComboPreset.WAR_Variant_Cure:
                     UserConfig.DrawSliderInt(1, 100, WAR_VariantCure,
                         "Player HP% to be \nless than or equal to:", 200);
@@ -103,7 +107,7 @@ internal partial class WAR
                     break;
 
                 case CustomComboPreset.WAR_AoE_Advanced_Infuriate:
-                    UserConfig.DrawSliderInt(0, 50, WAR_InfuriateAoEGauge, 
+                    UserConfig.DrawSliderInt(0, 50, WAR_InfuriateAoEGauge,
                         "Use when gauge is under or equal to");
 
                     break;
@@ -118,11 +122,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_ST_Bloodwhetting_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_SubOption,
                         "All Enemies",
                         $"Uses {Bloodwhetting.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_SubOption,
                         "Bosses Only",
                         $"Only uses {Bloodwhetting.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -132,11 +136,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_AoE_Bloodwhetting_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Bloodwhetting_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Bloodwhetting_SubOption,
                         "All Enemies",
                         $"Uses {Bloodwhetting.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Bloodwhetting_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Bloodwhetting_SubOption,
                         "Bosses Only",
                        $"Only uses {Bloodwhetting.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -174,11 +178,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_ST_Rampart_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Rampart_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Rampart_SubOption,
                         "All Enemies",
                         $"Uses {All.Rampart.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Rampart_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Rampart_SubOption,
                         "Bosses Only",
                         $"Only uses {All.Rampart.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -188,11 +192,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_AoE_Rampart_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Rampart_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Rampart_SubOption,
                         "All Enemies",
                         $"Uses {All.Rampart.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Rampart_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Rampart_SubOption,
                         "Bosses Only",
                         $"Only uses {All.Rampart.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -227,14 +231,14 @@ internal partial class WAR
                     break;
 
                 case CustomComboPreset.WAR_ST_Advanced_Vengeance:
-                    UserConfig.DrawSliderInt(1, 100, WAR_ST_Vengeance_Health, 
+                    UserConfig.DrawSliderInt(1, 100, WAR_ST_Vengeance_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Vengeance_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Vengeance_SubOption,
                         "All Enemies",
                         $"Uses {Vengeance.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Vengeance_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Vengeance_SubOption,
                         "Bosses Only",
                         $"Only uses {Vengeance.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -244,11 +248,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_AoE_Vengeance_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Vengeance_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Vengeance_SubOption,
                         "All Enemies",
                         $"Uses {Vengeance.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Vengeance_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Vengeance_SubOption,
                         "Bosses Only",
                         $"Only uses {Vengeance.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -258,11 +262,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_ST_Holmgang_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Holmgang_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Holmgang_SubOption,
                         "All Enemies",
                         $"Uses {Holmgang.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Holmgang_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_Holmgang_SubOption,
                         "Bosses Only",
                         $"Only uses {Holmgang.ActionName()} when the targeted enemy is a boss.", 2);
 
@@ -272,11 +276,11 @@ internal partial class WAR
                     UserConfig.DrawSliderInt(1, 100, WAR_AoE_Holmgang_Health,
                         "Player HP% to be \nless than or equal to:", 200);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Holmgang_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Holmgang_SubOption,
                         "All Enemies",
                         $"Uses {Holmgang.ActionName()} regardless of targeted enemy type.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Holmgang_SubOption, 
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Holmgang_SubOption,
                         "Bosses Only",
                         $"Only uses {Holmgang.ActionName()} when the targeted enemy is a boss.", 2);
 

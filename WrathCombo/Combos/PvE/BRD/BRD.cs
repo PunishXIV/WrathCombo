@@ -353,9 +353,6 @@ namespace WrathCombo.Combos.PvE
         #region Advanced Modes
         internal class BRD_AoE_AdvMode : CustomCombo
         {
-            internal static bool inOpener = false;
-            internal static bool openerFinished = false;
-
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_AoE_AdvMode;
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
@@ -363,8 +360,8 @@ namespace WrathCombo.Combos.PvE
                 if (actionID is Ladonsbite or QuickNock)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();                    
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave() && !ActionWatching.HasDoubleWeaved();                    
+                    bool canWeaveDelayed = CanDelayedWeave(0.9) && !ActionWatching.HasDoubleWeaved();
                     int songTimerInSeconds = gauge.SongTimer / 1000;
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
@@ -607,10 +604,6 @@ namespace WrathCombo.Combos.PvE
         internal class BRD_ST_AdvMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_ST_AdvMode;
-            internal static bool inOpener = false;
-            internal static bool openerFinished = false;
-            internal static byte step = 0;
-            internal static byte subStep = 0;
             internal static bool usedStraightShotReady = false;
             internal static bool usedPitchPerfect = false;
             internal delegate bool DotRecast(int value);
@@ -620,8 +613,8 @@ namespace WrathCombo.Combos.PvE
                 if (actionID is HeavyShot or BurstShot)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave() && !ActionWatching.HasDoubleWeaved();
+                    bool canWeaveDelayed = CanDelayedWeave(0.9) && !ActionWatching.HasDoubleWeaved();
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
                     bool songMage = gauge.Song == Song.MAGE;
@@ -631,12 +624,6 @@ namespace WrathCombo.Combos.PvE
                     bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
                     bool hasTarget = HasBattleTarget();
 
-
-
-                    if (!InCombat() && (inOpener || openerFinished))
-                    {
-                        openerFinished = false;
-                    }
 
                     #region Variants
 
@@ -650,6 +637,22 @@ namespace WrathCombo.Combos.PvE
                         return Variant.VariantRampart;
 
                     #endregion
+
+                    if (IsEnabled(CustomComboPreset.BRD_ST_Adv_Balance_Standard) &&
+                        Opener().FullOpener(ref actionID))
+                    {
+                        if (ActionWatching.GetAttackType(Opener().CurrentOpenerAction) != ActionWatching.ActionAttackType.Ability && canWeave)
+                        {
+                            if (gauge.Repertoire == 3 || gauge.Repertoire == 2 && GetCooldownRemainingTime(EmpyrealArrow) < 2)
+                                return OriginalHook(PitchPerfect);
+
+                            if (ActionReady(HeartbreakShot))
+                                return HeartbreakShot;
+                        }
+
+                        return actionID;
+
+                    }
 
                     #region Songs
 
@@ -845,9 +848,7 @@ namespace WrathCombo.Combos.PvE
                             if (IsEnabled(CustomComboPreset.BRD_Adv_RagingJaws) && ActionReady(IronJaws) && HasEffect(Buffs.RagingStrikes) &&
                             ragingStrikesDuration < ragingJawsRenewTime && // Raging Jaws Slider Check
                             purpleRemaining < 35 && blueRemaining < 35)    // Prevention of double refreshing dots
-
                             {
-                                openerFinished = true;
                                 return IronJaws;
                             }
 
@@ -920,8 +921,8 @@ namespace WrathCombo.Combos.PvE
                 if (actionID is Ladonsbite or QuickNock)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave() && !ActionWatching.HasDoubleWeaved();
+                    bool canWeaveDelayed = CanDelayedWeave(0.9) && !ActionWatching.HasDoubleWeaved();
                     int songTimerInSeconds = gauge.SongTimer / 1000;
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
@@ -1133,10 +1134,6 @@ namespace WrathCombo.Combos.PvE
         internal class BRD_ST_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BRD_ST_SimpleMode;
-            internal static bool inOpener = false;
-            internal static bool openerFinished = false;
-            internal static byte step = 0;
-            internal static byte subStep = 0;
             internal static bool usedStraightShotReady = false;
             internal static bool usedPitchPerfect = false;
             internal delegate bool DotRecast(int value);
@@ -1146,8 +1143,8 @@ namespace WrathCombo.Combos.PvE
                 if (actionID is HeavyShot or BurstShot)
                 {
                     BRDGauge? gauge = GetJobGauge<BRDGauge>();
-                    bool canWeave = CanWeave(actionID) && !ActionWatching.HasDoubleWeaved();
-                    bool canWeaveDelayed = CanDelayedWeave(actionID, 0.9) && !ActionWatching.HasDoubleWeaved();
+                    bool canWeave = CanWeave() && !ActionWatching.HasDoubleWeaved();
+                    bool canWeaveDelayed = CanDelayedWeave(0.9) && !ActionWatching.HasDoubleWeaved();
                     bool songNone = gauge.Song == Song.NONE;
                     bool songWanderer = gauge.Song == Song.WANDERER;
                     bool songMage = gauge.Song == Song.MAGE;
@@ -1155,11 +1152,6 @@ namespace WrathCombo.Combos.PvE
                     bool isEnemyHealthHigh = GetTargetHPPercent() > 1;
                     int songTimerInSeconds = gauge.SongTimer / 1000;
                     bool hasTarget = HasBattleTarget();
-
-                    if (!InCombat() && (inOpener || openerFinished))
-                    {
-                        openerFinished = false;
-                    }
 
                     #region Variants
                     if (IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= 50)
@@ -1352,9 +1344,7 @@ namespace WrathCombo.Combos.PvE
                         if (ActionReady(IronJaws) && HasEffect(Buffs.RagingStrikes) &&
                         ragingStrikesDuration < ragingJawsRenewTime && // Raging Jaws 
                         purpleRemaining < 35 && blueRemaining < 35)    // Prevention of double refreshing dots
-
                         {
-                            openerFinished = true;
                             return IronJaws;
                         }
 

@@ -46,7 +46,7 @@ namespace WrathCombo.Combos.PvP
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
                 #region Variables
-                bool isMoving = IsMoving;
+                bool isMoving = IsMoving();
                 bool hasTarget = HasTarget();
                 bool hasStarPrism = HasEffect(Buffs.Starstruck);
                 bool hasSubtractivePalette = HasEffect(Buffs.SubtractivePalette);

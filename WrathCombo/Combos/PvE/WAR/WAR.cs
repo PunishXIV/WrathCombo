@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -124,13 +125,13 @@ namespace WrathCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
                         IsEnabled(Variant.VariantUltimatum) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         ActionReady(Variant.VariantUltimatum))
                         return Variant.VariantUltimatum;
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
                         IsEnabled(Variant.VariantCure) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
                     #endregion
@@ -179,7 +180,7 @@ namespace WrathCombo.Combos.PvE
                         HasBattleTarget()) //has a target
                         return Tomahawk;
 
-                    if (CanWeave(actionID)) //in weave window
+                    if (CanWeave()) //in weave window
                     {
                         if (InCombat() && //in combat
                             ActionReady(Infuriate) && //Infuriate is ready
@@ -198,7 +199,7 @@ namespace WrathCombo.Combos.PvE
                     if (HasEffect(Buffs.SurgingTempest) && //has Surging Tempest
                         InCombat()) //in combat
                     {
-                        if (CanWeave(actionID)) //in weave window
+                        if (CanWeave()) //in weave window
                         {
                             if (ActionReady(OriginalHook(Berserk))) //Berserk is ready
                                 return OriginalHook(Berserk);
@@ -213,7 +214,7 @@ namespace WrathCombo.Combos.PvE
                             if (LevelChecked(Onslaught) && //Onslaught is available
                                 GetRemainingCharges(Onslaught) > 1) //has more than 1 charge
                             {
-                                if (!IsMoving && //not moving
+                                if (!IsMoving() && //not moving
                                     GetTargetDistance() <= 1 && //within 1y of target
                                     (GetCooldownRemainingTime(InnerRelease) > 40 || !LevelChecked(InnerRelease))) //IR is not ready or available
                                     return Onslaught;
@@ -222,7 +223,7 @@ namespace WrathCombo.Combos.PvE
 
                         if (HasEffect(Buffs.PrimalRendReady) && //has Primal Rend ready
                             !JustUsed(InnerRelease) && //has not just used IR
-                            !IsMoving && //not moving
+                            !IsMoving() && //not moving
                             GetTargetDistance() <= 1) //within 1y of target
                             return PrimalRend;
 
@@ -296,13 +297,13 @@ namespace WrathCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
                         IsEnabled(Variant.VariantUltimatum) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         ActionReady(Variant.VariantUltimatum))
                         return Variant.VariantUltimatum;
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
                         IsEnabled(Variant.VariantCure) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
                     #endregion
@@ -365,13 +366,20 @@ namespace WrathCombo.Combos.PvE
                     }
                     #endregion
 
+                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_BalanceOpener) && 
+                        ContentCheck.IsInConfiguredContent(Config.WAR_BalanceOpener_Content, ContentCheck.ListSet.BossOnly))
+                    {
+                        if (Opener().FullOpener(ref actionID))
+                            return actionID;
+                    }
+
                     if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_RangedUptime) && //Ranged uptime option is enabled
                         LevelChecked(Tomahawk) && //Tomahawk is available
                         !InMeleeRange() && //not in melee range
                         HasBattleTarget()) //has a target
                         return Tomahawk;
 
-                    if (CanWeave(actionID)) //in weave window
+                    if (CanWeave()) //in weave window
                     {
                         if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Infuriate) && //Infuriate option is enabled
                             InCombat() && //in combat
@@ -392,7 +400,7 @@ namespace WrathCombo.Combos.PvE
                     if (InCombat() && //in combat
                         HasEffect(Buffs.SurgingTempest)) //has Surging Tempest
                     {
-                        if (CanWeave(actionID)) //in weave window
+                        if (CanWeave()) //in weave window
                         {
                             if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_InnerRelease) && //Inner Release option is enabled
                                 ActionReady(OriginalHook(Berserk))) //Berserk is ready
@@ -413,7 +421,7 @@ namespace WrathCombo.Combos.PvE
                             {
                                 if (IsNotEnabled(CustomComboPreset.WAR_ST_Advanced_Onslaught_MeleeSpender) || //Melee spender option is disabled
                                     (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Onslaught_MeleeSpender) && //Melee spender option is enabled
-                                    !IsMoving && GetTargetDistance() <= 1 && //not moving and within 1y of target
+                                    !IsMoving() && GetTargetDistance() <= 1 && //not moving and within 1y of target
                                     (GetCooldownRemainingTime(InnerRelease) > 40 || !LevelChecked(InnerRelease)))) //IR is not ready or available
                                     return Onslaught;
                             }
@@ -430,7 +438,7 @@ namespace WrathCombo.Combos.PvE
                                 return PrimalRend;
 
                             if (IsNotEnabled(CustomComboPreset.WAR_ST_Advanced_PrimalRend_Late) && //Primal Rend late option is disabled
-                                !IsMoving && GetTargetDistance() <= 1) //not moving & within 1y of target
+                                !IsMoving() && GetTargetDistance() <= 1) //not moving & within 1y of target
                                 return PrimalRend;
                         }
 
@@ -512,13 +520,13 @@ namespace WrathCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
                         IsEnabled(Variant.VariantUltimatum) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         ActionReady(Variant.VariantUltimatum))
                         return Variant.VariantUltimatum;
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
                         IsEnabled(Variant.VariantCure) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
                     #endregion
@@ -562,7 +570,7 @@ namespace WrathCombo.Combos.PvE
                     }
                     #endregion
 
-                    if (CanWeave(actionID)) //in weave window
+                    if (CanWeave()) //in weave window
                     {
                         if (InCombat() && //in combat
                            ActionReady(Infuriate) && //Infuriate is ready
@@ -580,7 +588,7 @@ namespace WrathCombo.Combos.PvE
                     if (InCombat() && //in combat
                         HasEffect(Buffs.SurgingTempest)) //has Surging Tempest
                     {
-                        if (CanWeave(actionID)) //in weave window
+                        if (CanWeave()) //in weave window
                         {
                             if (ActionReady(OriginalHook(Berserk))) //Berserk is ready
                                 return OriginalHook(Berserk);
@@ -646,13 +654,13 @@ namespace WrathCombo.Combos.PvE
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
                         IsEnabled(Variant.VariantUltimatum) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         ActionReady(Variant.VariantUltimatum))
                         return Variant.VariantUltimatum;
 
                     if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
                         IsEnabled(Variant.VariantCure) &&
-                        CanWeave(actionID) &&
+                        CanWeave() &&
                         PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
                         return Variant.VariantCure;
                     #endregion
@@ -714,7 +722,7 @@ namespace WrathCombo.Combos.PvE
                     }
                     #endregion
 
-                    if (CanWeave(actionID)) //in weave window
+                    if (CanWeave()) //in weave window
                     {
                         if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Infuriate) && //Infuriate option is enabled
                             InCombat() && //in combat
@@ -734,7 +742,7 @@ namespace WrathCombo.Combos.PvE
                     if (InCombat() && //in combat
                         HasEffect(Buffs.SurgingTempest)) //has Surging Tempest
                     {
-                        if (CanWeave(actionID)) //in weave window
+                        if (CanWeave()) //in weave window
                         {
                             if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_InnerRelease) && //Inner Release option is enabled
                                 ActionReady(OriginalHook(Berserk))) //Berserk is ready

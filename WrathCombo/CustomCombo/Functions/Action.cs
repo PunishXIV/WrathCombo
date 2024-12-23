@@ -9,6 +9,9 @@ using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using WrathCombo.Extensions;
+using System.Runtime.InteropServices;
+using InteropGenerator.Runtime;
+using System.Reflection.Metadata.Ecma335;
 
 namespace WrathCombo.CustomComboNS.Functions
 {
@@ -89,6 +92,14 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns></returns>
         //Note: Testing so far shows non charge skills have a max charge of 1, and it's zero during cooldown
         public unsafe static bool ActionReady(uint id) => (LevelChecked(id) && (HasCharges(id) || GetCooldown(id).CooldownTotal <= 3)) || ActionManager.Instance()->GetActionStatus(ActionType.Action, id) == 0;
+
+        public static bool ActionsReady(uint[] ids)
+        {
+            foreach (var id in ids)
+                if (!ActionReady(id)) return false;
+                
+            return true;
+        }
 
         /// <summary> Checks if the last action performed was the passed ID. </summary>
         /// <param name="id"> ID of the action. </param>
@@ -187,32 +198,39 @@ namespace WrathCombo.CustomComboNS.Functions
         }
 
         /// <summary> Checks if the provided actionID has enough cooldown remaining to weave against it without causing clipping.</summary>
-        /// <param name="actionID"> Action ID to check. </param>
         /// <param name="weaveTime"> Time when weaving window is over. Defaults to 0.7. </param>
+        /// 
         /// <returns> True or false. </returns>
-        public static bool CanWeave(uint actionID, double weaveTime = 0.7) => (GetCooldown(actionID).CooldownRemaining > weaveTime) || (HasSilence() && HasPacification());
+        public static bool CanWeave(double weaveTime = 0.7)
+        {
+            return (RemainingGCD > weaveTime) || (HasSilence() && HasPacification());
+        }
 
         /// <summary> Checks if the provided actionID has enough cooldown remaining to weave against it without causing clipping and checks if you're casting a spell. </summary>
-        /// <param name="actionID"> Action ID to check. </param>
         /// <param name="weaveTime"> Time when weaving window is over. Defaults to 0.6. </param>
+        /// 
         /// <returns> True or false. </returns>
-        public static bool CanSpellWeave(uint actionID, double weaveTime = 0.6)
+        public static bool CanSpellWeave(double weaveTime = 0.6)
         {
             float castTimeRemaining = LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime;
 
-            if (GetCooldown(actionID).CooldownRemaining > weaveTime &&                          // Prevent GCD delay
+            if (RemainingGCD > weaveTime &&                          // Prevent GCD delay
                 castTimeRemaining <= 0.5 &&                                                     // Show in last 0.5sec of cast so game can queue ability
-                GetCooldown(actionID).CooldownRemaining - castTimeRemaining - weaveTime >= 0)   // Don't show if spell is still casting in weave window
+                RemainingGCD - castTimeRemaining - weaveTime >= 0)   // Don't show if spell is still casting in weave window
                 return true;
             return false;
         }
 
         /// <summary> Checks if the provided actionID has enough cooldown remaining to weave against it in the later portion of the GCD without causing clipping. </summary>
-        /// <param name="actionID"> Action ID to check. </param>
-        /// <param name="start"> Time (in seconds) to start to check for the weave window. </param>
+        /// <param name="start"> Time (in seconds) to start to check for the weave window. If this value is greater than half of a GCD, it will instead use half a GCD instead to ensure it lands in the latter half.</param>
         /// <param name="end"> Time (in seconds) to end the check for the weave window. </param>
+        /// 
         /// <returns> True or false. </returns>
-        public static bool CanDelayedWeave(uint actionID, double start = 1.25, double end = 0.6) => GetCooldown(actionID).CooldownRemaining <= start && GetCooldown(actionID).CooldownRemaining >= end;
+        public static unsafe bool CanDelayedWeave(double start = 1.25, double end = 0.6)
+        {
+            var halfGCD = GCDTotal / 2f;
+            return RemainingGCD <= (start > halfGCD ? halfGCD : start) && RemainingGCD >= end;
+        }
 
         /// <summary>
         /// Returns the current combo timer.
@@ -228,5 +246,19 @@ namespace WrathCombo.CustomComboNS.Functions
         /// Gets the current Limit Break action (PVE only)
         /// </summary>
         public unsafe static uint LimitBreakAction => LimitBreakController.Instance()->GetActionId(Player.Object.Character(), (byte)Math.Max(0, (LimitBreakLevel - 1)));
+
+        public unsafe static bool CanQueue(uint actionID)
+        {
+            bool original = ActionWatching.canQueueAction.Original(ActionManager.Instance(), (uint)ActionType.Action, actionID);
+            bool alreadyQueued = ActionManager.Instance()->QueuedActionId != 0;
+            bool inSlidecast = (LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime) <= 0.4f;
+            bool animLocked = ActionManager.Instance()->AnimationLock > 0;
+            bool recast = GetCooldown(actionID).CooldownRemaining <= 0.4f || GetCooldown(actionID).RemainingCharges > 0;
+            bool classCheck = ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) != 574;
+
+            var ret = original && !alreadyQueued && inSlidecast && !animLocked && recast && classCheck;
+
+            return ret || ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) == 0;
+        }
     }
 }

@@ -1,9 +1,12 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
+using System.Linq;
 using WrathCombo.Combos.PvE;
 using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
 
@@ -61,6 +64,20 @@ namespace WrathCombo.CustomComboNS.Functions
                 BLU.JobID => HasEffect(BLU.Buffs.TankMimicry),
                 _ => false
             };
+        }
+
+        public unsafe static bool InBossEncounter()
+        {
+            if (NearbyBosses.Count() == 0)
+                return false;
+
+            foreach (var boss in NearbyBosses)
+            {
+                if (boss.Struct()->InCombat && boss.GetNameplateKind() == NameplateKind.HostileEngagedSelfDamaged)
+                    return true;
+            }
+
+            return false;
         }
     }
 }

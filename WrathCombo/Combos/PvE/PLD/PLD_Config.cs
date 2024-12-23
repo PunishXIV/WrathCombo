@@ -35,12 +35,17 @@ internal partial class PLD
             PLD_ShieldLob_SubOption = new("PLD_ShieldLob_SubOption", 1),
             PLD_Requiescat_SubOption = new("PLD_Requiescat_SubOption", 1),
             PLD_SpiritsWithin_SubOption = new("PLD_SpiritsWithin_SubOption", 1),
-            PLD_VariantCure = new("PLD_VariantCure");
+            PLD_VariantCure = new("PLD_VariantCure"),
+            PLD_Balance_Content = new("PLD_Balance_Content", 1);
 
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
             {
+                case CustomComboPreset.PLD_ST_AdvancedMode_BalanceOpener:
+                    UserConfig.DrawBossOnlyChoice(PLD_Balance_Content);
+                    break;
+
                 // Fight or Flight
                 case CustomComboPreset.PLD_ST_AdvancedMode_FoF:
                     UserConfig.DrawSliderInt(0, 50, PLD_ST_FoF_Trigger, "Target HP%", 200);

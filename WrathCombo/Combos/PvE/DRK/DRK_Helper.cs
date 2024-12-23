@@ -1,11 +1,10 @@
 ﻿#region
 
-using Dalamud.Game.ClientState.Objects.SubKinds;
+using System.Collections.Generic;
+using Dalamud.Game.ClientState.JobGauge.Types;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Functions = WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Options = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable CheckNamespace
@@ -16,11 +15,15 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRK
 {
-    /// <summary>
-    ///     Shorter reference to the local player.
-    /// </summary>
-    /// <seealso cref="CustomComboFunctions.LocalPlayer" />
-    private static readonly IPlayerCharacter? LocalPlayer = CustomComboFunctions.LocalPlayer;
+    internal static WrathOpener Opener()
+    {
+        if (Opener1.LevelChecked)
+            return Opener1;
+
+        return WrathOpener.Dummy;
+    }
+
+    private static DRKGauge Gauge => GetJobGauge<DRKGauge>();
 
     /// <summary>
     ///     Whether the player has a shield from TBN from themselves.
@@ -93,15 +96,6 @@ internal partial class DRK
         if (LocalPlayer.TargetObject is null)
             return false;
 
-        // Bail if we're not in configured content
-        var inTBNContent = aoe || ContentCheck.IsInConfiguredContent(
-            Config.DRK_ST_TBNDifficulty,
-            Config.DRK_ST_TBNDifficultyListSet
-        );
-
-        if (!inTBNContent)
-            return false;
-
         var hpRemaining = PlayerHealthPercentageHp();
         var hpThreshold = !aoe ? (float)Config.DRK_ST_TBNThreshold : 90f;
 
@@ -127,4 +121,65 @@ internal partial class DRK
 
         return true;
     }
+
+    #region Openers
+
+    internal static DRKOpenerMaxLevel1 Opener1 = new();
+
+    internal class DRKOpenerMaxLevel1 : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            HardSlash,
+            EdgeOfShadow,
+            LivingShadow,
+            SyphonStrike,
+            Souleater, // 5
+            Delirium,
+            Disesteem,
+            SaltedEarth,
+            //EdgeOfShadow, // Depends on TBN pop
+            ScarletDelirium,
+            Shadowbringer, // 10
+            EdgeOfShadow,
+            Comeuppance,
+            CarveAndSpit,
+            EdgeOfShadow,
+            Torcleaver, // 15
+            Shadowbringer,
+            EdgeOfShadow,
+            Bloodspiller,
+            SaltAndDarkness,
+        ];
+        internal override UserData? ContentCheckConfig => Config.DRK_ST_OpenerDifficulty;
+
+        public override bool HasCooldowns()
+        {
+            if (LocalPlayer.CurrentMp < 7000)
+                return false;
+
+            if (!ActionReady(LivingShadow))
+                return false;
+
+            if (!ActionReady(Delirium))
+                return false;
+
+            if (!ActionReady(CarveAndSpit))
+                return false;
+
+            if (!ActionReady(SaltedEarth))
+                return false;
+
+            if (GetRemainingCharges(Shadowbringer) < 2)
+                return false;
+
+            return true;
+        }
+    }
+
+    #endregion
 }

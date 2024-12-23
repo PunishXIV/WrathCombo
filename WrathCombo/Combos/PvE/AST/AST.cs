@@ -40,8 +40,8 @@ namespace WrathCombo.Combos.PvE
             Spear = 37026,
             Spire = 37025,
             MinorArcana = 37022,
-            //LordOfCrowns = 7444,
-            //LadyOfCrown = 7445,
+            LordOfCrowns = 7444,
+            LadyOfCrown = 7445,
 
             //Utility
             Divination = 16552,
@@ -150,115 +150,53 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                int spellsSinceDraw = ActionWatching.CombatActions.Any(x => x == OriginalHook(AstralDraw)) ? ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Malefic), OriginalHook(AstralDraw)) +
-                    ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Combust), OriginalHook(AstralDraw)) +
-                    ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Gravity), OriginalHook(AstralDraw)) : Config.AST_ST_DPS_Play_SpeedSetting;
-
-                if (spellsSinceDraw == 0 && DrawnCard != CardType.NONE)
-                {
-                    spellsSinceDraw = 1;
-                }
-                
                 bool AlternateMode = GetIntOptionAsBool(Config.AST_DPS_AltMode); //(0 or 1 radio values)
-                bool inOpener = IsEnabled(CustomComboPreset.AST_ST_DPS_Opener) && MaleficCount < 6;
+                bool actionFound = (!AlternateMode && MaleficList.Contains(actionID)) ||
+                    (AlternateMode && CombustList.ContainsKey(actionID));
+
+                if (!actionFound)
+                    return actionID;
 
                 // Out of combat Card Draw
-                if (((!AlternateMode && MaleficList.Contains(actionID)) ||
-                    (AlternateMode && CombustList.ContainsKey(actionID)) &&
-                    !InCombat()))
+                if (!InCombat())
                 {
                     if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
                         ActionReady(OriginalHook(AstralDraw)) && (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards)))
                         return OriginalHook(AstralDraw);
                 }
+
+                if (IsEnabled(CustomComboPreset.AST_ST_DPS_Opener) && Opener().FullOpener(ref actionID))
+                    return actionID;
+
                 //In combat
-                if (((!AlternateMode && MaleficList.Contains(actionID)) ||
-                     (AlternateMode && CombustList.ContainsKey(actionID))) &&
-                     InCombat())
+                if (InCombat())
                 {
                     //Variant stuff
                     if (IsEnabled(CustomComboPreset.AST_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
                     if (IsEnabled(CustomComboPreset.AST_Variant_SpiritDart) &&
                         IsEnabled(Variant.VariantSpiritDart) &&
                         (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantSpiritDart;
-
-                    //Opener
-                    if (inOpener)
-                    {
-                        if (MaleficCount == 0)
-                            return OriginalHook(Malefic);
-
-                        if (MaleficCount == 1 && CombustCount == 0)
-                            return OriginalHook(Combust);
-
-                        if (MaleficCount == 1 && (CombustCount == 1) && ActionReady(Lightspeed) && CanDelayedWeave(actionID) && !HasEffect(Buffs.Lightspeed))
-                            return OriginalHook(Lightspeed);
-
-                        if (MaleficCount == 3 && CanWeave(actionID))
-                        {
-                            if (IsEnabled(CustomComboPreset.AST_DPS_Divination) &&
-                            ActionReady(Divination) &&
-                            !HasEffectAny(Buffs.Divination) && //Overwrite protection
-                            GetTargetHPPercent() > Config.AST_DPS_DivinationOption &&
-                            CanWeave(actionID))
-                                return Divination;
-
-                            if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
-                            ActionReady(Play1) &&
-                            Gauge.DrawnCards[0] is not CardType.NONE)
-                                return OriginalHook(Play1);
-                        }
-
-                        if (MaleficCount == 4 && CanWeave(actionID))
-                        {
-                            if (ActionReady(OriginalHook(MinorArcana)) &&
-                            IsEnabled(CustomComboPreset.AST_DPS_LazyLord) && Gauge.DrawnCrownCard is CardType.LORD &&
-                            HasBattleTarget())
-                                return OriginalHook(MinorArcana);
-
-                            if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) && Gauge.DrawnCrownCard is not CardType.LORD && CanDelayedWeave(actionID))
-                                return OriginalHook(AstralDraw);
-                        }
-                        if (MaleficCount == 5 && CanWeave(actionID))
-                        {
-                            if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
-                            ActionReady(Play1) &&
-                            Gauge.DrawnCards[0] is not CardType.NONE)
-                                return OriginalHook(Play1);
-
-                            if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
-                            HasEffect(Buffs.Divining) &&
-                            CanSpellWeave(actionID))
-                                return Oracle;
-                        }
-
-                        if (MaleficCount > 0)
-                            return OriginalHook(Malefic);
-                    }
-
-                    //End opener
 
                     if (IsEnabled(CustomComboPreset.AST_DPS_LightSpeed) &&
                         ActionReady(Lightspeed) &&
                         GetTargetHPPercent() > Config.AST_DPS_LightSpeedOption &&
-                        IsMoving &&
+                        IsMoving() &&
                         !HasEffect(Buffs.Lightspeed))
                         return Lightspeed;
-
 
 
                     if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
                         LocalPlayer.CurrentMp <= Config.AST_LucidDreaming &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return All.LucidDreaming;
 
 
@@ -266,15 +204,14 @@ namespace WrathCombo.Combos.PvE
                     if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
                         ActionReady(Play1) &&
                         Gauge.DrawnCards[0] is not CardType.NONE &&
-                        CanSpellWeave(actionID) &&
-                        spellsSinceDraw >= Config.AST_ST_DPS_Play_SpeedSetting)
+                        CanSpellWeave())
                         return OriginalHook(Play1);
 
                     //Card Draw
                     if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
                         ActionReady(OriginalHook(AstralDraw)) &&
                         (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards)) &&
-                        CanDelayedWeave(actionID))
+                        CanDelayedWeave())
                         return OriginalHook(AstralDraw);
 
                     //Divination
@@ -282,26 +219,26 @@ namespace WrathCombo.Combos.PvE
                         ActionReady(Divination) &&
                         !HasEffectAny(Buffs.Divination) && //Overwrite protection
                         GetTargetHPPercent() > Config.AST_DPS_DivinationOption &&
-                        CanDelayedWeave(actionID) &&
+                        CanDelayedWeave() &&
                         ActionWatching.NumberOfGcdsUsed >= 3)
                         return Divination;
 
                     //Earthly Star
                     if (IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar) &&
                         ActionReady(EarthlyStar) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return EarthlyStar;
 
                     if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
                         HasEffect(Buffs.Divining) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Oracle;
 
                     //Minor Arcana / Lord of Crowns
                     if (ActionReady(OriginalHook(MinorArcana)) &&
                         IsEnabled(CustomComboPreset.AST_DPS_LazyLord) && Gauge.DrawnCrownCard is CardType.LORD &&
                         HasBattleTarget() &&
-                        CanDelayedWeave(actionID))
+                        CanDelayedWeave())
                         return OriginalHook(MinorArcana);                                       
 
                     if (HasBattleTarget())
@@ -315,7 +252,7 @@ namespace WrathCombo.Combos.PvE
                             if (IsEnabled(CustomComboPreset.AST_Variant_SpiritDart) &&
                                 IsEnabled(Variant.VariantSpiritDart) &&
                                 GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
-                                CanSpellWeave(actionID))
+                                CanSpellWeave())
                                 return Variant.VariantSpiritDart;
                             
                             float refreshTimer = Config.AST_ST_DPS_CombustUptime_Adv ? Config.AST_ST_DPS_CombustUptime_Threshold : 3;
@@ -333,65 +270,51 @@ namespace WrathCombo.Combos.PvE
         }
         internal class AST_AOE_DPS : CustomCombo
         {
-            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_DPS;
+            protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AOE_DPS;
             protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
             {
-                int spellsSinceDraw = ActionWatching.CombatActions.Any(x => x == OriginalHook(AstralDraw)) ? ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Malefic), OriginalHook(AstralDraw)) +
-                    ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Combust), OriginalHook(AstralDraw)) +
-                    ActionWatching.HowManyTimesUsedAfterAnotherAction(OriginalHook(Gravity), OriginalHook(AstralDraw)) : Config.AST_ST_DPS_Play_SpeedSetting;
-
-                if (spellsSinceDraw == 0 && DrawnCard != CardType.NONE)
-                {
-                    spellsSinceDraw = 1;
-                }
-
-                bool AlternateMode = GetIntOptionAsBool(Config.AST_DPS_AltMode); //(0 or 1 radio values)
-
-
-
-                if (IsEnabled(CustomComboPreset.AST_AOE_DPS) && GravityList.Contains(actionID) &&
-                InCombat())
+                if (GravityList.Contains(actionID))
                 {
                     //Variant stuff
                     if (IsEnabled(CustomComboPreset.AST_Variant_Rampart) &&
                         IsEnabled(Variant.VariantRampart) &&
                         IsOffCooldown(Variant.VariantRampart) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Variant.VariantRampart;
 
                     Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
                     if (IsEnabled(CustomComboPreset.AST_Variant_SpiritDart) &&
                         IsEnabled(Variant.VariantSpiritDart) &&
                         (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3) &&
-                        CanSpellWeave(actionID) &&
+                        CanSpellWeave() &&
                         IsEnabled(CustomComboPreset.AST_AOE_DPS) && GravityList.Contains(actionID))
                         return Variant.VariantSpiritDart;                                   
 
                     if (IsEnabled(CustomComboPreset.AST_AOE_LightSpeed) &&
                         ActionReady(Lightspeed) &&
                         GetTargetHPPercent() > Config.AST_AOE_LightSpeedOption &&
-                        IsMoving &&
+                        IsMoving() &&
                         !HasEffect(Buffs.Lightspeed))
                         return Lightspeed;
 
                     if (IsEnabled(CustomComboPreset.AST_AOE_Lucid) &&
                         ActionReady(All.LucidDreaming) &&
                         LocalPlayer.CurrentMp <= Config.AST_LucidDreaming &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return All.LucidDreaming;
 
                     //Play Card
                     if (IsEnabled(CustomComboPreset.AST_AOE_AutoPlay) &&
                         ActionReady(Play1) &&
                         Gauge.DrawnCards[0] is not CardType.NONE &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return OriginalHook(Play1);
 
                     //Card Draw
                     if (IsEnabled(CustomComboPreset.AST_AOE_AutoDraw) &&
                         ActionReady(OriginalHook(AstralDraw)) &&
                         (Gauge.DrawnCards.All(x => x is CardType.NONE) || (DrawnCard == CardType.NONE && Config.AST_AOE_DPS_OverwriteCards)) &&
-                        CanDelayedWeave(actionID))
+                        CanDelayedWeave())
                         return OriginalHook(AstralDraw);
 
                     //Divination
@@ -399,25 +322,25 @@ namespace WrathCombo.Combos.PvE
                         ActionReady(Divination) &&
                         !HasEffectAny(Buffs.Divination) && //Overwrite protection
                         GetTargetHPPercent() > Config.AST_AOE_DivinationOption &&
-                        CanDelayedWeave(actionID) &&
+                        CanDelayedWeave() &&
                         ActionWatching.NumberOfGcdsUsed >= 3)
                         return Divination;
                     //Earthly Star
-                    if (IsEnabled(CustomComboPreset.AST_AOE_DPS_EarthlyStar) && !IsMoving &&
+                    if (IsEnabled(CustomComboPreset.AST_AOE_DPS_EarthlyStar) && !IsMoving() &&
                         ActionReady(EarthlyStar) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return EarthlyStar;
 
                     if (IsEnabled(CustomComboPreset.AST_AOE_Oracle) &&
                         HasEffect(Buffs.Divining) &&
-                        CanSpellWeave(actionID))
+                        CanSpellWeave())
                         return Oracle;
 
                     //Minor Arcana / Lord of Crowns
                     if (ActionReady(OriginalHook(MinorArcana)) &&
                         IsEnabled(CustomComboPreset.AST_AOE_LazyLord) && Gauge.DrawnCrownCard is CardType.LORD &&
                         HasBattleTarget() &&
-                        CanDelayedWeave(actionID))
+                        CanDelayedWeave())
                         return OriginalHook(MinorArcana);
                 }
                 return actionID;
@@ -433,9 +356,9 @@ namespace WrathCombo.Combos.PvE
 
                 if (NonaspectedMode && actionID is Helios || !NonaspectedMode && actionID is AspectedHelios or HeliosConjuction)
                 {
-                    var canLady = (Config.AST_AoE_SimpleHeals_WeaveLady && CanSpellWeave(actionID)) || !Config.AST_AoE_SimpleHeals_WeaveLady;
-                    var canHoroscope = (Config.AST_AoE_SimpleHeals_Horoscope && CanSpellWeave(actionID)) || !Config.AST_AoE_SimpleHeals_Horoscope;
-                    var canOppose = (Config.AST_AoE_SimpleHeals_Opposition && CanSpellWeave(actionID)) || !Config.AST_AoE_SimpleHeals_Opposition;
+                    var canLady = (Config.AST_AoE_SimpleHeals_WeaveLady && CanSpellWeave()) || !Config.AST_AoE_SimpleHeals_WeaveLady;
+                    var canHoroscope = (Config.AST_AoE_SimpleHeals_Horoscope && CanSpellWeave()) || !Config.AST_AoE_SimpleHeals_Horoscope;
+                    var canOppose = (Config.AST_AoE_SimpleHeals_Opposition && CanSpellWeave()) || !Config.AST_AoE_SimpleHeals_Opposition;
 
                     if (!LevelChecked(AspectedHelios)) //Level check to return helios immediately below 40
                         return Helios;
@@ -490,13 +413,13 @@ namespace WrathCombo.Combos.PvE
             {
                 if (actionID is Benefic2)
                 {
-                    var canDignity = (Config.AST_ST_SimpleHeals_WeaveDignity && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveDignity;
-                    var canIntersect = (Config.AST_ST_SimpleHeals_WeaveIntersection && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveIntersection;
-                    var canExalt = (Config.AST_ST_SimpleHeals_WeaveExalt && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveExalt;
-                    var canEwer = (Config.AST_ST_SimpleHeals_WeaveEwer && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveEwer;
-                    var canSpire = (Config.AST_ST_SimpleHeals_WeaveSpire && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveSpire;
-                    var canBole = (Config.AST_ST_SimpleHeals_WeaveBole && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveBole;
-                    var canArrow = (Config.AST_ST_SimpleHeals_WeaveArrow && CanSpellWeave(actionID)) || !Config.AST_ST_SimpleHeals_WeaveArrow;
+                    var canDignity = (Config.AST_ST_SimpleHeals_WeaveDignity && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveDignity;
+                    var canIntersect = (Config.AST_ST_SimpleHeals_WeaveIntersection && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveIntersection;
+                    var canExalt = (Config.AST_ST_SimpleHeals_WeaveExalt && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveExalt;
+                    var canEwer = (Config.AST_ST_SimpleHeals_WeaveEwer && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveEwer;
+                    var canSpire = (Config.AST_ST_SimpleHeals_WeaveSpire && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveSpire;
+                    var canBole = (Config.AST_ST_SimpleHeals_WeaveBole && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveBole;
+                    var canArrow = (Config.AST_ST_SimpleHeals_WeaveArrow && CanSpellWeave()) || !Config.AST_ST_SimpleHeals_WeaveArrow;
 
                     //Grab our target (Soft->Hard->Self)
                     IGameObject? healTarget = this.OptionalTarget ?? GetHealTarget(Config.AST_ST_SimpleHeals_Adv && Config.AST_ST_SimpleHeals_UIMouseOver);

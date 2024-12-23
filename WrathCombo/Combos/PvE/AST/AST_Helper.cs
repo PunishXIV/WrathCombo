@@ -4,9 +4,13 @@ using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using Lumina.Excel.Sheets;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE
@@ -15,6 +19,34 @@ namespace WrathCombo.Combos.PvE
     {
         public static ASTGauge Gauge => CustomComboFunctions.GetJobGauge<ASTGauge>();
         public static CardType DrawnCard { get; set; }
+        public static ASTOpenerMaxLevel1 Opener1 = new();
+
+        public static int SpellsSinceDraw()
+        {
+            if (ActionWatching.CombatActions.Count == 0)
+                return 0;
+
+            var spellToCheck = Gauge.ActiveDraw == DrawType.ASTRAL ? UmbralDraw : AstralDraw;
+            var idx = ActionWatching.CombatActions.LastIndexOf(spellToCheck);
+            if (idx == -1)
+                idx = 0;
+
+            int ret = 0;
+            for (int i = idx; i < ActionWatching.CombatActions.Count; i++)
+            {
+                if (ActionWatching.GetAttackType(ActionWatching.CombatActions[i]) == ActionWatching.ActionAttackType.Spell)
+                    ret++;
+            }
+            return ret;
+            
+        }
+
+        public static WrathOpener Opener()
+        {
+            if (Opener1.LevelChecked) return Opener1;
+
+            return WrathOpener.Dummy;
+        }
 
         internal static void InitCheckCards()
         {
@@ -219,6 +251,63 @@ namespace WrathCombo.Combos.PvE
         internal static void DisposeCheckCards()
         {
             Svc.Framework.Update -= CheckCards;
+        }
+
+        internal class ASTOpenerMaxLevel1 : WrathOpener
+        {
+            public override List<uint> OpenerActions { get; set; } =
+            [
+                EarthlyStar,
+                FallMalefic,
+                Combust3,
+                Lightspeed,
+                FallMalefic,
+                FallMalefic,
+                Divination,
+                Balance,
+                FallMalefic,
+                LordOfCrowns,
+                UmbralDraw,
+                FallMalefic,
+                Spear,
+                Oracle,
+                FallMalefic,
+                FallMalefic,
+                FallMalefic,
+                FallMalefic,
+                FallMalefic,
+                Combust3,
+                FallMalefic
+
+            ];
+            public override int MinOpenerLevel => 92;
+            public override int MaxOpenerLevel => 109;
+
+            internal override UserData? ContentCheckConfig => Config.AST_ST_DPS_Balance_Content;
+
+            public override bool HasCooldowns()
+            {
+                if (CustomComboFunctions.GetCooldown(EarthlyStar).CooldownElapsed >= 4f)
+                    return false;
+
+                if (!CustomComboFunctions.ActionReady(Lightspeed))
+                    return false;
+
+                if (!CustomComboFunctions.ActionReady(Divination))
+                    return false;
+
+                if (!CustomComboFunctions.ActionReady(Balance))
+                    return true;
+
+                if (!CustomComboFunctions.ActionReady(LordOfCrowns))
+                    return false;
+
+                if (!CustomComboFunctions.ActionReady(UmbralDraw))
+                    return false;
+
+
+                return true;
+            }
         }
     }
 }

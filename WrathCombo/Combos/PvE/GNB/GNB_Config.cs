@@ -47,6 +47,7 @@ internal partial class GNB
             GNB_Mit_Aurora_Charges = new("GNB_Mit_Aurora_Charges", 0),
             GNB_NM_Features_Weave = new("GNB_NM_Features_Weave", 0),
             GNB_GF_Features_Choice = new("GNB_GF_Features_Choice", 0),
+            GNB_ST_Balance_Content = new("GNB_ST_Balance_Content", 1),
 
             //Bozja
             GNB_Bozja_LostCure_Health = new("GNB_Bozja_LostCure_Health", 50),
@@ -60,6 +61,9 @@ internal partial class GNB
         {
             switch (preset)
             {
+                case CustomComboPreset.GNB_ST_Advanced_Opener:
+                    UserConfig.DrawBossOnlyChoice(GNB_ST_Balance_Content);
+                    break;
                 case CustomComboPreset.GNB_Bozja_LostCure:
                     UserConfig.DrawSliderInt(1, 100, GNB_Bozja_LostCure_Health,
                         "Player HP% to be \nless than or equal to:", 200);

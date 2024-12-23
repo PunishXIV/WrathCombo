@@ -24,7 +24,8 @@ internal static partial class MNK
             MNK_AoE_SecondWind_Threshold = new("MNK_AoE_SecondWindThreshold", 25),
             MNK_AoE_Bloodbath_Threshold = new("MNK_AoE_BloodbathThreshold", 40),
             MNK_VariantCure = new("MNK_Variant_Cure"),
-            MNK_SelectedOpener = new("MNK_SelectedOpener");
+            MNK_SelectedOpener = new("MNK_SelectedOpener"),
+            MNK_Balance_Content = new("MNK_Balance_Content", 1);
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -90,6 +91,8 @@ internal static partial class MNK
 
                     DrawHorizontalRadioButton(MNK_SelectedOpener, "Solar Lunar", "Uses Solar/Lunar opener",
                         1);
+
+                    DrawBossOnlyChoice(MNK_Balance_Content);
 
                     break;
 

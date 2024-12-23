@@ -14,7 +14,8 @@ internal partial class SMN
             SMN_PrimalChoice = new("SMN_PrimalChoice"),
             SMN_SwiftcastPhase = new("SMN_SwiftcastPhase"),
             SMN_Burst_Delay = new("SMN_Burst_Delay"),
-            SMN_VariantCure = new("SMN_VariantCure");
+            SMN_VariantCure = new("SMN_VariantCure"),
+            SMN_Balance_Content = new("SMN_Balance_Content", 1);
 
         public static UserBoolArray
             SMN_ST_Egi_AstralFlow = new("SMN_ST_Egi_AstralFlow");
@@ -26,6 +27,10 @@ internal partial class SMN
         {
             switch (preset)
             {
+                case CustomComboPreset.SMN_Advanced_Combo_Balance_Opener:
+                    UserConfig.DrawBossOnlyChoice(SMN_Balance_Content);
+                    break;
+
                 case CustomComboPreset.SMN_DemiEgiMenu_EgiOrder:
                     UserConfig.DrawHorizontalRadioButton(SMN_PrimalChoice, "Titan first",
                         "Summons Titan, Garuda then Ifrit.", 1);

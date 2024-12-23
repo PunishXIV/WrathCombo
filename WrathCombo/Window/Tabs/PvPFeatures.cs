@@ -22,8 +22,6 @@ namespace WrathCombo.Window.Tabs
 
             using (var scrolling = ImRaii.Child("scrolling", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y), true))
             {
-                int i = 1;
-
                 var indentwidth = 12f.Scale();
                 var indentwidth2 = indentwidth + 42f.Scale();
 
@@ -75,7 +73,7 @@ namespace WrathCombo.Window.Tabs
                     var id = groupedPresets[OpenJob].First().Info.JobID;
                     IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
 
-                    using (var headingTab = ImRaii.Child("PvPHeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, icon is null ? 24f.Scale() : (icon.Size.Y / 2f.Scale()) + 4f)))
+                    using (var headingTab = ImRaii.Child("PvPHeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, icon is null ? 24f.Scale() : (icon.Size.Y / 2f).Scale() + 4f)))
                     {
                         if (ImGui.Button("Back", new Vector2(0, 24f.Scale())))
                         {
@@ -97,14 +95,14 @@ namespace WrathCombo.Window.Tabs
 
                     using (var contents = ImRaii.Child("Contents", new Vector2(0)))
                     {
-
+                        ConfigWindow.currentPreset = 1;
                         try
                         {
                             if (ImGui.BeginTabBar($"subTab{OpenJob}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
                             {
                                 if (ImGui.BeginTabItem("Normal"))
                                 {
-                                    DrawHeadingContents(OpenJob, i);
+                                    DrawHeadingContents(OpenJob);
                                     ImGui.EndTabItem();
                                 }
 
@@ -119,11 +117,11 @@ namespace WrathCombo.Window.Tabs
             }
         }
 
-        private static void DrawHeadingContents(string jobName, int i)
+        private static void DrawHeadingContents(string jobName)
         {
             foreach (var (preset, info) in groupedPresets[jobName].Where(x => PresetStorage.IsPvP(x.Preset)))
             {
-                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info, ref i); } };
+                InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f.Scale(), ContentsOffset = 8f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info); } };
 
                 if (Service.Configuration.HideConflictedCombos)
                 {
@@ -144,13 +142,12 @@ namespace WrathCombo.Window.Tabs
 
                         // Keep removed items in the counter
                         var parent = PresetStorage.GetParent(preset) ?? preset;
-                        i += 1 + Presets.AllChildren(presetChildren[parent]);
+                        currentPreset += 1 + Presets.AllChildren(presetChildren[parent]);
                     }
 
                     else
                     {
                         presetBox.Draw();
-                        ImGuiHelpers.ScaledDummy(12.0f);
                         continue;
                     }
                 }

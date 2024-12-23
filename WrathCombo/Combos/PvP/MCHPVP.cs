@@ -57,7 +57,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID == BlastCharge)
                 {
-                    var canWeave = CanWeave(actionID);
+                    var canWeave = CanWeave();
                     var analysisStacks = GetRemainingCharges(Analysis);
                     var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
                     var overheated = HasEffect(Buffs.Overheated);

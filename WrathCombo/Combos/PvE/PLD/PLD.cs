@@ -45,8 +45,8 @@ namespace WrathCombo.Combos.PvE
             BladeOfValor = 25750,
             FightOrFlight = 20,
             Atonement = 16460,
-            //Supplication = 36918, // Second Atonement
-            //Sepulchre = 36919, // Third Atonement
+            Supplication = 36918, // Second Atonement
+            Sepulchre = 36919, // Third Atonement
             Intervene = 16461,
             BladeOfHonor = 36922,
             Sheltron = 3542;
@@ -84,35 +84,38 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                #region Variables
-                float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
-                float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
-                float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-                uint playerMP = LocalPlayer.CurrentMp;
-                bool canWeave = CanWeave(actionID);
-                bool canEarlyWeave = CanWeave(actionID, 1.5f);
-                bool hasRequiescat = HasEffect(Buffs.Requiescat);
-                bool hasDivineMight = HasEffect(Buffs.DivineMight);
-                bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
-                bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
-                bool hasRequiescatMP = playerMP >= GetResourceCost(HolySpirit) * 3.6;
-                bool inBurstWindow = JustUsed(FightOrFlight, 30f);
-                bool inAtonementStarter = HasEffect(Buffs.AtonementReady);
-                bool inAtonementFinisher = HasEffect(Buffs.SepulchreReady);
-                bool afterOpener = LevelChecked(BladeOfFaith) && RoyalAuthorityCount > 0;
-                bool inAtonementPhase = HasEffect(Buffs.AtonementReady) || HasEffect(Buffs.SupplicationReady) || HasEffect(Buffs.SepulchreReady);
-                bool isDivineMightExpiring = GetBuffRemainingTime(Buffs.DivineMight) < 6;
-                bool isAtonementExpiring = (HasEffect(Buffs.AtonementReady) && GetBuffRemainingTime(Buffs.AtonementReady) < 6) ||
-                                            (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
-                                            (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
-                #endregion
-
                 if (actionID is FastBlade)
                 {
+                    #region Variables
+                    float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
+                    float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
+                    float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
+                    uint playerMP = LocalPlayer.CurrentMp;
+                    bool canWeave = CanWeave();
+                    bool canEarlyWeave = CanWeave(1.5f);
+                    bool hasRequiescat = HasEffect(Buffs.Requiescat);
+                    bool hasDivineMight = HasEffect(Buffs.DivineMight);
+                    bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
+                    bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
+                    bool hasRequiescatMP = playerMP >= GetResourceCost(HolySpirit) * 3.6;
+                    bool inBurstWindow = JustUsed(FightOrFlight, 30f);
+                    bool inAtonementStarter = HasEffect(Buffs.AtonementReady);
+                    bool inAtonementFinisher = HasEffect(Buffs.SepulchreReady);
+                    bool afterOpener = LevelChecked(BladeOfFaith) && RoyalAuthorityCount > 0;
+                    bool inAtonementPhase = HasEffect(Buffs.AtonementReady) || HasEffect(Buffs.SupplicationReady) || HasEffect(Buffs.SepulchreReady);
+                    bool isDivineMightExpiring = GetBuffRemainingTime(Buffs.DivineMight) < 6;
+                    bool isAtonementExpiring = (HasEffect(Buffs.AtonementReady) && GetBuffRemainingTime(Buffs.AtonementReady) < 6) ||
+                                                (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
+                                                (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
+                    #endregion
+
                     // Variant Cure
                     if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
                         return Variant.VariantCure;
+
+                    if (Opener().FullOpener(ref actionID))
+                        return actionID;
 
                     if (HasBattleTarget())
                     {
@@ -238,20 +241,20 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                #region Variables
-                float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
-                float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-                uint playerMP = LocalPlayer.CurrentMp;
-                bool canWeave = CanWeave(actionID);
-                bool canEarlyWeave = CanWeave(actionID, 1.5f);
-                bool hasRequiescat = HasEffect(Buffs.Requiescat);
-                bool hasDivineMight = HasEffect(Buffs.DivineMight);
-                bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
-                bool hasRequiescatMP = playerMP >= GetResourceCost(HolySpirit) * 3.6;
-                #endregion
-
                 if (actionID is TotalEclipse)
                 {
+                    #region Variables
+                    float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
+                    float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
+                    uint playerMP = LocalPlayer.CurrentMp;
+                    bool canWeave = CanWeave();
+                    bool canEarlyWeave = CanWeave(1.5f);
+                    bool hasRequiescat = HasEffect(Buffs.Requiescat);
+                    bool hasDivineMight = HasEffect(Buffs.DivineMight);
+                    bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
+                    bool hasRequiescatMP = playerMP >= GetResourceCost(HolySpirit) * 3.6;
+                    #endregion
+
                     // Variant Cure
                     if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
@@ -326,40 +329,44 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                #region Variables
-                float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
-                float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
-                float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-                uint playerMP = LocalPlayer.CurrentMp;
-                bool canWeave = CanWeave(actionID);
-                bool canEarlyWeave = CanWeave(actionID, 1.5f);
-                bool hasRequiescat = HasEffect(Buffs.Requiescat);
-                bool hasDivineMight = HasEffect(Buffs.DivineMight);
-                bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
-                bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
-                bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
-                                             JustUsed(All.Rampart, 5f) || JustUsed(HallowedGround, 9f);
-                bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
-                                       (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_ST_MP_Reserve);
-                bool inBurstWindow = JustUsed(FightOrFlight, 30f);
-                bool inAtonementStarter = HasEffect(Buffs.AtonementReady);
-                bool inAtonementFinisher = HasEffect(Buffs.SepulchreReady);
-                bool afterOpener = LevelChecked(BladeOfFaith) && RoyalAuthorityCount > 0;
-                bool isDivineMightExpiring = GetBuffRemainingTime(Buffs.DivineMight) < 6;
-                bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) ||
-                                        (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_ST_MP_Reserve);
-                bool inAtonementPhase = HasEffect(Buffs.AtonementReady) || HasEffect(Buffs.SupplicationReady) || HasEffect(Buffs.SepulchreReady);
-                bool isAtonementExpiring = (HasEffect(Buffs.AtonementReady) && GetBuffRemainingTime(Buffs.AtonementReady) < 6) ||
-                                            (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
-                                            (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
-                #endregion
-
                 if (actionID is FastBlade)
                 {
+                    #region Variables
+                    float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
+                    float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
+                    float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
+                    uint playerMP = LocalPlayer.CurrentMp;
+                    bool canWeave = CanWeave();
+                    bool canEarlyWeave = CanWeave(1.5f);
+                    bool hasRequiescat = HasEffect(Buffs.Requiescat);
+                    bool hasDivineMight = HasEffect(Buffs.DivineMight);
+                    bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
+                    bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
+                    bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
+                                                 JustUsed(All.Rampart, 5f) || JustUsed(HallowedGround, 9f);
+                    bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
+                                           (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_ST_MP_Reserve);
+                    bool inBurstWindow = JustUsed(FightOrFlight, 30f);
+                    bool inAtonementStarter = HasEffect(Buffs.AtonementReady);
+                    bool inAtonementFinisher = HasEffect(Buffs.SepulchreReady);
+                    bool afterOpener = LevelChecked(BladeOfFaith) && RoyalAuthorityCount > 0;
+                    bool isDivineMightExpiring = GetBuffRemainingTime(Buffs.DivineMight) < 6;
+                    bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) ||
+                                            (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_ST_MP_Reserve);
+                    bool inAtonementPhase = HasEffect(Buffs.AtonementReady) || HasEffect(Buffs.SupplicationReady) || HasEffect(Buffs.SepulchreReady);
+                    bool isAtonementExpiring = (HasEffect(Buffs.AtonementReady) && GetBuffRemainingTime(Buffs.AtonementReady) < 6) ||
+                                                (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
+                                                (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
+                    #endregion
+
                     // Variant Cure
                     if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
                         return Variant.VariantCure;
+
+                    if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_BalanceOpener) &&
+                        Opener().FullOpener(ref actionID))
+                        return actionID;
 
                     if (HasBattleTarget())
                     {
@@ -419,7 +426,7 @@ namespace WrathCombo.Combos.PvE
                                 return Variant.VariantSpiritDart;
 
                             // Intervene
-                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Intervene) && LevelChecked(Intervene) && !IsMoving &&
+                            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Intervene) && LevelChecked(Intervene) && TimeMoving.Ticks == 0 &&
                                 cooldownFightOrFlight > 40 && GetRemainingCharges(Intervene) > Config.PLD_Intervene_HoldCharges && !WasLastAction(Intervene) &&
                                 ((Config.PLD_Intervene_MeleeOnly == 1 && InMeleeRange()) || (GetTargetDistance() == 0 && Config.PLD_Intervene_MeleeOnly == 2)))
                                 return Intervene;
@@ -500,7 +507,7 @@ namespace WrathCombo.Combos.PvE
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_ShieldLob) && !InMeleeRange())
                         {
                             // Holy Spirit (Not Moving)
-                            if (LevelChecked(HolySpirit) && hasDivineMagicMP && isAboveMPReserve && !IsMoving && Config.PLD_ShieldLob_SubOption == 2)
+                            if (LevelChecked(HolySpirit) && hasDivineMagicMP && isAboveMPReserve && TimeMoving.Ticks == 0 && Config.PLD_ShieldLob_SubOption == 2)
                                 return HolySpirit;
 
                             // Shield Lob
@@ -530,25 +537,25 @@ namespace WrathCombo.Combos.PvE
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
-                #region Variables
-                float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
-                float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-                uint playerMP = LocalPlayer.CurrentMp;
-                bool canWeave = CanWeave(actionID);
-                bool canEarlyWeave = CanWeave(actionID, 1.5f);
-                bool hasRequiescat = HasEffect(Buffs.Requiescat);
-                bool hasDivineMight = HasEffect(Buffs.DivineMight);
-                bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
-                bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
-                                             JustUsed(All.Rampart, 5f) || JustUsed(HallowedGround, 9f);
-                bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
-                                       (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_AoE_MP_Reserve);
-                bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) ||
-                                        (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_AoE_MP_Reserve);
-                #endregion
-
                 if (actionID is TotalEclipse)
                 {
+                    #region Variables
+                    float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
+                    float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
+                    uint playerMP = LocalPlayer.CurrentMp;
+                    bool canWeave = CanWeave();
+                    bool canEarlyWeave = CanWeave(1.5f);
+                    bool hasRequiescat = HasEffect(Buffs.Requiescat);
+                    bool hasDivineMight = HasEffect(Buffs.DivineMight);
+                    bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
+                    bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
+                                                 JustUsed(All.Rampart, 5f) || JustUsed(HallowedGround, 9f);
+                    bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
+                                           (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_AoE_MP_Reserve);
+                    bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) ||
+                                            (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_AoE_MP_Reserve);
+                    #endregion
+
                     // Variant Cure
                     if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                         PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
@@ -595,7 +602,7 @@ namespace WrathCombo.Combos.PvE
                                 return Variant.VariantSpiritDart;
 
                             // Intervene
-                            if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Intervene) && LevelChecked(Intervene) && !IsMoving &&
+                            if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Intervene) && LevelChecked(Intervene) && TimeMoving.Ticks == 0 &&
                                 cooldownFightOrFlight > 40 && GetRemainingCharges(Intervene) > Config.PLD_AoE_Intervene_HoldCharges && !WasLastAction(Intervene) &&
                                 ((Config.PLD_AoE_Intervene_MeleeOnly == 1 && InMeleeRange()) || (GetTargetDistance() == 0 && Config.PLD_AoE_Intervene_MeleeOnly == 2)))
                                 return Intervene;
@@ -711,7 +718,7 @@ namespace WrathCombo.Combos.PvE
             {
                 if (actionID is ShieldLob)
                 {
-                    if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (!IsMoving || HasEffect(Buffs.DivineMight)))
+                    if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (TimeMoving.Ticks == 0 || HasEffect(Buffs.DivineMight)))
                         return HolySpirit;
                 }
 

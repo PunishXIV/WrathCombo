@@ -67,7 +67,7 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_WindsReply) && InActionRange(WindsReply) && IsOffCooldown(WindsReply))
                             return WindsReply;
 
-                        if (CanWeave(actionID))
+                        if (CanWeave())
                         {
                                 if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth) && HasEffect(Buffs.EarthResonance) && GetBuffRemainingTime(Buffs.EarthResonance) < 6)
                                 return OriginalHook(EarthsReply);

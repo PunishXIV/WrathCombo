@@ -59,7 +59,7 @@ namespace WrathCombo.Combos.PvP
                 {
                     #region types
                     double distance = GetTargetDistance();
-                    bool canWeave = CanWeave(actionID);                    
+                    bool canWeave = CanWeave();                    
                     bool canBind = !TargetHasEffect(PvPCommon.Debuffs.Bind);
                     bool deathWarrantReady = IsOffCooldown(DeathWarrant);
                     bool plentifulReady = IsOffCooldown(PlentifulHarvest);
@@ -101,11 +101,11 @@ namespace WrathCombo.Combos.PvP
                             {
                                 // Holds Communio when moving & Enshrouded Time Remaining > 2s
                                 // Returns a Void/Cross Reaping if under 2s to avoid charge waste
-                                if (IsMoving && GetBuffRemainingTime(Buffs.Enshrouded) > 2)
+                                if (IsMoving() && GetBuffRemainingTime(Buffs.Enshrouded) > 2)
                                     return BLM.Xenoglossy;
 
                                 // Returns Communio if stationary
-                                if (!IsMoving)
+                                if (!IsMoving())
                                     return Communio;
                             }
                         }

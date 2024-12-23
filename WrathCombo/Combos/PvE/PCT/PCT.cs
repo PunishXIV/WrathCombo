@@ -71,56 +71,29 @@ namespace WrathCombo.Combos.PvE
         {
 
         }
-        
+
 
         internal class PCT_ST_SimpleMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PCT_ST_SimpleMode;
-            internal static PCTOpenerLogicLvl100 PCTOpenerLvl100 = new();
-            internal static PCTOpenerLogicLvl92 PCTOpenerLvl92 = new();
-            internal static PCTOpenerLogicLvl90 PCTOpenerLvl90 = new();
-            internal static PCTOpenerLogicLvl80 PCTOpenerLvl80 = new();
-            internal static PCTOpenerLogicLvl70 PCTOpenerLvl70 = new();
+
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
                 if (actionID is FireInRed)
                 {
                     PCTGauge gauge = GetJobGauge<PCTGauge>();
-                    bool canWeave = CanSpellWeave(ActionWatching.LastSpell) || CanSpellWeave(actionID);
+                    bool canWeave = CanSpellWeave() || CanSpellWeave();
 
-                    // Variant Cure
-                    if (IsEnabled(CustomComboPreset.PCT_Variant_Cure) &&
-                        IsEnabled(Variant.VariantCure) &&
-                        PlayerHealthPercentageHp() <= GetOptionValue(Config.PCT_VariantCure))
-                        return Variant.VariantCure;
 
-                    // Variant Rampart
-                    if (IsEnabled(CustomComboPreset.PCT_Variant_Rampart) &&
-                        IsEnabled(Variant.VariantRampart) &&
-                        IsOffCooldown(Variant.VariantRampart) &&
-                        canWeave)
-                        return Variant.VariantRampart;
-
-                    // Prepull logic
-
-                    if (!InCombat() || InCombat() && CurrentTarget == null)
-                    {
-                        if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
-                            return OriginalHook(CreatureMotif);
-                        if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
-                            return OriginalHook(WeaponMotif);
-                        if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasEffect(Buffs.StarryMuse))
-                            return OriginalHook(LandscapeMotif);
-                    }
 
                     // Lvl 100 Opener
                     if (StarPrism.LevelChecked())
                     {
-                        if (PCTOpenerLvl100.DoFullOpener(ref actionID))
+                        if (Opener().FullOpener(ref actionID))
                             return actionID;
                     }
-                    // Lvl 92 Opener
+                    /* Lvl 92 Opener
                     else if (!StarPrism.LevelChecked() && RainbowDrip.LevelChecked())
                     {
                         if (PCTOpenerLvl92.DoFullOpener(ref actionID))
@@ -144,12 +117,13 @@ namespace WrathCombo.Combos.PvE
                         if (PCTOpenerLvl70.DoFullOpener(ref actionID))
                             return actionID;
                     }
-                    
+                    */
+
                     // General Weaves
                     if (InCombat() && canWeave)
                     {
                         // ScenicMuse
-                        
+
                         if (ScenicMuse.LevelChecked() &&
                             gauge.LandscapeMotifDrawn &&
                             gauge.WeaponMotifDrawn &&
@@ -157,9 +131,9 @@ namespace WrathCombo.Combos.PvE
                         {
                             return OriginalHook(ScenicMuse);
                         }
-                        
+
                         // LivingMuse
-                                                
+
                         if (LivingMuse.LevelChecked() &&
                             gauge.CreatureMotifDrawn &&
                             (!(gauge.MooglePortraitReady || gauge.MadeenPortraitReady) ||
@@ -174,9 +148,9 @@ namespace WrathCombo.Combos.PvE
                                 }
                             }
                         }
-                        
+
                         // SteelMuse
-                        
+
                         if (SteelMuse.LevelChecked() &&
                             !HasEffect(Buffs.HammerTime) &&
                             gauge.WeaponMotifDrawn &&
@@ -187,9 +161,9 @@ namespace WrathCombo.Combos.PvE
                         {
                             return OriginalHook(SteelMuse);
                         }
-                        
+
                         // MogoftheAges
-                                                
+
                         if (MogoftheAges.LevelChecked() &&
                             (gauge.MooglePortraitReady || gauge.MadeenPortraitReady) &&
                             IsOffCooldown(OriginalHook(MogoftheAges)) &&
@@ -197,10 +171,10 @@ namespace WrathCombo.Combos.PvE
                         {
                             return OriginalHook(MogoftheAges);
                         }
-                        
+
                         // Swiftcast
-                                               
-                        if (IsMoving &&
+
+                        if (IsMoving() &&
                             IsOffCooldown(All.Swiftcast) &&
                             All.Swiftcast.LevelChecked() &&
                             !HasEffect(Buffs.HammerTime) &&
@@ -209,9 +183,9 @@ namespace WrathCombo.Combos.PvE
                         {
                             return All.Swiftcast;
                         }
-                        
+
                         // SubtractivePalette
-                                                
+
                         if (SubtractivePalette.LevelChecked() &&
                             !HasEffect(Buffs.SubtractivePalette) &&
                             !HasEffect(Buffs.MonochromeTones))
@@ -235,7 +209,7 @@ namespace WrathCombo.Combos.PvE
                     }
 
                     // IsMoving logic
-                    if (IsMoving && InCombat())
+                    if (IsMoving() && InCombat())
                     {
                         if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
                             return OriginalHook(HammerStamp);
@@ -274,11 +248,11 @@ namespace WrathCombo.Combos.PvE
                             return OriginalHook(HammerStamp);
 
                         if (HasEffect(Buffs.Starstruck) || HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) <= 3f)
-                                return StarPrism;
-                        
+                            return StarPrism;
+
                         if (HasEffect(Buffs.RainbowBright) || HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) <= 3f)
-                                return RainbowDrip;
-                        
+                            return RainbowDrip;
+
 
                     }
 
@@ -294,36 +268,36 @@ namespace WrathCombo.Combos.PvE
                     if (!HasEffect(Buffs.StarryMuse))
                     {
                         // LandscapeMotif
-                                                
+
                         if (LandscapeMotif.LevelChecked() &&
                             !gauge.LandscapeMotifDrawn &&
                             GetCooldownRemainingTime(ScenicMuse) <= 20)
                         {
                             return OriginalHook(LandscapeMotif);
                         }
-                        
+
                         // CreatureMotif
-                                                
+
                         if (CreatureMotif.LevelChecked() &&
                             !gauge.CreatureMotifDrawn &&
                             (HasCharges(LivingMuse) || GetCooldownChargeRemainingTime(LivingMuse) <= 8))
                         {
                             return OriginalHook(CreatureMotif);
                         }
-                        
+
                         // WeaponMotif
-                                            
+
                         if (WeaponMotif.LevelChecked() &&
                             !HasEffect(Buffs.HammerTime) &&
                             !gauge.WeaponMotifDrawn &&
                             (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
                         {
                             return OriginalHook(WeaponMotif);
-                        }                        
+                        }
                     }
 
 
-                    if (All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave(actionID) && LocalPlayer.CurrentMp <= 6500)
+                    if (All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= 6500)
                         return All.LucidDreaming;
 
                     if (BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
@@ -338,22 +312,17 @@ namespace WrathCombo.Combos.PvE
         internal class PCT_ST_AdvancedMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PCT_ST_AdvancedMode;
-            internal static PCTOpenerLogicLvl100 PCTOpenerLvl100 = new();
-            internal static PCTOpenerLogicLvl92 PCTOpenerLvl92 = new();
-            internal static PCTOpenerLogicLvl90 PCTOpenerLvl90 = new();
-            internal static PCTOpenerLogicLvl80 PCTOpenerLvl80 = new();
-            internal static PCTOpenerLogicLvl70 PCTOpenerLvl70 = new();
 
             protected override uint Invoke(uint actionID, uint lastComboActionID, float comboTime, byte level)
             {
                 if (actionID is FireInRed)
                 {
                     PCTGauge gauge = GetJobGauge<PCTGauge>();
-                    bool canWeave = CanSpellWeave(ActionWatching.LastSpell) || CanSpellWeave(actionID);
+                    bool canWeave = CanSpellWeave() || CanSpellWeave();
                     int creatureStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_CreatureStop);
                     int landscapeStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_LandscapeStop);
                     int weaponStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_WeaponStop);
-                    
+
                     // Variant Cure
                     if (IsEnabled(CustomComboPreset.PCT_Variant_Cure) &&
                         IsEnabled(Variant.VariantCure) &&
@@ -387,10 +356,10 @@ namespace WrathCombo.Combos.PvE
                         // Lvl 100 Opener
                         if (StarPrism.LevelChecked())
                         {
-                            if (PCTOpenerLvl100.DoFullOpener(ref actionID))
+                            if (Opener().FullOpener(ref actionID))
                                 return actionID;
                         }
-                        // Lvl 92 Opener
+                        /* Lvl 92 Opener
                         else if (!StarPrism.LevelChecked() && RainbowDrip.LevelChecked())
                         {
                             if (PCTOpenerLvl92.DoFullOpener(ref actionID))
@@ -414,6 +383,7 @@ namespace WrathCombo.Combos.PvE
                             if (PCTOpenerLvl70.DoFullOpener(ref actionID))
                                 return actionID;
                         }
+                        */
                     }
 
                     // General Weaves
@@ -506,7 +476,7 @@ namespace WrathCombo.Combos.PvE
                     }
 
                     // IsMoving logic
-                    if (IsMoving && InCombat())
+                    if (IsMoving() && InCombat())
                     {
                         if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
                             return OriginalHook(HammerStamp);
@@ -524,8 +494,8 @@ namespace WrathCombo.Combos.PvE
                             return OriginalHook(HolyInWhite);
 
                         if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwitfcastOption) && ActionReady(All.Swiftcast) &&
-                            ((LevelChecked(CreatureMotif) && !gauge.CreatureMotifDrawn) || 
-                             (LevelChecked(WeaponMotif) && !gauge.WeaponMotifDrawn) || 
+                            ((LevelChecked(CreatureMotif) && !gauge.CreatureMotifDrawn) ||
+                             (LevelChecked(WeaponMotif) && !gauge.WeaponMotifDrawn) ||
                              (LevelChecked(LandscapeMotif) && !gauge.LandscapeMotifDrawn)))
                             return All.Swiftcast;
                     }
@@ -614,7 +584,7 @@ namespace WrathCombo.Combos.PvE
                     }
 
 
-                    if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LucidDreaming) && All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave(actionID) && LocalPlayer.CurrentMp <= Config.PCT_ST_AdvancedMode_LucidOption)
+                    if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LucidDreaming) && All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= Config.PCT_ST_AdvancedMode_LucidOption)
                         return All.LucidDreaming;
 
                     if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
@@ -634,7 +604,7 @@ namespace WrathCombo.Combos.PvE
                 if (actionID is FireIIinRed)
                 {
                     var gauge = GetJobGauge<PCTGauge>();
-                    bool canWeave = CanSpellWeave(ActionWatching.LastSpell);
+                    bool canWeave = CanSpellWeave();
 
                     // Variant Cure
                     if (IsEnabled(CustomComboPreset.PCT_Variant_Cure) &&
@@ -654,20 +624,20 @@ namespace WrathCombo.Combos.PvE
 
                     if (!InCombat() || InCombat() && CurrentTarget == null)
                     {
-                        if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn) 
+                        if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
                             return OriginalHook(CreatureMotif);
                         if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
                             return OriginalHook(WeaponMotif);
                         if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasEffect(Buffs.StarryMuse))
                             return OriginalHook(LandscapeMotif);
                     }
-                    
+
 
                     // General Weaves
                     if (InCombat() && canWeave)
                     {
                         // LivingMuse
-                                                
+
                         if (LivingMuse.LevelChecked() &&
                             gauge.CreatureMotifDrawn &&
                             (!(gauge.MooglePortraitReady || gauge.MadeenPortraitReady) ||
@@ -682,9 +652,9 @@ namespace WrathCombo.Combos.PvE
                                 }
                             }
                         }
-                        
+
                         // ScenicMuse
-                                                
+
                         if (ScenicMuse.LevelChecked() &&
                             gauge.LandscapeMotifDrawn &&
                             gauge.WeaponMotifDrawn &&
@@ -692,9 +662,9 @@ namespace WrathCombo.Combos.PvE
                         {
                             return OriginalHook(ScenicMuse);
                         }
-                        
+
                         // SteelMuse
-                                                
+
                         if (SteelMuse.LevelChecked() &&
                             !HasEffect(Buffs.HammerTime) &&
                             gauge.WeaponMotifDrawn &&
@@ -705,17 +675,17 @@ namespace WrathCombo.Combos.PvE
                         {
                             return OriginalHook(SteelMuse);
                         }
-                        
+
                         // MogoftheAges
-                                                
+
                         if (MogoftheAges.LevelChecked() &&
                             (gauge.MooglePortraitReady || gauge.MadeenPortraitReady) &&
                             (IsOffCooldown(OriginalHook(MogoftheAges)) || !ScenicMuse.LevelChecked()))
                         {
                             return OriginalHook(MogoftheAges);
                         }
-                        
-                        if (IsMoving &&
+
+                        if (IsMoving() &&
                             IsOffCooldown(All.Swiftcast) &&
                             All.Swiftcast.LevelChecked() &&
                             !HasEffect(Buffs.HammerTime) &&
@@ -724,9 +694,9 @@ namespace WrathCombo.Combos.PvE
                         {
                             return All.Swiftcast;
                         }
-                        
+
                         // Subtractive Palette
-                        if  (SubtractivePalette.LevelChecked() &&
+                        if (SubtractivePalette.LevelChecked() &&
                             !HasEffect(Buffs.SubtractivePalette) &&
                             !HasEffect(Buffs.MonochromeTones))
                         {
@@ -745,7 +715,7 @@ namespace WrathCombo.Combos.PvE
                             return OriginalHook(LandscapeMotif);
                     }
 
-                    if (IsMoving && InCombat())
+                    if (IsMoving() && InCombat())
                     {
                         if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
                             return OriginalHook(HammerStamp);
@@ -787,11 +757,11 @@ namespace WrathCombo.Combos.PvE
 
                         // Check for Starstruck
                         if (HasEffect(Buffs.Starstruck) || (HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) < 3))
-                                return StarPrism;
-                        
+                            return StarPrism;
+
                         // Check for RainbowBright
                         if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) < 3))
-                                return RainbowDrip;
+                            return RainbowDrip;
                     }
 
                     if (HasEffect(Buffs.RainbowBright) && !HasEffect(Buffs.StarryMuse))
@@ -806,19 +776,19 @@ namespace WrathCombo.Combos.PvE
                     if (!HasEffect(Buffs.StarryMuse))
                     {
                         if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && GetCooldownRemainingTime(ScenicMuse) <= 20)
-                                return OriginalHook(LandscapeMotif);
-                       
+                            return OriginalHook(LandscapeMotif);
+
                         if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn && (HasCharges(LivingMuse) || GetCooldownChargeRemainingTime(LivingMuse) <= 8))
-                                return OriginalHook(CreatureMotif);
-                        
+                            return OriginalHook(CreatureMotif);
+
                         if (WeaponMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !gauge.WeaponMotifDrawn && (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
-                                return OriginalHook(WeaponMotif);
+                            return OriginalHook(WeaponMotif);
                     }
                     //Saves one Charge of White paint for movement/Black paint.
                     if (HolyInWhite.LevelChecked() && gauge.Paint >= 2)
                         return OriginalHook(HolyInWhite);
 
-                    if (All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave(actionID) && LocalPlayer.CurrentMp <= 6500)
+                    if (All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= 6500)
                         return All.LucidDreaming;
 
                     if (BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
@@ -837,7 +807,7 @@ namespace WrathCombo.Combos.PvE
                 if (actionID is FireIIinRed)
                 {
                     var gauge = GetJobGauge<PCTGauge>();
-                    bool canWeave = CanSpellWeave(ActionWatching.LastSpell);
+                    bool canWeave = CanSpellWeave();
                     int creatureStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_CreatureStop);
                     int landscapeStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_LandscapeStop);
                     int weaponStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_WeaponStop);
@@ -946,13 +916,13 @@ namespace WrathCombo.Combos.PvE
                     {
                         if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
                             return OriginalHook(CreatureMotif);
-                        if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() >weaponStop)
+                        if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > weaponStop)
                             return OriginalHook(HammerMotif);
                         if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > landscapeStop)
                             return OriginalHook(LandscapeMotif);
                     }
 
-                    if (IsMoving && InCombat())
+                    if (IsMoving() && InCombat())
                     {
                         if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
                             return OriginalHook(HammerStamp);
@@ -1054,7 +1024,7 @@ namespace WrathCombo.Combos.PvE
                         }
                     }
 
-                    if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming) && All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave(actionID) && LocalPlayer.CurrentMp <= Config.PCT_ST_AdvancedMode_LucidOption)
+                    if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming) && All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= Config.PCT_ST_AdvancedMode_LucidOption)
                         return All.LucidDreaming;
 
                     if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))

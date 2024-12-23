@@ -61,7 +61,7 @@ namespace WrathCombo.Combos.PvP
                         return ShieldSmite;
 
                     // Prioritize Imperator
-                    if (IsEnabled(CustomComboPreset.PLDPvP_Imperator) && IsOffCooldown(Imperator) && InMeleeRange() && CanWeave(actionID))
+                    if (IsEnabled(CustomComboPreset.PLDPvP_Imperator) && IsOffCooldown(Imperator) && InMeleeRange() && CanWeave())
                         return Imperator;
 
                     if (IsEnabled(CustomComboPreset.PLDPvP_PhalanxCombo))

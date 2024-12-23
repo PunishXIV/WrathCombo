@@ -57,7 +57,7 @@ namespace WrathCombo.Combos.PvP
                     bool curingWaltzReady = !GetCooldown(CuringWaltz).IsCooldown;
                     bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
                     var acclaimStacks = GetBuffStacks(Buffs.Acclaim);
-                    bool canWeave = CanWeave(actionID);
+                    bool canWeave = CanWeave();
                     var distance = GetTargetDistance();
                     var HPThreshold = PluginConfiguration.GetCustomIntValue(Config.DNCPvP_WaltzThreshold);
                     var HP = PlayerHealthPercentageHp();

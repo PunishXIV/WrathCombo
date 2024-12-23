@@ -46,7 +46,7 @@ namespace WrathCombo.Combos.PvP
                 {
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
-                        var canWeave = CanWeave(actionID);
+                        var canWeave = CanWeave();
 
                         // Bloodwhetting condition (both WARPvP BurstMode and CanWeave)
                         if (IsEnabled(CustomComboPreset.WARPvP_BurstMode_Bloodwhetting))

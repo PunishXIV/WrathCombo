@@ -21,7 +21,10 @@ namespace WrathCombo.Data
         public unsafe float CooldownElapsed => ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Action, ActionID);
 
         /// <summary> Gets the total cooldown time. </summary>
-        public unsafe float CooldownTotal => (ActionManager.GetAdjustedRecastTime(ActionType.Action, ActionID) / 1000f) * MaxCharges;
+        public unsafe float CooldownTotal => Math.Max(ActionManager.Instance()->GetRecastTime(ActionType.Action, ActionID), (BaseCooldownTotal) * MaxCharges);
+
+        /// <summary> Includes Skill/Spell Speed modifiers along with any job trait modifiers </summary>
+        public unsafe float BaseCooldownTotal => ActionManager.GetAdjustedRecastTime(ActionType.Action, ActionID) / 1000f;
 
         /// <summary> Gets the cooldown time remaining. </summary>
         public unsafe float CooldownRemaining => CooldownElapsed == 0 ? 0 : Math.Max(0, CooldownTotal - CooldownElapsed);

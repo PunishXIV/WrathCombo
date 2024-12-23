@@ -3,9 +3,9 @@
     public class AutoRotationConfig
     {
         public bool Enabled;
-        public bool InCombatOnly = false;
-        public bool BypassQuest = false;
-        public bool BypassFATE = false;
+        public bool InCombatOnly;
+        public bool BypassQuest;
+        public bool BypassFATE;
         public int CombatDelay = 1;
         public DPSRotationMode DPSRotationMode;
         public HealerRotationMode HealerRotationMode;
@@ -19,6 +19,8 @@
         public bool QuestPriority = false;
         public int? DPSAoETargets = 3;
         public bool PreferNonCombat = false;
+        public bool OnlyAttackInCombat = false;
+        public float MaxDistance = 25;
     }
 
     public class HealerSettings

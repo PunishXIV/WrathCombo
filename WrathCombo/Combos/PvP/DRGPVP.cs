@@ -55,7 +55,7 @@ namespace WrathCombo.Combos.PvP
                 {
                     if (!TargetHasEffectAny(PvPCommon.Buffs.Guard))
                     {
-                        if (CanWeave(actionID))
+                        if (CanWeave())
                         {
                             if (IsEnabled(CustomComboPreset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !HasEffect(Buffs.StarCrossReady) && (HasEffect(Buffs.LifeOfTheDragon) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
                                 return HighJump;

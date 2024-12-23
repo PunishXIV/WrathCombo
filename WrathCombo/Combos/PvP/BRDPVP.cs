@@ -59,7 +59,7 @@ namespace WrathCombo.Combos.PvP
 
                 if (actionID == PowerfulShot)
                 {
-                    var canWeave = CanWeave(actionID, 0.5);
+                    var canWeave = CanWeave(0.5);
                     uint harmonicCharges = GetRemainingCharges(HarmonicArrow);
 
                     if (!PvPCommon.TargetImmuneToDamage())

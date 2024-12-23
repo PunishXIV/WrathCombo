@@ -52,7 +52,7 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is Ruin3)
                 {
                     #region Types
-                    bool canWeave = CanWeave(actionID);
+                    bool canWeave = CanWeave();
                     bool bahamutBurst = OriginalHook(Ruin3) is AstralImpulse;
                     bool phoenixBurst = OriginalHook(Ruin3) is FountainOfFire;
                     double playerHP = PlayerHealthPercentageHp();
@@ -91,7 +91,7 @@ namespace WrathCombo.Combos.PvP
                             return MountainBuster;
 
                         // Garuda (check Slipstream cooldown)
-                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Slipstream) && IsOffCooldown(Slipstream) && !IsMoving)
+                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Slipstream) && IsOffCooldown(Slipstream) && !IsMoving())
                             return Slipstream;
                     }
                 }

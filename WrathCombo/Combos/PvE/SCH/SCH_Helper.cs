@@ -1,4 +1,7 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using System;
+using System.Collections.Generic;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -7,14 +10,15 @@ namespace WrathCombo.Combos.PvE
     internal static partial class SCH
     {
         // Class Gauge
-        internal static SCHGauge Gauge => CustomComboFunctions.GetJobGauge<SCHGauge>();
+        internal static SCHGauge Gauge => GetJobGauge<SCHGauge>();
         internal static bool HasAetherflow(this SCHGauge gauge) => (gauge.Aetherflow > 0);
 
-        internal enum OpenerState
+        internal static SCHOpenerMaxLevel1 Opener1 = new();
+        internal static WrathOpener Opener()
         {
-            PreOpener,
-            InOpener,
-            PostOpener,
+            if (Opener1.LevelChecked) return Opener1;
+
+            return WrathOpener.Dummy;
         }
 
         public static int GetMatchingConfigST(int i, out uint action, out bool enabled)
@@ -81,6 +85,54 @@ namespace WrathCombo.Combos.PvE
             enabled = false;
             action = 0;
             return 0;
+        }
+
+        internal class SCHOpenerMaxLevel1 : WrathOpener
+        {
+            public override List<uint> OpenerActions { get; set; } =
+            [
+                Broil4,
+                Biolysis,
+                Dissipation,
+                Broil4,
+                ChainStratagem,
+                Broil4,
+                EnergyDrain,
+                Broil4,
+                EnergyDrain,
+                Broil4,
+                EnergyDrain,
+                Broil4,
+                Aetherflow,
+                Broil4,
+                BanefulImpaction,
+                Broil4,
+                EnergyDrain,
+                Broil4,
+                EnergyDrain,
+                Broil4,
+                EnergyDrain,
+                Biolysis
+            ];
+
+            public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } = 
+            [
+                ([3], Aetherflow, () => Config.SCH_ST_DPS_OpenerOption == 1),
+                ([13], Dissipation, () => Config.SCH_ST_DPS_OpenerOption == 1),
+            ];
+
+            public override int MinOpenerLevel => 100;
+            public override int MaxOpenerLevel => 109;
+
+            internal override UserData? ContentCheckConfig => Config.SCH_ST_DPS_OpenerContent;
+
+            public override bool HasCooldowns()
+            {
+                if (!ActionsReady([ChainStratagem, Dissipation, Aetherflow]))
+                    return false;
+
+                return true;
+            }
         }
     }
 }
