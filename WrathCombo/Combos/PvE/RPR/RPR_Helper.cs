@@ -17,10 +17,10 @@ internal static partial class RPR
     internal static RPROpenerMaxLevel1 Opener1 = new();
 
     internal static RPRGauge Gauge = GetJobGauge<RPRGauge>();
-    
+
     internal static float GCD => GetCooldown(Slice).CooldownTotal;
 
-    internal static bool trueNorthReady =>
+    internal static bool TrueNorthReady =>
         TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
         !HasEffect(All.Buffs.TrueNorth);
 
@@ -82,7 +82,7 @@ internal static partial class RPR
 
     internal static class RPRHelper
     {
-        internal static unsafe bool IsComboExpiring(float Times)
+        public static unsafe bool IsComboExpiring(float Times)
         {
             float GCD = GetCooldown(Slice).CooldownTotal * Times;
 
@@ -96,7 +96,7 @@ internal static partial class RPR
             return TargetHasEffect(Debuffs.DeathsDesign) && GetDebuffRemainingTime(Debuffs.DeathsDesign) < GCD;
         }
 
-        internal static bool UseEnshroud(RPRGauge gauge)
+        public static bool UseEnshroud(RPRGauge gauge)
         {
             if (LevelChecked(Enshroud) && (gauge.Shroud >= 50 || HasEffect(Buffs.IdealHost)) &&
                 !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Executioner) &&
@@ -134,7 +134,7 @@ internal static partial class RPR
             return false;
         }
 
-        internal static bool UseShadowOfDeath()
+        public static bool UseShadowOfDeath()
         {
             if (LevelChecked(ShadowOfDeath) && !HasEffect(Buffs.SoulReaver) &&
                 !HasEffect(Buffs.Executioner) && !HasEffect(Buffs.PerfectioParata) &&
