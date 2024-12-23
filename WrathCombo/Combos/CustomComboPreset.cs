@@ -2732,6 +2732,10 @@ public enum CustomComboPreset
     MCH_AoE_Adv_Bioblaster = 8306,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Air Anchor Option", "Adds Air Anchor to the the rotation.", MCH.JobID)]
+    MCH_AoE_Adv_AirAnchor = 8313,
+
+    [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the the rotation.", MCH.JobID)]
     MCH_AoE_Adv_Chainsaw = 8309,
 
@@ -2833,9 +2837,9 @@ public enum CustomComboPreset
         MCH.JobID)]
     MCH_GaussRoundRicochet = 8003,
 
-
-
-    // Last value = 8058
+    // Last value ST = 8116
+    // Last value AoE = 8313
+    // Last value Misc = 8058
 
     #endregion
 
