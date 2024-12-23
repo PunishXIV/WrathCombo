@@ -1,6 +1,4 @@
-﻿#region
-
-using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,15 +7,12 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
-#endregion
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class DRG
 {
     // DRG Gauge & Extensions
     internal static DRGOpenerLogic Opener1 = new();
-
     internal static DRGGauge Gauge = GetJobGauge<DRGGauge>();
 
     internal static Status? ChaosDoTDebuff =>
