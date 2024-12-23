@@ -1,7 +1,7 @@
 ﻿#region
 
-using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Services;
@@ -27,34 +27,35 @@ internal partial class DNC
         protected override uint Invoke(uint actionID, uint lastComboMove,
             float comboTime, byte level)
         {
-            if (actionID is not Cascade) return actionID;
+            if (actionID is not Cascade)
+                return actionID;
 
             #region Variables
 
-            var flow = HasEffect(Buffs.SilkenFlow) ||
+            bool flow = HasEffect(Buffs.SilkenFlow) ||
                        HasEffect(Buffs.FlourishingFlow);
-            var symmetry = HasEffect(Buffs.SilkenSymmetry) ||
+            bool symmetry = HasEffect(Buffs.SilkenSymmetry) ||
                            HasEffect(Buffs.FlourishingSymmetry);
-            var targetHpThresholdFeather = Config.DNC_ST_Adv_FeatherBurstPercent;
-            var targetHpThresholdStandard = Config.DNC_ST_Adv_SSBurstPercent;
-            var targetHpThresholdTechnical = Config.DNC_ST_Adv_TSBurstPercent;
-            var gcd = GetCooldown(Fountain).CooldownTotal;
-            var tillanaDriftProtectionActive =
-                Config.DNC_ST_ADV_TillanaUse == (int)Config.TillanaDriftProtection.Favor;
+            CustomComboNS.Functions.UserInt targetHpThresholdFeather = Config.DNC_ST_Adv_FeatherBurstPercent;
+            CustomComboNS.Functions.UserInt targetHpThresholdStandard = Config.DNC_ST_Adv_SSBurstPercent;
+            CustomComboNS.Functions.UserInt targetHpThresholdTechnical = Config.DNC_ST_Adv_TSBurstPercent;
+            float gcd = GetCooldown(Fountain).CooldownTotal;
+            bool tillanaDriftProtectionActive =
+                Config.DNC_ST_ADV_TillanaUse == (int) Config.TillanaDriftProtection.Favor;
 
             // Thresholds to wait for TS/SS to come off CD
-            var longAlignmentThreshold = 0.6f;
-            var shortAlignmentThreshold = 0.3f;
-            if (Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.TripleWeave ||
-                Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Both)
+            float longAlignmentThreshold = 0.6f;
+            float shortAlignmentThreshold = 0.3f;
+            if (Config.DNC_ST_ADV_AntiDrift == (int) Config.AntiDrift.TripleWeave ||
+                Config.DNC_ST_ADV_AntiDrift == (int) Config.AntiDrift.Both)
             {
                 longAlignmentThreshold = 0.3f;
                 shortAlignmentThreshold = 0.1f;
             }
 
-            var needToTech =
+            bool needToTech =
                 IsEnabled(CustomComboPreset.DNC_ST_Adv_TS) &&
-                Config.DNC_ST_ADV_TS_IncludeTS == (int)Config.IncludeStep.Yes &&
+                Config.DNC_ST_ADV_TS_IncludeTS == (int) Config.IncludeStep.Yes &&
                 GetCooldownRemainingTime(TechnicalStep) <
                 longAlignmentThreshold && // Up or about to be (some anti-drift)
                 !HasEffect(Buffs.StandardStep) && // After Standard
@@ -62,19 +63,19 @@ internal partial class DNC
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                 LevelChecked(TechnicalStep);
 
-            var needToStandardOrFinish =
+            bool needToStandardOrFinish =
                 GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
                 LevelChecked(StandardStep);
 
             // More Threshold, but only for SS
-            if (Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Hold ||
-                Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Both)
+            if (Config.DNC_ST_ADV_AntiDrift == (int) Config.AntiDrift.Hold ||
+                Config.DNC_ST_ADV_AntiDrift == (int) Config.AntiDrift.Both)
             {
                 longAlignmentThreshold = gcd;
                 shortAlignmentThreshold = gcd;
             }
 
-            var needToFinish =
+            bool needToFinish =
                 IsEnabled(CustomComboPreset.DNC_ST_Adv_FM) &&
                 HasEffect(Buffs.FinishingMoveReady) &&
                 !HasEffect(Buffs.LastDanceReady) &&
@@ -84,9 +85,9 @@ internal partial class DNC
                   GetCooldownRemainingTime(StandardStep) <
                   shortAlignmentThreshold));
 
-            var needToStandard =
+            bool needToStandard =
                 IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
-                Config.DNC_ST_ADV_SS_IncludeSS == (int)Config.IncludeStep.Yes &&
+                Config.DNC_ST_ADV_SS_IncludeSS == (int) Config.IncludeStep.Yes &&
                 GetCooldownRemainingTime(StandardStep) <
                 longAlignmentThreshold && // Up or about to be (some anti-drift)
                 !HasEffect(Buffs.FinishingMoveReady) &&
@@ -110,7 +111,7 @@ internal partial class DNC
             if (!InCombat() && TargetIsHostile())
             {
                 // Dance Partner
-                var dpEnabled = P.IPC.GetComboState(
+                bool dpEnabled = P.IPC.GetComboState(
                         CustomComboPreset.DNC_ST_AdvancedMode.ToString())!
                     .Values.First();
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Partner) &&
@@ -124,7 +125,7 @@ internal partial class DNC
                 // ST Standard Step (Pre-pull)
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
                     IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull) &&
-                    Config.DNC_ST_ADV_SS_IncludeSS == (int)Config.IncludeStep.Yes &&
+                    Config.DNC_ST_ADV_SS_IncludeSS == (int) Config.IncludeStep.Yes &&
                     ActionReady(StandardStep) &&
                     !HasEffect(Buffs.FinishingMoveReady) &&
                     !HasEffect(Buffs.TechnicalFinish) &&
@@ -133,8 +134,8 @@ internal partial class DNC
                     return StandardStep;
 
                 // ST Standard Steps (Pre-pull)
-                if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
-                     IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull)) &&
+                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
+                     IsEnabled(CustomComboPreset.DNC_ST_Adv_SS_Prepull) &&
                     HasEffect(Buffs.StandardStep) &&
                     Gauge.CompletedSteps < 2)
                     return Gauge.NextStep;
@@ -158,7 +159,7 @@ internal partial class DNC
                     : StandardFinish2;
 
             // ST Technical (Dance) Steps & Fill
-            if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_TS)) &&
+            if (IsEnabled(CustomComboPreset.DNC_ST_Adv_TS) &&
                 HasEffect(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
@@ -197,8 +198,8 @@ internal partial class DNC
                  CombatEngageDuration().TotalSeconds > 20))
                 return Flourish;
 
-            if ((Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.TripleWeave ||
-                 Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Both) &&
+            if ((Config.DNC_ST_ADV_AntiDrift == (int) Config.AntiDrift.TripleWeave ||
+                 Config.DNC_ST_ADV_AntiDrift == (int) Config.AntiDrift.Both) &&
                 (HasEffect(Buffs.ThreeFoldFanDance) ||
                  HasEffect(Buffs.FourFoldFanDance)) &&
                 CombatEngageDuration().TotalSeconds > 20 &&
@@ -362,14 +363,14 @@ internal partial class DNC
                 return Tillana;
 
             // ST Saber Dance
-            if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SaberDance) &&
+            if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_SaberDance) &&
                 LevelChecked(SaberDance) &&
                 Gauge.Esprit >=
-                Config.DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
+                Config.DNC_ST_Adv_SaberThreshold) || // Above esprit threshold use
                 (HasEffect(Buffs.TechnicalFinish) &&
-                 Gauge.Esprit >= 50) && // Burst
+                 Gauge.Esprit >= 50 && // Burst
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
-                 IsOffCooldown(TechnicalStep))) // Tech is up
+                 IsOffCooldown(TechnicalStep)))) // Tech is up
                 return SaberDance;
 
             // ST combos and burst attacks
@@ -400,7 +401,8 @@ internal partial class DNC
         protected override uint Invoke(uint actionID, uint lastComboMove,
             float comboTime, byte level)
         {
-            if (actionID is not Windmill) return actionID;
+            if (actionID is not Windmill)
+                return actionID;
 
             #region Variables
 
@@ -408,19 +410,19 @@ internal partial class DNC
                         HasEffect(Buffs.FlourishingFlow);
             bool symmetry = HasEffect(Buffs.SilkenSymmetry) ||
                             HasEffect(Buffs.FlourishingSymmetry);
-            var targetHpThresholdStandard = Config.DNC_AoE_Adv_SSBurstPercent;
-            var targetHpThresholdTechnical = Config.DNC_AoE_Adv_TSBurstPercent;
+            CustomComboNS.Functions.UserInt targetHpThresholdStandard = Config.DNC_AoE_Adv_SSBurstPercent;
+            CustomComboNS.Functions.UserInt targetHpThresholdTechnical = Config.DNC_AoE_Adv_TSBurstPercent;
 
-            var needToTech =
+            bool needToTech =
                 IsEnabled(CustomComboPreset.DNC_AoE_Adv_TS) &&
-                Config.DNC_AoE_Adv_TS_IncludeTS == (int)Config.IncludeStep.Yes &&
+                Config.DNC_AoE_Adv_TS_IncludeTS == (int) Config.IncludeStep.Yes &&
                 ActionReady(TechnicalStep) && // Up
                 !HasEffect(Buffs.StandardStep) && // After Standard
                 IsOnCooldown(StandardStep) &&
                 GetTargetHPPercent() > targetHpThresholdTechnical && // HP% check
                 LevelChecked(TechnicalStep);
 
-            var needToStandardOrFinish =
+            bool needToStandardOrFinish =
                 ActionReady(StandardStep) && // Up
                 GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
                 (IsOffCooldown(
@@ -428,14 +430,14 @@ internal partial class DNC
                  GetCooldownRemainingTime(TechnicalStep) > 5) && // Don't mangle
                 LevelChecked(StandardStep);
 
-            var needToFinish =
+            bool needToFinish =
                 IsEnabled(CustomComboPreset.DNC_AoE_Adv_FM) && // Enabled
                 HasEffect(Buffs.FinishingMoveReady) &&
                 !HasEffect(Buffs.LastDanceReady);
 
-            var needToStandard =
+            bool needToStandard =
                 IsEnabled(CustomComboPreset.DNC_AoE_Adv_SS) && // Enabled
-                Config.DNC_AoE_Adv_SS_IncludeSS == (int)Config.IncludeStep.Yes &&
+                Config.DNC_AoE_Adv_SS_IncludeSS == (int) Config.IncludeStep.Yes &&
                 !HasEffect(Buffs.FinishingMoveReady) &&
                 (IsOffCooldown(Flourish) ||
                  GetCooldownRemainingTime(Flourish) > 5) &&
@@ -452,7 +454,7 @@ internal partial class DNC
                 ActionReady(ClosedPosition) &&
                 !HasEffect(Buffs.ClosedPosition) &&
                 (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                !(Service.Configuration.AutoActions[
+                !(Service.Configuration.AutoActions [
                       CustomComboPreset.DNC_AoE_AdvancedMode] &&
                   Service.Configuration.RotationConfig
                       .Enabled)) // Disabled in Auto-Rotation
@@ -657,14 +659,14 @@ internal partial class DNC
                 return Tillana;
 
             // AoE Saber Dance
-            if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_SaberDance) &&
+            if ((IsEnabled(CustomComboPreset.DNC_AoE_Adv_SaberDance) &&
                 LevelChecked(SaberDance) &&
                 Gauge.Esprit >=
-                Config.DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
+                Config.DNC_ST_Adv_SaberThreshold) || // Above esprit threshold use
                 (HasEffect(Buffs.TechnicalFinish) &&
-                 Gauge.Esprit >= 50) && // Burst
+                 Gauge.Esprit >= 50 && // Burst
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
-                 IsOffCooldown(TechnicalStep))) // Tech is up
+                 IsOffCooldown(TechnicalStep)))) // Tech is up
                 return SaberDance;
 
             // AoE combos and burst attacks
@@ -851,24 +853,25 @@ internal partial class DNC
         protected override uint Invoke(uint actionID, uint lastComboMove,
             float comboTime, byte level)
         {
-            if (!GetJobGauge<DNCGauge>().IsDancing) return actionID;
+            if (!GetJobGauge<DNCGauge>().IsDancing)
+                return actionID;
 
-            var actionIDs = Service.Configuration.DancerDanceCompatActionIDs;
+            uint [] actionIDs = Service.Configuration.DancerDanceCompatActionIDs;
 
-            if (actionID == actionIDs[0] ||
-                (actionIDs[0] == 0 && actionID == Cascade)) // Default
+            if (actionID == actionIDs [0] ||
+                (actionIDs [0] == 0 && actionID == Cascade)) // Default
                 return Emboite;
 
-            if (actionID == actionIDs[1] ||
-                (actionIDs[1] == 0 && actionID == Flourish)) // Default
+            if (actionID == actionIDs [1] ||
+                (actionIDs [1] == 0 && actionID == Flourish)) // Default
                 return Entrechat;
 
-            if (actionID == actionIDs[2] ||
-                (actionIDs[2] == 0 && actionID == FanDance1)) // Default
+            if (actionID == actionIDs [2] ||
+                (actionIDs [2] == 0 && actionID == FanDance1)) // Default
                 return Jete;
 
-            if (actionID == actionIDs[3] ||
-                (actionIDs[3] == 0 && actionID == FanDance2)) // Default
+            if (actionID == actionIDs [3] ||
+                (actionIDs [3] == 0 && actionID == FanDance2)) // Default
                 return Pirouette;
 
             return actionID;
@@ -888,7 +891,8 @@ internal partial class DNC
             float comboTime, byte level)
         {
             // Fan Dance 3 & 4 on Flourish
-            if (actionID is not Flourish || !CanWeave(actionID)) return actionID;
+            if (actionID is not Flourish || !CanWeave(actionID))
+                return actionID;
 
             if (IsEnabled(CustomComboPreset.DNC_Flourishing_FD3) &&
                 HasEffect(Buffs.ThreeFoldFanDance))

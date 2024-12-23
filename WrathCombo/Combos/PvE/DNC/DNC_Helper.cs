@@ -1,12 +1,10 @@
 ﻿#region
 
- using System;
- using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using ECommons.DalamudServices;
+using System;
+using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -18,15 +16,17 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DNC
 {
+    private static DNCGauge Gauge => GetJobGauge<DNCGauge>();
+
     internal static WrathOpener Opener()
     {
-        if (Config.DNC_ST_OpenerSelection == 0 && Opener1.LevelChecked) return Opener1;
-        if (Config.DNC_ST_OpenerSelection == 1 && Opener2.LevelChecked) return Opener2;
+        if (Config.DNC_ST_OpenerSelection == 0 && Opener1.LevelChecked)
+            return Opener1;
+        if (Config.DNC_ST_OpenerSelection == 1 && Opener2.LevelChecked)
+            return Opener2;
 
         return WrathOpener.Dummy;
     }
-
-    private static DNCGauge Gauge => GetJobGauge<DNCGauge>();
 
     #region Openers
 
@@ -58,19 +58,19 @@ internal partial class DNC
             LastDance,
             FanDance3,
             FinishingMove,
-            StarfallDance, 
+            StarfallDance,
             ReverseCascade, //20
             ReverseCascade,
             ReverseCascade,
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } =
+        public override List<(int [] Steps, int HoldDelay)> PrepullDelays { get; set; } =
         [
             ([4], 12)
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        public override List<(int [], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([2, 3, 6, 7, 8, 9], Entrechat, () => Gauge.NextStep == Entrechat),
             ([2, 3, 6, 7, 8, 9], Jete, () => Gauge.NextStep == Jete),
@@ -135,12 +135,12 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } =
+        public override List<(int [] Steps, int HoldDelay)> PrepullDelays { get; set; } =
         [
             ([4], 4)
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        public override List<(int [], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([2, 3, 6, 7, 8, 9], Entrechat, () => Gauge.NextStep == Entrechat),
             ([2, 3, 6, 7, 8, 9], Jete, () => Gauge.NextStep == Jete),

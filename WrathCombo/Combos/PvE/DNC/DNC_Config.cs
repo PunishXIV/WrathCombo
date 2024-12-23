@@ -1,10 +1,10 @@
 #region
 
-using System.Linq;
-using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using System.Linq;
+using System.Numerics;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -41,24 +41,24 @@ internal partial class DNC
                 "Forces a triple weave of Flourish and Fan Dance 3 + 4 during non-opener burst windows." +
                 "\nFixes SS/FM drift where you use a gcd when SS/FM is on a 0.5sec CD." +
                 "\nRecommended anti-drift option.",
-                outputValue: (int)AntiDrift.TripleWeave, descriptionAsTooltip: true);
+                outputValue: (int) AntiDrift.TripleWeave, descriptionAsTooltip: true);
             UserConfig.DrawRadioButton(
                 DNC_ST_ADV_AntiDrift, "Hold before Standard Step",
                 "Will hold GCDs for Standard Step if it is going to come off cooldown before your next GCD." +
                 "\nThis WILL give you down-time." +
                 "\nONLY recommended if you have extra skill speed, but can be used as an anti-drift option.",
-                outputValue: (int)AntiDrift.Hold, descriptionAsTooltip: true);
+                outputValue: (int) AntiDrift.Hold, descriptionAsTooltip: true);
             UserConfig.DrawRadioButton(
                 DNC_ST_ADV_AntiDrift, "Both",
                 "Will use both options from above." +
                 "\nThis WILL give you down-time." +
                 "\nNOT recommended, but can be the answer if neither of the above options work for you.",
-                outputValue: (int)AntiDrift.Both, descriptionAsTooltip: true);
+                outputValue: (int) AntiDrift.Both, descriptionAsTooltip: true);
             UserConfig.DrawRadioButton(
                 DNC_ST_ADV_AntiDrift, "None",
                 "Will not use any anti-drift options." +
                 "\nThis WILL cause drift. NOT recommended.",
-                outputValue: (int)AntiDrift.None, descriptionAsTooltip: true);
+                outputValue: (int) AntiDrift.None, descriptionAsTooltip: true);
         }
 
         internal static void Draw(CustomComboPreset preset)
@@ -81,31 +81,31 @@ internal partial class DNC
                         "\n(You can get Action IDs with Garland Tools by searching for the action and clicking the cog.)");
                     ImGui.PopStyleColor();
 
-                    var actions = Service.Configuration.DancerDanceCompatActionIDs
-                        .Select(x => (int)x).ToArray();
+                    int [] actions = Service.Configuration.DancerDanceCompatActionIDs
+                        .Select(x => (int) x).ToArray();
 
-                    var inputChanged = false;
+                    bool inputChanged = false;
                     ImGui.SetNextItemWidth(50f.Scale());
                     inputChanged |= ImGui.InputInt(
                         "(Red) Emboite replacement Action ID",
-                        ref actions[0], 0);
+                        ref actions [0], 0);
                     ImGui.SetNextItemWidth(50f.Scale());
                     inputChanged |= ImGui.InputInt(
                         "(Blue) Entrechat replacement Action ID",
-                        ref actions[1], 0);
+                        ref actions [1], 0);
                     ImGui.SetNextItemWidth(50f.Scale());
                     inputChanged |= ImGui.InputInt(
                         "(Green) Jete replacement Action ID",
-                        ref actions[2], 0);
+                        ref actions [2], 0);
                     ImGui.SetNextItemWidth(50f.Scale());
                     inputChanged |= ImGui.InputInt(
                         "(Yellow) Pirouette replacement Action ID",
-                        ref actions[3], 0);
+                        ref actions [3], 0);
 
                     if (inputChanged)
                     {
                         Service.Configuration.DancerDanceCompatActionIDs = actions
-                            .Select(x => (uint)x).ToArray();
+                            .Select(x => (uint) x).ToArray();
                         Service.Configuration.Save();
                     }
 
@@ -145,13 +145,13 @@ internal partial class DNC
                         "Include Standard Step",
                         "Will include Standard Step itself," +
                         "\ndance steps, and Finish into the rotation.",
-                        outputValue: (int)IncludeStep.Yes, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.Yes, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_SS_IncludeSS,
                         "Exclude Standard Step",
                         "Will ONLY include the dance steps, and Finish;" +
                         "\nYOU will need to manually press Standard Step.",
-                        outputValue: (int)IncludeStep.No, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.No, itemWidth: 125f);
 
                     DrawAntiDriftOptions();
 
@@ -166,13 +166,13 @@ internal partial class DNC
                         "Include Technical Step",
                         "Will include Technical Step itself," +
                         "\ndance steps, and Finish into the rotation.",
-                        outputValue: (int)IncludeStep.Yes, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.Yes, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TS_IncludeTS,
                         "Exclude Technical Step",
                         "Will ONLY include the dance Steps, and Finish;" +
                         "\nYOU will need to manually press Technical Step.",
-                        outputValue: (int)IncludeStep.No, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.No, itemWidth: 125f);
 
                     DrawAntiDriftOptions();
 
@@ -190,7 +190,7 @@ internal partial class DNC
                         "Use Tillana Normally",
                         "Will use Tillana as recommended by The Balance" +
                         "\nCan allow Tillana to drift out of burst windows.",
-                        outputValue: (int)TillanaDriftProtection.None, itemWidth: 125f);
+                        outputValue: (int) TillanaDriftProtection.None, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TillanaUse,
                         "Favor Tillana over Esprit",
@@ -198,7 +198,7 @@ internal partial class DNC
                         "\nCan prevent Tillana from drifting out of burst windows." +
                         "\nShould be used with Saber Dance's Esprit slider being >50." +
                         "\nNOT recommended.",
-                        outputValue: (int)TillanaDriftProtection.Favor, itemWidth: 125f);
+                        outputValue: (int) TillanaDriftProtection.Favor, itemWidth: 125f);
 
                     break;
 
@@ -240,13 +240,13 @@ internal partial class DNC
                         "Include Standard Step",
                         "Will include Standard Step itself," +
                         "\ndance steps, and Finish into the rotation.",
-                        outputValue: (int)IncludeStep.Yes, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.Yes, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_AoE_Adv_SS_IncludeSS,
                         "Exclude Standard Step",
                         "Will ONLY include the dance steps, and Finish;" +
                         "\nYOU will need to manually press Standard Step.",
-                        outputValue: (int)IncludeStep.No, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.No, itemWidth: 125f);
 
                     break;
 
@@ -259,13 +259,13 @@ internal partial class DNC
                         "Include Technical Step",
                         "Will include Technical Step itself," +
                         "\ndance steps, and Finish into the rotation.",
-                        outputValue: (int)IncludeStep.Yes, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.Yes, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_AoE_Adv_TS_IncludeTS,
                         "Exclude Technical Step",
                         "Will ONLY include the dance steps, and Finish;" +
                         "\nYOU will need to manually press Technical Step.",
-                        outputValue: (int)IncludeStep.No, itemWidth: 125f);
+                        outputValue: (int) IncludeStep.No, itemWidth: 125f);
 
                     break;
 
@@ -310,7 +310,7 @@ internal partial class DNC
 
                     break;
 
-                #endregion
+                    #endregion
             }
         }
 
@@ -398,7 +398,7 @@ internal partial class DNC
         /// </value>
         /// <seealso cref="CustomComboPreset.DNC_ST_Adv_SS" />
         public static readonly UserInt DNC_ST_ADV_SS_IncludeSS =
-            new("DNC_ST_ADV_SS_IncludeSS", (int)IncludeStep.Yes);
+            new("DNC_ST_ADV_SS_IncludeSS", (int) IncludeStep.Yes);
 
         /// <summary>
         ///     Anti-Drift choice for Single Target.
@@ -409,7 +409,7 @@ internal partial class DNC
         /// </value>
         /// <seealso cref="CustomComboPreset.DNC_ST_Adv_SS" />
         public static readonly UserInt DNC_ST_ADV_AntiDrift =
-            new("DNC_ST_ADV_AntiDrift", (int)AntiDrift.TripleWeave);
+            new("DNC_ST_ADV_AntiDrift", (int) AntiDrift.TripleWeave);
 
         /// <summary>
         ///     Include Technical Step in rotation for Single Target.
@@ -420,7 +420,7 @@ internal partial class DNC
         /// </value>
         /// <seealso cref="CustomComboPreset.DNC_ST_Adv_TS" />
         public static readonly UserInt DNC_ST_ADV_TS_IncludeTS =
-            new("DNC_ST_ADV_TS_IncludeTS", (int)IncludeStep.Yes);
+            new("DNC_ST_ADV_TS_IncludeTS", (int) IncludeStep.Yes);
 
         /// <summary>
         ///     Target HP% to use Technical Step above for Single Target.
@@ -455,7 +455,7 @@ internal partial class DNC
         /// </value>
         /// <seealso cref="CustomComboPreset.DNC_ST_Adv_Tillana" />
         public static readonly UserInt DNC_ST_ADV_TillanaUse =
-            new("DNC_ST_ADV_TillanaUse", (int)TillanaDriftProtection.None);
+            new("DNC_ST_ADV_TillanaUse", (int) TillanaDriftProtection.None);
 
         /// <summary>
         ///     Esprit threshold for Saber Dance in Single Target.
@@ -530,7 +530,7 @@ internal partial class DNC
         /// </value>
         /// <seealso cref="CustomComboPreset.DNC_AoE_Adv_SS" />
         public static readonly UserInt DNC_AoE_Adv_SS_IncludeSS =
-            new("DNC_AoE_Adv_SS_IncludeSS", (int)IncludeStep.Yes);
+            new("DNC_AoE_Adv_SS_IncludeSS", (int) IncludeStep.Yes);
 
         /// <summary>
         ///     Target HP% to use Technical Step above for AoE.
@@ -553,7 +553,7 @@ internal partial class DNC
         /// </value>
         /// <seealso cref="CustomComboPreset.DNC_AoE_Adv_TS" />
         public static readonly UserInt DNC_AoE_Adv_TS_IncludeTS =
-            new("DNC_AoE_Adv_TS_IncludeTS", (int)IncludeStep.Yes);
+            new("DNC_AoE_Adv_TS_IncludeTS", (int) IncludeStep.Yes);
 
         /// <summary>
         ///     Esprit threshold for Saber Dance in AoE.

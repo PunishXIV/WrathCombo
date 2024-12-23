@@ -1,14 +1,10 @@
-#region
-
-using System.Collections.Generic;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 
@@ -98,36 +94,27 @@ internal partial class WHM
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_SolaceMisery;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is AfflatusSolace && BloodLilies == 3
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => actionID is AfflatusSolace && BloodLilies == 3
                 ? AfflatusMisery
                 : actionID;
-        }
     }
 
     internal class WHM_RaptureMisery : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_RaptureMisery;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is AfflatusRapture && BloodLilies == 3
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => actionID is AfflatusRapture && BloodLilies == 3
                 ? AfflatusMisery
                 : actionID;
-        }
     }
 
     internal class WHM_CureSync : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_CureSync;
 
-        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
-        {
-            return actionID is Cure2 && !LevelChecked(Cure2)
+        protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level) => actionID is Cure2 && !LevelChecked(Cure2)
                 ? Cure
                 : actionID;
-        }
     }
 
     internal class WHM_Raise : CustomCombo
@@ -153,16 +140,16 @@ internal partial class WHM
     internal class WHM_ST_MainCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_ST_MainCombo;
-        
+
         protected override uint Invoke(uint actionID, uint lastComboMove, float comboTime, byte level)
         {
             bool ActionFound;
 
             if (Config.WHM_ST_MainCombo_Adv && Config.WHM_ST_MainCombo_Adv_Actions.Count > 0)
             {
-                bool onStones = Config.WHM_ST_MainCombo_Adv_Actions[0] && StoneGlareList.Contains(actionID);
-                bool onAeros = Config.WHM_ST_MainCombo_Adv_Actions[1] && AeroList.ContainsKey(actionID);
-                bool onStone2 = Config.WHM_ST_MainCombo_Adv_Actions[2] && actionID is Stone2;
+                bool onStones = Config.WHM_ST_MainCombo_Adv_Actions [0] && StoneGlareList.Contains(actionID);
+                bool onAeros = Config.WHM_ST_MainCombo_Adv_Actions [1] && AeroList.ContainsKey(actionID);
+                bool onStone2 = Config.WHM_ST_MainCombo_Adv_Actions [2] && actionID is Stone2;
                 ActionFound = onStones || onAeros || onStone2;
             }
             else
@@ -347,7 +334,7 @@ internal partial class WHM
                 foreach (int prio in Config.WHM_ST_Heals_Priority.Items.OrderBy(x => x))
                 {
                     int index = Config.WHM_ST_Heals_Priority.IndexOf(prio);
-                    int config = WHMHelper.GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
+                    int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
 
                     if (enabled)
                         if (GetTargetHPPercent(healTarget, Config.WHM_STHeals_IncludeShields) <= config &&

@@ -1,5 +1,4 @@
-﻿using ECommons.DalamudServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -11,12 +10,11 @@ internal partial class BRD
     public static BRDOpenerMaxLevel1 Opener1 = new();
     public static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked) return Opener1;
+        if (Opener1.LevelChecked)
+            return Opener1;
 
         return WrathOpener.Dummy;
     }
-
-
 
     internal class BRDOpenerMaxLevel1 : WrathOpener
     {
@@ -45,7 +43,7 @@ internal partial class BRD
 
         ];
 
-        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        public override List<(int [], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([6, 9, 16, 17, 20], RefulgentArrow, () => CustomComboFunctions.HasEffect(Buffs.HawksEye)),
         ];
@@ -78,7 +76,6 @@ internal partial class BRD
 
             if (!CustomComboFunctions.ActionReady(Barrage))
                 return false;
-
 
             return true;
         }

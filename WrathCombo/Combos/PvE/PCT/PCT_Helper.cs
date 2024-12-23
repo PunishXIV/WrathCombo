@@ -1,10 +1,8 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using ECommons.DalamudServices;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 
 namespace WrathCombo.Combos.PvE;
 
@@ -17,8 +15,10 @@ internal partial class PCT
 
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked && Config.PCT_Opener_Choice == 0) return Opener1;
-        if (Opener2.LevelChecked && Config.PCT_Opener_Choice == 1) return Opener2;
+        if (Opener1.LevelChecked && Config.PCT_Opener_Choice == 0)
+            return Opener1;
+        if (Opener2.LevelChecked && Config.PCT_Opener_Choice == 1)
+            return Opener2;
 
         return WrathOpener.Dummy;
     }
@@ -28,7 +28,7 @@ internal partial class PCT
 
         if (!Gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Pom))
             return false;
-      
+
         if (!Gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Weapon))
             return false;
 
@@ -91,7 +91,6 @@ internal partial class PCT
 
             return true;
         }
-
     }
 
     internal class PCTopenerMaxLevel2 : WrathOpener
@@ -148,6 +147,5 @@ internal partial class PCT
 
             return true;
         }
-
     }
 }

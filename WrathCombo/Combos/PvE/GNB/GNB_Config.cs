@@ -100,7 +100,6 @@ internal partial class GNB
 
                     break;
 
-
                 case CustomComboPreset.GNB_ST_Simple:
                     UserConfig.DrawHorizontalRadioButton(GNB_ST_MitsOptions,
                         "Include Mitigations",

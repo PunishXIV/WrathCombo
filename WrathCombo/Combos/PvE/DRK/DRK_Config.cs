@@ -85,12 +85,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "All Enemies",
                         "Will use The Blackest Night regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "Avoid Bosses",
                         "Will try not to use Blackest Night when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     break;
 
@@ -112,12 +112,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "All Enemies",
                         "Will use Living Dead regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "Avoid Bosses",
                         "Will try not to use Living Dead when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     break;
 
@@ -184,7 +184,7 @@ internal partial class DRK
 
                     break;
 
-                #endregion
+                    #endregion
             }
         }
 
@@ -379,7 +379,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="CustomComboPreset.DRK_ST_TBN" />
         public static readonly UserInt DRK_ST_TBNBossRestriction =
-            new("DRK_ST_TBNBossRestriction", (int)BossAvoidance.Off);
+            new("DRK_ST_TBNBossRestriction", (int) BossAvoidance.Off);
 
         /// <summary>
         ///     Self HP% to use Shadowed Vigil below for Single Target.
@@ -426,7 +426,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="CustomComboPreset.DRK_ST_LivingDead" />
         public static readonly UserInt DRK_ST_LivingDeadBossRestriction =
-            new("DRK_ST_LivingDeadBossRestriction", (int)BossAvoidance.On);
+            new("DRK_ST_LivingDeadBossRestriction", (int) BossAvoidance.On);
 
         #endregion
 

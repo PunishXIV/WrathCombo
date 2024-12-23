@@ -14,41 +14,38 @@ internal partial class NIN
     internal static NINOpenerMaxLevel3rdGCDDokumori Opener2 = new();
     internal static NINOpenerMaxLevel3rdGCDKunai Opener3 = new();
 
-    internal static WrathOpener Opener()
-    {
-        if (CustomComboFunctions.IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode))
-        {
-            if (Config.NIN_Adv_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
-            if (Config.NIN_Adv_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
-            if (Config.NIN_Adv_Opener_Selection == 2 && Opener3.LevelChecked) return Opener3;
-        }
-
-        if (Opener1.LevelChecked) return Opener1;
-        return WrathOpener.Dummy;
-    }
-
     internal static bool OriginalJutsu => CustomComboFunctions.IsOriginal(Ninjutsu);
 
     internal static bool TrickDebuff => TargetHasTrickDebuff();
 
     internal static bool MugDebuff => TargetHasMugDebuff();
 
-    private static bool TargetHasTrickDebuff()
-    {
-        return CustomComboFunctions.TargetHasEffect(Debuffs.TrickAttack) ||
+    private static bool TargetHasTrickDebuff() => CustomComboFunctions.TargetHasEffect(Debuffs.TrickAttack) ||
                CustomComboFunctions.TargetHasEffect(Debuffs.KunaisBane);
-    }
 
-    private static bool TargetHasMugDebuff()
-    {
-        return CustomComboFunctions.TargetHasEffect(Debuffs.Mug) ||
+    private static bool TargetHasMugDebuff() => CustomComboFunctions.TargetHasEffect(Debuffs.Mug) ||
                CustomComboFunctions.TargetHasEffect(Debuffs.Dokumori);
-    }
 
     public static Status? MudraBuff => CustomComboFunctions.FindEffect(Buffs.Mudra);
 
     public static uint CurrentNinjutsu => CustomComboFunctions.OriginalHook(Ninjutsu);
 
+    internal static WrathOpener Opener()
+    {
+        if (CustomComboFunctions.IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode))
+        {
+            if (Config.NIN_Adv_Opener_Selection == 0 && Opener1.LevelChecked)
+                return Opener1;
+            if (Config.NIN_Adv_Opener_Selection == 1 && Opener2.LevelChecked)
+                return Opener2;
+            if (Config.NIN_Adv_Opener_Selection == 2 && Opener3.LevelChecked)
+                return Opener3;
+        }
+
+        if (Opener1.LevelChecked)
+            return Opener1;
+        return WrathOpener.Dummy;
+    }
 
     internal class MudraCasting
     {
@@ -71,11 +68,13 @@ internal partial class NIN
         ///<summary> Checks if the player is in a state to be able to cast a ninjitsu.</summary>
         private static bool CanCast()
         {
-            if (InMudra) return true;
+            if (InMudra)
+                return true;
 
             float gcd = CustomComboFunctions.GetCooldown(GustSlash).CooldownTotal;
 
-            if (gcd == 0.5) return true;
+            if (gcd == 0.5)
+                return true;
 
             if (CustomComboFunctions.GetRemainingCharges(Ten) == 0 &&
                 !CustomComboFunctions.HasEffect(Buffs.Mudra) &&
@@ -460,7 +459,7 @@ internal partial class NIN
                 CurrentMudra = MudraState.None;
             }
 
-            if ((ActionWatching.LastAction == FumaShuriken ||
+            if (ActionWatching.LastAction == FumaShuriken ||
                  ActionWatching.LastAction == Katon ||
                  ActionWatching.LastAction == Raiton ||
                  ActionWatching.LastAction == Hyoton ||
@@ -468,7 +467,7 @@ internal partial class NIN
                  ActionWatching.LastAction == Doton ||
                  ActionWatching.LastAction == Suiton ||
                  ActionWatching.LastAction == GokaMekkyaku ||
-                 ActionWatching.LastAction == HyoshoRanryu))
+                 ActionWatching.LastAction == HyoshoRanryu)
             {
                 CurrentMudra = MudraState.None;
                 InMudra = false;
@@ -543,14 +542,22 @@ internal partial class NIN
 
         public override bool HasCooldowns()
         {
-            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1) return false;
-            if (CustomComboFunctions.IsOnCooldown(Mug)) return false;
-            if (CustomComboFunctions.IsOnCooldown(TenChiJin)) return false;
-            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi)) return false;
-            if (CustomComboFunctions.IsOnCooldown(Bunshin)) return false;
-            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream)) return false;
-            if (CustomComboFunctions.IsOnCooldown(Kassatsu)) return false;
-            if (CustomComboFunctions.IsOnCooldown(TrickAttack)) return false;
+            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1)
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Mug))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(TenChiJin))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Bunshin))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Kassatsu))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(TrickAttack))
+                return false;
 
             return true;
         }
@@ -609,14 +616,22 @@ internal partial class NIN
 
         public override bool HasCooldowns()
         {
-            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1) return false;
-            if (CustomComboFunctions.IsOnCooldown(Mug)) return false;
-            if (CustomComboFunctions.IsOnCooldown(TenChiJin)) return false;
-            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi)) return false;
-            if (CustomComboFunctions.IsOnCooldown(Bunshin)) return false;
-            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream)) return false;
-            if (CustomComboFunctions.IsOnCooldown(Kassatsu)) return false;
-            if (CustomComboFunctions.IsOnCooldown(TrickAttack)) return false;
+            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1)
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Mug))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(TenChiJin))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Bunshin))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Kassatsu))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(TrickAttack))
+                return false;
 
             return true;
         }
@@ -673,14 +688,22 @@ internal partial class NIN
 
         public override bool HasCooldowns()
         {
-            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1) return false;
-            if (CustomComboFunctions.IsOnCooldown(Mug)) return false;
-            if (CustomComboFunctions.IsOnCooldown(TenChiJin)) return false;
-            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi)) return false;
-            if (CustomComboFunctions.IsOnCooldown(Bunshin)) return false;
-            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream)) return false;
-            if (CustomComboFunctions.IsOnCooldown(Kassatsu)) return false;
-            if (CustomComboFunctions.IsOnCooldown(TrickAttack)) return false;
+            if (CustomComboFunctions.GetRemainingCharges(Ten) < 1)
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Mug))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(TenChiJin))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(PhantomKamaitachi))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Bunshin))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(DreamWithinADream))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(Kassatsu))
+                return false;
+            if (CustomComboFunctions.IsOnCooldown(TrickAttack))
+                return false;
 
             return true;
         }

@@ -1,7 +1,4 @@
-﻿using ECommons.DalamudServices;
-using Lumina.Excel.Sheets;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 
@@ -12,10 +9,10 @@ internal partial class PLD
     internal static PLDOpenerMaxLevel1 Opener1 = new();
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked) return Opener1;
+        if (Opener1.LevelChecked)
+            return Opener1;
         return WrathOpener.Dummy;
     }
-
 
     internal class PLDOpenerMaxLevel1 : WrathOpener
     {
@@ -50,12 +47,18 @@ internal partial class PLD
 
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(FightOrFlight)) return false;
-            if (!CustomComboFunctions.ActionReady(Imperator)) return false;
-            if (!CustomComboFunctions.ActionReady(CircleOfScorn)) return false;
-            if (!CustomComboFunctions.ActionReady(Expiacion)) return false;
-            if (CustomComboFunctions.GetRemainingCharges(Intervene) < 2) return false;
-            if (!CustomComboFunctions.ActionReady(GoringBlade)) return false;
+            if (!CustomComboFunctions.ActionReady(FightOrFlight))
+                return false;
+            if (!CustomComboFunctions.ActionReady(Imperator))
+                return false;
+            if (!CustomComboFunctions.ActionReady(CircleOfScorn))
+                return false;
+            if (!CustomComboFunctions.ActionReady(Expiacion))
+                return false;
+            if (CustomComboFunctions.GetRemainingCharges(Intervene) < 2)
+                return false;
+            if (!CustomComboFunctions.ActionReady(GoringBlade))
+                return false;
 
             return true;
         }

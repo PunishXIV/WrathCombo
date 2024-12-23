@@ -304,7 +304,7 @@ internal static partial class MCH
                     if (lastComboMove is SplitShot && LevelChecked(OriginalHook(SlugShot)))
                         return OriginalHook(SlugShot);
 
-                    if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[4] &&
+                    if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled [4] &&
                         lastComboMove == OriginalHook(SlugShot) &&
                         !LevelChecked(Drill) && !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble))
                         return Reassemble;
@@ -436,28 +436,28 @@ internal static partial class MCH
             if (actionID is SpreadShot or Scattergun)
             {
                 bool reassembledScattergunAoE = IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) &&
-                                            Config.MCH_AoE_Reassembled[0] && HasEffect(Buffs.Reassembled);
+                                            Config.MCH_AoE_Reassembled [0] && HasEffect(Buffs.Reassembled);
 
                 bool reassembledChainsawAoE =
-                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[2] &&
+                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled [2] &&
                      HasEffect(Buffs.Reassembled)) ||
-                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[2] &&
+                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled [2] &&
                      !HasEffect(Buffs.Reassembled)) ||
                     (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool) ||
                     !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
                 bool reassembledExcavatorAoE =
-                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[3] &&
+                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled [3] &&
                      HasEffect(Buffs.Reassembled)) ||
-                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[3] &&
+                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled [3] &&
                      !HasEffect(Buffs.Reassembled)) ||
                     (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool) ||
                     !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
                 bool reassembledAirAnchorAoE =
-                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[4] &&
+                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled [4] &&
                     HasEffect(Buffs.Reassembled)) ||
-                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[4] &&
+                    (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled [4] &&
                     !HasEffect(Buffs.Reassembled)) ||
                     (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool) ||
                     !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
@@ -507,11 +507,11 @@ internal static partial class MCH
                         if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !HasEffect(Buffs.Wildfire) &&
                             !HasEffect(Buffs.Reassembled) && HasCharges(Reassemble) && !JustUsed(Flamethrower, 10f) &&
                             GetRemainingCharges(Reassemble) > Config.MCH_AoE_ReassemblePool &&
-                            ((Config.MCH_AoE_Reassembled[0] && Scattergun.LevelChecked()) ||
-                             (Gauge.IsOverheated && Config.MCH_AoE_Reassembled[1] && AutoCrossbow.LevelChecked()) ||
-                             (GetCooldownRemainingTime(Chainsaw) < 1 && Config.MCH_AoE_Reassembled[2] &&
+                            ((Config.MCH_AoE_Reassembled [0] && Scattergun.LevelChecked()) ||
+                             (Gauge.IsOverheated && Config.MCH_AoE_Reassembled [1] && AutoCrossbow.LevelChecked()) ||
+                             (GetCooldownRemainingTime(Chainsaw) < 1 && Config.MCH_AoE_Reassembled [2] &&
                               Chainsaw.LevelChecked()) ||
-                             (GetCooldownRemainingTime(OriginalHook(Chainsaw)) < 1 && Config.MCH_AoE_Reassembled[3] &&
+                             (GetCooldownRemainingTime(OriginalHook(Chainsaw)) < 1 && Config.MCH_AoE_Reassembled [3] &&
                               Excavator.LevelChecked())))
                             return Reassemble;
 

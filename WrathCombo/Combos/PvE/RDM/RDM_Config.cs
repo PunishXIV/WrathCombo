@@ -2,10 +2,8 @@
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
-using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Window.Functions.SliderIncrements;
-using WrathCombo.Window.Functions;
-using WrathCombo.Data;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE
 {
@@ -70,7 +68,8 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_ST_oGCD_OnAction_Adv, "Advanced Action Options.", "Changes which action this option will replace.", isConditionalChoice: true);
                         if (RDM_ST_oGCD_OnAction_Adv)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, $"{Jolt.ActionName()}s", "", 4, 0, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, Fleche.ActionName(), "", 4, 1, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_ST_oGCD_OnAction, Riposte.ActionName(), "", 4, 2, descriptionColor: ImGuiColors.DalamudYellow);
@@ -83,14 +82,16 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_ST_oGCD_Engagement, Engagement.ActionName(), "", isConditionalChoice: true);
                         if (RDM_ST_oGCD_Engagement)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawAdditionalBoolChoice(RDM_ST_oGCD_Engagement_Pooling, "Pool one charge for manual use.", "");
                             ImGui.Unindent();
                         }
                         DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps, Corpsacorps.ActionName(), "", isConditionalChoice: true);
                         if (RDM_ST_oGCD_CorpACorps)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
                             DrawAdditionalBoolChoice(RDM_ST_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
                             ImGui.Unindent();
@@ -103,7 +104,8 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_ST_MeleeCombo_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
                         if (RDM_ST_MeleeCombo_Adv)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, $"{Jolt.ActionName()}s", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, Riposte.ActionName(), "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
                             ImGui.Unindent();
@@ -114,7 +116,8 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_ST_MeleeFinisher_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
                         if (RDM_ST_MeleeFinisher_Adv)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, $"{Jolt.ActionName()}s", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, Riposte.ActionName(), "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_ST_MeleeFinisher_OnAction, $"{Veraero.ActionName()} & {Verthunder.ActionName()}", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
@@ -132,14 +135,16 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_AoE_oGCD_Engagement, Engagement.ActionName(), "", isConditionalChoice: true);
                         if (RDM_AoE_oGCD_Engagement)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawAdditionalBoolChoice(RDM_AoE_oGCD_Engagement_Pooling, "Pool one charge for manual use.", "");
                             ImGui.Unindent();
                         }
                         DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps, Corpsacorps.ActionName(), "", isConditionalChoice: true);
                         if (RDM_AoE_oGCD_CorpACorps)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps_Melee, "Use only in melee range.", "");
                             DrawAdditionalBoolChoice(RDM_AoE_oGCD_CorpACorps_Pooling, "Pool one charge for manual use.", "");
                             ImGui.Unindent();
@@ -153,7 +158,8 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_AoE_MeleeCombo_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
                         if (RDM_AoE_MeleeCombo_Adv)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, $"{Scatter.ActionName()}/{Impact.ActionName()}", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, Moulinet.ActionName(), "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
                             ImGui.Unindent();
@@ -165,7 +171,8 @@ namespace WrathCombo.Combos.PvE
                         DrawAdditionalBoolChoice(RDM_AoE_MeleeFinisher_Adv, "Advanced Action Options", "Changes which action this option will replace.", isConditionalChoice: true);
                         if (RDM_AoE_MeleeFinisher_Adv)
                         {
-                            ImGui.Indent(); ImGui.Spacing();
+                            ImGui.Indent();
+                            ImGui.Spacing();
                             DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, $"{Scatter.ActionName()}/{Impact.ActionName()}", "", 3, 0, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, Moulinet.ActionName(), "", 3, 1, descriptionColor: ImGuiColors.DalamudYellow);
                             DrawHorizontalMultiChoice(RDM_AoE_MeleeFinisher_OnAction, $"{Veraero2.ActionName()} & {Verthunder3.ActionName()}", "", 3, 2, descriptionColor: ImGuiColors.DalamudYellow);
