@@ -128,22 +128,27 @@ internal partial class NIN
                         return OriginalHook(ThrowingDaggers);
                 }
 
-                if (canWeave && !InMudra)
-                {
-                    if (IsEnabled(CustomComboPreset.NIN_Variant_Rampart) &&
-                        IsEnabled(Variant.VariantRampart) &&
-                        IsOffCooldown(Variant.VariantRampart))
-                        return Variant.VariantRampart;
+                    if (canDelayedWeave && !InMudra)
+                    {
+                        if (IsEnabled(CustomComboPreset.NIN_Variant_Rampart) &&
+                            IsEnabled(Variant.VariantRampart) &&
+                            IsOffCooldown(Variant.VariantRampart))
+                            return Variant.VariantRampart;
 
-                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) &&
-                        IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug_AlignBefore) &&
-                        HasEffect(Buffs.ShadowWalker) &&
-                        GetCooldownRemainingTime(TrickAttack) <= 3 &&
-                        ((IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed) && InCombat() && CombatEngageDuration().TotalSeconds > 6) ||
-                        IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed)) &&
-                        IsOffCooldown(Mug) &&
-                        Mug.LevelChecked())
-                        return OriginalHook(Mug);
+                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) &&
+                            IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug_AlignBefore) &&
+                            HasEffect(Buffs.ShadowWalker) &&
+                            GetCooldownRemainingTime(TrickAttack) <= 3 &&
+                            ((IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed) && InCombat() &&
+                              CombatEngageDuration().TotalSeconds > 6) ||
+                             IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed)) &&
+                            IsOffCooldown(Mug) &&
+                            Mug.LevelChecked())
+                        {
+                            if (Dokumori.LevelChecked() && gauge.Ninki >= 60)
+                                return OriginalHook(Bhavacakra);
+                            return OriginalHook(Mug);
+                        }
 
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) &&
                         HasEffect(Buffs.ShadowWalker) &&
@@ -171,11 +176,11 @@ internal partial class NIN
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bloodbath) && All.Bloodbath.LevelChecked() && playerHP <= BloodbathThreshold && IsOffCooldown(All.Bloodbath))
                         return All.Bloodbath;
 
-                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra) &&
-                        ((TrickDebuff && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100)) &&
-                        (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && IsOnCooldown(Mug))) &&
-                        Bhavacakra.LevelChecked())
-                        return OriginalHook(Bhavacakra);
+                        if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra) &&
+                            ((TrickDebuff && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki >= 85)) &&
+                            (IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) && IsOnCooldown(Mug))) &&
+                            Bhavacakra.LevelChecked())
+                            return OriginalHook(Bhavacakra);
 
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra) &&
                         ((TrickDebuff && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki >= 60)) &&
@@ -590,19 +595,23 @@ internal partial class NIN
                     if (HasEffect(Buffs.ShadowWalker) && IsOffCooldown(TrickAttack))
                         return OriginalHook(TrickAttack);
 
-                    if (Bhavacakra.LevelChecked() && ((TrickDebuff && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100)))
-                        return OriginalHook(Bhavacakra);
+                        if (Bhavacakra.LevelChecked() && ((TrickDebuff && gauge.Ninki >= 50) || useBhakaBeforeTrickWindow && gauge.Ninki == 85))
+                            return OriginalHook(Bhavacakra);
 
-                    if ((TrickDebuff && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 100 && !Bhavacakra.LevelChecked() && Hellfrog.LevelChecked()))
-                        return OriginalHook(Hellfrog);
+                        if ((TrickDebuff && gauge.Ninki >= 50) || (useBhakaBeforeTrickWindow && gauge.Ninki == 85) && !Bhavacakra.LevelChecked() && Hellfrog.LevelChecked())
+                            return OriginalHook(Hellfrog);
 
                     if (!inTrickBurstSaveWindow)
                     {
                         if (HasEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                             return OriginalHook(Meisui);
 
-                        if (IsOffCooldown(Mug) && Mug.LevelChecked())
-                            return OriginalHook(Mug);
+                            if (IsOffCooldown(Mug) && Mug.LevelChecked())
+                            {
+                                if (Dokumori.LevelChecked() && gauge.Ninki >= 60)
+                                    return OriginalHook(Bhavacakra);
+                                return OriginalHook(Mug);
+                            }
 
                         if (gauge.Ninki >= 85 && Bhavacakra.LevelChecked())
                             return OriginalHook(Bhavacakra);

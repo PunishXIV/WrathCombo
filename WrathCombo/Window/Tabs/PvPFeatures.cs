@@ -95,7 +95,7 @@ namespace WrathCombo.Window.Tabs
 
                     using (var contents = ImRaii.Child("Contents", new Vector2(0)))
                     {
-
+                        ConfigWindow.currentPreset = 1;
                         try
                         {
                             if (ImGui.BeginTabBar($"subTab{OpenJob}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
