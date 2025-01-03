@@ -11,7 +11,8 @@ internal static partial class MNK
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Bootshine or LeapingOpo)) return actionID;
+            if (actionID is not (Bootshine or LeapingOpo))
+                return actionID;
 
             if ((!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
@@ -135,7 +136,6 @@ internal static partial class MNK
 
             // Standard Beast Chakras
             return DetermineCoreAbility(actionID, true);
-
         }
     }
 
@@ -145,7 +145,8 @@ internal static partial class MNK
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Bootshine or LeapingOpo)) return actionID;
+            if (actionID is not (Bootshine or LeapingOpo))
+                return actionID;
 
             if (IsEnabled(CustomComboPreset.MNK_STUseMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
@@ -304,7 +305,8 @@ internal static partial class MNK
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer)) return actionID;
+            if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
+                return actionID;
 
             if (!InCombat() && Gauge.Chakra < 5 &&
                 LevelChecked(InspiritedMeditation))
@@ -433,7 +435,8 @@ internal static partial class MNK
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer)) return actionID;
+            if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
+                return actionID;
 
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMeditation) &&
                 !InCombat() && Gauge.Chakra < 5 &&
@@ -586,7 +589,7 @@ internal static partial class MNK
         protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_PerfectBalance;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is PerfectBalance && 
+            actionID is PerfectBalance &&
             OriginalHook(MasterfulBlitz) != MasterfulBlitz &&
             LevelChecked(MasterfulBlitz)
                 ? OriginalHook(MasterfulBlitz)
@@ -602,9 +605,6 @@ internal static partial class MNK
                 ? Brotherhood
                 : actionID;
     }
-
-    #region Beast Chakras
-
     internal class MNK_BeastChakras : CustomCombo
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;
@@ -632,69 +632,4 @@ internal static partial class MNK
             return actionID;
         }
     }
-
-    #endregion
-
-    #region ID's
-
-    public const byte ClassID = 2;
-    public const byte JobID = 20;
-
-    public const uint
-        Bootshine = 53,
-        TrueStrike = 54,
-        SnapPunch = 56,
-        SteeledMeditation = 36940,
-        SteelPeak = 25761,
-        TwinSnakes = 61,
-        ArmOfTheDestroyer = 62,
-        Demolish = 66,
-        Mantra = 65,
-        DragonKick = 74,
-        Rockbreaker = 70,
-        Thunderclap = 25762,
-        HowlingFist = 25763,
-        FourPointFury = 16473,
-        PerfectBalance = 69,
-        FormShift = 4262,
-        TheForbiddenChakra = 3547,
-        MasterfulBlitz = 25764,
-        RiddleOfEarth = 7394,
-        EarthsReply = 36944,
-        RiddleOfFire = 7395,
-        Brotherhood = 7396,
-        RiddleOfWind = 25766,
-        InspiritedMeditation = 36941,
-        EnlightenedMeditation = 36943,
-        Enlightenment = 16474,
-        SixSidedStar = 16476,
-        ShadowOfTheDestroyer = 25767,
-        RisingPhoenix = 25768,
-        WindsReply = 36949,
-        ForbiddenMeditation = 36942,
-        LeapingOpo = 36945,
-        RisingRaptor = 36946,
-        PouncingCoeurl = 36947,
-        TrueNorth = 7546,
-        ElixirBurst = 36948,
-        FiresReply = 36950;
-
-    internal static class Buffs
-    {
-        public const ushort
-            TwinSnakes = 101,
-            OpoOpoForm = 107,
-            RaptorForm = 108,
-            CoeurlForm = 109,
-            PerfectBalance = 110,
-            RiddleOfFire = 1181,
-            RiddleOfWind = 2687,
-            FormlessFist = 2513,
-            TrueNorth = 1250,
-            WindsRumination = 3842,
-            FiresRumination = 3843,
-            Brotherhood = 1185;
-    }
-
-    #endregion
 }

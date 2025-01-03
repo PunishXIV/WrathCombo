@@ -1,5 +1,4 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
-using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
@@ -14,7 +13,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Yukikaze) return actionID;
+            if (actionID is not Yukikaze)
+                return actionID;
 
             if (Config.SAM_Yukaze_KenkiOvercap && CanWeave() &&
                 gauge.Kenki >= Config.SAM_Yukaze_KenkiOvercapAmount && LevelChecked(Shinten))
@@ -28,7 +28,6 @@ internal partial class SAM
                     return OriginalHook(Yukikaze);
 
             return OriginalHook(Hakaze);
-
         }
     }
 
@@ -38,7 +37,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Kasha) return actionID;
+            if (actionID is not Kasha)
+                return actionID;
 
             if (Config.SAM_Kasha_KenkiOvercap && CanWeave() &&
                 gauge.Kenki >= Config.SAM_Kasha_KenkiOvercapAmount && LevelChecked(Shinten))
@@ -57,7 +57,6 @@ internal partial class SAM
             }
 
             return OriginalHook(Hakaze);
-
         }
     }
 
@@ -67,7 +66,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Gekko) return actionID;
+            if (actionID is not Gekko)
+                return actionID;
 
             if (Config.SAM_Gekko_KenkiOvercap && CanWeave() &&
                 gauge.Kenki >= Config.SAM_Gekko_KenkiOvercapAmount && LevelChecked(Shinten))
@@ -86,7 +86,6 @@ internal partial class SAM
             }
 
             return OriginalHook(Hakaze);
-
         }
     }
 
@@ -267,7 +266,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Hakaze or Gyofu)) return actionID;
+            if (actionID is not (Hakaze or Gyofu))
+                return actionID;
 
             int kenkiOvercap = Config.SAM_ST_KenkiOvercapAmount;
             int shintenTreshhold = Config.SAM_ST_ExecuteThreshold;
@@ -296,23 +296,23 @@ internal partial class SAM
                 !InCombat() && TargetIsHostile())
                 return MeikyoShisui;
 
-                //oGCDs
-                if (CanWeave())
+            //oGCDs
+            if (CanWeave())
+            {
+                if (IsEnabled(CustomComboPreset.SAM_ST_CDs))
                 {
-                    if (IsEnabled(CustomComboPreset.SAM_ST_CDs))
-                    {
-                        //Meikyo Features
-                        if (IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
-                            UseMeikyo())
-                            return MeikyoShisui;
+                    //Meikyo Features
+                    if (IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
+                        UseMeikyo())
+                        return MeikyoShisui;
 
-                        //Ikishoten Features
-                        if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Ikishoten) &&
-                            LevelChecked(Ikishoten))
-                        {
-                            //Dumps Kenki in preparation for Ikishoten
-                            if (gauge.Kenki > 50 && GetCooldownRemainingTime(Ikishoten) < 10)
-                                return Shinten;
+                    //Ikishoten Features
+                    if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Ikishoten) &&
+                        LevelChecked(Ikishoten))
+                    {
+                        //Dumps Kenki in preparation for Ikishoten
+                        if (gauge.Kenki > 50 && GetCooldownRemainingTime(Ikishoten) < 10)
+                            return Shinten;
 
                         if (gauge.Kenki <= 50 && IsOffCooldown(Ikishoten))
                             return Ikishoten;
@@ -333,14 +333,14 @@ internal partial class SAM
                             return Guren;
                     }
 
-                        //Zanshin Usage
-                        if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Zanshin) &&
-                            LevelChecked(Zanshin) && gauge.Kenki >= 50 &&
-                            CanWeave() && HasEffect(Buffs.ZanshinReady) &&
-                            (JustUsed(Higanbana, 7f) || 
-                            (SenCount is 1 && HasEffect(Buffs.OgiNamikiriReady)) ||
-                             GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
-                            return Zanshin;
+                    //Zanshin Usage
+                    if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Zanshin) &&
+                        LevelChecked(Zanshin) && gauge.Kenki >= 50 &&
+                        CanWeave() && HasEffect(Buffs.ZanshinReady) &&
+                        (JustUsed(Higanbana, 7f) ||
+                        (SenCount is 1 && HasEffect(Buffs.OgiNamikiriReady)) ||
+                         GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
+                        return Zanshin;
 
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Shoha) &&
                         LevelChecked(Shoha) && gauge.MeditationStacks is 3)
@@ -476,7 +476,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Oka) return actionID;
+            if (actionID is not Oka)
+                return actionID;
 
             if (Config.SAM_Oka_KenkiOvercap && gauge.Kenki >= Config.SAM_Oka_KenkiOvercapAmount &&
                 LevelChecked(Kyuten) && CanWeave())
@@ -490,7 +491,6 @@ internal partial class SAM
                     return Oka;
 
             return OriginalHook(Fuko);
-
         }
     }
 
@@ -500,7 +500,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Mangetsu) return actionID;
+            if (actionID is not Mangetsu)
+                return actionID;
 
             if (Config.SAM_Mangetsu_KenkiOvercap && gauge.Kenki >= Config.SAM_Mangetsu_KenkiOvercapAmount &&
                 LevelChecked(Kyuten) && CanWeave())
@@ -514,7 +515,6 @@ internal partial class SAM
                     return Mangetsu;
 
             return OriginalHook(Fuko);
-
         }
     }
 
@@ -630,7 +630,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Fuga or Fuko)) return actionID;
+            if (actionID is not (Fuga or Fuko))
+                return actionID;
 
             float kenkiOvercap = Config.SAM_AoE_KenkiOvercapAmount;
 
@@ -773,7 +774,8 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Iaijutsu) return actionID;
+            if (actionID is not Iaijutsu)
+                return actionID;
 
             bool canAddShoha = IsEnabled(CustomComboPreset.SAM_Iaijutsu_Shoha) &&
                                ActionReady(Shoha) &&
@@ -866,8 +868,11 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Ikishoten) return actionID;
-            if (!IsEnabled(CustomComboPreset.SAM_Ikishoten)) return actionID;
+            if (actionID is not Ikishoten)
+                return actionID;
+
+            if (!IsEnabled(CustomComboPreset.SAM_Ikishoten))
+                return actionID;
 
             if (IsEnabled(CustomComboPreset.SAM_Ikishoten_Shoha) &&
                 ActionReady(Shoha) &&
@@ -920,88 +925,4 @@ internal partial class SAM
                 ? OriginalHook(11)
                 : actionID;
     }
-
-    #region ID's
-
-    public const byte JobID = 34;
-
-    public const uint
-        Hakaze = 7477,
-        Yukikaze = 7480,
-        Gekko = 7481,
-        Enpi = 7486,
-        Jinpu = 7478,
-        Kasha = 7482,
-        Shifu = 7479,
-        Mangetsu = 7484,
-        Fuga = 7483,
-        Oka = 7485,
-        Higanbana = 7489,
-        TenkaGoken = 7488,
-        MidareSetsugekka = 7487,
-        Shinten = 7490,
-        Kyuten = 7491,
-        Hagakure = 7495,
-        Guren = 7496,
-        Senei = 16481,
-        MeikyoShisui = 7499,
-        Seigan = 7501,
-        ThirdEye = 7498,
-        Iaijutsu = 7867,
-        TsubameGaeshi = 16483,
-        KaeshiHiganbana = 16484,
-        Shoha = 16487,
-        Ikishoten = 16482,
-        Fuko = 25780,
-        OgiNamikiri = 25781,
-        KaeshiNamikiri = 25782,
-        Yaten = 7493,
-        Gyoten = 7492,
-        KaeshiSetsugekka = 16486,
-        TendoGoken = 36965,
-        TendoKaeshiSetsugekka = 36968,
-        Zanshin = 36964,
-        TendoSetsugekka = 36966,
-        Gyofu = 36963;
-
-    public static int NumSen(SAMGauge Gauge)
-    {
-        bool ka = gauge.Sen.HasFlag(Sen.KA);
-        bool getsu = gauge.Sen.HasFlag(Sen.GETSU);
-        bool setsu = gauge.Sen.HasFlag(Sen.SETSU);
-
-        return (ka ? 1 : 0) + (getsu ? 1 : 0) + (setsu ? 1 : 0);
-    }
-
-    public static class Buffs
-    {
-        public const ushort
-            MeikyoShisui = 1233,
-            EnhancedEnpi = 1236,
-            EyesOpen = 1252,
-            OgiNamikiriReady = 2959,
-            Fuka = 1299,
-            Fugetsu = 1298,
-            TsubameReady = 4216,
-            TendoKaeshiSetsugekkaReady = 4218,
-            KaeshiGokenReady = 3852,
-            TendoKaeshiGokenReady = 4217,
-            ZanshinReady = 3855,
-            Tendo = 3856;
-    }
-
-    public static class Debuffs
-    {
-        public const ushort
-            Higanbana = 1228;
-    }
-
-    public static class Traits
-    {
-        public const ushort
-            EnhancedHissatsu = 591,
-            EnhancedMeikyoShishui2 = 593;
-    }
-
-    #endregion
 }

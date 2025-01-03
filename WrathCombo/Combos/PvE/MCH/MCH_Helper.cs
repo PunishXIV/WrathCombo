@@ -11,30 +11,97 @@ namespace WrathCombo.Combos.PvE;
 
 internal static partial class MCH
 {
+    #region ID's
+
+    public const byte JobID = 31;
+
+    public const uint
+        CleanShot = 2873,
+        HeatedCleanShot = 7413,
+        SplitShot = 2866,
+        HeatedSplitShot = 7411,
+        SlugShot = 2868,
+        HeatedSlugShot = 7412,
+        GaussRound = 2874,
+        Ricochet = 2890,
+        Reassemble = 2876,
+        Drill = 16498,
+        HotShot = 2872,
+        AirAnchor = 16500,
+        Hypercharge = 17209,
+        Heatblast = 7410,
+        SpreadShot = 2870,
+        Scattergun = 25786,
+        AutoCrossbow = 16497,
+        RookAutoturret = 2864,
+        RookOverdrive = 7415,
+        AutomatonQueen = 16501,
+        QueenOverdrive = 16502,
+        Tactician = 16889,
+        Chainsaw = 25788,
+        BioBlaster = 16499,
+        BarrelStabilizer = 7414,
+        Wildfire = 2878,
+        Dismantle = 2887,
+        Flamethrower = 7418,
+        BlazingShot = 36978,
+        DoubleCheck = 36979,
+        CheckMate = 36980,
+        Excavator = 36981,
+        FullMetalField = 36982;
+
+    public static class Buffs
+    {
+        public const ushort
+            Reassembled = 851,
+            Tactician = 1951,
+            Wildfire = 1946,
+            Overheated = 2688,
+            Flamethrower = 1205,
+            Hypercharged = 3864,
+            ExcavatorReady = 3865,
+            FullMetalMachinist = 3866;
+    }
+
+    public static class Debuffs
+    {
+        public const ushort
+            Dismantled = 860,
+            Bioblaster = 1866;
+    }
+
+    public static class Traits
+    {
+        public const ushort
+            EnhancedMultiWeapon = 605;
+    }
+
+    #endregion
+
     internal static MCHOpenerMaxLevel1 Opener1 = new();
     internal static MCHGauge Gauge = GetJobGauge<MCHGauge>();
 
     internal static bool ReassembledExcavatorST =>
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled [0] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled [0] && !HasEffect(Buffs.Reassembled)) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[0] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled[0] && !HasEffect(Buffs.Reassembled)) ||
         (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_ST_ReassemblePool) ||
         !IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble);
 
     internal static bool ReassembledChainsawST =>
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled [1] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled [1] && !HasEffect(Buffs.Reassembled)) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[1] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled[1] && !HasEffect(Buffs.Reassembled)) ||
         (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_ST_ReassemblePool) ||
         !IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble);
 
     internal static bool ReassembledAnchorST =>
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled [2] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled [2] && !HasEffect(Buffs.Reassembled)) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[2] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled[2] && !HasEffect(Buffs.Reassembled)) ||
         (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_ST_ReassemblePool) ||
         !IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble);
 
     internal static bool ReassembledDrillST =>
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled [3] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
-        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled [3] && !HasEffect(Buffs.Reassembled)) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[3] && (HasEffect(Buffs.Reassembled) || !HasEffect(Buffs.Reassembled))) ||
+        (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled[3] && !HasEffect(Buffs.Reassembled)) ||
         (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_ST_ReassemblePool) ||
         !IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble);
 
@@ -140,13 +207,13 @@ internal static partial class MCH
             !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) && !JustUsed(OriginalHook(Heatblast)))
         {
             if (((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) && !InBossEncounter()) ||
-                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled [0] &&
+                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled[0] &&
                  Config.MCH_ST_Adv_Excavator_SubOption == 1 && !InBossEncounter())) &&
                 LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
                 return true;
 
             if (((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) && InBossEncounter()) ||
-                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled [0])) &&
+                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled[0])) &&
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_TurretQueen) &&
                  (Config.MCH_ST_Adv_Excavator_SubOption == 0 ||
                  (Config.MCH_ST_Adv_Excavator_SubOption == 1 && InBossEncounter())) &&
@@ -159,23 +226,23 @@ internal static partial class MCH
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled [1])) &&
+                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled[1])) &&
                 LevelChecked(Chainsaw) && !LevelChecked(Excavator) &&
                 (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
                  ActionReady(Chainsaw)) && !Battery)
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled [2])) &&
+                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled[2])) &&
                 LevelChecked(AirAnchor) &&
                 (GetCooldownRemainingTime(AirAnchor) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
                  ActionReady(AirAnchor)) && !Battery)
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled [3])) &&
+                 (IsEnabled(CustomComboPreset.MCH_ST_AdvancedMode) && Config.MCH_ST_Reassembled[3])) &&
                 LevelChecked(Drill) &&
-                ((!LevelChecked(AirAnchor) && Config.MCH_ST_Reassembled [2]) || !Config.MCH_ST_Reassembled [2]) &&
+                ((!LevelChecked(AirAnchor) && Config.MCH_ST_Reassembled[2]) || !Config.MCH_ST_Reassembled[2]) &&
                 (GetCooldownRemainingTime(Drill) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
                  ActionReady(Drill)))
                 return true;
@@ -304,9 +371,9 @@ internal static partial class MCH
         ];
         internal override UserData? ContentCheckConfig => Config.MCH_Balance_Content;
 
-        public override List<(int [] Steps, int HoldDelay)> PrepullDelays { get; set; } =
+        public override List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } =
            [
-           ([1], 5)
+           ([2], 5)
            ];
 
         public override bool HasCooldowns()
