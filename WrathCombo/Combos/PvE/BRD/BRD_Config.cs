@@ -1,4 +1,5 @@
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
@@ -15,6 +16,7 @@ internal partial class BRD
             BRD_AoESecondWindThreshold = new("BRD_AoESecondWindThreshold"),
             BRD_VariantCure = new("BRD_VariantCure"),
             BRDPvP_HarmonicArrowCharges = new("BRDPvP_HarmonicArrowCharges"),
+            BRD_Adv_Opener_Selection = new("BRD_Adv_Opener_Selection", 0),
             BRD_Balance_Content = new("BRD_Balance_Content", 1);
 
         internal static void Draw(CustomComboPreset preset)
@@ -22,8 +24,13 @@ internal partial class BRD
             switch (preset)
             {
                 case CustomComboPreset.BRD_ST_Adv_Balance_Standard:
-                    DrawBossOnlyChoice(BRD_Balance_Content);
-                    break;
+                    UserConfig.DrawRadioButton(BRD_Adv_Opener_Selection, $"Standard Opener", "", 0);
+                    UserConfig.DrawRadioButton(BRD_Adv_Opener_Selection, $"2.48 Adjusted Standard Opener", "", 1);
+                    UserConfig.DrawRadioButton(BRD_Adv_Opener_Selection, $"2.49 Standard Comfy", "", 2);
+
+                    UserConfig.DrawBossOnlyChoice(BRD_Balance_Content);
+                    break;                
+
                 case CustomComboPreset.BRD_Adv_RagingJaws:
                     DrawSliderInt(3, 10, BRD_RagingJawsRenewTime,
                         "Remaining time (In seconds). Recommended 5, increase little by little if refresh is outside of radiant window");

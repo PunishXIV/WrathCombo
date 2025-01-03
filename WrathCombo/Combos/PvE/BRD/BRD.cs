@@ -610,6 +610,7 @@ namespace WrathCombo.Combos.PvE
                 int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_NoWasteHPPercentage);
                 bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
                 bool hasTarget = HasBattleTarget();
+                bool buffTime = GetCooldownRemainingTime(RagingStrikes) < 2.7;
 
 
                 #region Variants
@@ -630,13 +631,13 @@ namespace WrathCombo.Combos.PvE
                 {
                     if (ActionWatching.GetAttackType(Opener().CurrentOpenerAction) != ActionWatching.ActionAttackType.Ability && canWeave)
                     {
-                        if (gauge.Repertoire == 3 || gauge.Repertoire == 2 && GetCooldownRemainingTime(EmpyrealArrow) < 2)
+                        if (HasEffect(Buffs.RagingStrikes) && (gauge.Repertoire == 3 || gauge.Repertoire == 2 && GetCooldownRemainingTime(EmpyrealArrow) < 2))
                             return OriginalHook(PitchPerfect);
 
-                        if (ActionReady(HeartbreakShot))
+                        if (ActionReady(HeartbreakShot) && HasEffect(Buffs.RagingStrikes))
                             return HeartbreakShot;
                     }
-
+                    
                     return actionID;
 
                 }
@@ -649,9 +650,6 @@ namespace WrathCombo.Combos.PvE
                     // Limit optimisation to when you are high enough level to benefit from it.
                     if (LevelChecked(WanderersMinuet))
                     {
-                        if (ActionReady(EmpyrealArrow) && JustUsed(WanderersMinuet)) // Used to ensure Empyreal arrow goes off as soon as possible in opener
-                            return EmpyrealArrow;
-
                         if (canWeave || !hasTarget)
                         {
                             if (songNone && InCombat())
@@ -711,19 +709,18 @@ namespace WrathCombo.Combos.PvE
                 if (IsEnabled(CustomComboPreset.BRD_Adv_Buffs) && (!songNone || !LevelChecked(MagesBallad)) && isEnemyHealthHigh)
                 {
                     float ragingCD = GetCooldownRemainingTime(RagingStrikes);
-
-                    // Late weave Battle voice logic first, timed with raging strikes cd to keep buffs tight.
-                    if (canWeaveDelayed && ActionReady(BattleVoice) && songWanderer && (ragingCD < 3 || ActionReady(RagingStrikes)))
-                        return BattleVoice;
-
+                    
                     // Radiant next, must have battlevoice buff for it to fire
-                    if (canWeave && ActionReady(RadiantFinale) &&
-                        (Array.TrueForAll(gauge.Coda, SongIsNotNone) || Array.Exists(gauge.Coda, SongIsWandererMinuet)) &&
-                        HasEffect(Buffs.BattleVoice))
+                    if (canWeaveDelayed && ActionReady(RadiantFinale) && ragingCD < 2.3 &&
+                    (Array.TrueForAll(gauge.Coda, SongIsNotNone) || Array.Exists(gauge.Coda, SongIsWandererMinuet)))                        
                         return RadiantFinale;
 
+                    // Late weave Battle voice logic first, timed with raging strikes cd to keep buffs tight.
+                    if (canWeave && ActionReady(BattleVoice) && (HasEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale)))
+                        return BattleVoice;
+
                     // Late weave Raging last, must have battle voice buff OR not be high enough level for Battlecoice
-                    if (canWeave && ActionReady(RagingStrikes) && (HasEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)))
+                    if (canWeave && ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasEffect(Buffs.BattleVoice)))
                         return RagingStrikes;
 
                     // Barrage Logic to check for raging for low level reasons and it doesn't really need to check for the other buffs
@@ -736,15 +733,16 @@ namespace WrathCombo.Combos.PvE
 
                 #region OGCD
 
-                if (canWeave && IsEnabled(CustomComboPreset.BRD_ST_Adv_oGCD))
+                if (canWeave && IsEnabled(CustomComboPreset.BRD_ST_Adv_oGCD) && 
+                    (!buffTime || !IsEnabled(CustomComboPreset.BRD_Adv_Buffs)))
                 {
-                    if (ActionReady(EmpyrealArrow))
-                        return EmpyrealArrow;
-
-                    // Pitch Perfect loogic to use when full or when Empyreal arrow might overcap it.
+                    // Pitch Perfect logic to use when full or when Empyreal arrow might overcap it.
                     if (LevelChecked(PitchPerfect) && songWanderer &&
                         (gauge.Repertoire == 3 || (LevelChecked(EmpyrealArrow) && gauge.Repertoire == 2 && GetCooldownRemainingTime(EmpyrealArrow) < 2)))
                         return OriginalHook(PitchPerfect);
+
+                    if (ActionReady(EmpyrealArrow))
+                        return EmpyrealArrow;
 
                     // Sidewinder logic to use in burst window with buffs or on cd on the 1 minutes
                     if (ActionReady(Sidewinder))
@@ -859,7 +857,7 @@ namespace WrathCombo.Combos.PvE
 
                 if (IsEnabled(CustomComboPreset.BRD_Adv_BuffsEncore))
                 {
-                    if (HasEffect(Buffs.RadiantEncoreReady) && GetBuffRemainingTime(Buffs.RadiantFinale) < 15) // Delay Encore enough for buff window
+                    if (HasEffect(Buffs.RadiantEncoreReady) && HasEffect(Buffs.RagingStrikes)) // Delay Encore enough for buff window
                         return OriginalHook(RadiantEncore);
                 }
 
