@@ -2878,8 +2878,12 @@ public enum CustomComboPreset
     MNK_STUseWindsReply = 9015,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
-    [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance and Masterful Blitz to the rotation", MNK.JobID)]
+    [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance to the rotation", MNK.JobID)]
     MNK_STUsePerfectBalance = 9013,
+
+    [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo(" Masterful Blitz Option", "Adds Masterful Blitz to the rotation", MNK.JobID)]
+    MNK_STUseMasterfulBlitz = 9039,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
     [CustomComboInfo("True North Option", "Adds True North dynamically, when not in positional, to the rotation", MNK.JobID)]
@@ -2937,8 +2941,12 @@ public enum CustomComboPreset
     MNK_AoEUseWindsReply = 9035,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
-    [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance and Masterful Blitz to the rotation", MNK.JobID)]
+    [CustomComboInfo("Perfect Balance Option", "Adds Perfect Balance to the rotation", MNK.JobID)]
     MNK_AoEUsePerfectBalance = 9034,
+
+    [ParentCombo(MNK_AOE_AdvancedMode)]
+    [CustomComboInfo(" Masterful Blitz Option", "Adds Masterful Blitz to the rotation", MNK.JobID)]
+    MNK_AoEUseMasterfulBlitz = 9040,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the rotation.", MNK.JobID)]
@@ -2993,7 +3001,7 @@ public enum CustomComboPreset
         "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
     MNK_Riddle_Brotherhood = 9024,
 
-    // Last value = 9037
+    // Last value = 9040
 
     #endregion
 
