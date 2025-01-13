@@ -19,9 +19,8 @@ namespace WrathCombo.Combos.PvE
                 if (InCombat() && CanSpellWeave())
                 {
                     // ScenicMuse
-                    if (ActionReady(ScenicMuse) &&
-                        Gauge.LandscapeMotifDrawn &&
-                        Gauge.WeaponMotifDrawn)
+                    if (ActionReady(ScenicMuse) && InBossEncounter() &&
+                        Gauge.LandscapeMotifDrawn && Gauge.WeaponMotifDrawn)
                         return OriginalHook(ScenicMuse);
 
                     // LivingMuse
@@ -241,9 +240,9 @@ namespace WrathCombo.Combos.PvE
                 {
                     // ScenicMuse
                     if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_ScenicMuse) &&
-                        ActionReady(ScenicMuse) &&
-                        Gauge.LandscapeMotifDrawn &&
-                        Gauge.WeaponMotifDrawn)
+                        ((Config.PCT_ST_StarryMuse_SubOption == 0) ||
+                        (Config.PCT_ST_StarryMuse_SubOption == 1 && InBossEncounter())) &&
+                        ActionReady(ScenicMuse) && Gauge.LandscapeMotifDrawn && Gauge.WeaponMotifDrawn)
                         return OriginalHook(ScenicMuse);
 
                     // LivingMuse
