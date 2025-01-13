@@ -445,6 +445,11 @@ internal partial class PCT
             // General Weaves
             if (InCombat() && CanSpellWeave())
             {
+                // ScenicMuse
+                if (ActionReady(ScenicMuse) && Gauge.LandscapeMotifDrawn &&
+                    Gauge.WeaponMotifDrawn)
+                    return OriginalHook(ScenicMuse);
+
                 // LivingMuse
                 if (LivingMuse.LevelChecked() && Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
@@ -453,19 +458,12 @@ internal partial class PCT
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
-                // ScenicMuse
-                if (ActionReady(ScenicMuse) &&
-                    Gauge.LandscapeMotifDrawn &&
-                    Gauge.WeaponMotifDrawn)
-                    return OriginalHook(ScenicMuse);
-
                 // SteelMuse
-                if (ActionReady(OriginalHook(SteelMuse)) &&
-                    !HasEffect(Buffs.HammerTime) &&
-                    Gauge.WeaponMotifDrawn &&
+                if (SteelMuse.LevelChecked() && !HasEffect(Buffs.HammerTime) &&
+                    Gauge.WeaponMotifDrawn && HasCharges(OriginalHook(SteelMuse)) &&
                     (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
-                    GetRemainingCharges(SteelMuse) == GetMaxCharges(SteelMuse) ||
-                    !ScenicMuse.LevelChecked()))
+                     GetRemainingCharges(SteelMuse) == GetMaxCharges(SteelMuse) ||
+                     !ScenicMuse.LevelChecked()))
                     return OriginalHook(SteelMuse);
 
                 // MogoftheAges
@@ -629,6 +627,11 @@ internal partial class PCT
             // General Weaves
             if (InCombat() && CanSpellWeave())
             {
+                // ScenicMuse
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_ScenicMuse) &&
+                    ActionReady(ScenicMuse) && Gauge.LandscapeMotifDrawn && Gauge.WeaponMotifDrawn)
+                    return OriginalHook(ScenicMuse);
+
                 // LivingMuse
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LivingMuse) &&
                     LivingMuse.LevelChecked() && Gauge.CreatureMotifDrawn &&
@@ -637,13 +640,6 @@ internal partial class PCT
                     HasCharges(OriginalHook(LivingMuse)) && (!ScenicMuse.LevelChecked() ||
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
-
-                // ScenicMuse
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_ScenicMuse) &&
-                    ActionReady(ScenicMuse) &&
-                    Gauge.LandscapeMotifDrawn &&
-                    Gauge.WeaponMotifDrawn)
-                    return OriginalHook(ScenicMuse);
 
                 // SteelMuse
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SteelMuse) &&
