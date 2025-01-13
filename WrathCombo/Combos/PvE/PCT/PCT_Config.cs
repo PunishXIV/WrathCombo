@@ -1,7 +1,7 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
 using WrathCombo.Extensions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -22,13 +22,14 @@ internal partial class PCT
             PCT_ST_LandscapeStop = new("PCT_ST_LandscapeStop"),
             PCT_AoE_LandscapeStop = new("PCT_AoE_LandscapeStop"),
             PCT_Opener_Choice = new("PCT_Opener_Choice"),
-            PCT_Balance_Content = new("PCT_Balance_Content", 1);
+            PCT_Balance_Content = new("PCT_Balance_Content", 1),
+            PCT_ST_StarryMuse_SubOption = new("PCT_ST_StarryMuse_SubOption", 1);
 
         public static UserBool
             CombinedMotifsMog = new("CombinedMotifsMog"),
             CombinedMotifsMadeen = new("CombinedMotifsMadeen"),
             CombinedMotifsWeapon = new("CombinedMotifsWeapon"),
-            CombinedMotifsLandscape = new ("CombinedMotifsLandscape");
+            CombinedMotifsLandscape = new("CombinedMotifsLandscape");
 
         internal static void Draw(CustomComboPreset preset)
         {
