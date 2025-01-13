@@ -27,9 +27,9 @@ internal partial class PCT
                 if (ActionReady(LivingMuse) &&
                     Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
-                     GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                     (!ScenicMuse.LevelChecked() ||
-                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
+                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse) ||
+                    !ScenicMuse.LevelChecked() ||
+                    GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
                 // SteelMuse
@@ -43,7 +43,8 @@ internal partial class PCT
 
                 // MogoftheAges
                 if (ActionReady(OriginalHook(MogoftheAges)) &&
-                    (Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) &&
+                    (Gauge.MooglePortraitReady ||
+                    Gauge.MadeenPortraitReady) &&
                     (GetCooldownRemainingTime(StarryMuse) >= 60 || !ScenicMuse.LevelChecked()))
                     return OriginalHook(MogoftheAges);
 
@@ -250,8 +251,8 @@ internal partial class PCT
                     ActionReady(LivingMuse) &&
                     Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
-                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                    (!ScenicMuse.LevelChecked() ||
+                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse) ||
+                    !ScenicMuse.LevelChecked() ||
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
@@ -450,8 +451,9 @@ internal partial class PCT
                 if (ActionReady(LivingMuse) &&
                     Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
-                     GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                     (!ScenicMuse.LevelChecked() || GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
+                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse) ||
+                    !ScenicMuse.LevelChecked() ||
+                    GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
                 // ScenicMuse
@@ -635,8 +637,8 @@ internal partial class PCT
                     ActionReady(LivingMuse) &&
                     Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
-                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                    (!ScenicMuse.LevelChecked() ||
+                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse) ||
+                    !ScenicMuse.LevelChecked() ||
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
