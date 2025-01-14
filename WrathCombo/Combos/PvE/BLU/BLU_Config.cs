@@ -11,9 +11,9 @@ using WrathCombo.Window.Functions;
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
 
-#endregion
-
 namespace WrathCombo.Combos.PvE;
+
+#endregion
 
 internal partial class BLU
 {

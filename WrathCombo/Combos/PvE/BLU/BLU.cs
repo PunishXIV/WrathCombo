@@ -12,9 +12,9 @@ using Options = WrathCombo.Combos.CustomComboPreset;
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
 
-#endregion
-
 namespace WrathCombo.Combos.PvE;
+
+#endregion
 
 internal partial class BLU
 {
@@ -426,7 +426,7 @@ internal partial class BLU
             // Waste protection
             if (IsEnabled(Options.BLU_DPS_DoT_WasteProtection) &&
                 HasTarget() && !dotHelper.AnyDotsWanted())
-                return PLD.ShieldBash;
+                return All.SavageBlade;
 
             // Buffed Song of Torment
             if (dotHelper.CheckDotWanted(DoT.DPS_SongOfTorment))
@@ -556,7 +556,7 @@ internal partial class BLU
             // Waste protection
             if (IsEnabled(Options.BLU_Tank_DoT_WasteProtection) &&
                 HasTarget() && !dotHelper.AnyDotsWanted() && actionID != 2)
-                return PLD.ShieldBash;
+                return All.SavageBlade;
 
             // Feather Rain
             if (dotHelper.CheckDotWanted(DoT.Tank_FeatherRain))

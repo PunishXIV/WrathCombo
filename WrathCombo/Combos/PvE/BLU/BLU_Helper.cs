@@ -276,11 +276,11 @@ internal partial class BLU
 internal class DoTInfoAttribute(
     ushort debuffID,
     uint spellID,
-    CustomComboPreset configPreset) : Attribute
+    Options configPreset) : Attribute
 {
     public ushort DebuffID { get; } = debuffID;
     public uint SpellID { get; } = spellID;
-    public CustomComboPreset Config { get; } = configPreset;
+    public Options Config { get; } = configPreset;
 }
 
 internal static class DoTExtensions
@@ -303,7 +303,7 @@ internal static class DoTExtensions
         return ((DoTInfoAttribute)attributes[0]).SpellID;
     }
 
-    public static CustomComboPreset Preset(this BLU.DoT dot)
+    public static Options Preset(this BLU.DoT dot)
     {
         var type = typeof(BLU.DoT);
         var memInfo = type.GetMember(dot.ToString());
