@@ -24,18 +24,16 @@ internal partial class PCT
                     return OriginalHook(ScenicMuse);
 
                 // LivingMuse
-                if (LivingMuse.LevelChecked() && Gauge.CreatureMotifDrawn &&
+                if (ActionReady(LivingMuse) && Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
-                     GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) && HasCharges(OriginalHook(LivingMuse)) &&
+                     GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
                      (!ScenicMuse.LevelChecked() ||
                      GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
                 // SteelMuse
-                if (SteelMuse.LevelChecked() &&
-                    !HasEffect(Buffs.HammerTime) &&
-                    Gauge.WeaponMotifDrawn &&
-                    HasCharges(OriginalHook(SteelMuse)) &&
+                if (ActionReady(SteelMuse) &&
+                    !HasEffect(Buffs.HammerTime) && Gauge.WeaponMotifDrawn &&
                     (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
                      GetRemainingCharges(SteelMuse) == GetMaxCharges(SteelMuse) ||
                      !ScenicMuse.LevelChecked()))
@@ -248,17 +246,17 @@ internal partial class PCT
 
                 // LivingMuse
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LivingMuse) &&
-                    LivingMuse.LevelChecked() && Gauge.CreatureMotifDrawn &&
+                    ActionReady(LivingMuse) && Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
                     GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                    HasCharges(OriginalHook(LivingMuse)) && (!ScenicMuse.LevelChecked() ||
+                    (!ScenicMuse.LevelChecked() ||
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
                 // SteelMuse
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SteelMuse) &&
-                    SteelMuse.LevelChecked() && !HasEffect(Buffs.HammerTime) &&
-                    Gauge.WeaponMotifDrawn && HasCharges(OriginalHook(SteelMuse)) &&
+                    ActionReady(SteelMuse) && !HasEffect(Buffs.HammerTime) &&
+                    Gauge.WeaponMotifDrawn &&
                     (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
                     GetRemainingCharges(SteelMuse) == GetMaxCharges(SteelMuse) ||
                     !ScenicMuse.LevelChecked()))
@@ -451,16 +449,15 @@ internal partial class PCT
                     return OriginalHook(ScenicMuse);
 
                 // LivingMuse
-                if (LivingMuse.LevelChecked() && Gauge.CreatureMotifDrawn &&
+                if (ActionReady(LivingMuse) && Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
-                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                    HasCharges(OriginalHook(LivingMuse)) && (!ScenicMuse.LevelChecked() ||
+                    GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) && (!ScenicMuse.LevelChecked() ||
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
                 // SteelMuse
-                if (SteelMuse.LevelChecked() && !HasEffect(Buffs.HammerTime) &&
-                    Gauge.WeaponMotifDrawn && HasCharges(OriginalHook(SteelMuse)) &&
+                if (ActionReady(SteelMuse) && !HasEffect(Buffs.HammerTime) &&
+                    Gauge.WeaponMotifDrawn &&
                     (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
                      GetRemainingCharges(SteelMuse) == GetMaxCharges(SteelMuse) ||
                      !ScenicMuse.LevelChecked()))
@@ -565,10 +562,12 @@ internal partial class PCT
                 if (LandscapeMotif.LevelChecked() && !Gauge.LandscapeMotifDrawn && GetCooldownRemainingTime(ScenicMuse) <= 20)
                     return OriginalHook(LandscapeMotif);
 
-                if (CreatureMotif.LevelChecked() && !Gauge.CreatureMotifDrawn && (HasCharges(LivingMuse) || GetCooldownChargeRemainingTime(LivingMuse) <= 8))
+                if (CreatureMotif.LevelChecked() && !Gauge.CreatureMotifDrawn &&
+                    (HasCharges(LivingMuse) || GetCooldownChargeRemainingTime(LivingMuse) <= 8))
                     return OriginalHook(CreatureMotif);
 
-                if (WeaponMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !Gauge.WeaponMotifDrawn && (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
+                if (WeaponMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !Gauge.WeaponMotifDrawn &&
+                    (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
                     return OriginalHook(WeaponMotif);
             }
             //Saves one Charge of White paint for movement/Black paint.
@@ -637,7 +636,7 @@ internal partial class PCT
                     LivingMuse.LevelChecked() && Gauge.CreatureMotifDrawn &&
                     (!(Gauge.MooglePortraitReady || Gauge.MadeenPortraitReady) ||
                     GetRemainingCharges(LivingMuse) == GetMaxCharges(LivingMuse)) &&
-                    HasCharges(OriginalHook(LivingMuse)) && (!ScenicMuse.LevelChecked() ||
+                    (!ScenicMuse.LevelChecked() ||
                     GetCooldown(ScenicMuse).CooldownRemaining > GetCooldownChargeRemainingTime(LivingMuse)))
                     return OriginalHook(LivingMuse);
 
