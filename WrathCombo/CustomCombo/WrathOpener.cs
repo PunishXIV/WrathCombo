@@ -194,12 +194,6 @@ namespace WrathCombo.CustomComboNS
                             CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                     }
 
-                    if (CurrentOpenerAction == All.TrueNorth && !TargetNeedsPositionals())
-                    {
-                        OpenerStep++;
-                        CurrentOpenerAction = OpenerActions[OpenerStep - 1];
-                    }
-
                     foreach (var (Steps, HoldDelay) in PrepullDelays.Where(x => x.Steps.Any(y => y == OpenerStep)))
                     {
                         if (DelayedStep != OpenerStep)
@@ -210,9 +204,16 @@ namespace WrathCombo.CustomComboNS
 
                         if ((DateTime.Now - DelayedAt).TotalSeconds < HoldDelay && !InCombat())
                         {
+                            ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
                             actionID = 11;
                             return true;
                         }
+                    }
+
+                    if (CurrentOpenerAction == All.TrueNorth && !TargetNeedsPositionals())
+                    {
+                        OpenerStep++;
+                        CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                     }
 
                     while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) && ActionWatching.TimeSinceLastAction.TotalSeconds > 1.5)

@@ -318,7 +318,7 @@ namespace WrathCombo.Data
 
         public static TimeSpan TimeSinceLastAction => DateTime.Now - TimeLastActionUsed;
 
-        private static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
+        public static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
 
         public static void OutputLog()
         {

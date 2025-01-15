@@ -230,7 +230,7 @@ internal static partial class SAM
 
         public override List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], 14),
+            ([2], 13),
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
