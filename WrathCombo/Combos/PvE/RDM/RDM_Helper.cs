@@ -774,7 +774,8 @@ namespace WrathCombo.Combos.PvE
 
             public override bool HasCooldowns()
             {
-                if (!ActionsReady([All.Swiftcast, Fleche, Embolden, Manafication, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
+                if (!ActionsReady([All.Swiftcast, Fleche, Embolden, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
+                    !IsOffCooldown(Manafication) ||
                     GetRemainingCharges(Engagement) < 2 ||
                     GetRemainingCharges(Corpsacorps) < 2)
                     return false;

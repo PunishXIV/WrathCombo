@@ -229,9 +229,14 @@ internal static partial class SAM
         internal override UserData? ContentCheckConfig => Config.SAM_Balance_Content;
 
         public override List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } =
-            [
-            ([2], 14),
-            ];
+        [
+            ([2], 13),
+        ];
+
+        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+        [
+            ([2], 11, () => !TargetNeedsPositionals())
+        ];
 
         public override bool HasCooldowns()
         {
@@ -241,10 +246,10 @@ internal static partial class SAM
             if (GetRemainingCharges(All.TrueNorth) < 2)
                 return false;
 
-            if (!ActionReady(Senei))
+            if (!IsOffCooldown(Senei))
                 return false;
 
-            if (!ActionReady(Ikishoten))
+            if (!IsOffCooldown(Ikishoten))
                 return false;
 
             return true;

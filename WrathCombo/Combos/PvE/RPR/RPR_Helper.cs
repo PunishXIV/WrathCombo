@@ -156,10 +156,10 @@ internal static partial class RPR
             if (GetRemainingCharges(SoulSlice) < 2)
                 return false;
 
-            if (!ActionReady(ArcaneCircle))
+            if (!IsOffCooldown(ArcaneCircle))
                 return false;
 
-            if (!ActionReady(Gluttony))
+            if (!IsOffCooldown(Gluttony))
                 return false;
 
             return true;

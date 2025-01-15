@@ -20,6 +20,7 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data
 {
@@ -54,84 +55,92 @@ namespace WrathCombo.Data
         private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
         private unsafe static void ReceiveActionEffectDetour(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds)
         {
-
-            var rawEffects = (ulong*)effects;
-            List<(ulong id, ActionEffects effects)> targets = new();
-            for (int i = 0; i < header->NumTargets; ++i)
-            {
-                var targetEffects = new ActionEffects();
-                for (int j = 0; j < ActionEffects.MaxCount; ++j)
-                    targetEffects[j] = rawEffects[i * 8 + j];
-
-                targets.Add(new(targetEntityIds[i], targetEffects));
-            }
-
-            foreach (var target in targets)
-            {
-                foreach (var eff in target.effects)
-                {
-                    Svc.Log.Debug($"{eff.Type}, {eff.Value} ({header->ActionId.ActionName()}) -> {Svc.Objects.First(x => x.GameObjectId == target.id).Name}, {eff.AtSource}/{eff.FromTarget}");
-                    if (eff.Type is ActionEffectType.Heal or ActionEffectType.Damage)
-                    {
-                        if (CustomComboFunctions.GetPartyMembers().Any(x => x.GameObjectId == target.id))
-                        {
-                            var member = CustomComboFunctions.GetPartyMembers().First(x => x.GameObjectId == target.id);
-                            member.CurrentHP = eff.Type == ActionEffectType.Damage ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - eff.Value) : Math.Min(member.BattleChara.MaxHp, member.CurrentHP + eff.Value);
-                            member.HPUpdatePending = true;
-                            Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
-                        }
-                    }
-                    if (eff.Type is ActionEffectType.MpGain or ActionEffectType.MpLoss)
-                    {
-                        if (CustomComboFunctions.GetPartyMembers().Any(x => x.GameObjectId == (eff.AtSource ? casterEntityId : target.id)))
-                        {
-                            var member = CustomComboFunctions.GetPartyMembers().First(x => x.GameObjectId == (eff.AtSource ? casterEntityId : target.id));
-                            member.CurrentMP = eff.Type == ActionEffectType.MpLoss ? Math.Min(member.BattleChara.MaxMp, member.CurrentMP - eff.Value) : Math.Min(member.BattleChara.MaxMp, member.CurrentMP + eff.Value);
-                            member.MPUpdatePending = true;
-                            Svc.Framework.RunOnTick(() => member.MPUpdatePending = false, TimeSpan.FromSeconds(1.5));
-                        }
-                    }
-                }
-            }
-
             ReceiveActionEffectHook!.Original(casterEntityId, casterPtr, targetPos, header, effects, targetEntityIds);
 
-            if (ActionType is 13 or 2) return;
-            if (header->ActionId != 7 &&
-                header->ActionId != 8 &&
-                casterEntityId == Svc.ClientState.LocalPlayer.GameObjectId)
+            try
             {
-                LastAction = header->ActionId;
-                TimeLastActionUsed = DateTime.Now;
-                if (header->ActionId != CombatActions.LastOrDefault())
-                    LastActionUseCount = 1;
-                else
-                    LastActionUseCount++;
-
-                CombatActions.Add(header->ActionId);
-                LastSuccessfulUseTime[header->ActionId] = Environment.TickCount64;
-
-                if (ActionSheet.TryGetValue(header->ActionId, out var sheet))
+                var rawEffects = (ulong*)effects;
+                List<(ulong id, ActionEffects effects)> targets = new();
+                for (int i = 0; i < header->NumTargets; ++i)
                 {
-                    switch (sheet.ActionCategory.Value.RowId)
-                    {
-                        case 2: //Spell
-                            LastSpell = header->ActionId;
-                            break;
-                        case 3: //Weaponskill
-                            LastWeaponskill = header->ActionId;
-                            break;
-                        case 4: //Ability
-                            LastAbility = header->ActionId;
-                            break;
-                    }
+                    var targetEffects = new ActionEffects();
+                    for (int j = 0; j < ActionEffects.MaxCount; ++j)
+                        targetEffects[j] = rawEffects[i * 8 + j];
 
-                    if (sheet.TargetArea)
-                        WrathOpener.CurrentOpener?.ProgressOpener(header->ActionId);
+                    targets.Add(new(targetEntityIds[i], targetEffects));
                 }
 
-                if (Service.Configuration.EnabledOutputLog)
-                    OutputLog();
+                foreach (var target in targets)
+                {
+                    foreach (var eff in target.effects)
+                    {
+                        Svc.Log.Debug($"{eff.Type}, {eff.Value} ({header->ActionId.ActionName()}) -> {Svc.Objects.First(x => x.GameObjectId == target.id).Name}, {eff.AtSource}/{eff.FromTarget}");
+                        if (eff.Type is ActionEffectType.Heal or ActionEffectType.Damage)
+                        {
+                            if (GetPartyMembers().Any(x => x.GameObjectId == target.id))
+                            {
+                                var member = GetPartyMembers().First(x => x.GameObjectId == target.id);
+                                member.CurrentHP = eff.Type == ActionEffectType.Damage ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - eff.Value) : Math.Min(member.BattleChara.MaxHp, member.CurrentHP + eff.Value);
+                                member.HPUpdatePending = true;
+                                Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
+                            }
+                        }
+                        if (eff.Type is ActionEffectType.MpGain or ActionEffectType.MpLoss)
+                        {
+                            if (GetPartyMembers().Any(x => x.GameObjectId == (eff.AtSource ? casterEntityId : target.id)))
+                            {
+                                var member = GetPartyMembers().First(x => x.GameObjectId == (eff.AtSource ? casterEntityId : target.id));
+                                member.CurrentMP = eff.Type == ActionEffectType.MpLoss ? Math.Min(member.BattleChara.MaxMp, member.CurrentMP - eff.Value) : Math.Min(member.BattleChara.MaxMp, member.CurrentMP + eff.Value);
+                                member.MPUpdatePending = true;
+                                Svc.Framework.RunOnTick(() => member.MPUpdatePending = false, TimeSpan.FromSeconds(1.5));
+                            }
+                        }
+                    }
+                }
+
+
+
+                if (ActionType is 13 or 2) return;
+                if (header->ActionId != 7 &&
+                    header->ActionId != 8 &&
+                    casterEntityId == Svc.ClientState.LocalPlayer.GameObjectId)
+                {
+                    LastAction = header->ActionId;
+                    TimeLastActionUsed = DateTime.Now;
+                    if (header->ActionId != CombatActions.LastOrDefault())
+                        LastActionUseCount = 1;
+                    else
+                        LastActionUseCount++;
+
+                    CombatActions.Add(header->ActionId);
+                    LastSuccessfulUseTime[header->ActionId] = Environment.TickCount64;
+
+                    if (ActionSheet.TryGetValue(header->ActionId, out var sheet))
+                    {
+                        switch (sheet.ActionCategory.Value.RowId)
+                        {
+                            case 2: //Spell
+                                LastSpell = header->ActionId;
+                                break;
+                            case 3: //Weaponskill
+                                LastWeaponskill = header->ActionId;
+                                break;
+                            case 4: //Ability
+                                LastAbility = header->ActionId;
+                                break;
+                        }
+
+                        if (sheet.TargetArea)
+                            WrathOpener.CurrentOpener?.ProgressOpener(header->ActionId);
+                    }
+
+                    if (Service.Configuration.EnabledOutputLog)
+                        OutputLog();
+                }
+            }
+            catch
+            {
+
             }
         }
 
@@ -143,17 +152,17 @@ namespace WrathCombo.Data
             {
                 OnActionSend?.Invoke();
 
-                if (!CustomComboFunctions.InCombat())
+                if (!InCombat())
                     CombatActions.Clear();
 
-                if (actionType == 1 && CustomComboFunctions.GetMaxCharges(actionId) > 0)
+                if (actionType == 1 && GetMaxCharges(actionId) > 0)
                     ChargeTimestamps[actionId] = Environment.TickCount64;
 
                 if (actionType == 1)
                     ActionTimestamps[actionId] = Environment.TickCount64;
 
                 CheckForChangedTarget(actionId, ref targetObjectId);
-                TimeLastActionUsed = DateTime.Now;
+                TimeLastActionUsed = DateTime.Now + TimeSpan.FromMilliseconds(ActionManager.GetAdjustedCastTime((ActionType)actionType, actionId));
                 LastAction = actionId;
                 ActionType = actionType;
                 WrathOpener.CurrentOpener?.ProgressOpener(actionId);
@@ -195,14 +204,14 @@ namespace WrathCombo.Data
                         targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 1:
-                        if (CustomComboFunctions.HasFriendlyTarget())
+                        if (HasFriendlyTarget())
                             targetObjectId = Svc.Targets.Target.GameObjectId;
                         else
                             targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 2:
-                        if (CustomComboFunctions.GetHealTarget(true, true) is not null)
-                            targetObjectId = CustomComboFunctions.GetHealTarget(true, true).GameObjectId;
+                        if (GetHealTarget(true, true) is not null)
+                            targetObjectId = GetHealTarget(true, true).GameObjectId;
                         else
                             targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
@@ -309,7 +318,7 @@ namespace WrathCombo.Data
 
         public static TimeSpan TimeSinceLastAction => DateTime.Now - TimeLastActionUsed;
 
-        private static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
+        public static DateTime TimeLastActionUsed { get; set; } = DateTime.Now;
 
         public static void OutputLog()
         {

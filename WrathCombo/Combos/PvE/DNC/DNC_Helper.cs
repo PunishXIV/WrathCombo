@@ -197,7 +197,7 @@ internal partial class DNC
             if (!ActionReady(TechnicalStep))
                 return false;
 
-            if (!ActionReady(Devilment))
+            if (!IsOffCooldown(Devilment))
                 return false;
 
             if (InCombat())
@@ -287,7 +287,7 @@ internal partial class DNC
             if (!ActionReady(TechnicalStep))
                 return false;
 
-            if (!ActionReady(Devilment))
+            if (!IsOffCooldown(Devilment))
                 return false;
 
             if (InCombat())
@@ -297,7 +297,7 @@ internal partial class DNC
                 return false;
 
             // go at 7s, with some leeway
-            if (CountdownRemaining is > 5.5f and < 8f)
+            if (CountdownRemaining is < 5.5f or > 8f)
                 return false;
 
             return true;

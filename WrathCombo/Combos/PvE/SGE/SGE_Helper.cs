@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -270,7 +271,7 @@ internal static partial class SGE
             if (GetRemainingCharges(Phlegma3) < 2)
                 return false;
 
-            if (!ActionReady(Psyche))
+            if (!IsOffCooldown(Psyche))
                 return false;
 
             if (!HasAddersting(Gauge))

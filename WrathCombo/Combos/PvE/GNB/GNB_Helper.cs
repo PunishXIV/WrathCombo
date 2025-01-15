@@ -146,22 +146,22 @@ internal partial class GNB
 
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(Bloodfest))
+            if (!IsOffCooldown(Bloodfest))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(NoMercy))
+            if (!IsOffCooldown(NoMercy))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(Hypervelocity))
+            if (!IsOffCooldown(Hypervelocity))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(SonicBreak))
+            if (!IsOffCooldown(SonicBreak))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(DoubleDown))
+            if (!IsOffCooldown(DoubleDown))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(BowShock))
+            if (!IsOffCooldown(BowShock))
                 return false;
 
             return true;
@@ -205,22 +205,22 @@ internal partial class GNB
         internal override UserData? ContentCheckConfig => Config.GNB_ST_Balance_Content;
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(Bloodfest))
+            if (!IsOffCooldown(Bloodfest))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(NoMercy))
+            if (!IsOffCooldown(NoMercy))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(Hypervelocity))
+            if (!IsOffCooldown(Hypervelocity))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(SonicBreak))
+            if (!IsOffCooldown(SonicBreak))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(DoubleDown))
+            if (!IsOffCooldown(DoubleDown))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(BowShock))
+            if (!IsOffCooldown(BowShock))
                 return false;
 
             return true;

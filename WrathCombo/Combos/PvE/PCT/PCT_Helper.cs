@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons.DalamudServices;
 using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
@@ -148,7 +149,7 @@ internal partial class PCT
 
         public override bool HasCooldowns()
         {
-            if (!ActionReady(StarryMuse))
+            if (!IsOffCooldown(StarryMuse))
                 return false;
 
             if (GetRemainingCharges(LivingMuse) < 3)
@@ -213,7 +214,7 @@ internal partial class PCT
 
         public override bool HasCooldowns()
         {
-            if (!ActionReady(StarryMuse))
+            if (!IsOffCooldown(StarryMuse))
                 return false;
 
             if (GetRemainingCharges(LivingMuse) < 3)

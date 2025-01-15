@@ -66,19 +66,19 @@ internal partial class BRD
 
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(WanderersMinuet))
+            if (!CustomComboFunctions.IsOffCooldown(WanderersMinuet))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(BattleVoice))
+            if (!CustomComboFunctions.IsOffCooldown(BattleVoice))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(RadiantFinale))
+            if (!CustomComboFunctions.IsOffCooldown(RadiantFinale))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(RagingStrikes))
+            if (!CustomComboFunctions.IsOffCooldown(RagingStrikes))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(Barrage))
+            if (!CustomComboFunctions.IsOffCooldown(Barrage))
                 return false;
 
 
@@ -127,19 +127,19 @@ internal partial class BRD
 
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(WanderersMinuet))
+            if (!CustomComboFunctions.IsOffCooldown(WanderersMinuet))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(BattleVoice))
+            if (!CustomComboFunctions.IsOffCooldown(BattleVoice))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(RadiantFinale))
+            if (!CustomComboFunctions.IsOffCooldown(RadiantFinale))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(RagingStrikes))
+            if (!CustomComboFunctions.IsOffCooldown(RagingStrikes))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(Barrage))
+            if (!CustomComboFunctions.IsOffCooldown(Barrage))
                 return false;
 
 
@@ -184,19 +184,19 @@ internal partial class BRD
 
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(WanderersMinuet))
+            if (!CustomComboFunctions.IsOffCooldown(WanderersMinuet))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(BattleVoice))
+            if (!CustomComboFunctions.IsOffCooldown(BattleVoice))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(RadiantFinale))
+            if (!CustomComboFunctions.IsOffCooldown(RadiantFinale))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(RagingStrikes))
+            if (!CustomComboFunctions.IsOffCooldown(RagingStrikes))
                 return false;
 
-            if (!CustomComboFunctions.ActionReady(Barrage))
+            if (!CustomComboFunctions.IsOffCooldown(Barrage))
                 return false;
 
 

@@ -134,10 +134,10 @@ namespace WrathCombo.Window.Functions
             Vector2 length = new();
             using (var styleCol = ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
             {
-                if (ConfigWindow.currentPreset != -1)
+                if (currentPreset != -1)
                 {
-                    ImGui.Text($"#{ConfigWindow.currentPreset}: ");
-                    length = ImGui.CalcTextSize($"#{ConfigWindow.currentPreset}: ");
+                    ImGui.Text($"#{currentPreset}: ");
+                    length = ImGui.CalcTextSize($"#{currentPreset}: ");
                     ImGui.SameLine();
                     ImGui.PushItemWidth(length.Length());
                 }
@@ -351,7 +351,7 @@ namespace WrathCombo.Window.Functions
 
             }
 
-            ConfigWindow.currentPreset++;
+            currentPreset++;
 
             presetChildren.TryGetValue(preset, out var children);
 
@@ -386,7 +386,7 @@ namespace WrathCombo.Window.Functions
                                 Service.Configuration.Save();
 
                                 // Keep removed items in the counter
-                                ConfigWindow.currentPreset += 1 + AllChildren(presetChildren[childPreset]);
+                                currentPreset += 1 + AllChildren(presetChildren[childPreset]);
                             }
 
                             else
@@ -410,7 +410,7 @@ namespace WrathCombo.Window.Functions
                 }
                 else
                 {
-                    ConfigWindow.currentPreset += AllChildren(presetChildren[preset]);
+                    currentPreset += AllChildren(presetChildren[preset]);
 
                 }
             }
