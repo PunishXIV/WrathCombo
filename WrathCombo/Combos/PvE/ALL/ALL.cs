@@ -222,7 +222,7 @@ internal class All
         {
             switch (actionID)
             {
-                case BLU.AngelWhisper or RDM.Verraise:
+                case BLU.AngelWhisper_Spell72 or RDM.Verraise:
                 case SMN.Resurrection when LocalPlayer.ClassJob.RowId is SMN.JobID:
                 {
                     if (HasEffect(Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast))
