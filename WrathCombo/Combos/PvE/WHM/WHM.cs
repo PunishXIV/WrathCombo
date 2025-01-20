@@ -1,133 +1,41 @@
-#region
-
-using System.Collections.Generic;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-
-#endregion
 
 namespace WrathCombo.Combos.PvE;
 
 internal partial class WHM
 {
-    public const byte ClassID = 6;
-    public const byte JobID = 24;
-
-    public const uint
-
-        // Heals
-        Cure = 120,
-        Cure2 = 135,
-        Cure3 = 131,
-        Regen = 137,
-        AfflatusSolace = 16531,
-        AfflatusRapture = 16534,
-        Raise = 125,
-        Benediction = 140,
-        AfflatusMisery = 16535,
-        Medica1 = 124,
-        Medica2 = 133,
-        Medica3 = 37010,
-        Tetragrammaton = 3570,
-        DivineBenison = 7432,
-        Aquaveil = 25861,
-        DivineCaress = 37011,
-
-        // DPS
-        Glare1 = 16533,
-        Glare3 = 25859,
-        Glare4 = 37009,
-        Stone1 = 119,
-        Stone2 = 127,
-        Stone3 = 3568,
-        Stone4 = 7431,
-        Assize = 3571,
-        Holy = 139,
-        Holy3 = 25860,
-
-        // DoT
-        Aero = 121,
-        Aero2 = 132,
-        Dia = 16532,
-
-        // Buffs
-        ThinAir = 7430,
-        PresenceOfMind = 136,
-        PlenaryIndulgence = 7433;
-
-    //Action Groups
-    internal static readonly List<uint>
-        StoneGlareList = [Stone1, Stone2, Stone3, Stone4, Glare1, Glare3];
-
-    //Debuff Pairs of Actions and Debuff
-    internal static readonly Dictionary<uint, ushort>
-        AeroList = new()
-        {
-            { Aero, Debuffs.Aero },
-            { Aero2, Debuffs.Aero2 },
-            { Dia, Debuffs.Dia }
-        };
-
-    public static class Buffs
-    {
-        public const ushort
-            Regen = 158,
-            Medica2 = 150,
-            Medica3 = 3880,
-            PresenceOfMind = 157,
-            ThinAir = 1217,
-            DivineBenison = 1218,
-            Aquaveil = 2708,
-            SacredSight = 3879,
-            DivineGrace = 3881;
-    }
-
-    public static class Debuffs
-    {
-        public const ushort
-            Aero = 143,
-            Aero2 = 144,
-            Dia = 1871;
-    }
-
     internal class WHM_SolaceMisery : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_SolaceMisery;
 
-        protected override uint Invoke(uint actionID)
-        {
-            return actionID is AfflatusSolace && BloodLilies == 3
+        protected override uint Invoke(uint actionID) =>
+            actionID is AfflatusSolace && gauge.BloodLily == 3
                 ? AfflatusMisery
                 : actionID;
-        }
     }
 
     internal class WHM_RaptureMisery : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_RaptureMisery;
 
-        protected override uint Invoke(uint actionID)
-        {
-            return actionID is AfflatusRapture && BloodLilies == 3
+        protected override uint Invoke(uint actionID) =>
+            actionID is AfflatusRapture && gauge.BloodLily == 3
                 ? AfflatusMisery
                 : actionID;
-        }
     }
 
     internal class WHM_CureSync : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_CureSync;
 
-        protected override uint Invoke(uint actionID)
-        {
-            return actionID is Cure2 && !LevelChecked(Cure2)
+        protected override uint Invoke(uint actionID) => actionID is Cure2 && !LevelChecked(Cure2)
                 ? Cure
                 : actionID;
-        }
     }
 
     internal class WHM_Raise : CustomCombo
@@ -136,7 +44,8 @@ internal partial class WHM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not All.Swiftcast) return actionID;
+            if (actionID is not All.Swiftcast)
+                return actionID;
 
             bool thinAirReady = !HasEffect(Buffs.ThinAir) && LevelChecked(ThinAir) && HasCharges(ThinAir);
 
@@ -152,7 +61,7 @@ internal partial class WHM
     internal class WHM_ST_MainCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_ST_MainCombo;
-        
+
         protected override uint Invoke(uint actionID)
         {
             bool ActionFound;
@@ -170,7 +79,8 @@ internal partial class WHM
             }
 
             // If the action is not in the list, return the actionID
-            if (!ActionFound) return actionID;
+            if (!ActionFound)
+                return actionID;
 
             if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Opener))
                 if (Opener().FullOpener(ref actionID))
@@ -253,7 +163,8 @@ internal partial class WHM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Medica1) return actionID;
+            if (actionID is not Medica1)
+                return actionID;
 
             bool thinAirReady = LevelChecked(ThinAir) && !HasEffect(Buffs.ThinAir) &&
                                 GetRemainingCharges(ThinAir) > Config.WHM_AoEHeals_ThinAir;
@@ -322,7 +233,8 @@ internal partial class WHM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Cure) return actionID;
+            if (actionID is not Cure)
+                return actionID;
 
             IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.WHM_STHeals_UIMouseOver);
 
@@ -345,7 +257,7 @@ internal partial class WHM
             foreach (int prio in Config.WHM_ST_Heals_Priority.Items.OrderBy(x => x))
             {
                 int index = Config.WHM_ST_Heals_Priority.IndexOf(prio);
-                int config = WHMHelper.GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
+                int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
 
                 if (enabled)
                     if (GetTargetHPPercent(healTarget, Config.WHM_STHeals_IncludeShields) <= config &&
@@ -377,7 +289,8 @@ internal partial class WHM
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Holy or Holy3)) return actionID;
+            if (actionID is not (Holy or Holy3))
+                return actionID;
 
             bool liliesFullNoBlood = gauge.Lily == 3 && gauge.BloodLily < 3;
             bool liliesNearlyFull = gauge.Lily == 2 && gauge.LilyTimer >= 17000;

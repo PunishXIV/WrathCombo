@@ -1,4 +1,4 @@
-﻿namespace WrathCombo.Combos.JobHelpers.Enums;
+﻿namespace WrathCombo.Combos.PvE.Enums;
 
 public enum OpenerState
 {

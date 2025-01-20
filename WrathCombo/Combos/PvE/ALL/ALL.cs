@@ -89,12 +89,10 @@ internal class All
     /// <param name="MPThreshold">Player MP less than Threshold check</param>
     /// <param name="weave">Spell Weave check by default</param>
     /// <returns></returns>
-    public static bool CanUseLucid(uint actionID, int MPThreshold, bool weave = true)
-    {
-        return CustomComboFunctions.ActionReady(LucidDreaming)
-               && CustomComboFunctions.LocalPlayer.CurrentMp <= MPThreshold
-               && (!weave || CustomComboFunctions.CanSpellWeave());
-    }
+    public static bool CanUseLucid(uint actionID, int MPThreshold, bool weave = true) => 
+        CustomComboFunctions.ActionReady(LucidDreaming)
+        && CustomComboFunctions.LocalPlayer.CurrentMp <= MPThreshold
+        && (!weave || CustomComboFunctions.CanSpellWeave());
 
     public static class Buffs
     {

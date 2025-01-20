@@ -8,10 +8,81 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class PLD
 {
+    #region ID's
+
+    public const byte ClassID = 1;
+    public const byte JobID = 19;
+
+    public const float CooldownThreshold = 0.5f;
+
+    public const uint
+        FastBlade = 9,
+        RiotBlade = 15,
+        ShieldBash = 16,
+        Sentinel = 17,
+        RageOfHalone = 21,
+        Bulwark = 22,
+        CircleOfScorn = 23,
+        ShieldLob = 24,
+        SpiritsWithin = 29,
+        HallowedGround = 30,
+        GoringBlade = 3538,
+        DivineVeil = 3540,
+        RoyalAuthority = 3539,
+        Guardian = 36920,
+        TotalEclipse = 7381,
+        Intervention = 7382,
+        Requiescat = 7383,
+        Imperator = 36921,
+        HolySpirit = 7384,
+        Prominence = 16457,
+        HolyCircle = 16458,
+        Confiteor = 16459,
+        Expiacion = 25747,
+        BladeOfFaith = 25748,
+        BladeOfTruth = 25749,
+        BladeOfValor = 25750,
+        FightOrFlight = 20,
+        Atonement = 16460,
+        Supplication = 36918, // Second Atonement
+        Sepulchre = 36919, // Third Atonement
+        Intervene = 16461,
+        BladeOfHonor = 36922,
+        Sheltron = 3542,
+        Clemency = 3541;
+
+    public static class Buffs
+    {
+        public const ushort
+            IronWill = 79,
+            Requiescat = 1368,
+            AtonementReady = 1902, // First Atonement Buff
+            SupplicationReady = 3827, // Second Atonement Buff
+            SepulchreReady = 3828, // Third Atonement Buff
+            GoringBladeReady = 3847,
+            BladeOfHonor = 3831,
+            FightOrFlight = 76,
+            ConfiteorReady = 3019,
+            DivineMight = 2673,
+            HolySheltron = 2674,
+            Sheltron = 1856;
+    }
+
+    public static class Debuffs
+    {
+        public const ushort
+            BladeOfValor = 2721,
+            GoringBlade = 725;
+    }
+
+    #endregion
+
     internal static PLDOpenerMaxLevel1 Opener1 = new();
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked) return Opener1;
+        if (Opener1.LevelChecked)
+            return Opener1;
+
         return WrathOpener.Dummy;
     }
 

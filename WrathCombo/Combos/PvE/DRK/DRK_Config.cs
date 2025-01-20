@@ -1,9 +1,9 @@
 #region
 
-using System.Numerics;
 using Dalamud.Interface.Utility;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using System.Numerics;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -88,12 +88,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "All Enemies",
                         "Will use The Blackest Night regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "Avoid Bosses",
                         "Will try not to use Blackest Night when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     break;
 
@@ -115,12 +115,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "All Enemies",
                         "Will use Living Dead regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "Avoid Bosses",
                         "Will try not to use Living Dead when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     break;
 
@@ -240,12 +240,12 @@ internal partial class DRK
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Require party",
                         "Will not use Dark Missionary unless there are 2 or more party members.",
-                        outputValue: (int)PartyRequirement.Yes, itemWidth: medium);
+                        outputValue: (int) PartyRequirement.Yes, itemWidth: medium);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Dark Missionary.",
-                        outputValue: (int)PartyRequirement.No, itemWidth: medium);
+                        outputValue: (int) PartyRequirement.No, itemWidth: medium);
 
                     UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 3,
@@ -277,11 +277,11 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     UserConfig.DrawSliderInt(0, 3, DRK_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)",
@@ -304,7 +304,7 @@ internal partial class DRK
 
                     break;
 
-                #endregion
+                    #endregion
             }
         }
 
@@ -508,7 +508,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="CustomComboPreset.DRK_ST_TBN" />
         public static readonly UserInt DRK_ST_TBNBossRestriction =
-            new("DRK_ST_TBNBossRestriction", (int)BossAvoidance.Off);
+            new("DRK_ST_TBNBossRestriction", (int) BossAvoidance.Off);
 
         /// <summary>
         ///     Self HP% to use Shadowed Vigil below for Single Target.
@@ -555,7 +555,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="CustomComboPreset.DRK_ST_LivingDead" />
         public static readonly UserInt DRK_ST_LivingDeadBossRestriction =
-            new("DRK_ST_LivingDeadBossRestriction", (int)BossAvoidance.On);
+            new("DRK_ST_LivingDeadBossRestriction", (int) BossAvoidance.On);
 
         #endregion
 
@@ -743,7 +743,7 @@ internal partial class DRK
         public static readonly UserInt
             DRK_Mit_DarkMissionary_PartyRequirement =
                 new("DRK_Mit_DarkMissionary_PartyRequirement",
-                    (int)PartyRequirement.Yes);
+                    (int) PartyRequirement.Yes);
 
         /// <summary>
         ///     Self HP% to use Rampart below in the Mitigation Rotation.
@@ -766,7 +766,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="CustomComboPreset.DRK_Mit_ArmsLength" />
         public static readonly UserInt DRK_Mit_ArmsLength_Boss =
-            new("DRK_Mit_ArmsLength_Boss", (int)BossAvoidance.On);
+            new("DRK_Mit_ArmsLength_Boss", (int) BossAvoidance.On);
 
         /// <summary>
         ///     The number of enemies to be nearby for Arm's Length.

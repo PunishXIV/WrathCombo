@@ -11,7 +11,6 @@ namespace WrathCombo.Combos.PvE;
 internal static partial class SCH
 {
 
-
     /*
      * SCH_Consolation
      * Even though Summon Seraph becomes Consolation, 
@@ -50,7 +49,7 @@ internal static partial class SCH
             if (actionID is not Recitation || !HasEffect(Buffs.Recitation))
                 return actionID;
 
-            switch ((int)Config.SCH_Recitation_Mode)
+            switch ((int) Config.SCH_Recitation_Mode)
             {
                 case 0: return OriginalHook(Adloquium);
                 case 1: return OriginalHook(Succor);

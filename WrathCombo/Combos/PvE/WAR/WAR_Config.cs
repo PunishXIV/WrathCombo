@@ -1,6 +1,6 @@
-using System.Numerics;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using System.Numerics;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -77,8 +77,8 @@ internal partial class WAR
             WAR_Mit_Equilibrium_Health = new("WAR_Mit_Equilibrium_Health", 45),
             WAR_Mit_ThrillOfBattle_Health = new("WAR_Mit_ThrillOfBattle_Health", 60),
             WAR_Mit_Rampart_Health = new("WAR_Mit_Rampart_Health", 65),
-            WAR_Mit_ShakeItOff_PartyRequirement = new("WAR_Mit_ShakeItOff_PartyRequirement", (int)PartyRequirement.Yes),
-            WAR_Mit_ArmsLength_Boss = new("WAR_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
+            WAR_Mit_ShakeItOff_PartyRequirement = new("WAR_Mit_ShakeItOff_PartyRequirement", (int) PartyRequirement.Yes),
+            WAR_Mit_ArmsLength_Boss = new("WAR_Mit_ArmsLength_Boss", (int) BossAvoidance.On),
             WAR_Mit_ArmsLength_EnemyCount = new("WAR_Mit_ArmsLength_EnemyCount", 0),
             WAR_Mit_Vengeance_Health = new("WAR_Mit_Vengeance_Health", 50);
 
@@ -441,12 +441,12 @@ internal partial class WAR
                         WAR_Mit_ShakeItOff_PartyRequirement,
                         "Require party",
                         "Will not use Shake It Off unless there are 2 or more party members.",
-                        outputValue: (int)PartyRequirement.Yes);
+                        outputValue: (int) PartyRequirement.Yes);
                     UserConfig.DrawHorizontalRadioButton(
                         WAR_Mit_ShakeItOff_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Shake It Off.",
-                        outputValue: (int)PartyRequirement.No);
+                        outputValue: (int) PartyRequirement.No);
 
                     UserConfig.DrawPriorityInput(WAR_Mit_Priorities,
                         numberMitigationOptions, 5,
@@ -459,11 +459,11 @@ internal partial class WAR
                     UserConfig.DrawHorizontalRadioButton(
                         WAR_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         WAR_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     UserConfig.DrawSliderInt(0, 3, WAR_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)");
@@ -483,7 +483,7 @@ internal partial class WAR
                         "Vengeance Priority:");
                     break;
 
-                #endregion
+                    #endregion
             }
         }
     }

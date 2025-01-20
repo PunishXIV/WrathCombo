@@ -1,6 +1,6 @@
-using System.Numerics;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
@@ -23,7 +23,7 @@ internal partial class PLD
             Off = 1,
             On = 2
         }
-        
+
         public static UserInt
             PLD_ST_FoF_Trigger = new("PLD_ST_FoF_Trigger", 0),
             PLD_AoE_FoF_Trigger = new("PLD_AoE_FoF_Trigger", 0),
@@ -59,10 +59,10 @@ internal partial class PLD
 
             //One-Button Mitigation
             PLD_Mit_HallowedGround_Max_Health = new("PLD_Mit_HallowedGround_Max_Health", 20),
-            PLD_Mit_DivineVeil_PartyRequirement = new("PLD_Mit_DivineVeil_PartyRequirement", (int)PartyRequirement.Yes),
+            PLD_Mit_DivineVeil_PartyRequirement = new("PLD_Mit_DivineVeil_PartyRequirement", (int) PartyRequirement.Yes),
             PLD_Mit_Rampart_Health = new("PLD_Mit_Rampart_Health", 65),
             PLD_Mit_Sentinel_Health = new("PLD_Mit_Sentinel_Health", 60),
-            PLD_Mit_ArmsLength_Boss = new("PLD_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
+            PLD_Mit_ArmsLength_Boss = new("PLD_Mit_ArmsLength_Boss", (int) BossAvoidance.On),
             PLD_Mit_ArmsLength_EnemyCount = new("PLD_Mit_ArmsLength_EnemyCount", 0),
             PLD_Mit_Bulwark_Health = new("PLD_Mit_Bulwark_Health", 50),
             PLD_Mit_HallowedGround_Health = new("PLD_Mit_HallowedGround_Health", 35),
@@ -285,7 +285,7 @@ internal partial class PLD
                         "Exclude Mitigations",
                         "Disables the use of mitigations in Simple Mode.", 1);
                     break;
-                
+
                 #region One-Button Mitigation
 
                 case CustomComboPreset.PLD_Mit_HallowedGround_Max:
@@ -319,12 +319,12 @@ internal partial class PLD
                         PLD_Mit_DivineVeil_PartyRequirement,
                         "Require party",
                         "Will not use Divine Veil unless there are 2 or more party members.",
-                        outputValue: (int)PartyRequirement.Yes);
+                        outputValue: (int) PartyRequirement.Yes);
                     UserConfig.DrawHorizontalRadioButton(
                         PLD_Mit_DivineVeil_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Divine Veil.",
-                        outputValue: (int)PartyRequirement.No);
+                        outputValue: (int) PartyRequirement.No);
 
                     UserConfig.DrawPriorityInput(PLD_Mit_Priorities,
                         numberMitigationOptions, 2,
@@ -357,11 +357,11 @@ internal partial class PLD
                     UserConfig.DrawHorizontalRadioButton(
                         PLD_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         PLD_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     UserConfig.DrawSliderInt(0, 3, PLD_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)");
@@ -407,7 +407,7 @@ internal partial class PLD
                         "Clemency Priority:");
                     break;
 
-                #endregion
+                    #endregion
             }
         }
     }

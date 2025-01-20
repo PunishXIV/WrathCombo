@@ -1,7 +1,7 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
 using WrathCombo.Extensions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -28,7 +28,7 @@ internal partial class PCT
             CombinedMotifsMog = new("CombinedMotifsMog"),
             CombinedMotifsMadeen = new("CombinedMotifsMadeen"),
             CombinedMotifsWeapon = new("CombinedMotifsWeapon"),
-            CombinedMotifsLandscape = new ("CombinedMotifsLandscape");
+            CombinedMotifsLandscape = new("CombinedMotifsLandscape");
 
         internal static void Draw(CustomComboPreset preset)
         {

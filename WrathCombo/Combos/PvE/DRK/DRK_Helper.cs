@@ -1,7 +1,7 @@
 ﻿#region
 
-using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -15,6 +15,150 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRK
 {
+    #region IDs
+
+    public const byte JobID = 32;
+
+    #region Actions
+
+    public const uint
+
+    #region Single-Target 1-2-3 Combo
+
+        HardSlash = 3617,
+        SyphonStrike = 3623,
+        Souleater = 3632,
+
+    #endregion
+
+    #region AoE 1-2-3 Combo
+
+        Unleash = 3621,
+        StalwartSoul = 16468,
+
+    #endregion
+
+    #region Single-Target oGCDs
+
+        CarveAndSpit = 3643, // With AbyssalDrain
+        EdgeOfDarkness = 16467, // For MP
+        EdgeOfShadow = 16470, // For MP // Upgrade of EdgeOfDarkness
+        Bloodspiller = 7392, // For Blood
+        ScarletDelirium = 36928, // Under Enhanced Delirium
+        Comeuppance = 36929, // Under Enhanced Delirium
+        Torcleaver = 36930, // Under Enhanced Delirium
+
+    #endregion
+
+    #region AoE oGCDs
+
+        AbyssalDrain = 3641, // Cooldown shared with CarveAndSpit
+        FloodOfDarkness = 16466, // For MP
+        FloodOfShadow = 16469, // For MP // Upgrade of FloodOfDarkness
+        Quietus = 7391, // For Blood
+        SaltedEarth = 3639,
+        SaltAndDarkness = 25755, // Recast of Salted Earth
+        Impalement = 36931, // Under Delirium
+
+    #endregion
+
+    #region Buffing oGCDs
+
+        BloodWeapon = 3625,
+        Delirium = 7390,
+
+    #endregion
+
+    #region Burst Window
+
+        LivingShadow = 16472,
+        Shadowbringer = 25757,
+        Disesteem = 36932,
+
+    #endregion
+
+    #region Ranged Option
+
+        Unmend = 3624,
+
+    #endregion
+
+    #region Mitigation
+        Grit = 3629, // Lv10, instant, 2.0s CD (group 1), range 0, single-target, targets=Self
+        ReleaseGrit = 32067, // Lv10, instant, 1.0s CD (group 1), range 0, single-target, targets=Self
+        ShadowWall = 3636, // Lv38, instant, 120.0s CD (group 20), range 0, single-target, targets=Self
+        DarkMind = 3634, // Lv45, instant, 60.0s CD (group 8), range 0, single-target, targets=Self
+        LivingDead = 3638, // Lv50, instant, 300.0s CD (group 24), range 0, single-target, targets=Self
+        DarkMissionary = 16471, // Lv66, instant, 90.0s CD (group 14), range 0, AOE 30 circle, targets=Self
+        BlackestNight = 7393, // Lv70, instant, 15.0s CD (group 2), range 30, single-target, targets=Self/Party
+        Oblation = 25754, // Lv82, instant, 60.0s CD (group 18/71) (2 charges), range 30, single-target, targets=Self/Party
+        ShadowedVigil = 36927; // Lv92, instant, 120.0s CD (group 20), range 0, single-target, targets=Self, animLock=???
+    #endregion
+
+    #endregion
+
+    public static class Buffs
+    {
+        #region Main Buffs
+
+        /// Tank Stance
+        public const ushort Grit = 743;
+
+        /// The lowest level buff, before Delirium
+        public const ushort BloodWeapon = 742;
+
+        /// The lower Delirium buff, with just the blood ability usage
+        public const ushort Delirium = 1972;
+
+        /// Different from Delirium, to do the Scarlet Delirium chain
+        public const ushort EnhancedDelirium = 3836;
+
+        /// The increased damage buff that should always be up - checked through gauge
+        public const ushort Darkside = 741;
+
+        #endregion
+
+        #region "DoT" or Burst
+
+        /// Ground DoT active status
+        public const ushort SaltedEarth = 749;
+
+        /// Charge to be able to use Disesteem
+        public const ushort Scorn = 3837;
+
+        #endregion
+
+        #region Mitigation
+
+        /// TBN Active - Dark arts checked through gauge
+        public const ushort BlackestNightShield = 1178;
+
+        /// The initial Invuln that needs procc'd
+        public const ushort LivingDead = 810;
+
+        /// The real, triggered Invuln that gives heals
+        public const ushort WalkingDead = 811;
+
+        /// Damage Reduction part of Vigil
+        public const ushort ShadowedVigil = 3835;
+
+        /// The triggered part of Vigil that needs procc'd to heal (happens below 50%)
+        public const ushort ShadowedVigilant = 3902;
+
+        /// Oblation Active
+        public const ushort Oblation = 2682;
+
+        #endregion
+    }
+
+    public static class Traits
+    {
+        public const uint
+            EnhancedDelirium = 572;
+    }
+
+    #endregion
+
     private static DRKGauge Gauge => GetJobGauge<DRKGauge>();
 
     /// <summary>
@@ -25,7 +169,7 @@ internal partial class DRK
     {
         get
         {
-            var has = false;
+            bool has = false;
             if (LocalPlayer is not null)
                 has = FindEffect(
                     Buffs.BlackestNightShield,
@@ -45,7 +189,7 @@ internal partial class DRK
     {
         get
         {
-            var has = false;
+            bool has = false;
             if (LocalPlayer is not null)
                 has = FindEffect(Buffs.BlackestNightShield) is not null;
 
@@ -96,21 +240,21 @@ internal partial class DRK
         if (LocalPlayer.TargetObject is null)
             return false;
 
-        var hpRemaining = PlayerHealthPercentageHp();
-        var hpThreshold = !aoe ? (float)Config.DRK_ST_TBNThreshold : 90f;
+        float hpRemaining = PlayerHealthPercentageHp();
+        float hpThreshold = !aoe ? (float) Config.DRK_ST_TBNThreshold : 90f;
 
         // Bail if we're above the threshold
         if (hpRemaining > hpThreshold)
             return false;
 
-        var targetIsBoss = TargetIsBoss();
-        var bossRestriction =
+        bool targetIsBoss = TargetIsBoss();
+        int bossRestriction =
             !aoe
-                ? (int)Config.DRK_ST_TBNBossRestriction
-                : (int)Config.BossAvoidance.Off; // Don't avoid bosses in AoE
+                ? (int) Config.DRK_ST_TBNBossRestriction
+                : (int) Config.BossAvoidance.Off; // Don't avoid bosses in AoE
 
         // Bail if we're trying to avoid bosses and the target is one
-        if (bossRestriction is (int)Config.BossAvoidance.On
+        if (bossRestriction is (int) Config.BossAvoidance.On
             && targetIsBoss)
             return false;
 
