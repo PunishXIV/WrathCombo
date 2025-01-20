@@ -122,7 +122,7 @@ internal partial class SAM
             {
 
                 //Ikishoten Features
-                if (LevelChecked(Ikishoten))
+                if (LevelChecked(Ikishoten) && !HasEffect(Buffs.ZanshinReady))
                 {
                     //Dumps Kenki in preparation for Ikishoten
                     if (gauge.Kenki >= 40 && GetCooldownRemainingTime(Ikishoten) < 10)
@@ -313,7 +313,7 @@ internal partial class SAM
                 {
                     //Ikishoten Features
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Ikishoten) &&
-                        LevelChecked(Ikishoten))
+                        LevelChecked(Ikishoten) && !HasEffect(Buffs.ZanshinReady))
                     {
                         //Dumps Kenki in preparation for Ikishoten
                         if (gauge.Kenki >= 40 && GetCooldownRemainingTime(Ikishoten) < 10)
@@ -559,7 +559,7 @@ internal partial class SAM
                 if (ActionReady(Guren) && gauge.Kenki >= 25)
                     return Guren;
 
-                if (LevelChecked(Ikishoten))
+                if (LevelChecked(Ikishoten) && !HasEffect(Buffs.ZanshinReady))
                 {
                     //Dumps Kenki in preparation for Ikishoten
                     if (gauge.Kenki > 50 && GetCooldownRemainingTime(Ikishoten) < 10)
@@ -581,7 +581,7 @@ internal partial class SAM
             }
 
             if (LevelChecked(Zanshin) && HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50)
-                return OriginalHook(Ikishoten);
+                return Zanshin;
 
             if (LevelChecked(OgiNamikiri) &&
                 ((!IsMoving() && HasEffect(Buffs.OgiNamikiriReady)) || gauge.Kaeshi is Kaeshi.NAMIKIRI))
@@ -669,7 +669,7 @@ internal partial class SAM
                     return Guren;
 
                 if (IsEnabled(CustomComboPreset.SAM_AOE_CDs_Ikishoten) &&
-                    LevelChecked(Ikishoten))
+                    LevelChecked(Ikishoten) && !HasEffect(Buffs.ZanshinReady))
                 {
                     //Dumps Kenki in preparation for Ikishoten
                     if (gauge.Kenki > 50 && GetCooldownRemainingTime(Ikishoten) < 10)
@@ -695,7 +695,7 @@ internal partial class SAM
 
             if (IsEnabled(CustomComboPreset.SAM_AoE_Zanshin) &&
                 LevelChecked(Zanshin) && HasEffect(Buffs.ZanshinReady) && gauge.Kenki >= 50)
-                return OriginalHook(Ikishoten);
+                return Zanshin;
 
             if (IsEnabled(CustomComboPreset.SAM_AoE_OgiNamikiri) &&
                 LevelChecked(OgiNamikiri) && ((!IsMoving() && HasEffect(Buffs.OgiNamikiriReady)) ||
