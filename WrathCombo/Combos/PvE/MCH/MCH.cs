@@ -353,7 +353,8 @@ internal static partial class MCH
                 if (!ActionWatching.HasDoubleWeaved() && !Gauge.IsOverheated)
                 {
                     // BarrelStabilizer
-                    if (ActionReady(BarrelStabilizer))
+                    if (ActionReady(BarrelStabilizer) &&
+                        !HasEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
                     if (Gauge.Battery == 100)
@@ -489,7 +490,7 @@ internal static partial class MCH
                 {
                     // BarrelStabilizer
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Stabilizer) &&
-                        ActionReady(BarrelStabilizer))
+                        ActionReady(BarrelStabilizer) && !HasEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Queen) &&
@@ -612,7 +613,8 @@ internal static partial class MCH
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_AutoBarrel) &&
-                ActionReady(BarrelStabilizer) && !Gauge.IsOverheated)
+                ActionReady(BarrelStabilizer) && !Gauge.IsOverheated &&
+                !HasEffect(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_Wildfire) &&
@@ -656,7 +658,8 @@ internal static partial class MCH
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.MCH_AutoCrossbow_AutoBarrel) &&
-                ActionReady(BarrelStabilizer) && !Gauge.IsOverheated)
+                ActionReady(BarrelStabilizer) && !Gauge.IsOverheated &&
+                 !HasEffect(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (!Gauge.IsOverheated && LevelChecked(Hypercharge) &&
