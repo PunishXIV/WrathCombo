@@ -115,12 +115,14 @@ internal partial class DRG
 
                 //Geirskogul Feature
                 if (ActionReady(Geirskogul) &&
-                     CanDRGWeave(Geirskogul))
+                     CanDRGWeave(Geirskogul) &&
+                     !Gauge.IsLOTDActive)
                     return Geirskogul;
 
                 //Dragonfire Dive Feature
                 if (ActionReady(DragonfireDive) &&
                      CanDRGWeave(DragonfireDive) &&
+                     !HasEffect(Buffs.DragonsFlight) &&
                     TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
                     return DragonfireDive;
 
@@ -139,8 +141,8 @@ internal partial class DRG
                 //StarDiver Feature
                 if (ActionReady(Stardiver) &&
                      CanDRGWeave(Stardiver) &&
+                     !HasEffect(Buffs.StarcrossReady) &&
                     Gauge.IsLOTDActive && TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
-
                     return Stardiver;
 
                 //Starcross Feature
@@ -168,6 +170,12 @@ internal partial class DRG
                     HasEffect(Buffs.DiveReady))
                     return MirageDive;
             }
+
+            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
+                return All.SecondWind;
+
+            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
+                return All.Bloodbath;
 
             //1-2-3 Combo
             if (ComboTimer > 0)
@@ -285,13 +293,15 @@ internal partial class DRG
                     //Geirskogul Feature
                     if (IsEnabled(CustomComboPreset.DRG_ST_Geirskogul) &&
                         ActionReady(Geirskogul) &&
-                         CanDRGWeave(Geirskogul))
+                         CanDRGWeave(Geirskogul) &&
+                         !Gauge.IsLOTDActive)
                         return Geirskogul;
 
                     //Dragonfire Dive Feature
                     if (IsEnabled(CustomComboPreset.DRG_ST_DragonfireDive) &&
                         ActionReady(DragonfireDive) &&
                          CanDRGWeave(DragonfireDive) &&
+                         !HasEffect(Buffs.DragonsFlight) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) ||
                          (IsEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) && TimeMoving.Ticks == 0 &&
                           GetTargetDistance() <= 1)))
@@ -318,6 +328,7 @@ internal partial class DRG
                         ActionReady(Stardiver) &&
                          CanDRGWeave(Stardiver) &&
                         Gauge.IsLOTDActive &&
+                        !HasEffect(Buffs.StarcrossReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) ||
                          (IsEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) && TimeMoving.Ticks == 0 &&
                           GetTargetDistance() <= 1)))
@@ -468,7 +479,8 @@ internal partial class DRG
 
                 //Geirskogul Feature
                 if (ActionReady(Geirskogul) &&
-                     CanDRGWeave(Geirskogul))
+                     CanDRGWeave(Geirskogul) &&
+                     !Gauge.IsLOTDActive)
                     return Geirskogul;
 
                 //(High) Jump Feature   
@@ -480,12 +492,14 @@ internal partial class DRG
                 //Dragonfire Dive Feature
                 if (ActionReady(DragonfireDive) &&
                      CanDRGWeave(DragonfireDive) &&
+                     !HasEffect(Buffs.DragonsFlight) &&
                     TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
                     return DragonfireDive;
 
                 //StarDiver Feature
                 if (ActionReady(Stardiver) &&
                      CanDRGWeave(Stardiver) &&
+                     !HasEffect(Buffs.StarcrossReady) &&
                     Gauge.IsLOTDActive && TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
                     return Stardiver;
 
@@ -493,27 +507,33 @@ internal partial class DRG
                 if (LevelChecked(Starcross) &&
                      CanDRGWeave(Starcross) &&
                     HasEffect(Buffs.StarcrossReady))
-                    return OriginalHook(Stardiver);
+                    return Starcross;
 
                 //Rise of the Dragon Feature
                 if (LevelChecked(RiseOfTheDragon) &&
                      CanDRGWeave(RiseOfTheDragon) &&
                     HasEffect(Buffs.DragonsFlight))
-                    return OriginalHook(DragonfireDive);
+                    return RiseOfTheDragon;
 
                 //Mirage Feature
                 if (LevelChecked(MirageDive) &&
                      CanDRGWeave(MirageDive) &&
                     HasEffect(Buffs.DiveReady))
-                    return OriginalHook(HighJump);
+                    return MirageDive;
 
                 //Nastrond Feature
                 if (LevelChecked(Nastrond) &&
                      CanDRGWeave(Nastrond) &&
                     HasEffect(Buffs.NastrondReady) &&
                     Gauge.IsLOTDActive)
-                    return OriginalHook(Geirskogul);
+                    return Nastrond;
             }
+
+            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
+                return All.SecondWind;
+
+            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
+                return All.Bloodbath;
 
             if (ComboTimer > 0)
             {
@@ -608,8 +628,8 @@ internal partial class DRG
                     //Geirskogul Feature
                     if (IsEnabled(CustomComboPreset.DRG_AoE_Geirskogul) &&
                         ActionReady(Geirskogul) &&
-                         CanDRGWeave(Geirskogul))
-
+                        CanDRGWeave(Geirskogul) &&
+                        !Gauge.IsLOTDActive)
                         return Geirskogul;
 
                     //(High) Jump Feature   
@@ -625,6 +645,7 @@ internal partial class DRG
                     if (IsEnabled(CustomComboPreset.DRG_AoE_DragonfireDive) &&
                         ActionReady(DragonfireDive) &&
                          CanDRGWeave(DragonfireDive) &&
+                         !HasEffect(Buffs.DragonsFlight) &&
                         (IsNotEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) ||
                          (IsEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) && TimeMoving.Ticks == 0 &&
                           GetTargetDistance() <= 1)))
@@ -635,6 +656,7 @@ internal partial class DRG
                         ActionReady(Stardiver) &&
                          CanDRGWeave(Stardiver) &&
                         Gauge.IsLOTDActive &&
+                        !HasEffect(Buffs.StarcrossReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) ||
                          (IsEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) && TimeMoving.Ticks == 0 &&
                           GetTargetDistance() <= 1)))
@@ -645,37 +667,36 @@ internal partial class DRG
                         LevelChecked(Starcross) &&
                          CanDRGWeave(Starcross) &&
                         HasEffect(Buffs.StarcrossReady))
-                        return OriginalHook(Stardiver);
+                        return Starcross;
 
                     //Rise of the Dragon Feature
                     if (IsEnabled(CustomComboPreset.DRG_AoE_RiseOfTheDragon) &&
                         LevelChecked(RiseOfTheDragon) &&
                          CanDRGWeave(RiseOfTheDragon) &&
                         HasEffect(Buffs.DragonsFlight))
-                        return OriginalHook(DragonfireDive);
+                        return RiseOfTheDragon;
 
                     //Mirage Feature
                     if (IsEnabled(CustomComboPreset.DRG_AoE_Mirage) &&
                         LevelChecked(MirageDive) &&
                          CanDRGWeave(MirageDive) &&
                         HasEffect(Buffs.DiveReady))
-                        return OriginalHook(HighJump);
+                        return MirageDive;
 
                     //Nastrond Feature
                     if (IsEnabled(CustomComboPreset.DRG_AoE_Nastrond) &&
                         LevelChecked(Nastrond) &&
-                         CanDRGWeave(Nastrond) &&
+                        CanDRGWeave(Nastrond) &&
                         HasEffect(Buffs.NastrondReady) &&
                         Gauge.IsLOTDActive)
-                        return OriginalHook(Geirskogul);
+                        return Nastrond;
                 }
             }
 
             // healing
             if (IsEnabled(CustomComboPreset.DRG_AoE_ComboHeals))
             {
-                if (PlayerHealthPercentageHp() <= Config.DRG_AoE_SecondWind_Threshold &&
-                    ActionReady(All.SecondWind))
+                if (PlayerHealthPercentageHp() <= Config.DRG_AoE_SecondWind_Threshold && ActionReady(All.SecondWind))
                     return All.SecondWind;
 
                 if (PlayerHealthPercentageHp() <= Config.DRG_AoE_Bloodbath_Threshold && ActionReady(All.Bloodbath))
