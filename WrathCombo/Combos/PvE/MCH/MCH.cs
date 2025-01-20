@@ -50,7 +50,8 @@ internal static partial class MCH
                     if (!Gauge.IsOverheated)
                     {
                         // BarrelStabilizer
-                        if (ActionReady(BarrelStabilizer) && InBossEncounter())
+                        if (ActionReady(BarrelStabilizer) && InBossEncounter() &&
+                            !HasEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
 
                         // Hypercharge
@@ -206,7 +207,8 @@ internal static partial class MCH
                         if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Stabilizer) &&
                             ((Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 0) ||
                             (Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 1 && InBossEncounter())) &&
-                            ActionReady(BarrelStabilizer))
+                            ActionReady(BarrelStabilizer) &&
+                            !HasEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
 
                         // Hypercharge
