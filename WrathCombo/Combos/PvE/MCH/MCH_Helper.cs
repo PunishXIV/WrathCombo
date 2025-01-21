@@ -276,10 +276,10 @@ internal static partial class MCH
         }
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-             (IsEnabled(CustomComboPreset.MCH_ST_Adv_Chainsaw) && ReassembledChainsawST)) &&
-            LevelChecked(Chainsaw) && !Battery &&
+            (IsEnabled(CustomComboPreset.MCH_ST_Adv_Chainsaw) && ReassembledChainsawST)) &&
+            LevelChecked(Chainsaw) && !Battery && !HasEffect(Buffs.ExcavatorReady) &&
             (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-             ActionReady(Chainsaw)))
+            ActionReady(Chainsaw)))
         {
             actionID = Chainsaw;
 
@@ -287,7 +287,7 @@ internal static partial class MCH
         }
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-             (IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) && ReassembledAnchorST)) &&
+            (IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) && ReassembledAnchorST)) &&
             LevelChecked(AirAnchor) && !Battery &&
             (GetCooldownRemainingTime(AirAnchor) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
             ActionReady(AirAnchor)))
@@ -298,7 +298,7 @@ internal static partial class MCH
         }
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-             (IsEnabled(CustomComboPreset.MCH_ST_Adv_Drill) && ReassembledDrillST)) &&
+            (IsEnabled(CustomComboPreset.MCH_ST_Adv_Drill) && ReassembledDrillST)) &&
             LevelChecked(Drill) &&
             !JustUsed(Drill) &&
             (GetCooldownRemainingTime(Drill) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
@@ -310,7 +310,7 @@ internal static partial class MCH
         }
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
-             IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor)) &&
+            IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor)) &&
             LevelChecked(HotShot) && !LevelChecked(AirAnchor) && !Battery &&
             (GetCooldownRemainingTime(HotShot) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
             ActionReady(HotShot)))

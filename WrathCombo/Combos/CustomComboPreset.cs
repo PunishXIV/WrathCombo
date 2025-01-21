@@ -2586,7 +2586,7 @@ public enum CustomComboPreset
     MCH_ST_AdvancedMode = 8100,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.", MCH.JobID)]
+    [CustomComboInfo("Balance Opener", "Adds the Balance opener at level 90+.", MCH.JobID)]
     MCH_ST_Adv_Opener = 8101,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
