@@ -384,7 +384,7 @@ internal static partial class MCH
             if (GetRemainingCharges(OriginalHook(Ricochet)) < 3)
                 return false;
 
-            if (!ActionReady(Chainsaw))
+            if (!IsOffCooldown(Chainsaw))
                 return false;
 
             if (!IsOffCooldown(Wildfire))
@@ -470,13 +470,13 @@ internal static partial class MCH
             if (GetRemainingCharges(OriginalHook(Ricochet)) < 3)
                 return false;
 
-            if (!ActionReady(Chainsaw))
+            if (!IsOffCooldown(Chainsaw))
                 return false;
 
-            if (!ActionReady(Wildfire))
+            if (!IsOffCooldown(Wildfire))
                 return false;
 
-            if (!ActionReady(BarrelStabilizer))
+            if (!IsOffCooldown(BarrelStabilizer))
                 return false;
 
             return true;
