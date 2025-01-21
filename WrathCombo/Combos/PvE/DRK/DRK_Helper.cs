@@ -237,20 +237,21 @@ internal partial class DRK
             if (LocalPlayer.CurrentMp < 7000)
                 return false;
 
-            if (!ActionReady(LivingShadow))
+            if (!IsOffCooldown(LivingShadow))
                 return false;
 
-            if (!ActionReady(Delirium))
+            if (!IsOffCooldown(Delirium))
                 return false;
 
-            if (!ActionReady(CarveAndSpit))
+            if (!IsOffCooldown(CarveAndSpit))
                 return false;
 
-            if (!ActionReady(SaltedEarth))
+            if (!IsOffCooldown(SaltedEarth))
                 return false;
 
             if (GetRemainingCharges(Shadowbringer) < 2)
                 return false;
+
 
             return true;
         }

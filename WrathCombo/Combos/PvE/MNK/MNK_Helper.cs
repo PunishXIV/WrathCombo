@@ -208,13 +208,13 @@ internal static partial class MNK
             if (GetRemainingCharges(PerfectBalance) < 2)
                 return false;
 
-            if (!ActionReady(Brotherhood))
+            if (!IsOffCooldown(Brotherhood))
                 return false;
 
-            if (!ActionReady(RiddleOfFire))
+            if (!IsOffCooldown(RiddleOfFire))
                 return false;
 
-            if (!ActionReady(RiddleOfWind))
+            if (!IsOffCooldown(RiddleOfWind))
                 return false;
 
             if (Gauge.Nadi != Nadi.NONE)
@@ -266,13 +266,13 @@ internal static partial class MNK
             if (GetRemainingCharges(PerfectBalance) < 2)
                 return false;
 
-            if (!ActionReady(Brotherhood))
+            if (!IsOffCooldown(Brotherhood))
                 return false;
 
-            if (!ActionReady(RiddleOfFire))
+            if (!IsOffCooldown(RiddleOfFire))
                 return false;
 
-            if (!ActionReady(RiddleOfWind))
+            if (!IsOffCooldown(RiddleOfWind))
                 return false;
 
             if (Gauge.Nadi != Nadi.NONE)

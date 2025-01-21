@@ -253,7 +253,7 @@ internal static partial class VPR
             if (GetRemainingCharges(Vicewinder) < 2)
                 return false;
 
-            if (!ActionReady(SerpentsIre))
+            if (!IsOffCooldown(SerpentsIre))
                 return false;
 
             return true;

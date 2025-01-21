@@ -24,11 +24,11 @@ internal partial class BRD
             switch (preset)
             {
                 case CustomComboPreset.BRD_ST_Adv_Balance_Standard:
-                    UserConfig.DrawRadioButton(BRD_Adv_Opener_Selection, $"Standard Opener", "", 0);
-                    UserConfig.DrawRadioButton(BRD_Adv_Opener_Selection, $"2.48 Adjusted Standard Opener", "", 1);
-                    UserConfig.DrawRadioButton(BRD_Adv_Opener_Selection, $"2.49 Standard Comfy", "", 2);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, $"Standard Opener", "", 0);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, $"2.48 Adjusted Standard Opener", "", 1);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, $"2.49 Standard Comfy", "", 2);
 
-                    UserConfig.DrawBossOnlyChoice(BRD_Balance_Content);
+                    DrawBossOnlyChoice(BRD_Balance_Content);
                     break;                
 
                 case CustomComboPreset.BRD_Adv_RagingJaws:

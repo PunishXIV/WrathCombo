@@ -239,7 +239,12 @@ internal static partial class SCH
 
         public override bool HasCooldowns()
         {
-            if (!ActionsReady([ChainStratagem, Dissipation, Aetherflow]))
+            if (!HasPetPresent())
+                return false;
+
+            if (!IsOffCooldown(ChainStratagem) ||
+                !IsOffCooldown(Dissipation) ||
+                !IsOffCooldown(Aetherflow))
                 return false;
 
             return true;

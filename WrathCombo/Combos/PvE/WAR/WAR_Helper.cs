@@ -135,13 +135,13 @@ internal partial class WAR
 
         public override bool HasCooldowns()
         {
-            if (!CustomComboFunctions.ActionReady(InnerRelease))
+            if (!IsOffCooldown(InnerRelease))
                 return false;
-            if (!CustomComboFunctions.ActionReady(Upheaval))
+            if (!IsOffCooldown(Upheaval))
                 return false;
-            if (CustomComboFunctions.GetRemainingCharges(Infuriate) < 2)
+            if (GetRemainingCharges(Infuriate) < 2)
                 return false;
-            if (CustomComboFunctions.GetRemainingCharges(Onslaught) < 3)
+            if (GetRemainingCharges(Onslaught) < 3)
                 return false;
 
             return true;

@@ -381,16 +381,16 @@ internal static partial class MCH
             if (!ActionReady(Chainsaw))
                 return false;
 
-            if (!ActionReady(Wildfire))
+            if (!IsOffCooldown(Wildfire))
                 return false;
 
-            if (!ActionReady(BarrelStabilizer))
+            if (!IsOffCooldown(BarrelStabilizer))
                 return false;
 
-            if (!ActionReady(Excavator))
+            if (!IsOffCooldown(Excavator))
                 return false;
 
-            if (!ActionReady(FullMetalField))
+            if (!IsOffCooldown(FullMetalField))
                 return false;
 
             return true;

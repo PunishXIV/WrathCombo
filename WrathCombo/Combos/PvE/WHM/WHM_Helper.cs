@@ -55,10 +55,10 @@ internal partial class WHM
 
         public override bool HasCooldowns()
         {
-            if (!ActionReady(PresenceOfMind))
+            if (!IsOffCooldown(PresenceOfMind))
                 return false;
 
-            if (!ActionReady(Assize))
+            if (!IsOffCooldown(Assize))
                 return false;
 
             return true;

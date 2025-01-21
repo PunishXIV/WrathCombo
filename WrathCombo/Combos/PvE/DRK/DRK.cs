@@ -63,11 +63,8 @@ internal partial class DRK
                 && HasBattleTarget())
                 return Unmend;
 
-            // Bail if not in combat
-            if (!InCombat()) return HardSlash;
-
             // Opener
-            
+
             if (IsEnabled(CustomComboPreset.DRK_ST_BalanceOpener) && Opener().FullOpener(ref actionID))
             {
                 var currentAction = Opener().CurrentOpenerAction;
@@ -78,6 +75,9 @@ internal partial class DRK
 
                 return actionID;
             }
+
+            // Bail if not in combat
+            if (!InCombat()) return HardSlash;
 
             // Disesteem
             if (LevelChecked(LivingShadow)
