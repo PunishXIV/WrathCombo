@@ -5,11 +5,172 @@ using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class VPR
 {
+    internal static VPRGauge Gauge = GetJobGauge<VPRGauge>();
+    internal static VPROpenerMaxLevel1 Opener1 = new();
+
+    internal static float GCD => GetCooldown(OriginalHook(ReavingFangs)).CooldownTotal;
+
+    internal static float IreCD => GetCooldownRemainingTime(SerpentsIre);
+
+    internal static bool In5Y => HasBattleTarget() && GetTargetDistance() <= 5;
+
+    internal static bool TrueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) && !HasEffect(All.Buffs.TrueNorth);
+
+    internal static bool CappedOnCoils =>
+        TraitLevelChecked(Traits.EnhancedVipersRattle) && Gauge.RattlingCoilStacks > 2 ||
+        !TraitLevelChecked(Traits.EnhancedVipersRattle) && Gauge.RattlingCoilStacks > 1;
+
+    internal static bool VicewinderReady => Gauge.DreadCombo == DreadCombo.Dreadwinder;
+
+    internal static bool HuntersCoilReady => Gauge.DreadCombo == DreadCombo.HuntersCoil;
+
+    internal static bool SwiftskinsCoilReady => Gauge.DreadCombo == DreadCombo.SwiftskinsCoil;
+
+    internal static bool VicepitReady => Gauge.DreadCombo == DreadCombo.PitOfDread;
+
+    internal static bool SwiftskinsDenReady => Gauge.DreadCombo == DreadCombo.SwiftskinsDen;
+
+    internal static bool HuntersDenReady => Gauge.DreadCombo == DreadCombo.HuntersDen;
+
+    internal static bool HasRattlingCoilStack(VPRGauge gauge) => Gauge.RattlingCoilStacks > 0;
+
+    internal static WrathOpener Opener()
+    {
+        if (Opener1.LevelChecked)
+            return Opener1;
+
+        return WrathOpener.Dummy;
+    }
+
+    internal static bool UseReawaken(VPRGauge gauge)
+    {
+        if (LevelChecked(Reawaken) && !HasEffect(Buffs.Reawakened) && InActionRange(Reawaken) &&
+            !HasEffect(Buffs.HuntersVenom) && !HasEffect(Buffs.SwiftskinsVenom) &&
+            !HasEffect(Buffs.PoisedForTwinblood) && !HasEffect(Buffs.PoisedForTwinfang) &&
+            !IsEmpowermentExpiring(6))
+        {
+            //2min burst
+            if (!JustUsed(SerpentsIre, 2.2f) && HasEffect(Buffs.ReadyToReawaken) ||
+                WasLastWeaponskill(Ouroboros) && Gauge.SerpentOffering >= 50 && IreCD >= 50)
+                return true;
+
+            //1min
+            if (Gauge.SerpentOffering is >= 50 and <= 80 && IreCD is >= 50 and <= 62)
+                return true;
+
+            //overcap protection
+            if (Gauge.SerpentOffering >= 100)
+                return true;
+
+            //Lower lvl
+            if (Gauge.SerpentOffering >= 50 &&
+                WasLastWeaponskill(FourthGeneration) && !LevelChecked(Ouroboros))
+                return true;
+        }
+
+        return false;
+    }
+
+    internal static bool IsHoningExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return HasEffect(Buffs.HonedSteel) && GetBuffRemainingTime(Buffs.HonedSteel) < gcd ||
+               HasEffect(Buffs.HonedReavers) && GetBuffRemainingTime(Buffs.HonedReavers) < gcd;
+    }
+
+    internal static bool IsVenomExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return HasEffect(Buffs.FlankstungVenom) && GetBuffRemainingTime(Buffs.FlankstungVenom) < gcd ||
+               HasEffect(Buffs.FlanksbaneVenom) && GetBuffRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
+               HasEffect(Buffs.HindstungVenom) && GetBuffRemainingTime(Buffs.HindstungVenom) < gcd ||
+               HasEffect(Buffs.HindsbaneVenom) && GetBuffRemainingTime(Buffs.HindsbaneVenom) < gcd;
+    }
+
+    internal static bool IsEmpowermentExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return GetBuffRemainingTime(Buffs.Swiftscaled) < gcd || GetBuffRemainingTime(Buffs.HuntersInstinct) < gcd;
+    }
+
+    internal static unsafe bool IsComboExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
+    }
+
+    internal class VPROpenerMaxLevel1 : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            ReavingFangs,
+            SerpentsIre,
+            SwiftskinsSting,
+            Vicewinder,
+            HuntersCoil,
+            TwinfangBite,
+            TwinbloodBite,
+            SwiftskinsCoil,
+            TwinbloodBite,
+            TwinfangBite,
+            Reawaken,
+            FirstGeneration,
+            FirstLegacy,
+            SecondGeneration,
+            SecondLegacy,
+            ThirdGeneration,
+            ThirdLegacy,
+            FourthGeneration,
+            FourthLegacy,
+            Ouroboros,
+            UncoiledFury,
+            UncoiledTwinfang,
+            UncoiledTwinblood,
+            UncoiledFury,
+            UncoiledTwinfang,
+            UncoiledTwinblood,
+            HindstingStrike,
+            DeathRattle,
+            Vicewinder,
+            UncoiledFury,
+            UncoiledTwinfang,
+            UncoiledTwinblood,
+            HuntersCoil,
+            TwinfangBite,
+            TwinbloodBite,
+            SwiftskinsCoil,
+            TwinbloodBite,
+            TwinfangBite
+        ];
+        internal override UserData ContentCheckConfig => Config.VPR_Balance_Content;
+
+        public override bool HasCooldowns()
+        {
+            if (!IsOriginal(ReavingFangs))
+                return false;
+
+            if (GetRemainingCharges(Vicewinder) < 2)
+                return false;
+
+            if (!IsOffCooldown(SerpentsIre))
+                return false;
+
+            return true;
+        }
+    }
+
     #region ID's
 
     public const byte JobID = 41;
@@ -97,166 +258,4 @@ internal static partial class VPR
     }
 
     #endregion
-
-    internal static VPROpenerMaxLevel1 Opener1 = new();
-    internal static VPRGauge gauge = GetJobGauge<VPRGauge>();
-
-    internal static float GCD => GetCooldown(OriginalHook(ReavingFangs)).CooldownTotal;
-
-    internal static float IreCD => GetCooldownRemainingTime(SerpentsIre);
-
-    internal static bool In5y => HasBattleTarget() && GetTargetDistance() <= 5;
-
-    internal static bool TrueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) && !HasEffect(All.Buffs.TrueNorth);
-
-    internal static bool CappedOnCoils =>
-        (TraitLevelChecked(Traits.EnhancedVipersRattle) && gauge.RattlingCoilStacks > 2) ||
-        (!TraitLevelChecked(Traits.EnhancedVipersRattle) && gauge.RattlingCoilStacks > 1);
-
-    internal static bool HasRattlingCoilStack(VPRGauge Gauge) => gauge.RattlingCoilStacks > 0;
-
-    internal static bool VicewinderReady => gauge.DreadCombo == DreadCombo.Dreadwinder;
-
-    internal static bool HuntersCoilReady => gauge.DreadCombo == DreadCombo.HuntersCoil;
-
-    internal static bool SwiftskinsCoilReady => gauge.DreadCombo == DreadCombo.SwiftskinsCoil;
-
-    internal static bool VicepitReady => gauge.DreadCombo == DreadCombo.PitOfDread;
-
-    internal static bool SwiftskinsDenReady => gauge.DreadCombo == DreadCombo.SwiftskinsDen;
-
-    internal static bool HuntersDenReady => gauge.DreadCombo == DreadCombo.HuntersDen;
-
-    internal static WrathOpener Opener()
-    {
-        if (Opener1.LevelChecked)
-            return Opener1;
-
-        return WrathOpener.Dummy;
-    }
-
-    internal static bool UseReawaken(VPRGauge gauge)
-    {
-        if (LevelChecked(Reawaken) && !HasEffect(Buffs.Reawakened) && InActionRange(Reawaken) &&
-            !HasEffect(Buffs.HuntersVenom) && !HasEffect(Buffs.SwiftskinsVenom) &&
-            !HasEffect(Buffs.PoisedForTwinblood) && !HasEffect(Buffs.PoisedForTwinfang) &&
-            !IsEmpowermentExpiring(6))
-        {
-            //2min burst
-            if ((!JustUsed(SerpentsIre, 2.2f) && HasEffect(Buffs.ReadyToReawaken)) ||
-               (WasLastWeaponskill(Ouroboros) && gauge.SerpentOffering >= 50 && IreCD >= 50))
-                return true;
-
-            //1min
-            if (gauge.SerpentOffering is >= 50 and <= 80 && IreCD is >= 50 and <= 62)
-                return true;
-
-            //overcap protection
-            if (gauge.SerpentOffering >= 100)
-                return true;
-
-            //Lower lvl
-            if (gauge.SerpentOffering >= 50 &&
-                WasLastWeaponskill(FourthGeneration) && !LevelChecked(Ouroboros))
-                return true;
-        }
-
-        return false;
-    }
-
-    internal static bool IsHoningExpiring(float times)
-    {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
-
-        return (HasEffect(Buffs.HonedSteel) && GetBuffRemainingTime(Buffs.HonedSteel) < gcd) ||
-               (HasEffect(Buffs.HonedReavers) && GetBuffRemainingTime(Buffs.HonedReavers) < gcd);
-    }
-
-    internal static bool IsVenomExpiring(float times)
-    {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
-
-        return (HasEffect(Buffs.FlankstungVenom) && GetBuffRemainingTime(Buffs.FlankstungVenom) < gcd) ||
-               (HasEffect(Buffs.FlanksbaneVenom) && GetBuffRemainingTime(Buffs.FlanksbaneVenom) < gcd) ||
-               (HasEffect(Buffs.HindstungVenom) && GetBuffRemainingTime(Buffs.HindstungVenom) < gcd) ||
-               (HasEffect(Buffs.HindsbaneVenom) && GetBuffRemainingTime(Buffs.HindsbaneVenom) < gcd);
-    }
-
-    internal static bool IsEmpowermentExpiring(float times)
-    {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
-
-        return GetBuffRemainingTime(Buffs.Swiftscaled) < gcd || GetBuffRemainingTime(Buffs.HuntersInstinct) < gcd;
-    }
-
-    internal static unsafe bool IsComboExpiring(float times)
-    {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
-
-        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
-    }
-
-    internal class VPROpenerMaxLevel1 : WrathOpener
-    {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 109;
-
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            ReavingFangs,
-            SerpentsIre,
-            SwiftskinsSting,
-            Vicewinder,
-            HuntersCoil,
-            TwinfangBite,
-            TwinbloodBite,
-            SwiftskinsCoil,
-            TwinbloodBite,
-            TwinfangBite,
-            Reawaken,
-            FirstGeneration,
-            FirstLegacy,
-            SecondGeneration,
-            SecondLegacy,
-            ThirdGeneration,
-            ThirdLegacy,
-            FourthGeneration,
-            FourthLegacy,
-            Ouroboros,
-            UncoiledFury,
-            UncoiledTwinfang,
-            UncoiledTwinblood,
-            UncoiledFury,
-            UncoiledTwinfang,
-            UncoiledTwinblood,
-            HindstingStrike,
-            DeathRattle,
-            Vicewinder,
-            UncoiledFury,
-            UncoiledTwinfang,
-            UncoiledTwinblood,
-            HuntersCoil,
-            TwinfangBite,
-            TwinbloodBite,
-            SwiftskinsCoil,
-            TwinbloodBite,
-            TwinfangBite
-        ];
-        internal override UserData? ContentCheckConfig => Config.VPR_Balance_Content;
-
-        public override bool HasCooldowns()
-        {
-            if (!IsOriginal(ReavingFangs))
-                return false;
-
-            if (GetRemainingCharges(Vicewinder) < 2)
-                return false;
-
-            if (!IsOffCooldown(SerpentsIre))
-                return false;
-
-            return true;
-        }
-    }
 }

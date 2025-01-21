@@ -2,7 +2,6 @@ using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class MCH
@@ -59,15 +58,15 @@ internal static partial class MCH
                             !IsComboExpiring(6) && LevelChecked(Hypercharge))
                         {
                             // Ensures Hypercharge is double weaved with WF
-                            if ((LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
-                                 (GetCooldownRemainingTime(Wildfire) < GCD || ActionReady(Wildfire))) ||
-                                (!LevelChecked(FullMetalField) && ActionReady(Wildfire)) ||
+                            if (LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
+                                (GetCooldownRemainingTime(Wildfire) < GCD || ActionReady(Wildfire)) ||
+                                !LevelChecked(FullMetalField) && ActionReady(Wildfire) ||
                                 !LevelChecked(Wildfire))
                                 return Hypercharge;
 
                             // Only Hypercharge when tools are on cooldown
                             if (DrillCD && AnchorCD && SawCD &&
-                                ((GetCooldownRemainingTime(Wildfire) > 40 && LevelChecked(Wildfire)) ||
+                                (GetCooldownRemainingTime(Wildfire) > 40 && LevelChecked(Wildfire) ||
                                  !LevelChecked(Wildfire)))
                                 return Hypercharge;
                         }
@@ -195,8 +194,8 @@ internal static partial class MCH
 
                     // Wildfire
                     if (IsEnabled(CustomComboPreset.MCH_ST_Adv_WildFire) &&
-                        ((Config.MCH_ST_Adv_Wildfire_SubOption == 0) ||
-                        (Config.MCH_ST_Adv_Wildfire_SubOption == 1 && InBossEncounter())) &&
+                        (Config.MCH_ST_Adv_Wildfire_SubOption == 0 ||
+                         Config.MCH_ST_Adv_Wildfire_SubOption == 1 && InBossEncounter()) &&
                         JustUsed(Hypercharge) && ActionReady(Wildfire) &&
                         GetTargetHPPercent() >= Config.MCH_ST_WildfireHP)
                         return Wildfire;
@@ -205,8 +204,8 @@ internal static partial class MCH
                     {
                         // BarrelStabilizer
                         if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Stabilizer) &&
-                            ((Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 0) ||
-                            (Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 1 && InBossEncounter())) &&
+                            (Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 0 ||
+                             Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 1 && InBossEncounter()) &&
                             ActionReady(BarrelStabilizer) &&
                             !HasEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
@@ -219,15 +218,15 @@ internal static partial class MCH
                             GetTargetHPPercent() >= Config.MCH_ST_HyperchargeHP)
                         {
                             // Ensures Hypercharge is double weaved with WF
-                            if ((LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
-                                 (GetCooldownRemainingTime(Wildfire) < GCD || ActionReady(Wildfire))) ||
-                                (!LevelChecked(FullMetalField) && ActionReady(Wildfire)) ||
+                            if (LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
+                                (GetCooldownRemainingTime(Wildfire) < GCD || ActionReady(Wildfire)) ||
+                                !LevelChecked(FullMetalField) && ActionReady(Wildfire) ||
                                 !LevelChecked(Wildfire))
                                 return Hypercharge;
 
                             // Only Hypercharge when tools are on cooldown
                             if (DrillCD && AnchorCD && SawCD &&
-                                ((GetCooldownRemainingTime(Wildfire) > 40 && LevelChecked(Wildfire)) ||
+                                (GetCooldownRemainingTime(Wildfire) > 40 && LevelChecked(Wildfire) ||
                                  !LevelChecked(Wildfire)))
                                 return Hypercharge;
                         }
@@ -285,12 +284,12 @@ internal static partial class MCH
 
             // Full Metal Field
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Stabilizer_FullMetalField) &&
-                ((Config.MCH_ST_Adv_FullMetalMachinist_SubOption == 0) ||
-                (Config.MCH_ST_Adv_FullMetalMachinist_SubOption == 1 && InBossEncounter())) &&
+                (Config.MCH_ST_Adv_FullMetalMachinist_SubOption == 0 ||
+                 Config.MCH_ST_Adv_FullMetalMachinist_SubOption == 1 && InBossEncounter()) &&
                 HasEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField) &&
                 (GetBuffRemainingTime(Buffs.FullMetalMachinist) <= 6 ||
-                GetCooldownRemainingTime(Wildfire) <= GCD ||
-                ActionReady(Wildfire)))
+                 GetCooldownRemainingTime(Wildfire) <= GCD ||
+                 ActionReady(Wildfire)))
                 return FullMetalField;
 
             // Heatblast
@@ -363,9 +362,9 @@ internal static partial class MCH
                     // Hypercharge
                     if ((Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
-                        ((BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10) ||
+                        (BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10 ||
                          !BioBlaster.LevelChecked()) &&
-                        ((Flamethrower.LevelChecked() && GetCooldownRemainingTime(Flamethrower) > 10) ||
+                        (Flamethrower.LevelChecked() && GetCooldownRemainingTime(Flamethrower) > 10 ||
                          !Flamethrower.LevelChecked()))
                         return Hypercharge;
 
@@ -373,9 +372,9 @@ internal static partial class MCH
                         !HasEffect(Buffs.Wildfire) &&
                         !HasEffect(Buffs.Reassembled) &&
                         !JustUsed(Flamethrower, 10f) &&
-                        ((HasEffect(Buffs.ExcavatorReady) && Excavator.LevelChecked()) ||
-                         (GetCooldownRemainingTime(Chainsaw) < 1 && Chainsaw.LevelChecked()) ||
-                         (GetCooldownRemainingTime(AirAnchor) < 1 && AirAnchor.LevelChecked()) ||
+                        (HasEffect(Buffs.ExcavatorReady) && Excavator.LevelChecked() ||
+                         GetCooldownRemainingTime(Chainsaw) < 1 && Chainsaw.LevelChecked() ||
+                         GetCooldownRemainingTime(AirAnchor) < 1 && AirAnchor.LevelChecked() ||
                          Scattergun.LevelChecked()))
                         return Reassemble;
 
@@ -412,9 +411,9 @@ internal static partial class MCH
                     return OriginalHook(Flamethrower);
 
                 if (LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
-                    return OriginalHook(Chainsaw);
+                    return Excavator;
 
-                if (LevelChecked(Chainsaw) &&
+                if (LevelChecked(Chainsaw) && !HasEffect(Buffs.ExcavatorReady) &&
                     (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(Scattergun)) + 0.25 ||
                      ActionReady(Chainsaw)))
                     return Chainsaw;
@@ -448,21 +447,21 @@ internal static partial class MCH
                                             Config.MCH_AoE_Reassembled[0] && HasEffect(Buffs.Reassembled);
 
             bool reassembledChainsawAoE =
-                (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[2] && HasEffect(Buffs.Reassembled)) ||
-                (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[2] && !HasEffect(Buffs.Reassembled)) ||
-                (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[2] && HasEffect(Buffs.Reassembled) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[2] && !HasEffect(Buffs.Reassembled) ||
+                !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
             bool reassembledExcavatorAoE =
-                (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[3] && HasEffect(Buffs.Reassembled)) ||
-                (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[3] && !HasEffect(Buffs.Reassembled)) ||
-                (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[3] && HasEffect(Buffs.Reassembled) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[3] && !HasEffect(Buffs.Reassembled) ||
+                !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
             bool reassembledAirAnchorAoE =
-                (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[1] && HasEffect(Buffs.Reassembled)) ||
-                (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[1] && !HasEffect(Buffs.Reassembled)) ||
-                (!HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[1] && HasEffect(Buffs.Reassembled) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[1] && !HasEffect(Buffs.Reassembled) ||
+                !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
             if (IsEnabled(CustomComboPreset.MCH_Variant_Cure) &&
@@ -501,9 +500,9 @@ internal static partial class MCH
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Hypercharge) &&
                         (Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
-                        ((BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10) ||
+                        (BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10 ||
                          !BioBlaster.LevelChecked() || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster)) &&
-                        ((Flamethrower.LevelChecked() && GetCooldownRemainingTime(Flamethrower) > 10) ||
+                        (Flamethrower.LevelChecked() && GetCooldownRemainingTime(Flamethrower) > 10 ||
                          !Flamethrower.LevelChecked() || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_FlameThrower)))
                         return Hypercharge;
 
@@ -511,11 +510,11 @@ internal static partial class MCH
                         ActionReady(Reassemble) && !HasEffect(Buffs.Wildfire) &&
                         !HasEffect(Buffs.Reassembled) && !JustUsed(Flamethrower, 10f) &&
                         GetRemainingCharges(Reassemble) > Config.MCH_AoE_ReassemblePool &&
-                        ((Config.MCH_AoE_Reassembled[0] && Scattergun.LevelChecked()) ||
-                         (Gauge.IsOverheated && Config.MCH_AoE_Reassembled[1] && AutoCrossbow.LevelChecked()) ||
-                         (GetCooldownRemainingTime(Chainsaw) < 1 && Config.MCH_AoE_Reassembled[2] && Chainsaw.LevelChecked()) ||
-                         (GetCooldownRemainingTime(OriginalHook(Chainsaw)) < 1 && Config.MCH_AoE_Reassembled[3] &&
-                          Excavator.LevelChecked())))
+                        (Config.MCH_AoE_Reassembled[0] && Scattergun.LevelChecked() ||
+                         Gauge.IsOverheated && Config.MCH_AoE_Reassembled[1] && AutoCrossbow.LevelChecked() ||
+                         GetCooldownRemainingTime(Chainsaw) < 1 && Config.MCH_AoE_Reassembled[2] && Chainsaw.LevelChecked() ||
+                         GetCooldownRemainingTime(OriginalHook(Chainsaw)) < 1 && Config.MCH_AoE_Reassembled[3] &&
+                         Excavator.LevelChecked()))
                         return Reassemble;
 
                     //gauss and ricochet outside HC
@@ -573,11 +572,11 @@ internal static partial class MCH
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Excavator) &&
                     reassembledExcavatorAoE &&
                     LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
-                    return OriginalHook(Chainsaw);
+                    return Excavator;
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Chainsaw) &&
                     reassembledChainsawAoE &&
-                    LevelChecked(Chainsaw) &&
+                    LevelChecked(Chainsaw) && !HasEffect(Buffs.ExcavatorReady) &&
                     (GetCooldownRemainingTime(Chainsaw) <= GCD + 0.25 || ActionReady(Chainsaw)))
                     return Chainsaw;
 
@@ -659,7 +658,7 @@ internal static partial class MCH
 
             if (IsEnabled(CustomComboPreset.MCH_AutoCrossbow_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !Gauge.IsOverheated &&
-                 !HasEffect(Buffs.FullMetalMachinist))
+                !HasEffect(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (!Gauge.IsOverheated && LevelChecked(Hypercharge) &&
@@ -726,28 +725,20 @@ internal static partial class MCH
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_HotShotDrillChainsawExcavator;
 
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not (Drill or HotShot or AirAnchor or Chainsaw))
-                return actionID;
-
-            if (LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
-                return CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill);
-
-            if (LevelChecked(Chainsaw))
-                return CalcBestAction(actionID, Chainsaw, AirAnchor, Drill);
-
-            if (LevelChecked(AirAnchor))
-                return CalcBestAction(actionID, AirAnchor, Drill);
-
-            if (LevelChecked(Drill))
-                return CalcBestAction(actionID, Drill, HotShot);
-
-            if (!LevelChecked(Drill))
-                return HotShot;
-
-            return actionID;
-        }
+        protected override uint Invoke(uint actionID) => 
+            actionID is not (Drill or HotShot or AirAnchor or Chainsaw) 
+                ? actionID
+                : LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady)
+                    ? CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill)
+                    : LevelChecked(Chainsaw) 
+                        ? CalcBestAction(actionID, Chainsaw, AirAnchor, Drill) 
+                        : LevelChecked(AirAnchor) 
+                            ? CalcBestAction(actionID, AirAnchor, Drill) 
+                            : LevelChecked(Drill) 
+                                ? CalcBestAction(actionID, Drill, HotShot)
+                                : !LevelChecked(Drill) 
+                                    ? HotShot 
+                                    : actionID;
     }
 
     internal class MCH_DismantleTactician : CustomCombo

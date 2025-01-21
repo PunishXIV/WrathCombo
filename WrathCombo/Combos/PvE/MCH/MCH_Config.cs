@@ -2,7 +2,6 @@ using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH
@@ -55,8 +54,8 @@ internal partial class MCH
 
                 case CustomComboPreset.MCH_ST_Adv_TurretQueen:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
-                      "All content",
-                      $"Uses {ActionWatching.GetActionName(AutomatonQueen)} logic regardless of content.", 0);
+                        "All content",
+                        $"Uses {ActionWatching.GetActionName(AutomatonQueen)} logic regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
                         "Boss encounters Only",
@@ -65,7 +64,7 @@ internal partial class MCH
                     if (MCH_ST_Adv_Turret_SubOption == 1)
                     {
                         DrawSliderInt(50, 100, MCH_ST_TurretUsage,
-                          $"Uses {ActionWatching.GetActionName(AutomatonQueen)} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
+                            $"Uses {ActionWatching.GetActionName(AutomatonQueen)} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
                     }
 
                     break;

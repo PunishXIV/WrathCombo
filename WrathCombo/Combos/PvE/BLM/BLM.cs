@@ -2,7 +2,6 @@ using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class BLM
@@ -58,8 +57,9 @@ internal static partial class BLM
                 if (Gauge.IsParadoxActive && GCDsInTimer < 2 && CurMp >= MP.FireI)
                     return Paradox;
 
-                if ((HasEffect(Buffs.Firestarter) && GCDsInTimer < 2 &&
-                     CurMp >= MP.FireI) || (HasEffect(Buffs.Firestarter) && Gauge.AstralFireStacks < 3))
+                if (HasEffect(Buffs.Firestarter) &&
+                    (GCDsInTimer < 2 && CurMp >= MP.FireI ||
+                     Gauge.AstralFireStacks < 3))
                     return Fire3;
 
                 if (CurMp < MP.FireI && LevelChecked(Despair) && CurMp >= MP.Despair)
@@ -159,7 +159,7 @@ internal static partial class BLM
                             ? Xenoglossy
                             : Foul;
 
-                    if (CurMp + nextMpGain <= 10000 || CurMp < 7500)
+                    if (CurMp + NextMpGain <= 10000 || CurMp < 7500)
                         return Blizzard;
 
                     if (ActionReady(Transpose) && CanSpellWeave() &&
@@ -174,7 +174,7 @@ internal static partial class BLM
                         : Foul;
                 }
 
-                if (CurMp + nextMpGain >= 7500 &&
+                if (CurMp + NextMpGain >= 7500 &&
                     (LocalPlayer?.CastActionId == Blizzard ||
                      WasLastSpell(Blizzard) ||
                      WasLastSpell(Blizzard4)))
@@ -182,7 +182,7 @@ internal static partial class BLM
                         ? Fire3
                         : Fire;
 
-                if (CurMp + nextMpGain <= 10000 || CurMp < 7500)
+                if (CurMp + NextMpGain <= 10000 || CurMp < 7500)
                     return Blizzard;
 
                 if (ActionReady(Transpose) && CanSpellWeave() &&
@@ -264,8 +264,9 @@ internal static partial class BLM
                 if (Gauge.IsParadoxActive && GCDsInTimer < 2 && CurMp >= MP.FireI)
                     return Paradox;
 
-                if ((HasEffect(Buffs.Firestarter) && GCDsInTimer < 2 &&
-                     CurMp >= MP.FireI) || (HasEffect(Buffs.Firestarter) && Gauge.AstralFireStacks < 3))
+                if (HasEffect(Buffs.Firestarter) &&
+                    (GCDsInTimer < 2 && CurMp >= MP.FireI ||
+                     Gauge.AstralFireStacks < 3))
                     return Fire3;
 
                 if (IsEnabled(CustomComboPreset.BLM_ST_Despair) &&
@@ -329,7 +330,7 @@ internal static partial class BLM
                         : Manafont;
 
                 if (ActionReady(Blizzard3) &&
-                    ((IsEnabled(CustomComboPreset.BLM_ST_Swiftcast) && ActionReady(All.Swiftcast)) ||
+                    (IsEnabled(CustomComboPreset.BLM_ST_Swiftcast) && ActionReady(All.Swiftcast) ||
                      HasEffect(Buffs.Triplecast)))
                 {
                     if (IsEnabled(CustomComboPreset.BLM_ST_Transpose) &&
@@ -386,7 +387,7 @@ internal static partial class BLM
                             ? Xenoglossy
                             : Foul;
 
-                    if (CurMp + nextMpGain <= 10000 || CurMp < 7500)
+                    if (CurMp + NextMpGain <= 10000 || CurMp < 7500)
                         return Blizzard;
 
                     if (IsEnabled(CustomComboPreset.BLM_ST_Transpose) &&
@@ -402,7 +403,7 @@ internal static partial class BLM
                         : Foul;
                 }
 
-                if (CurMp + nextMpGain >= 7500 &&
+                if (CurMp + NextMpGain >= 7500 &&
                     (LocalPlayer?.CastActionId == Blizzard ||
                      WasLastSpell(Blizzard) ||
                      WasLastSpell(Blizzard4)))
@@ -410,7 +411,7 @@ internal static partial class BLM
                         ? Fire3
                         : Fire;
 
-                if (CurMp + nextMpGain <= 10000 || CurMp < 7500)
+                if (CurMp + NextMpGain <= 10000 || CurMp < 7500)
                     return Blizzard;
 
                 if (IsEnabled(CustomComboPreset.BLM_ST_Transpose) &&
@@ -452,8 +453,8 @@ internal static partial class BLM
             if (WasLastSpell(UmbralSoul))
                 return OriginalHook(Fire2);
 
-            if ((HasEffect(Buffs.Thunderhead) && GCDsInTimer > 1 && Thunder2.LevelChecked() &&
-                 ThunderDebuffAoE is null) || ThunderDebuffAoE?.RemainingTime < 3)
+            if (HasEffect(Buffs.Thunderhead) && GCDsInTimer > 1 && Thunder2.LevelChecked() &&
+                (ThunderDebuffAoE is null || ThunderDebuffAoE.RemainingTime < 3))
                 return OriginalHook(Thunder2);
 
             if (ActionReady(Amplifier) && RemainingPolyglotCD >= 20000 && CanSpellWeave())
@@ -554,9 +555,8 @@ internal static partial class BLM
                             : OriginalHook(Blizzard2);
 
                     if (IsEnabled(CustomComboPreset.BLM_AoE_Transpose) &&
-                        ActionReady(Transpose) &&
-                        ((CanSpellWeave() && Flare.LevelChecked()) ||
-                         !TraitLevelChecked(Traits.AspectMasteryIII)))
+                        ActionReady(Transpose) && CanSpellWeave() &&
+                        (Flare.LevelChecked() || !TraitLevelChecked(Traits.AspectMasteryIII)))
                         return Transpose;
 
                     if (Fire2.LevelChecked() && TraitLevelChecked(Traits.AspectMasteryIII))
@@ -596,10 +596,10 @@ internal static partial class BLM
             if (WasLastSpell(UmbralSoul))
                 return OriginalHook(Fire2);
 
-            if ((IsEnabled(CustomComboPreset.BLM_AoE_Thunder) &&
-                 HasEffect(Buffs.Thunderhead) && GCDsInTimer > 1 && LevelChecked(Thunder2) &&
-                 GetTargetHPPercent() >= Config.BLM_AoE_ThunderHP &&
-                 ThunderDebuffAoE is null) || ThunderDebuffAoE?.RemainingTime < 3)
+            if (IsEnabled(CustomComboPreset.BLM_AoE_Thunder) &&
+                HasEffect(Buffs.Thunderhead) && GCDsInTimer > 1 && LevelChecked(Thunder2) &&
+                GetTargetHPPercent() >= Config.BLM_AoE_ThunderHP &&
+                (ThunderDebuffAoE is null || ThunderDebuffAoE.RemainingTime < 3))
                 return OriginalHook(Thunder2);
 
             if (IsEnabled(CustomComboPreset.BLM_AoE_Amplifier) &&
@@ -712,9 +712,8 @@ internal static partial class BLM
                         : OriginalHook(Blizzard2);
 
                 if (IsEnabled(CustomComboPreset.BLM_AoE_Transpose) &&
-                    ActionReady(Transpose) &&
-                    ((CanSpellWeave() && Flare.LevelChecked()) ||
-                     !TraitLevelChecked(Traits.AspectMasteryIII)))
+                    ActionReady(Transpose) && CanSpellWeave() &&
+                    (Flare.LevelChecked() || !TraitLevelChecked(Traits.AspectMasteryIII)))
                     return Transpose;
 
                 if (Fire2.LevelChecked() && TraitLevelChecked(Traits.AspectMasteryIII))
@@ -773,7 +772,7 @@ internal static partial class BLM
 
         protected override uint Invoke(uint actionID) =>
             actionID is Fire &&
-            ((LevelChecked(Fire3) && !Gauge.InAstralFire) ||
+            (LevelChecked(Fire3) && !Gauge.InAstralFire ||
              HasEffect(Buffs.Firestarter))
                 ? Fire3
                 : actionID;

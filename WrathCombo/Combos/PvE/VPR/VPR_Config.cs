@@ -2,7 +2,6 @@ using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class VPR
