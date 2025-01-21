@@ -129,6 +129,7 @@ internal partial class DRG
                 //(High) Jump Feature   
                 if (ActionReady(OriginalHook(Jump)) &&
                      CanDRGWeave(OriginalHook(Jump)) &&
+                    !HasEffect(Buffs.DiveReady) &&
                     TimeMoving.Ticks == 0)
                     return OriginalHook(Jump);
 
@@ -310,10 +311,11 @@ internal partial class DRG
                     //(High) Jump Feature   
                     if (IsEnabled(CustomComboPreset.DRG_ST_HighJump) &&
                         ActionReady(OriginalHook(Jump)) &&
-                         CanDRGWeave(OriginalHook(Jump)) &&
+                        CanDRGWeave(OriginalHook(Jump)) &&
+                        !HasEffect(Buffs.DiveReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) ||
-                         (IsEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) && TimeMoving.Ticks == 0 &&
-                          GetTargetDistance() <= 1)))
+                        (IsEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) && TimeMoving.Ticks == 0 &&
+                        GetTargetDistance() <= 1)))
                         return OriginalHook(Jump);
 
                     //Wyrmwind Thrust Feature
@@ -485,7 +487,8 @@ internal partial class DRG
 
                 //(High) Jump Feature   
                 if (ActionReady(OriginalHook(Jump)) &&
-                     CanDRGWeave(OriginalHook(Jump)) &&
+                    CanDRGWeave(OriginalHook(Jump)) &&
+                    !HasEffect(Buffs.DiveReady) &&
                     TimeMoving.Ticks == 0)
                     return OriginalHook(Jump);
 
@@ -523,7 +526,7 @@ internal partial class DRG
 
                 //Nastrond Feature
                 if (LevelChecked(Nastrond) &&
-                     CanDRGWeave(Nastrond) &&
+                    CanDRGWeave(Nastrond) &&
                     HasEffect(Buffs.NastrondReady) &&
                     Gauge.IsLOTDActive)
                     return Nastrond;
@@ -635,10 +638,11 @@ internal partial class DRG
                     //(High) Jump Feature   
                     if (IsEnabled(CustomComboPreset.DRG_AoE_HighJump) &&
                         ActionReady(OriginalHook(Jump)) &&
-                         CanDRGWeave(OriginalHook(Jump)) &&
+                        CanDRGWeave(OriginalHook(Jump)) &&
+                        !HasEffect(Buffs.DiveReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_AoE_HighJump_Melee) ||
-                         (IsEnabled(CustomComboPreset.DRG_AoE_HighJump_Melee) && TimeMoving.Ticks == 0 &&
-                          GetTargetDistance() <= 1)))
+                        (IsEnabled(CustomComboPreset.DRG_AoE_HighJump_Melee) && TimeMoving.Ticks == 0 &&
+                        GetTargetDistance() <= 1)))
                         return OriginalHook(Jump);
 
                     //Dragonfire Dive Feature
