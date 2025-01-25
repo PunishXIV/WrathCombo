@@ -168,6 +168,11 @@ namespace WrathCombo.Window.Tabs
                     Service.Configuration.Save();
 
                 ImGuiComponents.HelpMarker("During an opener, if this amount of seconds has passed since your last action, it will fail the opener and resume with non-opener functionality.");
+
+                if (ImGui.Checkbox("Performance Mode", ref Service.Configuration.PerformanceMode))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("This mode will disable actions being changed on your hotbar, but will still continue to work in the background as you press your buttons.");
             }
         }
     }

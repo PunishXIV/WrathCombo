@@ -1,10 +1,9 @@
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
-internal static partial class MNK
+internal partial class MNK
 {
     internal static class Config
     {

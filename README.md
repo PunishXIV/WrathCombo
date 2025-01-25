@@ -172,12 +172,12 @@ rotation will run; if you already have your jobs setup, you can disable Option 5
 |:---------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `/wrath`                               | Opens the main plugin window, where you can enable/disable features, access settings and more.                                                                    |
 | `/wrath auto`                          | Toggles Auto-Rotation **on** or **off**.                                                                                                                          |
-| `/wrath auto STATE`                    | Sets Auto-Rotation to a specific state. Replace `STATE` with `on` or `off`.                                                                                       |
-| `/wrath combo STATE`                   | When toggled off, actions will not be replaced with combos from the plugin.<br>Auto-Rotation will still work. Replace `STATE` with `on`, `off` or `toggle`.       |
+| `/wrath auto <X>`                      | Sets Auto-Rotation to a specific state. Replace `<X>` with `on` or `off`.                                                                                         |
+| `/wrath combo <X>`                     | When toggled off, actions will not be replaced with combos from the plugin.<br>Auto-Rotation will still work. Replace `<X>` with `on`, `off` or `toggle`.         |
 | `/wrath ignore`                        | Use when targeting an NPC to add it, and all instances of it, to an ignore list for Auto-Rotation's auto-targeting.<br>Manage this list in the Auto-Rotation tab. |
-| `/wrath toggle INT`                    | Toggles a specific feature/option **on or off** by replacing `INT` with its internal name.<br>Does not work while in combat.                                      |
-| `/wrath set INT`                       | Turns a specific feature/option **on** by replacing `INT` with its internal name.<br>Does not work when in combat.                                                |
-| `/wrath unset INT`                     | Turn a specific feature/option **off** by replacing `INT` with its internal name.<br>Does not work while in combat.                                               |
+| `/wrath toggle <X>`                    | Toggles a specific feature/option **on or off** by replacing `<X>` with its internal name (or ID).<br>Does not work while in combat.                              |
+| `/wrath set <X>`                       | Turns a specific feature/option **on** by replacing `<X>` with its internal name (or ID).<br>Does not work when in combat.                                        |
+| `/wrath unset <X>`                     | Turn a specific feature/option **off** by replacing `<X>` with its internal name (or ID).<br>Does not work while in combat.                                       |
 | `/wrath unsetall`                      | Turns all features and options **off** at once.                                                                                                                   |
 | `/wrath list ...`                      | Prints lists of feature's internal names to the game chat based on filter arguments.<br>Requires an appended filter. See Below.                                   |
 | `/wrath list set`<br/>`/wrath enabled` | Prints a list of all currently enabled features & options in the game chat.                                                                                       |
@@ -200,8 +200,9 @@ but ideally get in contact with us over on
 the [Discord](https://discord.gg/Zzrcc8kmvy) server so we can communicate with one
 another to make any necessary changes and review your submission!
 
-You may also find the [contributing guidelines](CONTRIBUTING.md) helpful in getting
-started.
+You may also find [contributing info](CONTRIBUTING.md) and
+[available guides](CONTRIBUTING.md#guides-on-using-specific-parts-of-wrath) helpful
+in getting started.
 
    <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section>

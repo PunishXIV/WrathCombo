@@ -16,17 +16,17 @@ using ImGuiNET;
 using Lumina.Excel.Sheets;
 using System;
 using System.Linq;
+using System.Numerics;
+using WrathCombo.AutoRotation;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-using WrathCombo.Services;
 using WrathCombo.Extensions;
+using WrathCombo.Services;
+using WrathCombo.Services.IPC;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
-using ECommons;
-using WrathCombo.Services.IPC;
-using WrathCombo.AutoRotation;
 
 namespace WrathCombo.Window.Tabs
 {
@@ -66,35 +66,24 @@ namespace WrathCombo.Window.Tabs
                 {
                     foreach (Status? status in LocalPlayer.StatusList)
                     {
-                        // Null Check (Source Name)
-                        if (status.SourceObject is not null)
-                        {
-                            ImGui.TextUnformatted($"{status.SourceObject.Name} ->");
-                            ImGui.SameLine(0, 4f);
-                        }
-
-                        // Null Check (Status Name)
-                        if (!string.IsNullOrEmpty(ActionWatching.GetStatusName(status.StatusId)))
-                        {
-                            CustomStyleText(ActionWatching.GetStatusName(status.StatusId) + ":", $"{status.StatusId} P: {status.Param}");
-                        }
-                        else CustomStyleText("", status.StatusId);
-
-                        // Duration + Blacklist Check
                         float buffDuration = GetBuffRemainingTime((ushort)status.StatusId, false);
+                        string formattedDuration = "";
                         if (buffDuration != 0 && !statusBlacklist.Contains(status.StatusId))
                         {
-                            string formattedDuration;
                             if (buffDuration >= 60)
                             {
                                 int minutes = (int)(buffDuration / 60);
                                 formattedDuration = $"{minutes}m";
                             }
                             else formattedDuration = $"{buffDuration:F1}s";
-
-                            ImGui.SameLine(0, 4f);
-                            CustomStyleText("", $"({formattedDuration})");
                         }
+
+                        // Null Check (Status Name)
+                        if (!string.IsNullOrEmpty(ActionWatching.GetStatusName(status.StatusId)))
+                        {
+                            CustomStyleText(ActionWatching.GetStatusName(status.StatusId) + ":", $"{status.StatusId} P: {status.Param}, {formattedDuration}");
+                        }
+                        else CustomStyleText("", status.StatusId);
                     }
                 }
 
@@ -425,7 +414,7 @@ namespace WrathCombo.Window.Tabs
                 if (ImGui.CollapsingHeader("IPC"))
                 {
                     CustomStyleText("Wrath Leased:", WrathLease is not null);
-                    foreach (var registration in P.IPC._leasing.Registrations)
+                    foreach (var registration in P.IPC.Leasing.Registrations)
                     {
                         CustomStyleText($"{registration.Key}", $"{registration.Value}");
                     }

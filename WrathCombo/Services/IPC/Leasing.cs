@@ -85,13 +85,10 @@ public class Lease(
 
     /// <summary>
     ///     The number of sets leased by this registration currently.
-    ///     Maximum is <c>60</c>.
     /// </summary>
-    /// <seealso cref="Provider.RegisterForLease(string,string)" />
-    /// <seealso cref="Leasing.MaxLeaseConfigurations" />
     public int SetsLeased =>
         AutoRotationControlled.Count +
-        //JobsControlled.Count +
+        JobsControlled.Count +
         CombosControlled.Count +
         OptionsControlled.Count;
 
@@ -154,14 +151,6 @@ public class Lease(
 
 public partial class Leasing
 {
-    /// <summary>
-    ///     The number of sets allowed per lease.
-    /// </summary>
-    /// <seealso cref="Provider.RegisterForLease(string,string)" />
-    /// <seealso cref="CheckLeaseConfigurationsAvailable" />
-    /// <seealso cref="Lease.SetsLeased" />
-    internal const int MaxLeaseConfigurations = 60;
-
     /// <summary>
     ///     Active leases.
     /// </summary>
@@ -239,7 +228,11 @@ public partial class Leasing
     {
         // Bail if the plugin is temporarily blacklisted
         if (CheckBlacklist(internalPluginName))
+        {
+            Logging.Warn(
+                $"{pluginName}: Plugin is temporarily blacklisted, cannot register for a lease");
             return null;
+        }
 
         // Make sure the lease ID is unique
         // (unnecessary, but could save a big headache)
@@ -310,8 +303,13 @@ public partial class Leasing
     {
         var registration = Registrations[lease];
 
-        if (registration.AutoRotationConfigsControlled.Count > 0 && registration.AutoRotationControlled[0] == newState)
+        if (registration.AutoRotationConfigsControlled.Count > 0 &&
+            registration.AutoRotationControlled[0] == newState)
+        {
+            Logging.Log(
+                $"{registration.PluginName}: You are already controlling Auto-Rotation");
             return;
+        }
 
         // Always [0], not an actual add
         registration.AutoRotationControlled[0] = newState;
@@ -353,8 +351,9 @@ public partial class Leasing
     /// <param name="lease">
     ///     Your lease ID from <see cref="Provider.RegisterForLease(string,string)" />
     /// </param>
+    /// <param name="jobOverride">A manual override, only used in testing</param>
     /// <seealso cref="Provider.SetCurrentJobAutoRotationReady" />
-    internal void AddRegistrationForCurrentJob(Guid lease)
+    internal void AddRegistrationForCurrentJob(Guid lease, Job? jobOverride = null)
     {
         var registration = Registrations[lease];
 
@@ -373,11 +372,16 @@ public partial class Leasing
                 CustomComboFunctions.JobIDs.ClassToJob(currentJobRow.RowId);
 
         var currentJob = (Job)currentRealJob;
+        if (jobOverride is not null)
+            currentJob = jobOverride.Value;
         var job = currentJob.ToString();
-        if (registration.JobsControlled.ContainsKey(currentJob))
-            return;
 
-        registration.JobsControlled[currentJob] = true;
+        if (!registration.JobsControlled.TryAdd(currentJob, true))
+        {
+            Logging.Log(
+                $"{registration.PluginName}: You are already controlling the current job ({job})");
+            return;
+        }
 
         Logging.Log(
             $"{registration.PluginName}: Registering Current Job ({job}) ...");
@@ -399,8 +403,10 @@ public partial class Leasing
             else
             {
                 locking = false;
-                stringKeys = registration.CombosControlled.Keys
-                    .Select(k => k.ToString()).ToArray();
+                stringKeys = combos.Select(k => k.ToString())
+                    .Concat(registration.CombosControlled.Keys
+                        .Select(k => k.ToString()).ToArray())
+                    .ToArray();
             }
 
             // Register all combos
@@ -612,22 +618,6 @@ public partial class Leasing
     /// <returns>Whether the lease exists.</returns>
     internal bool CheckLeaseExists(Guid lease) =>
         Registrations.ContainsKey(lease);
-
-    /// <summary>
-    ///     Checks how many sets are still available for a lease.
-    /// </summary>
-    /// <param name="lease">
-    ///     Your lease ID from <see cref="Provider.RegisterForLease(string,string)" />
-    /// </param>
-    /// <returns>
-    ///     The number of sets available for the lease, or <c>null</c> if the lease
-    ///     does not exist.
-    /// </returns>
-    /// <seealso cref="MaxLeaseConfigurations" />
-    internal int? CheckLeaseConfigurationsAvailable(Guid lease) =>
-        Registrations.TryGetValue(lease, out var value)
-            ? MaxLeaseConfigurations - value.SetsLeased
-            : null;
 
     /// <summary>
     ///     Suspend all leases. Called when IPC is disabled remotely.

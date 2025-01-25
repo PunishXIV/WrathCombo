@@ -92,7 +92,6 @@ internal partial class SMN
                     break;
                 }
 
-                
                 case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
                     UserConfig.DrawSliderInt(0, 90, SMNPvP.Config.SMNPvP_RadiantAegisThreshold,
                         "Caps at 90 to prevent waste.");

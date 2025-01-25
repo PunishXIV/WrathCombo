@@ -8,9 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using WrathCombo.Attributes;
 using WrathCombo.Combos;
-using WrathCombo.CustomComboNS.Functions;
 
 // ReSharper disable UnusedMember.Global
 
@@ -39,33 +37,47 @@ public partial class Provider : IDisposable
     ///     Leasing services for the IPC, essentially a backer for <c>Set</c>
     ///     methods.
     /// </summary>
-    internal readonly Leasing _leasing;
+    // ReSharper disable once MemberCanBePrivate.Global
+    internal readonly Leasing Leasing;
 
     /// <summary>
     ///     The helper services for the IPC provider.
     /// </summary>
-    internal readonly Helper _helper;
+    // ReSharper disable once MemberCanBePrivate.Global
+    internal readonly Helper Helper;
 
-    private bool _IPCReady = false;
+    /// <summary>
+    ///     Whether the IPC (when initialized by <see cref="InitAsync"/>) is ready.
+    /// </summary>
+    private bool _ipcReady;
 
     /// <summary>
     ///     Initializes the class, and sets up the other parts of the IPC provider.
     /// </summary>
-    internal Provider()
+    private Provider()
     {
-        _leasing = new();
-        _helper = new(ref _leasing);
+        Leasing = new Leasing();
+        Helper = new Helper(ref Leasing);
     }
 
-    public async static Task<Provider> CreateAsync()
+    /// <summary>
+    ///     Initializes the IPC provider, setting up the IPC and the helper services.
+    /// </summary>
+    /// <returns><see cref="Provider" /></returns>
+    /// <seealso cref="Provider()"/>
+    public static async Task<Provider> InitAsync()
     {
         Provider output = new();
+
+        // Initiate the IPC and helper services
         EzIPC.Init(output, prefix: "WrathCombo");
-        P.IPCSearch = new Search(output._leasing);
-        P.UIHelper = new UIHelper(output._leasing);
+        P.IPCSearch = new Search(output.Leasing);
+        P.UIHelper = new UIHelper(output.Leasing);
+
+        // Build Caches of presets
         await Task.Run(() => P.IPCSearch.ComboStatesByJobCategorized.TryGetValue(Player.Job, out var _));
         await Task.Run(() => P.UIHelper.PresetControlled(CustomComboPreset.DRK_ST_Combo));
-        output._IPCReady = true;
+        output._ipcReady = true;
 
         return output;
     }
@@ -75,7 +87,7 @@ public partial class Provider : IDisposable
     /// </summary>
     public void Dispose()
     {
-        _leasing.SuspendLeases(CancellationReason.WrathPluginDisabled);
+        Leasing.SuspendLeases(CancellationReason.WrathPluginDisabled);
     }
 
     #endregion
@@ -89,7 +101,7 @@ public partial class Provider : IDisposable
     [EzIPC]
     public bool IPCReady()
     {
-        return _IPCReady;
+        return _ipcReady;
     }
 
     /// <summary>
@@ -131,10 +143,8 @@ public partial class Provider : IDisposable
     ///     </list>
     /// </returns>
     /// <remarks>
-    ///     Each lease is limited to controlling <c>60</c> configurations.<br/>
     ///     None of this will work correctly -or sometimes at all- with PvP.
     /// </remarks>
-    /// <seealso cref="Leasing.MaxLeaseConfigurations" />
     /// <seealso cref="RegisterForLeaseWithCallback" />
     /// <seealso cref="RegisterForLease(string,string,Action{int,string})" />
     [EzIPC]
@@ -142,10 +152,10 @@ public partial class Provider : IDisposable
         (string internalPluginName, string pluginName)
     {
         // Bail if IPC is disabled
-        if (_helper.CheckForBailConditionsAtSetTime())
+        if (Helper.CheckForBailConditionsAtSetTime())
             return null;
 
-        return _leasing.CreateRegistration(internalPluginName, pluginName);
+        return Leasing.CreateRegistration(internalPluginName, pluginName);
     }
 
     /// <summary>
@@ -186,14 +196,13 @@ public partial class Provider : IDisposable
         (string internalPluginName, string pluginName, string? ipcPrefixForCallback)
     {
         // Bail if IPC is disabled
-        if (_helper.CheckForBailConditionsAtSetTime())
+        if (Helper.CheckForBailConditionsAtSetTime())
             return null;
 
         // Assign the IPC prefix if indicated it is the same as the internal name
-        if (ipcPrefixForCallback is null)
-            ipcPrefixForCallback = internalPluginName;
+        ipcPrefixForCallback ??= internalPluginName;
 
-        return _leasing.CreateRegistration(internalPluginName, pluginName,
+        return Leasing.CreateRegistration(internalPluginName, pluginName,
             ipcPrefixForCallback: ipcPrefixForCallback);
     }
 
@@ -225,10 +234,10 @@ public partial class Provider : IDisposable
         Action<int, string> leaseCancelledCallback)
     {
         // Bail if IPC is disabled
-        if (_helper.CheckForBailConditionsAtSetTime())
+        if (Helper.CheckForBailConditionsAtSetTime())
             return null;
 
-        return _leasing.CreateRegistration(
+        return Leasing.CreateRegistration(
             internalPluginName, pluginName, leaseCancelledCallback);
     }
 
@@ -243,7 +252,7 @@ public partial class Provider : IDisposable
     [EzIPC]
     [SuppressMessage("Performance", "CA1822:Mark members as static")]
     public bool GetAutoRotationState() =>
-        _leasing.CheckAutoRotationControlled() ??
+        Leasing.CheckAutoRotationControlled() ??
         Service.Configuration.RotationConfig.Enabled;
 
     /// <summary>
@@ -262,15 +271,14 @@ public partial class Provider : IDisposable
     ///     This is only the state of Auto-Rotation, not whether any combos are
     ///     enabled in Auto-Mode.
     /// </remarks>
-    /// <value>+1 <c>set</c></value>
     [EzIPC]
     public void SetAutoRotationState(Guid lease, bool enabled = true)
     {
         // Bail for standard conditions
-        if (_helper.CheckForBailConditionsAtSetTime(lease, 1))
+        if (Helper.CheckForBailConditionsAtSetTime(lease))
             return;
 
-        _leasing.AddRegistrationForAutoRotation(lease, enabled);
+        Leasing.AddRegistrationForAutoRotation(lease, enabled);
     }
 
     /// <summary>
@@ -299,10 +307,6 @@ public partial class Provider : IDisposable
     ///     This will try to use the user's existing settings, only enabling default
     ///     states for jobs that are not configured.
     /// </summary>
-    /// <value>
-    ///     +2 <c>set</c><br />
-    ///     (can be up to 38 for non-simple jobs, the highest being healers)
-    /// </value>
     /// <param name="lease">
     ///     Your lease ID from
     ///     <see cref="RegisterForLease(string,string)" />
@@ -312,10 +316,10 @@ public partial class Provider : IDisposable
     public void SetCurrentJobAutoRotationReady(Guid lease)
     {
         // Bail for standard conditions
-        if (_helper.CheckForBailConditionsAtSetTime(lease, 6))
+        if (Helper.CheckForBailConditionsAtSetTime(lease))
             return;
 
-        _leasing.AddRegistrationForCurrentJob(lease);
+        Leasing.AddRegistrationForCurrentJob(lease);
     }
 
     /// <summary>
@@ -333,13 +337,13 @@ public partial class Provider : IDisposable
     public void ReleaseControl(Guid lease)
     {
         // Bail if the lease does not exist
-        if (!_leasing.CheckLeaseExists(lease))
+        if (!Leasing.CheckLeaseExists(lease))
         {
             Logging.Warn(BailMessages.InvalidLease);
             return;
         }
 
-        _leasing.RemoveRegistration(lease, CancellationReason.LeaseeReleased);
+        Leasing.RemoveRegistration(lease, CancellationReason.LeaseeReleased);
     }
 
     #endregion
@@ -365,12 +369,12 @@ public partial class Provider : IDisposable
         {
             {
                 ComboTargetTypeKeys.SingleTarget,
-                _helper.CheckCurrentJobModeIsEnabled(
+                Helper.CheckCurrentJobModeIsEnabled(
                     ComboTargetTypeKeys.SingleTarget, ComboStateKeys.Enabled)
             },
             {
                 ComboTargetTypeKeys.MultiTarget,
-                _helper.CheckCurrentJobModeIsEnabled(
+                Helper.CheckCurrentJobModeIsEnabled(
                     ComboTargetTypeKeys.MultiTarget, ComboStateKeys.Enabled)
             }
         };
@@ -394,12 +398,12 @@ public partial class Provider : IDisposable
         {
             {
                 ComboTargetTypeKeys.SingleTarget,
-                _helper.CheckCurrentJobModeIsEnabled(
+                Helper.CheckCurrentJobModeIsEnabled(
                     ComboTargetTypeKeys.SingleTarget, ComboStateKeys.AutoMode)
             },
             {
                 ComboTargetTypeKeys.MultiTarget,
-                _helper.CheckCurrentJobModeIsEnabled(
+                Helper.CheckCurrentJobModeIsEnabled(
                     ComboTargetTypeKeys.MultiTarget, ComboStateKeys.AutoMode)
             }
         };
@@ -410,39 +414,24 @@ public partial class Provider : IDisposable
     #region Fine-Grained Combo Methods
 
     /// <summary>
-    ///     Gets the internal names of all combos and options for the given job.
+    ///     Gets the internal names of all combos for the given job.
     /// </summary>
-    /// <param name="jobAbbreviation">
-    ///     The all-caps, 3-letter abbreviation for the job you want to search for.
-    ///     <br />
-    ///     Defaults to the user's current job if not provided.<br />
-    ///     See <see cref="CustomComboFunctions.JobIDs.JobIDToShorthand" />.
+    /// <param name="jobID">
+    ///     The <see cref="ECommons.ExcelServices.Job" /> to get combos for.
     /// </param>
     /// <returns>
     ///     A list of internal names for all combos and options for the given job.
     /// </returns>
     [EzIPC]
     [SuppressMessage("Performance", "CA1822:Mark members as static")]
-    public List<string>? GetComboNamesForJob(uint jobId)
-    {
-        // Default to the user's current job
-        Job job = (Job)jobId;
-
-        // Return the combos for the job, or null if the job is not found
-        var searchForJobAbbr =
-            P.IPCSearch.ComboNamesByJob.GetValueOrDefault(job);
-
-        return searchForJobAbbr;
-    }
+    public List<string>? GetComboNamesForJob(uint jobID) =>
+        P.IPCSearch.ComboNamesByJob.GetValueOrDefault((Job)jobID);
 
     /// <summary>
     ///     Gets the names of all combo options for the given job.
     /// </summary>
-    /// <param name="jobAbbreviation">
-    ///     The all-caps, 3-letter abbreviation for the job you want to search for.
-    ///     <br />
-    ///     Defaults to the user's current job if not provided.<br />
-    ///     See <see cref="CustomComboInfoAttribute.JobIDToShorthand" />.
+    /// <param name="jobID">
+    ///     The <see cref="ECommons.ExcelServices.Job" /> to get options for.
     /// </param>
     /// <returns>
     ///     A dictionary of combo internal names and under each, a list of options'
@@ -450,18 +439,8 @@ public partial class Provider : IDisposable
     /// </returns>
     [EzIPC]
     [SuppressMessage("Performance", "CA1822:Mark members as static")]
-    public Dictionary<string, List<string>>? GetComboOptionNamesForJob
-        (uint jobId)
-    {
-        // Default to the user's current job
-        Job job = (Job)jobId;
-
-        // Return the combos for the job, or null if the job is not found
-        var searchForJobAbbr =
-            P.IPCSearch.OptionNamesByJob.GetValueOrDefault(job);
-
-        return searchForJobAbbr;
-    }
+    public Dictionary<string, List<string>>? GetComboOptionNamesForJob(uint jobID) =>
+        P.IPCSearch.OptionNamesByJob.GetValueOrDefault((Job)jobID);
 
     /// <summary>
     ///     Get the current state of a combo in Wrath Combo.
@@ -481,7 +460,7 @@ public partial class Provider : IDisposable
     public Dictionary<ComboStateKeys, bool>? GetComboState(string comboInternalName)
     {
         // Override if the combo is controlled by a lease
-        var checkLeasing = _leasing.CheckComboControlled(comboInternalName);
+        var checkLeasing = Leasing.CheckComboControlled(comboInternalName);
         if (checkLeasing is not null)
         {
             return new Dictionary<ComboStateKeys, bool>
@@ -502,7 +481,6 @@ public partial class Provider : IDisposable
     /// <summary>
     ///     Set the state of a combo in Wrath Combo.
     /// </summary>
-    /// <value>+2 <c>set</c></value>
     /// <param name="lease">
     ///     Your lease ID from
     ///     <see cref="RegisterForLease(string,string)" />
@@ -526,10 +504,10 @@ public partial class Provider : IDisposable
         bool comboState = true, bool autoState = true)
     {
         // Bail for standard conditions
-        if (_helper.CheckForBailConditionsAtSetTime(lease, 2))
+        if (Helper.CheckForBailConditionsAtSetTime(lease))
             return;
 
-        _leasing.AddRegistrationForCombo(
+        Leasing.AddRegistrationForCombo(
             lease, comboInternalName, comboState, autoState);
     }
 
@@ -548,7 +526,7 @@ public partial class Provider : IDisposable
     {
         // Override if the combo option is controlled by a lease,
         // otherwise return the saved state
-        return _leasing.CheckComboOptionControlled(optionName) ??
+        return Leasing.CheckComboOptionControlled(optionName) ??
                P.IPCSearch.PresetStates.GetValueOrDefault(optionName)[
                    ComboStateKeys.Enabled];
     }
@@ -556,7 +534,6 @@ public partial class Provider : IDisposable
     /// <summary>
     ///     Sets the state of a combo option in Wrath Combo.
     /// </summary>
-    /// <value>+1 <c>set</c></value>
     /// <param name="lease">
     ///     Your lease ID from <see cref="RegisterForLease(string,string)" />.
     /// </param>
@@ -571,10 +548,10 @@ public partial class Provider : IDisposable
     public void SetComboOptionState(Guid lease, string optionName, bool state = true)
     {
         // Bail for standard conditions
-        if (_helper.CheckForBailConditionsAtSetTime(lease, 1))
+        if (Helper.CheckForBailConditionsAtSetTime(lease))
             return;
 
-        _leasing.AddRegistrationForOption(lease, optionName, state);
+        Leasing.AddRegistrationForOption(lease, optionName, state);
     }
 
     #endregion

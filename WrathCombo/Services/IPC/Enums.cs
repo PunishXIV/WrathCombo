@@ -184,6 +184,9 @@ public enum AutoRotationConfigOption
 
     /// <seealso cref="HealerSettings.IncludeNPCs"/>
     [ConfigValueType(typeof(bool))] IncludeNPCs = 12,
+
+    /// <seealso cref="DPSSettings.OnlyAttackInCombat" />
+    [ConfigValueType(typeof(bool))] OnlyAttackInCombat = 13,
 }
 
 #region Type Attribute

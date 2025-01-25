@@ -1,14 +1,13 @@
 ﻿#region
 
-using ECommons.ExcelServices;
-using ECommons.EzIpcManager;
-using ECommons.GameHelpers;
-using ECommons.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
+using ECommons.ExcelServices;
+using ECommons.EzIpcManager;
+using ECommons.Logging;
 using WrathCombo.CustomComboNS.Functions;
 
 #endregion
@@ -25,10 +24,9 @@ public partial class Helper(ref Leasing leasing)
     /// <param name="lease">
     ///     Your lease ID from <see cref="Provider.RegisterForLease(string,string)" />
     /// </param>
-    /// <param name="setCost">The cost of the <c>set</c> method.</param>
     /// <returns>If the method should bail.</returns>
     internal bool CheckForBailConditionsAtSetTime
-        (Guid? lease = null, int? setCost = null)
+        (Guid? lease = null)
     {
         // Bail if IPC is disabled
         if (!IPCEnabled)
@@ -50,15 +48,6 @@ public partial class Helper(ref Leasing leasing)
             _leasing.CheckBlacklist(lease.Value))
         {
             Logging.Warn(BailMessages.BlacklistedLease);
-            return true;
-        }
-
-        // Bail if the lease does not have enough configuration left for this set
-        if (lease is not null &&
-            setCost is not null &&
-            _leasing.CheckLeaseConfigurationsAvailable(lease.Value) < setCost.Value)
-        {
-            Logging.Warn(BailMessages.NotEnoughConfigurations);
             return true;
         }
 
@@ -96,7 +85,7 @@ public partial class Helper(ref Leasing leasing)
             currentRealJob =
                 CustomComboFunctions.JobIDs.ClassToJob(currentJobRow.RowId);
 
-        P.IPCSearch.ComboStatesByJobCategorized.TryGetValue(Player.Job,
+        P.IPCSearch.ComboStatesByJobCategorized.TryGetValue((Job)currentRealJob,
             out var comboStates);
 
         if (comboStates is null)
@@ -163,7 +152,8 @@ public partial class Helper(ref Leasing leasing)
             var stAdvanced = comboStates[ComboTargetTypeKeys.SingleTarget]
                 [ComboSimplicityLevelKeys.Advanced].First().Key;
             combos.Add(stAdvanced);
-            combos.AddRange(P.IPCSearch.OptionNamesByJob[job][stAdvanced]);
+            if (includeOptions)
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][stAdvanced]);
         }
 
         #endregion
@@ -183,7 +173,8 @@ public partial class Helper(ref Leasing leasing)
             var mtAdvanced = comboStates[ComboTargetTypeKeys.MultiTarget]
                 [ComboSimplicityLevelKeys.Advanced].First().Key;
             combos.Add(mtAdvanced);
-            combos.AddRange(P.IPCSearch.OptionNamesByJob[job][mtAdvanced]);
+            if (includeOptions)
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][mtAdvanced]);
         }
 
         #endregion
@@ -198,7 +189,8 @@ public partial class Helper(ref Leasing leasing)
         {
             var healSTPreset = comboStates[ComboTargetTypeKeys.HealST]
                 [ComboSimplicityLevelKeys.Other].First().Key;
-            combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healSTPreset]);
+            if (includeOptions)
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healSTPreset]);
         }
 
         if (comboStates.TryGetValue(ComboTargetTypeKeys.HealMT, out healResults))
@@ -209,7 +201,8 @@ public partial class Helper(ref Leasing leasing)
         {
             var healMTPreset = comboStates[ComboTargetTypeKeys.HealMT]
                 [ComboSimplicityLevelKeys.Other].First().Key;
-            combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healMTPreset]);
+            if (includeOptions)
+                combos.AddRange(P.IPCSearch.OptionNamesByJob[job][healMTPreset]);
         }
 
         #endregion
@@ -341,11 +334,23 @@ internal static class Logging
     {
         get
         {
-            var frame = StackTrace.GetFrame(3); // Get the calling method frame
-            var method = frame.GetMethod();
-            var className = method.DeclaringType.Name;
-            var methodName = method.Name;
-            return $"[{className}.{methodName}] ";
+            for (var i = 3; i >= 0; i--)
+            {
+                try
+                {
+                    var frame = StackTrace.GetFrame(i);
+                    var method = frame.GetMethod();
+                    var className = method.DeclaringType.Name;
+                    var methodName = method.Name;
+                    return $"[{className}.{methodName}] ";
+                }
+                catch
+                {
+                    // Continue to the next index
+                }
+            }
+
+            return "[Unknown Method] ";
         }
     }
 

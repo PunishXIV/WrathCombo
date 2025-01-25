@@ -8,99 +8,11 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE;
 
-internal static partial class SAM
+internal partial class SAM
 {
-    #region ID's
-
-    public const byte JobID = 34;
-
-    public const uint
-        Hakaze = 7477,
-        Yukikaze = 7480,
-        Gekko = 7481,
-        Enpi = 7486,
-        Jinpu = 7478,
-        Kasha = 7482,
-        Shifu = 7479,
-        Mangetsu = 7484,
-        Fuga = 7483,
-        Oka = 7485,
-        Higanbana = 7489,
-        TenkaGoken = 7488,
-        MidareSetsugekka = 7487,
-        Shinten = 7490,
-        Kyuten = 7491,
-        Hagakure = 7495,
-        Guren = 7496,
-        Senei = 16481,
-        MeikyoShisui = 7499,
-        Seigan = 7501,
-        ThirdEye = 7498,
-        Iaijutsu = 7867,
-        TsubameGaeshi = 16483,
-        KaeshiHiganbana = 16484,
-        Shoha = 16487,
-        Ikishoten = 16482,
-        Fuko = 25780,
-        OgiNamikiri = 25781,
-        KaeshiNamikiri = 25782,
-        Yaten = 7493,
-        Gyoten = 7492,
-        KaeshiSetsugekka = 16486,
-        TendoGoken = 36965,
-        TendoKaeshiSetsugekka = 36968,
-        Zanshin = 36964,
-        TendoSetsugekka = 36966,
-        Tengentsu = 7498,
-        Gyofu = 36963;
-
-    public static int NumSen(SAMGauge gauge)
-    {
-        bool ka = gauge.Sen.HasFlag(Sen.KA);
-        bool getsu = gauge.Sen.HasFlag(Sen.GETSU);
-        bool setsu = gauge.Sen.HasFlag(Sen.SETSU);
-
-        return (ka ? 1 : 0) + (getsu ? 1 : 0) + (setsu ? 1 : 0);
-    }
-
-    public static class Buffs
-    {
-        public const ushort
-            MeikyoShisui = 1233,
-            EnhancedEnpi = 1236,
-            EyesOpen = 1252,
-            OgiNamikiriReady = 2959,
-            Fuka = 1299,
-            Fugetsu = 1298,
-            TsubameReady = 4216,
-            TendoKaeshiSetsugekkaReady = 4218,
-            KaeshiGokenReady = 3852,
-            TendoKaeshiGokenReady = 4217,
-            ZanshinReady = 3855,
-            Tengentsu = 3853,
-            Tendo = 3856;
-    }
-
-    public static class Debuffs
-    {
-        public const ushort
-            Higanbana = 1228;
-    }
-
-    public static class Traits
-    {
-        public const ushort
-            EnhancedHissatsu = 591,
-            EnhancedMeikyoShishui = 443,
-            EnhancedMeikyoShishui2 = 593;
-    }
-
-    #endregion
-
-    internal static SAMGauge gauge = GetJobGauge<SAMGauge>();
+    internal static SAMGauge Gauge = GetJobGauge<SAMGauge>();
     internal static SAMOpenerMaxLevel1 Opener1 = new();
 
     internal static int MeikyoUsed => ActionWatching.CombatActions.Count(x => x == MeikyoShisui);
@@ -112,8 +24,10 @@ internal static partial class SAM
     internal static float GCD => GetCooldown(Hakaze).CooldownTotal;
 
     internal static int SenCount => GetSenCount();
-
+    
     internal static bool ComboStarted => GetComboStarted();
+    
+    internal static int NumSen => GetNumSen();
 
     internal static WrathOpener Opener()
     {
@@ -127,13 +41,13 @@ internal static partial class SAM
     {
         int senCount = 0;
 
-        if (gauge.HasGetsu)
+        if (Gauge.HasGetsu)
             senCount++;
 
-        if (gauge.HasSetsu)
+        if (Gauge.HasSetsu)
             senCount++;
 
-        if (gauge.HasKa)
+        if (Gauge.HasKa)
             senCount++;
 
         return senCount;
@@ -148,6 +62,15 @@ internal static partial class SAM
                comboAction == Shifu;
     }
 
+    private static int GetNumSen()
+    {
+        bool ka = Gauge.Sen.HasFlag(Sen.KA);
+        bool getsu = Gauge.Sen.HasFlag(Sen.GETSU);
+        bool setsu = Gauge.Sen.HasFlag(Sen.SETSU);
+
+        return (ka ? 1 : 0) + (getsu ? 1 : 0) + (setsu ? 1 : 0);
+    }
+
     internal static bool UseMeikyo()
     {
         if (ActionReady(MeikyoShisui) &&
@@ -156,8 +79,8 @@ internal static partial class SAM
         {
             //if no opener/before lvl 100
             if ((IsNotEnabled(CustomComboPreset.SAM_ST_Opener) ||
-                !LevelChecked(TendoSetsugekka) ||
-                (IsEnabled(CustomComboPreset.SAM_ST_Opener) && Config.SAM_Balance_Content == 1 && !InBossEncounter())) &&
+                 !LevelChecked(TendoSetsugekka) ||
+                 IsEnabled(CustomComboPreset.SAM_ST_Opener) && Config.SAM_Balance_Content == 1 && !InBossEncounter()) &&
                 MeikyoUsed < 2 && !HasEffect(Buffs.MeikyoShisui) && !HasEffect(Buffs.TsubameReady))
                 return true;
 
@@ -165,18 +88,18 @@ internal static partial class SAM
             if (TraitLevelChecked(Traits.EnhancedMeikyoShishui) && HasEffect(Buffs.TsubameReady))
             {
                 //2min windows
-                if ((GetCooldownRemainingTime(Ikishoten) > 80 || (GetCooldownRemainingTime(Ikishoten) < GCD * 2) ||
-                    IsOffCooldown(Ikishoten) || JustUsed(Ikishoten, 5f)) &&
-                    ((MeikyoUsed % 7 is 2 && SenCount is 3) ||
-                    (MeikyoUsed % 7 is 4 && SenCount is 2) ||
-                    (MeikyoUsed % 7 is 6 && SenCount is 1)))
+                if ((GetCooldownRemainingTime(Ikishoten) > 80 || GetCooldownRemainingTime(Ikishoten) < GCD * 2 ||
+                     IsOffCooldown(Ikishoten) || JustUsed(Ikishoten, 5f)) &&
+                    (MeikyoUsed % 7 is 2 && SenCount is 3 ||
+                     MeikyoUsed % 7 is 4 && SenCount is 2 ||
+                     MeikyoUsed % 7 is 6 && SenCount is 1))
                     return true;
 
                 //1min windows
                 if (GetCooldownRemainingTime(Ikishoten) is > 35 and < 71 &&
-                    ((MeikyoUsed % 7 is 1 && SenCount is 3) ||
-                    (MeikyoUsed % 7 is 3 && SenCount is 2) ||
-                    (MeikyoUsed % 7 is 5 && SenCount is 1)))
+                    (MeikyoUsed % 7 is 1 && SenCount is 3 ||
+                     MeikyoUsed % 7 is 3 && SenCount is 2 ||
+                     MeikyoUsed % 7 is 5 && SenCount is 1))
                     return true;
             }
 
@@ -226,11 +149,11 @@ internal static partial class SAM
             TendoSetsugekka,
             TendoKaeshiSetsugekka
         ];
-        internal override UserData? ContentCheckConfig => Config.SAM_Balance_Content;
+        internal override UserData ContentCheckConfig => Config.SAM_Balance_Content;
 
         public override List<(int[] Steps, int HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], 13),
+            ([2], 13)
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
@@ -255,4 +178,82 @@ internal static partial class SAM
             return true;
         }
     }
+
+    #region ID's
+
+    public const byte JobID = 34;
+
+    public const uint
+        Hakaze = 7477,
+        Yukikaze = 7480,
+        Gekko = 7481,
+        Enpi = 7486,
+        Jinpu = 7478,
+        Kasha = 7482,
+        Shifu = 7479,
+        Mangetsu = 7484,
+        Fuga = 7483,
+        Oka = 7485,
+        Higanbana = 7489,
+        TenkaGoken = 7488,
+        MidareSetsugekka = 7487,
+        Shinten = 7490,
+        Kyuten = 7491,
+        Hagakure = 7495,
+        Guren = 7496,
+        Senei = 16481,
+        MeikyoShisui = 7499,
+        Seigan = 7501,
+        ThirdEye = 7498,
+        Iaijutsu = 7867,
+        TsubameGaeshi = 16483,
+        KaeshiHiganbana = 16484,
+        Shoha = 16487,
+        Ikishoten = 16482,
+        Fuko = 25780,
+        OgiNamikiri = 25781,
+        KaeshiNamikiri = 25782,
+        Yaten = 7493,
+        Gyoten = 7492,
+        KaeshiSetsugekka = 16486,
+        TendoGoken = 36965,
+        TendoKaeshiSetsugekka = 36968,
+        Zanshin = 36964,
+        TendoSetsugekka = 36966,
+        Tengentsu = 7498,
+        Gyofu = 36963;
+
+    public static class Buffs
+    {
+        public const ushort
+            MeikyoShisui = 1233,
+            EnhancedEnpi = 1236,
+            EyesOpen = 1252,
+            OgiNamikiriReady = 2959,
+            Fuka = 1299,
+            Fugetsu = 1298,
+            TsubameReady = 4216,
+            TendoKaeshiSetsugekkaReady = 4218,
+            KaeshiGokenReady = 3852,
+            TendoKaeshiGokenReady = 4217,
+            ZanshinReady = 3855,
+            Tengentsu = 3853,
+            Tendo = 3856;
+    }
+
+    public static class Debuffs
+    {
+        public const ushort
+            Higanbana = 1228;
+    }
+
+    public static class Traits
+    {
+        public const ushort
+            EnhancedHissatsu = 591,
+            EnhancedMeikyoShishui = 443,
+            EnhancedMeikyoShishui2 = 593;
+    }
+
+    #endregion
 }

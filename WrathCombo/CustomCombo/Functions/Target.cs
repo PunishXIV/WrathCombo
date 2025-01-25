@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 
@@ -451,12 +452,15 @@ namespace WrathCombo.CustomComboNS.Functions
             ActionWatching.ActionSheet.Values.TryGetFirst(x => x.RowId == aoeSpell, out var sheetSpell);
             bool needsTarget = sheetSpell.CanTargetHostile;
 
+            if (needsTarget && GetTargetDistance(target) > sheetSpell.Range)
+                return 0;
+
             int count = sheetSpell.CastType switch
             {
                 1 => 1,
                 2 => sheetSpell.CanTargetSelf ? CanCircleAoe(sheetSpell.EffectRange, checkIgnoredList) : CanRangedCircleAoe(sheetSpell.EffectRange, target, checkIgnoredList),
-                3 => CanConeAoe(sheetSpell.Range, sheetSpell.EffectRange, checkIgnoredList),
-                4 => CanLineAoe(sheetSpell.Range, sheetSpell.XAxisModifier, checkIgnoredList),
+                3 => CanConeAoe(target, sheetSpell.Range, sheetSpell.EffectRange, checkIgnoredList),
+                4 => CanLineAoe(target, sheetSpell.Range, sheetSpell.XAxisModifier, checkIgnoredList),
                 _ => 0
             };
 
@@ -500,6 +504,7 @@ namespace WrathCombo.CustomComboNS.Functions
             Vector2 Ptrans = new Vector2(Vector2.Dot(P2, n), Vector2.Dot(P2, d));
             Vector2 Pabs = new Vector2(Math.Abs(Ptrans.X), Math.Abs(Ptrans.Y));
             Vector2 Pcorner = new Vector2(Math.Abs(Ptrans.X) - halfWidth, Math.Abs(Ptrans.Y) - (lenFront / 2));
+#if DEBUG
             if (Svc.GameGui.WorldToScreen(o.Position, out var screenCoords))
             {
                 var objectText = $"A = {A}\n" +
@@ -521,7 +526,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
                 ImGui.SetNextWindowBgAlpha(1f);
                 if (ImGui.Begin(
-                        $"Actor##ActorWindow{o.GameObjectId}",
+                        $"Actor###ActorWindow{o.GameObjectId}",
                         ImGuiWindowFlags.NoDecoration |
                         ImGuiWindowFlags.AlwaysAutoResize |
                         ImGuiWindowFlags.NoSavedSettings |
@@ -533,6 +538,7 @@ namespace WrathCombo.CustomComboNS.Functions
                     ImGui.Text(objectText);
                 ImGui.End();
             }
+#endif
 
             if (Pcorner.X > R || Pcorner.Y > R)
                 return false;
@@ -569,25 +575,29 @@ namespace WrathCombo.CustomComboNS.Functions
         }
 
         // Cone Aoe 
-        public static int CanConeAoe(float range, float effectRange, bool checkIgnoredList = false)
+        public static int CanConeAoe(IGameObject? target, float range, float effectRange, bool checkIgnoredList = false)
         {
+            if (target is null) return 0;
+            var dir = PositionalMath.AngleXZ(LocalPlayer.Position, target.Position);
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
                                                                  GetTargetDistance(o) <= range &&
                                                                  (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 PointInCone(o.Position - LocalPlayer.Position, LocalPlayer.Rotation, 45f));
+                                                                 PointInCone(o.Position - LocalPlayer.Position, dir, 45f));
         }
 
         // Line Aoe 
-        public static int CanLineAoe(float range, float effectRange, bool checkIgnoredList = false)
+        public static int CanLineAoe(IGameObject? target, float range, float effectRange, bool checkIgnoredList = false)
         {
+            if (target is null) return 0;
+            var dir = PositionalMath.AngleXZ(LocalPlayer.Position, target.Position);
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
                                                                  GetTargetDistance(o) <= range &&
                                                                  (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 HitboxInRect(o, LocalPlayer.Rotation, range, effectRange / 2));
+                                                                 HitboxInRect(o, dir, range, effectRange / 2));
         }
 
         internal static unsafe bool IsInLineOfSight(IGameObject target)

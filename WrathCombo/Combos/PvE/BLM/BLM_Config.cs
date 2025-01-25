@@ -1,4 +1,5 @@
 using Dalamud.Interface.Colors;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
@@ -6,7 +7,6 @@ using System;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
@@ -37,11 +37,10 @@ internal partial class BLM
             switch (preset)
             {
                 case CustomComboPreset.BLM_ST_Opener:
-                    if (Player.Job is ECommons.ExcelServices.Job.BLM && Player.Level == 100)
+                    if (Player.Job is Job.BLM && Player.Level == 100)
                     {
                         float gcd = MathF.Round(CustomComboFunctions.GetCooldown(Fire3).BaseCooldownTotal, 2, MidpointRounding.ToZero);
                         ImGuiEx.Text(gcd > 2.45f ? ImGuiColors.DalamudRed : ImGuiColors.HealerGreen, $"Your GCD is currently: {gcd}");
-
                     }
 
                     DrawBossOnlyChoice(BLM_ST_Balance_Content);
@@ -175,7 +174,6 @@ internal partial class BLM
                         "Also uses Xenoglossy when under 50%% HP.");
 
                     break;
-
             }
         }
     }

@@ -48,7 +48,9 @@ namespace WrathCombo.Core
         /// <inheritdoc/>
         public void Dispose()
         {
+            getIconHook?.Disable();
             getIconHook?.Dispose();
+            isIconReplaceableHook?.Disable();
             isIconReplaceableHook?.Dispose();
         }
 
@@ -57,20 +59,23 @@ namespace WrathCombo.Core
         /// <returns> The result from the hook. </returns>
         internal uint OriginalHook(uint actionID) => getIconHook.Original(actionManager, actionID);
 
-        private static IEnumerable<CustomCombo>? _filteredCombos;
+        public static IEnumerable<CustomCombo>? FilteredCombos;
 
         public void UpdateFilteredCombos()
         {
-            _filteredCombos = CustomCombos.Where(x => x.Preset.Attributes() is not null && x.Preset.Attributes().IsPvP == CustomComboFunctions.InPvP() && ((x.Preset.Attributes().RoleAttribute is not null && x.Preset.Attributes().RoleAttribute.PlayerIsRole()) || x.Preset.Attributes().CustomComboInfo.JobID == Player.JobId || x.Preset.Attributes().CustomComboInfo.JobID == CustomComboFunctions.JobIDs.ClassToJob(Player.JobId)));
-            Svc.Log.Debug($"Now running {_filteredCombos.Count()} combos\n{string.Join("\n", _filteredCombos.Select(x => x.Preset.Attributes().CustomComboInfo.Name))}");
+            FilteredCombos = CustomCombos.Where(x => x.Preset.Attributes() is not null && x.Preset.Attributes().IsPvP == CustomComboFunctions.InPvP() && ((x.Preset.Attributes().RoleAttribute is not null && x.Preset.Attributes().RoleAttribute.PlayerIsRole()) || x.Preset.Attributes().CustomComboInfo.JobID == Player.JobId || x.Preset.Attributes().CustomComboInfo.JobID == CustomComboFunctions.JobIDs.ClassToJob(Player.JobId)));
+            Svc.Log.Debug($"Now running {FilteredCombos.Count()} combos\n{string.Join("\n", FilteredCombos.Select(x => x.Preset.Attributes().CustomComboInfo.Name))}");
         }
 
         private unsafe uint GetIconDetour(IntPtr actionManager, uint actionID)
         {
             try
             {
-                if (_filteredCombos is null)
+                if (FilteredCombos is null)
                     UpdateFilteredCombos();
+
+                if (Service.Configuration.PerformanceMode)
+                    return OriginalHook(actionID);
 
                 if (Svc.ClientState.LocalPlayer == null)
                     return OriginalHook(actionID);
@@ -80,7 +85,7 @@ namespace WrathCombo.Core
                     (DisabledJobsPVP.Any(x => x == Svc.ClientState.LocalPlayer.ClassJob.RowId) && Svc.ClientState.IsPvP))
                     return OriginalHook(actionID);
 
-                foreach (CustomCombo? combo in _filteredCombos)
+                foreach (CustomCombo? combo in FilteredCombos)
                 {
                     if (combo.TryInvoke(actionID, out uint newActionID))
                     {

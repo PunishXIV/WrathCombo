@@ -7,6 +7,8 @@
         public bool BypassQuest;
         public bool BypassFATE;
         public int CombatDelay = 1;
+        public bool EnableInInstance;
+        public bool DisableAfterInstance;
         public DPSRotationMode DPSRotationMode;
         public HealerRotationMode HealerRotationMode;
         public HealerSettings HealerSettings = new();

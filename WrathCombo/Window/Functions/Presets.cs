@@ -114,16 +114,11 @@ namespace WrathCombo.Window.Functions
             {
                 if (enabled)
                 {
-                    EnableParentPresets(preset);
-                    Service.Configuration.EnabledActions.Add(preset);
-                    foreach (var conflict in conflicts)
-                    {
-                        Service.Configuration.EnabledActions.Remove(conflict);
-                    }
+                    PresetStorage.EnablePreset(preset);
                 }
                 else
                 {
-                    Service.Configuration.EnabledActions.Remove(preset);
+                    PresetStorage.DisablePreset(preset);
                 }
 
                 Service.Configuration.Save();
@@ -449,31 +444,6 @@ namespace WrathCombo.Window.Functions
             }
 
             return output;
-        }
-
-
-
-        /// <summary> Iterates up a preset's parent tree, enabling each of them. </summary>
-        /// <param name="preset"> Combo preset to enabled. </param>
-        private static void EnableParentPresets(CustomComboPreset preset)
-        {
-            var parentMaybe = PresetStorage.GetParent(preset);
-
-            while (parentMaybe != null)
-            {
-                var parent = parentMaybe.Value;
-
-                if (!Service.Configuration.EnabledActions.Contains(parent))
-                {
-                    Service.Configuration.EnabledActions.Add(parent);
-                    foreach (var conflict in PresetStorage.GetConflicts(parent))
-                    {
-                        Service.Configuration.EnabledActions.Remove(conflict);
-                    }
-                }
-
-                parentMaybe = PresetStorage.GetParent(parent);
-            }
         }
     }
 }

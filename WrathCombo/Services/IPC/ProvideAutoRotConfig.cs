@@ -2,6 +2,7 @@
 
 using System;
 using ECommons.EzIpcManager;
+using arcOption = WrathCombo.Services.IPC.AutoRotationConfigOption;
 
 #endregion
 
@@ -12,20 +13,36 @@ public partial class Provider
     /// <summary>
     ///     Get the state of Auto-Rotation Configuration in Wrath Combo.
     /// </summary>
-    /// <param name="option">The option to check the value of.</param>
+    /// <param name="passedOption">
+    ///     The option to check the value of.
+    /// </param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <returns>The correctly-typed value of the configuration.</returns>
     [EzIPC]
-    public object? GetAutoRotationConfigState(AutoRotationConfigOption option)
+    public object? GetAutoRotationConfigState(object passedOption)
     {
-        var type = Helper.GetAutoRotationConfigType(option);
-
-        // Check if the config is overriden by a lease
-        var checkControlled = _leasing.CheckAutoRotationConfigControlled(option);
-        if (checkControlled is not null)
+        // Try to cast the input to an Auto-Rotation Configuration option
+        arcOption option;
+        try
         {
-            return type.IsEnum
-                ? checkControlled.Value
-                : Convert.ChangeType(checkControlled.Value, type);
+            option = (arcOption)Convert.ToInt32(passedOption);
+
+            // Check if the config is overriden by a lease
+            var checkControlled = Leasing.CheckAutoRotationConfigControlled(option);
+            if (checkControlled is not null)
+            {
+                var type = Helper.GetAutoRotationConfigType(option);
+                return type.IsEnum
+                    ? checkControlled.Value
+                    : Convert.ChangeType(checkControlled.Value, type);
+            }
+        }
+        catch (Exception)
+        {
+            Logging.Warn("Invalid or not-yet-implemented `option` of " +
+                          $"'{passedOption}'. Please refer to " +
+                          "WrathCombo.Services.IPC.AutoRotationConfigOption");
+            return null;
         }
 
         // Otherwise, return the actual config value
@@ -36,39 +53,37 @@ public partial class Provider
         {
             return option switch
             {
-                AutoRotationConfigOption.InCombatOnly => arc.InCombatOnly,
-                AutoRotationConfigOption.DPSRotationMode => arc.DPSRotationMode,
-                AutoRotationConfigOption.HealerRotationMode =>
-                    arc.HealerRotationMode,
-                AutoRotationConfigOption.FATEPriority => arcD.FATEPriority,
-                AutoRotationConfigOption.QuestPriority => arcD.QuestPriority,
-                AutoRotationConfigOption.SingleTargetHPP => arcH.SingleTargetHPP,
-                AutoRotationConfigOption.AoETargetHPP => arcH.AoETargetHPP,
-                AutoRotationConfigOption.SingleTargetRegenHPP => arcH
-                    .SingleTargetRegenHPP,
-                AutoRotationConfigOption.ManageKardia => arcH.ManageKardia,
-                AutoRotationConfigOption.AutoRez => arcH.AutoRez,
-                AutoRotationConfigOption.AutoRezDPSJobs => arcH.AutoRezDPSJobs,
-                AutoRotationConfigOption.AutoCleanse => arcH.AutoCleanse,
-                _ => throw new ArgumentOutOfRangeException(nameof(option), option,
-                    null)
+                arcOption.InCombatOnly => arc.InCombatOnly,
+                arcOption.DPSRotationMode => arc.DPSRotationMode,
+                arcOption.HealerRotationMode => arc.HealerRotationMode,
+                arcOption.FATEPriority => arcD.FATEPriority,
+                arcOption.QuestPriority => arcD.QuestPriority,
+                arcOption.SingleTargetHPP => arcH.SingleTargetHPP,
+                arcOption.AoETargetHPP => arcH.AoETargetHPP,
+                arcOption.SingleTargetRegenHPP => arcH.SingleTargetRegenHPP,
+                arcOption.ManageKardia => arcH.ManageKardia,
+                arcOption.AutoRez => arcH.AutoRez,
+                arcOption.AutoRezDPSJobs => arcH.AutoRezDPSJobs,
+                arcOption.AutoCleanse => arcH.AutoCleanse,
+                arcOption.IncludeNPCs => arcH.IncludeNPCs,
+                arcOption.OnlyAttackInCombat => arcD.OnlyAttackInCombat,
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(passedOption), passedOption, null)
             };
         }
-#pragma warning disable CS0168 // Variable is declared but never used
-        catch (Exception _)
+        catch (Exception)
         {
-            Logging.Error("Invalid `option`. Please refer to " +
+            Logging.Error($"Invalid `option` of '{passedOption}'. Please refer to " +
                           "WrathCombo.Services.IPC.AutoRotationConfigOption");
             return null;
         }
-#pragma warning restore CS0168 // Variable is declared but never used
     }
 
     /// <summary>
     ///     Set the state of Auto-Rotation Configuration in Wrath Combo.
     /// </summary>
     /// <param name="lease">Your lease ID from <see cref="RegisterForLease(string,string)" /></param>
-    /// <param name="option">
+    /// <param name="passedOption">
     ///     The Auto-Rotation Configuration option you want to set.<br />
     ///     This is a subset of the Auto-Rotation options, flattened into a single
     ///     enum.
@@ -77,24 +92,41 @@ public partial class Provider
     ///     The value you want to set the option to.<br />
     ///     All valid options can be parsed from an int, or the exact expected types.
     /// </param>
-    /// <value>+1 <c>set</c></value>
     /// <seealso cref="AutoRotationConfigOption"/>
     [EzIPC]
-    public void SetAutoRotationConfigState
-        (Guid lease, AutoRotationConfigOption option, object value)
+    public void SetAutoRotationConfigState(Guid lease, object passedOption, object value)
     {
         // Bail for standard conditions
-        if (_helper.CheckForBailConditionsAtSetTime(lease, 1))
+        if (Helper.CheckForBailConditionsAtSetTime(lease))
             return;
 
-        // Try to convert the value to the correct type
-        var type = Helper.GetAutoRotationConfigType(option);
-        var typeCode = Type.GetTypeCode(type);
+        // Try to cast the input to an Auto-Rotation Configuration option
+        arcOption option;
+        Type? type;
+        TypeCode? typeCode;
+        try
+        {
+            option = (arcOption)Convert.ToInt32(passedOption);
+
+            // Try to convert the value to the correct type
+            type = Helper.GetAutoRotationConfigType(option);
+            typeCode = Type.GetTypeCode(type);
+        }
+        catch (Exception)
+        {
+            Logging.Warn("Invalid or not-yet-implemented `option` of " +
+                          $"'{passedOption}'. Please refer to " +
+                          "WrathCombo.Services.IPC.AutoRotationConfigOption");
+            return;
+        }
+
         object convertedValue;
         try
         {
+            // Handle enum values as any number type, and convert it to the real enum
             if (type.IsEnum && typeCode is >= TypeCode.SByte and <= TypeCode.UInt64)
                 convertedValue = Enum.ToObject(type, value);
+            // Convert anything else directly
             else
                 convertedValue = Convert.ChangeType(value, type);
         }
@@ -112,7 +144,7 @@ public partial class Provider
         if (type == typeof(bool))
             convertedValue = (bool)convertedValue ? 1 : 0;
 
-        _leasing.AddRegistrationForAutoRotationConfig(
+        Leasing.AddRegistrationForAutoRotationConfig(
             lease, option, (int)convertedValue);
     }
 }

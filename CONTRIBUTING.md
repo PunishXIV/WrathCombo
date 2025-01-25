@@ -1,4 +1,8 @@
-﻿# Rotations
+﻿# Guides on using specific parts of Wrath
+
+- [IPC](/docs/IPC.md) - for other plugins to control Wrath Combo settings.
+
+# Rotations
 Rotations refer to the code behind the Combo presets, specifically the logic
 that appears in the `Invoke` methods in the `Combos/` [`PvE`](/WrathCombo/Combos/PvE)
 and [`PvP`](/WrathCombo/Combos/PvP)  folders.
@@ -34,19 +38,29 @@ Presets are all defined in [`CustomComboPreset.cs`](/WrathCombo/Combos/CustomCom
 
 ### [Tanks] Mitigations Option template:
 - Simple Mode - Single Target
-  - Include "Mitigation Options" (Content Difficulty Filtering)
+  - Include Mitigation Options (Content Difficulty Filtering)
 - Simple Mode - AoE
-  - Include "Mitigation Options"
+  - Include Mitigation Options
 - Advanced Mode - Single Target
-  - "Mitigation Options" (Content Difficulty Filtering)
+  - Mitigation Options (Content Difficulty Filtering)
     - All <60s mitigations (HP% slider, boss filtering)
     - All heals/mitigations that heal (HP% slider, boss filtering)
     - Invuln (enemy HP% slider, self HP% slider, boss filtering)
 - Advanced Mode - AoE
-  - "Mitigation Options"
+  - Mitigation Options
     - All heals/mitigations that heal (HP% slider)
     - Invuln (enemy HP% slider, self HP% slider)
     - All other mitigations, including `Reprisal`, `Arm's Length`, etc without options
+- One-Button Mitigation Feature (User-Prioritized)
+  - Emergency Invuln Option (Content Difficulty Filtering)
+  - Spammable Mitigation Options (Content Difficulty Filtering)
+  - Reprisal
+  - Group Mitigation (Party-check Option)
+  - Bigger Mitigation Options (HP% slider)
+  - Arm's Length (boss filtering, Nearby-Enemy-Count slider)
+    - Mitigation should be roughly ordered by default from lowest mit to highest,
+      shortest to longest cooldown.
+    - Any mitigation options that have charges should have a charge slider.
 
 ## Concerning Conflicts
 - Conflicts should always go both ways. If X conflicts with Y, Y must conflict with X.
@@ -67,7 +81,3 @@ will need backed by a `User...`-Type option, e.g.
 [`UserBool`](/WrathCombo/CustomCombo/Functions/Config.cs#L64), etc, 
 which can then be referenced in [rotation](#rotations) code as
 `Config.<your config's name>`.
-
-# Guides on using specific parts of Wrath
-
-- [IPC](/docs/IPC.md) - for other plugins to control Wrath Combo settings.

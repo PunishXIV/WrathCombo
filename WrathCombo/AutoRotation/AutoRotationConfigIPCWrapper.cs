@@ -93,13 +93,23 @@ public class DPSSettingsIPCWrapper(DPSSettings settings)
         }
     }
 
+    public bool OnlyAttackInCombat
+    {
+        get
+        {
+            var checkControlled =
+                P.UIHelper.AutoRotationConfigControlled("OnlyAttackInCombat");
+            return checkControlled is not null
+                ? checkControlled.Value.state == 1
+                : settings.QuestPriority;
+        }
+    }
+
     #region Direct Pass-Throughs (no IPC check)
 
     public int? DPSAoETargets => settings.DPSAoETargets;
 
     public bool PreferNonCombat => settings.PreferNonCombat;
-
-    public bool OnlyAttackInCombat => settings.OnlyAttackInCombat;
 
     public float MaxDistance => settings.MaxDistance;
 

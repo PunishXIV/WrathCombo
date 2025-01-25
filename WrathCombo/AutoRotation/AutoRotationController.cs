@@ -217,7 +217,7 @@ namespace WrathCombo.AutoRotation
             if (ActionManager.Instance()->QueuedActionId == resSpell)
                 ActionManager.Instance()->QueuedActionId = 0;
 
-            if (Player.Object.CurrentMp >= GetResourceCost(resSpell) && ActionReady(resSpell) && ActionManager.Instance()->GetActionStatus(ActionType.Action, resSpell) == 0)
+            if (Player.Object.CurrentMp >= GetResourceCost(resSpell) && ActionReady(resSpell))
             {
                 var timeSinceLastRez = TimeSpan.FromMilliseconds(ActionWatching.TimeSinceLastSuccessfulCast(resSpell));
                 if ((ActionWatching.TimeSinceLastSuccessfulCast(resSpell) != -1f && timeSinceLastRez.TotalSeconds < 4) || Player.Object.IsCasting())
@@ -415,12 +415,12 @@ namespace WrathCombo.AutoRotation
                 }
                 else
                 {
-                    uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, Player.Object));
+                    var target = DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
+                    uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct));
                     if (!CanQueue(outAct)) return false;
                     if (!ActionReady(outAct))
                         return false;
 
-                    var target = GetSingleTarget(mode);
                     var sheet = Svc.Data.GetExcelSheet<Action>().GetRow(outAct);
                     var mustTarget = sheet.CanTargetHostile;
                     var numEnemies = NumberOfEnemiesInRange(gameAct, target, true);

@@ -1,7 +1,6 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM

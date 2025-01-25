@@ -1,6 +1,6 @@
-using System.Numerics;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -75,9 +75,9 @@ internal partial class GNB
             GNB_Mit_Corundum_Health = new("GNB_Mit_Corundum_Health", 60),
             GNB_Mit_Aurora_Charges = new("GNB_Mit_Aurora_Charges", 0),
             GNB_Mit_Aurora_Health = new("GNB_Mit_Aurora_Health", 60),
-            GNB_Mit_HeartOfLight_PartyRequirement = new("GNB_Mit_HeartOfLight_PartyRequirement", (int)PartyRequirement.Yes),
+            GNB_Mit_HeartOfLight_PartyRequirement = new("GNB_Mit_HeartOfLight_PartyRequirement", (int) PartyRequirement.Yes),
             GNB_Mit_Rampart_Health = new("GNB_Mit_Rampart_Health", 65),
-            GNB_Mit_ArmsLength_Boss = new("GNB_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
+            GNB_Mit_ArmsLength_Boss = new("GNB_Mit_ArmsLength_Boss", (int) BossAvoidance.On),
             GNB_Mit_ArmsLength_EnemyCount = new("GNB_Mit_ArmsLength_EnemyCount", 0),
             GNB_Mit_Nebula_Health = new("GNB_Mit_Nebula_Health", 50),
 
@@ -142,7 +142,6 @@ internal partial class GNB
                         "Player HP% to be \nless than or equal to:", 200);
 
                     break;
-
 
                 case CustomComboPreset.GNB_ST_Simple:
                     UserConfig.DrawHorizontalRadioButton(GNB_ST_MitsOptions,
@@ -404,12 +403,12 @@ internal partial class GNB
                         GNB_Mit_HeartOfLight_PartyRequirement,
                         "Require party",
                         "Will not use Heart of Light unless there are 2 or more party members.",
-                        outputValue: (int)PartyRequirement.Yes);
+                        outputValue: (int) PartyRequirement.Yes);
                     UserConfig.DrawHorizontalRadioButton(
                         GNB_Mit_HeartOfLight_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Heart of Light.",
-                        outputValue: (int)PartyRequirement.No);
+                        outputValue: (int) PartyRequirement.No);
 
                     UserConfig.DrawPriorityInput(GNB_Mit_Priorities,
                         numberMitigationOptions, 4,
@@ -432,11 +431,11 @@ internal partial class GNB
                     UserConfig.DrawHorizontalRadioButton(
                         GNB_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
-                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         GNB_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
-                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
 
                     UserConfig.DrawSliderInt(0, 3, GNB_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)");

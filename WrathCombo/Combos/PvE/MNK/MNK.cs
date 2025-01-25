@@ -1,9 +1,8 @@
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
-
 namespace WrathCombo.Combos.PvE;
 
-internal static partial class MNK
+internal partial class MNK
 {
     internal class MNK_ST_SimpleMode : CustomCombo
     {
@@ -31,6 +30,7 @@ internal static partial class MNK
                 return Variant.VariantCure;
 
             if (ActionReady(RiddleOfFire) &&
+                !HasEffect(Buffs.FiresRumination) &&
                 CanDelayedWeave())
                 return RiddleOfFire;
 
@@ -46,7 +46,8 @@ internal static partial class MNK
                 if (ActionReady(Brotherhood))
                     return Brotherhood;
 
-                if (ActionReady(RiddleOfWind))
+                if (ActionReady(RiddleOfWind) &&
+                    !HasEffect(Buffs.WindsRumination))
                     return RiddleOfWind;
 
                 //Perfect Balance
@@ -80,7 +81,7 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
                     return Gauge.OpoOpoFury == 0
                         ? DragonKick
                         : OriginalHook(Bootshine);
@@ -154,8 +155,7 @@ internal static partial class MNK
                 if (Opener().FullOpener(ref actionID))
                 {
                     if (IsOnCooldown(RiddleOfWind) &&
-                        CanWeave() &&
-                        Gauge.Chakra >= 5)
+                        CanWeave() && Gauge.Chakra >= 5)
                         return TheForbiddenChakra;
 
                     return actionID;
@@ -169,6 +169,7 @@ internal static partial class MNK
 
             if (IsEnabled(CustomComboPreset.MNK_STUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_STUseROF) &&
+                !HasEffect(Buffs.FiresRumination) &&
                 ActionReady(RiddleOfFire) &&
                 CanDelayedWeave() &&
                 GetTargetHPPercent() >= Config.MNK_ST_RiddleOfFire_HP)
@@ -191,6 +192,7 @@ internal static partial class MNK
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
+                        !HasEffect(Buffs.WindsRumination) &&
                         ActionReady(RiddleOfWind) &&
                         GetTargetHPPercent() >= Config.MNK_ST_RiddleOfWind_HP)
                         return RiddleOfWind;
@@ -234,7 +236,7 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
                     return Gauge.OpoOpoFury == 0
                         ? DragonKick
                         : OriginalHook(Bootshine);
@@ -315,6 +317,7 @@ internal static partial class MNK
                 return Variant.VariantCure;
 
             if (ActionReady(RiddleOfFire) &&
+                !HasEffect(Buffs.FiresRumination) &&
                 CanDelayedWeave())
                 return RiddleOfFire;
 
@@ -330,7 +333,8 @@ internal static partial class MNK
                 if (ActionReady(Brotherhood))
                     return Brotherhood;
 
-                if (ActionReady(RiddleOfWind))
+                if (ActionReady(RiddleOfWind) &&
+                    !HasEffect(Buffs.WindsRumination))
                     return RiddleOfWind;
 
                 if (ActionReady(PerfectBalance) &&
@@ -338,8 +342,8 @@ internal static partial class MNK
                     (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance) ||
                      GetCooldownRemainingTime(PerfectBalance) <= 4 ||
                      HasEffect(Buffs.Brotherhood) ||
-                     (HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10) ||
-                     (GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8)))
+                     HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10 ||
+                     GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8))
                     return PerfectBalance;
 
                 if (Gauge.Chakra >= 5 &&
@@ -376,7 +380,7 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
                     return LevelChecked(ShadowOfTheDestroyer)
                         ? ShadowOfTheDestroyer
                         : Rockbreaker;
@@ -448,6 +452,7 @@ internal static partial class MNK
 
             if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
+                !HasEffect(Buffs.FiresRumination) &&
                 ActionReady(RiddleOfFire) &&
                 CanDelayedWeave() &&
                 GetTargetHPPercent() >= Config.MNK_AoE_RiddleOfFire_HP)
@@ -471,6 +476,7 @@ internal static partial class MNK
 
                     if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
                         ActionReady(RiddleOfWind) &&
+                        !HasEffect(Buffs.WindsRumination) &&
                         GetTargetHPPercent() >= Config.MNK_AoE_RiddleOfWind_HP)
                         return RiddleOfWind;
                 }
@@ -481,8 +487,8 @@ internal static partial class MNK
                     (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance) ||
                      GetCooldownRemainingTime(PerfectBalance) <= 4 ||
                      HasEffect(Buffs.Brotherhood) ||
-                     (HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10) ||
-                     (GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8)))
+                     HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10 ||
+                     GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8))
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseHowlingFist) &&
@@ -533,7 +539,7 @@ internal static partial class MNK
             {
                 #region Open Lunar
 
-                if (!LunarNadi || BothNadisOpen || (!SolarNadi && !LunarNadi))
+                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
                     return LevelChecked(ShadowOfTheDestroyer)
                         ? ShadowOfTheDestroyer
                         : Rockbreaker;

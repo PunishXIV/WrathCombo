@@ -116,6 +116,11 @@ namespace WrathCombo
                 PvEFeatures.HasToOpenJob = true;
                 WrathOpener.SelectOpener();
                 P.IPCSearch.UpdateActiveJobPresets();
+                if (Service.Configuration.RotationConfig.EnableInInstance && Content.InstanceContentRow?.RowId > 0)
+                    Service.Configuration.RotationConfig.Enabled = true;
+
+                if (Service.Configuration.RotationConfig.DisableAfterInstance && Content.InstanceContentRow?.RowId == 0)
+                    Service.Configuration.RotationConfig.Enabled = false;
 
                 return true;
             }, "UpdateCaches");
@@ -140,7 +145,7 @@ namespace WrathCombo
             Service.IconReplacer = new IconReplacer();
             ActionWatching.Enable();
             AST.InitCheckCards();
-            IPC = Provider.CreateAsync().Result;
+            IPC = Provider.InitAsync().Result;
 
             ConfigWindow = new ConfigWindow();
             SettingChangeWindow = new SettingChangeWindow();
@@ -189,7 +194,7 @@ namespace WrathCombo
             UpdateCaches();
         }
 
-        private const string OptionControlledByIPC =
+        public const string OptionControlledByIPC =
             "(being overwritten by another plugin, check the setting in /wrath)";
 
         private void ToggleAutorot(bool value)
@@ -240,6 +245,7 @@ namespace WrathCombo
             BlueMageService.PopulateBLUSpells();
             TargetHelper.Draw();
             AutoRotationController.Run();
+            PluginConfiguration.ProcessSaveQueue();
 
             // Skip the IPC checking if hidden
             if (DtrBarEntry.UserHidden) return;
@@ -339,6 +345,15 @@ namespace WrathCombo
         {
             ConfigWindow?.Dispose();
 
+            // Try to force a config save if there are some pending
+            if (PluginConfiguration.SaveQueue.Count > 0)
+                lock (PluginConfiguration.SaveQueue)
+                {
+                    PluginConfiguration.SaveQueue.Clear();
+                    Service.Configuration.Save();
+                    PluginConfiguration.ProcessSaveQueue();
+                }
+
             ws.RemoveAllWindows();
             Svc.DtrBar.Remove("Wrath Combo");
             Svc.Framework.Update -= OnFrameworkUpdate;
@@ -369,11 +384,7 @@ namespace WrathCombo
             {
                 case "unsetall": // unset all features
                     {
-                        foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>())
-                        {
-                            Service.Configuration.EnabledActions.Remove(preset);
-                        }
-
+                        Service.Configuration.EnabledActions.Clear();
                         DuoLog.Information("All UNSET");
                         Service.Configuration.Save();
                         break;
@@ -382,19 +393,14 @@ namespace WrathCombo
                 case "set": // set a feature
                     {
                         string? targetPreset = argumentsParts[1].ToLowerInvariant();
-                        foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>())
+                        if (int.TryParse(targetPreset, out int number))
                         {
-                            if (!preset.ToString().Equals(targetPreset, StringComparison.InvariantCultureIgnoreCase))
-                                continue;
-
-                            Service.Configuration.EnabledActions.Add(preset);
-                            if (int.TryParse(preset.ToString(), out int pres)) continue;
-                            var controlled =
-                                P.UIHelper.PresetControlled(preset) is not null;
-                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
-                            DuoLog.Information($"{preset} SET{ctrlText}");
+                            PresetStorage.EnablePreset(number, true);
                         }
-
+                        else
+                        {
+                            PresetStorage.EnablePreset(targetPreset, true);
+                        }
                         Service.Configuration.Save();
                         break;
                     }
@@ -402,26 +408,14 @@ namespace WrathCombo
                 case "toggle": // toggle a feature
                     {
                         string? targetPreset = argumentsParts[1].ToLowerInvariant();
-                        foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>())
+                        if (int.TryParse(targetPreset, out int number))
                         {
-                            if (!preset.ToString().Equals(targetPreset, StringComparison.InvariantCultureIgnoreCase))
-                                continue;
-
-                            if (int.TryParse(preset.ToString(), out int pres)) continue;
-                            var controlled =
-                                P.UIHelper.PresetControlled(preset) is not null;
-                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
-                            if (!Service.Configuration.EnabledActions.Remove(preset))
-                            {
-                                Service.Configuration.EnabledActions.Add(preset);
-                                DuoLog.Information($"{preset} SET{ctrlText}");
-                            }
-                            else
-                            {
-                                DuoLog.Information($"{preset} UNSET{ctrlText}");
-                            }
+                            PresetStorage.TogglePreset(number, true);
                         }
-
+                        else
+                        {
+                            PresetStorage.TogglePreset(targetPreset, true);
+                        }
                         Service.Configuration.Save();
                         break;
                     }
@@ -429,19 +423,14 @@ namespace WrathCombo
                 case "unset": // unset a feature
                     {
                         string? targetPreset = argumentsParts[1].ToLowerInvariant();
-                        foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>())
+                        if (int.TryParse(targetPreset, out int number))
                         {
-                            if (!preset.ToString().Equals(targetPreset, StringComparison.InvariantCultureIgnoreCase))
-                                continue;
-
-                            Service.Configuration.EnabledActions.Remove(preset);
-                            if (int.TryParse(preset.ToString(), out int pres)) continue;
-                            var controlled =
-                                P.UIHelper.PresetControlled(preset) is not null;
-                            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
-                            DuoLog.Information($"{preset} UNSET{ctrlText}"); ;
+                            PresetStorage.DisablePreset(number, true);
                         }
-
+                        else
+                        {
+                            PresetStorage.DisablePreset(targetPreset, true);
+                        }
                         Service.Configuration.Save();
                         break;
                     }
@@ -459,7 +448,7 @@ namespace WrathCombo
                                 var controlled =
                                     P.UIHelper.PresetControlled(preset) is not null;
                                 var ctrlText = controlled ? " " + OptionControlledByIPC : "";
-                                DuoLog.Information(preset + ctrlText);
+                                DuoLog.Information($"{(int)preset} - {preset}{ctrlText}");
                             }
                         }
 
@@ -470,7 +459,7 @@ namespace WrathCombo
                                 var controlled =
                                     P.UIHelper.PresetControlled(preset) is not null;
                                 var ctrlText = controlled ? " " + OptionControlledByIPC : "";
-                                DuoLog.Information(preset + ctrlText);
+                                DuoLog.Information($"{(int)preset} - {preset}{ctrlText}");
                             }
                         }
 
@@ -481,7 +470,7 @@ namespace WrathCombo
                                 var controlled =
                                     P.UIHelper.PresetControlled(preset) is not null;
                                 var ctrlText = controlled ? " " + OptionControlledByIPC : "";
-                                DuoLog.Information(preset + ctrlText);
+                                DuoLog.Information($"{(int)preset} - {preset}{ctrlText}");
                             }
                         }
 

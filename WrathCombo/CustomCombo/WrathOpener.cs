@@ -5,8 +5,8 @@ using ECommons.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using WrathCombo.Combos.JobHelpers.Enums;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -202,7 +202,7 @@ namespace WrathCombo.CustomComboNS
                             DelayedStep = OpenerStep;
                         }
 
-                        if ((DateTime.Now - DelayedAt).TotalSeconds < HoldDelay && !InCombat())
+                        if ((DateTime.Now - DelayedAt).TotalSeconds < HoldDelay && !PartyInCombat())
                         {
                             ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
                             actionID = 11;
@@ -216,7 +216,7 @@ namespace WrathCombo.CustomComboNS
                         CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                     }
 
-                    while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) && ActionWatching.TimeSinceLastAction.TotalSeconds > 1.5)
+                    while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) && ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
                     {
                         if (OpenerStep >= OpenerActions.Count)
                             break;

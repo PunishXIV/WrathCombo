@@ -97,7 +97,6 @@ internal static partial class SCH
                 { Biolysis, Debuffs.Biolysis }
         };
 
-
     #endregion
 
     // Class Gauge

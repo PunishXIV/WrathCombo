@@ -1,6 +1,7 @@
 ﻿using Dalamud.Utility;
 using ECommons;
 using ECommons.DalamudServices;
+using ECommons.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
+using static FFXIVClientStructs.FFXIV.Client.UI.RaptureAtkHistory.Delegates;
 
 namespace WrathCombo.Core
 {
@@ -103,5 +105,158 @@ namespace WrathCombo.Core
 
         /// <summary> Get all the info from conflicted combos. </summary>
         public static List<CustomComboPreset[]> GetAllConflictOriginals() => ConflictingCombos.Values.ToList();
+
+        public static CustomComboPreset? GetPresetByString(string value)
+        {
+            if (Enum.GetValues<CustomComboPreset>().TryGetFirst(x => x.ToString().ToLower() == value.ToLower(), out var pre))
+            {
+                return pre;
+            }
+            return null;
+        }
+
+        public static CustomComboPreset? GetPresetByInt(int value)
+        {
+            if (Enum.GetValues<CustomComboPreset>().TryGetFirst(x => (int)x == value, out var pre))
+            {
+                return pre;
+            }
+            return null;
+        }
+
+        /// <summary> Iterates up a preset's parent tree, enabling each of them. </summary>
+        /// <param name="preset"> Combo preset to enabled. </param>
+        public static void EnableParentPresets(CustomComboPreset preset)
+        {
+            var parentMaybe = GetParent(preset);
+
+            while (parentMaybe != null)
+            {
+                EnablePreset(parentMaybe.Value);
+                parentMaybe = GetParent(parentMaybe.Value);
+            }
+        }
+
+        public static void DisableAllConflicts(CustomComboPreset preset)
+        {
+            var conflicts = GetConflicts(preset);
+            foreach (var conflict in conflicts)
+            {
+                Service.Configuration.EnabledActions.Remove(conflict);
+            }
+        }
+
+        public static bool EnablePreset(string preset, bool outputLog = false)
+        {
+            var pre = GetPresetByString(preset);
+            if (pre != null)
+            {
+                return EnablePreset(pre.Value, outputLog);
+            }
+            return false;
+        }
+
+        public static bool EnablePreset(int preset, bool outputLog = false)
+        {
+            var pre = GetPresetByInt(preset);
+            if (pre != null)
+            {
+                return EnablePreset(pre.Value, outputLog);
+            }
+            return false;
+        }
+
+        public static bool EnablePreset(CustomComboPreset preset, bool outputLog = false)
+        {
+            var ctrlText = GetControlledText(preset);
+            EnableParentPresets(preset);
+            var ret = Service.Configuration.EnabledActions.Add(preset);
+            DisableAllConflicts(preset);
+
+            if (outputLog)
+                DuoLog.Information($"{(int)preset} - {preset} SET{ctrlText}");
+
+            return ret;
+        }
+
+
+        public static bool DisablePreset(string preset, bool outputLog = false)
+        {
+            var pre = GetPresetByString(preset);
+            if (pre != null)
+            {
+                return DisablePreset(pre.Value, outputLog);
+            }
+            return false;
+        }
+
+        public static bool DisablePreset(int preset, bool outputLog = false)
+        {
+            var pre = GetPresetByInt(preset);
+            if (pre != null)
+            {
+                return DisablePreset(pre.Value, outputLog);
+            }
+            return false;
+        }
+
+        public static bool DisablePreset(CustomComboPreset preset, bool outputLog = false)
+        {
+            if (Service.Configuration.EnabledActions.Remove(preset))
+            {
+                var ctrlText = GetControlledText(preset);
+
+                if (outputLog)
+                    DuoLog.Information($"{(int)preset} - {preset} UNSET{ctrlText}");
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static object GetControlledText(CustomComboPreset preset)
+        {
+            var controlled = P.UIHelper.PresetControlled(preset) is not null;
+            var ctrlText = controlled ? " " + OptionControlledByIPC : "";
+
+            return ctrlText;
+        }
+
+        public static bool TogglePreset(CustomComboPreset preset, bool outputLog = false)
+        {
+            var ctrlText = GetControlledText(preset);
+            if (!Service.Configuration.EnabledActions.Remove(preset))
+            {
+                var ret = EnablePreset(preset);
+                if (outputLog)
+                    DuoLog.Information($"{(int)preset} - {preset} SET{ctrlText}");
+            }
+            else if (outputLog)
+            {
+                DuoLog.Information($"{(int)preset} - {preset} UNSET{ctrlText}");
+            }
+            return false;
+        }
+
+        public static bool TogglePreset(string preset, bool outputLog = false)
+        {
+            var pre = GetPresetByString(preset);
+            if (pre != null)
+            {
+                return TogglePreset(pre.Value, outputLog);
+            }
+            return false;
+        }
+
+        public static bool TogglePreset(int preset, bool outputLog = false)
+        {
+            var pre = GetPresetByInt(preset);
+            if (pre != null)
+            {
+                return TogglePreset(pre.Value, outputLog);
+            }
+            return false;
+        }
     }
 }

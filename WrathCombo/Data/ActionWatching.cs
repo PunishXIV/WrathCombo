@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -53,6 +54,10 @@ namespace WrathCombo.Data
 
         private unsafe delegate void ReceiveActionEffectDelegate(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds);
         private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
+
+        private unsafe delegate bool UseActionDelegate(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted);
+        private readonly static Hook<UseActionDelegate>? UseActionHook;
+
         private unsafe static void ReceiveActionEffectDetour(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds)
         {
             ReceiveActionEffectHook!.Original(casterEntityId, casterPtr, targetPos, header, effects, targetEntityIds);
@@ -74,7 +79,9 @@ namespace WrathCombo.Data
                 {
                     foreach (var eff in target.effects)
                     {
-                        Svc.Log.Debug($"{eff.Type}, {eff.Value} ({header->ActionId.ActionName()}) -> {Svc.Objects.First(x => x.GameObjectId == target.id).Name}, {eff.AtSource}/{eff.FromTarget}");
+#if DEBUG
+                        Svc.Log.Verbose($"{eff.Type}, {eff.Value} 0:{eff.Param0}, 1:{eff.Param1}, 2:{eff.Param2}, 3:{eff.Param3}, 4:{eff.Param4} | ({header->ActionId.ActionName()}) -> {Svc.Objects.First(x => x.GameObjectId == target.id).Name}, {eff.AtSource}/{eff.FromTarget}");
+#endif
                         if (eff.Type is ActionEffectType.Heal or ActionEffectType.Damage)
                         {
                             if (GetPartyMembers().Any(x => x.GameObjectId == target.id))
@@ -327,16 +334,36 @@ namespace WrathCombo.Data
 
         public static void Dispose()
         {
+            Disable();
             ReceiveActionEffectHook?.Dispose();
             SendActionHook?.Dispose();
             canQueueAction?.Dispose();
+            UseActionHook?.Dispose();
         }
 
         static unsafe ActionWatching()
         {
             ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<ReceiveActionEffectDelegate>(Addresses.Receive.Value, ReceiveActionEffectDetour);
             SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
+            UseActionHook ??= Svc.Hook.HookFromAddress<UseActionDelegate>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
             canQueueAction ??= Svc.Hook.HookFromSignature<CanQueueActionDelegate>("E8 ?? ?? ?? ?? 84 C0 74 37 8B 84 24 ?? ?? 00 00", CanQueueDetour);
+        }
+
+        private unsafe static bool UseActionDetour(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
+        {
+            if (Service.Configuration.PerformanceMode)
+            {
+                var result = actionId;
+                foreach (var combo in IconReplacer.FilteredCombos)
+                {
+                    if (combo.TryInvoke(actionId, out result))
+                    {
+                        actionId = result;
+                        break;
+                    }
+                }
+            }
+            return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         }
 
         private static unsafe bool CanQueueDetour(ActionManager* actionManager, uint actionType, uint actionID)
@@ -348,6 +375,7 @@ namespace WrathCombo.Data
         {
             ReceiveActionEffectHook?.Enable();
             SendActionHook?.Enable();
+            UseActionHook?.Enable();
             Svc.Condition.ConditionChange += ResetActions;
         }
 
@@ -368,6 +396,8 @@ namespace WrathCombo.Data
         {
             ReceiveActionEffectHook.Disable();
             SendActionHook?.Disable();
+            canQueueAction?.Disable();
+            UseActionHook?.Disable();
             Svc.Condition.ConditionChange -= ResetActions;
         }
 

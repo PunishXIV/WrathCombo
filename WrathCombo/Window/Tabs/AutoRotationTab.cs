@@ -61,6 +61,9 @@ namespace WrathCombo.Window.Tabs
                 }
             }
 
+            changed |= ImGui.Checkbox("Enable Automatically in Instanced Content", ref cfg.EnableInInstance);
+            changed |= ImGui.Checkbox("Disable After Leaving Instanced Content", ref cfg.DisableAfterInstance);
+
             if (ImGui.CollapsingHeader("Damage Settings"))
             {
                 ImGuiEx.TextUnderlined($"Targeting Mode");
@@ -106,7 +109,8 @@ namespace WrathCombo.Window.Tabs
                 if (cfg.DPSSettings.PreferNonCombat && changed)
                     cfg.DPSSettings.OnlyAttackInCombat = false;
 
-                changed |= ImGui.Checkbox($"Only Attack Targets Already In Combat", ref cfg.DPSSettings.OnlyAttackInCombat);
+                changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                    "Only Attack Targets Already In Combat", ref cfg.InCombatOnly, "OnlyAttackInCombat");
 
                 if (cfg.DPSSettings.OnlyAttackInCombat && changed)
                     cfg.DPSSettings.PreferNonCombat = false;
