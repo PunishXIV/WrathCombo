@@ -10,6 +10,7 @@ using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.Extensions;
 using WrathCombo.Window;
+using WrathCombo.Window.Tabs;
 
 namespace WrathCombo.Core
 {
@@ -313,7 +314,13 @@ namespace WrathCombo.Core
         ///     were added, each frame.
         /// </remarks>
         /// <seealso cref="SaveQueue"/>
-        public void Save() => SaveQueue.Enqueue(this);
+        public void Save()
+        {
+            if (Debug.DebugConfig)
+                return;
+
+            SaveQueue.Enqueue(this);
+        }
 
         #endregion
     }

@@ -82,6 +82,14 @@ namespace WrathCombo.Window.Tabs
                     "Nearest - Prioritises the closest target to you.\n" +
                     "Furthest - Prioritises the furthest target from you.");
                 ImGui.Spacing();
+
+                if (cfg.DPSRotationMode == AutoRotation.DPSRotationMode.Manual)
+                {
+                    changed |= ImGui.Checkbox("Enforce Best AoE Target Selection", ref cfg.DPSSettings.AoEIgnoreManual);
+
+                    ImGuiComponents.HelpMarker("For all other targeting modes, AoE will target based on highest number of targets hit. In manual mode, it will only do this if you tick this box.");
+                }
+
                 var input = ImGuiEx.InputInt(100f.Scale(), "Targets Required for AoE Damage Features", ref cfg.DPSSettings.DPSAoETargets);
                 if (input)
                 {

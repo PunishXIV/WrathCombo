@@ -114,6 +114,7 @@ internal partial class RDM
                         }
                         ImGui.Unindent();
                     }
+                    DrawAdditionalBoolChoice(RDM_ST_MeleeEnforced, "Enforced Melee Check", "Once the melee combo has started, don't switch away even if target is out of range.");
                     break;
 
                 case CustomComboPreset.RDM_ST_MeleeFinisher:
@@ -168,7 +169,6 @@ internal partial class RDM
                         DrawHorizontalMultiChoice(RDM_AoE_MeleeCombo_OnAction, Moulinet.ActionName(), "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
                         ImGui.Unindent();
                     }
-                    DrawAdditionalBoolChoice(RDM_ST_MeleeEnforced, "Enforced Melee Check", "Once the melee combo has started, don't switch away even if target is out of range.");
                     break;
 
                 case CustomComboPreset.RDM_AoE_MeleeFinisher:

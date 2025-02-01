@@ -840,6 +840,9 @@ internal partial class NIN
             else if (mudraState.CurrentMudra == MudraCasting.MudraState.CastingDoton)
                 mudraState.CurrentMudra = MudraCasting.MudraState.None;
 
+            if (mudraState.CastKaton(ref actionID))
+                return actionID;
+
             if (canWeave && !InMudra)
             {
                 if (IsEnabled(CustomComboPreset.NIN_Variant_Rampart) &&
@@ -876,9 +879,6 @@ internal partial class NIN
                 if (HasEffect(Buffs.PhantomReady))
                     return OriginalHook(PhantomKamaitachi);
             }
-
-            if (mudraState.CastKaton(ref actionID))
-                return actionID;
 
             if (ComboTimer > 1f)
             {

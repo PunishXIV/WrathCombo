@@ -13,6 +13,7 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
+using Newtonsoft.Json;
 using PunishLib;
 using System;
 using System.Collections.Generic;
@@ -688,6 +689,9 @@ namespace WrathCombo
 
                                 file.WriteLine($"END STATUS EFFECTS");
                             }
+
+                            var b64 = System.Text.Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Service.Configuration));
+                            file.WriteLine(Convert.ToBase64String(b64));
 
                             file.WriteLine("END DEBUG LOG");
                             DuoLog.Information("Please check your desktop for WrathDebug.txt and upload this file where requested.");
