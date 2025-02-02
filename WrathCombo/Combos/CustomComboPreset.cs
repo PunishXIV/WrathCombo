@@ -6799,11 +6799,6 @@ public enum CustomComboPreset
 
     [PvPCustomCombo]
     [ParentCombo(MCHPvP_BurstMode)]
-    [CustomComboInfo("Blazing Shot Option", "Adds Blazing Shot to Burst Mode.", MCHPvP.JobID)]
-    MCHPvP_BurstMode_BlazingShot = 118010,
-
-    [PvPCustomCombo]
-    [ParentCombo(MCHPvP_BurstMode)]
     [CustomComboInfo("Marksmans Spite Option",
         "Adds Marksmans Spite to Burst Mode when the target is below specified HP.", MCHPvP.JobID)]
     MCHPvP_BurstMode_MarksmanSpite = 118011,

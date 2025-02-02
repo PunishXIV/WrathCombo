@@ -63,7 +63,7 @@ namespace WrathCombo.Combos.PvP
                     var overheated = HasEffect(Buffs.Overheated);
                     var FMFOption = PluginConfiguration.GetCustomIntValue(Config.MCHPVP_FMFOption);
 
-                    if (!PvPCommon.TargetImmuneToDamage())
+                    if (!PvPCommon.TargetImmuneToDamage() && HasBattleTarget())
                     {
                         // MarksmanSpite execute condition - todo add config
                         if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite) && HasBattleTarget() && EnemyHealthCurrentHp() < GetOptionValue(Config.MCHPVP_MarksmanSpite) && IsLB1Ready)
@@ -86,10 +86,6 @@ namespace WrathCombo.Combos.PvP
                                     return FullMetalField;
                             }
                         }
-
-                        // If overheated, BlazingShot is the next action
-                        if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_BlazingShot) && overheated)
-                            return OriginalHook(BlazingShot);
 
                         // Check if primed buffs and analysis conditions are met
                         bool hasPrimedBuffs = HasEffect(Buffs.DrillPrimed) ||
