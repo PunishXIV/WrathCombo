@@ -372,7 +372,7 @@ internal static partial class SCH
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Lucid)
-                && All.CanUseLucid(actionID, Config.SCH_AoE_Heal_LucidOption, true))
+                && All.CanUseLucid(Config.SCH_AoE_Heal_LucidOption, true))
                 return All.LucidDreaming;
 
             for (int i = 0; i < Config.SCH_AoE_Heals_Priority.Count; i++)

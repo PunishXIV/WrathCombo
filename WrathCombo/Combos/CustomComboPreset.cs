@@ -4635,11 +4635,6 @@ public enum CustomComboPreset
         "Prognosis becomes Eukrasian Prognosis if the shield is not applied.", SGE.JobID)]
     SGE_AoE_Heal_EPrognosis = 14028,
 
-    [ParentCombo(SGE_AoE_Heal_EPrognosis)]
-    [CustomComboInfo("Ignore Shield Check",
-        "Warning, will force the use of Eukrasia Prognosis, and normal Prognosis will be unavailable.", SGE.JobID)]
-    SGE_AoE_Heal_EPrognosis_IgnoreShield = 14029,
-
     [ParentCombo(SGE_AoE_Heal)]
     [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
     SGE_AoE_Heal_Rhizomata = 14036,

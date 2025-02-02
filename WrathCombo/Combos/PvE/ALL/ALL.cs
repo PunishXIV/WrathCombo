@@ -85,11 +85,10 @@ internal class All
     /// <summary>
     ///     Quick Level, Offcooldown, spellweave, and MP check of Lucid Dreaming
     /// </summary>
-    /// <param name="actionID">action id to check weave</param>
     /// <param name="MPThreshold">Player MP less than Threshold check</param>
     /// <param name="weave">Spell Weave check by default</param>
     /// <returns></returns>
-    public static bool CanUseLucid(uint actionID, int MPThreshold, bool weave = true) => 
+    public static bool CanUseLucid(int MPThreshold, bool weave = true) => 
         CustomComboFunctions.ActionReady(LucidDreaming)
         && CustomComboFunctions.LocalPlayer.CurrentMp <= MPThreshold
         && (!weave || CustomComboFunctions.CanSpellWeave());
