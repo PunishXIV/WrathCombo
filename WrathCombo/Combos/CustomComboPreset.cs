@@ -3291,17 +3291,13 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(PCT.FireInRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_ST_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Fire in Red with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
-        PCT.JobID)]
+    [CustomComboInfo("Simple Mode - Single Target", "Replaces Fire in Red with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", PCT.JobID)]
     PCT_ST_SimpleMode = 20000,
 
     [AutoAction(true, false)]
     [ReplaceSkill(PCT.FireIIinRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_AoE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Fire in Red II with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.",
-        PCT.JobID)]
+    [CustomComboInfo("Simple Mode - AoE", "Replaces Fire in Red II with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", PCT.JobID)]
     PCT_AoE_SimpleMode = 20001,
 
     #endregion
@@ -3311,15 +3307,11 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(PCT.FireInRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_ST_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Fire in Red with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
-        PCT.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Fire in Red with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", PCT.JobID)]
     PCT_ST_AdvancedMode = 20005,
 
     [ParentCombo(PCT_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)",
-        "Adds the Balance opener at level 100.",
-        PCT.JobID)]
+    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.", PCT.JobID)]
     PCT_ST_Advanced_Openers = 20006,
 
     [ParentCombo(PCT_ST_AdvancedMode)]
@@ -3327,8 +3319,7 @@ public enum CustomComboPreset
     PCT_ST_AdvancedMode_PrePullMotifs = 20008,
 
     [ParentCombo(PCT_ST_AdvancedMode)]
-    [CustomComboInfo("Downtime Motifs Option", "Adds missing Motifs to the combo while no target is present in combat.",
-        PCT.JobID)]
+    [CustomComboInfo("Downtime Motifs Option", "Adds missing Motifs to the combo while no target is present in combat.", PCT.JobID)]
     PCT_ST_AdvancedMode_NoTargetMotifs = 20009,
 
     [ParentCombo(PCT_ST_AdvancedMode)]
@@ -3444,18 +3435,15 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(PCT.FireIIinRed)]
     [ConflictingCombos(CombinedAetherhues, PCT_AoE_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Fire in Red II with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
-        PCT.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE", "Replaces Fire in Red II with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", PCT.JobID)]
     PCT_AoE_AdvancedMode = 20040,
 
     [ParentCombo(PCT_AoE_AdvancedMode)]
     [CustomComboInfo("Prepull Motifs Feature", "Adds missing Motifs to the combo while out of combat.", PCT.JobID)]
     PCT_AoE_AdvancedMode_PrePullMotifs = 20041,
 
-    [ParentCombo(PCT_AoE_AdvancedMode_PrePullMotifs)]
-    [CustomComboInfo("Downtime Motifs Option", "Adds missing Motifs to the combo while no target is present in combat.",
-        PCT.JobID)]
+    [ParentCombo(PCT_AoE_AdvancedMode)]
+    [CustomComboInfo("Downtime Motifs Option", "Adds missing Motifs to the combo while no target is present in combat.", PCT.JobID)]
     PCT_AoE_AdvancedMode_NoTargetMotifs = 20042,
 
     [ParentCombo(PCT_AoE_AdvancedMode)]
@@ -3564,8 +3552,7 @@ public enum CustomComboPreset
 
     [ReplaceSkill(PCT.FireInRed, PCT.FireIIinRed)]
     [ConflictingCombos(PCT_ST_SimpleMode, PCT_AoE_SimpleMode)]
-    [CustomComboInfo("Combined Aetherhues Feature",
-        "Merges aetherhue actions for specific target types into a single button.", PCT.JobID)]
+    [CustomComboInfo("Combined Aetherhues Feature", "Merges aetherhue actions for specific target types into a single button.", PCT.JobID)]
     CombinedAetherhues = 20002,
 
     [ReplaceSkill(PCT.CreatureMotif, PCT.WeaponMotif, PCT.LandscapeMotif)]
