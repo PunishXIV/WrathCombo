@@ -1984,6 +1984,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100. Switches between 2 different openers depending on skillspeed.", GNB.JobID)]
     GNB_ST_Advanced_Opener = 7006,
 
+    [ParentCombo(GNB_ST_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", GNB.JobID)]
+    GNB_ST_Interrupt = 7084,
+
     #region Cooldowns
 
     [ParentCombo(GNB_ST_Advanced)]
@@ -2101,6 +2105,14 @@ public enum CustomComboPreset
         "Replaces Demon Slice with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         GNB.JobID)]
     GNB_AoE_Advanced = 7200,
+
+    [ParentCombo(GNB_AoE_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", GNB.JobID)]
+    GNB_AoE_Interrupt = 7222,
+
+    [ParentCombo(GNB_AoE_Advanced)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting, interruptible or not.", GNB.JobID)]
+    GNB_AoE_Stun = 7223,
 
     [ConflictingCombos(GNB_NM_Features)]
     [ParentCombo(GNB_AoE_Advanced)]
@@ -3632,6 +3644,10 @@ public enum CustomComboPreset
     PLD_ST_AdvancedMode_BalanceOpener = 11046,
 
     [ParentCombo(PLD_ST_AdvancedMode)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", PLD.JobID)]
+    PLD_ST_Interrupt = 11058,
+
+    [ParentCombo(PLD_ST_AdvancedMode)]
     [CustomComboInfo("Fight or Flight Option",
         "Adds Fight or Flight to Advanced Mode.\n- Uses after Royal Authority during opener.\n- Afterward, on cooldown alongside Requiescat.\n- Target HP must be at or above:",
         PLD.JobID)]
@@ -3738,6 +3754,14 @@ public enum CustomComboPreset
         "Replaces Total Eclipse with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         PLD.JobID)]
     PLD_AoE_AdvancedMode = 11015,
+
+    [ParentCombo(PLD_AoE_AdvancedMode)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", PLD.JobID)]
+    PLD_AoE_Interrupt = 11059,
+
+    [ParentCombo(PLD_AoE_AdvancedMode)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow or Shield Bash to the rotation when your target is casting, interruptible or not.", PLD.JobID)]
+    PLD_AoE_Stun = 11060,
 
     [ParentCombo(PLD_AoE_AdvancedMode)]
     [CustomComboInfo("Fight or Flight Option",
@@ -3909,7 +3933,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    //// Last value = 11056
+    //// Last value = 11060
 
     #endregion
 
@@ -5805,6 +5829,10 @@ public enum CustomComboPreset
     WAR_ST_Advanced_BalanceOpener = 18058,
 
     [ParentCombo(WAR_ST_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", WAR.JobID)]
+    WAR_ST_Interrupt = 18066,
+
+    [ParentCombo(WAR_ST_Advanced)]
     [CustomComboInfo("Storm's Eye Option", "Adds Storms Eye into the rotation.", WAR.JobID)]
     WAR_ST_Advanced_StormsEye = 18005,
 
@@ -5907,6 +5935,14 @@ public enum CustomComboPreset
         "Replaces Overpower with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         WAR.JobID)]
     WAR_AoE_Advanced = 18016,
+
+    [ParentCombo(WAR_AoE_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", WAR.JobID)]
+    WAR_AoE_Interrupt = 18067,
+
+    [ParentCombo(WAR_AoE_Advanced)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting, interruptible or not.", WAR.JobID)]
+    WAR_AoE_Stun = 18068,
 
     [ReplaceSkill(WAR.NascentFlash)]
     [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.",
@@ -6079,7 +6115,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 18065
+    // Last value = 18068
 
     #endregion
 

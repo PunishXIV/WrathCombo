@@ -81,6 +81,11 @@ internal partial class GNB
             if (Opener().FullOpener(ref actionID))
                 return actionID;
 
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
             #region Mitigations
             if (Config.GNB_ST_MitsOptions != 1)
             {
@@ -607,6 +612,12 @@ internal partial class GNB
             if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) &&
                 Opener().FullOpener(ref actionID))
                 return actionID;
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.GNB_ST_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
 
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation) && //Mitigation option is enabled
@@ -1142,6 +1153,20 @@ internal partial class GNB
             #endregion
             #endregion
 
+            #region Stuns
+
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (ActionReady(All.LowBlow)
+                && TargetIsCasting())
+                return All.LowBlow;
+
+            #endregion
+
             #region Mitigations
             if (Config.GNB_AoE_MitsOptions != 1)
             {
@@ -1535,6 +1560,22 @@ internal partial class GNB
                            GunStep == 0 && //Gnashing Fang or Reign combo is not already active
                            hasReign; //Ready To Reign is active
             #endregion
+            #endregion
+
+            #region Stuns
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Stun)
+                && ActionReady(All.LowBlow)
+                && TargetIsCasting())
+                return All.LowBlow;
+
             #endregion
 
             #region Mitigations
