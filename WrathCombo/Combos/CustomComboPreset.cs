@@ -5778,7 +5778,7 @@ public enum CustomComboPreset
     [ConflictingCombos(WAR_ST_Advanced)]
     [ReplaceSkill(WAR.HeavySwing)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Storm's Path with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Heavy Swing with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
         WAR.JobID)]
     WAR_ST_Simple = 18000,
 
@@ -5797,7 +5797,7 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ConflictingCombos(WAR_ST_Simple)]
     [ReplaceSkill(WAR.HeavySwing)]
-    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Storm's Path with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", WAR.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Heavy Swing with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", WAR.JobID)]
     WAR_ST_Advanced = 18002,
 
     [ParentCombo(WAR_ST_Advanced)]
