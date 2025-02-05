@@ -168,23 +168,26 @@ rotation will run; if you already have your jobs setup, you can disable Option 5
 
 # Commands
 
-| **Chat command**                       | **Function**                                                                                                                                                      |
-|:---------------------------------------|:------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/wrath`                               | Opens the main plugin window, where you can enable/disable features, access settings and more.                                                                    |
-| `/wrath auto`                          | Toggles Auto-Rotation **on** or **off**.                                                                                                                          |
-| `/wrath auto <X>`                      | Sets Auto-Rotation to a specific state. Replace `<X>` with `on` or `off`.                                                                                         |
-| `/wrath combo <X>`                     | When toggled off, actions will not be replaced with combos from the plugin.<br>Auto-Rotation will still work. Replace `<X>` with `on`, `off` or `toggle`.         |
-| `/wrath ignore`                        | Use when targeting an NPC to add it, and all instances of it, to an ignore list for Auto-Rotation's auto-targeting.<br>Manage this list in the Auto-Rotation tab. |
-| `/wrath toggle <X>`                    | Toggles a specific feature/option **on or off** by replacing `<X>` with its internal name (or ID).<br>Does not work while in combat.                              |
-| `/wrath set <X>`                       | Turns a specific feature/option **on** by replacing `<X>` with its internal name (or ID).<br>Does not work when in combat.                                        |
-| `/wrath unset <X>`                     | Turn a specific feature/option **off** by replacing `<X>` with its internal name (or ID).<br>Does not work while in combat.                                       |
-| `/wrath unsetall`                      | Turns all features and options **off** at once.                                                                                                                   |
-| `/wrath list ...`                      | Prints lists of feature's internal names to the game chat based on filter arguments.<br>Requires an appended filter. See Below.                                   |
-| `/wrath list set`<br/>`/wrath enabled` | Prints a list of all currently enabled features & options in the game chat.                                                                                       |
-| `/wrath list unset`                    | Prints a list of all currently disabled features & options in the game chat.                                                                                      |
-| `/wrath list all`                      | Prints a list of every feature & option in the game chat, regardless of state.                                                                                    |
-| `/wrath debug`                         | Outputs a full debug file to your desktop that can be sent to developers for utilisation in bug-fixing.                                                           |
-| `/wrath debug JOB`                     | Outputs a debug file to your desktop containing only job-relevant features/options. <br>Replace `JOB` with the appropriate job abbreviation.                      |
+| **Chat command**                       | **Function**                                                                                                                                                                   |
+|:---------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `/wrath`                               | Opens the main plugin window, where you can enable/disable features, access settings and more.                                                                                 |
+| `/wrath <X>`                           | Opens the main plugin window, to a specific job's PvE features.<br>Replace `<X>` with the jobs abbreviation.                                                                   |
+| `/wrath auto`                          | Toggles Auto-Rotation **on** or **off**.                                                                                                                                       |
+| `/wrath auto <X>`                      | Sets Auto-Rotation to a specific state.<br>Replace `<X>` with `on`, `off`, or `toggle`.                                                                                        |
+| `/wrath combo`                         | Toggles action replacing **on** or **off**.<br>When off, actions will not be replaced with combos from the plugin. Auto-Rotation will still work.                              |
+| `/wrath combo <X>`                     | Sets action replacing to a specific state.<br>Replace `<X>` with `on`, `off`, or `toggle`.                                                                                     |
+| `/wrath ignore`                        | Adds a targeted NPC, and all instances of it, to an ignore list for Auto-Rotation's auto-targeting.<br>Manage this list in the Auto-Rotation tab.                              |
+| `/wrath toggle <X>`                    | Toggles a specific feature or option **on** or **off**. Does not work while in combat.<br>Replace `<X>` with its internal name (or ID).                                        |
+| `/wrath set <X>`                       | Turns a specific feature/option **on**. Does not work when in combat.<br>Replace `<X>` with its internal name (or ID).                                                         |
+| `/wrath unset <X>`                     | Turn a specific feature/option **off**. Does not work when in combat.<br>Replace `<X>` with its internal name (or ID).                                                         |
+| `/wrath unsetall`                      | Turns all features and options **off** at once.                                                                                                                                |
+| `/wrath list ...`                      | Prints lists of feature's internal names to the game chat based on filter arguments.<br>Requires an appended filter. See Below.                                                |
+| `/wrath list set`<br/>`/wrath enabled` | Prints a list of all currently enabled features & options in the game chat.                                                                                                    |
+| `/wrath list unset`                    | Prints a list of all currently disabled features & options in the game chat.                                                                                                   |
+| `/wrath list all`                      | Prints a list of every feature & option in the game chat, regardless of state.                                                                                                 |
+| `/wrath debug`                         | Outputs a debug file to your desktop containing only relevant features/options for your current job.<br>To be sent to developers, to help in bug-fixing. Completely anonymous. |
+| `/wrath debug <X>`                     | Outputs a debug file containing only job-relevant features/options.<br>Replace `<X>` with the jobs abbreviation.                                                               |
+| `/wrath debug all`                     | Outputs a debug file containing all features/options.                                                                                                                          |
 
 <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section>

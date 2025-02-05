@@ -18,8 +18,6 @@ namespace WrathCombo.Window.Tabs
 
         internal static new void Draw()
         {
-            PvEFeatures.HasToOpenJob = true;
-
             using (var scrolling = ImRaii.Child("scrolling", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y), true))
             {
                 var indentwidth = 12f.Scale();

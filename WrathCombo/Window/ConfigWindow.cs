@@ -135,14 +135,16 @@ namespace WrathCombo.Window
                     OpenWindow = OpenWindow.PvP;
                 }
                 ImGui.Spacing();
-                if (ImGui.Selectable("Misc. Settings", OpenWindow == OpenWindow.Settings))
-                {
-                    OpenWindow = OpenWindow.Settings;
-                }
-                ImGui.Spacing();
                 if (ImGui.Selectable("Auto-Rotation", OpenWindow == OpenWindow.AutoRotation))
                 {
                     OpenWindow = OpenWindow.AutoRotation;
+                }
+                ImGui.Spacing();
+                ImGui.Spacing();
+                ImGui.Spacing();
+                if (ImGui.Selectable("Settings", OpenWindow == OpenWindow.Settings))
+                {
+                    OpenWindow = OpenWindow.Settings;
                 }
                 ImGui.Spacing();
                 if (ImGui.Selectable("About", OpenWindow == OpenWindow.About))
@@ -151,6 +153,8 @@ namespace WrathCombo.Window
                 }
 
 #if DEBUG
+                ImGui.Spacing();
+                ImGui.Spacing();
                 ImGui.Spacing();
                 if (ImGui.Selectable("DEBUG", OpenWindow == OpenWindow.Debug))
                 {
