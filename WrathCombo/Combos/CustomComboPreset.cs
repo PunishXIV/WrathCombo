@@ -3920,15 +3920,13 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(RPR.Slice)]
     [ConflictingCombos(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Slice with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
+    [CustomComboInfo("Simple Mode - Single Target", "Replaces Slice with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
     RPR_ST_SimpleMode = 12000,
 
     [AutoAction(true, false)]
     [ReplaceSkill(RPR.SpinningScythe)]
     [ConflictingCombos(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
+    [CustomComboInfo("Simple Mode - AoE", "Replaces Spinning Scythe with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
     RPR_AoE_SimpleMode = 12100,
 
     #endregion
@@ -3938,13 +3936,11 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(RPR.Slice)]
     [ConflictingCombos(RPR_ST_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Slice with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Slice with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
     RPR_ST_AdvancedMode = 12001,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)",
-        "Adds the Balance opener at level 100.\n Does not check positional choice.\n Always does Gibbet first (FLANK)", RPR.JobID)]
+    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.\n Does not check positional choice.\n Always does Gibbet first (FLANK)", RPR.JobID)]
     RPR_ST_Opener = 12002,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
@@ -3958,6 +3954,10 @@ public enum CustomComboPreset
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to the rotation.", RPR.JobID)]
     RPR_ST_SoD = 12003,
+
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Soulsow", "Adds Soulsow to the rotation when out of combat and u dont have the buff.", RPR.JobID)]
+    RPR_ST_SoulSow = 12020, 
 
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Soul Slice Option", "Adds Soul Slice to the rotation.", RPR.JobID)]
@@ -3980,8 +3980,7 @@ public enum CustomComboPreset
     RPR_ST_Enshroud = 12010,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Void/Cross Reaping Option",
-        "Adds Void Reaping and Cross Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
+    [CustomComboInfo("Void/Cross Reaping Option", "Adds Void Reaping and Cross Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
     RPR_ST_Reaping = 12011,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
@@ -4001,31 +4000,26 @@ public enum CustomComboPreset
     RPR_ST_Perfectio = 12015,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Dynamic True North Feature",
-        "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
+    [CustomComboInfo("Dynamic True North Feature", "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
     RPR_ST_TrueNorthDynamic = 12098,
 
     [ParentCombo(RPR_ST_TrueNorthDynamic)]
-    [CustomComboInfo("Hold True North for Gluttony Option",
-        "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.", RPR.JobID)]
+    [CustomComboInfo("Hold True North for Gluttony Option", "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.", RPR.JobID)]
     RPR_ST_TrueNorthDynamic_HoldCharge = 12099,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Ranged Filler Option",
-        "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", RPR.JobID)]
+    [CustomComboInfo("Ranged Filler Option", "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", RPR.JobID)]
     RPR_ST_RangedFiller = 12017,
 
     [ParentCombo(RPR_ST_RangedFiller)]
-    [CustomComboInfo("Add Harvest Moon",
-        "Adds Harvest Moon if available, when outside of melee range. Will not override Communio.", RPR.JobID)]
+    [CustomComboInfo("Add Harvest Moon", "Adds Harvest Moon if available, when outside of melee range. Will not override Communio.", RPR.JobID)]
     RPR_ST_RangedFillerHarvestMoon = 12018,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Combo Heals Option",
-        "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
+    [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
     RPR_ST_ComboHeals = 12097,
 
-    //last value = 12019
+    //last value = 12020
 
     #endregion
 
@@ -4034,8 +4028,7 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(RPR.SpinningScythe)]
     [ConflictingCombos(RPR_AoE_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE", "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
     RPR_AoE_AdvancedMode = 12101,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
@@ -4049,6 +4042,10 @@ public enum CustomComboPreset
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Whorl Of Death Option", "Adds Whorl of Death to the rotation.", RPR.JobID)]
     RPR_AoE_WoD = 12102,
+
+    [ParentCombo(RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Soulsow", "Adds Soulsow to the rotation when out of combat and u dont have the buff.", RPR.JobID)]
+    RPR_AoE_SoulSow = 12117, 
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Soul Scythe Option", "Adds Soul Scythe to the rotation.", RPR.JobID)]
@@ -4071,8 +4068,7 @@ public enum CustomComboPreset
     RPR_AoE_Enshroud = 12109,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Grim Reaping Option",
-        "Adds Grim Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
+    [CustomComboInfo("Grim Reaping Option", "Adds Grim Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
     RPR_AoE_Reaping = 12110,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
@@ -4092,29 +4088,25 @@ public enum CustomComboPreset
     RPR_AoE_Perfectio = 12114,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Combo Heals Option",
-        "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
+    [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
     RPR_AoE_ComboHeals = 12116,
 
-    // Last value = 12116
+    // Last value = 12117
 
     #endregion
 
     #region Blood Stalk/Grim Swathe Combo Section
 
     [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
-    [CustomComboInfo("Gluttony on Blood Stalk/Grim Swathe Feature",
-        "Blood Stalk and Grim Swathe will turn into Gluttony when it is available.", RPR.JobID)]
+    [CustomComboInfo("Gluttony on Blood Stalk/Grim Swathe Feature", "Blood Stalk and Grim Swathe will turn into Gluttony when it is available.", RPR.JobID)]
     RPR_GluttonyBloodSwathe = 12200,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature",
-        "Adds (Executioner's) Gibbet and Gallows on Blood Stalk.\nAdds (Executioner's) Guillotine on Grim Swathe.", RPR.JobID)]
+    [CustomComboInfo("Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature", "Adds (Executioner's) Gibbet and Gallows on Blood Stalk.\nAdds (Executioner's) Guillotine on Grim Swathe.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_BloodSwatheCombo = 12201,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Enshroud Combo Option",
-        "Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure's Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe.", RPR.JobID)]
+    [CustomComboInfo("Enshroud Combo Option", "Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure's Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_Enshroud = 12202,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
@@ -4122,13 +4114,11 @@ public enum CustomComboPreset
     RPR_GluttonyBloodSwathe_OGCD = 12204,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Sacrificium only Option",
-        "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
+    [CustomComboInfo("Sacrificium only Option", "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_Sacrificium = 12203,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("True North Feature",
-        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
+    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
     RPR_TrueNorthGluttony = 12310,
 
     // Last value = 12204
@@ -4152,23 +4142,19 @@ public enum CustomComboPreset
     #region Miscellaneous
 
     [ReplaceSkill(RPR.Slice, RPR.SpinningScythe, RPR.ShadowOfDeath, RPR.Harpe, RPR.BloodStalk)]
-    [CustomComboInfo("Soulsow Reminder Feature",
-        "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.", RPR.JobID)]
+    [CustomComboInfo("Soulsow Reminder Feature", "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.", RPR.JobID)]
     RPR_Soulsow = 12302,
 
     [ParentCombo(RPR_Soulsow)]
-    [CustomComboInfo("Soulsow Reminder during Combat",
-        "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
+    [CustomComboInfo("Soulsow Reminder during Combat", "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
     RPR_Soulsow_Combat = 12309,
 
     [ReplaceSkill(RPR.ArcaneCircle)]
-    [CustomComboInfo("Arcane Circle Harvest Feature",
-        "Replaces Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
+    [CustomComboInfo("Arcane Circle Harvest Feature", "Replaces Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
     RPR_ArcaneCirclePlentifulHarvest = 12300,
 
     [ReplaceSkill(RPR.HellsEgress, RPR.HellsIngress)]
-    [CustomComboInfo("Regress Feature",
-        "Changes both Hell's Ingress and Hell's Egress turn into Regress when Threshold is active.", RPR.JobID)]
+    [CustomComboInfo("Regress Feature", "Changes both Hell's Ingress and Hell's Egress turn into Regress when Threshold is active.", RPR.JobID)]
     RPR_Regress = 12301,
 
     [ReplaceSkill(RPR.Enshroud)]
@@ -4177,14 +4163,12 @@ public enum CustomComboPreset
     RPR_EnshroudProtection = 12304,
 
     [ParentCombo(RPR_EnshroudProtection)]
-    [CustomComboInfo("True North Feature",
-        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
+    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
     RPR_TrueNorthEnshroud = 12308,
 
     [ReplaceSkill(RPR.Enshroud)]
     [ConflictingCombos(RPR_EnshroudProtection)]
-    [CustomComboInfo("Enshroud to Communio to Perfectio Feature",
-        "Turns Enshroud to Communio and Perfectio when available to use.", RPR.JobID)]
+    [CustomComboInfo("Enshroud to Communio to Perfectio Feature", "Turns Enshroud to Communio and Perfectio when available to use.", RPR.JobID)]
     RPR_EnshroudCommunio = 12307,
 
     [ReplaceSkill(RPR.Gibbet, RPR.Gallows, RPR.Guillotine)]
@@ -4192,8 +4176,7 @@ public enum CustomComboPreset
     RPR_CommunioOnGGG = 12305,
 
     [ParentCombo(RPR_CommunioOnGGG)]
-    [CustomComboInfo("Lemure's Slice/Scythe Option",
-        "Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.", RPR.JobID)]
+    [CustomComboInfo("Lemure's Slice/Scythe Option", "Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.", RPR.JobID)]
     RPR_LemureOnGGG = 12306,
 
     // Last value = 12312

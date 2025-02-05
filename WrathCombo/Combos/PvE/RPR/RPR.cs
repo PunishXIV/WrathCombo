@@ -13,6 +13,10 @@ internal partial class RPR
             // Don't change anything if not basic skill
             if (actionID is not Slice)
                 return actionID;
+            
+            //Soulsow
+            if (!HasEffect(Buffs.Soulsow) && !PartyInCombat())
+                return Soulsow;
 
             //Variant Cure
             if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
@@ -187,6 +191,11 @@ internal partial class RPR
                 return actionID;
 
             int positionalChoice = Config.RPR_Positional;
+
+            //Soulsow
+            if (IsEnabled(CustomComboPreset.RPR_ST_SoulSow) &&
+                !HasEffect(Buffs.Soulsow) && !PartyInCombat())
+                return Soulsow;
 
             //Variant Cure
             if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
@@ -399,6 +408,10 @@ internal partial class RPR
             if (actionID is not SpinningScythe)
                 return actionID;
 
+            //Soulsow
+            if (!HasEffect(Buffs.Soulsow) && !PartyInCombat())
+                return Soulsow;
+
             if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
                 IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
@@ -489,6 +502,11 @@ internal partial class RPR
             // Don't change anything if not basic skill
             if (actionID is not SpinningScythe)
                 return actionID;
+
+            //Soulsow
+            if (IsEnabled(CustomComboPreset.RPR_AoE_SoulSow) && 
+                !HasEffect(Buffs.Soulsow) && !PartyInCombat())
+                return Soulsow;
 
             if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
                 IsEnabled(Variant.VariantCure) &&
