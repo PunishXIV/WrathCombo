@@ -355,6 +355,8 @@ namespace WrathCombo
                     PluginConfiguration.ProcessSaveQueue();
                 }
 
+            Debug.Dispose();
+
             ws.RemoveAllWindows();
             Svc.DtrBar.Remove("Wrath Combo");
             Svc.Framework.Update -= OnFrameworkUpdate;
