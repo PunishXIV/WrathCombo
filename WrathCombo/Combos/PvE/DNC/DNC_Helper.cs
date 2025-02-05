@@ -147,23 +147,24 @@ internal partial class DNC
             StandardStep,
             Emboite,
             Emboite,
-            StandardFinish2,
-            TechnicalStep, //5
+            Peloton,
+            StandardFinish2, //5
+            TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite,
-            TechnicalFinish4, //10
+            Emboite, //10
+            TechnicalFinish4,
             Devilment,
             Tillana,
             Flourish,
-            DanceOfTheDawn,
-            FanDance4, //15
+            DanceOfTheDawn, //15
+            FanDance4,
             LastDance,
             FanDance3,
             FinishingMove,
-            StarfallDance,
-            ReverseCascade, //20
+            StarfallDance, //20
+            ReverseCascade,
             ReverseCascade,
             ReverseCascade,
         ];
@@ -174,7 +175,8 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], 12)
+            ([4], 7),
+            ([5], 5),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -183,16 +185,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 6, 7, 8, 9], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 6, 7, 8, 9], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 6, 7, 8, 9], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([19], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 22], SaberDance, () => Gauge.Esprit > 80),
-            ([20, 21, 22], StarfallDance,
+            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([20], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
+            ([21, 22, 23], StarfallDance,
                 () => HasEffect(Buffs.FlourishingStarfall)),
-            ([20, 21, 22], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 22], LastDance, () => HasEffect(Buffs.LastDanceReady)),
-            ([20, 21, 22], Fountainfall, () =>
+            ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([21, 22, 23], Fountainfall, () =>
                 HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -237,23 +239,24 @@ internal partial class DNC
             StandardStep,
             Emboite,
             Emboite,
-            StandardFinish2,
-            TechnicalStep, //5
+            Peloton,
+            StandardFinish2, //5
+            TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite,
-            TechnicalFinish4, //10
+            Emboite, //10
+            TechnicalFinish4,
             Devilment,
             Tillana,
             Flourish,
-            DanceOfTheDawn,
-            FanDance4, //15
+            DanceOfTheDawn, //15
+            FanDance4,
             LastDance,
             FanDance3,
             StarfallDance,
-            ReverseCascade,
             ReverseCascade, //20
+            ReverseCascade,
             FinishingMove,
             ReverseCascade,
         ];
@@ -264,7 +267,8 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], 4)
+            ([4], 2),
+            ([5], 2),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -273,16 +277,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 6, 7, 8, 9], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 6, 7, 8, 9], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 6, 7, 8, 9], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([21], SaberDance, () => Gauge.Esprit >= 50),
-            ([19, 20, 22], SaberDance, () => Gauge.Esprit > 80),
-            ([19, 20, 22], StarfallDance,
+            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([22], SaberDance, () => Gauge.Esprit >= 50),
+            ([20, 21, 23], SaberDance, () => Gauge.Esprit > 80),
+            ([20, 21, 23], StarfallDance,
                 () => HasEffect(Buffs.FlourishingStarfall)),
-            ([19, 20, 22], SaberDance, () => Gauge.Esprit >= 50),
-            ([19, 20, 22], LastDance, () => HasEffect(Buffs.LastDanceReady)),
-            ([19, 20, 22], Fountainfall, () =>
+            ([20, 21, 23], SaberDance, () => Gauge.Esprit >= 50),
+            ([20, 21, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([20, 21, 23], Fountainfall, () =>
                 HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
         ];
 
