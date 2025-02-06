@@ -4775,7 +4775,7 @@ public enum CustomComboPreset
     SAM_ST_CDs = 15011,
 
     [ParentCombo(SAM_ST_CDs)]
-    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", SAM.JobID)]
+    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.\n Dynamically changes usage for 2.14 or 2.08 GCD", SAM.JobID)]
     SAM_ST_CDs_MeikyoShisui = 15018,
 
     [ParentCombo(SAM_ST_CDs)]

@@ -41,7 +41,7 @@ internal partial class SAM
                     break;
 
                 case CustomComboPreset.SAM_ST_CDs_Iaijutsu:
-                    UserConfig.DrawSliderInt(0, 100, SAM_ST_Higanbana_Threshold,
+                    UserConfig.DrawSliderInt(0, 10, SAM_ST_Higanbana_Threshold,
                         "Stop using Higanbana on targets below this HP % (0% = always use).");
 
                     UserConfig.DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
