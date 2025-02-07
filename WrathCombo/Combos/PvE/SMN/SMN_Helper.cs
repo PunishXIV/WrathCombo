@@ -168,6 +168,9 @@ internal partial class SMN
             EnkindleSolarBahamut,
             Necrotize,
             UmbralImpulse,
+            Sunflare,
+            Necrotize,
+            UmbralImpulse,
             SearingFlash,
             SummonTitan2,
             TopazRite,
@@ -197,7 +200,7 @@ internal partial class SMN
             if (!HasPetPresent())
                 return false;
 
-            if (!IsOffCooldown(SummonSolarBahamut) ||
+            if (!ActionReady(SummonSolarBahamut) ||
                 !IsOffCooldown(SearingFlash) ||
                 !IsOffCooldown(SearingLight) ||
                 !IsOffCooldown(All.Swiftcast) ||

@@ -25,6 +25,7 @@
         public bool OnlyAttackInCombat = false;
         public bool AlwaysSelectTarget = true;
         public float MaxDistance = 25;
+        public bool AoEIgnoreManual = false;
     }
 
     public class HealerSettings

@@ -12,23 +12,29 @@ namespace WrathCombo.Attributes
         /// <param name="actionIDs"> List of actions the preset replaces. </param>
         internal BlueInactiveAttribute(params uint[] actionIDs)
         {
-            if (Service.Configuration is null)
-                return;
-
-            NoneSet = true;
             foreach (uint id in actionIDs)
             {
-                if (Service.Configuration.ActiveBLUSpells.Contains(id))
+                MasterActions.Add(id);
+            }
+        }
+
+        internal void GetActions()
+        {
+            NoneSet = true;
+            Actions.Clear();
+            foreach (var action in MasterActions)
+            {
+                if (Service.Configuration.ActiveBLUSpells.Contains(action))
                 {
                     NoneSet = false;
                     continue;
                 }
 
-                Actions.Add(id);
+                Actions.Add(action);
             }
         }
-
         internal List<uint> Actions { get; set; } = [];
+        internal List<uint> MasterActions { get; set; } = [];
         internal bool NoneSet { get; set; } = false;
     }
 }

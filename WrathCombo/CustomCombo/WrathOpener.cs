@@ -4,7 +4,10 @@ using ECommons.GameHelpers;
 using ECommons.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.CustomComboNS.Functions;
@@ -117,7 +120,13 @@ namespace WrathCombo.CustomComboNS
         private int DelayedStep = 0;
         private DateTime DelayedAt;
 
-        public uint CurrentOpenerAction { get; set; }
+        public uint CurrentOpenerAction { get; 
+            set 
+            {
+                if (value != 11)
+                field = value;
+            } 
+        }
         public uint PreviousOpenerAction { get; set; }
 
         public abstract int MinOpenerLevel { get; }
@@ -216,7 +225,7 @@ namespace WrathCombo.CustomComboNS
                         CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                     }
 
-                    while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) && ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
+                    while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) && ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(3, GCDTotal))
                     {
                         if (OpenerStep >= OpenerActions.Count)
                             break;

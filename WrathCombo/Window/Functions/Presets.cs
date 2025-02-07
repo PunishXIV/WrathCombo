@@ -187,6 +187,7 @@ namespace WrathCombo.Window.Functions
 
             if (blueAttr != null)
             {
+                blueAttr.GetActions();
                 if (blueAttr.Actions.Count > 0)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, blueAttr.NoneSet ? ImGuiColors.DPSRed : ImGuiColors.DalamudOrange);

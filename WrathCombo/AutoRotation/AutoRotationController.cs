@@ -403,6 +403,9 @@ namespace WrathCombo.AutoRotation
             {
                 if (attributes.AutoAction.IsHeal)
                 {
+                    LockedAoE = false;
+                    LockedST = false;
+
                     uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, Player.Object));
                     if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0) return false;
                     if (!ActionReady(outAct))
@@ -424,7 +427,7 @@ namespace WrathCombo.AutoRotation
                 }
                 else
                 {
-                    var target = DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
+                    var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ? Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
                     var numEnemies = NumberOfEnemiesInRange(gameAct, target, true);
                     if (!_ninjaLockedAoE)
                     {
