@@ -117,23 +117,60 @@ public enum ComboSimplicityLevelKeys
 public enum CancellationReason
 {
     [Description("The Wrath user manually elected to revoke your lease.")]
-    WrathUserManuallyCancelled,
+    WrathUserManuallyCancelled = 0,
 
     [Description("Your plugin was detected as having been disabled, " +
                  "not that you're likely to see this.")]
-    LeaseePluginDisabled,
+    LeaseePluginDisabled = 1,
 
     [Description("The Wrath plugin is being disabled.")]
-    WrathPluginDisabled,
+    WrathPluginDisabled = 2,
 
     [Description("Your lease was released by IPC call, " +
                  "theoretically this was done by you.")]
-    LeaseeReleased,
+    LeaseeReleased = 3,
 
     [Description("IPC Services have been disabled remotely. " +
                  "Please see the commit history for /res/ipc_status.txt.\n " +
                  "https://github.com/PunishXIV/WrathCombo/commits/main/res/ipc_status.txt")]
-    AllServicesSuspended,
+    AllServicesSuspended = 4,
+}
+
+public enum SetResult
+{
+    [Description("A default value that shouldn't ever be seen.")]
+    IGNORED = -1,
+
+    // Success Statuses
+
+    [Description("The configuration was set successfully.")]
+    Okay = 0,
+
+    [Description("The configuration will be set, it is working asynchronously.")]
+    OkayWorking = 1,
+
+    // Error Statuses
+
+    [Description("IPC services are currently disabled.")]
+    IPCDisabled = 10,
+
+    [Description("Invalid lease.")]
+    InvalidLease = 11,
+
+    [Description("Blacklisted lease.")]
+    BlacklistedLease = 12,
+
+    [Description("Configuration you are trying to set is already set.")]
+    Duplicate = 13,
+
+    [Description("Player object is not available.")]
+    PlayerNotAvailable = 14,
+
+    [Description("The configuration you are trying to set is not available.")]
+    InvalidConfiguration = 15,
+
+    [Description("The value you are trying to set is invalid.")]
+    InvalidValue = 16,
 }
 
 #region Auto-Rotation Configuration Options

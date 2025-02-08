@@ -85,7 +85,7 @@ internal partial class MCH
     internal static bool UseQueen(MCHGauge gauge)
     {
         if (!ActionWatching.HasDoubleWeaved() && !HasEffect(Buffs.Wildfire) &&
-            !JustUsed(OriginalHook(Heatblast)) && LevelChecked(OriginalHook(RookAutoturret)) &&
+            !JustUsed(OriginalHook(Heatblast)) && ActionReady(RookAutoturret) &&
             gauge is { IsRobotActive: false, Battery: >= 50 })
         {
             if ((Config.MCH_ST_Adv_Turret_SubOption == 0 ||

@@ -295,7 +295,7 @@ internal partial class DNC
             #region GCD
 
             // ST Technical Step
-            if (needToTech)
+            if (needToTech && !HasEffect(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // ST Last Dance
@@ -598,7 +598,7 @@ internal partial class DNC
             #region GCD
 
             // ST Technical Step
-            if (needToTech)
+            if (needToTech && !HasEffect(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // ST Last Dance
@@ -868,7 +868,7 @@ internal partial class DNC
             #region GCD
 
             // AoE Technical Step
-            if (needToTech)
+            if (needToTech && !HasEffect(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // AoE Last Dance
@@ -1127,7 +1127,7 @@ internal partial class DNC
             #region GCD
 
             // AoE Technical Step
-            if (needToTech)
+            if (needToTech && !HasEffect(Buffs.FlourishingFinish))
                 return TechnicalStep;
 
             // AoE Last Dance

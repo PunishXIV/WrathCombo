@@ -1464,9 +1464,21 @@ public enum CustomComboPreset
 
     #region Simple Mode
 
-    //TODO
+    [AutoAction(false, false)]
+    [ReplaceSkill(DRK.HardSlash)]
+    [ConflictingCombos(DRK_ST_Adv)]
+    [CustomComboInfo("Simple Mode - Single Target",
+        "Replaces Hard Slash with a full one-button single target rotation.", DRK.JobID)]
+    DRK_ST_Simple = 5001,
+
+    [AutoAction(true, false)]
+    [ReplaceSkill(DRK.Unleash)]
+    [ConflictingCombos(DRK_AoE_Adv)]
+    [CustomComboInfo("Simple Mode - AoE", "Replaces Unleash with a full one-button AoE rotation.", DRK.JobID)]
+    DRK_AoE_Simple = 5002,
 
     #endregion
+    // Last value = 5002
 
     #region Advanced Single Target Combo
 
@@ -1475,9 +1487,13 @@ public enum CustomComboPreset
     [CustomComboInfo("Advanced Mode - Single Target",
         "Replaces Hard Slash with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         DRK.JobID)]
-    DRK_ST_Combo = 5001,
+    DRK_ST_Adv = 5010,
 
-    [ParentCombo(DRK_ST_Combo)]
+    [ParentCombo(DRK_ST_Adv)]
+    [CustomComboInfo("Prevent Triple Weaves Option", "Tries to prevent any triple-weaving (even when it may not clip).", DRK.JobID)]
+    DRK_PreventTripleWeaves = 5038,
+
+    [ParentCombo(DRK_ST_Adv)]
     [CustomComboInfo("Balance Opener (Level 100)",
         "Adds the Balance opener at level 100." +
         "\nRequirements:" +
@@ -1487,140 +1503,160 @@ public enum CustomComboPreset
         "\n- Delirium off cooldown" +
         "\n- Carve and Spit off cooldown" +
         "\n- Salted Earth off cooldown" +
-        "\n(will skip the 2nd Edge if you have not popped a TBN)" +
-        "\n(does support TBN'ing during use or pre-pull)",
+        "\n(supports TBN'ing during use or pre-pull)",
         DRK.JobID)]
-    DRK_ST_BalanceOpener = 5041,
+    DRK_ST_BalanceOpener = 5011,
 
-    [ParentCombo(DRK_ST_Combo)]
+    [ParentCombo(DRK_ST_Adv)]
     [CustomComboInfo("Unmend Uptime Option", "Adds Unmend to the rotation when you are out of range.", DRK.JobID)]
-    DRK_ST_RangedUptime = 5015,
-
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Blood Gauge Overcap Option",
-        "Adds Bloodspiller to the rotation when at 90 blood gauge or higher.", DRK.JobID)]
-    DRK_ST_BloodOvercap = 5014,
-
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Bloodspiller Option", "Adds Bloodspiller to the rotation when Delirium is active.", DRK.JobID)]
-    DRK_ST_Bloodspiller = 5013,
-
-    #region Buff Options
-
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Delirium on Cooldown",
-        "Adds Delirium (or Blood Weapon at lower levels) to the rotation on cooldown and when Darkside is up. Will also spend 50 blood gauge if Delirium is nearly ready to protect from overcap.",
-        DRK.JobID)]
-    DRK_ST_Delirium = 5002,
-
-    [ParentCombo(DRK_ST_Delirium)]
-    [CustomComboInfo("Scarlet Delirium Combo Option",
-        "Adds the Scarlet Delirium combo chain to the rotation when Delirium is activated.", DRK.JobID)]
-    DRK_ST_Delirium_Chain = 5003,
-
-    #endregion
-
-    // Last value = 5003
+    DRK_ST_RangedUptime = 5012,
 
     #region Cooldowns
 
-    [ParentCombo(DRK_ST_Combo)]
-    [ConflictingCombos(DRK_oGCD)]
-    [CustomComboInfo("Cooldowns Options", "Collection of cooldowns to add to the rotation.", DRK.JobID)]
-    DRK_ST_CDs = 5004,
+    [ParentCombo(DRK_ST_Adv)]
+    [CustomComboInfo("Cooldown Options", "Collection of cooldowns to add to the rotation.", DRK.JobID)]
+    DRK_ST_CDs = 5013,
+
+    [ParentCombo(DRK_ST_CDs)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", DRK.JobID)]
+    DRK_ST_CD_Interrupt = 5014,
+
+    [ParentCombo(DRK_ST_CDs)]
+    [CustomComboInfo("Delirium on Cooldown",
+        "Adds Delirium (or Blood Weapon at lower levels) to the rotation on cooldown and when Darkside is up.\n Will also spend 50 blood gauge if Delirium is nearly ready to protect from overcap.",
+        DRK.JobID)]
+    DRK_ST_CD_Delirium = 5015,
 
     #region Living Shadow Options
 
     [ParentCombo(DRK_ST_CDs)]
-    [CustomComboInfo("Living Shadow Option", "Adds Living Shadow to the rotation.", DRK.JobID)]
-    DRK_ST_CDs_LivingShadow = 5005,
+    [CustomComboInfo("Living Shadow Option", "Adds Living Shadow to the rotation when Darkside is up.", DRK.JobID)]
+    DRK_ST_CD_Shadow = 5016,
 
-    [ParentCombo(DRK_ST_CDs_LivingShadow)]
+    [ParentCombo(DRK_ST_CDs)]
     [CustomComboInfo("Disesteem Option", "Adds Disesteem to the rotation when available.", DRK.JobID)]
-    DRK_ST_CDs_Disesteem = 5006,
+    DRK_ST_CD_Disesteem = 5017,
 
     #endregion
-
-    // Last value = 5006
 
     #region Shadowbringer Options
 
     [ParentCombo(DRK_ST_CDs)]
     [CustomComboInfo("Shadowbringer Option",
         "Adds Shadowbringer to the rotation while Darkside is up. Will use all stacks on cooldown.", DRK.JobID)]
-    DRK_ST_CDs_Shadowbringer = 5007,
+    DRK_ST_CD_Bringer = 5018,
 
-    [ParentCombo(DRK_ST_CDs_Shadowbringer)]
-    [CustomComboInfo("Shadowbringer Burst Option", "Pools Shadowbringer to use during even minute window bursts.",
+    [ParentCombo(DRK_ST_CD_Bringer)]
+    [CustomComboInfo("Shadowbringer Burst Option", "Pools Shadowbringer to use during even minute window bursts (after Disesteem).",
         DRK.JobID)]
-    DRK_ST_CDs_ShadowbringerBurst = 5008,
+    DRK_ST_CD_BringerBurst = 5019,
 
     #endregion
 
-    // Last value = 5008
-
-    [ParentCombo(DRK_ST_CDs)]
-    [CustomComboInfo("Carve and Spit Option", "Adds Carve and Spit to the rotation while Darkside is up.", DRK.JobID)]
-    DRK_ST_CDs_CarveAndSpit = 5009,
+    #region Salt Options
 
     [ParentCombo(DRK_ST_CDs)]
     [CustomComboInfo("Salted Earth Option",
         "Adds Salted Earth to the rotation while Darkside is up, will use Salt and Darkness if unlocked.", DRK.JobID)]
-    DRK_ST_CDs_SaltedEarth = 5010,
+    DRK_ST_CD_Salt = 5020,
+
+    [ParentCombo(DRK_ST_CDs)]
+    [CustomComboInfo("Salt and Darkness Option", "Adds Salt and Darkness to the rotation in the latter half of its duration.", DRK.JobID)]
+    DRK_ST_CD_Darkness = 5021,
 
     #endregion
 
-    // Last value = 5010
-
-    #region Mana Overcap Options
-
-    [ParentCombo(DRK_ST_Combo)]
-    [CustomComboInfo("Edge of Shadow Overcap Option",
-        "Uses Edge of Shadow if you are above 8,500 mana, Darkside is about to expire (<10s), or if you have Dark Arts in Burst.",
-        DRK.JobID)]
-    DRK_ST_ManaOvercap = 5011,
-
-    [ParentCombo(DRK_ST_ManaOvercap)]
-    [CustomComboInfo("Edge of Shadow Burst Option",
-        "Pools Edge of Shadow for even minute burst windows, and then uses them until chosen MP limit is reached.",
-        DRK.JobID)]
-    DRK_ST_ManaSpenderPooling = 5012,
-
-    [ParentCombo(DRK_ST_ManaOvercap)]
-    [CustomComboInfo("Dark Arts Drop Prevention",
-        "Will spend Dark Arts if your own The Blackest Night shield is active on you", DRK.JobID)]
-    DRK_ST_DarkArtsDropPrevention = 5032,
+    [ParentCombo(DRK_ST_CDs)]
+    [CustomComboInfo("Carve and Spit Option", "Adds Carve and Spit to the rotation while Darkside is up.", DRK.JobID)]
+    DRK_ST_CD_Spit = 5022,
 
     #endregion
 
-    // Last value = 5032
+    #region Spenders
+
+    [ParentCombo(DRK_ST_Adv)]
+    [CustomComboInfo("Spender Options", "Collection of spenders (mana and blood) to add to the rotation.", DRK.JobID)]
+    DRK_ST_Spenders = 5023,
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Scarlet Delirium Combo Option", "Adds the Scarlet Delirium combo chain to the rotation when Delirium is activated.", DRK.JobID)]
+    DRK_ST_Sp_ScarletChain = 5024,
+
+    #region Blood
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Bloodspiller Option", "Adds Bloodspiller to the rotation when Delirium is active or well outside of burst.", DRK.JobID)]
+    DRK_ST_Sp_Bloodspiller = 5025,
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Blood Gauge Overcap Option",
+        "Adds Bloodspiller to the rotation when the blood gauge is above a threshold.", DRK.JobID)]
+    DRK_ST_Sp_BloodOvercap = 5026,
+
+    #endregion
+
+    #region Mana
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Edge of Darkness Option", "Uses Edge of Darkness in burst windows, and outside of that will spend to chosen MP limit.", DRK.JobID)]
+    DRK_ST_Sp_Edge = 5027,
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Dark Arts Drop Prevention", "Will spend Dark Arts if your own The Blackest Night shield is active on you.", DRK.JobID)]
+    DRK_ST_Sp_DarkArts = 5028,
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Darkside Maintenance Option", "Uses Edge of Darkness if Darkside is about to expire (<10s).", DRK.JobID)]
+    DRK_ST_Sp_EdgeDarkside = 5029,
+
+    [ParentCombo(DRK_ST_Spenders)]
+    [CustomComboInfo("Mana Overcap Option", "Uses Edge of Darkness if you are above 8,500 mana.", DRK.JobID)]
+    DRK_ST_Sp_ManaOvercap = 5030,
+
+    #endregion
+
+    #endregion
 
     #region Mitigation Options
 
-    [ParentCombo(DRK_ST_Combo)]
+    [ParentCombo(DRK_ST_Adv)]
     [CustomComboInfo("Mitigation Options", "Collection of Mitigations to add to the rotation.", DRK.JobID)]
-    DRK_ST_Mitigation = 5033,
+    DRK_ST_Mitigation = 5031,
 
     [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("The Blackest Night Option", "Uses The Blackest Night based on Health Remaining.\n" +
-                                                  "(Note: makes no attempt to ensure shield will break)", DRK.JobID)]
-    DRK_ST_TBN = 5034,
+    [CustomComboInfo("The Blackest Night Option",
+        "Uses The Blackest Night based on Health Remaining.\n" +
+        "(Note: makes no attempt to ensure shield will break)", DRK.JobID)]
+    DRK_ST_Mit_TBN = 5032,
+
+    [ParentCombo(DRK_ST_Mitigation)]
+    [CustomComboInfo("Oblation Option", "Uses Oblation based on Health Remaining.", DRK.JobID)]
+    DRK_ST_Mit_Oblation = 5033,
+
+    [ParentCombo(DRK_ST_Mitigation)]
+    [CustomComboInfo("Reprisal Option", "Uses Reprisal when a raidwide is in the process of casting.", DRK.JobID)]
+    DRK_ST_Mit_Reprisal = 5034,
+
+    [ParentCombo(DRK_ST_Mitigation)]
+    [CustomComboInfo("Dark Missionary Option", "Uses Dark Missionary when a raidwide is in the process of casting.", DRK.JobID)]
+    DRK_ST_Mit_Missionary = 5035,
+
+    [ParentCombo(DRK_ST_Mit_Missionary)]
+    [CustomComboInfo("Avoid Doubling up on Group Mit", "Won't use Dark Missionary if your own Reprisal is on the target.", DRK.JobID)]
+    DRK_ST_Mit_MissionaryAvoid = 5039,
 
     [ParentCombo(DRK_ST_Mitigation)]
     [CustomComboInfo("Shadowed Vigil Option", "Uses Shadowed Vigil based on Health Remaining.", DRK.JobID)]
-    DRK_ST_ShadowedVigil = 5035,
+    DRK_ST_Mit_Vigil = 5036,
 
     [ParentCombo(DRK_ST_Mitigation)]
     [CustomComboInfo("Living Dead Option", "Uses Living Dead based on Health Remaining.", DRK.JobID)]
-    DRK_ST_LivingDead = 5036,
+    DRK_ST_Mit_LivingDead = 5037,
 
     #endregion
 
-    // Last value = 5036
-
     #endregion
-
-    // Last value = 5015
+    // Last value = 5039
 
     #region Advanced Multi Target Combo
 
@@ -1629,188 +1665,236 @@ public enum CustomComboPreset
     [CustomComboInfo("Advanced Mode - AoE",
         "Replaces Unleash with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         DRK.JobID)]
-    DRK_AoE_Combo = 5016,
-
-    [ParentCombo(DRK_AoE_Combo)]
-    [CustomComboInfo("Blood Gauge Overcap Option", "Adds Quietus to the rotation when at 90 blood gauge or higher.",
-        DRK.JobID)]
-    DRK_AoE_BloodOvercap = 5026,
-
-    #region Buff Options
-
-    [ParentCombo(DRK_AoE_Combo)]
-    [CustomComboInfo("Delirium Option",
-        "Adds Delirium (or Blood Weapon at lower levels) to the rotation on cooldown and when Darkside is up.",
-        DRK.JobID)]
-    DRK_AoE_Delirium = 5017,
-
-    [ParentCombo(DRK_AoE_Delirium)]
-    [CustomComboInfo("Impalement Option", "Adds Impalement to the rotation when Delirium is activated.", DRK.JobID)]
-    DRK_AoE_Delirium_Chain = 5018,
-
-    #endregion
-
-    // Last value = 5018
+    DRK_AoE_Adv = 5050,
 
     #region Cooldowns
 
-    [ParentCombo(DRK_AoE_Combo)]
+    [ParentCombo(DRK_AoE_Adv)]
     [CustomComboInfo("Cooldowns Options", "Collection of cooldowns to add to the rotation.", DRK.JobID)]
-    DRK_AoE_CDs = 5019,
+    DRK_AoE_CDs = 5051,
 
     [ParentCombo(DRK_AoE_CDs)]
-    [CustomComboInfo("AoE Shadowbringer Option", "Adds Shadowbringer to the rotation.", DRK.JobID)]
-    DRK_AoE_CDs_Shadowbringer = 5020,
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", DRK.JobID)]
+    DRK_AoE_Interrupt = 5052,
+
+    [ParentCombo(DRK_AoE_CDs)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target's cast is interruptible.", DRK.JobID)]
+    DRK_AoE_Stun = 5053,
+
+    [ParentCombo(DRK_AoE_CDs)]
+    [CustomComboInfo("Delirium Option",
+        "Adds Delirium (or Blood Weapon at lower levels) to the rotation on cooldown and when Darkside is up.",
+        DRK.JobID)]
+    DRK_AoE_CD_Delirium = 5054,
 
     #region Living Shadow Options
 
     [ParentCombo(DRK_AoE_CDs)]
     [CustomComboInfo("Living Shadow Option", "Adds Living Shadow to the rotation on cooldown and when Darkside is up.",
         DRK.JobID)]
-    DRK_AoE_CDs_LivingShadow = 5021,
+    DRK_AoE_CD_Shadow = 5055,
 
-    [ParentCombo(DRK_AoE_CDs_LivingShadow)]
+    [ParentCombo(DRK_AoE_CDs)]
     [CustomComboInfo("Disesteem Option", "Adds Disesteem to the rotation when available.", DRK.JobID)]
-    DRK_AoE_CDs_Disesteem = 5022,
+    DRK_AoE_CD_Disesteem = 5056,
 
     #endregion
 
-    // Last value = 5022
-
     [ParentCombo(DRK_AoE_CDs)]
-    [CustomComboInfo("Abyssal Drain Option", "Adds Abyssal Drain to the rotation when you fall below 60 percent hp.",
-        DRK.JobID)]
-    DRK_AoE_CDs_AbyssalDrain = 5023,
+    [CustomComboInfo("AoE Shadowbringer Option", "Adds Shadowbringer to the rotation.", DRK.JobID)]
+    DRK_AoE_CD_Bringer = 5057,
+
+    #region Salt Options
 
     [ParentCombo(DRK_AoE_CDs)]
     [CustomComboInfo("Salted Earth Option",
         "Adds Salted Earth and Salt and Darkness to the rotation on cooldown and when Darkside is up.", DRK.JobID)]
-    DRK_AoE_CDs_SaltedEarth = 5024,
+    DRK_AoE_CD_Salt = 5058,
+
+    [ParentCombo(DRK_AoE_CDs)]
+    [CustomComboInfo("Salt After Pull Option",
+        "Requires to be at a stand-still and for combat to have been going on for >7 seconds to use Salted Earth, to try to make it be placed after you finish your pull.", DRK.JobID)]
+    DRK_AoE_CD_SaltStill = 5059,
 
     #endregion
 
-    // Last value = 5024
-
-    [ParentCombo(DRK_AoE_Combo)]
-    [CustomComboInfo("Flood of Shadow Overcap Option",
-        "Uses Flood of Shadow if you are above 8,500 mana, Darkside is about to expire (<10s), or if you have Dark Arts.",
+    [ParentCombo(DRK_AoE_CDs)]
+    [CustomComboInfo("Abyssal Drain Option", "Adds Abyssal Drain to the rotation when you fall below 60 percent hp.",
         DRK.JobID)]
-    DRK_AoE_ManaOvercap = 5025,
+    DRK_AoE_CD_Drain = 5060,
+
+    #endregion
+
+    #region Spenders
+
+    [ParentCombo(DRK_AoE_Adv)]
+    [CustomComboInfo("Spender Options", "Collection of spenders (mana and blood) to add to the rotation.", DRK.JobID)]
+    DRK_AoE_Spenders = 5061,
+
+    [ParentCombo(DRK_AoE_Spenders)]
+    [CustomComboInfo("Impalement Option", "Adds Impalement to the rotation when Delirium is active.", DRK.JobID)]
+    DRK_AoE_Sp_ImpalementChain = 5062,
+
+    #region Blood
+
+    [ParentCombo(DRK_AoE_Spenders)]
+    [CustomComboInfo("Quietus Option", "Adds Quietus to the rotation when Delirium is active or well outside of burst.", DRK.JobID)]
+    DRK_AoE_Sp_Quietus = 5063,
+
+    [ParentCombo(DRK_AoE_Spenders)]
+    [CustomComboInfo("Blood Gauge Overcap Option", "Adds Quietus to the rotation when the blood gauge is above a threshold.", DRK.JobID)]
+    DRK_AoE_Sp_BloodOvercap = 5064,
+
+    #endregion
+
+    #region Mana
+
+    [ParentCombo(DRK_AoE_Spenders)]
+    [CustomComboInfo("Flood of Shadow Option", "Uses Flood of Shadow in burst, if Darkside is about to expire (<10s), or if you have Dark Arts.", DRK.JobID)]
+    DRK_AoE_Sp_Flood = 5065,
+
+    [ParentCombo(DRK_AoE_Spenders)]
+    [CustomComboInfo("Mana Overcap Option", "Uses Flood of Shadow if you are above 8,500 mana.", DRK.JobID)]
+    DRK_AoE_Sp_ManaOvercap = 5066,
+
+    #endregion
+
+    #endregion
 
     #region Mitigation Options
 
-    [ParentCombo(DRK_AoE_Combo)]
+    [ParentCombo(DRK_AoE_Adv)]
     [CustomComboInfo("Mitigation Options", "Collection of Mitigations to add to the rotation.", DRK.JobID)]
-    DRK_AoE_Mitigation = 5037,
+    DRK_AoE_Mitigation = 5067,
 
     [ParentCombo(DRK_AoE_Mitigation)]
     [CustomComboInfo("The Blackest Night Option", "Adds The Blackest Night to the rotation.", DRK.JobID)]
-    DRK_AoE_TBN = 5038,
+    DRK_AoE_Mit_TBN = 5068,
+
+    [ParentCombo(DRK_AoE_Mitigation)]
+    [CustomComboInfo("Oblation Option", "Uses Oblation based on Health Remaining.", DRK.JobID)]
+    DRK_AoE_Mit_Oblation = 5069,
+
+    [ParentCombo(DRK_AoE_Mitigation)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal to the rotation.", DRK.JobID)]
+    DRK_AoE_Mit_Reprisal = 5070,
+
+    [ParentCombo(DRK_AoE_Mitigation)]
+    [CustomComboInfo("Rampart Option", "Adds Rampart to the rotation.", DRK.JobID)]
+    DRK_AoE_Mit_Rampart = 5071,
+
+    [ParentCombo(DRK_AoE_Mitigation)]
+    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length to the rotation.", DRK.JobID)]
+    DRK_AoE_Mit_ArmsLength = 5072,
 
     [ParentCombo(DRK_AoE_Mitigation)]
     [CustomComboInfo("Shadowed Vigil Option", "Uses Shadowed Vigil based on Health Remaining.", DRK.JobID)]
-    DRK_AoE_ShadowedVigil = 5039,
+    DRK_AoE_Mit_Vigil = 5073,
 
     [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Living Dead Option", "Uses Living Dead based on your and your enemy's Remaining Health.",
-        DRK.JobID)]
-    DRK_AoE_LivingDead = 5040,
+    [CustomComboInfo("Living Dead Option", "Uses Living Dead based on your and your enemy's Remaining Health.", DRK.JobID)]
+    DRK_AoE_Mit_LivingDead = 5074,
 
     #endregion
 
-    // Last value = 5040
-
     #endregion
+    // Last value = 5074
 
-    // Last value = 5038
+    #region Multibutton Features
 
     #region One-Button Mitigation
 
     [ReplaceSkill(DRK.DarkMind)]
     [CustomComboInfo("One-Button Mitigation Feature", "Replaces Dark Mind with an all-in-one mitigation button.", DRK.JobID)]
-    DRK_Mit_OneButton = 5042,
+    DRK_Mit_OneButton = 5090,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Living Dead Emergency Option", "Gives max priority to Living Dead when the Health percentage threshold is met.", DRK.JobID)]
-    DRK_Mit_LivingDead_Max = 5043,
+    DRK_Mit_LivingDead_Max = 5091,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("The Blackest Night Option", "Adds The Blackest Night to the one-button mitigation.", DRK.JobID)]
-    DRK_Mit_TheBlackestNight = 5044,
+    DRK_Mit_TheBlackestNight = 5092,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Oblation Option", "Adds Oblation to the one-button mitigation.", DRK.JobID)]
-    DRK_Mit_Oblation = 5045,
+    DRK_Mit_Oblation = 5093,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Reprisal Option",
         "Adds Reprisal to the one-button mitigation." +
         "\nNOTE: Will not use unless there is a target within range to prevent waste.", DRK.JobID)]
-    DRK_Mit_Reprisal = 5046,
+    DRK_Mit_Reprisal = 5094,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Dark Missionary Option", "Adds Dark Missionary to the one-button mitigation.", DRK.JobID)]
-    DRK_Mit_DarkMissionary = 5047,
+    DRK_Mit_DarkMissionary = 5095,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Rampart Option", "Adds Rampart to the one-button mitigation.", DRK.JobID)]
-    DRK_Mit_Rampart = 5048,
+    DRK_Mit_Rampart = 5096,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Dark Mind Option",
         "Adds Dark Mind to the one-button mitigation." +
         "\nNOTE: even if disabled, will still try to use Dark Mind as the lowest priority.", DRK.JobID)]
-    DRK_Mit_DarkMind = 5049,
+    DRK_Mit_DarkMind = 5097,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Arm's Length Option", "Adds Arm's Length to the one-button mitigation.", DRK.JobID)]
-    DRK_Mit_ArmsLength = 5050,
+    DRK_Mit_ArmsLength = 5098,
 
     [ParentCombo(DRK_Mit_OneButton)]
     [CustomComboInfo("Shadow Wall / Vigil Option", "Adds Shadow Wall / Vigil to the one-button mitigation.", DRK.JobID)]
-    DRK_Mit_ShadowWall = 5051,
+    DRK_Mit_ShadowWall = 5099,
 
     #endregion
-
-    // Last value = 5052
+    // Last value = 5099
 
     #region oGCD Feature
 
     [ReplaceSkill(DRK.CarveAndSpit, DRK.AbyssalDrain)]
-    [ConflictingCombos(DRK_ST_CDs)]
-    [CustomComboInfo("oGCD Feature",
-        "Adds Living Shadow > Salted Earth > Salt And Darkness to Carve And Spit and Abyssal Drain", DRK.JobID)]
-    DRK_oGCD = 5027,
+    [CustomComboInfo("oGCD Feature", "Adds Living Shadow > Disesteem > Salted Earth > Salt And Darkness to Carve And Spit and Abyssal Drain.", DRK.JobID)]
+    DRK_oGCD = 5120,
 
     [ParentCombo(DRK_oGCD)]
-    [CustomComboInfo("Shadowbringer oGCD Feature", "Adds Shadowbringer to oGCD Feature ", DRK.JobID)]
-    DRK_Shadowbringer_oGCD = 5028,
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the beginning of the feature when your target's cast is interruptible.", DRK.JobID)]
+    DRK_oGCD_Interrupt = 5121,
+
+    [ParentCombo(DRK_oGCD)]
+    [CustomComboInfo("Delirium Option", "Adds Blood Weapon or Delirium to the Feature.", DRK.JobID)]
+    DRK_oGCD_Delirium = 5122,
+
+    [ParentCombo(DRK_oGCD)]
+    [CustomComboInfo("Shadowbringer Option", "Adds Shadowbringer to the Feature.", DRK.JobID)]
+    DRK_oGCD_Shadowbringer = 5123,
 
     #endregion
+    // Last value = 5123
 
-    // Last value = 5028
+    #endregion
+    // Last value = 5123
 
     #region Variant
 
     [Variant]
-    [VariantParent(DRK_ST_Combo, DRK_AoE_Combo)]
+    [VariantParent(DRK_ST_Adv, DRK_AoE_Adv, DRK_ST_Simple, DRK_AoE_Simple)]
     [CustomComboInfo("Spirit Dart Option",
         "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", DRK.JobID)]
-    DRK_Variant_SpiritDart = 5029,
+    DRK_Var_Dart = 5140,
 
     [Variant]
-    [VariantParent(DRK_ST_Combo, DRK_AoE_Combo)]
+    [VariantParent(DRK_ST_Adv, DRK_AoE_Adv, DRK_ST_Simple, DRK_AoE_Simple)]
     [CustomComboInfo("Cure Option", "Use Variant Cure when HP is below set threshold.", DRK.JobID)]
-    DRK_Variant_Cure = 5030,
+    DRK_Var_Cure = 5141,
 
     [Variant]
-    [VariantParent(DRK_ST_Combo, DRK_AoE_Combo)]
+    [VariantParent(DRK_ST_Adv, DRK_AoE_Adv, DRK_ST_Simple, DRK_AoE_Simple)]
     [CustomComboInfo("Ultimatum Option", "Use Variant Ultimatum on cooldown.", DRK.JobID)]
-    DRK_Variant_Ultimatum = 5031,
+    DRK_Var_Ulti = 5142,
 
     #endregion
-
-    // Last value = 5031
+    // Last value = 5142
 
     #endregion
 
@@ -2113,6 +2197,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100. Switches between 2 different openers depending on skillspeed.", GNB.JobID)]
     GNB_ST_Advanced_Opener = 7006,
 
+    [ParentCombo(GNB_ST_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", GNB.JobID)]
+    GNB_ST_Interrupt = 7084,
+
     #region Cooldowns
 
     [ParentCombo(GNB_ST_Advanced)]
@@ -2230,6 +2318,14 @@ public enum CustomComboPreset
         "Replaces Demon Slice with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         GNB.JobID)]
     GNB_AoE_Advanced = 7200,
+
+    [ParentCombo(GNB_AoE_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", GNB.JobID)]
+    GNB_AoE_Interrupt = 7222,
+
+    [ParentCombo(GNB_AoE_Advanced)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting, interruptible or not.", GNB.JobID)]
+    GNB_AoE_Stun = 7223,
 
     [ConflictingCombos(GNB_NM_Features)]
     [ParentCombo(GNB_AoE_Advanced)]
@@ -2925,15 +3021,13 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(MNK.Bootshine, MNK.LeapingOpo)]
     [ConflictingCombos(MNK_ST_BeastChakras, MNK_ST_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Bootshine with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", MNK.JobID)]
+    [CustomComboInfo("Simple Mode - Single Target", "Replaces Bootshine with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", MNK.JobID)]
     MNK_ST_SimpleMode = 9004,
 
     [AutoAction(true, false)]
     [ReplaceSkill(MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer)]
     [ConflictingCombos(MNK_AOE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Arms of the Destroyer with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", MNK.JobID)]
+    [CustomComboInfo("Simple Mode - AoE", "Replaces Arms of the Destroyer with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", MNK.JobID)]
     MNK_AOE_SimpleMode = 9003,
 
     #endregion
@@ -2943,8 +3037,7 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(MNK.Bootshine, MNK.LeapingOpo)]
     [ConflictingCombos(MNK_ST_BeastChakras, MNK_ST_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Bootshine with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", MNK.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Bootshine with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", MNK.JobID)]
     MNK_ST_AdvancedMode = 9005,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
@@ -3010,8 +3103,7 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(MNK.ArmOfTheDestroyer, MNK.ShadowOfTheDestroyer)]
     [ConflictingCombos(MNK_AOE_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Arms of the Destroyer with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", MNK.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE", "Replaces Arms of the Destroyer with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", MNK.JobID)]
     MNK_AOE_AdvancedMode = 9027,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
@@ -3102,16 +3194,18 @@ public enum CustomComboPreset
     #endregion
 
     [ReplaceSkill(MNK.PerfectBalance)]
-    [CustomComboInfo("Perfect Balance Feature",
-        "Perfect Balance becomes Masterful Blitz while you have 3 Beast Chakra.", MNK.JobID)]
+    [CustomComboInfo("Perfect Balance Feature", "Perfect Balance becomes Masterful Blitz while you have 3 Beast Chakra.", MNK.JobID)]
     MNK_PerfectBalance = 9023,
 
     [ReplaceSkill(MNK.RiddleOfFire)]
-    [CustomComboInfo("Riddle of Fire/Brotherhood Feature",
-        "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
+    [CustomComboInfo("Riddle of Fire/Brotherhood Feature", "Replaces Riddle of Fire with Brotherhood when Riddle of Fire is on cooldown.", MNK.JobID)]
     MNK_Riddle_Brotherhood = 9024,
 
-    // Last value = 9040
+    [ReplaceSkill(MNK.RiddleOfFire)]
+    [CustomComboInfo("Riddle of Fire/Brotherhood Feature", "Replaces Brotherhood with Riddle of Fire when Brotherhood is on cooldown.", MNK.JobID)]
+    MNK_Brotherhood_Riddle = 9041,
+
+    // Last value = 9041
 
     #endregion
 
@@ -3761,6 +3855,10 @@ public enum CustomComboPreset
     PLD_ST_AdvancedMode_BalanceOpener = 11046,
 
     [ParentCombo(PLD_ST_AdvancedMode)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", PLD.JobID)]
+    PLD_ST_Interrupt = 11058,
+
+    [ParentCombo(PLD_ST_AdvancedMode)]
     [CustomComboInfo("Fight or Flight Option",
         "Adds Fight or Flight to Advanced Mode.\n- Uses after Royal Authority during opener.\n- Afterward, on cooldown alongside Requiescat.\n- Target HP must be at or above:",
         PLD.JobID)]
@@ -3867,6 +3965,14 @@ public enum CustomComboPreset
         "Replaces Total Eclipse with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         PLD.JobID)]
     PLD_AoE_AdvancedMode = 11015,
+
+    [ParentCombo(PLD_AoE_AdvancedMode)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", PLD.JobID)]
+    PLD_AoE_Interrupt = 11059,
+
+    [ParentCombo(PLD_AoE_AdvancedMode)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow or Shield Bash to the rotation when your target is casting, interruptible or not.", PLD.JobID)]
+    PLD_AoE_Stun = 11060,
 
     [ParentCombo(PLD_AoE_AdvancedMode)]
     [CustomComboInfo("Fight or Flight Option",
@@ -4038,7 +4144,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    //// Last value = 11056
+    //// Last value = 11060
 
     #endregion
 
@@ -4049,15 +4155,13 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(RPR.Slice)]
     [ConflictingCombos(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Slice with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
+    [CustomComboInfo("Simple Mode - Single Target", "Replaces Slice with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
     RPR_ST_SimpleMode = 12000,
 
     [AutoAction(true, false)]
     [ReplaceSkill(RPR.SpinningScythe)]
     [ConflictingCombos(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE",
-        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
+    [CustomComboInfo("Simple Mode - AoE", "Replaces Spinning Scythe with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", RPR.JobID)]
     RPR_AoE_SimpleMode = 12100,
 
     #endregion
@@ -4067,13 +4171,11 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(RPR.Slice)]
     [ConflictingCombos(RPR_ST_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces Slice with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Slice with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
     RPR_ST_AdvancedMode = 12001,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)",
-        "Adds the Balance opener at level 100.\n Does not check positional choice.\n Always does Gibbet first (FLANK)", RPR.JobID)]
+    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.\n Does not check positional choice.\n Always does Gibbet first (FLANK)", RPR.JobID)]
     RPR_ST_Opener = 12002,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
@@ -4087,6 +4189,10 @@ public enum CustomComboPreset
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to the rotation.", RPR.JobID)]
     RPR_ST_SoD = 12003,
+
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Soulsow", "Adds Soulsow to the rotation when out of combat and u dont have the buff.", RPR.JobID)]
+    RPR_ST_SoulSow = 12020, 
 
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Soul Slice Option", "Adds Soul Slice to the rotation.", RPR.JobID)]
@@ -4109,8 +4215,7 @@ public enum CustomComboPreset
     RPR_ST_Enshroud = 12010,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Void/Cross Reaping Option",
-        "Adds Void Reaping and Cross Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
+    [CustomComboInfo("Void/Cross Reaping Option", "Adds Void Reaping and Cross Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
     RPR_ST_Reaping = 12011,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
@@ -4130,31 +4235,26 @@ public enum CustomComboPreset
     RPR_ST_Perfectio = 12015,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Dynamic True North Feature",
-        "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
+    [CustomComboInfo("Dynamic True North Feature", "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
     RPR_ST_TrueNorthDynamic = 12098,
 
     [ParentCombo(RPR_ST_TrueNorthDynamic)]
-    [CustomComboInfo("Hold True North for Gluttony Option",
-        "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.", RPR.JobID)]
+    [CustomComboInfo("Hold True North for Gluttony Option", "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.", RPR.JobID)]
     RPR_ST_TrueNorthDynamic_HoldCharge = 12099,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Ranged Filler Option",
-        "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", RPR.JobID)]
+    [CustomComboInfo("Ranged Filler Option", "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", RPR.JobID)]
     RPR_ST_RangedFiller = 12017,
 
     [ParentCombo(RPR_ST_RangedFiller)]
-    [CustomComboInfo("Add Harvest Moon",
-        "Adds Harvest Moon if available, when outside of melee range. Will not override Communio.", RPR.JobID)]
+    [CustomComboInfo("Add Harvest Moon", "Adds Harvest Moon if available, when outside of melee range. Will not override Communio.", RPR.JobID)]
     RPR_ST_RangedFillerHarvestMoon = 12018,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Combo Heals Option",
-        "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
+    [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
     RPR_ST_ComboHeals = 12097,
 
-    //last value = 12019
+    //last value = 12020
 
     #endregion
 
@@ -4163,8 +4263,7 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(RPR.SpinningScythe)]
     [ConflictingCombos(RPR_AoE_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE", "Replaces Spinning Scythe with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", RPR.JobID)]
     RPR_AoE_AdvancedMode = 12101,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
@@ -4178,6 +4277,10 @@ public enum CustomComboPreset
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Whorl Of Death Option", "Adds Whorl of Death to the rotation.", RPR.JobID)]
     RPR_AoE_WoD = 12102,
+
+    [ParentCombo(RPR_AoE_AdvancedMode)]
+    [CustomComboInfo("Soulsow", "Adds Soulsow to the rotation when out of combat and u dont have the buff.", RPR.JobID)]
+    RPR_AoE_SoulSow = 12117, 
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
     [CustomComboInfo("Soul Scythe Option", "Adds Soul Scythe to the rotation.", RPR.JobID)]
@@ -4200,8 +4303,7 @@ public enum CustomComboPreset
     RPR_AoE_Enshroud = 12109,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Grim Reaping Option",
-        "Adds Grim Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
+    [CustomComboInfo("Grim Reaping Option", "Adds Grim Reaping to the rotation.\n(Disabling this may stop the one-button combo working during enshroud)", RPR.JobID)]
     RPR_AoE_Reaping = 12110,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
@@ -4221,29 +4323,25 @@ public enum CustomComboPreset
     RPR_AoE_Perfectio = 12114,
 
     [ParentCombo(RPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Combo Heals Option",
-        "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
+    [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
     RPR_AoE_ComboHeals = 12116,
 
-    // Last value = 12116
+    // Last value = 12117
 
     #endregion
 
     #region Blood Stalk/Grim Swathe Combo Section
 
     [ReplaceSkill(RPR.BloodStalk, RPR.GrimSwathe)]
-    [CustomComboInfo("Gluttony on Blood Stalk/Grim Swathe Feature",
-        "Blood Stalk and Grim Swathe will turn into Gluttony when it is available.", RPR.JobID)]
+    [CustomComboInfo("Gluttony on Blood Stalk/Grim Swathe Feature", "Blood Stalk and Grim Swathe will turn into Gluttony when it is available.", RPR.JobID)]
     RPR_GluttonyBloodSwathe = 12200,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature",
-        "Adds (Executioner's) Gibbet and Gallows on Blood Stalk.\nAdds (Executioner's) Guillotine on Grim Swathe.", RPR.JobID)]
+    [CustomComboInfo("Gibbet and Gallows/Guillotine on Blood Stalk/Grim Swathe Feature", "Adds (Executioner's) Gibbet and Gallows on Blood Stalk.\nAdds (Executioner's) Guillotine on Grim Swathe.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_BloodSwatheCombo = 12201,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Enshroud Combo Option",
-        "Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure's Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe.", RPR.JobID)]
+    [CustomComboInfo("Enshroud Combo Option", "Adds Enshroud combo (Void/Cross Reaping, Communio, Lemure's Slice, Sacrificium and Perfectio) on Blood Stalk and Grim Swathe.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_Enshroud = 12202,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
@@ -4251,13 +4349,11 @@ public enum CustomComboPreset
     RPR_GluttonyBloodSwathe_OGCD = 12204,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("Sacrificium only Option",
-        "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
+    [CustomComboInfo("Sacrificium only Option", "Adds only Sacrificium on Blood Stalk and Grim Swathe while enshrouded.", RPR.JobID)]
     RPR_GluttonyBloodSwathe_Sacrificium = 12203,
 
     [ParentCombo(RPR_GluttonyBloodSwathe)]
-    [CustomComboInfo("True North Feature",
-        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
+    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
     RPR_TrueNorthGluttony = 12310,
 
     // Last value = 12204
@@ -4281,23 +4377,19 @@ public enum CustomComboPreset
     #region Miscellaneous
 
     [ReplaceSkill(RPR.Slice, RPR.SpinningScythe, RPR.ShadowOfDeath, RPR.Harpe, RPR.BloodStalk)]
-    [CustomComboInfo("Soulsow Reminder Feature",
-        "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.", RPR.JobID)]
+    [CustomComboInfo("Soulsow Reminder Feature", "Adds Soulsow to the skills selected below when out of combat. \nWill also add Soulsow to Harpe when in combat and no target is selected.", RPR.JobID)]
     RPR_Soulsow = 12302,
 
     [ParentCombo(RPR_Soulsow)]
-    [CustomComboInfo("Soulsow Reminder during Combat",
-        "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
+    [CustomComboInfo("Soulsow Reminder during Combat", "Adds Soulsow to Harpe during combat when no target is selected.", RPR.JobID)]
     RPR_Soulsow_Combat = 12309,
 
     [ReplaceSkill(RPR.ArcaneCircle)]
-    [CustomComboInfo("Arcane Circle Harvest Feature",
-        "Replaces Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
+    [CustomComboInfo("Arcane Circle Harvest Feature", "Replaces Arcane Circle with Plentiful Harvest when you have stacks of Immortal Sacrifice.", RPR.JobID)]
     RPR_ArcaneCirclePlentifulHarvest = 12300,
 
     [ReplaceSkill(RPR.HellsEgress, RPR.HellsIngress)]
-    [CustomComboInfo("Regress Feature",
-        "Changes both Hell's Ingress and Hell's Egress turn into Regress when Threshold is active.", RPR.JobID)]
+    [CustomComboInfo("Regress Feature", "Changes both Hell's Ingress and Hell's Egress turn into Regress when Threshold is active.", RPR.JobID)]
     RPR_Regress = 12301,
 
     [ReplaceSkill(RPR.Enshroud)]
@@ -4306,14 +4398,12 @@ public enum CustomComboPreset
     RPR_EnshroudProtection = 12304,
 
     [ParentCombo(RPR_EnshroudProtection)]
-    [CustomComboInfo("True North Feature",
-        "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
+    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
     RPR_TrueNorthEnshroud = 12308,
 
     [ReplaceSkill(RPR.Enshroud)]
     [ConflictingCombos(RPR_EnshroudProtection)]
-    [CustomComboInfo("Enshroud to Communio to Perfectio Feature",
-        "Turns Enshroud to Communio and Perfectio when available to use.", RPR.JobID)]
+    [CustomComboInfo("Enshroud to Communio to Perfectio Feature", "Turns Enshroud to Communio and Perfectio when available to use.", RPR.JobID)]
     RPR_EnshroudCommunio = 12307,
 
     [ReplaceSkill(RPR.Gibbet, RPR.Gallows, RPR.Guillotine)]
@@ -4321,8 +4411,7 @@ public enum CustomComboPreset
     RPR_CommunioOnGGG = 12305,
 
     [ParentCombo(RPR_CommunioOnGGG)]
-    [CustomComboInfo("Lemure's Slice/Scythe Option",
-        "Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.", RPR.JobID)]
+    [CustomComboInfo("Lemure's Slice/Scythe Option", "Adds Lemure's Slice to Gibbet/Gallows and Lemure's Scythe to Guillotine.", RPR.JobID)]
     RPR_LemureOnGGG = 12306,
 
     // Last value = 12312
@@ -4764,11 +4853,6 @@ public enum CustomComboPreset
         "Prognosis becomes Eukrasian Prognosis if the shield is not applied.", SGE.JobID)]
     SGE_AoE_Heal_EPrognosis = 14028,
 
-    [ParentCombo(SGE_AoE_Heal_EPrognosis)]
-    [CustomComboInfo("Ignore Shield Check",
-        "Warning, will force the use of Eukrasia Prognosis, and normal Prognosis will be unavailable.", SGE.JobID)]
-    SGE_AoE_Heal_EPrognosis_IgnoreShield = 14029,
-
     [ParentCombo(SGE_AoE_Heal)]
     [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
     SGE_AoE_Heal_Rhizomata = 14036,
@@ -4904,7 +4988,7 @@ public enum CustomComboPreset
     SAM_ST_CDs = 15011,
 
     [ParentCombo(SAM_ST_CDs)]
-    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", SAM.JobID)]
+    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.\n Dynamically changes usage for 2.14 or 2.08 GCD", SAM.JobID)]
     SAM_ST_CDs_MeikyoShisui = 15018,
 
     [ParentCombo(SAM_ST_CDs)]
@@ -5907,7 +5991,7 @@ public enum CustomComboPreset
     [ConflictingCombos(WAR_ST_Advanced)]
     [ReplaceSkill(WAR.HeavySwing)]
     [CustomComboInfo("Simple Mode - Single Target",
-        "Replaces Storm's Path with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
+        "Replaces Heavy Swing with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.",
         WAR.JobID)]
     WAR_ST_Simple = 18000,
 
@@ -5926,12 +6010,16 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ConflictingCombos(WAR_ST_Simple)]
     [ReplaceSkill(WAR.HeavySwing)]
-    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Storm's Path with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", WAR.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces Heavy Swing with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", WAR.JobID)]
     WAR_ST_Advanced = 18002,
 
     [ParentCombo(WAR_ST_Advanced)]
     [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.", WAR.JobID)]
     WAR_ST_Advanced_BalanceOpener = 18058,
+
+    [ParentCombo(WAR_ST_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", WAR.JobID)]
+    WAR_ST_Interrupt = 18066,
 
     [ParentCombo(WAR_ST_Advanced)]
     [CustomComboInfo("Storm's Eye Option", "Adds Storms Eye into the rotation.", WAR.JobID)]
@@ -6036,6 +6124,14 @@ public enum CustomComboPreset
         "Replaces Overpower with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         WAR.JobID)]
     WAR_AoE_Advanced = 18016,
+
+    [ParentCombo(WAR_AoE_Advanced)]
+    [CustomComboInfo("Interrupt Option", "Adds Interject to the rotation when your target's cast is interruptible.", WAR.JobID)]
+    WAR_AoE_Interrupt = 18067,
+
+    [ParentCombo(WAR_AoE_Advanced)]
+    [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting, interruptible or not.", WAR.JobID)]
+    WAR_AoE_Stun = 18068,
 
     [ReplaceSkill(WAR.NascentFlash)]
     [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.",
@@ -6208,7 +6304,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 18065
+    // Last value = 18068
 
     #endregion
 
@@ -6925,11 +7021,6 @@ public enum CustomComboPreset
     [ParentCombo(MCHPvP_BurstMode)]
     [CustomComboInfo("Wildfire Option", "Adds Wildfire to Burst Mode.", MCHPvP.JobID)]
     MCHPvP_BurstMode_Wildfire = 118009,
-
-    [PvPCustomCombo]
-    [ParentCombo(MCHPvP_BurstMode)]
-    [CustomComboInfo("Blazing Shot Option", "Adds Blazing Shot to Burst Mode.", MCHPvP.JobID)]
-    MCHPvP_BurstMode_BlazingShot = 118010,
 
     [PvPCustomCombo]
     [ParentCombo(MCHPvP_BurstMode)]

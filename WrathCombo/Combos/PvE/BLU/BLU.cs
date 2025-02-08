@@ -155,7 +155,7 @@ internal partial class BLU
                     return OriginalHook(PhantomFlurry_Spell103);
 
                 if (HasEffect(Buffs.MoonFlute))
-                    return OriginalHook(11);
+                    return All.SavageBlade;
             }
 
             return actionID;

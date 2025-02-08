@@ -539,5 +539,15 @@ public class Search(Leasing leasing)
                 preset => preset.Value[ComboStateKeys.AutoMode]
             );
 
+    /// <summary>
+    ///     A wrapper for <see cref="Core.PluginConfiguration.EnabledActions" /> with
+    ///     IPC settings on top.
+    /// </summary>
+    internal HashSet<CustomComboPreset> EnabledActions =>
+        PresetStates
+            .Where(preset => preset.Value[ComboStateKeys.Enabled])
+            .Select(preset => Enum.Parse<CustomComboPreset>(preset.Key))
+            .ToHashSet();
+
     #endregion
 }

@@ -92,13 +92,18 @@ public partial class Provider
     ///     The value you want to set the option to.<br />
     ///     All valid options can be parsed from an int, or the exact expected types.
     /// </param>
+    /// <returns>
+    ///     The <see cref="SetResult" /> status code indicating the result of the
+    ///     operation.
+    /// </returns>
     /// <seealso cref="AutoRotationConfigOption"/>
     [EzIPC]
-    public void SetAutoRotationConfigState(Guid lease, object passedOption, object value)
+    public SetResult SetAutoRotationConfigState
+        (Guid lease, object passedOption, object value)
     {
         // Bail for standard conditions
-        if (Helper.CheckForBailConditionsAtSetTime(lease))
-            return;
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
 
         // Try to cast the input to an Auto-Rotation Configuration option
         arcOption option;
@@ -117,7 +122,7 @@ public partial class Provider
             Logging.Warn("Invalid or not-yet-implemented `option` of " +
                           $"'{passedOption}'. Please refer to " +
                           "WrathCombo.Services.IPC.AutoRotationConfigOption");
-            return;
+            return SetResult.InvalidConfiguration;
         }
 
         object convertedValue;
@@ -136,7 +141,7 @@ public partial class Provider
                           "Value likely out of range for option that wanted an enum. " +
                           $"Expected type: {type}.\n" +
                           e.Message);
-            return;
+            return SetResult.InvalidValue;
         }
 
         // Handle converting bool->int, which doesn't work for some reason, despite
@@ -144,7 +149,7 @@ public partial class Provider
         if (type == typeof(bool))
             convertedValue = (bool)convertedValue ? 1 : 0;
 
-        Leasing.AddRegistrationForAutoRotationConfig(
+        return Leasing.AddRegistrationForAutoRotationConfig(
             lease, option, (int)convertedValue);
     }
 }

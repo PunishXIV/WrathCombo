@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WrathCombo.Combos;
 
+// ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable UnusedMember.Global
 
 #endregion
@@ -76,7 +77,7 @@ public partial class Provider : IDisposable
 
         // Build Caches of presets
         await Task.Run(() => P.IPCSearch.ComboStatesByJobCategorized.TryGetValue(Player.Job, out var _));
-        await Task.Run(() => P.UIHelper.PresetControlled(CustomComboPreset.DRK_ST_Combo));
+        await Task.Run(() => P.UIHelper.PresetControlled(CustomComboPreset.AST_ST_DPS));
         output._ipcReady = true;
 
         return output;
@@ -143,7 +144,7 @@ public partial class Provider : IDisposable
     ///     </list>
     /// </returns>
     /// <remarks>
-    ///     None of this will work correctly -or sometimes at all- with PvP.
+    ///     None of this will work correctly - or sometimes at all - with PvP.
     /// </remarks>
     /// <seealso cref="RegisterForLeaseWithCallback" />
     /// <seealso cref="RegisterForLease(string,string,Action{int,string})" />
@@ -152,7 +153,7 @@ public partial class Provider : IDisposable
         (string internalPluginName, string pluginName)
     {
         // Bail if IPC is disabled
-        if (Helper.CheckForBailConditionsAtSetTime())
+        if (Helper.CheckForBailConditionsAtSetTime(out _))
             return null;
 
         return Leasing.CreateRegistration(internalPluginName, pluginName);
@@ -196,7 +197,7 @@ public partial class Provider : IDisposable
         (string internalPluginName, string pluginName, string? ipcPrefixForCallback)
     {
         // Bail if IPC is disabled
-        if (Helper.CheckForBailConditionsAtSetTime())
+        if (Helper.CheckForBailConditionsAtSetTime(out _))
             return null;
 
         // Assign the IPC prefix if indicated it is the same as the internal name
@@ -234,7 +235,7 @@ public partial class Provider : IDisposable
         Action<int, string> leaseCancelledCallback)
     {
         // Bail if IPC is disabled
-        if (Helper.CheckForBailConditionsAtSetTime())
+        if (Helper.CheckForBailConditionsAtSetTime(out _))
             return null;
 
         return Leasing.CreateRegistration(
@@ -266,19 +267,23 @@ public partial class Provider : IDisposable
     ///     Optionally whether to enable Auto-Rotation.<br />
     ///     Only used to disable Auto-Rotation, as enabling it is the default.
     /// </param>
+    /// <returns>
+    ///     The <see cref="SetResult" /> status code indicating the result of the
+    ///     operation.
+    /// </returns>
     /// <seealso cref="GetAutoRotationState" />
     /// <remarks>
     ///     This is only the state of Auto-Rotation, not whether any combos are
     ///     enabled in Auto-Mode.
     /// </remarks>
     [EzIPC]
-    public void SetAutoRotationState(Guid lease, bool enabled = true)
+    public SetResult SetAutoRotationState(Guid lease, bool enabled = true)
     {
         // Bail for standard conditions
-        if (Helper.CheckForBailConditionsAtSetTime(lease))
-            return;
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
 
-        Leasing.AddRegistrationForAutoRotation(lease, enabled);
+        return Leasing.AddRegistrationForAutoRotation(lease, enabled);
     }
 
     /// <summary>
@@ -311,15 +316,22 @@ public partial class Provider : IDisposable
     ///     Your lease ID from
     ///     <see cref="RegisterForLease(string,string)" />
     /// </param>
-    /// <remarks>This can take a little bit to finish.</remarks>
+    /// <returns>
+    ///     The <see cref="SetResult" /> status code indicating the result of the
+    ///     operation.
+    /// </returns>
+    /// <remarks>
+    ///     This will do the actual <c>set</c>ting asynchronously, and will take a
+    ///     several seconds to complete.
+    /// </remarks>
     [EzIPC]
-    public void SetCurrentJobAutoRotationReady(Guid lease)
+    public SetResult SetCurrentJobAutoRotationReady(Guid lease)
     {
         // Bail for standard conditions
-        if (Helper.CheckForBailConditionsAtSetTime(lease))
-            return;
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
 
-        Leasing.AddRegistrationForCurrentJob(lease);
+        return Leasing.AddRegistrationForCurrentJob(lease);
     }
 
     /// <summary>
@@ -498,16 +510,24 @@ public partial class Provider : IDisposable
     ///     Only used to disable the combo in Auto-Mode, as enabling it is the
     ///     default.
     /// </param>
+    /// <returns>
+    ///     The <see cref="SetResult" /> status code indicating the result of the
+    ///     operation.
+    /// </returns>
+    /// <returns>
+    ///     The <see cref="SetResult" /> status code indicating the result of the
+    ///     operation.
+    /// </returns>
     [EzIPC]
-    public void SetComboState
+    public SetResult SetComboState
     (Guid lease, string comboInternalName,
         bool comboState = true, bool autoState = true)
     {
         // Bail for standard conditions
-        if (Helper.CheckForBailConditionsAtSetTime(lease))
-            return;
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
 
-        Leasing.AddRegistrationForCombo(
+        return Leasing.AddRegistrationForCombo(
             lease, comboInternalName, comboState, autoState);
     }
 
@@ -544,14 +564,19 @@ public partial class Provider : IDisposable
     ///     Optionally whether to enable the combo option.<br />
     ///     Only used to disable the combo option, as enabling it is the default.
     /// </param>
+    /// <returns>
+    ///     The <see cref="SetResult" /> status code indicating the result of the
+    ///     operation.
+    /// </returns>
     [EzIPC]
-    public void SetComboOptionState(Guid lease, string optionName, bool state = true)
+    public SetResult SetComboOptionState
+        (Guid lease, string optionName, bool state = true)
     {
         // Bail for standard conditions
-        if (Helper.CheckForBailConditionsAtSetTime(lease))
-            return;
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
 
-        Leasing.AddRegistrationForOption(lease, optionName, state);
+        return Leasing.AddRegistrationForOption(lease, optionName, state);
     }
 
     #endregion

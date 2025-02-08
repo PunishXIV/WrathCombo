@@ -21,17 +21,21 @@ public partial class Helper(ref Leasing leasing)
     /// <summary>
     ///     Checks for typical bail conditions at the time of a set.
     /// </summary>
+    /// <param name="result">
+    ///     The result to set if the method should bail.
+    /// </param>
     /// <param name="lease">
     ///     Your lease ID from <see cref="Provider.RegisterForLease(string,string)" />
     /// </param>
     /// <returns>If the method should bail.</returns>
     internal bool CheckForBailConditionsAtSetTime
-        (Guid? lease = null)
+        (out SetResult result, Guid? lease = null)
     {
         // Bail if IPC is disabled
         if (!IPCEnabled)
         {
             Logging.Warn(BailMessages.LiveDisabled);
+            result = SetResult.IPCDisabled;
             return true;
         }
 
@@ -40,6 +44,7 @@ public partial class Helper(ref Leasing leasing)
             !_leasing.CheckLeaseExists(lease.Value))
         {
             Logging.Warn(BailMessages.InvalidLease);
+            result = SetResult.InvalidLease;
             return true;
         }
 
@@ -48,9 +53,11 @@ public partial class Helper(ref Leasing leasing)
             _leasing.CheckBlacklist(lease.Value))
         {
             Logging.Warn(BailMessages.BlacklistedLease);
+            result = SetResult.BlacklistedLease;
             return true;
         }
 
+        result = SetResult.IGNORED;
         return false;
     }
 

@@ -299,7 +299,7 @@ public partial class Leasing
     /// </param>
     /// <param name="newState">Whether to enabled Auto-Rotation.</param>
     /// <seealso cref="Provider.SetAutoRotationState" />
-    internal void AddRegistrationForAutoRotation(Guid lease, bool newState)
+    internal SetResult AddRegistrationForAutoRotation(Guid lease, bool newState)
     {
         var registration = Registrations[lease];
 
@@ -308,7 +308,7 @@ public partial class Leasing
         {
             Logging.Log(
                 $"{registration.PluginName}: You are already controlling Auto-Rotation");
-            return;
+            return SetResult.Duplicate;
         }
 
         // Always [0], not an actual add
@@ -318,6 +318,7 @@ public partial class Leasing
         AutoRotationStateUpdated = DateTime.Now;
 
         Logging.Log($"{registration.PluginName}: Auto-Rotation state updated");
+        return SetResult.Okay;
     }
 
     /// <summary>
@@ -353,7 +354,7 @@ public partial class Leasing
     /// </param>
     /// <param name="jobOverride">A manual override, only used in testing</param>
     /// <seealso cref="Provider.SetCurrentJobAutoRotationReady" />
-    internal void AddRegistrationForCurrentJob(Guid lease, Job? jobOverride = null)
+    internal SetResult AddRegistrationForCurrentJob(Guid lease, Job? jobOverride = null)
     {
         var registration = Registrations[lease];
 
@@ -361,7 +362,7 @@ public partial class Leasing
         {
             Logging.Error(
                 "Failed to register current job: player object does not exist!");
-            return;
+            return SetResult.PlayerNotAvailable;
         }
 
         // Convert current job/class to a job, if it is a class
@@ -380,7 +381,7 @@ public partial class Leasing
         {
             Logging.Log(
                 $"{registration.PluginName}: You are already controlling the current job ({job})");
-            return;
+            return SetResult.Duplicate;
         }
 
         Logging.Log(
@@ -442,6 +443,7 @@ public partial class Leasing
             CombosUpdated = DateTime.Now;
             OptionsUpdated = DateTime.Now;
         });
+        return SetResult.OkayWorking;
     }
 
     /// <summary>
@@ -527,7 +529,7 @@ public partial class Leasing
     /// <param name="newState">The state to set the preset to.</param>
     /// <param name="newAutoState">The state to set the Auto-Mode to.</param>
     /// <seealso cref="Provider.SetComboState" />
-    internal void AddRegistrationForCombo
+    internal SetResult AddRegistrationForCombo
         (Guid lease, string combo, bool newState, bool newAutoState)
     {
         var registration = Registrations[lease];
@@ -538,13 +540,18 @@ public partial class Leasing
 
         if (CheckBlacklist(Registrations[lease].ConfigurationsHash) &&
             Registrations[lease].SetsLeased > 4)
-            RemoveRegistration(lease, CancellationReasonEnum.WrathUserManuallyCancelled,
+        {
+            RemoveRegistration(lease,
+                CancellationReasonEnum.WrathUserManuallyCancelled,
                 "Matched currently-blacklisted configuration");
+            return SetResult.BlacklistedLease;
+        }
 
         registration.LastUpdated = DateTime.Now;
         CombosUpdated = DateTime.Now;
 
         Logging.Log($"{registration.PluginName}: Registered Combo ({combo})");
+        return SetResult.Okay;
     }
 
     /// <summary>
@@ -585,7 +592,7 @@ public partial class Leasing
     /// <param name="option">The option internal name to register control of.</param>
     /// <param name="newState">The state to set the preset to.</param>
     /// <seealso cref="Provider.SetComboOptionState" />
-    internal void AddRegistrationForOption
+    internal SetResult AddRegistrationForOption
         (Guid lease, string option, bool newState)
     {
         var registration = Registrations[lease];
@@ -596,13 +603,18 @@ public partial class Leasing
 
         if (CheckBlacklist(Registrations[lease].ConfigurationsHash) &&
             Registrations[lease].SetsLeased > 4)
-            RemoveRegistration(lease, CancellationReasonEnum.WrathUserManuallyCancelled,
+        {
+            RemoveRegistration(lease,
+                CancellationReasonEnum.WrathUserManuallyCancelled,
                 "Matched currently-blacklisted configuration");
+            return SetResult.BlacklistedLease;
+        }
 
         registration.LastUpdated = DateTime.Now;
         OptionsUpdated = DateTime.Now;
 
         Logging.Log($"{registration.PluginName}: Registered Option ({option})");
+        return SetResult.Okay;
     }
 
     #endregion

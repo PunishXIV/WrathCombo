@@ -127,13 +127,21 @@ internal partial class DNC
 
                 case CustomComboPreset.DNC_ST_BalanceOpener:
                     UserConfig.DrawRadioButton(DNC_ST_OpenerSelection,
-                        "15s Countdown",
+                        "Standard: 15s Countdown",
                         "Requires at least a 15s cooldown\nand that you start Standard Step at 15s.",
-                        0, descriptionAsTooltip: true);
+                        (int)Openers.FifteenSecond, descriptionAsTooltip: true);
                     UserConfig.DrawRadioButton(DNC_ST_OpenerSelection,
-                        "7s Countdown",
+                        "Standard: 7s Countdown",
                         "Requires at least a 7s cooldown\nand that you start Standard Step at 7s.\nPerforms worse than 15s.",
-                        1, descriptionAsTooltip: true);
+                        (int)Openers.SevenSecond, descriptionAsTooltip: true);
+                    UserConfig.DrawRadioButton(DNC_ST_OpenerSelection,
+                        "Technical: 30s Countdown",
+                        "Requires at least a 30s cooldown\nand that you start Standard Step at 30s.\nNot generally recommended.\nWill align buffs worse than Standard 15s.",
+                        (int)Openers.ThirtySecondTech, descriptionAsTooltip: true);
+                    UserConfig.DrawRadioButton(DNC_ST_OpenerSelection,
+                        "Technical: 7s Countdown",
+                        "Requires at least a 7s cooldown\nand that you start Technical Step at 7s.\nNOT recommended.",
+                        (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
                     UserConfig.DrawBossOnlyChoice(DNC_ST_OpenerDifficulty);
 
                     break;
@@ -350,6 +358,8 @@ internal partial class DNC
         {
             FifteenSecond,
             SevenSecond,
+            ThirtySecondTech,
+            SevenSecondTech,
         }
 
         public enum IncludeStep

@@ -50,6 +50,11 @@ internal partial class PLD
                              JustUsed(HallowedGround, 9f);
             #endregion
 
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
             // Variant Cure
             if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
@@ -242,6 +247,18 @@ internal partial class PLD
                              JustUsed(HallowedGround, 9f);
             #endregion
 
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (TargetIsCasting())
+                if (ActionReady(ShieldBash))
+                    return ShieldBash;
+                else if (ActionReady(All.LowBlow))
+                    return All.LowBlow;
+
             // Variant Cure
             if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
@@ -386,6 +403,12 @@ internal partial class PLD
                                        (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
                                        (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
             #endregion
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.PLD_ST_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
 
             // Variant Cure
             if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
@@ -583,6 +606,19 @@ internal partial class PLD
             bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) ||
                                     (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_AoE_MP_Reserve);
             #endregion
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.PLD_AoE_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (IsEnabled(CustomComboPreset.PLD_AoE_Stun) && TargetIsCasting())
+                if (ActionReady(ShieldBash))
+                    return ShieldBash;
+                else if (ActionReady(All.LowBlow))
+                    return All.LowBlow;
 
             // Variant Cure
             if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&

@@ -54,7 +54,8 @@ internal static partial class SGE
             SGE_AoE_Heal_PanhaimaOption = new("SGE_AoE_Heal_PanhaimaOption", 70),
             SGE_AoE_Heal_KeracholeOption = new("SGE_AoE_Heal_KeracholeOption", 70),
             SGE_AoE_Heal_IxocholeOption = new("SGE_AoE_Heal_IxocholeOption", 70),
-            SGE_AoE_Heal_HolosOption = new("SGE_AoE_Heal_HolosOption", 70);
+            SGE_AoE_Heal_HolosOption = new("SGE_AoE_Heal_HolosOption", 70),
+            SGE_AoE_Heal_EPrognosisOption = new("SGE_AoE_Heal_EPrognosisOption", 34);
         public static UserIntArray
             SGE_ST_Heals_Priority = new("SGE_ST_Heals_Priority"),
             SGE_AoE_Heals_Priority = new("SGE_AoE_Heals_Priority");
@@ -194,37 +195,42 @@ internal static partial class SGE
 
                 case CustomComboPreset.SGE_AoE_Heal_Ixochole:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_IxocholeOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 1, $"{Ixochole.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 1, $"{Ixochole.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Physis:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_PhysisOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 2, $"{Physis.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 2, $"{Physis.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Holos:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_HolosOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 3, $"{Holos.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 3, $"{Holos.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Panhaima:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_PanhaimaOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 4, $"{Panhaima.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 4, $"{Panhaima.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Pepsis:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_PepsisOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 5, $"{Pepsis.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 5, $"{Pepsis.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Philosophia:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_PhilosophiaOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 6, $"{Philosophia.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 6, $"{Philosophia.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Zoe:
                     DrawSliderInt(0, 100, SGE_AoE_Heal_ZoeOption, "Start using when below party average HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 8, 7, $"{Pneuma.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 7, $"{Pneuma.ActionName()} Priority: ");
+                    break;
+
+                case CustomComboPreset.SGE_AoE_Heal_EPrognosis:
+                    DrawSliderInt(0, 100, SGE_AoE_Heal_EPrognosisOption, "Shield Check: Percentage of Party Members without shields to check for.", sliderIncrement: 25);
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 8, $"{EukrasianPrognosis.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_Eukrasia:

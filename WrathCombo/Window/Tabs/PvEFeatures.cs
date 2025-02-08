@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Linq;
@@ -14,10 +15,8 @@ namespace WrathCombo.Window.Tabs
 {
     internal class PvEFeatures : ConfigWindow
     {
-        //internal static Dictionary<string, bool> showHeader = new Dictionary<string, bool>();
-
-        internal static bool HasToOpenJob = true;
         internal static string OpenJob = string.Empty;
+
         internal static new void Draw()
         {
             //#if !DEBUG
@@ -223,6 +222,17 @@ namespace WrathCombo.Window.Tabs
             }
         }
 
-        internal static string? HeaderToOpen;
+        internal static void OpenToCurrentJob(bool onJobChange)
+        {
+            if ((onJobChange && Service.Configuration.OpenToCurrentJobOnSwitch) || 
+                (!onJobChange && Service.Configuration.OpenToCurrentJob && Player.Available))
+            {
+                    OpenJob = groupedPresets
+                        .FirstOrDefault(x =>
+                            x.Value.Any(y => y.Info.JobShorthand == Player.Job.ToString()))
+                        .Key;
+            }
+ 
+        }
     }
 }

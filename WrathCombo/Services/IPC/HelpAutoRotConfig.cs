@@ -40,13 +40,14 @@ public partial class Leasing
     /// <param name="option">The Auto-Rotation option to set.</param>
     /// <param name="value">The type-juggled value to set it to.</param>
     /// <seealso cref="Provider.SetAutoRotationConfigState" />
-    internal void AddRegistrationForAutoRotationConfig
+    internal SetResult AddRegistrationForAutoRotationConfig
         (Guid lease, AutoRotationConfigOption option, int value)
     {
         var registration = Registrations[lease];
 
-        if (registration.AutoRotationConfigsControlled.ContainsKey(option) && registration.AutoRotationConfigsControlled[option] == value)
-            return;
+        if (registration.AutoRotationConfigsControlled.ContainsKey(option) &&
+            registration.AutoRotationConfigsControlled[option] == value)
+            return SetResult.Duplicate;
 
         registration.AutoRotationConfigsControlled[option] = value;
 
@@ -54,6 +55,7 @@ public partial class Leasing
         AutoRotationConfigsUpdated = DateTime.Now;
 
         Logging.Log($"{registration.PluginName}: Registered Auto-Rotation Config ({option} to {value})");
+        return SetResult.Okay;
     }
 }
 

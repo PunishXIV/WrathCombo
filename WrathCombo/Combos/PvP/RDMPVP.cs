@@ -1,4 +1,5 @@
 ﻿using ImGuiNET;
+using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -215,7 +216,7 @@ namespace WrathCombo.Combos.PvP
                     }
 
                     // Grand Impact / Jolt III
-                    return hasGrandImpact || !isMoving ? OriginalHook(actionID) : OriginalHook(11);
+                    return hasGrandImpact || !isMoving ? OriginalHook(actionID) : All.SavageBlade;
                 }
 
                 return actionID;

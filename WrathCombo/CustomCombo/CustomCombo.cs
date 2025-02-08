@@ -67,7 +67,7 @@ namespace WrathCombo.CustomComboNS
 
             if (!Svc.ClientState.IsPvP && ActionManager.Instance()->QueuedActionType == ActionType.Action && ActionManager.Instance()->QueuedActionId != actionID)
             {
-                if (resultingActionID != OriginalHook(11) && WrathOpener.CurrentOpener?.OpenerStep <= 1)
+                if (resultingActionID != All.SavageBlade && WrathOpener.CurrentOpener?.OpenerStep <= 1)
                     return false;
             }
             newActionID = resultingActionID;

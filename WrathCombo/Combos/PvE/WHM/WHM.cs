@@ -251,7 +251,7 @@ internal partial class WHM
                 return All.Esuna;
 
             if (IsEnabled(CustomComboPreset.WHM_STHeals_Lucid) &&
-                All.CanUseLucid(actionID, Config.WHM_STHeals_Lucid))
+                All.CanUseLucid(Config.WHM_STHeals_Lucid))
                 return All.LucidDreaming;
 
             foreach (int prio in Config.WHM_ST_Heals_Priority.Items.OrderBy(x => x))

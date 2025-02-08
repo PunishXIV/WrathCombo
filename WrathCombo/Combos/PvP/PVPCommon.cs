@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using System.Collections.Generic;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -64,7 +65,7 @@ namespace WrathCombo.Combos.PvP
 
         // Lists of Excluded skills 
         internal static readonly List<uint>
-            MovmentSkills = [WARPvP.Onslaught, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide],
+            MovmentSkills = [WARPvP.Onslaught, VPRPvP.Slither, NINPvP.Shukuchi, DNCPvP.EnAvant, MNKPvP.ThunderClap, RDMPvP.CorpsACorps, RDMPvP.Displacement, SGEPvP.Icarus, RPRPvP.HellsIngress, RPRPvP.Regress, BRDPvP.RepellingShot, BLMPvP.AetherialManipulation, DRGPvP.ElusiveJump, GNBPvP.RoughDivide],
             GlobalSkills = [Teleport, Guard, Recuperate, Purify, StandardElixir, Sprint];
 
         internal class GlobalEmergencyHeals : CustomCombo
@@ -76,7 +77,7 @@ namespace WrathCombo.Combos.PvP
                 if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
                     if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    return All.SavageBlade;
                 }
 
                 if (Execute() &&
@@ -98,6 +99,7 @@ namespace WrathCombo.Combos.PvP
 
                 if (HasEffect(3180)) return false; //DRG LB buff
                 if (HasEffectAny(1420)) return false; //Rival Wings Mounted
+                if (HasEffect(4096)) return false; //VPR Snakesbane
                 if (HasEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
                 if (LocalPlayer.CurrentMp < 2500) return false;
                 if (remainingPercentage * 100 > threshold) return false;
@@ -121,14 +123,14 @@ namespace WrathCombo.Combos.PvP
                             return Recuperate;
                         return Guard;
                     }
-                    return OriginalHook(11);
+                    return All.SavageBlade;
                 }
 
                 if (Execute() &&
                     InPvP() &&
                     !GlobalSkills.Contains(actionID) &&
                     !MovmentSkills.Contains(actionID))
-                    return OriginalHook(Guard);
+                    return All.SavageBlade;
 
                 return actionID;
             }
@@ -140,6 +142,7 @@ namespace WrathCombo.Combos.PvP
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)jobMaxHp;
 
                 if (HasEffect(3180)) return false; //DRG LB buff
+                if (HasEffect(4096)) return false; //VPR Snakesbane
                 if (HasEffectAny(1420)) return false; //Rival Wings Mounted
                 if (HasEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
                 if (HasEffectAny(Debuffs.Unguarded) || HasEffect(WARPvP.Buffs.InnerRelease)) return false;
@@ -160,7 +163,7 @@ namespace WrathCombo.Combos.PvP
                 if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
                     if (actionID == Guard) return Guard;
-                    else return OriginalHook(11);
+                    return All.SavageBlade;
                 }
 
                 if (Execute() &&
@@ -176,6 +179,7 @@ namespace WrathCombo.Combos.PvP
                 var selectedStatuses = PluginConfiguration.GetCustomBoolArrayValue(Config.QuickPurifyStatuses);
 
                 if (HasEffect(3180)) return false; //DRG LB buff
+                if (HasEffect(4096)) return false; //VPR Snakesbane
                 if (HasEffectAny(1420)) return false; //Rival Wings Mounted
 
                 if (selectedStatuses.Length == 0) return false;

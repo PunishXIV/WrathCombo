@@ -81,6 +81,11 @@ internal partial class GNB
             if (Opener().FullOpener(ref actionID))
                 return actionID;
 
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
             #region Mitigations
             if (Config.GNB_ST_MitsOptions != 1)
             {
@@ -122,7 +127,7 @@ internal partial class GNB
                         return OriginalHook(HeartOfStone);
 
                     //Aurora
-                    if (LevelChecked(Aurora) && //Aurora is unlocked
+                    if (ActionReady(Aurora) && //Aurora is ready
                         !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && //Aurora is not active on self or target
                         PlayerHealthPercentageHp() < 85) //
                         return Aurora;
@@ -608,6 +613,12 @@ internal partial class GNB
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.GNB_ST_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation) && //Mitigation option is enabled
                 InCombat() && //Player is in combat
@@ -674,7 +685,7 @@ internal partial class GNB
 
                 //Aurora
                 if (IsEnabled(CustomComboPreset.GNB_ST_Aurora) && //Aurora option is enabled
-                    LevelChecked(Aurora) && //Aurora is unlocked
+                    ActionReady(Aurora) && //Aurora is ready
                     !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && //Aurora is not already active on player or target
                     GetRemainingCharges(Aurora) > Config.GNB_ST_Aurora_Charges && //Aurora has more charges than set threshold
                     PlayerHealthPercentageHp() < Config.GNB_ST_Aurora_Health && //Player's health is below selected threshold
@@ -1142,6 +1153,20 @@ internal partial class GNB
             #endregion
             #endregion
 
+            #region Stuns
+
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (ActionReady(All.LowBlow)
+                && TargetIsCasting())
+                return All.LowBlow;
+
+            #endregion
+
             #region Mitigations
             if (Config.GNB_AoE_MitsOptions != 1)
             {
@@ -1183,7 +1208,7 @@ internal partial class GNB
                         return OriginalHook(HeartOfStone);
 
                     //Aurora
-                    if (LevelChecked(Aurora) && //Aurora is unlocked
+                    if (ActionReady(Aurora) && //Aurora is ready
                         !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && //Aurora is not active on self or target
                         PlayerHealthPercentageHp() < 85) //Player's health is below 85%
                         return Aurora;
@@ -1537,6 +1562,22 @@ internal partial class GNB
             #endregion
             #endregion
 
+            #region Stuns
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Stun)
+                && ActionReady(All.LowBlow)
+                && TargetIsCasting())
+                return All.LowBlow;
+
+            #endregion
+
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_AoE_Mitigation) && //Mitigation option is enabled
                 InCombat() && //Player is in combat
@@ -1603,7 +1644,7 @@ internal partial class GNB
 
                 //Aurora
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Aurora) && //Aurora option is enabled
-                    LevelChecked(Aurora) && //Aurora is unlocked
+                    ActionReady(Aurora) && //Aurora is ready
                     GetRemainingCharges(Aurora) > Config.GNB_AoE_Aurora_Charges && //Aurora has more charges than set threshold
                     !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && //Aurora is not already active on player or target
                     PlayerHealthPercentageHp() < Config.GNB_AoE_Aurora_Health && //Player's health is below selected threshold
@@ -2413,7 +2454,7 @@ internal partial class GNB
                 return actionID;
             if ((HasFriendlyTarget() && TargetHasEffectAny(Buffs.Aurora)) ||
                 (!HasFriendlyTarget() && HasEffectAny(Buffs.Aurora)))
-                return OriginalHook(11);
+                return All.SavageBlade;
             return actionID;
         }
     }

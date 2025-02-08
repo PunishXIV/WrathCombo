@@ -1,6 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.DalamudServices;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -231,6 +230,12 @@ internal static partial class SGE
                 action = Zoe;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Zoe);
                 return Config.SGE_AoE_Heal_ZoeOption;
+            
+            case 8:
+                action = Eukrasia;
+                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis)
+                    && (GetPartyBuffPercent(Buffs.EukrasianDiagnosis) + GetPartyBuffPercent(Buffs.EukrasianPrognosis)) <= Config.SGE_AoE_Heal_EPrognosisOption;
+                return 100; //Don't HP Check
         }
 
         enabled = false;

@@ -607,6 +607,17 @@ internal partial class MNK
                 : actionID;
     }
 
+    internal class MNK_Brotherhood_Riddle : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_Brotherhood_Riddle;
+
+        protected override uint Invoke(uint actionID) =>
+            actionID is Brotherhood &&
+            ActionReady(RiddleOfFire) && IsOnCooldown(Brotherhood)
+                ? RiddleOfFire
+                : actionID;
+    }
+
     internal class MNK_BeastChakras : CustomCombo
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;

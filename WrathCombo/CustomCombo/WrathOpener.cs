@@ -123,8 +123,8 @@ namespace WrathCombo.CustomComboNS
         public uint CurrentOpenerAction { get; 
             set 
             {
-                if (value != 11)
-                field = value;
+                if (value != All.SavageBlade)
+                    field = value;
             } 
         }
         public uint PreviousOpenerAction { get; set; }
@@ -187,7 +187,7 @@ namespace WrathCombo.CustomComboNS
                     {
                         if (!CanDelayedWeave())
                         {
-                            actionID = 11;
+                            actionID = All.SavageBlade;
                             return true;
                         }
                     }
@@ -214,7 +214,7 @@ namespace WrathCombo.CustomComboNS
                         if ((DateTime.Now - DelayedAt).TotalSeconds < HoldDelay && !PartyInCombat())
                         {
                             ActionWatching.TimeLastActionUsed = DateTime.Now; //Hacky workaround for TN jobs
-                            actionID = 11;
+                            actionID = All.SavageBlade;
                             return true;
                         }
                     }

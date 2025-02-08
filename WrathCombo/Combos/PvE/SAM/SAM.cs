@@ -116,6 +116,10 @@ internal partial class SAM
             if (LevelChecked(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
+            //Meikyo Features
+            if (UseMeikyo())
+                return MeikyoShisui;
+
             //oGCDs
             if (CanWeave())
             {
@@ -132,10 +136,6 @@ internal partial class SAM
                             return Ikishoten;
                     }
                 }
-
-                //Meikyo Features
-                if (UseMeikyo())
-                    return MeikyoShisui;
 
                 //Senei Features
                 if (HasEffect(Buffs.Fugetsu) && HasEffect(Buffs.Fuka))
@@ -308,6 +308,12 @@ internal partial class SAM
                 LevelChecked(Enpi) && !InMeleeRange() && HasBattleTarget())
                 return Enpi;
 
+            //Meikyo Features
+            if (IsEnabled(CustomComboPreset.SAM_ST_CDs) &&
+                IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
+                UseMeikyo())
+                return MeikyoShisui;
+
             //oGCDs
             if (CanWeave())
             {
@@ -327,11 +333,6 @@ internal partial class SAM
                                 return Ikishoten;
                         }
                     }
-
-                    //Meikyo Features
-                    if (IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
-                        UseMeikyo())
-                        return MeikyoShisui;
 
                     //Senei Features
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Senei) &&
@@ -682,7 +683,7 @@ internal partial class SAM
                         //Dumps Kenki in preparation for Ikishoten
                         case > 50 when GetCooldownRemainingTime(Ikishoten) < 10:
                             return Kyuten;
-                        
+
                         case <= 50 when IsOffCooldown(Ikishoten):
                             return Ikishoten;
                     }
@@ -941,7 +942,7 @@ internal partial class SAM
 
         protected override uint Invoke(uint actionID) =>
             actionID is MeikyoShisui && HasEffect(Buffs.MeikyoShisui) && LevelChecked(MeikyoShisui)
-                ? OriginalHook(11)
+                ? All.SavageBlade
                 : actionID;
     }
 }

@@ -26,6 +26,11 @@ internal partial class WAR
                               JustUsed(All.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
             #region Variant
             Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
             if (IsEnabled(CustomComboPreset.WAR_Variant_SpiritDart) &&
@@ -204,6 +209,12 @@ internal partial class WAR
                               JustUsed(ThrillOfBattle, 5f) ||
                               JustUsed(All.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
 
             #region Variant
             Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
@@ -442,6 +453,20 @@ internal partial class WAR
                               JustUsed(All.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
+            #region Stuns
+
+            // Interrupt
+            if (ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (ActionReady(All.LowBlow)
+                && TargetIsCasting())
+                return All.LowBlow;
+
+            #endregion
+
             #region Variant
             Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
             if (IsEnabled(CustomComboPreset.WAR_Variant_SpiritDart) &&
@@ -582,6 +607,22 @@ internal partial class WAR
                               JustUsed(ThrillOfBattle, 5f) ||
                               JustUsed(All.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
+
+            #region Stuns
+
+            // Interrupt
+            if (IsEnabled(CustomComboPreset.WAR_AoE_Interrupt)
+                && ActionReady(All.Interject)
+                && CanInterruptEnemy())
+                return All.Interject;
+
+            // Stun
+            if (IsEnabled(CustomComboPreset.WAR_AoE_Stun)
+                && ActionReady(All.LowBlow)
+                && TargetIsCasting())
+                return All.LowBlow;
+
+            #endregion
 
             #region Variant
             Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);

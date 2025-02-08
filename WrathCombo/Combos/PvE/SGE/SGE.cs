@@ -215,7 +215,7 @@ internal partial class SGE
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Lucid) &&
-                All.CanUseLucid(actionID, Config.SGE_ST_DPS_Lucid))
+                All.CanUseLucid(Config.SGE_ST_DPS_Lucid))
                 return All.LucidDreaming;
 
             // Variant
@@ -455,11 +455,6 @@ internal partial class SGE
                         return spell;
                 }
             }
-
-            if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis) && LevelChecked(Eukrasia) &&
-                (IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis_IgnoreShield) ||
-                 FindEffect(Buffs.EukrasianPrognosis) is null))
-                return Eukrasia;
 
             return actionID;
         }

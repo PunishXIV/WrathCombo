@@ -33,13 +33,25 @@ internal partial class DNC
     /// <returns>The chosen Opener.</returns>
     internal static WrathOpener Opener()
     {
-        if (Config.DNC_ST_OpenerSelection == (int) Config.Openers.FifteenSecond &&
+        if (Config.DNC_ST_OpenerSelection ==
+            (int) Config.Openers.FifteenSecond &&
             Opener15S.LevelChecked)
             return Opener15S;
 
-        if (Config.DNC_ST_OpenerSelection == (int) Config.Openers.SevenSecond &&
+        if (Config.DNC_ST_OpenerSelection ==
+            (int) Config.Openers.SevenSecond &&
             Opener07S.LevelChecked)
             return Opener07S;
+
+        if (Config.DNC_ST_OpenerSelection ==
+            (int) Config.Openers.ThirtySecondTech &&
+            Opener30TechS.LevelChecked)
+            return Opener30TechS;
+
+        if (Config.DNC_ST_OpenerSelection ==
+            (int) Config.Openers.SevenSecondTech &&
+            Opener07TechS.LevelChecked)
+            return Opener07TechS;
 
         return WrathOpener.Dummy;
     }
@@ -134,6 +146,8 @@ internal partial class DNC
 
     #region Openers
 
+    #region Standard Openers
+
     internal static FifteenSecondOpener Opener15S = new();
 
     internal class FifteenSecondOpener : WrathOpener
@@ -147,23 +161,24 @@ internal partial class DNC
             StandardStep,
             Emboite,
             Emboite,
-            StandardFinish2,
-            TechnicalStep, //5
+            Peloton,
+            StandardFinish2, //5
+            TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite,
-            TechnicalFinish4, //10
+            Emboite, //10
+            TechnicalFinish4,
             Devilment,
             Tillana,
             Flourish,
-            DanceOfTheDawn,
-            FanDance4, //15
+            DanceOfTheDawn, //15
+            FanDance4,
             LastDance,
             FanDance3,
             FinishingMove,
-            StarfallDance,
-            ReverseCascade, //20
+            StarfallDance, //20
+            ReverseCascade,
             ReverseCascade,
             ReverseCascade,
         ];
@@ -174,7 +189,8 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], 12)
+            ([4], 7),
+            ([5], 5),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -183,16 +199,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 6, 7, 8, 9], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 6, 7, 8, 9], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 6, 7, 8, 9], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([19], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 22], SaberDance, () => Gauge.Esprit > 80),
-            ([20, 21, 22], StarfallDance,
+            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([20], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
+            ([21, 22, 23], StarfallDance,
                 () => HasEffect(Buffs.FlourishingStarfall)),
-            ([20, 21, 22], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 22], LastDance, () => HasEffect(Buffs.LastDanceReady)),
-            ([20, 21, 22], Fountainfall, () =>
+            ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([21, 22, 23], Fountainfall, () =>
                 HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -237,23 +253,24 @@ internal partial class DNC
             StandardStep,
             Emboite,
             Emboite,
-            StandardFinish2,
-            TechnicalStep, //5
+            Peloton,
+            StandardFinish2, //5
+            TechnicalStep,
             Emboite,
             Emboite,
             Emboite,
-            Emboite,
-            TechnicalFinish4, //10
+            Emboite, //10
+            TechnicalFinish4,
             Devilment,
             Tillana,
             Flourish,
-            DanceOfTheDawn,
-            FanDance4, //15
+            DanceOfTheDawn, //15
+            FanDance4,
             LastDance,
             FanDance3,
             StarfallDance,
-            ReverseCascade,
             ReverseCascade, //20
+            ReverseCascade,
             FinishingMove,
             ReverseCascade,
         ];
@@ -264,7 +281,8 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], 4)
+            ([4], 2),
+            ([5], 2),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -273,16 +291,16 @@ internal partial class DNC
             set;
         } =
         [
-            ([2, 3, 6, 7, 8, 9], Entrechat, () => Gauge.NextStep == Entrechat),
-            ([2, 3, 6, 7, 8, 9], Jete, () => Gauge.NextStep == Jete),
-            ([2, 3, 6, 7, 8, 9], Pirouette, () => Gauge.NextStep == Pirouette),
-            ([21], SaberDance, () => Gauge.Esprit >= 50),
-            ([19, 20, 22], SaberDance, () => Gauge.Esprit > 80),
-            ([19, 20, 22], StarfallDance,
+            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([22], SaberDance, () => Gauge.Esprit >= 50),
+            ([20, 21, 23], SaberDance, () => Gauge.Esprit > 80),
+            ([20, 21, 23], StarfallDance,
                 () => HasEffect(Buffs.FlourishingStarfall)),
-            ([19, 20, 22], SaberDance, () => Gauge.Esprit >= 50),
-            ([19, 20, 22], LastDance, () => HasEffect(Buffs.LastDanceReady)),
-            ([19, 20, 22], Fountainfall, () =>
+            ([20, 21, 23], SaberDance, () => Gauge.Esprit >= 50),
+            ([20, 21, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([20, 21, 23], Fountainfall, () =>
                 HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
         ];
 
@@ -313,6 +331,190 @@ internal partial class DNC
             return true;
         }
     }
+
+    #endregion
+
+    #region Technical Openers
+
+    internal static ThirtySecondTechOpener Opener30TechS = new();
+
+    internal class ThirtySecondTechOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            StandardStep,
+            Emboite,
+            Emboite,
+            StandardFinish2,
+            Peloton, //5
+            TechnicalStep,
+            Emboite,
+            Emboite,
+            Emboite,
+            Emboite, //10
+            TechnicalFinish4,
+            Devilment,
+            Tillana,
+            Flourish,
+            DanceOfTheDawn, //15
+            FanDance4,
+            LastDance,
+            FanDance3,
+            FinishingMove,
+            StarfallDance, //20
+            ReverseCascade,
+            ReverseCascade,
+            ReverseCascade,
+        ];
+
+        public override List<(int[] Steps, int HoldDelay)> PrepullDelays
+        {
+            get;
+            set;
+        } =
+        [
+            ([5], 1),
+            ([6], 6),
+        ];
+
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([2, 3, 7, 8, 9, 10], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 7, 8, 9, 10], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 7, 8, 9, 10], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([20], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
+            ([21, 22, 23], StarfallDance,
+                () => HasEffect(Buffs.FlourishingStarfall)),
+            ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
+            ([21, 22, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([21, 22, 23], Fountainfall, () =>
+                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+        ];
+
+        internal override UserData? ContentCheckConfig =>
+            Config.DNC_ST_OpenerDifficulty;
+
+        public override bool HasCooldowns()
+        {
+            if (!ActionReady(StandardStep))
+                return false;
+
+            if (!ActionReady(TechnicalStep))
+                return false;
+
+            if (!IsOffCooldown(Devilment))
+                return false;
+
+            if (InCombat())
+                return false;
+
+            if (!CountdownActive)
+                return false;
+
+            // go at 30s, with some leeway
+            if (CountdownRemaining < 28.5f)
+                return false;
+
+            return true;
+        }
+    }
+
+    internal static SevenSecondTechOpener Opener07TechS = new();
+
+    internal class SevenSecondTechOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            TechnicalStep,
+            Emboite,
+            Emboite,
+            Emboite,
+            Emboite, //5
+            Peloton,
+            TechnicalFinish4,
+            Devilment,
+            Tillana,
+            Flourish, //10
+            FinishingMove,
+            DanceOfTheDawn,
+            FanDance4,
+            StarfallDance,
+            FanDance3, //15
+            ReverseCascade,
+            ReverseCascade,
+            ReverseCascade,
+        ];
+
+        public override List<(int[] Steps, int HoldDelay)> PrepullDelays
+        {
+            get;
+            set;
+        } =
+        [
+            ([7], 2),
+        ];
+
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([2, 3, 4, 5], Entrechat, () => Gauge.NextStep == Entrechat),
+            ([2, 3, 4, 5], Jete, () => Gauge.NextStep == Jete),
+            ([2, 3, 4, 5], Pirouette, () => Gauge.NextStep == Pirouette),
+            ([14], SaberDance, () => Gauge.Esprit >= 50),
+            ([16, 17, 18], SaberDance, () => Gauge.Esprit > 80),
+            ([16, 17, 18], StarfallDance, () =>
+                HasEffect(Buffs.FlourishingStarfall)),
+            ([16, 17, 18], SaberDance, () => Gauge.Esprit >= 50),
+            ([16, 17, 18], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([16, 17, 18], Fountainfall, () =>
+                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+        ];
+
+        internal override UserData? ContentCheckConfig =>
+            Config.DNC_ST_OpenerDifficulty;
+
+        public override bool HasCooldowns()
+        {
+            if (!ActionReady(StandardStep))
+                return false;
+
+            if (!ActionReady(TechnicalStep))
+                return false;
+
+            if (!IsOffCooldown(Devilment))
+                return false;
+
+            if (InCombat())
+                return false;
+
+            if (!CountdownActive)
+                return false;
+
+            // go at 7s, with some leeway
+            if (CountdownRemaining is < 5.5f or > 8f)
+                return false;
+
+            return true;
+        }
+    }
+
+    #endregion
 
     #endregion
 

@@ -37,32 +37,34 @@ internal partial class RDM
                 CanSpellWeave())
                 return Variant.VariantRampart;
 
+            uint NewActionID = 0;
+
             //oGCDs
-            if (TryOGCDs(actionID, true, out uint oGCDAction))
-                return oGCDAction;
+            if (TryOGCDs(actionID, true, ref NewActionID))
+                return NewActionID;
 
             //Lucid Dreaming
-            if (TryLucidDreaming(actionID, 6500, ComboAction))
+            if (TryLucidDreaming(6500, ComboAction))
                 return All.LucidDreaming;
 
             //Melee Finisher
-            if (MeleeCombo.TryMeleeFinisher(out uint finisherAction))
-                return finisherAction;
+            if (MeleeCombo.TryMeleeFinisher(ref NewActionID))
+                return NewActionID;
 
             //Melee Combo
             //  Manafication/Embolden Code
-            if (MeleeCombo.TrySTManaEmbolden(actionID, out uint ManaEmbolden))
-                return ManaEmbolden;
-            if (MeleeCombo.TrySTMeleeCombo(actionID, out uint MeleeComboID))
-                return MeleeComboID;
-            if (MeleeCombo.TrySTMeleeStart(actionID, out uint MeleeID))
-                return MeleeID;
+            if (MeleeCombo.TrySTManaEmbolden(ref NewActionID))
+                return NewActionID;
+            if (MeleeCombo.TrySTMeleeCombo(ref NewActionID))
+                return NewActionID;
+            if (MeleeCombo.TrySTMeleeStart(ref NewActionID))
+                return NewActionID;
 
             //Normal Spell Rotation
-            if (SpellCombo.TryAcceleration(actionID, out uint Accel))
-                return Accel;
-            if (SpellCombo.TrySTSpellRotation(actionID, out uint SpellID))
-                return SpellID;
+            if (SpellCombo.TryAcceleration(ref NewActionID))
+                return NewActionID;
+            if (SpellCombo.TrySTSpellRotation(ref NewActionID))
+                return NewActionID;
 
             //NO_CONDITIONS_MET
             return actionID;
@@ -78,6 +80,8 @@ internal partial class RDM
             if (actionID is not (Jolt or Jolt2 or Jolt3) &&
                 actionID is not (Fleche or Riposte or Reprise))
                 return actionID;
+
+            uint NewActionID = 0;
 
             if (actionID is Jolt or Jolt2 or Jolt3)
             {
@@ -116,8 +120,8 @@ internal partial class RDM
 
                 if (ActionFound && LevelChecked(Corpsacorps))
                 {
-                    if (TryOGCDs(actionID, true, out uint oGCDAction, true))
-                        return oGCDAction;
+                    if (TryOGCDs(actionID, true, ref NewActionID, true))
+                        return NewActionID;
                 }
             }
             //END_RDM_OGCD
@@ -125,7 +129,7 @@ internal partial class RDM
             //Lucid Dreaming
             if (IsEnabled(CustomComboPreset.RDM_ST_Lucid)
                 && actionID is Jolt or Jolt2 or Jolt3
-                && TryLucidDreaming(actionID, Config.RDM_ST_Lucid_Threshold, ComboAction)) //Don't interupt certain combos
+                && TryLucidDreaming(Config.RDM_ST_Lucid_Threshold, ComboAction)) //Don't interupt certain combos
                 return All.LucidDreaming;
 
             //RDM_MELEEFINISHER
@@ -141,8 +145,8 @@ internal partial class RDM
                     (Config.RDM_ST_MeleeFinisher_Adv &&
                         (useJoltsAdv || useRiposteAdv || useVerMagicAdv));
 
-                if (ActionFound && MeleeCombo.TryMeleeFinisher(out uint finisherAction))
-                    return finisherAction;
+                if (ActionFound && MeleeCombo.TryMeleeFinisher(ref NewActionID))
+                    return NewActionID;
             }
             //END_RDM_MELEEFINISHER
 
@@ -163,25 +167,25 @@ internal partial class RDM
                 if (ActionFound)
                 {
                     if (MeleeCombo.TrySTManaEmbolden(
-                        actionID, out uint ManaEmboldenID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden), IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                        ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden), IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
                         IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
                         IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
-                        return ManaEmboldenID;
+                        return NewActionID;
                 }
 
                 //Zwerchhau & Redoublement. Force to Jolts if Auto Rotation
                 if (ActionFound || (isAutoRotOn && isJoltAction))
                 {
-                    if (MeleeCombo.TrySTMeleeCombo(actionID, out uint MeleeComboID, Config.RDM_ST_MeleeEnforced))
-                        return MeleeComboID;
+                    if (MeleeCombo.TrySTMeleeCombo(ref NewActionID, Config.RDM_ST_MeleeEnforced))
+                        return NewActionID;
                 }
 
                 //Start the Combo
                 if (ActionFound)
                 {
-                    if (MeleeCombo.TrySTMeleeStart(actionID, out uint MeleeID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                    if (MeleeCombo.TrySTMeleeStart(ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
                         IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
-                        return MeleeID;
+                        return NewActionID;
                 }
             }
 
@@ -189,17 +193,17 @@ internal partial class RDM
             if (IsEnabled(CustomComboPreset.RDM_ST_ThunderAero) && IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel)
                 && actionID is Jolt or Jolt2 or Jolt3)
             {
-                if (SpellCombo.TryAcceleration(actionID, out uint AccID, IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Swiftcast)))
-                    return AccID;
+                if (SpellCombo.TryAcceleration(ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Swiftcast)))
+                    return NewActionID;
             }
 
             if (actionID is Jolt or Jolt2 or Jolt3)
             {
 
-                if (SpellCombo.TrySTSpellRotation(actionID, out uint SpellID,
+                if (SpellCombo.TrySTSpellRotation(ref NewActionID,
                     IsEnabled(CustomComboPreset.RDM_ST_FireStone),
                     IsEnabled(CustomComboPreset.RDM_ST_ThunderAero)))
-                    return SpellID;
+                    return NewActionID;
             }
 
             //NO_CONDITIONS_MET
@@ -227,29 +231,31 @@ internal partial class RDM
                 CanSpellWeave())
                 return Variant.VariantRampart;
 
+            uint NewActionID = 0;
+
             //RDM_OGCD
-            if (TryOGCDs(actionID, true, out uint oGCDAction, true))
-                return oGCDAction;
+            if (TryOGCDs(actionID, true, ref NewActionID, true))
+                return NewActionID;
 
             // LUCID
-            if (TryLucidDreaming(actionID, 6500, ComboAction))
+            if (TryLucidDreaming(6500, ComboAction))
                 return All.LucidDreaming;
 
             //RDM_MELEEFINISHER
-            if (MeleeCombo.TryMeleeFinisher(out uint finisherAction))
-                return finisherAction;
+            if (MeleeCombo.TryMeleeFinisher(ref NewActionID))
+                return NewActionID;
 
-            if (MeleeCombo.TryAoEManaEmbolden(actionID, out uint ManaEmbolden))
-                return ManaEmbolden;
+            if (MeleeCombo.TryAoEManaEmbolden(ref NewActionID))
+                return NewActionID;
 
-            if (MeleeCombo.TryAoEMeleeCombo(actionID, out uint AoEMeleeID))
-                return AoEMeleeID;
+            if (MeleeCombo.TryAoEMeleeCombo(ref NewActionID))
+                return NewActionID;
 
-            if (SpellCombo.TryAcceleration(actionID, out uint AccelID))
-                return AccelID;
+            if (SpellCombo.TryAcceleration(ref NewActionID))
+                return NewActionID;
 
-            if (SpellCombo.TryAoESpellRotation(actionID, out uint SpellID))
-                return SpellID;
+            if (SpellCombo.TryAoESpellRotation(ref NewActionID))
+                return NewActionID;
             return actionID;
         }
     }
@@ -259,6 +265,12 @@ internal partial class RDM
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_AoE_DPS;
         protected override uint Invoke(uint actionID)
         {
+            if (actionID is not (Scatter or Impact) &&
+                actionID is not (Moulinet or Veraero2 or Verthunder2))
+                return actionID;
+
+            uint NewActionID = 0;
+
             if (actionID is Scatter or Impact)
             {
                 //VARIANTS
@@ -276,12 +288,12 @@ internal partial class RDM
                 //RDM_OGCD
                 if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)
                     && LevelChecked(Corpsacorps)
-                    && TryOGCDs(actionID, true, out uint oGCDAction, true))
-                    return oGCDAction;
+                    && TryOGCDs(actionID, true, ref NewActionID, true))
+                    return NewActionID;
 
                 // LUCID
                 if (IsEnabled(CustomComboPreset.RDM_AoE_Lucid)
-                    && TryLucidDreaming(actionID, Config.RDM_AoE_Lucid_Threshold, ComboAction))
+                    && TryLucidDreaming(Config.RDM_AoE_Lucid_Threshold, ComboAction))
                     return All.LucidDreaming;
             }
 
@@ -295,8 +307,8 @@ internal partial class RDM
                          (Config.RDM_AoE_MeleeFinisher_OnAction[1] && actionID is Moulinet) ||
                          (Config.RDM_AoE_MeleeFinisher_OnAction[2] && actionID is Veraero2 or Verthunder2)));
 
-                if (ActionFound && MeleeCombo.TryMeleeFinisher(out uint finisherAction))
-                    return finisherAction;
+                if (ActionFound && MeleeCombo.TryMeleeFinisher(ref NewActionID))
+                    return NewActionID;
             }
             //END_RDM_MELEEFINISHER
 
@@ -312,24 +324,24 @@ internal partial class RDM
                 if (ActionFound)
                 {
                     if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_ManaEmbolden)
-                        && MeleeCombo.TryAoEManaEmbolden(actionID, out uint ManaEmbolen, Config.RDM_AoE_MoulinetRange))
-                        return ManaEmbolen;
+                        && MeleeCombo.TryAoEManaEmbolden(ref NewActionID, Config.RDM_AoE_MoulinetRange))
+                        return NewActionID;
 
-                    if (MeleeCombo.TryAoEMeleeCombo(actionID, out uint AoEMelee, Config.RDM_AoE_MoulinetRange, IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_CorpsGapCloser),
+                    if (MeleeCombo.TryAoEMeleeCombo(ref NewActionID, Config.RDM_AoE_MoulinetRange, IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_CorpsGapCloser),
                         false)) //Melee range enforced
-                        return AoEMelee;
+                        return NewActionID;
                 }
             }
 
             if (actionID is Scatter or Impact)
             {
                 if (IsEnabled(CustomComboPreset.RDM_AoE_Accel)
-                    && SpellCombo.TryAcceleration(actionID, out uint AccelID, IsEnabled(CustomComboPreset.RDM_AoE_Accel_Swiftcast),
+                    && SpellCombo.TryAcceleration(ref NewActionID, IsEnabled(CustomComboPreset.RDM_AoE_Accel_Swiftcast),
                     IsEnabled(CustomComboPreset.RDM_AoE_Accel_Weave)))
-                    return AccelID;
+                    return NewActionID;
 
-                if (SpellCombo.TryAoESpellRotation(actionID, out uint SpellID))
-                    return SpellID;
+                if (SpellCombo.TryAoESpellRotation(ref NewActionID))
+                    return NewActionID;
 
             }
 
@@ -408,7 +420,7 @@ internal partial class RDM
         protected override uint Invoke(uint actionID) =>
             actionID is Embolden &&
             ActionReady(Embolden) &&
-            HasEffectAny(Buffs.EmboldenOthers) ? OriginalHook(11) : actionID;
+            HasEffectAny(Buffs.EmboldenOthers) ? All.SavageBlade : actionID;
     }
 
     internal class RDM_MagickProtection : CustomCombo
@@ -417,6 +429,6 @@ internal partial class RDM
         protected override uint Invoke(uint actionID) =>
             actionID is MagickBarrier &&
             ActionReady(MagickBarrier) &&
-            HasEffectAny(Buffs.MagickBarrier) ? OriginalHook(11) : actionID;
+            HasEffectAny(Buffs.MagickBarrier) ? All.SavageBlade : actionID;
     }
 }

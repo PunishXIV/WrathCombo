@@ -118,7 +118,8 @@ namespace WrathCombo.Window.Tabs
                     cfg.DPSSettings.OnlyAttackInCombat = false;
 
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                    "Only Attack Targets Already In Combat", ref cfg.InCombatOnly, "OnlyAttackInCombat");
+                    "Only Attack Targets Already In Combat", ref cfg.DPSSettings.OnlyAttackInCombat,
+                    "OnlyAttackInCombat");
 
                 if (cfg.DPSSettings.OnlyAttackInCombat && changed)
                     cfg.DPSSettings.PreferNonCombat = false;

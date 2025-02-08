@@ -1,7 +1,6 @@
 #region
 
 using System.Linq;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 
@@ -16,43 +15,18 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRK
 {
-    internal class DRK_ST_Combo : CustomCombo
+    internal class DRK_ST_Advanced : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } =
-            CustomComboPreset.DRK_ST_Combo;
+            CustomComboPreset.DRK_ST_Adv;
 
         protected override uint Invoke(uint actionID)
         {
             // Bail if not looking at the replaced action
             if (actionID is not HardSlash) return actionID;
 
-            #region Variables
-
-            var inManaPoolingContent =
-                ContentCheck.IsInConfiguredContent(
-                    Config.DRK_ST_ManaSpenderPoolingDifficulty,
-                    Config.DRK_ST_ManaSpenderPoolingDifficultyListSet
-                );
-            var mpRemaining = inManaPoolingContent
-                ? Config.DRK_ST_ManaSpenderPooling
-                : 0;
-            var hpRemainingShadow = Config.DRK_ST_LivingShadowThreshold;
-            var hpRemainingDelirium = Config.DRK_ST_DeliriumThreshold;
-            var hpRemainingVigil = Config.DRK_ST_ShadowedVigilThreshold;
-            var hpRemainingLivingDead = Config.DRK_ST_LivingDeadSelfThreshold;
-            var hpRemainingLivingDeadTarget =
-                Config.DRK_ST_LivingDeadTargetThreshold;
-            var bossRestrictionLivingDead =
-                (int)Config.DRK_ST_LivingDeadBossRestriction;
-
-            #endregion
-
-            // Variant Cure - Heal: Priority to save your life
-            if (IsEnabled(CustomComboPreset.DRK_Variant_Cure)
-                && IsEnabled(Variant.VariantCure)
-                && PlayerHealthPercentageHp() <=
-                GetOptionValue(Config.DRK_VariantCure))
-                return Variant.VariantCure;
+            const Combo comboFlags = Combo.ST | Combo.Adv;
+            var newAction = HardSlash;
 
             // Unmend Option
             if (IsEnabled(CustomComboPreset.DRK_ST_RangedUptime)
@@ -69,411 +43,156 @@ internal partial class DRK
             // Bail if not in combat
             if (!InCombat()) return HardSlash;
 
-            // Disesteem
-            if (LevelChecked(LivingShadow)
-                && LevelChecked(Disesteem)
-                && IsEnabled(CustomComboPreset.DRK_ST_CDs_Disesteem)
-                && HasEffect(Buffs.Scorn)
-                && ((Gauge.DarksideTimeRemaining > 0 // Optimal usage
-                     && GetBuffRemainingTime(Buffs.Scorn) < 24)
-                    || GetBuffRemainingTime(Buffs.Scorn) < 14) // Emergency usage
-               )
-                return OriginalHook(Disesteem);
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
+                return newAction;
 
-            // oGCDs
-            if (CanWeave() || CanDelayedWeave())
-            {
-                var inMitigationContent =
-                    ContentCheck.IsInConfiguredContent(
-                        Config.DRK_ST_MitDifficulty,
-                        Config.DRK_ST_MitDifficultyListSet
-                    );
-                // Mitigation first
-                if (IsEnabled(CustomComboPreset.DRK_ST_Mitigation) &&
-                    inMitigationContent)
-                {
-                    // TBN
-                    if (IsEnabled(CustomComboPreset.DRK_ST_TBN)
-                        && IsOffCooldown(BlackestNight)
-                        && LevelChecked(BlackestNight)
-                        && ShouldTBNSelf()
-                        && LocalPlayer.CurrentMp >= 3000)
-                        return BlackestNight;
+            var cdBossRequirement =
+                (int)Config.DRK_ST_CDsBossRequirement ==
+                (int)Config.BossRequirement.On;
+            if (IsEnabled(CustomComboPreset.DRK_ST_CDs) &&
+                ((cdBossRequirement && InBossEncounter()) ||
+                 !cdBossRequirement) &&
+                TryGetAction<Cooldown>(comboFlags, ref newAction))
+                return newAction;
 
-                    // Shadowed Vigil
-                    if (IsEnabled(CustomComboPreset.DRK_ST_ShadowedVigil)
-                        && IsOffCooldown(ShadowedVigil)
-                        && LevelChecked(ShadowedVigil)
-                        && PlayerHealthPercentageHp() <= hpRemainingVigil)
-                        return ShadowedVigil;
+            var inMitigationContent =
+                ContentCheck.IsInConfiguredContent(
+                    Config.DRK_ST_MitDifficulty,
+                    Config.DRK_ST_MitDifficultyListSet
+                );
+            if (IsEnabled(CustomComboPreset.DRK_ST_Mitigation) &&
+                inMitigationContent &&
+                TryGetAction<Mitigation>(comboFlags, ref newAction))
+                return newAction;
 
-                    // Living Dead
-                    if (IsEnabled(CustomComboPreset.DRK_ST_LivingDead)
-                        && IsOffCooldown(LivingDead)
-                        && LevelChecked(LivingDead)
-                        && PlayerHealthPercentageHp() <= hpRemainingLivingDead
-                        && GetTargetHPPercent() >= hpRemainingLivingDeadTarget
-                        // Checking if the target matches the boss avoidance option
-                        && ((bossRestrictionLivingDead is
-                                 (int)Config.BossAvoidance.On
-                             && LocalPlayer.TargetObject is not null
-                             && TargetIsBoss())
-                            || bossRestrictionLivingDead is
-                                (int)Config.BossAvoidance.Off))
-                        return LivingDead;
-                }
+            if (IsEnabled(CustomComboPreset.DRK_ST_Spenders) &&
+                TryGetAction<Spender>(comboFlags, ref newAction))
+                return newAction;
 
-                // Variant Spirit Dart - DoT
-                var sustainedDamage =
-                    FindTargetEffect(Variant.Debuffs.SustainedDamage);
-                if (IsEnabled(CustomComboPreset.DRK_Variant_SpiritDart)
-                    && IsEnabled(Variant.VariantSpiritDart)
-                    && (sustainedDamage is null ||
-                        sustainedDamage.RemainingTime <= 3))
-                    return Variant.VariantSpiritDart;
-
-                // Variant Ultimatum - AoE Agro stun
-                if (IsEnabled(CustomComboPreset.DRK_Variant_Ultimatum)
-                    && IsEnabled(Variant.VariantUltimatum)
-                    && IsOffCooldown(Variant.VariantUltimatum))
-                    return Variant.VariantUltimatum;
-
-                // Mana Spenders
-                if (IsEnabled(CustomComboPreset.DRK_ST_ManaOvercap)
-                    && CombatEngageDuration().TotalSeconds >= 5)
-                {
-                    // Spend mana to limit when not near even minute burst windows
-                    if (IsEnabled(CustomComboPreset.DRK_ST_ManaSpenderPooling)
-                        && GetCooldownRemainingTime(LivingShadow) >= 45
-                        && LocalPlayer.CurrentMp > (mpRemaining + 3000)
-                        && LevelChecked(EdgeOfDarkness))
-                        return OriginalHook(EdgeOfDarkness);
-
-                    // Keep Darkside up
-                    if (LocalPlayer.CurrentMp > 8500
-                        || (Gauge.DarksideTimeRemaining < 10000 &&
-                            LocalPlayer.CurrentMp > (mpRemaining + 3000)))
-                    {
-                        // Return Edge of Darkness if available
-                        if (LevelChecked(EdgeOfDarkness))
-                            return OriginalHook(EdgeOfDarkness);
-                        if (LevelChecked(FloodOfDarkness)
-                            && !LevelChecked(EdgeOfDarkness))
-                            return FloodOfDarkness;
-                    }
-
-                    // Spend Dark Arts
-                    if (Gauge.HasDarkArts
-                        && LevelChecked(EdgeOfDarkness)
-                        && CombatEngageDuration().TotalSeconds >= 10
-                        && (Gauge.ShadowTimeRemaining > 0 // In Burst
-                            || (IsEnabled(CustomComboPreset
-                                    .DRK_ST_DarkArtsDropPrevention)
-                                && HasOwnTBN))) // TBN
-                        return OriginalHook(EdgeOfDarkness);
-                }
-
-                // Bigger Cooldown Features
-                if (Gauge.DarksideTimeRemaining > 1)
-                {
-                    // Living Shadow
-                    var inLivingShadowThresholdContent =
-                        ContentCheck.IsInConfiguredContent(
-                            Config.DRK_ST_LivingShadowThresholdDifficulty,
-                            Config.DRK_ST_LivingShadowThresholdDifficultyListSet
-                        );
-                    if (IsEnabled(CustomComboPreset.DRK_ST_CDs)
-                        && IsEnabled(CustomComboPreset.DRK_ST_CDs_LivingShadow)
-                        && IsOffCooldown(LivingShadow)
-                        && LevelChecked(LivingShadow)
-                        && ((inLivingShadowThresholdContent
-                             && GetTargetHPPercent() > hpRemainingShadow)
-                            || !inLivingShadowThresholdContent))
-                        return LivingShadow;
-
-                    // Delirium
-                    var inDeliriumThresholdContent =
-                        ContentCheck.IsInConfiguredContent(
-                            Config.DRK_ST_DeliriumThresholdDifficulty,
-                            Config.DRK_ST_DeliriumThresholdDifficultyListSet
-                        );
-                    if (IsEnabled(CustomComboPreset.DRK_ST_Delirium)
-                        && IsOffCooldown(BloodWeapon)
-                        && LevelChecked(BloodWeapon)
-                        && ((inDeliriumThresholdContent
-                             && GetTargetHPPercent() > hpRemainingDelirium)
-                            || !inDeliriumThresholdContent)
-                        && CombatEngageDuration().TotalSeconds > 5)
-                        return OriginalHook(Delirium);
-
-                    // Big CDs
-                    if (IsEnabled(CustomComboPreset.DRK_ST_CDs)
-                        && CombatEngageDuration().TotalSeconds > 5)
-                    {
-                        // Salted Earth
-                        if (IsEnabled(CustomComboPreset.DRK_ST_CDs_SaltedEarth))
-                        {
-                            // Cast Salted Earth
-                            if (!HasEffect(Buffs.SaltedEarth)
-                                && ActionReady(SaltedEarth))
-                                return SaltedEarth;
-                            //Cast Salt and Darkness
-                            if (HasEffect(Buffs.SaltedEarth)
-                                && GetBuffRemainingTime(Buffs.SaltedEarth) < 7
-                                && ActionReady(SaltAndDarkness))
-                                return OriginalHook(SaltAndDarkness);
-                        }
-
-                        // Shadowbringer
-                        if (LevelChecked(Shadowbringer)
-                            && IsEnabled(CustomComboPreset.DRK_ST_CDs_Shadowbringer))
-                        {
-                            if ((GetRemainingCharges(Shadowbringer) > 0
-                                 && IsNotEnabled(CustomComboPreset
-                                     .DRK_ST_CDs_ShadowbringerBurst)) // Dump
-                                ||
-                                (IsEnabled(CustomComboPreset
-                                     .DRK_ST_CDs_ShadowbringerBurst)
-                                 && GetRemainingCharges(Shadowbringer) > 0
-                                 && Gauge.ShadowTimeRemaining > 1
-                                 && IsOnCooldown(LivingShadow)
-                                 && !HasEffect(Buffs.Scorn))) // Burst
-                                return Shadowbringer;
-                        }
-
-                        // Carve and Spit
-                        if (IsEnabled(CustomComboPreset.DRK_ST_CDs_CarveAndSpit)
-                            && IsOffCooldown(CarveAndSpit)
-                            && LevelChecked(CarveAndSpit))
-                            return CarveAndSpit;
-                    }
-                }
-            }
-
-            // Delirium Chain
-            if (LevelChecked(Delirium)
-                && LevelChecked(ScarletDelirium)
-                && IsEnabled(CustomComboPreset.DRK_ST_Delirium_Chain)
-                && HasEffect(Buffs.EnhancedDelirium)
-                && Gauge.DarksideTimeRemaining > 0)
-                return OriginalHook(Bloodspiller);
-
-            //Delirium Features
-            if (LevelChecked(Delirium)
-                && IsEnabled(CustomComboPreset.DRK_ST_Bloodspiller))
-            {
-                //Bloodspiller under Delirium
-                var deliriumBuff = TraitLevelChecked(Traits.EnhancedDelirium)
-                    ? Buffs.EnhancedDelirium
-                    : Buffs.Delirium;
-                if (GetBuffStacks(deliriumBuff) > 0)
-                    return Bloodspiller;
-
-                //Blood management outside of Delirium
-                if (IsEnabled(CustomComboPreset.DRK_ST_Delirium)
-                    && ((Gauge.Blood >= 60 &&
-                         GetCooldownRemainingTime(Delirium) is > 0
-                             and < 3) // Prep for Delirium
-                        || (Gauge.Blood >= 50 &&
-                            GetCooldownRemainingTime(Delirium) >
-                            37))) // Regular Bloodspiller
-                    return Bloodspiller;
-            }
-
-            // 1-2-3 combo
-            if (!(ComboTimer > 0)) return HardSlash;
-            if (ComboAction == HardSlash && LevelChecked(SyphonStrike))
-                return SyphonStrike;
-            if (ComboAction == SyphonStrike && LevelChecked(Souleater))
-            {
-                // Blood management
-                if (IsEnabled(CustomComboPreset.DRK_ST_BloodOvercap)
-                    && LevelChecked(Bloodspiller) && Gauge.Blood >= 90)
-                    return Bloodspiller;
-
-                return Souleater;
-            }
+            if (TryGetAction<Core>(comboFlags, ref newAction))
+                return newAction;
 
             return HardSlash;
         }
     }
 
-    internal class DRK_AoE_Combo : CustomCombo
+    internal class DRK_ST_Simple : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } =
-            CustomComboPreset.DRK_AoE_Combo;
+            CustomComboPreset.DRK_ST_Simple;
+
+        protected override uint Invoke(uint actionID)
+        {
+            // Bail if not looking at the replaced action
+            if (actionID is not HardSlash) return actionID;
+
+            const Combo comboFlags = Combo.ST | Combo.Simple;
+            var newAction = HardSlash;
+
+            // Unmend Option
+            if (ActionReady(Unmend) &&
+                !InMeleeRange() &&
+                HasBattleTarget())
+                return Unmend;
+
+            // Bail if not in combat
+            if (!InCombat()) return HardSlash;
+
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Cooldown>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Mitigation>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Spender>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Core>(comboFlags, ref newAction))
+                return newAction;
+
+            return HardSlash;
+        }
+    }
+
+    internal class DRK_AoE_Advanced : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } =
+            CustomComboPreset.DRK_AoE_Adv;
 
         protected override uint Invoke(uint actionID)
         {
             // Bail if not looking at the replaced action
             if (actionID is not Unleash) return actionID;
 
-            var hpRemainingShadow = Config.DRK_AoE_LivingShadowThreshold;
-            var hpRemainingDelirium = Config.DRK_AoE_DeliriumThreshold;
-            var hpRemainingVigil = Config.DRK_AoE_ShadowedVigilThreshold;
-            var hpRemainingLivingDead =
-                Config.DRK_AoE_LivingDeadSelfThreshold;
-            var hpRemainingLivingDeadTarget =
-                Config.DRK_AoE_LivingDeadTargetThreshold;
+            const Combo comboFlags = Combo.AoE | Combo.Adv;
+            var newAction = Unleash;
 
-            // Variant Cure - Heal: Priority to save your life
-            if (IsEnabled(CustomComboPreset.DRK_Variant_Cure)
-                && IsEnabled(Variant.VariantCure)
-                && PlayerHealthPercentageHp() <=
-                GetOptionValue(Config.DRK_VariantCure))
-                return Variant.VariantCure;
+            // Bail if not in combat
+            if (!InCombat()) return Unleash;
 
-            // Disesteem
-            if (LevelChecked(LivingShadow)
-                && LevelChecked(Disesteem)
-                && IsEnabled(CustomComboPreset.DRK_AoE_CDs_Disesteem)
-                && HasEffect(Buffs.Scorn)
-                && (Gauge.DarksideTimeRemaining > 0 // Optimal usage
-                    || GetBuffRemainingTime(Buffs.Scorn) < 5)) // Emergency usage
-                return OriginalHook(Disesteem);
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
+                return newAction;
 
-            // oGCDs
-            if (CanWeave() || CanDelayedWeave())
-            {
-                // Mitigation first
-                if (IsEnabled(CustomComboPreset.DRK_AoE_Mitigation))
-                {
-                    // TBN
-                    if (IsEnabled(CustomComboPreset.DRK_AoE_TBN)
-                        && IsOffCooldown(BlackestNight)
-                        && LevelChecked(BlackestNight)
-                        && ShouldTBNSelf(aoe: true)
-                        && LocalPlayer.CurrentMp >= 3000)
-                        return BlackestNight;
+            if (IsEnabled(CustomComboPreset.DRK_AoE_CDs) &&
+                TryGetAction<Cooldown>(comboFlags, ref newAction))
+                return newAction;
 
-                    // Shadowed Vigil
-                    if (IsEnabled(CustomComboPreset.DRK_AoE_ShadowedVigil)
-                        && IsOffCooldown(ShadowedVigil)
-                        && LevelChecked(ShadowedVigil)
-                        && PlayerHealthPercentageHp() <= hpRemainingVigil)
-                        return ShadowedVigil;
+            if (IsEnabled(CustomComboPreset.DRK_AoE_Mitigation) &&
+                TryGetAction<Mitigation>(comboFlags, ref newAction))
+                return newAction;
 
-                    // Living Dead
-                    if (IsEnabled(CustomComboPreset.DRK_AoE_LivingDead)
-                        && IsOffCooldown(LivingDead)
-                        && LevelChecked(LivingDead)
-                        && PlayerHealthPercentageHp() <= hpRemainingLivingDead
-                        && GetTargetHPPercent() >= hpRemainingLivingDeadTarget)
-                        return LivingDead;
-                }
+            if (IsEnabled(CustomComboPreset.DRK_AoE_Spenders) &&
+                TryGetAction<Spender>(comboFlags, ref newAction))
+                return newAction;
 
-                // Variant Spirit Dart - DoT
-                var sustainedDamage =
-                    FindTargetEffect(Variant.Debuffs.SustainedDamage);
-                if (IsEnabled(CustomComboPreset.DRK_Variant_SpiritDart)
-                    && IsEnabled(Variant.VariantSpiritDart)
-                    && (sustainedDamage is null ||
-                        sustainedDamage.RemainingTime <= 3))
-                    return Variant.VariantSpiritDart;
-
-                // Variant Ultimatum - AoE Agro stun
-                if (IsEnabled(CustomComboPreset.DRK_Variant_Ultimatum)
-                    && IsEnabled(Variant.VariantUltimatum)
-                    && IsOffCooldown(Variant.VariantUltimatum))
-                    return Variant.VariantUltimatum;
-
-                // Mana Features
-                if (IsEnabled(CustomComboPreset.DRK_AoE_ManaOvercap)
-                    && LevelChecked(FloodOfDarkness)
-                    && (LocalPlayer.CurrentMp > 8500 ||
-                        (Gauge.DarksideTimeRemaining < 10 &&
-                         LocalPlayer.CurrentMp >= 3000)))
-                    return OriginalHook(FloodOfDarkness);
-
-                // Spend Dark Arts
-                if (IsEnabled(CustomComboPreset.DRK_AoE_ManaOvercap)
-                    && Gauge.HasDarkArts
-                    && LevelChecked(FloodOfDarkness))
-                    return OriginalHook(FloodOfDarkness);
-
-                // Living Shadow
-                var inLivingShadowThresholdContent =
-                    ContentCheck.IsInConfiguredContent(
-                        Config.DRK_AoE_LivingShadowThresholdDifficulty,
-                        Config.DRK_AoE_LivingShadowThresholdDifficultyListSet
-                    );
-                if (IsEnabled(CustomComboPreset.DRK_AoE_CDs_LivingShadow)
-                    && IsOffCooldown(LivingShadow)
-                    && LevelChecked(LivingShadow)
-                    && ((inLivingShadowThresholdContent
-                         && GetTargetHPPercent() > hpRemainingShadow)
-                        || !inLivingShadowThresholdContent))
-                    return LivingShadow;
-
-                // Delirium
-                var inDeliriumThresholdContent =
-                    ContentCheck.IsInConfiguredContent(
-                        Config.DRK_AoE_DeliriumThresholdDifficulty,
-                        Config.DRK_AoE_DeliriumThresholdDifficultyListSet
-                    );
-                if (IsEnabled(CustomComboPreset.DRK_AoE_Delirium)
-                    && IsOffCooldown(BloodWeapon)
-                    && LevelChecked(BloodWeapon)
-                    && ((inDeliriumThresholdContent
-                         && GetTargetHPPercent() > hpRemainingDelirium)
-                        || !inDeliriumThresholdContent))
-                    return OriginalHook(Delirium);
-
-                if (Gauge.DarksideTimeRemaining > 1)
-                {
-                    // Salted Earth
-                    if (IsEnabled(CustomComboPreset.DRK_AoE_CDs_SaltedEarth))
-                    {
-                        // Cast Salted Earth
-                        if (!HasEffect(Buffs.SaltedEarth)
-                            && ActionReady(SaltedEarth))
-                            return SaltedEarth;
-                        //Cast Salt and Darkness
-                        if (HasEffect(Buffs.SaltedEarth)
-                            && GetBuffRemainingTime(Buffs.SaltedEarth) < 9
-                            && ActionReady(SaltAndDarkness))
-                            return OriginalHook(SaltAndDarkness);
-                    }
-
-                    // Shadowbringer
-                    if (IsEnabled(CustomComboPreset.DRK_AoE_CDs_Shadowbringer)
-                        && LevelChecked(Shadowbringer)
-                        && GetRemainingCharges(Shadowbringer) > 0)
-                        return Shadowbringer;
-
-                    // Abyssal Drain
-                    if (IsEnabled(CustomComboPreset.DRK_AoE_CDs_AbyssalDrain)
-                        && LevelChecked(AbyssalDrain)
-                        && IsOffCooldown(AbyssalDrain)
-                        && PlayerHealthPercentageHp() <= 60)
-                        return AbyssalDrain;
-                }
-            }
-
-            // Delirium Chain
-            if (LevelChecked(Delirium)
-                && LevelChecked(Impalement)
-                && IsEnabled(CustomComboPreset.DRK_AoE_Delirium_Chain)
-                && HasEffect(Buffs.EnhancedDelirium)
-                && Gauge.DarksideTimeRemaining > 1)
-                return OriginalHook(Quietus);
-
-            // 1-2-3 combo
-            if (!(ComboTimer > 0)) return Unleash;
-            if (ComboAction == Unleash && LevelChecked(StalwartSoul))
-            {
-                if (IsEnabled(CustomComboPreset.DRK_AoE_BloodOvercap)
-                    && Gauge.Blood >= 90
-                    && LevelChecked(Quietus))
-                    return Quietus;
-                return StalwartSoul;
-            }
+            if (TryGetAction<Core>(comboFlags, ref newAction))
+                return newAction;
 
             return Unleash;
         }
     }
 
-    internal class DRK_oGCD : CustomCombo
+    internal class DRK_AoE_Simple : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } =
+            CustomComboPreset.DRK_AoE_Simple;
+
+        protected override uint Invoke(uint actionID)
+        {
+            // Bail if not looking at the replaced action
+            if (actionID is not Unleash) return actionID;
+
+            const Combo comboFlags = Combo.AoE | Combo.Simple;
+            var newAction = Unleash;
+
+            // Bail if not in combat
+            if (!InCombat()) return Unleash;
+
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Cooldown>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Mitigation>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Spender>(comboFlags, ref newAction))
+                return newAction;
+
+            if (TryGetAction<Core>(comboFlags, ref newAction))
+                return newAction;
+
+            return Unleash;
+        }
+    }
+
+    #region Multi-Button Combos
+
+    internal class DRK_oGCDs : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } =
             CustomComboPreset.DRK_oGCD;
@@ -482,12 +201,26 @@ internal partial class DRK
         {
             if (actionID is not (CarveAndSpit or AbyssalDrain)) return actionID;
 
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_Interrupt) &&
+                ActionReady(All.Interject) &&
+                CanInterruptEnemy())
+                return All.Interject;
+
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_Delirium) &&
+                ActionReady(BloodWeapon))
+                return OriginalHook(Delirium);
+
             if (IsOffCooldown(LivingShadow)
                 && LevelChecked(LivingShadow))
                 return LivingShadow;
 
+            if (IsOffCooldown(Disesteem)
+                && LevelChecked(Disesteem))
+                return Disesteem;
+
             if (IsOffCooldown(SaltedEarth)
-                && LevelChecked(SaltedEarth))
+                && LevelChecked(SaltedEarth) &&
+                !HasEffect(Buffs.SaltedEarth))
                 return SaltedEarth;
 
             if (IsOffCooldown(CarveAndSpit)
@@ -499,7 +232,7 @@ internal partial class DRK
                 && LevelChecked(SaltAndDarkness))
                 return SaltAndDarkness;
 
-            if (IsEnabled(CustomComboPreset.DRK_Shadowbringer_oGCD)
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_Shadowbringer)
                 && GetCooldownRemainingTime(Shadowbringer) < 60
                 && LevelChecked(Shadowbringer)
                 && Gauge.DarksideTimeRemaining > 0)
@@ -510,6 +243,7 @@ internal partial class DRK
     }
 
     #region One-Button Mitigation
+
     internal class DRK_Mit_OneButton : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } =
@@ -538,5 +272,8 @@ internal partial class DRK
             return actionID;
         }
     }
+
+    #endregion
+
     #endregion
 }
