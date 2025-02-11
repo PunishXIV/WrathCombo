@@ -26,23 +26,45 @@ internal partial class BLU
 {
     internal class DoTs(
         UserInt minHp,
-        UserInt minTime,
-        DoT[] dotsToUse)
+        UserInt minTime)
     {
-        public bool AnyDotsWanted() => dotsToUse.Any(CheckDotWanted);
+        public bool AnyDotsWanted() => _dots.Any(CheckDotWanted);
 
-        public bool CheckDotWanted(DoT dot) =>
+        private bool CheckDotWanted(DoT dot) =>
             // Check config preset is enabled
-            IsEnabled(dot.Preset()) &&
+            IsEnabled(dot.Preset) &&
             // Check spell is ready
-            IsSpellActive(dot.Action()) &&
-            ActionReady(dot.Action()) &&
-            !WasLastAction(dot.Action()) &&
+            IsSpellActive(dot.ActionID) &&
+            ActionReady(dot.ActionID) &&
+            !WasLastAction(dot.ActionID) &&
             // Check debuff is not applied or remaining time is less than requirement
-            (!TargetHasEffect(dot.Debuff()) ||
-             GetDebuffRemainingTime(dot.Debuff()) <= minTime) &&
+            (!TargetHasEffect(dot.DebuffID) ||
+             GetDebuffRemainingTime(dot.DebuffID) <= minTime) &&
             // Check target HP is above requirement
             GetTargetHPPercent() > minHp;
+
+        public bool TryGet(out uint actionID)
+        {
+            actionID = All.SavageBlade;
+
+            foreach (var dot in _dots)
+                if (CheckDotWanted(dot) && dot.Logic())
+                    return (actionID = dot.ActionID) != 0;
+
+            return false;
+        }
+
+        private readonly DoT[] _dots =
+        [
+            new(Debuffs.FeatherRain, FeatherRain_Spell44,
+                Options.BLU_Tank_DoT),
+            new(Debuffs.SongOfTorment, SongofTorment_Spell9,
+                Options.BLU_DPS_DoT),
+            new(Debuffs.BreathOfMagic, BreathofMagic_Spell109,
+                Options.BLU_DPS_DoT_Breath),
+            new(Debuffs.MortalFlame, MortalFlame_Spell121,
+                Options.BLU_DPS_DoT_Flame, InCombat),
+        ];
     }
 
     #region ID's
@@ -216,101 +238,21 @@ internal partial class BLU
             Begrimed = 3636;
     }
 
-    internal enum DoT
-    {
-        [DoTInfo(
-            Debuffs.SongOfTorment,
-            SongofTorment_Spell9,
-            Options.BLU_DPS_DoT)]
-        DPS_SongOfTorment,
-
-        [DoTInfo(
-            Debuffs.BreathOfMagic,
-            BreathofMagic_Spell109,
-            Options.BLU_DPS_DoT_Breath)]
-        DPS_BreathOfMagic,
-
-        [DoTInfo(
-            Debuffs.MortalFlame,
-            MortalFlame_Spell121,
-            Options.BLU_DPS_DoT_Flame)]
-        DPS_MortalFlame,
-
-        [DoTInfo(
-            Debuffs.FeatherRain,
-            FeatherRain_Spell44,
-            Options.BLU_Tank_DoT)]
-        Tank_FeatherRain,
-
-        [DoTInfo(
-            Debuffs.SongOfTorment,
-            SongofTorment_Spell9,
-            Options.BLU_Tank_DoT_Torment)]
-        Tank_SongOfTorment,
-
-        [DoTInfo(
-            Debuffs.BadBreath,
-            BadBreath_Spell28,
-            Options.BLU_Tank_DoT_Bad)]
-        Tank_BadBreath,
-
-        [DoTInfo(
-            Debuffs.BreathOfMagic,
-            BreathofMagic_Spell109,
-            Options.BLU_Tank_DoT_Breath)]
-        Tank_BreathOfMagic,
-
-        [DoTInfo(
-            Debuffs.MortalFlame,
-            MortalFlame_Spell121,
-            Options.BLU_Tank_DoT_Flame)]
-        Tank_MortalFlame
-    }
-
     #endregion
 }
 
-#region DoT Attributes
+#region DoT Class
 
-[AttributeUsage(AttributeTargets.Field)]
-internal class DoTInfoAttribute(
+public class DoT(
     ushort debuffID,
-    uint spellID,
-    Options configPreset) : Attribute
+    uint actionID,
+    Options preset,
+    Func<bool>? logic = null)
 {
     public ushort DebuffID { get; } = debuffID;
-    public uint SpellID { get; } = spellID;
-    public Options Config { get; } = configPreset;
-}
-
-internal static class DoTExtensions
-{
-    public static ushort Debuff(this BLU.DoT dot)
-    {
-        var type = typeof(BLU.DoT);
-        var memInfo = type.GetMember(dot.ToString());
-        var attributes =
-            memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
-        return ((DoTInfoAttribute)attributes[0]).DebuffID;
-    }
-
-    public static uint Action(this BLU.DoT dot)
-    {
-        var type = typeof(BLU.DoT);
-        var memInfo = type.GetMember(dot.ToString());
-        var attributes =
-            memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
-        return ((DoTInfoAttribute)attributes[0]).SpellID;
-    }
-
-    public static Options Preset(this BLU.DoT dot)
-    {
-        var type = typeof(BLU.DoT);
-        var memInfo = type.GetMember(dot.ToString());
-        var attributes =
-            memInfo[0].GetCustomAttributes(typeof(DoTInfoAttribute), false);
-        return ((DoTInfoAttribute)attributes[0]).Config;
-    }
+    public uint ActionID { get; } = actionID;
+    public Options Preset { get; } = preset;
+    public Func<bool> Logic { get; } = logic ?? (() => true);
 }
 
 #endregion
