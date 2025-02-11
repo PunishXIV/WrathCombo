@@ -1602,11 +1602,6 @@ public enum Preset
         BLU_Tank_DoT_Torment = 70063,
 
         [ParentCombo(BLU_Tank_DoT)]
-        [BlueInactive(BLU.BadBreath_Spell28)]
-        [CustomComboInfo("Bad Breath", "Adds Bad Breath to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
-        BLU_Tank_DoT_Bad = 70064,
-
-        [ParentCombo(BLU_Tank_DoT)]
         [BlueInactive(BLU.BreathofMagic_Spell109)]
         [CustomComboInfo("Breath of Magic", "Adds Breath of Magic to the combo, if available, with the same Waste Protection rules.", BLU.JobID)]
         BLU_Tank_DoT_Breath = 70066,
