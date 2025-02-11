@@ -34,22 +34,22 @@ internal partial class DNC
     internal static WrathOpener Opener()
     {
         if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.FifteenSecond &&
+            (int)Config.Openers.FifteenSecond &&
             Opener15S.LevelChecked)
             return Opener15S;
 
         if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.SevenSecond &&
+            (int)Config.Openers.SevenSecond &&
             Opener07S.LevelChecked)
             return Opener07S;
 
         if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.ThirtySecondTech &&
+            (int)Config.Openers.ThirtySecondTech &&
             Opener30TechS.LevelChecked)
             return Opener30TechS;
 
         if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.SevenSecondTech &&
+            (int)Config.Openers.SevenSecondTech &&
             Opener07TechS.LevelChecked)
             return Opener07TechS;
 
@@ -183,14 +183,14 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, int HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([4], 7),
-            ([5], 5),
+            ([4], () => 7),
+            ([5], () => 5),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -275,14 +275,14 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, int HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([4], 2),
-            ([5], 2),
+            ([4], () => 2),
+            ([5], () => 2),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -371,14 +371,14 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, int HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([5], 1),
-            ([6], 6),
+            ([5], () => 1),
+            ([6], () => 6),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -458,13 +458,13 @@ internal partial class DNC
             ReverseCascade,
         ];
 
-        public override List<(int[] Steps, int HoldDelay)> PrepullDelays
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
         {
             get;
             set;
         } =
         [
-            ([7], 2),
+            ([7], () => 2),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps

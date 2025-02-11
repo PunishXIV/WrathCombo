@@ -28,7 +28,7 @@ namespace WrathCombo.Window.Functions
         /// <param name="sliderIncrement"> How much you want the user to increment the slider by. Uses SliderIncrements as a preset. </param>
         /// <param name="hasAdditionalChoice">True if this config can trigger additional configs depending on value.</param>
         /// <param name="additonalChoiceCondition">What the condition is to convey to the user what triggers it.</param>
-        public static void DrawSliderInt(int minValue, int maxValue, string config, string sliderDescription, float itemWidth = 150, uint sliderIncrement = SliderIncrements.Ones, bool hasAdditionalChoice = false, string additonalChoiceCondition = "")
+        public static bool DrawSliderInt(int minValue, int maxValue, string config, string sliderDescription, float itemWidth = 150, uint sliderIncrement = SliderIncrements.Ones, bool hasAdditionalChoice = false, string additonalChoiceCondition = "")
         {
             ImGui.Indent();
             int output = PluginConfiguration.GetCustomIntValue(config, minValue);
@@ -51,7 +51,7 @@ namespace WrathCombo.Window.Functions
                 AutoResize = true,
                 HasMaxWidth = true,
                 IsSubBox = true,
-                ContentsAction = () =>
+                ContentsFunc = () =>
                 {
                     bool inputChanged = false;
                     Vector2 currentPos = ImGui.GetCursorPos();
@@ -114,12 +114,15 @@ namespace WrathCombo.Window.Functions
                         PluginConfiguration.SetCustomIntValue(config, output);
                         Service.Configuration.Save();
                     }
+
+                    return inputChanged;
                 }
             };
 
             box.Draw();
             ImGui.Spacing();
             ImGui.Unindent();
+            return box.FuncRes;
         }
 
         /// <summary> Draws a slider that lets the user set a given value for their feature. </summary>

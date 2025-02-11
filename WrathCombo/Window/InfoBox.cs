@@ -9,7 +9,9 @@ namespace WrathCombo.Window
     internal class InfoBox
     {
         public Vector4 Color { get; set; } = Colors.White;
-        public Action ContentsAction { get; set; } = () => ImGui.Text("Action Not Set");
+        public Action ContentsAction { get; set; }
+        public Func<bool> ContentsFunc { get; set; }
+        public bool FuncRes { get; set; }
         public float CurveRadius { get; set; } = 1f;
         public float ContentsOffset { get; set; } = 0f;
         public Vector2 Size { get; set; } = Vector2.Zero;
@@ -79,7 +81,10 @@ namespace WrathCombo.Window
             using (var group = ImRaii.Group())
             {
                 ImGui.PushID(Label);
-                ContentsAction();
+                if (ContentsAction is not null)
+                    ContentsAction();
+                else if (ContentsFunc is not null)
+                    FuncRes = ContentsFunc();
                 if (ContentsOffset > 0)
                     ImGuiHelpers.ScaledDummy(ContentsOffset);
                 ImGui.PopID();

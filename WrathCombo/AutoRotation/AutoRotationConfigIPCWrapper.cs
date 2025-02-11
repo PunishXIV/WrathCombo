@@ -101,7 +101,7 @@ public class DPSSettingsIPCWrapper(DPSSettings settings)
                 P.UIHelper.AutoRotationConfigControlled("OnlyAttackInCombat");
             return checkControlled is not null
                 ? checkControlled.Value.state == 1
-                : settings.QuestPriority;
+                : settings.OnlyAttackInCombat;
         }
     }
 

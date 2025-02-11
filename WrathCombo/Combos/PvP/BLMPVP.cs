@@ -1,4 +1,5 @@
-﻿using WrathCombo.CustomComboNS;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 
 namespace WrathCombo.Combos.PvP
@@ -92,7 +93,7 @@ namespace WrathCombo.Combos.PvP
                     bool isMoving = IsMoving();
                     bool inCombat = InCombat();
                     bool hasTarget = HasTarget();
-                    bool isTargetNPC = HasBattleTarget();
+                    bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.DataId != 8016;
                     bool hasParadox = HasEffect(Buffs.Paradox);
                     bool hasResonance = HasEffect(Buffs.SoulResonance);
                     bool hasWreathOfFire = HasEffect(Buffs.WreathOfFire);

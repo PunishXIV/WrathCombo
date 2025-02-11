@@ -76,6 +76,7 @@ namespace WrathCombo.Window.Tabs
                     {
                         _previousConfig = Service.Configuration;
                         Service.Configuration = config;
+                        AutoRotationController.cfg = null;
                         _debugError = "";
                         DebugConfig = true;
                     }

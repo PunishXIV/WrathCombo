@@ -113,7 +113,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static float PlayerHealthPercentageHp() => (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp * 100;
 
-        public static bool HasBattleTarget() => CurrentTarget is IBattleNpc { BattleNpcKind: BattleNpcSubKind.Enemy or (BattleNpcSubKind)1 };
+        public static bool HasBattleTarget() => CurrentTarget is not null && CurrentTarget.IsHostile();
 
         /// <summary> Checks if the player is being targeted by a hostile target. </summary>
         public static bool IsPlayerTargeted() => Svc.Objects.Any(x => x.IsHostile() && x.IsTargetable && x.TargetObjectId == LocalPlayer.GameObjectId);

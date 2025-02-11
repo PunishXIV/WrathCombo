@@ -1,5 +1,7 @@
+using ECommons.DalamudServices;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
 namespace WrathCombo.Combos.PvE;
 
@@ -23,7 +25,8 @@ internal partial class SAM
             SAM_ST_Higanbana_Suboption = new("SAM_ST_Higanbana_Suboption", 1),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
             SAM_VariantCure = new("SAM_VariantCure"),
-            SAM_Balance_Content = new("SAM_Balance_Content", 1);
+            SAM_Balance_Content = new("SAM_Balance_Content", 1),
+            SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13);
 
         public static UserBool
             SAM_Kasha_KenkiOvercap = new(nameof(SAM_Kasha_KenkiOvercap)),
@@ -38,6 +41,7 @@ internal partial class SAM
             {
                 case CustomComboPreset.SAM_ST_Opener:
                     UserConfig.DrawBossOnlyChoice(SAM_Balance_Content);
+                    UserConfig.DrawSliderInt(0, 13, SAM_Opener_PrePullDelay, $"Delay from first {MeikyoShisui.ActionName()} to next step. (seconds)");
                     break;
 
                 case CustomComboPreset.SAM_ST_CDs_Iaijutsu:

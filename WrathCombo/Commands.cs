@@ -558,6 +558,11 @@ public partial class WrathCombo
                 x.Value.Any(y =>
                     y.Info.JobShorthand == argument[0].ToUpperInvariant()))
             .Key;
+        if (jobName is null)
+        {
+            DuoLog.Error($"{argument[0]} is not a correct job abbreviation.");
+            return;
+        }
         ConfigWindow.IsOpen = true;
         PvEFeatures.OpenJob = jobName;
     }
