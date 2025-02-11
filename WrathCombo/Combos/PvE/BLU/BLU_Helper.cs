@@ -1,14 +1,10 @@
 ﻿#region
 
-#region
-
 using System;
 using System.Linq;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Options = WrathCombo.Combos.CustomComboPreset;
-
-#endregion
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
