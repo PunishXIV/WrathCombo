@@ -96,6 +96,8 @@ public static class DebugFile
 
             AddPlayerInfo();
 
+            AddSettingsInfo();
+
             AddAutoRotationInfo();
 
             AddFeatures(job);
@@ -183,6 +185,21 @@ public static class DebugFile
         AddLine($"Current Zone: {currentZone}");
         AddLine($"Current Party Size: {GetPartyMembers().Count}");
         AddLine("END PLAYER INFO");
+
+        AddLine();
+    }
+
+    private static void AddSettingsInfo()
+    {
+        AddLine("START SETTINGS INFO");
+        AddLine($"Throttle: {Service.Configuration.Throttle}ms");
+        AddLine($"Performance Mode: {(Service.Configuration.PerformanceMode ? "ON" : "OFF")}");
+        AddLine($"Block Spell on Move: {(Service.Configuration.BlockSpellOnMove ? "ON" : "OFF")}");
+        AddLine($"Movement Delay: {Service.Configuration.MovementLeeway}s");
+        AddLine($"Opener Timeout: {Service.Configuration.OpenerTimeout}s");
+        AddLine($"Melee Offset: {Service.Configuration.MeleeOffset}y");
+        AddLine($"Interrupt Delay: {Service.Configuration.InterruptDelay*100}%");
+        AddLine("END SETTINGS INFO");
 
         AddLine();
     }

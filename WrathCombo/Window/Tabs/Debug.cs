@@ -32,6 +32,8 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
+using WrathCombo.Services.IPC_Subscriber;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
 
 namespace WrathCombo.Window.Tabs
 {
@@ -640,6 +642,31 @@ namespace WrathCombo.Window.Tabs
                     else
                     {
                         CustomStyleText("No current leases", "");
+                    }
+
+
+                    if (ImGui.CollapsingHeader("OrbwalkerIPC"))
+                    {
+                        CustomStyleText($"Plugin Installed & On:", $"{OrbwalkerIPC.IsEnabled}");
+                        if (OrbwalkerIPC.IsEnabled)
+                        {
+                            CustomStyleText($"Version:", $"{OrbwalkerIPC.Version}");
+                            CustomStyleText($"Plugin Enabled:", OrbwalkerIPC.PluginEnabled());
+
+                            if (ImGui.Button($"Set Enabled"))
+                            {
+                                OrbwalkerIPC.SetPluginEnabled(!OrbwalkerIPC.PluginEnabled());
+                            }
+
+                            CustomStyleText($"Can OrbWalk:", OrbwalkerIPC.CanOrbwalk);
+                            var jobs = OrbwalkerIPC.EnabledJobs();
+                            CustomStyleText($"Orbwalking Jobs:", string.Join(", ", jobs));
+
+                            if (ImGui.Button($"Toggle Current Job Enabled"))
+                            {
+                                OrbwalkerIPC.SetEnabledJob((uint)Player.Job, !jobs.Any(x => x == (int)Player.Job));
+                            }
+                        }
                     }
                 }
 

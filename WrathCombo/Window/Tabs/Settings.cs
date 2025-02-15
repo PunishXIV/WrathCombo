@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Components;
+﻿using System;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
@@ -119,6 +120,29 @@ namespace WrathCombo.Window.Tabs
 
                 ImGui.Dummy(new Vector2(20f));
                 ImGuiEx.TextUnderlined("Rotation Behavior Options");
+
+                #region Throttle
+
+                ImGui.PushItemWidth(125);
+                var throttle = Service.Configuration.Throttle;
+                if (ImGui.InputInt("milliseconds    -    Action Updater Throttle",
+                        ref throttle, 10))
+                {
+                    Service.Configuration.Throttle = Math.Clamp(throttle, 0, 1500);
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker(
+                    "This is the restriction for how often combos will update the action on your hotbar." +
+                    "\nBy default this isn't restricting the combos, so you always get an up-to-date action." +
+                    "\n\nIf you have minor FPS issues, you can increase this value to make combos run less often." +
+                    "\nThis makes your combos less responsive, and perhaps even clips GCDs." +
+                    "\nAt high values, this can break your rotation entirely." +
+                    "\nMore severe FPS issues should instead be handled with Performance Mode below." +
+                    "\n\n200ms can make a reasonable difference in your FPS." +
+                    "\nValues over 500ms are NOT recommended.");
+
+                #endregion
 
                 #region Performance Mode
 

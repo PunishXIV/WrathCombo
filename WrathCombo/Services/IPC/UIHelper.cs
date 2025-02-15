@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -120,7 +121,7 @@ public class UIHelper(Leasing leasing)
 
     private DateTime? _presetsUpdated;
 
-    private Dictionary<string, (string controllers, bool enabled, bool autoMode)>
+    private ConcurrentDictionary<string, (string controllers, bool enabled, bool autoMode)>
         PresetsControlled { get; } = new();
 
     internal (string controllers, bool enabled, bool autoMode)?

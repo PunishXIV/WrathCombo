@@ -354,7 +354,7 @@ namespace WrathCombo.Data
             if (Service.Configuration.PerformanceMode)
             {
                 var result = actionId;
-                foreach (var combo in IconReplacer.FilteredCombos)
+                foreach (var combo in ActionReplacer.FilteredCombos)
                 {
                     if (combo.TryInvoke(actionId, out result))
                     {

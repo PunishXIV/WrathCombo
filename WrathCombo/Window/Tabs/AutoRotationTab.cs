@@ -11,6 +11,7 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Services.IPC;
+using WrathCombo.Services.IPC_Subscriber;
 
 namespace WrathCombo.Window.Tabs
 {
@@ -219,6 +220,14 @@ namespace WrathCombo.Window.Tabs
                 var autoRez = (bool)P.IPC.GetAutoRotationConfigState(AutoRotationConfigOption.AutoRez)!;
                 if (autoRez)
                 {
+                    ImGuiExtensions.Prefix(false);
+                    changed |= ImGui.Checkbox("Require Swiftcast/Dualcast", ref
+                        cfg.HealerSettings.AutoRezRequireSwift);
+                    ImGuiComponents.HelpMarker(
+                        $"Requires {All.Swiftcast.ActionName()} " +
+                        $"(or {RDM.JobID.JobAbbreviation()}'s Dualcast) " +
+                        $"to be available to resurrect a party member, to avoid hard-casting.");
+
                     ImGuiExtensions.Prefix(true);
                     P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezDPSJobs");
                     changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
@@ -253,6 +262,13 @@ namespace WrathCombo.Window.Tabs
             ImGuiEx.TextUnderlined("Advanced");
             changed |= ImGui.InputInt("Throttle Delay (ms)", ref cfg.Throttler);
             ImGuiComponents.HelpMarker("Auto-Rotation has a built in throttler to only run every so many milliseconds for performance reasons. If you experience issues with frame rate, try increasing this value. Do note this may have a side-effect of introducing clipping if set too high, so experiment with the value.");
+
+            using (ImRaii.Disabled(!OrbwalkerIPC.IsEnabled))
+            {
+                changed |= ImGui.Checkbox($"Enable Orbwalker Integration", ref cfg.OrbwalkerIntegration);
+
+                ImGuiComponents.HelpMarker($"This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast.");
+            }
 
             if (changed)
                 Service.Configuration.Save();

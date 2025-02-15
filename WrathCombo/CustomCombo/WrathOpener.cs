@@ -26,7 +26,7 @@ namespace WrathCombo.CustomComboNS
 
         private void UpdateOpener(Dalamud.Plugin.Services.IFramework framework)
         {
-            if (!Service.IconReplacer.getIconHook.IsEnabled)
+            if (!Service.ActionReplacer.getActionHook.IsEnabled)
             {
                 uint _ = 0;
                 FullOpener(ref _);

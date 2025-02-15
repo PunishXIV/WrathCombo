@@ -16,6 +16,6 @@ namespace WrathCombo.Services
         internal static PluginConfiguration Configuration { get; set; } = null!;
 
         /// <summary> Gets or sets the plugin icon replacer. </summary>
-        internal static IconReplacer IconReplacer { get; set; } = null!;
+        internal static ActionReplacer ActionReplacer { get; set; } = null!;
     }
 }

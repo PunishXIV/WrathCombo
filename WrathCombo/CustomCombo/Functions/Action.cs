@@ -17,12 +17,12 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Calls the original hook. </summary>
         /// <param name="actionID"> Action ID. </param>
         /// <returns> The result from the hook. </returns>
-        public static uint OriginalHook(uint actionID) => Service.IconReplacer.OriginalHook(actionID);
+        public static uint OriginalHook(uint actionID) => Service.ActionReplacer.OriginalHook(actionID);
 
         /// <summary> Compare the original hook to the given action ID. </summary>
         /// <param name="actionID"> Action ID. </param>
         /// <returns> A value indicating whether the action would be modified. </returns>
-        public static bool IsOriginal(uint actionID) => Service.IconReplacer.OriginalHook(actionID) == actionID;
+        public static bool IsOriginal(uint actionID) => Service.ActionReplacer.OriginalHook(actionID) == actionID;
 
         /// <summary> Checks if the player is high enough level to use the passed Action ID. </summary>
         /// <param name="actionid"> ID of the action. </param>

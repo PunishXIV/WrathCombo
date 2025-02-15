@@ -324,8 +324,11 @@ internal partial class WHM
 
             if (CanSpellWeave() || IsMoving())
             {
+                if (ActionReady(Glare4))
+                    return OriginalHook(Glare4);
+
                 if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && ActionReady(PresenceOfMind))
-                    return PresenceOfMind;
+                    return OriginalHook(PresenceOfMind);
 
                 if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Lucid) && ActionReady(All.LucidDreaming) &&
                     LocalPlayer.CurrentMp <= Config.WHM_AoEDPS_Lucid)

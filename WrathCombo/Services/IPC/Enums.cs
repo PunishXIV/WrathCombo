@@ -224,6 +224,8 @@ public enum AutoRotationConfigOption
 
     /// <seealso cref="DPSSettings.OnlyAttackInCombat" />
     [ConfigValueType(typeof(bool))] OnlyAttackInCombat = 13,
+
+    [ConfigValueType(typeof(bool))] OrbwalkerIntegration = 14,
 }
 
 #region Type Attribute

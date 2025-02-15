@@ -286,30 +286,30 @@ public partial class WrathCombo
     {
         if (argument.Length < 2)
         {
-            if (Service.IconReplacer.getIconHook.IsEnabled)
-                Service.IconReplacer.getIconHook.Disable();
+            if (Service.ActionReplacer.getActionHook.IsEnabled)
+                Service.ActionReplacer.getActionHook.Disable();
             else
-                Service.IconReplacer.getIconHook.Enable();
+                Service.ActionReplacer.getActionHook.Enable();
             return;
         }
 
         switch (argument[1])
         {
             case "on":
-                if (!Service.IconReplacer.getIconHook.IsEnabled)
-                    Service.IconReplacer.getIconHook.Enable();
+                if (!Service.ActionReplacer.getActionHook.IsEnabled)
+                    Service.ActionReplacer.getActionHook.Enable();
                 break;
 
             case "off":
-                if (Service.IconReplacer.getIconHook.IsEnabled)
-                    Service.IconReplacer.getIconHook.Disable();
+                if (Service.ActionReplacer.getActionHook.IsEnabled)
+                    Service.ActionReplacer.getActionHook.Disable();
                 break;
 
             case "toggle":
-                if (Service.IconReplacer.getIconHook.IsEnabled)
-                    Service.IconReplacer.getIconHook.Disable();
+                if (Service.ActionReplacer.getActionHook.IsEnabled)
+                    Service.ActionReplacer.getActionHook.Disable();
                 else
-                    Service.IconReplacer.getIconHook.Enable();
+                    Service.ActionReplacer.getActionHook.Enable();
                 break;
 
             default:

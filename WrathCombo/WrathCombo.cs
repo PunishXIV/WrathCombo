@@ -107,7 +107,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
             if (onJobChange)
             {
                 PvEFeatures.OpenToCurrentJob(true);
-                Service.IconReplacer.UpdateFilteredCombos();
+                Service.ActionReplacer.UpdateFilteredCombos();
                 WrathOpener.SelectOpener();
                 P.IPCSearch.UpdateActiveJobPresets();
             }
@@ -137,7 +137,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     {
         P = this;
         pluginInterface.Create<Service>();
-        ECommonsMain.Init(pluginInterface, this);
+        ECommonsMain.Init(pluginInterface, this, Module.All);
         PunishLibMain.Init(pluginInterface, "Wrath Combo");
 
         TM = new();
@@ -148,7 +148,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         PresetStorage.Init();
 
         Service.ComboCache = new CustomComboCache();
-        Service.IconReplacer = new IconReplacer();
+        Service.ActionReplacer = new ActionReplacer();
         ActionWatching.Enable();
         AST.InitCheckCards();
         IPC = Provider.InitAsync().Result;
@@ -382,7 +382,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
         Svc.PluginInterface.UiBuilder.Draw -= DrawUI;
 
-        Service.IconReplacer.Dispose();
+        Service.ActionReplacer.Dispose();
         Service.ComboCache.Dispose();
         ActionWatching.Dispose();
         AST.DisposeCheckCards();
