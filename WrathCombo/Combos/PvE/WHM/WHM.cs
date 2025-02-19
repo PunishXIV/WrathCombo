@@ -4,7 +4,6 @@ using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class WHM
@@ -34,8 +33,8 @@ internal partial class WHM
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_CureSync;
 
         protected override uint Invoke(uint actionID) => actionID is Cure2 && !LevelChecked(Cure2)
-                ? Cure
-                : actionID;
+            ? Cure
+            : actionID;
     }
 
     internal class WHM_Raise : CustomCombo
@@ -64,22 +63,22 @@ internal partial class WHM
 
         protected override uint Invoke(uint actionID)
         {
-            bool ActionFound;
+            bool actionFound;
 
             if (Config.WHM_ST_MainCombo_Adv && Config.WHM_ST_MainCombo_Adv_Actions.Count > 0)
             {
                 bool onStones = Config.WHM_ST_MainCombo_Adv_Actions[0] && StoneGlareList.Contains(actionID);
                 bool onAeros = Config.WHM_ST_MainCombo_Adv_Actions[1] && AeroList.ContainsKey(actionID);
                 bool onStone2 = Config.WHM_ST_MainCombo_Adv_Actions[2] && actionID is Stone2;
-                ActionFound = onStones || onAeros || onStone2;
+                actionFound = onStones || onAeros || onStone2;
             }
             else
             {
-                ActionFound = StoneGlareList.Contains(actionID); //default handling
+                actionFound = StoneGlareList.Contains(actionID); //default handling
             }
 
             // If the action is not in the list, return the actionID
-            if (!ActionFound)
+            if (!actionFound)
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Opener))
@@ -119,7 +118,9 @@ internal partial class WHM
             {
                 // DoTs
                 if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_DoT) && LevelChecked(Aero) && HasBattleTarget() &&
-                    AeroList.TryGetValue(OriginalHook(Aero), out ushort dotDebuffID))
+                    AeroList.TryGetValue(OriginalHook(Aero), out ushort dotDebuffID) &&
+                    (Config.WHM_ST_MainCombo_DoTSubOption == 0 ||
+                     Config.WHM_ST_MainCombo_DoTSubOption == 1 && InBossEncounter()))
                 {
                     if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) &&
                         IsEnabled(Variant.VariantSpiritDart) &&
@@ -173,11 +174,11 @@ internal partial class WHM
 
             bool plenaryReady = ActionReady(PlenaryIndulgence) &&
                                 (!Config.WHM_AoEHeals_PlenaryWeave ||
-                                 (Config.WHM_AoEHeals_PlenaryWeave && canWeave));
+                                 Config.WHM_AoEHeals_PlenaryWeave && canWeave);
             bool divineCaressReady = ActionReady(DivineCaress) && HasEffect(Buffs.DivineGrace);
 
             bool assizeReady = ActionReady(Assize) &&
-                               (!Config.WHM_AoEHeals_AssizeWeave || (Config.WHM_AoEHeals_AssizeWeave && canWeave));
+                               (!Config.WHM_AoEHeals_AssizeWeave || Config.WHM_AoEHeals_AssizeWeave && canWeave);
 
             IGameObject? healTarget = OptionalTarget ??
                                       (Config.WHM_AoEHeals_MedicaMO
@@ -209,11 +210,11 @@ internal partial class WHM
                 return ThinAir;
 
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Medica2)
-                && ((hasMedica2 == null && hasMedica3 == null) // No Medica buffs
-                    || (hasMedica2 != null &&
-                        hasMedica2.RemainingTime <=
-                        Config.WHM_AoEHeals_MedicaTime) // Medica buff, but falling off soon
-                    || (hasMedica3 != null && hasMedica3.RemainingTime <= Config.WHM_AoEHeals_MedicaTime)) // ^
+                && (hasMedica2 == null && hasMedica3 == null // No Medica buffs
+                    || hasMedica2 != null &&
+                    hasMedica2.RemainingTime <=
+                    Config.WHM_AoEHeals_MedicaTime // Medica buff, but falling off soon
+                    || hasMedica3 != null && hasMedica3.RemainingTime <= Config.WHM_AoEHeals_MedicaTime) // ^
                 && (ActionReady(Medica2) || ActionReady(Medica3)))
                 return LevelChecked(Medica3) ? Medica3 : Medica2;
 
@@ -254,7 +255,7 @@ internal partial class WHM
                 All.CanUseLucid(Config.WHM_STHeals_Lucid))
                 return All.LucidDreaming;
 
-            foreach (int prio in Config.WHM_ST_Heals_Priority.Items.OrderBy(x => x))
+            foreach(int prio in Config.WHM_ST_Heals_Priority.Items.OrderBy(x => x))
             {
                 int index = Config.WHM_ST_Heals_Priority.IndexOf(prio);
                 int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
@@ -294,7 +295,7 @@ internal partial class WHM
 
             bool liliesFullNoBlood = gauge.Lily == 3 && gauge.BloodLily < 3;
             bool liliesNearlyFull = gauge.Lily == 2 && gauge.LilyTimer >= 17000;
-            bool PresenceOfMindReady = ActionReady(PresenceOfMind) && !Config.WHM_AoEDPS_PresenceOfMindWeave;
+            bool presenceOfMindReady = ActionReady(PresenceOfMind) && !Config.WHM_AoEDPS_PresenceOfMindWeave;
 
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_SwiftHoly) &&
                 ActionReady(All.Swiftcast) &&
@@ -308,7 +309,7 @@ internal partial class WHM
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Assize) && ActionReady(Assize))
                 return Assize;
 
-            if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && PresenceOfMindReady)
+            if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && presenceOfMindReady)
                 return PresenceOfMind;
 
             if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_Rampart) &&

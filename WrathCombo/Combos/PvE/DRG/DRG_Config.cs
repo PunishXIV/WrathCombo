@@ -34,6 +34,7 @@ internal partial class DRG
 
                     DrawBossOnlyChoice(DRG_Balance_Content);
                     break;
+                
                 case CustomComboPreset.DRG_ST_ComboHeals:
                     DrawSliderInt(0, 100, DRG_ST_SecondWind_Threshold, "Second Wind HP percentage threshold (0 = Disabled)");
 

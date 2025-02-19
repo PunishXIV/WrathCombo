@@ -1,16 +1,18 @@
 ﻿using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SGE
 {
     public static class Config
     {
+
         #region DPS
+
         public static UserBool
             SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv"),
             SGE_ST_DPS_EDosis_Adv = new("SGE_ST_Dosis_EDosis_Adv");
@@ -21,6 +23,7 @@ internal static partial class SGE
             SGE_ST_DPS_Lucid = new("SGE_ST_DPS_Lucid", 6500),
             SGE_ST_DPS_Rhizo = new("SGE_ST_DPS_Rhizo"),
             SGE_ST_DPS_Phlegma = new("SGE_ST_DPS_Phlegma"),
+            SGE_ST_DPS_EDosisSubOption = new("SGE_ST_DPS_EDosisSubOption", 0),
             SGE_ST_DPS_AddersgallProtect = new("SGE_ST_DPS_AddersgallProtect", 3),
             SGE_AoE_DPS_Lucid = new("SGE_AoE_Phlegma_Lucid", 6500),
             SGE_AoE_DPS_Rhizo = new("SGE_AoE_DPS_Rhizo"),
@@ -28,8 +31,9 @@ internal static partial class SGE
             SGE_Balance_Content = new("SGE_Balance_Content");
         public static UserFloat
             SGE_ST_DPS_EDosisThreshold = new("SGE_ST_Dosis_EDosisThreshold", 3.0f);
-        #endregion
 
+        #endregion
+        
         #region Healing
 
         public static UserBool
@@ -63,7 +67,7 @@ internal static partial class SGE
             SGE_ST_Heal_EDiagnosisOpts = new("SGE_ST_Heal_EDiagnosisOpts");
 
         #endregion
-
+        
         public static UserInt
             SGE_Eukrasia_Mode = new("SGE_Eukrasia_Mode");
 
@@ -80,15 +84,14 @@ internal static partial class SGE
                     break;
 
                 case CustomComboPreset.SGE_ST_DPS_EDosis:
-                    DrawSliderInt(0, 100, SGE_ST_DPS_EDosisHPPer, "Stop using at Enemy HP %. Set to Zero to disable this check");
+                    DrawHorizontalRadioButton(SGE_ST_DPS_EDosisSubOption,
+                        "All content", $"Uses {ActionWatching.GetActionName(EukrasianDosis)} logic regardless of content.", 0);
 
-                    DrawAdditionalBoolChoice(SGE_ST_DPS_EDosis_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (SGE_ST_DPS_EDosis_Adv)
-                    {
-                        ImGui.Indent();
-                        DrawRoundedSliderFloat(0, 4, SGE_ST_DPS_EDosisThreshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
-                        ImGui.Unindent();
-                    }
+                    DrawHorizontalRadioButton(SGE_ST_DPS_EDosisSubOption,
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(EukrasianDosis)} logic when in Boss encounters.", 1);
+
+                    DrawRoundedSliderFloat(0, 6, SGE_ST_DPS_EDosisThreshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+
                     break;
 
                 case CustomComboPreset.SGE_ST_DPS_Lucid:
@@ -96,22 +99,21 @@ internal static partial class SGE
                     break;
 
                 case CustomComboPreset.SGE_ST_DPS_Rhizo:
-                    DrawSliderInt(0, 1, SGE_ST_DPS_Rhizo, "Addersgall Threshold", 150, Ones);
+                    DrawSliderInt(0, 1, SGE_ST_DPS_Rhizo, "Addersgall Threshold");
                     break;
 
                 case CustomComboPreset.SGE_ST_DPS_Phlegma:
-                    DrawSliderInt(0, 1, SGE_ST_DPS_Phlegma, "Number of charges to hold onto", 150, Ones);
+                    DrawSliderInt(0, 1, SGE_ST_DPS_Phlegma, "Number of charges to hold onto");
                     break;
 
                 case CustomComboPreset.SGE_ST_DPS_AddersgallProtect:
-                    DrawSliderInt(1, 3, SGE_ST_DPS_AddersgallProtect, "Addersgall Threshold", 150, Ones);
+                    DrawSliderInt(1, 3, SGE_ST_DPS_AddersgallProtect, "Addersgall Threshold");
                     break;
 
                 case CustomComboPreset.SGE_ST_DPS_Movement:
                     DrawHorizontalMultiChoice(SGE_ST_DPS_Movement, Toxikon.ActionName(), $"Use {Toxikon.ActionName()} when Addersting == available.", 4, 0);
                     DrawHorizontalMultiChoice(SGE_ST_DPS_Movement, Dyskrasia.ActionName(), $"Use {Dyskrasia.ActionName()} when in range of a selected enemy target.", 4, 1);
                     DrawHorizontalMultiChoice(SGE_ST_DPS_Movement, Eukrasia.ActionName(), $"Use {Eukrasia.ActionName()}.", 4, 2);
-                    DrawHorizontalMultiChoice(SGE_ST_DPS_Movement, Psyche.ActionName(), $"Use {Psyche.ActionName()}.", 4, 3);
                     break;
 
                 case CustomComboPreset.SGE_AoE_DPS_Lucid:
@@ -119,11 +121,11 @@ internal static partial class SGE
                     break;
 
                 case CustomComboPreset.SGE_AoE_DPS_Rhizo:
-                    DrawSliderInt(0, 1, SGE_AoE_DPS_Rhizo, "Addersgall Threshold", 150, Ones);
+                    DrawSliderInt(0, 1, SGE_AoE_DPS_Rhizo, "Addersgall Threshold");
                     break;
 
                 case CustomComboPreset.SGE_AoE_DPS_AddersgallProtect:
-                    DrawSliderInt(1, 3, SGE_AoE_DPS_AddersgallProtect, "Addersgall Threshold", 150, Ones);
+                    DrawSliderInt(1, 3, SGE_AoE_DPS_AddersgallProtect, "Addersgall Threshold");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal:
@@ -189,8 +191,8 @@ internal static partial class SGE
                     DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 0, $"{Kerachole.ActionName()} Priority: ");
                     DrawSliderInt(0, 100, SGE_AoE_Heal_KeracholeOption, "Start using when below party average HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SGE_AoE_Heal_KeracholeTrait,
-                                            "Check for Enhanced Kerachole Trait (Heal over Time)",
-                                            $"Enabling this will prevent {Kerachole.ActionName()} from being used when the Heal over Time trait == unavailable.");
+                        "Check for Enhanced Kerachole Trait (Heal over Time)",
+                        $"Enabling this will prevent {Kerachole.ActionName()} from being used when the Heal over Time trait == unavailable.");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Ixochole:
