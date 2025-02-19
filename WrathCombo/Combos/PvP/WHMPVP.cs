@@ -50,10 +50,6 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.WHMPvP_Afflatus_Misery) && IsOffCooldown(AfflatusMisery))
                             return AfflatusMisery;
 
-                        // Seraph Strike if Sacred Sight is active
-                        if (IsEnabled(CustomComboPreset.WHMPvP_Glare4) && HasEffect(Buffs.SacredSight))
-                            return OriginalHook(SeraphStrike);
-
                         // Weave conditions
                         if (CanWeave())
                         {

@@ -7601,10 +7601,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Aquaveil Option", "Adds Aquaviel to Cure II when available.", WHM.JobID)]
     WHMPvP_Aquaveil = 129007,
 
-    [ParentCombo(WHMPvP_Burst)]
-    [CustomComboInfo("Glare IV Option", "Adds Glare IV to Burst Mode.", WHM.JobID)]
-    WHMPvP_Glare4 = 129006,
-
     // Last value = 129007
 
     #endregion
