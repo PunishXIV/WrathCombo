@@ -232,6 +232,15 @@ internal partial class DRK
                     UserConfig.DrawSliderInt(50, 100, DRK_AoE_BloodOvercapThreshold,
                         startUsingAboveDescription,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
+
+                    break;
+
+                case CustomComboPreset.DRK_AoE_Sp_Flood:
+                    UserConfig.DrawSliderInt(0, 3000, DRK_AoE_ManaSpenderPooling,
+                        "Mana to save for TBN (0 = Use All)",
+                        itemWidth: biggest,
+                        sliderIncrement: SliderIncrements.Thousands);
+
                     break;
 
                 case CustomComboPreset.DRK_AoE_Mit_Oblation:
@@ -906,6 +915,18 @@ internal partial class DRK
         /// <seealso cref="CustomComboPreset.DRK_AoE_Sp_BloodOvercap" />
         public static readonly UserInt DRK_AoE_BloodOvercapThreshold =
             new("DRK_AoE_BloodOvercapThreshold", 90);
+
+        /// <summary>
+        ///     How much mana to save for TBN in AoE.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0 <br />
+        ///     <b>Range</b>: 0 - 3000 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Thousands" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DRK_AoE_Sp_Flood" />
+        public static readonly UserInt DRK_AoE_ManaSpenderPooling =
+            new("DRK_AoE_ManaSpenderPooling", 0);
 
         /// <summary>
         ///     The number of Oblation charges to keep for manual use in AoE.

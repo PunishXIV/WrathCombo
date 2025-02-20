@@ -344,7 +344,7 @@ internal partial class DRK
                     ? flags.HasFlag(Combo.Adv)
                         ? Config.DRK_AoE_SaltThreshold
                         : 30
-                    : 100;
+                    : 0;
 
             #endregion
 
@@ -867,10 +867,11 @@ internal partial class DRK
                 ContentCheck.IsInConfiguredContent(
                     Config.DRK_ST_ManaSpenderPoolingDifficulty,
                     Config.DRK_ST_ManaSpenderPoolingDifficultyListSet);
-            var manaPool =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST) && manaPooling
-                    ? ((int)Config.DRK_ST_ManaSpenderPooling)
-                    : 0;
+            var manaPool = flags.HasFlag(Combo.Adv) ?
+                flags.HasFlag(Combo.ST)
+                    ? manaPooling ? (int)Config.DRK_ST_ManaSpenderPooling : 0
+                    : (int)Config.DRK_AoE_ManaSpenderPooling :
+                0;
             var hasEnoughMana = mana >= (manaPool + 3000);
             var manaEvenBurstSoon =
                 GetCooldownRemainingTime(LivingShadow) is > 0 and < 30;
@@ -916,10 +917,11 @@ internal partial class DRK
 
             #region Mana Darkside Maintenance
 
-            if (flags.HasFlag(Combo.Simple) ||
-                flags.HasFlag(Combo.AoE) ||
-                (flags.HasFlag(Combo.ST) &&
-                 IsEnabled(Preset.DRK_ST_Sp_EdgeDarkside)) &&
+            if ((flags.HasFlag(Combo.Simple) ||
+                 ((flags.HasFlag(Combo.ST) &&
+                   IsEnabled(Preset.DRK_ST_Sp_EdgeDarkside)) ||
+                  flags.HasFlag(Combo.AoE) &&
+                  IsEnabled(Preset.DRK_AoE_Sp_Flood))) &&
                 manaDarksideDropping)
                 if (flags.HasFlag(Combo.ST) && LevelChecked(EdgeOfDarkness))
                     return (action = OriginalHook(EdgeOfDarkness)) != 0;
@@ -934,9 +936,9 @@ internal partial class DRK
             #region Mana Dark Arts Drop Prevention
 
             if ((flags.HasFlag(Combo.Simple) ||
-                 flags.HasFlag(Combo.AoE) ||
-                 (flags.HasFlag(Combo.ST) &&
-                  IsEnabled(Preset.DRK_ST_Sp_DarkArts))) &&
+                 ((flags.HasFlag(Combo.ST) &&
+                   IsEnabled(Preset.DRK_ST_Sp_DarkArts)) ||
+                  flags.HasFlag(Combo.AoE) && IsEnabled(Preset.DRK_AoE_Sp_Flood))) &&
                 Gauge.HasDarkArts &&
                 (manaBursting ||
                  (!manaEvenBurstSoon && HasOwnTBN)))
