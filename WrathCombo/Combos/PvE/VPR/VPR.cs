@@ -30,7 +30,8 @@ internal partial class VPR
             if (CanWeave())
             {
                 //Serpents Ire - ForceWeave
-                if (InCombat() && !CappedOnCoils && ActionReady(SerpentsIre))
+                if (InCombat() && !CappedOnCoils &&
+                    ActionReady(SerpentsIre) && InBossEncounter())
                     return SerpentsIre;
 
                 // Legacy Weaves
@@ -246,7 +247,9 @@ internal partial class VPR
             {
                 //Serpents Ire
                 if (IsEnabled(CustomComboPreset.VPR_ST_SerpentsIre) && InCombat() &&
-                    !CappedOnCoils && ActionReady(SerpentsIre))
+                    !CappedOnCoils && ActionReady(SerpentsIre) &&
+                    (Config.VPR_ST_SerpentsIre_SubOption == 0 ||
+                     Config.VPR_ST_SerpentsIre_SubOption == 1 && InBossEncounter()))
                     return SerpentsIre;
 
                 // Death Rattle

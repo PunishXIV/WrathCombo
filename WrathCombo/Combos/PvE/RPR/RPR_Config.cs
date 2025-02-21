@@ -1,5 +1,6 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -11,6 +12,7 @@ internal partial class RPR
             RPR_SoDThreshold = new("RPRSoDThreshold", 0),
             RPR_WoDThreshold = new("RPRWoDThreshold", 1),
             RPR_SoDRefreshRange = new("RPRSoDRefreshRange", 6),
+            RPR_ST_ArcaneCircle_SubOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
             RPR_Positional = new("RPR_Positional", 0),
             RPR_VariantCure = new("RPRVariantCure"),
             RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 25),
@@ -22,9 +24,6 @@ internal partial class RPR
         public static UserBoolArray
             RPR_SoulsowOptions = new("RPR_SoulsowOptions");
 
-        public static UserBool
-            RPR_ST_TrueNorth_Moving = new("RPR_ST_TrueNorth_Moving");
-
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -32,15 +31,13 @@ internal partial class RPR
                 case CustomComboPreset.RPR_ST_Opener:
                     DrawBossOnlyChoice(RPR_Balance_Content);
                     break;
-                case CustomComboPreset.RPRPvP_Burst_ImmortalPooling:
-                    DrawSliderInt(0, 8, RPRPvP.Config.RPRPvP_ImmortalStackThreshold,
-                        "Set a value of Immortal Sacrifice Stacks to hold for burst.");
 
-                    break;
+                case CustomComboPreset.RPR_ST_ArcaneCircle:
+                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
+                        "All content", $"Uses {ActionWatching.GetActionName(ArcaneCircle)} regardless of content.", 0);
 
-                case CustomComboPreset.RPRPvP_Burst_ArcaneCircle:
-                    DrawSliderInt(5, 90, RPRPvP.Config.RPRPvP_ArcaneCircleThreshold,
-                        "Set a HP percentage value. Caps at 90 to prevent waste.");
+                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(ArcaneCircle)} when in Boss encounters.", 1);
 
                     break;
 
@@ -108,6 +105,19 @@ internal partial class RPR
 
                 case CustomComboPreset.RPR_Variant_Cure:
                     DrawSliderInt(1, 100, RPR_VariantCure, "HP% to be at or under", 200);
+
+                    break;
+
+                //PVP
+                case CustomComboPreset.RPRPvP_Burst_ImmortalPooling:
+                    DrawSliderInt(0, 8, RPRPvP.Config.RPRPvP_ImmortalStackThreshold,
+                        "Set a value of Immortal Sacrifice Stacks to hold for burst.");
+
+                    break;
+
+                case CustomComboPreset.RPRPvP_Burst_ArcaneCircle:
+                    DrawSliderInt(5, 90, RPRPvP.Config.RPRPvP_ArcaneCircleThreshold,
+                        "Set a HP percentage value. Caps at 90 to prevent waste.");
 
                     break;
             }

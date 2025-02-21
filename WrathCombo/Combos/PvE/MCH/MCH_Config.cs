@@ -44,28 +44,23 @@ internal partial class MCH
 
                 case CustomComboPreset.MCH_ST_Adv_Excavator:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Excavator_SubOption,
-                        "All content",
-                        $"Uses {ActionWatching.GetActionName(Excavator)} logic regardless of content.", 0);
+                        "All content", $"Uses {ActionWatching.GetActionName(Excavator)} logic regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Excavator_SubOption,
-                        "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(Excavator)} logic when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(Excavator)} logic when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.MCH_ST_Adv_TurretQueen:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
-                        "All content",
-                        $"Uses {ActionWatching.GetActionName(AutomatonQueen)} logic regardless of content.", 0);
+                        "All content", $"Uses {ActionWatching.GetActionName(AutomatonQueen)} logic regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
-                        "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(AutomatonQueen)} logic when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(AutomatonQueen)} logic when in Boss encounters.", 1);
 
                     if (MCH_ST_Adv_Turret_SubOption == 1)
                     {
-                        DrawSliderInt(50, 100, MCH_ST_TurretUsage,
-                            $"Uses {ActionWatching.GetActionName(AutomatonQueen)} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
+                        DrawSliderInt(50, 100, MCH_ST_TurretUsage, $"Uses {ActionWatching.GetActionName(AutomatonQueen)} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
                     }
 
                     break;

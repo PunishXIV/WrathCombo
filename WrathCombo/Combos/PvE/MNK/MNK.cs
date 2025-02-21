@@ -31,7 +31,7 @@ internal partial class MNK
 
             if (ActionReady(RiddleOfFire) &&
                 !HasEffect(Buffs.FiresRumination) &&
-                CanDelayedWeave())
+                CanDelayedWeave() && InBossEncounter())
                 return RiddleOfFire;
 
             // OGCDs
@@ -43,11 +43,13 @@ internal partial class MNK
                     IsOffCooldown(Variant.VariantRampart))
                     return Variant.VariantRampart;
 
-                if (ActionReady(Brotherhood))
+                if (ActionReady(Brotherhood) &&
+                    InBossEncounter())
                     return Brotherhood;
 
                 if (ActionReady(RiddleOfWind) &&
-                    !HasEffect(Buffs.WindsRumination))
+                    !HasEffect(Buffs.WindsRumination) &&
+                    InBossEncounter())
                     return RiddleOfWind;
 
                 //Perfect Balance
@@ -172,7 +174,8 @@ internal partial class MNK
                 !HasEffect(Buffs.FiresRumination) &&
                 ActionReady(RiddleOfFire) &&
                 CanDelayedWeave() &&
-                GetTargetHPPercent() >= Config.MNK_ST_RiddleOfFire_HP)
+                (Config.MNK_ST_RiddleOfFire_SubOption == 0 ||
+                 Config.MNK_ST_RiddleOfFire_SubOption == 1 && InBossEncounter()))
                 return RiddleOfFire;
 
             // OGCDs
@@ -188,13 +191,15 @@ internal partial class MNK
                 {
                     if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &&
                         ActionReady(Brotherhood) &&
-                        GetTargetHPPercent() >= Config.MNK_ST_Brotherhood_HP)
+                        (Config.MNK_ST_Brotherhood_SubOption == 0 ||
+                         Config.MNK_ST_Brotherhood_SubOption == 1 && InBossEncounter()))
                         return Brotherhood;
 
                     if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
                         !HasEffect(Buffs.WindsRumination) &&
                         ActionReady(RiddleOfWind) &&
-                        GetTargetHPPercent() >= Config.MNK_ST_RiddleOfWind_HP)
+                        (Config.MNK_ST_RiddleOfWind_SubOption == 0 ||
+                         Config.MNK_ST_RiddleOfWind_SubOption == 1 && InBossEncounter()))
                         return RiddleOfWind;
                 }
 
