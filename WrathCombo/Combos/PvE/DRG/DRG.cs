@@ -129,7 +129,9 @@ internal partial class DRG
                 //Wyrmwind Thrust Feature
                 if (LevelChecked(WyrmwindThrust) &&
                     CanDRGWeave(WyrmwindThrust) &&
-                    Gauge.FirstmindsFocusCount is 2)
+                    Gauge.FirstmindsFocusCount is 2 &&
+                    (Gauge.IsLOTDActive ||
+                     !Gauge.IsLOTDActive && HasEffect(Buffs.DraconianFire)))
                     return WyrmwindThrust;
 
                 //StarDiver Feature
@@ -309,7 +311,9 @@ internal partial class DRG
                     if (IsEnabled(CustomComboPreset.DRG_ST_Wyrmwind) &&
                         LevelChecked(WyrmwindThrust) &&
                         CanDRGWeave(WyrmwindThrust) &&
-                        Gauge.FirstmindsFocusCount is 2)
+                        Gauge.FirstmindsFocusCount is 2 &&
+                        (Gauge.IsLOTDActive ||
+                         !Gauge.IsLOTDActive && HasEffect(Buffs.DraconianFire)))
                         return WyrmwindThrust;
 
                     //StarDiver Feature
@@ -463,7 +467,9 @@ internal partial class DRG
                 //Wyrmwind Thrust Feature
                 if (LevelChecked(WyrmwindThrust) &&
                     CanDRGWeave(WyrmwindThrust) &&
-                    Gauge.FirstmindsFocusCount is 2)
+                    Gauge.FirstmindsFocusCount is 2 &&
+                    (Gauge.IsLOTDActive ||
+                     !Gauge.IsLOTDActive && HasEffect(Buffs.DraconianFire)))
                     return WyrmwindThrust;
 
                 //Geirskogul Feature
@@ -612,7 +618,9 @@ internal partial class DRG
                     if (IsEnabled(CustomComboPreset.DRG_AoE_Wyrmwind) &&
                         LevelChecked(WyrmwindThrust) &&
                         CanDRGWeave(WyrmwindThrust) &&
-                        Gauge.FirstmindsFocusCount is 2)
+                        Gauge.FirstmindsFocusCount is 2 &&
+                        (Gauge.IsLOTDActive ||
+                         !Gauge.IsLOTDActive && HasEffect(Buffs.DraconianFire)))
                         return WyrmwindThrust;
 
                     //Geirskogul Feature
