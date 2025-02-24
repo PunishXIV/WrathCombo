@@ -180,7 +180,9 @@ To enable this:
 
 | **Chat command**                       | **Function**                                                                                                                                                                   |
 |:---------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/wrath`                               | Opens the main plugin window, where you can enable/disable features, access settings and more.                                                                                 |
+| `/wrath`                               | Toggles the main plugin window, where you can enable/disable features, access settings and more.                                                                               |
+| `/wrath pve`                           | Opens the main plugin window, to the PvE tab.                                                                                                                                  |
+| `/wrath pvp`                           | Opens the main plugin window, to the PvP tab.                                                                                                                                  |
 | `/wrath settings`                      | Opens the main plugin window, to the Settings tab.                                                                                                                             |
 | `/wrath autosettings`                  | Opens the main plugin window, to the Auto-Rotation tab.                                                                                                                        |
 | `/wrath <X>`                           | Opens the main plugin window, to a specific job's PvE features.<br>Replace `<X>` with the jobs abbreviation.                                                                   |

@@ -9,6 +9,7 @@ using ECommons.Logging;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.Extensions;
+using WrathCombo.Services;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
 
@@ -65,6 +66,22 @@ namespace WrathCombo.Core
         public bool OpenToCurrentJob = false;
 
         public bool OpenToCurrentJobOnSwitch = false;
+
+        public bool ActionChanging = true;
+
+        internal void SetActionChanging(bool? newValue = null)
+        {
+            if (newValue is not null)
+                ActionChanging = newValue.Value;
+
+            // Checks if action replacing is not in line with the setting
+            if (ActionChanging && !Service.ActionReplacer.getActionHook.IsEnabled)
+                Service.ActionReplacer.getActionHook.Enable();
+            if (!ActionChanging && Service.ActionReplacer.getActionHook.IsEnabled)
+                Service.ActionReplacer.getActionHook.Disable();
+
+            Save();
+        }
 
         #endregion
 

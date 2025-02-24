@@ -142,6 +142,15 @@ namespace WrathCombo.Window.Tabs
 
                 #endregion
 
+                #region Action Changing
+
+                if (ImGui.Checkbox("Action Replacing", ref Service.Configuration.ActionChanging))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by /wrath combo");
+
+                #endregion
+
                 #region Throttle
 
                 var len = ImGui.CalcTextSize("milliseconds").X;

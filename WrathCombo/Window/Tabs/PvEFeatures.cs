@@ -231,6 +231,9 @@ namespace WrathCombo.Window.Tabs
                 (onJobChange || !Service.Configuration.OpenToCurrentJob ||
                  !Player.Available)) return;
 
+            if (onJobChange && !P.ConfigWindow.IsOpen)
+                return;
+
             if (Player.Job.IsDoh())
                 return;
 

@@ -37,7 +37,7 @@ namespace WrathCombo;
 public sealed partial class WrathCombo : IDalamudPlugin
 {
     private static TaskManager? TM;
-    private readonly ConfigWindow ConfigWindow;
+    internal readonly ConfigWindow ConfigWindow;
     private readonly SettingChangeWindow SettingChangeWindow;
     private readonly TargetHelper TargetHelper;
     internal static WrathCombo? P;
@@ -262,6 +262,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         TargetHelper.Draw();
         AutoRotationController.Run();
         PluginConfiguration.ProcessSaveQueue();
+
+        Service.Configuration.SetActionChanging();
 
         // Skip the IPC checking if hidden
         if (DtrBarEntry.UserHidden) return;
