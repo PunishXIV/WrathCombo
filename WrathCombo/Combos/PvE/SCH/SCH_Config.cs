@@ -4,14 +4,14 @@ using WrathCombo.Data;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SCH
 {
     internal static class Config
     {
-        #region DPS
+          #region DPS
+
         public static UserInt
             SCH_ST_DPS_AltMode = new("SCH_ST_DPS_AltMode"),
             SCH_ST_DPS_LucidOption = new("SCH_ST_DPS_LucidOption", 6500),
@@ -19,6 +19,7 @@ internal static partial class SCH
             SCH_ST_DPS_OpenerOption = new("SCH_ST_DPS_OpenerOption"),
             SCH_ST_DPS_OpenerContent = new("SCH_ST_DPS_OpenerContent", 1),
             SCH_ST_DPS_ChainStratagemOption = new("SCH_ST_DPS_ChainStratagemOption", 10),
+            SCH_DPS_BioSubOption = new("SCH_DPS_BioSubOption", 0),
             SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1);
         public static UserBool
             SCH_ST_DPS_Adv = new("SCH_ST_DPS_Adv"),
@@ -29,9 +30,11 @@ internal static partial class SCH
             SCH_ST_DPS_EnergyDrain = new("SCH_ST_DPS_EnergyDrain", 3.0f);
         public static UserBoolArray
             SCH_ST_DPS_Adv_Actions = new("SCH_ST_DPS_Adv_Actions");
+
         #endregion
 
         #region Healing
+
         public static UserInt
             SCH_AoE_LucidOption = new("SCH_AoE_LucidOption", 6500),
             SCH_AoE_Heal_LucidOption = new("SCH_AoE_Heal_LucidOption", 6500),
@@ -62,9 +65,11 @@ internal static partial class SCH
             SCH_DeploymentTactics_UIMouseOver = new("SCH_DeploymentTactics_UIMouseOver");
         public static UserBoolArray
             SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts");
+
         #endregion
 
         #region Utility
+
         internal static UserBool
             SCH_Aetherflow_Recite_Indom = new("SCH_Aetherflow_Recite_Indom"),
             SCH_Aetherflow_Recite_Excog = new("SCH_Aetherflow_Recite_Excog");
@@ -73,8 +78,9 @@ internal static partial class SCH
             SCH_Aetherflow_Recite_ExcogMode = new("SCH_Aetherflow_Recite_ExcogMode"),
             SCH_Aetherflow_Recite_IndomMode = new("SCH_Aetherflow_Recite_IndomMode"),
             SCH_Recitation_Mode = new("SCH_Recitation_Mode");
-        #endregion
 
+        #endregion
+        
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -103,15 +109,14 @@ internal static partial class SCH
                     break;
 
                 case CustomComboPreset.SCH_DPS_Bio:
-                    DrawSliderInt(0, 100, SCH_ST_DPS_BioOption, "Stop using at Enemy HP%. Set to Zero to disable this check.");
+                    DrawHorizontalRadioButton(SCH_DPS_BioSubOption,
+                        "All content", $"Uses {ActionWatching.GetActionName(Bio)} logic regardless of content.", 0);
 
-                    DrawAdditionalBoolChoice(SCH_ST_DPS_Bio_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (SCH_ST_DPS_Bio_Adv)
-                    {
-                        ImGui.Indent();
-                        DrawRoundedSliderFloat(0, 4, SCH_ST_DPS_Bio_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
-                        ImGui.Unindent();
-                    }
+                    DrawHorizontalRadioButton(SCH_DPS_BioSubOption,
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(Bio)} logic when in Boss encounters.", 1);
+
+                    DrawRoundedSliderFloat(0, 4, SCH_ST_DPS_Bio_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+
                     break;
 
                 case CustomComboPreset.SCH_DPS_ChainStrat:
@@ -155,7 +160,7 @@ internal static partial class SCH
                     break;
 
                 case CustomComboPreset.SCH_ST_Heal_Adloquium:
-                    DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, $"Start using when below HP %. Set to 100 to disable this check.");
+                    DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, "Start using when below HP %. Set to 100 to disable this check.");
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Ignore Shield Check", $"Warning, will force the use of {Adloquium.ActionName()}, and normal {Physick.ActionName()} maybe unavailable.", 3, 0);
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Sage Shield Check", "Enable to not override an existing Sage's shield.", 3, 1);
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, $"{EmergencyTactics.ActionName()}", $"Use {EmergencyTactics.ActionName()} before {Adloquium.ActionName()}", 3, 2);
