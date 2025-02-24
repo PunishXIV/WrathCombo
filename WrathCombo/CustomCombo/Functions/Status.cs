@@ -4,6 +4,7 @@ using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
@@ -171,16 +172,16 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
-        public static bool TargetHasRezWeakness(IGameObject? target)
+        public static bool TargetHasRezWeakness(IGameObject? target, bool checkForWeakness = true)
         {
-            foreach (var status in ActionWatching.GetStatusesByName(GetStatusName(43)))
-            {
+            if (checkForWeakness)
+                foreach (var status in ActionWatching.GetStatusesByName(
+                             GetStatusName(All.Debuffs.Weakness)))
+                    if (FindEffectOnMember((ushort)status, target) is not null) return true;
+
+            foreach (var status in ActionWatching.GetStatusesByName(
+                         GetStatusName(All.Debuffs.BrinkOfDeath)))
                 if (FindEffectOnMember((ushort)status, target) is not null) return true;
-            }
-            foreach (var status in ActionWatching.GetStatusesByName(GetStatusName(44)))
-            {
-                if (FindEffectOnMember((ushort)status, target) is not null) return true;
-            }
 
             return false;
         }

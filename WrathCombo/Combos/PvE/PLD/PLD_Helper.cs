@@ -24,6 +24,7 @@ internal partial class PLD
         Bulwark = 22,
         CircleOfScorn = 23,
         ShieldLob = 24,
+        IronWill = 28,
         SpiritsWithin = 29,
         HallowedGround = 30,
         GoringBlade = 3538,

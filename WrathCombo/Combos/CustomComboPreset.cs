@@ -954,6 +954,13 @@ public enum CustomComboPreset
 
     #region DANCER
 
+    [ReplaceSkill(DNC.StandardFinish2, DNC.TechnicalFinish4)]
+    [CustomComboInfo("Require Nearby Enemy for Finishes Feature",
+        "Will hold Standard Finish and Technical Finish until an enemy is within range of the abilities in all (non-Simple) Modes and Features below by replacing whatever button with Savage Blade." +
+        "\nWill show either Finish when the dance is about to expire." +
+        "\nThis behavior is recommended by The Balance but can introduce drift, so it may not be what is best for your group.", DNC.JobID)]
+    DNC_ST_BlockFinishes = 4000,
+
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -1243,6 +1250,27 @@ public enum CustomComboPreset
     // Last value = 4093
 
     #region Smaller Features
+
+    #region Dance Partner Features
+
+    /*
+    [ReplaceSkill(DNC.ClosedPosition, DNC.Ending)]
+    [CustomComboInfo("Dance Partner on Desirable Partner Feature",
+        "Replaces Closed Position (including in the combos above) with itself, but targeted to a party member, so you can cast it without having to pick anyone and without having to actually target anyone." +
+        "\nThis will check through your party members, and select the most desirable Partner based on The Balance's priority and stuff like Rez Sickness.", DNC.JobID)]
+    DNC_DesirablePartner = 4175,
+
+    [ParentCombo(DNC_DesirablePartner)]
+    [CustomComboInfo("Party-Target Overrides Selection Option", "If you are targeting a party member that is a valid target, they will be used instead of searching party members.\nTarget must be alive and in range.", DNC.JobID)]
+    DNC_Desirable_TargetOverride = 4176,
+
+    [ParentCombo(DNC_DesirablePartner)]
+    [CustomComboInfo("Custom Priority Option", "If your Partner priority differs from The Balance's recommendation for some reason, you can customize the priority here.\nNot generally recommended.", DNC.JobID)]
+    DNC_Desirable_CustomPriority = 4177,
+    */
+
+    #endregion
+    // Last value = 4177
 
     #region Dance Features
 
