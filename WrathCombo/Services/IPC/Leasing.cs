@@ -58,7 +58,7 @@ public class Lease(
     ///     The date and time this lease was created.
     /// </summary>
     // ReSharper disable once UnusedMember.Local
-    private DateTime Created { get; } = DateTime.Now;
+    internal DateTime Created { get; } = DateTime.Now;
     /// <summary>
     ///     The date and time this lease was last updated.
     /// </summary>
