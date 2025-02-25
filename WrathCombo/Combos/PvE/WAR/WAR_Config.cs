@@ -435,8 +435,7 @@ internal partial class WAR
                     break;
 
                 case CustomComboPreset.WAR_Mit_ShakeItOff:
-                    ImGui.Dummy(new Vector2(15f.Scale(), 0f));
-                    ImGui.SameLine();
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         WAR_Mit_ShakeItOff_PartyRequirement,
                         "Require party",
@@ -447,15 +446,16 @@ internal partial class WAR
                         "Use Always",
                         "Will not require a party for Shake It Off.",
                         outputValue: (int) PartyRequirement.No);
+                    ImGui.Unindent();
 
+                    ImGui.NewLine();
                     UserConfig.DrawPriorityInput(WAR_Mit_Priorities,
                         numberMitigationOptions, 5,
                         "Shake It Off Priority:");
                     break;
 
                 case CustomComboPreset.WAR_Mit_ArmsLength:
-                    ImGui.Dummy(new Vector2(15f.Scale(), 0f));
-                    ImGui.SameLine();
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         WAR_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
@@ -464,7 +464,9 @@ internal partial class WAR
                         WAR_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
                         outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                    ImGui.Unindent();
 
+                    ImGui.NewLine();
                     UserConfig.DrawSliderInt(0, 3, WAR_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)");
 

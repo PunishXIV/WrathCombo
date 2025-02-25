@@ -1,3 +1,4 @@
+using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -32,6 +33,7 @@ internal partial class DRG
                     DrawHorizontalRadioButton(DRG_SelectedOpener, "Piercing Talon opener", "Uses Piercing Talon opener",
                         1);
 
+                    ImGui.NewLine();
                     DrawBossOnlyChoice(DRG_Balance_Content);
                     break;
                 case CustomComboPreset.DRG_ST_ComboHeals:

@@ -23,7 +23,7 @@ namespace WrathCombo.Window.Tabs
 
                 #region UI Options
 
-                ImGui.Dummy(new Vector2(20f));
+                ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("Main UI Options");
 
                 #region SubCombos
@@ -120,7 +120,7 @@ namespace WrathCombo.Window.Tabs
 
                 #region Rotation Behavior Options
 
-                ImGui.Dummy(new Vector2(20f));
+                ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("Rotation Behavior Options");
 
 
@@ -250,7 +250,7 @@ namespace WrathCombo.Window.Tabs
 
                 #region Troubleshooting Options
 
-                ImGui.Dummy(new Vector2(20f));
+                ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("Troubleshooting / Analysis Options");
 
                 #region Combat Log

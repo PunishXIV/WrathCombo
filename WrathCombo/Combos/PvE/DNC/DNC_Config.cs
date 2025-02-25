@@ -30,10 +30,9 @@ internal partial class DNC
         /// </summary>
         private static void DrawAntiDriftOptions()
         {
-            ImGui.Dummy(new Vector2(1f, 12f));
-            ImGui.Indent(40f);
+            ImGui.NewLine();
+            ImGuiEx.Spacing(new Vector2(40, 12));
             ImGui.Text("Anti-Drift Options:     (hover each for more info)");
-            ImGui.Unindent(40f);
             ImGui.NewLine();
 
             UserConfig.DrawRadioButton(
@@ -85,30 +84,31 @@ internal partial class DNC
                         .Select(x => (int) x).ToArray();
 
                     bool inputChanged = false;
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Red) Emboite replacement Action ID",
                         ref actions[0], 0);
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Blue) Entrechat replacement Action ID",
                         ref actions[1], 0);
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Green) Jete replacement Action ID",
                         ref actions[2], 0);
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Yellow) Pirouette replacement Action ID",
                         ref actions[3], 0);
 
-                    ImGui.Dummy(new Vector2(0f, 12f.Scale()));
+                    ImGuiEx.Spacing(new Vector2(0, 12));
+
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
                     ImGui.TextWrapped(
                         "This WILL let you set up a conflict!");
                     ImGui.PopStyleColor();
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                    ImGui.TextWrapped("Double check the actions you are setting do not conflict with other combos you are using!");
+                    ImGui.TextWrapped("Double check the actions you are setting do not conflict with other combos you are using, or enable the feature below!");
                     ImGui.PopStyleColor();
 
                     if (inputChanged)
@@ -154,7 +154,10 @@ internal partial class DNC
                         "Technical: 7s Countdown",
                         "Requires at least a 7s cooldown\nand that you start Technical Step at 7s.\nNOT recommended.",
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
+
+                    ImGui.Indent();
                     UserConfig.DrawBossOnlyChoice(DNC_ST_OpenerDifficulty);
+                    ImGui.Unindent();
 
                     break;
 
@@ -170,6 +173,7 @@ internal partial class DNC
                         "Target HP% to stop using Standard Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_SS_IncludeSS,
                         "Include Standard Step",
@@ -194,6 +198,7 @@ internal partial class DNC
                         "Target HP% to stop using Technical Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TS_IncludeTS,
                         "Include Technical Step",
@@ -221,6 +226,7 @@ internal partial class DNC
                     break;
 
                 case CustomComboPreset.DNC_ST_Adv_Tillana:
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TillanaUse,
                         "Use Tillana Normally",
@@ -237,6 +243,7 @@ internal partial class DNC
                         "\nNOT recommended.",
                         outputValue: (int) TillanaDriftProtection.Favor,
                         itemWidth: 125f);
+                    ImGui.Unindent();
 
                     break;
 
@@ -276,6 +283,7 @@ internal partial class DNC
                         "Target HP% to stop using Standard Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_AoE_Adv_SS_IncludeSS,
                         "Include Standard Step",
@@ -298,6 +306,7 @@ internal partial class DNC
                         "Target HP% to stop using Technical Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_AoE_Adv_TS_IncludeTS,
                         "Include Technical Step",

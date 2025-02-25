@@ -430,9 +430,9 @@ namespace WrathCombo.Window.Tabs
                             ActionManager.Instance()->GetActionStatus(ActionType.Action, _debugSpell.Value.RowId);
                         var icon = Svc.Texture.GetFromGameIcon(new(_debugSpell.Value.Icon)).GetWrapOrEmpty()
                             .ImGuiHandle;
-                        ImGui.Image(icon, new Vector2(60f.Scale(), 60f.Scale()));
+                        ImGui.Image(icon, new Vector2(60).Scale());
                         ImGui.SameLine();
-                        ImGui.Image(icon, new Vector2(30f.Scale(), 30f.Scale()));
+                        ImGui.Image(icon, new Vector2(30).Scale());
                         CustomStyleText("Action Status:",
                             $"{actionStatus} ({Svc.Data.GetExcelSheet<LogMessage>().GetRow(actionStatus).Text})");
                         CustomStyleText("Action Type:", _debugSpell.Value.ActionCategory.Value.Name);

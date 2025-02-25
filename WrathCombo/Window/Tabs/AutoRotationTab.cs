@@ -36,9 +36,6 @@ namespace WrathCombo.Window.Tabs
             {
                 var inCombatOnly = (bool)P.IPC.GetAutoRotationConfigState(
                     Enum.Parse<AutoRotationConfigOption>("InCombatOnly"))!;
-                if (P.UIHelper.AutoRotationConfigControlled("InCombatOnly") is not null)
-                    ImGuiExtensions.Prefix(false);
-                P.UIHelper.ShowIPCControlledIndicatorIfNeeded("InCombatOnly");
                 ImGuiExtensions.Prefix(!inCombatOnly);
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
                     "Only in Combat", ref cfg.InCombatOnly, "InCombatOnly");
@@ -54,7 +51,7 @@ namespace WrathCombo.Window.Tabs
                     ImGuiComponents.HelpMarker("Disables Auto-Mode outside of combat unless you're synced to a FATE.");
 
                     ImGuiExtensions.Prefix(true);
-                    ImGui.SetNextItemWidth(100f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(100);
                     changed |= ImGui.InputInt("Delay to activate Auto-Rotation once combat starts (seconds)", ref cfg.CombatDelay);
 
                     if (cfg.CombatDelay < 0)
@@ -100,7 +97,7 @@ namespace WrathCombo.Window.Tabs
                 }
                 ImGuiComponents.HelpMarker($"Disabling this will turn off AoE DPS features. Otherwise will require the amount of targets required to be in range of an AoE feature's attack to use. This applies to all 3 roles, and for any features that deal AoE damage.");
 
-                ImGui.SetNextItemWidth(100f.Scale());
+                ImGuiEx.SetNextItemWidthScaled(100);
                 changed |= ImGui.SliderFloat("Max Target Distance", ref cfg.DPSSettings.MaxDistance, 1, 30);
                 cfg.DPSSettings.MaxDistance =
                     Math.Clamp(cfg.DPSSettings.MaxDistance, 1, 30);
@@ -204,7 +201,7 @@ namespace WrathCombo.Window.Tabs
                         cfg.HealerSettings.AoEHealTargetCount = 0;
                 }
                 ImGuiComponents.HelpMarker($"Disabling this will turn off AoE Healing features. Otherwise will require the amount of targets required to be in range of an AoE feature's heal to use.");
-                ImGui.SetNextItemWidth(100f.Scale());
+                ImGuiEx.SetNextItemWidthScaled(100);
                 changed |= ImGui.InputInt("Delay to start healing once above conditions are met (seconds)", ref cfg.HealerSettings.HealDelay);
 
                 if (cfg.HealerSettings.HealDelay < 0)

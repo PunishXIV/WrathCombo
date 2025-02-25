@@ -1,3 +1,4 @@
+using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -28,7 +29,9 @@ internal partial class BRD
                     DrawRadioButton(BRD_Adv_Opener_Selection, $"2.48 Adjusted Standard Opener", "", 1);
                     DrawRadioButton(BRD_Adv_Opener_Selection, $"2.49 Standard Comfy", "", 2);
 
+                    ImGui.Indent();
                     DrawBossOnlyChoice(BRD_Balance_Content);
+                    ImGui.Unindent();
                     break;                
 
                 case CustomComboPreset.BRD_Adv_RagingJaws:

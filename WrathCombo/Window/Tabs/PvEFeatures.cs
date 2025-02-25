@@ -92,7 +92,7 @@ namespace WrathCombo.Window.Tabs
                         {
                             if (icon != null)
                             {
-                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
+                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X, icon.Size.Y).Scale() / 2f);
                                 ImGui.SameLine();
                             }
                             ImGuiEx.Text($"{OpenJob}");
@@ -163,7 +163,7 @@ namespace WrathCombo.Window.Tabs
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
                 presetBox.Draw();
-                ImGuiHelpers.ScaledDummy(12.0f);
+                ImGuiEx.Spacing(new Vector2(0, 12));
             }
         }
         private static void DrawBozjaContents(string jobName)
@@ -173,7 +173,7 @@ namespace WrathCombo.Window.Tabs
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
                 presetBox.Draw();
-                ImGuiHelpers.ScaledDummy(12.0f);
+                ImGuiEx.Spacing(new Vector2(0, 12));
             }
         }
 
@@ -196,7 +196,7 @@ namespace WrathCombo.Window.Tabs
                     if (!conflictsSource.Where(x => x == preset).Any() || conflictOriginals.Length == 0)
                     {
                         presetBox.Draw();
-                        ImGuiHelpers.ScaledDummy(12.0f);
+                        ImGuiEx.Spacing(new Vector2(0, 12));
                         continue;
                     }
 
@@ -220,7 +220,7 @@ namespace WrathCombo.Window.Tabs
                 else
                 {
                     presetBox.Draw();
-                    ImGuiHelpers.ScaledDummy(12.0f);
+                    ImGuiEx.Spacing(new Vector2(0, 12));
                 }
             }
         }
