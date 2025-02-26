@@ -3,9 +3,11 @@ using ECommons.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using static FFXIVClientStructs.FFXIV.Client.Graphics.Kernel.VertexShader;
 
 namespace WrathCombo.Translation
 {
@@ -16,11 +18,13 @@ namespace WrathCombo.Translation
             if (TransDict.TryGetValue(origin, out string? result)) {
                 return result;
             }
-            //if (!Records.Contains(origin)) {
-            //    Records.Add(origin);
-            //    string 文本 = origin.Replace("\n", "#换行符");
-            //    PluginLog.Information($"待翻译：{文本}");
-            //}
+            if (!Records.Contains(origin)) {
+                if (Regex.IsMatch(origin, @"[a-zA-Z]")) {
+                    Records.Add(origin);
+                    string 文本 = origin.Replace("\n", "#换行符");
+                    PluginLog.Information($"待翻译：{文本}");
+                }
+            }
             return origin;
         }
 
@@ -2062,6 +2066,7 @@ namespace WrathCombo.Translation
             {"Add Mountain Buster","加入山崩"},
             {"Add Crimson Cyclone","加入深红旋风"},
             {"Add Slipstream","加入螺旋气流"},
+
             #endregion
 
             #region 赤魔
@@ -2781,9 +2786,19 @@ namespace WrathCombo.Translation
         {"Defensive Elemental Weave","防御性元素天赋"},
         {"When under, uses Wreath of Ice instead.\n- Will not use outside combat.","血量低于阈值时改用寒冰环，不在战斗外使用。"},
         {"Caps at 90 to prevent waste.","上限为90以防浪费。"},
-        #endregion
+            #endregion
+
+            #region 更新补充
+            //02.26
+            {"Adds Egi summons to the single target combo.\nWill prioritise the Egi selected below.","把三神召唤加入单体循环中。\n会优先召唤下方选择的三神。"},
+            {"Adds Egi summons to the AoE combo.\nWill prioritise the Egi selected below.","把三神召唤加入群体循环中。\n会优先召唤下方选择的三神。"},
+            {"Adds Harmonic Arrow to Burst Mode. Will use it at set number of charges AND when target is below the health threshold per charge for execute. ","把和弦箭加入爆发模式中。当达到预设的充能数且目标的血量低于每层设定的阈值时就会使用。"},
+            {"Backlash Option","蛇鳞击"},
+            {"Enforced Crimson Cyclone Melee Check","强制深红旋风近战检测"},
+            {"Only uses Crimson Cyclone within melee range.","只有当你在近战范围内时，才使用深红旋风。"},
+            #endregion
         };
 
-        //private static List<string> Records = new List<string>();
+        private static List<string> Records = new List<string>();
     }
 }

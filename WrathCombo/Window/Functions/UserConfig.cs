@@ -31,6 +31,8 @@ namespace WrathCombo.Window.Functions
         /// <param name="additonalChoiceCondition">What the condition is to convey to the user what triggers it.</param>
         public static bool DrawSliderInt(int minValue, int maxValue, string config, string sliderDescription, float itemWidth = 150, uint sliderIncrement = SliderIncrements.Ones, bool hasAdditionalChoice = false, string additonalChoiceCondition = "")
         {
+            sliderDescription = Translation.Translation.Translate(sliderDescription);
+
             ImGui.Indent();
             int output = PluginConfiguration.GetCustomIntValue(config, minValue);
             if (output < minValue)
@@ -40,7 +42,6 @@ namespace WrathCombo.Window.Functions
                 Service.Configuration.Save();
             }
 
-            sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
 
@@ -159,6 +160,7 @@ namespace WrathCombo.Window.Functions
                 Service.Configuration.Save();
             }
 
+            sliderDescription = Translation.Translation.Translate(sliderDescription);
             sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
@@ -255,6 +257,7 @@ namespace WrathCombo.Window.Functions
                 Service.Configuration.Save();
             }
 
+            sliderDescription = Translation.Translation.Translate(sliderDescription);
             sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
@@ -351,6 +354,9 @@ namespace WrathCombo.Window.Functions
             ImGui.SameLine();
             bool enabled = output == outputValue;
 
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
+
             if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
             {
                 PluginConfiguration.SetCustomIntValue(config, outputValue);
@@ -398,9 +404,10 @@ namespace WrathCombo.Window.Functions
             {
                 ImGui.NewLine();
             }
-
             bool enabled = output == outputValue;
 
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
             using (ImRaii.PushColor(ImGuiCol.Text, descriptionColor))
             {
                 if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
@@ -419,7 +426,7 @@ namespace WrathCombo.Window.Functions
 
             DrawResetContextMenu(config, outputValue);
 
-            ImGui.SameLine();
+            //ImGui.SameLine();
         }
 
         /// <summary>
@@ -440,6 +447,8 @@ namespace WrathCombo.Window.Functions
             bool[]? values = PluginConfiguration.GetCustomBoolArrayValue(config);
             ImGui.PushItemWidth(itemWidth);
 
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
             using (ImRaii.PushColor(ImGuiCol.Text, descriptionColor))
             {
                 if (ImGui.RadioButton($"{checkBoxName}###{config}{choice}", values[choice]))
@@ -491,6 +500,9 @@ namespace WrathCombo.Window.Functions
                 ImGui.SameLine();
                 if (isConditionalChoice) ImGui.Indent(); //Align checkbox after the + symbol
             }
+
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
             if (ImGui.Checkbox($"{checkBoxName}###{config}", ref output))
             {
                 PluginConfiguration.SetCustomBoolValue(config, output);
@@ -539,6 +551,8 @@ namespace WrathCombo.Window.Functions
                     ImGui.SameLine();
                 }
 
+                checkBoxName = Translation.Translation.Translate(checkBoxName);
+                checkboxDescription = Translation.Translation.Translate(checkboxDescription);
                 if (ImGui.Checkbox($"{checkBoxName}###{config}{choice}", ref values[choice]))
                 {
                     PluginConfiguration.SetCustomBoolArrayValue(config, values);
@@ -583,9 +597,12 @@ namespace WrathCombo.Window.Functions
                 //Convert the 2D array of names and descriptions into radio buttons
                 for (int idx = 0; idx < totalChoices; idx++)
                 {
+
                     ImGui.TableNextColumn();
                     string checkBoxName = nameAndDesc[idx, 0];
                     string checkboxDescription = nameAndDesc[idx, 1];
+                    checkBoxName = Translation.Translation.Translate(checkBoxName);
+                    checkboxDescription = Translation.Translation.Translate(checkboxDescription);
 
                     ImGui.PushStyleColor(ImGuiCol.Text, descriptionColor);
                     if (ImGui.Checkbox($"{checkBoxName}###{config}{idx}", ref values[idx]))
@@ -1221,6 +1238,7 @@ namespace WrathCombo.Window.Functions
         public static void DrawDifficultyMultiChoice
             (string config, ContentCheck.ListSet configListSet, string overrideText = "")
         {
+            overrideText = Translation.Translation.Translate(overrideText);
             switch (configListSet)
             {
                 case ContentCheck.ListSet.Halved:
@@ -1399,10 +1417,11 @@ namespace WrathCombo.Window.Functions
         /// <seealso cref="ContentCheck.IsInBossOnlyContent"/>
         internal static void DrawBossOnlyChoice(UserBoolArray config, string overrideText = "")
         {
+            //ImGui.NewLine();
             using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
             {
                 ImGui.Text(overrideText.IsNullOrEmpty()
-                    ? "Select what kind of content this option applies to:"
+                    ? "选择此选项将应用于何种类型的战斗中："
                     : overrideText);
             }
 
@@ -1443,11 +1462,12 @@ namespace WrathCombo.Window.Functions
         /// <seealso cref="ContentCheck.IsInBossOnlyContent"/>
         internal static void DrawBossOnlyChoice(UserInt config, string overrideText = "")
         {
+            //ImGui.NewLine();
             using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
             {
 
                 ImGui.TextUnformatted(overrideText.IsNullOrEmpty()
-                    ? "Select what kind of content this option applies to:"
+                    ? "选择此选项将应用于何种类型的战斗中："
                     : overrideText);
             }
 
@@ -1496,6 +1516,7 @@ namespace WrathCombo.Window.Functions
                     }
                     else
                     {
+                        customLabel = Translation.Translation.Translate(customLabel);
                         ImGui.TextUnformatted(customLabel);
                     }
                     ImGui.SameLine();

@@ -800,7 +800,7 @@ internal partial class SMN
                     if (CanSpellWeave() && IsGarudaAttuned && IsOffCooldown(All.Swiftcast))
                         return All.Swiftcast;
 
-                    if (Config.SMN_ST_Egi_AstralFlow[2] &&
+                    if (Config.SMN_AoE_Egi_AstralFlow[2] &&
                         ((HasEffect(Buffs.GarudasFavor) && HasEffect(All.Buffs.Swiftcast)) || (gauge.Attunement == 0)))     // Astral Flow if Swiftcast is not ready throughout Garuda
                         return OriginalHook(AstralFlow);
                 }
@@ -810,7 +810,7 @@ internal partial class SMN
                 {
                     if (IsOffCooldown(All.Swiftcast) && IsIfritAttuned && ComboAction is not CrimsonCyclone)
                     {
-                        if (!Config.SMN_ST_Egi_AstralFlow[1] || (Config.SMN_ST_Egi_AstralFlow[1] && gauge.Attunement >= 1))
+                        if (!Config.SMN_AoE_Egi_AstralFlow[1] || (Config.SMN_AoE_Egi_AstralFlow[1] && gauge.Attunement >= 1))
                             return All.Swiftcast;
                     }
                 }
@@ -824,7 +824,7 @@ internal partial class SMN
                         if (CanSpellWeave() && IsGarudaAttuned && IsOffCooldown(All.Swiftcast))
                             return All.Swiftcast;
 
-                        if (Config.SMN_ST_Egi_AstralFlow[2] &&
+                        if (Config.SMN_AoE_Egi_AstralFlow[2] &&
                             ((HasEffect(Buffs.GarudasFavor) && HasEffect(All.Buffs.Swiftcast)) || (gauge.Attunement == 0)))     // Astral Flow if Swiftcast is not ready throughout Garuda
                             return OriginalHook(AstralFlow);
                     }
@@ -832,7 +832,7 @@ internal partial class SMN
                     // Swiftcast Ifrit Feature (Conditions to allow for SpS Ruins to still be under the effect of Swiftcast)
                     if (IsOffCooldown(All.Swiftcast) && IsIfritAttuned && ComboAction is not CrimsonCyclone)
                     {
-                        if (!Config.SMN_ST_Egi_AstralFlow[1] || (Config.SMN_ST_Egi_AstralFlow[1] && gauge.Attunement >= 1))
+                        if (!Config.SMN_AoE_Egi_AstralFlow[1] || (Config.SMN_AoE_Egi_AstralFlow[1] && gauge.Attunement >= 1))
                             return All.Swiftcast;
                     }
                 }
@@ -844,10 +844,10 @@ internal partial class SMN
                  (HasEffect(Buffs.GarudasFavor) && gauge.Attunement >= 1 && !HasEffect(All.Buffs.Swiftcast) && IsMoving())))
                 return OriginalHook(PreciousBrilliance);
 
-            if ((Config.SMN_ST_Egi_AstralFlow[2] && HasEffect(Buffs.GarudasFavor) && (IsNotEnabled(CustomComboPreset.SMN_AoE_DemiEgiMenu_SwiftcastEgi) || swiftcastPhase == 2)) ||                 // Garuda
-                (Config.SMN_ST_Egi_AstralFlow[0] && HasEffect(Buffs.TitansFavor) && ComboAction is TopazRite or TopazCata && CanSpellWeave()) ||                                  // Titan
-                (Config.SMN_ST_Egi_AstralFlow[1] && ((HasEffect(Buffs.IfritsFavor) && !Config.SMN_ST_CrimsonCycloneMelee && (IsMoving() || gauge.Attunement == 0)) || (ComboAction is CrimsonCyclone && InMeleeRange()))) ||
-                (Config.SMN_ST_Egi_AstralFlow[1] && HasEffect(Buffs.IfritsFavor) && Config.SMN_ST_CrimsonCycloneMelee && InMeleeRange()))  // Ifrit
+            if ((Config.SMN_AoE_Egi_AstralFlow[2] && HasEffect(Buffs.GarudasFavor) && (IsNotEnabled(CustomComboPreset.SMN_AoE_DemiEgiMenu_SwiftcastEgi) || swiftcastPhase == 2)) ||                 // Garuda
+                (Config.SMN_AoE_Egi_AstralFlow[0] && HasEffect(Buffs.TitansFavor) && ComboAction is TopazRite or TopazCata && CanSpellWeave()) ||                                  // Titan
+                (Config.SMN_AoE_Egi_AstralFlow[1] && ((HasEffect(Buffs.IfritsFavor) && !Config.SMN_AoE_CrimsonCycloneMelee && (IsMoving() || gauge.Attunement == 0)) || (ComboAction is CrimsonCyclone && InMeleeRange()))) ||
+                (Config.SMN_AoE_Egi_AstralFlow[1] && HasEffect(Buffs.IfritsFavor) && Config.SMN_AoE_CrimsonCycloneMelee && InMeleeRange()))  // Ifrit
                 return OriginalHook(AstralFlow);
 
             // Precious Brilliance
