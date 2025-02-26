@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
+using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 using System;
 using System.Runtime.InteropServices;
 
@@ -81,6 +82,35 @@ public struct PictoGauge
     public bool MooglePortraitReady => CreatureFlags.HasFlag(CreatureFlags.MooglePortrait);
     public bool MadeenPortraitReady => CreatureFlags.HasFlag(CreatureFlags.MadeenPortrait);
 
+}
+
+[StructLayout(LayoutKind.Explicit, Size = 0x10)]
+public struct DebugSMNGauge
+{
+    [FieldOffset(0x8)] public ushort SummonTimer; // millis counting down
+    [FieldOffset(0xA)] public ushort AttunementTimer; // millis counting down
+    [FieldOffset(0xC)] public byte ReturnSummon; // Pet sheet (23=Carbuncle, the only option now)
+    [FieldOffset(0xD)] public byte ReturnSummonGlam; // PetMirage sheet
+    [FieldOffset(0xE)] public byte Attunement; // Count of "Attunement cost" resource
+    [FieldOffset(0xF)] public DebugAetherFlags AetherFlags; // bitfield
+
+    public byte AttunementCount => (byte)(Attunement >> 2);//new in 7.01,Attunement may be Bit Field
+    public byte AttunementType => (byte)(Attunement & 0x3);//new in 7.01, 1 = Ifrit, 2 = Titan, 3 = Garuda
+}
+
+[Flags]
+public enum DebugAetherFlags : byte
+{
+    None = 0,
+    AetherFlow1 = 1 << 0,
+    AetherFlow2 = 1 << 1,
+    AetherFlow = AetherFlow1 | AetherFlow2,
+    PhoenixNext = 1 << 2,
+    SolarBahamutNext1 = 1 << 3,
+    SolarBahamutNext2 = PhoenixNext | SolarBahamutNext1,
+    IfritReady = 32,
+    TitanReady = 64,
+    GarudaReady = 128,
 }
 
 [Flags]

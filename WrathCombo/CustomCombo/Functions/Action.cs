@@ -318,5 +318,65 @@ namespace WrathCombo.CustomComboNS.Functions
                 return _beingTargetedHostile = Svc.Objects.Any(x => x.IsHostile() && x is IBattleChara chara && chara.CastTargetObjectId == LocalPlayer.GameObjectId);
             }
         }
+
+        /// <summary>
+        /// Counts how many times an action has been used since combat started.
+        /// </summary>
+        /// <param name="actionId"></param>
+        /// <returns></returns>
+        public static int ActionCount(uint actionId) => ActionWatching.CombatActions.Count(x => x == OriginalHook(actionId));
+
+        /// <summary>
+        /// Counts how many times multiple actions have been used since combat started.
+        /// </summary>
+        /// <param name="actionIds"></param>
+        /// <returns></returns>
+        public static int ActionCount(uint[] actionIds)
+        {
+            int output = 0;
+            foreach (var a in actionIds)
+                output += ActionCount(a);
+
+            return output;
+        }
+
+        /// <summary>
+        /// Counts how many times an action has been used in combat since using another action
+        /// </summary>
+        /// <param name="actionToCheckAgainst"></param>
+        /// <param name="actionToCount"></param>
+        /// <returns></returns>
+        public static int TimesUsedSinceOtherAction(uint actionToCheckAgainst, uint actionToCount)
+        {
+            if (!ActionWatching.CombatActions.Any(x => x == actionToCheckAgainst)) return 0;
+
+            var startIdx = ActionWatching.CombatActions.LastIndexOf(actionToCheckAgainst);
+
+            var output = 0;
+            for (int i = startIdx; i < ActionWatching.CombatActions.Count; i++)
+            {
+                if (ActionWatching.CombatActions[i] == actionToCount)
+                    output++;
+            }
+
+            return output;
+        }
+
+        /// <summary>
+        /// Counts how many times multiple actions have been used in combat since using another action
+        /// </summary>
+        /// <param name="actionToCheckAgainst"></param>
+        /// <param name="actionsToCount"></param>
+        /// <returns></returns>
+        public static int TimesUsedSinceOtherAction(uint actionToCheckAgainst, uint[] actionsToCount)
+        {
+            var output = 0;
+            foreach(var a in actionsToCount)
+            {
+                output += TimesUsedSinceOtherAction(actionToCheckAgainst, a);
+            }
+
+            return output;
+        }
     }
 }
