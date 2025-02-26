@@ -576,7 +576,8 @@ internal static partial class SCH
                 if (ActionReady(SummonSeraph) && HasPetPresent()) {
                     return SummonSeraph;
                 }
-                if (LevelChecked(SummonSeraph) && Gauge.SeraphTimer > 0 && HasCharges(Consolation)) {
+                //if (LevelChecked(SummonSeraph) && Gauge.SeraphTimer > 0 && HasCharges(Consolation)) {
+                if (Gauge.SeraphTimer > 0) {
                     return Consolation;
                 }
                 if (ActionReady(Seraphism) && HasPetPresent() && InCombat()) {

@@ -5399,7 +5399,7 @@ public enum CustomComboPreset
     SCH_Indomitability = 16050,
 
     [ReplaceSkill(SCH.Dissipation)]
-    [CustomComboInfo("转化整合", "整合炽天召唤/慰藉/炽天附体/转化", SCH.JobID)]
+    [CustomComboInfo("转化整合", "按炽天召唤-慰藉-炽天附体-转化的顺序整合，需要关闭炽天召唤到慰藉的技能变换。", SCH.JobID)]
     SCH_Fairy_Combo3 = 16051,
     #endregion
 
