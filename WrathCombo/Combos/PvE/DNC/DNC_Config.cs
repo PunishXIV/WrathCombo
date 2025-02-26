@@ -33,17 +33,36 @@ internal partial class DNC
             ImGui.Dummy(new Vector2(1f, 12f));
             ImGui.Indent(40f);
             ImGui.Text("Anti-Drift Options:     (hover each for more info)");
+
+            #region Show a colored display of the user's current detected GCD
+
+            var color = GCDValue switch
+            {
+                GCDRange.Perfect => ImGuiColors.HealerGreen,
+                GCDRange.NotGood => ImGuiColors.DalamudYellow,
+                _ => ImGuiColors.DalamudRed,
+            };
+            ImGui.SameLine();
+            ImGui.Text("GCD: " );
+            ImGui.SameLine();
+            ImGui.TextColored(color, $"{GCD:0.00}");
             ImGui.Unindent(40f);
             ImGui.NewLine();
 
+            #endregion
+
+            var t = ImGui.GetCursorPos();
+            const string texTrip = "Forced Triple Weave";
             UserConfig.DrawRadioButton(
-                DNC_ST_ADV_AntiDrift, "Forced Triple Weave",
+                DNC_ST_ADV_AntiDrift, texTrip,
                 "Forces a triple weave of Flourish and Fan Dance 3 + 4 during non-opener burst windows." +
                 "\nFixes SS/FM drift where you use a gcd when SS/FM is on a 0.5sec CD." +
                 "\nRecommended anti-drift option.",
                 outputValue: (int) AntiDrift.TripleWeave, descriptionAsTooltip: true);
+            var h = ImGui.GetCursorPos();
+            const string texHold = "Hold before Standard Step";
             UserConfig.DrawRadioButton(
-                DNC_ST_ADV_AntiDrift, "Hold before Standard Step",
+                DNC_ST_ADV_AntiDrift, texHold,
                 "Will hold GCDs for Standard Step if it is going to come off cooldown before your next GCD." +
                 "\nThis WILL give you down-time." +
                 "\nONLY recommended if you have extra skill speed, but can be used as an anti-drift option.",
@@ -59,6 +78,32 @@ internal partial class DNC
                 "Will not use any anti-drift options." +
                 "\nThis WILL cause drift. NOT recommended.",
                 outputValue: (int) AntiDrift.None, descriptionAsTooltip: true);
+
+            #region Show recommended setting, based on GCD
+
+            // Save the current cursor position
+            var pos = ImGui.GetCursorPos();
+
+            // Determine which recommendation text to show
+            const string rec = "(Recommended)";
+            var recTriple = GCDValue is GCDRange.Perfect ? rec : "";
+            var recHold = GCDValue is not GCDRange.Perfect ? rec : "";
+
+            // Set the position of (any) Triple-Weave recommendation text
+            var texSize = ImGui.CalcTextSize(texHold);
+            ImGui.SetCursorPos(
+                t with { X = t.X + texSize.X + 110f.Scale(), Y = t.Y - texSize.Y - 2f.Scale() });
+            ImGui.TextColored(ImGuiColors.DalamudGrey, recTriple);
+
+            // Set the position of (any) Hold recommendation text
+            ImGui.SetCursorPos(
+                h with { X = h.X + texSize.X + 110f.Scale(), Y = h.Y - 2f.Scale() });
+            ImGui.TextColored(ImGuiColors.DalamudGrey, recHold);
+
+            // Reset to where the cursor was
+            ImGui.SetCursorPos(pos);
+
+            #endregion
         }
 
         internal static void Draw(CustomComboPreset preset)

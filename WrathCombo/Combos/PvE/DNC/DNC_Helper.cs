@@ -1,9 +1,9 @@
 ﻿#region
 
-using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services;
@@ -24,43 +24,8 @@ namespace WrathCombo.Combos.PvE;
 // ReSharper disable CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberHidesStaticFromOuterClass
-
 internal partial class DNC
 {
-    /// <summary>
-    ///     Logic to pick different openers.
-    /// </summary>
-    /// <returns>The chosen Opener.</returns>
-    internal static WrathOpener Opener()
-    {
-        if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.FifteenSecond &&
-            Opener15S.LevelChecked)
-            return Opener15S;
-
-        if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.SevenSecond &&
-            Opener07S.LevelChecked)
-            return Opener07S;
-
-        if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.ThirtySecondTech &&
-            Opener30STech.LevelChecked)
-            return Opener30STech;
-
-        if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.SevenPlusSecondTech &&
-            Opener07PlusSTech.LevelChecked)
-            return Opener07PlusSTech;
-
-        if (Config.DNC_ST_OpenerSelection ==
-            (int) Config.Openers.SevenSecondTech &&
-            Opener07STech.LevelChecked)
-            return Opener07STech;
-
-        return WrathOpener.Dummy;
-    }
-
     /// <summary>
     ///     Dancer Gauge data, just consolidated.
     /// </summary>
@@ -71,6 +36,58 @@ internal partial class DNC
     /// </summary>
     private static double GCD =>
         Math.Floor(GetCooldown(Cascade).CooldownTotal * 100) / 100;
+
+    /// <summary>
+    ///     Checks if any enemy is within 15 yalms.
+    /// </summary>
+    /// <remarks>
+    ///     This is used for <see cref="StandardFinish2" />,
+    ///     <see cref="TechnicalFinish4" />, <see cref="FinishingMove" />,
+    ///     and <see cref="Tillana" />.
+    /// </remarks>
+    private static bool EnemyIn15Yalms => CanCircleAoe(15, true) > 0;
+
+    /// <summary>
+    ///     Checks if any enemy is within 8 yalms.
+    /// </summary>
+    /// <remarks>
+    ///     This is used for <see cref="Improvisation" />.
+    /// </remarks>
+    private static bool EnemyIn8Yalms => CanCircleAoe(8, true) > 0;
+
+    /// <summary>
+    ///     Logic to pick different openers.
+    /// </summary>
+    /// <returns>The chosen Opener.</returns>
+    internal static WrathOpener Opener()
+    {
+        if (Config.DNC_ST_OpenerSelection ==
+            (int)Config.Openers.FifteenSecond &&
+            Opener15S.LevelChecked)
+            return Opener15S;
+
+        if (Config.DNC_ST_OpenerSelection ==
+            (int)Config.Openers.SevenSecond &&
+            Opener07S.LevelChecked)
+            return Opener07S;
+
+        if (Config.DNC_ST_OpenerSelection ==
+            (int)Config.Openers.ThirtySecondTech &&
+            Opener30STech.LevelChecked)
+            return Opener30STech;
+
+        if (Config.DNC_ST_OpenerSelection ==
+            (int)Config.Openers.SevenPlusSecondTech &&
+            Opener07PlusSTech.LevelChecked)
+            return Opener07PlusSTech;
+
+        if (Config.DNC_ST_OpenerSelection ==
+            (int)Config.Openers.SevenSecondTech &&
+            Opener07STech.LevelChecked)
+            return Opener07STech;
+
+        return WrathOpener.Dummy;
+    }
 
     /// <summary>
     ///     Check if the rotation is in Auto-Rotation.
@@ -99,6 +116,60 @@ internal partial class DNC
             ).ToString()
         )!.Values.Last();
 
+    /// <summary>
+    ///     Hold or Return a dance's Finisher based on user options and enemy ranges.
+    /// </summary>
+    /// <param name="desiredFinish">
+    ///     Which Finisher should be returned.<br />
+    ///     Expects <see cref="StandardFinish2" /> or
+    ///     <see cref="TechnicalFinish4" />.
+    /// </param>
+    /// <returns>
+    ///     The Finisher to use, or if
+    ///     <see cref="CustomComboPreset.DNC_ST_BlockFinishes"/> is enabled and
+    ///     there is no enemy in range: <see cref="All.SavageBlade"/>.
+    /// </returns>
+    private static uint FinishOrHold(uint desiredFinish)
+    {
+        // If the option to hold is not enabled
+        if (IsNotEnabled(Options.DNC_ST_BlockFinishes))
+            return desiredFinish;
+
+        // Return the Finish if the dance is about to expire
+        if (desiredFinish is StandardFinish2 &&
+            GetBuffRemainingTime(Buffs.StandardStep) < GCD * 1.5)
+            return desiredFinish;
+        if (desiredFinish is TechnicalFinish4 &&
+            GetBuffRemainingTime(Buffs.TechnicalStep) < GCD * 1.5)
+            return desiredFinish;
+
+        // If there is no enemy in range, hold the finish
+        if (!EnemyIn15Yalms)
+            return All.SavageBlade;
+
+        // If there is an enemy in range, or as a fallback, return the desired finish
+        return desiredFinish;
+    }
+
+    #region GCD Evaluation
+
+    private static GCDRange GCDValue =>
+        GCD switch
+        {
+            2.50 => GCDRange.Perfect,
+            2.49 => GCDRange.NotGood,
+            _ => GCDRange.Bad,
+        };
+
+    private enum GCDRange
+    {
+        Perfect,
+        NotGood,
+        Bad,
+    }
+
+    #endregion
+
     #region Custom Dance Step Logic
 
     /// <summary>
@@ -122,8 +193,8 @@ internal partial class DNC
     /// </summary>
     /// <param name="action">The action ID to check.</param>
     /// <param name="updatedAction">
-    ///     The matching dance step the action was assigned to.<br/>
-    ///     Will be Savage Blade if used and was not a custom dance step.<br/>
+    ///     The matching dance step the action was assigned to.<br />
+    ///     Will be Savage Blade if used and was not a custom dance step.<br />
     ///     Do not use this value if the return is <c>false</c>.
     /// </param>
     /// <returns>If the action was assigned as a custom dance step.</returns>
@@ -164,7 +235,6 @@ internal partial class DNC
     internal class FifteenSecondOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -256,7 +326,6 @@ internal partial class DNC
     internal class SevenSecondOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -352,7 +421,6 @@ internal partial class DNC
     internal class ThirtySecondTechOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -444,7 +512,6 @@ internal partial class DNC
     internal class SevenPlusSecondTechOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
 
         public override List<uint> OpenerActions { get; set; } =
@@ -527,7 +594,6 @@ internal partial class DNC
     internal class SevenSecondTechOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
 
         public override List<uint> OpenerActions { get; set; } =

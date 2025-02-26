@@ -954,6 +954,13 @@ public enum CustomComboPreset
 
     #region DANCER
 
+    [ReplaceSkill(DNC.StandardFinish2, DNC.TechnicalFinish4)]
+    [CustomComboInfo("Require Nearby Enemy for Finishes Feature",
+        "Will hold Standard Finish and Technical Finish until an enemy is within range of the abilities in all (non-Simple) Modes and Features below by replacing whatever button with Savage Blade." +
+        "\nWill show either Finish when the dance is about to expire." +
+        "\nThis behavior is recommended by The Balance but can introduce drift, so it may not be what is best for your group.", DNC.JobID)]
+    DNC_ST_BlockFinishes = 4000,
+
     #region Simple Mode
 
     [AutoAction(false, false)]
