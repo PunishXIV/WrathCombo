@@ -10,7 +10,7 @@ namespace WrathCombo.Window.MessagesNS
         {
             if (jobName == CustomComboFunctions.JobIDs.JobIDToName(36)) //Blue Mage ID
             {
-                ImGui.TextColored(ImGuiColors.ParsedPink, $"Please note that even if you do not have all the required spells active, you may still use these features.\nAny spells you do not have active will be skipped over so if a feature is not working as intended then\nplease try and enable more required spells.");
+                ImGui.TextColored(ImGuiColors.ParsedPink, $"请注意，即使你没有激活所有需要的技能，你可能也能用以下的设置，但那些你没有激活的技能将会被自动跳过。\n所以如果有设置没有起作用，请尝试激活更多的需要的技能。");
             }
 
             return true;

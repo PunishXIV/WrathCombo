@@ -87,7 +87,7 @@ namespace WrathCombo.Window.Functions
                 if (!Service.Configuration.AutoActions.ContainsKey(preset))
                     Service.Configuration.AutoActions[preset] = false;
 
-                var label = "Auto-Mode";
+                var label = "加入自动循环";
                 var labelSize = ImGui.CalcTextSize(label);
                 ImGui.SetCursorPosX(ImGui.GetContentRegionAvail().X - labelSize.X.Scale() - 64f.Scale());
                 bool autoOn = Service.Configuration.AutoActions[preset];
@@ -100,8 +100,8 @@ namespace WrathCombo.Window.Functions
                 }
                 ImGui.SameLine();
                 ImGui.Text(label);
-                ImGuiComponents.HelpMarker($"Add this feature to Auto-Rotation.\n" +
-                    $"Auto-Rotation will automatically use the actions selected within the feature, allowing you to focus on movement. Configure the settings in the 'Auto-Rotation' section.");
+                ImGuiComponents.HelpMarker($"把这条连击加入自动循环\n" +
+                    $"自动循环功能会自动使用在此选定的技能动作，让你能够专注于走位。请在 “自动循环” 部分配置相关设置。");
                 ImGui.Separator();
             }
 
@@ -155,7 +155,7 @@ namespace WrathCombo.Window.Functions
 
             if (conflicts.Length > 0)
             {
-                ImGui.TextColored(ImGuiColors.DalamudRed, "Conflicts with:");
+                ImGui.TextColored(ImGuiColors.DalamudRed, "与以下连击冲突:");
                 StringBuilder conflictBuilder = new();
                 ImGui.Indent();
                 foreach (var conflict in conflicts)
@@ -191,14 +191,14 @@ namespace WrathCombo.Window.Functions
                 if (blueAttr.Actions.Count > 0)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, blueAttr.NoneSet ? ImGuiColors.DPSRed : ImGuiColors.DalamudOrange);
-                    ImGui.Text($"{(blueAttr.NoneSet ? "No Required Spells Active:" : "Missing active spells:")} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + ActionWatching.GetActionName(x)))}");
+                    ImGui.Text($"{(blueAttr.NoneSet ? "所需技能均未激活:" : "还需要激活的技能:")} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + ActionWatching.GetActionName(x)))}");
                     ImGui.PopStyleColor();
                 }
 
                 else
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                    ImGui.Text($"All required spells active!");
+                    ImGui.Text($"所有需要的技能都已激活!");
                     ImGui.PopStyleColor();
                 }
             }
@@ -206,7 +206,7 @@ namespace WrathCombo.Window.Functions
             if (variantParents is not null)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.TextWrapped($"Part of normal combo{(variantParents.ParentPresets.Length > 1 ? "s" : "")}:");
+                ImGui.TextWrapped($"是以下通常连击的一部分：");
                 StringBuilder builder = new();
                 foreach (var par in variantParents.ParentPresets)
                 {
@@ -232,7 +232,7 @@ namespace WrathCombo.Window.Functions
             if (bozjaParents is not null)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.TextWrapped($"Part of normal combo{(variantParents.ParentPresets.Length > 1 ? "s" : "")}:");
+                ImGui.TextWrapped($"是以下通常连击的一部分：");
                 StringBuilder builder = new();
                 foreach (var par in bozjaParents.ParentPresets)
                 {
@@ -258,7 +258,7 @@ namespace WrathCombo.Window.Functions
             if (eurekaParents is not null)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.TextWrapped($"Part of normal combo{(variantParents.ParentPresets.Length > 1 ? "s" : "")}:");
+                ImGui.TextWrapped($"是以下通常连击的一部分：");
                 StringBuilder builder = new();
                 foreach (var par in eurekaParents.ParentPresets)
                 {

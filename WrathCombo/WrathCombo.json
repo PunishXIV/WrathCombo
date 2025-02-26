@@ -1,10 +1,10 @@
 {
-  "Author": "Team Wrath",
+  "Author": "Team Wrath，动画，Arzhaana，以及万能的群友。",
   "Name": "Wrath Combo",
   "InternalName": "WrathCombo",
   "DalamudApiLevel": 11,
-  "Punchline": "Condenses combos and mutually exclusive abilities onto a single button - and then some.",
-  "Description": "Condenses combos and mutually exclusive abilities onto a single button - and then some.",
+  "Punchline": "将连招和互斥的技能整合到一个按键上 —— 而且还不止于此。",
+  "Description": "将连招和互斥的技能整合到一个按键上 —— 而且还不止于此。",
   "RepoUrl": "https://github.com/PunishXIV/WrathCombo",
   "IconUrl": "https://s3.puni.sh/media/plugin/60/icon-2bwhkn3zf1f.png",
   "Changelog": "Please check the project's GitHub or Discord for a full changelog.",

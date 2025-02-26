@@ -2,21 +2,21 @@
 {
     public enum DPSRotationMode
     {
-        Manual = 0,
-        Highest_Max = 1,
-        Lowest_Max = 2,
-        Highest_Current = 3,
-        Lowest_Current = 4,
-        Tank_Target = 5,
-        Nearest = 6,
-        Furthest = 7,
+        手动模式 = 0,
+        最大HP最高 = 1,
+        最大HP最低 = 2,
+        当前HP最高 = 3,
+        当前HP最低 = 4,
+        坦克目标 = 5,
+        最近优先 = 6,
+        最远优先 = 7,
     }
 
     public enum HealerRotationMode
     {
-        Manual = 0,
-        Highest_Current = 1,
-        Lowest_Current = 2,
+        手动模式 = 0,
+        当前HP最高 = 1,
+        当前HP最低 = 2,
         //Self_Priority,
         //Tank_Priority,
         //Healer_Priority,

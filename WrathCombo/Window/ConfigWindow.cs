@@ -142,29 +142,29 @@ namespace WrathCombo.Window
                 ImGui.Spacing();
                 ImGui.Separator();
 
-                if (ImGui.Selectable("PvE Features", OpenWindow == OpenWindow.PvE))
+                if (ImGui.Selectable("PvE 连击", OpenWindow == OpenWindow.PvE))
                 {
                     OpenWindow = OpenWindow.PvE;
                 }
                 ImGui.Spacing();
-                if (ImGui.Selectable("PvP Features", OpenWindow == OpenWindow.PvP))
+                if (ImGui.Selectable("PvP 连击", OpenWindow == OpenWindow.PvP))
                 {
                     OpenWindow = OpenWindow.PvP;
                 }
                 ImGui.Spacing();
-                if (ImGui.Selectable("Auto-Rotation", OpenWindow == OpenWindow.AutoRotation))
+                if (ImGui.Selectable("自动循环", OpenWindow == OpenWindow.AutoRotation))
                 {
                     OpenWindow = OpenWindow.AutoRotation;
                 }
                 ImGui.Spacing();
                 ImGui.Spacing();
                 ImGui.Spacing();
-                if (ImGui.Selectable("Settings", OpenWindow == OpenWindow.Settings))
+                if (ImGui.Selectable("设置", OpenWindow == OpenWindow.Settings))
                 {
                     OpenWindow = OpenWindow.Settings;
                 }
                 ImGui.Spacing();
-                if (ImGui.Selectable("About", OpenWindow == OpenWindow.About))
+                if (ImGui.Selectable("关于", OpenWindow == OpenWindow.About))
                 {
                     OpenWindow = OpenWindow.About;
                 }
@@ -173,7 +173,7 @@ namespace WrathCombo.Window
                 ImGui.Spacing();
                 ImGui.Spacing();
                 ImGui.Spacing();
-                if (ImGui.Selectable("DEBUG", OpenWindow == OpenWindow.Debug))
+                if (ImGui.Selectable("调试", OpenWindow == OpenWindow.Debug))
                 {
                     OpenWindow = OpenWindow.Debug;
                 }

@@ -654,9 +654,9 @@ namespace WrathCombo.Window.Tabs
                             P.IPC.SetAutoRotationConfigState(_wrathLease!.Value, AutoRotationConfigOption.IncludeNPCs,
                                 true);
                             P.IPC.SetAutoRotationConfigState(_wrathLease!.Value,
-                                AutoRotationConfigOption.DPSRotationMode, DPSRotationMode.Lowest_Current);
+                                AutoRotationConfigOption.DPSRotationMode, DPSRotationMode.当前HP最低);
                             P.IPC.SetAutoRotationConfigState(_wrathLease!.Value,
-                                AutoRotationConfigOption.HealerRotationMode, HealerRotationMode.Lowest_Current);
+                                AutoRotationConfigOption.HealerRotationMode, HealerRotationMode.当前HP最低);
                         }
 
                         ImGui.SameLine();

@@ -351,14 +351,14 @@ namespace WrathCombo.AutoRotation
                     {
                         IGameObject? target = dpsmode switch
                         {
-                            DPSRotationMode.Manual => Svc.Targets.Target,
-                            DPSRotationMode.Highest_Max => TankTargeting.GetHighestMaxTarget(),
-                            DPSRotationMode.Lowest_Max => TankTargeting.GetLowestMaxTarget(),
-                            DPSRotationMode.Highest_Current => TankTargeting.GetHighestCurrentTarget(),
-                            DPSRotationMode.Lowest_Current => TankTargeting.GetLowestCurrentTarget(),
-                            DPSRotationMode.Tank_Target => Svc.Targets.Target,
-                            DPSRotationMode.Nearest => DPSTargeting.GetNearestTarget(),
-                            DPSRotationMode.Furthest => DPSTargeting.GetFurthestTarget(),
+                            DPSRotationMode.手动模式 => Svc.Targets.Target,
+                            DPSRotationMode.最大HP最高 => TankTargeting.GetHighestMaxTarget(),
+                            DPSRotationMode.最大HP最低 => TankTargeting.GetLowestMaxTarget(),
+                            DPSRotationMode.当前HP最高 => TankTargeting.GetHighestCurrentTarget(),
+                            DPSRotationMode.当前HP最低 => TankTargeting.GetLowestCurrentTarget(),
+                            DPSRotationMode.坦克目标 => Svc.Targets.Target,
+                            DPSRotationMode.最近优先 => DPSTargeting.GetNearestTarget(),
+                            DPSRotationMode.最远优先 => DPSTargeting.GetFurthestTarget(),
                             _ => Svc.Targets.Target,
                         };
                         return target;
@@ -367,14 +367,14 @@ namespace WrathCombo.AutoRotation
                     {
                         IGameObject? target = dpsmode switch
                         {
-                            DPSRotationMode.Manual => Svc.Targets.Target,
-                            DPSRotationMode.Highest_Max => DPSTargeting.GetHighestMaxTarget(),
-                            DPSRotationMode.Lowest_Max => DPSTargeting.GetLowestMaxTarget(),
-                            DPSRotationMode.Highest_Current => DPSTargeting.GetHighestCurrentTarget(),
-                            DPSRotationMode.Lowest_Current => DPSTargeting.GetLowestCurrentTarget(),
-                            DPSRotationMode.Tank_Target => DPSTargeting.GetTankTarget(),
-                            DPSRotationMode.Nearest => DPSTargeting.GetNearestTarget(),
-                            DPSRotationMode.Furthest => DPSTargeting.GetFurthestTarget(),
+                            DPSRotationMode.手动模式 => Svc.Targets.Target,
+                            DPSRotationMode.最大HP最高 => DPSTargeting.GetHighestMaxTarget(),
+                            DPSRotationMode.最大HP最低 => DPSTargeting.GetLowestMaxTarget(),
+                            DPSRotationMode.当前HP最高 => DPSTargeting.GetHighestCurrentTarget(),
+                            DPSRotationMode.当前HP最低 => DPSTargeting.GetLowestCurrentTarget(),
+                            DPSRotationMode.坦克目标 => DPSTargeting.GetTankTarget(),
+                            DPSRotationMode.最近优先 => DPSTargeting.GetNearestTarget(),
+                            DPSRotationMode.最远优先 => DPSTargeting.GetFurthestTarget(),
                             _ => Svc.Targets.Target,
                         };
                         return target;
@@ -385,9 +385,9 @@ namespace WrathCombo.AutoRotation
                     if (Player.Object.GetRole() != CombatRole.Healer) return null;
                     IGameObject? target = healermode switch
                     {
-                        HealerRotationMode.Manual => HealerTargeting.ManualTarget(),
-                        HealerRotationMode.Highest_Current => HealerTargeting.GetHighestCurrent(),
-                        HealerRotationMode.Lowest_Current => HealerTargeting.GetLowestCurrent(),
+                        HealerRotationMode.手动模式 => HealerTargeting.ManualTarget(),
+                        HealerRotationMode.当前HP最高 => HealerTargeting.GetHighestCurrent(),
+                        HealerRotationMode.当前HP最低 => HealerTargeting.GetLowestCurrent(),
                         _ => HealerTargeting.ManualTarget(),
                     };
                     return target;
@@ -425,7 +425,7 @@ namespace WrathCombo.AutoRotation
                 }
                 else
                 {
-                    var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ? Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
+                    var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.手动模式 ? Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
                     var numEnemies = NumberOfEnemiesInRange(gameAct, target, true);
                     if (!_ninjaLockedAoE)
                     {

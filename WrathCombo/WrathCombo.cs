@@ -187,7 +187,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         CustomComboFunctions.TimerSetup();
 
 #if DEBUG
-        ConfigWindow.IsOpen = true;
+        ConfigWindow.IsOpen = false;
 #endif
     }
 

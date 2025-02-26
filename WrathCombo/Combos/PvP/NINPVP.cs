@@ -88,8 +88,8 @@ namespace WrathCombo.Combos.PvP
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
 
-                        // Seiton Tenchu priority for targets below 50% HP
-                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) &&
+                        // Seiton Tenchu priority for targets below 50% HP + 有目标 + 不要打冰！
+                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && HasBattleTarget() && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) && EnemyHealthMaxHp() < 100000f &&
                             (IsLB1Ready || HasEffect(Buffs.SeitonUnsealed)))  // Limit Break or Unsealed buff
                             return OriginalHook(SeitonTenchu);
 

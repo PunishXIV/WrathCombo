@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.Automation;
 using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
@@ -10,6 +11,7 @@ namespace WrathCombo.Combos.PvE;
 
 internal static partial class SCH
 {
+    private static bool 复生喊话 = false;
 
     /*
      * SCH_Consolation
@@ -30,11 +32,43 @@ internal static partial class SCH
     internal class SCH_Lustrate : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Lustrate;
-        protected override uint Invoke(uint actionID) =>
-            actionID is Lustrate &&
-            LevelChecked(Excogitation) && IsOffCooldown(Excogitation)
-            ? Excogitation
-            : actionID;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is Lustrate) {
+                //如果没豆子，先以太超流拿豆子
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_以太超流) && ActionReady(Aetherflow) && !Gauge.HasAetherflow() && InCombat()) {
+                    return Aetherflow;
+                }
+                IGameObject? healTarget = GetHealTarget(Config.SCH_ST_Heal_Adv && Config.SCH_ST_Heal_UIMouseOver);
+                float hpPercent = GetTargetHPPercent(healTarget);
+                //有绿帽先挂绿帽
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_深谋远虑之策) && hpPercent >= 90f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
+                    return Excogitation;
+                }
+                //没绿帽先挂生命回生法
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_生命回生法) && ActionReady(Protraction)) {
+                    return Protraction;
+                }
+                //结算抬血，若低于50用绿帽抬，若高于50用活性法抬
+                if (hpPercent < 50f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
+                    return Excogitation;
+                }
+                if (hpPercent >= 50f && ActionReady(Lustrate) && Gauge.HasAetherflow()) {
+                    return Lustrate;
+                }
+                //没豆子了，用应急单盾抬
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_应急单盾)) {
+                    if (ActionReady(OriginalHook(应急战术))) {
+                        return OriginalHook(应急战术);
+                    }
+                    if (HasEffect(Buffs.应急战术)) {
+                        return Adloquium;
+                    }
+                }
+                return actionID;
+            }
+            return actionID;
+        }
     }
 
     /*
@@ -133,10 +167,36 @@ internal static partial class SCH
     internal class SCH_Raise : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
-        protected override uint Invoke(uint actionID) =>
-            actionID is All.Swiftcast && IsOnCooldown(All.Swiftcast)
-            ? Resurrection
-            : actionID;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is Resurrection) {
+                //复生喊话
+                if (IsEnabled(CustomComboPreset.SCH_Raise_Say)) {
+                    if (JustUsed(Resurrection)) {
+                        if (复生喊话 == false && IsInParty()) {
+                            复生喊话 = true;
+                            IGameObject? healTarget = GetHealTarget(true);
+                            string LeaderName = healTarget.Name.ToString();
+                            if (WasLastAbility(All.Swiftcast))
+                                Chat.Instance.SendMessage($"/p 上善若水，烟水还魂！（已复生[{LeaderName}]）<se.7>");
+                            else
+                                Chat.Instance.SendMessage($"/p 以水为引，唤汝魂归！（正在对[{LeaderName}]咏唱[复生]）<se.7>");
+                        }
+                    }
+                    else {
+                        if (复生喊话 == true) {
+                            复生喊话 = false;
+                        }
+                    }
+                }
+
+                if (ActionReady(All.Swiftcast)) {
+                    return All.Swiftcast;
+                }
+            }
+            return actionID;
+        }
+        //=> actionID is All.即刻咏唱 && IsOnCooldown(All.即刻咏唱) ? 复生Resurrection : actionID;
     }
 
     // Replaces Fairy abilities with Fairy summoning with Eos
@@ -171,6 +231,64 @@ internal static partial class SCH
                     return Recitation;
 
                 return OriginalHook(Adloquium);
+            }
+            return actionID;
+        }
+    }
+
+    internal class SCH_DeploymentTactics2 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_DeploymentTactics2;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is DeploymentTactics) {
+
+                //展开战术没好，不用执行后面的，做了盾也扩散不了
+                if (!ActionReady(DeploymentTactics)) {
+                    //但是因为秘策CD对不上，如果秘策CD另外转好了，可以打个秘策
+                    if (ActionReady(Recitation) && !HasEffect(Buffs.Recitation)) {
+                        return Recitation;
+                    }
+                    //否则就等着吧
+                    return actionID;
+                }
+
+                //获得治疗对象
+                IGameObject? healTarget = GetHealTarget(true);
+
+                //如果有秘策，且没有激励（因为有激励肯定就已经是暴击盾了），打秘策
+                if (ActionReady(Recitation) && !HasEffect(Buffs.Recitation) && (FindEffectOnMember(Buffs.激励, healTarget) is null)) {
+                    return Recitation;
+                }
+
+                //有秘策做秘策盾
+                if (HasEffect(Buffs.Recitation)) {
+                    //插入回生法，增加盾量
+                    if (ActionReady(Protraction) && FindEffectOnMember(Buffs.生命回生法, healTarget) is null) {
+                        return Protraction;
+                    }
+                    //插入即刻
+                    if (ActionReady(All.Swiftcast) && !HasEffect(All.Buffs.Swiftcast)) {
+                        return All.Swiftcast;
+                    }
+                    //做盾
+                    return Adloquium;
+                }
+
+                //如果已经做好盾了，直接展开
+                if (!(FindEffectOnMember(Buffs.Galvanize, healTarget) is null)) {
+                    return DeploymentTactics;
+                }
+
+                //没鼓舞，准备做盾，先打回生法增加盾量
+                if (ActionReady(Protraction) && FindEffectOnMember(Buffs.生命回生法, healTarget) is null) {
+                    return Protraction;
+                }
+                //插入即刻
+                if (ActionReady(All.Swiftcast) && !HasEffect(All.Buffs.Swiftcast)) {
+                    return All.Swiftcast;
+                }
+                return Adloquium;
             }
             return actionID;
         }
@@ -389,6 +507,32 @@ internal static partial class SCH
         }
     }
 
+    //群抬自用
+    //异想的祥光 - 不屈不挠之策
+    internal class SCH_Indomitability : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Indomitability;
+        protected override uint Invoke(uint actionID)
+        {
+            //是不屈不挠之策 
+            if (actionID is Indomitability) {
+                //有异想的祥光等级且冷却转好了
+                if (LevelChecked(FeyBlessing) && IsOffCooldown(FeyBlessing)) {
+                    //有小仙女，而且小仙女不是大天使状态
+                    if (HasPetPresent() && Gauge.SeraphTimer == 0)
+                        //用异想的祥光
+                        return FeyBlessing;
+                }
+
+                //如果没豆子，以太超流好了，插入以太超流
+                if (ActionReady(Aetherflow) && !Gauge.HasAetherflow() && InCombat())
+                    return Aetherflow;
+            }
+
+            return actionID;
+        }
+    }
+
     /*
     * SCH_Fairy_Combo
     * Overrides Whispering Dawn
@@ -418,6 +562,30 @@ internal static partial class SCH
                     return OriginalHook(Consolation);
             }
 
+            return actionID;
+        }
+    }
+
+    //转化整合
+    internal class SCH_Fairy_Combo3 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Fairy_Combo3;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is Dissipation) {
+                if (ActionReady(SummonSeraph) && HasPetPresent()) {
+                    return SummonSeraph;
+                }
+                if (LevelChecked(SummonSeraph) && Gauge.SeraphTimer > 0 && HasCharges(Consolation)) {
+                    return Consolation;
+                }
+                if (ActionReady(Seraphism) && HasPetPresent() && InCombat()) {
+                    return Seraphism;
+                }
+                if (ActionReady(Dissipation) && HasPetPresent()) {
+                    return Dissipation;
+                }
+            }
             return actionID;
         }
     }

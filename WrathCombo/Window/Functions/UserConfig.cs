@@ -40,6 +40,7 @@ namespace WrathCombo.Window.Functions
                 Service.Configuration.Save();
             }
 
+            sliderDescription = Translation.Translation.Translate(sliderDescription);
             sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
@@ -159,6 +160,7 @@ namespace WrathCombo.Window.Functions
                 Service.Configuration.Save();
             }
 
+            sliderDescription = Translation.Translation.Translate(sliderDescription);
             sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
@@ -255,6 +257,7 @@ namespace WrathCombo.Window.Functions
                 Service.Configuration.Save();
             }
 
+            sliderDescription = Translation.Translation.Translate(sliderDescription);
             sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
@@ -351,6 +354,9 @@ namespace WrathCombo.Window.Functions
             ImGui.SameLine();
             bool enabled = output == outputValue;
 
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
+
             if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
             {
                 PluginConfiguration.SetCustomIntValue(config, outputValue);
@@ -396,6 +402,11 @@ namespace WrathCombo.Window.Functions
             bool enabled = output == outputValue;
 
             ImGui.PushStyleColor(ImGuiCol.Text, descriptionColor);
+
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
+
+
             if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
             {
                 PluginConfiguration.SetCustomIntValue(config, outputValue);
@@ -434,6 +445,10 @@ namespace WrathCombo.Window.Functions
             ImGui.PushItemWidth(itemWidth);
 
             ImGui.PushStyleColor(ImGuiCol.Text, descriptionColor);
+
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
+
             if (ImGui.RadioButton($"{checkBoxName}###{config}{choice}", values[choice]))
             {
                 for (var i = 0; i < values.Length; i++)
@@ -480,6 +495,10 @@ namespace WrathCombo.Window.Functions
                 ImGui.SameLine();
                 if (isConditionalChoice) ImGui.Indent(); //Align checkbox after the + symbol
             }
+
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
+
             if (ImGui.Checkbox($"{checkBoxName}###{config}", ref output))
             {
                 PluginConfiguration.SetCustomBoolValue(config, output);
@@ -526,6 +545,9 @@ namespace WrathCombo.Window.Functions
                 ImGui.Dummy(new Vector2(12f, 0));
                 ImGui.SameLine();
             }
+
+            checkBoxName = Translation.Translation.Translate(checkBoxName);
+            checkboxDescription = Translation.Translation.Translate(checkboxDescription);
 
             if (ImGui.Checkbox($"{checkBoxName}###{config}{choice}", ref values[choice]))
             {
@@ -575,6 +597,10 @@ namespace WrathCombo.Window.Functions
                     string checkboxDescription = nameAndDesc[idx, 1];
 
                     ImGui.PushStyleColor(ImGuiCol.Text, descriptionColor);
+
+                    checkBoxName = Translation.Translation.Translate(checkBoxName);
+                    checkboxDescription = Translation.Translation.Translate(checkboxDescription);
+
                     if (ImGui.Checkbox($"{checkBoxName}###{config}{idx}", ref values[idx]))
                     {
                         PluginConfiguration.SetCustomBoolArrayValue(config, values);
@@ -608,7 +634,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedPink);
 
-            if (ImGui.Checkbox($"Stun###{config}0", ref values[0]))
+            if (ImGui.Checkbox($"眩晕###{config}0", ref values[0]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -616,7 +642,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Deep Freeze###{config}1", ref values[1]))
+            if (ImGui.Checkbox($"深度冻结###{config}1", ref values[1]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -624,7 +650,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Half Asleep###{config}2", ref values[2]))
+            if (ImGui.Checkbox($"渐渐入睡###{config}2", ref values[2]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -632,7 +658,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Sleep###{config}3", ref values[3]))
+            if (ImGui.Checkbox($"睡眠###{config}3", ref values[3]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -640,7 +666,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Bind###{config}4", ref values[4]))
+            if (ImGui.Checkbox($"止步###{config}4", ref values[4]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -648,7 +674,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Heavy###{config}5", ref values[5]))
+            if (ImGui.Checkbox($"加重###{config}5", ref values[5]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -656,7 +682,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Silence###{config}6", ref values[6]))
+            if (ImGui.Checkbox($"沉默###{config}6", ref values[6]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -664,7 +690,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.NextColumn();
 
-            if (ImGui.Checkbox($"Miracle of Nature###{config}7", ref values[7]))
+            if (ImGui.Checkbox($"自然的奇迹###{config}7", ref values[7]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -685,7 +711,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.TankBlue);
 
-            if (ImGui.Checkbox($"Tanks###{config}0", ref values[0]))
+            if (ImGui.Checkbox($"防护职业###{config}0", ref values[0]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -695,7 +721,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
 
-            if (ImGui.Checkbox($"Healers###{config}1", ref values[1]))
+            if (ImGui.Checkbox($"治疗职业###{config}1", ref values[1]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -705,7 +731,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DPSRed);
 
-            if (ImGui.Checkbox($"Melee###{config}2", ref values[2]))
+            if (ImGui.Checkbox($"近战职业###{config}2", ref values[2]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -715,7 +741,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
 
-            if (ImGui.Checkbox($"Ranged###{config}3", ref values[3]))
+            if (ImGui.Checkbox($"远敏职业###{config}3", ref values[3]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -725,7 +751,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedPurple);
 
-            if (ImGui.Checkbox($"Casters###{config}4", ref values[4]))
+            if (ImGui.Checkbox($"法系职业###{config}4", ref values[4]))
             {
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
@@ -754,7 +780,7 @@ namespace WrathCombo.Window.Functions
 
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.TankBlue);
 
-            if (ImGui.Checkbox($"Tanks###{config}0", ref values[0]))
+            if (ImGui.Checkbox($"防护职业###{config}0", ref values[0]))
             {
                 PluginConfiguration.SetCustomIntValue(config, 0);
                 Service.Configuration.Save();
@@ -764,7 +790,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
 
-            if (ImGui.Checkbox($"Healers###{config}1", ref values[1]))
+            if (ImGui.Checkbox($"治疗职业###{config}1", ref values[1]))
             {
                 PluginConfiguration.SetCustomIntValue(config, 1);
                 Service.Configuration.Save();
@@ -774,7 +800,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DPSRed);
 
-            if (ImGui.Checkbox($"Melee###{config}2", ref values[2]))
+            if (ImGui.Checkbox($"近战职业###{config}2", ref values[2]))
             {
                 PluginConfiguration.SetCustomIntValue(config, 2);
                 Service.Configuration.Save();
@@ -784,7 +810,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
 
-            if (ImGui.Checkbox($"Ranged###{config}3", ref values[3]))
+            if (ImGui.Checkbox($"远敏职业###{config}3", ref values[3]))
             {
                 PluginConfiguration.SetCustomIntValue(config, 3);
                 Service.Configuration.Save();
@@ -794,7 +820,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PopStyleColor();
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedPurple);
 
-            if (ImGui.Checkbox($"Casters###{config}4", ref values[4]))
+            if (ImGui.Checkbox($"法系职业###{config}4", ref values[4]))
             {
                 PluginConfiguration.SetCustomIntValue(config, 4);
                 Service.Configuration.Save();
@@ -1208,6 +1234,7 @@ namespace WrathCombo.Window.Functions
         public static void DrawDifficultyMultiChoice
             (string config, ContentCheck.ListSet configListSet, string overrideText = "")
         {
+            overrideText = Translation.Translation.Translate(overrideText);
             switch (configListSet)
             {
                 case ContentCheck.ListSet.Halved:
@@ -1249,7 +1276,7 @@ namespace WrathCombo.Window.Functions
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
             ImGui.Indent();
             ImGui.TextUnformatted(overrideText.IsNullOrEmpty()
-                ? "Select what difficulty the above should apply to:"
+                ? "选择此选项应应用于何种难度的本："
                 : overrideText);
             ImGui.PopStyleColor();
             ImGui.Unindent();
@@ -1390,7 +1417,7 @@ namespace WrathCombo.Window.Functions
             {
                 ImGui.Indent();
                 ImGui.TextUnformatted(overrideText.IsNullOrEmpty()
-                    ? "Select what kind of content this option applies to:"
+                    ? "选择将此选项应用于哪种类型的战斗："
                     : overrideText);
             }
             ImGui.Unindent();
@@ -1435,7 +1462,7 @@ namespace WrathCombo.Window.Functions
             {
                 ImGui.Indent();
                 ImGui.TextUnformatted(overrideText.IsNullOrEmpty()
-                    ? "Select what kind of content this option applies to:"
+                    ? "选择将此选项应用于哪种类型的战斗："
                     : overrideText);
             }
             ImGui.Unindent();
@@ -1485,6 +1512,7 @@ namespace WrathCombo.Window.Functions
                     }
                     else
                     {
+                        customLabel = Translation.Translation.Translate(customLabel);
                         ImGui.TextUnformatted(customLabel);
                     }
                     ImGui.SameLine();
@@ -1513,7 +1541,7 @@ namespace WrathCombo.Window.Functions
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
-                ImGui.Text("Smaller Number = Higher Priority");
+                ImGui.Text("数字越小 = 优先级越高");
                 ImGui.EndTooltip();
             }
             ImGui.Unindent();

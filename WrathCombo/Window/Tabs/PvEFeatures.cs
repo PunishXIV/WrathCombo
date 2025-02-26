@@ -5,6 +5,7 @@ using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Reflection.Metadata.Ecma335;
@@ -20,12 +21,28 @@ namespace WrathCombo.Window.Tabs
     {
         internal static string OpenJob = string.Empty;
 
+        private static Dictionary<string, string> jobNameToNumber = new Dictionary<string, string>() {
+            {"骑士","01"},
+            {"战士","02"},
+            {"暗黑骑士","03"},
+            {"绝枪战士","04"},
+        };
+
+        private static string addNum(string jobName)
+        {
+            if(jobNameToNumber.TryGetValue(jobName,out string? number)) {
+                return $"{number} - {jobName}";
+            }
+            return jobName;
+        }
+
+
         internal static new void Draw()
         {
             //#if !DEBUG
             if (ActionReplacer.ClassLocked())
             {
-                ImGui.TextWrapped("Equip your job stone to re-unlock features.");
+                ImGui.TextWrapped("装备你的特职水晶以解锁连击。");
                 return;
             }
             //#endif
@@ -40,13 +57,13 @@ namespace WrathCombo.Window.Tabs
                     ImGui.SameLine(indentwidth);
                     ImGuiEx.LineCentered(() =>
                     {
-                        ImGuiEx.TextUnderlined("Select a job from below to enable and configure features for it.");
+                        ImGuiEx.TextUnderlined("从下方的职业中选择一个以配置其连击。");
                     });
 
                     foreach (string? jobName in groupedPresets.Keys)
                     {
                         string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
-                        string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
+                        string header = jobName;
                         var id = groupedPresets[jobName].First().Info.JobID;
                         IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
                         using (var disabled = ImRaii.Disabled(DisabledJobsPVE.Any(x => x == id)))
@@ -82,7 +99,7 @@ namespace WrathCombo.Window.Tabs
 
                     using (var headingTab = ImRaii.Child("HeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, icon is null ? 24f.Scale() : (icon.Size.Y / 2f).Scale() + 4f)))
                     {
-                        if (ImGui.Button("Back", new Vector2(0, 24f.Scale())))
+                        if (ImGui.Button("返回", new Vector2(0, 24f.Scale())))
                         {
                             OpenJob = "";
                             return;
@@ -114,7 +131,7 @@ namespace WrathCombo.Window.Tabs
                         {
                             if (ImGui.BeginTabBar($"subTab{OpenJob}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
                             {
-                                if (ImGui.BeginTabItem("Normal"))
+                                if (ImGui.BeginTabItem("通常"))
                                 {
                                     DrawHeadingContents(OpenJob);
                                     ImGui.EndTabItem();
@@ -122,7 +139,7 @@ namespace WrathCombo.Window.Tabs
 
                                 if (groupedPresets[OpenJob].Any(x => PresetStorage.IsVariant(x.Preset)))
                                 {
-                                    if (ImGui.BeginTabItem("Variant Dungeons"))
+                                    if (ImGui.BeginTabItem("多变迷宫"))
                                     {
                                         DrawVariantContents(OpenJob);
                                         ImGui.EndTabItem();
@@ -131,7 +148,7 @@ namespace WrathCombo.Window.Tabs
 
                                 if (groupedPresets[OpenJob].Any(x => PresetStorage.IsBozja(x.Preset)))
                                 {
-                                    if (ImGui.BeginTabItem("Field Operations"))
+                                    if (ImGui.BeginTabItem("特殊场景"))
                                     {
                                         DrawBozjaContents(OpenJob);
                                         ImGui.EndTabItem();
@@ -140,7 +157,7 @@ namespace WrathCombo.Window.Tabs
 
                                 if (groupedPresets[OpenJob].Any(x => PresetStorage.IsEureka(x.Preset)))
                                 {
-                                    if (ImGui.BeginTabItem("Eureka"))
+                                    if (ImGui.BeginTabItem("优雷卡"))
                                     {
                                         ImGui.EndTabItem();
                                     }

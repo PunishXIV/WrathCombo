@@ -31,6 +31,7 @@ internal static partial class SCH
         Resurrection = 173,
         Protraction = 25867,
         Seraphism = 37014,
+        应急战术 = 3586,
 
         // Offense
         Bio = 17864,
@@ -77,6 +78,9 @@ internal static partial class SCH
             SacredSoil = 299,
             Dissipation = 791,
             Recitation = 1896,
+            应急战术 = 792,
+            激励 = 1918,
+            生命回生法 = 2710,
             ImpactImminent = 3882;
     }
 

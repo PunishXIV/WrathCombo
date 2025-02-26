@@ -426,7 +426,7 @@ internal partial class MCH
                 if (ActionReady(BioBlaster) && !TargetHasEffect(Debuffs.Bioblaster) && !Gauge.IsOverheated && !HasEffect(Buffs.Reassembled))
                     return OriginalHook(BioBlaster);
 
-                if (ActionReady(Flamethrower) && !IsMoving())
+                if (!IsEnabled(CustomComboPreset.MCH_AoE_NoFire) && ActionReady(Flamethrower) && !IsMoving())
                     return OriginalHook(Flamethrower);
 
                 if (LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
@@ -767,10 +767,22 @@ internal partial class MCH
 
         protected override uint Invoke(uint actionID) =>
             actionID is Dismantle &&
-            (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle)) &&
+            (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle) || !HasBattleTarget()) &&
             ActionReady(Tactician) && !HasEffect(Buffs.Tactician)
                 ? Tactician
                 : actionID;
+    }
+
+    internal class MCH_»ðÑæÅçÉäÆ÷_ËÙÐÐ : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_»ðÑæÅçÉäÆ÷_ËÙÐÐ;
+
+        protected override uint Invoke(uint actionID) =>
+            actionID is Flamethrower 
+            && !InCombat()
+            && ActionReady(All.Peloton) 
+            ? All.Peloton
+            : actionID;
     }
 
     internal class All_PRanged_Dismantle : CustomCombo

@@ -196,7 +196,7 @@ internal static partial class SCH
                     break;
 
                 case CustomComboPreset.SCH_AoE_Heal:
-                    ImGui.TextUnformatted("Note: Succor will always be available. These options are to provide optional priority to Succor.");
+                    ImGui.TextUnformatted("注意：士气高扬之策总是会能用的，下面的选择只是会在士气高扬之策之前使用。");
                     DrawSliderInt(0, 100, SCH_AoE_Heal_SuccorShieldOption, "Shield Check: Percentage of Party Members without shields to check for.", sliderIncrement: 25);
                     DrawPriorityInput(SCH_AoE_Heals_Priority, 7, 6, $"{Succor.ActionName()} Priority: ");
                     break;

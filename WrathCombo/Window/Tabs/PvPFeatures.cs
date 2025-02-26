@@ -31,7 +31,7 @@ namespace WrathCombo.Window.Tabs
                         ImGui.TextWrapped($"{FontAwesomeIcon.SkullCrossbones.ToIconString()}");
                         ImGui.PopFont();
                         ImGui.SameLine();
-                        ImGui.TextWrapped("These are PvP features. They will only work in PvP-enabled zones.");
+                        ImGui.TextWrapped("此为PvP功能，仅在PvP区域生效。");
                         ImGui.SameLine();
                         ImGui.PushFont(UiBuilder.IconFont);
                         ImGui.TextWrapped($"{FontAwesomeIcon.SkullCrossbones.ToIconString()}");
@@ -39,7 +39,7 @@ namespace WrathCombo.Window.Tabs
                     });
                     ImGuiEx.LineCentered($"pvpDesc2", () =>
                     {
-                        ImGuiEx.TextUnderlined("Select a job from below to enable and configure features for it.");
+                        ImGuiEx.TextUnderlined("选择下方职业以启用并配置其功能。");
                     });
                     ImGui.Spacing();
 
@@ -73,7 +73,7 @@ namespace WrathCombo.Window.Tabs
 
                     using (var headingTab = ImRaii.Child("PvPHeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, icon is null ? 24f.Scale() : (icon.Size.Y / 2f).Scale() + 4f)))
                     {
-                        if (ImGui.Button("Back", new Vector2(0, 24f.Scale())))
+                        if (ImGui.Button("返回", new Vector2(0, 24f.Scale())))
                         {
                             OpenJob = "";
                             return;
@@ -98,7 +98,7 @@ namespace WrathCombo.Window.Tabs
                         {
                             if (ImGui.BeginTabBar($"subTab{OpenJob}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
                             {
-                                if (ImGui.BeginTabItem("Normal"))
+                                if (ImGui.BeginTabItem("通常"))
                                 {
                                     DrawHeadingContents(OpenJob);
                                     ImGui.EndTabItem();

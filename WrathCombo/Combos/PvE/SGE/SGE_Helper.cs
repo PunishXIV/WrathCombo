@@ -55,12 +55,14 @@ internal static partial class SGE
         Soteria = 24294,
         Zoe = 24300,
         Krasis = 24317,
+        混合 = 24317,
         Philosophia = 37035,
 
         // Other
         Kardia = 24285,
         Eukrasia = 24290,
-        Rhizomata = 24309;
+        Rhizomata = 24309,
+        根素 = 24309;
 
     // Action Groups
     internal static readonly List<uint>
@@ -86,6 +88,7 @@ internal static partial class SGE
             EukrasianDiagnosis = 2607,
             EukrasianPrognosis = 2609,
             Panhaima = 2613,
+            坚角清汁 = 2618,
             Kerachole = 2618,
             Zoe = 2611,
             Eudaimonia = 3899;

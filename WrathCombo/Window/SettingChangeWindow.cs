@@ -70,8 +70,8 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
     ///     The current plugin version.
     /// </summary>
     /// <remarks>No need to update this value to re-use this window.</remarks>
-    private static readonly string Version =
-        Svc.PluginInterface.Manifest.AssemblyVersion.ToString();
+    private static readonly string Version = "1.0.0.13";
+        //Svc.PluginInterface.Manifest.AssemblyVersion.ToString();
 
     /// <summary>
     ///     The version where the problem was introduced.

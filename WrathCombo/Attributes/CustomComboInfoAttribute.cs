@@ -23,8 +23,8 @@ namespace WrathCombo.Attributes
         //// <param name="memeDescription"> Meme description. </param>
         internal CustomComboInfoAttribute(string name, string description, byte jobID, [CallerLineNumber] int order = 0)
         {
-            Name = name;
-            Description = description;
+            Name = Translation.Translation.Translate(name);
+            Description = Translation.Translation.Translate(description);
             JobID = jobID;
             Order = order;
         }
@@ -90,7 +90,7 @@ namespace WrathCombo.Attributes
         public static string JobIDToName(byte key)
         {
             if (key == 0)
-                return "General/Multiple Jobs";
+                return "Ò»°ã/È«¾Ö";
 
             //Override DOH/DOL
             if (key is DOH.JobID) key = 08; //Set to Carpenter

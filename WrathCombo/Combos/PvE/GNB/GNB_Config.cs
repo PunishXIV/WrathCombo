@@ -47,7 +47,7 @@ internal partial class GNB
             GNB_ST_Reprisal_Health = new("GNB_ST_Reprisal_Health", 0),
             GNB_ST_Reprisal_SubOption = new("GNB_ST_Reprisal_Option", 0),
             GNB_ST_ArmsLength_Health = new("GNB_ST_ArmsLength_Health", 0),
-            GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop", 5),
+            GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop", 0),
             GNB_AoE_MitsOptions = new("GNB_AoE_MitsOptions", 0),
             GNB_AoE_Corundum_Health = new("GNB_AoE_CorundumOption", 90),
             GNB_AoE_Corundum_SubOption = new("GNB_AoE_Corundum_Option", 0),
@@ -62,13 +62,13 @@ internal partial class GNB
             GNB_AoE_Nebula_SubOption = new("GNB_AoE_Nebula_Option", 0),
             GNB_AoE_Superbolide_Health = new("GNB_AoE_Superbolide_Health", 30),
             GNB_AoE_Superbolide_SubOption = new("GNB_AoE_Superbolide_Option", 0),
-            GNB_AoE_Reprisal_Health = new("GNB_ST_Reprisal_Health", 0),
-            GNB_AoE_Reprisal_SubOption = new("GNB_ST_Reprisal_Option", 0),
-            GNB_AoE_ArmsLength_Health = new("GNB_ST_ArmsLength_Health", 0),
+            GNB_AoE_Reprisal_Health = new("GNB_AOE_Reprisal_Health", 0),
+            GNB_AoE_Reprisal_SubOption = new("GNB_AOE_Reprisal_Option", 0),
+            GNB_AoE_ArmsLength_Health = new("GNB_AOE_ArmsLength_Health", 0),
             GNB_AoE_NoMercyStop = new("GNB_AoE_NoMercyStop", 5),
             GNB_NM_Features_Weave = new("GNB_NM_Feature_Weave", 0),
             GNB_GF_Features_Choice = new("GNB_GF_Choice", 0),
-            GNB_ST_Balance_Content = new("GNB_ST_Balance_Content", 1),
+            GNB_ST_Balance_Content = new("GNB_ST_Balance_Content", 0),
 
             //One-Button Mitigation
             GNB_Mit_Superbolide_Health = new("GNB_Mit_Superbolide_Health", 30),
@@ -83,9 +83,9 @@ internal partial class GNB
 
             //Bozja
             GNB_Bozja_LostCure_Health = new("GNB_Bozja_LostCure_Health", 50),
-            GNB_Bozja_LostCure2_Health = new("GNB_Bozja_LostCure_Health", 50),
-            GNB_Bozja_LostCure3_Health = new("GNB_Bozja_LostCure_Health", 50),
-            GNB_Bozja_LostCure4_Health = new("GNB_Bozja_LostCure_Health", 50),
+            GNB_Bozja_LostCure2_Health = new("GNB_Bozja_LostCure2_Health", 50),
+            GNB_Bozja_LostCure3_Health = new("GNB_Bozja_LostCure3_Health", 50),
+            GNB_Bozja_LostCure4_Health = new("GNB_Bozja_LostCure4_Health", 50),
             GNB_Bozja_LostAethershield_Health = new("GNB_Bozja_LostAethershield_Health", 70),
             GNB_Bozja_LostReraise_Health = new("GNB_Bozja_LostReraise_Health", 10);
 
@@ -107,6 +107,7 @@ internal partial class GNB
                 case CustomComboPreset.GNB_ST_Advanced_Opener:
                     UserConfig.DrawBossOnlyChoice(GNB_ST_Balance_Content);
                     break;
+
                 case CustomComboPreset.GNB_Bozja_LostCure:
                     UserConfig.DrawSliderInt(1, 100, GNB_Bozja_LostCure_Health,
                         "Player HP% to be \nless than or equal to:", 200);
@@ -403,12 +404,12 @@ internal partial class GNB
                         GNB_Mit_HeartOfLight_PartyRequirement,
                         "Require party",
                         "Will not use Heart of Light unless there are 2 or more party members.",
-                        outputValue: (int) PartyRequirement.Yes);
+                        outputValue: (int)PartyRequirement.Yes);
                     UserConfig.DrawHorizontalRadioButton(
                         GNB_Mit_HeartOfLight_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Heart of Light.",
-                        outputValue: (int) PartyRequirement.No);
+                        outputValue: (int)PartyRequirement.No);
 
                     UserConfig.DrawPriorityInput(GNB_Mit_Priorities,
                         numberMitigationOptions, 4,
@@ -431,11 +432,11 @@ internal partial class GNB
                     UserConfig.DrawHorizontalRadioButton(
                         GNB_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
-                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         GNB_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
-                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
 
                     UserConfig.DrawSliderInt(0, 3, GNB_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)");
@@ -452,7 +453,7 @@ internal partial class GNB
 
                     UserConfig.DrawPriorityInput(GNB_Mit_Priorities,
                         numberMitigationOptions, 7,
-                        "Arm's Length Priority:");
+                        "Nebula Priority:");
                     break;
 
                 #endregion

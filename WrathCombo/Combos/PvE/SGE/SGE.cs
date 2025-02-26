@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.Automation;
 using System;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
@@ -8,6 +9,8 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE
 {
+    private static bool 复苏喊话 = false;
+
     /*
      * SGE_Kardia
      * Soteria becomes Kardia when Kardia's Buff is not active or Soteria is on cooldown.
@@ -39,6 +42,7 @@ internal partial class SGE
                 : actionID;
     }
 
+
     /*
      * Druo/Tauro
      * Druochole Upgrade to Taurochole (like a trait upgrade)
@@ -48,11 +52,25 @@ internal partial class SGE
     internal class SGE_DruoTauro : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGE_TauroDruo;
-
-        protected override uint Invoke(uint actionID) =>
-            actionID is Taurochole && IsOnCooldown(Taurochole)
-            ? Druochole
-            : actionID;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is Druochole) {
+                if (IsEnabled(CustomComboPreset.SGE_混合) && ActionReady(混合)) {
+                    return 混合;
+                }
+                if (ActionReady(Taurochole) && 有蛇胆() && !HasEffect(Buffs.坚角清汁)) {
+                    return Taurochole;
+                }
+                if (ActionReady(Druochole) && 有蛇胆()) {
+                    return Druochole;
+                }
+                if (ActionReady(根素) && !有蛇胆()) {
+                    return 根素;
+                }
+                return 根素;
+            }
+            return actionID;
+        }
     }
 
     /*
@@ -323,11 +341,60 @@ internal partial class SGE
     internal class SGE_Raise : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGE_Raise;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is Egeiro) {
+                //复生喊话
+                if (IsEnabled(CustomComboPreset.SGE_Raise_Say)) {
+                    if (JustUsed(Egeiro)) {
+                        if (复苏喊话 == false && IsInParty()) {
+                            复苏喊话 = true;
+                            IGameObject? healTarget = GetHealTarget(true);
+                            string LeaderName = healTarget.Name.ToString();
+                            if (WasLastAbility(All.Swiftcast))
+                                Chat.Instance.SendMessage($"/p 已对{LeaderName}实施心肺复苏，抢救大成功！（已复苏）<se.7>");
+                            else
+                                Chat.Instance.SendMessage($"/p 正在对{LeaderName}实施心肺复苏！（正在咏唱复苏）<se.7>");
+                        }
+                    }
+                    else {
+                        if (复苏喊话 == true) {
+                            复苏喊话 = false;
+                        }
+                    }
+                }
+                //插入即刻
+                if (ActionReady(All.Swiftcast))
+                    return All.Swiftcast;
+            }
+            return actionID;
+        }
+    }
 
-        protected override uint Invoke(uint actionID) =>
-            actionID is All.Swiftcast && IsOnCooldown(All.Swiftcast)
-            ? Egeiro
-            : actionID;
+    public static bool 有蛇胆()
+    {
+        return Gauge.Addersgall > 0;
+    }
+
+    internal class SGE_自生_寄生清汁 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGE_自生_寄生清汁;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is Ixochole) {
+                if (ActionReady(OriginalHook(Physis))) {
+                    return OriginalHook(Physis);
+                }
+                if (ActionReady(Ixochole) && 有蛇胆()) {
+                    return Ixochole;
+                }
+                if (ActionReady(根素)) {
+                    return 根素;
+                }
+                return OriginalHook(Physis);
+            }
+            return actionID;
+        }
     }
 
     /*

@@ -110,7 +110,7 @@ internal partial class RDM
                         DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, Riposte.ActionName(), "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
                         if (P.IPC.GetComboOptionState(CustomComboPreset.RDM_ST_MeleeCombo.ToString()))
                         {
-                            ImGui.TextColored(ImGuiColors.DalamudYellow, $"Auto-Mode is enabled for this option.\n{Zwerchhau.ActionName()} & {Redoublement.ActionName()} will be placed on {Jolt.ActionName()}");
+                            ImGui.TextColored(ImGuiColors.DalamudYellow, $"自动模式会启用此选项.\n{Zwerchhau.ActionName()} & {Redoublement.ActionName()} 会整合到 {Jolt.ActionName()} 上");
                         }
                         ImGui.Unindent();
                     }

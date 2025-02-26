@@ -32,7 +32,7 @@ internal partial class DNC
         {
             ImGui.Dummy(new Vector2(1f, 12f));
             ImGui.Indent(40f);
-            ImGui.Text("Anti-Drift Options:     (hover each for more info)");
+            ImGui.Text("防错位选项:     (鼠标悬停之以获得更多信息)");
             ImGui.Unindent(40f);
             ImGui.NewLine();
 
@@ -129,7 +129,7 @@ internal partial class DNC
                     ImGui.Indent();
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
                     ImGui.TextWrapped(
-                        "Opener variations:     (hover each for more info)");
+                        "开场选项:     (鼠标悬停之以获取说明)");
                     ImGui.PopStyleColor();
                     ImGui.Unindent();
                     ImGui.NewLine();

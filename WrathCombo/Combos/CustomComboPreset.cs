@@ -146,6 +146,169 @@ public enum CustomComboPreset
 
     #endregion
 
+    #region Bozja
+
+    [Bozja]
+    [CustomComboInfo("Lost Focus Option", "Use Lost Focus when available.", ADV.JobID)]
+    GNB_Bozja_LostFocus = 7070,
+
+    [Bozja]
+    [CustomComboInfo("Lost Font Of Power Option", "Use Lost Font Of Power when available.", ADV.JobID)]
+    GNB_Bozja_LostFontOfPower = 7036,
+
+    [Bozja]
+    [CustomComboInfo("Lost Slash Option", "Use Lost Slash when available.", ADV.JobID)]
+    GNB_Bozja_LostSlash = 7037,
+
+    [Bozja]
+    [CustomComboInfo("Lost Death Option", "Use Lost Death when available.", ADV.JobID)]
+    GNB_Bozja_LostDeath = 7038,
+
+    [Bozja]
+    [CustomComboInfo("Banner Of Noble Ends Option", "Use Banner Of Noble Ends when available.", ADV.JobID)]
+    GNB_Bozja_BannerOfNobleEnds = 7039,
+
+    [Bozja]
+    [ParentCombo(GNB_Bozja_BannerOfNobleEnds)]
+    [CustomComboInfo("Only with `Lost Font Of Power` Option",
+        "Use Banner Of Noble Ends only when under Lost Font of Power.", ADV.JobID)]
+    GNB_Bozja_PowerEnds = 7040,
+
+    [Bozja]
+    [CustomComboInfo("Banner Of Honored Sacrifice Option", "Use Banner Of Honored Sacrifice when available.",
+        ADV.JobID)]
+    GNB_Bozja_BannerOfHonoredSacrifice = 7041,
+
+    [Bozja]
+    [ParentCombo(GNB_Bozja_BannerOfHonoredSacrifice)]
+    [CustomComboInfo("Only with `Lost Font Of Power` Option",
+        "Use Banner Of Honored Sacrifice only when under Lost Font of Power.", ADV.JobID)]
+    GNB_Bozja_PowerSacrifice = 7042,
+
+    [Bozja]
+    [CustomComboInfo("Banner Of Honed Acuity Option", "Use Banner Of Honed Acuity when available.", ADV.JobID)]
+    GNB_Bozja_BannerOfHonedAcuity = 7043,
+
+    [Bozja]
+    [CustomComboInfo("Lost Fair Trade Option", "Use Lost Fair Trade when available.", ADV.JobID)]
+    GNB_Bozja_LostFairTrade = 7044,
+
+    [Bozja]
+    [CustomComboInfo("Lost Assassination Option", "Use Lost Assassination when available.", ADV.JobID)]
+    GNB_Bozja_LostAssassination = 7045,
+
+    [Bozja]
+    [CustomComboInfo("Lost Manawall Option", "Use Lost Manawall when available.", ADV.JobID)]
+    GNB_Bozja_LostManawall = 7046,
+
+    [Bozja]
+    [CustomComboInfo("Banner Of Tireless Conviction Option", "Use Banner Of Tireless Conviction when available.",
+        ADV.JobID)]
+    GNB_Bozja_BannerOfTirelessConviction = 7047,
+
+    [Bozja]
+    [CustomComboInfo("Lost Blood Rage Option", "Use Lost Blood Rage when available.", ADV.JobID)]
+    GNB_Bozja_LostBloodRage = 7048,
+
+    [Bozja]
+    [CustomComboInfo("Banner Of Solemn Clarity Option", "Use Banner Of Solemn Clarity when available.", ADV.JobID)]
+    GNB_Bozja_BannerOfSolemnClarity = 7049,
+
+    [Bozja]
+    [CustomComboInfo("Lost Cure Option", "Use Lost Cure when available.", ADV.JobID)]
+    GNB_Bozja_LostCure = 7050,
+
+    [Bozja]
+    [CustomComboInfo("Lost Cure II Option", "Use Lost Cure II when available.", ADV.JobID)]
+    GNB_Bozja_LostCure2 = 7051,
+
+    [Bozja]
+    [CustomComboInfo("Lost Cure III Option", "Use Lost Cure III when available.", ADV.JobID)]
+    GNB_Bozja_LostCure3 = 7052,
+
+    [Bozja]
+    [CustomComboInfo("Lost Cure IV Option", "Use Lost Cure IV when available.", ADV.JobID)]
+    GNB_Bozja_LostCure4 = 7053,
+
+    [Bozja]
+    [CustomComboInfo("Lost Arise Option", "Use Lost Arise when available.", ADV.JobID)]
+    GNB_Bozja_LostArise = 7054,
+
+    [Bozja]
+    [CustomComboInfo("Lost Sacrifice Option", "Use Lost Sacrifice when available.", ADV.JobID)]
+    GNB_Bozja_LostSacrifice = 7055,
+
+    [Bozja]
+    [CustomComboInfo("Lost Reraise Option", "Use Lost Reraise when available.", ADV.JobID)]
+    GNB_Bozja_LostReraise = 7056,
+
+    [Bozja]
+    [CustomComboInfo("Lost Spellforge Option", "Use Lost Spellforge when available.", ADV.JobID)]
+    GNB_Bozja_LostSpellforge = 7057,
+
+    [Bozja]
+    [CustomComboInfo("Lost Steel Sting Option", "Use Lost Steel Sting when available.", ADV.JobID)]
+    GNB_Bozja_LostSteelsting = 7058,
+
+    [Bozja]
+    [CustomComboInfo("Lost Protect Option", "Use Lost Protect when available.", ADV.JobID)]
+    GNB_Bozja_LostProtect = 7059,
+
+    [Bozja]
+    [CustomComboInfo("Lost Shell Option", "Use Lost Shell when available.", ADV.JobID)]
+    GNB_Bozja_LostShell = 7060,
+
+    [Bozja]
+    [CustomComboInfo("Lost Reflect Option", "Use Lost Reflect when available.", ADV.JobID)]
+    GNB_Bozja_LostReflect = 7061,
+
+    [Bozja]
+    [CustomComboInfo("Lost Bravery Option", "Use Lost Bravery when available.", ADV.JobID)]
+    GNB_Bozja_LostBravery = 7062,
+
+    [Bozja]
+    [CustomComboInfo("Lost Aethershield Option", "Use Lost Aether Shield when available.", ADV.JobID)]
+    GNB_Bozja_LostAethershield = 7063,
+
+    [Bozja]
+    [CustomComboInfo("Lost Protect II Option", "Use Lost Protect II when available.", ADV.JobID)]
+    GNB_Bozja_LostProtect2 = 7064,
+
+    [Bozja]
+    [CustomComboInfo("Lost Shell II Option", "Use Lost Shell II when available.", ADV.JobID)]
+    GNB_Bozja_LostShell2 = 7065,
+
+    [Bozja]
+    [CustomComboInfo("Lost Bubble Option", "Use Lost Bubble when available.", ADV.JobID)]
+    GNB_Bozja_LostBubble = 7066,
+
+    [Bozja]
+    [CustomComboInfo("Lost Stealth Option", "Use Lost Stealth when available.", ADV.JobID)]
+    GNB_Bozja_LostStealth = 7067,
+
+    [Bozja]
+    [CustomComboInfo("Lost Swift Option", "Use Lost Swift when available.", ADV.JobID)]
+    GNB_Bozja_LostSwift = 7068,
+
+    [Bozja]
+    [CustomComboInfo("Lost Font Of Skill Option", "Use Lost Font Of Skill when available.", ADV.JobID)]
+    GNB_Bozja_LostFontOfSkill = 7069,
+
+    [Bozja]
+    [CustomComboInfo("Lost Impetus Option", "Use Lost Impetus when available.", ADV.JobID)]
+    GNB_Bozja_LostImpetus = 7071,
+
+    [Bozja]
+    [CustomComboInfo("Lost Paralyze III Option", "Use Lost Paralyze III when available.", ADV.JobID)]
+    GNB_Bozja_LostParalyze3 = 7072,
+
+    [Bozja]
+    [CustomComboInfo("Lost Rampage Option", "Use Lost Rampage when available.", ADV.JobID)]
+    GNB_Bozja_LostRampage = 7073,
+
+    #endregion
+
+
     // Jobs
 
     #region ASTROLOGIAN
@@ -2530,167 +2693,6 @@ public enum CustomComboPreset
 
     #endregion
 
-    #region Bozja
-
-    [Bozja]
-    [CustomComboInfo("Lost Focus Option", "Use Lost Focus when available.", GNB.JobID)]
-    GNB_Bozja_LostFocus = 7070,
-
-    [Bozja]
-    [CustomComboInfo("Lost Font Of Power Option", "Use Lost Font Of Power when available.", GNB.JobID)]
-    GNB_Bozja_LostFontOfPower = 7036,
-
-    [Bozja]
-    [CustomComboInfo("Lost Slash Option", "Use Lost Slash when available.", GNB.JobID)]
-    GNB_Bozja_LostSlash = 7037,
-
-    [Bozja]
-    [CustomComboInfo("Lost Death Option", "Use Lost Death when available.", GNB.JobID)]
-    GNB_Bozja_LostDeath = 7038,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Noble Ends Option", "Use Banner Of Noble Ends when available.", GNB.JobID)]
-    GNB_Bozja_BannerOfNobleEnds = 7039,
-
-    [Bozja]
-    [ParentCombo(GNB_Bozja_BannerOfNobleEnds)]
-    [CustomComboInfo("Only with `Lost Font Of Power` Option",
-        "Use Banner Of Noble Ends only when under Lost Font of Power.", GNB.JobID)]
-    GNB_Bozja_PowerEnds = 7040,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Honored Sacrifice Option", "Use Banner Of Honored Sacrifice when available.",
-        GNB.JobID)]
-    GNB_Bozja_BannerOfHonoredSacrifice = 7041,
-
-    [Bozja]
-    [ParentCombo(GNB_Bozja_BannerOfHonoredSacrifice)]
-    [CustomComboInfo("Only with `Lost Font Of Power` Option",
-        "Use Banner Of Honored Sacrifice only when under Lost Font of Power.", GNB.JobID)]
-    GNB_Bozja_PowerSacrifice = 7042,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Honed Acuity Option", "Use Banner Of Honed Acuity when available.", GNB.JobID)]
-    GNB_Bozja_BannerOfHonedAcuity = 7043,
-
-    [Bozja]
-    [CustomComboInfo("Lost Fair Trade Option", "Use Lost Fair Trade when available.", GNB.JobID)]
-    GNB_Bozja_LostFairTrade = 7044,
-
-    [Bozja]
-    [CustomComboInfo("Lost Assassination Option", "Use Lost Assassination when available.", GNB.JobID)]
-    GNB_Bozja_LostAssassination = 7045,
-
-    [Bozja]
-    [CustomComboInfo("Lost Manawall Option", "Use Lost Manawall when available.", GNB.JobID)]
-    GNB_Bozja_LostManawall = 7046,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Tireless Conviction Option", "Use Banner Of Tireless Conviction when available.",
-        GNB.JobID)]
-    GNB_Bozja_BannerOfTirelessConviction = 7047,
-
-    [Bozja]
-    [CustomComboInfo("Lost Blood Rage Option", "Use Lost Blood Rage when available.", GNB.JobID)]
-    GNB_Bozja_LostBloodRage = 7048,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Solemn Clarity Option", "Use Banner Of Solemn Clarity when available.", GNB.JobID)]
-    GNB_Bozja_BannerOfSolemnClarity = 7049,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure Option", "Use Lost Cure when available.", GNB.JobID)]
-    GNB_Bozja_LostCure = 7050,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure II Option", "Use Lost Cure II when available.", GNB.JobID)]
-    GNB_Bozja_LostCure2 = 7051,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure III Option", "Use Lost Cure III when available.", GNB.JobID)]
-    GNB_Bozja_LostCure3 = 7052,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure IV Option", "Use Lost Cure IV when available.", GNB.JobID)]
-    GNB_Bozja_LostCure4 = 7053,
-
-    [Bozja]
-    [CustomComboInfo("Lost Arise Option", "Use Lost Arise when available.", GNB.JobID)]
-    GNB_Bozja_LostArise = 7054,
-
-    [Bozja]
-    [CustomComboInfo("Lost Sacrifice Option", "Use Lost Sacrifice when available.", GNB.JobID)]
-    GNB_Bozja_LostSacrifice = 7055,
-
-    [Bozja]
-    [CustomComboInfo("Lost Reraise Option", "Use Lost Reraise when available.", GNB.JobID)]
-    GNB_Bozja_LostReraise = 7056,
-
-    [Bozja]
-    [CustomComboInfo("Lost Spellforge Option", "Use Lost Spellforge when available.", GNB.JobID)]
-    GNB_Bozja_LostSpellforge = 7057,
-
-    [Bozja]
-    [CustomComboInfo("Lost Steel Sting Option", "Use Lost Steel Sting when available.", GNB.JobID)]
-    GNB_Bozja_LostSteelsting = 7058,
-
-    [Bozja]
-    [CustomComboInfo("Lost Protect Option", "Use Lost Protect when available.", GNB.JobID)]
-    GNB_Bozja_LostProtect = 7059,
-
-    [Bozja]
-    [CustomComboInfo("Lost Shell Option", "Use Lost Shell when available.", GNB.JobID)]
-    GNB_Bozja_LostShell = 7060,
-
-    [Bozja]
-    [CustomComboInfo("Lost Reflect Option", "Use Lost Reflect when available.", GNB.JobID)]
-    GNB_Bozja_LostReflect = 7061,
-
-    [Bozja]
-    [CustomComboInfo("Lost Bravery Option", "Use Lost Bravery when available.", GNB.JobID)]
-    GNB_Bozja_LostBravery = 7062,
-
-    [Bozja]
-    [CustomComboInfo("Lost Aethershield Option", "Use Lost Aether Shield when available.", GNB.JobID)]
-    GNB_Bozja_LostAethershield = 7063,
-
-    [Bozja]
-    [CustomComboInfo("Lost Protect II Option", "Use Lost Protect II when available.", GNB.JobID)]
-    GNB_Bozja_LostProtect2 = 7064,
-
-    [Bozja]
-    [CustomComboInfo("Lost Shell II Option", "Use Lost Shell II when available.", GNB.JobID)]
-    GNB_Bozja_LostShell2 = 7065,
-
-    [Bozja]
-    [CustomComboInfo("Lost Bubble Option", "Use Lost Bubble when available.", GNB.JobID)]
-    GNB_Bozja_LostBubble = 7066,
-
-    [Bozja]
-    [CustomComboInfo("Lost Stealth Option", "Use Lost Stealth when available.", GNB.JobID)]
-    GNB_Bozja_LostStealth = 7067,
-
-    [Bozja]
-    [CustomComboInfo("Lost Swift Option", "Use Lost Swift when available.", GNB.JobID)]
-    GNB_Bozja_LostSwift = 7068,
-
-    [Bozja]
-    [CustomComboInfo("Lost Font Of Skill Option", "Use Lost Font Of Skill when available.", GNB.JobID)]
-    GNB_Bozja_LostFontOfSkill = 7069,
-
-    [Bozja]
-    [CustomComboInfo("Lost Impetus Option", "Use Lost Impetus when available.", GNB.JobID)]
-    GNB_Bozja_LostImpetus = 7071,
-
-    [Bozja]
-    [CustomComboInfo("Lost Paralyze III Option", "Use Lost Paralyze III when available.", GNB.JobID)]
-    GNB_Bozja_LostParalyze3 = 7072,
-
-    [Bozja]
-    [CustomComboInfo("Lost Rampage Option", "Use Lost Rampage when available.", GNB.JobID)]
-    GNB_Bozja_LostRampage = 7073,
-
-    #endregion
 
     #endregion
 
@@ -2709,6 +2711,10 @@ public enum CustomComboPreset
     [ConflictingCombos(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Simple Mode - AoE", "Replaces Spreadshot with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.\nWill lock out input to keep Flamethrower going by replacing Spreadshot with Savage Blade.", MCH.JobID)]
     MCH_AoE_SimpleMode = 8200,
+
+    [ParentCombo(MCH_AoE_SimpleMode)]
+    [CustomComboInfo("不要打火焰喷射器", "简易群体连击里不要打火焰喷射器(经常面向不对)", MCH.JobID)]
+    MCH_AoE_NoFire = 820001,
 
     #endregion
 
@@ -2922,9 +2928,13 @@ public enum CustomComboPreset
     [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate Feature", "Replace Gauss Round and Ricochet or Double Check and Checkmate with one or the other depending on which has more charges.", MCH.JobID)]
     MCH_GaussRoundRicochet = 8003,
 
+    [ReplaceSkill(MCH.Flamethrower)]
+    [CustomComboInfo("火焰喷射器 - 速行", "如果你不在战斗中，则用速行代替火焰喷射器。", MCH.JobID)]
+    MCH_火焰喷射器_速行 = 8059,
+
     // Last value ST = 8116
     // Last value AoE = 8313
-    // Last value Misc = 8058
+    // Last value Misc = 8059
 
     #endregion
 
@@ -2999,7 +3009,7 @@ public enum CustomComboPreset
     MNK_STUsePerfectBalance = 9013,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
-    [CustomComboInfo(" Masterful Blitz Option", "Adds Masterful Blitz to the rotation", MNK.JobID)]
+    [CustomComboInfo("Masterful Blitz Option", "Adds Masterful Blitz to the rotation", MNK.JobID)]
     MNK_STUseMasterfulBlitz = 9039,
 
     [ParentCombo(MNK_ST_AdvancedMode)]
@@ -3061,7 +3071,7 @@ public enum CustomComboPreset
     MNK_AoEUsePerfectBalance = 9034,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
-    [CustomComboInfo(" Masterful Blitz Option", "Adds Masterful Blitz to the rotation", MNK.JobID)]
+    [CustomComboInfo("Masterful Blitz Option", "Adds Masterful Blitz to the rotation", MNK.JobID)]
     MNK_AoEUseMasterfulBlitz = 9040,
 
     [ParentCombo(MNK_AOE_AdvancedMode)]
@@ -3501,7 +3511,7 @@ public enum CustomComboPreset
     PCT_ST_AdvancedMode_LandscapeMotif = 20017,
 
     [ParentCombo(PCT_ST_AdvancedMode_MotifFeature)]
-    [CustomComboInfo("Creature Motif Option", "Adds Landscape Motif.", PCT.JobID)]
+    [CustomComboInfo("Creature Motif Option", "Adds Creature Motif.", PCT.JobID)]
     PCT_ST_AdvancedMode_CreatureMotif = 20018,
 
     [ParentCombo(PCT_ST_AdvancedMode_MotifFeature)]
@@ -3628,7 +3638,7 @@ public enum CustomComboPreset
     PCT_AoE_AdvancedMode_LandscapeMotif = 20050,
 
     [ParentCombo(PCT_AoE_AdvancedMode_MotifFeature)]
-    [CustomComboInfo("Creature Motif Option", "Adds Landscape Motif.", PCT.JobID)]
+    [CustomComboInfo("Creature Motif Option", "Adds Creature Motif.", PCT.JobID)]
     PCT_AoE_AdvancedMode_CreatureMotif = 20051,
 
     [ParentCombo(PCT_AoE_AdvancedMode_MotifFeature)]
@@ -4779,26 +4789,34 @@ public enum CustomComboPreset
     [CustomComboInfo("Rhizomata Feature", "Replaces Addersgall skills with Rhizomata when empty.", SGE.JobID)]
     SGE_Rhizo = 14037,
 
-    [ReplaceSkill(SGE.Taurochole)]
+    [ReplaceSkill(SGE.Druochole)]
     [CustomComboInfo("Taurochole to Druochole Feature", "Turns Taurochole to Druochole when Taurochole is on cooldown.",
         SGE.JobID)]
     SGE_TauroDruo = 14038,
 
+    [ParentCombo(SGE_TauroDruo)]
+    [CustomComboInfo("混合", "在这两个青汁前先打【混合】增加疗效。", SGE.JobID)]
+    SGE_混合 = 1403801,
+
     [ReplaceSkill(SGE.Pneuma)]
     [CustomComboInfo("Zoe Pneuma Feature", "Places Zoe on top of Pneuma when both actions are on cooldown.", SGE.JobID)]
-
-    //Temporary to keep the order
     SGE_ZoePneuma = 14039,
+
+    [ReplaceSkill(SGE.Ixochole)]
+    [CustomComboInfo("自生 - 寄生清汁", "如果自生转好了，先打【自生】。", SGE.JobID)]
+    SGE_自生_寄生清汁 = 1403901,
 
     #endregion
 
     #region Utility
 
-    [ReplaceSkill(All.Swiftcast)]
-    [ConflictingCombos(ALL_Healer_Raise)]
-    [CustomComboInfo("Swiftcast Raise Feature", "Changes Swiftcast to Egeiro while Swiftcast is on cooldown.",
-        SGE.JobID)]
+    [ReplaceSkill(SGE.Egeiro)]
+    [CustomComboInfo("即刻 - 复苏", "如果【即刻咏唱】就绪，则在【复苏】前插入【即刻咏唱】。",SGE.JobID)]
     SGE_Raise = 14040,
+
+    [ParentCombo(SGE_Raise)]
+    [CustomComboInfo("复苏喊话", "在你使用复苏后，发送一条消息到小队频道。", SGE.JobID)]
+    SGE_Raise_Say = 1404001,
 
     [ReplaceSkill(SGE.Soteria)]
     [CustomComboInfo("Soteria to Kardia Feature",
@@ -5239,29 +5257,50 @@ public enum CustomComboPreset
 
     #region Healing
 
-    [ReplaceSkill(SCH.FeyBlessing)]
-    [CustomComboInfo("Fey Blessing to Seraph's Consolation Feature",
-        "Change Fey Blessing into Consolation when Seraph is out.", SCH.JobID)]
-    SCH_Consolation = 16013,
+    
 
-    [ReplaceSkill(SCH.Lustrate)]
-    [CustomComboInfo("Lustrate to Excogitation Feature",
-        "Change Lustrate into Excogitation when Excogitation is ready.", SCH.JobID)]
-    SCH_Lustrate = 16014,
+    [AutoAction(false, true)]
+    [ReplaceSkill(SCH.Physick)]
+    [CustomComboInfo("Simple Heals - Single Target",
+    "Change Physick into Adloquium, Lustrate, then Physick with below options:", SCH.JobID)]
+    SCH_ST_Heal = 16023,
 
-    [ReplaceSkill(SCH.Recitation)]
-    [CustomComboInfo("Recitation Combo Feature",
-        "Change Recitation into either Adloquium, Succor, Indomitability, or Excogitation when used.", SCH.JobID)]
-    SCH_Recitation = 16015,
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value:", SCH.JobID)]
+    SCH_ST_Heal_Lucid = 16024,
 
-    [ReplaceSkill(SCH.WhisperingDawn)]
-    [CustomComboInfo("Fairy Healing Combo Feature",
-        "Change Whispering Dawn into Fey Illumination, Fey Blessing, then Whispering Dawn when used.", SCH.JobID)]
-    SCH_Fairy_Combo = 16016,
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Aetherflow Weave Option", "Use Aetherflow when out of Aetherflow stacks.", SCH.JobID)]
+    SCH_ST_Heal_Aetherflow = 16025,
 
-    [ParentCombo(SCH_Fairy_Combo)]
-    [CustomComboInfo("Consolation During Seraph Option", "Adds Consolation during Seraph.", SCH.JobID)]
-    SCH_Fairy_Combo_Consolation = 16017,
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Disspation Option", "Use Dissipation when out of Aetherflow stacks.", SCH.JobID)]
+    SCH_ST_Heal_Dissipation = 16040,
+
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", SCH.JobID)]
+    SCH_ST_Heal_Esuna = 16026,
+
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Adloquium Option", "Use Adloquium when missing Galvanize or target HP%% below:", SCH.JobID)]
+    SCH_ST_Heal_Adloquium = 16027,
+
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Lustrate Option", "Use Lustrate when target HP%% below:", SCH.JobID)]
+    SCH_ST_Heal_Lustrate = 16028,
+
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Excogitation Option", "Use Excogitation when target HP%% below:", SCH.JobID)]
+    SCH_ST_Heal_Excogitation = 16038,
+
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Protraction Option", "Use Protraction when target HP%% below:", SCH.JobID)]
+    SCH_ST_Heal_Protraction = 16039,
+
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Aetherpact Option", "Use Aetherpact when target HP%% below:", SCH.JobID)]
+    SCH_ST_Heal_Aetherpact = 16047,
+
 
     [AutoAction(true, true)]
     [ReplaceSkill(SCH.Succor)]
@@ -5310,48 +5349,58 @@ public enum CustomComboPreset
     [CustomComboInfo("Consolation", "Use Consolation before using Succor.", SCH.JobID)]
     SCH_AoE_Heal_Consolation = 16046,
 
-    [AutoAction(false, true)]
-    [ReplaceSkill(SCH.Physick)]
-    [CustomComboInfo("Simple Heals - Single Target",
-        "Change Physick into Adloquium, Lustrate, then Physick with below options:", SCH.JobID)]
-    SCH_ST_Heal = 16023,
+    [ReplaceSkill(SCH.FeyBlessing)]
+    [CustomComboInfo("Fey Blessing to Seraph's Consolation Feature",
+        "Change Fey Blessing into Consolation when Seraph is out.", SCH.JobID)]
+    SCH_Consolation = 16013,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value:", SCH.JobID)]
-    SCH_ST_Heal_Lucid = 16024,
+    [ReplaceSkill(SCH.Lustrate)]
+    [CustomComboInfo("Lustrate to Excogitation Feature",
+        "Change Lustrate into Excogitation when Excogitation is ready.", SCH.JobID)]
+    SCH_Lustrate = 16014,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Aetherflow Weave Option", "Use Aetherflow when out of Aetherflow stacks.", SCH.JobID)]
-    SCH_ST_Heal_Aetherflow = 16025,
+    [ParentCombo(SCH_Lustrate)]
+    [CustomComboInfo("以太超流", "没豆子且在战斗中的话，先【以太超流】拿豆子。", SCH.JobID)]
+    SCH_Lustrate_以太超流 = 1601401,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Disspation Option", "Use Dissipation when out of Aetherflow stacks.", SCH.JobID)]
-    SCH_ST_Heal_Dissipation = 16040,
+    [ParentCombo(SCH_Lustrate)]
+    [CustomComboInfo("生命回生法", "在抬血前，先插入生命回生法提高疗效。", SCH.JobID)]
+    SCH_Lustrate_生命回生法 = 1601402,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", SCH.JobID)]
-    SCH_ST_Heal_Esuna = 16026,
+    [ParentCombo(SCH_Lustrate)]
+    [CustomComboInfo("戴绿帽", "若目标生命值高于90%，则优先使用【深谋远虑之策】。", SCH.JobID)]
+    SCH_Lustrate_深谋远虑之策 = 1601403,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Adloquium Option", "Use Adloquium when missing Galvanize or target HP%% below:", SCH.JobID)]
-    SCH_ST_Heal_Adloquium = 16027,
+    [ParentCombo(SCH_Lustrate)]
+    [CustomComboInfo("应急单盾", "使用【应急战术】-【鼓舞激励之策】来抬血。", SCH.JobID)]
+    SCH_Lustrate_应急单盾 = 1601404,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Lustrate Option", "Use Lustrate when target HP%% below:", SCH.JobID)]
-    SCH_ST_Heal_Lustrate = 16028,
+    [ReplaceSkill(SCH.Recitation)]
+    [CustomComboInfo("Recitation Combo Feature",
+        "Change Recitation into either Adloquium, Succor, Indomitability, or Excogitation when used.", SCH.JobID)]
+    SCH_Recitation = 16015,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Excogitation Option", "Use Excogitation when target HP%% below:", SCH.JobID)]
-    SCH_ST_Heal_Excogitation = 16038,
+    [ReplaceSkill(SCH.WhisperingDawn)]
+    [CustomComboInfo("Fairy Healing Combo Feature",
+        "Change Whispering Dawn into Fey Illumination, Fey Blessing, then Whispering Dawn when used.", SCH.JobID)]
+    SCH_Fairy_Combo = 16016,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Protraction Option", "Use Protraction when target HP%% below:", SCH.JobID)]
-    SCH_ST_Heal_Protraction = 16039,
+    [ParentCombo(SCH_Fairy_Combo)]
+    [CustomComboInfo("Consolation During Seraph Option", "Adds Consolation during Seraph.", SCH.JobID)]
+    SCH_Fairy_Combo_Consolation = 16017,
 
-    [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Aetherpact Option", "Use Aetherpact when target HP%% below:", SCH.JobID)]
-    SCH_ST_Heal_Aetherpact = 16047,
+    [ReplaceSkill(SCH.DeploymentTactics)]
+    [ConflictingCombos(SCH_DeploymentTactics)]
+    [CustomComboInfo("展开战术-动画整合", "按秘策-生命回春法-即刻咏唱-单盾-展开战术的顺序释放技能", SCH.JobID)]
+    SCH_DeploymentTactics2 = 1604701,
 
+    [ReplaceSkill(SCH.Indomitability)]
+    [CustomComboInfo("异想的祥光 替换 不屈不挠之策", "当异想的祥光可用时，用异想的祥光替换不屈不挠之策。", SCH.JobID)]
+    SCH_Indomitability = 16050,
+
+    [ReplaceSkill(SCH.Dissipation)]
+    [CustomComboInfo("转化整合", "整合炽天召唤/慰藉/炽天附体/转化", SCH.JobID)]
+    SCH_Fairy_Combo3 = 16051,
     #endregion
 
     #region Utilities
@@ -5369,11 +5418,14 @@ public enum CustomComboPreset
     [CustomComboInfo("Dissipation Option", "If Aetherflow is on cooldown, show Dissipation instead.", SCH.JobID)]
     SCH_Aetherflow_Dissipation = 16031,
 
-    [ReplaceSkill(All.Swiftcast)]
-    [ConflictingCombos(ALL_Healer_Raise)]
+    [ReplaceSkill(SCH.Resurrection)]
     [CustomComboInfo("Swiftcast Raise Combo Feature",
         "Changes Swiftcast to Resurrection while Swiftcast is on cooldown.", SCH.JobID)]
     SCH_Raise = 16032,
+
+    [ParentCombo(SCH_Raise)]
+    [CustomComboInfo("复生 - 喊话","在你使用复生后，发送一条消息到小队频道。", SCH.JobID)]
+    SCH_Raise_Say = 1603201,
 
     [ReplaceSkill(SCH.WhisperingDawn, SCH.FeyIllumination, SCH.FeyBlessing, SCH.Aetherpact, SCH.Dissipation,
         SCH.SummonSeraph)]
@@ -5404,7 +5456,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 16047
+    // Last value = 16048
 
     #endregion
 
