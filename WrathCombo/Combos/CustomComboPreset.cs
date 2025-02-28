@@ -4089,7 +4089,7 @@ public enum CustomComboPreset
     RPR_ST_AdvancedMode = 12001,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.\n Does not check positional choice.\n Always does Gibbet first (FLANK)", RPR.JobID)]
+    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.", RPR.JobID)]
     RPR_ST_Opener = 12002,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
