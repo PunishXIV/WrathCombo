@@ -11,6 +11,7 @@
 		<PackageProjectUrl></PackageProjectUrl>
 		<TargetFramework>net8.0-windows</TargetFramework>
 		<Configurations>Debug;Release</Configurations>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
 	</PropertyGroup>
 
 	<PropertyGroup>

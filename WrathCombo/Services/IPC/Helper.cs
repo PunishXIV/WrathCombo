@@ -73,6 +73,14 @@ public partial class Helper(ref Leasing leasing)
     /// <param name="enabledStateToCheck">
     ///     The <see cref="ComboStateKeys">State</see> to check.
     /// </param>
+    /// <param name="previousMatch">
+    ///     The <see cref="ComboSimplicityLevelKeys">Simplicity Level</see> that
+    ///     was used in the last call of this method, to make sure that it uses
+    ///     the same level for both checking if enabled and enabled in Auto-Mode.
+    ///     <br />
+    ///     Or <see langword="null" /> if it is the first call, so the level can be
+    ///     set.
+    /// </param>
     /// <returns>
     ///     Whether the current job has simple or advanced combo enabled
     ///     (however specified) for the target type specified.
@@ -80,7 +88,9 @@ public partial class Helper(ref Leasing leasing)
     /// <seealso cref="Provider.IsCurrentJobConfiguredOn" />
     /// <seealso cref="Provider.IsCurrentJobAutoModeOn" />
     internal bool CheckCurrentJobModeIsEnabled
-        (ComboTargetTypeKeys mode, ComboStateKeys enabledStateToCheck)
+            (ComboTargetTypeKeys mode,
+            ComboStateKeys enabledStateToCheck,
+            ref ComboSimplicityLevelKeys? previousMatch)
     {
         if (CustomComboFunctions.LocalPlayer is null)
             return false;
@@ -104,6 +114,24 @@ public partial class Helper(ref Leasing leasing)
             simpleResults?.FirstOrDefault().Value;
         var advanced =
             comboStates[mode][ComboSimplicityLevelKeys.Advanced].First().Value;
+
+        // Save the simplicity level, so the same level can be checked for enabled
+        // and enabled in Auto-Mode
+        if (previousMatch is null)
+        {
+            if (simple is not null && simple[enabledStateToCheck])
+                previousMatch = ComboSimplicityLevelKeys.Simple;
+            else if (advanced[enabledStateToCheck])
+                previousMatch = ComboSimplicityLevelKeys.Advanced;
+        }
+
+        // If the simplicity level is set, check that specifically instead of either
+        if (previousMatch is not null)
+        {
+            if (previousMatch == ComboSimplicityLevelKeys.Simple)
+                return simple is not null && simple[enabledStateToCheck];
+            return advanced[enabledStateToCheck];
+        }
 
         return simple is not null && simple[enabledStateToCheck] ||
                advanced[enabledStateToCheck];
