@@ -2982,7 +2982,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Riddle of Fire Option", "Adds Riddle of Fire to the rotation", MNK.JobID)]
     MNK_STUseROF = 9011,
 
-    [ParentCombo(MNK_STUseROF)]
+    [ParentCombo(MNK_STUseBuffs)]
     [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to the rotation", MNK.JobID)]
     MNK_STUseFiresReply = 9016,
 
@@ -2990,7 +2990,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Riddle of Wind Option", "Adds Riddle of Wind to the rotation", MNK.JobID)]
     MNK_STUseROW = 9010,
 
-    [ParentCombo(MNK_STUseROW)]
+    [ParentCombo(MNK_STUseBuffs)]
     [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to the rotation", MNK.JobID)]
     MNK_STUseWindsReply = 9015,
 

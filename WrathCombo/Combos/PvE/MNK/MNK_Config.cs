@@ -1,4 +1,5 @@
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
@@ -8,9 +9,9 @@ internal partial class MNK
     internal static class Config
     {
         public static UserInt
-            MNK_ST_Brotherhood_HP = new("MNK_ST_Brotherhood_HP", 0),
-            MNK_ST_RiddleOfFire_HP = new("MNK_ST_RiddleOfFire_HP", 0),
-            MNK_ST_RiddleOfWind_HP = new("MNK_ST_RiddleOfWind_HP", 0),
+            MNK_ST_Brotherhood_SubOption = new("MNK_ST_Brotherhood_SubOption", 1),
+            MNK_ST_RiddleOfFire_SubOption = new("MNK_ST_RiddleOfFire_SubOption", 1),
+            MNK_ST_RiddleOfWind_SubOption = new("MNK_ST_RiddleOfWind_SubOption", 1),
             MNK_AoE_Brotherhood_HP = new("MNK_AoE_Brotherhood_HP", 5),
             MNK_AoE_RiddleOfWind_HP = new("MNK_AoE_RiddleOfWind_HP", 5),
             MNK_AoE_RiddleOfFire_HP = new("MNK_AoE_RiddleOfFire_HP", 5),
@@ -45,20 +46,29 @@ internal partial class MNK
                     break;
 
                 case CustomComboPreset.MNK_STUseBrotherhood:
-                    DrawSliderInt(0, 100, MNK_ST_Brotherhood_HP,
-                        $"Stop Using {Brotherhood.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                    DrawHorizontalRadioButton(MNK_ST_Brotherhood_SubOption,
+                        "All content", $"Uses {ActionWatching.GetActionName(Brotherhood)} regardless of content.", 0);
+
+                    DrawHorizontalRadioButton(MNK_ST_Brotherhood_SubOption,
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(Brotherhood)} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.MNK_STUseROF:
-                    DrawSliderInt(0, 100, MNK_ST_RiddleOfFire_HP,
-                        $"Stop Using {RiddleOfFire.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                    DrawHorizontalRadioButton(MNK_ST_RiddleOfFire_SubOption,
+                        "All content", $"Uses {ActionWatching.GetActionName(RiddleOfFire)} regardless of content.", 0);
+
+                    DrawHorizontalRadioButton(MNK_ST_RiddleOfFire_SubOption,
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(RiddleOfFire)} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.MNK_STUseROW:
-                    DrawSliderInt(0, 100, MNK_ST_RiddleOfWind_HP,
-                        $"Stop Using {RiddleOfWind.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                    DrawHorizontalRadioButton(MNK_ST_RiddleOfWind_SubOption,
+                        "All content", $"Uses {ActionWatching.GetActionName(RiddleOfWind)} regardless of content.", 0);
+
+                    DrawHorizontalRadioButton(MNK_ST_RiddleOfWind_SubOption,
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(RiddleOfWind)} when in Boss encounters.", 1);
 
                     break;
 
