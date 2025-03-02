@@ -166,8 +166,7 @@ internal partial class SAM
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([2], 11, () => !TargetNeedsPositionals()),
-            ([20], Shinten, () => Gauge.Kenki >= 25)
+            ([2], 11, () => !TargetNeedsPositionals())
         ];
 
         public override bool HasCooldowns()

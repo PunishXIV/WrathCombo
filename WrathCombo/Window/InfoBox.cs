@@ -9,8 +9,8 @@ namespace WrathCombo.Window
     internal class InfoBox
     {
         public Vector4 Color { get; set; } = Colors.White;
-        public Action ContentsAction { get; set; }
-        public Func<bool> ContentsFunc { get; set; }
+        public Action ContentsAction { get; set; } = null!;
+        public Func<bool> ContentsFunc { get; set; } = null!;
         public bool FuncRes { get; set; }
         public float CurveRadius { get; set; } = 1f;
         public float ContentsOffset { get; set; } = 0f;

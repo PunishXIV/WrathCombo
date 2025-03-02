@@ -1,9 +1,11 @@
 ﻿#region
 
-using Dalamud.Game.ClientState.JobGauge.Types;
+using System;
+using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.Logging;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
-using WrathCombo.Services;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -34,9 +36,9 @@ internal partial class DNC
             var targetHpThresholdFeather = Config.DNC_ST_Adv_FeatherBurstPercent;
             var targetHpThresholdStandard = Config.DNC_ST_Adv_SSBurstPercent;
             var targetHpThresholdTechnical = Config.DNC_ST_Adv_TSBurstPercent;
-            var gcd = GetCooldown(Fountain).CooldownTotal;
             var tillanaDriftProtectionActive =
-                Config.DNC_ST_ADV_TillanaUse == (int)Config.TillanaDriftProtection.Favor;
+                Config.DNC_ST_ADV_TillanaUse ==
+                (int)Config.TillanaDriftProtection.Favor;
 
             // Thresholds to wait for TS/SS to come off CD
             var longAlignmentThreshold = 0.6f;
@@ -66,8 +68,8 @@ internal partial class DNC
             if (Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Hold ||
                 Config.DNC_ST_ADV_AntiDrift == (int)Config.AntiDrift.Both)
             {
-                longAlignmentThreshold = gcd;
-                shortAlignmentThreshold = gcd;
+                longAlignmentThreshold = (float)GCD;
+                shortAlignmentThreshold = (float)GCD;
             }
 
             var needToFinish =
@@ -75,7 +77,7 @@ internal partial class DNC
                 HasEffect(Buffs.FinishingMoveReady) &&
                 !HasEffect(Buffs.LastDanceReady) &&
                 ((GetCooldownRemainingTime(StandardStep) < longAlignmentThreshold &&
-                  HasEffect(Buffs.TechnicalFinish)) ||// Aggressive anti-drift
+                  HasEffect(Buffs.TechnicalFinish)) || // Aggressive anti-drift
                  (!HasEffect(Buffs.TechnicalFinish) && // Anti-Drift outside of Tech
                   GetCooldownRemainingTime(StandardStep) <
                   shortAlignmentThreshold));
@@ -152,14 +154,14 @@ internal partial class DNC
                 HasEffect(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
-                    : StandardFinish2;
+                    : FinishOrHold(StandardFinish2);
 
             // ST Technical (Dance) Steps & Fill
             if ((IsEnabled(CustomComboPreset.DNC_ST_Adv_TS)) &&
                 HasEffect(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
-                    : TechnicalFinish4;
+                    : FinishOrHold(TechnicalFinish4);
 
             #endregion
 
@@ -209,19 +211,20 @@ internal partial class DNC
                     return FanDance4;
             }
 
-            // ST Interrupt
-            if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Interrupt) &&
-                CanInterruptEnemy() &&
-                ActionReady(All.HeadGraze) &&
-                !HasEffect(Buffs.TechnicalFinish))
-                return All.HeadGraze;
-
             // Variant Cure
             if (IsEnabled(CustomComboPreset.DNC_Variant_Cure) &&
                 IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <=
                 GetOptionValue(Config.DNCVariantCurePercent))
                 return Variant.VariantCure;
+
+            // ST Interrupt
+            if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Interrupt) &&
+                CanWeave() &&
+                CanInterruptEnemy() &&
+                ActionReady(All.HeadGraze) &&
+                !HasEffect(Buffs.TechnicalFinish))
+                return All.HeadGraze;
 
             // Variant Rampart
             if (IsEnabled(CustomComboPreset.DNC_Variant_Rampart) &&
@@ -232,13 +235,19 @@ internal partial class DNC
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
-                if (HasEffect(Buffs.ThreeFoldFanDance))
-                    return FanDance3;
+                // ST Fans
+                if (IsEnabled(CustomComboPreset.DNC_ST_Adv_FanProccs))
+                {
+                    if (IsEnabled(CustomComboPreset.DNC_ST_Adv_FanProcc3) &&
+                        HasEffect(Buffs.ThreeFoldFanDance))
+                        return FanDance3;
 
-                if (HasEffect(Buffs.FourFoldFanDance))
-                    return FanDance4;
+                    if (IsEnabled(CustomComboPreset.DNC_ST_Adv_FanProcc4) &&
+                        HasEffect(Buffs.FourFoldFanDance))
+                        return FanDance4;
+                }
 
-                // ST Feathers & Fans
+                // ST Feathers
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Feathers) &&
                     LevelChecked(FanDance1))
                 {
@@ -286,7 +295,8 @@ internal partial class DNC
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Improvisation) &&
                     ActionReady(Improvisation) &&
                     !HasEffect(Buffs.TechnicalFinish) &&
-                    InCombat())
+                    InCombat() &&
+                    EnemyIn8Yalms)
                     return Improvisation;
             }
 
@@ -311,7 +321,7 @@ internal partial class DNC
                 return LastDance;
 
             // ST Standard Step (Finishing Move)
-            if (needToStandardOrFinish && needToFinish)
+            if (needToStandardOrFinish && needToFinish && EnemyIn15Yalms)
                 return OriginalHook(FinishingMove);
 
             // ST Standard Step
@@ -329,8 +339,10 @@ internal partial class DNC
                 LevelChecked(DanceOfTheDawn) &&
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                  IsOffCooldown(TechnicalStep)) && // Tech is up
-                (Gauge.Esprit >= Config.DNC_ST_Adv_SaberThreshold || // >esprit threshold use
-                 (HasEffect(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
+                (Gauge.Esprit >=
+                 Config.DNC_ST_Adv_SaberThreshold || // >esprit threshold use
+                 (HasEffect(Buffs
+                      .TechnicalFinish) && // will overcap with Tillana if not used
                   !tillanaDriftProtectionActive && Gauge.Esprit >= 50) ||
                  (GetBuffRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
                   Gauge.Esprit >= 50))) // emergency use
@@ -355,7 +367,8 @@ internal partial class DNC
 
             // ST Tillana
             if (HasEffect(Buffs.FlourishingFinish) &&
-                IsEnabled(CustomComboPreset.DNC_ST_Adv_Tillana))
+                IsEnabled(CustomComboPreset.DNC_ST_Adv_Tillana) &&
+                EnemyIn15Yalms)
                 return Tillana;
 
             // ST Saber Dance
@@ -428,7 +441,7 @@ internal partial class DNC
                 HasEffect(Buffs.FinishingMoveReady) &&
                 !HasEffect(Buffs.LastDanceReady) &&
                 ((GetCooldownRemainingTime(StandardStep) < longAlignmentThreshold &&
-                  HasEffect(Buffs.TechnicalFinish)) ||// Aggressive anti-drift
+                  HasEffect(Buffs.TechnicalFinish)) || // Aggressive anti-drift
                  (!HasEffect(Buffs.TechnicalFinish) && // Anti-Drift outside of Tech
                   GetCooldownRemainingTime(StandardStep) <
                   shortAlignmentThreshold));
@@ -532,16 +545,17 @@ internal partial class DNC
                     return FanDance4;
             }
 
-            // ST Interrupt
-            if (CanInterruptEnemy() &&
-                ActionReady(All.HeadGraze) &&
-                !HasEffect(Buffs.TechnicalFinish))
-                return All.HeadGraze;
-
             // Variant Cure
             if (IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <= 50)
                 return Variant.VariantCure;
+
+            // ST Interrupt
+            if (CanInterruptEnemy() &&
+                CanWeave() &&
+                ActionReady(All.HeadGraze) &&
+                !HasEffect(Buffs.TechnicalFinish))
+                return All.HeadGraze;
 
             // Variant Rampart
             if (IsEnabled(Variant.VariantRampart) &&
@@ -575,9 +589,7 @@ internal partial class DNC
                         // FD1 Pooling
                         if (Gauge.Feathers > 3 &&
                             (HasEffect(Buffs.SilkenSymmetry) ||
-                             HasEffect(Buffs.SilkenFlow))
-                           )
-
+                             HasEffect(Buffs.SilkenFlow)))
                             return FanDance1;
                     }
 
@@ -588,7 +600,7 @@ internal partial class DNC
 
                 // ST Panic Heals
 
-               if (ActionReady(All.SecondWind) &&
+                if (ActionReady(All.SecondWind) &&
                     PlayerHealthPercentageHp() < 40)
                     return All.SecondWind;
             }
@@ -613,7 +625,7 @@ internal partial class DNC
                 return LastDance;
 
             // ST Standard Step (Finishing Move)
-            if (needToStandardOrFinish && needToFinish)
+            if (needToStandardOrFinish && needToFinish && EnemyIn15Yalms)
                 return OriginalHook(FinishingMove);
 
             // ST Standard Step
@@ -630,8 +642,10 @@ internal partial class DNC
                 LevelChecked(DanceOfTheDawn) &&
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
                  IsOffCooldown(TechnicalStep)) && // Tech is up
-                (Gauge.Esprit >= Config.DNC_ST_Adv_SaberThreshold || // >esprit threshold use
-                 (HasEffect(Buffs.TechnicalFinish) && // will overcap with Tillana if not used
+                (Gauge.Esprit >=
+                 Config.DNC_ST_Adv_SaberThreshold || // >esprit threshold use
+                 (HasEffect(Buffs
+                      .TechnicalFinish) && // will overcap with Tillana if not used
                   Gauge.Esprit >= 50) ||
                  (GetBuffRemainingTime(Buffs.DanceOfTheDawnReady) < 5 &&
                   Gauge.Esprit >= 50))) // emergency use
@@ -649,7 +663,8 @@ internal partial class DNC
                 return StarfallDance;
 
             // ST Tillana
-            if (HasEffect(Buffs.FlourishingFinish))
+            if (HasEffect(Buffs.FlourishingFinish) &&
+                EnemyIn15Yalms)
                 return Tillana;
 
             // ST combos and burst attacks
@@ -743,14 +758,14 @@ internal partial class DNC
                 HasEffect(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
-                    : StandardFinish2;
+                    : FinishOrHold(StandardFinish2);
 
             // AoE Technical (Dance) Steps & Fill
             if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_TS) &&
                 HasEffect(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
-                    : TechnicalFinish4;
+                    : FinishOrHold(TechnicalFinish4);
 
             #endregion
 
@@ -782,17 +797,17 @@ internal partial class DNC
                 !HasEffect(Buffs.FinishingMoveReady))
                 return Flourish;
 
-            // AoE Interrupt
-            if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Interrupt) &&
-                CanInterruptEnemy() && ActionReady(All.HeadGraze) &&
-                !HasEffect(Buffs.TechnicalFinish))
-                return All.HeadGraze;
-
             if (IsEnabled(CustomComboPreset.DNC_Variant_Cure) &&
                 IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <=
                 GetOptionValue(Config.DNCVariantCurePercent))
                 return Variant.VariantCure;
+
+            // AoE Interrupt
+            if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Interrupt) &&
+                CanInterruptEnemy() && ActionReady(All.HeadGraze) &&
+                CanWeave() && !HasEffect(Buffs.TechnicalFinish))
+                return All.HeadGraze;
 
             if (IsEnabled(CustomComboPreset.DNC_Variant_Rampart) &&
                 IsEnabled(Variant.VariantRampart) &&
@@ -802,14 +817,16 @@ internal partial class DNC
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
-                // AoE Feathers & Fans
+                // AoE Fan 3
+                if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_FanProccs) &&
+                    IsEnabled(CustomComboPreset.DNC_AoE_Adv_FanProcc3) &&
+                    HasEffect(Buffs.ThreeFoldFanDance))
+                    return FanDance3;
+
+                // AoE Feathers
                 if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_Feathers) &&
                     LevelChecked(FanDance1))
                 {
-                    // FD3
-                    if (HasEffect(Buffs.ThreeFoldFanDance))
-                        return FanDance3;
-
                     if (LevelChecked(FanDance2))
                     {
                         if (LevelChecked(TechnicalStep))
@@ -838,7 +855,10 @@ internal partial class DNC
                         return FanDance1;
                 }
 
-                if (HasEffect(Buffs.FourFoldFanDance))
+                // AoE Fan 4
+                if (IsEnabled(CustomComboPreset.DNC_AoE_Adv_FanProccs) &&
+                    IsEnabled(CustomComboPreset.DNC_AoE_Adv_FanProcc4) &&
+                    HasEffect(Buffs.FourFoldFanDance))
                     return FanDance4;
 
                 // AoE Panic Heals
@@ -1062,14 +1082,14 @@ internal partial class DNC
                 !HasEffect(Buffs.FinishingMoveReady))
                 return Flourish;
 
-            // AoE Interrupt
-            if (CanInterruptEnemy() && ActionReady(All.HeadGraze) &&
-                !HasEffect(Buffs.TechnicalFinish))
-                return All.HeadGraze;
-
             if (IsEnabled(Variant.VariantCure) &&
                 PlayerHealthPercentageHp() <= 50)
                 return Variant.VariantCure;
+
+            // AoE Interrupt
+            if (CanInterruptEnemy() && ActionReady(All.HeadGraze) &&
+                CanWeave() && !HasEffect(Buffs.TechnicalFinish))
+                return All.HeadGraze;
 
             if (IsEnabled(Variant.VariantRampart) &&
                 IsOffCooldown(Variant.VariantRampart) &&
@@ -1318,6 +1338,59 @@ internal partial class DNC
 
     #region Smaller Features
 
+    #region Dance Partner Features
+
+    /*internal class DNC_DesirablePartner : CustomCombo
+    {
+        private static DateTime _lastPartnerCheckTime = DateTime.MinValue;
+
+        protected internal override CustomComboPreset Preset =>
+            CustomComboPreset.DNC_DesirablePartner;
+
+        private static bool CurrentPartnerNonOptimal =>
+            DesirableDancePartner is not null &&
+            DesirableDancePartner.GameObjectId != CurrentDancePartner;
+
+        private static IGameObject? DesirableDancePartner
+        {
+            get
+            {
+                if ((DateTime.Now - _lastPartnerCheckTime).TotalSeconds <= 3)
+                    return field;
+
+                _lastPartnerCheckTime = DateTime.Now;
+                field = TryGetDancePartner(out var partner, true)
+                    ? partner
+                    : null;
+
+                return field;
+            }
+        }
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (ClosedPosition or Ending)) return actionID;
+
+            var currentTarget = LocalPlayer.TargetObject;
+            var noCurrentPartner = !HasEffect(Buffs.ClosedPosition);
+
+            if (noCurrentPartner || CurrentPartnerNonOptimal)
+                if (DesirableDancePartner.GameObjectId == currentTarget.GameObjectId)
+                    return Ending;
+                else
+                {
+                    SetTarget(DesirableDancePartner);
+                    TM.DelayNext(250);
+                    TM.Enqueue(() => SetTarget(currentTarget));
+                    return ClosedPosition;
+                }
+
+            return actionID;
+        }
+    }*/
+
+    #endregion
+
     #region Dance Features
 
     internal class DNC_DanceStepCombo : CustomCombo
@@ -1334,14 +1407,14 @@ internal partial class DNC
                 HasEffect(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
-                    : StandardFinish2;
+                    : FinishOrHold(StandardFinish2);
 
             // Technical Step
             if (actionID is TechnicalStep && Gauge.IsDancing &&
                 HasEffect(Buffs.TechnicalStep))
                 return Gauge.CompletedSteps < 4
                     ? Gauge.NextStep
-                    : TechnicalFinish4;
+                    : FinishOrHold(TechnicalFinish4);
 
             return actionID;
         }
@@ -1473,7 +1546,8 @@ internal partial class DNC
         protected internal override CustomComboPreset Preset =>
             CustomComboPreset.DNC_TechnicalStep_Devilment;
 
-        protected override uint Invoke(uint actionID) {
+        protected override uint Invoke(uint actionID)
+        {
             if (actionID is not TechnicalStep) return actionID;
 
             if (WantsCustomStepsOnSmallerFeatures)

@@ -70,10 +70,10 @@ internal partial class MCH
 
                             // Only Hypercharge when tools are on cooldown
                             if (DrillCD && AnchorCD && SawCD &&
-                                (LevelChecked(Wildfire) &&
-                                 (!InBossEncounter() && IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist) ||
-                                  InBossEncounter() && GetCooldownRemainingTime(Wildfire) > 40) ||
-                                 !LevelChecked(Wildfire)))
+                                (!LevelChecked(Wildfire) ||
+                                 LevelChecked(Wildfire) &&
+                                 (GetCooldownRemainingTime(Wildfire) > 40 ||
+                                  IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist))))
                                 return Hypercharge;
                         }
 
@@ -110,8 +110,9 @@ internal partial class MCH
                 if (JustUsed(OriginalHook(Heatblast), 1f) && HasNotWeaved)
                 {
                     if (ActionReady(GaussRound) &&
-                        GetRemainingCharges(OriginalHook(GaussRound)) >=
-                        GetRemainingCharges(OriginalHook(Ricochet)))
+                        (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                         GetRemainingCharges(OriginalHook(Ricochet)) ||
+                         !LevelChecked(Ricochet)))
                         return OriginalHook(GaussRound);
 
                     if (ActionReady(Ricochet) &&
@@ -206,8 +207,7 @@ internal partial class MCH
                     if (IsEnabled(CustomComboPreset.MCH_ST_Adv_WildFire) &&
                         (Config.MCH_ST_Adv_Wildfire_SubOption == 0 ||
                          Config.MCH_ST_Adv_Wildfire_SubOption == 1 && InBossEncounter()) &&
-                        JustUsed(Hypercharge) && ActionReady(Wildfire) && !HasEffect(Buffs.Wildfire) &&
-                        GetTargetHPPercent() >= Config.MCH_ST_WildfireHP)
+                        JustUsed(Hypercharge) && ActionReady(Wildfire) && !HasEffect(Buffs.Wildfire))
                         return Wildfire;
 
                     if (!Gauge.IsOverheated)
@@ -224,8 +224,7 @@ internal partial class MCH
                         if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Hypercharge) &&
                             (Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) &&
                             !IsComboExpiring(6) &&
-                            LevelChecked(Hypercharge) &&
-                            GetTargetHPPercent() >= Config.MCH_ST_HyperchargeHP)
+                            LevelChecked(Hypercharge))
                         {
                             // Ensures Hypercharge is double weaved with WF
                             if (LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
@@ -236,11 +235,10 @@ internal partial class MCH
 
                             // Only Hypercharge when tools are on cooldown
                             if (DrillCD && AnchorCD && SawCD &&
-                                (LevelChecked(Wildfire) &&
-                                 (!InBossEncounter() && IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist) ||
-                                  (Config.MCH_ST_Adv_Wildfire_SubOption == 0 ||
-                                   Config.MCH_ST_Adv_Wildfire_SubOption == 1 && InBossEncounter()) && GetCooldownRemainingTime(Wildfire) > 40) ||
-                                 !LevelChecked(Wildfire)))
+                                (!LevelChecked(Wildfire) ||
+                                 LevelChecked(Wildfire) && 
+                                 (GetCooldownRemainingTime(Wildfire) > 40 || 
+                                  IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist))))
                                 return Hypercharge;
                         }
 
@@ -263,10 +261,12 @@ internal partial class MCH
                              JustUsed(Excavator, 2f)))
                         {
                             if (ActionReady(GaussRound) &&
+                                GetRemainingCharges(OriginalHook(GaussRound)) > Config.MCH_ST_GaussRicoPool &&
                                 !JustUsed(OriginalHook(GaussRound), 2f))
                                 return OriginalHook(GaussRound);
 
                             if (ActionReady(Ricochet) &&
+                                GetRemainingCharges(OriginalHook(Ricochet)) > Config.MCH_ST_GaussRicoPool &&
                                 !JustUsed(OriginalHook(Ricochet), 2f))
                                 return OriginalHook(Ricochet);
                         }
@@ -284,11 +284,14 @@ internal partial class MCH
                     JustUsed(OriginalHook(Heatblast), 1f) && HasNotWeaved)
                 {
                     if (ActionReady(GaussRound) &&
-                        GetRemainingCharges(OriginalHook(GaussRound)) >=
-                        GetRemainingCharges(OriginalHook(Ricochet)))
+                        GetRemainingCharges(OriginalHook(GaussRound)) > Config.MCH_ST_GaussRicoPool &&
+                        (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                         GetRemainingCharges(OriginalHook(Ricochet)) ||
+                         !LevelChecked(Ricochet)))
                         return OriginalHook(GaussRound);
 
                     if (ActionReady(Ricochet) &&
+                        GetRemainingCharges(OriginalHook(Ricochet)) > Config.MCH_ST_GaussRicoPool &&
                         GetRemainingCharges(OriginalHook(Ricochet)) >
                         GetRemainingCharges(OriginalHook(GaussRound)))
                         return OriginalHook(Ricochet);
@@ -399,8 +402,9 @@ internal partial class MCH
                      JustUsed(OriginalHook(Heatblast), 1f)) && HasNotWeaved)
                 {
                     if (ActionReady(GaussRound) &&
-                        GetRemainingCharges(OriginalHook(GaussRound)) >=
-                        GetRemainingCharges(OriginalHook(Ricochet)))
+                        (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                         GetRemainingCharges(OriginalHook(Ricochet)) ||
+                         !LevelChecked(Ricochet)))
                         return OriginalHook(GaussRound);
 
                     if (ActionReady(Ricochet) &&
@@ -554,8 +558,9 @@ internal partial class MCH
                      JustUsed(OriginalHook(Heatblast), 1f)) && HasNotWeaved)
                 {
                     if (ActionReady(GaussRound) &&
-                        GetRemainingCharges(OriginalHook(GaussRound)) >=
-                        GetRemainingCharges(OriginalHook(Ricochet)))
+                        (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                         GetRemainingCharges(OriginalHook(Ricochet)) ||
+                         !LevelChecked(Ricochet)))
                         return OriginalHook(GaussRound);
 
                     if (ActionReady(Ricochet) &&
@@ -641,8 +646,9 @@ internal partial class MCH
                 HasNotWeaved)
             {
                 if (ActionReady(GaussRound) &&
-                    GetRemainingCharges(OriginalHook(GaussRound)) >=
-                    GetRemainingCharges(OriginalHook(Ricochet)))
+                    (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                     GetRemainingCharges(OriginalHook(Ricochet)) ||
+                     !LevelChecked(Ricochet)))
                     return OriginalHook(GaussRound);
 
                 if (ActionReady(Ricochet) &&
@@ -680,8 +686,9 @@ internal partial class MCH
                 CanWeave() && JustUsed(OriginalHook(AutoCrossbow), 1f) && HasNotWeaved)
             {
                 if (ActionReady(GaussRound) &&
-                    GetRemainingCharges(OriginalHook(GaussRound)) >=
-                    GetRemainingCharges(OriginalHook(Ricochet)))
+                    (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                     GetRemainingCharges(OriginalHook(Ricochet)) ||
+                     !LevelChecked(Ricochet)))
                     return OriginalHook(GaussRound);
 
                 if (ActionReady(Ricochet) &&
@@ -707,8 +714,9 @@ internal partial class MCH
                 return actionID;
 
             if (ActionReady(GaussRound) &&
-                GetRemainingCharges(OriginalHook(GaussRound)) >=
-                GetRemainingCharges(OriginalHook(Ricochet)))
+                (GetRemainingCharges(OriginalHook(GaussRound)) >=
+                 GetRemainingCharges(OriginalHook(Ricochet)) ||
+                 !LevelChecked(Ricochet)))
                 return OriginalHook(GaussRound);
 
             if (ActionReady(Ricochet) &&

@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -10,7 +11,7 @@ internal partial class RPR
 {
     internal static RPRGauge Gauge = GetJobGauge<RPRGauge>();
     internal static RPROpenerMaxLevel1 Opener1 = new();
-    
+
     internal static float GCD => GetCooldown(Slice).CooldownTotal;
 
     internal static bool TrueNorthReady =>
@@ -117,6 +118,8 @@ internal partial class RPR
         return false;
     }
 
+    #region Openers
+    
     internal class RPROpenerMaxLevel1 : WrathOpener
     {
         public override int MinOpenerLevel => 100;
@@ -129,8 +132,8 @@ internal partial class RPR
             SoulSlice,
             ArcaneCircle,
             Gluttony,
-            ExecutionersGibbet,
-            ExecutionersGallows,
+            ExecutionersGibbet, //5
+            ExecutionersGallows, //6
             SoulSlice,
             PlentifulHarvest,
             Enshroud,
@@ -143,11 +146,20 @@ internal partial class RPR
             LemuresSlice,
             Communio,
             Perfectio,
-            UnveiledGibbet,
-            Gibbet,
+            UnveiledGibbet, //19
+            Gibbet, //20
             ShadowOfDeath,
             Slice
         ];
+
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        [
+            ([5], ExecutionersGallows, () => OnTargetsRear()),
+            ([6], ExecutionersGibbet, () => HasEffect(Buffs.EnhancedGibbet)),
+            ([19], UnveiledGallows, () => HasEffect(Buffs.EnhancedGallows)),
+            ([20], Gallows, () => HasEffect(Buffs.EnhancedGallows))
+        ];
+        
         internal override UserData ContentCheckConfig => Config.RPR_Balance_Content;
 
         public override bool HasCooldowns()
@@ -164,6 +176,8 @@ internal partial class RPR
             return true;
         }
     }
+    
+    #endregion
 
     #region ID's
 

@@ -38,7 +38,16 @@ internal partial class DRK
             // Opener
             if (IsEnabled(CustomComboPreset.DRK_ST_BalanceOpener)
                 && Opener().FullOpener(ref actionID))
+            {
+                handleEdgeCasts(Opener().CurrentOpenerAction, ref actionID,
+                [
+                    ScarletDelirium,
+                    Comeuppance,
+                    Torcleaver,
+                    Bloodspiller,
+                ]);
                 return actionID;
+            }
 
             // Bail if not in combat
             if (!InCombat()) return HardSlash;
@@ -210,32 +219,34 @@ internal partial class DRK
                 ActionReady(BloodWeapon))
                 return OriginalHook(Delirium);
 
-            if (IsOffCooldown(LivingShadow)
-                && LevelChecked(LivingShadow))
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_Shadow) &&
+                IsOffCooldown(LivingShadow) &&
+                LevelChecked(LivingShadow))
                 return LivingShadow;
 
-            if (IsOffCooldown(Disesteem)
-                && LevelChecked(Disesteem))
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_Disesteem) &&
+                IsOffCooldown(Disesteem) &&
+                LevelChecked(Disesteem))
                 return Disesteem;
 
-            if (IsOffCooldown(SaltedEarth)
-                && LevelChecked(SaltedEarth) &&
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_SaltedEarth) &&
+                IsOffCooldown(SaltedEarth) &&
+                LevelChecked(SaltedEarth) &&
                 !HasEffect(Buffs.SaltedEarth))
                 return SaltedEarth;
 
-            if (IsOffCooldown(CarveAndSpit)
-                && LevelChecked(AbyssalDrain))
+            if (IsOffCooldown(CarveAndSpit) &&
+                LevelChecked(AbyssalDrain))
                 return actionID;
 
-            if (IsOffCooldown(SaltAndDarkness)
-                && HasEffect(Buffs.SaltedEarth)
-                && LevelChecked(SaltAndDarkness))
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_SaltAndDarkness) &&
+                IsOffCooldown(SaltAndDarkness) &&
+                LevelChecked(SaltAndDarkness) &&
+                HasEffect(Buffs.SaltedEarth))
                 return SaltAndDarkness;
 
-            if (IsEnabled(CustomComboPreset.DRK_oGCD_Shadowbringer)
-                && GetCooldownRemainingTime(Shadowbringer) < 60
-                && LevelChecked(Shadowbringer)
-                && Gauge.DarksideTimeRemaining > 0)
+            if (IsEnabled(CustomComboPreset.DRK_oGCD_Shadowbringer) &&
+                ActionReady(Shadowbringer))
                 return Shadowbringer;
 
             return actionID;

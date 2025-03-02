@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.Services;
@@ -16,17 +17,23 @@ namespace WrathCombo.CustomComboNS.Functions
         public static float GetOptionFloat(string SliderID) => PluginConfiguration.GetCustomFloatValue(SliderID);
     }
 
-    internal class UserData(string v)
+    internal abstract class UserData(string v)
     {
         public string pName = v;
 
         public static implicit operator string(UserData o) => (o.pName);
+
+        public static Dictionary<string, UserData> MasterList = new();
+
+        public abstract void ResetToDefault();
     }
 
     internal class UserFloat : UserData
     {
         // Constructor with only the string parameter
         public UserFloat(string v) : this(v, 0.0f) { }
+
+        public float Default;
 
         // Constructor with both string and float parameters
         public UserFloat(string v, float defaults) : base(v) // Overload constructor to preload data
@@ -36,10 +43,19 @@ namespace WrathCombo.CustomComboNS.Functions
                 PluginConfiguration.SetCustomFloatValue(this.pName, defaults);
                 Service.Configuration.Save();
             }
+
+            Default = defaults;
+            MasterList.Add(this.pName, this);
         }
 
         // Implicit conversion to float
         public static implicit operator float(UserFloat o) => PluginConfiguration.GetCustomFloatValue(o.pName);
+
+        public override void ResetToDefault()
+        {
+            PluginConfiguration.SetCustomFloatValue(this.pName, Default);
+            Service.Configuration.Save();
+        }
     }
 
     internal class UserInt : UserData
@@ -47,6 +63,7 @@ namespace WrathCombo.CustomComboNS.Functions
         // Constructor with only the string parameter
         public UserInt(string v) : this(v, 0) { } // Chaining to the other constructor with a default value
 
+        public int Default;
         // Constructor with both string and int parameters
         public UserInt(string v, int defaults) : base(v) // Overload constructor to preload data
         {
@@ -55,16 +72,27 @@ namespace WrathCombo.CustomComboNS.Functions
                 PluginConfiguration.SetCustomIntValue(this.pName, defaults);
                 Service.Configuration.Save();
             }
+
+            Default = defaults;
+            MasterList.Add(this.pName, this);
         }
 
         // Implicit conversion to int
         public static implicit operator int(UserInt o) => PluginConfiguration.GetCustomIntValue(o.pName);
+
+        public override void ResetToDefault()
+        {
+            PluginConfiguration.SetCustomIntValue(this.pName, Default);
+            Service.Configuration.Save();
+        }
     }
 
     internal class UserBool : UserData
     {
         // Constructor with only the string parameter
         public UserBool(string v) : this(v, false) { }
+
+        public bool Default;
 
         // Constructor with both string and bool parameters
         public UserBool(string v, bool defaults) : base(v) // Overload constructor to preload data
@@ -74,15 +102,26 @@ namespace WrathCombo.CustomComboNS.Functions
                 PluginConfiguration.SetCustomBoolValue(this.pName, defaults);
                 Service.Configuration.Save();
             }
+
+            Default = defaults;
+            MasterList.Add(this.pName, this);
         }
 
         // Implicit conversion to bool
         public static implicit operator bool(UserBool o) => PluginConfiguration.GetCustomBoolValue(o.pName);
+
+        public override void ResetToDefault()
+        {
+            PluginConfiguration.SetCustomBoolValue(this.pName, Default);
+            Service.Configuration.Save();
+        }
     }
 
-    internal class UserIntArray(string v) : UserData(v)
+    internal class UserIntArray : UserData
     {
         public string Name => pName;
+
+        public int[] Default;
         public int Count => PluginConfiguration.GetCustomIntArrayValue(this.pName).Length;
         public bool Any(Func<int, bool> func) => PluginConfiguration.GetCustomIntArrayValue(this.pName).Any(func);
         public int[] Items => PluginConfiguration.GetCustomIntArrayValue(this.pName);
@@ -102,6 +141,30 @@ namespace WrathCombo.CustomComboNS.Functions
             Array.Resize(ref array, maxValues);
             PluginConfiguration.SetCustomIntArrayValue(this.pName, array);
             Service.Configuration.Save();
+        }
+
+        public UserIntArray(string v, int[] defaults) : base(v)
+        {
+            if (!PluginConfiguration.CustomIntArrayValues.ContainsKey(this.pName))
+            {
+                PluginConfiguration.SetCustomIntArrayValue(this.pName, defaults);
+                Service.Configuration.Save();
+            }
+
+            Default = defaults;
+            MasterList.Add(this.pName, this);
+        }
+
+        public UserIntArray(string v) : base(v)
+        {
+            if (!PluginConfiguration.CustomIntArrayValues.ContainsKey(this.pName))
+            {
+                PluginConfiguration.SetCustomIntArrayValue(this.pName, []);
+                Service.Configuration.Save();
+            }
+
+            Default = [];
+            MasterList.Add(this.pName, this);
         }
 
         public static implicit operator int[](UserIntArray o) => PluginConfiguration.GetCustomIntArrayValue(o.pName);
@@ -130,12 +193,20 @@ namespace WrathCombo.CustomComboNS.Functions
                 }
             }
         }
+
+        public override void ResetToDefault()
+        {
+            PluginConfiguration.SetCustomIntArrayValue(this.pName, Default);
+            Service.Configuration.Save();
+        }
     }
 
     internal class UserBoolArray : UserData
     {
         // Constructor with only the string parameter
         public UserBoolArray(string v) : this(v, []) { }
+
+        public bool[] Default;
 
         // Constructor with both string and bool array parameters
         public UserBoolArray(string v, bool[] defaults) : base(v)
@@ -145,6 +216,9 @@ namespace WrathCombo.CustomComboNS.Functions
                 PluginConfiguration.SetCustomBoolArrayValue(this.pName, defaults);
                 Service.Configuration.Save();
             }
+
+            Default = defaults;
+            MasterList.Add(this.pName, this);
         }
 
         public int Count => PluginConfiguration.GetCustomBoolArrayValue(this.pName).Length;
@@ -169,6 +243,12 @@ namespace WrathCombo.CustomComboNS.Functions
         {
             var array = PluginConfiguration.GetCustomBoolArrayValue(this.pName);
             return array.All(predicate);
+        }
+
+        public override void ResetToDefault()
+        {
+            PluginConfiguration.SetCustomBoolArrayValue(this.pName, Default);
+            Service.Configuration.Save();
         }
     }
 

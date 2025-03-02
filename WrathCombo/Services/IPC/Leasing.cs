@@ -11,8 +11,10 @@ using System.Threading.Tasks;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
+using ECommons.GameHelpers;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using CancellationReasonEnum = WrathCombo.Services.IPC.CancellationReason;
 
 // ReSharper disable UseSymbolAlias
@@ -58,7 +60,7 @@ public class Lease(
     ///     The date and time this lease was created.
     /// </summary>
     // ReSharper disable once UnusedMember.Local
-    private DateTime Created { get; } = DateTime.Now;
+    internal DateTime Created { get; } = DateTime.Now;
     /// <summary>
     ///     The date and time this lease was last updated.
     /// </summary>
@@ -317,6 +319,10 @@ public partial class Leasing
         registration.LastUpdated = DateTime.Now;
         AutoRotationStateUpdated = DateTime.Now;
 
+        // Try to build combo data before auto-rotation-readiness is requested
+        Task.Run(() => P.IPCSearch.ComboStatesByJobCategorized
+            .TryGetValue(Player.Job, out var _));
+
         Logging.Log($"{registration.PluginName}: Auto-Rotation state updated");
         return SetResult.Okay;
     }
@@ -399,6 +405,18 @@ public partial class Leasing
             {
                 locking = true;
                 stringKeys = [];
+                combos = P.IPCSearch.EnabledActions
+                    .Where(a=> a.Attributes().CustomComboInfo.JobID
+                               == (uint)currentJob)
+                    .Where(a => a.Attributes().Parent is null)
+                    .Select(a => a.ToString())
+                    .ToList();
+                options = P.IPCSearch.EnabledActions
+                    .Where(a=> a.Attributes().CustomComboInfo.JobID
+                               == (uint)currentJob)
+                    .Where(a => a.Attributes().Parent is not null)
+                    .Select(a => a.ToString())
+                    .ToList();
             }
             // Get the list of combos and options to enable
             else
@@ -536,6 +554,15 @@ public partial class Leasing
         var preset = (CustomComboPreset)
             Enum.Parse(typeof(CustomComboPreset), combo, true);
 
+        // Disable the combo of the opposite type mode, if one exists
+        var oppositeModeCombo = Helper.GetOppositeModeCombo(preset);
+        if (oppositeModeCombo is not null)
+            registration.CombosControlled[(CustomComboPreset)oppositeModeCombo] =
+                (false, false);
+        var oppositeText = oppositeModeCombo is not null
+            ? $" (Disabled opposite combo: {oppositeModeCombo})"
+            : "";
+
         registration.CombosControlled[preset] = (newState, newAutoState);
 
         if (CheckBlacklist(Registrations[lease].ConfigurationsHash) &&
@@ -550,7 +577,8 @@ public partial class Leasing
         registration.LastUpdated = DateTime.Now;
         CombosUpdated = DateTime.Now;
 
-        Logging.Log($"{registration.PluginName}: Registered Combo ({combo})");
+        Logging.Log(
+            $"{registration.PluginName}: Registered Combo ({combo}){oppositeText}");
         return SetResult.Okay;
     }
 

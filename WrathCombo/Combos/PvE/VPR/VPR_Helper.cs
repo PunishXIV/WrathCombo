@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -107,6 +108,8 @@ internal partial class VPR
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
+    #region Openers
+
     internal class VPROpenerMaxLevel1 : WrathOpener
     {
         public override int MinOpenerLevel => 100;
@@ -147,13 +150,24 @@ internal partial class VPR
             UncoiledFury,
             UncoiledTwinfang,
             UncoiledTwinblood,
-            HuntersCoil,
-            TwinfangBite,
-            TwinbloodBite,
-            SwiftskinsCoil,
-            TwinbloodBite,
-            TwinfangBite
+            HuntersCoil, //33
+            TwinfangBite, //34
+            TwinbloodBite, //35
+            SwiftskinsCoil, //36
+            TwinbloodBite, //37
+            TwinfangBite //38
         ];
+
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        [
+            ([33], SwiftskinsCoil, () => OnTargetsRear()),
+            ([34], TwinbloodBite, () => HasEffect(Buffs.SwiftskinsVenom)),
+            ([35], TwinfangBite, () => HasEffect(Buffs.HuntersVenom)),
+            ([36], HuntersCoil, () => SwiftskinsCoilReady),
+            ([37], TwinfangBite, () => HasEffect(Buffs.HuntersVenom)),
+            ([38], TwinbloodBite, () => HasEffect(Buffs.SwiftskinsVenom))
+        ];
+
         internal override UserData ContentCheckConfig => Config.VPR_Balance_Content;
 
         public override bool HasCooldowns()
@@ -170,6 +184,8 @@ internal partial class VPR
             return true;
         }
     }
+
+    #endregion
 
     #region ID's
 

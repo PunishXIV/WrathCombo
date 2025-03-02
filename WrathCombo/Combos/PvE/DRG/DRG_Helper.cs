@@ -11,8 +11,9 @@ namespace WrathCombo.Combos.PvE;
 internal partial class DRG
 {
     internal static DRGGauge Gauge = GetJobGauge<DRGGauge>();
-    internal static DRGOpenerLogic Opener1 = new();
-    
+    internal static StandardOpenerLogic StandardOpener = new();
+    internal static PiercingTalonOpenerLogic PiercingTalonOpener = new();
+
     internal static readonly List<uint> FastLocks =
     [
         BattleLitany,
@@ -48,8 +49,11 @@ internal partial class DRG
 
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked)
-            return Opener1;
+        if (StandardOpener.LevelChecked && Config.DRG_SelectedOpener == 0)
+            return StandardOpener;
+
+        if (PiercingTalonOpener.LevelChecked && Config.DRG_SelectedOpener == 1)
+            return PiercingTalonOpener;
 
         return WrathOpener.Dummy;
     }
@@ -74,7 +78,26 @@ internal partial class DRG
         return false;
     }
 
-    internal class DRGOpenerLogic : WrathOpener
+    internal static bool UseLifeSurge()
+    {
+        if (ActionReady(LifeSurge) && CanDRGWeave(LifeSurge) && !HasEffect(Buffs.LifeSurge))
+        {
+            if (LevelChecked(Drakesbane) && Gauge.IsLOTDActive &&
+                (HasEffect(Buffs.LanceCharge) || HasEffect(Buffs.BattleLitany)) &&
+                (JustUsed(WheelingThrust) ||
+                 JustUsed(FangAndClaw) ||
+                 JustUsed(OriginalHook(VorpalThrust)) && LevelChecked(HeavensThrust)))
+                return true;
+        }
+
+        return false;
+    }
+
+
+
+    #region Openers
+
+    internal class StandardOpenerLogic : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 
@@ -126,6 +149,62 @@ internal partial class DRG
             return true;
         }
     }
+
+    internal class PiercingTalonOpenerLogic : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            PiercingTalon,
+            TrueThrust,
+            SpiralBlow,
+            LanceCharge,
+            BattleLitany,
+            ChaoticSpring,
+            Geirskogul,
+            WheelingThrust,
+            HighJump,
+            LifeSurge,
+            Drakesbane,
+            DragonfireDive,
+            Nastrond,
+            RaidenThrust,
+            Stardiver,
+            LanceBarrage,
+            Starcross,
+            LifeSurge,
+            HeavensThrust,
+            RiseOfTheDragon,
+            MirageDive,
+            FangAndClaw,
+            Drakesbane,
+            RaidenThrust,
+            WyrmwindThrust
+        ];
+        internal override UserData ContentCheckConfig => Config.DRG_Balance_Content;
+
+        public override bool HasCooldowns()
+        {
+            if (GetRemainingCharges(LifeSurge) < 2)
+                return false;
+
+            if (!IsOffCooldown(BattleLitany))
+                return false;
+
+            if (!IsOffCooldown(DragonfireDive))
+                return false;
+
+            if (!IsOffCooldown(LanceCharge))
+                return false;
+
+            return true;
+        }
+    }
+
+    #endregion
 
     #region ID's
 

@@ -4,70 +4,14 @@ using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SGE
 {
-    #region ID's
-
-    internal const byte JobID = 40;
-
-    // Actions
-    internal const uint
-
-        // Heals and Shields
-        Diagnosis = 24284,
-        Prognosis = 24286,
-        Physis = 24288,
-        Druochole = 24296,
-        Kerachole = 24298,
-        Ixochole = 24299,
-        Pepsis = 24301,
-        Physis2 = 24302,
-        Taurochole = 24303,
-        Haima = 24305,
-        Panhaima = 24311,
-        Holos = 24310,
-        EukrasianDiagnosis = 24291,
-        EukrasianPrognosis = 24292,
-        Egeiro = 24287,
-
-        // DPS
-        Dosis = 24283,
-        Dosis2 = 24306,
-        Dosis3 = 24312,
-        EukrasianDosis = 24293,
-        EukrasianDosis2 = 24308,
-        EukrasianDosis3 = 24314,
-        Phlegma = 24289,
-        Phlegma2 = 24307,
-        Phlegma3 = 24313,
-        Dyskrasia = 24297,
-        Dyskrasia2 = 24315,
-        Toxikon = 24304,
-        Toxikon2 = 24316,
-        Pneuma = 24318,
-        EukrasianDyskrasia = 37032,
-        Psyche = 37033,
-
-        // Buffs
-        Soteria = 24294,
-        Zoe = 24300,
-        Krasis = 24317,
-        Philosophia = 37035,
-
-        // Other
-        Kardia = 24285,
-        Eukrasia = 24290,
-        Rhizomata = 24309;
-
-    // Action Groups
+    // Sage Gauge & Extensions
     internal static readonly List<uint>
         AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
         DyskrasiaList = [Dyskrasia, Dyskrasia2];
-
-    // Debuff Pairs of Actions and Debuff
     internal static readonly Dictionary<uint, ushort>
         DosisList = new()
         {
@@ -75,41 +19,6 @@ internal static partial class SGE
             { Dosis2, Debuffs.EukrasianDosis2 },
             { Dosis3, Debuffs.EukrasianDosis3 }
         };
-
-    // Action Buffs
-    internal static class Buffs
-    {
-        internal const ushort
-            Kardia = 2604,
-            Kardion = 2605,
-            Eukrasia = 2606,
-            EukrasianDiagnosis = 2607,
-            EukrasianPrognosis = 2609,
-            Panhaima = 2613,
-            Kerachole = 2618,
-            Zoe = 2611,
-            Eudaimonia = 3899;
-    }
-
-    internal static class Debuffs
-    {
-        internal const ushort
-            EukrasianDosis = 2614,
-            EukrasianDosis2 = 2615,
-            EukrasianDosis3 = 2616,
-            EukrasianDyskrasia = 3897;
-    }
-
-    internal static class Traits
-    {
-        internal const ushort
-            EnhancedKerachole = 375,
-            OffensiveMagicMasteryII = 376;
-    }
-
-    #endregion
-
-    // Sage Gauge & Extensions
     internal static SGEOpenerMaxLevel1 Opener1 = new();
     internal static SGEGauge Gauge = GetJobGauge<SGEGauge>();
 
@@ -189,15 +98,15 @@ internal static partial class SGE
             case 0:
                 action = Kerachole;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Kerachole) &&
-                    (!Config.SGE_AoE_Heal_KeracholeTrait ||
-                    (Config.SGE_AoE_Heal_KeracholeTrait && TraitLevelChecked(Traits.EnhancedKerachole))) &&
-                    Gauge.HasAddersgall();
+                          (!Config.SGE_AoE_Heal_KeracholeTrait ||
+                           Config.SGE_AoE_Heal_KeracholeTrait && TraitLevelChecked(Traits.EnhancedKerachole)) &&
+                          Gauge.HasAddersgall();
                 return Config.SGE_AoE_Heal_KeracholeOption;
 
             case 1:
                 action = Ixochole;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Ixochole) &&
-                    Gauge.HasAddersgall();
+                          Gauge.HasAddersgall();
                 return Config.SGE_AoE_Heal_IxocholeOption;
 
             case 2:
@@ -230,11 +139,11 @@ internal static partial class SGE
                 action = Zoe;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Zoe);
                 return Config.SGE_AoE_Heal_ZoeOption;
-            
+
             case 8:
                 action = Eukrasia;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis)
-                    && (GetPartyBuffPercent(Buffs.EukrasianDiagnosis) + GetPartyBuffPercent(Buffs.EukrasianPrognosis)) <= Config.SGE_AoE_Heal_EPrognosisOption;
+                          && GetPartyBuffPercent(Buffs.EukrasianDiagnosis) + GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= Config.SGE_AoE_Heal_EPrognosisOption;
                 return 100; //Don't HP Check
         }
 
@@ -242,6 +151,7 @@ internal static partial class SGE
         action = 0;
         return 0;
     }
+
     internal class SGEOpenerMaxLevel1 : WrathOpener
     {
         public override int MinOpenerLevel => 92;
@@ -269,7 +179,7 @@ internal static partial class SGE
             Dosis3,
             Dosis3
         ];
-        internal override UserData? ContentCheckConfig => Config.SGE_Balance_Content;
+        internal override UserData ContentCheckConfig => Config.SGE_Balance_Content;
 
         public override bool HasCooldowns()
         {
@@ -285,4 +195,96 @@ internal static partial class SGE
             return true;
         }
     }
+
+    #region ID's
+
+    internal const byte JobID = 40;
+
+    // Actions
+    internal const uint
+
+        // Heals and Shields
+        Diagnosis = 24284,
+        Prognosis = 24286,
+        Physis = 24288,
+        Druochole = 24296,
+        Kerachole = 24298,
+        Ixochole = 24299,
+        Pepsis = 24301,
+        Physis2 = 24302,
+        Taurochole = 24303,
+        Haima = 24305,
+        Panhaima = 24311,
+        Holos = 24310,
+        EukrasianDiagnosis = 24291,
+        EukrasianPrognosis = 24292,
+        Egeiro = 24287,
+
+        // DPS
+        Dosis = 24283,
+        Dosis2 = 24306,
+        Dosis3 = 24312,
+        EukrasianDosis = 24293,
+        EukrasianDosis2 = 24308,
+        EukrasianDosis3 = 24314,
+        Phlegma = 24289,
+        Phlegma2 = 24307,
+        Phlegma3 = 24313,
+        Dyskrasia = 24297,
+        Dyskrasia2 = 24315,
+        Toxikon = 24304,
+        Toxikon2 = 24316,
+        Pneuma = 24318,
+        EukrasianDyskrasia = 37032,
+        Psyche = 37033,
+
+        // Buffs
+        Soteria = 24294,
+        Zoe = 24300,
+        Krasis = 24317,
+        Philosophia = 37035,
+
+        // Other
+        Kardia = 24285,
+        Eukrasia = 24290,
+        Rhizomata = 24309;
+
+    // Action Groups
+
+
+    // Debuff Pairs of Actions and Debuff
+
+
+    // Action Buffs
+    internal static class Buffs
+    {
+        internal const ushort
+            Kardia = 2604,
+            Kardion = 2605,
+            Eukrasia = 2606,
+            EukrasianDiagnosis = 2607,
+            EukrasianPrognosis = 2609,
+            Panhaima = 2613,
+            Kerachole = 2618,
+            Zoe = 2611,
+            Eudaimonia = 3899;
+    }
+
+    internal static class Debuffs
+    {
+        internal const ushort
+            EukrasianDosis = 2614,
+            EukrasianDosis2 = 2615,
+            EukrasianDosis3 = 2616,
+            EukrasianDyskrasia = 3897;
+    }
+
+    internal static class Traits
+    {
+        internal const ushort
+            EnhancedKerachole = 375,
+            OffensiveMagicMasteryII = 376;
+    }
+
+    #endregion
 }

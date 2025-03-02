@@ -225,7 +225,8 @@ namespace WrathCombo.CustomComboNS
                         CurrentOpenerAction = OpenerActions[OpenerStep - 1];
                     }
 
-                    while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) && ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(3, GCDTotal))
+                    while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) &&
+                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
                     {
                         if (OpenerStep >= OpenerActions.Count)
                             break;

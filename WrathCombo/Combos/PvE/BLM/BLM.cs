@@ -28,7 +28,7 @@ internal partial class BLM
                     IsEnabled(Variant.VariantRampart) &&
                     IsOffCooldown(Variant.VariantRampart))
                     return Variant.VariantRampart;
-                
+
                 if (ActionReady(Amplifier) && RemainingPolyglotCD >= 20000)
                     return Amplifier;
 
@@ -509,63 +509,63 @@ internal partial class BLM
                     if (ActionReady(Blizzard2) && TraitLevelChecked(Traits.AspectMasteryIII))
                         return OriginalHook(Blizzard2);
                 }
+            }
 
-                if (Gauge.InUmbralIce)
+            if (Gauge.InUmbralIce)
+            {
+                if (HasPolyglotStacks(Gauge))
+                    return Foul;
+
+                if (ActionWatching.WhichOfTheseActionsWasLast(OriginalHook(Fire2), OriginalHook(Freeze),
+                        OriginalHook(Flare), OriginalHook(FlareStar)) == OriginalHook(Freeze) &&
+                    FlareStar.LevelChecked())
                 {
-                    if (HasPolyglotStacks(Gauge))
-                        return Foul;
-
-                    if (ActionWatching.WhichOfTheseActionsWasLast(OriginalHook(Fire2), OriginalHook(Freeze),
-                            OriginalHook(Flare), OriginalHook(FlareStar)) == OriginalHook(Freeze) &&
-                        FlareStar.LevelChecked())
-                    {
-                        if (ActionReady(Transpose) && CanSpellWeave())
-                            return Transpose;
-
-                        return OriginalHook(Fire2);
-                    }
-
-                    if (ActionReady(OriginalHook(Blizzard2)) && Gauge.UmbralIceStacks < 3 &&
-                        TraitLevelChecked(Traits.AspectMasteryIII))
-                    {
-                        if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0 &&
-                            CanSpellWeave())
-                            return Triplecast;
-
-                        if (GetBuffStacks(Buffs.Triplecast) == 0 && IsOffCooldown(All.Swiftcast) &&
-                            CanSpellWeave())
-                            return All.Swiftcast;
-
-                        if (HasEffect(All.Buffs.Swiftcast) || GetBuffStacks(Buffs.Triplecast) > 0)
-                            return OriginalHook(Blizzard2);
-                    }
-
-                    if (Gauge.UmbralIceStacks < 3 && ActionReady(OriginalHook(Blizzard2)))
-                        return OriginalHook(Blizzard2);
-
-                    if (Freeze.LevelChecked() && Gauge.UmbralHearts < 3 && TraitLevelChecked(Traits.UmbralHeart))
-                        return Freeze;
-
-                    if (DoubleBlizz() && Fire2.LevelChecked())
-                        return OriginalHook(Fire2);
-
-                    if (CurMp < LocalPlayer?.MaxMp)
-                        return Freeze.LevelChecked()
-                            ? OriginalHook(Freeze)
-                            : OriginalHook(Blizzard2);
-
-                    if (IsEnabled(CustomComboPreset.BLM_AoE_Transpose) &&
-                        ActionReady(Transpose) && CanSpellWeave() &&
-                        (Flare.LevelChecked() || !TraitLevelChecked(Traits.AspectMasteryIII)))
+                    if (ActionReady(Transpose) && CanSpellWeave())
                         return Transpose;
 
-                    if (Fire2.LevelChecked() && TraitLevelChecked(Traits.AspectMasteryIII))
-                        return OriginalHook(Fire2);
+                    return OriginalHook(Fire2);
                 }
 
-                if (Blizzard2.LevelChecked())
+                if (ActionReady(OriginalHook(Blizzard2)) && Gauge.UmbralIceStacks < 3 &&
+                    TraitLevelChecked(Traits.AspectMasteryIII))
+                {
+                    if (ActionReady(Triplecast) && GetBuffStacks(Buffs.Triplecast) == 0 &&
+                        CanSpellWeave())
+                        return Triplecast;
+
+                    if (GetBuffStacks(Buffs.Triplecast) == 0 && IsOffCooldown(All.Swiftcast) &&
+                        CanSpellWeave())
+                        return All.Swiftcast;
+
+                    if (HasEffect(All.Buffs.Swiftcast) || GetBuffStacks(Buffs.Triplecast) > 0)
+                        return OriginalHook(Blizzard2);
+                }
+
+                if (Gauge.UmbralIceStacks < 3 && ActionReady(OriginalHook(Blizzard2)))
                     return OriginalHook(Blizzard2);
+
+                if (Freeze.LevelChecked() && Gauge.UmbralHearts < 3 && TraitLevelChecked(Traits.UmbralHeart))
+                    return Freeze;
+
+                if (DoubleBlizz() && Fire2.LevelChecked())
+                    return OriginalHook(Fire2);
+
+                if (CurMp < LocalPlayer?.MaxMp)
+                    return Freeze.LevelChecked()
+                        ? OriginalHook(Freeze)
+                        : OriginalHook(Blizzard2);
+
+                if (ActionReady(Transpose) && CanSpellWeave() &&
+                    (Flare.LevelChecked() || !TraitLevelChecked(Traits.AspectMasteryIII)))
+                    return Transpose;
+
+                if (Fire2.LevelChecked() && TraitLevelChecked(Traits.AspectMasteryIII))
+                    return OriginalHook(Fire2);
             }
+
+            if (Blizzard2.LevelChecked())
+                return OriginalHook(Blizzard2);
+
             return actionID;
         }
     }

@@ -87,7 +87,7 @@ internal partial class MCH
     {
         if (!ActionWatching.HasDoubleWeaved() && !HasEffect(Buffs.Wildfire) &&
             !JustUsed(OriginalHook(Heatblast)) && ActionReady(RookAutoturret) &&
-            gauge is { IsRobotActive: false, Battery: >= 50 })
+            !gauge.IsRobotActive && gauge.Battery >= 50)
         {
             if ((Config.MCH_ST_Adv_Turret_SubOption == 0 ||
                  Config.MCH_ST_Adv_Turret_SubOption == 1 && InBossEncounter() ||
@@ -255,6 +255,7 @@ internal partial class MCH
 
         return false;
     }
+
     #region ID's
 
     public const byte JobID = 31;

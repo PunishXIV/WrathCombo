@@ -96,7 +96,6 @@ internal class All
     public static class Buffs
     {
         public const ushort
-            Weakness = 43,
             WellFed = 48,
             Medicated = 49,
             Bloodbath = 84,
@@ -113,6 +112,8 @@ internal class All
     public static class Debuffs
     {
         public const ushort
+            Weakness = 43,
+            BrinkOfDeath = 44,
 
             //Tank
             Reprisal = 1193, //applied by Reprisal to target

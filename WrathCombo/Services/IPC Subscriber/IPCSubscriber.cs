@@ -19,9 +19,11 @@ namespace WrathCombo.Services.IPC_Subscriber
     {
         private static EzIPCDisposalToken[] _disposalTokens = EzIPC.Init(typeof(OrbwalkerIPC), "Orbwalker", SafeWrapper.IPCException);
 
-        internal static bool IsEnabled => DalamudReflector.TryGetDalamudPlugin("Orbwalker", out _, false, true);
-        internal static Version? Version => DalamudReflector.TryGetDalamudPlugin("Orbwalker", out var dalamudPlugin, false, true) ? dalamudPlugin.GetType().Assembly.GetName().Version : new Version(0, 0, 0, 0);
+        internal static bool IsEnabled => InstalledVersion >= _validVersion;
+        internal static Version InstalledVersion => DalamudReflector.TryGetDalamudPlugin("Orbwalker", out var dalamudPlugin, false, true) ? dalamudPlugin.GetType().Assembly.GetName().Version : new Version(0, 0, 0, 0);
+        private static Version _validVersion = new(1,0,1,1);
 
+#pragma warning disable CS0649, CS8618 // Complaints of the method
         [EzIPC] public static readonly Func<bool> PluginEnabled;
         [EzIPC] public static readonly Func<bool> MovementLocked;
         [EzIPC] public static readonly Func<bool> IsSlideWindowAuto; //True for Automatic, False for Manual
@@ -41,10 +43,11 @@ namespace WrathCombo.Services.IPC_Subscriber
         [EzIPC] public static Action<bool> SetMouseButtonRelease;
         [EzIPC] public static Action<bool> SetPvP;
         [EzIPC] public static Action<uint, bool> SetEnabledJob;
+#pragma warning restore CS8618, CS0649
 
         public static bool CanOrbwalk => IsEnabled && PluginEnabled() && !MouseMoving && EnabledJobs().Any(x => x == (uint)Player.Job);
 
-        private static unsafe InputManager.MouseButtonHoldState* _state => InputManager.GetMouseButtonHoldState() + 1;
+        private static unsafe InputManager.MouseButtonHoldState* _state => InputManager.GetMouseButtonHoldState();
         private static unsafe bool BothMousebuttonsHeld => _state->HasFlag(InputManager.MouseButtonHoldState.Left) && _state->HasFlag(InputManager.MouseButtonHoldState.Right);
         
         public static bool MouseMoving => MouseButtonReleaseEnabled() && BothMousebuttonsHeld;

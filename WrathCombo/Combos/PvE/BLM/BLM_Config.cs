@@ -43,7 +43,9 @@ internal partial class BLM
                         ImGuiEx.Text(gcd > 2.45f ? ImGuiColors.DalamudRed : ImGuiColors.HealerGreen, $"Your GCD is currently: {gcd}");
                     }
 
+                    ImGui.Indent();
                     DrawBossOnlyChoice(BLM_ST_Balance_Content);
+                    ImGui.Unindent();
                     break;
                 case CustomComboPreset.BLM_Variant_Cure:
                     DrawSliderInt(1, 100, BLM_VariantCure, "HP% to be at or under", 200);
