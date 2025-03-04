@@ -8,7 +8,7 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE
 {
-    private static bool ���պ��� = false;
+    private static bool 复苏喊话 = false;
 
     /*
      * SGE_Kardia
@@ -51,19 +51,15 @@ internal partial class SGE
         protected override uint Invoke(uint actionID)
         {
             if (actionID is Druochole) {
-                if (IsEnabled(CustomComboPreset.SGE_���) && ActionReady(���)) {
-                    return ���;
+                if (IsEnabled(CustomComboPreset.SGE_混合) && ActionReady(混合)) {
+                    return 混合;
                 }
-                if (ActionReady(Taurochole) && ���ߵ�() && !HasEffect(Buffs.�����֭)) {
+                if (ActionReady(Taurochole) && 有蛇胆() && !HasEffect(Buffs.坚角清汁)) {
                     return Taurochole;
                 }
-                if (ActionReady(Druochole) && ���ߵ�()) {
-                    return Druochole;
+                if (ActionReady(根素) && Gauge.Addersgall <= 1) {
+                    return 根素;
                 }
-                if (ActionReady(����) && !���ߵ�()) {
-                    return ����;
-                }
-                return ����;
             }
             return actionID;
         }
@@ -330,26 +326,26 @@ internal partial class SGE
         protected override uint Invoke(uint actionID)
         {
             if (actionID is Egeiro) {
-                //��������
+                //复苏喊话
                 if (IsEnabled(CustomComboPreset.SGE_Raise_Say)) {
                     if (JustUsed(Egeiro)) {
-                        if (���պ��� == false && IsInParty()) {
-                            ���պ��� = true;
+                        if (复苏喊话 == false && IsInParty()) {
+                            复苏喊话 = true;
                             IGameObject? healTarget = GetHealTarget(true);
                             string LeaderName = healTarget.Name.ToString();
                             if (WasLastAbility(All.Swiftcast))
-                                Chat.Instance.SendMessage($"/p �Ѷ�{LeaderName}ʵʩ�ķθ��գ����ȴ�ɹ������Ѹ��գ�<se.7>");
+                                Chat.Instance.SendMessage($"/p 已对{LeaderName}实施心肺复苏，抢救大成功！<se.7>");
                             else
-                                Chat.Instance.SendMessage($"/p ���ڶ�{LeaderName}ʵʩ�ķθ��գ�������ӽ�����գ�<se.7>");
+                                Chat.Instance.SendMessage($"/p 正在对{LeaderName}实施心肺复苏。<se.7>");
                         }
                     }
                     else {
-                        if (���պ��� == true) {
-                            ���պ��� = false;
+                        if (复苏喊话 == true) {
+                            复苏喊话 = false;
                         }
                     }
                 }
-                //���뼴��
+                //插入即刻
                 if (ActionReady(All.Swiftcast))
                     return All.Swiftcast;
             }
@@ -357,25 +353,25 @@ internal partial class SGE
         }
     }
 
-    public static bool ���ߵ�()
+    public static bool 有蛇胆()
     {
         return Gauge.Addersgall > 0;
     }
 
-    internal class SGE_����_������֭ : CustomCombo
+    internal class SGE_自生_寄生清汁 : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGE_����_������֭;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGE_自生_寄生清汁;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is Ixochole) {
                 if (ActionReady(OriginalHook(Physis))) {
                     return OriginalHook(Physis);
                 }
-                if (ActionReady(Ixochole) && ���ߵ�()) {
+                if (ActionReady(Ixochole) && 有蛇胆()) {
                     return Ixochole;
                 }
-                if (ActionReady(����)) {
-                    return ����;
+                if (ActionReady(根素) && Gauge.Addersgall <= 1) {
+                    return 根素;
                 }
                 return OriginalHook(Physis);
             }

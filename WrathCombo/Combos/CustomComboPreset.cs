@@ -4091,7 +4091,7 @@ public enum CustomComboPreset
     PLD_ShieldLob_Feature = 11027,
 
     [ReplaceSkill(All.铁壁)]
-    [CustomComboInfo("铁壁替换选项", "如果铁壁进CD了且壁垒可用，则用壁垒代替之。", PLD.JobID)]
+    [CustomComboInfo("铁壁替换选项", "如果【铁壁】进冷却了且【壁垒】可用，则用【壁垒】代替之。", PLD.JobID)]
     PLD_Bulwark = 1104101,
 
     // Variant Features

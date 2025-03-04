@@ -178,8 +178,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
             ToggleAutoRotation(!Service.Configuration.RotationConfig.Enabled);
         };
         DtrBarEntry.Tooltip = new SeString(
-        new TextPayload("Click to toggle Wrath Combo's Auto-Rotation.\n"),
-        new TextPayload("Disable this icon in /xlsettings -> Server Info Bar"));
+        new TextPayload(Translation.Translation.Translate("Click to toggle Wrath Combo's Auto-Rotation.\n")),
+        new TextPayload(Translation.Translation.Translate("Disable this icon in /xlsettings -> Server Info Bar")));
 
         Svc.ClientState.Login += PrintLoginMessage;
         if (Svc.ClientState.IsLoggedIn) ResetFeatures();
@@ -242,7 +242,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     }
 
     public const string OptionControlledByIPC =
-        "(being overwritten by another plugin, check the setting in /wrath)";
+        "(被其他的插件覆写了，检查/wrath中的设置)";
 
     private static void HandleConflictedCombos()
     {
@@ -258,7 +258,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
                 if (PresetStorage.IsEnabled(conflict))
                     if (Service.Configuration.EnabledActions.Remove(conflict))
                     {
-                        PluginLog.Debug($"Removed {conflict} due to conflict with {preset}");
+                        PluginLog.Debug($"移除了 {conflict} 因为它和 {preset} 冲突");
                         Service.Configuration.Save();
                     }
         }

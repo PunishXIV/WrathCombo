@@ -2796,6 +2796,25 @@ namespace WrathCombo.Translation
             {"Backlash Option","蛇鳞击"},
             {"Enforced Crimson Cyclone Melee Check","强制深红旋风近战检测"},
             {"Only uses Crimson Cyclone within melee range.","只有当你在近战范围内时，才使用深红旋风。"},
+
+            //03.04
+            {"Require Nearby Enemy for Finishes Feature","需要附近有敌人才用标准/技巧舞步结束"},
+            {"Will hold Standard Finish and Technical Finish until an enemy is within range of the abilities in all (non-Simple) Modes and Features below by replacing whatever button with Savage Blade.\nWill show either Finish when the dance is about to expire.\nThis behavior is recommended by The Balance but can introduce drift, so it may not be what is best for your group.","会保留标准/技巧舞步结束直到范围内有敌人，对所有设定都生效（除了简易模式），是通过把舞步结束替换成【雪仇剑】来实现的。\n但如果舞要没了，也会让你打一个舞结束，以免舞浪费了。\n推荐和平衡模式合用，但是可能导致技能轴错位，所以对你的队友来说，可能不是最佳选择。"},
+            {"Adds Bloodspiller to the rotation after Syphon Strike when the blood gauge is above the chosen threshold.","当暗血量谱超过设定的阈值时，在【吸收斩】后加入【血溅】。"},
+            {"Adds Quietus to the rotation when the blood gauge is above the chosen threshold.","当暗血量谱超过设定的阈值时，添加【寂灭】到循环中。"},
+            {"Uses Flood of Shadow in burst, if Darkside is about to expire (<10s), if you have Dark Arts and use The Blackest Night, and outside of burst will spend to chosen MP limit.","在以下任意一情况下使用【暗影波动】：1.在爆发期 2.暗黑即将消失（<10秒） 3.你有暗技状态，但你又开了个黑盾 4.非爆发期但MP超过阈值。"},
+            {"Acceleration Movement Option","【促进】移动选项"},
+            {"Add Acceleration when moving.","当你在移动时，加入【促进】"},
+            {"Add Acceleration into the AoE rotation.","把【促进】加入AoE循环"},
+            {"Checks for any Searing Light for bursting rather than just your own.\nUse this option if partied with multiple SMN and are worried about your Searing Light being wasted.","检查队伍中所有的【灼热之光】，而不仅仅是自身的。建议与多个召唤师组队时使用，以防止重复施放【灼热之光】。"},
+            {"Click to toggle Wrath Combo's Auto-Rotation.\n","点击以切换Wrath Combo的自动循环"},
+            {"Disable this icon in /xlsettings -> Server Info Bar","在 /xlsettings -> 服务器信息栏中禁用此图标"},
+            {"Select what kind of enemies the HP check should be applied to:","选择此敌人HP检测应用于哪种类型的敌人："},
+            {"Non-Bosses","非Boss敌人"},
+            {"Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.","仅对非Boss敌人应用 HP 检测。\n此选项允许您在对非Boss目标时提前停止DoT应用。"},
+            {"Applies the HP check above to all enemies.","将HP检测应用于所有敌人，包括boss"},
+            {"Action Replacing","技能替换"},
+            {"Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by /wrath combo","控制是否使用插件自动替换技能，如果禁用此选项，您的手动技能输入将不再受到Wrath设定的影响。无论此选项是否启用，自动循环仍然会生效。可使用/Wrath combo 命令进行管理。"},
             #endregion
         };
 

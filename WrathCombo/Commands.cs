@@ -31,10 +31,10 @@ public partial class WrathCombo
     private void RegisterCommands()
     {
         EzCmd.Add(Command, OnCommand,
-            "Open a window to edit custom combo settings.\n" +
-            $"{Command} auto → Toggle Auto-rotation on/off.\n" +
-            $"{Command} debug → Dumps a debug log onto your desktop for developers.\n" +
-            $"{OldCommand} → Old alias from XIVSlothCombo, still works!");
+            "打开一个窗口来编辑自定义循环的设置.\n" +
+            $"{Command} auto → 开关自动循环.\n" +
+            $"{Command} debug → 为开发者创建一个调试日志到桌面上。\n" +
+            $"{OldCommand} → XIVSlothCombo的遗留物，仍然可用！");
         EzCmd.Add(OldCommand, OnCommand);
     }
 

@@ -30,7 +30,7 @@ internal static partial class SGE
 
                     ImGui.Indent();
 
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Translation.Translation.Translate("Select what kind of enemies the HP check should be applied to:"));
 
                     DrawHorizontalRadioButton(SGE_ST_DPS_EDosisSubOption,
                         "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);

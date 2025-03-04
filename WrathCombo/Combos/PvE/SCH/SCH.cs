@@ -6,12 +6,13 @@ using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SCH
 {
 
-    private static bool �������� = false;
+    private static bool 复生喊话 = false;
 
     /*
      * SCH_Consolation
@@ -32,42 +33,41 @@ internal static partial class SCH
     internal class SCH_Lustrate : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Lustrate;
-      
+
 
         protected override uint Invoke(uint actionID)
         {
             if (actionID is Lustrate) {
-                //���û���ӣ�����̫�����ö���
-                if (IsEnabled(CustomComboPreset.SCH_Lustrate_��̫����) && ActionReady(Aetherflow) && !Gauge.HasAetherflow() && InCombat()) {
+                //如果没豆子，先以太超流拿豆子
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_以太超流) && ActionReady(Aetherflow) && !Gauge.HasAetherflow() && InCombat()) {
                     return Aetherflow;
                 }
                 IGameObject? healTarget = GetHealTarget(Config.SCH_ST_Heal_Adv && Config.SCH_ST_Heal_UIMouseOver);
                 float hpPercent = GetTargetHPPercent(healTarget);
-                //����ñ�ȹ���ñ
-                if (IsEnabled(CustomComboPreset.SCH_Lustrate_��ıԶ��֮��) && hpPercent >= 90f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
+                //有绿帽先挂绿帽
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_深谋远虑之策) && hpPercent >= 90f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
                     return Excogitation;
                 }
-                //û��ñ�ȹ�����������
-                if (IsEnabled(CustomComboPreset.SCH_Lustrate_����������) && ActionReady(Protraction)) {
+                //没绿帽先挂生命回生法
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_生命回生法) && ActionReady(Protraction)) {
                     return Protraction;
                 }
-                //����̧Ѫ��������50����ņ̃��������50�û��Է�̧
+                //结算抬血，若低于50用绿帽抬，若高于50用活性法抬
                 if (hpPercent < 50f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
                     return Excogitation;
                 }
                 if (hpPercent >= 50f && ActionReady(Lustrate) && Gauge.HasAetherflow()) {
                     return Lustrate;
                 }
-                //û�����ˣ���Ӧ������̧
-                if (IsEnabled(CustomComboPreset.SCH_Lustrate_Ӧ������)) {
-                    if (ActionReady(OriginalHook(Ӧ��ս��))) {
-                        return OriginalHook(Ӧ��ս��);
+                //没豆子了，用应急单盾抬
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_应急单盾)) {
+                    if (ActionReady(OriginalHook(应急战术))) {
+                        return OriginalHook(应急战术);
                     }
-                    if (HasEffect(Buffs.Ӧ��ս��)) {
+                    if (HasEffect(Buffs.应急战术)) {
                         return Adloquium;
                     }
                 }
-                return actionID;
             }
             return actionID;
         }
@@ -172,22 +172,22 @@ internal static partial class SCH
         protected override uint Invoke(uint actionID)
         {
             if (actionID is Resurrection) {
-                //��������
+                //复生喊话
                 if (IsEnabled(CustomComboPreset.SCH_Raise_Say)) {
                     if (JustUsed(Resurrection)) {
-                        if (�������� == false && IsInParty()) {
-                            �������� = true;
+                        if (复生喊话 == false && IsInParty()) {
+                            复生喊话 = true;
                             IGameObject? healTarget = GetHealTarget(true);
                             string LeaderName = healTarget.Name.ToString();
                             if (WasLastAbility(All.Swiftcast))
-                                Chat.Instance.SendMessage($"/p ������ˮ����ˮ���꣡���Ѹ���[{LeaderName}]��<se.7>");
+                                Chat.Instance.SendMessage($"/p 上善若水，烟水还魂！已对{LeaderName}使用复苏。<se.7>");
                             else
-                                Chat.Instance.SendMessage($"/p ��ˮΪ���������飡�����ڶ�[{LeaderName}]ӽ��[����]��<se.7>");
+                                Chat.Instance.SendMessage($"/p 正在对{LeaderName}]咏唱复苏。<se.7>");
                         }
                     }
                     else {
-                        if (�������� == true) {
-                            �������� = false;
+                        if (复生喊话 == true) {
+                            复生喊话 = false;
                         }
                     }
                 }
@@ -245,48 +245,48 @@ internal static partial class SCH
         {
             if (actionID is DeploymentTactics) {
 
-                //չ��ս��û�ã�����ִ�к���ģ����˶�Ҳ��ɢ����
+                //展开战术没好，不用执行后面的，做了盾也扩散不了
                 if (!ActionReady(DeploymentTactics)) {
-                    //������Ϊ�ز�CD�Բ��ϣ�����ز�CD����ת���ˣ����Դ���ز�
+                    //但是因为秘策CD对不上，如果秘策CD另外转好了，可以打个秘策
                     if (ActionReady(Recitation) && !HasEffect(Buffs.Recitation)) {
                         return Recitation;
                     }
-                    //����͵��Ű�
+                    //否则就等着吧
                     return actionID;
                 }
 
-                //������ƶ���
+                //获得治疗对象
                 IGameObject? healTarget = GetHealTarget(true);
 
-                //������زߣ���û�м�������Ϊ�м����϶����Ѿ��Ǳ������ˣ������ز�
-                if (ActionReady(Recitation) && !HasEffect(Buffs.Recitation) && (FindEffectOnMember(Buffs.����, healTarget) is null)) {
+                //如果有秘策，且没有激励（因为有激励肯定就已经是暴击盾了），打秘策
+                if (ActionReady(Recitation) && !HasEffect(Buffs.Recitation) && (FindEffectOnMember(Buffs.激励, healTarget) is null)) {
                     return Recitation;
                 }
 
-                //���ز����ز߶�
+                //有秘策做秘策盾
                 if (HasEffect(Buffs.Recitation)) {
-                    //��������������Ӷ���
-                    if (ActionReady(Protraction) && FindEffectOnMember(Buffs.����������, healTarget) is null) {
+                    //插入回生法，增加盾量
+                    if (ActionReady(Protraction) && FindEffectOnMember(Buffs.生命回生法, healTarget) is null) {
                         return Protraction;
                     }
-                    //���뼴��
+                    //插入即刻
                     if (ActionReady(All.Swiftcast) && !HasEffect(All.Buffs.Swiftcast)) {
                         return All.Swiftcast;
                     }
-                    //����
+                    //做盾
                     return Adloquium;
                 }
 
-                //����Ѿ����ö��ˣ�ֱ��չ��
+                //如果已经做好盾了，直接展开
                 if (!(FindEffectOnMember(Buffs.Galvanize, healTarget) is null)) {
                     return DeploymentTactics;
                 }
 
-                //û���裬׼�����ܣ��ȴ���������Ӷ���
-                if (ActionReady(Protraction) && FindEffectOnMember(Buffs.����������, healTarget) is null) {
+                //没鼓舞，准备做盾，先打回生法增加盾量
+                if (ActionReady(Protraction) && FindEffectOnMember(Buffs.生命回生法, healTarget) is null) {
                     return Protraction;
                 }
-                //���뼴��
+                //插入即刻
                 if (ActionReady(All.Swiftcast) && !HasEffect(All.Buffs.Swiftcast)) {
                     return All.Swiftcast;
                 }
@@ -295,6 +295,7 @@ internal static partial class SCH
             return actionID;
         }
     }
+    
 
     /*
      * SCH_DPS
@@ -672,3 +673,7 @@ internal static partial class SCH
         }
     }
 }
+
+
+
+

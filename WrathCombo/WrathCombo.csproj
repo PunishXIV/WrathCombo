@@ -56,7 +56,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
+        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -64,17 +64,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig"/>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="11.0.0"/>
-        <PackageReference Include="ILRepack" Version="2.0.18"/>
+        <PackageReference Include="DalamudPackager" Version="11.0.0" />
+        <PackageReference Include="ILRepack" Version="2.0.18" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj"/>
-        <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj"/>
+        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+        <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj" />
     </ItemGroup>
 
     <ItemGroup>
