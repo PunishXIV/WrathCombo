@@ -1,3 +1,4 @@
+using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -32,8 +33,10 @@ internal partial class DRG
                     DrawHorizontalRadioButton(DRG_SelectedOpener, "Piercing Talon opener", "Uses Piercing Talon opener",
                         1);
 
+                    ImGui.NewLine();
                     DrawBossOnlyChoice(DRG_Balance_Content);
                     break;
+                
                 case CustomComboPreset.DRG_ST_ComboHeals:
                     DrawSliderInt(0, 100, DRG_ST_SecondWind_Threshold, "Second Wind HP percentage threshold (0 = Disabled)");
 
@@ -55,20 +58,20 @@ internal partial class DRG
 
                 case CustomComboPreset.DRG_ST_Litany:
                     DrawHorizontalRadioButton(DRG_ST_Litany_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(BattleLitany)} logic regardless of content.", 0);
+                        "All content", $"Uses {ActionWatching.GetActionName(BattleLitany)} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(DRG_ST_Litany_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(BattleLitany)} logic when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(BattleLitany)} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.DRG_ST_Lance:
 
                     DrawHorizontalRadioButton(DRG_ST_Lance_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(LanceCharge)} logic regardless of content.", 0);
+                        "All content", $"Uses {ActionWatching.GetActionName(LanceCharge)} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(DRG_ST_Lance_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(LanceCharge)} logic when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(LanceCharge)} when in Boss encounters.", 1);
 
 
                     break;

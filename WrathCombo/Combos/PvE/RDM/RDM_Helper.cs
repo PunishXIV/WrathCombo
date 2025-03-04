@@ -652,7 +652,11 @@ internal partial class RDM
                 && !HasEffect(All.Buffs.Swiftcast))
             {
                 if (ActionReady(Acceleration)
-                    && GetCooldown(Acceleration).ChargeCooldownRemaining < 54.5)
+                    && GetRemainingCharges(Acceleration) > Config.RDM_ST_Acceleration_Charges
+                    && (!IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Movement) 
+                    || (IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Movement) 
+                    && IsMoving() 
+                    && GetRemainingCharges(Acceleration) > Config.RDM_ST_AccelerationMovement_Charges)))
                 {
                     newActionID = Acceleration;
                     return true;

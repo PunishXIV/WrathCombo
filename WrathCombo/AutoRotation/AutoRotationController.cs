@@ -181,7 +181,7 @@ namespace WrathCombo.AutoRotation
                 _ => 0
             };
 
-            if (regenSpell != 0 && Svc.Targets.FocusTarget != null && (!MemberHasEffect(regenBuff, Svc.Targets.FocusTarget, true, out var regen) || regen?.RemainingTime <= 5f))
+            if (regenSpell != 0 && !JustUsed(regenSpell, 4) && Svc.Targets.FocusTarget != null && (!MemberHasEffect(regenBuff, Svc.Targets.FocusTarget, true, out var regen) || regen?.RemainingTime <= 5f))
             {
                 var query = Svc.Objects.Where(x => !x.IsDead && x.IsHostile() && x.IsTargetable);
                 if (!query.Any())

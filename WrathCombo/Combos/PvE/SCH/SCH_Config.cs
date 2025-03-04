@@ -1,80 +1,16 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Interface.Colors;
+using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class SCH
 {
     internal static class Config
     {
-        #region DPS
-        public static UserInt
-            SCH_ST_DPS_AltMode = new("SCH_ST_DPS_AltMode"),
-            SCH_ST_DPS_LucidOption = new("SCH_ST_DPS_LucidOption", 6500),
-            SCH_ST_DPS_BioOption = new("SCH_ST_DPS_BioOption", 10),
-            SCH_ST_DPS_OpenerOption = new("SCH_ST_DPS_OpenerOption"),
-            SCH_ST_DPS_OpenerContent = new("SCH_ST_DPS_OpenerContent", 1),
-            SCH_ST_DPS_ChainStratagemOption = new("SCH_ST_DPS_ChainStratagemOption", 10),
-            SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1);
-        public static UserBool
-            SCH_ST_DPS_Adv = new("SCH_ST_DPS_Adv"),
-            SCH_ST_DPS_Bio_Adv = new("SCH_ST_DPS_Bio_Adv"),
-            SCH_ST_DPS_EnergyDrain_Adv = new("SCH_ST_DPS_EnergyDrain_Adv");
-        public static UserFloat
-            SCH_ST_DPS_Bio_Threshold = new("SCH_ST_DPS_Bio_Threshold", 3.0f),
-            SCH_ST_DPS_EnergyDrain = new("SCH_ST_DPS_EnergyDrain", 3.0f);
-        public static UserBoolArray
-            SCH_ST_DPS_Adv_Actions = new("SCH_ST_DPS_Adv_Actions");
-        #endregion
-
-        #region Healing
-        public static UserInt
-            SCH_AoE_LucidOption = new("SCH_AoE_LucidOption", 6500),
-            SCH_AoE_Heal_LucidOption = new("SCH_AoE_Heal_LucidOption", 6500),
-            SCH_AoE_Heal_SuccorShieldOption = new("SCH_AoE_Heal_SuccorShieldCount"),
-            SCH_AoE_Heal_WhisperingDawnOption = new("SCH_AoE_Heal_WhisperingDawnOption", 70),
-            SCH_AoE_Heal_FeyIlluminationOption = new("SCH_AoE_Heal_FeyIlluminationOption", 70),
-            SCH_AoE_Heal_ConsolationOption = new("SCH_AoE_Heal_ConsolationOption", 70),
-            SCH_AoE_Heal_FeyBlessingOption = new("SCH_AoE_Heal_FeyBlessingOption", 70),
-            SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption", 70),
-            SCH_AoE_Heal_IndomitabilityOption = new("SCH_AoE_Heal_IndomitabilityOption", 70),
-            SCH_ST_Heal_LucidOption = new("SCH_ST_Heal_LucidOption", 6500),
-            SCH_ST_Heal_AdloquiumOption = new("SCH_ST_Heal_AdloquiumOption", 99),
-            SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption", 99),
-            SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption", 99),
-            SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption", 99),
-            SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 99),
-            SCH_ST_Heal_AetherpactDissolveOption = new("SCH_ST_Heal_AetherpactDissolveOption", 99),
-            SCH_ST_Heal_AetherpactFairyGauge = new("SCH_ST_Heal_AetherpactFairyGauge", 99),
-            SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 100);
-        public static UserIntArray
-            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority"),
-            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority");
-        public static UserBool
-            SCH_ST_Heal_Adv = new("SCH_ST_Heal_Adv"),
-            SCH_ST_Heal_UIMouseOver = new("SCH_ST_Heal_UIMouseOver"),
-            SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),
-            SCH_DeploymentTactics_Adv = new("SCH_DeploymentTactics_Adv"),
-            SCH_DeploymentTactics_UIMouseOver = new("SCH_DeploymentTactics_UIMouseOver");
-        public static UserBoolArray
-            SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts");
-        #endregion
-
-        #region Utility
-        internal static UserBool
-            SCH_Aetherflow_Recite_Indom = new("SCH_Aetherflow_Recite_Indom"),
-            SCH_Aetherflow_Recite_Excog = new("SCH_Aetherflow_Recite_Excog");
-        internal static UserInt
-            SCH_Aetherflow_Display = new("SCH_Aetherflow_Display"),
-            SCH_Aetherflow_Recite_ExcogMode = new("SCH_Aetherflow_Recite_ExcogMode"),
-            SCH_Aetherflow_Recite_IndomMode = new("SCH_Aetherflow_Recite_IndomMode"),
-            SCH_Recitation_Mode = new("SCH_Recitation_Mode");
-        #endregion
-
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -103,15 +39,26 @@ internal static partial class SCH
                     break;
 
                 case CustomComboPreset.SCH_DPS_Bio:
-                    DrawSliderInt(0, 100, SCH_ST_DPS_BioOption, "Stop using at Enemy HP%. Set to Zero to disable this check.");
 
-                    DrawAdditionalBoolChoice(SCH_ST_DPS_Bio_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (SCH_ST_DPS_Bio_Adv)
-                    {
-                        ImGui.Indent();
-                        DrawRoundedSliderFloat(0, 4, SCH_ST_DPS_Bio_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
-                        ImGui.Unindent();
-                    }
+                    DrawSliderInt(0, 50, SCH_DPS_BioOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(SCH_DPS_BioSubOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
+
+                    DrawHorizontalRadioButton(SCH_DPS_BioSubOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+                    
+                    
+
+                    DrawRoundedSliderFloat(0, 4, SCH_DPS_BioUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+
+                    ImGui.Unindent();
+
                     break;
 
                 case CustomComboPreset.SCH_DPS_ChainStrat:
@@ -155,7 +102,7 @@ internal static partial class SCH
                     break;
 
                 case CustomComboPreset.SCH_ST_Heal_Adloquium:
-                    DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, $"Start using when below HP %. Set to 100 to disable this check.");
+                    DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, "Start using when below HP %. Set to 100 to disable this check.");
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Ignore Shield Check", $"Warning, will force the use of {Adloquium.ActionName()}, and normal {Physick.ActionName()} maybe unavailable.", 3, 0);
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Sage Shield Check", "Enable to not override an existing Sage's shield.", 3, 1);
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, $"{EmergencyTactics.ActionName()}", $"Use {EmergencyTactics.ActionName()} before {Adloquium.ActionName()}", 3, 2);
@@ -279,5 +226,76 @@ internal static partial class SCH
                     break;
             }
         }
+          #region DPS
+
+        public static UserInt
+            SCH_ST_DPS_AltMode = new("SCH_ST_DPS_AltMode"),
+            SCH_ST_DPS_LucidOption = new("SCH_ST_DPS_LucidOption", 6500),
+            SCH_ST_DPS_BioOption = new("SCH_ST_DPS_BioOption", 10),
+            SCH_ST_DPS_OpenerOption = new("SCH_ST_DPS_OpenerOption"),
+            SCH_ST_DPS_OpenerContent = new("SCH_ST_DPS_OpenerContent", 1),
+            SCH_ST_DPS_ChainStratagemOption = new("SCH_ST_DPS_ChainStratagemOption", 10),
+            SCH_DPS_BioOption = new("SCH_DPS_BioOption"),
+            SCH_DPS_BioSubOption = new("SCH_DPS_BioSubOption", 0),
+            SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1);
+        public static UserBool
+            SCH_ST_DPS_Adv = new("SCH_ST_DPS_Adv"),
+            SCH_ST_DPS_Bio_Adv = new("SCH_ST_DPS_Bio_Adv"),
+            SCH_ST_DPS_EnergyDrain_Adv = new("SCH_ST_DPS_EnergyDrain_Adv");
+        public static UserFloat
+            SCH_DPS_BioUptime_Threshold = new("SCH_DPS_BioUptime_Threshold", 3.0f),
+            SCH_ST_DPS_EnergyDrain = new("SCH_ST_DPS_EnergyDrain", 3.0f);
+        public static UserBoolArray
+            SCH_ST_DPS_Adv_Actions = new("SCH_ST_DPS_Adv_Actions");
+
+        #endregion
+
+        #region Healing
+
+        public static UserInt
+            SCH_AoE_LucidOption = new("SCH_AoE_LucidOption", 6500),
+            SCH_AoE_Heal_LucidOption = new("SCH_AoE_Heal_LucidOption", 6500),
+            SCH_AoE_Heal_SuccorShieldOption = new("SCH_AoE_Heal_SuccorShieldCount"),
+            SCH_AoE_Heal_WhisperingDawnOption = new("SCH_AoE_Heal_WhisperingDawnOption", 70),
+            SCH_AoE_Heal_FeyIlluminationOption = new("SCH_AoE_Heal_FeyIlluminationOption", 70),
+            SCH_AoE_Heal_ConsolationOption = new("SCH_AoE_Heal_ConsolationOption", 70),
+            SCH_AoE_Heal_FeyBlessingOption = new("SCH_AoE_Heal_FeyBlessingOption", 70),
+            SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption", 70),
+            SCH_AoE_Heal_IndomitabilityOption = new("SCH_AoE_Heal_IndomitabilityOption", 70),
+            SCH_ST_Heal_LucidOption = new("SCH_ST_Heal_LucidOption", 6500),
+            SCH_ST_Heal_AdloquiumOption = new("SCH_ST_Heal_AdloquiumOption", 99),
+            SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption", 99),
+            SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption", 99),
+            SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption", 99),
+            SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 99),
+            SCH_ST_Heal_AetherpactDissolveOption = new("SCH_ST_Heal_AetherpactDissolveOption", 99),
+            SCH_ST_Heal_AetherpactFairyGauge = new("SCH_ST_Heal_AetherpactFairyGauge", 99),
+            SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 100);
+        public static UserIntArray
+            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority"),
+            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority");
+        public static UserBool
+            SCH_ST_Heal_Adv = new("SCH_ST_Heal_Adv"),
+            SCH_ST_Heal_UIMouseOver = new("SCH_ST_Heal_UIMouseOver"),
+            SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),
+            SCH_DeploymentTactics_Adv = new("SCH_DeploymentTactics_Adv"),
+            SCH_DeploymentTactics_UIMouseOver = new("SCH_DeploymentTactics_UIMouseOver");
+        public static UserBoolArray
+            SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts");
+
+        #endregion
+
+        #region Utility
+
+        internal static UserBool
+            SCH_Aetherflow_Recite_Indom = new("SCH_Aetherflow_Recite_Indom"),
+            SCH_Aetherflow_Recite_Excog = new("SCH_Aetherflow_Recite_Excog");
+        internal static UserInt
+            SCH_Aetherflow_Display = new("SCH_Aetherflow_Display"),
+            SCH_Aetherflow_Recite_ExcogMode = new("SCH_Aetherflow_Recite_ExcogMode"),
+            SCH_Aetherflow_Recite_IndomMode = new("SCH_Aetherflow_Recite_IndomMode"),
+            SCH_Recitation_Mode = new("SCH_Recitation_Mode");
+
+        #endregion
     }
 }

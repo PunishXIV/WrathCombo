@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Textures.TextureWraps;
+﻿using System;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.ExcelServices;
@@ -8,7 +9,7 @@ using ImGuiNET;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Reflection.Metadata.Ecma335;
+using ECommons.Logging;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Services;
@@ -49,7 +50,6 @@ namespace WrathCombo.Window.Tabs
 
             using (var scrolling = ImRaii.Child("scrolling", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y), true))
             {
-                int i = 1;
                 var indentwidth = 12f.Scale();
                 var indentwidth2 = indentwidth + 42f.Scale();
                 if (OpenJob == string.Empty)
@@ -109,7 +109,7 @@ namespace WrathCombo.Window.Tabs
                         {
                             if (icon != null)
                             {
-                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
+                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X, icon.Size.Y).Scale() / 2f);
                                 ImGui.SameLine();
                             }
                             ImGuiEx.Text($"{OpenJob}");
@@ -180,7 +180,7 @@ namespace WrathCombo.Window.Tabs
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
                 presetBox.Draw();
-                ImGuiHelpers.ScaledDummy(12.0f);
+                ImGuiEx.Spacing(new Vector2(0, 12));
             }
         }
         private static void DrawBozjaContents(string jobName)
@@ -190,7 +190,7 @@ namespace WrathCombo.Window.Tabs
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
                 presetBox.Draw();
-                ImGuiHelpers.ScaledDummy(12.0f);
+                ImGuiEx.Spacing(new Vector2(0, 12));
             }
         }
 
@@ -213,14 +213,21 @@ namespace WrathCombo.Window.Tabs
                     if (!conflictsSource.Where(x => x == preset).Any() || conflictOriginals.Length == 0)
                     {
                         presetBox.Draw();
-                        ImGuiHelpers.ScaledDummy(12.0f);
+                        ImGuiEx.Spacing(new Vector2(0, 12));
                         continue;
                     }
 
                     if (conflictOriginals.Any(PresetStorage.IsEnabled))
                     {
-                        if (Service.Configuration.EnabledActions.Remove(preset))
-                            Service.Configuration.Save();
+                        if (DateTime.UtcNow - LastPresetDeconflictTime > TimeSpan.FromSeconds(3))
+                        {
+                            if (Service.Configuration.EnabledActions.Remove(preset))
+                            {
+                                PluginLog.Debug($"Removed {preset} due to conflict");
+                                Service.Configuration.Save();
+                            }
+                            LastPresetDeconflictTime = DateTime.UtcNow;
+                        }
 
                         // Keep removed items in the counter
                         var parent = PresetStorage.GetParent(preset) ?? preset;
@@ -237,7 +244,7 @@ namespace WrathCombo.Window.Tabs
                 else
                 {
                     presetBox.Draw();
-                    ImGuiHelpers.ScaledDummy(12.0f);
+                    ImGuiEx.Spacing(new Vector2(0, 12));
                 }
             }
         }
@@ -247,6 +254,9 @@ namespace WrathCombo.Window.Tabs
             if ((!onJobChange || !Service.Configuration.OpenToCurrentJobOnSwitch) &&
                 (onJobChange || !Service.Configuration.OpenToCurrentJob ||
                  !Player.Available)) return;
+
+            if (onJobChange && !P.ConfigWindow.IsOpen)
+                return;
 
             if (Player.Job.IsDoh())
                 return;

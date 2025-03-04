@@ -1,4 +1,5 @@
 using ECommons.DalamudServices;
+using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -41,6 +42,7 @@ internal partial class SAM
             {
                 case CustomComboPreset.SAM_ST_Opener:
                     UserConfig.DrawBossOnlyChoice(SAM_Balance_Content);
+                    ImGui.NewLine();
                     UserConfig.DrawSliderInt(0, 13, SAM_Opener_PrePullDelay, $"Delay from first {MeikyoShisui.ActionName()} to next step. (seconds)\nDelay is enforced by replacing your button with Savage Blade.");
                     break;
 
@@ -48,6 +50,7 @@ internal partial class SAM
                     UserConfig.DrawSliderInt(0, 10, SAM_ST_Higanbana_Threshold,
                         "Stop using Higanbana on targets below this HP % (0% = always use).");
 
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
                         "All Enemies",
                         "Uses Higanbana regardless of targeted enemy type.", 0);
@@ -55,6 +58,7 @@ internal partial class SAM
                     UserConfig.DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
                         "Bosses Only",
                         "Only uses Higanbana when the targeted enemy is a boss.", 1);
+                    ImGui.Unindent();
 
                     break;
 

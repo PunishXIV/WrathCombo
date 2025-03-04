@@ -22,7 +22,8 @@ namespace WrathCombo.Window.Tabs
 
                 #region UI Options
 
-                ImGui.Dummy(new Vector2(20f));
+
+                ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("主界面UI设置");
 
                 #region SubCombos
@@ -114,9 +115,9 @@ namespace WrathCombo.Window.Tabs
 
                 #region Rotation Behavior Options
 
-                ImGui.Dummy(new Vector2(20f));
-                ImGuiEx.TextUnderlined("自动循环选项");
 
+                ImGuiEx.Spacing(new Vector2(0, 20));
+                ImGuiEx.TextUnderlined("自动循环选项");
 
                 #region Performance Mode
 
@@ -133,6 +134,15 @@ namespace WrathCombo.Window.Tabs
                     Service.Configuration.Save();
 
                 ImGuiComponents.HelpMarker("当你在移动时，完全禁止使用读条技能，这是通过把读条技能变成“雪仇剑”来实现的。\n这将取代针对大多数职业所具备的特定连招的移动选项。");
+
+                #endregion
+
+                #region Action Changing
+
+                if (ImGui.Checkbox("Action Replacing", ref Service.Configuration.ActionChanging))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by /wrath combo");
 
                 #endregion
 
@@ -241,7 +251,8 @@ namespace WrathCombo.Window.Tabs
 
                 #region Troubleshooting Options
 
-                ImGui.Dummy(new Vector2(20f));
+
+                ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("找Bug/分析选项");
 
                 #region Combat Log

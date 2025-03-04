@@ -10,6 +10,8 @@ namespace WrathCombo.Extensions
         internal static bool TraitLevelChecked(this uint value) => CustomComboFunctions.TraitLevelChecked(value);
 
         internal static string ActionName(this uint value) => ActionWatching.GetActionName(value);
+
+        internal static int Role(this uint value) => CustomComboFunctions.JobIDs.JobIDToRole(value);
     }
 
     internal static class UShortExtensions

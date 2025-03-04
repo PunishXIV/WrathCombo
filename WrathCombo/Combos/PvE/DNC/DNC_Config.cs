@@ -30,20 +30,37 @@ internal partial class DNC
         /// </summary>
         private static void DrawAntiDriftOptions()
         {
-            ImGui.Dummy(new Vector2(1f, 12f));
-            ImGui.Indent(40f);
-            ImGui.Text("·À´íÎ»Ñ¡Ïî:     (Êó±êÐüÍ£Ö®ÒÔ»ñµÃ¸ü¶àÐÅÏ¢)");
-            ImGui.Unindent(40f);
-            ImGui.NewLine();
+            ImGuiEx.Spacing(new Vector2(40, 12));
+            ImGui.Text("é˜²é”™ä½é€‰é¡¹:     (é¼ æ ‡æ‚¬åœä¹‹ä»¥èŽ·å¾—æ›´å¤šä¿¡æ¯)");
 
+            #region Show a colored display of the user's current detected GCD
+
+            var color = GCDValue switch
+            {
+                GCDRange.Perfect => ImGuiColors.HealerGreen,
+                GCDRange.NotGood => ImGuiColors.DalamudYellow,
+                _ => ImGuiColors.DalamudRed,
+            };
+            ImGui.SameLine();
+            ImGui.Text("GCD: " );
+            ImGui.SameLine();
+            ImGui.TextColored(color, $"{GCD:0.00}");
+
+            ImGui.NewLine();
+            #endregion
+
+            var t = ImGui.GetCursorPos();
+            const string texTrip = "Forced Triple Weave";
             UserConfig.DrawRadioButton(
-                DNC_ST_ADV_AntiDrift, "Forced Triple Weave",
+                DNC_ST_ADV_AntiDrift, texTrip,
                 "Forces a triple weave of Flourish and Fan Dance 3 + 4 during non-opener burst windows." +
                 "\nFixes SS/FM drift where you use a gcd when SS/FM is on a 0.5sec CD." +
                 "\nRecommended anti-drift option.",
                 outputValue: (int) AntiDrift.TripleWeave, descriptionAsTooltip: true);
+            var h = ImGui.GetCursorPos();
+            const string texHold = "Hold before Standard Step";
             UserConfig.DrawRadioButton(
-                DNC_ST_ADV_AntiDrift, "Hold before Standard Step",
+                DNC_ST_ADV_AntiDrift, texHold,
                 "Will hold GCDs for Standard Step if it is going to come off cooldown before your next GCD." +
                 "\nThis WILL give you down-time." +
                 "\nONLY recommended if you have extra skill speed, but can be used as an anti-drift option.",
@@ -59,6 +76,32 @@ internal partial class DNC
                 "Will not use any anti-drift options." +
                 "\nThis WILL cause drift. NOT recommended.",
                 outputValue: (int) AntiDrift.None, descriptionAsTooltip: true);
+
+            #region Show recommended setting, based on GCD
+
+            // Save the current cursor position
+            var pos = ImGui.GetCursorPos();
+
+            // Determine which recommendation text to show
+            const string rec = "(Recommended)";
+            var recTriple = GCDValue is GCDRange.Perfect ? rec : "";
+            var recHold = GCDValue is not GCDRange.Perfect ? rec : "";
+
+            // Set the position of (any) Triple-Weave recommendation text
+            var texSize = ImGui.CalcTextSize(texHold);
+            ImGui.SetCursorPos(
+                t with { X = t.X + texSize.X + 110f.Scale(), Y = t.Y - texSize.Y - 2f.Scale() });
+            ImGui.TextColored(ImGuiColors.DalamudGrey, recTriple);
+
+            // Set the position of (any) Hold recommendation text
+            ImGui.SetCursorPos(
+                h with { X = h.X + texSize.X + 110f.Scale(), Y = h.Y - 2f.Scale() });
+            ImGui.TextColored(ImGuiColors.DalamudGrey, recHold);
+
+            // Reset to where the cursor was
+            ImGui.SetCursorPos(pos);
+
+            #endregion
         }
 
         internal static void Draw(CustomComboPreset preset)
@@ -85,30 +128,31 @@ internal partial class DNC
                         .Select(x => (int) x).ToArray();
 
                     bool inputChanged = false;
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Red) Emboite replacement Action ID",
                         ref actions[0], 0);
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Blue) Entrechat replacement Action ID",
                         ref actions[1], 0);
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Green) Jete replacement Action ID",
                         ref actions[2], 0);
-                    ImGui.SetNextItemWidth(50f.Scale());
+                    ImGuiEx.SetNextItemWidthScaled(50);
                     inputChanged |= ImGui.InputInt(
                         "(Yellow) Pirouette replacement Action ID",
                         ref actions[3], 0);
 
-                    ImGui.Dummy(new Vector2(0f, 12f.Scale()));
+                    ImGuiEx.Spacing(new Vector2(0, 12));
+
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
                     ImGui.TextWrapped(
                         "This WILL let you set up a conflict!");
                     ImGui.PopStyleColor();
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                    ImGui.TextWrapped("Double check the actions you are setting do not conflict with other combos you are using!");
+                    ImGui.TextWrapped("Double check the actions you are setting do not conflict with other combos you are using, or enable the feature below!");
                     ImGui.PopStyleColor();
 
                     if (inputChanged)
@@ -129,11 +173,11 @@ internal partial class DNC
                     ImGui.Indent();
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
                     ImGui.TextWrapped(
-                        "¿ª³¡Ñ¡Ïî:     (Êó±êÐüÍ£Ö®ÒÔ»ñÈ¡ËµÃ÷)");
+                        "ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½:     (ï¿½ï¿½ï¿½ï¿½ï¿½Í£Ö®ï¿½Ô»ï¿½È¡Ëµï¿½ï¿½)");
                     ImGui.PopStyleColor();
                     ImGui.Unindent();
-                    ImGui.NewLine();
 
+                    ImGui.NewLine();
                     UserConfig.DrawRadioButton(DNC_ST_OpenerSelection,
                         "Standard: 15s Countdown",
                         "Requires at least a 15s cooldown\nand that you start Standard Step at 15s.",
@@ -154,7 +198,10 @@ internal partial class DNC
                         "Technical: 7s Countdown",
                         "Requires at least a 7s cooldown\nand that you start Technical Step at 7s.\nNOT recommended.",
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
+
+                    ImGui.Indent();
                     UserConfig.DrawBossOnlyChoice(DNC_ST_OpenerDifficulty);
+                    ImGui.Unindent();
 
                     break;
 
@@ -170,6 +217,7 @@ internal partial class DNC
                         "Target HP% to stop using Standard Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_SS_IncludeSS,
                         "Include Standard Step",
@@ -194,6 +242,7 @@ internal partial class DNC
                         "Target HP% to stop using Technical Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TS_IncludeTS,
                         "Include Technical Step",
@@ -221,6 +270,7 @@ internal partial class DNC
                     break;
 
                 case CustomComboPreset.DNC_ST_Adv_Tillana:
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TillanaUse,
                         "Use Tillana Normally",
@@ -237,6 +287,7 @@ internal partial class DNC
                         "\nNOT recommended.",
                         outputValue: (int) TillanaDriftProtection.Favor,
                         itemWidth: 125f);
+                    ImGui.Unindent();
 
                     break;
 
@@ -276,6 +327,7 @@ internal partial class DNC
                         "Target HP% to stop using Standard Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_AoE_Adv_SS_IncludeSS,
                         "Include Standard Step",
@@ -298,6 +350,7 @@ internal partial class DNC
                         "Target HP% to stop using Technical Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGuiEx.Spacing(new Vector2(30, 0));
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_AoE_Adv_TS_IncludeTS,
                         "Include Technical Step",

@@ -13,6 +13,7 @@ using WrathCombo.Combos;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
+using WrathCombo.Window.Tabs;
 
 #endregion
 
@@ -294,11 +295,22 @@ public class Search(Leasing leasing)
                     ? _leasing.CombosUpdated
                     : _leasing.OptionsUpdated ?? DateTime.MinValue);
 
-            if (field != null &&
-                File.GetLastWriteTime(ConfigFilePath) <=
-                _lastCacheUpdateForPresetStates &&
-                presetsUpdated <= _lastCacheUpdateForPresetStates)
-                return field;
+            if (!Debug.DebugConfig)
+            {
+                if (field != null &&
+                    File.GetLastWriteTime(ConfigFilePath) <=
+                    _lastCacheUpdateForPresetStates &&
+                    presetsUpdated <= _lastCacheUpdateForPresetStates)
+                    return field;
+            }
+            else
+            {
+                if (field != null &&
+                    DateTime.Now.AddSeconds(-1) <=
+                    _lastCacheUpdateForPresetStates &&
+                    presetsUpdated <= _lastCacheUpdateForPresetStates)
+                    return field;
+            }
 
             field = Presets
                 .ToDictionary(
@@ -402,65 +414,70 @@ public class Search(Leasing leasing)
         {
             if (File.GetLastWriteTime(ConfigFilePath) <=
                 _lastCacheUpdateForComboStatesByJobCategorized)
-                return field is null ? new() : field;
+                return field ?? [];
 
-            Task.Run(() => field = Presets
-                .Where(preset =>
-                    preset.Value is { IsVariant: false, HasParentCombo: false } &&
-                    !preset.Key.Contains("pvp", ToLower))
-                .SelectMany(preset => new[]
-                {
-                    new
+            Task.Run(() =>
+            {
+                field = Presets
+                    .Where(preset =>
+                        preset.Value is
+                        { IsVariant: false, HasParentCombo: false } &&
+                        !preset.Key.Contains("pvp", ToLower))
+                    .SelectMany(preset => new[]
                     {
-                        Job = (Job)preset.Value.Info.JobID,
-                        Combo = preset.Key,
-                        preset.Value.Info
-                    }
-                })
-                .GroupBy(x => x.Job)
-                .ToDictionary(
-                    g => g.Key,
-                    g => g.GroupBy(x =>
-                            x.Info.Name.Contains("heals - single", ToLower)
-                                ? ComboTargetTypeKeys.HealST
-                                : x.Info.Name.Contains("heals - aoe", ToLower)
-                                    ? ComboTargetTypeKeys.HealMT
-                                    : x.Info.Name.Contains("- aoe", ToLower) ||
-                                      x.Info.Name.Contains("aoe dps feature",
-                                          ToLower)
-                                        ? ComboTargetTypeKeys.MultiTarget
-                                        : x.Info.Name.Contains("- single target",
-                                              ToLower) ||
-                                          x.Info.Name.Contains(
-                                              "single target dps feature",
-                                              ToLower)
-                                            ? ComboTargetTypeKeys.SingleTarget
-                                            : ComboTargetTypeKeys.Other
-                        )
-                        .ToDictionary(
-                            g2 => g2.Key,
-                            g2 => g2.GroupBy(x =>
-                                    x.Info.Name.Contains("advanced mode -",
-                                        ToLower) ||
-                                    x.Info.Name.Contains("dps feature", ToLower)
-                                        ? ComboSimplicityLevelKeys.Advanced
-                                        : x.Info.Name.Contains("simple mode -",
-                                            ToLower)
-                                            ? ComboSimplicityLevelKeys.Simple
-                                            : ComboSimplicityLevelKeys.Other
-                                )
-                                .ToDictionary(
-                                    g3 => g3.Key,
-                                    g3 => g3.ToDictionary(
-                                        x => x.Combo,
-                                        x => ComboStatesByJob[x.Job][x.Combo]
+                        new
+                        {
+                            Job = (Job)preset.Value.Info.JobID,
+                            Combo = preset.Key,
+                            preset.Value.Info
+                        }
+                    })
+                    .GroupBy(x => x.Job)
+                    .ToDictionary(
+                        g => g.Key,
+                        g => g.GroupBy(x =>
+                                x.Info.Name.Contains("heals - single", ToLower) ?
+                                    ComboTargetTypeKeys.HealST :
+                                    x.Info.Name.Contains("heals - aoe", ToLower) ?
+                                        ComboTargetTypeKeys.HealMT :
+                                        x.Info.Name.Contains("- aoe", ToLower) ||
+                                        x.Info.Name.Contains("aoe dps feature",
+                                            ToLower) ?
+                                            ComboTargetTypeKeys.MultiTarget :
+                                            x.Info.Name.Contains("- single target",
+                                                ToLower) ||
+                                            x.Info.Name.Contains(
+                                                "single target dps feature",
+                                                ToLower) ?
+                                                ComboTargetTypeKeys.SingleTarget :
+                                                ComboTargetTypeKeys.Other
+                            )
+                            .ToDictionary(
+                                g2 => g2.Key,
+                                g2 => g2.GroupBy(x =>
+                                        x.Info.Name.Contains("advanced mode -",
+                                            ToLower) ||
+                                        x.Info.Name.Contains("dps feature",
+                                            ToLower) ?
+                                            ComboSimplicityLevelKeys.Advanced :
+                                            x.Info.Name.Contains("simple mode -",
+                                                ToLower) ?
+                                                ComboSimplicityLevelKeys.Simple :
+                                                ComboSimplicityLevelKeys.Other
                                     )
-                                )
-                        )
-                ));
-            _lastCacheUpdateForComboStatesByJobCategorized = DateTime.Now;
+                                    .ToDictionary(
+                                        g3 => g3.Key,
+                                        g3 => g3.ToDictionary(
+                                            x => x.Combo,
+                                            x => ComboStatesByJob[x.Job][x.Combo]
+                                        )
+                                    )
+                            )
+                    );
+                _lastCacheUpdateForComboStatesByJobCategorized = DateTime.Now;
+            });
 
-            return field is null ? new() : field;
+            return field ?? [];
         }
     }
 

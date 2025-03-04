@@ -78,7 +78,7 @@ namespace WrathCombo.Window
             RespectCloseHotkey = true;
 
             SizeCondition = ImGuiCond.FirstUseEver;
-            Size = new Vector2(800, 650);
+            Size = new Vector2(800, 650).Scale();
             SetMinSize();
 
             Svc.PluginInterface.UiBuilder.DefaultFontHandle.ImFontChanged += SetMinSize;
@@ -88,7 +88,7 @@ namespace WrathCombo.Window
         {
             SizeConstraints = new()
             {
-                MinimumSize = new Vector2(700f.Scale(), 10f.Scale())
+                MinimumSize = new Vector2(700, 10).Scale()
             };
         }
 
@@ -99,7 +99,7 @@ namespace WrathCombo.Window
 
             var topLeftSideHeight = region.Y;
 
-            using var style = ImRaii.PushStyle(ImGuiStyleVar.CellPadding, new Vector2(4, 0));
+            using var style = ImRaii.PushStyle(ImGuiStyleVar.CellPadding, new Vector2(4, 0).Scale());
             using var table = ImRaii.Table("###MainTable", 2, ImGuiTableFlags.Resizable);
             if (!table)
                 return;
@@ -135,7 +135,7 @@ namespace WrathCombo.Window
                 {
                     ImGuiEx.LineCentered("###WrathLogo", () =>
                     {
-                        ImGui.Image(logo.ImGuiHandle, new(125f.Scale(), 125f.Scale()));
+                        ImGui.Image(logo.ImGuiHandle, new Vector2(125).Scale());
                     });
 
                 }

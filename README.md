@@ -145,20 +145,24 @@ the [Discord](https://discord.gg/Zzrcc8kmvy) server for more info.
 
 ## Use with Other Plugins
 
-By default, the plugins below will ensure that combos in Wrath are set up, and
-will lock all settings under those combos to `On` if combos were not set up, to
-ensure that the rotation will run.
+### [Orbwalker](https://puni.sh/plugin/Orbwalker)
+
+Wrath Combo can use Orbwalker to stop player movement in Auto-Rotation mode 
+instead of requiring the player to stop before choosing to cast.
+
+1. Open Wrath Combo's Auto-Rotation Settings: `/wrath autosettings`.
+2. Check "Enable Orbwalker Integration".
+3. Open Orbwalker and confirm your settings: `/orbwalker`.
 
 ### [AutoDuty](https://github.com/ffxivcode/AutoDuty)
 
 Wrath Combo can be used as the Rotation Engine for AutoDuty, such that Wrath Combo's
 Auto-Rotation will be used during duties.
 To enable this:
-1. Open AutoDuty's main window.
-2. Go to the "Config" tab.
-3. Expand the "Duty Config Settings" section.
-4. Enable "Auto Manage Rotation Plugin State".
-5. (Also check "> Wrath Config Options <" -> "Auto setup jobs for autorotation")\
+1. Open AutoDuty's Config window: `/autoduty cfg`.
+2. Expand the "Duty Config Settings" section.
+3. Enable "Auto Manage Rotation Plugin State".
+4. (Also check "> Wrath Config Options <" -> "Auto setup jobs for autorotation")\
    (if you already have your jobs setup, you can skip this step)
 
 ### [Questionable](https://git.carvel.li/liza/Questionable)
@@ -166,9 +170,13 @@ To enable this:
 Wrath Combo can be used as the Combat Module for Questionable, such that Wrath 
 Combo's Auto-Rotation will be employed during questing.
 To enable this:
-1. Open Questionable's Settings window.
+1. Open Questionable's Settings window: `/qst config`.
 2. Go to the "General" tab.
 3. Select "Wrath Combo" as the "Preferred Combat Module".
+
+> By default, the two plugins above will ensure that combos in Wrath are set up, and
+will lock all settings under those combos to `On` if combos were not set up, to
+ensure that the rotation will run.
 
   <p align="right"><a href="#top" alt="Back to top"><img src=/res/readme_images/arrowhead-up.png width ="25"/></a></p>
 </section> 
@@ -180,7 +188,9 @@ To enable this:
 
 | **Chat command**                       | **Function**                                                                                                                                                                   |
 |:---------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `/wrath`                               | Opens the main plugin window, where you can enable/disable features, access settings and more.                                                                                 |
+| `/wrath`                               | Toggles the main plugin window, where you can enable/disable features, access settings and more.                                                                               |
+| `/wrath pve`                           | Opens the main plugin window, to the PvE tab.                                                                                                                                  |
+| `/wrath pvp`                           | Opens the main plugin window, to the PvP tab.                                                                                                                                  |
 | `/wrath settings`                      | Opens the main plugin window, to the Settings tab.                                                                                                                             |
 | `/wrath autosettings`                  | Opens the main plugin window, to the Auto-Rotation tab.                                                                                                                        |
 | `/wrath <X>`                           | Opens the main plugin window, to a specific job's PvE features.<br>Replace `<X>` with the jobs abbreviation.                                                                   |
