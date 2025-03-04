@@ -13,13 +13,16 @@ internal partial class MNK
             if (actionID is not (Bootshine or LeapingOpo))
                 return actionID;
 
-            if ((!InCombat() || !InMeleeRange()) &&
+            if (LevelChecked(SteeledMeditation) &&
+                (!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
+                IsOriginal(MasterfulBlitz) &&
                 !HasEffect(Buffs.RiddleOfFire) &&
-                LevelChecked(SteeledMeditation))
+                !HasEffect(Buffs.WindsRumination) &&
+                !HasEffect(Buffs.FiresRumination))
                 return OriginalHook(SteeledMeditation);
 
-            if (!InCombat() && LevelChecked(FormShift) &&
+            if (LevelChecked(FormShift) && !InCombat() &&
                 !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance) &&
                 !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
@@ -67,20 +70,6 @@ internal partial class MNK
                     return OriginalHook(SteeledMeditation);
             }
 
-            if (HasEffect(Buffs.FiresRumination) &&
-                !HasEffect(Buffs.FormlessFist) &&
-                !JustUsed(RiddleOfFire, 4) && 
-                (JustUsed(OriginalHook(Bootshine)) ||
-                 JustUsed(DragonKick) ||
-                 GetBuffRemainingTime(Buffs.FiresRumination) < 4))
-                return FiresReply;
-
-            if (HasEffect(Buffs.WindsRumination) &&
-                LevelChecked(WindsReply) &&
-                HasEffect(Buffs.RiddleOfWind) &&
-                GetBuffRemainingTime(Buffs.WindsRumination) < 4)
-                return WindsReply;
-
             // GCDs
             if (HasEffect(Buffs.FormlessFist))
                 return Gauge.OpoOpoFury == 0
@@ -92,6 +81,22 @@ internal partial class MNK
                 !HasEffect(Buffs.PerfectBalance) &&
                 !IsOriginal(MasterfulBlitz))
                 return OriginalHook(MasterfulBlitz);
+
+            if (HasEffect(Buffs.FiresRumination) &&
+                LevelChecked(FiresReply) &&
+                !HasEffect(Buffs.FormlessFist) &&
+                !JustUsed(RiddleOfFire, 4) &&
+                (JustUsed(OriginalHook(Bootshine)) ||
+                 JustUsed(DragonKick) ||
+                 GetBuffRemainingTime(Buffs.FiresRumination) < 4 ||
+                 !InMeleeRange()))
+                return FiresReply;
+
+            if (HasEffect(Buffs.WindsRumination) &&
+                LevelChecked(WindsReply) &&
+                HasEffect(Buffs.RiddleOfWind) &&
+                (GetBuffRemainingTime(Buffs.WindsRumination) < 4 || !InMeleeRange()))
+                return WindsReply;
 
             // Perfect Balance
             if (HasEffect(Buffs.PerfectBalance))
@@ -143,14 +148,17 @@ internal partial class MNK
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.MNK_STUseMeditation) &&
+                LevelChecked(SteeledMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
+                IsOriginal(MasterfulBlitz) &&
                 !HasEffect(Buffs.RiddleOfFire) &&
-                LevelChecked(SteeledMeditation))
+                !HasEffect(Buffs.WindsRumination) &&
+                !HasEffect(Buffs.FiresRumination))
                 return OriginalHook(SteeledMeditation);
 
             if (IsEnabled(CustomComboPreset.MNK_STUseFormShift) &&
-                !InCombat() && LevelChecked(FormShift) &&
+                LevelChecked(FormShift) && !InCombat() &&
                 !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance) &&
                 !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
@@ -225,25 +233,6 @@ internal partial class MNK
                     return OriginalHook(SteeledMeditation);
             }
 
-            if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
-            {
-                if (IsEnabled(CustomComboPreset.MNK_STUseFiresReply) &&
-                    HasEffect(Buffs.FiresRumination) &&
-                    !HasEffect(Buffs.FormlessFist) &&
-                    !JustUsed(RiddleOfFire, 4) && 
-                    (JustUsed(OriginalHook(Bootshine)) ||
-                     JustUsed(DragonKick) ||
-                     GetBuffRemainingTime(Buffs.FiresRumination) < 4))
-                    return FiresReply;
-
-                if (IsEnabled(CustomComboPreset.MNK_STUseWindsReply) &&
-                    HasEffect(Buffs.WindsRumination) &&
-                    LevelChecked(WindsReply) &&
-                    HasEffect(Buffs.RiddleOfWind) &&
-                    GetBuffRemainingTime(Buffs.WindsRumination) < 4)
-                    return WindsReply;
-            }
-
             // GCDs
             if (HasEffect(Buffs.FormlessFist))
                 return Gauge.OpoOpoFury == 0
@@ -256,6 +245,27 @@ internal partial class MNK
                 !HasEffect(Buffs.PerfectBalance) &&
                 !IsOriginal(MasterfulBlitz))
                 return OriginalHook(MasterfulBlitz);
+
+            if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
+            {
+                if (IsEnabled(CustomComboPreset.MNK_STUseFiresReply) &&
+                    HasEffect(Buffs.FiresRumination) &&
+                    LevelChecked(FiresReply) &&
+                    !HasEffect(Buffs.FormlessFist) &&
+                    !JustUsed(RiddleOfFire, 4) &&
+                    (JustUsed(OriginalHook(Bootshine)) ||
+                     JustUsed(DragonKick) ||
+                     GetBuffRemainingTime(Buffs.FiresRumination) < 4 ||
+                     !InMeleeRange()))
+                    return FiresReply;
+
+                if (IsEnabled(CustomComboPreset.MNK_STUseWindsReply) &&
+                    HasEffect(Buffs.WindsRumination) &&
+                    LevelChecked(WindsReply) &&
+                    HasEffect(Buffs.RiddleOfWind) &&
+                    (GetBuffRemainingTime(Buffs.WindsRumination) < 4 || !InMeleeRange()))
+                    return WindsReply;
+            }
 
             // Perfect Balance
             if (HasEffect(Buffs.PerfectBalance))
@@ -306,13 +316,18 @@ internal partial class MNK
             if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
                 return actionID;
 
-            if (!InCombat() && Gauge.Chakra < 5 &&
-                LevelChecked(InspiritedMeditation))
+            if (LevelChecked(InspiritedMeditation) &&
+                (!InCombat() || !InMeleeRange()) &&
+                Gauge.Chakra < 5 &&
+                IsOriginal(MasterfulBlitz) &&
+                !HasEffect(Buffs.RiddleOfFire) &&
+                !HasEffect(Buffs.WindsRumination) &&
+                !HasEffect(Buffs.FiresRumination))
                 return OriginalHook(InspiritedMeditation);
 
-            if (!InCombat() && LevelChecked(FormShift) &&
-                !HasEffect(Buffs.FormlessFist) &&
-                !HasEffect(Buffs.PerfectBalance))
+            if (LevelChecked(FormShift) && !InCombat() &&
+                !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance) &&
+                !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
 
             //Variant Cure
@@ -363,22 +378,22 @@ internal partial class MNK
                     return All.Bloodbath;
             }
 
-            if (LevelChecked(FiresReply) &&
-                HasEffect(Buffs.FiresRumination) &&
+            // Masterful Blitz
+            if (LevelChecked(MasterfulBlitz) &&
                 !HasEffect(Buffs.PerfectBalance) &&
-                !HasEffect(Buffs.FormlessFist))
+                !IsOriginal(MasterfulBlitz))
+                return OriginalHook(MasterfulBlitz);
+
+            if (HasEffect(Buffs.FiresRumination) &&
+                LevelChecked(FiresReply) &&
+                !HasEffect(Buffs.FormlessFist) &&
+                !JustUsed(RiddleOfFire, 4))
                 return FiresReply;
 
             if (HasEffect(Buffs.WindsRumination) &&
                 LevelChecked(WindsReply) &&
-                HasEffect(Buffs.RiddleOfWind) &&
-                GetBuffRemainingTime(Buffs.WindsRumination) < 4)
+                HasEffect(Buffs.RiddleOfWind))
                 return WindsReply;
-
-            // Masterful Blitz
-            if (LevelChecked(MasterfulBlitz) && !HasEffect(Buffs.PerfectBalance) &&
-                OriginalHook(MasterfulBlitz) != MasterfulBlitz)
-                return OriginalHook(MasterfulBlitz);
 
             // Perfect Balance
             if (HasEffect(Buffs.PerfectBalance))
@@ -440,13 +455,19 @@ internal partial class MNK
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMeditation) &&
-                !InCombat() && Gauge.Chakra < 5 &&
-                LevelChecked(InspiritedMeditation))
+                LevelChecked(InspiritedMeditation) &&
+                (!InCombat() || !InMeleeRange()) &&
+                Gauge.Chakra < 5 &&
+                IsOriginal(MasterfulBlitz) &&
+                !HasEffect(Buffs.RiddleOfFire) &&
+                !HasEffect(Buffs.WindsRumination) &&
+                !HasEffect(Buffs.FiresRumination))
                 return OriginalHook(InspiritedMeditation);
 
             if (IsEnabled(CustomComboPreset.MNK_AoEUseFormShift) &&
-                !InCombat() && LevelChecked(FormShift) &&
-                !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance))
+                LevelChecked(FormShift) && !InCombat() &&
+                !HasEffect(Buffs.FormlessFist) && !HasEffect(Buffs.PerfectBalance) &&
+                !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
 
             //Variant Cure
@@ -513,31 +534,28 @@ internal partial class MNK
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
-            {
-                if (IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
-                    IsEnabled(CustomComboPreset.MNK_AoEUseFiresReply) &&
-                    LevelChecked(FiresReply) &&
-                    HasEffect(Buffs.FiresRumination) &&
-                    !HasEffect(Buffs.PerfectBalance) &&
-                    !HasEffect(Buffs.FormlessFist))
-                    return FiresReply;
-
-                if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
-                    IsEnabled(CustomComboPreset.MNK_AoEUseWindsReply) &&
-                    HasEffect(Buffs.WindsRumination) &&
-                    LevelChecked(WindsReply) &&
-                    HasEffect(Buffs.RiddleOfWind) &&
-                    GetBuffRemainingTime(Buffs.WindsRumination) < 4)
-                    return WindsReply;
-            }
-
             // Masterful Blitz
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMasterfulBlitz) &&
                 LevelChecked(MasterfulBlitz) &&
                 !HasEffect(Buffs.PerfectBalance) &&
-                OriginalHook(MasterfulBlitz) != MasterfulBlitz)
+                !IsOriginal(MasterfulBlitz))
                 return OriginalHook(MasterfulBlitz);
+
+            if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
+            {
+                if (IsEnabled(CustomComboPreset.MNK_AoEUseFiresReply) &&
+                    HasEffect(Buffs.FiresRumination) &&
+                    LevelChecked(FiresReply) &&
+                    !HasEffect(Buffs.FormlessFist) &&
+                    !JustUsed(RiddleOfFire, 4))
+                    return FiresReply;
+
+                if (IsEnabled(CustomComboPreset.MNK_AoEUseWindsReply) &&
+                    HasEffect(Buffs.WindsRumination) &&
+                    LevelChecked(WindsReply) &&
+                    HasEffect(Buffs.RiddleOfWind))
+                    return WindsReply;
+            }
 
             // Perfect Balance
             if (HasEffect(Buffs.PerfectBalance))
