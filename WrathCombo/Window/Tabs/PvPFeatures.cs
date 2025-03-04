@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface;
+﻿using System;
+using Dalamud.Interface;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -6,6 +7,7 @@ using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Linq;
 using System.Numerics;
+using ECommons.Logging;
 using WrathCombo.Core;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
@@ -52,14 +54,14 @@ namespace WrathCombo.Window.Tabs
                         using (var disabled = ImRaii.Disabled(DisabledJobsPVP.Any(x => x == id)))
                         {
                             if (ImGui.Selectable($"###{header}", OpenJob == jobName, ImGuiSelectableFlags.None,
-                                    icon == null ? new Vector2(0, 32f.Scale()) : new Vector2(0, (icon.Size.Y / 2f).Scale())))
+                                    icon == null ? new Vector2(0, 32).Scale() : new Vector2(0, icon.Size.Y / 2f).Scale()))
                             {
                                 OpenJob = jobName;
                             }
                             ImGui.SameLine(indentwidth);
                             if (icon != null)
                             {
-                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
+                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X, icon.Size.Y).Scale() / 2f);
                                 ImGui.SameLine(indentwidth2);
                             }
                             ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
@@ -83,7 +85,7 @@ namespace WrathCombo.Window.Tabs
                         {
                             if (icon != null)
                             {
-                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
+                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X, icon.Size.Y).Scale() / 2f);
                                 ImGui.SameLine();
                             }
                             ImGuiEx.Text($"{OpenJob}");
@@ -129,14 +131,21 @@ namespace WrathCombo.Window.Tabs
                     if (!conflictsSource.Where(x => x == preset).Any() || conflictOriginals.Length == 0)
                     {
                         presetBox.Draw();
-                        ImGuiHelpers.ScaledDummy(12.0f);
+                        ImGuiEx.Spacing(new Vector2(0, 12));
                         continue;
                     }
 
                     if (conflictOriginals.Any(PresetStorage.IsEnabled))
                     {
-                        if (Service.Configuration.EnabledActions.Remove(preset))
-                            Service.Configuration.Save();
+                        if (DateTime.UtcNow - LastPresetDeconflictTime > TimeSpan.FromSeconds(3))
+                        {
+                            if (Service.Configuration.EnabledActions.Remove(preset))
+                            {
+                                PluginLog.Debug($"Removed {preset} due to conflict");
+                                Service.Configuration.Save();
+                            }
+                            LastPresetDeconflictTime = DateTime.UtcNow;
+                        }
 
                         // Keep removed items in the counter
                         var parent = PresetStorage.GetParent(preset) ?? preset;
@@ -153,7 +162,7 @@ namespace WrathCombo.Window.Tabs
                 else
                 {
                     presetBox.Draw();
-                    ImGuiHelpers.ScaledDummy(12.0f);
+                    ImGuiEx.Spacing(new Vector2(0, 12));
                 }
             }
         }

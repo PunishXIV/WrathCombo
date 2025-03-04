@@ -124,7 +124,7 @@ internal partial class DRK
                         DRK_ST_MitDifficultyListSet,
                         "Select what difficulties mitigation should be used in:"
                     );
-                    ImGuiHelpers.ScaledDummy(15.0f);
+                    ImGuiEx.Spacing(new Vector2(0, 15));
 
                     break;
 
@@ -133,6 +133,7 @@ internal partial class DRK
                         startUsingAtDescriptionPlusDisable,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
 
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "All Enemies",
                         "Will use The Blackest Night regardless of the type of enemy.",
@@ -142,6 +143,7 @@ internal partial class DRK
                         "Will try not to use Blackest Night when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
                         outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                    ImGui.Unindent();
 
                     break;
 
@@ -176,6 +178,7 @@ internal partial class DRK
                         stopUsingAtDescription,
                         itemWidth: little, sliderIncrement: SliderIncrements.Ones);
 
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "All Enemies",
                         "Will use Living Dead regardless of the type of enemy.",
@@ -185,6 +188,7 @@ internal partial class DRK
                         "Will try not to use Living Dead when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
                         outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                    ImGui.Unindent();
 
                     break;
 
@@ -232,6 +236,15 @@ internal partial class DRK
                     UserConfig.DrawSliderInt(50, 100, DRK_AoE_BloodOvercapThreshold,
                         startUsingAboveDescription,
                         itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
+
+                    break;
+
+                case CustomComboPreset.DRK_AoE_Sp_Flood:
+                    UserConfig.DrawSliderInt(0, 3000, DRK_AoE_ManaSpenderPooling,
+                        "Mana to save for TBN (0 = Use All)",
+                        itemWidth: biggest,
+                        sliderIncrement: SliderIncrements.Thousands);
+
                     break;
 
                 case CustomComboPreset.DRK_AoE_Mit_Oblation:
@@ -352,8 +365,7 @@ internal partial class DRK
                     break;
 
                 case CustomComboPreset.DRK_Mit_DarkMissionary:
-                    ImGui.Dummy(new Vector2(15f.Scale(), 0f));
-                    ImGui.SameLine();
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Require party",
@@ -364,7 +376,9 @@ internal partial class DRK
                         "Use Always",
                         "Will not require a party for Dark Missionary.",
                         outputValue: (int) PartyRequirement.No, itemWidth: medium);
+                    ImGui.Unindent();
 
+                    ImGui.NewLine();
                     UserConfig.DrawPriorityInput(DRK_Mit_Priorities,
                         numberMitigationOptions, 3,
                         "Dark Missionary Priority:");
@@ -390,8 +404,7 @@ internal partial class DRK
                     break;
 
                 case CustomComboPreset.DRK_Mit_ArmsLength:
-                    ImGui.Dummy(new Vector2(15f.Scale(), 0f));
-                    ImGui.SameLine();
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
@@ -400,7 +413,9 @@ internal partial class DRK
                         DRK_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
                         outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                    ImGui.Unindent();
 
+                    ImGui.NewLine();
                     UserConfig.DrawSliderInt(0, 3, DRK_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)",
                         itemWidth: little, sliderIncrement: SliderIncrements.Ones);
@@ -906,6 +921,18 @@ internal partial class DRK
         /// <seealso cref="CustomComboPreset.DRK_AoE_Sp_BloodOvercap" />
         public static readonly UserInt DRK_AoE_BloodOvercapThreshold =
             new("DRK_AoE_BloodOvercapThreshold", 90);
+
+        /// <summary>
+        ///     How much mana to save for TBN in AoE.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0 <br />
+        ///     <b>Range</b>: 0 - 3000 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Thousands" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DRK_AoE_Sp_Flood" />
+        public static readonly UserInt DRK_AoE_ManaSpenderPooling =
+            new("DRK_AoE_ManaSpenderPooling", 0);
 
         /// <summary>
         ///     The number of Oblation charges to keep for manual use in AoE.

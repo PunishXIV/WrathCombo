@@ -344,7 +344,7 @@ internal partial class DRK
                     ? flags.HasFlag(Combo.Adv)
                         ? Config.DRK_AoE_SaltThreshold
                         : 30
-                    : 100;
+                    : 0;
 
             #endregion
 
@@ -438,12 +438,12 @@ internal partial class DRK
     ///     strength of the mitigation.
     /// </summary>
     private static readonly bool JustUsedMitigation =
-        JustUsed(BlackestNight, 2f) ||
-        JustUsed(Oblation, 2f) ||
+        JustUsed(BlackestNight, 4f) ||
+        JustUsed(Oblation, 4f) ||
         JustUsed(All.Reprisal, 4f) ||
         JustUsed(DarkMissionary, 5f) ||
         JustUsed(All.Rampart, 6f) ||
-        JustUsed(All.ArmsLength, 2f) ||
+        JustUsed(All.ArmsLength, 4f) ||
         JustUsed(ShadowedVigil, 6f) ||
         JustUsed(LivingDead, 7f);
 
@@ -748,6 +748,8 @@ internal partial class DRK
 
         private bool TryGetBloodAction(Combo flags, ref uint action)
         {
+            if (ComboTimer > 0 && ComboTimer < GCD * 2) return false;
+
             #region Variables
 
             var bloodGCDReady =
@@ -809,7 +811,6 @@ internal partial class DRK
                   IsEnabled(Preset.DRK_AoE_Sp_Quietus)) ||
                  (flags.HasFlag(Combo.ST) &&
                   IsEnabled(Preset.DRK_ST_Sp_Bloodspiller))) &&
-                LevelChecked(Bloodspiller) &&
                 Gauge.Blood >= 50 &&
                 GetCooldownRemainingTime(Delirium) > 37 &&
                 bloodGCDReady)
@@ -830,6 +831,9 @@ internal partial class DRK
                     : Config.DRK_AoE_BloodOvercapThreshold
                 : 90;
 
+            var beforeSouleater =
+                flags.HasFlag(Combo.AoE) || ComboAction == SyphonStrike;
+
             #endregion
 
             if ((flags.HasFlag(Combo.Simple) ||
@@ -837,9 +841,9 @@ internal partial class DRK
                    IsEnabled(Preset.DRK_ST_Sp_BloodOvercap)) ||
                   flags.HasFlag(Combo.AoE) &&
                   IsEnabled(Preset.DRK_AoE_Sp_BloodOvercap))) &&
-                LevelChecked(Bloodspiller) &&
                 Gauge.Blood >= overcapThreshold &&
-                bloodGCDReady)
+                bloodGCDReady &&
+                beforeSouleater)
                 if (flags.HasFlag(Combo.ST))
                     return (action = Bloodspiller) != 0;
                 else if (flags.HasFlag(Combo.AoE) && LevelChecked(Quietus))
@@ -867,10 +871,11 @@ internal partial class DRK
                 ContentCheck.IsInConfiguredContent(
                     Config.DRK_ST_ManaSpenderPoolingDifficulty,
                     Config.DRK_ST_ManaSpenderPoolingDifficultyListSet);
-            var manaPool =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST) && manaPooling
-                    ? ((int)Config.DRK_ST_ManaSpenderPooling)
-                    : 0;
+            var manaPool = flags.HasFlag(Combo.Adv)
+                ? flags.HasFlag(Combo.ST)
+                    ? manaPooling ? (int)Config.DRK_ST_ManaSpenderPooling : 0
+                    : (int)Config.DRK_AoE_ManaSpenderPooling
+                : 0;
             var hasEnoughMana = mana >= (manaPool + 3000);
             var manaEvenBurstSoon =
                 GetCooldownRemainingTime(LivingShadow) is > 0 and < 30;
@@ -916,10 +921,11 @@ internal partial class DRK
 
             #region Mana Darkside Maintenance
 
-            if (flags.HasFlag(Combo.Simple) ||
-                flags.HasFlag(Combo.AoE) ||
-                (flags.HasFlag(Combo.ST) &&
-                 IsEnabled(Preset.DRK_ST_Sp_EdgeDarkside)) &&
+            if ((flags.HasFlag(Combo.Simple) ||
+                 ((flags.HasFlag(Combo.ST) &&
+                   IsEnabled(Preset.DRK_ST_Sp_EdgeDarkside)) ||
+                  flags.HasFlag(Combo.AoE) &&
+                  IsEnabled(Preset.DRK_AoE_Sp_Flood))) &&
                 manaDarksideDropping)
                 if (flags.HasFlag(Combo.ST) && LevelChecked(EdgeOfDarkness))
                     return (action = OriginalHook(EdgeOfDarkness)) != 0;
@@ -934,9 +940,9 @@ internal partial class DRK
             #region Mana Dark Arts Drop Prevention
 
             if ((flags.HasFlag(Combo.Simple) ||
-                 flags.HasFlag(Combo.AoE) ||
-                 (flags.HasFlag(Combo.ST) &&
-                  IsEnabled(Preset.DRK_ST_Sp_DarkArts))) &&
+                 ((flags.HasFlag(Combo.ST) &&
+                   IsEnabled(Preset.DRK_ST_Sp_DarkArts)) ||
+                  flags.HasFlag(Combo.AoE) && IsEnabled(Preset.DRK_AoE_Sp_Flood))) &&
                 Gauge.HasDarkArts &&
                 (manaBursting ||
                  (!manaEvenBurstSoon && HasOwnTBN)))

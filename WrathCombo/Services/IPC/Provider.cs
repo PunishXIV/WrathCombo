@@ -377,18 +377,21 @@ public partial class Provider : IDisposable
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public Dictionary<ComboTargetTypeKeys, bool> IsCurrentJobConfiguredOn()
     {
+        ComboSimplicityLevelKeys? previousMatch = null;
         return new Dictionary<ComboTargetTypeKeys, bool>
         {
             {
                 ComboTargetTypeKeys.SingleTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.Enabled)
+                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.Enabled,
+                    ref previousMatch)
             },
             {
                 ComboTargetTypeKeys.MultiTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.Enabled)
-            }
+                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.Enabled,
+                    ref previousMatch)
+            },
         };
     }
 
@@ -406,18 +409,21 @@ public partial class Provider : IDisposable
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public Dictionary<ComboTargetTypeKeys, bool> IsCurrentJobAutoModeOn()
     {
+        ComboSimplicityLevelKeys? previousMatch = null;
         return new Dictionary<ComboTargetTypeKeys, bool>
         {
             {
                 ComboTargetTypeKeys.SingleTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.AutoMode)
+                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.AutoMode,
+                    ref previousMatch)
             },
             {
                 ComboTargetTypeKeys.MultiTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.AutoMode)
-            }
+                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.AutoMode,
+                    ref previousMatch)
+            },
         };
     }
 

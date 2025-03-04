@@ -13,10 +13,10 @@ internal partial class RPR
             // Don't change anything if not basic skill
             if (actionID is not Slice)
                 return actionID;
-            
+
             //Soulsow
             if (LevelChecked(Soulsow) &&
-                !HasEffect(Buffs.Soulsow) && 
+                !HasEffect(Buffs.Soulsow) &&
                 !PartyInCombat())
                 return Soulsow;
 
@@ -37,7 +37,7 @@ internal partial class RPR
             if (CanWeave())
             {
                 //Arcane Cirlce
-                if (LevelChecked(ArcaneCircle) &&
+                if (LevelChecked(ArcaneCircle) && InBossEncounter() &&
                     (LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle) ||
                      !LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle)))
                     return ArcaneCircle;
@@ -196,7 +196,7 @@ internal partial class RPR
 
             //Soulsow
             if (IsEnabled(CustomComboPreset.RPR_ST_SoulSow) &&
-                LevelChecked(Soulsow) && 
+                LevelChecked(Soulsow) &&
                 !HasEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 
@@ -225,7 +225,9 @@ internal partial class RPR
                 if (IsEnabled(CustomComboPreset.RPR_ST_ArcaneCircle) &&
                     LevelChecked(ArcaneCircle) &&
                     (LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle) ||
-                     !LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle)))
+                     !LevelChecked(Enshroud) && IsOffCooldown(ArcaneCircle)) &&
+                    (Config.RPR_ST_ArcaneCircle_SubOption == 0 ||
+                     Config.RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter()))
                     return ArcaneCircle;
 
                 //Enshroud
@@ -412,7 +414,8 @@ internal partial class RPR
                 return actionID;
 
             //Soulsow
-            if (!HasEffect(Buffs.Soulsow) && !PartyInCombat())
+            if (LevelChecked(Soulsow) &&
+                !HasEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 
             if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
@@ -507,7 +510,8 @@ internal partial class RPR
                 return actionID;
 
             //Soulsow
-            if (IsEnabled(CustomComboPreset.RPR_AoE_SoulSow) && 
+            if (IsEnabled(CustomComboPreset.RPR_AoE_SoulSow) &&
+                LevelChecked(Soulsow) &&
                 !HasEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 

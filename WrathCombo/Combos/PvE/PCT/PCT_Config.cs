@@ -1,3 +1,4 @@
+using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -35,10 +36,13 @@ internal partial class PCT
             switch (preset)
             {
                 case CustomComboPreset.PCT_ST_Advanced_Openers:
+                    ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(PCT_Opener_Choice, $"2nd GCD {StarryMuse.ActionName()}", "", 0);
                     UserConfig.DrawHorizontalRadioButton(PCT_Opener_Choice, $"3rd GCD {StarryMuse.ActionName()}", "", 1);
 
+                    ImGui.NewLine();
                     UserConfig.DrawBossOnlyChoice(PCT_Balance_Content);
+                    ImGui.Unindent();
                     break;
                 case CustomComboPreset.CombinedAetherhues:
                     UserConfig.DrawRadioButton(CombinedAetherhueChoices, "Both Single Target & AoE",

@@ -34,9 +34,6 @@ namespace WrathCombo.Window.Tabs
             if (P.IPC.GetAutoRotationState()) {
                 var inCombatOnly = (bool)P.IPC.GetAutoRotationConfigState(
                     Enum.Parse<AutoRotationConfigOption>("InCombatOnly"))!;
-                if (P.UIHelper.AutoRotationConfigControlled("InCombatOnly") is not null)
-                    ImGuiExtensions.Prefix(false);
-                P.UIHelper.ShowIPCControlledIndicatorIfNeeded("InCombatOnly");
                 ImGuiExtensions.Prefix(!inCombatOnly);
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
                     "只在战斗中启用", ref cfg.InCombatOnly, "InCombatOnly");
@@ -51,7 +48,8 @@ namespace WrathCombo.Window.Tabs
                     ImGuiComponents.HelpMarker("没有和FATE同步等级时，脱战后会禁用自动模式");
 
                     ImGuiExtensions.Prefix(true);
-                    ImGui.SetNextItemWidth(100f.Scale());
+
+                    ImGuiEx.SetNextItemWidthScaled(100);
                     changed |= ImGui.InputInt("战斗开始后延迟激活自动循环的时间（秒）", ref cfg.CombatDelay);
 
                     if (cfg.CombatDelay < 0)
@@ -94,8 +92,10 @@ namespace WrathCombo.Window.Tabs
                 }
                 ImGuiComponents.HelpMarker($"禁用此选项将关闭AOE功能。\n若启用之，则只有当敌人数达到要求时才会使用AoE。此设置适用于所有职业，并适用于任何造成范围伤害的技能。");
 
-                ImGui.SetNextItemWidth(100f.Scale());
+
+                ImGuiEx.SetNextItemWidthScaled(100);
                 changed |= ImGui.SliderFloat("最远目标选择距离", ref cfg.DPSSettings.MaxDistance, 1, 30);
+                
                 cfg.DPSSettings.MaxDistance =
                     Math.Clamp(cfg.DPSSettings.MaxDistance, 1, 30);
 
@@ -188,8 +188,9 @@ namespace WrathCombo.Window.Tabs
                     if (cfg.HealerSettings.AoEHealTargetCount < 0)
                         cfg.HealerSettings.AoEHealTargetCount = 0;
                 }
+
                 ImGuiComponents.HelpMarker($"禁用此选项将关闭群体治疗功能。只有达到群体治疗功所需的目标数量要求时才用。");
-                ImGui.SetNextItemWidth(100f.Scale());
+                ImGuiEx.SetNextItemWidthScaled(100);
                 changed |= ImGui.InputInt("在满足上述条件后开始治疗的延迟时间（秒）", ref cfg.HealerSettings.HealDelay);
 
                 if (cfg.HealerSettings.HealDelay < 0)

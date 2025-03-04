@@ -8,7 +8,9 @@ using System.Net.Http;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.Logging;
+using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 #endregion
 
@@ -61,6 +63,44 @@ public partial class Helper(ref Leasing leasing)
         return false;
     }
 
+    /// <summary>
+    ///     Gets the "opposite" preset, as in Advanced if given Simple, and vice
+    ///     versa.
+    /// </summary>
+    /// <param name="preset">The preset to search for the opposite of.</param>
+    /// <returns>The Opposite-mode preset.</returns>
+    internal static CustomComboPreset? GetOppositeModeCombo(CustomComboPreset preset)
+    {
+        var attr = preset.Attributes();
+
+        if (attr.CustomComboInfo.Name
+            .Contains("heal", StringComparison.CurrentCultureIgnoreCase))
+            return null;
+
+        var targetType = attr.CustomComboInfo.Name
+            .Contains("single target", StringComparison.CurrentCultureIgnoreCase)
+            ? ComboTargetTypeKeys.SingleTarget
+            : ComboTargetTypeKeys.MultiTarget;
+        var simplicityLevel =
+            attr.CustomComboInfo.Name
+                .Contains("simple mode", StringComparison.CurrentCultureIgnoreCase)
+                ? ComboSimplicityLevelKeys.Simple
+                : ComboSimplicityLevelKeys.Advanced;
+        var simplicityLevelToSearchFor =
+            simplicityLevel == ComboSimplicityLevelKeys.Simple
+                ? ComboSimplicityLevelKeys.Advanced
+                : ComboSimplicityLevelKeys.Simple;
+        var categorizedPreset =
+            P.IPCSearch.ComboStatesByJobCategorized
+                [(Job)attr.CustomComboInfo.JobID]
+                [targetType][simplicityLevelToSearchFor];
+        var oppositeMode = categorizedPreset.FirstOrDefault().Key;
+        var oppositeModePreset = (CustomComboPreset)
+            Enum.Parse(typeof(CustomComboPreset), oppositeMode, true);
+
+        return oppositeModePreset;
+    }
+
     #region Auto-Rotation Ready
 
     /// <summary>
@@ -73,6 +113,14 @@ public partial class Helper(ref Leasing leasing)
     /// <param name="enabledStateToCheck">
     ///     The <see cref="ComboStateKeys">State</see> to check.
     /// </param>
+    /// <param name="previousMatch">
+    ///     The <see cref="ComboSimplicityLevelKeys">Simplicity Level</see> that
+    ///     was used in the last call of this method, to make sure that it uses
+    ///     the same level for both checking if enabled and enabled in Auto-Mode.
+    ///     <br />
+    ///     Or <see langword="null" /> if it is the first call, so the level can be
+    ///     set.
+    /// </param>
     /// <returns>
     ///     Whether the current job has simple or advanced combo enabled
     ///     (however specified) for the target type specified.
@@ -80,7 +128,9 @@ public partial class Helper(ref Leasing leasing)
     /// <seealso cref="Provider.IsCurrentJobConfiguredOn" />
     /// <seealso cref="Provider.IsCurrentJobAutoModeOn" />
     internal bool CheckCurrentJobModeIsEnabled
-        (ComboTargetTypeKeys mode, ComboStateKeys enabledStateToCheck)
+            (ComboTargetTypeKeys mode,
+            ComboStateKeys enabledStateToCheck,
+            ref ComboSimplicityLevelKeys? previousMatch)
     {
         if (CustomComboFunctions.LocalPlayer is null)
             return false;
@@ -95,7 +145,7 @@ public partial class Helper(ref Leasing leasing)
         P.IPCSearch.ComboStatesByJobCategorized.TryGetValue((Job)currentRealJob,
             out var comboStates);
 
-        if (comboStates is null)
+        if (comboStates is null || comboStates.Count == 0)
             return false;
 
         comboStates[mode]
@@ -104,6 +154,24 @@ public partial class Helper(ref Leasing leasing)
             simpleResults?.FirstOrDefault().Value;
         var advanced =
             comboStates[mode][ComboSimplicityLevelKeys.Advanced].First().Value;
+
+        // Save the simplicity level, so the same level can be checked for enabled
+        // and enabled in Auto-Mode
+        if (previousMatch is null)
+        {
+            if (simple is not null && simple[enabledStateToCheck])
+                previousMatch = ComboSimplicityLevelKeys.Simple;
+            else if (advanced[enabledStateToCheck])
+                previousMatch = ComboSimplicityLevelKeys.Advanced;
+        }
+
+        // If the simplicity level is set, check that specifically instead of either
+        if (previousMatch is not null)
+        {
+            if (previousMatch == ComboSimplicityLevelKeys.Simple)
+                return simple is not null && simple[enabledStateToCheck];
+            return advanced[enabledStateToCheck];
+        }
 
         return simple is not null && simple[enabledStateToCheck] ||
                advanced[enabledStateToCheck];

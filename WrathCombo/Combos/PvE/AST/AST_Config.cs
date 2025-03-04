@@ -1,10 +1,11 @@
-﻿using ImGuiNET;
+﻿using Dalamud.Interface.Colors;
+using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class AST
@@ -28,6 +29,7 @@ internal static partial class AST
             AST_DPS_CombustOption = new("AST_DPS_CombustOption"),
             AST_QuickTarget_Override = new("AST_QuickTarget_Override"),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
+            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
             //PVP
             ASTPvP_Burst_PlayCardOption = new("ASTPvP_Burst_PlayCardOption");
         public static UserBool
@@ -59,6 +61,7 @@ internal static partial class AST
                 case CustomComboPreset.AST_ST_DPS_Opener:
                     DrawBossOnlyChoice(AST_ST_DPS_Balance_Content);
                     break;
+
                 case CustomComboPreset.AST_ST_DPS:
                     DrawRadioButton(AST_DPS_AltMode, $"On {Malefic.ActionName()}", "", 0);
                     DrawRadioButton(AST_DPS_AltMode, $"On {Combust.ActionName()}", $"Alternative DPS Mode. Leaves {Malefic.ActionName()} alone for pure DPS, becomes {Malefic.ActionName()} when features are on cooldown", 1);
@@ -69,15 +72,25 @@ internal static partial class AST
                     break;
 
                 case CustomComboPreset.AST_ST_DPS_CombustUptime:
-                    DrawSliderInt(0, 100, AST_DPS_CombustOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                    
+                    DrawSliderInt(0, 50, AST_DPS_CombustOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
-                    DrawAdditionalBoolChoice(AST_ST_DPS_CombustUptime_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (AST_ST_DPS_CombustUptime_Adv)
-                    {
-                        ImGui.Indent();
-                        DrawRoundedSliderFloat(0, 4, AST_ST_DPS_CombustUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
-                        ImGui.Unindent();
-                    }
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(AST_ST_DPS_CombustSubOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
+                    
+                    DrawHorizontalRadioButton(AST_ST_DPS_CombustSubOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+                    
+                    
+
+                    DrawRoundedSliderFloat(0, 4, AST_ST_DPS_CombustUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+
+                    ImGui.Unindent();
 
                     break;
 
@@ -203,7 +216,6 @@ internal static partial class AST
                         "Only uses Lady of Crowns when available.", 3);
 
                     break;
-
             }
         }
     }
