@@ -1,4 +1,8 @@
-﻿using ECommons.DalamudServices;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.Automation;
+using ECommons;
+using ECommons.DalamudServices;
+using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 
@@ -11,16 +15,46 @@ internal class All
     /// Used to block user input.
     public const uint SavageBlade = 11;
 
+    private static bool 挑衅喊话 = false;
+    private static bool 退避喊话 = false;
+
+    private static List<string> 挑衅喊话列表 = new List<string>()
+        {
+            "来吧，糊涂的老鬼！",
+            "来吧，没种的蠢货！",
+            "来吧，狂傲的畜生！",
+            "来吧，缺德的蠢货！",
+            "来吧，多管闲事的傻子！",
+            "来吧，没脑子的白痴！",
+            "来吧，没用的废物！",
+            "来吧，缺心眼的暴徒！",
+            "来吧，要死的祸害！",
+            "来吧，唠叨的土包子！",
+            "来吧，差劲的蠢货！",
+            "来吧，特号大傻瓜！",
+            "来吧，大舌头饭桶！",
+            "来吧，缺德的笨蛋！",
+            "来吧，没人要的老狗！",
+            "来吧，愚蠢的懒蛋！",
+            "来吧，没良心的走狗！",
+            "来吧，卑鄙的坏蛋！"
+        };
+
+
     public const uint
         //Tank
         ShieldWall = 197, //LB1, instant, range 0, AOE 50 circle, targets=self, animLock=1.930
         Stronghold = 198, //LB2, instant, range 0, AOE 50 circle, targets=self, animLock=3.860
         Rampart = 7531, //Lv8, instant, 90.0s CD (group 46), range 0, single-target, targets=self
+        铁壁 = 7531, //Lv8, instant, 90.0s CD (group 46), range 0, single-target, targets=self
         LowBlow = 7540, //Lv12, instant, 25.0s CD (group 41), range 3, single-target, targets=hostile
         Provoke = 7533, //Lv15, instant, 30.0s CD (group 42), range 25, single-target, targets=hostile
+        挑衅 = 7533, //Lv15, instant, 30.0s CD (group 42), range 25, single-target, targets=hostile
         Interject = 7538, //Lv18, instant, 30.0s CD (group 43), range 3, single-target, targets=hostile
         Reprisal = 7535, //Lv22, instant, 60.0s CD (group 44), range 0, AOE 5 circle, targets=self
         Shirk = 7537, //Lv48, instant, 120.0s CD (group 49), range 25, single-target, targets=party
+        退避 = 7537, //Lv48, instant, 120.0s CD (group 49), range 25, single-target, targets=party
+
 
         //Healer
         HealingWind = 206, //LB1, 2.0s cast, range 0, AOE 50 circle, targets=self, castAnimLock=2.100
@@ -283,5 +317,58 @@ internal class All
             actionID is FootGraze && CanInterruptEnemy() && ActionReady(HeadGraze)
                 ? HeadGraze
                 : actionID;
+    }
+
+    internal class ALL_Tank_挑衅喊话 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Tank_挑衅喊话;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is 挑衅) {
+                if (JustUsed(挑衅)) {
+                    if (挑衅喊话 == false && IsInParty()) {
+                        挑衅喊话 = true;
+                        IGameObject? TargetEnemy = GetTargetEnemy();
+                        if (TargetEnemy != null) {
+                            string LeaderName = TargetEnemy.Name.ToString();
+                            string 挑衅句子 = 挑衅喊话列表.GetRandom();
+                            Chat.Instance.SendMessage($"/p {挑衅句子}（已挑衅{LeaderName}）<se.6>");
+                        }
+                    }
+                }
+                else {
+                    if (挑衅喊话 == true) {
+                        挑衅喊话 = false;
+                    }
+                }
+            }
+            return actionID;
+        }
+    }
+
+    internal class ALL_Tank_退避喊话 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Tank_退避喊话;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is 退避) {
+                if (JustUsed(退避)) {
+                    if (退避喊话 == false && IsInParty()) {
+                        退避喊话 = true;
+                        IGameObject? healTarget = GetHealTarget(true);
+                        string LeaderName = healTarget.Name.ToString();
+                        Chat.Instance.SendMessage($"/p 顶不住了！你来！（已对{LeaderName}使用[退避]）<se.7>");
+                    }
+                }
+                else {
+                    if (退避喊话 == true) {
+                        退避喊话 = false;
+                    }
+                }
+            }
+            return actionID;
+        }
     }
 }

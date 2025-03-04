@@ -44,6 +44,16 @@ public enum CustomComboPreset
         "Prevents the use of Reprisal when target already has the effect by replacing it with Savage Blade.", ADV.JobID)]
     ALL_Tank_Reprisal = 100001,
 
+    [ReplaceSkill(All.挑衅)]
+    [ParentCombo(ALL_Tank_Menu)]
+    [CustomComboInfo("防护职业：挑衅喊话", "当你挑衅后，发一条消息到小队列表。", ADV.JobID)]
+    ALL_Tank_挑衅喊话 = 10000101,
+
+    [ReplaceSkill(All.退避)]
+    [ParentCombo(ALL_Tank_Menu)]
+    [CustomComboInfo("防护职业：退避喊话", "当你退避后，发一条消息到小队列表。", ADV.JobID)]
+    ALL_Tank_退避喊话 = 10000102,
+
     #endregion
 
     #region Global Healer Features
@@ -3762,6 +3772,10 @@ public enum CustomComboPreset
         PLD.JobID)]
     PLD_AoE_SimpleMode = 11001,
 
+    [ParentCombo(PLD_AoE_SimpleMode)]
+    [CustomComboInfo("不要盾猛","不要在循环中加入击晕技能（因为有的不吃，比如血亏堡老一）",PLD.JobID)]
+    PLD_AoE_不要盾猛 = 1100101,
+
     #endregion
 
     #region ST Advanced Mode
@@ -4045,6 +4059,10 @@ public enum CustomComboPreset
         "Replaces Shield Lob with Holy Spirit when available.\n- Must be under the effect of Divine Might or not moving.",
         PLD.JobID)]
     PLD_ShieldLob_Feature = 11027,
+
+    [ReplaceSkill(All.铁壁)]
+    [CustomComboInfo("铁壁替换选项", "如果铁壁进CD了且壁垒可用，则用壁垒代替之。", PLD.JobID)]
+    PLD_Bulwark = 1104101,
 
     // Variant Features
 
@@ -5308,6 +5326,10 @@ public enum CustomComboPreset
     SCH_AoE_Heal = 16018,
 
     [ParentCombo(SCH_AoE_Heal)]
+    [CustomComboInfo("应急群盾", "如果你有盾，则使用【应急战术】-【士气高昂之策】来抬血。（会优先结算这个）", SCH.JobID)]
+    SCH_Lustrate_应急群盾 = 1601801,
+
+    [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Lucid Dreaming Option", "Adds Lucid Dreaming when MP isn't high enough to cast Succor.",
         SCH.JobID)]
     SCH_AoE_Heal_Lucid = 16019,
@@ -5364,15 +5386,15 @@ public enum CustomComboPreset
     SCH_Lustrate_以太超流 = 1601401,
 
     [ParentCombo(SCH_Lustrate)]
-    [CustomComboInfo("生命回生法", "在抬血前，先插入生命回生法提高疗效。", SCH.JobID)]
-    SCH_Lustrate_生命回生法 = 1601402,
-
-    [ParentCombo(SCH_Lustrate)]
-    [CustomComboInfo("戴绿帽", "若目标生命值高于90%，则优先使用【深谋远虑之策】。", SCH.JobID)]
+    [CustomComboInfo("深谋远虑之策", "如果你有【深谋远虑之策】，则使用【深谋远虑之策】。", SCH.JobID)]
     SCH_Lustrate_深谋远虑之策 = 1601403,
 
     [ParentCombo(SCH_Lustrate)]
-    [CustomComboInfo("应急单盾", "使用【应急战术】-【鼓舞激励之策】来抬血。", SCH.JobID)]
+    [CustomComboInfo("生命回生法", "如果目标生命值低于百分之50，则在抬血前，先插入生命回生法提高疗效。", SCH.JobID)]
+    SCH_Lustrate_生命回生法 = 1601402,
+
+    [ParentCombo(SCH_Lustrate)]
+    [CustomComboInfo("应急单盾", "如果没有豆子，使用【应急战术】-【鼓舞激励之策】来抬血。", SCH.JobID)]
     SCH_Lustrate_应急单盾 = 1601404,
 
     [ReplaceSkill(SCH.Recitation)]

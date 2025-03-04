@@ -253,7 +253,7 @@ internal partial class PLD
                 return All.Interject;
 
             // Stun
-            if (TargetIsCasting())
+            if (!IsEnabled(CustomComboPreset.PLD_AoE_不要盾猛) && TargetIsCasting())
                 if (ActionReady(ShieldBash))
                     return ShieldBash;
                 else if (ActionReady(All.LowBlow))
@@ -786,6 +786,22 @@ internal partial class PLD
             if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (TimeMoving.Ticks == 0 || HasEffect(Buffs.DivineMight)))
                 return HolySpirit;
 
+            return actionID;
+        }
+    }
+
+    //铁壁 → 壁垒 
+    internal class PLD_Bulwark : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_Bulwark;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID == All.铁壁) {
+                if (ActionReady(Bulwark)) {
+                    return Bulwark;
+                }
+            }
             return actionID;
         }
     }

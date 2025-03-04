@@ -662,6 +662,23 @@ namespace WrathCombo.CustomComboNS.Functions
             return isLoSBlocked == false;
         }
 
+        public static unsafe IGameObject? GetTargetEnemy()
+        {
+            ITargetManager tm = Svc.Targets;
+            //先检测UI-Target
+            GameObject* t = Framework.Instance()->GetUIModule()->GetPronounModule()->UiMouseOverTarget;
+            if (t != null && t->GetGameObjectId().ObjectId != 0) {
+                IGameObject? uiTarget = Svc.Objects.Where(x => x.GameObjectId == t->GetGameObjectId().ObjectId).FirstOrDefault();
+                if (uiTarget != null)
+                    return uiTarget;
+            }
+            //再检测当前目标
+            if (!HasFriendlyTarget(CurrentTarget)) {
+                return CurrentTarget;
+            }
+            return null;
+        }
+
         internal static unsafe bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
 
         private static bool IsBoss(IGameObject? target) =>

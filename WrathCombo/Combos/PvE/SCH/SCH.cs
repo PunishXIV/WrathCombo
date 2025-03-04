@@ -41,19 +41,16 @@ internal static partial class SCH
                 }
                 IGameObject? healTarget = GetHealTarget(Config.SCH_ST_Heal_Adv && Config.SCH_ST_Heal_UIMouseOver);
                 float hpPercent = GetTargetHPPercent(healTarget);
-                //有绿帽先挂绿帽
-                if (IsEnabled(CustomComboPreset.SCH_Lustrate_深谋远虑之策) && hpPercent >= 90f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
-                    return Excogitation;
-                }
                 //没绿帽先挂生命回生法
-                if (IsEnabled(CustomComboPreset.SCH_Lustrate_生命回生法) && ActionReady(Protraction)) {
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_生命回生法) && hpPercent <= 50f && ActionReady(Protraction)) {
                     return Protraction;
                 }
-                //结算抬血，若低于50用绿帽抬，若高于50用活性法抬
-                if (hpPercent < 50f && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
+                //有绿帽先挂绿帽
+                if (IsEnabled(CustomComboPreset.SCH_Lustrate_深谋远虑之策) && ActionReady(Excogitation) && Gauge.HasAetherflow()) {
                     return Excogitation;
                 }
-                if (hpPercent >= 50f && ActionReady(Lustrate) && Gauge.HasAetherflow()) {
+                //没绿帽打豆子
+                if (ActionReady(Lustrate) && Gauge.HasAetherflow()) {
                     return Lustrate;
                 }
                 //没豆子了，用应急单盾抬
@@ -475,6 +472,8 @@ internal static partial class SCH
             if (actionID is not Succor)
                 return actionID;
 
+
+
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Aetherflow) &&
                 ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
@@ -492,6 +491,16 @@ internal static partial class SCH
             if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Lucid)
                 && All.CanUseLucid(Config.SCH_AoE_Heal_LucidOption, true))
                 return All.LucidDreaming;
+
+            //没豆子了，用应急单盾抬
+            if (IsEnabled(CustomComboPreset.SCH_Lustrate_应急群盾) && HasEffect(Buffs.Galvanize)) {
+                if (ActionReady(OriginalHook(应急战术))) {
+                    return OriginalHook(应急战术);
+                }
+                if (HasEffect(Buffs.应急战术)) {
+                    return OriginalHook(Succor);
+                }
+            }
 
             float averagePartyHP = GetPartyAvgHPPercent();
             for (int i = 0; i < Config.SCH_AoE_Heals_Priority.Count; i++)
@@ -656,8 +665,11 @@ internal static partial class SCH
                 ActionReady(Adloquium) &&
                 GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) <= Config.SCH_ST_Heal_AdloquiumOption)
             {
-                if (Config.SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics))
+                if (Config.SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics) && !(FindEffectOnMember(Buffs.Galvanize, healTarget) is null))
                     return EmergencyTactics;
+
+                if (Config.SCH_ST_Heal_AldoquimOpts[2] && HasEffect(Buffs.应急战术))
+                    return OriginalHook(Adloquium);
 
                 if ((Config.SCH_ST_Heal_AldoquimOpts[0] || FindEffectOnMember(Buffs.Galvanize, healTarget) is null) && //Ignore existing shield check
                     (!Config.SCH_ST_Heal_AldoquimOpts[1] ||

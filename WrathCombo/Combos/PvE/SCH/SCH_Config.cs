@@ -158,7 +158,7 @@ internal static partial class SCH
                     DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption, $"Start using when below HP %. Set to 100 to disable this check.");
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Ignore Shield Check", $"Warning, will force the use of {Adloquium.ActionName()}, and normal {Physick.ActionName()} maybe unavailable.", 3, 0);
                     DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, "Sage Shield Check", "Enable to not override an existing Sage's shield.", 3, 1);
-                    DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, $"{EmergencyTactics.ActionName()}", $"Use {EmergencyTactics.ActionName()} before {Adloquium.ActionName()}", 3, 2);
+                    DrawHorizontalMultiChoice(SCH_ST_Heal_AldoquimOpts, $"{EmergencyTactics.ActionName()}", $"如果目标已经有盾，则先用 {EmergencyTactics.ActionName()} ", 3, 2);
                     break;
 
                 case CustomComboPreset.SCH_ST_Heal_Lustrate:
