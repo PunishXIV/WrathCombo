@@ -18,8 +18,7 @@ internal partial class GNB
             GNBPvP_Corundum = "GNBPvP_Corundum";
 
         public static UserInt
-            GNB_Opener_LSoption = new ("GNB_Opener_LSoption", 0),
-
+            GNB_Opener_LS = new ("GNB_Opener_LS", 0),
             GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 0),
             GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
             GNB_ST_Corundum_SubOption = new("GNB_ST_Corundum_Option", 0),
@@ -60,7 +59,6 @@ internal partial class GNB
             GNB_GF_Features_Choice = new("GNB_GF_Choice", 0),
             GNB_ST_Balance_Content = new("GNB_ST_Balance_Content", 1),
 
-
             //One-Button Mitigation
             GNB_Mit_Superbolide_Health = new("GNB_Mit_Superbolide_Health", 30),
             GNB_Mit_Corundum_Health = new("GNB_Mit_Corundum_Health", 60),
@@ -86,12 +84,6 @@ internal partial class GNB
         public static UserBoolArray
             GNB_Mit_Superbolide_Difficulty = new("GNB_Mit_Superbolide_Difficulty",
                 [true, false]);
-
-        public static UserBool
-            GNB_Openers_Lv70 = new("GNB_Openers_Lv70", false),
-            GNB_Openers_Lv80 = new("GNB_Openers_Lv80", false),
-            GNB_Openers_Lv90 = new("GNB_Openers_Lv90", false),
-            GNB_Openers_Lv100 = new("GNB_Openers_Lv100", false);
 
         public static readonly ContentCheck.ListSet GNB_Mit_Superbolide_DifficultyListSet = ContentCheck.ListSet.Halved;
 
@@ -157,11 +149,11 @@ internal partial class GNB
 
                 case CustomComboPreset.GNB_ST_Advanced_Opener:
                     ImGui.Spacing();
-                    DrawHorizontalRadioButton(GNB_Opener_LSoption,
+                    DrawHorizontalRadioButton(GNB_Opener_LS,
                         $"Include {LightningShot.ActionName()}",
                         $"Allows the use of {LightningShot.ActionName()} in all Openers", 0);
 
-                    DrawHorizontalRadioButton(GNB_Opener_LSoption,
+                    DrawHorizontalRadioButton(GNB_Opener_LS,
                         $"Exclude {LightningShot.ActionName()}",
                         $"Forbids the use of {LightningShot.ActionName()} from all Openers", 1);
                     ImGui.Spacing();
