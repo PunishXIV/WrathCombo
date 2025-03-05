@@ -26,16 +26,15 @@ internal partial class RPR
                 PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
                 return Variant.VariantCure;
 
-            //Variant Rampart
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
-
             //All Weaves
             if (CanWeave())
             {
+                //Variant Rampart
+                if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart))
+                    return Variant.VariantRampart;
+
                 //Arcane Cirlce
                 if (LevelChecked(ArcaneCircle) && InBossEncounter() &&
                     (LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle) ||
@@ -54,8 +53,7 @@ internal partial class RPR
                     !IsComboExpiring(3))
                 {
                     //Gluttony
-                    if (ActionReady(Gluttony) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)))
+                    if (ActionReady(Gluttony))
                         return TrueNorthReady
                             ? All.TrueNorth
                             : Gluttony;
@@ -72,8 +70,10 @@ internal partial class RPR
                 if (HasEffect(Buffs.Enshrouded))
                 {
                     //Sacrificium
-                    if (Gauge.LemureShroud is 2 && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 &&
-                        HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
+                    if (LevelChecked(Sacrificium) &&
+                        Gauge.LemureShroud <= 4 && HasEffect(Buffs.Oblatio) &&
+                        (InBossEncounter() && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) ||
+                         !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
                         return OriginalHook(Gluttony);
 
                     //Lemure's Slice
@@ -206,13 +206,6 @@ internal partial class RPR
                 PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
                 return Variant.VariantCure;
 
-            //Variant Rampart
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
-
             //RPR Opener
             if (IsEnabled(CustomComboPreset.RPR_ST_Opener))
                 if (Opener().FullOpener(ref actionID))
@@ -221,6 +214,12 @@ internal partial class RPR
             //All Weaves
             if (CanWeave())
             {
+                //Variant Rampart
+                if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart))
+                    return Variant.VariantRampart;
+
                 //Arcane Cirlce
                 if (IsEnabled(CustomComboPreset.RPR_ST_ArcaneCircle) &&
                     LevelChecked(ArcaneCircle) &&
@@ -244,8 +243,7 @@ internal partial class RPR
                 {
                     //Gluttony
                     if (IsEnabled(CustomComboPreset.RPR_ST_Gluttony) &&
-                        ActionReady(Gluttony) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)))
+                        ActionReady(Gluttony))
                     {
                         if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
                             TrueNorthReady)
@@ -262,21 +260,24 @@ internal partial class RPR
                          (Gauge.Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 4)))
                         return OriginalHook(BloodStalk);
                 }
-            }
 
-            //Enshroud Weaves
-            if (HasEffect(Buffs.Enshrouded))
-            {
-                //Sacrificium
-                if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
-                    Gauge.LemureShroud is 2 && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 &&
-                    HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
-                    return OriginalHook(Gluttony);
+                //Enshroud Weaves
+                if (HasEffect(Buffs.Enshrouded))
+                {
+                    //Sacrificium
+                    if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
+                        LevelChecked(Sacrificium) &&
+                        Gauge.LemureShroud <= 4 && HasEffect(Buffs.Oblatio) &&
+                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
+                         (Config.RPR_ST_ArcaneCircle_SubOption == 0 || Config.RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter()) ||
+                         Config.RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
+                        return OriginalHook(Gluttony);
 
-                //Lemure's Slice
-                if (IsEnabled(CustomComboPreset.RPR_ST_Lemure) &&
-                    Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
-                    return OriginalHook(BloodStalk);
+                    //Lemure's Slice
+                    if (IsEnabled(CustomComboPreset.RPR_ST_Lemure) &&
+                        Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
+                        return OriginalHook(BloodStalk);
+                }
             }
 
             //Ranged Attacks

@@ -86,40 +86,54 @@ internal partial class RPR
             !HasEffect(Buffs.ImmortalSacrifice) && !IsComboExpiring(3) &&
             !JustUsed(ShadowOfDeath))
         {
-            //1st part double enshroud
-            if (LevelChecked(PlentifulHarvest) && HasEffect(Buffs.Enshrouded) &&
-                GetCooldownRemainingTime(ArcaneCircle) <= GCD * 2 + 1.5 && JustUsed(Enshroud))
-                return true;
+            if (Config.RPR_ST_ArcaneCircle_SubOption == 0 ||
+                Config.RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter())
+            {
+                //1st part double enshroud
+                if (LevelChecked(PlentifulHarvest) && HasEffect(Buffs.Enshrouded) &&
+                    GetCooldownRemainingTime(ArcaneCircle) <= GCD * 2 + 1.5 && JustUsed(Enshroud))
+                    return true;
 
-            //2nd part double enshroud
-            if (LevelChecked(PlentifulHarvest) && HasEffect(Buffs.Enshrouded) &&
-                (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
-                (JustUsed(VoidReaping) || JustUsed(CrossReaping)))
-                return true;
+                //2nd part double enshroud
+                if (LevelChecked(PlentifulHarvest) && HasEffect(Buffs.Enshrouded) &&
+                    (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
+                    (JustUsed(VoidReaping) || JustUsed(CrossReaping)))
+                    return true;
 
-            //lvl 88+ general use
-            if (LevelChecked(PlentifulHarvest) && !HasEffect(Buffs.Enshrouded) &&
-                (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode) &&
-                 GetDebuffRemainingTime(Debuffs.DeathsDesign) <= 8 ||
-                 IsEnabled(CustomComboPreset.RPR_ST_AdvancedMode) &&
-                 GetDebuffRemainingTime(Debuffs.DeathsDesign) <= Config.RPR_SoDRefreshRange) &&
-                (GetCooldownRemainingTime(ArcaneCircle) > GCD * 8 || IsOffCooldown(ArcaneCircle)))
-                return true;
+                //lvl 88+ general use
+                if (LevelChecked(PlentifulHarvest) && !HasEffect(Buffs.Enshrouded) &&
+                    (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode) &&
+                     GetDebuffRemainingTime(Debuffs.DeathsDesign) <= 8 ||
+                     IsEnabled(CustomComboPreset.RPR_ST_AdvancedMode) &&
+                     GetDebuffRemainingTime(Debuffs.DeathsDesign) <= Config.RPR_SoDRefreshRange) &&
+                    (GetCooldownRemainingTime(ArcaneCircle) > GCD * 8 || IsOffCooldown(ArcaneCircle)))
+                    return true;
 
-            //below lvl 88 use
-            if (!LevelChecked(PlentifulHarvest) &&
-                (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode) &&
-                 GetDebuffRemainingTime(Debuffs.DeathsDesign) <= 8 ||
-                 IsEnabled(CustomComboPreset.RPR_ST_AdvancedMode) &&
-                 GetDebuffRemainingTime(Debuffs.DeathsDesign) <= Config.RPR_SoDRefreshRange))
-                return true;
+                //below lvl 88 use
+                if (!LevelChecked(PlentifulHarvest) &&
+                    (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode) &&
+                     GetDebuffRemainingTime(Debuffs.DeathsDesign) <= 8 ||
+                     IsEnabled(CustomComboPreset.RPR_ST_AdvancedMode) &&
+                     GetDebuffRemainingTime(Debuffs.DeathsDesign) <= Config.RPR_SoDRefreshRange))
+                    return true;
+            }
+
+            if (Config.RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter())
+            {
+                if (LevelChecked(PlentifulHarvest) && !HasEffect(Buffs.Enshrouded) &&
+                    (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode) &&
+                     GetDebuffRemainingTime(Debuffs.DeathsDesign) <= 8 ||
+                     IsEnabled(CustomComboPreset.RPR_ST_AdvancedMode) &&
+                     GetDebuffRemainingTime(Debuffs.DeathsDesign) <= Config.RPR_SoDRefreshRange))
+                    return true;
+            }
         }
 
         return false;
     }
 
     #region Openers
-    
+
     internal class RPROpenerMaxLevel1 : WrathOpener
     {
         public override int MinOpenerLevel => 100;
@@ -159,7 +173,7 @@ internal partial class RPR
             ([19], UnveiledGallows, () => HasEffect(Buffs.EnhancedGallows)),
             ([20], Gallows, () => HasEffect(Buffs.EnhancedGallows))
         ];
-        
+
         internal override UserData ContentCheckConfig => Config.RPR_Balance_Content;
 
         public override bool HasCooldowns()
@@ -176,7 +190,7 @@ internal partial class RPR
             return true;
         }
     }
-    
+
     #endregion
 
     #region ID's
