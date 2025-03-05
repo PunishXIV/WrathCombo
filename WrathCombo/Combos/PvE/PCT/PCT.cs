@@ -400,10 +400,20 @@ internal partial class PCT
             // IsMoving logic
             if (IsMoving() && InCombat())
             {
+                //increase priority for using casts as soon as possible to avoid losing DPS and ensure all abilities fit within buff windows
+                //previously, there were situations where Wrath prioritized using Hammer Combo over casts, which would prevent us from generating Rainbow Bright in time when movement is required
+                //so, if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines, we burn it all down
+                bool hasPaint = gauge.Paint > 0;
+                bool burnStacks = GetBuffStacks(Buffs.Hyperphantasia) > 0 && HasEffect(Buffs.Inspiration) && hasPaint; //use casts asap if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines
+                bool shouldHolyInWhite = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && hasPaint & !HasEffect(Buffs.MonochromeTones); //normal conditions for Holy In White
+                bool shouldCometInBlack = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && hasPaint && HasEffect(Buffs.MonochromeTones); //normal conditions for Comet in Black
+                if (burnStacks && ((Config.BlackHyperphantasiaOption && shouldCometInBlack) || (Config.WhiteHyperphantasiaOption && shouldHolyInWhite)))
+                    return HasEffect(Buffs.MonochromeTones) ? OriginalHook(CometinBlack) : OriginalHook(HolyInWhite);
+
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasEffect(Buffs.MonochromeTones))
+                if (shouldCometInBlack)
                     return OriginalHook(CometinBlack);
 
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_RainbowDrip))
@@ -412,7 +422,7 @@ internal partial class PCT
                         return RainbowDrip;
                 }
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && gauge.Paint >= 1)
+                if (shouldHolyInWhite)
                     return OriginalHook(HolyInWhite);
 
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwitfcastOption) && ActionReady(All.Swiftcast) &&
