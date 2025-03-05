@@ -71,33 +71,46 @@ public partial class Helper(ref Leasing leasing)
     /// <returns>The Opposite-mode preset.</returns>
     internal static CustomComboPreset? GetOppositeModeCombo(CustomComboPreset preset)
     {
+        const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
         var attr = preset.Attributes();
 
-        if (attr.CustomComboInfo.Name
-            .Contains("heal", StringComparison.CurrentCultureIgnoreCase))
+        // Bail if it is a heal preset
+        if (attr.CustomComboInfo.Name.Contains("heal", lower))
             return null;
 
-        var targetType = attr.CustomComboInfo.Name
-            .Contains("single target", StringComparison.CurrentCultureIgnoreCase)
+        // Detect the target type
+        var targetType = attr.CustomComboInfo.Name.Contains("single target", lower)
             ? ComboTargetTypeKeys.SingleTarget
-            : ComboTargetTypeKeys.MultiTarget;
+            : (attr.CustomComboInfo.Name.Contains("- aoe", lower) ||
+               attr.CustomComboInfo.Name.Contains("aoe dps", lower))
+                ? ComboTargetTypeKeys.MultiTarget
+                : ComboTargetTypeKeys.Other;
+
+        // Bail if it is not a Single-Target or Multi-Target primary preset
+        if (targetType == ComboTargetTypeKeys.Other)
+            return null;
+
+        // Detect the simplicity level
         var simplicityLevel =
-            attr.CustomComboInfo.Name
-                .Contains("simple mode", StringComparison.CurrentCultureIgnoreCase)
+            attr.CustomComboInfo.Name.Contains("simple mode", lower)
                 ? ComboSimplicityLevelKeys.Simple
                 : ComboSimplicityLevelKeys.Advanced;
+        // Flip the simplicity level
         var simplicityLevelToSearchFor =
             simplicityLevel == ComboSimplicityLevelKeys.Simple
                 ? ComboSimplicityLevelKeys.Advanced
                 : ComboSimplicityLevelKeys.Simple;
+
+        // Get the opposite mode
         var categorizedPreset =
             P.IPCSearch.ComboStatesByJobCategorized
                 [(Job)attr.CustomComboInfo.JobID]
                 [targetType][simplicityLevelToSearchFor];
+
+        // Return the opposite mode, as a proper preset
         var oppositeMode = categorizedPreset.FirstOrDefault().Key;
         var oppositeModePreset = (CustomComboPreset)
             Enum.Parse(typeof(CustomComboPreset), oppositeMode, true);
-
         return oppositeModePreset;
     }
 
@@ -115,9 +128,9 @@ public partial class Helper(ref Leasing leasing)
     /// </param>
     /// <param name="previousMatch">
     ///     The <see cref="ComboSimplicityLevelKeys">Simplicity Level</see> that
-    ///     was used in the last call of this method, to make sure that it uses
-    ///     the same level for both checking if enabled and enabled in Auto-Mode.
-    ///     <br />
+    ///     was used in the last set of calls of this method, to make sure that it
+    ///     uses the same level for both checking if enabled and enabled in
+    ///     Auto-Mode.<br />
     ///     Or <see langword="null" /> if it is the first call, so the level can be
     ///     set.
     /// </param>
@@ -127,13 +140,13 @@ public partial class Helper(ref Leasing leasing)
     /// </returns>
     /// <seealso cref="Provider.IsCurrentJobConfiguredOn" />
     /// <seealso cref="Provider.IsCurrentJobAutoModeOn" />
-    internal bool CheckCurrentJobModeIsEnabled
+    internal ComboSimplicityLevelKeys? CheckCurrentJobModeIsEnabled
             (ComboTargetTypeKeys mode,
             ComboStateKeys enabledStateToCheck,
-            ref ComboSimplicityLevelKeys? previousMatch)
+            ComboSimplicityLevelKeys? previousMatch = null)
     {
         if (CustomComboFunctions.LocalPlayer is null)
-            return false;
+            return null;
 
         // Convert current job/class to a job, if it is a class
         var currentJobRow = CustomComboFunctions.LocalPlayer.ClassJob;
@@ -146,7 +159,7 @@ public partial class Helper(ref Leasing leasing)
             out var comboStates);
 
         if (comboStates is null || comboStates.Count == 0)
-            return false;
+            return null;
 
         comboStates[mode]
             .TryGetValue(ComboSimplicityLevelKeys.Simple, out var simpleResults);
@@ -155,26 +168,22 @@ public partial class Helper(ref Leasing leasing)
         var advanced =
             comboStates[mode][ComboSimplicityLevelKeys.Advanced].First().Value;
 
-        // Save the simplicity level, so the same level can be checked for enabled
-        // and enabled in Auto-Mode
-        if (previousMatch is null)
-        {
-            if (simple is not null && simple[enabledStateToCheck])
-                previousMatch = ComboSimplicityLevelKeys.Simple;
-            else if (advanced[enabledStateToCheck])
-                previousMatch = ComboSimplicityLevelKeys.Advanced;
-        }
-
         // If the simplicity level is set, check that specifically instead of either
         if (previousMatch is not null)
         {
-            if (previousMatch == ComboSimplicityLevelKeys.Simple)
-                return simple is not null && simple[enabledStateToCheck];
-            return advanced[enabledStateToCheck];
+            if (previousMatch == ComboSimplicityLevelKeys.Simple &&
+                simple is not null && simple[enabledStateToCheck])
+                return ComboSimplicityLevelKeys.Simple;
+            return advanced[enabledStateToCheck]
+                ? ComboSimplicityLevelKeys.Advanced
+                : null;
         }
 
-        return simple is not null && simple[enabledStateToCheck] ||
-               advanced[enabledStateToCheck];
+        return simple is not null && simple[enabledStateToCheck]
+            ? ComboSimplicityLevelKeys.Simple
+            : advanced[enabledStateToCheck]
+                ? ComboSimplicityLevelKeys.Advanced
+                : null;
     }
 
     /// <summary>
@@ -373,6 +382,7 @@ public partial class Helper(ref Leasing leasing)
             }
             catch (Exception e)
             {
+                data = "enabled";
                 Logging.Error(
                     "Failed to check IPC status. Assuming it is enabled.\n" +
                     e.Message

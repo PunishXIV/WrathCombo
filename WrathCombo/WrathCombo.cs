@@ -438,7 +438,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     public void Dispose()
     {
         ConfigWindow.Dispose();
-
+        IPCSearch.Cancel.Cancel();
         // Try to force a config save if there are some pending
         if (PluginConfiguration.SaveQueue.Count > 0)
             lock (PluginConfiguration.SaveQueue)
