@@ -483,8 +483,9 @@ namespace WrathCombo.CustomComboNS.Functions
             ActionWatching.ActionSheet.Values.TryGetFirst(x => x.RowId == aoeSpell, out var sheetSpell);
             bool needsTarget = sheetSpell.CanTargetHostile;
 
-            if (needsTarget && GetTargetDistance(target) > sheetSpell.Range)
+            if (needsTarget && GetTargetDistance(target) > ActionWatching.GetActionRange(sheetSpell.RowId))
                 return 0;
+
 
             int count = sheetSpell.CastType switch
             {

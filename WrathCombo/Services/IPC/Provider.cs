@@ -6,8 +6,10 @@ using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using WrathCombo.Combos;
 
 // ReSharper disable UnusedMethodReturnValue.Global
@@ -287,6 +289,21 @@ public partial class Provider : IDisposable
     }
 
     /// <summary>
+    ///     The last time the current job was reported as not ready.
+    /// </summary>
+    private DateTime _lastJobReadyLog = DateTime.MinValue;
+
+    /// <summary>
+    ///     The last time there was a full check for the current job's readiness.
+    /// </summary>
+    private DateTime _lastJobReadyCheck = DateTime.MinValue;
+
+    /// <summary>
+    ///     The state of the last <see cref="IsCurrentJobAutoRotationReady" /> check.
+    /// </summary>
+    private bool _lastJobReady;
+
+    /// <summary>
     ///     Checks if the current job has a Single and Multi-Target combo configured
     ///     that are enabled in Auto-Mode.
     /// </summary>
@@ -298,11 +315,33 @@ public partial class Provider : IDisposable
     [EzIPC]
     public bool IsCurrentJobAutoRotationReady()
     {
-        // Check if job has a Single and Multi-Target combo configured on and
-        // enabled in Auto-Mode
-        return
-            IsCurrentJobConfiguredOn().All(x => x.Value) &&
-            IsCurrentJobAutoModeOn().All(x => x.Value);
+        if (File.GetLastWriteTime(P.IPCSearch.ConfigFilePath) <= _lastJobReadyCheck &&
+            (DateTime.Now - _lastJobReadyCheck).TotalSeconds <= 45)
+            return _lastJobReady;
+
+        // Check if the current job has a Single and Multi-Target combo configured on
+        var jobOn = IsCurrentJobConfiguredOn();
+        // Check if the current job has those same combos configured on in Auto-Mode
+        var jobAutoOn = InternalIsCurrentJobAutoModeOn(jobOn);
+
+        // Check that all combos are configured and enabled in Auto-Mode
+        var allGood = jobOn.All(x => x.Value is not null) &&
+               jobAutoOn.All(x => x.Value is not null);
+
+        // Log if not ready
+        if (!allGood && (DateTime.Now - _lastJobReadyLog).TotalSeconds > 15)
+        {
+            Logging.Warn(
+                $"Current job is not fully ready for Auto-Rotation.\n" +
+                $"jobOn: {JsonConvert.SerializeObject(jobOn)}\n" +
+                $"jobAutoOn: {JsonConvert.SerializeObject(jobAutoOn)}"
+            );
+            _lastJobReadyLog = DateTime.Now;
+        }
+
+        _lastJobReadyCheck = DateTime.Now;
+        _lastJobReady = allGood;
+        return allGood;
     }
 
     /// <summary>
@@ -375,22 +414,19 @@ public partial class Provider : IDisposable
     /// <seealso cref="Helper.CheckCurrentJobModeIsEnabled" />
     [EzIPC]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public Dictionary<ComboTargetTypeKeys, bool> IsCurrentJobConfiguredOn()
+    public Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?> IsCurrentJobConfiguredOn()
     {
-        ComboSimplicityLevelKeys? previousMatch = null;
-        return new Dictionary<ComboTargetTypeKeys, bool>
+        return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
         {
             {
                 ComboTargetTypeKeys.SingleTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.Enabled,
-                    ref previousMatch)
+                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.Enabled)
             },
             {
                 ComboTargetTypeKeys.MultiTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
-                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.Enabled,
-                    ref previousMatch)
+                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.Enabled)
             },
         };
     }
@@ -400,29 +436,59 @@ public partial class Provider : IDisposable
     ///     combo enabled in Auto-Mode.
     /// </summary>
     /// <returns>
-    ///     <see cref="ComboTargetTypeKeys.SingleTarget" /> - a <c>bool</c> indicating if
-    ///     a Single-Target combo is enabled in Auto-Mode.<br />
-    ///     <see cref="ComboTargetTypeKeys.MultiTarget" /> - a <c>bool</c> indicating if
-    ///     a Multi-Target combo is enabled in Auto-Mode.
+    ///     <see cref="ComboTargetTypeKeys.SingleTarget" /> - a
+    ///     <see cref="ComboSimplicityLevelKeys">SimplicityLevel?</see> indicating
+    ///     what mode, if any, is enabled for Auto-Mode for Single-Target.<br />
+    ///     <see cref="ComboTargetTypeKeys.MultiTarget" /> - a
+    ///     <see cref="ComboSimplicityLevelKeys">SimplicityLevel?</see> indicating
+    ///     what mode, if any, is enabled for Auto-Mode for Multi-Target.<br />
     /// </returns>
     [EzIPC]
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public Dictionary<ComboTargetTypeKeys, bool> IsCurrentJobAutoModeOn()
+    public Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
+        IsCurrentJobAutoModeOn()
     {
-        ComboSimplicityLevelKeys? previousMatch = null;
-        return new Dictionary<ComboTargetTypeKeys, bool>
+        return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
+        {
+            {
+                ComboTargetTypeKeys.SingleTarget,
+                Helper.CheckCurrentJobModeIsEnabled(
+                    ComboTargetTypeKeys.SingleTarget, ComboStateKeys.AutoMode)
+            },
+            {
+                ComboTargetTypeKeys.MultiTarget,
+                Helper.CheckCurrentJobModeIsEnabled(
+                    ComboTargetTypeKeys.MultiTarget, ComboStateKeys.AutoMode)
+            },
+        };
+    }
+
+    /// <summary>
+    ///     Same as <see cref="IsCurrentJobAutoModeOn" />, but with a parameter
+    ///     to make sure that Auto-Mode is enabled for the same enabled combos.
+    /// </summary>
+    /// <param name="previousMatches">
+    ///     The result of <see cref="IsCurrentJobConfiguredOn" />.
+    /// </param>
+    /// <returns></returns>
+    /// <seealso cref="IsCurrentJobAutoModeOn"/>
+    private Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
+        InternalIsCurrentJobAutoModeOn
+        (Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?> previousMatches)
+    {
+        return new Dictionary<ComboTargetTypeKeys, ComboSimplicityLevelKeys?>
         {
             {
                 ComboTargetTypeKeys.SingleTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
                     ComboTargetTypeKeys.SingleTarget, ComboStateKeys.AutoMode,
-                    ref previousMatch)
+                    previousMatches[ComboTargetTypeKeys.SingleTarget])
             },
             {
                 ComboTargetTypeKeys.MultiTarget,
                 Helper.CheckCurrentJobModeIsEnabled(
                     ComboTargetTypeKeys.MultiTarget, ComboStateKeys.AutoMode,
-                    ref previousMatch)
+                    previousMatches[ComboTargetTypeKeys.MultiTarget])
             },
         };
     }

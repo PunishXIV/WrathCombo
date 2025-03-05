@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
@@ -21,6 +22,9 @@ namespace WrathCombo.Services.IPC;
 
 public class Search(Leasing leasing)
 {
+    public Task? UpdatePresetCount;
+    public CancellationTokenSource Cancel = new();
+
     /// <summary>
     ///     A shortcut for <see cref="StringComparison.CurrentCultureIgnoreCase" />.
     /// </summary>
@@ -196,7 +200,7 @@ public class Search(Leasing leasing)
     /// <summary>
     ///     The path to the configuration file for Wrath Combo.
     /// </summary>
-    private string ConfigFilePath
+    internal string ConfigFilePath
     {
         get
         {
@@ -333,7 +337,7 @@ public class Search(Leasing leasing)
                     }
                 );
             _lastCacheUpdateForPresetStates = DateTime.Now;
-            Svc.Framework.RunOnTick(() => UpdateActiveJobPresets(), TimeSpan.FromSeconds(1));
+            UpdatePresetCount = Svc.Framework.RunOnTick(() => UpdateActiveJobPresets(), TimeSpan.FromSeconds(1), 0, Cancel.Token);
             return field;
         }
     }
