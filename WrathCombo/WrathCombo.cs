@@ -19,7 +19,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using ECommons.Logging;
-using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using WrathCombo.Attributes;
 using WrathCombo.AutoRotation;
