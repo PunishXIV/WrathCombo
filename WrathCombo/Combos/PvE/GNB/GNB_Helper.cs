@@ -47,15 +47,6 @@ internal partial class GNB
     #endregion
 
     #region Openers
-    //TODO: reduce redundancy somehow
-    public static GNBOpenerLv70FastWithLS OpenerLv70FastWithLS = new();
-    public static GNBOpenerLv70SlowWithLS OpenerLv70SlowWithLS = new();
-    public static GNBOpenerLv70FastWithoutLS OpenerLv70FastWithoutLS = new();
-    public static GNBOpenerLv70SlowWithoutLS OpenerLv70SlowWithoutLS = new();
-    public static GNBOpenerLv80FastWithLS OpenerLv80FastWithLS = new();
-    public static GNBOpenerLv80SlowWithLS OpenerLv80SlowWithLS = new();
-    public static GNBOpenerLv80FastWithoutLS OpenerLv80FastWithoutLS = new();
-    public static GNBOpenerLv80SlowWithoutLS OpenerLv80SlowWithoutLS = new();
     public static GNBOpenerLv90FastWithLS OpenerLv90FastWithLS = new();
     public static GNBOpenerLv90SlowWithLS OpenerLv90SlowWithLS = new();
     public static GNBOpenerLv90FastWithoutLS OpenerLv90FastWithoutLS = new();
@@ -70,224 +61,26 @@ internal partial class GNB
         bool include = Config.GNB_Opener_LS == 0;
         bool exclude = Config.GNB_Opener_LS == 1;
 
-        if (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !IsActionUnlocked(Continuation)) 
+        if (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !LevelChecked(DoubleDown)) 
             return WrathOpener.Dummy;
 
         if (include)
         {
             if (MidGNB || FastGNB)
-                return OpenerLv100FastWithLS.LevelChecked ? OpenerLv100FastWithLS : OpenerLv90FastWithLS.LevelChecked ? OpenerLv90FastWithLS : OpenerLv80FastWithLS.LevelChecked ? OpenerLv80FastWithLS : OpenerLv70FastWithLS.LevelChecked ? OpenerLv70FastWithLS : WrathOpener.Dummy;
+                return OpenerLv100FastWithLS.LevelChecked ? OpenerLv100FastWithLS : OpenerLv90FastWithLS;
             if (SlowGNB)
-                return OpenerLv100SlowWithLS.LevelChecked ? OpenerLv100SlowWithLS : OpenerLv90SlowWithLS.LevelChecked ? OpenerLv90SlowWithLS : OpenerLv80SlowWithLS.LevelChecked ? OpenerLv80SlowWithLS : OpenerLv70SlowWithLS.LevelChecked ? OpenerLv70SlowWithLS : WrathOpener.Dummy;
+                return OpenerLv100SlowWithLS.LevelChecked ? OpenerLv100SlowWithLS : OpenerLv90SlowWithLS;
         }
         if (exclude)
         {
             if (MidGNB || FastGNB)
-                return OpenerLv100FastWithoutLS.LevelChecked ? OpenerLv100FastWithoutLS : OpenerLv90FastWithoutLS.LevelChecked ? OpenerLv90FastWithoutLS : OpenerLv80FastWithoutLS.LevelChecked ? OpenerLv80FastWithoutLS : OpenerLv70FastWithoutLS.LevelChecked ? OpenerLv70FastWithoutLS : WrathOpener.Dummy;
+                return OpenerLv100FastWithoutLS.LevelChecked ? OpenerLv100FastWithoutLS : OpenerLv90FastWithoutLS;
             if (SlowGNB)
-                return OpenerLv100SlowWithoutLS.LevelChecked ? OpenerLv100SlowWithoutLS : OpenerLv90SlowWithoutLS.LevelChecked ? OpenerLv90SlowWithoutLS : OpenerLv80SlowWithoutLS.LevelChecked ? OpenerLv80SlowWithoutLS : OpenerLv70SlowWithoutLS.LevelChecked ? OpenerLv70SlowWithoutLS : WrathOpener.Dummy;
+                return OpenerLv100SlowWithoutLS.LevelChecked ? OpenerLv100SlowWithoutLS : OpenerLv90SlowWithoutLS;
         }
 
         return WrathOpener.Dummy;
     }
-
-    #region Lv70
-    //we acquire Bloodfest at Lv76, so until then we have this cute little opener
-    internal abstract class GNBOpenerLv70Base : WrathOpener
-    {
-        public override int MinOpenerLevel => 70;
-        public override int MaxOpenerLevel => 75;
-        internal override UserData ContentCheckConfig => Config.GNB_ST_Balance_Content;
-        public override bool HasCooldowns() => IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(BowShock) && Ammo == 0;
-    }
-    internal class GNBOpenerLv70FastWithLS : GNBOpenerLv70Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            LightningShot,
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SonicBreak,
-            DangerZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-        ];
-
-        public override List<int> VeryDelayedWeaveSteps { get; set; } = [ 5 ];
-    }
-    internal class GNBOpenerLv70FastWithoutLS : GNBOpenerLv70Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SonicBreak,
-            DangerZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-        ];
-
-        public override List<int> VeryDelayedWeaveSteps { get; set; } = [4];
-    }
-    internal class GNBOpenerLv70SlowWithLS : GNBOpenerLv70Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            LightningShot,
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SonicBreak,
-            DangerZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-        ];
-    }
-    internal class GNBOpenerLv70SlowWithoutLS : GNBOpenerLv70Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            JugularRip,
-            SonicBreak,
-            DangerZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-        ];
-    }
-    #endregion
-
-    #region Lv80
-    //technically works with Lv76 - Lv89
-    internal abstract class GNBOpenerLv80Base : WrathOpener
-    {
-        public override int MinOpenerLevel => 76;
-        public override int MaxOpenerLevel => 89;
-        internal override UserData ContentCheckConfig => Config.GNB_ST_Balance_Content;
-        public override bool HasCooldowns() => IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(BowShock) && IsOffCooldown(Bloodfest) && Ammo == 0;
-    }
-    internal class GNBOpenerLv80FastWithLS : GNBOpenerLv80Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            LightningShot,
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            Bloodfest, //+2 (2)
-            JugularRip,
-            SonicBreak,
-            BestZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            BurstStrike, //-1 (1)
-            BurstStrike //-1 (0)
-        ];
-
-        public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
-    }
-    internal class GNBOpenerLv80FastWithoutLS : GNBOpenerLv80Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            Bloodfest, //+2 (2)
-            JugularRip,
-            SonicBreak,
-            BestZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            BurstStrike, //-1 (1)
-            BurstStrike //-1 (0)
-        ];
-
-        public override List<int> VeryDelayedWeaveSteps { get; set; } = [4];
-    }
-    internal class GNBOpenerLv80SlowWithLS : GNBOpenerLv80Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            LightningShot,
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            Bloodfest, //+2 (2)
-            JugularRip,
-            SonicBreak,
-            BestZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            BurstStrike, //-1 (1)
-            BurstStrike //-1 (0)
-        ];
-    }
-    internal class GNBOpenerLv80SlowWithoutLS : GNBOpenerLv80Base
-    {
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            KeenEdge,
-            BrutalShell,
-            SolidBarrel, //+1 (1)
-            NoMercy,
-            GnashingFang, //-1 (0)
-            Bloodfest, //+2 (2)
-            JugularRip,
-            SonicBreak,
-            BestZone,
-            BowShock,
-            SavageClaw,
-            AbdomenTear,
-            WickedTalon,
-            EyeGouge,
-            BurstStrike, //-1 (1)
-            BurstStrike //-1 (0)
-        ];
-    }
-    #endregion
 
     #region Lv90
     internal abstract class GNBOpenerLv90Base : WrathOpener
@@ -523,7 +316,6 @@ internal partial class GNB
     #endregion
 
     #endregion
-
 
     #region Helpers
     internal static int MaxCartridges() => TraitLevelChecked(427) ? 3 : TraitLevelChecked(257) ? 2 : 0; //Level Check helper for Maximum Ammo
