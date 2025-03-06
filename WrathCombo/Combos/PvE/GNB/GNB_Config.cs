@@ -19,6 +19,7 @@ internal partial class GNB
 
         public static UserInt
             GNB_Opener_LS = new ("GNB_Opener_LS", 0),
+            GNB_Opener_NM = new("GNB_Opener_NM", 0),
             GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 0),
             GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
             GNB_ST_Corundum_SubOption = new("GNB_ST_Corundum_Option", 0),
@@ -148,7 +149,19 @@ internal partial class GNB
                     break;
 
                 case CustomComboPreset.GNB_ST_Advanced_Opener:
+
                     ImGui.Spacing();
+
+                    DrawHorizontalRadioButton(GNB_Opener_NM,
+                        $"Normal {NoMercy.ActionName()}",
+                        $"Uses {NoMercy.ActionName()} normally in all Openers", 0);
+
+                    DrawHorizontalRadioButton(GNB_Opener_NM,
+                        $"Early {NoMercy.ActionName()}",
+                        $"Uses {NoMercy.ActionName()} ASAP in all Openers", 1);
+
+                    ImGui.Spacing();
+
                     DrawHorizontalRadioButton(GNB_Opener_LS,
                         $"Include {LightningShot.ActionName()}",
                         $"Allows the use of {LightningShot.ActionName()} in all Openers", 0);
@@ -156,6 +169,7 @@ internal partial class GNB
                     DrawHorizontalRadioButton(GNB_Opener_LS,
                         $"Exclude {LightningShot.ActionName()}",
                         $"Forbids the use of {LightningShot.ActionName()} from all Openers", 1);
+
                     ImGui.Spacing();
 
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
