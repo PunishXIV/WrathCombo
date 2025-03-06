@@ -56,7 +56,6 @@ internal partial class GNB
     public static Lv100SlowWithLSNormalNM GNBLv100SlowWithLSNormalNM = new();
     public static Lv90SlowWithoutLSNormalNM GNBLv90SlowWithoutLSNormalNM = new();
     public static Lv100SlowWithoutLSNormalNM GNBLv100SlowWithoutLSNormalNM = new();
-
     public static Lv90FastWithLSEarlyNM GNBLv90FastWithLSEarlyNM = new();
     public static Lv100FastWithLSEarlyNM GNBLv100FastWithLSEarlyNM = new();
     public static Lv90FastWithoutLSEarlyNM GNBLv90FastWithoutLSEarlyNM = new();
@@ -72,44 +71,53 @@ internal partial class GNB
         bool normalNM = Config.GNB_Opener_NM == 0;
         bool earlyNM = Config.GNB_Opener_NM == 1;
 
-        if (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !LevelChecked(DoubleDown)) 
+        if (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !LevelChecked(DoubleDown))
             return WrathOpener.Dummy;
+
+        return GetOpener(includeLS, excludeLS, normalNM, earlyNM);
+    }
+    private static WrathOpener GetOpener(bool includeLS, bool excludeLS, bool normalNM, bool earlyNM)
+    {
+        bool isFastGNB = MidGNB || FastGNB;
+        bool isSlowGNB = SlowGNB;
 
         if (includeLS)
         {
             if (normalNM)
-            {
-                if (MidGNB || FastGNB)
-                    return GNBLv100FastWithLSNormalNM.LevelChecked ? GNBLv100FastWithLSNormalNM : GNBLv90FastWithLSNormalNM;
-                if (SlowGNB)
-                    return GNBLv100SlowWithLSNormalNM.LevelChecked ? GNBLv100SlowWithLSNormalNM : GNBLv90SlowWithLSNormalNM;
-            }
+                return GetLSOpener(isFastGNB, isSlowGNB, "Normal");
             if (earlyNM)
-            {
-                if (MidGNB || FastGNB)
-                    return GNBLv100FastWithLSEarlyNM.LevelChecked ? GNBLv100FastWithLSEarlyNM : GNBLv90FastWithLSEarlyNM;
-                if (SlowGNB)
-                    return GNBLv100SlowWithLSEarlyNM.LevelChecked ? GNBLv100SlowWithLSEarlyNM : GNBLv90SlowWithLSEarlyNM;
-            }
-
+                return GetLSOpener(isFastGNB, isSlowGNB, "Early");
         }
+
         if (excludeLS)
         {
             if (normalNM)
-            {
-                if (MidGNB || FastGNB)
-                    return GNBLv100FastWithoutLSNormalNM.LevelChecked ? GNBLv100FastWithoutLSNormalNM : GNBLv90FastWithoutLSNormalNM;
-                if (SlowGNB)
-                    return GNBLv100SlowWithoutLSNormalNM.LevelChecked ? GNBLv100SlowWithoutLSNormalNM : GNBLv90SlowWithoutLSNormalNM;
-            }
+                return GetWithoutLSOpener(isFastGNB, isSlowGNB, "Normal");
             if (earlyNM)
-            {
-                if (MidGNB || FastGNB)
-                    return GNBLv100FastWithoutLSEarlyNM.LevelChecked ? GNBLv100FastWithoutLSEarlyNM : GNBLv90FastWithoutLSEarlyNM;
-                if (SlowGNB)
-                    return GNBLv100SlowWithoutLSNormalNM.LevelChecked ? GNBLv100SlowWithoutLSNormalNM : GNBLv90SlowWithoutLSEarlyNM;
-            }
+                return GetWithoutLSOpener(isFastGNB, isSlowGNB, "Early");
         }
+
+        return WrathOpener.Dummy;
+    }
+    private static WrathOpener GetLSOpener(bool isFastGNB, bool isSlowGNB, string nmType)
+    {
+        if (isFastGNB)
+            return nmType is "Normal" ? (GNBLv100FastWithLSNormalNM.LevelChecked ? GNBLv100FastWithLSNormalNM : GNBLv90FastWithLSNormalNM) :
+                                         (GNBLv100FastWithLSEarlyNM.LevelChecked ? GNBLv100FastWithLSEarlyNM : GNBLv90FastWithLSEarlyNM);
+        if (isSlowGNB)
+            return nmType is "Normal" ? (GNBLv100SlowWithLSNormalNM.LevelChecked ? GNBLv100SlowWithLSNormalNM : GNBLv90SlowWithLSNormalNM) :
+                                         (GNBLv100SlowWithLSEarlyNM.LevelChecked ? GNBLv100SlowWithLSEarlyNM : GNBLv90SlowWithLSEarlyNM);
+
+        return WrathOpener.Dummy;
+    }
+    private static WrathOpener GetWithoutLSOpener(bool isFastGNB, bool isSlowGNB, string nmType)
+    {
+        if (isFastGNB)
+            return nmType is "Normal" ? (GNBLv100FastWithoutLSNormalNM.LevelChecked ? GNBLv100FastWithoutLSNormalNM : GNBLv90FastWithoutLSNormalNM) :
+                                         (GNBLv100FastWithoutLSEarlyNM.LevelChecked ? GNBLv100FastWithoutLSEarlyNM : GNBLv90FastWithoutLSEarlyNM);
+        if (isSlowGNB)
+            return nmType is "Normal" ? (GNBLv100SlowWithoutLSNormalNM.LevelChecked ? GNBLv100SlowWithoutLSNormalNM : GNBLv90SlowWithoutLSNormalNM) :
+                                         (GNBLv100SlowWithoutLSNormalNM.LevelChecked ? GNBLv100SlowWithoutLSNormalNM : GNBLv90SlowWithoutLSEarlyNM);
 
         return WrathOpener.Dummy;
     }
@@ -433,7 +441,6 @@ internal partial class GNB
             LionHeart
         ];
     }
-
     internal class Lv100FastWithLSEarlyNM : GNBOpenerLv100Base
     {
         public override List<uint> OpenerActions { get; set; } =
