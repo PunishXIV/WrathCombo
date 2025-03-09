@@ -177,9 +177,16 @@ internal partial class GNB
             #endregion
 
             #region Standard
-            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) &&
-                Opener().FullOpener(ref actionID))
-                return actionID;
+            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener))
+            {
+                if (Opener().OpenerStep == 1 && //if on very first step of opener
+                    Config.GNB_Opener_LS == 1) //and we want to exclude Lightning Shot (first step) from opener
+                    Opener().OpenerStep++; //cut that bitch out
+
+                if (Opener().FullOpener(ref actionID))
+                    return actionID;
+            }
+
             if (IsEnabled(CustomComboPreset.GNB_ST_RangedUptime) && ShouldUseLightningShot())
                 return LightningShot;
             if (IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && ShouldUseNoMercy() &&
