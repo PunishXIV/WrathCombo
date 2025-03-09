@@ -177,7 +177,7 @@ namespace WrathCombo.Window.Tabs
                     "\n\nIf you have minor FPS issues, you can increase this value to make combos run less often." +
                     "\nThis makes your combos less responsive, and perhaps even clips GCDs." +
                     "\nAt high values, this can break your rotation entirely." +
-                    "\nMore severe FPS issues should instead be handled with Performance Mode below." +
+                    "\nMore severe FPS issues should instead be handled with Performance Mode option above." +
                     "\n\n200ms can make a reasonable difference in your FPS." +
                     "\nValues over 500ms are NOT recommended.");
 

@@ -575,10 +575,16 @@ public partial class WrathCombo
             return;
         }
 
-        // Open to current job setting
-        PvEFeatures.OpenToCurrentJob(false);
+        // If no arguments provided
+        if (argument[0].Length <= 0)
+        {
+            // Handle the "Open to current job" setting
+            if (ConfigWindow.IsOpen)
+                PvEFeatures.OpenToCurrentJob(false);
 
-        if (argument[0].Length <= 0) return;
+            // Skip trying to process arguments
+            return;
+        }
 
         // Open to specified job
         var jobName = argument[0].ToUpperInvariant();
