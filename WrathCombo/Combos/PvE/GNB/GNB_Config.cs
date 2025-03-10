@@ -18,7 +18,7 @@ internal partial class GNB
             GNBPvP_Corundum = "GNBPvP_Corundum";
 
         public static UserInt
-            GNB_Opener_LS = new ("GNB_Opener_LS", 0),
+            GNB_Opener_StartChoice = new ("GNB_Opener_StartChoice", 0),
             GNB_Opener_NM = new("GNB_Opener_NM", 0),
             GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 0),
             GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
@@ -158,17 +158,17 @@ internal partial class GNB
 
                     DrawHorizontalRadioButton(GNB_Opener_NM,
                         $"Early {NoMercy.ActionName()}",
-                        $"Uses {NoMercy.ActionName()} ASAP in all Openers", 1);
+                        $"Uses {NoMercy.ActionName()} as soon as possible in all Openers", 1);
 
                     ImGui.Spacing();
 
-                    DrawHorizontalRadioButton(GNB_Opener_LS,
-                        $"Include {LightningShot.ActionName()}",
-                        $"Allows the use of {LightningShot.ActionName()} in all Openers", 0);
+                    DrawHorizontalRadioButton(GNB_Opener_StartChoice,
+                        $"Normal Opener",
+                        $"Starts opener with {LightningShot.ActionName()}", 0);
 
-                    DrawHorizontalRadioButton(GNB_Opener_LS,
-                        $"Exclude {LightningShot.ActionName()}",
-                        $"Forbids the use of {LightningShot.ActionName()} from all Openers", 1);
+                    DrawHorizontalRadioButton(GNB_Opener_StartChoice,
+                        $"Early Opener",
+                        $"Starts opener with {KeenEdge.ActionName()} instead, skipping {LightningShot.ActionName()}", 1);
 
                     ImGui.Spacing();
 

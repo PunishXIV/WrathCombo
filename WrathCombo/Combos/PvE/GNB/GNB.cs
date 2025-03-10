@@ -1,5 +1,6 @@
 #region Dependencies
 using System.Linq;
+using Lumina.Excel.Sheets;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -179,13 +180,18 @@ internal partial class GNB
             #region Standard
             if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener))
             {
-                if (Opener().OpenerStep == 1 && //if on very first step of opener
-                    Config.GNB_Opener_LS == 1) //and we want to exclude Lightning Shot (first step) from opener
-                    Opener().OpenerStep++; //cut that bitch out
+                if (Config.GNB_Opener_StartChoice == 1)
+                {
+                    if (Opener().OpenerStep == 1)
+                        Opener().OpenerStep++;
+                }
+                if (Config.GNB_Opener_StartChoice == 0)
+                    Opener().OpenerStep = 1;
 
                 if (Opener().FullOpener(ref actionID))
                     return actionID;
             }
+
 
             if (IsEnabled(CustomComboPreset.GNB_ST_RangedUptime) && ShouldUseLightningShot())
                 return LightningShot;
