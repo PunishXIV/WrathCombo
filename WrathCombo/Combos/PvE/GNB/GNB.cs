@@ -177,9 +177,20 @@ internal partial class GNB
             #endregion
 
             #region Standard
-            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) &&
-                Opener().FullOpener(ref actionID))
-                return actionID;
+            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener))
+            {
+                if (Config.GNB_Opener_StartChoice == 1)
+                {
+                    if (Opener().OpenerStep == 1)
+                        Opener().OpenerStep++;
+                }
+                if (Config.GNB_Opener_StartChoice == 0)
+                    Opener().OpenerStep = 1;
+
+                if (Opener().FullOpener(ref actionID))
+                    return actionID;
+            }
+
             if (IsEnabled(CustomComboPreset.GNB_ST_RangedUptime) && ShouldUseLightningShot())
                 return LightningShot;
             if (IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && ShouldUseNoMercy() &&
