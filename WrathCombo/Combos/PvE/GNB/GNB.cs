@@ -1,6 +1,5 @@
 #region Dependencies
 using System.Linq;
-using Lumina.Excel.Sheets;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -191,7 +190,6 @@ internal partial class GNB
                 if (Opener().FullOpener(ref actionID))
                     return actionID;
             }
-
 
             if (IsEnabled(CustomComboPreset.GNB_ST_RangedUptime) && ShouldUseLightningShot())
                 return LightningShot;
