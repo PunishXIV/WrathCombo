@@ -57,8 +57,8 @@ internal partial class GNB
     public static Lv100SlowEarlyNM GNBLv100SlowEarlyNM = new();
 
     public static WrathOpener Opener() => (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !LevelChecked(DoubleDown)) ? WrathOpener.Dummy : GetOpener(Config.GNB_Opener_NM == 0);
-    private static WrathOpener GetOpener(bool normalNM) => GetLSOpener(normalNM);
-    private static WrathOpener GetLSOpener(bool isNormal)
+
+    private static WrathOpener GetOpener(bool isNormal)
     {
         if (MidGNB || FastGNB)
             return isNormal
