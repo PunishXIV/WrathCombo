@@ -160,7 +160,7 @@ public static class RezMacro
     ///     Should only be specified when used for testing, to go to echo chat.
     /// </param>
     private static void PrintMacro
-        (IPlayerCharacter target, XivChatType channel = XivChatType.Echo)
+        (IPlayerCharacter target, XivChatType channel = XivChatType.Party)
     {
         // Handled like this for wider compatibility, if another message sending method is used
         List<Payload> payloads = [];
@@ -186,7 +186,7 @@ public static class RezMacro
         // String-Only Payloads
         var payloadString = "";
         if (channel == XivChatType.Party)
-            payloadString += "/p ";
+            payloadString += "/e ";
         else
             payloadString += "/e ";
         foreach (var payload in payloads)
