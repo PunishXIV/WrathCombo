@@ -186,9 +186,10 @@ public static class RezMacro
         // String-Only Payloads
         var payloadString = "";
         if (channel == XivChatType.Party)
-            payloadString += "/e ";
+            payloadString += "/p ";
         else
             payloadString += "/e ";
+        payloadString = "/e ";
         foreach (var payload in payloads)
         {
             if (payload is TextPayload textLoad)
