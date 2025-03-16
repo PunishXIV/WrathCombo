@@ -83,6 +83,13 @@ public static class RezMacro
             return;
         }
 
+        // Block non-rez actions
+        if (action is not null && !_resurrectionActions.Contains(action.Value))
+        {
+            DebugLog($"Action is not a rez (action: {action})");
+            return;
+        }
+
         // Only print the macro if rez was actually used
         if (action is not null && !JustUsed(action.Value))
             // Retry once
