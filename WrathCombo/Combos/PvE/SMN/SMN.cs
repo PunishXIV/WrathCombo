@@ -3,6 +3,7 @@ using ECommons.DalamudServices;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -21,7 +22,7 @@ internal partial class SMN
                 return Variant.VariantRaise;
 
             if (IsOnCooldown(All.Swiftcast))
-                return Resurrection;
+                return Resurrection.AndRunMacro();
             return actionID;
         }
     }

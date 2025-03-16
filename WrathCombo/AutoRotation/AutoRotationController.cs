@@ -240,6 +240,8 @@ namespace WrathCombo.AutoRotation
 
                         if (ActionManager.GetAdjustedCastTime(ActionType.Action, resSpell) == 0)
                         {
+                            if (member.PlayerChara is not null)
+                                RezMacro.RunMacro(member.PlayerChara);
                             ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
                         }
 
@@ -258,7 +260,13 @@ namespace WrathCombo.AutoRotation
                         if (!IsMoving() || HasEffect(All.Buffs.Swiftcast))
                         {
                             if ((cfg.HealerSettings.AutoRezRequireSwift && ActionManager.GetAdjustedCastTime(ActionType.Action, resSpell) == 0) || !cfg.HealerSettings.AutoRezRequireSwift)
-                                ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
+                            {
+                                if (member.PlayerChara is not null)
+                                    RezMacro.RunMacro(member.PlayerChara);
+                                ActionManager.Instance()->UseAction(
+                                    ActionType.Action, resSpell,
+                                    member.BattleChara.GameObjectId);
+                            }
                         }
                     }
                 }

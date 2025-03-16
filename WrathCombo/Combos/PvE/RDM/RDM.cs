@@ -1,6 +1,7 @@
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -372,7 +373,7 @@ internal partial class RDM
             {
                 bool schwifty = HasEffect(All.Buffs.Swiftcast);
                 if (schwifty || HasEffect(Buffs.Dualcast))
-                    return Verraise;
+                    return Verraise.AndRunMacro();
                 if (IsEnabled(CustomComboPreset.RDM_Raise_Vercure) &&
                     !schwifty &&
                     ActionReady(Vercure) &&

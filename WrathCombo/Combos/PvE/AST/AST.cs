@@ -26,7 +26,7 @@ internal static partial class AST
 
         protected override uint Invoke(uint actionID) =>
             actionID is All.Swiftcast && IsOnCooldown(All.Swiftcast)
-                ? Ascend
+                ? Ascend.AndRunMacro()
                 : actionID;
     }
 

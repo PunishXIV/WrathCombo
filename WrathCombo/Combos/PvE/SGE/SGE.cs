@@ -3,6 +3,8 @@ using Dalamud.Game.ClientState.Statuses;
 using System;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE
@@ -313,7 +315,7 @@ internal partial class SGE
 
         protected override uint Invoke(uint actionID) =>
             actionID is All.Swiftcast && IsOnCooldown(All.Swiftcast)
-                ? Egeiro
+                ? Egeiro.AndRunMacro()
                 : actionID;
     }
 

@@ -132,7 +132,7 @@ internal static partial class SCH
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
         protected override uint Invoke(uint actionID) =>
             actionID is All.Swiftcast && IsOnCooldown(All.Swiftcast)
-                ? Resurrection
+                ? Resurrection.AndRunMacro()
                 : actionID;
     }
 

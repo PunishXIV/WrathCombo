@@ -5,6 +5,8 @@ using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class WHM
@@ -52,7 +54,7 @@ internal partial class WHM
             if (HasEffect(All.Buffs.Swiftcast))
                 return IsEnabled(CustomComboPreset.WHM_ThinAirRaise) && thinAirReady
                     ? ThinAir
-                    : Raise;
+                    : Raise.AndRunMacro();
 
             return actionID;
         }
