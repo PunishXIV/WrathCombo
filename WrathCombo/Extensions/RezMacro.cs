@@ -12,6 +12,7 @@ using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using ECommons.Throttlers;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -59,7 +60,7 @@ public static class RezMacro
         // Error out if called incorrectly
         if (action is null && targetID is null && targetObj is null)
         {
-            ErrorLog("Called incorrectly; no action or target");
+            ErrorLog($"Called incorrectly; no action or target. StackTrace: {Environment.StackTrace}");
             return;
         }
 
@@ -77,14 +78,17 @@ public static class RezMacro
 
         // Block macro spam
         if (!EzThrottler.Throttle("RezMacroSendThrottle", 3000))
+        {
+            VerboseLog("Throttled for all targets");
             return;
+        }
 
         // Only print the macro if rez was actually used
         if (action is not null && !JustUsed(action.Value))
             // Retry once
             if (firstCall)
             {
-                ErrorLog("Rez was not used; retrying once");
+                DebugLog("Rez was not used; retrying once");
                 TM.DelayNext(150);
                 TM.Enqueue(() =>
                     CheckThenPrintMacro(action.Value, false, targetID));
@@ -93,7 +97,7 @@ public static class RezMacro
             // Bail if not used
             else
             {
-                ErrorLog("Rez was not used");
+                DebugLog("Rez was not used");
                 return;
             }
 
@@ -125,12 +129,16 @@ public static class RezMacro
             if (targetObj is null)
             {
                 ErrorLog($"Cannot find who the target was (target: {targetID})");
+                return;
             }
         }
 
         // Block macro spam (again, for same-target)
         if (!EzThrottler.Throttle($"RezMacro{targetObj.GameObjectId}SendThrottle", 5000))
+        {
+            VerboseLog($"Throttled for same target (target: {targetObj.GameObjectId})");
             return;
+        }
 
         // Actually request the macro be printed
         PrintMacro(targetObj!);
@@ -229,6 +237,16 @@ public static class RezMacro
 
     #region Utility Methods
 
+    private static uint[] _resurrectionActions = [
+        WHM.Raise,
+        AST.Ascend,
+        SGE.Egeiro,
+        SCH.Resurrection,
+        BLU.AngelWhisper,
+        RDM.Verraise,
+        SMN.Resurrection,
+    ];
+
     /// <summary>
     ///     Print the rez macro, formatted, to echo chat for testing.
     /// </summary>
@@ -276,6 +294,20 @@ public static class RezMacro
     /// <param name="message">The message to log.</param>
     private static void ErrorLog(string message) =>
         PluginLog.Error($"[RezMacro] {message}");
+
+    /// <summary>
+    ///     Standardizing debug logging for this extension.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    private static void DebugLog(string message) =>
+        PluginLog.Debug($"[RezMacro] {message}");
+
+    /// <summary>
+    ///     Standardizing verbose logging for this extension.
+    /// </summary>
+    /// <param name="message">The message to log.</param>
+    private static void VerboseLog(string message) =>
+        PluginLog.Verbose($"[RezMacro] {message}");
 
     #endregion
 }
