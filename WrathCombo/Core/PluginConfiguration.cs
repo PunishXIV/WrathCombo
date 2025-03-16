@@ -71,6 +71,10 @@ namespace WrathCombo.Core
 
         public bool ActionChanging = true;
 
+        public bool OutputRezMacro = false;
+
+        public string RezMacro = "Raising <t>";
+
         private DateTime _lastActionChangeCheck = DateTime.MinValue;
 
         internal void SetActionChanging(bool? newValue = null)

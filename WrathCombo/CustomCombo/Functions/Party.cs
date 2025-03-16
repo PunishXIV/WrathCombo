@@ -37,6 +37,7 @@ namespace WrathCombo.CustomComboNS.Functions
                     {
                         GameObjectId = chara.GameObjectId,
                         BattleChara = chara,
+                        PlayerChara = member as IPlayerCharacter,
                         CurrentHP = chara.CurrentHp
                     };
 
@@ -147,6 +148,8 @@ namespace WrathCombo.CustomComboNS.Functions
         public bool MPUpdatePending = false;
         public ulong GameObjectId;
         public IBattleChara BattleChara = null!;
+        /// You really shouldn't have a reason to use this ...
+        public IPlayerCharacter? PlayerChara;
         public uint CurrentHP
         {
             get
