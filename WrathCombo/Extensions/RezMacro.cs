@@ -86,7 +86,7 @@ public static class RezMacro
         // Block non-rez actions
         if (action is not null && !_resurrectionActions.Contains(action.Value))
         {
-            DebugLog($"Action is not a rez (action: {action})");
+            VerboseLog($"Action is not a rez (action: {action})");
             return;
         }
 
