@@ -137,7 +137,8 @@ internal partial class SMN
             EverlastingFlight = 16517,
             SearingLight = 2703,
             RubysGlimmer = 3873,
-            RefulgentLux = 3874;
+            RefulgentLux = 3874,
+            CrimsonStrike = 4403;
     }
 
     public static class Traits
