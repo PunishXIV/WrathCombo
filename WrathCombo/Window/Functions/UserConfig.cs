@@ -4,6 +4,7 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System;
@@ -383,7 +384,7 @@ namespace WrathCombo.Window.Functions
         /// <param name="outputValue"> If the user ticks this box, this is the value the config will be set to. </param>
         /// <param name="itemWidth"></param>
         /// <param name="descriptionColor"></param>
-        public static void DrawHorizontalRadioButton(string config, string checkBoxName, string checkboxDescription, int outputValue, float itemWidth = 150, Vector4 descriptionColor = new Vector4())
+        public static bool DrawHorizontalRadioButton(string config, string checkBoxName, string checkboxDescription, int outputValue, float itemWidth = 150, Vector4 descriptionColor = new Vector4())
         {
             if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudYellow;
             int output = PluginConfiguration.GetCustomIntValue(config);
@@ -394,15 +395,16 @@ namespace WrathCombo.Window.Functions
             if (finishPos >= ImGui.GetContentRegionMax().X)
                 ImGui.NewLine();
             
-
             bool enabled = output == outputValue;
 
+            bool o = false;
             using (ImRaii.PushColor(ImGuiCol.Text, descriptionColor))
             {
                 if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
                 {
                     PluginConfiguration.SetCustomIntValue(config, outputValue);
                     Service.Configuration.Save();
+                    o = true;
                 }
 
                 if (!checkboxDescription.IsNullOrEmpty() && ImGui.IsItemHovered())
@@ -414,6 +416,8 @@ namespace WrathCombo.Window.Functions
             }
 
             DrawResetContextMenu(config, outputValue);
+
+            return o;
         }
 
         /// <summary>

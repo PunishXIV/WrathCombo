@@ -113,6 +113,8 @@ namespace WrathCombo.CustomComboNS
 
         public virtual List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } = new();
 
+        public virtual List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = new();
+
         public virtual List<int> AllowUpgradeSteps { get; set; } = new();
 
         private int DelayedStep = 0;
@@ -179,6 +181,12 @@ namespace WrathCombo.CustomComboNS
 
                 if (OpenerStep < OpenerActions.Count)
                 {
+                    foreach (var (Step, Condition) in SkipSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
+                    {
+                        if (Condition())
+                            OpenerStep++;
+                    }
+
                     actionID = CurrentOpenerAction = OpenerActions[OpenerStep - 1];
 
                     double startValue = (VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) ? 1 : 1.25;
@@ -222,7 +230,8 @@ namespace WrathCombo.CustomComboNS
                     }
 
                     while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) &&
-                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
+                           !SkipSteps.Any(x => x.Steps.Any(y => y == OpenerStep - 1)) &&
+                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal)) 
                     {
                         if (OpenerStep >= OpenerActions.Count)
                             break;

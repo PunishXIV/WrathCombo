@@ -162,9 +162,13 @@ internal partial class GNB
 
                     ImGui.Spacing();
 
-                    DrawHorizontalRadioButton(GNB_Opener_StartChoice,
+                    if (DrawHorizontalRadioButton(GNB_Opener_StartChoice,
                         $"Normal Opener",
-                        $"Starts opener with {LightningShot.ActionName()}", 0);
+                        $"Starts opener with {LightningShot.ActionName()}", 0))
+                    {
+                        if (!CustomComboFunctions.InCombat())
+                            Opener().OpenerStep = 1;
+                    }    
 
                     DrawHorizontalRadioButton(GNB_Opener_StartChoice,
                         $"Early Opener",

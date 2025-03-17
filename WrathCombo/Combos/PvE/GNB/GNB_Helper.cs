@@ -1,6 +1,7 @@
 ﻿#region Dependencies
 using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
 using System.Collections.Generic;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
@@ -213,6 +214,8 @@ internal partial class GNB
             Hypervelocity
         ];
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => Config.GNB_Opener_StartChoice == 1)];
     }
     internal class Lv100SlowNormalNM : GNBOpenerLv100Base
     {
@@ -238,6 +241,8 @@ internal partial class GNB
             NobleBlood,
             LionHeart
         ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => Config.GNB_Opener_StartChoice == 1)];
     }
     internal class Lv100FastEarlyNM : GNBOpenerLv100Base
     {
@@ -263,6 +268,8 @@ internal partial class GNB
             Hypervelocity,
         ];
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [3];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => Config.GNB_Opener_StartChoice == 1)];
     }
     internal class Lv100SlowEarlyNM : GNBOpenerLv100Base
     {
@@ -287,6 +294,8 @@ internal partial class GNB
             NobleBlood,
             LionHeart
         ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => Config.GNB_Opener_StartChoice == 1)];
     }
     #endregion
 
