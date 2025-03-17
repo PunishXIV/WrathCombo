@@ -1,13 +1,12 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class WAR
+internal partial class WAR : TankJob
 {
     #region Simple Mode - Single Target
     internal class WAR_ST_Simple : CustomCombo
@@ -23,32 +22,22 @@ internal partial class WAR
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
                               JustUsed(OriginalHook(Vengeance), 5f) ||
                               JustUsed(ThrillOfBattle, 5f) ||
-                              JustUsed(All.Rampart, 5f) ||
+                              JustUsed(Role.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
             // Interrupt
-            if (ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+            if (Role.CanInterject())
+                return Role.Interject;
 
             #region Variant
-            Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-            if (IsEnabled(CustomComboPreset.WAR_Variant_SpiritDart) &&
-                IsEnabled(Variant.VariantSpiritDart) &&
-                (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                return Variant.VariantSpiritDart;
+            if (Variant.CanSpiritDart(CustomComboPreset.WAR_Variant_SpiritDart))
+                return Variant.SpiritDart;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
-                IsEnabled(Variant.VariantUltimatum) &&
-                CanWeave() &&
-                ActionReady(Variant.VariantUltimatum))
-                return Variant.VariantUltimatum;
+            if (Variant.CanUltimatum(CustomComboPreset.WAR_Variant_Ultimatum, WeaveTypes.Weave))
+                return Variant.Ultimatum;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                CanWeave() &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.WAR_Variant_Cure, Config.WAR_VariantCure))
+                return Variant.Cure;
             #endregion
 
             #region Mitigations
@@ -70,15 +59,12 @@ internal partial class WAR
                             return OriginalHook(Vengeance);
 
                         //Rampart
-                        if (ActionReady(All.Rampart) && //Rampart is ready
-                            PlayerHealthPercentageHp() < 80) //Player's health is below 80%
-                            return All.Rampart;
+                        if (Role.CanRampart(80)) //Player's health is below 80%
+                            return Role.Rampart;
 
                         //Reprisal
-                        if (ActionReady(All.Reprisal) && //Reprisal is ready
-                            InActionRange(All.Reprisal) && //Player is in range of Reprisal
-                            PlayerHealthPercentageHp() < 90) //Player's health is below 90%
-                            return All.Reprisal;
+                        if (Role.CanReprisal(90)) //Player's health is below 90%
+                            return Role.Reprisal;
                     }
 
                     //Thrill
@@ -207,33 +193,23 @@ internal partial class WAR
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
                               JustUsed(OriginalHook(Vengeance), 5f) ||
                               JustUsed(ThrillOfBattle, 5f) ||
-                              JustUsed(All.Rampart, 5f) ||
+                              JustUsed(Role.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
             // Interrupt
             if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
-                && ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+                && Role.CanInterject())
+                return Role.Interject;
 
             #region Variant
-            Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-            if (IsEnabled(CustomComboPreset.WAR_Variant_SpiritDart) &&
-                IsEnabled(Variant.VariantSpiritDart) &&
-                (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                return Variant.VariantSpiritDart;
+            if (Variant.CanSpiritDart(CustomComboPreset.WAR_Variant_SpiritDart))
+                return Variant.SpiritDart;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
-                IsEnabled(Variant.VariantUltimatum) &&
-                CanWeave() &&
-                ActionReady(Variant.VariantUltimatum))
-                return Variant.VariantUltimatum;
+            if (Variant.CanUltimatum(CustomComboPreset.WAR_Variant_Ultimatum, WeaveTypes.Weave))
+                return Variant.Ultimatum;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                CanWeave() &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.WAR_Variant_Cure, Config.WAR_VariantCure))
+                return Variant.Cure;
             #endregion
 
             #region Mitigations
@@ -261,27 +237,23 @@ internal partial class WAR
 
                     //Rampart
                     if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Rampart) && //Rampart option is enabled
-                        ActionReady(All.Rampart) && //Rampart is ready
-                        PlayerHealthPercentageHp() <= Config.WAR_ST_Rampart_Health && //Player's health is below selected threshold
+                        Role.CanRampart(Config.WAR_ST_Rampart_Health) && //Player's health is below selected threshold
                         (Config.WAR_ST_Rampart_SubOption == 0 || //Rampart is enabled for all targets
                          (TargetIsBoss() && Config.WAR_ST_Rampart_SubOption == 1))) //Rampart is enabled for bosses only
-                        return All.Rampart;
+                        return Role.Rampart;
 
                     //Reprisal
                     if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_Reprisal) && //Reprisal option is enabled
-                        ActionReady(All.Reprisal) && //Reprisal is ready
-                        InActionRange(All.Reprisal) && //Player is in range of Reprisal
-                        PlayerHealthPercentageHp() <= Config.WAR_ST_Reprisal_Health && //Player's health is below selected threshold
+                        Role.CanReprisal(Config.WAR_ST_Reprisal_Health) && //Player's health is below selected threshold
                         (Config.WAR_ST_Reprisal_SubOption == 0 || //Reprisal is enabled for all targets
                          (TargetIsBoss() && Config.WAR_ST_Reprisal_SubOption == 1))) //Reprisal is enabled for bosses only
-                        return All.Reprisal;
+                        return Role.Reprisal;
 
                     //Arms Length
-                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_ArmsLength) && //Arms Length option is enabled
-                        ActionReady(All.ArmsLength) && //Arms Length is ready
-                        PlayerHealthPercentageHp() <= Config.WAR_ST_ArmsLength_Health && //Player's health is below selected threshold
-                        !InBossEncounter()) //target is not a boss
-                        return All.ArmsLength;
+                    if (IsEnabled(CustomComboPreset.WAR_ST_Advanced_ArmsLength) &&
+                        PlayerHealthPercentageHp() <= Config.WAR_ST_ArmsLength_Health &&
+                        Role.CanArmsLength())
+                        return Role.ArmsLength;
                 }
 
                 //Thrill
@@ -450,41 +422,30 @@ internal partial class WAR
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
                               JustUsed(OriginalHook(Vengeance), 5f) ||
                               JustUsed(ThrillOfBattle, 5f) ||
-                              JustUsed(All.Rampart, 5f) ||
+                              JustUsed(Role.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
             #region Stuns
 
             // Interrupt
-            if (ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+            if (Role.CanInterject())
+                return Role.Interject;
 
             // Stun
-            if (ActionReady(All.LowBlow)
-                && TargetIsCasting())
-                return All.LowBlow;
+            if (Role.CanLowBlow())
+                return Role.LowBlow;
 
             #endregion
 
             #region Variant
-            Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-            if (IsEnabled(CustomComboPreset.WAR_Variant_SpiritDart) &&
-                IsEnabled(Variant.VariantSpiritDart) &&
-                (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                return Variant.VariantSpiritDart;
+            if (Variant.CanSpiritDart(CustomComboPreset.WAR_Variant_SpiritDart))
+                return Variant.SpiritDart;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
-                IsEnabled(Variant.VariantUltimatum) &&
-                CanWeave() &&
-                ActionReady(Variant.VariantUltimatum))
-                return Variant.VariantUltimatum;
+            if (Variant.CanUltimatum(CustomComboPreset.WAR_Variant_Ultimatum, WeaveTypes.Weave))
+                return Variant.Ultimatum;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                CanWeave() &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.WAR_Variant_Cure, Config.WAR_VariantCure))
+                return Variant.Cure;
             #endregion
 
             #region Mitigations
@@ -506,15 +467,12 @@ internal partial class WAR
                             return OriginalHook(Vengeance);
 
                         //Rampart
-                        if (ActionReady(All.Rampart) && //Rampart is ready
-                            PlayerHealthPercentageHp() < 80) //Player's health is below 80%
-                            return All.Rampart;
+                        if (Role.CanRampart(80)) //Player's health is below 80%
+                            return Role.Rampart;
 
                         //Reprisal
-                        if (ActionReady(All.Reprisal) && //Reprisal is ready
-                            GetTargetDistance() <= 5 && //within 5y of target
-                            PlayerHealthPercentageHp() < 90) //Player's health is below 90%
-                            return All.Reprisal;
+                        if (Role.CanReprisal(90, checkTargetForDebuff:false))
+                            return Role.Reprisal;
                     }
 
                     //Thrill
@@ -605,43 +563,33 @@ internal partial class WAR
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
                               JustUsed(OriginalHook(Vengeance), 5f) ||
                               JustUsed(ThrillOfBattle, 5f) ||
-                              JustUsed(All.Rampart, 5f) ||
+                              JustUsed(Role.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
             #region Stuns
 
             // Interrupt
             if (IsEnabled(CustomComboPreset.WAR_AoE_Interrupt)
-                && ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+                && Role.CanInterject())
+                return Role.Interject;
 
             // Stun
             if (IsEnabled(CustomComboPreset.WAR_AoE_Stun)
-                && ActionReady(All.LowBlow)
-                && TargetIsCasting())
-                return All.LowBlow;
+                && Role.CanLowBlow())
+                return Role.LowBlow;
 
             #endregion
 
             #region Variant
-            Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-            if (IsEnabled(CustomComboPreset.WAR_Variant_SpiritDart) &&
-                IsEnabled(Variant.VariantSpiritDart) &&
-                (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                return Variant.VariantSpiritDart;
+            if (Variant.CanSpiritDart(CustomComboPreset.WAR_Variant_SpiritDart))
+                return Variant.SpiritDart;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Ultimatum) &&
-                IsEnabled(Variant.VariantUltimatum) &&
-                CanWeave() &&
-                ActionReady(Variant.VariantUltimatum))
-                return Variant.VariantUltimatum;
+            if (Variant.CanUltimatum(CustomComboPreset.WAR_Variant_Ultimatum, WeaveTypes.Weave))
+                return Variant.Ultimatum;
 
-            if (IsEnabled(CustomComboPreset.WAR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                CanWeave() &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.WAR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.WAR_Variant_Cure, Config.WAR_VariantCure))
+                return Variant.Cure;
+
             #endregion
 
             #region Mitigations
@@ -669,27 +617,23 @@ internal partial class WAR
 
                     //Rampart
                     if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Rampart) && //Rampart option is enabled
-                        ActionReady(All.Rampart) && //Rampart is ready
-                        PlayerHealthPercentageHp() <= Config.WAR_AoE_Rampart_Health && //Player's health is below selected threshold
+                        Role.CanRampart(Config.WAR_AoE_Rampart_Health) && //Player's health is below selected threshold
                         (Config.WAR_AoE_Rampart_SubOption == 0 || //Rampart is enabled for all targets
                          (TargetIsBoss() && Config.WAR_AoE_Rampart_SubOption == 1))) //Rampart is enabled for bosses only
-                        return All.Rampart;
+                        return Role.Rampart;
 
                     //Reprisal
                     if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Reprisal) && //Reprisal option is enabled
-                        ActionReady(All.Reprisal) && //Reprisal is ready
-                        GetTargetDistance() <= 5 && //within 5y of target
-                        PlayerHealthPercentageHp() <= Config.WAR_AoE_Reprisal_Health && //Player's health is below selected threshold
+                        Role.CanReprisal(Config.WAR_AoE_Reprisal_Health, checkTargetForDebuff:false) && //Player's health is below selected threshold
                         (Config.WAR_AoE_Reprisal_SubOption == 0 || //Reprisal is enabled for all targets
                          (TargetIsBoss() && Config.WAR_AoE_Reprisal_SubOption == 1))) //Reprisal is enabled for bosses only
-                        return All.Reprisal;
+                        return Role.Reprisal;
 
                     //Arms Length
-                    if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_ArmsLength) && //Arms Length option is enabled
-                        ActionReady(All.ArmsLength) && //Arms Length is ready
-                        PlayerHealthPercentageHp() <= Config.WAR_AoE_ArmsLength_Health && //Player's health is below selected threshold
-                        !InBossEncounter()) //target is not a boss
-                        return All.ArmsLength;
+                    if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_ArmsLength) &&
+                        PlayerHealthPercentageHp() <= Config.WAR_AoE_ArmsLength_Health &&
+                        Role.CanArmsLength())
+                        return Role.ArmsLength;
                 }
                 //Thrill
                 if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Thrill) && //Thrill option is enabled

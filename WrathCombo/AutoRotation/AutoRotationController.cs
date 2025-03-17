@@ -79,9 +79,6 @@ namespace WrathCombo.AutoRotation
             if (cfg.InCombatOnly && (!GetPartyMembers().Any(x => x.BattleChara.Struct()->InCombat) || PartyEngageDuration().TotalSeconds < cfg.CombatDelay) && !combatBypass)
                 return;
 
-            if (Player.Job is Job.SGE && cfg.HealerSettings.ManageKardia)
-                UpdateKardiaTarget();
-
             var autoActions = Presets.GetJobAutorots;
             var healTarget = Player.Object.GetRole() is CombatRole.Healer ? AutoRotationHelper.GetSingleTarget(cfg.HealerRotationMode) : null;
             var aoeheal = Player.Object.GetRole() is CombatRole.Healer && HealerTargeting.CanAoEHeal() && autoActions.Any(x => x.Key.Attributes().AutoAction.IsHeal && x.Key.Attributes().AutoAction.IsAoE);
@@ -113,6 +110,9 @@ namespace WrathCombo.AutoRotation
                         RezParty();
                 }
             }
+
+            if (Player.Job is Job.SGE && cfg.HealerSettings.ManageKardia)
+                UpdateKardiaTarget();
 
 
             if (ActionManager.Instance()->AnimationLock > 0) return;
@@ -218,7 +218,6 @@ namespace WrathCombo.AutoRotation
                 _ => throw new NotImplementedException(),
             };
 
-
             if (ActionManager.Instance()->QueuedActionId == resSpell)
                 ActionManager.Instance()->QueuedActionId = 0;
 
@@ -232,9 +231,9 @@ namespace WrathCombo.AutoRotation
                 {
                     if (Player.Job is Job.RDM)
                     {
-                        if (ActionReady(All.Swiftcast) && !HasEffect(RDM.Buffs.Dualcast))
+                        if (ActionReady(MagicRole.Swiftcast) && !HasEffect(RDM.Buffs.Dualcast))
                         {
-                            ActionManager.Instance()->UseAction(ActionType.Action, All.Swiftcast);
+                            ActionManager.Instance()->UseAction(ActionType.Action, MagicRole.Swiftcast);
                             return;
                         }
 
@@ -246,17 +245,18 @@ namespace WrathCombo.AutoRotation
                     }
                     else
                     {
-                        if (ActionReady(All.Swiftcast))
+                        if (ActionReady(MagicRole.Swiftcast))
                         {
-                            if (ActionManager.Instance()->GetActionStatus(ActionType.Action, All.Swiftcast) == 0)
+                            if (ActionManager.Instance()->GetActionStatus(ActionType.Action, MagicRole.Swiftcast) == 0)
                             {
-                                ActionManager.Instance()->UseAction(ActionType.Action, All.Swiftcast);
+                                ActionManager.Instance()->UseAction(ActionType.Action, MagicRole.Swiftcast);
                                 return;
                             }
                         }
 
-                        if (!IsMoving() || HasEffect(All.Buffs.Swiftcast))
+                        if (!IsMoving() || HasEffect(MagicRole.Buffs.Swiftcast))
                         {
+                            
                             if ((cfg.HealerSettings.AutoRezRequireSwift && ActionManager.GetAdjustedCastTime(ActionType.Action, resSpell) == 0) || !cfg.HealerSettings.AutoRezRequireSwift)
                                 ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
                         }
@@ -267,13 +267,13 @@ namespace WrathCombo.AutoRotation
 
         private static void CleanseParty()
         {
-            if (ActionManager.Instance()->QueuedActionId == All.Esuna)
+            if (ActionManager.Instance()->QueuedActionId == Healer.Esuna)
                 ActionManager.Instance()->QueuedActionId = 0;
 
             if (GetPartyMembers().FindFirst(x => HasCleansableDebuff(x.BattleChara), out var member))
             {
-                if (InActionRange(All.Esuna, member.BattleChara) && IsInLineOfSight(member.BattleChara))
-                    ActionManager.Instance()->UseAction(ActionType.Action, All.Esuna, member.BattleChara.GameObjectId);
+                if (InActionRange(Healer.Esuna, member.BattleChara) && IsInLineOfSight(member.BattleChara))
+                    ActionManager.Instance()->UseAction(ActionType.Action, Healer.Esuna, member.BattleChara.GameObjectId);
             }
         }
 
@@ -282,7 +282,7 @@ namespace WrathCombo.AutoRotation
             if (!LevelChecked(SGE.Kardia)) return;
             if (CombatEngageDuration().TotalSeconds < 3) return;
 
-            foreach (var member in GetPartyMembers().OrderByDescending(x => x.BattleChara.GetRole() is CombatRole.Tank))
+            foreach (var member in GetPartyMembers().Where(x => !x.BattleChara.IsDead).OrderByDescending(x => x.BattleChara.GetRole() is CombatRole.Tank))
             {
                 if (cfg.HealerSettings.KardiaTanksOnly && member.BattleChara.GetRole() is not CombatRole.Tank &&
                     FindEffectOnMember(3615, member.BattleChara) is null) continue;

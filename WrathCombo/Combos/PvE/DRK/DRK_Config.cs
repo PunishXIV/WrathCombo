@@ -1,6 +1,5 @@
 #region
 
-using Dalamud.Interface.Utility;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Numerics;
@@ -8,7 +7,10 @@ using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
+using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
+using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
+// ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable once GrammarMistakeInComment
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable InconsistentNaming
@@ -482,30 +484,12 @@ internal partial class DRK
             "# charges to keep (0 = Use All)";
 
         /// <summary>
-        ///     Whether abilities should be restricted to Bosses or not.
-        /// </summary>
-        internal enum BossAvoidance
-        {
-            Off = 1,
-            On = 2,
-        }
-
-        /// <summary>
         ///     Whether abilities should be restricted to bosses or not.
         /// </summary>
         internal enum BossRequirement
         {
             Off = 1,
             On = 2,
-        }
-
-        /// <summary>
-        ///     Whether abilities should be restricted to while in a party or not.
-        /// </summary>
-        internal enum PartyRequirement
-        {
-            No,
-            Yes,
         }
 
         /// <summary>

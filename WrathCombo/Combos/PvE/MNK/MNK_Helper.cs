@@ -95,68 +95,21 @@ internal partial class MNK
         return false;
     }
 
-    #region ID's
-
-    public const byte ClassID = 2;
-    public const byte JobID = 20;
-
-    public const uint
-        Bootshine = 53,
-        TrueStrike = 54,
-        SnapPunch = 56,
-        SteeledMeditation = 36940,
-        SteelPeak = 25761,
-        TwinSnakes = 61,
-        ArmOfTheDestroyer = 62,
-        Demolish = 66,
-        Mantra = 65,
-        DragonKick = 74,
-        Rockbreaker = 70,
-        Thunderclap = 25762,
-        HowlingFist = 25763,
-        FourPointFury = 16473,
-        PerfectBalance = 69,
-        FormShift = 4262,
-        TheForbiddenChakra = 3547,
-        MasterfulBlitz = 25764,
-        RiddleOfEarth = 7394,
-        EarthsReply = 36944,
-        RiddleOfFire = 7395,
-        Brotherhood = 7396,
-        RiddleOfWind = 25766,
-        InspiritedMeditation = 36941,
-        EnlightenedMeditation = 36943,
-        Enlightenment = 16474,
-        SixSidedStar = 16476,
-        ShadowOfTheDestroyer = 25767,
-        RisingPhoenix = 25768,
-        WindsReply = 36949,
-        ForbiddenMeditation = 36942,
-        LeapingOpo = 36945,
-        RisingRaptor = 36946,
-        PouncingCoeurl = 36947,
-        TrueNorth = 7546,
-        ElixirBurst = 36948,
-        FiresReply = 36950;
-
-    internal static class Buffs
+    internal static bool InMasterfulRange()
     {
-        public const ushort
-            TwinSnakes = 101,
-            OpoOpoForm = 107,
-            RaptorForm = 108,
-            CoeurlForm = 109,
-            PerfectBalance = 110,
-            RiddleOfFire = 1181,
-            RiddleOfWind = 2687,
-            FormlessFist = 2513,
-            TrueNorth = 1250,
-            WindsRumination = 3842,
-            FiresRumination = 3843,
-            Brotherhood = 1185;
-    }
+        if (NumberOfEnemiesInRange(ElixirField, null) >= 1 &&
+            (OriginalHook(MasterfulBlitz) == ElixirField || OriginalHook(MasterfulBlitz) == FlintStrike ||
+             OriginalHook(MasterfulBlitz) == ElixirBurst || OriginalHook(MasterfulBlitz) == RisingPhoenix))
+            return true;
 
-    #endregion
+        if (NumberOfEnemiesInRange(TornadoKick, CurrentTarget) >= 1 &&
+            (OriginalHook(MasterfulBlitz) == TornadoKick ||
+             OriginalHook(MasterfulBlitz) == CelestialRevolution ||
+             OriginalHook(MasterfulBlitz) == PhantomRush))
+            return true;
+
+        return false;
+    }
 
     #region Openers
 
@@ -285,6 +238,80 @@ internal partial class MNK
 
             return true;
         }
+    }
+
+    #endregion
+
+    #region ID's
+
+    public const byte ClassID = 2;
+    public const byte JobID = 20;
+
+    public const uint
+        Bootshine = 53,
+        TrueStrike = 54,
+        SnapPunch = 56,
+        TwinSnakes = 61,
+        ArmOfTheDestroyer = 62,
+        Demolish = 66,
+        DragonKick = 74,
+        Rockbreaker = 70,
+        Thunderclap = 25762,
+        HowlingFist = 25763,
+        FourPointFury = 16473,
+        FormShift = 4262,
+        SixSidedStar = 16476,
+        ShadowOfTheDestroyer = 25767,
+        LeapingOpo = 36945,
+        RisingRaptor = 36946,
+        PouncingCoeurl = 36947,
+        TrueNorth = 7546,
+
+        //Blitzes
+        PerfectBalance = 69,
+        MasterfulBlitz = 25764,
+        ElixirField = 3545,
+        ElixirBurst = 36948,
+        FlintStrike = 25882,
+        RisingPhoenix = 25768,
+        CelestialRevolution = 25765,
+        TornadoKick = 3543,
+        PhantomRush = 25769,
+
+        //Riddles + Buffs
+        RiddleOfEarth = 7394,
+        EarthsReply = 36944,
+        RiddleOfFire = 7395,
+        FiresReply = 36950,
+        RiddleOfWind = 25766,
+        WindsReply = 36949,
+        Brotherhood = 7396,
+        Mantra = 65,
+
+        //Meditations
+        InspiritedMeditation = 36941,
+        SteeledMeditation = 36940,
+        EnlightenedMeditation = 36943,
+        ForbiddenMeditation = 36942,
+        TheForbiddenChakra = 3547,
+        Enlightenment = 16474,
+        SteelPeak = 25761;
+
+    internal static class Buffs
+    {
+        public const ushort
+            TwinSnakes = 101,
+            OpoOpoForm = 107,
+            RaptorForm = 108,
+            CoeurlForm = 109,
+            PerfectBalance = 110,
+            RiddleOfFire = 1181,
+            RiddleOfWind = 2687,
+            FormlessFist = 2513,
+            TrueNorth = 1250,
+            WindsRumination = 3842,
+            FiresRumination = 3843,
+            Brotherhood = 1185;
     }
 
     #endregion

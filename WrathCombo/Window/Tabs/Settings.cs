@@ -177,9 +177,10 @@ namespace WrathCombo.Window.Tabs
                     "\n\nIf you have minor FPS issues, you can increase this value to make combos run less often." +
                     "\nThis makes your combos less responsive, and perhaps even clips GCDs." +
                     "\nAt high values, this can break your rotation entirely." +
-                    "\nMore severe FPS issues should instead be handled with Performance Mode below." +
+                    "\nMore severe FPS issues should instead be handled with Performance Mode option above." +
                     "\n\n200ms can make a reasonable difference in your FPS." +
-                    "\nValues over 500ms are NOT recommended.");
+                    "\nValues over 500ms are NOT recommended." +
+                    "\nDefault: 50");
 
                 #endregion
 
@@ -196,7 +197,7 @@ namespace WrathCombo.Window.Tabs
 
                 ImGui.Text($"   -   Movement Check Delay");
 
-                ImGuiComponents.HelpMarker("Many features check if you are moving to decide actions, this will allow you to set a delay on how long you need to be moving before it recognizes you as moving.\nThis allows you to not have to worry about small movements affecting your rotation, primarily for casters.\n\nIt is recommended to keep this value between 0 and 1 seconds.");
+                ImGuiComponents.HelpMarker("Many features check if you are moving to decide actions, this will allow you to set a delay on how long you need to be moving before it recognizes you as moving.\nThis allows you to not have to worry about small movements affecting your rotation, primarily for casters.\n\nIt is recommended to keep this value between 0 and 1 seconds.\nDefault: 0.0");
 
                 #endregion
 
@@ -212,7 +213,7 @@ namespace WrathCombo.Window.Tabs
 
                 ImGui.Text($"   -   Opener Failure Timeout");
 
-                ImGuiComponents.HelpMarker("During an opener, if this amount of time has passed since your last action, it will fail the opener and resume with non-opener functionality.");
+                ImGuiComponents.HelpMarker("During an opener if this amount of time has passed since your last action, it will fail the opener and resume with non-opener functionality.\n\nIt is recommended to keep this value below 6.\nDefault: 4.0");
 
                 #endregion
 
@@ -231,7 +232,7 @@ namespace WrathCombo.Window.Tabs
 
                 ImGui.Text($"   -   Melee Distance Offset");
 
-                ImGuiComponents.HelpMarker("Offset of melee check distance.\nFor those who don't want to immediately use their ranged attack if the boss walks slightly out of range.\n\nFor example, a value of -0.5 would make you have to be 0.5 yalms closer to the target,\nor a value of 2 would disable triggering of ranged features until you are 2 yalms further from the hitbox.\n\nIt is recommended to keep this value at 0.");
+                ImGuiComponents.HelpMarker("Offset of melee check distance.\nFor those who don't want to immediately use their ranged attack if the boss walks slightly out of range.\n\nFor example, a value of -0.5 would make you have to be 0.5 yalms closer to the target,\nor a value of 2 would disable triggering of ranged features until you are 2 yalms further from the hitbox.\n\nIt is recommended to keep this value at 0.\nDefault: 0.0");
                 #endregion
 
                 #region Interrupt Delay
@@ -251,7 +252,7 @@ namespace WrathCombo.Window.Tabs
                 ImGui.SameLine( pos);
                 ImGui.Text($"   -   Interrupt Delay");
 
-                ImGuiComponents.HelpMarker("The percentage of a total cast time to wait before interrupting.\nApplies to all interrupts, in every job's combos.\n\nIt is recommend to keep this value below 50%.");
+                ImGuiComponents.HelpMarker("The percentage of a total cast time to wait before interrupting.\nApplies to all interrupts, in every job's combos.\n\nIt is recommend to keep this value below 50%.\nDefault: 0%");
 
                 #endregion
 

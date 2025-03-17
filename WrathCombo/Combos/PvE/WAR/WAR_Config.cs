@@ -6,6 +6,8 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
+using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
+using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -14,17 +16,6 @@ internal partial class WAR
     internal static class Config
     {
         private const int numberMitigationOptions = 8;
-
-        internal enum PartyRequirement
-        {
-            No,
-            Yes
-        }
-        internal enum BossAvoidance
-        {
-            Off = 1,
-            On = 2
-        }
 
         public static UserInt
             WAR_InfuriateRange = new("WAR_InfuriateRange", 40),
@@ -226,11 +217,11 @@ internal partial class WAR
 
                     UserConfig.DrawHorizontalRadioButton(WAR_ST_Rampart_SubOption,
                         "All Enemies",
-                        $"Uses {All.Rampart.ActionName()} regardless of targeted enemy type.", 0);
+                        $"Uses {Role.Rampart.ActionName()} regardless of targeted enemy type.", 0);
 
                     UserConfig.DrawHorizontalRadioButton(WAR_ST_Rampart_SubOption,
                         "Bosses Only",
-                        $"Only uses {All.Rampart.ActionName()} when the targeted enemy is a boss.", 1);
+                        $"Only uses {Role.Rampart.ActionName()} when the targeted enemy is a boss.", 1);
 
                     break;
 
@@ -240,11 +231,11 @@ internal partial class WAR
 
                     UserConfig.DrawHorizontalRadioButton(WAR_AoE_Rampart_SubOption,
                         "All Enemies",
-                        $"Uses {All.Rampart.ActionName()} regardless of targeted enemy type.", 0);
+                        $"Uses {Role.Rampart.ActionName()} regardless of targeted enemy type.", 0);
 
                     UserConfig.DrawHorizontalRadioButton(WAR_AoE_Rampart_SubOption,
                         "Bosses Only",
-                        $"Only uses {All.Rampart.ActionName()} when the targeted enemy is a boss.", 1);
+                        $"Only uses {Role.Rampart.ActionName()} when the targeted enemy is a boss.", 1);
 
                     break;
 
@@ -357,10 +348,10 @@ internal partial class WAR
                         "Player HP% to be \nless than or equal to:", 200);
                     UserConfig.DrawHorizontalRadioButton(WAR_ST_Reprisal_SubOption,
                         "All Enemies",
-                        $"Uses {All.Reprisal.ActionName()} regardless of targeted enemy type.", 0);
+                        $"Uses {Role.Reprisal.ActionName()} regardless of targeted enemy type.", 0);
                     UserConfig.DrawHorizontalRadioButton(WAR_ST_Reprisal_SubOption,
                         "Bosses Only",
-                        $"Only uses {All.Reprisal.ActionName()} when the targeted enemy is a boss.", 1);
+                        $"Only uses {Role.Reprisal.ActionName()} when the targeted enemy is a boss.", 1);
                     break;
 
                 case CustomComboPreset.WAR_AoE_Advanced_Reprisal:
@@ -368,10 +359,10 @@ internal partial class WAR
                         "Player HP% to be \nless than or equal to:", 200);
                     UserConfig.DrawHorizontalRadioButton(WAR_AoE_Reprisal_SubOption,
                         "All Enemies",
-                        $"Uses {All.Reprisal.ActionName()} regardless of targeted enemy type.", 0);
+                        $"Uses {Role.Reprisal.ActionName()} regardless of targeted enemy type.", 0);
                     UserConfig.DrawHorizontalRadioButton(WAR_AoE_Reprisal_SubOption,
                         "Bosses Only",
-                        $"Only uses {All.Reprisal.ActionName()} when the targeted enemy is a boss.", 1);
+                        $"Only uses {Role.Reprisal.ActionName()} when the targeted enemy is a boss.", 1);
                     break;
 
                 #region One-Button Mitigation

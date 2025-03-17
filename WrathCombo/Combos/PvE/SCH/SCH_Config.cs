@@ -7,7 +7,7 @@ using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
-internal static partial class SCH
+internal partial class SCH
 {
     internal static class Config
     {

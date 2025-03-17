@@ -19,8 +19,6 @@ internal partial class VPR
 
     internal static bool In5Y => HasBattleTarget() && GetTargetDistance() <= 5;
 
-    internal static bool TrueNorthReady => TargetNeedsPositionals() && ActionReady(All.TrueNorth) && !HasEffect(All.Buffs.TrueNorth);
-
     internal static bool CappedOnCoils =>
         TraitLevelChecked(Traits.EnhancedVipersRattle) && Gauge.RattlingCoilStacks > 2 ||
         !TraitLevelChecked(Traits.EnhancedVipersRattle) && Gauge.RattlingCoilStacks > 1;
@@ -65,6 +63,12 @@ internal partial class VPR
 
             //overcap protection
             if (Gauge.SerpentOffering >= 100)
+                return true;
+
+            //non boss encounters
+            if ((IsEnabled(CustomComboPreset.VPR_ST_SimpleMode) && !InBossEncounter() ||
+                 IsEnabled(CustomComboPreset.VPR_ST_AdvancedMode) && Config.VPR_ST_SerpentsIre_SubOption == 1 && !InBossEncounter()) &&
+                gauge.SerpentOffering >= 50)
                 return true;
 
             //Lower lvl

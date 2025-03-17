@@ -474,6 +474,8 @@ namespace WrathCombo.Window.Tabs
                         CustomStyleText("Last Successful Cast:",
                             $"{ActionWatching.TimeSinceLastSuccessfulCast(_debugSpell.Value.RowId) / 1000f:F2}");
 
+                    CustomStyleText($"JustUsedOn:", $"{JustUsedOn(_debugSpell.Value.RowId, CurrentTarget)}");
+
                     if (Svc.Targets.Target != null)
                     {
                         var inRange = ActionManager.GetActionInRangeOrLoS(_debugSpell.Value.RowId,

@@ -250,6 +250,22 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
+        public enum WeaveTypes
+        {
+            None,
+            Weave,
+            DelayWeave,
+            SpellWeave
+        }
+        public static bool CheckWeave(WeaveTypes weave) => weave switch
+        {
+            WeaveTypes.None => true,
+            WeaveTypes.Weave => CanWeave(),
+            WeaveTypes.DelayWeave => CanDelayedWeave(),
+            WeaveTypes.SpellWeave => CanSpellWeave(),
+            _ => false
+        };
+
         /// <summary>
         /// Returns the current combo timer.
         /// </summary>

@@ -4,6 +4,7 @@ using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 
+// ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
@@ -13,7 +14,7 @@ using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRK
+internal partial class DRK : TankJob
 {
     internal class DRK_ST_Advanced : CustomCombo
     {
@@ -52,7 +53,7 @@ internal partial class DRK
             // Bail if not in combat
             if (!InCombat()) return HardSlash;
 
-            if (TryGetAction<Variant>(comboFlags, ref newAction))
+            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
                 return newAction;
 
             var cdBossRequirement =
@@ -107,7 +108,7 @@ internal partial class DRK
             // Bail if not in combat
             if (!InCombat()) return HardSlash;
 
-            if (TryGetAction<Variant>(comboFlags, ref newAction))
+            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
                 return newAction;
 
             if (TryGetAction<Cooldown>(comboFlags, ref newAction))
@@ -142,7 +143,7 @@ internal partial class DRK
             // Bail if not in combat
             if (!InCombat()) return Unleash;
 
-            if (TryGetAction<Variant>(comboFlags, ref newAction))
+            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
                 return newAction;
 
             if (IsEnabled(CustomComboPreset.DRK_AoE_CDs) &&
@@ -180,7 +181,7 @@ internal partial class DRK
             // Bail if not in combat
             if (!InCombat()) return Unleash;
 
-            if (TryGetAction<Variant>(comboFlags, ref newAction))
+            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
                 return newAction;
 
             if (TryGetAction<Cooldown>(comboFlags, ref newAction))
@@ -211,9 +212,8 @@ internal partial class DRK
             if (actionID is not (CarveAndSpit or AbyssalDrain)) return actionID;
 
             if (IsEnabled(CustomComboPreset.DRK_oGCD_Interrupt) &&
-                ActionReady(All.Interject) &&
-                CanInterruptEnemy())
-                return All.Interject;
+                Role.CanInterject())
+                return Role.Interject;
 
             if (IsEnabled(CustomComboPreset.DRK_oGCD_Delirium) &&
                 ActionReady(BloodWeapon))

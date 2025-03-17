@@ -235,7 +235,7 @@ internal partial class RDM
     }
 
     private static bool TryLucidDreaming(int MPThreshold, uint ComboAction) =>
-        All.CanUseLucid(MPThreshold)
+        Role.CanLucidDream(MPThreshold)
         && InCombat()
         && !HasEffect(Buffs.Dualcast)
         && ComboAction != EnchantedRiposte
@@ -257,7 +257,7 @@ internal partial class RDM
                 && LevelChecked(Embolden)
                 && HasCondition(ConditionFlag.InCombat)
                 && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(All.Buffs.Swiftcast)
+                && !HasEffect(Role.Buffs.Swiftcast)
                 && !HasEffect(Buffs.Acceleration)
                 && (GetTargetDistance() <= 3 || (GapCloser && HasCharges(Corpsacorps))))
             {
@@ -462,7 +462,7 @@ internal partial class RDM
 
             if (InCombat()
                 && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(All.Buffs.Swiftcast)
+                && !HasEffect(Role.Buffs.Swiftcast)
                 && !HasEffect(Buffs.Acceleration)
                 && ((GetTargetDistance() <= MoulinetRange && RDMMana.ManaStacks == 0) || RDMMana.ManaStacks > 0))
             {
@@ -544,7 +544,7 @@ internal partial class RDM
             if (LevelChecked(Moulinet)
                 && LocalPlayer.IsCasting == false
                 && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(All.Buffs.Swiftcast)
+                && !HasEffect(Role.Buffs.Swiftcast)
                 && !HasEffect(Buffs.Acceleration)
                 && RDMMana.Min >= 50)
             {
@@ -649,7 +649,7 @@ internal partial class RDM
                 && !HasEffect(Buffs.VerstoneReady)
                 && !HasEffect(Buffs.Acceleration)
                 && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(All.Buffs.Swiftcast))
+                && !HasEffect(Role.Buffs.Swiftcast))
             {
                 if (ActionReady(Acceleration)
                     && GetRemainingCharges(Acceleration) > Config.RDM_ST_Acceleration_Charges
@@ -662,10 +662,10 @@ internal partial class RDM
                     return true;
                 }
                 if (swiftcast
-                    && ActionReady(All.Swiftcast)
+                    && ActionReady(Role.Swiftcast)
                     && !HasCharges(Acceleration))
                 {
-                    newActionID = All.Swiftcast;
+                    newActionID = Role.Swiftcast;
                     return true;
                 }
             }
@@ -767,7 +767,7 @@ internal partial class RDM
 
             //ST
             if (LevelChecked(Verthunder)
-                && (HasEffect(Buffs.Dualcast) || HasEffect(All.Buffs.Swiftcast) || HasEffect(Buffs.Acceleration)))
+                && (HasEffect(Buffs.Dualcast) || HasEffect(Role.Buffs.Swiftcast) || HasEffect(Buffs.Acceleration)))
             {
                 if (RDMMana.Black <= RDMMana.White || HasEffect(Buffs.VerstoneReady))
                     useThunder = true;
@@ -779,7 +779,7 @@ internal partial class RDM
                     useThunder = true;
             }
             if (!HasEffect(Buffs.Dualcast)
-                && !HasEffect(All.Buffs.Swiftcast)
+                && !HasEffect(Role.Buffs.Swiftcast)
                 && !HasEffect(Buffs.Acceleration))
             {
                 //Checking the time remaining instead of just the effect, to stop last second bad casts
@@ -804,7 +804,7 @@ internal partial class RDM
             //AoE
             if (LevelChecked(Verthunder2)
                 && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(All.Buffs.Swiftcast)
+                && !HasEffect(Role.Buffs.Swiftcast)
                 && !HasEffect(Buffs.Acceleration))
             {
                 if (RDMMana.Black <= RDMMana.White || !LevelChecked(Veraero2))
@@ -824,7 +824,7 @@ internal partial class RDM
         [
             Veraero3,
             Verthunder3,
-            All.Swiftcast,
+            Role.Swiftcast,
             Verthunder3,
             Fleche,
             Acceleration,
@@ -855,7 +855,7 @@ internal partial class RDM
             Verthunder3,
             Verstone,
             Veraero3,
-            All.Swiftcast,
+            Role.Swiftcast,
             Veraero3,
             ContreSixte
         ];
@@ -871,7 +871,7 @@ internal partial class RDM
 
             public override bool HasCooldowns()
             {
-                if (!ActionsReady([All.Swiftcast, Fleche, Embolden, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
+                if (!ActionsReady([Role.Swiftcast, Fleche, Embolden, ContreSixte]) || GetRemainingCharges(Acceleration) < 2 ||
                     !IsOffCooldown(Manafication) ||
                     GetRemainingCharges(Engagement) < 2 ||
                     GetRemainingCharges(Corpsacorps) < 2)

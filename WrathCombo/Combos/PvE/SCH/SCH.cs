@@ -1,13 +1,11 @@
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
-internal static partial class SCH
+internal partial class SCH : HealerJob
 {
     /*
      * SCH_Consolation
@@ -73,7 +71,7 @@ internal static partial class SCH
             if (!AetherflowList.Contains(actionID) || !LevelChecked(Aetherflow))
                 return actionID;
 
-            bool hasAetherFlows = Gauge.HasAetherflow(); //False if Zero stacks
+            bool hasAetherFlows = HasAetherflow(); //False if Zero stacks
 
             if (IsEnabled(CustomComboPreset.SCH_Aetherflow_Recite) &&
                 LevelChecked(Recitation) &&
@@ -131,7 +129,7 @@ internal static partial class SCH
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
         protected override uint Invoke(uint actionID) =>
-            actionID is All.Swiftcast && IsOnCooldown(All.Swiftcast)
+            actionID is Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
                 ? Resurrection
                 : actionID;
     }
@@ -207,11 +205,8 @@ internal static partial class SCH
                 NeedToSummon)
                 return SummonEos;
 
-            if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanSpellWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
+                return Variant.Rampart;
 
             //Opener
             if (IsEnabled(CustomComboPreset.SCH_DPS_Balance_Opener))
@@ -221,15 +216,13 @@ internal static partial class SCH
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_DPS_Aetherflow) &&
                 !WasLastAction(Dissipation) && ActionReady(Aetherflow) &&
-                !Gauge.HasAetherflow() && InCombat() && CanSpellWeave())
+                !HasAetherflow() && InCombat() && CanSpellWeave())
                 return Aetherflow;
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SCH_DPS_Lucid) &&
-                ActionReady(All.LucidDreaming) &&
-                LocalPlayer.CurrentMp <= Config.SCH_ST_DPS_LucidOption &&
-                CanSpellWeave())
-                return All.LucidDreaming;
+                Role.CanLucidDream(Config.SCH_ST_DPS_LucidOption))
+                return Role.LucidDreaming;
 
             //Target based options
             if (HasBattleTarget())
@@ -240,7 +233,7 @@ internal static partial class SCH
                     float edTime = Config.SCH_ST_DPS_EnergyDrain_Adv ? Config.SCH_ST_DPS_EnergyDrain : 10f;
 
                     if (LevelChecked(EnergyDrain) && InCombat() && CanSpellWeave() &&
-                        Gauge.HasAetherflow() && GetCooldownRemainingTime(Aetherflow) <= edTime &&
+                        HasAetherflow() && GetCooldownRemainingTime(Aetherflow) <= edTime &&
                         (!IsEnabled(CustomComboPreset.SCH_DPS_EnergyDrain_BurstSaver) ||
                          LevelChecked(ChainStratagem) && GetCooldownRemainingTime(ChainStratagem) > 10 ||
                          !ChainStratagem.LevelChecked()))
@@ -272,11 +265,8 @@ internal static partial class SCH
                 if (IsEnabled(CustomComboPreset.SCH_DPS_Bio) && LevelChecked(Bio) && InCombat() &&
                     BioList.TryGetValue(OriginalHook(Bio), out ushort dotDebuffID))
                 {
-                    if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_SpiritDart) &&
-                        IsEnabled(Variant.VariantSpiritDart) &&
-                        GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
-                        CanSpellWeave())
-                        return Variant.VariantSpiritDart;
+                    if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
+                        return Variant.SpiritDart;
 
                     float refreshTimer = Config.SCH_ST_DPS_Bio_Adv ? Config.SCH_DPS_BioUptime_Threshold : 3;
                     int hpThreshold = Config.SCH_DPS_BioSubOption == 1 || !InBossEncounter() ? Config.SCH_DPS_BioOption : 0;
@@ -311,31 +301,22 @@ internal static partial class SCH
                 NeedToSummon)
                 return SummonEos;
 
-            if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanSpellWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
+                return Variant.Rampart;
 
-            Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-
-            if (IsEnabled(CustomComboPreset.SCH_DPS_Variant_SpiritDart) &&
-                IsEnabled(Variant.VariantSpiritDart) &&
-                (sustainedDamage is null || sustainedDamage.RemainingTime <= 3) &&
-                HasBattleTarget())
-                return Variant.VariantSpiritDart;
+            if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
+                return Variant.SpiritDart;
 
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_AoE_Aetherflow) &&
-                ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
+                ActionReady(Aetherflow) && !HasAetherflow() &&
                 InCombat())
                 return Aetherflow;
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SCH_AoE_Lucid) &&
-                ActionReady(All.LucidDreaming) &&
-                LocalPlayer.CurrentMp <= Config.SCH_AoE_LucidOption)
-                return All.LucidDreaming;
+                Role.CanLucidDream(Config.SCH_AoE_LucidOption))
+                return Role.LucidDreaming;
 
             return actionID;
         }
@@ -356,21 +337,21 @@ internal static partial class SCH
 
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Aetherflow) &&
-                ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
+                ActionReady(Aetherflow) && !HasAetherflow() &&
                 !(IsEnabled(CustomComboPreset.SCH_AoE_Heal_Aetherflow_Indomitability) && GetCooldownRemainingTime(Indomitability) <= 0.6f) &&
                 InCombat())
                 return Aetherflow;
 
             if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Dissipation)
                 && ActionReady(Dissipation)
-                && !Gauge.HasAetherflow()
+                && !HasAetherflow()
                 && InCombat())
                 return Dissipation;
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Lucid)
-                && All.CanUseLucid(Config.SCH_AoE_Heal_LucidOption))
-                return All.LucidDreaming;
+                && Role.CanLucidDream(Config.SCH_AoE_Heal_LucidOption))
+                return Role.LucidDreaming;
 
             float averagePartyHP = GetPartyAvgHPPercent();
             for(int i = 0; i < Config.SCH_AoE_Heals_Priority.Count; i++)
@@ -434,22 +415,20 @@ internal static partial class SCH
 
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Aetherflow) &&
-                ActionReady(Aetherflow) && !Gauge.HasAetherflow() &&
+                ActionReady(Aetherflow) && !HasAetherflow() &&
                 InCombat() && CanSpellWeave())
                 return Aetherflow;
 
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Dissipation)
                 && ActionReady(Dissipation)
-                && !Gauge.HasAetherflow()
+                && !HasAetherflow()
                 && InCombat())
                 return Dissipation;
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Lucid) &&
-                ActionReady(All.LucidDreaming) &&
-                LocalPlayer.CurrentMp <= Config.SCH_ST_Heal_LucidOption &&
-                CanSpellWeave())
-                return All.LucidDreaming;
+                Role.CanLucidDream(Config.SCH_ST_Heal_LucidOption))
+                return Role.LucidDreaming;
 
             // Dissolve Union if needed
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Aetherpact)
@@ -461,10 +440,10 @@ internal static partial class SCH
             //Grab our target (Soft->Hard->Self)
             IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.SCH_ST_Heal_Adv && Config.SCH_ST_Heal_UIMouseOver);
 
-            if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Esuna) && ActionReady(All.Esuna) &&
+            if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) >= Config.SCH_ST_Heal_EsunaOption &&
                 HasCleansableDebuff(healTarget))
-                return All.Esuna;
+                return Role.Esuna;
 
             for(int i = 0; i < Config.SCH_ST_Heals_Priority.Count; i++)
             {

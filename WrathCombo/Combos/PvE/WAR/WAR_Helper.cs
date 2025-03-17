@@ -2,6 +2,7 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -87,7 +88,6 @@ internal partial class WAR
             BloodwhettingDefenseLong = 2678, //applied by Bloodwhetting to self, -10% damage taken + heal on hit for 8 sec
             BloodwhettingDefenseShort = 2679, //applied by Bloodwhetting, Nascent Flash to self/target, -10% damage taken for 4 sec
             BloodwhettingShield = 2680, //applied by Bloodwhetting, Nascent Flash to self/target, damage shield
-            ArmsLength = 1209, //applied by Arm's Length to self
             Defiance = 91, //applied by Defiance to self, tank stance
             ShieldWall = 194, //applied by Shield Wall to self/target
             Stronghold = 195, //applied by Stronghold to self/target
@@ -142,25 +142,24 @@ internal partial class WAR
         (Equilibrium, CustomComboPreset.WAR_Mit_Equilibrium,
             () => PlayerHealthPercentageHp() <= Config.WAR_Mit_Equilibrium_Health),
         // Reprisal
-        (All.Reprisal, CustomComboPreset.WAR_Mit_Reprisal,
-            () => InActionRange(All.Reprisal)),
+        (Role.Reprisal, CustomComboPreset.WAR_Mit_Reprisal,
+            () => Role.CanReprisal(checkTargetForDebuff:false)),
         //Thrill of Battle
         (ThrillOfBattle, CustomComboPreset.WAR_Mit_ThrillOfBattle,
             () => PlayerHealthPercentageHp() <= Config.WAR_Mit_ThrillOfBattle_Health),
         //Rampart
-        (All.Rampart, CustomComboPreset.WAR_Mit_Rampart,
-            () => PlayerHealthPercentageHp() <= Config.WAR_Mit_Rampart_Health),
+        (Role.Rampart, CustomComboPreset.WAR_Mit_Rampart,
+            () => Role.CanRampart(Config.WAR_Mit_Rampart_Health)),
         //Shake it Off
         (ShakeItOff, CustomComboPreset.WAR_Mit_ShakeItOff,
             () => (FindEffect(Buffs.ShakeItOff) is null &&
                   Config.WAR_Mit_ShakeItOff_PartyRequirement ==
-                  (int)Config.PartyRequirement.No) ||
+                  (int)PartyRequirement.No) ||
                   IsInParty()),
         //Arm's Length
-        (All.ArmsLength, CustomComboPreset.WAR_Mit_ArmsLength,
-            () => CanCircleAoe(7) >= Config.WAR_Mit_ArmsLength_EnemyCount &&
-                  (Config.WAR_Mit_ArmsLength_Boss == (int)Config.BossAvoidance.Off ||
-                   InBossEncounter())),
+        (Role.ArmsLength, CustomComboPreset.WAR_Mit_ArmsLength,
+            () => Role.CanArmsLength(Config.WAR_Mit_ArmsLength_EnemyCount,
+                Config.WAR_Mit_ArmsLength_Boss)),
         //Vengeance
         (OriginalHook(Vengeance), CustomComboPreset.WAR_Mit_Vengeance,
             () => PlayerHealthPercentageHp() <= Config.WAR_Mit_Vengeance_Health),
