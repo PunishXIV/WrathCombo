@@ -179,12 +179,6 @@ internal partial class GNB
             #region Standard
             if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener))
             {
-                if (Config.GNB_Opener_StartChoice == 1)
-                {
-                    if (Opener().OpenerStep == 1)
-                        Opener().OpenerStep++;
-                }
-
                 if (Opener().FullOpener(ref actionID))
                     return actionID;
             }
