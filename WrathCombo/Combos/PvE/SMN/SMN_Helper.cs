@@ -137,8 +137,7 @@ internal partial class SMN
             EverlastingFlight = 16517,
             SearingLight = 2703,
             RubysGlimmer = 3873,
-            RefulgentLux = 3874,
-            CrimsonStrike = 4403;
+            RefulgentLux = 3874;
     }
 
     public static class Traits
@@ -239,7 +238,7 @@ internal partial class SMN
             TopazRite,
             MountainBuster,
             SummonGaruda2,
-            Role.Swiftcast,
+            All.Swiftcast,
             Slipstream,
 
         ];
@@ -260,7 +259,7 @@ internal partial class SMN
             if (!ActionReady(SummonSolarBahamut) ||
                 !IsOffCooldown(SearingFlash) ||
                 !IsOffCooldown(SearingLight) ||
-                !IsOffCooldown(Role.Swiftcast) ||
+                !IsOffCooldown(All.Swiftcast) ||
                 !IsOffCooldown(EnergyDrain))
                 return false;
 

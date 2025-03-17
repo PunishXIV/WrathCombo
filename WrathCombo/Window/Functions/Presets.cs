@@ -95,7 +95,6 @@ namespace WrathCombo.Window.Functions
                 if (P.UIHelper.ShowIPCControlledCheckboxIfNeeded
                         ($"###AutoAction{preset}", ref autoOn, preset, false))
                 {
-                    DebugFile.AddLog($"Set Auto-Mode for {preset} to {autoOn}");
                     Service.Configuration.AutoActions[preset] = autoOn;
                     Service.Configuration.Save();
                 }
@@ -121,8 +120,6 @@ namespace WrathCombo.Window.Functions
                 {
                     PresetStorage.DisablePreset(preset);
                 }
-
-                DebugFile.AddLog($"Set {preset} to {enabled}");
 
                 Service.Configuration.Save();
             }

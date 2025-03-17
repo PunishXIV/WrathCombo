@@ -6,25 +6,25 @@ using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SGE
+internal static partial class SGE
 {
     // Sage Gauge & Extensions
     internal static readonly List<uint>
         AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
         DyskrasiaList = [Dyskrasia, Dyskrasia2];
-    internal static readonly Dictionary<uint, (uint Eukrasian, ushort DebuffID)>
+    internal static readonly Dictionary<uint, ushort>
         DosisList = new()
         {
-            { Dosis,  (EukrasianDosis,  Debuffs.EukrasianDosis)  },
-            { Dosis2, (EukrasianDosis2, Debuffs.EukrasianDosis2) },
-            { Dosis3, (EukrasianDosis3, Debuffs.EukrasianDosis3) }
+            { Dosis, Debuffs.EukrasianDosis },
+            { Dosis2, Debuffs.EukrasianDosis2 },
+            { Dosis3, Debuffs.EukrasianDosis3 }
         };
     internal static SGEOpenerMaxLevel1 Opener1 = new();
     internal static SGEGauge Gauge = GetJobGauge<SGEGauge>();
 
-    internal static bool HasAddersgall() => Gauge.Addersgall > 0;
+    internal static bool HasAddersgall(this SGEGauge gauge) => gauge.Addersgall > 0;
 
-    internal static bool HasAddersting() => Gauge.Addersting > 0;
+    internal static bool HasAddersting(this SGEGauge gauge) => gauge.Addersting > 0;
 
     internal static WrathOpener Opener()
     {
@@ -62,7 +62,7 @@ internal partial class SGE
 
             case 3:
                 action = Taurochole;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Taurochole) && HasAddersgall();
+                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Taurochole) && Gauge.HasAddersgall();
 
                 return Config.SGE_ST_Heal_Taurochole;
 
@@ -80,7 +80,7 @@ internal partial class SGE
 
             case 6:
                 action = Druochole;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Druochole) && HasAddersgall();
+                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Druochole) && Gauge.HasAddersgall();
 
                 return Config.SGE_ST_Heal_Druochole;
         }
@@ -100,13 +100,13 @@ internal partial class SGE
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Kerachole) &&
                           (!Config.SGE_AoE_Heal_KeracholeTrait ||
                            Config.SGE_AoE_Heal_KeracholeTrait && TraitLevelChecked(Traits.EnhancedKerachole)) &&
-                          HasAddersgall();
+                          Gauge.HasAddersgall();
                 return Config.SGE_AoE_Heal_KeracholeOption;
 
             case 1:
                 action = Ixochole;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Ixochole) &&
-                          HasAddersgall();
+                          Gauge.HasAddersgall();
                 return Config.SGE_AoE_Heal_IxocholeOption;
 
             case 2:
@@ -189,7 +189,7 @@ internal partial class SGE
             if (!IsOffCooldown(Psyche))
                 return false;
 
-            if (!HasAddersting())
+            if (!HasAddersting(Gauge))
                 return false;
 
             return true;

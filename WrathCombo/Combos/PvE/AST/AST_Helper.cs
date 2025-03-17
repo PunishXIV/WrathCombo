@@ -13,7 +13,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class AST
+internal static partial class AST
 {
     internal static readonly List<uint>
         MaleficList = [Malefic, Malefic2, Malefic3, Malefic4, FallMalefic],

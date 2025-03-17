@@ -1,8 +1,9 @@
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRG : MeleeJob
+internal partial class DRG
 {
     internal class DRG_ST_FullThrustCombo : CustomCombo
     {
@@ -70,12 +71,16 @@ internal partial class DRG : MeleeJob
             if (actionID is not TrueThrust)
                 return actionID;
 
-            if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.DRG_Variant_Cure)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
-                CanDRGWeave(Variant.Rampart))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                CanDRGWeave(Variant.VariantRampart))
+                return Variant.VariantRampart;
 
             // Piercing Talon Uptime Option
             if (LevelChecked(PiercingTalon) &&
@@ -162,11 +167,11 @@ internal partial class DRG : MeleeJob
                     return MirageDive;
             }
 
-            if (Role.CanSecondWind(25))
-                return Role.SecondWind;
+            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
+                return All.SecondWind;
 
-            if (Role.CanBloodBath(40))
-                return Role.Bloodbath;
+            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
+                return All.Bloodbath;
 
             //1-2-3 Combo
             if (ComboTimer > 0)
@@ -180,18 +185,18 @@ internal partial class DRG : MeleeJob
 
                 if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
                 {
-                    if (Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                    if (TrueNorthReady && CanDRGWeave(All.TrueNorth) &&
                         !OnTargetsRear())
-                        return Role.TrueNorth;
+                        return All.TrueNorth;
 
                     return OriginalHook(ChaosThrust);
                 }
 
                 if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
                 {
-                    if (Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                    if (TrueNorthReady && CanDRGWeave(All.TrueNorth) &&
                         !OnTargetsRear())
-                        return Role.TrueNorth;
+                        return All.TrueNorth;
 
                     return WheelingThrust;
                 }
@@ -201,9 +206,9 @@ internal partial class DRG : MeleeJob
 
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                 {
-                    if (Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                    if (TrueNorthReady && CanDRGWeave(All.TrueNorth) &&
                         !OnTargetsFlank())
-                        return Role.TrueNorth;
+                        return All.TrueNorth;
 
                     return FangAndClaw;
                 }
@@ -226,12 +231,16 @@ internal partial class DRG : MeleeJob
             if (actionID is not TrueThrust)
                 return actionID;
 
-            if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.DRG_Variant_Cure)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
-                CanDRGWeave(Variant.Rampart))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                CanDRGWeave(Variant.VariantRampart))
+                return Variant.VariantRampart;
 
             // Opener for DRG
             if (IsEnabled(CustomComboPreset.DRG_ST_Opener))
@@ -350,12 +359,12 @@ internal partial class DRG : MeleeJob
 
             // healing
             if (IsEnabled(CustomComboPreset.DRG_ST_ComboHeals))
-            { 
-                if (Role.CanSecondWind(Config.DRG_ST_SecondWind_Threshold))
-                    return Role.SecondWind;
+            {
+                if (PlayerHealthPercentageHp() <= Config.DRG_ST_SecondWind_Threshold && ActionReady(All.SecondWind))
+                    return All.SecondWind;
 
-                if (Role.CanBloodBath(Config.DRG_ST_Bloodbath_Threshold))
-                    return Role.Bloodbath;
+                if (PlayerHealthPercentageHp() <= Config.DRG_ST_Bloodbath_Threshold && ActionReady(All.Bloodbath))
+                    return All.Bloodbath;
             }
 
             //1-2-3 Combo
@@ -371,9 +380,9 @@ internal partial class DRG : MeleeJob
                 if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
                 {
                     if (IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                        Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                        TrueNorthReady && CanDRGWeave(All.TrueNorth) &&
                         !OnTargetsRear())
-                        return Role.TrueNorth;
+                        return All.TrueNorth;
 
                     return OriginalHook(ChaosThrust);
                 }
@@ -381,9 +390,9 @@ internal partial class DRG : MeleeJob
                 if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
                 {
                     if (IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                        Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                        TrueNorthReady && CanDRGWeave(All.TrueNorth) &&
                         !OnTargetsRear())
-                        return Role.TrueNorth;
+                        return All.TrueNorth;
 
                     return WheelingThrust;
                 }
@@ -394,9 +403,9 @@ internal partial class DRG : MeleeJob
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                 {
                     if (IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                        Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                        TrueNorthReady && CanDRGWeave(All.TrueNorth) &&
                         !OnTargetsFlank())
-                        return Role.TrueNorth;
+                        return All.TrueNorth;
 
                     return FangAndClaw;
                 }
@@ -419,12 +428,16 @@ internal partial class DRG : MeleeJob
             if (actionID is not DoomSpike)
                 return actionID;
 
-            if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.DRG_Variant_Cure)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
-                CanDRGWeave(Variant.Rampart))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                CanDRGWeave(Variant.VariantRampart))
+                return Variant.VariantRampart;
 
             // Piercing Talon Uptime Option
             if (LevelChecked(PiercingTalon) && !InMeleeRange() && HasBattleTarget())
@@ -511,11 +524,12 @@ internal partial class DRG : MeleeJob
                     Gauge.IsLOTDActive)
                     return Nastrond;
             }
-            if (Role.CanSecondWind(25))
-                return Role.SecondWind;
 
-            if (Role.CanBloodBath(40))
-                return Role.Bloodbath;
+            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
+                return All.SecondWind;
+
+            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
+                return All.Bloodbath;
 
             if (ComboTimer > 0)
             {
@@ -554,12 +568,16 @@ internal partial class DRG : MeleeJob
             if (actionID is not DoomSpike)
                 return actionID;
 
-            if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.DRG_Variant_Cure)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
-                CanDRGWeave(Variant.Rampart))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.DRG_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                CanDRGWeave(Variant.VariantRampart))
+                return Variant.VariantRampart;
 
             // Piercing Talon Uptime Option
             if (IsEnabled(CustomComboPreset.DRG_AoE_RangedUptime) &&
@@ -677,12 +695,13 @@ internal partial class DRG : MeleeJob
             // healing
             if (IsEnabled(CustomComboPreset.DRG_AoE_ComboHeals))
             {
-                if (Role.CanSecondWind(Config.DRG_AoE_SecondWind_Threshold))
-                    return Role.SecondWind;
+                if (PlayerHealthPercentageHp() <= Config.DRG_AoE_SecondWind_Threshold && ActionReady(All.SecondWind))
+                    return All.SecondWind;
 
-                if (Role.CanBloodBath(Config.DRG_AoE_Bloodbath_Threshold))
-                    return Role.Bloodbath;
+                if (PlayerHealthPercentageHp() <= Config.DRG_AoE_Bloodbath_Threshold && ActionReady(All.Bloodbath))
+                    return All.Bloodbath;
             }
+
             if (ComboTimer > 0)
             {
                 if (IsEnabled(CustomComboPreset.DRG_AoE_Disembowel) &&

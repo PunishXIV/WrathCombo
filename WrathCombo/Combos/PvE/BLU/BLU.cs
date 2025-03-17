@@ -3,7 +3,7 @@ using WrathCombo.CustomComboNS;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class BLU : CasterJob
+internal partial class BLU
 {
     public const byte JobID = 36;
 
@@ -143,10 +143,10 @@ internal partial class BLU : CasterJob
                     return FeatherRain;
                 if (IsOffCooldown(Eruption) && IsSpellActive(Eruption))
                     return Eruption;
-                if (!HasEffect(Buffs.Bristle) && IsOffCooldown(Role.Swiftcast) && IsSpellActive(Bristle))
+                if (!HasEffect(Buffs.Bristle) && IsOffCooldown(All.Swiftcast) && IsSpellActive(Bristle))
                     return Bristle;
-                if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
-                    return Role.Swiftcast;
+                if (IsOffCooldown(All.Swiftcast) && LevelChecked(All.Swiftcast))
+                    return All.Swiftcast;
                 if (IsOffCooldown(GlassDance) && IsSpellActive(GlassDance))
                     return GlassDance;
                 if (GetCooldownRemainingTime(Surpanakha) < 95 && IsSpellActive(Surpanakha))
@@ -195,8 +195,8 @@ internal partial class BLU : CasterJob
                         return ShockStrike;
                 }
 
-                if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
-                    return Role.Swiftcast;
+                if (IsOffCooldown(All.Swiftcast) && LevelChecked(All.Swiftcast))
+                    return All.Swiftcast;
                 if (IsSpellActive(FinalSting))
                     return FinalSting;
             }
@@ -220,8 +220,8 @@ internal partial class BLU : CasterJob
 
                 if (TargetHasEffectAny(Debuffs.DeepFreeze))
                 {
-                    if (IsOffCooldown(Role.Swiftcast))
-                        return Role.Swiftcast;
+                    if (IsOffCooldown(All.Swiftcast))
+                        return All.Swiftcast;
                     if (IsSpellActive(Ultravibration) && IsOffCooldown(Ultravibration))
                         return Ultravibration;
                 }
@@ -245,8 +245,8 @@ internal partial class BLU : CasterJob
                     return BadBreath;
                 if (IsOffCooldown(Devour) && HasEffect(Buffs.TankMimicry) && IsSpellActive(Devour))
                     return Devour;
-                if (Role.CanLucidDream(9000))
-                    return Role.LucidDreaming;
+                if (IsOffCooldown(All.LucidDreaming) && LocalPlayer.CurrentMp <= 9000 && LevelChecked(All.LucidDreaming))
+                    return All.LucidDreaming;
             }
 
             return actionID;
@@ -257,7 +257,7 @@ internal partial class BLU : CasterJob
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_Addle;
 
-        protected override uint Invoke(uint actionID) => (actionID is MagicHammer && IsOnCooldown(MagicHammer) && IsOffCooldown(Role.Addle) && !TargetHasEffect(Role.Debuffs.Addle) && !TargetHasEffect(Debuffs.Conked)) ? Role.Addle : actionID;
+        protected override uint Invoke(uint actionID) => (actionID is MagicHammer && IsOnCooldown(MagicHammer) && IsOffCooldown(All.Addle) && !TargetHasEffect(All.Debuffs.Addle) && !TargetHasEffect(Debuffs.Conked)) ? All.Addle : actionID;
     }
 
     internal class BLU_PrimalCombo : CustomCombo
@@ -464,8 +464,8 @@ internal partial class BLU : CasterJob
                 if (IsSpellActive(Bristle) && !HasEffect(Buffs.Bristle) && IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
                     return Bristle;
 
-                if (IsOffCooldown(Role.Swiftcast))
-                    return Role.Swiftcast;
+                if (IsOffCooldown(All.Swiftcast))
+                    return All.Swiftcast;
 
                 if (IsSpellActive(Surpanakha))
                 {
@@ -473,7 +473,7 @@ internal partial class BLU : CasterJob
                         return Surpanakha;
                 }
 
-                if (IsSpellActive(MatraMagic) && HasEffect(Role.Buffs.Swiftcast))
+                if (IsSpellActive(MatraMagic) && HasEffect(All.Buffs.Swiftcast))
                     return MatraMagic;
 
                 if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsEnabled(CustomComboPreset.BLU_NewMoonFluteOpener_DoTOpener))

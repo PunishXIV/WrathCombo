@@ -4,7 +4,6 @@ using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 
-// ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
@@ -14,7 +13,7 @@ using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRK : TankJob
+internal partial class DRK
 {
     internal class DRK_ST_Advanced : CustomCombo
     {
@@ -53,7 +52,7 @@ internal partial class DRK : TankJob
             // Bail if not in combat
             if (!InCombat()) return HardSlash;
 
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
                 return newAction;
 
             var cdBossRequirement =
@@ -108,7 +107,7 @@ internal partial class DRK : TankJob
             // Bail if not in combat
             if (!InCombat()) return HardSlash;
 
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
                 return newAction;
 
             if (TryGetAction<Cooldown>(comboFlags, ref newAction))
@@ -143,7 +142,7 @@ internal partial class DRK : TankJob
             // Bail if not in combat
             if (!InCombat()) return Unleash;
 
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
                 return newAction;
 
             if (IsEnabled(CustomComboPreset.DRK_AoE_CDs) &&
@@ -181,7 +180,7 @@ internal partial class DRK : TankJob
             // Bail if not in combat
             if (!InCombat()) return Unleash;
 
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
+            if (TryGetAction<Variant>(comboFlags, ref newAction))
                 return newAction;
 
             if (TryGetAction<Cooldown>(comboFlags, ref newAction))
@@ -212,8 +211,9 @@ internal partial class DRK : TankJob
             if (actionID is not (CarveAndSpit or AbyssalDrain)) return actionID;
 
             if (IsEnabled(CustomComboPreset.DRK_oGCD_Interrupt) &&
-                Role.CanInterject())
-                return Role.Interject;
+                ActionReady(All.Interject) &&
+                CanInterruptEnemy())
+                return All.Interject;
 
             if (IsEnabled(CustomComboPreset.DRK_oGCD_Delirium) &&
                 ActionReady(BloodWeapon))

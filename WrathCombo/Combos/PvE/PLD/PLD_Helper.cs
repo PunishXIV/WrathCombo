@@ -3,7 +3,6 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -114,23 +113,24 @@ internal partial class PLD
         (OriginalHook(Sheltron), CustomComboPreset.PLD_Mit_Sheltron,
             () => Gauge.OathGauge >= 50),
         // Reprisal
-        (Role.Reprisal, CustomComboPreset.PLD_Mit_Reprisal,
-            () => Role.CanReprisal(checkTargetForDebuff:false)),
+        (All.Reprisal, CustomComboPreset.PLD_Mit_Reprisal,
+            () => InActionRange(All.Reprisal)),
         //Divine Veil
         (DivineVeil, CustomComboPreset.PLD_Mit_DivineVeil,
             () => Config.PLD_Mit_DivineVeil_PartyRequirement ==
-                  (int)PartyRequirement.No ||
+                  (int)Config.PartyRequirement.No ||
                   IsInParty()),
         //Rampart
-        (Role.Rampart, CustomComboPreset.PLD_Mit_Rampart,
-            () => Role.CanRampart(Config.PLD_Mit_Rampart_Health)),
+        (All.Rampart, CustomComboPreset.PLD_Mit_Rampart,
+            () => PlayerHealthPercentageHp() <= Config.PLD_Mit_Rampart_Health),
         //Sentinel
         (OriginalHook(Sentinel), CustomComboPreset.PLD_Mit_Sentinel,
             () => PlayerHealthPercentageHp() <= Config.PLD_Mit_Sentinel_Health),
         //Arm's Length
-        (Role.ArmsLength, CustomComboPreset.PLD_Mit_ArmsLength,
-            () => Role.CanArmsLength(Config.PLD_Mit_ArmsLength_EnemyCount,
-                Config.PLD_Mit_ArmsLength_Boss)),
+        (All.ArmsLength, CustomComboPreset.PLD_Mit_ArmsLength,
+            () => CanCircleAoe(7) >= Config.PLD_Mit_ArmsLength_EnemyCount &&
+                  (Config.PLD_Mit_ArmsLength_Boss == (int)Config.BossAvoidance.Off ||
+                   InBossEncounter())),
         //Bulwark
         (Bulwark, CustomComboPreset.PLD_Mit_Bulwark,
             () => PlayerHealthPercentageHp() <= Config.PLD_Mit_Bulwark_Health),

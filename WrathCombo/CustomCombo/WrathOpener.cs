@@ -223,7 +223,7 @@ namespace WrathCombo.CustomComboNS
                         }
                     }
 
-                    if (CurrentOpenerAction == Melee.TrueNorth && !TargetNeedsPositionals())
+                    if (CurrentOpenerAction == All.TrueNorth && !TargetNeedsPositionals())
                     {
                         OpenerStep++;
                         CurrentOpenerAction = OpenerActions[OpenerStep - 1];

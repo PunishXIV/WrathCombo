@@ -6,7 +6,7 @@ using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SGE
+internal static partial class SGE
 {
     public static class Config
     {

@@ -1,11 +1,13 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.DalamudServices;
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class WHM : HealerJob
+internal partial class WHM
 {
     internal class WHM_SolaceMisery : CustomCombo
     {
@@ -42,12 +44,12 @@ internal partial class WHM : HealerJob
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Role.Swiftcast)
+            if (actionID is not All.Swiftcast)
                 return actionID;
 
             bool thinAirReady = !HasEffect(Buffs.ThinAir) && LevelChecked(ThinAir) && HasCharges(ThinAir);
 
-            if (HasEffect(Role.Buffs.Swiftcast))
+            if (HasEffect(All.Buffs.Swiftcast))
                 return IsEnabled(CustomComboPreset.WHM_ThinAirRaise) && thinAirReady
                     ? ThinAir
                     : Raise;
@@ -89,15 +91,19 @@ internal partial class WHM : HealerJob
 
             if (CanSpellWeave())
             {
-                bool lucidReady = Role.CanLucidDream(Config.WHM_STDPS_Lucid);
+                bool lucidReady = ActionReady(All.LucidDreaming) && LevelChecked(All.LucidDreaming) &&
+                                  LocalPlayer.CurrentMp <= Config.WHM_STDPS_Lucid;
                 bool pomReady = LevelChecked(PresenceOfMind) && IsOffCooldown(PresenceOfMind);
                 bool assizeReady = LevelChecked(Assize) && IsOffCooldown(Assize);
                 bool pomEnabled = IsEnabled(CustomComboPreset.WHM_ST_MainCombo_PresenceOfMind);
                 bool assizeEnabled = IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Assize);
                 bool lucidEnabled = IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Lucid);
 
-                if (Variant.CanRampart(CustomComboPreset.WHM_DPS_Variant_Rampart))
-                    return Variant.Rampart;
+                if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart) &&
+                    CanSpellWeave())
+                    return Variant.VariantRampart;
 
                 if (pomEnabled && pomReady)
                     return PresenceOfMind;
@@ -106,7 +112,7 @@ internal partial class WHM : HealerJob
                     return Assize;
 
                 if (lucidEnabled && lucidReady)
-                    return Role.LucidDreaming;
+                    return All.LucidDreaming;
             }
 
             if (InCombat())
@@ -115,8 +121,11 @@ internal partial class WHM : HealerJob
                 if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_DoT) && LevelChecked(Aero) && HasBattleTarget() &&
                     AeroList.TryGetValue(OriginalHook(Aero), out ushort dotDebuffID))
                 {
-                    if (Variant.CanSpiritDart(CustomComboPreset.WHM_DPS_Variant_SpiritDart))
-                        return Variant.SpiritDart;
+                    if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) &&
+                        IsEnabled(Variant.VariantSpiritDart) &&
+                        GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
+                        CanSpellWeave())
+                        return Variant.VariantSpiritDart;
 
                     // DoT Uptime & HP% threshold
                     float refreshTimer = Config.WHM_ST_MainCombo_DoT_Adv ? Config.WHM_ST_MainCombo_DoT_Threshold : 3;
@@ -159,7 +168,7 @@ internal partial class WHM : HealerJob
             bool thinAirReady = LevelChecked(ThinAir) && !HasEffect(Buffs.ThinAir) &&
                                 GetRemainingCharges(ThinAir) > Config.WHM_AoEHeals_ThinAir;
             bool canWeave = CanSpellWeave(0.3);
-            bool lucidReady = Role.CanLucidDream(Config.WHM_AoEHeals_Lucid,false); //canWeave will be the check
+            bool lucidReady = ActionReady(All.LucidDreaming) && LocalPlayer.CurrentMp <= Config.WHM_AoEHeals_Lucid;
 
             bool plenaryReady = ActionReady(PlenaryIndulgence) &&
                                 (!Config.WHM_AoEHeals_PlenaryWeave ||
@@ -186,7 +195,7 @@ internal partial class WHM : HealerJob
                 return OriginalHook(DivineCaress);
 
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Lucid) && canWeave && lucidReady)
-                return Role.LucidDreaming;
+                return All.LucidDreaming;
 
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Misery) && gauge.BloodLily == 3)
                 return AfflatusMisery;
@@ -235,14 +244,14 @@ internal partial class WHM : HealerJob
                               !JustUsed(Regen, 4) &&
                               (!MemberHasEffect(Buffs.Regen, healTarget, false, out var regen) || regen?.RemainingTime <= Config.WHM_STHeals_RegenTimer);
 
-            if (IsEnabled(CustomComboPreset.WHM_STHeals_Esuna) && ActionReady(Role.Esuna) &&
+            if (IsEnabled(CustomComboPreset.WHM_STHeals_Esuna) && ActionReady(All.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.WHM_STHeals_IncludeShields) >= Config.WHM_STHeals_Esuna &&
                 HasCleansableDebuff(healTarget))
-                return Role.Esuna;
+                return All.Esuna;
 
             if (IsEnabled(CustomComboPreset.WHM_STHeals_Lucid) &&
-                Role.CanLucidDream(Config.WHM_STHeals_Lucid))
-                return Role.LucidDreaming;
+                All.CanUseLucid(Config.WHM_STHeals_Lucid))
+                return All.LucidDreaming;
 
             foreach(int prio in Config.WHM_ST_Heals_Priority.Items.OrderBy(x => x))
             {
@@ -288,12 +297,12 @@ internal partial class WHM : HealerJob
             bool presenceOfMindReady = ActionReady(PresenceOfMind) && !Config.WHM_AoEDPS_PresenceOfMindWeave;
 
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_SwiftHoly) &&
-                ActionReady(Role.Swiftcast) &&
+                ActionReady(All.Swiftcast) &&
                 AssizeCount == 0 && !IsMoving() && InCombat())
-                return Role.Swiftcast;
+                return All.Swiftcast;
 
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_SwiftHoly) &&
-                WasLastAction(Role.Swiftcast))
+                WasLastAction(All.Swiftcast))
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Assize) && ActionReady(Assize))
@@ -302,11 +311,16 @@ internal partial class WHM : HealerJob
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && presenceOfMindReady)
                 return PresenceOfMind;
 
-            if (Variant.CanRampart(CustomComboPreset.WHM_DPS_Variant_Rampart))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart))
+                return Variant.VariantRampart;
 
-            if (Variant.CanSpiritDart(CustomComboPreset.WHM_DPS_Variant_SpiritDart))
-                return Variant.SpiritDart;
+            if (IsEnabled(CustomComboPreset.WHM_DPS_Variant_SpiritDart) &&
+                IsEnabled(Variant.VariantSpiritDart) &&
+                GetDebuffRemainingTime(Variant.Debuffs.SustainedDamage) <= 3 &&
+                HasBattleTarget())
+                return Variant.VariantSpiritDart;
 
             if (CanSpellWeave() || IsMoving())
             {
@@ -316,8 +330,9 @@ internal partial class WHM : HealerJob
                 if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && ActionReady(PresenceOfMind))
                     return OriginalHook(PresenceOfMind);
 
-                if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Lucid) && Role.CanLucidDream(Config.WHM_AoEDPS_Lucid))
-                    return Role.LucidDreaming;
+                if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Lucid) && ActionReady(All.LucidDreaming) &&
+                    LocalPlayer.CurrentMp <= Config.WHM_AoEDPS_Lucid)
+                    return All.LucidDreaming;
             }
 
             // Glare IV

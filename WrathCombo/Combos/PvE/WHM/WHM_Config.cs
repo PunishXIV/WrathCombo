@@ -7,7 +7,7 @@ using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class WHM
+internal static partial class WHM
 {
     public static class Config
     {

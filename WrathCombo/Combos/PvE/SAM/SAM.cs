@@ -1,9 +1,10 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SAM : MeleeJob
+internal partial class SAM
 {
     internal class SAM_ST_YukikazeCombo : CustomCombo
     {
@@ -96,11 +97,16 @@ internal partial class SAM : MeleeJob
             if (actionID is not (Hakaze or Gyofu))
                 return actionID;
 
-            if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, Config.SAM_VariantCure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.SAM_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.SAM_VariantCure)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                CanWeave())
+                return Variant.VariantRampart;
 
             //Meikyo to start before combat
             if (!HasEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
@@ -202,8 +208,8 @@ internal partial class SAM : MeleeJob
 
             if (HasEffect(Buffs.MeikyoShisui))
             {
-                if (Role.CanTrueNorth() && CanDelayedWeave())
-                    return Role.TrueNorth;
+                if (TrueNorthReady && CanDelayedWeave())
+                    return All.TrueNorth;
 
                 if (LevelChecked(Gekko) &&
                     (!HasEffect(Buffs.Fugetsu) ||
@@ -220,11 +226,11 @@ internal partial class SAM : MeleeJob
             }
 
             // healing
-            if (Role.CanSecondWind(40))
-                return Role.SecondWind;
+            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.SecondWind))
+                return All.SecondWind;
 
-            if (Role.CanBloodBath(25))
-                return Role.Bloodbath;
+            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.Bloodbath))
+                return All.Bloodbath;
 
             if (ComboTimer > 0)
             {
@@ -275,11 +281,16 @@ internal partial class SAM : MeleeJob
             int shintenTreshhold = Config.SAM_ST_ExecuteThreshold;
             int higanbanaThreshold = Config.SAM_ST_Higanbana_Threshold;
 
-            if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, Config.SAM_VariantCure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.SAM_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.SAM_VariantCure)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                CanWeave())
+                return Variant.VariantRampart;
 
             // Opener for SAM
             if (IsEnabled(CustomComboPreset.SAM_ST_Opener))
@@ -409,8 +420,8 @@ internal partial class SAM : MeleeJob
             if (HasEffect(Buffs.MeikyoShisui))
             {
                 if (IsEnabled(CustomComboPreset.SAM_ST_TrueNorth) &&
-                    Role.CanTrueNorth() && CanDelayedWeave())
-                    return Role.TrueNorth;
+                    TrueNorthReady && CanDelayedWeave())
+                    return All.TrueNorth;
 
                 if (LevelChecked(Gekko) &&
                     (!HasEffect(Buffs.Fugetsu) ||
@@ -431,11 +442,11 @@ internal partial class SAM : MeleeJob
             // healing
             if (IsEnabled(CustomComboPreset.SAM_ST_ComboHeals))
             {
-                if (Role.CanSecondWind(Config.SAM_STSecondWindThreshold))
-                    return Role.SecondWind;
+                if (PlayerHealthPercentageHp() <= Config.SAM_STSecondWindThreshold && ActionReady(All.SecondWind))
+                    return All.SecondWind;
 
-                if (Role.CanBloodBath(Config.SAM_STBloodbathThreshold))
-                    return Role.Bloodbath;
+                if (PlayerHealthPercentageHp() <= Config.SAM_STBloodbathThreshold && ActionReady(All.Bloodbath))
+                    return All.Bloodbath;
             }
 
             if (ComboTimer > 0)
@@ -534,14 +545,18 @@ internal partial class SAM : MeleeJob
             if (actionID is not (Fuga or Fuko))
                 return actionID;
 
-            if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, Config.SAM_VariantCure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.SAM_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.SAM_VariantCure)
+                return Variant.VariantCure;
 
             //oGCD Features
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart))
-                    return Variant.Rampart;
+                if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart))
+                    return Variant.VariantRampart;
 
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -603,11 +618,11 @@ internal partial class SAM : MeleeJob
             }
 
             // healing - please move if not appropriate this high priority
-            if (Role.CanSecondWind(25))
-                return Role.SecondWind;
+            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
+                return All.SecondWind;
 
-            if (Role.CanBloodBath(40))
-                return Role.Bloodbath;
+            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
+                return All.Bloodbath;
 
             if (ComboTimer > 0 &&
                 ComboAction is Fuko or Fuga && LevelChecked(Mangetsu))
@@ -639,14 +654,18 @@ internal partial class SAM : MeleeJob
 
             float kenkiOvercap = Config.SAM_AoE_KenkiOvercapAmount;
 
-            if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, Config.SAM_VariantCure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.SAM_Variant_Cure) &&
+                IsEnabled(Variant.VariantCure) &&
+                PlayerHealthPercentageHp() <= Config.SAM_VariantCure)
+                return Variant.VariantCure;
 
             //oGCD Features
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart))
-                    return Variant.Rampart;
+                if (IsEnabled(CustomComboPreset.SAM_Variant_Rampart) &&
+                    IsEnabled(Variant.VariantRampart) &&
+                    IsOffCooldown(Variant.VariantRampart))
+                    return Variant.VariantRampart;
 
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Hagakure) &&
                     OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
@@ -718,11 +737,11 @@ internal partial class SAM : MeleeJob
 
             if (IsEnabled(CustomComboPreset.SAM_AoE_ComboHeals))
             {
-                if (Role.CanSecondWind(Config.SAM_AoESecondWindThreshold))
-                    return Role.SecondWind;
+                if (PlayerHealthPercentageHp() <= Config.SAM_AoESecondWindThreshold && ActionReady(All.SecondWind))
+                    return All.SecondWind;
 
-                if (Role.CanBloodBath(Config.SAM_AoEBloodbathThreshold))
-                    return Role.Bloodbath;
+                if (PlayerHealthPercentageHp() <= Config.SAM_AoEBloodbathThreshold && ActionReady(All.Bloodbath))
+                    return All.Bloodbath;
             }
 
             if (ComboTimer > 0 &&

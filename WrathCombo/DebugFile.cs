@@ -1,17 +1,15 @@
 #region
 
-using ECommons.DalamudServices;
-using ECommons.GameHelpers;
-using ECommons.Logging;
-using FFXIVClientStructs;
-using Lumina.Excel.Sheets;
-using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using ECommons.DalamudServices;
+using ECommons.GameHelpers;
+using ECommons.Logging;
+using Lumina.Excel.Sheets;
+using Newtonsoft.Json;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
@@ -52,11 +50,6 @@ public static class DebugFile
     ///     Defaults to an empty string.
     /// </param>
     private static void AddLine(string line = "") => _file.WriteLine(line);
-
-    /// <summary>
-    /// List of many things the user has done in the current session (Toggles, config changes etc.)
-    /// </summary>
-    internal static List<string> DebugLog = new();
 
     /// <summary>
     ///     Makes a debug file on the desktop.
@@ -116,8 +109,6 @@ public static class DebugFile
             AddLine();
 
             AddDebugCode();
-
-            AddLogHistory();
 
             AddLine();
             AddLine("END DEBUG LOG");
@@ -496,17 +487,5 @@ public static class DebugFile
             .GetBytes(JsonConvert.SerializeObject(Service.Configuration));
         AddLine(Convert.ToBase64String(b64));
         AddLine("END DEBUG CODE");
-    }
-
-    private static void AddLogHistory()
-    {
-        AddLine("START LOG HISTORY");
-        AddLine(string.Join("\n", DebugLog));
-        AddLine("END LOG HISTORY");
-    }
-
-    public static void AddLog(string log)
-    {
-        DebugLog.Add($"{DateTime.UtcNow} | {log}");
     }
 }

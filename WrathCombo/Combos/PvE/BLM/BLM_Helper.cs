@@ -47,7 +47,7 @@ internal partial class BLM
 
     internal static bool CanSwiftF =>
         TraitLevelChecked(Traits.AspectMasteryIII) &&
-        IsOffCooldown(Role.Swiftcast);
+        IsOffCooldown(All.Swiftcast);
 
     internal static bool HasPolyglotStacks(BLMGauge gauge) => gauge.PolyglotStacks > 0;
 
@@ -125,7 +125,7 @@ internal partial class BLM
         [
             Fire3,
             HighThunder,
-            Role.Swiftcast,
+            All.Swiftcast,
             Amplifier,
             Fire4,
             Fire4,
@@ -161,7 +161,7 @@ internal partial class BLM
             if (GetRemainingCharges(Triplecast) < 2)
                 return false;
 
-            if (!IsOffCooldown(Role.Swiftcast))
+            if (!IsOffCooldown(All.Swiftcast))
                 return false;
 
             if (!IsOffCooldown(Amplifier))

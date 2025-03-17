@@ -2,13 +2,14 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class BRD : PhysRangedJob
+internal partial class BRD
 {
     #region Song status
     internal static bool SongIsNotNone(Song value) => value != Song.NONE;
@@ -300,11 +301,14 @@ internal partial class BRD : PhysRangedJob
 
             #region Variants
 
-            if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure ,Config.BRD_VariantCure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                canWeave)
+                return Variant.VariantRampart;
 
             #endregion
 
@@ -426,8 +430,8 @@ internal partial class BRD : PhysRangedJob
             }
 
             // Interupt Logic, set to delayed weave. Let someone else do it if they want. Better to be last line of defense and stay off cd.
-            if (Role.CanHeadGraze(CustomComboPreset.BRD_AoE_Adv_Interrupt, WeaveTypes.None) && canWeaveDelayed)
-                return Role.HeadGraze;
+            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Interrupt) && CanInterruptEnemy() && IsOffCooldown(All.HeadGraze) && canWeaveDelayed)
+                return All.HeadGraze;
 
             // Rain of death Logic
             if (canWeave && IsEnabled(CustomComboPreset.BRD_AoE_Adv_oGCD))
@@ -470,8 +474,11 @@ internal partial class BRD : PhysRangedJob
 
             if (canWeave)
             {
-                if (IsEnabled(CustomComboPreset.BRD_ST_SecondWind) && Role.CanSecondWind(Config.BRD_STSecondWindThreshold))
-                    return Role.SecondWind;
+                if (IsEnabled(CustomComboPreset.BRD_ST_SecondWind))
+                {
+                    if (PlayerHealthPercentageHp() <= PluginConfiguration.GetCustomIntValue(Config.BRD_STSecondWindThreshold) && ActionReady(All.SecondWind))
+                        return All.SecondWind;
+                }
 
                 if (IsEnabled(CustomComboPreset.BRD_ST_Wardens))
                 {
@@ -550,11 +557,14 @@ internal partial class BRD : PhysRangedJob
 
             #region Variants
 
-            if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, Config.BRD_VariantCure))
-                return Variant.Cure;
+            if (IsEnabled(CustomComboPreset.BRD_Variant_Cure) && IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= GetOptionValue(Config.BRD_VariantCure))
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
+            if (IsEnabled(CustomComboPreset.BRD_Variant_Rampart) &&
+                IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                canWeave)
+                return Variant.VariantRampart;
 
             #endregion
 
@@ -699,8 +709,8 @@ internal partial class BRD : PhysRangedJob
                 }
             }
             //Interupt Logic, set to delayed weave. Let someone else do it if they want. Better to be last line of defense and stay off cd.
-            if (Role.CanHeadGraze(CustomComboPreset.BRD_Adv_Interrupt, WeaveTypes.None) && canWeaveDelayed)
-                return Role.HeadGraze;
+            if (IsEnabled(CustomComboPreset.BRD_Adv_Interrupt) && CanInterruptEnemy() && IsOffCooldown(All.HeadGraze) && canWeaveDelayed)
+                return All.HeadGraze;
 
             // Bloodletter pooling logic. Will Pool as buffs are coming up.
             if (canWeave && IsEnabled(CustomComboPreset.BRD_ST_Adv_oGCD))
@@ -738,8 +748,11 @@ internal partial class BRD : PhysRangedJob
             #region Self Care
             if (canWeave)
             {
-                if (IsEnabled(CustomComboPreset.BRD_ST_SecondWind) && Role.CanSecondWind(Config.BRD_STSecondWindThreshold))
-                    return Role.SecondWind;
+                if (IsEnabled(CustomComboPreset.BRD_ST_SecondWind))
+                {
+                    if (PlayerHealthPercentageHp() <= PluginConfiguration.GetCustomIntValue(Config.BRD_STSecondWindThreshold) && ActionReady(All.SecondWind))
+                        return All.SecondWind;
+                }
 
                 if (IsEnabled(CustomComboPreset.BRD_ST_Wardens))
                 {
@@ -850,11 +863,13 @@ internal partial class BRD : PhysRangedJob
 
             #region Variants
 
-            if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, 50))
-                return Variant.Cure;
+            if (IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= 50)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
+            if (IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                canWeave)
+                return Variant.VariantRampart;
 
             #endregion
 
@@ -978,8 +993,8 @@ internal partial class BRD : PhysRangedJob
                 }
 
                 // Interupt
-                if (Role.CanHeadGraze(CustomComboPreset.BRD_AoE_SimpleMode) && canWeaveDelayed)
-                    return Role.HeadGraze;
+                if (CanInterruptEnemy() && IsOffCooldown(All.HeadGraze) && canWeaveDelayed)
+                    return All.HeadGraze;
 
                 // Pooling logic for rain of death basied on song
                 if (LevelChecked(RainOfDeath) && !WasLastAction(RainOfDeath) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
@@ -1015,8 +1030,8 @@ internal partial class BRD : PhysRangedJob
 
                 // Self care section for healing and debuff removal
 
-                if (Role.CanSecondWind(40))
-                    return Role.SecondWind;
+                if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.SecondWind))
+                    return All.SecondWind;
 
                 if (ActionReady(TheWardensPaeon) && HasCleansableDebuff(LocalPlayer))
                     return OriginalHook(TheWardensPaeon);
@@ -1069,11 +1084,13 @@ internal partial class BRD : PhysRangedJob
             bool hasTarget = HasBattleTarget();
 
             #region Variants
-            if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, 50))
-                return Variant.Cure;
+            if (IsEnabled(Variant.VariantCure) && PlayerHealthPercentageHp() <= 50)
+                return Variant.VariantCure;
 
-            if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
+            if (IsEnabled(Variant.VariantRampart) &&
+                IsOffCooldown(Variant.VariantRampart) &&
+                canWeave)
+                return Variant.VariantRampart;
             #endregion
 
             #region Songs
@@ -1201,8 +1218,8 @@ internal partial class BRD : PhysRangedJob
                 }
 
                 //Interupt delayered weave
-                if (Role.CanHeadGraze(CustomComboPreset.BRD_ST_SimpleMode, WeaveTypes.None) && canWeaveDelayed)
-                    return Role.HeadGraze;
+                if (CanInterruptEnemy() && IsOffCooldown(All.HeadGraze) && canWeaveDelayed)
+                    return All.HeadGraze;
 
                 // Bloodletter pooling logic
                 if (ActionReady(Bloodletter) && !(WasLastAction(Bloodletter) || WasLastAction(HeartbreakShot)) && (empyrealCD > 1 || !LevelChecked(EmpyrealArrow)))
@@ -1235,8 +1252,8 @@ internal partial class BRD : PhysRangedJob
 
                 // Self Care
 
-                if (Role.CanSecondWind(40))
-                    return Role.SecondWind;
+                if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.SecondWind))
+                    return All.SecondWind;
 
                 if (ActionReady(TheWardensPaeon) && HasCleansableDebuff(LocalPlayer))
                     return OriginalHook(TheWardensPaeon);

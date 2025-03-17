@@ -7,7 +7,6 @@ using System.Linq;
 using System.Net.Http;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
-using ECommons.GameHelpers;
 using ECommons.Logging;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
@@ -150,9 +149,13 @@ public partial class Helper(ref Leasing leasing)
             return null;
 
         // Convert current job/class to a job, if it is a class
-        var job = (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
+        var currentJobRow = CustomComboFunctions.LocalPlayer.ClassJob;
+        var currentRealJob = currentJobRow.Value.RowId;
+        if (currentJobRow.Value.ClassJobParent.RowId != currentJobRow.Value.RowId)
+            currentRealJob =
+                CustomComboFunctions.JobIDs.ClassToJob(currentJobRow.RowId);
 
-        P.IPCSearch.ComboStatesByJobCategorized.TryGetValue(job,
+        P.IPCSearch.ComboStatesByJobCategorized.TryGetValue((Job)currentRealJob,
             out var comboStates);
 
         if (comboStates is null || comboStates.Count == 0)
