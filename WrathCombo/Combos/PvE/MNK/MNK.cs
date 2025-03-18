@@ -55,7 +55,7 @@ internal partial class MNK : MeleeJob
                 if (UsePerfectBalance())
                     return PerfectBalance;
 
-                if (IsEnabled(25) && Role.CanSecondWind(25))
+                if (Role.CanSecondWind(25))
                     return Role.SecondWind;
 
                 if (Role.CanBloodBath(40))
@@ -90,8 +90,7 @@ internal partial class MNK : MeleeJob
 
             if (HasEffect(Buffs.WindsRumination) &&
                 LevelChecked(WindsReply) &&
-                HasEffect(Buffs.RiddleOfWind) &&
-                (GetBuffRemainingTime(Buffs.WindsRumination) < 4 || !InMeleeRange()))
+                (!InMeleeRange() || !HasEffect(Buffs.PerfectBalance)))
                 return WindsReply;
 
             // Perfect Balance
@@ -162,7 +161,7 @@ internal partial class MNK : MeleeJob
             if (IsEnabled(CustomComboPreset.MNK_STUseOpener))
                 if (Opener().FullOpener(ref actionID))
                 {
-                    if (IsOnCooldown(RiddleOfWind) &&
+                    if (Opener().OpenerStep >= 9 &&
                         CanWeave() && Gauge.Chakra >= 5)
                         return TheForbiddenChakra;
 
@@ -254,8 +253,7 @@ internal partial class MNK : MeleeJob
                 if (IsEnabled(CustomComboPreset.MNK_STUseWindsReply) &&
                     HasEffect(Buffs.WindsRumination) &&
                     LevelChecked(WindsReply) &&
-                    HasEffect(Buffs.RiddleOfWind) &&
-                    (GetBuffRemainingTime(Buffs.WindsRumination) < 4 || !InMeleeRange()))
+                    (!InMeleeRange() || !HasEffect(Buffs.PerfectBalance)))
                     return WindsReply;
             }
 
@@ -382,7 +380,8 @@ internal partial class MNK : MeleeJob
 
             if (HasEffect(Buffs.WindsRumination) &&
                 LevelChecked(WindsReply) &&
-                HasEffect(Buffs.RiddleOfWind))
+                HasEffect(Buffs.RiddleOfWind) &&
+                !HasEffect(Buffs.PerfectBalance))
                 return WindsReply;
 
             // Perfect Balance
@@ -538,7 +537,8 @@ internal partial class MNK : MeleeJob
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseWindsReply) &&
                     HasEffect(Buffs.WindsRumination) &&
                     LevelChecked(WindsReply) &&
-                    HasEffect(Buffs.RiddleOfWind))
+                    HasEffect(Buffs.RiddleOfWind) &&
+                    !HasEffect(Buffs.PerfectBalance))
                     return WindsReply;
             }
 

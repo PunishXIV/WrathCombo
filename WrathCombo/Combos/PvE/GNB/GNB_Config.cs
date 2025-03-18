@@ -20,6 +20,8 @@ internal partial class GNB
             GNBPvP_Corundum = "GNBPvP_Corundum";
 
         public static UserInt
+            GNB_Opener_StartChoice = new ("GNB_Opener_StartChoice", 0),
+            GNB_Opener_NM = new("GNB_Opener_NM", 0),
             GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 0),
             GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
             GNB_ST_Corundum_SubOption = new("GNB_ST_Corundum_Option", 0),
@@ -95,10 +97,6 @@ internal partial class GNB
         {
             switch (preset)
             {
-                case CustomComboPreset.GNB_ST_Advanced_Opener:
-                    DrawBossOnlyChoice(GNB_ST_Balance_Content);
-                    break;
-
                 case CustomComboPreset.GNB_Bozja_LostCure:
                     DrawSliderInt(1, 100, GNB_Bozja_LostCure_Health,
                         "Player HP% to be \nless than or equal to:", 200);
@@ -154,6 +152,38 @@ internal partial class GNB
                         "Exclude Mitigations",
                         "Disables the use of mitigations in Simple Mode.", 1);
                     break;
+
+                case CustomComboPreset.GNB_ST_Advanced_Opener:
+
+                    ImGui.Spacing();
+
+                    DrawHorizontalRadioButton(GNB_Opener_NM,
+                        $"Normal {NoMercy.ActionName()}",
+                        $"Uses {NoMercy.ActionName()} normally in all Openers", 0);
+
+                    DrawHorizontalRadioButton(GNB_Opener_NM,
+                        $"Early {NoMercy.ActionName()}",
+                        $"Uses {NoMercy.ActionName()} as soon as possible in all Openers", 1);
+
+                    ImGui.Spacing();
+
+                    if (DrawHorizontalRadioButton(GNB_Opener_StartChoice,
+                        $"Normal Opener",
+                        $"Starts opener with {LightningShot.ActionName()}", 0))
+                    {
+                        if (!CustomComboFunctions.InCombat())
+                            Opener().OpenerStep = 1;
+                    }    
+
+                    DrawHorizontalRadioButton(GNB_Opener_StartChoice,
+                        $"Early Opener",
+                        $"Starts opener with {KeenEdge.ActionName()} instead, skipping {LightningShot.ActionName()}", 1);
+
+                    ImGui.Spacing();
+
+                    DrawBossOnlyChoice(GNB_ST_Balance_Content);
+                    break;
+
 
                 case CustomComboPreset.GNB_ST_NoMercy:
                     DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,

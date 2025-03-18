@@ -4,10 +4,7 @@ using ECommons.GameHelpers;
 using ECommons.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.CustomComboNS.Functions;
@@ -110,10 +107,13 @@ namespace WrathCombo.CustomComboNS
         public abstract List<uint> OpenerActions { get; set; }
 
         public virtual List<int> DelayedWeaveSteps { get; set; } = new List<int>();
+        public virtual List<int> VeryDelayedWeaveSteps { get; set; } = new List<int>(); //for very late-weaving
 
         public virtual List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } = new();
 
         public virtual List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } = new();
+
+        public virtual List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = new();
 
         public virtual List<int> AllowUpgradeSteps { get; set; } = new();
 
@@ -181,15 +181,19 @@ namespace WrathCombo.CustomComboNS
 
                 if (OpenerStep < OpenerActions.Count)
                 {
+                    foreach (var (Step, Condition) in SkipSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
+                    {
+                        if (Condition())
+                            OpenerStep++;
+                    }
+
                     actionID = CurrentOpenerAction = OpenerActions[OpenerStep - 1];
 
-                    if (DelayedWeaveSteps.Any(x => x == OpenerStep))
+                    double startValue = (VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) ? 1 : 1.25;
+                    if ((DelayedWeaveSteps.Any(x => x == OpenerStep) || VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) && !CanDelayedWeave(startValue))
                     {
-                        if (!CanDelayedWeave())
-                        {
-                            actionID = All.SavageBlade;
-                            return true;
-                        }
+                        actionID = All.SavageBlade;
+                        return true;
                     }
 
                     foreach (var (Steps, NewAction, Condition) in SubstitutionSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
@@ -226,7 +230,8 @@ namespace WrathCombo.CustomComboNS
                     }
 
                     while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) &&
-                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
+                           !SkipSteps.Any(x => x.Steps.Any(y => y == OpenerStep - 1)) &&
+                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal)) 
                     {
                         if (OpenerStep >= OpenerActions.Count)
                             break;

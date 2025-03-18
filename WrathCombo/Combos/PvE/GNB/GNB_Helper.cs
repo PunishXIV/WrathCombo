@@ -1,6 +1,7 @@
 ﻿#region Dependencies
 using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
 using System.Collections.Generic;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
@@ -18,12 +19,10 @@ internal partial class GNB : TankJob
     internal static byte GunStep => GetJobGauge<GNBGauge>().AmmoComboStep;
     internal static float HPP => PlayerHealthPercentageHp();
     internal static int NmStop => Config.GNB_AoE_NoMercyStop;
-    internal static float GCD => GetCooldown(KeenEdge).CooldownTotal;
     internal static float GfCD => GetCooldownRemainingTime(GnashingFang);
     internal static float NmCD => GetCooldownRemainingTime(NoMercy);
     internal static float DdCD => GetCooldownRemainingTime(DoubleDown);
     internal static float BfCD => GetCooldownRemainingTime(Bloodfest);
-    internal static float NmLeft => GetBuffRemainingTime(Buffs.NoMercy);
     internal static bool HasNM => NmCD is >= 40 and <= 60;
     internal static bool HasBreak => HasEffect(Buffs.ReadyToBreak);
     internal static bool HasReign => HasEffect(Buffs.ReadyToReign);
@@ -47,34 +46,168 @@ internal partial class GNB : TankJob
     #endregion
 
     #region Openers
-    public static GNBOpenerMaxLevel1 Opener1 = new();
-    public static GNBOpenerMaxLevel2 Opener2 = new();
+    public static Lv90FastNormalNM GNBLv90FastNormalNM = new();
+    public static Lv100FastNormalNM GNBLv100FastNormalNM = new();
+    public static Lv90SlowNormalNM GNBLv90SlowNormalNM = new();
+    public static Lv100SlowNormalNM GNBLv100SlowNormalNM = new();
+    public static Lv90FastEarlyNM GNBLv90FastEarlyNM = new();
+    public static Lv100FastEarlyNM GNBLv100FastEarlyNM = new();
+    public static Lv90SlowEarlyNM GNBLv90SlowEarlyNM = new();
+    public static Lv100SlowEarlyNM GNBLv100SlowEarlyNM = new();
 
-    public static WrathOpener Opener()
+    public static WrathOpener Opener() => (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !LevelChecked(DoubleDown)) ? WrathOpener.Dummy : GetOpener(Config.GNB_Opener_NM == 0);
+    private static WrathOpener GetOpener(bool isNormal)
     {
-        if ((FastGNB || MidGNB) && Opener1.LevelChecked)
-            return Opener1;
+        if (MidGNB || FastGNB)
+            return isNormal
+                ? (LevelChecked(ReignOfBeasts) ? GNBLv100FastNormalNM : GNBLv90FastNormalNM)
+                : (LevelChecked(ReignOfBeasts) ? GNBLv100FastEarlyNM : GNBLv90FastEarlyNM);
 
-        if (SlowGNB && Opener2.LevelChecked)
-            return Opener2;
+        if (SlowGNB)
+            return isNormal
+                ? (LevelChecked(ReignOfBeasts) ? GNBLv100SlowNormalNM : GNBLv90SlowNormalNM)
+                : (LevelChecked(ReignOfBeasts) ? GNBLv100SlowEarlyNM : GNBLv90SlowEarlyNM);
 
         return WrathOpener.Dummy;
-    }    
-    internal class GNBOpenerMaxLevel1 : WrathOpener
+    }
+
+    #region Lv90
+    internal abstract class GNBOpenerLv90Base : WrathOpener
     {
-        //2.47 GCD or lower
+        public override int MinOpenerLevel => 90;
+        public override int MaxOpenerLevel => 99;
+        internal override UserData ContentCheckConfig => Config.GNB_ST_Balance_Content;
+        public override bool HasCooldowns() => IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(BowShock) && IsOffCooldown(Bloodfest) && IsOffCooldown(DoubleDown) && Ammo == 0;
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => Config.GNB_Opener_StartChoice == 1)];
+    }
+    internal class Lv90FastNormalNM : GNBOpenerLv90Base
+    {
         public override List<uint> OpenerActions { get; set; } =
         [
             LightningShot,
-            Bloodfest,
+            KeenEdge,
+            BrutalShell,
+            SolidBarrel, //+1 (1)
+            NoMercy, //LateWeave
+            GnashingFang, //-1 (0)
+            Bloodfest, //+3 (3)
+            JugularRip,
+            DoubleDown, //-1 (2)
+            BlastingZone,
+            BowShock,
+            SonicBreak,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge,
+            BurstStrike, //-1 (1)
+            Hypervelocity,
+            BurstStrike, //-1 (0)
+            Hypervelocity
+        ];
+
+        public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
+    }
+    internal class Lv90SlowNormalNM : GNBOpenerLv90Base
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LightningShot,
             KeenEdge,
             BrutalShell,
             NoMercy,
-            GnashingFang,
+            Bloodfest, //+3 (3)
+            GnashingFang, //-1 (2)
             JugularRip,
             BowShock,
-            DoubleDown,
+            DoubleDown, //-1 (1)
             BlastingZone,
+            SonicBreak,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge,
+            BurstStrike, //-1 (0)
+            Hypervelocity,
+            SolidBarrel, //+1 (1)
+            BurstStrike, //-1 (0)
+            Hypervelocity
+        ];
+    }
+    internal class Lv90FastEarlyNM : GNBOpenerLv90Base
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LightningShot,
+            Bloodfest, //+3 (3)
+            KeenEdge,
+            NoMercy, //LateWeave
+            GnashingFang, //-1 (2)
+            JugularRip,
+            DoubleDown, //-1 (1)
+            BlastingZone,
+            BowShock,
+            SonicBreak,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge,
+            BurstStrike, //-1 (0)
+            Hypervelocity,
+        ];
+
+        public override List<int> VeryDelayedWeaveSteps { get; set; } = [4];
+    }
+    internal class Lv90SlowEarlyNM : GNBOpenerLv90Base
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LightningShot,
+            KeenEdge,
+            Bloodfest, //+3 (3)
+            NoMercy,
+            GnashingFang, //-1 (2)
+            JugularRip,
+            BowShock,
+            DoubleDown, //-1 (1)
+            BlastingZone,
+            SonicBreak,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge,
+            BurstStrike, //-1 (0)
+            Hypervelocity,
+        ];
+    }
+    #endregion
+
+    #region Lv100
+    internal abstract class GNBOpenerLv100Base : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+        internal override UserData ContentCheckConfig => Config.GNB_ST_Balance_Content;
+        public override bool HasCooldowns() => IsOffCooldown(Bloodfest) && IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(DoubleDown) && IsOffCooldown(BowShock) && Ammo == 0;
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => Config.GNB_Opener_StartChoice == 1)];
+    }
+    internal class Lv100FastNormalNM : GNBOpenerLv100Base
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LightningShot,
+            Bloodfest, //+3 (3)
+            KeenEdge,
+            BrutalShell,
+            NoMercy, //LateWeave
+            GnashingFang, //-1 (2)
+            JugularRip,
+            BowShock,
+            DoubleDown, //-1 (1)
+            BlastingZone,
+            SonicBreak,
             SavageClaw,
             AbdomenTear,
             WickedTalon,
@@ -82,59 +215,25 @@ internal partial class GNB : TankJob
             ReignOfBeasts,
             NobleBlood,
             LionHeart,
-            BurstStrike,
-            Hypervelocity,
-            SonicBreak
+            BurstStrike, //-1 (0)
+            Hypervelocity
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            2,
-            5
-        ];
-        internal override UserData ContentCheckConfig => Config.GNB_ST_Balance_Content;
-
-        public override bool HasCooldowns()
-        {
-            if (!IsOffCooldown(Bloodfest))
-                return false;
-
-            if (!IsOffCooldown(NoMercy))
-                return false;
-
-            if (!IsOffCooldown(Hypervelocity))
-                return false;
-
-            if (!IsOffCooldown(SonicBreak))
-                return false;
-
-            if (!IsOffCooldown(DoubleDown))
-                return false;
-
-            if (!IsOffCooldown(BowShock))
-                return false;
-
-            return true;
-        }
+        public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
     }
-
-    internal class GNBOpenerMaxLevel2 : WrathOpener
+    internal class Lv100SlowNormalNM : GNBOpenerLv100Base
     {
-        //Above 2.47 GCD
         public override List<uint> OpenerActions { get; set; } =
         [
             LightningShot,
-            Bloodfest,
+            Bloodfest, //+3 (3)
             KeenEdge,
-            BurstStrike,
+            BurstStrike, //-1 (2)
             NoMercy,
             Hypervelocity,
-            GnashingFang,
+            GnashingFang, //-1 (1)
             JugularRip,
             BowShock,
-            DoubleDown,
+            DoubleDown, //-1 (0)
             BlastingZone,
             SonicBreak,
             SavageClaw,
@@ -145,38 +244,57 @@ internal partial class GNB : TankJob
             NobleBlood,
             LionHeart
         ];
-        public override int MinOpenerLevel => 100;
-        public override int MaxOpenerLevel => 109;
-
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            2
-        ];
-
-        internal override UserData ContentCheckConfig => Config.GNB_ST_Balance_Content;
-        public override bool HasCooldowns()
-        {
-            if (!IsOffCooldown(Bloodfest))
-                return false;
-
-            if (!IsOffCooldown(NoMercy))
-                return false;
-
-            if (!IsOffCooldown(Hypervelocity))
-                return false;
-
-            if (!IsOffCooldown(SonicBreak))
-                return false;
-
-            if (!IsOffCooldown(DoubleDown))
-                return false;
-
-            if (!IsOffCooldown(BowShock))
-                return false;
-
-            return true;
-        }
     }
+    internal class Lv100FastEarlyNM : GNBOpenerLv100Base
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LightningShot,
+            Bloodfest, //+3 (3)
+            NoMercy, //LateWeave
+            GnashingFang, //-1 (2)
+            JugularRip,
+            BowShock,
+            DoubleDown, //-1 (1)
+            BlastingZone,
+            SonicBreak,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge,
+            ReignOfBeasts,
+            NobleBlood,
+            LionHeart,
+            BurstStrike, //-1 (0)
+            Hypervelocity,
+        ];
+        public override List<int> VeryDelayedWeaveSteps { get; set; } = [3];
+    }
+    internal class Lv100SlowEarlyNM : GNBOpenerLv100Base
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            LightningShot,
+            Bloodfest, //+3 (3)
+            BurstStrike, //-1 (2)
+            NoMercy, //LateWeave
+            Hypervelocity,
+            GnashingFang, //-1 (1)
+            JugularRip,
+            BowShock,
+            DoubleDown, //-1 (0)
+            BlastingZone,
+            SonicBreak,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge,
+            ReignOfBeasts,
+            NobleBlood,
+            LionHeart
+        ];
+    }
+    #endregion
 
     #endregion
 

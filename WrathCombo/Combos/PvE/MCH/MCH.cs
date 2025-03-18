@@ -27,13 +27,13 @@ internal partial class MCH : PhysRangedJob
                 return Reassemble;
 
             // Interrupt
-            if (Role.CanHeadGraze(CustomComboPreset.MCH_ST_SimpleMode,WeaveTypes.DelayWeave))
+            if (Role.CanHeadGraze(CustomComboPreset.MCH_ST_SimpleMode, WeaveTypes.DelayWeave))
                 return Role.HeadGraze;
 
             // All weaves
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart, WeaveTypes.None))
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                     return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved())
@@ -159,7 +159,7 @@ internal partial class MCH : PhysRangedJob
                 return actionID;
 
             if (Variant.CanCure(CustomComboPreset.MCH_Variant_Cure, Config.MCH_VariantCure))
-                    return Variant.Cure;
+                return Variant.Cure;
 
             // Opener
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Opener) && TargetIsHostile())
@@ -183,7 +183,7 @@ internal partial class MCH : PhysRangedJob
             // All weaves
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart, WeaveTypes.None))
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                     return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved())
@@ -346,7 +346,7 @@ internal partial class MCH : PhysRangedJob
             // All weaves
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart, WeaveTypes.None))
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                     return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved() && !Gauge.IsOverheated)
@@ -478,7 +478,7 @@ internal partial class MCH : PhysRangedJob
             // All weaves
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart, WeaveTypes.None))
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                     return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved() && !Gauge.IsOverheated)

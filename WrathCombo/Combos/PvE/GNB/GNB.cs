@@ -179,9 +179,12 @@ internal partial class GNB : TankJob
             #endregion
 
             #region Standard
-            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) &&
-                Opener().FullOpener(ref actionID))
-                return actionID;
+            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener))
+            {
+                if (Opener().FullOpener(ref actionID))
+                    return actionID;
+            }
+
             if (IsEnabled(CustomComboPreset.GNB_ST_RangedUptime) && ShouldUseLightningShot())
                 return LightningShot;
             if (IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && ShouldUseNoMercy() &&
