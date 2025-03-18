@@ -17,7 +17,7 @@ namespace WrathCombo.Combos.PvE;
 
 #endregion
 
-internal partial class BLU
+internal partial class BLU : CasterJob
 {
     #region Openers
 
@@ -129,15 +129,15 @@ internal partial class BLU
                 IsSpellActive(MatraMagic_Spell100))
                 return Bristle_Spell12;
 
-            if (IsOffCooldown(All.Swiftcast))
-                return All.Swiftcast;
+            if (IsOffCooldown(Role.Swiftcast))
+                return Role.Swiftcast;
 
             if (IsSpellActive(Surpanakha_Spell78) &&
                 GetRemainingCharges(Surpanakha_Spell78) > 0)
                 return Surpanakha_Spell78;
 
             if (IsSpellActive(MatraMagic_Spell100) &&
-                HasEffect(All.Buffs.Swiftcast))
+                HasEffect(Role.Buffs.Swiftcast))
                 return MatraMagic_Spell100;
 
             if (IsSpellActive(BeingMortal_Spell124) &&
@@ -327,8 +327,8 @@ internal partial class BLU
                     return ShockStrike_Spell47;
             }
 
-            if (IsOffCooldown(All.Swiftcast) && LevelChecked(All.Swiftcast))
-                return All.Swiftcast;
+            if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
+                return Role.Swiftcast;
             if (IsSpellActive(FinalSting_Spell8))
                 return FinalSting_Spell8;
 
@@ -357,8 +357,8 @@ internal partial class BLU
             if (!TargetHasEffectAny(Debuffs.DeepFreeze)) return actionID;
 
             // Ultravibration
-            if (IsOffCooldown(All.Swiftcast))
-                return All.Swiftcast;
+            if (IsOffCooldown(Role.Swiftcast))
+                return Role.Swiftcast;
             if (IsSpellActive(Ultravibration_Spell92) &&
                 IsOffCooldown(Ultravibration_Spell92))
                 return Ultravibration_Spell92;
@@ -562,10 +562,8 @@ internal partial class BLU
                 return Devour_Spell75;
 
             // Lucid Dreaming
-            if (IsOffCooldown(All.LucidDreaming) &&
-                LocalPlayer.CurrentMp <= 9000 &&
-                LevelChecked(All.LucidDreaming))
-                return All.LucidDreaming;
+            if (Role.CanLucidDream(9000))
+                return Role.LucidDreaming;
 
             return actionID;
         }
@@ -581,10 +579,10 @@ internal partial class BLU
             if (actionID is not MagicHammer_Spell60) return actionID;
 
             return (IsOnCooldown(MagicHammer_Spell60) &&
-                    IsOffCooldown(All.Addle) &&
-                    !TargetHasEffect(All.Debuffs.Addle) &&
+                    IsOffCooldown(Role.Addle) &&
+                    !TargetHasEffect(Role.Debuffs.Addle) &&
                     !TargetHasEffect(Debuffs.Conked))
-                ? All.Addle
+                ? Role.Addle
                 : actionID;
         }
     }

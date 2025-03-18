@@ -6,11 +6,12 @@ using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 #endregion
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class GNB
+internal partial class GNB : TankJob
 {
     #region Variables
     internal static byte Ammo => GetJobGauge<GNBGauge>().Ammo;
@@ -38,7 +39,7 @@ internal partial class GNB
     internal static bool CanReign => LevelChecked(ReignOfBeasts) && GunStep == 0 && HasReign;
     internal static bool InOdd => BfCD is < 90 and > 20;
     internal static bool CanLateWeave => CanDelayedWeave(start: 1);
-    internal static bool MitUsed => JustUsed(OriginalHook(HeartOfStone), 4f) || JustUsed(OriginalHook(Nebula), 5f) || JustUsed(Camouflage, 5f) || JustUsed(All.Rampart, 5f) || JustUsed(Aurora, 5f) || JustUsed(Superbolide, 9f);
+    internal static bool MitUsed => JustUsed(OriginalHook(HeartOfStone), 4f) || JustUsed(OriginalHook(Nebula), 5f) || JustUsed(Camouflage, 5f) || JustUsed(Role.Rampart, 5f) || JustUsed(Aurora, 5f) || JustUsed(Superbolide, 9f);
     internal static float GCDLength => ActionManager.GetAdjustedRecastTime(ActionType.Action, KeenEdge) / 1000f;
     internal static bool FastGNB => GCDLength < 2.43f; //2.42 or lower
     internal static bool MidGNB => GCDLength is <= 2.47f and >= 2.43f; //2.43 to 2.47
@@ -183,27 +184,14 @@ internal partial class GNB
     internal static int MaxCartridges() => TraitLevelChecked(427) ? 3 : TraitLevelChecked(257) ? 2 : 0; //Level Check helper for Maximum Ammo
     internal static uint GetVariantAction()
     {
-        if (IsEnabled(CustomComboPreset.GNB_Variant_Cure) &&
-            IsEnabled(Variant.VariantCure) &&
-            PlayerHealthPercentageHp() <= GetOptionValue(Config.GNB_VariantCure))
-        {
-            return Variant.VariantCure;
-        }
+        if (Variant.CanCure(CustomComboPreset.GNB_Variant_Cure, Config.GNB_VariantCure))
+            return Variant.Cure;
 
-        Dalamud.Game.ClientState.Statuses.Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-        if (IsEnabled(CustomComboPreset.GNB_Variant_SpiritDart) &&
-            IsEnabled(Variant.VariantSpiritDart) &&
-            CanWeave() && sustainedDamage is null)
-        {
-            return Variant.VariantSpiritDart;
-        }
-
-        if (IsEnabled(CustomComboPreset.GNB_Variant_Ultimatum) &&
-            IsEnabled(Variant.VariantUltimatum) &&
-            CanWeave() && ActionReady(Variant.VariantUltimatum))
-        {
-            return Variant.VariantUltimatum;
-        }
+        if (Variant.CanSpiritDart(CustomComboPreset.GNB_Variant_SpiritDart) && CanWeave())
+            return Variant.SpiritDart;
+        
+        if (Variant.CanUltimatum(CustomComboPreset.GNB_Variant_Ultimatum) && CanWeave())
+            return Variant.Ultimatum;
 
         return 0; //No conditions met
     }
@@ -251,7 +239,7 @@ internal partial class GNB
         {
         (CustomComboPreset.GNB_Bozja_LostDeath, Bozja.LostDeath, true),
         (CustomComboPreset.GNB_Bozja_LostCure, Bozja.LostCure, PlayerHealthPercentageHp() <= Config.GNB_Bozja_LostCure_Health),
-        (CustomComboPreset.GNB_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasEffect(All.Debuffs.Raise)),
+        (CustomComboPreset.GNB_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasEffect(MagicRole.Buffs.Raise)),
         (CustomComboPreset.GNB_Bozja_LostReraise, Bozja.LostReraise, PlayerHealthPercentageHp() <= Config.GNB_Bozja_LostReraise_Health),
         (CustomComboPreset.GNB_Bozja_LostProtect, Bozja.LostProtect, !HasEffect(Bozja.Buffs.LostProtect)),
         (CustomComboPreset.GNB_Bozja_LostShell, Bozja.LostShell, !HasEffect(Bozja.Buffs.LostShell)),
@@ -390,7 +378,6 @@ internal partial class GNB
             Nebula = 1834, //applied by Nebula to self
             Rampart = 1191, //applied by Rampart to self
             Camouflage = 1832, //applied by Camouflage to self
-            ArmsLength = 1209, //applied by Arm's Length to self
             HeartOfLight = 1839, //applied by Heart of Light to self
             Aurora = 1835, //applied by Aurora to self
             Superbolide = 1836, //applied by Superbolide to self
@@ -450,21 +437,20 @@ internal partial class GNB
         //Camouflage
         (Camouflage, CustomComboPreset.GNB_Mit_Camouflage, () => true),
         //Reprisal
-        (All.Reprisal, CustomComboPreset.GNB_Mit_Reprisal,
-            () => InActionRange(All.Reprisal)),
+        (Role.Reprisal, CustomComboPreset.GNB_Mit_Reprisal,
+            () => Role.CanReprisal(checkTargetForDebuff:false)),
         //Heart of Light
         (HeartOfLight, CustomComboPreset.GNB_Mit_HeartOfLight,
             () => Config.GNB_Mit_HeartOfLight_PartyRequirement ==
-                  (int)Config.PartyRequirement.No ||
+                  (int)PartyRequirement.No ||
                   IsInParty()),
         //Rampart
-        (All.Rampart, CustomComboPreset.GNB_Mit_Rampart,
-            () => PlayerHealthPercentageHp() <= Config.GNB_Mit_Rampart_Health),
+        (Role.Rampart, CustomComboPreset.GNB_Mit_Rampart,
+            () => Role.CanRampart(Config.GNB_Mit_Rampart_Health)),
         //Arm's Length
-        (All.ArmsLength, CustomComboPreset.GNB_Mit_ArmsLength,
-            () => CanCircleAoe(7) >= Config.GNB_Mit_ArmsLength_EnemyCount &&
-                  (Config.GNB_Mit_ArmsLength_Boss == (int)Config.BossAvoidance.Off ||
-                   InBossEncounter())),
+        (Role.ArmsLength, CustomComboPreset.GNB_Mit_ArmsLength,
+            () => Role.CanArmsLength(Config.GNB_Mit_ArmsLength_EnemyCount,
+                Config.GNB_Mit_ArmsLength_Boss)),
         //Nebula
         (OriginalHook(Nebula), CustomComboPreset.GNB_Mit_Nebula,
             () => PlayerHealthPercentageHp() <= Config.GNB_Mit_Nebula_Health)

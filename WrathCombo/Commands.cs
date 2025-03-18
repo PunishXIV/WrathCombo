@@ -190,9 +190,17 @@ public partial class WrathCombo
         if (target != all)
         {
             var presetCanNumber = int.TryParse(target, out var targetNumber);
-            preset = presetCanNumber
-                ? (CustomComboPreset)targetNumber
-                : Enum.Parse<CustomComboPreset>(target, true);
+            try
+            {
+                preset = presetCanNumber
+                    ? (CustomComboPreset)targetNumber
+                    : Enum.Parse<CustomComboPreset>(target, true);
+            }
+            catch
+            {
+                DuoLog.Error($"Could not find preset '{target}'");
+                return;
+            }
         }
 
         // Give the correct method for the action
@@ -216,12 +224,19 @@ public partial class WrathCombo
             var usablePreset = (CustomComboPreset)preset!;
             method(usablePreset, false);
 
+            if (action == toggle)
+                action =
+                    Service.Configuration.EnabledActions
+                        .TryGetValue(usablePreset, out _)
+                        ? set
+                        : unset;
+
             var ctrlText = P.UIHelper.PresetControlled(usablePreset) is not null
                 ? " " + OptionControlledByIPC
                 : "";
 
             DuoLog.Information(
-                $"{target} {(action == toggle ? "toggled" : action)} {ctrlText}");
+                $"{usablePreset.Attributes().CustomComboInfo.Name} {action} {ctrlText}");
         }
     }
 
@@ -575,10 +590,16 @@ public partial class WrathCombo
             return;
         }
 
-        // Open to current job setting
-        PvEFeatures.OpenToCurrentJob(false);
+        // If no arguments provided
+        if (argument[0].Length <= 0)
+        {
+            // Handle the "Open to current job" setting
+            if (ConfigWindow.IsOpen)
+                PvEFeatures.OpenToCurrentJob(false);
 
-        if (argument[0].Length <= 0) return;
+            // Skip trying to process arguments
+            return;
+        }
 
         // Open to specified job
         var jobName = argument[0].ToUpperInvariant();

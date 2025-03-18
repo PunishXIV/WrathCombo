@@ -221,7 +221,7 @@ namespace WrathCombo.Window.Tabs
                     changed |= ImGui.Checkbox("Require Swiftcast/Dualcast", ref
                         cfg.HealerSettings.AutoRezRequireSwift);
                     ImGuiComponents.HelpMarker(
-                        $"Requires {All.Swiftcast.ActionName()} " +
+                        $"Requires {MagicRole.Swiftcast.ActionName()} " +
                         $"(or {RDM.JobID.JobAbbreviation()}'s Dualcast) " +
                         $"to be available to resurrect a party member, to avoid hard-casting.");
 
@@ -229,13 +229,13 @@ namespace WrathCombo.Window.Tabs
                     P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezDPSJobs");
                     changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
                         $"Apply to {SMN.JobID.JobAbbreviation()} & {RDM.JobID.JobAbbreviation()}", ref cfg.HealerSettings.AutoRezDPSJobs, "AutoRezDPSJobs");
-                    ImGuiComponents.HelpMarker($"When playing as {SMN.JobID.JobAbbreviation()} or {RDM.JobID.JobAbbreviation()}, also attempt to raise a dead party member. {RDM.JobID.JobAbbreviation()} will only resurrect with {All.Buffs.Swiftcast.StatusName()} or {RDM.Buffs.Dualcast.StatusName()} active.");
+                    ImGuiComponents.HelpMarker($"When playing as {SMN.JobID.JobAbbreviation()} or {RDM.JobID.JobAbbreviation()}, also attempt to raise a dead party member. {RDM.JobID.JobAbbreviation()} will only resurrect with {MagicRole.Buffs.Swiftcast.StatusName()} or {RDM.Buffs.Dualcast.StatusName()} active.");
                 }
 
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoCleanse");
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                    $"Auto-{All.Esuna.ActionName()}", ref cfg.HealerSettings.AutoCleanse, "AutoCleanse");
-                ImGuiComponents.HelpMarker($"Will {All.Esuna.ActionName()} any cleansable debuffs (Healing takes priority).");
+                    $"Auto-{Healer.Esuna.ActionName()}", ref cfg.HealerSettings.AutoCleanse, "AutoCleanse");
+                ImGuiComponents.HelpMarker($"Will {Healer.Esuna.ActionName()} any cleansable debuffs (Healing takes priority).");
 
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded("ManageKardia");
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(

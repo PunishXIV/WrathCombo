@@ -88,7 +88,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <param name="id"> ID of the action. </param>
         /// <returns></returns>
         //Note: Testing so far shows non charge skills have a max charge of 1, and it's zero during cooldown
-        public unsafe static bool ActionReady(uint id) => ((GetCooldownRemainingTime(OriginalHook(id)) <= GCDTotal && ActionWatching.GetAttackType(id) != ActionWatching.ActionAttackType.Ability) || HasCharges(OriginalHook(id))) && ActionManager.Instance()->GetActionStatus(ActionType.Action, OriginalHook(id), checkRecastActive: false, checkCastingActive: false) is 0 or 582 or 580;
+        public unsafe static bool ActionReady(uint id) => ((GetCooldownRemainingTime(OriginalHook(id)) <= RemainingGCD + 0.5f && ActionWatching.GetAttackType(id) != ActionWatching.ActionAttackType.Ability) || HasCharges(OriginalHook(id))) && ActionManager.Instance()->GetActionStatus(ActionType.Action, OriginalHook(id), checkRecastActive: false, checkCastingActive: false) is 0 or 582 or 580;
 
         public static bool ActionsReady(uint[] ids)
         {
@@ -249,6 +249,22 @@ namespace WrathCombo.CustomComboNS.Functions
         {
             return false;
         }
+
+        public enum WeaveTypes
+        {
+            None,
+            Weave,
+            DelayWeave,
+            SpellWeave
+        }
+        public static bool CheckWeave(WeaveTypes weave) => weave switch
+        {
+            WeaveTypes.None => true,
+            WeaveTypes.Weave => CanWeave(),
+            WeaveTypes.DelayWeave => CanDelayedWeave(),
+            WeaveTypes.SpellWeave => CanSpellWeave(),
+            _ => false
+        };
 
         /// <summary>
         /// Returns the current combo timer.

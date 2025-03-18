@@ -137,9 +137,10 @@ internal partial class SMN
 
                 case CustomComboPreset.SMN_ST_Advanced_Combo_Egi_AstralFlow:
                     {
-                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Mountain Buster", "", 3, 0);
-                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Crimson Cyclone", "", 3, 1);
-                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Slipstream", "", 3, 2);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Mountain Buster", "", 4, 0);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Crimson Cyclone", "", 4, 1);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Crimson Strike", "", 4, 3);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Slipstream", "", 4, 2);
 
                         if (SMN_ST_Egi_AstralFlow[1])
                             UserConfig.DrawAdditionalBoolChoice(SMN_ST_CrimsonCycloneMelee,
@@ -150,9 +151,10 @@ internal partial class SMN
 
                 case CustomComboPreset.SMN_AoE_Advanced_Combo_Egi_AstralFlow:
                     {
-                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Mountain Buster", "", 3, 0);
-                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Crimson Cyclone", "", 3, 1);
-                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Slipstream", "", 3, 2);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Mountain Buster", "", 4, 0);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Crimson Cyclone", "", 4, 1);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Crimson Strike", "", 4, 3);
+                        UserConfig.DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Slipstream", "", 4, 2);
 
                         if (SMN_AoE_Egi_AstralFlow[1])
                             UserConfig.DrawAdditionalBoolChoice(SMN_AoE_CrimsonCycloneMelee,

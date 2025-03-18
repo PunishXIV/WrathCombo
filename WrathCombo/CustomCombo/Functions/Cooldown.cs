@@ -1,5 +1,8 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
+using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
 
@@ -42,6 +45,35 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <param name="variance"> Variance of how long to check the elapsed cooldown</param>
         /// <returns> True or false. </returns>
         public static bool JustUsed(uint actionID, float variance = 3f) => GetMaxCharges(actionID) == 0 ? IsOnCooldown(actionID) && GetCooldownElapsed(actionID) <= variance : ActionWatching.ChargeTimestamps.ContainsKey(actionID) ? (Environment.TickCount64 - ActionWatching.ChargeTimestamps[actionID]) / 1000f <= variance : false;
+
+
+        /// <summary>
+        /// Checks if an action has just been used on a given target
+        /// </summary>
+        /// <param name="actionID"></param>
+        /// <param name="target"></param>
+        /// <param name="variance"></param>
+        /// <returns></returns>
+        public static bool JustUsedOn(uint actionID, IGameObject? target, float variance = 3f) => target is null ? false : JustUsedOn(actionID, target.GameObjectId, variance);
+
+        /// <summary>
+        /// See <see cref="JustUsedOn(uint, IGameObject?, float)"/>
+        /// </summary>
+        /// <param name="actionID"></param>
+        /// <param name="targetGameobjectId"></param>
+        /// <param name="variance"></param>
+        /// <returns></returns>
+        public static bool JustUsedOn(uint actionID, ulong targetGameobjectId, float variance = 3f)
+        {
+            if (!ActionWatching.UsedOnDict.ContainsKey((actionID, targetGameobjectId)))
+                return false;
+
+            var timestamp = ActionWatching.UsedOnDict[(actionID, targetGameobjectId)];
+
+            var timeDiff = (Environment.TickCount64 - timestamp) / 1000f;
+
+            return timeDiff <= variance;
+        }
 
         /// <summary> Gets a value indicating whether an action has any available charges. </summary>
         /// <param name="actionID"> Action ID to check. </param>

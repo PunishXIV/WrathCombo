@@ -1,14 +1,13 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class PLD
+internal partial class PLD : TankJob
 {
     private static PLDGauge Gauge => CustomComboFunctions.GetJobGauge<PLDGauge>();
 
@@ -46,19 +45,17 @@ internal partial class PLD
             bool justMitted = JustUsed(OriginalHook(Sheltron), 3f) ||
                              JustUsed(OriginalHook(Sentinel), 4f) ||
                              JustUsed(DivineVeil, 4f) ||
-                             JustUsed(All.Rampart, 4f) ||
+                             JustUsed(Role.Rampart, 4f) ||
                              JustUsed(HallowedGround, 9f);
             #endregion
 
             // Interrupt
-            if (ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+            if (Role.CanInterject())
+                return Role.Interject;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
+                return Variant.Cure;
 
             #region Mitigations
 
@@ -80,15 +77,12 @@ internal partial class PLD
                             return OriginalHook(Sentinel);
 
                         //Rampart
-                        if (ActionReady(All.Rampart) && //Rampart is ready
-                            PlayerHealthPercentageHp() < 80) //Player's health is below 80%
-                            return All.Rampart;
+                        if (Role.CanRampart(80)) //Player's health is below 80%
+                            return Role.Rampart;
 
                         //Reprisal
-                        if (ActionReady(All.Reprisal) && //Reprisal is ready
-                            InActionRange(All.Reprisal) && //Target is within range of Reprisal
-                            PlayerHealthPercentageHp() < 90) //Player's health is below 80%
-                            return All.Reprisal;
+                        if (Role.CanReprisal(90)) //Player's health is below 80%
+                            return Role.Reprisal;
                     }
 
                     //Bulwark
@@ -106,9 +100,6 @@ internal partial class PLD
 
             if (HasBattleTarget())
             {
-                // Variant DoT Check
-                Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-
                 // Weavables
                 if (canWeave)
                 {
@@ -141,9 +132,8 @@ internal partial class PLD
                         }
 
                         // Variant Ultimatum
-                        if (IsEnabled(CustomComboPreset.PLD_Variant_Ultimatum) && IsEnabled(Variant.VariantUltimatum) &&
-                            IsOffCooldown(Variant.VariantUltimatum))
-                            return Variant.VariantUltimatum;
+                        if (Variant.CanUltimatum(CustomComboPreset.PLD_Variant_Ultimatum))
+                            return Variant.Ultimatum;
 
                         // Circle of Scorn / Spirits Within
                         if (cooldownFightOrFlight > 15)
@@ -157,9 +147,8 @@ internal partial class PLD
                     }
 
                     // Variant Spirit Dart
-                    if (IsEnabled(CustomComboPreset.PLD_Variant_SpiritDart) && IsEnabled(Variant.VariantSpiritDart) &&
-                        (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                        return Variant.VariantSpiritDart;
+                    if (Variant.CanSpiritDart(CustomComboPreset.PLD_Variant_SpiritDart))
+                        return Variant.SpiritDart;
 
                     // Blade of Honor
                     if (LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)
@@ -243,26 +232,24 @@ internal partial class PLD
             bool justMitted = JustUsed(OriginalHook(Sheltron), 3f) ||
                              JustUsed(OriginalHook(Sentinel), 4f) ||
                              JustUsed(DivineVeil, 4f) ||
-                             JustUsed(All.Rampart, 4f) ||
+                             JustUsed(Role.Rampart, 4f) ||
                              JustUsed(HallowedGround, 9f);
             #endregion
 
             // Interrupt
-            if (ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+            if (Role.CanInterject())
+                return Role.Interject;
 
             // Stun
             if (TargetIsCasting())
                 if (ActionReady(ShieldBash))
                     return ShieldBash;
-                else if (ActionReady(All.LowBlow))
-                    return All.LowBlow;
+                else if (Role.CanLowBlow())
+                    return Role.LowBlow;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
+                return Variant.Cure;
 
             if (Config.PLD_AoE_MitsOptions != 1)
             {
@@ -282,15 +269,12 @@ internal partial class PLD
                             return OriginalHook(Sentinel);
 
                         //Rampart
-                        if (ActionReady(All.Rampart) && //Rampart is ready
-                            PlayerHealthPercentageHp() < 80) //Player's health is below 80%
-                            return All.Rampart;
+                        if (Role.CanRampart(80))
+                            return Role.Rampart;
 
                         //Reprisal
-                        if (ActionReady(All.Reprisal) && //Reprisal is ready
-                            InActionRange(All.Reprisal) && //Target is within range of Reprisal
-                            PlayerHealthPercentageHp() < 90) //Player's health is below 80%
-                            return All.Reprisal;
+                        if (Role.CanReprisal(90, checkTargetForDebuff:false))
+                            return Role.Reprisal;
                     }
 
                     //Bulwark
@@ -307,9 +291,6 @@ internal partial class PLD
 
             if (HasBattleTarget())
             {
-                // Variant DoT Check
-                Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-
                 // Weavables
                 if (canWeave)
                 {
@@ -324,9 +305,8 @@ internal partial class PLD
                             return FightOrFlight;
 
                         // Variant Ultimatum
-                        if (IsEnabled(CustomComboPreset.PLD_Variant_Ultimatum) && IsEnabled(Variant.VariantUltimatum) &&
-                            IsOffCooldown(Variant.VariantUltimatum))
-                            return Variant.VariantUltimatum;
+                        if (Variant.CanUltimatum(CustomComboPreset.PLD_Variant_Ultimatum))
+                            return Variant.Ultimatum;
 
                         // Circle of Scorn / Spirits Within
                         if (cooldownFightOrFlight > 15)
@@ -340,9 +320,8 @@ internal partial class PLD
                     }
 
                     // Variant Spirit Dart
-                    if (IsEnabled(CustomComboPreset.PLD_Variant_SpiritDart) && IsEnabled(Variant.VariantSpiritDart) &&
-                        (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                        return Variant.VariantSpiritDart;
+                    if (Variant.CanSpiritDart(CustomComboPreset.PLD_Variant_SpiritDart))
+                        return Variant.SpiritDart;
 
                     // Blade of Honor
                     if (LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)
@@ -388,7 +367,7 @@ internal partial class PLD
             bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
             bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
             bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
-                                         JustUsed(All.Rampart, 5f) || JustUsed(HallowedGround, 9f);
+                                         JustUsed(Role.Rampart, 5f) || JustUsed(HallowedGround, 9f);
             bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
                                    (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_ST_MP_Reserve);
             bool inBurstWindow = JustUsed(FightOrFlight, 30f);
@@ -406,14 +385,12 @@ internal partial class PLD
 
             // Interrupt
             if (IsEnabled(CustomComboPreset.PLD_ST_Interrupt)
-                && ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+                && Role.CanInterject())
+                return Role.Interject;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
+                return Variant.Cure;
 
             if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -421,9 +398,6 @@ internal partial class PLD
 
             if (HasBattleTarget())
             {
-                // Variant DoT Check
-                Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-
                 // Weavables
                 if (canWeave)
                 {
@@ -456,9 +430,8 @@ internal partial class PLD
                         }
 
                         // Variant Ultimatum
-                        if (IsEnabled(CustomComboPreset.PLD_Variant_Ultimatum) && IsEnabled(Variant.VariantUltimatum) &&
-                            IsOffCooldown(Variant.VariantUltimatum))
-                            return Variant.VariantUltimatum;
+                        if (Variant.CanUltimatum(CustomComboPreset.PLD_Variant_Ultimatum))
+                            return Variant.Ultimatum;
 
                         // Circle of Scorn / Spirits Within
                         if (cooldownFightOrFlight > 15)
@@ -472,9 +445,8 @@ internal partial class PLD
                     }
 
                     // Variant Spirit Dart
-                    if (IsEnabled(CustomComboPreset.PLD_Variant_SpiritDart) && IsEnabled(Variant.VariantSpiritDart) &&
-                        (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                        return Variant.VariantSpiritDart;
+                    if (Variant.CanSpiritDart(CustomComboPreset.PLD_Variant_SpiritDart))
+                        return Variant.SpiritDart;
 
                     // Intervene
                     if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Intervene) && LevelChecked(Intervene) && TimeMoving.Ticks == 0 &&
@@ -502,10 +474,11 @@ internal partial class PLD
                             return OriginalHook(Sentinel);
 
                         // Rampart
-                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Rampart) && ActionReady(All.Rampart) &&
-                            PlayerHealthPercentageHp() < Config.PLD_ST_Rampart_Health && (Config.PLD_ST_Rampart_SubOption == 1 ||
+                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Rampart) && 
+                            
+                            Role.CanRampart(Config.PLD_ST_Rampart_Health) && (Config.PLD_ST_Rampart_SubOption == 1 ||
                                 (TargetIsBoss() && Config.PLD_ST_Rampart_SubOption == 2)))
-                            return All.Rampart;
+                            return Role.Rampart;
 
                         // Sheltron
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Sheltron) && LevelChecked(Sheltron) &&
@@ -600,7 +573,7 @@ internal partial class PLD
             bool hasDivineMight = HasEffect(Buffs.DivineMight);
             bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
             bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
-                                         JustUsed(All.Rampart, 5f) || JustUsed(HallowedGround, 9f);
+                                         JustUsed(Role.Rampart, 5f) || JustUsed(HallowedGround, 9f);
             bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
                                    (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_AoE_MP_Reserve);
             bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) ||
@@ -609,27 +582,22 @@ internal partial class PLD
 
             // Interrupt
             if (IsEnabled(CustomComboPreset.PLD_AoE_Interrupt)
-                && ActionReady(All.Interject)
-                && CanInterruptEnemy())
-                return All.Interject;
+                && Role.CanInterject())
+                return Role.Interject;
 
             // Stun
             if (IsEnabled(CustomComboPreset.PLD_AoE_Stun) && TargetIsCasting())
                 if (ActionReady(ShieldBash))
                     return ShieldBash;
-                else if (ActionReady(All.LowBlow))
-                    return All.LowBlow;
+                else if (Role.CanLowBlow())
+                    return Role.LowBlow;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PLD_Variant_Cure) && IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.PLD_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
+                return Variant.Cure;
 
             if (HasBattleTarget())
             {
-                // Variant DoT Check
-                Status? sustainedDamage = FindTargetEffect(Variant.Debuffs.SustainedDamage);
-
                 // Weavables
                 if (canWeave)
                 {
@@ -645,9 +613,8 @@ internal partial class PLD
                             return FightOrFlight;
 
                         // Variant Ultimatum
-                        if (IsEnabled(CustomComboPreset.PLD_Variant_Ultimatum) && IsEnabled(Variant.VariantUltimatum) &&
-                            IsOffCooldown(Variant.VariantUltimatum))
-                            return Variant.VariantUltimatum;
+                        if (Variant.CanUltimatum(CustomComboPreset.PLD_Variant_Ultimatum))
+                            return Variant.Ultimatum;
 
                         // Circle of Scorn / Spirits Within
                         if (cooldownFightOrFlight > 15)
@@ -661,9 +628,8 @@ internal partial class PLD
                     }
 
                     // Variant Spirit Dart
-                    if (IsEnabled(CustomComboPreset.PLD_Variant_SpiritDart) && IsEnabled(Variant.VariantSpiritDart) &&
-                        (sustainedDamage is null || sustainedDamage?.RemainingTime <= 3))
-                        return Variant.VariantSpiritDart;
+                    if (Variant.CanSpiritDart(CustomComboPreset.PLD_Variant_SpiritDart))
+                        return Variant.SpiritDart;
 
                     // Intervene
                     if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Intervene) && LevelChecked(Intervene) && TimeMoving.Ticks == 0 &&
@@ -691,10 +657,10 @@ internal partial class PLD
                             return OriginalHook(Sentinel);
 
                         // Rampart
-                        if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Rampart) && ActionReady(All.Rampart) &&
-                            PlayerHealthPercentageHp() < Config.PLD_AoE_Rampart_Health && (Config.PLD_AoE_Rampart_SubOption == 1 ||
+                        if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Rampart) && 
+                            Role.CanRampart(Config.PLD_AoE_Rampart_Health) && (Config.PLD_AoE_Rampart_SubOption == 1 ||
                                 (TargetIsBoss() && Config.PLD_AoE_Rampart_SubOption == 2)))
-                            return All.Rampart;
+                            return Role.Rampart;
 
                         // Sheltron
                         if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron) && LevelChecked(Sheltron) &&

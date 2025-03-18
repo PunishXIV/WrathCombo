@@ -7,7 +7,7 @@ using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class GNB
+internal partial class GNB : TankJob
 {
     #region Simple Mode - Single Target
     internal class GNB_ST_Simple : CustomCombo
@@ -34,8 +34,8 @@ internal partial class GNB
             }
 
             //Interject
-            if (ActionReady(All.Interject) && CanInterruptEnemy())
-                return All.Interject;
+            if (Role.CanInterject())
+                return Role.Interject;
 
             #region Mitigations
             if (Config.GNB_ST_MitsOptions != 1)
@@ -48,10 +48,10 @@ internal partial class GNB
                     {
                         if (ActionReady(OriginalHook(Nebula)) && HPP < 60)
                             return OriginalHook(Nebula);
-                        if (ActionReady(All.Rampart) && HPP < 80)
-                            return All.Rampart;
-                        if (ActionReady(All.Reprisal) && InActionRange(All.Reprisal) && HPP < 90)
-                            return All.Reprisal;
+                        if (ActionReady(Role.Rampart) && HPP < 80)
+                            return Role.Rampart;
+                        if (Role.CanReprisal(90))
+                            return Role.Reprisal;
                     }
                     if (ActionReady(Camouflage) && HPP < 70)
                         return Camouflage;
@@ -139,8 +139,8 @@ internal partial class GNB
             }
 
             //Interject
-            if (IsEnabled(CustomComboPreset.GNB_ST_Interrupt) && ActionReady(All.Interject) && CanInterruptEnemy())
-                return All.Interject;
+            if (IsEnabled(CustomComboPreset.GNB_ST_Interrupt) && Role.CanInterject())
+                return Role.Interject;
 
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation) && InCombat() && !MitUsed)
@@ -153,14 +153,16 @@ internal partial class GNB
                     if (IsEnabled(CustomComboPreset.GNB_ST_Nebula) && ActionReady(OriginalHook(Nebula)) && HPP < Config.GNB_ST_Nebula_Health &&
                         (Config.GNB_ST_Nebula_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Nebula_SubOption == 1))
                         return OriginalHook(Nebula);
-                    if (IsEnabled(CustomComboPreset.GNB_ST_Rampart) && ActionReady(All.Rampart) && HPP < Config.GNB_ST_Rampart_Health &&
+                    if (IsEnabled(CustomComboPreset.GNB_ST_Rampart) && Role.CanRampart(Config.GNB_ST_Rampart_Health) &&
                         (Config.GNB_ST_Rampart_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Rampart_SubOption == 1))
-                        return All.Rampart;
-                    if (IsEnabled(CustomComboPreset.GNB_ST_Reprisal) && ActionReady(All.Reprisal) && InActionRange(All.Reprisal) && HPP < Config.GNB_ST_Reprisal_Health &&
+                        return Role.Rampart;
+                    if (IsEnabled(CustomComboPreset.GNB_ST_Reprisal) && Role.CanReprisal(Config.GNB_ST_Reprisal_Health) &&
                         (Config.GNB_ST_Reprisal_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Reprisal_SubOption == 1))
-                        return All.Reprisal;
-                    if (IsEnabled(CustomComboPreset.GNB_ST_ArmsLength) && ActionReady(All.ArmsLength) && HPP < Config.GNB_ST_ArmsLength_Health && !InBossEncounter())
-                        return All.ArmsLength;
+                        return Role.Reprisal;
+                    if (IsEnabled(CustomComboPreset.GNB_ST_ArmsLength) &&
+                        HPP < Config.GNB_AoE_ArmsLength_Health &&
+                        Role.CanArmsLength())
+                        return Role.ArmsLength;
                 }
                 if (IsEnabled(CustomComboPreset.GNB_ST_Camouflage) && ActionReady(Camouflage) && HPP < Config.GNB_ST_Camouflage_Health &&
                     (Config.GNB_ST_Camouflage_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Camouflage_SubOption == 1))
@@ -261,10 +263,10 @@ internal partial class GNB
             }
 
             #region Stuns
-            if (ActionReady(All.Interject) && CanInterruptEnemy())
-                return All.Interject;
-            if (ActionReady(All.LowBlow) && TargetIsCasting())
-                return All.LowBlow;
+            if (Role.CanInterject())
+                return Role.Interject;
+            if (Role.CanLowBlow())
+                return Role.LowBlow;
             #endregion
 
             #region Mitigations
@@ -278,10 +280,10 @@ internal partial class GNB
                     {
                         if (ActionReady(OriginalHook(Nebula)) && HPP < 60)
                             return OriginalHook(Nebula);
-                        if (ActionReady(All.Rampart) && HPP < 80)
-                            return All.Rampart;
-                        if (ActionReady(All.Reprisal) && InActionRange(All.Reprisal) && HPP < 90)
-                            return All.Reprisal;
+                        if (Role.CanRampart(80))
+                            return Role.Rampart;
+                        if (Role.CanReprisal(90, checkTargetForDebuff:false))
+                            return Role.Reprisal;
                     }
                     if (ActionReady(Camouflage) && HPP < 70)
                         return Camouflage;
@@ -370,10 +372,10 @@ internal partial class GNB
             }
 
             #region Stuns
-            if (IsEnabled(CustomComboPreset.GNB_AoE_Interrupt) && ActionReady(All.Interject) && CanInterruptEnemy())
-                return All.Interject;
-            if (IsEnabled(CustomComboPreset.GNB_AoE_Stun) && ActionReady(All.LowBlow) && TargetIsCasting())
-                return All.LowBlow;
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Interrupt) && Role.CanInterject())
+                return Role.Interject;
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Stun) && Role.CanLowBlow())
+                return Role.LowBlow;
             #endregion
 
             #region Mitigations
@@ -387,14 +389,16 @@ internal partial class GNB
                     if (IsEnabled(CustomComboPreset.GNB_AoE_Nebula) && ActionReady(OriginalHook(Nebula)) && HPP < Config.GNB_AoE_Nebula_Health &&
                         (Config.GNB_AoE_Nebula_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Nebula_SubOption == 1)))
                         return OriginalHook(Nebula);
-                    if (IsEnabled(CustomComboPreset.GNB_AoE_Rampart) && ActionReady(All.Rampart) && HPP < Config.GNB_AoE_Rampart_Health &&
+                    if (IsEnabled(CustomComboPreset.GNB_AoE_Rampart) && Role.CanRampart(Config.GNB_AoE_Rampart_Health) &&
                         (Config.GNB_AoE_Rampart_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Rampart_SubOption == 1)))
-                        return All.Rampart;
-                    if (IsEnabled(CustomComboPreset.GNB_AoE_Reprisal) && ActionReady(All.Reprisal) && InActionRange(All.Reprisal) && HPP < Config.GNB_AoE_Reprisal_Health &&
+                        return Role.Rampart;
+                    if (IsEnabled(CustomComboPreset.GNB_AoE_Reprisal) && Role.CanReprisal(Config.GNB_AoE_Reprisal_Health, checkTargetForDebuff:false) &&
                         (Config.GNB_AoE_Reprisal_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Reprisal_SubOption == 1)))
-                        return All.Reprisal;
-                    if (IsEnabled(CustomComboPreset.GNB_AoE_ArmsLength) && ActionReady(All.ArmsLength) && HPP < Config.GNB_AoE_ArmsLength_Health && !InBossEncounter())
-                        return All.ArmsLength;
+                        return Role.Reprisal;
+                    if (IsEnabled(CustomComboPreset.GNB_AoE_ArmsLength) &&
+                        HPP < Config.GNB_AoE_ArmsLength_Health &&
+                        Role.CanArmsLength())
+                        return Role.ArmsLength;
                 }
 
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Camouflage) && ActionReady(Camouflage) && HPP < Config.GNB_AoE_Camouflage_Health &&

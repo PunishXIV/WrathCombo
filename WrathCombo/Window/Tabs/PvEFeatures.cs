@@ -1,6 +1,5 @@
 ﻿using System;
 using Dalamud.Interface.Textures.TextureWraps;
-using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
@@ -14,6 +13,7 @@ using WrathCombo.Core;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using WrathCombo.Window.MessagesNS;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions.JobIDs;
 
 namespace WrathCombo.Window.Tabs
 {
@@ -246,16 +246,13 @@ namespace WrathCombo.Window.Tabs
 
             if (Player.Job.IsDol())
             {
-                OpenJob = groupedPresets
-                    .FirstOrDefault(x => x.Value.Any(y => y.Info.JobID == DOL.JobID)).Key;
+                OpenJob = JobIDToName(DOL.JobID);
                 return;
             }
 
-            OpenJob = groupedPresets
-                .FirstOrDefault(x =>
-                    x.Value.Any(y => y.Info.JobShorthand == Player.Job.ToString()))
-                .Key;
-
+            var job = JobIDToName(ClassToJob((uint)Player.Job));
+            if (groupedPresets.TryGetValue(job, out var foundJob))
+                OpenJob = foundJob.First().Info.JobName;
         }
     }
 }

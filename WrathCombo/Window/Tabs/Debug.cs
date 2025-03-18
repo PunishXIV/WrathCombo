@@ -474,6 +474,8 @@ namespace WrathCombo.Window.Tabs
                         CustomStyleText("Last Successful Cast:",
                             $"{ActionWatching.TimeSinceLastSuccessfulCast(_debugSpell.Value.RowId) / 1000f:F2}");
 
+                    CustomStyleText($"JustUsedOn:", $"{JustUsedOn(_debugSpell.Value.RowId, CurrentTarget)}");
+
                     if (Svc.Targets.Target != null)
                     {
                         var inRange = ActionManager.GetActionInRangeOrLoS(_debugSpell.Value.RowId,
@@ -768,6 +770,10 @@ namespace WrathCombo.Window.Tabs
                 Svc.PluginInterface.GetPluginConfig() as PluginConfiguration ??
                 new PluginConfiguration();
             _previousConfig = null;
+
+            P.IPC = Provider.InitAsync().Result;
+            AutoRotationController.cfg = null;
+            UpdateCaches(true, true, false);
         }
 
         public new static void Dispose()

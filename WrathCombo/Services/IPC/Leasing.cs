@@ -293,6 +293,8 @@ public partial class Leasing
         return _autoRotationStateUpdated;
     }
 
+    private DateTime _lastAutoRotationSetCheck = DateTime.MinValue;
+
     /// <summary>
     ///     Adds a registration for Auto-Rotation control to a lease.
     /// </summary>
@@ -308,8 +310,12 @@ public partial class Leasing
         if (registration.AutoRotationConfigsControlled.Count > 0 &&
             registration.AutoRotationControlled[0] == newState)
         {
-            Logging.Log(
-                $"{registration.PluginName}: You are already controlling Auto-Rotation");
+            if ((DateTime.Now - _lastAutoRotationSetCheck).TotalSeconds >= 15)
+            {
+                Logging.Log(
+                    $"{registration.PluginName}: You are already controlling Auto-Rotation");
+                _lastAutoRotationSetCheck = DateTime.Now;
+            }
             return SetResult.Duplicate;
         }
 
@@ -352,6 +358,8 @@ public partial class Leasing
         return lease?.JobsControlled[resolvedJob];
     }
 
+    private DateTime _lasJobSetCheck = DateTime.MinValue;
+
     /// <summary>
     ///     Adds a registration for the current Job to a lease.
     /// </summary>
@@ -371,22 +379,19 @@ public partial class Leasing
             return SetResult.PlayerNotAvailable;
         }
 
-        // Convert current job/class to a job, if it is a class
-        var currentJobRow = CustomComboFunctions.LocalPlayer.ClassJob;
-        var currentRealJob = currentJobRow.Value.RowId;
-        if (currentJobRow.Value.ClassJobParent.RowId != currentJobRow.Value.RowId)
-            currentRealJob =
-                CustomComboFunctions.JobIDs.ClassToJob(currentJobRow.RowId);
-
-        var currentJob = (Job)currentRealJob;
+        var job =
+            (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
         if (jobOverride is not null)
-            currentJob = jobOverride.Value;
-        var job = currentJob.ToString();
+            job = jobOverride.Value;
 
-        if (!registration.JobsControlled.TryAdd(currentJob, true))
+        if (!registration.JobsControlled.TryAdd(job, true))
         {
-            Logging.Log(
-                $"{registration.PluginName}: You are already controlling the current job ({job})");
+            if ((DateTime.Now - _lasJobSetCheck).TotalSeconds >= 15)
+            {
+                Logging.Log(
+                    $"{registration.PluginName}: You are already controlling the current job ({job})");
+                _lasJobSetCheck = DateTime.Now;
+            }
             return SetResult.Duplicate;
         }
 
@@ -396,8 +401,8 @@ public partial class Leasing
         Task.Run(() =>
         {
             bool locking;
-            var combos = Helper.GetCombosToSetJobAutoRotationReady(currentJob, false)!;
-            var options = Helper.GetCombosToSetJobAutoRotationReady(currentJob)!;
+            var combos = Helper.GetCombosToSetJobAutoRotationReady(job, false)!;
+            var options = Helper.GetCombosToSetJobAutoRotationReady(job)!;
             string[] stringKeys;
 
             // Lock the job if it's already ready
@@ -407,13 +412,13 @@ public partial class Leasing
                 stringKeys = [];
                 combos = P.IPCSearch.EnabledActions
                     .Where(a=> a.Attributes().CustomComboInfo.JobID
-                               == (uint)currentJob)
+                               == (uint)job)
                     .Where(a => a.Attributes().Parent is null)
                     .Select(a => a.ToString())
                     .ToList();
                 options = P.IPCSearch.EnabledActions
                     .Where(a=> a.Attributes().CustomComboInfo.JobID
-                               == (uint)currentJob)
+                               == (uint)job)
                     .Where(a => a.Attributes().Parent is not null)
                     .Select(a => a.ToString())
                     .ToList();

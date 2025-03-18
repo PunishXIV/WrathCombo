@@ -43,6 +43,7 @@ namespace WrathCombo.Data
         internal static readonly Dictionary<uint, long> ChargeTimestamps = [];
         internal static readonly Dictionary<uint, long> ActionTimestamps = [];
         internal static readonly Dictionary<uint, long> LastSuccessfulUseTime = [];
+        internal static readonly Dictionary<(uint, ulong), long> UsedOnDict = [];
 
         internal readonly static List<uint> CombatActions = [];
 
@@ -174,6 +175,7 @@ namespace WrathCombo.Data
                 ActionType = actionType;
                 WrathOpener.CurrentOpener?.ProgressOpener(actionId);
                 UpdateHelpers(actionId);
+                UsedOnDict[(actionId, targetObjectId)] = Environment.TickCount64;
                 SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
 
                 Svc.Log.Verbose($"{actionId} {sequence} {a5} {a6} {a7} {a8} {a9}");
@@ -389,6 +391,7 @@ namespace WrathCombo.Data
                 LastAction = 0;
                 LastWeaponskill = 0;
                 LastSpell = 0;
+                UsedOnDict.Clear();
             }
         }
 

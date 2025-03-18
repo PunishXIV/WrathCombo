@@ -137,7 +137,7 @@ internal partial class RDM
                     break;
 
                 case CustomComboPreset.RDM_ST_Lucid:
-                    DrawSliderInt(0, 10000, RDM_ST_Lucid_Threshold, $"Add {All.LucidDreaming.ActionName()} when below this MP", sliderIncrement: Hundreds);
+                    DrawSliderInt(0, 10000, RDM_ST_Lucid_Threshold, $"Add {Role.LucidDreaming.ActionName()} when below this MP", sliderIncrement: Hundreds);
                     break;
 
                 case CustomComboPreset.RDM_AoE_oGCD:
@@ -191,7 +191,7 @@ internal partial class RDM
                     break;
 
                 case CustomComboPreset.RDM_AoE_Lucid:
-                    DrawSliderInt(0, 10000, RDM_AoE_Lucid_Threshold, $"Add {All.LucidDreaming.ActionName()} when below this MP", sliderIncrement: Hundreds);
+                    DrawSliderInt(0, 10000, RDM_AoE_Lucid_Threshold, $"Add {Role.LucidDreaming.ActionName()} when below this MP", sliderIncrement: Hundreds);
                     break;
 
                 case CustomComboPreset.RDM_Variant_Cure:

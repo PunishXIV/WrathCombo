@@ -1,8 +1,7 @@
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class VPR
+internal partial class VPR : MeleeJob
 {
     internal class VPR_ST_SimpleMode : CustomCombo
     {
@@ -14,17 +13,12 @@ internal partial class VPR
                 return actionID;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.VPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.VPR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, Config.VPR_VariantCure))
+                return Variant.Cure;
 
             // Variant Rampart
-            if (IsEnabled(CustomComboPreset.VPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+                return Variant.Rampart;
 
             //oGCDs
             if (CanWeave())
@@ -93,7 +87,7 @@ internal partial class VPR
             //Vicewinder Usage
             if (HasEffect(Buffs.Swiftscaled) && !IsComboExpiring(3) &&
                 ActionReady(Vicewinder) && !HasEffect(Buffs.Reawakened) && InMeleeRange() &&
-                (IreCD >= GCD * 5 || !LevelChecked(SerpentsIre)) &&
+                (IreCD >= GCD * 5 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre)) &&
                 !IsVenomExpiring(3) && !IsHoningExpiring(3))
                 return Vicewinder;
 
@@ -175,13 +169,13 @@ internal partial class VPR
                     if ((HasEffect(Buffs.FlankstungVenom) || HasEffect(Buffs.HindstungVenom)) &&
                         LevelChecked(FlanksbaneFang))
                     {
-                        if (TrueNorthReady && !OnTargetsRear() && HasEffect(Buffs.HindstungVenom) &&
+                        if (Role.CanTrueNorth() && !OnTargetsRear() && HasEffect(Buffs.HindstungVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
-                        if (TrueNorthReady && !OnTargetsFlank() && HasEffect(Buffs.FlankstungVenom) &&
+                        if (Role.CanTrueNorth() && !OnTargetsFlank() && HasEffect(Buffs.FlankstungVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
                         return OriginalHook(SteelFangs);
                     }
@@ -189,13 +183,13 @@ internal partial class VPR
                     if ((HasEffect(Buffs.FlanksbaneVenom) || HasEffect(Buffs.HindsbaneVenom)) &&
                         LevelChecked(HindstingStrike))
                     {
-                        if (TrueNorthReady && !OnTargetsRear() && HasEffect(Buffs.HindsbaneVenom) &&
+                        if (Role.CanTrueNorth() && !OnTargetsRear() && HasEffect(Buffs.HindsbaneVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
-                        if (TrueNorthReady && !OnTargetsFlank() && HasEffect(Buffs.FlanksbaneVenom) &&
+                        if (Role.CanTrueNorth() && !OnTargetsFlank() && HasEffect(Buffs.FlanksbaneVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
                         return OriginalHook(ReavingFangs);
                     }
@@ -225,17 +219,12 @@ internal partial class VPR
                 return actionID;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.VPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.VPR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, Config.VPR_VariantCure))
+                return Variant.Cure;
 
             // Variant Rampart
-            if (IsEnabled(CustomComboPreset.VPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+                return Variant.Rampart;
 
             // Opener for VPR
             if (IsEnabled(CustomComboPreset.VPR_ST_Opener))
@@ -326,7 +315,7 @@ internal partial class VPR
             if (IsEnabled(CustomComboPreset.VPR_ST_Vicewinder) && HasEffect(Buffs.Swiftscaled) &&
                 !IsComboExpiring(3) &&
                 ActionReady(Vicewinder) && !HasEffect(Buffs.Reawakened) && InMeleeRange() &&
-                (IreCD >= GCD * 5 || !LevelChecked(SerpentsIre)) &&
+                (IreCD >= GCD * 5 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre)) &&
                 !IsVenomExpiring(3) && !IsHoningExpiring(3))
                 return Vicewinder;
 
@@ -392,11 +381,11 @@ internal partial class VPR
             // healing
             if (IsEnabled(CustomComboPreset.VPR_ST_ComboHeals))
             {
-                if (PlayerHealthPercentageHp() <= Config.VPR_ST_SecondWind_Threshold && ActionReady(All.SecondWind))
-                    return All.SecondWind;
+                if (Role.CanSecondWind(Config.VPR_ST_SecondWind_Threshold))
+                    return Role.SecondWind;
 
-                if (PlayerHealthPercentageHp() <= Config.VPR_ST_Bloodbath_Threshold && ActionReady(All.Bloodbath))
-                    return All.Bloodbath;
+                if (Role.CanBloodBath(Config.VPR_ST_Bloodbath_Threshold))
+                    return Role.Bloodbath;
             }
 
             //1-2-3 (4-5-6) Combo
@@ -420,14 +409,14 @@ internal partial class VPR
                         LevelChecked(FlanksbaneFang))
                     {
                         if (IsEnabled(CustomComboPreset.VPR_TrueNorthDynamic) &&
-                            TrueNorthReady && !OnTargetsRear() && HasEffect(Buffs.HindstungVenom) &&
+                            Role.CanTrueNorth() && !OnTargetsRear() && HasEffect(Buffs.HindstungVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
                         if (IsEnabled(CustomComboPreset.VPR_TrueNorthDynamic) &&
-                            TrueNorthReady && !OnTargetsFlank() && HasEffect(Buffs.FlankstungVenom) &&
+                            Role.CanTrueNorth() && !OnTargetsFlank() && HasEffect(Buffs.FlankstungVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
                         return OriginalHook(SteelFangs);
                     }
@@ -436,14 +425,14 @@ internal partial class VPR
                         LevelChecked(HindstingStrike))
                     {
                         if (IsEnabled(CustomComboPreset.VPR_TrueNorthDynamic) &&
-                            TrueNorthReady && !OnTargetsRear() && HasEffect(Buffs.HindsbaneVenom) &&
+                            Role.CanTrueNorth() && !OnTargetsRear() && HasEffect(Buffs.HindsbaneVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
                         if (IsEnabled(CustomComboPreset.VPR_TrueNorthDynamic) &&
-                            TrueNorthReady && !OnTargetsFlank() && HasEffect(Buffs.FlanksbaneVenom) &&
+                            Role.CanTrueNorth() && !OnTargetsFlank() && HasEffect(Buffs.FlanksbaneVenom) &&
                             CanDelayedWeave())
-                            return All.TrueNorth;
+                            return Role.TrueNorth;
 
                         return OriginalHook(ReavingFangs);
                     }
@@ -475,17 +464,12 @@ internal partial class VPR
             if (CanWeave())
             {
                 // Variant Cure
-                if (IsEnabled(CustomComboPreset.VPR_Variant_Cure) &&
-                    IsEnabled(Variant.VariantCure) &&
-                    PlayerHealthPercentageHp() <= GetOptionValue(Config.VPR_VariantCure))
-                    return Variant.VariantCure;
+                if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, Config.VPR_VariantCure))
+                    return Variant.Cure;
 
                 // Variant Rampart
-                if (IsEnabled(CustomComboPreset.VPR_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart) &&
-                    CanWeave())
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+                    return Variant.Rampart;
 
                 // Death Rattle
                 if (LevelChecked(SerpentsTail) && OriginalHook(SerpentsTail) is LastLash)
@@ -605,11 +589,11 @@ internal partial class VPR
             }
 
             // healing
-            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
-                return All.SecondWind;
+            if (Role.CanSecondWind(25))
+                return Role.SecondWind;
 
-            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
-                return All.Bloodbath;
+            if (Role.CanBloodBath(40))
+                return Role.Bloodbath;
 
             //1-2-3 (4-5-6) Combo
             if (ComboTimer > 0 && !HasEffect(Buffs.Reawakened))
@@ -659,17 +643,12 @@ internal partial class VPR
                 return actionID;
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.VPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.VPR_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, Config.VPR_VariantCure))
+                return Variant.Cure;
 
             // Variant Rampart
-            if (IsEnabled(CustomComboPreset.VPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+                return Variant.Rampart;
 
             if (CanWeave())
             {
@@ -813,12 +792,11 @@ internal partial class VPR
             // healing
             if (IsEnabled(CustomComboPreset.VPR_AoE_ComboHeals))
             {
-                if (PlayerHealthPercentageHp() <= Config.VPR_AoE_SecondWind_Threshold &&
-                    ActionReady(All.SecondWind))
-                    return All.SecondWind;
+                if (Role.CanSecondWind(Config.VPR_AoE_SecondWind_Threshold))
+                    return Role.SecondWind;
 
-                if (PlayerHealthPercentageHp() <= Config.VPR_AoE_Bloodbath_Threshold && ActionReady(All.Bloodbath))
-                    return All.Bloodbath;
+                if (Role.CanBloodBath(Config.VPR_AoE_Bloodbath_Threshold))
+                    return Role.Bloodbath;
             }
 
             //1-2-3 (4-5-6) Combo
