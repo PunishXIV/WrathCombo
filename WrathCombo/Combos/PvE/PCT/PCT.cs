@@ -1,12 +1,11 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class PCT
+internal partial class PCT : CasterJob
 {
     internal class PCT_ST_SimpleMode : CustomCombo
     {
@@ -102,13 +101,13 @@ internal partial class PCT
                 // Swiftcast
 
                 if (IsMoving() &&
-                    IsOffCooldown(All.Swiftcast) &&
-                    All.Swiftcast.LevelChecked() &&
+                    IsOffCooldown(Role.Swiftcast) &&
+                    Role.Swiftcast.LevelChecked() &&
                     !HasEffect(Buffs.HammerTime) &&
                     gauge.Paint < 1 &&
                     (!gauge.CreatureMotifDrawn || !gauge.WeaponMotifDrawn || !gauge.LandscapeMotifDrawn))
                 {
-                    return All.Swiftcast;
+                    return Role.Swiftcast;
                 }
 
                 // SubtractivePalette
@@ -125,7 +124,7 @@ internal partial class PCT
             }
 
             // Swiftcast Motifs
-            if (HasEffect(All.Buffs.Swiftcast))
+            if (HasEffect(Role.Buffs.Swiftcast))
             {
                 if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse))
                     return OriginalHook(CreatureMotif);
@@ -222,8 +221,8 @@ internal partial class PCT
                 }
             }
 
-            if (All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= 6500)
-                return All.LucidDreaming;
+            if (Role.CanLucidDream(6500))
+                return Role.LucidDreaming;
 
             if (BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardinCyan);
@@ -248,17 +247,12 @@ internal partial class PCT
             int weaponStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_WeaponStop);
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PCT_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.PCT_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
 
             // Variant Rampart
-            if (IsEnabled(CustomComboPreset.PCT_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                canWeave)
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart,WeaveTypes.SpellWeave))
+                return Variant.Rampart;
 
             // Prepull logic
             if ((IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_PrePullMotifs) && !InCombat()) || (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_NoTargetMotifs) && InCombat() && CurrentTarget == null))
@@ -386,7 +380,7 @@ internal partial class PCT
 
             // Swiftcast Motifs
             if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwiftMotifs) &&
-                HasEffect(All.Buffs.Swiftcast))
+                HasEffect(Role.Buffs.Swiftcast))
             {
                 if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
                     return OriginalHook(CreatureMotif);
@@ -400,10 +394,20 @@ internal partial class PCT
             // IsMoving logic
             if (IsMoving() && InCombat())
             {
+                //increase priority for using casts as soon as possible to avoid losing DPS and ensure all abilities fit within buff windows
+                //previously, there were situations where Wrath prioritized using Hammer Combo over casts, which would prevent us from generating Rainbow Bright in time when movement is required
+                //so, if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines, we burn it all down
+                bool hasPaint = gauge.Paint > 0;
+                bool burnStacks = GetBuffStacks(Buffs.Hyperphantasia) > 0 && HasEffect(Buffs.Inspiration) && hasPaint; //use casts asap if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines
+                bool shouldHolyInWhite = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && hasPaint & !HasEffect(Buffs.MonochromeTones); //normal conditions for Holy In White
+                bool shouldCometInBlack = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && hasPaint && HasEffect(Buffs.MonochromeTones); //normal conditions for Comet in Black
+                if (burnStacks && ((Config.BlackHyperphantasiaOption && shouldCometInBlack) || (Config.WhiteHyperphantasiaOption && shouldHolyInWhite)))
+                    return HasEffect(Buffs.MonochromeTones) ? OriginalHook(CometinBlack) : OriginalHook(HolyInWhite);
+
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasEffect(Buffs.MonochromeTones))
+                if (shouldCometInBlack)
                     return OriginalHook(CometinBlack);
 
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_RainbowDrip))
@@ -412,14 +416,14 @@ internal partial class PCT
                         return RainbowDrip;
                 }
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && gauge.Paint >= 1)
+                if (shouldHolyInWhite)
                     return OriginalHook(HolyInWhite);
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwitfcastOption) && ActionReady(All.Swiftcast) &&
+                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwitfcastOption) && ActionReady(Role.Swiftcast) &&
                     ((LevelChecked(CreatureMotif) && !gauge.CreatureMotifDrawn) ||
                      (LevelChecked(WeaponMotif) && !gauge.WeaponMotifDrawn) ||
                      (LevelChecked(LandscapeMotif) && !gauge.LandscapeMotifDrawn)))
-                    return All.Swiftcast;
+                    return Role.Swiftcast;
             }
 
             //Prepare for Burst
@@ -504,8 +508,8 @@ internal partial class PCT
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LucidDreaming) && All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= Config.PCT_ST_AdvancedMode_LucidOption)
-                return All.LucidDreaming;
+            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LucidDreaming) && Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
+                return Role.LucidDreaming;
 
             if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardinCyan);
@@ -527,17 +531,12 @@ internal partial class PCT
             bool canWeave = CanSpellWeave();
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PCT_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.PCT_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
 
             // Variant Rampart
-            if (IsEnabled(CustomComboPreset.PCT_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                canWeave)
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
+                return Variant.Rampart;
 
             // Prepull logic
 
@@ -604,13 +603,13 @@ internal partial class PCT
                 }
 
                 if (IsMoving() &&
-                    IsOffCooldown(All.Swiftcast) &&
-                    All.Swiftcast.LevelChecked() &&
+                    IsOffCooldown(Role.Swiftcast) &&
+                    Role.Swiftcast.LevelChecked() &&
                     !HasEffect(Buffs.HammerTime) &&
                     gauge.Paint < 1 &&
                     (!gauge.CreatureMotifDrawn || !gauge.WeaponMotifDrawn || !gauge.LandscapeMotifDrawn))
                 {
-                    return All.Swiftcast;
+                    return Role.Swiftcast;
                 }
 
                 // Subtractive Palette
@@ -623,7 +622,7 @@ internal partial class PCT
                 }
             }
 
-            if (HasEffect(All.Buffs.Swiftcast))
+            if (HasEffect(Role.Buffs.Swiftcast))
             {
                 if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse))
                     return OriginalHook(CreatureMotif);
@@ -706,8 +705,8 @@ internal partial class PCT
             if (HolyInWhite.LevelChecked() && gauge.Paint >= 2)
                 return OriginalHook(HolyInWhite);
 
-            if (All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= 6500)
-                return All.LucidDreaming;
+            if (Role.CanLucidDream(6500))
+                return Role.LucidDreaming;
 
             if (BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardIIinCyan);
@@ -731,17 +730,12 @@ internal partial class PCT
             int weaponStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_WeaponStop);
 
             // Variant Cure
-            if (IsEnabled(CustomComboPreset.PCT_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.PCT_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
 
             // Variant Rampart
-            if (IsEnabled(CustomComboPreset.PCT_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                canWeave)
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
+                return Variant.Rampart;
 
             // Prepull logic
             if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_PrePullMotifs))
@@ -828,7 +822,7 @@ internal partial class PCT
                 }
             }
 
-            if (HasEffect(All.Buffs.Swiftcast))
+            if (HasEffect(Role.Buffs.Swiftcast))
             {
                 if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
                     return OriginalHook(CreatureMotif);
@@ -855,11 +849,11 @@ internal partial class PCT
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && gauge.Paint >= 1)
                     return OriginalHook(HolyInWhite);
 
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SwitfcastOption) && ActionReady(All.Swiftcast) &&
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SwitfcastOption) && ActionReady(Role.Swiftcast) &&
                     ((LevelChecked(CreatureMotif) && !gauge.CreatureMotifDrawn) ||
                      (LevelChecked(WeaponMotif) && !gauge.WeaponMotifDrawn) ||
                      (LevelChecked(LandscapeMotif) && !gauge.LandscapeMotifDrawn)))
-                    return All.Swiftcast;
+                    return Role.Swiftcast;
             }
 
             //Prepare for Burst
@@ -939,8 +933,8 @@ internal partial class PCT
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming) && All.LucidDreaming.LevelChecked() && ActionReady(All.LucidDreaming) && CanSpellWeave() && LocalPlayer.CurrentMp <= Config.PCT_ST_AdvancedMode_LucidOption)
-                return All.LucidDreaming;
+            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming) && Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
+                return Role.LucidDreaming;
 
             if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardIIinCyan);

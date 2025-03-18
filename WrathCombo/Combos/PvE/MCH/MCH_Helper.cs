@@ -56,9 +56,6 @@ internal partial class MCH
         !LevelChecked(Chainsaw) ||
         LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) >= 9;
 
-    internal static bool InterruptReady =>
-        ActionReady(All.HeadGraze) && CanInterruptEnemy() && CanDelayedWeave();
-
     internal static bool Battery => Gauge.Battery >= 100;
 
     internal static bool HasNotWeaved =>

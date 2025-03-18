@@ -1,10 +1,11 @@
 ﻿using ECommons.DalamudServices;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE.Content;
 
-internal static class Variant
+internal static class VariantActions
 {
-    public const uint
+    internal const uint
         VariantUltimatum = 29730,
         VariantRaise = 29731,
         VariantRaise2 = 29734;
@@ -12,21 +13,21 @@ internal static class Variant
     //1069 = The Sil'dihn Subterrane
     //1137 = Mount Rokkon
     //1176 = Aloalo Island
-    public static uint VariantCure => Svc.ClientState.TerritoryType switch
+    internal static uint VariantCure => Svc.ClientState.TerritoryType switch
     {
         1069 => 29729,
         1137 or 1176 => 33862,
         _ => 0
     };
 
-    public static uint VariantSpiritDart => Svc.ClientState.TerritoryType switch
+    internal static uint VariantSpiritDart => Svc.ClientState.TerritoryType switch
     {
         1069 => 29732,
         1137 or 1176 => 33863,
         _ => 0
     };
 
-    public static uint VariantRampart => Svc.ClientState.TerritoryType switch
+    internal static uint VariantRampart => Svc.ClientState.TerritoryType switch
     {
         1069 => 29733,
         1137 or 1176 => 33864,
@@ -35,7 +36,7 @@ internal static class Variant
 
     public static class Buffs
     {
-        public const ushort
+        internal const ushort
             EmnityUp = 3358,
             VulnDown = 3360,
             Rehabilitation = 3367,
@@ -44,7 +45,76 @@ internal static class Variant
 
     public static class Debuffs
     {
-        public const ushort
+        internal const ushort
             SustainedDamage = 3359;
     }
+
+    internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+        IsEnabled(preset) && IsEnabled(VariantRampart) && IsOffCooldown(VariantRampart) && CheckWeave(weave);
+
+    internal static bool CanSpiritDart(CustomComboPreset preset) =>
+        IsEnabled(preset) && IsEnabled(VariantSpiritDart) && HasBattleTarget() && GetDebuffRemainingTime(VariantActions.Debuffs.SustainedDamage) <= 3;
+
+    internal static bool CanCure(CustomComboPreset preset, int healthpercent) =>
+        IsEnabled(preset) && IsEnabled(VariantCure) &&
+        PlayerHealthPercentageHp() <= healthpercent;
+
+    internal static bool CanRaise(CustomComboPreset preset) =>
+        IsEnabled(preset) && IsEnabled(VariantRaise) && HasEffect(MagicRole.Buffs.Swiftcast);
+
+    internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => 
+        IsEnabled(preset) && CanCircleAoe(5) > 0 && CheckWeave(weave);
+
+
+
+}
+
+public class VariantTank
+{
+    internal static uint Cure => VariantActions.VariantCure;
+    internal static uint Ultimatum => VariantActions.VariantUltimatum;
+    internal static uint Raise => VariantActions.VariantRaise;
+    internal static uint SpiritDart => VariantActions.VariantSpiritDart;
+
+    internal static bool CanCure(CustomComboPreset preset, int healthpercent) => VariantActions.CanCure(preset, healthpercent);
+    internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanUltimatum(preset, weave);
+    internal static bool CanRaise(CustomComboPreset preset) => VariantActions.CanRaise(preset);
+    internal static bool CanSpiritDart(CustomComboPreset preset) => VariantActions.CanSpiritDart(preset);
+
+}
+
+public class VariantHealer
+{
+    internal static uint SpiritDart => VariantActions.VariantSpiritDart;
+    internal static uint Rampart => VariantActions.VariantRampart;
+    internal static uint Ultimatum => VariantActions.VariantUltimatum;
+
+    internal static bool CanSpiritDart(CustomComboPreset preset) => VariantActions.CanSpiritDart(preset);
+    internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanRampart(preset, weave);
+    internal static bool CanUltimatum(CustomComboPreset preset) => VariantActions.CanUltimatum(preset);
+}
+public class VariantPDPS
+{
+    internal static uint Cure => VariantActions.VariantCure;
+    internal static uint Ultimatum => VariantActions.VariantUltimatum;
+    internal static uint Raise => VariantActions.VariantRaise;
+    internal static uint Rampart => VariantActions.VariantRampart;
+
+    internal static bool CanCure(CustomComboPreset preset, int healthpercent) => VariantActions.CanCure(preset, healthpercent);
+    internal static bool CanUltimatum(CustomComboPreset preset) => VariantActions.CanUltimatum(preset);
+    internal static bool CanRaise(CustomComboPreset preset) => VariantActions.CanRaise(preset);
+    internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanRampart(preset, weave);
+}
+
+public class VariantMDPS
+{
+    internal static uint Cure => VariantActions.VariantCure;
+    internal static uint Ultimatum => VariantActions.VariantUltimatum;
+    internal static uint Raise => VariantActions.VariantRaise;
+    internal static uint Rampart => VariantActions.VariantRampart;
+
+    internal static bool CanCure(CustomComboPreset preset, int healthpercent) => VariantActions.CanCure(preset, healthpercent);
+    internal static bool CanUltimatum(CustomComboPreset preset) => VariantActions.CanUltimatum(preset);
+    internal static bool CanRaise(CustomComboPreset preset) => VariantActions.CanRaise(preset);
+    internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanRampart(preset, weave);
 }

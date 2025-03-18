@@ -4,6 +4,8 @@ using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
+using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
+using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -12,17 +14,6 @@ internal partial class PLD
     internal static class Config
     {
         private const int numberMitigationOptions = 9;
-
-        internal enum PartyRequirement
-        {
-            No,
-            Yes
-        }
-        internal enum BossAvoidance
-        {
-            Off = 1,
-            On = 2
-        }
 
         public static UserInt
             PLD_ST_FoF_Trigger = new("PLD_ST_FoF_Trigger", 0),

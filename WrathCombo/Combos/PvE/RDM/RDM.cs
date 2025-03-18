@@ -1,19 +1,18 @@
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class RDM
+internal partial class RDM : CasterJob
 {
     internal class RDM_VariantVerCure : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Variant_Cure2;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Vercure && IsEnabled(Variant.VariantCure)
-            ? Variant.VariantCure
+            actionID is Vercure && IsEnabled(Variant.Cure)
+            ? Variant.Cure
             : actionID;
     }
 
@@ -27,16 +26,11 @@ internal partial class RDM
                 return actionID;
 
             //VARIANTS
-            if (IsEnabled(CustomComboPreset.RDM_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.RDM_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
+                return Variant.Cure;
 
-            if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanSpellWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
+                return Variant.Rampart;
 
             uint NewActionID = 0;
 
@@ -46,7 +40,7 @@ internal partial class RDM
 
             //Lucid Dreaming
             if (TryLucidDreaming(6500, ComboAction))
-                return All.LucidDreaming;
+                return Role.LucidDreaming;
 
             //Melee Finisher
             if (MeleeCombo.TryMeleeFinisher(ref NewActionID))
@@ -87,16 +81,11 @@ internal partial class RDM
             if (actionID is Jolt or Jolt2 or Jolt3)
             {
                 //VARIANTS
-                if (IsEnabled(CustomComboPreset.RDM_Variant_Cure) &&
-                    IsEnabled(Variant.VariantCure) &&
-                    PlayerHealthPercentageHp() <= GetOptionValue(Config.RDM_VariantCure))
-                    return Variant.VariantCure;
+                if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
+                    return Variant.Cure;
 
-                if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart) &&
-                    CanSpellWeave())
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
+                    return Variant.Rampart;
 
                 // Opener for RDM
                 if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) && ContentCheck.IsInConfiguredContent(Config.RDM_BalanceOpener_Content, ContentCheck.ListSet.BossOnly))
@@ -131,7 +120,7 @@ internal partial class RDM
             if (IsEnabled(CustomComboPreset.RDM_ST_Lucid)
                 && actionID is Jolt or Jolt2 or Jolt3
                 && TryLucidDreaming(Config.RDM_ST_Lucid_Threshold, ComboAction)) //Don't interupt certain combos
-                return All.LucidDreaming;
+                return Role.LucidDreaming;
 
             //RDM_MELEEFINISHER
             if (IsEnabled(CustomComboPreset.RDM_ST_MeleeFinisher))
@@ -221,16 +210,11 @@ internal partial class RDM
                 return actionID;
 
             //VARIANTS
-            if (IsEnabled(CustomComboPreset.RDM_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.RDM_VariantCure))
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
+                return Variant.Cure;
 
-            if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanSpellWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
+                return Variant.Rampart;
 
             uint NewActionID = 0;
 
@@ -240,7 +224,7 @@ internal partial class RDM
 
             // LUCID
             if (TryLucidDreaming(6500, ComboAction))
-                return All.LucidDreaming;
+                return Role.LucidDreaming;
 
             //RDM_MELEEFINISHER
             if (MeleeCombo.TryMeleeFinisher(ref NewActionID))
@@ -275,16 +259,11 @@ internal partial class RDM
             if (actionID is Scatter or Impact)
             {
                 //VARIANTS
-                if (IsEnabled(CustomComboPreset.RDM_Variant_Cure) &&
-                    IsEnabled(Variant.VariantCure) &&
-                    PlayerHealthPercentageHp() <= GetOptionValue(Config.RDM_VariantCure))
-                    return Variant.VariantCure;
+                if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
+                    return Variant.Cure;
 
-                if (IsEnabled(CustomComboPreset.RDM_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart) &&
-                    CanSpellWeave())
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
+                    return Variant.Rampart;
 
                 //RDM_OGCD
                 if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)
@@ -295,7 +274,7 @@ internal partial class RDM
                 // LUCID
                 if (IsEnabled(CustomComboPreset.RDM_AoE_Lucid)
                     && TryLucidDreaming(Config.RDM_AoE_Lucid_Threshold, ComboAction))
-                    return All.LucidDreaming;
+                    return Role.LucidDreaming;
             }
 
             //RDM_MELEEFINISHER
@@ -363,21 +342,21 @@ internal partial class RDM
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Raise;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not All.Swiftcast)
+            if (actionID is not Role.Swiftcast)
                 return actionID;
 
-            if (HasEffect(All.Buffs.Swiftcast) && IsEnabled(CustomComboPreset.SMN_Variant_Raise) && IsEnabled(Variant.VariantRaise))
-                return Variant.VariantRaise;
+            if (Variant.CanRaise(CustomComboPreset.RDM_Variant_Raise))
+                return Variant.Raise;
 
             if (LevelChecked(Verraise))
             {
-                bool schwifty = HasEffect(All.Buffs.Swiftcast);
+                bool schwifty = HasEffect(Role.Buffs.Swiftcast);
                 if (schwifty || HasEffect(Buffs.Dualcast))
                     return Verraise.AndRunMacro();
                 if (IsEnabled(CustomComboPreset.RDM_Raise_Vercure) &&
                     !schwifty &&
                     ActionReady(Vercure) &&
-                    IsOnCooldown(All.Swiftcast))
+                    IsOnCooldown(Role.Swiftcast))
                     return Vercure;
             }
 
@@ -411,8 +390,7 @@ internal partial class RDM
         protected override uint Invoke(uint actionID) =>
             actionID is MagickBarrier
             && (IsOnCooldown(MagickBarrier) || !LevelChecked(MagickBarrier))
-            && ActionReady(All.Addle)
-            && !TargetHasEffectAny(All.Debuffs.Addle) ? All.Addle : actionID;
+            && Role.CanAddle() ? Role.Addle : actionID;
     }
 
     internal class RDM_EmboldenProtection : CustomCombo

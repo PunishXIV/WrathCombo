@@ -1,8 +1,7 @@
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class RPR
+internal partial class RPR : MeleeJob
 {
     internal class RPR_ST_SimpleMode : CustomCombo
     {
@@ -21,21 +20,16 @@ internal partial class RPR
                 return Soulsow;
 
             //Variant Cure
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
-                return Variant.VariantCure;
-
-            //Variant Rampart
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
+                return Variant.Cure;
 
             //All Weaves
             if (CanWeave())
             {
+                //Variant Rampart
+                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                    return Variant.Rampart;
+
                 //Arcane Cirlce
                 if (LevelChecked(ArcaneCircle) && InBossEncounter() &&
                     (LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle) ||
@@ -54,10 +48,9 @@ internal partial class RPR
                     !IsComboExpiring(3))
                 {
                     //Gluttony
-                    if (ActionReady(Gluttony) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)))
-                        return TrueNorthReady
-                            ? All.TrueNorth
+                    if (ActionReady(Gluttony))
+                        return Role.CanTrueNorth()
+                            ? Role.TrueNorth
                             : Gluttony;
 
                     //Bloodstalk
@@ -72,14 +65,23 @@ internal partial class RPR
                 if (HasEffect(Buffs.Enshrouded))
                 {
                     //Sacrificium
-                    if (Gauge.LemureShroud is 2 && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 &&
-                        HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
+                    if (LevelChecked(Sacrificium) &&
+                        Gauge.LemureShroud <= 4 && HasEffect(Buffs.Oblatio) &&
+                        (InBossEncounter() && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) ||
+                         !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
                         return OriginalHook(Gluttony);
 
                     //Lemure's Slice
                     if (Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
                         return OriginalHook(BloodStalk);
                 }
+
+                //Healing
+                if (Role.CanSecondWind(25))
+                    return Role.SecondWind;
+
+                if (Role.CanBloodBath(40))
+                    return Role.Bloodbath;
             }
 
             //Ranged Attacks
@@ -111,9 +113,9 @@ internal partial class RPR
                 //Gibbet
                 if (HasEffect(Buffs.EnhancedGibbet))
                 {
-                    if (TrueNorthReady && !OnTargetsFlank() &&
+                    if (Role.CanTrueNorth() && !OnTargetsFlank() &&
                         CanDelayedWeave())
-                        return All.TrueNorth;
+                        return Role.TrueNorth;
 
                     return OriginalHook(Gibbet);
                 }
@@ -122,9 +124,9 @@ internal partial class RPR
                 if (HasEffect(Buffs.EnhancedGallows) ||
                     !HasEffect(Buffs.EnhancedGibbet) && !HasEffect(Buffs.EnhancedGallows))
                 {
-                    if (TrueNorthReady && !OnTargetsRear() &&
+                    if (Role.CanTrueNorth() && !OnTargetsRear() &&
                         CanDelayedWeave())
-                        return All.TrueNorth;
+                        return Role.TrueNorth;
 
                     return OriginalHook(Gallows);
                 }
@@ -162,13 +164,6 @@ internal partial class RPR
                 !HasEffect(Buffs.PerfectioParata) && !HasEffect(Buffs.ImmortalSacrifice))
                 return SoulSlice;
 
-            //Healing
-            if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
-                return All.SecondWind;
-
-            if (PlayerHealthPercentageHp() <= 40 && ActionReady(All.Bloodbath))
-                return All.Bloodbath;
-
             //1-2-3 Combo
             if (ComboTimer > 0)
             {
@@ -201,17 +196,8 @@ internal partial class RPR
                 return Soulsow;
 
             //Variant Cure
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
-                return Variant.VariantCure;
-
-            //Variant Rampart
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
+            if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
+                return Variant.Cure;
 
             //RPR Opener
             if (IsEnabled(CustomComboPreset.RPR_ST_Opener))
@@ -221,6 +207,10 @@ internal partial class RPR
             //All Weaves
             if (CanWeave())
             {
+                //Variant Rampart
+                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                    return Variant.Rampart;
+
                 //Arcane Cirlce
                 if (IsEnabled(CustomComboPreset.RPR_ST_ArcaneCircle) &&
                     LevelChecked(ArcaneCircle) &&
@@ -244,12 +234,11 @@ internal partial class RPR
                 {
                     //Gluttony
                     if (IsEnabled(CustomComboPreset.RPR_ST_Gluttony) &&
-                        ActionReady(Gluttony) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 || !LevelChecked(ArcaneCircle)))
+                        ActionReady(Gluttony))
                     {
                         if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
-                            TrueNorthReady)
-                            return All.TrueNorth;
+                            Role.CanTrueNorth())
+                            return Role.TrueNorth;
 
                         return Gluttony;
                     }
@@ -262,21 +251,34 @@ internal partial class RPR
                          (Gauge.Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 4)))
                         return OriginalHook(BloodStalk);
                 }
-            }
 
-            //Enshroud Weaves
-            if (HasEffect(Buffs.Enshrouded))
-            {
-                //Sacrificium
-                if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
-                    Gauge.LemureShroud is 2 && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 &&
-                    HasEffect(Buffs.Oblatio) && LevelChecked(Sacrificium))
-                    return OriginalHook(Gluttony);
+                //Enshroud Weaves
+                if (HasEffect(Buffs.Enshrouded))
+                {
+                    //Sacrificium
+                    if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
+                        LevelChecked(Sacrificium) &&
+                        Gauge.LemureShroud <= 4 && HasEffect(Buffs.Oblatio) &&
+                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
+                         (Config.RPR_ST_ArcaneCircle_SubOption == 0 || Config.RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter()) ||
+                         Config.RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
+                        return OriginalHook(Gluttony);
 
-                //Lemure's Slice
-                if (IsEnabled(CustomComboPreset.RPR_ST_Lemure) &&
-                    Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
-                    return OriginalHook(BloodStalk);
+                    //Lemure's Slice
+                    if (IsEnabled(CustomComboPreset.RPR_ST_Lemure) &&
+                        Gauge.VoidShroud >= 2 && LevelChecked(LemuresSlice))
+                        return OriginalHook(BloodStalk);
+                }
+
+                //Healing
+                if (IsEnabled(CustomComboPreset.RPR_ST_ComboHeals))
+                {
+                    if (Role.CanSecondWind(Config.RPR_STSecondWindThreshold))
+                        return Role.SecondWind;
+
+                    if (Role.CanBloodBath(Config.RPR_STBloodbathThreshold))
+                        return Role.Bloodbath;
+                }
             }
 
             //Ranged Attacks
@@ -317,11 +319,11 @@ internal partial class RPR
                 {
                     if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
                         (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic_HoldCharge) &&
-                         GetRemainingCharges(All.TrueNorth) < 2 ||
+                         GetRemainingCharges(Role.TrueNorth) < 2 ||
                          IsNotEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic_HoldCharge)) &&
-                        TrueNorthReady && !OnTargetsFlank() &&
+                        Role.CanTrueNorth() && !OnTargetsFlank() &&
                         CanDelayedWeave())
-                        return All.TrueNorth;
+                        return Role.TrueNorth;
 
                     return OriginalHook(Gibbet);
                 }
@@ -333,11 +335,11 @@ internal partial class RPR
                 {
                     if (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
                         (IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic_HoldCharge) &&
-                         GetRemainingCharges(All.TrueNorth) < 2 ||
+                         GetRemainingCharges(Role.TrueNorth) < 2 ||
                          IsNotEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic_HoldCharge)) &&
-                        TrueNorthReady && !OnTargetsRear() &&
+                        Role.CanTrueNorth() && !OnTargetsRear() &&
                         CanDelayedWeave())
-                        return All.TrueNorth;
+                        return Role.TrueNorth;
 
                     return OriginalHook(Gallows);
                 }
@@ -380,16 +382,6 @@ internal partial class RPR
                 !HasEffect(Buffs.PerfectioParata) && !HasEffect(Buffs.ImmortalSacrifice))
                 return SoulSlice;
 
-            //Healing
-            if (IsEnabled(CustomComboPreset.RPR_ST_ComboHeals))
-            {
-                if (PlayerHealthPercentageHp() <= Config.RPR_STSecondWindThreshold && ActionReady(All.SecondWind))
-                    return All.SecondWind;
-
-                if (PlayerHealthPercentageHp() <= Config.RPR_STBloodbathThreshold && ActionReady(All.Bloodbath))
-                    return All.Bloodbath;
-            }
-
             //1-2-3 Combo
             if (ComboTimer > 0)
             {
@@ -418,32 +410,14 @@ internal partial class RPR
                 !HasEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
-                return Variant.VariantCure;
-
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
-
-            if (LevelChecked(WhorlOfDeath) &&
-                GetDebuffRemainingTime(Debuffs.DeathsDesign) < 6 && !HasEffect(Buffs.SoulReaver) &&
-                !HasEffect(Buffs.Executioner))
-                return WhorlOfDeath;
-
-            if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
-                return OriginalHook(Communio);
-
-            if (HasEffect(Buffs.ImmortalSacrifice) && LevelChecked(PlentifulHarvest) &&
-                !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.Executioner) &&
-                (GetBuffRemainingTime(Buffs.BloodsownCircle) <= 1 || JustUsed(Communio)))
-                return PlentifulHarvest;
+            if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
+                return Variant.Cure;
 
             if (CanWeave())
             {
+                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                    return Variant.Rampart;
+
                 if (LevelChecked(ArcaneCircle) &&
                     (GetCooldownRemainingTime(ArcaneCircle) <= GCD + 0.25 || ActionReady(ArcaneCircle)))
                     return ArcaneCircle;
@@ -462,12 +436,30 @@ internal partial class RPR
 
                 if (LevelChecked(GrimSwathe) && !HasEffect(Buffs.Enshrouded) &&
                     !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.ImmortalSacrifice) &&
-                    !HasEffect(Buffs.Executioner) &&
-                    Gauge.Soul >= 50 && (!LevelChecked(Gluttony) ||
-                                         LevelChecked(Gluttony) && (Gauge.Soul is 100 ||
-                                                                    GetCooldownRemainingTime(Gluttony) > GCD * 5)))
+                    !HasEffect(Buffs.Executioner) && Gauge.Soul >= 50 &&
+                    (!LevelChecked(Gluttony) || LevelChecked(Gluttony) &&
+                        (Gauge.Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5)))
                     return GrimSwathe;
+
+                if (Role.CanSecondWind(25))
+                    return Role.SecondWind;
+
+                if (Role.CanBloodBath(40))
+                    return Role.Bloodbath;
             }
+
+            if (LevelChecked(WhorlOfDeath) &&
+                GetDebuffRemainingTime(Debuffs.DeathsDesign) < 6 && !HasEffect(Buffs.SoulReaver) &&
+                !HasEffect(Buffs.Executioner))
+                return WhorlOfDeath;
+
+            if (HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
+                return OriginalHook(Communio);
+
+            if (HasEffect(Buffs.ImmortalSacrifice) && LevelChecked(PlentifulHarvest) &&
+                !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.Executioner) &&
+                (GetBuffRemainingTime(Buffs.BloodsownCircle) <= 1 || JustUsed(Communio)))
+                return PlentifulHarvest;
 
             if (!HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Executioner) &&
                 !HasEffect(Buffs.PerfectioParata) &&
@@ -515,35 +507,14 @@ internal partial class RPR
                 !HasEffect(Buffs.Soulsow) && !PartyInCombat())
                 return Soulsow;
 
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.RPR_VariantCure))
-                return Variant.VariantCure;
-
-            if (IsEnabled(CustomComboPreset.RPR_Variant_Rampart) &&
-                IsEnabled(Variant.VariantRampart) &&
-                IsOffCooldown(Variant.VariantRampart) &&
-                CanWeave())
-                return Variant.VariantRampart;
-
-            if (IsEnabled(CustomComboPreset.RPR_AoE_WoD) &&
-                LevelChecked(WhorlOfDeath) &&
-                GetDebuffRemainingTime(Debuffs.DeathsDesign) < 6 && !HasEffect(Buffs.SoulReaver) &&
-                GetTargetHPPercent() > Config.RPR_WoDThreshold)
-                return WhorlOfDeath;
-
-            if (IsEnabled(CustomComboPreset.RPR_AoE_Perfectio) &&
-                HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
-                return OriginalHook(Communio);
-
-            if (IsEnabled(CustomComboPreset.RPR_AoE_PlentifulHarvest) &&
-                HasEffect(Buffs.ImmortalSacrifice) && LevelChecked(PlentifulHarvest) &&
-                !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Enshrouded) &&
-                (GetBuffRemainingTime(Buffs.BloodsownCircle) <= 1 || JustUsed(Communio)))
-                return PlentifulHarvest;
+            if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
+                return Variant.Cure;
 
             if (CanWeave())
             {
+                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                    return Variant.Rampart;
+
                 if (IsEnabled(CustomComboPreset.RPR_AoE_ArcaneCircle) &&
                     LevelChecked(ArcaneCircle) &&
                     (GetCooldownRemainingTime(ArcaneCircle) <= GCD + 0.25 || ActionReady(ArcaneCircle)))
@@ -570,7 +541,32 @@ internal partial class RPR
                      LevelChecked(Gluttony) && (Gauge.Soul is 100 ||
                                                 GetCooldownRemainingTime(Gluttony) > GCD * 5)))
                     return GrimSwathe;
+
+                if (IsEnabled(CustomComboPreset.RPR_AoE_ComboHeals))
+                {
+                    if (Role.CanSecondWind(Config.RPR_AoESecondWindThreshold))
+                        return Role.SecondWind;
+
+                    if (Role.CanBloodBath(Config.RPR_AoEBloodbathThreshold))
+                        return Role.Bloodbath;
+                }
             }
+
+            if (IsEnabled(CustomComboPreset.RPR_AoE_WoD) &&
+                LevelChecked(WhorlOfDeath) &&
+                GetDebuffRemainingTime(Debuffs.DeathsDesign) < 6 && !HasEffect(Buffs.SoulReaver) &&
+                GetTargetHPPercent() > Config.RPR_WoDThreshold)
+                return WhorlOfDeath;
+
+            if (IsEnabled(CustomComboPreset.RPR_AoE_Perfectio) &&
+                HasEffect(Buffs.PerfectioParata) && LevelChecked(Perfectio))
+                return OriginalHook(Communio);
+
+            if (IsEnabled(CustomComboPreset.RPR_AoE_PlentifulHarvest) &&
+                HasEffect(Buffs.ImmortalSacrifice) && LevelChecked(PlentifulHarvest) &&
+                !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Enshrouded) &&
+                (GetBuffRemainingTime(Buffs.BloodsownCircle) <= 1 || JustUsed(Communio)))
+                return PlentifulHarvest;
 
             if (IsEnabled(CustomComboPreset.RPR_AoE_SoulScythe) &&
                 !HasEffect(Buffs.Enshrouded) && !HasEffect(Buffs.SoulReaver) && !HasEffect(Buffs.Executioner) &&
@@ -596,15 +592,6 @@ internal partial class RPR
                 if (IsEnabled(CustomComboPreset.RPR_AoE_Reaping) &&
                     Gauge.LemureShroud > 0)
                     return OriginalHook(Guillotine);
-            }
-
-            if (IsEnabled(CustomComboPreset.RPR_AoE_ComboHeals))
-            {
-                if (PlayerHealthPercentageHp() <= Config.RPR_AoESecondWindThreshold && ActionReady(All.SecondWind))
-                    return All.SecondWind;
-
-                if (PlayerHealthPercentageHp() <= Config.RPR_AoEBloodbathThreshold && ActionReady(All.Bloodbath))
-                    return All.Bloodbath;
             }
 
             if (IsEnabled(CustomComboPreset.RPR_AoE_Guillotine) &&
@@ -683,8 +670,8 @@ internal partial class RPR
                     break;
                 }
 
-                case BloodStalk when IsEnabled(CustomComboPreset.RPR_TrueNorthGluttony) && TrueNorthReady:
-                    return All.TrueNorth;
+                case BloodStalk when IsEnabled(CustomComboPreset.RPR_TrueNorthGluttony) && Role.CanTrueNorth():
+                    return Role.TrueNorth;
 
                 case BloodStalk:
                 {
@@ -816,8 +803,8 @@ internal partial class RPR
             switch (actionID)
             {
                 case Enshroud when IsEnabled(CustomComboPreset.RPR_TrueNorthEnshroud) &&
-                                   GetBuffStacks(Buffs.SoulReaver) is 2 && TrueNorthReady && CanDelayedWeave():
-                    return All.TrueNorth;
+                                   GetBuffStacks(Buffs.SoulReaver) is 2 && Role.CanTrueNorth() && CanDelayedWeave():
+                    return Role.TrueNorth;
 
                 case Enshroud:
                 {

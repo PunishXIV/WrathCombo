@@ -133,7 +133,7 @@ internal partial class PCT
             HammerBrush,
             PolishingHammer,
             RainbowDrip,
-            All.Swiftcast,
+            Role.Swiftcast,
             ClawMotif,
             ClawedMuse,
         ];
@@ -164,7 +164,7 @@ internal partial class PCT
             if (HasEffect(Buffs.SubtractivePalette))
                 return false;
 
-            if (IsOnCooldown(All.Swiftcast))
+            if (IsOnCooldown(Role.Swiftcast))
                 return false;
 
             return true;
@@ -197,7 +197,7 @@ internal partial class PCT
             HammerBrush,
             PolishingHammer,
             FireInRed,
-            All.Swiftcast,
+            Role.Swiftcast,
             ClawMotif,
             ClawedMuse
         ];
@@ -229,7 +229,7 @@ internal partial class PCT
             if (HasEffect(Buffs.SubtractivePalette))
                 return false;
 
-            if (IsOnCooldown(All.Swiftcast))
+            if (IsOnCooldown(Role.Swiftcast))
                 return false;
 
             return true;

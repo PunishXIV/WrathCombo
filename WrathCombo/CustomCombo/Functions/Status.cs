@@ -255,6 +255,7 @@ namespace WrathCombo.CustomComboNS.Functions
             1936,
             2413,
             2654,
+            3012,
             3039,
             3052,
             3054,

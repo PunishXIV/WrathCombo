@@ -1,10 +1,9 @@
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class MCH
+internal partial class MCH : PhysRangedJob
 {
     internal class MCH_ST_SimpleMode : CustomCombo
     {
@@ -15,10 +14,8 @@ internal partial class MCH
             if (actionID is not (SplitShot or HeatedSplitShot))
                 return actionID;
 
-            if (IsEnabled(CustomComboPreset.MCH_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.MCH_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.MCH_Variant_Cure, Config.MCH_VariantCure))
+                return Variant.Cure;
 
             //Reassemble to start before combat
             if (!HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
@@ -30,16 +27,14 @@ internal partial class MCH
                 return Reassemble;
 
             // Interrupt
-            if (InterruptReady)
-                return All.HeadGraze;
+            if (Role.CanHeadGraze(CustomComboPreset.MCH_ST_SimpleMode, WeaveTypes.DelayWeave))
+                return Role.HeadGraze;
 
             // All weaves
             if (CanWeave())
             {
-                if (IsEnabled(CustomComboPreset.MCH_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart))
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
+                    return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved())
                 {
@@ -101,8 +96,8 @@ internal partial class MCH
                         }
 
                         // Healing
-                        if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
-                            return All.SecondWind;
+                        if (Role.CanSecondWind(5))
+                            return Role.SecondWind;
                     }
                 }
 
@@ -163,10 +158,8 @@ internal partial class MCH
             if (actionID is not (SplitShot or HeatedSplitShot))
                 return actionID;
 
-            if (IsEnabled(CustomComboPreset.MCH_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.MCH_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.MCH_Variant_Cure, Config.MCH_VariantCure))
+                return Variant.Cure;
 
             // Opener
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Opener) && TargetIsHostile())
@@ -184,17 +177,14 @@ internal partial class MCH
                 return Reassemble;
 
             // Interrupt
-            if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Interrupt) &&
-                InterruptReady)
-                return All.HeadGraze;
+            if (Role.CanHeadGraze(CustomComboPreset.MCH_ST_Adv_Interrupt, WeaveTypes.DelayWeave))
+                return Role.HeadGraze;
 
             // All weaves
             if (CanWeave())
             {
-                if (IsEnabled(CustomComboPreset.MCH_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart))
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
+                    return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved())
                 {
@@ -236,8 +226,8 @@ internal partial class MCH
                             // Only Hypercharge when tools are on cooldown
                             if (DrillCD && AnchorCD && SawCD &&
                                 (!LevelChecked(Wildfire) ||
-                                 LevelChecked(Wildfire) && 
-                                 (GetCooldownRemainingTime(Wildfire) > 40 || 
+                                 LevelChecked(Wildfire) &&
+                                 (GetCooldownRemainingTime(Wildfire) > 40 ||
                                   IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist))))
                                 return Hypercharge;
                         }
@@ -273,9 +263,8 @@ internal partial class MCH
 
                         // Healing
                         if (IsEnabled(CustomComboPreset.MCH_ST_Adv_SecondWind) &&
-                            PlayerHealthPercentageHp() <= Config.MCH_ST_SecondWindThreshold &&
-                            ActionReady(All.SecondWind))
-                            return All.SecondWind;
+                            Role.CanSecondWind(Config.MCH_ST_SecondWindThreshold))
+                            return Role.SecondWind;
                     }
                 }
 
@@ -344,25 +333,21 @@ internal partial class MCH
             if (actionID is not (SpreadShot or Scattergun))
                 return actionID;
 
-            if (IsEnabled(CustomComboPreset.MCH_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.MCH_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.MCH_Variant_Cure, Config.MCH_VariantCure))
+                return Variant.Cure;
 
             if (HasEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
                 return All.SavageBlade;
 
             // Interrupt
-            if (InterruptReady)
-                return All.HeadGraze;
+            if (Role.CanHeadGraze(CustomComboPreset.MCH_AoE_SimpleMode, WeaveTypes.DelayWeave))
+                return Role.HeadGraze;
 
             // All weaves
             if (CanWeave())
             {
-                if (IsEnabled(CustomComboPreset.MCH_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart))
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
+                    return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved() && !Gauge.IsOverheated)
                 {
@@ -393,8 +378,8 @@ internal partial class MCH
                          Scattergun.LevelChecked()))
                         return Reassemble;
 
-                    if (PlayerHealthPercentageHp() <= 25 && ActionReady(All.SecondWind))
-                        return All.SecondWind;
+                    if (Role.CanSecondWind(25))
+                        return Role.SecondWind;
                 }
 
                 //AutoCrossbow, Gauss, Rico
@@ -480,26 +465,21 @@ internal partial class MCH
                 !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
-            if (IsEnabled(CustomComboPreset.MCH_Variant_Cure) &&
-                IsEnabled(Variant.VariantCure) &&
-                PlayerHealthPercentageHp() <= Config.MCH_VariantCure)
-                return Variant.VariantCure;
+            if (Variant.CanCure(CustomComboPreset.MCH_Variant_Cure, Config.MCH_VariantCure))
+                return Variant.Cure;
 
             if (HasEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
                 return All.SavageBlade;
 
             // Interrupt
-            if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Interrupt) &&
-                InterruptReady)
-                return All.HeadGraze;
+            if (Role.CanHeadGraze(CustomComboPreset.MCH_AoE_Adv_Interrupt, WeaveTypes.DelayWeave))
+                return Role.HeadGraze;
 
             // All weaves
             if (CanWeave())
             {
-                if (IsEnabled(CustomComboPreset.MCH_Variant_Rampart) &&
-                    IsEnabled(Variant.VariantRampart) &&
-                    IsOffCooldown(Variant.VariantRampart))
-                    return Variant.VariantRampart;
+                if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
+                    return Variant.Rampart;
 
                 if (!ActionWatching.HasDoubleWeaved() && !Gauge.IsOverheated)
                 {
@@ -546,9 +526,8 @@ internal partial class MCH
                             return OriginalHook(Ricochet);
                     }
 
-                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_SecondWind) &&
-                        PlayerHealthPercentageHp() <= Config.MCH_AoE_SecondWindThreshold && ActionReady(All.SecondWind))
-                        return All.SecondWind;
+                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_SecondWind) && Role.CanSecondWind(Config.MCH_AoE_SecondWindThreshold))
+                        return Role.SecondWind;
                 }
 
                 //AutoCrossbow, Gauss, Rico
@@ -764,7 +743,7 @@ internal partial class MCH
 
         protected override uint Invoke(uint actionID) =>
             actionID is Dismantle &&
-            (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle)) &&
+            (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle) || !TargetIsHostile()) &&
             ActionReady(Tactician) && !HasEffect(Buffs.Tactician)
                 ? Tactician
                 : actionID;

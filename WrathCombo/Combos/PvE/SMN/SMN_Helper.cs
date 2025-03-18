@@ -239,7 +239,7 @@ internal partial class SMN
             TopazRite,
             MountainBuster,
             SummonGaruda2,
-            All.Swiftcast,
+            Role.Swiftcast,
             Slipstream,
 
         ];
@@ -260,7 +260,7 @@ internal partial class SMN
             if (!ActionReady(SummonSolarBahamut) ||
                 !IsOffCooldown(SearingFlash) ||
                 !IsOffCooldown(SearingLight) ||
-                !IsOffCooldown(All.Swiftcast) ||
+                !IsOffCooldown(Role.Swiftcast) ||
                 !IsOffCooldown(EnergyDrain))
                 return false;
 

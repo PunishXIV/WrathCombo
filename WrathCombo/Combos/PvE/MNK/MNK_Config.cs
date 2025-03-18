@@ -30,19 +30,19 @@ internal partial class MNK
             {
                 case CustomComboPreset.MNK_ST_ComboHeals:
                     DrawSliderInt(0, 100, MNK_ST_SecondWind_Threshold,
-                        $"HP percent threshold to use {All.SecondWind.ActionName()} (0 = Disabled)");
+                        $"HP percent threshold to use {Role.SecondWind.ActionName()} (0 = Disabled)");
 
                     DrawSliderInt(0, 100, MNK_ST_Bloodbath_Threshold,
-                        $"HP percent threshold to use {All.Bloodbath.ActionName()} (0 = Disabled)");
+                        $"HP percent threshold to use {Role.Bloodbath.ActionName()} (0 = Disabled)");
 
                     break;
 
                 case CustomComboPreset.MNK_AoE_ComboHeals:
                     DrawSliderInt(0, 100, MNK_AoE_SecondWind_Threshold,
-                        $"HP percent threshold to use {All.SecondWind.ActionName()} (0 = Disabled)");
+                        $"HP percent threshold to use {Role.SecondWind.ActionName()} (0 = Disabled)");
 
                     DrawSliderInt(0, 100, MNK_AoE_Bloodbath_Threshold,
-                        $"HP percent threshold to use {All.Bloodbath.ActionName()} (0 = Disabled)");
+                        $"HP percent threshold to use {Role.Bloodbath.ActionName()} (0 = Disabled)");
 
                     break;
 

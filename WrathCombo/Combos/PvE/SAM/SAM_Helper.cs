@@ -17,10 +17,6 @@ internal partial class SAM
 
     internal static int MeikyoUsed => ActionWatching.CombatActions.Count(x => x == MeikyoShisui);
 
-    internal static bool TrueNorthReady =>
-        TargetNeedsPositionals() && ActionReady(All.TrueNorth) &&
-        !HasEffect(All.Buffs.TrueNorth);
-
     internal static float GCD => GetCooldown(Hakaze).CooldownTotal;
 
     internal static int SenCount => GetSenCount();
@@ -132,7 +128,7 @@ internal partial class SAM
         public override List<uint> OpenerActions { get; set; } =
         [
             MeikyoShisui,
-            All.TrueNorth, //2
+            Role.TrueNorth, //2
             Gekko,
             Kasha,
             Ikishoten,
@@ -174,7 +170,7 @@ internal partial class SAM
             if (GetRemainingCharges(MeikyoShisui) < 2)
                 return false;
 
-            if (GetRemainingCharges(All.TrueNorth) < 2)
+            if (GetRemainingCharges(Role.TrueNorth) < 2)
                 return false;
 
             if (!IsOffCooldown(Senei))
