@@ -477,11 +477,8 @@ internal partial class BLU
                     return Surpanakha_Spell78;
 
                 // Lucid Dreaming
-                if (IsEnabled(Preset.BLU_Tank_Advanced_Lucid) &&
-                    IsOffCooldown(All.LucidDreaming) &&
-                    LocalPlayer.CurrentMp <= Config.BLU_Tank_Advanced_Lucid &&
-                    LevelChecked(All.LucidDreaming))
-                    return All.LucidDreaming;
+                if (Role.CanLucidDream(9000))
+                    return Role.LucidDreaming;
             }
 
             #endregion
