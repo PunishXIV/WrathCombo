@@ -117,6 +117,10 @@ internal partial class DRK
                         DRK_ST_ManaSpenderPoolingDifficulty,
                         DRK_ST_ManaSpenderPoolingDifficultyListSet
                     );
+                    UserConfig.DrawSliderInt(0, 45, DRK_ST_BurstSoonThreshold,
+                        "Seconds before Burst to start saving Mana and Dark Arts (0 = Don't save)",
+                        itemWidth: little,
+                        sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
@@ -646,6 +650,19 @@ internal partial class DRK
         /// <seealso cref="CustomComboPreset.DRK_ST_Sp_Edge" />
         public static readonly UserInt DRK_ST_ManaSpenderPooling =
             new("DRK_ST_ManaSpenderPooling", 3000);
+
+        /// <summary>
+        ///     Number of seconds before burst that high mana will be allowed within,
+        ///     and attempts to save Dark Arts will start working in.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 30<br />
+        ///     <b>Range</b>: 0 - 45 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DRK_ST_Sp_Edge" />
+        public static readonly UserInt DRK_ST_BurstSoonThreshold =
+            new("DRK_ST_BurstSoonThreshold", 30);
 
         /// <summary>
         ///     Difficulty of Mana Spender Pooling for Single Target.
