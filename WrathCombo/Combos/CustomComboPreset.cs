@@ -5486,7 +5486,7 @@ public enum CustomComboPreset
     SMN_ST_Advanced_Combo_Balance_Opener = 170001,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Use Ruin III instead of Emerald Ruin III when standing still",
+    [CustomComboInfo("Use Ruin III instead of Emerald Ruin III when standing still between the levels of 54 and 72",
         "Replaces Emerald Ruin III with Ruin III in the rotation when standing still and Ruin Mastery III is not active.",
         SMN.JobID)]
     SMN_ST_Ruin3_Emerald_Ruin3 = 17067,
@@ -5568,6 +5568,10 @@ public enum CustomComboPreset
     SMN.JobID)]
     SMN_ST_Advanced_Combo_DemiEgiMenu_EgiOrder = 17016,
 
+    [ParentCombo(SMN_ST_Advanced_Combo)]
+    [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
+    SMN_ST_Advanced_Combo_Radiant = 17071,
+
     #endregion
 
     #region Advanced AoE
@@ -5616,12 +5620,6 @@ SMN.JobID)]
     [CustomComboInfo("Rekindle Combo Option", "Adds Rekindle to the AoE combo.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_DemiSummons_Rekindle = 17056,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling)]
-    [CustomComboInfo("Any Searing Burst Option",
-        "Checks for any Searing light for bursting rather than just your own.\nUse this option if partied with multiple SMN and are worried about your Searing being overwritten.",
-        SMN.JobID)]
-    SMN_AoE_Advanced_Burst_Any_Option = 17057,
-
     [ParentCombo(SMN_AoE_Advanced_Combo_SearingLight)]
     [CustomComboInfo("Searing Flash Combo Option", "Adds Searing Flash to the AoE combo.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_SearingFlash = 17058,
@@ -5662,11 +5660,15 @@ SMN.JobID)]
     [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Add Egi Astralflow", "Choose which Egi Astralflows to add to the rotation.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_Egi_AstralFlow = 17068,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Radiant = 17070,
     #endregion
 
     #region Standalone Features
     [ReplaceSkill(SMN.Fester)]
-    [CustomComboInfo("Energy Drain to Fester Feature", "Change Fester into Energy Drain when out of Aetherflow stacks.",
+    [CustomComboInfo("Fester to Energy Drain Feature", "Change Fester into Energy Drain when out of Aetherflow stacks.",
         SMN.JobID)]
     SMN_EDFester = 17008,
 
@@ -5677,7 +5679,7 @@ SMN.JobID)]
     SMN_EDFester_Ruin4 = 17013,
 
     [ReplaceSkill(SMN.Painflare)]
-    [CustomComboInfo("Energy Siphon to Painflare Feature",
+    [CustomComboInfo("Painflare to Energy Siphon Feature",
         "Change Painflare into Energy Siphon when out of Aetherflow stacks.", SMN.JobID)]
     SMN_ESPainflare = 17009,
 
@@ -5708,6 +5710,12 @@ SMN.JobID)]
         "Changes Painflare to Ruin IV when out of Aetherflow stacks, Energy Siphon is on cooldown, and Ruin IV is up.",
         SMN.JobID)]
     SMN_ESPainflare_Ruin4 = 17039,
+
+    [CustomComboInfo("Searing Light Waste Protection Feature",
+           "Changes Searing light to SavageBlade while under the affect of another summoners buff to prevent waste.", SMN.JobID)]
+    SMN_Searing = 17072,
+
+
 
     #endregion
 

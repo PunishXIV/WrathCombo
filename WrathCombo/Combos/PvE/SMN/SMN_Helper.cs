@@ -144,7 +144,9 @@ internal partial class SMN
     public static class Traits
     {
         public const ushort
-            RuinMastery3 = 476;
+            EnhancedDreadwyrmTrance = 178,
+            RuinMastery3 = 476,
+            EnhancedBahamut = 619;
     }
 
     #endregion
@@ -156,6 +158,8 @@ internal partial class SMN
     internal static bool IsIfritAttuned => AttunementType == 1;
     internal static bool IsTitanAttuned => AttunementType == 2;
     internal static bool IsGarudaAttuned => AttunementType == 3;
+
+    internal static bool GemshineReady => AttunementCount > 0;
 
     internal static bool IsAttunedAny => IsIfritAttuned || IsTitanAttuned || IsGarudaAttuned;
 
@@ -248,6 +252,8 @@ internal partial class SMN
         [
             4,
         ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([26], () => Config.SMN_Opener_SkipSwiftcast == 2)];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => Config.SMN_Balance_Content;
