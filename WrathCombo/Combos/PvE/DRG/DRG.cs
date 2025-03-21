@@ -73,7 +73,7 @@ internal partial class DRG : MeleeJob
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
                 CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
@@ -229,7 +229,7 @@ internal partial class DRG : MeleeJob
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
                 CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
@@ -350,7 +350,7 @@ internal partial class DRG : MeleeJob
 
             // healing
             if (IsEnabled(CustomComboPreset.DRG_ST_ComboHeals))
-            { 
+            {
                 if (Role.CanSecondWind(Config.DRG_ST_SecondWind_Threshold))
                     return Role.SecondWind;
 
@@ -422,7 +422,7 @@ internal partial class DRG : MeleeJob
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
                 CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
@@ -557,7 +557,7 @@ internal partial class DRG : MeleeJob
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart, WeaveTypes.None) &&
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
                 CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 

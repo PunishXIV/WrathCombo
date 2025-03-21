@@ -1,4 +1,3 @@
-using ECommons.DalamudServices;
 using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
@@ -48,35 +47,35 @@ internal partial class SAM
 
                 case CustomComboPreset.SAM_ST_CDs_Iaijutsu:
                     UserConfig.DrawSliderInt(0, 10, SAM_ST_Higanbana_Threshold,
-                        "Stop using Higanbana on targets below this HP % (0% = always use).");
+                        $"Stop using {Higanbana.ActionName()} on targets below this HP % (0% = always use).");
 
                     ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
                         "All Enemies",
-                        "Uses Higanbana regardless of targeted enemy type.", 0);
+                        $"Uses {Higanbana.ActionName()} regardless of targeted enemy type.", 0);
 
                     UserConfig.DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
                         "Bosses Only",
-                        "Only uses Higanbana when the targeted enemy is a boss.", 1);
+                        $"Only uses {Higanbana.ActionName()} when the targeted enemy is a boss.", 1);
                     ImGui.Unindent();
 
                     break;
 
                 case CustomComboPreset.SAM_ST_ComboHeals:
                     UserConfig.DrawSliderInt(0, 100, SAM_STSecondWindThreshold,
-                        "HP percent threshold to use Second Wind below (0 = Disabled)");
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
                     UserConfig.DrawSliderInt(0, 100, SAM_STBloodbathThreshold,
-                        "HP percent threshold to use Bloodbath (0 = Disabled)");
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 
                 case CustomComboPreset.SAM_AoE_ComboHeals:
                     UserConfig.DrawSliderInt(0, 100, SAM_AoESecondWindThreshold,
-                        "HP percent threshold to use Second Wind below (0 = Disabled)");
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
                     UserConfig.DrawSliderInt(0, 100, SAM_AoEBloodbathThreshold,
-                        "HP percent threshold to use Bloodbath below (0 = Disabled)");
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 

@@ -174,19 +174,7 @@ internal partial class VPR
 
         internal override UserData ContentCheckConfig => Config.VPR_Balance_Content;
 
-        public override bool HasCooldowns()
-        {
-            if (!IsOriginal(ReavingFangs))
-                return false;
-
-            if (GetRemainingCharges(Vicewinder) < 2)
-                return false;
-
-            if (!IsOffCooldown(SerpentsIre))
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() => IsOriginal(ReavingFangs) && GetRemainingCharges(Vicewinder) is 2 && IsOffCooldown(SerpentsIre);
     }
 
     #endregion

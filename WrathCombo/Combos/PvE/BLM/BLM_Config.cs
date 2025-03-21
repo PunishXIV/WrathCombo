@@ -6,6 +6,8 @@ using ImGuiNET;
 using System;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -39,14 +41,17 @@ internal partial class BLM
                 case CustomComboPreset.BLM_ST_Opener:
                     if (Player.Job is Job.BLM && Player.Level == 100)
                     {
-                        float gcd = MathF.Round(CustomComboFunctions.GetCooldown(Fire3).BaseCooldownTotal, 2, MidpointRounding.ToZero);
+                        float gcd = MathF.Round(GetCooldown(Fire3).BaseCooldownTotal, 2, MidpointRounding.ToZero);
                         ImGuiEx.Text(gcd > 2.45f ? ImGuiColors.DalamudRed : ImGuiColors.HealerGreen, $"Your GCD is currently: {gcd}");
                     }
 
                     ImGui.Indent();
+
                     DrawBossOnlyChoice(BLM_ST_Balance_Content);
+
                     ImGui.Unindent();
                     break;
+
                 case CustomComboPreset.BLM_Variant_Cure:
                     DrawSliderInt(1, 100, BLM_VariantCure, "HP% to be at or under", 200);
 
@@ -58,10 +63,10 @@ internal partial class BLM
                     break;
 
                 case CustomComboPreset.BLM_ST_Triplecast:
-                    DrawSliderInt(0, 1, BLM_ST_Triplecast_HoldCharges, "How many charges to keep ready? (0 = Use all)");
+                    DrawSliderInt(0, 1, BLM_ST_Triplecast_HoldCharges, $"How many charges of {Triplecast.ActionName()} to keep ready? (0 = Use all)");
 
                     DrawSliderInt(10, 20, BLM_ST_Triplecast_ChargeTime,
-                        "Set the amount of time remaining on Triplecast charge before using.(Only when at threshold)");
+                        $"Set the amount of time remaining on {Triplecast.ActionName()} charge before using.(Only when at threshold)");
 
                     break;
 
@@ -79,22 +84,22 @@ internal partial class BLM
 
                 case CustomComboPreset.BLM_ST_LeyLines:
                     DrawSliderInt(0, 1, BLM_ST_LeyLinesCharges,
-                        "How many charges to keep ready? (0 = Use all)");
+                        $"How many charges of {LeyLines.ActionName()} to keep ready? (0 = Use all)");
 
                     break;
 
                 case CustomComboPreset.BLM_ST_Thunder:
                     DrawSliderInt(0, 10, BLM_ST_ThunderHP,
-                        "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                        $"Stop Using {Thunder.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
 
                 case CustomComboPreset.BLM_AoE_Triplecast:
                     DrawSliderInt(0, 1, BLM_AoE_Triplecast_HoldCharges,
-                        "How many charges to keep ready? (0 = Use all)");
+                        $"How many charges of {Triplecast.ActionName()} to keep ready? (0 = Use all)");
 
                     DrawSliderInt(10, 20, BLM_AoE_Triplecast_ChargeTime,
-                        "Set the amount of time remaining on Triplecast charge before using.(Only when at threshold)");
+                        $"Set the amount of time remaining on {Triplecast.ActionName()} charge before using.(Only when at threshold)");
 
                     break;
 
@@ -112,13 +117,13 @@ internal partial class BLM
 
                 case CustomComboPreset.BLM_AoE_LeyLines:
                     DrawSliderInt(0, 1, BLM_AoE_LeyLinesCharges,
-                        "How many charges to keep ready? (0 = Use all)");
+                        $"How many charges of {LeyLines.ActionName()} to keep ready? (0 = Use all)");
 
                     break;
 
                 case CustomComboPreset.BLM_AoE_Thunder:
                     DrawSliderInt(0, 10, BLM_AoE_ThunderHP,
-                        "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                        $"Stop Using {Thunder2.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
 

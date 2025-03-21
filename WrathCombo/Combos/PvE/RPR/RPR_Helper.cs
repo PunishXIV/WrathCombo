@@ -197,19 +197,7 @@ internal partial class RPR
 
         internal override UserData ContentCheckConfig => Config.RPR_Balance_Content;
 
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(SoulSlice) < 2)
-                return false;
-
-            if (!IsOffCooldown(ArcaneCircle))
-                return false;
-
-            if (!IsOffCooldown(Gluttony))
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() => GetRemainingCharges(SoulSlice) is 2 && IsOffCooldown(ArcaneCircle) && IsOffCooldown(Gluttony);
     }
 
     #endregion

@@ -1,7 +1,7 @@
 using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
+using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -46,11 +46,11 @@ internal partial class MCH
                 case CustomComboPreset.MCH_ST_Adv_WildFire:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Wildfire_SubOption,
                         "All content",
-                        $"Uses {ActionWatching.GetActionName(Wildfire)} regardless of content.", 0);
+                        $"Uses {Wildfire.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Wildfire_SubOption,
                         "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(Wildfire)} when in Boss encounters.", 1);
+                        $"Only uses {Wildfire.ActionName()} when in Boss encounters.", 1);
 
                     break;
 
@@ -58,11 +58,11 @@ internal partial class MCH
                     ImGui.Indent();
                     DrawHorizontalRadioButton(MCH_ST_Adv_BarrelStabiliser_SubOption,
                         "All content",
-                        $"Uses {ActionWatching.GetActionName(BarrelStabilizer)} regardless of content.", 0);
+                        $"Uses {BarrelStabilizer.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_BarrelStabiliser_SubOption,
                         "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(BarrelStabilizer)} when in Boss encounters.", 1);
+                        $"Only uses {BarrelStabilizer.ActionName()} when in Boss encounters.", 1);
                     ImGui.Unindent();
 
                     break;
@@ -71,11 +71,11 @@ internal partial class MCH
                     ImGui.Indent();
                     DrawHorizontalRadioButton(MCH_ST_Adv_FullMetalMachinist_SubOption,
                         "All content",
-                        $"Uses {ActionWatching.GetActionName(FullMetalField)} regardless of content.", 0);
+                        $"Uses {FullMetalField.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_FullMetalMachinist_SubOption,
                         "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(FullMetalField)} when in Boss encounters.", 1);
+                        $"Only uses {FullMetalField.ActionName()} when in Boss encounters.", 1);
                     ImGui.Unindent();
 
                     break;
@@ -83,16 +83,16 @@ internal partial class MCH
                 case CustomComboPreset.MCH_ST_Adv_TurretQueen:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
                         "All content",
-                        $"Uses {ActionWatching.GetActionName(AutomatonQueen)} logic regardless of content.", 0);
+                        $"Uses {AutomatonQueen.ActionName()} logic regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
                         "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(AutomatonQueen)} logic when in Boss encounters.", 1);
+                        $"Only uses {AutomatonQueen.ActionName()} logic when in Boss encounters.", 1);
 
                     if (MCH_ST_Adv_Turret_SubOption == 1)
                     {
                         DrawSliderInt(50, 100, MCH_ST_TurretUsage,
-                            $"Uses {ActionWatching.GetActionName(AutomatonQueen)} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
+                            $"Uses {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
                     }
 
                     break;
@@ -100,27 +100,27 @@ internal partial class MCH
                 case CustomComboPreset.MCH_ST_Adv_Excavator:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Excavator_SubOption,
                         "All content",
-                        $"Uses {ActionWatching.GetActionName(Excavator)} logic regardless of content.", 0);
+                        $"Uses {Excavator.ActionName()} logic regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Excavator_SubOption,
                         "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(Excavator)} logic when in Boss encounters.", 1);
+                        $"Only uses {Excavator.ActionName()} logic when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.MCH_ST_Adv_GaussRicochet:
-                    DrawSliderInt(0, 2, MCH_ST_GaussRicoPool, "Number of Charges to Save for Manual Use");
+                    DrawSliderInt(0, 2, MCH_ST_GaussRicoPool, "Number of Charges of to Save for Manual Use");
 
                     break;
 
                 case CustomComboPreset.MCH_ST_Adv_Reassemble:
                     DrawSliderInt(0, 1, MCH_ST_ReassemblePool, "Number of Charges to Save for Manual Use");
 
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {ActionWatching.GetActionName(Excavator)}", "", 5, 0);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {ActionWatching.GetActionName(Chainsaw)}", "", 5, 1);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {ActionWatching.GetActionName(AirAnchor)}", "", 5, 2);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {ActionWatching.GetActionName(Drill)}", "", 5, 3);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {ActionWatching.GetActionName(CleanShot)}", "", 5, 4);
+                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Excavator.ActionName()}", "", 5, 0);
+                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Chainsaw.ActionName()}", "", 5, 1);
+                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {AirAnchor}", "", 5, 2);
+                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Drill.ActionName()}", "", 5, 3);
+                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {CleanShot.ActionName()}", "", 5, 4);
 
                     break;
 
@@ -131,7 +131,7 @@ internal partial class MCH
 
                 case CustomComboPreset.MCH_ST_Adv_SecondWind:
                     DrawSliderInt(0, 100, MCH_ST_SecondWindThreshold,
-                        $"{ActionWatching.GetActionName(Role.SecondWind)} HP percentage threshold");
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
                     break;
 
@@ -139,16 +139,16 @@ internal partial class MCH
                 case CustomComboPreset.MCH_AoE_Adv_Reassemble:
                     DrawSliderInt(0, 1, MCH_AoE_ReassemblePool, "Number of Charges to Save for Manual Use");
 
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {ActionWatching.GetActionName(SpreadShot)}/{ActionWatching.GetActionName(Scattergun)}", "", 4, 0);
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {ActionWatching.GetActionName(AirAnchor)}", "", 4, 1);
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {ActionWatching.GetActionName(Chainsaw)}", "", 4, 2);
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {ActionWatching.GetActionName(Excavator)}", "", 4, 3);
+                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {SpreadShot.ActionName()}/{Scattergun.ActionName()}", "", 4, 0);
+                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {AirAnchor.ActionName()}", "", 4, 1);
+                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {Chainsaw.ActionName()}", "", 4, 2);
+                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {Excavator.ActionName()}", "", 4, 3);
 
                     break;
 
                 case CustomComboPreset.MCH_AoE_Adv_SecondWind:
                     DrawSliderInt(0, 100, MCH_AoE_SecondWindThreshold,
-                        $"{ActionWatching.GetActionName(Role.SecondWind)} HP percentage threshold");
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
                     break;
 
@@ -159,7 +159,7 @@ internal partial class MCH
 
                 case CustomComboPreset.MCH_AoE_Adv_GaussRicochet:
                     DrawAdditionalBoolChoice(MCH_AoE_Hypercharge,
-                        $"Use Outwith {ActionWatching.GetActionName(Hypercharge)}", "");
+                        $"Use Outwith {Hypercharge.ActionName()}", "");
 
                     break;
 

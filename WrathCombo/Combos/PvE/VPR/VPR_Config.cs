@@ -1,6 +1,5 @@
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
@@ -37,24 +36,24 @@ internal partial class VPR
 
                 case CustomComboPreset.VPR_ST_SerpentsIre:
                     DrawHorizontalRadioButton(VPR_ST_SerpentsIre_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(SerpentsIre)} regardless of content.", 0);
+                        "All content", $"Uses {SerpentsIre.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(VPR_ST_SerpentsIre_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(SerpentsIre)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses  {SerpentsIre.ActionName()} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.VPR_ST_UncoiledFury:
                     DrawSliderInt(0, 3, VPR_ST_UncoiledFury_HoldCharges,
-                        "How many charges to keep ready? (0 = Use all)");
-                    DrawSliderInt(0, 5, VPR_ST_UncoiledFury_Threshold, "Set a HP% Threshold to use all charges.");
+                        $"How many charges of {UncoiledFury.ActionName()} to keep ready? (0 = Use all)");
+                    DrawSliderInt(0, 5, VPR_ST_UncoiledFury_Threshold, $"Set a HP% Threshold to use all charges of {UncoiledFury.ActionName()}.");
 
                     break;
 
                 case CustomComboPreset.VPR_AoE_UncoiledFury:
                     DrawSliderInt(0, 3, VPR_AoE_UncoiledFury_HoldCharges,
-                        "How many charges to keep ready? (0 = Use all)");
-                    DrawSliderInt(0, 5, VPR_AoE_UncoiledFury_Threshold, "Set a HP% Threshold to use all charges.");
+                        $"How many charges of {UncoiledFury.ActionName()} to keep ready? (0 = Use all)");
+                    DrawSliderInt(0, 5, VPR_AoE_UncoiledFury_Threshold, $"Set a HP% Threshold to use all charges of {UncoiledFury.ActionName()}.");
 
                     break;
 
@@ -74,19 +73,19 @@ internal partial class VPR
 
                 case CustomComboPreset.VPR_ST_ComboHeals:
                     DrawSliderInt(0, 100, VPR_ST_SecondWind_Threshold,
-                        $"HP percent threshold to use {Role.SecondWind.ActionName()} (0 = Disabled)");
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
                     DrawSliderInt(0, 100, VPR_ST_Bloodbath_Threshold,
-                        $"HP percent threshold to use {Role.Bloodbath.ActionName()} (0 = Disabled)");
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 
                 case CustomComboPreset.VPR_AoE_ComboHeals:
                     DrawSliderInt(0, 100, VPR_AoE_SecondWind_Threshold,
-                        $"HP percent threshold to use {Role.SecondWind.ActionName()} (0 = Disabled)");
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
                     DrawSliderInt(0, 100, VPR_AoE_Bloodbath_Threshold,
-                        $"HP percent threshold to use {Role.Bloodbath.ActionName()} (0 = Disabled)");
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 

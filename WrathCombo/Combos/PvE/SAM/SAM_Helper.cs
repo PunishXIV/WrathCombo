@@ -119,6 +119,8 @@ internal partial class SAM
         return false;
     }
 
+    #region Openers
+
     internal class SAMOpenerMaxLevel1 : WrathOpener
     {
         public override int MinOpenerLevel => 100;
@@ -153,6 +155,7 @@ internal partial class SAM
             TendoSetsugekka,
             TendoKaeshiSetsugekka
         ];
+        
         internal override UserData ContentCheckConfig => Config.SAM_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
@@ -165,23 +168,11 @@ internal partial class SAM
             ([2], 11, () => !TargetNeedsPositionals())
         ];
 
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(MeikyoShisui) < 2)
-                return false;
-
-            if (GetRemainingCharges(Role.TrueNorth) < 2)
-                return false;
-
-            if (!IsOffCooldown(Senei))
-                return false;
-
-            if (!IsOffCooldown(Ikishoten))
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() => GetRemainingCharges(MeikyoShisui) is 2 && GetRemainingCharges(Role.TrueNorth) is 2 &&
+                                               IsOffCooldown(Senei) && IsOffCooldown(Ikishoten);
     }
+
+    #endregion
 
     #region ID's
 

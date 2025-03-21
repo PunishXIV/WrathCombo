@@ -21,7 +21,7 @@ internal partial class BLM
             { HighThunder, Debuffs.HighThunder },
             { HighThunder2, Debuffs.HighThunder2 }
         };
-    
+
     internal static BLMGauge Gauge = GetJobGauge<BLMGauge>();
     internal static BLMOpenerMaxLevel1 Opener1 = new();
 
@@ -114,6 +114,8 @@ internal partial class BLM
 
         return false;
     }
+    
+    #region Openers
 
     internal class BLMOpenerMaxLevel1 : WrathOpener
     {
@@ -148,31 +150,15 @@ internal partial class BLM
             Fire4,
             Despair
         ];
+        
         internal override UserData ContentCheckConfig => Config.BLM_ST_Balance_Content;
 
-        public override bool HasCooldowns()
-        {
-            if (GetCooldown(Fire).BaseCooldownTotal > 2.45)
-                return false;
-
-            if (!IsOffCooldown(Manafont))
-                return false;
-
-            if (GetRemainingCharges(Triplecast) < 2)
-                return false;
-
-            if (!IsOffCooldown(Role.Swiftcast))
-                return false;
-
-            if (!IsOffCooldown(Amplifier))
-                return false;
-
-            if (Gauge.InUmbralIce)
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() => GetCooldown(Fire).BaseCooldownTotal <= 2.45 && IsOffCooldown(Manafont) &&
+                                               GetRemainingCharges(Triplecast) is 2 && IsOffCooldown(Role.Swiftcast) &&
+                                               IsOffCooldown(Amplifier) && Gauge.InAstralFire;
     }
+
+  #endregion
 
     #region ID's
 
@@ -214,8 +200,7 @@ internal partial class BLM
         FlareStar = 36989;
 
     // Debuff Pairs of Actions and Debuff
-
-
+    
     private static int NextMpGain => Gauge.UmbralIceStacks switch
     {
         0 => 0,
