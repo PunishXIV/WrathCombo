@@ -1,6 +1,7 @@
+using ImGuiNET;
 using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
+using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -9,6 +10,7 @@ internal partial class RPR
     internal static class Config
     {
         public static UserInt
+            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
             RPR_SoDThreshold = new("RPRSoDThreshold", 0),
             RPR_WoDThreshold = new("RPRWoDThreshold", 1),
             RPR_SoDRefreshRange = new("RPRSoDRefreshRange", 6),
@@ -29,77 +31,92 @@ internal partial class RPR
             switch (preset)
             {
                 case CustomComboPreset.RPR_ST_Opener:
+
+                    if (DrawHorizontalRadioButton(RPR_Opener_StartChoice,
+                        "Normal Opener",
+                        $"Starts opener with {Harpe.ActionName()}", 0))
+                    {
+                        if (!CustomComboFunctions.InCombat())
+                            Opener().OpenerStep = 1;
+                    }
+
+                    DrawHorizontalRadioButton(RPR_Opener_StartChoice,
+                        "Early Opener",
+                        $"Starts opener with {ShadowOfDeath.ActionName()} instead, skipping {Harpe.ActionName()}", 1);
+
+                    ImGui.Spacing();
+
                     DrawBossOnlyChoice(RPR_Balance_Content);
                     break;
 
                 case CustomComboPreset.RPR_ST_ArcaneCircle:
                     DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(ArcaneCircle)} regardless of content.", 0);
+                        "All content", $"Uses {ArcaneCircle.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(ArcaneCircle)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {ArcaneCircle.ActionName()} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.RPR_ST_AdvancedMode:
                     DrawHorizontalRadioButton(RPR_Positional, "Rear First",
-                        "First positional: Gallows.", 0);
+                        $"First positional: {Gallows.ActionName()}.", 0);
 
                     DrawHorizontalRadioButton(RPR_Positional, "Flank First",
-                        "First positional: Gibbet.", 1);
+                        $"First positional: {Gibbet.ActionName()}.", 1);
 
                     break;
 
                 case CustomComboPreset.RPR_ST_SoD:
                     DrawSliderInt(4, 8, RPR_SoDRefreshRange,
-                        "Seconds remaining before refreshing Death's Design.");
+                        $"Seconds remaining before refreshing {ShadowOfDeath.ActionName()}.");
 
                     DrawSliderInt(0, 5, RPR_SoDThreshold,
-                        "Set a HP% Threshold for when SoD will not be automatically applied to the target.");
+                        $"Set a HP% Threshold for when {ShadowOfDeath.ActionName()} will not be automatically applied to the target.");
 
                     break;
 
                 case CustomComboPreset.RPR_AoE_WoD:
                     DrawSliderInt(0, 5, RPR_WoDThreshold,
-                        "Set a HP% Threshold for when WoD will not be automatically applied to the target.");
+                        $"Set a HP% Threshold for when {WhorlOfDeath.ActionName()} will not be automatically applied to the target.");
 
                     break;
 
                 case CustomComboPreset.RPR_ST_ComboHeals:
                     DrawSliderInt(0, 100, RPR_STSecondWindThreshold,
-                        "HP percent threshold to use Second Wind below (0 = Disabled)");
+                        $"HP percent threshold to use {Role.SecondWind.ActionName()} below (0 = Disabled)");
 
                     DrawSliderInt(0, 100, RPR_STBloodbathThreshold,
-                        "HP percent threshold to use Bloodbath (0 = Disabled)");
+                        $"HP percent threshold to use {Role.Bloodbath.ActionName()} (0 = Disabled)");
 
                     break;
 
                 case CustomComboPreset.RPR_AoE_ComboHeals:
                     DrawSliderInt(0, 100, RPR_AoESecondWindThreshold,
-                        "HP percent threshold to use Second Wind below (0 = Disabled)");
+                        $"HP percent threshold to use {Role.SecondWind.ActionName()} below (0 = Disabled)");
 
                     DrawSliderInt(0, 100, RPR_AoEBloodbathThreshold,
-                        "HP percent threshold to use Bloodbath below (0 = Disabled)");
+                        $"HP percent threshold to use {Role.Bloodbath.ActionName()} below (0 = Disabled)");
 
                     break;
 
                 case CustomComboPreset.RPR_Soulsow:
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, "Harpe",
-                        "Adds Soulsow to Harpe.",
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{Harpe.ActionName()}",
+                        $"Adds {Soulsow.ActionName()} to {Harpe.ActionName()}.",
                         5, 0);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, "Slice",
-                        "Adds Soulsow to Slice.",
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{Slice.ActionName()}",
+                        $"Adds {Soulsow.ActionName()} to {Slice.ActionName()}.",
                         5, 1);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, "Spinning Scythe",
-                        "Adds Soulsow to Spinning Scythe", 5, 2);
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{SpinningScythe.ActionName()}",
+                        $"Adds {Soulsow.ActionName()} to {SpinningScythe.ActionName()}", 5, 2);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, "Shadow of Death",
-                        "Adds Soulsow to Shadow of Death.", 5, 3);
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{ShadowOfDeath.ActionName()}",
+                        $"Adds {Soulsow.ActionName()} to {ShadowOfDeath.ActionName()}.", 5, 3);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, "Blood Stalk",
-                        "Adds Soulsow to Blood Stalk.", 5, 4);
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{BloodStalk.ActionName()}",
+                        $"Adds {Soulsow.ActionName()} to {BloodStalk.ActionName()}.", 5, 4);
 
                     break;
 

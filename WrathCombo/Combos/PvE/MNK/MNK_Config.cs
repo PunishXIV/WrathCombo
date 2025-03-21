@@ -1,6 +1,5 @@
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
@@ -48,28 +47,28 @@ internal partial class MNK
 
                 case CustomComboPreset.MNK_STUseBrotherhood:
                     DrawHorizontalRadioButton(MNK_ST_Brotherhood_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(Brotherhood)} regardless of content.", 0);
+                        "All content", $"Uses {Brotherhood.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MNK_ST_Brotherhood_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(Brotherhood)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {Brotherhood.ActionName()} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.MNK_STUseROF:
                     DrawHorizontalRadioButton(MNK_ST_RiddleOfFire_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(RiddleOfFire)} regardless of content.", 0);
+                        "All content", $"Uses {RiddleOfFire.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MNK_ST_RiddleOfFire_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(RiddleOfFire)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses{RiddleOfFire.ActionName()} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.MNK_STUseROW:
                     DrawHorizontalRadioButton(MNK_ST_RiddleOfWind_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(RiddleOfWind)} regardless of content.", 0);
+                        "All content", $"Uses {RiddleOfWind.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MNK_ST_RiddleOfWind_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(RiddleOfWind)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {RiddleOfWind.ActionName()} when in Boss encounters.", 1);
 
                     break;
 

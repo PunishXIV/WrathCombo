@@ -155,31 +155,10 @@ internal partial class MNK
         ];
 
         internal override UserData ContentCheckConfig => Config.MNK_Balance_Content;
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(PerfectBalance) < 2)
-                return false;
 
-            if (!IsOffCooldown(Brotherhood))
-                return false;
-
-            if (!IsOffCooldown(RiddleOfFire))
-                return false;
-
-            if (!IsOffCooldown(RiddleOfWind))
-                return false;
-
-            if (Gauge.Nadi != Nadi.NONE)
-                return false;
-
-            if (Gauge.RaptorFury != 0)
-                return false;
-
-            if (Gauge.CoeurlFury != 0)
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() => GetRemainingCharges(PerfectBalance) is 2 && IsOffCooldown(Brotherhood) &&
+                                               IsOffCooldown(RiddleOfFire) && IsOffCooldown(RiddleOfWind) &&
+                                               Gauge.Nadi is Nadi.NONE && Gauge.RaptorFury is 0 && Gauge.CoeurlFury is 0;
     }
 
     internal class MNKOpenerLogicLL : WrathOpener
@@ -213,31 +192,9 @@ internal partial class MNK
         ];
         internal override UserData ContentCheckConfig => Config.MNK_Balance_Content;
 
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(PerfectBalance) < 2)
-                return false;
-
-            if (!IsOffCooldown(Brotherhood))
-                return false;
-
-            if (!IsOffCooldown(RiddleOfFire))
-                return false;
-
-            if (!IsOffCooldown(RiddleOfWind))
-                return false;
-
-            if (Gauge.Nadi != Nadi.NONE)
-                return false;
-
-            if (Gauge.RaptorFury != 0)
-                return false;
-
-            if (Gauge.CoeurlFury != 0)
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() => GetRemainingCharges(PerfectBalance) is 2 && IsOffCooldown(Brotherhood) &&
+                                               IsOffCooldown(RiddleOfFire) && IsOffCooldown(RiddleOfWind) &&
+                                               Gauge.Nadi is Nadi.NONE && Gauge.RaptorFury is 0 && Gauge.CoeurlFury is 0;
     }
 
     #endregion
