@@ -1341,14 +1341,14 @@ public enum CustomComboPreset
 
     // StandardStep(or Finishing Move) --> Last Dance
     [ReplaceSkill(DNC.StandardStep, DNC.FinishingMove)]
-    [ConflictingCombos(DNC_DanceStepCombo, DNC_TechnicalStep_Devilment)]
+    [ConflictingCombos(DNC_DanceStepCombo)]
     [CustomComboInfo("Standard Step to Last Dance Feature",
         "Change Standard Step or Finishing Move to Last Dance when available.", DNC.JobID)]
     DNC_StandardStep_LastDance = 4155,
 
     // Technical Step --> Devilment
     [ReplaceSkill(DNC.StandardStep, DNC.FinishingMove)]
-    [ConflictingCombos(DNC_StandardStep_LastDance, DNC_DanceStepCombo)]
+    [ConflictingCombos(DNC_DanceStepCombo)]
     [CustomComboInfo("Technical Step to Devilment Feature", "Change Technical Step to Devilment as soon as possible.",
         DNC.JobID)]
     DNC_TechnicalStep_Devilment = 4160,
