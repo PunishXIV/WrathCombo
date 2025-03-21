@@ -172,7 +172,7 @@ internal partial class WHM
     //Debuff Pairs of Actions and Debuff
 
 
-    public static class Buffs
+    internal new class Buffs : HealerJob.Buffs
     {
         public const ushort
             Regen = 158,

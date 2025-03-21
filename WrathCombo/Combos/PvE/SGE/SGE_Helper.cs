@@ -256,7 +256,7 @@ internal partial class SGE
 
 
     // Action Buffs
-    internal static class Buffs
+    internal new class Buffs : HealerJob.Buffs
     {
         internal const ushort
             Kardia = 2604,

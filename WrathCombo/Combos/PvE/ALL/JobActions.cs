@@ -53,6 +53,8 @@ class Healer : MagicRole //Healers
         Repose = 16560, //Lv8, 2.5s cast, GCD, range 30, single-target, targets=hostile
         Esuna = 7568, //Lv10, 1.0s cast, GCD, range 30, single-target, targets=self/party/alliance/friendly
         Rescue = 7571; //Lv48, instant, 120.0s CD (group 49), range 30, single-target, targets=party
+
+    public new class Buffs : MagicRole.Buffs;
 }
 
 class PhysicalRole //Base Shared Physical Dmg Classes

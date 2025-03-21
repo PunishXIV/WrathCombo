@@ -226,8 +226,7 @@ internal partial class SCH
 
     //Action Groups
 
-
-    internal static class Buffs
+    internal new class Buffs : HealerJob.Buffs
     {
         internal const ushort
             Galvanize = 297,

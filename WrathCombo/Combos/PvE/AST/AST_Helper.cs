@@ -395,8 +395,7 @@ internal partial class AST
 
     //Action Groups
 
-
-    internal static class Buffs
+    internal new class Buffs : HealerJob.Buffs
     {
         internal const ushort
             AspectedBenefic = 835,
