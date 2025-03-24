@@ -1,5 +1,7 @@
 ﻿using ECommons.DalamudServices;
 using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -107,11 +109,11 @@ internal partial class All
                         ActionReady(WHM.ThinAir) && !HasEffect(WHM.Buffs.ThinAir))
                         return WHM.ThinAir;
 
-                    return actionID;
+                    return actionID.AndRunMacro();
                 }
 
                 default:
-                    return actionID;
+                    return actionID.AndRunMacro();
             }
         }
     }
@@ -139,7 +141,7 @@ internal partial class All
                 case SMN.Resurrection when LocalPlayer.ClassJob.RowId is SMN.JobID:
                 {
                     if (HasEffect(MagicRole.Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast))
-                        return actionID;
+                        return actionID.AndRunMacro();
 
                     if (IsOffCooldown(MagicRole.Swiftcast))
                         return MagicRole.Swiftcast;
@@ -152,7 +154,7 @@ internal partial class All
                 }
             }
 
-            return actionID;
+            return actionID.AndRunMacro();
         }
     }
 

@@ -3,6 +3,8 @@ using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class WHM : HealerJob
@@ -50,7 +52,7 @@ internal partial class WHM : HealerJob
             if (HasEffect(Role.Buffs.Swiftcast))
                 return IsEnabled(CustomComboPreset.WHM_ThinAirRaise) && thinAirReady
                     ? ThinAir
-                    : Raise;
+                    : Raise.AndRunMacro();
 
             return actionID;
         }

@@ -130,7 +130,7 @@ internal partial class SCH : HealerJob
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
         protected override uint Invoke(uint actionID) =>
             actionID is Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? Resurrection
+                ? Resurrection.AndRunMacro()
                 : actionID;
     }
 
