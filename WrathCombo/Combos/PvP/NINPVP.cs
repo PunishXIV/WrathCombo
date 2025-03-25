@@ -1,4 +1,16 @@
-﻿using WrathCombo.CustomComboNS;
+﻿using ECommons.Automation;
+using WrathCombo.CustomComboNS;
+using static WrathCombo.AutoRotation.AutoRotationController;
+using WrathCombo.CustomComboNS.Functions;
+using System.Linq;
+using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using ECommons.GameHelpers;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using WrathCombo.Data;
+using ECommons.GameFunctions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+
 
 namespace WrathCombo.Combos.PvP
 {
@@ -60,6 +72,46 @@ namespace WrathCombo.Combos.PvP
                 NINPVP_SeitonTenchuAoE = "NINPVP_SeitonTenchuAoE";
         }
 
+        private static bool 找星遁天诛()
+        {
+            var target = DPSTargeting.BaseSelection.OrderByDescending(x => DPSTargeting.寻找星遁天诛(x)).ThenBy(x => (x as IBattleChara).CurrentHp).FirstOrDefault();
+            if (target != null) {
+                //Chat.Instance.SendMessage($"/e 星他！星他！<se.1>");
+                CustomComboFunctions.TargetObject(target);
+                return true;
+            }
+            return false;
+        }
+
+        private static unsafe IGameObject? 寻找星遁天诛目标()
+        {
+            var query = Svc.Objects.Where(x => !x.IsDead && x.IsHostile() && x.IsTargetable);
+            if (!query.Any())
+                return null;
+
+            IGameObject? target = null;
+
+            foreach(var t in query) {
+                //不是冰
+                if(GetTargetMaxHp(t) < 300000) {
+                    //范围够
+                    if (InActionRange(OriginalHook(SeitonTenchu), t)) {
+                        //不免疫
+                        if (!PvPCommon.TargetImmuneToDamage2(false, t)) {
+                            //血量低
+                            if (GetTargetHPPercent(t, false) < 50f) {
+                                target = t;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return target;
+        }
+
+
         internal class NINPvP_ST_BurstMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NINPvP_ST_BurstMode;
@@ -81,17 +133,33 @@ namespace WrathCombo.Combos.PvP
                     float remainingPercentage = (float)LocalPlayer.CurrentHp / maxHPThreshold;
                     bool inMeisuiRange = GetOptionValue(Config.NINPvP_Meisui_ST) >= (remainingPercentage * 100);
 
-                    // Hidden state actions
-                    if (isHidden)
-                        return OriginalHook(Assassinate);
+                    //处理星遁天诛
+                    if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu_动画)) {
+                        if(IsLB1Ready || HasEffect(Buffs.SeitonUnsealed)){
+                            var target = 寻找星遁天诛目标();
+                            if(target != null) {
+                                CustomComboFunctions.TargetObject(target);
+                                if(GetTargetHPPercent(target, false) < 50f)
+                                    return OriginalHook(SeitonTenchu);
+                            }
+                        }
+                    }
+
+                    //地天停手
+                    if (IsEnabled(CustomComboPreset.NINPvP_ST_地天停手) && TargetHasEffectAny(PvPCommon.Buffs.地天)) {
+                        return BLMPvP.Fire;
+                    }
 
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
-
-                        // Seiton Tenchu priority for targets below 50% HP + 有目标 + 不要打冰！
-                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && HasBattleTarget() && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) && EnemyHealthMaxHp() < 100000f &&
+                        // Seiton Tenchu priority for targets below 50% HP
+                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) &&
                             (IsLB1Ready || HasEffect(Buffs.SeitonUnsealed)))  // Limit Break or Unsealed buff
                             return OriginalHook(SeitonTenchu);
+
+                        // Hidden state actions
+                        if (isHidden && InActionRange(29503))
+                            return OriginalHook(Assassinate);
 
                         // Zesho Meppo
                         if (HasEffect(Buffs.ZeshoMeppoReady) && InMeleeRange())
@@ -127,6 +195,7 @@ namespace WrathCombo.Combos.PvP
                                 if (!HasEffect(Debuffs.SealedHyoshoRanryu))
                                     return OriginalHook(HyoshoRanryu);
 
+                                //雷遁
                                 if (!HasEffect(Debuffs.SeakedForkedRaiju) && bunshinStacks > 0)
                                     return OriginalHook(ForkedRaiju);
 

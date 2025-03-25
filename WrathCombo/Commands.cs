@@ -1,12 +1,14 @@
 #region
 
-using System;
-using System.Linq;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
+using ECommons.Automation;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
+using System;
+using System.Linq;
 using WrathCombo.Combos;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
@@ -14,6 +16,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
+using static WrathCombo.AutoRotation.AutoRotationController;
 
 #endregion
 
@@ -57,8 +60,7 @@ public partial class WrathCombo
     private void OnCommand(string command, string arguments)
     {
         var argumentParts = arguments.ToLowerInvariant().Split();
-        switch (argumentParts[0])
-        {
+        switch (argumentParts[0]) {
             case "unsetall":
             case "set":
             case "toggle":
@@ -102,6 +104,7 @@ public partial class WrathCombo
             case "dbg": // unlisted
             case "debugtab": // unlisted
                 HandleOpenCommand(tab: OpenWindow.Debug, forceOpen: true); break;
+
 
             default:
                 HandleOpenCommand(argumentParts); break;
@@ -155,8 +158,7 @@ public partial class WrathCombo
         */
 
         // Parse the action
-        switch (argument[0])
-        {
+        switch (argument[0]) {
             case "unsetall":
                 action = unset;
                 target = all;
@@ -179,16 +181,14 @@ public partial class WrathCombo
                 return;
         }
 
-        if (target is null && argument.Length < 2)
-        {
+        if (target is null && argument.Length < 2) {
             DuoLog.Error($"Please specify a feature to {action}");
             return;
         }
 
         // Parse the target feature
         target ??= argument[1];
-        if (target != all)
-        {
+        if (target != all) {
             var presetCanNumber = int.TryParse(target, out var targetNumber);
             preset = presetCanNumber
                 ? (CustomComboPreset)targetNumber
@@ -206,13 +206,11 @@ public partial class WrathCombo
         };
 
         // Execute the method
-        if (target == all)
-        {
+        if (target == all) {
             Service.Configuration.EnabledActions.Clear();
             DuoLog.Information("All unset");
         }
-        else
-        {
+        else {
             var usablePreset = (CustomComboPreset)preset!;
             method(usablePreset, false);
 
@@ -244,15 +242,13 @@ public partial class WrathCombo
     {
         var filter = argument.Length > 1 ? argument[1] : argument[0];
 
-        switch (filter)
-        {
+        switch (filter) {
             case "enabled":
             case "set":
                 foreach (var preset in Enum.GetValues<CustomComboPreset>()
                              .Where(preset =>
                                  IPC.GetComboState(preset.ToString())!.First()
-                                     .Value))
-                {
+                                     .Value)) {
                     var controlled =
                         P.UIHelper.PresetControlled(preset) is not null;
                     var ctrlText = controlled ? " " + OptionControlledByIPC : "";
@@ -266,8 +262,7 @@ public partial class WrathCombo
                 foreach (var preset in Enum.GetValues<CustomComboPreset>()
                              .Where(preset =>
                                  !IPC.GetComboState(preset.ToString())!.First()
-                                     .Value))
-                {
+                                     .Value)) {
                     var controlled =
                         P.UIHelper.PresetControlled(preset) is not null;
                     var ctrlText = controlled ? " " + OptionControlledByIPC : "";
@@ -277,8 +272,7 @@ public partial class WrathCombo
                 break;
 
             case "all":
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
-                {
+                foreach (var preset in Enum.GetValues<CustomComboPreset>()) {
                     var controlled =
                         P.UIHelper.PresetControlled(preset) is not null;
                     var ctrlText = controlled ? " " + OptionControlledByIPC : "";
@@ -308,8 +302,7 @@ public partial class WrathCombo
     /// </param>
     private void HandleComboCommands(string[] argument)
     {
-        if (argument.Length < 2)
-        {
+        if (argument.Length < 2) {
             Service.Configuration.SetActionChanging(
                 !Service.Configuration.ActionChanging);
             DuoLog.Information(
@@ -318,8 +311,7 @@ public partial class WrathCombo
             return;
         }
 
-        switch (argument[1])
-        {
+        switch (argument[1]) {
             case "on":
                 Service.Configuration.SetActionChanging(true);
                 break;
@@ -365,8 +357,9 @@ public partial class WrathCombo
                 : argument[1] == "on"
             : toggledVal;
 
-        if (newVal != Service.Configuration.RotationConfig.Enabled)
+        if (newVal != Service.Configuration.RotationConfig.Enabled) {
             ToggleAutoRotation(newVal);
+        }
     }
 
     /// <summary>
@@ -403,27 +396,23 @@ public partial class WrathCombo
     {
         var target = Svc.Targets.Target;
 
-        if (target == null)
-        {
+        if (target == null) {
             DuoLog.Error("No target selected");
             return;
         }
 
-        if (!target.IsHostile())
-        {
+        if (!target.IsHostile()) {
             DuoLog.Error("No valid target selected");
             return;
         }
 
-        if (Service.Configuration.IgnoredNPCs.Any(x => x.Key == target.DataId))
-        {
+        if (Service.Configuration.IgnoredNPCs.Any(x => x.Key == target.DataId)) {
             DuoLog.Error(
                 $"{target.Name} (ID: {target.DataId}) is already on the ignored list");
             return;
         }
 
-        if (Service.Configuration.IgnoredNPCs.All(x => x.Key != target.DataId))
-        {
+        if (Service.Configuration.IgnoredNPCs.All(x => x.Key != target.DataId)) {
             Service.Configuration.IgnoredNPCs.Add(target.DataId, target.GetNameId());
 
             DuoLog.Information(
@@ -446,63 +435,58 @@ public partial class WrathCombo
     /// </param>
     private void HandleDebugCommands(string[] argument)
     {
-        try
-        {
+        try {
             ClassJob? job = null;
 
             // Handle an entered job abbreviation
-            if (argument.Length > 1)
-            {
-                if (argument[1].Length != 3)
-                {
+            if (argument.Length > 1) {
+                if (argument[1].Length != 3) {
                     DuoLog.Error("Invalid job abbreviation");
                     throw new ArgumentException("Invalid job abbreviation");
                 }
 
-                if (argument[1] == "all")
-                {
+                if (argument[1] == "all") {
                     DebugFile.MakeDebugFile(allJobs: true);
                     return;
                 }
 
                 var jobName = argument[1].ToUpperInvariant();
-                try
-                {
+                try {
                     // Look up the entered job
                     var jobSearch = Svc.Data.Excel.GetSheet<ClassJob>()
                         .First(j => j.Abbreviation == jobName);
                     var jobId = jobSearch.RowId;
                     // Switch class to job, if necessary
-                    if (jobSearch.ClassJobParent.RowId != jobSearch.RowId)
+                    if (jobSearch.ClassJobParent.RowId != jobSearch.RowId) {
                         jobId =
                             CustomComboFunctions.JobIDs.ClassToJob(jobSearch.RowId);
+                    }
+
                     job = Svc.Data.Excel.GetSheet<ClassJob>().GetRow(jobId);
                 }
                 // the .first() failed
-                catch (InvalidOperationException)
-                {
+                catch (InvalidOperationException) {
                     DuoLog.Error($"Invalid job abbreviation, '{jobName}'");
                     throw;
                 }
                 // unknown
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     DuoLog.Error($"Error looking up job abbreviation, '{jobName}'");
                     Svc.Log.Error(ex, "Debug Log");
                     throw;
                 }
 
                 if (job.Value.RowId !=
-                    Svc.ClientState.LocalPlayer.ClassJob.Value.RowId)
+                    Svc.ClientState.LocalPlayer.ClassJob.Value.RowId) {
                     DuoLog.Warning($"You are not on {job.Value.Name}");
+                }
             }
 
             // Request a debug file, with null, or the entered Job
             // (if converted successfully)
             DebugFile.MakeDebugFile(job);
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             Svc.Log.Error(ex, "Debug Log");
             DuoLog.Error("Unable to write Debug log");
         }
@@ -565,12 +549,12 @@ public partial class WrathCombo
         ConfigWindow.IsOpen = !ConfigWindow.IsOpen;
 
         // Force open (UI buttons)
-        if (forceOpen is not null)
+        if (forceOpen is not null) {
             ConfigWindow.IsOpen = forceOpen.Value;
+        }
 
         // Open to specific tab
-        if (tab is not null)
-        {
+        if (tab is not null) {
             ConfigWindow.OpenWindow = tab.Value;
             return;
         }
@@ -578,15 +562,16 @@ public partial class WrathCombo
         // Open to current job setting
         PvEFeatures.OpenToCurrentJob(false);
 
-        if (argument[0].Length <= 0) return;
+        if (argument[0].Length <= 0) {
+            return;
+        }
 
         // Open to specified job
         var jobName = argument[0].ToUpperInvariant();
         jobName = ConfigWindow.groupedPresets
             .FirstOrDefault(x =>
                 x.Value.Any(y => y.Info.JobShorthand == jobName)).Key;
-        if (jobName is null)
-        {
+        if (jobName is null) {
             DuoLog.Error($"{argument[0]} is not a correct job abbreviation.");
             return;
         }
@@ -594,4 +579,6 @@ public partial class WrathCombo
         ConfigWindow.IsOpen = true;
         PvEFeatures.OpenJob = jobName;
     }
+
 }
+

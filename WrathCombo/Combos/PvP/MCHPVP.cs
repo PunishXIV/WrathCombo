@@ -1,5 +1,10 @@
+using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using ECommons.GameFunctions;
+using WrathCombo.CustomComboNS.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -19,7 +24,7 @@ namespace WrathCombo.Combos.PvP
             BishopTurret = 29412,
             AetherMortar = 29413,
             Analysis = 29414,
-            MarksmanSpite = 29415,
+            Ä§µ¯ÉäÊÖ = 29415,
             FullMetalField = 41469;
 
         public static class Buffs
@@ -49,6 +54,34 @@ namespace WrathCombo.Combos.PvP
 
         }
 
+        private static unsafe IGameObject? Ñ°ÕÒÄ§µ¯ÉäÊÖÄ¿±ê()
+        {
+            var query = Svc.Objects.Where(x => !x.IsDead && x.IsHostile() && x.IsTargetable);
+            if (!query.Any())
+                return null;
+
+            IGameObject? target = null;
+
+            foreach (var t in query) {
+                //²»ÊÇ±ù
+                if (CustomComboFunctions.GetTargetMaxHp(t) < 300000) {
+                    //·¶Î§¹»
+                    if (CustomComboFunctions.InActionRange(CustomComboFunctions.OriginalHook(Ä§µ¯ÉäÊÖ), t)) {
+                        //²»ÃâÒß
+                        if (!PvPCommon.TargetImmuneToDamage2(true, t)) {
+                            //ÑªÁ¿µÍ
+                            float x = CustomComboFunctions.EnemyHealthCurrentHp(t);
+                            if (x> 0f && x < 16000f) {
+                                target = t;
+                                break;
+                            }
+                        }
+                    }                  
+                }
+            }
+            return target;
+        }
+
         internal class MCHPvP_BurstMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCHPvP_BurstMode;
@@ -65,9 +98,25 @@ namespace WrathCombo.Combos.PvP
 
                     if (!PvPCommon.TargetImmuneToDamage() && HasBattleTarget())
                     {
+                        //´¦ÀíÕ¶Ìú½£
+                        if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite)) {
+                            if (IsLB1Ready) {
+                                var target = Ñ°ÕÒÄ§µ¯ÉäÊÖÄ¿±ê();
+                                if (target != null) {
+                                    CustomComboFunctions.TargetObject(target);
+                                    float x = CustomComboFunctions.EnemyHealthCurrentHp(target);
+                                    //ÔÙ´ÎÈ·ÈÏ
+                                    if (HasTarget() && x < 16000f)
+                                        return OriginalHook(Ä§µ¯ÉäÊÖ);
+                                }
+                            }
+                        }
+
+
+
                         // MarksmanSpite execute condition - todo add config
-                        if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite) && HasBattleTarget() && EnemyHealthCurrentHp() < GetOptionValue(Config.MCHPVP_MarksmanSpite) && IsLB1Ready)
-                            return MarksmanSpite;
+                        //if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite) && HasBattleTarget() && EnemyHealthCurrentHp() < GetOptionValue(Config.MCHPVP_MarksmanSpite) && IsLB1Ready)
+                        //    return Ä§µ¯ÉäÊÖ;
 
                         if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_Wildfire) && canWeave && overheated && IsOffCooldown(Wildfire))
                             return OriginalHook(Wildfire);

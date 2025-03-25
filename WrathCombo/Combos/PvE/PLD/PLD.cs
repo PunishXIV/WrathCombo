@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
 using WrathCombo.Combos.PvE.Content;
@@ -798,9 +799,29 @@ internal partial class PLD
         protected override uint Invoke(uint actionID)
         {
             if (actionID == All.铁壁) {
-                if (ActionReady(Bulwark)) {
+                if (IsOnCooldown(All.铁壁) && ActionReady(Bulwark)) {
                     return Bulwark;
                 }
+            }
+            return actionID;
+        }
+    }
+
+    //盾阵 → 干预
+    internal class PLD_盾阵_干预 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_盾阵_干预;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID == OriginalHook(Sheltron)) {
+                if (ActionReady(干预) && Gauge.OathGauge >= 50) {
+                    IGameObject? healTarget = GetHealTarget(true);
+                    if (healTarget != LocalPlayer) {
+                        return 干预;
+                    }
+                }
+
             }
             return actionID;
         }

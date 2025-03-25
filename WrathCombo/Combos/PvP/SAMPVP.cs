@@ -1,10 +1,20 @@
-﻿using WrathCombo.CustomComboNS;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.Automation;
+using ECommons.DalamudServices;
+using ECommons.GameFunctions;
+using System.Linq;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.AutoRotation.AutoRotationController;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class SAMPvP
     {
+        public static bool 已通知 = false;
+
+        private static IGameObject LastTarget = null;
+
         public const byte JobID = 34;
 
         public const uint
@@ -22,7 +32,7 @@ namespace WrathCombo.Combos.PvP
             MeikyoShisui = 29536,
             Midare = 29529,
             Kaeshi = 29531,
-            Zantetsuken = 29537,
+            斩铁剑 = 29537,
             TendoSetsugekka = 41454,
             TendoKaeshiSetsugekka = 41455,
             Zanshin = 41577;
@@ -40,7 +50,7 @@ namespace WrathCombo.Combos.PvP
         public static class Debuffs
         {
             public const ushort
-                Kuzushi = 3202;
+                崩破 = 3202;
         }
 
         public static class Config
@@ -54,6 +64,37 @@ namespace WrathCombo.Combos.PvP
             public static UserBool
                 SAMPvP_Soten_SubOption = new("SAMPvP_Soten_SubOption"),
                 SAMPvP_Mineuchi_SubOption = new("SAMPvP_Mineuchi_SubOption");
+        }
+
+        private static unsafe IGameObject? 寻找斩铁剑目标()
+        {
+            var query = Svc.Objects.Where(x => !x.IsDead && x.IsHostile() && x.IsTargetable);
+            if (!query.Any())
+                return null;
+
+            IGameObject? target = null;
+
+            foreach (var t in query) {
+                //不是冰
+                if (CustomComboFunctions.GetTargetMaxHp(t) < 300000) {
+                    //有自己的崩破
+                    if(CustomComboFunctions.FindEffect(Debuffs.崩破, t, CustomComboFunctions.LocalPlayer?.GameObjectId) is not null) {
+                        //范围够
+                        if (CustomComboFunctions.InActionRange(CustomComboFunctions.OriginalHook(斩铁剑), t)) {
+                            //不免疫
+                            if (!PvPCommon.TargetImmuneToDamage2(false, t)) {
+                                //血量低
+                                if (CustomComboFunctions.GetTargetHPPercent(t, true) <= 100f) {
+                                    target = t;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                   
+                }
+            }
+            return target;
         }
 
         internal class SAMPvP_BurstMode : CustomCombo
@@ -78,7 +119,7 @@ namespace WrathCombo.Combos.PvP
                     bool hasBind = HasEffectAny(PvPCommon.Debuffs.Bind);
                     bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
                     bool isTargetPrimed = hasTarget && !targetHasImmunity;
-                    bool targetHasKuzushi = TargetHasEffect(Debuffs.Kuzushi);
+                    bool targetHasKuzushi = TargetHasEffect(Debuffs.崩破);
                     bool hasKaeshiNamikiri = OriginalHook(OgiNamikiri) is Kaeshi;
                     bool hasTendo = OriginalHook(MeikyoShisui) is TendoSetsugekka;
                     bool isYukikazePrimed = ComboTimer == 0 || ComboAction is Kasha;
@@ -87,12 +128,27 @@ namespace WrathCombo.Combos.PvP
                     bool isMeikyoPrimed = IsOnCooldown(OgiNamikiri) && !hasKaeshiNamikiri && !hasKaiten && !isMoving;
                     bool isZantetsukenPrimed = IsLB1Ready && !hasBind && hasTarget && targetHasKuzushi && targetDistance <= 20;
                     bool isSotenPrimed = chargesSoten > Config.SAMPvP_Soten_Charges && !hasKaiten && !hasBind && !hasPrioWeaponskill;
-                    bool isTargetInvincible = TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption);
+                    bool isTargetInvincible = TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption) || TargetHasEffectAny(PLDPvP.Buffs.被保护);
+                    bool 盾不厚 = GetTargetHPPercent(CurrentTarget, true) <= 100f;
                     #endregion
 
-                    // Zantetsuken
-                    if (IsEnabled(CustomComboPreset.SAMPvP_Zantetsuken) && isZantetsukenPrimed && !isTargetInvincible)
-                        return OriginalHook(Zantetsuken);
+                    //处理斩铁剑
+                    if (IsEnabled(CustomComboPreset.SAMPvP_Zantetsuken)) {
+                        if (IsLB1Ready) {
+                            var target = 寻找斩铁剑目标();
+                            if (target != null) {
+                                CustomComboFunctions.TargetObject(target);
+                                //再次确认
+                                if (HasTarget() && targetHasKuzushi && !isTargetInvincible && 盾不厚)
+                                    return OriginalHook(斩铁剑);
+                            }
+                        }
+                    }
+
+
+                    //// Zantetsuken
+                    //if (IsEnabled(CustomComboPreset.SAMPvP_Zantetsuken) && isZantetsukenPrimed && !isTargetInvincible)
+                    //    return OriginalHook(斩铁剑);
 
                     // Chiten
                     if (IsEnabled(CustomComboPreset.SAMPvP_Chiten) && IsOffCooldown(Chiten) && inCombat && playerCurrentPercentHp < Config.SAMPvP_Chiten_PlayerHP)

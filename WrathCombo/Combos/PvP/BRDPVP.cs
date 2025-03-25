@@ -10,7 +10,7 @@ namespace WrathCombo.Combos.PvP
         public const uint
             PowerfulShot = 29391,
             ApexArrow = 29393,
-            SilentNocturne = 29395,
+            默者的夜曲 = 29395,
             RepellingShot = 29399,
             WardensPaean = 29400,
             PitchPerfect = 29392,
@@ -70,8 +70,8 @@ namespace WrathCombo.Combos.PvP
                         if (canWeave)
                         {
                             // Silence shot that gives PP, set up to not happen right after apex to tighten burst and silence after the bigger damage. Apex > Harmonic> Silent > Burst > PP or Apex > Burst > Silent >  PP
-                            if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !HasEffect(Buffs.Repertoire)) 
-                                return OriginalHook(SilentNocturne);
+                            if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(默者的夜曲).IsCooldown && !WasLastAction(ApexArrow) && !HasEffect(Buffs.Repertoire) && InActionRange(默者的夜曲)) 
+                                return OriginalHook(默者的夜曲);
 
                             if (IsEnabled(CustomComboPreset.BRDPvP_EncoreOfLight) && HasEffect(Buffs.EncoreofLightReady)) // LB finisher shot
                                 return OriginalHook(FinalFantasia);

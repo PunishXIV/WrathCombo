@@ -15,7 +15,7 @@ namespace WrathCombo.Combos.PvP
             Cure3 = 29225,
             AfflatusMisery = 29226,
             Aquaveil = 29227,
-            MiracleOfNature = 29228,
+            自然的奇迹 = 29228,
             SeraphStrike = 29229,
             AfflatusPurgation = 29230;
 
@@ -54,8 +54,10 @@ namespace WrathCombo.Combos.PvP
                         if (CanWeave())
                         {
                             // Miracle of Nature if enabled and off cooldown and inrange 
-                            if (IsEnabled(CustomComboPreset.WHMPvP_Mirace_of_Nature) && IsOffCooldown(MiracleOfNature) && InActionRange(MiracleOfNature))
-                                return MiracleOfNature;
+                            if (IsEnabled(CustomComboPreset.WHMPvP_Mirace_of_Nature) && IsOffCooldown(自然的奇迹) && InActionRange(自然的奇迹))
+                                //不要对冰放
+                                if(GetTargetMaxHp() < 300000)
+                                    return 自然的奇迹;
 
                             // Seraph Strike if enabled and off cooldown
                             if (IsEnabled(CustomComboPreset.WHMPvP_Seraph_Strike) && IsOffCooldown(SeraphStrike))

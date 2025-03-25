@@ -4,6 +4,7 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -44,6 +45,7 @@ namespace WrathCombo.Combos.PvP
         {
             public const ushort
                 Sprint = 1342,
+                地天 = 1240,
                 Guard = 3054;
         }
 
@@ -62,6 +64,21 @@ namespace WrathCombo.Combos.PvP
                 ? targetHasReductions || targetHasImmunities
                 : targetHasImmunities;
         }
+
+        public static bool TargetImmuneToDamage2(bool includeReductions = true, IGameObject? optionalTarget = null)
+        {
+            var t = optionalTarget ?? CustomComboFunctions.CurrentTarget;
+            if (t is null || !CustomComboFunctions.InPvP()) return false;
+
+            bool targetHasReductions = CustomComboFunctions.TargetHasEffectAny(Buffs.Guard, t) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales, t);
+            bool targetHasImmunities = CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption, t) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround, t) 
+                || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.被保护, t);
+
+            return includeReductions
+                ? targetHasReductions || targetHasImmunities
+                : targetHasImmunities;
+        }
+
 
         // Lists of Excluded skills 
         internal static readonly List<uint>

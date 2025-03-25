@@ -130,18 +130,25 @@ internal partial class WHM
         Cure = 120,
         Cure2 = 135,
         Cure3 = 131,
+        愈疗 = 131,
         Regen = 137,
+        再生 = 137,
         AfflatusSolace = 16531,
         AfflatusRapture = 16534,
+        狂喜之心 = 16534,
         Raise = 125,
+        复活 = 125,
         Benediction = 140,
         AfflatusMisery = 16535,
         Medica1 = 124,
         Medica2 = 133,
         Medica3 = 37010,
+        庇护所 = 3569,
         Tetragrammaton = 3570,
         DivineBenison = 7432,
+        神祝祷 = 7432,
         Aquaveil = 25861,
+        水流幕 = 25861,
         DivineCaress = 37011,
 
         // DPS
@@ -152,6 +159,7 @@ internal partial class WHM
         Stone2 = 127,
         Stone3 = 3568,
         Stone4 = 7431,
+        法令 = 3571,
         Assize = 3571,
         Holy = 139,
         Holy3 = 25860,
@@ -163,7 +171,9 @@ internal partial class WHM
 
         // Buffs
         ThinAir = 7430,
+        无中生有 = 7430,
         PresenceOfMind = 136,
+        全大赦 = 7433,
         PlenaryIndulgence = 7433;
 
     //Action Groups
@@ -176,11 +186,14 @@ internal partial class WHM
     {
         public const ushort
             Regen = 158,
+            再生 = 158,
             Medica2 = 150,
             Medica3 = 3880,
             PresenceOfMind = 157,
             ThinAir = 1217,
+            无中生有 = 1217,
             DivineBenison = 1218,
+            神祝祷 = 1218,
             Aquaveil = 2708,
             SacredSight = 3879,
             DivineGrace = 3881;

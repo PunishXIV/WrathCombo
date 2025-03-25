@@ -91,6 +91,21 @@ namespace WrathCombo.CustomComboNS.Functions
             else return 0;
         }
 
+
+        public static uint GetTargetMaxHp(IGameObject? OurTarget = null)
+        {
+            if (OurTarget is null) {
+                OurTarget = CurrentTarget; // Fallback to CurrentTarget
+                if (OurTarget is null)
+                    return 0;
+            }
+
+            if (OurTarget is IBattleChara chara) {
+                return chara.MaxHp;
+            }
+            else return 0;
+        }
+
         public static float EnemyHealthMaxHp()
         {
             if (CurrentTarget is null)
@@ -101,11 +116,16 @@ namespace WrathCombo.CustomComboNS.Functions
             return chara.MaxHp;
         }
 
-        public static float EnemyHealthCurrentHp()
+        public static float EnemyHealthCurrentHp(IGameObject? OurTarget = null)
         {
-            if (CurrentTarget is null)
+            IGameObject? target = null;
+            if (OurTarget != null)
+                target = OurTarget;
+            else
+                target = CurrentTarget;
+            if (target is null)
                 return 0;
-            if (CurrentTarget is not IBattleChara chara)
+            if (target is not IBattleChara chara)
                 return 0;
 
             return chara.CurrentHp;

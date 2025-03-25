@@ -33,6 +33,7 @@ internal partial class PLD
         Guardian = 36920,
         TotalEclipse = 7381,
         Intervention = 7382,
+        干预 = 7382,
         Requiescat = 7383,
         Imperator = 36921,
         HolySpirit = 7384,

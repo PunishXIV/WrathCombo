@@ -16,7 +16,7 @@ namespace WrathCombo.Combos.PvP
             Intervene = 29065,
             HolySheltron = 29067,
             Guardian = 29066,
-            Phalanx = 29069,
+            列阵 = 29069,
             BladeOfFaith = 29071,
             BladeOfTruth = 29072,
             BladeOfValor = 29073;
@@ -27,6 +27,8 @@ namespace WrathCombo.Combos.PvP
             internal const ushort
                 ConfiteorReady = 3028,
                 HallowedGround = 1302,
+                被保护 = 1301,
+                地天 = 1240,
                 AttonementReady = 2015,
                 SupplicationReady = 4281,
                 SepulchreReady = 4282,
@@ -38,6 +40,7 @@ namespace WrathCombo.Combos.PvP
         {
             internal const ushort
                 Stun = 1343,
+                崩破 = 3202,
                 ShieldSmite = 4283;
         }
 
@@ -47,38 +50,42 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID)
             {
-                if (actionID is FastBlade or RiotBlade or RoyalAuthority)
-                {
-                    if (IsEnabled(CustomComboPreset.PLDPvP_Intervene) && !InMeleeRange() && IsOffCooldown(Intervene) || IsEnabled(CustomComboPreset.PLDPvP_Intervene_Melee) && InMeleeRange() && IsOffCooldown(Intervene))
+                if (actionID is FastBlade or RiotBlade or RoyalAuthority) {
+                    if ((IsEnabled(CustomComboPreset.PLDPvP_Intervene) && !InMeleeRange() && IsOffCooldown(Intervene)) || (IsEnabled(CustomComboPreset.PLDPvP_Intervene_Melee) && InMeleeRange() && IsOffCooldown(Intervene))) {
                         return Intervene;
+                    }
 
                     // Check conditions for Holy Sheltron
-                    if (IsEnabled(CustomComboPreset.PLDPvP_Sheltron) && IsOffCooldown(HolySheltron) && InCombat() && InMeleeRange())
+                    if (IsEnabled(CustomComboPreset.PLDPvP_Sheltron) && IsOffCooldown(HolySheltron) && InCombat() && InMeleeRange()) {
                         return HolySheltron;
+                    }
 
                     // Check conditions for ShieldSmite
-                    if (IsEnabled(CustomComboPreset.PLDPvP_ShieldSmite) && IsOffCooldown(ShieldSmite) && InCombat() && InMeleeRange())
+                    if (IsEnabled(CustomComboPreset.PLDPvP_ShieldSmite) && IsOffCooldown(ShieldSmite) && InCombat() && InMeleeRange()) {
                         return ShieldSmite;
+                    }
 
                     // Prioritize Imperator
-                    if (IsEnabled(CustomComboPreset.PLDPvP_Imperator) && IsOffCooldown(Imperator) && InMeleeRange() && CanWeave())
+                    if (IsEnabled(CustomComboPreset.PLDPvP_Imperator) && IsOffCooldown(Imperator) && InMeleeRange() && CanWeave()) {
                         return Imperator;
+                    }
 
-                    if (IsEnabled(CustomComboPreset.PLDPvP_PhalanxCombo))
-                    {
-                        if (HasEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
-                            return OriginalHook(Phalanx);
+                    if (IsEnabled(CustomComboPreset.PLDPvP_PhalanxCombo)) {
+                        if (!IsOriginal(列阵)) { 
+                        //if (HasEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith)) {
+                            return OriginalHook(列阵);
+                        }
                     }
 
                     // Check if the custom combo preset is enabled and ConfiteorReady is active
-                    if (IsEnabled(CustomComboPreset.PLDPvP_Confiteor) && HasEffect(Buffs.ConfiteorReady))
+                    if (IsEnabled(CustomComboPreset.PLDPvP_Confiteor) && HasEffect(Buffs.ConfiteorReady)) {
                         return OriginalHook(Imperator);
+                    }
 
-
-                    if (IsEnabled(CustomComboPreset.PLDPvP_HolySpirit))
-                    {
-                        if (IsOffCooldown(HolySpirit) && !InMeleeRange() || IsOffCooldown(HolySpirit) && (!HasEffect(Buffs.AttonementReady) && !HasEffect(Buffs.SupplicationReady) && !HasEffect(Buffs.SepulchreReady)))
+                    if (IsEnabled(CustomComboPreset.PLDPvP_HolySpirit)) {
+                        if ((IsOffCooldown(HolySpirit) && !InMeleeRange()) || (IsOffCooldown(HolySpirit) && !HasEffect(Buffs.AttonementReady) && !HasEffect(Buffs.SupplicationReady) && !HasEffect(Buffs.SepulchreReady))) {
                             return HolySpirit;
+                        }
                     }
 
                 }

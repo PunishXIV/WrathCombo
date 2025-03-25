@@ -612,6 +612,19 @@ public enum CustomComboPreset
     [CustomComboInfo("Foul/Xenoglossy for Movement Option", "Add Foul / Xenoglossy to the rotation as movement option.", BLM.JobID)]
     BLM_ST_UsePolyglotMoving = 2105,
 
+    [ParentCombo(BLM_ST_AdvancedMode)]
+    [CustomComboInfo("低级爆炎",
+    "如果你在火状态但不会炽炎，那有爆炎就丢。", BLM.JobID)]
+    BLM_ST_爆炎 = 210101,
+
+
+    [ReplaceSkill(BLM.Fire)]
+    [CustomComboInfo("单目标连击 - 动画版", "用单目标的一键连击代替【火炎】，这个是动画重置版。", BLM.JobID)]
+    BLM_ST_AnimeMode = 210102,
+
+    [ReplaceSkill(BLM.Blizzard2, BLM.HighBlizzard2)]
+    [CustomComboInfo("多目标连击 - 动画版", "用单目标的一键连击代替【冰冻/高冰冻】，这个是动画重置版。", BLM.JobID)]
+    BLM_AoE_AnimeMode = 210103,
     #endregion
 
     #region AoE - Advanced
@@ -4094,6 +4107,10 @@ public enum CustomComboPreset
     [CustomComboInfo("铁壁替换选项", "如果【铁壁】进冷却了且【壁垒】可用，则用【壁垒】代替之。", PLD.JobID)]
     PLD_Bulwark = 1104101,
 
+    [ReplaceSkill(PLD.Sheltron)]
+    [CustomComboInfo("盾阵 - 干预", "如果你的目标是队友，或鼠标悬停于小队列表的队友至上，把盾阵换成干预。", PLD.JobID)]
+    PLD_盾阵_干预 = 1104102,
+
     // Variant Features
 
     [Variant]
@@ -5848,7 +5865,7 @@ SMN.JobID)]
     VPR_ST_VicewinderCombo = 30007,
 
     [ParentCombo(VPR_ST_AdvancedMode)]
-    [CustomComboInfo("Vicewinder Weaves", "Adds Twinfang and Bloodfang to the rotation.", VPR.JobID)]
+    [CustomComboInfo("Vicewinder Weaves", "Adds Twinfang and Twinblood to the rotation.", VPR.JobID)]
     VPR_ST_VicewinderWeaves = 30013,
 
     [ParentCombo(VPR_ST_AdvancedMode)]
@@ -6563,6 +6580,47 @@ SMN.JobID)]
     [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", WHM.JobID)]
     WHM_DPS_Variant_Rampart = 19026,
 
+    //自用
+    [ReplaceSkill(WHM.神祝祷)]
+    [CustomComboInfo("水流幕 - 神祝祷", "如果水流幕可用，用之代替神祝祷。", WHM.JobID)]
+    WHM_减伤 = 1900001,
+
+    [ParentCombo(WHM_减伤)]
+    [CustomComboInfo("插入再生", "如果再生可用，则插入再生。", WHM.JobID)]
+    WHM_减伤_再生 = 1900002,
+
+    [ReplaceSkill(WHM.愈疗)]
+    [CustomComboInfo("狂喜之心 - 愈疗", "如果狂喜之心可用，用之代替愈疗。", WHM.JobID)]
+    WHM_狂喜之心_愈疗 = 1900101,
+
+    [ParentCombo(WHM_RaptureMisery)]
+    [CustomComboInfo("无中生有", "如果无中生有可用且在战斗中，在愈疗前插入无中生有。", WHM.JobID)]
+    WHM_无中生有_愈疗 = 1900102,
+
+    [ReplaceSkill(WHM.全大赦)]
+    [CustomComboInfo("全大赦", "如果下面的技能可用，用下面的技能代替全大赦（单独启用此项不会有效果）", WHM.JobID)]
+    WHM_全大赦 = 1900200,
+
+    [ParentCombo(WHM_全大赦)]
+    [CustomComboInfo("法令", "如果法令可用，用之代替全大赦。", WHM.JobID)]
+    WHM_法令_全大赦 = 1900201,
+
+    [ParentCombo(WHM_全大赦)]
+    [CustomComboInfo("庇护所", "如果庇护所可用，用之代替全大赦。", WHM.JobID)]
+    WHM_庇护所_全大赦 = 1900202,
+
+    [ParentCombo(WHM_全大赦)]
+    [CustomComboInfo("庇护所喊话", "在你使用[庇护所]后，发送一条消息到小队频道以提醒大家进庇护所。", WHM.JobID)]
+    WHM_庇护所_喊话 = 1900203,
+
+    [ReplaceSkill(WHM.复活)]
+    [CustomComboInfo("即刻-无中-复活", "按[即刻 - 无中 - 复活]的顺序丢技能", WHM.JobID)]
+    WHM_Raise_动画 = 1900400,
+
+    [ParentCombo(WHM_Raise_动画)]
+    [CustomComboInfo("复活喊话", "发送一条喊话到小队频道以提示复活。", WHM.JobID)]
+    WHM_Raise_喊话 = 1900401,
+
     // Last value = 19027
 
     #endregion
@@ -7175,6 +7233,18 @@ SMN.JobID)]
         NINPvP.JobID)]
     NINPvP_ST_SeitonTenchu = 120007,
 
+
+    [ParentCombo(NINPvP_ST_BurstMode)]
+    [PvPCustomCombo]
+    [CustomComboInfo("星遁天诛 - 动画版", "动画修改过的星遁天诛（测试中），和上面的选项冲突。",
+    NINPvP.JobID)]
+    NINPvP_ST_SeitonTenchu_动画 = 12000701,
+
+    [ParentCombo(NINPvP_ST_BurstMode)]
+    [PvPCustomCombo]
+    [CustomComboInfo("地天停手", "你也不想吃斩铁剑对吧", NINPvP.JobID)]
+    NINPvP_ST_地天停手 = 12000702,
+
     [ParentCombo(NINPvP_AoE_BurstMode)]
     [PvPCustomCombo]
     [CustomComboInfo("Meisui Option", "Uses Three Mudra on Meisui when HP is under the set threshold.", NINPvP.JobID)]
@@ -7504,7 +7574,6 @@ SMN.JobID)]
         "Uses Zantetsuken when available.\n- Will not use if target is invulnerable.\n- Requires target to have player's Kuzushi.",
         SAMPvP.JobID)]
     SAMPvP_Zantetsuken = 125005,
-
     // Last value = 125005
 
     #endregion

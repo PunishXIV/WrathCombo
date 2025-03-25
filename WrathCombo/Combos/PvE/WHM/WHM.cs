@@ -1,5 +1,7 @@
+using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.Automation;
 using ECommons.DalamudServices;
 using System.Linq;
 using WrathCombo.Combos.PvE.Content;
@@ -9,6 +11,9 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class WHM
 {
+    private static bool 复活喊话 = false;
+    private static bool 天赐喊话 = false;
+    private static bool 庇护所喊话 = false;
     internal class WHM_SolaceMisery : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_SolaceMisery;
@@ -349,6 +354,122 @@ internal partial class WHM
                 gauge.BloodLily >= 3 && HasBattleTarget())
                 return AfflatusMisery;
 
+            return actionID;
+        }
+    }
+
+    internal class WHM_减伤 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_减伤;
+
+        protected override uint Invoke(uint actionID)
+        {
+            IGameObject? healTarget = GetHealTarget(true);
+            if (actionID is 神祝祷) {
+                if (IsEnabled(CustomComboPreset.WHM_减伤_再生)) {
+                    if (ActionReady(再生)) {
+                        if (FindEffectOnMember(Buffs.再生, healTarget, true) is null) {
+                            return 再生;
+                        }
+                    }
+                }
+                if (ActionReady(水流幕)) {
+                    return 水流幕;
+                }
+                if (FindEffectOnMember(Buffs.神祝祷, healTarget) is null) {
+                    return 神祝祷;
+                }
+                return BLM.Fire;
+            }
+            return actionID;
+        }
+    }
+
+    internal class WHM_狂喜之心_愈疗 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_狂喜之心_愈疗;
+
+        protected override uint Invoke(uint actionID)
+        {
+            WHMGauge? gauge = GetJobGauge<WHMGauge>();
+            if (actionID is 愈疗) {
+                if (LevelChecked(狂喜之心) && gauge.Lily > 0) {
+                    return 狂喜之心;
+                }
+                if (IsEnabled(CustomComboPreset.WHM_无中生有_愈疗) && InCombat() && ActionReady(无中生有) && !HasEffect(Buffs.无中生有)) {
+                    return 无中生有;
+                }
+            }
+            return actionID;
+        }
+    }
+
+    internal class WHM_全大赦 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_全大赦;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is 全大赦) {
+                if (IsEnabled(CustomComboPreset.WHM_庇护所_喊话)) {
+                    if (WasLastAbility(庇护所)) {
+                        if (庇护所喊话 == false && IsInParty()) {
+                            庇护所喊话 = true;
+                            Chat.Instance.SendMessage($"/p 肯定是这边！(请进庇护所！）<se.7>");
+                        }
+                    }
+                    else {
+                        if (庇护所喊话 == true) {
+                            庇护所喊话 = false;
+                        }
+                    }
+                }
+                if (IsEnabled(CustomComboPreset.WHM_法令_全大赦) && ActionReady(法令)) {
+                    return 法令;
+                }
+                if (IsEnabled(CustomComboPreset.WHM_庇护所_全大赦) && ActionReady(庇护所)) {
+                    return 庇护所;
+                }
+            }
+            return actionID;
+        }
+    }
+
+    internal class WHM_Raise_动画 : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WHM_Raise_动画;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is 复活) {
+                //复生喊话
+                if (IsEnabled(CustomComboPreset.WHM_Raise_喊话)) {
+                    if (JustUsed(复活, 3f)) {
+                        if (复活喊话 == false && IsInParty()) {
+                            复活喊话 = true;
+                            IGameObject? healTarget = GetHealTarget(true);
+                            string LeaderName = healTarget.Name.ToString();
+                            if (JustUsed(All.Swiftcast, 3f)) {
+                                Chat.Instance.SendMessage($"/p 大地母亲为你骄傲。（已对【{LeaderName}】施放复活）<se.1>");
+                            }
+                            else {
+                                Chat.Instance.SendMessage($"/p 愿太阳温暖你的脸。（正在复活{LeaderName}）<se.1>");
+                            }
+                        }
+                    }
+                    else {
+                        if (复活喊话 == true) {
+                            复活喊话 = false;
+                        }
+                    }
+                }
+                if (ActionReady(All.Swiftcast) && !HasEffect(All.Buffs.Swiftcast)) {
+                    return All.Swiftcast;
+                }
+                if (ActionReady(无中生有) && !HasEffect(Buffs.无中生有)) {
+                    return 无中生有;
+                }
+            }
             return actionID;
         }
     }

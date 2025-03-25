@@ -198,7 +198,6 @@ internal static partial class SCH
             }
             return actionID;
         }
-        //=> actionID is All.����ӽ�� && IsOnCooldown(All.����ӽ��) ? ����Resurrection : actionID;
     }
 
     // Replaces Fairy abilities with Fairy summoning with Eos
@@ -659,7 +658,7 @@ internal static partial class SCH
                 ActionReady(Adloquium) &&
                 GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) <= Config.SCH_ST_Heal_AdloquiumOption)
             {
-                if (Config.SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics))
+                if (Config.SCH_ST_Heal_AldoquimOpts[2] && ActionReady(EmergencyTactics) && !(FindEffectOnMember(Buffs.Galvanize, healTarget) is null))
                     return EmergencyTactics;
 
                 if ((Config.SCH_ST_Heal_AldoquimOpts[0] || FindEffectOnMember(Buffs.Galvanize, healTarget) is null) && //Ignore existing shield check
