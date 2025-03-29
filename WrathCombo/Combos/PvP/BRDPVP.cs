@@ -46,6 +46,7 @@ namespace WrathCombo.Combos.PvP
         public static class Config
         {
             public const string
+                BRDPvP_EagleThreshold = "BRDPvP_EagleThreshold",
                 BRDPvP_HarmonicArrowCharges = "BRDPvP_HarmonicArrowCharges";
 
         }
@@ -62,6 +63,9 @@ namespace WrathCombo.Combos.PvP
                 {
                     var canWeave = CanWeave(0.5);
                     uint harmonicCharges = GetRemainingCharges(HarmonicArrow);
+
+                    if (IsEnabled(CustomComboPreset.BRDPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= GetOptionValue(Config.BRDPvP_EagleThreshold)))
+                        return PvPPhysRanged.EagleEyeShot;
 
                     if (!PvPCommon.TargetImmuneToDamage())
                     {

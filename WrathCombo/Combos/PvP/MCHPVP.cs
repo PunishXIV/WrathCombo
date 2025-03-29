@@ -47,6 +47,7 @@ namespace WrathCombo.Combos.PvP
             public const string
                 MCHPVP_MarksmanSpite = "MCHPVP_MarksmanSpite",
                 MCHPVP_FMFOption = "MCHPVP_FMFOption",
+                MCHPVP_EagleThreshold = "MCHPVP_EagleThreshold",
                 MCHPVP_Heat = "MCHPVP_Heat";
 
         }
@@ -64,6 +65,9 @@ namespace WrathCombo.Combos.PvP
                     var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
                     var overheated = HasEffect(Buffs.Overheated);
                     var FMFOption = PluginConfiguration.GetCustomIntValue(Config.MCHPVP_FMFOption);
+
+                    if (IsEnabled(CustomComboPreset.BRDPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= GetOptionValue(Config.MCHPVP_EagleThreshold)))
+                        return PvPPhysRanged.EagleEyeShot;
 
                     if (!PvPCommon.TargetImmuneToDamage() && HasBattleTarget())
                     {

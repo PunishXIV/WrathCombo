@@ -42,6 +42,7 @@ namespace WrathCombo.Combos.PvP
         public static class Config
         {
             public const string
+                DNCPvP_EagleThreshold = "DNCPvP_EagleThreshold",
                 DNCPvP_WaltzThreshold = "DNCWaltzThreshold",
                 DNCPvP_EnAvantCharges = "DNCPvP_EnAvantCharges";
         }
@@ -69,6 +70,9 @@ namespace WrathCombo.Combos.PvP
 
                     if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !HasEffect(Buffs.ClosedPosition) & GetPartyMembers().Count > 1)
                         return ClosedPosition;
+
+                    if (IsEnabled(CustomComboPreset.DNCPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= GetOptionValue(DNCPvP.Config.DNCPvP_EagleThreshold)))
+                        return PvPPhysRanged.EagleEyeShot;
 
                     if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && distance <= 5 && !enemyGuarded)
                     {

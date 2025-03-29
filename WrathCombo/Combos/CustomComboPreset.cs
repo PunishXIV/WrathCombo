@@ -6804,7 +6804,13 @@ SMN.JobID)]
         BRD.JobID)]
     BRDPvP_Wardens = 113006,
 
-    // Last value = 113006
+    [PvPCustomCombo]
+    [ParentCombo(BRDPvP_BurstMode)]
+    [CustomComboInfo("Role Action Eagle Eye Shot Option", "Automatically Adds Eagle Eye Shot to Burst Mode when target is guarded or under selected health percentage \n WILL ONLY WORK IN LARGE SCALE PVP",
+        BRD.JobID)]
+    BRDPvP_Eagle = 113007,
+
+    // Last value = 113007
 
     #endregion
 
@@ -6839,7 +6845,13 @@ SMN.JobID)]
         DNC.JobID)]
     DNCPvP_BurstMode_Dash = 114004,
 
-    // Last value = 114004
+    [PvPCustomCombo]
+    [ParentCombo(DNCPvP_BurstMode)]
+    [CustomComboInfo("Role Action Eagle Eye Shot Option", "Automatically Adds Eagle Eye Shot to Burst Mode when target is guarded or under selected health percentage \n WILL ONLY WORK IN LARGE SCALE PVP",
+       DNC.JobID)]
+    DNCPvP_Eagle = 114005,
+
+    // Last value = 114005
 
     #endregion
 
@@ -7052,7 +7064,13 @@ SMN.JobID)]
         "Adds Marksmans Spite to Burst Mode when the target is below specified HP.", MCHPvP.JobID)]
     MCHPvP_BurstMode_MarksmanSpite = 118011,
 
-    // Last value = 118011
+    [PvPCustomCombo]
+    [ParentCombo(MCHPvP_BurstMode)]
+    [CustomComboInfo("Role Action Eagle Eye Shot Option", "Automatically Adds Eagle Eye Shot to Burst Mode when target is guarded or under selected health percentage \n WILL ONLY WORK IN LARGE SCALE PVP",
+       MCH.JobID)]
+    MCHPvP_Eagle = 118012,
+
+    // Last value = 118012
 
     #endregion
 

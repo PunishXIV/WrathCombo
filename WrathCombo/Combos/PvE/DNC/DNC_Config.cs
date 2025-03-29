@@ -412,6 +412,13 @@ internal partial class DNC
 
                     break;
 
+                case CustomComboPreset.DNCPvP_Eagle:
+                    UserConfig.DrawSliderInt(0, 100, 
+                        DNCPvP.Config.DNCPvP_EagleThreshold,
+                        "Target HP percent threshold to use Eagle Eye Shot Below.");
+
+                    break;
+
                     #endregion
             }
         }

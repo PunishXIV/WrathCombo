@@ -186,6 +186,12 @@ internal partial class MCH
                     ImGui.Unindent();
 
                     break;
+
+                case CustomComboPreset.MCHPvP_Eagle:
+                    DrawSliderInt(0, 100, MCHPvP.Config.MCHPVP_EagleThreshold,
+                        "Target HP percent threshold to use Eagle Eye Shot Below.");
+
+                    break;
             }
         }
     }
