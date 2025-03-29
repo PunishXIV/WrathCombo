@@ -86,7 +86,7 @@ public static class DebugFile
                 throw new InvalidOperationException();
             }
 
-            job = Svc.ClientState.LocalPlayer.ClassJob.Value;
+            job = Svc.ClientState.LocalPlayer!.ClassJob.Value;
         }
 
         using (_file = new StreamWriter(
@@ -459,7 +459,7 @@ public static class DebugFile
 
     private static void AddStatusEffects()
     {
-        var playerID = Svc.ClientState.LocalPlayer.GameObjectId;
+        var playerID = Svc.ClientState.LocalPlayer!.GameObjectId;
         var statusEffects = Svc.ClientState.LocalPlayer.StatusList;
 
         AddLine($"Status Effects found: {statusEffects.Count()}");

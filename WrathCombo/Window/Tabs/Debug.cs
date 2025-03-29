@@ -332,7 +332,7 @@ namespace WrathCombo.Window.Tabs
                 CustomStyleText("Health:",
                     $"{EnemyHealthCurrentHp():N0} / {EnemyHealthMaxHp():N0} ({Math.Round(GetTargetHPPercent(), 2)}%)");
                 CustomStyleText("Shield:",
-                    (GetHealTarget() as ICharacter).ShieldPercentage);
+                    (GetHealTarget() as ICharacter)!.ShieldPercentage); //Null safe
                 CustomStyleText("Health Percent (+ Shield):",
                     $"{GetTargetHPPercent(GetHealTarget())} / {GetTargetHPPercent(GetHealTarget(), true)}");
                 CustomStyleText("Party Avg HP Percent:",

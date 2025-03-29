@@ -542,7 +542,7 @@ internal partial class RDM
             }
 
             if (LevelChecked(Moulinet)
-                && LocalPlayer.IsCasting == false
+                && LocalPlayer!.IsCasting == false
                 && !HasEffect(Buffs.Dualcast)
                 && !HasEffect(Role.Buffs.Swiftcast)
                 && !HasEffect(Buffs.Acceleration)
@@ -638,7 +638,7 @@ internal partial class RDM
 
             //RDM_ST_ACCELERATION
             if (InCombat()
-                && LocalPlayer.IsCasting == false
+                && LocalPlayer!.IsCasting == false
                 && RDMMana.ManaStacks == 0
                 && ComboAction is not Verflare //are these needed if the finisher is still going on?
                 && ComboAction is not Verholy

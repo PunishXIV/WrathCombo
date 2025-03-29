@@ -120,7 +120,7 @@ namespace WrathCombo.Data
                 if (ActionType is 13 or 2) return;
                 if (header->ActionId != 7 &&
                     header->ActionId != 8 &&
-                    casterEntityId == Svc.ClientState.LocalPlayer.GameObjectId)
+                    casterEntityId == Svc.ClientState.LocalPlayer!.GameObjectId)
                 {
                     LastAction = header->ActionId;
                     TimeLastActionUsed = DateTime.Now;
@@ -220,13 +220,14 @@ namespace WrathCombo.Data
                         break;
                     case 1:
                         if (HasFriendlyTarget())
-                            targetObjectId = Svc.Targets.Target.GameObjectId;
+                            targetObjectId = Svc.Targets.Target!.GameObjectId;
                         else
                             targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
                     case 2:
-                        if (GetHealTarget(true, true) is not null)
-                            targetObjectId = GetHealTarget(true, true).GameObjectId;
+                        var healTarget = GetHealTarget(true, true);
+                        if (healTarget is not null)
+                            targetObjectId = healTarget.GameObjectId;
                         else
                             targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
                         break;
@@ -360,7 +361,7 @@ namespace WrathCombo.Data
             if (Service.Configuration.PerformanceMode)
             {
                 var result = actionId;
-                foreach (var combo in ActionReplacer.FilteredCombos)
+                foreach (var combo in ActionReplacer.FilteredCombos ?? [])
                 {
                     if (combo.TryInvoke(actionId, out result))
                     {

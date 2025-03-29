@@ -73,8 +73,8 @@ internal partial class DRK
     {
         switch (restrictToHostile)
         {
-            case true when LocalPlayer.TargetObject is IBattleChara:
-            case false when LocalPlayer.TargetObject is not null:
+            case true when LocalPlayer!.TargetObject is IBattleChara:
+            case false when LocalPlayer!.TargetObject is not null:
                 return LocalPlayer.TargetObject;
         }
 
@@ -550,7 +550,7 @@ internal partial class DRK
                  ((flags.HasFlag(Combo.ST) && IsEnabled(Preset.DRK_ST_Mit_TBN)) ||
                   flags.HasFlag(Combo.AoE) && IsEnabled(Preset.DRK_AoE_Mit_TBN))) &&
                 ActionReady(BlackestNight) &&
-                LocalPlayer.CurrentMp >= 3000 &&
+                LocalPlayer!.CurrentMp >= 3000 &&
                 ShouldTBNSelf(flags.HasFlag(Combo.AoE)))
                 return (action = BlackestNight) != 0;
 
@@ -867,7 +867,7 @@ internal partial class DRK
             // Bail if mana spending is not available yet
             if (!LevelChecked(FloodOfDarkness)) return false;
 
-            var mana = (int)LocalPlayer.CurrentMp;
+            var mana = (int)LocalPlayer!.CurrentMp;
             var manaPooling =
                 ContentCheck.IsInConfiguredContent(
                     Config.DRK_ST_ManaSpenderPoolingDifficulty,
@@ -1156,7 +1156,7 @@ internal partial class DRK
         PrioritizedMitigation =>
     [
         (BlackestNight, Preset.DRK_Mit_TheBlackestNight,
-            () => !HasAnyTBN && LocalPlayer.CurrentMp > 3000 &&
+            () => !HasAnyTBN && LocalPlayer!.CurrentMp > 3000 &&
                   PlayerHealthPercentageHp() <= Config.DRK_Mit_TBN_Health),
         (Oblation, Preset.DRK_Mit_Oblation,
             () => (!((HasFriendlyTarget() && TargetHasEffectAny(Buffs.Oblation)) ||
@@ -1211,7 +1211,7 @@ internal partial class DRK
         (uint currentAction, ref uint action, uint[] castLocations)
     {
         if (castLocations.Contains(currentAction) &&
-            (Gauge.HasDarkArts || LocalPlayer.CurrentMp > 3000) &&
+            (Gauge.HasDarkArts || LocalPlayer!.CurrentMp > 3000) &&
             CanWeave() && !ActionWatching.HasDoubleWeaved())
             action = OriginalHook(EdgeOfDarkness);
     }
@@ -1253,7 +1253,7 @@ internal partial class DRK
 
         public override bool HasCooldowns()
         {
-            if (LocalPlayer.CurrentMp < 7000)
+            if (LocalPlayer!.CurrentMp < 7000)
                 return false;
 
             if (!IsOffCooldown(LivingShadow))

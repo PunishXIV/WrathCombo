@@ -78,7 +78,7 @@ namespace WrathCombo.Combos.PvP
                     bool mudraMode = HasEffect(Buffs.ThreeMudra);
                     bool inMeleeRange = InMeleeRange();
                     bool isHidden = HasEffect(Buffs.Hidden);
-                    var jobMaxHp = LocalPlayer.MaxHp;
+                    var jobMaxHp = LocalPlayer!.MaxHp;
                     var maxHPThreshold = jobMaxHp - 8000;
                     float remainingPercentage = (float)LocalPlayer.CurrentHp / maxHPThreshold;
                     bool inMeisuiRange = GetOptionValue(Config.NINPvP_Meisui_ST) >= (remainingPercentage * 100);
@@ -166,7 +166,7 @@ namespace WrathCombo.Combos.PvP
                     bool gokaLocked = HasEffect(Debuffs.SealedGokaMekkyaku);
                     bool mudraMode = HasEffect(Buffs.ThreeMudra);
                     bool canWeave = CanWeave();
-                    var jobMaxHp = LocalPlayer.MaxHp;
+                    var jobMaxHp = LocalPlayer!.MaxHp;
                     var threshold = GetOptionValue(Config.NINPvP_Meisui_AoE);
                     var maxHPThreshold = jobMaxHp - 8000;
                     var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;

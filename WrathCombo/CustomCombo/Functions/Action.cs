@@ -27,12 +27,12 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Checks if the player is high enough level to use the passed Action ID. </summary>
         /// <param name="actionid"> ID of the action. </param>
         /// <returns></returns>
-        public static bool LevelChecked(uint actionid) => LocalPlayer.Level >= GetLevel(actionid) && NoBlockingStatuses(actionid) && IsActionUnlocked(actionid);
+        public static bool LevelChecked(uint actionid) => LocalPlayer!.Level >= GetLevel(actionid) && NoBlockingStatuses(actionid) && IsActionUnlocked(actionid);
 
         /// <summary> Checks if the player is high enough level to use the passed Trait ID. </summary>
         /// <param name="traitid"> ID of the action. </param>
         /// <returns></returns>
-        public static bool TraitLevelChecked(uint traitid) => LocalPlayer.Level >= GetTraitLevel(traitid);
+        public static bool TraitLevelChecked(uint traitid) => LocalPlayer!.Level >= GetTraitLevel(traitid);
 
         /// <summary> Returns the name of an action from its ID. </summary>
         /// <param name="id"> ID of the action. </param>
@@ -101,7 +101,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Checks if the last action performed was the passed ID. </summary>
         /// <param name="id"> ID of the action. </param>
         /// <returns></returns>
-        public static bool WasLastAction(uint id) => ActionWatching.CombatActions.Count > 0 ? ActionWatching.CombatActions.LastOrDefault() == id : false;
+        public static bool WasLastAction(uint id) => ActionWatching.CombatActions.Count > 0 && ActionWatching.CombatActions.LastOrDefault() == id;
 
         /// <summary> Returns how many times in a row the last action was used. </summary>
         /// <returns></returns>
@@ -216,7 +216,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> True or false. </returns>
         public static bool CanSpellWeave(double weaveTime = 0.6)
         {
-            float castTimeRemaining = LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime;
+            float castTimeRemaining = LocalPlayer!.TotalCastTime - LocalPlayer.CurrentCastTime;
 
             if (RemainingGCD > weaveTime &&                          // Prevent GCD delay
                 castTimeRemaining <= 0.5 &&                                                     // Show in last 0.5sec of cast so game can queue ability
@@ -284,7 +284,7 @@ namespace WrathCombo.CustomComboNS.Functions
         public static unsafe bool CanQueue(uint actionID)
         {
             bool alreadyQueued = ActionManager.Instance()->QueuedActionId != 0;
-            bool inSlidecast = (LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime) <= 0.5f;
+            bool inSlidecast = (LocalPlayer!.TotalCastTime - LocalPlayer.CurrentCastTime) <= 0.5f;
             bool animLocked = ActionManager.Instance()->AnimationLock > 0;
             bool recast = GetCooldown(actionID).CooldownRemaining <= 0.5f || GetCooldown(actionID).RemainingCharges > 0;
             bool classCheck = ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) != 574;
@@ -330,7 +330,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 if (!EzThrottler.Throttle("BeingTargetedHostile", 100))
                     return _beingTargetedHostile;
 
-                return _beingTargetedHostile = Svc.Objects.Any(x => x.IsHostile() && x is IBattleChara chara && chara.CastTargetObjectId == LocalPlayer.GameObjectId);
+                return _beingTargetedHostile = Svc.Objects.Any(x => x.IsHostile() && x is IBattleChara chara && chara.CastTargetObjectId == LocalPlayer!.GameObjectId);
             }
         }
 

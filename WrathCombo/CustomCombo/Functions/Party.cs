@@ -32,9 +32,8 @@ namespace WrathCombo.CustomComboNS.Functions
             for (int i = 1; i <= 8; i++)
             {
                 var member = GetPartySlot(i);
-                if (member != null)
+                if (member is IBattleChara chara)
                 {
-                    var chara = (member as IBattleChara);
                     WrathPartyMember wmember = new()
                     {
                         GameObjectId = chara.GameObjectId,

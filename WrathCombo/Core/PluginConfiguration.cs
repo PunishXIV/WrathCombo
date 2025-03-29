@@ -264,7 +264,7 @@ namespace WrathCombo.Core
                         }
 
                         var info = preset.GetComboAttribute();
-                        DuoLog.Error($"- {info.JobName}: {info.Name}");
+                        if (info is not null) DuoLog.Error($"- {info.JobName}: {info.Name}");
                         EnabledActions.Remove(preset);
                     }
                 }

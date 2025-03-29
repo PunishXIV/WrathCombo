@@ -1,4 +1,5 @@
-﻿using Dalamud.Interface.Utility;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Interface.Utility;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -33,8 +34,9 @@ internal class TargetHelper : Dalamud.Interface.Windowing.Window
 
             for (int i = 1; i <= 8; i++)
             {
-                if (CustomComboFunctions.GetPartySlot(i) is null) continue;
-                if (CustomComboFunctions.GetPartySlot(i).GameObjectId == Combos.PvE.AST.QuickTargetCards.SelectedRandomMember.GameObjectId)
+                IGameObject? slot = CustomComboFunctions.GetPartySlot(i);
+                if (slot is null) continue;
+                if (slot.GameObjectId == Combos.PvE.AST.QuickTargetCards.SelectedRandomMember.GameObjectId)
                 {
                     var member = i switch
                     {

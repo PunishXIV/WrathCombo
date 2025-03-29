@@ -103,7 +103,7 @@ namespace WrathCombo.Combos.PvP
                     bool hasFrostStar = OriginalHook(SoulResonance) is FrostStar;
                     bool targetHasGuard = TargetHasEffectAny(PvPCommon.Buffs.Guard);
                     bool targetHasHeavy = TargetHasEffectAny(PvPCommon.Debuffs.Heavy);
-                    bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
+                    bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer!.GameObjectId;
                     bool isParadoxPrimed = HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.AstralFire1);
                     bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= Config.BLMPvP_Movement_Threshold;
                     bool isResonanceExpiring = HasEffect(Buffs.SoulResonance) && GetBuffRemainingTime(Buffs.SoulResonance) <= 10;

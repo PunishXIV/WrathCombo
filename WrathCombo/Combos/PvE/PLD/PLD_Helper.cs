@@ -143,7 +143,7 @@ internal partial class PLD
                   )),
         //Clemency
         (Clemency, CustomComboPreset.PLD_Mit_Clemency,
-            () => LocalPlayer.CurrentMp >= 2000 &&
+            () => LocalPlayer!.CurrentMp >= 2000 &&
                   PlayerHealthPercentageHp() <= Config.PLD_Mit_Clemency_Health),
     ];
 

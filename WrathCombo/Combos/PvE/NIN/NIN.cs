@@ -972,7 +972,7 @@ internal partial class NIN : MeleeJob
 
             if (HasEffect(Buffs.TenChiJin) && IsEnabled(CustomComboPreset.NIN_TCJ))
             {
-                float tcjTimer = FindEffectAny(Buffs.TenChiJin).RemainingTime;
+                float tcjTimer = GetBuffRemainingTime(Buffs.TenChiJin);
 
                 if (tcjTimer > 5)
                     return OriginalHook(Ten);

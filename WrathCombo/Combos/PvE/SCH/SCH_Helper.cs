@@ -42,7 +42,12 @@ internal partial class SCH
 
     public static bool NeedToSummon => DateTime.Now > SummonTime && !HasPetPresent() && !FairyDismissed;
 
-    public static IBattleChara? AetherPactTarget => Svc.Objects.Where(x => x is IBattleChara chara && chara.StatusList.Any(y => y.StatusId == 1223 && y.SourceObject.GameObjectId == Svc.Buddies.PetBuddy.ObjectId)).Cast<IBattleChara>().FirstOrDefault();
+    public static IBattleChara? AetherPactTarget => 
+        Svc.Objects
+            .Where(x => x is IBattleChara chara && 
+                        chara.StatusList.Any(y => y.StatusId == 1223 && 
+                                                  y.SourceObject?.GameObjectId == Svc.Buddies.PetBuddy?.ObjectId))
+            .Cast<IBattleChara>().FirstOrDefault();
 
     internal static bool HasAetherflow() => Gauge.Aetherflow > 0;
     internal static WrathOpener Opener()
