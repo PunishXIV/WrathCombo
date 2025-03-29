@@ -5241,13 +5241,16 @@ public enum CustomComboPreset
     #region Other
 
     [ReplaceSkill(SAM.Gyoten)]
-    [CustomComboInfo("Gyoten Feature",
-        "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
+    [CustomComboInfo("Gyoten Feature", "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
     SAM_GyotenYaten = 15211,
+
+    [ReplaceSkill(SAM.Senei)]
+    [CustomComboInfo("Senei - Guren Feature", "Hissatsu: Senei becomes Hissatsu : Guren when synched below lvl 72.", SAM.JobID)]
+    SAM_SeneiGuren = 15215,
 
     #endregion
 
-    // Last value = 15214
+    // Last value = 15215
 
     #endregion
 

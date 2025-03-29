@@ -926,4 +926,14 @@ internal partial class SAM : MeleeJob
                 ? All.SavageBlade
                 : actionID;
     }
+
+    internal class SAM_SeneiGuren: CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SAM_SeneiGuren;
+
+        protected override uint Invoke(uint actionID) =>
+            actionID is Senei && !LevelChecked(Senei)
+                ? Guren
+                : actionID;
+    }
 }
