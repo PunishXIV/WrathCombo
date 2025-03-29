@@ -1039,7 +1039,7 @@ namespace WrathCombo.Window.Functions
             {
                 if (pc != null)
                 {
-                    uint maxHP = Svc.ClientState.LocalPlayer?.MaxHp <= 15000 ? 0 : Svc.ClientState.LocalPlayer.MaxHp - 15000;
+                    uint maxHP = pc.MaxHp <= 15000 ? 0 : pc.MaxHp - 15000;
 
                     if (maxHP > 0)
                     {

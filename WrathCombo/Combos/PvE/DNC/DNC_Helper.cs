@@ -186,7 +186,7 @@ internal partial class DNC
         (out IGameObject? partner, bool? callingFromFeature = null)
     {
         partner = null;
-        var playerID = LocalPlayer.GameObjectId;
+        var playerID = LocalPlayer!.GameObjectId;
         var party = GetPartyMembers()
             .Where(member => member.GameObjectId != playerID)
             .Where(member => !member.BattleChara.IsDead)

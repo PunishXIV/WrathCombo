@@ -117,7 +117,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns></returns>
         public static bool MemberHasEffect(ushort effectID, IGameObject? obj, bool playerOwned, out Status? status)
         {
-            status = Service.ComboCache.GetStatus(effectID, obj, playerOwned ? LocalPlayer.GameObjectId : null);
+            status = Service.ComboCache.GetStatus(effectID, obj, playerOwned ? LocalPlayer!.GameObjectId : null);
             return status != null;
         }
 
@@ -265,7 +265,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static bool TargetIsInvincible(IGameObject target)
         {
-            var tar = (target as IBattleChara);
+            var tar = (target as IBattleChara)!;
             bool invinceStatus = tar.StatusList.Any(y => InvincibleStatuses.Any(x => x == y.StatusId));
             if (invinceStatus)
                 return true;

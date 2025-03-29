@@ -20,7 +20,7 @@ class MagicRole //All Magic Classes
 
     public static bool CanLucidDream(int MPThreshold, bool spellweave = true) =>
         ActionReady(LucidDreaming)
-        && LocalPlayer.CurrentMp <= MPThreshold
+        && LocalPlayer!.CurrentMp <= MPThreshold
         && (!spellweave || CanSpellWeave());
 
     public static bool CanSwiftcast(bool spellweave = true) =>

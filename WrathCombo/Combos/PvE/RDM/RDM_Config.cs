@@ -114,7 +114,7 @@ internal partial class RDM
                         ImGui.Spacing();
                         DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, $"{Jolt.ActionName()}s", "", 2, 0, descriptionColor: ImGuiColors.DalamudYellow);
                         DrawHorizontalMultiChoice(RDM_ST_MeleeCombo_OnAction, Riposte.ActionName(), "", 2, 1, descriptionColor: ImGuiColors.DalamudYellow);
-                        if (P.IPC.GetComboOptionState(CustomComboPreset.RDM_ST_MeleeCombo.ToString()))
+                        if (P!.IPC.GetComboOptionState(CustomComboPreset.RDM_ST_MeleeCombo.ToString()))
                         {
                             ImGui.TextColored(ImGuiColors.DalamudYellow, $"Auto-Mode is enabled for this option.\n{Zwerchhau.ActionName()} & {Redoublement.ActionName()} will be placed on {Jolt.ActionName()}");
                         }

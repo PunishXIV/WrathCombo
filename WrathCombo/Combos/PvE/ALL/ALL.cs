@@ -98,7 +98,7 @@ internal partial class All
             switch (actionID)
             {
                 case WHM.Raise or AST.Ascend or SGE.Egeiro:
-                case SCH.Resurrection when LocalPlayer.ClassJob.Value.RowId is SCH.JobID:
+                case SCH.Resurrection when LocalPlayer!.ClassJob.Value.RowId is SCH.JobID:
                 {
                     if (ActionReady(MagicRole.Swiftcast))
                         return MagicRole.Swiftcast;
@@ -136,7 +136,7 @@ internal partial class All
             switch (actionID)
             {
                 case BLU.AngelWhisper or RDM.Verraise:
-                case SMN.Resurrection when LocalPlayer.ClassJob.RowId is SMN.JobID:
+                case SMN.Resurrection when LocalPlayer!.ClassJob.RowId is SMN.JobID:
                 {
                     if (HasEffect(MagicRole.Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast))
                         return actionID;
@@ -144,7 +144,7 @@ internal partial class All
                     if (IsOffCooldown(MagicRole.Swiftcast))
                         return MagicRole.Swiftcast;
 
-                    if (LocalPlayer.ClassJob.RowId is RDM.JobID &&
+                    if (LocalPlayer!.ClassJob.RowId is RDM.JobID &&
                         ActionReady(RDM.Vercure))
                         return RDM.Vercure;
 

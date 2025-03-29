@@ -94,8 +94,9 @@ internal partial class AST
             return true;
 
         IBattleChara? m = QuickTargetCards.SelectedRandomMember as IBattleChara;
-        if (DrawnCard is CardType.Balance && CustomComboFunctions.JobIDs.Melee.Any(x => x == m.ClassJob.RowId) ||
-            DrawnCard is CardType.Spear && CustomComboFunctions.JobIDs.Ranged.Any(x => x == m.ClassJob.RowId))
+        if ((m is not null) &&
+            (DrawnCard is CardType.Balance && CustomComboFunctions.JobIDs.Melee.Any(x => x == m.ClassJob.RowId) ||
+             DrawnCard is CardType.Spear && CustomComboFunctions.JobIDs.Ranged.Any(x => x == m.ClassJob.RowId)))
             return false;
 
         List<IBattleChara> targets = new();
@@ -230,48 +231,57 @@ internal partial class AST
                 }
             }
 
+            //Grok is a scary SOB
             if (PartyTargets.Count > 0)
             {
                 PartyTargets.Shuffle();
-                //Give card to DPS first
-                for(int i = 0; i <= PartyTargets.Count - 1; i++)
+
+                IGameObject? suitableDps = null;
+                IGameObject? unsuitableDps = null;
+                IGameObject? backupTarget = null;
+
+                foreach (IGameObject partyMember in PartyTargets)
                 {
-                    byte job = PartyTargets[i] is IBattleChara ? (byte)(PartyTargets[i] as IBattleChara).ClassJob.RowId : (byte)0;
+                    if (partyMember is null) continue;
+                    byte job = partyMember is IBattleChara chara ? (byte)chara.ClassJob.RowId : (byte)0;
+
+                    // Suitable DPS (highest priority)
                     if (cardDrawn is CardType.Balance && JobIDs.Melee.Contains(job) ||
                         cardDrawn is CardType.Spear && JobIDs.Ranged.Contains(job))
                     {
-                        //TargetObject(PartyTargets[i]);
-                        SelectedRandomMember = PartyTargets[i];
-                        return true;
+                        suitableDps = partyMember;
+                        break; // Found the best option, stop searching
                     }
-                }
-                //Give card to unsuitable DPS next
-                for(int i = 0; i <= PartyTargets.Count - 1; i++)
-                {
-                    byte job = PartyTargets[i] is IBattleChara ? (byte)(PartyTargets[i] as IBattleChara).ClassJob.RowId : (byte)0;
-                    if (cardDrawn is CardType.Balance && JobIDs.Ranged.Contains(job) ||
-                        cardDrawn is CardType.Spear && JobIDs.Melee.Contains(job))
+                    // Unsuitable DPS (medium priority)
+                    else if (cardDrawn is CardType.Balance && JobIDs.Ranged.Contains(job) ||
+                             cardDrawn is CardType.Spear && JobIDs.Melee.Contains(job))
                     {
-                        //TargetObject(PartyTargets[i]);
-                        SelectedRandomMember = PartyTargets[i];
-                        return true;
+                        unsuitableDps = partyMember; // Store but keep looking for suitable DPS
+                    }
+                    // Healers/Tanks (lowest priority, if enabled)
+                    else if (IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards_TargetExtra) &&
+                             (cardDrawn is CardType.Balance && JobIDs.Tank.Contains(job) ||
+                              cardDrawn is CardType.Spear && JobIDs.Healer.Contains(job)))
+                    {
+                        backupTarget = partyMember; // Store but keep looking for DPS
                     }
                 }
 
-                //Give cards to healers/tanks if backup is turned on
-                if (IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards_TargetExtra))
+                // Set SelectedRandomMember based on priority
+                if (suitableDps is not null)
                 {
-                    for(int i = 0; i <= PartyTargets.Count - 1; i++)
-                    {
-                        byte job = PartyTargets[i] is IBattleChara ? (byte)(PartyTargets[i] as IBattleChara).ClassJob.RowId : (byte)0;
-                        if (cardDrawn is CardType.Balance && JobIDs.Tank.Contains(job) ||
-                            cardDrawn is CardType.Spear && JobIDs.Healer.Contains(job))
-                        {
-                            //TargetObject(PartyTargets[i]);
-                            SelectedRandomMember = PartyTargets[i];
-                            return true;
-                        }
-                    }
+                    SelectedRandomMember = suitableDps;
+                    return true;
+                }
+                if (unsuitableDps is not null)
+                {
+                    SelectedRandomMember = unsuitableDps;
+                    return true;
+                }
+                if (backupTarget is not null)
+                {
+                    SelectedRandomMember = backupTarget;
+                    return true;
                 }
             }
             return false;

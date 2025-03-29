@@ -126,11 +126,12 @@ internal sealed class ActionReplacer : IDisposable
         try
         {
             if (ClassLocked() ||
-                (DisabledJobsPVE.Any(x => x == Svc.ClientState.LocalPlayer.ClassJob.RowId) && !Svc.ClientState.IsPvP) ||
-                (DisabledJobsPVP.Any(x => x == Svc.ClientState.LocalPlayer.ClassJob.RowId) && Svc.ClientState.IsPvP))
+                (DisabledJobsPVE.Any(x => x == Svc.ClientState.LocalPlayer!.ClassJob.RowId) && !Svc.ClientState.IsPvP) ||
+                (DisabledJobsPVP.Any(x => x == Svc.ClientState.LocalPlayer!.ClassJob.RowId) && Svc.ClientState.IsPvP))
                 return OriginalHook(actionID);
 
-            foreach (CustomCombo? combo in FilteredCombos)
+            
+            foreach (CustomCombo? combo in FilteredCombos ?? [])
             {
                 if (combo.TryInvoke(actionID, out uint newActionID))
                 {
@@ -190,13 +191,21 @@ internal sealed class ActionReplacer : IDisposable
     public void UpdateFilteredCombos()
     {
         FilteredCombos = CustomCombos.Where(x =>
-            x.Preset.Attributes() is not null && x.Preset.Attributes().IsPvP == CustomComboFunctions.InPvP() &&
-            ((x.Preset.Attributes().RoleAttribute is not null && x.Preset.Attributes().RoleAttribute.PlayerIsRole()) ||
-             x.Preset.Attributes().CustomComboInfo.JobID == Player.JobId ||
-             x.Preset.Attributes().CustomComboInfo.JobID == CustomComboFunctions.JobIDs.ClassToJob(Player.JobId)));
+        {
+            Window.Functions.Presets.PresetAttributes? attributes = x.Preset.Attributes();
+            return attributes is not null &&
+                   attributes.IsPvP == CustomComboFunctions.InPvP() &&
+                   ((attributes.RoleAttribute is not null && attributes.RoleAttribute.PlayerIsRole()) ||
+                    attributes.CustomComboInfo?.JobID == Player.JobId ||
+                    attributes.CustomComboInfo?.JobID == CustomComboFunctions.JobIDs.ClassToJob(Player.JobId));
+        });
         var filteredCombos = FilteredCombos as CustomCombo[] ?? FilteredCombos.ToArray();
         Svc.Log.Debug(
-            $"Now running {filteredCombos.Count()} combos\n{string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().CustomComboInfo.Name))}");
+            $"Now running {filteredCombos.Length} combos\n{string.Join("\n", filteredCombos.Select(x =>
+            {
+                var attr = x.Preset.Attributes();
+                return attr?.CustomComboInfo?.Name ?? "Unknown";
+            }))}");
     }
 
     #endregion

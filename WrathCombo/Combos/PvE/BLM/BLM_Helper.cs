@@ -58,7 +58,7 @@ internal partial class BLM
 
     internal static float MPAfterCast()
     {
-        uint castedSpell = LocalPlayer.CastActionId;
+        uint castedSpell = LocalPlayer!.CastActionId;
 
         int mpGain = Gauge.UmbralIceStacks switch
         {
@@ -89,7 +89,7 @@ internal partial class BLM
         {
             case Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2:
             {
-                uint castedSpell = LocalPlayer.CastActionId;
+                uint castedSpell = LocalPlayer!.CastActionId;
 
                 if (castedSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
                     return true;

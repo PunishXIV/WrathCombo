@@ -141,10 +141,10 @@ internal partial class RDM : CasterJob
 
             //RDM_ST_MELEECOMBO
             if (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo)
-                && LocalPlayer.IsCasting == false)
+                && LocalPlayer!.IsCasting == false)
             {
                 bool isJoltAction = actionID is Jolt or Jolt2 or Jolt3;
-                bool isAutoRotOn = P.IPC.GetComboOptionState(Preset.ToString()) && P.IPC.GetAutoRotationState();
+                bool isAutoRotOn = P!.IPC.GetComboOptionState(Preset.ToString()) && P.IPC.GetAutoRotationState();
 
                 bool useJolts = !Config.RDM_ST_MeleeCombo_Adv && isJoltAction;
                 bool useJoltsAdv = Config.RDM_ST_MeleeCombo_OnAction[0] && isJoltAction;

@@ -91,7 +91,7 @@ namespace WrathCombo.Combos.PvP
 
             public static bool Execute()
             {
-                var jobMaxHp = LocalPlayer.MaxHp;
+                var jobMaxHp = LocalPlayer!.MaxHp;
                 var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyHealThreshold);
                 var maxHPThreshold = jobMaxHp - 15000;
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
@@ -119,7 +119,7 @@ namespace WrathCombo.Combos.PvP
                 {
                     if (actionID == Guard)
                     {
-                        if (IsEnabled(CustomComboPreset.PvP_MashCancelRecup) && !JustUsed(Guard, 2f) && LocalPlayer.CurrentMp >= 2500 && LocalPlayer.CurrentHp <= LocalPlayer.MaxHp - 15000) 
+                        if (IsEnabled(CustomComboPreset.PvP_MashCancelRecup) && !JustUsed(Guard, 2f) && LocalPlayer!.CurrentMp >= 2500 && LocalPlayer.CurrentHp <= LocalPlayer.MaxHp - 15000) 
                             return Recuperate;
                         return Guard;
                     }
@@ -137,7 +137,7 @@ namespace WrathCombo.Combos.PvP
 
             public static bool Execute()
             {
-                var jobMaxHp = LocalPlayer.MaxHp;
+                var jobMaxHp = LocalPlayer!.MaxHp;
                 var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyGuardThreshold);
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)jobMaxHp;
 
