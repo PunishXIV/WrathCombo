@@ -74,6 +74,8 @@ public partial class Helper(ref Leasing leasing)
     {
         const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
         var attr = preset.Attributes();
+        
+        if (attr is null || attr.CustomComboInfo is null) return null;
 
         // Bail if it is a heal preset
         if (attr.CustomComboInfo.Name.Contains("heal", lower))

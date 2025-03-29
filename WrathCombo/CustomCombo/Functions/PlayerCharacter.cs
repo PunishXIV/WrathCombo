@@ -54,11 +54,11 @@ namespace WrathCombo.CustomComboNS.Functions
             return UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(unlockLink);
         }
 
-        public static unsafe bool InFATE() => FateManager.Instance()->CurrentFate is not null && LocalPlayer.Level <= FateManager.Instance()->CurrentFate->MaxLevel;
+        public static unsafe bool InFATE() => FateManager.Instance()->CurrentFate is not null && LocalPlayer!.Level <= FateManager.Instance()->CurrentFate->MaxLevel;
 
         public static bool PlayerHasTankStance()
         {
-            return LocalPlayer.ClassJob.RowId switch
+            return LocalPlayer!.ClassJob.RowId switch
             {
                 PLD.JobID or PLD.ClassID => HasEffect(PLD.Buffs.IronWill),
                 WAR.JobID or WAR.ClassID => HasEffect(WAR.Buffs.Defiance),

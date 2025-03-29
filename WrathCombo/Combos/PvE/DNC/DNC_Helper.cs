@@ -180,7 +180,7 @@ internal partial class DNC
             .FirstOrDefault();
 
     internal static ulong? DesiredDancePartner =>
-        TryGetDancePartner(out var partner) ? partner.GameObjectId : null;
+        TryGetDancePartner(out var partner) ? partner!.GameObjectId : null;
 
     private static bool TryGetDancePartner
         (out IGameObject? partner, bool? callingFromFeature = null)
@@ -225,7 +225,7 @@ internal partial class DNC
         // Fallback to companion
         if (HasCompanionPresent())
         {
-            partner = Svc.Buddies.CompanionBuddy.GameObject;
+            partner = Svc.Buddies.CompanionBuddy!.GameObject;
             return true;
         }
 

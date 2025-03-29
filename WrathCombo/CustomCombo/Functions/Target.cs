@@ -127,12 +127,12 @@ namespace WrathCombo.CustomComboNS.Functions
             return chara.CurrentHp;
         }
 
-        public static float PlayerHealthPercentageHp() => (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp * 100;
+        public static float PlayerHealthPercentageHp() => (float)LocalPlayer!.CurrentHp / LocalPlayer.MaxHp * 100;
 
         public static bool HasBattleTarget() => CurrentTarget is not null && CurrentTarget.IsHostile();
 
         /// <summary> Checks if the player is being targeted by a hostile target. </summary>
-        public static bool IsPlayerTargeted() => Svc.Objects.Any(x => x.IsHostile() && x.IsTargetable && x.TargetObjectId == LocalPlayer.GameObjectId);
+        public static bool IsPlayerTargeted() => Svc.Objects.Any(x => x.IsHostile() && x.IsTargetable && x.TargetObjectId == LocalPlayer!.GameObjectId);
 
         public static bool HasFriendlyTarget(IGameObject? OurTarget = null)
         {
@@ -148,7 +148,7 @@ namespace WrathCombo.CustomComboNS.Functions
             if (OurTarget.ObjectKind is ObjectKind.Player)
                 return true;
             //AI
-            if (OurTarget is IBattleNpc) return (OurTarget as IBattleNpc).BattleNpcKind is not BattleNpcSubKind.Enemy and not (BattleNpcSubKind)1;
+            if (OurTarget is IBattleNpc npc) return npc.BattleNpcKind is not BattleNpcSubKind.Enemy and not (BattleNpcSubKind)1;
             return false;
         }
 
@@ -257,9 +257,9 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static bool TargetNeedsPositionals()
         {
-            if (!HasBattleTarget()) return false;
+            if (!HasBattleTarget()) return false; //Check for CurrentTarget existance
             if (TargetHasEffectAny(3808)) return false; // Directional Disregard Effect (Patch 7.01)
-            if (!NPCPositionals.ContainsKey(CurrentTarget.DataId))
+            if (!NPCPositionals.ContainsKey(CurrentTarget!.DataId))
             {
                 if (Svc.Data.GetExcelSheet<BNpcBase>().TryGetFirst(x => x.RowId == CurrentTarget.DataId, out var bnpc))
                     NPCPositionals[CurrentTarget.DataId] = bnpc.IsOmnidirectional;
@@ -546,7 +546,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static bool HitboxInRect(IGameObject o, float direction, float lenFront, float halfWidth)
         {
-            Vector2 A = new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+            Vector2 A = new Vector2(LocalPlayer!.Position.X, LocalPlayer.Position.Z);
             Vector2 d = new Vector2(MathF.Sin(direction), MathF.Cos(direction));
             Vector2 n = new Vector2(d.Y, -d.X);
             Vector2 P = new Vector2(o.Position.X, o.Position.Z);
@@ -614,7 +614,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
                                                                  (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 PointInCircle(o.Position - LocalPlayer.Position, effectRange + o.HitboxRadius));
+                                                                 PointInCircle(o.Position - LocalPlayer!.Position, effectRange + o.HitboxRadius));
         }
 
         // Ranged Circle Aoe 
@@ -633,7 +633,7 @@ namespace WrathCombo.CustomComboNS.Functions
         public static int CanConeAoe(IGameObject? target, float range, float effectRange, bool checkIgnoredList = false)
         {
             if (target is null) return 0;
-            float dir = PositionalMath.AngleXZ(LocalPlayer.Position, target.Position);
+            float dir = PositionalMath.AngleXZ(LocalPlayer!.Position, target.Position);
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
@@ -647,7 +647,7 @@ namespace WrathCombo.CustomComboNS.Functions
         public static int CanLineAoe(IGameObject? target, float range, float effectRange, bool checkIgnoredList = false)
         {
             if (target is null) return 0;
-            float dir = PositionalMath.AngleXZ(LocalPlayer.Position, target.Position);
+            float dir = PositionalMath.AngleXZ(LocalPlayer!.Position, target.Position);
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
@@ -689,7 +689,7 @@ namespace WrathCombo.CustomComboNS.Functions
         private static bool IsBoss(IGameObject? target) =>
             target != null && Svc.Data.GetExcelSheet<BNpcBase>().HasRow(target.DataId) && Svc.Data.GetExcelSheet<BNpcBase>().GetRow(target.DataId).Rank is 2 or 6;
 
-        internal static bool TargetIsBoss() => IsBoss(LocalPlayer.TargetObject);
+        internal static bool TargetIsBoss() => IsBoss(LocalPlayer!.TargetObject);
 
         internal static bool TargetIsHostile() => HasTarget() && CurrentTarget.IsHostile();
 

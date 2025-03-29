@@ -25,7 +25,7 @@ internal partial class PLD : TankJob
             float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-            uint playerMP = LocalPlayer.CurrentMp;
+            uint playerMP = LocalPlayer!.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
             bool hasRequiescat = HasEffect(Buffs.Requiescat);
@@ -222,7 +222,7 @@ internal partial class PLD : TankJob
             #region Variables
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-            uint playerMP = LocalPlayer.CurrentMp;
+            uint playerMP = LocalPlayer!.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
             bool hasRequiescat = HasEffect(Buffs.Requiescat);
@@ -359,7 +359,7 @@ internal partial class PLD : TankJob
             float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-            uint playerMP = LocalPlayer.CurrentMp;
+            uint playerMP = LocalPlayer!.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
             bool hasRequiescat = HasEffect(Buffs.Requiescat);
@@ -566,7 +566,7 @@ internal partial class PLD : TankJob
             #region Variables
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
-            uint playerMP = LocalPlayer.CurrentMp;
+            uint playerMP = LocalPlayer!.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
             bool hasRequiescat = HasEffect(Buffs.Requiescat);
@@ -749,7 +749,7 @@ internal partial class PLD : TankJob
             if (actionID is not ShieldLob)
                 return actionID;
 
-            if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (TimeMoving.Ticks == 0 || HasEffect(Buffs.DivineMight)))
+            if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer!.CurrentMp && (TimeMoving.Ticks == 0 || HasEffect(Buffs.DivineMight)))
                 return HolySpirit;
 
             return actionID;
