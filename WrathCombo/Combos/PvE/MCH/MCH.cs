@@ -135,14 +135,14 @@ internal partial class MCH : PhysRangedJob
             // 1-2-3 Combo
             if (ComboTimer > 0)
             {
-                if (ComboAction is SplitShot && ActionReady(SlugShot))
+                if (ComboAction is SplitShot && LevelChecked(OriginalHook(SlugShot)))
                     return OriginalHook(SlugShot);
 
                 if (ComboAction == OriginalHook(SlugShot) &&
                     !LevelChecked(Drill) && !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble))
                     return Reassemble;
 
-                if (ComboAction is SlugShot && ActionReady(CleanShot))
+                if (ComboAction is SlugShot && LevelChecked(OriginalHook(CleanShot)))
                     return OriginalHook(CleanShot);
             }
             return actionID;
@@ -309,7 +309,7 @@ internal partial class MCH : PhysRangedJob
             // 1-2-3 Combo
             if (ComboTimer > 0)
             {
-                if (ComboAction is SplitShot && ActionReady(SlugShot))
+                if (ComboAction is SplitShot && LevelChecked(OriginalHook(SlugShot)))
                     return OriginalHook(SlugShot);
 
                 if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[4] &&
@@ -317,7 +317,7 @@ internal partial class MCH : PhysRangedJob
                     !LevelChecked(Drill) && !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble))
                     return Reassemble;
 
-                if (ComboAction is SlugShot && ActionReady(CleanShot))
+                if (ComboAction is SlugShot && LevelChecked(OriginalHook(CleanShot)))
                     return OriginalHook(CleanShot);
             }
             return actionID;
