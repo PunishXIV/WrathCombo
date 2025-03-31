@@ -268,7 +268,7 @@ internal partial class SCH : HealerJob
                     if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
                         return Variant.SpiritDart;
 
-                    float refreshTimer = Config.SCH_ST_DPS_Bio_Adv ? Config.SCH_DPS_BioUptime_Threshold : 3;
+                    float refreshTimer = (Config.SCH_DPS_BioUptime_Threshold != 0) ? Config.SCH_DPS_BioUptime_Threshold : 3;
                     int hpThreshold = Config.SCH_DPS_BioSubOption == 1 || !InBossEncounter() ? Config.SCH_DPS_BioOption : 0;
                     if (GetDebuffRemainingTime(dotDebuffID) <= refreshTimer &&
                         GetTargetHPPercent() > hpThreshold)
