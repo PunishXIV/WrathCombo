@@ -1,5 +1,4 @@
 using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -166,24 +165,6 @@ internal partial class MCH
                 //Variant
                 case CustomComboPreset.MCH_Variant_Cure:
                     DrawSliderInt(1, 100, MCH_VariantCure, "HP% to be at or under", 200);
-
-                    break;
-
-                //PVP
-                case CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite:
-                    DrawSliderInt(0, 36000, MCHPvP.Config.MCHPVP_MarksmanSpite,
-                        "Use Marksman's Spite when the target is below set HP");
-
-                    break;
-
-                case CustomComboPreset.MCHPvP_BurstMode_FullMetalField:
-                    ImGui.Indent();
-                    DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field Wildfire combo",
-                        "Uses Full Metal Field when Wildfire is ready.", 1);
-
-                    DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field only when Overheated",
-                        "Only uses Full Metal Field while Overheated.", 2);
-                    ImGui.Unindent();
 
                     break;
             }

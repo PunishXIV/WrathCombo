@@ -36,6 +36,17 @@ namespace WrathCombo.Combos.PvP
                 Haimatinon = 3111;
         }
 
+        internal static class Config
+        {
+            //User options
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                //switch (preset)
+                //{
+                //}
+            }
+
         internal class SGEPvP_BurstMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGEPvP_BurstMode;

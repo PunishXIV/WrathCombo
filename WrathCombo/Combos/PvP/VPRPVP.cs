@@ -1,5 +1,6 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -61,6 +62,49 @@ namespace WrathCombo.Combos.PvP
 
             public static UserBool
                 VPRPvP_Backlash_SubOption = new("VPRPvP_Backlash_SubOption");
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    // Bloodcoil
+                    case CustomComboPreset.VPRPvP_Bloodcoil:
+                        DrawSliderInt(10, 100, VPRPvP.Config.VPRPvP_Bloodcoil_TargetHP, "Target HP%", 210);
+                        DrawSliderInt(10, 100, VPRPvP.Config.VPRPvP_Bloodcoil_PlayerHP, "Player HP%", 210);
+
+                        break;
+
+                    // Uncoiled Fury
+                    case CustomComboPreset.VPRPvP_UncoiledFury:
+                        DrawSliderInt(10, 100, VPRPvP.Config.VPRPvP_UncoiledFury_TargetHP, "Target HP%", 210);
+
+                        break;
+
+                    // Backlash
+                    case CustomComboPreset.VPRPvP_Backlash:
+                        DrawAdditionalBoolChoice(VPRPvP.Config.VPRPvP_Backlash_SubOption, "Empowered Only",
+                            "Also requires Snake's Bane to be present.");
+
+                        break;
+
+                    // Rattling Coil
+                    case CustomComboPreset.VPRPvP_RattlingCoil:
+                        DrawHorizontalMultiChoice(VPRPvP.Config.VPRPvP_RattlingCoil_SubOptions, "No Uncoiled Fury",
+                            "Must not have charges of Uncoiled Fury.", 2, 0);
+
+                        DrawHorizontalMultiChoice(VPRPvP.Config.VPRPvP_RattlingCoil_SubOptions, "No Snake Scales",
+                            "Snake Scales must be on cooldown.", 2, 1);
+
+                        break;
+
+                    // Slither
+                    case CustomComboPreset.VPRPvP_Slither:
+                        DrawSliderInt(0, 1, VPRPvP.Config.VPRPvP_Slither_Charges, "Charges to Keep", 178);
+                        DrawSliderInt(6, 10, VPRPvP.Config.VPRPvP_Slither_Range, "Maximum Range", 173);
+
+                        break;
+                }
+            }
         }
 
         internal class VPRPvP_Burst : CustomCombo

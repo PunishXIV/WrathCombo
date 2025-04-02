@@ -1,6 +1,7 @@
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -50,6 +51,24 @@ namespace WrathCombo.Combos.PvP
                 RPRPvP_ImmortalStackThreshold = "RPRPvPImmortalStackThreshold";
             public const string
                 RPRPvP_ArcaneCircleThreshold = "RPRPvPArcaneCircleOption";
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.RPRPvP_Burst_ImmortalPooling:
+                        DrawSliderInt(0, 8, RPRPvP_ImmortalStackThreshold,
+                            "Set a value of Immortal Sacrifice Stacks to hold for burst.");
+
+                        break;
+
+                    case CustomComboPreset.RPRPvP_Burst_ArcaneCircle:
+                        DrawSliderInt(5, 90, RPRPvP_ArcaneCircleThreshold,
+                            "Set a HP percentage value. Caps at 90 to prevent waste.");
+
+                        break;
+                }
+            }
         }
 
         internal class RPRPvP_Burst : CustomCombo

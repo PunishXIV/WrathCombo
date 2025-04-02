@@ -2,6 +2,8 @@
 using ECommons.DalamudServices;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -32,6 +34,17 @@ namespace WrathCombo.Combos.PvP
         {
             internal static UserInt
                 WHMPVP_HealOrder = new("WHMPVP_HealOrder");
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.WHMPvP_Heals:
+                        DrawHorizontalRadioButton(WHMPVP_HealOrder, $"{Aquaveil.ActionName()} First", $"If Both {Aquaveil.ActionName()} & {Cure3.ActionName()} are ready, prioritise {Aquaveil.ActionName()}", 0);
+                        DrawHorizontalRadioButton(WHMPVP_HealOrder, $"{Cure3.ActionName()} First", $"If Both {Aquaveil.ActionName()} & {Cure3.ActionName()} are ready, prioritise {Cure3.ActionName()}", 1);
+                        break;
+                }
+            }
         }
 
         internal class WHMPvP_Burst : CustomCombo

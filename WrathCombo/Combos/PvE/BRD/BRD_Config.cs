@@ -67,11 +67,6 @@ internal partial class BRD
                     DrawSliderInt(1, 100, BRD_VariantCure, "HP% to be at or under", 200);
 
                     break;
-
-                case CustomComboPreset.BRDPvP_HarmonicArrow:
-                    DrawSliderInt(1, 4, BRDPvP_HarmonicArrowCharges, "How many Charges to use it at \n 1 charge 8000 damage \n 2 charge 12000 damage \n 3 charge 15000 damage \n 4 charge 17000 damage");
-
-                    break;
             }
         }
     }

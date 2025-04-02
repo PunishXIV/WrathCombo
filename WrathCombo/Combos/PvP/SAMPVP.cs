@@ -1,5 +1,6 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -56,6 +57,36 @@ namespace WrathCombo.Combos.PvP
             public static UserBool
                 SAMPvP_Soten_SubOption = new("SAMPvP_Soten_SubOption"),
                 SAMPvP_Mineuchi_SubOption = new("SAMPvP_Mineuchi_SubOption");
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                     // Chiten
+                    case CustomComboPreset.SAMPvP_Chiten:
+                        UserConfig.DrawSliderInt(10, 100, SAMPvP.Config.SAMPvP_Chiten_PlayerHP, "Player HP%", 210);
+
+                        break;
+
+                    // Mineuchi
+                    case CustomComboPreset.SAMPvP_Mineuchi:
+                        UserConfig.DrawSliderInt(10, 100, SAMPvP.Config.SAMPvP_Mineuchi_TargetHP, "Target HP%", 210);
+
+                        UserConfig.DrawAdditionalBoolChoice(SAMPvP.Config.SAMPvP_Mineuchi_SubOption, "Burst Preparation",
+                            "Also uses Mineuchi before Tendo Setsugekka.");
+
+                        break;
+
+                    // Soten
+                    case CustomComboPreset.SAMPvP_Soten:
+                        UserConfig.DrawSliderInt(0, 2, SAMPvP.Config.SAMPvP_Soten_Charges, "Charges to Keep", 178);
+                        UserConfig.DrawSliderInt(1, 10, SAMPvP.Config.SAMPvP_Soten_Range, "Maximum Range", 173);
+
+                        UserConfig.DrawAdditionalBoolChoice(SAMPvP.Config.SAMPvP_Soten_SubOption, "Yukikaze Only",
+                            "Also requires next weaponskill to be Yukikaze.");
+
+                        break;
+                }
         }
 
         internal class SAMPvP_BurstMode : CustomCombo

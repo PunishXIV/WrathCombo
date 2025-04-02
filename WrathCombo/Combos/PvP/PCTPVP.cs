@@ -1,5 +1,6 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -40,6 +41,22 @@ namespace WrathCombo.Combos.PvP
             internal static UserInt
                 PCTPvP_BurstHP = new("PCTPvP_BurstHP", 100),
                 PCTPvP_TemperaHP = new("PCTPvP_TemperaHP", 50);
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.PCTPvP_BurstControl:
+                        UserConfig.DrawSliderInt(1, 100, PCTPvP.Config.PCTPvP_BurstHP, "Target HP%", 200);
+
+                        break;
+
+                    case CustomComboPreset.PCTPvP_TemperaCoat:
+                        UserConfig.DrawSliderInt(1, 100, PCTPvP.Config.PCTPvP_TemperaHP, "Player HP%", 200);
+
+                        break;
+                }
+            }
         }
 
         internal class PCTPvP_Burst : CustomCombo

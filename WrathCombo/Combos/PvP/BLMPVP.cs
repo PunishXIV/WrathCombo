@@ -1,6 +1,8 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using ImGuiNET;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -74,6 +76,65 @@ namespace WrathCombo.Combos.PvP
 
             public static UserFloat
                 BLMPvP_Movement_Threshold = new("BLMPvP_Movement_Threshold", 0.1f);
+
+            public static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.BLMPvP_BurstMode:
+                        DrawHorizontalRadioButton(BLMPVP_BurstButtonOption, "One Button Mode", "Combines Fire & Blizzard onto one button", 0);
+                        DrawHorizontalRadioButton(BLMPVP_BurstButtonOption, "Dual Button Mode", "Puts the combo onto separate Fire & Blizzard buttons, which will only use that element.", 1);
+
+                        if (BLMPVP_BurstButtonOption == 0)
+                        {
+                            ImGui.Indent();
+                            DrawRoundedSliderFloat(0.1f, 3, BLMPvP_Movement_Threshold, "Movement Threshold", 137);
+                            ImGui.Unindent();
+                            if (ImGui.IsItemHovered())
+                            {
+                                ImGui.BeginTooltip();
+                                ImGui.TextUnformatted("When under the effect of Astral Fire, must be\nmoving this long before using Blizzard spells.");
+                                ImGui.EndTooltip();
+                            }
+                        }
+                        break;
+
+                    // Burst
+                    case CustomComboPreset.BLMPvP_Burst:
+                        DrawAdditionalBoolChoice(BLMPvP_Burst_SubOption, "Defensive Burst",
+                            "Also uses Burst when under 50%% HP.\n- Will not use outside combat.");
+
+                        break;
+
+                    // Elemental Weave
+                    case CustomComboPreset.BLMPvP_ElementalWeave:
+                        DrawSliderInt(10, 100, BLMPvP_ElementalWeave_PlayerHP, "Player HP%", 180);
+                        ImGui.Spacing();
+                        DrawAdditionalBoolChoice(BLMPvP_ElementalWeave_SubOption, "Defensive Elemental Weave",
+                            "When under, uses Wreath of Ice instead.\n- Will not use outside combat.");
+
+                        break;
+
+                    // Lethargy
+                    case CustomComboPreset.BLMPvP_Lethargy:
+                        DrawSliderInt(10, 100, BLMPvP_Lethargy_TargetHP, "Target HP%", 180);
+                        ImGui.Spacing();
+                        DrawAdditionalBoolChoice(BLMPvP_Lethargy_SubOption, "Defensive Lethargy",
+                            "Also uses Lethargy when under 50%% HP.\n- Uses only when targeted by enemy.");
+
+                        break;
+
+                    // Xenoglossy
+                    case CustomComboPreset.BLMPvP_Xenoglossy:
+                        DrawSliderInt(10, 100, BLMPvP_Xenoglossy_TargetHP, "Target HP%", 180);
+                        ImGui.Spacing();
+                        DrawAdditionalBoolChoice(BLMPvP_Xenoglossy_SubOption, "Defensive Xenoglossy",
+                            "Also uses Xenoglossy when under 50%% HP.");
+
+                        break;
+                }
+            }
+
         }
 
         internal class BLMPvP_BurstMode : CustomCombo

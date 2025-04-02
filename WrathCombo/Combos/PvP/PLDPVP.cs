@@ -43,6 +43,20 @@ namespace WrathCombo.Combos.PvP
                 ShieldSmite = 4283;
         }
 
+        internal class Config
+        {
+            //Useroptions
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                //switch(preset)
+                //{
+
+                //}
+            }
+        }
+
+
         internal class PLDPvP_Burst : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLDPvP_Burst;

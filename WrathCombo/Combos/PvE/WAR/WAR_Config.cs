@@ -1,7 +1,4 @@
-using ECommons.ImGuiMethods;
 using ImGuiNET;
-using System.Numerics;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -146,12 +143,6 @@ internal partial class WAR
                 case CustomComboPreset.WAR_AoE_Advanced_Infuriate:
                     UserConfig.DrawSliderInt(0, 50, WAR_InfuriateAoEGauge,
                         "Use when gauge is under or equal to");
-
-                    break;
-
-                case CustomComboPreset.WARPvP_BurstMode_Blota:
-                    UserConfig.DrawHorizontalRadioButton(WARPvP.Config.WARPVP_BlotaTiming, $"Before {PrimalRend.ActionName()}", "", 0);
-                    UserConfig.DrawHorizontalRadioButton(WARPvP.Config.WARPVP_BlotaTiming, $"After {PrimalRend.ActionName()}", "", 1);
 
                     break;
 

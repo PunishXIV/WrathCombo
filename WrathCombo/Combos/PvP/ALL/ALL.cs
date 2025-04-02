@@ -7,8 +7,10 @@ using WrathCombo.CustomComboNS.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
-    internal static class PvPCommon
+    internal static partial class PvPCommon
     {
+        public const uint JobID = 0;
+
         public const uint
             Teleport = 5,
             Return = 6,
@@ -17,14 +19,6 @@ namespace WrathCombo.Combos.PvP
             Purify = 29056,
             Guard = 29054,
             Sprint = 29057;
-
-        internal class Config
-        {
-            public const string
-                EmergencyHealThreshold = "EmergencyHealThreshold",
-                EmergencyGuardThreshold = "EmergencyGuardThreshold",
-                QuickPurifyStatuses = "QuickPurifyStatuses";
-        }
 
         internal class Debuffs
         {

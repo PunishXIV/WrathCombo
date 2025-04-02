@@ -1,5 +1,6 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -42,7 +43,19 @@ namespace WrathCombo.Combos.PvP
             public const string
                 SMNPvP_RadiantAegisThreshold = "SMNPvP_RadiantAegisThreshold";
             public const string
-                SMNPvP_FesterThreshold = "SMNPvP_FesterThreshold";
+                SMNPvP_FesterThreshold = "SMNPvP_FesterThreshold"; //this even used?
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
+                        UserConfig.DrawSliderInt(0, 90, SMNPvP_RadiantAegisThreshold,
+                            "Caps at 90 to prevent waste.");
+
+                        break;
+                }
+            }
         }
 
         internal class SMNPvP_BurstMode : CustomCombo

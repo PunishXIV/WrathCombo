@@ -29,6 +29,19 @@ namespace WrathCombo.Combos.PvP
                 Biolytic = 3090;
         }
 
+        internal static class Config
+        {
+            //Useroptions here
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                //switch(preset)
+                //{
+
+                //}
+            }
+
+
         internal class SCHPvP_Burst : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCHPvP_Burst;

@@ -1,5 +1,7 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -37,6 +39,18 @@ namespace WrathCombo.Combos.PvP
         {
             public static UserInt
                 WARPVP_BlotaTiming = new("WARPVP_BlotaTiming");
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.WARPvP_BurstMode_Blota:
+                        DrawHorizontalRadioButton(WARPVP_BlotaTiming, $"Before {PrimalRend.ActionName()}", "", 0);
+                        DrawHorizontalRadioButton(WARPVP_BlotaTiming, $"After {PrimalRend.ActionName()}", "", 1);
+
+                        break;
+                }
+            }
 
         }
         internal class WARPvP_BurstMode : CustomCombo

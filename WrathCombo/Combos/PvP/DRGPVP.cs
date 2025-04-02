@@ -1,4 +1,5 @@
 ﻿using WrathCombo.CustomComboNS;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -45,6 +46,29 @@ namespace WrathCombo.Combos.PvP
                 DRGPvP_LOTD_HPValue = "DRGPvP_LOTD_HPValue",
                 DRGPvP_CS_HP_Threshold = "DRGPvP_CS_HP_Threshold",
                 DRGPvP_Distance_Threshold = "DRGPvP_Distance_Threshold";
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.DRGPvP_Nastrond:
+                        DrawSliderInt(0, 100, DRGPvP_LOTD_HPValue, "Ends Life of the Dragon if HP falls below the set percentage");
+
+                        DrawSliderInt(2, 8, DRGPvP_LOTD_Duration, "Seconds remaining of Life of the Dragon buff before using Nastrond if you are still above the set HP percentage.");
+
+                        break;
+
+                    case CustomComboPreset.DRGPvP_ChaoticSpringSustain:
+                        DrawSliderInt(0, 101, DRGPvP_CS_HP_Threshold, "Chaotic Spring HP percentage threshold. Set to 100 to use on cd");
+
+                        break;
+
+                    case CustomComboPreset.DRGPvP_WyrmwindThrust:
+                        DrawSliderInt(0, 20, DRGPvP_Distance_Threshold, "Minimum Distance to use Wyrmwind Thrust. Maximum damage at 15 or more");
+
+                        break;
+                }
+
         }
 
         internal class DRGPvP_Burst : CustomCombo

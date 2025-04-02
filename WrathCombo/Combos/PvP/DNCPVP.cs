@@ -44,6 +44,15 @@ namespace WrathCombo.Combos.PvP
             public const string
                 DNCPvP_WaltzThreshold = "DNCWaltzThreshold",
                 DNCPvP_EnAvantCharges = "DNCPvP_EnAvantCharges";
+
+            public static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.DNCPvP_BurstMode: //Needs implementation?
+                    break;
+                }
+            }
         }
 
         internal class DNCPvP_BurstMode : CustomCombo

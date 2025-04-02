@@ -1,5 +1,7 @@
+using ImGuiNET;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -48,6 +50,29 @@ namespace WrathCombo.Combos.PvP
                 MCHPVP_MarksmanSpite = "MCHPVP_MarksmanSpite",
                 MCHPVP_FMFOption = "MCHPVP_FMFOption",
                 MCHPVP_Heat = "MCHPVP_Heat";
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.MCHPvP_BurstMode_MarksmanSpite:
+                        DrawSliderInt(0, 36000, MCHPvP.Config.MCHPVP_MarksmanSpite,
+                            "Use Marksman's Spite when the target is below set HP");
+
+                        break;
+
+                    case CustomComboPreset.MCHPvP_BurstMode_FullMetalField:
+                        ImGui.Indent();
+                        DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field Wildfire combo",
+                            "Uses Full Metal Field when Wildfire is ready.", 1);
+
+                        DrawHorizontalRadioButton(MCHPvP.Config.MCHPVP_FMFOption, "Full Metal Field only when Overheated",
+                            "Only uses Full Metal Field while Overheated.", 2);
+                        ImGui.Unindent();
+
+                        break;
+                }
+            }
 
         }
 

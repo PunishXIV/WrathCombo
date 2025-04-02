@@ -41,6 +41,18 @@ namespace WrathCombo.Combos.PvP
                 PressurePoint = 3172;
         }
 
+        public static class Config
+        {
+            //items here
+            internal static void Draw(CustomComboPreset preset)
+            {
+                //switch (preset)
+                //{
+                //
+                //}
+            }
+        }
+
         internal class MNKPvP_Burst : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNKPvP_Burst;

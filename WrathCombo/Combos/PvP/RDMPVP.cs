@@ -67,8 +67,6 @@ namespace WrathCombo.Combos.PvP
             {
                 switch (preset)
                 {
-                    // PvP
-
                     // Resolution
                     case CustomComboPreset.RDMPvP_Resolution:
                         DrawSliderInt(10, 100, RDMPvP_Resolution_TargetHP, "Target HP%", 210);

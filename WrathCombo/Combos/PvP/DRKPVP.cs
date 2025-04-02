@@ -1,4 +1,5 @@
 ﻿using WrathCombo.CustomComboNS;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -35,6 +36,20 @@ namespace WrathCombo.Combos.PvP
         {
             public const string
                 ShadowbringerThreshold = nameof(ShadowbringerThreshold);
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch(preset)
+                {
+                    case CustomComboPreset.DRKPvP_Shadowbringer:
+                        UserConfig.DrawSliderInt(20, 100,
+                            ShadowbringerThreshold,
+                            "HP% to be at or Above to use ",
+                            itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
+
+                        break;
+                }    
+            }
 
         }
 

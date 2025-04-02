@@ -1,21 +1,15 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using WrathCombo.Combos;
-using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Services;
-using static FFXIVClientStructs.FFXIV.Client.UI.RaptureAtkHistory.Delegates;
 
 
 namespace WrathCombo.Window.Functions
@@ -992,121 +986,6 @@ namespace WrathCombo.Window.Functions
         {
             DebugFile.AddLog($"Set Config {config} to default");
             UserData.MasterList[config].ResetToDefault();
-        }
-    }
-
-    public static class UserConfigItems
-    {
-        /// <summary> Draws the User Configurable settings. </summary>
-        /// <param name="preset"> The preset it's attached to. </param>
-        /// <param name="enabled"> If it's enabled or not. </param>
-        internal static void Draw(CustomComboPreset preset, bool enabled)
-        {
-            if (!enabled) return;
-
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            // ====================================================================================
-            #region PvP VALUES
-
-            IPlayerCharacter? pc = Svc.ClientState.LocalPlayer;
-
-            if (preset == CustomComboPreset.PvP_EmergencyHeals)
-            {
-                if (pc != null)
-                {
-                    uint maxHP = Svc.ClientState.LocalPlayer?.MaxHp <= 15000 ? 0 : Svc.ClientState.LocalPlayer.MaxHp - 15000;
-
-                    if (maxHP > 0)
-                    {
-                        int setting = PluginConfiguration.GetCustomIntValue(PvPCommon.Config.EmergencyHealThreshold);
-                        float hpThreshold = (float)maxHP / 100 * setting;
-
-                        UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, $"Set the percentage to be at or under for the feature to kick in.\n100% is considered to start at 15,000 less than your max HP to prevent wastage.\nHP Value to be at or under: {hpThreshold}");
-                    }
-
-                    else
-                    {
-                        UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, "Set the percentage to be at or under for the feature to kick in.\n100% is considered to start at 15,000 less than your max HP to prevent wastage.");
-                    }
-                }
-
-                else
-                {
-                    UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyHealThreshold, "Set the percentage to be at or under for the feature to kick in.\n100% is considered to start at 15,000 less than your max HP to prevent wastage.");
-                }
-            }
-
-            if (preset == CustomComboPreset.PvP_EmergencyGuard)
-                UserConfig.DrawSliderInt(1, 100, PvPCommon.Config.EmergencyGuardThreshold, "Set the percentage to be at or under for the feature to kick in.");
-
-            if (preset == CustomComboPreset.PvP_QuickPurify)
-                UserConfig.DrawPvPStatusMultiChoice(PvPCommon.Config.QuickPurifyStatuses);
-
-            if (preset == CustomComboPreset.NINPvP_ST_Meisui)
-            {
-                string description = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
-
-                if (pc != null)
-                {
-                    uint maxHP = pc.MaxHp <= 8000 ? 0 : pc.MaxHp - 8000;
-                    if (maxHP > 0)
-                    {
-                        int setting = PluginConfiguration.GetCustomIntValue(NINPvP.Config.NINPvP_Meisui_ST);
-                        float hpThreshold = (float)maxHP / 100 * setting;
-
-                        description += $"\nHP Value to be at or under: {hpThreshold}";
-                    }
-                }
-
-                UserConfig.DrawSliderInt(1, 100, NINPvP.Config.NINPvP_Meisui_ST, description);
-            }
-
-            if (preset == CustomComboPreset.NINPvP_AoE_Meisui)
-            {
-                string description = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
-
-                if (pc != null)
-                {
-                    uint maxHP = pc.MaxHp <= 8000 ? 0 : pc.MaxHp - 8000;
-                    if (maxHP > 0)
-                    {
-                        int setting = PluginConfiguration.GetCustomIntValue(NINPvP.Config.NINPvP_Meisui_AoE);
-                        float hpThreshold = (float)maxHP / 100 * setting;
-
-                        description += $"\nHP Value to be at or under: {hpThreshold}";
-                    }
-                }
-
-                UserConfig.DrawSliderInt(1, 100, NINPvP.Config.NINPvP_Meisui_AoE, description);
-            }
-
-
-            #endregion
         }
     }
 

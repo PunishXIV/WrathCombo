@@ -54,6 +54,15 @@ namespace WrathCombo.Combos.PvP
                 corundumThreshold = nameof(corundumThreshold),
                 blastingZoneThreshold = nameof(blastingZoneThreshold);
 
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.GNBPvP_Burst:
+                        break;
+                }
+            }
+
         }
         internal class GNBPvP_Burst : CustomCombo
         {
