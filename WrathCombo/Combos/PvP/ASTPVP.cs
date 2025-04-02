@@ -58,6 +58,7 @@ namespace WrathCombo.Combos.PvP
                         break;
                 }
             }
+        }
 
         internal class ASTPvP_Burst : CustomCombo
         {

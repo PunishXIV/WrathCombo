@@ -46,6 +46,7 @@ namespace WrathCombo.Combos.PvP
                 //{
                 //}
             }
+        }
 
         internal class SGEPvP_BurstMode : CustomCombo
         {

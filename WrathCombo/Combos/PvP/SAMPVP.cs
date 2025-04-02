@@ -62,7 +62,7 @@ namespace WrathCombo.Combos.PvP
             {
                 switch (preset)
                 {
-                     // Chiten
+                    // Chiten
                     case CustomComboPreset.SAMPvP_Chiten:
                         UserConfig.DrawSliderInt(10, 100, SAMPvP.Config.SAMPvP_Chiten_PlayerHP, "Player HP%", 210);
 
@@ -87,6 +87,7 @@ namespace WrathCombo.Combos.PvP
 
                         break;
                 }
+            }
         }
 
         internal class SAMPvP_BurstMode : CustomCombo

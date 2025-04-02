@@ -40,6 +40,7 @@ namespace WrathCombo.Combos.PvP
 
                 //}
             }
+        }
 
 
         internal class SCHPvP_Burst : CustomCombo

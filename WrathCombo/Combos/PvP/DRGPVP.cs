@@ -68,6 +68,7 @@ namespace WrathCombo.Combos.PvP
 
                         break;
                 }
+            }
 
         }
 

@@ -28,7 +28,7 @@ internal partial class AST
             AST_DPS_CombustOption = new("AST_DPS_CombustOption"),
             AST_QuickTarget_Override = new("AST_QuickTarget_Override"),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
-            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
+            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0);
         public static UserBool
             AST_QuickTarget_SkipDamageDown = new("AST_QuickTarget_SkipDamageDown"),
             AST_QuickTarget_SkipRezWeakness = new("AST_QuickTarget_SkipRezWeakness"),
