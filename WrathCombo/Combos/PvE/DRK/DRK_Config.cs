@@ -3,7 +3,6 @@
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Numerics;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
@@ -312,19 +311,7 @@ internal partial class DRK
                         startUsingAtDescription,
                         itemWidth: biggest, sliderIncrement: SliderIncrements.Fives);
 
-                    break;
-
-                #region PVP
-
-                case CustomComboPreset.DRKPvP_Shadowbringer:
-                    UserConfig.DrawSliderInt(20, 100,
-                        DRKPvP.Config.ShadowbringerThreshold,
-                        "HP% to be at or Above to use ",
-                        itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
-
-                    break;
-
-                #endregion
+                    break;               
 
                 #region One-Button Mitigation
 

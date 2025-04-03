@@ -1,4 +1,3 @@
-using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
@@ -276,7 +275,7 @@ internal partial class PLD
                         "Exclude Mitigations",
                         "Disables the use of mitigations in Simple Mode.", 1);
                     break;
-
+               
                 #region One-Button Mitigation
 
                 case CustomComboPreset.PLD_Mit_HallowedGround_Max:

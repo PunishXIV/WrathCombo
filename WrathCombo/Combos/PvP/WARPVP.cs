@@ -1,10 +1,14 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class WARPvP
     {
+        #region IDS
+
         public const byte ClassID = 3;
         public const byte JobID = 21;
 
@@ -32,13 +36,35 @@ namespace WrathCombo.Combos.PvP
                 PrimalRuinationReady = 4285,
                 Wrathfull = 4286;
         }
+        #endregion
 
+        #region Config
         public static class Config
         {
             public static UserInt
-                WARPVP_BlotaTiming = new("WARPVP_BlotaTiming");
+                WARPVP_BlotaTiming = new("WARPVP_BlotaTiming"),
+                WARPvP_RampartThreshold = new("WARPvP_RampartThreshold");
 
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.WARPvP_Rampart:
+                        UserConfig.DrawSliderInt(1, 100, WARPvP_RampartThreshold,
+                            "Use Rampart below set threshold for self");
+                        break;
+
+                    case CustomComboPreset.WARPvP_BurstMode_Blota:
+                        UserConfig.DrawHorizontalRadioButton(WARPVP_BlotaTiming, $"Before {PrimalRend.ActionName()}", "", 0);
+                        UserConfig.DrawHorizontalRadioButton(WARPVP_BlotaTiming, $"After {PrimalRend.ActionName()}", "", 1);
+
+                        break;
+                }
+            }
         }
+        #endregion
+       
         internal class WARPvP_BurstMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WARPvP_BurstMode;
@@ -47,6 +73,9 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is HeavySwing or Maim or StormsPath)
                 {
+                    if (IsEnabled(CustomComboPreset.WARPvP_Rampart) && PvPTank.CanRampart(Config.WARPvP_RampartThreshold))
+                        return PvPTank.Rampart;
+
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
                         var canWeave = CanWeave();

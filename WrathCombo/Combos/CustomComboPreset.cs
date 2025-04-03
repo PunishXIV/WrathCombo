@@ -6853,51 +6853,57 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(DRKPvP.Souleater)]
-    [CustomComboInfo("Burst Mode", "Turns Souleater Combo into an all-in-one damage button.", DRK.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Souleater Combo into an all-in-one damage button.", DRKPvP.JobID)]
     DRKPvP_Burst = 115000,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Plunge Option", "Adds Plunge to Burst Mode.", DRK.JobID)]
+    [CustomComboInfo("Plunge Option", "Adds Plunge to Burst Mode.", DRKPvP.JobID)]
     DRKPvP_Plunge = 115001,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Plunge)]
     [CustomComboInfo("Melee Plunge Option", "Uses Plunge whilst in melee range, and not just as a gap-closer.",
-        DRK.JobID)]
+        DRKPvP.JobID)]
     DRKPvP_PlungeMelee = 115002,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Salted Earth Option", "Adds Salted Earth to Burst mode.", DRK.JobID)]
+    [CustomComboInfo("Salted Earth Option", "Adds Salted Earth to Burst mode.", DRKPvP.JobID)]
     DRKPvP_SaltedEarth = 115003,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Salt and Darkness Option", "Adds Salt and Darkness to Burst mode.", DRK.JobID)]
+    [CustomComboInfo("Salt and Darkness Option", "Adds Salt and Darkness to Burst mode.", DRKPvP.JobID)]
     DRKPvP_SaltAndDarkness = 115004,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Impalement Option", "Adds Impalement to Burst mode.", DRK.JobID)]
+    [CustomComboInfo("Impalement Option", "Adds Impalement to Burst mode.", DRKPvP.JobID)]
     DRKPvP_Impalement = 115005,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Shadowbringer Option", "Adds Shadowbringer to Burst mode.", DRK.JobID)]
+    [CustomComboInfo("Shadowbringer Option", "Adds Shadowbringer to Burst mode.", DRKPvP.JobID)]
     DRKPvP_Shadowbringer = 115006,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Blackest Night Option", "Adds Blackest Night to Burst mode.", DRK.JobID)]
+    [CustomComboInfo("Blackest Night Option", "Adds Blackest Night to Burst mode.", DRKPvP.JobID)]
     DRKPvP_BlackestNight = 115007,
 
     [PvPCustomCombo]
     [ParentCombo(DRKPvP_Burst)]
-    [CustomComboInfo("Scorn Option", "Adds Scorn to Burst mode.", DRK.JobID)]
+    [CustomComboInfo("Scorn Option", "Adds Scorn to Burst mode.", DRKPvP.JobID)]
     DRKPvP_Scorn = 115008,
 
-    // Last value = 115008
+    [PvPCustomCombo]
+    [ParentCombo(DRKPvP_Burst)]
+    [CustomComboInfo("Role Action Rampart Option",
+        "Adds Defensive Role Action Rampart to Burst Mode below selected health", DRK.JobID)]
+    DRKPvP_Rampart = 115009,
+
+    // Last value = 115009
 
     #endregion
 
@@ -6954,36 +6960,44 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(GNBPvP.SolidBarrel)]
-    [CustomComboInfo("Burst Mode", "Turns Solid Barrel Combo into an all-in-one damage button.", GNB.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Solid Barrel Combo into an all-in-one damage button.", GNBPvP.JobID)]
     GNBPvP_Burst = 117000,
 
+    [PvPCustomCombo]
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Fated Circle Option", "Adds Fated Circle to rotation under No Mercy status.", GNB.JobID)]
+    [CustomComboInfo("Fated Circle Option", "Adds Fated Circle to rotation under No Mercy status.", GNBPvP.JobID)]
     GNBPvP_FatedCircle = 117001,
 
-    //[ParentCombo(GNBPvP_Burst)] No longer its own ability
-    //[CustomComboInfo("Burst Strike Option", "Adds Burst Strike to rotation when appropriate.", GNB.JobID)]
-    //GNBPvP_BurstStrike = 117002,
-
+    [PvPCustomCombo]
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang to Burst Mode.", GNB.JobID)]
+    [CustomComboInfo("Gnashing Fang Option", "Adds Gnashing Fang to Burst Mode.", GNBPvP.JobID)]
     GNBPvP_ST_GnashingFang = 117004,
 
+    [PvPCustomCombo]
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Continuation Option", "Adds Continuation to Burst Mode.", GNB.JobID)]
+    [CustomComboInfo("Continuation Option", "Adds Continuation to Burst Mode.", GNBPvP.JobID)]
     GNBPvP_ST_Continuation = 117005,
 
+    [PvPCustomCombo]
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Rough Divide Option", "Adds Rough Divide to rotation when appropriate.", GNB.JobID)]
+    [CustomComboInfo("Rough Divide Option", "Adds Rough Divide to rotation when appropriate.", GNBPvP.JobID)]
     GNBPvP_RoughDivide = 117006,
 
+    [PvPCustomCombo]
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Blasting Zone Option", "Adds Blasting Zone to Burst Mode when under Threshold.", GNB.JobID)]
+    [CustomComboInfo("Blasting Zone Option", "Adds Blasting Zone to Burst Mode when under Threshold.", GNBPvP.JobID)]
     GNBPvP_BlastingZone = 117007,
 
+    [PvPCustomCombo]
     [ParentCombo(GNBPvP_Burst)]
-    [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Corundum to Burst Mode under set health %.", GNB.JobID)]
+    [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Corundum to Burst Mode under set health %.", GNBPvP.JobID)]
     GNBPvP_Corundum = 117011,
+
+    [PvPCustomCombo]
+    [ParentCombo(GNBPvP_Burst)]
+    [CustomComboInfo("Role Action Rampart Option",
+        "Adds Defensive Role Action Rampart to Burst Mode below selected health", GNBPvP.JobID)]
+    GNBPvP_Rampart = 117012,
 
     #endregion
 
@@ -6991,10 +7005,10 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(GNBPvP.GnashingFang)]
-    [CustomComboInfo("Continuation Feature", "Adds Continuation to Gnashing Fang.", GNB.JobID)]
+    [CustomComboInfo("Continuation Feature", "Adds Continuation to Gnashing Fang.", GNBPvP.JobID)]
     GNBPvP_GnashingFang = 117010,
 
-    // Last value = 117011
+    // Last value = 117012
 
     #endregion
 
@@ -7211,42 +7225,56 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(PLDPvP.RoyalAuthority)]
-    [CustomComboInfo("Burst Mode", "Turns Royal Authority Combo into an all-in-one damage button.", PLD.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Royal Authority Combo into an all-in-one damage button.", PLDPvP.JobID)]
     PLDPvP_Burst = 121000,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Shield Smite Option", "Adds Shield Smite to Burst Mode.", PLD.JobID)]
+    [CustomComboInfo("Shield Smite Option", "Adds Shield Smite to Burst Mode.", PLDPvP.JobID)]
     PLDPvP_ShieldSmite = 121001,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Imperator Option", "Adds Imperator to Burst Mode.", PLD.JobID)]
+    [CustomComboInfo("Imperator Option", "Adds Imperator to Burst Mode.", PLDPvP.JobID)]
     PLDPvP_Imperator = 121002,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Confiteor Option", "Adds Confiteor to Burst Mode.", PLD.JobID)]
+    [CustomComboInfo("Confiteor Option", "Adds Confiteor to Burst Mode.", PLDPvP.JobID)]
     PLDPvP_Confiteor = 121003,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Holy Spirit Option", "Adds Holy Spirit to Burst Mode.", PLD.JobID)]
+    [CustomComboInfo("Holy Spirit Option", "Adds Holy Spirit to Burst Mode.", PLDPvP.JobID)]
     PLDPvP_HolySpirit = 121004,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Intervene Option", "Adds Intervene to Burst Mode.", PLD.JobID)]
+    [CustomComboInfo("Intervene Option", "Adds Intervene to Burst Mode.", PLDPvP.JobID)]
     PLDPvP_Intervene = 121005,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Melee Intervene Option", "Adds Intervene to Burst Mode when in melee range.", PLD.JobID)]
+    [CustomComboInfo("Melee Intervene Option", "Adds Intervene to Burst Mode when in melee range.", PLDPvP.JobID)]
     PLDPvP_Intervene_Melee = 121006,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Phalanx Combo Option", "Adds Phalanx Combo to Burst Mode.", PLD.JobID)]
+    [CustomComboInfo("Phalanx Combo Option", "Adds Phalanx Combo to Burst Mode.", PLDPvP.JobID)]
     PLDPvP_PhalanxCombo = 121007,
 
+    [PvPCustomCombo]
     [ParentCombo(PLDPvP_Burst)]
-    [CustomComboInfo("Holy Sheltron Option", "Adds Holy Sheltron to Burst Mode in melee range.", PLD.JobID)]
+    [CustomComboInfo("Holy Sheltron Option", "Adds Holy Sheltron to Burst Mode in melee range.", PLDPvP.JobID)]
     PLDPvP_Sheltron = 121008,
 
-    // Last value = 121008
+    [PvPCustomCombo]
+    [ParentCombo(PLDPvP_Burst)]
+    [CustomComboInfo("Role Action Rampart Option",
+        "Adds Defensive Role Action Rampart to Burst Mode below selected health", PLDPvP.JobID)]
+    PLDPvP_Rampart = 121009,
+
+    // Last value = 121009
 
     #endregion
 
@@ -7666,7 +7694,13 @@ SMN.JobID)]
     [CustomComboInfo("PrimalScream Option", "Adds Primal Scream to Burst Mode.", WARPvP.JobID)]
     WARPvP_BurstMode_PrimalScream = 128008,
 
-    // Last value = 128008
+    [PvPCustomCombo]
+    [ParentCombo(WARPvP_BurstMode)]
+    [CustomComboInfo("Role Action Rampart Option",
+        "Adds Defensive Role Action Rampart to Burst Mode below selected health", WARPvP.JobID)]
+    WARPvP_Rampart = 128009,
+
+    // Last value = 128009
 
     #endregion
 

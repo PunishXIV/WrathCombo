@@ -1,7 +1,5 @@
-using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Numerics;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -148,13 +146,7 @@ internal partial class WAR
                         "Use when gauge is under or equal to");
 
                     break;
-
-                case CustomComboPreset.WARPvP_BurstMode_Blota:
-                    UserConfig.DrawHorizontalRadioButton(WARPvP.Config.WARPVP_BlotaTiming, $"Before {PrimalRend.ActionName()}", "", 0);
-                    UserConfig.DrawHorizontalRadioButton(WARPvP.Config.WARPVP_BlotaTiming, $"After {PrimalRend.ActionName()}", "", 1);
-
-                    break;
-
+                
                 case CustomComboPreset.WAR_ST_Advanced_Bloodwhetting:
                     UserConfig.DrawSliderInt(1, 100, WAR_ST_Bloodwhetting_Health,
                         "Player HP% to be \nless than or equal to:", 200);
@@ -363,7 +355,7 @@ internal partial class WAR
                     UserConfig.DrawHorizontalRadioButton(WAR_AoE_Reprisal_SubOption,
                         "Bosses Only",
                         $"Only uses {Role.Reprisal.ActionName()} when the targeted enemy is a boss.", 1);
-                    break;
+                    break;               
 
                 #region One-Button Mitigation
 
