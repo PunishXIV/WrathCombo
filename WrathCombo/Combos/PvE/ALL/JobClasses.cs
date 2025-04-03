@@ -8,30 +8,30 @@ namespace WrathCombo.Combos.PvE;
 //THis should help for future jobs and future random actions to quickly wireup job appropriate actions
 class HealerJob
 {
-    public class Variant : VariantHealer;
+    public static IHealerVariant Variant { get; } = new VariantHealer();
     public class Role : Healer;
 }
 
 class TankJob
 {
-    public class Variant : VariantTank;
+    public static ITankVariant Variant { get; } = new VariantTank();
     public class Role : Tank;
 }
 
 class MeleeJob
 {
-    public class Variant : VariantPDPS;
+    public static IMDPSVariant Variant { get; } = new VariantMDPS();
     public class Role : Melee;
 }
 
 class PhysRangedJob
 {
-    public class Variant : VariantPDPS;
+    public static IPDPSVariant Variant { get; } = new VariantPDPS();
     public class Role : PhysRanged;
 }
 
 class CasterJob
 {
-    public class Variant : VariantMDPS;
+    public static ICasterVariant Variant { get; } = new VariantCaster();
     public class Role : Caster;
 }
