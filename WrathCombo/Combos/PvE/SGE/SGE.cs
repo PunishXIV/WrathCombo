@@ -116,9 +116,11 @@ internal partial class SGE : HealerJob
                 float dotDebuff = Math.Max(GetDebuffRemainingTime(currentDosis.DebuffID),
                     GetDebuffRemainingTime(Debuffs.EukrasianDyskrasia));
 
-                const float refreshtimer = 3; //Will revisit if it's really needed....SGE_ST_DPS_EDosis_Adv ? Config.SGE_ST_DPS_EDosisThreshold : 3;
+                float refreshTimer = (Config.SGE_ST_DPS_EDosisThreshold != 0) ? Config.SGE_ST_DPS_EDosisThreshold : 3;
+                int hpThreshold = Config.SGE_ST_DPS_EDosisSubOption == 1 || !InBossEncounter() ? Config.SGE_ST_DPS_EDosisOption : 0;
 
-                if (dotDebuff <= refreshtimer && GetTargetHPPercent() > 10) //Will Revisit if Config is needed Config.SGE_ST_DPS_EDosisHPPer)
+                if (dotDebuff <= refreshTimer &&
+                                GetTargetHPPercent() > hpThreshold)
                     return Eukrasia;
             }
 
@@ -234,7 +236,7 @@ internal partial class SGE : HealerJob
                             if (TraitLevelChecked(Traits.OffensiveMagicMasteryII))
                                 dotDebuff = Math.Max(dotDebuff, GetDebuffRemainingTime(Debuffs.EukrasianDyskrasia));
 
-                            float refreshTimer = Config.SGE_ST_DPS_EDosis_Adv ? Config.SGE_ST_DPS_EDosisThreshold : 5;
+                            float refreshTimer = (Config.SGE_ST_DPS_EDosisThreshold != 0) ? Config.SGE_ST_DPS_EDosisThreshold : 3;
                             int hpThreshold = Config.SGE_ST_DPS_EDosisSubOption == 1 || !InBossEncounter() ? Config.SGE_ST_DPS_EDosisOption : 0;
 
                             if (dotDebuff <= refreshTimer &&

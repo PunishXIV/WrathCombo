@@ -119,7 +119,7 @@ internal partial class WHM : HealerJob
                         return Variant.SpiritDart;
 
                     // DoT Uptime & HP% threshold
-                    float refreshTimer = Config.WHM_ST_MainCombo_DoT_Adv ? Config.WHM_ST_MainCombo_DoT_Threshold : 3;
+                    float refreshTimer = (Config.WHM_ST_MainCombo_DoT_Threshold != 0) ? Config.WHM_ST_MainCombo_DoT_Threshold : 3;
                     int hpThreshold = Config.WHM_ST_DPS_AeroOptionSubOption == 1 || !InBossEncounter() ? Config.WHM_ST_DPS_AeroOption : 0;
                     if (GetDebuffRemainingTime(dotDebuffID) <= refreshTimer &&
                         GetTargetHPPercent() > hpThreshold)

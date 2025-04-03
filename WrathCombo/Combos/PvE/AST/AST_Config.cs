@@ -84,9 +84,6 @@ internal partial class AST
                     DrawHorizontalRadioButton(AST_ST_DPS_CombustSubOption,
                         "All Enemies", "Applies the HP check above to all enemies.", 1);
 
-                    
-                    
-
                     DrawRoundedSliderFloat(0, 4, AST_ST_DPS_CombustUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
 
                     ImGui.Unindent();
