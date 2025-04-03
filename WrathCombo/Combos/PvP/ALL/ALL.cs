@@ -1,7 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using System.Collections.Generic;
 using WrathCombo.Combos.PvE;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 
@@ -20,10 +19,11 @@ namespace WrathCombo.Combos.PvP
 
         internal class Config
         {
-            public const string
-                EmergencyHealThreshold = "EmergencyHealThreshold",
-                EmergencyGuardThreshold = "EmergencyGuardThreshold",
-                QuickPurifyStatuses = "QuickPurifyStatuses";
+            public static UserInt
+                EmergencyHealThreshold = new("EmergencyHealThreshold"),
+                EmergencyGuardThreshold = new("EmergencyGuardThreshold");
+            public static UserBoolArray
+                QuickPurifyStatuses = new("QuickPurifyStatuses");
         }
 
         internal class Debuffs
@@ -92,7 +92,7 @@ namespace WrathCombo.Combos.PvP
             public static bool Execute()
             {
                 var jobMaxHp = LocalPlayer.MaxHp;
-                var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyHealThreshold);
+                int threshold = Config.EmergencyHealThreshold;
                 var maxHPThreshold = jobMaxHp - 15000;
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
 
@@ -138,7 +138,7 @@ namespace WrathCombo.Combos.PvP
             public static bool Execute()
             {
                 var jobMaxHp = LocalPlayer.MaxHp;
-                var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyGuardThreshold);
+                var threshold = Config.EmergencyGuardThreshold;
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)jobMaxHp;
 
                 if (HasEffect(3180)) return false; //DRG LB buff
@@ -176,7 +176,7 @@ namespace WrathCombo.Combos.PvP
 
             public static bool Execute()
             {
-                var selectedStatuses = PluginConfiguration.GetCustomBoolArrayValue(Config.QuickPurifyStatuses);
+                bool[] selectedStatuses = Config.QuickPurifyStatuses;
 
                 if (HasEffect(3180)) return false; //DRG LB buff
                 if (HasEffect(4096)) return false; //VPR Snakesbane

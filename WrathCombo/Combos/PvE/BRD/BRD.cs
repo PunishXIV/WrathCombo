@@ -2,7 +2,6 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 
@@ -294,7 +293,7 @@ internal partial class BRD : PhysRangedJob
             bool songWanderer = gauge.Song == Song.Wanderer;
             bool songMage = gauge.Song == Song.Mage;
             bool songArmy = gauge.Song == Song.Army;
-            int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_AoENoWasteHPPercentage);
+            int targetHPThreshold = Config.BRD_AoENoWasteHPPercentage;
             bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_AoE_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
             bool hasTarget = HasBattleTarget();
             bool ragingEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Raging);
@@ -547,7 +546,7 @@ internal partial class BRD : PhysRangedJob
             bool songMage = gauge.Song == Song.Mage;
             bool songArmy = gauge.Song == Song.Army;
             int songTimerInSeconds = gauge.SongTimer / 1000;
-            int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_NoWasteHPPercentage);
+            int targetHPThreshold = Config.BRD_NoWasteHPPercentage;
             bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
             bool hasTarget = HasBattleTarget();
             bool buffTime = GetCooldownRemainingTime(RagingStrikes) < 2.7;
@@ -767,7 +766,7 @@ internal partial class BRD : PhysRangedJob
                 float purpleRemaining = purple?.RemainingTime ?? 0;
                 float blueRemaining = blue?.RemainingTime ?? 0;
                 float ragingStrikesDuration = GetBuffRemainingTime(Buffs.RagingStrikes);
-                int ragingJawsRenewTime = PluginConfiguration.GetCustomIntValue(Config.BRD_RagingJawsRenewTime);
+                int ragingJawsRenewTime = Config.BRD_RagingJawsRenewTime;
 
                 if (IsEnabled(CustomComboPreset.BRD_Adv_DoT))
                 {
@@ -852,7 +851,7 @@ internal partial class BRD : PhysRangedJob
             bool songWanderer = gauge.Song == Song.Wanderer;
             bool songMage = gauge.Song == Song.Mage;
             bool songArmy = gauge.Song == Song.Army;
-            int targetHPThreshold = PluginConfiguration.GetCustomIntValue(Config.BRD_AoENoWasteHPPercentage);
+            int targetHPThreshold = Config.BRD_AoENoWasteHPPercentage;
             bool isEnemyHealthHigh = GetTargetHPPercent() > 5;
             bool hasTarget = HasBattleTarget();
 

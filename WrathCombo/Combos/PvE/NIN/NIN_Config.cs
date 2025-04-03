@@ -21,7 +21,6 @@ internal partial class NIN
             Advanced_DotonHP = new("Advanced_DotonHP", 20),
             BurnKazematoi = new("BurnKazematoi"),
             Advanced_TCJEnderAoE = new("Advanced_TCJEnderAoe", 0),
-            Advanced_ChargePool = new("Advanced_ChargePool"),
             SecondWindThresholdST = new("SecondWindThresholdST", 20),
             ShadeShiftThresholdST = new("ShadeShiftThresholdST"),
             BloodbathThresholdST = new("BloodbathThresholdST"),
@@ -32,6 +31,8 @@ internal partial class NIN
             NIN_Adv_Opener_Selection = new("NIN_Adv_Opener_Selection", 0),
             NIN_Balance_Content = new("NIN_Balance_Content", 1),
             Advanced_TrueNorth = new("Advanced_TrueNorth");
+        public static UserBool
+            Advanced_ChargePool = new("Advanced_ChargePool");
 
         internal static void Draw(CustomComboPreset preset)
         {

@@ -143,7 +143,7 @@ internal partial class DRK
                  (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Cure))) &&
                 IsEnabled(Variant.Cure) &&
                 ActionReady(Variant.Cure) &&
-                PlayerHealthPercentageHp() <= GetOptionValue(Config.DRK_VariantCure))
+                PlayerHealthPercentageHp() <= Config.DRK_VariantCure)
                 return (action = Variant.Cure) != 0;
 
             #endregion

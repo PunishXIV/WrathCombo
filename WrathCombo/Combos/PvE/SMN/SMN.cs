@@ -1,5 +1,4 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 
 namespace WrathCombo.Combos.PvE;
@@ -461,11 +460,11 @@ internal partial class SMN : CasterJob
                 return actionID;
 
             #region Variables
-            int summonerPrimalChoice = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_PrimalChoice);
-            int SummonerBurstPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_BurstPhase);
-            int lucidThreshold = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_Lucid);
-            int swiftcastPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_SwiftcastPhase);
-            int burstDelay = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? PluginConfiguration.GetCustomIntValue(Config.SMN_ST_Burst_Delay) : 0;
+            int summonerPrimalChoice = Config.SMN_ST_PrimalChoice;
+            int SummonerBurstPhase = Config.SMN_ST_BurstPhase;
+            int lucidThreshold = Config.SMN_ST_Lucid;
+            int swiftcastPhase = Config.SMN_ST_SwiftcastPhase;
+            int burstDelay = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? Config.SMN_ST_Burst_Delay : 0;
 
             bool TitanAstralFlow = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Egi_AstralFlow) && Config.SMN_ST_Egi_AstralFlow[0];
             bool IfritAstralFlowCyclone = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Egi_AstralFlow) && Config.SMN_ST_Egi_AstralFlow[1];
@@ -687,11 +686,11 @@ internal partial class SMN : CasterJob
 
             #region Variables
 
-            int summonerPrimalChoice = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_PrimalChoice);
-            int SummonerBurstPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_BurstPhase);
-            int lucidThreshold = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_Lucid);
-            int swiftcastPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_SwiftcastPhase);
-            int burstDelay = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_Burst_Delay) : 0;
+            int summonerPrimalChoice = Config.SMN_AoE_PrimalChoice;
+            int SummonerBurstPhase = Config.SMN_AoE_BurstPhase;
+            int lucidThreshold = Config.SMN_AoE_Lucid;
+            int swiftcastPhase = Config.SMN_AoE_SwiftcastPhase;
+            int burstDelay = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? Config.SMN_AoE_Burst_Delay : 0;
 
             bool TitanAstralFlow = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Egi_AstralFlow) && Config.SMN_AoE_Egi_AstralFlow[0];
             bool IfritAstralFlowCyclone = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Egi_AstralFlow) && Config.SMN_AoE_Egi_AstralFlow[1];

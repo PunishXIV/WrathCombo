@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -25,20 +24,20 @@ internal partial class NIN : MeleeJob
             NINGauge gauge = GetJobGauge<NINGauge>();
             bool canWeave = CanWeave();
             bool canDelayedWeave = CanDelayedWeave();
-            bool inTrickBurstSaveWindow = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Cooldowns) && IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) && GetCooldownRemainingTime(TrickAttack) <= GetOptionValue(Config.Advanced_Trick_Cooldown);
+            bool inTrickBurstSaveWindow = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Cooldowns) && IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) && GetCooldownRemainingTime(TrickAttack) <= Config.Advanced_Trick_Cooldown;
             bool useBhakaBeforeTrickWindow = GetCooldownRemainingTime(TrickAttack) >= 3;
-            bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= GetOptionValue(Config.Trick_CooldownRemaining) && !HasEffect(Buffs.ShadowWalker);
+            bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= Config.Trick_CooldownRemaining && !HasEffect(Buffs.ShadowWalker);
             bool setupKassatsuWindow = GetCooldownRemainingTime(TrickAttack) <= 10 && HasEffect(Buffs.ShadowWalker);
             bool chargeCheck = IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_ChargeHold) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_ChargeHold) && (InMudra || GetRemainingCharges(Ten) == 2 || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 3)));
-            bool poolCharges = !GetOptionBool(Config.Advanced_ChargePool) || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 2) || TrickDebuff || InMudra;
+            bool poolCharges = !(bool)Config.Advanced_ChargePool || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 2) || TrickDebuff || InMudra;
             bool raitonUptime = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Raiton_Uptime);
             bool suitonUptime = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Suiton_Uptime);
-            int bhavaPool = GetOptionValue(Config.Ninki_BhavaPooling);
-            int bunshinPool = GetOptionValue(Config.Ninki_BunshinPoolingST);
-            int burnKazematoi = GetOptionValue(Config.BurnKazematoi);
-            int SecondWindThreshold = PluginConfiguration.GetCustomIntValue(Config.SecondWindThresholdST);
-            int ShadeShiftThreshold = PluginConfiguration.GetCustomIntValue(Config.ShadeShiftThresholdST);
-            int BloodbathThreshold = PluginConfiguration.GetCustomIntValue(Config.BloodbathThresholdST);
+            int bhavaPool = Config.Ninki_BhavaPooling;
+            int bunshinPool = Config.Ninki_BunshinPoolingST;
+            int burnKazematoi = Config.BurnKazematoi;
+            int SecondWindThreshold = Config.SecondWindThresholdST;
+            int ShadeShiftThreshold = Config.ShadeShiftThresholdST;
+            int BloodbathThreshold = Config.BloodbathThresholdST;
             double playerHP = PlayerHealthPercentageHp();
             bool phantomUptime = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Phantom_Uptime);
             var comboLength = GetCooldown(GustSlash).CooldownTotal * 3;
@@ -344,14 +343,14 @@ internal partial class NIN : MeleeJob
             bool canWeave = CanWeave();
             bool chargeCheck = IsNotEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Ninjitsus_ChargeHold) || (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Ninjitsus_ChargeHold) && GetRemainingCharges(Ten) == 2);
             bool inMudraState = InMudra;
-            int hellfrogPool = GetOptionValue(Config.Ninki_HellfrogPooling);
-            int dotonTimer = GetOptionValue(Config.Advanced_DotonTimer);
-            int dotonThreshold = GetOptionValue(Config.Advanced_DotonHP);
-            int tcjPath = GetOptionValue(Config.Advanced_TCJEnderAoE);
-            int bunshingPool = GetOptionValue(Config.Ninki_BunshinPoolingAoE);
-            int SecondWindThreshold = PluginConfiguration.GetCustomIntValue(Config.SecondWindThresholdAoE);
-            int ShadeShiftThreshold = PluginConfiguration.GetCustomIntValue(Config.ShadeShiftThresholdAoE);
-            int BloodbathThreshold = PluginConfiguration.GetCustomIntValue(Config.BloodbathThresholdAoE);
+            int hellfrogPool = Config.Ninki_HellfrogPooling;
+            int dotonTimer = Config.Advanced_DotonTimer;
+            int dotonThreshold = Config.Advanced_DotonHP;
+            int tcjPath = Config.Advanced_TCJEnderAoE;
+            int bunshingPool = Config.Ninki_BunshinPoolingAoE;
+            int SecondWindThreshold = Config.SecondWindThresholdAoE;
+            int ShadeShiftThreshold = Config.ShadeShiftThresholdAoE;
+            int BloodbathThreshold = Config.BloodbathThresholdAoE;
             double playerHP = PlayerHealthPercentageHp();
 
             if (IsNotEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Ninjitsus) || (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat()))
@@ -996,7 +995,7 @@ internal partial class NIN : MeleeJob
             if (actionID is not (Ten or Chi or Jin) || !HasEffect(Buffs.Mudra))
                 return actionID;
 
-            int mudrapath = GetOptionValue(Config.NIN_SimpleMudra_Choice);
+            int mudrapath = Config.NIN_SimpleMudra_Choice;
 
             if (mudrapath == 1)
             {
