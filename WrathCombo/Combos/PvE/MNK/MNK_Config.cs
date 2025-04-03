@@ -106,6 +106,7 @@ internal partial class MNK
                     DrawSliderInt(1, 100, MNK_VariantCure, "HP% to be at or under", 200);
 
                     break;
+                
             }
         }
     }

@@ -6905,46 +6905,60 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(DRGPvP.Drakesbane)]
-    [CustomComboInfo("Burst Mode", "Turns Drakesbane Combo into an all-in-one damage button.", DRG.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Drakesbane Combo into an all-in-one damage button.", DRGPvP.JobID)]
     DRGPvP_Burst = 116000,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_Geirskogul = 116001,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Geirskogul)]
-    [CustomComboInfo("Nastrond Option", "Adds Nastrond to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Nastrond Option", "Adds Nastrond to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_Nastrond = 116002,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Horrid Roar Option", "Adds Horrid Roar to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Horrid Roar Option", "Adds Horrid Roar to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_HorridRoar = 116003,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
     [CustomComboInfo("Sustain Chaos Spring Option", "Adds Chaos Spring to Burst Mode when below the set HP percentage.",
-        DRG.JobID)]
+        DRGPvP.JobID)]
     DRGPvP_ChaoticSpringSustain = 116004,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
     [CustomComboInfo("Execute Chaos Spring Option",
-        "Adds Chaos Spring to Burst Mode when target is below 8k health because it goes through guard.", DRG.JobID)]
+        "Adds Chaos Spring to Burst Mode when target is below 8k health because it goes through guard.", DRGPvP.JobID)]
     DRGPvP_ChaoticSpringExecute = 116009,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_WyrmwindThrust = 116006,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("High Jump Weave Option", "Adds High Jump to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("High Jump Weave Option", "Adds High Jump to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_HighJump = 116007,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
     [CustomComboInfo("Elusive Jump Burst Option",
         "Using Elusive Jump turns Drakesbane Combo into all-in-one burst damage button once all cooldowns are ready. \n Disables Elusive Jump if Burst is not ready.",
-        DRG.JobID)]
+        DRGPvP.JobID)]
     DRGPvP_BurstProtection = 116008,
 
-    // Last value = 116009
+    [PvPCustomCombo]
+    [ParentCombo(DRGPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health", DRGPvP.JobID)]
+    DRGPvP_Smite = 116010,
+
+    // Last value = 116010
 
     #endregion
 
@@ -7066,43 +7080,49 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(MNKPvP.PhantomRush)]
-    [CustomComboInfo("Burst Mode", "Turns Phantom Rush Combo into an all-in-one damage button.", MNK.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Phantom Rush Combo into an all-in-one damage button.", MNKPvP.JobID)]
     MNKPvP_Burst = 119000,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
     [CustomComboInfo("Meteodrive Option",
-        "Adds Meteodrive Limit break to Burst Mode when target is below 20k and guarded", MNK.JobID)]
+        "Adds Meteodrive Limit break to Burst Mode when target is below 20k and guarded", MNKPvP.JobID)]
     MNKPvP_Burst_Meteodrive = 119006,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
     [CustomComboInfo("Thunderclap Option", "Adds Thunderclap to Burst Mode when not buffed with Wind Resonance.",
-        MNK.JobID)]
+        MNKPvP.JobID)]
     MNKPvP_Burst_Thunderclap = 119001,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
     [CustomComboInfo("Riddle of Earth Option", "Adds Riddle of Earth and Earth's Reply to Burst Mode when in combat.",
-        MNK.JobID)]
+        MNKPvP.JobID)]
     MNKPvP_Burst_RiddleOfEarth = 119002,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Flints Reply Option", "Adds Flints Reply to Burst Mode.", MNK.JobID)]
+    [CustomComboInfo("Flints Reply Option", "Adds Flints Reply to Burst Mode.", MNKPvP.JobID)]
     MNKPvP_Burst_FlintsReply = 119003,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Rising Phoenix Option", "Adds Rising Phoenix to Burst Mode.", MNK.JobID)]
+    [CustomComboInfo("Rising Phoenix Option", "Adds Rising Phoenix to Burst Mode.", MNKPvP.JobID)]
     MNKPvP_Burst_RisingPhoenix = 119004,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to Burst Mode.", MNK.JobID)]
+    [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to Burst Mode.", MNKPvP.JobID)]
     MNKPvP_Burst_WindsReply = 119005,
 
-    // Last value = 119006
+    [ParentCombo(MNKPvP_Burst)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health", MNKPvP.JobID)]
+    MNKPvP_Smite = 119007,
+
+    // Last value = 119007
 
     #endregion
 
@@ -7203,7 +7223,14 @@ SMN.JobID)]
         NINPvP.JobID)]
     NINPvP_AoE_SeitonTenchu = 120017,
 
-    // Last value = 120016
+    [ParentCombo(NINPvP_ST_BurstMode)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Role Action Smite Option",
+      "Adds Role Action Smite to Burst Mode below selected health",
+      NINPvP.JobID)]
+    NINPvP_Smite = 120018,
+
+    // Last value = 120018
 
     #endregion
 
@@ -7301,32 +7328,32 @@ SMN.JobID)]
     [PvPCustomCombo]
     [ReplaceSkill(RPRPvP.Slice)]
     [CustomComboInfo("Burst Mode",
-        "Turns Slice Combo into an all-in-one damage button.\nAdds Soul Slice to the main combo.", RPR.JobID)]
+        "Turns Slice Combo into an all-in-one damage button.\nAdds Soul Slice to the main combo.", RPRPvP.JobID)]
     RPRPvP_Burst = 122000,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
-    [CustomComboInfo("Grim Swathe Option", "Add's Grim Swathe onto the main combo on cd", RPR.JobID)]
+    [CustomComboInfo("Grim Swathe Option", "Add's Grim Swathe onto the main combo on cd", RPRPvP.JobID)]
     RPRPvP_Burst_GrimSwathe = 122009,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Death Warrant Option",
         "Adds Death Warrant onto the main combo when Plentiful Harvest is ready to use, or when Plentiful Harvest's cooldown is longer than Death Warrant's.\nRespects Immortal Sacrifice Pooling Option.",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_DeathWarrant = 122001,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Plentiful Harvest + Immortal Sacrifice Pooling Option",
         "Pools stacks of Immortal Sacrifice before using Plentiful Harvest.\nAlso holds Plentiful Harvest if Death Warrant is on cooldown.\nSet the value to 3 or below to use Plentiful Harvest as soon as it's available.",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_ImmortalPooling = 122003,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Enshrouded Burst Option",
-        "Adds Lemure's Slice to the main combo during the Enshroud burst phase.\nContains burst options.", RPR.JobID)]
+        "Adds Lemure's Slice to the main combo during the Enshroud burst phase.\nContains burst options.", RPRPvP.JobID)]
     RPRPvP_Burst_Enshrouded = 122004,
 
     #region RPR Enshrouded Option
@@ -7350,16 +7377,23 @@ SMN.JobID)]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Ranged Harvest Moon Option",
         "Adds Harvest Moon onto the main combo when you're out of melee range, the GCD is not rolling and it's available for use. Will also throw it when the enemy is under 12k health for execute",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_RangedHarvest = 122007,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Arcane Crest Option", "Adds Arcane Crest to the main combo when under the set HP perecentage.",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_ArcaneCircle = 122008,
 
-    // Last value = 122009
+    [PvPCustomCombo]
+    [ParentCombo(RPRPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health",
+        RPRPvP.JobID)]
+    RPRPvP_Smite = 122010,
+
+    // Last value = 122010
 
     #endregion
 
@@ -7491,7 +7525,14 @@ SMN.JobID)]
         SAMPvP.JobID)]
     SAMPvP_Zantetsuken = 125005,
 
-    // Last value = 125005
+    [PvPCustomCombo]
+    [ParentCombo(SAMPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health",
+        SAMPvP.JobID)]
+    SAMPvP_Smite = 125006,
+
+    // Last value = 125006
 
     #endregion
 
@@ -7619,7 +7660,14 @@ SMN.JobID)]
         "Adds Rattling Coil to Snake Scales when available.\n- Requires Snake Scales to be on cooldown.", VPRPvP.JobID)]
     VPRPvP_SnakeScales_Feature = 130006,
 
-    // Last value = 130006
+    [PvPCustomCombo]
+    [ParentCombo(VPRPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health",
+        VPRPvP.JobID)]
+    VPRPvP_Smite = 130007,
+
+    // Last value = 130007
 
     #endregion
 

@@ -1,9 +1,14 @@
-﻿using WrathCombo.CustomComboNS;
+﻿using ECommons.DalamudServices;
+using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class DRGPvP
     {
+        #region IDS
+
         public const byte ClassID = 4;
         public const byte JobID = 22;
 
@@ -38,14 +43,46 @@ namespace WrathCombo.Combos.PvP
 
 
         }
-        internal static class Config
+        #endregion
+
+        #region Config
+        public static class Config
         {
-            internal const string
-                DRGPvP_LOTD_Duration = "DRGPvP_LOTD_Duration",
-                DRGPvP_LOTD_HPValue = "DRGPvP_LOTD_HPValue",
-                DRGPvP_CS_HP_Threshold = "DRGPvP_CS_HP_Threshold",
-                DRGPvP_Distance_Threshold = "DRGPvP_Distance_Threshold";
+            public static UserInt
+                DRGPvP_LOTD_Duration = new("DRGPvP_LOTD_Duration"),
+                DRGPvP_LOTD_HPValue = new("DRGPvP_LOTD_HPValue"),
+                DRGPvP_CS_HP_Threshold = new("DRGPvP_CS_HP_Threshold"),
+                DRGPvP_Distance_Threshold = new("DRGPvP_Distance_Threshold"),
+                DRGPvP_SmiteThreshold = new("DRGPvP_SmiteThreshold");
+
+            internal static void Draw(CustomComboPreset preset)
+            {            
+                switch (preset)
+                {
+                    case CustomComboPreset.DRGPvP_Nastrond:
+                        UserConfig.DrawSliderInt(0, 100, DRGPvP_LOTD_HPValue, "Ends Life of the Dragon if HP falls below the set percentage");
+                        UserConfig.DrawSliderInt(2, 8, DRGPvP_LOTD_Duration, "Seconds remaining of Life of the Dragon buff before using Nastrond if you are still above the set HP percentage.");
+                        break;
+
+                    case CustomComboPreset.DRGPvP_ChaoticSpringSustain:
+                        UserConfig.DrawSliderInt(0, 101, DRGPvP_CS_HP_Threshold, "Chaotic Spring HP percentage threshold. Set to 100 to use on cd");
+                        break;
+                        
+
+                    case CustomComboPreset.DRGPvP_WyrmwindThrust:
+                        UserConfig.DrawSliderInt(0, 20, DRGPvP_Distance_Threshold, "Minimum Distance to use Wyrmwind Thrust. Maximum damage at 15 or more");                        
+                        break;
+
+                    case CustomComboPreset.DRGPvP_Smite:
+                        UserConfig.DrawSliderInt(0, 100, DRGPvP_SmiteThreshold,
+                            "Target HP% to smite, Max damage below 25%");                       
+                        break;
+                }
+
+            }
+            
         }
+        #endregion      
 
         internal class DRGPvP_Burst : CustomCombo
         {
@@ -57,6 +94,10 @@ namespace WrathCombo.Combos.PvP
                 {
                     if (!TargetHasEffectAny(PvPCommon.Buffs.Guard))
                     {
+                        if (IsEnabled(CustomComboPreset.DRGPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                            GetTargetHPPercent() <= Config.DRGPvP_SmiteThreshold)
+                            return PvPMelee.Smite;
+
                         if (CanWeave())
                         {
                             if (IsEnabled(CustomComboPreset.DRGPvP_HighJump) && IsOffCooldown(HighJump) && !HasEffect(Buffs.StarCrossReady) && (HasEffect(Buffs.LifeOfTheDragon) || GetCooldownRemainingTime(Geirskogul) > 5)) // Will high jump after Gierskogul OR if Geir will be on cd for 2 more gcds.
@@ -64,8 +105,8 @@ namespace WrathCombo.Combos.PvP
 
                             if (IsEnabled(CustomComboPreset.DRGPvP_Nastrond)) // Nastrond Finisher logic
                             {
-                                if (HasEffect(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_LOTD_HPValue)
-                                 || HasEffect(Buffs.LifeOfTheDragon) && GetBuffRemainingTime(Buffs.LifeOfTheDragon) < GetOptionValue(Config.DRGPvP_LOTD_Duration))
+                                if (HasEffect(Buffs.LifeOfTheDragon) && PlayerHealthPercentageHp() < Config.DRGPvP_LOTD_HPValue
+                                 || HasEffect(Buffs.LifeOfTheDragon) && GetBuffRemainingTime(Buffs.LifeOfTheDragon) < Config.DRGPvP_LOTD_Duration)
                                     return Nastrond;
                             }
 
@@ -81,7 +122,7 @@ namespace WrathCombo.Combos.PvP
                                 return Geirskogul;
                         }                       
                                                    
-                        if (IsEnabled(CustomComboPreset.DRGPvP_WyrmwindThrust) && HasEffect(Buffs.FirstmindsFocus) && GetTargetDistance() >= GetOptionValue(Config.DRGPvP_Distance_Threshold))
+                        if (IsEnabled(CustomComboPreset.DRGPvP_WyrmwindThrust) && HasEffect(Buffs.FirstmindsFocus) && GetTargetDistance() >= Config.DRGPvP_Distance_Threshold)
                             return WyrmwindThrust;
 
                         if (IsEnabled(CustomComboPreset.DRGPvP_Geirskogul) && HasEffect(Buffs.StarCrossReady))
@@ -90,7 +131,7 @@ namespace WrathCombo.Combos.PvP
                     }
                     if (IsOffCooldown(ChaoticSpring) && InMeleeRange())
                     {
-                        if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringSustain) && PlayerHealthPercentageHp() < GetOptionValue(Config.DRGPvP_CS_HP_Threshold)) // Chaotic Spring as a self heal option, it does not break combos of other skills
+                        if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringSustain) && PlayerHealthPercentageHp() < Config.DRGPvP_CS_HP_Threshold) // Chaotic Spring as a self heal option, it does not break combos of other skills
                             return ChaoticSpring;
                         if (IsEnabled(CustomComboPreset.DRGPvP_ChaoticSpringExecute) && EnemyHealthCurrentHp() <= 8000) // Chaotic Spring Execute
                             return ChaoticSpring;
