@@ -54,7 +54,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 {
                     foreach (var npc in Svc.Objects.Where(x => x is IBattleChara && x is not IPlayerCharacter).Cast<IBattleChara>())
                     {
-                        if (ActionManager.CanUseActionOnTarget(Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.BattleChara == npc))
+                        if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.BattleChara == npc))
                         {
                             WrathPartyMember wmember = new()
                             {

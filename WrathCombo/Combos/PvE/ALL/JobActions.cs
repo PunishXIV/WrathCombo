@@ -3,195 +3,694 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
-class MagicRole //All Magic Classes
+#region Role Actions (Static)
+internal static class RoleActions
 {
-    public const uint
-        LucidDreaming = 7562, //Lv14 WHM/BLM/SMN/SCH/AST/RDM/BLU/SGE, instant, 60.0s CD (group 45), range 0, single-target, targets=self
-        Swiftcast = 7561, //Lv18 WHM/BLM/SMN/SCH/AST/RDM/BLU/SGE, instant, 60.0s CD (group 44), range 0, single-target, targets=self
-        Surecast = 7559; //Lv44 WHM/BLM/SMN/SCH/AST/RDM/BLU/SGE, instant, 120.0s CD (group 48), range 0, single-target, targets=self
-
-    public class Buffs
+    public static class Magic
     {
-        public const ushort
-            Raise = 148,
-            Swiftcast = 167,
-            Surecast = 160;
+        public const uint
+            LucidDreaming = 7562,
+            Swiftcast = 7561,
+            Surecast = 7559;
+
+        public static class Buffs
+        {
+            public const ushort
+                Raise = 148,
+                Swiftcast = 167,
+                Surecast = 160;
+        }
+
+        public static bool CanLucidDream(int MPThreshold, bool spellweave = true) =>
+            ActionReady(LucidDreaming) &&
+            LocalPlayer.CurrentMp <= MPThreshold &&
+            (!spellweave || CanSpellWeave());
+
+        public static bool CanSwiftcast(bool spellweave = true) =>
+            ActionReady(Swiftcast) && (!spellweave || CanSpellWeave());
+
+        public static bool CanSurecast() =>
+            ActionReady(Surecast);
     }
 
-    public static bool CanLucidDream(int MPThreshold, bool spellweave = true) =>
-        ActionReady(LucidDreaming)
-        && LocalPlayer.CurrentMp <= MPThreshold
-        && (!spellweave || CanSpellWeave());
-
-    public static bool CanSwiftcast(bool spellweave = true) =>
-        ActionReady(Swiftcast) && (!spellweave || CanSpellWeave());
-
-}
-class Caster : MagicRole //Offensive Magic
-{
-    public const uint
-        Skyshard = 203, //LB1, 2.0s cast, range 25, AOE 8 circle, targets=area, castAnimLock=3.100
-        Starstorm = 204, //LB2, 3.0s cast, range 25, AOE 10 circle, targets=area, castAnimLock=5.100
-        Addle = 7560, //Lv8 BLM/SMN/RDM/BLU, instant, 90.0s CD (group 46), range 25, single-target, targets=hostile
-        Sleep = 25880; //Lv10 BLM/SMN/RDM/BLU, 2.5s cast, GCD, range 30, AOE 5 circle, targets=hostile
-
-    public class Debuffs
+    public static class Caster
     {
-        public const ushort
-            Addle = 1203;
+        public const uint
+            Skyshard = 203,
+            Starstorm = 204,
+            Addle = 7560,
+            Sleep = 25880;
+
+        public static class Debuffs
+        {
+            public const ushort
+                Addle = 1203;
+        }
+
+        public static bool CanAddle() =>
+            ActionReady(Addle) && !TargetHasEffectAny(Debuffs.Addle);
+
+        public static bool CanSleep() =>
+            ActionReady(Sleep);
     }
 
-    public static bool CanAddle() =>
-        ActionReady(Addle) && !TargetHasEffectAny(Debuffs.Addle);
-}
-
-class Healer : MagicRole //Healers
-{
-    public const uint
-        HealingWind = 206, //LB1, 2.0s cast, range 0, AOE 50 circle, targets=self, castAnimLock=2.100
-        BreathOfTheEarth = 207, //LB2, 2.0s cast, range 0, AOE 50 circle, targets=self, castAnimLock=5.130
-        Repose = 16560, //Lv8, 2.5s cast, GCD, range 30, single-target, targets=hostile
-        Esuna = 7568, //Lv10, 1.0s cast, GCD, range 30, single-target, targets=self/party/alliance/friendly
-        Rescue = 7571; //Lv48, instant, 120.0s CD (group 49), range 30, single-target, targets=party
-}
-
-class PhysicalRole //Base Shared Physical Dmg Classes
-{
-    public const uint
-        SecondWind = 7541, //Lv8 MNK/DRG/BRD/NIN/MCH/SAM/DNC/RPR, instant, 120.0s CD (group 49), range 0, single-target, targets=self
-        ArmsLength = 7548; //Lv32 PLD/MNK/WAR/DRG/BRD/NIN/MCH/DRK/SAM/GNB/DNC/RPR, instant, 120.0s CD (group 48), range 0, single-target, targets=self
-
-    public class Buffs
+    public static class Healer
     {
-        public const ushort
-            ArmsLength = 1209;
+        public const uint
+            HealingWind = 206,
+            BreathOfTheEarth = 207,
+            Repose = 16560,
+            Esuna = 7568,
+            Rescue = 7571;
+
+        public static bool CanRepose() =>
+            ActionReady(Repose);
+
+        public static bool CanEsuna() =>
+            ActionReady(Esuna);
+
+        public static bool CanRescue() =>
+            ActionReady(Rescue);
     }
 
-    public static bool CanSecondWind(int healthpercent) =>
-        ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthpercent;
-}
+    public static class Physical
+    {
+        public const uint
+            SecondWind = 7541,
+            ArmsLength = 7548;
 
-class PhysRanged : PhysicalRole
+        public static class Buffs
+        {
+            public const ushort
+                ArmsLength = 1209;
+        }
+
+        public static bool CanSecondWind(int healthpercent) =>
+            ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthpercent;
+
+        public static bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
+            ActionReady(ArmsLength) && CanCircleAoe(7) >= enemyCount &&
+            ((int)avoidanceSetting == (int)All.Enums.BossAvoidance.Off || !InBossEncounter());
+    }
+
+    public static class PhysRanged
+    {
+        public const uint
+            BigShot = 4238,
+            Desperado = 4239,
+            LegGraze = 7554,
+            FootGraze = 7553,
+            Peloton = 7557,
+            HeadGraze = 7551;
+
+        public static class Buffs
+        {
+            public const ushort
+                Peloton = 1199;
+        }
+
+        public static bool CanLegGraze() =>
+            ActionReady(LegGraze);
+
+        public static bool CanFootGraze() =>
+            ActionReady(FootGraze);
+
+        public static bool CanPeloton() =>
+            ActionReady(Peloton);
+
+        public static bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+            IsEnabled(preset) && CanInterruptEnemy() && IsOffCooldown(HeadGraze) && CheckWeave(weave);
+    }
+
+    public static class Melee
+    {
+        public const uint
+            Braver = 200,
+            Bladedance = 201,
+            LegSweep = 7863,
+            Bloodbath = 7542,
+            Feint = 7549,
+            TrueNorth = 7546;
+
+        public static class Buffs
+        {
+            public const ushort
+                BloodBath = 84,
+                TrueNorth = 1250;
+        }
+
+        public static class Debuffs
+        {
+            public const ushort
+                Feint = 1195;
+        }
+
+        public static bool CanLegSweep() =>
+            ActionReady(LegSweep);
+
+        public static bool CanBloodBath(int healthpercent) =>
+            ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthpercent;
+
+        public static bool CanFeint() =>
+            ActionReady(Feint) && !TargetHasEffectAny(Debuffs.Feint);
+
+        public static bool CanTrueNorth() =>
+            ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasEffect(Buffs.TrueNorth);
+    }
+
+    public static class Tank
+    {
+        public const uint
+            ShieldWall = 197,
+            Stronghold = 198,
+            Rampart = 7531,
+            LowBlow = 7540,
+            Provoke = 7533,
+            Interject = 7538,
+            Reprisal = 7535,
+            Shirk = 7537;
+
+        public static class Debuffs
+        {
+            public const ushort
+                Reprisal = 1193;
+        }
+
+        public static bool CanRampart(int healthPercent) =>
+            ActionReady(Rampart) && PlayerHealthPercentageHp() < healthPercent;
+
+        public static bool CanLowBlow() =>
+            ActionReady(LowBlow) && TargetIsCasting();
+
+        public static bool CanProvoke() =>
+            ActionReady(Provoke);
+
+        public static bool CanInterject() =>
+            ActionReady(Interject) && CanInterruptEnemy();
+
+        public static bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true) =>
+            (checkTargetForDebuff && !TargetHasEffectAny(Debuffs.Reprisal) || !checkTargetForDebuff) &&
+            (enemyCount is null ? InActionRange(Reprisal) : CanCircleAoe(5) >= enemyCount) &&
+            ActionReady(Reprisal) && PlayerHealthPercentageHp() < healthPercent;
+
+        public static bool CanShirk() =>
+            ActionReady(Shirk);
+    }
+}
+#endregion
+
+#region Action-Specific Interfaces
+// Action-specific interfaces
+internal interface ILucidDreaming
 {
-    public const uint
-        BigShot = 4238, //LB1, 2.0s cast, range 30, AOE 30+R width 4 rect, targets=hostile, castAnimLock=3.100
-        Desperado = 4239, //LB2, 3.0s cast, range 30, AOE 30+R width 5 rect, targets=hostile, castAnimLock=3.100
-        LegGraze = 7554, //Lv6, instant, 30.0s CD (group 42), range 25, single-target, targets=hostile
-        FootGraze = 7553, //Lv10, instant, 30.0s CD (group 41), range 25, single-target, targets=hostile
-        Peloton = 7557, //Lv20, instant, 5.0s CD (group 40), range 0, AOE 30 circle, targets=self
-        HeadGraze = 7551; //Lv24, instant, 30.0s CD (group 43), range 25, single-target, targets=hostile
-    public new class Buffs : PhysicalRole.Buffs
-    {
-        public const ushort
-            Peloton = 1199;
-    }
-
-    public static bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
-        IsEnabled(preset) && CanInterruptEnemy() && IsOffCooldown(HeadGraze) && CheckWeave(weave);
+    uint LucidDreaming { get; }
+    bool CanLucidDream(int MPThreshold, bool spellweave = true);
 }
 
-class Melee : PhysicalRole
+internal interface ISwiftcast
 {
-    public const uint
-        Braver = 200, //LB1, 2.0s cast, range 8, single-target, targets=hostile, castAnimLock=3.860
-        Bladedance = 201, //LB2, 3.0s cast, range 8, single-target, targets=hostile, castAnimLock=3.860
-        LegSweep = 7863, //Lv10, instant, 40.0s CD (group 41), range 3, single-target, targets=hostile
-        Bloodbath = 7542, //Lv12, instant, 90.0s CD (group 46), range 0, single-target, targets=self
-        Feint = 7549, //Lv22, instant, 90.0s CD (group 47), range 10, single-target, targets=hostile
-        TrueNorth = 7546; //Lv50, instant, 45.0s CD (group 45/50) (2 charges), range 0, single-target, targets=self
-
-
-    public new class Buffs : PhysicalRole.Buffs
-    {
-        public const ushort
-            BloodBath = 84,
-            TrueNorth = 1250;
-    }
-
-    public static class Debuffs
-    {
-        public const ushort
-            Feint = 1195;
-    }
-
-    public static bool CanBloodBath(int healthpercent) =>
-        ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthpercent;
-    public static bool CanTrueNorth() =>
-        ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasEffect(Buffs.TrueNorth);
+    uint Swiftcast { get; }
+    bool CanSwiftcast(bool spellweave = true);
 }
 
-class Tank : PhysicalRole
+internal interface ISurecast
 {
-    public const uint
-        ShieldWall = 197, //LB1, instant, range 0, AOE 50 circle, targets=self, animLock=1.930
-        Stronghold = 198, //LB2, instant, range 0, AOE 50 circle, targets=self, animLock=3.860
-        Rampart = 7531, //Lv8, instant, 90.0s CD (group 46), range 0, single-target, targets=self
-        LowBlow = 7540, //Lv12, instant, 25.0s CD (group 41), range 3, single-target, targets=hostile
-        Provoke = 7533, //Lv15, instant, 30.0s CD (group 42), range 25, single-target, targets=hostile
-        Interject = 7538, //Lv18, instant, 30.0s CD (group 43), range 3, single-target, targets=hostile
-        Reprisal = 7535, //Lv22, instant, 60.0s CD (group 44), range 0, AOE 5 circle, targets=self
-        Shirk = 7537; //Lv48, instant, 120.0s CD (group 49), range 25, single-target, targets=party
-        
-    public static class Debuffs
-    {
-        public const ushort
-            Reprisal = 1193; //applied by Reprisal to target
-    }
-
-    public static bool CanInterject() =>
-        ActionReady(Interject) && CanInterruptEnemy();
-
-    public static bool CanLowBlow() =>
-        ActionReady(LowBlow) && TargetIsCasting();
-
-    public static bool CanRampart(int healthPercent) =>
-        ActionReady(Rampart) && PlayerHealthPercentageHp() < healthPercent;
-
-    /// <see cref="CanArmsLength(int, UserInt?)">CanArmsLength</see> with default values.
-    /// <seealso cref="CanArmsLength(int, UserInt?)"/>
-    public static bool CanArmsLength() =>
-        CanArmsLength(3, All.Enums.BossAvoidance.On);
-
-    /// <summary>
-    ///     Logic for <see cref="PhysicalRole.ArmsLength"/>.
-    /// </summary>
-    /// <param name="enemyCount">
-    ///     The minimum number of enemies within range.
-    /// </param>
-    /// <param name="avoidanceSetting">
-    ///     Whether to avoid boss fights.<br />
-    ///     Defaults to <see cref="All.Enums.BossAvoidance.Off">Off</see>.
-    /// </param>
-    /// <returns>
-    ///     If <see cref="PhysicalRole.ArmsLength"/> is ready and passes the
-    ///     provided requirements.
-    /// </returns>
-    public static bool CanArmsLength
-        (int enemyCount, UserInt? avoidanceSetting = null) =>
-        CanArmsLength(enemyCount,
-            (All.Enums.BossAvoidance)
-            (avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
-
-    /// <see cref="CanArmsLength(int, UserInt?)">CanArmsLength</see> with direct Enum values for <paramref name="avoidanceSetting"/>.
-    /// <remarks>
-    ///     You should probably use <see cref="CanArmsLength(int, UserInt?)"/>
-    ///     instead (as in, just add an extra user-config for the boss avoidance).
-    /// </remarks>
-    /// <seealso cref="CanArmsLength(int, UserInt?)"/>
-    internal static bool CanArmsLength
-        (int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
-        ActionReady(ArmsLength) && CanCircleAoe(7) >= enemyCount &&
-        ((int)avoidanceSetting == (int)All.Enums.BossAvoidance.Off ||
-         !InBossEncounter());
-
-    public static bool CanReprisal
-    (int healthPercent = 101,
-        int? enemyCount = null,
-        bool checkTargetForDebuff = true) =>
-        (checkTargetForDebuff && !TargetHasEffectAny(Debuffs.Reprisal) ||
-         !checkTargetForDebuff) &&
-        (enemyCount is null
-            ? InActionRange(Reprisal)
-            : CanCircleAoe(5) >= enemyCount) &&
-        ActionReady(Reprisal) && PlayerHealthPercentageHp() < healthPercent;
+    uint Surecast { get; }
+    bool CanSurecast();
 }
+
+internal interface IAddle
+{
+    uint Addle { get; }
+    bool CanAddle();
+}
+
+internal interface ISleep
+{
+    uint Sleep { get; }
+    bool CanSleep();
+}
+
+internal interface IRepose
+{
+    uint Repose { get; }
+    bool CanRepose();
+}
+
+internal interface IEsuna
+{
+    uint Esuna { get; }
+    bool CanEsuna();
+}
+
+internal interface IRescue
+{
+    uint Rescue { get; }
+    bool CanRescue();
+}
+
+internal interface ISecondWind
+{
+    uint SecondWind { get; }
+    bool CanSecondWind(int healthpercent);
+}
+
+internal interface IArmsLength
+{
+    uint ArmsLength { get; }
+    bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null);
+    bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting);
+}
+
+internal interface ILegGraze
+{
+    uint LegGraze { get; }
+    bool CanLegGraze();
+}
+
+internal interface IFootGraze
+{
+    uint FootGraze { get; }
+    bool CanFootGraze();
+}
+
+internal interface IPeloton
+{
+    uint Peloton { get; }
+    bool CanPeloton();
+}
+
+internal interface IHeadGraze
+{
+    uint HeadGraze { get; }
+    internal bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None);
+}
+
+internal interface ILegSweep
+{
+    uint LegSweep { get; }
+    bool CanLegSweep();
+}
+
+internal interface IBloodbath
+{
+    uint Bloodbath { get; }
+    bool CanBloodBath(int healthpercent);
+}
+
+internal interface IFeint
+{
+    uint Feint { get; }
+    bool CanFeint();
+}
+
+internal interface ITrueNorth
+{
+    uint TrueNorth { get; }
+    bool CanTrueNorth();
+}
+
+internal interface IRampart
+{
+    uint Rampart { get; }
+    bool CanRampart(int healthPercent);
+}
+
+internal interface ILowBlow
+{
+    uint LowBlow { get; }
+    bool CanLowBlow();
+}
+
+internal interface IProvoke
+{
+    uint Provoke { get; }
+    bool CanProvoke();
+}
+
+internal interface IInterject
+{
+    uint Interject { get; }
+    bool CanInterject();
+}
+
+internal interface IReprisal
+{
+    uint Reprisal { get; }
+    bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true);
+}
+
+internal interface IShirk
+{
+    uint Shirk { get; }
+    bool CanShirk();
+}
+#endregion
+
+#region Status Effect Interfaces
+// Buff and Debuff interfaces
+internal interface IMagicRoleBuffs
+{
+    ushort Raise { get; }
+    ushort Swiftcast { get; }
+    ushort Surecast { get; }
+}
+
+internal interface ICasterBuffs : IMagicRoleBuffs
+{
+}
+
+internal interface IHealerBuffs : IMagicRoleBuffs
+{
+}
+
+internal interface IPhysicalRoleBuffs
+{
+    ushort ArmsLength { get; }
+}
+
+internal interface IPhysRangedBuffs : IPhysicalRoleBuffs
+{
+    ushort Peloton { get; }
+}
+
+internal interface IMeleeBuffs : IPhysicalRoleBuffs
+{
+    ushort BloodBath { get; }
+    ushort TrueNorth { get; }
+}
+
+internal interface ITankBuffs : IPhysicalRoleBuffs
+{
+}
+
+internal interface ICasterDebuffs
+{
+    ushort Addle { get; }
+}
+
+internal interface IMeleeDebuffs
+{
+    ushort Feint { get; }
+}
+
+internal interface ITankDebuffs
+{
+    ushort Reprisal { get; }
+}
+#endregion
+
+#region Role Interfaces
+// Shared interfaces for Inheritance
+internal interface IMagicRoleShared : ILucidDreaming, ISwiftcast, ISurecast
+{
+}
+
+internal interface IPhysicalRoleShared : ISecondWind, IArmsLength
+{
+}
+
+// Role-specific interfaces using inheritance
+internal interface IMagicRole : IMagicRoleShared
+{
+    IMagicRoleBuffs Buffs { get; }
+}
+
+internal interface ICaster : IMagicRoleShared, IAddle, ISleep
+{
+    ICasterBuffs Buffs { get; }
+    ICasterDebuffs Debuffs { get; }
+}
+
+internal interface IHealer : IMagicRoleShared, IRepose, IEsuna, IRescue
+{
+    IHealerBuffs Buffs { get; }
+}
+
+internal interface IPhysicalRole : IPhysicalRoleShared
+{
+    IPhysicalRoleBuffs Buffs { get; }
+}
+
+internal interface IPhysRanged : IPhysicalRoleShared, ILegGraze, IFootGraze, IPeloton, IHeadGraze
+{
+    IPhysRangedBuffs Buffs { get; }
+}
+
+internal interface IMelee : IPhysicalRoleShared, ILegSweep, IBloodbath, IFeint, ITrueNorth
+{
+    IMeleeBuffs Buffs { get; }
+    IMeleeDebuffs Debuffs { get; }
+}
+
+internal interface ITank : IPhysicalRoleShared, IRampart, ILowBlow, IProvoke, IInterject, IReprisal, IShirk
+{
+    ITankBuffs Buffs { get; }
+    ITankDebuffs Debuffs { get; }
+} 
+#endregion
+
+#region Buff and Debuff implementations
+internal class MagicRoleBuffsImpl : IMagicRoleBuffs
+{
+    public ushort Raise => RoleActions.Magic.Buffs.Raise;
+    public ushort Swiftcast => RoleActions.Magic.Buffs.Swiftcast;
+    public ushort Surecast => RoleActions.Magic.Buffs.Surecast;
+}
+
+internal class CasterBuffsImpl : MagicRoleBuffsImpl, ICasterBuffs
+{
+}
+
+internal class CasterDebuffsImpl : ICasterDebuffs
+{
+    public ushort Addle => RoleActions.Caster.Debuffs.Addle;
+}
+
+internal class HealerBuffsImpl : MagicRoleBuffsImpl, IHealerBuffs
+{
+}
+
+internal class PhysicalRoleBuffsImpl : IPhysicalRoleBuffs
+{
+    public ushort ArmsLength => RoleActions.Physical.Buffs.ArmsLength;
+}
+
+internal class PhysRangedBuffsImpl : PhysicalRoleBuffsImpl, IPhysRangedBuffs
+{
+    public ushort Peloton => RoleActions.PhysRanged.Buffs.Peloton;
+}
+
+internal class MeleeBuffsImpl : PhysicalRoleBuffsImpl, IMeleeBuffs
+{
+    public ushort BloodBath => RoleActions.Melee.Buffs.BloodBath;
+    public ushort TrueNorth => RoleActions.Melee.Buffs.TrueNorth;
+}
+
+internal class MeleeDebuffsImpl : IMeleeDebuffs
+{
+    public ushort Feint => RoleActions.Melee.Debuffs.Feint;
+}
+
+internal class TankBuffsImpl : PhysicalRoleBuffsImpl, ITankBuffs
+{
+}
+
+internal class TankDebuffsImpl : ITankDebuffs
+{
+    public ushort Reprisal => RoleActions.Tank.Debuffs.Reprisal;
+} 
+#endregion
+
+#region Role implementations
+static class Caster
+{
+    public static ICaster Instance { get; } = new CasterImpl();
+
+    private class CasterImpl : ICaster
+    {
+        public ICasterBuffs Buffs { get; } = new CasterBuffsImpl();
+        public ICasterDebuffs Debuffs { get; } = new CasterDebuffsImpl();
+
+        public uint LucidDreaming => RoleActions.Magic.LucidDreaming;
+        public uint Swiftcast => RoleActions.Magic.Swiftcast;
+        public uint Surecast => RoleActions.Magic.Surecast;
+        public uint Addle => RoleActions.Caster.Addle;
+        public uint Sleep => RoleActions.Caster.Sleep;
+
+        public bool CanLucidDream(int MPThreshold, bool spellweave = true) =>
+            RoleActions.Magic.CanLucidDream(MPThreshold, spellweave);
+
+        public bool CanSwiftcast(bool spellweave = true) =>
+            RoleActions.Magic.CanSwiftcast(spellweave);
+
+        public bool CanSurecast() =>
+            RoleActions.Magic.CanSurecast();
+
+        public bool CanAddle() =>
+            RoleActions.Caster.CanAddle();
+
+        public bool CanSleep() =>
+            RoleActions.Caster.CanSleep();
+    }
+}
+
+static class Healer
+{
+    public static IHealer Instance { get; } = new HealerImpl();
+
+    private class HealerImpl : IHealer
+    {
+        public IHealerBuffs Buffs { get; } = new HealerBuffsImpl();
+
+        public uint LucidDreaming => RoleActions.Magic.LucidDreaming;
+        public uint Swiftcast => RoleActions.Magic.Swiftcast;
+        public uint Surecast => RoleActions.Magic.Surecast;
+        public uint Repose => RoleActions.Healer.Repose;
+        public uint Esuna => RoleActions.Healer.Esuna;
+        public uint Rescue => RoleActions.Healer.Rescue;
+
+        public bool CanLucidDream(int MPThreshold, bool spellweave = true) =>
+            RoleActions.Magic.CanLucidDream(MPThreshold, spellweave);
+
+        public bool CanSwiftcast(bool spellweave = true) =>
+            RoleActions.Magic.CanSwiftcast(spellweave);
+
+        public bool CanSurecast() =>
+            RoleActions.Magic.CanSurecast();
+
+        public bool CanRepose() =>
+            RoleActions.Healer.CanRepose();
+
+        public bool CanEsuna() =>
+            RoleActions.Healer.CanEsuna();
+
+        public bool CanRescue() =>
+            RoleActions.Healer.CanRescue();
+    }
+}
+
+static class PhysRanged
+{
+    public static IPhysRanged Instance { get; } = new PhysRangedImpl();
+
+    private class PhysRangedImpl : IPhysRanged
+    {
+        public IPhysRangedBuffs Buffs { get; } = new PhysRangedBuffsImpl();
+
+        public uint SecondWind => RoleActions.Physical.SecondWind;
+        public uint ArmsLength => RoleActions.Physical.ArmsLength;
+        public uint LegGraze => RoleActions.PhysRanged.LegGraze;
+        public uint FootGraze => RoleActions.PhysRanged.FootGraze;
+        public uint Peloton => RoleActions.PhysRanged.Peloton;
+        public uint HeadGraze => RoleActions.PhysRanged.HeadGraze;
+
+        public bool CanSecondWind(int healthpercent) =>
+            RoleActions.Physical.CanSecondWind(healthpercent);
+
+        public bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null) =>
+            RoleActions.Physical.CanArmsLength(enemyCount, (All.Enums.BossAvoidance)(avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
+
+        public bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
+            RoleActions.Physical.CanArmsLength(enemyCount, avoidanceSetting);
+
+        public bool CanLegGraze() =>
+            RoleActions.PhysRanged.CanLegGraze();
+
+        public bool CanFootGraze() =>
+            RoleActions.PhysRanged.CanFootGraze();
+
+        public bool CanPeloton() =>
+            RoleActions.PhysRanged.CanPeloton();
+
+        public bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+            RoleActions.PhysRanged.CanHeadGraze(preset, weave);
+    }
+}
+
+static class Melee
+{
+    public static IMelee Instance { get; } = new MeleeImpl();
+
+    private class MeleeImpl : IMelee
+    {
+        public IMeleeBuffs Buffs { get; } = new MeleeBuffsImpl();
+        public IMeleeDebuffs Debuffs { get; } = new MeleeDebuffsImpl();
+
+        public uint SecondWind => RoleActions.Physical.SecondWind;
+        public uint ArmsLength => RoleActions.Physical.ArmsLength;
+        public uint LegSweep => RoleActions.Melee.LegSweep;
+        public uint Bloodbath => RoleActions.Melee.Bloodbath;
+        public uint Feint => RoleActions.Melee.Feint;
+        public uint TrueNorth => RoleActions.Melee.TrueNorth;
+
+        public bool CanSecondWind(int healthpercent) =>
+            RoleActions.Physical.CanSecondWind(healthpercent);
+
+        public bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null) =>
+            RoleActions.Physical.CanArmsLength(enemyCount, (All.Enums.BossAvoidance)(avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
+
+        public bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
+            RoleActions.Physical.CanArmsLength(enemyCount, avoidanceSetting);
+
+        public bool CanLegSweep() =>
+            RoleActions.Melee.CanLegSweep();
+
+        public bool CanBloodBath(int healthpercent) =>
+            RoleActions.Melee.CanBloodBath(healthpercent);
+
+        public bool CanFeint() =>
+            RoleActions.Melee.CanFeint();
+
+        public bool CanTrueNorth() =>
+            RoleActions.Melee.CanTrueNorth();
+    }
+}
+
+static class Tank
+{
+    public static ITank Instance { get; } = new TankImpl();
+
+    private class TankImpl : ITank
+    {
+        public ITankBuffs Buffs { get; } = new TankBuffsImpl();
+        public ITankDebuffs Debuffs { get; } = new TankDebuffsImpl();
+
+        public uint SecondWind => RoleActions.Physical.SecondWind;
+        public uint ArmsLength => RoleActions.Physical.ArmsLength;
+        public uint Rampart => RoleActions.Tank.Rampart;
+        public uint LowBlow => RoleActions.Tank.LowBlow;
+        public uint Provoke => RoleActions.Tank.Provoke;
+        public uint Interject => RoleActions.Tank.Interject;
+        public uint Reprisal => RoleActions.Tank.Reprisal;
+        public uint Shirk => RoleActions.Tank.Shirk;
+
+        public bool CanSecondWind(int healthpercent) =>
+            RoleActions.Physical.CanSecondWind(healthpercent);
+
+        public bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null) =>
+            RoleActions.Physical.CanArmsLength(enemyCount, (All.Enums.BossAvoidance)(avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
+
+        public bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
+            RoleActions.Physical.CanArmsLength(enemyCount, avoidanceSetting);
+
+        public bool CanRampart(int healthPercent) =>
+            RoleActions.Tank.CanRampart(healthPercent);
+
+        public bool CanLowBlow() =>
+            RoleActions.Tank.CanLowBlow();
+
+        public bool CanProvoke() =>
+            RoleActions.Tank.CanProvoke();
+
+        public bool CanInterject() =>
+            RoleActions.Tank.CanInterject();
+
+        public bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true) =>
+            RoleActions.Tank.CanReprisal(healthPercent, enemyCount, checkTargetForDebuff);
+
+        public bool CanShirk() =>
+            RoleActions.Tank.CanShirk();
+    }
+} 
+#endregion

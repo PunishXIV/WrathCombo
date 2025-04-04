@@ -9,29 +9,29 @@ namespace WrathCombo.Combos.PvE;
 class HealerJob
 {
     public class Variant : VariantHealer;
-    public class Role : Healer;
+    public static IHealer Role { get; } = Healer.Instance;
 }
 
 class TankJob
 {
     public class Variant : VariantTank;
-    public class Role : Tank;
+    public static ITank Role { get; } = Tank.Instance;
 }
 
 class MeleeJob
 {
     public class Variant : VariantPDPS;
-    public class Role : Melee;
+    public static IMelee Role { get; } = Melee.Instance;
 }
 
 class PhysRangedJob
 {
     public class Variant : VariantPDPS;
-    public class Role : PhysRanged;
+    public static IPhysRanged Role { get; } = PhysRanged.Instance;
 }
 
 class CasterJob
 {
     public class Variant : VariantMDPS;
-    public class Role : Caster;
+    public static ICaster Role { get; } = Caster.Instance;
 }

@@ -65,7 +65,7 @@ internal static class VariantActions
 
     internal static bool CanRaise(CustomComboPreset preset) =>
         IsEnabled(preset) && IsEnabled(VariantRaise) &&
-        ActionReady(VariantRaise) && HasEffect(MagicRole.Buffs.Swiftcast);
+        ActionReady(VariantRaise) && HasEffect(RoleActions.Magic.Buffs.Swiftcast);
 
     internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => 
         IsEnabled(preset) && IsEnabled(VariantUltimatum) &&
