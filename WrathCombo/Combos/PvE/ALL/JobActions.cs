@@ -258,6 +258,7 @@ internal interface ISecondWind
 internal interface IArmsLength
 {
     uint ArmsLength { get; }
+    bool CanArmsLength();
     bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null);
     bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting);
 }
@@ -588,6 +589,8 @@ static class PhysRanged
         public bool CanSecondWind(int healthpercent) =>
             RoleActions.Physical.CanSecondWind(healthpercent);
 
+        public bool CanArmsLength() => CanArmsLength(3, All.Enums.BossAvoidance.On);
+
         public bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null) =>
             RoleActions.Physical.CanArmsLength(enemyCount, (All.Enums.BossAvoidance)(avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
 
@@ -626,6 +629,8 @@ static class Melee
 
         public bool CanSecondWind(int healthpercent) =>
             RoleActions.Physical.CanSecondWind(healthpercent);
+
+        public bool CanArmsLength() => CanArmsLength(3, All.Enums.BossAvoidance.On);
 
         public bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null) =>
             RoleActions.Physical.CanArmsLength(enemyCount, (All.Enums.BossAvoidance)(avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
@@ -667,6 +672,8 @@ static class Tank
 
         public bool CanSecondWind(int healthpercent) =>
             RoleActions.Physical.CanSecondWind(healthpercent);
+
+        public bool CanArmsLength() => CanArmsLength(3, All.Enums.BossAvoidance.On);
 
         public bool CanArmsLength(int enemyCount, UserInt? avoidanceSetting = null) =>
             RoleActions.Physical.CanArmsLength(enemyCount, (All.Enums.BossAvoidance)(avoidanceSetting ?? (int)All.Enums.BossAvoidance.Off));
