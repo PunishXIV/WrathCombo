@@ -3,65 +3,7 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE.Content;
 
-// Base interface for shared functionality (if any)
-public interface IVariant
-{
-    // Add any shared properties/methods here if needed
-    // Currently empty since all actions are role-specific
-}
-
-// Action-specific interfaces
-public interface IVariantCure
-{
-    uint Cure { get; }
-    bool CanCure(CustomComboPreset preset, int healthpercent);
-}
-
-public interface IVariantUltimatum
-{
-    uint Ultimatum { get; }
-    bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None);
-}
-
-public interface IVariantRaise
-{
-    uint Raise { get; }
-    bool CanRaise(CustomComboPreset preset);
-}
-
-public interface IVariantSpiritDart
-{
-    uint SpiritDart { get; }
-    bool CanSpiritDart(CustomComboPreset preset);
-}
-
-public interface IVariantRampart
-{
-    uint Rampart { get; }
-    bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None);
-}
-
-// Role-specific variant interfaces
-public interface ITankVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantSpiritDart
-{
-}
-
-public interface IHealerVariant : IVariant, IVariantUltimatum, IVariantSpiritDart, IVariantRampart
-{
-}
-
-public interface IMDPSVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantRampart
-{
-}
-
-public interface IPDPSVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantRampart
-{
-}
-
-public interface ICasterVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantRampart
-{
-}
-
+#region Variant Actions and Functions
 // Static utility class for shared logic
 internal static class VariantActions
 {
@@ -122,16 +64,81 @@ internal static class VariantActions
         PlayerHealthPercentageHp() <= healthpercent;
 
     internal static bool CanRaise(CustomComboPreset preset) =>
-        IsEnabled(preset) && ActionReady(VariantRaise) 
-		&& HasEffect(MagicRole.Buffs.Swiftcast);
+        IsEnabled(preset) && ActionReady(VariantRaise)
+        && HasEffect(MagicRole.Buffs.Swiftcast);
 
-    internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => 
-        IsEnabled(preset) && ActionReady(VariantUltimatum) 
-		&& CanCircleAoe(5) > 0 && CheckWeave(weave);
+    internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+        IsEnabled(preset) && ActionReady(VariantUltimatum)
+        && CanCircleAoe(5) > 0 && CheckWeave(weave);
+} 
+#endregion
+
+#region Variant Action Interfaces
+// Base interface for shared functionality (if any)
+internal interface IVariant
+{
+    // Add any shared properties/methods here if needed
+    // Currently empty since all actions are role-specific
 }
 
+// Action-specific interfaces
+internal interface IVariantCure
+{
+    uint Cure { get; }
+    bool CanCure(CustomComboPreset preset, int healthpercent);
+}
+
+internal interface IVariantUltimatum
+{
+    uint Ultimatum { get; }
+    bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None);
+}
+
+internal interface IVariantRaise
+{
+    uint Raise { get; }
+    bool CanRaise(CustomComboPreset preset);
+}
+
+internal interface IVariantSpiritDart
+{
+    uint SpiritDart { get; }
+    bool CanSpiritDart(CustomComboPreset preset);
+}
+
+internal interface IVariantRampart
+{
+    uint Rampart { get; }
+    bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None);
+}
+#endregion
+
+#region Variant Action Interface Groupings
+// Role-specific variant interfaces
+internal interface ITankVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantSpiritDart
+{
+}
+
+internal interface IHealerVariant : IVariant, IVariantUltimatum, IVariantSpiritDart, IVariantRampart
+{
+}
+
+internal interface IMDPSVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantRampart
+{
+}
+
+internal interface IPDPSVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantRampart
+{
+}
+
+internal interface ICasterVariant : IVariant, IVariantCure, IVariantUltimatum, IVariantRaise, IVariantRampart
+{
+}
+#endregion
+
+#region Variant Jobs
 // VariantTank: Cure, Ultimatum, Raise, SpiritDart
-public class VariantTank : ITankVariant
+internal class VariantTank : ITankVariant
 {
     public uint Cure => VariantActions.VariantCure;
     public uint Ultimatum => VariantActions.VariantUltimatum;
@@ -145,7 +152,7 @@ public class VariantTank : ITankVariant
 }
 
 // VariantHealer: Ultimatum, SpiritDart, Rampart
-public class VariantHealer : IHealerVariant
+internal class VariantHealer : IHealerVariant
 {
     public uint Ultimatum => VariantActions.VariantUltimatum;
     public uint SpiritDart => VariantActions.VariantSpiritDart;
@@ -157,7 +164,7 @@ public class VariantHealer : IHealerVariant
 }
 
 // VariantPDPS: Cure, Ultimatum, Raise, Rampart
-public class VariantPDPS : IPDPSVariant
+internal class VariantPDPS : IPDPSVariant
 {
     public uint Cure => VariantActions.VariantCure;
     public uint Ultimatum => VariantActions.VariantUltimatum;
@@ -171,7 +178,7 @@ public class VariantPDPS : IPDPSVariant
 }
 
 // VariantMDPS: Cure, Ultimatum, Raise, Rampart
-public class VariantMDPS : IMDPSVariant
+internal class VariantMDPS : IMDPSVariant
 {
     public uint Cure => VariantActions.VariantCure;
     public uint Ultimatum => VariantActions.VariantUltimatum;
@@ -185,7 +192,7 @@ public class VariantMDPS : IMDPSVariant
 }
 
 // VariantCaster (Magical Ranged DPS): Cure, Ultimatum, Raise, Rampart
-public class VariantCaster : ICasterVariant
+internal class VariantCaster : ICasterVariant
 {
     public uint Cure => VariantActions.VariantCure;
     public uint Ultimatum => VariantActions.VariantUltimatum;
@@ -196,4 +203,5 @@ public class VariantCaster : ICasterVariant
     public bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanUltimatum(preset, weave);
     public bool CanRaise(CustomComboPreset preset) => VariantActions.CanRaise(preset);
     public bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanRampart(preset, weave);
-}
+} 
+#endregion
