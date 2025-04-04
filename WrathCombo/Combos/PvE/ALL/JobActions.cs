@@ -350,18 +350,18 @@ internal interface IShirk
 
 #region Status Effect Interfaces
 // Buff and Debuff interfaces
-internal interface IMagicRoleBuffs
+internal interface IMagicBuffs
 {
     ushort Raise { get; }
     ushort Swiftcast { get; }
     ushort Surecast { get; }
 }
 
-internal interface ICasterBuffs : IMagicRoleBuffs
+internal interface ICasterBuffs : IMagicBuffs
 {
 }
 
-internal interface IHealerBuffs : IMagicRoleBuffs
+internal interface IHealerBuffs : IMagicBuffs
 {
 }
 
@@ -402,28 +402,33 @@ internal interface ITankDebuffs
 #endregion
 
 #region Role Interfaces
-// Shared interfaces for Inheritance
-internal interface IMagicRoleShared : ILucidDreaming, ISwiftcast, ISurecast
+// Base interface for shared functionality / lists/ idfk
+public interface IRoleAction
 {
 }
 
-internal interface IPhysicalRoleShared : ISecondWind, IArmsLength
+// Shared interfaces for Inheritance
+internal interface IMagicShared : IRoleAction, ILucidDreaming, ISwiftcast, ISurecast
+{
+}
+
+internal interface IPhysicalRoleShared : IRoleAction, ISecondWind, IArmsLength
 {
 }
 
 // Role-specific interfaces using inheritance
-internal interface IMagicRole : IMagicRoleShared
+internal interface IMagic : IMagicShared
 {
-    IMagicRoleBuffs Buffs { get; }
+    IMagicBuffs Buffs { get; }
 }
 
-internal interface ICaster : IMagicRoleShared, IAddle, ISleep
+internal interface ICaster : IMagicShared, IAddle, ISleep
 {
     ICasterBuffs Buffs { get; }
     ICasterDebuffs Debuffs { get; }
 }
 
-internal interface IHealer : IMagicRoleShared, IRepose, IEsuna, IRescue
+internal interface IHealer : IMagicShared, IRepose, IEsuna, IRescue
 {
     IHealerBuffs Buffs { get; }
 }
@@ -452,52 +457,52 @@ internal interface ITank : IPhysicalRoleShared, IRampart, ILowBlow, IProvoke, II
 #endregion
 
 #region Buff and Debuff implementations
-internal class MagicRoleBuffsImpl : IMagicRoleBuffs
+internal class MagicBuffs : IMagicBuffs
 {
     public ushort Raise => RoleActions.Magic.Buffs.Raise;
     public ushort Swiftcast => RoleActions.Magic.Buffs.Swiftcast;
     public ushort Surecast => RoleActions.Magic.Buffs.Surecast;
 }
 
-internal class CasterBuffsImpl : MagicRoleBuffsImpl, ICasterBuffs
+internal class CasterBuffs : MagicBuffs, ICasterBuffs
 {
 }
 
-internal class CasterDebuffsImpl : ICasterDebuffs
+internal class CasterDebuffs : ICasterDebuffs
 {
     public ushort Addle => RoleActions.Caster.Debuffs.Addle;
 }
 
-internal class HealerBuffsImpl : MagicRoleBuffsImpl, IHealerBuffs
+internal class HealerBuffs : MagicBuffs, IHealerBuffs
 {
 }
 
-internal class PhysicalRoleBuffsImpl : IPhysicalRoleBuffs
+internal class PhysicalRoleBuffs : IPhysicalRoleBuffs
 {
     public ushort ArmsLength => RoleActions.Physical.Buffs.ArmsLength;
 }
 
-internal class PhysRangedBuffsImpl : PhysicalRoleBuffsImpl, IPhysRangedBuffs
+internal class PhysRangedBuffs : PhysicalRoleBuffs, IPhysRangedBuffs
 {
     public ushort Peloton => RoleActions.PhysRanged.Buffs.Peloton;
 }
 
-internal class MeleeBuffsImpl : PhysicalRoleBuffsImpl, IMeleeBuffs
+internal class MeleeBuffs : PhysicalRoleBuffs, IMeleeBuffs
 {
     public ushort BloodBath => RoleActions.Melee.Buffs.BloodBath;
     public ushort TrueNorth => RoleActions.Melee.Buffs.TrueNorth;
 }
 
-internal class MeleeDebuffsImpl : IMeleeDebuffs
+internal class MeleeDebuffs : IMeleeDebuffs
 {
     public ushort Feint => RoleActions.Melee.Debuffs.Feint;
 }
 
-internal class TankBuffsImpl : PhysicalRoleBuffsImpl, ITankBuffs
+internal class TankBuffs : PhysicalRoleBuffs, ITankBuffs
 {
 }
 
-internal class TankDebuffsImpl : ITankDebuffs
+internal class TankDebuffs : ITankDebuffs
 {
     public ushort Reprisal => RoleActions.Tank.Debuffs.Reprisal;
 } 
@@ -510,8 +515,8 @@ static class Caster
 
     private class CasterImpl : ICaster
     {
-        public ICasterBuffs Buffs { get; } = new CasterBuffsImpl();
-        public ICasterDebuffs Debuffs { get; } = new CasterDebuffsImpl();
+        public ICasterBuffs Buffs { get; } = new CasterBuffs();
+        public ICasterDebuffs Debuffs { get; } = new CasterDebuffs();
 
         public uint LucidDreaming => RoleActions.Magic.LucidDreaming;
         public uint Swiftcast => RoleActions.Magic.Swiftcast;
@@ -542,7 +547,7 @@ static class Healer
 
     private class HealerImpl : IHealer
     {
-        public IHealerBuffs Buffs { get; } = new HealerBuffsImpl();
+        public IHealerBuffs Buffs { get; } = new HealerBuffs();
 
         public uint LucidDreaming => RoleActions.Magic.LucidDreaming;
         public uint Swiftcast => RoleActions.Magic.Swiftcast;
@@ -577,7 +582,7 @@ static class PhysRanged
 
     private class PhysRangedImpl : IPhysRanged
     {
-        public IPhysRangedBuffs Buffs { get; } = new PhysRangedBuffsImpl();
+        public IPhysRangedBuffs Buffs { get; } = new PhysRangedBuffs();
 
         public uint SecondWind => RoleActions.Physical.SecondWind;
         public uint ArmsLength => RoleActions.Physical.ArmsLength;
@@ -617,8 +622,8 @@ static class Melee
 
     private class MeleeImpl : IMelee
     {
-        public IMeleeBuffs Buffs { get; } = new MeleeBuffsImpl();
-        public IMeleeDebuffs Debuffs { get; } = new MeleeDebuffsImpl();
+        public IMeleeBuffs Buffs { get; } = new MeleeBuffs();
+        public IMeleeDebuffs Debuffs { get; } = new MeleeDebuffs();
 
         public uint SecondWind => RoleActions.Physical.SecondWind;
         public uint ArmsLength => RoleActions.Physical.ArmsLength;
@@ -658,8 +663,8 @@ static class Tank
 
     private class TankImpl : ITank
     {
-        public ITankBuffs Buffs { get; } = new TankBuffsImpl();
-        public ITankDebuffs Debuffs { get; } = new TankDebuffsImpl();
+        public ITankBuffs Buffs { get; } = new TankBuffs();
+        public ITankDebuffs Debuffs { get; } = new TankDebuffs();
 
         public uint SecondWind => RoleActions.Physical.SecondWind;
         public uint ArmsLength => RoleActions.Physical.ArmsLength;
