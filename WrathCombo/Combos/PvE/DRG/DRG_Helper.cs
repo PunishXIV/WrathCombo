@@ -129,7 +129,7 @@ internal partial class DRG
         public override bool HasCooldowns() =>
             GetRemainingCharges(LifeSurge) is 2 &&
             IsOffCooldown(BattleLitany) &&
-            IsOffCooldown(DragonfireDive) && 
+            IsOffCooldown(DragonfireDive) &&
             IsOffCooldown(LanceCharge);
     }
 
@@ -170,10 +170,10 @@ internal partial class DRG
 
         internal override UserData ContentCheckConfig => Config.DRG_Balance_Content;
 
-        public override bool HasCooldowns() => 
-            GetRemainingCharges(LifeSurge) is 2 && 
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(LifeSurge) is 2 &&
             IsOffCooldown(BattleLitany) &&
-            IsOffCooldown(DragonfireDive) && 
+            IsOffCooldown(DragonfireDive) &&
             IsOffCooldown(LanceCharge);
     }
 

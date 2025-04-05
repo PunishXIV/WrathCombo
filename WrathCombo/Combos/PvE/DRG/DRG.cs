@@ -111,6 +111,8 @@ internal partial class DRG : MeleeJob
                 if (ActionReady(OriginalHook(Jump)) &&
                     CanDRGWeave(OriginalHook(Jump)) &&
                     !HasEffect(Buffs.DiveReady) &&
+                    (LevelChecked(HighJump) && (GetCooldownRemainingTime(Geirskogul) < 15 || Gauge.IsLOTDActive) ||
+                     !LevelChecked(HighJump)) &&
                     TimeMoving.Ticks == 0)
                     return OriginalHook(Jump);
 
@@ -158,7 +160,8 @@ internal partial class DRG : MeleeJob
                 //Mirage Feature
                 if (LevelChecked(MirageDive) &&
                     CanDRGWeave(MirageDive) &&
-                    HasEffect(Buffs.DiveReady))
+                    HasEffect(Buffs.DiveReady) &&
+                    Gauge.IsLOTDActive)
                     return MirageDive;
             }
 
@@ -283,6 +286,8 @@ internal partial class DRG : MeleeJob
                         ActionReady(OriginalHook(Jump)) &&
                         CanDRGWeave(OriginalHook(Jump)) &&
                         !HasEffect(Buffs.DiveReady) &&
+                        (LevelChecked(HighJump) && (GetCooldownRemainingTime(Geirskogul) < 15 || Gauge.IsLOTDActive) ||
+                         !LevelChecked(HighJump)) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) && TimeMoving.Ticks == 0 &&
                          GetTargetDistance() <= 1))
@@ -343,7 +348,8 @@ internal partial class DRG : MeleeJob
                     if (IsEnabled(CustomComboPreset.DRG_ST_Mirage) &&
                         LevelChecked(MirageDive) &&
                         CanDRGWeave(MirageDive) &&
-                        HasEffect(Buffs.DiveReady))
+                        HasEffect(Buffs.DiveReady) &&
+                        Gauge.IsLOTDActive)
                         return MirageDive;
                 }
             }
