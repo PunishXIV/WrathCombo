@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using Newtonsoft.Json;
 using WrathCombo.Combos;
 using ECommons.DalamudServices;
@@ -51,7 +51,7 @@ public partial class Provider : IDisposable
     internal readonly Helper Helper;
 
     /// <summary>
-    ///     Whether the IPC (when initialized by <see cref="InitAsync"/>) is ready.
+    ///     Whether the IPC (when initialized by <see cref="Init"/>) is ready.
     /// </summary>
     private bool _ipcReady;
 
@@ -78,7 +78,62 @@ public partial class Provider : IDisposable
         P.IPCSearch = new Search(output.Leasing);
         P.UIHelper = new UIHelper(output.Leasing);
 
+        // Build Caches of presets
+        Svc.Framework.RunOnTick(BuildCachesAction(output));
+
         return output;
+    }
+
+    /// <summary>
+    ///     A token to cancel <see cref="BuildCaches" /> if the IPC is disabled.
+    /// </summary>
+    private static readonly CancellationTokenSource ActionToken = new();
+
+    /// <summary>
+    ///     Just provides a signature-compatible way to call <see cref="BuildCaches" />
+    ///     with <see cref="Svc.Framework" />.
+    /// </summary>
+    /// <param name="output">The IPC provider instance to set ready.</param>
+    /// <returns>An Action of <see cref="BuildCaches" /></returns>
+    private static Action BuildCachesAction(Provider output)
+    {
+        return () => BuildCaches(output);
+    }
+
+    /// <summary>
+    /// Builds necessary caches for IPC functionality.
+    /// Called after initialization to ensure all data is ready for IPC interactions.
+    /// </summary>
+    /// <param name="output">The IPC provider instance to set ready.</param>
+    private static void BuildCaches(Provider output)
+    {
+        // Respect the token
+        if (ActionToken.IsCancellationRequested)
+        {
+            Logging.Verbose("IPC caches cancelled, IPC disabled");
+            return;
+        }
+
+        // Wait until player is ready
+        if (!Svc.ClientState.IsLoggedIn || !Player.Available)
+        {
+            Svc.Framework.RunOnTick(BuildCachesAction(output),
+                TimeSpan.FromSeconds(3));
+            Logging.Verbose("IPC caches delayed, waiting for player-ready");
+            return;
+        }
+
+        // Build job-specific combo state caches
+        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+        P.IPCSearch.ComboStatesByJob.TryGetValue(Player.Job, out _);
+
+        // Build UI-state caches
+        P.UIHelper.PresetControlled(CustomComboPreset.AST_ST_DPS);
+
+        // Mark IPC as ready after caches are built
+        output._ipcReady = true;
+
+        Logging.Log("IPC caches built successfully");
     }
 
     /// <summary>
@@ -86,6 +141,7 @@ public partial class Provider : IDisposable
     /// </summary>
     public void Dispose()
     {
+        ActionToken.Cancel();
         Leasing.SuspendLeases(CancellationReason.WrathPluginDisabled);
     }
 

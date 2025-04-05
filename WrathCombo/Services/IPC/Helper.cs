@@ -436,6 +436,9 @@ internal static class Logging
         }
     }
 
+    public static void Verbose(string message) =>
+        PluginLog.Verbose(Prefix + PrefixMethod + message);
+
     public static void Log(string message) =>
         PluginLog.Debug(Prefix + PrefixMethod + message);
 
