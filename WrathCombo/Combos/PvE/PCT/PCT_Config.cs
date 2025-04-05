@@ -1,5 +1,4 @@
 using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
@@ -137,17 +136,7 @@ internal partial class PCT
                     UserConfig.DrawSliderInt(1, 100, PCT_VariantCure, "HP% to be at or under", 200);
 
                     break;
-
-                // PvP
-                case CustomComboPreset.PCTPvP_BurstControl:
-                    UserConfig.DrawSliderInt(1, 100, PCTPvP.Config.PCTPvP_BurstHP, "Target HP%", 200);
-
-                    break;
-
-                case CustomComboPreset.PCTPvP_TemperaCoat:
-                    UserConfig.DrawSliderInt(1, 100, PCTPvP.Config.PCTPvP_TemperaHP, "Player HP%", 200);
-
-                    break;
+                
             }
         }
     }

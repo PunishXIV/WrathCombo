@@ -1,6 +1,5 @@
 using ECommons.ExcelServices;
 using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
@@ -181,12 +180,7 @@ internal partial class SMN
                 case CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight:
                     UserConfig.DrawAdditionalBoolChoice(SMN_AoE_Searing_Any, $"Do not user when under another {Job.SMN.GetData().Abbreviation}'s {Buffs.SearingLight.StatusName()} buff.", $"Saves your {SearingLight.ActionName()} if you already have the buff from another {Job.SMN.GetData().Abbreviation}.");
                     break;
-
-                case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
-                    UserConfig.DrawSliderInt(0, 90, SMNPvP.Config.SMNPvP_RadiantAegisThreshold,
-                        "Caps at 90 to prevent waste.");
-
-                    break;
+                
             }
         }
     }

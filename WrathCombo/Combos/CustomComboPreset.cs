@@ -6768,7 +6768,7 @@ SMN.JobID)]
 
     [ParentCombo(BLMPvP_BurstMode)]
     [PvPCustomCombo]
-    [CustomComboInfo("Phantom Dart Option", "Uses Phantom Dart (if selected) when available.", BLMPvP.JobID)]
+    [CustomComboInfo("Phantom Dart Option", "Uses Phantom Dart (if selected) when available at or below set health threshold.", BLMPvP.JobID)]
     BLMPvP_PhantomDart = 112007,
 
     [PvPCustomCombo]
@@ -7286,42 +7286,55 @@ SMN.JobID)]
     [CustomComboInfo("Burst Mode", "Turns Fire in Red into an all-in-one damage button.", PCTPvP.JobID)]
     PCTPvP_Burst = 140000,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Burst Control Option",
         "Saves high-damaging actions until the target's HP falls below the threshold.", PCTPvP.JobID)]
     PCTPvP_BurstControl = 140001,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Tempera Coat Option", "Uses Tempera Coat when HP falls below the threshold during combat.",
         PCTPvP.JobID)]
     PCTPvP_TemperaCoat = 140002,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Smart Palette Option",
         "Uses Subtractive Palette when standing still and releases it when moving.", PCTPvP.JobID)]
     PCTPvP_SubtractivePalette = 140003,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Creature Motif Option", "Adds Creature Motif to Burst Mode.", PCTPvP.JobID)]
     PCTPvP_CreatureMotif = 140004,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Living Muse Option", "Adds Living Muse to Burst Mode.", PCTPvP.JobID)]
     PCTPvP_LivingMuse = 140005,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Mog Of The Ages Option", "Adds Mog Of The Ages to Burst Mode.", PCTPvP.JobID)]
     PCTPvP_MogOfTheAges = 140006,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Holy In White Option", "Adds Holy In White to Burst Mode.", PCTPvP.JobID)]
     PCTPvP_HolyInWhite = 140007,
 
+    [PvPCustomCombo]
     [ParentCombo(PCTPvP_Burst)]
     [CustomComboInfo("Star Prism Option", "Adds Star Prism to Burst Mode.", PCTPvP.JobID)]
     PCTPvP_StarPrism = 140008,
 
-    // Last value = 140008
+    [ParentCombo(PCTPvP_Burst)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Phantom Dart Option", "Uses Phantom Dart (if selected) when available at or below set health threshold.", PCTPvP.JobID)]
+    PCTPvP_PhantomDart = 140009,
+
+    // Last value = 140009
 
     #endregion
 
@@ -7434,7 +7447,12 @@ SMN.JobID)]
     [CustomComboInfo("Corps-a-corps / Displacement Feature", "Adds Purify when affected by crowd control.\n- Requires Purify to be available.", RDMPvP.JobID)]
     RDMPvP_Dash_Feature = 123007,
 
-    // Last value = 123007
+    [ParentCombo(RDMPvP_BurstMode)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Phantom Dart Option", "Uses Phantom Dart (if selected) when available at or below set health threshold.", RDMPvP.JobID)]
+    RDMPvP_PhantomDart = 123008,
+
+    // Last value = 123008
 
     #endregion
 
@@ -7601,6 +7619,11 @@ SMN.JobID)]
     [ParentCombo(SMNPvP_BurstMode)]
     [CustomComboInfo("Brand of Purgatory Option", "Adds Brand of Purgatory to Burst Mode.", SMNPvP.JobID)]
     SMNPvP_BurstMode_BrandofPurgatory = 127008,
+
+    [ParentCombo(SMNPvP_BurstMode)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Phantom Dart Option", "Uses Phantom Dart (if selected) when available at or below set health threshold.", SMNPvP.JobID)]
+    SMNPvP_PhantomDart = 127009,
 
     // Last value = 127008
 

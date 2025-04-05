@@ -3,12 +3,15 @@ using ImGuiNET;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class RDMPvP
     {
+        #region IDs
+
         public const byte JobID = 35;
 
         internal class Role : PvPCaster;
@@ -49,6 +52,10 @@ namespace WrathCombo.Combos.PvP
             public const ushort
                 Monomachy = 3242;
         }
+
+        #endregion
+
+        #region Config
         public static class Config
         {
             internal static UserInt
@@ -56,7 +63,8 @@ namespace WrathCombo.Combos.PvP
                 RDMPvP_Corps_Charges = new("RDMPvP_Corps_Charges", 1),
                 RDMPvP_Displacement_Charges = new("RDMPvP_Displacement_Charges", 1),
                 RDMPvP_Forte_PlayerHP = new("RDMPvP_Forte_PlayerHP", 50),
-                RDMPvP_Resolution_TargetHP = new("RDMPvP_Resolution_TargetHP", 50);
+                RDMPvP_Resolution_TargetHP = new("RDMPvP_Resolution_TargetHP", 50),
+                RDMPvP_PhantomDartThreshold = new("RDMPvP_PhantomDartThreshold", 50);
 
             public static UserBool
                 RDMPvP_Forte_SubOption = new("RDMPvP_Forte_SubOption"),
@@ -67,8 +75,6 @@ namespace WrathCombo.Combos.PvP
             {
                 switch (preset)
                 {
-                    // PvP
-
                     // Resolution
                     case CustomComboPreset.RDMPvP_Resolution:
                         DrawSliderInt(10, 100, RDMPvP_Resolution_TargetHP, "Target HP%", 210);
@@ -106,9 +112,17 @@ namespace WrathCombo.Combos.PvP
                             "Uses Vice of Thorns when available.");
 
                         break;
+
+                    // Phantom Dart
+                    case CustomComboPreset.RDMPvP_PhantomDart:
+                        UserConfig.DrawSliderInt(1, 100, RDMPvP.Config.RDMPvP_PhantomDartThreshold,
+                            "Target HP% to use Phantom Dart at or below");
+
+                        break;
                 }
             }
         }
+        #endregion
 
         internal class RDMPvP_BurstMode : CustomCombo
         {
@@ -160,6 +174,9 @@ namespace WrathCombo.Combos.PvP
                     {
                         if (!targetHasGuard)
                         {
+                            if (IsEnabled(CustomComboPreset.RDMPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= GetOptionValue(Config.RDMPvP_PhantomDartThreshold))
+                                return Role.PhantomDart;
+
                             // Vice of Thorns
                             if (isEnabledViceOfThorns && hasViceOfThorns && (!isTargetNPC || isViceOfThornsExpiring))
                                 return OriginalHook(Forte);

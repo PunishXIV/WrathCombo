@@ -323,7 +323,7 @@ namespace WrathCombo.Window.Functions
                     {
                         //  case All.JobID: All.Config.Draw(preset); break;
                         case AST.JobID: AST.Config.Draw(preset); break;
-                        case BLM.JobID: BLM.Config.Draw(preset); break;
+                        case BLM.JobID: BLMPvP.Config.Draw(preset); break;
                         case BLU.JobID: BLU.Config.Draw(preset); break;
                         case BRD.JobID: BRDPvP.Config.Draw(preset); break;
                         case DNC.JobID: DNCPvP.Config.Draw(preset); break;
@@ -333,14 +333,14 @@ namespace WrathCombo.Window.Functions
                         case MCH.JobID: MCHPvP.Config.Draw(preset); break;
                         case MNK.JobID: MNK.Config.Draw(preset); break;
                         case NIN.JobID: NIN.Config.Draw(preset); break;
-                        case PCT.JobID: PCT.Config.Draw(preset); break;
+                        case PCT.JobID: PCTPvP.Config.Draw(preset); break;
                         case PLD.JobID: PLD.Config.Draw(preset); break;
                         case RPR.JobID: RPR.Config.Draw(preset); break;
                         case RDM.JobID: RDMPvP.Config.Draw(preset); break;
                         case SAM.JobID: SAM.Config.Draw(preset); break;
                         case SCH.JobID: SCH.Config.Draw(preset); break;
                         case SGE.JobID: SGE.Config.Draw(preset); break;
-                        case SMN.JobID: SMN.Config.Draw(preset); break;
+                        case SMN.JobID: SMNPvP.Config.Draw(preset); break;
                         case VPR.JobID: VPR.Config.Draw(preset); break;
                         case WAR.JobID: WAR.Config.Draw(preset); break;
                         case WHM.JobID: WHM.Config.Draw(preset); break;

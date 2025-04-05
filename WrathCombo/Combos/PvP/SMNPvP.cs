@@ -1,10 +1,14 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class SMNPvP
     {
+        #region IDs
+
         public const byte ClassID = 26;
         public const byte JobID = 27;
 
@@ -36,14 +40,33 @@ namespace WrathCombo.Combos.PvP
                 FurtherRuin = 4399;
 
         }
+        #endregion
 
+        #region Config
         public static class Config
         {
-            public const string
-                SMNPvP_RadiantAegisThreshold = "SMNPvP_RadiantAegisThreshold";
-            public const string
-                SMNPvP_FesterThreshold = "SMNPvP_FesterThreshold";
+            public static UserInt
+                SMNPvP_RadiantAegisThreshold = new("SMNPvP_RadiantAegisThreshold"),
+                SMNPvP_PhantomDartThreshold = new("SMNPvP_PhantomDartThreshold", 50);
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    // Phantom Dart
+                    case CustomComboPreset.SMNPvP_PhantomDart:
+                        UserConfig.DrawSliderInt(1, 100, SMNPvP.Config.SMNPvP_PhantomDartThreshold,
+                            "Target HP% to use Phantom Dart at or below");
+                        break;
+
+                    case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
+                        UserConfig.DrawSliderInt(0, 90, SMNPvP.Config.SMNPvP_RadiantAegisThreshold,
+                            "Caps at 90 to prevent waste.");
+                        break;
+                }
+            }
         }
+        #endregion
 
         internal class SMNPvP_BurstMode : CustomCombo
         {
@@ -58,7 +81,6 @@ namespace WrathCombo.Combos.PvP
                     bool bahamutBurst = OriginalHook(Ruin3) is AstralImpulse;
                     bool phoenixBurst = OriginalHook(Ruin3) is FountainOfFire;
                     double playerHP = PlayerHealthPercentageHp();
-                    bool canBind = !TargetHasEffectAny(PvPCommon.Debuffs.Bind);
                     int radiantThreshold = PluginConfiguration.GetCustomIntValue(Config.SMNPvP_RadiantAegisThreshold);
                     #endregion
 
@@ -70,6 +92,9 @@ namespace WrathCombo.Combos.PvP
                             if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_RadiantAegis) &&
                                 IsOffCooldown(RadiantAegis) && playerHP <= radiantThreshold)
                                 return RadiantAegis;
+
+                            if (IsEnabled(CustomComboPreset.SMNPvP_PhantomDart) && Role.CanPhantomDart() && GetTargetHPPercent() <= GetOptionValue(Config.SMNPvP_PhantomDartThreshold))
+                                return Role.PhantomDart;
                         }
                         // Phoenix & Bahamut bursts
                         if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_BrandofPurgatory) && phoenixBurst && IsOffCooldown(BrandofPurgatory))
