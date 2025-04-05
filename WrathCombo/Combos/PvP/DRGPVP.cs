@@ -55,7 +55,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is RaidenThrust or FangAndClaw or WheelingThrust or Drakesbane)
                 {
-                    if (!TargetHasEffectAny(PvPCommon.Buffs.Guard))
+                    if (!HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true))
                     {
                         if (CanWeave())
                         {

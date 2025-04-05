@@ -135,7 +135,7 @@ namespace WrathCombo.Combos.PvP
                     bool hasViceOfThorns = OriginalHook(Forte) is ViceOfThorns;
                     bool hasPrefulgence = OriginalHook(Embolden) is Prefulgence;
                     bool hasGrandImpact = OriginalHook(actionID) is GrandImpact;
-                    bool targetHasGuard = TargetHasEffectAny(PvPCommon.Buffs.Guard);
+                    bool targetHasGuard = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
                     bool hasForte = IsOffCooldown(Forte) && OriginalHook(Forte) is Forte;
                     bool hasEmbolden = IsOffCooldown(Embolden) && OriginalHook(Embolden) is Embolden;
                     bool isEmboldenDelayDependant = !JustUsed(Embolden, 5f) || IsOnCooldown(EnchantedRiposte);
@@ -146,7 +146,7 @@ namespace WrathCombo.Combos.PvP
                     bool isViceOfThornsExpiring = HasEffect(Buffs.ThornedFlourish) && GetBuffRemainingTime(Buffs.ThornedFlourish) <= 3;
                     bool isPrefulgenceExpiring = HasEffect(Buffs.PrefulgenceReady) && GetBuffRemainingTime(Buffs.PrefulgenceReady) <= 3;
                     bool isMovementDependant = !Config.RDMPvP_Displacement_SubOption || (Config.RDMPvP_Displacement_SubOption && !isMoving);
-                    bool targetHasImmunity = TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption);
+                    bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
                     bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !HasEffect(Buffs.Displacement) && hasScorch && inMeleeRange;
                     bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > Config.RDMPvP_Corps_Charges && targetDistance <= Config.RDMPvP_Corps_Range;
                     #endregion

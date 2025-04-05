@@ -58,7 +58,7 @@ namespace WrathCombo.Combos.PvP
                     bool bahamutBurst = OriginalHook(Ruin3) is AstralImpulse;
                     bool phoenixBurst = OriginalHook(Ruin3) is FountainOfFire;
                     double playerHP = PlayerHealthPercentageHp();
-                    bool canBind = !TargetHasEffectAny(PvPCommon.Debuffs.Bind);
+                    bool canBind = !HasStatusEffect(PvPCommon.Debuffs.Bind, CurrentTarget, true);
                     int radiantThreshold = PluginConfiguration.GetCustomIntValue(Config.SMNPvP_RadiantAegisThreshold);
                     #endregion
 

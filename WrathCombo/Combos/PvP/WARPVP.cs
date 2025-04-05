@@ -66,7 +66,7 @@ namespace WrathCombo.Combos.PvP
                         if (!InMeleeRange())
                         {
                             // Blota with specific conditions and burst mode enabled
-                            if (IsOffCooldown(Blota) && !TargetHasEffectAny(PvPCommon.Debuffs.Stun) && IsEnabled(CustomComboPreset.WARPvP_BurstMode_Blota))
+                            if (IsOffCooldown(Blota) && !HasStatusEffect(PvPCommon.Debuffs.Stun, CurrentTarget, true) && IsEnabled(CustomComboPreset.WARPvP_BurstMode_Blota))
                             {
                                 if (Config.WARPVP_BlotaTiming == 0 && IsOffCooldown(PrimalRend))
                                     return OriginalHook(Blota);
@@ -109,7 +109,7 @@ namespace WrathCombo.Combos.PvP
                             }
 
                             // Blota with specific conditions and burst mode enabled in meleerange
-                            if (IsOffCooldown(Blota) && !TargetHasEffectAny(PvPCommon.Debuffs.Stun) && IsEnabled(CustomComboPreset.WARPvP_BurstMode_Blota))
+                            if (IsOffCooldown(Blota) && !HasStatusEffect(PvPCommon.Debuffs.Stun, CurrentTarget, true) && IsEnabled(CustomComboPreset.WARPvP_BurstMode_Blota))
                             {
                                 if (Config.WARPVP_BlotaTiming == 0 && IsOffCooldown(PrimalRend))
                                     return OriginalHook(Blota);

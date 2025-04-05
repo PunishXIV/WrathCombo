@@ -42,7 +42,7 @@ class Caster : MagicRole //Offensive Magic
     }
 
     public static bool CanAddle() =>
-        ActionReady(Addle) && !TargetHasEffectAny(Debuffs.Addle);
+        ActionReady(Addle) && !HasStatusEffect(Debuffs.Addle, CurrentTarget, true);
 }
 
 class Healer : MagicRole //Healers
@@ -188,7 +188,7 @@ class Tank : PhysicalRole
     (int healthPercent = 101,
         int? enemyCount = null,
         bool checkTargetForDebuff = true) =>
-        (checkTargetForDebuff && !TargetHasEffectAny(Debuffs.Reprisal) ||
+        (checkTargetForDebuff && !HasStatusEffect(Debuffs.Reprisal, CurrentTarget, true) ||
          !checkTargetForDebuff) &&
         (enemyCount is null
             ? InActionRange(Reprisal)

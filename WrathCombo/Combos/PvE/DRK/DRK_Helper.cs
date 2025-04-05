@@ -161,12 +161,10 @@ internal partial class DRK
 
             #region Damage over Time
 
-            var DoTStatus =
-                FindTargetEffect(VariantActions.Debuffs.SustainedDamage);
             if ((flags.HasFlag(Combo.Simple) ||
                  (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Dart))) &&
                 ActionReady(Variant.SpiritDart) &&
-                DoTStatus?.RemainingTime <= 3)
+                GetStatusEffectRemainingTime(VariantActions.Debuffs.SustainedDamage, CurrentTarget) <=3)
                 return (action = Variant.SpiritDart) != 0;
 
             #endregion
@@ -227,10 +225,10 @@ internal partial class DRK
                   IsEnabled(Preset.DRK_AoE_CD_Disesteem))) &&
                 ActionReady(Disesteem) &&
                 TraitLevelChecked(Traits.EnhancedShadowIII) &&
-                HasEffect(Buffs.Scorn) &&
+                HasStatusEffect(Buffs.Scorn) &&
                 ((Gauge.DarksideTimeRemaining > 0 &&
-                  GetBuffRemainingTime(Buffs.Scorn) < 24) ||
-                 GetBuffRemainingTime(Buffs.Scorn) < 14))
+                  GetStatusEffectRemainingTime(Buffs.Scorn) < 24) ||
+                 GetStatusEffectRemainingTime(Buffs.Scorn) < 14))
                 return (action = OriginalHook(Disesteem)) != 0;
 
             #endregion
@@ -352,7 +350,7 @@ internal partial class DRK
                   flags.HasFlag(Combo.AoE) && IsEnabled(Preset.DRK_AoE_CD_Salt))) &&
                 LevelChecked(SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
-                !HasEffect(Buffs.SaltedEarth) &&
+                !HasStatusEffect(Buffs.SaltedEarth) &&
                 saltStill &&
                 GetTargetHPPercent(Target(flags)) >= saltHPThreshold)
                 return (action = SaltedEarth) != 0;
@@ -366,8 +364,8 @@ internal partial class DRK
                  IsEnabled(Preset.DRK_ST_CD_Darkness)) &&
                 LevelChecked(SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
-                HasEffect(Buffs.SaltedEarth) &&
-                GetBuffRemainingTime(Buffs.SaltedEarth) < 7)
+                HasStatusEffect(Buffs.SaltedEarth) &&
+                GetStatusEffectRemainingTime(Buffs.SaltedEarth) < 7)
                 return (action = OriginalHook(SaltAndDarkness)) != 0;
 
             #endregion
@@ -383,7 +381,7 @@ internal partial class DRK
                 (flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST) &&
                  IsEnabled(Preset.DRK_ST_CD_BringerBurst) &&
                  GetCooldownRemainingTime(LivingShadow) >= 90 &&
-                 !HasEffect(Buffs.Scorn));
+                 !HasStatusEffect(Buffs.Scorn));
 
             #endregion
 
@@ -487,9 +485,9 @@ internal partial class DRK
             if (JustUsedMitigation) return false;
 
             // Bail if we're trying to Invuln or actively Invulnerable
-            if (HasEffect(Buffs.LivingDead) ||
-                HasEffect(Buffs.WalkingDead) ||
-                HasEffect(Buffs.UndeadRebirth))
+            if (HasStatusEffect(Buffs.LivingDead) ||
+                HasStatusEffect(Buffs.WalkingDead) ||
+                HasStatusEffect(Buffs.UndeadRebirth))
                 return false;
 
             // Bail if Simple mode and mitigation is disabled
@@ -576,7 +574,7 @@ internal partial class DRK
                   flags.HasFlag(Combo.AoE) &&
                   IsEnabled(Preset.DRK_AoE_Mit_Oblation))) &&
                 ActionReady(Oblation) &&
-                !HasEffectAny(Buffs.Oblation) &&
+                !HasStatusEffect(Buffs.Oblation, anyOwner: true) &&
                 GetRemainingCharges(Oblation) > oblationCharges &&
                 PlayerHealthPercentageHp() <= oblationThreshold)
                 return (action = Oblation) != 0;
@@ -624,7 +622,7 @@ internal partial class DRK
                 flags.HasFlag(Combo.AoE) ||
                 flags.HasFlag(Combo.Simple) ||
                 IsNotEnabled(Preset.DRK_ST_Mit_MissionaryAvoid) ||
-                !TargetHasEffectAny(Role.Debuffs.Reprisal);
+                !HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget, true);
 
             #endregion
 
@@ -763,7 +761,7 @@ internal partial class DRK
                    IsEnabled(Preset.DRK_ST_Sp_ScarletChain)) ||
                   flags.HasFlag(Combo.AoE) &&
                   IsEnabled(Preset.DRK_AoE_Sp_ImpalementChain))) &&
-                HasEffect(Buffs.EnhancedDelirium) &&
+                HasStatusEffect(Buffs.EnhancedDelirium) &&
                 bloodGCDReady)
                 if (flags.HasFlag(Combo.ST))
                     return (action = OriginalHook(Bloodspiller)) != 0;
@@ -779,7 +777,7 @@ internal partial class DRK
                   IsEnabled(Preset.DRK_AoE_Sp_Quietus)) ||
                  (flags.HasFlag(Combo.ST) &&
                   IsEnabled(Preset.DRK_ST_Sp_Bloodspiller))) &&
-                GetBuffStacks(Buffs.Delirium) > 0 &&
+                GetStatusEffectStacks(Buffs.Delirium) > 0 &&
                 bloodGCDReady)
                 if (flags.HasFlag(Combo.ST))
                     return (action = OriginalHook(Bloodspiller)) != 0;
@@ -1042,11 +1040,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = FindEffect(
-                    Buffs.BlackestNightShield,
-                    LocalPlayer,
-                    LocalPlayer.GameObjectId
-                ) is not null;
+                has = HasStatusEffect(Buffs.BlackestNightShield);
 
             return has;
         }
@@ -1062,7 +1056,7 @@ internal partial class DRK
         {
             var has = false;
             if (LocalPlayer is not null)
-                has = FindEffect(Buffs.BlackestNightShield) is not null;
+                has = HasStatusEffect(Buffs.BlackestNightShield, anyOwner: true);
 
             return has;
         }
@@ -1156,8 +1150,8 @@ internal partial class DRK
             () => !HasAnyTBN && LocalPlayer.CurrentMp > 3000 &&
                   PlayerHealthPercentageHp() <= Config.DRK_Mit_TBN_Health),
         (Oblation, Preset.DRK_Mit_Oblation,
-            () => (!((HasFriendlyTarget() && TargetHasEffectAny(Buffs.Oblation)) ||
-                     (!HasFriendlyTarget() && HasEffectAny(Buffs.Oblation)))) &&
+            () => (!((HasFriendlyTarget() && HasStatusEffect(Buffs.Oblation, CurrentTarget, true)) ||
+                     (!HasFriendlyTarget() && HasStatusEffect(Buffs.Oblation, anyOwner: true)))) &&
                   GetRemainingCharges(Oblation) > Config.DRK_Mit_Oblation_Charges),
         (Role.Reprisal, Preset.DRK_Mit_Reprisal,
             () => Role.CanReprisal(checkTargetForDebuff:false)),

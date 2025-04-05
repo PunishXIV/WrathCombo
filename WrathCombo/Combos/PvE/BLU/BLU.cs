@@ -215,10 +215,10 @@ internal partial class BLU : CasterJob
             {
                 if (IsEnabled(CustomComboPreset.BLU_HydroPull) && !InMeleeRange() && IsSpellActive(HydroPull))
                     return HydroPull;
-                if (!TargetHasEffectAny(Debuffs.DeepFreeze) && IsOffCooldown(Ultravibration) && IsSpellActive(RamsVoice))
+                if (!HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true) && IsOffCooldown(Ultravibration) && IsSpellActive(RamsVoice))
                     return RamsVoice;
 
-                if (TargetHasEffectAny(Debuffs.DeepFreeze))
+                if (HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true))
                 {
                     if (IsOffCooldown(Role.Swiftcast))
                         return Role.Swiftcast;
@@ -239,9 +239,9 @@ internal partial class BLU : CasterJob
         {
             if (actionID is Devour or Offguard or BadBreath)
             {
-                if (!TargetHasEffectAny(Debuffs.Offguard) && IsOffCooldown(Offguard) && IsSpellActive(Offguard))
+                if (!HasStatusEffect(Debuffs.Offguard, CurrentTarget, true) && IsOffCooldown(Offguard) && IsSpellActive(Offguard))
                     return Offguard;
-                if (!TargetHasEffectAny(Debuffs.Malodorous) && HasEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath))
+                if (!HasStatusEffect(Debuffs.Malodorous, CurrentTarget, true) && HasEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath))
                     return BadBreath;
                 if (IsOffCooldown(Devour) && HasEffect(Buffs.TankMimicry) && IsSpellActive(Devour))
                     return Devour;
@@ -257,7 +257,7 @@ internal partial class BLU : CasterJob
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_Addle;
 
-        protected override uint Invoke(uint actionID) => (actionID is MagicHammer && IsOnCooldown(MagicHammer) && IsOffCooldown(Role.Addle) && !TargetHasEffect(Role.Debuffs.Addle) && !TargetHasEffect(Debuffs.Conked)) ? Role.Addle : actionID;
+        protected override uint Invoke(uint actionID) => (actionID is MagicHammer && IsOnCooldown(MagicHammer) && IsOffCooldown(Role.Addle) && !HasStatusEffect(Role.Debuffs.Addle, CurrentTarget) && !HasStatusEffect(Debuffs.Conked, CurrentTarget)) ? Role.Addle : actionID;
     }
 
     internal class BLU_PrimalCombo : CustomCombo
@@ -332,9 +332,9 @@ internal partial class BLU : CasterJob
         {
             if (actionID is WhiteKnightsTour or BlackKnightsTour)
             {
-                if (TargetHasEffect(Debuffs.Slow) && IsSpellActive(BlackKnightsTour))
+                if (HasStatusEffect(Debuffs.Slow, CurrentTarget) && IsSpellActive(BlackKnightsTour))
                     return BlackKnightsTour;
-                if (TargetHasEffect(Debuffs.Bind) && IsSpellActive(WhiteKnightsTour))
+                if (HasStatusEffect(Debuffs.Bind, CurrentTarget) && IsSpellActive(WhiteKnightsTour))
                     return WhiteKnightsTour;
             }
 
@@ -350,9 +350,9 @@ internal partial class BLU : CasterJob
         {
             if (actionID is PeripheralSynthesis)
             {
-                if (!TargetHasEffect(Debuffs.Lightheaded) && IsSpellActive(PeripheralSynthesis))
+                if (!HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) && IsSpellActive(PeripheralSynthesis))
                     return PeripheralSynthesis;
-                if (TargetHasEffect(Debuffs.Lightheaded) && IsSpellActive(MustardBomb))
+                if (HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) && IsSpellActive(MustardBomb))
                     return MustardBomb;
             }
 
@@ -364,7 +364,7 @@ internal partial class BLU : CasterJob
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_PerpetualRayStunCombo;
 
-        protected override uint Invoke(uint actionID) => (actionID is PerpetualRay && (TargetHasEffectAny(Debuffs.Stun) || WasLastAction(PerpetualRay)) && IsSpellActive(SharpenedKnife) && InMeleeRange()) ? SharpenedKnife : actionID;
+        protected override uint Invoke(uint actionID) => (actionID is PerpetualRay && (HasStatusEffect(Debuffs.Stun, CurrentTarget, true) || WasLastAction(PerpetualRay)) && IsSpellActive(SharpenedKnife) && InMeleeRange()) ? SharpenedKnife : actionID;
     }
 
     internal class BLU_MeleeCombo : CustomCombo
@@ -382,7 +382,7 @@ internal partial class BLU : CasterJob
         {
             if (actionID is DeepClean)
             {
-                if (IsSpellActive(PeatPelt) && !TargetHasEffect(Debuffs.Begrimed))
+                if (IsSpellActive(PeatPelt) && !HasStatusEffect(Debuffs.Begrimed, CurrentTarget))
                     return PeatPelt;
             }
 
@@ -423,7 +423,7 @@ internal partial class BLU : CasterJob
 
                 if (IsEnabled(CustomComboPreset.BLU_NewMoonFluteOpener_DoTOpener))
                 {
-                    if ((!TargetHasEffectAny(Debuffs.BreathOfMagic) && IsSpellActive(BreathOfMagic)) || (!TargetHasEffectAny(Debuffs.MortalFlame) && IsSpellActive(MortalFlame)))
+                    if ((!HasStatusEffect(Debuffs.BreathOfMagic, CurrentTarget, true) && IsSpellActive(BreathOfMagic)) || (!HasStatusEffect(Debuffs.MortalFlame, CurrentTarget, true) && IsSpellActive(MortalFlame)))
                     {
                         if (IsSpellActive(Bristle) && !HasEffect(Buffs.Bristle))
                             return Bristle;
@@ -434,9 +434,9 @@ internal partial class BLU : CasterJob
                         if (IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
                             return SeaShanty;
 
-                        if (IsSpellActive(BreathOfMagic) && !TargetHasEffectAny(Debuffs.BreathOfMagic))
+                        if (IsSpellActive(BreathOfMagic) && !HasStatusEffect(Debuffs.BreathOfMagic, CurrentTarget, true))
                             return BreathOfMagic;
-                        else if (IsSpellActive(MortalFlame) && !TargetHasEffectAny(Debuffs.MortalFlame))
+                        else if (IsSpellActive(MortalFlame) && !HasStatusEffect(Debuffs.MortalFlame, CurrentTarget, true))
                             return MortalFlame;
                     }
                 }

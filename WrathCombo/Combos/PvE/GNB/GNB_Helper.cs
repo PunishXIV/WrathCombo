@@ -24,11 +24,11 @@ internal partial class GNB : TankJob
     internal static float DdCD => GetCooldownRemainingTime(DoubleDown);
     internal static float BfCD => GetCooldownRemainingTime(Bloodfest);
     internal static bool HasNM => NmCD is >= 40 and <= 60;
-    internal static bool HasBreak => HasEffect(Buffs.ReadyToBreak);
-    internal static bool HasReign => HasEffect(Buffs.ReadyToReign);
+    internal static bool HasBreak => HasStatusEffect(Buffs.ReadyToBreak);
+    internal static bool HasReign => HasStatusEffect(Buffs.ReadyToReign);
     internal static bool CanBS => LevelChecked(BurstStrike) && Ammo > 0;
     internal static bool CanFC => LevelChecked(FatedCircle) && Ammo > 0;
-    internal static bool CanGF => LevelChecked(GnashingFang) && GfCD < 0.6f && !HasEffect(Buffs.ReadyToBlast) && GunStep == 0 && Ammo > 0;
+    internal static bool CanGF => LevelChecked(GnashingFang) && GfCD < 0.6f && !HasStatusEffect(Buffs.ReadyToBlast) && GunStep == 0 && Ammo > 0;
     internal static bool CanDD => LevelChecked(DoubleDown) && DdCD < 0.6f && Ammo > 0;
     internal static bool CanBF => LevelChecked(Bloodfest) && BfCD < 0.6f;
     internal static bool CanZone => LevelChecked(DangerZone) && GetCooldownRemainingTime(OriginalHook(DangerZone)) < 0.6f;
@@ -348,7 +348,7 @@ internal partial class GNB : TankJob
                     return action;
 
             if (IsEnabledAndUsable(CustomComboPreset.GNB_Bozja_BannerOfHonedAcuity, Bozja.BannerOfHonedAcuity) &&
-                !HasEffect(Bozja.Buffs.BannerOfTranscendentFinesse))
+                !HasStatusEffect(Bozja.Buffs.BannerOfTranscendentFinesse))
                 return Bozja.BannerOfHonedAcuity;
         }
 
@@ -357,12 +357,12 @@ internal partial class GNB : TankJob
         {
         (CustomComboPreset.GNB_Bozja_LostDeath, Bozja.LostDeath, true),
         (CustomComboPreset.GNB_Bozja_LostCure, Bozja.LostCure, PlayerHealthPercentageHp() <= Config.GNB_Bozja_LostCure_Health),
-        (CustomComboPreset.GNB_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasEffect(MagicRole.Buffs.Raise)),
+        (CustomComboPreset.GNB_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(MagicRole.Buffs.Raise)),
         (CustomComboPreset.GNB_Bozja_LostReraise, Bozja.LostReraise, PlayerHealthPercentageHp() <= Config.GNB_Bozja_LostReraise_Health),
-        (CustomComboPreset.GNB_Bozja_LostProtect, Bozja.LostProtect, !HasEffect(Bozja.Buffs.LostProtect)),
-        (CustomComboPreset.GNB_Bozja_LostShell, Bozja.LostShell, !HasEffect(Bozja.Buffs.LostShell)),
-        (CustomComboPreset.GNB_Bozja_LostBravery, Bozja.LostBravery, !HasEffect(Bozja.Buffs.LostBravery)),
-        (CustomComboPreset.GNB_Bozja_LostBubble, Bozja.LostBubble, !HasEffect(Bozja.Buffs.LostBubble)),
+        (CustomComboPreset.GNB_Bozja_LostProtect, Bozja.LostProtect, !HasStatusEffect(Bozja.Buffs.LostProtect)),
+        (CustomComboPreset.GNB_Bozja_LostShell, Bozja.LostShell, !HasStatusEffect(Bozja.Buffs.LostShell)),
+        (CustomComboPreset.GNB_Bozja_LostBravery, Bozja.LostBravery, !HasStatusEffect(Bozja.Buffs.LostBravery)),
+        (CustomComboPreset.GNB_Bozja_LostBubble, Bozja.LostBubble, !HasStatusEffect(Bozja.Buffs.LostBubble)),
         (CustomComboPreset.GNB_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f))
         })
             if (IsEnabledAndUsable(preset, action) && condition)
@@ -370,12 +370,12 @@ internal partial class GNB : TankJob
 
         if (IsEnabled(CustomComboPreset.GNB_Bozja_LostSpellforge) &&
             CanUse(Bozja.LostSpellforge) &&
-            (!HasEffect(Bozja.Buffs.LostSpellforge) || !HasEffect(Bozja.Buffs.LostSteelsting)))
+            (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
             return Bozja.LostSpellforge;
 
         if (IsEnabled(CustomComboPreset.GNB_Bozja_LostSteelsting) &&
             CanUse(Bozja.LostSteelsting) &&
-            (!HasEffect(Bozja.Buffs.LostSpellforge) || !HasEffect(Bozja.Buffs.LostSteelsting)))
+            (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
             return Bozja.LostSteelsting;
 
         return 0; //No conditions met
@@ -399,7 +399,7 @@ internal partial class GNB : TankJob
     internal static bool ShouldUseBloodfest() => InCombat() && HasTarget() && CanWeave() && CanBF && Ammo == 0;
     internal static bool ShouldUseZone() => CanZone && CanWeave() && NmCD is < 57.5f and > 17f;
     internal static bool ShouldUseBowShock() => CanBow && CanWeave() && NmCD is < 57.5f and >= 40;
-    internal static bool ShouldUseContinuation() => CanContinue && (HasEffect(Buffs.ReadyToRip) || HasEffect(Buffs.ReadyToTear) || HasEffect(Buffs.ReadyToGouge) || (LevelChecked(Hypervelocity) && HasEffect(Buffs.ReadyToBlast)));
+    internal static bool ShouldUseContinuation() => CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || (LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast)));
     #endregion
 
     #region GCDs
@@ -407,7 +407,7 @@ internal partial class GNB : TankJob
     internal static bool ShouldUseGnashingFang() => CanGF && (NmCD is > 17 and < 35 || JustUsed(NoMercy, 6f));
     internal static bool ShouldUseDoubleDown() => CanDD && HasNM && (IsOnCooldown(GnashingFang) || Ammo == 1);
     internal static bool ShouldUseSonicBreak() => CanBreak && ((IsOnCooldown(GnashingFang) || !LevelChecked(GnashingFang)) && (IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown)));
-    internal static bool ShouldUseReignOfBeasts() => CanReign && IsOnCooldown(GnashingFang) && IsOnCooldown(DoubleDown) && !HasEffect(Buffs.ReadyToBreak) && GunStep == 0;
+    internal static bool ShouldUseReignOfBeasts() => CanReign && IsOnCooldown(GnashingFang) && IsOnCooldown(DoubleDown) && !HasStatusEffect(Buffs.ReadyToBreak) && GunStep == 0;
     internal static bool ApproachingOvercap() => ComboTimer > 0 && LevelChecked(SolidBarrel) && ComboAction == BrutalShell && LevelChecked(BurstStrike) && Ammo == MaxCartridges();
     internal static bool ShouldUseBurstStrike()
     {
@@ -543,13 +543,13 @@ internal partial class GNB : TankJob
     [
         //Heart of Corundum
         (OriginalHook(HeartOfStone), CustomComboPreset.GNB_Mit_Corundum,
-            () => FindEffect(Buffs.HeartOfCorundum) is null &&
-                  FindEffect(Buffs.HeartOfStone) is null &&
+            () => !HasStatusEffect(Buffs.HeartOfCorundum) &&
+                  !HasStatusEffect(Buffs.HeartOfStone) &&
                   PlayerHealthPercentageHp() <= Config.GNB_Mit_Corundum_Health),
         //Aurora
         (Aurora, CustomComboPreset.GNB_Mit_Aurora,
-            () => !(HasFriendlyTarget() && TargetHasEffectAny(Buffs.Aurora) ||
-                    !HasFriendlyTarget() && HasEffectAny(Buffs.Aurora)) &&
+            () => !(HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, anyOwner : true) ||
+                    !HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, anyOwner : true)) &&
                   GetRemainingCharges(Aurora) > Config.GNB_Mit_Aurora_Charges &&
                   PlayerHealthPercentageHp() <= Config.GNB_Mit_Aurora_Health),
         //Camouflage

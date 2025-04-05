@@ -78,7 +78,7 @@ internal partial class PCT : CasterJob
                 // SteelMuse
 
                 if (SteelMuse.LevelChecked() &&
-                    !HasEffect(Buffs.HammerTime) &&
+                    !HasStatusEffect(Buffs.HammerTime) &&
                     gauge.WeaponMotifDrawn &&
                     HasCharges(OriginalHook(SteelMuse)) &&
                     (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
@@ -103,7 +103,7 @@ internal partial class PCT : CasterJob
                 if (IsMoving() &&
                     IsOffCooldown(Role.Swiftcast) &&
                     Role.Swiftcast.LevelChecked() &&
-                    !HasEffect(Buffs.HammerTime) &&
+                    !HasStatusEffect(Buffs.HammerTime) &&
                     gauge.Paint < 1 &&
                     (!gauge.CreatureMotifDrawn || !gauge.WeaponMotifDrawn || !gauge.LandscapeMotifDrawn))
                 {
@@ -113,10 +113,10 @@ internal partial class PCT : CasterJob
                 // SubtractivePalette
 
                 if (SubtractivePalette.LevelChecked() &&
-                    !HasEffect(Buffs.SubtractivePalette) &&
-                    !HasEffect(Buffs.MonochromeTones))
+                    !HasStatusEffect(Buffs.SubtractivePalette) &&
+                    !HasStatusEffect(Buffs.MonochromeTones))
                 {
-                    if (HasEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
+                    if (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
                     {
                         return SubtractivePalette;
                     }
@@ -124,26 +124,26 @@ internal partial class PCT : CasterJob
             }
 
             // Swiftcast Motifs
-            if (HasEffect(Role.Buffs.Swiftcast))
+            if (HasStatusEffect(Role.Buffs.Swiftcast))
             {
-                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse))
+                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(CreatureMotif);
-                if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.StarryMuse))
+                if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(HammerMotif);
-                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse))
+                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(LandscapeMotif);
             }
 
             // IsMoving logic
             if (IsMoving() && InCombat())
             {
-                if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+                if (HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
-                if (CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasEffect(Buffs.MonochromeTones))
+                if (CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasStatusEffect(Buffs.MonochromeTones))
                     return OriginalHook(CometinBlack);
 
-                if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) <= 3f))
+                if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) <= 3f))
                     return RainbowDrip;
 
                 if (HolyInWhite.LevelChecked() && gauge.Paint >= 1)
@@ -159,38 +159,38 @@ internal partial class PCT : CasterJob
                 if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
                     return OriginalHook(CreatureMotif);
 
-                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
+                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(WeaponMotif);
             }
 
             // Burst
-            if (HasEffect(Buffs.StarryMuse))
+            if (HasStatusEffect(Buffs.StarryMuse))
             {
 
-                if (CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
+                if (CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
                     return CometinBlack;
 
-                if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.Starstruck))
+                if (HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.Starstruck))
                     return OriginalHook(HammerStamp);
 
-                if (HasEffect(Buffs.Starstruck) || (HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) <= 3f))
+                if (HasStatusEffect(Buffs.Starstruck) || (HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) <= 3f))
                     return StarPrism;
 
-                if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) <= 3f))
+                if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) <= 3f))
                     return RainbowDrip;
 
             }
 
-            if (HasEffect(Buffs.RainbowBright) && !HasEffect(Buffs.StarryMuse))
+            if (HasStatusEffect(Buffs.RainbowBright) && !HasStatusEffect(Buffs.StarryMuse))
                 return RainbowDrip;
 
-            if (CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 30f)
+            if (CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 30f)
                 return OriginalHook(CometinBlack);
 
-            if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+            if (HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                 return OriginalHook(HammerStamp);
 
-            if (!HasEffect(Buffs.StarryMuse))
+            if (!HasStatusEffect(Buffs.StarryMuse))
             {
                 // LandscapeMotif
 
@@ -213,7 +213,7 @@ internal partial class PCT : CasterJob
                 // WeaponMotif
 
                 if (WeaponMotif.LevelChecked() &&
-                    !HasEffect(Buffs.HammerTime) &&
+                    !HasStatusEffect(Buffs.HammerTime) &&
                     !gauge.WeaponMotifDrawn &&
                     (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
                 {
@@ -224,7 +224,7 @@ internal partial class PCT : CasterJob
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
 
-            if (BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
+            if (BlizzardIIinCyan.LevelChecked() && HasStatusEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardinCyan);
 
             return actionID;
@@ -259,9 +259,9 @@ internal partial class PCT : CasterJob
             {
                 if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
                     return OriginalHook(CreatureMotif);
-                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
+                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(WeaponMotif);
-                if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasEffect(Buffs.StarryMuse))
+                if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(LandscapeMotif);
 
             }
@@ -340,7 +340,7 @@ internal partial class PCT : CasterJob
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SteelMuse))
                 {
                     if (SteelMuse.LevelChecked() &&
-                        !HasEffect(Buffs.HammerTime) &&
+                        !HasStatusEffect(Buffs.HammerTime) &&
                         gauge.WeaponMotifDrawn &&
                         HasCharges(OriginalHook(SteelMuse)) &&
                         (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
@@ -367,10 +367,10 @@ internal partial class PCT : CasterJob
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SubtractivePalette))
                 {
                     if (SubtractivePalette.LevelChecked() &&
-                        !HasEffect(Buffs.SubtractivePalette) &&
-                        !HasEffect(Buffs.MonochromeTones))
+                        !HasStatusEffect(Buffs.SubtractivePalette) &&
+                        !HasStatusEffect(Buffs.MonochromeTones))
                     {
-                        if (HasEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
+                        if (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
                         {
                             return SubtractivePalette;
                         }
@@ -380,13 +380,13 @@ internal partial class PCT : CasterJob
 
             // Swiftcast Motifs
             if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwiftMotifs) &&
-                HasEffect(Role.Buffs.Swiftcast))
+                HasStatusEffect(Role.Buffs.Swiftcast))
             {
-                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
+                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
                     return OriginalHook(CreatureMotif);
-                if (!gauge.WeaponMotifDrawn && WeaponMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > weaponStop)
+                if (!gauge.WeaponMotifDrawn && WeaponMotif.LevelChecked() && !HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.StarryMuse) && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(WeaponMotif);
-                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > landscapeStop)
+                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse) && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
 
             }
@@ -398,13 +398,13 @@ internal partial class PCT : CasterJob
                 //previously, there were situations where Wrath prioritized using Hammer Combo over casts, which would prevent us from generating Rainbow Bright in time when movement is required
                 //so, if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines, we burn it all down
                 bool hasPaint = gauge.Paint > 0;
-                bool burnStacks = GetBuffStacks(Buffs.Hyperphantasia) > 0 && HasEffect(Buffs.Inspiration) && hasPaint; //use casts asap if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines
-                bool shouldHolyInWhite = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && hasPaint & !HasEffect(Buffs.MonochromeTones); //normal conditions for Holy In White
-                bool shouldCometInBlack = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && hasPaint && HasEffect(Buffs.MonochromeTones); //normal conditions for Comet in Black
+                bool burnStacks = GetStatusEffectStacks(Buffs.Hyperphantasia) > 0 && HasStatusEffect(Buffs.Inspiration) && hasPaint; //use casts asap if we have Hyperphantasia stacks and Inspiration is active from standing in PCT LeyLines
+                bool shouldHolyInWhite = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) && HolyInWhite.LevelChecked() && hasPaint & !HasStatusEffect(Buffs.MonochromeTones); //normal conditions for Holy In White
+                bool shouldCometInBlack = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && hasPaint && HasStatusEffect(Buffs.MonochromeTones); //normal conditions for Comet in Black
                 if (burnStacks && ((Config.BlackHyperphantasiaOption && shouldCometInBlack) || (Config.WhiteHyperphantasiaOption && shouldHolyInWhite)))
-                    return HasEffect(Buffs.MonochromeTones) ? OriginalHook(CometinBlack) : OriginalHook(HolyInWhite);
+                    return HasStatusEffect(Buffs.MonochromeTones) ? OriginalHook(CometinBlack) : OriginalHook(HolyInWhite);
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
                 if (shouldCometInBlack)
@@ -412,7 +412,7 @@ internal partial class PCT : CasterJob
 
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_RainbowDrip))
                 {
-                    if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) <= 3f))
+                    if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) <= 3f))
                         return RainbowDrip;
                 }
 
@@ -435,43 +435,43 @@ internal partial class PCT : CasterJob
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_CreatureMotif) && CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn && GetTargetHPPercent() > creatureStop)
                     return OriginalHook(CreatureMotif);
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_WeaponMotif) && WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime) && GetTargetHPPercent() > weaponStop)
+                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_WeaponMotif) && WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime) && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(WeaponMotif);
             }
 
             // Burst
-            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_Phase) && HasEffect(Buffs.StarryMuse))
+            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_Phase) && HasStatusEffect(Buffs.StarryMuse))
             {
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_CometInBlack) && CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
+                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_CometInBlack) && CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
                     return CometinBlack;
 
-                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_HammerCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.Starstruck))
+                if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_HammerCombo) && HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.Starstruck))
                     return OriginalHook(HammerStamp);
 
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_StarPrism))
                 {
-                    if (HasEffect(Buffs.Starstruck) || (HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) <= 3f))
+                    if (HasStatusEffect(Buffs.Starstruck) || (HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) <= 3f))
                         return StarPrism;
                 }
 
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_RainbowDrip))
                 {
-                    if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) <= 3f))
+                    if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) <= 3f))
                         return RainbowDrip;
                 }
             }
 
-            if (HasEffect(Buffs.RainbowBright) && !HasEffect(Buffs.StarryMuse))
+            if (HasStatusEffect(Buffs.RainbowBright) && !HasStatusEffect(Buffs.StarryMuse))
                 return RainbowDrip;
 
-            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_CometinBlack) && CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 30f)
+            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_CometinBlack) && CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 30f)
                 return OriginalHook(CometinBlack);
 
-            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_HammerStampCombo) && HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                 return OriginalHook(HammerStamp);
 
-            if (!HasEffect(Buffs.StarryMuse))
+            if (!HasStatusEffect(Buffs.StarryMuse))
             {
                 // LandscapeMotif
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LandscapeMotif) && GetTargetHPPercent() > landscapeStop)
@@ -499,7 +499,7 @@ internal partial class PCT : CasterJob
                 if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_WeaponMotif) && GetTargetHPPercent() > weaponStop)
                 {
                     if (WeaponMotif.LevelChecked() &&
-                        !HasEffect(Buffs.HammerTime) &&
+                        !HasStatusEffect(Buffs.HammerTime) &&
                         !gauge.WeaponMotifDrawn &&
                         (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
                     {
@@ -511,7 +511,7 @@ internal partial class PCT : CasterJob
             if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LucidDreaming) && Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
                 return Role.LucidDreaming;
 
-            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
+            if (IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasStatusEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardinCyan);
 
             return actionID;
@@ -544,9 +544,9 @@ internal partial class PCT : CasterJob
             {
                 if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
                     return OriginalHook(CreatureMotif);
-                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
+                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(WeaponMotif);
-                if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasEffect(Buffs.StarryMuse))
+                if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(LandscapeMotif);
             }
 
@@ -583,7 +583,7 @@ internal partial class PCT : CasterJob
                 // SteelMuse
 
                 if (SteelMuse.LevelChecked() &&
-                    !HasEffect(Buffs.HammerTime) &&
+                    !HasStatusEffect(Buffs.HammerTime) &&
                     gauge.WeaponMotifDrawn &&
                     HasCharges(OriginalHook(SteelMuse)) &&
                     (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
@@ -605,7 +605,7 @@ internal partial class PCT : CasterJob
                 if (IsMoving() &&
                     IsOffCooldown(Role.Swiftcast) &&
                     Role.Swiftcast.LevelChecked() &&
-                    !HasEffect(Buffs.HammerTime) &&
+                    !HasStatusEffect(Buffs.HammerTime) &&
                     gauge.Paint < 1 &&
                     (!gauge.CreatureMotifDrawn || !gauge.WeaponMotifDrawn || !gauge.LandscapeMotifDrawn))
                 {
@@ -614,33 +614,33 @@ internal partial class PCT : CasterJob
 
                 // Subtractive Palette
                 if (SubtractivePalette.LevelChecked() &&
-                    !HasEffect(Buffs.SubtractivePalette) &&
-                    !HasEffect(Buffs.MonochromeTones))
+                    !HasStatusEffect(Buffs.SubtractivePalette) &&
+                    !HasStatusEffect(Buffs.MonochromeTones))
                 {
-                    if (HasEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
+                    if (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
                         return SubtractivePalette;
                 }
             }
 
-            if (HasEffect(Role.Buffs.Swiftcast))
+            if (HasStatusEffect(Role.Buffs.Swiftcast))
             {
-                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse))
+                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(CreatureMotif);
-                if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.StarryMuse))
+                if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(HammerMotif);
-                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse))
+                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse))
                     return OriginalHook(LandscapeMotif);
             }
 
             if (IsMoving() && InCombat())
             {
-                if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+                if (HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
-                if (CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasEffect(Buffs.MonochromeTones))
+                if (CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasStatusEffect(Buffs.MonochromeTones))
                     return OriginalHook(CometinBlack);
 
-                if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) < 3))
+                if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) < 3))
                     return RainbowDrip;
 
                 if (HolyInWhite.LevelChecked() && gauge.Paint >= 1)
@@ -657,40 +657,40 @@ internal partial class PCT : CasterJob
                 if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
                     return OriginalHook(CreatureMotif);
 
-                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
+                if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(WeaponMotif);
             }
 
             // Burst
-            if (HasEffect(Buffs.StarryMuse))
+            if (HasStatusEffect(Buffs.StarryMuse))
             {
                 // Check for CometInBlack
-                if (CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
+                if (CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
                     return CometinBlack;
 
                 // Check for HammerTime
-                if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.Starstruck))
+                if (HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.Starstruck))
                     return OriginalHook(HammerStamp);
 
                 // Check for Starstruck
-                if (HasEffect(Buffs.Starstruck) || (HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) < 3))
+                if (HasStatusEffect(Buffs.Starstruck) || (HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) < 3))
                     return StarPrism;
 
                 // Check for RainbowBright
-                if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) < 3))
+                if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) < 3))
                     return RainbowDrip;
             }
 
-            if (HasEffect(Buffs.RainbowBright) && !HasEffect(Buffs.StarryMuse))
+            if (HasStatusEffect(Buffs.RainbowBright) && !HasStatusEffect(Buffs.StarryMuse))
                 return RainbowDrip;
 
-            if (CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 60)
+            if (CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 60)
                 return OriginalHook(CometinBlack);
 
-            if (HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+            if (HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                 return OriginalHook(HammerStamp);
 
-            if (!HasEffect(Buffs.StarryMuse))
+            if (!HasStatusEffect(Buffs.StarryMuse))
             {
                 if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && GetCooldownRemainingTime(ScenicMuse) <= 20)
                     return OriginalHook(LandscapeMotif);
@@ -698,7 +698,7 @@ internal partial class PCT : CasterJob
                 if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn && (HasCharges(LivingMuse) || GetCooldownChargeRemainingTime(LivingMuse) <= 8))
                     return OriginalHook(CreatureMotif);
 
-                if (WeaponMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !gauge.WeaponMotifDrawn && (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
+                if (WeaponMotif.LevelChecked() && !HasStatusEffect(Buffs.HammerTime) && !gauge.WeaponMotifDrawn && (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
                     return OriginalHook(WeaponMotif);
             }
             //Saves one Charge of White paint for movement/Black paint.
@@ -708,7 +708,7 @@ internal partial class PCT : CasterJob
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
 
-            if (BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
+            if (BlizzardIIinCyan.LevelChecked() && HasStatusEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardIIinCyan);
             return actionID;
         }
@@ -744,9 +744,9 @@ internal partial class PCT : CasterJob
                 {
                     if (CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn)
                         return OriginalHook(CreatureMotif);
-                    if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime))
+                    if (WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime))
                         return OriginalHook(WeaponMotif);
-                    if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasEffect(Buffs.StarryMuse))
+                    if (LandscapeMotif.LevelChecked() && !gauge.LandscapeMotifDrawn && !HasStatusEffect(Buffs.StarryMuse))
                         return OriginalHook(LandscapeMotif);
                 }
             }
@@ -789,7 +789,7 @@ internal partial class PCT : CasterJob
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SteelMuse))
                 {
                     if (SteelMuse.LevelChecked() &&
-                        !HasEffect(Buffs.HammerTime) &&
+                        !HasStatusEffect(Buffs.HammerTime) &&
                         gauge.WeaponMotifDrawn &&
                         HasCharges(OriginalHook(SteelMuse)) &&
                         (GetCooldown(SteelMuse).CooldownRemaining < GetCooldown(ScenicMuse).CooldownRemaining ||
@@ -814,35 +814,35 @@ internal partial class PCT : CasterJob
                 // Subtractive Palette
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SubtractivePalette) &&
                     SubtractivePalette.LevelChecked() &&
-                    !HasEffect(Buffs.SubtractivePalette) &&
-                    !HasEffect(Buffs.MonochromeTones))
+                    !HasStatusEffect(Buffs.SubtractivePalette) &&
+                    !HasStatusEffect(Buffs.MonochromeTones))
                 {
-                    if (HasEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
+                    if (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50)
                         return SubtractivePalette;
                 }
             }
 
-            if (HasEffect(Role.Buffs.Swiftcast))
+            if (HasStatusEffect(Role.Buffs.Swiftcast))
             {
-                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
+                if (!gauge.CreatureMotifDrawn && CreatureMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse) && GetTargetHPPercent() > creatureStop)
                     return OriginalHook(CreatureMotif);
-                if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > weaponStop)
+                if (!gauge.WeaponMotifDrawn && HammerMotif.LevelChecked() && !HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.StarryMuse) && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(HammerMotif);
-                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasEffect(Buffs.StarryMuse) && GetTargetHPPercent() > landscapeStop)
+                if (!gauge.LandscapeMotifDrawn && LandscapeMotif.LevelChecked() && !HasStatusEffect(Buffs.StarryMuse) && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
             }
 
             if (IsMoving() && InCombat())
             {
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_HammerStampCombo) && HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasEffect(Buffs.MonochromeTones))
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_CometinBlack) && CometinBlack.LevelChecked() && gauge.Paint >= 1 && HasStatusEffect(Buffs.MonochromeTones))
                     return OriginalHook(CometinBlack);
 
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_RainbowDrip))
                 {
-                    if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) < 3))
+                    if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) < 3))
                         return RainbowDrip;
                 }
 
@@ -865,54 +865,54 @@ internal partial class PCT : CasterJob
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_CreatureMotif) && CreatureMotif.LevelChecked() && !gauge.CreatureMotifDrawn && GetTargetHPPercent() > creatureStop)
                     return OriginalHook(CreatureMotif);
 
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_WeaponMotif) && WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasEffect(Buffs.HammerTime) && GetTargetHPPercent() > weaponStop)
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_WeaponMotif) && WeaponMotif.LevelChecked() && !gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime) && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(WeaponMotif);
             }
 
             // Burst
-            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_Phase) && HasEffect(Buffs.StarryMuse))
+            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_Phase) && HasStatusEffect(Buffs.StarryMuse))
             {
                 // Check for CometInBlack
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_CometInBlack) && CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_CometInBlack) && CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0)
                     return CometinBlack;
 
                 // Check for HammerTime
-                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_HammerCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime) && !HasEffect(Buffs.Starstruck))
+                if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_HammerCombo) && HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime) && !HasStatusEffect(Buffs.Starstruck))
                     return OriginalHook(HammerStamp);
 
                 // Check for Starstruck
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_StarPrism))
                 {
-                    if (HasEffect(Buffs.Starstruck) || (HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) < 3))
+                    if (HasStatusEffect(Buffs.Starstruck) || (HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) < 3))
                         return StarPrism;
                 }
 
                 // Check for RainbowBright
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_Burst_RainbowDrip))
                 {
-                    if (HasEffect(Buffs.RainbowBright) || (HasEffect(Buffs.RainbowBright) && GetBuffRemainingTime(Buffs.StarryMuse) < 3))
+                    if (HasStatusEffect(Buffs.RainbowBright) || (HasStatusEffect(Buffs.RainbowBright) && GetStatusEffectRemainingTime(Buffs.StarryMuse) < 3))
                         return RainbowDrip;
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_HolyinWhite) && !HasEffect(Buffs.StarryMuse) && !HasEffect(Buffs.MonochromeTones))
+            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_HolyinWhite) && !HasStatusEffect(Buffs.StarryMuse) && !HasStatusEffect(Buffs.MonochromeTones))
             {
                 if (gauge.Paint > Config.PCT_AoE_AdvancedMode_HolyinWhiteOption ||
-                    (Config.PCT_AoE_AdvancedMode_HolyinWhiteOption == 5 && gauge.Paint == 5 && !HasEffect(Buffs.HammerTime) &&
-                     (HasEffect(Buffs.RainbowBright) || WasLastSpell(AeroIIinGreen) || WasLastSpell(StoneIIinYellow))))
+                    (Config.PCT_AoE_AdvancedMode_HolyinWhiteOption == 5 && gauge.Paint == 5 && !HasStatusEffect(Buffs.HammerTime) &&
+                     (HasStatusEffect(Buffs.RainbowBright) || WasLastSpell(AeroIIinGreen) || WasLastSpell(StoneIIinYellow))))
                     return OriginalHook(HolyInWhite);
             }
 
-            if (HasEffect(Buffs.RainbowBright) && !HasEffect(Buffs.StarryMuse))
+            if (HasStatusEffect(Buffs.RainbowBright) && !HasStatusEffect(Buffs.StarryMuse))
                 return RainbowDrip;
 
-            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_CometinBlack) && CometinBlack.LevelChecked() && HasEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 60)
+            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_CometinBlack) && CometinBlack.LevelChecked() && HasStatusEffect(Buffs.MonochromeTones) && gauge.Paint > 0 && GetCooldownRemainingTime(StarryMuse) > 60)
                 return OriginalHook(CometinBlack);
 
-            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_HammerStampCombo) && HammerStamp.LevelChecked() && HasEffect(Buffs.HammerTime))
+            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_HammerStampCombo) && HammerStamp.LevelChecked() && HasStatusEffect(Buffs.HammerTime))
                 return OriginalHook(HammerStamp);
 
-            if (!HasEffect(Buffs.StarryMuse))
+            if (!HasStatusEffect(Buffs.StarryMuse))
             {
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LandscapeMotif) && GetTargetHPPercent() > landscapeStop)
                 {
@@ -928,7 +928,7 @@ internal partial class PCT : CasterJob
 
                 if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_WeaponMotif) && GetTargetHPPercent() > weaponStop)
                 {
-                    if (WeaponMotif.LevelChecked() && !HasEffect(Buffs.HammerTime) && !gauge.WeaponMotifDrawn && (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
+                    if (WeaponMotif.LevelChecked() && !HasStatusEffect(Buffs.HammerTime) && !gauge.WeaponMotifDrawn && (HasCharges(SteelMuse) || GetCooldownChargeRemainingTime(SteelMuse) <= 8))
                         return OriginalHook(WeaponMotif);
                 }
             }
@@ -936,7 +936,7 @@ internal partial class PCT : CasterJob
             if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming) && Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
                 return Role.LucidDreaming;
 
-            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasEffect(Buffs.SubtractivePalette))
+            if (IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_BlizzardInCyan) && BlizzardIIinCyan.LevelChecked() && HasStatusEffect(Buffs.SubtractivePalette))
                 return OriginalHook(BlizzardIIinCyan);
             return actionID;
         }
@@ -955,13 +955,13 @@ internal partial class PCT : CasterJob
 
             if (actionID == FireInRed && choice is 0 or 1)
             {
-                if (HasEffect(Buffs.SubtractivePalette))
+                if (HasStatusEffect(Buffs.SubtractivePalette))
                     return OriginalHook(BlizzardinCyan);
             }
 
             if (actionID == FireIIinRed && choice is 0 or 2)
             {
-                if (HasEffect(Buffs.SubtractivePalette))
+                if (HasStatusEffect(Buffs.SubtractivePalette))
                     return OriginalHook(BlizzardIIinCyan);
             }
 
@@ -988,7 +988,7 @@ internal partial class PCT : CasterJob
 
             if (actionID == WeaponMotif)
             {
-                if (Config.CombinedMotifsWeapon && HasEffect(Buffs.HammerTime))
+                if (Config.CombinedMotifsWeapon && HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
                 if (gauge.WeaponMotifDrawn)
@@ -997,7 +997,7 @@ internal partial class PCT : CasterJob
 
             if (actionID == LandscapeMotif)
             {
-                if (Config.CombinedMotifsLandscape && HasEffect(Buffs.Starstruck))
+                if (Config.CombinedMotifsLandscape && HasStatusEffect(Buffs.Starstruck))
                     return OriginalHook(StarPrism);
 
                 if (gauge.LandscapeMotifDrawn)
@@ -1016,7 +1016,7 @@ internal partial class PCT : CasterJob
         {
             if (actionID != HolyInWhite)
                 return actionID;
-            if (HasEffect(Buffs.MonochromeTones))
+            if (HasStatusEffect(Buffs.MonochromeTones))
                 return CometinBlack;
             return actionID;
         }

@@ -138,10 +138,10 @@ internal partial class DNC
 
         // Return the Finish if the dance is about to expire
         if (desiredFinish is StandardFinish2 &&
-            GetBuffRemainingTime(Buffs.StandardStep) < GCD * 1.5)
+            GetStatusEffectRemainingTime(Buffs.StandardStep) < GCD * 1.5)
             return desiredFinish;
         if (desiredFinish is TechnicalFinish4 &&
-            GetBuffRemainingTime(Buffs.TechnicalStep) < GCD * 1.5)
+            GetStatusEffectRemainingTime(Buffs.TechnicalStep) < GCD * 1.5)
             return desiredFinish;
 
         // If there is no enemy in range, hold the finish
@@ -308,12 +308,10 @@ internal partial class DNC
     }
 
     private static bool HasAnyPartner(WrathPartyMember target) =>
-        FindEffect(Buffs.Partner, target.BattleChara, null)
-            is not null;
+        HasStatusEffect(Buffs.Partner, target.BattleChara, true);
 
     private static bool HasMyPartner(WrathPartyMember target) =>
-        FindEffect(Buffs.Partner, target.BattleChara, LocalPlayer?.GameObjectId)
-            is not null;
+        HasStatusEffect(Buffs.Partner, target.BattleChara);
 
     #region Partner Priority Static Data
 
@@ -518,11 +516,11 @@ internal partial class DNC
             ([20], SaberDance, () => Gauge.Esprit >= 50),
             ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
             ([21, 22, 23], StarfallDance,
-                () => HasEffect(Buffs.FlourishingStarfall)),
+                () => HasStatusEffect(Buffs.FlourishingStarfall)),
             ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([21, 22, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([21, 22, 23], Fountainfall, () =>
-                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -609,11 +607,11 @@ internal partial class DNC
             ([22], SaberDance, () => Gauge.Esprit >= 50),
             ([20, 21, 23], SaberDance, () => Gauge.Esprit > 80),
             ([20, 21, 23], StarfallDance,
-                () => HasEffect(Buffs.FlourishingStarfall)),
+                () => HasStatusEffect(Buffs.FlourishingStarfall)),
             ([20, 21, 23], SaberDance, () => Gauge.Esprit >= 50),
-            ([20, 21, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([20, 21, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([20, 21, 23], Fountainfall, () =>
-                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -704,11 +702,11 @@ internal partial class DNC
             ([19], SaberDance, () => Gauge.Esprit >= 50),
             ([21, 22, 23], SaberDance, () => Gauge.Esprit > 80),
             ([21, 22, 23], StarfallDance,
-                () => HasEffect(Buffs.FlourishingStarfall)),
+                () => HasStatusEffect(Buffs.FlourishingStarfall)),
             ([21, 22, 23], SaberDance, () => Gauge.Esprit >= 50),
-            ([21, 22, 23], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([21, 22, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([21, 22, 23], Fountainfall, () =>
-                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -786,11 +784,11 @@ internal partial class DNC
             ([14], SaberDance, () => Gauge.Esprit >= 50),
             ([16, 17, 18], SaberDance, () => Gauge.Esprit > 80),
             ([16, 17, 18], StarfallDance, () =>
-                HasEffect(Buffs.FlourishingStarfall)),
+                HasStatusEffect(Buffs.FlourishingStarfall)),
             ([16, 17, 18], SaberDance, () => Gauge.Esprit >= 50),
-            ([16, 17, 18], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([16, 17, 18], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([16, 17, 18], Fountainfall, () =>
-                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -871,11 +869,11 @@ internal partial class DNC
             ([14], SaberDance, () => Gauge.Esprit >= 50),
             ([16, 17, 18], SaberDance, () => Gauge.Esprit > 80),
             ([16, 17, 18], StarfallDance, () =>
-                HasEffect(Buffs.FlourishingStarfall)),
+                HasStatusEffect(Buffs.FlourishingStarfall)),
             ([16, 17, 18], SaberDance, () => Gauge.Esprit >= 50),
-            ([16, 17, 18], LastDance, () => HasEffect(Buffs.LastDanceReady)),
+            ([16, 17, 18], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([16, 17, 18], Fountainfall, () =>
-                HasEffect(Buffs.SilkenFlow) || HasEffect(Buffs.FlourishingFlow)),
+                HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
         internal override UserData? ContentCheckConfig =>

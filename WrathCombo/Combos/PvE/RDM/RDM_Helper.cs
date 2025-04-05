@@ -119,7 +119,7 @@ internal partial class RDM
         {
             if (LevelChecked(Manafication))
             {
-                ushort magickedSword = GetBuffStacks(Buffs.MagickedSwordPlay);
+                ushort magickedSword = GetStatusEffectStacks(Buffs.MagickedSwordPlay);
                 byte magickedSwordMana = magickedSword switch
                 {
                     3 => 50,
@@ -171,7 +171,7 @@ internal partial class RDM
         if (newActionID == 0
             && prefulg
             && TraitLevelChecked(Traits.EnhancedManaficationIII)
-            && HasEffect(Buffs.PrefulugenceReady))
+            && HasStatusEffect(Buffs.PrefulugenceReady))
             newActionID = Prefulgence;
 
         if (newActionID == 0
@@ -205,7 +205,7 @@ internal partial class RDM
         if (newActionID == 0
             && vice
             && TraitLevelChecked(Traits.EnhancedEmbolden)
-            && HasEffect(Buffs.ThornedFlourish)
+            && HasStatusEffect(Buffs.ThornedFlourish)
             && !JustUsed(Embolden, 2f)) //try not to double use, wait for next GCD
             newActionID = ViceOfThorns;
 
@@ -237,7 +237,7 @@ internal partial class RDM
     private static bool TryLucidDreaming(int MPThreshold, uint ComboAction) =>
         Role.CanLucidDream(MPThreshold)
         && InCombat()
-        && !HasEffect(Buffs.Dualcast)
+        && !HasStatusEffect(Buffs.Dualcast)
         && ComboAction != EnchantedRiposte
         && ComboAction != EnchantedZwerchhau
         && ComboAction != EnchantedRedoublement
@@ -256,9 +256,9 @@ internal partial class RDM
             if (ManaEmbolden
                 && LevelChecked(Embolden)
                 && HasCondition(ConditionFlag.InCombat)
-                && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(Role.Buffs.Swiftcast)
-                && !HasEffect(Buffs.Acceleration)
+                && !HasStatusEffect(Buffs.Dualcast)
+                && !HasStatusEffect(Role.Buffs.Swiftcast)
+                && !HasStatusEffect(Buffs.Acceleration)
                 && (GetTargetDistance() <= 3 || (GapCloser && HasCharges(Corpsacorps))))
             {
                 //Situation 1: Manafication first
@@ -319,7 +319,7 @@ internal partial class RDM
                     && ComboAction is not Verholy
                     && ComboAction is not Scorch
                     && RDMMana.Max <= 50
-                    && (HasEffect(Buffs.Embolden) || WasLastAction(Embolden))
+                    && (HasStatusEffect(Buffs.Embolden) || WasLastAction(Embolden))
                     && IsOffCooldown(Manafication))
                 {
                     newActionID = Manafication;
@@ -353,7 +353,7 @@ internal partial class RDM
                     && ComboAction is not Verholy
                     && ComboAction is not Scorch
                     && RDMMana.Max <= 50
-                    && (HasEffect(Buffs.Embolden) || WasLastAction(Embolden)))
+                    && (HasStatusEffect(Buffs.Embolden) || WasLastAction(Embolden)))
                 {
                     newActionID = Manafication;
                     return true;
@@ -402,7 +402,7 @@ internal partial class RDM
             if (((RDMMana.Min >= 50 && LevelChecked(Redoublement))
                 || (RDMMana.Min >= 35 && !LevelChecked(Redoublement))
                 || (RDMMana.Min >= 20 && !LevelChecked(Zwerchhau)))
-                && !HasEffect(Buffs.Dualcast))
+                && !HasStatusEffect(Buffs.Dualcast))
             {
                 if (GapCloser
                     && ActionReady(Corpsacorps)
@@ -416,9 +416,9 @@ internal partial class RDM
                     && LevelChecked(Acceleration)
                     && RDMMana.Black == RDMMana.White
                     && RDMMana.Black >= 50
-                    && !HasEffect(Buffs.Embolden))
+                    && !HasStatusEffect(Buffs.Embolden))
                 {
-                    if (HasEffect(Buffs.Acceleration) || WasLastAction(Buffs.Acceleration))
+                    if (HasStatusEffect(Buffs.Acceleration) || WasLastAction(Buffs.Acceleration))
                     {
                         //Run the Mana Balance Computer
                         //SHUT UP ITS FINE
@@ -461,9 +461,9 @@ internal partial class RDM
             if (!CanSpellWeave()) return false;
 
             if (InCombat()
-                && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(Role.Buffs.Swiftcast)
-                && !HasEffect(Buffs.Acceleration)
+                && !HasStatusEffect(Buffs.Dualcast)
+                && !HasStatusEffect(Role.Buffs.Swiftcast)
+                && !HasStatusEffect(Buffs.Acceleration)
                 && ((GetTargetDistance() <= MoulinetRange && RDMMana.ManaStacks == 0) || RDMMana.ManaStacks > 0))
             {
                 if (ActionReady(Manafication))
@@ -481,7 +481,7 @@ internal partial class RDM
                         && ComboAction is not Verholy
                         && ComboAction is not Scorch
                         && RDMMana.Max <= 50
-                        && (HasEffect(Buffs.Embolden) || WasLastAction(Embolden)))
+                        && (HasStatusEffect(Buffs.Embolden) || WasLastAction(Embolden)))
                     {
                         newActionID = Manafication;
                         return true;
@@ -505,7 +505,7 @@ internal partial class RDM
                         && ComboAction is not Scorch
                         && RDMMana.Max <= 50
                         && RDMMana.Min >= 10
-                        && (HasEffect(Buffs.Embolden) || WasLastAction(Embolden)))
+                        && (HasStatusEffect(Buffs.Embolden) || WasLastAction(Embolden)))
                     {
                         newActionID = Manafication;
                         return true;
@@ -543,9 +543,9 @@ internal partial class RDM
 
             if (LevelChecked(Moulinet)
                 && LocalPlayer.IsCasting == false
-                && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(Role.Buffs.Swiftcast)
-                && !HasEffect(Buffs.Acceleration)
+                && !HasStatusEffect(Buffs.Dualcast)
+                && !HasStatusEffect(Role.Buffs.Swiftcast)
+                && !HasStatusEffect(Buffs.Acceleration)
                 && RDMMana.Min >= 50)
             {
                 if (GapCloser
@@ -573,9 +573,9 @@ internal partial class RDM
             {
                 if (RDMMana.Black >= RDMMana.White && LevelChecked(Verholy))
                 {
-                    if ((!HasEffect(Buffs.Embolden) || GetBuffRemainingTime(Buffs.Embolden) < 10)
-                        && !HasEffect(Buffs.VerfireReady)
-                        && HasEffect(Buffs.VerstoneReady) && GetBuffRemainingTime(Buffs.VerstoneReady) >= 10
+                    if ((!HasStatusEffect(Buffs.Embolden) || GetStatusEffectRemainingTime(Buffs.Embolden) < 10)
+                        && !HasStatusEffect(Buffs.VerfireReady)
+                        && HasStatusEffect(Buffs.VerstoneReady) && GetStatusEffectRemainingTime(Buffs.VerstoneReady) >= 10
                         && (RDMMana.Black - RDMMana.White <= 18))
                     {
                         newActionID = Verflare;
@@ -586,9 +586,9 @@ internal partial class RDM
                 }
                 else if (LevelChecked(Verflare))
                 {
-                    if ((!HasEffect(Buffs.Embolden) || GetBuffRemainingTime(Buffs.Embolden) < 10)
-                        && HasEffect(Buffs.VerfireReady) && GetBuffRemainingTime(Buffs.VerfireReady) >= 10
-                        && !HasEffect(Buffs.VerstoneReady)
+                    if ((!HasStatusEffect(Buffs.Embolden) || GetStatusEffectRemainingTime(Buffs.Embolden) < 10)
+                        && HasStatusEffect(Buffs.VerfireReady) && GetStatusEffectRemainingTime(Buffs.VerfireReady) >= 10
+                        && !HasStatusEffect(Buffs.VerstoneReady)
                         && LevelChecked(Verholy)
                         && (RDMMana.White - RDMMana.Black <= 18))
                     {
@@ -623,8 +623,8 @@ internal partial class RDM
         private static bool TryGrandImpact(ref uint newActionID)
         {
             if (TraitLevelChecked(Traits.EnhancedAccelerationII)
-                && HasEffect(Buffs.GrandImpactReady)
-                && !HasEffect(Buffs.Dualcast))
+                && HasStatusEffect(Buffs.GrandImpactReady)
+                && !HasStatusEffect(Buffs.Dualcast))
             {
                 newActionID = GrandImpact;
                 return true;
@@ -645,11 +645,11 @@ internal partial class RDM
                 && ComboAction is not Scorch
                 && !WasLastAction(Embolden)
                 && (!AoEWeave || CanSpellWeave())
-                && !HasEffect(Buffs.VerfireReady)
-                && !HasEffect(Buffs.VerstoneReady)
-                && !HasEffect(Buffs.Acceleration)
-                && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(Role.Buffs.Swiftcast))
+                && !HasStatusEffect(Buffs.VerfireReady)
+                && !HasStatusEffect(Buffs.VerstoneReady)
+                && !HasStatusEffect(Buffs.Acceleration)
+                && !HasStatusEffect(Buffs.Dualcast)
+                && !HasStatusEffect(Role.Buffs.Swiftcast))
             {
                 if (ActionReady(Acceleration)
                     && GetRemainingCharges(Acceleration) > Config.RDM_ST_Acceleration_Charges
@@ -684,8 +684,8 @@ internal partial class RDM
 
             //RDM_VERFIREVERSTONE
             if (FireStone
-                && !HasEffect(Buffs.Acceleration)
-                && !HasEffect(Buffs.Dualcast))
+                && !HasStatusEffect(Buffs.Acceleration)
+                && !HasStatusEffect(Buffs.Dualcast))
             {
                 //Run the Mana Balance Computer
                 if (actions.useFire)
@@ -767,24 +767,24 @@ internal partial class RDM
 
             //ST
             if (LevelChecked(Verthunder)
-                && (HasEffect(Buffs.Dualcast) || HasEffect(Role.Buffs.Swiftcast) || HasEffect(Buffs.Acceleration)))
+                && (HasStatusEffect(Buffs.Dualcast) || HasStatusEffect(Role.Buffs.Swiftcast) || HasStatusEffect(Buffs.Acceleration)))
             {
-                if (RDMMana.Black <= RDMMana.White || HasEffect(Buffs.VerstoneReady))
+                if (RDMMana.Black <= RDMMana.White || HasStatusEffect(Buffs.VerstoneReady))
                     useThunder = true;
 
-                if (RDMMana.White <= RDMMana.Black || HasEffect(Buffs.VerfireReady))
+                if (RDMMana.White <= RDMMana.Black || HasStatusEffect(Buffs.VerfireReady))
                     useAero = true;
 
                 if (!LevelChecked(Veraero))
                     useThunder = true;
             }
-            if (!HasEffect(Buffs.Dualcast)
-                && !HasEffect(Role.Buffs.Swiftcast)
-                && !HasEffect(Buffs.Acceleration))
+            if (!HasStatusEffect(Buffs.Dualcast)
+                && !HasStatusEffect(Role.Buffs.Swiftcast)
+                && !HasStatusEffect(Buffs.Acceleration))
             {
                 //Checking the time remaining instead of just the effect, to stop last second bad casts
-                bool VerFireReady = GetBuffRemainingTime(Buffs.VerfireReady) >= GetActionCastTime(Verfire);
-                bool VerStoneReady = GetBuffRemainingTime(Buffs.VerstoneReady) >= GetActionCastTime(Verstone);
+                bool VerFireReady = GetStatusEffectRemainingTime(Buffs.VerfireReady) >= GetActionCastTime(Verfire);
+                bool VerStoneReady = GetStatusEffectRemainingTime(Buffs.VerstoneReady) >= GetActionCastTime(Verstone);
 
                 //Prioritize mana balance
                 if (RDMMana.Black <= RDMMana.White && VerFireReady)
@@ -803,9 +803,9 @@ internal partial class RDM
 
             //AoE
             if (LevelChecked(Verthunder2)
-                && !HasEffect(Buffs.Dualcast)
-                && !HasEffect(Role.Buffs.Swiftcast)
-                && !HasEffect(Buffs.Acceleration))
+                && !HasStatusEffect(Buffs.Dualcast)
+                && !HasStatusEffect(Role.Buffs.Swiftcast)
+                && !HasStatusEffect(Buffs.Acceleration))
             {
                 if (RDMMana.Black <= RDMMana.White || !LevelChecked(Veraero2))
                     useThunder2 = true;

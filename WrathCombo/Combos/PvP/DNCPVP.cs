@@ -101,7 +101,7 @@ namespace WrathCombo.Combos.PvP
                     bool canWeave = CanWeave();
                     var distance = GetTargetDistance();
                     var HP = PlayerHealthPercentageHp();
-                    bool enemyGuarded = TargetHasEffectAny(PvPCommon.Buffs.Guard);
+                    bool enemyGuarded = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
 
                     #endregion
 

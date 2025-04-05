@@ -101,8 +101,8 @@ namespace WrathCombo.Combos.PvP
                     bool hasWreathOfFire = HasEffect(Buffs.WreathOfFire);
                     bool hasFlareStar = OriginalHook(SoulResonance) is FlareStar;
                     bool hasFrostStar = OriginalHook(SoulResonance) is FrostStar;
-                    bool targetHasGuard = TargetHasEffectAny(PvPCommon.Buffs.Guard);
-                    bool targetHasHeavy = TargetHasEffectAny(PvPCommon.Debuffs.Heavy);
+                    bool targetHasGuard = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
+                    bool targetHasHeavy = HasStatusEffect(PvPCommon.Debuffs.Heavy, CurrentTarget, true);
                     bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
                     bool isParadoxPrimed = HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.AstralFire1);
                     bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= Config.BLMPvP_Movement_Threshold;
@@ -110,7 +110,7 @@ namespace WrathCombo.Combos.PvP
                     bool hasUmbralIce = HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.UmbralIce2) || HasEffect(Buffs.UmbralIce3);
                     bool isElementalStarDelayed = HasEffect(Buffs.ElementalStar) && GetBuffRemainingTime(Buffs.ElementalStar) <= 20;
                     bool hasAstralFire = HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3);
-                    bool targetHasImmunity = TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption);
+                    bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
                     #endregion
 
                     if (inCombat)

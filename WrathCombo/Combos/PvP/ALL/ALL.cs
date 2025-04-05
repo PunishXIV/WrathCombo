@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
-using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -52,11 +52,11 @@ namespace WrathCombo.Combos.PvP
         /// <param name="optionalTarget"> Optional target to check. </param>
         public static bool TargetImmuneToDamage(bool includeReductions = true, IGameObject? optionalTarget = null)
         {
-            var t = optionalTarget ?? CustomComboFunctions.CurrentTarget;
-            if (t is null || !CustomComboFunctions.InPvP()) return false;
+            var t = optionalTarget ?? CurrentTarget;
+            if (t is null || !InPvP()) return false;
 
-            bool targetHasReductions = CustomComboFunctions.TargetHasEffectAny(Buffs.Guard, t) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales, t);
-            bool targetHasImmunities = CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption, t) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround, t);
+            bool targetHasReductions = HasStatusEffect(Buffs.Guard, t, true) || HasStatusEffect(VPRPvP.Buffs.HardenedScales, t, true);
+            bool targetHasImmunities = HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, t, true) || HasStatusEffect(PLDPvP.Buffs.HallowedGround, t, true);
 
             return includeReductions
                 ? targetHasReductions || targetHasImmunities

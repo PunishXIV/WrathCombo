@@ -135,8 +135,8 @@ internal partial class WAR
     [
         //Bloodwhetting
         (OriginalHook(RawIntuition), CustomComboPreset.WAR_Mit_Bloodwhetting,
-            () => FindEffect(Buffs.RawIntuition) is null &&
-                  FindEffect(Buffs.BloodwhettingDefenseLong) is null &&
+            () => !HasStatusEffect(Buffs.RawIntuition) &&
+                  !HasStatusEffect(Buffs.BloodwhettingDefenseLong) &&
                   PlayerHealthPercentageHp() <= Config.WAR_Mit_Bloodwhetting_Health),
         //Equilibrium
         (Equilibrium, CustomComboPreset.WAR_Mit_Equilibrium,
@@ -152,7 +152,7 @@ internal partial class WAR
             () => Role.CanRampart(Config.WAR_Mit_Rampart_Health)),
         //Shake it Off
         (ShakeItOff, CustomComboPreset.WAR_Mit_ShakeItOff,
-            () => (FindEffect(Buffs.ShakeItOff) is null &&
+            () => (!HasStatusEffect(Buffs.ShakeItOff) &&
                   Config.WAR_Mit_ShakeItOff_PartyRequirement ==
                   (int)PartyRequirement.No) ||
                   IsInParty()),

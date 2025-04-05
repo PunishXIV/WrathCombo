@@ -45,9 +45,9 @@ internal partial class WHM : HealerJob
             if (actionID is not Role.Swiftcast)
                 return actionID;
 
-            bool thinAirReady = !HasEffect(Buffs.ThinAir) && LevelChecked(ThinAir) && HasCharges(ThinAir);
+            bool thinAirReady = !HasStatusEffect(Buffs.ThinAir) && LevelChecked(ThinAir) && HasCharges(ThinAir);
 
-            if (HasEffect(Role.Buffs.Swiftcast))
+            if (HasStatusEffect(Role.Buffs.Swiftcast))
                 return IsEnabled(CustomComboPreset.WHM_ThinAirRaise) && thinAirReady
                     ? ThinAir
                     : Raise;
@@ -121,15 +121,15 @@ internal partial class WHM : HealerJob
                     // DoT Uptime & HP% threshold
                     float refreshTimer = Config.WHM_ST_MainCombo_DoT_Adv ? Config.WHM_ST_MainCombo_DoT_Threshold : 3;
                     int hpThreshold = Config.WHM_ST_DPS_AeroOptionSubOption == 1 || !InBossEncounter() ? Config.WHM_ST_DPS_AeroOption : 0;
-                    if (GetDebuffRemainingTime(dotDebuffID) <= refreshTimer &&
+                    if (GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget) <= refreshTimer &&
                         GetTargetHPPercent() > hpThreshold)
                         return OriginalHook(Aero);
                 }
 
                 // Glare IV
                 if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_GlareIV)
-                    && HasEffect(Buffs.SacredSight)
-                    && GetBuffStacks(Buffs.SacredSight) > 0)
+                    && HasStatusEffect(Buffs.SacredSight)
+                    && GetStatusEffectStacks(Buffs.SacredSight) > 0)
                     return OriginalHook(Glare4);
 
                 if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_LilyOvercap) && LevelChecked(AfflatusRapture) &&
@@ -156,7 +156,7 @@ internal partial class WHM : HealerJob
             if (actionID is not Medica1)
                 return actionID;
 
-            bool thinAirReady = LevelChecked(ThinAir) && !HasEffect(Buffs.ThinAir) &&
+            bool thinAirReady = LevelChecked(ThinAir) && !HasStatusEffect(Buffs.ThinAir) &&
                                 GetRemainingCharges(ThinAir) > Config.WHM_AoEHeals_ThinAir;
             bool canWeave = CanSpellWeave(0.3);
             bool lucidReady = Role.CanLucidDream(Config.WHM_AoEHeals_Lucid,false); //canWeave will be the check
@@ -164,7 +164,7 @@ internal partial class WHM : HealerJob
             bool plenaryReady = ActionReady(PlenaryIndulgence) &&
                                 (!Config.WHM_AoEHeals_PlenaryWeave ||
                                  Config.WHM_AoEHeals_PlenaryWeave && canWeave);
-            bool divineCaressReady = ActionReady(DivineCaress) && HasEffect(Buffs.DivineGrace);
+            bool divineCaressReady = ActionReady(DivineCaress) && HasStatusEffect(Buffs.DivineGrace);
 
             bool assizeReady = ActionReady(Assize) &&
                                (!Config.WHM_AoEHeals_AssizeWeave || Config.WHM_AoEHeals_AssizeWeave && canWeave);
@@ -173,8 +173,9 @@ internal partial class WHM : HealerJob
                                       (Config.WHM_AoEHeals_MedicaMO
                                           ? GetHealTarget(Config.WHM_AoEHeals_MedicaMO)
                                           : LocalPlayer);
-            Status? hasMedica2 = FindEffect(Buffs.Medica2, healTarget, LocalPlayer?.GameObjectId);
-            Status? hasMedica3 = FindEffect(Buffs.Medica3, healTarget, LocalPlayer?.GameObjectId);
+            
+            Status? hasMedica2 = GetStatusEffect(Buffs.Medica2, healTarget);
+            Status? hasMedica3 = GetStatusEffect(Buffs.Medica3, healTarget);
 
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Assize) && assizeReady)
                 return Assize;
@@ -198,6 +199,7 @@ internal partial class WHM : HealerJob
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_ThinAir) && thinAirReady)
                 return ThinAir;
 
+            //Question, do we need the null checks if GetStatusEffectRemainingTime returns 0 on null? -Flan
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Medica2)
                 && (hasMedica2 == null && hasMedica3 == null // No Medica buffs
                     || hasMedica2 != null &&
@@ -210,7 +212,7 @@ internal partial class WHM : HealerJob
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Cure3)
                 && ActionReady(Cure3)
                 && (LocalPlayer.CurrentMp >= Config.WHM_AoEHeals_Cure3MP
-                    || HasEffect(Buffs.ThinAir)))
+                    || HasStatusEffect(Buffs.ThinAir)))
                 return Cure3;
 
             return actionID;
@@ -228,12 +230,12 @@ internal partial class WHM : HealerJob
 
             IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.WHM_STHeals_UIMouseOver);
 
-            bool thinAirReady = LevelChecked(ThinAir) && !HasEffect(Buffs.ThinAir) &&
+            bool thinAirReady = LevelChecked(ThinAir) && !HasStatusEffect(Buffs.ThinAir) &&
                                 GetRemainingCharges(ThinAir) > Config.WHM_STHeals_ThinAir;
 
             bool regenReady = ActionReady(Regen) &&
                               !JustUsed(Regen, 4) &&
-                              (!MemberHasEffect(Buffs.Regen, healTarget, false, out var regen) || regen?.RemainingTime <= Config.WHM_STHeals_RegenTimer);
+                              (!HasStatusEffect(Buffs.Regen, out var regen, healTarget, true) || regen?.RemainingTime <= Config.WHM_STHeals_RegenTimer);
 
             if (IsEnabled(CustomComboPreset.WHM_STHeals_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.WHM_STHeals_IncludeShields) >= Config.WHM_STHeals_Esuna &&
@@ -322,8 +324,8 @@ internal partial class WHM : HealerJob
 
             // Glare IV
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_GlareIV)
-                && HasEffect(Buffs.SacredSight)
-                && GetBuffStacks(Buffs.SacredSight) > 0)
+                && HasStatusEffect(Buffs.SacredSight)
+                && GetStatusEffectStacks(Buffs.SacredSight) > 0)
                 return OriginalHook(Glare4);
 
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_LilyOvercap) && LevelChecked(AfflatusRapture) &&

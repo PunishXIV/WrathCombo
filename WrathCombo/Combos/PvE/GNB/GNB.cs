@@ -57,7 +57,7 @@ internal partial class GNB : TankJob
                         return Camouflage;
                     if (ActionReady(OriginalHook(HeartOfStone)) && HPP < 90)
                         return OriginalHook(HeartOfStone);
-                    if (ActionReady(Aurora) && !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && HPP < 85)
+                    if (ActionReady(Aurora) && !(HasStatusEffect(Buffs.Aurora) || HasStatusEffect(Buffs.Aurora, CurrentTarget, true)) && HPP < 85)
                         return Aurora;
                 }
             }
@@ -70,7 +70,7 @@ internal partial class GNB : TankJob
                 return LightningShot;
             if (ShouldUseNoMercy())
                 return NoMercy;
-            if (JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasEffect(Buffs.ReadyToBlast) && NmCD is > 1 or <= 0.1f)
+            if (JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast) && NmCD is > 1 or <= 0.1f)
                 return Hypervelocity;
             if (ShouldUseContinuation())
                 return OriginalHook(Continuation);
@@ -102,7 +102,7 @@ internal partial class GNB : TankJob
                     return BrutalShell;
                 if (LevelChecked(SolidBarrel) && ComboAction == BrutalShell)
                 {
-                    if (LevelChecked(Hypervelocity) &&  HasEffect(Buffs.ReadyToBlast) && NmCD is > 1 or <= 0.1f)
+                    if (LevelChecked(Hypervelocity) &&  HasStatusEffect(Buffs.ReadyToBlast) && NmCD is > 1 or <= 0.1f)
                         return Hypervelocity;
                     return SolidBarrel;
                 }
@@ -170,7 +170,7 @@ internal partial class GNB : TankJob
                 if (IsEnabled(CustomComboPreset.GNB_ST_Corundum) && ActionReady(OriginalHook(HeartOfStone)) && HPP < Config.GNB_ST_Corundum_Health &&
                     (Config.GNB_ST_Corundum_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Corundum_SubOption == 1))
                     return OriginalHook(HeartOfStone);
-                if (IsEnabled(CustomComboPreset.GNB_ST_Aurora) && ActionReady(Aurora) && !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && GetRemainingCharges(Aurora) > Config.GNB_ST_Aurora_Charges && HPP < Config.GNB_ST_Aurora_Health &&
+                if (IsEnabled(CustomComboPreset.GNB_ST_Aurora) && ActionReady(Aurora) && !(HasStatusEffect(Buffs.Aurora) || HasStatusEffect(Buffs.Aurora, CurrentTarget, true)) && GetRemainingCharges(Aurora) > Config.GNB_ST_Aurora_Charges && HPP < Config.GNB_ST_Aurora_Health &&
                     (Config.GNB_ST_Aurora_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Aurora_SubOption == 1))
                     return Aurora;
             }
@@ -191,7 +191,7 @@ internal partial class GNB : TankJob
                 (Config.GNB_ST_NoMercy_SubOption == 0 || Config.GNB_ST_NoMercy_SubOption == 1 && InBossEncounter()))
                 return NoMercy;
             if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Cooldowns) && IsEnabled(CustomComboPreset.GNB_ST_Continuation) &&
-                JustUsed(BurstStrike, 5f) &&  LevelChecked(Hypervelocity) && HasEffect(Buffs.ReadyToBlast) && IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && NmCD is > 1 or <= 0.1f)
+                JustUsed(BurstStrike, 5f) &&  LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast) && IsEnabled(CustomComboPreset.GNB_ST_NoMercy) && NmCD is > 1 or <= 0.1f)
                 return Hypervelocity;
             if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Cooldowns) && IsEnabled(CustomComboPreset.GNB_ST_Continuation) && ShouldUseContinuation())
                 return OriginalHook(Continuation);
@@ -228,7 +228,7 @@ internal partial class GNB : TankJob
                 if (LevelChecked(SolidBarrel) && ComboAction == BrutalShell)
                 {
                     if (IsEnabled(CustomComboPreset.GNB_ST_Continuation) && IsEnabled(CustomComboPreset.GNB_ST_NoMercy) &&
-                        LevelChecked(Hypervelocity) && HasEffect(Buffs.ReadyToBlast) && NmCD is > 1 or <= 0.1f &&
+                        LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast) && NmCD is > 1 or <= 0.1f &&
                         (Config.GNB_ST_NoMercy_SubOption == 0 || (Config.GNB_ST_NoMercy_SubOption == 1 && InBossEncounter())))
                         return Hypervelocity;
                     return SolidBarrel;
@@ -293,7 +293,7 @@ internal partial class GNB : TankJob
                         return Camouflage;
                     if (ActionReady(OriginalHook(HeartOfStone)) && HPP < 90)
                         return OriginalHook(HeartOfStone);
-                    if (ActionReady(Aurora) && !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && HPP < 85)
+                    if (ActionReady(Aurora) && !(HasStatusEffect(Buffs.Aurora) || HasStatusEffect(Buffs.Aurora, CurrentTarget, true)) && HPP < 85)
                         return Aurora;
                 }
             }
@@ -307,7 +307,7 @@ internal partial class GNB : TankJob
                 {
                     if (ActionReady(NoMercy) && GetTargetHPPercent() > 10)
                         return NoMercy;
-                    if (LevelChecked(FatedBrand) && HasEffect(Buffs.ReadyToRaze))
+                    if (LevelChecked(FatedBrand) && HasStatusEffect(Buffs.ReadyToRaze))
                         return FatedBrand;
                 }
                 if (ShouldUseBowShock())
@@ -316,7 +316,7 @@ internal partial class GNB : TankJob
                     return OriginalHook(DangerZone);
                 if (ShouldUseBloodfest())
                     return Bloodfest;
-                if (CanBreak && HasNM && !HasEffect(Buffs.ReadyToRaze))
+                if (CanBreak && HasNM && !HasStatusEffect(Buffs.ReadyToRaze))
                     return SonicBreak;
                 if (CanDD && HasNM)
                     return DoubleDown;
@@ -412,7 +412,7 @@ internal partial class GNB : TankJob
                     (Config.GNB_AoE_Corundum_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Corundum_SubOption == 1)))
                     return OriginalHook(HeartOfStone);
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Aurora) && ActionReady(Aurora) && GetRemainingCharges(Aurora) > Config.GNB_AoE_Aurora_Charges &&
-                    !(HasEffect(Buffs.Aurora) || TargetHasEffectAny(Buffs.Aurora)) && HPP < Config.GNB_AoE_Aurora_Health &&
+                    !(HasStatusEffect(Buffs.Aurora) || HasStatusEffect(Buffs.Aurora, CurrentTarget, true)) && HPP < Config.GNB_AoE_Aurora_Health &&
                     (Config.GNB_AoE_Aurora_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Aurora_SubOption == 1)))
                     return Aurora;
             }
@@ -433,10 +433,10 @@ internal partial class GNB : TankJob
                         return OriginalHook(DangerZone);
                     if (IsEnabled(CustomComboPreset.GNB_AoE_Bloodfest) && ShouldUseBloodfest())
                         return Bloodfest;
-                    if (LevelChecked(FatedBrand) && HasEffect(Buffs.ReadyToRaze))
+                    if (LevelChecked(FatedBrand) && HasStatusEffect(Buffs.ReadyToRaze))
                         return FatedBrand;
                 }
-                if (IsEnabled(CustomComboPreset.GNB_AoE_SonicBreak) && CanBreak && HasNM && !HasEffect(Buffs.ReadyToRaze))
+                if (IsEnabled(CustomComboPreset.GNB_AoE_SonicBreak) && CanBreak && HasNM && !HasStatusEffect(Buffs.ReadyToRaze))
                     return SonicBreak;
                 if (IsEnabled(CustomComboPreset.GNB_AoE_DoubleDown) && CanDD && HasNM)
                     return DoubleDown;
@@ -486,7 +486,7 @@ internal partial class GNB : TankJob
 
             if (IsEnabled(CustomComboPreset.GNB_GF_NoMercy) && ShouldUseNoMercy())
                 return NoMercy;
-            if (IsEnabled(CustomComboPreset.GNB_GF_Continuation) && JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasEffect(Buffs.ReadyToBlast) && IsEnabled(CustomComboPreset.GNB_GF_NoMercy) && NmCD is > 1 or <= 0.1f)
+            if (IsEnabled(CustomComboPreset.GNB_GF_Continuation) && JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast) && IsEnabled(CustomComboPreset.GNB_GF_NoMercy) && NmCD is > 1 or <= 0.1f)
                 return Hypervelocity;
             if (IsEnabled(CustomComboPreset.GNB_GF_Continuation) && ShouldUseContinuation())
                 return OriginalHook(Continuation);
@@ -530,9 +530,9 @@ internal partial class GNB : TankJob
 
             if (IsEnabled(CustomComboPreset.GNB_BS_Continuation))
             {
-                if (IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && LevelChecked(Hypervelocity) && (JustUsed(BurstStrike, 1) || HasEffect(Buffs.ReadyToBlast)))
+                if (IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && LevelChecked(Hypervelocity) && (JustUsed(BurstStrike, 1) || HasStatusEffect(Buffs.ReadyToBlast)))
                     return Hypervelocity;
-                if (!IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && CanContinue && (HasEffect(Buffs.ReadyToRip) || HasEffect(Buffs.ReadyToTear) || HasEffect(Buffs.ReadyToGouge) || (LevelChecked(Hypervelocity) && HasEffect(Buffs.ReadyToBlast))))
+                if (!IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || (LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast))))
                     return OriginalHook(Continuation);
             }
             if (IsEnabled(CustomComboPreset.GNB_BS_Bloodfest) && ShouldUseBloodfest())
@@ -560,7 +560,7 @@ internal partial class GNB : TankJob
         {
             if (actionID is not FatedCircle) return actionID;
 
-            if (IsEnabled(CustomComboPreset.GNB_FC_Continuation) && HasEffect(Buffs.ReadyToRaze) && LevelChecked(FatedBrand))
+            if (IsEnabled(CustomComboPreset.GNB_FC_Continuation) && HasStatusEffect(Buffs.ReadyToRaze) && LevelChecked(FatedBrand))
                 return FatedBrand;
             if (IsEnabled(CustomComboPreset.GNB_FC_DoubleDown) && IsEnabled(CustomComboPreset.GNB_FC_DoubleDown_NM) && CanDD && HasNM)
                 return DoubleDown;
@@ -589,7 +589,7 @@ internal partial class GNB : TankJob
 
             if ((Config.GNB_NM_Features_Weave == 0 && CanWeave()) || Config.GNB_NM_Features_Weave == 1)
             {
-                if (IsEnabled(CustomComboPreset.GNB_NM_Continuation) && (ShouldUseContinuation() || (LevelChecked(FatedBrand) && HasEffect(Buffs.ReadyToRaze))))
+                if (IsEnabled(CustomComboPreset.GNB_NM_Continuation) && (ShouldUseContinuation() || (LevelChecked(FatedBrand) && HasStatusEffect(Buffs.ReadyToRaze))))
                     return OriginalHook(Continuation);
                 if (IsEnabled(CustomComboPreset.GNB_NM_Bloodfest) && ShouldUseBloodfest())
                     return Bloodfest;
@@ -614,8 +614,8 @@ internal partial class GNB : TankJob
             if (actionID is not Aurora)
                 return actionID;
 
-            if (HasFriendlyTarget() && TargetHasEffectAny(Buffs.Aurora) ||
-                !HasFriendlyTarget() && HasEffectAny(Buffs.Aurora))
+            if (HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
+                !HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, anyOwner: true))
                 return All.SavageBlade;
 
             return actionID;

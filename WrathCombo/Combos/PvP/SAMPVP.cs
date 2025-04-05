@@ -80,7 +80,7 @@ namespace WrathCombo.Combos.PvP
                     bool hasBind = HasEffectAny(PvPCommon.Debuffs.Bind);
                     bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
                     bool isTargetPrimed = hasTarget && !targetHasImmunity;
-                    bool targetHasKuzushi = TargetHasEffect(Debuffs.Kuzushi);
+                    bool targetHasKuzushi = HasStatusEffect(Debuffs.Kuzushi, CurrentTarget);
                     bool hasKaeshiNamikiri = OriginalHook(OgiNamikiri) is Kaeshi;
                     bool hasTendo = OriginalHook(MeikyoShisui) is TendoSetsugekka;
                     bool isYukikazePrimed = ComboTimer == 0 || ComboAction is Kasha;
@@ -89,7 +89,7 @@ namespace WrathCombo.Combos.PvP
                     bool isMeikyoPrimed = IsOnCooldown(OgiNamikiri) && !hasKaeshiNamikiri && !hasKaiten && !isMoving;
                     bool isZantetsukenPrimed = IsLB1Ready && !hasBind && hasTarget && targetHasKuzushi && targetDistance <= 20;
                     bool isSotenPrimed = chargesSoten > Config.SAMPvP_Soten_Charges && !hasKaiten && !hasBind && !hasPrioWeaponskill;
-                    bool isTargetInvincible = TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption);
+                    bool isTargetInvincible = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
                     #endregion
 
                     // Zantetsuken
