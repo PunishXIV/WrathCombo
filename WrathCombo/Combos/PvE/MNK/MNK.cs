@@ -52,7 +52,7 @@ internal partial class MNK : MeleeJob
                     return RiddleOfWind;
 
                 //Perfect Balance
-                if (UsePerfectBalance())
+                if (UsePerfectBalanceST())
                     return PerfectBalance;
 
                 if (Role.CanSecondWind(25))
@@ -94,39 +94,8 @@ internal partial class MNK : MeleeJob
                 return WindsReply;
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return Gauge.OpoOpoFury == 0
-                        ? DragonKick
-                        : OriginalHook(Bootshine);
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                {
-                    if (CoeurlChakra == 0)
-                        return Gauge.CoeurlFury == 0
-                            ? Demolish
-                            : OriginalHook(SnapPunch);
-
-                    if (RaptorChakra == 0)
-                        return Gauge.RaptorFury == 0
-                            ? TwinSnakes
-                            : OriginalHook(TrueStrike);
-
-                    if (OpoOpoChakra == 0)
-                        return Gauge.OpoOpoFury == 0
-                            ? DragonKick
-                            : OriginalHook(Bootshine);
-                }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboST(ref actionID))
+                return actionID;
 
             // Standard Beast Chakras
             return DetermineCoreAbility(actionID, true);
@@ -206,7 +175,7 @@ internal partial class MNK : MeleeJob
 
                 //Perfect Balance
                 if (IsEnabled(CustomComboPreset.MNK_STUsePerfectBalance) &&
-                    UsePerfectBalance())
+                    UsePerfectBalanceST())
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_ST_ComboHeals))
@@ -258,39 +227,8 @@ internal partial class MNK : MeleeJob
             }
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return Gauge.OpoOpoFury == 0
-                        ? DragonKick
-                        : OriginalHook(Bootshine);
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                {
-                    if (CoeurlChakra == 0)
-                        return Gauge.CoeurlFury == 0
-                            ? Demolish
-                            : OriginalHook(SnapPunch);
-
-                    if (RaptorChakra == 0)
-                        return Gauge.RaptorFury == 0
-                            ? TwinSnakes
-                            : OriginalHook(TrueStrike);
-
-                    if (OpoOpoChakra == 0)
-                        return Gauge.OpoOpoFury == 0
-                            ? DragonKick
-                            : OriginalHook(Bootshine);
-                }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboST(ref actionID))
+                return actionID;
 
             // Standard Beast Chakras
             return DetermineCoreAbility(actionID, IsEnabled(CustomComboPreset.MNK_STUseTrueNorth));
@@ -343,15 +281,8 @@ internal partial class MNK : MeleeJob
                     !HasEffect(Buffs.WindsRumination))
                     return RiddleOfWind;
 
-                if (ActionReady(PerfectBalance) &&
-                    !HasEffect(Buffs.PerfectBalance) &&
-                    (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance) ||
-                     GetCooldownRemainingTime(PerfectBalance) <= 4 ||
-                     HasEffect(Buffs.Brotherhood) ||
-                     HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10 ||
-                     GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8))
+                if (UsePerfectBalanceAoE())
                     return PerfectBalance;
-
 
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -385,34 +316,8 @@ internal partial class MNK : MeleeJob
                 return WindsReply;
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return LevelChecked(ShadowOfTheDestroyer)
-                        ? ShadowOfTheDestroyer
-                        : Rockbreaker;
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                    switch (GetBuffStacks(Buffs.PerfectBalance))
-                    {
-                        case 3:
-                            return OriginalHook(ArmOfTheDestroyer);
-
-                        case 2:
-                            return FourPointFury;
-
-                        case 1:
-                            return Rockbreaker;
-                    }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboAoE(ref actionID))
+                return actionID;
 
             // Monk Rotation
             if (HasEffect(Buffs.OpoOpoForm))
@@ -493,13 +398,7 @@ internal partial class MNK : MeleeJob
                 }
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUsePerfectBalance) &&
-                    ActionReady(PerfectBalance) &&
-                    !HasEffect(Buffs.PerfectBalance) &&
-                    (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance) ||
-                     GetCooldownRemainingTime(PerfectBalance) <= 4 ||
-                     HasEffect(Buffs.Brotherhood) ||
-                     HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10 ||
-                     GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8))
+                    UsePerfectBalanceAoE())
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_AoE_ComboHeals))
@@ -543,34 +442,8 @@ internal partial class MNK : MeleeJob
             }
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return LevelChecked(ShadowOfTheDestroyer)
-                        ? ShadowOfTheDestroyer
-                        : Rockbreaker;
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                    switch (GetBuffStacks(Buffs.PerfectBalance))
-                    {
-                        case 3:
-                            return OriginalHook(ArmOfTheDestroyer);
-
-                        case 2:
-                            return FourPointFury;
-
-                        case 1:
-                            return Rockbreaker;
-                    }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboAoE(ref actionID))
+                return actionID;
 
             // Monk Rotation
             if (HasEffect(Buffs.OpoOpoForm))
