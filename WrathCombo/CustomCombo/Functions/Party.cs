@@ -29,7 +29,6 @@ namespace WrathCombo.CustomComboNS.Functions
             if (!EzThrottler.Throttle("PartyUpdateThrottle", 2000))
                 return _partyList;
 
-            _partyList.Clear();
             for (int i = 1; i <= 8; i++)
             {
                 var member = GetPartySlot(i);

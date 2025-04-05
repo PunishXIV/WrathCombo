@@ -179,7 +179,7 @@ namespace WrathCombo.CustomComboNS
                     }
                 }
 
-                if (OpenerStep < OpenerActions.Count)
+                if (OpenerStep <= OpenerActions.Count)
                 {
                     foreach (var (Step, Condition) in SkipSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
                     {
