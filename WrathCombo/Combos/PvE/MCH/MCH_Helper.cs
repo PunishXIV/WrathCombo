@@ -311,7 +311,7 @@ internal partial class MCH
             IsOffCooldown(Chainsaw) &&
             IsOffCooldown(Wildfire) &&
             IsOffCooldown(BarrelStabilizer) &&
-            IsOffCooldown(Excavator) && 
+            IsOffCooldown(Excavator) &&
             IsOffCooldown(FullMetalField);
     }
 
@@ -372,12 +372,12 @@ internal partial class MCH
             19, 21, 23, 25
         ];
 
-        public override bool HasCooldowns() => 
+        public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
             GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
             IsOffCooldown(Chainsaw) &&
-            IsOffCooldown(Wildfire) && 
+            IsOffCooldown(Wildfire) &&
             IsOffCooldown(BarrelStabilizer);
     }
 

@@ -766,7 +766,7 @@ public enum CustomComboPreset
     BRD_Adv_Song = 3011,
 
     [ParentCombo(BRD_ST_AdvMode)]
-    [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature. \nBuffs have specific timing with each other intended to follow balance. \nDisabling only one can lead to unwanted results", BRD.JobID)]
+    [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature. \nEnable all to follow balance buff windows \nDisabling any buff will follow simple priority", BRD.JobID)]
     BRD_Adv_Buffs = 3017,
 
     [ParentCombo(BRD_Adv_Buffs)]
@@ -778,7 +778,7 @@ public enum CustomComboPreset
     BRD_Adv_Buffs_Battlevoice = 3050,
 
     [ParentCombo(BRD_Adv_Buffs)]
-        [CustomComboInfo("Radiant Finale Option", "Adds Radiant Finale", BRD.JobID)]
+    [CustomComboInfo("Radiant Finale Option", "Adds Radiant Finale", BRD.JobID)]
     BRD_Adv_Buffs_RadiantFinale = 3051,
 
     [ParentCombo(BRD_Adv_Buffs)]
@@ -803,8 +803,12 @@ public enum CustomComboPreset
     BRD_ST_Adv_oGCD = 3038,
 
     [ParentCombo(BRD_ST_AdvMode)]
-    [CustomComboInfo("Pooling Option", "84+ Pools Bloodletter charges to allow for optimum burst phases.", BRD.JobID)]
+    [CustomComboInfo("Pooling Option", "Pools Bloodletter charges and Sidewinder to allow for optimum burst phases ", BRD.JobID)]
     BRD_Adv_Pooling = 3023,
+
+    [ParentCombo(BRD_ST_AdvMode)]
+    [CustomComboInfo("Apex Pooling Option", "Pools Apex arrow into buff window and when buffs are between 50-60 seconds on cd.", BRD.JobID)]
+    BRD_Adv_ApexPooling = 3057,
 
     [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
@@ -837,7 +841,7 @@ public enum CustomComboPreset
     BRD_AoE_Adv_Songs = 3016,
 
     [ParentCombo(BRD_AoE_AdvMode)]
-    [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.\nBuffs have specific timing with each other intended to follow balance. \nDisabling only one can lead to unwanted results", BRD.JobID)]
+    [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.\nEnable all to follow balance buff windows \nDisabling any buff will follow simple priority", BRD.JobID)]
     BRD_AoE_Adv_Buffs = 3032,
 
     [ParentCombo(BRD_AoE_Adv_Buffs)]
@@ -862,8 +866,12 @@ public enum CustomComboPreset
     BRD_AoE_Adv_oGCD = 3037,
 
     [ParentCombo(BRD_AoE_AdvMode)]
-    [CustomComboInfo("Pooling Option", "84+ Pools Rain of death charges to allow for optimum burst phases.", BRD.JobID)]
+    [CustomComboInfo("Pooling Option", "Pools Rain of death charges to allow for optimum burst phases.", BRD.JobID)]
     BRD_AoE_Pooling = 3040,
+
+    [ParentCombo(BRD_AoE_AdvMode)]
+    [CustomComboInfo("Apex Pooling Option", "Pools Apex arrow into buff window and when buffs are between 50-60 seconds on cd.", BRD.JobID)]
+    BRD_AoE_ApexPooling = 3058,
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
@@ -871,7 +879,7 @@ public enum CustomComboPreset
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
-    BRD_Aoe_ApexArrow = 3039,
+    BRD_AoE_ApexArrow = 3039,
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("AoE No Waste Option",
@@ -980,7 +988,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 3048
+    // Last value = 3058
 
     #endregion
 
@@ -5241,13 +5249,16 @@ public enum CustomComboPreset
     #region Other
 
     [ReplaceSkill(SAM.Gyoten)]
-    [CustomComboInfo("Gyoten Feature",
-        "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
+    [CustomComboInfo("Gyoten Feature", "Hissatsu: Gyoten becomes Yaten/Gyoten depending on the distance from your target.", SAM.JobID)]
     SAM_GyotenYaten = 15211,
+
+    [ReplaceSkill(SAM.Senei)]
+    [CustomComboInfo("Senei - Guren Feature", "Hissatsu: Senei becomes Hissatsu : Guren when synched below lvl 72.", SAM.JobID)]
+    SAM_SeneiGuren = 15215,
 
     #endregion
 
-    // Last value = 15214
+    // Last value = 15215
 
     #endregion
 
@@ -6779,38 +6790,44 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
-    [CustomComboInfo("Silent Nocturne Option", "Adds Silent Nocturne to Burst Mode.", BRD.JobID)]
+    [CustomComboInfo("Silent Nocturne Option", "Adds Silent Nocturne to Burst Mode.", BRDPvP.JobID)]
     BRDPvP_SilentNocturne = 113001,
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
-    [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow to Burst Mode.", BRD.JobID)]
+    [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow to Burst Mode.", BRDPvP.JobID)]
     BRDPvP_ApexArrow = 113002,
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
-    [CustomComboInfo("Blast Arrow Option", "Adds Blast Arrow to Burst Mode.", BRD.JobID)]
+    [CustomComboInfo("Blast Arrow Option", "Adds Blast Arrow to Burst Mode.", BRDPvP.JobID)]
     BRDPvP_BlastArrow = 113003,
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
     [CustomComboInfo("Harmonic Arrow Option",
         "Adds Harmonic Arrow to Burst Mode. Will use it at set number of charges AND when target is below the health threshold per charge for execute. ",
-        BRD.JobID)]
+        BRDPvP.JobID)]
     BRDPvP_HarmonicArrow = 113004,
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
-    [CustomComboInfo("Encore of Light Option", "Adds Encore of Light to Burst Mode.", BRD.JobID)]
+    [CustomComboInfo("Encore of Light Option", "Adds Encore of Light to Burst Mode.", BRDPvP.JobID)]
     BRDPvP_EncoreOfLight = 113005,
 
     [PvPCustomCombo]
     [ParentCombo(BRDPvP_BurstMode)]
     [CustomComboInfo("Wardens Paeon Option", "Auto Self cleanse of soft cc. \n Half Asleep, Heavy, and Bind",
-        BRD.JobID)]
+        BRDPvP.JobID)]
     BRDPvP_Wardens = 113006,
 
-    // Last value = 113006
+    [PvPCustomCombo]
+    [ParentCombo(BRDPvP_BurstMode)]
+    [CustomComboInfo("Role Action Eagle Eye Shot Option", "Automatically Adds Eagle Eye Shot to Burst Mode when target is guarded or under selected health percentage \n WILL ONLY WORK IN LARGE SCALE PVP",
+        BRDPvP.JobID)]
+    BRDPvP_Eagle = 113007,
+
+    // Last value = 113007
 
     #endregion
 
@@ -6818,34 +6835,40 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(DNCPvP.Fountain)]
-    [CustomComboInfo("Burst Mode", "Turns Fountain Combo into an all-in-one damage button.", DNC.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Fountain Combo into an all-in-one damage button.", DNCPvP.JobID)]
     DNCPvP_BurstMode = 114000,
 
     [PvPCustomCombo]
     [ParentCombo(DNCPvP_BurstMode)]
     [CustomComboInfo("Honing Dance Option",
         "Adds Honing Dance to the main combo when in melee range (respects global offset).\nThis option prevents early use of Honing Ovation!\nKeep Honing Dance bound to another key if you want to end early.",
-        DNC.JobID)]
+        DNCPvP.JobID)]
     DNCPvP_BurstMode_HoningDance = 114001,
 
     [PvPCustomCombo]
     [ParentCombo(DNCPvP_BurstMode)]
     [CustomComboInfo("Curing Waltz Option",
-        "Adds Curing Waltz to the combo when available, and your HP is at or below the set percentage.", DNC.JobID)]
+        "Adds Curing Waltz to the combo when available, and your HP is at or below the set percentage.", DNCPvP.JobID)]
     DNCPvP_BurstMode_CuringWaltz = 114002,
 
     [PvPCustomCombo]
     [ParentCombo(DNCPvP_BurstMode)]
-    [CustomComboInfo("Dance Partner Reminder Option", "Adds Closed Position reminder when you have none", DNC.JobID)]
+    [CustomComboInfo("Dance Partner Reminder Option", "Adds Closed Position reminder when you have none", DNCPvP.JobID)]
     DNCPvP_BurstMode_Partner = 114003,
 
     [PvPCustomCombo]
     [ParentCombo(DNCPvP_BurstMode)]
     [CustomComboInfo("En Avant Option", "Uses En Avant if available and buff is missing to boost 1 2 combo damage.",
-        DNC.JobID)]
+        DNCPvP.JobID)]
     DNCPvP_BurstMode_Dash = 114004,
 
-    // Last value = 114004
+    [PvPCustomCombo]
+    [ParentCombo(DNCPvP_BurstMode)]
+    [CustomComboInfo("Role Action Eagle Eye Shot Option", "Automatically Adds Eagle Eye Shot to Burst Mode when target is guarded or under selected health percentage \n WILL ONLY WORK IN LARGE SCALE PVP",
+       DNCPvP.JobID)]
+    DNCPvP_Eagle = 114005,
+
+    // Last value = 114005
 
     #endregion
 
@@ -6905,46 +6928,60 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(DRGPvP.Drakesbane)]
-    [CustomComboInfo("Burst Mode", "Turns Drakesbane Combo into an all-in-one damage button.", DRG.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Drakesbane Combo into an all-in-one damage button.", DRGPvP.JobID)]
     DRGPvP_Burst = 116000,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_Geirskogul = 116001,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Geirskogul)]
-    [CustomComboInfo("Nastrond Option", "Adds Nastrond to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Nastrond Option", "Adds Nastrond to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_Nastrond = 116002,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Horrid Roar Option", "Adds Horrid Roar to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Horrid Roar Option", "Adds Horrid Roar to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_HorridRoar = 116003,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
     [CustomComboInfo("Sustain Chaos Spring Option", "Adds Chaos Spring to Burst Mode when below the set HP percentage.",
-        DRG.JobID)]
+        DRGPvP.JobID)]
     DRGPvP_ChaoticSpringSustain = 116004,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
     [CustomComboInfo("Execute Chaos Spring Option",
-        "Adds Chaos Spring to Burst Mode when target is below 8k health because it goes through guard.", DRG.JobID)]
+        "Adds Chaos Spring to Burst Mode when target is below 8k health because it goes through guard.", DRGPvP.JobID)]
     DRGPvP_ChaoticSpringExecute = 116009,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_WyrmwindThrust = 116006,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
-    [CustomComboInfo("High Jump Weave Option", "Adds High Jump to Burst Mode.", DRG.JobID)]
+    [CustomComboInfo("High Jump Weave Option", "Adds High Jump to Burst Mode.", DRGPvP.JobID)]
     DRGPvP_HighJump = 116007,
 
+    [PvPCustomCombo]
     [ParentCombo(DRGPvP_Burst)]
     [CustomComboInfo("Elusive Jump Burst Option",
         "Using Elusive Jump turns Drakesbane Combo into all-in-one burst damage button once all cooldowns are ready. \n Disables Elusive Jump if Burst is not ready.",
-        DRG.JobID)]
+        DRGPvP.JobID)]
     DRGPvP_BurstProtection = 116008,
 
-    // Last value = 116009
+    [PvPCustomCombo]
+    [ParentCombo(DRGPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health", DRGPvP.JobID)]
+    DRGPvP_Smite = 116010,
+
+    // Last value = 116010
 
     #endregion
 
@@ -7058,7 +7095,13 @@ SMN.JobID)]
         "Adds Marksmans Spite to Burst Mode when the target is below specified HP.", MCHPvP.JobID)]
     MCHPvP_BurstMode_MarksmanSpite = 118011,
 
-    // Last value = 118011
+    [PvPCustomCombo]
+    [ParentCombo(MCHPvP_BurstMode)]
+    [CustomComboInfo("Role Action Eagle Eye Shot Option", "Automatically Adds Eagle Eye Shot to Burst Mode when target is guarded or under selected health percentage \n WILL ONLY WORK IN LARGE SCALE PVP",
+       MCHPvP.JobID)]
+    MCHPvP_Eagle = 118012,
+
+    // Last value = 118012
 
     #endregion
 
@@ -7066,43 +7109,49 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(MNKPvP.PhantomRush)]
-    [CustomComboInfo("Burst Mode", "Turns Phantom Rush Combo into an all-in-one damage button.", MNK.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Phantom Rush Combo into an all-in-one damage button.", MNKPvP.JobID)]
     MNKPvP_Burst = 119000,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
     [CustomComboInfo("Meteodrive Option",
-        "Adds Meteodrive Limit break to Burst Mode when target is below 20k and guarded", MNK.JobID)]
+        "Adds Meteodrive Limit break to Burst Mode when target is below 20k and guarded", MNKPvP.JobID)]
     MNKPvP_Burst_Meteodrive = 119006,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
     [CustomComboInfo("Thunderclap Option", "Adds Thunderclap to Burst Mode when not buffed with Wind Resonance.",
-        MNK.JobID)]
+        MNKPvP.JobID)]
     MNKPvP_Burst_Thunderclap = 119001,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
     [CustomComboInfo("Riddle of Earth Option", "Adds Riddle of Earth and Earth's Reply to Burst Mode when in combat.",
-        MNK.JobID)]
+        MNKPvP.JobID)]
     MNKPvP_Burst_RiddleOfEarth = 119002,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Flints Reply Option", "Adds Flints Reply to Burst Mode.", MNK.JobID)]
+    [CustomComboInfo("Flints Reply Option", "Adds Flints Reply to Burst Mode.", MNKPvP.JobID)]
     MNKPvP_Burst_FlintsReply = 119003,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Rising Phoenix Option", "Adds Rising Phoenix to Burst Mode.", MNK.JobID)]
+    [CustomComboInfo("Rising Phoenix Option", "Adds Rising Phoenix to Burst Mode.", MNKPvP.JobID)]
     MNKPvP_Burst_RisingPhoenix = 119004,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to Burst Mode.", MNK.JobID)]
+    [CustomComboInfo("Wind's Reply Option", "Adds Wind's Reply to Burst Mode.", MNKPvP.JobID)]
     MNKPvP_Burst_WindsReply = 119005,
 
-    // Last value = 119006
+    [ParentCombo(MNKPvP_Burst)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health", MNKPvP.JobID)]
+    MNKPvP_Smite = 119007,
+
+    // Last value = 119007
 
     #endregion
 
@@ -7203,7 +7252,14 @@ SMN.JobID)]
         NINPvP.JobID)]
     NINPvP_AoE_SeitonTenchu = 120017,
 
-    // Last value = 120016
+    [ParentCombo(NINPvP_ST_BurstMode)]
+    [PvPCustomCombo]
+    [CustomComboInfo("Role Action Smite Option",
+      "Adds Role Action Smite to Burst Mode below selected health",
+      NINPvP.JobID)]
+    NINPvP_Smite = 120018,
+
+    // Last value = 120018
 
     #endregion
 
@@ -7301,32 +7357,32 @@ SMN.JobID)]
     [PvPCustomCombo]
     [ReplaceSkill(RPRPvP.Slice)]
     [CustomComboInfo("Burst Mode",
-        "Turns Slice Combo into an all-in-one damage button.\nAdds Soul Slice to the main combo.", RPR.JobID)]
+        "Turns Slice Combo into an all-in-one damage button.\nAdds Soul Slice to the main combo.", RPRPvP.JobID)]
     RPRPvP_Burst = 122000,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
-    [CustomComboInfo("Grim Swathe Option", "Add's Grim Swathe onto the main combo on cd", RPR.JobID)]
+    [CustomComboInfo("Grim Swathe Option", "Add's Grim Swathe onto the main combo on cd", RPRPvP.JobID)]
     RPRPvP_Burst_GrimSwathe = 122009,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Death Warrant Option",
         "Adds Death Warrant onto the main combo when Plentiful Harvest is ready to use, or when Plentiful Harvest's cooldown is longer than Death Warrant's.\nRespects Immortal Sacrifice Pooling Option.",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_DeathWarrant = 122001,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Plentiful Harvest + Immortal Sacrifice Pooling Option",
         "Pools stacks of Immortal Sacrifice before using Plentiful Harvest.\nAlso holds Plentiful Harvest if Death Warrant is on cooldown.\nSet the value to 3 or below to use Plentiful Harvest as soon as it's available.",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_ImmortalPooling = 122003,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Enshrouded Burst Option",
-        "Adds Lemure's Slice to the main combo during the Enshroud burst phase.\nContains burst options.", RPR.JobID)]
+        "Adds Lemure's Slice to the main combo during the Enshroud burst phase.\nContains burst options.", RPRPvP.JobID)]
     RPRPvP_Burst_Enshrouded = 122004,
 
     #region RPR Enshrouded Option
@@ -7350,16 +7406,23 @@ SMN.JobID)]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Ranged Harvest Moon Option",
         "Adds Harvest Moon onto the main combo when you're out of melee range, the GCD is not rolling and it's available for use. Will also throw it when the enemy is under 12k health for execute",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_RangedHarvest = 122007,
 
     [PvPCustomCombo]
     [ParentCombo(RPRPvP_Burst)]
     [CustomComboInfo("Arcane Crest Option", "Adds Arcane Crest to the main combo when under the set HP perecentage.",
-        RPR.JobID)]
+        RPRPvP.JobID)]
     RPRPvP_Burst_ArcaneCircle = 122008,
 
-    // Last value = 122009
+    [PvPCustomCombo]
+    [ParentCombo(RPRPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health",
+        RPRPvP.JobID)]
+    RPRPvP_Smite = 122010,
+
+    // Last value = 122010
 
     #endregion
 
@@ -7491,7 +7554,14 @@ SMN.JobID)]
         SAMPvP.JobID)]
     SAMPvP_Zantetsuken = 125005,
 
-    // Last value = 125005
+    [PvPCustomCombo]
+    [ParentCombo(SAMPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health",
+        SAMPvP.JobID)]
+    SAMPvP_Smite = 125006,
+
+    // Last value = 125006
 
     #endregion
 
@@ -7619,7 +7689,14 @@ SMN.JobID)]
         "Adds Rattling Coil to Snake Scales when available.\n- Requires Snake Scales to be on cooldown.", VPRPvP.JobID)]
     VPRPvP_SnakeScales_Feature = 130006,
 
-    // Last value = 130006
+    [PvPCustomCombo]
+    [ParentCombo(VPRPvP_Burst)]
+    [CustomComboInfo("Role Action Smite Option",
+        "Adds Role Action Smite to Burst Mode below selected health",
+        VPRPvP.JobID)]
+    VPRPvP_Smite = 130007,
+
+    // Last value = 130007
 
     #endregion
 

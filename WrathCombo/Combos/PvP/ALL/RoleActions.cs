@@ -102,16 +102,16 @@ namespace WrathCombo.Combos.PvP
         public static class Debuffs
         {
             public const ushort
-                Rampage = 4476; 
+                Rampage = 4476;
         }
 
         public static bool CanRampage() =>
-            IsEnabled(Rampage) && ActionReady(Rampage);
+            ActionReady(Rampage);
 
         public static bool CanRampart(int healthPercent) =>
-            IsEnabled(Rampage) && ActionReady(Rampart) && PlayerHealthPercentageHp() < healthPercent;
+            ActionReady(Rampart) && PlayerHealthPercentageHp() < healthPercent;
 
         public static bool CanFullSwing() =>
-            IsEnabled(FullSwing) && ActionReady(FullSwing);
+            ActionReady(FullSwing);
     }
 }

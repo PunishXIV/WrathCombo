@@ -67,7 +67,7 @@ namespace WrathCombo.CustomComboNS
 
             if (!Svc.ClientState.IsPvP && ActionManager.Instance()->QueuedActionType == ActionType.Action && ActionManager.Instance()->QueuedActionId != actionID)
             {
-                if (resultingActionID != All.SavageBlade && WrathOpener.CurrentOpener?.OpenerStep <= 1)
+                if (resultingActionID != All.SavageBlade) //&& WrathOpener.CurrentOpener?.OpenerStep <= 1)  //TODO Remember why I put this particular bit in
                     return false;
             }
             newActionID = resultingActionID;
