@@ -2351,19 +2351,19 @@ public enum CustomComboPreset
     GNB_AoE_FatedCircle = 7208,
 
     [ParentCombo(GNB_AoE_FatedCircle)]
+    [CustomComboInfo("Ammo Overcap Option",
+        "Adds Fated Circle into the AoE rotation when overcapping cartridges is imminent.",
+        GNB.JobID)]
+    GNB_AoE_Overcap = 7209,
+
+    [ParentCombo(GNB_AoE_FatedCircle)]
     [CustomComboInfo("Burst Strike Option",
         "Adds Burst Strike into the AoE rotation if you do not have Fated Circle unlocked yet.", GNB.JobID)]
     GNB_AoE_noFatedCircle = 7212,
 
-    [ParentCombo(GNB_AoE_Advanced)]
-    [CustomComboInfo("Ammo Overcap Option",
-        "Adds Fated Circle into the AoE rotation if you have max cartridges & your last combo action was Demon Slice.",
-        GNB.JobID)]
-    GNB_AoE_Overcap = 7209,
-
-    [ParentCombo(GNB_AoE_Overcap)]
+    [ParentCombo(GNB_AoE_noFatedCircle)]
     [CustomComboInfo("Ammo Overcap Burst Strike Option",
-        "Adds Burst Strike into the AoE rotation if you have max cartridges, your last combo action was Demon Slice, & you do not have Fated Circle unlocked yet.",
+        "Adds Burst Strike into the AoE rotation when overcapping cartridges is imminent.",
         GNB.JobID)]
     GNB_AoE_BSOvercap = 7211,
 
