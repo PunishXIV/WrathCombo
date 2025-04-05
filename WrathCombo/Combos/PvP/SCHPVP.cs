@@ -1,10 +1,15 @@
 ﻿using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class SCHPvP
     {
-        public const byte JobID = 28;
+        #region IDS
+
+        public const byte ClassID = 26;
+        public const byte JobID = 28;       
 
         internal class Role : PvPHealer;
 
@@ -28,6 +33,30 @@ namespace WrathCombo.Combos.PvP
                 Biolysis = 3089,
                 Biolytic = 3090;
         }
+        #endregion
+
+        #region Config
+        public static class Config
+        {
+            public static UserInt
+               SCHPvP_DiabrosisThreshold = new("SCHPvP_DiabrosisThreshold");
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.SCHPvP_Diabrosis:
+                        UserConfig.DrawSliderInt(0, 100, SCHPvP_DiabrosisThreshold,
+                            "Target HP% to use Diabrosis");
+
+                        break;
+                }
+            }
+        }
+
+        #endregion
+
+       
 
         internal class SCHPvP_Burst : CustomCombo
         {
@@ -40,6 +69,10 @@ namespace WrathCombo.Combos.PvP
                     // Uses Chain Stratagem when available
                     if (IsEnabled(CustomComboPreset.SCHPvP_ChainStratagem) && IsOffCooldown(ChainStratagem))
                         return ChainStratagem;
+
+                    if (IsEnabled(CustomComboPreset.SCHPvP_Diabrosis) && PvPHealer.CanDiabrosis() && HasTarget() &&
+                            GetTargetHPPercent() <= Config.SCHPvP_DiabrosisThreshold)
+                        return PvPHealer.Diabrosis;
 
                     // Uses Expedient when available and target isn't affected with Biolysis
                     if (IsEnabled(CustomComboPreset.SCHPvP_Expedient) && IsOffCooldown(Expedient) && !TargetHasEffect(Debuffs.Biolysis))

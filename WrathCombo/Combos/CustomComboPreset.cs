@@ -6691,46 +6691,59 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(ASTPvP.Malefic)]
-    [CustomComboInfo("Burst Mode", "Turns Fall Malefic into an all-in-one damage button.", AST.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Fall Malefic into an all-in-one damage button.", ASTPvP.JobID)]
     ASTPvP_Burst = 111000,
 
+    [PvPCustomCombo]
     [ParentCombo(ASTPvP_Burst)]
-    [CustomComboInfo("Card Draw Option", "Adds Drawing Cards to Burst Mode.", AST.JobID)]
+    [CustomComboInfo("Card Draw Option", "Adds Drawing Cards to Burst Mode.", ASTPvP.JobID)]
     ASTPvP_Burst_DrawCard = 111002,
 
+    [PvPCustomCombo]
     [ParentCombo(ASTPvP_Burst)]
-    [CustomComboInfo("Card Play Option", "Adds Playing Cards to Burst Mode.", AST.JobID)]
+    [CustomComboInfo("Card Play Option", "Adds Playing Cards to Burst Mode.", ASTPvP.JobID)]
     ASTPvP_Burst_PlayCard = 111003,
 
     [PvPCustomCombo]
     [ReplaceSkill(ASTPvP.AspectedBenefic)]
-    [CustomComboInfo("Double Cast Heal Feature", "Adds Double Cast to Aspected Benefic.", AST.JobID)]
+    [CustomComboInfo("Double Cast Heal Feature", "Adds Double Cast to Aspected Benefic.", ASTPvP.JobID)]
     ASTPvP_Heal = 111004,
 
+    [PvPCustomCombo]
     [ParentCombo(ASTPvP_Burst)]
-    [CustomComboInfo("Double Malefic Cast Option", "Adds Double Malefic Cast to Burst Mode.", AST.JobID)]
+    [CustomComboInfo("Double Malefic Cast Option", "Adds Double Malefic Cast to Burst Mode.", ASTPvP.JobID)]
     ASTPvP_Burst_DoubleMalefic = 111005,
 
+    [PvPCustomCombo]
     [ParentCombo(ASTPvP_Burst_Gravity)]
-    [CustomComboInfo("Double Gravity Cast Option", "Adds Double Gravity Cast to Burst Mode.", AST.JobID)]
+    [CustomComboInfo("Double Gravity Cast Option", "Adds Double Gravity Cast to Burst Mode.", ASTPvP.JobID)]
     ASTPvP_Burst_DoubleGravity = 111009,
 
+    [PvPCustomCombo]
     [ParentCombo(ASTPvP_Burst)]
-    [CustomComboInfo("Gravity Burst Option", "Adds Gravity Cast to Burst Mode.", AST.JobID)]
+    [CustomComboInfo("Gravity Burst Option", "Adds Gravity Cast to Burst Mode.", ASTPvP.JobID)]
     ASTPvP_Burst_Gravity = 111006,
 
+    [PvPCustomCombo]
     [ParentCombo(ASTPvP_Burst)]
     [CustomComboInfo("Macrocosmos Option",
         "Adds Macrocosmos to Burst Mode. \n If Double Gravity is enabled, it will hold Macrocosmos for the double gravity burst.",
-        AST.JobID)]
+        ASTPvP.JobID)]
     ASTPvP_Burst_Macrocosmos = 111007,
 
     [PvPCustomCombo]
+    [ParentCombo(ASTPvP_Burst)]
+    [CustomComboInfo("Role Action Diabrosis Option",
+        "Adds Role Action Diabrosis to Burst Mode below selected health",
+        ASTPvP.JobID)]
+    ASTPvP_Diabrosis = 111010,
+
+    [PvPCustomCombo]
     [ReplaceSkill(ASTPvP.Epicycle)]
-    [CustomComboInfo("Epicycle Burst Feature", "Turns Epicycle into burst combo.", AST.JobID)]
+    [CustomComboInfo("Epicycle Burst Feature", "Turns Epicycle into burst combo.", ASTPvP.JobID)]
     ASTPvP_Epicycle = 111008,
 
-    // Last value = 111009
+    // Last value = 111010
 
     #endregion
 
@@ -7442,38 +7455,52 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(SGEPvP.Dosis)]
-    [CustomComboInfo("Burst Mode", "Turns Dosis III into an all-in-one damage button.", SGE.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Dosis III into an all-in-one damage button.", SGEPvP.JobID)]
     SGEPvP_BurstMode = 124000,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Pneuma Option", "Adds Pneuma to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Pneuma Option", "Adds Pneuma to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_Pneuma = 124001,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Eukrasia Option", "Adds Eukrasia to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Eukrasia Option", "Adds Eukrasia to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_Eukrasia = 124002,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Phlegma Option", "Adds Phlegma to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Phlegma Option", "Adds Phlegma to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_Phlegma = 124003,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Psyche Option", "Adds Psyche to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Psyche Option", "Adds Psyche to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_Psyche = 124004,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Toxikon Option", "Adds Toxikon to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Toxikon Option", "Adds Toxikon to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_Toxikon = 124005,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Toxikon II Option", "Adds Toxikon II to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Toxikon II Option", "Adds Toxikon II to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_Toxikon2 = 124006,
 
+    [PvPCustomCombo]
     [ParentCombo(SGEPvP_BurstMode)]
-    [CustomComboInfo("Kardia Reminder Option", "Adds Kardia to Burst Mode.", SGE.JobID)]
+    [CustomComboInfo("Kardia Reminder Option", "Adds Kardia to Burst Mode.", SGEPvP.JobID)]
     SGEPvP_BurstMode_KardiaReminder = 124007,
 
-    // Last value = 124007
+    [PvPCustomCombo]
+    [ParentCombo(SGEPvP_BurstMode)]
+    [CustomComboInfo("Role Action Diabrosis Option",
+       "Adds Role Action Diabrosis to Burst Mode below selected health",
+       SGEPvP.JobID)]
+    SGEPvP_Diabrosis = 124008,
+
+    // Last value = 124008
 
     #endregion
 
@@ -7528,26 +7555,37 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(SCHPvP.Broil)]
-    [CustomComboInfo("Burst Mode", "Turns Broil IV into all-in-one damage button.", SCH.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Broil IV into all-in-one damage button.", SCHPvP.JobID)]
     SCHPvP_Burst = 126000,
 
+    [PvPCustomCombo]
     [ParentCombo(SCHPvP_Burst)]
-    [CustomComboInfo("Expedient Option", "Adds Expedient to Burst Mode to empower Biolysis.", SCH.JobID)]
+    [CustomComboInfo("Expedient Option", "Adds Expedient to Burst Mode to empower Biolysis.", SCHPvP.JobID)]
     SCHPvP_Expedient = 126001,
 
+    [PvPCustomCombo]
     [ParentCombo(SCHPvP_Burst)]
-    [CustomComboInfo("Biolysis Option", "Adds Biolysis use on cooldown to Burst Mode.", SCH.JobID)]
+    [CustomComboInfo("Biolysis Option", "Adds Biolysis use on cooldown to Burst Mode.", SCHPvP.JobID)]
     SCHPvP_Biolysis = 126002,
 
+    [PvPCustomCombo]
     [ParentCombo(SCHPvP_Burst)]
-    [CustomComboInfo("Deployment Tactics Option", "Adds Deployment Tactics to Burst Mode when available.", SCH.JobID)]
+    [CustomComboInfo("Deployment Tactics Option", "Adds Deployment Tactics to Burst Mode when available.", SCHPvP.JobID)]
     SCHPvP_DeploymentTactics = 126003,
 
+    [PvPCustomCombo]
     [ParentCombo(SCHPvP_Burst)]
-    [CustomComboInfo("Chain Stratagem Option", "Adds Chain Stratagem to Burst Mode when available.", SCH.JobID)]
+    [CustomComboInfo("Chain Stratagem Option", "Adds Chain Stratagem to Burst Mode when available.", SCHPvP.JobID)]
     SCHPvP_ChainStratagem = 126004,
 
-    // Last value = 126004
+    [PvPCustomCombo]
+    [ParentCombo(SCHPvP_Burst)]
+    [CustomComboInfo("Role Action Diabrosis Option",
+       "Adds Role Action Diabrosis to Burst Mode below selected health",
+       SCHPvP.JobID)]
+    SCHPvP_Diabrosis = 126005,
+
+    // Last value = 126005
 
     #endregion
 
@@ -7703,41 +7741,52 @@ SMN.JobID)]
 
     [PvPCustomCombo]
     [ReplaceSkill(WHMPvP.Glare)]
-    [CustomComboInfo("Burst Mode", "Turns Glare into an all-in-one damage button.", WHM.JobID)]
+    [CustomComboInfo("Burst Mode", "Turns Glare into an all-in-one damage button.", WHMPvP.JobID)]
     WHMPvP_Burst = 129000,
 
+    [PvPCustomCombo]
     [ParentCombo(WHMPvP_Burst)]
-    [CustomComboInfo("Misery Option", "Adds Afflatus Misery to Burst Mode.", WHM.JobID)]
+    [CustomComboInfo("Misery Option", "Adds Afflatus Misery to Burst Mode.", WHMPvP.JobID)]
     WHMPvP_Afflatus_Misery = 129001,
 
+    [PvPCustomCombo]
     [ParentCombo(WHMPvP_Burst)]
-    [CustomComboInfo("Miracle of Nature Option", "Adds Miracle of Nature to Burst Mode.", WHM.JobID)]
+    [CustomComboInfo("Miracle of Nature Option", "Adds Miracle of Nature to Burst Mode.", WHMPvP.JobID)]
     WHMPvP_Mirace_of_Nature = 129002,
 
+    [PvPCustomCombo]
     [ParentCombo(WHMPvP_Burst)]
-    [CustomComboInfo("Seraph Strike Option", "Adds Seraph Strike to Burst Mode.", WHM.JobID)]
+    [CustomComboInfo("Seraph Strike Option", "Adds Seraph Strike to Burst Mode.", WHMPvP.JobID)]
     WHMPvP_Seraph_Strike = 129003,
 
+    [PvPCustomCombo]
     [ParentCombo(WHMPvP_Burst)]
-    [CustomComboInfo("Afflatus Purgation Option", "Adds Afflatus Purgation (Limit Break) to Burst Mode.", WHM.JobID)]
+    [CustomComboInfo("Afflatus Purgation Option", "Adds Afflatus Purgation (Limit Break) to Burst Mode.", WHMPvP.JobID)]
     WHMPvP_AfflatusPurgation = 129008,
 
     [PvPCustomCombo]
     [ReplaceSkill(WHMPvP.Cure2)]
-    [CustomComboInfo("Heal Feature", "Adds the below options onto Cure II.", WHM.JobID)]
+    [CustomComboInfo("Heal Feature", "Adds the below options onto Cure II.", WHMPvP.JobID)]
     WHMPvP_Heals = 129004,
 
     [PvPCustomCombo]
     [ParentCombo(WHMPvP_Heals)]
-    [CustomComboInfo("Cure III Option", "Adds Cure III to Cure II when available.", WHM.JobID)]
+    [CustomComboInfo("Cure III Option", "Adds Cure III to Cure II when available.", WHMPvP.JobID)]
     WHMPvP_Cure3 = 129005,
 
     [PvPCustomCombo]
     [ParentCombo(WHMPvP_Heals)]
-    [CustomComboInfo("Aquaveil Option", "Adds Aquaviel to Cure II when available.", WHM.JobID)]
+    [CustomComboInfo("Aquaveil Option", "Adds Aquaviel to Cure II when available.", WHMPvP.JobID)]
     WHMPvP_Aquaveil = 129007,
 
-    // Last value = 129007
+    [PvPCustomCombo]
+    [ParentCombo(WHMPvP_Burst)]
+    [CustomComboInfo("Role Action Diabrosis Option",
+       "Adds Role Action Diabrosis to Burst Mode below selected health",
+       WHMPvP.JobID)]
+    WHMPvP_Diabrosis = 129009,
+
+    // Last value = 129009
 
     #endregion
 
