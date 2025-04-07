@@ -44,14 +44,14 @@ internal partial class BLM
 
     internal static int RemainingPolyglotCD => Math.Max(0, (MaxPolyglot - Gauge.PolyglotStacks) * 30000 + (Gauge.EnochianTimer - 30000));
 
-    internal static Status? ThunderDebuffST => FindEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget, LocalPlayer?.GameObjectId);
+    internal static Status? ThunderDebuffST => GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
 
-    internal static Status? ThunderDebuffAoE => FindEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget, LocalPlayer?.GameObjectId);
+    internal static Status? ThunderDebuffAoE => GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
     internal static uint FireSpam => LevelChecked(Fire4) ? Fire4 : Fire;
     internal static uint BlizzardSpam => LevelChecked(Blizzard4) ? Blizzard4 : Blizzard;
 
-    internal static float TimeSinceFirestarterBuff => HasEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
+    internal static float TimeSinceFirestarterBuff => HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
     internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
 

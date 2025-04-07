@@ -80,7 +80,7 @@ namespace WrathCombo.Combos.PvP
                         break;
 
 
-                }
+        }
             }
         }
         #endregion
@@ -95,12 +95,12 @@ namespace WrathCombo.Combos.PvP
                     #region types
                     double distance = GetTargetDistance();
                     bool canWeave = CanWeave();                    
-                    bool canBind = !TargetHasEffect(PvPCommon.Debuffs.Bind);
+                    bool canBind = !HasStatusEffect(PvPCommon.Debuffs.Bind, CurrentTarget);
                     bool deathWarrantReady = IsOffCooldown(DeathWarrant);
                     bool plentifulReady = IsOffCooldown(PlentifulHarvest);
-                    bool enshrouded = HasEffect(Buffs.Enshrouded);
-                    float enshroudStacks = GetBuffStacks(Buffs.Enshrouded);
-                    float immortalStacks = GetBuffStacks(Buffs.ImmortalSacrifice);
+                    bool enshrouded = HasStatusEffect(Buffs.Enshrouded);
+                    float enshroudStacks = GetStatusEffectStacks(Buffs.Enshrouded);
+                    float immortalStacks = GetStatusEffectStacks(Buffs.ImmortalSacrifice);
                     int immortalThreshold = Config.RPRPvP_ImmortalStackThreshold;
                     #endregion
 
@@ -127,7 +127,7 @@ namespace WrathCombo.Combos.PvP
                             {
                                 // Enshrouded Death Warrant Option
                                 if (IsEnabled(CustomComboPreset.RPRPvP_Burst_Enshrouded_DeathWarrant) &&
-                                    deathWarrantReady && enshroudStacks >= 3 && distance <= 25 || HasEffect(Buffs.DeathWarrant) && GetBuffRemainingTime(Buffs.DeathWarrant) <= 3)
+                                    deathWarrantReady && enshroudStacks >= 3 && distance <= 25 || HasStatusEffect(Buffs.DeathWarrant) && GetStatusEffectRemainingTime(Buffs.DeathWarrant) <= 3)
                                     return OriginalHook(DeathWarrant);
 
                                 // Lemure's Slice
@@ -141,7 +141,7 @@ namespace WrathCombo.Combos.PvP
                             {
                                 // Holds Communio when moving & Enshrouded Time Remaining > 2s
                                 // Returns a Void/Cross Reaping if under 2s to avoid charge waste
-                                if (IsMoving() && GetBuffRemainingTime(Buffs.Enshrouded) > 2)
+                                if (IsMoving() && GetStatusEffectRemainingTime(Buffs.Enshrouded) > 2)
                                     return BLM.Xenoglossy;
 
                                 // Returns Communio if stationary
@@ -153,7 +153,7 @@ namespace WrathCombo.Combos.PvP
                         // Outside of Enshroud
                         if (!enshrouded)
                         {
-                            if (HasEffect(Buffs.PerfectioParata))
+                            if (HasStatusEffect(Buffs.PerfectioParata))
                                 return OriginalHook(TenebraeLemurum);
 
                             // Pooling Plentiful with Death warrant
@@ -166,7 +166,7 @@ namespace WrathCombo.Combos.PvP
                                     return OriginalHook(DeathWarrant);
 
                                 if (plentifulReady && immortalStacks >= immortalThreshold &&
-                                TargetHasEffect(Debuffs.DeathWarrant) && distance <= 15)
+                                HasStatusEffect(Debuffs.DeathWarrant, CurrentTarget) && distance <= 15)
                                     return PlentifulHarvest;
                             }
 

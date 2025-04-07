@@ -149,17 +149,17 @@ internal partial class NIN
 
     private static bool TargetHasTrickDebuff()
     {
-        return TargetHasEffect(Debuffs.TrickAttack) ||
-               TargetHasEffect(Debuffs.KunaisBane);
+        return HasStatusEffect(Debuffs.TrickAttack, CurrentTarget) ||
+               HasStatusEffect(Debuffs.KunaisBane, CurrentTarget);
     }
 
     private static bool TargetHasMugDebuff()
     {
-        return TargetHasEffect(Debuffs.Mug) ||
-               TargetHasEffect(Debuffs.Dokumori);
+        return HasStatusEffect(Debuffs.Mug, CurrentTarget) ||
+               HasStatusEffect(Debuffs.Dokumori, CurrentTarget);
     }
 
-    public static Status? MudraBuff => FindEffect(Buffs.Mudra);
+    public static Status? MudraBuff => GetStatusEffect(Buffs.Mudra);
 
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
 
@@ -193,8 +193,8 @@ internal partial class NIN
                 return true;
 
             if (GetRemainingCharges(Ten) == 0 &&
-                !HasEffect(Buffs.Mudra) &&
-                !HasEffect(Buffs.Kassatsu))
+                !HasStatusEffect(Buffs.Mudra) &&
+                !HasStatusEffect(Buffs.Kassatsu))
                 return false;
 
             return true;
@@ -317,7 +317,7 @@ internal partial class NIN
         {
             if (Hyoton.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingHyoton)
             {
-                if (!CanCast() || HasEffect(Buffs.Kassatsu) || ActionWatching.LastAction == Hyoton)
+                if (!CanCast() || HasStatusEffect(Buffs.Kassatsu) || ActionWatching.LastAction == Hyoton)
                 {
                     CurrentMudra = MudraState.None;
 
@@ -494,7 +494,7 @@ internal partial class NIN
         {
             if (GokaMekkyaku.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingGokaMekkyaku)
             {
-                if (!CanCast() || !HasEffect(Buffs.Kassatsu) || ActionWatching.LastAction == GokaMekkyaku)
+                if (!CanCast() || !HasStatusEffect(Buffs.Kassatsu) || ActionWatching.LastAction == GokaMekkyaku)
                 {
                     CurrentMudra = MudraState.None;
 
@@ -533,7 +533,7 @@ internal partial class NIN
         {
             if (HyoshoRanryu.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingHyoshoRanryu)
             {
-                if (!CanCast() || !HasEffect(Buffs.Kassatsu) || ActionWatching.LastAction == HyoshoRanryu)
+                if (!CanCast() || !HasStatusEffect(Buffs.Kassatsu) || ActionWatching.LastAction == HyoshoRanryu)
                 {
                     CurrentMudra = MudraState.None;
 

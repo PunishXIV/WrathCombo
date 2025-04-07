@@ -56,7 +56,7 @@ internal partial class SGE
                 action = Pepsis;
 
                 enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Pepsis) &&
-                          FindEffect(Buffs.EukrasianDiagnosis, healTarget, LocalPlayer?.GameObjectId) is not null;
+                          HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget);
 
                 return Config.SGE_ST_Heal_Pepsis;
 
@@ -127,7 +127,7 @@ internal partial class SGE
             case 5:
                 action = Pepsis;
                 enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Pepsis) &&
-                          FindEffect(Buffs.EukrasianPrognosis) is not null;
+                          HasStatusEffect(Buffs.EukrasianPrognosis);
                 return Config.SGE_AoE_Heal_PepsisOption;
 
             case 6:

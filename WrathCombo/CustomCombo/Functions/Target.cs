@@ -258,7 +258,7 @@ namespace WrathCombo.CustomComboNS.Functions
         public static bool TargetNeedsPositionals()
         {
             if (!HasBattleTarget()) return false;
-            if (TargetHasEffectAny(3808)) return false; // Directional Disregard Effect (Patch 7.01)
+            if (HasStatusEffect(3808, CurrentTarget, true)) return false; // Directional Disregard Effect (Patch 7.01)
             if (!NPCPositionals.ContainsKey(CurrentTarget.DataId))
             {
                 if (Svc.Data.GetExcelSheet<BNpcBase>().TryGetFirst(x => x.RowId == CurrentTarget.DataId, out var bnpc))

@@ -95,23 +95,23 @@ namespace WrathCombo.Combos.PvP
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
                         if (IsEnabled(CustomComboPreset.BRDPvP_Wardens) && InPvP() &&  //Autowardens set up only for soft ccs, it cant be used while cced like purify
-                            (HasEffectAny(Debuffs.Bind) || HasEffectAny(Debuffs.Heavy) || HasEffectAny(Debuffs.HalfAsleep)))
+                            (HasStatusEffect(Debuffs.Bind, anyOwner: true) || HasStatusEffect(Debuffs.Heavy, anyOwner: true) || HasStatusEffect(Debuffs.HalfAsleep, anyOwner: true)))
                             return OriginalHook(WardensPaean);
 
                         if (canWeave)
                         {
                             // Silence shot that gives PP, set up to not happen right after apex to tighten burst and silence after the bigger damage. Apex > Harmonic> Silent > Burst > PP or Apex > Burst > Silent >  PP
-                            if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !HasEffect(Buffs.Repertoire)) 
+                            if (IsEnabled(CustomComboPreset.BRDPvP_SilentNocturne) && !GetCooldown(SilentNocturne).IsCooldown && !WasLastAction(ApexArrow) && !HasStatusEffect(Buffs.Repertoire)) 
                                 return OriginalHook(SilentNocturne);
 
-                            if (IsEnabled(CustomComboPreset.BRDPvP_EncoreOfLight) && HasEffect(Buffs.EncoreofLightReady)) // LB finisher shot
+                            if (IsEnabled(CustomComboPreset.BRDPvP_EncoreOfLight) && HasStatusEffect(Buffs.EncoreofLightReady)) // LB finisher shot
                                 return OriginalHook(FinalFantasia);
                         }
 
                         if (IsEnabled(CustomComboPreset.BRDPvP_ApexArrow) && ActionReady(ApexArrow)) // Use on cd to keep up buff
                             return OriginalHook(ApexArrow);
 
-                        if (HasEffect(Buffs.FrontlineMarch))
+                        if (HasStatusEffect(Buffs.FrontlineMarch))
                         {
                             if (IsEnabled(CustomComboPreset.BRDPvP_HarmonicArrow) &&    //Harmonic Logic. Slider plus execute ranges
                                (harmonicCharges >= Config.BRDPvP_HarmonicArrowCharges ||
@@ -120,7 +120,7 @@ namespace WrathCombo.Combos.PvP
                                harmonicCharges == 3 && EnemyHealthCurrentHp() <= 15000))
                                 return OriginalHook(HarmonicArrow);
 
-                            if (IsEnabled(CustomComboPreset.BRDPvP_BlastArrow) && HasEffect(Buffs.BlastArrowReady)) // Blast arrow when ready
+                            if (IsEnabled(CustomComboPreset.BRDPvP_BlastArrow) && HasStatusEffect(Buffs.BlastArrowReady)) // Blast arrow when ready
                                 return OriginalHook(BlastArrow);
                         }
 

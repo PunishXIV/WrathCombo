@@ -63,7 +63,7 @@ internal partial class SCH
                 return Config.SCH_ST_Heal_LustrateOption;
             case 1:
                 action = Excogitation;
-                enabled = IsEnabled(CustomComboPreset.SCH_ST_Heal_Excogitation) && (HasAetherflow() || HasEffect(Buffs.Recitation));
+                enabled = IsEnabled(CustomComboPreset.SCH_ST_Heal_Excogitation) && (HasAetherflow() || HasStatusEffect(Buffs.Recitation));
                 return Config.SCH_ST_Heal_ExcogitationOption;
             case 2:
                 action = Protraction;

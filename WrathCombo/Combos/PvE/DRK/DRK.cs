@@ -232,7 +232,7 @@ internal partial class DRK : TankJob
             if (IsEnabled(CustomComboPreset.DRK_oGCD_SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
                 LevelChecked(SaltedEarth) &&
-                !HasEffect(Buffs.SaltedEarth))
+                !HasStatusEffect(Buffs.SaltedEarth))
                 return SaltedEarth;
 
             if (IsOffCooldown(CarveAndSpit) &&
@@ -242,7 +242,7 @@ internal partial class DRK : TankJob
             if (IsEnabled(CustomComboPreset.DRK_oGCD_SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 LevelChecked(SaltAndDarkness) &&
-                HasEffect(Buffs.SaltedEarth))
+                HasStatusEffect(Buffs.SaltedEarth))
                 return SaltAndDarkness;
 
             if (IsEnabled(CustomComboPreset.DRK_oGCD_Shadowbringer) &&

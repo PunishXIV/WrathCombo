@@ -38,7 +38,7 @@ namespace WrathCombo.AutoRotation
 
         static DateTime? TimeToHeal;
 
-        static Func<WrathPartyMember, bool> RezQuery => x => x.BattleChara.IsDead && FindEffectOnMember(2648, x.BattleChara) == null && FindEffectOnMember(148, x.BattleChara) == null && x.BattleChara.IsTargetable && TimeSpentDead(x.BattleChara.GameObjectId).TotalSeconds > 2 && GetTargetDistance(x.BattleChara) <= 30;
+        static Func<WrathPartyMember, bool> RezQuery => x => x.BattleChara.IsDead && !HasStatusEffect(2648, x.BattleChara, true) && !HasStatusEffect(148, x.BattleChara, true) && x.BattleChara.IsTargetable && TimeSpentDead(x.BattleChara.GameObjectId).TotalSeconds > 2 && GetTargetDistance(x.BattleChara) <= 30;
 
         public static bool LockedST
         {
@@ -140,7 +140,7 @@ namespace WrathCombo.AutoRotation
                     continue;
                 }
 
-                if (!action.IsHeal && HasEffect(418)) //Rez Invuln
+                if (!action.IsHeal && HasStatusEffect(418)) //Rez Invuln
                     continue;
 
                 if (Player.Object.GetRole() is CombatRole.Tank)
@@ -181,7 +181,7 @@ namespace WrathCombo.AutoRotation
                 _ => 0
             };
 
-            if (regenSpell != 0 && !JustUsed(regenSpell, 4) && Svc.Targets.FocusTarget != null && (!MemberHasEffect(regenBuff, Svc.Targets.FocusTarget, true, out var regen) || regen?.RemainingTime <= 5f))
+            if (regenSpell != 0 && !JustUsed(regenSpell, 4) && Svc.Targets.FocusTarget != null && (!HasStatusEffect(regenBuff, out var regen, Svc.Targets.FocusTarget) || regen?.RemainingTime <= 5f))
             {
                 var query = Svc.Objects.Where(x => !x.IsDead && x.IsHostile() && x.IsTargetable);
                 if (!query.Any())
@@ -231,7 +231,7 @@ namespace WrathCombo.AutoRotation
                 {
                     if (Player.Job is Job.RDM)
                     {
-                        if (ActionReady(MagicRole.Swiftcast) && !HasEffect(RDM.Buffs.Dualcast))
+                        if (ActionReady(MagicRole.Swiftcast) && !HasStatusEffect(RDM.Buffs.Dualcast))
                         {
                             ActionManager.Instance()->UseAction(ActionType.Action, MagicRole.Swiftcast);
                             return;
@@ -254,7 +254,7 @@ namespace WrathCombo.AutoRotation
                             }
                         }
 
-                        if (!IsMoving() || HasEffect(MagicRole.Buffs.Swiftcast))
+                        if (!IsMoving() || HasStatusEffect(MagicRole.Buffs.Swiftcast))
                         {
                             
                             if ((cfg.HealerSettings.AutoRezRequireSwift && ActionManager.GetAdjustedCastTime(ActionType.Action, resSpell) == 0) || !cfg.HealerSettings.AutoRezRequireSwift)
@@ -285,10 +285,10 @@ namespace WrathCombo.AutoRotation
             foreach (var member in GetPartyMembers().Where(x => !x.BattleChara.IsDead).OrderByDescending(x => x.BattleChara.GetRole() is CombatRole.Tank))
             {
                 if (cfg.HealerSettings.KardiaTanksOnly && member.BattleChara.GetRole() is not CombatRole.Tank &&
-                    FindEffectOnMember(3615, member.BattleChara) is null) continue;
+                    !HasStatusEffect(3615, member.BattleChara, true)) continue;
 
                 var enemiesTargeting = Svc.Objects.Where(x => x.IsTargetable && x.IsHostile() && x.TargetObjectId == member.BattleChara.GameObjectId).Count();
-                if (enemiesTargeting > 0 && FindEffectOnMember(SGE.Buffs.Kardion, member.BattleChara, true) is null)
+                if (enemiesTargeting > 0 && !HasStatusEffect(SGE.Buffs.Kardion, member.BattleChara))
                 {
                     ActionManager.Instance()->UseAction(ActionType.Action, SGE.Kardia, member.BattleChara.GameObjectId);
                     return;
@@ -590,7 +590,7 @@ namespace WrathCombo.AutoRotation
 
             public static IGameObject? GetTankTarget()
             {
-                var tank = GetPartyMembers().Where(x => x.BattleChara.GetRole() == CombatRole.Tank || FindEffectOnMember(3615, x.BattleChara) is not null).FirstOrDefault();
+                var tank = GetPartyMembers().Where(x => x.BattleChara.GetRole() == CombatRole.Tank || HasStatusEffect(3615, x.BattleChara, true)).FirstOrDefault();
                 if (tank == null)
                     return null;
 
@@ -674,8 +674,8 @@ namespace WrathCombo.AutoRotation
                 if (target is null) return false;
                 return JobID switch
                 {
-                    AST.JobID => FindEffectOnMember(AST.Buffs.AspectedBenefic, target) != null,
-                    WHM.JobID => FindEffectOnMember(WHM.Buffs.Regen, target) != null,
+                    AST.JobID => HasStatusEffect(AST.Buffs.AspectedBenefic, target, true),
+                    WHM.JobID => HasStatusEffect(WHM.Buffs.Regen, target, true),
                     _ => false,
                 };
             }

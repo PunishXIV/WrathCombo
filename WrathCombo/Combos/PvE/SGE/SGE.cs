@@ -15,7 +15,7 @@ internal partial class SGE : HealerJob
 
         protected override uint Invoke(uint actionID) =>
             actionID is Soteria &&
-            (!HasEffect(Buffs.Kardia) || IsOnCooldown(Soteria))
+            (!HasStatusEffect(Buffs.Kardia) || IsOnCooldown(Soteria))
                 ? Kardia
                 : actionID;
     }
@@ -76,7 +76,7 @@ internal partial class SGE : HealerJob
         {
             if (!DyskrasiaList.Contains(actionID))
                 return actionID;
-            if (HasEffect(Buffs.Eukrasia))
+            if (HasStatusEffect(Buffs.Eukrasia))
                 return actionID;
 
             // Variant Rampart
@@ -96,7 +96,7 @@ internal partial class SGE : HealerJob
 
             //Soteria
             if (IsEnabled(CustomComboPreset.SGE_AoE_DPS_Soteria) && CanSpellWeave() &&
-                ActionReady(Soteria) && HasEffect(Buffs.Kardia))
+                ActionReady(Soteria) && HasStatusEffect(Buffs.Kardia))
                 return Soteria;
 
             // Addersgall Protection
@@ -113,8 +113,8 @@ internal partial class SGE : HealerJob
                 HasBattleTarget() && InActionRange(Dyskrasia) && //Same range
                 DosisList.TryGetValue(OriginalHook(actionID), out (uint Eukrasian, ushort DebuffID) currentDosis))
             {
-                float dotDebuff = Math.Max(GetDebuffRemainingTime(currentDosis.DebuffID),
-                    GetDebuffRemainingTime(Debuffs.EukrasianDyskrasia));
+                float dotDebuff = Math.Max(GetStatusEffectRemainingTime(currentDosis.DebuffID, CurrentTarget),
+                    GetStatusEffectRemainingTime(Debuffs.EukrasianDyskrasia, CurrentTarget));
 
                 const float refreshtimer = 3; //Will revisit if it's really needed....SGE_ST_DPS_EDosis_Adv ? Config.SGE_ST_DPS_EDosisThreshold : 3;
 
@@ -182,7 +182,7 @@ internal partial class SGE : HealerJob
 
             // Kardia Reminder
             if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Kardia) && LevelChecked(Kardia) &&
-                FindEffect(Buffs.Kardia) is null)
+                !HasStatusEffect(Buffs.Kardia))
                 return Kardia;
 
             // Opener for SGE
@@ -204,7 +204,7 @@ internal partial class SGE : HealerJob
 
             //Soteria
             if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Soteria) && CanSpellWeave() &&
-                ActionReady(Soteria) && HasEffect(Buffs.Kardia))
+                ActionReady(Soteria) && HasStatusEffect(Buffs.Kardia))
                 return Soteria;
 
             // Addersgall Protection
@@ -213,7 +213,7 @@ internal partial class SGE : HealerJob
                 return Druochole;
 
             // Buff check Above. Without it, Toxikon and any future option will interfere in the Eukrasia->Eukrasia Dosis combo
-            if (HasBattleTarget() && !HasEffect(Buffs.Eukrasia))
+            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia))
             {
                 // Eukrasian Dosis.
                 // If we're too low level to use Eukrasia, we can stop here.
@@ -228,11 +228,11 @@ internal partial class SGE : HealerJob
 
                         if (!JustUsedOn(currentDosis.Eukrasian,CurrentTarget)) { 
                             // Dosis DoT Debuff
-                            float dotDebuff = GetDebuffRemainingTime(currentDosis.DebuffID);
+                            float dotDebuff = GetStatusEffectRemainingTime(currentDosis.DebuffID, CurrentTarget);
 
                             // Check for the AoE DoT.  These DoTs overlap, so get time remaining of any of them
                             if (TraitLevelChecked(Traits.OffensiveMagicMasteryII))
-                                dotDebuff = Math.Max(dotDebuff, GetDebuffRemainingTime(Debuffs.EukrasianDyskrasia));
+                                dotDebuff = Math.Max(dotDebuff, GetStatusEffectRemainingTime(Debuffs.EukrasianDyskrasia, CurrentTarget));
 
                             float refreshTimer = Config.SGE_ST_DPS_EDosis_Adv ? Config.SGE_ST_DPS_EDosisThreshold : 5;
                             int hpThreshold = Config.SGE_ST_DPS_EDosisSubOption == 1 || !InBossEncounter() ? Config.SGE_ST_DPS_EDosisOption : 0;
@@ -307,21 +307,17 @@ internal partial class SGE : HealerJob
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Eukrasia || !HasEffect(Buffs.Eukrasia))
+            if (actionID is not Eukrasia || !HasStatusEffect(Buffs.Eukrasia))
                 return actionID;
 
-            switch ((int)Config.SGE_Eukrasia_Mode)
+            return (int)Config.SGE_Eukrasia_Mode switch
             {
-                case 0: return OriginalHook(Dosis);
-
-                case 1: return OriginalHook(Diagnosis);
-
-                case 2: return OriginalHook(Prognosis);
-
-                case 3: return OriginalHook(Dyskrasia);
-            }
-
-            return actionID;
+                0 => OriginalHook(Dosis),
+                1 => OriginalHook(Diagnosis),
+                2 => OriginalHook(Prognosis),
+                3 => OriginalHook(Dyskrasia),
+                _ => actionID,
+            };
         }
     }
 
@@ -339,7 +335,7 @@ internal partial class SGE : HealerJob
             if (actionID is not Diagnosis)
                 return actionID;
 
-            if (HasEffect(Buffs.Eukrasia))
+            if (HasStatusEffect(Buffs.Eukrasia))
                 return EukrasianDiagnosis;
 
             IGameObject? healTarget = OptionalTarget ??
@@ -355,8 +351,8 @@ internal partial class SGE : HealerJob
                 return Rhizomata;
 
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Kardia) && LevelChecked(Kardia) &&
-                FindEffect(Buffs.Kardia) is null &&
-                FindEffect(Buffs.Kardion, healTarget, LocalPlayer?.GameObjectId) is null)
+                !HasStatusEffect(Buffs.Kardia) &&
+                !HasStatusEffect(Buffs.Kardion, healTarget))
                 return Kardia;
 
             for(int i = 0; i < Config.SGE_ST_Heals_Priority.Count; i++)
@@ -374,9 +370,9 @@ internal partial class SGE : HealerJob
                 GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) <=
                 Config.SGE_ST_Heal_EDiagnosisHP &&
                 (Config.SGE_ST_Heal_EDiagnosisOpts[0] ||
-                 FindEffectOnMember(Buffs.EukrasianDiagnosis, healTarget) is null) && //Ignore existing shield check
+                 HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Ignore existing shield check
                 (!Config.SGE_ST_Heal_EDiagnosisOpts[1] ||
-                 FindEffectOnMember(SCH.Buffs.Galvanize, healTarget) is null)) //Galvenize Check
+                 HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))) //Galvenize Check
                 return Eukrasia;
 
             return actionID;
@@ -398,10 +394,10 @@ internal partial class SGE : HealerJob
                 return actionID;
 
             //Zoe -> Pneuma like Eukrasia 
-            if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_ZoePneuma) && HasEffect(Buffs.Zoe))
+            if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_ZoePneuma) && HasStatusEffect(Buffs.Zoe))
                 return Pneuma;
 
-            if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis) && HasEffect(Buffs.Eukrasia))
+            if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis) && HasStatusEffect(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);
 
             if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_Rhizomata) && ActionReady(Rhizomata) &&
@@ -433,16 +429,16 @@ internal partial class SGE : HealerJob
 
             if (actionID is Kerachole && IsEnabled(CustomComboPreset.SGE_OverProtect_Kerachole) &&
                 ActionReady(Kerachole))
-                if (HasEffectAny(Buffs.Kerachole) ||
-                    IsEnabled(CustomComboPreset.SGE_OverProtect_SacredSoil) && HasEffectAny(SCH.Buffs.SacredSoil))
+                if (HasStatusEffect(Buffs.Kerachole, anyOwner: true) ||
+                    IsEnabled(CustomComboPreset.SGE_OverProtect_SacredSoil) && HasStatusEffect(SCH.Buffs.SacredSoil, anyOwner: true))
                     return SCH.SacredSoil;
 
             if (actionID is Panhaima && IsEnabled(CustomComboPreset.SGE_OverProtect_Panhaima) &&
-                ActionReady(Panhaima) && HasEffectAny(Buffs.Panhaima))
+                ActionReady(Panhaima) && HasStatusEffect(Buffs.Panhaima, anyOwner: true))
                 return SCH.SacredSoil;
 
             if (actionID is Philosophia && IsEnabled(CustomComboPreset.SGE_OverProtect_Philosophia) &&
-                ActionReady(Philosophia) && HasEffectAny(Buffs.Eudaimonia))
+                ActionReady(Philosophia) && HasStatusEffect(Buffs.Eudaimonia, anyOwner: true))
                 return SCH.Consolation;
 
             return actionID;

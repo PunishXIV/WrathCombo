@@ -146,7 +146,7 @@ namespace WrathCombo.Window.Tabs
             {
                 foreach (Status? status in LocalPlayer.StatusList)
                 {
-                    float buffDuration = GetBuffRemainingTime((ushort) status.StatusId, false);
+                    float buffDuration = GetStatusEffectRemainingTime(status);
                     string formattedDuration = "";
                     if (buffDuration != 0 && !statusBlacklist.Contains(status.StatusId))
                     {
@@ -296,7 +296,7 @@ namespace WrathCombo.Window.Tabs
                         else CustomStyleText("", status.StatusId);
 
                         // Duration + Blacklist Check
-                        float debuffDuration = GetDebuffRemainingTime((ushort) status.StatusId, false);
+                        float debuffDuration = GetStatusEffectRemainingTime(status);
                         if (debuffDuration != 0 && !statusBlacklist.Contains(status.StatusId))
                         {
                             string formattedDuration;

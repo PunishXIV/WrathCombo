@@ -27,8 +27,8 @@ internal partial class NIN : MeleeJob
             bool canDelayedWeave = CanDelayedWeave();
             bool inTrickBurstSaveWindow = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Cooldowns) && IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) && GetCooldownRemainingTime(TrickAttack) <= GetOptionValue(Config.Advanced_Trick_Cooldown);
             bool useBhakaBeforeTrickWindow = GetCooldownRemainingTime(TrickAttack) >= 3;
-            bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= GetOptionValue(Config.Trick_CooldownRemaining) && !HasEffect(Buffs.ShadowWalker);
-            bool setupKassatsuWindow = GetCooldownRemainingTime(TrickAttack) <= 10 && HasEffect(Buffs.ShadowWalker);
+            bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= GetOptionValue(Config.Trick_CooldownRemaining) && !HasStatusEffect(Buffs.ShadowWalker);
+            bool setupKassatsuWindow = GetCooldownRemainingTime(TrickAttack) <= 10 && HasStatusEffect(Buffs.ShadowWalker);
             bool chargeCheck = IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_ChargeHold) || (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_ChargeHold) && (InMudra || GetRemainingCharges(Ten) == 2 || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 3)));
             bool poolCharges = !GetOptionBool(Config.Advanced_ChargePool) || (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 2) || TrickDebuff || InMudra;
             bool raitonUptime = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Raiton_Uptime);
@@ -78,7 +78,7 @@ internal partial class NIN : MeleeJob
                     return actionID;
             }
 
-            if (HasEffect(Buffs.TenChiJin))
+            if (HasStatusEffect(Buffs.TenChiJin))
             {
                 if (OriginalHook(Ten) == TCJFumaShurikenTen)
                     return OriginalHook(Ten);
@@ -89,7 +89,7 @@ internal partial class NIN : MeleeJob
             }
 
             if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Kassatsu_HyoshoRaynryu) &&
-                HasEffect(Buffs.Kassatsu) &&
+                HasStatusEffect(Buffs.Kassatsu) &&
                 TrickDebuff &&
                 mudraState.CastHyoshoRanryu(ref actionID))
                 return actionID;
@@ -100,8 +100,8 @@ internal partial class NIN : MeleeJob
             if (InCombat() && !InMeleeRange())
             {
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin_Phantom) &&
-                    HasEffect(Buffs.PhantomReady) &&
-                    ((GetCooldownRemainingTime(TrickAttack) > GetBuffRemainingTime(Buffs.PhantomReady)) || TrickDebuff || (HasEffect(Buffs.Bunshin) && MugDebuff)) &&
+                    HasStatusEffect(Buffs.PhantomReady) &&
+                    ((GetCooldownRemainingTime(TrickAttack) > GetStatusEffectRemainingTime(Buffs.PhantomReady)) || TrickDebuff || (HasStatusEffect(Buffs.Bunshin) && MugDebuff)) &&
                     PhantomKamaitachi.LevelChecked()
                     && phantomUptime)
                     return OriginalHook(PhantomKamaitachi);
@@ -109,7 +109,7 @@ internal partial class NIN : MeleeJob
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_Suiton) &&
                     setupSuitonWindow &&
                     TrickAttack.LevelChecked() &&
-                    !HasEffect(Buffs.ShadowWalker) &&
+                    !HasStatusEffect(Buffs.ShadowWalker) &&
                     chargeCheck &&
                     suitonUptime &&
                     mudraState.CastSuiton(ref actionID))
@@ -123,7 +123,7 @@ internal partial class NIN : MeleeJob
                     mudraState.CastRaiton(ref actionID))
                     return actionID;
 
-                if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_RangedUptime) && ThrowingDaggers.LevelChecked() && HasTarget() && !HasEffect(Buffs.RaijuReady))
+                if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_RangedUptime) && ThrowingDaggers.LevelChecked() && HasTarget() && !HasStatusEffect(Buffs.RaijuReady))
                     return OriginalHook(ThrowingDaggers);
             }
 
@@ -134,7 +134,7 @@ internal partial class NIN : MeleeJob
 
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug) &&
                     IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Mug_AlignBefore) &&
-                    HasEffect(Buffs.ShadowWalker) &&
+                    HasStatusEffect(Buffs.ShadowWalker) &&
                     GetCooldownRemainingTime(TrickAttack) <= 3 &&
                     ((IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed) && InCombat() &&
                       CombatEngageDuration().TotalSeconds > 6) ||
@@ -149,14 +149,14 @@ internal partial class NIN : MeleeJob
                 }
 
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack) &&
-                    HasEffect(Buffs.ShadowWalker) &&
+                    HasStatusEffect(Buffs.ShadowWalker) &&
                     IsOffCooldown(TrickAttack) &&
                     canDelayedWeave &&
                     ((IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed) && InCombat() && CombatEngageDuration().TotalSeconds > 8) ||
                      IsNotEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrickAttack_Delayed)))
                     return OriginalHook(TrickAttack);
 
-                if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TenriJindo) && HasEffect(Buffs.TenriJendo) && ((TrickDebuff && MugDebuff) || GetBuffRemainingTime(Buffs.TenriJendo) <= 3))
+                if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TenriJindo) && HasStatusEffect(Buffs.TenriJendo) && ((TrickDebuff && MugDebuff) || GetStatusEffectRemainingTime(Buffs.TenriJendo) <= 3))
                     return OriginalHook(TenriJendo);
 
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin) && Bunshin.LevelChecked() && IsOffCooldown(Bunshin) && gauge.Ninki >= bunshinPool)
@@ -195,7 +195,7 @@ internal partial class NIN : MeleeJob
                             return OriginalHook(Mug);
                     }
 
-                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Meisui) && HasEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
+                    if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Meisui) && HasStatusEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                         return OriginalHook(Meisui);
 
                     if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bhavacakra) && gauge.Ninki >= bhavaPool && Bhavacakra.LevelChecked())
@@ -221,7 +221,7 @@ internal partial class NIN : MeleeJob
                     return Role.Bloodbath;
             }
 
-            if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Raiju) && HasEffect(Buffs.RaijuReady))
+            if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Raiju) && HasStatusEffect(Buffs.RaijuReady))
             {
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Raiju_Forked) && !InMeleeRange())
                     return OriginalHook(ForkedRaiju);
@@ -239,7 +239,7 @@ internal partial class NIN : MeleeJob
                 if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Ninjitsus_Suiton) &&
                     setupSuitonWindow &&
                     TrickAttack.LevelChecked() &&
-                    !HasEffect(Buffs.ShadowWalker) &&
+                    !HasStatusEffect(Buffs.ShadowWalker) &&
                     chargeCheck &&
                     mudraState.CastSuiton(ref actionID))
                     return actionID;
@@ -259,8 +259,8 @@ internal partial class NIN : MeleeJob
             }
 
             if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Bunshin_Phantom) &&
-                HasEffect(Buffs.PhantomReady) &&
-                ((GetCooldownRemainingTime(TrickAttack) > GetBuffRemainingTime(Buffs.PhantomReady)) || TrickDebuff || (HasEffect(Buffs.Bunshin) && MugDebuff) || GetBuffRemainingTime(Buffs.PhantomReady) < 6) &&
+                HasStatusEffect(Buffs.PhantomReady) &&
+                ((GetCooldownRemainingTime(TrickAttack) > GetStatusEffectRemainingTime(Buffs.PhantomReady)) || TrickDebuff || (HasStatusEffect(Buffs.Bunshin) && MugDebuff) || GetStatusEffectRemainingTime(Buffs.PhantomReady) < 6) &&
                 PhantomKamaitachi.LevelChecked())
                 return OriginalHook(PhantomKamaitachi);
 
@@ -339,7 +339,7 @@ internal partial class NIN : MeleeJob
             if (actionID is not DeathBlossom)
                 return actionID;
 
-            Status? dotonBuff = FindEffect(Buffs.Doton);
+            Status? dotonBuff = GetStatusEffect(Buffs.Doton);
             NINGauge? gauge = GetJobGauge<NINGauge>();
             bool canWeave = CanWeave();
             bool chargeCheck = IsNotEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Ninjitsus_ChargeHold) || (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Ninjitsus_ChargeHold) && GetRemainingCharges(Ten) == 2);
@@ -366,7 +366,7 @@ internal partial class NIN : MeleeJob
                     return actionID;
             }
 
-            if (HasEffect(Buffs.TenChiJin))
+            if (HasStatusEffect(Buffs.TenChiJin))
             {
                 if (tcjPath == 0)
                 {
@@ -388,7 +388,7 @@ internal partial class NIN : MeleeJob
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_GokaMekkyaku) && HasEffect(Buffs.Kassatsu))
+            if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_GokaMekkyaku) && HasStatusEffect(Buffs.Kassatsu))
                 mudraState.CurrentMudra = MudraCasting.MudraState.CastingGokaMekkyaku;
 
             if (Variant.CanCure(CustomComboPreset.NIN_Variant_Cure, Config.NIN_VariantCure))
@@ -396,10 +396,10 @@ internal partial class NIN : MeleeJob
 
             if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_KunaisBane))
             {
-                if (!HasEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && mudraState.CastHuton(ref actionID))
+                if (!HasStatusEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && mudraState.CastHuton(ref actionID))
                     return actionID;
 
-                if (HasEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && IsOffCooldown(KunaisBane) && canWeave)
+                if (HasStatusEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && IsOffCooldown(KunaisBane) && canWeave)
                     return KunaisBane;
             }
 
@@ -408,7 +408,7 @@ internal partial class NIN : MeleeJob
                 if (Variant.CanRampart(CustomComboPreset.NIN_Variant_Rampart))
                     return Variant.Rampart;
 
-                if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_TenriJindo) && HasEffect(Buffs.TenriJendo))
+                if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_TenriJindo) && HasStatusEffect(Buffs.TenriJendo))
                     return OriginalHook(TenriJendo);
 
                 if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Bunshin) && Bunshin.LevelChecked() && IsOffCooldown(Bunshin) && gauge.Ninki >= bunshingPool)
@@ -416,7 +416,7 @@ internal partial class NIN : MeleeJob
 
                 if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_HellfrogMedium) && gauge.Ninki >= hellfrogPool && Hellfrog.LevelChecked())
                 {
-                    if (HasEffect(Buffs.Meisui) && TraitLevelChecked(440))
+                    if (HasStatusEffect(Buffs.Meisui) && TraitLevelChecked(440))
                         return OriginalHook(Bhavacakra);
 
                     return OriginalHook(Hellfrog);
@@ -434,7 +434,7 @@ internal partial class NIN : MeleeJob
                      IsNotEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Ninjitsus_Doton)))
                     return OriginalHook(Kassatsu);
 
-                if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Meisui) && HasEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
+                if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Meisui) && HasStatusEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                     return OriginalHook(Meisui);
 
                 if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_AssassinateDWAD) && IsOffCooldown(OriginalHook(Assassinate)) && Assassinate.LevelChecked())
@@ -485,7 +485,7 @@ internal partial class NIN : MeleeJob
                     return actionID;
             }
 
-            if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Bunshin_Phantom) && HasEffect(Buffs.PhantomReady) && PhantomKamaitachi.LevelChecked())
+            if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_Bunshin_Phantom) && HasStatusEffect(Buffs.PhantomReady) && PhantomKamaitachi.LevelChecked())
                 return OriginalHook(PhantomKamaitachi);
 
             if (ComboTimer > 1f)
@@ -516,8 +516,8 @@ internal partial class NIN : MeleeJob
             bool canDelayedWeave = CanDelayedWeave();
             bool inTrickBurstSaveWindow = GetCooldownRemainingTime(TrickAttack) <= 20;
             bool useBhakaBeforeTrickWindow = GetCooldownRemainingTime(TrickAttack) >= 3;
-            bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= 18 && !HasEffect(Buffs.ShadowWalker);
-            bool setupKassatsuWindow = GetCooldownRemainingTime(TrickAttack) <= 10 && HasEffect(Buffs.ShadowWalker);
+            bool setupSuitonWindow = GetCooldownRemainingTime(OriginalHook(TrickAttack)) <= 18 && !HasStatusEffect(Buffs.ShadowWalker);
+            bool setupKassatsuWindow = GetCooldownRemainingTime(TrickAttack) <= 10 && HasStatusEffect(Buffs.ShadowWalker);
             bool poolCharges = (GetRemainingCharges(Ten) == 1 && GetCooldownChargeRemainingTime(Ten) < 2) || TrickDebuff || InMudra;
             bool raitonUptime = true;
             int bhavaPool = 50;
@@ -558,7 +558,7 @@ internal partial class NIN : MeleeJob
                     return OriginalHook(Mug);
             }
 
-            if (HasEffect(Buffs.Kassatsu) &&
+            if (HasStatusEffect(Buffs.Kassatsu) &&
                 TrickDebuff &&
                 mudraState.CastHyoshoRanryu(ref actionID))
                 return actionID;
@@ -574,7 +574,7 @@ internal partial class NIN : MeleeJob
                     return actionID;
             }
 
-            if (HasEffect(Buffs.TenChiJin))
+            if (HasStatusEffect(Buffs.TenChiJin))
             {
                 if (OriginalHook(Ten) == TCJFumaShurikenTen)
                     return OriginalHook(Ten);
@@ -589,15 +589,15 @@ internal partial class NIN : MeleeJob
 
             if (InCombat() && !InMeleeRange())
             {
-                if (HasEffect(Buffs.PhantomReady) &&
-                    ((GetCooldownRemainingTime(TrickAttack) > GetBuffRemainingTime(Buffs.PhantomReady) && GetBuffRemainingTime(Buffs.PhantomReady) < 5) || TrickDebuff || (HasEffect(Buffs.Bunshin) && MugDebuff)) &&
+                if (HasStatusEffect(Buffs.PhantomReady) &&
+                    ((GetCooldownRemainingTime(TrickAttack) > GetStatusEffectRemainingTime(Buffs.PhantomReady) && GetStatusEffectRemainingTime(Buffs.PhantomReady) < 5) || TrickDebuff || (HasStatusEffect(Buffs.Bunshin) && MugDebuff)) &&
                     PhantomKamaitachi.LevelChecked()
                     && phantomUptime)
                     return OriginalHook(PhantomKamaitachi);
 
                 if (setupSuitonWindow &&
                     TrickAttack.LevelChecked() &&
-                    !HasEffect(Buffs.ShadowWalker) &&
+                    !HasStatusEffect(Buffs.ShadowWalker) &&
                     mudraState.CastSuiton(ref actionID))
                     return actionID;
 
@@ -607,7 +607,7 @@ internal partial class NIN : MeleeJob
                     mudraState.CastRaiton(ref actionID))
                     return actionID;
 
-                if (ThrowingDaggers.LevelChecked() && HasTarget() && !HasEffect(Buffs.RaijuReady))
+                if (ThrowingDaggers.LevelChecked() && HasTarget() && !HasStatusEffect(Buffs.RaijuReady))
                     return OriginalHook(ThrowingDaggers);
             }
 
@@ -616,13 +616,13 @@ internal partial class NIN : MeleeJob
                 if (Variant.CanRampart(CustomComboPreset.NIN_Variant_Rampart))
                     return Variant.Rampart;
 
-                if (HasEffect(Buffs.ShadowWalker) &&
+                if (HasStatusEffect(Buffs.ShadowWalker) &&
                     IsOffCooldown(TrickAttack) &&
                     InCombat() && CombatEngageDuration().TotalSeconds > 8 &&
                     canDelayedWeave)
                     return OriginalHook(TrickAttack);
 
-                if (HasEffect(Buffs.TenriJendo) && (TrickDebuff || GetBuffRemainingTime(Buffs.TenriJendo) <= 3))
+                if (HasStatusEffect(Buffs.TenriJendo) && (TrickDebuff || GetStatusEffectRemainingTime(Buffs.TenriJendo) <= 3))
                     return OriginalHook(TenriJendo);
 
                 if (Bunshin.LevelChecked() && IsOffCooldown(Bunshin) && gauge.Ninki >= bunshinPool)
@@ -651,7 +651,7 @@ internal partial class NIN : MeleeJob
 
                 if (!inTrickBurstSaveWindow)
                 {
-                    if (HasEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
+                    if (HasStatusEffect(Buffs.ShadowWalker) && gauge.Ninki <= 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                         return OriginalHook(Meisui);
 
                     if (gauge.Ninki >= bhavaPool && Bhavacakra.LevelChecked())
@@ -677,7 +677,7 @@ internal partial class NIN : MeleeJob
                     return Role.Bloodbath;
             }
 
-            if (HasEffect(Buffs.RaijuReady) && InMeleeRange())
+            if (HasStatusEffect(Buffs.RaijuReady) && InMeleeRange())
             {
                 return OriginalHook(FleetingRaiju);
             }
@@ -689,7 +689,7 @@ internal partial class NIN : MeleeJob
 
             if (setupSuitonWindow &&
                 TrickAttack.LevelChecked() &&
-                !HasEffect(Buffs.ShadowWalker) &&
+                !HasStatusEffect(Buffs.ShadowWalker) &&
                 mudraState.CastSuiton(ref actionID))
                 return actionID;
 
@@ -699,8 +699,8 @@ internal partial class NIN : MeleeJob
                 mudraState.CastRaiton(ref actionID))
                 return actionID;
 
-            if (HasEffect(Buffs.PhantomReady) &&
-                ((GetCooldownRemainingTime(TrickAttack) > GetBuffRemainingTime(Buffs.PhantomReady) && GetBuffRemainingTime(Buffs.PhantomReady) < 5) || TrickDebuff || (HasEffect(Buffs.Bunshin) && TargetHasEffect(Debuffs.Mug))) &&
+            if (HasStatusEffect(Buffs.PhantomReady) &&
+                ((GetCooldownRemainingTime(TrickAttack) > GetStatusEffectRemainingTime(Buffs.PhantomReady) && GetStatusEffectRemainingTime(Buffs.PhantomReady) < 5) || TrickDebuff || (HasStatusEffect(Buffs.Bunshin) && HasStatusEffect(Debuffs.Mug, CurrentTarget))) &&
                 PhantomKamaitachi.LevelChecked())
                 return OriginalHook(PhantomKamaitachi);
 
@@ -775,7 +775,7 @@ internal partial class NIN : MeleeJob
             if (actionID is not DeathBlossom)
                 return actionID;
 
-            Status? dotonBuff = FindEffect(Buffs.Doton);
+            Status? dotonBuff = GetStatusEffect(Buffs.Doton);
             NINGauge gauge = GetJobGauge<NINGauge>();
             bool canWeave = CanWeave();
 
@@ -791,7 +791,7 @@ internal partial class NIN : MeleeJob
                     return actionID;
             }
 
-            if (HasEffect(Buffs.TenChiJin))
+            if (HasStatusEffect(Buffs.TenChiJin))
             {
                 if (WasLastAction(TCJFumaShurikenJin))
                     return OriginalHook(Ten);
@@ -800,7 +800,7 @@ internal partial class NIN : MeleeJob
                 return OriginalHook(Jin);
             }
 
-            if (HasEffect(Buffs.Kassatsu))
+            if (HasStatusEffect(Buffs.Kassatsu))
             {
                 if (GokaMekkyaku.LevelChecked())
                 {
@@ -819,10 +819,10 @@ internal partial class NIN : MeleeJob
             if (Variant.CanCure(CustomComboPreset.NIN_Variant_Cure, Config.NIN_VariantCure))
                 return Variant.Cure;
 
-            if (!HasEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && mudraState.CastHuton(ref actionID))
+            if (!HasStatusEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && mudraState.CastHuton(ref actionID))
                 return actionID;
 
-            if (HasEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && IsOffCooldown(KunaisBane) && canWeave)
+            if (HasStatusEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && IsOffCooldown(KunaisBane) && canWeave)
                 return KunaisBane;
 
             if (GetTargetHPPercent() > 20 && (dotonBuff is null || dotonBuff?.RemainingTime <= GetCooldownChargeRemainingTime(Ten)) && !JustUsed(Doton) && IsOnCooldown(TenChiJin))
@@ -844,16 +844,16 @@ internal partial class NIN : MeleeJob
                 if (IsOffCooldown(TenChiJin) && TenChiJin.LevelChecked())
                     return OriginalHook(TenChiJin);
 
-                if (HasEffect(Buffs.TenriJendo))
+                if (HasStatusEffect(Buffs.TenriJendo))
                     return TenriJendo;
 
                 if (IsOffCooldown(Bunshin) && gauge.Ninki >= 50 && Bunshin.LevelChecked())
                     return OriginalHook(Bunshin);
 
-                if (HasEffect(Buffs.ShadowWalker) && gauge.Ninki < 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
+                if (HasStatusEffect(Buffs.ShadowWalker) && gauge.Ninki < 50 && IsOffCooldown(Meisui) && Meisui.LevelChecked())
                     return OriginalHook(Meisui);
 
-                if (HasEffect(Buffs.Meisui) && gauge.Ninki >= 50)
+                if (HasStatusEffect(Buffs.Meisui) && gauge.Ninki >= 50)
                     return OriginalHook(Bhavacakra);
 
                 if (gauge.Ninki >= 50 && Hellfrog.LevelChecked())
@@ -867,7 +867,7 @@ internal partial class NIN : MeleeJob
             }
             else
             {
-                if (HasEffect(Buffs.PhantomReady))
+                if (HasStatusEffect(Buffs.PhantomReady))
                     return OriginalHook(PhantomKamaitachi);
             }
 
@@ -919,7 +919,7 @@ internal partial class NIN : MeleeJob
                 return OriginalHook(Mug);
             }
 
-            if (HasEffect(Buffs.Hidden))
+            if (HasStatusEffect(Buffs.Hidden))
             {
                 return OriginalHook(TrickAttack);
             }
@@ -934,7 +934,7 @@ internal partial class NIN : MeleeJob
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID == Chi && TraitLevelChecked(250) && HasEffect(Buffs.Kassatsu))
+            if (actionID == Chi && TraitLevelChecked(250) && HasStatusEffect(Buffs.Kassatsu))
             {
                 return Jin;
             }
@@ -950,7 +950,7 @@ internal partial class NIN : MeleeJob
         {
             if (actionID is not Kassatsu)
                 return actionID;
-            if (HasEffect(Buffs.ShadowWalker) || HasEffect(Buffs.Hidden))
+            if (HasStatusEffect(Buffs.ShadowWalker) || HasStatusEffect(Buffs.Hidden))
             {
                 return OriginalHook(TrickAttack);
             }
@@ -967,12 +967,12 @@ internal partial class NIN : MeleeJob
             if (actionID is not TenChiJin)
                 return actionID;
 
-            if (HasEffect(Buffs.ShadowWalker))
+            if (HasStatusEffect(Buffs.ShadowWalker))
                 return Meisui;
 
-            if (HasEffect(Buffs.TenChiJin) && IsEnabled(CustomComboPreset.NIN_TCJ))
+            if (HasStatusEffect(Buffs.TenChiJin) && IsEnabled(CustomComboPreset.NIN_TCJ))
             {
-                float tcjTimer = FindEffectAny(Buffs.TenChiJin).RemainingTime;
+                float tcjTimer = GetStatusEffectRemainingTime(Buffs.TenChiJin, anyOwner: true);
 
                 if (tcjTimer > 5)
                     return OriginalHook(Ten);
@@ -993,7 +993,7 @@ internal partial class NIN : MeleeJob
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Ten or Chi or Jin) || !HasEffect(Buffs.Mudra))
+            if (actionID is not (Ten or Chi or Jin) || !HasStatusEffect(Buffs.Mudra))
                 return actionID;
 
             int mudrapath = GetOptionValue(Config.NIN_SimpleMudra_Choice);
@@ -1014,7 +1014,7 @@ internal partial class NIN : MeleeJob
 
                     if (OriginalHook(Ninjutsu) == FumaShuriken)
                     {
-                        if (HasEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
+                        if (HasStatusEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return JinCombo;
 
                         if (Chi.LevelChecked())
@@ -1100,7 +1100,7 @@ internal partial class NIN : MeleeJob
 
                     if (OriginalHook(Ninjutsu) == FumaShuriken)
                     {
-                        if (HasEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
+                        if (HasStatusEffect(Buffs.Kassatsu) && Traits.EnhancedKasatsu.TraitLevelChecked())
                             return OriginalHook(Ten);
                         return OriginalHook(Chi);
                     }

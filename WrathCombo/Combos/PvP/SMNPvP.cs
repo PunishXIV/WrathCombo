@@ -58,7 +58,7 @@ namespace WrathCombo.Combos.PvP
                     bool bahamutBurst = OriginalHook(Ruin3) is AstralImpulse;
                     bool phoenixBurst = OriginalHook(Ruin3) is FountainOfFire;
                     double playerHP = PlayerHealthPercentageHp();
-                    bool canBind = !TargetHasEffectAny(PvPCommon.Debuffs.Bind);
+                    bool canBind = !HasStatusEffect(PvPCommon.Debuffs.Bind, CurrentTarget, true);
                     int radiantThreshold = PluginConfiguration.GetCustomIntValue(Config.SMNPvP_RadiantAegisThreshold);
                     #endregion
 
@@ -78,7 +78,7 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_DeathFlare) && bahamutBurst && IsOffCooldown(DeathFlare))
                             return DeathFlare;
 
-                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !HasEffect(Buffs.FurtherRuin))
+                        if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !HasStatusEffect(Buffs.FurtherRuin))
                             return Necrotize;
                         
                         // Ifrit (check CrimsonCyclone conditions)

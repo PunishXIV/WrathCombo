@@ -127,7 +127,7 @@ namespace WrathCombo.Combos.PvP
                         //RoughDivide overcap protection
                         if (IsEnabled(CustomComboPreset.GNBPvP_RoughDivide))
                         {
-                            if (HasCharges(RoughDivide) && !HasEffect(Buffs.NoMercy) && !JustUsed(RoughDivide, 3f) &&
+                            if (HasCharges(RoughDivide) && !HasStatusEffect(Buffs.NoMercy) && !JustUsed(RoughDivide, 3f) &&
                                (ActionReady(FatedCircle)|| ActionReady(GnashingFang) || GetRemainingCharges(RoughDivide) == 2)) // Will RD for for no mercy when at 2 charges, or before the fated circle or gnashing fang combo
                                 return RoughDivide;
                         }
@@ -135,7 +135,7 @@ namespace WrathCombo.Combos.PvP
                         //Fated Circle and Followup
                         if (IsEnabled(CustomComboPreset.GNBPvP_FatedCircle))
                         {
-                            if (ActionReady(FatedCircle) && HasEffect(Buffs.NoMercy) && OriginalHook(Continuation) == Continuation)
+                            if (ActionReady(FatedCircle) && HasStatusEffect(Buffs.NoMercy) && OriginalHook(Continuation) == Continuation)
                                 return FatedCircle;
                         }
 
@@ -156,7 +156,7 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID) =>
                 actionID is GnashingFang &&
-                    CanWeave() && (HasEffect(Buffs.ReadyToRip) || HasEffect(Buffs.ReadyToTear) || HasEffect(Buffs.ReadyToGouge))
+                    CanWeave() && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge))
                     ? OriginalHook(Continuation)
                     : actionID;
         }

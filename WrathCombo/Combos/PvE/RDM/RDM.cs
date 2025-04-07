@@ -349,8 +349,8 @@ internal partial class RDM : CasterJob
 
             if (LevelChecked(Verraise))
             {
-                bool schwifty = HasEffect(Role.Buffs.Swiftcast);
-                if (schwifty || HasEffect(Buffs.Dualcast))
+                bool schwifty = HasStatusEffect(Role.Buffs.Swiftcast);
+                if (schwifty || HasStatusEffect(Buffs.Dualcast))
                     return Verraise;
                 if (IsEnabled(CustomComboPreset.RDM_Raise_Vercure) &&
                     !schwifty &&
@@ -398,7 +398,7 @@ internal partial class RDM : CasterJob
         protected override uint Invoke(uint actionID) =>
             actionID is Embolden &&
             ActionReady(Embolden) &&
-            HasEffectAny(Buffs.EmboldenOthers) ? All.SavageBlade : actionID;
+            HasStatusEffect(Buffs.EmboldenOthers, anyOwner: true) ? All.SavageBlade : actionID;
     }
 
     internal class RDM_MagickProtection : CustomCombo
@@ -407,6 +407,6 @@ internal partial class RDM : CasterJob
         protected override uint Invoke(uint actionID) =>
             actionID is MagickBarrier &&
             ActionReady(MagickBarrier) &&
-            HasEffectAny(Buffs.MagickBarrier) ? All.SavageBlade : actionID;
+            HasStatusEffect(Buffs.MagickBarrier, anyOwner: true) ? All.SavageBlade : actionID;
     }
 }

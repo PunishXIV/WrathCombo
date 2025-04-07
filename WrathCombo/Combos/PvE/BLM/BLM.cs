@@ -24,7 +24,7 @@ internal partial class BLM : CasterJob
                     !HasMaxPolyglotStacks)
                     return Amplifier;
 
-                if (ActionReady(LeyLines) && !HasEffect(Buffs.LeyLines))
+                if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines))
                     return LeyLines;
 
                 if (EndOfFirePhase)
@@ -51,7 +51,7 @@ internal partial class BLM : CasterJob
                     ? Xenoglossy
                     : Foul;
 
-            if (HasEffect(Buffs.Thunderhead) &&
+            if (HasStatusEffect(Buffs.Thunderhead) &&
                 (ThunderDebuffST is null || ThunderDebuffST.RemainingTime <= 3))
                 return OriginalHook(Thunder);
 
@@ -66,10 +66,10 @@ internal partial class BLM : CasterJob
                     Gauge.InAstralFire && Gauge.IsParadoxActive)
                     return Paradox;
 
-                if (ActionReady(Triplecast) && !HasEffect(Buffs.Triplecast))
+                if (ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
                     return Triplecast;
 
-                if (ActionReady(Role.Swiftcast) && !HasEffect(Buffs.Triplecast))
+                if (ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
                     return Role.Swiftcast;
             }
 
@@ -85,14 +85,14 @@ internal partial class BLM : CasterJob
                 //        : Foul;
 
                 if (Gauge.IsParadoxActive && JustUsed(Transpose, 5) &&
-                    !HasEffect(Buffs.Firestarter) && (Gauge.AstralFireStacks < 3 || JustUsed(FlareStar) ||
+                    !HasStatusEffect(Buffs.Firestarter) && (Gauge.AstralFireStacks < 3 || JustUsed(FlareStar) ||
                                                       !LevelChecked(FlareStar) && ActionReady(Despair)))
                     return Paradox;
 
                 if (FlarestarReady)
                     return FlareStar;
 
-                if ((LevelChecked(Paradox) && HasEffect(Buffs.Firestarter) || TimeSinceFirestarterBuff >= 2) && Gauge.AstralFireStacks < 3)
+                if ((LevelChecked(Paradox) && HasStatusEffect(Buffs.Firestarter) || TimeSinceFirestarterBuff >= 2) && Gauge.AstralFireStacks < 3)
                     return Fire3;
 
                 if (ActionReady(FireSpam) && ((LevelChecked(Despair) && CurMp - MP.FireI >= 800) || !LevelChecked(Despair)))
@@ -168,7 +168,7 @@ internal partial class BLM : CasterJob
                     return Amplifier;
 
                 if (IsEnabled(CustomComboPreset.BLM_ST_LeyLines) &&
-                    ActionReady(LeyLines) && !HasEffect(Buffs.LeyLines) &&
+                    ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
                     GetRemainingCharges(LeyLines) > Config.BLM_ST_LeyLinesCharges)
                     return LeyLines;
 
@@ -200,7 +200,7 @@ internal partial class BLM : CasterJob
                     : Foul;
 
             if (IsEnabled(CustomComboPreset.BLM_ST_Thunder) &&
-                HasEffect(Buffs.Thunderhead) && LevelChecked(Thunder) &&
+                HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder) &&
                 (Config.BLM_ST_Thunder_SubOption == 0 ||
                  Config.BLM_ST_Thunder_SubOption == 1 && InBossEncounter()) &&
                 (ThunderDebuffST is null || ThunderDebuffST.RemainingTime <= 3))
@@ -209,7 +209,7 @@ internal partial class BLM : CasterJob
             if (IsMoving() && InCombat())
             {
                 if (Config.BLM_ST_MovementOption[0] &&
-                    ActionReady(Triplecast) && !HasEffect(Buffs.Triplecast))
+                    ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
                     return Triplecast;
 
                 if (Config.BLM_ST_MovementOption[1] &&
@@ -218,7 +218,7 @@ internal partial class BLM : CasterJob
                     return Paradox;
 
                 if (Config.BLM_ST_MovementOption[2] &&
-                    ActionReady(Role.Swiftcast) && !HasEffect(Buffs.Triplecast))
+                    ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
                     return Role.Swiftcast;
 
                 if (Config.BLM_ST_MovementOption[3] &&
@@ -240,7 +240,7 @@ internal partial class BLM : CasterJob
                 //        : Foul;
 
                 if (Gauge.IsParadoxActive && JustUsed(Transpose, 5) &&
-                    !HasEffect(Buffs.Firestarter) && (Gauge.AstralFireStacks < 3 || JustUsed(FlareStar) ||
+                    !HasStatusEffect(Buffs.Firestarter) && (Gauge.AstralFireStacks < 3 || JustUsed(FlareStar) ||
                                                       !LevelChecked(FlareStar) && ActionReady(Despair)))
                     return Paradox;
 
@@ -248,7 +248,7 @@ internal partial class BLM : CasterJob
                     FlarestarReady)
                     return FlareStar;
 
-                if ((LevelChecked(Paradox) && HasEffect(Buffs.Firestarter) || TimeSinceFirestarterBuff >= 2) && Gauge.AstralFireStacks < 3)
+                if ((LevelChecked(Paradox) && HasStatusEffect(Buffs.Firestarter) || TimeSinceFirestarterBuff >= 2) && Gauge.AstralFireStacks < 3)
                     return Fire3;
 
                 if (ActionReady(FireSpam) && ((LevelChecked(Despair) && CurMp - MP.FireI >= 800) || !LevelChecked(Despair)))
@@ -324,7 +324,7 @@ internal partial class BLM : CasterJob
                 if (ActionReady(Amplifier) && RemainingPolyglotCD >= 20000)
                     return Amplifier;
 
-                if (ActionReady(LeyLines) && !HasEffect(Buffs.LeyLines) &&
+                if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
                     GetRemainingCharges(LeyLines) > Config.BLM_AoE_LeyLinesCharges)
                     return LeyLines;
             }
@@ -333,7 +333,7 @@ internal partial class BLM : CasterJob
                 HasPolyglotStacks())
                 return Foul;
 
-            if (HasEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
+            if (HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
                 (ThunderDebuffAoE is null || ThunderDebuffAoE.RemainingTime <= 3) &&
                 (EndOfFirePhase || EndOfIcePhase || EndOfIcePhaseAoEMaxLevel))
                 return OriginalHook(Thunder2);
@@ -352,7 +352,7 @@ internal partial class BLM : CasterJob
                     ((TraitLevelChecked(Traits.UmbralHeart) && Gauge.UmbralHearts > 1) || !TraitLevelChecked(Traits.UmbralHeart)))
                     return OriginalHook(Fire2);
 
-                if (!HasEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
+                if (!HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
                     HasMaxUmbralHeartStacks &&
                     !ActionReady(Manafont))
                     return Triplecast;
@@ -424,7 +424,7 @@ internal partial class BLM : CasterJob
                     return Amplifier;
 
                 if (IsEnabled(CustomComboPreset.BLM_AoE_LeyLines) &&
-                    ActionReady(LeyLines) && !HasEffect(Buffs.LeyLines) &&
+                    ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
                     GetRemainingCharges(LeyLines) > Config.BLM_AoE_LeyLinesCharges)
                     return LeyLines;
             }
@@ -435,7 +435,7 @@ internal partial class BLM : CasterJob
                 return Foul;
 
             if (IsEnabled(CustomComboPreset.BLM_AoE_Thunder) &&
-                HasEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
+                HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
                 GetTargetHPPercent() > Config.BLM_AoE_ThunderHP &&
                 (ThunderDebuffAoE is null || ThunderDebuffAoE.RemainingTime <= 3) && 
                 (EndOfFirePhase || EndOfIcePhase || EndOfIcePhaseAoEMaxLevel))
@@ -457,7 +457,7 @@ internal partial class BLM : CasterJob
                     return OriginalHook(Fire2);
 
                 if (IsEnabled(CustomComboPreset.BLM_AoE_Triplecast) &&
-                    !HasEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
+                    !HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
                     GetRemainingCharges(Triplecast) > Config.BLM_AoE_Triplecast_HoldCharges && HasMaxUmbralHeartStacks &&
                     !ActionReady(Manafont))
                     return Triplecast;
@@ -547,7 +547,7 @@ internal partial class BLM : CasterJob
         protected override uint Invoke(uint actionID) =>
             actionID is Fire &&
             (LevelChecked(Fire3) && !Gauge.InAstralFire ||
-             HasEffect(Buffs.Firestarter))
+             HasStatusEffect(Buffs.Firestarter))
                 ? Fire3
                 : actionID;
     }
@@ -557,7 +557,7 @@ internal partial class BLM : CasterJob
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLM_Between_The_LeyLines;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is LeyLines && HasEffect(Buffs.LeyLines) && LevelChecked(BetweenTheLines)
+            actionID is LeyLines && HasStatusEffect(Buffs.LeyLines) && LevelChecked(BetweenTheLines)
                 ? BetweenTheLines
                 : actionID;
     }
@@ -568,7 +568,7 @@ internal partial class BLM : CasterJob
 
         protected override uint Invoke(uint actionID) =>
             actionID is AetherialManipulation && ActionReady(BetweenTheLines) &&
-            HasEffect(Buffs.LeyLines) && !HasEffect(Buffs.CircleOfPower) && !IsMoving()
+            HasStatusEffect(Buffs.LeyLines) && !HasStatusEffect(Buffs.CircleOfPower) && !IsMoving()
                 ? BetweenTheLines
                 : actionID;
     }
@@ -588,7 +588,7 @@ internal partial class BLM : CasterJob
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLM_TriplecastProtection;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Triplecast && HasEffect(Buffs.Triplecast) && LevelChecked(Triplecast)
+            actionID is Triplecast && HasStatusEffect(Buffs.Triplecast) && LevelChecked(Triplecast)
                 ? All.SavageBlade
                 : actionID;
     }

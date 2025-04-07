@@ -96,18 +96,18 @@ namespace WrathCombo.Combos.PvP
 
                     if (IsEnabled(CustomComboPreset.PLDPvP_PhalanxCombo))
                     {
-                        if (HasEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
+                        if (HasStatusEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
                             return OriginalHook(Phalanx);
                     }
 
                     // Check if the custom combo preset is enabled and ConfiteorReady is active
-                    if (IsEnabled(CustomComboPreset.PLDPvP_Confiteor) && HasEffect(Buffs.ConfiteorReady))
+                    if (IsEnabled(CustomComboPreset.PLDPvP_Confiteor) && HasStatusEffect(Buffs.ConfiteorReady))
                         return OriginalHook(Imperator);
 
 
                     if (IsEnabled(CustomComboPreset.PLDPvP_HolySpirit))
                     {
-                        if (IsOffCooldown(HolySpirit) && !InMeleeRange() || IsOffCooldown(HolySpirit) && (!HasEffect(Buffs.AttonementReady) && !HasEffect(Buffs.SupplicationReady) && !HasEffect(Buffs.SepulchreReady)))
+                        if (IsOffCooldown(HolySpirit) && !InMeleeRange() || IsOffCooldown(HolySpirit) && (!HasStatusEffect(Buffs.AttonementReady) && !HasStatusEffect(Buffs.SupplicationReady) && !HasStatusEffect(Buffs.SepulchreReady)))
                             return HolySpirit;
                     }
 

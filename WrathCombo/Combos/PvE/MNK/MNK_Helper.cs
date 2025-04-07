@@ -32,23 +32,23 @@ internal partial class MNK
 
     internal static uint DetermineCoreAbility(uint actionId, bool useTrueNorthIfEnabled)
     {
-        if (HasEffect(Buffs.OpoOpoForm) || HasEffect(Buffs.FormlessFist))
+        if (HasStatusEffect(Buffs.OpoOpoForm) || HasStatusEffect(Buffs.FormlessFist))
             return Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
                 ? DragonKick
                 : OriginalHook(Bootshine);
 
-        if (HasEffect(Buffs.RaptorForm))
+        if (HasStatusEffect(Buffs.RaptorForm))
             return Gauge.RaptorFury == 0 && LevelChecked(TwinSnakes)
                 ? TwinSnakes
                 : OriginalHook(TrueStrike);
 
-        if (HasEffect(Buffs.CoeurlForm))
+        if (HasStatusEffect(Buffs.CoeurlForm))
         {
             if (Gauge.CoeurlFury == 0 && LevelChecked(Demolish))
             {
                 if (!OnTargetsRear() &&
                     TargetNeedsPositionals() &&
-                    !HasEffect(Buffs.TrueNorth) &&
+                    !HasStatusEffect(Buffs.TrueNorth) &&
                     ActionReady(TrueNorth) &&
                     useTrueNorthIfEnabled)
                     return TrueNorth;
@@ -60,7 +60,7 @@ internal partial class MNK
             {
                 if (!OnTargetsFlank() &&
                     TargetNeedsPositionals() &&
-                    !HasEffect(Buffs.TrueNorth) &&
+                    !HasStatusEffect(Buffs.TrueNorth) &&
                     ActionReady(TrueNorth) &&
                     useTrueNorthIfEnabled)
                     return TrueNorth;
@@ -100,23 +100,23 @@ internal partial class MNK
 
     internal static bool UsePerfectBalanceST()
     {
-        if (ActionReady(PerfectBalance) && !HasEffect(Buffs.PerfectBalance) && !HasEffect(Buffs.FormlessFist))
+        if (ActionReady(PerfectBalance) && !HasStatusEffect(Buffs.PerfectBalance) && !HasStatusEffect(Buffs.FormlessFist))
         {
             // Odd window
             if ((JustUsed(OriginalHook(Bootshine)) || JustUsed(DragonKick)) &&
                 !JustUsed(PerfectBalance, 20) &&
-                HasEffect(Buffs.RiddleOfFire) && !HasEffect(Buffs.Brotherhood))
+                HasStatusEffect(Buffs.RiddleOfFire) && !HasStatusEffect(Buffs.Brotherhood))
                 return true;
 
             // Even window
             if ((JustUsed(OriginalHook(Bootshine)) || JustUsed(DragonKick)) &&
-                (GetCooldownRemainingTime(Brotherhood) <= GCD * 3 || HasEffect(Buffs.Brotherhood)) &&
-                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasEffect(Buffs.RiddleOfFire)))
+                (GetCooldownRemainingTime(Brotherhood) <= GCD * 3 || HasStatusEffect(Buffs.Brotherhood)) &&
+                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasStatusEffect(Buffs.RiddleOfFire)))
                 return true;
 
             // Low level
             if ((JustUsed(OriginalHook(Bootshine)) || JustUsed(DragonKick)) &&
-                (HasEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood) ||
+                (HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood) ||
                  !LevelChecked(RiddleOfFire)))
                 return true;
         }
@@ -126,23 +126,23 @@ internal partial class MNK
 
     internal static bool UsePerfectBalanceAoE()
     {
-        if (ActionReady(PerfectBalance) && !HasEffect(Buffs.PerfectBalance) && !HasEffect(Buffs.FormlessFist))
+        if (ActionReady(PerfectBalance) && !HasStatusEffect(Buffs.PerfectBalance) && !HasStatusEffect(Buffs.FormlessFist))
         {
             //Initial/Failsafe
             if (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance))
                 return true;
 
             // Odd window
-            if (HasEffect(Buffs.RiddleOfFire) && !HasEffect(Buffs.Brotherhood))
+            if (HasStatusEffect(Buffs.RiddleOfFire) && !HasStatusEffect(Buffs.Brotherhood))
                 return true;
 
             // Even window
-            if ((GetCooldownRemainingTime(Brotherhood) <= GCD * 3 || HasEffect(Buffs.Brotherhood)) &&
-                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasEffect(Buffs.RiddleOfFire)))
+            if ((GetCooldownRemainingTime(Brotherhood) <= GCD * 3 || HasStatusEffect(Buffs.Brotherhood)) &&
+                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasStatusEffect(Buffs.RiddleOfFire)))
                 return true;
 
             // Low level
-            if (HasEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood) ||
+            if (HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood) ||
                 !LevelChecked(RiddleOfFire))
                 return true;
         }
@@ -156,7 +156,7 @@ internal partial class MNK
 
     internal static bool DoPerfectBalanceComboST(ref uint actionID)
     {
-        if (HasEffect(Buffs.PerfectBalance))
+        if (HasStatusEffect(Buffs.PerfectBalance))
         {
         #region Open Lunar
 
@@ -230,7 +230,7 @@ internal partial class MNK
 
     internal static bool DoPerfectBalanceComboAoE(ref uint actionID)
     {
-        if (HasEffect(Buffs.PerfectBalance))
+        if (HasStatusEffect(Buffs.PerfectBalance))
         {
         #region Open Lunar
 
@@ -255,7 +255,7 @@ internal partial class MNK
 
             if (!SolarNadi && !BothNadisOpen)
             {
-                switch (GetBuffStacks(Buffs.PerfectBalance))
+                switch (GetStatusEffectStacks(Buffs.PerfectBalance))
                 {
                     case 3:
                         actionID = OriginalHook(ArmOfTheDestroyer);

@@ -121,7 +121,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 if (GetPartySlot(i) is not IBattleChara member) continue;
                 if (member is null) continue; //Skip nulls/disconnected people
                 if (member.IsDead) continue;
-                if (FindEffectOnMember(buff, member) is not null) BuffCount++;
+                if (HasStatusEffect(buff, member, true)) BuffCount++;
                 PartyCount++;
             }
             return PartyCount == 0 ? 0 : (float)BuffCount / PartyCount * 100f; //Div by 0 check...just in case....

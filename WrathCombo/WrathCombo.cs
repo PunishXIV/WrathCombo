@@ -339,7 +339,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
             (byte job, uint action, ushort buff, ulong? target, ref bool
                 callAgain)
         {
-            if (JobID != job || CustomComboFunctions.HasEffect(buff))
+            if (JobID != job || CustomComboFunctions.HasStatusEffect(buff))
                 return;
 
             callAgain = true;

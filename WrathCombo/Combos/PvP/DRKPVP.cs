@@ -91,21 +91,21 @@ namespace WrathCombo.Combos.PvP
                                 return OriginalHook(Plunge);
                         }
 
-                        if (IsEnabled(CustomComboPreset.DRKPvP_Scorn) && HasEffect(Buffs.Scorn))
+                        if (IsEnabled(CustomComboPreset.DRKPvP_Scorn) && HasStatusEffect(Buffs.Scorn))
                             return OriginalHook(Eventide);
 
                         if (canWeave)
                         {
-                            if (IsEnabled(CustomComboPreset.DRKPvP_BlackestNight) && ActionReady(BlackestNight) && !HasEffect(Buffs.BlackestNight) && !WasLastAbility(BlackestNight))
+                            if (IsEnabled(CustomComboPreset.DRKPvP_BlackestNight) && ActionReady(BlackestNight) && !HasStatusEffect(Buffs.BlackestNight) && !WasLastAbility(BlackestNight))
                                 return OriginalHook(BlackestNight);
 
                             if (IsEnabled(CustomComboPreset.DRKPvP_SaltedEarth) && ActionReady(SaltedEarth) && IsEnabled(CustomComboPreset.DRKPvP_SaltedEarth))
                                 return OriginalHook(SaltedEarth);
 
-                            if (IsEnabled(CustomComboPreset.DRKPvP_SaltAndDarkness) && HasEffect(Buffs.SaltedEarthDMG) && ActionReady(SaltAndDarkness))
+                            if (IsEnabled(CustomComboPreset.DRKPvP_SaltAndDarkness) && HasStatusEffect(Buffs.SaltedEarthDMG) && ActionReady(SaltAndDarkness))
                                 return OriginalHook(SaltAndDarkness);
 
-                            if (IsEnabled(CustomComboPreset.DRKPvP_Shadowbringer) && !HasEffect(Buffs.Blackblood) && (HasEffect(Buffs.DarkArts) || PlayerHealthPercentageHp() >= shadowBringerThreshold))
+                            if (IsEnabled(CustomComboPreset.DRKPvP_Shadowbringer) && !HasStatusEffect(Buffs.Blackblood) && (HasStatusEffect(Buffs.DarkArts) || PlayerHealthPercentageHp() >= shadowBringerThreshold))
                                 return OriginalHook(Shadowbringer);
                         }
 

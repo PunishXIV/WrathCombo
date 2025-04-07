@@ -66,7 +66,7 @@ internal partial class AST : HealerJob
                     ActionReady(Lightspeed) &&
                     GetTargetHPPercent() > Config.AST_DPS_LightSpeedOption &&
                     IsMoving() &&
-                    !HasEffect(Buffs.Lightspeed))
+                    !HasStatusEffect(Buffs.Lightspeed))
                     return Lightspeed;
 
                 if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
@@ -90,7 +90,7 @@ internal partial class AST : HealerJob
                 //Divination
                 if (IsEnabled(CustomComboPreset.AST_DPS_Divination) &&
                     ActionReady(Divination) &&
-                    !HasEffectAny(Buffs.Divination) && //Overwrite protection
+                    !HasStatusEffect(Buffs.Divination, anyOwner: true) && //Overwrite protection
                     GetTargetHPPercent() > Config.AST_DPS_DivinationOption &&
                     CanDelayedWeave() &&
                     ActionWatching.NumberOfGcdsUsed >= 3)
@@ -98,13 +98,13 @@ internal partial class AST : HealerJob
 
                 //Earthly Star
                 if (IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar) &&
-                    !HasEffect(Buffs.EarthlyDominance) &&
+                    !HasStatusEffect(Buffs.EarthlyDominance) &&
                     ActionReady(EarthlyStar) &&
                     CanSpellWeave())
                     return EarthlyStar;
 
                 if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
-                    HasEffect(Buffs.Divining) &&
+                    HasStatusEffect(Buffs.Divining) &&
                     CanSpellWeave())
                     return Oracle;
 
@@ -128,7 +128,7 @@ internal partial class AST : HealerJob
 
                         float refreshTimer = Config.AST_ST_DPS_CombustUptime_Adv ? Config.AST_ST_DPS_CombustUptime_Threshold : 3;
                         int hpThreshold = Config.AST_ST_DPS_CombustSubOption == 1 || !InBossEncounter() ? Config.AST_DPS_CombustOption : 0;
-                        if (GetDebuffRemainingTime(dotDebuffID) <= refreshTimer &&
+                        if (GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget) <= refreshTimer &&
                             GetTargetHPPercent() > hpThreshold)
                             return OriginalHook(Combust);
 
@@ -161,7 +161,7 @@ internal partial class AST : HealerJob
                 ActionReady(Lightspeed) &&
                 GetTargetHPPercent() > Config.AST_AOE_LightSpeedOption &&
                 IsMoving() &&
-                !HasEffect(Buffs.Lightspeed))
+                !HasStatusEffect(Buffs.Lightspeed))
                 return Lightspeed;
 
             if (IsEnabled(CustomComboPreset.AST_AOE_Lucid) &&
@@ -185,20 +185,20 @@ internal partial class AST : HealerJob
             //Divination
             if (IsEnabled(CustomComboPreset.AST_AOE_Divination) &&
                 ActionReady(Divination) &&
-                !HasEffectAny(Buffs.Divination) && //Overwrite protection
+                !HasStatusEffect(Buffs.Divination, anyOwner: true) && //Overwrite protection
                 GetTargetHPPercent() > Config.AST_AOE_DivinationOption &&
                 CanDelayedWeave() &&
                 ActionWatching.NumberOfGcdsUsed >= 3)
                 return Divination;
             //Earthly Star
             if (IsEnabled(CustomComboPreset.AST_AOE_DPS_EarthlyStar) && !IsMoving() &&
-                !HasEffect(Buffs.EarthlyDominance) &&
+                !HasStatusEffect(Buffs.EarthlyDominance) &&
                 ActionReady(EarthlyStar) &&
                 CanSpellWeave())
                 return EarthlyStar;
 
             if (IsEnabled(CustomComboPreset.AST_AOE_Oracle) &&
-                HasEffect(Buffs.Divining) &&
+                HasStatusEffect(Buffs.Divining) &&
                 CanSpellWeave())
                 return Oracle;
 
@@ -245,25 +245,24 @@ internal partial class AST : HealerJob
             if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_Horoscope))
             {
                 if (ActionReady(Horoscope) &&
-                    !HasEffect(Buffs.Horoscope) &&
-                    !HasEffect(Buffs.HoroscopeHelios) &&
+                    !HasStatusEffect(Buffs.Horoscope) &&
+                    !HasStatusEffect(Buffs.HoroscopeHelios) &&
                     canHoroscope)
                     return Horoscope;
 
-                if (HasEffect(Buffs.HoroscopeHelios) &&
+                if (HasStatusEffect(Buffs.HoroscopeHelios) &&
                     canHoroscope)
                     return HoroscopeHeal;
             }
 
             // Only check for our own HoTs
-            Status? hotCheck = HeliosConjuction.LevelChecked() ? FindEffect(Buffs.HeliosConjunction, LocalPlayer, LocalPlayer?.GameObjectId) : FindEffect(Buffs.AspectedHelios, LocalPlayer, LocalPlayer?.GameObjectId);
-
+            Status? hotCheck = HeliosConjuction.LevelChecked() ? GetStatusEffect(Buffs.HeliosConjunction) : GetStatusEffect(Buffs.AspectedHelios);
             if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_Aspected) && nonAspectedMode || // Helios mode: option must be on
                 !nonAspectedMode) // Aspected mode: option is not required
             {
                 if (ActionReady(AspectedHelios)
                     && hotCheck is null
-                    || HasEffect(Buffs.NeutralSect) && !HasEffect(Buffs.NeutralSectShield))
+                    || HasStatusEffect(Buffs.NeutralSect) && !HasStatusEffect(Buffs.NeutralSectShield))
                     return OriginalHook(AspectedHelios);
             }
 
@@ -345,9 +344,11 @@ internal partial class AST : HealerJob
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic) && ActionReady(AspectedBenefic))
             {
-                Status? aspectedBeneficHoT = FindEffect(Buffs.AspectedBenefic, healTarget, LocalPlayer?.GameObjectId);
-                Status? neutralSectShield = FindEffect(Buffs.NeutralSectShield, healTarget, LocalPlayer?.GameObjectId);
-                Status? neutralSectBuff = FindEffect(Buffs.NeutralSect, healTarget, LocalPlayer?.GameObjectId);
+                //Possibly a good use for new HasStatusEffect with Status Out
+                //HasStatusEffect(Buffs.AspectedBenefic, out Status? aspectedBeneficHoT, healTarget);
+                Status? aspectedBeneficHoT = GetStatusEffect(Buffs.AspectedBenefic, healTarget);
+                Status? neutralSectShield = GetStatusEffect(Buffs.NeutralSectShield, healTarget);
+                Status? neutralSectBuff = GetStatusEffect(Buffs.NeutralSect, healTarget);
                 if (aspectedBeneficHoT is null || aspectedBeneficHoT.RemainingTime <= 3
                                                || neutralSectShield is null && neutralSectBuff is not null)
                     return AspectedBenefic;
