@@ -64,7 +64,8 @@ internal static class VariantActions
         PlayerHealthPercentageHp() <= healthpercent;
 
     internal static bool CanRaise(CustomComboPreset preset) =>
-        IsEnabled(preset) && ActionReady(VariantRaise) && HasEffect(MagicRole.Buffs.Swiftcast);
+        IsEnabled(preset) && ActionReady(VariantRaise) && 
+        HasEffect(RoleActions.Magic.Buffs.Swiftcast);
 
     internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => 
         IsEnabled(preset) && ActionReady(VariantUltimatum) && CanCircleAoe(5) > 0 && CheckWeave(weave);

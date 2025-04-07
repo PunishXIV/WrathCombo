@@ -30,7 +30,7 @@ public enum CustomComboPreset
     ALL_Tank_Menu = 100099,
 
     [Role(JobRole.Tank)]
-    [ReplaceSkill(Tank.LowBlow, PLD.ShieldBash)]
+    [ReplaceSkill(RoleActions.Tank.LowBlow, PLD.ShieldBash)]
     [ParentCombo(ALL_Tank_Menu)]
     [CustomComboInfo("Tank: Interrupt Feature",
         "Replaces Low Blow (Stun) with Interject (Interrupt) when the target can be interrupted.\nPLDs can slot Shield Bash to have the feature to work with Shield Bash.",
@@ -38,7 +38,7 @@ public enum CustomComboPreset
     ALL_Tank_Interrupt = 100000,
 
     [Role(JobRole.Tank)]
-    [ReplaceSkill(Tank.Reprisal)]
+    [ReplaceSkill(RoleActions.Tank.Reprisal)]
     [ParentCombo(ALL_Tank_Menu)]
     [CustomComboInfo("Tank: Double Reprisal Protection",
         "Prevents the use of Reprisal when target already has the effect by replacing it with Savage Blade.", ADV.JobID)]
@@ -72,7 +72,7 @@ public enum CustomComboPreset
     ALL_Caster_Menu = 100097,
 
     [Role(JobRole.MagicalDPS)]
-    [ReplaceSkill(Caster.Addle)]
+    [ReplaceSkill(RoleActions.Caster.Addle)]
     [ParentCombo(ALL_Caster_Menu)]
     [CustomComboInfo("Magical Ranged DPS: Double Addle Protection",
         "Prevents the use of Addle when target already has the effect by replacing it with Savage Blade.", ADV.JobID)]
@@ -98,14 +98,14 @@ public enum CustomComboPreset
     ALL_Melee_Menu = 100096,
 
     [Role(JobRole.MeleeDPS)]
-    [ReplaceSkill(Melee.Feint)]
+    [ReplaceSkill(RoleActions.Melee.Feint)]
     [ParentCombo(ALL_Melee_Menu)]
     [CustomComboInfo("Melee DPS: Double Feint Protection",
         "Prevents the use of Feint when target already has the effect by replacing it with Savage Blade.", ADV.JobID)]
     ALL_Melee_Feint = 100030,
 
     [Role(JobRole.MeleeDPS)]
-    [ReplaceSkill(Melee.TrueNorth)]
+    [ReplaceSkill(RoleActions.Melee.TrueNorth)]
     [ParentCombo(ALL_Melee_Menu)]
     [CustomComboInfo("Melee DPS: True North Protection",
         "Prevents the use of True North when its buff is already active by replacing it with Savage Blade.", ADV.JobID)]
@@ -130,7 +130,7 @@ public enum CustomComboPreset
     ALL_Ranged_Mitigation = 100040,
 
     [Role(JobRole.RangedDPS)]
-    [ReplaceSkill(PhysRanged.FootGraze)]
+    [ReplaceSkill(RoleActions.PhysRanged.FootGraze)]
     [ParentCombo(ALL_Ranged_Menu)]
     [CustomComboInfo("Physical Ranged DPS: Ranged Interrupt Feature",
         "Replaces Foot Graze with Head Graze when target can be interrupted.", ADV.JobID)]
@@ -325,7 +325,7 @@ public enum CustomComboPreset
 
     #region Utility
 
-    [ReplaceSkill(MagicRole.Swiftcast)]
+    [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Alternative Raise Feature", "Changes Swiftcast to Ascend", AST.JobID)]
     AST_Raise_Alternative = 1003,
@@ -4560,7 +4560,7 @@ public enum CustomComboPreset
 
     #region QoL
 
-    [ReplaceSkill(MagicRole.Swiftcast)]
+    [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Caster_Raise)]
     [CustomComboInfo("Verraise Feature",
         "Changes Swiftcast to Verraise when under the effect of Swiftcast or Dualcast.", RDM.JobID)]
@@ -4858,7 +4858,7 @@ public enum CustomComboPreset
 
     #region Utility
 
-    [ReplaceSkill(MagicRole.Swiftcast)]
+    [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Swiftcast Raise Feature", "Changes Swiftcast to Egeiro while Swiftcast is on cooldown.",
         SGE.JobID)]
@@ -5436,7 +5436,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Dissipation Option", "If Aetherflow is on cooldown, show Dissipation instead.", SCH.JobID)]
     SCH_Aetherflow_Dissipation = 16031,
 
-    [ReplaceSkill(MagicRole.Swiftcast)]
+    [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Swiftcast Raise Combo Feature",
         "Changes Swiftcast to Resurrection while Swiftcast is on cooldown.", SCH.JobID)]
@@ -6519,7 +6519,7 @@ SMN.JobID)]
     [CustomComboInfo("Cure II Sync Feature", "Changes Cure II to Cure when synced below Lv.30.", WHM.JobID)]
     WHM_CureSync = 19002,
 
-    [ReplaceSkill(MagicRole.Swiftcast)]
+    [ReplaceSkill( RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Alternative Raise Feature", "Changes Swiftcast to Raise.", WHM.JobID)]
     WHM_Raise = 19004,

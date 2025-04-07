@@ -40,7 +40,7 @@ namespace WrathCombo.CustomComboNS.Functions
                         CurrentHP = chara.CurrentHp
                     };
 
-                    _partyList.Add(wmember);
+                        _partyList.Add(wmember);
 
                 }
             }
@@ -51,7 +51,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 {
                     foreach (var npc in Svc.Objects.Where(x => x is IBattleChara && x is not IPlayerCharacter).Cast<IBattleChara>())
                     {
-                        if (ActionManager.CanUseActionOnTarget(Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.GameObjectId == npc.GameObjectId))
+                        if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.GameObjectId == npc.GameObjectId))
                         {
                             WrathPartyMember wmember = new()
                             {
@@ -59,7 +59,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                 CurrentHP = npc.CurrentHp
                             };
 
-                            _partyList.Add(wmember);
+                                _partyList.Add(wmember);
                         }
                     }
                 }

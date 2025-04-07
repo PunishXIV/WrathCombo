@@ -42,7 +42,7 @@ internal partial class WHM : HealerJob
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Role.Swiftcast)
+            if (actionID != Role.Swiftcast)
                 return actionID;
 
             bool thinAirReady = !HasEffect(Buffs.ThinAir) && LevelChecked(ThinAir) && HasCharges(ThinAir);
