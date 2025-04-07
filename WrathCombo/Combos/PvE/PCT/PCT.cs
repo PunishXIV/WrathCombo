@@ -1,5 +1,4 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 
@@ -242,9 +241,9 @@ internal partial class PCT : CasterJob
 
             PCTGauge gauge = GetJobGauge<PCTGauge>();
             bool canWeave = CanSpellWeave() || CanSpellWeave();
-            int creatureStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_CreatureStop);
-            int landscapeStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_LandscapeStop);
-            int weaponStop = PluginConfiguration.GetCustomIntValue(Config.PCT_ST_WeaponStop);
+            int creatureStop = Config.PCT_ST_CreatureStop;
+            int landscapeStop = Config.PCT_ST_LandscapeStop;
+            int weaponStop = Config.PCT_ST_WeaponStop;
 
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
@@ -725,9 +724,9 @@ internal partial class PCT : CasterJob
 
             PCTGauge gauge = GetJobGauge<PCTGauge>();
             bool canWeave = CanSpellWeave();
-            int creatureStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_CreatureStop);
-            int landscapeStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_LandscapeStop);
-            int weaponStop = PluginConfiguration.GetCustomIntValue(Config.PCT_AoE_WeaponStop);
+            int creatureStop = Config.PCT_AoE_CreatureStop;
+            int landscapeStop = Config.PCT_AoE_LandscapeStop;
+            int weaponStop = Config.PCT_AoE_WeaponStop;
 
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))

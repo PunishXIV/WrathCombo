@@ -35,7 +35,7 @@ internal partial class AST : HealerJob
 
         protected override uint Invoke(uint actionID)
         {
-            bool alternateMode = GetIntOptionAsBool(Config.AST_DPS_AltMode); //(0 or 1 radio values)
+            bool alternateMode = Config.AST_DPS_AltMode > 0; //(0 or 1 radio values)
             bool actionFound = !alternateMode && MaleficList.Contains(actionID) ||
                                alternateMode && CombustList.ContainsKey(actionID);
 
@@ -218,7 +218,7 @@ internal partial class AST : HealerJob
 
         protected override uint Invoke(uint actionID)
         {
-            bool nonAspectedMode = GetIntOptionAsBool(Config.AST_AoEHeals_AltMode); //(0 or 1 radio values)
+            bool nonAspectedMode = Config.AST_AoEHeals_AltMode > 0; //(0 or 1 radio values)
 
             if ((!nonAspectedMode || actionID is not Helios) &&
                 (nonAspectedMode || actionID is not (AspectedHelios or HeliosConjuction)))
