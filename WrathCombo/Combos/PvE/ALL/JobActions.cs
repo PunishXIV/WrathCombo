@@ -509,7 +509,7 @@ internal class TankDebuffs : ITankDebuffs
 #endregion
 
 #region Role implementations
-static class Caster
+internal static class Caster
 {
     public static ICaster Instance { get; } = new CasterImpl();
 
@@ -541,7 +541,7 @@ static class Caster
     }
 }
 
-static class Healer
+internal static class Healer
 {
     public static IHealer Instance { get; } = new HealerImpl();
 
@@ -576,7 +576,7 @@ static class Healer
     }
 }
 
-static class PhysRanged
+internal static class PhysRanged
 {
     public static IPhysRanged Instance { get; } = new PhysRangedImpl();
 
@@ -616,7 +616,7 @@ static class PhysRanged
     }
 }
 
-static class Melee
+internal static class Melee
 {
     public static IMelee Instance { get; } = new MeleeImpl();
 
@@ -657,7 +657,7 @@ static class Melee
     }
 }
 
-static class Tank
+internal static class Tank
 {
     public static ITank Instance { get; } = new TankImpl();
 
