@@ -168,10 +168,10 @@ internal partial class SAM
             ([2], 11, () => !TargetNeedsPositionals())
         ];
 
-        public override bool HasCooldowns() => 
+        public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
             GetRemainingCharges(Role.TrueNorth) is 2 &&
-            IsOffCooldown(Senei) && 
+            IsOffCooldown(Senei) &&
             IsOffCooldown(Ikishoten);
     }
 

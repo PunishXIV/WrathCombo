@@ -1,9 +1,13 @@
-﻿using WrathCombo.CustomComboNS;
+﻿using ECommons.GameHelpers;
+using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class NINPvP
     {
+        #region IDS
         public const byte ClassID = 29;
         public const byte JobID = 30;
 
@@ -53,15 +57,72 @@ namespace WrathCombo.Combos.PvP
                 Dokumori = 4303;
         }
 
-        internal class Config
-        {
-            internal const string
-                NINPvP_Meisui_ST = "NINPvP_Meisui_ST",
-                NINPvP_Meisui_AoE = "NINPvP_Meisui_AoE",
-                NINPVP_SeitonTenchu = "NINPVP_SeitonTenchu",
-                NINPVP_SeitonTenchuAoE = "NINPVP_SeitonTenchuAoE";
-        }
+        #endregion
 
+        #region Config
+        public static class Config
+        {
+            public static UserInt
+                NINPvP_Meisui_ST = new("NINPvP_Meisui_ST"),
+                NINPvP_Meisui_AoE = new("NINPvP_Meisui_AoE"),
+                NINPVP_SeitonTenchu = new("NINPVP_SeitonTenchu"),
+                NINPVP_SeitonTenchuAoE = new("NINPVP_SeitonTenchuAoE"),
+                NINPvP_SmiteThreshold = new("NINPvP_SmiteThreshold");
+
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.NINPvP_ST_SeitonTenchu:
+                        UserConfig.DrawSliderInt(1, 50, NINPVP_SeitonTenchu, "Target's HP% to be at or under", 200);
+                        break;
+                    case CustomComboPreset.NINPvP_AoE_SeitonTenchu:
+                        UserConfig.DrawSliderInt(1, 50, NINPVP_SeitonTenchuAoE, "Target's HP% to be at or under", 200);
+                        break;
+                    case CustomComboPreset.NINPvP_Smite:
+                        UserConfig.DrawSliderInt(0, 100, NINPvP_SmiteThreshold,
+                            "Target HP% to smite, Max damage below 25%");
+                        break;
+
+                    case CustomComboPreset.NINPvP_ST_Meisui:
+                        string descriptionST = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
+
+                        if (Player.Object != null)
+                        {
+                            uint maxHP = Player.Object.MaxHp <= 8000 ? 0 : Player.Object.MaxHp - 8000;
+                            if (maxHP > 0)
+                            {
+                                float hpThreshold = (float)maxHP / 100 * NINPvP_Meisui_ST;
+
+                                descriptionST += $"\nHP Value to be at or under: {hpThreshold}";
+                            }
+                        }
+
+                        UserConfig.DrawSliderInt(1, 100, NINPvP_Meisui_ST, descriptionST);
+                        break;
+
+
+                    case CustomComboPreset.NINPvP_AoE_Meisui:
+                        string descriptionAoE = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
+
+                        if (Player.Object != null)
+                        {
+                            uint maxHP = Player.Object.MaxHp <= 8000 ? 0 : Player.Object.MaxHp - 8000;
+                            if (maxHP > 0)
+                            {
+                                float hpThreshold = (float)maxHP / 100 * NINPvP_Meisui_AoE;
+
+                                descriptionAoE += $"\nHP Value to be at or under: {hpThreshold}";
+                            }
+                        }
+
+                        UserConfig.DrawSliderInt(1, 100, NINPvP_Meisui_AoE, descriptionAoE);
+                        break;
+                }
+            }
+        }
+        #endregion
+       
         internal class NINPvP_ST_BurstMode : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NINPvP_ST_BurstMode;
@@ -94,6 +155,11 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) &&
                             (IsLB1Ready || HasEffect(Buffs.SeitonUnsealed)))  // Limit Break or Unsealed buff
                             return OriginalHook(SeitonTenchu);
+
+                        //Smite
+                        if (IsEnabled(CustomComboPreset.NINPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                            GetTargetHPPercent() <= GetOptionValue(Config.NINPvP_SmiteThreshold))
+                            return PvPMelee.Smite;
 
                         // Zesho Meppo
                         if (HasEffect(Buffs.ZeshoMeppoReady) && InMeleeRange())

@@ -10,7 +10,7 @@ internal partial class RDM : CasterJob
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Variant_Cure2;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Vercure && IsEnabled(Variant.Cure)
+            actionID is Vercure && Variant.CanCure(Preset,100)
             ? Variant.Cure
             : actionID;
     }

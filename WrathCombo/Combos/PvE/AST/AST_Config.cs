@@ -28,9 +28,8 @@ internal partial class AST
             AST_DPS_CombustOption = new("AST_DPS_CombustOption"),
             AST_QuickTarget_Override = new("AST_QuickTarget_Override"),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
-            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
-            //PVP
-            ASTPvP_Burst_PlayCardOption = new("ASTPvP_Burst_PlayCardOption");
+            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0);            
+
         public static UserBool
             AST_QuickTarget_SkipDamageDown = new("AST_QuickTarget_SkipDamageDown"),
             AST_QuickTarget_SkipRezWeakness = new("AST_QuickTarget_SkipRezWeakness"),
@@ -203,18 +202,8 @@ internal partial class AST
                     DrawAdditionalBoolChoice(AST_ST_DPS_OverwriteCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
                     break;
 
-                //PVP
-                case CustomComboPreset.ASTPvP_Burst_PlayCard:
-                    DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lord and Lady card play",
-                        "Uses Lord and Lady of Crowns when available.", 1);
-
-                    DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lord of Crowns card play",
-                        "Only uses Lord of Crowns when available.", 2);
-
-                    DrawHorizontalRadioButton(ASTPvP_Burst_PlayCardOption, "Lady of Crowns card play",
-                        "Only uses Lady of Crowns when available.", 3);
-
-                    break;
+               
+                
             }
         }
     }

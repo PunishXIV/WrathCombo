@@ -563,7 +563,18 @@ namespace WrathCombo.Window.Tabs
                     ImGui.TextUnformatted(
                         $"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(ActionWatching.GetActionName).OrderBy(x => x))}");
                 }
+                ImGui.Indent();
+                if (ImGui.CollapsingHeader("Enmity"))
+                {
+                    foreach (var h in EnmityDictParty)
+                    {
+                        CustomStyleText($"{Svc.Objects.First(x => x.GameObjectId == h.Key).Name}", h.Value);
+                    }
 
+                    ImGui.Spacing();
+                    CustomStyleText($"\"Strongest\" DPS:", $"{StrongestDPS()?.Name}");
+                }
+                ImGui.Unindent();
                 if (WrathOpener.CurrentOpener is not null)
                 {
                     CustomStyleText("Current Opener",

@@ -1,11 +1,14 @@
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 
 namespace WrathCombo.Combos.PvP
 {
     internal static class RPRPvP
     {
+        #region IDS
         public const byte JobID = 39;
 
         internal class Role : PvPMelee;
@@ -43,15 +46,45 @@ namespace WrathCombo.Combos.PvP
             internal const ushort
                 DeathWarrant = 3206;
         }
+        #endregion
 
+        #region Config
         public static class Config
         {
-            public const string
-                RPRPvP_ImmortalStackThreshold = "RPRPvPImmortalStackThreshold";
-            public const string
-                RPRPvP_ArcaneCircleThreshold = "RPRPvPArcaneCircleOption";
-        }
+            public static UserInt
+                
+                RPRPvP_ImmortalStackThreshold = new("RPRPvPImmortalStackThreshold"),            
+                RPRPvP_ArcaneCircleThreshold = new("RPRPvPArcaneCircleOption"),            
+                RPRPvP_SmiteThreshold = new("RPRPvP_SmiteThreshold");
 
+            internal static void Draw(CustomComboPreset preset)
+            {
+                switch (preset)
+                {
+                    case CustomComboPreset.RPRPvP_Burst_ImmortalPooling:
+                        UserConfig.DrawSliderInt(0, 8, RPRPvP_ImmortalStackThreshold,
+                            "Set a value of Immortal Sacrifice Stacks to hold for burst.");
+
+                        break;
+
+                    case CustomComboPreset.RPRPvP_Burst_ArcaneCircle:
+                        UserConfig.DrawSliderInt(5, 90, RPRPvP_ArcaneCircleThreshold,
+                            "Set a HP percentage value. Caps at 90 to prevent waste.");
+
+                        break;
+
+                    case CustomComboPreset.RPRPvP_Smite:
+                        UserConfig.DrawSliderInt(0, 100, RPRPvP_SmiteThreshold,
+                            "Target HP% to smite, Max damage below 25%");
+
+                        break;
+
+
+                }
+            }
+        }
+        #endregion
+    
         internal class RPRPvP_Burst : CustomCombo
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RPRPvP_Burst;
@@ -68,16 +101,21 @@ namespace WrathCombo.Combos.PvP
                     bool enshrouded = HasEffect(Buffs.Enshrouded);
                     float enshroudStacks = GetBuffStacks(Buffs.Enshrouded);
                     float immortalStacks = GetBuffStacks(Buffs.ImmortalSacrifice);
-                    int immortalThreshold = PluginConfiguration.GetCustomIntValue(Config.RPRPvP_ImmortalStackThreshold);
+                    int immortalThreshold = Config.RPRPvP_ImmortalStackThreshold;
                     #endregion
 
                     // Arcane Cirle Option
                     if (IsEnabled(CustomComboPreset.RPRPvP_Burst_ArcaneCircle)
-                        && ActionReady(ArcaneCrest) && PlayerHealthPercentageHp() <= PluginConfiguration.GetCustomIntValue(Config.RPRPvP_ArcaneCircleThreshold))
+                        && ActionReady(ArcaneCrest) && PlayerHealthPercentageHp() <= Config.RPRPvP_ArcaneCircleThreshold)
                         return ArcaneCrest;
 
                     if (!PvPCommon.TargetImmuneToDamage()) // Guard check on target
                     {
+                        //Smite
+                        if (IsEnabled(CustomComboPreset.RPRPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                            GetTargetHPPercent() <= Config.RPRPvP_SmiteThreshold)
+                            return PvPMelee.Smite;
+
                         // Harvest Moon Ranged Option
                         if (IsEnabled(CustomComboPreset.RPRPvP_Burst_RangedHarvest) && distance > 5)
                             return HarvestMoon;

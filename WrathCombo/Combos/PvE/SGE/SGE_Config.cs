@@ -195,6 +195,8 @@ internal partial class SGE
                     DrawRadioButton(SGE_Eukrasia_Mode, $"{EukrasianPrognosis.ActionName()}", "", 2);
                     DrawRadioButton(SGE_Eukrasia_Mode, $"{EukrasianDyskrasia.ActionName()}", "", 3);
                     break;
+
+               
             }
         }
 

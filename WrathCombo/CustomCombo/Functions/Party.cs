@@ -1,6 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
@@ -29,11 +28,10 @@ namespace WrathCombo.CustomComboNS.Functions
             if (!EzThrottler.Throttle("PartyUpdateThrottle", 2000))
                 return _partyList;
 
-            _partyList.Clear();
             for (int i = 1; i <= 8; i++)
             {
                 var member = GetPartySlot(i);
-                if (member != null)
+                if (member != null && !_partyList.Any(x => x.BattleChara.GameObjectId == member.GameObjectId))
                 {
                     var chara = (member as IBattleChara);
                     WrathPartyMember wmember = new()
@@ -42,7 +40,6 @@ namespace WrathCombo.CustomComboNS.Functions
                         CurrentHP = chara.CurrentHp
                     };
 
-                    if (!_partyList.Any(x => x.BattleChara.GameObjectId == chara.GameObjectId))
                         _partyList.Add(wmember);
 
                 }
@@ -54,7 +51,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 {
                     foreach (var npc in Svc.Objects.Where(x => x is IBattleChara && x is not IPlayerCharacter).Cast<IBattleChara>())
                     {
-                        if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.BattleChara == npc))
+                        if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.GameObjectId == npc.GameObjectId))
                         {
                             WrathPartyMember wmember = new()
                             {
@@ -62,14 +59,13 @@ namespace WrathCombo.CustomComboNS.Functions
                                 CurrentHP = npc.CurrentHp
                             };
 
-                            if (!_partyList.Any(x => x.BattleChara.GameObjectId == npc.GameObjectId))
                                 _partyList.Add(wmember);
                         }
                     }
                 }
             }
 
-            _partyList.RemoveAll(x => !Svc.Objects.Any(y => y.GameObjectId == x.GameObjectId));
+            _partyList.RemoveAll(x => x.BattleChara is null);
             return _partyList;
         }
 

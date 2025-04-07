@@ -657,10 +657,11 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  HitboxInRect(o, dir, range, effectRange / 2));
         }
 
-        internal static unsafe bool IsInLineOfSight(IGameObject target)
+        internal static unsafe bool IsInLineOfSight(IGameObject? target)
         {
+            if (target is null) return false;
             var sourcePos = FFXIVClientStructs.FFXIV.Common.Math.Vector3.Zero;
-
+            
             if (!Player.Available) return false;
 
             sourcePos = Player.Object.Struct()->Position;

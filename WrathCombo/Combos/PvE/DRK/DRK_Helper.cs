@@ -141,7 +141,6 @@ internal partial class DRK
 
             if ((flags.HasFlag(Combo.Simple) ||
                  (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Cure))) &&
-                IsEnabled(Variant.Cure) &&
                 ActionReady(Variant.Cure) &&
                 PlayerHealthPercentageHp() <= GetOptionValue(Config.DRK_VariantCure))
                 return (action = Variant.Cure) != 0;
@@ -155,7 +154,6 @@ internal partial class DRK
 
             if ((flags.HasFlag(Combo.Simple) ||
                  (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Ulti))) &&
-                IsEnabled(Variant.Ultimatum) &&
                 ActionReady(Variant.Ultimatum))
                 return (action = Variant.Ultimatum) != 0;
 
@@ -167,7 +165,6 @@ internal partial class DRK
                 FindTargetEffect(VariantActions.Debuffs.SustainedDamage);
             if ((flags.HasFlag(Combo.Simple) ||
                  (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Dart))) &&
-                IsEnabled(Variant.SpiritDart) &&
                 ActionReady(Variant.SpiritDart) &&
                 DoTStatus?.RemainingTime <= 3)
                 return (action = Variant.SpiritDart) != 0;
@@ -1147,7 +1144,7 @@ internal partial class DRK
     /// </value>
     /// <remarks>
     ///     Each logic check is already combined with checking if the preset
-    ///     <see cref="IsEnabled(uint)">is enabled</see>
+    ///     <see cref="IsEnabled">is enabled</see>
     ///     and if the action is <see cref="ActionReady(uint)">ready</see> and
     ///     <see cref="LevelChecked(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
