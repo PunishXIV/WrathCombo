@@ -103,51 +103,8 @@ internal partial class VPR : MeleeJob
                 return UncoiledFury;
 
             //Reawaken combo
-            if (HasEffect(Buffs.Reawakened))
-            {
-                #region Pre Ouroboros
-
-                if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 4:
-                            return OriginalHook(SteelFangs);
-
-                        case 3:
-                            return OriginalHook(ReavingFangs);
-
-                        case 2:
-                            return OriginalHook(HuntersCoil);
-
-                        case 1:
-                            return OriginalHook(SwiftskinsCoil);
-                    }
-
-                #endregion
-
-                #region With Ouroboros
-
-                if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 5:
-                            return OriginalHook(SteelFangs);
-
-                        case 4:
-                            return OriginalHook(ReavingFangs);
-
-                        case 3:
-                            return OriginalHook(HuntersCoil);
-
-                        case 2:
-                            return OriginalHook(SwiftskinsCoil);
-
-                        case 1:
-                            return OriginalHook(Reawaken);
-                    }
-
-                #endregion
-            }
+            if (ReawakenComboST(ref actionID))
+                return actionID;
 
             //1-2-3 (4-5-6) Combo
             if (ComboTimer > 0 && !HasEffect(Buffs.Reawakened))
@@ -247,7 +204,7 @@ internal partial class VPR : MeleeJob
                     return OriginalHook(SerpentsTail);
 
                 // Legacy Weaves
-                if (IsEnabled(CustomComboPreset.VPR_ST_ReawakenCombo) && In5Y &&
+                if (IsEnabled(CustomComboPreset.VPR_ST_LegacyWeaves) && In5Y &&
                     TraitLevelChecked(Traits.SerpentsLegacy) && HasEffect(Buffs.Reawakened)
                     && OriginalHook(SerpentsTail) is not SerpentsTail)
                     return OriginalHook(SerpentsTail);
@@ -301,7 +258,10 @@ internal partial class VPR : MeleeJob
             }
 
             //Reawakend Usage
-            if (IsEnabled(CustomComboPreset.VPR_ST_Reawaken) && UseReawaken(Gauge))
+            if (IsEnabled(CustomComboPreset.VPR_ST_Reawaken) &&
+                UseReawaken(Gauge) &&
+                (Config.VPR_ST_ReAwaken_SubOption == 0 ||
+                 Config.VPR_ST_ReAwaken_SubOption == 1 && InBossEncounter()))
                 return Reawaken;
 
             //Overcap protection
@@ -331,52 +291,9 @@ internal partial class VPR : MeleeJob
                 return UncoiledFury;
 
             //Reawaken combo
-            if (IsEnabled(CustomComboPreset.VPR_ST_ReawakenCombo) &&
-                HasEffect(Buffs.Reawakened))
-            {
-                #region Pre Ouroboros
-
-                if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 4:
-                            return OriginalHook(SteelFangs);
-
-                        case 3:
-                            return OriginalHook(ReavingFangs);
-
-                        case 2:
-                            return OriginalHook(HuntersCoil);
-
-                        case 1:
-                            return OriginalHook(SwiftskinsCoil);
-                    }
-
-                #endregion
-
-                #region With Ouroboros
-
-                if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 5:
-                            return OriginalHook(SteelFangs);
-
-                        case 4:
-                            return OriginalHook(ReavingFangs);
-
-                        case 3:
-                            return OriginalHook(HuntersCoil);
-
-                        case 2:
-                            return OriginalHook(SwiftskinsCoil);
-
-                        case 1:
-                            return OriginalHook(Reawaken);
-                    }
-
-                #endregion
-            }
+            if (IsEnabled(CustomComboPreset.VPR_ST_GenerationCombo) &&
+                ReawakenComboST(ref actionID))
+                return actionID;
 
             // healing
             if (IsEnabled(CustomComboPreset.VPR_ST_ComboHeals))
@@ -448,6 +365,7 @@ internal partial class VPR : MeleeJob
             if (LevelChecked(ReavingFangs) && (HasEffect(Buffs.HonedReavers) ||
                                                !HasEffect(Buffs.HonedReavers) && !HasEffect(Buffs.HonedSteel)))
                 return OriginalHook(ReavingFangs);
+
             return actionID;
         }
     }
@@ -461,16 +379,16 @@ internal partial class VPR : MeleeJob
             if (actionID is not SteelMaw)
                 return actionID;
 
+            // Variant Cure
+            if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, Config.VPR_VariantCure))
+                return Variant.Cure;
+
+            // Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+                return Variant.Rampart;
+
             if (CanWeave())
             {
-                // Variant Cure
-                if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, Config.VPR_VariantCure))
-                    return Variant.Cure;
-
-                // Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
-                    return Variant.Rampart;
-
                 // Death Rattle
                 if (LevelChecked(SerpentsTail) && OriginalHook(SerpentsTail) is LastLash)
                     return OriginalHook(SerpentsTail);
@@ -542,51 +460,8 @@ internal partial class VPR : MeleeJob
                 return UncoiledFury;
 
             //Reawaken combo
-            if (HasEffect(Buffs.Reawakened))
-            {
-                #region Pre Ouroboros
-
-                if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 4:
-                            return OriginalHook(SteelMaw);
-
-                        case 3:
-                            return OriginalHook(ReavingMaw);
-
-                        case 2:
-                            return OriginalHook(HuntersDen);
-
-                        case 1:
-                            return OriginalHook(SwiftskinsDen);
-                    }
-
-                #endregion
-
-                #region With Ouroboros
-
-                if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 5:
-                            return OriginalHook(SteelMaw);
-
-                        case 4:
-                            return OriginalHook(ReavingMaw);
-
-                        case 3:
-                            return OriginalHook(HuntersDen);
-
-                        case 2:
-                            return OriginalHook(SwiftskinsDen);
-
-                        case 1:
-                            return OriginalHook(Reawaken);
-                    }
-
-                #endregion
-            }
+            if (ReawakenComboAoE(ref actionID))
+                return actionID;
 
             // healing
             if (Role.CanSecondWind(25))
@@ -629,6 +504,7 @@ internal partial class VPR : MeleeJob
             if (LevelChecked(ReavingMaw) && (HasEffect(Buffs.HonedReavers)
                                              || !HasEffect(Buffs.HonedReavers) && !HasEffect(Buffs.HonedSteel)))
                 return OriginalHook(ReavingMaw);
+
             return actionID;
         }
     }
@@ -707,6 +583,7 @@ internal partial class VPR : MeleeJob
 
             //Reawakend Usage
             if (IsEnabled(CustomComboPreset.VPR_AoE_Reawaken) &&
+                GetTargetHPPercent() > Config.VPR_AoE_Reawaken_Usage &&
                 (HasEffect(Buffs.ReadyToReawaken) || Gauge.SerpentOffering >= 50) && LevelChecked(Reawaken) &&
                 HasEffect(Buffs.Swiftscaled) && HasEffect(Buffs.HuntersInstinct) &&
                 !HasEffect(Buffs.Reawakened) &&
@@ -743,51 +620,8 @@ internal partial class VPR : MeleeJob
 
             //Reawaken combo
             if (IsEnabled(CustomComboPreset.VPR_AoE_ReawakenCombo) &&
-                HasEffect(Buffs.Reawakened))
-            {
-                #region Pre Ouroboros
-
-                if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 4:
-                            return OriginalHook(SteelMaw);
-
-                        case 3:
-                            return OriginalHook(ReavingMaw);
-
-                        case 2:
-                            return OriginalHook(HuntersDen);
-
-                        case 1:
-                            return OriginalHook(SwiftskinsDen);
-                    }
-
-                #endregion
-
-                #region With Ouroboros
-
-                if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
-                    switch (Gauge.AnguineTribute)
-                    {
-                        case 5:
-                            return OriginalHook(SteelMaw);
-
-                        case 4:
-                            return OriginalHook(ReavingMaw);
-
-                        case 3:
-                            return OriginalHook(HuntersDen);
-
-                        case 2:
-                            return OriginalHook(SwiftskinsDen);
-
-                        case 1:
-                            return OriginalHook(Reawaken);
-                    }
-
-                #endregion
-            }
+                ReawakenComboAoE(ref actionID))
+                return actionID;
 
             // healing
             if (IsEnabled(CustomComboPreset.VPR_AoE_ComboHeals))
@@ -833,6 +667,7 @@ internal partial class VPR : MeleeJob
             if (LevelChecked(ReavingMaw) && (HasEffect(Buffs.HonedReavers)
                                              || !HasEffect(Buffs.HonedReavers) && !HasEffect(Buffs.HonedSteel)))
                 return OriginalHook(ReavingMaw);
+
             return actionID;
         }
     }

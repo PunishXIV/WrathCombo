@@ -253,6 +253,136 @@ internal partial class MCH
         return false;
     }
 
+    #region Openers
+
+    internal class MCHOpenerMaxLevel : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Reassemble,
+            AirAnchor,
+            CheckMate,
+            DoubleCheck,
+            Drill,
+            BarrelStabilizer,
+            Chainsaw,
+            Excavator,
+            AutomatonQueen,
+            Reassemble,
+            Drill,
+            CheckMate,
+            Wildfire,
+            FullMetalField,
+            DoubleCheck,
+            Hypercharge,
+            BlazingShot,
+            CheckMate,
+            BlazingShot,
+            DoubleCheck,
+            BlazingShot,
+            CheckMate,
+            BlazingShot,
+            DoubleCheck,
+            BlazingShot,
+            CheckMate,
+            Drill,
+            DoubleCheck,
+            CheckMate,
+            HeatedSplitShot,
+            DoubleCheck,
+            HeatedSlugShot,
+            HeatedCleanShot
+        ];
+
+        internal override UserData ContentCheckConfig => Config.MCH_Balance_Content;
+
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => 4)
+        ];
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(Reassemble) is 2 &&
+            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
+            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
+            IsOffCooldown(Chainsaw) &&
+            IsOffCooldown(Wildfire) &&
+            IsOffCooldown(BarrelStabilizer) &&
+            IsOffCooldown(Excavator) &&
+            IsOffCooldown(FullMetalField);
+    }
+
+    internal class MCHOpenerLvl90EarlyTools : WrathOpener
+    {
+        public override int MinOpenerLevel => 90;
+
+        public override int MaxOpenerLevel => 99;
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Reassemble,
+            AirAnchor,
+            GaussRound,
+            Ricochet,
+            Drill,
+            BarrelStabilizer,
+            Chainsaw,
+            GaussRound,
+            Ricochet,
+            HeatedSplitShot,
+            GaussRound,
+            Ricochet,
+            HeatedSlugShot,
+            Wildfire,
+            HeatedCleanShot,
+            AutomatonQueen,
+            Hypercharge,
+            BlazingShot,
+            Ricochet,
+            BlazingShot,
+            GaussRound,
+            BlazingShot,
+            Ricochet,
+            BlazingShot,
+            GaussRound,
+            BlazingShot,
+            Reassemble,
+            Drill
+        ];
+
+        internal override UserData ContentCheckConfig => Config.MCH_Balance_Content;
+
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => 4)
+        ];
+
+        public override List<int> DelayedWeaveSteps { get; set; } =
+        [
+            14
+        ];
+
+        public override List<int> AllowUpgradeSteps { get; set; } =
+        [
+            3, 4,
+            8, 9,
+            11, 12,
+            19, 21, 23, 25
+        ];
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(Reassemble) is 2 &&
+            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
+            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
+            IsOffCooldown(Chainsaw) &&
+            IsOffCooldown(Wildfire) &&
+            IsOffCooldown(BarrelStabilizer);
+    }
+
+    #endregion
+
     #region ID's
 
     public const byte JobID = 31;
@@ -316,168 +446,6 @@ internal partial class MCH
     {
         public const ushort
             EnhancedMultiWeapon = 605;
-    }
-
-    #endregion
-
-    #region Openers
-
-    internal class MCHOpenerMaxLevel : WrathOpener
-    {
-        public override int MinOpenerLevel => 100;
-
-        public override int MaxOpenerLevel => 109;
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            Reassemble,
-            AirAnchor,
-            CheckMate,
-            DoubleCheck,
-            Drill,
-            BarrelStabilizer,
-            Chainsaw,
-            Excavator,
-            AutomatonQueen,
-            Reassemble,
-            Drill,
-            CheckMate,
-            Wildfire,
-            FullMetalField,
-            DoubleCheck,
-            Hypercharge,
-            BlazingShot,
-            CheckMate,
-            BlazingShot,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            BlazingShot,
-            DoubleCheck,
-            BlazingShot,
-            CheckMate,
-            Drill,
-            DoubleCheck,
-            CheckMate,
-            HeatedSplitShot,
-            DoubleCheck,
-            HeatedSlugShot,
-            HeatedCleanShot
-        ];
-        internal override UserData ContentCheckConfig => Config.MCH_Balance_Content;
-
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => 4)
-        ];
-
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(Reassemble) < 2)
-                return false;
-
-            if (GetRemainingCharges(OriginalHook(GaussRound)) < 3)
-                return false;
-
-            if (GetRemainingCharges(OriginalHook(Ricochet)) < 3)
-                return false;
-
-            if (!IsOffCooldown(Chainsaw))
-                return false;
-
-            if (!IsOffCooldown(Wildfire))
-                return false;
-
-            if (!IsOffCooldown(BarrelStabilizer))
-                return false;
-
-            if (!IsOffCooldown(Excavator))
-                return false;
-
-            if (!IsOffCooldown(FullMetalField))
-                return false;
-
-            return true;
-        }
-    }
-
-    internal class MCHOpenerLvl90EarlyTools : WrathOpener
-    {
-        public override int MinOpenerLevel => 90;
-
-        public override int MaxOpenerLevel => 99;
-        public override List<uint> OpenerActions { get; set; } =
-        [
-            Reassemble,
-            AirAnchor,
-            GaussRound,
-            Ricochet,
-            Drill,
-            BarrelStabilizer,
-            Chainsaw,
-            GaussRound,
-            Ricochet,
-            HeatedSplitShot,
-            GaussRound,
-            Ricochet,
-            HeatedSlugShot,
-            Wildfire,
-            HeatedCleanShot,
-            AutomatonQueen,
-            Hypercharge,
-            BlazingShot,
-            Ricochet,
-            BlazingShot,
-            GaussRound,
-            BlazingShot,
-            Ricochet,
-            BlazingShot,
-            GaussRound,
-            BlazingShot,
-            Reassemble,
-            Drill
-        ];
-        internal override UserData ContentCheckConfig => Config.MCH_Balance_Content;
-
-        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
-        [
-            ([2], () => 4)
-        ];
-
-        public override List<int> DelayedWeaveSteps { get; set; } =
-        [
-            14
-        ];
-
-        public override List<int> AllowUpgradeSteps { get; set; } =
-        [
-            3, 4,
-            8, 9,
-            11, 12,
-            19, 21, 23, 25
-        ];
-
-        public override bool HasCooldowns()
-        {
-            if (GetRemainingCharges(Reassemble) < 2)
-                return false;
-
-            if (GetRemainingCharges(OriginalHook(GaussRound)) < 3)
-                return false;
-
-            if (GetRemainingCharges(OriginalHook(Ricochet)) < 3)
-                return false;
-
-            if (!IsOffCooldown(Chainsaw))
-                return false;
-
-            if (!IsOffCooldown(Wildfire))
-                return false;
-
-            if (!IsOffCooldown(BarrelStabilizer))
-                return false;
-
-            return true;
-        }
     }
 
     #endregion

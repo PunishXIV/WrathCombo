@@ -223,7 +223,7 @@ internal partial class SCH
                     DrawRadioButton(SCH_Recitation_Mode, "Succor", "", 1);
                     DrawRadioButton(SCH_Recitation_Mode, "Indomitability", "", 2);
                     DrawRadioButton(SCH_Recitation_Mode, "Excogitation", "", 3);
-                    break;
+                    break;               
             }
         }
           #region DPS

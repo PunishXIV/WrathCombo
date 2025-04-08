@@ -74,7 +74,7 @@ namespace WrathCombo.CustomComboNS
                             Svc.Log.Information($"Opener Failed at step {OpenerStep}, {CurrentOpenerAction.ActionName()}");
 
                         if (AllowReopener)
-                        ResetOpener();
+                            ResetOpener();
                     }
 
                     if (value == OpenerState.OpenerFinished)
@@ -171,7 +171,7 @@ namespace WrathCombo.CustomComboNS
 
                 if (OpenerStep > 1)
                 {
-                    var delay = PrepullDelays.FindFirst(x => x.Steps.Any(y => y == DelayedStep && y == OpenerStep), out var hold);
+                    bool delay = PrepullDelays.FindFirst(x => x.Steps.Any(y => y == DelayedStep && y == OpenerStep), out var hold);
                     if ((!delay && InCombat() && ActionWatching.TimeSinceLastAction.TotalSeconds >= Service.Configuration.OpenerTimeout) || (delay && (DateTime.Now - DelayedAt).TotalSeconds > hold.HoldDelay() + Service.Configuration.OpenerTimeout))
                     {
                         CurrentState = OpenerState.FailedOpener;
@@ -179,7 +179,7 @@ namespace WrathCombo.CustomComboNS
                     }
                 }
 
-                if (OpenerStep < OpenerActions.Count)
+                if (OpenerStep <= OpenerActions.Count)
                 {
                     foreach (var (Step, Condition) in SkipSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
                     {
@@ -332,7 +332,7 @@ namespace WrathCombo.CustomComboNS
 
     public class DummyOpener : WrathOpener
     {
-        public override List<uint> OpenerActions { get; set; } = new();
+        public override List<uint> OpenerActions { get; set; } = [];
         public override int MinOpenerLevel => 1;
         public override int MaxOpenerLevel => 10000;
 

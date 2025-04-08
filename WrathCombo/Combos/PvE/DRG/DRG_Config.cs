@@ -1,7 +1,6 @@
 using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
+using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -30,24 +29,28 @@ internal partial class DRG
                     DrawHorizontalRadioButton(DRG_SelectedOpener, "Standard opener", "Uses Standard opener",
                         0);
 
-                    DrawHorizontalRadioButton(DRG_SelectedOpener, "Piercing Talon opener", "Uses Piercing Talon opener",
+                    DrawHorizontalRadioButton(DRG_SelectedOpener, $"{PiercingTalon.ActionName()} opener", $"Uses {PiercingTalon.ActionName()} opener",
                         1);
 
                     ImGui.NewLine();
                     DrawBossOnlyChoice(DRG_Balance_Content);
                     break;
-                
-                case CustomComboPreset.DRG_ST_ComboHeals:
-                    DrawSliderInt(0, 100, DRG_ST_SecondWind_Threshold, "Second Wind HP percentage threshold (0 = Disabled)");
 
-                    DrawSliderInt(0, 100, DRG_ST_Bloodbath_Threshold, "Bloodbath HP percentage threshold (0 = Disabled)");
+                case CustomComboPreset.DRG_ST_ComboHeals:
+                    DrawSliderInt(0, 100, DRG_ST_SecondWind_Threshold,
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
+
+                    DrawSliderInt(0, 100, DRG_ST_Bloodbath_Threshold,
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 
                 case CustomComboPreset.DRG_AoE_ComboHeals:
-                    DrawSliderInt(0, 100, DRG_AoE_SecondWind_Threshold, "Second Wind HP percentage threshold (0 = Disabled)");
+                    DrawSliderInt(0, 100, DRG_AoE_SecondWind_Threshold,
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
-                    DrawSliderInt(0, 100, DRG_AoE_Bloodbath_Threshold, "Bloodbath HP percentage threshold (0 = Disabled)");
+                    DrawSliderInt(0, 100, DRG_AoE_Bloodbath_Threshold,
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 
@@ -58,50 +61,34 @@ internal partial class DRG
 
                 case CustomComboPreset.DRG_ST_Litany:
                     DrawHorizontalRadioButton(DRG_ST_Litany_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(BattleLitany)} regardless of content.", 0);
+                        "All content", $"Uses {BattleLitany.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(DRG_ST_Litany_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(BattleLitany)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {BattleLitany.ActionName()} when in Boss encounters.", 1);
 
                     break;
 
                 case CustomComboPreset.DRG_ST_Lance:
 
                     DrawHorizontalRadioButton(DRG_ST_Lance_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(LanceCharge)} regardless of content.", 0);
+                        "All content", $"Uses {LanceCharge.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(DRG_ST_Lance_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(LanceCharge)} when in Boss encounters.", 1);
+                        "Boss encounters Only", $"Only uses {LanceCharge.ActionName()} when in Boss encounters.", 1);
 
 
                     break;
 
                 case CustomComboPreset.DRG_AoE_Litany:
-                    DrawSliderInt(0, 100, DRG_AoE_LitanyHP, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                    DrawSliderInt(0, 100, DRG_AoE_LitanyHP, $"Stop Using {BattleLitany.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
 
                 case CustomComboPreset.DRG_AoE_Lance:
-                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP, "Stop Using When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP, $"Stop Using {LanceCharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
 
-                case CustomComboPreset.DRGPvP_Nastrond:
-                    DrawSliderInt(0, 100, DRGPvP.Config.DRGPvP_LOTD_HPValue, "Ends Life of the Dragon if HP falls below the set percentage");
-
-                    DrawSliderInt(2, 8, DRGPvP.Config.DRGPvP_LOTD_Duration, "Seconds remaining of Life of the Dragon buff before using Nastrond if you are still above the set HP percentage.");
-
-                    break;
-
-                case CustomComboPreset.DRGPvP_ChaoticSpringSustain:
-                    DrawSliderInt(0, 101, DRGPvP.Config.DRGPvP_CS_HP_Threshold, "Chaotic Spring HP percentage threshold. Set to 100 to use on cd");
-
-                    break;
-
-                case CustomComboPreset.DRGPvP_WyrmwindThrust:
-                    DrawSliderInt(0, 20, DRGPvP.Config.DRGPvP_Distance_Threshold, "Minimum Distance to use Wyrmwind Thrust. Maximum damage at 15 or more");
-
-                    break;
             }
         }
     }

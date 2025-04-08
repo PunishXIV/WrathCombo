@@ -23,13 +23,13 @@ internal partial class RPR : MeleeJob
             if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
                 return Variant.Cure;
 
+            //Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                return Variant.Rampart;
+
             //All Weaves
             if (CanWeave())
             {
-                //Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
-                    return Variant.Rampart;
-
                 //Arcane Cirlce
                 if (LevelChecked(ArcaneCircle) && InBossEncounter() &&
                     (LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) && IsOffCooldown(ArcaneCircle) ||
@@ -199,6 +199,10 @@ internal partial class RPR : MeleeJob
             if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
                 return Variant.Cure;
 
+            //Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                return Variant.Rampart;
+
             //RPR Opener
             if (IsEnabled(CustomComboPreset.RPR_ST_Opener))
                 if (Opener().FullOpener(ref actionID))
@@ -207,10 +211,6 @@ internal partial class RPR : MeleeJob
             //All Weaves
             if (CanWeave())
             {
-                //Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
-                    return Variant.Rampart;
-
                 //Arcane Cirlce
                 if (IsEnabled(CustomComboPreset.RPR_ST_ArcaneCircle) &&
                     LevelChecked(ArcaneCircle) &&
@@ -413,11 +413,11 @@ internal partial class RPR : MeleeJob
             if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
                 return Variant.Cure;
 
+            if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                return Variant.Rampart;
+
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
-                    return Variant.Rampart;
-
                 if (LevelChecked(ArcaneCircle) &&
                     (GetCooldownRemainingTime(ArcaneCircle) <= GCD + 0.25 || ActionReady(ArcaneCircle)))
                     return ArcaneCircle;
@@ -510,11 +510,11 @@ internal partial class RPR : MeleeJob
             if (Variant.CanCure(CustomComboPreset.RPR_Variant_Cure, Config.RPR_VariantCure))
                 return Variant.Cure;
 
+            if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
+                return Variant.Rampart;
+
             if (CanWeave())
             {
-                if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
-                    return Variant.Rampart;
-
                 if (IsEnabled(CustomComboPreset.RPR_AoE_ArcaneCircle) &&
                     LevelChecked(ArcaneCircle) &&
                     (GetCooldownRemainingTime(ArcaneCircle) <= GCD + 0.25 || ActionReady(ArcaneCircle)))

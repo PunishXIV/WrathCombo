@@ -1,6 +1,5 @@
 ﻿using Dalamud.Interface.Colors;
 using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
@@ -175,10 +174,7 @@ internal partial class WHM
                     DrawAdditionalBoolChoice(WHM_AoEHeals_MedicaMO, "Party UI Mousover Checking", "Check your mouseover target for the Medica II/III buff.\nTo be used in conjunction with Redirect/Reaction/etc.");
                     break;
 
-                case CustomComboPreset.WHMPvP_Heals:
-                    DrawHorizontalRadioButton(WHMPvP.Config.WHMPVP_HealOrder, $"{WHMPvP.Aquaveil.ActionName()} First", $"If Both {WHMPvP.Aquaveil.ActionName()} & {WHMPvP.Cure3.ActionName()} are ready, prioritise {WHMPvP.Aquaveil.ActionName()}", 0);
-                    DrawHorizontalRadioButton(WHMPvP.Config.WHMPVP_HealOrder, $"{WHMPvP.Cure3.ActionName()} First", $"If Both {WHMPvP.Aquaveil.ActionName()} & {WHMPvP.Cure3.ActionName()} are ready, prioritise {WHMPvP.Cure3.ActionName()}", 1);
-                    break;
+                
             }
         }
     }

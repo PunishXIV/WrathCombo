@@ -470,7 +470,7 @@ public static class DebugFile
         foreach (var effect in statusEffects)
             AddLine(
                 $"ID: {effect.StatusId}, " +
-                $"STACKS: {effect.StackCount}, " +
+                $"STACKS: {effect.Param}, " +
                 $"SOURCE: {(effect.SourceId == playerID ? "self" : effect
                     .SourceId)}, " +
                 $"NAME: {ActionWatching.GetStatusName(effect.StatusId)}");

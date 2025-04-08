@@ -12,6 +12,14 @@ internal partial class MNK : MeleeJob
             if (actionID is not (Bootshine or LeapingOpo))
                 return actionID;
 
+            //Variant Cure
+            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
+                return Variant.Cure;
+
+            //Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
+                return Variant.Rampart;
+
             if (LevelChecked(SteeledMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
@@ -26,10 +34,6 @@ internal partial class MNK : MeleeJob
                 !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
-                return Variant.Cure;
-
             if (ActionReady(RiddleOfFire) &&
                 !HasEffect(Buffs.FiresRumination) &&
                 CanDelayedWeave() && InBossEncounter())
@@ -38,10 +42,6 @@ internal partial class MNK : MeleeJob
             // OGCDs
             if (CanWeave())
             {
-                //Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
-                    return Variant.Rampart;
-
                 if (ActionReady(Brotherhood) &&
                     InBossEncounter())
                     return Brotherhood;
@@ -52,7 +52,7 @@ internal partial class MNK : MeleeJob
                     return RiddleOfWind;
 
                 //Perfect Balance
-                if (UsePerfectBalance())
+                if (UsePerfectBalanceST())
                     return PerfectBalance;
 
                 if (Role.CanSecondWind(25))
@@ -94,39 +94,8 @@ internal partial class MNK : MeleeJob
                 return WindsReply;
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return Gauge.OpoOpoFury == 0
-                        ? DragonKick
-                        : OriginalHook(Bootshine);
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                {
-                    if (CoeurlChakra == 0)
-                        return Gauge.CoeurlFury == 0
-                            ? Demolish
-                            : OriginalHook(SnapPunch);
-
-                    if (RaptorChakra == 0)
-                        return Gauge.RaptorFury == 0
-                            ? TwinSnakes
-                            : OriginalHook(TrueStrike);
-
-                    if (OpoOpoChakra == 0)
-                        return Gauge.OpoOpoFury == 0
-                            ? DragonKick
-                            : OriginalHook(Bootshine);
-                }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboST(ref actionID))
+                return actionID;
 
             // Standard Beast Chakras
             return DetermineCoreAbility(actionID, true);
@@ -141,6 +110,14 @@ internal partial class MNK : MeleeJob
         {
             if (actionID is not (Bootshine or LeapingOpo))
                 return actionID;
+
+            //Variant Cure
+            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
+                return Variant.Cure;
+
+            //Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
+                return Variant.Rampart;
 
             if (IsEnabled(CustomComboPreset.MNK_STUseMeditation) &&
                 LevelChecked(SteeledMeditation) &&
@@ -168,10 +145,6 @@ internal partial class MNK : MeleeJob
                     return actionID;
                 }
 
-            //Variant Cure
-            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
-                return Variant.Cure;
-
             if (IsEnabled(CustomComboPreset.MNK_STUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_STUseROF) &&
                 !HasEffect(Buffs.FiresRumination) &&
@@ -184,10 +157,6 @@ internal partial class MNK : MeleeJob
             // OGCDs
             if (CanWeave())
             {
-                //Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
-                    return Variant.Rampart;
-
                 if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
                 {
                     if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &&
@@ -206,7 +175,7 @@ internal partial class MNK : MeleeJob
 
                 //Perfect Balance
                 if (IsEnabled(CustomComboPreset.MNK_STUsePerfectBalance) &&
-                    UsePerfectBalance())
+                    UsePerfectBalanceST())
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_ST_ComboHeals))
@@ -258,39 +227,8 @@ internal partial class MNK : MeleeJob
             }
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return Gauge.OpoOpoFury == 0
-                        ? DragonKick
-                        : OriginalHook(Bootshine);
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                {
-                    if (CoeurlChakra == 0)
-                        return Gauge.CoeurlFury == 0
-                            ? Demolish
-                            : OriginalHook(SnapPunch);
-
-                    if (RaptorChakra == 0)
-                        return Gauge.RaptorFury == 0
-                            ? TwinSnakes
-                            : OriginalHook(TrueStrike);
-
-                    if (OpoOpoChakra == 0)
-                        return Gauge.OpoOpoFury == 0
-                            ? DragonKick
-                            : OriginalHook(Bootshine);
-                }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboST(ref actionID))
+                return actionID;
 
             // Standard Beast Chakras
             return DetermineCoreAbility(actionID, IsEnabled(CustomComboPreset.MNK_STUseTrueNorth));
@@ -306,6 +244,14 @@ internal partial class MNK : MeleeJob
             if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
                 return actionID;
 
+            //Variant Cure
+            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
+                return Variant.Cure;
+
+            //Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
+                return Variant.Rampart;
+
             if (LevelChecked(InspiritedMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
                 Gauge.Chakra < 5 &&
@@ -320,10 +266,6 @@ internal partial class MNK : MeleeJob
                 !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
-                return Variant.Cure;
-
             if (ActionReady(RiddleOfFire) &&
                 !HasEffect(Buffs.FiresRumination) &&
                 CanDelayedWeave())
@@ -332,10 +274,6 @@ internal partial class MNK : MeleeJob
             // Buffs
             if (CanWeave())
             {
-                //Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
-                    return Variant.Rampart;
-
                 if (ActionReady(Brotherhood))
                     return Brotherhood;
 
@@ -343,15 +281,8 @@ internal partial class MNK : MeleeJob
                     !HasEffect(Buffs.WindsRumination))
                     return RiddleOfWind;
 
-                if (ActionReady(PerfectBalance) &&
-                    !HasEffect(Buffs.PerfectBalance) &&
-                    (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance) ||
-                     GetCooldownRemainingTime(PerfectBalance) <= 4 ||
-                     HasEffect(Buffs.Brotherhood) ||
-                     HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10 ||
-                     GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8))
+                if (UsePerfectBalanceAoE())
                     return PerfectBalance;
-
 
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -385,34 +316,8 @@ internal partial class MNK : MeleeJob
                 return WindsReply;
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return LevelChecked(ShadowOfTheDestroyer)
-                        ? ShadowOfTheDestroyer
-                        : Rockbreaker;
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                    switch (GetBuffStacks(Buffs.PerfectBalance))
-                    {
-                        case 3:
-                            return OriginalHook(ArmOfTheDestroyer);
-
-                        case 2:
-                            return FourPointFury;
-
-                        case 1:
-                            return Rockbreaker;
-                    }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboAoE(ref actionID))
+                return actionID;
 
             // Monk Rotation
             if (HasEffect(Buffs.OpoOpoForm))
@@ -443,6 +348,14 @@ internal partial class MNK : MeleeJob
             if (actionID is not (ArmOfTheDestroyer or ShadowOfTheDestroyer))
                 return actionID;
 
+            //Variant Cure
+            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
+                return Variant.Cure;
+
+            //Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
+                return Variant.Rampart;
+
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMeditation) &&
                 LevelChecked(InspiritedMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
@@ -459,10 +372,6 @@ internal partial class MNK : MeleeJob
                 !HasEffect(Buffs.OpoOpoForm) && !HasEffect(Buffs.RaptorForm) && !HasEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(CustomComboPreset.MNK_Variant_Cure, Config.MNK_VariantCure))
-                return Variant.Cure;
-
             if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
                 !HasEffect(Buffs.FiresRumination) &&
@@ -474,10 +383,6 @@ internal partial class MNK : MeleeJob
             // Buffs
             if (CanWeave())
             {
-                //Variant Rampart
-                if (Variant.CanRampart(CustomComboPreset.MNK_Variant_Rampart))
-                    return Variant.Rampart;
-
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
                 {
                     if (IsEnabled(CustomComboPreset.MNK_AoEUseBrotherhood) &&
@@ -493,13 +398,7 @@ internal partial class MNK : MeleeJob
                 }
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUsePerfectBalance) &&
-                    ActionReady(PerfectBalance) &&
-                    !HasEffect(Buffs.PerfectBalance) &&
-                    (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance) ||
-                     GetCooldownRemainingTime(PerfectBalance) <= 4 ||
-                     HasEffect(Buffs.Brotherhood) ||
-                     HasEffect(Buffs.RiddleOfFire) && GetBuffRemainingTime(Buffs.RiddleOfFire) < 10 ||
-                     GetCooldownRemainingTime(RiddleOfFire) < 4 && GetCooldownRemainingTime(Brotherhood) < 8))
+                    UsePerfectBalanceAoE())
                     return PerfectBalance;
 
                 if (IsEnabled(CustomComboPreset.MNK_AoE_ComboHeals))
@@ -543,34 +442,8 @@ internal partial class MNK : MeleeJob
             }
 
             // Perfect Balance
-            if (HasEffect(Buffs.PerfectBalance))
-            {
-                #region Open Lunar
-
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                    return LevelChecked(ShadowOfTheDestroyer)
-                        ? ShadowOfTheDestroyer
-                        : Rockbreaker;
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && !BothNadisOpen)
-                    switch (GetBuffStacks(Buffs.PerfectBalance))
-                    {
-                        case 3:
-                            return OriginalHook(ArmOfTheDestroyer);
-
-                        case 2:
-                            return FourPointFury;
-
-                        case 1:
-                            return Rockbreaker;
-                    }
-
-                #endregion
-            }
+            if (DoPerfectBalanceComboAoE(ref actionID))
+                return actionID;
 
             // Monk Rotation
             if (HasEffect(Buffs.OpoOpoForm))

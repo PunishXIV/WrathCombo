@@ -37,13 +37,43 @@ internal partial class VPR
 
     internal static bool HasRattlingCoilStack(VPRGauge gauge) => Gauge.RattlingCoilStacks > 0;
 
-    internal static WrathOpener Opener()
-    {
-        if (Opener1.LevelChecked)
-            return Opener1;
+    #region Combos
 
-        return WrathOpener.Dummy;
+    internal static bool IsHoningExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return HasEffect(Buffs.HonedSteel) && GetBuffRemainingTime(Buffs.HonedSteel) < gcd ||
+               HasEffect(Buffs.HonedReavers) && GetBuffRemainingTime(Buffs.HonedReavers) < gcd;
     }
+
+    internal static bool IsVenomExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return HasEffect(Buffs.FlankstungVenom) && GetBuffRemainingTime(Buffs.FlankstungVenom) < gcd ||
+               HasEffect(Buffs.FlanksbaneVenom) && GetBuffRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
+               HasEffect(Buffs.HindstungVenom) && GetBuffRemainingTime(Buffs.HindstungVenom) < gcd ||
+               HasEffect(Buffs.HindsbaneVenom) && GetBuffRemainingTime(Buffs.HindsbaneVenom) < gcd;
+    }
+
+    internal static bool IsEmpowermentExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return GetBuffRemainingTime(Buffs.Swiftscaled) < gcd || GetBuffRemainingTime(Buffs.HuntersInstinct) < gcd;
+    }
+
+    internal static unsafe bool IsComboExpiring(float times)
+    {
+        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+
+        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
+    }
+
+    #endregion
+
+    #region Awaken
 
     internal static bool UseReawaken(VPRGauge gauge)
     {
@@ -80,39 +110,136 @@ internal partial class VPR
         return false;
     }
 
-    internal static bool IsHoningExpiring(float times)
+    internal static bool ReawakenComboST(ref uint actionID)
     {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+        if (HasEffect(Buffs.Reawakened))
+        {
+                #region Pre Ouroboros
 
-        return HasEffect(Buffs.HonedSteel) && GetBuffRemainingTime(Buffs.HonedSteel) < gcd ||
-               HasEffect(Buffs.HonedReavers) && GetBuffRemainingTime(Buffs.HonedReavers) < gcd;
+            if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
+                switch (Gauge.AnguineTribute)
+                {
+                    case 4:
+                        actionID = OriginalHook(SteelFangs);
+                        return true;
+
+                    case 3:
+                        actionID = OriginalHook(ReavingFangs);
+                        return true;
+
+                    case 2:
+                        actionID = OriginalHook(HuntersCoil);
+                        return true;
+
+                    case 1:
+                        actionID = OriginalHook(SwiftskinsCoil);
+                        return true;
+                }
+
+                #endregion
+
+                #region With Ouroboros
+
+            if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
+                switch (Gauge.AnguineTribute)
+                {
+                    case 5:
+                        actionID = OriginalHook(SteelFangs);
+                        return true;
+
+                    case 4:
+                        actionID = OriginalHook(ReavingFangs);
+                        return true;
+
+                    case 3:
+                        actionID = OriginalHook(HuntersCoil);
+                        return true;
+
+                    case 2:
+                        actionID = OriginalHook(SwiftskinsCoil);
+                        return true;
+
+                    case 1:
+                        actionID = OriginalHook(Reawaken);
+                        return true;
+                }
+
+                #endregion
+        }
+
+        return false;
     }
 
-    internal static bool IsVenomExpiring(float times)
+    internal static bool ReawakenComboAoE(ref uint actionID)
     {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+        if (HasEffect(Buffs.Reawakened))
+        {
+                #region Pre Ouroboros
 
-        return HasEffect(Buffs.FlankstungVenom) && GetBuffRemainingTime(Buffs.FlankstungVenom) < gcd ||
-               HasEffect(Buffs.FlanksbaneVenom) && GetBuffRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
-               HasEffect(Buffs.HindstungVenom) && GetBuffRemainingTime(Buffs.HindstungVenom) < gcd ||
-               HasEffect(Buffs.HindsbaneVenom) && GetBuffRemainingTime(Buffs.HindsbaneVenom) < gcd;
+            if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
+                switch (Gauge.AnguineTribute)
+                {
+                    case 4:
+                        actionID = OriginalHook(SteelMaw);
+                        return true;
+
+                    case 3:
+                        actionID = OriginalHook(ReavingMaw);
+                        return true;
+
+                    case 2:
+                        actionID = OriginalHook(HuntersDen);
+                        return true;
+
+                    case 1:
+                        actionID = OriginalHook(SwiftskinsDen);
+                        return true;
+                }
+
+                #endregion
+
+                #region With Ouroboros
+
+            if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
+                switch (Gauge.AnguineTribute)
+                {
+                    case 5:
+                        actionID = OriginalHook(SteelMaw);
+                        return true;
+
+                    case 4:
+                        actionID = OriginalHook(ReavingMaw);
+                        return true;
+
+                    case 3:
+                        actionID = OriginalHook(HuntersDen);
+                        return true;
+
+                    case 2:
+                        actionID = OriginalHook(SwiftskinsDen);
+                        return true;
+
+                    case 1:
+                        actionID = OriginalHook(Reawaken);
+                        return true;
+                }
+
+                #endregion
+        }
+        return false;
     }
 
-    internal static bool IsEmpowermentExpiring(float times)
-    {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
-
-        return GetBuffRemainingTime(Buffs.Swiftscaled) < gcd || GetBuffRemainingTime(Buffs.HuntersInstinct) < gcd;
-    }
-
-    internal static unsafe bool IsComboExpiring(float times)
-    {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
-
-        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
-    }
+    #endregion
 
     #region Openers
+
+    internal static WrathOpener Opener()
+    {
+        if (Opener1.LevelChecked)
+            return Opener1;
+
+        return WrathOpener.Dummy;
+    }
 
     internal class VPROpenerMaxLevel1 : WrathOpener
     {
@@ -174,19 +301,10 @@ internal partial class VPR
 
         internal override UserData ContentCheckConfig => Config.VPR_Balance_Content;
 
-        public override bool HasCooldowns()
-        {
-            if (!IsOriginal(ReavingFangs))
-                return false;
-
-            if (GetRemainingCharges(Vicewinder) < 2)
-                return false;
-
-            if (!IsOffCooldown(SerpentsIre))
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() =>
+            IsOriginal(ReavingFangs) &&
+            GetRemainingCharges(Vicewinder) is 2 &&
+            IsOffCooldown(SerpentsIre);
     }
 
     #endregion

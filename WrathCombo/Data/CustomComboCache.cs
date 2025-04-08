@@ -43,6 +43,7 @@ namespace WrathCombo.Data
         /// <returns> Status object or null. </returns>
         internal DalamudStatus.Status? GetStatus(uint statusID, IGameObject? obj, ulong? sourceID)
         {
+            if (obj is null) return null;
             var key = (statusID, obj?.GameObjectId, sourceID);
             if (statusCache.TryGetValue(key, out DalamudStatus.Status? found))
                 return found;

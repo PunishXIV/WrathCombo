@@ -114,6 +114,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
                 Service.ActionReplacer.UpdateFilteredCombos();
                 WrathOpener.SelectOpener();
                 P.IPCSearch.UpdateActiveJobPresets();
+                P.IPC.Leasing.SuspendLeases(CancellationReason.JobChanged);
             }
 
             if (onTerritoryChange)
@@ -155,7 +156,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.ActionReplacer = new ActionReplacer();
         ActionWatching.Enable();
         AST.InitCheckCards();
-        IPC = Provider.InitAsync().Result;
+        IPC = Provider.Init();
 
         ConfigWindow = new ConfigWindow();
         SettingChangeWindow = new SettingChangeWindow();
@@ -196,9 +197,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
 #if DEBUG
         ConfigWindow.IsOpen = true;
-
-        if (Service.Configuration.OpenToCurrentJob && Player.Available)
-            HandleOpenCommand([""], forceOpen:true);
 #endif
     }
 
@@ -472,7 +470,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
     public void Dispose()
     {
         ConfigWindow.Dispose();
-        IPCSearch.Cancel.Cancel();
         // Try to force a config save if there are some pending
         if (PluginConfiguration.SaveQueue.Count > 0)
             lock (PluginConfiguration.SaveQueue)
@@ -490,7 +487,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Svc.ClientState.TerritoryChanged -= ClientState_TerritoryChanged;
         Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
         Svc.PluginInterface.UiBuilder.Draw -= DrawUI;
-
+        
         Service.ActionReplacer.Dispose();
         Service.ComboCache.Dispose();
         ActionWatching.Dispose();
