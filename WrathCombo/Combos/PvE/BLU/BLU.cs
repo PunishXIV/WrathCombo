@@ -95,7 +95,7 @@ internal partial class BLU
                     !WasLastSpell(WingedReprobation_Spell118) &&
                     !WasLastAbility(FeatherRain_Spell44) &&
                     (!HasEffect(Buffs.WingedReprobation) ||
-                     FindEffect(Buffs.WingedReprobation)?.StackCount < 2))
+                     FindEffect(Buffs.WingedReprobation)?.Param < 2))
                     return WingedReprobation_Spell118;
 
                 if (IsSpellActive(FeatherRain_Spell44) &&
@@ -110,7 +110,7 @@ internal partial class BLU
             if (IsSpellActive(WingedReprobation_Spell118) &&
                 IsOffCooldown(WingedReprobation_Spell118) &&
                 !WasLastAbility(ShockStrike_Spell47) &&
-                FindEffect(Buffs.WingedReprobation)?.StackCount < 2)
+                FindEffect(Buffs.WingedReprobation)?.Param < 2)
                 return WingedReprobation_Spell118;
 
             if (IsSpellActive(ShockStrike_Spell47) &&
@@ -184,7 +184,7 @@ internal partial class BLU
 
             if (IsEnabled(Preset
                     .BLU_PrimalCombo_WingedReprobation) &&
-                FindEffect(Buffs.WingedReprobation)?.StackCount > 1 &&
+                FindEffect(Buffs.WingedReprobation)?.Param > 1 &&
                 IsOffCooldown(WingedReprobation_Spell118))
                 return OriginalHook(WingedReprobation_Spell118);
 
