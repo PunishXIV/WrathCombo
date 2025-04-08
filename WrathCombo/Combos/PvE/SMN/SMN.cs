@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -21,7 +22,7 @@ internal partial class SMN : CasterJob
                 return Variant.Raise;
 
             if (IsOnCooldown(Role.Swiftcast))
-                return Resurrection;
+                return Resurrection.AndRunMacro();
             return actionID;
         }
     }

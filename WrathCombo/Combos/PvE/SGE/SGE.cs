@@ -1,6 +1,8 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE : HealerJob
@@ -226,7 +228,7 @@ internal partial class SGE : HealerJob
                     {
                         if (Variant.CanSpiritDart(CustomComboPreset.SGE_DPS_Variant_SpiritDart)) return Variant.SpiritDart;
 
-                        if (!JustUsedOn(currentDosis.Eukrasian,CurrentTarget)) { 
+                        if (!JustUsedOn(currentDosis.Eukrasian,CurrentTarget)) {
                             // Dosis DoT Debuff
                             float dotDebuff = GetDebuffRemainingTime(currentDosis.DebuffID);
 
@@ -292,7 +294,7 @@ internal partial class SGE : HealerJob
 
         protected override uint Invoke(uint actionID) =>
             actionID is Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? Egeiro
+                ? Egeiro.AndRunMacro()
                 : actionID;
     }
 
