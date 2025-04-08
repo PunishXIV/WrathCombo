@@ -37,13 +37,11 @@ namespace WrathCombo.CustomComboNS.Functions
                     WrathPartyMember wmember = new()
                     {
                         GameObjectId = chara.GameObjectId,
-                        BattleChara = chara,
                         PlayerChara = member as IPlayerCharacter,
-                        CurrentHP = chara.CurrentHp
+                        CurrentHP = chara.CurrentHp,
                     };
 
                     _partyList.Add(wmember);
-
                 }
             }
 
