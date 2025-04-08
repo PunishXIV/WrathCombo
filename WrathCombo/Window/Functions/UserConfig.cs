@@ -1067,45 +1067,6 @@ namespace WrathCombo.Window.Functions
             if (preset == CustomComboPreset.PvP_QuickPurify)
                 UserConfig.DrawPvPStatusMultiChoice(PvPCommon.Config.QuickPurifyStatuses);
 
-            if (preset == CustomComboPreset.NINPvP_ST_Meisui)
-            {
-                string description = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
-
-                if (pc != null)
-                {
-                    uint maxHP = pc.MaxHp <= 8000 ? 0 : pc.MaxHp - 8000;
-                    if (maxHP > 0)
-                    {
-                        int setting = PluginConfiguration.GetCustomIntValue(NINPvP.Config.NINPvP_Meisui_ST);
-                        float hpThreshold = (float)maxHP / 100 * setting;
-
-                        description += $"\nHP Value to be at or under: {hpThreshold}";
-                    }
-                }
-
-                UserConfig.DrawSliderInt(1, 100, NINPvP.Config.NINPvP_Meisui_ST, description);
-            }
-
-            if (preset == CustomComboPreset.NINPvP_AoE_Meisui)
-            {
-                string description = "Set the HP percentage to be at or under for the feature to kick in.\n100% is considered to start at 8,000 less than your max HP to prevent wastage.";
-
-                if (pc != null)
-                {
-                    uint maxHP = pc.MaxHp <= 8000 ? 0 : pc.MaxHp - 8000;
-                    if (maxHP > 0)
-                    {
-                        int setting = PluginConfiguration.GetCustomIntValue(NINPvP.Config.NINPvP_Meisui_AoE);
-                        float hpThreshold = (float)maxHP / 100 * setting;
-
-                        description += $"\nHP Value to be at or under: {hpThreshold}";
-                    }
-                }
-
-                UserConfig.DrawSliderInt(1, 100, NINPvP.Config.NINPvP_Meisui_AoE, description);
-            }
-
-
             #endregion
         }
     }

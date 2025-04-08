@@ -6,7 +6,7 @@ namespace WrathCombo.Combos.PvE;
 //Examples
 // GNB.Role.Interject would work, SGE.Role.Interject would not.
 //THis should help for future jobs and future random actions to quickly wireup job appropriate actions
-class HealerJob : Healer
+class HealerJob
 {
     public class Variant : VariantHealer;
     public class Role : Healer;

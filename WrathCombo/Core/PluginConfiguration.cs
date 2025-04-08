@@ -331,7 +331,7 @@ namespace WrathCombo.Core
             }
             catch (Exception)
             {
-                Task.Run(() => RetrySave(config, trace));
+                Svc.Framework.Run(() => RetrySave(config, trace));
             }
         }
 

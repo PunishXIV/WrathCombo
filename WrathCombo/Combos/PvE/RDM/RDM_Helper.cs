@@ -119,7 +119,7 @@ internal partial class RDM
         {
             if (LevelChecked(Manafication))
             {
-                byte magickedSword = GetBuffStacks(Buffs.MagickedSwordPlay);
+                ushort magickedSword = GetBuffStacks(Buffs.MagickedSwordPlay);
                 byte magickedSwordMana = magickedSword switch
                 {
                     3 => 50,

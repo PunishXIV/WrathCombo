@@ -274,7 +274,7 @@ internal partial class BLU : CasterJob
 
                 if (!HasEffect(Buffs.PhantomFlurry))
                 {
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_WingedReprobation) && FindEffect(Buffs.WingedReprobation)?.StackCount > 1 && IsOffCooldown(WingedReprobation))
+                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_WingedReprobation) && FindEffect(Buffs.WingedReprobation)?.Param > 1 && IsOffCooldown(WingedReprobation))
                         return OriginalHook(WingedReprobation);
 
                     if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain) &&
@@ -442,7 +442,7 @@ internal partial class BLU : CasterJob
                 }
                 else
                 {
-                    if (IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation) && !WasLastSpell(WingedReprobation) && !WasLastAbility(FeatherRain) && (!HasEffect(Buffs.WingedReprobation) || FindEffect(Buffs.WingedReprobation)?.StackCount < 2))
+                    if (IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation) && !WasLastSpell(WingedReprobation) && !WasLastAbility(FeatherRain) && (!HasEffect(Buffs.WingedReprobation) || FindEffect(Buffs.WingedReprobation)?.Param < 2))
                         return WingedReprobation;
 
                     if (IsSpellActive(FeatherRain) && IsOffCooldown(FeatherRain))
@@ -452,7 +452,7 @@ internal partial class BLU : CasterJob
                         return SeaShanty;
                 }
 
-                if (IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation) && !WasLastAbility(ShockStrike) && FindEffect(Buffs.WingedReprobation)?.StackCount < 2)
+                if (IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation) && !WasLastAbility(ShockStrike) && FindEffect(Buffs.WingedReprobation)?.Param < 2)
                     return WingedReprobation;
 
                 if (IsSpellActive(ShockStrike) && IsOffCooldown(ShockStrike))

@@ -1,5 +1,4 @@
 using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -16,9 +15,7 @@ internal partial class GNB
     {
         private const int NumberMitigationOptions = 8;
 
-        public const string
-            GNBPvP_Corundum = "GNBPvP_Corundum";
-
+        
         public static UserInt
             GNB_Opener_StartChoice = new ("GNB_Opener_StartChoice", 0),
             GNB_Opener_NM = new("GNB_Opener_NM", 0),
@@ -532,24 +529,9 @@ internal partial class GNB
                         "Replace No Mercy",
                         $"Use this feature instead on {NoMercy.ActionName()}\nWARNING: This WILL conflict with 'No Mercy Features'!", 1);
 
-                    break;
+                    break;            
 
-                case CustomComboPreset.GNBPvP_Corundum:
-                    UserConfig.DrawSliderInt(1, 100,
-                        GNBPvP.Config.corundumThreshold,
-                        "HP% to be at or Below to use " +
-                        "(100 = Use Always)",
-                        itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
-                    break;
-
-                case CustomComboPreset.GNBPvP_BlastingZone:
-
-                    UserConfig.DrawSliderInt(1, 100,
-                        GNBPvP.Config.blastingZoneThreshold,
-                        "Hp % of target to use Blasting zone. Most powerful below 50% " +
-                        "(100 = Use Always)",
-                        itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
-                    break;
+               
             }
         }
     }

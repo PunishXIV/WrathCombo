@@ -90,20 +90,15 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> Number of charges. </returns>
         public static ushort GetMaxCharges(uint actionID) => GetCooldown(actionID).MaxCharges;
 
-        /// <summary> Get if an action is enabled.</summary>
-        /// <param name="actionID"> Action ID to check</param>
-        /// <returns> If the action is currently enabled.</returns>
-        public unsafe static bool IsEnabled(uint actionID) => ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) == 0;
-
-        private static uint Action1 => ActionManager.GetDutyActionId(0);
-        private static uint Action2 => ActionManager.GetDutyActionId(1);
+        private static uint Action1 => DutyActionManager.GetDutyActionId(0);
+        private static uint Action2 => DutyActionManager.GetDutyActionId(1);
 
         public static bool HasActionEquipped(uint actionId) => (Action1 == actionId && HasCharges(actionId)) || (Action2 == actionId && HasCharges(actionId));
 
-        private unsafe static RecastDetail* GCD => ActionManager.Instance()->GetRecastGroupDetail(57);
+        private static unsafe RecastDetail* GCD => ActionManager.Instance()->GetRecastGroupDetail(57);
 
-        public unsafe static float GCDTotal => GCD->Total;
+        public static unsafe float GCDTotal => GCD->Total;
 
-        public unsafe static float RemainingGCD => GCDTotal - GCD->Elapsed;
+        public static unsafe float RemainingGCD => GCDTotal - GCD->Elapsed;
     }
 }

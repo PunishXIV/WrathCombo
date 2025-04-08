@@ -2,16 +2,15 @@
 
 // ReSharper disable RedundantUsingDirective
 
+using Dalamud.Plugin.Services;
+using ECommons.DalamudServices;
+using ECommons.ExcelServices;
+using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
-using Dalamud.Plugin.Services;
-using ECommons.DalamudServices;
-using ECommons.ExcelServices;
-using ECommons.GameHelpers;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -107,7 +106,8 @@ public class Lease(
     internal Dictionary<Job, bool> JobsControlled { get; set; } = new();
 
     internal Dictionary<CustomComboPreset, (bool enabled, bool autoMode)>
-        CombosControlled { get; set; } = new();
+        CombosControlled
+    { get; set; } = new();
 
     internal Dictionary<CustomComboPreset, bool> OptionsControlled { get; set; } =
         new();
@@ -325,10 +325,6 @@ public partial class Leasing
         registration.LastUpdated = DateTime.Now;
         AutoRotationStateUpdated = DateTime.Now;
 
-        // Try to build combo data before auto-rotation-readiness is requested
-        Task.Run(() => P.IPCSearch.ComboStatesByJobCategorized
-            .TryGetValue(Player.Job, out var _));
-
         Logging.Log($"{registration.PluginName}: Auto-Rotation state updated");
         return SetResult.Okay;
     }
@@ -379,8 +375,7 @@ public partial class Leasing
             return SetResult.PlayerNotAvailable;
         }
 
-        var job =
-            (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
+        var job = (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
         if (jobOverride is not null)
             job = jobOverride.Value;
 
@@ -398,74 +393,75 @@ public partial class Leasing
         Logging.Log(
             $"{registration.PluginName}: Registering Current Job ({job}) ...");
 
-        Task.Run(() =>
+
+        bool locking;
+        var combos = Helper.GetCombosToSetJobAutoRotationReady(job, false)!;
+        var options = Helper.GetCombosToSetJobAutoRotationReady(job)!;
+        string[] stringKeys;
+
+        // Lock the job if it's already ready
+        if (P.IPC.IsCurrentJobAutoRotationReady())
         {
-            bool locking;
-            var combos = Helper.GetCombosToSetJobAutoRotationReady(job, false)!;
-            var options = Helper.GetCombosToSetJobAutoRotationReady(job)!;
-            string[] stringKeys;
+            locking = true;
+            stringKeys = [];
+            combos = P.IPCSearch.EnabledActions
+                .Where(a => a.Attributes().CustomComboInfo.JobID
+                           == (uint)job)
+                .Where(a => a.Attributes().Parent is null)
+                .Select(a => a.ToString())
+                .ToList();
+            options = P.IPCSearch.EnabledActions
+                .Where(a => a.Attributes().CustomComboInfo.JobID
+                           == (uint)job)
+                .Where(a => a.Attributes().Parent is not null)
+                .Select(a => a.ToString())
+                .ToList();
+        }
+        // Get the list of combos and options to enable
+        else
+        {
+            locking = false;
+            stringKeys = combos.Select(k => k.ToString())
+                .Concat(registration.CombosControlled.Keys
+                    .Select(k => k.ToString()).ToArray())
+                .ToArray();
+        }
 
-            // Lock the job if it's already ready
-            if (P.IPC.IsCurrentJobAutoRotationReady())
-            {
-                locking = true;
-                stringKeys = [];
-                combos = P.IPCSearch.EnabledActions
-                    .Where(a=> a.Attributes().CustomComboInfo.JobID
-                               == (uint)job)
-                    .Where(a => a.Attributes().Parent is null)
-                    .Select(a => a.ToString())
-                    .ToList();
-                options = P.IPCSearch.EnabledActions
-                    .Where(a=> a.Attributes().CustomComboInfo.JobID
-                               == (uint)job)
-                    .Where(a => a.Attributes().Parent is not null)
-                    .Select(a => a.ToString())
-                    .ToList();
-            }
-            // Get the list of combos and options to enable
-            else
-            {
-                locking = false;
-                stringKeys = combos.Select(k => k.ToString())
-                    .Concat(registration.CombosControlled.Keys
-                        .Select(k => k.ToString()).ToArray())
-                    .ToArray();
-            }
+        // Register all combos
+        foreach (var combo in combos)
+            AddRegistrationForCombo(lease, combo, true, true);
 
-            // Register all combos
-            foreach (var combo in combos)
-                AddRegistrationForCombo(lease, combo, true, true);
+        // Register all options
+        foreach (var option in options)
+        {
+            if (stringKeys.Contains(option)) continue;
 
-            // Register all options
-            foreach (var option in options)
-            {
-                if (stringKeys.Contains(option)) continue;
-
-                // Enable the option, or lock the option to its current state
-                var state = true;
-                if (locking)
-                {
-                    var ccpOption = (CustomComboPreset)
-                        Enum.Parse(typeof(CustomComboPreset), option);
-                    state = CustomComboFunctions.IsEnabled(ccpOption);
-                }
-
-                AddRegistrationForOption(lease, option, state);
-            }
-
-            var logText =
-                $"{registration.PluginName}: Registered Current Job ({job})";
+            // Enable the option, or lock the option to its current state
+            var state = true;
             if (locking)
-                logText += " (was already ready: locked it)";
+            {
+                var ccpOption = (CustomComboPreset)
+                    Enum.Parse(typeof(CustomComboPreset), option);
+                state = CustomComboFunctions.IsEnabled(ccpOption);
+            }
 
-            Logging.Log(logText);
+            AddRegistrationForOption(lease, option, state);
+        }
 
-            registration.LastUpdated = DateTime.Now;
-            JobsUpdated = DateTime.Now;
-            CombosUpdated = DateTime.Now;
-            OptionsUpdated = DateTime.Now;
-        });
+        var logText =
+            $"{registration.PluginName}: Registered Current Job ({job})";
+        if (locking)
+            logText += " (was already ready: locked it)";
+
+        Logging.Log(logText);
+
+        registration.LastUpdated = DateTime.Now;
+        JobsUpdated = DateTime.Now;
+        CombosUpdated = DateTime.Now;
+        OptionsUpdated = DateTime.Now;
+
+        P.IPCSearch.UpdateActiveJobPresets();
+
         return SetResult.OkayWorking;
     }
 
@@ -506,6 +502,8 @@ public partial class Leasing
         JobsUpdated = DateTime.Now;
         CombosUpdated = DateTime.Now;
         OptionsUpdated = DateTime.Now;
+
+        P.IPCSearch.UpdateActiveJobPresets();
     }
 
     #endregion

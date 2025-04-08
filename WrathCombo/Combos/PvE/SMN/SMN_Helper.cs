@@ -1,11 +1,10 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 using System;
 using System.Collections.Generic;
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
@@ -144,18 +143,20 @@ internal partial class SMN
     public static class Traits
     {
         public const ushort
-            RuinMastery3 = 476;
+            EnhancedDreadwyrmTrance = 178,
+            RuinMastery3 = 476,
+            EnhancedBahamut = 619;
     }
 
     #endregion
 
     internal static SMNGauge Gauge => GetJobGauge<SMNGauge>();
-    private static byte AttunementType => (byte)(Gauge.Attunement & 0x3);
-    private static byte AttunementCount => (byte)(Gauge.Attunement >> 2);
 
-    internal static bool IsIfritAttuned => AttunementType == 1;
-    internal static bool IsTitanAttuned => AttunementType == 2;
-    internal static bool IsGarudaAttuned => AttunementType == 3;
+    internal static bool IsIfritAttuned => Gauge.AttunementType is SummonAttunement.Ifrit;
+    internal static bool IsTitanAttuned => Gauge.AttunementType is SummonAttunement.Titan;
+    internal static bool IsGarudaAttuned => Gauge.AttunementType is SummonAttunement.Garuda;
+
+    internal static bool GemshineReady => Gauge.AttunementCount > 0;
 
     internal static bool IsAttunedAny => IsIfritAttuned || IsTitanAttuned || IsGarudaAttuned;
 
@@ -181,7 +182,7 @@ internal partial class SMN
     {
         get
         {
-            if (Gauge.SummonTimerRemaining > 0 && Gauge.AttunmentTimerRemaining == 0)
+            if (Gauge.SummonTimerRemaining > 0 && Gauge.AttunementTimerRemaining == 0)
             {
                 if (IsDreadwyrmTranceReady) return DemiSummon.Dreadwyrm;
                 if (IsBahamutReady) return DemiSummon.Bahamut;
@@ -248,6 +249,8 @@ internal partial class SMN
         [
             4,
         ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([26], () => Config.SMN_Opener_SkipSwiftcast == 2)];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => Config.SMN_Balance_Content;

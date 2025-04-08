@@ -52,11 +52,8 @@ internal sealed class ActionReplacer : IDisposable
 
         // ReSharper disable once RedundantCast
         // Must keep the nint cast
-        getActionHook = Svc.Hook.HookFromAddress<GetActionDelegate>
-        ((nint) ActionManager.Addresses.GetAdjustedActionId.Value,
-            GetAdjustedActionDetour);
-        isActionReplaceableHook = Svc.Hook.HookFromAddress<IsActionReplaceableDelegate>
-            (Service.Address.IsActionIdReplaceable, IsActionReplaceableDetour);
+        getActionHook = Svc.Hook.HookFromAddress<GetActionDelegate>((nint) ActionManager.Addresses.GetAdjustedActionId.Value, GetAdjustedActionDetour);
+        isActionReplaceableHook = Svc.Hook.HookFromAddress<IsActionReplaceableDelegate>(Service.Address.IsActionIdReplaceable, IsActionReplaceableDetour);
 
         getActionHook.Enable();
         isActionReplaceableHook.Enable();

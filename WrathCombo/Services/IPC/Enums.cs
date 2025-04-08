@@ -134,6 +134,9 @@ public enum CancellationReason
                  "Please see the commit history for /res/ipc_status.txt.\n " +
                  "https://github.com/PunishXIV/WrathCombo/commits/main/res/ipc_status.txt")]
     AllServicesSuspended = 4,
+
+    [Description("Player job has been changed and leases will have to be reapplied.")]
+    JobChanged = 5,
 }
 
 public enum SetResult

@@ -6,7 +6,9 @@ namespace WrathCombo.Combos.PvE.Content;
 internal class Bozja
 {
     public const uint
+        
     #region Offensive
+
         LostFocus = 20714,
         LostFontOfMagic = 20715,
         LostFontOfPower = 20717,
@@ -19,18 +21,22 @@ internal class Bozja
         LostFlareStar = 22352,
         LostChainspell = 23913,
         LostAssassination = 23914,
-    #endregion
 
+    #endregion
+        
     #region Defensive
+
         LostManawall = 20703,
         BannerOfTirelessConviction = 20722,
         BannerOfFirmResolve = 20723,
         LostIncense = 20731,
         LostExcellence = 23919,
         LostBloodRage = 23921,
-    #endregion
 
+    #endregion
+        
     #region Restorative
+
         BannerOfSolemnClarity = 20724,
         LostCure = 20726,
         LostCure2 = 20727,
@@ -40,9 +46,11 @@ internal class Bozja
         LostSacrifice = 22345,
         LostReraise = 23912,
         LostFullCure = 23920,
-    #endregion
 
+    #endregion
+        
     #region Beneficial
+
         LostSpellforge = 20706,
         LostSteelsting = 20707,
         LostProtect = 20709,
@@ -56,18 +64,22 @@ internal class Bozja
         LostProtect2 = 23915,
         LostShell2 = 23916,
         LostBubble = 23917,
-    #endregion
 
+    #endregion
+        
     #region Tactical
+
         LostStealth = 20705,
         LostSwift = 20708,
         LostFontOfSkill = 20716,
         Mimic = 20733,
         LostPerception = 22344,
         LostImpetus = 23918,
-    #endregion
 
+    #endregion
+        
     #region Detrimental
+
         LostParalyze3 = 20701,
         LostBanish3 = 20702,
         LostDispel = 20704,
@@ -75,9 +87,11 @@ internal class Bozja
         LostSeraphStrike = 22354,
         LostBurst = 23909,
         LostRampage = 23910,
-    #endregion
 
+    #endregion
+        
     #region Item-related
+
         DynamisDice = 20734,
         ResistancePhoenix = 20735,
         ResistanceReraiser = 20736,
@@ -124,13 +138,19 @@ internal class Bozja
         Lodestone = 23907,
         LightCurtain = 23911,
         ResistanceElixir = 23922;
+
     #endregion
+
+    public static bool InFieldOperations => ContentHelper.Content.ContentType == ContentHelper.ContentType.FieldOperations; //Southern Front, Zadnor
+    public static bool InFieldRaids => ContentHelper.Content.ContentType == ContentHelper.ContentType.FieldRaid; //Delubrum Reginae, etc.
+    public static bool IsInBozja => ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Bozja && (InFieldOperations || InFieldRaids);
 
     public static class Buffs
     {
         public const ushort
-
+            
         #region Lost Actions
+
             LostFontOfPower = 2346, //granted by Lost Font of Power action or Lost Assasination
             LostSpellforge = 2338, //granted by Lost Spellforge
             LostSteelsting = 2339, //granted by Lost Steelsting
@@ -150,9 +170,11 @@ internal class Bozja
             LostManawall = 2345, //granted by Lost Manawall
             LostStealth = 2336, //granted by Lost Stealth
             LostSwift = 2335, //granted by Lost Swift
-        #endregion
 
+        #endregion
+            
         #region Banners
+
             BannerOfNobleEnds = 2326, //granted by Banner of Noble Ends
             BannerOfHonoredSacrifice = 2327, //granted by Banner of Honored Sacrifice
             BannerOfHonedAcuity = 2331, //granted by Banner of Honed Acuity
@@ -162,9 +184,11 @@ internal class Bozja
             BannerOfTranscendentFinesse = 2354, //granted by 3 stacks of Banner of Honed Acuity
             BannerOfUnyieldingDefense = 2352, //granted by 5 stacks of either Banner of Firm Resolve or Tireless Conviction
             BannerOfLimitlessGrace = 2353, //granted by 4 stacks of Banner of Solemn Clarity
-        #endregion
 
+        #endregion
+            
         #region Misc
+
             MPRefresh = 909,
             MPRefresh2 = 1198,
             Boost = 1656, //granted by Lost Focus; max 16 stacks
@@ -179,9 +203,11 @@ internal class Bozja
             Autoether = 2343, //Granted by Lost Full Cure
             RapidRecast = 1645, //granted by Lost Swift, requires Spirit of the Watcher
             ClericStance = 2484, //granted by Lost Seraph Strike 
-        #endregion
 
+        #endregion
+            
         #region Essences
+
             SpiritOfTheAetherweaver = 2311, //granted by any Essence of the Aetherweaver
             SpiritOfTheMartialist = 2312, //granted by any Essence of the Martialist
             SpiritOfTheSavior = 2313, //granted by any Essence of the Savior
@@ -203,8 +229,8 @@ internal class Bozja
             SpiritOfTheFieldhunter = 2437, //granted by Pure Essence of the Fieldhunter
             SpiritOfTheIndomitable = 2438, //granted by Pure Essence of the Indomitable
             SpiritOfTheDivine = 2439; //granted by Pure Essence of the Divine
-        #endregion
 
+        #endregion
     }
 
     public static class Debuffs
@@ -215,8 +241,4 @@ internal class Bozja
             MagicalAversion = 2370,
             PhysicalAversion = 2369;
     }
-
-    public static bool InFieldOperations => ContentHelper.Content.ContentType == ContentHelper.ContentType.FieldOperations; //Southern Front, Zadnor
-    public static bool InFieldRaids => ContentHelper.Content.ContentType == ContentHelper.ContentType.FieldRaid; //Delubrum Reginae, etc.
-    public static bool IsInBozja => ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Bozja && (InFieldOperations || InFieldRaids);
 }

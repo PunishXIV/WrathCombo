@@ -82,7 +82,7 @@ namespace WrathCombo.Window.Tabs
                         DebugConfig = true;
                         _previousConfig = Service.Configuration;
                         Service.Configuration = config;
-                        P.IPC = Provider.InitAsync().Result;
+                        P.IPC = Provider.Init();
                         AutoRotationController.cfg = null;
                         UpdateCaches(true, true, false);
                         _debugError = "";
@@ -174,6 +174,7 @@ namespace WrathCombo.Window.Tabs
                     $"{LocalPlayer.ClassJob.Value.NameEnglish} (ID: {LocalPlayer.ClassJob.RowId})");
                 CustomStyleText("Zone:",
                     $"{Svc.Data.GetExcelSheet<TerritoryType>().FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType).PlaceName.Value.Name} (ID: {Svc.ClientState.TerritoryType})");
+                CustomStyleText($"MP:", GetPartyMembers().First().CurrentMP);
                 CustomStyleText("In PvP:", InPvP());
                 CustomStyleText("In Combat:", InCombat());
                 CustomStyleText("In Boss:", InBossEncounter());
@@ -320,6 +321,7 @@ namespace WrathCombo.Window.Tabs
                 CustomStyleText("Is BattleChara:", target is IBattleChara);
                 CustomStyleText("Is PlayerCharacter:", target is IPlayerCharacter);
                 CustomStyleText("Distance:", $"{Math.Round(GetTargetDistance(), 2)}y");
+                CustomStyleText("Height:", $"{Math.Round(GetTargetHeightDifference(), 2)}y");
                 CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
                 CustomStyleText("In Melee Range:", InMeleeRange());
                 CustomStyleText("Requires Postionals:", TargetNeedsPositionals());
@@ -375,8 +377,7 @@ namespace WrathCombo.Window.Tabs
                     ImGui.Indent();
                     foreach (var member in GetPartyMembers())
                     {
-                        if (ImGui.CollapsingHeader(
-                                member.BattleChara.GetInitials()))
+                        if (ImGui.CollapsingHeader($"{member?.BattleChara?.GetInitials()}###{member.GameObjectId}"))
                         {
                             CustomStyleText("Job:",
                                 member.BattleChara.ClassJob.Value.Abbreviation);
@@ -386,6 +387,8 @@ namespace WrathCombo.Window.Tabs
                                 $"{member.CurrentMP}/{member.BattleChara.MaxMp}");
                             CustomStyleText("Dead Timer:",
                                 TimeSpentDead(member.BattleChara.GameObjectId));
+
+                            Util.ShowObject(member.BattleChara);
                         }
                     }
 
@@ -560,7 +563,18 @@ namespace WrathCombo.Window.Tabs
                     ImGui.TextUnformatted(
                         $"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(ActionWatching.GetActionName).OrderBy(x => x))}");
                 }
+                ImGui.Indent();
+                if (ImGui.CollapsingHeader("Enmity"))
+                {
+                    foreach (var h in EnmityDictParty)
+                    {
+                        CustomStyleText($"{Svc.Objects.First(x => x.GameObjectId == h.Key).Name}", h.Value);
+                    }
 
+                    ImGui.Spacing();
+                    CustomStyleText($"\"Strongest\" DPS:", $"{StrongestDPS()?.Name}");
+                }
+                ImGui.Unindent();
                 if (WrathOpener.CurrentOpener is not null)
                 {
                     CustomStyleText("Current Opener",
@@ -771,7 +785,7 @@ namespace WrathCombo.Window.Tabs
                 new PluginConfiguration();
             _previousConfig = null;
 
-            P.IPC = Provider.InitAsync().Result;
+            P.IPC = Provider.Init();
             AutoRotationController.cfg = null;
             UpdateCaches(true, true, false);
         }

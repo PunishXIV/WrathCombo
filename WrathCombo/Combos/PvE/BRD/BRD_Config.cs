@@ -1,6 +1,5 @@
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
@@ -16,7 +15,6 @@ internal partial class BRD
             BRD_STSecondWindThreshold = new("BRD_STSecondWindThreshold"),
             BRD_AoESecondWindThreshold = new("BRD_AoESecondWindThreshold"),
             BRD_VariantCure = new("BRD_VariantCure"),
-            BRDPvP_HarmonicArrowCharges = new("BRDPvP_HarmonicArrowCharges"),
             BRD_Adv_Opener_Selection = new("BRD_Adv_Opener_Selection", 0),
             BRD_Balance_Content = new("BRD_Balance_Content", 1);
 
@@ -25,14 +23,14 @@ internal partial class BRD
             switch (preset)
             {
                 case CustomComboPreset.BRD_ST_Adv_Balance_Standard:
-                    DrawRadioButton(BRD_Adv_Opener_Selection, $"Standard Opener", "", 0);
-                    DrawRadioButton(BRD_Adv_Opener_Selection, $"2.48 Adjusted Standard Opener", "", 1);
-                    DrawRadioButton(BRD_Adv_Opener_Selection, $"2.49 Standard Comfy", "", 2);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, "Standard Opener", "", 0);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, "2.48 Adjusted Standard Opener", "", 1);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, "2.49 Standard Comfy", "", 2);
 
                     ImGui.Indent();
                     DrawBossOnlyChoice(BRD_Balance_Content);
                     ImGui.Unindent();
-                    break;                
+                    break;
 
                 case CustomComboPreset.BRD_Adv_RagingJaws:
                     DrawSliderInt(3, 10, BRD_RagingJawsRenewTime,
@@ -65,11 +63,6 @@ internal partial class BRD
 
                 case CustomComboPreset.BRD_Variant_Cure:
                     DrawSliderInt(1, 100, BRD_VariantCure, "HP% to be at or under", 200);
-
-                    break;
-
-                case CustomComboPreset.BRDPvP_HarmonicArrow:
-                    DrawSliderInt(1, 4, BRDPvP_HarmonicArrowCharges, "How many Charges to use it at \n 1 charge 8000 damage \n 2 charge 12000 damage \n 3 charge 15000 damage \n 4 charge 17000 damage");
 
                     break;
             }

@@ -1,5 +1,5 @@
 using ECommons.ExcelServices;
-using WrathCombo.Combos.PvP;
+using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
@@ -16,6 +16,7 @@ internal partial class SMN
             SMN_ST_PrimalChoice = new("SMN_PrimalChoice", 1),
             SMN_ST_SwiftcastPhase = new("SMN_SwiftcastPhase", 1),
             SMN_ST_Burst_Delay = new("SMN_Burst_Delay", 0),
+            SMN_Opener_SkipSwiftcast = new("SMN_Opener_SkipSwiftcast", 1),
 
             SMN_AoE_Lucid = new("SMN_AoE_Lucid", 8000),
             SMN_AoE_BurstPhase = new("SMN_AoE_BurstPhase", 1),
@@ -41,7 +42,16 @@ internal partial class SMN
             switch (preset)
             {
                 case CustomComboPreset.SMN_ST_Advanced_Combo_Balance_Opener:
+                    
                     UserConfig.DrawBossOnlyChoice(SMN_Balance_Content);
+
+                    ImGui.NewLine();
+
+                    UserConfig.DrawHorizontalRadioButton(SMN_Opener_SkipSwiftcast, "Use Swiftcast",
+                        "Will use Swiftcast in opener to try and snapshot in pots for lower gcds", 1);
+
+                    UserConfig.DrawHorizontalRadioButton(SMN_Opener_SkipSwiftcast, "Skip Swiftcast",
+                        "Will not use swiftcast in opener for higher gcds", 2);
                     break;
 
                 case CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_EgiOrder:
@@ -63,9 +73,9 @@ internal partial class SMN
                     break;
 
                 case CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling:
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Solar Bahamut/Bahamut",
-                        "Bursts during Bahamut phase.\nBahamut burst phase becomes Solar Bahamut at Lv100.", 1);
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Phoenix", "Bursts during Phoenix phase.", 2);
+                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Solar Bahamut/Pre 100 Bahamut",
+                        "Bursts during Bahamut phase before 100.\nBahamut burst phase becomes Solar Bahamut at Lv100.", 1);
+                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Phoenix/Post 100 Bahamut", "Bursts during Phoenix phase. Also adds Regular Bahamut at 100. ", 2);
 
                     UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Any Demi Phase",
                         "Bursts during any Demi Summon phase.", 3);
@@ -79,9 +89,9 @@ internal partial class SMN
                     break;
 
                 case CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling:
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Solar Bahamut/Bahamut",
-                        "Bursts during Bahamut phase.\nBahamut burst phase becomes Solar Bahamut at Lv100.", 1);
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Phoenix", "Bursts during Phoenix phase.", 2);
+                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Solar Bahamut/Pre 100 Bahamut",
+                        "Bursts during Bahamut phase below 100.\nBahamut burst phase becomes Solar Bahamut at Lv100.", 1);
+                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Phoenix/Post 100 Bahamut", "Bursts during Phoenix phase. Also adds Regular Bahamut at 100.", 2);
 
                     UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Any Demi Phase",
                         "Bursts during any Demi Summon phase.", 3);
@@ -170,12 +180,7 @@ internal partial class SMN
                 case CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight:
                     UserConfig.DrawAdditionalBoolChoice(SMN_AoE_Searing_Any, $"Do not user when under another {Job.SMN.GetData().Abbreviation}'s {Buffs.SearingLight.StatusName()} buff.", $"Saves your {SearingLight.ActionName()} if you already have the buff from another {Job.SMN.GetData().Abbreviation}.");
                     break;
-
-                case CustomComboPreset.SMNPvP_BurstMode_RadiantAegis:
-                    UserConfig.DrawSliderInt(0, 90, SMNPvP.Config.SMNPvP_RadiantAegisThreshold,
-                        "Caps at 90 to prevent waste.");
-
-                    break;
+                
             }
         }
     }

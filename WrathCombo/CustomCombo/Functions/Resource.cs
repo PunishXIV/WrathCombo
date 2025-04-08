@@ -22,14 +22,14 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> The job gauge. </returns>
         public static T GetJobGauge<T>() where T : JobGaugeBase => Service.ComboCache.GetJobGauge<T>();
 
-        public unsafe static int LimitBreakValue => LimitBreakController.Instance()->CurrentUnits;
+        public static unsafe int LimitBreakValue => LimitBreakController.Instance()->CurrentUnits;
 
-        public unsafe static int LimitBreakLevel => LimitBreakController.Instance()->BarUnits == 0 ? 0 : LimitBreakValue / LimitBreakController.Instance()->BarUnits;
+        public static unsafe int LimitBreakLevel => LimitBreakController.Instance()->BarUnits == 0 ? 0 : LimitBreakValue / LimitBreakController.Instance()->BarUnits;
 
-        public unsafe static bool IsLB1Ready => LimitBreakLevel == 1;
+        public static bool IsLB1Ready => LimitBreakLevel == 1;
 
-        public unsafe static bool IsLB2Ready => LimitBreakLevel == 2;
+        public static bool IsLB2Ready => LimitBreakLevel == 2;
 
-        public unsafe static bool IsLB3Ready => LimitBreakLevel == 3;
+        public static bool IsLB3Ready => LimitBreakLevel == 3;
     }
 }

@@ -17,22 +17,24 @@ internal static class VariantActions
     {
         1069 => 29729,
         1137 or 1176 => 33862,
-        _ => 0
+        var _ => 0
     };
 
     internal static uint VariantSpiritDart => Svc.ClientState.TerritoryType switch
     {
         1069 => 29732,
         1137 or 1176 => 33863,
-        _ => 0
+        var _ => 0
     };
 
     internal static uint VariantRampart => Svc.ClientState.TerritoryType switch
     {
         1069 => 29733,
         1137 or 1176 => 33864,
-        _ => 0
+        var _ => 0
     };
+
+
 
     public static class Buffs
     {
@@ -50,22 +52,22 @@ internal static class VariantActions
     }
 
     internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
-        IsEnabled(preset) && IsEnabled(VariantRampart) && IsOffCooldown(VariantRampart) && CheckWeave(weave);
+        IsEnabled(preset) && ActionReady(VariantRampart) &&
+        CheckWeave(weave);
 
     internal static bool CanSpiritDart(CustomComboPreset preset) =>
-        IsEnabled(preset) && IsEnabled(VariantSpiritDart) && HasBattleTarget() && GetDebuffRemainingTime(VariantActions.Debuffs.SustainedDamage) <= 3;
+        IsEnabled(preset) && ActionReady(VariantSpiritDart) &&
+        HasBattleTarget() && GetDebuffRemainingTime(Debuffs.SustainedDamage) <= 3;
 
     internal static bool CanCure(CustomComboPreset preset, int healthpercent) =>
-        IsEnabled(preset) && IsEnabled(VariantCure) &&
+        IsEnabled(preset) && ActionReady(VariantCure) &&
         PlayerHealthPercentageHp() <= healthpercent;
 
     internal static bool CanRaise(CustomComboPreset preset) =>
-        IsEnabled(preset) && IsEnabled(VariantRaise) && HasEffect(MagicRole.Buffs.Swiftcast);
+        IsEnabled(preset) && ActionReady(VariantRaise) && HasEffect(MagicRole.Buffs.Swiftcast);
 
     internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => 
-        IsEnabled(preset) && CanCircleAoe(5) > 0 && CheckWeave(weave);
-
-
+        IsEnabled(preset) && ActionReady(VariantUltimatum) && CanCircleAoe(5) > 0 && CheckWeave(weave);
 
 }
 
@@ -80,7 +82,6 @@ public class VariantTank
     internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanUltimatum(preset, weave);
     internal static bool CanRaise(CustomComboPreset preset) => VariantActions.CanRaise(preset);
     internal static bool CanSpiritDart(CustomComboPreset preset) => VariantActions.CanSpiritDart(preset);
-
 }
 
 public class VariantHealer
@@ -93,6 +94,7 @@ public class VariantHealer
     internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) => VariantActions.CanRampart(preset, weave);
     internal static bool CanUltimatum(CustomComboPreset preset) => VariantActions.CanUltimatum(preset);
 }
+
 public class VariantPDPS
 {
     internal static uint Cure => VariantActions.VariantCure;

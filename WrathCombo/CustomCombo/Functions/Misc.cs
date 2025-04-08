@@ -21,9 +21,9 @@ namespace WrathCombo.CustomComboNS.Functions
 
             try
             {
-                var checkControlled = P.UIHelper.PresetControlled(preset);
-                var controlled = checkControlled is not null;
-                var controlledState = checkControlled?.enabled;
+                (string controllers, bool enabled, bool autoMode)? checkControlled = P.UIHelper.PresetControlled(preset);
+                bool controlled = checkControlled is not null;
+                bool? controlledState = checkControlled?.enabled;
 
                 return controlled
                     ? (bool)controlledState!

@@ -47,7 +47,7 @@ internal partial class AST : HealerJob
             {
                 if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
                     ActionReady(OriginalHook(AstralDraw)) &&
-                    (Gauge.DrawnCards.All(x => x is CardType.NONE) || DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards))
+                    (Gauge.DrawnCards.All(x => x is CardType.None) || DrawnCard == CardType.None && Config.AST_ST_DPS_OverwriteCards))
                     return OriginalHook(AstralDraw);
             }
 
@@ -76,14 +76,14 @@ internal partial class AST : HealerJob
                 //Play Card
                 if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
                     ActionReady(Play1) &&
-                    Gauge.DrawnCards[0] is not CardType.NONE &&
+                    Gauge.DrawnCards[0] is not CardType.None &&
                     CanSpellWeave())
                     return OriginalHook(Play1);
 
                 //Card Draw
                 if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
                     ActionReady(OriginalHook(AstralDraw)) &&
-                    (Gauge.DrawnCards.All(x => x is CardType.NONE) || DrawnCard == CardType.NONE && Config.AST_ST_DPS_OverwriteCards) &&
+                    (Gauge.DrawnCards.All(x => x is CardType.None) || DrawnCard == CardType.None && Config.AST_ST_DPS_OverwriteCards) &&
                     CanDelayedWeave())
                     return OriginalHook(AstralDraw);
 
@@ -111,7 +111,7 @@ internal partial class AST : HealerJob
                 //Minor Arcana / Lord of Crowns
                 if (ActionReady(OriginalHook(MinorArcana)) &&
                     IsEnabled(CustomComboPreset.AST_DPS_LazyLord) &&
-                    Gauge.DrawnCrownCard is CardType.LORD &&
+                    Gauge.DrawnCrownCard is CardType.Lord &&
                     HasBattleTarget() && CanDelayedWeave())
                     return OriginalHook(MinorArcana);
 
@@ -171,14 +171,14 @@ internal partial class AST : HealerJob
             //Play Card
             if (IsEnabled(CustomComboPreset.AST_AOE_AutoPlay) &&
                 ActionReady(Play1) &&
-                Gauge.DrawnCards[0] is not CardType.NONE &&
+                Gauge.DrawnCards[0] is not CardType.None &&
                 CanSpellWeave())
                 return OriginalHook(Play1);
 
             //Card Draw
             if (IsEnabled(CustomComboPreset.AST_AOE_AutoDraw) &&
                 ActionReady(OriginalHook(AstralDraw)) &&
-                (Gauge.DrawnCards.All(x => x is CardType.NONE) || DrawnCard == CardType.NONE && Config.AST_AOE_DPS_OverwriteCards) &&
+                (Gauge.DrawnCards.All(x => x is CardType.None) || DrawnCard == CardType.None && Config.AST_AOE_DPS_OverwriteCards) &&
                 CanDelayedWeave())
                 return OriginalHook(AstralDraw);
 
@@ -204,7 +204,7 @@ internal partial class AST : HealerJob
 
             //Minor Arcana / Lord of Crowns
             if (ActionReady(OriginalHook(MinorArcana)) &&
-                IsEnabled(CustomComboPreset.AST_AOE_LazyLord) && Gauge.DrawnCrownCard is CardType.LORD &&
+                IsEnabled(CustomComboPreset.AST_AOE_LazyLord) && Gauge.DrawnCrownCard is CardType.Lord &&
                 HasBattleTarget() &&
                 CanDelayedWeave())
                 return OriginalHook(MinorArcana);
@@ -233,7 +233,7 @@ internal partial class AST : HealerJob
 
             if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_LazyLady) &&
                 ActionReady(MinorArcana) &&
-                Gauge.DrawnCrownCard is CardType.LADY
+                Gauge.DrawnCrownCard is CardType.Lady
                 && canLady)
                 return OriginalHook(MinorArcana);
 
@@ -299,28 +299,28 @@ internal partial class AST : HealerJob
                 return Role.Esuna;
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Spire) &&
-                Gauge.DrawnCards[2] == CardType.SPIRE &&
+                Gauge.DrawnCards[2] == CardType.Spire &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Spire &&
                 ActionReady(Play3) &&
                 canSpire)
                 return OriginalHook(Play3);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Ewer) &&
-                Gauge.DrawnCards[2] == CardType.EWER &&
+                Gauge.DrawnCards[2] == CardType.Ewer &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Ewer &&
                 ActionReady(Play3) &&
                 canEwer)
                 return OriginalHook(Play3);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Arrow) &&
-                Gauge.DrawnCards[1] == CardType.ARROW &&
+                Gauge.DrawnCards[1] == CardType.Arrow &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Arrow &&
                 ActionReady(Play2) &&
                 canArrow)
                 return OriginalHook(Play2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Bole) &&
-                Gauge.DrawnCards[1] == CardType.BOLE &&
+                Gauge.DrawnCards[1] == CardType.Bole &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Bole &&
                 ActionReady(Play2) &&
                 canBole)
