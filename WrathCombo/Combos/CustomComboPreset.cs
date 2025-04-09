@@ -7658,7 +7658,14 @@ SMN.JobID)]
        SCHPvP.JobID)]
     SCHPvP_Diabrosis = 126005,
 
-    // Last value = 126005
+    [PvPCustomCombo]
+    [ParentCombo(SCHPvP_Burst)]
+    [CustomComboInfo("Self Adlo Option",
+       "Adds Adloquium to self when at or beneath selected heath threshold. \n Will Not Overwrite Catalyze",
+       SCHPvP.JobID)]
+    SCHPvP_Selfcare = 126006,
+
+    // Last value = 126006
 
     #endregion
 

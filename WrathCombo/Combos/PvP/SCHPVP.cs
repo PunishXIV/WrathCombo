@@ -15,7 +15,7 @@ namespace WrathCombo.Combos.PvP
 
         public const uint
             Broil = 29231,
-            Aqloquilum = 29232,
+            Adloquilum = 29232,
             Biolysis = 29233,
             DeploymentTactics = 29234,
             Expedient = 29236,
@@ -25,6 +25,7 @@ namespace WrathCombo.Combos.PvP
         internal class Buffs
         {
             internal const ushort
+                Catalyze = 3088,
                 Recitation = 3094;
         }
         internal class Debuffs
@@ -39,7 +40,8 @@ namespace WrathCombo.Combos.PvP
         public static class Config
         {
             public static UserInt
-               SCHPvP_DiabrosisThreshold = new("SCHPvP_DiabrosisThreshold");
+               SCHPvP_DiabrosisThreshold = new("SCHPvP_DiabrosisThreshold"),
+               SCHPvP_AdloThreshold = new("SCHPvP_AdloThreshold");
 
             internal static void Draw(CustomComboPreset preset)
             {
@@ -48,6 +50,12 @@ namespace WrathCombo.Combos.PvP
                     case CustomComboPreset.SCHPvP_Diabrosis:
                         UserConfig.DrawSliderInt(0, 100, SCHPvP_DiabrosisThreshold,
                             "Target HP% to use Diabrosis");
+
+                        break;
+
+                    case CustomComboPreset.SCHPvP_Selfcare:
+                        UserConfig.DrawSliderInt(1, 100, SCHPvP_AdloThreshold,
+                            "Player HP% to use Adlo on self");
 
                         break;
                 }
@@ -68,26 +76,35 @@ namespace WrathCombo.Combos.PvP
                 {
                     // Uses Chain Stratagem when available
                     if (IsEnabled(CustomComboPreset.SCHPvP_ChainStratagem) && IsOffCooldown(ChainStratagem))
-                        return ChainStratagem;
+                        return ChainStratagem;                    
 
-                    if (IsEnabled(CustomComboPreset.SCHPvP_Diabrosis) && PvPHealer.CanDiabrosis() && HasTarget() &&
+                    // Uses Expedient when available and target isn't affected with Biolysis
+                    if (IsEnabled(CustomComboPreset.SCHPvP_Expedient) && IsOffCooldown(Expedient) && GetCooldownRemainingTime(Biolysis) < 3)
+                        return Expedient;
+
+                    // Uses Biolysis on cooldown or with Recitation when Expedient is enabled with safetey for too long of an expedient cooldown. 
+                    if (IsEnabled(CustomComboPreset.SCHPvP_Biolysis) && IsOffCooldown(Biolysis))
+                    {
+                        if (IsEnabled(CustomComboPreset.SCHPvP_Expedient))
+                        {
+                            if (HasEffect(Buffs.Recitation) || GetCooldownRemainingTime(Expedient) > 5)
+                                return Biolysis;
+                        } 
+                        return Biolysis;
+                    }
+
+                    //Uses Diabrosis when below set health
+                    if (IsEnabled(CustomComboPreset.SCHPvP_Diabrosis) && PvPHealer.CanDiabrosis() && HasTarget() && 
                             GetTargetHPPercent() <= Config.SCHPvP_DiabrosisThreshold)
                         return PvPHealer.Diabrosis;
 
-                    // Uses Expedient when available and target isn't affected with Biolysis
-                    if (IsEnabled(CustomComboPreset.SCHPvP_Expedient) && IsOffCooldown(Expedient) && !TargetHasEffect(Debuffs.Biolysis))
-                        return Expedient;
-
-                    // Uses Biolysis under Recitation, or on cooldown when option active
-                    if (IsEnabled(CustomComboPreset.SCHPvP_Biolysis))
-                    {
-                        if (IsOffCooldown(Biolysis) || (HasEffect(Buffs.Recitation) && IsOffCooldown(Biolysis)))
-                            return Biolysis;
-                    }
-
                     // Uses Deployment Tactics when available
-                    if (IsEnabled(CustomComboPreset.SCHPvP_DeploymentTactics) && GetRemainingCharges(DeploymentTactics) > 1)
+                    if (IsEnabled(CustomComboPreset.SCHPvP_DeploymentTactics) && GetRemainingCharges(DeploymentTactics) > 1 && TargetHasEffect(Debuffs.Biolysis))
                         return DeploymentTactics;
+
+                    // Adds Adloquium when at or below threshold, will not Overwrite the 10% damage reduction buff to prevent waste
+                    if (IsEnabled(CustomComboPreset.SCHPvP_Selfcare) && !HasEffect(Buffs.Catalyze) && PlayerHealthPercentageHp() <= Config.SCHPvP_AdloThreshold)
+                        return Adloquilum;
                 }
 
                 return actionID;
