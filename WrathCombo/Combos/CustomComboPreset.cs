@@ -726,11 +726,20 @@ public enum CustomComboPreset
     BRD_ST_Adv_Balance_Standard = 3048,
 
     [ParentCombo(BRD_ST_AdvMode)]
-    [CustomComboInfo("Bard DoTs Option", "This option will make Bard apply DoTs if none are present on the target.",
+    [CustomComboInfo("Bard DoTs Option", "Enables the use of dot sub options below",
        BRD.JobID)]
     BRD_Adv_DoT = 3010,
 
-    [ParentCombo(BRD_ST_AdvMode)]
+    [ParentCombo(BRD_Adv_DoT)]
+    [CustomComboInfo("Iron Jaws Option", "Enable the refreshing of dots with Ironjaws", BRD.JobID)]
+    BRD_Adv_IronJaws = 3060,
+
+    [ParentCombo(BRD_Adv_DoT)]
+    [CustomComboInfo("Dot Application Option",
+        "Enable the application of dots outside of the opener", BRD.JobID)]
+    BRD_Adv_ApplyDots = 3059,
+
+    [ParentCombo(BRD_Adv_DoT)]
     [CustomComboInfo("Raging Jaws Option",
         "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID)]
     BRD_Adv_RagingJaws = 3025,

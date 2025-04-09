@@ -555,15 +555,17 @@ internal partial class BRD : PhysRangedJob
             {
                 if (IsEnabled(CustomComboPreset.BRD_Adv_DoT))
                 {
-                    if (UseIronJaws())
+                    if (IsEnabled(CustomComboPreset.BRD_Adv_IronJaws) && UseIronJaws())
                         return IronJaws;
 
-                    if (ApplyBlueDot())
-                        return OriginalHook(Windbite);
+                    if (IsEnabled(CustomComboPreset.BRD_Adv_ApplyDots))
+                    {
+                        if (ApplyBlueDot())
+                            return OriginalHook(Windbite);
 
-                    if (ApplyPurpleDot())
-                        return OriginalHook(VenomousBite);
-
+                        if (ApplyPurpleDot())
+                            return OriginalHook(VenomousBite);
+                    }   
                     if (IsEnabled(CustomComboPreset.BRD_Adv_RagingJaws) && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
                         return IronJaws;
                 }
