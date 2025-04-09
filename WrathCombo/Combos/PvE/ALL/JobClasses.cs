@@ -1,37 +1,42 @@
-﻿using WrathCombo.Combos.PvE.Content;
+﻿using WrathCombo.Combos.PvE.Content.Variant;
 
 namespace WrathCombo.Combos.PvE;
 
 //This defines a FFXIV job type, and maps specific Role and Variant actions to that job
 //Examples
 // GNB.Role.Interject would work, SGE.Role.Interject would not.
-//THis should help for future jobs and future random actions to quickly wireup job appropriate actions
-class HealerJob
+//This should help for future jobs and future random actions to quickly wireup job appropriate actions
+internal class HealerJob
 {
-    public class Variant : VariantHealer;
+    public static IHealerVariant Variant { get; } = VariantHealer.Instance;
     public class Role : Healer;
+    private HealerJob() { } // Prevent instantiation
 }
 
-class TankJob
+internal class TankJob
 {
-    public class Variant : VariantTank;
+    public static ITankVariant Variant { get; } = VariantTank.Instance;
     public class Role : Tank;
+    private TankJob() { }
 }
 
-class MeleeJob
+internal class MeleeJob
 {
-    public class Variant : VariantPDPS;
+    public static IMeleeVariant Variant { get; } = VariantMelee.Instance;
     public class Role : Melee;
+    private MeleeJob() { }
 }
 
-class PhysRangedJob
+internal class PhysRangedJob
 {
-    public class Variant : VariantPDPS;
+    public static IPhysRangedVariant Variant { get; } = VariantPhysRanged.Instance;
     public class Role : PhysRanged;
+    private PhysRangedJob() { }
 }
 
-class CasterJob
+internal class CasterJob
 {
-    public class Variant : VariantMDPS;
+    public static ICasterVariant Variant { get; } = VariantCaster.Instance;
     public class Role : Caster;
+    private CasterJob() { }
 }
