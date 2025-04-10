@@ -7856,13 +7856,25 @@ SMN.JobID)]
     WHMPvP_AfflatusPurgation = 129008,
 
     [PvPCustomCombo]
+    [ParentCombo(WHMPvP_Burst)]
+    [CustomComboInfo("Role Action Diabrosis Option",
+       "Adds Role Action Diabrosis to Burst Mode below selected health",
+       WHMPvP.JobID)]
+    WHMPvP_Diabrosis = 129009,
+
+    [PvPCustomCombo]
+    [ParentCombo(WHMPvP_Burst)]
+    [CustomComboInfo("Cure 3 Waste Prevention", "Adds Cure 3 to Burst combo when the Cure 3 Ready buff is under 6 seconds", WHMPvP.JobID)]
+    WHMPvP_NoWasteCure = 129010,
+
+    [PvPCustomCombo]
     [ReplaceSkill(WHMPvP.Cure2)]
     [CustomComboInfo("Heal Feature", "Adds the below options onto Cure II.", WHMPvP.JobID)]
     WHMPvP_Heals = 129004,
 
     [PvPCustomCombo]
-    [ParentCombo(WHMPvP_Heals)]
-    [CustomComboInfo("Cure III Option", "Adds Cure III to Cure II when available.", WHMPvP.JobID)]
+    [ParentCombo(WHMPvP_Aquaveil)]
+    [CustomComboInfo("Cure III Priority Option", "Makes Cure 3 prioritized before Aquaveil. \n Cure 3 replaces Cure 2 regardless of this setting as that is how SE made it", WHMPvP.JobID)]
     WHMPvP_Cure3 = 129005,
 
     [PvPCustomCombo]
@@ -7870,14 +7882,7 @@ SMN.JobID)]
     [CustomComboInfo("Aquaveil Option", "Adds Aquaviel to Cure II when available.", WHMPvP.JobID)]
     WHMPvP_Aquaveil = 129007,
 
-    [PvPCustomCombo]
-    [ParentCombo(WHMPvP_Burst)]
-    [CustomComboInfo("Role Action Diabrosis Option",
-       "Adds Role Action Diabrosis to Burst Mode below selected health",
-       WHMPvP.JobID)]
-    WHMPvP_Diabrosis = 129009,
-
-    // Last value = 129009
+    // Last value = 129010
 
     #endregion
 
