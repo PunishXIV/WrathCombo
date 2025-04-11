@@ -43,6 +43,7 @@
 /WrathCombo/Services/IPC/                             @zbee
 /res/ipc_status.txt                                   @zbee
 /WrathCombo/Combos/PvE/Content/Bozja.cs               @Akechi-kun @zbee
+/WrathCombo/CustomCombo/StancePartner.cs              @zbee
 
 # Protect the owners file
 /docs/CODEOWNERS                                      @Taurenkey @zbee
