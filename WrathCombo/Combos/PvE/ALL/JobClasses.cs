@@ -10,33 +10,33 @@ internal class HealerJob
 {
     public static IHealerVariant Variant { get; } = VariantHealer.Instance;
     public class Role : Healer;
-    private HealerJob() { } // Prevent instantiation
+    protected HealerJob() { } // Prevent instantiation
 }
 
 internal class TankJob
 {
     public static ITankVariant Variant { get; } = VariantTank.Instance;
     public class Role : Tank;
-    private TankJob() { }
+    protected TankJob() { }
 }
 
 internal class MeleeJob
 {
     public static IMeleeVariant Variant { get; } = VariantMelee.Instance;
     public class Role : Melee;
-    private MeleeJob() { }
+    protected MeleeJob() { }
 }
 
 internal class PhysRangedJob
 {
     public static IPhysRangedVariant Variant { get; } = VariantPhysRanged.Instance;
     public class Role : PhysRanged;
-    private PhysRangedJob() { }
+    protected PhysRangedJob() { }
 }
 
 internal class CasterJob
 {
     public static ICasterVariant Variant { get; } = VariantCaster.Instance;
     public class Role : Caster;
-    private CasterJob() { }
+    protected CasterJob() { }
 }

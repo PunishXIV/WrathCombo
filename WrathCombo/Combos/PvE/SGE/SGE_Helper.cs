@@ -1,16 +1,14 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using System.Collections.Generic;
-using WrathCombo.Combos.PvE.Content.Variant;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
-internal static partial class SGE
+internal partial class SGE
 {
     // Sage Gauge & Extensions
-    public static IHealerVariant Variant => HealerJob.Variant;
 
     internal static readonly List<uint>
         AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
