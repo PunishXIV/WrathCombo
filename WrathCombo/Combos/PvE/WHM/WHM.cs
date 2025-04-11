@@ -299,7 +299,7 @@ internal partial class WHM : HealerJob
             if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Assize) && ActionReady(Assize))
                 return Assize;
 
-            if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && presenceOfMindReady)
+            if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) && presenceOfMindReady && !HasEffect(Buffs.SacredSight))
                 return PresenceOfMind;
 
             if (Variant.CanRampart(CustomComboPreset.WHM_DPS_Variant_Rampart))
