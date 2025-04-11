@@ -73,8 +73,7 @@ internal partial class DRG : MeleeJob
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
-                CanDRGWeave(Variant.Rampart))
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) && CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
             // Piercing Talon Uptime Option
@@ -100,6 +99,13 @@ internal partial class DRG : MeleeJob
                 //Life Surge Feature
                 if (UseLifeSurge())
                     return LifeSurge;
+
+                //Mirage Feature
+                if (LevelChecked(MirageDive) &&
+                    CanDRGWeave(MirageDive) &&
+                    HasEffect(Buffs.DiveReady) &&
+                    Gauge.IsLOTDActive)
+                    return MirageDive;
 
                 //Geirskogul Feature
                 if (ActionReady(Geirskogul) &&
@@ -135,7 +141,8 @@ internal partial class DRG : MeleeJob
                 if (ActionReady(Stardiver) &&
                     CanDRGWeave(Stardiver) &&
                     !HasEffect(Buffs.StarcrossReady) &&
-                    Gauge.IsLOTDActive && TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
+                    Gauge.IsLOTDActive &&
+                    TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
                     return Stardiver;
 
                 //Starcross Feature
@@ -156,13 +163,6 @@ internal partial class DRG : MeleeJob
                     HasEffect(Buffs.NastrondReady) &&
                     Gauge.IsLOTDActive)
                     return Nastrond;
-
-                //Mirage Feature
-                if (LevelChecked(MirageDive) &&
-                    CanDRGWeave(MirageDive) &&
-                    HasEffect(Buffs.DiveReady) &&
-                    Gauge.IsLOTDActive)
-                    return MirageDive;
             }
 
             if (Role.CanSecondWind(25))
@@ -183,7 +183,8 @@ internal partial class DRG : MeleeJob
 
                 if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
                 {
-                    if (Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                    if (Role.CanTrueNorth() &&
+                        CanDRGWeave(Role.TrueNorth) &&
                         !OnTargetsRear())
                         return Role.TrueNorth;
 
@@ -192,7 +193,8 @@ internal partial class DRG : MeleeJob
 
                 if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
                 {
-                    if (Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                    if (Role.CanTrueNorth() &&
+                        CanDRGWeave(Role.TrueNorth) &&
                         !OnTargetsRear())
                         return Role.TrueNorth;
 
@@ -204,7 +206,8 @@ internal partial class DRG : MeleeJob
 
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                 {
-                    if (Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                    if (Role.CanTrueNorth() &&
+                        CanDRGWeave(Role.TrueNorth) &&
                         !OnTargetsFlank())
                         return Role.TrueNorth;
 
@@ -232,8 +235,7 @@ internal partial class DRG : MeleeJob
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, Config.DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
-                CanDRGWeave(Variant.Rampart))
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) && CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
             // Opener for DRG
@@ -273,6 +275,14 @@ internal partial class DRG : MeleeJob
                     if (IsEnabled(CustomComboPreset.DRG_ST_LifeSurge) &&
                         UseLifeSurge())
                         return LifeSurge;
+
+                    //Mirage Feature
+                    if (IsEnabled(CustomComboPreset.DRG_ST_Mirage) &&
+                        LevelChecked(MirageDive) &&
+                        CanDRGWeave(MirageDive) &&
+                        HasEffect(Buffs.DiveReady) &&
+                        Gauge.IsLOTDActive)
+                        return MirageDive;
 
                     //Geirskogul Feature
                     if (IsEnabled(CustomComboPreset.DRG_ST_Geirskogul) &&
@@ -343,14 +353,6 @@ internal partial class DRG : MeleeJob
                         HasEffect(Buffs.NastrondReady) &&
                         Gauge.IsLOTDActive)
                         return Nastrond;
-
-                    //Mirage Feature
-                    if (IsEnabled(CustomComboPreset.DRG_ST_Mirage) &&
-                        LevelChecked(MirageDive) &&
-                        CanDRGWeave(MirageDive) &&
-                        HasEffect(Buffs.DiveReady) &&
-                        Gauge.IsLOTDActive)
-                        return MirageDive;
                 }
             }
 
@@ -377,7 +379,8 @@ internal partial class DRG : MeleeJob
                 if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
                 {
                     if (IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                        Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                        Role.CanTrueNorth() &&
+                        CanDRGWeave(Role.TrueNorth) &&
                         !OnTargetsRear())
                         return Role.TrueNorth;
 
@@ -387,7 +390,8 @@ internal partial class DRG : MeleeJob
                 if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
                 {
                     if (IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                        Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                        Role.CanTrueNorth() &&
+                        CanDRGWeave(Role.TrueNorth) &&
                         !OnTargetsRear())
                         return Role.TrueNorth;
 
@@ -400,7 +404,8 @@ internal partial class DRG : MeleeJob
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                 {
                     if (IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                        Role.CanTrueNorth() && CanDRGWeave(Role.TrueNorth) &&
+                        Role.CanTrueNorth() &&
+                        CanDRGWeave(Role.TrueNorth) &&
                         !OnTargetsFlank())
                         return Role.TrueNorth;
 
