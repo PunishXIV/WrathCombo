@@ -35,7 +35,9 @@ internal partial class BLM
     internal static bool HasMaxPolyglotStacks => PolyglotStacks == MaxPolyglot;
 
     internal static bool EndOfFirePhase => Gauge.InAstralFire && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
+
     internal static bool EndOfIcePhase => Gauge.InUmbralIce && CurMp == MP.MaxMP && HasMaxUmbralHeartStacks;
+
     internal static bool EndOfIcePhaseAoEMaxLevel => Gauge.InUmbralIce && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
 
     internal static int PolyglotStacks => Gauge.PolyglotStacks;
@@ -49,13 +51,14 @@ internal partial class BLM
     internal static Status? ThunderDebuffAoE => FindEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget, LocalPlayer?.GameObjectId);
 
     internal static uint FireSpam => LevelChecked(Fire4) ? Fire4 : Fire;
+
     internal static uint BlizzardSpam => LevelChecked(Blizzard4) ? Blizzard4 : Blizzard;
 
     internal static float TimeSinceFirestarterBuff => HasEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
-    internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
-
     internal static bool HasMaxUmbralHeartStacks => !TraitLevelChecked(Traits.UmbralHeart) || Gauge.UmbralHearts == 3; //Returns true before you can have Umbral Hearts out of design
+
+    internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
 
     internal static WrathOpener Opener()
     {

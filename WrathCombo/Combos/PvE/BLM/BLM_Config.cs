@@ -1,5 +1,3 @@
-using ImGuiNET;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -90,8 +88,6 @@ internal partial class BLM
                     DrawSliderInt(1, 100, BLM_VariantRampart, "HP% to be at or under", 200);
 
                     break;
-
-                
             }
         }
     }
