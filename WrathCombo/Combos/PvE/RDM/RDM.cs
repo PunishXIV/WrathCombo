@@ -218,7 +218,7 @@ internal partial class RDM : CasterJob
             uint NewActionID = 0;
 
             //RDM_OGCD
-            if (TryOGCDs(actionID, true, ref NewActionID, true))
+            if (TryOGCDs(actionID, false, ref NewActionID))
                 return NewActionID;
 
             // LUCID
@@ -267,7 +267,7 @@ internal partial class RDM : CasterJob
                 //RDM_OGCD
                 if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)
                     && LevelChecked(Corpsacorps)
-                    && TryOGCDs(actionID, true, ref NewActionID, true))
+                    && TryOGCDs(actionID, false, ref NewActionID, true))
                     return NewActionID;
 
                 // LUCID
