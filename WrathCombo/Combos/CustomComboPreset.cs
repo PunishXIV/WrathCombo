@@ -5232,7 +5232,9 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 15215
+    // Last Value ST = 15017
+    // Last Value AoE = 15110
+    // Last Value Misc = 15253
 
     #endregion
 
