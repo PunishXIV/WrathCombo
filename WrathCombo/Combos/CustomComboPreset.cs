@@ -188,9 +188,18 @@ public enum CustomComboPreset
         AST.JobID)]
     AST_DPS_AutoPlay = 1037,
 
+    [ParentCombo(AST_DPS_AutoPlay)]
+    [CustomComboInfo("Card Play Pooling Option", "Pools your dps cards for the Divination window",
+        AST.JobID)]
+    AST_DPS_CardPool = 1055,
+
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Lord of Crowns Weave Option", "Adds Lord Of Crowns", AST.JobID)]
     AST_DPS_LazyLord = 1014,
+
+    [ParentCombo(AST_DPS_LazyLord)]
+    [CustomComboInfo("Lord of Crowns Pooling Option", "Holds Lord of Crowns for the Divination window", AST.JobID)]
+    AST_DPS_LordPool = 1056,
 
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Oracle Option", "Adds Oracle after Divination", AST.JobID)]
@@ -232,9 +241,18 @@ public enum CustomComboPreset
         AST.JobID)]
     AST_AOE_AutoPlay = 1045,
 
+    [ParentCombo(AST_AOE_AutoPlay)]
+    [CustomComboInfo("Card Play Pooling Option", "Pools your dps cards for the Divination window",
+        AST.JobID)]
+    AST_AOE_CardPool = 1057,
+
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Lord of Crowns Weave Option", "Adds Lord Of Crowns", AST.JobID)]
     AST_AOE_LazyLord = 1046,
+
+    [ParentCombo(AST_AOE_LazyLord)]
+    [CustomComboInfo("Lord of Crowns Pooling Option", "Holds Lord of Crowns for the Divination window", AST.JobID)]
+    AST_AOE_LordPool = 1058,
 
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Oracle Option", "Adds Oracle after Divination", AST.JobID)]
@@ -357,7 +375,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 1054
+    // Last value = 1058
 
     #endregion
 
