@@ -3,6 +3,7 @@
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable UnusedType.Global
@@ -429,7 +430,7 @@ internal partial class WHM : Healer
             if (HasStatusEffect(Role.Buffs.Swiftcast))
                 return IsEnabled(CustomComboPreset.WHM_ThinAirRaise) && thinAirReady
                     ? ThinAir
-                    : Raise;
+                    : Raise.AndRunMacro();
 
             return actionID;
         }
