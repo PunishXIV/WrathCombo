@@ -17,7 +17,7 @@ namespace WrathCombo.Combos.PvE;
 
 #endregion
 
-internal partial class BLU
+internal partial class BLU : Caster
 {
     #region Openers
 
@@ -30,15 +30,15 @@ internal partial class BLU
         {
             if (actionID is not MoonFlute_Spell39) return actionID;
 
-            if (!HasEffect(Buffs.MoonFlute))
+            if (!HasStatusEffect(Buffs.MoonFlute))
             {
                 if (IsSpellActive(Whistle_Spell64) &&
-                    !HasEffect(Buffs.Whistle) &&
+                    !HasStatusEffect(Buffs.Whistle) &&
                     !WasLastAction(Whistle_Spell64))
                     return Whistle_Spell64;
 
                 if (IsSpellActive(Tingle_Spell82) &&
-                    !HasEffect(Buffs.Tingle))
+                    !HasStatusEffect(Buffs.Tingle))
                     return Tingle_Spell82;
 
                 if (IsSpellActive(RoseofDestruction_Spell90) &&
@@ -63,13 +63,13 @@ internal partial class BLU
 
             if (IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
             {
-                if ((!TargetHasEffectAny(Debuffs.BreathOfMagic) &&
+                if ((!HasStatusEffect(Debuffs.BreathOfMagic, anyOwner: true) &&
                      IsSpellActive(BreathofMagic_Spell109)) ||
-                    (!TargetHasEffectAny(Debuffs.MortalFlame) &&
+                    (!HasStatusEffect(Debuffs.MortalFlame, anyOwner: true) &&
                      IsSpellActive(MortalFlame_Spell121)))
                 {
                     if (IsSpellActive(Bristle_Spell12) &&
-                        !HasEffect(Buffs.Bristle))
+                        !HasStatusEffect(Buffs.Bristle))
                         return Bristle_Spell12;
 
                     if (IsSpellActive(FeatherRain_Spell44) &&
@@ -81,10 +81,10 @@ internal partial class BLU
                         return SeaShanty_Spell122;
 
                     if (IsSpellActive(BreathofMagic_Spell109) &&
-                        !TargetHasEffectAny(Debuffs.BreathOfMagic))
+                        !HasStatusEffect(Debuffs.BreathOfMagic, anyOwner: true))
                         return BreathofMagic_Spell109;
                     if (IsSpellActive(MortalFlame_Spell121) &&
-                        !TargetHasEffectAny(Debuffs.MortalFlame))
+                        !HasStatusEffect(Debuffs.MortalFlame, anyOwner: true))
                         return MortalFlame_Spell121;
                 }
             }
@@ -94,8 +94,8 @@ internal partial class BLU
                     IsOffCooldown(WingedReprobation_Spell118) &&
                     !WasLastSpell(WingedReprobation_Spell118) &&
                     !WasLastAbility(FeatherRain_Spell44) &&
-                    (!HasEffect(Buffs.WingedReprobation) ||
-                     FindEffect(Buffs.WingedReprobation)?.Param < 2))
+                    (!HasStatusEffect(Buffs.WingedReprobation) ||
+                     (GetStatusEffect(Buffs.WingedReprobation)?.Param ?? 0) < 2))
                     return WingedReprobation_Spell118;
 
                 if (IsSpellActive(FeatherRain_Spell44) &&
@@ -110,7 +110,7 @@ internal partial class BLU
             if (IsSpellActive(WingedReprobation_Spell118) &&
                 IsOffCooldown(WingedReprobation_Spell118) &&
                 !WasLastAbility(ShockStrike_Spell47) &&
-                FindEffect(Buffs.WingedReprobation)?.Param < 2)
+                (GetStatusEffect(Buffs.WingedReprobation)?.Param ?? 0) < 2)
                 return WingedReprobation_Spell118;
 
             if (IsSpellActive(ShockStrike_Spell47) &&
@@ -124,20 +124,20 @@ internal partial class BLU
                 return BeingMortal_Spell124;
 
             if (IsSpellActive(Bristle_Spell12) &&
-                !HasEffect(Buffs.Bristle) &&
+                !HasStatusEffect(Buffs.Bristle) &&
                 IsOffCooldown(MatraMagic_Spell100) &&
                 IsSpellActive(MatraMagic_Spell100))
                 return Bristle_Spell12;
 
-            if (IsOffCooldown(All.Swiftcast))
-                return All.Swiftcast;
+            if (IsOffCooldown(Role.Swiftcast))
+                return Role.Swiftcast;
 
             if (IsSpellActive(Surpanakha_Spell78) &&
                 GetRemainingCharges(Surpanakha_Spell78) > 0)
                 return Surpanakha_Spell78;
 
             if (IsSpellActive(MatraMagic_Spell100) &&
-                HasEffect(All.Buffs.Swiftcast))
+                HasStatusEffect(Role.Buffs.Swiftcast))
                 return MatraMagic_Spell100;
 
             if (IsSpellActive(BeingMortal_Spell124) &&
@@ -150,11 +150,11 @@ internal partial class BLU
                 IsOffCooldown(PhantomFlurry_Spell103))
                 return PhantomFlurry_Spell103;
 
-            if (HasEffect(Buffs.PhantomFlurry) &&
-                FindEffect(Buffs.PhantomFlurry)?.RemainingTime < 2)
+            if (HasStatusEffect(Buffs.PhantomFlurry) &&
+                GetStatusEffectRemainingTime(Buffs.PhantomFlurry) < 2)
                 return OriginalHook(PhantomFlurry_Spell103);
 
-            if (HasEffect(Buffs.MoonFlute))
+            if (HasStatusEffect(Buffs.MoonFlute))
                 return All.SavageBlade;
 
             return actionID;
@@ -177,14 +177,14 @@ internal partial class BLU
             if (actionID is not (FeatherRain_Spell44 or Eruption_Spell45))
                 return actionID;
 
-            if (HasEffect(Buffs.PhantomFlurry))
+            if (HasStatusEffect(Buffs.PhantomFlurry))
                 return OriginalHook(PhantomFlurry_Spell103);
 
-            if (HasEffect(Buffs.PhantomFlurry)) return actionID;
+            if (HasStatusEffect(Buffs.PhantomFlurry)) return actionID;
 
             if (IsEnabled(Preset
                     .BLU_PrimalCombo_WingedReprobation) &&
-                FindEffect(Buffs.WingedReprobation)?.Param > 1 &&
+                (GetStatusEffect(Buffs.WingedReprobation)?.Param ?? 0) > 1 &&
                 IsOffCooldown(WingedReprobation_Spell118))
                 return OriginalHook(WingedReprobation_Spell118);
 
@@ -289,18 +289,18 @@ internal partial class BLU
 
             if (IsEnabled(Preset.BLU_SoloMode) &&
                 HasCondition(ConditionFlag.BoundByDuty) &&
-                !HasEffect(Buffs.BasicInstinct) &&
+                !HasStatusEffect(Buffs.BasicInstinct) &&
                 GetPartyMembers().Count == 0 &&
                 IsSpellActive(BasicInstinct_Spell91))
                 return BasicInstinct_Spell91;
-            if (!HasEffect(Buffs.Whistle) &&
+            if (!HasStatusEffect(Buffs.Whistle) &&
                 IsSpellActive(Whistle_Spell64) &&
                 !WasLastAction(Whistle_Spell64))
                 return Whistle_Spell64;
-            if (!HasEffect(Buffs.Tingle) && IsSpellActive(Tingle_Spell82) &&
+            if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle_Spell82) &&
                 !WasLastSpell(Tingle_Spell82))
                 return Tingle_Spell82;
-            if (!HasEffect(Buffs.MoonFlute) &&
+            if (!HasStatusEffect(Buffs.MoonFlute) &&
                 !WasLastSpell(MoonFlute_Spell39) &&
                 IsSpellActive(MoonFlute_Spell39))
                 return MoonFlute_Spell39;
@@ -327,8 +327,8 @@ internal partial class BLU
                     return ShockStrike_Spell47;
             }
 
-            if (IsOffCooldown(All.Swiftcast) && LevelChecked(All.Swiftcast))
-                return All.Swiftcast;
+            if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
+                return Role.Swiftcast;
             if (IsSpellActive(FinalSting_Spell8))
                 return FinalSting_Spell8;
 
@@ -349,16 +349,16 @@ internal partial class BLU
             if (IsEnabled(Preset.BLU_HydroPull) &&
                 !InMeleeRange() && IsSpellActive(HydroPull_Spell97))
                 return HydroPull_Spell97;
-            if (!TargetHasEffectAny(Debuffs.DeepFreeze) &&
+            if (!HasStatusEffect(Debuffs.DeepFreeze, anyOwner: true) &&
                 IsOffCooldown(Ultravibration_Spell92) &&
                 IsSpellActive(RamsVoice_Spell33))
                 return RamsVoice_Spell33;
 
-            if (!TargetHasEffectAny(Debuffs.DeepFreeze)) return actionID;
+            if (!HasStatusEffect(Debuffs.DeepFreeze, anyOwner: true)) return actionID;
 
             // Ultravibration
-            if (IsOffCooldown(All.Swiftcast))
-                return All.Swiftcast;
+            if (IsOffCooldown(Role.Swiftcast))
+                return Role.Swiftcast;
             if (IsSpellActive(Ultravibration_Spell92) &&
                 IsOffCooldown(Ultravibration_Spell92))
                 return Ultravibration_Spell92;
@@ -385,15 +385,15 @@ internal partial class BLU
                 return TripleTrident_Spell81;
 
             // Buff
-            if (!HasEffect(Buffs.Whistle) && IsSpellActive(Whistle_Spell64))
+            if (!HasStatusEffect(Buffs.Whistle) && IsSpellActive(Whistle_Spell64))
                 return Whistle_Spell64;
-            if (!HasEffect(Buffs.Tingle) && IsSpellActive(Tingle_Spell82) &&
-                HasEffect(Buffs.Whistle))
+            if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle_Spell82) &&
+                HasStatusEffect(Buffs.Whistle))
                 return Tingle_Spell82;
 
             // Triple Trident
             if (IsSpellActive(TripleTrident_Spell81) &&
-                HasEffect(Buffs.Tingle) && HasEffect(Buffs.Whistle))
+                HasStatusEffect(Buffs.Tingle) && HasStatusEffect(Buffs.Whistle))
                 return TripleTrident_Spell81;
 
             return actionID;
@@ -543,26 +543,24 @@ internal partial class BLU
             if (actionID is not Devour_Spell75) return actionID;
 
             // Offguard
-            if (!TargetHasEffectAny(Debuffs.Offguard) &&
+            if (!HasStatusEffect(Debuffs.Offguard, anyOwner: true) &&
                 IsOffCooldown(Offguard_Spell20) &&
                 IsSpellActive(Offguard_Spell20))
                 return Offguard_Spell20;
 
             // Bad Breath
-            if (!TargetHasEffectAny(Debuffs.Malodorous) &&
-                HasEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath_Spell28))
+            if (!HasStatusEffect(Debuffs.Malodorous, anyOwner: true) &&
+                HasStatusEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath_Spell28))
                 return BadBreath_Spell28;
 
             // Devour
-            if (IsOffCooldown(Devour_Spell75) && HasEffect(Buffs.TankMimicry) &&
+            if (IsOffCooldown(Devour_Spell75) && HasStatusEffect(Buffs.TankMimicry) &&
                 IsSpellActive(Devour_Spell75))
                 return Devour_Spell75;
 
             // Lucid Dreaming
-            if (IsOffCooldown(All.LucidDreaming) &&
-                LocalPlayer.CurrentMp <= 9000 &&
-                LevelChecked(All.LucidDreaming))
-                return All.LucidDreaming;
+            if (Role.CanLucidDream(9000))
+                return Role.LucidDreaming;
 
             return actionID;
         }
@@ -578,10 +576,10 @@ internal partial class BLU
             if (actionID is not MagicHammer_Spell60) return actionID;
 
             return (IsOnCooldown(MagicHammer_Spell60) &&
-                    IsOffCooldown(All.Addle) &&
-                    !TargetHasEffect(All.Debuffs.Addle) &&
-                    !TargetHasEffect(Debuffs.Conked))
-                ? All.Addle
+                    IsOffCooldown(Role.Addle) &&
+                    !HasStatusEffect(Role.Debuffs.Addle, CurrentTarget) &&
+                    !HasStatusEffect(Debuffs.Conked, CurrentTarget))
+                ? Role.Addle
                 : actionID;
         }
     }
@@ -607,10 +605,10 @@ internal partial class BLU
                 (WhiteKnightsTour_Spell65 or BlackKnightsTour_Spell66))
                 return actionID;
 
-            if (TargetHasEffect(Debuffs.Slow) &&
+            if (HasStatusEffect(Debuffs.Slow, CurrentTarget) &&
                 IsSpellActive(BlackKnightsTour_Spell66))
                 return BlackKnightsTour_Spell66;
-            if (TargetHasEffect(Debuffs.Bind) &&
+            if (HasStatusEffect(Debuffs.Bind, CurrentTarget) &&
                 IsSpellActive(WhiteKnightsTour_Spell65))
                 return WhiteKnightsTour_Spell65;
 
@@ -627,10 +625,10 @@ internal partial class BLU
         {
             if (actionID is not PeripheralSynthesis_Spell101) return actionID;
 
-            if (!TargetHasEffect(Debuffs.Lightheaded) &&
+            if (!HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) &&
                 IsSpellActive(PeripheralSynthesis_Spell101))
                 return PeripheralSynthesis_Spell101;
-            if (TargetHasEffect(Debuffs.Lightheaded) &&
+            if (HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) &&
                 IsSpellActive(MustardBomb_Spell94))
                 return MustardBomb_Spell94;
 
@@ -647,7 +645,7 @@ internal partial class BLU
         {
             if (actionID is not PerpetualRay_Spell69) return actionID;
 
-            return ((TargetHasEffectAny(Debuffs.Stun) ||
+            return ((HasStatusEffect(Debuffs.Stun, anyOwner: true) ||
                      WasLastAction(PerpetualRay_Spell69)) &&
                     IsSpellActive(SharpenedKnife_Spell15) && InMeleeRange())
                 ? SharpenedKnife_Spell15
@@ -681,7 +679,7 @@ internal partial class BLU
             if (actionID is not DeepClean_Spell112) return actionID;
 
             if (IsSpellActive(PeatPelt_Spell111) &&
-                !TargetHasEffect(Debuffs.Begrimed))
+                !HasStatusEffect(Debuffs.Begrimed, CurrentTarget))
                 return PeatPelt_Spell111;
 
             return actionID;

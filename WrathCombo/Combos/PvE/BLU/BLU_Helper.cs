@@ -34,8 +34,8 @@ internal partial class BLU
             ActionReady(dot.ActionID) &&
             !WasLastAction(dot.ActionID) &&
             // Check debuff is not applied or remaining time is less than requirement
-            (!TargetHasEffect(dot.DebuffID) ||
-             GetDebuffRemainingTime(dot.DebuffID) <= minTime) &&
+            (!HasStatusEffect(dot.DebuffID, CurrentTarget) ||
+             GetStatusEffectRemainingTime(dot.DebuffID) <= minTime) &&
             // Check target HP is above requirement
             GetTargetHPPercent() > minHp;
 
