@@ -418,11 +418,11 @@ public enum CustomComboPreset
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Flare Star Option", "Add Flare Star to the rotation.", BLM.JobID)]
     BLM_ST_FlareStar = 2112,
-    
+
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Swiftcast Option", "Add Swiftcast to the rotation.", BLM.JobID)]
     BLM_ST_Swiftcast = 2106,
-    
+
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
     BLM_ST_UsePolyglot = 2104,
@@ -430,7 +430,7 @@ public enum CustomComboPreset
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Movement Option", "Add chosen options for movement.", BLM.JobID)]
     BLM_ST_Movement = 2113,
-    
+
     #endregion
 
     #region AoE - Advanced
@@ -468,7 +468,7 @@ public enum CustomComboPreset
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("(High) Thunder II Option", "Add (High) Thunder II to the rotation.", BLM.JobID)]
     BLM_AoE_Thunder = 2209,
-    
+
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Foul Option", "Add Foul to the rotation.", BLM.JobID)]
     BLM_AoE_UsePolyglot = 2203,
@@ -476,7 +476,7 @@ public enum CustomComboPreset
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Blizzard IV on 2 Targets Option", "Substitutes Freeze for Blizzard 4 whenever it would hit 2 targets.", BLM.JobID)]
     BLM_AoE_Blizzard4Sub = 2211,
-    
+
     #endregion
 
     #region Variant
@@ -4985,7 +4985,7 @@ public enum CustomComboPreset
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Gekko Combo", "Adds Gekko combo to the rotation.", SAM.JobID)]
     SAM_ST_Gekko = 15022,
-    
+
     #region cooldowns on Main Combo
 
     [ParentCombo(SAM_ST_AdvancedMode)]
@@ -5001,7 +5001,7 @@ public enum CustomComboPreset
     SAM_ST_CDs_Ikishoten = 15012,
 
     #endregion
-    
+
     #region Damage skills
 
     [ParentCombo(SAM_ST_AdvancedMode)]
@@ -5023,7 +5023,7 @@ public enum CustomComboPreset
     [ParentCombo(SAM_ST_CDs_Senei)]
     [CustomComboInfo("Guren Option", "Adds Guren to the rotation if Senei is not unlocked.", SAM.JobID)]
     SAM_ST_CDs_Guren = 15021,
-    
+
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Ogi Namikiri Option", "Adds Ogi Namikiri and Kaeshi: Namikiri to the rotation.", SAM.JobID)]
     SAM_ST_CDs_OgiNamikiri = 15015,
@@ -5039,13 +5039,13 @@ public enum CustomComboPreset
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Shoha Option", "Adds Shoha when you have three meditation stacks.", SAM.JobID)]
     SAM_ST_CDs_Shoha = 15019,
-    
+
     #endregion
-    
+
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation", SAM.JobID)]
     SAM_ST_Shinten = 15008,
-    
+
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("True North Feature", "Adds True North if Meikyo Shisui's buff is on you.", SAM.JobID)]
     SAM_ST_TrueNorth = 15099,
@@ -5077,7 +5077,7 @@ public enum CustomComboPreset
     SAM_AoE_Hagakure = 15113,
 
     #region Cooldowns on Main Combo
-    
+
     [ParentCombo(SAM_AoE_AdvancedMode)]
     [CustomComboInfo("Cooldowns on Main Combo", "Collection of Cooldown features on main combo.", SAM.JobID)]
     SAM_AoE_CDs = 15115,
@@ -5089,7 +5089,7 @@ public enum CustomComboPreset
     [ParentCombo(SAM_AoE_CDs)]
     [CustomComboInfo("Ikishoten Option", "Adds Ikishoten when at or below 50 Kenki.\nWill dump Kenki at 10 seconds left to allow Ikishoten to be used.", SAM.JobID)]
     SAM_AOE_CDs_Ikishoten = 15108,
-    
+
     #endregion
 
     #region Damage Skills
@@ -5117,9 +5117,9 @@ public enum CustomComboPreset
     [ParentCombo(SAM_AoE_Damage)]
     [CustomComboInfo("Shoha Option", "Adds Shoha when you have 3 meditation stacks.", SAM.JobID)]
     SAM_AoE_Shoha = 15111,
-    
+
     #endregion
-    
+
     [ParentCombo(SAM_AoE_AdvancedMode)]
     [CustomComboInfo("Kyuten Option", "Adds Kyuten to the rotation.", SAM.JobID)]
     SAM_AoE_Kyuten = 15105,
@@ -5809,6 +5809,48 @@ SMN.JobID)]
 
     #endregion
 
+    #region Bozja
+    [Bozja]
+    [CustomComboInfo("Lost Focus Option", "Use Lost Focus when available.", SMN.JobID)]
+    SMN_Bozja_LostFocus = 17080,
+
+    [Bozja]
+    [CustomComboInfo("Lost Font Of Magic Option", "Use Lost Font Of Magic when available.", SMN.JobID)]
+    SMN_Bozja_LostFontOfMagic = 17081,
+
+    [Bozja]
+    [CustomComboInfo("Lost Chainspell Option", "Use Lost Chainspell when available.", SMN.JobID)]
+    SMN_Bozja_LostChainspell = 17082,
+
+    [Bozja]
+    [CustomComboInfo("Lost Death Option", "Use Lost Death when available.", SMN.JobID)]
+    SMN_Bozja_LostDeath = 17083,
+
+    [Bozja]
+    [CustomComboInfo("Banner Of Honored Sacrifice Option", "Use Banner Of Honored Sacrifice when available.", SMN.JobID)]
+    SMN_Bozja_BannerOfHonoredSacrifice = 17084,
+
+    [Bozja]
+    [ParentCombo(SMN_Bozja_BannerOfHonoredSacrifice)]
+    [CustomComboInfo("Only with 'Lost Font Of Magic' Option", "Use Banner Of Honored Sacrifice only when under Lost Font of Magic.", SMN.JobID)]
+    SMN_Bozja_FontSacrifice = 17085,
+
+    [Bozja]
+    [CustomComboInfo("Lost Arise Option", "Use Lost Arise when available.", SMN.JobID)]
+    SMN_Bozja_LostArise = 17086,
+
+    [Bozja]
+    [CustomComboInfo("Lost Protect Option", "Use Lost Protect when available.", SMN.JobID)]
+    SMN_Bozja_LostProtect = 17087,
+
+    [Bozja]
+    [CustomComboInfo("Lost Shell Option", "Use Lost Shell when available.", SMN.JobID)]
+    SMN_Bozja_LostShell = 17088,
+
+    [Bozja]
+    [CustomComboInfo("Resistance Ether Kit Option", "Automatically use Resistance Ether Kit when MP falls below threshold.", SMN.JobID)]
+    SMN_Bozja_EtherKit = 17089,
+    #endregion[Bozja]
     #endregion
 
     #region VIPER
@@ -6032,9 +6074,9 @@ SMN.JobID)]
     [ConflictingCombos(VPR_ST_SimpleMode, VPR_AoE_SimpleMode, VPR_ST_AdvancedMode, VPR_AoE_AdvancedMode, VPR_Legacies)]
     [CustomComboInfo("Serpents Tail", "Replaces basic combo with Death Rattle or Last Lash when applicable.", VPR.JobID)]
     VPR_SerpentsTail = 30210,
-    
+
     #endregion
-    
+
     //ST 30014
     //AoE 30115
     //Misc 30210
@@ -6571,7 +6613,7 @@ SMN.JobID)]
     [CustomComboInfo("Cure II Sync Feature", "Changes Cure II to Cure when synced below Lv.30.", WHM.JobID)]
     WHM_CureSync = 19002,
 
-    [ReplaceSkill( RoleActions.Magic.Swiftcast)]
+    [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Alternative Raise Feature", "Changes Swiftcast to Raise.", WHM.JobID)]
     WHM_Raise = 19004,
