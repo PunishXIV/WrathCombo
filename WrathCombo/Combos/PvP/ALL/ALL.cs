@@ -1,9 +1,9 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using System.Collections.Generic;
 using WrathCombo.Combos.PvE;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvP
 {
@@ -20,10 +20,11 @@ namespace WrathCombo.Combos.PvP
 
         internal class Config
         {
-            public const string
-                EmergencyHealThreshold = "EmergencyHealThreshold",
-                EmergencyGuardThreshold = "EmergencyGuardThreshold",
-                QuickPurifyStatuses = "QuickPurifyStatuses";
+            public static UserInt
+                EmergencyHealThreshold = new("EmergencyHealThreshold"),
+                EmergencyGuardThreshold = new("EmergencyGuardThreshold");
+            public static UserBoolArray
+                QuickPurifyStatuses = new("QuickPurifyStatuses");
         }
 
         internal class Debuffs
@@ -52,11 +53,11 @@ namespace WrathCombo.Combos.PvP
         /// <param name="optionalTarget"> Optional target to check. </param>
         public static bool TargetImmuneToDamage(bool includeReductions = true, IGameObject? optionalTarget = null)
         {
-            var t = optionalTarget ?? CustomComboFunctions.CurrentTarget;
-            if (t is null || !CustomComboFunctions.InPvP()) return false;
+            var t = optionalTarget ?? CurrentTarget;
+            if (t is null || !InPvP()) return false;
 
-            bool targetHasReductions = CustomComboFunctions.TargetHasEffectAny(Buffs.Guard, t) || CustomComboFunctions.TargetHasEffectAny(VPRPvP.Buffs.HardenedScales, t);
-            bool targetHasImmunities = CustomComboFunctions.TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption, t) || CustomComboFunctions.TargetHasEffectAny(PLDPvP.Buffs.HallowedGround, t);
+            bool targetHasReductions = HasStatusEffect(Buffs.Guard, t, true) || HasStatusEffect(VPRPvP.Buffs.HardenedScales, t, true);
+            bool targetHasImmunities = HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, t, true) || HasStatusEffect(PLDPvP.Buffs.HallowedGround, t, true);
 
             return includeReductions
                 ? targetHasReductions || targetHasImmunities
@@ -74,7 +75,7 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID)
             {
-                if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+                if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
                     if (actionID == Guard) return Guard;
                     return All.SavageBlade;
@@ -92,15 +93,15 @@ namespace WrathCombo.Combos.PvP
             public static bool Execute()
             {
                 var jobMaxHp = LocalPlayer.MaxHp;
-                var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyHealThreshold);
+                int threshold = Config.EmergencyHealThreshold;
                 var maxHPThreshold = jobMaxHp - 15000;
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
 
 
-                if (HasEffect(3180)) return false; //DRG LB buff
-                if (HasEffectAny(1420)) return false; //Rival Wings Mounted
-                if (HasEffect(4096)) return false; //VPR Snakesbane
-                if (HasEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
+                if (HasStatusEffect(3180)) return false; //DRG LB buff
+                if (HasStatusEffect(1420, anyOwner: true)) return false; //Rival Wings Mounted
+                if (HasStatusEffect(4096)) return false; //VPR Snakesbane
+                if (HasStatusEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
                 if (LocalPlayer.CurrentMp < 2500) return false;
                 if (remainingPercentage * 100 > threshold) return false;
 
@@ -115,7 +116,7 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID)
             {
-                if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+                if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
                     if (actionID == Guard)
                     {
@@ -138,14 +139,14 @@ namespace WrathCombo.Combos.PvP
             public static bool Execute()
             {
                 var jobMaxHp = LocalPlayer.MaxHp;
-                var threshold = PluginConfiguration.GetCustomIntValue(Config.EmergencyGuardThreshold);
+                var threshold = Config.EmergencyGuardThreshold;
                 var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)jobMaxHp;
 
-                if (HasEffect(3180)) return false; //DRG LB buff
-                if (HasEffect(4096)) return false; //VPR Snakesbane
-                if (HasEffectAny(1420)) return false; //Rival Wings Mounted
-                if (HasEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
-                if (HasEffectAny(Debuffs.Unguarded) || HasEffect(WARPvP.Buffs.InnerRelease)) return false;
+                if (HasStatusEffect(3180)) return false; //DRG LB buff
+                if (HasStatusEffect(4096)) return false; //VPR Snakesbane
+                if (HasStatusEffect(1420, anyOwner: true)) return false; //Rival Wings Mounted
+                if (HasStatusEffect(DRKPvP.Buffs.UndeadRedemption)) return false;
+                if (HasStatusEffect(Debuffs.Unguarded, anyOwner: true) || HasStatusEffect(WARPvP.Buffs.InnerRelease)) return false;
                 if (GetCooldown(Guard).IsCooldown) return false;
                 if (remainingPercentage * 100 > threshold) return false;
 
@@ -160,7 +161,7 @@ namespace WrathCombo.Combos.PvP
 
             protected override uint Invoke(uint actionID)
             {
-                if ((HasEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+                if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
                 {
                     if (actionID == Guard) return Guard;
                     return All.SavageBlade;
@@ -176,22 +177,22 @@ namespace WrathCombo.Combos.PvP
 
             public static bool Execute()
             {
-                var selectedStatuses = PluginConfiguration.GetCustomBoolArrayValue(Config.QuickPurifyStatuses);
+                bool[] selectedStatuses = Config.QuickPurifyStatuses;
 
-                if (HasEffect(3180)) return false; //DRG LB buff
-                if (HasEffect(4096)) return false; //VPR Snakesbane
-                if (HasEffectAny(1420)) return false; //Rival Wings Mounted
+                if (HasStatusEffect(3180)) return false; //DRG LB buff
+                if (HasStatusEffect(4096)) return false; //VPR Snakesbane
+                if (HasStatusEffect(1420, anyOwner: true)) return false; //Rival Wings Mounted
 
                 if (selectedStatuses.Length == 0) return false;
                 if (GetCooldown(Purify).IsCooldown) return false;
-                if (HasEffectAny(Debuffs.Stun) && selectedStatuses[0]) return true;
-                if (HasEffectAny(Debuffs.DeepFreeze) && selectedStatuses[1]) return true;
-                if (HasEffectAny(Debuffs.HalfAsleep) && selectedStatuses[2]) return true;
-                if (HasEffectAny(Debuffs.Sleep) && selectedStatuses[3]) return true;
-                if (HasEffectAny(Debuffs.Bind) && selectedStatuses[4]) return true;
-                if (HasEffectAny(Debuffs.Heavy) && selectedStatuses[5]) return true;
-                if (HasEffectAny(Debuffs.Silence) && selectedStatuses[6]) return true;
-                if (HasEffectAny(Debuffs.MiracleOfNature) && selectedStatuses[7]) return true;
+                if (HasStatusEffect(Debuffs.Stun, anyOwner: true) && selectedStatuses[0]) return true;
+                if (HasStatusEffect(Debuffs.DeepFreeze, anyOwner: true) && selectedStatuses[1]) return true;
+                if (HasStatusEffect(Debuffs.HalfAsleep, anyOwner: true) && selectedStatuses[2]) return true;
+                if (HasStatusEffect(Debuffs.Sleep, anyOwner: true) && selectedStatuses[3]) return true;
+                if (HasStatusEffect(Debuffs.Bind, anyOwner: true) && selectedStatuses[4]) return true;
+                if (HasStatusEffect(Debuffs.Heavy, anyOwner: true) && selectedStatuses[5]) return true;
+                if (HasStatusEffect(Debuffs.Silence, anyOwner: true) && selectedStatuses[6]) return true;
+                if (HasStatusEffect(Debuffs.MiracleOfNature, anyOwner: true) && selectedStatuses[7]) return true;
 
                 return false;
 

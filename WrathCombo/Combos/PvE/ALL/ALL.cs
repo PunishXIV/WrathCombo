@@ -67,13 +67,13 @@ internal partial class All
         {
             switch (actionID)
             {
-                case Tank.LowBlow or PLD.ShieldBash when CanInterruptEnemy() && ActionReady(Tank.Interject):
-                    return Tank.Interject;
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash when CanInterruptEnemy() && ActionReady(RoleActions.Tank.Interject):
+                    return RoleActions.Tank.Interject;
 
-                case Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(Tank.LowBlow):
-                    return Tank.LowBlow;
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(RoleActions.Tank.LowBlow):
+                    return RoleActions.Tank.LowBlow;
 
-                case PLD.ShieldBash when IsOnCooldown(Tank.LowBlow):
+                case PLD.ShieldBash when IsOnCooldown(RoleActions.Tank.LowBlow):
                 default:
                     return actionID;
             }
@@ -85,7 +85,7 @@ internal partial class All
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Tank_Reprisal;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Tank.Reprisal && TargetHasEffectAny(Tank.Debuffs.Reprisal) && IsOffCooldown(Tank.Reprisal)
+            actionID is RoleActions.Tank.Reprisal && HasStatusEffect(RoleActions.Tank.Debuffs.Reprisal, CurrentTarget, true) && IsOffCooldown(RoleActions.Tank.Reprisal)
                 ? SavageBlade
                 : actionID;
     }
@@ -102,11 +102,11 @@ internal partial class All
                 case WHM.Raise or AST.Ascend or SGE.Egeiro:
                 case SCH.Resurrection when LocalPlayer.ClassJob.Value.RowId is SCH.JobID:
                 {
-                    if (ActionReady(MagicRole.Swiftcast))
-                        return MagicRole.Swiftcast;
+                    if (ActionReady(RoleActions.Magic.Swiftcast))
+                        return RoleActions.Magic.Swiftcast;
 
                     if (actionID == WHM.Raise && IsEnabled(CustomComboPreset.WHM_ThinAirRaise) &&
-                        ActionReady(WHM.ThinAir) && !HasEffect(WHM.Buffs.ThinAir))
+                        ActionReady(WHM.ThinAir) && !HasStatusEffect(WHM.Buffs.ThinAir))
                         return WHM.ThinAir;
 
                     return actionID.AndRunMacro();
@@ -124,7 +124,7 @@ internal partial class All
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Caster_Addle;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Caster.Addle && TargetHasEffectAny(Caster.Debuffs.Addle) && IsOffCooldown(Caster.Addle)
+            actionID is RoleActions.Caster.Addle && HasStatusEffect(RoleActions.Caster.Debuffs.Addle, CurrentTarget, true) && IsOffCooldown(RoleActions.Caster.Addle)
                 ? SavageBlade
                 : actionID;
     }
@@ -140,11 +140,11 @@ internal partial class All
                 case BLU.AngelWhisper or RDM.Verraise:
                 case SMN.Resurrection when LocalPlayer.ClassJob.RowId is SMN.JobID:
                 {
-                    if (HasEffect(MagicRole.Buffs.Swiftcast) || HasEffect(RDM.Buffs.Dualcast))
+                    if (HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) || HasStatusEffect(RDM.Buffs.Dualcast))
                         return actionID.AndRunMacro();
 
-                    if (IsOffCooldown(MagicRole.Swiftcast))
-                        return MagicRole.Swiftcast;
+                    if (IsOffCooldown(RoleActions.Magic.Swiftcast))
+                        return RoleActions.Magic.Swiftcast;
 
                     if (LocalPlayer.ClassJob.RowId is RDM.JobID &&
                         ActionReady(RDM.Vercure))
@@ -164,7 +164,7 @@ internal partial class All
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Melee_Feint;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Melee.Feint && TargetHasEffectAny(Melee.Debuffs.Feint) && IsOffCooldown(Melee.Feint)
+            actionID is RoleActions.Melee.Feint && HasStatusEffect(RoleActions.Melee.Debuffs.Feint, CurrentTarget, true) && IsOffCooldown(RoleActions.Melee.Feint)
                 ? SavageBlade
                 : actionID;
     }
@@ -174,7 +174,7 @@ internal partial class All
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Melee_TrueNorth;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Melee.TrueNorth && HasEffect(Melee.Buffs.TrueNorth)
+            actionID is RoleActions.Melee.TrueNorth && HasStatusEffect(RoleActions.Melee.Buffs.TrueNorth)
                 ? SavageBlade
                 : actionID;
     }
@@ -186,8 +186,8 @@ internal partial class All
 
         protected override uint Invoke(uint actionID) =>
             actionID is BRD.Troubadour or MCH.Tactician or DNC.ShieldSamba &&
-            (HasEffectAny(BRD.Buffs.Troubadour) || HasEffectAny(MCH.Buffs.Tactician) ||
-             HasEffectAny(DNC.Buffs.ShieldSamba)) &&
+            (HasStatusEffect(BRD.Buffs.Troubadour, anyOwner: true) || HasStatusEffect(MCH.Buffs.Tactician, anyOwner: true) ||
+             HasStatusEffect(DNC.Buffs.ShieldSamba, anyOwner: true)) &&
             IsOffCooldown(actionID)
                 ? SavageBlade
                 : actionID;
@@ -198,8 +198,8 @@ internal partial class All
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Ranged_Interrupt;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is PhysRanged.FootGraze && CanInterruptEnemy() && ActionReady(PhysRanged.HeadGraze)
-                ? PhysRanged.HeadGraze
+            actionID is RoleActions.PhysRanged.FootGraze && CanInterruptEnemy() && ActionReady(RoleActions.PhysRanged.HeadGraze)
+                ? RoleActions.PhysRanged.HeadGraze
                 : actionID;
     }
 }

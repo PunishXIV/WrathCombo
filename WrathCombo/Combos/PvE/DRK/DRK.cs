@@ -14,7 +14,7 @@ using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class DRK : TankJob
+internal partial class DRK : Tank
 {
     internal class DRK_ST_Advanced : CustomCombo
     {
@@ -232,7 +232,7 @@ internal partial class DRK : TankJob
             if (IsEnabled(CustomComboPreset.DRK_oGCD_SaltedEarth) &&
                 IsOffCooldown(SaltedEarth) &&
                 LevelChecked(SaltedEarth) &&
-                !HasEffect(Buffs.SaltedEarth))
+                !HasStatusEffect(Buffs.SaltedEarth))
                 return SaltedEarth;
 
             if (IsOffCooldown(CarveAndSpit) &&
@@ -242,7 +242,7 @@ internal partial class DRK : TankJob
             if (IsEnabled(CustomComboPreset.DRK_oGCD_SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 LevelChecked(SaltAndDarkness) &&
-                HasEffect(Buffs.SaltedEarth))
+                HasStatusEffect(Buffs.SaltedEarth))
                 return SaltAndDarkness;
 
             if (IsEnabled(CustomComboPreset.DRK_oGCD_Shadowbringer) &&

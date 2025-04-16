@@ -1,11 +1,10 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class SMN : CasterJob
+internal partial class SMN : Caster
 {
     #region Small Features
 
@@ -35,10 +34,10 @@ internal partial class SMN : CasterJob
             if (actionID != SearingLight)
                 return actionID;
 
-            if (HasEffect(Buffs.RubysGlimmer))
+            if (HasStatusEffect(Buffs.RubysGlimmer))
                 return SearingFlash;
 
-            if (HasEffectAny(Buffs.SearingLight))
+            if (HasStatusEffect(Buffs.SearingLight, anyOwner: true))
                 return 11;
 
             return actionID;
@@ -52,7 +51,7 @@ internal partial class SMN : CasterJob
         {
             if (actionID != Ruin4)
                 return actionID;
-            bool furtherRuin = HasEffect(Buffs.FurtherRuin);
+            bool furtherRuin = HasStatusEffect(Buffs.FurtherRuin);
 
             if (!furtherRuin)
                 return Ruin3;
@@ -70,7 +69,7 @@ internal partial class SMN : CasterJob
                 return actionID;
 
             SMNGauge gauge = GetJobGauge<SMNGauge>();
-            if (HasEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergyDrain) && !gauge.HasAetherflowStacks && IsEnabled(CustomComboPreset.SMN_EDFester_Ruin4))
+            if (HasStatusEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergyDrain) && !gauge.HasAetherflowStacks && IsEnabled(CustomComboPreset.SMN_EDFester_Ruin4))
                 return Ruin4;
 
             if (LevelChecked(EnergyDrain) && !gauge.HasAetherflowStacks)
@@ -94,7 +93,7 @@ internal partial class SMN : CasterJob
             if (!LevelChecked(Painflare) || gauge.HasAetherflowStacks)
                 return actionID;
 
-            if (HasEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergySiphon) && IsEnabled(CustomComboPreset.SMN_ESPainflare_Ruin4))
+            if (HasStatusEffect(Buffs.FurtherRuin) && IsOnCooldown(EnergySiphon) && IsEnabled(CustomComboPreset.SMN_ESPainflare_Ruin4))
                 return Ruin4;
 
             if (LevelChecked(EnergySiphon))
@@ -132,9 +131,9 @@ internal partial class SMN : CasterJob
 
         protected override uint Invoke(uint actionID)
         {
-            if ((actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 or SummonRuby or SummonIfrit or SummonIfrit2 && HasEffect(Buffs.TitansFavor)) ||
-                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 && HasEffect(Buffs.GarudasFavor)) ||
-                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonRuby or SummonIfrit or SummonIfrit2 && (HasEffect(Buffs.IfritsFavor) || (ComboAction == CrimsonCyclone && InMeleeRange()))))
+            if ((actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 or SummonRuby or SummonIfrit or SummonIfrit2 && HasStatusEffect(Buffs.TitansFavor)) ||
+                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonEmerald or SummonGaruda or SummonGaruda2 && HasStatusEffect(Buffs.GarudasFavor)) ||
+                (actionID is SummonTopaz or SummonTitan or SummonTitan2 or SummonRuby or SummonIfrit or SummonIfrit2 && (HasStatusEffect(Buffs.IfritsFavor) || (ComboAction == CrimsonCyclone && InMeleeRange()))))
                 return OriginalHook(AstralFlow);
 
             return actionID;
@@ -199,7 +198,7 @@ internal partial class SMN : CasterJob
             if (CanSpellWeave())
             {
                 // Searing Light
-                if (IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && !HasEffectAny(Buffs.SearingLight) && CurrentDemiSummon is not DemiSummon.None)
+                if (IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && !HasStatusEffect(Buffs.SearingLight, anyOwner: true) && CurrentDemiSummon is not DemiSummon.None)
                     return SearingLight;
                    
                 // Energy Drain
@@ -207,7 +206,7 @@ internal partial class SMN : CasterJob
                     return EnergyDrain;
 
                 //Searing Flash
-                if (HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
+                if (HasStatusEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                     return SearingFlash;
 
                 // Demi Nuke
@@ -222,7 +221,7 @@ internal partial class SMN : CasterJob
 
                 // Lux Solaris
                 if (ActionReady(LuxSolaris) &&
-                    (PlayerHealthPercentageHp() < 100 || (GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
+                    (PlayerHealthPercentageHp() < 100 || (GetStatusEffectRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
                     return OriginalHook(LuxSolaris);
 
                 // Fester
@@ -231,7 +230,7 @@ internal partial class SMN : CasterJob
                     return OriginalHook(Fester);
 
                 //Self Shield Overcap
-                if (!HasEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
+                if (!HasStatusEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
                     return RadiantAegis;
 
                 // Lucid Dreaming
@@ -259,7 +258,7 @@ internal partial class SMN : CasterJob
             #region Garuda Phase
             if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
             {
-                if (HasEffect(Buffs.GarudasFavor) && (!IsMoving() || HasEffect(Role.Buffs.Swiftcast)))
+                if (HasStatusEffect(Buffs.GarudasFavor) && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(AstralFlow);
 
                 if (GemshineReady)
@@ -274,13 +273,13 @@ internal partial class SMN : CasterJob
 
             if (IsIfritAttuned || OriginalHook(AstralFlow) is CrimsonCyclone or CrimsonStrike)
             {                
-                if (GemshineReady && (!IsMoving() || HasEffect(Role.Buffs.Swiftcast)))
+                if (GemshineReady && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(Gemshine);
 
-                if (HasEffect(Buffs.IfritsFavor) || HasEffect(Buffs.CrimsonStrike) && InMeleeRange())
+                if (HasStatusEffect(Buffs.IfritsFavor) || HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())
                     return OriginalHook(AstralFlow);
 
-                if (ActionReady(Ruin4) && !HasEffect(Role.Buffs.Swiftcast) && GemshineReady)
+                if (ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
                     return Ruin4;
             }
             #endregion
@@ -299,7 +298,7 @@ internal partial class SMN : CasterJob
             }
 
             // Ruin 4 Dump
-            if (LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasEffect(Buffs.FurtherRuin))
+            if (LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
 
             return actionID;
@@ -333,7 +332,7 @@ internal partial class SMN : CasterJob
             if (CanSpellWeave())
             {
                 // Searing Light
-                if (IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && !HasEffectAny(Buffs.SearingLight) && CurrentDemiSummon is not DemiSummon.None)
+                if (IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && !HasStatusEffect(Buffs.SearingLight, anyOwner: true) && CurrentDemiSummon is not DemiSummon.None)
                     return SearingLight;
 
                 // Energy Drain
@@ -346,7 +345,7 @@ internal partial class SMN : CasterJob
                 }
 
                 //Searing Flash
-                if (HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
+                if (HasStatusEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                     return SearingFlash;
 
                 // Demi Nuke
@@ -361,7 +360,7 @@ internal partial class SMN : CasterJob
 
                 // Lux Solaris
                 if (ActionReady(LuxSolaris) &&
-                    (PlayerHealthPercentageHp() < 100 || (GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
+                    (PlayerHealthPercentageHp() < 100 || (GetStatusEffectRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
                     return OriginalHook(LuxSolaris);
 
                 // Fester
@@ -373,7 +372,7 @@ internal partial class SMN : CasterJob
                     return OriginalHook(Painflare);
 
                 //Self Shield Overcap
-                if (!HasEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
+                if (!HasStatusEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
                     return RadiantAegis;
 
                 // Lucid Dreaming
@@ -402,7 +401,7 @@ internal partial class SMN : CasterJob
             #region Garuda Phase
             if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
             {
-                if (HasEffect(Buffs.GarudasFavor) && (!IsMoving() || HasEffect(Role.Buffs.Swiftcast)))
+                if (HasStatusEffect(Buffs.GarudasFavor) && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(AstralFlow);
 
                 if (GemshineReady)
@@ -417,13 +416,13 @@ internal partial class SMN : CasterJob
 
             if (IsIfritAttuned || OriginalHook(AstralFlow) is CrimsonCyclone or CrimsonStrike)
             {
-                if (GemshineReady && (!IsMoving() || HasEffect(Role.Buffs.Swiftcast)))
+                if (GemshineReady && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(PreciousBrilliance);
 
-                if (HasEffect(Buffs.IfritsFavor) || HasEffect(Buffs.CrimsonStrike) && InMeleeRange())
+                if (HasStatusEffect(Buffs.IfritsFavor) || HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())
                     return OriginalHook(AstralFlow);
 
-                if (ActionReady(Ruin4) && !HasEffect(Role.Buffs.Swiftcast) && GemshineReady)
+                if (ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
                     return Ruin4;
             }
             #endregion
@@ -442,7 +441,7 @@ internal partial class SMN : CasterJob
             }
 
             // Ruin 4 Dump
-            if (LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasEffect(Buffs.FurtherRuin))
+            if (LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
 
             return actionID;
@@ -462,11 +461,11 @@ internal partial class SMN : CasterJob
                 return actionID;
 
             #region Variables
-            int summonerPrimalChoice = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_PrimalChoice);
-            int SummonerBurstPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_BurstPhase);
-            int lucidThreshold = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_Lucid);
-            int swiftcastPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_ST_SwiftcastPhase);
-            int burstDelay = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? PluginConfiguration.GetCustomIntValue(Config.SMN_ST_Burst_Delay) : 0;
+            int summonerPrimalChoice = Config.SMN_ST_PrimalChoice;
+            int SummonerBurstPhase = Config.SMN_ST_BurstPhase;
+            int lucidThreshold = Config.SMN_ST_Lucid;
+            int swiftcastPhase = Config.SMN_ST_SwiftcastPhase;
+            int burstDelay = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? Config.SMN_ST_Burst_Delay : 0;
 
             bool TitanAstralFlow = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Egi_AstralFlow) && Config.SMN_ST_Egi_AstralFlow[0];
             bool IfritAstralFlowCyclone = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Egi_AstralFlow) && Config.SMN_ST_Egi_AstralFlow[1];
@@ -513,7 +512,7 @@ internal partial class SMN : CasterJob
             if (CanSpellWeave())
             {
                 // Searing Light
-                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingLight) && IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && ((!HasEffectAny(Buffs.SearingLight) && Config.SMN_ST_Searing_Any) || !Config.SMN_ST_Searing_Any))
+                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingLight) && IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && ((!HasStatusEffect(Buffs.SearingLight, anyOwner: true) && Config.SMN_ST_Searing_Any) || !Config.SMN_ST_Searing_Any))
                 {
                     if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingLight_Burst) && TraitLevelChecked(Traits.EnhancedDreadwyrmTrance))
                     {
@@ -536,16 +535,16 @@ internal partial class SMN : CasterJob
 
                 // First set of Festers if Energy Drain is close to being off CD, or off CD while you have aetherflow stacks.
                 if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_EDFester) && IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling) && ActionReady(Fester) && GetCooldown(EnergyDrain).CooldownRemaining <= 3.2 &&
-                    ((HasEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Burst_Any_Option)) || HasEffectAny(Buffs.SearingLight)) &&
+                    ((HasStatusEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Burst_Any_Option)) || HasStatusEffect(Buffs.SearingLight, anyOwner: true)) &&
                          (SummonerBurstPhase is not 4) ||
-                        (SummonerBurstPhase == 4 && !HasEffect(Buffs.TitansFavor)))
+                        (SummonerBurstPhase == 4 && !HasStatusEffect(Buffs.TitansFavor)))
                     return OriginalHook(Fester);
 
-                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingFlash) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
+                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingFlash) && HasStatusEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                     return SearingFlash;
 
                 // Demi Nuke
-                if (CurrentDemiSummon is not DemiSummon.None && IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiSummons_Attacks) && DemiAttackCount >= burstDelay && (IsNotEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingLight_Burst) || HasEffect(Buffs.SearingLight) || searingInSummon))
+                if (CurrentDemiSummon is not DemiSummon.None && IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiSummons_Attacks) && DemiAttackCount >= burstDelay && (IsNotEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_SearingLight_Burst) || HasStatusEffect(Buffs.SearingLight) || searingInSummon))
                 {
                     if (ActionReady(OriginalHook(EnkindleBahamut)))
                         return OriginalHook(EnkindleBahamut);
@@ -556,7 +555,7 @@ internal partial class SMN : CasterJob
 
                 // Lux Solaris
                 if (ActionReady(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris) &&
-                    (PlayerHealthPercentageHp() < 100 || (GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
+                    (PlayerHealthPercentageHp() < 100 || (GetStatusEffectRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
                     return OriginalHook(LuxSolaris);
 
                 // Fester
@@ -570,15 +569,15 @@ internal partial class SMN : CasterJob
                         if (!LevelChecked(SearingLight))
                             return OriginalHook(Fester);
 
-                        if ((((HasEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Burst_Any_Option)) || HasEffectAny(Buffs.SearingLight)) &&
+                        if ((((HasStatusEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Burst_Any_Option)) || HasStatusEffect(Buffs.SearingLight, anyOwner: true)) &&
                              SummonerBurstPhase is 0 or 1 or 2 or 3 && DemiAttackCount >= burstDelay) ||
-                            (SummonerBurstPhase == 4 && !HasEffect(Buffs.TitansFavor)))
+                            (SummonerBurstPhase == 4 && !HasStatusEffect(Buffs.TitansFavor)))
                             return OriginalHook(Fester);
 
                     }
                 }
                 // Self Shield Overcap
-                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Radiant) && !HasEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
+                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Radiant) && !HasStatusEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
                     return RadiantAegis;
 
                 // Lucid Dreaming
@@ -606,12 +605,12 @@ internal partial class SMN : CasterJob
             #region Garuda Phase
             if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
             {               
-                if (GarudaAstralFlow && HasEffect(Buffs.GarudasFavor))
+                if (GarudaAstralFlow && HasStatusEffect(Buffs.GarudasFavor))
                 {
                     if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 1 or 3 && Role.CanSwiftcast()) // Forced Swiftcast option
                         return Role.Swiftcast;
                     
-                    if (!IsMoving() || HasEffect(Role.Buffs.Swiftcast))
+                    if (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast))
                         return OriginalHook(AstralFlow);                    
                 }
 
@@ -640,15 +639,15 @@ internal partial class SMN : CasterJob
                     return Role.Swiftcast;
 
                 if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_EgiSummons_Attacks) && GemshineReady && 
-                    (!IsMoving() || HasEffect(Role.Buffs.Swiftcast)))
+                    (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(Gemshine);
 
-                if (IfritAstralFlowCyclone && HasEffect(Buffs.IfritsFavor) &&
+                if (IfritAstralFlowCyclone && HasStatusEffect(Buffs.IfritsFavor) &&
                    ((!Config.SMN_ST_CrimsonCycloneMelee) || (Config.SMN_ST_CrimsonCycloneMelee && InMeleeRange()))  //Melee Check
-                   || (IfritAstralFlowStrike && HasEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
+                   || (IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
                     return OriginalHook(AstralFlow);
 
-                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasEffect(Role.Buffs.Swiftcast) && GemshineReady)
+                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
                     return Ruin4;
             }
             #endregion
@@ -669,7 +668,7 @@ internal partial class SMN : CasterJob
 
             // Ruin 4 Dump
 
-            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasEffect(Buffs.FurtherRuin))
+            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
 
             return actionID;
@@ -688,11 +687,11 @@ internal partial class SMN : CasterJob
 
             #region Variables
 
-            int summonerPrimalChoice = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_PrimalChoice);
-            int SummonerBurstPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_BurstPhase);
-            int lucidThreshold = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_Lucid);
-            int swiftcastPhase = PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_SwiftcastPhase);
-            int burstDelay = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? PluginConfiguration.GetCustomIntValue(Config.SMN_AoE_Burst_Delay) : 0;
+            int summonerPrimalChoice = Config.SMN_AoE_PrimalChoice;
+            int SummonerBurstPhase = Config.SMN_AoE_BurstPhase;
+            int lucidThreshold = Config.SMN_AoE_Lucid;
+            int swiftcastPhase = Config.SMN_AoE_SwiftcastPhase;
+            int burstDelay = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling) ? Config.SMN_AoE_Burst_Delay : 0;
 
             bool TitanAstralFlow = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Egi_AstralFlow) && Config.SMN_AoE_Egi_AstralFlow[0];
             bool IfritAstralFlowCyclone = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Egi_AstralFlow) && Config.SMN_AoE_Egi_AstralFlow[1];
@@ -735,7 +734,7 @@ internal partial class SMN : CasterJob
             if (CanSpellWeave())
             {
                 // Searing Light
-                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight) && IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && ((!HasEffectAny(Buffs.SearingLight) && Config.SMN_AoE_Searing_Any) || !Config.SMN_AoE_Searing_Any))
+                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight) && IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && ((!HasStatusEffect(Buffs.SearingLight, anyOwner: true) && Config.SMN_AoE_Searing_Any) || !Config.SMN_AoE_Searing_Any))
                 {
                     if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight_Burst) && TraitLevelChecked(Traits.EnhancedDreadwyrmTrance))
                     {
@@ -764,16 +763,16 @@ internal partial class SMN : CasterJob
 
                 // First set of Painflares if Energy Drain is close to being off CD, or off CD while you have aetherflow stacks.
                 if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_ESPainflare) && IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling) && ActionReady(Painflare) && GetCooldown(EnergyDrain).CooldownRemaining <= 3.2 &&
-                    ((HasEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Burst_Any_Option)) || HasEffectAny(Buffs.SearingLight)) &&
+                    ((HasStatusEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Burst_Any_Option)) || HasStatusEffect(Buffs.SearingLight, anyOwner: true)) &&
                          (SummonerBurstPhase is not 4) ||
-                        (SummonerBurstPhase == 4 && !HasEffect(Buffs.TitansFavor)))
+                        (SummonerBurstPhase == 4 && !HasStatusEffect(Buffs.TitansFavor)))
                     return OriginalHook(Painflare);
 
-                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingFlash) && HasEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
+                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingFlash) && HasStatusEffect(Buffs.RubysGlimmer) && LevelChecked(SearingFlash))
                     return SearingFlash;
 
                 // Demi Nuke
-                if (CurrentDemiSummon is not DemiSummon.None && IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiSummons_Attacks) && DemiAttackCount >= burstDelay && (IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight_Burst) || HasEffect(Buffs.SearingLight) || searingInSummon))
+                if (CurrentDemiSummon is not DemiSummon.None && IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiSummons_Attacks) && DemiAttackCount >= burstDelay && (IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight_Burst) || HasStatusEffect(Buffs.SearingLight) || searingInSummon))
                 {
                     if (ActionReady(OriginalHook(EnkindleBahamut)))
                         return OriginalHook(EnkindleBahamut);
@@ -784,7 +783,7 @@ internal partial class SMN : CasterJob
 
                 // Lux Solaris
                 if (ActionReady(LuxSolaris) && IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris) &&
-                    (PlayerHealthPercentageHp() < 100 || (GetBuffRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
+                    (PlayerHealthPercentageHp() < 100 || (GetStatusEffectRemainingTime(Buffs.RefulgentLux) is < 3 and > 0)))
                     return OriginalHook(LuxSolaris);
 
                 // Painflare
@@ -798,16 +797,16 @@ internal partial class SMN : CasterJob
                         if (IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling) || !LevelChecked(SearingLight))
                             return OriginalHook(Painflare);
 
-                        if ((((HasEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Burst_Any_Option)) || HasEffectAny(Buffs.SearingLight)) &&
+                        if ((((HasStatusEffect(Buffs.SearingLight) && IsNotEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Burst_Any_Option)) || HasStatusEffect(Buffs.SearingLight, anyOwner: true)) &&
                              SummonerBurstPhase is 0 or 1 or 2 or 3 && DemiAttackCount >= burstDelay) ||
-                            (SummonerBurstPhase == 4 && !HasEffect(Buffs.TitansFavor)))
+                            (SummonerBurstPhase == 4 && !HasStatusEffect(Buffs.TitansFavor)))
                             return OriginalHook(Painflare);
                     }
                     
                 }
 
                 // Self Shield Overcap
-                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Radiant) && !HasEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
+                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Radiant) && !HasStatusEffect(Buffs.SearingLight) && GetRemainingCharges(RadiantAegis) == 2 && ActionReady(RadiantAegis))
                     return RadiantAegis;
 
                 // Lucid Dreaming
@@ -837,12 +836,12 @@ internal partial class SMN : CasterJob
             #region Garuda Phase
             if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
             {
-                if (GarudaAstralFlow && HasEffect(Buffs.GarudasFavor))
+                if (GarudaAstralFlow && HasStatusEffect(Buffs.GarudasFavor))
                 {
                     if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 1 or 3 && Role.CanSwiftcast()) // Forced Swiftcast option
                         return Role.Swiftcast;
                    
-                    if (!IsMoving() || HasEffect(Role.Buffs.Swiftcast))
+                    if (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast))
                         return OriginalHook(AstralFlow);
                 }                
 
@@ -861,15 +860,15 @@ internal partial class SMN : CasterJob
                     return Role.Swiftcast;
 
                 if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_EgiSummons_Attacks) && GemshineReady && 
-                    (!IsMoving() || HasEffect(Role.Buffs.Swiftcast)))
+                    (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(PreciousBrilliance);
 
-                if (IfritAstralFlowCyclone && HasEffect(Buffs.IfritsFavor) &&
+                if (IfritAstralFlowCyclone && HasStatusEffect(Buffs.IfritsFavor) &&
                    ((!Config.SMN_AoE_CrimsonCycloneMelee) || (Config.SMN_AoE_CrimsonCycloneMelee && InMeleeRange()))  //Melee Check
-                   || (IfritAstralFlowStrike && HasEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
+                   || (IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
                     return OriginalHook(AstralFlow);
 
-                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasEffect(Role.Buffs.Swiftcast) && GemshineReady)
+                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
                     return Ruin4;
             }
             #endregion
@@ -888,7 +887,7 @@ internal partial class SMN : CasterJob
             }
 
             // Ruin 4
-            if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasEffect(Buffs.FurtherRuin))
+            if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
 
             return actionID;

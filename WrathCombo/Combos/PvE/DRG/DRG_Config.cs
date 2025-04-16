@@ -88,7 +88,6 @@ internal partial class DRG
                     DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP, $"Stop Using {LanceCharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
-
             }
         }
     }

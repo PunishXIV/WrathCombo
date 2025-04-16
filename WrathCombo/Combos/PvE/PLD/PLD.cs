@@ -7,7 +7,7 @@ using WrathCombo.Data;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class PLD : TankJob
+internal partial class PLD : Tank
 {
     private static PLDGauge Gauge => CustomComboFunctions.GetJobGauge<PLDGauge>();
 
@@ -22,26 +22,26 @@ internal partial class PLD : TankJob
                 return actionID;
 
             #region Variables
-            float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
+            float durationFightOrFlight = GetStatusEffectRemainingTime(Buffs.FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
             uint playerMP = LocalPlayer.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
-            bool hasRequiescat = HasEffect(Buffs.Requiescat);
-            bool hasDivineMight = HasEffect(Buffs.DivineMight);
-            bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
+            bool hasRequiescat = HasStatusEffect(Buffs.Requiescat);
+            bool hasDivineMight = HasStatusEffect(Buffs.DivineMight);
+            bool hasFightOrFlight = HasStatusEffect(Buffs.FightOrFlight);
             bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
             bool hasRequiescatMP = playerMP >= GetResourceCost(HolySpirit) * 3.6;
             bool inBurstWindow = JustUsed(FightOrFlight, 30f);
-            bool inAtonementStarter = HasEffect(Buffs.AtonementReady);
-            bool inAtonementFinisher = HasEffect(Buffs.SepulchreReady);
+            bool inAtonementStarter = HasStatusEffect(Buffs.AtonementReady);
+            bool inAtonementFinisher = HasStatusEffect(Buffs.SepulchreReady);
             bool afterOpener = LevelChecked(BladeOfFaith) && RoyalAuthorityCount > 0;
-            bool inAtonementPhase = HasEffect(Buffs.AtonementReady) || HasEffect(Buffs.SupplicationReady) || HasEffect(Buffs.SepulchreReady);
-            bool isDivineMightExpiring = GetBuffRemainingTime(Buffs.DivineMight) < 6;
-            bool isAtonementExpiring = (HasEffect(Buffs.AtonementReady) && GetBuffRemainingTime(Buffs.AtonementReady) < 6) ||
-                                       (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
-                                       (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
+            bool inAtonementPhase = HasStatusEffect(Buffs.AtonementReady) || HasStatusEffect(Buffs.SupplicationReady) || HasStatusEffect(Buffs.SepulchreReady);
+            bool isDivineMightExpiring = GetStatusEffectRemainingTime(Buffs.DivineMight) < 6;
+            bool isAtonementExpiring = (HasStatusEffect(Buffs.AtonementReady) && GetStatusEffectRemainingTime(Buffs.AtonementReady) < 6) ||
+                                       (HasStatusEffect(Buffs.SupplicationReady) && GetStatusEffectRemainingTime(Buffs.SupplicationReady) < 6) ||
+                                       (HasStatusEffect(Buffs.SepulchreReady) && GetStatusEffectRemainingTime(Buffs.SepulchreReady) < 6);
             bool justMitted = JustUsed(OriginalHook(Sheltron), 3f) ||
                              JustUsed(OriginalHook(Sentinel), 4f) ||
                              JustUsed(DivineVeil, 4f) ||
@@ -159,7 +159,7 @@ internal partial class PLD : TankJob
                 if (hasDivineMagicMP)
                 {
                     // Confiteor & Blades
-                    if (HasEffect(Buffs.ConfiteorReady) || (LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
+                    if (HasStatusEffect(Buffs.ConfiteorReady) || (LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
                         return OriginalHook(Confiteor);
 
                     // Pre-Blades
@@ -168,7 +168,7 @@ internal partial class PLD : TankJob
                 }
 
                 // Goring Blade
-                if (HasEffect(Buffs.GoringBladeReady) && InMeleeRange())
+                if (HasStatusEffect(Buffs.GoringBladeReady) && InMeleeRange())
                     return GoringBlade;
 
                 // Holy Spirit Prioritization
@@ -225,8 +225,8 @@ internal partial class PLD : TankJob
             uint playerMP = LocalPlayer.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
-            bool hasRequiescat = HasEffect(Buffs.Requiescat);
-            bool hasDivineMight = HasEffect(Buffs.DivineMight);
+            bool hasRequiescat = HasStatusEffect(Buffs.Requiescat);
+            bool hasDivineMight = HasStatusEffect(Buffs.DivineMight);
             bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
             bool hasRequiescatMP = playerMP >= GetResourceCost(HolySpirit) * 3.6;
             bool justMitted = JustUsed(OriginalHook(Sheltron), 3f) ||
@@ -329,7 +329,7 @@ internal partial class PLD : TankJob
                 }
 
                 // Confiteor & Blades
-                if (hasDivineMagicMP && (HasEffect(Buffs.ConfiteorReady) || (LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)))
+                if (hasDivineMagicMP && (HasStatusEffect(Buffs.ConfiteorReady) || (LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)))
                     return OriginalHook(Confiteor);
             }
 
@@ -356,31 +356,31 @@ internal partial class PLD : TankJob
                 return actionID;
 
             #region Variables
-            float durationFightOrFlight = GetBuffRemainingTime(Buffs.FightOrFlight);
+            float durationFightOrFlight = GetStatusEffectRemainingTime(Buffs.FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
             uint playerMP = LocalPlayer.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
-            bool hasRequiescat = HasEffect(Buffs.Requiescat);
-            bool hasDivineMight = HasEffect(Buffs.DivineMight);
-            bool hasFightOrFlight = HasEffect(Buffs.FightOrFlight);
+            bool hasRequiescat = HasStatusEffect(Buffs.Requiescat);
+            bool hasDivineMight = HasStatusEffect(Buffs.DivineMight);
+            bool hasFightOrFlight = HasStatusEffect(Buffs.FightOrFlight);
             bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
             bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
                                          JustUsed(Role.Rampart, 5f) || JustUsed(HallowedGround, 9f);
             bool hasRequiescatMP = (IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) * 3.6) ||
                                    (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= (GetResourceCost(HolySpirit) * 3.6) + Config.PLD_ST_MP_Reserve);
             bool inBurstWindow = JustUsed(FightOrFlight, 30f);
-            bool inAtonementStarter = HasEffect(Buffs.AtonementReady);
-            bool inAtonementFinisher = HasEffect(Buffs.SepulchreReady);
+            bool inAtonementStarter = HasStatusEffect(Buffs.AtonementReady);
+            bool inAtonementFinisher = HasStatusEffect(Buffs.SepulchreReady);
             bool afterOpener = LevelChecked(BladeOfFaith) && RoyalAuthorityCount > 0;
-            bool isDivineMightExpiring = GetBuffRemainingTime(Buffs.DivineMight) < 6;
+            bool isDivineMightExpiring = GetStatusEffectRemainingTime(Buffs.DivineMight) < 6;
             bool isAboveMPReserve = IsNotEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) ||
                                     (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_ST_MP_Reserve);
-            bool inAtonementPhase = HasEffect(Buffs.AtonementReady) || HasEffect(Buffs.SupplicationReady) || HasEffect(Buffs.SepulchreReady);
-            bool isAtonementExpiring = (HasEffect(Buffs.AtonementReady) && GetBuffRemainingTime(Buffs.AtonementReady) < 6) ||
-                                       (HasEffect(Buffs.SupplicationReady) && GetBuffRemainingTime(Buffs.SupplicationReady) < 6) ||
-                                       (HasEffect(Buffs.SepulchreReady) && GetBuffRemainingTime(Buffs.SepulchreReady) < 6);
+            bool inAtonementPhase = HasStatusEffect(Buffs.AtonementReady) || HasStatusEffect(Buffs.SupplicationReady) || HasStatusEffect(Buffs.SepulchreReady);
+            bool isAtonementExpiring = (HasStatusEffect(Buffs.AtonementReady) && GetStatusEffectRemainingTime(Buffs.AtonementReady) < 6) ||
+                                       (HasStatusEffect(Buffs.SupplicationReady) && GetStatusEffectRemainingTime(Buffs.SupplicationReady) < 6) ||
+                                       (HasStatusEffect(Buffs.SepulchreReady) && GetStatusEffectRemainingTime(Buffs.SepulchreReady) < 6);
             #endregion
 
             // Interrupt
@@ -483,7 +483,7 @@ internal partial class PLD : TankJob
                         // Sheltron
                         if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Sheltron) && LevelChecked(Sheltron) &&
                             Gauge.OathGauge >= Config.PLD_ST_SheltronOption && PlayerHealthPercentageHp() < 95 &&
-                            !HasEffect(Buffs.Sheltron) && !HasEffect(Buffs.HolySheltron))
+                            !HasStatusEffect(Buffs.Sheltron) && !HasStatusEffect(Buffs.HolySheltron))
                             return OriginalHook(Sheltron);
                     }
                 }
@@ -492,7 +492,7 @@ internal partial class PLD : TankJob
                 if (hasDivineMagicMP)
                 {
                     // Confiteor & Blades
-                    if ((IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Confiteor) && HasEffect(Buffs.ConfiteorReady)) ||
+                    if ((IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Confiteor) && HasStatusEffect(Buffs.ConfiteorReady)) ||
                         (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Blades) && LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
                         return OriginalHook(Confiteor);
 
@@ -502,7 +502,7 @@ internal partial class PLD : TankJob
                 }
 
                 // Goring Blade
-                if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_GoringBlade) && HasEffect(Buffs.GoringBladeReady) && InMeleeRange())
+                if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_GoringBlade) && HasStatusEffect(Buffs.GoringBladeReady) && InMeleeRange())
                     return GoringBlade;
 
                 // Holy Spirit Prioritization
@@ -569,8 +569,8 @@ internal partial class PLD : TankJob
             uint playerMP = LocalPlayer.CurrentMp;
             bool canWeave = CanWeave();
             bool canEarlyWeave = CanWeave(1.5f);
-            bool hasRequiescat = HasEffect(Buffs.Requiescat);
-            bool hasDivineMight = HasEffect(Buffs.DivineMight);
+            bool hasRequiescat = HasStatusEffect(Buffs.Requiescat);
+            bool hasDivineMight = HasStatusEffect(Buffs.DivineMight);
             bool hasDivineMagicMP = playerMP >= GetResourceCost(HolySpirit);
             bool hasJustUsedMitigation = JustUsed(OriginalHook(Sheltron), 3f) || JustUsed(OriginalHook(Sentinel), 5f) ||
                                          JustUsed(Role.Rampart, 5f) || JustUsed(HallowedGround, 9f);
@@ -665,13 +665,13 @@ internal partial class PLD : TankJob
                         // Sheltron
                         if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Sheltron) && LevelChecked(Sheltron) &&
                             Gauge.OathGauge >= Config.PLD_AoE_SheltronOption && PlayerHealthPercentageHp() < 95 &&
-                            !HasEffect(Buffs.Sheltron) && !HasEffect(Buffs.HolySheltron))
+                            !HasStatusEffect(Buffs.Sheltron) && !HasStatusEffect(Buffs.HolySheltron))
                             return OriginalHook(Sheltron);
                     }
                 }
 
                 // Confiteor & Blades
-                if (hasDivineMagicMP && ((IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Confiteor) && HasEffect(Buffs.ConfiteorReady)) ||
+                if (hasDivineMagicMP && ((IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Confiteor) && HasStatusEffect(Buffs.ConfiteorReady)) ||
                                          (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Blades) && LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)))
                     return OriginalHook(Confiteor);
             }
@@ -703,11 +703,11 @@ internal partial class PLD : TankJob
                 return FightOrFlight;
 
             // Confiteor & Blades
-            if (HasEffect(Buffs.ConfiteorReady) || (LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
+            if (HasStatusEffect(Buffs.ConfiteorReady) || (LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
                 return OriginalHook(Confiteor);
 
             // Pre-Blades
-            if (HasEffect(Buffs.Requiescat))
+            if (HasStatusEffect(Buffs.Requiescat))
             {
                 // AoE
                 if (LevelChecked(HolyCircle) && NumberOfEnemiesInRange(HolyCircle, null) > 2)
@@ -749,7 +749,7 @@ internal partial class PLD : TankJob
             if (actionID is not ShieldLob)
                 return actionID;
 
-            if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (TimeMoving.Ticks == 0 || HasEffect(Buffs.DivineMight)))
+            if (LevelChecked(HolySpirit) && GetResourceCost(HolySpirit) <= LocalPlayer.CurrentMp && (TimeMoving.Ticks == 0 || HasStatusEffect(Buffs.DivineMight)))
                 return HolySpirit;
 
             return actionID;

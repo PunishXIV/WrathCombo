@@ -17,6 +17,7 @@ namespace WrathCombo.Window.Tabs
     internal class PvPFeatures : ConfigWindow
     {
         internal static string OpenJob = string.Empty;
+        internal static int ColCount = 1;
 
         internal static new void Draw()
         {
@@ -45,26 +46,38 @@ namespace WrathCombo.Window.Tabs
                     });
                     ImGui.Spacing();
 
-                    foreach (string? jobName in groupedPresets.Where(x => x.Value.Any(y => PresetStorage.IsPvP(y.Preset))).Select(x => x.Key))
+                    ColCount = Math.Max(1, (int)(ImGui.GetContentRegionAvail().X / 200f.Scale()));
+
+                    using (var tab = ImRaii.Table("PvPTable", ColCount))
                     {
-                        string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
-                        string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
-                        var id = groupedPresets[jobName].First().Info.JobID;
-                        IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
-                        using (var disabled = ImRaii.Disabled(DisabledJobsPVP.Any(x => x == id)))
+                        ImGui.TableNextColumn();
+
+                        if (!tab)
+                            return;
+
+                        foreach (string? jobName in groupedPresets.Where(x => x.Value.Any(y => PresetStorage.IsPvP(y.Preset))).Select(x => x.Key))
                         {
-                            if (ImGui.Selectable($"###{header}", OpenJob == jobName, ImGuiSelectableFlags.None,
-                                    icon == null ? new Vector2(0, 32).Scale() : new Vector2(0, icon.Size.Y / 2f).Scale()))
+                            string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
+                            string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
+                            var id = groupedPresets[jobName].First().Info.JobID;
+                            IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
+                            using (var disabled = ImRaii.Disabled(DisabledJobsPVP.Any(x => x == id)))
                             {
-                                OpenJob = jobName;
+                                if (ImGui.Selectable($"###{header}", OpenJob == jobName, ImGuiSelectableFlags.None,
+                                        icon == null ? new Vector2(0, 32).Scale() : new Vector2(0, icon.Size.Y / 2f).Scale()))
+                                {
+                                    OpenJob = jobName;
+                                }
+                                ImGui.SameLine(indentwidth);
+                                if (icon != null)
+                                {
+                                    ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X, icon.Size.Y).Scale() / 2f);
+                                    ImGui.SameLine(indentwidth2);
+                                }
+                                ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
                             }
-                            ImGui.SameLine(indentwidth);
-                            if (icon != null)
-                            {
-                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X, icon.Size.Y).Scale() / 2f);
-                                ImGui.SameLine(indentwidth2);
-                            }
-                            ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
+
+                            ImGui.TableNextColumn();
                         }
                     }
                 }

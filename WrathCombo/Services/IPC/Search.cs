@@ -2,14 +2,11 @@
 
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
-using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Core;
@@ -414,12 +411,10 @@ public class Search(Leasing leasing)
     {
         get
         {
-            if (File.GetLastWriteTime(ConfigFilePath) <=
-                _lastCacheUpdateForComboStatesByJobCategorized)
-                return field ?? [];
+            var job = (Job)CustomComboFunctions.JobIDs.ClassToJob(JobID!.Value);
 
-
-            var job = (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
+            if (field != null && field.ContainsKey(job))
+                return field;
 
             field = Presets
                 .Where(preset =>
@@ -478,7 +473,8 @@ public class Search(Leasing leasing)
                                 )
                         )
                 );
-            _lastCacheUpdateForComboStatesByJobCategorized = DateTime.Now;
+
+            Svc.Log.Verbose($"IPC Combo Built for {job}");
 
             return field ?? [];
         }

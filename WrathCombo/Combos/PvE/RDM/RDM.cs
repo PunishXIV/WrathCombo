@@ -4,7 +4,7 @@ using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class RDM : CasterJob
+internal partial class RDM : Caster
 {
     internal class RDM_VariantVerCure : CustomCombo
     {
@@ -219,7 +219,7 @@ internal partial class RDM : CasterJob
             uint NewActionID = 0;
 
             //RDM_OGCD
-            if (TryOGCDs(actionID, true, ref NewActionID, true))
+            if (TryOGCDs(actionID, false, ref NewActionID))
                 return NewActionID;
 
             // LUCID
@@ -268,7 +268,7 @@ internal partial class RDM : CasterJob
                 //RDM_OGCD
                 if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)
                     && LevelChecked(Corpsacorps)
-                    && TryOGCDs(actionID, true, ref NewActionID, true))
+                    && TryOGCDs(actionID, false, ref NewActionID, true))
                     return NewActionID;
 
                 // LUCID
@@ -342,7 +342,7 @@ internal partial class RDM : CasterJob
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Raise;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Role.Swiftcast)
+            if (actionID != Role.Swiftcast)
                 return actionID;
 
             if (Variant.CanRaise(CustomComboPreset.RDM_Variant_Raise))
@@ -350,8 +350,8 @@ internal partial class RDM : CasterJob
 
             if (LevelChecked(Verraise))
             {
-                bool schwifty = HasEffect(Role.Buffs.Swiftcast);
-                if (schwifty || HasEffect(Buffs.Dualcast))
+                bool schwifty = HasStatusEffect(Role.Buffs.Swiftcast);
+                if (schwifty || HasStatusEffect(Buffs.Dualcast))
                     return Verraise.AndRunMacro();
                 if (IsEnabled(CustomComboPreset.RDM_Raise_Vercure) &&
                     !schwifty &&
@@ -399,7 +399,7 @@ internal partial class RDM : CasterJob
         protected override uint Invoke(uint actionID) =>
             actionID is Embolden &&
             ActionReady(Embolden) &&
-            HasEffectAny(Buffs.EmboldenOthers) ? All.SavageBlade : actionID;
+            HasStatusEffect(Buffs.EmboldenOthers, anyOwner: true) ? All.SavageBlade : actionID;
     }
 
     internal class RDM_MagickProtection : CustomCombo
@@ -408,6 +408,6 @@ internal partial class RDM : CasterJob
         protected override uint Invoke(uint actionID) =>
             actionID is MagickBarrier &&
             ActionReady(MagickBarrier) &&
-            HasEffectAny(Buffs.MagickBarrier) ? All.SavageBlade : actionID;
+            HasStatusEffect(Buffs.MagickBarrier, anyOwner: true) ? All.SavageBlade : actionID;
     }
 }

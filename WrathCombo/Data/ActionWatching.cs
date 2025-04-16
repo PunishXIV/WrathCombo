@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Hooking;
 using Dalamud.Utility;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.Logging;
@@ -117,7 +118,7 @@ namespace WrathCombo.Data
 
 
 
-                if (ActionType is 13 or 2) return;
+                if ((byte)header->ActionType is 13 or 2) return;
                 if (header->ActionId != 7 &&
                     header->ActionId != 8 &&
                     casterEntityId == Svc.ClientState.LocalPlayer.GameObjectId)
@@ -155,9 +156,9 @@ namespace WrathCombo.Data
                         OutputLog();
                 }
             }
-            catch
+            catch (Exception ex)
             {
-
+                ex.Log();
             }
         }
 

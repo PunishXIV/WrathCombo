@@ -34,13 +34,13 @@ namespace WrathCombo.Window
             .Where(preset => (int)preset > 100)
             .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
             .Where(tpl => tpl.Info != null && PresetStorage.GetParent(tpl.Preset) == null)
-            .OrderByDescending(tpl => tpl.Info.JobID == 0)
-            .ThenByDescending(tpl => tpl.Info.JobID == DOL.JobID)
-            .ThenByDescending(tpl => tpl.Info.JobID == DOH.JobID)
-            .ThenByDescending(tpl => tpl.Info.Role == 1)
+            .OrderByDescending(tpl => tpl.Info.Role == 1)
             .ThenByDescending(tpl => tpl.Info.Role == 4)
             .ThenByDescending(tpl => tpl.Info.Role == 2)
             .ThenByDescending(tpl => tpl.Info.Role == 3)
+            .ThenByDescending(tpl => tpl.Info.JobID == 0)
+            .ThenByDescending(tpl => tpl.Info.JobID == DOL.JobID)
+            .ThenByDescending(tpl => tpl.Info.JobID == DOH.JobID)
             .ThenBy(tpl => tpl.Info.ClassJobCategory)
             .ThenBy(tpl => tpl.Info.JobName)
             .ThenBy(tpl => tpl.Info.Order)
@@ -88,7 +88,7 @@ namespace WrathCombo.Window
         {
             SizeConstraints = new()
             {
-                MinimumSize = new Vector2(700, 10).Scale()
+                MinimumSize = new Vector2(700, 100).Scale()
             };
         }
 

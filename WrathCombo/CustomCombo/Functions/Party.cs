@@ -31,7 +31,7 @@ namespace WrathCombo.CustomComboNS.Functions
             for (int i = 1; i <= 8; i++)
             {
                 var member = GetPartySlot(i);
-                if (member != null && !_partyList.Any(x => x.BattleChara.GameObjectId == member.GameObjectId))
+                if (member != null && !_partyList.Any(x => x.GameObjectId == member.GameObjectId))
                 {
                     var chara = (member as IBattleChara);
                     WrathPartyMember wmember = new()
@@ -51,7 +51,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 {
                     foreach (var npc in Svc.Objects.Where(x => x is IBattleChara && x is not IPlayerCharacter).Cast<IBattleChara>())
                     {
-                        if (ActionManager.CanUseActionOnTarget(Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.GameObjectId == npc.GameObjectId))
+                        if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.GameObjectId == npc.GameObjectId))
                         {
                             WrathPartyMember wmember = new()
                             {
@@ -59,7 +59,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                 CurrentHP = npc.CurrentHp
                             };
 
-                            _partyList.Add(wmember);
+                                _partyList.Add(wmember);
                         }
                     }
                 }
@@ -121,7 +121,7 @@ namespace WrathCombo.CustomComboNS.Functions
                 if (GetPartySlot(i) is not IBattleChara member) continue;
                 if (member is null) continue; //Skip nulls/disconnected people
                 if (member.IsDead) continue;
-                if (FindEffectOnMember(buff, member) is not null) BuffCount++;
+                if (HasStatusEffect(buff, member, true)) BuffCount++;
                 PartyCount++;
             }
             return PartyCount == 0 ? 0 : (float)BuffCount / PartyCount * 100f; //Div by 0 check...just in case....

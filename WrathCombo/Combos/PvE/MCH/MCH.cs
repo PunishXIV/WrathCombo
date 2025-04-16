@@ -3,7 +3,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 namespace WrathCombo.Combos.PvE;
 
-internal partial class MCH : PhysRangedJob
+internal partial class MCH : PhysicalRanged
 {
     internal class MCH_ST_SimpleMode : CustomCombo
     {
@@ -21,7 +21,7 @@ internal partial class MCH : PhysRangedJob
                 return Variant.Rampart;
 
             //Reassemble to start before combat
-            if (!HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
+            if (!HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
                 !InCombat() && TargetIsHostile() &&
                 (ActionReady(Excavator) ||
                  ActionReady(Chainsaw) ||
@@ -41,7 +41,7 @@ internal partial class MCH : PhysRangedJob
                     // Wildfire
                     if (JustUsed(Hypercharge) &&
                         ActionReady(Wildfire) &&
-                        !HasEffect(Buffs.Wildfire) &&
+                        !HasStatusEffect(Buffs.Wildfire) &&
                         InBossEncounter())
                         return Wildfire;
 
@@ -49,11 +49,11 @@ internal partial class MCH : PhysRangedJob
                     {
                         // BarrelStabilizer
                         if (ActionReady(BarrelStabilizer) && InBossEncounter() &&
-                            !HasEffect(Buffs.FullMetalMachinist))
+                            !HasStatusEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
 
                         // Hypercharge
-                        if ((Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) &&
+                        if ((Gauge.Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) &&
                             !IsComboExpiring(6) && LevelChecked(Hypercharge))
                         {
                             // Ensures Hypercharge is double weaved with WF
@@ -68,7 +68,7 @@ internal partial class MCH : PhysRangedJob
                                 (!LevelChecked(Wildfire) ||
                                  LevelChecked(Wildfire) &&
                                  (GetCooldownRemainingTime(Wildfire) > 40 ||
-                                  IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist))))
+                                  IsOffCooldown(Wildfire) && !HasStatusEffect(Buffs.FullMetalMachinist))))
                                 return Hypercharge;
                         }
 
@@ -118,9 +118,9 @@ internal partial class MCH : PhysRangedJob
             }
 
             // Full Metal Field
-            if (HasEffect(Buffs.FullMetalMachinist) && InBossEncounter() &&
+            if (HasStatusEffect(Buffs.FullMetalMachinist, out var fullMetal) && InBossEncounter() &&
                 (GetCooldownRemainingTime(Wildfire) <= GCD || ActionReady(Wildfire) ||
-                 GetBuffRemainingTime(Buffs.FullMetalMachinist) <= 6) &&
+                 fullMetal.RemainingTime <= 6) &&
                 LevelChecked(FullMetalField))
                 return FullMetalField;
 
@@ -139,7 +139,7 @@ internal partial class MCH : PhysRangedJob
                     return OriginalHook(SlugShot);
 
                 if (ComboAction == OriginalHook(SlugShot) &&
-                    !LevelChecked(Drill) && !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble))
+                    !LevelChecked(Drill) && !HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble))
                     return Reassemble;
 
                 if (ComboAction is SlugShot && LevelChecked(OriginalHook(CleanShot)))
@@ -171,7 +171,7 @@ internal partial class MCH : PhysRangedJob
 
             //Reassemble to start before combat
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) &&
-                !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
+                !HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
                 !InCombat() && TargetIsHostile() &&
                 (ActionReady(Excavator) && Config.MCH_ST_Reassembled[0] ||
                  ActionReady(Chainsaw) && Config.MCH_ST_Reassembled[1] ||
@@ -197,7 +197,7 @@ internal partial class MCH : PhysRangedJob
                     if (IsEnabled(CustomComboPreset.MCH_ST_Adv_WildFire) &&
                         (Config.MCH_ST_Adv_Wildfire_SubOption == 0 ||
                          Config.MCH_ST_Adv_Wildfire_SubOption == 1 && InBossEncounter()) &&
-                        JustUsed(Hypercharge) && ActionReady(Wildfire) && !HasEffect(Buffs.Wildfire))
+                        JustUsed(Hypercharge) && ActionReady(Wildfire) && !HasStatusEffect(Buffs.Wildfire))
                         return Wildfire;
 
                     if (!Gauge.IsOverheated)
@@ -207,12 +207,12 @@ internal partial class MCH : PhysRangedJob
                             (Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 0 ||
                              Config.MCH_ST_Adv_BarrelStabiliser_SubOption == 1 && InBossEncounter()) &&
                             ActionReady(BarrelStabilizer) &&
-                            !HasEffect(Buffs.FullMetalMachinist))
+                            !HasStatusEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
 
                         // Hypercharge
                         if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Hypercharge) &&
-                            (Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) &&
+                            (Gauge.Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) &&
                             !IsComboExpiring(6) &&
                             LevelChecked(Hypercharge))
                         {
@@ -228,7 +228,7 @@ internal partial class MCH : PhysRangedJob
                                 (!LevelChecked(Wildfire) ||
                                  LevelChecked(Wildfire) &&
                                  (GetCooldownRemainingTime(Wildfire) > 40 ||
-                                  IsOffCooldown(Wildfire) && !HasEffect(Buffs.FullMetalMachinist))))
+                                  IsOffCooldown(Wildfire) && !HasStatusEffect(Buffs.FullMetalMachinist))))
                                 return Hypercharge;
                         }
 
@@ -291,8 +291,8 @@ internal partial class MCH : PhysRangedJob
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Stabilizer_FullMetalField) &&
                 (Config.MCH_ST_Adv_FullMetalMachinist_SubOption == 0 ||
                  Config.MCH_ST_Adv_FullMetalMachinist_SubOption == 1 && InBossEncounter()) &&
-                HasEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField) &&
-                (GetBuffRemainingTime(Buffs.FullMetalMachinist) <= 6 ||
+                HasStatusEffect(Buffs.FullMetalMachinist, out var fullMetal) && LevelChecked(FullMetalField) &&
+                (fullMetal.RemainingTime <= 6 ||
                  GetCooldownRemainingTime(Wildfire) <= GCD ||
                  ActionReady(Wildfire)))
                 return FullMetalField;
@@ -314,7 +314,7 @@ internal partial class MCH : PhysRangedJob
 
                 if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[4] &&
                     ComboAction == OriginalHook(SlugShot) &&
-                    !LevelChecked(Drill) && !HasEffect(Buffs.Reassembled) && ActionReady(Reassemble))
+                    !LevelChecked(Drill) && !HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble))
                     return Reassemble;
 
                 if (ComboAction is SlugShot && LevelChecked(OriginalHook(CleanShot)))
@@ -339,7 +339,7 @@ internal partial class MCH : PhysRangedJob
             if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                 return Variant.Rampart;
 
-            if (HasEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
+            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
                 return All.SavageBlade;
 
             // Interrupt
@@ -353,14 +353,14 @@ internal partial class MCH : PhysRangedJob
                 {
                     // BarrelStabilizer
                     if (ActionReady(BarrelStabilizer) &&
-                        !HasEffect(Buffs.FullMetalMachinist))
+                        !HasStatusEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
                     if (Gauge.Battery == 100)
                         return OriginalHook(RookAutoturret);
 
                     // Hypercharge
-                    if ((Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
+                    if ((Gauge.Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
                         (BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10 ||
                          !BioBlaster.LevelChecked()) &&
@@ -369,10 +369,10 @@ internal partial class MCH : PhysRangedJob
                         return Hypercharge;
 
                     if (ActionReady(Reassemble) &&
-                        !HasEffect(Buffs.Wildfire) &&
-                        !HasEffect(Buffs.Reassembled) &&
+                        !HasStatusEffect(Buffs.Wildfire) &&
+                        !HasStatusEffect(Buffs.Reassembled) &&
                         !JustUsed(Flamethrower, 10f) &&
-                        (HasEffect(Buffs.ExcavatorReady) && Excavator.LevelChecked() ||
+                        (HasStatusEffect(Buffs.ExcavatorReady) && Excavator.LevelChecked() ||
                          GetCooldownRemainingTime(Chainsaw) < 1 && Chainsaw.LevelChecked() ||
                          GetCooldownRemainingTime(AirAnchor) < 1 && AirAnchor.LevelChecked() ||
                          Scattergun.LevelChecked()))
@@ -402,19 +402,19 @@ internal partial class MCH : PhysRangedJob
             if (!Gauge.IsOverheated)
             {
                 //Full Metal Field
-                if (HasEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField))
+                if (HasStatusEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField))
                     return FullMetalField;
 
-                if (ActionReady(BioBlaster) && !TargetHasEffect(Debuffs.Bioblaster) && !Gauge.IsOverheated && !HasEffect(Buffs.Reassembled))
+                if (ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) && !Gauge.IsOverheated && !HasStatusEffect(Buffs.Reassembled))
                     return OriginalHook(BioBlaster);
 
                 if (ActionReady(Flamethrower) && !IsMoving())
                     return OriginalHook(Flamethrower);
 
-                if (LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
+                if (LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                     return Excavator;
 
-                if (LevelChecked(Chainsaw) && !HasEffect(Buffs.ExcavatorReady) &&
+                if (LevelChecked(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady) &&
                     (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(Scattergun)) + 0.25 ||
                      ActionReady(Chainsaw)))
                     return Chainsaw;
@@ -445,24 +445,24 @@ internal partial class MCH : PhysRangedJob
                 return actionID;
 
             bool reassembledScattergunAoE = IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) &&
-                                            Config.MCH_AoE_Reassembled[0] && HasEffect(Buffs.Reassembled);
+                                            Config.MCH_AoE_Reassembled[0] && HasStatusEffect(Buffs.Reassembled);
 
             bool reassembledChainsawAoE =
-                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[2] && HasEffect(Buffs.Reassembled) ||
-                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[2] && !HasEffect(Buffs.Reassembled) ||
-                !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[2] && HasStatusEffect(Buffs.Reassembled) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[2] && !HasStatusEffect(Buffs.Reassembled) ||
+                !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
             bool reassembledExcavatorAoE =
-                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[3] && HasEffect(Buffs.Reassembled) ||
-                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[3] && !HasEffect(Buffs.Reassembled) ||
-                !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[3] && HasStatusEffect(Buffs.Reassembled) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[3] && !HasStatusEffect(Buffs.Reassembled) ||
+                !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
             bool reassembledAirAnchorAoE =
-                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[1] && HasEffect(Buffs.Reassembled) ||
-                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[1] && !HasEffect(Buffs.Reassembled) ||
-                !HasEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && Config.MCH_AoE_Reassembled[1] && HasStatusEffect(Buffs.Reassembled) ||
+                IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) && !Config.MCH_AoE_Reassembled[1] && !HasStatusEffect(Buffs.Reassembled) ||
+                !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_AoE_ReassemblePool ||
                 !IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble);
 
             if (Variant.CanCure(CustomComboPreset.MCH_Variant_Cure, Config.MCH_VariantCure))
@@ -471,7 +471,7 @@ internal partial class MCH : PhysRangedJob
             if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                 return Variant.Rampart;
 
-            if (HasEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
+            if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
                 return All.SavageBlade;
 
             // Interrupt
@@ -485,7 +485,7 @@ internal partial class MCH : PhysRangedJob
                 {
                     // BarrelStabilizer
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Stabilizer) &&
-                        ActionReady(BarrelStabilizer) && !HasEffect(Buffs.FullMetalMachinist))
+                        ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Queen) &&
@@ -494,7 +494,7 @@ internal partial class MCH : PhysRangedJob
 
                     // Hypercharge
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Hypercharge) &&
-                        (Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
+                        (Gauge.Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
                         (BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10 ||
                          !BioBlaster.LevelChecked() || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster)) &&
@@ -503,8 +503,8 @@ internal partial class MCH : PhysRangedJob
                         return Hypercharge;
 
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) &&
-                        ActionReady(Reassemble) && !HasEffect(Buffs.Wildfire) &&
-                        !HasEffect(Buffs.Reassembled) && !JustUsed(Flamethrower, 10f) &&
+                        ActionReady(Reassemble) && !HasStatusEffect(Buffs.Wildfire) &&
+                        !HasStatusEffect(Buffs.Reassembled) && !JustUsed(Flamethrower, 10f) &&
                         GetRemainingCharges(Reassemble) > Config.MCH_AoE_ReassemblePool &&
                         (Config.MCH_AoE_Reassembled[0] && Scattergun.LevelChecked() ||
                          Gauge.IsOverheated && Config.MCH_AoE_Reassembled[1] && AutoCrossbow.LevelChecked() ||
@@ -553,11 +553,11 @@ internal partial class MCH : PhysRangedJob
             {
                 //Full Metal Field
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Stabilizer_FullMetalField) &&
-                    HasEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField))
+                    HasStatusEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField))
                     return FullMetalField;
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster) &&
-                    ActionReady(BioBlaster) && !TargetHasEffect(Debuffs.Bioblaster) && !Gauge.IsOverheated && !HasEffect(Buffs.Reassembled))
+                    ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) && !Gauge.IsOverheated && !HasStatusEffect(Buffs.Reassembled))
                     return OriginalHook(BioBlaster);
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_FlameThrower) &&
@@ -566,12 +566,12 @@ internal partial class MCH : PhysRangedJob
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Excavator) &&
                     reassembledExcavatorAoE &&
-                    LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady))
+                    LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                     return Excavator;
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Chainsaw) &&
                     reassembledChainsawAoE &&
-                    LevelChecked(Chainsaw) && !HasEffect(Buffs.ExcavatorReady) &&
+                    LevelChecked(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady) &&
                     (GetCooldownRemainingTime(Chainsaw) <= GCD + 0.25 || ActionReady(Chainsaw)))
                     return Chainsaw;
 
@@ -608,15 +608,15 @@ internal partial class MCH : PhysRangedJob
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !Gauge.IsOverheated &&
-                !HasEffect(Buffs.FullMetalMachinist))
+                !HasStatusEffect(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_Wildfire) &&
-                ActionReady(Wildfire) && JustUsed(Hypercharge) && !HasEffect(Buffs.Wildfire))
+                ActionReady(Wildfire) && JustUsed(Hypercharge) && !HasStatusEffect(Buffs.Wildfire))
                 return Wildfire;
 
             if (!Gauge.IsOverheated && LevelChecked(Hypercharge) &&
-                (Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)))
+                (Gauge.Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)))
                 return Hypercharge;
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_GaussRound) &&
@@ -654,11 +654,11 @@ internal partial class MCH : PhysRangedJob
 
             if (IsEnabled(CustomComboPreset.MCH_AutoCrossbow_AutoBarrel) &&
                 ActionReady(BarrelStabilizer) && !Gauge.IsOverheated &&
-                !HasEffect(Buffs.FullMetalMachinist))
+                !HasStatusEffect(Buffs.FullMetalMachinist))
                 return BarrelStabilizer;
 
             if (!Gauge.IsOverheated && LevelChecked(Hypercharge) &&
-                (Gauge.Heat >= 50 || HasEffect(Buffs.Hypercharged)))
+                (Gauge.Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)))
                 return Hypercharge;
 
             if (IsEnabled(CustomComboPreset.MCH_AutoCrossbow_GaussRound) &&
@@ -724,7 +724,7 @@ internal partial class MCH : PhysRangedJob
         protected override uint Invoke(uint actionID) =>
             actionID is not (Drill or HotShot or AirAnchor or Chainsaw)
                 ? actionID
-                : LevelChecked(Excavator) && HasEffect(Buffs.ExcavatorReady)
+                : LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady)
                     ? CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill)
                     : LevelChecked(Chainsaw)
                         ? CalcBestAction(actionID, Chainsaw, AirAnchor, Drill)
@@ -744,7 +744,7 @@ internal partial class MCH : PhysRangedJob
         protected override uint Invoke(uint actionID) =>
             actionID is Dismantle &&
             (IsOnCooldown(Dismantle) || !LevelChecked(Dismantle) || !TargetIsHostile()) &&
-            ActionReady(Tactician) && !HasEffect(Buffs.Tactician)
+            ActionReady(Tactician) && !HasStatusEffect(Buffs.Tactician)
                 ? Tactician
                 : actionID;
     }
@@ -754,7 +754,7 @@ internal partial class MCH : PhysRangedJob
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.All_PRanged_Dismantle;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Dismantle && TargetHasEffectAny(Debuffs.Dismantled) && IsOffCooldown(Dismantle)
+            actionID is Dismantle && HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) && IsOffCooldown(Dismantle)
                 ? All.SavageBlade
                 : actionID;
     }

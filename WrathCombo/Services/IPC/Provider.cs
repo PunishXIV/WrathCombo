@@ -95,9 +95,9 @@ public partial class Provider : IDisposable
     /// </summary>
     /// <param name="output">The IPC provider instance to set ready.</param>
     /// <returns>An Action of <see cref="BuildCaches" /></returns>
-    private static Action BuildCachesAction(Provider output)
+    internal static Action BuildCachesAction(Provider? output = null)
     {
-        return () => BuildCaches(output);
+        return () => BuildCaches(output ?? P.IPC);
     }
 
     /// <summary>
@@ -383,7 +383,7 @@ public partial class Provider : IDisposable
         // Log if not ready
         if (!allGood && (DateTime.Now - _lastJobReadyLog).TotalSeconds > 15)
         {
-            Logging.Warn(
+            Logging.Log(
                 $"Current job is not fully ready for Auto-Rotation.\n" +
                 $"jobOn: {JsonConvert.SerializeObject(jobOn)}\n" +
                 $"jobAutoOn: {JsonConvert.SerializeObject(jobAutoOn)}"
