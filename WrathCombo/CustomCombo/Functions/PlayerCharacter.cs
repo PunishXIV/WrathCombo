@@ -60,11 +60,11 @@ namespace WrathCombo.CustomComboNS.Functions
         {
             return LocalPlayer.ClassJob.RowId switch
             {
-                PLD.JobID or PLD.ClassID => HasEffect(PLD.Buffs.IronWill),
-                WAR.JobID or WAR.ClassID => HasEffect(WAR.Buffs.Defiance),
-                DRK.JobID => HasEffect(DRK.Buffs.Grit),
-                GNB.JobID => HasEffect(GNB.Buffs.RoyalGuard),
-                BLU.JobID => HasEffect(BLU.Buffs.TankMimicry),
+                PLD.JobID or PLD.ClassID => HasStatusEffect(PLD.Buffs.IronWill),
+                WAR.JobID or WAR.ClassID => HasStatusEffect(WAR.Buffs.Defiance),
+                DRK.JobID => HasStatusEffect(DRK.Buffs.Grit),
+                GNB.JobID => HasStatusEffect(GNB.Buffs.RoyalGuard),
+                BLU.JobID => HasStatusEffect(BLU.Buffs.TankMimicry),
                 _ => false
             };
         }

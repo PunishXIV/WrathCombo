@@ -152,7 +152,7 @@ internal partial class SAM : Melee
                     HasStatusEffect(Buffs.ZanshinReady) &&
                     (JustUsed(Higanbana, 5) ||
                      !TargetIsBoss() ||
-                     GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
+                     GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 6))
                     return Zanshin;
 
                 if (ActionReady(Shoha) && Gauge.MeditationStacks is 3 &&
@@ -181,7 +181,7 @@ internal partial class SAM : Melee
                     HasStatusEffect(Buffs.OgiNamikiriReady) &&
                     (JustUsed(Higanbana, 5f) ||
                      !TargetIsBoss() ||
-                     GetBuffRemainingTime(Buffs.OgiNamikiriReady) <= 8) ||
+                     GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) ||
                     Gauge.Kaeshi == Kaeshi.Namikiri)
                     return OriginalHook(OgiNamikiri);
 
@@ -334,7 +334,7 @@ internal partial class SAM : Melee
                         HasStatusEffect(Buffs.ZanshinReady) &&
                         (JustUsed(Higanbana, 5) ||
                          Config.SAM_ST_Higanbana_Suboption == 1 && !TargetIsBoss() ||
-                         GetBuffRemainingTime(Buffs.ZanshinReady) <= 6))
+                         GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 6))
                         return Zanshin;
 
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Shoha) &&
@@ -369,7 +369,7 @@ internal partial class SAM : Melee
                     HasStatusEffect(Buffs.OgiNamikiriReady) &&
                     (JustUsed(Higanbana, 5f) ||
                      Config.SAM_ST_Higanbana_Suboption == 1 && !TargetIsBoss() ||
-                     GetBuffRemainingTime(Buffs.OgiNamikiriReady) <= 8) ||
+                     GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) ||
                     Gauge.Kaeshi == Kaeshi.Namikiri)
                     return OriginalHook(OgiNamikiri);
 
@@ -583,7 +583,8 @@ internal partial class SAM : Melee
             {
                 if (!Gauge.HasGetsu ||
                     RefreshFugetsu ||
-                    !HasStatusEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
+                    !HasStatusEffect(Buffs.Fugetsu) ||
+                    !LevelChecked(Oka))
                     return Mangetsu;
 
                 if (LevelChecked(Oka) &&
@@ -709,7 +710,8 @@ internal partial class SAM : Melee
             {
                 if (IsNotEnabled(CustomComboPreset.SAM_AoE_Oka) ||
                     !Gauge.HasGetsu || RefreshFugetsu ||
-                    !HasStatusEffect(Buffs.Fugetsu) || !LevelChecked(Oka))
+                    !HasStatusEffect(Buffs.Fugetsu) ||
+                    !LevelChecked(Oka))
                     return Mangetsu;
 
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Oka) &&

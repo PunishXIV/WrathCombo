@@ -82,12 +82,12 @@ namespace WrathCombo.Combos.PvP
                 #region Variables
                 bool isMoving = IsMoving();
                 bool hasTarget = HasTarget();
-                bool hasStarPrism = HasEffect(Buffs.Starstruck);
-                bool hasSubtractivePalette = HasEffect(Buffs.SubtractivePalette);
-                bool hasPortrait = HasEffect(Buffs.MooglePortrait) || HasEffect(Buffs.MadeenPortrait);
-                bool isStarPrismExpiring = HasEffect(Buffs.Starstruck) && GetBuffRemainingTime(Buffs.Starstruck) <= 3;
-                bool isTemperaCoatExpiring = HasEffect(Buffs.TemperaCoat) && GetBuffRemainingTime(Buffs.TemperaCoat) <= 3;
-                bool hasMotifDrawn = HasEffect(Buffs.PomMotif) || HasEffect(Buffs.WingMotif) || HasEffect(Buffs.ClawMotif) || HasEffect(Buffs.MawMotif);
+                bool hasStarPrism = HasStatusEffect(Buffs.Starstruck);
+                bool hasSubtractivePalette = HasStatusEffect(Buffs.SubtractivePalette);
+                bool hasPortrait = HasStatusEffect(Buffs.MooglePortrait) || HasStatusEffect(Buffs.MadeenPortrait);
+                bool isStarPrismExpiring = HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) <= 3;
+                bool isTemperaCoatExpiring = HasStatusEffect(Buffs.TemperaCoat) && GetStatusEffectRemainingTime(Buffs.TemperaCoat) <= 3;
+                bool hasMotifDrawn = HasStatusEffect(Buffs.PomMotif) || HasStatusEffect(Buffs.WingMotif) || HasStatusEffect(Buffs.ClawMotif) || HasStatusEffect(Buffs.MawMotif);
                 bool isBurstControlled = IsNotEnabled(CustomComboPreset.PCTPvP_BurstControl) || (IsEnabled(CustomComboPreset.PCTPvP_BurstControl) && GetTargetHPPercent() < Config.PCTPvP_BurstHP);
                 #endregion
 

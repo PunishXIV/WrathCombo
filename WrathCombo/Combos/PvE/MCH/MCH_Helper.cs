@@ -141,12 +141,12 @@ internal partial class MCH
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_TurretQueen) &&
                  (Config.MCH_ST_Adv_Excavator_SubOption == 0 ||
                   Config.MCH_ST_Adv_Excavator_SubOption == 1 && InBossEncounter())) &&
-                LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady, out var excavator) &&
+                LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
                 (BSUsed is 1 ||
                  BSUsed % 3 is 2 && Gauge.Battery <= 40 ||
                  BSUsed % 3 is 0 && Gauge.Battery <= 50 ||
                  BSUsed % 3 is 1 && Gauge.Battery <= 60 ||
-                 excavator.RemainingTime < 6))
+                 GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= 6))
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
@@ -193,12 +193,12 @@ internal partial class MCH
              IsEnabled(CustomComboPreset.MCH_ST_Adv_TurretQueen) &&
              (Config.MCH_ST_Adv_Excavator_SubOption == 0 ||
               Config.MCH_ST_Adv_Excavator_SubOption == 1 && InBossEncounter())) &&
-            LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady, out var excavatorReady) &&
+            LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (BSUsed is 1 ||
              BSUsed % 3 is 2 && Gauge.Battery <= 40 ||
              BSUsed % 3 is 0 && Gauge.Battery <= 50 ||
              BSUsed % 3 is 1 && Gauge.Battery <= 60 ||
-             excavatorReady.RemainingTime < 6))
+             GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= 6))
         {
             actionID = Excavator;
 

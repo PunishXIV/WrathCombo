@@ -240,7 +240,6 @@ internal partial class SCH
             SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1);
         public static UserBool
             SCH_ST_DPS_Adv = new("SCH_ST_DPS_Adv"),
-            SCH_ST_DPS_Bio_Adv = new("SCH_ST_DPS_Bio_Adv"),
             SCH_ST_DPS_EnergyDrain_Adv = new("SCH_ST_DPS_EnergyDrain_Adv");
         public static UserFloat
             SCH_DPS_BioUptime_Threshold = new("SCH_DPS_BioUptime_Threshold", 3.0f),

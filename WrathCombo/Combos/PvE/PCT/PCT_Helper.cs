@@ -144,7 +144,7 @@ internal partial class PCT
             ([8, 9, 10], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
             ([8, 9, 10], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
             ([8, 9, 10], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([11], HolyInWhite, () => !HasEffect(Buffs.MonochromeTones)),
+            ([11], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
 
         public override bool HasCooldowns()
@@ -161,7 +161,7 @@ internal partial class PCT
             if (!HasMotifs())
                 return false;
 
-            if (HasEffect(Buffs.SubtractivePalette))
+            if (HasStatusEffect(Buffs.SubtractivePalette))
                 return false;
 
             if (IsOnCooldown(Role.Swiftcast))
@@ -205,11 +205,11 @@ internal partial class PCT
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([3], CometinBlack, () => HasEffect(Buffs.MonochromeTones)),
+            ([3], CometinBlack, () => HasStatusEffect(Buffs.MonochromeTones)),
             ([9, 10, 11], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
              ([9, 10, 11], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
             ([9, 10, 11], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
-            ([12], HolyInWhite, () => !HasEffect(Buffs.MonochromeTones)),
+            ([12], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
 
         public override bool HasCooldowns()
@@ -226,7 +226,7 @@ internal partial class PCT
             if (!HasMotifs())
                 return false;
 
-            if (HasEffect(Buffs.SubtractivePalette))
+            if (HasStatusEffect(Buffs.SubtractivePalette))
                 return false;
 
             if (IsOnCooldown(Role.Swiftcast))

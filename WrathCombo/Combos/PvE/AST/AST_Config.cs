@@ -47,8 +47,7 @@ internal partial class AST
             AST_AoE_SimpleHeals_Opposition = new("AST_AoE_SimpleHeals_Opposition"),
             AST_AoE_SimpleHeals_Horoscope = new("AST_AoE_SimpleHeals_Horoscope"),
             AST_ST_DPS_OverwriteCards = new("AST_ST_DPS_OverwriteCards"),
-            AST_AOE_DPS_OverwriteCards = new("AST_AOE_DPS_OverwriteCards"),
-            AST_ST_DPS_CombustUptime_Adv = new("AST_ST_DPS_CombustUptime_Adv");
+            AST_AOE_DPS_OverwriteCards = new("AST_AOE_DPS_OverwriteCards");
         public static UserFloat
             AST_ST_DPS_CombustUptime_Threshold = new("AST_ST_DPS_CombustUptime_Threshold");
 

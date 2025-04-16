@@ -134,7 +134,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(SwiftskinsCoil);
                         return true;
-    }
+                }
 
                 #endregion
 
@@ -142,7 +142,7 @@ internal partial class VPR
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (Gauge.AnguineTribute)
-    {
+                {
                     case 5:
                         actionID = OriginalHook(SteelFangs);
                         return true;
@@ -162,7 +162,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(Reawaken);
                         return true;
-    }
+                }
 
                 #endregion
         }
@@ -194,7 +194,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(SwiftskinsDen);
                         return true;
-    }
+                }
 
                 #endregion
 
@@ -202,7 +202,7 @@ internal partial class VPR
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (Gauge.AnguineTribute)
-    {
+                {
                     case 5:
                         actionID = OriginalHook(SteelMaw);
                         return true;
@@ -222,7 +222,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(Reawaken);
                         return true;
-    }
+                }
 
                 #endregion
         }

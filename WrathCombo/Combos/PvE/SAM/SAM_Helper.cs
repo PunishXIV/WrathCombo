@@ -70,7 +70,7 @@ internal partial class SAM
                     case <= 2.08f when GetCooldownRemainingTime(Ikishoten) <= gcd * 4 && SenCount is 3:
 
                     //Odd windows
-                    case <= 2.08f when GetCooldownRemainingTime(Ikishoten) is <= 65 and > 50 && SenCount is 3:
+                    case <= 2.08f when GetCooldownRemainingTime(Ikishoten) is <= 75 and > 50 && SenCount is 3:
                         return true;
                 }
             }
@@ -107,7 +107,7 @@ internal partial class SAM
                 if (!IsMoving())
                 {
                     if (SenCount is 1 && GetTargetHPPercent() > 1 && TargetIsBoss() &&
-                        (GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 && JustUsed(Gekko) && JustUsed(MeikyoShisui, 15f) ||
+                        (GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 && JustUsed(MeikyoShisui, 15f) ||
                          !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)))
                     {
                         actionID = OriginalHook(Iaijutsu);
@@ -146,7 +146,7 @@ internal partial class SAM
                         SenCount is 1 && GetTargetHPPercent() > higanbanaThreshold &&
                         (Config.SAM_ST_Higanbana_Suboption == 0 ||
                          Config.SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss()) &&
-                        (GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 && JustUsed(Gekko) && JustUsed(MeikyoShisui, 15f) ||
+                        (GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 && JustUsed(MeikyoShisui, 15f) ||
                          !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)))
                     {
                         actionID = OriginalHook(Iaijutsu);
