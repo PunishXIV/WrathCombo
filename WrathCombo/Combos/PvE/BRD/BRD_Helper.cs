@@ -26,8 +26,8 @@ internal partial class BRD
     internal static bool SongMage => gauge.Song == Song.Mage;
     internal static bool SongArmy => gauge.Song == Song.Army;
     //Dot Management
-    internal static Status? Purple => FindTargetEffect(Debuffs.CausticBite) ?? FindTargetEffect(Debuffs.VenomousBite);
-    internal static Status? Blue => FindTargetEffect(Debuffs.Stormbite) ?? FindTargetEffect(Debuffs.Windbite);
+    internal static Status? Purple => GetStatusEffect(Debuffs.CausticBite, CurrentTarget) ?? GetStatusEffect(Debuffs.VenomousBite, CurrentTarget);
+    internal static Status? Blue => GetStatusEffect(Debuffs.Stormbite, CurrentTarget) ?? GetStatusEffect(Debuffs.Windbite, CurrentTarget);
     internal static float PurpleRemaining => Purple?.RemainingTime ?? 0;
     internal static float BlueRemaining => Blue?.RemainingTime ?? 0;
 
@@ -37,17 +37,17 @@ internal partial class BRD
     internal static bool CanWeaveDelayed => CanDelayedWeave() && !ActionWatching.HasDoubleWeaved();
     internal static bool CanIronJaws => LevelChecked(IronJaws);
     internal static bool BuffTime => GetCooldownRemainingTime(RagingStrikes) < 2.7;
-    internal static bool BuffWindow => HasEffect(Buffs.RagingStrikes) && 
-                                       (HasEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
-                                       (HasEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
+    internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 
+                                       (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
+                                       (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
 
     //Buff Tracking
     internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
     internal static float BattleVoiceCD => GetCooldownRemainingTime(BattleVoice);
     internal static float EmpyrealCD => GetCooldownRemainingTime(EmpyrealArrow);
     internal static float RadiantCD => GetCooldownRemainingTime(RadiantFinale);
-    internal static float RagingStrikesDuration => GetBuffRemainingTime(Buffs.RagingStrikes);
-    internal static float RadiantFinaleDuration => GetBuffRemainingTime(Buffs.RadiantFinale);
+    internal static float RagingStrikesDuration => GetStatusEffectRemainingTime(Buffs.RagingStrikes);
+    internal static float RadiantFinaleDuration => GetStatusEffectRemainingTime(Buffs.RadiantFinale);
 
     // Charge Tracking
     internal static uint RainOfDeathCharges => LevelChecked(RainOfDeath) ? GetRemainingCharges(RainOfDeath) : 0;
@@ -134,7 +134,7 @@ internal partial class BRD
         //Raging jaws option dot refresh for snapshot
         internal static bool RagingJawsRefresh()
         {
-            if (HasEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35)
+            if (HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35)
                 return true;
             return false;
         }
@@ -144,7 +144,7 @@ internal partial class BRD
         //RadiantFinale Buff
         internal static bool UseRadiantBuff()
         {
-            if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasEffect(Buffs.RadiantEncoreReady))
+            if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady))
                 return true;
             return false;
         } 
@@ -152,7 +152,7 @@ internal partial class BRD
         //BattleVoice Buff
         internal static bool UseBattleVoiceBuff()
         {
-            if (ActionReady(BattleVoice) && (HasEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale)))
+            if (ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale)))
                 return true;
             return false;
         }
@@ -160,7 +160,7 @@ internal partial class BRD
         //RagingStrikes Buff
         internal static bool UseRagingStrikesBuff()
         {
-            if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasEffect(Buffs.BattleVoice)))
+            if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasStatusEffect(Buffs.BattleVoice)))
                 return true;
             return false;
 
@@ -169,7 +169,7 @@ internal partial class BRD
         //Barrage Buff
         internal static bool UseBarrageBuff()
         {
-            if (ActionReady(Barrage) && HasEffect(Buffs.RagingStrikes) && !HasEffect(Buffs.ResonantArrowReady))
+            if (ActionReady(Barrage) && HasStatusEffect(Buffs.RagingStrikes) && !HasStatusEffect(Buffs.ResonantArrowReady))
                 return true;
             return false;
         }
@@ -353,7 +353,7 @@ internal partial class BRD
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([6, 9, 16, 17, 19], RefulgentArrow, () => HasEffect(Buffs.HawksEye))
+            ([6, 9, 16, 17, 19], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } =
@@ -402,7 +402,7 @@ internal partial class BRD
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([7, 10, 17, 18, 20], RefulgentArrow, () => HasEffect(Buffs.HawksEye))
+            ([7, 10, 17, 18, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
 
         public override List<int> DelayedWeaveSteps { get; set; } =
@@ -452,7 +452,7 @@ internal partial class BRD
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
-            ([7, 10, 16, 18, 20], RefulgentArrow, () => HasEffect(Buffs.HawksEye))
+            ([7, 10, 16, 18, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
 
         public override int MinOpenerLevel => 100;

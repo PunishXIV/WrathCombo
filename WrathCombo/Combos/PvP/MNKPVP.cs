@@ -85,9 +85,9 @@ namespace WrathCombo.Combos.PvP
 
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RisingPhoenix))
                         {
-                            if (!HasEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
+                            if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
                                 return OriginalHook(RisingPhoenix);
-                            if (HasEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
+                            if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
                                 return actionID;
                         }
 
@@ -102,13 +102,13 @@ namespace WrathCombo.Combos.PvP
 
                         if (CanWeave())
                         {
-                                if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth) && HasEffect(Buffs.EarthResonance) && GetBuffRemainingTime(Buffs.EarthResonance) < 6)
+                                if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth) && HasStatusEffect(Buffs.EarthResonance) && GetStatusEffectRemainingTime(Buffs.EarthResonance) < 6)
                                 return OriginalHook(EarthsReply);
                         }
 
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_FlintsReply))
                         {
-                            if (GetRemainingCharges(FlintsReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)) || HasEffect(Buffs.FiresRumination) && !WasLastAction(PouncingCoeurl))
+                            if (GetRemainingCharges(FlintsReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)) || HasStatusEffect(Buffs.FiresRumination) && !WasLastAction(PouncingCoeurl))
                                 return OriginalHook(FlintsReply);
                         }
                     }

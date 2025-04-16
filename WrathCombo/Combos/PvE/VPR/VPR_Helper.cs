@@ -43,25 +43,25 @@ internal partial class VPR
     {
         float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
 
-        return HasEffect(Buffs.HonedSteel) && GetBuffRemainingTime(Buffs.HonedSteel) < gcd ||
-               HasEffect(Buffs.HonedReavers) && GetBuffRemainingTime(Buffs.HonedReavers) < gcd;
+        return HasStatusEffect(Buffs.HonedSteel) && GetStatusEffectRemainingTime(Buffs.HonedSteel) < gcd ||
+               HasStatusEffect(Buffs.HonedReavers) && GetStatusEffectRemainingTime(Buffs.HonedReavers) < gcd;
     }
 
     internal static bool IsVenomExpiring(float times)
     {
         float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
 
-        return HasEffect(Buffs.FlankstungVenom) && GetBuffRemainingTime(Buffs.FlankstungVenom) < gcd ||
-               HasEffect(Buffs.FlanksbaneVenom) && GetBuffRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
-               HasEffect(Buffs.HindstungVenom) && GetBuffRemainingTime(Buffs.HindstungVenom) < gcd ||
-               HasEffect(Buffs.HindsbaneVenom) && GetBuffRemainingTime(Buffs.HindsbaneVenom) < gcd;
+        return HasStatusEffect(Buffs.FlankstungVenom) && GetStatusEffectRemainingTime(Buffs.FlankstungVenom) < gcd ||
+               HasStatusEffect(Buffs.FlanksbaneVenom) && GetStatusEffectRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
+               HasStatusEffect(Buffs.HindstungVenom) && GetStatusEffectRemainingTime(Buffs.HindstungVenom) < gcd ||
+               HasStatusEffect(Buffs.HindsbaneVenom) && GetStatusEffectRemainingTime(Buffs.HindsbaneVenom) < gcd;
     }
 
     internal static bool IsEmpowermentExpiring(float times)
     {
         float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
 
-        return GetBuffRemainingTime(Buffs.Swiftscaled) < gcd || GetBuffRemainingTime(Buffs.HuntersInstinct) < gcd;
+        return GetStatusEffectRemainingTime(Buffs.Swiftscaled) < gcd || GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < gcd;
     }
 
     internal static unsafe bool IsComboExpiring(float times)
@@ -77,13 +77,13 @@ internal partial class VPR
 
     internal static bool UseReawaken(VPRGauge gauge)
     {
-        if (LevelChecked(Reawaken) && !HasEffect(Buffs.Reawakened) && InActionRange(Reawaken) &&
-            !HasEffect(Buffs.HuntersVenom) && !HasEffect(Buffs.SwiftskinsVenom) &&
-            !HasEffect(Buffs.PoisedForTwinblood) && !HasEffect(Buffs.PoisedForTwinfang) &&
+        if (LevelChecked(Reawaken) && !HasStatusEffect(Buffs.Reawakened) && InActionRange(Reawaken) &&
+            !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
+            !HasStatusEffect(Buffs.PoisedForTwinblood) && !HasStatusEffect(Buffs.PoisedForTwinfang) &&
             !IsEmpowermentExpiring(6))
         {
             //2min burst
-            if (!JustUsed(SerpentsIre, 2.2f) && HasEffect(Buffs.ReadyToReawaken) ||
+            if (!JustUsed(SerpentsIre, 2.2f) && HasStatusEffect(Buffs.ReadyToReawaken) ||
                 WasLastWeaponskill(Ouroboros) && Gauge.SerpentOffering >= 50 && IreCD >= 50)
                 return true;
 
@@ -112,7 +112,7 @@ internal partial class VPR
 
     internal static bool ReawakenComboST(ref uint actionID)
     {
-        if (HasEffect(Buffs.Reawakened))
+        if (HasStatusEffect(Buffs.Reawakened))
         {
                 #region Pre Ouroboros
 
@@ -134,7 +134,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(SwiftskinsCoil);
                         return true;
-                }
+    }
 
                 #endregion
 
@@ -142,7 +142,7 @@ internal partial class VPR
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (Gauge.AnguineTribute)
-                {
+    {
                     case 5:
                         actionID = OriginalHook(SteelFangs);
                         return true;
@@ -162,7 +162,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(Reawaken);
                         return true;
-                }
+    }
 
                 #endregion
         }
@@ -172,7 +172,7 @@ internal partial class VPR
 
     internal static bool ReawakenComboAoE(ref uint actionID)
     {
-        if (HasEffect(Buffs.Reawakened))
+        if (HasStatusEffect(Buffs.Reawakened))
         {
                 #region Pre Ouroboros
 
@@ -194,7 +194,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(SwiftskinsDen);
                         return true;
-                }
+    }
 
                 #endregion
 
@@ -202,7 +202,7 @@ internal partial class VPR
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (Gauge.AnguineTribute)
-                {
+    {
                     case 5:
                         actionID = OriginalHook(SteelMaw);
                         return true;
@@ -222,7 +222,7 @@ internal partial class VPR
                     case 1:
                         actionID = OriginalHook(Reawaken);
                         return true;
-                }
+    }
 
                 #endregion
         }
@@ -292,11 +292,11 @@ internal partial class VPR
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([33], SwiftskinsCoil, () => OnTargetsRear()),
-            ([34], TwinbloodBite, () => HasEffect(Buffs.SwiftskinsVenom)),
-            ([35], TwinfangBite, () => HasEffect(Buffs.HuntersVenom)),
+            ([34], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom)),
+            ([35], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
             ([36], HuntersCoil, () => SwiftskinsCoilReady),
-            ([37], TwinfangBite, () => HasEffect(Buffs.HuntersVenom)),
-            ([38], TwinbloodBite, () => HasEffect(Buffs.SwiftskinsVenom))
+            ([37], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([38], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
         ];
 
         internal override UserData ContentCheckConfig => Config.VPR_Balance_Content;

@@ -94,20 +94,20 @@ namespace WrathCombo.Combos.PvP
                     #region Variables
 
                     bool starfallDanceReady = !GetCooldown(StarfallDance).IsCooldown;
-                    bool starfallDance = HasEffect(Buffs.StarfallDance);
+                    bool starfallDance = HasStatusEffect(Buffs.StarfallDance);
                     bool curingWaltzReady = !GetCooldown(CuringWaltz).IsCooldown;
                     bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
-                    var acclaimStacks = GetBuffStacks(Buffs.Acclaim);
+                    var acclaimStacks = GetStatusEffectStacks(Buffs.Acclaim);
                     bool canWeave = CanWeave();
                     var distance = GetTargetDistance();
                     var HP = PlayerHealthPercentageHp();
-                    bool enemyGuarded = TargetHasEffectAny(PvPCommon.Buffs.Guard);
+                    bool enemyGuarded = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
 
                     #endregion
 
                     // Honing Dance Option
 
-                    if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !HasEffect(Buffs.ClosedPosition) & GetPartyMembers().Count > 1)
+                    if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_Partner) && ActionReady(ClosedPosition) && !HasStatusEffect(Buffs.ClosedPosition) & GetPartyMembers().Count > 1)
                         return ClosedPosition;
 
                     if (IsEnabled(CustomComboPreset.DNCPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= Config.DNCPvP_EagleThreshold))
@@ -115,7 +115,7 @@ namespace WrathCombo.Combos.PvP
 
                     if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && distance <= 5 && !enemyGuarded)
                     {
-                        if (HasEffect(Buffs.Acclaim) && acclaimStacks < 4)
+                        if (HasStatusEffect(Buffs.Acclaim) && acclaimStacks < 4)
                             return WHM.Assize;
 
                         return HoningDance;
@@ -131,7 +131,7 @@ namespace WrathCombo.Combos.PvP
                         if (IsOffCooldown(FanDance) && distance < 13 && !enemyGuarded) // 2y below max to avoid waste
                             return OriginalHook(FanDance);
 
-                        if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_Dash) && !HasEffect(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > Config.DNCPvP_EnAvantCharges)
+                        if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_Dash) && !HasStatusEffect(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > Config.DNCPvP_EnAvantCharges)
                             return EnAvant;
                     }
 

@@ -35,7 +35,9 @@ internal partial class BLM
     internal static bool HasMaxPolyglotStacks => PolyglotStacks == MaxPolyglot;
 
     internal static bool EndOfFirePhase => Gauge.InAstralFire && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
+
     internal static bool EndOfIcePhase => Gauge.InUmbralIce && CurMp == MP.MaxMP && HasMaxUmbralHeartStacks;
+
     internal static bool EndOfIcePhaseAoEMaxLevel => Gauge.InUmbralIce && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
 
     internal static int PolyglotStacks => Gauge.PolyglotStacks;
@@ -44,18 +46,19 @@ internal partial class BLM
 
     internal static int RemainingPolyglotCD => Math.Max(0, (MaxPolyglot - Gauge.PolyglotStacks) * 30000 + (Gauge.EnochianTimer - 30000));
 
-    internal static Status? ThunderDebuffST => FindEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget, LocalPlayer?.GameObjectId);
+    internal static Status? ThunderDebuffST => GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
 
-    internal static Status? ThunderDebuffAoE => FindEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget, LocalPlayer?.GameObjectId);
+    internal static Status? ThunderDebuffAoE => GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
     internal static uint FireSpam => LevelChecked(Fire4) ? Fire4 : Fire;
+
     internal static uint BlizzardSpam => LevelChecked(Blizzard4) ? Blizzard4 : Blizzard;
 
-    internal static float TimeSinceFirestarterBuff => HasEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
-
-    internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
+    internal static float TimeSinceFirestarterBuff => HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
     internal static bool HasMaxUmbralHeartStacks => !TraitLevelChecked(Traits.UmbralHeart) || Gauge.UmbralHearts == 3; //Returns true before you can have Umbral Hearts out of design
+
+    internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
 
     internal static WrathOpener Opener()
     {
@@ -157,6 +160,7 @@ internal partial class BLM
         ];
 
         public override bool HasCooldowns() =>
+            CurMp == MP.MaxMP &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -212,6 +216,7 @@ internal partial class BLM
         ];
 
         public override bool HasCooldowns() =>
+            CurMp == MP.MaxMP &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&

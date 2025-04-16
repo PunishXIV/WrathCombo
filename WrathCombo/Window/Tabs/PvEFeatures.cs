@@ -20,7 +20,7 @@ namespace WrathCombo.Window.Tabs
     internal class PvEFeatures : ConfigWindow
     {
         internal static string OpenJob = string.Empty;
-
+        internal static int ColCount = 1;
         internal static new void Draw()
         {
             //#if !DEBUG
@@ -43,35 +43,47 @@ namespace WrathCombo.Window.Tabs
                         ImGuiEx.TextUnderlined("Select a job from below to enable and configure features for it.");
                     });
 
-                    foreach (string? jobName in groupedPresets.Keys)
+                    ColCount = Math.Max(1, (int)(ImGui.GetContentRegionAvail().X / 200f.Scale()));
+
+                    using (var tab = ImRaii.Table("PvETable", ColCount))
                     {
-                        string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
-                        string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
-                        var id = groupedPresets[jobName].First().Info.JobID;
-                        IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
-                        using (var disabled = ImRaii.Disabled(DisabledJobsPVE.Any(x => x == id)))
+                        ImGui.TableNextColumn();
+
+                        if (!tab)
+                            return;
+
+                        foreach (string? jobName in groupedPresets.Keys)
                         {
-                            if (ImGui.Selectable($"###{header}", OpenJob == jobName, ImGuiSelectableFlags.None,
-                                    icon == null ? new Vector2(0, 32f.Scale()) : new Vector2(0, (icon.Size.Y / 2f).Scale())))
+                            string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
+                            string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
+                            var id = groupedPresets[jobName].First().Info.JobID;
+                            IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
+                            using (var disabled = ImRaii.Disabled(DisabledJobsPVE.Any(x => x == id)))
                             {
-                                OpenJob = jobName;
-                            }
-                            ImGui.SameLine(indentwidth);
-                            if (icon != null)
-                            {
-                                ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
-                                ImGui.SameLine(indentwidth2);
+                                if (ImGui.Selectable($"###{header}", OpenJob == jobName, ImGuiSelectableFlags.None,
+                                        icon == null ? new Vector2(0, 32f.Scale()) : new Vector2(0, (icon.Size.Y / 2f).Scale())))
+                                {
+                                    OpenJob = jobName;
+                                }
+                                ImGui.SameLine(indentwidth);
+                                if (icon != null)
+                                {
+                                    ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Size.X.Scale(), icon.Size.Y.Scale()) / 2f);
+                                    ImGui.SameLine(indentwidth2);
+                                }
+
+                                ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
+
+                                if (!string.IsNullOrEmpty(abbreviation) &&
+                                    P.UIHelper.JobControlled(id) is not null)
+                                {
+                                    ImGui.SameLine();
+                                    P.UIHelper
+                                        .ShowIPCControlledIndicatorIfNeeded(id, false);
+                                }
                             }
 
-                            ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
-
-                            if (!string.IsNullOrEmpty(abbreviation) &&
-                                P.UIHelper.JobControlled(id) is not null)
-                            {
-                                ImGui.SameLine();
-                                P.UIHelper
-                                    .ShowIPCControlledIndicatorIfNeeded(id, false);
-                            }
+                            ImGui.TableNextColumn();
                         }
                     }
                 }

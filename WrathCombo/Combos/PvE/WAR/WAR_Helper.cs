@@ -124,10 +124,9 @@ internal partial class WAR
     ///     <c>Logic</c> is the logic for whether to use the action.
     /// </value>
     /// <remarks>
-    ///     Each logic check is already combined with checking if the preset
-    ///     <see cref="IsEnabled(uint)">is enabled</see>
-    ///     and if the action is <see cref="ActionReady(uint)">ready</see> and
-    ///     <see cref="LevelChecked(uint)">level-checked</see>.<br />
+    ///     Each logic check is already combined with checking if the preset is
+    ///     enabled and if the action is <see cref="ActionReady(uint)">ready</see>
+    ///     and <see cref="LevelChecked(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
     private static (uint Action, CustomComboPreset Preset, System.Func<bool> Logic)[]
@@ -135,8 +134,8 @@ internal partial class WAR
     [
         //Bloodwhetting
         (OriginalHook(RawIntuition), CustomComboPreset.WAR_Mit_Bloodwhetting,
-            () => FindEffect(Buffs.RawIntuition) is null &&
-                  FindEffect(Buffs.BloodwhettingDefenseLong) is null &&
+            () => !HasStatusEffect(Buffs.RawIntuition) &&
+                  !HasStatusEffect(Buffs.BloodwhettingDefenseLong) &&
                   PlayerHealthPercentageHp() <= Config.WAR_Mit_Bloodwhetting_Health),
         //Equilibrium
         (Equilibrium, CustomComboPreset.WAR_Mit_Equilibrium,
@@ -152,7 +151,7 @@ internal partial class WAR
             () => Role.CanRampart(Config.WAR_Mit_Rampart_Health)),
         //Shake it Off
         (ShakeItOff, CustomComboPreset.WAR_Mit_ShakeItOff,
-            () => (FindEffect(Buffs.ShakeItOff) is null &&
+            () => (!HasStatusEffect(Buffs.ShakeItOff) &&
                   Config.WAR_Mit_ShakeItOff_PartyRequirement ==
                   (int)PartyRequirement.No) ||
                   IsInParty()),

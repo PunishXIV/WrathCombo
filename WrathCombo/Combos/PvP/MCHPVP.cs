@@ -102,7 +102,7 @@ namespace WrathCombo.Combos.PvP
                     var canWeave = CanWeave();
                     var analysisStacks = GetRemainingCharges(Analysis);
                     var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
-                    var overheated = HasEffect(Buffs.Overheated);
+                    var overheated = HasStatusEffect(Buffs.Overheated);
 
                     #endregion
 
@@ -134,13 +134,13 @@ namespace WrathCombo.Combos.PvP
                         }
 
                         // Check if primed buffs and analysis conditions are met
-                        bool hasPrimedBuffs = HasEffect(Buffs.DrillPrimed) ||
-                                              (HasEffect(Buffs.ChainSawPrimed) && !IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AltAnalysis)) ||
-                                              (HasEffect(Buffs.AirAnchorPrimed) && IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AltAnalysis));
+                        bool hasPrimedBuffs = HasStatusEffect(Buffs.DrillPrimed) ||
+                                              (HasStatusEffect(Buffs.ChainSawPrimed) && !IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AltAnalysis)) ||
+                                              (HasStatusEffect(Buffs.AirAnchorPrimed) && IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AltAnalysis));
 
                         if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_Analysis))
                         {
-                            if (hasPrimedBuffs && !HasEffect(Buffs.Analysis) && analysisStacks > 0 &&
+                            if (hasPrimedBuffs && !HasStatusEffect(Buffs.Analysis) && analysisStacks > 0 &&
                                 (!IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AltDrill) || IsOnCooldown(Wildfire)) &&
                                 !canWeave && !overheated && bigDamageStacks > 0)
                             {
@@ -151,16 +151,16 @@ namespace WrathCombo.Combos.PvP
                         // BigDamageStacks logic with checks for primed buffs
                         if (bigDamageStacks > 0)
                         {
-                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_Drill) && HasEffect(Buffs.DrillPrimed))
+                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_Drill) && HasStatusEffect(Buffs.DrillPrimed))
                                 return OriginalHook(Drill);
 
-                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_BioBlaster) && HasEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && GetTargetDistance() <= 12)
+                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && GetTargetDistance() <= 12)
                                 return OriginalHook(BioBlaster);
 
-                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AirAnchor) && HasEffect(Buffs.AirAnchorPrimed))
+                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AirAnchor) && HasStatusEffect(Buffs.AirAnchorPrimed))
                                 return OriginalHook(AirAnchor);
 
-                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_ChainSaw) && HasEffect(Buffs.ChainSawPrimed))
+                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_ChainSaw) && HasStatusEffect(Buffs.ChainSawPrimed))
                                 return OriginalHook(ChainSaw);
                         }
                     }

@@ -4,7 +4,6 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
-using ECommons.GameFunctions;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System;
@@ -15,7 +14,6 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Services;
-using static FFXIVClientStructs.FFXIV.Client.UI.RaptureAtkHistory.Delegates;
 
 
 namespace WrathCombo.Window.Functions
@@ -399,7 +397,7 @@ namespace WrathCombo.Window.Functions
             var finishPos = ImGui.GetCursorPosX() + labelW.X + ImGui.GetStyle().ItemSpacing.X;
             if (finishPos >= ImGui.GetContentRegionMax().X)
                 ImGui.NewLine();
-            
+
             bool enabled = output == outputValue;
 
             bool o = false;
@@ -495,7 +493,7 @@ namespace WrathCombo.Window.Functions
                 ImGuiEx.Spacing(new Vector2(3, 0));
                 if (isConditionalChoice) ImGui.Indent(); //Align checkbox after the + symbol
             }
-            if (ImGui.Checkbox($"{checkBoxName}###{config}", ref output))
+            if (ImGui.Checkbox($"{checkBoxName}##{config}", ref output))
             {
                 DebugFile.AddLog($"Set Config {config} to {output}");
                 PluginConfiguration.SetCustomBoolValue(config, output);
