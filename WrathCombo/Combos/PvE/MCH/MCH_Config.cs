@@ -167,8 +167,6 @@ internal partial class MCH
                     DrawSliderInt(1, 100, MCH_VariantCure, "HP% to be at or under", 200);
 
                     break;
-
-
             }
         }
     }

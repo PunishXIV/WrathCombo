@@ -85,7 +85,7 @@ namespace WrathCombo.Combos.PvP
                     {
                         if (IsEnabled(CustomComboPreset.SCHPvP_Expedient))
                         {
-                            if (HasEffect(Buffs.Recitation) || GetCooldownRemainingTime(Expedient) > 5)
+                            if (HasStatusEffect(Buffs.Recitation) || GetCooldownRemainingTime(Expedient) > 5)
                                 return Biolysis;
                         } 
                         return Biolysis;
@@ -97,11 +97,11 @@ namespace WrathCombo.Combos.PvP
                         return PvPHealer.Diabrosis;
 
                     // Uses Deployment Tactics when available
-                    if (IsEnabled(CustomComboPreset.SCHPvP_DeploymentTactics) && GetRemainingCharges(DeploymentTactics) > 1 && TargetHasEffect(Debuffs.Biolysis))
+                    if (IsEnabled(CustomComboPreset.SCHPvP_DeploymentTactics) && GetRemainingCharges(DeploymentTactics) > 1 && HasStatusEffect(Debuffs.Biolysis, CurrentTarget))
                         return DeploymentTactics;
 
                     // Adds Adloquium when at or below threshold, will not Overwrite the 10% damage reduction buff to prevent waste
-                    if (IsEnabled(CustomComboPreset.SCHPvP_Selfcare) && !HasEffect(Buffs.Catalyze) && PlayerHealthPercentageHp() <= Config.SCHPvP_AdloThreshold)
+                    if (IsEnabled(CustomComboPreset.SCHPvP_Selfcare) && !HasStatusEffect(Buffs.Catalyze) && PlayerHealthPercentageHp() <= Config.SCHPvP_AdloThreshold)
                         return Adloquilum;
                 }
 

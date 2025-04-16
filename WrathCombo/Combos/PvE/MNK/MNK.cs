@@ -81,6 +81,7 @@ internal partial class MNK : Melee
             if (HasStatusEffect(Buffs.FiresRumination) &&
                 LevelChecked(FiresReply) &&
                 !HasStatusEffect(Buffs.FormlessFist) &&
+                !HasStatusEffect(Buffs.PerfectBalance) &&
                 !JustUsed(RiddleOfFire, 4) &&
                 (JustUsed(OriginalHook(Bootshine)) ||
                  JustUsed(DragonKick) ||
@@ -212,6 +213,7 @@ internal partial class MNK : Melee
                     HasStatusEffect(Buffs.FiresRumination) &&
                     LevelChecked(FiresReply) &&
                     !HasStatusEffect(Buffs.FormlessFist) &&
+                    !HasStatusEffect(Buffs.PerfectBalance) &&
                     !JustUsed(RiddleOfFire, 4) &&
                     (JustUsed(OriginalHook(Bootshine)) ||
                      JustUsed(DragonKick) ||
@@ -305,6 +307,7 @@ internal partial class MNK : Melee
 
             if (HasStatusEffect(Buffs.FiresRumination) &&
                 LevelChecked(FiresReply) &&
+                !HasStatusEffect(Buffs.PerfectBalance) &&
                 !HasStatusEffect(Buffs.FormlessFist) &&
                 !JustUsed(RiddleOfFire, 4))
                 return FiresReply;
@@ -430,6 +433,7 @@ internal partial class MNK : Melee
                     HasStatusEffect(Buffs.FiresRumination) &&
                     LevelChecked(FiresReply) &&
                     !HasStatusEffect(Buffs.FormlessFist) &&
+                    !HasStatusEffect(Buffs.PerfectBalance) &&
                     !JustUsed(RiddleOfFire, 4))
                     return FiresReply;
 

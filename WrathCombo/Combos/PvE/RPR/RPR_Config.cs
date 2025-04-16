@@ -122,8 +122,7 @@ internal partial class RPR
                 case CustomComboPreset.RPR_Variant_Cure:
                     DrawSliderInt(1, 100, RPR_VariantCure, "HP% to be at or under", 200);
 
-                    break;             
-               
+                    break;
             }
         }
     }

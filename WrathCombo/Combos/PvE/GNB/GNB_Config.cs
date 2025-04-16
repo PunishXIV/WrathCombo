@@ -476,7 +476,7 @@ internal partial class GNB
 
                     DrawPriorityInput(GNB_Mit_Priorities,
                         NumberMitigationOptions, 7,
-                        "Arm's Length Priority:");
+                        "Nebula Priority:");
                     break;
 
                 #endregion

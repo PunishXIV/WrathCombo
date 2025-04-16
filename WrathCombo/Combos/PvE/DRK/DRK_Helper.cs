@@ -481,8 +481,6 @@ internal partial class DRK
     {
         public bool TryGetAction(Combo flags, ref uint action)
         {
-            if (JustUsedMitigation) return false;
-
             // Bail if we're trying to Invuln or actively Invulnerable
             if (HasStatusEffect(Buffs.LivingDead) ||
                 HasStatusEffect(Buffs.WalkingDead) ||
@@ -537,6 +535,8 @@ internal partial class DRK
 
             // Bail if we can't weave any other mitigations
             if (!CanWeave) return false;
+            // Bail if we just used mitigation
+            if (JustUsedMitigation) return false;
 
             #region TBN
 
@@ -888,6 +888,11 @@ internal partial class DRK
             if (!hasEnoughMana) return false;
 
             #endregion
+
+            // Bail if it is right before burst
+            if (GetCooldownRemainingTime(LivingShadow) <
+                Math.Min(6, secondsBeforeBurst))
+                return false;
 
             #region Mana Overcap
 

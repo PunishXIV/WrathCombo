@@ -203,8 +203,7 @@ internal partial class SGE
         #region DPS
 
         public static UserBool
-            SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv"),
-            SGE_ST_DPS_EDosis_Adv = new("SGE_ST_Dosis_EDosis_Adv");
+            SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv");
         public static UserBoolArray
             SGE_ST_DPS_Movement = new("SGE_ST_DPS_Movement");
         public static UserInt
@@ -220,7 +219,7 @@ internal partial class SGE
             SGE_AoE_DPS_AddersgallProtect = new("SGE_AoE_DPS_AddersgallProtect", 3),
             SGE_Balance_Content = new("SGE_Balance_Content");
         public static UserFloat
-            SGE_ST_DPS_EDosisThreshold = new("SGE_ST_Dosis_EDosisThreshold", 3.0f);
+            SGE_ST_DPS_EDosisThreshold = new("SGE_ST_Dosis_EDosisThreshold", 5.0f);
 
         #endregion
 

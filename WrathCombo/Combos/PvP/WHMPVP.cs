@@ -96,7 +96,7 @@ namespace WrathCombo.Combos.PvP
                             return AfflatusMisery;
                     }
                     // Prevent waste cure 3 option
-                    if (IsEnabled(CustomComboPreset.WHMPvP_NoWasteCure) && HasEffect(Buffs.Cure3Ready) && GetBuffRemainingTime(Buffs.Cure3Ready) < 6)
+                    if (IsEnabled(CustomComboPreset.WHMPvP_NoWasteCure) && HasStatusEffect(Buffs.Cure3Ready) && GetStatusEffectRemainingTime(Buffs.Cure3Ready) < 6)
                         return Cure3;
                 }
 
@@ -112,7 +112,7 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is Cure2)
                 { 
-                    if (IsEnabled(CustomComboPreset.WHMPvP_Cure3) && HasEffect(Buffs.Cure3Ready))
+                    if (IsEnabled(CustomComboPreset.WHMPvP_Cure3) && HasStatusEffect(Buffs.Cure3Ready))
                         return Cure3;
 
                     if (IsEnabled(CustomComboPreset.WHMPvP_Aquaveil) && IsOffCooldown(Aquaveil))

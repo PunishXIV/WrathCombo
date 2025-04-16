@@ -170,21 +170,21 @@ namespace WrathCombo.Combos.PvP
                     bool inCombat = InCombat();
                     bool hasTarget = HasTarget();
                     bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.DataId != 8016;
-                    bool hasParadox = HasEffect(Buffs.Paradox);
-                    bool hasResonance = HasEffect(Buffs.SoulResonance);
-                    bool hasWreathOfFire = HasEffect(Buffs.WreathOfFire);
+                    bool hasParadox = HasStatusEffect(Buffs.Paradox);
+                    bool hasResonance = HasStatusEffect(Buffs.SoulResonance);
+                    bool hasWreathOfFire = HasStatusEffect(Buffs.WreathOfFire);
                     bool hasFlareStar = OriginalHook(SoulResonance) is FlareStar;
                     bool hasFrostStar = OriginalHook(SoulResonance) is FrostStar;
-                    bool targetHasGuard = TargetHasEffectAny(PvPCommon.Buffs.Guard);
-                    bool targetHasHeavy = TargetHasEffectAny(PvPCommon.Debuffs.Heavy);
+                    bool targetHasGuard = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
+                    bool targetHasHeavy = HasStatusEffect(PvPCommon.Debuffs.Heavy, CurrentTarget, true);
                     bool isPlayerTargeted = CurrentTarget?.TargetObjectId == LocalPlayer.GameObjectId;
-                    bool isParadoxPrimed = HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.AstralFire1);
+                    bool isParadoxPrimed = HasStatusEffect(Buffs.UmbralIce1) || HasStatusEffect(Buffs.AstralFire1);
                     bool isMovingAdjusted = TimeMoving.TotalMilliseconds / 1000f >= Config.BLMPvP_Movement_Threshold;
-                    bool isResonanceExpiring = HasEffect(Buffs.SoulResonance) && GetBuffRemainingTime(Buffs.SoulResonance) <= 10;
-                    bool hasUmbralIce = HasEffect(Buffs.UmbralIce1) || HasEffect(Buffs.UmbralIce2) || HasEffect(Buffs.UmbralIce3);
-                    bool isElementalStarDelayed = HasEffect(Buffs.ElementalStar) && GetBuffRemainingTime(Buffs.ElementalStar) <= 20;
-                    bool hasAstralFire = HasEffect(Buffs.AstralFire1) || HasEffect(Buffs.AstralFire2) || HasEffect(Buffs.AstralFire3);
-                    bool targetHasImmunity = TargetHasEffectAny(PLDPvP.Buffs.HallowedGround) || TargetHasEffectAny(DRKPvP.Buffs.UndeadRedemption);
+                    bool isResonanceExpiring = HasStatusEffect(Buffs.SoulResonance) && GetStatusEffectRemainingTime(Buffs.SoulResonance) <= 10;
+                    bool hasUmbralIce = HasStatusEffect(Buffs.UmbralIce1) || HasStatusEffect(Buffs.UmbralIce2) || HasStatusEffect(Buffs.UmbralIce3);
+                    bool isElementalStarDelayed = HasStatusEffect(Buffs.ElementalStar) && GetStatusEffectRemainingTime(Buffs.ElementalStar) <= 20;
+                    bool hasAstralFire = HasStatusEffect(Buffs.AstralFire1) || HasStatusEffect(Buffs.AstralFire2) || HasStatusEffect(Buffs.AstralFire3);
+                    bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
                     #endregion
 
                     if (inCombat)
@@ -269,8 +269,8 @@ namespace WrathCombo.Combos.PvP
             {
                 if (actionID is AetherialManipulation)
                 {
-                    bool hasCrowdControl = HasEffectAny(PvPCommon.Debuffs.Stun) || HasEffectAny(PvPCommon.Debuffs.DeepFreeze) ||
-                                           HasEffectAny(PvPCommon.Debuffs.Bind) || HasEffectAny(PvPCommon.Debuffs.Silence) || HasEffectAny(PvPCommon.Debuffs.MiracleOfNature);
+                    bool hasCrowdControl = HasStatusEffect(PvPCommon.Debuffs.Stun, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.DeepFreeze, anyOwner: true) ||
+                                           HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.Silence, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.MiracleOfNature, anyOwner: true);
 
                     if (IsOffCooldown(AetherialManipulation) && IsOffCooldown(PvPCommon.Purify) && hasCrowdControl)
                         return OriginalHook(PvPCommon.Purify);
