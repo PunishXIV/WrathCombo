@@ -6,6 +6,7 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using WrathCombo.Combos.PvE.Content;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -209,6 +210,63 @@ internal partial class SMN
             return Opener1;
 
         return WrathOpener.Dummy;
+    }
+
+    internal static uint GetBozjaAction(bool duringBurst = false)
+    {
+        if (!Bozja.IsInBozja)
+            return 0;
+
+        bool CanUse(uint action) => HasActionEquipped(action) && IsOffCooldown(action);
+        bool IsEnabledAndUsable(CustomComboPreset preset, uint action) => IsEnabled(preset) && CanUse(action);
+
+        // Check if MP is below threshold and use Resistance Ether Kit
+        // I don't know yet how to do this, but this should work?
+        if (IsEnabled(CustomComboPreset.SMN_Bozja_EtherKit) &&
+            LocalPlayer.CurrentMp <= Config.SMN_Bozja_EtherKit_Threshold &&
+            HasCharges((int)Bozja.ResistanceEtherKit) &&
+            (!HasStatusEffect(Bozja.Buffs.MPRefresh) || !HasStatusEffect(Bozja.Buffs.MPRefresh2) || !HasStatusEffect(Bozja.Buffs.Autoether))
+            )
+        {
+            return Bozja.ResistanceEtherKit; // Return a placeholder action to show something happened
+        }
+
+        // If we want to use actions only during burst phase (when SearingLight is active or about to be used)
+        if (!HasStatusEffect(Buffs.SearingLight, anyOwner: true) && !ActionReady(SearingLight))
+            return 0;
+
+        // OGCDs (use with SpellWeave)
+        if (CanSpellWeave())
+        {
+            foreach (var (preset, action) in new[]
+            {
+            (CustomComboPreset.SMN_Bozja_LostFontOfMagic, Bozja.LostFontOfMagic),
+            (CustomComboPreset.SMN_Bozja_LostChainspell, Bozja.LostChainspell),
+        })
+                if (IsEnabledAndUsable(preset, action))
+                    return action;
+
+            // Banner with Font of Magic check
+            if (IsEnabledAndUsable(CustomComboPreset.SMN_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice) &&
+                (!IsEnabled(CustomComboPreset.SMN_Bozja_FontSacrifice) || HasStatusEffect(Bozja.Buffs.LostFontOfMagic)))
+                return Bozja.BannerOfHonoredSacrifice;
+        }
+
+        // GCDs - these can be used anytime, not just during burst phase
+        if (!duringBurst)
+        {
+            foreach (var (preset, action, condition) in new[]
+            {
+            (CustomComboPreset.SMN_Bozja_LostDeath, Bozja.LostDeath, true),
+            (CustomComboPreset.SMN_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(RoleActions.Magic.Buffs.Raise, CurrentTarget)),
+            (CustomComboPreset.SMN_Bozja_LostProtect, Bozja.LostProtect, !HasStatusEffect(Bozja.Buffs.LostProtect)),
+            (CustomComboPreset.SMN_Bozja_LostShell, Bozja.LostShell, !HasStatusEffect(Bozja.Buffs.LostShell)),
+        })
+                if (IsEnabledAndUsable(preset, action) && condition)
+                    return action;
+        }
+
+        return 0; // No conditions met
     }
 
     internal class SMNOpenerMaxLevel1 : WrathOpener

@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 
 namespace WrathCombo.Combos.PvE;
@@ -199,7 +200,16 @@ internal partial class SMN : Caster
                 // Searing Light
                 if (IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && !HasStatusEffect(Buffs.SearingLight, anyOwner: true) && CurrentDemiSummon is not DemiSummon.None)
                     return SearingLight;
-                   
+
+                if (Bozja.IsInBozja)
+                {
+                    bool burstPhase = CurrentDemiSummon is DemiSummon.Bahamut && (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || IsOffCooldown(SearingLight));
+
+                    uint bozjaAction = GetBozjaAction(burstPhase);
+                    if (bozjaAction != 0)
+                        return bozjaAction;
+                }
+
                 // Energy Drain
                 if (!Gauge.HasAetherflowStacks && ActionReady(EnergyDrain))
                     return EnergyDrain;
@@ -333,6 +343,15 @@ internal partial class SMN : Caster
                 // Searing Light
                 if (IsOffCooldown(SearingLight) && LevelChecked(SearingLight) && !HasStatusEffect(Buffs.SearingLight, anyOwner: true) && CurrentDemiSummon is not DemiSummon.None)
                     return SearingLight;
+
+                if (Bozja.IsInBozja)
+                {
+                    bool burstPhase = CurrentDemiSummon is DemiSummon.Bahamut && (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || IsOffCooldown(SearingLight));
+
+                    uint bozjaAction = GetBozjaAction(burstPhase);
+                    if (bozjaAction != 0)
+                        return bozjaAction;
+                }
 
                 // Energy Drain
                 if (!Gauge.HasAetherflowStacks && ActionReady(EnergyDrain))
@@ -525,6 +544,15 @@ internal partial class SMN : Caster
                     }
                     else
                         return SearingLight;
+                }
+
+                if (Bozja.IsInBozja)
+                {
+                    bool burstPhase = CurrentDemiSummon is DemiSummon.Bahamut && (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || IsOffCooldown(SearingLight));
+
+                    uint bozjaAction = GetBozjaAction(burstPhase);
+                    if (bozjaAction != 0)
+                        return bozjaAction;
                 }
 
                 // Energy Drain
@@ -747,6 +775,15 @@ internal partial class SMN : Caster
                     }
                     else
                         return SearingLight;
+                }
+
+                if (Bozja.IsInBozja)
+                {
+                    bool burstPhase = CurrentDemiSummon is DemiSummon.Bahamut && (HasStatusEffect(Buffs.SearingLight, anyOwner: true) || IsOffCooldown(SearingLight));
+
+                    uint bozjaAction = GetBozjaAction(burstPhase);
+                    if (bozjaAction != 0)
+                        return bozjaAction;
                 }
 
                 // Energy Drain
