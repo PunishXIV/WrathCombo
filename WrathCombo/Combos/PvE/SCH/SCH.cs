@@ -130,7 +130,7 @@ internal partial class SCH : Healer
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? Resurrection
+                ? Resurrection.AndRunMacro()
                 : actionID;
     }
 
@@ -160,7 +160,7 @@ internal partial class SCH : Healer
             IGameObject? healTarget = GetHealTarget(Config.SCH_DeploymentTactics_Adv && Config.SCH_DeploymentTactics_UIMouseOver);
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
-            if (!HasStatusEffect(Buffs.Galvanize, healTarget)) 
+            if (!HasStatusEffect(Buffs.Galvanize, healTarget))
             {
                 if (IsEnabled(CustomComboPreset.SCH_DeploymentTactics_Recitation) && ActionReady(Recitation))
                     return Recitation;
