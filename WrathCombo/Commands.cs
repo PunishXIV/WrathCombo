@@ -1,6 +1,7 @@
 #region
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ECommons;
 using ECommons.DalamudServices;
@@ -137,7 +138,7 @@ public partial class WrathCombo
 
         const string all = "all";
 
-        string? action = null;
+        string? action;
         string? target = null;
 
         CustomComboPreset? preset = null;
@@ -257,16 +258,33 @@ public partial class WrathCombo
     /// </param>
     private void HandleListCommands(string[] argument)
     {
-        var filter = argument.Length > 1 ? argument[1] : argument[0];
+        IEnumerable<CustomComboPreset> presets = Enum.GetValues<CustomComboPreset>();
+        const StringComparison lower = StringComparison.InvariantCultureIgnoreCase;
+        var filter =
+            argument.Length > 1 && argument[0].Trim().Equals("list", lower)
+                ? argument[1]
+                : argument[0];
+        var job = argument.Length > 2
+            ? argument[2]
+            : argument.Length > 1 && !argument[0].Trim().Equals("list", lower)
+                ? argument[1]
+                : null;
+        PluginLog.Debug($"Filter: {filter}, " +
+                        $"Job: {job}");
 
         switch (filter)
         {
             case "enabled":
             case "set":
-                foreach (var preset in Enum.GetValues<CustomComboPreset>()
-                             .Where(preset =>
-                                 IPC.GetComboState(preset.ToString())!.First()
-                                     .Value))
+                presets = presets.Where(preset =>
+                    IPC.GetComboState(preset.ToString())?.First().Value ?? false
+                );
+
+                presets = FilterPresetsToJob(presets, job);
+                if (!presets.Any())
+                    return;
+
+                foreach (var preset in presets)
                 {
                     var controlled =
                         P.UIHelper.PresetControlled(preset) is not null;
@@ -278,10 +296,14 @@ public partial class WrathCombo
 
             case "disabled":
             case "unset":
-                foreach (var preset in Enum.GetValues<CustomComboPreset>()
-                             .Where(preset =>
-                                 !IPC.GetComboState(preset.ToString())!.First()
-                                     .Value))
+                presets = presets.Where(preset =>
+                    !IPC.GetComboState(preset.ToString())!.First().Value);
+
+                presets = FilterPresetsToJob(presets, job);
+                if (!presets.Any())
+                    return;
+
+                foreach (var preset in presets)
                 {
                     var controlled =
                         P.UIHelper.PresetControlled(preset) is not null;
@@ -292,7 +314,11 @@ public partial class WrathCombo
                 break;
 
             case "all":
-                foreach (var preset in Enum.GetValues<CustomComboPreset>())
+                presets = FilterPresetsToJob(presets, job);
+                if (!presets.Any())
+                    return;
+
+                foreach (var preset in presets)
                 {
                     var controlled =
                         P.UIHelper.PresetControlled(preset) is not null;
@@ -305,6 +331,30 @@ public partial class WrathCombo
             default:
                 DuoLog.Error("Available list filters: set, unset, all");
                 break;
+        }
+
+        return;
+
+        CustomComboPreset[] FilterPresetsToJob
+            (IEnumerable<CustomComboPreset> presetsList, string? jobShort)
+        {
+            if (jobShort is not null)
+            {
+                presetsList = presetsList.Where(preset =>
+                    preset.Attributes().CustomComboInfo.JobShorthand
+                        .Equals(jobShort, lower));
+            }
+
+            presetsList = presetsList.ToArray();
+            if (presetsList.Any()) return presetsList.ToArray();
+
+            if (jobShort is not null)
+                DuoLog.Error($"{jobShort} is not a correct job abbreviation," +
+                             $" or has nothing to list.");
+            else
+                DuoLog.Error($"Nothing is disabled.");
+            return [];
+
         }
     }
 
@@ -613,6 +663,7 @@ public partial class WrathCombo
         }
 
         ConfigWindow.IsOpen = true;
+        ConfigWindow.OpenWindow = OpenWindow.PvE;
         PvEFeatures.OpenJob = jobName;
     }
 }
