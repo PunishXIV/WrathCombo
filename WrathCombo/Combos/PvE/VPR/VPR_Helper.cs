@@ -41,7 +41,7 @@ internal partial class VPR
 
     internal static bool IsHoningExpiring(float times)
     {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return HasStatusEffect(Buffs.HonedSteel) && GetStatusEffectRemainingTime(Buffs.HonedSteel) < gcd ||
                HasStatusEffect(Buffs.HonedReavers) && GetStatusEffectRemainingTime(Buffs.HonedReavers) < gcd;
@@ -49,7 +49,7 @@ internal partial class VPR
 
     internal static bool IsVenomExpiring(float times)
     {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return HasStatusEffect(Buffs.FlankstungVenom) && GetStatusEffectRemainingTime(Buffs.FlankstungVenom) < gcd ||
                HasStatusEffect(Buffs.FlanksbaneVenom) && GetStatusEffectRemainingTime(Buffs.FlanksbaneVenom) < gcd ||
@@ -59,14 +59,14 @@ internal partial class VPR
 
     internal static bool IsEmpowermentExpiring(float times)
     {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return GetStatusEffectRemainingTime(Buffs.Swiftscaled) < gcd || GetStatusEffectRemainingTime(Buffs.HuntersInstinct) < gcd;
     }
 
     internal static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GetCooldown(SteelFangs).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
@@ -88,7 +88,8 @@ internal partial class VPR
                 return true;
 
             //1min
-            if (Gauge.SerpentOffering is >= 50 and <= 80 && IreCD is >= 50 and <= 62)
+            if (Gauge.SerpentOffering is >= 50 and <= 80 &&
+                IreCD is >= 50 and <= 62)
                 return true;
 
             //overcap protection

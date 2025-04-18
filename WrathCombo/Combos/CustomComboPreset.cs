@@ -4400,7 +4400,7 @@ public enum CustomComboPreset
     RPR_EnshroudProtection = 12304,
 
     [ParentCombo(RPR_EnshroudProtection)]
-    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
+    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony.", RPR.JobID)]
     RPR_TrueNorthEnshroud = 12308,
 
     [ReplaceSkill(RPR.Enshroud)]

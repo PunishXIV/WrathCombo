@@ -14,24 +14,16 @@ internal partial class RPR
 
     internal static float GCD => GetCooldown(Slice).CooldownTotal;
 
-    internal static WrathOpener Opener()
-    {
-        if (Opener1.LevelChecked)
-            return Opener1;
-
-        return WrathOpener.Dummy;
-    }
-
     internal static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GetCooldown(Slice).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
     internal static bool IsDebuffExpiring(float times)
     {
-        float gcd = GetCooldown(Slice).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return HasStatusEffect(Debuffs.DeathsDesign, CurrentTarget) && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < gcd;
     }
@@ -155,6 +147,14 @@ internal partial class RPR
     }
 
     #region Openers
+
+    internal static WrathOpener Opener()
+    {
+        if (Opener1.LevelChecked)
+            return Opener1;
+
+        return WrathOpener.Dummy;
+    }
 
     internal class RPROpenerMaxLevel1 : WrathOpener
     {
