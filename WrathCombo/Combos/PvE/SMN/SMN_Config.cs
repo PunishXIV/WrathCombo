@@ -25,7 +25,9 @@ internal partial class SMN
             SMN_AoE_Burst_Delay = new("SMN_AoE_Burst_Delay", 0),
 
             SMN_VariantCure = new("SMN_VariantCure"),
-            SMN_Balance_Content = new("SMN_Balance_Content", 1);
+            SMN_Balance_Content = new("SMN_Balance_Content", 1),
+
+            SMN_Bozja_EtherKit_Threshold = new("SMN_Bozja_EtherKit_Threshold", 5000);
 
         public static UserBoolArray
             SMN_ST_Egi_AstralFlow = new("SMN_ST_Egi_AstralFlow"),
@@ -36,6 +38,7 @@ internal partial class SMN
             SMN_AoE_CrimsonCycloneMelee = new("SMN_AoE_CrimsonCycloneMelee"),
             SMN_ST_Searing_Any = new("SMN_ST_Searing_Any"),
             SMN_AoE_Searing_Any = new("SMN_AoE_Searing_Any");
+
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -131,6 +134,12 @@ internal partial class SMN
                         "Set value for your MP to be at or under for this feature to take effect.", 150,
                         SliderIncrements.Hundreds);
 
+                    break;
+
+                case CustomComboPreset.SMN_Bozja_EtherKit:
+                    UserConfig.DrawSliderInt(4000, 9500, SMN_Bozja_EtherKit_Threshold,
+                        "Set value for your MP to be at or under for this feature to take effect.", 150,
+                        SliderIncrements.Hundreds);
                     break;
 
                 case CustomComboPreset.SMN_AoE_Advanced_Combo_Lucid:
