@@ -14,24 +14,24 @@ internal partial class SAM
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
             SAM_ST_KenkiOvercapAmount = new(nameof(SAM_ST_KenkiOvercapAmount), 65),
             SAM_ST_Higanbana_Suboption = new("SAM_ST_Higanbana_Suboption", 1),
-            SAM_ST_Higanbana_Threshold = new("SAM_ST_Higanbana_Threshold", 1),
+            SAM_ST_Higanbana_Threshold = new("SAM_ST_Higanbana_Threshold", 0),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
             SAM_STSecondWindThreshold = new("SAM_STSecondWindThreshold", 25),
             SAM_STBloodbathThreshold = new("SAM_STBloodbathThreshold", 40),
             SAM_AoE_KenkiOvercapAmount = new(nameof(SAM_AoE_KenkiOvercapAmount), 50),
             SAM_AoESecondWindThreshold = new("SAM_AoESecondWindThreshold", 25),
             SAM_AoEBloodbathThreshold = new("SAM_AoEBloodbathThreshold", 40),
-            SAM_Kasha_KenkiOvercapAmount = new(nameof(SAM_Kasha_KenkiOvercapAmount), 50),
-            SAM_Yukaze_KenkiOvercapAmount = new(nameof(SAM_Yukaze_KenkiOvercapAmount), 50),
-            SAM_Gekko_KenkiOvercapAmount = new(nameof(SAM_Gekko_KenkiOvercapAmount), 50),
+            SAM_Gekko_KenkiOvercapAmount = new(nameof(SAM_Gekko_KenkiOvercapAmount), 65),
+            SAM_Kasha_KenkiOvercapAmount = new(nameof(SAM_Kasha_KenkiOvercapAmount), 65),
+            SAM_Yukaze_KenkiOvercapAmount = new(nameof(SAM_Yukaze_KenkiOvercapAmount), 65),
             SAM_Oka_KenkiOvercapAmount = new(nameof(SAM_Oka_KenkiOvercapAmount), 50),
             SAM_Mangetsu_KenkiOvercapAmount = new(nameof(SAM_Mangetsu_KenkiOvercapAmount), 50),
             SAM_VariantCure = new("SAM_VariantCure");
 
         public static UserBool
+            SAM_Gekko_KenkiOvercap = new(nameof(SAM_Gekko_KenkiOvercap)),
             SAM_Kasha_KenkiOvercap = new(nameof(SAM_Kasha_KenkiOvercap)),
             SAM_Yukaze_KenkiOvercap = new(nameof(SAM_Yukaze_KenkiOvercap)),
-            SAM_Gekko_KenkiOvercap = new(nameof(SAM_Gekko_KenkiOvercap)),
             SAM_Oka_KenkiOvercap = new(nameof(SAM_Oka_KenkiOvercap)),
             SAM_Mangetsu_KenkiOvercap = new(nameof(SAM_Mangetsu_KenkiOvercap));
 
@@ -108,6 +108,18 @@ internal partial class SAM
 
                     break;
 
+                case CustomComboPreset.SAM_ST_GekkoCombo:
+                {
+                    DrawAdditionalBoolChoice(SAM_Gekko_KenkiOvercap, "Kenki Overcap Protection",
+                        "Spends Kenki when at the set value or above.");
+
+                    if (SAM_Gekko_KenkiOvercap)
+                        DrawSliderInt(25, 100, SAM_Gekko_KenkiOvercapAmount, "Kenki Amount",
+                            sliderIncrement: SliderIncrements.Fives);
+
+                    break;
+                }
+
                 case CustomComboPreset.SAM_ST_KashaCombo:
                 {
                     DrawAdditionalBoolChoice(SAM_Kasha_KenkiOvercap, "Kenki Overcap Protection",
@@ -127,18 +139,6 @@ internal partial class SAM
 
                     if (SAM_Yukaze_KenkiOvercap)
                         DrawSliderInt(25, 100, SAM_Yukaze_KenkiOvercapAmount, "Kenki Amount",
-                            sliderIncrement: SliderIncrements.Fives);
-
-                    break;
-                }
-
-                case CustomComboPreset.SAM_ST_GekkoCombo:
-                {
-                    DrawAdditionalBoolChoice(SAM_Gekko_KenkiOvercap, "Kenki Overcap Protection",
-                        "Spends Kenki when at the set value or above.");
-
-                    if (SAM_Gekko_KenkiOvercap)
-                        DrawSliderInt(25, 100, SAM_Gekko_KenkiOvercapAmount, "Kenki Amount",
                             sliderIncrement: SliderIncrements.Fives);
 
                     break;
