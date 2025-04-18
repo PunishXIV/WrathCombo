@@ -217,11 +217,10 @@ internal partial class WHM : Healer
 
             var regenReady = ActionReady(Regen) &&
                              !JustUsed(Regen, 4) &&
-                             GetStatusEffect(Buffs.Regen, healTarget)?
-                                 .RemainingTime <= Config.WHM_STHeals_RegenTimer &&
-                             GetTargetHPPercent(healTarget,
-                                 Config.WHM_STHeals_IncludeShields) >=
-                             Config.WHM_STHeals_RegenHP;
+                             GetStatusEffectRemainingTime(Buffs.Regen, healTarget) 
+                                <= Config.WHM_STHeals_RegenTimer && //Refresh Time Threshold
+                             GetTargetHPPercent(healTarget,Config.WHM_STHeals_IncludeShields) 
+                                >= Config.WHM_STHeals_RegenHP; // Regen use threshold for low health
 
             #endregion
 
