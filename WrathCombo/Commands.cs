@@ -583,6 +583,10 @@ public partial class WrathCombo
         if (forceOpen is not null)
             ConfigWindow.IsOpen = forceOpen.Value;
 
+        // Handle option to always open to the PvE tab
+        if (ConfigWindow.IsOpen && Service.Configuration.OpenToPvE)
+            ConfigWindow.OpenWindow = OpenWindow.PvE;
+
         // Open to specific tab
         if (tab is not null)
         {

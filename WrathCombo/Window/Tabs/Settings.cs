@@ -53,20 +53,6 @@ namespace WrathCombo.Window.Tabs
 
                 #endregion
 
-                #region Open to Current Job
-
-                if (ImGui.Checkbox("Open PvE Features UI to Current Job on Opening", ref Service.Configuration.OpenToCurrentJob))
-                    Service.Configuration.Save();
-
-                ImGuiComponents.HelpMarker("When you open Wrath's UI, it will automatically open to the job you are currently playing.");
-
-                if (ImGui.Checkbox("Open PvE Features UI to Current Job on Switching Jobs", ref Service.Configuration.OpenToCurrentJobOnSwitch))
-                    Service.Configuration.Save();
-
-                ImGuiComponents.HelpMarker("When you switch jobs, it will automatically open to the job you are currently playing.");
-
-                #endregion
-
                 #region Shorten DTR bar text
 
                 bool shortDTRText = Service.Configuration.ShortDTRText;
@@ -116,6 +102,37 @@ namespace WrathCombo.Window.Tabs
 
                 #endregion
 
+                ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #region Open to PvE
+
+                if (ImGui.Checkbox("Open Wrath to the PvE Features tab", ref
+                        Service.Configuration.OpenToPvE))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("When you open Wrath with `/wrath`, it will open to the PvE Features tab, instead of the last tab you were on." +
+                                           "\nSame as always using the `/wrath pve` command to open Wrath.");
+
+                #endregion
+
+                #region Open to Current Job
+
+                if (ImGui.Checkbox("Open PvE Features UI to Current Job on Opening", ref Service.Configuration.OpenToCurrentJob))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("When you open Wrath's UI, if your last tab was PvE, it will automatically open to the job you are currently playing.");
+
+                #endregion
+
+                #region Open to Current Job on Switching
+
+                if (ImGui.Checkbox("Open PvE Features UI to Current Job on Switching Jobs", ref Service.Configuration.OpenToCurrentJobOnSwitch))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("When you switch jobs, it will automatically switch the PvE Features tab to the job you are currently playing.");
+
+                #endregion
+
                 #endregion
 
                 #region Rotation Behavior Options
@@ -147,7 +164,7 @@ namespace WrathCombo.Window.Tabs
                 if (ImGui.Checkbox("Action Replacing", ref Service.Configuration.ActionChanging))
                     Service.Configuration.Save();
 
-                ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by /wrath combo");
+                ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by the `/wrath combo` command.");
 
                 #endregion
 
