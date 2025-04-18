@@ -6,11 +6,6 @@ using WrathCombo.Services;
 
 namespace WrathCombo.CustomComboNS.Functions
 {
-    internal abstract partial class CustomComboFunctions
-    {
-        public static int GetOptionValue(string SliderID) => PluginConfiguration.GetCustomIntValue(SliderID);
-    }
-
     internal abstract class UserData(string v)
     {
         public string pName = v;

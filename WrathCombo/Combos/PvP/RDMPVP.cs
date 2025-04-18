@@ -174,7 +174,7 @@ namespace WrathCombo.Combos.PvP
                     {
                         if (!targetHasGuard)
                         {
-                            if (IsEnabled(CustomComboPreset.RDMPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= GetOptionValue(Config.RDMPvP_PhantomDartThreshold))
+                            if (IsEnabled(CustomComboPreset.RDMPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= (Config.RDMPvP_PhantomDartThreshold))
                                 return Role.PhantomDart;
 
                             // Vice of Thorns

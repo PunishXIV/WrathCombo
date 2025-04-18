@@ -93,7 +93,7 @@ namespace WrathCombo.Combos.PvP
                                 IsOffCooldown(RadiantAegis) && playerHP <= radiantThreshold)
                                 return RadiantAegis;
 
-                            if (IsEnabled(CustomComboPreset.SMNPvP_PhantomDart) && Role.CanPhantomDart() && GetTargetHPPercent() <= GetOptionValue(Config.SMNPvP_PhantomDartThreshold))
+                            if (IsEnabled(CustomComboPreset.SMNPvP_PhantomDart) && Role.CanPhantomDart() && GetTargetHPPercent() <= Config.SMNPvP_PhantomDartThreshold)
                                 return Role.PhantomDart;
                         }
                         // Phoenix & Bahamut bursts
