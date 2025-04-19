@@ -878,6 +878,14 @@ public enum CustomComboPreset
     BRD_AoE_Adv_Interrupt = 3043,
 
     [ParentCombo(BRD_AoE_AdvMode)]
+    [CustomComboInfo("Encore Option", "Adds Radiant Encore to the Rotation after Finale.", BRD.JobID)]
+    BRD_AoE_BuffsEncore = 3062,
+
+    [ParentCombo(BRD_AoE_AdvMode)]
+    [CustomComboInfo("Resonant Option", "Adds Resonant Arrow to the Rotation after Barrage.", BRD.JobID)]
+    BRD_AoE_BuffsResonant = 3061,
+
+    [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
     BRD_AoE_ApexArrow = 3039,
 

@@ -346,14 +346,14 @@ internal partial class BRD : PhysicalRanged
                     (IsEnabled(CustomComboPreset.BRD_AoE_Pooling) && UsePooledSidewinder() || !IsEnabled(CustomComboPreset.BRD_AoE_Pooling)))
                     return Sidewinder;
             
-                if (Role.CanHeadGraze(CustomComboPreset.BRD_AoE_Adv_Interrupt) && CanWeaveDelayed)
+                if (Role.CanHeadGraze(CustomComboPreset.BRD_AoE_Adv_Interrupt) && UseInterrupt)
                     return Role.HeadGraze;
 
                 if (ActionReady(RainOfDeath) &&
                     (IsEnabled(CustomComboPreset.BRD_AoE_Pooling) && UsePooledBloodRain() || !IsEnabled(CustomComboPreset.BRD_AoE_Pooling)))
                     return OriginalHook(RainOfDeath);
 
-                if (!LevelChecked(RainOfDeath) && !(WasLastAction(Bloodletter) && BloodletterCharges > 0))
+                if (!LevelChecked(RainOfDeath) && !WasLastAction(Bloodletter) && BloodletterCharges > 0)
                     return OriginalHook(Bloodletter);
             }
 
@@ -378,7 +378,8 @@ internal partial class BRD : PhysicalRanged
             if (HasStatusEffect(Buffs.Barrage))
                 return OriginalHook(WideVolley);
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_BuffsEncore) && HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16)
+            if (IsEnabled(CustomComboPreset.BRD_AoE_BuffsEncore) && HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16 &&
+               (HasStatusEffect(Buffs.RagingStrikes) || !ragingEnabled))
                 return OriginalHook(RadiantEncore);
 
             if (IsEnabled(CustomComboPreset.BRD_AoE_ApexArrow))
@@ -390,13 +391,13 @@ internal partial class BRD : PhysicalRanged
                     return ApexArrow;
             }
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_BuffsResonant))
+            if (IsEnabled(CustomComboPreset.BRD_AoE_BuffsResonant))
             {
                 if (HasStatusEffect(Buffs.ResonantArrowReady))
                     return ResonantArrow;
             }
 
-            if (HasStatusEffect(Buffs.HawksEye))
+            if (HasStatusEffect(Buffs.HawksEye) && ActionReady(WideVolley))
                 return OriginalHook(WideVolley);
 
             #endregion
@@ -526,7 +527,7 @@ internal partial class BRD : PhysicalRanged
                     (IsEnabled(CustomComboPreset.BRD_Adv_Pooling) && UsePooledSidewinder() || !IsEnabled(CustomComboPreset.BRD_Adv_Pooling)))
                     return Sidewinder;
 
-                if (Role.CanHeadGraze(CustomComboPreset.BRD_Adv_Interrupt) && CanWeaveDelayed)
+                if (Role.CanHeadGraze(CustomComboPreset.BRD_Adv_Interrupt) && UseInterrupt)
                     return Role.HeadGraze;
 
                 if (ActionReady(Bloodletter) &&
@@ -578,7 +579,8 @@ internal partial class BRD : PhysicalRanged
             if (HasStatusEffect(Buffs.Barrage))
                 return OriginalHook(StraightShot);
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_BuffsEncore) && HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16)
+            if (IsEnabled(CustomComboPreset.BRD_Adv_BuffsEncore) && HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16 && 
+               (HasStatusEffect(Buffs.RagingStrikes) || !ragingEnabled))
                 return OriginalHook(RadiantEncore);
 
             if (IsEnabled(CustomComboPreset.BRD_ST_ApexArrow))
@@ -698,7 +700,7 @@ internal partial class BRD : PhysicalRanged
                 if (ActionReady(Sidewinder) && UsePooledSidewinder())
                     return Sidewinder;
 
-                if (Role.CanHeadGraze(CustomComboPreset.BRD_AoE_SimpleMode) && CanWeaveDelayed)
+                if (UseInterrupt)
                     return Role.HeadGraze;
 
                 if (ActionReady(RainOfDeath) && UsePooledBloodRain())
@@ -730,10 +732,10 @@ internal partial class BRD : PhysicalRanged
             if (HasStatusEffect(Buffs.ResonantArrowReady))
                 return ResonantArrow;
 
-            if (HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16)
+            if (HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16 && HasStatusEffect(Buffs.RagingStrikes))
                 return OriginalHook(RadiantEncore);
 
-            if (HasStatusEffect(Buffs.HawksEye))
+            if (HasStatusEffect(Buffs.HawksEye) && ActionReady(WideVolley))
                 return OriginalHook(WideVolley);
 
             #endregion
@@ -834,7 +836,7 @@ internal partial class BRD : PhysicalRanged
                 if (ActionReady(Sidewinder) && UsePooledSidewinder())
                     return Sidewinder;            
                
-                if (Role.CanHeadGraze(CustomComboPreset.BRD_ST_SimpleMode) && CanWeaveDelayed)
+                if (UseInterrupt)
                     return Role.HeadGraze;
 
                 if (ActionReady(Bloodletter) && UsePooledBloodRain())
@@ -880,7 +882,7 @@ internal partial class BRD : PhysicalRanged
             if (HasStatusEffect(Buffs.ResonantArrowReady))
                 return ResonantArrow;
 
-            if (HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16)
+            if (HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16 && HasStatusEffect(Buffs.RagingStrikes))
                 return OriginalHook(RadiantEncore);
 
             if (HasStatusEffect(Buffs.HawksEye))
