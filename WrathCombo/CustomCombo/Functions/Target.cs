@@ -152,36 +152,49 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
-        /// <summary> Grabs healable target. Checks Soft Target then Hard Target. 
-        /// If Party UI Mouseover is enabled, find the target and return that. Else return the player. </summary>
-        /// <param name="checkMOPartyUI">Checks for a mouseover target.</param>
-        /// <param name="restrictToMouseover">Forces only the mouseover target, may return null.</param>
-        /// <returns> IGameObject of a player target. </returns>
-        public static unsafe IGameObject? GetHealTarget(bool checkMOPartyUI = false, bool restrictToMouseover = false)
+        
+        /// <summary>
+        /// Grabs the Mouse Over Target from Party List.
+        /// Returns Null if nothing found
+        /// </summary>
+        /// <returns>IGameObject of the MouseOver target or null</returns>
+        public static unsafe IGameObject? GetMouseOverHealTarget()
         {
-            IGameObject? healTarget = null;
+            GameObject* uiTargetPtr = Framework.Instance()->GetUIModule()->GetPronounModule()->UiMouseOverTarget;
+            if (uiTargetPtr != null && uiTargetPtr->GetGameObjectId().ObjectId != 0)
+            {
+                IGameObject? uiTarget = Svc.Objects.FirstOrDefault(x => x.GameObjectId == uiTargetPtr->GetGameObjectId().ObjectId);
+                if (uiTarget != null && HasFriendlyTarget(uiTarget))
+                    return uiTarget;
+            }
+            return null;
+        }
+
+        
+        /// <summary> Grabs healable target. 
+        /// Party UI Mouseover (optional) -> Soft Target -> Hard Target -> Player
+        /// <param name="checkMOPartyUI">Checks for a mouseover target.</param>
+        /// <returns> IGameObject of a player target. </returns>
+        /// </summary>
+        public static IGameObject GetHealTarget(bool checkMOPartyUI = false)
+        {
             ITargetManager tm = Svc.Targets;
 
-            if (HasFriendlyTarget(tm.SoftTarget)) healTarget = tm.SoftTarget;
-            if (healTarget is null && HasFriendlyTarget(CurrentTarget) && !restrictToMouseover) healTarget = CurrentTarget;
-            //if (checkMO && HasFriendlyTarget(tm.MouseOverTarget)) healTarget = tm.MouseOverTarget;
-            if (checkMOPartyUI)
-            {
-                GameObject* t = Framework.Instance()->GetUIModule()->GetPronounModule()->UiMouseOverTarget;
-                if (t != null && t->GetGameObjectId().ObjectId != 0)
-                {
-                    IGameObject? uiTarget = Svc.Objects.Where(x => x.GameObjectId == t->GetGameObjectId().ObjectId).FirstOrDefault();
-                    if (uiTarget != null && HasFriendlyTarget(uiTarget)) healTarget = uiTarget;
+            // Check optional mouseover party UI target first
+            if (checkMOPartyUI && GetMouseOverHealTarget() is IGameObject uiTarget)
+                return uiTarget;
 
-                    if (restrictToMouseover)
-                        return healTarget;
-                }
+            // Check soft target
+            // Null checks to make sure HasFriendlyTarget doesn't use it's own failback
+            if (tm.SoftTarget != null && HasFriendlyTarget(tm.SoftTarget))
+                return tm.SoftTarget;
 
-                if (restrictToMouseover)
-                    return healTarget;
-            }
-            healTarget ??= LocalPlayer;
-            return healTarget;
+            // Check current target if not restricted to mouseover
+            if (tm.Target != null && HasFriendlyTarget(tm.Target))
+                return tm.Target;
+
+            // Default to local player
+            return LocalPlayer!;
         }
 
         /// <summary>
