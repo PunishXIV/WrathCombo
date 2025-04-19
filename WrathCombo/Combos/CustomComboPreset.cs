@@ -422,6 +422,10 @@ public enum CustomComboPreset
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Swiftcast Option", "Add Swiftcast to the rotation.", BLM.JobID)]
     BLM_ST_Swiftcast = 2106,
+
+    [ParentCombo(BLM_ST_AdvancedMode)]
+    [CustomComboInfo("Triplecast Option", "Add Triplecast to the rotation.\nWill only be used if Swiftcast is on cooldown.", BLM.JobID)]
+    BLM_ST_Triplecast = 2115,
     
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
@@ -546,7 +550,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value ST = 2114
+    // Last value ST = 2115
     //Last Value AoE = 2212
     //Last Value misc = 2060
 

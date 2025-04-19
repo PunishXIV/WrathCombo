@@ -11,18 +11,14 @@ internal partial class BLM
             BLM_VariantCure = new("BLM_VariantCure"),
             BLM_VariantRampart = new("BLM_VariantRampart"),
             BLM_ST_LeyLinesCharges = new("BLM_ST_LeyLinesCharges", 1),
+            BLM_ST_Triplecast_UseCharges = new("BLM_ST_Triplecast_UseCharges", 1),
             BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
-            BLM_AoE_UsePolyglot_HoldCharges = new("BLM_AoE_UsePolyglot_HoldCharges", 1),
-            BLM_AoE_UsePolyglotMoving_HoldCharges = new("BLM_AoE_UsePolyglotMoving_HoldCharges", 0),
             BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 1),
             BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5),
             BLM_SelectedOpener = new("BLM_SelectedOpener", 0),
             BLM_ST_Thunder_SubOption = new("BLM_ST_Thunder_SubOption", 1),
             BLM_Balance_Content = new("BLM_Balance_Content", 1);
-
-        public static UserFloat
-            BLM_ST_Triplecast_ChargeTime = new("BLM_ST_Triplecast_ChargeTime", 20),
-            BLM_AoE_Triplecast_ChargeTime = new("BLM_AoE_Triplecast_ChargeTime", 20);
+        
         public static UserBoolArray
             BLM_ST_MovementOption = new("BLM_ST_MovementOption");
 
@@ -44,6 +40,10 @@ internal partial class BLM
                     DrawSliderInt(0, 1, BLM_ST_LeyLinesCharges,
                         $"How many charges of {LeyLines.ActionName()} to keep ready? (0 = Use all)");
 
+                    break;
+
+                case CustomComboPreset.BLM_ST_Triplecast:
+                    DrawSliderInt(1, 2, BLM_ST_Triplecast_UseCharges, $"How many charges of {Triplecast.ActionName()} to use?");
                     break;
 
                 case CustomComboPreset.BLM_ST_Movement:

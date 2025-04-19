@@ -46,7 +46,7 @@ internal partial class BLM : Caster
                     return Transpose;
             }
 
-            if (HasMaxPolyglotStacks && Gauge.EnochianTimer < 3000)
+            if (HasMaxPolyglotStacks && Gauge.EnochianTimer <= 5000)
                 return LevelChecked(Xenoglossy)
                     ? Xenoglossy
                     : Foul;
@@ -61,7 +61,8 @@ internal partial class BLM : Caster
                     return Triplecast;
 
                 if (ActionReady(Paradox) &&
-                    Gauge.InAstralFire && Gauge.IsParadoxActive)
+                    Gauge.InAstralFire && Gauge.IsParadoxActive &&
+                    !HasStatusEffect(Buffs.Firestarter))
                     return Paradox;
 
                 if (ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
@@ -192,6 +193,12 @@ internal partial class BLM : Caster
                         !ActionReady(Manafont) && !HasStatusEffect(Buffs.Triplecast))
                         return Role.Swiftcast;
 
+                    if (IsEnabled(CustomComboPreset.BLM_ST_Triplecast) &&
+                        ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
+                        GetRemainingCharges(Triplecast) >= Config.BLM_ST_Triplecast_UseCharges &&
+                        JustUsed(Despair) && !ActionReady(Manafont) && !HasStatusEffect(Buffs.Triplecast))
+                        return Triplecast;
+
                     if (IsEnabled(CustomComboPreset.BLM_ST_Transpose) &&
                         ActionReady(Transpose) && (HasStatusEffect(Role.Buffs.Swiftcast) || HasStatusEffect(Buffs.Triplecast)))
                         return Transpose;
@@ -203,7 +210,7 @@ internal partial class BLM : Caster
             }
 
             if (IsEnabled(CustomComboPreset.BLM_ST_UsePolyglot) &&
-                HasMaxPolyglotStacks && Gauge.EnochianTimer < 3000)
+                HasMaxPolyglotStacks && Gauge.EnochianTimer <= 5000)
                 return LevelChecked(Xenoglossy)
                     ? Xenoglossy
                     : Foul;
@@ -225,7 +232,8 @@ internal partial class BLM : Caster
 
                 if (Config.BLM_ST_MovementOption[1] &&
                     ActionReady(Paradox) &&
-                    Gauge.InAstralFire && Gauge.IsParadoxActive)
+                    Gauge.InAstralFire && Gauge.IsParadoxActive &&
+                    !HasStatusEffect(Buffs.Firestarter))
                     return Paradox;
 
                 if (Config.BLM_ST_MovementOption[2] &&

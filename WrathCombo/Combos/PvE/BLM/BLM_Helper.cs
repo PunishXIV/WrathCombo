@@ -60,6 +60,8 @@ internal partial class BLM
 
     internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
 
+    #region Openers
+
     internal static WrathOpener Opener()
     {
         if (StandardOpener.LevelChecked && Config.BLM_SelectedOpener == 0)
@@ -70,46 +72,6 @@ internal partial class BLM
 
         return WrathOpener.Dummy;
     }
-
-    internal static bool DoubleBlizz()
-    {
-        List<uint> spells = ActionWatching.CombatActions.Where(x =>
-            ActionWatching.GetAttackType(x) == ActionWatching.ActionAttackType.Spell &&
-            x != OriginalHook(Thunder) && x != OriginalHook(Thunder2)).ToList();
-
-        if (spells.Count < 1)
-            return false;
-
-        uint firstSpell = spells[^1];
-
-        switch (firstSpell)
-        {
-            case Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2:
-            {
-                uint castedSpell = LocalPlayer.CastActionId;
-
-                if (castedSpell is Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2)
-                    return true;
-
-                if (spells.Count >= 2)
-                {
-                    uint secondSpell = spells[^2];
-
-                    switch (secondSpell)
-                    {
-                        case Blizzard or Blizzard2 or Blizzard3 or Blizzard4 or Freeze or HighBlizzard2:
-                            return true;
-                    }
-                }
-
-                break;
-            }
-        }
-
-        return false;
-    }
-
-    #region Openers
 
     internal class BLMStandardOpener : WrathOpener
     {
