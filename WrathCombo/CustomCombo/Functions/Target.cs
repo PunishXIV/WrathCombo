@@ -4,7 +4,6 @@ using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
-using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
@@ -24,102 +23,129 @@ namespace WrathCombo.CustomComboNS.Functions
 {
     internal abstract partial class CustomComboFunctions
     {
-        private static readonly Dictionary<uint, bool> NPCPositionals = new();
+        private static readonly Dictionary<uint, bool> NPCPositionals = [];
 
         /// <summary> Gets the current target or null. </summary>
         public static IGameObject? CurrentTarget => Svc.Targets.Target;
 
-        /// <summary> Find if the player has a target. </summary>
+        /// <summary> Checks if the player has a target. </summary>
         public static bool HasTarget() => CurrentTarget is not null;
 
-        /// <summary> Gets the distance from the target. </summary>
-        public static float GetTargetDistance(IGameObject? optionalTarget = null, IGameObject? source = null)
+        /// <summary> Checks if the target is a hostile object. </summary>
+        public static bool HasBattleTarget() => HasTarget() && CurrentTarget.IsHostile();
+
+        /// <summary> Checks if the target is within the specified range. </summary>
+        public static bool IsTargetInRange(float maxRange, IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
         {
-            if (LocalPlayer is null)
-                return 0;
+            if (LocalPlayer is null) return false;
 
-            IGameObject? chara = optionalTarget ?? CurrentTarget;
-            if (chara is null) return 0;
+            IGameObject? target = optionalTarget ?? CurrentTarget;
+            if (target is null) return false;
 
-            IGameObject? sourceChara = source ?? LocalPlayer;
+            IGameObject? source = sourceChara ?? LocalPlayer;
+            if (target.GameObjectId == source.GameObjectId) return false;
 
-            if (chara.GameObjectId == sourceChara.GameObjectId)
-                return 0;
+            Vector2 offset = new(target.Position.X - source.Position.X, target.Position.Z - source.Position.Z);
 
-            Vector2 position = new(chara.Position.X, chara.Position.Z);
-            Vector2 selfPosition = new(sourceChara.Position.X, sourceChara.Position.Z);
+            float squaredDistance = Vector2.Dot(offset, offset);
+            float totalRadius = maxRange + target.HitboxRadius + source.HitboxRadius;
 
-            return Math.Max(0, Vector2.Distance(position, selfPosition) - chara.HitboxRadius - sourceChara.HitboxRadius);
+            return squaredDistance <= totalRadius * totalRadius;
         }
 
-        public static float GetTargetHeightDifference(IGameObject? target = null, IGameObject? source = null)
+        /// <summary> Gets the distance from the target as a float value. </summary>
+        public static float GetTargetDistance(IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
         {
-            if (LocalPlayer is null)
-                return 0;
+            if (LocalPlayer is null) return 0f;
 
-            IGameObject? chara = target ?? CurrentTarget;
-            if (chara is null) return 0;
+            IGameObject? target = optionalTarget ?? CurrentTarget;
+            if (target is null) return 0f;
 
-            IGameObject? sourceChara = source ?? LocalPlayer;
+            IGameObject? source = sourceChara ?? LocalPlayer;
+            if (target.GameObjectId == source.GameObjectId) return 0f;
 
-            if (chara.GameObjectId == sourceChara.GameObjectId)
-                return 0;
+            Vector2 selfPosition = new(source.Position.X, source.Position.Z);
+            Vector2 targetPosition = new(target.Position.X, target.Position.Z);
 
-            return Math.Abs(chara.Position.Y - sourceChara.Position.Y);
+            return Math.Max(0f, Vector2.Distance(targetPosition, selfPosition) - target.HitboxRadius - source.HitboxRadius);
         }
 
-        /// <summary> Gets a value indicating whether you are in melee range from the current target. </summary>
+        /// <summary> Gets the height distance from the target as a float value. </summary>
+        public static float GetTargetHeightDifference(IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
+        {
+            if (LocalPlayer is null) return 0f;
+
+            IGameObject? target = optionalTarget ?? CurrentTarget;
+            if (target is null) return 0f;
+
+            IGameObject? source = sourceChara ?? LocalPlayer;
+            if (target.GameObjectId == source.GameObjectId) return 0f;
+
+            return Math.Abs(target.Position.Y - source.Position.Y);
+        }
+
+        /// <summary> Checks if the target is within melee range. </summary>
         public static bool InMeleeRange()
         {
-            if (Svc.Targets.Target == null)
-                return false;
+            if (Svc.Targets.Target == null) return false;
 
-            float distance = GetTargetDistance();
-
-            return distance <= 3.0 + Service.Configuration.MeleeOffset;
+            return IsTargetInRange(3f + (float)Service.Configuration.MeleeOffset);
         }
 
-        /// <summary> Gets a value indicating target's HP Percent. CurrentTarget is default unless specified </summary>
-        public static float GetTargetHPPercent(IGameObject? OurTarget = null, bool includeShield = false)
+        /// <summary> Gets the current HP of the target as a percentage value. </summary>
+        public static float GetTargetHPPercent(IGameObject? optionalTarget = null, bool includeShield = false)
         {
-            OurTarget ??= CurrentTarget;
-            if (OurTarget is not IBattleChara chara)
-                return 0;
+            optionalTarget ??= CurrentTarget;
+            if (optionalTarget is not IBattleChara chara || chara.IsDead) return 0f;
 
-            float percent = (float)chara.CurrentHp / chara.MaxHp * 100f;
-            if (includeShield) percent += chara.ShieldPercentage;
-            return Math.Clamp(percent, 0f, 100f);
+            uint currentHP = chara.CurrentHp;
+            uint maxHP = chara.MaxHp;
+
+            if (currentHP == maxHP) return 100f;
+
+            float percentHP = currentHP * 100f / maxHP;
+            percentHP += includeShield ? chara.ShieldPercentage : 0f;
+
+            return Math.Clamp(percentHP, 0f, 100f);
         }
 
+        /// <summary> Gets the maximum HP of the target as a float value. </summary>
         public static float EnemyHealthMaxHp() => CurrentTarget is IBattleChara chara ? chara.MaxHp : 0;
 
+        /// <summary> Gets the current HP of the target as a float value. </summary>
         public static float EnemyHealthCurrentHp() => CurrentTarget is IBattleChara chara ? chara.CurrentHp : 0;
 
-        public static float PlayerHealthPercentageHp() => LocalPlayer is not null ? (float)LocalPlayer.CurrentHp / LocalPlayer.MaxHp * 100 : 0;
+        /// <summary> Gets the current HP of the player as a percentage value. </summary>
+        public static float PlayerHealthPercentageHp()
+        {
+            if (LocalPlayer is null || LocalPlayer.IsDead) return 0f;
 
-        public static bool HasBattleTarget() => CurrentTarget is not null && CurrentTarget.IsHostile();
+            uint currentHP = LocalPlayer.CurrentHp;
+            uint maxHP = LocalPlayer.MaxHp;
 
-        /// <summary> Checks if the player is being targeted by a hostile target. </summary>
+            if (currentHP == maxHP) return 100f;
+
+            return currentHP * 100f / maxHP;
+        }
+
+        /// <summary> Checks if the player is being targeted by a hostile object. </summary>
         public static bool IsPlayerTargeted() => Svc.Objects.Any(x => x.IsHostile() && x.IsTargetable && x.TargetObjectId == LocalPlayer?.GameObjectId);
 
-        public static bool HasFriendlyTarget(IGameObject? OurTarget = null)
+        /// <summary> Checks if the target is a friendly object. </summary>
+        public static bool HasFriendlyTarget(IGameObject? optionalTarget = null)
         {
-            OurTarget ??= CurrentTarget;
-            if (OurTarget is null)
-                return false;
+            optionalTarget ??= CurrentTarget;
+            if (optionalTarget is not IBattleChara chara) return false;
 
-            return OurTarget.ObjectKind switch
+            return chara.ObjectKind switch
             {
                 ObjectKind.Player => true,
-                _ when OurTarget is IBattleNpc npc => npc.BattleNpcKind is not BattleNpcSubKind.Enemy and not (BattleNpcSubKind)1,
+                _ when chara is IBattleNpc npc => npc.BattleNpcKind is not BattleNpcSubKind.Enemy and not (BattleNpcSubKind)1,
                 _ => false
             };
         }
 
-        /// <summary>
-        /// Grabs the Mouse Over Target from Party List.
-        /// Returns Null if nothing found
-        /// </summary>
+        /// <summary> Gets the mouse-over target from the party list. Returns null if not found. </summary>
         public static unsafe IGameObject? GetMouseOverHealTarget()
         {
             try
@@ -146,9 +172,7 @@ namespace WrathCombo.CustomComboNS.Functions
             return null;
         }
 
-        /// <summary> Grabs healable target. 
-        /// Party UI Mouseover (optional) -> Soft Target -> Hard Target -> Player
-        /// </summary>
+        /// <summary> Gets a healable target. Priority: Party UI Mouseover (optional) -> Soft Target -> Hard Target -> Player. </summary>
         public static IGameObject GetHealTarget(bool checkMOPartyUI = false)
         {
             ITargetManager tm = Svc.Targets;
@@ -174,13 +198,13 @@ namespace WrathCombo.CustomComboNS.Functions
         ///     Determines if the enemy is casting an action. Optionally, limit by percentage of cast time.
         /// </summary>
         /// <param name="minCastPercentage">
-        ///     The minimum percentage of the cast time completed required.<br/>
-        ///     Default is 0%.<br/>
+        ///     The minimum percentage of the cast time completed required.
+        ///     Default is 0%.
         ///     As a float representation of a percentage, value should be between
         ///     0.0f (0%) and 1.0f (100%).
         /// </param>
         /// <returns>
-        ///     Bool indicating whether they are casting an action or not.<br/>
+        ///     Bool indicating whether they are casting an action or not.
         ///     (and if the cast time is over the percentage specified)
         /// </returns>
         public static bool TargetIsCasting(double? minCastPercentage = null)
@@ -199,17 +223,16 @@ namespace WrathCombo.CustomComboNS.Functions
 
         /// <summary>
         ///     Determines if the enemy is casting an action that can be interrupted.
-        ///     <br/>
         ///     Optionally limited by percentage of cast time.
         /// </summary>
         /// <param name="minCastPercentage">
-        ///     The minimum percentage of the cast time completed required.<br/>
-        ///     Default is 0%.<br/>
+        ///     The minimum percentage of the cast time completed required.
+        ///     Default is 0%.
         ///     As a float representation of a percentage, value should be between
         ///     0.0f (0%) and 1.0f (100%).
         /// </param>
         /// <returns>
-        ///     Bool indicating whether they can be interrupted or not.<br/>
+        ///     Bool indicating whether they can be interrupted or not.
         ///     (and if the cast time is over the percentage specified)
         /// </returns>
         public static bool CanInterruptEnemy(double? minCastPercentage = null)
@@ -226,21 +249,28 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
-        /// <summary> Sets the player's target. </summary>
-        /// <param name="target"> Target must be a game object that the player can normally click and target. </param>
+        /// <summary> Sets the player's current target. </summary>
+        /// <param name="target"> Must be an object the player can normally click and target. </param>
         public static void SetTarget(IGameObject? target) => Svc.Targets.Target = target;
 
-        /// <summary> Checks if target is in appropriate range for targeting </summary>
-        /// <param name="target"> The target object to check </param>
-        /// <param name="distance">Optional distance to check</param>
-        public static bool IsInRange(IGameObject? target, float distance = 25f)
+        /// <summary> Sets the player's current target to the given target. </summary>
+        public static void TargetObject(IGameObject? target)
         {
-            if (target == null || GetTargetDistance(target, LocalPlayer) >= distance)
-                return false;
-
-            return true;
+            if (IsInRange(target))
+                SetTarget(target);
         }
 
+        /// <summary> Checks if the target is within appropriate range for targeting. </summary>
+        /// <param name="target"> The target object to check. </param>
+        /// <param name="distance"> The distance to check. </param>
+        public static bool IsInRange(IGameObject? target, float distance = 25f)
+        {
+            if (target is null) return false;
+
+            return IsTargetInRange(distance, target, LocalPlayer);
+        }
+
+        /// <summary> Checks if the target needs positionals. </summary>
         public static bool TargetNeedsPositionals()
         {
             if (!HasBattleTarget()) return false;
@@ -253,8 +283,8 @@ namespace WrathCombo.CustomComboNS.Functions
             return !NPCPositionals[CurrentTarget.DataId];
         }
 
-        /// <summary> Attempts to target the given party member </summary>
-        /// <param name="target"></param>
+        /// <summary> Sets the player's current target to the given party member. </summary>
+        /// <param name="target"> The party member to target. </param>
         protected static unsafe void TargetObject(TargetType target)
         {
             GameObject* t = GetTarget(target);
@@ -265,11 +295,7 @@ namespace WrathCombo.CustomComboNS.Functions
             if (IsInRange(p)) SetTarget(p);
         }
 
-        public static void TargetObject(IGameObject? target)
-        {
-            if (IsInRange(target)) SetTarget(target);
-        }
-
+        /// <summary> Gets a specific type of target. </summary>
         public static unsafe GameObject* GetTarget(TargetType target)
         {
             IGameObject? o = null;
@@ -321,6 +347,7 @@ namespace WrathCombo.CustomComboNS.Functions
             return o != null ? (GameObject*)o.Address : null;
         }
 
+        /// <summary> List of possible target types. </summary>
         public enum TargetType
         {
             Target,
@@ -342,129 +369,63 @@ namespace WrathCombo.CustomComboNS.Functions
             P8
         }
 
-        /// <summary>
-        /// Get angle to target.
-        /// </summary>
-        /// <returns>Angle relative to target</returns>
+        /// <summary> Gets the player's angle relative to the target. </summary>
         public static float AngleToTarget()
         {
-            if (CurrentTarget is null || LocalPlayer is null)
-                return 0;
-            if (CurrentTarget is not IBattleChara || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
-                return 0;
+            if (LocalPlayer is null || CurrentTarget is not IBattleChara chara || chara.ObjectKind != ObjectKind.BattleNpc) return 0f;
 
-            float angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
+            float angle = PositionalMath.AngleXZ(chara.Position, LocalPlayer.Position) - chara.Rotation;
+            float regionDegrees = (PositionalMath.Degrees(angle) + 360) % 360;
 
-            double regionDegrees = PositionalMath.Degrees(angle);
-            if (regionDegrees < 0)
+            return regionDegrees switch
             {
-                regionDegrees = 360 + regionDegrees;
-            }
-
-            if (regionDegrees is >= 45 and <= 135)
-            {
-                return 1;
-            }
-            
-            if (regionDegrees is >= 135 and <= 225)
-            {
-                return 2;
-            }
-            
-            if (regionDegrees is >= 225 and <= 315)
-            {
-                return 3;
-            }
-            
-            if (regionDegrees is >= 315 or <= 45)
-            {
-                return 4;
-            }
-            return 0;
+                >= 315 or <= 45     => 4f, // Front (0° ± 45°)
+                >= 45 and <= 135    => 1f, // Right Flank (90° ± 45°)
+                >= 135 and <= 225   => 2f, // Rear (180° ± 45°)
+                >= 225 and <= 315   => 3f, // Left Flank (270° ± 45°)
+                _                   => 0f  // Fallback
+            };
         }
 
-        /// <summary>
-        /// Is player on target's rear.
+        /// <summary> Checks if the player is on the target's rear. </summary>
+        public static bool OnTargetsRear() => AngleToTarget() is 2f;
+
+        /// <summary> Checks if the player is on either flank of the target. </summary>
+        public static bool OnTargetsFlank() => AngleToTarget() is 1f or 3f;
+
+        /// <summary> Checks if the player is on the target's front. </summary>
+        public static bool OnTargetsFront() => AngleToTarget() is 4f;
+
+        /// <summary> Checks if an object is quest-related. </summary>
+        internal static unsafe bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
+
+        /// <summary> Checks if the target is an instance boss. </summary>
+        internal static bool TargetIsBoss() => IsBoss(LocalPlayer.TargetObject);
+
+        /// <summary> Checks if an object is an instance boss.
+        ///     Rank 0 - Trash.
+        ///     Rank 1 - Hunt Targets (B/A/S), FATE Bosses (Shadowbringers+).
+        ///     Rank 2 - Final Dungeon Boss, Trial Boss, Raid Boss, Alliance Raid Boss.
+        ///     Rank 3 - Trash.
+        ///     Rank 4 - Raid Trash (Alexander).
+        ///     Rank 5 - Nothing.
+        ///     Rank 6 - First 2 Dungeon Bosses.
+        ///     Rank 7 - PvP Targets.
+        ///     Rank 8 - A puppy.
+        ///     Rank 32, 33, 34, 35, 36, 37 - Old Diadem Targets.
         /// </summary>
-        /// <returns>True or false.</returns>
-        public static bool OnTargetsRear()
-        {
-            if (CurrentTarget is null || LocalPlayer is null)
-                return false;
-            if (CurrentTarget is not IBattleChara || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
-                return false;
+        private static bool IsBoss(IGameObject? obj) =>
+            obj is not null &&
+            Svc.Data.GetExcelSheet<BNpcBase>().HasRow(obj.DataId) &&
+            Svc.Data.GetExcelSheet<BNpcBase>().GetRow(obj.DataId).Rank is 2 or 6;
 
-            float angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
+        /// <summary> Gets a list of instance bosses from the Object Table. </summary>
+        internal static IEnumerable<IBattleChara> NearbyBosses => Svc.Objects.Where(x => x.ObjectKind == ObjectKind.BattleNpc && IsBoss(x)).Cast<IBattleChara>();
 
-            double regionDegrees = PositionalMath.Degrees(angle);
-            if (regionDegrees < 0)
-            {
-                regionDegrees = 360 + regionDegrees;
-            }
+        /// <summary> Checks if the object is out of range for a given action. </summary>
+        internal static bool OutOfRange(uint actionID, IGameObject obj) => ActionWatching.OutOfRange(actionID, Svc.ClientState.LocalPlayer!, obj);
 
-            if (regionDegrees is >= 135 and <= 225)
-            {
-                return true;
-            }
-            
-            return false;
-        }
-
-        /// <summary>
-        /// Is player on target's flank.
-        /// </summary>
-        /// <returns>True or false.</returns>
-        public static bool OnTargetsFlank()
-        {
-            if (CurrentTarget is null || LocalPlayer is null)
-                return false;
-            if (CurrentTarget is not IBattleChara || CurrentTarget.ObjectKind != ObjectKind.BattleNpc)
-                return false;
-
-
-            float angle = PositionalMath.AngleXZ(CurrentTarget.Position, LocalPlayer.Position) - CurrentTarget.Rotation;
-
-            double regionDegrees = PositionalMath.Degrees(angle);
-            if (regionDegrees < 0)
-            {
-                regionDegrees = 360 + regionDegrees;
-            }
-
-            // left flank
-            if (regionDegrees is >= 45 and <= 135)
-            {
-                return true;
-            }
-            
-            // right flank
-            if (regionDegrees is >= 225 and <= 315)
-            {
-                return true;
-            }
-            return false;
-        }
-
-        // the following is all lifted from the excellent Resonant plugin
-        internal static class PositionalMath
-        {
-            internal static float Radians(float degrees)
-            {
-                return (float)Math.PI * degrees / 180.0f;
-            }
-
-            internal static double Degrees(float radians)
-            {
-                return (180 / Math.PI) * radians;
-            }
-
-            internal static float AngleXZ(Vector3 a, Vector3 b)
-            {
-                return (float)Math.Atan2(b.X - a.X, b.Z - a.Z);
-            }
-        }
-
-        internal static bool OutOfRange(uint actionID, IGameObject target) => ActionWatching.OutOfRange(actionID, Svc.ClientState.LocalPlayer!, target);
-
+        /// <summary> Checks if there are enemies in range for a given action. </summary>
         public static unsafe bool EnemiesInRange(uint spellCheck)
         {
             var enemies = Svc.Objects.Where(x => x.ObjectKind == ObjectKind.BattleNpc).Cast<IBattleNpc>().Where(x => x.BattleNpcKind is BattleNpcSubKind.Enemy or BattleNpcSubKind.BattleNpcPart).ToList();
@@ -485,14 +446,13 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
+        /// <summary> Gets the number of enemies in range for a given action. </summary>
         public static int NumberOfEnemiesInRange(uint aoeSpell, IGameObject? target, bool checkIgnoredList = false)
         {
             ActionWatching.ActionSheet.Values.TryGetFirst(x => x.RowId == aoeSpell, out var sheetSpell);
             bool needsTarget = sheetSpell.CanTargetHostile;
 
-            if (needsTarget && GetTargetDistance(target) > ActionWatching.GetActionRange(sheetSpell.RowId))
-                return 0;
-
+            if (needsTarget && !IsTargetInRange(ActionWatching.GetActionRange(sheetSpell.RowId), target)) return 0;
 
             int count = sheetSpell.CastType switch
             {
@@ -506,180 +466,187 @@ namespace WrathCombo.CustomComboNS.Functions
             return count;
         }
 
-        #region Position
-        public static Vector3 DirectionToVec3(float direction)
-        {
-            return new(MathF.Sin(direction), 0, MathF.Cos(direction));
-        }
-
-        #region Point in Circle
-        public static bool PointInCircle(Vector3 offsetFromOrigin, float radius)
-        {
-            return offsetFromOrigin.LengthSquared() <= radius * radius;
-        }
-        #endregion
-        #region Point in Cone
-        public static bool PointInCone(Vector3 offsetFromOrigin, Vector3 direction, float halfAngle)
-        {
-            return Vector3.Dot(Vector3.Normalize(offsetFromOrigin), direction) > MathF.Cos(halfAngle);
-        }
-        public static bool PointInCone(Vector3 offsetFromOrigin, float direction, float halfAngle)
-        {
-            return PointInCone(offsetFromOrigin, DirectionToVec3(direction), halfAngle);
-        }
-        #endregion
-        #region Point in Rect
-
-        public static bool HitboxInRect(IGameObject o, float direction, float lenFront, float halfWidth)
-        {
-            Vector2 A = new Vector2(LocalPlayer.Position.X, LocalPlayer.Position.Z);
-            Vector2 d = new Vector2(MathF.Sin(direction), MathF.Cos(direction));
-            Vector2 n = new Vector2(d.Y, -d.X);
-            Vector2 P = new Vector2(o.Position.X, o.Position.Z);
-            float R = o.HitboxRadius;
-
-            Vector2 Q = A + d * (lenFront / 2);
-            Vector2 P2 = P - Q;
-            Vector2 Ptrans = new Vector2(Vector2.Dot(P2, n), Vector2.Dot(P2, d));
-            Vector2 Pabs = new Vector2(Math.Abs(Ptrans.X), Math.Abs(Ptrans.Y));
-            Vector2 Pcorner = new Vector2(Math.Abs(Ptrans.X) - halfWidth, Math.Abs(Ptrans.Y) - (lenFront / 2));
-#if DEBUG
-            if (Svc.GameGui.WorldToScreen(o.Position, out var screenCoords))
-            {
-                var objectText = $"A = {A}\n" +
-                    $"d = {d}\n" +
-                    $"n = {n}\n" +
-                    $"P = {P}\n" +
-                    $"Q = {Q}\n" +
-                    $"P2 = {P2}\n" +
-                    $"Ptrans = {Ptrans}\n" +
-                    $"Pcorner{Pcorner}\n" +
-                    $"R = {R}, R * R = {R * R}\n" +
-                    $"PcornerSquared = {Pcorner.LengthSquared()}\n" +
-                    $"PcornerX > R = {Pcorner.X > R}, PcornerY > R = {Pcorner.Y > R}\n" +
-                    $"PcornerX <= 0 = {Pcorner.X <= 0}, PcornerY <= 0 = {Pcorner.Y <= 0}";
-
-                var screenPos = ImGui.GetMainViewport().Pos;
-
-                ImGui.SetNextWindowPos(new Vector2(screenCoords.X, screenCoords.Y));
-
-                ImGui.SetNextWindowBgAlpha(1f);
-                if (ImGui.Begin(
-                        $"Actor###ActorWindow{o.GameObjectId}",
-                        ImGuiWindowFlags.NoDecoration |
-                        ImGuiWindowFlags.AlwaysAutoResize |
-                        ImGuiWindowFlags.NoSavedSettings |
-                        ImGuiWindowFlags.NoMove |
-                        ImGuiWindowFlags.NoMouseInputs |
-                        ImGuiWindowFlags.NoDocking |
-                        ImGuiWindowFlags.NoFocusOnAppearing |
-                        ImGuiWindowFlags.NoNav))
-                    ImGui.Text(objectText);
-                ImGui.End();
-            }
-#endif
-
-            if (Pcorner.X > R || Pcorner.Y > R)
-                return false;
-
-            if (Pcorner.X <= 0 || Pcorner.Y <= 0)
-                return true;
-
-            return Pcorner.LengthSquared() <= R * R;
-        }
-
-        #endregion
-
-        #endregion
-
-        // Circle Aoe
+        /// <summary> Gets how many enemies are within range for a point-blank circle AoE. </summary>
         public static int CanCircleAoe(float effectRange, bool checkIgnoredList = false)
         {
+            if (LocalPlayer is null) return 0;
+
+            var playerPos = LocalPlayer.Position;
+            var configIgnored = checkIgnoredList ? Service.Configuration.IgnoredNPCs : null;
+
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
-                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 PointInCircle(o.Position - LocalPlayer.Position, effectRange + o.HitboxRadius));
+                                                                 (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
+                                                                 AreaMath.PointInCircle(o.Position - playerPos, effectRange + o.HitboxRadius));
         }
 
-        // Ranged Circle Aoe 
+        /// <summary> Gets how many enemies are within range for a targeted circle AoE. </summary>
         public static int CanRangedCircleAoe(float effectRange, IGameObject? target, bool checkIgnoredList = false)
         {
-            if (target == null) return 0;
+            if (target is null) return 0;
+
+            var targetPos = target.Position;
+            var configIgnored = checkIgnoredList ? Service.Configuration.IgnoredNPCs : null;
+
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
-                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 PointInCircle(o.Position - target.Position, effectRange + o.HitboxRadius));
+                                                                 (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
+                                                                 AreaMath.PointInCircle(o.Position - targetPos, effectRange + o.HitboxRadius));
         }
 
-        // Cone Aoe 
+        /// <summary> Gets how many enemies are within range for a cone AoE. </summary>
         public static int CanConeAoe(IGameObject? target, float range, float effectRange, bool checkIgnoredList = false)
         {
-            if (target is null) return 0;
-            float dir = PositionalMath.AngleXZ(LocalPlayer.Position, target.Position);
+            if (LocalPlayer is null || target is null) return 0;
+
+            var playerPos = LocalPlayer.Position;
+            var dir = PositionalMath.AngleXZ(playerPos, target.Position);
+            var configIgnored = checkIgnoredList ? Service.Configuration.IgnoredNPCs : null;
+
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
-                                                                 GetTargetDistance(o) <= range &&
-                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 PointInCone(o.Position - LocalPlayer.Position, dir, 45f));
+                                                                 IsTargetInRange(range, o) &&
+                                                                 (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
+                                                                 AreaMath.PointInCone(o.Position - playerPos, dir, effectRange));
         }
 
-        // Line Aoe 
+        /// <summary> Gets how many enemies are within range for a line AoE. </summary>
         public static int CanLineAoe(IGameObject? target, float range, float effectRange, bool checkIgnoredList = false)
         {
-            if (target is null) return 0;
+            if (LocalPlayer is null || target is null) return 0;
+
+            float halfWidth = effectRange / 2f;
             float dir = PositionalMath.AngleXZ(LocalPlayer.Position, target.Position);
+            var configIgnored = checkIgnoredList ? Service.Configuration.IgnoredNPCs : null;
+
             return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
                                                                  o.IsHostile() &&
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
-                                                                 GetTargetDistance(o) <= range &&
-                                                                 (checkIgnoredList ? !Service.Configuration.IgnoredNPCs.Any(x => x.Key == o.DataId) : true) &&
-                                                                 HitboxInRect(o, dir, range, effectRange / 2));
+                                                                 IsTargetInRange(range, o) &&
+                                                                 (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
+                                                                 AreaMath.HitboxInRect(o, dir, range, halfWidth));
         }
 
-        internal static unsafe bool IsInLineOfSight(IGameObject? target)
+        /// <summary> Checks if an object is in line of sight of the player. </summary>
+        public static unsafe bool IsInLineOfSight(IGameObject? target)
         {
-            if (target is null) return false;
-            var sourcePos = FFXIVClientStructs.FFXIV.Common.Math.Vector3.Zero;
-            
-            if (!Player.Available) return false;
+            if (LocalPlayer is null || target is null) return false;
 
-            sourcePos = Player.Object.Struct()->Position;
-            sourcePos.Y += 2;
+            Vector3 sourcePos = LocalPlayer.Position with { Y = LocalPlayer.Position.Y + 2f };
+            Vector3 targetPos = target.Position with { Y = target.Position.Y + 2f };
 
-            var targetPos = target.Struct()->Position;
-            targetPos.Y += 2;
-
-            var direction = targetPos - sourcePos;
-            float distance = direction.Magnitude;
-
-            direction = direction.Normalized;
-
-            Vector3 originVect = new Vector3(sourcePos.X, sourcePos.Y, sourcePos.Z);
-            Vector3 directionVect = new Vector3(direction.X, direction.Y, direction.Z);
+            Vector3 offset = targetPos - sourcePos;
+            Vector3 direction = Vector3.Normalize(offset);
+            float distance = offset.Length();
 
             RaycastHit hit;
-            int* flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-            bool isLoSBlocked = Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &originVect, &directionVect, distance, 1, flags);
+            var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
 
-            return isLoSBlocked == false;
+            return !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &sourcePos, &direction, distance, 1, flags);
         }
 
-        internal static unsafe bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
+        /// <summary> Performs positional calculations. Based on the excellent Resonant plugin. </summary>
+        internal static class PositionalMath
+        {
+            public const float DegreesToRadians = MathF.PI / 180f;
+            public const float RadiansToDegrees = 180f / MathF.PI;
 
-        private static bool IsBoss(IGameObject? target) =>
-            target != null && Svc.Data.GetExcelSheet<BNpcBase>().HasRow(target.DataId) && Svc.Data.GetExcelSheet<BNpcBase>().GetRow(target.DataId).Rank is 2 or 6;
+            internal static float Radians(float degrees) => degrees * DegreesToRadians;
 
-        internal static bool TargetIsBoss() => IsBoss(LocalPlayer.TargetObject);
+            internal static float Degrees(float radians) => radians * RadiansToDegrees;
 
-        internal static bool TargetIsHostile() => HasTarget() && CurrentTarget.IsHostile();
+            internal static float AngleXZ(Vector3 a, Vector3 b) => MathF.Atan2(b.X - a.X, b.Z - a.Z);
+        }
 
-        internal static IEnumerable<IBattleChara> NearbyBosses => Svc.Objects.Where(x => x.ObjectKind == ObjectKind.BattleNpc && IsBoss(x)).Cast<IBattleChara>();
+        /// <summary> Performs area calculations. </summary>
+        internal static class AreaMath
+        {
+            public static Vector3 DirectionToVector3(float direction)
+            {
+                return new(MathF.Sin(direction), 0, MathF.Cos(direction));
+            }
+
+            public static bool PointInCircle(Vector3 offsetFromOrigin, float radius)
+            {
+                return offsetFromOrigin.LengthSquared() <= radius * radius;
+            }
+
+            public static bool PointInCone(Vector3 offsetFromOrigin, Vector3 direction, float halfAngle)
+            {
+                return Vector3.Dot(Vector3.Normalize(offsetFromOrigin), direction) > MathF.Cos(halfAngle);
+            }
+            public static bool PointInCone(Vector3 offsetFromOrigin, float direction, float halfAngle)
+            {
+                return PointInCone(offsetFromOrigin, DirectionToVector3(direction), halfAngle);
+            }
+
+            public static bool HitboxInRect(IGameObject o, float direction, float lenFront, float halfWidth)
+            {
+                Vector2 A = new(LocalPlayer.Position.X, LocalPlayer.Position.Z);
+                Vector2 d = new(MathF.Sin(direction), MathF.Cos(direction));
+                Vector2 n = new(d.Y, -d.X);
+                Vector2 P = new(o.Position.X, o.Position.Z);
+                float R = o.HitboxRadius;
+
+                Vector2 Q = A + d * (lenFront / 2);
+                Vector2 P2 = P - Q;
+                Vector2 Ptrans = new(Vector2.Dot(P2, n), Vector2.Dot(P2, d));
+                Vector2 Pabs = new(Math.Abs(Ptrans.X), Math.Abs(Ptrans.Y));
+                Vector2 Pcorner = new(Math.Abs(Ptrans.X) - halfWidth, Math.Abs(Ptrans.Y) - (lenFront / 2));
+
+                #region Debug
+#if DEBUG
+                if (Svc.GameGui.WorldToScreen(o.Position, out var screenCoords))
+                {
+                    var objectText = $"A = {A}\n" +
+                        $"d = {d}\n" +
+                        $"n = {n}\n" +
+                        $"P = {P}\n" +
+                        $"Q = {Q}\n" +
+                        $"P2 = {P2}\n" +
+                        $"Ptrans = {Ptrans}\n" +
+                        $"Pcorner{Pcorner}\n" +
+                        $"R = {R}, R * R = {R * R}\n" +
+                        $"PcornerSquared = {Pcorner.LengthSquared()}\n" +
+                        $"PcornerX > R = {Pcorner.X > R}, PcornerY > R = {Pcorner.Y > R}\n" +
+                        $"PcornerX <= 0 = {Pcorner.X <= 0}, PcornerY <= 0 = {Pcorner.Y <= 0}";
+
+                    var screenPos = ImGui.GetMainViewport().Pos;
+
+                    ImGui.SetNextWindowPos(new Vector2(screenCoords.X, screenCoords.Y));
+
+                    ImGui.SetNextWindowBgAlpha(1f);
+                    if (ImGui.Begin(
+                            $"Actor###ActorWindow{o.GameObjectId}",
+                            ImGuiWindowFlags.NoDecoration |
+                            ImGuiWindowFlags.AlwaysAutoResize |
+                            ImGuiWindowFlags.NoSavedSettings |
+                            ImGuiWindowFlags.NoMove |
+                            ImGuiWindowFlags.NoMouseInputs |
+                            ImGuiWindowFlags.NoDocking |
+                            ImGuiWindowFlags.NoFocusOnAppearing |
+                            ImGuiWindowFlags.NoNav))
+                        ImGui.Text(objectText);
+                    ImGui.End();
+                }
+#endif
+                #endregion
+
+                if (Pcorner.X > R || Pcorner.Y > R)
+                    return false;
+
+                if (Pcorner.X <= 0 || Pcorner.Y <= 0)
+                    return true;
+
+                return Pcorner.LengthSquared() <= R * R;
+            }
+        }
     }
 }

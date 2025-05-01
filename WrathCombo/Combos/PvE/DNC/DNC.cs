@@ -129,7 +129,7 @@ internal partial class DNC : PhysicalRanged
 
             #region Pre-pull
 
-            if (!InCombat() && TargetIsHostile())
+            if (!InCombat() && HasBattleTarget())
             {
                 // ST Standard Step (Pre-pull)
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
@@ -468,7 +468,7 @@ internal partial class DNC : PhysicalRanged
                     // todo: do not disable for auto-rotation, provide targeting
                     return ClosedPosition;
 
-                if (TargetIsHostile())
+                if (HasBattleTarget())
                 {
                     // ST Standard Step (Pre-pull)
                     if (ActionReady(StandardStep) &&

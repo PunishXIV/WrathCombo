@@ -96,7 +96,7 @@ internal partial class SAM : Melee
 
             //Meikyo to start before combat
             if (!HasStatusEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
-                !InCombat() && TargetIsHostile())
+                !InCombat() && HasBattleTarget())
                 return MeikyoShisui;
 
             if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, Config.SAM_VariantCure))
@@ -261,7 +261,7 @@ internal partial class SAM : Melee
                 IsEnabled(CustomComboPreset.SAM_ST_CDs_MeikyoShisui) &&
                 ActionReady(MeikyoShisui) &&
                 !HasStatusEffect(Buffs.MeikyoShisui) &&
-                !InCombat() && TargetIsHostile())
+                !InCombat() && HasBattleTarget())
                 return MeikyoShisui;
 
             if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, Config.SAM_VariantCure))
