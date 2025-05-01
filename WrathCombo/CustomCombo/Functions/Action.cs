@@ -70,12 +70,12 @@ namespace WrathCombo.CustomComboNS.Functions
                         //But attacks from player must include personal space (0.5y).
                         if (radius > 0)
                         {   //Do not nest with above
-                            if (HasTarget() || optionalTarget != null) return GetTargetDistance(optionalTarget) <= radius; else return false;
+                            if (HasTarget() || optionalTarget != null) return IsTargetInRange(radius, optionalTarget); else return false;
                         }
                         else return true; //Self use targets (Second Wind) have no radius
                     }
                 default:
-                    return GetTargetDistance(optionalTarget) <= range;
+                    return IsTargetInRange(range, optionalTarget);
             }
         }
 

@@ -70,6 +70,25 @@ namespace WrathCombo.CustomComboNS.Functions
             return Math.Max(0f, Vector2.Distance(targetPosition, selfPosition) - target.HitboxRadius - source.HitboxRadius);
         }
 
+        /// <summary> Gets the squared distance from the target as a float value. </summary>
+        public static float GetTargetDistanceSquared(IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
+        {
+            if (LocalPlayer is null) return 0f;
+
+            IGameObject? target = optionalTarget ?? CurrentTarget;
+            if (target is null) return 0f;
+
+            IGameObject? source = sourceChara ?? LocalPlayer;
+            if (target.GameObjectId == source.GameObjectId) return 0f;
+
+            Vector2 offset = new(target.Position.X - source.Position.X, target.Position.Z - source.Position.Z);
+
+            float squaredDistance = Vector2.Dot(offset, offset);
+            float totalHitbox = target.HitboxRadius + source.HitboxRadius;
+
+            return Math.Max(0f, squaredDistance - (totalHitbox * totalHitbox));
+        }
+
         /// <summary> Gets the height distance from the target as a float value. </summary>
         public static float GetTargetHeightDifference(IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
         {
