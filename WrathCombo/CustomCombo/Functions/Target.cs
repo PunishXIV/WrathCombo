@@ -281,7 +281,7 @@ namespace WrathCombo.CustomComboNS.Functions
             return !NPCPositionals[CurrentTarget.DataId];
         }
 
-        /// <summary> Sets the player's current target. </summary>
+        /// <summary> Sets the player's current target to the given object. </summary>
         /// <param name="targetObj"> Must be an object the player can normally click and target. </param>
         public static void SetTarget(IGameObject? targetObj) => Svc.Targets.Target = targetObj;
 
