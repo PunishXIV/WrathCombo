@@ -268,28 +268,7 @@ namespace WrathCombo.CustomComboNS.Functions
             return false;
         }
 
-        /// <summary> Sets the player's current target. </summary>
-        /// <param name="target"> Must be an object the player can normally click and target. </param>
-        public static void SetTarget(IGameObject? target) => Svc.Targets.Target = target;
-
-        /// <summary> Sets the player's current target to the given target. </summary>
-        public static void TargetObject(IGameObject? target)
-        {
-            if (IsInRange(target))
-                SetTarget(target);
-        }
-
-        /// <summary> Checks if the target is within appropriate range for targeting. </summary>
-        /// <param name="target"> The target object to check. </param>
-        /// <param name="distance"> The distance to check. </param>
-        public static bool IsInRange(IGameObject? target, float distance = 25f)
-        {
-            if (target is null) return false;
-
-            return IsTargetInRange(distance, target, LocalPlayer);
-        }
-
-        /// <summary> Checks if the target needs positionals. </summary>
+        /// <summary> Checks if the target is suitable for positional actions. </summary>
         public static bool TargetNeedsPositionals()
         {
             if (!HasBattleTarget()) return false;
@@ -302,16 +281,33 @@ namespace WrathCombo.CustomComboNS.Functions
             return !NPCPositionals[CurrentTarget.DataId];
         }
 
-        /// <summary> Sets the player's current target to the given party member. </summary>
-        /// <param name="target"> The party member to target. </param>
-        protected static unsafe void TargetObject(TargetType target)
+        /// <summary> Sets the player's current target. </summary>
+        /// <param name="targetObj"> Must be an object the player can normally click and target. </param>
+        public static void SetTarget(IGameObject? targetObj) => Svc.Targets.Target = targetObj;
+
+        /// <summary> Sets the player's current target to the given object if in range. </summary>
+        public static void SetTargetObject(IGameObject? targetObj) { if (IsInRange(targetObj)) SetTarget(targetObj); }
+
+        /// <summary> Sets the player's current target to the given target type. </summary>
+        /// <param name="type"> The desired target type. </param>
+        protected static unsafe void SetTargetType(TargetType type)
         {
-            GameObject* t = GetTarget(target);
+            GameObject* t = GetTarget(type);
             if (t == null) return;
             ulong o = PartyTargetingService.GetObjectID(t);
             IGameObject? p = Svc.Objects.Where(x => x.GameObjectId == o).First();
 
-            if (IsInRange(p)) SetTarget(p);
+            SetTargetObject(p);
+        }
+
+        /// <summary> Checks if the object is within appropriate range for targeting. </summary>
+        /// <param name="targetObj"> The object to check. </param>
+        /// <param name="distance"> The distance to check. </param>
+        public static bool IsInRange(IGameObject? targetObj, float distance = 25f)
+        {
+            if (LocalPlayer is null || targetObj is null) return false;
+
+            return IsTargetInRange(distance, targetObj, LocalPlayer);
         }
 
         /// <summary> Gets a specific type of target. </summary>
@@ -394,7 +390,7 @@ namespace WrathCombo.CustomComboNS.Functions
             if (LocalPlayer is null || CurrentTarget is not IBattleChara chara || chara.ObjectKind != ObjectKind.BattleNpc) return 0f;
 
             float angle = PositionalMath.AngleXZ(chara.Position, LocalPlayer.Position) - chara.Rotation;
-            float regionDegrees = (PositionalMath.Degrees(angle) + 360) % 360;
+            float regionDegrees = (PositionalMath.ToDegrees(angle) + 360) % 360;
 
             return regionDegrees switch
             {
@@ -416,29 +412,18 @@ namespace WrathCombo.CustomComboNS.Functions
         public static bool OnTargetsFront() => AngleToTarget() is 4f;
 
         /// <summary> Checks if an object is quest-related. </summary>
-        internal static unsafe bool IsQuestMob(IGameObject target) => target.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
+        internal static unsafe bool IsQuestMob(IGameObject obj) => obj.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
 
         /// <summary> Checks if the target is an instance boss. </summary>
         internal static bool TargetIsBoss() => IsBoss(LocalPlayer.TargetObject);
 
-        /// <summary> Checks if an object is an instance boss.
-        ///     Rank 0 - Trash.
-        ///     Rank 1 - Hunt Targets (B/A/S), FATE Bosses (Shadowbringers+).
-        ///     Rank 2 - Final Dungeon Boss, Trial Boss, Raid Boss, Alliance Raid Boss.
-        ///     Rank 3 - Trash.
-        ///     Rank 4 - Raid Trash (Alexander).
-        ///     Rank 5 - Nothing.
-        ///     Rank 6 - First 2 Dungeon Bosses.
-        ///     Rank 7 - PvP Targets.
-        ///     Rank 8 - A puppy.
-        ///     Rank 32, 33, 34, 35, 36, 37 - Old Diadem Targets.
-        /// </summary>
+        /// <summary> Checks if an object is an instance boss. </summary>
         private static bool IsBoss(IGameObject? obj) =>
             obj is not null &&
             Svc.Data.GetExcelSheet<BNpcBase>().HasRow(obj.DataId) &&
             Svc.Data.GetExcelSheet<BNpcBase>().GetRow(obj.DataId).Rank is 2 or 6;
 
-        /// <summary> Gets a list of instance bosses from the Object Table. </summary>
+        /// <summary> Gets a list of instance bosses from the object table. </summary>
         internal static IEnumerable<IBattleChara> NearbyBosses => Svc.Objects.Where(x => x.ObjectKind == ObjectKind.BattleNpc && IsBoss(x)).Cast<IBattleChara>();
 
         /// <summary> Checks if the object is out of range for a given action. </summary>
@@ -498,7 +483,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
                                                                  (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
-                                                                 AreaMath.PointInCircle(o.Position - playerPos, effectRange + o.HitboxRadius));
+                                                                 PositionalMath.PointInCircle(o.Position - playerPos, effectRange + o.HitboxRadius));
         }
 
         /// <summary> Gets how many enemies are within range for a targeted circle AoE. </summary>
@@ -514,7 +499,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  o.IsTargetable &&
                                                                  !TargetIsInvincible(o) &&
                                                                  (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
-                                                                 AreaMath.PointInCircle(o.Position - targetPos, effectRange + o.HitboxRadius));
+                                                                 PositionalMath.PointInCircle(o.Position - targetPos, effectRange + o.HitboxRadius));
         }
 
         /// <summary> Gets how many enemies are within range for a cone AoE. </summary>
@@ -532,7 +517,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  !TargetIsInvincible(o) &&
                                                                  IsTargetInRange(range, o) &&
                                                                  (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
-                                                                 AreaMath.PointInCone(o.Position - playerPos, dir, effectRange));
+                                                                 PositionalMath.PointInCone(o.Position - playerPos, dir, effectRange));
         }
 
         /// <summary> Gets how many enemies are within range for a line AoE. </summary>
@@ -550,7 +535,7 @@ namespace WrathCombo.CustomComboNS.Functions
                                                                  !TargetIsInvincible(o) &&
                                                                  IsTargetInRange(range, o) &&
                                                                  (!checkIgnoredList || !configIgnored!.Any(x => x.Key == o.DataId)) &&
-                                                                 AreaMath.HitboxInRect(o, dir, range, halfWidth));
+                                                                 PositionalMath.HitboxInRect(o, dir, range, halfWidth));
         }
 
         /// <summary> Checks if an object is in line of sight of the player. </summary>
@@ -572,25 +557,18 @@ namespace WrathCombo.CustomComboNS.Functions
         }
 
         /// <summary> Performs positional calculations. Based on the excellent Resonant plugin. </summary>
-        internal static class PositionalMath
+        public static class PositionalMath
         {
             public const float DegreesToRadians = MathF.PI / 180f;
             public const float RadiansToDegrees = 180f / MathF.PI;
 
-            internal static float Radians(float degrees) => degrees * DegreesToRadians;
+            public static float ToRadians(float degrees) => degrees * DegreesToRadians;
 
-            internal static float Degrees(float radians) => radians * RadiansToDegrees;
+            public static float ToDegrees(float radians) => radians * RadiansToDegrees;
 
-            internal static float AngleXZ(Vector3 a, Vector3 b) => MathF.Atan2(b.X - a.X, b.Z - a.Z);
-        }
+            public static float AngleXZ(Vector3 a, Vector3 b) => MathF.Atan2(b.X - a.X, b.Z - a.Z);
 
-        /// <summary> Performs area calculations. </summary>
-        internal static class AreaMath
-        {
-            public static Vector3 DirectionToVector3(float direction)
-            {
-                return new(MathF.Sin(direction), 0, MathF.Cos(direction));
-            }
+            public static Vector3 ToVector3(float direction) => new(MathF.Sin(direction), 0f, MathF.Cos(direction));
 
             public static bool PointInCircle(Vector3 offsetFromOrigin, float radius)
             {
@@ -601,9 +579,10 @@ namespace WrathCombo.CustomComboNS.Functions
             {
                 return Vector3.Dot(Vector3.Normalize(offsetFromOrigin), direction) > MathF.Cos(halfAngle);
             }
+
             public static bool PointInCone(Vector3 offsetFromOrigin, float direction, float halfAngle)
             {
-                return PointInCone(offsetFromOrigin, DirectionToVector3(direction), halfAngle);
+                return PointInCone(offsetFromOrigin, ToVector3(direction), halfAngle);
             }
 
             public static bool HitboxInRect(IGameObject o, float direction, float lenFront, float halfWidth)
