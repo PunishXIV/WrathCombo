@@ -79,7 +79,7 @@ namespace WrathCombo.Combos.PvP
 
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
-                        if (IsEnabled(CustomComboPreset.MNKPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                        if (IsEnabled(CustomComboPreset.MNKPvP_Smite) && PvPMelee.CanSmite() && IsTargetInRange(10f) && HasTarget() &&
                             GetTargetHPPercent() <= Config.MNKPvP_SmiteThreshold)
                             return PvPMelee.Smite;
 

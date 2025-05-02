@@ -133,7 +133,6 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is Jolt3)
                 {
                     #region Variables
-                    float targetDistance = GetTargetDistance();
                     float targetCurrentPercentHp = GetTargetHPPercent();
                     float playerCurrentPercentHp = PlayerHealthPercentageHp();
                     uint chargesCorps = HasCharges(CorpsACorps) ? GetCooldown(CorpsACorps).RemainingCharges : 0;
@@ -142,7 +141,7 @@ namespace WrathCombo.Combos.PvP
                     bool inCombat = InCombat();
                     bool hasTarget = HasTarget();
                     bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.DataId != 8016;
-                    bool inMeleeRange = targetDistance <= 5;
+                    bool inMeleeRange = IsTargetInRange(5f);
                     bool hasBind = HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true);
                     bool isCorpsAvailable = chargesCorps > 0 && !hasBind;
                     bool hasScorch = OriginalHook(EnchantedRiposte) is Scorch;
@@ -162,7 +161,7 @@ namespace WrathCombo.Combos.PvP
                     bool isMovementDependant = !Config.RDMPvP_Displacement_SubOption || (Config.RDMPvP_Displacement_SubOption && !isMoving);
                     bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
                     bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !HasStatusEffect(Buffs.Displacement) && hasScorch && inMeleeRange;
-                    bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > Config.RDMPvP_Corps_Charges && targetDistance <= Config.RDMPvP_Corps_Range;
+                    bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > Config.RDMPvP_Corps_Charges && IsTargetInRange(Config.RDMPvP_Corps_Range);
                     #endregion
 
                     // Forte

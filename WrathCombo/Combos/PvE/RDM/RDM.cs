@@ -369,7 +369,7 @@ internal partial class RDM : Caster
             actionID is Displacement
             && LevelChecked(Displacement)
             && HasTarget()
-            && GetTargetDistance() >= 5 ? Corpsacorps : actionID;
+            && !IsTargetInRange(5f) ? Corpsacorps : actionID;
     }
 
     internal class RDM_EmboldenManafication : CustomCombo

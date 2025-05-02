@@ -139,8 +139,6 @@ internal partial class RDM
         newActionID = 0; //reset just incase
         if (!CanSpellWeave()) return false;
 
-        float distance = GetTargetDistance();
-
         //Simple Settings
         bool fleche = true;
         bool contre = true;
@@ -150,7 +148,7 @@ internal partial class RDM
         int engagementPool = 0;
         bool corpacorps = false;
         int corpsacorpsPool = 0;
-        int corpacorpsRange = 25;
+        float corpacorpsRange = 25f;
 
         if (AdvMode)
         {
@@ -190,7 +188,7 @@ internal partial class RDM
                 || (GetRemainingCharges(Engagement) == 1 && GetCooldownRemainingTime(Engagement) < 3))
             && LevelChecked(Engagement)
             && !JustUsed(Engagement, 2f) //try not to double use, wait for next GCD
-            && distance <= 3)
+            && IsTargetInRange(3f))
             newActionID = Engagement;
 
         if (newActionID == 0
@@ -199,7 +197,7 @@ internal partial class RDM
                 || (GetRemainingCharges(Corpsacorps) == 1 && GetCooldownRemainingTime(Corpsacorps) < 3))
             && LevelChecked(Corpsacorps)
             && !JustUsed(Corpsacorps, 2f) //try not to double use, wait for next GCD
-            && distance <= corpacorpsRange)
+            && IsTargetInRange(corpacorpsRange))
             newActionID = Corpsacorps;
 
         if (newActionID == 0
@@ -259,7 +257,7 @@ internal partial class RDM
                 && !HasStatusEffect(Buffs.Dualcast)
                 && !HasStatusEffect(Role.Buffs.Swiftcast)
                 && !HasStatusEffect(Buffs.Acceleration)
-                && (GetTargetDistance() <= 3 || (GapCloser && HasCharges(Corpsacorps))))
+                && (IsTargetInRange(3f) || (GapCloser && HasCharges(Corpsacorps))))
             {
                 //Situation 1: Manafication first
                 if (DoubleCombo
@@ -375,7 +373,7 @@ internal partial class RDM
             bool MeleeEnforced = true)
         {
             //Normal Combo
-            if (GetTargetDistance() <= 3 || MeleeEnforced)
+            if (IsTargetInRange(3f) || MeleeEnforced)
             {
                 if ((ComboAction is Riposte or EnchantedRiposte)
                     && LevelChecked(Zwerchhau)
@@ -406,7 +404,7 @@ internal partial class RDM
             {
                 if (GapCloser
                     && ActionReady(Corpsacorps)
-                    && GetTargetDistance() > 3)
+                    && !IsTargetInRange(3f))
                 {
                     newActionID = Corpsacorps;
                     return true;
@@ -445,7 +443,7 @@ internal partial class RDM
                         return true;
                     }
                 }
-                if (GetTargetDistance() <= 3)
+                if (IsTargetInRange(3f))
                 {
                     newActionID = OriginalHook(Riposte);
                     return true;
@@ -456,7 +454,7 @@ internal partial class RDM
         }
 
         internal static bool TryAoEManaEmbolden(ref uint newActionID,                 //Simple Mode Values
-            int MoulinetRange = 6)//idk just making this up
+            float MoulinetRange = 6f)//idk just making this up
         {
             if (!CanSpellWeave()) return false;
 
@@ -464,7 +462,7 @@ internal partial class RDM
                 && !HasStatusEffect(Buffs.Dualcast)
                 && !HasStatusEffect(Role.Buffs.Swiftcast)
                 && !HasStatusEffect(Buffs.Acceleration)
-                && ((GetTargetDistance() <= MoulinetRange && RDMMana.ManaStacks == 0) || RDMMana.ManaStacks > 0))
+                && ((IsTargetInRange(MoulinetRange) && RDMMana.ManaStacks == 0) || RDMMana.ManaStacks > 0))
             {
                 if (ActionReady(Manafication))
                 {
@@ -529,7 +527,7 @@ internal partial class RDM
             int MoulinetRange = 6, bool GapCloser = false,
             bool MeleeEnforced = true)
         {
-            if (GetTargetDistance() <= MoulinetRange || MeleeEnforced)
+            if (IsTargetInRange(MoulinetRange) || MeleeEnforced)
             {
                 //Finish the combo
                 if (LevelChecked(Moulinet)
@@ -550,13 +548,13 @@ internal partial class RDM
             {
                 if (GapCloser
                     && ActionReady(Corpsacorps)
-                    && GetTargetDistance() > MoulinetRange)
+                    && !IsTargetInRange(MoulinetRange))
                 {
                     newActionID = Corpsacorps;
                     return true;
                 }
 
-                if ((GetTargetDistance() <= MoulinetRange && RDMMana.ManaStacks == 0) || RDMMana.ManaStacks >= 1)
+                if ((IsTargetInRange(MoulinetRange) && RDMMana.ManaStacks == 0) || RDMMana.ManaStacks >= 1)
                 {
                     newActionID = OriginalHook(Moulinet);
                     return true;

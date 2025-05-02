@@ -17,7 +17,7 @@ internal partial class VPR
 
     internal static float IreCD => GetCooldownRemainingTime(SerpentsIre);
 
-    internal static bool In5Y => HasBattleTarget() && GetTargetDistance() <= 5;
+    internal static bool In5Y => HasBattleTarget() && IsTargetInRange(5f);
 
     internal static bool CappedOnCoils =>
         TraitLevelChecked(Traits.EnhancedVipersRattle) && Gauge.RattlingCoilStacks > 2 ||

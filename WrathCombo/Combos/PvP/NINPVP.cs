@@ -157,7 +157,7 @@ namespace WrathCombo.Combos.PvP
                             return OriginalHook(SeitonTenchu);
 
                         //Smite
-                        if (IsEnabled(CustomComboPreset.NINPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                        if (IsEnabled(CustomComboPreset.NINPvP_Smite) && PvPMelee.CanSmite() && IsTargetInRange(10f) && HasTarget() &&
                             GetTargetHPPercent() <= (Config.NINPvP_SmiteThreshold))
                             return PvPMelee.Smite;
 

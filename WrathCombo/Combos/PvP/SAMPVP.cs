@@ -112,7 +112,6 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is Yukikaze or Gekko or Kasha)
                 {
                     #region Variables
-                    float targetDistance = GetTargetDistance();
                     float targetCurrentPercentHp = GetTargetHPPercent();
                     float playerCurrentPercentHp = PlayerHealthPercentageHp();
                     uint chargesSoten = HasCharges(Soten) ? GetCooldown(Soten).RemainingCharges : 0;
@@ -132,7 +131,7 @@ namespace WrathCombo.Combos.PvP
                     bool hasTendoKaeshi = OriginalHook(MeikyoShisui) is TendoKaeshiSetsugekka;
                     bool hasPrioWeaponskill = hasTendo || hasTendoKaeshi || hasKaeshiNamikiri;
                     bool isMeikyoPrimed = IsOnCooldown(OgiNamikiri) && !hasKaeshiNamikiri && !hasKaiten && !isMoving;
-                    bool isZantetsukenPrimed = IsLB1Ready && !hasBind && hasTarget && targetHasKuzushi && targetDistance <= 20;
+                    bool isZantetsukenPrimed = IsLB1Ready && !hasBind && hasTarget && targetHasKuzushi && IsTargetInRange(20f);
                     bool isSotenPrimed = chargesSoten > Config.SAMPvP_Soten_Charges && !hasKaiten && !hasBind && !hasPrioWeaponskill;
                     bool isTargetInvincible = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
                     #endregion
@@ -142,7 +141,7 @@ namespace WrathCombo.Combos.PvP
                         return OriginalHook(Zantetsuken);
 
                     //Smite
-                    if (IsEnabled(CustomComboPreset.SAMPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && GetTargetDistance() <= 10 && HasTarget() &&
+                    if (IsEnabled(CustomComboPreset.SAMPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && IsTargetInRange(10f) && HasTarget() &&
                         GetTargetHPPercent() <= Config.SAMPvP_SmiteThreshold)
                         return PvPMelee.Smite;
 
@@ -153,11 +152,11 @@ namespace WrathCombo.Combos.PvP
                     if (isTargetPrimed)
                     {
                         // Zanshin
-                        if (hasZanshin && targetDistance <= 8)
+                        if (hasZanshin && IsTargetInRange(8f))
                             return OriginalHook(Chiten);
 
                         // Soten
-                        if (IsEnabled(CustomComboPreset.SAMPvP_Soten) && isSotenPrimed && targetDistance <= Config.SAMPvP_Soten_Range &&
+                        if (IsEnabled(CustomComboPreset.SAMPvP_Soten) && isSotenPrimed && IsTargetInRange(Config.SAMPvP_Soten_Range) &&
                             (!Config.SAMPvP_Soten_SubOption || (Config.SAMPvP_Soten_SubOption && isYukikazePrimed)))
                             return OriginalHook(Soten);
 

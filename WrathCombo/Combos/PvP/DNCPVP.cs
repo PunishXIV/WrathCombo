@@ -99,7 +99,6 @@ namespace WrathCombo.Combos.PvP
                     bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
                     var acclaimStacks = GetStatusEffectStacks(Buffs.Acclaim);
                     bool canWeave = CanWeave();
-                    var distance = GetTargetDistance();
                     var HP = PlayerHealthPercentageHp();
                     bool enemyGuarded = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
 
@@ -113,7 +112,7 @@ namespace WrathCombo.Combos.PvP
                     if (IsEnabled(CustomComboPreset.DNCPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= Config.DNCPvP_EagleThreshold))
                         return PvPPhysRanged.EagleEyeShot;
 
-                    if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && distance <= 5 && !enemyGuarded)
+                    if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && IsTargetInRange(5f) && !enemyGuarded)
                     {
                         if (HasStatusEffect(Buffs.Acclaim) && acclaimStacks < 4)
                             return WHM.Assize;
@@ -128,7 +127,7 @@ namespace WrathCombo.Combos.PvP
                             return OriginalHook(CuringWaltz);
 
                         // Fan Dance weave
-                        if (IsOffCooldown(FanDance) && distance < 13 && !enemyGuarded) // 2y below max to avoid waste
+                        if (IsOffCooldown(FanDance) && IsTargetInRange(13f) && !enemyGuarded) // 2y below max to avoid waste
                             return OriginalHook(FanDance);
 
                         if (IsEnabled(CustomComboPreset.DNCPvP_BurstMode_Dash) && !HasStatusEffect(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > Config.DNCPvP_EnAvantCharges)
@@ -136,7 +135,7 @@ namespace WrathCombo.Combos.PvP
                     }
 
                     // Starfall Dance
-                    if (!starfallDance && starfallDanceReady && distance < 20 && !enemyGuarded) // 5y below max to avoid waste
+                    if (!starfallDance && starfallDanceReady && IsTargetInRange(20f) && !enemyGuarded) // 5y below max to avoid waste
                         return OriginalHook(StarfallDance);
                 }
 

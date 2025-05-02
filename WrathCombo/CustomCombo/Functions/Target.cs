@@ -53,7 +53,7 @@ namespace WrathCombo.CustomComboNS.Functions
             return squaredDistance <= totalRadius * totalRadius;
         }
 
-        /// <summary> Gets the distance from the target as a float value. </summary>
+        /// <summary> Gets the euclidean distance from the target as a float value. </summary>
         public static float GetTargetDistance(IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
         {
             if (LocalPlayer is null) return 0f;

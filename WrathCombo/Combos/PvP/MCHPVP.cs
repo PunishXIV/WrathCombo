@@ -154,7 +154,7 @@ namespace WrathCombo.Combos.PvP
                             if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_Drill) && HasStatusEffect(Buffs.DrillPrimed))
                                 return OriginalHook(Drill);
 
-                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && GetTargetDistance() <= 12)
+                            if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && IsTargetInRange(12f))
                                 return OriginalHook(BioBlaster);
 
                             if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AirAnchor) && HasStatusEffect(Buffs.AirAnchorPrimed))

@@ -162,7 +162,6 @@ namespace WrathCombo.Combos.PvP
                 if (actionIsFire || (actionIsIce && Config.BLMPVP_BurstButtonOption == 1))
                 {
                     #region Variables
-                    float targetDistance = GetTargetDistance();
                     float targetCurrentPercentHp = GetTargetHPPercent();
                     float playerCurrentPercentHp = PlayerHealthPercentageHp();
                     uint chargesXenoglossy = HasCharges(Xenoglossy) ? GetCooldown(Xenoglossy).RemainingCharges : 0;
@@ -203,7 +202,7 @@ namespace WrathCombo.Combos.PvP
                     {
                         // Elemental Weave (Offensive)
                         if (IsEnabled(CustomComboPreset.BLMPvP_ElementalWeave) && IsOffCooldown(ElementalWeave) && hasAstralFire &&
-                            targetDistance <= 25 && playerCurrentPercentHp >= Config.BLMPvP_ElementalWeave_PlayerHP)
+                            IsTargetInRange(25f) && playerCurrentPercentHp >= Config.BLMPvP_ElementalWeave_PlayerHP)
                             return OriginalHook(ElementalWeave);
 
                         if (!targetHasGuard)
@@ -224,7 +223,7 @@ namespace WrathCombo.Combos.PvP
                                 return Role.PhantomDart;
 
                             // Burst (Offensive)
-                            if (IsEnabled(CustomComboPreset.BLMPvP_Burst) && IsOffCooldown(Burst) && targetDistance <= 4)
+                            if (IsEnabled(CustomComboPreset.BLMPvP_Burst) && IsOffCooldown(Burst) && IsTargetInRange(4f))
                                 return OriginalHook(Burst);
 
                             // Flare Star / Frost Star

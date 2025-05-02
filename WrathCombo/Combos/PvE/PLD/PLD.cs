@@ -474,7 +474,7 @@ internal partial class PLD : Tank
                     // Intervene
                     if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_Intervene) && LevelChecked(Intervene) && TimeMoving.Ticks == 0 &&
                         cooldownFightOrFlight > 40 && GetRemainingCharges(Intervene) > Config.PLD_Intervene_HoldCharges && !WasLastAction(Intervene) &&
-                        (Config.PLD_Intervene_MeleeOnly == 1 && InMeleeRange() || GetTargetDistance() == 0 && Config.PLD_Intervene_MeleeOnly == 2))
+                        (Config.PLD_Intervene_MeleeOnly == 1 && InMeleeRange() || GetTargetDistanceSquared() <= float.Epsilon && Config.PLD_Intervene_MeleeOnly == 2))
                         return Intervene;
 
                     // Blade of Honor
@@ -658,7 +658,7 @@ internal partial class PLD : Tank
                     // Intervene
                     if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_Intervene) && LevelChecked(Intervene) && TimeMoving.Ticks == 0 &&
                         cooldownFightOrFlight > 40 && GetRemainingCharges(Intervene) > Config.PLD_AoE_Intervene_HoldCharges && !WasLastAction(Intervene) &&
-                        (Config.PLD_AoE_Intervene_MeleeOnly == 1 && InMeleeRange() || GetTargetDistance() == 0 && Config.PLD_AoE_Intervene_MeleeOnly == 2))
+                        (Config.PLD_AoE_Intervene_MeleeOnly == 1 && InMeleeRange() || GetTargetDistanceSquared() <= float.Epsilon && Config.PLD_AoE_Intervene_MeleeOnly == 2))
                         return Intervene;
 
                     // Blade of Honor

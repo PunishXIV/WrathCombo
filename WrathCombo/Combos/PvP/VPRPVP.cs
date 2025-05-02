@@ -128,14 +128,13 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is SteelFangs or HuntersSting or BarbarousSlice or PiercingFangs or SwiftskinsSting or RavenousBite)
                 {
                     #region Variables
-                    float targetDistance = GetTargetDistance();
                     float targetCurrentPercentHp = GetTargetHPPercent();
                     float playerCurrentPercentHp = PlayerHealthPercentageHp();
                     uint chargesSlither = HasCharges(Slither) ? GetCooldown(Slither).RemainingCharges : 0;
                     uint chargesUncoiledFury = HasCharges(UncoiledFury) ? GetCooldown(UncoiledFury).RemainingCharges : 0;
                     bool[] optionsRattlingCoil = Config.VPRPvP_RattlingCoil_SubOptions;
                     bool hasTarget = HasTarget();
-                    bool inMeleeRange = targetDistance <= 5;
+                    bool inMeleeRange = IsTargetInRange(5f);
                     bool hasSlither = HasStatusEffect(Buffs.Slither);
                     bool hasBind = HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true);
                     bool targetHasImmunity = PvPCommon.TargetImmuneToDamage();
@@ -155,8 +154,9 @@ namespace WrathCombo.Combos.PvP
                     bool isUncoiledFuryDependant = !isUncoiledFuryEnabled || !(isUncoiledFuryEnabled && isUncoiledFuryPrimed);
                     bool isSlitherPrimed = hasTarget && !inMeleeRange && isUncoiledFuryDependant && !hasSlither && !hasBind;
                     #endregion
+
                     // Smite
-                    if (IsEnabled(CustomComboPreset.VPRPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && GetTargetDistance() <= 10 && HasTarget() &&
+                    if (IsEnabled(CustomComboPreset.VPRPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && IsTargetInRange(10f) && HasTarget() &&
                         GetTargetHPPercent() <= Config.VPRPvP_SmiteThreshold)
                         return PvPMelee.Smite;
 
@@ -172,7 +172,7 @@ namespace WrathCombo.Combos.PvP
 
                     // Slither
                     if (IsEnabled(CustomComboPreset.VPRPvP_Slither) && chargesSlither > Config.VPRPvP_Slither_Charges &&
-                        isSlitherPrimed && targetDistance <= Config.VPRPvP_Slither_Range)
+                        isSlitherPrimed && IsTargetInRange(Config.VPRPvP_Slither_Range))
                         return OriginalHook(Slither);
 
                     // Serpent's Tail

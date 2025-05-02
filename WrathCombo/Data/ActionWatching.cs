@@ -65,7 +65,7 @@ namespace WrathCombo.Data
             try
             {
                 var rawEffects = (ulong*)effects;
-                List<(ulong id, ActionEffects effects)> targets = new();
+                List<(ulong id, ActionEffects effects)> targets = [];
                 for (int i = 0; i < header->NumTargets; ++i)
                 {
                     var targetEffects = new ActionEffects();
@@ -247,16 +247,16 @@ namespace WrathCombo.Data
         /// <returns>Time in milliseconds if found, else -1.</returns>
         public static float TimeSinceActionUsed(uint actionId)
         {
-            if (ActionTimestamps.ContainsKey(actionId))
-                return Environment.TickCount64 - ActionTimestamps[actionId];
+            if (ActionTimestamps.TryGetValue(actionId, out long value))
+                return Environment.TickCount64 - value;
 
             return -1f;
         }
 
         public static float TimeSinceLastSuccessfulCast(uint actionId)
         {
-            if (LastSuccessfulUseTime.ContainsKey(actionId))
-                return Environment.TickCount64 - LastSuccessfulUseTime[actionId];
+            if (LastSuccessfulUseTime.TryGetValue(actionId, out long value))
+                return Environment.TickCount64 - value;
 
             return -1f;
         }
@@ -424,7 +424,7 @@ namespace WrathCombo.Data
             if (statusCache.TryGetValue(status, out List<uint>? list))
                 return list;
 
-            return statusCache.TryAdd(status, StatusSheet.Where(x => x.Value.Name.ToString().Equals(status, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Key).ToList())
+            return statusCache.TryAdd(status, [.. StatusSheet.Where(x => x.Value.Name.ToString().Equals(status, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Key)])
                 ? statusCache[status]
                 : null;
 

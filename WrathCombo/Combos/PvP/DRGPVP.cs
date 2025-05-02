@@ -94,7 +94,7 @@ namespace WrathCombo.Combos.PvP
                 {
                     if (!HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true))
                     {
-                        if (IsEnabled(CustomComboPreset.DRGPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                        if (IsEnabled(CustomComboPreset.DRGPvP_Smite) && PvPMelee.CanSmite() && IsTargetInRange(10f) && HasTarget() &&
                             GetTargetHPPercent() <= Config.DRGPvP_SmiteThreshold)
                             return PvPMelee.Smite;
 
@@ -110,7 +110,7 @@ namespace WrathCombo.Combos.PvP
                                     return Nastrond;
                             }
 
-                            if (IsEnabled(CustomComboPreset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && GetTargetDistance() <= 10) // HorridRoar Roar on cd
+                            if (IsEnabled(CustomComboPreset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && IsTargetInRange(10f)) // HorridRoar Roar on cd
                                 return HorridRoar;
                         }
                        
@@ -122,7 +122,7 @@ namespace WrathCombo.Combos.PvP
                                 return Geirskogul;
                         }                       
                                                    
-                        if (IsEnabled(CustomComboPreset.DRGPvP_WyrmwindThrust) && HasStatusEffect(Buffs.FirstmindsFocus) && GetTargetDistance() >= Config.DRGPvP_Distance_Threshold)
+                        if (IsEnabled(CustomComboPreset.DRGPvP_WyrmwindThrust) && HasStatusEffect(Buffs.FirstmindsFocus) && !IsTargetInRange(Config.DRGPvP_Distance_Threshold))
                             return WyrmwindThrust;
 
                         if (IsEnabled(CustomComboPreset.DRGPvP_Geirskogul) && HasStatusEffect(Buffs.StarCrossReady))
