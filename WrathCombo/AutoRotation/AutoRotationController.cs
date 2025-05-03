@@ -200,7 +200,7 @@ namespace WrathCombo.AutoRotation
                 if (!query.Any())
                     return;
 
-                if (query.Min(x => GetTargetDistanceSquared(x, Svc.Targets.FocusTarget, 30f)) <= 900f) // Squared Distance: 30² = 900
+                if (query.Min(x => GetTargetDistanceSquared(x, Svc.Targets.FocusTarget, 30f)) <= PositionalMath.ToSquared(30f)) // Use 'PositionalMath.ToSquared' for comparisons
                 {
                     var spell = ActionManager.Instance()->GetAdjustedActionId(regenSpell);
 

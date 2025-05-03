@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
@@ -90,11 +91,17 @@ namespace WrathCombo.CustomComboNS.Functions
             float squaredDistance = Vector2.Dot(offset, offset);
             float totalHitbox = target.HitboxRadius + source.HitboxRadius;
 
-            return optionalRange.HasValue
-                ? squaredDistance <= (optionalRange.Value + totalHitbox) * (optionalRange.Value + totalHitbox)
+            // Threshold Mode
+            if (optionalRange.HasValue)
+            {
+                float totalRadius = optionalRange.Value + totalHitbox;
+                return squaredDistance <= totalRadius * totalRadius
                     ? squaredDistance
-                    : float.MaxValue
-                : MathF.Max(0f, squaredDistance - (totalHitbox * totalHitbox));
+                    : float.MaxValue;
+            }
+
+            // Sorting Mode
+            return MathF.Max(0f, squaredDistance - (totalHitbox * totalHitbox));
         }
 
         /// <summary> Gets the height distance from the target as a float value. </summary>
@@ -569,6 +576,8 @@ namespace WrathCombo.CustomComboNS.Functions
         {
             public const float DegreesToRadians = MathF.PI / 180f;
             public const float RadiansToDegrees = 180f / MathF.PI;
+
+            public static float ToSquared(float value) => value * value;
 
             public static float ToRadians(float degrees) => degrees * DegreesToRadians;
 
