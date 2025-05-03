@@ -135,7 +135,7 @@ internal partial class All
         {
             switch (actionID)
             {
-                case BLU.AngelWhisper or RDM.Verraise:
+                case BLU.AngelWhisper_Spell72 or RDM.Verraise:
                 case SMN.Resurrection when LocalPlayer.ClassJob.RowId is SMN.JobID:
                 {
                     if (HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) || HasStatusEffect(RDM.Buffs.Dualcast))
