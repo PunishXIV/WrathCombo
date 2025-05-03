@@ -12,6 +12,8 @@ using System.Threading;
 using Newtonsoft.Json;
 using WrathCombo.Combos;
 using ECommons.DalamudServices;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 
 // ReSharper disable UnusedMethodReturnValue.Global
 // ReSharper disable UnusedMember.Global
@@ -341,11 +343,6 @@ public partial class Provider : IDisposable
     }
 
     /// <summary>
-    ///     The last time the current job was reported as not ready.
-    /// </summary>
-    private DateTime _lastJobReadyLog = DateTime.MinValue;
-
-    /// <summary>
     ///     The last time there was a full check for the current job's readiness.
     /// </summary>
     private DateTime _lastJobReadyCheck = DateTime.MinValue;
@@ -368,7 +365,8 @@ public partial class Provider : IDisposable
     public bool IsCurrentJobAutoRotationReady()
     {
         if (File.GetLastWriteTime(P.IPCSearch.ConfigFilePath) <= _lastJobReadyCheck &&
-            (DateTime.Now - _lastJobReadyCheck).TotalSeconds <= 45)
+            (Leasing.CombosUpdated ?? DateTime.MinValue) <= _lastJobReadyCheck &&
+            !EZ.Throttle("ipcJobReadyCheck", TS.FromSeconds(30)))
             return _lastJobReady;
 
         // Check if the current job has a Single and Multi-Target combo configured on
@@ -381,15 +379,12 @@ public partial class Provider : IDisposable
                jobAutoOn.All(x => x.Value is not null);
 
         // Log if not ready
-        if (!allGood && (DateTime.Now - _lastJobReadyLog).TotalSeconds > 15)
-        {
+        if (!allGood && EZ.Throttle("ipcJobReadyCheckLog", TS.FromSeconds(5)))
             Logging.Log(
                 $"Current job is not fully ready for Auto-Rotation.\n" +
                 $"jobOn: {JsonConvert.SerializeObject(jobOn)}\n" +
                 $"jobAutoOn: {JsonConvert.SerializeObject(jobAutoOn)}"
             );
-            _lastJobReadyLog = DateTime.Now;
-        }
 
         _lastJobReadyCheck = DateTime.Now;
         _lastJobReady = allGood;

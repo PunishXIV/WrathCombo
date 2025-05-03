@@ -38,6 +38,8 @@ internal partial class AST : Healer
             bool alternateMode = Config.AST_DPS_AltMode > 0; //(0 or 1 radio values)
             bool actionFound = !alternateMode && MaleficList.Contains(actionID) ||
                                alternateMode && CombustList.ContainsKey(actionID);
+            bool cardPooling = IsEnabled(CustomComboPreset.AST_DPS_CardPool);
+            bool lordPooling = IsEnabled(CustomComboPreset.AST_DPS_LordPool);
 
             if (!actionFound)
                 return actionID;
@@ -59,7 +61,10 @@ internal partial class AST : Healer
             if (InCombat())
             {
                 //Variant stuff
-                if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_Rampart))
+                if (Variant.CanRampart(CustomComboPreset.AST_Variant_Rampart))
+                    return Variant.Rampart;
+
+                if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart) && HasBattleTarget())
                     return Variant.SpiritDart;
 
                 if (IsEnabled(CustomComboPreset.AST_DPS_LightSpeed) &&
@@ -73,12 +78,25 @@ internal partial class AST : Healer
                     Role.CanLucidDream(Config.AST_LucidDreaming))
                     return Role.LucidDreaming;
 
-                //Play Card
+                //Play Card with pooling option
                 if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
                     ActionReady(Play1) &&
                     Gauge.DrawnCards[0] is not CardType.None &&
-                    CanSpellWeave())
+                    CanSpellWeave() &&
+                    (cardPooling && HasStatusEffect(Buffs.Divination, anyOwner: true) ||
+                    !cardPooling ||
+                    !LevelChecked(Divination)))
                     return OriginalHook(Play1);
+
+                //Minor Arcana / Lord of Crowns
+                if (ActionReady(OriginalHook(MinorArcana)) &&
+                    IsEnabled(CustomComboPreset.AST_DPS_LazyLord) &&
+                    Gauge.DrawnCrownCard is CardType.Lord &&
+                    HasBattleTarget() && CanDelayedWeave() &&
+                    (lordPooling && HasStatusEffect(Buffs.Divination, anyOwner: true) ||
+                    !lordPooling ||
+                    !LevelChecked(Divination)))
+                    return OriginalHook(MinorArcana);
 
                 //Card Draw
                 if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
@@ -108,13 +126,6 @@ internal partial class AST : Healer
                     CanSpellWeave())
                     return Oracle;
 
-                //Minor Arcana / Lord of Crowns
-                if (ActionReady(OriginalHook(MinorArcana)) &&
-                    IsEnabled(CustomComboPreset.AST_DPS_LazyLord) &&
-                    Gauge.DrawnCrownCard is CardType.Lord &&
-                    HasBattleTarget() && CanDelayedWeave())
-                    return OriginalHook(MinorArcana);
-
                 if (HasBattleTarget())
                 {
                     //Combust
@@ -122,10 +133,7 @@ internal partial class AST : Healer
                         !GravityList.Contains(actionID) &&
                         LevelChecked(Combust) &&
                         CombustList.TryGetValue(OriginalHook(Combust), out ushort dotDebuffID))
-                    {
-                        if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart))
-                            return Variant.SpiritDart;
-
+                    {   
                         float refreshTimer = Config.AST_ST_DPS_CombustUptime_Threshold;
                         int hpThreshold = Config.AST_ST_DPS_CombustSubOption == 1 || !InBossEncounter() ? Config.AST_DPS_CombustOption : 0;
                         if (GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget) <= refreshTimer &&
@@ -147,6 +155,9 @@ internal partial class AST : Healer
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AOE_DPS;
         protected override uint Invoke(uint actionID)
         {
+            bool cardPooling = IsEnabled(CustomComboPreset.AST_AOE_CardPool);
+            bool lordPooling = IsEnabled(CustomComboPreset.AST_AOE_LordPool);
+
             if (!GravityList.Contains(actionID))
                 return actionID;
 
@@ -168,12 +179,24 @@ internal partial class AST : Healer
                 Role.CanLucidDream(Config.AST_LucidDreaming))
                 return Role.LucidDreaming;
 
-            //Play Card
+            //Play Card with Pooling
             if (IsEnabled(CustomComboPreset.AST_AOE_AutoPlay) &&
                 ActionReady(Play1) &&
                 Gauge.DrawnCards[0] is not CardType.None &&
-                CanSpellWeave())
+                CanSpellWeave() &&
+                (cardPooling && HasStatusEffect(Buffs.Divination, anyOwner: true) ||
+                !cardPooling ||
+                !LevelChecked(Divination)))
                 return OriginalHook(Play1);
+
+            //Minor Arcana / Lord of Crowns
+            if (ActionReady(OriginalHook(MinorArcana)) &&
+                IsEnabled(CustomComboPreset.AST_AOE_LazyLord) && Gauge.DrawnCrownCard is CardType.Lord &&
+                HasBattleTarget() && CanDelayedWeave() &&
+                (lordPooling && HasStatusEffect(Buffs.Divination, anyOwner: true) ||
+                !lordPooling ||
+                !LevelChecked(Divination)))
+                return OriginalHook(MinorArcana);
 
             //Card Draw
             if (IsEnabled(CustomComboPreset.AST_AOE_AutoDraw) &&
@@ -202,12 +225,6 @@ internal partial class AST : Healer
                 CanSpellWeave())
                 return Oracle;
 
-            //Minor Arcana / Lord of Crowns
-            if (ActionReady(OriginalHook(MinorArcana)) &&
-                IsEnabled(CustomComboPreset.AST_AOE_LazyLord) && Gauge.DrawnCrownCard is CardType.Lord &&
-                HasBattleTarget() &&
-                CanDelayedWeave())
-                return OriginalHook(MinorArcana);
             return actionID;
         }
     }

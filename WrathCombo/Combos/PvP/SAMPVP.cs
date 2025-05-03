@@ -143,7 +143,7 @@ namespace WrathCombo.Combos.PvP
 
                     //Smite
                     if (IsEnabled(CustomComboPreset.SAMPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && GetTargetDistance() <= 10 && HasTarget() &&
-                        GetTargetHPPercent() <= GetOptionValue(Config.SAMPvP_SmiteThreshold))
+                        GetTargetHPPercent() <= Config.SAMPvP_SmiteThreshold)
                         return PvPMelee.Smite;
 
                     // Chiten

@@ -157,7 +157,7 @@ namespace WrathCombo.Combos.PvP
                     #endregion
                     // Smite
                     if (IsEnabled(CustomComboPreset.VPRPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && GetTargetDistance() <= 10 && HasTarget() &&
-                        GetTargetHPPercent() <= GetOptionValue(Config.VPRPvP_SmiteThreshold))
+                        GetTargetHPPercent() <= Config.VPRPvP_SmiteThreshold)
                         return PvPMelee.Smite;
 
                     // Backlash

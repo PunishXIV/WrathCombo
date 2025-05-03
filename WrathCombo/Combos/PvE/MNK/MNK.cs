@@ -74,12 +74,10 @@ internal partial class MNK : Melee
             // Masterful Blitz
             if (LevelChecked(MasterfulBlitz) &&
                 !HasStatusEffect(Buffs.PerfectBalance) &&
-                InMasterfulRange() &&
-                !IsOriginal(MasterfulBlitz))
+                InMasterfulRange() && !IsOriginal(MasterfulBlitz))
                 return OriginalHook(MasterfulBlitz);
 
             if (HasStatusEffect(Buffs.FiresRumination) &&
-                LevelChecked(FiresReply) &&
                 !HasStatusEffect(Buffs.FormlessFist) &&
                 !HasStatusEffect(Buffs.PerfectBalance) &&
                 !JustUsed(RiddleOfFire, 4) &&
@@ -90,7 +88,6 @@ internal partial class MNK : Melee
                 return FiresReply;
 
             if (HasStatusEffect(Buffs.WindsRumination) &&
-                LevelChecked(WindsReply) &&
                 (!InMeleeRange() || !HasStatusEffect(Buffs.PerfectBalance)))
                 return WindsReply;
 
@@ -136,15 +133,13 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            if (IsEnabled(CustomComboPreset.MNK_STUseOpener))
-                if (Opener().FullOpener(ref actionID))
-                {
-                    if (Opener().OpenerStep >= 9 &&
-                        CanWeave() && Gauge.Chakra >= 5)
-                        return TheForbiddenChakra;
+            if (IsEnabled(CustomComboPreset.MNK_STUseOpener) &&
+                Opener().FullOpener(ref actionID))
+                return Opener().OpenerStep >= 9 &&
+                       CanWeave() && Gauge.Chakra >= 5
+                    ? TheForbiddenChakra
+                    : actionID;
 
-                    return actionID;
-                }
 
             if (IsEnabled(CustomComboPreset.MNK_STUseBuffs) &&
                 IsEnabled(CustomComboPreset.MNK_STUseROF) &&
@@ -211,7 +206,6 @@ internal partial class MNK : Melee
             {
                 if (IsEnabled(CustomComboPreset.MNK_STUseFiresReply) &&
                     HasStatusEffect(Buffs.FiresRumination) &&
-                    LevelChecked(FiresReply) &&
                     !HasStatusEffect(Buffs.FormlessFist) &&
                     !HasStatusEffect(Buffs.PerfectBalance) &&
                     !JustUsed(RiddleOfFire, 4) &&
@@ -223,7 +217,6 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(CustomComboPreset.MNK_STUseWindsReply) &&
                     HasStatusEffect(Buffs.WindsRumination) &&
-                    LevelChecked(WindsReply) &&
                     (!InMeleeRange() || !HasStatusEffect(Buffs.PerfectBalance)))
                     return WindsReply;
             }
@@ -306,14 +299,12 @@ internal partial class MNK : Melee
                 return OriginalHook(MasterfulBlitz);
 
             if (HasStatusEffect(Buffs.FiresRumination) &&
-                LevelChecked(FiresReply) &&
                 !HasStatusEffect(Buffs.PerfectBalance) &&
                 !HasStatusEffect(Buffs.FormlessFist) &&
                 !JustUsed(RiddleOfFire, 4))
                 return FiresReply;
 
             if (HasStatusEffect(Buffs.WindsRumination) &&
-                LevelChecked(WindsReply) &&
                 HasStatusEffect(Buffs.RiddleOfWind) &&
                 !HasStatusEffect(Buffs.PerfectBalance))
                 return WindsReply;
@@ -431,7 +422,6 @@ internal partial class MNK : Melee
             {
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseFiresReply) &&
                     HasStatusEffect(Buffs.FiresRumination) &&
-                    LevelChecked(FiresReply) &&
                     !HasStatusEffect(Buffs.FormlessFist) &&
                     !HasStatusEffect(Buffs.PerfectBalance) &&
                     !JustUsed(RiddleOfFire, 4))
@@ -439,7 +429,6 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseWindsReply) &&
                     HasStatusEffect(Buffs.WindsRumination) &&
-                    LevelChecked(WindsReply) &&
                     HasStatusEffect(Buffs.RiddleOfWind) &&
                     !HasStatusEffect(Buffs.PerfectBalance))
                     return WindsReply;

@@ -220,7 +220,7 @@ namespace WrathCombo.Combos.PvP
                                     return OriginalHook(Lethargy);
                             }
 
-                            if (IsEnabled(CustomComboPreset.BLMPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= GetOptionValue(Config.BLMPvP_PhantomDartThreshold))
+                            if (IsEnabled(CustomComboPreset.BLMPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= Config.BLMPvP_PhantomDartThreshold)
                                 return Role.PhantomDart;
 
                             // Burst (Offensive)

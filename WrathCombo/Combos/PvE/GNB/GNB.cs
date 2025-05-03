@@ -1,15 +1,40 @@
 #region Dependencies
+
 using System.Linq;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+
 #endregion
 
 namespace WrathCombo.Combos.PvE;
 
 internal partial class GNB : Tank
 {
+    internal class GNB_ST_BasicCombo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_ST_BasicCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not SolidBarrel)
+                return actionID;
+
+            if (ComboTimer > 0)
+            {
+                if (ComboAction is KeenEdge && LevelChecked(BrutalShell))
+                    return BrutalShell;
+
+                if (ComboAction is BrutalShell && LevelChecked(SolidBarrel))
+                    return SolidBarrel;
+            }
+
+            return KeenEdge;
+        }
+    }
+
     #region Simple Mode - Single Target
+
     internal class GNB_ST_Simple : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_ST_Simple;
@@ -20,6 +45,7 @@ internal partial class GNB : Tank
                 return actionID;
 
             #region Non-Standard
+
             //Variant
             uint variantAction = GetVariantAction();
             if (variantAction != 0)
@@ -38,6 +64,7 @@ internal partial class GNB : Tank
                 return Role.Interject;
 
             #region Mitigations
+
             if (Config.GNB_ST_MitsOptions != 1)
             {
                 if (InCombat() && !MitUsed)
@@ -61,11 +88,13 @@ internal partial class GNB : Tank
                         return Aurora;
                 }
             }
+
             #endregion
 
             #endregion
 
             #region Standard
+
             //Priority hack for increasing Continuation priority when inside late weave window
             if (CanDelayedWeave())
             {
@@ -90,7 +119,7 @@ internal partial class GNB : Tank
                 return OriginalHook(DangerZone);
             if (ShouldUseContinuation() &&
                 (CanWeave() || //normal
-                CanDelayedWeave(0.6f, 0f))) //send asap if about to lose due to GCD
+                 CanDelayedWeave(0.6f, 0f))) //send asap if about to lose due to GCD
                 return OriginalHook(Continuation);
             if (LevelChecked(DoubleDown) && JustUsed(NoMercy, 5f) && GunStep == 0 && ComboAction is BrutalShell && Ammo == 1)
                 return SolidBarrel;
@@ -103,8 +132,8 @@ internal partial class GNB : Tank
             if (ShouldUseReignOfBeasts())
                 return ReignOfBeasts;
             if (ShouldUseBurstStrike() ||
-                (LevelChecked(DoubleDown) && 
-                NmCD < 1 && Ammo == 3 && !InOdd))
+                LevelChecked(DoubleDown) &&
+                NmCD < 1 && Ammo == 3 && !InOdd)
                 return BurstStrike;
             if (GunStep is 1 or 2)
                 return OriginalHook(GnashingFang);
@@ -121,14 +150,17 @@ internal partial class GNB : Tank
                     return SolidBarrel;
                 }
             }
+
             #endregion
 
             return KeenEdge;
         }
     }
+
     #endregion
 
     #region Advanced Mode - Single Target
+
     internal class GNB_ST_Advanced : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_ST_Advanced;
@@ -139,6 +171,7 @@ internal partial class GNB : Tank
                 return actionID;
 
             #region Non-Standard
+
             //Variant
             uint variantAction = GetVariantAction();
             if (variantAction != 0)
@@ -157,6 +190,7 @@ internal partial class GNB : Tank
                 return Role.Interject;
 
             #region Mitigations
+
             if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation) && InCombat() && !MitUsed)
             {
                 if (IsEnabled(CustomComboPreset.GNB_ST_Superbolide) && ActionReady(Superbolide) && HPP < Config.GNB_ST_Superbolide_Health &&
@@ -188,20 +222,21 @@ internal partial class GNB : Tank
                     (Config.GNB_ST_Aurora_SubOption == 0 || TargetIsBoss() && Config.GNB_ST_Aurora_SubOption == 1))
                     return Aurora;
             }
+
             #endregion
 
             #endregion
 
             #region Standard
-            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener))
-            {
-                if (Opener().FullOpener(ref actionID))
-                    return actionID;
-            }
+
+            if (IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) && 
+                Opener().FullOpener(ref actionID))
+                return actionID;
+            
             //Priority hack for ensuring Continuation is used on late weave at the very latest
             if (CanDelayedWeave())
             {
-                if (IsEnabled(CustomComboPreset.GNB_ST_Continuation) && 
+                if (IsEnabled(CustomComboPreset.GNB_ST_Continuation) &&
                     ShouldUseContinuation())
                     return OriginalHook(Continuation);
             }
@@ -216,11 +251,11 @@ internal partial class GNB : Tank
                     return NoMercy;
                 if (IsEnabled(CustomComboPreset.GNB_ST_Continuation) && IsEnabled(CustomComboPreset.GNB_ST_NoMercy) &&
                     JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast))
-                    {
-                        if (NmCD is > 1.5f || //hold if No Mercy is imminent
-                            CanDelayedWeave(0.6f, 0f)) //send asap if about to lose due to GCD
-                            return Hypervelocity;
-                    }
+                {
+                    if (NmCD is > 1.5f || //hold if No Mercy is imminent
+                        CanDelayedWeave(0.6f, 0f)) //send asap if about to lose due to GCD
+                        return Hypervelocity;
+                }
             }
             if (IsEnabled(CustomComboPreset.GNB_ST_Scuffed) &&
                 LevelChecked(DoubleDown) && JustUsed(NoMercy, 5f) && GunStep == 0 && ComboAction is BrutalShell && Ammo == 1)
@@ -233,7 +268,7 @@ internal partial class GNB : Tank
                     return OriginalHook(DangerZone);
                 if (IsEnabled(CustomComboPreset.GNB_ST_Continuation) && ShouldUseContinuation() &&
                     (CanWeave() || //normal
-                    CanDelayedWeave(0.6f, 0f))) //send asap if about to lose due to GCD
+                     CanDelayedWeave(0.6f, 0f))) //send asap if about to lose due to GCD
                     return OriginalHook(Continuation);
                 if (IsEnabled(CustomComboPreset.GNB_ST_GnashingFang) && ShouldUseGnashingFang())
                     return GnashingFang;
@@ -246,8 +281,8 @@ internal partial class GNB : Tank
                 if (IsEnabled(CustomComboPreset.GNB_ST_BurstStrike))
                 {
                     if (ShouldUseBurstStrike() ||
-                        (IsEnabled(CustomComboPreset.GNB_ST_NoMercy) &&
-                        (LevelChecked(DoubleDown) && NmCD < 1 && Ammo == 3 && !InOdd)))
+                        IsEnabled(CustomComboPreset.GNB_ST_NoMercy) &&
+                        LevelChecked(DoubleDown) && NmCD < 1 && Ammo == 3 && !InOdd)
                         return BurstStrike;
                 }
             }
@@ -267,11 +302,13 @@ internal partial class GNB : Tank
                     return SolidBarrel;
                 }
             }
+
             #endregion
 
             return KeenEdge;
         }
     }
+
     #endregion
 
     #region Simple Mode - AoE
@@ -286,6 +323,7 @@ internal partial class GNB : Tank
                 return actionID;
 
             #region Non-Standard
+
             //Variant
             uint variantAction = GetVariantAction();
             if (variantAction != 0)
@@ -300,13 +338,16 @@ internal partial class GNB : Tank
             }
 
             #region Stuns
+
             if (Role.CanInterject())
                 return Role.Interject;
             if (Role.CanLowBlow())
                 return Role.LowBlow;
+
             #endregion
 
             #region Mitigations
+
             if (Config.GNB_AoE_MitsOptions != 1)
             {
                 if (InCombat() && !MitUsed)
@@ -319,7 +360,7 @@ internal partial class GNB : Tank
                             return OriginalHook(Nebula);
                         if (Role.CanRampart(80))
                             return Role.Rampart;
-                        if (Role.CanReprisal(90, checkTargetForDebuff:false))
+                        if (Role.CanReprisal(90, checkTargetForDebuff: false))
                             return Role.Reprisal;
                     }
                     if (ActionReady(Camouflage) && HPP < 70)
@@ -330,10 +371,13 @@ internal partial class GNB : Tank
                         return Aurora;
                 }
             }
+
             #endregion
+
             #endregion
 
             #region Standard
+
             if (InCombat())
             {
                 if (CanWeave())
@@ -355,7 +399,7 @@ internal partial class GNB : Tank
                     return DoubleDown;
                 if (CanReign || GunStep is 3 or 4)
                     return OriginalHook(ReignOfBeasts);
-                if (CanFC && ((HasNM && ((IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown)) && GunStep == 0)) || BfCD < 6))
+                if (CanFC && (HasNM && (IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown)) && GunStep == 0 || BfCD < 6))
                     return FatedCircle;
                 if (Ammo > 0 && !LevelChecked(FatedCircle) && LevelChecked(BurstStrike) && HasNM && GunStep == 0)
                     return BurstStrike;
@@ -375,6 +419,7 @@ internal partial class GNB : Tank
                         return DemonSlaughter;
                 }
             }
+
             #endregion
 
             return DemonSlice;
@@ -395,6 +440,7 @@ internal partial class GNB : Tank
                 return actionID;
 
             #region Non-Standard
+
             //Variant
             uint variantAction = GetVariantAction();
             if (variantAction != 0)
@@ -409,28 +455,31 @@ internal partial class GNB : Tank
             }
 
             #region Stuns
+
             if (IsEnabled(CustomComboPreset.GNB_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
             if (IsEnabled(CustomComboPreset.GNB_AoE_Stun) && Role.CanLowBlow())
                 return Role.LowBlow;
+
             #endregion
 
             #region Mitigations
+
             if (IsEnabled(CustomComboPreset.GNB_AoE_Mitigation) && InCombat() && !MitUsed)
             {
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Superbolide) && ActionReady(Superbolide) && HPP < Config.GNB_AoE_Superbolide_Health &&
-                    (Config.GNB_AoE_Superbolide_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Superbolide_SubOption == 1)))
+                    (Config.GNB_AoE_Superbolide_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Superbolide_SubOption == 1))
                     return Superbolide;
                 if (IsPlayerTargeted())
                 {
                     if (IsEnabled(CustomComboPreset.GNB_AoE_Nebula) && ActionReady(OriginalHook(Nebula)) && HPP < Config.GNB_AoE_Nebula_Health &&
-                        (Config.GNB_AoE_Nebula_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Nebula_SubOption == 1)))
+                        (Config.GNB_AoE_Nebula_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Nebula_SubOption == 1))
                         return OriginalHook(Nebula);
                     if (IsEnabled(CustomComboPreset.GNB_AoE_Rampart) && Role.CanRampart(Config.GNB_AoE_Rampart_Health) &&
-                        (Config.GNB_AoE_Rampart_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Rampart_SubOption == 1)))
+                        (Config.GNB_AoE_Rampart_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Rampart_SubOption == 1))
                         return Role.Rampart;
-                    if (IsEnabled(CustomComboPreset.GNB_AoE_Reprisal) && Role.CanReprisal(Config.GNB_AoE_Reprisal_Health, checkTargetForDebuff:false) &&
-                        (Config.GNB_AoE_Reprisal_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Reprisal_SubOption == 1)))
+                    if (IsEnabled(CustomComboPreset.GNB_AoE_Reprisal) && Role.CanReprisal(Config.GNB_AoE_Reprisal_Health, checkTargetForDebuff: false) &&
+                        (Config.GNB_AoE_Reprisal_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Reprisal_SubOption == 1))
                         return Role.Reprisal;
                     if (IsEnabled(CustomComboPreset.GNB_AoE_ArmsLength) &&
                         HPP < Config.GNB_AoE_ArmsLength_Health &&
@@ -439,21 +488,23 @@ internal partial class GNB : Tank
                 }
 
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Camouflage) && ActionReady(Camouflage) && HPP < Config.GNB_AoE_Camouflage_Health &&
-                    (Config.GNB_AoE_Camouflage_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Camouflage_SubOption == 1)))
+                    (Config.GNB_AoE_Camouflage_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Camouflage_SubOption == 1))
                     return Camouflage;
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Corundum) && ActionReady(OriginalHook(HeartOfStone)) && HPP < Config.GNB_AoE_Corundum_Health &&
-                    (Config.GNB_AoE_Corundum_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Corundum_SubOption == 1)))
+                    (Config.GNB_AoE_Corundum_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Corundum_SubOption == 1))
                     return OriginalHook(HeartOfStone);
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Aurora) && ActionReady(Aurora) && GetRemainingCharges(Aurora) > Config.GNB_AoE_Aurora_Charges &&
                     !(HasStatusEffect(Buffs.Aurora) || HasStatusEffect(Buffs.Aurora, CurrentTarget, true)) && HPP < Config.GNB_AoE_Aurora_Health &&
-                    (Config.GNB_AoE_Aurora_SubOption == 0 || (TargetIsBoss() && Config.GNB_AoE_Aurora_SubOption == 1)))
+                    (Config.GNB_AoE_Aurora_SubOption == 0 || TargetIsBoss() && Config.GNB_AoE_Aurora_SubOption == 1))
                     return Aurora;
             }
+
             #endregion
 
             #endregion
 
             #region Standard
+
             if (InCombat())
             {
                 if (CanWeave())
@@ -475,7 +526,7 @@ internal partial class GNB : Tank
                     return DoubleDown;
                 if (IsEnabled(CustomComboPreset.GNB_AoE_Reign) && (CanReign || GunStep is 3 or 4))
                     return OriginalHook(ReignOfBeasts);
-                if (IsEnabled(CustomComboPreset.GNB_AoE_FatedCircle) && CanFC &&  (HasNM && (!ActionReady(DoubleDown) || !IsEnabled(CustomComboPreset.GNB_AoE_DoubleDown)) && GunStep == 0 || IsEnabled(CustomComboPreset.GNB_AoE_Bloodfest) && BfCD < 6))
+                if (IsEnabled(CustomComboPreset.GNB_AoE_FatedCircle) && CanFC && (HasNM && (!ActionReady(DoubleDown) || !IsEnabled(CustomComboPreset.GNB_AoE_DoubleDown)) && GunStep == 0 || IsEnabled(CustomComboPreset.GNB_AoE_Bloodfest) && BfCD < 6))
                     return FatedCircle;
                 if (IsEnabled(CustomComboPreset.GNB_AoE_noFatedCircle) && Ammo > 0 && !LevelChecked(FatedCircle) && LevelChecked(BurstStrike) && HasNM && GunStep == 0)
                     return BurstStrike;
@@ -495,19 +546,22 @@ internal partial class GNB : Tank
                             return BurstStrike;
                     }
                     if (Ammo != MaxCartridges() ||
-                        (Ammo == MaxCartridges() &&
-                        (!LevelChecked(FatedCircle) && !IsEnabled(CustomComboPreset.GNB_AoE_BSOvercap)) || !IsEnabled(CustomComboPreset.GNB_AoE_Overcap)))
+                        Ammo == MaxCartridges() &&
+                        !LevelChecked(FatedCircle) && !IsEnabled(CustomComboPreset.GNB_AoE_BSOvercap) || !IsEnabled(CustomComboPreset.GNB_AoE_Overcap))
                         return DemonSlaughter;
                 }
             }
+
             #endregion
 
             return DemonSlice;
         }
     }
+
     #endregion
 
     #region Gnashing Fang Features
+
     internal class GNB_GF_Features : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_GF_Features;
@@ -542,7 +596,7 @@ internal partial class GNB : Tank
                 }
                 if (IsEnabled(CustomComboPreset.GNB_GF_Continuation) && ShouldUseContinuation() &&
                     (CanWeave() || //normal
-                    CanDelayedWeave(0.6f, 0f))) //send asap if about to lose due to GCD
+                     CanDelayedWeave(0.6f, 0f))) //send asap if about to lose due to GCD
                     return OriginalHook(Continuation);
                 if (IsEnabled(CustomComboPreset.GNB_GF_Scuffed) && LevelChecked(DoubleDown) && JustUsed(NoMercy, 5f) && GunStep == 0 && ComboAction is BrutalShell && Ammo == 1)
                     return SolidBarrel;
@@ -562,8 +616,8 @@ internal partial class GNB : Tank
                     IsEnabled(CustomComboPreset.GNB_GF_BurstStrike))
                 {
                     if (ShouldUseBurstStrike() ||
-                        (IsEnabled(CustomComboPreset.GNB_GF_NoMercy) && 
-                        (LevelChecked(DoubleDown) && NmCD < 1 && Ammo == 3 && !InOdd)))
+                        IsEnabled(CustomComboPreset.GNB_GF_NoMercy) &&
+                        LevelChecked(DoubleDown) && NmCD < 1 && Ammo == 3 && !InOdd)
                         return BurstStrike;
                 }
                 if (IsEnabled(CustomComboPreset.GNB_GF_Features) && GunStep is 1 or 2)
@@ -575,23 +629,25 @@ internal partial class GNB : Tank
             return actionID;
         }
     }
+
     #endregion
 
     #region Burst Strike Features
+
     internal class GNB_BS_Features : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_BS_Features;
         protected override uint Invoke(uint actionID)
         {
             //Our Button
-            if (actionID is not BurstStrike) 
+            if (actionID is not BurstStrike)
                 return actionID;
 
             if (IsEnabled(CustomComboPreset.GNB_BS_Continuation))
             {
                 if (IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && LevelChecked(Hypervelocity) && (JustUsed(BurstStrike, 1) || HasStatusEffect(Buffs.ReadyToBlast)))
                     return Hypervelocity;
-                if (!IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || (LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast))))
+                if (!IsEnabled(CustomComboPreset.GNB_BS_Hypervelocity) && CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast)))
                     return OriginalHook(Continuation);
             }
             if (IsEnabled(CustomComboPreset.GNB_BS_Bloodfest) && ShouldUseBloodfest())
@@ -609,9 +665,11 @@ internal partial class GNB : Tank
             return actionID;
         }
     }
+
     #endregion
 
     #region Fated Circle Features
+
     internal class GNB_FC_Features : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_FC_Features;
@@ -635,9 +693,11 @@ internal partial class GNB : Tank
             return actionID;
         }
     }
+
     #endregion
 
     #region No Mercy Features
+
     internal class GNB_NM_Features : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_NM_Features;
@@ -646,9 +706,9 @@ internal partial class GNB : Tank
             if (actionID is not NoMercy)
                 return actionID;
 
-            if ((Config.GNB_NM_Features_Weave == 0 && CanWeave()) || Config.GNB_NM_Features_Weave == 1)
+            if (Config.GNB_NM_Features_Weave == 0 && CanWeave() || Config.GNB_NM_Features_Weave == 1)
             {
-                if (IsEnabled(CustomComboPreset.GNB_NM_Continuation) && (ShouldUseContinuation() || (LevelChecked(FatedBrand) && HasStatusEffect(Buffs.ReadyToRaze))))
+                if (IsEnabled(CustomComboPreset.GNB_NM_Continuation) && (ShouldUseContinuation() || LevelChecked(FatedBrand) && HasStatusEffect(Buffs.ReadyToRaze)))
                     return OriginalHook(Continuation);
                 if (IsEnabled(CustomComboPreset.GNB_NM_Bloodfest) && ShouldUseBloodfest())
                     return Bloodfest;
@@ -661,6 +721,7 @@ internal partial class GNB : Tank
             return actionID;
         }
     }
+
     #endregion
 
     #region Aurora Protection

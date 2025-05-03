@@ -44,7 +44,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <param name="actionID"> Action ID to check. </param>
         /// <param name="variance"> Variance of how long to check the elapsed cooldown</param>
         /// <returns> True or false. </returns>
-        public static bool JustUsed(uint actionID, float variance = 3f) => GetMaxCharges(actionID) == 0 ? IsOnCooldown(actionID) && GetCooldownElapsed(actionID) <= variance : ActionWatching.ChargeTimestamps.ContainsKey(actionID) ? (Environment.TickCount64 - ActionWatching.ChargeTimestamps[actionID]) / 1000f <= variance : false;
+        public static bool JustUsed(uint actionID, float variance = 3f) => ActionWatching.ActionTimestamps.ContainsKey(actionID) ? (Environment.TickCount64 - ActionWatching.ActionTimestamps[actionID]) / 1000f <= variance : false;
 
 
         /// <summary>

@@ -32,16 +32,14 @@ internal partial class RPR
                 case CustomComboPreset.RPR_ST_Opener:
 
                     if (DrawHorizontalRadioButton(RPR_Opener_StartChoice,
-                        "Normal Opener",
-                        $"Starts opener with {Harpe.ActionName()}", 0))
+                        "Normal Opener", $"Starts opener with {Harpe.ActionName()}", 0))
                     {
                         if (!CustomComboFunctions.InCombat())
                             Opener().OpenerStep = 1;
                     }
 
                     DrawHorizontalRadioButton(RPR_Opener_StartChoice,
-                        "Early Opener",
-                        $"Starts opener with {ShadowOfDeath.ActionName()} instead, skipping {Harpe.ActionName()}", 1);
+                        "Early Opener", $"Starts opener with {ShadowOfDeath.ActionName()} instead, skipping {Harpe.ActionName()}", 1);
 
                     ImGui.Spacing();
 
@@ -100,27 +98,28 @@ internal partial class RPR
                     break;
 
                 case CustomComboPreset.RPR_Soulsow:
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{Harpe.ActionName()}",
-                        $"Adds {Soulsow.ActionName()} to {Harpe.ActionName()}.",
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions,
+                        $"{Harpe.ActionName()}", $"Adds {Soulsow.ActionName()} to {Harpe.ActionName()}.",
                         5, 0);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{Slice.ActionName()}",
-                        $"Adds {Soulsow.ActionName()} to {Slice.ActionName()}.",
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions,
+                        $"{Slice.ActionName()}", $"Adds {Soulsow.ActionName()} to {Slice.ActionName()}.",
                         5, 1);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{SpinningScythe.ActionName()}",
-                        $"Adds {Soulsow.ActionName()} to {SpinningScythe.ActionName()}", 5, 2);
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, 
+                        $"{SpinningScythe.ActionName()}", $"Adds {Soulsow.ActionName()} to {SpinningScythe.ActionName()}", 5, 2);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{ShadowOfDeath.ActionName()}",
-                        $"Adds {Soulsow.ActionName()} to {ShadowOfDeath.ActionName()}.", 5, 3);
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions,
+                        $"{ShadowOfDeath.ActionName()}", $"Adds {Soulsow.ActionName()} to {ShadowOfDeath.ActionName()}.", 5, 3);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, $"{BloodStalk.ActionName()}",
-                        $"Adds {Soulsow.ActionName()} to {BloodStalk.ActionName()}.", 5, 4);
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions,
+                        $"{BloodStalk.ActionName()}", $"Adds {Soulsow.ActionName()} to {BloodStalk.ActionName()}.", 5, 4);
 
                     break;
 
                 case CustomComboPreset.RPR_Variant_Cure:
-                    DrawSliderInt(1, 100, RPR_VariantCure, "HP% to be at or under", 200);
+                    DrawSliderInt(1, 100, RPR_VariantCure, 
+                        "HP% to be at or under", 200);
 
                     break;
             }

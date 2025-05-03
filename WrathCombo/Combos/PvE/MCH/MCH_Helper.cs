@@ -17,6 +17,12 @@ internal partial class MCH
 
     internal static int BSUsed => ActionWatching.CombatActions.Count(x => x == BarrelStabilizer);
 
+    internal static float GCD => GetCooldown(OriginalHook(SplitShot)).CooldownTotal;
+
+    internal static bool UseGauss => GetRemainingCharges(OriginalHook(GaussRound)) >= GetRemainingCharges(OriginalHook(Ricochet));
+
+    internal static bool UseRicochet => GetRemainingCharges(OriginalHook(Ricochet)) > GetRemainingCharges(OriginalHook(GaussRound));
+
     internal static bool ReassembledExcavatorST =>
         IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[0] && (HasStatusEffect(Buffs.Reassembled) || !HasStatusEffect(Buffs.Reassembled)) ||
         IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && !Config.MCH_ST_Reassembled[0] && !HasStatusEffect(Buffs.Reassembled) ||
@@ -41,8 +47,6 @@ internal partial class MCH
         !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= Config.MCH_ST_ReassemblePool ||
         !IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble);
 
-    internal static float GCD => GetCooldown(OriginalHook(SplitShot)).CooldownTotal;
-
     internal static bool DrillCD =>
         !LevelChecked(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= 9 ||
@@ -62,20 +66,9 @@ internal partial class MCH
         ActionWatching.GetAttackType(ActionWatching.LastAction) !=
         ActionWatching.ActionAttackType.Ability;
 
-    internal static WrathOpener Opener()
-    {
-        if (Lvl90EarlyTools.LevelChecked)
-            return Lvl90EarlyTools;
-
-        if (Lvl100Standard.LevelChecked)
-            return Lvl100Standard;
-
-        return WrathOpener.Dummy;
-    }
-
     internal static unsafe bool IsComboExpiring(float times)
     {
-        float gcd = GetCooldown(OriginalHook(SplitShot)).CooldownTotal * times;
+        float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
@@ -151,24 +144,19 @@ internal partial class MCH
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[1]) &&
-                LevelChecked(Chainsaw) && !LevelChecked(Excavator) &&
-                (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-                 ActionReady(Chainsaw)) && !Battery)
+                !LevelChecked(Excavator) && ActionReady(Chainsaw) && !Battery)
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[2]) &&
-                LevelChecked(AirAnchor) &&
-                (GetCooldownRemainingTime(AirAnchor) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-                 ActionReady(AirAnchor)) && !Battery)
+                ActionReady(AirAnchor) && !Battery)
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && Config.MCH_ST_Reassembled[3]) &&
                 LevelChecked(Drill) &&
                 (!LevelChecked(AirAnchor) && Config.MCH_ST_Reassembled[2] || !Config.MCH_ST_Reassembled[2]) &&
-                (GetCooldownRemainingTime(Drill) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-                 ActionReady(Drill)))
+                ActionReady(Drill))
                 return true;
         }
 
@@ -207,9 +195,7 @@ internal partial class MCH
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_Chainsaw) && ReassembledChainsawST) &&
-            LevelChecked(Chainsaw) && !Battery && !HasStatusEffect(Buffs.ExcavatorReady) &&
-            (GetCooldownRemainingTime(Chainsaw) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-             ActionReady(Chainsaw)))
+            !Battery && !HasStatusEffect(Buffs.ExcavatorReady) && ActionReady(Chainsaw))
         {
             actionID = Chainsaw;
 
@@ -218,9 +204,7 @@ internal partial class MCH
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) && ReassembledAnchorST) &&
-            LevelChecked(AirAnchor) && !Battery &&
-            (GetCooldownRemainingTime(AirAnchor) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-             ActionReady(AirAnchor)))
+            !Battery && ActionReady(AirAnchor))
         {
             actionID = AirAnchor;
 
@@ -229,10 +213,8 @@ internal partial class MCH
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_Drill) && ReassembledDrillST) &&
-            LevelChecked(Drill) &&
             !JustUsed(Drill) &&
-            (GetCooldownRemainingTime(Drill) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-             ActionReady(Drill)) && GetCooldownRemainingTime(Wildfire) is >= 20 or <= 10)
+            ActionReady(Drill) && GetCooldownRemainingTime(Wildfire) is >= 20 or <= 10)
         {
             actionID = Drill;
 
@@ -242,8 +224,7 @@ internal partial class MCH
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor)) &&
             LevelChecked(HotShot) && !LevelChecked(AirAnchor) && !Battery &&
-            (GetCooldownRemainingTime(HotShot) <= GetCooldownRemainingTime(OriginalHook(SplitShot)) + 0.25 ||
-             ActionReady(HotShot)))
+            ActionReady(HotShot))
         {
             actionID = HotShot;
 
@@ -254,6 +235,17 @@ internal partial class MCH
     }
 
     #region Openers
+
+    internal static WrathOpener Opener()
+    {
+        if (Lvl90EarlyTools.LevelChecked)
+            return Lvl90EarlyTools;
+
+        if (Lvl100Standard.LevelChecked)
+            return Lvl100Standard;
+
+        return WrathOpener.Dummy;
+    }
 
     internal class MCHOpenerMaxLevel : WrathOpener
     {

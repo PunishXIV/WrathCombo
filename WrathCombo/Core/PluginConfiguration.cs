@@ -51,6 +51,7 @@ namespace WrathCombo.Core
         public double MeleeOffset { get; set; } = 0;
 
         public bool BlockSpellOnMove = false;
+
         public Vector4 TargetHighlightColor { get; set; } = new() { W = 1, X = 0.5f, Y = 0.5f, Z = 0.5f };
 
         public bool OutputOpenerLogs;
@@ -64,6 +65,10 @@ namespace WrathCombo.Core
         public int Throttle = 50;
 
         public double InterruptDelay  = 0.0f;
+
+        public bool OpenToPvE = false;
+
+        public bool OpenToPvP = false;
 
         public bool OpenToCurrentJob = false;
 

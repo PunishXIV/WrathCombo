@@ -1,5 +1,4 @@
 using WrathCombo.CustomComboNS;
-using WrathCombo.Data;
 using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
@@ -11,7 +10,7 @@ internal partial class RDM : Caster
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Variant_Cure2;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is Vercure && Variant.CanCure(Preset,100)
+            actionID is Vercure && Variant.CanCure(Preset, 100)
             ? Variant.Cure
             : actionID;
     }
@@ -88,11 +87,10 @@ internal partial class RDM : Caster
                     return Variant.Rampart;
 
                 // Opener for RDM
-                if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) && ContentCheck.IsInConfiguredContent(Config.RDM_BalanceOpener_Content, ContentCheck.ListSet.BossOnly))
-                {
-                    if (Opener().FullOpener(ref actionID))
-                        return actionID;
-                }
+                if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) &&
+                    Opener().FullOpener(ref actionID))
+                    return actionID;
+
             }
 
             //RDM_OGCD

@@ -110,7 +110,7 @@ namespace WrathCombo.Combos.PvP
                                 return StarPrism;
                         }
 
-                        if (IsEnabled(CustomComboPreset.PCTPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= GetOptionValue(Config.PCTPvP_PhantomDartThreshold))
+                        if (IsEnabled(CustomComboPreset.PCTPvP_PhantomDart) && Role.CanPhantomDart() && CanWeave() && GetTargetHPPercent() <= (Config.PCTPvP_PhantomDartThreshold))
                             return Role.PhantomDart;
 
                         // Moogle / Madeen Portrait

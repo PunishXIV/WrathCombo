@@ -240,12 +240,12 @@ internal partial class DNC
 
         #region Sickness-checking shortcut methods
 
-        bool SicknessFree(IGameObject target)
+        bool SicknessFree(IGameObject? target)
         {
             return !TargetHasRezWeakness(target);
         }
 
-        bool BrinkFree(IGameObject target)
+        bool BrinkFree(IGameObject? target)
         {
             return !TargetHasRezWeakness(target, false);
         }

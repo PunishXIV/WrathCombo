@@ -284,7 +284,8 @@ public class UIHelper(Leasing leasing)
         uint? forJob = null,
         CustomComboPreset? forPreset = null,
         string? forAutoRotationConfig = null,
-        bool showX = true)
+        bool showX = true,
+        bool shortDisplay = false)
     {
         (string controllers, object state)? controlled = null;
         var revokeID = "RevokeControl";
@@ -339,7 +340,10 @@ public class UIHelper(Leasing leasing)
 
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, _backgroundColor);
         ImGui.PushStyleColor(ImGuiCol.ButtonActive, _backgroundColor);
-        ImGui.SmallButton($"Controlled by: {controlled.Value.controllers}");
+        var buttonText = shortDisplay
+            ? "Controlled"
+            : "Controlled by: " + controlled.Value.controllers;
+        ImGui.SmallButton(buttonText);
         ImGui.PopStyleColor(2);
 
         if (showX)
@@ -349,8 +353,7 @@ public class UIHelper(Leasing leasing)
             ImGui.PushStyleColor(ImGuiCol.ButtonHovered, _hoverColor);
             ImGui.PushStyleColor(ImGuiCol.ButtonActive, _hoverColor);
             ImGui.PushStyleColor(ImGuiCol.Text, _textColor);
-            ImGui.SetCursorPosX(ImGui.GetCursorPosX() - _rounding.Scale() -
-                                3f.Scale());
+            ImGui.SetCursorPosX(ImGui.GetCursorPosX() - 12f.Scale());
             if (ImGui.SmallButton("X###" + revokeID))
                 RevokeControl(controlled.Value.controllers);
             ImGui.PopStyleColor(3);
@@ -615,8 +618,10 @@ public class UIHelper(Leasing leasing)
     public bool ShowIPCControlledIndicatorIfNeeded() =>
         ShowIPCControlledIndicator(forAutoRotation: true);
 
-    public bool ShowIPCControlledIndicatorIfNeeded(uint job, bool showX = true) =>
-        ShowIPCControlledIndicator(forJob: job, showX: showX);
+    public bool ShowIPCControlledIndicatorIfNeeded
+        (uint job, bool showX = true, bool shortDisplay = false) =>
+        ShowIPCControlledIndicator
+            (forJob: job, showX: showX, shortDisplay: shortDisplay);
 
     public bool ShowIPCControlledIndicatorIfNeeded(CustomComboPreset preset) =>
         ShowIPCControlledIndicator(forPreset: preset);

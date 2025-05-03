@@ -91,10 +91,12 @@ internal partial class MNK
                     break;
 
                 case CustomComboPreset.MNK_STUseOpener:
-                    DrawHorizontalRadioButton(MNK_SelectedOpener, "Double Lunar", "Uses Lunar/Lunar opener",
+                    DrawHorizontalRadioButton(MNK_SelectedOpener,
+                        "Double Lunar", "Uses Lunar/Lunar opener",
                         0);
 
-                    DrawHorizontalRadioButton(MNK_SelectedOpener, "Solar Lunar", "Uses Solar/Lunar opener",
+                    DrawHorizontalRadioButton(MNK_SelectedOpener,
+                        "Solar Lunar", "Uses Solar/Lunar opener",
                         1);
 
                     ImGui.NewLine();
@@ -103,7 +105,8 @@ internal partial class MNK
                     break;
 
                 case CustomComboPreset.MNK_Variant_Cure:
-                    DrawSliderInt(1, 100, MNK_VariantCure, "HP% to be at or under", 200);
+                    DrawSliderInt(1, 100, MNK_VariantCure,
+                        "HP% to be at or under", 200);
 
                     break;
             }

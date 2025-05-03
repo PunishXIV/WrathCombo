@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using ECommons;
-using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
@@ -14,6 +13,8 @@ using ECommons.Logging;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 
 #endregion
 
@@ -162,18 +163,42 @@ public partial class Helper(ref Leasing leasing)
         // Convert current job/class to a job, if it is a class
         var job = (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
 
+        // Get the user's settings for this job
         P.IPCSearch.CurrentJobComboStatesCategorized.TryGetValue(job,
             out var comboStates);
 
+        // Bail if there are no combos found for this job
         if (comboStates is null || comboStates.Count == 0)
             return null;
 
+        // Try to get the Simple Mode settings
         comboStates[mode]
             .TryGetValue(ComboSimplicityLevelKeys.Simple, out var simpleResults);
-        var simple =
-            simpleResults?.FirstOrDefault().Value;
-        var advanced =
-            comboStates[mode][ComboSimplicityLevelKeys.Advanced].First().Value;
+        var simpleHigher = simpleResults?.FirstOrDefault();
+        var simple = simpleHigher?.Value;
+        #region Override the Values with any IPC-control
+        CustomComboPreset? simpleComboPreset = simpleHigher is null ? null : (CustomComboPreset)
+            Enum.Parse(typeof(CustomComboPreset), simpleHigher.Value.Key, true);
+        if (simpleComboPreset is not null)
+        {
+            simple[ComboStateKeys.AutoMode] =
+                P.IPCSearch.AutoActions[(CustomComboPreset)simpleComboPreset];
+            simple[ComboStateKeys.Enabled] =
+                P.IPCSearch.EnabledActions.Contains(
+                    (CustomComboPreset)simpleComboPreset);
+        }
+        #endregion
+
+        // Get the Advanced Mode settings
+        var (advancedKey, advancedValue) = comboStates[mode][ComboSimplicityLevelKeys.Advanced].First();
+        #region Override the Values with any IPC-control
+        var advancedComboPreset = (CustomComboPreset)
+            Enum.Parse(typeof(CustomComboPreset), advancedKey, true);
+        advancedValue[ComboStateKeys.AutoMode] =
+            P.IPCSearch.AutoActions[advancedComboPreset];
+        advancedValue[ComboStateKeys.Enabled] =
+            P.IPCSearch.EnabledActions.Contains(advancedComboPreset);
+        #endregion
 
         // If the simplicity level is set, check that specifically instead of either
         if (previousMatch is not null)
@@ -181,14 +206,15 @@ public partial class Helper(ref Leasing leasing)
             if (previousMatch == ComboSimplicityLevelKeys.Simple &&
                 simple is not null && simple[enabledStateToCheck])
                 return ComboSimplicityLevelKeys.Simple;
-            return advanced[enabledStateToCheck]
+            return advancedValue[enabledStateToCheck]
                 ? ComboSimplicityLevelKeys.Advanced
                 : null;
         }
 
+        // Check for either Simple or Advanced being ready
         return simple is not null && simple[enabledStateToCheck]
             ? ComboSimplicityLevelKeys.Simple
-            : advanced[enabledStateToCheck]
+            : advancedValue[enabledStateToCheck]
                 ? ComboSimplicityLevelKeys.Advanced
                 : null;
     }
@@ -348,16 +374,8 @@ public partial class Helper(ref Leasing leasing)
     /// <summary>
     ///     The cached backing field for the IPC status.
     /// </summary>
-    /// <seealso cref="_ipcStatusLastUpdated" />
     /// <seealso cref="IPCEnabled" />
     private bool? _ipcEnabled;
-
-    /// <summary>
-    ///     The time the IPC status was last checked.
-    /// </summary>
-    /// <seealso cref="_ipcEnabled" />
-    /// <seealso cref="IPCEnabled" />
-    private DateTime? _ipcStatusLastUpdated;
 
     /// <summary>
     ///     The lightly-cached live IPC status.<br />
@@ -365,7 +383,6 @@ public partial class Helper(ref Leasing leasing)
     /// </summary>
     /// <seealso cref="IPCStatusEndpoint" />
     /// <seealso cref="_ipcEnabled" />
-    /// <seealso cref="_ipcStatusLastUpdated" />
     public bool IPCEnabled
     {
         get
@@ -373,11 +390,11 @@ public partial class Helper(ref Leasing leasing)
             // If the IPC status was checked within the last 5 minutes:
             // return the cached value
             if (_ipcEnabled is not null &&
-                DateTime.Now - _ipcStatusLastUpdated < TimeSpan.FromMinutes(5))
+                !EZ.Throttle("ipcLastStatusChecked", TS.FromMinutes(5)))
                 return _ipcEnabled!.Value;
 
             // Otherwise, check the status and cache the result
-            var data = string.Empty;
+            string data;
             // Check the status
             try
             {
@@ -400,7 +417,6 @@ public partial class Helper(ref Leasing leasing)
             var ipcStatus = data.StartsWith("enabled");
             // Cache the status
             _ipcEnabled = ipcStatus;
-            _ipcStatusLastUpdated = DateTime.Now;
 
             // Handle suspended status
             if (!ipcStatus)

@@ -314,17 +314,18 @@ namespace WrathCombo.Window.Functions
                         case VPR.JobID: VPR.Config.Draw(preset); break;
                         case WAR.JobID: WAR.Config.Draw(preset); break;
                         case WHM.JobID: WHM.Config.Draw(preset); break;
-                        default: UserConfigItems.Draw(preset, enabled); break;
+                        default:
+                            break;
                     }
                 }
                 else
                 {
                     switch (info.JobID)
                     {
-                        //  case All.JobID: All.Config.Draw(preset); break;
+                        case All.JobID: PvPCommon.Config.Draw(preset); break;
                         case AST.JobID: ASTPvP.Config.Draw(preset); break;
                         case BLM.JobID: BLMPvP.Config.Draw(preset); break;
-                        case BLU.JobID: BLU.Config.Draw(preset); break;
+                        //case BLU.JobID: BLU.Config.Draw(preset); break;
                         case BRD.JobID: BRDPvP.Config.Draw(preset); break;
                         case DNC.JobID: DNCPvP.Config.Draw(preset); break;
                         case DRG.JobID: DRGPvP.Config.Draw(preset); break;
@@ -344,7 +345,8 @@ namespace WrathCombo.Window.Functions
                         case VPR.JobID: VPRPvP.Config.Draw(preset); break;
                         case WAR.JobID: WARPvP.Config.Draw(preset); break;
                         case WHM.JobID: WHMPvP.Config.Draw(preset); break;
-                        default: UserConfigItems.Draw(preset, enabled); break;
+                        default:
+                            break;
                     }
                 }
 

@@ -17,33 +17,7 @@ internal partial class PCT : Caster
 
             PCTGauge gauge = GetJobGauge<PCTGauge>();
             bool canWeave = CanSpellWeave() || CanSpellWeave();
-
-            /* Lvl 92 Opener
-                else if (!StarPrism.LevelChecked() && RainbowDrip.LevelChecked())
-                {
-                    if (PCTOpenerLvl92.DoFullOpener(ref actionID))
-                        return actionID;
-                }
-                // Lvl 90 Opener
-                else if (!StarPrism.LevelChecked() && !RainbowDrip.LevelChecked() && CometinBlack.LevelChecked())
-                {
-                    if (PCTOpenerLvl90.DoFullOpener(ref actionID))
-                        return actionID;
-                }
-                // Lvl 80 Opener
-                else if (!StarPrism.LevelChecked() && !CometinBlack.LevelChecked() && HolyInWhite.LevelChecked())
-                {
-                    if (PCTOpenerLvl80.DoFullOpener(ref actionID))
-                        return actionID;
-                }
-                // Lvl 70 Opener
-                else if (!StarPrism.LevelChecked() && !CometinBlack.LevelChecked() && !HolyInWhite.LevelChecked() && StarryMuse.LevelChecked())
-                {
-                    if (PCTOpenerLvl70.DoFullOpener(ref actionID))
-                        return actionID;
-                }
-                */
-
+            
             // General Weaves
             if (InCombat() && canWeave)
             {
@@ -266,15 +240,11 @@ internal partial class PCT : Caster
             }
 
             // Check if Openers are enabled and determine which opener to execute based on current level
-            if (IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers))
-            {
-                // Lvl 100 Opener
-                if (StarPrism.LevelChecked())
-                {
-                    if (Opener().FullOpener(ref actionID))
-                        return actionID;
-                }
-                /* Lvl 92 Opener
+            if (IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers) && 
+                Opener().FullOpener(ref actionID))
+                return actionID; 
+            
+            /* Lvl 92 Opener
                     else if (!StarPrism.LevelChecked() && RainbowDrip.LevelChecked())
                     {
                         if (PCTOpenerLvl92.DoFullOpener(ref actionID))
@@ -299,7 +269,6 @@ internal partial class PCT : Caster
                             return actionID;
                     }
                     */
-            }
 
             // General Weaves
             if (InCombat() && canWeave)

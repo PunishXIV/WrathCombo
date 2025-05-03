@@ -12,6 +12,23 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DNC : PhysicalRanged
 {
+    internal class DNC_ST_BasicCombo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_ST_BasicCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Fountain)
+                return actionID;
+            
+            if (LevelChecked(Fountain) && ComboAction is Cascade &&
+                ComboTimer > 0)
+                return Fountain;
+
+            return Cascade;
+
+        }
+    }
     internal class DNC_ST_AdvancedMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset =>

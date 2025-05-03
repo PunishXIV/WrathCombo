@@ -120,12 +120,14 @@ namespace WrathCombo.CustomComboNS
         private int DelayedStep = 0;
         private DateTime DelayedAt;
 
-        public uint CurrentOpenerAction { get; 
-            set 
+        public uint CurrentOpenerAction
+        {
+            get;
+            set
             {
                 if (value != All.SavageBlade)
                     field = value;
-            } 
+            }
         }
         public uint PreviousOpenerAction { get; set; }
 
@@ -175,7 +177,7 @@ namespace WrathCombo.CustomComboNS
                     if ((!delay && InCombat() && ActionWatching.TimeSinceLastAction.TotalSeconds >= Service.Configuration.OpenerTimeout) || (delay && (DateTime.Now - DelayedAt).TotalSeconds > hold.HoldDelay() + Service.Configuration.OpenerTimeout))
                     {
                         CurrentState = OpenerState.FailedOpener;
-                        return false; 
+                        return false;
                     }
                 }
 
@@ -187,7 +189,7 @@ namespace WrathCombo.CustomComboNS
                             OpenerStep++;
                     }
 
-                    actionID = CurrentOpenerAction = OpenerActions[OpenerStep - 1];
+                    actionID = CurrentOpenerAction = AllowUpgradeSteps.Any(x => x == OpenerStep) ? OriginalHook(OpenerActions[OpenerStep - 1]) : OpenerActions[OpenerStep - 1];
 
                     double startValue = (VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) ? 1 : 1.25;
                     if ((DelayedWeaveSteps.Any(x => x == OpenerStep) || VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) && !CanDelayedWeave(startValue))
@@ -231,7 +233,7 @@ namespace WrathCombo.CustomComboNS
 
                     while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) &&
                            !SkipSteps.Any(x => x.Steps.Any(y => y == OpenerStep - 1)) &&
-                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal)) 
+                           ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
                     {
                         if (OpenerStep >= OpenerActions.Count)
                             break;
