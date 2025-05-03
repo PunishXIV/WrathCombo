@@ -79,7 +79,7 @@ namespace WrathCombo.Window.Tabs
                                 {
                                     ImGui.SameLine();
                                     P.UIHelper
-                                        .ShowIPCControlledIndicatorIfNeeded(id, false);
+                                        .ShowIPCControlledIndicatorIfNeeded(id, false, ColCount > 1);
                                 }
                             }
 

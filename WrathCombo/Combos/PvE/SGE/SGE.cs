@@ -186,9 +186,9 @@ internal partial class SGE : Healer
                 return Kardia;
 
             // Opener for SGE
-            if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Opener))
-                if (Opener().FullOpener(ref actionID))
-                    return actionID;
+            if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Opener) && 
+                Opener().FullOpener(ref actionID))
+                return actionID;
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Lucid) && Role.CanLucidDream(Config.SGE_ST_DPS_Lucid))
@@ -367,12 +367,10 @@ internal partial class SGE : Healer
             }
 
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) && LevelChecked(Eukrasia) &&
-                GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) <=
-                Config.SGE_ST_Heal_EDiagnosisHP &&
-                (Config.SGE_ST_Heal_EDiagnosisOpts[0] ||
-                 HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Ignore existing shield check
-                (!Config.SGE_ST_Heal_EDiagnosisOpts[1] ||
-                 HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))) //Galvenize Check
+                GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) <= Config.SGE_ST_Heal_EDiagnosisHP &&
+                (Config.SGE_ST_Heal_EDiagnosisOpts[0] || // Ignore Any Shield check
+                !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Shield Check
+                (!Config.SGE_ST_Heal_EDiagnosisOpts[1] || !HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))) //Galvanize Check
                 return Eukrasia;
 
             return actionID;

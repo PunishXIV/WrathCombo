@@ -91,6 +91,8 @@ namespace WrathCombo.Combos.PvE
         {
             uint HeadGraze { get; }
             internal bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None);
+
+            internal bool CanHeadGraze(bool simpleMode, WeaveTypes weave = WeaveTypes.None);
         }
 
         internal interface ILegSweep

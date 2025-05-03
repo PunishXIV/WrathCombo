@@ -109,7 +109,7 @@ internal partial class DRK
 
                 case CustomComboPreset.DRK_ST_Sp_Edge:
                     UserConfig.DrawSliderInt(0, 3000, DRK_ST_ManaSpenderPooling,
-                        "Mana to save for TBN (0 = Use All)",
+                        "Mana to always save for TBN (0 = Use All)",
                         itemWidth: biggest,
                         sliderIncrement: SliderIncrements.Thousands);
                     UserConfig.DrawDifficultyMultiChoice(
@@ -117,9 +117,8 @@ internal partial class DRK
                         DRK_ST_ManaSpenderPoolingDifficultyListSet
                     );
                     UserConfig.DrawSliderInt(0, 45, DRK_ST_BurstSoonThreshold,
-                        "Seconds before Burst to start saving Mana and Dark Arts (0 = Don't save)",
-                        itemWidth: little,
-                        sliderIncrement: SliderIncrements.Fives);
+                        "Seconds before Burst to start saving Edges (0 = Don't save)",
+                        itemWidth: little, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 

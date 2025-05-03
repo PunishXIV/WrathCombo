@@ -196,6 +196,7 @@ internal partial class PCT
             StarPrism,
             HammerBrush,
             PolishingHammer,
+            RainbowDrip,
             FireInRed,
             Role.Swiftcast,
             ClawMotif,

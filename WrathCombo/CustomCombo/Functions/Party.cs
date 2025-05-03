@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
@@ -28,39 +29,36 @@ namespace WrathCombo.CustomComboNS.Functions
             if (!EzThrottler.Throttle("PartyUpdateThrottle", 2000))
                 return _partyList;
 
+            var existingIds = _partyList.Select(x => x.GameObjectId).ToHashSet();
+
             for (int i = 1; i <= 8; i++)
             {
                 var member = GetPartySlot(i);
-                if (member != null && !_partyList.Any(x => x.GameObjectId == member.GameObjectId))
+                if (member is IBattleChara chara && !existingIds.Contains(chara.GameObjectId))
                 {
-                    var chara = (member as IBattleChara);
                     WrathPartyMember wmember = new()
                     {
                         GameObjectId = chara.GameObjectId,
                         CurrentHP = chara.CurrentHp
                     };
-
-                        _partyList.Add(wmember);
-
+                    _partyList.Add(wmember);
+                    existingIds.Add(chara.GameObjectId);
                 }
             }
 
-            if (AutoRotationController.cfg is not null)
+            if (AutoRotationController.cfg?.Enabled == true && AutoRotationController.cfg.HealerSettings.IncludeNPCs && Player.Job.IsHealer())
             {
-                if (AutoRotationController.cfg.Enabled && AutoRotationController.cfg.HealerSettings.IncludeNPCs && Player.Job.IsHealer())
+                foreach (var npc in Svc.Objects.OfType<IBattleChara>().Where(x => x is not IPlayerCharacter && !existingIds.Contains(x.GameObjectId)))
                 {
-                    foreach (var npc in Svc.Objects.Where(x => x is IBattleChara && x is not IPlayerCharacter).Cast<IBattleChara>())
+                    if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()))
                     {
-                        if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()) && !_partyList.Any(x => x.GameObjectId == npc.GameObjectId))
+                        WrathPartyMember wmember = new()
                         {
-                            WrathPartyMember wmember = new()
-                            {
-                                GameObjectId = npc.GameObjectId,
-                                CurrentHP = npc.CurrentHp
-                            };
-
-                                _partyList.Add(wmember);
-                        }
+                            GameObjectId = npc.GameObjectId,
+                            CurrentHP = npc.CurrentHp
+                        };
+                        _partyList.Add(wmember);
+                        existingIds.Add(npc.GameObjectId);
                     }
                 }
             }
@@ -85,46 +83,50 @@ namespace WrathCombo.CustomComboNS.Functions
                     6 => GetTarget(TargetType.P6),
                     7 => GetTarget(TargetType.P7),
                     8 => GetTarget(TargetType.P8),
-                    _ => GetTarget(TargetType.Self),
+                    _ => null,
                 };
-                return Svc.Objects.FirstOrDefault(x => x.GameObjectId == o->GetGameObjectId());
-            }
 
-            catch
+                return o != null ? Svc.Objects.FirstOrDefault(x => x.GameObjectId == o->GetGameObjectId()) : null;
+            }
+            catch (Exception ex)
             {
+                ex.Log();
                 return null;
             }
         }
 
         public static float GetPartyAvgHPPercent()
         {
-            float HP = 0;
-            byte Count = 0;
-            for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
-            {
-                if (GetPartySlot(i) is not IBattleChara member) continue;
-                if (member is null) continue; //Skip nulls/disconnected people
-                if (member.IsDead) continue;
+            float totalHP = 0;
+            int count = 0;
 
-                HP += GetTargetHPPercent(member);
-                Count++;
+            for (int i = 1; i <= 8; i++)
+            {
+                if (GetPartySlot(i) is IBattleChara member && !member.IsDead)
+                {
+                    totalHP += GetTargetHPPercent(member);
+                    count++;
+                }
             }
-            return Count == 0 ? 0 : (float)HP / Count; //Div by 0 check...just in case....
+
+            return count == 0 ? 0 : totalHP / count;
         }
 
         public static float GetPartyBuffPercent(ushort buff)
         {
-            byte BuffCount = 0;
-            byte PartyCount = 0;
-            for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
+            int buffCount = 0;
+            int partyCount = 0;
+
+            for (int i = 1; i <= 8; i++)
             {
-                if (GetPartySlot(i) is not IBattleChara member) continue;
-                if (member is null) continue; //Skip nulls/disconnected people
-                if (member.IsDead) continue;
-                if (HasStatusEffect(buff, member, true)) BuffCount++;
-                PartyCount++;
+                if (GetPartySlot(i) is IBattleChara member && !member.IsDead)
+                {
+                    if (HasStatusEffect(buff, member, true)) buffCount++;
+                    partyCount++;
+                }
             }
-            return PartyCount == 0 ? 0 : (float)BuffCount / PartyCount * 100f; //Div by 0 check...just in case....
+
+            return partyCount == 0 ? 0 : (float)buffCount / partyCount * 100f;
         }
 
         public static bool PartyInCombat() => PartyEngageDuration().Ticks > 0;
@@ -143,39 +145,42 @@ namespace WrathCombo.CustomComboNS.Functions
         public bool HPUpdatePending = false;
         public bool MPUpdatePending = false;
         public ulong GameObjectId;
-        public IBattleChara? BattleChara => Svc.Objects.Any(x => x.GameObjectId == GameObjectId) ? Svc.Objects.First(x => x.GameObjectId == GameObjectId) as IBattleChara : null;
+        public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
         public Dictionary<ushort, long> BuffsGainedAt = new();
+
+        private uint _currentHP;
         public uint CurrentHP
         {
             get
             {
-                if ((field > BattleChara.CurrentHp && !HPUpdatePending) || field < BattleChara.CurrentHp)
-                    field = BattleChara.CurrentHp;
-
-                return field;
+                if (BattleChara != null)
+                {
+                    if ((_currentHP > BattleChara.CurrentHp && !HPUpdatePending) || _currentHP < BattleChara.CurrentHp)
+                        _currentHP = BattleChara.CurrentHp;
+                }
+                return _currentHP;
             }
-
-            set;
+            set => _currentHP = value;
         }
 
+        private uint _currentMP;
         public uint CurrentMP
         {
             get
             {
-                if ((field > BattleChara.CurrentMp && !MPUpdatePending) || field < BattleChara.CurrentMp)
-                    field = BattleChara.CurrentMp;
-
-                return field;
+                if (BattleChara != null)
+                {
+                    if ((_currentMP > BattleChara.CurrentMp && !MPUpdatePending) || _currentMP < BattleChara.CurrentMp)
+                        _currentMP = BattleChara.CurrentMp;
+                }
+                return _currentMP;
             }
-            set;
+            set => _currentMP = value;
         }
 
         public float TimeSinceBuffApplied(ushort buff)
         {
-            if (!BuffsGainedAt.ContainsKey(buff))
-                return 0;
-
-            return (Environment.TickCount64 - BuffsGainedAt[buff]) / 1000f;
+            return BuffsGainedAt.TryGetValue(buff, out var timestamp) ? (Environment.TickCount64 - timestamp) / 1000f : 0;
         }
     }
 }

@@ -142,7 +142,7 @@ namespace WrathCombo.Combos.PvP
                     var jobMaxHp = LocalPlayer.MaxHp;
                     var maxHPThreshold = jobMaxHp - 8000;
                     float remainingPercentage = (float)LocalPlayer.CurrentHp / maxHPThreshold;
-                    bool inMeisuiRange = GetOptionValue(Config.NINPvP_Meisui_ST) >= (remainingPercentage * 100);
+                    bool inMeisuiRange = (Config.NINPvP_Meisui_ST) >= (remainingPercentage * 100);
 
                     // Hidden state actions
                     if (isHidden)
@@ -152,13 +152,13 @@ namespace WrathCombo.Combos.PvP
                     {
 
                         // Seiton Tenchu priority for targets below 50% HP
-                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) &&
+                        if (IsEnabled(CustomComboPreset.NINPvP_ST_SeitonTenchu) && GetTargetHPPercent() < (Config.NINPVP_SeitonTenchu) &&
                             (IsLB1Ready || HasStatusEffect(Buffs.SeitonUnsealed)))  // Limit Break or Unsealed buff
                             return OriginalHook(SeitonTenchu);
 
                         //Smite
                         if (IsEnabled(CustomComboPreset.NINPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
-                            GetTargetHPPercent() <= GetOptionValue(Config.NINPvP_SmiteThreshold))
+                            GetTargetHPPercent() <= (Config.NINPvP_SmiteThreshold))
                             return PvPMelee.Smite;
 
                         // Zesho Meppo
@@ -233,7 +233,7 @@ namespace WrathCombo.Combos.PvP
                     bool mudraMode = HasStatusEffect(Buffs.ThreeMudra);
                     bool canWeave = CanWeave();
                     var jobMaxHp = LocalPlayer.MaxHp;
-                    var threshold = GetOptionValue(Config.NINPvP_Meisui_AoE);
+                    var threshold = Config.NINPvP_Meisui_AoE;
                     var maxHPThreshold = jobMaxHp - 8000;
                     var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
                     bool inMeisuiRange = threshold >= (remainingPercentage * 100);
@@ -244,7 +244,7 @@ namespace WrathCombo.Combos.PvP
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
                         // Seiton Tenchu priority for targets below 50% HP
-                        if (IsEnabled(CustomComboPreset.NINPvP_AoE_SeitonTenchu) && GetTargetHPPercent() < GetOptionValue(Config.NINPVP_SeitonTenchu) && IsLB1Ready)
+                        if (IsEnabled(CustomComboPreset.NINPvP_AoE_SeitonTenchu) && GetTargetHPPercent() < (Config.NINPVP_SeitonTenchu) && IsLB1Ready)
                             return OriginalHook(SeitonTenchu);
 
                         if (canWeave)

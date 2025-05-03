@@ -117,7 +117,10 @@ internal static partial class RoleActions
             ActionReady(Peloton);
 
         public static bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
-            IsEnabled(preset) && CanInterruptEnemy() && IsOffCooldown(HeadGraze) && CheckWeave(weave);
+            IsEnabled(preset) && CanInterruptEnemy() && ActionReady(HeadGraze) && CheckWeave(weave);
+
+        public static bool CanHeadGraze(bool simpleMode, WeaveTypes weave = WeaveTypes.None) =>
+            simpleMode && CanInterruptEnemy() && ActionReady(HeadGraze) && CheckWeave(weave);
     }
 
     public static class Melee

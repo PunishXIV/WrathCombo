@@ -11,14 +11,12 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using Lumina.Excel.Sheets;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
-using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
@@ -205,34 +203,36 @@ namespace WrathCombo.Data
                 NIN.InMudra = false;
         }
 
-        private unsafe static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
+        private static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
         {
-            if (actionId is AST.Balance or AST.Spear &&
-                AST.QuickTargetCards.SelectedRandomMember is not null &&
-                !OutOfRange(actionId, Svc.ClientState.LocalPlayer!, AST.QuickTargetCards.SelectedRandomMember))
-            {
-                int targetOptions = AST.Config.AST_QuickTarget_Override;
+            if (actionId is not (AST.Balance or AST.Spear) ||
+                AST.QuickTargetCards.SelectedRandomMember is null ||
+                OutOfRange(actionId, Svc.ClientState.LocalPlayer!, AST.QuickTargetCards.SelectedRandomMember))
+                return;
 
-                switch (targetOptions)
-                {
-                    case 0:
-                        Svc.Log.Debug($"Switched to {AST.QuickTargetCards.SelectedRandomMember.Name}");
-                        targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
-                        break;
-                    case 1:
-                        if (HasFriendlyTarget())
-                            targetObjectId = Svc.Targets.Target.GameObjectId;
-                        else
-                            targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
-                        break;
-                    case 2:
-                        if (GetHealTarget(true, true) is not null)
-                            targetObjectId = GetHealTarget(true, true).GameObjectId;
-                        else
-                            targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
-                        break;
-                }
+            // Set Default Result
+            targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
+
+            //Apply Overrides
+            switch ((int)AST.Config.AST_QuickTarget_Override)
+            {
+                // Case 0 is Default (SelectedRandomMember)
+
+                // Hard Target
+                case 1 when Svc.Targets.Target is not null && HasFriendlyTarget():
+                    targetObjectId = Svc.Targets.Target.GameObjectId;
+                    break;
+                // UI Mousover Override
+                case 2:
+                    if (GetMouseOverHealTarget() is IGameObject mouseTarget)
+                        targetObjectId = mouseTarget.GameObjectId;
+                    break;
             }
+
+            // Log the selected target for debugging
+            ulong localTargetId = targetObjectId; // Copy to local variable, can't use for the next line
+            var selectedTarget = Svc.Objects.FirstOrDefault(x => x.GameObjectId == localTargetId);
+            Svc.Log.Debug($"Switched to {selectedTarget?.Name ?? "Unknown"}");
         }
 
         public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)

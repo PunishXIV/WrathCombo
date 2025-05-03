@@ -477,7 +477,8 @@ internal partial class SMN : Caster
             #endregion
 
             //Opener
-            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Balance_Opener) && Opener().FullOpener(ref actionID))
+            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Balance_Opener) &&
+                Opener().FullOpener(ref actionID))
                 return actionID;
 
             #region Variants

@@ -209,9 +209,9 @@ internal partial class SCH : Healer
                 return Variant.Rampart;
 
             //Opener
-            if (IsEnabled(CustomComboPreset.SCH_DPS_Balance_Opener))
-                if (Opener().FullOpener(ref actionID))
-                    return actionID;
+            if (IsEnabled(CustomComboPreset.SCH_DPS_Balance_Opener) &&
+                Opener().FullOpener(ref actionID))
+                return actionID;
 
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_DPS_Aetherflow) &&

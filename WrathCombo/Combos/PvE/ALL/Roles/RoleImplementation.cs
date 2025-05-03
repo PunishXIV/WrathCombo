@@ -165,6 +165,9 @@ namespace WrathCombo.Combos.PvE
 
                     public bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
                         RoleActions.PhysRanged.CanHeadGraze(preset, weave);
+
+                    public bool CanHeadGraze(bool simpleMode, WeaveTypes weave = WeaveTypes.None) =>
+                        RoleActions.PhysRanged.CanHeadGraze(simpleMode, weave);
                 }
             }
 

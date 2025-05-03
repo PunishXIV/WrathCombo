@@ -13,6 +13,8 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Tabs;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 
 #endregion
 
@@ -250,7 +252,6 @@ public class Search(Leasing leasing)
         get
         {
             return field ??= PresetStorage.AllPresets!
-                .Cast<CustomComboPreset>()
                 .Select(preset => new
                 {
                     ID = preset,
@@ -305,8 +306,7 @@ public class Search(Leasing leasing)
             else
             {
                 if (field != null &&
-                    DateTime.Now.AddSeconds(-1) <=
-                    _lastCacheUpdateForPresetStates &&
+                    !EZ.Throttle("ipcPresetStateCheck", TS.FromSeconds(1)) &&
                     presetsUpdated <= _lastCacheUpdateForPresetStates)
                     return field;
             }
@@ -342,7 +342,7 @@ public class Search(Leasing leasing)
         ActiveJobPresets = Window.Functions.Presets.GetJobAutorots.Count;
     }
 
-    internal int ActiveJobPresets = 0;
+    internal int ActiveJobPresets;
 
     #endregion
 
@@ -385,12 +385,6 @@ public class Search(Leasing leasing)
                         combo => PresetStates[combo]
                     )
             );
-
-    /// <summary>
-    ///     When <see cref="CurrentJobComboStatesCategorized" /> was last built.
-    /// </summary>
-    private DateTime _lastCacheUpdateForComboStatesByJobCategorized =
-        DateTime.MinValue;
 
     /// <summary>
     ///     The states of each combo, but heavily categorized.

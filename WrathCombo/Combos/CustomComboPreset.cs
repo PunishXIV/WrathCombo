@@ -184,9 +184,18 @@ public enum CustomComboPreset
         AST.JobID)]
     AST_DPS_AutoPlay = 1037,
 
+    [ParentCombo(AST_DPS_AutoPlay)]
+    [CustomComboInfo("Card Play Pooling Option", "Pools your dps cards for the Divination window",
+        AST.JobID)]
+    AST_DPS_CardPool = 1055,
+
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Lord of Crowns Weave Option", "Adds Lord Of Crowns", AST.JobID)]
     AST_DPS_LazyLord = 1014,
+
+    [ParentCombo(AST_DPS_LazyLord)]
+    [CustomComboInfo("Lord of Crowns Pooling Option", "Holds Lord of Crowns for the Divination window", AST.JobID)]
+    AST_DPS_LordPool = 1056,
 
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Oracle Option", "Adds Oracle after Divination", AST.JobID)]
@@ -228,9 +237,18 @@ public enum CustomComboPreset
         AST.JobID)]
     AST_AOE_AutoPlay = 1045,
 
+    [ParentCombo(AST_AOE_AutoPlay)]
+    [CustomComboInfo("Card Play Pooling Option", "Pools your dps cards for the Divination window",
+        AST.JobID)]
+    AST_AOE_CardPool = 1057,
+
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Lord of Crowns Weave Option", "Adds Lord Of Crowns", AST.JobID)]
     AST_AOE_LazyLord = 1046,
+
+    [ParentCombo(AST_AOE_LazyLord)]
+    [CustomComboInfo("Lord of Crowns Pooling Option", "Holds Lord of Crowns for the Divination window", AST.JobID)]
+    AST_AOE_LordPool = 1058,
 
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Oracle Option", "Adds Oracle after Divination", AST.JobID)]
@@ -353,7 +371,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 1054
+    // Last value = 1058
 
     #endregion
 
@@ -418,6 +436,10 @@ public enum CustomComboPreset
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Swiftcast Option", "Add Swiftcast to the rotation.", BLM.JobID)]
     BLM_ST_Swiftcast = 2106,
+
+    [ParentCombo(BLM_ST_AdvancedMode)]
+    [CustomComboInfo("Triplecast Option", "Add Triplecast to the rotation.\nWill only be used if Swiftcast is on cooldown.", BLM.JobID)]
+    BLM_ST_Triplecast = 2115,
     
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
@@ -426,7 +448,7 @@ public enum CustomComboPreset
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Movement Option", "Add chosen options for movement.", BLM.JobID)]
     BLM_ST_Movement = 2113,
-    
+
     #endregion
 
     #region AoE - Advanced
@@ -464,7 +486,7 @@ public enum CustomComboPreset
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("(High) Thunder II Option", "Add (High) Thunder II to the rotation.", BLM.JobID)]
     BLM_AoE_Thunder = 2209,
-    
+
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Foul Option", "Add Foul to the rotation.", BLM.JobID)]
     BLM_AoE_UsePolyglot = 2203,
@@ -472,7 +494,7 @@ public enum CustomComboPreset
     [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Blizzard IV on 2 Targets Option", "Substitutes Freeze for Blizzard 4 whenever it would hit 2 targets.", BLM.JobID)]
     BLM_AoE_Blizzard4Sub = 2211,
-    
+
     #endregion
 
     #region Variant
@@ -542,7 +564,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value ST = 2114
+    // Last value ST = 2115
     //Last Value AoE = 2212
     //Last Value misc = 2060
 
@@ -1002,6 +1024,14 @@ public enum CustomComboPreset
     BRD_AoE_Adv_Interrupt = 3043,
 
     [ParentCombo(BRD_AoE_AdvMode)]
+    [CustomComboInfo("Encore Option", "Adds Radiant Encore to the Rotation after Finale.", BRD.JobID)]
+    BRD_AoE_BuffsEncore = 3062,
+
+    [ParentCombo(BRD_AoE_AdvMode)]
+    [CustomComboInfo("Resonant Option", "Adds Resonant Arrow to the Rotation after Barrage.", BRD.JobID)]
+    BRD_AoE_BuffsResonant = 3061,
+
+    [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
     BRD_AoE_ApexArrow = 3039,
 
@@ -1362,6 +1392,14 @@ public enum CustomComboPreset
     #endregion
     // Last value = 4057
 
+     #region Basic combo
+
+    [ReplaceSkill(DNC.Fountain)]
+    [CustomComboInfo("Basic Combo", "Replace Fountain with its combo chain.", DNC.JobID)]
+    DNC_ST_BasicCombo = 4003,
+
+    #endregion
+
     #region Multibutton Features
 
     #region Single Target Multibutton
@@ -1568,7 +1606,7 @@ public enum CustomComboPreset
     DRK_AoE_Simple = 5002,
 
     #endregion
-    // Last value = 5002
+    // Last value = 5003
 
     #region Advanced Single Target Combo
 
@@ -1681,7 +1719,7 @@ public enum CustomComboPreset
 
     [ParentCombo(DRK_ST_Spenders)]
     [CustomComboInfo("Blood Gauge Overcap Option",
-        "Adds Bloodspiller to the rotation after Syphon Strike when the blood gauge is above the chosen threshold.", DRK.JobID)]
+        "Adds Bloodspiller to the rotation before Syphon Strike when the blood gauge is above the chosen threshold.", DRK.JobID)]
     DRK_ST_Sp_BloodOvercap = 5026,
 
     #endregion
@@ -1689,19 +1727,19 @@ public enum CustomComboPreset
     #region Mana
 
     [ParentCombo(DRK_ST_Spenders)]
-    [CustomComboInfo("Edge of Darkness Option", "Uses Edge of Darkness in burst windows, and outside of that will spend to chosen MP limit.", DRK.JobID)]
+    [CustomComboInfo("Edge of Darkness Option", "Uses Edge of Darkness in burst windows.", DRK.JobID)]
     DRK_ST_Sp_Edge = 5027,
 
     [ParentCombo(DRK_ST_Spenders)]
-    [CustomComboInfo("Dark Arts Drop Prevention", "Will spend Dark Arts if your own The Blackest Night shield is active on you.", DRK.JobID)]
+    [CustomComboInfo("Dark Arts Drop Prevention", "Will spend Dark Arts if your own The Blackest Night shield is active on you, except when saving for burst.", DRK.JobID)]
     DRK_ST_Sp_DarkArts = 5028,
 
     [ParentCombo(DRK_ST_Spenders)]
-    [CustomComboInfo("Darkside Maintenance Option", "Uses Edge of Darkness if Darkside is about to expire (<10s).", DRK.JobID)]
+    [CustomComboInfo("Darkside Maintenance Option", "Uses Edge of Darkness if Darkside is about to expire (<30s).", DRK.JobID)]
     DRK_ST_Sp_EdgeDarkside = 5029,
 
     [ParentCombo(DRK_ST_Spenders)]
-    [CustomComboInfo("Mana Overcap Option", "Uses Edge of Darkness if you are above 8,500 mana.", DRK.JobID)]
+    [CustomComboInfo("Mana Overcap Option", "Uses Edge of Darkness if you are at or above 9,400 mana, except when saving for burst.", DRK.JobID)]
     DRK_ST_Sp_ManaOvercap = 5030,
 
     #endregion
@@ -1846,7 +1884,7 @@ public enum CustomComboPreset
     DRK_AoE_Sp_Flood = 5065,
 
     [ParentCombo(DRK_AoE_Spenders)]
-    [CustomComboInfo("Mana Overcap Option", "Uses Flood of Shadow if you are above 8,500 mana.", DRK.JobID)]
+    [CustomComboInfo("Mana Overcap Option", "Uses Flood of Shadow if you are above 9,400 mana.", DRK.JobID)]
     DRK_AoE_Sp_ManaOvercap = 5066,
 
     #endregion
@@ -1876,7 +1914,7 @@ public enum CustomComboPreset
     DRK_AoE_Mit_Rampart = 5071,
 
     [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length to the rotation.", DRK.JobID)]
+    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length to the rotation, when the set number of enemies are within range of you.", DRK.JobID)]
     DRK_AoE_Mit_ArmsLength = 5072,
 
     [ParentCombo(DRK_AoE_Mitigation)]
@@ -1891,6 +1929,14 @@ public enum CustomComboPreset
 
     #endregion
     // Last value = 5074
+
+    #region Basic combo
+
+    [ReplaceSkill(DRK.Souleater)]
+    [CustomComboInfo("Basic Combo", "Replace Souleater with its combo chain.", DRK.JobID)]
+    DRK_ST_BasicCombo = 5003,
+
+    #endregion
 
     #region Multibutton Features
 
@@ -2007,7 +2053,7 @@ public enum CustomComboPreset
     #endregion
 
     #region DRAGOON
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -2240,6 +2286,18 @@ public enum CustomComboPreset
     DRG_AoE_ComboHeals = 6299,
 
     #endregion
+    
+    #region Basic Combo
+
+    [ReplaceSkill(DRG.FullThrust, DRG.HeavensThrust)]
+    [CustomComboInfo("FullThrust Combo", "Replace Full Thrust/Heavens' Thrust with its combo chain.", DRG.JobID)]
+    DRG_ST_FullThrustCombo = 6304,
+
+    [ReplaceSkill(DRG.ChaosThrust, DRG.ChaoticSpring)]
+    [CustomComboInfo("Chaotic Combo", "Replace Chaos Thrust /Chaotic Spring with its combo chain.", DRG.JobID)]
+    DRG_ST_ChaoticCombo = 6305,
+
+    #endregion
 
     #region Variant
 
@@ -2254,15 +2312,7 @@ public enum CustomComboPreset
     DRG_Variant_Rampart = 6303,
 
     #endregion
-
-    [ReplaceSkill(DRG.FullThrust, DRG.HeavensThrust)]
-    [CustomComboInfo("FullThrust Combo", "Replace Full Thrust/Heavens' Thrust with its combo chain.", DRG.JobID)]
-    DRG_ST_FullThrustCombo = 6304,
-
-    [ReplaceSkill(DRG.ChaosThrust, DRG.ChaoticSpring)]
-    [CustomComboInfo("Chaotic Combo", "Replace Chaos Thrust /Chaotic Spring with its combo chain.", DRG.JobID)]
-    DRG_ST_ChaoticCombo = 6305,
-
+    
     [ReplaceSkill(DRG.LanceCharge)]
     [CustomComboInfo("Lance Charge to Battle Litany Feature",
         "Turns Lance Charge into Battle Litany when the former is on cooldown.", DRG.JobID)]
@@ -2274,7 +2324,7 @@ public enum CustomComboPreset
     #endregion
 
     #region GUNBREAKER
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -2534,6 +2584,14 @@ public enum CustomComboPreset
     GNB_AoE_ArmsLength = 7221,
 
     #endregion
+
+    #endregion
+
+    #region Basic combo
+
+    [ReplaceSkill(GNB.SolidBarrel)]
+    [CustomComboInfo("Basic Combo", "Replace Solid Barrel with its combo chain.", GNB.JobID)]
+    GNB_ST_BasicCombo = 7100,
 
     #endregion
 
@@ -2901,7 +2959,7 @@ public enum CustomComboPreset
     #endregion
 
     #region MACHINIST
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -3058,6 +3116,14 @@ public enum CustomComboPreset
 
     #endregion
 
+    #region Basic combo
+
+    [ReplaceSkill(MCH.CleanShot, MCH.HeatedCleanShot)]
+    [CustomComboInfo("Basic Combo", "Replace Clean Shot with its combo chain.", MCH.JobID)]
+    MCH_ST_BasicCombo = 8117,
+
+    #endregion
+
     #region Variant
 
     [Variant]
@@ -3073,8 +3139,8 @@ public enum CustomComboPreset
     #endregion
 
     [ReplaceSkill(MCH.Dismantle)]
-    [CustomComboInfo("Physical Ranged DPS: Double Dismantle Protection", "Prevents the use of Dismantle when target already has the effect by replacing it with Savage Blade.", MCH.JobID)]
-    All_PRanged_Dismantle = 8042,
+    [CustomComboInfo("Double Dismantle Protection", "Prevents the use of Dismantle when target already has the effect by replacing it with Savage Blade.", MCH.JobID)]
+    MCH_DismantleProtection = 8042,
 
     [ReplaceSkill(MCH.Dismantle)]
     [CustomComboInfo("Dismantle - Tactician", "Swap dismantle with tactician when dismantle is on cooldown.", MCH.JobID)]
@@ -3128,14 +3194,14 @@ public enum CustomComboPreset
     [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate Feature", "Replace Gauss Round and Ricochet or Double Check and Checkmate with one or the other depending on which has more charges.", MCH.JobID)]
     MCH_GaussRoundRicochet = 8003,
 
-    // Last value ST = 8116
+    // Last value ST = 8117
     // Last value AoE = 8313
     // Last value Misc = 8058
 
     #endregion
 
     #region MONK
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -3276,7 +3342,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    #region Monk Beast Chakras
+    #region Basic Combo
 
     [ConflictingCombos(MNK_ST_AdvancedMode, MNK_ST_SimpleMode)]
     [CustomComboInfo("Beast Chakra Handlers", "Merge single target GCDs which share the same beast chakra", MNK.JobID)]
@@ -3336,7 +3402,7 @@ public enum CustomComboPreset
     #endregion
 
     #region NINJA
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -3571,6 +3637,18 @@ public enum CustomComboPreset
     [ParentCombo(NIN_AoE_AdvancedMode)]
     [CustomComboInfo("Bloodbath Option", "Adds Bloodbath to Advanced Mode.", NIN.JobID)]
     NIN_AoE_AdvancedMode_Bloodbath = 10052,
+        
+    #region Basic Combo
+
+    [ReplaceSkill(NIN.AeolianEdge)]
+    [CustomComboInfo("Aeolian Edge Combo", "Replace Aeolian Edge with its combo chain.", NIN.JobID)]
+    NIN_ST_AeolianEdgeCombo = 10074,
+
+    [ReplaceSkill(NIN.ArmorCrush)]
+    [CustomComboInfo("Armor Crush Combo", "Replace Armor Crush with its combo chain.", NIN.JobID)]
+    NIN_ST_ArmorCrushCombo = 10075,
+
+    #endregion
 
     [ReplaceSkill(NIN.ArmorCrush)]
     [CustomComboInfo("Armor Crush Combo Feature", "Replace Armor Crush with its combo chain.", NIN.JobID)]
@@ -3629,7 +3707,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", NIN.JobID)]
     NIN_Variant_Rampart = 10070,
 
-    // Last value = 10070
+    // Last value = 10075
 
     #endregion
 
@@ -3944,7 +4022,7 @@ public enum CustomComboPreset
     #endregion
 
     #region PALADIN
-
+    
     #region Simple Mode
 
     // Simple Modes
@@ -4180,6 +4258,14 @@ public enum CustomComboPreset
     PLD_AoE_AdvancedMode_HallowedGround = 11045,
 
     #endregion
+    
+    #region Basic combo
+
+    [ReplaceSkill(PLD.RageOfHalone)]
+    [CustomComboInfo("Basic Combo", "Replace Rage Of Halone with its combo chain.", PLD.JobID)]
+    PLD_ST_BasicCombo = 11061,
+
+    #endregion
 
     #region One-Button Mitigation
     [ReplaceSkill(PLD.Bulwark)]
@@ -4270,12 +4356,12 @@ public enum CustomComboPreset
 
     #endregion
 
-    //// Last value = 11060
+    //// Last value = 11061
 
     #endregion
 
     #region REAPER
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -4380,7 +4466,7 @@ public enum CustomComboPreset
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
     RPR_ST_ComboHeals = 12097,
 
-    //last value = 12020
+    //last value = 12021
 
     #endregion
 
@@ -4455,6 +4541,14 @@ public enum CustomComboPreset
     // Last value = 12117
 
     #endregion
+    
+    #region Basic combo
+
+    [ReplaceSkill(RPR.InfernalSlice)]
+    [CustomComboInfo("Basic Combo", "Replace Infernal Slice with its combo chain.", RPR.JobID)]
+    RPR_ST_BasicCombo = 12021,
+
+    #endregion
 
     #region Blood Stalk/Grim Swathe Combo Section
 
@@ -4524,7 +4618,7 @@ public enum CustomComboPreset
     RPR_EnshroudProtection = 12304,
 
     [ParentCombo(RPR_EnshroudProtection)]
-    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony and if Gibbet/Gallows options are selected to replace those skills.", RPR.JobID)]
+    [CustomComboInfo("True North Feature", "Adds True North when under Gluttony.", RPR.JobID)]
     RPR_TrueNorthEnshroud = 12308,
 
     [ReplaceSkill(RPR.Enshroud)]
@@ -5069,7 +5163,7 @@ public enum CustomComboPreset
     #endregion
 
     #region SAMURAI
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -5253,8 +5347,8 @@ public enum CustomComboPreset
     SAM_AoE_ComboHeals = 15199,
 
     #endregion
-
-    #region Yukikaze/Kasha/Gekko Combos
+    
+    #region Basic Combo
 
     [ReplaceSkill(SAM.Yukikaze)]
     [CustomComboInfo("Yukikaze Combo", "Replace Yukikaze with its combo chain.", SAM.JobID)]
@@ -5268,10 +5362,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Gekko Combo", "Replace Gekko with its combo chain.", SAM.JobID)]
     SAM_ST_GekkoCombo = 15010,
 
-    #endregion
-
-    #region AoE Oka Combo
-
     [ReplaceSkill(SAM.Oka)]
     [CustomComboInfo("Oka Combo", "Replace Oka with its combo chain.", SAM.JobID)]
     SAM_AoE_OkaCombo = 15100,
@@ -5281,7 +5371,7 @@ public enum CustomComboPreset
     SAM_AoE_MangetsuCombo = 15101,
 
     #endregion
-
+    
     #region Meikyo Features
 
     [ReplaceSkill(SAM.MeikyoShisui)]
@@ -6095,6 +6185,15 @@ SMN.JobID)]
     VPR_AoE_ComboHeals = 30199,
 
     #endregion
+    
+    #region Basic combo
+
+    [ReplaceSkill(VPR.ReavingFangs)]
+    [ConflictingCombos(VPR_ReawakenLegacy, VPR_Legacies, VPR_SerpentsTail)]
+    [CustomComboInfo("Basic Combo", "Replace Reaving Fangs with its combo chain.", VPR.JobID)]
+    VPR_ST_BasicCombo = 30015,
+
+    #endregion
 
     #region Variant
 
@@ -6126,7 +6225,7 @@ SMN.JobID)]
     VPR_UncoiledTwins = 30202,
 
     [ReplaceSkill(VPR.Reawaken, VPR.ReavingFangs)]
-    [ConflictingCombos(VPR_Legacies)]
+    [ConflictingCombos(VPR_Legacies, VPR_ST_BasicCombo)]
     [CustomComboInfo("Reawaken - Generation", "Replaces Option with the Generations.", VPR.JobID)]
     VPR_ReawakenLegacy = 30203,
 
@@ -6148,25 +6247,25 @@ SMN.JobID)]
     VPR_VicepitDens_oGCDs = 30207,
 
     [ReplaceSkill(VPR.SteelFangs, VPR.ReavingFangs, VPR.HuntersCoil, VPR.SwiftskinsCoil)]
-    [ConflictingCombos(VPR_ST_SimpleMode, VPR_ST_AdvancedMode, VPR_SerpentsTail, VPR_ReawakenLegacy)]
+    [ConflictingCombos(VPR_ST_SimpleMode, VPR_ST_AdvancedMode, VPR_SerpentsTail, VPR_ReawakenLegacy, VPR_ST_BasicCombo)]
     [CustomComboInfo("Legacy Buttons", "Replaces Generations with the Legacys.", VPR.JobID)]
     VPR_Legacies = 30209,
 
     [ReplaceSkill(VPR.SteelFangs, VPR.ReavingFangs, VPR.SteelMaw, VPR.ReavingMaw)]
-    [ConflictingCombos(VPR_ST_SimpleMode, VPR_AoE_SimpleMode, VPR_ST_AdvancedMode, VPR_AoE_AdvancedMode, VPR_Legacies)]
+    [ConflictingCombos(VPR_ST_SimpleMode, VPR_AoE_SimpleMode, VPR_ST_AdvancedMode, VPR_AoE_AdvancedMode, VPR_Legacies, VPR_ST_BasicCombo)]
     [CustomComboInfo("Serpents Tail", "Replaces basic combo with Death Rattle or Last Lash when applicable.", VPR.JobID)]
     VPR_SerpentsTail = 30210,
-    
+
     #endregion
     
-    //ST 30014
+    //ST 30015
     //AoE 30115
     //Misc 30210
 
     #endregion
 
     #region WARRIOR
-
+    
     #region Simple Mode
 
     [AutoAction(false, false)]
@@ -6386,6 +6485,18 @@ SMN.JobID)]
     #endregion
 
     #endregion
+    
+    #region Basic Combo
+
+    [ReplaceSkill(WAR.StormsPath)]
+    [CustomComboInfo("Storm's Path Combo", "Replace Storm's Path with its combo chain.", WAR.JobID)]
+    WAR_ST_StormsPathCombo = 18069,
+
+    [ReplaceSkill(WAR.StormsEye)]
+    [CustomComboInfo("Storm's Eye Combo", "Replace Storm's Eye with its combo chain.", WAR.JobID)]
+    WAR_ST_StormsEyeCombo = 18070,
+
+    #endregion
 
     #region One-Button Mitigation
     [ReplaceSkill(WAR.ThrillOfBattle)]
@@ -6486,7 +6597,7 @@ SMN.JobID)]
 
     #endregion
 
-    // Last value = 18068
+    // Last value = 18070
 
     #endregion
 

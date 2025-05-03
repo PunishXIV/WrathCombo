@@ -54,7 +54,9 @@ internal partial class VPR
                 case CustomComboPreset.VPR_ST_UncoiledFury:
                     DrawSliderInt(0, 3, VPR_ST_UncoiledFury_HoldCharges,
                         $"How many charges of {UncoiledFury.ActionName()} to keep ready? (0 = Use all)");
-                    DrawSliderInt(0, 5, VPR_ST_UncoiledFury_Threshold, $"Set a HP% Threshold to use all charges of {UncoiledFury.ActionName()}.");
+                    
+                    DrawSliderInt(0, 5, VPR_ST_UncoiledFury_Threshold,
+                    $"Set a HP% Threshold to use all charges of {UncoiledFury.ActionName()}.");
 
                     break;
 
@@ -70,7 +72,9 @@ internal partial class VPR
                 case CustomComboPreset.VPR_AoE_UncoiledFury:
                     DrawSliderInt(0, 3, VPR_AoE_UncoiledFury_HoldCharges,
                         $"How many charges of {UncoiledFury.ActionName()} to keep ready? (0 = Use all)");
-                    DrawSliderInt(0, 5, VPR_AoE_UncoiledFury_Threshold, $"Set a HP% Threshold to use all charges of {UncoiledFury.ActionName()}.");
+                    
+                    DrawSliderInt(0, 5, VPR_AoE_UncoiledFury_Threshold,
+                        $"Set a HP% Threshold to use all charges of {UncoiledFury.ActionName()}.");
 
                     break;
 
@@ -91,16 +95,17 @@ internal partial class VPR
                     break;
 
                 case CustomComboPreset.VPR_ReawakenLegacy:
-                    DrawRadioButton(VPR_ReawakenLegacyButton, $"Replaces {Reawaken.ActionName()}",
-                        $"Replaces {Reawaken.ActionName()} with Full Generation - Legacy combo.", 0);
+                    DrawRadioButton(VPR_ReawakenLegacyButton,
+                        $"Replaces {Reawaken.ActionName()}", $"Replaces {Reawaken.ActionName()} with Full Generation - Legacy combo.", 0);
 
-                    DrawRadioButton(VPR_ReawakenLegacyButton, $"Replaces {ReavingFangs.ActionName()}",
-                        $"Replaces {ReavingFangs.ActionName()} with Full Generation - Legacy combo.", 1);
+                    DrawRadioButton(VPR_ReawakenLegacyButton,
+                        $"Replaces {ReavingFangs.ActionName()}", $"Replaces {ReavingFangs.ActionName()} with Full Generation - Legacy combo.", 1);
 
                     break;
 
                 case CustomComboPreset.VPR_Variant_Cure:
-                    DrawSliderInt(1, 100, VPR_VariantCure, "HP% to be at or under", 200);
+                    DrawSliderInt(1, 100, VPR_VariantCure,
+                        "HP% to be at or under", 200);
 
                     break;
             }

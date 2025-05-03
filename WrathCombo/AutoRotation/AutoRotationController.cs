@@ -425,7 +425,7 @@ namespace WrathCombo.AutoRotation
                     {
                         var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
                         bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
-                        if (IsMoving() && castTime > 0 && !orbwalking)
+                        if (TimeMoving.TotalMilliseconds > 0 && castTime > 0 && !orbwalking)
                             return false;
 
                         var ret = ActionManager.Instance()->UseAction(ActionType.Action, Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct);
@@ -465,7 +465,7 @@ namespace WrathCombo.AutoRotation
                     bool switched = SwitchOnDChole(attributes, outAct, ref target);
                     var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
                     bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
-                    if (IsMoving() && castTime > 0 && !orbwalking)
+                    if (TimeMoving.TotalMilliseconds > 0 && castTime > 0 && !orbwalking)
                         return false;
 
                     if (mustTarget || cfg.DPSSettings.AlwaysSelectTarget)
@@ -527,7 +527,7 @@ namespace WrathCombo.AutoRotation
 
                 var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
                 bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
-                if (IsMoving() && castTime > 0 && !orbwalking)
+                if (TimeMoving.TotalMilliseconds > 0 && castTime > 0 && !orbwalking)
                     return false;
 
                 if (canUse && (inRange || areaTargeted))

@@ -102,6 +102,7 @@ public class ContentCheck
         }
     }
 
+    /// <seealso cref="IsInConfiguredContent(UserBoolArray, ListSet)"/>
     internal static bool IsInConfiguredContent
         (UserInt configuredContent, ListSet configListSet)
     {
@@ -120,6 +121,17 @@ public class ContentCheck
 
         return false;
     }
+
+    /// <summary>
+    ///     Check if the current area is PvP content.
+    /// </summary>
+    /// <returns>
+    ///     Whether the current area is the pier or instanced PvP content.
+    /// </returns>
+    public static bool IsInPVPContent() =>
+        (Content.ContentType is ContentType.OverWorld &&
+         Content.TerritoryName == "Wolves' Den Pier") ||
+        Content.ContentType is ContentType.PVP;
 
     #region Halved Content Lists
 
