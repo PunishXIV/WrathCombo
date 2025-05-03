@@ -25,7 +25,7 @@ internal partial class AST : Healer
 
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? Ascend
+                ? Ascend.AndRunMacro()
                 : actionID;
     }
 
