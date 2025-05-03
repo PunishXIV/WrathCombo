@@ -188,7 +188,7 @@ internal partial class RDM
                 || (GetRemainingCharges(Engagement) == 1 && GetCooldownRemainingTime(Engagement) < 3))
             && LevelChecked(Engagement)
             && !JustUsed(Engagement, 2f) //try not to double use, wait for next GCD
-            && IsTargetInRange(3f))
+            && InMeleeRange())
             newActionID = Engagement;
 
         if (newActionID == 0
@@ -257,7 +257,7 @@ internal partial class RDM
                 && !HasStatusEffect(Buffs.Dualcast)
                 && !HasStatusEffect(Role.Buffs.Swiftcast)
                 && !HasStatusEffect(Buffs.Acceleration)
-                && (IsTargetInRange(3f) || (GapCloser && HasCharges(Corpsacorps))))
+                && (InMeleeRange() || (GapCloser && HasCharges(Corpsacorps))))
             {
                 //Situation 1: Manafication first
                 if (DoubleCombo
@@ -373,7 +373,7 @@ internal partial class RDM
             bool MeleeEnforced = true)
         {
             //Normal Combo
-            if (IsTargetInRange(3f) || MeleeEnforced)
+            if (InMeleeRange() || MeleeEnforced)
             {
                 if ((ComboAction is Riposte or EnchantedRiposte)
                     && LevelChecked(Zwerchhau)
@@ -404,7 +404,7 @@ internal partial class RDM
             {
                 if (GapCloser
                     && ActionReady(Corpsacorps)
-                    && !IsTargetInRange(3f))
+                    && !InMeleeRange())
                 {
                     newActionID = Corpsacorps;
                     return true;
@@ -443,7 +443,7 @@ internal partial class RDM
                         return true;
                     }
                 }
-                if (IsTargetInRange(3f))
+                if (InMeleeRange())
                 {
                     newActionID = OriginalHook(Riposte);
                     return true;
@@ -454,7 +454,7 @@ internal partial class RDM
         }
 
         internal static bool TryAoEManaEmbolden(ref uint newActionID,                 //Simple Mode Values
-            float MoulinetRange = 6f)//idk just making this up
+            float MoulinetRange = 8f)//idk just making this up (same)
         {
             if (!CanSpellWeave()) return false;
 
@@ -524,7 +524,7 @@ internal partial class RDM
         }
 
         internal static bool TryAoEMeleeCombo(ref uint newActionID,                 //Simple Mode Values
-            int MoulinetRange = 6, bool GapCloser = false,
+            float MoulinetRange = 8f, bool GapCloser = false,
             bool MeleeEnforced = true)
         {
             if (IsTargetInRange(MoulinetRange) || MeleeEnforced)

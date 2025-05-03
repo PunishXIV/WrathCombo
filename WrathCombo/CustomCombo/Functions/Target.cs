@@ -67,11 +67,15 @@ namespace WrathCombo.CustomComboNS.Functions
             Vector2 selfPosition = new(source.Position.X, source.Position.Z);
             Vector2 targetPosition = new(target.Position.X, target.Position.Z);
 
-            return Math.Max(0f, Vector2.Distance(targetPosition, selfPosition) - target.HitboxRadius - source.HitboxRadius);
+            return MathF.Max(0f, Vector2.Distance(targetPosition, selfPosition) - target.HitboxRadius - source.HitboxRadius);
         }
 
         /// <summary> Gets the squared distance from the target as a float value. </summary>
-        public static float GetTargetDistanceSquared(IGameObject? optionalTarget = null, IGameObject? sourceChara = null)
+        /// <returns>
+        ///     If 'optionalRange' is set: Returns distance² for threshold comparisons.
+        ///     If 'optionalRange' is null: Returns (distance² - hitboxRadius²) for sorting.
+        /// </returns>
+        public static float GetTargetDistanceSquared(IGameObject? optionalTarget = null, IGameObject? sourceChara = null, float? optionalRange = null)
         {
             if (LocalPlayer is null) return 0f;
 
@@ -86,7 +90,11 @@ namespace WrathCombo.CustomComboNS.Functions
             float squaredDistance = Vector2.Dot(offset, offset);
             float totalHitbox = target.HitboxRadius + source.HitboxRadius;
 
-            return Math.Max(0f, squaredDistance - (totalHitbox * totalHitbox));
+            return optionalRange.HasValue
+                ? squaredDistance <= (optionalRange.Value + totalHitbox) * (optionalRange.Value + totalHitbox)
+                    ? squaredDistance
+                    : float.MaxValue
+                : MathF.Max(0f, squaredDistance - (totalHitbox * totalHitbox));
         }
 
         /// <summary> Gets the height distance from the target as a float value. </summary>
@@ -100,7 +108,7 @@ namespace WrathCombo.CustomComboNS.Functions
             IGameObject? source = sourceChara ?? LocalPlayer;
             if (target.GameObjectId == source.GameObjectId) return 0f;
 
-            return Math.Abs(target.Position.Y - source.Position.Y);
+            return MathF.Abs(target.Position.Y - source.Position.Y);
         }
 
         /// <summary> Checks if the target is within melee range. </summary>
@@ -596,8 +604,8 @@ namespace WrathCombo.CustomComboNS.Functions
                 Vector2 Q = A + d * (lenFront / 2);
                 Vector2 P2 = P - Q;
                 Vector2 Ptrans = new(Vector2.Dot(P2, n), Vector2.Dot(P2, d));
-                Vector2 Pabs = new(Math.Abs(Ptrans.X), Math.Abs(Ptrans.Y));
-                Vector2 Pcorner = new(Math.Abs(Ptrans.X) - halfWidth, Math.Abs(Ptrans.Y) - (lenFront / 2));
+                Vector2 Pabs = new(MathF.Abs(Ptrans.X), MathF.Abs(Ptrans.Y));
+                Vector2 Pcorner = new(MathF.Abs(Ptrans.X) - halfWidth, MathF.Abs(Ptrans.Y) - (lenFront / 2));
 
                 #region Debug
 #if DEBUG

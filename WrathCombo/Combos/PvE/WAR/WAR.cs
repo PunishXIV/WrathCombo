@@ -60,7 +60,7 @@ internal partial class WAR : Tank
             if (actionID is not HeavySwing)
                 return actionID; //Our button
 
-
+            bool inContactRange = IsTargetInRange(1f);
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
                               JustUsed(OriginalHook(Vengeance), 5f) ||
                               JustUsed(ThrillOfBattle, 5f) ||
@@ -171,7 +171,7 @@ internal partial class WAR : Tank
                         GetRemainingCharges(Onslaught) > 1) //has more than 1 charge
                     {
                         if (!IsMoving() && //not moving
-                            IsTargetInRange(1f) && //within 1y of target
+                            inContactRange && //within 1y of target
                             (GetCooldownRemainingTime(InnerRelease) > 40 || !LevelChecked(InnerRelease))) //IR is not ready or available
                             return Onslaught;
                     }
@@ -180,7 +180,7 @@ internal partial class WAR : Tank
                 if (HasStatusEffect(Buffs.PrimalRendReady) && //has Primal Rend ready
                     !JustUsed(InnerRelease) && //has not just used IR
                     !IsMoving() && //not moving
-                    IsTargetInRange(1f)) //within 1y of target
+                    inContactRange) //within 1y of target
                     return PrimalRend;
 
                 if (HasStatusEffect(Buffs.PrimalRuinationReady) && //has Primal Ruination ready
@@ -237,6 +237,7 @@ internal partial class WAR : Tank
             if (actionID is not HeavySwing)
                 return actionID; //Our button
 
+            bool inContactRange = IsTargetInRange(1f);
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
                               JustUsed(OriginalHook(Vengeance), 5f) ||
                               JustUsed(ThrillOfBattle, 5f) ||
@@ -385,7 +386,7 @@ internal partial class WAR : Tank
                     {
                         if (IsNotEnabled(CustomComboPreset.WAR_ST_Advanced_Onslaught_MeleeSpender) || //Melee spender option is disabled
                             IsEnabled(CustomComboPreset.WAR_ST_Advanced_Onslaught_MeleeSpender) && //Melee spender option is enabled
-                            !IsMoving() && IsTargetInRange(1f) && //not moving and within 1y of target
+                            !IsMoving() && inContactRange && //not moving and within 1y of target
                             (GetCooldownRemainingTime(InnerRelease) > 40 || !LevelChecked(InnerRelease))) //IR is not ready or available
                             return Onslaught;
                     }
@@ -402,7 +403,7 @@ internal partial class WAR : Tank
                         return PrimalRend;
 
                     if (IsNotEnabled(CustomComboPreset.WAR_ST_Advanced_PrimalRend_Late) && //Primal Rend late option is disabled
-                        !IsMoving() && IsTargetInRange(1f)) //not moving & within 1y of target
+                        !IsMoving() && inContactRange) //not moving & within 1y of target
                         return PrimalRend;
                 }
 
