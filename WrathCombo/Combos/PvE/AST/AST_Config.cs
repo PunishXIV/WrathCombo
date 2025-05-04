@@ -32,6 +32,7 @@ internal partial class AST
 
         public static UserBool
             AST_QuickTarget_SkipDamageDown = new("AST_QuickTarget_SkipDamageDown"),
+            AST_QuickTarget_Prio = new("AST_QuickTarget_Prio"),
             AST_QuickTarget_SkipRezWeakness = new("AST_QuickTarget_SkipRezWeakness"),
             AST_ST_SimpleHeals_Adv = new("AST_ST_SimpleHeals_Adv"),
             AST_ST_SimpleHeals_UIMouseOver = new("AST_ST_SimpleHeals_UIMouseOver"),
@@ -195,6 +196,7 @@ internal partial class AST
                     ImGui.Spacing();
                     DrawAdditionalBoolChoice(AST_QuickTarget_SkipDamageDown, $"Skip targets with a {GetStatusName(62)} debuff", "");
                     DrawAdditionalBoolChoice(AST_QuickTarget_SkipRezWeakness, $"Skip targets with a {GetStatusName(43)} or {GetStatusName(44)} debuff", "");
+                    DrawAdditionalBoolChoice(AST_QuickTarget_Prio, $"Uses Fixed Card Priorities", "");
                     break;
 
                 case CustomComboPreset.AST_DPS_AutoDraw:
