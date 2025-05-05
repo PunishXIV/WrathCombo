@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
 {
-    internal static SAMGauge Gauge = GetJobGauge<SAMGauge>();
     internal static SAMOpenerMaxLevel1 Opener1 = new();
 
     internal static bool RefreshFugetsu => GetStatusEffectRemainingTime(Buffs.Fugetsu) < GetStatusEffectRemainingTime(Buffs.Fuka);
@@ -23,22 +23,6 @@ internal partial class SAM
     internal static bool DoubleMeikyo => TraitLevelChecked(Traits.EnhancedMeikyoShishui);
 
     internal static int SenCount => GetSenCount();
-
-    private static int GetSenCount()
-    {
-        int senCount = 0;
-
-        if (Gauge.HasGetsu)
-            senCount++;
-
-        if (Gauge.HasSetsu)
-            senCount++;
-
-        if (Gauge.HasKa)
-            senCount++;
-
-        return senCount;
-    }
 
     internal static bool UseMeikyo()
     {
@@ -194,6 +178,22 @@ internal partial class SAM
         return false;
     }
 
+    private static int GetSenCount()
+    {
+        int senCount = 0;
+
+        if (HasGetsu)
+            senCount++;
+
+        if (HasSetsu)
+            senCount++;
+
+        if (HasKa)
+            senCount++;
+
+        return senCount;
+    }
+
     #region Openers
 
     internal static WrathOpener Opener()
@@ -257,6 +257,26 @@ internal partial class SAM
             IsOffCooldown(Senei) &&
             IsOffCooldown(Ikishoten);
     }
+
+    #endregion
+
+    #region Gauge
+
+    internal static SAMGauge Gauge = GetJobGauge<SAMGauge>();
+
+    internal static bool HasGetsu => Gauge.HasGetsu;
+
+    internal static bool HasSetsu => Gauge.HasSetsu;
+
+    internal static bool HasKa => Gauge.HasKa;
+
+    internal static byte Kenki => Gauge.Kenki;
+
+    internal static byte MeditationStacks => Gauge.MeditationStacks;
+
+    internal static Kaeshi Kaeshi => Gauge.Kaeshi;
+
+    internal static bool NamikiriReady => Kaeshi is Kaeshi.Namikiri;
 
     #endregion
 

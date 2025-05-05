@@ -22,7 +22,7 @@ internal partial class MNK : Melee
 
             if (LevelChecked(SteeledMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
-                Gauge.Chakra < 5 &&
+                Chakra < 5 &&
                 IsOriginal(MasterfulBlitz) &&
                 !HasStatusEffect(Buffs.RiddleOfFire) &&
                 !HasStatusEffect(Buffs.WindsRumination) &&
@@ -61,13 +61,13 @@ internal partial class MNK : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
 
-                if (Gauge.Chakra >= 5 && InCombat() && LevelChecked(SteeledMeditation))
+                if (Chakra >= 5 && InCombat() && LevelChecked(SteeledMeditation))
                     return OriginalHook(SteeledMeditation);
             }
 
             // GCDs
             if (HasStatusEffect(Buffs.FormlessFist))
-                return Gauge.OpoOpoFury == 0
+                return OpoOpo is 0
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
@@ -120,7 +120,7 @@ internal partial class MNK : Melee
             if (IsEnabled(CustomComboPreset.MNK_STUseMeditation) &&
                 LevelChecked(SteeledMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
-                Gauge.Chakra < 5 &&
+                Chakra < 5 &&
                 IsOriginal(MasterfulBlitz) &&
                 !HasStatusEffect(Buffs.RiddleOfFire) &&
                 !HasStatusEffect(Buffs.WindsRumination) &&
@@ -136,7 +136,7 @@ internal partial class MNK : Melee
             if (IsEnabled(CustomComboPreset.MNK_STUseOpener) &&
                 Opener().FullOpener(ref actionID))
                 return Opener().OpenerStep >= 9 &&
-                       CanWeave() && Gauge.Chakra >= 5
+                       CanWeave() && Chakra >= 5
                     ? TheForbiddenChakra
                     : actionID;
 
@@ -184,14 +184,14 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(CustomComboPreset.MNK_STUseTheForbiddenChakra) &&
-                    Gauge.Chakra >= 5 && InCombat() &&
+                    Chakra >= 5 && InCombat() &&
                     LevelChecked(SteeledMeditation))
                     return OriginalHook(SteeledMeditation);
             }
 
             // GCDs
             if (HasStatusEffect(Buffs.FormlessFist))
-                return Gauge.OpoOpoFury == 0
+                return OpoOpo is 0
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
@@ -249,7 +249,7 @@ internal partial class MNK : Melee
 
             if (LevelChecked(InspiritedMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
-                Gauge.Chakra < 5 &&
+                Chakra < 5 &&
                 IsOriginal(MasterfulBlitz) &&
                 !HasStatusEffect(Buffs.RiddleOfFire) &&
                 !HasStatusEffect(Buffs.WindsRumination) &&
@@ -285,7 +285,7 @@ internal partial class MNK : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
 
-                if (Gauge.Chakra >= 5 &&
+                if (Chakra >= 5 &&
                     LevelChecked(InspiritedMeditation) &&
                     HasBattleTarget() && InCombat())
                     return OriginalHook(InspiritedMeditation);
@@ -353,7 +353,7 @@ internal partial class MNK : Melee
             if (IsEnabled(CustomComboPreset.MNK_AoEUseMeditation) &&
                 LevelChecked(InspiritedMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
-                Gauge.Chakra < 5 &&
+                Chakra < 5 &&
                 IsOriginal(MasterfulBlitz) &&
                 !HasStatusEffect(Buffs.RiddleOfFire) &&
                 !HasStatusEffect(Buffs.WindsRumination) &&
@@ -405,7 +405,7 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseHowlingFist) &&
-                    Gauge.Chakra >= 5 && HasBattleTarget() && InCombat() &&
+                    Chakra >= 5 && HasBattleTarget() && InCombat() &&
                     LevelChecked(InspiritedMeditation))
                     return OriginalHook(InspiritedMeditation);
             }
@@ -500,19 +500,19 @@ internal partial class MNK : Melee
         {
             if (IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
                 actionID is Bootshine or LeapingOpo)
-                return Gauge.OpoOpoFury == 0 && LevelChecked(DragonKick)
+                return OpoOpo is 0 && LevelChecked(DragonKick)
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
             if (IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
                 actionID is TrueStrike or RisingRaptor)
-                return Gauge.RaptorFury == 0 && LevelChecked(TwinSnakes)
+                return Raptor is 0 && LevelChecked(TwinSnakes)
                     ? TwinSnakes
                     : OriginalHook(TrueStrike);
 
             if (IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
                 actionID is SnapPunch or PouncingCoeurl)
-                return Gauge.CoeurlFury == 0 && LevelChecked(Demolish)
+                return Coeurl is 0 && LevelChecked(Demolish)
                     ? Demolish
                     : OriginalHook(SnapPunch);
 

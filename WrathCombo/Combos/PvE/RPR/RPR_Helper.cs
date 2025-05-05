@@ -9,28 +9,11 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class RPR
 {
-    internal static RPRGauge Gauge = GetJobGauge<RPRGauge>();
     internal static RPROpenerMaxLevel1 Opener1 = new();
 
-    internal static float GCD => GetCooldown(Slice).CooldownTotal;
-
-    internal static unsafe bool IsComboExpiring(float times)
+    internal static bool UseEnshroud()
     {
-        float gcd = GCD * times;
-
-        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
-    }
-
-    internal static bool IsDebuffExpiring(float times)
-    {
-        float gcd = GCD * times;
-
-        return HasStatusEffect(Debuffs.DeathsDesign, CurrentTarget) && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < gcd;
-    }
-
-    internal static bool UseEnshroud(RPRGauge gauge)
-    {
-        if (LevelChecked(Enshroud) && (gauge.Shroud >= 50 || HasStatusEffect(Buffs.IdealHost)) &&
+        if (LevelChecked(Enshroud) && (Shroud >= 50 || HasStatusEffect(Buffs.IdealHost)) &&
             !HasStatusEffect(Buffs.SoulReaver) && !HasStatusEffect(Buffs.Executioner) &&
             !HasStatusEffect(Buffs.PerfectioParata) && !HasStatusEffect(Buffs.Enshrouded))
         {
@@ -59,7 +42,7 @@ internal partial class RPR
 
             // Correction for 2 min windows 
             if (!HasStatusEffect(Buffs.ArcaneCircle) && !IsDebuffExpiring(5) &&
-                gauge.Soul >= 90)
+                Soul >= 90)
                 return true;
         }
 
@@ -146,6 +129,26 @@ internal partial class RPR
         return false;
     }
 
+    #region Combos
+
+    internal static float GCD => GetCooldown(Slice).CooldownTotal;
+
+    internal static unsafe bool IsComboExpiring(float times)
+    {
+        float gcd = GCD * times;
+
+        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
+    }
+
+    internal static bool IsDebuffExpiring(float times)
+    {
+        float gcd = GCD * times;
+
+        return HasStatusEffect(Debuffs.DeathsDesign, CurrentTarget) && GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < gcd;
+    }
+
+    #endregion
+
     #region Openers
 
     internal static WrathOpener Opener()
@@ -209,6 +212,20 @@ internal partial class RPR
             IsOffCooldown(ArcaneCircle) &&
             IsOffCooldown(Gluttony);
     }
+
+    #endregion
+
+    #region Gauge
+
+    internal static RPRGauge Gauge = GetJobGauge<RPRGauge>();
+
+    internal static byte Shroud => Gauge.Shroud;
+
+    internal static byte Soul => Gauge.Soul;
+
+    internal static byte Lemure => Gauge.LemureShroud;
+
+    internal static byte Void => Gauge.VoidShroud;
 
     #endregion
 

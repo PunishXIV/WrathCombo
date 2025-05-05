@@ -1,17 +1,18 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
 {
-    public static readonly Dictionary<uint, ushort>
+    internal static BLMStandardOpener StandardOpener = new();
+    internal static BLMFlareOpener FlareOpener = new();
+
+    internal static readonly Dictionary<uint, ushort>
         ThunderList = new()
         {
             { Thunder, Debuffs.Thunder },
@@ -22,10 +23,6 @@ internal partial class BLM
             { HighThunder2, Debuffs.HighThunder2 }
         };
 
-    internal static BLMGauge Gauge = GetJobGauge<BLMGauge>();
-    internal static BLMStandardOpener StandardOpener = new();
-    internal static BLMFlareOpener FlareOpener = new();
-
     internal static uint CurMp => GetPartyMembers().First().CurrentMP;
 
     internal static int MaxPolyglot =>
@@ -34,17 +31,13 @@ internal partial class BLM
 
     internal static bool HasMaxPolyglotStacks => PolyglotStacks == MaxPolyglot;
 
-    internal static bool EndOfFirePhase => Gauge.InAstralFire && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
+    internal static bool EndOfFirePhase => FirePhase && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
 
-    internal static bool EndOfIcePhase => Gauge.InUmbralIce && CurMp == MP.MaxMP && HasMaxUmbralHeartStacks;
+    internal static bool EndOfIcePhase => IcePhase && CurMp == MP.MaxMP && HasMaxUmbralHeartStacks;
 
-    internal static bool EndOfIcePhaseAoEMaxLevel => Gauge.InUmbralIce && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
+    internal static bool EndOfIcePhaseAoEMaxLevel => IcePhase && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
 
-    internal static int PolyglotStacks => Gauge.PolyglotStacks;
-
-    internal static bool FlarestarReady => LevelChecked(FlareStar) && Gauge.AstralSoulStacks == 6;
-
-    internal static int RemainingPolyglotCD => Math.Max(0, (MaxPolyglot - Gauge.PolyglotStacks) * 30000 + (Gauge.EnochianTimer - 30000));
+    internal static bool FlarestarReady => LevelChecked(FlareStar) && AstralSoulStacks is 6;
 
     internal static Status? ThunderDebuffST => GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
 
@@ -56,7 +49,7 @@ internal partial class BLM
 
     internal static float TimeSinceFirestarterBuff => HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
-    internal static bool HasMaxUmbralHeartStacks => !TraitLevelChecked(Traits.UmbralHeart) || Gauge.UmbralHearts == 3; //Returns true before you can have Umbral Hearts out of design
+    internal static bool HasMaxUmbralHeartStacks => !TraitLevelChecked(Traits.UmbralHeart) || UmbralHearts is 3; //Returns true before you can have Umbral Hearts out of design
 
     internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
 
@@ -188,6 +181,30 @@ internal partial class BLM
 
   #endregion
 
+    #region Gauge
+
+    internal static BLMGauge Gauge = GetJobGauge<BLMGauge>();
+
+    internal static bool FirePhase => Gauge.InAstralFire;
+
+    internal static byte AstralFireStacks => Gauge.AstralFireStacks;
+
+    internal static bool IcePhase => Gauge.InUmbralIce;
+
+    internal static byte UmbralIceStacks => Gauge.UmbralIceStacks;
+
+    internal static byte UmbralHearts => Gauge.UmbralHearts;
+
+    internal static bool ActiveParadox => Gauge.IsParadoxActive;
+
+    internal static int AstralSoulStacks => Gauge.AstralSoulStacks;
+
+    internal static byte PolyglotStacks => Gauge.PolyglotStacks;
+
+    internal static short PolyglotTimer => Gauge.EnochianTimer;
+
+    #endregion
+
     #region ID's
 
     public const byte ClassID = 7;
@@ -267,8 +284,6 @@ internal partial class BLM
     internal static class MP
     {
         internal const int MaxMP = 10000;
-
-        internal const int AllMPSpells = 800; //"ALL MP" spell. Only caring about the absolute minimum.
 
         internal static int FireI => GetResourceCost(OriginalHook(Fire));
 
