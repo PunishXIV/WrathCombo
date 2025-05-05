@@ -6,6 +6,7 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using Dalamud.Game.ClientState.Objects.Types;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -150,20 +151,18 @@ internal partial class SMN
 
     #endregion
 
+    #region Variables
     internal static SMNGauge Gauge => GetJobGauge<SMNGauge>();
 
     internal static bool IsIfritAttuned => Gauge.AttunementType is SummonAttunement.Ifrit;
     internal static bool IsTitanAttuned => Gauge.AttunementType is SummonAttunement.Titan;
     internal static bool IsGarudaAttuned => Gauge.AttunementType is SummonAttunement.Garuda;
-
     internal static bool GemshineReady => Gauge.AttunementCount > 0;
-
     internal static bool IsAttunedAny => IsIfritAttuned || IsTitanAttuned || IsGarudaAttuned;
-
     internal static bool IsDreadwyrmTranceReady => !LevelChecked(SummonBahamut) && IsBahamutReady;
     internal static bool IsBahamutReady => !IsPhoenixReady && !IsSolarBahamutReady;
     internal static bool IsPhoenixReady => Gauge.AetherFlags.HasFlag((AetherFlags)4) && !Gauge.AetherFlags.HasFlag((AetherFlags)8);
-    internal static bool IsSolarBahamutReady => Gauge.AetherFlags.HasFlag((AetherFlags)8) || Gauge.AetherFlags.HasFlag((AetherFlags)12);
+    internal static bool IsSolarBahamutReady => Gauge.AetherFlags.HasFlag((AetherFlags)8) || Gauge.AetherFlags.HasFlag((AetherFlags)12);    
 
     private static DateTime SummonTime
     {
@@ -201,6 +200,77 @@ internal partial class SMN
         Phoenix,
         SolarBahamut
     }
+    #endregion
+
+    #region Egi Priority
+
+    public static int GetMatchingConfigST(
+        int i,
+        IGameObject? optionalTarget,
+        out uint action,
+        out bool enabled)
+    {      
+        switch (i)
+        {
+            case 0:
+                action = OriginalHook(SummonTopaz);
+
+                enabled = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Titan) && Gauge.IsTitanReady;
+                return 0;
+
+            case 1:
+                action = OriginalHook(SummonEmerald);
+
+                enabled = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Garuda) && Gauge.IsGarudaReady;
+                return 0;
+
+            case 2:
+                action = OriginalHook(SummonRuby);
+
+                enabled = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ifrit) && Gauge.IsIfritReady;
+                return 0;
+        }
+
+        enabled = false;
+        action = 0;
+
+        return 0;
+    }
+
+    public static int GetMatchingConfigAoE(
+        int i,
+        IGameObject? optionalTarget,
+        out uint action,
+        out bool enabled)
+    {       
+        switch (i)
+        {
+            case 0:
+                action = OriginalHook(SummonTopaz);
+
+                enabled = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Titan) && Gauge.IsTitanReady;
+                return 0;
+            case 1:
+                action = OriginalHook(SummonEmerald);
+
+                enabled = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Garuda) && Gauge.IsGarudaReady;
+                return 0;
+            case 2:
+                action = OriginalHook(SummonRuby);
+
+                enabled = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ifrit) && Gauge.IsIfritReady;
+                return 0;
+        }
+
+        enabled = false;
+        action = 0;
+
+        return 0;
+    }
+
+    #endregion
+
+    #region Opener
 
     internal static SMNOpenerMaxLevel1 Opener1 = new();
     internal static WrathOpener Opener()
@@ -270,4 +340,6 @@ internal partial class SMN
             return true;
         }
     }
+    #endregion
 }
+

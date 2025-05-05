@@ -1,4 +1,6 @@
-﻿using WrathCombo.Attributes;
+﻿using Lumina.Data.Parsing;
+using System;
+using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
 namespace WrathCombo.Combos;
@@ -5647,10 +5649,8 @@ public enum CustomComboPreset
     SMN_ST_Advanced_Combo_Balance_Opener = 170001,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Use Ruin III instead of Emerald Ruin III when standing still between the levels of 54 and 72",
-        "Replaces Emerald Ruin III with Ruin III in the rotation when standing still and Ruin Mastery III is not active.",
-        SMN.JobID)]
-    SMN_ST_Ruin3_Emerald_Ruin3 = 17067,
+    [CustomComboInfo("Demi Summons Combo Option", "Adds Demi summons to the single target combo.", SMN.JobID)]
+    SMN_ST_Advanced_Combo_DemiSummons = 17020,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Demi Attacks Combo Option", "Adds Demi Summon oGCDs to the single target combo.", SMN.JobID)]
@@ -5665,23 +5665,34 @@ public enum CustomComboPreset
     SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris = 17029,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
+    [CustomComboInfo("Summon Titan", "Adds Titan to the Single Target Rotation", SMN.JobID)]
+    SMN_ST_Advanced_Combo_Titan = 17073,
+
+    [ParentCombo(SMN_ST_Advanced_Combo)]
+    [CustomComboInfo("Summon Garuda", "Adds Garuda to the Single Target Rotation", SMN.JobID)]
+    SMN_ST_Advanced_Combo_Garuda = 17074,
+
+    [ParentCombo(SMN_ST_Advanced_Combo)]
+    [CustomComboInfo("Summon Ifrit", "Adds Ifrit to the Single Target Rotation", SMN.JobID)]
+    SMN_ST_Advanced_Combo_Ifrit = 17075,
+
+    [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Egi Attacks Combo Option", "Adds Gemshine to the single target combo.", SMN.JobID)]
     SMN_ST_Advanced_Combo_EgiSummons_Attacks = 17004,
 
-    [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Lucid Dreaming Option",
-        "Adds Lucid Dreaming to the single target combo when MP falls below the set value.", SMN.JobID)]
-    SMN_ST_Advanced_Combo_Lucid = 17031,
+    [ParentCombo(SMN_ST_Advanced_Combo_EgiSummons_Attacks)]
+    [CustomComboInfo("Use Ruin III instead of Emerald Ruin III when standing still between the levels of 54 and 72",
+        "Replaces Emerald Ruin III with Ruin III in the rotation when standing still and Ruin Mastery III is not active.",
+        SMN.JobID)]
+    SMN_ST_Ruin3_Emerald_Ruin3 = 17067,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Add Egi Astralflow", "Choose which Egi Astralflows to add to the rotation.", SMN.JobID)]
     SMN_ST_Advanced_Combo_Egi_AstralFlow = 17048,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Ruin IV Combo Option",
-        "Adds Ruin IV to the single target combo.\nUses when moving during Garuda Phase and you have no attunement, when moving during Ifrit phase, or when you have no active Egi or Demi summon.",
-        SMN.JobID)]
-    SMN_ST_Advanced_Combo_Ruin4 = 17011,
+    [CustomComboInfo("Swiftcast Egi Ability Option", "Uses Swiftcast during the selected Egi summon.", SMN.JobID)]
+    SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi = 17023,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Energy Attacks Combo Option",
@@ -5716,22 +5727,19 @@ public enum CustomComboPreset
     SMN_ST_Advanced_Combo_SearingFlash = 17019,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Demi Summons Combo Option", "Adds Demi summons to the single target combo.", SMN.JobID)]
-    SMN_ST_Advanced_Combo_DemiSummons = 17020,
-
-    [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Swiftcast Egi Ability Option", "Uses Swiftcast during the selected Egi summon.", SMN.JobID)]
-    SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi = 17023,
-
-    [ParentCombo(SMN_ST_Advanced_Combo)]
-    [CustomComboInfo("Egi Summons Combo Option",
-    "Adds Egi summons to the single target combo.\nWill prioritise the Egi selected below.",
-    SMN.JobID)]
-    SMN_ST_Advanced_Combo_DemiEgiMenu_EgiOrder = 17016,
+    [CustomComboInfo("Ruin IV Combo Option",
+        "Adds Ruin IV to the single target combo.\nUses when moving during Garuda Phase and you have no attunement, when moving during Ifrit phase, or when you have no active Egi or Demi summon.",
+        SMN.JobID)]
+    SMN_ST_Advanced_Combo_Ruin4 = 17011,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
     SMN_ST_Advanced_Combo_Radiant = 17071,
+
+    [ParentCombo(SMN_ST_Advanced_Combo)]
+    [CustomComboInfo("Lucid Dreaming Option",
+       "Adds Lucid Dreaming to the single target combo when MP falls below the set value.", SMN.JobID)]
+    SMN_ST_Advanced_Combo_Lucid = 17031,
 
     #endregion
 
@@ -5744,6 +5752,46 @@ public enum CustomComboPreset
         "Replaces Outburst with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.",
         SMN.JobID)]
     SMN_AoE_Advanced_Combo = 17049,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Demi Summons Combo Option", "Adds Demi summons to the AoE combo.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_DemiSummons = 17061,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Demi Attacks Combo Option", "Adds Demi Summon oGCDs to the AoE combo.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_DemiSummons_Attacks = 17055,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo_DemiSummons_Attacks)]
+    [CustomComboInfo("Rekindle Combo Option", "Adds Rekindle to the AoE combo.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_DemiSummons_Rekindle = 17056,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo_DemiSummons_Attacks)]
+    [CustomComboInfo("Lux Solaris Combo Option", "Adds Lux Solaris to the AoE combo.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_DemiSummons_LuxSolaris = 17059,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Summon Titan", "Adds Titan to the AoE Rotation", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Titan = 17076,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Summon Garuda", "Adds Garuda to the AoE Rotation", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Garuda = 17077,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Summon Ifrit", "Adds Ifrit to the AoE Rotation", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Ifrit = 17078,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Egi Attacks Combo Option", "Adds Precious Brilliance to the AoE combo.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_EgiSummons_Attacks = 17064,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Add Egi Astralflow", "Choose which Egi Astralflows to add to the rotation.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Egi_AstralFlow = 17068,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Swiftcast Egi Ability Option", "Uses Swiftcast during the selected Egi summon.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi = 17063,
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Energy Attacks Combo Option",
@@ -5773,58 +5821,39 @@ SMN.JobID)]
         SMN.JobID)]
     SMN_AoE_Advanced_Combo_SearingLight_Burst = 17054,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Demi Attacks Combo Option", "Adds Demi Summon oGCDs to the AoE combo.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiSummons_Attacks = 17055,
-
-    [ParentCombo(SMN_AoE_Advanced_Combo_DemiSummons_Attacks)]
-    [CustomComboInfo("Rekindle Combo Option", "Adds Rekindle to the AoE combo.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiSummons_Rekindle = 17056,
-
     [ParentCombo(SMN_AoE_Advanced_Combo_SearingLight)]
     [CustomComboInfo("Searing Flash Combo Option", "Adds Searing Flash to the AoE combo.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_SearingFlash = 17058,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo_DemiSummons_Attacks)]
-    [CustomComboInfo("Lux Solaris Combo Option", "Adds Lux Solaris to the AoE combo.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiSummons_LuxSolaris = 17059,
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Ruin IV Combo Option",
+       "Adds Ruin IV to the AoE combo.\nUses when moving during Garuda Phase and you have no attunement, when moving during Ifrit phase, or when you have no active Egi or Demi summon.",
+       SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Ruin4 = 17062,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_Radiant = 17070,
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Lucid Dreaming Option", "Adds Lucid Dreaming to the AoE combo when MP falls below the set value.",
         SMN.JobID)]
     SMN_AoE_Advanced_Combo_Lucid = 17060,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Demi Summons Combo Option", "Adds Demi summons to the AoE combo.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiSummons = 17061,
+    
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Ruin IV Combo Option",
-        "Adds Ruin IV to the AoE combo.\nUses when moving during Garuda Phase and you have no attunement, when moving during Ifrit phase, or when you have no active Egi or Demi summon.",
-        SMN.JobID)]
-    SMN_AoE_Advanced_Combo_Ruin4 = 17062,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Swiftcast Egi Ability Option", "Uses Swiftcast during the selected Egi summon.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi = 17063,
+   
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Egi Attacks Combo Option", "Adds Precious Brilliance to the AoE combo.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_EgiSummons_Attacks = 17064,
+   
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Egi Summons Combo Option",
-        "Adds Egi summons to the AoE combo.\nWill prioritise the Egi selected below.",
-        SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiEgiMenu_EgiOrder = 17065,
+     
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Add Egi Astralflow", "Choose which Egi Astralflows to add to the rotation.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_Egi_AstralFlow = 17068,
+    
 
-    [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_Radiant = 17070,
+    
+
+    
     #endregion
 
     #region Standalone Features
@@ -5898,6 +5927,8 @@ SMN.JobID)]
     SMN_Variant_Cure = 17047,
 
     #endregion
+
+    // Last Used 17078
 
     #endregion
 

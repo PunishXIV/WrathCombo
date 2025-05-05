@@ -13,14 +13,12 @@ internal partial class SMN
         public static UserInt
             SMN_ST_Lucid = new("SMN_ST_Lucid", 8000),
             SMN_ST_BurstPhase = new("SMN_ST_BurstPhase", 1),
-            SMN_ST_PrimalChoice = new("SMN_PrimalChoice", 1),
             SMN_ST_SwiftcastPhase = new("SMN_SwiftcastPhase", 1),
             SMN_ST_Burst_Delay = new("SMN_Burst_Delay", 0),
             SMN_Opener_SkipSwiftcast = new("SMN_Opener_SkipSwiftcast", 1),
 
             SMN_AoE_Lucid = new("SMN_AoE_Lucid", 8000),
             SMN_AoE_BurstPhase = new("SMN_AoE_BurstPhase", 1),
-            SMN_AoE_PrimalChoice = new("SMN_AoE_PrimalChoice", 1),
             SMN_AoE_SwiftcastPhase = new("SMN_AoE_SwiftcastPhase", 1),
             SMN_AoE_Burst_Delay = new("SMN_AoE_Burst_Delay", 0),
 
@@ -36,6 +34,10 @@ internal partial class SMN
             SMN_AoE_CrimsonCycloneMelee = new("SMN_AoE_CrimsonCycloneMelee"),
             SMN_ST_Searing_Any = new("SMN_ST_Searing_Any"),
             SMN_AoE_Searing_Any = new("SMN_AoE_Searing_Any");
+
+        internal static UserIntArray 
+            SMN_ST_Egi_Priority = new("SMN_ST_Egi_Priority"),
+            SMN_AoE_Egi_Priority = new ("SMN_AoE_Egi_Priority");
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -54,22 +56,34 @@ internal partial class SMN
                         "Will not use swiftcast in opener for higher gcds", 2);
                     break;
 
-                case CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_EgiOrder:
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_PrimalChoice, "Titan first",
-                        "Summons Titan, Garuda then Ifrit.", 1);
-
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_PrimalChoice, "Garuda first",
-                        "Summons Garuda, Titan then Ifrit.", 2);
-
+                case CustomComboPreset.SMN_ST_Advanced_Combo_Titan:                    
+                    UserConfig.DrawPriorityInput(SMN_ST_Egi_Priority, 3, 0,
+                        $"{SummonTopaz.ActionName()} Priority: ");
                     break;
 
-                case CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_EgiOrder:
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_PrimalChoice, "Titan first",
-                        "Summons Titan, Garuda then Ifrit.", 1);
+                case CustomComboPreset.SMN_ST_Advanced_Combo_Garuda:
+                    UserConfig.DrawPriorityInput(SMN_ST_Egi_Priority, 3, 1,
+                        $"{SummonEmerald.ActionName()} Priority: ");
+                    break;
 
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_PrimalChoice, "Garuda first",
-                        "Summons Garuda, Titan then Ifrit.", 2);
+                case CustomComboPreset.SMN_ST_Advanced_Combo_Ifrit:
+                    UserConfig.DrawPriorityInput(SMN_ST_Egi_Priority, 3, 2,
+                        $"{SummonRuby.ActionName()} Priority: ");
+                    break;
 
+                case CustomComboPreset.SMN_AoE_Advanced_Combo_Titan:
+                    UserConfig.DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 0,
+                        $"{SummonTopaz.ActionName()} Priority: ");
+                    break;
+
+                case CustomComboPreset.SMN_AoE_Advanced_Combo_Garuda:
+                    UserConfig.DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 1,
+                        $"{SummonEmerald.ActionName()} Priority: ");
+                    break;
+
+                case CustomComboPreset.SMN_AoE_Advanced_Combo_Ifrit:
+                    UserConfig.DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 2,
+                        $"{SummonRuby.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling:
