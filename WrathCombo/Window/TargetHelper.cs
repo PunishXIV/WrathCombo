@@ -34,7 +34,7 @@ internal class TargetHelper : Dalamud.Interface.Windowing.Window
 
             for (int i = 1; i <= 8; i++)
             {
-                IGameObject? slot = CustomComboFunctions.GetPartySlot(i);
+                IGameObject? slot = PartyUITargeting.GetPartySlot(i);
                 if (slot is null) continue;
                 if (slot.GameObjectId == Combos.PvE.AST.QuickTargetCards.SelectedRandomMember.GameObjectId)
                 {

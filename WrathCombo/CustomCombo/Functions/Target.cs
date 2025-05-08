@@ -7,7 +7,6 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
-using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using ImGuiNET;
@@ -116,36 +115,6 @@ namespace WrathCombo.CustomComboNS.Functions
             };
         }
 
-        /// <summary>
-        /// Grabs the Mouse Over Target from Party List.
-        /// Returns Null if nothing found
-        /// </summary>
-        public static unsafe IGameObject? GetMouseOverHealTarget()
-        {
-            try
-            {
-                GameObject* uiTargetPtr = Framework.Instance()->GetUIModule()->GetPronounModule()->UiMouseOverTarget;
-                if (uiTargetPtr != null)
-                {
-                    var gameObjectId = uiTargetPtr->GetGameObjectId();
-                    if (gameObjectId.ObjectId != 0)
-                    {
-                        IGameObject? uiTarget = Svc.Objects.FirstOrDefault(x => x.GameObjectId == gameObjectId.ObjectId);
-                        if (uiTarget != null && HasFriendlyTarget(uiTarget))
-                        {
-                            return uiTarget;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.Log();
-            }
-
-            return null;
-        }
-
         /// <summary> Grabs healable target. 
         /// Party UI Mouseover (optional) -> Soft Target -> Hard Target -> Player
         /// </summary>
@@ -154,7 +123,7 @@ namespace WrathCombo.CustomComboNS.Functions
             ITargetManager tm = Svc.Targets;
 
             // Check optional mouseover party UI target first
-            if (checkMOPartyUI && GetMouseOverHealTarget() is IGameObject uiTarget)
+            if (checkMOPartyUI && PartyUITargeting.UiMouseOverTarget is IGameObject uiTarget)
                 return uiTarget;
 
             // Check soft target
@@ -253,72 +222,29 @@ namespace WrathCombo.CustomComboNS.Functions
             return !NPCPositionals[CurrentTarget.DataId];
         }
 
-        /// <summary> Attempts to target the given party member </summary>
-        /// <param name="target"></param>
-        protected static unsafe void TargetObject(TargetType target)
+        public static IGameObject? GetTarget(TargetType target)
         {
-            GameObject* t = GetTarget(target);
-            if (t == null) return;
-            ulong o = PartyTargetingService.GetObjectID(t);
-            IGameObject? p = Svc.Objects.Where(x => x.GameObjectId == o).First();
-
-            if (IsInRange(p)) SetTarget(p);
-        }
-
-        public static void TargetObject(IGameObject? target)
-        {
-            if (IsInRange(target)) SetTarget(target);
-        }
-
-        public static unsafe GameObject* GetTarget(TargetType target)
-        {
-            IGameObject? o = null;
-
-            switch (target)
+            return target switch
             {
-                case TargetType.Target:
-                    o = Svc.Targets.Target;
-                    break;
-                case TargetType.SoftTarget:
-                    o = Svc.Targets.SoftTarget;
-                    break;
-                case TargetType.FocusTarget:
-                    o = Svc.Targets.FocusTarget;
-                    break;
-                case TargetType.UITarget:
-                    return PartyTargetingService.UITarget;
-                case TargetType.FieldTarget:
-                    o = Svc.Targets.MouseOverTarget;
-                    break;
-                case TargetType.TargetsTarget when Svc.Targets.Target is { TargetObjectId: not 0xE0000000 }:
-                    o = Svc.Targets.Target.TargetObject;
-                    break;
-                case TargetType.Self:
-                    o = Svc.ClientState.LocalPlayer;
-                    break;
-                case TargetType.LastTarget:
-                    return PartyTargetingService.GetGameObjectFromPronounID(1006);
-                case TargetType.LastEnemy:
-                    return PartyTargetingService.GetGameObjectFromPronounID(1084);
-                case TargetType.LastAttacker:
-                    return PartyTargetingService.GetGameObjectFromPronounID(1008);
-                case TargetType.P2:
-                    return PartyTargetingService.GetGameObjectFromPronounID(44);
-                case TargetType.P3:
-                    return PartyTargetingService.GetGameObjectFromPronounID(45);
-                case TargetType.P4:
-                    return PartyTargetingService.GetGameObjectFromPronounID(46);
-                case TargetType.P5:
-                    return PartyTargetingService.GetGameObjectFromPronounID(47);
-                case TargetType.P6:
-                    return PartyTargetingService.GetGameObjectFromPronounID(48);
-                case TargetType.P7:
-                    return PartyTargetingService.GetGameObjectFromPronounID(49);
-                case TargetType.P8:
-                    return PartyTargetingService.GetGameObjectFromPronounID(50);
-            }
-
-            return o != null ? (GameObject*)o.Address : null;
+                TargetType.Target => Svc.Targets.Target,
+                TargetType.SoftTarget => Svc.Targets.SoftTarget,
+                TargetType.FocusTarget => Svc.Targets.FocusTarget,
+                TargetType.UiMouseOverTarget => PartyUITargeting.UiMouseOverTarget,
+                TargetType.FieldTarget => Svc.Targets.MouseOverTarget,
+                TargetType.TargetsTarget when Svc.Targets.Target is { TargetObjectId: not 0xE0000000 } => Svc.Targets.Target.TargetObject,
+                TargetType.Self => Svc.ClientState.LocalPlayer,
+                TargetType.LastTarget => PartyUITargeting.GetIGameObjectFromPronounID(1006),
+                TargetType.LastEnemy => PartyUITargeting.GetIGameObjectFromPronounID(1084),
+                TargetType.LastAttacker => PartyUITargeting.GetIGameObjectFromPronounID(1008),
+                TargetType.P2 => PartyUITargeting.GetPartySlot(2),
+                TargetType.P3 => PartyUITargeting.GetPartySlot(3),
+                TargetType.P4 => PartyUITargeting.GetPartySlot(4),
+                TargetType.P5 => PartyUITargeting.GetPartySlot(5),
+                TargetType.P6 => PartyUITargeting.GetPartySlot(6),
+                TargetType.P7 => PartyUITargeting.GetPartySlot(7),
+                TargetType.P8 => PartyUITargeting.GetPartySlot(8),
+                _ => null,
+            };
         }
 
         public enum TargetType
@@ -326,7 +252,7 @@ namespace WrathCombo.CustomComboNS.Functions
             Target,
             SoftTarget,
             FocusTarget,
-            UITarget,
+            UiMouseOverTarget,
             FieldTarget,
             TargetsTarget,
             Self,
