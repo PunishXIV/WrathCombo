@@ -2963,6 +2963,10 @@ public enum CustomComboPreset
     MCH_AoE_Adv_Queen = 8304,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Rook / Queen Overdrive Option", "Adds Rook or Queen Overdrive to the rotation.", MCH.JobID)]
+    MCH_AoE_Adv_QueenOverdrive = 8314,
+
+    [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Reassemble Option", "Adds Reassemble to the rotation.", MCH.JobID)]
     MCH_AoE_Adv_Reassemble = 8301,
 
@@ -3071,7 +3075,7 @@ public enum CustomComboPreset
     MCH_GaussRoundRicochet = 8003,
 
     // Last value ST = 8117
-    // Last value AoE = 8313
+    // Last value AoE = 8314
     // Last value Misc = 8058
 
     #endregion

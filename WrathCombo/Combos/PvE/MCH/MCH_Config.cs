@@ -19,6 +19,7 @@ internal partial class MCH
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
             MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool", 0),
             MCH_ST_GaussRicoPool = new("MCH_ST_GaussRicoPool", 0),
+            MCH_AoE_QueenOverDrive = new("MCH_AoE_QueenOverDrive"),
             MCH_ST_SecondWindThreshold = new("MCH_ST_SecondWindThreshold", 25),
             MCH_AoE_ReassemblePool = new("MCH_AoE_ReassemblePool", 0),
             MCH_AoE_TurretUsage = new("MCH_AoE_TurretUsage", 100),
@@ -104,12 +105,12 @@ internal partial class MCH
                     break;
 
                 case CustomComboPreset.MCH_ST_Adv_Reassemble:
-                    DrawSliderInt(0, 1, MCH_ST_ReassemblePool, 
+                    DrawSliderInt(0, 1, MCH_ST_ReassemblePool,
                         "Number of Charges to Save for Manual Use");
 
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Excavator.ActionName()}", "", 5, 0);
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Chainsaw.ActionName()}", "", 5, 1);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {AirAnchor}", "", 5, 2);
+                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {AirAnchor.ActionName()}", "", 5, 2);
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Drill.ActionName()}", "", 5, 3);
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {CleanShot.ActionName()}", "", 5, 4);
 
@@ -139,6 +140,12 @@ internal partial class MCH
 
                     break;
 
+                case CustomComboPreset.MCH_AoE_Adv_QueenOverdrive:
+                    DrawSliderInt(1, 10, MCH_AoE_QueenOverDrive,
+                        "HP% for the target to be at or under");
+
+                    break;
+
                 case CustomComboPreset.MCH_AoE_Adv_SecondWind:
                     DrawSliderInt(0, 100, MCH_AoE_SecondWindThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
@@ -146,7 +153,7 @@ internal partial class MCH
                     break;
 
                 case CustomComboPreset.MCH_AoE_Adv_Queen:
-                    DrawSliderInt(50, 100, MCH_AoE_TurretUsage, 
+                    DrawSliderInt(50, 100, MCH_AoE_TurretUsage,
                         "Battery threshold", sliderIncrement: 5);
 
                     break;
@@ -159,7 +166,7 @@ internal partial class MCH
 
                 //Variant
                 case CustomComboPreset.MCH_Variant_Cure:
-                    DrawSliderInt(1, 100, MCH_VariantCure, 
+                    DrawSliderInt(1, 100, MCH_VariantCure,
                         "HP% to be at or under", 200);
 
                     break;
