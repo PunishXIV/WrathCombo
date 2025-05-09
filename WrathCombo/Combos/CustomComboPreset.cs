@@ -527,11 +527,11 @@ public enum CustomComboPreset
 
     [ReplaceSkill(BLM.Fire)]
     [CustomComboInfo("Fire I/III Feature", "Replaces Fire I with Fire III outside of Astral Fire or when Firestarter is up.", BLM.JobID)]
-    BLM_Fire_1to3 = 2054,
+    BLM_Fire1to3 = 2054,
 
     [ReplaceSkill(BLM.Blizzard, BLM.Freeze)]
     [CustomComboInfo("Blizzard I/III Feature", "Replaces Blizzard I with Blizzard III when out of Umbral Ice.\nReplaces Freeze with Blizzard II when synced below Lv.40.", BLM.JobID)]
-    BLM_Blizzard_1to3 = 2052,
+    BLM_Blizzard1to3 = 2052,
 
     [ReplaceSkill(BLM.Fire4, BLM.Flare)]
     [CustomComboInfo("Fire & Ice", "Replaces Fire4 with Blizzard4 when in Umbral Ice.\nReplaces Flare with Freeze when in Umbral Ice.", BLM.JobID)]
@@ -547,7 +547,7 @@ public enum CustomComboPreset
 
     [ReplaceSkill(BLM.Scathe)]
     [CustomComboInfo("Xenoglossy Feature", "Replaces Scathe with Xenoglossy when available.", BLM.JobID)]
-    BLM_Scathe_Xeno = 2053,
+    BLM_ScatheXeno = 2053,
 
     [ReplaceSkill(BLM.LeyLines)]
     [CustomComboInfo("Between the Ley Lines Feature", "Replaces Ley Lines with Between the Lines when Ley Lines is active.", BLM.JobID)]
@@ -560,17 +560,21 @@ public enum CustomComboPreset
     [ReplaceSkill(BLM.Fire4)]
     [ConflictingCombos(BLM_FireandIce)]
     [CustomComboInfo("Fire 4 to 3", "Replaces Fire 4 with Fire 3 when not in Astral Fire.", BLM.JobID)]
-    BLM_Fire_4to3 = 2059,
+    BLM_Fire4to3 = 2059,
 
     [ReplaceSkill(BLM.Blizzard4)]
     [CustomComboInfo("Blizzard 4 to Despair", "Replaces Blizzard 4 with Despair when in Astral Fire.", BLM.JobID)]
-    BLM_Blizzard_4toDespair = 2060,
+    BLM_Blizzard4toDespair = 2060,
+
+    [ReplaceSkill(BLM.Amplifier)]
+    [CustomComboInfo("Amplifier to Xenoglossy", "Replaces Amplifier with Xenoglossy when at max Polyglot stacks.", BLM.JobID)]
+    BLM_AmplifierXeno = 2061,
 
     #endregion
 
     // Last value ST = 2115
     //Last Value AoE = 2212
-    //Last Value misc = 2060
+    //Last Value misc = 2061
 
     #endregion
 
