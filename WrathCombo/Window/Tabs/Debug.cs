@@ -117,23 +117,6 @@ namespace WrathCombo.Window.Tabs
                 360, 361, 362, 363, 364, 365, 366, 367, 368
             ]; // Duration will not be displayed for these status effects
 
-            // Custom Styling
-            static void CustomStyleText(string label, object? value)
-            {
-                ImGui.Columns(2, null, false);
-                if (!string.IsNullOrEmpty(label))
-                {
-                    ImGui.TextUnformatted(label);
-                    ImGui.SameLine(0, 4f);
-                }
-
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
-                ImGui.NextColumn();
-                ImGui.TextUnformatted(value?.ToString() ?? "");
-                ImGui.PopStyleColor();
-                ImGui.Columns(1);
-            }
-
             if (LocalPlayer is null)
             {
                 ImGui.TextUnformatted("Please log into the game to use this tab.");
@@ -774,6 +757,40 @@ namespace WrathCombo.Window.Tabs
             }
 
             #endregion
+
+            ImGuiEx.Spacing(new Vector2(0, 20));
+
+            #region Hidden Features
+
+            if (ImGui.Checkbox("Show Hidden Features",
+                    ref Service.Configuration.ShowHiddenFeatures))
+                Service.Configuration.Save();
+
+            ImGuiComponents.HelpMarker("Some features can be marked as hidden, and will only be shown if this setting is enabled.\nThis is here instead of on the Settings tab while this behavior is still early in its life, and to keep such features more secretive.");
+
+            ImGui.SameLine();
+            ImGui.TextColored(ImGuiColors.DalamudGrey, "(Do NOT publicly direct users to this setting!)");
+
+            #endregion
+
+            return;
+
+            // Custom Styling
+            static void CustomStyleText(string label, object? value)
+            {
+                ImGui.Columns(2, null, false);
+                if (!string.IsNullOrEmpty(label))
+                {
+                    ImGui.TextUnformatted(label);
+                    ImGui.SameLine(0, 4f);
+                }
+
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+                ImGui.NextColumn();
+                ImGui.TextUnformatted(value?.ToString() ?? "");
+                ImGui.PopStyleColor();
+                ImGui.Columns(1);
+            }
         }
 
         private static void DisableDebugConfig()

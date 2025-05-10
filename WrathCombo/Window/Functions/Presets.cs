@@ -42,6 +42,7 @@ namespace WrathCombo.Window.Functions
             public CustomComboInfoAttribute? CustomComboInfo;
             public AutoActionAttribute? AutoAction;
             public RoleAttribute? RoleAttribute;
+            public HiddenAttribute? Hidden;
 
             public PresetAttributes(CustomComboPreset preset)
             {
@@ -58,6 +59,7 @@ namespace WrathCombo.Window.Functions
                 CustomComboInfo = preset.GetAttribute<CustomComboInfoAttribute>();
                 AutoAction = preset.GetAttribute<AutoActionAttribute>();
                 RoleAttribute = preset.GetAttribute<RoleAttribute>();
+                Hidden = preset.GetAttribute<HiddenAttribute>();
             }
         }
 
@@ -80,6 +82,7 @@ namespace WrathCombo.Window.Functions
             var bozjaParents = Attributes[preset].BozjaParent;
             var eurekaParents = Attributes[preset].EurekaParent;
             var auto = Attributes[preset].AutoAction;
+            var hidden = Attributes[preset].Hidden;
 
             ImGui.Spacing();
 
@@ -365,6 +368,8 @@ namespace WrathCombo.Window.Functions
 
                     foreach (var (childPreset, childInfo) in children)
                     {
+                        if (PresetStorage.ShouldBeHidden(childPreset)) continue;
+
                         presetChildren.TryGetValue(childPreset, out var grandchildren);
                         InfoBox box = new() { HasMaxWidth = true, Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 4f, ContentsAction = () => { DrawPreset(childPreset, childInfo); } };
                         Action draw = grandchildren?.Count() > 0 ? () => box.Draw() : () => DrawPreset(childPreset, childInfo);

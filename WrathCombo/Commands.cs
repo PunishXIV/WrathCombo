@@ -653,7 +653,7 @@ public partial class WrathCombo
 
         // Handle option to always open to the PvE tab
         var openingToPvP =
-            ContentCheck.IsInPVPContent() && Service.Configuration.OpenToPvP;
+            ContentCheck.IsInPVPContent && Service.Configuration.OpenToPvP;
         if (ConfigWindow.IsOpen)
             if (openingToPvP)
                 ConfigWindow.OpenWindow = OpenWindow.PvP;
