@@ -40,21 +40,24 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> True or false. </returns>
         public static bool IsOffCooldown(uint actionID) => !GetCooldown(actionID).IsCooldown;
 
-        /// <summary> Check if the Cooldown was just used. </summary>
+        /// <summary> Check if an action was just used. </summary>
         /// <param name="actionID"> Action ID to check. </param>
-        /// <param name="variance"> Variance of how long to check the elapsed cooldown</param>
+        /// <param name="variance"> How far back to check for. </param>
         /// <returns> True or false. </returns>
-        public static bool JustUsed(uint actionID, float variance = 3f) => ActionWatching.ActionTimestamps.ContainsKey(actionID) ? (Environment.TickCount64 - ActionWatching.ActionTimestamps[actionID]) / 1000f <= variance : false;
+        public static bool JustUsed(uint actionID, float variance = 3f)
+        {
+            if (!ActionWatching.ActionTimestamps.TryGetValue(actionID, out long timestamp))
+                return false;
 
+            return (Environment.TickCount64 - timestamp) <= (long)(variance * 1000f);
+        }
 
-        /// <summary>
-        /// Checks if an action has just been used on a given target
-        /// </summary>
+        /// <summary> Checks if an action has just been used on a given target. </summary>
         /// <param name="actionID"></param>
         /// <param name="target"></param>
         /// <param name="variance"></param>
         /// <returns></returns>
-        public static bool JustUsedOn(uint actionID, IGameObject? target, float variance = 3f) => target is null ? false : JustUsedOn(actionID, target.GameObjectId, variance);
+        public static bool JustUsedOn(uint actionID, IGameObject? target, float variance = 3f) => target is not null && JustUsedOn(actionID, target.GameObjectId, variance);
 
         /// <summary>
         /// See <see cref="JustUsedOn(uint, IGameObject?, float)"/>
@@ -65,14 +68,10 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns></returns>
         public static bool JustUsedOn(uint actionID, ulong targetGameobjectId, float variance = 3f)
         {
-            if (!ActionWatching.UsedOnDict.ContainsKey((actionID, targetGameobjectId)))
+            if (!ActionWatching.UsedOnDict.TryGetValue((actionID, targetGameobjectId), out long timestamp))
                 return false;
 
-            var timestamp = ActionWatching.UsedOnDict[(actionID, targetGameobjectId)];
-
-            var timeDiff = (Environment.TickCount64 - timestamp) / 1000f;
-
-            return timeDiff <= variance;
+            return (Environment.TickCount64 - timestamp) <= (long)(variance * 1000f);
         }
 
         /// <summary> Gets a value indicating whether an action has any available charges. </summary>

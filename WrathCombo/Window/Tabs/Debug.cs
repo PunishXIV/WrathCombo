@@ -325,10 +325,7 @@ namespace WrathCombo.Window.Tabs
                 CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
                 CustomStyleText("In Melee Range:", InMeleeRange());
                 CustomStyleText("Requires Postionals:", TargetNeedsPositionals());
-                CustomStyleText("Relative Position:",
-                    AngleToTarget() is 2 ? "Rear" :
-                    (AngleToTarget() is 1 or 3) ? "Flank" :
-                    AngleToTarget() is 4 ? "Front" : "");
+                CustomStyleText("Relative Position:", AngleToTarget().ToString());
                 CustomStyleText("Health:",
                     $"{EnemyHealthCurrentHp():N0} / {EnemyHealthMaxHp():N0} ({Math.Round(GetTargetHPPercent(), 2)}%)");
                 CustomStyleText("Shield:",
