@@ -116,8 +116,12 @@ internal partial class DRK
                         DRK_ST_ManaSpenderPoolingDifficulty,
                         DRK_ST_ManaSpenderPoolingDifficultyListSet
                     );
-                    UserConfig.DrawSliderInt(0, 45, DRK_ST_BurstSoonThreshold,
-                        "Seconds before Burst to start saving Edges (0 = Don't save)",
+
+                    break;
+
+                case CustomComboPreset.DRK_ST_Sp_ManaOvercap:
+                    UserConfig.DrawSliderInt(0, 30, DRK_ST_BurstSoonThreshold,
+                        "Seconds before Burst to save (allowing capping)",
                         itemWidth: little, sliderIncrement: SliderIncrements.Fives);
 
                     break;
@@ -642,13 +646,13 @@ internal partial class DRK
         ///     and attempts to save Dark Arts will start working in.
         /// </summary>
         /// <value>
-        ///     <b>Default</b>: 30<br />
+        ///     <b>Default</b>: 18<br />
         ///     <b>Range</b>: 0 - 45 <br />
         ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
         /// </value>
-        /// <seealso cref="CustomComboPreset.DRK_ST_Sp_Edge" />
+        /// <seealso cref="CustomComboPreset.DRK_ST_Sp_ManaOvercap" />
         public static readonly UserInt DRK_ST_BurstSoonThreshold =
-            new("DRK_ST_BurstSoonThreshold", 30);
+            new("DRK_ST_BurstSoonThreshold", 18);
 
         /// <summary>
         ///     Difficulty of Mana Spender Pooling for Single Target.

@@ -1611,7 +1611,7 @@ public enum CustomComboPreset
     DRK_ST_Sp_DarkArts = 5028,
 
     [ParentCombo(DRK_ST_Spenders)]
-    [CustomComboInfo("Darkside Maintenance Option", "Uses Edge of Darkness if Darkside is about to expire (<30s).", DRK.JobID)]
+    [CustomComboInfo("Darkside Maintenance Option", "Uses Edge of Darkness if Darkside is about to expire (<10s).", DRK.JobID)]
     DRK_ST_Sp_EdgeDarkside = 5029,
 
     [ParentCombo(DRK_ST_Spenders)]

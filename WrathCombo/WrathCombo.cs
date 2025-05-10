@@ -196,6 +196,11 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
 #if DEBUG
         ConfigWindow.IsOpen = true;
+        Svc.Framework.RunOnTick(() =>
+        {
+            if (Service.Configuration.OpenToCurrentJob && Player.Available)
+                HandleOpenCommand([""], forceOpen:true);
+        });
 #endif
     }
 
