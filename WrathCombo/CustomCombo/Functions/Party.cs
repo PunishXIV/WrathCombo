@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Services;
 
 namespace WrathCombo.CustomComboNS.Functions
 {
@@ -33,7 +34,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
             for (int i = 1; i <= 8; i++)
             {
-                var member = GetPartySlot(i);
+                var member = PartyUITargeting.GetPartySlot(i);
                 if (member is IBattleChara chara && !existingIds.Contains(chara.GameObjectId))
                 {
                     WrathPartyMember wmember = new()
@@ -71,31 +72,21 @@ namespace WrathCombo.CustomComboNS.Functions
 
         private static List<WrathPartyMember> _partyList = new();
 
-        public static unsafe IGameObject? GetPartySlot(int slot)
-        {
-            try
-            {
-                var o = slot switch
-                {
-                    1 => GetTarget(TargetType.Self),
-                    2 => GetTarget(TargetType.P2),
-                    3 => GetTarget(TargetType.P3),
-                    4 => GetTarget(TargetType.P4),
-                    5 => GetTarget(TargetType.P5),
-                    6 => GetTarget(TargetType.P6),
-                    7 => GetTarget(TargetType.P7),
-                    8 => GetTarget(TargetType.P8),
-                    _ => null,
-                };
-
-                return o != null ? Svc.Objects.FirstOrDefault(x => x.GameObjectId == o->GetGameObjectId()) : null;
-            }
-            catch (Exception ex)
-            {
-                ex.Log();
-                return null;
-            }
-        }
+        //public static unsafe IGameObject? GetPartySlot(int slot)
+        //{
+        //    return slot switch
+        //    {
+        //        1 => Player.Object,
+        //        2 => GetTarget(TargetType.P2),
+        //        3 => GetTarget(TargetType.P3),
+        //        4 => GetTarget(TargetType.P4),
+        //        5 => GetTarget(TargetType.P5),
+        //        6 => GetTarget(TargetType.P6),
+        //        7 => GetTarget(TargetType.P7),
+        //        8 => GetTarget(TargetType.P8),
+        //        _ => null,
+        //    };
+        //}
 
         public static float GetPartyAvgHPPercent()
         {
@@ -104,7 +95,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
             for (int i = 1; i <= 8; i++)
             {
-                if (GetPartySlot(i) is IBattleChara member && !member.IsDead)
+                if (PartyUITargeting.GetPartySlot(i) is IBattleChara member && !member.IsDead)
                 {
                     totalHP += GetTargetHPPercent(member);
                     count++;
@@ -121,7 +112,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
             for (int i = 1; i <= 8; i++)
             {
-                if (GetPartySlot(i) is IBattleChara member && !member.IsDead)
+                if (PartyUITargeting.GetPartySlot(i) is IBattleChara member && !member.IsDead)
                 {
                     if (HasStatusEffect(buff, member, true)) buffCount++;
                     partyCount++;

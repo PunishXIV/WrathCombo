@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
+using System.Linq;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -461,7 +462,6 @@ internal partial class SMN : Caster
                 return actionID;
 
             #region Variables
-            int summonerPrimalChoice = Config.SMN_ST_PrimalChoice;
             int SummonerBurstPhase = Config.SMN_ST_BurstPhase;
             int lucidThreshold = Config.SMN_ST_Lucid;
             int swiftcastPhase = Config.SMN_ST_SwiftcastPhase;
@@ -617,11 +617,9 @@ internal partial class SMN : Caster
 
                 #region Special Ruin 3 rule lvl 54 - 72
                 // Use Ruin III instead of Emerald Ruin III if enabled and Ruin Mastery III is not active
-                if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3))
-                {
-                    if (!IsMoving())
-                        return Ruin3;
-                }
+                if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3) && !IsMoving())
+                    return Ruin3;
+
                 #endregion
 
                 if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_EgiSummons_Attacks) && GemshineReady)
@@ -648,28 +646,30 @@ internal partial class SMN : Caster
                    || (IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
                     return OriginalHook(AstralFlow);
 
-                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
+                if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast))
                     return Ruin4;
             }
             #endregion
 
-            // Egi Order 
-            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_EgiOrder) && !ActionReady(OriginalHook(Aethercharge)) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0)
-            { 
-                if ((Gauge.IsGarudaReady) && (summonerPrimalChoice == 2 || !ActionReady(SummonTopaz)))
-                    return OriginalHook(SummonEmerald);
-            
-                if (Gauge.IsTitanReady)
-                    return OriginalHook(SummonTopaz);
+            #region Egi Priority
 
-                if (Gauge.IsIfritReady)
-                    return OriginalHook(SummonRuby);
+            foreach (var prio in Config.SMN_ST_Egi_Priority.Items.OrderBy(x => x))
+            {
+                var index = Config.SMN_ST_Egi_Priority.IndexOf(prio);
+                var config = GetMatchingConfigST(index, OptionalTarget,
+                    out var spell, out var enabled);
+
+                if (!enabled) continue;
+
+                if (!ActionReady(OriginalHook(Aethercharge)) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0)
+                    return spell;
             }
 
+            #endregion
 
             // Ruin 4 Dump
 
-            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasStatusEffect(Buffs.FurtherRuin))
+            if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && !IsAttunedAny  && CurrentDemiSummon is DemiSummon.None && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
 
             return actionID;
@@ -688,7 +688,6 @@ internal partial class SMN : Caster
 
             #region Variables
 
-            int summonerPrimalChoice = Config.SMN_AoE_PrimalChoice;
             int SummonerBurstPhase = Config.SMN_AoE_BurstPhase;
             int lucidThreshold = Config.SMN_AoE_Lucid;
             int swiftcastPhase = Config.SMN_AoE_SwiftcastPhase;
@@ -856,6 +855,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Ifrit Phase
+            if (IsIfritAttuned || OriginalHook(AstralFlow) is CrimsonCyclone or CrimsonStrike)
             {
                 if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 2 or 3 && (Role.CanSwiftcast()))
                     return Role.Swiftcast;
@@ -869,37 +869,33 @@ internal partial class SMN : Caster
                    || (IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
                     return OriginalHook(AstralFlow);
 
-                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
+                if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast))
                     return Ruin4;
             }
             #endregion
 
-            // Egi Order
-            if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_EgiOrder) && !ActionReady(OriginalHook(Aethercharge)) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0)
+            #region Egi Priority
+
+            foreach (var prio in Config.SMN_AoE_Egi_Priority.Items.OrderBy(x => x))
             {
-                if ((Gauge.IsGarudaReady) && (summonerPrimalChoice == 2 || !ActionReady(SummonTopaz)))
-                    return OriginalHook(SummonEmerald);
+                var index = Config.SMN_AoE_Egi_Priority.IndexOf(prio);
+                var config = GetMatchingConfigAoE(index, OptionalTarget,
+                    out var spell, out var enabled);
 
-                if (Gauge.IsTitanReady)
-                    return OriginalHook(SummonTopaz);
+                if (!enabled) continue;
 
-                if (Gauge.IsIfritReady)
-                    return OriginalHook(SummonRuby);
+                if (!ActionReady(OriginalHook(Aethercharge)) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0)
+                    return spell;
             }
 
-            // Ruin 4
-            if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0 && HasStatusEffect(Buffs.FurtherRuin))
+            #endregion
+
+            // Ruin 4 Dump
+            if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && LevelChecked(Ruin4) && !IsAttunedAny && CurrentDemiSummon is DemiSummon.None && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
 
             return actionID;
         }
     }
-
     #endregion
-
-    
-
-    
-
-    
 }

@@ -54,6 +54,7 @@ internal partial class GNB
             GNB_AoE_Reprisal_Health = new("GNB_AoE_Reprisal_Health", 0),
             GNB_AoE_Reprisal_SubOption = new("GNB_AoE_Reprisal_Option", 0),
             GNB_AoE_ArmsLength_Health = new("GNB_AoE_ArmsLength_Health", 0),
+            GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop", 5),
             GNB_AoE_NoMercyStop = new("GNB_AoE_NoMercyStop", 5),
             GNB_NM_Features_Weave = new("GNB_NM_Feature_Weave", 0),
             GNB_GF_Features_Choice = new("GNB_GF_Choice", 0),
@@ -188,12 +189,14 @@ internal partial class GNB
 
                     DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,
                         "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(NoMercy)} when in Boss encounters.", 1);
+                    DrawSliderInt(0, 75, GNB_ST_NoMercyStop,
+                        " Stop usage if Target\n HP% is below set value.\n (To Disable, set to 0)");
 
                     break;
 
                 case CustomComboPreset.GNB_AoE_NoMercy:
-                    DrawSliderInt(0, 25, GNB_AoE_NoMercyStop,
-                        "Stop Usage if Target HP% is below set value.\nTo Disable this option, set to 0.");
+                    DrawSliderInt(0, 75, GNB_AoE_NoMercyStop,
+                        " Stop usage if Target\n HP% is below set value.\n (To Disable, set to 0)");
 
                     break;
 

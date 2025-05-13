@@ -106,7 +106,7 @@ internal partial class RPR
                         $"{Slice.ActionName()}", $"Adds {Soulsow.ActionName()} to {Slice.ActionName()}.",
                         5, 1);
 
-                    DrawHorizontalMultiChoice(RPR_SoulsowOptions, 
+                    DrawHorizontalMultiChoice(RPR_SoulsowOptions,
                         $"{SpinningScythe.ActionName()}", $"Adds {Soulsow.ActionName()} to {SpinningScythe.ActionName()}", 5, 2);
 
                     DrawHorizontalMultiChoice(RPR_SoulsowOptions,
@@ -118,7 +118,7 @@ internal partial class RPR
                     break;
 
                 case CustomComboPreset.RPR_Variant_Cure:
-                    DrawSliderInt(1, 100, RPR_VariantCure, 
+                    DrawSliderInt(1, 100, RPR_VariantCure,
                         "HP% to be at or under", 200);
 
                     break;

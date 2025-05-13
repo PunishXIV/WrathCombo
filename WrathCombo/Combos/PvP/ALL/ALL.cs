@@ -1,6 +1,8 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
+﻿using System;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameHelpers;
 using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -201,6 +203,18 @@ namespace WrathCombo.Combos.PvP
         {
             protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PvP_QuickPurify;
 
+            public static (ushort debuff, string label)[] Statuses =
+            [
+                (Debuffs.Stun, "Stun"),
+                (Debuffs.DeepFreeze, "Deep Freeze"),
+                (Debuffs.HalfAsleep, "Half Asleep"), // todo: remove, reset cfg
+                (Debuffs.Sleep, "Sleep"), // todo: remove, reset cfg
+                (Debuffs.Bind, "Bind"),
+                (Debuffs.Heavy, "Heavy"),
+                (Debuffs.Silence, "Silence"),
+                (Debuffs.MiracleOfNature, "Miracle of Nature"),
+            ];
+
             protected override uint Invoke(uint actionID)
             {
                 if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
@@ -221,23 +235,22 @@ namespace WrathCombo.Combos.PvP
             {
                 bool[] selectedStatuses = Config.QuickPurifyStatuses;
 
-                if (HasStatusEffect(3180)) return false; //DRG LB buff
-                if (HasStatusEffect(4096)) return false; //VPR Snakesbane
-                if (HasStatusEffect(1420, anyOwner: true)) return false; //Rival Wings Mounted
-
+                // Bail if nothing is enabled
                 if (selectedStatuses.Length == 0) return false;
+                // Make sure new statuses are supported
+                Array.Resize(ref selectedStatuses, Statuses.Length);
+                // Bail if Purify is not available
                 if (GetCooldown(Purify).IsCooldown) return false;
-                if (HasStatusEffect(Debuffs.Stun, anyOwner: true) && selectedStatuses[0]) return true;
-                if (HasStatusEffect(Debuffs.DeepFreeze, anyOwner: true) && selectedStatuses[1]) return true;
-                if (HasStatusEffect(Debuffs.HalfAsleep, anyOwner: true) && selectedStatuses[2]) return true;
-                if (HasStatusEffect(Debuffs.Sleep, anyOwner: true) && selectedStatuses[3]) return true;
-                if (HasStatusEffect(Debuffs.Bind, anyOwner: true) && selectedStatuses[4]) return true;
-                if (HasStatusEffect(Debuffs.Heavy, anyOwner: true) && selectedStatuses[5]) return true;
-                if (HasStatusEffect(Debuffs.Silence, anyOwner: true) && selectedStatuses[6]) return true;
-                if (HasStatusEffect(Debuffs.MiracleOfNature, anyOwner: true) && selectedStatuses[7]) return true;
 
-                return false;
+                // Don't purify if under some buffs
+                if (HasStatusEffect(3180) || //DRG LB buff
+                    HasStatusEffect(4096) || //VPR Snake's Bane
+                    HasStatusEffect(1420, anyOwner: true)) //Rival Wings Mounted
+                    return false;
 
+                // Check if the status is present and one the user wants purified
+                return selectedStatuses.Where((t, i) =>
+                    t && HasStatusEffect(Statuses[i].debuff, anyOwner: true)).Any();
             }
         }
 
