@@ -1,20 +1,16 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
-using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System;
 using System.Numerics;
-using WrathCombo.Combos;
 using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Services;
-
 
 namespace WrathCombo.Window.Functions
 {
@@ -565,84 +561,31 @@ namespace WrathCombo.Window.Functions
             ImGui.Unindent();
         }
 
+        /// <seealso cref="PvPCommon.QuickPurify.Statuses">
+        ///     PvP Purifiable Statuses List
+        /// </seealso>
+        /// <seealso cref="PvPCommon.Config.QuickPurifyStatuses">
+        ///     User-Selected List of Status to Purify
+        /// </seealso>
         public static void DrawPvPStatusMultiChoice(string config)
         {
             bool[]? values = PluginConfiguration.GetCustomBoolArrayValue(config);
-
-            ImGui.Columns(4, $"{config}", false);
-
-            Array.Resize(ref values, 8);
+            Array.Resize(ref values, PvPCommon.QuickPurify.Statuses.Length);
 
             ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedPink);
+            ImGui.Columns(4, $"{config}", false);
 
-            if (ImGui.Checkbox($"Stun###{config}0", ref values[0]))
+            for (var i = 0; i < PvPCommon.QuickPurify.Statuses.Length; i++)
             {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
+                var status = PvPCommon.QuickPurify.Statuses[i];
+                if (ImGui.Checkbox($"{status.label}###{config}{i}", ref values[i]))
+                {
+                    DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
+                    PluginConfiguration.SetCustomBoolArrayValue(config, values);
+                    Service.Configuration.Save();
+                }
 
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Deep Freeze###{config}1", ref values[1]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
-
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Half Asleep###{config}2", ref values[2]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
-
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Sleep###{config}3", ref values[3]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
-
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Bind###{config}4", ref values[4]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
-
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Heavy###{config}5", ref values[5]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
-
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Silence###{config}6", ref values[6]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
-            }
-
-            ImGui.NextColumn();
-
-            if (ImGui.Checkbox($"Miracle of Nature###{config}7", ref values[7]))
-            {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
-                Service.Configuration.Save();
+                ImGui.NextColumn();
             }
 
             ImGui.Columns(1);

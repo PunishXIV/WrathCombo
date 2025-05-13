@@ -84,12 +84,20 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns></returns>
         public static int GetTraitLevel(uint id) => ActionWatching.GetTraitLevel(id);
 
-        /// <summary> Checks if the player can use an action based on the level required and off cooldown / has charges.</summary>
+        /// <summary> Checks if the player can use an action based on the level required and whether it has charges / is off cooldown. </summary>
         /// <param name="id"> ID of the action. </param>
-        /// <returns></returns>
-        //Note: Testing so far shows non charge skills have a max charge of 1, and it's zero during cooldown
-        public static unsafe bool ActionReady(uint id) => ((GetCooldownRemainingTime(OriginalHook(id)) <= RemainingGCD + 0.5f && ActionWatching.GetAttackType(id) != ActionWatching.ActionAttackType.Ability) || HasCharges(OriginalHook(id))) && ActionManager.Instance()->GetActionStatus(ActionType.Action, OriginalHook(id), checkRecastActive: false, checkCastingActive: false) is 0 or 582 or 580;
+        /// <returns> Non-charge actions have a charge value of 1 when off cooldown; otherwise they have a value of 0. </returns>
+        public static unsafe bool ActionReady(uint id)
+        {
+            uint hookedId = OriginalHook(id);
 
+            return ((GetCooldownRemainingTime(hookedId) <= RemainingGCD + 0.5f && ActionWatching.GetAttackType(hookedId) != ActionWatching.ActionAttackType.Ability) ||
+                HasCharges(hookedId)) && ActionManager.Instance()->GetActionStatus(ActionType.Action, hookedId, checkRecastActive: false, checkCastingActive: false) is 0 or 582 or 580;
+        }
+
+        /// <summary> Checks if all passed actions are ready to be used. </summary>
+        /// <param name="ids"> IDs of the actions. </param>
+        /// <returns></returns>
         public static bool ActionsReady(uint[] ids)
         {
             foreach (var id in ids)
@@ -101,7 +109,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Checks if the last action performed was the passed ID. </summary>
         /// <param name="id"> ID of the action. </param>
         /// <returns></returns>
-        public static bool WasLastAction(uint id) => ActionWatching.CombatActions.Count > 0 ? ActionWatching.CombatActions.LastOrDefault() == id : false;
+        public static bool WasLastAction(uint id) => ActionWatching.CombatActions.Count > 0 && ActionWatching.CombatActions.LastOrDefault() == id;
 
         /// <summary> Returns how many times in a row the last action was used. </summary>
         /// <returns></returns>

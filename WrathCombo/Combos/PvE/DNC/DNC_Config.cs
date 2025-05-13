@@ -5,9 +5,9 @@ using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.Combos.PvP;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 
@@ -199,7 +199,15 @@ internal partial class DNC
                         (int)Openers.SevenSecondTech, descriptionAsTooltip: true);
 
                     ImGui.Indent();
-                    UserConfig.DrawBossOnlyChoice(DNC_ST_OpenerDifficulty);
+                    ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
+                    ImGui.TextWrapped(
+                        "Opener options:");
+                    ImGui.PopStyleColor();
+
+                    UserConfig.DrawAdditionalBoolChoice(DNC_ST_OpenerOption_Peloton,
+                        $"Include {Peloton.ActionName()}", "");
+
+                    UserConfig.DrawBossOnlyChoice(DNC_ST_OpenerDifficulty, "Select what kind of content to use this opener in:");
                     ImGui.Unindent();
 
                     break;
@@ -458,6 +466,17 @@ internal partial class DNC
         /// <seealso cref="CustomComboPreset.DNC_ST_BalanceOpener" />
         public static readonly UserInt DNC_ST_OpenerSelection =
             new("DNC_ST_OpenerSelection", (int) Openers.FifteenSecond);
+
+        /// <summary>
+        ///     Whether to include Peloton in the opener.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see langword="true"/><br />
+        ///     <b>Options</b>: <see langword="true"/> or <see langword="false"/>
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DNC_ST_BalanceOpener" />
+        public static readonly UserBool DNC_ST_OpenerOption_Peloton =
+            new("DNC_ST_OpenerOption_Peloton", true);
 
         /// <summary>
         ///     Esprit threshold for Single Target.

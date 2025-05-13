@@ -4,14 +4,32 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Combos.PvE.DRG.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.Data.ActionWatching;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG
 {
-    internal static DRGGauge Gauge = GetJobGauge<DRGGauge>();
     internal static StandardOpenerLogic StandardOpener = new();
     internal static PiercingTalonOpenerLogic PiercingTalonOpener = new();
+
+    internal static bool UseLifeSurge()
+    {
+        if (ActionReady(LifeSurge) && CanDRGWeave(LifeSurge) && !HasStatusEffect(Buffs.LifeSurge))
+        {
+            if (LevelChecked(Drakesbane) && LoTDActive &&
+                (HasStatusEffect(Buffs.LanceCharge) || HasStatusEffect(Buffs.BattleLitany)) &&
+                (JustUsed(WheelingThrust) ||
+                 JustUsed(FangAndClaw) ||
+                 JustUsed(OriginalHook(VorpalThrust)) && LevelChecked(HeavensThrust)))
+                return true;
+        }
+
+        return false;
+    }
+
+    #region Animation Locks
 
     internal static readonly List<uint> FastLocks =
     [
@@ -41,17 +59,6 @@ internal partial class DRG
 
     internal static uint SlowLock => Stardiver;
 
-    internal static WrathOpener Opener()
-    {
-        if (StandardOpener.LevelChecked && Config.DRG_SelectedOpener == 0)
-            return StandardOpener;
-
-        if (PiercingTalonOpener.LevelChecked && Config.DRG_SelectedOpener == 1)
-            return PiercingTalonOpener;
-
-        return WrathOpener.Dummy;
-    }
-
     internal static bool CanDRGWeave(uint oGCD)
     {
         float gcdTimer = GetCooldownRemainingTime(TrueThrust);
@@ -60,34 +67,32 @@ internal partial class DRG
         if (IsOffCooldown(TrueThrust))
             return false;
 
-        if (FastLocks.Any(x => x == oGCD) && gcdTimer >= 0.6f)
+        if (FastLocks.Any(x => x == oGCD) && gcdTimer >= 0.6f && !HasDoubleWeaved())
             return true;
 
-        if (MidLocks.Any(x => x == oGCD) && gcdTimer >= 0.8f)
+        if (MidLocks.Any(x => x == oGCD) && gcdTimer >= 0.8f && !HasDoubleWeaved())
             return true;
 
-        if (SlowLock == oGCD && gcdTimer >= 1.5f)
+        if (SlowLock == oGCD && gcdTimer >= 1.5f && !HasDoubleWeaved())
             return true;
 
         return false;
     }
 
-    internal static bool UseLifeSurge()
-    {
-        if (ActionReady(LifeSurge) && CanDRGWeave(LifeSurge) && !HasStatusEffect(Buffs.LifeSurge))
-        {
-            if (LevelChecked(Drakesbane) && Gauge.IsLOTDActive &&
-                (HasStatusEffect(Buffs.LanceCharge) || HasStatusEffect(Buffs.BattleLitany)) &&
-                (JustUsed(WheelingThrust) ||
-                 JustUsed(FangAndClaw) ||
-                 JustUsed(OriginalHook(VorpalThrust)) && LevelChecked(HeavensThrust)))
-                return true;
-        }
-
-        return false;
-    }
+    #endregion
 
     #region Openers
+
+    internal static WrathOpener Opener()
+    {
+        if (StandardOpener.LevelChecked && DRG_SelectedOpener == 0)
+            return StandardOpener;
+
+        if (PiercingTalonOpener.LevelChecked && DRG_SelectedOpener == 1)
+            return PiercingTalonOpener;
+
+        return WrathOpener.Dummy;
+    }
 
     internal class StandardOpenerLogic : WrathOpener
     {
@@ -123,7 +128,7 @@ internal partial class DRG
             WyrmwindThrust
         ];
 
-        internal override UserData ContentCheckConfig => Config.DRG_Balance_Content;
+        internal override UserData ContentCheckConfig => DRG_Balance_Content;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(LifeSurge) is 2 &&
@@ -167,7 +172,7 @@ internal partial class DRG
             WyrmwindThrust
         ];
 
-        internal override UserData ContentCheckConfig => Config.DRG_Balance_Content;
+        internal override UserData ContentCheckConfig => DRG_Balance_Content;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(LifeSurge) is 2 &&
@@ -175,6 +180,16 @@ internal partial class DRG
             IsOffCooldown(DragonfireDive) &&
             IsOffCooldown(LanceCharge);
     }
+
+    #endregion
+
+    #region Gauge
+
+    internal static DRGGauge Gauge = GetJobGauge<DRGGauge>();
+
+    internal static bool LoTDActive => Gauge.IsLOTDActive;
+
+    internal static byte FirstmindsFocus => Gauge.FirstmindsFocusCount;
 
     #endregion
 
@@ -238,12 +253,6 @@ internal partial class DRG
         public const ushort
             ChaosThrust = 118,
             ChaoticSpring = 2719;
-    }
-
-    public static class Traits
-    {
-        public const uint
-            EnhancedLifeSurge = 438;
     }
 
     #endregion

@@ -230,7 +230,7 @@ internal partial class DRK
     /// </remarks>
     private class VariantAction : IActionProvider
     {
-        public bool TryGetAction(Combo flags, ref uint action)
+        public bool TryGetAction(Combo flags, ref uint action, bool? _)
         {
             #region Heal
 
@@ -309,9 +309,11 @@ internal partial class DRK
     {
         public static bool ShouldDeliriumNext;
 
-        public bool TryGetAction(Combo flags, ref uint action)
+        public bool TryGetAction(Combo flags, ref uint action, bool? disesteemOnly)
         {
             #region Disesteem
+
+            disesteemOnly ??= false;
 
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Disesteem) ||
@@ -327,6 +329,7 @@ internal partial class DRK
             #endregion
 
             if (!CanWeave || Gauge.DarksideTimeRemaining <= 1) return false;
+            if (disesteemOnly == true) return false;
 
             #region Living Shadow
 
@@ -401,7 +404,7 @@ internal partial class DRK
                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_Delirium)) &&
                 deliriumHPMatchesThreshold &&
                 LevelChecked(BloodWeapon) &&
-                GetCooldownRemainingTime(BloodWeapon) < GCD)
+                GetCooldownRemainingTime(BloodWeapon) < GCD*1.5)
                 ShouldDeliriumNext = true;
 
             if (ShouldDeliriumNext &&
@@ -570,7 +573,7 @@ internal partial class DRK
     /// </remarks>
     private class Mitigation : IActionProvider
     {
-        public bool TryGetAction(Combo flags, ref uint action)
+        public bool TryGetAction(Combo flags, ref uint action, bool? _)
         {
             // Bail if we're trying to Invuln or actively Invulnerable
             if (HasStatusEffect(Buffs.LivingDead) ||
@@ -817,9 +820,10 @@ internal partial class DRK
     /// </remarks>
     private class Spender : IActionProvider
     {
-        public bool TryGetAction(Combo flags, ref uint action)
+        public bool TryGetAction(Combo flags, ref uint action, bool? specialManaOnly)
         {
-            if (TryGetManaAction(flags, ref action)) return true;
+            if (TryGetManaAction(flags, ref action, specialManaOnly)) return true;
+            if (specialManaOnly == true) return false;
             if (TryGetBloodAction(flags, ref action)) return true;
 
             return false;
@@ -833,7 +837,7 @@ internal partial class DRK
 
             var bloodGCDReady =
                 LevelChecked(Bloodspiller) &&
-                GetCooldownRemainingTime(Bloodspiller) < GCD;
+                GetCooldownRemainingTime(Bloodspiller) < GCD/2;
 
             if (!bloodGCDReady) return false;
 
@@ -844,7 +848,8 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_Sp_ScarletChain) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Sp_ImpalementChain)) &&
-                HasStatusEffect(Buffs.EnhancedDelirium))
+                HasStatusEffect(Buffs.EnhancedDelirium) &&
+                GetStatusEffectStacks(Buffs.EnhancedDelirium) > 0)
                 if (flags.HasFlag(Combo.ST))
                     return (action = OriginalHook(Bloodspiller)) != 0;
                 else if (flags.HasFlag(Combo.AoE))
@@ -876,6 +881,8 @@ internal partial class DRK
                 return (action = Bloodspiller) != 0;
 
             #endregion
+
+            if (HasStatusEffect(Buffs.Scorn)) return false;
 
             #region Blood Spending after Delirium Chain
 
@@ -921,7 +928,7 @@ internal partial class DRK
             return false;
         }
 
-        private bool TryGetManaAction(Combo flags, ref uint action)
+        private bool TryGetManaAction(Combo flags, ref uint action, bool? specialOnly)
         {
             // Bail if we can't weave anything else
             if (!CanWeave) return false;
@@ -947,7 +954,7 @@ internal partial class DRK
             var secondsBeforeBurst =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST)
                     ? Config.DRK_ST_BurstSoonThreshold
-                    : 30;
+                    : 20;
             var evenBurstSoon =
                 IsOnCooldown(LivingShadow) &&
                 GetCooldownRemainingTime(LivingShadow) < secondsBeforeBurst;
@@ -991,6 +998,8 @@ internal partial class DRK
                     return (action = OriginalHook(FloodOfDarkness)) != 0;
 
             #endregion
+
+            if (specialOnly == true) return false;
 
             #region Burst Phase Spending
 
@@ -1048,7 +1057,7 @@ internal partial class DRK
     /// </remarks>
     private class Core : IActionProvider
     {
-        public bool TryGetAction(Combo flags, ref uint action)
+        public bool TryGetAction(Combo flags, ref uint action, bool? _)
         {
             var comboRunning = ComboTimer > 0;
             var lastComboAction = ComboAction;
@@ -1501,7 +1510,7 @@ internal partial class DRK
 
     private interface IActionProvider
     {
-        bool TryGetAction(Combo flags, ref uint action);
+        bool TryGetAction(Combo flags, ref uint action, bool? extraParam = null);
     }
 
     /// <summary>
@@ -1523,6 +1532,7 @@ internal partial class DRK
     ///     The flags to describe the combo executing this method.
     /// </param>
     /// <param name="action">The action to execute.</param>
+    /// <param name="extraParam">Any extra parameter to pass through.</param>
     /// <returns>Whether the <c>action</c> was changed.</returns>
     /// <seealso cref="IActionProvider.TryGetAction" />
     /// <seealso cref="VariantAction" />
@@ -1530,8 +1540,8 @@ internal partial class DRK
     /// <seealso cref="Spender" />
     /// <seealso cref="Cooldown" />
     /// <seealso cref="Core" />
-    private static bool TryGetAction<T>(Combo flags, ref uint action)
-        where T : IActionProvider, new() => new T().TryGetAction(flags, ref action);
+    private static bool TryGetAction<T> (Combo flags, ref uint action, bool? extraParam = null)
+        where T : IActionProvider, new() => new T().TryGetAction(flags, ref action, extraParam);
 
     #endregion
 }

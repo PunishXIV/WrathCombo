@@ -19,10 +19,10 @@ internal static partial class RoleActions
                 Surecast = 160;
         }
 
-        public static bool CanLucidDream(int MPThreshold, bool spellweave = true) =>
+        public static bool CanLucidDream(int MPThreshold, bool spellWeave = true) =>
             ActionReady(LucidDreaming) &&
             LocalPlayer.CurrentMp <= MPThreshold &&
-            (!spellweave || CanSpellWeave());
+            (!spellWeave || CanSpellWeave());
 
         public static bool CanSwiftcast(bool spellweave = true) =>
             ActionReady(Swiftcast) && (!spellweave || CanSpellWeave());
@@ -83,8 +83,8 @@ internal static partial class RoleActions
                 ArmsLength = 1209;
         }
 
-        public static bool CanSecondWind(int healthpercent) =>
-            ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthpercent;
+        public static bool CanSecondWind(int healthPercent) =>
+            ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
             ActionReady(ArmsLength) && CanCircleAoe(7) >= enemyCount &&
@@ -149,8 +149,8 @@ internal static partial class RoleActions
         public static bool CanLegSweep() =>
             ActionReady(LegSweep);
 
-        public static bool CanBloodBath(int healthpercent) =>
-            ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthpercent;
+        public static bool CanBloodBath(int healthPercent) =>
+            ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanFeint() =>
             ActionReady(Feint) && !HasStatusEffect(Debuffs.Feint, CurrentTarget, true);
@@ -177,8 +177,8 @@ internal static partial class RoleActions
                 Reprisal = 1193;
         }
 
-        public static bool CanRampart(int healthPercent) =>
-            ActionReady(Rampart) && PlayerHealthPercentageHp() < healthPercent;
+        public static bool CanRampart(int healthPercent = 100) =>
+            ActionReady(Rampart) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanLowBlow() =>
             ActionReady(LowBlow) && TargetIsCasting();
@@ -189,10 +189,10 @@ internal static partial class RoleActions
         public static bool CanInterject() =>
             ActionReady(Interject) && CanInterruptEnemy();
 
-        public static bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true) =>
+        public static bool CanReprisal(int healthPercent = 100, int? enemyCount = null, bool checkTargetForDebuff = true) =>
             (checkTargetForDebuff && !HasStatusEffect(Debuffs.Reprisal, CurrentTarget, true) || !checkTargetForDebuff) &&
             (enemyCount is null ? InActionRange(Reprisal) : CanCircleAoe(5) >= enemyCount) &&
-            ActionReady(Reprisal) && PlayerHealthPercentageHp() < healthPercent;
+            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanShirk() =>
             ActionReady(Shirk);

@@ -1,193 +1,115 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
+using static WrathCombo.Combos.PvE.SAM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.Data.ActionWatching;
+using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
 {
-    internal static SAMGauge Gauge = GetJobGauge<SAMGauge>();
     internal static SAMOpenerMaxLevel1 Opener1 = new();
 
     internal static bool RefreshFugetsu => GetStatusEffectRemainingTime(Buffs.Fugetsu) < GetStatusEffectRemainingTime(Buffs.Fuka);
 
     internal static bool RefreshFuka => GetStatusEffectRemainingTime(Buffs.Fuka) < GetStatusEffectRemainingTime(Buffs.Fugetsu);
 
-    internal static bool MaxLvL => TraitLevelChecked(Traits.EnhancedHissatsu);
-
-    internal static bool DoubleMeikyo => TraitLevelChecked(Traits.EnhancedMeikyoShishui);
+    internal static bool EnhancedSenei => TraitLevelChecked(Traits.EnhancedHissatsu);
 
     internal static int SenCount => GetSenCount();
 
-    private static int GetSenCount()
-    {
-        int senCount = 0;
-
-        if (Gauge.HasGetsu)
-            senCount++;
-
-        if (Gauge.HasSetsu)
-            senCount++;
-
-        if (Gauge.HasKa)
-            senCount++;
-
-        return senCount;
-    }
-
+    //TODO Rework
+    //Meikyo
     internal static bool UseMeikyo()
     {
         float gcd = ActionManager.GetAdjustedRecastTime(ActionType.Action, Hakaze) / 100f;
-        int meikyoUsed = ActionWatching.CombatActions.Count(x => x == MeikyoShisui);
+        int meikyoUsed = CombatActions.Count(x => x == MeikyoShisui);
 
-        if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) &&
+        if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) && !HasStatusEffect(Buffs.MeikyoShisui) &&
             (JustUsed(Gekko) || JustUsed(Kasha) || JustUsed(Yukikaze)))
         {
-            //if no opener/before lvl 100
-            if ((IsNotEnabled(CustomComboPreset.SAM_ST_Opener) || !LevelChecked(TendoSetsugekka) ||
-                 IsEnabled(CustomComboPreset.SAM_ST_Opener) && Config.SAM_Balance_Content == 1 && !InBossEncounter()) &&
-                meikyoUsed < 2 && !HasStatusEffect(Buffs.MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
-                return true;
-
-            //double meikyo
-            if (DoubleMeikyo)
+            if (EnhancedSenei)
             {
+                //if no opener
+                if ((IsEnabled(CustomComboPreset.SAM_ST_Opener) && SAM_Balance_Content == 1 && !InBossEncounter() ||
+                     IsNotEnabled(CustomComboPreset.SAM_ST_Opener)) &&
+                    meikyoUsed < 2 && !HasStatusEffect(Buffs.TsubameReady))
+                    return true;
+
                 if (HasStatusEffect(Buffs.TsubameReady))
                 {
-                    switch (gcd)
-                    {
-                        //Even windows
-                        case >= 2.09f when
-                            GetCooldownRemainingTime(Senei) <= 10 &&
-                            (meikyoUsed % 7 is 2 && SenCount is 3 && IsOffCooldown(Ikishoten) ||
-                             meikyoUsed % 7 is 4 && SenCount is 2 ||
-                             meikyoUsed % 7 is 6 && SenCount is 1):
+                    //2.14 GCD
+                    if (gcd >= 2.09f && GetCooldownRemainingTime(Senei) <= 10 &&
+                        (meikyoUsed % 7 is 1 or 2 && SenCount is 3 ||
+                         meikyoUsed % 7 is 3 or 4 && SenCount is 2 ||
+                         meikyoUsed % 7 is 5 or 6 && SenCount is 1))
+                        return true;
 
-                        //Odd windows
-                        case >= 2.09f when
-                            (MaxLvL && GetCooldownRemainingTime(Senei) <= 10 ||
-                             !MaxLvL && GetCooldownRemainingTime(Senei) is > 45 and <= 85) &&
-                            (meikyoUsed % 7 is 1 && SenCount is 3 ||
-                             meikyoUsed % 7 is 3 && SenCount is 2 ||
-                             meikyoUsed % 7 is 5 && SenCount is 1):
-
-                        //Even windows
-                        case <= 2.08f when
-                            GetCooldownRemainingTime(Senei) <= 5 && SenCount is 3:
-
-                        //Odd windows
-                        case <= 2.08f when
-                            (!MaxLvL && GetCooldownRemainingTime(Senei) is > 45 and <= 85 ||
-                             MaxLvL && GetCooldownRemainingTime(Senei) <= 5) && SenCount is 3:
-
-                            return true;
-                    }
+                    //2.08 gcd
+                    if (gcd <= 2.08f && GetCooldownRemainingTime(Senei) <= 10 && SenCount is 3)
+                        return true;
                 }
 
                 // reset meikyo
-                if (gcd >= 2.09f && meikyoUsed % 7 is 0 && !HasStatusEffect(Buffs.MeikyoShisui) && WasLastWeaponskill(Yukikaze))
+                if (gcd >= 2.09f && meikyoUsed % 7 is 0)
                     return true;
             }
 
-            //Pre double meikyo
-            if (!DoubleMeikyo && GetRemainingCharges(MeikyoShisui) == GetMaxCharges(MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
+            //Pre Enhanced Senei
+            if (!EnhancedSenei && ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
                 return true;
         }
 
         return false;
     }
 
+    //TODO Rework
     // Iaijutsu Features
     internal static bool UseIaijutsu(ref uint actionID)
     {
-        int higanbanaThreshold = Config.SAM_ST_Higanbana_Threshold;
+        int higanbanaThreshold = SAM_ST_Higanbana_Threshold;
 
         if (LevelChecked(Iaijutsu))
         {
-            if (IsEnabled(CustomComboPreset.SAM_ST_SimpleMode))
+            if ((IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) && SAM_ST_CDs_IaijutsuOption[3] ||
+                 IsEnabled(CustomComboPreset.SAM_ST_SimpleMode)) &&
+                (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
+                 (HasStatusEffect(Buffs.TsubameReady) && (SenCount is 3 || GetCooldownRemainingTime(Senei) > 33))))
             {
-                if (HasStatusEffect(Buffs.TsubameReady) &&
-                    (SenCount is 3 ||
-                     MaxLvL && GetCooldownRemainingTime(Senei) > 33 ||
-                     !MaxLvL && GetCooldownRemainingTime(Senei) < 45 ||
-                     !MaxLvL && GetCooldownRemainingTime(Senei) >= 85) ||
-                    HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady))
-                {
-                    actionID = OriginalHook(TsubameGaeshi);
-                    return true;
-                }
-
-                if (!IsMoving())
-                {
-                    if (SenCount is 1 && GetTargetHPPercent() > 1 && TargetIsBoss() &&
-                        (GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 && JustUsed(MeikyoShisui, 15f) ||
-                         !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)))
-                    {
-                        actionID = OriginalHook(Iaijutsu);
-                        return true;
-                    }
-
-                    if (SenCount is 2 && !LevelChecked(MidareSetsugekka))
-                    {
-                        actionID = OriginalHook(Iaijutsu);
-                        return true;
-                    }
-
-                    if (SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
-                    {
-                        actionID = OriginalHook(Iaijutsu);
-                        return true;
-                    }
-                }
+                actionID = OriginalHook(TsubameGaeshi);
+                return true;
             }
 
-            if (IsEnabled(CustomComboPreset.SAM_ST_AdvancedMode))
+            if (IsEnabled(CustomComboPreset.SAM_ST_SimpleMode) && !IsMoving() &&
+                ((SenCount is 1 && GetTargetHPPercent() > 1 && TargetIsBoss() &&
+                  (JustUsed(MeikyoShisui, 15f) && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 ||
+                   !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)) ||
+                  (SenCount is 2 && !LevelChecked(MidareSetsugekka)) ||
+                  (SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady)))))
             {
-                if (Config.SAM_ST_CDs_IaijutsuOption[3] &&
-                    (HasStatusEffect(Buffs.TsubameReady) &&
-                     (SenCount is 3 ||
-                      MaxLvL && GetCooldownRemainingTime(Senei) > 33 ||
-                      !MaxLvL && GetCooldownRemainingTime(Senei) < 45 ||
-                      !MaxLvL && GetCooldownRemainingTime(Senei) >= 85) ||
-                     HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady)))
-                {
-                    actionID = OriginalHook(TsubameGaeshi);
-                    return true;
-                }
+                actionID = OriginalHook(Iaijutsu);
+                return true;
+            }
 
-                if (!IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) ||
-                    IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) && !IsMoving())
-                {
-                    if (Config.SAM_ST_CDs_IaijutsuOption[0] &&
-                        SenCount is 1 && GetTargetHPPercent() > higanbanaThreshold &&
-                        (Config.SAM_ST_Higanbana_Suboption == 0 ||
-                         Config.SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss()) &&
-                        (GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 && JustUsed(MeikyoShisui, 15f) ||
-                         !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)))
-                    {
-                        actionID = OriginalHook(Iaijutsu);
-                        return true;
-                    }
-
-                    if (Config.SAM_ST_CDs_IaijutsuOption[1] &&
-                        SenCount is 2 && !LevelChecked(MidareSetsugekka))
-                    {
-                        actionID = OriginalHook(Iaijutsu);
-                        return true;
-                    }
-
-                    if (Config.SAM_ST_CDs_IaijutsuOption[2] &&
-                        SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
-                    {
-                        actionID = OriginalHook(Iaijutsu);
-                        return true;
-                    }
-                }
+            if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) &&
+                (!IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) || IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) && !IsMoving()) &&
+                ((SAM_ST_CDs_IaijutsuOption[0] &&
+                  SenCount is 1 && GetTargetHPPercent() > higanbanaThreshold &&
+                  (SAM_ST_Higanbana_Suboption == 0 ||
+                   SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss()) &&
+                  (JustUsed(MeikyoShisui, 15f) && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 10 ||
+                   !HasStatusEffect(Debuffs.Higanbana, CurrentTarget))) ||
+                 (SAM_ST_CDs_IaijutsuOption[1] && SenCount is 2 && !LevelChecked(MidareSetsugekka)) ||
+                 (SAM_ST_CDs_IaijutsuOption[2] && SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))))
+            {
+                actionID = OriginalHook(Iaijutsu);
+                return true;
             }
         }
 
@@ -239,11 +161,11 @@ internal partial class SAM
             TendoKaeshiSetsugekka
         ];
 
-        internal override UserData ContentCheckConfig => Config.SAM_Balance_Content;
+        internal override UserData ContentCheckConfig => SAM_Balance_Content;
 
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
-            ([2], () => Config.SAM_Opener_PrePullDelay)
+            ([2], () => SAM_Opener_PrePullDelay)
         ];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
@@ -256,6 +178,42 @@ internal partial class SAM
             GetRemainingCharges(Role.TrueNorth) is 2 &&
             IsOffCooldown(Senei) &&
             IsOffCooldown(Ikishoten);
+    }
+
+    #endregion
+
+    #region Gauge
+
+    internal static SAMGauge Gauge = GetJobGauge<SAMGauge>();
+
+    internal static bool HasGetsu => Gauge.HasGetsu;
+
+    internal static bool HasSetsu => Gauge.HasSetsu;
+
+    internal static bool HasKa => Gauge.HasKa;
+
+    internal static byte Kenki => Gauge.Kenki;
+
+    internal static byte MeditationStacks => Gauge.MeditationStacks;
+
+    internal static Kaeshi Kaeshi => Gauge.Kaeshi;
+
+    internal static bool NamikiriReady => Kaeshi is Kaeshi.Namikiri;
+
+    private static int GetSenCount()
+    {
+        int senCount = 0;
+
+        if (HasGetsu)
+            senCount++;
+
+        if (HasSetsu)
+            senCount++;
+
+        if (HasKa)
+            senCount++;
+
+        return senCount;
     }
 
     #endregion

@@ -57,7 +57,7 @@ internal partial class DRG
                     break;
 
                 case CustomComboPreset.DRG_Variant_Cure:
-                    DrawSliderInt(1, 100, DRG_Variant_Cure, 
+                    DrawSliderInt(1, 100, DRG_Variant_Cure,
                         "HP% to be at or under", 200);
 
                     break;
@@ -83,13 +83,13 @@ internal partial class DRG
                     break;
 
                 case CustomComboPreset.DRG_AoE_Litany:
-                    DrawSliderInt(0, 100, DRG_AoE_LitanyHP, 
+                    DrawSliderInt(0, 100, DRG_AoE_LitanyHP,
                         $"Stop Using {BattleLitany.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;
 
                 case CustomComboPreset.DRG_AoE_Lance:
-                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP, 
+                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP,
                         $"Stop Using {LanceCharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     break;

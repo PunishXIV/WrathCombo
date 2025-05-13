@@ -1,5 +1,6 @@
 ﻿#region
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -129,6 +130,12 @@ internal partial class DNC : PhysicalRanged
 
             #region Pre-pull
 
+            if (!InCombat() && ContentCheck.IsInConfiguredContent(
+                    Config.DNC_ST_OpenerDifficulty, ContentCheck.ListSet.BossOnly) &&
+                IsEnabled(CustomComboPreset.DNC_ST_BalanceOpener) &&
+                IsEnabled(CustomComboPreset.DNC_ST_Opener_BlockEarly))
+                return All.SavageBlade;
+
             if (!InCombat() && TargetIsHostile())
             {
                 // ST Standard Step (Pre-pull)
@@ -182,7 +189,7 @@ internal partial class DNC : PhysicalRanged
             if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Devilment) &&
                 CanWeave() &&
                 LevelChecked(Devilment) &&
-                GetCooldownRemainingTime(Devilment) < 0.05 &&
+                GetCooldownRemainingTime(Devilment) < GCD/2 &&
                 (HasStatusEffect(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
                  !LevelChecked(TechnicalStep)))
@@ -1374,34 +1381,71 @@ internal partial class DNC : PhysicalRanged
 
     #region Dance Features
 
-    internal class DNC_DanceStepCombo : CustomCombo
+    internal class DNC_StandardDanceFeatures : CustomCombo
     {
         protected internal override CustomComboPreset Preset =>
-            CustomComboPreset.DNC_DanceStepCombo;
+            CustomComboPreset.DNC_DanceFeatures;
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (StandardStep or TechnicalStep)) return actionID;
+            if (actionID is not (StandardStep or FinishingMove)) return actionID;
 
-            // Standard Step
-            if (actionID is StandardStep && Gauge.IsDancing &&
+            // Standard Finish
+            if (IsEnabled(CustomComboPreset.DNC_StandardStepCombo) &&
+                actionID is StandardStep &&
+                Gauge.IsDancing &&
                 HasStatusEffect(Buffs.StandardStep))
                 return Gauge.CompletedSteps < 2
                     ? Gauge.NextStep
                     : FinishOrHold(StandardFinish2);
 
-            // Technical Step
-            if (actionID is TechnicalStep && Gauge.IsDancing &&
-                HasStatusEffect(Buffs.TechnicalStep))
-                return Gauge.CompletedSteps < 4
-                    ? Gauge.NextStep
-                    : FinishOrHold(TechnicalFinish4);
+            // Custom Steps
+            if (WantsCustomStepsOnSmallerFeatures)
+                if (GetCustomDanceStep(actionID, out var danceStep))
+                    return danceStep;
+
+            // StandardStep(or Finishing Move) --> Last Dance
+            if (IsEnabled(CustomComboPreset.DNC_StandardStep_LastDance) &&
+                HasStatusEffect(Buffs.LastDanceReady))
+                return LastDance;
 
             return actionID;
         }
     }
 
-    internal class DNC_DanceComboReplacer : CustomCombo
+    internal class DNC_TechnicalDanceFeatures : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset =>
+            CustomComboPreset.DNC_DanceFeatures;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not TechnicalStep) return actionID;
+
+            // Technical Finish
+            if (IsEnabled(CustomComboPreset.DNC_TechnicalStepCombo) &&
+                Gauge.IsDancing &&
+                HasStatusEffect(Buffs.TechnicalStep))
+                return Gauge.CompletedSteps < 4
+                    ? Gauge.NextStep
+                    : FinishOrHold(TechnicalFinish4);
+
+            // Custom Steps
+            if (WantsCustomStepsOnSmallerFeatures)
+                if (GetCustomDanceStep(actionID, out var danceStep))
+                    return danceStep;
+
+            // Technical Step --> Devilment
+            if (IsEnabled(CustomComboPreset.DNC_TechnicalStep_Devilment) &&
+                WasLastWeaponskill(TechnicalFinish4) &&
+                HasStatusEffect(Buffs.TechnicalFinish))
+                return Devilment;
+
+            return actionID;
+        }
+    }
+
+    internal class DNC_CustomDanceSteps : CustomCombo
     {
         protected internal override CustomComboPreset Preset =>
             CustomComboPreset.DNC_CustomDanceSteps;
@@ -1497,47 +1541,6 @@ internal partial class DNC : PhysicalRanged
 
             if (HasStatusEffect(Buffs.FlourishingStarfall))
                 return StarfallDance;
-
-            return actionID;
-        }
-    }
-
-    internal class DNC_StandardStep_LastDance : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset =>
-            CustomComboPreset.DNC_StandardStep_LastDance;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not (StandardStep or FinishingMove)) return actionID;
-
-            if (WantsCustomStepsOnSmallerFeatures)
-                if (GetCustomDanceStep(actionID, out var danceStep))
-                    return danceStep;
-
-            if (HasStatusEffect(Buffs.LastDanceReady))
-                return LastDance;
-
-            return actionID;
-        }
-    }
-
-    internal class DNC_TechnicalStep_Devilment : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset =>
-            CustomComboPreset.DNC_TechnicalStep_Devilment;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not TechnicalStep) return actionID;
-
-            if (WantsCustomStepsOnSmallerFeatures)
-                if (GetCustomDanceStep(actionID, out var danceStep))
-                    return danceStep;
-
-            if (WasLastWeaponskill(TechnicalFinish4) &&
-                HasStatusEffect(Buffs.TechnicalFinish))
-                return Devilment;
 
             return actionID;
         }

@@ -32,7 +32,7 @@ internal partial class BLM
                         "Standard opener", "Uses Standard opener",
                         0);
 
-                    DrawHorizontalRadioButton(BLM_SelectedOpener, 
+                    DrawHorizontalRadioButton(BLM_SelectedOpener,
                         $"{Flare.ActionName()} opener", $"Uses {Flare.ActionName()} opener",
                         1);
 
@@ -77,7 +77,7 @@ internal partial class BLM
                     break;
 
                 case CustomComboPreset.BLM_AoE_Triplecast:
-                    DrawSliderInt(0, 1, BLM_AoE_Triplecast_HoldCharges, 
+                    DrawSliderInt(0, 1, BLM_AoE_Triplecast_HoldCharges,
                         $"How many charges of {Triplecast.ActionName()} to keep ready? (0 = Use all)");
                     break;
 

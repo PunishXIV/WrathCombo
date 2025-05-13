@@ -37,7 +37,6 @@ internal partial class BRD
     internal static bool CanWeaveDelayed => CanDelayedWeave() && !ActionWatching.HasDoubleWeaved();
     internal static bool CanIronJaws => LevelChecked(IronJaws);
     internal static bool BuffTime => GetCooldownRemainingTime(RagingStrikes) < 2.7;
-    internal static bool UseInterrupt => CanWeaveDelayed && ActionReady(Role.HeadGraze);
     internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 
                                        (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
                                        (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));

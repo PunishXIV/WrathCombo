@@ -13,10 +13,8 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Options = WrathCombo.Combos.CustomComboPreset;
-
-#endregion
-
-namespace WrathCombo.Combos.PvE;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 
 // ReSharper disable ReturnTypeCanBeNotNullable
 // ReSharper disable UnusedType.Global
@@ -25,6 +23,11 @@ namespace WrathCombo.Combos.PvE;
 // ReSharper disable CheckNamespace
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable MemberHidesStaticFromOuterClass
+
+#endregion
+
+namespace WrathCombo.Combos.PvE;
+
 internal partial class DNC
 {
     /// <summary>
@@ -173,14 +176,34 @@ internal partial class DNC
 
     #region Dance Partner
 
-    internal static ulong? CurrentDancePartner =>
-        GetPartyMembers()
-            .Where(HasMyPartner)
-            .Select(x => (ulong?)x.GameObjectId)
-            .FirstOrDefault();
+    internal static ulong? CurrentDancePartner
+    {
+        get
+        {
+            if (!EZ.Throttle("dncPartnerCurrentCheck", TS.FromSeconds(1.9)))
+                return field;
 
-    internal static ulong? DesiredDancePartner =>
-        TryGetDancePartner(out var partner) ? partner.GameObjectId : null;
+            field = GetPartyMembers()
+                .Where(HasMyPartner)
+                .Select(x => (ulong?)x.GameObjectId)
+                .FirstOrDefault();
+            return field;
+        }
+    }
+
+    internal static ulong? DesiredDancePartner
+    {
+        get
+        {
+            if (!EZ.Throttle("dncPartnerDesiredCheck", TS.FromSeconds(2)))
+                return field;
+
+            field = TryGetDancePartner(out var partner)
+                ? partner.GameObjectId
+                : null;
+            return field;
+        }
+    }
 
     private static bool TryGetDancePartner
         (out IGameObject? partner, bool? callingFromFeature = null)
@@ -413,7 +436,7 @@ internal partial class DNC
     /// <summary>
     ///     Saved custom dance steps.
     /// </summary>
-    /// <seealso cref="DNC_DanceComboReplacer.Invoke">DanceComboReplacer</seealso>
+    /// <seealso cref="DNC_CustomDanceSteps.Invoke">CustomDanceSteps</seealso>
     private static uint[] CustomDanceStepActions =>
         Service.Configuration.DancerDanceCompatActionIDs;
 
@@ -501,7 +524,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 7),
-            ([5], () => 5),
+            ([5], () => (!Config.DNC_ST_OpenerOption_Peloton ? 12 : 5)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -521,6 +544,15 @@ internal partial class DNC
             ([21, 22, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([21, 22, 23], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([4], () => !Config.DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -592,7 +624,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 2),
-            ([5], () => 2),
+            ([5], () => (!Config.DNC_ST_OpenerOption_Peloton ? 4 : 2)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -612,6 +644,15 @@ internal partial class DNC
             ([20, 21, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([20, 21, 23], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([4], () => !Config.DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -687,7 +728,7 @@ internal partial class DNC
         } =
         [
             ([5], () => 1),
-            ([6], () => 6),
+            ([6], () => (!Config.DNC_ST_OpenerOption_Peloton ? 7 : 6)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -707,6 +748,15 @@ internal partial class DNC
             ([21, 22, 23], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([21, 22, 23], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([5], () => !Config.DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
@@ -874,6 +924,15 @@ internal partial class DNC
             ([16, 17, 18], LastDance, () => HasStatusEffect(Buffs.LastDanceReady)),
             ([16, 17, 18], Fountainfall, () =>
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([6], () => !Config.DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>

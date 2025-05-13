@@ -92,8 +92,8 @@ internal partial class SAM
                 case CustomComboPreset.SAM_ST_Shinten:
                     DrawSliderInt(25, 85, SAM_ST_KenkiOvercapAmount,
                         "Set the Kenki overcap amount for ST combos.");
-                    
-                    DrawSliderInt(0, 100, SAM_ST_ExecuteThreshold, 
+
+                    DrawSliderInt(0, 100, SAM_ST_ExecuteThreshold,
                         "HP percent threshold to not save Kenki");
 
                     break;
@@ -105,7 +105,7 @@ internal partial class SAM
                     break;
 
                 case CustomComboPreset.SAM_Variant_Cure:
-                    DrawSliderInt(1, 100, SAM_VariantCure, 
+                    DrawSliderInt(1, 100, SAM_VariantCure,
                         "HP% to be at or under", 200);
 
                     break;
@@ -160,11 +160,11 @@ internal partial class SAM
 
                 case CustomComboPreset.SAM_AoE_MangetsuCombo:
                 {
-                    DrawAdditionalBoolChoice(SAM_Mangetsu_KenkiOvercap, 
+                    DrawAdditionalBoolChoice(SAM_Mangetsu_KenkiOvercap,
                         "Kenki Overcap Protection", "Spends Kenki when at the set value or above.");
 
                     if (SAM_Mangetsu_KenkiOvercap)
-                        DrawSliderInt(25, 100, SAM_Mangetsu_KenkiOvercapAmount, 
+                        DrawSliderInt(25, 100, SAM_Mangetsu_KenkiOvercapAmount,
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
 
                     break;
