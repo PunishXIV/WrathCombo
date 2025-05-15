@@ -430,7 +430,7 @@ internal partial class MCH : PhysicalRanged
                 if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
                     return Chainsaw;
 
-                if (ActionReady(AirAnchor))
+                if (LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
             }
 
@@ -586,7 +586,7 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_AirAnchor) &&
                     reassembledAirAnchorAoE &&
-                    ActionReady(AirAnchor))
+                    LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
 
                 if (reassembledScattergunAoE)
