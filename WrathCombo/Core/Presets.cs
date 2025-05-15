@@ -68,7 +68,16 @@ namespace WrathCombo.Core
         /// <summary> Gets a value indicating whether a preset is enabled. </summary>
         /// <param name="preset"> Preset to check. </param>
         /// <returns> The boolean representation. </returns>
-        public static bool IsEnabled(CustomComboPreset preset) => Service.Configuration.EnabledActions.Contains(preset);
+        public static bool IsEnabled(CustomComboPreset preset) => Service.Configuration.EnabledActions.Contains(preset) && !ShouldBeHidden(preset);
+
+        /// <summary>
+        /// Gets a value indicating whether a preset is marked as hidden.
+        /// </summary>
+        /// <param name="preset"></param>
+        /// <returns></returns>
+        public static bool ShouldBeHidden(CustomComboPreset preset) =>
+            preset.GetAttribute<HiddenAttribute>() != null &&
+            !Service.Configuration.ShowHiddenFeatures;
 
         /// <summary> Gets a value indicating whether a preset is secret. </summary>
         /// <param name="preset"> Preset to check. </param>

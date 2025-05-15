@@ -55,7 +55,10 @@ namespace WrathCombo.Window.Tabs
                         if (!tab)
                             return;
 
-                        foreach (string? jobName in groupedPresets.Where(x => x.Value.Any(y => PresetStorage.IsPvP(y.Preset))).Select(x => x.Key))
+                        foreach (string? jobName in groupedPresets.Where(x =>
+                                     x.Value.Any(y => PresetStorage.IsPvP(y.Preset) &&
+                                                      !PresetStorage.ShouldBeHidden(y.Preset)))
+                                     .Select(x => x.Key))
                         {
                             string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
                             string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
