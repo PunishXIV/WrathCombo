@@ -24,6 +24,12 @@ internal partial class DRG
                  JustUsed(FangAndClaw) ||
                  JustUsed(OriginalHook(VorpalThrust)) && LevelChecked(HeavensThrust)))
                 return true;
+
+            if (!LevelChecked(Drakesbane) && JustUsed(VorpalThrust))
+                return true;
+
+            if (!LevelChecked(FullThrust) && JustUsed(TrueThrust))
+                return true;
         }
 
         return false;
