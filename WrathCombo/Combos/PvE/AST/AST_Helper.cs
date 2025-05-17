@@ -107,11 +107,13 @@ internal partial class AST
             QuickTargetCards.SelectedRandomMember = null;
     }
 
+    private static bool TargetInCardRange(IGameObject target) => InActionRange(Balance, target);
+
     private static bool BetterTargetAvailable()
     {
         if (QuickTargetCards.SelectedRandomMember is null ||
             QuickTargetCards.SelectedRandomMember.IsDead ||
-            OutOfRange(Balance, QuickTargetCards.SelectedRandomMember))
+            !TargetInCardRange(QuickTargetCards.SelectedRandomMember))
             return true;
 
         IBattleChara? m = QuickTargetCards.SelectedRandomMember as IBattleChara;
@@ -122,7 +124,7 @@ internal partial class AST
         List<IBattleChara> targets = new();
         for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
         {
-            if (PartyUITargeting.GetPartySlot(i) is not IBattleChara member)
+            if (SimpleTarget.GetPartyMemberInSlotSlot(i) is not IBattleChara member)
                 continue;
             if (member.GameObjectId == QuickTargetCards.SelectedRandomMember.GameObjectId)
                 continue;
@@ -130,7 +132,7 @@ internal partial class AST
                 continue; //Skip nulls/disconnected people
             if (member.IsDead)
                 continue;
-            if (OutOfRange(Balance, member))
+            if (!TargetInCardRange(member))
                 continue;
 
             if (HasStatusEffect(Buffs.BalanceBuff, member, true)) continue;
@@ -171,7 +173,7 @@ internal partial class AST
         {
             if (DrawnCard is not CardType.None)
             {
-                if (PartyUITargeting.GetPartySlot(2) is not null)
+                if (SimpleTarget.PartyMember2 is not null)
                 {
                     _ = SetTarget();
                     Svc.Log.Debug($"Set card to {SelectedRandomMember?.Name}");
@@ -196,13 +198,13 @@ internal partial class AST
             PartyTargets.Clear();
             for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
             {
-                if (PartyUITargeting.GetPartySlot(i) is not IBattleChara member)
+                if (SimpleTarget.GetPartyMemberInSlotSlot(i) is not IBattleChara member)
                     continue;
                 if (member is null)
                     continue; //Skip nulls/disconnected people
                 if (member.IsDead)
                     continue;
-                if (OutOfRange(Balance, member))
+                if (!TargetInCardRange(member))
                     continue;
 
                 if (HasStatusEffect(Buffs.BalanceBuff, member, true)) continue;
@@ -220,13 +222,13 @@ internal partial class AST
             {
                 for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
                 {
-                    if (PartyUITargeting.GetPartySlot(i) is not IBattleChara member)
+                    if (SimpleTarget.GetPartyMemberInSlotSlot(i) is not IBattleChara member)
                         continue;
                     if (member is null)
                         continue; //Skip nulls/disconnected people
                     if (member.IsDead)
                         continue;
-                    if (OutOfRange(Balance, member))
+                    if (!TargetInCardRange(member))
                         continue;
 
                     if (HasStatusEffect(Buffs.BalanceBuff, member, true))

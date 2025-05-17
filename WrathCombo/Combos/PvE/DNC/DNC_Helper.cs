@@ -7,6 +7,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -205,6 +206,44 @@ internal partial class DNC
         }
     }
 
+    internal static ulong? FeatureDesiredDancePartner
+    {
+        get
+        {
+            if (!EZ.Throttle("dncFeatPartnerDesiredCheck", TS.FromSeconds(7)))
+                return field;
+
+            field = TryGetDancePartner(out var partner, true)
+                ? partner.GameObjectId
+                : null;
+            return field;
+        }
+    }
+
+    private static bool CurrentPartnerNonOptimal =>
+        !HasStatusEffect(Buffs.ClosedPosition) ||
+        (CurrentDancePartner is not null &&
+         FeatureDesiredDancePartner is not null &&
+         FeatureDesiredDancePartner != CurrentDancePartner);
+
+    #region Resolver Delegates
+
+    internal static TargetResolverDelegate DancePartnerResolver = () =>
+    {
+        P.ActionRetargeting.MyResolverMethodName = "DancePartnerResolver";
+        return Svc.Objects.FirstOrDefault(x =>
+            x.GameObjectId == DesiredDancePartner);
+    };
+
+    internal static TargetResolverDelegate FeatureDancePartnerResolver = () =>
+    {
+        P.ActionRetargeting.MyResolverMethodName = "FeatureDancePartnerResolver";
+        return Svc.Objects.FirstOrDefault(x =>
+            x.GameObjectId == FeatureDesiredDancePartner);
+    };
+
+    #endregion
+
     private static bool TryGetDancePartner
         (out IGameObject? partner, bool? callingFromFeature = null)
     {
@@ -225,18 +264,19 @@ internal partial class DNC
             return false;
 
         // Check if we have a target overriding any searching
-        /*
-         if (callingFromFeature is true &&
-            IsEnabled(Options.DNC_Desirable_TargetOverride) &&
-            LocalPlayer.TargetObject is IBattleChara &&
-            !LocalPlayer.TargetObject.IsDead &&
+        if (callingFromFeature is true &&
+            Config.DNC_Partner_FocusOverride &&
+            SimpleTarget.FocusTarget is IBattleChara &&
+            !SimpleTarget.FocusTarget.IsDead &&
             party.Any(x =>
-                x.GameObjectId == LocalPlayer.TargetObject.GameObjectId) &&
-            IsInRange(LocalPlayer.TargetObject, 30))
+                x.GameObjectId == SimpleTarget.FocusTarget.GameObjectId) &&
+            IsInRange(SimpleTarget.FocusTarget, 30) &&
+            SicknessFree(SimpleTarget.FocusTarget) &&
+            DamageDownFree(SimpleTarget.FocusTarget))
         {
-            partner = LocalPlayer.TargetObject;
+            partner = SimpleTarget.FocusTarget;
             return true;
-        }*/
+        }
 
         // Search for a partner
         if (TryGetBestPartner(out var bestPartner))
@@ -248,7 +288,7 @@ internal partial class DNC
         // Fallback to companion
         if (HasCompanionPresent())
         {
-            partner = Svc.Buddies.CompanionBuddy.GameObject;
+            partner = SimpleTarget.Chocobo;
             return true;
         }
 
@@ -261,7 +301,14 @@ internal partial class DNC
 
         return false;
 
-        #region Sickness-checking shortcut methods
+        #region Status-checking shortcut methods
+
+        // These are here so I don't have to add a ton of methods to DNC
+
+        bool DamageDownFree(IGameObject? target)
+        {
+            return !TargetHasDamageDown(target);
+        }
 
         bool SicknessFree(IGameObject? target)
         {
@@ -287,26 +334,30 @@ internal partial class DNC
 
             #endregion
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions.MustBeMelee))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.Melee))
                 filter = filter
                     .Where(x => x.ClassJob.RowId.Role() is melee).ToList();
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions.MustBeDPS))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.DPS))
                 filter = filter
                     .Where(x => x.ClassJob.RowId.Role() is melee or ranged)
                     .ToList();
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions
-                    .MustBeSicknessFree))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.NotDD))
+                filter = filter.Where(DamageDownFree).ToList();
+
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.NotSick))
                 filter = filter.Where(SicknessFree).ToList();
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions.MustBeBrinkFree))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.NotBrink))
                 filter = filter.Where(BrinkFree).ToList();
 
+            // Run the next step if no matches were found
             if (filter.Count == 0 &&
                 step < PartnerPriority.RestrictionSteps.Length - 1)
                 return TryGetBestPartner(out newBestPartner, step + 1);
-            if (filter.Count == 0 && step == 6)
+            // If it's the last step and there are no matches found, bail
+            if (filter.Count == 0)
                 return false;
 
             filter = filter
@@ -330,11 +381,15 @@ internal partial class DNC
         }
     }
 
+    #region DP-checking shortcut methods
+
     private static bool HasAnyPartner(WrathPartyMember target) =>
         HasStatusEffect(Buffs.Partner, target.BattleChara, true);
 
     private static bool HasMyPartner(WrathPartyMember target) =>
         HasStatusEffect(Buffs.Partner, target.BattleChara);
+
+    #endregion
 
     #region Partner Priority Static Data
 
@@ -350,8 +405,8 @@ internal partial class DNC
 
         internal static readonly Dictionary<uint, int> Job100Prio = new()
         {
-            { PCT.JobID, 1 },
             { SAM.JobID, 1 },
+            { PCT.JobID, 2 },
             { RPR.JobID, 2 },
             { VPR.JobID, 2 },
             { MNK.JobID, 2 },
@@ -367,7 +422,7 @@ internal partial class DNC
 
         internal static readonly Dictionary<uint, int> Job090Prio = new()
         {
-            { PCT.JobID, 0 },
+            { PCT.JobID, 1 },
             { SAM.JobID, 1 },
             { NIN.JobID, 2 },
             { MNK.JobID, 3 },
@@ -384,16 +439,21 @@ internal partial class DNC
 
         internal static readonly Restrictions[] RestrictionSteps =
         [
+            // Ailment-free DPS
+            Restrictions.Melee | Restrictions.NotDD | Restrictions.NotSick,
+            Restrictions.DPS | Restrictions.NotDD | Restrictions.NotSick,
             // Sickness-free DPS
-            Restrictions.MustBeMelee | Restrictions.MustBeSicknessFree,
-            Restrictions.MustBeDPS | Restrictions.MustBeSicknessFree,
+            Restrictions.Melee | Restrictions.NotSick,
+            Restrictions.DPS | Restrictions.NotSick,
             // Sick DPS
-            Restrictions.MustBeMelee | Restrictions.MustBeBrinkFree,
-            Restrictions.MustBeDPS | Restrictions.MustBeBrinkFree,
+            Restrictions.Melee | Restrictions.NotBrink,
+            Restrictions.DPS | Restrictions.NotBrink,
+            // Ailment-free
+            Restrictions.NotDD,
             // Sickness-free
-            Restrictions.MustBeSicknessFree,
+            Restrictions.NotSick,
             // Sick
-            Restrictions.MustBeBrinkFree,
+            Restrictions.NotBrink,
             // :(
             Restrictions.ScrapeTheBottom,
         ];
@@ -411,11 +471,12 @@ internal partial class DNC
         [Flags]
         internal enum Restrictions
         {
-            MustBeMelee = 1 << 0, // 1
-            MustBeDPS = 1 << 1, // 2
-            MustBeSicknessFree = 1 << 2, // 4
-            MustBeBrinkFree = 1 << 3, // 8
-            ScrapeTheBottom = 1 << 4, // 16
+            Melee = 1 << 0, // 1
+            DPS = 1 << 1, // 2
+            NotDD = 1 << 2, // 4
+            NotSick = 1 << 3, // 8
+            NotBrink = 1 << 4, // 16
+            ScrapeTheBottom = 1 << 5, // 32
         }
     }
 

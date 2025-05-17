@@ -37,7 +37,7 @@ internal partial class SGE
 
     internal static int GetMatchingConfigST(int i, IGameObject? optionalTarget, out uint action, out bool enabled)
     {
-        IGameObject? healTarget = optionalTarget ?? GetHealTarget(Config.SGE_ST_Heal_Adv && Config.SGE_ST_Heal_UIMouseOver);
+        var healTarget = optionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
         switch (i)
         {

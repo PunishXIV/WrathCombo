@@ -306,8 +306,8 @@ internal partial class AST : Healer
             bool canBole = Config.AST_ST_SimpleHeals_WeaveBole && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveBole;
             bool canArrow = Config.AST_ST_SimpleHeals_WeaveArrow && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveArrow;
 
-            //Grab our target (Soft->Hard->Self)
-            IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.AST_ST_SimpleHeals_Adv && Config.AST_ST_SimpleHeals_UIMouseOver);
+            //Grab our target
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) >= Config.AST_ST_SimpleHeals_Esuna &&

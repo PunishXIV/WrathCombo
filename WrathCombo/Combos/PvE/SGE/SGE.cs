@@ -338,8 +338,7 @@ internal partial class SGE : Healer
             if (HasStatusEffect(Buffs.Eukrasia))
                 return EukrasianDiagnosis;
 
-            IGameObject? healTarget = OptionalTarget ??
-                                      GetHealTarget(Config.SGE_ST_Heal_Adv && Config.SGE_ST_Heal_UIMouseOver);
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) >= Config.SGE_ST_Heal_Esuna &&

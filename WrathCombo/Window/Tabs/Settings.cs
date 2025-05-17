@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Linq;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 using System.Numerics;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using Dalamud.Interface.Colors;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
@@ -10,11 +13,14 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using ECommons.DalamudServices;
+using WrathCombo.CustomComboNS;
 
 namespace WrathCombo.Window.Tabs
 {
     internal class Settings : ConfigWindow
     {
+        private static string SimpleTargetItemToAddToCustomHealStack = "default";
+
         internal new static void Draw()
         {
             using (ImRaii.Child("main", new Vector2(0, 0), true))
@@ -154,7 +160,6 @@ namespace WrathCombo.Window.Tabs
                 ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("Rotation Behavior Options");
 
-
                 #region Performance Mode
 
                 if (ImGui.Checkbox("Performance Mode", ref Service.Configuration.PerformanceMode))
@@ -284,6 +289,205 @@ namespace WrathCombo.Window.Tabs
                 ImGui.Text($"   -   Interrupt Delay");
 
                 ImGuiComponents.HelpMarker("The percentage of a total cast time to wait before interrupting.\nApplies to all interrupts, in every job's combos.\n\nIt is recommend to keep this value below 50%.\nDefault: 0%");
+
+                #endregion
+
+                #endregion
+
+                #region Targeting Options
+
+                ImGuiEx.Spacing(new Vector2(0, 20));
+                ImGuiEx.TextUnderlined("Targeting Options");
+
+                var useCusHealStack = Service.Configuration.UseCustomHealStack;
+
+                #region Retarget Healing Actions
+
+                bool retargetHealingActions =
+                    Service.Configuration.RetargetHealingActionsToStack;
+                if (ImGui.Checkbox("Retarget Healing Actions", ref retargetHealingActions))
+                {
+                    Service.Configuration.RetargetHealingActionsToStack =
+                        retargetHealingActions;
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker(
+                    "This will retarget all healing actions to the Heal Stack as shown below,\nsimilarly to how Redirect or Reaction would.\n\nIt is recommended to enable this if you customize the Heal Stack at all.\nDefault: Off");
+                Presets.DrawPossiblyRetargetedSymbol();
+
+                #endregion
+
+                ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #region Current Heal Stack
+
+                ImGui.TextUnformatted("Current Heal Stack:");
+
+                ImGuiComponents.HelpMarker("This is the priority list ");
+
+                var healStackText = "";
+                var nextStackItemMarker = "   >   ";
+                if (useCusHealStack)
+                {
+
+                }
+                else
+                {
+                    if (Service.Configuration.UseMouseoverOverridesInDefaultHealStack)
+                        healStackText += "MouseOver" + nextStackItemMarker;
+                    healStackText += "Soft Target" + nextStackItemMarker;
+                    healStackText += "Hard Target" + nextStackItemMarker;
+                    if (Service.Configuration.UseFocusTargetOverrideInDefaultHealStack)
+                        healStackText += "Focus Target" + nextStackItemMarker;
+                    if (Service.Configuration.UseLowestHPOverrideInDefaultHealStack)
+                        healStackText += "Lowest HP% Ally" + nextStackItemMarker;
+                    healStackText += "Yourself";
+                }
+                ImGuiEx.Spacing(new Vector2(10, 0));
+                ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, healStackText);
+
+                ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #endregion
+
+                #region Default Heal Stack Include: MouseOver
+
+                if (useCusHealStack) ImGui.BeginDisabled();
+
+                bool useMouseoverOverridesInDefaultHealStack =
+                    Service.Configuration.UseMouseoverOverridesInDefaultHealStack;
+                if (ImGui.Checkbox("Add MouseOver to the Default Healing Stack", ref useMouseoverOverridesInDefaultHealStack))
+                {
+                    Service.Configuration.UseMouseoverOverridesInDefaultHealStack =
+                        useMouseoverOverridesInDefaultHealStack;
+                    Service.Configuration.Save();
+                }
+
+                if (useCusHealStack) ImGui.EndDisabled();
+
+                ImGuiComponents.HelpMarker("This will add any MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI, nameplate UI, or character model.\n\nIt is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have MouseOver targets in your Redirect/Reaction configuration).\nDefault: Off");
+
+                #endregion
+
+                #region Default Heal Stack Include: Focus Target
+
+                if (useCusHealStack) ImGui.BeginDisabled();
+
+                bool useFocusTargetOverrideInDefaultHealStack =
+                    Service.Configuration.UseFocusTargetOverrideInDefaultHealStack;
+                if (ImGui.Checkbox("Add Focus Target to the Default Healing Stack", ref useFocusTargetOverrideInDefaultHealStack))
+                {
+                    Service.Configuration.UseFocusTargetOverrideInDefaultHealStack =
+                        useFocusTargetOverrideInDefaultHealStack;
+                    Service.Configuration.Save();
+                }
+
+                if (useCusHealStack) ImGui.EndDisabled();
+
+                ImGuiComponents.HelpMarker("This will add your focus target under your hard and soft targets in the Default Heal Stack, overriding the rest of the stack if you have a living focus target.\n\nDefault: Off");
+
+                #endregion
+
+                #region Default Heal Stack Include: Lowest HP Ally
+
+                if (useCusHealStack) ImGui.BeginDisabled();
+
+                bool useLowestHPOverrideInDefaultHealStack =
+                    Service.Configuration.UseLowestHPOverrideInDefaultHealStack;
+                if (ImGui.Checkbox("Add Lowest HP% Ally to the Default Healing Stack", ref useLowestHPOverrideInDefaultHealStack))
+                {
+                    Service.Configuration.UseLowestHPOverrideInDefaultHealStack =
+                        useLowestHPOverrideInDefaultHealStack;
+                    Service.Configuration.Save();
+                }
+
+                if (useCusHealStack) ImGui.EndDisabled();
+
+                ImGuiComponents.HelpMarker("This will add a nearby party member with the lowest HP% to bottom of the Default Heal Stack, overriding only yourself.\n\nTHIS SHOULD BE USED WITH THE 'RETARGET HEALING ACTIONS' SETTING!\n\nDefault: Off");
+
+                if (useCusHealStack) ImGui.BeginDisabled();
+                if (useLowestHPOverrideInDefaultHealStack)
+                {
+                    ImGuiEx.Spacing(new Vector2(30, 0));
+                    ImGuiEx.Text(ImGuiColors.DalamudYellow, "This should be used with the 'Retarget Healing Actions' setting above!");
+                }
+                if (useCusHealStack) ImGui.EndDisabled();
+
+                #endregion
+
+                ImGuiEx.Spacing(new Vector2(5, 5));
+                ImGui.TextUnformatted("Or");
+                ImGuiEx.Spacing(new Vector2(0, 5));
+
+                #region Use Custom Heal Stack
+
+                bool useCustomHealStack = Service.Configuration.UseCustomHealStack;
+                if (ImGui.Checkbox("Use a Custom Heal Stack Instead", ref useCustomHealStack))
+                {
+                    Service.Configuration.UseCustomHealStack = useCustomHealStack;
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker("Select this if you would rather make your own stack of target priorities for Heal Targets instead of using our default stack.\n\nIt is recommended to use this to align with your Redirect/Reaction configuration if you're not using the Retarget Healing Actions setup; otherwise it is preference.\nDefault: Off");
+
+                #endregion
+
+                #region Custom Heal Stack Setup
+
+                if (Service.Configuration.UseCustomHealStack)
+                {
+                    #region Combo Variables
+
+                    var defaultLabel = "Select a Target to Add";
+                    var minSize = ImGui.CalcTextSize(defaultLabel).X;
+
+                    var simpleTargetProperties = typeof(SimpleTarget)
+                        .GetProperties(BindingFlags.Public |
+                                       BindingFlags.Static)
+                        .Select(x => x.Name)
+                        .Where(x => !x.Contains("Enemy") && !x.Contains("Attack"))
+                        .Prepend("default")
+                        .ToArray();
+
+                    var nonPartyMembers = simpleTargetProperties
+                        .Where(name => !name.StartsWith("PartyMember"));
+                    var partyMembers = simpleTargetProperties
+                        .Where(name => name.StartsWith("PartyMember"));
+                    var simpleTargets =
+                        nonPartyMembers.Concat(partyMembers).ToArray();
+
+                    var simpleTargetNames =
+                        simpleTargets.ToDictionary(
+                            name => name,
+                            name =>
+                            {
+                                return name switch
+                                {
+                                    "default" => defaultLabel,
+                                    "UIMouseOverTarget" => "UI-MouseOver Target",
+                                    "ModelMouseOverTarget" =>
+                                        "Model-MouseOver Target",
+                                    "LowestHPAlly" => "Lowest HP Ally",
+                                    "LowestHPPAlly" => "Lowest HP% Ally",
+#pragma warning disable SYSLIB1045
+                                    _ => Regex.Replace(name,
+#pragma warning restore SYSLIB1045
+                                        @"(?<=[a-z])(?=[A-Z0-9])", " "),
+                                };
+                            }
+                        );
+
+                    #endregion
+
+                    ImGui.PushItemWidth(minSize + 40f.Scale());
+                    ImGuiEx.Combo(
+                        "##CustomHealTargetStack",
+                        ref SimpleTargetItemToAddToCustomHealStack,
+                        simpleTargets,
+                        names: simpleTargetNames
+                    );
+                }
 
                 #endregion
 

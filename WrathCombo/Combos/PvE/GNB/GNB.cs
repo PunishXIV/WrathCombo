@@ -743,8 +743,8 @@ internal partial class GNB : Tank
             if (actionID is not Aurora)
                 return actionID;
 
-            if (HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
-                !HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, anyOwner: true))
+            if (TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
+                !TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, anyOwner: true))
                 return All.SavageBlade;
 
             return actionID;

@@ -2,12 +2,12 @@
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.Runtime.InteropServices;
 using Dalamud.Interface.Utility;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Common.Math;
 using ImGuiNET;
+using WrathCombo.Core;
 using WrathCombo.Services;
 
 #endregion
@@ -27,15 +27,21 @@ namespace WrathCombo.Window;
 /// <seealso cref="Draw"/>
 internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
 {
+    private static bool _getConfigValue(string config) =>
+        PluginConfiguration.GetCustomBoolValue(config);
 
     /// <summary>
     ///     The option value to be changed.
     /// </summary>
     /// <remarks>UPDATE THIS VALUE</remarks>
-    private static double Option
+    private static object Option
     {
-        get => Service.Configuration.MeleeOffset;
-        set => Service.Configuration.MeleeOffset = value;
+        get => _getConfigValue("AST_ST_SimpleHeals_UIMouseOver") ||
+               _getConfigValue("SCH_ST_Heal_UIMouseOver") ||
+               _getConfigValue("SCH_DeploymentTactics_UIMouseOver") ||
+               _getConfigValue("SGE_ST_Heal_UIMouseOver") ||
+               _getConfigValue("WHM_STHeals_UIMouseOver");
+        set => PluginConfiguration.SetCustomBoolValue("test", value is true);
     }
 
     #region Option Value Checking
@@ -45,15 +51,14 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
     ///     As a string to reduce code-change needed for future settings changes.
     /// </summary>
     /// <remarks>No need to update this value to re-use this window.</remarks>
-    private static readonly string OptionValue =
-        Option.ToString(CultureInfo.InvariantCulture).Trim();
+    private static readonly object OptionValue = Option;
 
     /// <summary>
     ///     The value this option should be.<br/>
     ///     As a string to reduce code-change needed for future settings changes.
     /// </summary>
     /// <remarks>UPDATE THIS VALUE</remarks>
-    private const string OptionSuggestedValue = "0";
+    private static readonly object OptionSuggestedValue = true;
 
     /// <summary>
     ///     Whether the current value is problematic.
@@ -77,7 +82,7 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
     ///     The version where the problem was introduced.
     /// </summary>
     /// <remarks>UPDATE THIS VALUE</remarks>
-    private const string VersionWhereProblemIntroduced = "1.0.0.4";
+    private const string VersionWhereProblemIntroduced = "1.0.1.6";
 
     /// <summary>
     ///     Whether the current version is problematic.
@@ -105,10 +110,10 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
         "The max melee range has been updated to correctly reflect the game's max melee range.\n" +
         "It has been changed from 3 to 3.5 yalms.\n\n" +
         "Your current setting for Melee Offset (in Misc Settings) is " +
-        $"{Math.Round(Option, 1)} yalms.\n" +
+        $"{Math.Round(0.1, 1)} yalms.\n" +
         "This value used to make the maximum range for wrath be " +
-        $"{Math.Round(Option+3, 1)} yalms, " +
-        $"but would now make it {Math.Round(Option+3.5, 1)} yalms.\n" +
+        $"{Math.Round(3.1, 1)} yalms, " +
+        $"but would now make it {Math.Round(3.5, 1)} yalms.\n" +
         "It is recommended you update this value, to prevent melee down-time.\n";
 
     #endregion
@@ -151,7 +156,7 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
     public override void Draw()
     {
         // UPDATE THIS VALUE
-        var buttonText1 = "Update Melee Offset to 0.0";
+        var buttonText1 = "Enable MouseOver options ";
         // UPDATE THIS VALUE
         var buttonText2 = "Close and Do Not Show again";
 
@@ -167,9 +172,8 @@ internal class SettingChangeWindow : Dalamud.Interface.Windowing.Window
 
         if (ImGui.Button(buttonText1))
         {
-            // UPDATE THIS VALUE (the cast)
-            Option =
-                double.Parse(OptionSuggestedValue, CultureInfo.InvariantCulture);
+            // UPDATE THIS VALUE
+            Option = OptionSuggestedValue;
             Service.Configuration.HideSettingsChangeSuggestionForVersion = Version;
             Service.Configuration.Save();
             IsOpen = false;

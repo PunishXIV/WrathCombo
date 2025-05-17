@@ -40,6 +40,8 @@
 /WrathCombo/CustomCombo/Functions/                    @Taurenkey
 /WrathCombo/Core/                                     @Taurenkey
 /WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest
+/WrathCombo/Core/ActionRetargeting.cs                 @zbee
+/WrathCombo/CustomCombo/SimpleTarget.cs               @zbee
 /docs/                                                @zbee
 /CONTRIBUTING.md                                      @zbee
 /WrathCombo/Services/IPC/                             @zbee

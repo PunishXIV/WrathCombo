@@ -8,6 +8,7 @@ namespace WrathCombo.Attributes
     internal class RoleAttribute : Attribute
     {
         public JobRole Role;
+
         internal RoleAttribute(JobRole role)
         {
             Role = role;
@@ -18,61 +19,66 @@ namespace WrathCombo.Attributes
             if (Role == JobRole.All)
                 return true;
 
-            switch (Player.Job)
-            {
-                case Job.GLA:
-                case Job.PLD:
-                case Job.MRD:
-                case Job.WAR:
-                case Job.DRK:
-                case Job.GNB:
-                    return Role == JobRole.Tank;
-                case Job.CNJ:
-                case Job.WHM:
-                case Job.AST:
-                case Job.SCH:
-                case Job.SGE:
-                    return Role == JobRole.Healer;
-                case Job.ARC:
-                case Job.BRD:
-                case Job.MCH:
-                case Job.DNC:
-                    return Role == JobRole.RangedDPS;
-                case Job.THM:
-                case Job.BLM:
-                case Job.ACN:
-                case Job.SMN:
-                case Job.RDM:
-                case Job.PCT:
-                case Job.BLU:
-                    return Role == JobRole.MagicalDPS;
-                case Job.LNC:
-                case Job.DRG:
-                case Job.PGL:
-                case Job.MNK:
-                case Job.ROG:
-                case Job.NIN:
-                case Job.SAM:
-                case Job.VPR:
-                case Job.RPR:
-                    return Role == JobRole.MeleeDPS;
-                case Job.BTN:
-                case Job.MIN:
-                case Job.FSH:
-                    return Role == JobRole.DoL;
-                case Job.CRP:
-                case Job.GSM:
-                case Job.LTW:
-                case Job.CUL:
-                case Job.BSM:
-                case Job.ARM:
-                case Job.ALC:
-                case Job.WVR:
-                    return Role == JobRole.DoH;
-            }
-
-            return false;
+            return Role == GetRoleFromJob(Player.Job);
         }
+
+        public static JobRole GetRoleFromJob(uint job) =>
+            GetRoleFromJob((Job)job);
+
+        public static JobRole GetRoleFromJob(Job job) =>
+            job switch
+            {
+                Job.GLA or
+                    Job.PLD or
+                    Job.MRD or
+                    Job.WAR or
+                    Job.DRK or
+                    Job.GNB =>
+                    JobRole.Tank,
+                Job.CNJ or
+                    Job.WHM or
+                    Job.AST or
+                    Job.SCH or
+                    Job.SGE =>
+                    JobRole.Healer,
+                Job.ARC or
+                    Job.BRD or
+                    Job.MCH or
+                    Job.DNC =>
+                    JobRole.RangedDPS,
+                Job.THM or
+                    Job.BLM or
+                    Job.ACN or
+                    Job.SMN or
+                    Job.RDM or
+                    Job.PCT or
+                    Job.BLU =>
+                    JobRole.MagicalDPS,
+                Job.LNC or
+                    Job.DRG or
+                    Job.PGL or
+                    Job.MNK or
+                    Job.ROG or
+                    Job.NIN or
+                    Job.SAM or
+                    Job.VPR or
+                    Job.RPR =>
+                    JobRole.MeleeDPS,
+                Job.BTN or
+                    Job.MIN or
+                    Job.FSH =>
+                    JobRole.DoL,
+                Job.CRP or
+                    Job.GSM or
+                    Job.LTW or
+                    Job.CUL or
+                    Job.BSM or
+                    Job.ARM or
+                    Job.ALC or
+                    Job.WVR =>
+                    JobRole.DoH,
+                _ => JobRole.All,
+            };
     }
 
     public enum JobRole
@@ -84,6 +90,6 @@ namespace WrathCombo.Attributes
         RangedDPS,
         MagicalDPS,
         DoH,
-        DoL
+        DoL,
     }
 }

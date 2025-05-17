@@ -74,6 +74,16 @@ namespace WrathCombo.Core
 
         public bool OpenToCurrentJobOnSwitch = false;
 
+        public bool RetargetHealingActionsToStack = false;
+
+        public bool UseMouseoverOverridesInDefaultHealStack = false;
+
+        public bool UseFocusTargetOverrideInDefaultHealStack = false;
+
+        public bool UseLowestHPOverrideInDefaultHealStack = false;
+
+        public bool UseCustomHealStack = false;
+
         public bool ActionChanging = true;
 
         private DateTime _lastActionChangeCheck = DateTime.MinValue;

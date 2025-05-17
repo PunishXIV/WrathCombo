@@ -7,7 +7,7 @@ using ImGuiNET;
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.CustomComboNS;
 using WrathCombo.Services;
 
 
@@ -34,7 +34,7 @@ internal class TargetHelper : Dalamud.Interface.Windowing.Window
 
             for (int i = 1; i <= 8; i++)
             {
-                IGameObject? slot = PartyUITargeting.GetPartySlot(i);
+                IGameObject? slot = SimpleTarget.GetPartyMemberInSlotSlot(i);
                 if (slot is null) continue;
                 if (slot.GameObjectId == Combos.PvE.AST.QuickTargetCards.SelectedRandomMember.GameObjectId)
                 {

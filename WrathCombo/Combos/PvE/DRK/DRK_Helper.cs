@@ -1213,8 +1213,8 @@ internal partial class DRK
             () => !HasAnyTBN && LocalPlayer.CurrentMp > 3000 &&
                   PlayerHealthPercentageHp() <= Config.DRK_Mit_TBN_Health),
         (Oblation, Preset.DRK_Mit_Oblation,
-            () => (!((HasFriendlyTarget() && HasStatusEffect(Buffs.Oblation, CurrentTarget, true)) ||
-                     (!HasFriendlyTarget() && HasStatusEffect(Buffs.Oblation, anyOwner: true)))) &&
+            () => (!((TargetIsFriendly() && HasStatusEffect(Buffs.Oblation, CurrentTarget, true)) ||
+                     (!TargetIsFriendly() && HasStatusEffect(Buffs.Oblation, anyOwner: true)))) &&
                   GetRemainingCharges(Oblation) > Config.DRK_Mit_Oblation_Charges),
         (Role.Reprisal, Preset.DRK_Mit_Reprisal,
             () => Role.CanReprisal(checkTargetForDebuff:false)),

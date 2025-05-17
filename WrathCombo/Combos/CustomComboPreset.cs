@@ -1,6 +1,4 @@
-﻿using Lumina.Data.Parsing;
-using System;
-using WrathCombo.Attributes;
+﻿using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
 namespace WrathCombo.Combos;
@@ -1082,13 +1080,18 @@ public enum CustomComboPreset
     DNC_ST_Opener_BlockEarly = 4031,
 
     [ParentCombo(DNC_ST_AdvancedMode)]
-    [CustomComboInfo("Dance Partner Reminder Option", "Includes Closed Position when out of combat and no dance partner is found.", DNC.JobID)]
+    [CustomComboInfo("Dance Partner Reminder Option", "Includes Closed Position when out of combat and you do not have a dance partner.\nWill be automatically targeted onto the Best Partner if the below option is enabled.", DNC.JobID)]
+    [PossiblyRetargeted]
     DNC_ST_Adv_Partner = 4012,
 
     [ParentCombo(DNC_ST_AdvancedMode)]
+    [CustomComboInfo("Optimal Dance Partner Option", "Includes Ending and then Closed Position in the rotation when your current partner is not the optimal one, such as when they get a damage down.", DNC.JobID)]
+    [Retargeted]
+    DNC_ST_Adv_AutoPartner = 4032,
+
+    [ParentCombo(DNC_ST_AdvancedMode)]
     [CustomComboInfo("Peloton Pre-Pull Option",
-        "Uses Peloton when you are out of combat, do not already have the Peloton buff and are performing Standard Step with greater than 5s remaining of your dance." +
-        "\n(Already included in The Balance Opener).", DNC.JobID)]
+        "Uses Peloton when you are out of combat, do not already have the Peloton buff and are performing Standard Step with greater than 5s remaining of your dance.", DNC.JobID)]
     DNC_ST_Adv_Peloton = 4013,
 
     [ParentCombo(DNC_ST_AdvancedMode)]
@@ -1179,7 +1182,7 @@ public enum CustomComboPreset
     DNC_ST_Adv_PanicHeals = 4027,
 
     #endregion
-    // Last value = 4030
+    // Last value = 4032
 
     #region Advanced Dancer (AoE)
 
@@ -1278,13 +1281,14 @@ public enum CustomComboPreset
     #endregion
     // Last value = 4057
 
-     #region Basic combo
+    #region Basic combo
 
     [ReplaceSkill(DNC.Fountain)]
     [CustomComboInfo("Basic Combo", "Replace Fountain with its combo chain.", DNC.JobID)]
     DNC_ST_BasicCombo = 4003,
 
     #endregion
+    // Last value = 4003
 
     #region Multibutton Features
 
@@ -1341,24 +1345,14 @@ public enum CustomComboPreset
 
     #region Dance Partner Features
 
-    /*
     [ReplaceSkill(DNC.ClosedPosition, DNC.Ending)]
     [CustomComboInfo("Dance Partner on Desirable Partner Feature",
-        "Replaces Closed Position (including in the combos above) with itself, but targeted to a party member, so you can cast it without having to pick anyone and without having to actually target anyone." +
-        "\nThis will check through your party members, and select the most desirable Partner based on The Balance's priority and stuff like Rez Sickness.", DNC.JobID)]
+        "Replaces Closed Position with itself, but targeted to a party member, so you can cast it without having to pick anyone and without having to actually target anyone.\nWill show Ending when your current Partner is no longer the best choice.", DNC.JobID)]
+    [Retargeted]
     DNC_DesirablePartner = 4175,
 
-    [ParentCombo(DNC_DesirablePartner)]
-    [CustomComboInfo("Party-Target Overrides Selection Option", "If you are targeting a party member that is a valid target, they will be used instead of searching party members.\nTarget must be alive and in range.", DNC.JobID)]
-    DNC_Desirable_TargetOverride = 4176,
-
-    [ParentCombo(DNC_DesirablePartner)]
-    [CustomComboInfo("Custom Priority Option", "If your Partner priority differs from The Balance's recommendation for some reason, you can customize the priority here.\nNot generally recommended.", DNC.JobID)]
-    DNC_Desirable_CustomPriority = 4177,
-    */
-
     #endregion
-    // Last value = 4177
+    // Last value = 4176
 
     #region Dance Features
 
@@ -1459,10 +1453,10 @@ public enum CustomComboPreset
     DNC_Procc_Windmill = 4170,
 
     #endregion
-    // Last value = 4170
+    // Last value = 4176
 
     #endregion
-    // Last value = 4177
+    // Last value = 4176
 
     #region Variant
 

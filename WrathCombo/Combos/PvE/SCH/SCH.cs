@@ -156,8 +156,8 @@ internal partial class SCH : Healer
             if (actionID is not DeploymentTactics || !ActionReady(DeploymentTactics))
                 return actionID;
 
-            //Grab our target (Soft->Hard->Self)
-            IGameObject? healTarget = GetHealTarget(Config.SCH_DeploymentTactics_Adv && Config.SCH_DeploymentTactics_UIMouseOver);
+            //Grab our target
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
             if (!HasStatusEffect(Buffs.Galvanize, healTarget)) 
@@ -437,8 +437,8 @@ internal partial class SCH : Healer
                 && GetTargetHPPercent(AetherPactTarget) >= Config.SCH_ST_Heal_AetherpactDissolveOption)
                 return DissolveUnion;
 
-            //Grab our target (Soft->Hard->Self)
-            IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.SCH_ST_Heal_Adv && Config.SCH_ST_Heal_UIMouseOver);
+            //Grab our target
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) >= Config.SCH_ST_Heal_EsunaOption &&

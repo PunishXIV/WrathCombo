@@ -327,11 +327,11 @@ namespace WrathCombo.Window.Tabs
                 CustomStyleText("Requires Postionals:", TargetNeedsPositionals());
                 CustomStyleText("Relative Position:", AngleToTarget().ToString());
                 CustomStyleText("Health:",
-                    $"{EnemyHealthCurrentHp():N0} / {EnemyHealthMaxHp():N0} ({Math.Round(GetTargetHPPercent(), 2)}%)");
+                    $"{EnemyHealthCurrentHp():N0} / {GetTargetMaxHP():N0} ({Math.Round(GetTargetHPPercent(), 2)}%)");
                 CustomStyleText("Shield:",
-                    (GetHealTarget() as ICharacter).ShieldPercentage);
+                    (SimpleTarget.Stack.AllyToHeal as ICharacter).ShieldPercentage);
                 CustomStyleText("Health Percent (+ Shield):",
-                    $"{GetTargetHPPercent(GetHealTarget())} / {GetTargetHPPercent(GetHealTarget(), true)}");
+                    $"{GetTargetHPPercent(SimpleTarget.Stack.AllyToHeal)} / {GetTargetHPPercent(SimpleTarget.Stack.AllyToHeal, true)}");
                 CustomStyleText("Party Avg HP Percent:",
                     $"{GetPartyAvgHPPercent()}");
 

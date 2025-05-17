@@ -205,6 +205,16 @@ namespace WrathCombo.Data
 
         private static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
         {
+            // Check if there is a retargeted action
+            if (P.ActionRetargeting.TryGetTargetFor(actionId, out var target))
+            {
+                if (target is not null)
+                    targetObjectId = target.GameObjectId;
+                return;
+            }
+
+            #region AST-only targeting
+
             if (actionId is not (AST.Balance or AST.Spear) ||
                 AST.QuickTargetCards.SelectedRandomMember is null ||
                 OutOfRange(actionId, Svc.ClientState.LocalPlayer!, AST.QuickTargetCards.SelectedRandomMember))
@@ -219,20 +229,26 @@ namespace WrathCombo.Data
                 // Case 0 is Default (SelectedRandomMember)
 
                 // Hard Target
-                case 1 when Svc.Targets.Target is not null && HasFriendlyTarget():
+                case 1 when Svc.Targets.Target is not null && TargetIsFriendly():
                     targetObjectId = Svc.Targets.Target.GameObjectId;
                     break;
-                // UI Mousover Override
+                // UI Mouseover Override
                 case 2:
-                    if (PartyUITargeting.UiMouseOverTarget is IGameObject mouseTarget)
+                    var mouseTarget = SimpleTarget.UIMouseOverTarget;
+                    if (mouseTarget != null)
                         targetObjectId = mouseTarget.GameObjectId;
                     break;
             }
 
+#if DEBUG
             // Log the selected target for debugging
-            ulong localTargetId = targetObjectId; // Copy to local variable, can't use for the next line
-            var selectedTarget = Svc.Objects.FirstOrDefault(x => x.GameObjectId == localTargetId);
+            var localTargetId = targetObjectId; // Copy to local, making next line more stable
+            var selectedTarget =
+                Svc.Objects.FirstOrDefault(x => x.GameObjectId == localTargetId);
             Svc.Log.Debug($"Switched to {selectedTarget?.Name ?? "Unknown"}");
+#endif
+
+            #endregion
         }
 
         public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
@@ -370,6 +386,7 @@ namespace WrathCombo.Data
                     }
                 }
             }
+            CheckForChangedTarget(actionId, ref targetId);
             return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         }
 

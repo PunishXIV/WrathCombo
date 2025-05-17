@@ -552,8 +552,8 @@ internal partial class GNB : Tank
                   PlayerHealthPercentageHp() <= Config.GNB_Mit_Corundum_Health),
         //Aurora
         (Aurora, CustomComboPreset.GNB_Mit_Aurora,
-            () => !(HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
-                    !HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, anyOwner: true)) &&
+            () => !(TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
+                    !TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, anyOwner: true)) &&
                   GetRemainingCharges(Aurora) > Config.GNB_Mit_Aurora_Charges &&
                   PlayerHealthPercentageHp() <= Config.GNB_Mit_Aurora_Health),
         //Camouflage
