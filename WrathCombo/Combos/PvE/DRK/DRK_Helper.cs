@@ -1280,6 +1280,7 @@ internal partial class DRK
 
         public override List<uint> OpenerActions { get; set; } =
         [
+            Unmend,
             HardSlash,
             EdgeOfShadow, // Not handled like a procc, since it sets up Darkside
             LivingShadow,
@@ -1300,6 +1301,15 @@ internal partial class DRK
             //EdgeOfShadow, // Handled like a procc
             Bloodspiller, // 15
             SaltAndDarkness,
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps
+        {
+            get;
+            set;
+        } =
+        [
+            ([1], () => !Config.DRK_ST_OpenerUnmend),
         ];
 
         internal override UserData? ContentCheckConfig =>

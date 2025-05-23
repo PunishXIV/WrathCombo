@@ -63,7 +63,13 @@ internal partial class DRK
                 #region Adv Single Target
 
                 case CustomComboPreset.DRK_ST_BalanceOpener:
+                    ImGui.Indent();
                     UserConfig.DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
+                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    UserConfig.DrawAdditionalBoolChoice(DRK_ST_OpenerUnmend,
+                        "Include Unmend",
+                        "Will include Unmend in the opener if selected.");
                     break;
 
                 case CustomComboPreset.DRK_ST_CDs:
@@ -540,6 +546,17 @@ internal partial class DRK
         /// <seealso cref="CustomComboPreset.DRK_ST_BalanceOpener" />
         public static readonly UserBoolArray DRK_ST_OpenerDifficulty =
             new("DRK_ST_OpenerDifficulty", [false, true]);
+
+        /// <summary>
+        ///     Whether to include Unmend in the opener for Single Target.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see langword="true"/> <br />
+        ///     <b>Options</b>: <see langword="true"/> or <see langword="false"/>
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DRK_ST_BalanceOpener" />
+        public static readonly UserBool DRK_ST_OpenerUnmend =
+            new("DRK_ST_OpenerUnmend", true);
 
         /// <summary>
         ///     Cooldown Boss Restriction for Single Target.
