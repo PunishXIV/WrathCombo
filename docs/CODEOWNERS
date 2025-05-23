@@ -26,24 +26,30 @@
 /WrathCombo/Combos/PvE/WHM/                           @zbee
 
 # PvP Combos
-/WrathCombo/Combos/PvP/                               @Nik-Potokar
-#/WrathCombo/Combos/PvP/BLMPVP.cs                      @Kaeris-Tempest
-#/WrathCombo/Combos/PvP/RDMPVP.cs                      @Kaeris-Tempest
-#/WrathCombo/Combos/PvP/SAMPVP.cs                      @Kaeris-Tempest
-#/WrathCombo/Combos/PvP/VPRPVP.cs                      @Kaeris-Tempest
+/WrathCombo/Combos/PvP/                               @Nik-Potokar @Kaeris-Tempest
+/WrathCombo/Combos/PvP/BLMPVP.cs                      @Kaeris-Tempest
+/WrathCombo/Combos/PvP/RDMPVP.cs                      @Kaeris-Tempest
+/WrathCombo/Combos/PvP/SAMPVP.cs                      @Kaeris-Tempest
+/WrathCombo/Combos/PvP/VPRPVP.cs                      @Kaeris-Tempest
 
 # Other Owners
 /res/motd.txt                                         @Taurenkey
 /WrathCombo/Data/ActionWatching.cs                    @Taurenkey
 /WrathCombo/AutoRotation/                             @Taurenkey
+/WrathCombo/CustomCombo/                              @Taurenkey
 /WrathCombo/CustomCombo/Functions/                    @Taurenkey
 /WrathCombo/Core/                                     @Taurenkey
+/WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest
 /docs/                                                @zbee
 /CONTRIBUTING.md                                      @zbee
 /WrathCombo/Services/IPC/                             @zbee
 /res/ipc_status.txt                                   @zbee
-/WrathCombo/Combos/PvE/Content/Bozja.cs               @Akechi-kun @zbee
+/WrathCombo/Data/ContentCheck.cs                      @zbee
+/WrathCombo/Data/ConflictingPluginsCheck.cs           @zbee
+/WrathCombo/Combos/PvE/Content/Bozja.cs               @zbee @Akechi-kun
 /WrathCombo/CustomCombo/StancePartner.cs              @zbee
+/WrathCombo/Combos/PvE/ALL/                           @Tartarga
+/WrathCombo/Combos/PvE/Content/Variant/               @Tartarga
 
 # Protect the owners file
 /docs/CODEOWNERS                                      @Taurenkey @zbee

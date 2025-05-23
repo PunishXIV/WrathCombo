@@ -6,6 +6,7 @@
         public bool InCombatOnly;
         public bool BypassQuest;
         public bool BypassFATE;
+        public bool BypassBuffs;
         public int CombatDelay = 1;
         public bool EnableInInstance;
         public bool DisableAfterInstance;

@@ -25,6 +25,7 @@ namespace WrathCombo.CustomComboNS
         {
             if (!Service.ActionReplacer.getActionHook.IsEnabled)
             {
+                SelectOpener();
                 uint _ = 0;
                 FullOpener(ref _);
             }
@@ -151,7 +152,7 @@ namespace WrathCombo.CustomComboNS
                 return false;
             }
 
-            CurrentOpener = this;
+            currentOpener = this;
 
             if (CurrentState == OpenerState.OpenerNotReady)
             {
@@ -301,7 +302,7 @@ namespace WrathCombo.CustomComboNS
                     Svc.Framework.Update -= currentOpener.UpdateOpener;
                     OnCastInterrupted -= RevertInterruptedCasts;
                     Svc.Condition.ConditionChange -= ResetAfterCombat;
-                    Svc.Log.Debug($"Removed update hook");
+                    Svc.Log.Debug($"Removed update hook {value.GetType()} {currentOpener.GetType()}");
                 }
 
                 if (currentOpener != value)

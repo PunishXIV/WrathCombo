@@ -72,6 +72,8 @@ public class AutoRotationConfigIPCWrapper(AutoRotationConfig? config)
 
     public bool BypassFATE => config.BypassFATE;
 
+    public bool BypassBuffs => config.BypassBuffs;
+
     public int CombatDelay => config.CombatDelay;
 
     public int Throttler => config.Throttler;
