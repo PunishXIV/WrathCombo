@@ -1970,8 +1970,7 @@ public enum CustomComboPreset
     [AutoAction(false, false)]
     [ReplaceSkill(DRG.TrueThrust)]
     [ConflictingCombos(DRG_ST_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - Single Target",
-        "Replaces True Thrust with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", DRG.JobID)]
+    [CustomComboInfo("Advanced Mode - Single Target", "Replaces True Thrust with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", DRG.JobID)]
     DRG_ST_AdvancedMode = 6100,
 
     [ParentCombo(DRG_ST_AdvancedMode)]
@@ -2009,8 +2008,7 @@ public enum CustomComboPreset
     DRG_ST_HighJump = 6113,
 
     [ParentCombo(DRG_ST_HighJump)]
-    [CustomComboInfo("(High) Jump Melee option",
-        "Adds (High) Jump to the rotation when in the target ring (1 yalm) & when not moving.", DRG.JobID)]
+    [CustomComboInfo("(High) Jump Melee option", "Adds (High) Jump to the rotation when in melee range & when not moving.", DRG.JobID)]
     DRG_ST_HighJump_Melee = 6114,
 
     [ParentCombo(DRG_ST_CDs)]
@@ -2026,8 +2024,7 @@ public enum CustomComboPreset
     DRG_ST_DragonfireDive = 6107,
 
     [ParentCombo(DRG_ST_DragonfireDive)]
-    [CustomComboInfo("Dragonfire Dive Melee option",
-        "Adds Dragonfire Dive to the rotation when in the target ring (1 yalm) & when not moving.", DRG.JobID)]
+    [CustomComboInfo("Dragonfire Dive Melee option", "Adds Dragonfire Dive to the rotation when in melee range & when not moving.", DRG.JobID)]
     DRG_ST_DragonfireDive_Melee = 6108,
 
     [ParentCombo(DRG_ST_CDs)]
@@ -2043,8 +2040,7 @@ public enum CustomComboPreset
     DRG_ST_Stardiver = 6110,
 
     [ParentCombo(DRG_ST_Stardiver)]
-    [CustomComboInfo("Stardiver Melee option",
-        "Adds Stardiver to the rotation when in the target ring (1 yalm) & when not moving.", DRG.JobID)]
+    [CustomComboInfo("Stardiver Melee option", "Adds Stardiver to the rotation when in melee range & when not moving.", DRG.JobID)]
     DRG_ST_Stardiver_Melee = 6111,
 
     [ParentCombo(DRG_ST_CDs)]
@@ -2062,8 +2058,7 @@ public enum CustomComboPreset
     #endregion
 
     [ParentCombo(DRG_ST_AdvancedMode)]
-    [CustomComboInfo("Dynamic True North Option",
-        "Adds True North before Chaos Thrust/Chaotic Spring, Fang And Claw and Wheeling Thrust when you are not in the correct position for the enhanced potency bonus.", DRG.JobID)]
+    [CustomComboInfo("Dynamic True North Option", "Adds True North before Chaos Thrust/Chaotic Spring, Fang And Claw and Wheeling Thrust when you are not in the correct position for the enhanced potency bonus.", DRG.JobID)]
     DRG_TrueNorthDynamic = 6199,
 
     [ParentCombo(DRG_ST_AdvancedMode)]
@@ -2081,8 +2076,7 @@ public enum CustomComboPreset
     [AutoAction(true, false)]
     [ReplaceSkill(DRG.DoomSpike)]
     [ConflictingCombos(DRG_AOE_SimpleMode)]
-    [CustomComboInfo("Advanced Mode - AoE",
-        "Replaces Doomspike with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", DRG.JobID)]
+    [CustomComboInfo("Advanced Mode - AoE", "Replaces Doomspike with a full one-button AoE rotation.\nThese features are ideal if you want to customize the rotation.", DRG.JobID)]
     DRG_AOE_AdvancedMode = 6201,
 
     #region Buffs AoE
@@ -2116,8 +2110,7 @@ public enum CustomComboPreset
     DRG_AoE_HighJump = 6213,
 
     [ParentCombo(DRG_AoE_HighJump)]
-    [CustomComboInfo("(High) Jump Melee option",
-        "Adds (High) Jump to the rotation when in the target ring (1 yalm) & when not moving.", DRG.JobID)]
+    [CustomComboInfo("(High) Jump Melee option", "Adds (High) Jump to the rotation when in melee range & when not moving.", DRG.JobID)]
     DRG_AoE_HighJump_Melee = 6214,
 
     [ParentCombo(DRG_AoE_CDs)]
@@ -2129,8 +2122,7 @@ public enum CustomComboPreset
     DRG_AoE_DragonfireDive = 6207,
 
     [ParentCombo(DRG_AoE_DragonfireDive)]
-    [CustomComboInfo("Dragonfire Dive Melee option",
-        "Adds Dragonfire Dive to the rotation when in the target ring (1 yalm) & when not moving.", DRG.JobID)]
+    [CustomComboInfo("Dragonfire Dive Melee option", "Adds Dragonfire Dive to the rotation when in melee range & when not moving.", DRG.JobID)]
     DRG_AoE_DragonfireDive_Melee = 6208,
 
     [ParentCombo(DRG_AoE_CDs)]
@@ -2146,8 +2138,7 @@ public enum CustomComboPreset
     DRG_AoE_Stardiver = 6210,
 
     [ParentCombo(DRG_AoE_Stardiver)]
-    [CustomComboInfo("Stardiver Melee option",
-        "Adds Stardiver to the rotation when in the target ring (1 yalm) & when not moving.", DRG.JobID)]
+    [CustomComboInfo("Stardiver Melee option", "Adds Stardiver to the rotation when in melee range & when not moving.", DRG.JobID)]
     DRG_AoE_Stardiver_Melee = 6211,
 
     [ParentCombo(DRG_AoE_CDs)]
@@ -2165,8 +2156,7 @@ public enum CustomComboPreset
     #endregion
 
     [ParentCombo(DRG_AOE_AdvancedMode)]
-    [CustomComboInfo("Low Level Disembowel",
-        "Adds Disembowel combo to the rotation when you are or synced below level 62.", DRG.JobID)]
+    [CustomComboInfo("Low Level Disembowel", "Adds Disembowel combo to the rotation when you are or synced below level 62.", DRG.JobID)]
     DRG_AoE_Disembowel = 6297,
 
     [ParentCombo(DRG_AOE_AdvancedMode)]
@@ -2203,8 +2193,7 @@ public enum CustomComboPreset
     #endregion
     
     [ReplaceSkill(DRG.LanceCharge)]
-    [CustomComboInfo("Lance Charge to Battle Litany Feature",
-        "Turns Lance Charge into Battle Litany when the former is on cooldown.", DRG.JobID)]
+    [CustomComboInfo("Lance Charge to Battle Litany Feature", "Turns Lance Charge into Battle Litany when the former is on cooldown.", DRG.JobID)]
     DRG_BurstCDFeature = 6301,
 
     // Last value ST = 6119

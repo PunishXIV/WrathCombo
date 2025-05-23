@@ -64,7 +64,7 @@ internal partial class DRG : Melee
                 !InMeleeRange() && HasBattleTarget())
                 return PiercingTalon;
 
-            if (HasStatusEffect(Buffs.PowerSurge))
+            if (HasStatusEffect(Buffs.PowerSurge) || !LevelChecked(Disembowel))
             {
                 //Battle Litany Feature
                 if (ActionReady(BattleLitany) &&
@@ -118,7 +118,7 @@ internal partial class DRG : Melee
                 if (ActionReady(DragonfireDive) &&
                     CanDRGWeave(DragonfireDive) &&
                     !HasStatusEffect(Buffs.DragonsFlight) &&
-                    TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
+                    TimeMoving.Ticks == 0 && InMeleeRange())
                     return DragonfireDive;
 
                 //StarDiver Feature
@@ -126,7 +126,7 @@ internal partial class DRG : Melee
                     CanDRGWeave(Stardiver) &&
                     !HasStatusEffect(Buffs.StarcrossReady) &&
                     LoTDActive &&
-                    TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
+                    TimeMoving.Ticks == 0 && InMeleeRange())
                     return Stardiver;
 
                 //Starcross Feature
@@ -224,7 +224,7 @@ internal partial class DRG : Melee
                 !InMeleeRange() && HasBattleTarget())
                 return PiercingTalon;
 
-            if (HasStatusEffect(Buffs.PowerSurge))
+            if (HasStatusEffect(Buffs.PowerSurge) || !LevelChecked(Disembowel))
             {
                 if (IsEnabled(CustomComboPreset.DRG_ST_Buffs))
                 {
@@ -289,7 +289,7 @@ internal partial class DRG : Melee
                          !LevelChecked(HighJump)) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_ST_HighJump_Melee) &&
-                         TimeMoving.Ticks == 0 && GetTargetDistance() <= 1))
+                         TimeMoving.Ticks == 0 && InMeleeRange()))
                         return OriginalHook(Jump);
 
                     //Dragonfire Dive Feature
@@ -299,7 +299,7 @@ internal partial class DRG : Melee
                         !HasStatusEffect(Buffs.DragonsFlight) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) && TimeMoving.Ticks == 0 &&
-                         GetTargetDistance() <= 1))
+                         InMeleeRange()))
                         return DragonfireDive;
 
                     //StarDiver Feature
@@ -310,7 +310,7 @@ internal partial class DRG : Melee
                         !HasStatusEffect(Buffs.StarcrossReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) && TimeMoving.Ticks == 0 &&
-                         GetTargetDistance() <= 1))
+                         InMeleeRange()))
                         return Stardiver;
 
                     //Starcross Feature
@@ -459,14 +459,14 @@ internal partial class DRG : Melee
                 if (ActionReady(DragonfireDive) &&
                     CanDRGWeave(DragonfireDive) &&
                     !HasStatusEffect(Buffs.DragonsFlight) &&
-                    TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
+                    TimeMoving.Ticks == 0 && InMeleeRange())
                     return DragonfireDive;
 
                 //StarDiver Feature
                 if (ActionReady(Stardiver) &&
                     CanDRGWeave(Stardiver) &&
                     !HasStatusEffect(Buffs.StarcrossReady) &&
-                    LoTDActive && TimeMoving.Ticks == 0 && GetTargetDistance() <= 1)
+                    LoTDActive && TimeMoving.Ticks == 0 && InMeleeRange())
                     return Stardiver;
 
                 //Starcross Feature
@@ -602,7 +602,7 @@ internal partial class DRG : Melee
                         !HasStatusEffect(Buffs.DiveReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_AoE_HighJump_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_AoE_HighJump_Melee) && TimeMoving.Ticks == 0 &&
-                         GetTargetDistance() <= 1))
+                         InMeleeRange()))
                         return OriginalHook(Jump);
 
                     //Dragonfire Dive Feature
@@ -612,7 +612,7 @@ internal partial class DRG : Melee
                         !HasStatusEffect(Buffs.DragonsFlight) &&
                         (IsNotEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) && TimeMoving.Ticks == 0 &&
-                         GetTargetDistance() <= 1))
+                         InMeleeRange()))
                         return DragonfireDive;
 
                     //StarDiver Feature
@@ -623,7 +623,7 @@ internal partial class DRG : Melee
                         !HasStatusEffect(Buffs.StarcrossReady) &&
                         (IsNotEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) ||
                          IsEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) && TimeMoving.Ticks == 0 &&
-                         GetTargetDistance() <= 1))
+                         InMeleeRange()))
                         return Stardiver;
 
                     //Starcross Feature
