@@ -13,6 +13,8 @@ internal partial class VPR
 {
     internal static VPROpenerMaxLevel1 Opener1 = new();
 
+    #region Config
+
     internal static float IreCD => GetCooldownRemainingTime(SerpentsIre);
 
     internal static bool In5Y => HasBattleTarget() && GetTargetDistance() <= 5;
@@ -22,6 +24,26 @@ internal partial class VPR
         !TraitLevelChecked(Traits.EnhancedVipersRattle) && RattlingCoilStacks > 1;
 
     internal static bool HasRattlingCoilStack() => RattlingCoilStacks > 0;
+
+    internal static bool HasHindVenom() =>
+        HasStatusEffect(Buffs.HindstungVenom) ||
+        HasStatusEffect(Buffs.HindsbaneVenom);
+
+    internal static bool HasFlankVenom() =>
+        HasStatusEffect(Buffs.FlankstungVenom) ||
+        HasStatusEffect(Buffs.FlanksbaneVenom);
+
+    internal static bool NoSwiftscaled() => !HasStatusEffect(Buffs.Swiftscaled);
+
+    internal static bool NoHuntersInstinct() => !HasStatusEffect(Buffs.HuntersInstinct);
+
+    internal static bool NoVenom() =>
+        !HasStatusEffect(Buffs.FlanksbaneVenom) &&
+        !HasStatusEffect(Buffs.FlankstungVenom) &&
+        !HasStatusEffect(Buffs.HindsbaneVenom) &&
+        !HasStatusEffect(Buffs.HindstungVenom);
+
+    #endregion Config
 
     #region Awaken
 
@@ -262,18 +284,18 @@ internal partial class VPR
             FourthGeneration,
             FourthLegacy,
             Ouroboros,
-            UncoiledFury,
-            UncoiledTwinfang,
-            UncoiledTwinblood,
-            UncoiledFury,
-            UncoiledTwinfang,
-            UncoiledTwinblood,
+            UncoiledFury, //21
+            UncoiledTwinfang, //22
+            UncoiledTwinblood, //23
+            UncoiledFury, //24
+            UncoiledTwinfang, //25
+            UncoiledTwinblood, //26
             HindstingStrike,
             DeathRattle,
             Vicewinder,
-            UncoiledFury,
-            UncoiledTwinfang,
-            UncoiledTwinblood,
+            UncoiledFury, //30
+            UncoiledTwinfang, //31
+            UncoiledTwinblood, //32
             HuntersCoil, //33
             TwinfangBite, //34
             TwinbloodBite, //35
@@ -290,6 +312,11 @@ internal partial class VPR
             ([36], HuntersCoil, () => SwiftskinsCoilReady),
             ([37], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
             ([38], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([21, 22, 23, 24, 25, 26, 30, 31, 32], () => VPR_Opener_ExcludeUF)
         ];
 
         internal override UserData ContentCheckConfig => VPR_Balance_Content;

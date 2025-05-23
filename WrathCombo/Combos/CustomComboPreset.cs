@@ -4296,7 +4296,7 @@ public enum CustomComboPreset
     RPR_ST_SoD = 12003,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Soulsow", "Adds Soulsow to the rotation when out of combat and u dont have the buff.", RPR.JobID)]
+    [CustomComboInfo("Soulsow", "Adds Soulsow to the rotation when out of combat and you dont have the buff.", RPR.JobID)]
     RPR_ST_SoulSow = 12020,
 
     [ParentCombo(RPR_ST_AdvancedMode)]

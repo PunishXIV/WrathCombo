@@ -23,6 +23,9 @@ internal partial class VPR
             VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton"),
             VPR_VariantCure = new("VPR_VariantCure");
 
+        public static UserBool
+            VPR_Opener_ExcludeUF = new("VPR_Opener_ExcludeUF");
+
         public static UserFloat
             VPR_AoE_Reawaken_Usage = new("VPR_AoE_Reawaken_Usage", 2);
 
@@ -32,6 +35,10 @@ internal partial class VPR
             {
                 case CustomComboPreset.VPR_ST_Opener:
                     DrawBossOnlyChoice(VPR_Balance_Content);
+
+                    DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
+                        $"Exclude {UncoiledFury.ActionName()}", "");
+
                     break;
 
                 case CustomComboPreset.VPR_ST_SerpentsIre:
