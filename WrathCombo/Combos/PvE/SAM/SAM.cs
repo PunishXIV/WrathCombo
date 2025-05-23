@@ -119,8 +119,8 @@ internal partial class SAM : Melee
                     return MeikyoShisui;
 
                 //Ikishoten Features
-                //TODO Revisit when Raidbuffs are in
-                if (ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
+                if (ActionReady(Ikishoten) &&
+                    !HasStatusEffect(Buffs.ZanshinReady))
                 {
                     switch (Kenki)
                     {
@@ -133,27 +133,24 @@ internal partial class SAM : Melee
                     }
                 }
 
-                //Senei Features
-                if (Kenki >= 25)
+                switch (Kenki)
                 {
-                    if (ActionReady(Senei) &&
-                        (JustUsed(MidareSetsugekka) ||
-                         JustUsed(KaeshiSetsugekka) ||
-                         JustUsed(TendoSetsugekka)))
+                    //Senei Features
+                    case >= 25 when ActionReady(Senei):
                         return Senei;
 
                     //Guren if no Senei
-                    if (!LevelChecked(Senei) && ActionReady(Guren) && InActionRange(Guren))
+                    case >= 25 when !LevelChecked(Senei) && ActionReady(Guren) && InActionRange(Guren):
                         return Guren;
                 }
 
                 //Zanshin Usage
+                //TODO Buffcheck
                 if (ActionReady(Zanshin) && Kenki >= 50 &&
                     InActionRange(Zanshin) &&
                     HasStatusEffect(Buffs.ZanshinReady) &&
                     (JustUsed(Higanbana) ||
                      JustUsed(OriginalHook(OgiNamikiri)) ||
-                     !TargetIsBoss() ||
                      GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8))
                     return Zanshin;
 
@@ -175,6 +172,9 @@ internal partial class SAM : Melee
                     return Role.Bloodbath;
             }
 
+            if (UseTsubame)
+                return OriginalHook(TsubameGaeshi);
+
             //Ogi Namikiri Features
             if (ActionReady(OgiNamikiri) &&
                 InActionRange(OriginalHook(OgiNamikiri)) &&
@@ -185,8 +185,8 @@ internal partial class SAM : Melee
                 return OriginalHook(OgiNamikiri);
 
             // Iaijutsu Features
-            if (UseIaijutsu(ref actionID))
-                return actionID;
+            if (UseIaijutsu() && !IsMoving())
+                return OriginalHook(Iaijutsu);
 
             if (HasStatusEffect(Buffs.MeikyoShisui))
             {
@@ -290,7 +290,6 @@ internal partial class SAM : Melee
                         return MeikyoShisui;
 
                     //Ikishoten Features
-                    //TODO Revisit when Raidbuffs are in
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Ikishoten) &&
                         ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
                     {
@@ -312,10 +311,7 @@ internal partial class SAM : Melee
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Senei)
                         && Kenki >= 25)
                     {
-                        if (ActionReady(Senei) &&
-                            (JustUsed(MidareSetsugekka) ||
-                             JustUsed(KaeshiSetsugekka) ||
-                             JustUsed(TendoSetsugekka)))
+                        if (ActionReady(Senei))
                             return Senei;
 
                         //Guren if no Senei
@@ -326,6 +322,7 @@ internal partial class SAM : Melee
                     }
 
                     //Zanshin Usage
+                    //TODO Buffcheck
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Zanshin) &&
                         ActionReady(Zanshin) && Kenki >= 50 &&
                         InActionRange(Zanshin) &&
@@ -359,9 +356,12 @@ internal partial class SAM : Melee
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.SAM_ST_Damage) &&
-                HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
+            if (IsEnabled(CustomComboPreset.SAM_ST_Damage))
             {
+                if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) &&
+                    SAM_ST_CDs_IaijutsuOption[3] && UseTsubame)
+                    return OriginalHook(TsubameGaeshi);
+
                 //Ogi Namikiri Features
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri) &&
                     (!IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) ||
@@ -375,8 +375,10 @@ internal partial class SAM : Melee
 
                 // Iaijutsu Features
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) &&
-                    UseIaijutsu(ref actionID))
-                    return actionID;
+                    (!IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) ||
+                     IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu_Movement) &&
+                     !IsMoving()) && UseIaijutsu())
+                    return OriginalHook(Iaijutsu);
             }
 
             if (HasStatusEffect(Buffs.MeikyoShisui))
@@ -517,10 +519,10 @@ internal partial class SAM : Melee
                     switch (Kenki)
                     {
                         //Dumps Kenki in preparation for Ikishoten
-                        case > 50:
+                        case >= 50:
                             return Kyuten;
 
-                        case <= 50:
+                        case < 50:
                             return Ikishoten;
                     }
                 }
@@ -632,10 +634,10 @@ internal partial class SAM : Melee
                         switch (Kenki)
                         {
                             //Dumps Kenki in preparation for Ikishoten
-                            case > 50:
+                            case >= 50:
                                 return Kyuten;
 
-                            case <= 50:
+                            case < 50:
                                 return Ikishoten;
                         }
                     }
