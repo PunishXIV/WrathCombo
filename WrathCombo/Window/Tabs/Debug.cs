@@ -159,9 +159,9 @@ namespace WrathCombo.Window.Tabs
                     }
 
                     // Null Check (Status Name)
-                    if (!string.IsNullOrEmpty(ActionWatching.GetStatusName(status.StatusId)))
+                    if (!string.IsNullOrEmpty(GetStatusName(status.StatusId)))
                     {
-                        CustomStyleText(ActionWatching.GetStatusName(status.StatusId) + ":",
+                        CustomStyleText(GetStatusName(status.StatusId) + ":",
                             $"{status.StatusId} P: {status.Param}, {formattedDuration}");
                     }
                     else CustomStyleText("", status.StatusId);
@@ -289,9 +289,9 @@ namespace WrathCombo.Window.Tabs
                         }
 
                         // Null Check (Status Name)
-                        if (!string.IsNullOrEmpty(ActionWatching.GetStatusName(status.StatusId)))
+                        if (!string.IsNullOrEmpty(GetStatusName(status.StatusId)))
                         {
-                            CustomStyleText(ActionWatching.GetStatusName(status.StatusId) + ":", status.StatusId);
+                            CustomStyleText(GetStatusName(status.StatusId) + ":", status.StatusId);
                         }
                         else CustomStyleText("", status.StatusId);
 

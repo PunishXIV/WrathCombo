@@ -357,6 +357,15 @@ namespace WrathCombo.CustomComboNS.Functions
             return count;
         }
 
+        public static int NumberOfEnemiesInRange(byte range)
+        {
+            return Svc.Objects.Count(
+                o => o.ObjectKind == ObjectKind.BattleNpc &&
+                o.IsHostile() &&
+                o.IsTargetable &&
+                GetTargetDistance(o) <= range);
+        }
+
         #region Position
         public static Vector3 DirectionToVec3(float direction)
         {
