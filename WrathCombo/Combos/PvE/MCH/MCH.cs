@@ -430,15 +430,17 @@ internal partial class MCH : PhysicalRanged
                 if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
                     return Chainsaw;
 
-                if (ActionReady(AirAnchor))
+                if (LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
             }
 
-            if (LevelChecked(AutoCrossbow) && IsOverheated && !LevelChecked(CheckMate))
-                return AutoCrossbow;
-
-            if (IsOverheated && LevelChecked(CheckMate))
-                return BlazingShot;
+            if (ActionReady(BlazingShot) && IsOverheated)
+                return HasBattleTarget() &&
+                       (!LevelChecked(CheckMate) ||
+                        LevelChecked(CheckMate) &&
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
+                    ? AutoCrossbow
+                    : BlazingShot;
 
             return actionID;
         }
@@ -528,8 +530,7 @@ internal partial class MCH : PhysicalRanged
                         return Reassemble;
 
                     //gauss and ricochet outside HC
-                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_GaussRicochet) &&
-                        MCH_AoE_Hypercharge)
+                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_GaussRicochet))
                     {
                         if (ActionReady(GaussRound) &&
                             !JustUsed(OriginalHook(GaussRound), 2.5f))
@@ -540,13 +541,14 @@ internal partial class MCH : PhysicalRanged
                             return OriginalHook(Ricochet);
                     }
 
-                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_SecondWind) && Role.CanSecondWind(MCH_AoE_SecondWindThreshold))
+                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_SecondWind) &&
+                        Role.CanSecondWind(MCH_AoE_SecondWindThreshold))
                         return Role.SecondWind;
                 }
 
                 //AutoCrossbow, Gauss, Rico
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_GaussRicochet) &&
-                    !MCH_AoE_Hypercharge &&
+                    IsOverheated &&
                     (JustUsed(OriginalHook(AutoCrossbow), 1f) ||
                      JustUsed(OriginalHook(Heatblast), 1f)) && HasNotWeaved)
                 {
@@ -586,20 +588,20 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_AirAnchor) &&
                     reassembledAirAnchorAoE &&
-                    ActionReady(AirAnchor))
+                    LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
 
                 if (reassembledScattergunAoE)
                     return OriginalHook(Scattergun);
             }
 
-            if (LevelChecked(AutoCrossbow) && IsOverheated &&
-                (!LevelChecked(CheckMate) || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_BlazingShot)))
-                return AutoCrossbow;
-
-            if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_BlazingShot) &&
-                IsOverheated && LevelChecked(CheckMate))
-                return BlazingShot;
+            if (ActionReady(BlazingShot) && IsOverheated)
+                return HasBattleTarget() &&
+                       (!LevelChecked(CheckMate) ||
+                        LevelChecked(CheckMate) &&
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
+                    ? AutoCrossbow
+                    : BlazingShot;
 
             return actionID;
         }

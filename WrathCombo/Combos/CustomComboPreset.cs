@@ -2968,10 +2968,6 @@ public enum CustomComboPreset
     MCH_AoE_Adv_Hypercharge = 8303,
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
-    [CustomComboInfo("Blazing Shot Option", "Use Blazing shot instead of Crossbow at lvl 92+", MCH.JobID)]
-    MCH_AoE_Adv_BlazingShot = 8312,
-
-    [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Rook Autoturret/Automaton Queen Option", "Adds Rook Autoturret or Automaton Queen to the rotation.", MCH.JobID)]
     MCH_AoE_Adv_Queen = 8304,
 
