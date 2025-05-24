@@ -67,9 +67,20 @@ internal partial class WAR : Tank
                               JustUsed(Role.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
+            #region Stuns
+
             // Interrupt
             if (Role.CanInterject())
                 return Role.Interject;
+
+            // Stun
+            if (!TargetIsBoss()
+                && Role.CanLowBlow()
+                && !JustUsed(Role.Interject)
+                && !InBossEncounter())
+                return Role.LowBlow;
+
+            #endregion
 
             #region Variant
 
@@ -243,10 +254,22 @@ internal partial class WAR : Tank
                               JustUsed(Role.Rampart, 5f) ||
                               JustUsed(Holmgang, 9f);
 
+            #region Stuns
+
             // Interrupt
             if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
                 && Role.CanInterject())
                 return Role.Interject;
+
+            // Stun
+            if (IsEnabled(CustomComboPreset.WAR_ST_Stun)
+                && !TargetIsBoss()
+                && Role.CanLowBlow()
+                && !JustUsed(Role.Interject)
+                && !InBossEncounter())
+                return Role.LowBlow;
+
+            #endregion
 
             #region Variant
 
@@ -482,7 +505,8 @@ internal partial class WAR : Tank
                 return Role.Interject;
 
             // Stun
-            if (Role.CanLowBlow())
+            if (Role.CanLowBlow()
+                && !JustUsed(Role.Interject))
                 return Role.LowBlow;
 
             #endregion
@@ -630,6 +654,7 @@ internal partial class WAR : Tank
 
             // Stun
             if (IsEnabled(CustomComboPreset.WAR_AoE_Stun)
+                && !JustUsed(Role.Interject)
                 && Role.CanLowBlow())
                 return Role.LowBlow;
 

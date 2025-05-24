@@ -57,9 +57,20 @@ internal partial class GNB : Tank
                     return bozjaAction;
             }
 
+            #region Stuns
+
             //Interject
             if (Role.CanInterject())
                 return Role.Interject;
+
+            // Stun
+            if (!TargetIsBoss()
+                && Role.CanLowBlow()
+                && !JustUsed(Role.Interject)
+                && !InBossEncounter())
+                return Role.LowBlow;
+
+            #endregion
 
             #region Mitigations
 
@@ -185,9 +196,21 @@ internal partial class GNB : Tank
                     return bozjaAction;
             }
 
+            #region Stuns
+
             //Interject
             if (IsEnabled(CustomComboPreset.GNB_ST_Interrupt) && Role.CanInterject())
                 return Role.Interject;
+
+            // Stun
+            if (IsEnabled(CustomComboPreset.GNB_ST_Stun)
+                && !TargetIsBoss()
+                && Role.CanLowBlow()
+                && !JustUsed(Role.Interject)
+                && !InBossEncounter())
+                return Role.LowBlow;
+
+            #endregion
 
             #region Mitigations
 
@@ -343,7 +366,7 @@ internal partial class GNB : Tank
 
             if (Role.CanInterject())
                 return Role.Interject;
-            if (Role.CanLowBlow())
+            if (Role.CanLowBlow() && !JustUsed(Role.Interject))
                 return Role.LowBlow;
 
             #endregion
@@ -460,7 +483,7 @@ internal partial class GNB : Tank
 
             if (IsEnabled(CustomComboPreset.GNB_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
-            if (IsEnabled(CustomComboPreset.GNB_AoE_Stun) && Role.CanLowBlow())
+            if (IsEnabled(CustomComboPreset.GNB_AoE_Stun) && Role.CanLowBlow() && !JustUsed(Role.Interject))
                 return Role.LowBlow;
 
             #endregion

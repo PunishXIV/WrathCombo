@@ -371,10 +371,13 @@ internal partial class DRK
                 Role.CanInterject())
                 return (action = Role.Interject) != 0;
 
-            if (flags.HasFlag(Combo.AoE) &&
-                (flags.HasFlag(Combo.Simple) ||
-                 IsEnabled(Preset.DRK_AoE_Stun)) &&
-                Role.CanLowBlow())
+            if ((flags.HasFlag(Combo.Simple) ||
+                 IsSTEnabled(flags, Preset.DRK_ST_CD_Stun) ||
+                 IsAoEEnabled(flags, Preset.DRK_AoE_Stun)) &&
+                !TargetIsBoss() &&
+                !JustUsed(Role.Interject) &&
+                Role.CanLowBlow() &&
+                !InBossEncounter())
                 return (action = Role.LowBlow) != 0;
 
             #endregion
