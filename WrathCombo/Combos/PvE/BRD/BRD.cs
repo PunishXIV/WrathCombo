@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using static WrathCombo.Combos.PvE.BRD.Config;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BRD : PhysicalRanged
@@ -252,14 +253,13 @@ internal partial class BRD : PhysicalRanged
                 return actionID;
 
             #region Variables
-
-            int targetHPThreshold = Config.BRD_AoENoWasteHPPercentage;
-            bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_AoE_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
             bool ragingEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Raging);
             bool battleVoiceEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Battlevoice);
             bool barrageEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Barrage);
             bool radiantEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_RadiantFinale);
             bool allBuffsEnabled = radiantEnabled && battleVoiceEnabled && ragingEnabled && barrageEnabled;
+            int buffThreshold = BRD_AoE_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_AoE_Adv_Buffs_Threshold : 0;
+
             #endregion
 
             #region Variants
@@ -274,7 +274,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Songs
 
-            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs) && isEnemyHealthHigh && InCombat() && (CanBardWeave || !BardHasTarget))
+            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs) && InCombat() && (CanBardWeave || !BardHasTarget))
             {
                 if (SongChangePitchPerfect())
                     return PitchPerfect;
@@ -296,7 +296,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Buffs
 
-            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs) && CanBardWeave && isEnemyHealthHigh)
+            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs) && CanBardWeave && GetTargetHPPercent() > buffThreshold)
             {
                 if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
                 {
@@ -415,14 +415,15 @@ internal partial class BRD : PhysicalRanged
                 return actionID;
 
             #region Variables
-            int targetHPThreshold = Config.BRD_NoWasteHPPercentage;
             int ragingJawsRenewTime = Config.BRD_RagingJawsRenewTime;
-            bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
             bool ragingEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_Raging);
             bool battleVoiceEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_Battlevoice);
             bool barrageEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_Barrage);
             bool radiantEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_RadiantFinale);
             bool allBuffsEnabled = radiantEnabled && battleVoiceEnabled && ragingEnabled && barrageEnabled;
+            int dotThreshold = BRD_Adv_DoT_SubOption == 1 || !InBossEncounter() ? BRD_Adv_DoT_Threshold : 0;
+            int buffThreshold = BRD_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_Adv_Buffs_Threshold : 0;
+
             #endregion
 
             #region Variants
@@ -455,7 +456,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Songs
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_Song) && isEnemyHealthHigh && InCombat())
+            if (IsEnabled(CustomComboPreset.BRD_Adv_Song) && InCombat())
             {
                 if (SongChangePitchPerfect())
                     return PitchPerfect;
@@ -478,7 +479,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Buffs
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_Buffs) && CanBardWeave && isEnemyHealthHigh)
+            if (IsEnabled(CustomComboPreset.BRD_Adv_Buffs) && CanBardWeave && GetTargetHPPercent() > buffThreshold)
             {
                 if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
                 {                    
@@ -552,25 +553,23 @@ internal partial class BRD : PhysicalRanged
 
             #region Dot Management
 
-            if (isEnemyHealthHigh)
+            if (IsEnabled(CustomComboPreset.BRD_Adv_DoT) && GetTargetHPPercent() > dotThreshold)
             {
-                if (IsEnabled(CustomComboPreset.BRD_Adv_DoT))
+                if (IsEnabled(CustomComboPreset.BRD_Adv_IronJaws) && UseIronJaws())
+                    return IronJaws;
+
+                if (IsEnabled(CustomComboPreset.BRD_Adv_ApplyDots))
                 {
-                    if (IsEnabled(CustomComboPreset.BRD_Adv_IronJaws) && UseIronJaws())
-                        return IronJaws;
+                    if (ApplyBlueDot())
+                        return OriginalHook(Windbite);
 
-                    if (IsEnabled(CustomComboPreset.BRD_Adv_ApplyDots))
-                    {
-                        if (ApplyBlueDot())
-                            return OriginalHook(Windbite);
-
-                        if (ApplyPurpleDot())
-                            return OriginalHook(VenomousBite);
-                    }   
-                    if (IsEnabled(CustomComboPreset.BRD_Adv_RagingJaws) && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
-                        return IronJaws;
-                }
+                    if (ApplyPurpleDot())
+                        return OriginalHook(VenomousBite);
+                }   
+                if (IsEnabled(CustomComboPreset.BRD_Adv_RagingJaws) && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
+                    return IronJaws;
             }
+            
 
             #endregion
 

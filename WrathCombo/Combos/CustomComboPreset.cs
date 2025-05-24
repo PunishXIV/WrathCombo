@@ -771,6 +771,10 @@ public enum CustomComboPreset
     BRD_ST_Adv_Balance_Standard = 3048,
 
     [ParentCombo(BRD_ST_AdvMode)]
+    [CustomComboInfo("Bard Songs Option", "This option adds the Bard's Songs to the Advanced Bard Feature.", BRD.JobID)]
+    BRD_Adv_Song = 3011,
+
+    [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Bard DoTs Option", "Enables the use of dot sub options below",
        BRD.JobID)]
     BRD_Adv_DoT = 3010,
@@ -788,10 +792,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Raging Jaws Option",
         "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID)]
     BRD_Adv_RagingJaws = 3025,
-
-    [ParentCombo(BRD_ST_AdvMode)]
-    [CustomComboInfo("Bard Songs Option", "This option adds the Bard's Songs to the Advanced Bard Feature.", BRD.JobID)]
-    BRD_Adv_Song = 3011,
 
     [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature. \nEnable all to follow balance buff windows \nDisabling any buff will follow simple priority", BRD.JobID)]
@@ -841,12 +841,6 @@ public enum CustomComboPreset
     [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Interrupt Option", "Uses interrupt during the rotation if applicable.", BRD.JobID)]
     BRD_Adv_Interrupt = 3020,
-
-    [ParentCombo(BRD_ST_AdvMode)]
-    [CustomComboInfo("No Waste Option",
-        "Adds enemy health checking on mobs for buffs, DoTs and Songs.\nThey will not be reapplied if less than specified.",
-        BRD.JobID)]
-    BRD_Adv_NoWaste = 3019,
 
     [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID)]
@@ -916,12 +910,6 @@ public enum CustomComboPreset
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Apex Arrow Option", "Adds Apex Arrow and Blast shot", BRD.JobID)]
     BRD_AoE_ApexArrow = 3039,
-
-    [ParentCombo(BRD_AoE_AdvMode)]
-    [CustomComboInfo("AoE No Waste Option",
-        "Adds enemy health checking on targetted mob for songs.\nThey will not be reapplied if less than specified.",
-        BRD.JobID)]
-    BRD_AoE_Adv_NoWaste = 3033,
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Second Wind Option", "Uses Second Wind when below set HP percentage.", BRD.JobID)]
