@@ -221,6 +221,7 @@ internal partial class BLM
         Blizzard3 = 154,
         AetherialManipulation = 155,
         Scathe = 156,
+        Manaward = 157,
         Manafont = 158,
         Freeze = 159,
         Flare = 162,
@@ -248,11 +249,9 @@ internal partial class BLM
     public static class Buffs
     {
         public const ushort
-            Thundercloud = 164,
             Firestarter = 165,
             LeyLines = 737,
             CircleOfPower = 738,
-            Sharpcast = 867,
             Triplecast = 1211,
             Thunderhead = 3870;
     }
