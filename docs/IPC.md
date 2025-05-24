@@ -7,6 +7,11 @@
 > there is a lot of explanation of the IPC, but also simple code snippet usage
 > details in this guide, as well as a Changelog at the end.
 
+> [!IMPORTANT]
+> Be sure to open the `IPC` section of Wrath's Debug tab, if you are implementing 
+> the IPC yourself, there are some examples and some tools to investigate what 
+> exactly is being set via the IPC: `/wrath dbg`
+
 ## Capabilities of the Wrath Combo IPC
 
 The Wrath Combo IPC allows other plugins to control the majority of Wrath Combo's

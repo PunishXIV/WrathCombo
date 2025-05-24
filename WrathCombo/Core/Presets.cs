@@ -80,6 +80,24 @@ namespace WrathCombo.Core
         /// <returns> The boolean representation. </returns>
         public static bool IsVariant(CustomComboPreset preset) => VariantCombos.Contains(preset);
 
+        /// <summary>
+        ///     Gets a value indicating whether a preset can be retargeted under some
+        ///     settings, with <see cref="ActionRetargeting" />.
+        /// </summary>
+        /// <param name="preset"> Preset to check. </param>
+        /// <returns> The boolean representation. </returns>
+        public static bool IsPossiblyRetargeted(CustomComboPreset preset) =>
+            preset.GetAttribute<RetargetedAttribute>() != null;
+
+        /// <summary>
+        ///     Gets a value indicating whether a preset is possibly retargeted with
+        ///     <see cref="ActionRetargeting" />.
+        /// </summary>
+        /// <param name="preset"> Preset to check. </param>
+        /// <returns> The boolean representation. </returns>
+        public static bool IsRetargeted(CustomComboPreset preset) =>
+            preset.GetAttribute<RetargetedAttribute>() != null;
+
         /// <summary> Gets a value indicating whether a preset is secret. </summary>
         /// <param name="preset"> Preset to check. </param>
         /// <returns> The boolean representation. </returns>

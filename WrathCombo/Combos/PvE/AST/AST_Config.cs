@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface.Colors;
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
@@ -31,11 +32,8 @@ internal partial class AST
             AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0);            
 
         public static UserBool
-            AST_QuickTarget_SkipDamageDown = new("AST_QuickTarget_SkipDamageDown"),
-            AST_QuickTarget_Prio = new("AST_QuickTarget_Prio"),
-            AST_QuickTarget_SkipRezWeakness = new("AST_QuickTarget_SkipRezWeakness"),
+            AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true),
             AST_ST_SimpleHeals_Adv = new("AST_ST_SimpleHeals_Adv"),
-            AST_ST_SimpleHeals_UIMouseOver = new("AST_ST_SimpleHeals_UIMouseOver"),
             AST_ST_SimpleHeals_IncludeShields = new("AST_ST_SimpleHeals_IncludeShields"),
             AST_ST_SimpleHeals_WeaveDignity = new("AST_ST_SimpleHeals_WeaveDignity"),
             AST_ST_SimpleHeals_WeaveIntersection = new("AST_ST_SimpleHeals_WeaveIntersection"),
@@ -125,10 +123,6 @@ internal partial class AST
                     {
                         ImGui.Indent();
                         ImGui.Spacing();
-                        DrawAdditionalBoolChoice(AST_ST_SimpleHeals_UIMouseOver,
-                            "Party UI Mouseover Checking",
-                            "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                            "To be used in conjunction with Redirect/Reaction/etc");
                         DrawAdditionalBoolChoice(AST_ST_SimpleHeals_IncludeShields, "Include Shields in HP Percent Sliders", "");
                         ImGui.Unindent();
                     }
@@ -189,14 +183,19 @@ internal partial class AST
                     break;
 
                 case CustomComboPreset.AST_Cards_QuickTargetCards:
-                    DrawRadioButton(AST_QuickTarget_Override, "No Override", "", 0);
-                    DrawRadioButton(AST_QuickTarget_Override, "Hard Target Override", "Overrides selection with hard target if you have one", 1);
-                    DrawRadioButton(AST_QuickTarget_Override, "UI Mousover Override", "Overrides selection with UI mouseover target if you have one", 2);
+                    DrawAdditionalBoolChoice(AST_QuickTarget_Manuals,
+                        "Also Retarget manually-used Cards",
+                        "Will also automatically target Cards that you manually use, as in, those outside of your damage rotations.",
+                        indentDescription: true);
 
-                    ImGui.Spacing();
-                    DrawAdditionalBoolChoice(AST_QuickTarget_SkipDamageDown, $"Skip targets with a {GetStatusName(62)} debuff", "");
-                    DrawAdditionalBoolChoice(AST_QuickTarget_SkipRezWeakness, $"Skip targets with a {GetStatusName(43)} or {GetStatusName(44)} debuff", "");
-                    DrawAdditionalBoolChoice(AST_QuickTarget_Prio, $"Uses Fixed Card Priorities (Based on the Balance)", "");
+                    ImGui.Indent();
+                    ImGui.TextWrapped("Target Overrides:           (hover each for more info)");
+                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    DrawRadioButton(AST_QuickTarget_Override, "No Override", "Will not override the automatic party target viability checking with any manual input.\nThe cards will be targeted according to The Balance's priorities and status checking\n(like not doubling up on cards, and no damage down, etc.).", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_QuickTarget_Override, "Hard Target Override", "Overrides selection with hard target, if you have one that is in range and does not have damage down or rez sickness.", 1, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_QuickTarget_Override, "UI MouseOver Override", "Overrides selection with UI MouseOver target, if you have one that is in range and does not have damage down or rez sickness.", 2, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_QuickTarget_Override, "Any MouseOver Override", "Overrides selection with UI or Nameplate or Model MouseOver target (in that order), if you have one that is in range and does not have damage down or rez sickness.", 3, descriptionAsTooltip: true);
                     break;
 
                 case CustomComboPreset.AST_DPS_AutoDraw:

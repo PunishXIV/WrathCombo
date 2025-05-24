@@ -207,8 +207,7 @@ internal partial class WHM : Healer
 
             #region Variables
 
-            var healTarget = OptionalTarget ??
-                             GetHealTarget(Config.WHM_STHeals_UIMouseOver);
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             var thinAirReady = LevelChecked(ThinAir) &&
                                !HasStatusEffect(Buffs.ThinAir) &&
@@ -232,7 +231,8 @@ internal partial class WHM : Healer
                     healTarget, Config.WHM_STHeals_IncludeShields) >=
                 Config.WHM_STHeals_Esuna &&
                 HasCleansableDebuff(healTarget))
-                return Role.Esuna;
+                return Role.Esuna
+                    .RetargetIfEnabled(OptionalTarget, Cure);
 
             #endregion
 
@@ -254,7 +254,8 @@ internal partial class WHM : Healer
                 if (GetTargetHPPercent(healTarget,
                         Config.WHM_STHeals_IncludeShields) <= config &&
                     ActionReady(spell))
-                    return spell;
+                    return spell
+                        .RetargetIfEnabled(OptionalTarget, Cure);
             }
 
             #endregion
@@ -262,22 +263,26 @@ internal partial class WHM : Healer
             #region GCD Tools
 
             if (IsEnabled(CustomComboPreset.WHM_STHeals_Regen) && regenReady)
-                return Regen;
+                return Regen
+                    .RetargetIfEnabled(OptionalTarget, Cure);
 
             if (IsEnabled(CustomComboPreset.WHM_STHeals_Solace) && CanLily &&
                 ActionReady(AfflatusSolace))
-                return AfflatusSolace;
+                return AfflatusSolace
+                    .RetargetIfEnabled(OptionalTarget, Cure);
 
             if (ActionReady(Cure2))
             {
                 if (IsEnabled(CustomComboPreset.WHM_STHeals_ThinAir) && thinAirReady)
                     return ThinAir;
-                return Cure2;
+                return Cure2
+                    .RetargetIfEnabled(OptionalTarget, Cure);
             }
 
             #endregion
 
-            return actionID;
+            return actionID
+                .RetargetIfEnabled(OptionalTarget, Cure);
         }
     }
 
@@ -308,10 +313,7 @@ internal partial class WHM : Healer
                                Config.WHM_AoEHeals_AssizeWeave &&
                                CanSpellWeave());
 
-            var healTarget = OptionalTarget ??
-                             (Config.WHM_AoEHeals_MedicaMO
-                                 ? GetHealTarget(Config.WHM_AoEHeals_MedicaMO)
-                                 : LocalPlayer);
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             var hasMedica2 = GetStatusEffect(Buffs.Medica2, healTarget);
             var hasMedica3 = GetStatusEffect(Buffs.Medica3, healTarget);

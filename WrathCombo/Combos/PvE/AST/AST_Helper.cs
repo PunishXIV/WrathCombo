@@ -1,19 +1,20 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿using System;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
-using ECommons.GameFunctions;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Core;
 using WrathCombo.Extensions;
-using ECommons.GameHelpers;
-using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST
@@ -32,24 +33,6 @@ internal partial class AST
 
     public static ASTGauge Gauge => GetJobGauge<ASTGauge>();
     public static CardType DrawnCard { get; set; }
-
-    public static Dictionary<byte, int> JobPriorities = new()
-    {
-    { SAM.JobID, 1 },
-    { NIN.JobID, 2 },
-    { VPR.JobID, 3 },
-    { DRG.JobID, 4 },
-    { MNK.JobID, 5 },
-    { DRK.JobID, 6 },
-    { RPR.JobID, 7 },
-    { PCT.JobID, 8 },
-    { SMN.JobID, 9 },
-    { MCH.JobID, 10 },
-    { BRD.JobID, 11 },
-    { RDM.JobID, 12 },
-    { DNC.JobID, 13 },
-    { BLM.JobID, 14 }
-    };
 
     public static int SpellsSinceDraw()
     {
@@ -78,252 +61,191 @@ internal partial class AST
         return WrathOpener.Dummy;
     }
 
-    internal static void InitCheckCards() => Svc.Framework.Update += CheckCards;
+    #region Card Targeting
 
-    private static void CheckCards(IFramework framework)
+    [ActionRetargeting.TargetResolver]
+    public static IGameObject? CardResolver () =>
+        CardTarget ?? SimpleTarget.Self;
+
+    internal static IGameObject? CardTarget
     {
-        if (Svc.ClientState.LocalPlayer is null || Svc.ClientState.LocalPlayer.ClassJob.RowId != 33)
-            return;
-
-        if (Svc.Condition[ConditionFlag.BetweenAreas] || Svc.Condition[ConditionFlag.Unconscious])
+        get
         {
-            QuickTargetCards.SelectedRandomMember = null;
-            return;
-        }
+            if (!EZ.Throttle("astCardTargetCheck", TS.FromSeconds(0.1)))
+                return field;
 
-        if (DrawnCard != Gauge.DrawnCards[0])
-        {
-            DrawnCard = Gauge.DrawnCards[0];
-        }
+            if (Svc.ClientState.LocalPlayer is null ||
+                Svc.ClientState.LocalPlayer.ClassJob.RowId != JobID ||
+                Svc.Condition[ConditionFlag.BetweenAreas] ||
+                Svc.Condition[ConditionFlag.Unconscious] ||
+                Gauge.DrawnCards[0] == CardType.None ||
+                !ActionReady(Play1) ||
+                !IsInParty())
+                return field = null;
 
-        if (IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards) &&
-            (QuickTargetCards.SelectedRandomMember is null || BetterTargetAvailable()))
-        {
-            if (ActionReady(Play1))
-                QuickTargetCards.Invoke();
-        }
+            // Check if we have a target overriding any searching
+            if (Config.AST_QuickTarget_Override != 0)
+            {
+                var targetOverride =
+                    (int)Config.AST_QuickTarget_Override switch
+                    {
+                        1 => SimpleTarget.HardTarget,
+                        2 => SimpleTarget.UIMouseOverTarget,
+                        _ => SimpleTarget.Stack.MouseOver,
+                    };
+                if (targetOverride is IBattleChara &&
+                    !targetOverride.IsDead &&
+                    targetOverride.IsFriendly() &&
+                    InCardRange(targetOverride) &&
+                    targetOverride.IsInParty() &&
+                    DamageDownFree(targetOverride) &&
+                    SicknessFree(targetOverride))
+                    return field = targetOverride;
+            }
 
-        if (DrawnCard == CardType.None)
-            QuickTargetCards.SelectedRandomMember = null;
+            if (!EZ.Throttle("astCardPartyCheck", TS.FromSeconds(0.75)))
+                return field;
+
+            var card = Gauge.DrawnCards[0];
+            var playerID = LocalPlayer.GameObjectId;
+            var party = GetPartyMembers()
+                .Where(member => member.GameObjectId != playerID)
+                .Where(member => !member.BattleChara.IsDead)
+                .Select(member => member.BattleChara)
+                .Where(InCardRange)
+                .Where(ExistingCardBuffFree)
+                .ToList();
+
+            if (party.Count <= 1)
+                return field = null;
+
+            if (TryGetBestCardTarget(out var target))
+                field = target;
+
+            return field;
+
+            #region Status-checking shortcut methods
+
+            // These are here so I don't have to add a ton of methods to AST,
+            // and my `.Where()`s can be short
+
+            bool InCardRange(IGameObject? thisTarget) =>
+                thisTarget != null && InActionRange(Balance, thisTarget);
+
+            bool ExistingCardBuffFree(IGameObject? thisTarget) =>
+                !HasStatusEffect(Buffs.BalanceBuff, thisTarget, true) &&
+                !HasStatusEffect(Buffs.SpearBuff, thisTarget, true);
+
+            bool IsMelee (IGameObject? thisTarget) =>
+                thisTarget is IBattleChara chara &&
+                JobIDs.Melee.Contains((byte)chara.ClassJob.RowId);
+
+            bool IsRanged (IGameObject? thisTarget) =>
+                thisTarget is IBattleChara chara &&
+                JobIDs.Ranged.Contains((byte)chara.ClassJob.RowId);
+
+            bool DamageDownFree(IGameObject? thisTarget) =>
+                !TargetHasDamageDown(thisTarget);
+
+            bool SicknessFree(IGameObject? thisTarget) =>
+                !TargetHasRezWeakness(thisTarget);
+
+            bool BrinkFree(IGameObject? thisTarget) =>
+                !TargetHasRezWeakness(thisTarget, false);
+
+            #endregion
+
+            bool TryGetBestCardTarget(out IGameObject? bestTarget, int step = 0)
+            {
+                bestTarget = null;
+                var restrictions = RestrictionSteps[step];
+                var filter = party;
+
+                if (restrictions.HasFlag(Restrictions.CardsRole))
+                    filter = card switch
+                    {
+                        CardType.Balance => filter.Where(IsMelee).ToList(),
+                        CardType.Spear => filter.Where(IsRanged).ToList(),
+                        _ => filter,
+                    };
+
+                if (restrictions.HasFlag(Restrictions.NotDD))
+                    filter = filter.Where(DamageDownFree).ToList();
+
+                if (restrictions.HasFlag(Restrictions.NotSick))
+                    filter = filter.Where(SicknessFree).ToList();
+
+                if (restrictions.HasFlag(Restrictions.NotBrink))
+                    filter = filter.Where(BrinkFree).ToList();
+
+                // Run the next step if no matches were found
+                if (filter.Count == 0 &&
+                    step < RestrictionSteps.Length - 1)
+                    return TryGetBestCardTarget(out bestTarget, step + 1);
+                // If it's the last step and there are no matches found, bail
+                if (filter.Count == 0)
+                    return false;
+
+                // Order by job priority
+                filter = filter
+                    .OrderBy(x =>
+                        _cardPriorities.GetValueOrDefault(
+                            (byte)x.ClassJob.RowId, byte.MaxValue))
+                    .ToList();
+
+                bestTarget = filter.First();
+                return true;
+            }
+        }
     }
 
-    private static bool BetterTargetAvailable()
+    #region Static Priority Data
+
+    private static Dictionary<byte, int> _cardPriorities = new()
     {
-        if (QuickTargetCards.SelectedRandomMember is null ||
-            QuickTargetCards.SelectedRandomMember.IsDead ||
-            OutOfRange(Balance, QuickTargetCards.SelectedRandomMember))
-            return true;
+        { SAM.JobID, 1 },
+        { NIN.JobID, 2 },
+        { VPR.JobID, 3 },
+        { DRG.JobID, 4 },
+        { MNK.JobID, 5 },
+        { DRK.JobID, 6 },
+        { RPR.JobID, 7 },
+        { PCT.JobID, 8 },
+        { SMN.JobID, 9 },
+        { MCH.JobID, 10 },
+        { BRD.JobID, 11 },
+        { RDM.JobID, 12 },
+        { DNC.JobID, 13 },
+        { BLM.JobID, 14 }
+    };
 
-        IBattleChara? m = QuickTargetCards.SelectedRandomMember as IBattleChara;
-        if (DrawnCard is CardType.Balance && JobIDs.Melee.Any(x => x == m.ClassJob.RowId) ||
-            DrawnCard is CardType.Spear && JobIDs.Ranged.Any(x => x == m.ClassJob.RowId))
-            return false;
+    private static readonly Restrictions[] RestrictionSteps =
+    [
+        // Correct DPS role for Card
+        Restrictions.CardsRole | Restrictions.NotDD | Restrictions.NotSick, // Ailment-free
+        // DPS
+        Restrictions.DPS | Restrictions.NotDD | Restrictions.NotSick, // Ailment-free
+        // Any Role
+        Restrictions.NotDD | Restrictions.NotSick, // Ailment-free
+        Restrictions.NotSick, // Sickness-free
+        Restrictions.NotBrink, // Sick
+        Restrictions.ScrapeTheBottom, // :(
+    ];
 
-        List<IBattleChara> targets = new();
-        for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
-        {
-            if (PartyUITargeting.GetPartySlot(i) is not IBattleChara member)
-                continue;
-            if (member.GameObjectId == QuickTargetCards.SelectedRandomMember.GameObjectId)
-                continue;
-            if (member is null)
-                continue; //Skip nulls/disconnected people
-            if (member.IsDead)
-                continue;
-            if (OutOfRange(Balance, member))
-                continue;
-
-            if (HasStatusEffect(Buffs.BalanceBuff, member, true)) continue;
-            if (HasStatusEffect(Buffs.SpearBuff, member, true)) continue;
-
-            if (Config.AST_QuickTarget_SkipDamageDown && TargetHasDamageDown(member))
-                continue;
-            if (Config.AST_QuickTarget_SkipRezWeakness && TargetHasRezWeakness(member))
-                continue;
-
-            if (member.GetRole() is CombatRole.Healer or CombatRole.Tank)
-                continue;
-
-            targets.Add(member);
-        }
-
-        if (targets.Count == 0)
-            return false;
-        if (DrawnCard is CardType.Balance && targets.Any(x => JobIDs.Melee.Any(y => y == x.ClassJob.RowId)) ||
-            DrawnCard is CardType.Spear && targets.Any(x => JobIDs.Ranged.Any(y => y == x.ClassJob.RowId)))
-        {
-            QuickTargetCards.SelectedRandomMember = null;
-            return true;
-        }
-
-        return false;
+    [Flags]
+    private enum Restrictions
+    {
+        CardsRole = 1 << 0,
+        DPS = 1 << 1,
+        NotDD = 1 << 2,
+        NotSick = 1 << 3,
+        NotBrink = 1 << 4,
+        ScrapeTheBottom = 1 << 5,
     }
 
-    internal static void DisposeCheckCards() => Svc.Framework.Update -= CheckCards;
+    #endregion
 
-    internal class QuickTargetCards : CustomComboFunctions
-    {
-        internal static List<IGameObject> PartyTargets = [];
-
-        internal static IGameObject? SelectedRandomMember;
-
-        public static void Invoke()
-        {
-            if (DrawnCard is not CardType.None)
-            {
-                if (PartyUITargeting.GetPartySlot(2) is not null)
-                {
-                    _ = SetTarget();
-                    Svc.Log.Debug($"Set card to {SelectedRandomMember?.Name}");
-                }
-                else
-                {
-                    Svc.Log.Debug($"Setting card to {Player.Name}");
-                    SelectedRandomMember = Player.Object;
-                }
-            }
-            else
-            {
-                SelectedRandomMember = null;
-            }
-        }
-
-        private static bool SetTarget()
-        {
-            if (Gauge.DrawnCards[0].Equals(CardType.None))
-                return false;
-            CardType cardDrawn = Gauge.DrawnCards[0];
-            PartyTargets.Clear();
-            for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
-            {
-                if (PartyUITargeting.GetPartySlot(i) is not IBattleChara member)
-                    continue;
-                if (member is null)
-                    continue; //Skip nulls/disconnected people
-                if (member.IsDead)
-                    continue;
-                if (OutOfRange(Balance, member))
-                    continue;
-
-                if (HasStatusEffect(Buffs.BalanceBuff, member, true)) continue;
-                if (HasStatusEffect(Buffs.SpearBuff, member, true)) continue;
-
-                if (Config.AST_QuickTarget_SkipDamageDown && TargetHasDamageDown(member))
-                    continue;
-                if (Config.AST_QuickTarget_SkipRezWeakness && TargetHasRezWeakness(member))
-                    continue;
-
-                PartyTargets.Add(member);
-            }
-            //The inevitable "0 targets found" because of debuffs
-            if (PartyTargets.Count == 0)
-            {
-                for (int i = 1; i <= 8; i++) //Checking all 8 available slots and skipping nulls & DCs
-                {
-                    if (PartyUITargeting.GetPartySlot(i) is not IBattleChara member)
-                        continue;
-                    if (member is null)
-                        continue; //Skip nulls/disconnected people
-                    if (member.IsDead)
-                        continue;
-                    if (OutOfRange(Balance, member))
-                        continue;
-
-                    if (HasStatusEffect(Buffs.BalanceBuff, member, true))
-                        continue;
-                    if (HasStatusEffect(Buffs.SpearBuff, member, true))
-                        continue;
-
-                    PartyTargets.Add(member);
-                }
-            }
-
-            if (SelectedRandomMember is not null)
-            {
-                if (PartyTargets.Any(x => x.GameObjectId == SelectedRandomMember.GameObjectId))
-                {
-                    //TargetObject(SelectedRandomMember);
-                    return true;
-                }
-            }
-
-            //Grok is a scary SOB
-            if (PartyTargets.Count > 0)
-            {
-                //Start of AST Fixed Prio
-                if (Config.AST_QuickTarget_Prio)
-                {
-                    PartyTargets.Sort((x, y) =>
-                    {
-                        int GetPriority(IGameObject obj)
-                        {
-                            if (obj is not IBattleChara chara)
-                                return int.MaxValue;
-
-                            return JobPriorities.TryGetValue((byte)chara.ClassJob.RowId, out int priority) ? priority : 99;
-
-                        }
-
-                        return GetPriority(x).CompareTo(GetPriority(y));
-                    });
-                }
-                else
-                {
-                    PartyTargets.Shuffle();
-                }
-                //End of AST Fixed prio
-
-                IGameObject? suitableDps = null;
-                IGameObject? unsuitableDps = null;
-                IGameObject? backupTarget = null;
-
-                foreach (IGameObject partyMember in PartyTargets)
-                {
-                    if (partyMember is null) continue;
-                    byte job = partyMember is IBattleChara chara ? (byte)chara.ClassJob.RowId : (byte)0;
-
-                    // Suitable DPS (highest priority)
-                    if (cardDrawn is CardType.Balance && JobIDs.Melee.Contains(job) ||
-                        cardDrawn is CardType.Spear && JobIDs.Ranged.Contains(job))
-                    {
-                        suitableDps = partyMember;
-                        break; // Found the best option, stop searching
-                    }
-                    // Unsuitable DPS (medium priority)
-                    else if (cardDrawn is CardType.Balance && JobIDs.Ranged.Contains(job) ||
-                             cardDrawn is CardType.Spear && JobIDs.Melee.Contains(job))
-                    {
-                        unsuitableDps = partyMember; // Store but keep looking for suitable DPS
-                    }
-                    // Healers/Tanks (lowest priority, if enabled)
-                    else if (IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards_TargetExtra) &&
-                             (cardDrawn is CardType.Balance && JobIDs.Tank.Contains(job) ||
-                              cardDrawn is CardType.Spear && JobIDs.Healer.Contains(job)))
-                    {
-                        backupTarget = partyMember; // Store but keep looking for DPS
-                    }
-                }
-
-                // Set SelectedRandomMember based on priority
-                if (suitableDps is not null)
-                {
-                    SelectedRandomMember = suitableDps;
-                    return true;
-                }
-                if (unsuitableDps is not null)
-                {
-                    SelectedRandomMember = unsuitableDps;
-                    return true;
-                }
-                if (backupTarget is not null)
-                {
-                    SelectedRandomMember = backupTarget;
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
+    #endregion
 
     internal class ASTOpenerMaxLevel1 : WrathOpener
     {
@@ -358,6 +280,12 @@ internal partial class AST
 
         public override bool HasCooldowns()
         {
+            if (ActionReady(EarthlyStar))
+                EarthlyStar.Retarget(Config.AST_DPS_AltMode > 0
+                        ? CombustList.Keys.ToArray()
+                        : MaleficList.ToArray(),
+                    SimpleTarget.Stack.Allies);
+
             if (GetCooldown(EarthlyStar).CooldownElapsed >= 4f)
                 return false;
 

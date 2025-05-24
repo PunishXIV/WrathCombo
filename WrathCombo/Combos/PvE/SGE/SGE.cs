@@ -336,15 +336,16 @@ internal partial class SGE : Healer
                 return actionID;
 
             if (HasStatusEffect(Buffs.Eukrasia))
-                return EukrasianDiagnosis;
+                return EukrasianDiagnosis
+                    .RetargetIfEnabled(OptionalTarget, Diagnosis);
 
-            IGameObject? healTarget = OptionalTarget ??
-                                      GetHealTarget(Config.SGE_ST_Heal_Adv && Config.SGE_ST_Heal_UIMouseOver);
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) >= Config.SGE_ST_Heal_Esuna &&
                 HasCleansableDebuff(healTarget))
-                return Role.Esuna;
+                return Role.Esuna
+                    .RetargetIfEnabled(OptionalTarget, Diagnosis);
 
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Rhizomata) && ActionReady(Rhizomata) &&
                 !HasAddersgall())
@@ -353,7 +354,8 @@ internal partial class SGE : Healer
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Kardia) && LevelChecked(Kardia) &&
                 !HasStatusEffect(Buffs.Kardia) &&
                 !HasStatusEffect(Buffs.Kardion, healTarget))
-                return Kardia;
+                return Kardia
+                    .RetargetIfEnabled(OptionalTarget, Diagnosis);
 
             for(int i = 0; i < Config.SGE_ST_Heals_Priority.Count; i++)
             {
@@ -363,17 +365,19 @@ internal partial class SGE : Healer
                 if (enabled)
                     if (GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) <= config &&
                         ActionReady(spell))
-                        return spell;
+                        return spell
+                            .RetargetIfEnabled(OptionalTarget, Diagnosis);
             }
 
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) && LevelChecked(Eukrasia) &&
                 GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) <= Config.SGE_ST_Heal_EDiagnosisHP &&
                 (Config.SGE_ST_Heal_EDiagnosisOpts[0] || // Ignore Any Shield check
-                !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Shield Check
-                (!Config.SGE_ST_Heal_EDiagnosisOpts[1] || !HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))) //Galvanize Check
+                 !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Shield Check
+                 (!Config.SGE_ST_Heal_EDiagnosisOpts[1] || !HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))) //Galvanize Check
                 return Eukrasia;
 
-            return actionID;
+            return actionID
+                .RetargetIfEnabled(OptionalTarget, Diagnosis);
         }
     }
 

@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -43,6 +44,10 @@ internal partial class AST : Healer
 
             if (!actionFound)
                 return actionID;
+
+            var replacedActions = alternateMode
+                ? CombustList.Keys.ToArray()
+                : MaleficList.ToArray();
 
             // Out of combat Card Draw
             if (!InCombat())
@@ -86,7 +91,9 @@ internal partial class AST : Healer
                     (cardPooling && HasStatusEffect(Buffs.Divination, anyOwner: true) ||
                     !cardPooling ||
                     !LevelChecked(Divination)))
-                    return OriginalHook(Play1);
+                    return IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards)
+                        ? OriginalHook(Play1).Retarget(replacedActions, CardResolver)
+                        : OriginalHook(Play1);
 
                 //Minor Arcana / Lord of Crowns
                 if (ActionReady(OriginalHook(MinorArcana)) &&
@@ -118,8 +125,10 @@ internal partial class AST : Healer
                 if (IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar) &&
                     !HasStatusEffect(Buffs.EarthlyDominance) &&
                     ActionReady(EarthlyStar) &&
+                    IsOffCooldown(EarthlyStar) &&
                     CanSpellWeave())
-                    return EarthlyStar;
+                    return EarthlyStar.Retarget(replacedActions,
+                        SimpleTarget.Stack.Allies);
 
                 if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
                     HasStatusEffect(Buffs.Divining) &&
@@ -187,7 +196,10 @@ internal partial class AST : Healer
                 (cardPooling && HasStatusEffect(Buffs.Divination, anyOwner: true) ||
                 !cardPooling ||
                 !LevelChecked(Divination)))
-                return OriginalHook(Play1);
+                return IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards)
+                    ? OriginalHook(Play1).Retarget(GravityList.ToArray(),
+                        CardResolver)
+                    : OriginalHook(Play1);
 
             //Minor Arcana / Lord of Crowns
             if (ActionReady(OriginalHook(MinorArcana)) &&
@@ -213,12 +225,15 @@ internal partial class AST : Healer
                 CanDelayedWeave() &&
                 ActionWatching.NumberOfGcdsUsed >= 3)
                 return Divination;
+
             //Earthly Star
             if (IsEnabled(CustomComboPreset.AST_AOE_DPS_EarthlyStar) && !IsMoving() &&
                 !HasStatusEffect(Buffs.EarthlyDominance) &&
                 ActionReady(EarthlyStar) &&
+                IsOffCooldown(EarthlyStar) &&
                 CanSpellWeave())
-                return EarthlyStar;
+                return EarthlyStar.Retarget(GravityList.ToArray(),
+                    SimpleTarget.Stack.Allies);
 
             if (IsEnabled(CustomComboPreset.AST_AOE_Oracle) &&
                 HasStatusEffect(Buffs.Divining) &&
@@ -306,58 +321,66 @@ internal partial class AST : Healer
             bool canBole = Config.AST_ST_SimpleHeals_WeaveBole && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveBole;
             bool canArrow = Config.AST_ST_SimpleHeals_WeaveArrow && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveArrow;
 
-            //Grab our target (Soft->Hard->Self)
-            IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.AST_ST_SimpleHeals_Adv && Config.AST_ST_SimpleHeals_UIMouseOver);
+            //Grab our target
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) >= Config.AST_ST_SimpleHeals_Esuna &&
                 HasCleansableDebuff(healTarget))
-                return Role.Esuna;
+                return Role.Esuna
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Spire) &&
                 Gauge.DrawnCards[2] == CardType.Spire &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Spire &&
                 ActionReady(Play3) &&
                 canSpire)
-                return OriginalHook(Play3);
+                return OriginalHook(Play3)
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Ewer) &&
                 Gauge.DrawnCards[2] == CardType.Ewer &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Ewer &&
                 ActionReady(Play3) &&
                 canEwer)
-                return OriginalHook(Play3);
+                return OriginalHook(Play3)
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Arrow) &&
                 Gauge.DrawnCards[1] == CardType.Arrow &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Arrow &&
                 ActionReady(Play2) &&
                 canArrow)
-                return OriginalHook(Play2);
+                return OriginalHook(Play2)
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Bole) &&
                 Gauge.DrawnCards[1] == CardType.Bole &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Bole &&
                 ActionReady(Play2) &&
                 canBole)
-                return OriginalHook(Play2);
+                return OriginalHook(Play2)
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_EssentialDignity) &&
                 ActionReady(EssentialDignity) &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_EssentialDignity &&
                 canDignity)
-                return EssentialDignity;
+                return EssentialDignity
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Exaltation) &&
                 ActionReady(Exaltation) &&
                 canExalt)
-                return Exaltation;
+                return Exaltation
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_CelestialIntersection) &&
                 ActionReady(CelestialIntersection) &&
                 canIntersect &&
                 !(healTarget as IBattleChara)!.HasShield())
-                return CelestialIntersection;
+                return CelestialIntersection
+                    .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic) && ActionReady(AspectedBenefic))
             {
@@ -368,8 +391,26 @@ internal partial class AST : Healer
                 Status? neutralSectBuff = GetStatusEffect(Buffs.NeutralSect, healTarget);
                 if (aspectedBeneficHoT is null || aspectedBeneficHoT.RemainingTime <= 3
                                                || neutralSectShield is null && neutralSectBuff is not null)
-                    return AspectedBenefic;
+                    return AspectedBenefic
+                        .RetargetIfEnabled(OptionalTarget, Benefic2);
             }
+            return actionID
+                .RetargetIfEnabled(OptionalTarget, Benefic2);
+        }
+    }
+
+    internal class AST_RetargetManualCards : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Cards_QuickTargetCards;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Play1 ||
+                !Config.AST_QuickTarget_Manuals)
+                return actionID;
+
+            Play1.Retarget([Spear, Balance], CardResolver, dontCull: true);
+
             return actionID;
         }
     }

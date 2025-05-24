@@ -112,10 +112,6 @@ internal partial class WHM
                 #region Single Target Heals
 
                 case CustomComboPreset.WHM_STHeals:
-                    DrawAdditionalBoolChoice(WHM_STHeals_UIMouseOver,
-                        mouseoverCheckingDescription,
-                        "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                        "To be used in conjunction with Redirect/Reaction/etc.");
                     DrawAdditionalBoolChoice(WHM_STHeals_IncludeShields,
                         "Include Shields in HP Percent Sliders",
                         "");
@@ -221,9 +217,6 @@ internal partial class WHM
                         reapplyTimeRemainingDescription,
                         itemWidth: little);
                     ImGui.Unindent();
-                    DrawAdditionalBoolChoice(WHM_AoEHeals_MedicaMO,
-                        mouseoverCheckingDescription,
-                        "Check your mouseover target for the Medica II/III buff.");
                     break;
 
                 #endregion
@@ -379,16 +372,6 @@ internal partial class WHM
         #endregion
 
         #region Single Target Heals
-
-        /// <summary>
-        ///     Enable party UI mouseover HP and debuff checking.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: false
-        /// </value>
-        /// <seealso cref="CustomComboPreset.WHM_STHeals" />
-        internal static UserBool WHM_STHeals_UIMouseOver =
-            new("WHM_STHeals_UIMouseOver", false);
 
         /// <summary>
         ///     Include shields when calculating HP percentages.
@@ -625,16 +608,6 @@ internal partial class WHM
         /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Medica2" />
         internal static UserFloat WHM_AoEHeals_MedicaTime =
             new("WHM_AoEHeals_MedicaTime");
-
-        /// <summary>
-        ///     Enable party UI mouseover checking for Medica II/III.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: false
-        /// </value>
-        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Medica2" />
-        internal static UserBool WHM_AoEHeals_MedicaMO =
-            new("WHM_AoEHeals_MedicaMO");
 
         #endregion
 

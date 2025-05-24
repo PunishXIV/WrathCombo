@@ -1,6 +1,7 @@
 ﻿# Guides on using specific parts of Wrath
 
 - [IPC](/docs/IPC.md) - for other plugins to control Wrath Combo settings.
+- [Action Retargeting](/docs/Retargeting.md) - for retargeting an action.
 
 # Rotations
 Rotations refer to the code behind the Combo presets, specifically the logic
@@ -22,6 +23,22 @@ It does not include [Configs](#configs), which come from `_Config.cs` files, and
 mostly UI code.
 
 Presets are all defined in [`CustomComboPreset.cs`](/WrathCombo/Combos/CustomComboPreset.cs).
+
+## Terminology
+- **Combos**
+  - Combos are the foremost Presets, the ones that include the main Rotations.
+  - Combos include both Simple Modes, both Advanced Modes, and Healing Combos.
+- **Options**
+  - Options are the second set of Presets, and are the choices for how to 
+    configure Combos.
+  - Can also be implemented as Configs if wanting to choose a default other than 
+    "off".
+- **Features**
+  - Features are the third set of Presets, and are all the base Presets (as in, 
+    that don't generally have Parents) that are not Combos.
+  - Features are usually smaller than Combos, not containing a whole Rotation, 
+    but rather a set of related actions; typically they are actions that combo 
+    together, but sometimes they are only similar, like the Mitigation features.
 
 ## Preset Templates
 ### Standard Preset Naming Template
@@ -62,7 +79,7 @@ Presets are all defined in [`CustomComboPreset.cs`](/WrathCombo/Combos/CustomCom
       shortest to longest cooldown.
     - Any mitigation options that have charges should have a charge slider.
 
-## Concerning Conflicts
+## Regarding Conflicts
 - Conflicts should always go both ways. If X conflicts with Y, Y must conflict with X.
 - Conflicts should only be on Combos.
   - Options should never conflict with Combos, it is just unnecessary.
@@ -78,6 +95,6 @@ This is mostly ImGUI code, primarily set up through
 [`UserConfig`](/WrathCombo/Window/Functions/UserConfig.cs) methods, but all options
 will need backed by a `User...`-Type option, e.g.
 [`UserInt`](/WrathCombo/CustomCombo/Functions/Config.cs#L45),
-[`UserBool`](/WrathCombo/CustomCombo/Functions/Config.cs#L64), etc, 
+[`UserBool`](/WrathCombo/CustomCombo/Functions/Config.cs#L64), etc., 
 which can then be referenced in [rotation](#rotations) code as
 `Config.<your config's name>`.

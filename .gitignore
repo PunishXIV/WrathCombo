@@ -1,12 +1,13 @@
-
-.vs/
-
+# Build Artifacts
 XIVSlothCombo/obj/
 XIVSlothCombo/bin/Debug/
 WrathCombo/obj/
 WrathCombo/bin/Debug/
+XIVSlothCombo/bin/Release/
+WrathCombo/bin/Release/
 
-*.v2
-/XIVSlothCombo/bin/Release
-/WrathCombo/bin/Release
+# IDE-specific files
+.idea/
 /WrathCombo.sln.DotSettings.user
+.vs/
+*.v2

@@ -74,6 +74,29 @@ namespace WrathCombo.Core
 
         public bool OpenToCurrentJobOnSwitch = false;
 
+        #region Target Settings
+
+        public bool RetargetHealingActionsToStack = false;
+
+        public bool UseUIMouseoverOverridesInDefaultHealStack = false;
+
+        public bool UseFieldMouseoverOverridesInDefaultHealStack = false;
+
+        public bool UseFocusTargetOverrideInDefaultHealStack = false;
+
+        public bool UseLowestHPOverrideInDefaultHealStack = false;
+
+        public bool UseCustomHealStack = false;
+
+        // Just has value so the UI element for it is more obvious from the get-go
+        public string[] CustomHealStack = [
+            "FocusTarget",
+            "HardTarget",
+            "Self",
+        ];
+
+        #endregion
+
         public bool ActionChanging = true;
 
         private DateTime _lastActionChangeCheck = DateTime.MinValue;
@@ -225,6 +248,77 @@ namespace WrathCombo.Core
 
         #endregion
 
+        #region Heal Stack Methods
+
+        internal static void MoveHealStackItemUp(string itemName)
+        {
+            var healStack = Service.Configuration.CustomHealStack;
+            if (healStack.Length < 1) return;
+
+            var index = Array.IndexOf(healStack, itemName);
+            if (index <= 0) return;
+
+            // Swap with the previous item
+            (healStack[index - 1], healStack[index]) =
+                (healStack[index], healStack[index - 1]);
+
+            // Save
+            Service.Configuration.CustomHealStack = healStack;
+            Service.Configuration.Save();
+        }
+
+        internal static void MoveHealStackItemDown(string itemName)
+        {
+            var healStack = Service.Configuration.CustomHealStack;
+            if (healStack.Length < 1) return;
+
+            var index = Array.IndexOf(healStack, itemName);
+            if (index >= healStack.Length - 1) return;
+
+            // Swap with the next item
+            (healStack[index], healStack[index + 1]) =
+                (healStack[index + 1], healStack[index]);
+
+            // Save
+            Service.Configuration.CustomHealStack = healStack;
+            Service.Configuration.Save();
+        }
+
+        internal static void RemoveHealStackItem(string itemName)
+        {
+            var healStack = Service.Configuration.CustomHealStack;
+            if (healStack.Length < 1) return;
+
+            var index = Array.IndexOf(healStack, itemName);
+            if (index <= -1) return;
+
+            // Remove the item from the array
+            var newList = healStack.ToList();
+            newList.RemoveAt(index);
+            var newArray = newList.ToArray();
+
+            // Save
+            Service.Configuration.CustomHealStack = newArray;
+            Service.Configuration.Save();
+        }
+
+        internal static void AddHealStackItem(string itemName)
+        {
+            var healStack = Service.Configuration.CustomHealStack;
+            if (healStack.Length < 1) return;
+
+            // Add the item to the end of the array
+            var newList = healStack.ToList();
+            newList.Add(itemName);
+            var newArray = newList.ToArray();
+
+            // Save
+            Service.Configuration.CustomHealStack = newArray;
+            Service.Configuration.Save();
+        }
+
+        #endregion
+
         #region Preset Resetting
 
         [JsonProperty]
@@ -289,11 +383,12 @@ namespace WrathCombo.Core
         public bool HideMessageOfTheDay { get; set; } = false;
 
         /// <summary>
-        ///     Whether the Setting Change Suggestion window was hidden for a
+        ///     Whether the Major Changes window was hidden for a
         ///     specific version.
         /// </summary>
-        /// <seealso cref="SettingChangeWindow"/>
-        public string HideSettingsChangeSuggestionForVersion { get; set; } = "";
+        /// <seealso cref="MajorChangesWindow"/>
+        public Version HideMajorChangesForVersion { get; set; } =
+            System.Version.Parse("0.0.0");
 
         /// <summary>
         ///     If the DTR Bar text should be shortened.

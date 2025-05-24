@@ -469,7 +469,8 @@ namespace WrathCombo.Window.Functions
         /// <param name="checkboxDescription">The description of the feature</param>
         /// <param name="itemWidth"></param>
         /// <param name="isConditionalChoice"></param>
-        public static void DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false)
+        /// <param name="indentDescription"></param>
+        public static void DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false, bool indentDescription = false)
         {
             bool output = PluginConfiguration.GetCustomBoolValue(config);
             ImGui.PushItemWidth(itemWidth);
@@ -500,7 +501,13 @@ namespace WrathCombo.Window.Functions
 
             if (!checkboxDescription.IsNullOrEmpty())
             {
+                if (indentDescription)
+                    ImGui.Indent();
+
                 ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, checkboxDescription);
+
+                if (indentDescription)
+                    ImGui.Unindent();
             }
 
             //!isConditionalChoice

@@ -87,10 +87,6 @@ internal partial class SGE
                     if (SGE_ST_Heal_Adv)
                     {
                         ImGui.Indent();
-                        DrawAdditionalBoolChoice(SGE_ST_Heal_UIMouseOver,
-                            "Party UI Mouseover Checking",
-                            "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                            "To be used in conjunction with Redirect/Reaction/etc");
                         DrawAdditionalBoolChoice(SGE_ST_Heal_IncludeShields, "Include Shields in HP Percent Sliders", "");
                         ImGui.Unindent();
                     }
@@ -227,7 +223,6 @@ internal partial class SGE
 
         public static UserBool
             SGE_ST_Heal_Adv = new("SGE_ST_Heal_Adv"),
-            SGE_ST_Heal_UIMouseOver = new("SGE_ST_Heal_UIMouseOver"),
             SGE_ST_Heal_IncludeShields = new("SGE_ST_Heal_IncludeShields"),
             SGE_AoE_Heal_KeracholeTrait = new("SGE_AoE_Heal_KeracholeTrait");
         public static UserInt

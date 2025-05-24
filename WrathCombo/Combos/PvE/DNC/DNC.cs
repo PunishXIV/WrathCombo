@@ -1,6 +1,8 @@
 ﻿#region
+
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Core;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -13,23 +15,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DNC : PhysicalRanged
 {
-    internal class DNC_ST_BasicCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_ST_BasicCombo;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not Fountain)
-                return actionID;
-            
-            if (LevelChecked(Fountain) && ComboAction is Cascade &&
-                ComboTimer > 0)
-                return Fountain;
-
-            return Cascade;
-
-        }
-    }
     internal class DNC_ST_AdvancedMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset =>
@@ -112,10 +97,12 @@ internal partial class DNC : PhysicalRanged
             if (IsEnabled(CustomComboPreset.DNC_ST_Adv_Partner) && !InCombat() &&
                 ActionReady(ClosedPosition) &&
                 !HasStatusEffect(Buffs.ClosedPosition) &&
-                (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                !InAutoMode(true, false)) // Disabled in Auto-Rotation
-                // todo: do not disable for auto-rotation, provide targeting
-                return ClosedPosition;
+                (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                if (InAutoMode(true, false) ||
+                    IsEnabled(CustomComboPreset.DNC_ST_Adv_AutoPartner))
+                    return ClosedPosition.Retarget(Cascade, DancePartnerResolver);
+                else
+                    return ClosedPosition;
 
             #endregion
 
@@ -228,6 +215,14 @@ internal partial class DNC : PhysicalRanged
                 if (HasStatusEffect(Buffs.FourFoldFanDance))
                     return FanDance4;
             }
+
+            // Dance Partner
+            if (IsEnabled(CustomComboPreset.DNC_ST_Adv_AutoPartner) &&
+                CanWeave() &&
+                CurrentPartnerNonOptimal)
+                return HasStatusEffect(Buffs.ClosedPosition)
+                    ? Ending
+                    : ClosedPosition.Retarget(Cascade, FeatureDancePartnerResolver);
 
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.DNC_Variant_Cure, Config.DNCVariantCurePercent))
@@ -470,10 +465,12 @@ internal partial class DNC : PhysicalRanged
                 // Dance Partner
                 if (ActionReady(ClosedPosition) &&
                     !HasStatusEffect(Buffs.ClosedPosition) &&
-                    (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                    !InAutoMode(true, true)) // Disabled in Auto-Rotation
-                    // todo: do not disable for auto-rotation, provide targeting
-                    return ClosedPosition;
+                    (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                    if (InAutoMode(true, true) ||
+                        IsEnabled(CustomComboPreset.DNC_DesirablePartner))
+                        return ClosedPosition.Retarget(Cascade, FeatureDancePartnerResolver);
+                    else
+                        return ClosedPosition;
 
                 if (TargetIsHostile())
                 {
@@ -551,6 +548,13 @@ internal partial class DNC : PhysicalRanged
                 if (HasStatusEffect(Buffs.FourFoldFanDance))
                     return FanDance4;
             }
+
+            // Dance Partner
+            if (CanWeave() &&
+                CurrentPartnerNonOptimal)
+                return HasStatusEffect(Buffs.ClosedPosition)
+                    ? Ending
+                    : ClosedPosition.Retarget(Cascade, FeatureDancePartnerResolver);
 
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.DNC_Variant_Cure, 50))
@@ -745,10 +749,12 @@ internal partial class DNC : PhysicalRanged
                 IsEnabled(CustomComboPreset.DNC_AoE_Adv_Partner) &&
                 ActionReady(ClosedPosition) &&
                 !HasStatusEffect(Buffs.ClosedPosition) &&
-                (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                !InAutoMode(false, false)) // Disabled in Auto-Rotation
-                // todo: do not disable for auto-rotation, provide targeting
-                return ClosedPosition;
+                (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                if (InAutoMode(false, false) ||
+                    IsEnabled(CustomComboPreset.DNC_DesirablePartner))
+                    return ClosedPosition.Retarget(Cascade, FeatureDancePartnerResolver);
+                else
+                    return ClosedPosition;
 
             #endregion
 
@@ -1025,10 +1031,12 @@ internal partial class DNC : PhysicalRanged
             if (!InCombat() &&
                 ActionReady(ClosedPosition) &&
                 !HasStatusEffect(Buffs.ClosedPosition) &&
-                (GetPartyMembers().Count > 1 || HasCompanionPresent()) &&
-                !InAutoMode(false, true)) // Disabled in Auto-Rotation
-                // todo: do not disable for auto-rotation, provide targeting
-                return ClosedPosition;
+                (GetPartyMembers().Count > 1 || HasCompanionPresent()))
+                if (InAutoMode(false, true) ||
+                    IsEnabled(CustomComboPreset.DNC_DesirablePartner))
+                    return ClosedPosition.Retarget(Cascade, FeatureDancePartnerResolver);
+                else
+                    return ClosedPosition;
 
             #endregion
 
@@ -1204,6 +1212,24 @@ internal partial class DNC : PhysicalRanged
 
     #region MultiButton Combos
 
+    internal class DNC_ST_BasicCombo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DNC_ST_BasicCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Fountain)
+                return actionID;
+
+            if (LevelChecked(Fountain) && ComboAction is Cascade &&
+                ComboTimer > 0)
+                return Fountain;
+
+            return Cascade;
+
+        }
+    }
+
     internal class DNC_ST_MultiButton : CustomCombo
     {
         protected internal override CustomComboPreset Preset =>
@@ -1328,54 +1354,35 @@ internal partial class DNC : PhysicalRanged
 
     #region Dance Partner Features
 
-    /*internal class DNC_DesirablePartner : CustomCombo
+    internal class DNC_DesirablePartner : CustomCombo
     {
-        private static DateTime _lastPartnerCheckTime = DateTime.MinValue;
-
         protected internal override CustomComboPreset Preset =>
             CustomComboPreset.DNC_DesirablePartner;
-
-        private static bool CurrentPartnerNonOptimal =>
-            DesirableDancePartner is not null &&
-            DesirableDancePartner.GameObjectId != CurrentDancePartner;
-
-        private static IGameObject? DesirableDancePartner
-        {
-            get
-            {
-                if ((DateTime.Now - _lastPartnerCheckTime).TotalSeconds <= 3)
-                    return field;
-
-                _lastPartnerCheckTime = DateTime.Now;
-                field = TryGetDancePartner(out var partner, true)
-                    ? partner
-                    : null;
-
-                return field;
-            }
-        }
 
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not (ClosedPosition or Ending)) return actionID;
 
-            var currentTarget = LocalPlayer.TargetObject;
-            var noCurrentPartner = !HasStatusEffect(Buffs.ClosedPosition);
-
-            if (noCurrentPartner || CurrentPartnerNonOptimal)
-                if (DesirableDancePartner.GameObjectId == currentTarget.GameObjectId)
+            if (CurrentPartnerNonOptimal)
+            {
+                if (HasStatusEffect(Buffs.ClosedPosition))
                     return Ending;
-                else
-                {
-                    SetTarget(DesirableDancePartner);
-                    TM.DelayNext(250);
-                    TM.Enqueue(() => SetTarget(currentTarget));
-                    return ClosedPosition;
-                }
+                // I could automatically end partner,
+                // instead of having the user press ending first ...
+                //StatusManager.ExecuteStatusOff(Buffs.ClosedPosition);
 
-            return actionID;
+                return ClosedPosition.Retarget([ClosedPosition, Ending],
+                    FeatureDancePartnerResolver, dontCull: true);
+            }
+
+            return (int)Config.DNC_Partner_ActionToShow switch
+            {
+                (int)Config.PartnerShowAction.ClosedPosition => ClosedPosition,
+                (int)Config.PartnerShowAction.SavageBlade => All.SavageBlade,
+                _ => OriginalHook(actionID),
+            };
         }
-    }*/
+    }
 
     #endregion
 
