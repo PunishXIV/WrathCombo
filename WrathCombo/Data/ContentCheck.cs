@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 
 #endregion
 
@@ -125,13 +127,36 @@ public class ContentCheck
     /// <summary>
     ///     Check if the current area is PvP content.
     /// </summary>
-    /// <returns>
-    ///     Whether the current area is the pier or instanced PvP content.
-    /// </returns>
-    public static bool IsInPVPContent() =>
-        (Content.ContentType is ContentType.OverWorld &&
-         Content.TerritoryName == "Wolves' Den Pier") ||
-        Content.ContentType is ContentType.PVP;
+    public static bool IsInPVPContent
+    {
+        get
+        {
+            if (!EZ.Throttle("contentCheckInPVP", TS.FromSeconds(5)))
+                return field;
+
+            field = (Content.ContentType is ContentType.OverWorld &&
+                     Content.TerritoryName == "Wolves' Den Pier") ||
+                    Content.ContentType is ContentType.PVP;
+            return field;
+        }
+    }
+
+    /// <summary>
+    ///     Check if the current instanced content is Savage or Ultimate.
+    /// </summary>
+    public static bool IsInSavagePlusContent
+    {
+        get
+        {
+            if (!EZ.Throttle("contentCheckInSavagePlus", TS.FromSeconds(5)))
+                return field;
+
+            field = Content.ContentDifficulty is ContentDifficulty.Savage or
+                ContentDifficulty.CriterionSavage or
+                ContentDifficulty.Ultimate;
+            return field;
+        }
+    }
 
     #region Halved Content Lists
 

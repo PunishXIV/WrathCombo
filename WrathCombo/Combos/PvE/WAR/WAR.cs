@@ -1,4 +1,5 @@
 using System.Linq;
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 namespace WrathCombo.Combos.PvE;
@@ -244,8 +245,12 @@ internal partial class WAR : Tank
                               JustUsed(Holmgang, 9f);
 
             // Interrupt
-            if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
-                && Role.CanInterject())
+            if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt) &&
+                HiddenFeaturesData.IsEnabledWith( // Only interrupt circle adds in 7
+                    CustomComboPreset.WAR_Hid_R7SCircleCastOnly,
+                    () => HiddenFeaturesData.Content.InR7S,
+                    () => HiddenFeaturesData.Targeting.R7SCircleCastingAdd) &&
+                Role.CanInterject())
                 return Role.Interject;
 
             #region Variant
@@ -615,11 +620,19 @@ internal partial class WAR : Tank
             if (actionID is not Overpower)
                 return actionID; //Our button
 
+            // If the Burst Holding for the Squirrels in 6 is enabled, check that
+            // we are either not targeting a squirrel or the fight is after 275s
+            var r6SReady = !HiddenFeaturesData.IsEnabledWIth(
+                CustomComboPreset.WAR_Hid_R6SHoldSquirrelBurst,
+                () => HiddenFeaturesData.Targeting.R6SSquirrel &&
+                      CombatEngageDuration().TotalSeconds < 275);
+
+            bool savage = ContentCheck.IsInSavagePlusContent;
             bool justMitted = JustUsed(OriginalHook(RawIntuition), 4f) ||
-                              JustUsed(OriginalHook(Vengeance), 5f) ||
-                              JustUsed(ThrillOfBattle, 5f) ||
-                              JustUsed(Role.Rampart, 5f) ||
-                              JustUsed(Holmgang, 9f);
+                              JustUsed(OriginalHook(Vengeance), (savage ? 15f : 6f)) ||
+                              JustUsed(ThrillOfBattle, (savage ? 15f : 6f)) ||
+                              JustUsed(Role.Rampart, 6f) ||
+                              JustUsed(Holmgang, 7f);
 
             #region Stuns
 
@@ -630,7 +643,11 @@ internal partial class WAR : Tank
 
             // Stun
             if (IsEnabled(CustomComboPreset.WAR_AoE_Stun)
-                && Role.CanLowBlow())
+                && Role.CanLowBlow()
+                && HiddenFeaturesData.IsEnabledWith( // Only stun the jabber, if in 6
+                    CustomComboPreset.WAR_Hid_R6SStunJabberOnly,
+                    () => HiddenFeaturesData.Content.InR6S,
+                    () => HiddenFeaturesData.Targeting.R6SJabber))
                 return Role.LowBlow;
 
             #endregion
@@ -681,6 +698,9 @@ internal partial class WAR : Tank
 
                     //Reprisal
                     if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Reprisal) && //Reprisal option is enabled
+                        HiddenFeaturesData.IsEnabledWIth( // Skip mit if in 6
+                            CustomComboPreset.WAR_Hid_R6SNoAutoGroupMits,
+                            () => !HiddenFeaturesData.Content.InR6S) &&
                         Role.CanReprisal(Config.WAR_AoE_Reprisal_Health, checkTargetForDebuff: false) && //Player's health is below selected threshold
                         (Config.WAR_AoE_Reprisal_SubOption == 0 || //Reprisal is enabled for all targets
                          TargetIsBoss() && Config.WAR_AoE_Reprisal_SubOption == 1)) //Reprisal is enabled for bosses only
@@ -694,6 +714,9 @@ internal partial class WAR : Tank
                 }
                 //Thrill
                 if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Thrill) && //Thrill option is enabled
+                    HiddenFeaturesData.IsEnabledWIth( // Skip mit if in 6
+                        CustomComboPreset.WAR_Hid_R6SNoAutoGroupMits,
+                        () => !HiddenFeaturesData.Content.InR6S) &&
                     ActionReady(ThrillOfBattle) && //Thrill is ready
                     PlayerHealthPercentageHp() <= Config.WAR_AoE_Thrill_Health && //Player's health is below selected threshold
                     (Config.WAR_AoE_Thrill_SubOption == 0 || //Thrill is enabled for all targets
@@ -719,7 +742,7 @@ internal partial class WAR : Tank
 
             #endregion
 
-            if (CanWeave()) //in weave window
+            if (CanWeave() && r6SReady) //in weave window
             {
                 if (IsEnabled(CustomComboPreset.WAR_AoE_Advanced_Infuriate) && //Infuriate option is enabled
                     InCombat() && //in combat
@@ -737,7 +760,7 @@ internal partial class WAR : Tank
             }
 
             if (InCombat() && //in combat
-                HasStatusEffect(Buffs.SurgingTempest)) //has Surging Tempest
+                HasStatusEffect(Buffs.SurgingTempest) && r6SReady) //has Surging Tempest
             {
                 if (CanWeave()) //in weave window
                 {

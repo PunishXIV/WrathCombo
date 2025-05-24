@@ -95,6 +95,8 @@ namespace WrathCombo.Core
                 Service.ActionReplacer.getActionHook.Disable();
         }
 
+        public bool ShowHiddenFeatures = false;
+
         #endregion
 
         #region AutoAction Settings
