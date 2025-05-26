@@ -32,13 +32,13 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Gets the distance from the target. </summary>
         public static float GetTargetDistance(IGameObject? optionalTarget = null, IGameObject? source = null)
         {
-            if (LocalPlayer is null)
+            if (LocalPlayer is not { } player)
                 return 0;
 
             IGameObject? chara = optionalTarget ?? CurrentTarget;
             if (chara is null) return 0;
 
-            IGameObject? sourceChara = source ?? LocalPlayer;
+            IGameObject? sourceChara = source ?? player;
 
             if (chara.GameObjectId == sourceChara.GameObjectId)
                 return 0;
@@ -51,13 +51,13 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static float GetTargetHeightDifference(IGameObject? target = null, IGameObject? source = null)
         {
-            if (LocalPlayer is null)
+            if (LocalPlayer is not { } player)
                 return 0;
 
             IGameObject? chara = target ?? CurrentTarget;
             if (chara is null) return 0;
 
-            IGameObject? sourceChara = source ?? LocalPlayer;
+            IGameObject? sourceChara = source ?? player;
 
             if (chara.GameObjectId == sourceChara.GameObjectId)
                 return 0;
@@ -68,12 +68,10 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Gets a value indicating whether you are in melee range from the current target. </summary>
         public static bool InMeleeRange()
         {
-            if (Svc.Targets.Target == null)
+            if (CurrentTarget is null)
                 return false;
 
-            float distance = GetTargetDistance();
-
-            return distance <= 3.0 + Service.Configuration.MeleeOffset;
+            return GetTargetDistance() <= 3f + (float)Service.Configuration.MeleeOffset;
         }
 
         /// <summary> Gets a value indicating target's HP Percent. CurrentTarget is default unless specified </summary>
@@ -83,7 +81,7 @@ namespace WrathCombo.CustomComboNS.Functions
             if (OurTarget is not IBattleChara chara)
                 return 0;
 
-            float percent = (float)chara.CurrentHp / chara.MaxHp * 100f;
+            float percent = chara.CurrentHp * 100f / chara.MaxHp;
             if (includeShield) percent += chara.ShieldPercentage;
             return Math.Clamp(percent, 0f, 100f);
         }
