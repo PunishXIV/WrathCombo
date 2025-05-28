@@ -92,9 +92,26 @@ internal partial class PLD
         (int index, out uint action)
     {
         action = PrioritizedMitigation[index].Action;
-        return ActionReady(action) && LevelChecked(action) &&
-               PrioritizedMitigation[index].Logic() &&
-               IsEnabled(PrioritizedMitigation[index].Preset);
+        // Not using ActionReady so that oGCDs don't make different mits flash
+        var meetsRequirements =
+            (IsOffCooldown(action) || HasCharges(action)) &&
+            LevelChecked(action) &&
+            PrioritizedMitigation[index].Logic() &&
+            IsEnabled(PrioritizedMitigation[index].Preset);
+
+        // Custom logic for Rampart and Reprisal, to make them not flash because of oGCDs
+        if (!meetsRequirements &&
+            (action == Role.Rampart || action == Role.Reprisal) &&
+            !PrioritizedMitigation[index].Logic() &&
+            (IsOffCooldown(action) || HasCharges(action)) &&
+            LevelChecked(action) &&
+            ((action == Role.Rampart &&
+              PlayerHealthPercentageHp() < Config.PLD_Mit_Rampart_Health) ||
+             (action == Role.Reprisal &&
+              InActionRange(Role.Reprisal))))
+            meetsRequirements = true;
+
+        return meetsRequirements;
     }
 
     #endregion

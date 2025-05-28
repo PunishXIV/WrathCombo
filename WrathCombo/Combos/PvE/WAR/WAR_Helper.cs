@@ -250,9 +250,26 @@ internal partial class WAR : Tank
     private static bool CheckMitigationConfigMeetsRequirements(int index, out uint action)
     {
         action = PrioritizedMitigation[index].Action;
-        return ActionReady(action) && LevelChecked(action) &&
+        // Not using ActionReady so that oGCDs don't make different mits flash
+        var meetsRequirements =
+            (IsOffCooldown(action) || HasCharges(action)) &&
+            LevelChecked(action) &&
             PrioritizedMitigation[index].Logic() &&
             IsEnabled(PrioritizedMitigation[index].Preset);
+
+        // Custom logic for Rampart and Reprisal, to make them not flash because of oGCDs
+        if (!meetsRequirements &&
+            (action == Role.Rampart || action == Role.Reprisal) &&
+            !PrioritizedMitigation[index].Logic() &&
+            (IsOffCooldown(action) || HasCharges(action)) &&
+            LevelChecked(action) &&
+            ((action == Role.Rampart &&
+              PlayerHealthPercentageHp() < Config.WAR_Mit_Rampart_Health) ||
+             (action == Role.Reprisal &&
+              InActionRange(Role.Reprisal))))
+            meetsRequirements = true;
+
+        return meetsRequirements;
     }
     #endregion
 
