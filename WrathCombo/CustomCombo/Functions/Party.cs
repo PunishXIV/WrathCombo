@@ -40,8 +40,10 @@ namespace WrathCombo.CustomComboNS.Functions
                     WrathPartyMember wmember = new()
                     {
                         GameObjectId = chara.GameObjectId,
-                        CurrentHP = chara.CurrentHp
+                        PlayerChara = member as IPlayerCharacter,
+                        CurrentHP = chara.CurrentHp,
                     };
+
                     _partyList.Add(wmember);
                     existingIds.Add(chara.GameObjectId);
                 }
@@ -138,7 +140,8 @@ namespace WrathCombo.CustomComboNS.Functions
         public ulong GameObjectId;
         public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
         public Dictionary<ushort, long> BuffsGainedAt = new();
-
+        /// You really shouldn't have a reason to use this ...
+        public IPlayerCharacter? PlayerChara;
         private uint _currentHP;
         public uint CurrentHP
         {
