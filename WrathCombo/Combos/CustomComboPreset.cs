@@ -6516,9 +6516,9 @@ SMN.JobID)]
     [CustomComboInfo("Storm's Path Combo", "Replace Storm's Path with its combo chain.", WAR.JobID)]
     WAR_ST_StormsPathCombo = 18069,
 
-    [ReplaceSkill(WAR.StormsEye)]
-    [CustomComboInfo("Storm's Eye Combo", "Replace Storm's Eye with its combo chain.", WAR.JobID)]
-    WAR_ST_StormsEyeCombo = 18070,
+    [ReplaceSkill(WAR.FellCleave)]
+    [CustomComboInfo("OGCD on Fell Cleave", "Replace Fell Cleave with Upheaval and Primal Wrath.", WAR.JobID)]
+    WAR_FellCleave_OGCD = 18070,
     #endregion
 
     [ReplaceSkill(WAR.FellCleave, WAR.Decimate)]

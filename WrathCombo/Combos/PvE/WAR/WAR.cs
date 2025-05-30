@@ -465,13 +465,13 @@ internal partial class WAR : Tank
             (ComboTimer > 0 && ComboAction == Maim && LevelChecked(StormsPath)) ? StormsPath :
             HeavySwing;
     }
-    internal class WAR_ST_StormsEyeCombo : CustomCombo
+    internal class WAR_FellCleave_OGCD : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_ST_StormsEyeCombo;
-        protected override uint Invoke(uint id) => (id != StormsEye) ? id :
-            (ComboTimer > 0 && ComboAction == HeavySwing && LevelChecked(Maim)) ? Maim :
-            (ComboTimer > 0 && ComboAction == Maim && LevelChecked(StormsEye)) ? StormsEye :
-            HeavySwing;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_FellCleave_OGCD;
+
+        protected override uint Invoke(uint action) => action is not (InnerBeast or FellCleave) ? action :
+            InCombat() && ActionReady(Upheaval) ? OriginalHook(Upheaval) :
+            InCombat() && ActionReady(PrimalWrath) ? OriginalHook(PrimalWrath) : action;
     }
     #endregion
 }
