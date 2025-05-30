@@ -470,8 +470,8 @@ internal partial class WAR : Tank
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_FellCleave_OGCD;
 
         protected override uint Invoke(uint action) => action is not (InnerBeast or FellCleave) ? action :
-            InCombat() && ActionReady(Upheaval) ? OriginalHook(Upheaval) :
-            InCombat() && ActionReady(PrimalWrath) ? OriginalHook(PrimalWrath) : action;
+            ShouldUseUpheaval ? OriginalHook(Upheaval) :
+            ShouldUsePrimalWrath ? OriginalHook(PrimalWrath) : action;
     }
     #endregion
 }
