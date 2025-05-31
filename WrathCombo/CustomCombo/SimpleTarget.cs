@@ -376,9 +376,8 @@ internal static class SimpleTarget
 
     public static IGameObject? AnyDeadNonPartyMember =>
         Svc.Objects
-            .Where(x => x is IBattleChara &&
-                        x.IsFriendly() && !x.IsInParty() &&
-                        x.IsAPlayer() && x.IsTargetable)
+            .Where(x => x.IsAPlayer() && x.IsTargetable &&
+                        !x.IsInParty())
             .FirstOrDefault(x => x.IsDead());
 
     #region HP-Based Targets
