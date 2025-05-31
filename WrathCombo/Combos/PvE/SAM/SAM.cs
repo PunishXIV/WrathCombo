@@ -496,7 +496,6 @@ internal partial class SAM : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            // Don't change anything if not basic skill
             if (actionID is not (Fuga or Fuko))
                 return actionID;
 

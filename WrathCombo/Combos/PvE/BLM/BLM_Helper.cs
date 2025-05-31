@@ -29,8 +29,6 @@ internal partial class BLM
         TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 :
         TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
 
-    internal static bool HasMaxPolyglotStacks => PolyglotStacks == MaxPolyglot;
-
     internal static bool EndOfFirePhase => FirePhase && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
 
     internal static bool EndOfIcePhase => IcePhase && CurMp == MP.MaxMP && HasMaxUmbralHeartStacks;
@@ -43,11 +41,13 @@ internal partial class BLM
 
     internal static Status? ThunderDebuffAoE => GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
+    internal static float TimeSinceFirestarterBuff => HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
+
+    internal static bool HasMaxPolyglotStacks => PolyglotStacks == MaxPolyglot;
+
     internal static uint FireSpam => LevelChecked(Fire4) ? Fire4 : Fire;
 
     internal static uint BlizzardSpam => LevelChecked(Blizzard4) ? Blizzard4 : Blizzard;
-
-    internal static float TimeSinceFirestarterBuff => HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
     internal static bool HasMaxUmbralHeartStacks => !TraitLevelChecked(Traits.UmbralHeart) || UmbralHearts is 3; //Returns true before you can have Umbral Hearts out of design
 

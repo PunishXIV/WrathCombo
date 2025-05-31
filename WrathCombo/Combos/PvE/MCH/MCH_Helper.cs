@@ -96,12 +96,14 @@ internal partial class MCH
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[1]) &&
-                !LevelChecked(Excavator) && ActionReady(Chainsaw) && !MaxBattery)
+                !LevelChecked(Excavator) && !MaxBattery && LevelChecked(Chainsaw) &&
+                (GetCooldownChargeRemainingTime(Chainsaw) <= GCD || IsOffCooldown(Chainsaw)))
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
                  IsEnabled(CustomComboPreset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[2]) &&
-                LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor) && !MaxBattery)
+                !MaxBattery && LevelChecked(AirAnchor) &&
+                (GetCooldownChargeRemainingTime(AirAnchor) <= GCD || IsOffCooldown(AirAnchor)))
                 return true;
 
             if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
@@ -147,7 +149,8 @@ internal partial class MCH
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_Chainsaw) && ReassembledChainsawST) &&
-            !MaxBattery && !HasStatusEffect(Buffs.ExcavatorReady) && ActionReady(Chainsaw))
+            !MaxBattery && !HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Chainsaw) &&
+            (GetCooldownChargeRemainingTime(Chainsaw) <= GCD / 2 || IsOffCooldown(Chainsaw)))
         {
             actionID = Chainsaw;
 
@@ -156,7 +159,8 @@ internal partial class MCH
 
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor) && ReassembledAnchorST) &&
-            !MaxBattery && LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
+            !MaxBattery && LevelChecked(AirAnchor) &&
+            (GetCooldownChargeRemainingTime(AirAnchor) <= GCD / 2 || IsOffCooldown(AirAnchor)))
         {
             actionID = AirAnchor;
 
@@ -176,7 +180,7 @@ internal partial class MCH
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_AirAnchor)) &&
             LevelChecked(HotShot) && !LevelChecked(AirAnchor) && !MaxBattery &&
-            ActionReady(HotShot))
+            (GetCooldownChargeRemainingTime(HotShot) < GCD / 2 || ActionReady(HotShot)))
         {
             actionID = HotShot;
 

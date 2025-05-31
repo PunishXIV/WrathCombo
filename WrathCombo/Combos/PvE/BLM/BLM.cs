@@ -257,6 +257,7 @@ internal partial class BLM : Caster
 
             if (IsEnabled(CustomComboPreset.BLM_ST_UsePolyglot))
             {
+                //Overcap protection
                 if (HasMaxPolyglotStacks && PolyglotTimer <= 5000)
                     return LevelChecked(Xenoglossy)
                         ? Xenoglossy
@@ -370,12 +371,14 @@ internal partial class BLM : Caster
 
                 if (CurMp == MP.MaxMP)
                 {
+                    //35-100, pre-Paradox/scuffed starting combat
                     if (ActionReady(Fire3))
-                        return Fire3; //35-100, pre-Paradox/scuffed starting combat
+                        return Fire3;
 
+                    //Levels 4-34
                     if (IsEnabled(CustomComboPreset.BLM_ST_Transpose) &&
                         ActionReady(Transpose))
-                        return Transpose; //Levels 4-34
+                        return Transpose;
                 }
 
                 if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
