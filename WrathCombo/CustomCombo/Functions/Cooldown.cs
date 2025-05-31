@@ -91,8 +91,15 @@ namespace WrathCombo.CustomComboNS.Functions
 
         private static uint Action1 => DutyActionManager.GetDutyActionId(0);
         private static uint Action2 => DutyActionManager.GetDutyActionId(1);
-
         public static bool HasActionEquipped(uint actionId) => (Action1 == actionId && HasCharges(actionId)) || (Action2 == actionId && HasCharges(actionId));
+
+        //TODO: Occult Crescent
+        //private static uint PhantomAction1 => DutyActionManager.GetPhantomActionId(0);
+        //private static uint PhantomAction2 => DutyActionManager.GetPhantomActionId(1);
+        //private static uint PhantomAction3 => DutyActionManager.GetPhantomActionId(2);
+        //private static uint PhantomAction4 => DutyActionManager.GetPhantomActionId(3);
+        //private static uint PhantomAction5 => DutyActionManager.GetPhantomActionId(4);
+        //public static bool HasPhantomActionEquipped(uint actionId) => (PhantomAction1 == actionId && HasCharges(actionId)) || PhantomAction2 == actionId && HasCharges(actionId)) || PhantomAction3 == actionId && HasCharges(actionId)) || PhantomAction4 == actionId && HasCharges(actionId)) || (PhantomAction5 == actionId && HasCharges(actionId));
 
         private static unsafe RecastDetail* GCD => ActionManager.Instance()->GetRecastGroupDetail(57);
 

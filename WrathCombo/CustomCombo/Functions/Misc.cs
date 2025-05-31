@@ -67,7 +67,6 @@ namespace WrathCombo.CustomComboNS.Functions
             }
 
             private static readonly Dictionary<uint, ClassJob> ClassJobs = Svc.Data.GetExcelSheet<ClassJob>()!.ToDictionary(i => i.RowId, i => i);
-
             public static string JobIDToName(uint key)
             {
                 if (key == 0)
@@ -96,7 +95,6 @@ namespace WrathCombo.CustomComboNS.Functions
                 } //Misc or unknown
                 else return key == 99 ? "Global" : "Unknown";
             }
-
             public static uint JobIDToClassJobCategory(uint jobID)
             {
                 if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
@@ -115,7 +113,6 @@ namespace WrathCombo.CustomComboNS.Functions
                 RPR.JobID,
                 SAM.JobID
             ];
-
             public static readonly List<byte> Ranged =
             [
                 BLM.JobID, BLM.ClassID,
@@ -127,7 +124,6 @@ namespace WrathCombo.CustomComboNS.Functions
                 DNC.JobID,
                 BLU.JobID
             ];
-
             public static readonly List<byte> Tank =
             [
                 PLD.JobID, PLD.ClassID,
@@ -135,7 +131,6 @@ namespace WrathCombo.CustomComboNS.Functions
                 DRK.JobID,
                 GNB.JobID
             ];
-
             public static readonly List<byte> Healer =
             [
                 WHM.JobID, WHM.ClassID,
@@ -143,7 +138,6 @@ namespace WrathCombo.CustomComboNS.Functions
                 AST.JobID,
                 SGE.JobID
             ];
-
             public static byte JobToClass(uint jobID)
             {
                 return jobID switch
@@ -162,7 +156,6 @@ namespace WrathCombo.CustomComboNS.Functions
                     _ => (byte)jobID,
                 };
             }
-
             public static byte ClassToJob(uint classId)
             {
                 return classId switch
@@ -181,6 +174,53 @@ namespace WrathCombo.CustomComboNS.Functions
                 };
             }
 
+            /*
+            private static readonly Dictionary<uint, PhantomJob> PhantomJobs = Svc.Data.GetExcelSheet<PhantomJob>()!.ToDictionary(i => i.RowId, i => i);
+            public static string PhantomJobIDToName(uint key)
+            {
+                // Handle special override cases if any for Phantom Jobs
+                if (PhantomJobs.TryGetValue(key, out PhantomJob job))
+                {
+                    string jobName = job.Name.ToString();
+                    string cultureID = Svc.ClientState.ClientLanguage switch
+                    {
+                        Dalamud.Game.ClientLanguage.French => "fr-FR",
+                        Dalamud.Game.ClientLanguage.Japanese => "ja-JP",
+                        Dalamud.Game.ClientLanguage.German => "de-DE",
+                        _ => "en-us",
+                    };
+                    TextInfo textInfo = new CultureInfo(cultureID, false).TextInfo;
+                    return textInfo.ToTitleCase(jobName);
+                }
+                else
+                    return key == 99 ? "Global" : "Unknown";
+            }
+            public static uint PhantomJobIDToCategory(uint phantomJobID)
+            {
+                if (Svc.Data.GetExcelSheet<PhantomJob>().HasRow(phantomJobID))
+                    return Svc.Data.GetExcelSheet<PhantomJob>().GetRow(phantomJobID).PhantomJobCategory.RowId;
+
+                return 0;
+            }
+
+            // Phantom Jobs list
+            public static readonly List<byte> _phantomJobs =
+            [
+                Freelancer.PhantomJobID,
+                Knight.PhantomJobID,
+                Monk.PhantomJobID,
+                Thief.PhantomJobID,
+                Berserker.PhantomJobID,
+                Ranger.PhantomJobID,
+                TimeMage.PhantomJobID,
+                Chemist.PhantomJobID,
+                Bard.PhantomJobID,
+                Oracle.PhantomJobID,
+                Cannoneer.PhantomJobID,
+                Samurai.PhantomJobID,
+                Geolancer.PhantomJobID
+            ];
+            */
         }
     }
 }
