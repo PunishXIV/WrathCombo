@@ -247,8 +247,21 @@ internal partial class DNC
     {
         partner = null;
 
-        if (!Player.Available)
+        if (!Player.Available || Player.IsBusy)
             return false;
+
+        #region Skip a new check, if the current partner is just out of range
+        if (CurrentDancePartner is not null)
+        {
+            var currentPartner = Svc.Objects.FirstOrDefault(
+                x => x.GameObjectId == CurrentDancePartner);
+            if (currentPartner is not null &&
+                !currentPartner.IsWithinRange(30) &&
+                !currentPartner.IsDead &&
+                DamageDownFree(currentPartner))
+                return false;
+        }
+        #endregion
 
         // Check if we have a target overriding any searching
         var focusTarget = SimpleTarget.FocusTarget;
