@@ -57,12 +57,12 @@ internal partial class DRK : Tank
             // Unmend Option for Pulling
             var skipBecauseOpener =
                 IsEnabled(CustomComboPreset.DRK_ST_BalanceOpener) &&
-                Opener().HasCooldowns();
+                Opener().HasCooldowns() &&
+                NumberOfEnemiesInRange(20) < 2; // don't skip if add-pulling
             if (IsEnabled(CustomComboPreset.DRK_ST_RangedUptime) &&
                 ActionReady(Unmend) &&
                 !InMeleeRange() &&
                 HasBattleTarget() &&
-                !InCombat() &&
                 !skipBecauseOpener)
                 return Unmend;
 
