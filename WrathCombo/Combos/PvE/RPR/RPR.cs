@@ -467,6 +467,7 @@ internal partial class RPR : Melee
             }
 
             if (LevelChecked(WhorlOfDeath) &&
+                CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
                 GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 6 &&
                 !HasStatusEffect(Buffs.SoulReaver) && !HasStatusEffect(Buffs.Executioner))
                 return WhorlOfDeath;
@@ -575,6 +576,7 @@ internal partial class RPR : Melee
 
             if (IsEnabled(CustomComboPreset.RPR_AoE_WoD) &&
                 ActionReady(WhorlOfDeath) &&
+                CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
                 GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) < 6 &&
                 !HasStatusEffect(Buffs.SoulReaver) &&
                 GetTargetHPPercent() > RPR_WoDThreshold)

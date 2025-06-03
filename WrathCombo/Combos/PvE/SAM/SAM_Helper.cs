@@ -91,6 +91,7 @@ internal partial class SAM
                   SenCount is 1 && GetTargetHPPercent() > higanbanaHPThreshold &&
                   (SAM_ST_Higanbana_Suboption == 0 ||
                    SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss()) &&
+                  CanApplyStatus(CurrentTarget, Debuffs.Higanbana) &&
                   ((JustUsed(MeikyoShisui, 15f) && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= higanbanaRefresh) ||
                    !HasStatusEffect(Debuffs.Higanbana, CurrentTarget))) ||
 
@@ -105,6 +106,7 @@ internal partial class SAM
 
                 //Higanbana
                 ((SenCount is 1 && GetTargetHPPercent() > 1 && TargetIsBoss() &&
+                  CanApplyStatus(CurrentTarget, Debuffs.Higanbana) &&
                   ((JustUsed(MeikyoShisui, 15f) && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= 15) ||
                    !HasStatusEffect(Debuffs.Higanbana, CurrentTarget))) ||
 

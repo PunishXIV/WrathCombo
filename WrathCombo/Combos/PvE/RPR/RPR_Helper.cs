@@ -55,6 +55,7 @@ internal partial class RPR
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
             !HasStatusEffect(Buffs.ImmortalSacrifice) && !IsComboExpiring(3) &&
+            CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath))
         {
             if (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode))

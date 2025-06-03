@@ -64,6 +64,7 @@ internal partial class BLM : Caster
                     : Foul;
 
             if (LevelChecked(Thunder) && HasStatusEffect(Buffs.Thunderhead) &&
+                CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
                 (ThunderDebuffST is null && ThunderDebuffAoE is null ||
                  ThunderDebuffST?.RemainingTime <= 3 ||
                  ThunderDebuffAoE?.RemainingTime <= 3) &&
@@ -276,7 +277,8 @@ internal partial class BLM : Caster
                 float refreshTimer = BLM_ST_ThunderUptime_Threshold;
                 int hpThreshold = BLM_ST_Thunder_SubOption == 1 || !InBossEncounter() ? BLM_ST_ThunderOption : 0;
 
-                if ((ThunderDebuffST is null && ThunderDebuffAoE is null ||
+                if (CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
+                    (ThunderDebuffST is null && ThunderDebuffAoE is null ||
                      ThunderDebuffST?.RemainingTime <= refreshTimer ||
                      ThunderDebuffAoE?.RemainingTime <= refreshTimer) &&
                     GetTargetHPPercent() > hpThreshold)
@@ -435,7 +437,8 @@ internal partial class BLM : Caster
                 return Foul;
 
             if (HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
-                (GetTargetHPPercent() > 1) &&
+                GetTargetHPPercent() > 1 &&
+                CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
                  ThunderDebuffST?.RemainingTime <= 3) &&
@@ -527,6 +530,7 @@ internal partial class BLM : Caster
 
             if (IsEnabled(CustomComboPreset.BLM_AoE_Thunder) &&
                 HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
+                CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
                 (GetTargetHPPercent() > BLM_AoE_ThunderHP) &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||

@@ -65,6 +65,7 @@ internal partial class MCH : PhysicalRanged
                     if (JustUsed(Hypercharge) &&
                         ActionReady(Wildfire) &&
                         !HasStatusEffect(Buffs.Wildfire) &&
+                        CanApplyStatus(CurrentTarget, Debuffs.Wildifre) &&
                         TargetIsBoss())
                         return Wildfire;
 
@@ -216,6 +217,7 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(CustomComboPreset.MCH_ST_Adv_WildFire) &&
                         (MCH_ST_Adv_Wildfire_SubOption == 0 ||
                          MCH_ST_Adv_Wildfire_SubOption == 1 && TargetIsBoss()) &&
+                        CanApplyStatus(CurrentTarget, Debuffs.Wildifre) &&
                         JustUsed(Hypercharge) && ActionReady(Wildfire) && !HasStatusEffect(Buffs.Wildfire))
                         return Wildfire;
 
@@ -419,7 +421,8 @@ internal partial class MCH : PhysicalRanged
 
                 if (ActionReady(BioBlaster) &&
                     !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-                    !IsOverheated && !HasStatusEffect(Buffs.Reassembled))
+                    !IsOverheated && !HasStatusEffect(Buffs.Reassembled) &&
+                    CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                     return OriginalHook(BioBlaster);
 
                 if (ActionReady(Flamethrower) && !IsMoving())
@@ -570,7 +573,9 @@ internal partial class MCH : PhysicalRanged
                     return FullMetalField;
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster) &&
-                    ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) && !IsOverheated && !HasStatusEffect(Buffs.Reassembled))
+                    ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
+                    !IsOverheated && !HasStatusEffect(Buffs.Reassembled) &&
+                    CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                     return OriginalHook(BioBlaster);
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_FlameThrower) &&
@@ -623,7 +628,9 @@ internal partial class MCH : PhysicalRanged
                 return BarrelStabilizer;
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_Wildfire) &&
-                ActionReady(Wildfire) && JustUsed(Hypercharge) && !HasStatusEffect(Buffs.Wildfire))
+                ActionReady(Wildfire) && JustUsed(Hypercharge) &&
+                !HasStatusEffect(Buffs.Wildfire) &&
+                CanApplyStatus(CurrentTarget, Debuffs.Wildifre))
                 return Wildfire;
 
             if (!IsOverheated && LevelChecked(Hypercharge) &&
