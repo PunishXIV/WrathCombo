@@ -1,3 +1,4 @@
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.SAM.Config;
 using static WrathCombo.Data.ActionWatching;
@@ -105,6 +106,9 @@ internal partial class SAM : Melee
 
             if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (ActionReady(Enpi) &&
                 !InMeleeRange() &&
@@ -274,6 +278,9 @@ internal partial class SAM : Melee
 
             if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (IsEnabled(CustomComboPreset.SAM_ST_RangedUptime) &&
                 ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
@@ -505,6 +512,9 @@ internal partial class SAM : Melee
             if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             //oGCD Features
             if (CanWeave() && !HasDoubleWeaved() && M6SReady)
             {
@@ -611,6 +621,9 @@ internal partial class SAM : Melee
 
             if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             //oGCD Features
             if (CanWeave() && !HasDoubleWeaved() && M6SReady)

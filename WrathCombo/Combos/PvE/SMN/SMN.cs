@@ -1,7 +1,8 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using WrathCombo.CustomComboNS;
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
+using WrathCombo.CustomComboNS;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -200,6 +201,9 @@ internal partial class SMN : Caster
 
             #endregion
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             #region OGCD
 
             if (CanSpellWeave())
@@ -333,6 +337,9 @@ internal partial class SMN : Caster
                 return SummonCarbuncle;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region OGCD
 
@@ -500,6 +507,9 @@ internal partial class SMN : Caster
                 return SummonCarbuncle;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region OGCD
 
@@ -721,6 +731,9 @@ internal partial class SMN : Caster
                 return SummonCarbuncle;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region OGCDS
 

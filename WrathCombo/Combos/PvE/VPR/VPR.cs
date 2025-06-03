@@ -1,3 +1,4 @@
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.VPR.Config;
 using static WrathCombo.Data.ActionWatching;
@@ -67,6 +68,9 @@ internal partial class VPR : Melee
             // Variant Rampart
             if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             //oGCDs
             if (CanWeave() && !HasDoubleWeaved())
@@ -217,6 +221,9 @@ internal partial class VPR : Melee
             // Variant Rampart
             if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Opener for VPR
             if (IsEnabled(CustomComboPreset.VPR_ST_Opener) &&
@@ -400,6 +407,9 @@ internal partial class VPR : Melee
             if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (CanWeave() && !HasDoubleWeaved())
             {
                 // Death Rattle / Legacy Weaves
@@ -535,6 +545,9 @@ internal partial class VPR : Melee
             // Variant Rampart
             if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (CanWeave() && !HasDoubleWeaved())
             {

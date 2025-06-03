@@ -19,6 +19,7 @@ namespace WrathCombo.Core
         private static HashSet<CustomComboPreset>? PvPCombos;
         private static HashSet<CustomComboPreset>? VariantCombos;
         private static HashSet<CustomComboPreset>? BozjaCombos;
+        private static HashSet<CustomComboPreset>? OccultCrescentCombos;
         private static HashSet<CustomComboPreset>? EurekaCombos;
         private static Dictionary<CustomComboPreset, CustomComboPreset[]>? ConflictingCombos;
         private static Dictionary<CustomComboPreset, CustomComboPreset?>? ParentCombos;  // child: parent
@@ -38,6 +39,10 @@ namespace WrathCombo.Core
 
             BozjaCombos = Enum.GetValues<CustomComboPreset>()
                 .Where(preset => preset.GetAttribute<BozjaAttribute>() != default)
+                .ToHashSet();
+
+            OccultCrescentCombos = Enum.GetValues<CustomComboPreset>()
+                .Where(preset => preset.GetAttribute<OccultCrescentAttribute>() != default)
                 .ToHashSet();
 
             EurekaCombos = Enum.GetValues<CustomComboPreset>()
@@ -112,6 +117,11 @@ namespace WrathCombo.Core
         /// <param name="preset"> Preset to check. </param>
         /// <returns> The boolean representation. </returns>
         public static bool IsBozja(CustomComboPreset preset) => BozjaCombos.Contains(preset);
+
+        /// <summary> Gets a value indicating whether a preset is secret. </summary>
+        /// <param name="preset"> Preset to check. </param>
+        /// <returns> The boolean representation. </returns>
+        public static bool IsOccultCrescent(CustomComboPreset preset) => OccultCrescentCombos.Contains(preset);
 
         /// <summary> Gets a value indicating whether a preset is secret. </summary>
         /// <param name="preset"> Preset to check. </param>

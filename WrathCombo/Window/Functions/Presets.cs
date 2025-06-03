@@ -248,7 +248,7 @@ namespace WrathCombo.Window.Functions
             if (bozjaParents is not null)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.TextWrapped($"Part of normal combo{(variantParents.ParentPresets.Length > 1 ? "s" : "")}:");
+                ImGui.TextWrapped($"Part of normal combo{(bozjaParents.ParentPresets.Length > 1 ? "s" : "")}:");
                 StringBuilder builder = new();
                 foreach (var par in bozjaParents.ParentPresets)
                 {
@@ -262,7 +262,6 @@ namespace WrathCombo.Window.Functions
                             builder.Insert(0, $"{(Attributes.ContainsKey(subpar.Value) ? Attributes[subpar.Value].CustomComboInfo.Name : subpar?.GetAttribute<CustomComboInfoAttribute>().Name)} -> ");
                             par2 = subpar!.Value;
                         }
-
                     }
 
                     ImGui.TextWrapped($"- {builder}");
@@ -326,6 +325,7 @@ namespace WrathCombo.Window.Functions
                         case VPR.JobID: VPR.Config.Draw(preset); break;
                         case WAR.JobID: WAR.Config.Draw(preset); break;
                         case WHM.JobID: WHM.Config.Draw(preset); break;
+                        case OccultCrescent.JobID: OccultCrescent.Config.Draw(preset); break;
                         default:
                             break;
                     }
