@@ -21,15 +21,14 @@ internal partial class BRD : PhysicalRanged
             if (IsEnabled(CustomComboPreset.BRD_DoTMaintainance) &&
                 InCombat())
             {
-                if (Purple is not null && PurpleRemaining < 4)
-                    return CanIronJaws
-                        ? IronJaws
-                        : VenomousBite;
+                if (UseIronJaws())
+                    return IronJaws;
 
-                if (Blue is not null && BlueRemaining < 4)
-                    return CanIronJaws
-                        ? IronJaws
-                        : Windbite;
+                if (ApplyBlueDot())
+                    return OriginalHook(Windbite);
+
+                if (ApplyPurpleDot())
+                    return OriginalHook(VenomousBite);
             }
 
             if (IsEnabled(CustomComboPreset.BRD_ApexST))

@@ -37,6 +37,8 @@ internal partial class BRD
     internal static Status? Blue => GetStatusEffect(Debuffs.Stormbite, CurrentTarget) ?? GetStatusEffect(Debuffs.Windbite, CurrentTarget);
     internal static float PurpleRemaining => Purple?.RemainingTime ?? 0;
     internal static float BlueRemaining => Blue?.RemainingTime ?? 0;
+    internal static bool DebuffCapCanPurple => CanApplyStatus(CurrentTarget, Debuffs.CausticBite) || CanApplyStatus(CurrentTarget, Debuffs.VenomousBite);
+    internal static bool DebuffCapCanBlue => CanApplyStatus(CurrentTarget, Debuffs.Stormbite) || CanApplyStatus(CurrentTarget, Debuffs.Windbite);
 
     //Useful Bools
     internal static bool BardHasTarget => HasBattleTarget();
@@ -125,7 +127,7 @@ internal partial class BRD
         //Blue dot application and low level refresh
         internal static bool ApplyBlueDot()
         {
-            if (ActionReady(Windbite) && (Blue is null || !CanIronJaws && BlueRemaining < 4))
+            if (ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < 4))
                 return true;
             return false;
         }
@@ -133,7 +135,7 @@ internal partial class BRD
         //Purple dot application and low level refresh
         internal static bool ApplyPurpleDot()
         {
-            if (ActionReady(VenomousBite) && (Purple is null || !CanIronJaws && PurpleRemaining < 4))
+            if (ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < 4))
                 return true;
             return false;
         }
