@@ -35,6 +35,7 @@ internal partial class WHM
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
+               CanApplyStatus(CurrentTarget, dotDebuffID) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
                dotRemaining <= Config.WHM_ST_MainCombo_DoT_Threshold;

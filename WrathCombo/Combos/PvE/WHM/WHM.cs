@@ -70,7 +70,7 @@ internal partial class WHM : Healer
                     return Variant.Rampart;
 
                 if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_PresenceOfMind) &&
-                    ActionReady(PresenceOfMind))
+                    ActionReady(PresenceOfMind) && !HasStatusEffect(Buffs.SacredSight))
                     return PresenceOfMind;
 
                 if (IsEnabled(CustomComboPreset.WHM_ST_MainCombo_Assize) &&
@@ -152,7 +152,7 @@ internal partial class WHM : Healer
                     return Assize;
 
                 if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_PresenceOfMind) &&
-                    ActionReady(PresenceOfMind))
+                    ActionReady(PresenceOfMind) && !HasStatusEffect(Buffs.SacredSight))
                     return PresenceOfMind;
 
                 if (IsEnabled(CustomComboPreset.WHM_AoE_DPS_Lucid) &&
