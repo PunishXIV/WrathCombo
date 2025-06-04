@@ -261,5 +261,11 @@ internal partial class DRG
             ChaoticSpring = 2719;
     }
 
+    public static class Traits
+    {
+        public const ushort
+            LifeOfTheDragon = 163;
+    }
+
     #endregion
 }
