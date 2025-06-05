@@ -4926,10 +4926,8 @@ public enum CustomComboPreset
     SGE_ST_Heal_Kardia = 14016,
 
     [ParentCombo(SGE_ST_Heal)]
-    [CustomComboInfo("Eukrasian Diagnosis Option",
-        "Diagnosis becomes Eukrasian Diagnosis if the shield is not applied to the target.", SGE.JobID)]
-    [PossiblyRetargeted]
-    SGE_ST_Heal_EDiagnosis = 14017,
+    [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
+    SGE_ST_Heal_Rhizomata = 14023,
 
     [ParentCombo(SGE_ST_Heal)]
     [CustomComboInfo("Soteria Option", "Applies Soteria.", SGE.JobID)]
@@ -4954,10 +4952,6 @@ public enum CustomComboPreset
     SGE_ST_Heal_Haima = 14022,
 
     [ParentCombo(SGE_ST_Heal)]
-    [CustomComboInfo("Rhizomata Option", "Adds Rhizomata when Addersgall is 0.", SGE.JobID)]
-    SGE_ST_Heal_Rhizomata = 14023,
-
-    [ParentCombo(SGE_ST_Heal)]
     [CustomComboInfo("Krasis Option", "Applies Krasis.", SGE.JobID)]
     [PossiblyRetargeted]
     SGE_ST_Heal_Krasis = 14024,
@@ -4966,6 +4960,12 @@ public enum CustomComboPreset
     [CustomComboInfo("Druochole Option", "Applies Druochole.", SGE.JobID)]
     [PossiblyRetargeted]
     SGE_ST_Heal_Druochole = 14025,
+
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Eukrasian Diagnosis Option",
+        "Diagnosis becomes Eukrasian Diagnosis if the shield is not applied to the target.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_ST_Heal_EDiagnosis = 14017,
 
     #endregion
 

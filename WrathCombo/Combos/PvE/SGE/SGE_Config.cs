@@ -98,51 +98,52 @@ internal partial class SGE
 
                 case CustomComboPreset.SGE_ST_Heal_Soteria:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Soteria, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 0, $"{Soteria.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 0, $"{Soteria.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_Zoe:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Zoe, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 1, $"{Zoe.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 1, $"{Zoe.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_Pepsis:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Pepsis, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 2, $"{Pepsis.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 2, $"{Pepsis.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_Taurochole:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Taurochole, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 3, $"{Taurochole.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 3, $"{Taurochole.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_Haima:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Haima, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 4, $"{Haima.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 4, $"{Haima.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_Krasis:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Krasis, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 5, $"{Krasis.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 5, $"{Krasis.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_Druochole:
                     DrawSliderInt(0, 100, SGE_ST_Heal_Druochole, "Start using when below HP %. Set to 100 to disable this check.");
-                    DrawPriorityInput(SGE_ST_Heals_Priority, 7, 6, $"{Druochole.ActionName()} Priority: ");
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 6, $"{Druochole.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_ST_Heal_EDiagnosis:
                     DrawSliderInt(0, 100, SGE_ST_Heal_EDiagnosisHP, "Start using when below HP %. Set to 100 to disable this check.");
                     DrawHorizontalMultiChoice(SGE_ST_Heal_EDiagnosisOpts, "Ignore Shield Check", $"Warning, will force the use of {EukrasianDiagnosis.ActionName()}, and normal {Diagnosis.ActionName()} will be unavailable.", 2, 0);
                     DrawHorizontalMultiChoice(SGE_ST_Heal_EDiagnosisOpts, "Check for Scholar Galvenize", "Enable to not override an existing Scholar's shield.", 2, 1);
+                    DrawPriorityInput(SGE_ST_Heals_Priority, 8, 7, $"{EukrasianDiagnosis.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Kerachole:
-                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 0, $"{Kerachole.ActionName()} Priority: ");
                     DrawSliderInt(0, 100, SGE_AoE_Heal_KeracholeOption, "Start using when below party average HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SGE_AoE_Heal_KeracholeTrait,
                         "Check for Enhanced Kerachole Trait (Heal over Time)",
                         $"Enabling this will prevent {Kerachole.ActionName()} from being used when the Heal over Time trait == unavailable.");
+                    DrawPriorityInput(SGE_AoE_Heals_Priority, 9, 0, $"{Kerachole.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.SGE_AoE_Heal_Ixochole:

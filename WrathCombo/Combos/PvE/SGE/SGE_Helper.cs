@@ -84,6 +84,15 @@ internal partial class SGE
                 enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Druochole) && HasAddersgall();
 
                 return Config.SGE_ST_Heal_Druochole;
+
+            case 7:
+                action = Eukrasia;
+                enabled = (IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) &&
+                          (Config.SGE_ST_Heal_EDiagnosisOpts[0] || // Ignore Any Shield check
+                           !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Shield Check
+                           (!Config.SGE_ST_Heal_EDiagnosisOpts[1] || !HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))); //Galvanize Check
+
+                return Config.SGE_ST_Heal_EDiagnosisHP;
         }
 
         enabled = false;

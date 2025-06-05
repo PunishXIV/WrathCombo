@@ -72,6 +72,8 @@ internal partial class SGE : Healer
      */
     internal class SGE_AoE_DPS : CustomCombo
     {
+        const float refreshtimer = 3; //Will revisit if it's really needed....SGE_ST_DPS_EDosis_Adv ? Config.SGE_ST_DPS_EDosisThreshold : 3;
+
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SGE_AoE_DPS;
 
         protected override uint Invoke(uint actionID)
@@ -117,8 +119,6 @@ internal partial class SGE : Healer
             {
                 float dotDebuff = Math.Max(GetStatusEffectRemainingTime(currentDosis.DebuffID, CurrentTarget),
                     GetStatusEffectRemainingTime(Debuffs.EukrasianDyskrasia, CurrentTarget));
-
-                const float refreshtimer = 3; //Will revisit if it's really needed....SGE_ST_DPS_EDosis_Adv ? Config.SGE_ST_DPS_EDosisThreshold : 3;
 
                 if (dotDebuff <= refreshtimer && GetTargetHPPercent() > 10) //Will Revisit if Config is needed Config.SGE_ST_DPS_EDosisHPPer)
                     return Eukrasia;
@@ -377,13 +377,6 @@ internal partial class SGE : Healer
                         return spell
                             .RetargetIfEnabled(OptionalTarget, Diagnosis);
             }
-
-            if (IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) && LevelChecked(Eukrasia) &&
-                GetTargetHPPercent(healTarget, Config.SGE_ST_Heal_IncludeShields) <= Config.SGE_ST_Heal_EDiagnosisHP &&
-                (Config.SGE_ST_Heal_EDiagnosisOpts[0] || // Ignore Any Shield check
-                 !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Shield Check
-                 (!Config.SGE_ST_Heal_EDiagnosisOpts[1] || !HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))) //Galvanize Check
-                return Eukrasia;
 
             return actionID
                 .RetargetIfEnabled(OptionalTarget, Diagnosis);
