@@ -7,6 +7,8 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Dalamud.Game.ClientState.Objects.Types;
+using WrathCombo.Data;
+using System.Diagnostics.Metrics;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -152,6 +154,10 @@ internal partial class SMN
     #endregion
 
     #region Variables
+    internal static readonly List<uint>
+        AllRuinsList = [Ruin, Ruin2, Ruin3],
+        NotRuin3List = [Ruin, Ruin2];
+
     internal static SMNGauge Gauge => GetJobGauge<SMNGauge>();
 
     internal static bool IsIfritAttuned => Gauge.AttunementType is SummonAttunement.Ifrit;
@@ -162,8 +168,18 @@ internal partial class SMN
     internal static bool IsDreadwyrmTranceReady => !LevelChecked(SummonBahamut) && IsBahamutReady;
     internal static bool IsBahamutReady => !IsPhoenixReady && !IsSolarBahamutReady;
     internal static bool IsPhoenixReady => Gauge.AetherFlags.HasFlag((AetherFlags)4) && !Gauge.AetherFlags.HasFlag((AetherFlags)8);
-    internal static bool IsSolarBahamutReady => Gauge.AetherFlags.HasFlag((AetherFlags)8) || Gauge.AetherFlags.HasFlag((AetherFlags)12);    
+    internal static bool IsSolarBahamutReady => Gauge.AetherFlags.HasFlag((AetherFlags)8) || Gauge.AetherFlags.HasFlag((AetherFlags)12);
+    internal static bool DemiExists => CurrentDemiSummon is not DemiSummon.None;
+    internal static bool DemiNone => CurrentDemiSummon is DemiSummon.None;
+    internal static bool DemiNotPheonix => CurrentDemiSummon is not DemiSummon.Phoenix;
+    internal static bool DemiPheonix => CurrentDemiSummon is DemiSummon.Phoenix;
+    internal static bool SearingBurstDriftCheck => SearingCD >=3 && SearingCD <=8;
+    internal static bool SummonerWeave => CanSpellWeave() && !ActionWatching.HasDoubleWeaved();
+    internal static float SearingCD => GetCooldownRemainingTime(SearingLight);
+   
+    #endregion
 
+    #region Carbuncle Summoner
     private static DateTime SummonTime
     {
         get
@@ -174,8 +190,10 @@ internal partial class SMN
             return field;
         }
     }
+    public static bool NeedToSummon => DateTime.Now > SummonTime && !HasPetPresent() && ActionReady(SummonCarbuncle);
+    #endregion
 
-    public static bool NeedToSummon => DateTime.Now > SummonTime && !HasPetPresent();
+    #region Demi Summon Detector
 
     internal static DemiSummon CurrentDemiSummon
     {
@@ -268,7 +286,7 @@ internal partial class SMN
         return 0;
     }
 
-    #endregion
+    #endregion   
 
     #region Opener
 

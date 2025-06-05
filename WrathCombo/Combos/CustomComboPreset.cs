@@ -5750,9 +5750,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Rekindle Combo Option", "Adds Rekindle to the single target combo.", SMN.JobID)]
     SMN_ST_Advanced_Combo_DemiSummons_Rekindle = 17028,
 
-    [ParentCombo(SMN_ST_Advanced_Combo_DemiSummons_Attacks)]
-    [CustomComboInfo("Lux Solaris Combo Option", "Adds Lux Solaris to the single target combo.", SMN.JobID)]
-    SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris = 17029,
+    [ParentCombo(SMN_ST_Advanced_Combo_DemiSummons_Rekindle)]
+    [CustomComboInfo("Retarget Rekindle Combo Option", "Will Retarget Rekindle to a tank that needs it, then a party member that need healing, before Self.", SMN.JobID)]
+    [Retargeted]
+    SMN_ST_Advanced_Combo_DemiSummons_Rekindle_Retarget = 17080,    
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Summon Titan", "Adds Titan to the Single Target Rotation", SMN.JobID)]
@@ -5786,33 +5787,27 @@ public enum CustomComboPreset
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Energy Attacks Combo Option",
-        "Adds Energy Drain and Fester to the single target combo.\nWill be used on cooldown.", SMN.JobID)]
+        "Adds Energy Drain and Fester to the single target combo.", SMN.JobID)]
     SMN_ST_Advanced_Combo_EDFester = 17014,
 
     [ParentCombo(SMN_ST_Advanced_Combo_EDFester)]
     [CustomComboInfo("Pooled oGCDs Option",
-        "Pools damage oGCDs for use inside the selected Demi phase while under the Searing Light buff.\nBahamut Burst becomes Solar Bahamut Burst at Lv100.",
+        "Pools damage oGCDs for use while under the Searing Light buff.",
         SMN.JobID)]
-    SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling = 17025,
-
-    [ParentCombo(SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling)]
-    [CustomComboInfo("Any Searing Burst Option",
-        "Checks for any Searing Light for bursting rather than just your own.\nUse this option if partied with multiple SMN and are worried about your Searing Light being wasted.",
-        SMN.JobID)]
-    SMN_ST_Advanced_Combo_Burst_Any_Option = 17044,
+    SMN_ST_Advanced_Combo_oGCDPooling = 17025,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Searing Light Combo Option",
-       "Adds Searing Light to the single target combo.\nWill be used on cooldown.", SMN.JobID)]
+       "Adds Searing Light to the single target combo.", SMN.JobID)]
     SMN_ST_Advanced_Combo_SearingLight = 17017,
 
     [ParentCombo(SMN_ST_Advanced_Combo_SearingLight)]
     [CustomComboInfo("Searing Light Burst Option",
-        "Casts Searing Light only during Demi phases.\nReflects Demi choice selected under 'Pooled oGCDs Option'.\nNot recommended for SpS Builds.",
+        "Casts Searing Light only during Demi phases.\nSpellspeed builds would turn this off.",
         SMN.JobID)]
     SMN_ST_Advanced_Combo_SearingLight_Burst = 17018,
 
-    [ParentCombo(SMN_ST_Advanced_Combo_SearingLight)]
+    [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Searing Flash Combo Option", "Adds Searing Flash to the single target combo.", SMN.JobID)]
     SMN_ST_Advanced_Combo_SearingFlash = 17019,
 
@@ -5821,6 +5816,10 @@ public enum CustomComboPreset
         "Adds Ruin IV to the single target combo.\nUses when moving during Garuda Phase and you have no attunement, when moving during Ifrit phase, or when you have no active Egi or Demi summon.",
         SMN.JobID)]
     SMN_ST_Advanced_Combo_Ruin4 = 17011,
+
+    [ParentCombo(SMN_ST_Advanced_Combo)]
+    [CustomComboInfo("Lux Solaris Combo Option", "Adds Lux Solaris to the single target combo.", SMN.JobID)]
+    SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris = 17029,
 
     [ParentCombo(SMN_ST_Advanced_Combo)]
     [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
@@ -5855,9 +5854,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Rekindle Combo Option", "Adds Rekindle to the AoE combo.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_DemiSummons_Rekindle = 17056,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo_DemiSummons_Attacks)]
-    [CustomComboInfo("Lux Solaris Combo Option", "Adds Lux Solaris to the AoE combo.", SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiSummons_LuxSolaris = 17059,
+    [ParentCombo(SMN_AoE_Advanced_Combo_DemiSummons_Rekindle)]
+    [CustomComboInfo("Retarget Rekindle Combo Option", "Will Retarget Rekindle to a tank that needs it, then a party member that need healing, before Self.", SMN.JobID)]
+    [Retargeted]
+    SMN_AoE_Advanced_Combo_DemiSummons_Rekindle_Retarget = 17081,    
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Summon Titan", "Adds Titan to the AoE Rotation", SMN.JobID)]
@@ -5885,33 +5885,27 @@ public enum CustomComboPreset
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Energy Attacks Combo Option",
-        "Adds Energy Siphon and Painflare to the AoE combo.\nWill be used on cooldown.", SMN.JobID)]
+        "Adds Energy Siphon and Painflare to the AoE combo.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_ESPainflare = 17051,
 
     [ParentCombo(SMN_AoE_Advanced_Combo_ESPainflare)]
     [CustomComboInfo("Pooled oGCDs Option",
-        "Pools damage oGCDs for use inside the selected Demi phase while under the Searing Light buff.\nBahamut Burst becomes Solar Bahamut Burst at Lv100.",
+        "Pools damage oGCDs for use inside the Searing Light buff",
         SMN.JobID)]
-    SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling = 17050,
-
-    [ParentCombo(SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling)]
-    [CustomComboInfo("Any Searing Burst Option",
-"Checks for any Searing Light for bursting rather than just your own.\nUse this option if partied with multiple SMN and are worried about your Searing Light being wasted.",
-SMN.JobID)]
-    SMN_AoE_Advanced_Combo_Burst_Any_Option = 17069,
+    SMN_AoE_Advanced_Combo_oGCDPooling = 17050,    
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
-    [CustomComboInfo("Searing Light Combo Option", "Adds Searing Light to the AoE combo.\nWill be used on cooldown.",
+    [CustomComboInfo("Searing Light Combo Option", "Adds Searing Light to the AoE combo.",
         SMN.JobID)]
     SMN_AoE_Advanced_Combo_SearingLight = 17053,
 
     [ParentCombo(SMN_AoE_Advanced_Combo_SearingLight)]
     [CustomComboInfo("Searing Light Burst Option",
-        "Casts Searing Light only during Demi phases.\nReflects Demi choice selected under 'Pooled oGCDs Option'.\nNot recommended for SpS Builds.",
+        "Casts Searing Light only during Demi phases.\nSpellspeed Builds would turn this off.",
         SMN.JobID)]
     SMN_AoE_Advanced_Combo_SearingLight_Burst = 17054,
 
-    [ParentCombo(SMN_AoE_Advanced_Combo_SearingLight)]
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Searing Flash Combo Option", "Adds Searing Flash to the AoE combo.", SMN.JobID)]
     SMN_AoE_Advanced_Combo_SearingFlash = 17058,
 
@@ -5922,28 +5916,17 @@ SMN.JobID)]
     SMN_AoE_Advanced_Combo_Ruin4 = 17062,
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
+    [CustomComboInfo("Lux Solaris Combo Option", "Adds Lux Solaris to the AoE combo.", SMN.JobID)]
+    SMN_AoE_Advanced_Combo_DemiSummons_LuxSolaris = 17059,
+
+    [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Radiant Aegis Option", "Will use Radiant Aegis, 30 second self shield, when at 2 charges to prevent waste ", SMN.JobID)]
     SMN_AoE_Advanced_Combo_Radiant = 17070,
 
     [ParentCombo(SMN_AoE_Advanced_Combo)]
     [CustomComboInfo("Lucid Dreaming Option", "Adds Lucid Dreaming to the AoE combo when MP falls below the set value.",
         SMN.JobID)]
-    SMN_AoE_Advanced_Combo_Lucid = 17060,
-
-    
-
-
-   
-
-   
-
-     
-
-    
-
-    
-
-    
+    SMN_AoE_Advanced_Combo_Lucid = 17060,    
     #endregion
 
     #region Standalone Features
