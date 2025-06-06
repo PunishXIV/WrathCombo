@@ -43,16 +43,27 @@ namespace WrathCombo.Window.Tabs;
 internal class Debug : ConfigWindow, IDisposable
 {
     public static bool DebugConfig;
+    private static int _sheetCustomId = 0;
     private static string _debugError = string.Empty;
     private static string _debugConfig = string.Empty;
     private static PluginConfiguration? _previousConfig;
 
     private static Guid? _wrathLease;
     private static Action? _debugSpell;
+    private static SheetType? _sheetType;
+
+    public enum SheetType
+    {
+        PvE,
+        PvP,
+        Bozja,
+        Occult,
+        Custom
+    }
 
     // Constants
-    private const int StatusIdWidth = 8;
-    private const int StatusDurationWidth = 11;
+    private const int WidthStatusId = 8;
+    private const int WidthStatusDuration = 11;
     private const float SpacingSmall = 10f;
     private const float SpacingMedium = 20f;
     private const string UnknownName = "???";
@@ -190,8 +201,8 @@ internal class Debug : ConfigWindow, IDisposable
 
                 // Build Second Column
                 var secondColumn = new StringBuilder();
-                secondColumn.Append(statusId.PadRight(StatusIdWidth));
-                secondColumn.Append(formattedDuration.PadRight(StatusDurationWidth));
+                secondColumn.Append(statusId.PadRight(WidthStatusId));
+                secondColumn.Append(formattedDuration.PadRight(WidthStatusDuration));
                 secondColumn.Append(formattedParam);
 
                 // Print
@@ -234,8 +245,8 @@ internal class Debug : ConfigWindow, IDisposable
 
                     // Build Second Column
                     var secondColumn = new StringBuilder();
-                    secondColumn.Append(statusId.PadRight(StatusIdWidth));
-                    secondColumn.Append(formattedDuration.PadRight(StatusDurationWidth));
+                    secondColumn.Append(statusId.PadRight(WidthStatusId));
+                    secondColumn.Append(formattedDuration.PadRight(WidthStatusDuration));
                     secondColumn.Append(formattedParam);
 
                     // Print
@@ -482,9 +493,39 @@ internal class Debug : ConfigWindow, IDisposable
         ImGui.Text("Action");
         ImGui.Separator();
 
-        var actions = Svc.Data.GetExcelSheet<Action>()
-            .Where(x => (x.ClassJobLevel > 0 || (x.IsPvP && x.ActionCategory.RowId is 2 or 3 or 4 or 9 or 15)) &&
-                        x.ClassJobCategory.RowId != 1 && x.ClassJobCategory.Value.IsJobInCategory(Player.Job)).OrderBy(x => x.ClassJobLevel);
+        // ActionSheet Reference
+        var actionSheet = Svc.Data.GetExcelSheet<Action>();
+
+        // PvE Actions
+        var actionsPvE = actionSheet
+            .Where(x =>
+                x.ClassJobLevel > 0 &&
+                x.ClassJobCategory.RowId != 1 &&
+                x.ClassJobCategory.Value.IsJobInCategory(Player.Job))
+            .OrderBy(x => x.ClassJobLevel);
+
+        // PvP Actions
+        var actionsPvP = actionSheet
+            .Where(x =>
+                x.IsPvP &&
+                x.Icon != 405 &&
+                x.ClassJobCategory.RowId != 1 &&
+                x.ClassJobCategory.Value.IsJobInCategory(Player.Job))
+            .OrderBy(x => x.RowId);
+
+        // Bozja Actions
+        var actionsBozja = actionSheet
+            .Where(x =>
+                x.ActionCategory.RowId != 5 &&
+                x.RowId is (>= 20701 and <= 20733) or (>= 22344 and <= 22356) or (>= 23908 and <= 23921))
+            .OrderBy(x => x.RowId);
+
+        // Occult Actions
+        var actionsOccult = actionSheet
+            .Where(x =>
+                x.RowId is >= 41588 and <= 41651 &&
+                x.RowId is not (41593 or 41632))
+            .OrderBy(x => x.RowId);
 
         if (ImGui.CollapsingHeader("Action Data"))
         {
@@ -563,11 +604,10 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("ActionReady"))
         {
-            if (ImGui.TreeNode("PvP"))
+            if (ImGui.TreeNode("PvE"))
             {
-                foreach (var act in actions)
+                foreach (var act in actionsPvE)
                 {
-                    if (!act.IsPvP) continue;
                     var status = ActionManager.Instance()->GetActionStatus(ActionType.Action, act.RowId, checkRecastActive: false, checkCastingActive: false);
                     CustomStyleText(act.Name.ExtractText(), $"{ActionReady(act.RowId)}, {status} ({Svc.Data.GetExcelSheet<LogMessage>().GetRow(status).Text})");
                 }
@@ -576,11 +616,34 @@ internal class Debug : ConfigWindow, IDisposable
                 ImGui.TreePop();
             }
 
-            if (ImGui.TreeNode("Normal"))
+            if (ImGui.TreeNode("PvP"))
             {
-                foreach (var act in actions)
+                foreach (var act in actionsPvP)
                 {
-                    if (act.IsPvP) continue;
+                    var status = ActionManager.Instance()->GetActionStatus(ActionType.Action, act.RowId, checkRecastActive: false, checkCastingActive: false);
+                    CustomStyleText(act.Name.ExtractText(), $"{ActionReady(act.RowId)}, {status} ({Svc.Data.GetExcelSheet<LogMessage>().GetRow(status).Text})");
+                }
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
+
+            if (ImGui.TreeNode("Bozja"))
+            {
+                foreach (var act in actionsBozja)
+                {
+                    var status = ActionManager.Instance()->GetActionStatus(ActionType.Action, act.RowId, checkRecastActive: false, checkCastingActive: false);
+                    CustomStyleText(act.Name.ExtractText(), $"{ActionReady(act.RowId)}, {status} ({Svc.Data.GetExcelSheet<LogMessage>().GetRow(status).Text})");
+                }
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
+
+            if (ImGui.TreeNode("Occult"))
+            {
+                foreach (var act in actionsOccult)
+                {
                     var status = ActionManager.Instance()->GetActionStatus(ActionType.Action, act.RowId, checkRecastActive: false, checkCastingActive: false);
                     CustomStyleText(act.Name.ExtractText(), $"{ActionReady(act.RowId)}, {status} ({Svc.Data.GetExcelSheet<LogMessage>().GetRow(status).Text})");
                 }
@@ -593,30 +656,88 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("ActionSheet"))
         {
-            string prev = _debugSpell == null
+            var prevAction = _debugSpell == null
                 ? "Select Action"
-                : $"({_debugSpell.Value.RowId}) Lv.{_debugSpell.Value.ClassJobLevel} {_debugSpell.Value.Name} - {(_debugSpell.Value.IsPvP ? "PvP" : "Normal")}";
+                : $"Lv.{_debugSpell.Value.ClassJobLevel} {_debugSpell.Value.Name} ({_debugSpell.Value.RowId})";
 
-            ImGuiEx.SetNextItemFullWidth();
-            using (var comboBox = ImRaii.Combo("###ActionCombo", prev))
+            var prevSheet = _sheetType == null
+                ? "Select Type"
+                : _sheetType.Value.ToString();
+
+            // Type Dropdown Menu
+            ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X * 0.3f);
+            using (var comboBoxSheet = ImRaii.Combo("###SheetCombo", prevSheet))
             {
-                if (comboBox)
+                if (comboBoxSheet)
+                {
+                    if (ImGui.Selectable("", _sheetType == null))
+                    {
+                        _sheetType = null;
+                        _debugSpell = null;
+                        _sheetCustomId = 0;
+                    }
+
+                    foreach (SheetType sheetType in Enum.GetValues(typeof(SheetType)))
+                    {
+                        if (ImGui.Selectable($"{sheetType}"))
+                        {
+                            _sheetType = sheetType;
+                            _debugSpell = null;
+                            _sheetCustomId = 0;
+                        }
+                    }
+                }
+            }
+
+            ImGui.SameLine();
+
+            // Custom Action Input
+            if (_sheetType == SheetType.Custom)
+            {
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                if (ImGui.InputInt("###CustomActionInput", ref _sheetCustomId))
+                {
+                    if (actionSheet.TryGetRow(rowId: (uint)_sheetCustomId, out var act))
+                    {
+                        _debugSpell = act;
+                    }
+                }
+            }
+            else
+            {
+                var currentActions = _sheetType switch
+                {
+                    SheetType.PvE => actionsPvE,
+                    SheetType.PvP => actionsPvP,
+                    SheetType.Bozja => actionsBozja,
+                    SheetType.Occult => actionsOccult,
+                    _ => null,
+                };
+
+                // Action Dropdown Menu
+                ImGui.SetNextItemWidth(ImGui.GetContentRegionAvail().X);
+                using var comboBoxAction = ImRaii.Combo("###ActionCombo", prevAction);
+                if (comboBoxAction)
                 {
                     if (ImGui.Selectable("", _debugSpell == null))
                     {
                         _debugSpell = null;
                     }
 
-                    foreach (var act in actions)
+                    if (currentActions != null)
                     {
-                        if (ImGui.Selectable($"({act.RowId}) Lv.{act.ClassJobLevel} {act.Name} - {(act.IsPvP ? "PvP" : "Normal")}", _debugSpell?.RowId == act.RowId))
+                        foreach (var act in currentActions)
                         {
-                            _debugSpell = act;
+                            if (ImGui.Selectable($"Lv.{act.ClassJobLevel} {act.Name} ({act.RowId})", _debugSpell?.RowId == act.RowId))
+                            {
+                                _debugSpell = act;
+                            }
                         }
                     }
                 }
             }
 
+            // Display Action Info
             if (_debugSpell != null)
             {
                 var actionStatus = ActionManager.Instance()->GetActionStatus(ActionType.Action, _debugSpell.Value.RowId);
