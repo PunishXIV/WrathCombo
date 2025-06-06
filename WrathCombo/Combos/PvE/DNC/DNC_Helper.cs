@@ -365,21 +365,28 @@ internal partial class DNC
             if (filter.Count == 0)
                 return false;
 
-            filter = filter
+            var orderedFilter = filter
                 .OrderBy(x =>
                     PartnerPriority.RolePrio.GetValueOrDefault(
-                        x.ClassJob.RowId.Role(), int.MaxValue))
-                .ThenBy(x =>
-                    Player.Level >= 90
-                        ? PartnerPriority.Job090Prio.GetValueOrDefault(
-                            x.ClassJob.RowId, int.MaxValue)
-                        : int.MaxValue)
-                .ThenBy(x =>
-                    Player.Level >= 100
-                        ? PartnerPriority.Job100Prio.GetValueOrDefault(
-                            x.ClassJob.RowId, int.MaxValue)
-                        : int.MaxValue)
-                .ToList();
+                        x.ClassJob.RowId.Role(), int.MaxValue));
+
+            switch (Player.Level)
+            {
+                case < 100 and >= 90:
+                    orderedFilter = orderedFilter
+                        .ThenBy(x =>
+                            PartnerPriority.Job090Prio.GetValueOrDefault(
+                                x.ClassJob.RowId, int.MaxValue));
+                    break;
+                case >= 100:
+                    orderedFilter = orderedFilter
+                        .ThenBy(x =>
+                            PartnerPriority.Job100Prio.GetValueOrDefault(
+                                x.ClassJob.RowId, int.MaxValue));
+                    break;
+            }
+
+            filter = orderedFilter.ToList();
 
             newBestPartner = filter.First();
             return true;
