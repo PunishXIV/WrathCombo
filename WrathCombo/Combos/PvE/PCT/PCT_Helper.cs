@@ -19,17 +19,18 @@ internal partial class PCT
 
 
     //Useful Bools
-    internal static bool ScenicMuseReady => gauge.LandscapeMotifDrawn && LevelChecked(ScenicMuse);
-    internal static bool LivingMuseReady => LevelChecked(LivingMuse) && gauge.CreatureMotifDrawn;
-    internal static bool SteelMuseReady => LevelChecked(SteelMuse) && !HasStatusEffect(Buffs.HammerTime) && gauge.WeaponMotifDrawn;
-    internal static bool PortraitReady => MogoftheAges.LevelChecked() && (gauge.MooglePortraitReady || gauge.MadeenPortraitReady);
+    internal static bool ScenicMuseReady => gauge.LandscapeMotifDrawn && ActionReady(ScenicMuse);
+    internal static bool LivingMuseReady => ActionReady(LivingMuse) && gauge.CreatureMotifDrawn;
+    internal static bool SteelMuseReady => ActionReady(SteelMuse) && !HasStatusEffect(Buffs.HammerTime) && gauge.WeaponMotifDrawn;
+    internal static bool PortraitReady => ActionReady(MogoftheAges) && (gauge.MooglePortraitReady || gauge.MadeenPortraitReady);
     internal static bool CreatureMotifReady => !gauge.CreatureMotifDrawn && LevelChecked(CreatureMotif) && !HasStatusEffect(Buffs.StarryMuse);
     internal static bool WeaponMotifReady => !gauge.WeaponMotifDrawn && LevelChecked(WeaponMotif) && !HasStatusEffect(Buffs.StarryMuse) && !HasStatusEffect(Buffs.HammerTime);
     internal static bool LandscapeMotifReady => !gauge.LandscapeMotifDrawn && LevelChecked(LandscapeMotif) && !HasStatusEffect(Buffs.StarryMuse);
     internal static bool PaletteReady => SubtractivePalette.LevelChecked() && !HasStatusEffect(Buffs.SubtractivePalette) && !HasStatusEffect(Buffs.MonochromeTones) && 
                                             (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50 && ScenicCD > 40 || gauge.PalleteGauge == 100);
     internal static bool HasPaint => gauge.Paint > 0;
-  
+    internal static bool BurstPhaseReady => LevelChecked(StarPrism) && InCombat() && (ScenicCD <= 5 || HasStatusEffect(Buffs.StarryMuse) && gauge.PalleteGauge >= 50);
+
 
 
     //Buff Tracking
@@ -61,15 +62,15 @@ internal partial class PCT
 
     internal static uint BurstWindow(uint actionId)
     {
-        if (LandscapeMotifReady)
+        if (LandscapeMotifReady) //Emergency Landscape Paint if someone started a fight with no motifs.
             return OriginalHook(LandscapeMotif);        
 
         if (!HasStatusEffect(Buffs.StarryMuse))
         {
-            if (SteelMuseReady)
+            if (SteelMuseReady && HasCharges(SteelMuse))
                 return OriginalHook(SteelMuse);
 
-            if (ActionReady(HammerStamp) && !HasStatusEffect(Buffs.StarryMuse) && ScenicCD < 1 && !JustUsed(HammerStamp, 3f))
+            if (ActionReady(HammerStamp) && !HasStatusEffect(Buffs.StarryMuse) && ScenicCD < 1 && !JustUsed(HammerStamp, 3f) && GetStatusEffectStacks(Buffs.HammerTime) == 3)
                 return HammerStamp;
 
             if (CanWeave() && ActionReady(SubtractivePalette) && !HasStatusEffect(Buffs.SubtractivePalette) && 
@@ -77,9 +78,12 @@ internal partial class PCT
                 (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50))
                 return SubtractivePalette;
 
-            if (ScenicMuseReady && CanDelayedWeave() && IsOffCooldown(ScenicMuse))
+            if (ScenicMuseReady && (CanDelayedWeave() || !CanWeave()) && IsOffCooldown(ScenicMuse)) // The !canweave option is specifically so that it can minimize drift IF it does not catch the delayed weave in time.
                 return OriginalHook(ScenicMuse);            
         }
+
+        if (HyperPhantasiaMovementPaint() && IsMoving())
+            return HasStatusEffect(Buffs.MonochromeTones) ? OriginalHook(CometinBlack) : OriginalHook(HolyInWhite);
 
         if (HasStatusEffect(Buffs.SubtractivePalette) && (GetStatusEffectRemainingTime(Buffs.StarryMuse) > 10 || !HasStatusEffect(Buffs.StarryMuse)))
             return OriginalHook(BlizzardinCyan);
@@ -235,22 +239,22 @@ internal partial class PCT
             PomMuse,
             StrikingMuse,
             WingMotif,
-            StarryMuse,
+            StarryMuse, //5
             HammerStamp,
             SubtractivePalette,
             BlizzardinCyan,
             StoneinYellow,
-            ThunderinMagenta,
+            ThunderinMagenta,//10
             CometinBlack,
             WingedMuse,
             MogoftheAges,
             StarPrism,
-            HammerBrush,
+            HammerBrush,//15
             PolishingHammer,
             RainbowDrip,
             Role.Swiftcast,
             ClawMotif,
-            ClawedMuse,
+            ClawedMuse,//20
         ];
         internal override UserData? ContentCheckConfig => Config.PCT_Balance_Content;
 
@@ -261,6 +265,7 @@ internal partial class PCT
             ([8, 9, 10], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
             ([11], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
         ];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([17], () => !HasStatusEffect(Buffs.RainbowBright))];
 
         public override bool HasCooldowns()
         {
@@ -298,26 +303,28 @@ internal partial class PCT
             StrikingMuse,
             HolyInWhite,
             PomMuse,
-            WingMotif,
+            WingMotif, //5 
             StarryMuse,
             HammerStamp,
             SubtractivePalette,
             BlizzardinCyan,
-            BlizzardinCyan,
+            BlizzardinCyan, //10
             BlizzardinCyan,
             CometinBlack,
             WingedMuse,
             MogoftheAges,
-            StarPrism,
+            StarPrism, //15
             HammerBrush,
             PolishingHammer,
             RainbowDrip,
             FireInRed,
-            Role.Swiftcast,
+            Role.Swiftcast, //20
             ClawMotif,
             ClawedMuse
         ];
         internal override UserData? ContentCheckConfig => Config.PCT_Balance_Content;
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([18], () => !HasStatusEffect(Buffs.RainbowBright))];
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
