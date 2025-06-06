@@ -364,6 +364,12 @@ internal partial class DNC
             // If it's the last step and there are no matches found, bail
             if (filter.Count == 0)
                 return false;
+            // If there's only one match, return it
+            if (filter.Count == 1)
+            {
+                newBestPartner = filter.First();
+                return true;
+            }
 
             var orderedFilter = filter
                 .OrderBy(x =>
