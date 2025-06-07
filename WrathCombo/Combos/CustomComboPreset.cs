@@ -489,10 +489,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
     BLM_ST_UsePolyglot = 2104,
 
-    [ParentCombo(BLM_ST_UsePolyglot)]
-    [CustomComboInfo("Spend ASAP", "Use Foul/Xenoglossy whenever available.\nWill NOT save a proc for Movement!", BLM.JobID)]
-    BLM_ST_UsePolyglotAsap = 2117,
-
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Movement Option", "Add chosen options for movement.", BLM.JobID)]
     BLM_ST_Movement = 2113,

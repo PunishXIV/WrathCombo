@@ -53,6 +53,50 @@ internal partial class BLM
 
     internal static bool HasPolyglotStacks() => PolyglotStacks > 0;
 
+    #region Movement Prio
+
+    private static (uint Action, CustomComboPreset Preset, System.Func<bool> Logic)[]
+        PrioritizedMovement =>
+    [
+        //Triplecast
+        (Triplecast, CustomComboPreset.BLM_ST_Movement,
+            () => Config.BLM_ST_MovementOption[0] &&
+                  ActionReady(Triplecast) &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast) &&
+                  !HasStatusEffect(Buffs.LeyLines)),
+        // Paradox
+        (OriginalHook(Paradox), CustomComboPreset.BLM_ST_Movement,
+            () => Config.BLM_ST_MovementOption[1] &&
+                  ActionReady(Paradox) &&
+                  FirePhase && ActiveParadox &&
+                  !HasStatusEffect(Buffs.Firestarter) &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+        //Swiftcast
+        (Role.Swiftcast, CustomComboPreset.BLM_ST_Movement,
+            () => Config.BLM_ST_MovementOption[2] &&
+                  ActionReady(Role.Swiftcast) &&
+                  !HasStatusEffect(Buffs.Triplecast)),
+        //Xeno
+        (Xenoglossy, CustomComboPreset.BLM_ST_Movement,
+            () => Config.BLM_ST_MovementOption[3] &&
+                  HasPolyglotStacks() &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast))
+    ];
+
+    private static bool CheckMovementConfigMeetsRequirements
+        (int index, out uint action)
+    {
+        action = PrioritizedMovement[index].Action;
+        return ActionReady(action) && LevelChecked(action) &&
+               PrioritizedMovement[index].Logic() &&
+               IsEnabled(PrioritizedMovement[index].Preset);
+    }
+
+    #endregion
+
     #region Openers
 
     internal static WrathOpener Opener()
