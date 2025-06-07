@@ -335,11 +335,19 @@ internal partial class WHM : Healer
                 ActionReady(DivineCaress))
                 return OriginalHook(DivineCaress);
 
+            var asylumTarget =
+                (IsEnabled(CustomComboPreset.WHM_AoEHeals_Asylum_Enemy)
+                    ? SimpleTarget.HardTarget
+                    : null) ??
+                (IsEnabled(CustomComboPreset.WHM_AoEHeals_Asylum_Allies)
+                    ? SimpleTarget.Stack.OverridesAllies
+                    : null) ??
+                SimpleTarget.Self;
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Asylum) &&
                 ActionReady(Asylum) &&
                 !IsMoving() &&
                 (!Config.WHM_AoEHeals_AsylumRaidwideOnly || RaidWideCasting()))
-                return Asylum.Retarget(Medica1, SimpleTarget.Stack.Allies);
+                return Asylum.Retarget(Medica1, asylumTarget);
 
             if (IsEnabled(CustomComboPreset.WHM_AoEHeals_Lucid) &&
                 CanSpellWeave() &&

@@ -24,10 +24,10 @@ namespace WrathCombo.CustomComboNS.Functions
 
         /// <summary> Gets the party list </summary>
         /// <returns> Current party list. </returns>
-        public static unsafe List<WrathPartyMember> GetPartyMembers()
+        public static unsafe List<WrathPartyMember> GetPartyMembers(bool allowCache = true)
         {
             if (!Player.Available) return [];
-            if (!EzThrottler.Throttle("PartyUpdateThrottle", 2000))
+            if (allowCache && !EzThrottler.Throttle("PartyUpdateThrottle", 2000))
                 return _partyList;
 
             var existingIds = _partyList.Select(x => x.GameObjectId).ToHashSet();

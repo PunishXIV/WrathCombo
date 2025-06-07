@@ -196,7 +196,8 @@ internal partial class DNC
     {
         get
         {
-            if (!EZ.Throttle("dncPartnerDesiredCheck", TS.FromSeconds(2)))
+            if (!EZ.Throttle("dncPartnerDesiredCheck", TS.FromSeconds(2)) &&
+                field is not null)
                 return field;
 
             field = TryGetDancePartner(out var partner)
@@ -206,48 +207,27 @@ internal partial class DNC
         }
     }
 
-    internal static ulong? FeatureDesiredDancePartner
-    {
-        get
-        {
-            if (!EZ.Throttle("dncFeatPartnerDesiredCheck", TS.FromSeconds(7)))
-                return field;
-
-            field = TryGetDancePartner(out var partner, true)
-                ? partner.GameObjectId
-                : null;
-            return field;
-        }
-    }
-
     private static bool CurrentPartnerNonOptimal =>
-        FeatureDesiredDancePartner is not null &&
+        DesiredDancePartner is not null &&
         (!HasStatusEffect(Buffs.ClosedPosition) &&
          (IsInParty() ||
           HasCompanionPresent())) ||
         (CurrentDancePartner is not null &&
-         FeatureDesiredDancePartner != CurrentDancePartner);
-
-    #region Resolver Delegates
+         DesiredDancePartner != CurrentDancePartner);
 
     [ActionRetargeting.TargetResolver]
     internal static IGameObject? DancePartnerResolver () =>
         Svc.Objects.FirstOrDefault(x =>
-            x.GameObjectId == DesiredDancePartner);
+            x.GameObjectId == DesiredDancePartner) ??
+        (!HasStatusEffect(Buffs.ClosedPosition)
+            ? SimpleTarget.AnySelfishDPS ?? SimpleTarget.AnyMeleeDPS ?? SimpleTarget.AnyDPS
+            : null);
 
-    [ActionRetargeting.TargetResolver]
-    internal static IGameObject? FeatureDancePartnerResolver() =>
-        Svc.Objects.FirstOrDefault(x =>
-            x.GameObjectId == FeatureDesiredDancePartner);
-
-    #endregion
-
-    private static bool TryGetDancePartner
-        (out IGameObject? partner, bool? callingFromFeature = null)
+    private static bool TryGetDancePartner (out IGameObject? partner)
     {
         partner = null;
 
-        if (!Player.Available || Player.IsBusy)
+        if (!Player.Available)
             return false;
 
         #region Skip a new check, if the current partner is just out of range
@@ -265,8 +245,7 @@ internal partial class DNC
 
         // Check if we have a target overriding any searching
         var focusTarget = SimpleTarget.FocusTarget;
-        if (callingFromFeature is true &&
-            Config.DNC_Partner_FocusOverride &&
+        if (Config.DNC_Partner_FocusOverride &&
             focusTarget is IBattleChara &&
             !focusTarget.IsDead &&
             focusTarget.IsInParty() &&

@@ -7019,9 +7019,19 @@ SMN.JobID)]
     WHM_AoEHeals_DivineCaress = 19207,
 
     [ParentCombo(WHM_AoEHeals)]
-    [CustomComboInfo("Asylum Option", "Adds Asylum placement, when standing still, to the rotation.\nWill Retarget it onto a friendly focus target, soft target, hard target, and fallback to placing it at your feet.", WHM.JobID)]
+    [CustomComboInfo("Asylum Option", "Adds Asylum placement, when standing still, to the rotation.\nWill Retarget it onto yourself.", WHM.JobID)]
     [Retargeted]
     WHM_AoEHeals_Asylum = 19028,
+
+    [ParentCombo(WHM_AoEHeals_Asylum)]
+    [CustomComboInfo("Enemy Placement Option", "Will add an enemy hard target as the top priority Retarget for Asylum.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_Asylum_Enemy = 19030,
+
+    [ParentCombo(WHM_AoEHeals_Asylum)]
+    [CustomComboInfo("Ally Placement Option", "Will add any ally UI MouseOver target, focus target, soft target, or hard target as the priority Retarget for Asylum.\nBeneath the Enemy placement option, but above yourself.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_Asylum_Allies = 19031,
 
     #endregion
 

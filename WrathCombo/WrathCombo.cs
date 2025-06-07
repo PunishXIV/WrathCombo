@@ -296,6 +296,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         Service.Configuration.SetActionChanging();
 
+        if (Player.Available && Player.IsDead)
+            ActionRetargeting.Retargets.Clear();
+
         // Skip the IPC checking if hidden
         if (DtrBarEntry.UserHidden) return;
 
