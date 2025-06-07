@@ -45,6 +45,24 @@ public static class GameObjectExtensions
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+    ///     <see langword="null" /> if the target is not in the player's party
+    ///     currently.<br/>
+    ///     Faster and more up-to-date than <see cref="IfInParty"/>, but less
+    ///     sanity-checked.
+    /// </summary>
+    public static IGameObject? IfStillInParty(this IGameObject? obj)
+    {
+        if (obj == null) return null;
+
+        var party = new ulong?[9];
+        for (var i = 1; i <= 8; i++)
+            party[i] = SimpleTarget.GetPartyMemberInSlotSlot(i)?.GameObjectId;
+
+        return party.Contains(obj.GameObjectId) ? obj : null;
+    }
+
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it return
     ///     <see langword="null" /> if the target is not hostile.
     /// </summary>
     public static IGameObject? IfHostile (this IGameObject? obj) =>
@@ -142,6 +160,16 @@ public static class GameObjectExtensions
     public static IGameObject? IfAPlayer (this IGameObject? obj) =>
         obj != null && obj is IPlayerCharacter ? obj : null;
 
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+    ///     <see langword="null" /> if the target is not still loaded in the player's
+    ///     game.
+    /// </summary>
+    public static IGameObject? IfStillAround (this IGameObject? obj) =>
+        obj != null &&
+        Svc.Objects
+            .Any(x => x.GameObjectId != obj.GameObjectId) ? obj : null;
+
     #endregion
 
     #region Target Checking (same as above, but returns a boolean)
@@ -161,6 +189,23 @@ public static class GameObjectExtensions
         obj != null &&
         CustomComboFunctions.GetPartyMembers()
             .Any(x => x.GameObjectId == obj.GameObjectId);
+
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+    ///     boolean check for if the target is in the player's party.<br />
+    ///     Faster and more up-to-date than <see cref="IfInParty"/>, but less
+    ///     sanity-checked.
+    /// </summary>
+    public static bool IsStillInParty(this IGameObject? obj)
+    {
+        if (obj == null) return false;
+
+        ulong?[] party = [];
+        for (var i = 1; i <= 8; i++)
+            party[i] = SimpleTarget.GetPartyMemberInSlotSlot(i)?.GameObjectId;
+
+        return party.Contains(obj.GameObjectId);
+    }
 
     // `IsHostile` already exists, and works the exact same as we would write here
 
@@ -234,6 +279,15 @@ public static class GameObjectExtensions
     /// </summary>
     public static bool IsAPlayer(this IGameObject? obj) =>
         obj != null && obj is IPlayerCharacter;
+
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+    ///     boolean check for if the object is still loaded in the player's game.
+    /// </summary>
+    public static bool IsStillAround(this IGameObject? obj) =>
+        obj != null &&
+        Svc.Objects
+            .Any(x => x.GameObjectId == obj.GameObjectId);
 
     #endregion
 

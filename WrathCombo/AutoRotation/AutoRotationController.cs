@@ -754,8 +754,21 @@ namespace WrathCombo.AutoRotation
 
             internal static bool CanAoEHeal(uint outAct = 0)
             {
-                var members = GetPartyMembers().Where(x => !x.BattleChara.IsDead && x.BattleChara.IsTargetable && (outAct == 0 ? GetTargetDistance(x.BattleChara) <= 15 : InActionRange(outAct, x.BattleChara)) && ((float)x.CurrentHP / x.BattleChara.MaxHp * 100) <= cfg.HealerSettings.AoETargetHPP);
-                if (members.Count() < cfg.HealerSettings.AoEHealTargetCount)
+                int memberCount;
+                try
+                {
+                    var members = GetPartyMembers()
+                        .Where(x => x.BattleChara is not null &&
+                            !x.BattleChara.IsDead && x.BattleChara.IsTargetable &&
+                            (outAct == 0
+                                ? GetTargetDistance(x.BattleChara) <= 15
+                                : InActionRange(outAct, x.BattleChara)) &&
+                            ((float)x.CurrentHP / x.BattleChara.MaxHp * 100) <= cfg.HealerSettings.AoETargetHPP);
+                    memberCount = members.Count();
+                }
+                catch { memberCount = 0; }
+
+                if (memberCount < cfg.HealerSettings.AoEHealTargetCount)
                     return false;
 
                 return true;
