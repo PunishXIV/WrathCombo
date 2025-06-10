@@ -7,7 +7,7 @@ internal partial class MNK : Melee
 {
     internal class MNK_ST_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_ST_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -104,7 +104,7 @@ internal partial class MNK : Melee
 
     internal class MNK_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_ST_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -234,7 +234,7 @@ internal partial class MNK : Melee
 
     internal class MNK_AOE_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_AOE_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_AOE_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -337,7 +337,7 @@ internal partial class MNK : Melee
 
     internal class MNK_AOE_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_AOE_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_AOE_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -474,7 +474,7 @@ internal partial class MNK : Melee
 
     internal class MNK_Riddle_Brotherhood : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_Riddle_Brotherhood;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_Riddle_Brotherhood;
 
         protected override uint Invoke(uint actionID) =>
             actionID is RiddleOfFire &&
@@ -485,7 +485,7 @@ internal partial class MNK : Melee
 
     internal class MNK_Brotherhood_Riddle : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_Brotherhood_Riddle;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_Brotherhood_Riddle;
 
         protected override uint Invoke(uint actionID) =>
             actionID is Brotherhood &&
@@ -524,7 +524,7 @@ internal partial class MNK : Melee
 
     internal class MNK_PerfectBalanceProtection : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MNK_PerfectBalanceProtection;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_PerfectBalanceProtection;
 
         protected override uint Invoke(uint actionID) =>
             actionID is PerfectBalance && HasStatusEffect(Buffs.PerfectBalance) && LevelChecked(PerfectBalance)
