@@ -7,7 +7,7 @@ internal partial class DRG : Melee
 {
     internal class DRG_BasicCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_BasicCombo;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.DRG_BasicCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -46,7 +46,7 @@ internal partial class DRG : Melee
 
     internal class DRG_ST_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_ST_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.DRG_ST_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -202,7 +202,7 @@ internal partial class DRG : Melee
 
     internal class DRG_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_ST_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.DRG_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -300,22 +300,22 @@ internal partial class DRG : Melee
 
                     //Dragonfire Dive Feature
                     if (IsEnabled(CustomComboPreset.DRG_ST_DragonfireDive) &&
+                        (IsNotEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) ||
+                         IsEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) && InMeleeRange()) &&
                         ActionReady(DragonfireDive) &&
                         CanDRGWeave(DragonfireDive) &&
                         !HasStatusEffect(Buffs.DragonsFlight) &&
-                        (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)) &&
-                        (IsNotEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) ||
-                         IsEnabled(CustomComboPreset.DRG_ST_DragonfireDive_Melee) && InMeleeRange()))
+                        (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
                         return DragonfireDive;
 
                     //StarDiver Feature
                     if (IsEnabled(CustomComboPreset.DRG_ST_Stardiver) &&
+                        (IsNotEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) ||
+                         IsEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) && InMeleeRange()) &&
                         ActionReady(Stardiver) &&
                         CanDRGWeave(Stardiver) &&
                         LoTDActive &&
-                        !HasStatusEffect(Buffs.StarcrossReady) &&
-                        (IsNotEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) ||
-                         IsEnabled(CustomComboPreset.DRG_ST_Stardiver_Melee) && InMeleeRange()))
+                        !HasStatusEffect(Buffs.StarcrossReady))
                         return Stardiver;
 
                     //Starcross Feature
@@ -400,7 +400,7 @@ internal partial class DRG : Melee
 
     internal class DRG_AOE_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_AOE_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.DRG_AOE_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -486,13 +486,12 @@ internal partial class DRG : Melee
                     HasStatusEffect(Buffs.DragonsFlight))
                     return RiseOfTheDragon;
 
-                //Mirage Feature
                 if (ActionReady(MirageDive) &&
                     CanDRGWeave(MirageDive) &&
                     HasStatusEffect(Buffs.DiveReady) &&
-                    ((TraitLevelChecked(Traits.LifeOfTheDragon) &&
-                      (LoTDActive || GetStatusEffectRemainingTime(Buffs.DiveReady) <= 3)) ||
-                     !TraitLevelChecked(Traits.LifeOfTheDragon)))
+                    (LoTDActive ||
+                     (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                      GetCooldownRemainingTime(Geirskogul) > 3)))
                     return MirageDive;
 
                 //Nastrond Feature
@@ -538,7 +537,7 @@ internal partial class DRG : Melee
 
     internal class DRG_AOE_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_AOE_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.DRG_AOE_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -614,22 +613,22 @@ internal partial class DRG : Melee
 
                     //Dragonfire Dive Feature
                     if (IsEnabled(CustomComboPreset.DRG_AoE_DragonfireDive) &&
+                        (IsNotEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) ||
+                         IsEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) && InMeleeRange()) &&
                         ActionReady(DragonfireDive) &&
                         CanDRGWeave(DragonfireDive) &&
                         !HasStatusEffect(Buffs.DragonsFlight) &&
-                        (IsNotEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) ||
-                         IsEnabled(CustomComboPreset.DRG_AoE_DragonfireDive_Melee) && InMeleeRange()) &&
                         (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
                         return DragonfireDive;
 
                     //StarDiver Feature
                     if (IsEnabled(CustomComboPreset.DRG_AoE_Stardiver) &&
+                        (IsNotEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) ||
+                         IsEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) && InMeleeRange()) &&
                         ActionReady(Stardiver) &&
                         CanDRGWeave(Stardiver) &&
                         LoTDActive &&
-                        !HasStatusEffect(Buffs.StarcrossReady) &&
-                        (IsNotEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) ||
-                         IsEnabled(CustomComboPreset.DRG_AoE_Stardiver_Melee) && InMeleeRange()))
+                        !HasStatusEffect(Buffs.StarcrossReady))
                         return Stardiver;
 
                     //Starcross Feature
@@ -651,7 +650,9 @@ internal partial class DRG : Melee
                         ActionReady(MirageDive) &&
                         CanDRGWeave(MirageDive) &&
                         HasStatusEffect(Buffs.DiveReady) &&
-                        (LoTDActive || GetStatusEffectRemainingTime(Buffs.DiveReady) <= 3))
+                        (LoTDActive ||
+                         (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                          GetCooldownRemainingTime(Geirskogul) > 3)))
                         return MirageDive;
 
                     //Nastrond Feature
@@ -705,7 +706,7 @@ internal partial class DRG : Melee
 
     internal class DRG_BurstCDFeature : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.DRG_BurstCDFeature;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.DRG_BurstCDFeature;
 
         protected override uint Invoke(uint actionID) =>
             actionID is LanceCharge && IsOnCooldown(LanceCharge) && ActionReady(BattleLitany)
