@@ -180,7 +180,7 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Interrupt) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Interrupt)) &&
-                HiddenFeaturesData.IsEnabledWith(
+                HiddenFeaturesData.NonBlockingIsEnabledWith(
                     Preset.DRK_Hid_R7SCircleCastOnly,
                     () => HiddenFeaturesData.Content.InR7S,
                     () => HiddenFeaturesData.Targeting.R7SCircleCastingAdd) &&
@@ -193,7 +193,7 @@ internal partial class DRK
                 !TargetIsBoss() &&
                 !JustUsed(Role.Interject) &&
                 Role.CanLowBlow() &&
-                HiddenFeaturesData.IsEnabledWith(
+                HiddenFeaturesData.NonBlockingIsEnabledWith(
                     Preset.DRK_Hid_R6SStunJabberOnly,
                     () => HiddenFeaturesData.Content.InR6S,
                     () => HiddenFeaturesData.Targeting.R6SJabber) &&

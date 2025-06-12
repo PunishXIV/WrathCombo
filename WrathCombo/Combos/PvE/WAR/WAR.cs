@@ -89,7 +89,7 @@ internal partial class WAR : Tank
                 return OtherAction;
             #region Stuns
             if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
-                && HiddenFeaturesData.IsEnabledWith( // Only interrupt circle adds in 7
+                && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only interrupt circle adds in 7
                     CustomComboPreset.WAR_Hid_R7SCircleCastOnly,
                     () => HiddenFeaturesData.Content.InR7S,
                     () => HiddenFeaturesData.Targeting.R7SCircleCastingAdd)
@@ -259,7 +259,7 @@ internal partial class WAR : Tank
 
             if (IsEnabled(CustomComboPreset.WAR_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
-            if (IsEnabled(CustomComboPreset.WAR_AoE_Stun) && !JustUsed(Role.Interject) && Role.CanLowBlow() && HiddenFeaturesData.IsEnabledWith( // Only stun the jabber, if in 6
+            if (IsEnabled(CustomComboPreset.WAR_AoE_Stun) && !JustUsed(Role.Interject) && Role.CanLowBlow() && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only stun the jabber, if in 6
                     CustomComboPreset.WAR_Hid_R6SStunJabberOnly,
                     () => HiddenFeaturesData.Content.InR6S,
                     () => HiddenFeaturesData.Targeting.R6SJabber))
