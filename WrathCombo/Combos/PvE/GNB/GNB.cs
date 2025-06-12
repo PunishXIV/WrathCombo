@@ -31,6 +31,9 @@ internal partial class GNB : Tank
 
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             #region Mitigations
             if (Config.GNB_ST_MitsOptions != 1)
@@ -145,8 +148,11 @@ internal partial class GNB : Tank
                 && !InBossEncounter())
                 return Role.LowBlow;
             #endregion
+
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation) && InCombat() && !MitUsed)
@@ -271,6 +277,8 @@ internal partial class GNB : Tank
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
             if (Config.GNB_AoE_MitsOptions != 1)
@@ -348,6 +356,8 @@ internal partial class GNB : Tank
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_AoE_Mitigation) && InCombat() && !MitUsed)

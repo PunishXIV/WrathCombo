@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -272,6 +273,9 @@ internal partial class BRD : PhysicalRanged
 
             #endregion
 
+            if (OccultCrescent.ShouldUsePhantomActions()) //lol hi Edewen
+                return OccultCrescent.BestPhantomAction();
+
             #region Songs
 
             if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs) && InCombat() && (CanBardWeave || !BardHasTarget))
@@ -440,6 +444,9 @@ internal partial class BRD : PhysicalRanged
                 return Variant.Rampart;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Opener
 
@@ -636,6 +643,10 @@ internal partial class BRD : PhysicalRanged
 
             #endregion
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
+
             #region Songs
 
             // Limit optimisation to when you are high enough level to benefit from it.
@@ -777,6 +788,10 @@ internal partial class BRD : PhysicalRanged
                 return Variant.Rampart;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             #region Songs
 

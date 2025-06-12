@@ -1,6 +1,7 @@
 #region
 
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -62,6 +63,9 @@ internal partial class DRK : Tank
                 HasBattleTarget() &&
                 !skipBecauseOpener)
                 return Unmend;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Opener
             if (IsEnabled(Preset.DRK_ST_BalanceOpener) &&
@@ -145,6 +149,9 @@ internal partial class DRK : Tank
             var newAction = HardSlash;
             _ = IsBursting;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             // Unmend Option
             if (ActionReady(Unmend) &&
                 !InMeleeRange() &&
@@ -193,6 +200,9 @@ internal partial class DRK : Tank
             const Combo comboFlags = Combo.AoE | Combo.Adv;
             var newAction = Unleash;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             // Bail if not in combat
             if (!InCombat())
             {
@@ -234,6 +244,9 @@ internal partial class DRK : Tank
 
             const Combo comboFlags = Combo.AoE | Combo.Simple;
             var newAction = Unleash;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Bail if not in combat
             if (!InCombat())

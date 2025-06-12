@@ -42,6 +42,7 @@ namespace WrathCombo.Window.Functions
             public RetargetedAttribute? RetargetedAttribute;
             public BozjaParentAttribute? BozjaParent;
             public EurekaParentAttribute? EurekaParent;
+            public OccultCrescentAttribute? OccultCrescentJob;
             public HoverInfoAttribute? HoverInfo;
             public ReplaceSkillAttribute? ReplaceSkill;
             public CustomComboInfoAttribute? CustomComboInfo;
@@ -61,6 +62,7 @@ namespace WrathCombo.Window.Functions
                 RetargetedAttribute = preset.GetAttribute<RetargetedAttribute>();
                 BozjaParent = preset.GetAttribute<BozjaParentAttribute>();
                 EurekaParent = preset.GetAttribute<EurekaParentAttribute>();
+                OccultCrescentJob = preset.GetAttribute<OccultCrescentAttribute>();
                 HoverInfo = preset.GetAttribute<HoverInfoAttribute>();
                 ReplaceSkill = preset.GetAttribute<ReplaceSkillAttribute>();
                 CustomComboInfo = preset.GetAttribute<CustomComboInfoAttribute>();
@@ -141,6 +143,9 @@ namespace WrathCombo.Window.Functions
             DrawReplaceAttribute(preset);
 
             DrawRetargetedAttribute(preset);
+
+            if (DrawOccultJobIcon(preset))
+                ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 8f.Scale());
 
             Vector2 length = new();
             using (var styleCol = ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
@@ -248,7 +253,7 @@ namespace WrathCombo.Window.Functions
             if (bozjaParents is not null)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.TextWrapped($"Part of normal combo{(variantParents.ParentPresets.Length > 1 ? "s" : "")}:");
+                ImGui.TextWrapped($"Part of normal combo{(bozjaParents.ParentPresets.Length > 1 ? "s" : "")}:");
                 StringBuilder builder = new();
                 foreach (var par in bozjaParents.ParentPresets)
                 {
@@ -262,7 +267,6 @@ namespace WrathCombo.Window.Functions
                             builder.Insert(0, $"{(Attributes.ContainsKey(subpar.Value) ? Attributes[subpar.Value].CustomComboInfo.Name : subpar?.GetAttribute<CustomComboInfoAttribute>().Name)} -> ");
                             par2 = subpar!.Value;
                         }
-
                     }
 
                     ImGui.TextWrapped($"- {builder}");
@@ -326,6 +330,7 @@ namespace WrathCombo.Window.Functions
                         case VPR.JobID: VPR.Config.Draw(preset); break;
                         case WAR.JobID: WAR.Config.Draw(preset); break;
                         case WHM.JobID: WHM.Config.Draw(preset); break;
+                        case OccultCrescent.JobID: OccultCrescent.Config.Draw(preset); break;
                         default:
                             break;
                     }
@@ -570,6 +575,26 @@ namespace WrathCombo.Window.Functions
                     }
                 }
             }
+        }
+
+        private static bool DrawOccultJobIcon(CustomComboPreset preset)
+        {
+            if (preset.Attributes().OccultCrescentJob == null) return false;
+            if (preset.Attributes().OccultCrescentJob.JobId == -1) return false;
+            ImGui.SameLine();
+
+            var iconMaxSize = 32f.Scale();
+            var uld = Svc.PluginInterface.UiBuilder.LoadUld("ui/uld/MKDSupportJob.uld");
+
+            var jobID = preset.Attributes().OccultCrescentJob.JobId;
+            var icon = uld.LoadTexturePart("ui/uld/MKDSupportJob_hr1.tex", jobID);
+
+            var scale = Math.Min(iconMaxSize / icon.Size.X, iconMaxSize / icon.Size.Y);
+            var imgSize = new Vector2(icon.Size.X * scale, icon.Size.Y * scale);
+
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 6f.Scale());
+            ImGui.Image(icon.ImGuiHandle, imgSize);
+            return true;
         }
 
         internal static int AllChildren((CustomComboPreset Preset, CustomComboInfoAttribute Info)[] children)

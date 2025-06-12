@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -212,6 +213,9 @@ internal partial class SCH : Healer
             if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             //Opener
             if (IsEnabled(CustomComboPreset.SCH_DPS_Balance_Opener) &&
                 Opener().FullOpener(ref actionID))
@@ -310,6 +314,9 @@ internal partial class SCH : Healer
 
             if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
                 return Variant.SpiritDart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_AoE_Aetherflow) &&
