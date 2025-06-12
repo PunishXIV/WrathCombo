@@ -371,6 +371,9 @@ internal partial class DNC
                     break;
             }
 
+            // Simple ilvl tie-breaker
+            orderedFilter = orderedFilter.ThenBy(x => x.MaxHp);
+
             filter = orderedFilter.ToList();
 
             newBestPartner = filter.First();
