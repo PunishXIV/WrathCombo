@@ -7,7 +7,7 @@ internal partial class VPR : Melee
 {
     internal class VPR_ST_BasicCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_ST_BasicCombo;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_ST_BasicCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -53,7 +53,7 @@ internal partial class VPR : Melee
 
     internal class VPR_ST_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_ST_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_ST_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -203,7 +203,7 @@ internal partial class VPR : Melee
 
     internal class VPR_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_ST_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -385,7 +385,7 @@ internal partial class VPR : Melee
 
     internal class VPR_AoE_Simplemode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_AoE_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_AoE_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -521,7 +521,7 @@ internal partial class VPR : Melee
 
     internal class VPR_AoE_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_AoE_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_AoE_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -680,7 +680,7 @@ internal partial class VPR : Melee
 
     internal class VPR_VicewinderCoils : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_VicewinderCoils;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_VicewinderCoils;
 
         protected override uint Invoke(uint actionID)
         {
@@ -719,7 +719,7 @@ internal partial class VPR : Melee
 
     internal class VPR_VicepitDens : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_VicepitDens;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_VicepitDens;
 
         protected override uint Invoke(uint actionID)
         {
@@ -752,7 +752,7 @@ internal partial class VPR : Melee
 
     internal class VPR_UncoiledTwins : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_UncoiledTwins;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_UncoiledTwins;
 
         protected override uint Invoke(uint actionID)
         {
@@ -772,7 +772,7 @@ internal partial class VPR : Melee
 
     internal class VPR_ReawakenLegacy : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_ReawakenLegacy;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_ReawakenLegacy;
 
         protected override uint Invoke(uint actionID)
         {
@@ -802,7 +802,7 @@ internal partial class VPR : Melee
 
     internal class VPR_TwinTails : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_TwinTails;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_TwinTails;
 
         protected override uint Invoke(uint actionID)
         {
@@ -831,7 +831,7 @@ internal partial class VPR : Melee
 
     internal class VPR_Legacies : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_Legacies;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_Legacies;
 
         protected override uint Invoke(uint actionID)
         {
@@ -854,7 +854,7 @@ internal partial class VPR : Melee
 
     internal class VPR_SerpentsTail : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.VPR_SerpentsTail;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_SerpentsTail;
 
         protected override uint Invoke(uint actionID)
         {
