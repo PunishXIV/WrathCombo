@@ -225,13 +225,17 @@ public enum CustomComboPreset
     [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed when moving", AST.JobID)]
     AST_DPS_LightSpeed = 1020,
 
-    [ParentCombo(AST_ST_DPS)]
-    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID)]
-    AST_DPS_Lucid = 1008,
+    [ParentCombo(AST_DPS_LightSpeed)]
+    [CustomComboInfo("Lightspeed Hold Option", "Retains 1 Lightspeed charge for manual use", AST.JobID)]
+    AST_DPS_LightSpeedHold = 1061,   
 
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Divination Weave Option", "Adds Divination", AST.JobID)]
     AST_DPS_Divination = 1016,
+
+    [ParentCombo(AST_DPS_Divination)]
+    [CustomComboInfo("Lightspeed Burst Option", "Add Lightspeed before Divination \nCombine with Lightspeed Hold Options to ensure you have a charge to use", AST.JobID)]
+    AST_DPS_LightspeedBurst = 1064,   
 
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Card Draw Weave Option", "Draws your cards", AST.JobID)]
@@ -265,6 +269,10 @@ public enum CustomComboPreset
     [Retargeted]
     AST_ST_DPS_EarthlyStar = 1051,
 
+    [ParentCombo(AST_ST_DPS)]
+    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID)]
+    AST_DPS_Lucid = 1008,
+
     #endregion
 
     #region AOE DPS
@@ -278,14 +286,17 @@ public enum CustomComboPreset
     [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed when moving", AST.JobID)]
     AST_AOE_LightSpeed = 1048,
 
-    [ParentCombo(AST_AOE_DPS)]
-    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID
-    )]
-    AST_AOE_Lucid = 1042,
+    [ParentCombo(AST_AOE_LightSpeed)]
+    [CustomComboInfo("Lightspeed Hold Option", "Retains 1 Lightspeed charge for manual use", AST.JobID)]
+    AST_AOE_LightSpeedHold = 1062,    
 
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Divination Weave Option", "Adds Divination", AST.JobID)]
     AST_AOE_Divination = 1043,
+
+    [ParentCombo(AST_AOE_Divination)]
+    [CustomComboInfo("Lightspeed Burst Option", "Add Lightspeed before Divination. \nCombine with Lightspeed Hold Options to ensure you have a charge to use", AST.JobID)]
+    AST_AOE_LightspeedBurst = 1063,    
 
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Card Draw Weave Option", "Draws your cards", AST.JobID)]
@@ -318,6 +329,14 @@ public enum CustomComboPreset
     [CustomComboInfo("Earthly Star Option", "Adds Earthly Star placement, but not detonation, to the rotation.\nWill be targeted to your focus target, then soft and hard targets, before falling back to placing it at your feet.", AST.JobID)]
     [Retargeted]
     AST_AOE_DPS_EarthlyStar = 1052,
+
+    [ParentCombo(AST_AOE_DPS)]
+    [CustomComboInfo("MacroCosmos Option", "Adds Macrocosmos to the Aoe rotation after 3 GCDs", AST.JobID)]    
+    AST_AOE_DPS_MacroCosmos = 1066,
+
+    [ParentCombo(AST_AOE_DPS)]
+    [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID)]
+    AST_AOE_Lucid = 1042,
 
     #endregion
 
@@ -395,6 +414,10 @@ public enum CustomComboPreset
     AST_AoE_SimpleHeals_Horoscope = 1026,
 
     [ParentCombo(AST_AoE_SimpleHeals_AspectedHelios)]
+    [CustomComboInfo("Neutral Sect Option", "Adds Neutral Sect and its followup Sun Sign.", AST.JobID)]
+    AST_AoE_SimpleHeals_NeutralSect =1067,
+
+    [ParentCombo(AST_AoE_SimpleHeals_AspectedHelios)]
     [CustomComboInfo("Aspected Helios Option",
         "In Helios mode: Will Cast Aspected Helios/Helios Conjunction when the HoT is missing on yourself."
         + "\nIn Aspected Helios mode: Is considered enabled regardless.", AST.JobID)]
@@ -418,6 +441,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Retarget Raise", "Will Retarget the Raise affected here to your Heal Stack.", AST.JobID)]
     [Retargeted]
     AST_Raise_Alternative_Retarget = 1060,
+
+    [ReplaceSkill(AST.Lightspeed)]
+    [CustomComboInfo("Lightspeed Overwrite Protection Feature", "Blocks the Lightspeed Button while buff is active.", AST.JobID)]
+    AST_Lightspeed_Protection = 1065,    
 
     [ReplaceSkill(AST.EssentialDignity)]
     [CustomComboInfo("Retarget Essential Dignity Feature", "Will Retarget Essential Dignity outside of Healing combos to your Heal Stack.", AST.JobID)]
@@ -447,7 +474,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 1060
+    // Last value = 1067
 
     #endregion
 

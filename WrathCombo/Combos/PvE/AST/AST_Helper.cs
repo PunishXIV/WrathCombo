@@ -183,6 +183,7 @@ internal partial class AST
                     .OrderBy(x =>
                         _cardPriorities.GetValueOrDefault(
                             (byte)x.RealJob!.Value.RowId, byte.MaxValue))
+                    .ThenByDescending(x => x.BattleChara.MaxHp)
                     .ToList();
 
                 bestTarget = filter.First().BattleChara;
@@ -272,12 +273,6 @@ internal partial class AST
 
         public override bool HasCooldowns()
         {
-            if (ActionReady(EarthlyStar))
-                EarthlyStar.Retarget(Config.AST_DPS_AltMode > 0
-                        ? CombustList.Keys.ToArray()
-                        : MaleficList.ToArray(),
-                    SimpleTarget.Stack.Allies);
-
             if (GetCooldown(EarthlyStar).CooldownElapsed >= 4f)
                 return false;
 
@@ -358,6 +353,8 @@ internal partial class AST
         Exaltation = 25873,
         Macrocosmos = 25874,
         Synastry = 3612,
+        NeutralSect = 16559,
+        SunSign = 37031,
         CollectiveUnconscious = 3613;
 
     //Action Groups

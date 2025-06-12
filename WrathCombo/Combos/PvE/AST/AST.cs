@@ -20,6 +20,16 @@ internal partial class AST : Healer
                 : actionID;
     }
 
+    internal class AST_Lightspeed : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Lightspeed_Protection;       
+
+        protected override uint Invoke(uint actionID) =>
+           actionID is Lightspeed && HasStatusEffect(Buffs.Lightspeed)
+               ? All.SavageBlade
+               : actionID;
+    }
+
     internal class AST_Raise_Alternative : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Raise_Alternative;
@@ -65,6 +75,9 @@ internal partial class AST : Healer
             if (IsEnabled(CustomComboPreset.AST_ST_DPS_Opener) &&
                 Opener().FullOpener(ref actionID))
             {
+                if (actionID is EarthlyStar && IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar))
+                    return actionID.Retarget(replacedActions,
+                        SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
                 if (actionID is (Balance or Spear) && IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards))
                     return actionID.Retarget(replacedActions, CardResolver);
 
@@ -85,8 +98,11 @@ internal partial class AST : Healer
                     ActionReady(Lightspeed) &&
                     GetTargetHPPercent() > Config.AST_DPS_LightSpeedOption &&
                     IsMoving() &&
-                    !HasStatusEffect(Buffs.Lightspeed))
-                    return Lightspeed;
+                    !HasStatusEffect(Buffs.Lightspeed) &&
+                    (IsNotEnabled(CustomComboPreset.AST_DPS_LightSpeedHold) ||
+                    GetCooldownChargeRemainingTime(Lightspeed) < GetCooldownRemainingTime(Divination) ||
+                    !LevelChecked(Divination)))
+                    return Lightspeed;                
 
                 if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
                     Role.CanLucidDream(Config.AST_LucidDreaming))
@@ -121,6 +137,14 @@ internal partial class AST : Healer
                      (DrawnDPSCard == CardType.None && Config.AST_ST_DPS_OverwriteCards)) &&
                     CanDelayedWeave())
                     return OriginalHook(AstralDraw);
+
+                //Lightspeed Burst
+                if (IsEnabled(CustomComboPreset.AST_DPS_LightspeedBurst) &&
+                    ActionReady(Lightspeed) &&
+                    !HasStatusEffect(Buffs.Lightspeed) &&
+                    GetCooldownRemainingTime(Divination) < 5 &&
+                    CanSpellWeave())
+                    return Lightspeed;
 
                 //Divination
                 if (IsEnabled(CustomComboPreset.AST_DPS_Divination) &&
@@ -157,7 +181,8 @@ internal partial class AST : Healer
                         float refreshTimer = Config.AST_ST_DPS_CombustUptime_Threshold;
                         int hpThreshold = Config.AST_ST_DPS_CombustSubOption == 1 || !InBossEncounter() ? Config.AST_DPS_CombustOption : 0;
                         if (GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget) <= refreshTimer &&
-                            GetTargetHPPercent() > hpThreshold)
+                            GetTargetHPPercent() > hpThreshold &&
+                            CanApplyStatus(CurrentTarget,dotDebuffID))
                             return OriginalHook(Combust);
 
                         //Alternate Mode (idles as Malefic)
@@ -192,8 +217,11 @@ internal partial class AST : Healer
                 ActionReady(Lightspeed) &&
                 GetTargetHPPercent() > Config.AST_AOE_LightSpeedOption &&
                 IsMoving() &&
-                !HasStatusEffect(Buffs.Lightspeed))
-                return Lightspeed;
+                !HasStatusEffect(Buffs.Lightspeed) &&
+                (IsNotEnabled(CustomComboPreset.AST_AOE_LightSpeedHold) ||
+                GetCooldownChargeRemainingTime(Lightspeed) < GetCooldownRemainingTime(Divination)  ||
+                !LevelChecked(Divination)))
+                return Lightspeed;            
 
             if (IsEnabled(CustomComboPreset.AST_AOE_Lucid) &&
                 Role.CanLucidDream(Config.AST_LucidDreaming))
@@ -228,6 +256,15 @@ internal partial class AST : Healer
                  (DrawnDPSCard == CardType.None && Config.AST_AOE_DPS_OverwriteCards)) &&
                 CanDelayedWeave())
                 return OriginalHook(AstralDraw);
+            
+            //Lightspeed Burst
+            if (IsEnabled(CustomComboPreset.AST_AOE_LightspeedBurst) &&
+                ActionReady(Lightspeed) &&
+                !HasStatusEffect(Buffs.Lightspeed) &&
+                GetCooldownRemainingTime(Divination) < 5 &&
+                ActionWatching.NumberOfGcdsUsed >= 3 &&
+                CanSpellWeave())
+                return Lightspeed;
 
             //Divination
             if (IsEnabled(CustomComboPreset.AST_AOE_Divination) &&
@@ -243,14 +280,23 @@ internal partial class AST : Healer
                 !HasStatusEffect(Buffs.EarthlyDominance) &&
                 ActionReady(EarthlyStar) &&
                 IsOffCooldown(EarthlyStar) &&
-                CanSpellWeave())
+                CanSpellWeave() &&
+                ActionWatching.NumberOfGcdsUsed >= 3)
                 return EarthlyStar.Retarget(GravityList.ToArray(),
-                    SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
-
+                    SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);            
+                
             if (IsEnabled(CustomComboPreset.AST_AOE_Oracle) &&
                 HasStatusEffect(Buffs.Divining) &&
                 CanSpellWeave())
                 return Oracle;
+
+            if (IsEnabled(CustomComboPreset.AST_AOE_DPS_MacroCosmos) &&
+                ActionReady(Macrocosmos) &&
+                !HasStatusEffect(Buffs.Macrocosmos) &&
+                ActionWatching.NumberOfGcdsUsed >= 3 &&
+                (Config.AST_AOE_DPS_MacroCosmos_SubOption == 1 ||
+                !InBossEncounter()))
+                return Macrocosmos;
 
             return actionID;
         }
@@ -268,9 +314,15 @@ internal partial class AST : Healer
                 (nonAspectedMode || actionID is not (AspectedHelios or HeliosConjuction)))
                 return actionID;
 
-            bool canLady = Config.AST_AoE_SimpleHeals_WeaveLady && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_WeaveLady;
-            bool canHoroscope = Config.AST_AoE_SimpleHeals_Horoscope && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_Horoscope;
-            bool canOppose = Config.AST_AoE_SimpleHeals_Opposition && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_Opposition;
+            bool canWeaveLady = Config.AST_AoE_SimpleHeals_WeaveLady && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_WeaveLady;            
+            bool canWeaveHoroscope = Config.AST_AoE_SimpleHeals_Horoscope && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_Horoscope;
+            bool canWeaveOppose = Config.AST_AoE_SimpleHeals_Opposition && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_Opposition;
+            bool canWeaveSect = Config.AST_AoE_SimpleHeals_NeutralSectWeave && CanSpellWeave() || !Config.AST_AoE_SimpleHeals_NeutralSectWeave;
+            bool hasHealthLady = Config.AST_AoE_SimpleHeals_LazyLadyThreshold >= GetPartyAvgHPPercent();
+            bool hasHealthHoroscope = Config.AST_AoE_SimpleHeals_HoroscopeThreshold >= GetPartyAvgHPPercent();
+            bool hasHealthOppose = Config.AST_AoE_SimpleHeals_CelestialOppositionThreshold >= GetPartyAvgHPPercent();
+            bool hasHealthSect = Config.AST_AoE_SimpleHeals_NeutralSectThreshold >= GetPartyAvgHPPercent();
+
 
             if (!LevelChecked(AspectedHelios)) //Level check to return helios immediately below 40
                 return Helios;
@@ -278,12 +330,12 @@ internal partial class AST : Healer
             if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_LazyLady) &&
                 ActionReady(MinorArcana) &&
                 Gauge.DrawnCrownCard is CardType.Lady
-                && canLady)
+                && canWeaveLady && hasHealthLady)
                 return OriginalHook(MinorArcana);
 
             if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_CelestialOpposition) &&
                 ActionReady(CelestialOpposition) &&
-                canOppose)
+                canWeaveOppose && hasHealthOppose)
                 return CelestialOpposition;
 
             if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_Horoscope))
@@ -291,13 +343,17 @@ internal partial class AST : Healer
                 if (ActionReady(Horoscope) &&
                     !HasStatusEffect(Buffs.Horoscope) &&
                     !HasStatusEffect(Buffs.HoroscopeHelios) &&
-                    canHoroscope)
+                    canWeaveHoroscope && hasHealthHoroscope)
                     return Horoscope;
 
                 if (HasStatusEffect(Buffs.HoroscopeHelios) &&
-                    canHoroscope)
+                    canWeaveHoroscope && hasHealthHoroscope)
                     return HoroscopeHeal;
             }
+
+            if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_NeutralSect) &&
+                ActionReady(OriginalHook(NeutralSect)) && canWeaveSect && hasHealthSect)                
+                return OriginalHook(NeutralSect);
 
             // Only check for our own HoTs
             Status? hotCheck = HeliosConjuction.LevelChecked() ? GetStatusEffect(Buffs.HeliosConjunction) : GetStatusEffect(Buffs.AspectedHelios);
@@ -324,17 +380,20 @@ internal partial class AST : Healer
         {
             if (actionID is not Benefic2)
                 return actionID;
-
-            bool canDignity = Config.AST_ST_SimpleHeals_WeaveDignity && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveDignity;
-            bool canIntersect = Config.AST_ST_SimpleHeals_WeaveIntersection && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveIntersection;
-            bool canExalt = Config.AST_ST_SimpleHeals_WeaveExalt && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveExalt;
-            bool canEwer = Config.AST_ST_SimpleHeals_WeaveEwer && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveEwer;
-            bool canSpire = Config.AST_ST_SimpleHeals_WeaveSpire && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveSpire;
-            bool canBole = Config.AST_ST_SimpleHeals_WeaveBole && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveBole;
-            bool canArrow = Config.AST_ST_SimpleHeals_WeaveArrow && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveArrow;
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+            bool canWeaveDignity = Config.AST_ST_SimpleHeals_WeaveDignity && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveDignity;
+            bool canWeaveIntersect = Config.AST_ST_SimpleHeals_WeaveIntersection && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveIntersection;
+            bool canWeaveExalt = Config.AST_ST_SimpleHeals_WeaveExalt && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveExalt;
+            bool canWeaveEwer = Config.AST_ST_SimpleHeals_WeaveEwer && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveEwer;
+            bool canWeaveSpire = Config.AST_ST_SimpleHeals_WeaveSpire && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveSpire;
+            bool canWeaveBole = Config.AST_ST_SimpleHeals_WeaveBole && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveBole;
+            bool canWeaveArrow = Config.AST_ST_SimpleHeals_WeaveArrow && CanSpellWeave() || !Config.AST_ST_SimpleHeals_WeaveArrow;
+            bool startHot = Config.AST_ST_SimpleHeals_AspectedBeneficHigh >= GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields);
+            bool stopHot = Config.AST_ST_SimpleHeals_AspectedBeneficLow <= GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields);
+            int refreshTime = Config.AST_ST_SimpleHeals_AspectedBeneficRefresh;
 
             //Grab our target
-            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) >= Config.AST_ST_SimpleHeals_Esuna &&
@@ -346,7 +405,7 @@ internal partial class AST : Healer
                 Gauge.DrawnCards[2] == CardType.Spire &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Spire &&
                 ActionReady(Play3) &&
-                canSpire)
+                canWeaveSpire)
                 return OriginalHook(Play3)
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
@@ -354,7 +413,7 @@ internal partial class AST : Healer
                 Gauge.DrawnCards[2] == CardType.Ewer &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Ewer &&
                 ActionReady(Play3) &&
-                canEwer)
+                canWeaveEwer)
                 return OriginalHook(Play3)
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
@@ -362,7 +421,7 @@ internal partial class AST : Healer
                 Gauge.DrawnCards[1] == CardType.Arrow &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Arrow &&
                 ActionReady(Play2) &&
-                canArrow)
+                canWeaveArrow)
                 return OriginalHook(Play2)
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
@@ -370,38 +429,39 @@ internal partial class AST : Healer
                 Gauge.DrawnCards[1] == CardType.Bole &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_Bole &&
                 ActionReady(Play2) &&
-                canBole)
+                canWeaveBole)
                 return OriginalHook(Play2)
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_EssentialDignity) &&
                 ActionReady(EssentialDignity) &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= Config.AST_EssentialDignity &&
-                canDignity)
+                canWeaveDignity)
                 return EssentialDignity
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Exaltation) &&
                 ActionReady(Exaltation) &&
-                canExalt)
+                canWeaveExalt)
                 return Exaltation
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
             if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_CelestialIntersection) &&
                 ActionReady(CelestialIntersection) &&
-                canIntersect &&
+                canWeaveIntersect &&
                 !(healTarget as IBattleChara)!.HasShield())
                 return CelestialIntersection
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
 
-            if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic) && ActionReady(AspectedBenefic))
+            if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic) && ActionReady(AspectedBenefic) &&
+                startHot && stopHot)
             {
                 //Possibly a good use for new HasStatusEffect with Status Out
                 //HasStatusEffect(Buffs.AspectedBenefic, out Status? aspectedBeneficHoT, healTarget);
                 Status? aspectedBeneficHoT = GetStatusEffect(Buffs.AspectedBenefic, healTarget);
                 Status? neutralSectShield = GetStatusEffect(Buffs.NeutralSectShield, healTarget);
                 Status? neutralSectBuff = GetStatusEffect(Buffs.NeutralSect, healTarget);
-                if (aspectedBeneficHoT is null || aspectedBeneficHoT.RemainingTime <= 3
+                if (aspectedBeneficHoT is null || aspectedBeneficHoT.RemainingTime <= refreshTime
                                                || neutralSectShield is null && neutralSectBuff is not null)
                     return AspectedBenefic
                         .RetargetIfEnabled(OptionalTarget, Benefic2);
