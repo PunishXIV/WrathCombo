@@ -65,7 +65,6 @@ public enum CustomComboPreset
     ALL_Tank_ShirkRetargeting = 100002,
 
     [Role(JobRole.Tank)]
-    [ReplaceSkill(RoleActions.Tank.Shirk)]
     [ParentCombo(ALL_Tank_ShirkRetargeting)]
     [CustomComboInfo("Use Healers instead",
         "Will Retarget Shirk to healers, instead of the other tank.\nOnly recommended during some specific enrages.", ADV.JobID)]
@@ -73,7 +72,6 @@ public enum CustomComboPreset
     ALL_Tank_ShirkRetargeting_Healer = 100003,
 
     [Role(JobRole.Tank)]
-    [ReplaceSkill(RoleActions.Tank.Shirk)]
     [ParentCombo(ALL_Tank_ShirkRetargeting)]
     [CustomComboInfo("Fallback to Any Support",
         "Will Retarget Shirk to tanks or healers, per your setting above, but will include a fallback to any tank OR healer if none of your setting is found.\nUseful to help your Shirk always go to *someone* even if your chosen players are not alive.", ADV.JobID)]
@@ -2011,6 +2009,7 @@ public enum CustomComboPreset
 
     [ParentCombo(DRK_Retarget_TBN)]
     [CustomComboInfo("Include Target's Target", "If your target's target is not you, will Retarget The Blackest Night onto them.\n(if you're not top aggro, and not mousing over or hard targeting an ally)", DRK.JobID)]
+    [Retargeted]
     DRK_Retarget_TBN_TT = 5131,
 
     [ReplaceSkill(DRK.Oblation)]
@@ -2020,13 +2019,18 @@ public enum CustomComboPreset
 
     [ParentCombo(DRK_Retarget_Oblation)]
     [CustomComboInfo("Include Target's Target", "If your target's target is not you, will Retarget Oblation onto them.\n(if you're not top aggro, and not mousing over or hard targeting an ally)", DRK.JobID)]
+    [Retargeted]
     DRK_Retarget_Oblation_TT = 5133,
 
-    #endregion
-    // Last value = 5133
+    [ParentCombo(DRK_Retarget_Oblation)]
+    [CustomComboInfo("Prevent Double Oblations", "Will change Oblation to Savage Blade when your target already has Oblation on them.", DRK.JobID)]
+    DRK_Retarget_Oblation_DoubleProtection = 5134,
 
     #endregion
-    // Last value = 5133
+    // Last value = 5134
+
+    #endregion
+    // Last value = 5134
 
     #region Variant
 
@@ -2742,8 +2746,32 @@ public enum CustomComboPreset
     #endregion
 
     #region Aurora Protection
+    [ReplaceSkill(GNB.Aurora)]
     [CustomComboInfo("Aurora Protection Feature", "Locks out Aurora if Aurora's effect is on the target by replacing it with Savage Blade.", GNB.JobID)]
     GNB_AuroraProtection = 7023,
+    
+    [ParentCombo(GNB_AuroraProtection)]
+    [CustomComboInfo("Aurora Mouseover Option", "Retargets Aurora to your mouseover target if they do not have the HoT", GNB.JobID)]
+    [Retargeted]
+    GNB_RetargetAurora_MO = 7087,
+    
+    [ParentCombo(GNB_AuroraProtection)]
+    [CustomComboInfo("Aurora Target's Target Option", "Retargets Aurora to the Target's Target if they do not have the HoT and you do not have Aggro", GNB.JobID)]
+    [Retargeted]
+    GNB_RetargetAurora_TT = 7088,
+    
+    #endregion
+    
+    #region Heart Of Stone Retarget
+    [ReplaceSkill(GNB.HeartOfCorundum, GNB.HeartOfStone)]
+    [CustomComboInfo("Heart Of Stone Feature", "Will retarget Heart of Stone/Corundum to your mouseover target or hard target outside of other combos", GNB.JobID)]
+    [Retargeted]
+    GNB_RetargetHeartofStone = 7089,
+    
+    [ParentCombo(GNB_RetargetHeartofStone)]
+    [CustomComboInfo("Heart of Stone Target's Target Option", "Retargets Heart of Stone/Corundum to the Target's Target you do not have Aggro, can bypass this by using mouseover at yourself", GNB.JobID)]
+    [Retargeted]
+    GNB_RetargetHeartofStone_TT = 7090,
     #endregion
 
     #region Variant Skills
@@ -2930,7 +2958,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last Value = 7086
+    // Last Value = 7090
     #endregion
 
     #region MACHINIST
@@ -4298,6 +4326,37 @@ public enum CustomComboPreset
         "Replaces Shield Lob with Holy Spirit when available.\n- Must be under the effect of Divine Might or not moving.",
         PLD.JobID)]
     PLD_ShieldLob_Feature = 11027,
+    
+    [ReplaceSkill(PLD.Clemency)]
+    [CustomComboInfo("Retarget Clemency Feature", "Will retarget Clemency according to following Suboptions", PLD.JobID)]
+    [Retargeted]
+    PLD_RetargetClemency = 11067,
+    
+    [ParentCombo(PLD_RetargetClemency)]
+    [CustomComboInfo("Mouseover Clemency Option", "Adds UI mouseover to the priority. Above LowHP option.", PLD.JobID)]
+    [Retargeted]
+    PLD_RetargetClemency_MO = 11071,
+    
+    [ParentCombo(PLD_RetargetClemency)]
+    [CustomComboInfo("Low hp Clemency Option", "Will Heal Lowest Health Party member until you fall below set threshold", PLD.JobID)]
+    [Retargeted]
+    PLD_RetargetClemency_LowHP = 11072,
+    
+    [ReplaceSkill(PLD.Sheltron)]
+    [CustomComboInfo("Sheltron to Intervention Feature", "Will use intervention on your Hard Target if target is a friendly party member, if not then Sheltron." +
+                                                         "\n- UI Mousover > Hard target > Target's target > Self Sheltron", PLD.JobID)]
+    [Retargeted]
+    PLD_RetargetSheltron = 11068,
+    
+    [ParentCombo(PLD_RetargetSheltron)]
+    [CustomComboInfo("Mouseover Intervention Option", "Adds UI mouseover to the priority.", PLD.JobID)]
+    [Retargeted]
+    PLD_RetargetSheltron_MO = 11069,
+    
+    [ParentCombo(PLD_RetargetSheltron)]
+    [CustomComboInfo("Target's Target Intervention Option", "Adds Target's Target to the priority when you do not have agro.", PLD.JobID)]
+    [Retargeted]
+    PLD_RetargetSheltron_TT = 11070,
 
     // Variant Features
 
@@ -4321,7 +4380,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    //// Last value = 11064
+    //// Last value = 11071
 
     #endregion
 
@@ -6638,24 +6697,21 @@ public enum CustomComboPreset
     [ReplaceSkill(WAR.NascentFlash)]
     [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.", WAR.JobID)]
     WAR_NascentFlash = 18017,
+    
+    [ReplaceSkill(WAR.RawIntuition, WAR.Bloodwhetting)]
+    [CustomComboInfo("Raw Intuition to Nascent Flash Retargeting Feature", "If available, will replace the combo with Nascent Flash if you are hard targeting an ally.", WAR.JobID)]
+    [Retargeted]
+    WAR_RawIntuition_Targeting = 18119,
 
-    [ReplaceSkill(WAR.Bloodwhetting)]
-    [CustomComboInfo("Bloodwhetting Feature", "Replaces Bloodwhetting with Raw Intuition, when level synced below 82.", WAR.JobID)]
-    WAR_Bloodwhetting = 18118,
-
-    [ParentCombo(WAR_Bloodwhetting)]
-    [CustomComboInfo("Nascent When Targeting Option", "If available, will replace the combo with Nascent Flash if you are hard targeting an ally.", WAR.JobID)]
-    WAR_Bloodwhetting_Targeting = 18119,
-
-    [ParentCombo(WAR_Bloodwhetting_Targeting)]
+    [ParentCombo(WAR_RawIntuition_Targeting)]
     [CustomComboInfo("Include MouseOver Target", "If mousing over an ally in the UI, will Retarget Nascent Flash onto them.", WAR.JobID)]
     [Retargeted]
-    WAR_Bloodwhetting_Targeting_MO = 18120,
+    WAR_RawIntuition_Targeting_MO = 18120,
 
-    [ParentCombo(WAR_Bloodwhetting_Targeting)]
+    [ParentCombo(WAR_RawIntuition_Targeting)]
     [CustomComboInfo("Include Target's Target", "If your target's target is not you, will Retarget Nascent Flash onto them.\n(if you're not top aggro, and not mousing over or hard targeting an ally)", WAR.JobID)]
     [Retargeted]
-    WAR_Bloodwhetting_Targeting_TT = 18121,
+    WAR_RawIntuition_Targeting_TT = 18121,
 
     [ReplaceSkill(WAR.Holmgang)]
     [CustomComboInfo("Retarget Holmgang Feature", "Will Retarget Holmgang to yourself, instead of letting it go on enemies.", WAR.JobID)]

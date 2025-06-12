@@ -1,8 +1,11 @@
 #region Dependencies
 using System.Linq;
-using WrathCombo.Combos.PvE.Content;
+using ECommons.Logging;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
+
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -606,16 +609,71 @@ internal partial class GNB : Tank
     }
     #endregion
 
-    #region Aurora Protection
+    #region Aurora Protection and Retargetting
     internal class GNB_AuroraProtection : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_AuroraProtection;
-        protected override uint Invoke(uint actionID) => actionID != Aurora ? actionID :
-            (TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true)) ||
-            (!TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, anyOwner: true)) ? All.SavageBlade : actionID;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID != Aurora)
+                return actionID;
+
+            var target =
+                //Mouseover retarget option
+                (IsEnabled(CustomComboPreset.GNB_RetargetAurora_MO)
+                    ? SimpleTarget.UIMouseOverTarget.IfFriendly()
+                    : null) ??
+
+                //Hard target
+                SimpleTarget.HardTarget.IfFriendly() ??
+
+                //Partner Tank
+                (IsEnabled(CustomComboPreset.GNB_RetargetAurora_TT) && !PlayerHasAggro && InCombat()
+                    ? SimpleTarget.TargetsTarget.IfFriendly()
+                    : null);
+
+            if (target != null)
+            {
+                return !HasStatusEffect(Buffs.Aurora, target, true)
+                    ? actionID.Retarget(target)
+                    : All.SavageBlade;
+            }
+
+            return !HasStatusEffect(Buffs.Aurora, SimpleTarget.Self, true)
+                ? actionID
+                : All.SavageBlade;
+        }
     }
     #endregion
+    
+    #region Heart of Corundum Retarget
 
+    internal class GNB_RetargetHeartofStone : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.GNB_RetargetHeartofStone;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (HeartOfStone or HeartOfCorundum))
+                return actionID;
+
+            var target =
+                SimpleTarget.UIMouseOverTarget.IfFriendly() ??
+                SimpleTarget.HardTarget.IfFriendly() ??
+                (IsEnabled(CustomComboPreset.GNB_RetargetHeartofStone_TT) && !PlayerHasAggro
+                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                    : null);
+
+            if (target is not null)
+                return OriginalHook(actionID).Retarget([HeartOfStone,HeartOfCorundum], target);
+
+            return actionID;
+
+        }
+    }
+
+    #endregion
+
+    #region Basic Combo
     internal class GNB_ST_BasicCombo : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.GNB_ST_BasicCombo;
@@ -623,4 +681,5 @@ internal partial class GNB : Tank
             ComboTimer > 0 && ComboAction is KeenEdge && LevelChecked(BrutalShell) ? BrutalShell :
             ComboTimer > 0 && ComboAction is BrutalShell && LevelChecked(SolidBarrel) ? SolidBarrel : KeenEdge;
     }
+    #endregion
 }

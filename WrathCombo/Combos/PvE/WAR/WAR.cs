@@ -360,7 +360,7 @@ internal partial class WAR : Tank
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_FC_Features;
         protected override uint Invoke(uint action)
         {
-            if (action is not InnerBeast or FellCleave)
+            if (action is not (InnerBeast or FellCleave))
                 return action;
             if (IsEnabled(CustomComboPreset.WAR_FC_InnerRelease) && ShouldUseInnerRelease(Config.WAR_FC_IRStop))
                 return OriginalHook(Berserk);
@@ -419,35 +419,32 @@ internal partial class WAR : Tank
     }
     #endregion
 
-    #region Bloodwhetting -> Nascent Flash or Raw Intuition
-    internal class WAR_Bloodwhetting : CustomCombo
+    #region Raw Intuition -> Nascent Flash
+    internal class WAR_RawIntuition_Targeting : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_Bloodwhetting;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.WAR_RawIntuition_Targeting;
 
         protected override uint Invoke(uint action)
         {
-            if (action != Bloodwhetting)
+            if (action is not (RawIntuition or Bloodwhetting))
                 return action;
-
+            
             var target =
-                (IsEnabled(CustomComboPreset.WAR_Bloodwhetting_Targeting_MO)
-                    ? SimpleTarget.UIMouseOverTarget.IfFriendly()
+                //Mouseover Retarget
+                (IsEnabled(CustomComboPreset.WAR_RawIntuition_Targeting_MO)
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
                     : null) ??
-                SimpleTarget.HardTarget.IfFriendly() ??
-                (IsEnabled(CustomComboPreset.WAR_Bloodwhetting_Targeting_TT) && !PlayerHasAggro
-                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                //Hard Target
+                SimpleTarget.HardTarget.IfInParty().IfNotThePlayer() ??
+                //Target's Target Retarget
+                (IsEnabled(CustomComboPreset.WAR_RawIntuition_Targeting_TT) && !PlayerHasAggro
+                    ? SimpleTarget.TargetsTarget.IfInParty().IfNotThePlayer()
                     : null);
 
             // Nascent if trying to heal an ally
-            if (IsEnabled(CustomComboPreset.WAR_Bloodwhetting_Targeting) &&
-                LevelChecked(NascentFlash) &&
+            if (ActionReady(NascentFlash) &&
                 target != null)
-                return NascentFlash.Retarget(Bloodwhetting, target);
-
-            // Raw Intuition if too low for Bloodwhetting, and not trying to heal an ally
-            if (!LevelChecked(Bloodwhetting) &&
-                LevelChecked(RawIntuition))
-                return RawIntuition;
+                return NascentFlash.Retarget([RawIntuition , Bloodwhetting], target);
 
             return action;
         }

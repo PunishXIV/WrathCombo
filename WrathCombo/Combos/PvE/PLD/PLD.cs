@@ -1,6 +1,9 @@
 ﻿using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PLD : Tank
@@ -812,6 +815,69 @@ internal partial class PLD : Tank
         }
     }
 
+    internal class PLD_RetargetClemency : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_RetargetClemency;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID != Clemency)
+                return actionID;
+
+            int healthThreshold = Config.PLD_RetargetClemency_Health;
+            
+            var target =
+                //Mouseover retarget option
+                (IsEnabled(CustomComboPreset.PLD_RetargetClemency_MO) 
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+                
+                //Hard target
+                SimpleTarget.HardTarget.IfFriendly() ??
+                
+                //Lowest HP option
+                (IsEnabled(CustomComboPreset.PLD_RetargetClemency_LowHP)
+                 && PlayerHealthPercentageHp() > healthThreshold
+                    ? SimpleTarget.LowestHPAlly.IfNotThePlayer().IfAlive()
+                    : null);
+
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
+    }
+    internal class PLD_RetargetSheltron : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_RetargetSheltron;
+
+        protected override uint Invoke(uint action)
+        {
+            if (action is not (Sheltron or HolySheltron))
+                return action;
+            
+            var target =
+                //Mouseover retarget option
+                (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_MO) 
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+                
+                //Hard target retarget
+                SimpleTarget.HardTarget.IfInParty().IfNotThePlayer() ??
+                
+                //Targets target retarget option
+                (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_TT)
+                    && !PlayerHasAggro
+                    ? SimpleTarget.TargetsTarget.IfNotThePlayer().IfInParty()
+                    : null);
+
+            // Intervention if trying to Buff an ally
+            if (ActionReady(Intervention) && 
+                target != null)
+                return Intervention.Retarget([Sheltron, HolySheltron], target);
+
+            return action;
+        }
+    }
     #region One-Button Mitigation
 
     internal class PLD_Mit_OneButton : CustomCombo

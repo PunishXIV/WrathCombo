@@ -194,6 +194,7 @@ internal partial class PLD
         Intervene = 16461,
         BladeOfHonor = 36922,
         Sheltron = 3542,
+        HolySheltron = 25746,
         Clemency = 3541;
 
     public static class Buffs

@@ -315,6 +315,9 @@ public class ActionRetargeting : IDisposable
         AST.EssentialDignity,
         DRK.BlackestNight,
         DRK.Oblation,
+        GNB.HeartOfStone,
+        GNB.HeartOfCorundum,
+        PLD.Clemency,
 
         // Resurrection abilities from the "All" feature
         WHM.Raise,

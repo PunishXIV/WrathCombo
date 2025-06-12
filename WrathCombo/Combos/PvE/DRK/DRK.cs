@@ -393,6 +393,12 @@ internal partial class DRK : Tank
                     ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
                     : null);
 
+            var checkTarget = target ?? SimpleTarget.Self;
+            if (IsEnabled(Preset.DRK_Retarget_Oblation_DoubleProtection) &&
+                (HasStatusEffect(Buffs.Oblation, checkTarget, anyOwner: true) ||
+                 JustUsedOn(Oblation, checkTarget)))
+                return All.SavageBlade;
+
             if (target is not null)
                 return actionID.Retarget(target, dontCull: true);
 

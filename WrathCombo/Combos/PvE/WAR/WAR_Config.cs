@@ -515,10 +515,11 @@ internal partial class WAR
                         " Player HP% to be less than or equal to:", 200);
                     break;
 
-                case CustomComboPreset.WAR_Bloodwhetting_Targeting_TT:
+                case CustomComboPreset.WAR_RawIntuition_Targeting_TT:
                     ImGui.Indent();
                     ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey,
                         "Note: If you are Off-Tanking, and want to use Bloodwhetting on yourself, the expectation would be that you do so via the One-Button Mitigation Feature or the Mitigation options in your rotation.\n" +
+                        "You could also mouseover yourself in the party to use Bloodwhetting or raw Intuition in this case.\n" +
                         "If you don't, Nascent Flash would replace the combo, and it would go to the main tank.\n" +
                         "If you don't use those Features for your personal mitigation, you may not want to enable this.");
                     ImGui.Unindent();
