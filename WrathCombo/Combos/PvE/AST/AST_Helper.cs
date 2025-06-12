@@ -14,6 +14,8 @@ using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+using ECommons;
+using Lumina.Excel.Sheets;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -102,10 +104,10 @@ internal partial class AST
 
             var card = Gauge.DrawnCards[0];
             var party = GetPartyMembers(false)
-                .Select(member => member.BattleChara)
-                .Where(member => !member.IsDead && member.IsNotThePlayer())
-                .Where(InCardRange)
-                .Where(ExistingCardBuffFree)
+                .Select(member => new { member.BattleChara, member.RealJob })
+                .Where(member => !member.BattleChara.IsDead && member.BattleChara.IsNotThePlayer())
+                .Where(x => InCardRange(x.BattleChara))
+                .Where(x => ExistingCardBuffFree(x.BattleChara))
                 .ToList();
 
             if (party.Count <= 1)
@@ -128,13 +130,11 @@ internal partial class AST
                 !HasStatusEffect(Buffs.BalanceBuff, thisTarget, true) &&
                 !HasStatusEffect(Buffs.SpearBuff, thisTarget, true);
 
-            bool IsMelee (IGameObject? thisTarget) =>
-                thisTarget is IBattleChara chara &&
-                JobIDs.Melee.Contains((byte)chara.ClassJob.RowId);
+            bool IsMelee (ClassJob job) =>
+                JobIDs.Melee.Contains((byte)job.RowId);
 
-            bool IsRanged (IGameObject? thisTarget) =>
-                thisTarget is IBattleChara chara &&
-                JobIDs.Ranged.Contains((byte)chara.ClassJob.RowId);
+            bool IsRanged(ClassJob job) =>
+                JobIDs.Ranged.Contains((byte)job.RowId);
 
             bool DamageDownFree(IGameObject? thisTarget) =>
                 !TargetHasDamageDown(thisTarget);
@@ -156,19 +156,19 @@ internal partial class AST
                 if (restrictions.HasFlag(Restrictions.CardsRole))
                     filter = card switch
                     {
-                        CardType.Balance => filter.Where(IsMelee).ToList(),
-                        CardType.Spear => filter.Where(IsRanged).ToList(),
+                        CardType.Balance => filter.Where(x => IsMelee(x.RealJob!.Value)).ToList(),
+                        CardType.Spear => filter.Where(x => IsRanged(x.RealJob!.Value)).ToList(),
                         _ => filter,
                     };
 
                 if (restrictions.HasFlag(Restrictions.NotDD))
-                    filter = filter.Where(DamageDownFree).ToList();
+                    filter = filter.Where(x => DamageDownFree(x.BattleChara)).ToList();
 
                 if (restrictions.HasFlag(Restrictions.NotSick))
-                    filter = filter.Where(SicknessFree).ToList();
+                    filter = filter.Where(x => SicknessFree(x.BattleChara)).ToList();
 
                 if (restrictions.HasFlag(Restrictions.NotBrink))
-                    filter = filter.Where(BrinkFree).ToList();
+                    filter = filter.Where(x => BrinkFree(x.BattleChara)).ToList();
 
                 // Run the next step if no matches were found
                 if (filter.Count == 0 &&
@@ -182,10 +182,10 @@ internal partial class AST
                 filter = filter
                     .OrderBy(x =>
                         _cardPriorities.GetValueOrDefault(
-                            (byte)x.ClassJob.RowId, byte.MaxValue))
+                            (byte)x.RealJob!.Value.RowId, byte.MaxValue))
                     .ToList();
 
-                bestTarget = filter.First();
+                bestTarget = filter.First().BattleChara;
                 return true;
             }
         }

@@ -1,18 +1,18 @@
 ﻿using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
-using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
+using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
-using WrathCombo.Services;
 
 namespace WrathCombo.CustomComboNS.Functions
 {
@@ -35,15 +35,40 @@ namespace WrathCombo.CustomComboNS.Functions
             for (int i = 1; i <= 8; i++)
             {
                 var member = SimpleTarget.GetPartyMemberInSlotSlot(i);
-                if (member is IBattleChara chara && !existingIds.Contains(chara.GameObjectId))
+                if (member is IBattleChara chara)
                 {
-                    WrathPartyMember wmember = new()
+                    var existingMember = _partyList.FirstOrDefault(x => x.GameObjectId == chara.GameObjectId);
+                    if (existingMember != null)
                     {
-                        GameObjectId = chara.GameObjectId,
-                        CurrentHP = chara.CurrentHp
-                    };
-                    _partyList.Add(wmember);
-                    existingIds.Add(chara.GameObjectId);
+                        // Update existing member's properties as needed
+                        existingMember.CurrentHP = chara.CurrentHp;
+                        if (member is IBattleNpc)
+                        {
+                            foreach (var p in InfoProxyPartyMember.Instance()->CharDataSpan)
+                            {
+                                if (p.Sort == i - 1)
+                                    existingMember.NPCClassJob = p.Job;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        WrathPartyMember wmember = new()
+                        {
+                            GameObjectId = chara.GameObjectId,
+                            CurrentHP = chara.CurrentHp
+                        };
+                        if (member is IBattleNpc)
+                        {
+                            foreach (var p in InfoProxyPartyMember.Instance()->CharDataSpan)
+                            {
+                                if (p.Sort == i - 1)
+                                    wmember.NPCClassJob = p.Job;
+                            }
+                        }
+                        _partyList.Add(wmember);
+                        existingIds.Add(chara.GameObjectId);
+                    }
                 }
             }
 
@@ -120,6 +145,9 @@ namespace WrathCombo.CustomComboNS.Functions
         public bool HPUpdatePending = false;
         public bool MPUpdatePending = false;
         public ulong GameObjectId;
+        public uint NPCClassJob;
+
+        public ClassJob? RealJob => NPCClassJob > 0 && Svc.Data.Excel.GetSheet<ClassJob>().TryGetRow(NPCClassJob, out var r) ? r : BattleChara?.ClassJob.Value ?? Svc.Data.Excel.GetSheet<ClassJob>().GetRow(0);
         public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
         public Dictionary<ushort, long> BuffsGainedAt = new();
 
