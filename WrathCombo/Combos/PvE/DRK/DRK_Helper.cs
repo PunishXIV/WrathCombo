@@ -282,28 +282,12 @@ internal partial class DRK
         internal override UserData? ContentCheckConfig =>
             Config.DRK_ST_OpenerDifficulty;
 
-        public override bool HasCooldowns()
-        {
-            if (LocalPlayer.CurrentMp < 7000)
-                return false;
-
-            if (!IsOffCooldown(LivingShadow))
-                return false;
-
-            if (!IsOffCooldown(Delirium))
-                return false;
-
-            if (!IsOffCooldown(CarveAndSpit))
-                return false;
-
-            if (!IsOffCooldown(SaltedEarth))
-                return false;
-
-            if (GetRemainingCharges(Shadowbringer) < 2)
-                return false;
-
-            return true;
-        }
+        public override bool HasCooldowns() =>
+            LocalPlayer.CurrentMp > 7000 && IsOffCooldown(LivingShadow) &&
+            IsOffCooldown(Delirium) && IsOffCooldown(CarveAndSpit) &&
+            IsOffCooldown(SaltedEarth) &&
+            GetRemainingCharges(Shadowbringer) >= 2 &&
+            (!InCombat() || CombatEngageDuration().TotalSeconds < 3);
     }
 
     #endregion
