@@ -48,6 +48,7 @@ namespace WrathCombo.Window.Functions
             public AutoActionAttribute? AutoAction;
             public RoleAttribute? RoleAttribute;
             public HiddenAttribute? Hidden;
+            public AlwaysShowUserOptsAttribute? AlwaysShowUserOpts;
 
             public PresetAttributes(CustomComboPreset preset)
             {
@@ -67,6 +68,7 @@ namespace WrathCombo.Window.Functions
                 AutoAction = preset.GetAttribute<AutoActionAttribute>();
                 RoleAttribute = preset.GetAttribute<RoleAttribute>();
                 Hidden = preset.GetAttribute<HiddenAttribute>();
+                AlwaysShowUserOpts = preset.GetAttribute<AlwaysShowUserOptsAttribute>();
             }
         }
 
@@ -90,6 +92,7 @@ namespace WrathCombo.Window.Functions
             var eurekaParents = Attributes[preset].EurekaParent;
             var auto = Attributes[preset].AutoAction;
             var hidden = Attributes[preset].Hidden;
+            bool showUserOpts = Attributes[preset].AlwaysShowUserOpts != null;
 
             ImGui.Spacing();
 
@@ -296,7 +299,7 @@ namespace WrathCombo.Window.Functions
                 }
                 ImGui.PopStyleColor();
             }
-            if (enabled)
+            if (enabled || showUserOpts)
             {
                 if (!pvp)
                 {
