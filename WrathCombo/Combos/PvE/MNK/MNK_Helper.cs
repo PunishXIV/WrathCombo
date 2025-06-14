@@ -87,8 +87,8 @@ internal partial class MNK
 
             // Even window
             if ((JustUsed(OriginalHook(Bootshine)) || JustUsed(DragonKick)) &&
-                (GetCooldownRemainingTime(Brotherhood) <= GCD * 3 || HasStatusEffect(Buffs.Brotherhood)) &&
-                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasStatusEffect(Buffs.RiddleOfFire)))
+                (GetCooldownRemainingTime(Brotherhood) <= GCD * 2 || HasStatusEffect(Buffs.Brotherhood)) &&
+                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 2 || HasStatusEffect(Buffs.RiddleOfFire)))
                 return true;
 
             // Low level
@@ -114,8 +114,8 @@ internal partial class MNK
                 return true;
 
             // Even window
-            if ((GetCooldownRemainingTime(Brotherhood) <= GCD * 3 || HasStatusEffect(Buffs.Brotherhood)) &&
-                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasStatusEffect(Buffs.RiddleOfFire)))
+            if ((GetCooldownRemainingTime(Brotherhood) <= GCD * 2 || HasStatusEffect(Buffs.Brotherhood)) &&
+                (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 2 || HasStatusEffect(Buffs.RiddleOfFire)))
                 return true;
 
             // Low level
