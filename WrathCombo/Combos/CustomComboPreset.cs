@@ -4618,7 +4618,7 @@ public enum CustomComboPreset
     #region Simple Mode
 
     [AutoAction(false, false)]
-    [ConflictingCombos(RDM_ST_DPS, RDM_ST_Jolt_Combo)]
+    [ConflictingCombos(RDM_ST_DPS)]
     [ReplaceSkill(RDM.Jolt, RDM.Jolt2, RDM.Jolt3)]
     [CustomComboInfo("Simple Mode - Single Target",
         "Replaces Jolt with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.\nTo start the melee combo, you must be within melee range.",
@@ -4639,7 +4639,7 @@ public enum CustomComboPreset
 
     [AutoAction(false, false)]
     [ReplaceSkill(RDM.Jolt, RDM.Jolt2, RDM.Jolt3)]
-    [ConflictingCombos(RDM_ST_SimpleMode, RDM_ST_Jolt_Combo)]
+    [ConflictingCombos(RDM_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target",
         "Replaces Jolt with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.",
         RDM.JobID)]
@@ -4651,42 +4651,48 @@ public enum CustomComboPreset
     RDM_Balance_Opener = 13110,
 
     [ParentCombo(RDM_ST_DPS)]
-    [CustomComboInfo("Verthunder/Veraero Option", "Replace Jolt with Verthunder and Veraero.", RDM.JobID)]
-    RDM_ST_ThunderAero = 13210,
+    [CustomComboInfo("Basic Spell Combo Options", "Replace Jolt with various Spells.", RDM.JobID)]
+    RDM_ST_Spells = 13001,
 
-    [ParentCombo(RDM_ST_ThunderAero)]
+    [ParentCombo(RDM_ST_Spells)]
+    [CustomComboInfo("Verthunder / Veraero Option", "Adds Verthunder & Veraero.", RDM.JobID)]
+    RDM_ST_Spells_ThunderAero = 13210,
+
+    [ParentCombo(RDM_ST_Spells)]
+    [CustomComboInfo("Verfire / Verstone Option", "Adds Verfire & Verstone.", RDM.JobID)]
+    RDM_ST_Spells_FireStone = 13220,
+
+    [ParentCombo(RDM_ST_Spells)]
     [CustomComboInfo("Acceleration Option", "Add Acceleration when no Verfire/Verstone proc is available.", RDM.JobID)]
-    RDM_ST_ThunderAero_Accel = 13211,
+    RDM_ST_Spell_Accel = 13211,
 
-    [ParentCombo(RDM_ST_ThunderAero_Accel)]
+    [ParentCombo(RDM_ST_Spell_Accel)]
     [CustomComboInfo("Acceleration Movement Option", "Add Acceleration when moving.", RDM.JobID)]
-    RDM_ST_ThunderAero_Accel_Movement = 13213,
+    RDM_ST_Spell_Accel_Movement = 13213,
 
-    [ParentCombo(RDM_ST_ThunderAero_Accel)]
+    [ParentCombo(RDM_ST_Spell_Accel)]
     [CustomComboInfo("Include Swiftcast Option", "Add Swiftcast when all Acceleration charges are used.", RDM.JobID)]
-    RDM_ST_ThunderAero_Accel_Swiftcast = 13212,
-
+    RDM_ST_Spell_Accel_Swiftcast = 13212,
+    
     [ParentCombo(RDM_ST_DPS)]
-    [CustomComboInfo("Verfire/Verstone Option", "Replace Jolt with Verfire and Verstone.", RDM.JobID)]
-    RDM_ST_FireStone = 13220,
-
-    [ParentCombo(RDM_ST_DPS)]
-    [CustomComboInfo("Weave oGCD Damage Option", "Weave the following oGCD actions.", RDM.JobID)]
-    RDM_ST_oGCD = 13240,
-
-    [ParentCombo(RDM_ST_DPS)]
-    [CustomComboInfo("Single Target Melee Combo Option",
-        "Add the Reposte combo.\n**Must be in melee range or have Gap close with Corps-a-corps enabled**", RDM.JobID)]
+    [CustomComboInfo("Melee Combo Option",
+    "Adds Zwerchhau & Redoublement, and burst abilities.\n" +
+    "**Must be in melee range or have Gap close with Corps-a-corps enabled**", RDM.JobID)]
     RDM_ST_MeleeCombo = 13410,
 
     [ParentCombo(RDM_ST_MeleeCombo)]
-    [CustomComboInfo("Use Manafication and Embolden Option",
-        "Add Manafication and Embolden.\n**Must be in melee range or have Gap close with Corps-a-corps enabled**",
+    [CustomComboInfo("Include Riposte",
+        "Adds Riposte to start the combo. Recommended for Auto Rotation",
+        RDM.JobID)]
+    RDM_ST_MeleeCombo_IncludeRiposte = 13413,
+
+    [ParentCombo(RDM_ST_MeleeCombo)]
+    [CustomComboInfo("Use Manafication and Embolden Option", "Add Manafication and Embolden.",
         RDM.JobID)]
     RDM_ST_MeleeCombo_ManaEmbolden = 13411,
 
     [ParentCombo(RDM_ST_MeleeCombo_ManaEmbolden)]
-    [CustomComboInfo("Hold for Double Melee Combo Option [Lv.90]",
+    [CustomComboInfo("Hold for Double Melee Combo Option [Lv.90+]",
         "Hold both actions until you can perform a double melee combo.", RDM.JobID)]
     RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo = 13412,
 
@@ -4700,8 +4706,13 @@ public enum CustomComboPreset
         RDM.JobID)]
     RDM_ST_MeleeCombo_UnbalanceMana = 13440,
 
+    [ParentCombo(RDM_ST_MeleeCombo)]
+    [CustomComboInfo("Enforced Melee Check", "Once the melee combo has started, don't switch away even if target is out of range.",
+        RDM.JobID)]
+    RDM_ST_MeleeCombo_MeleeEnforced = 13414,
+
     [ParentCombo(RDM_ST_DPS)]
-    [CustomComboInfo("Melee Finisher Option", "Add Verflare/Verholy and other finishing moves.", RDM.JobID)]
+    [CustomComboInfo("Verflare / Verholy Option", "Adds Verflare & Verholy.", RDM.JobID)]
     RDM_ST_MeleeFinisher = 13510,
 
     [ParentCombo(RDM_ST_DPS)]
@@ -4714,22 +4725,9 @@ public enum CustomComboPreset
         "Adds melee combo to the rotation when mana is at a certain threshold.", RDM.JobID)]
     RDM_ST_Melee_Overcap_Protection = 13660,
 
-    #endregion
-
-    #region ST DPS Indivdual Combos
-
-    [ConflictingCombos(RDM_ST_DPS, RDM_ST_SimpleMode)]
-    [ReplaceSkill(RDM.Jolt, RDM.Jolt2, RDM.Jolt3)]
-    [CustomComboInfo($"Jolt Combo", "Replaces Jolt with the basic Jolt combo logic.", RDM.JobID)]
-    RDM_ST_Jolt_Combo = 13840,
-
-    [ParentCombo(RDM_ST_Jolt_Combo)]
-    [CustomComboInfo("Add Verfire/Verstone", "Adds Verfire and Verstone to the combo logic.", RDM.JobID)]
-    RDM_ST_Jolt_Combo_VerFireStone = 13841,
-
-    [ReplaceSkill(RDM.Riposte)]
-    [CustomComboInfo("Melee Combo", "Replaces Riposte with the basic melee combo logic.", RDM.JobID)]
-    RDM_ST_Melee_Combo = 13842,
+    [ParentCombo(RDM_ST_DPS)]
+    [CustomComboInfo("Weave oGCD Damage Option", "Weave the following oGCD actions.", RDM.JobID)]
+    RDM_ST_oGCD = 13240,
 
     #endregion
 
@@ -4760,10 +4758,6 @@ public enum CustomComboPreset
     RDM_AoE_Accel_Weave = 13322,
 
     [ParentCombo(RDM_AoE_DPS)]
-    [CustomComboInfo("Weave oGCD Damage Option", "Weave the following oGCD actions:", RDM.JobID)]
-    RDM_AoE_oGCD = 13241,
-
-    [ParentCombo(RDM_AoE_DPS)]
     [CustomComboInfo("Moulinet Melee Combo Option", "Use Moulinet when over 50/50 mana", RDM.JobID)]
     RDM_AoE_MeleeCombo = 13420,
 
@@ -4778,13 +4772,46 @@ public enum CustomComboPreset
     RDM_AoE_MeleeCombo_CorpsGapCloser = 13422,
 
     [ParentCombo(RDM_AoE_DPS)]
-    [CustomComboInfo("Melee Finisher Option", "Add Verflare/Verholy and other finishing moves.", RDM.JobID)]
+    [CustomComboInfo("Verflare / Verholy Option", "Replace Jolt with Verflare & Verholy.", RDM.JobID)]
     RDM_AoE_MeleeFinisher = 13424,
+
+    [ParentCombo(RDM_AoE_DPS)]
+    [CustomComboInfo("Weave oGCD Damage Option", "Weave the following oGCD actions:", RDM.JobID)]
+    RDM_AoE_oGCD = 13241,
 
     [ParentCombo(RDM_AoE_DPS)]
     [CustomComboInfo("Lucid Dreaming Option", "Weaves Lucid Dreaming when your MP drops below the specified value.",
         RDM.JobID)]
     RDM_AoE_Lucid = 13425,
+
+    #endregion
+
+    #region ST DPS Indivdual Combos
+
+    [ReplaceSkill(RDM.Veraero, RDM.Veraero3, RDM.Verthunder, RDM.Verthunder3)]
+    [CustomComboInfo("Spell Combo on Veraero / Verthunder", "Replaces Veraero & Verthunder with jolt.", RDM.JobID)]
+    RDM_VerSpell = 13004,
+
+    [ParentCombo(RDM_VerSpell)]
+    [CustomComboInfo("Add Verstone & Verfire", "Replaces Veraero with Verstone, and Verthunder with Verfire", RDM.JobID)]
+    RDM_VerSpell_StoneFire = 13005,
+
+    [ParentCombo(RDM_VerSpell)]
+    [CustomComboInfo("Add Scorch & Resolution", "Adds Scorch and Resolution", RDM.JobID)]
+    RDM_VerSpell_JoltFinisher = 13006,
+
+
+    [ReplaceSkill(RDM.Riposte)]
+    [CustomComboInfo("Riposte Melee Combo", "Replaces Riposte with the basic melee combo logic.", RDM.JobID)]
+    RDM_Riposte = 13842,
+
+    [ParentCombo(RDM_Riposte)]
+    [CustomComboInfo("Weave oGCD Damage Option", "Weave the following oGCD actions.", RDM.JobID)]
+    RDM_Riposte_oGCD = 13002,
+
+    [ReplaceSkill(RDM.Reprise)]
+    [CustomComboInfo("Reprise Movement oGCDs", "Weave the following oGCD actions.", RDM.JobID)]
+    RDM_Reprise = 13003,
 
     #endregion
 
