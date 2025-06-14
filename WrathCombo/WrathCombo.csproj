@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
 
+    <!-- Metadata -->
     <PropertyGroup>
         <Authors>Team Wrath</Authors>
         <Company>-</Company>
@@ -8,75 +9,85 @@
         <!-- This is the version that will be used when pushing to the repo.-->
         <Description>XIVCombo for very lazy players</Description>
         <Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
-        <PackageProjectUrl></PackageProjectUrl>
-        <TargetFramework>net9.0-windows</TargetFramework>
-        <Configurations>Debug;Release</Configurations>
-        <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    </PropertyGroup>
-
-    <PropertyGroup>
-        <DalamudLibPath Condition="$([MSBuild]::IsOSPlatform('Windows'))">$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
-        <DalamudLibPath Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(HOME)/.xlcore/dalamud/Hooks/dev/</DalamudLibPath>
-        <DalamudLibPath Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(HOME)/Library/Application Support/XIV on Mac/dalamud/Hooks/dev/</DalamudLibPath>
-        <DalamudPluginPath>$(appdata)\XIVLauncher\installedPlugins\WrathCombo\$(version)</DalamudPluginPath>
-        <DalamudDevPlugins>$(appdata)\XIVLauncher\devPlugins\WrathCombo\</DalamudDevPlugins>
-        <AssemblyName>WrathCombo</AssemblyName>
+        <PackageProjectUrl>https://github.com/PunishXIV/WrathCombo</PackageProjectUrl>
         <PackageId>WrathCombo</PackageId>
         <Product>WrathCombo</Product>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <!-- Build Parameters -->
+    <PropertyGroup>
+        <AssemblyName>WrathCombo</AssemblyName>
+        <TargetFramework>net9.0-windows</TargetFramework>
+        <Configurations>Debug;Release</Configurations>
+        <EnableWindowsTargeting>true</EnableWindowsTargeting>
+        <NoWarn>CS1591</NoWarn>
+        <LangVersion>preview</LangVersion>
+        
         <Platforms>x64</Platforms>
         <Nullable>enable</Nullable>
-        <LangVersion>preview</LangVersion>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <OutputPath>bin\Release</OutputPath>
-        <NoWarn>CS1591</NoWarn>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-        <Platforms>x64</Platforms>
-        <Nullable>enable</Nullable>
-        <LangVersion>latest</LangVersion>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
-        <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <OutputPath>$(DalamudDevPlugins)</OutputPath>
-        <NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 
-    <PropertyGroup Label="Documentation">
-        <DocumentationFile></DocumentationFile>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>preview</LangVersion>
-    </PropertyGroup>
-
-    <ItemGroup>
-        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
-    </ItemGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-        <Optimize>True</Optimize>
-    </PropertyGroup>
-
+    <!-- Styling Rules -->
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig"/>
     </ItemGroup>
 
+    <!-- Required Paths -->
+    <PropertyGroup>
+        <DalamudLibPath>$(appdata)\XIVLauncher\addon\Hooks\dev\</DalamudLibPath>
+        <DalamudDevPlugins>$(appdata)\XIVLauncher\devPlugins\WrathCombo\</DalamudDevPlugins>
+        <DalamudPluginPath>$(appdata)\XIVLauncher\installedPlugins\WrathCombo\$(version)</DalamudPluginPath>
+    </PropertyGroup>
+
+    <!-- Path Overrides for Linux -->
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+        <DalamudLibPath>$(HOME)/.xlcore/dalamud/Hooks/dev/</DalamudLibPath>
+        <DalamudDevPlugins>$(HOME)/.xlcore/devPlugins/</DalamudDevPlugins>
+    </PropertyGroup>
+
+    <!-- Path Overrides for Mac -->
+    <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+        <DalamudLibPath>$(HOME)/Library/Application Support/XIV on Mac/dalamud/Hooks/dev/</DalamudLibPath>
+        <DalamudDevPlugins>$(HOME)/Library/Application Support/XIV on Mac/devPlugins/</DalamudDevPlugins>
+    </PropertyGroup>
+
+    <!-- Build Parameter Overrides for Debug -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+        <OutputPath>$(DalamudDevPlugins)</OutputPath>
+    </PropertyGroup>
+
+    <!-- Build Parameter Overrides for Release -->
+    <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+        <OutputPath>bin\Release</OutputPath>
+    </PropertyGroup>
+
+    <!-- Build Parameter Overrides for Optimization even in Debug -->
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+        <Optimize>True</Optimize>
+    </PropertyGroup>
+
+    <!-- Logo -->
+    <ItemGroup>
+        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
+    </ItemGroup>
+
+    <!-- Dalamud Packaging -->
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="12.0.0" />
         <PackageReference Include="ILRepack" Version="2.0.18"/>
     </ItemGroup>
 
+    <!-- Dependencies -->
     <ItemGroup>
         <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj"/>
         <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj"/>
     </ItemGroup>
 
+    <!-- Dalamud Libraries -->
     <ItemGroup>
         <Reference Include="Dalamud">
             <HintPath>$(DalamudLibPath)Dalamud.dll</HintPath>
@@ -121,6 +132,7 @@
 
     </ItemGroup>
 
+    <!-- Release Manifest -->
     <ItemGroup>
         <None Update="WrathCombo.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
