@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.MNK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -79,17 +78,16 @@ internal partial class MNK
     //RoF
     internal static bool UseRoF() =>
         ActionReady(RiddleOfFire) &&
-        CanWeave() && !ActionWatching.HasDoubleWeaved() &&
-        !HasStatusEffect(Buffs.FiresRumination);
+        !HasStatusEffect(Buffs.FiresRumination) &&
+        (JustUsed(Brotherhood, GCD) || (GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 && CanDelayedWeave()));
 
     //Brotherhood
     internal static bool UseBrotherhood() =>
-        ActionReady(Brotherhood) && JustUsed(RiddleOfFire, GCD);
+        ActionReady(Brotherhood);
 
     //RoW
     internal static bool UseRoW() =>
-        ActionReady(RiddleOfWind) && CanWeave() &&
-        !ActionWatching.HasDoubleWeaved() &&
+        ActionReady(RiddleOfWind) &&
         !HasStatusEffect(Buffs.WindsRumination);
 
     #endregion

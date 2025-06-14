@@ -36,19 +36,18 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            if (UseRoF())
-                return RiddleOfFire;
-
-            if (UseBrotherhood())
-                return Brotherhood;
-
-            if (UseRoW())
-                return RiddleOfWind;
-
             // OGCDs
             if (CanWeave() && !HasDoubleWeaved())
             {
-                //Perfect Balance
+                if (UseRoF())
+                    return RiddleOfFire;
+
+                if (UseBrotherhood())
+                    return Brotherhood;
+
+                if (UseRoW())
+                    return RiddleOfWind;
+
                 if (UsePerfectBalanceST())
                     return PerfectBalance;
 
@@ -139,32 +138,29 @@ internal partial class MNK : Melee
                     ? TheForbiddenChakra
                     : actionID;
 
-            //Buffs
-            if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
-            {
-                if (IsEnabled(CustomComboPreset.MNK_STUseROF) &&
-                    UseRoF() &&
-                    (MNK_ST_RiddleOfFire_SubOption == 0 ||
-                     MNK_ST_RiddleOfFire_SubOption == 1 && InBossEncounter()))
-                    return RiddleOfFire;
-
-                if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &&
-                    UseBrotherhood() &&
-                    (MNK_ST_Brotherhood_SubOption == 0 ||
-                     MNK_ST_Brotherhood_SubOption == 1 && InBossEncounter()))
-                    return Brotherhood;
-
-                if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
-                    UseRoW() &&
-                    (MNK_ST_RiddleOfWind_SubOption == 0 ||
-                     MNK_ST_RiddleOfWind_SubOption == 1 && InBossEncounter()))
-                    return RiddleOfWind;
-            }
-
             // OGCDs
             if (CanWeave() && !HasDoubleWeaved())
             {
-                //Perfect Balance
+                if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
+                {
+                    if (IsEnabled(CustomComboPreset.MNK_STUseROF) &&
+                        UseRoF() &&
+                        (MNK_ST_RiddleOfFire_SubOption == 0 ||
+                         MNK_ST_RiddleOfFire_SubOption == 1 && InBossEncounter()))
+                        return RiddleOfFire;
+
+                    if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &&
+                        UseBrotherhood() &&
+                        (MNK_ST_Brotherhood_SubOption == 0 ||
+                         MNK_ST_Brotherhood_SubOption == 1 && InBossEncounter()))
+                        return Brotherhood;
+
+                    if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
+                        UseRoW() &&
+                        (MNK_ST_RiddleOfWind_SubOption == 0 ||
+                         MNK_ST_RiddleOfWind_SubOption == 1 && InBossEncounter()))
+                        return RiddleOfWind;
+                }
                 if (IsEnabled(CustomComboPreset.MNK_STUsePerfectBalance) &&
                     UsePerfectBalanceST())
                     return PerfectBalance;
@@ -257,18 +253,18 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            if (UseRoF())
-                return RiddleOfFire;
-
-            if (UseBrotherhood())
-                return Brotherhood;
-
-            if (UseRoW())
-                return RiddleOfWind;
-
             // OGCD's
             if (CanWeave() && !HasDoubleWeaved())
             {
+                if (UseRoF())
+                    return RiddleOfFire;
+
+                if (UseBrotherhood())
+                    return Brotherhood;
+
+                if (UseRoW())
+                    return RiddleOfWind;
+
                 if (UsePerfectBalanceAoE())
                     return PerfectBalance;
 
@@ -360,28 +356,26 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Buffs
-            if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
-            {
-                if (IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
-                    UseRoF() &&
-                    GetTargetHPPercent() >= MNK_AoE_RiddleOfFire_HP)
-                    return RiddleOfFire;
-
-                if (IsEnabled(CustomComboPreset.MNK_AoEUseBrotherhood) &&
-                    UseBrotherhood() &&
-                    GetTargetHPPercent() >= MNK_AoE_Brotherhood_HP)
-                    return Brotherhood;
-
-                if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
-                    UseRoW() &&
-                    GetTargetHPPercent() >= MNK_AoE_RiddleOfWind_HP)
-                    return RiddleOfWind;
-            }
-
             // OGCD's 
             if (CanWeave() && !HasDoubleWeaved())
             {
+                if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
+                {
+                    if (IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
+                        UseRoF() &&
+                        GetTargetHPPercent() >= MNK_AoE_RiddleOfFire_HP)
+                        return RiddleOfFire;
+
+                    if (IsEnabled(CustomComboPreset.MNK_AoEUseBrotherhood) &&
+                        UseBrotherhood() &&
+                        GetTargetHPPercent() >= MNK_AoE_Brotherhood_HP)
+                        return Brotherhood;
+
+                    if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
+                        UseRoW() &&
+                        GetTargetHPPercent() >= MNK_AoE_RiddleOfWind_HP)
+                        return RiddleOfWind;
+                }
                 if (IsEnabled(CustomComboPreset.MNK_AoEUsePerfectBalance) &&
                     UsePerfectBalanceAoE())
                     return PerfectBalance;
