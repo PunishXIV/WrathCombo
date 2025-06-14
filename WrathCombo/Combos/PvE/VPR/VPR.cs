@@ -73,7 +73,7 @@ internal partial class VPR : Melee
             {
                 //Serpents Ire
                 if (InCombat() && !CappedOnCoils() &&
-                    ActionReady(SerpentsIre) && InBossEncounter())
+                    ActionReady(SerpentsIre))
                     return SerpentsIre;
 
                 // Legacy Weaves
@@ -130,7 +130,7 @@ internal partial class VPR : Melee
             //Vicewinder Usage
             if (HasStatusEffect(Buffs.Swiftscaled) && !IsComboExpiring(3) &&
                 ActionReady(Vicewinder) && !HasStatusEffect(Buffs.Reawakened) && InMeleeRange() &&
-                (IreCD >= GCD * 5 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre)) &&
+                ((IreCD >= GCD * 5) || !LevelChecked(SerpentsIre)) &&
                 !IsVenomExpiring(3) && !IsHoningExpiring(3))
                 return Role.CanTrueNorth()
                     ? Role.TrueNorth

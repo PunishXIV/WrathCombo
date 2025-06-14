@@ -36,24 +36,18 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
+            if (UseRoF())
+                return RiddleOfFire;
+
+            if (UseBrotherhood())
+                return Brotherhood;
+
+            if (UseRoW())
+                return RiddleOfWind;
+
             // OGCDs
             if (CanWeave() && !HasDoubleWeaved())
             {
-                if (ActionReady(Brotherhood) &&
-                    JustUsed(RiddleOfFire, GCD) &&
-                    InBossEncounter())
-                    return Brotherhood;
-                
-                if (ActionReady(RiddleOfFire) &&
-                    !HasStatusEffect(Buffs.FiresRumination) &&
-                    InBossEncounter())
-                    return RiddleOfFire;
-                
-                if (ActionReady(RiddleOfWind) &&
-                    !HasStatusEffect(Buffs.WindsRumination) &&
-                    InBossEncounter())
-                    return RiddleOfWind;
-
                 //Perfect Balance
                 if (UsePerfectBalanceST())
                     return PerfectBalance;
@@ -144,33 +138,31 @@ internal partial class MNK : Melee
                     ? TheForbiddenChakra
                     : actionID;
 
+            //Buffs
+            if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
+            {
+                if (IsEnabled(CustomComboPreset.MNK_STUseROF) &&
+                    UseRoF() &&
+                    (MNK_ST_RiddleOfFire_SubOption == 0 ||
+                     MNK_ST_RiddleOfFire_SubOption == 1 && InBossEncounter()))
+                    return RiddleOfFire;
+
+                if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &&
+                    UseBrotherhood() &&
+                    (MNK_ST_Brotherhood_SubOption == 0 ||
+                     MNK_ST_Brotherhood_SubOption == 1 && InBossEncounter()))
+                    return Brotherhood;
+
+                if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
+                    UseRoW() &&
+                    (MNK_ST_RiddleOfWind_SubOption == 0 ||
+                     MNK_ST_RiddleOfWind_SubOption == 1 && InBossEncounter()))
+                    return RiddleOfWind;
+            }
+
             // OGCDs
             if (CanWeave() && !HasDoubleWeaved())
             {
-                if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
-                {
-                    if (IsEnabled(CustomComboPreset.MNK_STUseBrotherhood) &
-                        ActionReady(Brotherhood) &&
-                        JustUsed(RiddleOfFire, GCD) &&
-                        (MNK_ST_Brotherhood_SubOption == 0 ||
-                         MNK_ST_Brotherhood_SubOption == 1 && InBossEncounter()))
-                        return Brotherhood;
-                    
-                    if (IsEnabled(CustomComboPreset.MNK_STUseROF) &&
-                        ActionReady(RiddleOfFire) &&
-                        !HasStatusEffect(Buffs.FiresRumination) &&
-                        (MNK_ST_RiddleOfFire_SubOption == 0 ||
-                         MNK_ST_RiddleOfFire_SubOption == 1 && InBossEncounter()))
-                        return RiddleOfFire;
-                    
-                    if (IsEnabled(CustomComboPreset.MNK_STUseROW) &&
-                        !HasStatusEffect(Buffs.WindsRumination) &&
-                        ActionReady(RiddleOfWind) &&
-                        (MNK_ST_RiddleOfWind_SubOption == 0 ||
-                         MNK_ST_RiddleOfWind_SubOption == 1 && InBossEncounter()))
-                        return RiddleOfWind;
-                }
-
                 //Perfect Balance
                 if (IsEnabled(CustomComboPreset.MNK_STUsePerfectBalance) &&
                     UsePerfectBalanceST())
@@ -262,22 +254,19 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.FormlessFist) && !HasStatusEffect(Buffs.PerfectBalance) &&
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
+            
+            if (UseRoF())
+                return RiddleOfFire;
 
-            // Buffs
+            if (UseBrotherhood())
+                return Brotherhood;
+
+            if (UseRoW())
+                return RiddleOfWind;
+
+            // OGCD's
             if (CanWeave() && !HasDoubleWeaved())
             {
-                if (ActionReady(Brotherhood) &&
-                    JustUsed(RiddleOfFire, GCD))
-                    return Brotherhood;
-                
-                if (ActionReady(RiddleOfFire) &&
-                    !HasStatusEffect(Buffs.FiresRumination))
-                    return RiddleOfFire;
-                
-                if (ActionReady(RiddleOfWind) &&
-                    !HasStatusEffect(Buffs.WindsRumination))
-                    return RiddleOfWind;
-
                 if (UsePerfectBalanceAoE())
                     return PerfectBalance;
 
@@ -367,31 +356,29 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.FormlessFist) && !HasStatusEffect(Buffs.PerfectBalance) &&
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
+            
+            //Buffs
+            if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
+            {
+                if (IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
+                    UseRoF() &&
+                    GetTargetHPPercent() >= MNK_AoE_RiddleOfFire_HP)
+                    return RiddleOfFire;
 
-            // Buffs
+                if (IsEnabled(CustomComboPreset.MNK_AoEUseBrotherhood) &&
+                    UseBrotherhood() &&
+                    GetTargetHPPercent() >= MNK_AoE_Brotherhood_HP)
+                    return Brotherhood;
+
+                if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
+                    UseRoW() &&
+                    GetTargetHPPercent() >= MNK_AoE_RiddleOfWind_HP)
+                    return RiddleOfWind;
+            }
+
+            // OGCD's 
             if (CanWeave() && !HasDoubleWeaved())
             {
-                if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
-                {
-                    if (IsEnabled(CustomComboPreset.MNK_AoEUseBrotherhood) &&
-                        ActionReady(Brotherhood) &&
-                        JustUsed(RiddleOfFire, GCD) &&
-                        GetTargetHPPercent() >= MNK_AoE_Brotherhood_HP)
-                        return Brotherhood;
-                    
-                    if (IsEnabled(CustomComboPreset.MNK_AoEUseROF) &&
-                        ActionReady(RiddleOfFire) &&
-                        !HasStatusEffect(Buffs.FiresRumination) &&
-                        GetTargetHPPercent() >= MNK_AoE_RiddleOfFire_HP)
-                        return RiddleOfFire;
-
-                    if (IsEnabled(CustomComboPreset.MNK_AoEUseROW) &&
-                        ActionReady(RiddleOfWind) &&
-                        !HasStatusEffect(Buffs.WindsRumination) &&
-                        GetTargetHPPercent() >= MNK_AoE_RiddleOfWind_HP)
-                        return RiddleOfWind;
-                }
-
                 if (IsEnabled(CustomComboPreset.MNK_AoEUsePerfectBalance) &&
                     UsePerfectBalanceAoE())
                     return PerfectBalance;

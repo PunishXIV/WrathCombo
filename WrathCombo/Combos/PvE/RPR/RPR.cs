@@ -55,7 +55,7 @@ internal partial class RPR : Melee
             if (CanWeave() && !HasDoubleWeaved())
             {
                 //Arcane Cirlce
-                if (ActionReady(ArcaneCircle) && InBossEncounter() &&
+                if (ActionReady(ArcaneCircle) &&
                     (LevelChecked(Enshroud) && JustUsed(ShadowOfDeath) ||
                      !LevelChecked(Enshroud)))
                     return ArcaneCircle;
@@ -92,9 +92,7 @@ internal partial class RPR : Melee
                 if (HasStatusEffect(Buffs.Enshrouded))
                 {
                     //Sacrificium
-                    if (Lemure <= 4 && HasStatusEffect(Buffs.Oblatio) &&
-                        (InBossEncounter() && GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) ||
-                         !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
+                    if (Lemure <= 4 && HasStatusEffect(Buffs.Oblatio))
                         return OriginalHook(Gluttony);
 
                     //Lemure's Slice

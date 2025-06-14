@@ -68,14 +68,12 @@ internal partial class DRG : Melee
             {
                 //Battle Litany Feature
                 if (ActionReady(BattleLitany) &&
-                    CanDRGWeave(BattleLitany) &&
-                    InBossEncounter())
+                    CanDRGWeave(BattleLitany))
                     return BattleLitany;
 
                 //Lance Charge Feature
                 if (ActionReady(LanceCharge) &&
-                    CanDRGWeave(LanceCharge) &&
-                    InBossEncounter())
+                    CanDRGWeave(LanceCharge))
                     return LanceCharge;
 
                 //Life Surge Feature
