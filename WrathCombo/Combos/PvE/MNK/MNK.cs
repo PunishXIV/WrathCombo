@@ -376,6 +376,7 @@ internal partial class MNK : Melee
                         GetTargetHPPercent() >= MNK_AoE_RiddleOfWind_HP)
                         return RiddleOfWind;
                 }
+                
                 if (IsEnabled(CustomComboPreset.MNK_AoEUsePerfectBalance) &&
                     UsePerfectBalanceAoE())
                     return PerfectBalance;
