@@ -79,9 +79,7 @@ internal partial class MNK
     internal static bool UseRoF() =>
         ActionReady(RiddleOfFire) &&
         !HasStatusEffect(Buffs.FiresRumination) &&
-        (JustUsed(Brotherhood, GCD) || 
-         (GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 && CanDelayedWeave()) || 
-         !LevelChecked(Brotherhood));
+        (JustUsed(Brotherhood, GCD) || (GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 && CanDelayedWeave()));
 
     //Brotherhood
     internal static bool UseBrotherhood() =>
