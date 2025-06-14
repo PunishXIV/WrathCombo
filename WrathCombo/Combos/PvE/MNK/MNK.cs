@@ -58,7 +58,8 @@ internal partial class MNK : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
 
-                if (Chakra >= 5 && InCombat() && LevelChecked(SteeledMeditation))
+                if (Chakra >= 5 && InCombat() && LevelChecked(SteeledMeditation) &&
+                    !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire))
                     return OriginalHook(SteeledMeditation);
             }
 
@@ -179,7 +180,8 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(CustomComboPreset.MNK_STUseTheForbiddenChakra) &&
                     Chakra >= 5 && InCombat() &&
-                    LevelChecked(SteeledMeditation))
+                    LevelChecked(SteeledMeditation) &&
+                    !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire))
                     return OriginalHook(SteeledMeditation);
             }
 
@@ -254,7 +256,7 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.FormlessFist) && !HasStatusEffect(Buffs.PerfectBalance) &&
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
-            
+
             if (UseRoF())
                 return RiddleOfFire;
 
@@ -278,7 +280,8 @@ internal partial class MNK : Melee
 
                 if (Chakra >= 5 &&
                     LevelChecked(InspiritedMeditation) &&
-                    HasBattleTarget() && InCombat())
+                    HasBattleTarget() && InCombat() &&
+                    !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire))
                     return OriginalHook(InspiritedMeditation);
             }
 
@@ -356,7 +359,7 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.FormlessFist) && !HasStatusEffect(Buffs.PerfectBalance) &&
                 !HasStatusEffect(Buffs.OpoOpoForm) && !HasStatusEffect(Buffs.RaptorForm) && !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
-            
+
             //Buffs
             if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
             {
@@ -394,7 +397,8 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseHowlingFist) &&
                     Chakra >= 5 && HasBattleTarget() && InCombat() &&
-                    LevelChecked(InspiritedMeditation))
+                    LevelChecked(InspiritedMeditation) &&
+                    !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire))
                     return OriginalHook(InspiritedMeditation);
             }
 

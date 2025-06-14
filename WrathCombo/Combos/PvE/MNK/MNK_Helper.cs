@@ -79,7 +79,7 @@ internal partial class MNK
     //RoF
     internal static bool UseRoF() =>
         ActionReady(RiddleOfFire) &&
-        CanDelayedWeave() && !ActionWatching.HasDoubleWeaved() &&
+        CanWeave() && !ActionWatching.HasDoubleWeaved() &&
         !HasStatusEffect(Buffs.FiresRumination);
 
     //Brotherhood
