@@ -657,10 +657,10 @@ internal partial class GNB : Tank
                 return actionID;
 
             var target =
-                SimpleTarget.UIMouseOverTarget.IfFriendly() ??
-                SimpleTarget.HardTarget.IfFriendly() ??
+                SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
+                SimpleTarget.HardTarget.IfNotThePlayer().IfInParty() ??
                 (IsEnabled(CustomComboPreset.GNB_RetargetHeartofStone_TT) && !PlayerHasAggro
-                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                    ? SimpleTarget.TargetsTarget.IfNotThePlayer().IfInParty()
                     : null);
 
             if (target is not null)
