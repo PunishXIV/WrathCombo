@@ -500,7 +500,8 @@ internal partial class BLU : Caster
                 IsOffCooldown(Devour_Spell75) &&
                 InActionRange(Devour_Spell75) &&
                 !HasStatusEffect(0) &&
-                !JustUsed(Devour_Spell75))
+                !JustUsed(Devour_Spell75) &&
+                HasStatusEffect(Buffs.TankMimicry))
                 return Devour_Spell75;
 
             // Include DoTs
