@@ -315,7 +315,7 @@ public class ActionRetargeting : IDisposable
         AST.Ascend,
         SGE.Egeiro,
         SCH.Resurrection,
-        BLU.AngelWhisper,
+        BLU.AngelWhisper_Spell72,
         RDM.Verraise,
         SMN.Resurrection,
     ];
