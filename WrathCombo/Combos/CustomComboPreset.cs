@@ -1393,14 +1393,16 @@ public enum Preset
     [BlueInactive(BLU.Whistle_Spell64, BLU.Tingle_Spell82, BLU.RoseofDestruction_Spell90, BLU.MoonFlute_Spell39, BLU.JKick_Spell80, BLU.TripleTrident_Spell81, BLU.Nightbloom_Spell104, BLU.WingedReprobation_Spell118, BLU.SeaShanty_Spell122, BLU.BeingMortal_Spell124, BLU.ShockStrike_Spell47, BLU.Surpanakha_Spell78, BLU.MatraMagic_Spell100, BLU.PhantomFlurry_Spell103, BLU.Bristle_Spell12)]
     [CustomComboInfo("Moon Flute Opener", "Turns Moon Flute into a full opener." +
         "\nUse the remaining 2 charges of Winged Reprobation before starting the opener again!" +
-        "\nCan be done with 2.50 spell speed", BLU.JobID)]
-    [Retargeted(BLU.FeatherRain)]
+        "\nCan be done with 2.50 spell speed")]
+    [Retargeted(BLU.FeatherRain_Spell44)]
     BLU_NewMoonFluteOpener = 70001,
 
     [BlueInactive(BLU.BreathofMagic_Spell109, BLU.MortalFlame_Spell121)]
     [ParentCombo(BLU_NewMoonFluteOpener)]
-    [CustomComboInfo("DoT Opener", "Changes the opener to apply either Mortal Flame or Breath of Magic instead of using Winged Reprobation." +
-                                   "\nRequires 2.20 or faster spell speed", BLU.JobID)]
+    [CustomComboInfo("DoT Opener",
+        "Changes the opener to apply either Mortal Flame or Breath of Magic instead of using Winged Reprobation." +
+        "\nRequires 2.20 or faster spell speed",
+        BLU.JobID)]
     BLU_NewMoonFluteOpener_DoTOpener = 70002,
 
     #endregion
@@ -1459,14 +1461,17 @@ public enum Preset
 
     [BlueInactive(BLU.FeatherRain_Spell44, BLU.ShockStrike_Spell47, BLU.RoseofDestruction_Spell90, BLU.GlassDance_Spell48)]
     [ReplaceSkill(BLU.FeatherRain_Spell44)]
-    [CustomComboInfo("Primal Feature", "Turns Feather Rain into Shock Strike, Rose of Destruction, and Glass Dance." +
-                                       "\nWill cause primals to desync from Moon Flute burst phases if used on cooldown.", BLU.JobID)]
+    [CustomComboInfo("Primal Feature",
+        "Turns Feather Rain into Shock Strike, Rose of Destruction, and Glass Dance." +
+        "\nWill cause primals to desync from Moon Flute burst phases if used on cooldown.")]
     [Retargeted(BLU.FeatherRain_Spell44)]
     BLU_PrimalCombo = 70020,
 
     [BlueInactive(BLU.FeatherRain_Spell44, BLU.ShockStrike_Spell47, BLU.RoseofDestruction_Spell90, BLU.GlassDance_Spell48)]
     [ParentCombo(BLU_PrimalCombo)]
-    [CustomComboInfo("Moon Flute Burst Pooling Option", "Holds spells if Moon Flute burst is about to occur and spells are off cooldown.", BLU.JobID)]
+    [CustomComboInfo("Moon Flute Burst Pooling Option",
+        "Holds spells if Moon Flute burst is about to occur and spells are off cooldown.",
+        BLU.JobID)]
     BLU_PrimalCombo_Pool = 70021,
 
     [BlueInactive(BLU.JKick_Spell80)]
