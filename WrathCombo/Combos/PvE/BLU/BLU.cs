@@ -24,8 +24,7 @@ internal partial class BLU : Caster
 
     internal class BLU_NewMoonFluteOpener : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_NewMoonFluteOpener;
+        protected internal override Preset Preset => Preset.BLU_NewMoonFluteOpener;
 
         protected override uint Invoke(uint actionID)
         {
@@ -170,8 +169,7 @@ internal partial class BLU : Caster
     {
         internal static bool surpanakhaReady;
 
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_PrimalCombo;
+        protected internal override Preset Preset => Preset.BLU_PrimalCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -281,8 +279,7 @@ internal partial class BLU : Caster
 
     internal class BLU_FinalSting : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_FinalSting;
+        protected internal override Preset Preset => Preset.BLU_FinalSting;
 
         protected override uint Invoke(uint actionID)
         {
@@ -339,8 +336,7 @@ internal partial class BLU : Caster
 
     internal class BLU_Ultravibrate : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_Ultravibrate;
+        protected internal override Preset Preset => Preset.BLU_Ultravibrate;
 
         protected override uint Invoke(uint actionID)
         {
@@ -374,8 +370,7 @@ internal partial class BLU : Caster
 
     internal class BLU_TridentCombo : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_TridentCombo;
+        protected internal override Preset Preset => Preset.BLU_TridentCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -403,8 +398,7 @@ internal partial class BLU : Caster
 
     internal class BLU_DPS_DoT : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_DPS_DoT;
+        protected internal override Preset Preset => Preset.BLU_DPS_DoT;
 
         public bool TryGetDoT(out uint DoT)
         {
@@ -447,8 +441,7 @@ internal partial class BLU : Caster
 
     internal class BLU_Tank_Advanced : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_Tank_Advanced;
+        protected internal override Preset Preset => Preset.BLU_Tank_Advanced;
 
         protected override uint Invoke(uint actionID)
         {
@@ -522,8 +515,7 @@ internal partial class BLU : Caster
 
     internal class BLU_Tank_DoT : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_Tank_DoT;
+        protected internal override Preset Preset => Preset.BLU_Tank_DoT;
 
         public bool TryGetDoT(out uint DoT)
         {
@@ -562,8 +554,7 @@ internal partial class BLU : Caster
 
     internal class BLU_DebuffCombo : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_DebuffCombo;
+        protected internal override Preset Preset => Preset.BLU_DebuffCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -595,8 +586,7 @@ internal partial class BLU : Caster
 
     internal class BLU_Addle : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_Addle;
+        protected internal override Preset Preset => Preset.BLU_Addle;
 
         protected override uint Invoke(uint actionID)
         {
@@ -623,8 +613,7 @@ internal partial class BLU : Caster
 
     internal class BLU_KnightCombo : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_KnightCombo;
+        protected internal override Preset Preset => Preset.BLU_KnightCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -645,8 +634,7 @@ internal partial class BLU : Caster
 
     internal class BLU_LightHeadedCombo : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_LightHeadedCombo;
+        protected internal override Preset Preset => Preset.BLU_LightHeadedCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -665,8 +653,7 @@ internal partial class BLU : Caster
 
     internal class BLU_PerpetualRayStunCombo : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_PerpetualRayStunCombo;
+        protected internal override Preset Preset => Preset.BLU_PerpetualRayStunCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -682,8 +669,7 @@ internal partial class BLU : Caster
 
     internal class BLU_MeleeCombo : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_MeleeCombo;
+        protected internal override Preset Preset => Preset.BLU_MeleeCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -698,8 +684,7 @@ internal partial class BLU : Caster
 
     internal class BLU_PeatClean : CustomCombo
     {
-        protected internal override Preset Preset { get; } =
-            Preset.BLU_PeatClean;
+        protected internal override Preset Preset => Preset.BLU_PeatClean;
 
         protected override uint Invoke(uint actionID)
         {
