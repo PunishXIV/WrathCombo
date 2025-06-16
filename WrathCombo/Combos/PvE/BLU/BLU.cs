@@ -1,6 +1,7 @@
 ﻿#region
 
 using Dalamud.Game.ClientState.Conditions;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using Preset = WrathCombo.Combos.CustomComboPreset;
 
@@ -504,7 +505,7 @@ internal partial class BLU : Caster
             BLU_Tank_DoT DoTCombo = new();
             if (IsEnabled(Preset.BLU_Tank_Advanced_DoTs) &&
                 DoTCombo.TryGetDoT(out var DoT))
-                return DoT;
+                return DoT.Retarget(GoblinPunch_Spell105, Target);
 
             return actionID;
         }
@@ -594,8 +595,8 @@ internal partial class BLU : Caster
 
             return (IsOnCooldown(MagicHammer_Spell60) &&
                     IsOffCooldown(Role.Addle) &&
-                    !HasStatusEffect(Role.Debuffs.Addle, CurrentTarget) &&
-                    !HasStatusEffect(Debuffs.Conked, CurrentTarget))
+                    !HasStatusEffect(Role.Debuffs.Addle, Target) &&
+                    !HasStatusEffect(Debuffs.Conked, Target))
                 ? Role.Addle
                 : actionID;
         }
@@ -622,10 +623,10 @@ internal partial class BLU : Caster
                 (WhiteKnightsTour_Spell65 or BlackKnightsTour_Spell66))
                 return actionID;
 
-            if (HasStatusEffect(Debuffs.Slow, CurrentTarget) &&
+            if (HasStatusEffect(Debuffs.Slow, Target) &&
                 IsSpellActive(BlackKnightsTour_Spell66))
                 return BlackKnightsTour_Spell66;
-            if (HasStatusEffect(Debuffs.Bind, CurrentTarget) &&
+            if (HasStatusEffect(Debuffs.Bind, Target) &&
                 IsSpellActive(WhiteKnightsTour_Spell65))
                 return WhiteKnightsTour_Spell65;
 
@@ -642,10 +643,10 @@ internal partial class BLU : Caster
         {
             if (actionID is not PeripheralSynthesis_Spell101) return actionID;
 
-            if (!HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) &&
+            if (!HasStatusEffect(Debuffs.Lightheaded, Target) &&
                 IsSpellActive(PeripheralSynthesis_Spell101))
                 return PeripheralSynthesis_Spell101;
-            if (HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) &&
+            if (HasStatusEffect(Debuffs.Lightheaded, Target) &&
                 IsSpellActive(MustardBomb_Spell94))
                 return MustardBomb_Spell94;
 
@@ -696,7 +697,7 @@ internal partial class BLU : Caster
             if (actionID is not DeepClean_Spell112) return actionID;
 
             if (IsSpellActive(PeatPelt_Spell111) &&
-                !HasStatusEffect(Debuffs.Begrimed, CurrentTarget))
+                !HasStatusEffect(Debuffs.Begrimed, Target))
                 return PeatPelt_Spell111;
 
             return actionID;

@@ -2,7 +2,10 @@
 
 using System;
 using System.Linq;
+using Dalamud.Game.ClientState.Objects.Types;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Options = WrathCombo.Combos.CustomComboPreset;
 
@@ -20,6 +23,10 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLU
 {
+    private static IGameObject? Target =>
+        SimpleTarget.HardTarget.IfHostile() ??
+        SimpleTarget.LastHostileHardTarget.IfHostile();
+    
     internal class DoTs(
         UserInt minHp,
         UserInt minTime)
