@@ -320,7 +320,7 @@ namespace WrathCombo.Window.Tabs
                 if (ImGui.Checkbox("Output Macro with Resurrection Casts", ref Service.Configuration.OutputRezMacro))
                     Service.Configuration.Save();
 
-                ImGuiComponents.HelpMarker("Controls whether a configured Rez Macro will be output to party chat when a resurrection ability is used.\n\nTHIS IS RISKY, THERE IS A REASON MOST PLUGINS DO NOT OUTPUT TO CHAT.\n\nIt is recommended to keep this off.\nDefault: Off");
+                ImGuiComponents.HelpMarker("Controls whether a configured Rez Macro will be output to party chat when a resurrection ability is used.\n\nTHIS IS RISKY, THERE IS A REASON MOST PLUGINS DO NOT OUTPUT TO CHAT!\nIf anything goes awry it could theoretically print garbage to the chat for everyone to see, or could even spam it heavily.\n\nIt is recommended to keep this off in most cases.\nDefault: Off");
 
                 if (Service.Configuration.OutputRezMacro)
                 {
