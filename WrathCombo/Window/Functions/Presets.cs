@@ -92,7 +92,8 @@ namespace WrathCombo.Window.Functions
             var eurekaParents = Attributes[preset].EurekaParent;
             var auto = Attributes[preset].AutoAction;
             var hidden = Attributes[preset].Hidden;
-            bool showUserOpts = Attributes[preset].AlwaysShowUserOpts != null;
+            bool showUserOpts = Attributes[preset].AlwaysShowUserOpts != null &&
+                                Service.Configuration.HideChildren == false;
 
             ImGui.Spacing();
 
