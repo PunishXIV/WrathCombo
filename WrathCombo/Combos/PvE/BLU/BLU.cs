@@ -500,6 +500,15 @@ internal partial class BLU : Caster
                 IsOffCooldown(SonicBoom_Spell63) &&
                 !InMeleeRange())
                 return SonicBoom_Spell63;
+            
+            // Devour maintenance
+            if (IsEnabled(Preset.BLU_Tank_Advanced_Devour) &&
+                IsSpellActive(Devour_Spell75) &&
+                IsOffCooldown(Devour_Spell75) &&
+                InActionRange(Devour_Spell75) &&
+                !HasStatusEffect(0) &&
+                !JustUsed(Devour_Spell75))
+                return Devour_Spell75;
 
             // Include DoTs
             BLU_Tank_DoT DoTCombo = new();

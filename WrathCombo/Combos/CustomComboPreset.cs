@@ -1561,6 +1561,13 @@ public enum Preset
     BLU_Tank_Advanced_Uptime = 70073,
 
     [ParentCombo(BLU_Tank_Advanced)]
+    [BlueInactive(BLU.Devour_Spell75)]
+    [CustomComboInfo("Devour Option",
+        "Include Devour into the rotation whenever the status is not present, or has little time remaining.",
+        BLU.JobID)]
+    BLU_Tank_Advanced_Devour = 70075,
+
+    [ParentCombo(BLU_Tank_Advanced)]
     [BlueInactive(BLU.JKick_Spell80)]
     [CustomComboInfo("J Kick Option",
         "Include J Kick into the rotation when in melee range.",
