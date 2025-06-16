@@ -32,7 +32,8 @@ internal partial class BLU
             // Check spell is ready
             IsSpellActive(dot.ActionID) &&
             ActionReady(dot.ActionID) &&
-            !WasLastAction(dot.ActionID) &&
+            !JustUsed(dot.ActionID) &&
+            CanApplyStatus(CurrentTarget, dot.DebuffID) &&
             // Check debuff is not applied or remaining time is less than requirement
             (!HasStatusEffect(dot.DebuffID, CurrentTarget) ||
              GetStatusEffectRemainingTime(dot.DebuffID) <= minTime) &&

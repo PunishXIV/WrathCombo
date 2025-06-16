@@ -405,7 +405,17 @@ internal partial class BLU : Caster
         protected internal override Preset Preset { get; } =
             Preset.BLU_DPS_DoT;
 
-        public uint getDoT() => Invoke(BypassAction);
+        public bool TryGetDoT(out uint DoT)
+        {
+            DoT = BypassAction;
+            
+            var call = Invoke(BypassAction);
+            if (call == BypassAction) return false;
+            
+            DoT = call;
+            return true;
+
+        }
 
         protected override uint Invoke(uint actionID)
         {
@@ -491,13 +501,10 @@ internal partial class BLU : Caster
                 return SonicBoom_Spell63;
 
             // Include DoTs
-            BLU_Tank_DoT DoTCheck = new();
-            if (IsEnabled(Preset.BLU_Tank_Advanced_DoTs))
-            {
-                var DoTCheckOutput = DoTCheck.getDoT();
-                if (DoTCheckOutput != BypassAction)
-                    return DoTCheckOutput;
-            }
+            BLU_Tank_DoT DoTCombo = new();
+            if (IsEnabled(Preset.BLU_Tank_Advanced_DoTs) &&
+                DoTCombo.TryGetDoT(out var DoT))
+                return DoT;
 
             return actionID;
         }
@@ -508,7 +515,17 @@ internal partial class BLU : Caster
         protected internal override Preset Preset { get; } =
             Preset.BLU_Tank_DoT;
 
-        public uint getDoT() => Invoke(BypassAction);
+        public bool TryGetDoT(out uint DoT)
+        {
+            DoT = BypassAction;
+            
+            var call = Invoke(BypassAction);
+            if (call == BypassAction) return false;
+            
+            DoT = call;
+            return true;
+
+        }
 
         protected override uint Invoke(uint actionID)
         {
