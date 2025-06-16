@@ -1,3 +1,4 @@
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 
@@ -34,15 +35,18 @@ internal partial class RDM : Caster
             uint NewActionID = 0;
 
             //oGCDs
-            if (TryOGCDs(actionID, true, ref NewActionID))
+            if (TryOGCDs(ref NewActionID))
                 return NewActionID;
 
             //Lucid Dreaming
             if (TryLucidDreaming(6500, ComboAction))
                 return Role.LucidDreaming;
 
-            //Melee Finisher
-            if (MeleeCombo.TryMeleeFinisher(ref NewActionID))
+            // SCORCH & RESOLUTION
+            if (MeleeCombo.CanScorchResolution()) return OriginalHook(Jolt);
+
+            // VERFLARE & VERHOLY
+            if (MeleeCombo.TryVerFlareVerHoly(ref NewActionID))
                 return NewActionID;
 
             //Melee Combo
@@ -71,130 +75,102 @@ internal partial class RDM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Jolt or Jolt2 or Jolt3) &&
-                actionID is not (Fleche or Riposte or Reprise))
+            if (actionID is not (Jolt or Jolt2 or Jolt3))
                 return actionID;
 
             uint NewActionID = 0;
 
-            if (actionID is Jolt or Jolt2 or Jolt3)
-            {
-                //VARIANTS
-                if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
-                    return Variant.Cure;
+            // OPENER
+            if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) &&
+                Opener().FullOpener(ref actionID))
+                return actionID;
 
-                if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
-                    return Variant.Rampart;
 
-                // Opener for RDM
-                if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) &&
-                    Opener().FullOpener(ref actionID))
-                    return actionID;
+            // VARIANTS
+            if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
+                return Variant.Cure;
 
-            }
+            if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
+                return Variant.Rampart;
 
-            //RDM_OGCD
-            if (IsEnabled(CustomComboPreset.RDM_ST_oGCD))
-            {
-                bool ActionFound =
-                    (!Config.RDM_ST_oGCD_OnAction_Adv && actionID is Jolt or Jolt2 or Jolt3) ||
-                      (Config.RDM_ST_oGCD_OnAction_Adv &&
-                        ((Config.RDM_ST_oGCD_OnAction[0] && actionID is Jolt or Jolt2 or Jolt3) ||
-                         (Config.RDM_ST_oGCD_OnAction[1] && actionID is Fleche) ||
-                         (Config.RDM_ST_oGCD_OnAction[2] && actionID is Riposte) ||
-                         (Config.RDM_ST_oGCD_OnAction[3] && actionID is Reprise)
-                        )
-                      );
 
-                if (ActionFound && LevelChecked(Corpsacorps))
-                {
-                    if (TryOGCDs(actionID, true, ref NewActionID, true))
-                        return NewActionID;
-                }
-            }
-            //END_RDM_OGCD
-
-            //Lucid Dreaming
-            if (IsEnabled(CustomComboPreset.RDM_ST_Lucid)
-                && actionID is Jolt or Jolt2 or Jolt3
-                && TryLucidDreaming(Config.RDM_ST_Lucid_Threshold, ComboAction)) //Don't interupt certain combos
+            // LUCID DREAMING
+            if (IsEnabled(CustomComboPreset.RDM_ST_Lucid) &&
+                TryLucidDreaming(Config.RDM_ST_Lucid_Threshold, ComboAction)) //Don't interupt certain combos
                 return Role.LucidDreaming;
 
-            //RDM_MELEEFINISHER
-            if (IsEnabled(CustomComboPreset.RDM_ST_MeleeFinisher))
-            {
-                bool isJoltAction = actionID is Jolt or Jolt2 or Jolt3;
-                bool useJolts = !Config.RDM_ST_MeleeFinisher_Adv && isJoltAction;
-                bool useJoltsAdv = Config.RDM_ST_MeleeFinisher_OnAction[0] && isJoltAction;
-                bool useRiposteAdv = Config.RDM_ST_MeleeFinisher_OnAction[1] && actionID is Riposte or EnchantedRiposte;
-                bool useVerMagicAdv = Config.RDM_ST_MeleeFinisher_OnAction[2] && actionID is Veraero or Veraero3 or Verthunder or Verthunder3;
 
-                bool ActionFound = useJolts ||
-                    (Config.RDM_ST_MeleeFinisher_Adv &&
-                        (useJoltsAdv || useRiposteAdv || useVerMagicAdv));
+            // oGCDs SINGLE TARGET
+            if (IsEnabled(CustomComboPreset.RDM_ST_oGCD) &&
+                LevelChecked(Corpsacorps) &&
+                TryOGCDs(ref NewActionID,
+                    Config.RDM_ST_oGCD_Engagement_Pooling,
+                    Config.RDM_ST_oGCD_CorpACorps_Pooling,
+                    Config.RDM_ST_oGCD_CorpACorps_Melee,
+                    Config.RDM_ST_oGCD_Actions))
+                return NewActionID;
 
-                if (ActionFound && MeleeCombo.TryMeleeFinisher(ref NewActionID))
-                    return NewActionID;
-            }
-            //END_RDM_MELEEFINISHER
 
-            //RDM_ST_MELEECOMBO
+            // SCORCH & RESOLUTION
+            if (MeleeCombo.CanScorchResolution()) return OriginalHook(Jolt);
+
+
+            // VERFLARE & VERHOLY
+            if (IsEnabled(CustomComboPreset.RDM_ST_MeleeFinisher) &&
+                MeleeCombo.TryVerFlareVerHoly(ref NewActionID))
+                return NewActionID;
+
+
+            // MELEE COMBO
             if (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo)
                 && LocalPlayer.IsCasting == false)
             {
-                bool isJoltAction = actionID is Jolt or Jolt2 or Jolt3;
-                bool isAutoRotOn = P.IPC.GetComboOptionState(Preset.ToString()) && P.IPC.GetAutoRotationState();
+                // Read in reverse due to combos
 
-                bool useJolts = !Config.RDM_ST_MeleeCombo_Adv && isJoltAction;
-                bool useJoltsAdv = Config.RDM_ST_MeleeCombo_OnAction[0] && isJoltAction;
-                bool useRiposte = Config.RDM_ST_MeleeCombo_OnAction[1] && (actionID is Riposte or EnchantedRiposte);
+                // Burst
+                if (MeleeCombo.TrySTManaEmbolden(
+                    ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden), IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
+                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
+                    IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
+                    return NewActionID;
 
-                bool ActionFound = useJolts || (Config.RDM_ST_MeleeCombo_Adv && (useJoltsAdv || useRiposte));
+                // Zwerchhau & Redoublement
+                if (MeleeCombo.TrySTMeleeCombo(ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_MeleeEnforced)))
+                    return NewActionID;
 
-                //Burst
-                if (ActionFound)
-                {
-                    if (MeleeCombo.TrySTManaEmbolden(
-                        ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden), IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
-                        IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_ManaEmbolden_DoubleCombo),
+                // Start the Combo (Riposte)
+                if (IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_IncludeRiposte) &&
+                    MeleeCombo.TrySTMeleeStart(ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
                         IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
-                        return NewActionID;
-                }
-
-                //Zwerchhau & Redoublement. Force to Jolts if Auto Rotation
-                if (ActionFound || (isAutoRotOn && isJoltAction))
-                {
-                    if (MeleeCombo.TrySTMeleeCombo(ref NewActionID, Config.RDM_ST_MeleeEnforced))
-                        return NewActionID;
-                }
-
-                //Start the Combo
-                if (ActionFound)
-                {
-                    if (MeleeCombo.TrySTMeleeStart(ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_CorpsGapCloser),
-                        IsEnabled(CustomComboPreset.RDM_ST_MeleeCombo_UnbalanceMana)))
-                        return NewActionID;
-                }
-            }
-
-            //RDM_ST_ACCELERATION
-            if (IsEnabled(CustomComboPreset.RDM_ST_ThunderAero) && IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel)
-                && actionID is Jolt or Jolt2 or Jolt3)
-            {
-                if (SpellCombo.TryAcceleration(ref NewActionID, IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Swiftcast)))
                     return NewActionID;
             }
 
-            if (actionID is Jolt or Jolt2 or Jolt3)
-            {
 
+            // SPELL COMBO
+            if (IsEnabled(CustomComboPreset.RDM_ST_Spells))
+            {
+                // ACCLERATION
+                if (IsEnabled(CustomComboPreset.RDM_ST_Spell_Accel))
+                {
+                    if (SpellCombo.TryAcceleration(
+                        ref NewActionID,
+                        IsEnabled(CustomComboPreset.RDM_ST_Spell_Accel_Swiftcast),
+                        false,
+                        IsEnabled(CustomComboPreset.RDM_ST_Spell_Accel_Movement),
+                        Config.RDM_ST_Acceleration_Charges,
+                        Config.RDM_ST_AccelerationMovement_Charges))
+                        return NewActionID;
+                }
+
+                // VER FIRE STONE THUNDER AERO
                 if (SpellCombo.TrySTSpellRotation(ref NewActionID,
-                    IsEnabled(CustomComboPreset.RDM_ST_FireStone),
-                    IsEnabled(CustomComboPreset.RDM_ST_ThunderAero)))
+                    IsEnabled(CustomComboPreset.RDM_ST_Spells_FireStone),
+                    IsEnabled(CustomComboPreset.RDM_ST_Spells_ThunderAero)))
                     return NewActionID;
             }
 
-            //NO_CONDITIONS_MET
+
+            // ELSE
             return actionID;
         }
     }
@@ -217,15 +193,18 @@ internal partial class RDM : Caster
             uint NewActionID = 0;
 
             //RDM_OGCD
-            if (TryOGCDs(actionID, false, ref NewActionID))
+            if (TryOGCDs(ref NewActionID))
                 return NewActionID;
 
             // LUCID
             if (TryLucidDreaming(6500, ComboAction))
                 return Role.LucidDreaming;
 
-            //RDM_MELEEFINISHER
-            if (MeleeCombo.TryMeleeFinisher(ref NewActionID))
+            // SCORCH & RESOLUTION
+            if (MeleeCombo.CanScorchResolution()) return OriginalHook(Jolt);
+
+            // VERFLARE & VERHOLY
+            if (MeleeCombo.TryVerFlareVerHoly(ref NewActionID))
                 return NewActionID;
 
             if (MeleeCombo.TryAoEManaEmbolden(ref NewActionID))
@@ -248,80 +227,72 @@ internal partial class RDM : Caster
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_AoE_DPS;
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Scatter or Impact) &&
-                actionID is not (Moulinet or Veraero2 or Verthunder2))
+            if (actionID is not (Scatter or Impact))
                 return actionID;
 
             uint NewActionID = 0;
 
-            if (actionID is Scatter or Impact)
-            {
-                //VARIANTS
-                if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
-                    return Variant.Cure;
+            //VARIANTS
+            if (Variant.CanCure(CustomComboPreset.RDM_Variant_Cure, Config.RDM_VariantCure))
+                return Variant.Cure;
 
-                if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
-                    return Variant.Rampart;
+            if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
+                return Variant.Rampart;
 
-                //RDM_OGCD
-                if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)
-                    && LevelChecked(Corpsacorps)
-                    && TryOGCDs(actionID, false, ref NewActionID, true))
-                    return NewActionID;
+            // oGCDs
+            if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)
+                && LevelChecked(Corpsacorps)
+                && TryOGCDs(ref NewActionID,
+                    Config.RDM_AoE_oGCD_Engagement_Pooling,
+                    Config.RDM_AoE_oGCD_CorpACorps_Pooling,
+                    Config.RDM_AoE_oGCD_CorpACorps_Melee,
+                    Config.RDM_AoE_oGCD_Actions))
+                return NewActionID;
 
-                // LUCID
-                if (IsEnabled(CustomComboPreset.RDM_AoE_Lucid)
-                    && TryLucidDreaming(Config.RDM_AoE_Lucid_Threshold, ComboAction))
-                    return Role.LucidDreaming;
-            }
 
-            //RDM_MELEEFINISHER
-            if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeFinisher))
-            {
-                bool ActionFound =
-                    (!Config.RDM_AoE_MeleeFinisher_Adv && actionID is Scatter or Impact) ||
-                    (Config.RDM_AoE_MeleeFinisher_Adv &&
-                        ((Config.RDM_AoE_MeleeFinisher_OnAction[0] && actionID is Scatter or Impact) ||
-                         (Config.RDM_AoE_MeleeFinisher_OnAction[1] && actionID is Moulinet) ||
-                         (Config.RDM_AoE_MeleeFinisher_OnAction[2] && actionID is Veraero2 or Verthunder2)));
+            // LUCID
+            if (IsEnabled(CustomComboPreset.RDM_AoE_Lucid)
+                && TryLucidDreaming(Config.RDM_AoE_Lucid_Threshold, ComboAction))
+                return Role.LucidDreaming;
 
-                if (ActionFound && MeleeCombo.TryMeleeFinisher(ref NewActionID))
-                    return NewActionID;
-            }
-            //END_RDM_MELEEFINISHER
 
-            //RDM_AOE_MELEECOMBO
+            // SCORCH & RESOLUTION
+            if (MeleeCombo.CanScorchResolution()) return OriginalHook(Scatter);
+
+
+            // VERFLARE & VERHOLY
+            if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeFinisher) &&
+                MeleeCombo.TryVerFlareVerHoly(ref NewActionID))
+                return NewActionID;
+
+
+            // MELEE COMBO
             if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo))
             {
-                bool ActionFound =
-                    (!Config.RDM_AoE_MeleeCombo_Adv && actionID is Scatter or Impact) ||
-                    (Config.RDM_AoE_MeleeCombo_Adv &&
-                        ((Config.RDM_AoE_MeleeCombo_OnAction[0] && actionID is Scatter or Impact) ||
-                            (Config.RDM_AoE_MeleeCombo_OnAction[1] && actionID is Moulinet)));
-
-                if (ActionFound)
-                {
-                    if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_ManaEmbolden)
-                        && MeleeCombo.TryAoEManaEmbolden(ref NewActionID, Config.RDM_AoE_MoulinetRange))
-                        return NewActionID;
-
-                    if (MeleeCombo.TryAoEMeleeCombo(ref NewActionID, Config.RDM_AoE_MoulinetRange, IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_CorpsGapCloser),
-                        false)) //Melee range enforced
-                        return NewActionID;
-                }
-            }
-
-            if (actionID is Scatter or Impact)
-            {
-                if (IsEnabled(CustomComboPreset.RDM_AoE_Accel)
-                    && SpellCombo.TryAcceleration(ref NewActionID, IsEnabled(CustomComboPreset.RDM_AoE_Accel_Swiftcast),
-                    IsEnabled(CustomComboPreset.RDM_AoE_Accel_Weave)))
+                // BURST?
+                if (IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_ManaEmbolden)
+                    && MeleeCombo.TryAoEManaEmbolden(ref NewActionID, Config.RDM_AoE_MoulinetRange))
                     return NewActionID;
 
-                if (SpellCombo.TryAoESpellRotation(ref NewActionID))
+                // MOULINET    
+                if (MeleeCombo.TryAoEMeleeCombo(ref NewActionID, Config.RDM_AoE_MoulinetRange, IsEnabled(CustomComboPreset.RDM_AoE_MeleeCombo_CorpsGapCloser),
+                    false)) //Melee range enforced
                     return NewActionID;
-
             }
+
+
+            // SPELL ROTATION
+            if (IsEnabled(CustomComboPreset.RDM_AoE_Accel)
+                && SpellCombo.TryAcceleration(
+                    ref NewActionID, IsEnabled(CustomComboPreset.RDM_AoE_Accel_Swiftcast),
+                    IsEnabled(CustomComboPreset.RDM_AoE_Accel_Weave),
+                    IsEnabled(CustomComboPreset.RDM_AoE_Accel_Movement),
+                    Config.RDM_AoE_Acceleration_Charges,
+                    Config.RDM_AoE_AccelerationMovement_Charges))
+                return NewActionID;
+
+            if (SpellCombo.TryAoESpellRotation(ref NewActionID))
+                return NewActionID;
 
             return actionID;
         }
@@ -344,18 +315,29 @@ internal partial class RDM : Caster
                 return actionID;
 
             if (Variant.CanRaise(CustomComboPreset.RDM_Variant_Raise))
-                return Variant.Raise;
+                return IsEnabled(CustomComboPreset.RDM_Raise_Retarget)
+                    ? Variant.Raise.Retarget(Role.Swiftcast,
+                        SimpleTarget.Stack.AllyToRaise)
+                    : Variant.Raise;
 
             if (LevelChecked(Verraise))
             {
                 bool schwifty = HasStatusEffect(Role.Buffs.Swiftcast);
                 if (schwifty || HasStatusEffect(Buffs.Dualcast))
-                    return Verraise.AndRunMacro();
+                    return IsEnabled(CustomComboPreset.RDM_Raise_Retarget)
+                        ? Verraise
+                            .Retarget(Role.Swiftcast,
+                                SimpleTarget.Stack.AllyToRaise)
+                            .AndRunMacro()
+                        : Verraise.AndRunMacro();
                 if (IsEnabled(CustomComboPreset.RDM_Raise_Vercure) &&
                     !schwifty &&
                     ActionReady(Vercure) &&
                     IsOnCooldown(Role.Swiftcast))
-                    return Vercure;
+                    return IsEnabled(CustomComboPreset.RDM_Raise_Retarget)
+                        ? Vercure.Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToHeal)
+                        : Vercure;
             }
 
             // Else we just exit normally and return Swiftcast
@@ -407,5 +389,82 @@ internal partial class RDM : Caster
             actionID is MagickBarrier &&
             ActionReady(MagickBarrier) &&
             HasStatusEffect(Buffs.MagickBarrier, anyOwner: true) ? All.SavageBlade : actionID;
+    }
+
+    internal class RDM_ST_Melee_Combo : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Riposte;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Riposte)
+                return actionID;
+
+            uint newActionID = 0;
+
+            // oGCDs SINGLE TARGET
+            if (IsEnabled(CustomComboPreset.RDM_Riposte_oGCD) &&
+                LevelChecked(Corpsacorps) &&
+                TryOGCDs(ref newActionID,
+                    Config.RDM_Riposte_oGCD_Engagement_Pooling,
+                    Config.RDM_Riposte_oGCD_CorpACorps_Pooling,
+                    Config.RDM_Riposte_oGCD_CorpACorps_Melee,
+                    Config.RDM_Riposte_oGCD_Actions))
+                return newActionID;
+
+            if (MeleeCombo.TrySTMeleeCombo(ref newActionID, false)) return newActionID;
+
+            return actionID;
+        }
+    }
+
+    internal class RDM_VerSpell : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_VerSpell;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (Veraero or Veraero3 or Verthunder or Verthunder3))
+                return actionID;
+
+            uint newActionID = 0;
+
+            if (IsEnabled(CustomComboPreset.RDM_VerSpell_JoltFinisher) && MeleeCombo.CanScorchResolution()) return OriginalHook(Jolt);
+
+            if (RDMMana.ManaStacks >= 3) return OriginalHook(actionID); //Verholy verflare
+
+            if (SpellCombo.TrySTSpellRotation(ref newActionID,
+                IsEnabled(CustomComboPreset.RDM_VerSpell_StoneFire), false))
+            {
+                if ((actionID is Veraero or Veraero3) && newActionID == Verstone) return Verstone;
+                if ((actionID is Verthunder or Verthunder3) && newActionID == Verfire) return Verfire;
+            }
+
+            if (HasStatusEffect(Buffs.Dualcast) || HasStatusEffect(Role.Buffs.Swiftcast) || 
+                MeleeCombo.CanScorchResolution()) return actionID; //Don't "force" scorch resolution by OriginalHook(Jolt)
+            else return OriginalHook(Jolt);
+        }
+    }
+
+    internal class RDM_Reprise : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.RDM_Reprise;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Reprise)
+                return actionID;
+
+            uint newActionID = 0;
+
+            // oGCDs SINGLE TARGET
+            return TryOGCDs(ref newActionID,
+                    Config.RDM_Reprise_oGCD_Engagement_Pooling,
+                    Config.RDM_Reprise_oGCD_CorpACorps_Pooling,
+                    Config.RDM_Reprise_oGCD_CorpACorps_Melee,
+                    Config.RDM_Reprise_oGCD_Actions)
+                ? newActionID
+                : actionID;
+        }
     }
 }

@@ -3,7 +3,6 @@
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.Logging;
-using FFXIVClientStructs;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
@@ -12,6 +11,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.GameFunctions;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
@@ -107,9 +108,9 @@ public static class DebugFile
             AddLine();
 
             AddPlayerInfo();
+            AddTargetInfo();
 
             AddSettingsInfo();
-
             AddAutoRotationInfo();
 
             AddFeatures(job);
@@ -121,7 +122,6 @@ public static class DebugFile
             AddLine();
 
             AddDebugCode();
-
             AddLogHistory();
 
             AddLine();
@@ -199,7 +199,42 @@ public static class DebugFile
         AddLine();
         AddLine($"Current Zone: {currentZone}");
         AddLine($"Current Party Size: {GetPartyMembers().Count}");
+        AddLine();
+        AddLine($"HP: {(player.CurrentHp / player.MaxHp * 100):F0}%");
+        AddLine($"+Shield: {player.ShieldPercentage:F0}%");
+        AddLine($"MP: {(player.CurrentMp / player.MaxMp * 100):F0}%");
         AddLine("END PLAYER INFO");
+
+        AddLine();
+    }
+
+    private static void AddTargetInfo()
+    {
+        var target = Svc.ClientState.LocalPlayer.TargetObject;
+
+        AddLine($"Target: {target?.GameObjectId.ToString() ?? "None"}");
+
+        if (target is null) return;
+
+        IBattleChara? battleTarget = null;
+        if (target is IBattleChara)
+            battleTarget = target as IBattleChara;
+
+        AddLine("START TARGET INFO");
+        AddLine($"Targetable: {target.IsTargetable}");
+        AddLine($"Hostile: {target.IsHostile()}");
+        AddLine($"Dead: {target.IsDead}");
+        AddLine($"Distance: {GetTargetDistance(target):F1}y");
+        if (battleTarget is not null)
+        {
+            AddLine($"Level: {battleTarget.Level}");
+            AddLine($"Is Casting: {battleTarget.IsCasting}");
+            AddLine($"Is Cast Interruptable: {battleTarget.IsCastInterruptible}");
+            AddLine();
+            AddLine($"HP: {(battleTarget.CurrentHp / battleTarget.MaxHp * 100):F0}%");
+            AddLine($"+Shield: {battleTarget.ShieldPercentage:F0}%");
+        }
+        AddLine("END TARGET INFO");
 
         AddLine();
     }
@@ -209,6 +244,7 @@ public static class DebugFile
         AddLine("START SETTINGS INFO");
         AddLine($"Throttle: {Service.Configuration.Throttle}ms");
         AddLine($"Performance Mode: {(Service.Configuration.PerformanceMode ? "ON" : "OFF")}");
+        AddLine($"Suppress Queued Actions: {(Service.Configuration.SuppressQueuedActions ? "ON" : "OFF")}");
         AddLine($"Block Spell on Move: {(Service.Configuration.BlockSpellOnMove ? "ON" : "OFF")}");
         AddLine($"Movement Delay: {Service.Configuration.MovementLeeway}s");
         AddLine($"Opener Timeout: {Service.Configuration.OpenerTimeout}s");
@@ -468,9 +504,14 @@ public static class DebugFile
         var playerID = Svc.ClientState.LocalPlayer.GameObjectId;
         var statusEffects = Svc.ClientState.LocalPlayer.StatusList;
 
-        AddLine($"Status Effects found: {statusEffects.Count()}");
+        var statusEffectsCount = 0;
+        foreach (var _ in statusEffects)
+            statusEffectsCount++;
 
-        if (statusEffects.Length <= 0) return;
+        AddLine($"Status Effects found: {statusEffectsCount} " +
+                $"(max: {statusEffects.Count()})");
+
+        if (statusEffectsCount <= 0) return;
 
         AddLine("START STATUS EFFECTS");
         foreach (var effect in statusEffects)
@@ -479,7 +520,7 @@ public static class DebugFile
                 $"STACKS: {effect.Param}, " +
                 $"SOURCE: {(effect.SourceId == playerID ? "self" : effect
                     .SourceId)}, " +
-                $"NAME: {ActionWatching.GetStatusName(effect.StatusId)}");
+                $"NAME: {GetStatusName(effect.StatusId)}");
         AddLine("END STATUS EFFECTS");
     }
 
@@ -508,12 +549,20 @@ public static class DebugFile
         AddLine("START DEBUG CODE");
         AddLine(GetDebugCode());
         AddLine("END DEBUG CODE");
+        AddLine();
     }
 
     private static void AddLogHistory()
     {
-        AddLine("START LOG HISTORY");
-        AddLine(string.Join("\n", DebugLog));
+        AddLine($"Setting Changes log Count: {DebugLog.Count}");
+
+        if (DebugLog.Count < 1) return;
+
+        var logsCopy = DebugLog.ToList();
+        logsCopy.Reverse();
+
+        AddLine("START LOG HISTORY (most recent first)");
+        AddLine(string.Join("\n", logsCopy));
         AddLine("END LOG HISTORY");
     }
 

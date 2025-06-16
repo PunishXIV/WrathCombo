@@ -106,7 +106,7 @@ namespace WrathCombo.Combos.PvP
 
                     #endregion
 
-                    if (IsEnabled(CustomComboPreset.BRDPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= Config.MCHPvP_EagleThreshold))
+                    if (IsEnabled(CustomComboPreset.MCHPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= Config.MCHPvP_EagleThreshold))
                         return PvPPhysRanged.EagleEyeShot;
 
                     if (!PvPCommon.TargetImmuneToDamage() && HasBattleTarget())

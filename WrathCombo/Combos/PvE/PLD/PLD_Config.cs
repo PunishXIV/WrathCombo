@@ -1,5 +1,7 @@
 using ImGuiNET;
 using System.Numerics;
+using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
@@ -42,6 +44,7 @@ internal partial class PLD
             PLD_ShieldLob_SubOption = new("PLD_ShieldLob_SubOption", 1),
             PLD_Requiescat_SubOption = new("PLD_Requiescat_SubOption", 1),
             PLD_SpiritsWithin_SubOption = new("PLD_SpiritsWithin_SubOption", 1),
+            PLD_RetargetClemency_Health = new("PLD_RetargetClemency_Health", 30),
             PLD_VariantCure = new("PLD_VariantCure"),
             PLD_Balance_Content = new("PLD_Balance_Content", 1),
             PLD_ST_MitsOptions = new("PLD_ST_MitsOptions", 0),
@@ -247,6 +250,12 @@ internal partial class PLD
                         "Prevents Spirits Within and Circle of Scorn from drifting.\n- Actions must be used within 5 seconds of each other.", 2);
 
                     break;
+                
+                // Retarget Clemency Feature
+                case CustomComboPreset.PLD_RetargetClemency_LowHP:
+                    UserConfig.DrawSliderInt(1, 100, PLD_RetargetClemency_Health, "Player HP%", 200);
+
+                    break;
 
                 // Variant Cure Feature
                 case CustomComboPreset.PLD_Variant_Cure:
@@ -274,6 +283,16 @@ internal partial class PLD
                     UserConfig.DrawHorizontalRadioButton(PLD_AoE_MitsOptions,
                         "Exclude Mitigations",
                         "Disables the use of mitigations in Simple Mode.", 1);
+                    break;
+                
+                case CustomComboPreset.PLD_RetargetSheltron_TT:
+                    ImGui.Indent();
+                    ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey,
+                        "Note: If you are Off-Tanking, and want to use Sheltron on yourself, the expectation would be that you do so via the One-Button Mitigation Feature or the Mitigation options in your rotation.\n" +
+                        "You could also mouseover yourself in the party to use Sheltron in this case.\n" +
+                        "If you don't, intervention would replace the combo, and it would go to the main tank.\n" +
+                        "If you don't use those Features for your personal mitigation, you may not want to enable this.");
+                    ImGui.Unindent();
                     break;
                
                 #region One-Button Mitigation

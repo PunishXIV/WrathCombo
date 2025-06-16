@@ -1,6 +1,8 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using static WrathCombo.Combos.PvE.BRD.Config;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BRD : PhysicalRanged
@@ -19,15 +21,14 @@ internal partial class BRD : PhysicalRanged
             if (IsEnabled(CustomComboPreset.BRD_DoTMaintainance) &&
                 InCombat())
             {
-                if (Purple is not null && PurpleRemaining < 4)
-                    return CanIronJaws
-                        ? IronJaws
-                        : VenomousBite;
+                if (UseIronJaws())
+                    return IronJaws;
 
-                if (Blue is not null && BlueRemaining < 4)
-                    return CanIronJaws
-                        ? IronJaws
-                        : Windbite;
+                if (ApplyBlueDot())
+                    return OriginalHook(Windbite);
+
+                if (ApplyPurpleDot())
+                    return OriginalHook(VenomousBite);
             }
 
             if (IsEnabled(CustomComboPreset.BRD_ApexST))
@@ -252,14 +253,13 @@ internal partial class BRD : PhysicalRanged
                 return actionID;
 
             #region Variables
-
-            int targetHPThreshold = Config.BRD_AoENoWasteHPPercentage;
-            bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_AoE_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
             bool ragingEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Raging);
             bool battleVoiceEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Battlevoice);
             bool barrageEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_Barrage);
             bool radiantEnabled = IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs_RadiantFinale);
             bool allBuffsEnabled = radiantEnabled && battleVoiceEnabled && ragingEnabled && barrageEnabled;
+            int buffThreshold = BRD_AoE_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_AoE_Adv_Buffs_Threshold : 0;
+
             #endregion
 
             #region Variants
@@ -274,7 +274,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Songs
 
-            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs) && isEnemyHealthHigh && InCombat() && (CanBardWeave || !BardHasTarget))
+            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Songs) && InCombat() && (CanBardWeave || !BardHasTarget))
             {
                 if (SongChangePitchPerfect())
                     return PitchPerfect;
@@ -296,7 +296,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Buffs
 
-            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs) && CanBardWeave && isEnemyHealthHigh)
+            if (IsEnabled(CustomComboPreset.BRD_AoE_Adv_Buffs) && CanBardWeave && GetTargetHPPercent() > buffThreshold)
             {
                 if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
                 {
@@ -363,12 +363,17 @@ internal partial class BRD : PhysicalRanged
 
             if (CanBardWeave)
             {
-                if (IsEnabled(CustomComboPreset.BRD_ST_SecondWind) && Role.CanSecondWind(Config.BRD_STSecondWindThreshold))
+                if (IsEnabled(CustomComboPreset.BRD_AoE_SecondWind) && Role.CanSecondWind(Config.BRD_STSecondWindThreshold))
                     return Role.SecondWind;
+               
+                if (IsEnabled(CustomComboPreset.BRD_AoE_Wardens) && ActionReady(TheWardensPaeon))
+                {
+                    if (HasCleansableDebuff(LocalPlayer))
+                        return TheWardensPaeon;
 
-                // Could be upgraded with a targetting system in the future
-                if (IsEnabled(CustomComboPreset.BRD_ST_Wardens) && ActionReady(TheWardensPaeon) && HasCleansableDebuff(LocalPlayer))
-                    return OriginalHook(TheWardensPaeon);
+                    else if (IsEnabled(CustomComboPreset.BRD_AoE_WardensAuto) && WardenResolver() is not null)
+                        return TheWardensPaeon.Retarget([Ladonsbite, QuickNock], WardenResolver);
+                }                   
             }
 
             #endregion
@@ -415,14 +420,15 @@ internal partial class BRD : PhysicalRanged
                 return actionID;
 
             #region Variables
-            int targetHPThreshold = Config.BRD_NoWasteHPPercentage;
             int ragingJawsRenewTime = Config.BRD_RagingJawsRenewTime;
-            bool isEnemyHealthHigh = !IsEnabled(CustomComboPreset.BRD_Adv_NoWaste) || GetTargetHPPercent() > targetHPThreshold;
             bool ragingEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_Raging);
             bool battleVoiceEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_Battlevoice);
             bool barrageEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_Barrage);
             bool radiantEnabled = IsEnabled(CustomComboPreset.BRD_Adv_Buffs_RadiantFinale);
             bool allBuffsEnabled = radiantEnabled && battleVoiceEnabled && ragingEnabled && barrageEnabled;
+            int dotThreshold = BRD_Adv_DoT_SubOption == 1 || !InBossEncounter() ? BRD_Adv_DoT_Threshold : 0;
+            int buffThreshold = BRD_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_Adv_Buffs_Threshold : 0;
+
             #endregion
 
             #region Variants
@@ -437,7 +443,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Opener
 
-            if (IsEnabled(CustomComboPreset.BRD_ST_Adv_Balance_Standard) &&
+            if (IsEnabled(CustomComboPreset.BRD_ST_Adv_Balance_Standard) && HasBattleTarget() &&
                 Opener().FullOpener(ref actionID))
             {
                 if (ActionWatching.GetAttackType(Opener().CurrentOpenerAction) != ActionWatching.ActionAttackType.Ability && CanBardWeave)
@@ -455,7 +461,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Songs
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_Song) && isEnemyHealthHigh && InCombat())
+            if (IsEnabled(CustomComboPreset.BRD_Adv_Song) && InCombat())
             {
                 if (SongChangePitchPerfect())
                     return PitchPerfect;
@@ -478,7 +484,7 @@ internal partial class BRD : PhysicalRanged
 
             #region Buffs
 
-            if (IsEnabled(CustomComboPreset.BRD_Adv_Buffs) && CanBardWeave && isEnemyHealthHigh)
+            if (IsEnabled(CustomComboPreset.BRD_Adv_Buffs) && CanBardWeave && GetTargetHPPercent() > buffThreshold)
             {
                 if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
                 {                    
@@ -539,38 +545,42 @@ internal partial class BRD : PhysicalRanged
 
             #region Self Care
 
-            if (CanBardWeave)
+            if (CanBardWeave || !InCombat())
             {
                 if (IsEnabled(CustomComboPreset.BRD_ST_SecondWind) && Role.CanSecondWind(Config.BRD_STSecondWindThreshold))
                     return Role.SecondWind;
 
-                if (IsEnabled(CustomComboPreset.BRD_ST_Wardens) && ActionReady(TheWardensPaeon) && HasCleansableDebuff(LocalPlayer))
-                    return OriginalHook(TheWardensPaeon);
+                if (IsEnabled(CustomComboPreset.BRD_ST_Wardens) && ActionReady(TheWardensPaeon))
+                {
+                    if (HasCleansableDebuff(LocalPlayer))
+                        return TheWardensPaeon;
+
+                    else if (IsEnabled(CustomComboPreset.BRD_ST_WardensAuto) && WardenResolver() is not null)
+                        return TheWardensPaeon.Retarget([HeavyShot, BurstShot], WardenResolver);
+                }
             }
 
             #endregion
 
             #region Dot Management
 
-            if (isEnemyHealthHigh)
+            if (IsEnabled(CustomComboPreset.BRD_Adv_DoT) && GetTargetHPPercent() > dotThreshold)
             {
-                if (IsEnabled(CustomComboPreset.BRD_Adv_DoT))
+                if (IsEnabled(CustomComboPreset.BRD_Adv_IronJaws) && UseIronJaws())
+                    return IronJaws;
+
+                if (IsEnabled(CustomComboPreset.BRD_Adv_ApplyDots))
                 {
-                    if (IsEnabled(CustomComboPreset.BRD_Adv_IronJaws) && UseIronJaws())
-                        return IronJaws;
+                    if (ApplyBlueDot())
+                        return OriginalHook(Windbite);
 
-                    if (IsEnabled(CustomComboPreset.BRD_Adv_ApplyDots))
-                    {
-                        if (ApplyBlueDot())
-                            return OriginalHook(Windbite);
-
-                        if (ApplyPurpleDot())
-                            return OriginalHook(VenomousBite);
-                    }   
-                    if (IsEnabled(CustomComboPreset.BRD_Adv_RagingJaws) && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
-                        return IronJaws;
-                }
+                    if (ApplyPurpleDot())
+                        return OriginalHook(VenomousBite);
+                }   
+                if (IsEnabled(CustomComboPreset.BRD_Adv_RagingJaws) && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
+                    return IronJaws;
             }
+            
 
             #endregion
 
@@ -712,8 +722,14 @@ internal partial class BRD : PhysicalRanged
                 if (Role.CanSecondWind(40))
                     return Role.SecondWind;
 
-                if (ActionReady(TheWardensPaeon) && HasCleansableDebuff(LocalPlayer))
-                    return OriginalHook(TheWardensPaeon);
+                if (ActionReady(TheWardensPaeon))
+                {
+                    if (HasCleansableDebuff(LocalPlayer))
+                        return TheWardensPaeon;
+
+                    else if (WardenResolver() is not null)
+                        return TheWardensPaeon.Retarget([Ladonsbite, QuickNock], WardenResolver);
+                }
             }
 
             #endregion
@@ -845,8 +861,13 @@ internal partial class BRD : PhysicalRanged
                 if (Role.CanSecondWind(40))
                     return Role.SecondWind;
 
-                if (ActionReady(TheWardensPaeon) && HasCleansableDebuff(LocalPlayer))
-                    return OriginalHook(TheWardensPaeon);
+                if (ActionReady(TheWardensPaeon))
+                {
+                    if (HasCleansableDebuff(LocalPlayer))
+                        return TheWardensPaeon;
+                    else if (WardenResolver() is not null)
+                        return TheWardensPaeon.Retarget([HeavyShot, BurstShot], WardenResolver);
+                }
             }
 
             #endregion

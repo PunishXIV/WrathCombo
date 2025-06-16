@@ -34,18 +34,6 @@ namespace WrathCombo.Combos.PvP
                 EncoreofLightReady = 4312,
                 FrontlineMarch = 3139;
         }
-        internal class Debuffs
-        {
-            public const ushort
-                Silence = 1347,
-                Bind = 1345,
-                Stun = 1343,
-                HalfAsleep = 3022,
-                Sleep = 1348,
-                DeepFreeze = 3219,
-                Heavy = 1344,
-                Unguarded = 3021;
-        }
         #endregion
 
         #region Config
@@ -95,7 +83,7 @@ namespace WrathCombo.Combos.PvP
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
                         if (IsEnabled(CustomComboPreset.BRDPvP_Wardens) && InPvP() &&  //Autowardens set up only for soft ccs, it cant be used while cced like purify
-                            (HasStatusEffect(Debuffs.Bind, anyOwner: true) || HasStatusEffect(Debuffs.Heavy, anyOwner: true) || HasStatusEffect(Debuffs.HalfAsleep, anyOwner: true)))
+                            (HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.Heavy, anyOwner: true) || HasStatusEffect(PvPCommon.Debuffs.HalfAsleep, anyOwner: true)))
                             return OriginalHook(WardensPaean);
 
                         if (canWeave)

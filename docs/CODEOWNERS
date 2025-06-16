@@ -5,7 +5,7 @@
 /WrathCombo/Combos/PvE/AST/                           @Taurenkey
 /WrathCombo/Combos/PvE/BLM/                           @Kagekazu
 /WrathCombo/Combos/PvE/BLU/                           @zbee
-/WrathCombo/Combos/PvE/BRD/                           @zbee
+/WrathCombo/Combos/PvE/BRD/                           @edewen
 /WrathCombo/Combos/PvE/DNC/                           @zbee
 /WrathCombo/Combos/PvE/DRG/                           @Kagekazu
 /WrathCombo/Combos/PvE/DRK/                           @zbee
@@ -13,20 +13,21 @@
 /WrathCombo/Combos/PvE/MCH/                           @Kagekazu
 /WrathCombo/Combos/PvE/MNK/                           @Kagekazu
 /WrathCombo/Combos/PvE/NIN/                           @Taurenkey
-/WrathCombo/Combos/PvE/PCT/                           @Nik-Potokar
+/WrathCombo/Combos/PvE/PCT/                           @Nik-Potokar @edewen
 /WrathCombo/Combos/PvE/PLD/                           @Kaeris-Tempest
 /WrathCombo/Combos/PvE/RDM/                           @Tartarga
 /WrathCombo/Combos/PvE/RPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/SAM/                           @Kagekazu
 /WrathCombo/Combos/PvE/SCH/                           @Tartarga
 /WrathCombo/Combos/PvE/SGE/                           @Tartarga
-/WrathCombo/Combos/PvE/SMN/                           @Genesis-Nova
-/WrathCombo/Combos/PvE/VPR/                           @Akechi-kun @Kagekazu
+/WrathCombo/Combos/PvE/SMN/                           @Genesis-Nova @edewen
+/WrathCombo/Combos/PvE/VPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/WAR/                           @Akechi-kun
 /WrathCombo/Combos/PvE/WHM/                           @zbee
 
 # PvP Combos
-/WrathCombo/Combos/PvP/                               @Nik-Potokar @Kaeris-Tempest
+/WrathCombo/Combos/PvP/                               @Nik-Potokar @Kaeris-Tempest @edewen
+/WrathCombo/Combos/PvP/BRDPVP.cs                      @edewen
 /WrathCombo/Combos/PvP/BLMPVP.cs                      @Kaeris-Tempest
 /WrathCombo/Combos/PvP/RDMPVP.cs                      @Kaeris-Tempest
 /WrathCombo/Combos/PvP/SAMPVP.cs                      @Kaeris-Tempest
@@ -40,6 +41,8 @@
 /WrathCombo/CustomCombo/Functions/                    @Taurenkey
 /WrathCombo/Core/                                     @Taurenkey
 /WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest
+/WrathCombo/Core/ActionRetargeting.cs                 @zbee
+/WrathCombo/CustomCombo/SimpleTarget.cs               @zbee
 /docs/                                                @zbee
 /CONTRIBUTING.md                                      @zbee
 /WrathCombo/Services/IPC/                             @zbee

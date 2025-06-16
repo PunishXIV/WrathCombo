@@ -83,8 +83,8 @@ internal partial class NIN : Melee
             int bloodbathThreshold = Config.BloodbathThresholdST;
             double playerHP = PlayerHealthPercentageHp();
             bool phantomUptime = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_Phantom_Uptime);
-            bool trueNorthArmor = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrueNorth) && Role.CanTrueNorth() && !OnTargetsFlank() && canDelayedWeave;
-            bool trueNorthEdge = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrueNorth) && Role.CanTrueNorth() && !OnTargetsRear() && canDelayedWeave;
+            bool trueNorthArmor = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrueNorth) && Role.CanTrueNorth() && !OnTargetsFlank();
+            bool trueNorthEdge = IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_TrueNorth) && Role.CanTrueNorth() && !OnTargetsRear();
             bool dynamic = Config.Advanced_TrueNorth == 0;
 
             if (IsEnabled(CustomComboPreset.NIN_ST_AdvancedMode_BalanceOpener) && 
@@ -561,8 +561,8 @@ internal partial class NIN : Melee
             int bloodbathThreshold = 50;
             double playerHP = PlayerHealthPercentageHp();
             bool phantomUptime = true;
-            bool trueNorthArmor = TargetNeedsPositionals() && !OnTargetsFlank() && Role.CanTrueNorth() && canDelayedWeave;
-            bool trueNorthEdge = TargetNeedsPositionals() && !OnTargetsRear() && Role.CanTrueNorth() && canDelayedWeave;
+            bool trueNorthArmor = !OnTargetsFlank() && Role.CanTrueNorth();
+            bool trueNorthEdge = !OnTargetsRear() && Role.CanTrueNorth();
             bool dynamic = true;
 
             if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat())

@@ -1,3 +1,4 @@
+using Dalamud.Interface.Colors;
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -9,14 +10,18 @@ internal partial class BRD
     internal static class Config
     {
         public static UserInt
-            BRD_RagingJawsRenewTime = new("ragingJawsRenewTime"),
-            BRD_NoWasteHPPercentage = new("noWasteHpPercentage"),
-            BRD_AoENoWasteHPPercentage = new("AoENoWasteHpPercentage"),
+            BRD_RagingJawsRenewTime = new("ragingJawsRenewTime"),            
             BRD_STSecondWindThreshold = new("BRD_STSecondWindThreshold"),
             BRD_AoESecondWindThreshold = new("BRD_AoESecondWindThreshold"),
             BRD_VariantCure = new("BRD_VariantCure"),
             BRD_Adv_Opener_Selection = new("BRD_Adv_Opener_Selection", 0),
-            BRD_Balance_Content = new("BRD_Balance_Content", 1);
+            BRD_Balance_Content = new("BRD_Balance_Content", 1),
+            BRD_Adv_DoT_Threshold = new("BRD_Adv_DoT_Threshold", 1),
+            BRD_Adv_DoT_SubOption = new("BRD_Adv_DoT_SubOption", 1),
+            BRD_Adv_Buffs_Threshold = new ("BRD_Adv_Buffs_Threshold", 1),
+            BRD_Adv_Buffs_SubOption = new ("BRD_Adv_Buffs_SubOption", 1),
+            BRD_AoE_Adv_Buffs_Threshold = new("BRD_AoE_Adv_Buffs_Threshold", 1),
+            BRD_AoE_Adv_Buffs_SubOption = new("BRD_AoE_Adv_Buffs_SubOption", 1);
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -38,14 +43,61 @@ internal partial class BRD
 
                     break;
 
-                case CustomComboPreset.BRD_Adv_NoWaste:
-                    DrawSliderInt(1, 10, BRD_NoWasteHPPercentage, "Remaining target HP percentage");
+
+                case CustomComboPreset.BRD_Adv_DoT:
+
+                    DrawSliderInt(0, 100, BRD_Adv_DoT_Threshold,
+                        $"Stop using Dots on targets below this HP % (0% = always use, 100% = never use).");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(BRD_Adv_DoT_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(BRD_Adv_DoT_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+
+                    ImGui.Unindent();
 
                     break;
 
-                case CustomComboPreset.BRD_AoE_Adv_NoWaste:
-                    DrawSliderInt(1, 50, BRD_AoENoWasteHPPercentage,
-                        "Remaining target HP percentage");
+                case CustomComboPreset.BRD_Adv_Buffs:
+
+                    DrawSliderInt(0, 100, BRD_Adv_Buffs_Threshold,
+                       $"Stop using Buffs on targets below this HP % (0% = always use, 100% = never use).");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(BRD_Adv_Buffs_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(BRD_Adv_Buffs_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+
+                    ImGui.Unindent();
+
+                    break;
+
+                case CustomComboPreset.BRD_AoE_Adv_Buffs:
+
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_Buffs_Threshold,
+                        $"Stop using Buffs on targets below this HP % (0% = always use, 100% = never use).");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(BRD_AoE_Adv_Buffs_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(BRD_AoE_Adv_Buffs_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+
+                    ImGui.Unindent();
 
                     break;
 

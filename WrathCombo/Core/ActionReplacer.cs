@@ -32,7 +32,7 @@ internal sealed class ActionReplacer : IDisposable
 
     private readonly Hook<IsActionReplaceableDelegate> isActionReplaceableHook;
 
-    private readonly Dictionary<uint, uint> lastActionInvokeFor = [];
+    public readonly Dictionary<uint, uint> LastActionInvokeFor = [];
 
     /// <summary>
     ///     Critical for the hook, do not remove or modify.
@@ -102,11 +102,11 @@ internal sealed class ActionReplacer : IDisposable
             // Only refresh every so often
             if (!EzThrottler.Throttle("Actions" + actionID,
                     Service.Configuration.Throttle))
-                return lastActionInvokeFor[actionID];
+                return LastActionInvokeFor[actionID];
 
             // Actually get the action
-            lastActionInvokeFor[actionID] = GetAdjustedAction(actionID);
-            return lastActionInvokeFor[actionID];
+            LastActionInvokeFor[actionID] = GetAdjustedAction(actionID);
+            return LastActionInvokeFor[actionID];
         }
         catch (Exception e)
         {

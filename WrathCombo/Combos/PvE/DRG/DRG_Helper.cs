@@ -14,6 +14,15 @@ internal partial class DRG
     internal static StandardOpenerLogic StandardOpener = new();
     internal static PiercingTalonOpenerLogic PiercingTalonOpener = new();
 
+    internal static readonly Dictionary<uint, ushort>
+        ChaoticList = new()
+        {
+            { ChaosThrust, Debuffs.ChaosThrust },
+            { ChaoticSpring, Debuffs.ChaoticSpring }
+        };
+
+    internal static Status? ChaosDebuff => GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
+
     internal static bool UseLifeSurge()
     {
         if (ActionReady(LifeSurge) && CanDRGWeave(LifeSurge) && !HasStatusEffect(Buffs.LifeSurge))
@@ -23,6 +32,12 @@ internal partial class DRG
                 (JustUsed(WheelingThrust) ||
                  JustUsed(FangAndClaw) ||
                  JustUsed(OriginalHook(VorpalThrust)) && LevelChecked(HeavensThrust)))
+                return true;
+
+            if (!LevelChecked(Drakesbane) && JustUsed(VorpalThrust))
+                return true;
+
+            if (!LevelChecked(FullThrust) && JustUsed(TrueThrust))
                 return true;
         }
 
@@ -52,10 +67,6 @@ internal partial class DRG
         HighJump,
         DragonfireDive
     ];
-
-    internal static Status? ChaosDoTDebuff => LevelChecked(ChaoticSpring)
-        ? GetStatusEffect(Debuffs.ChaoticSpring, CurrentTarget)
-        : GetStatusEffect(Debuffs.ChaosThrust, CurrentTarget);
 
     internal static uint SlowLock => Stardiver;
 
@@ -253,6 +264,12 @@ internal partial class DRG
         public const ushort
             ChaosThrust = 118,
             ChaoticSpring = 2719;
+    }
+
+    public static class Traits
+    {
+        public const ushort
+            LifeOfTheDragon = 163;
     }
 
     #endregion

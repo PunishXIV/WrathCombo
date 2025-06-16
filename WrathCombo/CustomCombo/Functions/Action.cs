@@ -27,7 +27,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <summary> Checks if the player is high enough level to use the passed Action ID. </summary>
         /// <param name="actionid"> ID of the action. </param>
         /// <returns></returns>
-        public static bool LevelChecked(uint actionid) => LocalPlayer.Level >= GetLevel(actionid) && NoBlockingStatuses(actionid) && IsActionUnlocked(actionid);
+        public static bool LevelChecked(uint actionid) => LocalPlayer.Level >= GetLevel(actionid) && IsActionUnlocked(actionid);
 
         /// <summary> Checks if the player is high enough level to use the passed Trait ID. </summary>
         /// <param name="traitid"> ID of the action. </param>
@@ -206,10 +206,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <param name="weaveTime"> Time when weaving window is over. Defaults to 0.7. </param>
         /// 
         /// <returns> True or false. </returns>
-        public static bool CanWeave(double weaveTime = 0.7)
-        {
-            return (RemainingGCD > weaveTime) || (HasSilence() && HasPacification());
-        }
+        public static bool CanWeave(double weaveTime = 0.7) => RemainingGCD > weaveTime;
 
         /// <summary> Checks if the provided actionID has enough cooldown remaining to weave against it without causing clipping and checks if you're casting a spell. </summary>
         /// <param name="weaveTime"> Time when weaving window is over. Defaults to 0.6. </param>
@@ -273,12 +270,9 @@ namespace WrathCombo.CustomComboNS.Functions
             bool alreadyQueued = ActionManager.Instance()->QueuedActionId != 0;
             bool inSlidecast = (LocalPlayer.TotalCastTime - LocalPlayer.CurrentCastTime) <= 0.5f;
             bool animLocked = ActionManager.Instance()->AnimationLock > 0;
-            bool recast = GetCooldown(actionID).CooldownRemaining <= 0.5f || GetCooldown(actionID).RemainingCharges > 0;
-            bool classCheck = ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID) != 574;
 
-            bool ret = !alreadyQueued && inSlidecast && !animLocked && recast && classCheck;
-            uint status = ActionManager.Instance()->GetActionStatus(ActionType.Action, actionID);
-            return ret && status is 0 or 582;
+            bool ret = !alreadyQueued && inSlidecast && !animLocked && ActionReady(actionID);
+            return ret;
         }
 
         private static bool _raidwideInc;

@@ -36,12 +36,11 @@ namespace WrathCombo.Combos.PvP
         public static class Buffs
         {
             public const ushort
-            FirstmindsFocus = 3178,
-            LifeOfTheDragon = 3177,
-            Heavensent = 3176,
-            StarCrossReady = 4302;
-
-
+                SkyHigh = 3180,
+                FirstmindsFocus = 3178,
+                LifeOfTheDragon = 3177,
+                Heavensent = 3176,
+                StarCrossReady = 4302;
         }
         #endregion
 

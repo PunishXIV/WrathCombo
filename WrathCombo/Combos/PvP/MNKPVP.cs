@@ -20,7 +20,7 @@ namespace WrathCombo.Combos.PvP
             PhantomRush = 29478,
             RisingPhoenix = 29481,
             RiddleOfEarth = 29482,
-            ThunderClap = 29484,
+            Thunderclap = 29484,
             EarthsReply = 29483,
             Meteordrive = 29485,
             WindsReply = 41509,
@@ -94,8 +94,8 @@ namespace WrathCombo.Combos.PvP
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
                             return OriginalHook(RiddleOfEarth);
 
-                        if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(ThunderClap) > 0 && !InMeleeRange())
-                            return OriginalHook(ThunderClap);
+                        if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(Thunderclap) > 0 && !InMeleeRange())
+                            return OriginalHook(Thunderclap);
 
                         if (IsEnabled(CustomComboPreset.MNKPvP_Burst_WindsReply) && InActionRange(WindsReply) && IsOffCooldown(WindsReply))
                             return WindsReply;

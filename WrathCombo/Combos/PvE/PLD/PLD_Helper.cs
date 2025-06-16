@@ -172,6 +172,7 @@ internal partial class PLD
         HallowedGround = 30,
         GoringBlade = 3538,
         DivineVeil = 3540,
+        PassageOfArms = 7385,
         RoyalAuthority = 3539,
         Guardian = 36920,
         TotalEclipse = 7381,
@@ -193,6 +194,7 @@ internal partial class PLD
         Intervene = 16461,
         BladeOfHonor = 36922,
         Sheltron = 3542,
+        HolySheltron = 25746,
         Clemency = 3541;
 
     public static class Buffs
@@ -209,6 +211,7 @@ internal partial class PLD
             ConfiteorReady = 3019,
             DivineMight = 2673,
             HolySheltron = 2674,
+            PassageOfArms = 1175,
             Sheltron = 1856;
     }
 

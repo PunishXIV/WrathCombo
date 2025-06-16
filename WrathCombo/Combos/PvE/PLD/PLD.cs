@@ -1,6 +1,9 @@
 ﻿using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PLD : Tank
@@ -39,6 +42,7 @@ internal partial class PLD : Tank
 
             #region Variables
 
+            var canFightOrFlight = OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight);
             float durationFightOrFlight = GetStatusEffectRemainingTime(Buffs.FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
@@ -70,6 +74,14 @@ internal partial class PLD : Tank
             // Interrupt
             if (Role.CanInterject())
                 return Role.Interject;
+
+            // Stun
+            if (!TargetIsBoss()
+                && TargetIsCasting()
+                && !JustUsed(Role.Interject)
+                && !InBossEncounter())
+                if (Role.CanLowBlow())
+                    return Role.LowBlow;
 
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
@@ -129,7 +141,7 @@ internal partial class PLD : Tank
                             return OriginalHook(Requiescat);
 
                         // Fight or Flight
-                        if (ActionReady(FightOrFlight))
+                        if (canFightOrFlight)
                         {
                             if (!LevelChecked(Requiescat))
                             {
@@ -137,17 +149,17 @@ internal partial class PLD : Tank
                                 {
                                     // Level 2-25
                                     if (ComboAction is FastBlade)
-                                        return FightOrFlight;
+                                        return OriginalHook(FightOrFlight);
                                 }
 
                                 // Level 26-67
                                 else if (ComboAction is RiotBlade)
-                                    return FightOrFlight;
+                                    return OriginalHook(FightOrFlight);
                             }
 
                             // Level 68+
                             else if (cooldownRequiescat < 0.5f && hasRequiescatMP && canEarlyWeave && (ComboAction is RoyalAuthority || afterOpener))
-                                return FightOrFlight;
+                                return OriginalHook(FightOrFlight);
                         }
 
                         // Variant Ultimatum
@@ -240,6 +252,7 @@ internal partial class PLD : Tank
 
             #region Variables
 
+            var canFightOrFlight = OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
             uint playerMP = LocalPlayer.CurrentMp;
@@ -262,10 +275,8 @@ internal partial class PLD : Tank
                 return Role.Interject;
 
             // Stun
-            if (TargetIsCasting())
-                if (ActionReady(ShieldBash))
-                    return ShieldBash;
-                else if (Role.CanLowBlow())
+            if (TargetIsCasting() && !JustUsed(Role.Interject))
+                if (Role.CanLowBlow())
                     return Role.LowBlow;
 
             // Variant Cure
@@ -322,8 +333,14 @@ internal partial class PLD : Tank
                             return OriginalHook(Requiescat);
 
                         // Fight or Flight
-                        if (ActionReady(FightOrFlight) && (cooldownRequiescat < 0.5f && hasRequiescatMP && canEarlyWeave || !LevelChecked(Requiescat)))
-                            return FightOrFlight;
+                        if (canFightOrFlight)
+                        {
+                            if (!LevelChecked(Requiescat))
+                                return OriginalHook(FightOrFlight);
+
+                            else if (cooldownRequiescat < 0.5f && hasRequiescatMP && canEarlyWeave)
+                                return OriginalHook(FightOrFlight);
+                        }
 
                         // Variant Ultimatum
                         if (Variant.CanUltimatum(CustomComboPreset.PLD_Variant_Ultimatum))
@@ -378,6 +395,7 @@ internal partial class PLD : Tank
 
             #region Variables
 
+            var canFightOrFlight = OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight);
             float durationFightOrFlight = GetStatusEffectRemainingTime(Buffs.FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
@@ -411,6 +429,16 @@ internal partial class PLD : Tank
                 && Role.CanInterject())
                 return Role.Interject;
 
+            // Stun
+            if (!TargetIsBoss()
+                && TargetIsCasting()
+                && !JustUsed(Role.Interject)
+                && !InBossEncounter())
+                if (IsEnabled(CustomComboPreset.PLD_ST_ShieldBash) && ActionReady(ShieldBash) && !JustUsed(Role.LowBlow) && !JustUsedOn(ShieldBash, CurrentTarget, 10))
+                    return ShieldBash;
+                else if (IsEnabled(CustomComboPreset.PLD_ST_LowBlow) && Role.CanLowBlow() && !JustUsed(ShieldBash))
+                    return Role.LowBlow;
+
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
                 return Variant.Cure;
@@ -431,7 +459,7 @@ internal partial class PLD : Tank
                             return OriginalHook(Requiescat);
 
                         // Fight or Flight
-                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && ActionReady(FightOrFlight) && GetTargetHPPercent() >= Config.PLD_ST_FoF_Trigger)
+                        if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_FoF) && canFightOrFlight && GetTargetHPPercent() >= Config.PLD_ST_FoF_Trigger)
                         {
                             if (!LevelChecked(Requiescat))
                             {
@@ -439,17 +467,17 @@ internal partial class PLD : Tank
                                 {
                                     // Level 2-25
                                     if (ComboAction is FastBlade)
-                                        return FightOrFlight;
+                                        return OriginalHook(FightOrFlight);
                                 }
 
                                 // Level 26-67
                                 else if (ComboAction is RiotBlade)
-                                    return FightOrFlight;
+                                    return OriginalHook(FightOrFlight);
                             }
 
                             // Level 68+
                             else if (cooldownRequiescat < 0.5f && hasRequiescatMP && canEarlyWeave && (ComboAction is RoyalAuthority || afterOpener))
-                                return FightOrFlight;
+                                return OriginalHook(FightOrFlight);
                         }
 
                         // Variant Ultimatum
@@ -587,6 +615,7 @@ internal partial class PLD : Tank
 
             #region Variables
 
+            var canFightOrFlight = OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight);
             float cooldownFightOrFlight = GetCooldownRemainingTime(FightOrFlight);
             float cooldownRequiescat = GetCooldownRemainingTime(Requiescat);
             uint playerMP = LocalPlayer.CurrentMp;
@@ -610,10 +639,10 @@ internal partial class PLD : Tank
                 return Role.Interject;
 
             // Stun
-            if (IsEnabled(CustomComboPreset.PLD_AoE_Stun) && TargetIsCasting())
-                if (ActionReady(ShieldBash))
+            if (TargetIsCasting() && !JustUsed(Role.Interject))
+                if (IsEnabled(CustomComboPreset.PLD_AoE_ShieldBash) && ActionReady(ShieldBash) && !JustUsed(Role.LowBlow) && !JustUsedOn(ShieldBash, CurrentTarget, 10))
                     return ShieldBash;
-                else if (Role.CanLowBlow())
+                else if (IsEnabled(CustomComboPreset.PLD_AoE_LowBlow) && Role.CanLowBlow() && !JustUsed(ShieldBash))
                     return Role.LowBlow;
 
             // Variant Cure
@@ -632,9 +661,14 @@ internal partial class PLD : Tank
                             return OriginalHook(Requiescat);
 
                         // Fight or Flight
-                        if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF) && ActionReady(FightOrFlight) && GetTargetHPPercent() >= Config.PLD_AoE_FoF_Trigger &&
-                            (cooldownRequiescat < 0.5f && hasRequiescatMP && canEarlyWeave || !LevelChecked(Requiescat)))
-                            return FightOrFlight;
+                        if (IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_FoF) && canFightOrFlight && GetTargetHPPercent() >= Config.PLD_AoE_FoF_Trigger)
+                        {
+                            if (!LevelChecked(Requiescat))
+                                return OriginalHook(FightOrFlight);
+
+                            else if (cooldownRequiescat < 0.5f && hasRequiescatMP && canEarlyWeave)
+                                return OriginalHook(FightOrFlight);
+                        }
 
                         // Variant Ultimatum
                         if (Variant.CanUltimatum(CustomComboPreset.PLD_Variant_Ultimatum))
@@ -722,9 +756,11 @@ internal partial class PLD : Tank
             if (actionID is not (Requiescat or Imperator))
                 return actionID;
 
+            var canFightOrFlight = OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight);
+
             // Fight or Flight
-            if (Config.PLD_Requiescat_SubOption == 2 && (ActionReady(FightOrFlight) && ActionReady(Requiescat) || !LevelChecked(Requiescat)))
-                return FightOrFlight;
+            if (Config.PLD_Requiescat_SubOption == 2 && (!LevelChecked(Requiescat) || (canFightOrFlight && ActionReady(Requiescat))))
+                return OriginalHook(FightOrFlight);
 
             // Confiteor & Blades
             if (HasStatusEffect(Buffs.ConfiteorReady) || LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor)
@@ -779,6 +815,69 @@ internal partial class PLD : Tank
         }
     }
 
+    internal class PLD_RetargetClemency : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_RetargetClemency;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID != Clemency)
+                return actionID;
+
+            int healthThreshold = Config.PLD_RetargetClemency_Health;
+            
+            var target =
+                //Mouseover retarget option
+                (IsEnabled(CustomComboPreset.PLD_RetargetClemency_MO) 
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+                
+                //Hard target
+                SimpleTarget.HardTarget.IfFriendly() ??
+                
+                //Lowest HP option
+                (IsEnabled(CustomComboPreset.PLD_RetargetClemency_LowHP)
+                 && PlayerHealthPercentageHp() > healthThreshold
+                    ? SimpleTarget.LowestHPAlly.IfNotThePlayer().IfAlive()
+                    : null);
+
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
+    }
+    internal class PLD_RetargetSheltron : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_RetargetSheltron;
+
+        protected override uint Invoke(uint action)
+        {
+            if (action is not (Sheltron or HolySheltron))
+                return action;
+            
+            var target =
+                //Mouseover retarget option
+                (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_MO) 
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+                
+                //Hard target retarget
+                SimpleTarget.HardTarget.IfInParty().IfNotThePlayer() ??
+                
+                //Targets target retarget option
+                (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_TT)
+                    && !PlayerHasAggro
+                    ? SimpleTarget.TargetsTarget.IfNotThePlayer().IfInParty()
+                    : null);
+
+            // Intervention if trying to Buff an ally
+            if (ActionReady(Intervention) && 
+                target != null)
+                return Intervention.Retarget([Sheltron, HolySheltron], target);
+
+            return action;
+        }
+    }
     #region One-Button Mitigation
 
     internal class PLD_Mit_OneButton : CustomCombo
@@ -807,6 +906,28 @@ internal partial class PLD : Tank
             }
 
             return actionID;
+        }
+    }
+
+    internal class PLD_Mit_OneButton_Party : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } =
+            CustomComboPreset.PLD_Mit_Party;
+
+        protected override uint Invoke(uint action)
+        {
+            if (action is not DivineVeil)
+                return action;
+
+            if (ActionReady(Role.Reprisal))
+                return Role.Reprisal;
+
+            if (ActionReady(PassageOfArms) &&
+                IsEnabled(CustomComboPreset.PLD_Mit_Party_Wings) &&
+                !HasStatusEffect(Buffs.PassageOfArms, anyOwner: true))
+                return PassageOfArms;
+
+            return action;
         }
     }
 

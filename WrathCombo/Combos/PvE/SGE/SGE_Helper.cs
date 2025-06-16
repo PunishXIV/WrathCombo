@@ -37,7 +37,7 @@ internal partial class SGE
 
     internal static int GetMatchingConfigST(int i, IGameObject? optionalTarget, out uint action, out bool enabled)
     {
-        IGameObject? healTarget = optionalTarget ?? GetHealTarget(Config.SGE_ST_Heal_Adv && Config.SGE_ST_Heal_UIMouseOver);
+        var healTarget = optionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
         switch (i)
         {
@@ -84,6 +84,15 @@ internal partial class SGE
                 enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Druochole) && HasAddersgall();
 
                 return Config.SGE_ST_Heal_Druochole;
+
+            case 7:
+                action = Eukrasia;
+                enabled = (IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) &&
+                          (Config.SGE_ST_Heal_EDiagnosisOpts[0] || // Ignore Any Shield check
+                           !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) && //Shield Check
+                           (!Config.SGE_ST_Heal_EDiagnosisOpts[1] || !HasStatusEffect(SCH.Buffs.Galvanize, healTarget, true)))); //Galvanize Check
+
+                return Config.SGE_ST_Heal_EDiagnosisHP;
         }
 
         enabled = false;

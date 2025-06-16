@@ -3,6 +3,7 @@
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System.Numerics;
+using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
@@ -63,7 +64,35 @@ internal partial class DRK
                 #region Adv Single Target
 
                 case CustomComboPreset.DRK_ST_BalanceOpener:
+                    ImGui.Indent();
                     UserConfig.DrawBossOnlyChoice(DRK_ST_OpenerDifficulty);
+                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    ImGui.Indent();
+                    ImGui.Text("Choose the action to pull with:     (hover each for more info)");
+                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
+                        "Unmend (Standard)",
+                        "Will use Unmend to pull, if selected.\n" +
+                        "Should start at -1.0 seconds.\n\n" +
+                        "Recommended by The Balance.",
+                        outputValue: (int) PullAction.Unmend,
+                        descriptionAsTooltip: true);
+                    UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
+                        "Shadowstride",
+                        "Will use Shadowstride to pull, if selected.\n" +
+                        "Will use an extra Hard Slash before Disesteem.\n" +
+                        "Should start at -0.7 seconds.",
+                        outputValue: (int) PullAction.Shadowstride,
+                        descriptionAsTooltip: true);
+                    UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
+                        "Hard Slash (Face or Manual Pulling)",
+                        "Will use nothing to pull, if selected, just going straight to Hard Slash.\n" +
+                        "Will use an extra Hard Slash before Disesteem.\n" +
+                        "Should start at 0.0 seconds.",
+                        outputValue: (int) PullAction.HardSlash,
+                        descriptionAsTooltip: true);
                     break;
 
                 case CustomComboPreset.DRK_ST_CDs:
@@ -148,7 +177,7 @@ internal partial class DRK
                         outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "Avoid Bosses",
-                        "Will try not to use Blackest Night when your target is a boss.\n" +
+                        "Will try not to use Blackest Night when in a boss fight.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
                         outputValue: (int) BossAvoidance.On, itemWidth: 125f);
                     ImGui.Unindent();
@@ -273,6 +302,12 @@ internal partial class DRK
                         "# enemies in range",
                         itemWidth: little, sliderIncrement: SliderIncrements.Ones);
 
+                    break;
+
+                case CustomComboPreset.DRK_AoE_Mit_DarkMind:
+                    UserConfig.DrawSliderInt(10, 100, DRK_AoE_Mit_DarkMindThreshold,
+                        startUsingAtDescriptionPlusDisable,
+                        itemWidth: medium, sliderIncrement: SliderIncrements.Fives);
                     break;
 
                 case CustomComboPreset.DRK_AoE_Mit_Rampart:
@@ -433,7 +468,29 @@ internal partial class DRK
 
                     break;
 
-                    #endregion
+                #endregion
+
+                #region Standalones
+
+                case CustomComboPreset.DRK_Retarget_TBN_TT:
+                    ImGui.Indent(34f.Scale());
+                    ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey,
+                        "Note: If you are Off-Tanking, and want to use this ability on yourself, the expectation would be that you do so via the One-Button Mitigation Feature or the Mitigation options in your rotation.\n" +
+                        "If you don't, it would go to the main tank.\n" +
+                        "If you don't use those Features for your personal mitigation, you may not want to enable this.");
+                    ImGui.Unindent(34f.Scale());
+                    break;
+
+                case CustomComboPreset.DRK_Retarget_Oblation_TT:
+                    ImGui.Indent(34f.Scale());
+                    ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey,
+                        "Note: If you are Off-Tanking, and want to use this ability on yourself, the expectation would be that you do so via the One-Button Mitigation Feature or the Mitigation options in your rotation.\n" +
+                        "If you don't, it would go to the main tank.\n" +
+                        "If you don't use those Features for your personal mitigation, you may not want to enable this.");
+                    ImGui.Unindent(34f.Scale());
+                    break;
+
+                #endregion
             }
         }
 
@@ -495,6 +552,13 @@ internal partial class DRK
             On,
         }
 
+        internal enum PullAction
+        {
+            Unmend,
+            Shadowstride,
+            HardSlash,
+        }
+
         #endregion
 
         #region Options
@@ -540,6 +604,17 @@ internal partial class DRK
         /// <seealso cref="CustomComboPreset.DRK_ST_BalanceOpener" />
         public static readonly UserBoolArray DRK_ST_OpenerDifficulty =
             new("DRK_ST_OpenerDifficulty", [false, true]);
+
+        /// <summary>
+        ///     What action is used to pull, in the opener.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="PullAction.Unmend" /> <br />
+        ///     <b>Options</b>: <see cref="PullAction">PullAction Enum</see>
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DRK_ST_BalanceOpener" />
+        public static readonly UserInt DRK_ST_OpenerAction =
+            new("DRK_ST_OpenerAction", (int)PullAction.Unmend);
 
         /// <summary>
         ///     Cooldown Boss Restriction for Single Target.
@@ -962,7 +1037,19 @@ internal partial class DRK
             new("DRK_AoE_ReprisalEnemyCount", 3);
 
         /// <summary>
-        ///     Self HP\% to use Rampart below for AoE.
+        ///     Self HP% to use Dark Mind below for AoE.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 75 <br />
+        ///     <b>Range</b>: 10 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.DRK_AoE_Mit_DarkMind" />
+        public static readonly UserInt DRK_AoE_Mit_DarkMindThreshold =
+            new("DRK_AoE_Mit_DarkMindThreshold", 75);
+
+        /// <summary>
+        ///     Self HP% to use Rampart below for AoE.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 50 <br />

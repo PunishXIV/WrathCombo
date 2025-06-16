@@ -88,10 +88,6 @@ internal partial class SCH
                     if (SCH_ST_Heal_Adv)
                     {
                         ImGui.Indent();
-                        DrawAdditionalBoolChoice(SCH_ST_Heal_UIMouseOver,
-                            "Party UI Mouseover Checking",
-                            "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                            "To be used in conjunction with Redirect/Reaction/etc");
                         DrawAdditionalBoolChoice(SCH_ST_Heal_IncludeShields, "Include Shields in HP Percent Sliders", "");
                         ImGui.Unindent();
                     }
@@ -178,19 +174,6 @@ internal partial class SCH
                     DrawPriorityInput(SCH_AoE_Heals_Priority, 7, 5, $"{Indomitability.ActionName()} Priority: ");
                     break;
 
-                case CustomComboPreset.SCH_DeploymentTactics:
-                    DrawAdditionalBoolChoice(SCH_DeploymentTactics_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (SCH_DeploymentTactics_Adv)
-                    {
-                        ImGui.Indent();
-                        DrawAdditionalBoolChoice(SCH_DeploymentTactics_UIMouseOver,
-                            "Party UI Mouseover Checking",
-                            "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                            "To be used in conjunction with Redirect/Reaction/etc");
-                        ImGui.Unindent();
-                    }
-                    break;
-
                 case CustomComboPreset.SCH_Aetherflow:
                     DrawRadioButton(SCH_Aetherflow_Display, "Show Aetherflow On Energy Drain Only", "", 0);
                     DrawRadioButton(SCH_Aetherflow_Display, "Show Aetherflow On All Aetherflow Skills", "", 1);
@@ -275,10 +258,7 @@ internal partial class SCH
             SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority");
         public static UserBool
             SCH_ST_Heal_Adv = new("SCH_ST_Heal_Adv"),
-            SCH_ST_Heal_UIMouseOver = new("SCH_ST_Heal_UIMouseOver"),
-            SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),
-            SCH_DeploymentTactics_Adv = new("SCH_DeploymentTactics_Adv"),
-            SCH_DeploymentTactics_UIMouseOver = new("SCH_DeploymentTactics_UIMouseOver");
+            SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields");
         public static UserBoolArray
             SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts");
 

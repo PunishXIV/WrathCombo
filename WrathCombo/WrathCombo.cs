@@ -16,8 +16,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Dalamud.Networking.Http;
 using ECommons.Logging;
 using WrathCombo.Attributes;
 using WrathCombo.AutoRotation;
@@ -31,6 +33,7 @@ using WrathCombo.Services;
 using WrathCombo.Services.IPC;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
+using ECommons.EzHookManager;
 
 namespace WrathCombo;
 
@@ -39,16 +42,23 @@ public sealed partial class WrathCombo : IDalamudPlugin
 {
     internal static TaskManager? TM;
     internal readonly ConfigWindow ConfigWindow;
-    private readonly SettingChangeWindow SettingChangeWindow;
+    private readonly MajorChangesWindow _majorChangesWindow;
     private readonly TargetHelper TargetHelper;
     internal static DateTime LastPresetDeconflictTime = DateTime.MinValue;
     internal static WrathCombo? P;
     private readonly WindowSystem ws;
-    private readonly HttpClient httpClient = new();
+    private static readonly SocketsHttpHandler httpHandler = new()
+    {
+        AutomaticDecompression = DecompressionMethods.All,
+        ConnectCallback = new HappyEyeballsCallback().ConnectCallback,
+    };
+    private readonly HttpClient httpClient = new(httpHandler) { Timeout = TimeSpan.FromSeconds(5) };
     private readonly IDtrBarEntry DtrBarEntry;
     internal Provider IPC;
     internal Search IPCSearch = null!;
     internal UIHelper UIHelper = null!;
+    internal ActionRetargeting ActionRetargeting = new();
+    internal MovementHook MoveHook;
 
     private readonly TextPayload starterMotd = new("[Wrath Message of the Day] ");
     private static uint? jobID;
@@ -104,13 +114,13 @@ public sealed partial class WrathCombo : IDalamudPlugin
             if (!Player.Available)
                 return false;
 
-            AST.QuickTargetCards.SelectedRandomMember = null;
+            WrathOpener.SelectOpener();
+            P.ActionRetargeting.ClearCachedRetargets();
             if (onJobChange)
                 PvEFeatures.OpenToCurrentJob(true);
             if (onJobChange || firstRun)
             {
                 Service.ActionReplacer.UpdateFilteredCombos();
-                WrathOpener.SelectOpener();
                 Svc.Framework.RunOnTick(Provider.BuildCachesAction());
                 P.IPCSearch.UpdateActiveJobPresets();
                 P.IPC.Leasing.SuspendLeases(CancellationReason.JobChanged);
@@ -149,20 +159,20 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
         Service.Address = new PluginAddressResolver();
         Service.Address.Setup(Svc.SigScanner);
+        MoveHook = new();
         PresetStorage.Init();
 
         Service.ComboCache = new CustomComboCache();
         Service.ActionReplacer = new ActionReplacer();
         ActionWatching.Enable();
-        AST.InitCheckCards();
         IPC = Provider.Init();
 
         ConfigWindow = new ConfigWindow();
-        SettingChangeWindow = new SettingChangeWindow();
+        _majorChangesWindow = new MajorChangesWindow();
         TargetHelper = new();
         ws = new();
         ws.AddWindow(ConfigWindow);
-        ws.AddWindow(SettingChangeWindow);
+        ws.AddWindow(_majorChangesWindow);
         ws.AddWindow(TargetHelper);
 
         Svc.PluginInterface.UiBuilder.Draw += ws.Draw;
@@ -193,6 +203,10 @@ public sealed partial class WrathCombo : IDalamudPlugin
             LastPresetDeconflictTime = DateTime.UtcNow;
         }
         CustomComboFunctions.TimerSetup();
+
+        // Starts Retarget list cleaning process after a delay
+        Svc.Framework.RunOnTick(ActionRetargeting.ClearOldRetargets,
+            TimeSpan.FromSeconds(60));
 
 #if DEBUG
         ConfigWindow.IsOpen = true;
@@ -282,6 +296,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         Service.Configuration.SetActionChanging();
 
+        if (Player.Available && Player.IsDead)
+            ActionRetargeting.Retargets.Clear();
+
         // Skip the IPC checking if hidden
         if (DtrBarEntry.UserHidden) return;
 
@@ -328,7 +345,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
     private void DrawUI()
     {
-        SettingChangeWindow.Draw();
+        _majorChangesWindow.Draw();
         ConfigWindow.Draw();
     }
 
@@ -377,7 +394,10 @@ public sealed partial class WrathCombo : IDalamudPlugin
     /// <inheritdoc/>
     public void Dispose()
     {
+        ActionRetargeting.Dispose();
         ConfigWindow.Dispose();
+        Debug.Dispose();
+
         // Try to force a config save if there are some pending
         if (PluginConfiguration.SaveQueue.Count > 0)
             lock (PluginConfiguration.SaveQueue)
@@ -386,8 +406,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
                 Service.Configuration.Save();
                 PluginConfiguration.ProcessSaveQueue();
             }
-
-        Debug.Dispose();
 
         ws.RemoveAllWindows();
         Svc.DtrBar.Remove("Wrath Combo");
@@ -399,9 +417,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.ActionReplacer.Dispose();
         Service.ComboCache.Dispose();
         ActionWatching.Dispose();
-        AST.DisposeCheckCards();
         CustomComboFunctions.TimerDispose();
         IPC.Dispose();
+        MoveHook?.Dispose();
 
         Svc.ClientState.Login -= PrintLoginMessage;
         ECommonsMain.Dispose();
@@ -411,6 +429,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
     private void OnOpenMainUi() =>
         HandleOpenCommand(forceOpen: true);
 
-    private void OnOpenConfigUi() =>
+    internal void OnOpenConfigUi() =>
         HandleOpenCommand(tab: OpenWindow.Settings, forceOpen: true);
 }

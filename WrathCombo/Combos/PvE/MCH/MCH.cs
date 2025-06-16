@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.Statuses;
 using WrathCombo.CustomComboNS;
-using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.MCH.Config;
 using static WrathCombo.Data.ActionWatching;
 namespace WrathCombo.Combos.PvE;
@@ -9,7 +8,7 @@ internal partial class MCH : PhysicalRanged
 {
     internal class MCH_ST_BasicCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_ST_BasicCombo;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_ST_BasicCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -31,7 +30,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_ST_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_ST_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_ST_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -66,13 +65,14 @@ internal partial class MCH : PhysicalRanged
                     if (JustUsed(Hypercharge) &&
                         ActionReady(Wildfire) &&
                         !HasStatusEffect(Buffs.Wildfire) &&
+                        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
                         TargetIsBoss())
                         return Wildfire;
 
                     if (!IsOverheated)
                     {
                         // BarrelStabilizer
-                        if (ActionReady(BarrelStabilizer) && InBossEncounter() &&
+                        if (ActionReady(BarrelStabilizer) && TargetIsBoss() &&
                             !HasStatusEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
 
@@ -138,7 +138,8 @@ internal partial class MCH : PhysicalRanged
             }
 
             // Full Metal Field
-            if (HasStatusEffect(Buffs.FullMetalMachinist, out Status? fullMetal) && InBossEncounter() &&
+            if (HasStatusEffect(Buffs.FullMetalMachinist, out Status? fullMetal) &&
+                TargetIsBoss() && !JustUsed(BarrelStabilizer) &&
                 (GetCooldownRemainingTime(Wildfire) <= GCD || fullMetal.RemainingTime <= 6))
                 return FullMetalField;
 
@@ -169,7 +170,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_ST_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -216,6 +217,7 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(CustomComboPreset.MCH_ST_Adv_WildFire) &&
                         (MCH_ST_Adv_Wildfire_SubOption == 0 ||
                          MCH_ST_Adv_Wildfire_SubOption == 1 && TargetIsBoss()) &&
+                        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
                         JustUsed(Hypercharge) && ActionReady(Wildfire) && !HasStatusEffect(Buffs.Wildfire))
                         return Wildfire;
 
@@ -224,7 +226,7 @@ internal partial class MCH : PhysicalRanged
                         // BarrelStabilizer
                         if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Stabilizer) &&
                             (MCH_ST_Adv_BarrelStabiliser_SubOption == 0 ||
-                             MCH_ST_Adv_BarrelStabiliser_SubOption == 1 && InBossEncounter()) &&
+                             MCH_ST_Adv_BarrelStabiliser_SubOption == 1 && TargetIsBoss()) &&
                             ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist))
                             return BarrelStabilizer;
 
@@ -304,8 +306,9 @@ internal partial class MCH : PhysicalRanged
             // Full Metal Field
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Stabilizer_FullMetalField) &&
                 (MCH_ST_Adv_FullMetalMachinist_SubOption == 0 ||
-                 MCH_ST_Adv_FullMetalMachinist_SubOption == 1 && InBossEncounter()) &&
+                 MCH_ST_Adv_FullMetalMachinist_SubOption == 1 && TargetIsBoss()) &&
                 HasStatusEffect(Buffs.FullMetalMachinist, out Status? fullMetal) &&
+                !JustUsed(BarrelStabilizer) &&
                 (fullMetal.RemainingTime <= 6 ||
                  GetCooldownRemainingTime(Wildfire) <= GCD ||
                  ActionReady(Wildfire)))
@@ -340,7 +343,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_AoE_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_AoE_SimpleMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_AoE_SimpleMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -370,26 +373,26 @@ internal partial class MCH : PhysicalRanged
                         !HasStatusEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
-                    if (Battery == 100)
+                    if (Battery is 100)
                         return OriginalHook(RookAutoturret);
 
                     // Hypercharge
                     if ((Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
-                        (BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10 ||
-                         !BioBlaster.LevelChecked()) &&
-                        (Flamethrower.LevelChecked() && GetCooldownRemainingTime(Flamethrower) > 10 ||
-                         !Flamethrower.LevelChecked()))
+                        (LevelChecked(BioBlaster) && GetCooldownRemainingTime(BioBlaster) > 10 ||
+                         !LevelChecked(BioBlaster)) &&
+                        (LevelChecked(Flamethrower) && GetCooldownRemainingTime(Flamethrower) > 10 ||
+                         !LevelChecked(Flamethrower)))
                         return Hypercharge;
 
                     if (ActionReady(Reassemble) &&
                         !HasStatusEffect(Buffs.Wildfire) &&
                         !HasStatusEffect(Buffs.Reassembled) &&
                         !JustUsed(Flamethrower, 10f) &&
-                        (HasStatusEffect(Buffs.ExcavatorReady) && Excavator.LevelChecked() ||
-                         GetCooldownRemainingTime(Chainsaw) < 1 && Chainsaw.LevelChecked() ||
-                         GetCooldownRemainingTime(AirAnchor) < 1 && AirAnchor.LevelChecked() ||
-                         Scattergun.LevelChecked()))
+                        (HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Excavator) ||
+                         GetCooldownRemainingTime(Chainsaw) < 1 && LevelChecked(Chainsaw) ||
+                         GetCooldownRemainingTime(AirAnchor) < 1 && LevelChecked(AirAnchor) ||
+                         LevelChecked(Scattergun)))
                         return Reassemble;
 
                     if (Role.CanSecondWind(25))
@@ -418,7 +421,8 @@ internal partial class MCH : PhysicalRanged
 
                 if (ActionReady(BioBlaster) &&
                     !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-                    !IsOverheated && !HasStatusEffect(Buffs.Reassembled))
+                    !IsOverheated && !HasStatusEffect(Buffs.Reassembled) &&
+                    CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                     return OriginalHook(BioBlaster);
 
                 if (ActionReady(Flamethrower) && !IsMoving())
@@ -430,15 +434,17 @@ internal partial class MCH : PhysicalRanged
                 if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
                     return Chainsaw;
 
-                if (ActionReady(AirAnchor))
+                if (LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
             }
 
-            if (LevelChecked(AutoCrossbow) && IsOverheated && !LevelChecked(CheckMate))
-                return AutoCrossbow;
-
-            if (IsOverheated && LevelChecked(CheckMate))
-                return BlazingShot;
+            if (ActionReady(BlazingShot) && IsOverheated)
+                return HasBattleTarget() &&
+                       (!LevelChecked(CheckMate) ||
+                        LevelChecked(CheckMate) &&
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
+                    ? AutoCrossbow
+                    : BlazingShot;
 
             return actionID;
         }
@@ -446,7 +452,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_AoE_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_AoE_AdvancedMode;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_AoE_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -510,26 +516,25 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Hypercharge) &&
                         (Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
-                        (BioBlaster.LevelChecked() && GetCooldownRemainingTime(BioBlaster) > 10 ||
-                         !BioBlaster.LevelChecked() || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster)) &&
-                        (Flamethrower.LevelChecked() && GetCooldownRemainingTime(Flamethrower) > 10 ||
-                         !Flamethrower.LevelChecked() || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_FlameThrower)))
+                        (LevelChecked(BioBlaster) && GetCooldownRemainingTime(BioBlaster) > 10 ||
+                         !LevelChecked(BioBlaster) || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster)) &&
+                        (LevelChecked(Flamethrower) && GetCooldownRemainingTime(Flamethrower) > 10 ||
+                         !LevelChecked(Flamethrower) || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_FlameThrower)))
                         return Hypercharge;
 
                     if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Reassemble) &&
                         ActionReady(Reassemble) && !HasStatusEffect(Buffs.Wildfire) &&
                         !HasStatusEffect(Buffs.Reassembled) && !JustUsed(Flamethrower, 10f) &&
                         GetRemainingCharges(Reassemble) > MCH_AoE_ReassemblePool &&
-                        (MCH_AoE_Reassembled[0] && Scattergun.LevelChecked() ||
-                         IsOverheated && MCH_AoE_Reassembled[1] && AutoCrossbow.LevelChecked() ||
-                         GetCooldownRemainingTime(Chainsaw) < 1 && MCH_AoE_Reassembled[2] && Chainsaw.LevelChecked() ||
+                        (MCH_AoE_Reassembled[0] && LevelChecked(Scattergun) ||
+                         IsOverheated && MCH_AoE_Reassembled[1] && LevelChecked(AutoCrossbow) ||
+                         GetCooldownRemainingTime(Chainsaw) < 1 && MCH_AoE_Reassembled[2] && LevelChecked(Chainsaw) ||
                          GetCooldownRemainingTime(OriginalHook(Chainsaw)) < 1 && MCH_AoE_Reassembled[3] &&
-                         Excavator.LevelChecked()))
+                         LevelChecked(Excavator)))
                         return Reassemble;
 
                     //gauss and ricochet outside HC
-                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_GaussRicochet) &&
-                        MCH_AoE_Hypercharge)
+                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_GaussRicochet))
                     {
                         if (ActionReady(GaussRound) &&
                             !JustUsed(OriginalHook(GaussRound), 2.5f))
@@ -540,13 +545,14 @@ internal partial class MCH : PhysicalRanged
                             return OriginalHook(Ricochet);
                     }
 
-                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_SecondWind) && Role.CanSecondWind(MCH_AoE_SecondWindThreshold))
+                    if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_SecondWind) &&
+                        Role.CanSecondWind(MCH_AoE_SecondWindThreshold))
                         return Role.SecondWind;
                 }
 
                 //AutoCrossbow, Gauss, Rico
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_GaussRicochet) &&
-                    !MCH_AoE_Hypercharge &&
+                    IsOverheated &&
                     (JustUsed(OriginalHook(AutoCrossbow), 1f) ||
                      JustUsed(OriginalHook(Heatblast), 1f)) && HasNotWeaved)
                 {
@@ -567,7 +573,9 @@ internal partial class MCH : PhysicalRanged
                     return FullMetalField;
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_Bioblaster) &&
-                    ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) && !IsOverheated && !HasStatusEffect(Buffs.Reassembled))
+                    ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
+                    !IsOverheated && !HasStatusEffect(Buffs.Reassembled) &&
+                    CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                     return OriginalHook(BioBlaster);
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_FlameThrower) &&
@@ -586,20 +594,20 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_AirAnchor) &&
                     reassembledAirAnchorAoE &&
-                    ActionReady(AirAnchor))
+                    LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
 
                 if (reassembledScattergunAoE)
                     return OriginalHook(Scattergun);
             }
 
-            if (LevelChecked(AutoCrossbow) && IsOverheated &&
-                (!LevelChecked(CheckMate) || IsNotEnabled(CustomComboPreset.MCH_AoE_Adv_BlazingShot)))
-                return AutoCrossbow;
-
-            if (IsEnabled(CustomComboPreset.MCH_AoE_Adv_BlazingShot) &&
-                IsOverheated && LevelChecked(CheckMate))
-                return BlazingShot;
+            if (ActionReady(BlazingShot) && IsOverheated)
+                return HasBattleTarget() &&
+                       (!LevelChecked(CheckMate) ||
+                        LevelChecked(CheckMate) &&
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
+                    ? AutoCrossbow
+                    : BlazingShot;
 
             return actionID;
         }
@@ -607,7 +615,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_HeatblastGaussRicochet : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_Heatblast;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_Heatblast;
 
         protected override uint Invoke(uint actionID)
         {
@@ -620,7 +628,9 @@ internal partial class MCH : PhysicalRanged
                 return BarrelStabilizer;
 
             if (IsEnabled(CustomComboPreset.MCH_Heatblast_Wildfire) &&
-                ActionReady(Wildfire) && JustUsed(Hypercharge) && !HasStatusEffect(Buffs.Wildfire))
+                ActionReady(Wildfire) && JustUsed(Hypercharge) &&
+                !HasStatusEffect(Buffs.Wildfire) &&
+                CanApplyStatus(CurrentTarget, Debuffs.Wildfire))
                 return Wildfire;
 
             if (!IsOverheated && LevelChecked(Hypercharge) &&
@@ -649,7 +659,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_AutoCrossbowGaussRicochet : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_AutoCrossbow;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_AutoCrossbow;
 
         protected override uint Invoke(uint actionID)
         {
@@ -685,7 +695,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_GaussRoundRicochet : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_GaussRoundRicochet;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_GaussRoundRicochet;
 
         protected override uint Invoke(uint actionID)
         {
@@ -705,7 +715,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_Overdrive : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_Overdrive;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_Overdrive;
 
         protected override uint Invoke(uint actionID) =>
             actionID is RookAutoturret or AutomatonQueen && RobotActive
@@ -715,7 +725,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_HotShotDrillChainsawExcavator : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_HotShotDrillChainsawExcavator;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_HotShotDrillChainsawExcavator;
 
         protected override uint Invoke(uint actionID) =>
             actionID is not (Drill or HotShot or AirAnchor or Chainsaw)
@@ -735,7 +745,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_DismantleTactician : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_DismantleTactician;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_DismantleTactician;
 
         protected override uint Invoke(uint actionID) =>
             actionID is Dismantle &&
@@ -747,7 +757,7 @@ internal partial class MCH : PhysicalRanged
 
     internal class MCH_DismantleProtection : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.MCH_DismantleProtection;
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MCH_DismantleProtection;
 
         protected override uint Invoke(uint actionID) =>
             actionID is Dismantle && HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) && IsOffCooldown(Dismantle)

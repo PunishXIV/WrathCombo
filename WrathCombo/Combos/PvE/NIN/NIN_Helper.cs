@@ -567,12 +567,12 @@ internal partial class NIN
 
         public bool ContinueCurrentMudra(ref uint actionID)
         {
-
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds > 1 && CurrentNinjutsu == Ninjutsu && CurrentMudra != MudraState.None)
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 1 && CurrentNinjutsu == Ninjutsu)
             {
                 InMudra = false;
                 ActionWatching.LastAction = 0;
                 CurrentMudra = MudraState.None;
+                return false;
             }
 
             if (ActionWatching.LastAction == FumaShuriken ||

@@ -1,11 +1,9 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Concurrent;
-using DalamudStatus = Dalamud.Game.ClientState.Statuses; // conflicts with structs if not defined
 
 namespace WrathCombo.Data
 {
@@ -15,7 +13,6 @@ namespace WrathCombo.Data
         private const uint InvalidObjectID = 0xE000_0000;
 
         // Invalidate these
-        private readonly ConcurrentDictionary<(uint StatusID, ulong? TargetID, ulong? SourceID), DalamudStatus.Status?> statusCache = new();
         private readonly ConcurrentDictionary<uint, CooldownData?> cooldownCache = new();
 
         // Do not invalidate these
@@ -35,33 +32,6 @@ namespace WrathCombo.Data
         /// <typeparam name="T"> Type of job gauge. </typeparam>
         /// <returns> The job gauge. </returns>
         internal T GetJobGauge<T>() where T : JobGaugeBase => Svc.Gauges.Get<T>();
-
-        /// <summary> Finds a status on the given object. </summary>
-        /// <param name="statusID"> Status effect ID. </param>
-        /// <param name="obj"> Object to look for effects on. </param>
-        /// <param name="sourceID"> Source object ID. </param>
-        /// <returns> Status object or null. </returns>
-        internal DalamudStatus.Status? GetStatus(uint statusID, IGameObject? obj, ulong? sourceID)
-        {
-            if (obj is null) return null;
-            var key = (statusID, obj?.GameObjectId, sourceID);
-            if (statusCache.TryGetValue(key, out DalamudStatus.Status? found))
-                return found;
-
-            if (obj is null)
-                return statusCache[key] = null;
-
-            if (obj is not IBattleChara chara)
-                return statusCache[key] = null;
-
-            foreach (DalamudStatus.Status? status in chara.StatusList)
-            {
-                if (status.StatusId == statusID && (!sourceID.HasValue || status.SourceId == 0 || status.SourceId == InvalidObjectID || status.SourceId == sourceID))
-                    return statusCache[key] = status;
-            }
-
-            return statusCache[key] = null;
-        }
 
         /// <summary> Gets the cooldown data for an action. </summary>
         /// <param name="actionID"> Action ID to check. </param>

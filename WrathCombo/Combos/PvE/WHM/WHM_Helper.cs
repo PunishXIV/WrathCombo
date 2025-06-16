@@ -35,6 +35,7 @@ internal partial class WHM
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
+               CanApplyStatus(CurrentTarget, dotDebuffID) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
                dotRemaining <= Config.WHM_ST_MainCombo_DoT_Threshold;
@@ -217,6 +218,9 @@ internal partial class WHM
         DivineBenison = 7432,
         Aquaveil = 25861,
         DivineCaress = 37011,
+        Asylum = 3569,
+        LiturgyOfTheBell = 25862,
+        LiturgyOfTheBellRecast = 28509,
 
         // Buffs
         ThinAir = 7430,
@@ -235,6 +239,7 @@ internal partial class WHM
             DivineBenison = 1218,
             Aquaveil = 2708,
             SacredSight = 3879,
+            LiturgyOfTheBell = 2709,
             DivineGrace = 3881;
     }
 

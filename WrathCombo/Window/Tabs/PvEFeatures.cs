@@ -171,7 +171,9 @@ namespace WrathCombo.Window.Tabs
 
         private static void DrawVariantContents(string jobName)
         {
-            foreach (var (preset, info) in groupedPresets[jobName].Where(x => PresetStorage.IsVariant(x.Preset)))
+            foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
+                         PresetStorage.IsVariant(x.Preset) &&
+                         !PresetStorage.ShouldBeHidden(x.Preset)))
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
                 presetBox.Draw();
@@ -181,7 +183,8 @@ namespace WrathCombo.Window.Tabs
         private static void DrawBozjaContents(string jobName)
         {
             foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
-                    PresetStorage.IsBozja(x.Preset)))
+                         PresetStorage.IsBozja(x.Preset) &&
+                         !PresetStorage.ShouldBeHidden(x.Preset)))
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
                 presetBox.Draw();
@@ -193,10 +196,12 @@ namespace WrathCombo.Window.Tabs
         {
             if (!Messages.PrintBLUMessage(jobName)) return;
 
-            foreach (var (preset, info) in groupedPresets[jobName].Where(x => !PresetStorage.IsPvP(x.Preset) &&
-                                                                                !PresetStorage.IsVariant(x.Preset) &&
-                                                                                !PresetStorage.IsBozja(x.Preset) &&
-                                                                                !PresetStorage.IsEureka(x.Preset)))
+            foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
+                         !PresetStorage.IsPvP(x.Preset) &&
+                         !PresetStorage.IsVariant(x.Preset) &&
+                         !PresetStorage.IsBozja(x.Preset) &&
+                         !PresetStorage.IsEureka(x.Preset) &&
+                         !PresetStorage.ShouldBeHidden(x.Preset)))
             {
                 InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 2f.Scale(), ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info); } };
 

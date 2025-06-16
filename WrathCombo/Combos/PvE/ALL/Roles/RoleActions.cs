@@ -156,7 +156,7 @@ internal static partial class RoleActions
             ActionReady(Feint) && !HasStatusEffect(Debuffs.Feint, CurrentTarget, true);
 
         public static bool CanTrueNorth() =>
-            ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasStatusEffect(Buffs.TrueNorth);
+            ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasStatusEffect(Buffs.TrueNorth) && CanDelayedWeave();
     }
 
     public static class Tank

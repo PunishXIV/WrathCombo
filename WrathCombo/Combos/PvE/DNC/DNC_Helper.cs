@@ -7,6 +7,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -195,7 +196,8 @@ internal partial class DNC
     {
         get
         {
-            if (!EZ.Throttle("dncPartnerDesiredCheck", TS.FromSeconds(2)))
+            if (!EZ.Throttle("dncPartnerDesiredCheck", TS.FromSeconds(2)) &&
+                field is not null)
                 return field;
 
             field = TryGetDancePartner(out var partner)
@@ -205,38 +207,66 @@ internal partial class DNC
         }
     }
 
-    private static bool TryGetDancePartner
-        (out IGameObject? partner, bool? callingFromFeature = null)
+    private static bool CurrentPartnerNonOptimal =>
+        DesiredDancePartner is not null &&
+        (!HasStatusEffect(Buffs.ClosedPosition) &&
+         (IsInParty() ||
+          HasCompanionPresent())) ||
+        (CurrentDancePartner is not null &&
+         DesiredDancePartner != CurrentDancePartner);
+
+    [ActionRetargeting.TargetResolver]
+    internal static IGameObject? DancePartnerResolver () =>
+        Svc.Objects.FirstOrDefault(x =>
+            x.GameObjectId == DesiredDancePartner) ??
+        (!HasStatusEffect(Buffs.ClosedPosition)
+            ? SimpleTarget.AnySelfishDPS ?? SimpleTarget.AnyMeleeDPS ?? SimpleTarget.AnyDPS
+            : null);
+
+    private static bool TryGetDancePartner (out IGameObject? partner)
     {
         partner = null;
-        var playerID = LocalPlayer.GameObjectId;
+
+        if (!Player.Available)
+            return false;
+
+        #region Skip a new check, if the current partner is just out of range
+        if (CurrentDancePartner is not null)
+        {
+            var currentPartner = Svc.Objects.FirstOrDefault(
+                x => x.GameObjectId == CurrentDancePartner);
+            if (currentPartner is not null &&
+                !currentPartner.IsWithinRange(30) &&
+                !currentPartner.IsDead &&
+                DamageDownFree(currentPartner))
+                return false;
+        }
+        #endregion
+
+        // Check if we have a target overriding any searching
+        var focusTarget = SimpleTarget.FocusTarget;
+        if (Config.DNC_Partner_FocusOverride &&
+            focusTarget is IBattleChara &&
+            !focusTarget.IsDead &&
+            focusTarget.IsInParty() &&
+            IsInRange(focusTarget, 30) &&
+            SicknessFree(focusTarget) &&
+            DamageDownFree(focusTarget))
+        {
+            partner = focusTarget;
+            return true;
+        }
+
         var party = GetPartyMembers()
-            .Where(member => member.GameObjectId != playerID)
+            .Where(member => member.GameObjectId != Player.Object.GameObjectId)
             .Where(member => !member.BattleChara.IsDead)
             .Where(member => IsInRange(member.BattleChara, 30))
             .Where(member => !HasAnyPartner(member) || HasMyPartner(member))
             .Select(member => member.BattleChara)
             .ToList();
 
-        // Bails
-        if (!Player.Available)
+        if (party.Count < 1 && !HasCompanionPresent())
             return false;
-        if (party.Count <= 1 && !HasCompanionPresent())
-            return false;
-
-        // Check if we have a target overriding any searching
-        /*
-         if (callingFromFeature is true &&
-            IsEnabled(Options.DNC_Desirable_TargetOverride) &&
-            LocalPlayer.TargetObject is IBattleChara &&
-            !LocalPlayer.TargetObject.IsDead &&
-            party.Any(x =>
-                x.GameObjectId == LocalPlayer.TargetObject.GameObjectId) &&
-            IsInRange(LocalPlayer.TargetObject, 30))
-        {
-            partner = LocalPlayer.TargetObject;
-            return true;
-        }*/
 
         // Search for a partner
         if (TryGetBestPartner(out var bestPartner))
@@ -248,7 +278,7 @@ internal partial class DNC
         // Fallback to companion
         if (HasCompanionPresent())
         {
-            partner = Svc.Buddies.CompanionBuddy.GameObject;
+            partner = SimpleTarget.Chocobo;
             return true;
         }
 
@@ -261,17 +291,18 @@ internal partial class DNC
 
         return false;
 
-        #region Sickness-checking shortcut methods
+        #region Status-checking shortcut methods
 
-        bool SicknessFree(IGameObject? target)
-        {
-            return !TargetHasRezWeakness(target);
-        }
+        // These are here so I don't have to add a ton of methods to DNC
 
-        bool BrinkFree(IGameObject? target)
-        {
-            return !TargetHasRezWeakness(target, false);
-        }
+        bool DamageDownFree(IGameObject? target) =>
+            !TargetHasDamageDown(target);
+
+        bool SicknessFree(IGameObject? target) =>
+            !TargetHasRezWeakness(target);
+
+        bool BrinkFree(IGameObject? target) =>
+            !TargetHasRezWeakness(target, false);
 
         #endregion
 
@@ -287,54 +318,78 @@ internal partial class DNC
 
             #endregion
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions.MustBeMelee))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.Melee))
                 filter = filter
                     .Where(x => x.ClassJob.RowId.Role() is melee).ToList();
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions.MustBeDPS))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.DPS))
                 filter = filter
                     .Where(x => x.ClassJob.RowId.Role() is melee or ranged)
                     .ToList();
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions
-                    .MustBeSicknessFree))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.NotDD))
+                filter = filter.Where(DamageDownFree).ToList();
+
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.NotSick))
                 filter = filter.Where(SicknessFree).ToList();
 
-            if (restrictions.HasFlag(PartnerPriority.Restrictions.MustBeBrinkFree))
+            if (restrictions.HasFlag(PartnerPriority.Restrictions.NotBrink))
                 filter = filter.Where(BrinkFree).ToList();
 
+            // Run the next step if no matches were found
             if (filter.Count == 0 &&
                 step < PartnerPriority.RestrictionSteps.Length - 1)
                 return TryGetBestPartner(out newBestPartner, step + 1);
-            if (filter.Count == 0 && step == 6)
+            // If it's the last step and there are no matches found, bail
+            if (filter.Count == 0)
                 return false;
+            // If there's only one match, return it
+            if (filter.Count == 1)
+            {
+                newBestPartner = filter.First();
+                return true;
+            }
 
-            filter = filter
+            var orderedFilter = filter
                 .OrderBy(x =>
                     PartnerPriority.RolePrio.GetValueOrDefault(
-                        x.ClassJob.RowId.Role(), int.MaxValue))
-                .ThenBy(x =>
-                    Player.Level >= 90
-                        ? PartnerPriority.Job090Prio.GetValueOrDefault(
-                            x.ClassJob.RowId, int.MaxValue)
-                        : int.MaxValue)
-                .ThenBy(x =>
-                    Player.Level >= 100
-                        ? PartnerPriority.Job100Prio.GetValueOrDefault(
-                            x.ClassJob.RowId, int.MaxValue)
-                        : int.MaxValue)
-                .ToList();
+                        x.ClassJob.RowId.Role(), int.MaxValue));
+
+            switch (Player.Level)
+            {
+                case < 100 and >= 90:
+                    orderedFilter = orderedFilter
+                        .ThenBy(x =>
+                            PartnerPriority.Job090Prio.GetValueOrDefault(
+                                x.ClassJob.RowId, int.MaxValue));
+                    break;
+                case >= 100:
+                    orderedFilter = orderedFilter
+                        .ThenBy(x =>
+                            PartnerPriority.Job100Prio.GetValueOrDefault(
+                                x.ClassJob.RowId, int.MaxValue));
+                    break;
+            }
+
+            // Simple ilvl tie-breaker
+            orderedFilter = orderedFilter.ThenBy(x => x.MaxHp);
+
+            filter = orderedFilter.ToList();
 
             newBestPartner = filter.First();
             return true;
         }
     }
 
+    #region DP-checking shortcut methods
+
     private static bool HasAnyPartner(WrathPartyMember target) =>
         HasStatusEffect(Buffs.Partner, target.BattleChara, true);
 
     private static bool HasMyPartner(WrathPartyMember target) =>
         HasStatusEffect(Buffs.Partner, target.BattleChara);
+
+    #endregion
 
     #region Partner Priority Static Data
 
@@ -350,8 +405,8 @@ internal partial class DNC
 
         internal static readonly Dictionary<uint, int> Job100Prio = new()
         {
-            { PCT.JobID, 1 },
             { SAM.JobID, 1 },
+            { PCT.JobID, 2 },
             { RPR.JobID, 2 },
             { VPR.JobID, 2 },
             { MNK.JobID, 2 },
@@ -367,7 +422,7 @@ internal partial class DNC
 
         internal static readonly Dictionary<uint, int> Job090Prio = new()
         {
-            { PCT.JobID, 0 },
+            { PCT.JobID, 1 },
             { SAM.JobID, 1 },
             { NIN.JobID, 2 },
             { MNK.JobID, 3 },
@@ -384,16 +439,21 @@ internal partial class DNC
 
         internal static readonly Restrictions[] RestrictionSteps =
         [
+            // Ailment-free DPS
+            Restrictions.Melee | Restrictions.NotDD | Restrictions.NotSick,
+            Restrictions.DPS | Restrictions.NotDD | Restrictions.NotSick,
             // Sickness-free DPS
-            Restrictions.MustBeMelee | Restrictions.MustBeSicknessFree,
-            Restrictions.MustBeDPS | Restrictions.MustBeSicknessFree,
+            Restrictions.Melee | Restrictions.NotSick,
+            Restrictions.DPS | Restrictions.NotSick,
             // Sick DPS
-            Restrictions.MustBeMelee | Restrictions.MustBeBrinkFree,
-            Restrictions.MustBeDPS | Restrictions.MustBeBrinkFree,
+            Restrictions.Melee | Restrictions.NotBrink,
+            Restrictions.DPS | Restrictions.NotBrink,
+            // Ailment-free
+            Restrictions.NotDD | Restrictions.NotSick,
             // Sickness-free
-            Restrictions.MustBeSicknessFree,
+            Restrictions.NotSick,
             // Sick
-            Restrictions.MustBeBrinkFree,
+            Restrictions.NotBrink,
             // :(
             Restrictions.ScrapeTheBottom,
         ];
@@ -411,11 +471,12 @@ internal partial class DNC
         [Flags]
         internal enum Restrictions
         {
-            MustBeMelee = 1 << 0, // 1
-            MustBeDPS = 1 << 1, // 2
-            MustBeSicknessFree = 1 << 2, // 4
-            MustBeBrinkFree = 1 << 3, // 8
-            ScrapeTheBottom = 1 << 4, // 16
+            Melee = 1 << 0, // 1
+            DPS = 1 << 1, // 2
+            NotDD = 1 << 2, // 4
+            NotSick = 1 << 3, // 8
+            NotBrink = 1 << 4, // 16
+            ScrapeTheBottom = 1 << 5, // 32
         }
     }
 

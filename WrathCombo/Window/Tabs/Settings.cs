@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
@@ -154,7 +155,6 @@ namespace WrathCombo.Window.Tabs
                 ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("Rotation Behavior Options");
 
-
                 #region Performance Mode
 
                 if (ImGui.Checkbox("Performance Mode", ref Service.Configuration.PerformanceMode))
@@ -179,6 +179,34 @@ namespace WrathCombo.Window.Tabs
                     Service.Configuration.Save();
 
                 ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by the `/wrath combo` command.");
+
+                #endregion
+
+                #region Queued Action Suppression
+
+                if (ImGui.Checkbox($"Queued Action Suppression", ref Service.Configuration.SuppressQueuedActions))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("While Enabled:\nWhenever you queue an action that is not the same as the button you are pressing, Wrath will disable every other Combo, preventing them from thinking the queued action should trigger them.\n- This prevents combos from conflicting with each other, just because of overlap in actions that combos return and actions that combos replace.\n- This does however cause the Replaced Action for each combo to 'flash' through as actions are queued.\nThat 'flashed' action won't go through, it is only visual.\n\nWhile Disabled:\nCombos will not be disabled when actions are queued from a combo.\n- This prevents your hotbars 'flashing', that is the only benefit.\n- This does however allow Combos to conflict with each other, if one combo returns an action that another combo has as its Replaced Action.\nWe do NOT mark these types of conflicts, and we do NOT try to avoid them as we add new features.\n\nIt is STRONGLY recommended to keep this setting On.\nIf the 'flashing' bothers you it is MUCH more advised to use Performance Mode,\ninstead of turning this off.\nDefault: On");
+
+                ImGui.SameLine();
+                ImGuiEx.Spacing(new Vector2(10, 0));
+                ImGui.TextColored(ImGuiColors.DalamudGrey, "read more:");
+
+                ImGuiComponents.HelpMarker($"With this enabled, whenever you queue an action that is not the same as the button you are pressing, it will disable every other button's feature from running. This resolves a number of issues where incorrect actions are performed due to how the game processes queued actions, however the visual experience on your hotbars is degraded. This is not recommended to be disabled, however if you feel uncomfortable with hotbar icons changing quickly this is one way to resolve it (or use Performance Mode) but be aware that this may introduce unintended side effects to combos if you have a lot enabled for a job." +
+                    $"\n\n" +
+                    $"For a more complicated explanation, whenever an action is used, the following happens:" +
+                    $"\n1. If the action invokes the GCD (Weaponskills & Spells), if the GCD currently isn't active it will use it right away." +
+                    $"\n2. Otherwise, if you're within the \"Queue Window\" (normally the last 0.5s of the GCD), it gets added to the queue before it is used." +
+                    $"\n3. If the action is an Ability, as long as there's no animation lock currently happening it will execute right away." +
+                    $"\n4. Otherwise, it is added to the queue immediately and then used when the animation lock is finished." +
+                    $"\n\nFor step 1, the action being passed to the game is the original, unmodified action, which is then converted at use time. At step 2, things get messy as the queued action still remains the unmodified action, but when the queue is executed it treats it as if the modified action *is* the unmodified action." +
+                    $"\n\nE.g. Original action Cure, modified action Cure II. At step 1, the game is okay to convert Cure to Cure II because that is what we're telling it to do. However, when Cure is passed to the queue, it treats it as if the unmodified action is Cure II." +
+                    $"\n\nThis is similar for steps 3 & 4, except it can just happen earlier." +
+                    $"\n\nHow this impacts us is if using the example before, we have a feature replacing Cure with Cure II, and another replacing Cure II with Regen and you enable both, the following happens:" +
+                    $"\n\nStep 1, Cure is passed to the game, is converted to Cure II.\nYou press Cure again at the Queue Window, Cure is passed to the queue, however the queue when it goes to execute will treat it as Cure II.\nResult is instead of Cure II being executed, it's Regen, because we've told it to modify Cure II to Regen." +
+                    $"\nThis was not part of the first feature, therefore an incorrect action." +
+                    $"\n\nOur workaround for this is to disable all other actions being replaced if they don't match the queued action, which this setting controls.");
 
                 #endregion
 
@@ -327,6 +355,268 @@ namespace WrathCombo.Window.Tabs
 
                 #endregion
 
+                #region Targeting Options
+
+                ImGuiEx.Spacing(new Vector2(0, 20));
+                ImGuiEx.TextUnderlined("Targeting Options");
+
+                var useCusHealStack = Service.Configuration.UseCustomHealStack;
+
+                #region Retarget ST Healing Actions
+
+                bool retargetHealingActions =
+                    Service.Configuration.RetargetHealingActionsToStack;
+                if (ImGui.Checkbox("Retarget (Single Target) Healing Actions", ref retargetHealingActions))
+                {
+                    Service.Configuration.RetargetHealingActionsToStack =
+                        retargetHealingActions;
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker(
+                    "This will retarget all single target healing actions to the Heal Stack as shown below,\nsimilarly to how Redirect or Reaction would.\nThis ensures that the target used to check HP% threshold logic for healing actions is the same target that will receive that heal.\n\nIt is recommended to enable this if you customize the Heal Stack at all.\nDefault: Off");
+                Presets.DrawRetargetedSymbolForSettingsPage();
+
+                #endregion
+
+                ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #region Current Heal Stack
+
+                ImGui.TextUnformatted("Current Heal Stack:");
+
+                ImGuiComponents.HelpMarker(
+                    "This is the order in which Wrath will try to select a healing target.\n\n" +
+                    "If the 'Retarget Healing Actions' option is disabled, that is just the target that will be used for checking the HP threshold to trigger different healing actions to show up in their rotations.\n" +
+                    "If the 'Retarget Healing Actions' option is enabled, that target is also the one that healing actions will be targeted onto (even when the action does not first check the HP of that target, like the combo's Replaced Action, for example).");
+
+                var healStackText = "";
+                var nextStackItemMarker = "   >   ";
+                if (useCusHealStack)
+                {
+                    foreach (var item in Service.Configuration.CustomHealStack
+                                 .Select((value, index) => new { value, index }))
+                    {
+                        healStackText += UserConfig.TargetDisplayNameFromPropertyName(item.value);
+                        if (item.index < Service.Configuration.CustomHealStack.Length - 1)
+                            healStackText += nextStackItemMarker;
+                    }
+                }
+                else
+                {
+                    if (Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack)
+                        healStackText += "UI-MouseOver Target" + nextStackItemMarker;
+                    if (Service.Configuration.UseFieldMouseoverOverridesInDefaultHealStack)
+                        healStackText += "Field-MouseOver Target" + nextStackItemMarker;
+                    healStackText += "Soft Target" + nextStackItemMarker;
+                    healStackText += "Hard Target" + nextStackItemMarker;
+                    if (Service.Configuration.UseFocusTargetOverrideInDefaultHealStack)
+                        healStackText += "Focus Target" + nextStackItemMarker;
+                    if (Service.Configuration.UseLowestHPOverrideInDefaultHealStack)
+                        healStackText += "Lowest HP% Ally" + nextStackItemMarker;
+                    healStackText += "Self";
+                }
+                ImGuiEx.Spacing(new Vector2(10, 0));
+                ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, healStackText);
+
+                ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #endregion
+
+                #region Heal Stack Customization Options
+
+                var labelText = "Heal Stack Customization Options";
+                // Nest the Collapse into a Child of varying size, to be able to limit its width
+                var dynamicHeight = _unCollapsed
+                    ? _healStackCustomizationHeight
+                    : ImGui.CalcTextSize("I").Y + 5f.Scale();
+                ImGui.BeginChild("##HealStackCustomization",
+                    new Vector2(ImGui.CalcTextSize(labelText).X * 2.2f, dynamicHeight),
+                    false,
+                    ImGuiWindowFlags.NoScrollbar);
+
+                // Collapsing Header for the Heal Stack Customization Options
+                _unCollapsed = ImGui.CollapsingHeader(labelText,
+                    ImGuiTreeNodeFlags.SpanAvailWidth);
+                var collapsibleHeight = ImGui.GetItemRectSize().Y;
+                if (_unCollapsed)
+                {
+                    ImGui.BeginGroup();
+
+                    #region Default Heal Stack Include: UI MouseOver
+
+                    if (useCusHealStack) ImGui.BeginDisabled();
+
+                    bool useUIMouseoverOverridesInDefaultHealStack =
+                        Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack;
+                    if (ImGui.Checkbox("Add UI MouseOver to the Default Healing Stack", ref useUIMouseoverOverridesInDefaultHealStack))
+                    {
+                        Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack =
+                            useUIMouseoverOverridesInDefaultHealStack;
+                        Service.Configuration.Save();
+                    }
+
+                    if (useCusHealStack) ImGui.EndDisabled();
+
+                    ImGuiComponents.HelpMarker("This will add any UI MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI.\n\nIt is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have UI MouseOver targets in your Redirect/Reaction configuration).\nDefault: Off");
+
+                    #endregion
+
+                    #region Default Heal Stack Include: Field MouseOver
+
+                    if (useCusHealStack) ImGui.BeginDisabled();
+
+                    bool useFieldMouseoverOverridesInDefaultHealStack =
+                        Service.Configuration.UseFieldMouseoverOverridesInDefaultHealStack;
+                    if (ImGui.Checkbox("Add Field MouseOver to the Default Healing Stack", ref useFieldMouseoverOverridesInDefaultHealStack))
+                    {
+                        Service.Configuration.UseFieldMouseoverOverridesInDefaultHealStack =
+                            useFieldMouseoverOverridesInDefaultHealStack;
+                        Service.Configuration.Save();
+                    }
+
+                    if (useCusHealStack) ImGui.EndDisabled();
+
+                    ImGuiComponents.HelpMarker("This will add any MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any nameplate UI or character model.\n\nIt is recommended to enable this only if you regularly intentionally use field mouseover targeting already.\nDefault: Off");
+
+                    #endregion
+
+                    #region Default Heal Stack Include: Focus Target
+
+                    if (useCusHealStack) ImGui.BeginDisabled();
+
+                    bool useFocusTargetOverrideInDefaultHealStack =
+                        Service.Configuration.UseFocusTargetOverrideInDefaultHealStack;
+                    if (ImGui.Checkbox("Add Focus Target to the Default Healing Stack", ref useFocusTargetOverrideInDefaultHealStack))
+                    {
+                        Service.Configuration.UseFocusTargetOverrideInDefaultHealStack =
+                            useFocusTargetOverrideInDefaultHealStack;
+                        Service.Configuration.Save();
+                    }
+
+                    if (useCusHealStack) ImGui.EndDisabled();
+
+                    ImGuiComponents.HelpMarker("This will add your focus target under your hard and soft targets in the Default Heal Stack, overriding the rest of the stack if you have a living focus target.\n\nDefault: Off");
+
+                    #endregion
+
+                    #region Default Heal Stack Include: Lowest HP Ally
+
+                    if (useCusHealStack) ImGui.BeginDisabled();
+
+                    bool useLowestHPOverrideInDefaultHealStack =
+                        Service.Configuration.UseLowestHPOverrideInDefaultHealStack;
+                    if (ImGui.Checkbox("Add Lowest HP% Ally to the Default Healing Stack", ref useLowestHPOverrideInDefaultHealStack))
+                    {
+                        Service.Configuration.UseLowestHPOverrideInDefaultHealStack =
+                            useLowestHPOverrideInDefaultHealStack;
+                        Service.Configuration.Save();
+                    }
+
+                    if (useCusHealStack) ImGui.EndDisabled();
+
+                    ImGuiComponents.HelpMarker("This will add a nearby party member with the lowest HP% to bottom of the Default Heal Stack, overriding only yourself.\n\nTHIS SHOULD BE USED WITH THE 'RETARGET HEALING ACTIONS' SETTING!\n\nDefault: Off");
+
+                    if (useCusHealStack) ImGui.BeginDisabled();
+                    if (useLowestHPOverrideInDefaultHealStack)
+                    {
+                        ImGuiEx.Spacing(new Vector2(30, 0));
+                        ImGuiEx.Text(ImGuiColors.DalamudYellow, "This should be used with the 'Retarget Healing Actions' setting above!");
+                    }
+                    if (useCusHealStack) ImGui.EndDisabled();
+
+                    #endregion
+
+                    ImGuiEx.Spacing(new Vector2(5, 5));
+                    ImGui.TextUnformatted("Or");
+                    ImGuiEx.Spacing(new Vector2(0, 5));
+
+                    #region Use Custom Heal Stack
+
+                    bool useCustomHealStack = Service.Configuration.UseCustomHealStack;
+                    if (ImGui.Checkbox("Use a Custom Heal Stack Instead", ref useCustomHealStack))
+                    {
+                        Service.Configuration.UseCustomHealStack = useCustomHealStack;
+                        Service.Configuration.Save();
+                    }
+
+                    ImGuiComponents.HelpMarker("Select this if you would rather make your own stack of target priorities for Heal Targets instead of using our default stack.\n\nIt is recommended to use this to align with your Redirect/Reaction configuration if you're not using the Retarget Healing Actions setup; otherwise it is preference.\nDefault: Off");
+
+                    #endregion
+
+                    #region Custom Heal Stack Manager
+
+                    if (Service.Configuration.UseCustomHealStack)
+                    {
+                        ImGui.Indent();
+                        UserConfig.DrawCustomStackManager(
+                            "CustomHealStack",
+                            ref Service.Configuration.CustomHealStack,
+                            ["Enemy", "Attack", "Dead", "Living"],
+                            "The priority goes from top to bottom.\n" +
+                            "Scroll down to see all of your items.\n" +
+                            "Click the Up and Down buttons to move items in the list.\n" +
+                            "Click the X button to remove an item from the list.\n\n" +
+                            "If there are fewer than 4 items, and all return nothing when checked, will fall back to Self.\n\n" +
+                            "These targets will only be considered valid if they are friendly and within 25y.\n" +
+                            "These targets will be checked for being Dead or having a Cleansable Debuff\n" +
+                            "when this Stack is applied to Raises or Esuna, respectively.\n" +
+                            "(For Raises: the Stack will fall back to your Hard Target or any Dead Party Member)\n\n" +
+                            "Default: Focus Target > Hard Target > Self"
+                        );
+                        ImGui.Unindent();
+                    }
+
+                    #endregion
+
+                    ImGui.EndGroup();
+
+                    // Get the max height of the section above
+                    _healStackCustomizationHeight =
+                        ImGui.GetItemRectSize().Y + collapsibleHeight + 5f.Scale();
+                }
+
+                ImGui.EndChild();
+
+                if (_unCollapsed)
+                    ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #endregion
+
+                ImGuiEx.Spacing(new Vector2(0, 10));
+
+                #region Raise Stack Manager
+
+                ImGui.TextUnformatted("Current Raise Stack:");
+
+                ImGuiComponents.HelpMarker(
+                    "This is the order in which Wrath will try to select a " +
+                    "target to Raise,\nif Retargeting of any Raise Feature is enabled.\n\n" +
+                    "You can find Raise Features under PvE>General,\n" +
+                    "or under each caster that has a Raise.");
+
+                ImGui.Indent();
+                UserConfig.DrawCustomStackManager(
+                    "CustomRaiseStack",
+                    ref Service.Configuration.RaiseStack,
+                    ["Enemy", "Attack", "MissingHP", "Lowest", "Chocobo", "Living"],
+                    "The priority goes from top to bottom.\n" +
+                    "Scroll down to see all of your items.\n" +
+                    "Click the Up and Down buttons to move items in the list.\n" +
+                    "Click the X button to remove an item from the list.\n\n" +
+                    "If there are fewer than 5 items, and all return nothing when checked, will fall back to:\n" +
+                    "your Hard Target if they're dead, or <Any Dead Party Member>.\n\n"+
+                    "These targets will only be considered valid if they are friendly, dead, and within 30y.\n" +
+                    "Default: Any Healer > Any Tank > Any Raiser > Any Dead Party Member",
+                    true
+                );
+                ImGui.TextDisabled("(all targets are checked for rezz-ability)");
+                ImGui.Unindent();
+
+                #endregion
+
+                #endregion
+
                 #region Troubleshooting Options
 
                 ImGuiEx.Spacing(new Vector2(0, 20));
@@ -370,5 +660,12 @@ namespace WrathCombo.Window.Tabs
                 #endregion
             }
         }
+
+        #region Custom Heal Stack Manager Methods
+
+        private static bool _unCollapsed;
+        private static float _healStackCustomizationHeight = 0;
+
+        #endregion
     }
 }

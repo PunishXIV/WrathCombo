@@ -1,8 +1,6 @@
-﻿using WrathCombo.Core;
-using WrathCombo.CustomComboNS;
+﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
-
 
 namespace WrathCombo.Combos.PvP
 {
@@ -25,7 +23,8 @@ namespace WrathCombo.Combos.PvP
             Macrocosmos = 29253,
             Microcosmos = 29254,
             MinorArcana = 41503,
-            Epicycle = 41506;
+            Epicycle = 41506,
+            Retrograde = 41507;
 
         internal class Buffs
         {

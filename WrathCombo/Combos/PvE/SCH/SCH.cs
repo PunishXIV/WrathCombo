@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -130,7 +131,12 @@ internal partial class SCH : Healer
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? Resurrection.AndRunMacro()
+                ? IsEnabled(CustomComboPreset.SCH_Raise_Retarget)
+                    ? Resurrection
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Resurrection.AndRunMacro()
                 : actionID;
     }
 
@@ -156,8 +162,8 @@ internal partial class SCH : Healer
             if (actionID is not DeploymentTactics || !ActionReady(DeploymentTactics))
                 return actionID;
 
-            //Grab our target (Soft->Hard->Self)
-            IGameObject? healTarget = GetHealTarget(Config.SCH_DeploymentTactics_Adv && Config.SCH_DeploymentTactics_UIMouseOver);
+            //Grab our target
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
             if (!HasStatusEffect(Buffs.Galvanize, healTarget))
@@ -437,13 +443,14 @@ internal partial class SCH : Healer
                 && GetTargetHPPercent(AetherPactTarget) >= Config.SCH_ST_Heal_AetherpactDissolveOption)
                 return DissolveUnion;
 
-            //Grab our target (Soft->Hard->Self)
-            IGameObject? healTarget = OptionalTarget ?? GetHealTarget(Config.SCH_ST_Heal_Adv && Config.SCH_ST_Heal_UIMouseOver);
+            //Grab our target
+            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) >= Config.SCH_ST_Heal_EsunaOption &&
                 HasCleansableDebuff(healTarget))
-                return Role.Esuna;
+                return Role.Esuna
+                    .RetargetIfEnabled(OptionalTarget, Physick);
 
             for(int i = 0; i < Config.SCH_ST_Heals_Priority.Count; i++)
             {
@@ -454,7 +461,8 @@ internal partial class SCH : Healer
                 {
                     if (GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) <= config &&
                         ActionReady(spell))
-                        return spell;
+                        return spell
+                            .RetargetIfEnabled(OptionalTarget, Physick);
                 }
             }
 
@@ -470,10 +478,12 @@ internal partial class SCH : Healer
                     (!Config.SCH_ST_Heal_AldoquimOpts[1] ||
                      !HasStatusEffect(SGE.Buffs.EukrasianDiagnosis, healTarget, true) && !HasStatusEffect(SGE.Buffs.EukrasianPrognosis, healTarget, true)
                     )) //Eukrasia Shield Check
-                    return OriginalHook(Adloquium);
+                    return OriginalHook(Adloquium)
+                        .RetargetIfEnabled(OptionalTarget, Physick);
             }
 
-            return actionID;
+            return actionID
+                .RetargetIfEnabled(OptionalTarget, Physick);
         }
     }
 }

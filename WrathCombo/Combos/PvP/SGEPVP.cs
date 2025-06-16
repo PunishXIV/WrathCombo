@@ -27,7 +27,8 @@ namespace WrathCombo.Combos.PvP
         {
             internal const ushort
                 EukrasianDosis = 3108,
-                Toxicon = 3113;
+                Toxicon = 3113,
+                Lype = 3120;
         }
 
         internal class Buffs
@@ -38,7 +39,8 @@ namespace WrathCombo.Combos.PvP
                 Eukrasia = 3107,
                 Addersting = 3115,
                 Haima = 3110,
-                Haimatinon = 3111;
+                Haimatinon = 3111,
+                Mesotes = 3119;
         }
 
         #endregion

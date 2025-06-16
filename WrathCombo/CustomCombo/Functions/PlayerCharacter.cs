@@ -39,7 +39,7 @@ namespace WrathCombo.CustomComboNS.Functions
 
         /// <summary> Find if the player has a companion (chocobo) present. </summary>
         /// <returns> A value indicating whether the player has a companion (chocobo). </returns>
-        public static bool HasCompanionPresent() => Svc.Buddies.CompanionBuddy != null;
+        public static bool HasCompanionPresent() => Svc.Buddies.CompanionBuddy?.GameObject != null;
 
         /// <summary> Checks if the player is in a PVP enabled zone. </summary>
         /// <returns> A value indicating whether the player is in a PVP enabled zone. </returns>

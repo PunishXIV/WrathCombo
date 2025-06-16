@@ -1,8 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
-using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
 
@@ -89,10 +87,18 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> Number of charges. </returns>
         public static ushort GetMaxCharges(uint actionID) => GetCooldown(actionID).MaxCharges;
 
-        private static uint Action1 => DutyActionManager.GetDutyActionId(0);
-        private static uint Action2 => DutyActionManager.GetDutyActionId(1);
+        public static uint Action1 => DutyActionManager.GetDutyActionId(0);
+        public static uint Action2 => DutyActionManager.GetDutyActionId(1);
+        public static uint Action3 => DutyActionManager.GetDutyActionId(2);
+        public static uint Action4 => DutyActionManager.GetDutyActionId(3);
+        public static uint Action5 => DutyActionManager.GetDutyActionId(4);
 
-        public static bool HasActionEquipped(uint actionId) => (Action1 == actionId && HasCharges(actionId)) || (Action2 == actionId && HasCharges(actionId));
+        public static bool HasActionEquipped(uint actionId) =>
+            (Action1 == actionId && HasCharges(actionId)) ||
+            (Action2 == actionId && HasCharges(actionId)) ||
+            (Action3 == actionId && HasCharges(actionId)) ||
+            (Action4 == actionId && HasCharges(actionId)) ||
+            (Action5 == actionId && HasCharges(actionId));
 
         private static unsafe RecastDetail* GCD => ActionManager.Instance()->GetRecastGroupDetail(57);
 

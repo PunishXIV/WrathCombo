@@ -20,6 +20,7 @@ namespace WrathCombo.Combos.PvP
             HolyInWhite = 39198,
             CreatureMotif = 39204,
             LivingMuse = 39209,
+            Smudge = 39210,
             TemperaCoat = 39211,
             SubtractivePalette = 39213,
             StarPrism = 39216,

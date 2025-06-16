@@ -73,14 +73,15 @@ namespace WrathCombo.AutoRotation
             return !cfg.Enabled
                 || !Player.Available
                 || Player.Object.IsDead
-                || Svc.Condition[ConditionFlag.Mounted]
+                || GenericHelpers.IsOccupied()
+                || Player.Mounted
                 || !EzThrottler.Throttle("Autorot", cfg.Throttler);
         }
 
         internal static void Run()
         {
             cfg ??= new AutoRotationConfigIPCWrapper(Service.Configuration.RotationConfig);
-
+          
             // Early exit for all conditions that should prevent autorotation
             if (ShouldSkipAutorotation())
                 return;
@@ -579,9 +580,9 @@ namespace WrathCombo.AutoRotation
                 var canUseTarget = target is null ? false : ActionManager.CanUseActionOnTarget(outAct, target.Struct());
                 var inRange = target is null && canUseSelf ? true : target is null ? false : IsInLineOfSight(target) && InActionRange(outAct, target);
 
-                var canUse = canUseSelf || canUseTarget || areaTargeted;
+                var canUse = (canUseSelf || canUseTarget || areaTargeted) && (outAct.ActionType() is { } type && (type is ActionType.Ability || type is not ActionType.Ability && RemainingGCD == 0));
 
-                if ((canUse || cfg.DPSSettings.AlwaysSelectTarget) && !canUseSelf)
+                if ((canUse || cfg.DPSSettings.AlwaysSelectTarget))
                     Svc.Targets.Target = target;
 
                 var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
@@ -591,7 +592,7 @@ namespace WrathCombo.AutoRotation
 
                 if (canUse && (inRange || areaTargeted))
                 {
-                    var ret = ActionManager.Instance()->UseAction(ActionType.Action, Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct, canUseTarget ? target.GameObjectId : Player.Object.GameObjectId);
+                    var ret = ActionManager.Instance()->UseAction(ActionType.Action, Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct, canUseTarget || areaTargeted ? target.GameObjectId : Player.Object.GameObjectId);
                     if (mode is HealerRotationMode && ret)
                         LastHealAt = Environment.TickCount64 + castTime;
 
@@ -760,8 +761,21 @@ namespace WrathCombo.AutoRotation
 
             internal static bool CanAoEHeal(uint outAct = 0)
             {
-                var members = GetPartyMembers().Where(x => !x.BattleChara.IsDead && x.BattleChara.IsTargetable && (outAct == 0 ? GetTargetDistance(x.BattleChara) <= 15 : InActionRange(outAct, x.BattleChara)) && ((float)x.CurrentHP / x.BattleChara.MaxHp * 100) <= cfg.HealerSettings.AoETargetHPP);
-                if (members.Count() < cfg.HealerSettings.AoEHealTargetCount)
+                int memberCount;
+                try
+                {
+                    var members = GetPartyMembers()
+                        .Where(x => x.BattleChara is not null &&
+                            !x.BattleChara.IsDead && x.BattleChara.IsTargetable &&
+                            (outAct == 0
+                                ? GetTargetDistance(x.BattleChara) <= 15
+                                : InActionRange(outAct, x.BattleChara)) &&
+                            ((float)x.CurrentHP / x.BattleChara.MaxHp * 100) <= cfg.HealerSettings.AoETargetHPP);
+                    memberCount = members.Count();
+                }
+                catch { memberCount = 0; }
+
+                if (memberCount < cfg.HealerSettings.AoEHealTargetCount)
                     return false;
 
                 return true;

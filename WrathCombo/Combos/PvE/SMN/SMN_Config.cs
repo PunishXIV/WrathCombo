@@ -1,8 +1,9 @@
-using ECommons.ExcelServices;
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
+using static WrathCombo.Extensions.UIntExtensions;
+using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -11,6 +12,7 @@ internal partial class SMN
     internal static class Config
     {
         public static UserInt
+            SMN_ST_Advanced_Combo_AltMode = new("SMN_ST_Advanced_Combo_AltMode"),
             SMN_ST_Lucid = new("SMN_ST_Lucid", 8000),
             SMN_ST_BurstPhase = new("SMN_ST_BurstPhase", 1),
             SMN_ST_SwiftcastPhase = new("SMN_SwiftcastPhase", 1),
@@ -43,6 +45,11 @@ internal partial class SMN
         {
             switch (preset)
             {
+                case CustomComboPreset.SMN_ST_Advanced_Combo:
+                    DrawRadioButton(SMN_ST_Advanced_Combo_AltMode, $"On Ruin 1, 2, and 3", "", 0);
+                    DrawRadioButton(SMN_ST_Advanced_Combo_AltMode, $"On Ruin 1 and 2 Only", $"Alternative DPS Mode. Leaves Ruin 3 alone for pure DPS.", 1);
+                    break;
+
                 case CustomComboPreset.SMN_ST_Advanced_Combo_Balance_Opener:
                     
                     UserConfig.DrawBossOnlyChoice(SMN_Balance_Content);
@@ -84,39 +91,7 @@ internal partial class SMN
                 case CustomComboPreset.SMN_AoE_Advanced_Combo_Ifrit:
                     UserConfig.DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 2,
                         $"{SummonRuby.ActionName()} Priority: ");
-                    break;
-
-                case CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_oGCDPooling:
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Solar Bahamut/Pre 100 Bahamut",
-                        "Bursts during Bahamut phase before 100.\nBahamut burst phase becomes Solar Bahamut at Lv100.", 1);
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Phoenix/Post 100 Bahamut", "Bursts during Phoenix phase. Also adds Regular Bahamut at 100. ", 2);
-
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Any Demi Phase",
-                        "Bursts during any Demi Summon phase.", 3);
-
-                    UserConfig.DrawHorizontalRadioButton(SMN_ST_BurstPhase, "Flexible (SpS) Option",
-                        "Bursts when Searing Light is ready, regardless of phase.", 4);
-
-                    UserConfig.DrawSliderInt(0, 3, SMN_ST_Burst_Delay,
-                        "Sets the amount of GCDs under Demi summon to wait for oGCD use.");
-
-                    break;
-
-                case CustomComboPreset.SMN_AoE_Advanced_Combo_DemiEgiMenu_oGCDPooling:
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Solar Bahamut/Pre 100 Bahamut",
-                        "Bursts during Bahamut phase below 100.\nBahamut burst phase becomes Solar Bahamut at Lv100.", 1);
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Phoenix/Post 100 Bahamut", "Bursts during Phoenix phase. Also adds Regular Bahamut at 100.", 2);
-
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Any Demi Phase",
-                        "Bursts during any Demi Summon phase.", 3);
-
-                    UserConfig.DrawHorizontalRadioButton(SMN_AoE_BurstPhase, "Flexible (SpS) Option",
-                        "Bursts when Searing Light is ready, regardless of phase.", 4);
-
-                    UserConfig.DrawSliderInt(0, 3, SMN_AoE_Burst_Delay,
-                        "Sets the amount of GCDs under Demi summon to wait for oGCD use.");
-
-                    break;
+                    break;              
 
                 case CustomComboPreset.SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi:
                     UserConfig.DrawHorizontalRadioButton(SMN_ST_SwiftcastPhase, "Garuda", "Swiftcasts Slipstream", 1);
@@ -185,16 +160,7 @@ internal partial class SMN
                                 "Enforced Crimson Cyclone Melee Check", "Only uses Crimson Cyclone within melee range.");
 
                         break;
-                    }
-
-                case CustomComboPreset.SMN_ST_Advanced_Combo_SearingLight:
-                    UserConfig.DrawAdditionalBoolChoice(SMN_ST_Searing_Any, $"Do not user when under another {Job.SMN.GetData().Abbreviation}'s {Buffs.SearingLight.StatusName()} buff.", $"Saves your {SearingLight.ActionName()} if you already have the buff from another {Job.SMN.GetData().Abbreviation}.");
-                    break;
-
-                case CustomComboPreset.SMN_AoE_Advanced_Combo_SearingLight:
-                    UserConfig.DrawAdditionalBoolChoice(SMN_AoE_Searing_Any, $"Do not user when under another {Job.SMN.GetData().Abbreviation}'s {Buffs.SearingLight.StatusName()} buff.", $"Saves your {SearingLight.ActionName()} if you already have the buff from another {Job.SMN.GetData().Abbreviation}.");
-                    break;
-                
+                    }  
             }
         }
     }

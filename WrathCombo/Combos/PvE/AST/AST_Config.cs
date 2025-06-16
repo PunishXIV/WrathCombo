@@ -1,6 +1,7 @@
 ﻿using Dalamud.Interface.Colors;
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
@@ -18,6 +19,10 @@ internal partial class AST
             AST_Ewer = new("AST_Ewer", 80),
             AST_Arrow = new("AST_Arrow", 80),
             AST_Bole = new("AST_Bole", 80),
+            AST_AoE_SimpleHeals_LazyLadyThreshold = new("AST_AoE_SimpleHeals_LazyLadyThreshold", 80),
+            AST_AoE_SimpleHeals_HoroscopeThreshold = new("AST_AoE_SimpleHeals_HoroscopeThreshold", 80),
+            AST_AoE_SimpleHeals_CelestialOppositionThreshold = new("AST_AoE_SimpleHeals_CelestialOppositionThreshold", 80),
+            AST_AoE_SimpleHeals_NeutralSectThreshold = new("AST_AoE_SimpleHeals_NeutralSectThreshold", 80),
             AST_ST_SimpleHeals_Esuna = new("AST_ST_SimpleHeals_Esuna", 100),
             AST_DPS_AltMode = new("AST_DPS_AltMode"),
             AST_AoEHeals_AltMode = new("AST_AoEHeals_AltMode"),
@@ -28,14 +33,15 @@ internal partial class AST
             AST_DPS_CombustOption = new("AST_DPS_CombustOption"),
             AST_QuickTarget_Override = new("AST_QuickTarget_Override"),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
-            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0);            
+            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
+            AST_ST_SimpleHeals_AspectedBeneficHigh = new("AST_ST_SimpleHeals_AspectedBeneficHigh", 90),
+            AST_ST_SimpleHeals_AspectedBeneficLow = new("AST_ST_SimpleHeals_AspectedBeneficLow", 40),
+            AST_ST_SimpleHeals_AspectedBeneficRefresh = new("AST_ST_SimpleHeals_AspectedBeneficRefresh", 3),
+            AST_AOE_DPS_MacroCosmos_SubOption = new("AST_AOE_DPS_MacroCosmos_SubOption", 0);            
 
         public static UserBool
-            AST_QuickTarget_SkipDamageDown = new("AST_QuickTarget_SkipDamageDown"),
-            AST_QuickTarget_Prio = new("AST_QuickTarget_Prio"),
-            AST_QuickTarget_SkipRezWeakness = new("AST_QuickTarget_SkipRezWeakness"),
+            AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true),
             AST_ST_SimpleHeals_Adv = new("AST_ST_SimpleHeals_Adv"),
-            AST_ST_SimpleHeals_UIMouseOver = new("AST_ST_SimpleHeals_UIMouseOver"),
             AST_ST_SimpleHeals_IncludeShields = new("AST_ST_SimpleHeals_IncludeShields"),
             AST_ST_SimpleHeals_WeaveDignity = new("AST_ST_SimpleHeals_WeaveDignity"),
             AST_ST_SimpleHeals_WeaveIntersection = new("AST_ST_SimpleHeals_WeaveIntersection"),
@@ -47,6 +53,7 @@ internal partial class AST
             AST_AoE_SimpleHeals_WeaveLady = new("AST_AoE_SimpleHeals_WeaveLady"),
             AST_AoE_SimpleHeals_Opposition = new("AST_AoE_SimpleHeals_Opposition"),
             AST_AoE_SimpleHeals_Horoscope = new("AST_AoE_SimpleHeals_Horoscope"),
+            AST_AoE_SimpleHeals_NeutralSectWeave = new("AST_AoE_SimpleHeals_NeutralSectWeave"),
             AST_ST_DPS_OverwriteCards = new("AST_ST_DPS_OverwriteCards"),
             AST_AOE_DPS_OverwriteCards = new("AST_AOE_DPS_OverwriteCards");
         public static UserFloat
@@ -117,6 +124,17 @@ internal partial class AST
                     DrawAdditionalBoolChoice(AST_AOE_DPS_OverwriteCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
                     break;
 
+                case CustomComboPreset.AST_AOE_DPS_MacroCosmos:
+
+                    DrawHorizontalRadioButton(AST_AOE_DPS_MacroCosmos_SubOption,
+                        "Non-boss Encounters Only", $"Will not use on bosses", 0);
+                    DrawHorizontalRadioButton(AST_AOE_DPS_MacroCosmos_SubOption,
+                        "All Content", $"Will use in all content", 1);
+
+                    ImGui.Unindent();
+
+                    break;
+
                 //end aoe added
 
                 case CustomComboPreset.AST_ST_SimpleHeals:
@@ -125,13 +143,16 @@ internal partial class AST
                     {
                         ImGui.Indent();
                         ImGui.Spacing();
-                        DrawAdditionalBoolChoice(AST_ST_SimpleHeals_UIMouseOver,
-                            "Party UI Mouseover Checking",
-                            "Check party member's HP & Debuffs by using mouseover on the party list.\n" +
-                            "To be used in conjunction with Redirect/Reaction/etc");
                         DrawAdditionalBoolChoice(AST_ST_SimpleHeals_IncludeShields, "Include Shields in HP Percent Sliders", "");
                         ImGui.Unindent();
                     }
+                    break;
+
+                case CustomComboPreset.AST_ST_SimpleHeals_AspectedBenefic:
+                    DrawSliderInt(0, 100, AST_ST_SimpleHeals_AspectedBeneficHigh, "Start using when below set percentage");
+                    DrawSliderInt(0, 100, AST_ST_SimpleHeals_AspectedBeneficLow, "Stop using when below set percentage");
+                    DrawSliderInt(0, 15, AST_ST_SimpleHeals_AspectedBeneficRefresh, "Seconds remaining before reapplying (0 = Do not reapply early)");
+                    
                     break;
 
                 case CustomComboPreset.AST_ST_SimpleHeals_EssentialDignity:
@@ -177,26 +198,40 @@ internal partial class AST
                     break;
 
                 case CustomComboPreset.AST_AoE_SimpleHeals_LazyLady:
+                    DrawSliderInt(0, 100, AST_AoE_SimpleHeals_LazyLadyThreshold, "Start using when below party average HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_WeaveLady, "Only Weave", "Will only weave this action.");
                     break;
 
                 case CustomComboPreset.AST_AoE_SimpleHeals_Horoscope:
+                    DrawSliderInt(0, 100, AST_AoE_SimpleHeals_HoroscopeThreshold, "Start using when below party average HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_Horoscope, "Only Weave", "Will only weave this action.");
                     break;
 
                 case CustomComboPreset.AST_AoE_SimpleHeals_CelestialOpposition:
+                    DrawSliderInt(0, 100, AST_AoE_SimpleHeals_CelestialOppositionThreshold, "Start using when below party average HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_Opposition, "Only Weave", "Will only weave this action.");
                     break;
 
-                case CustomComboPreset.AST_Cards_QuickTargetCards:
-                    DrawRadioButton(AST_QuickTarget_Override, "No Override", "", 0);
-                    DrawRadioButton(AST_QuickTarget_Override, "Hard Target Override", "Overrides selection with hard target if you have one", 1);
-                    DrawRadioButton(AST_QuickTarget_Override, "UI Mousover Override", "Overrides selection with UI mouseover target if you have one", 2);
 
-                    ImGui.Spacing();
-                    DrawAdditionalBoolChoice(AST_QuickTarget_SkipDamageDown, $"Skip targets with a {GetStatusName(62)} debuff", "");
-                    DrawAdditionalBoolChoice(AST_QuickTarget_SkipRezWeakness, $"Skip targets with a {GetStatusName(43)} or {GetStatusName(44)} debuff", "");
-                    DrawAdditionalBoolChoice(AST_QuickTarget_Prio, $"Uses Fixed Card Priorities (Based on the Balance)", "");
+                case CustomComboPreset.AST_AoE_SimpleHeals_NeutralSect:
+                    DrawSliderInt(0, 100, AST_AoE_SimpleHeals_NeutralSectThreshold, "Start using when below party average HP %. Set to 100 to disable this check");
+                    DrawAdditionalBoolChoice(AST_AoE_SimpleHeals_NeutralSectWeave, "Only Weave", "Will only weave this action.");
+                    break;
+
+                case CustomComboPreset.AST_Cards_QuickTargetCards:
+                    DrawAdditionalBoolChoice(AST_QuickTarget_Manuals,
+                        "Also Retarget manually-used Cards",
+                        "Will also automatically target Cards that you manually use, as in, those outside of your damage rotations.",
+                        indentDescription: true);
+
+                    ImGui.Indent();
+                    ImGui.TextWrapped("Target Overrides:           (hover each for more info)");
+                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    DrawRadioButton(AST_QuickTarget_Override, "No Override", "Will not override the automatic party target viability checking with any manual input.\nThe cards will be targeted according to The Balance's priorities and status checking\n(like not doubling up on cards, and no damage down, etc.).", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_QuickTarget_Override, "Hard Target Override", "Overrides selection with hard target, if you have one that is in range and does not have damage down or rez sickness.", 1, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_QuickTarget_Override, "UI MouseOver Override", "Overrides selection with UI MouseOver target, if you have one that is in range and does not have damage down or rez sickness.", 2, descriptionAsTooltip: true);
+                    DrawRadioButton(AST_QuickTarget_Override, "Any MouseOver Override", "Overrides selection with UI or Nameplate or Model MouseOver target (in that order), if you have one that is in range and does not have damage down or rez sickness.", 3, descriptionAsTooltip: true);
                     break;
 
                 case CustomComboPreset.AST_DPS_AutoDraw:

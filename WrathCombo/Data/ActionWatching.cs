@@ -30,14 +30,10 @@ namespace WrathCombo.Data
             .Where(i => i.RowId is not 7)
             .ToDictionary(i => i.RowId, i => i);
 
-        internal static Dictionary<uint, Lumina.Excel.Sheets.Status> StatusSheet = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>()!
-            .ToDictionary(i => i.RowId, i => i);
-
         internal static Dictionary<uint, Trait> TraitSheet = Svc.Data.GetExcelSheet<Trait>()!
             .Where(i => i.ClassJobCategory.IsValid) //All player traits are assigned to a category. Chocobo and other garbage lacks this, thus excluded.
             .ToDictionary(i => i.RowId, i => i);
         private static uint lastAction = 0;
-        private static readonly Dictionary<string, List<uint>> statusCache = [];
 
         internal static readonly Dictionary<uint, long> ChargeTimestamps = [];
         internal static readonly Dictionary<uint, long> ActionTimestamps = [];
@@ -80,7 +76,7 @@ namespace WrathCombo.Data
                     foreach (var eff in target.effects)
                     {
 #if DEBUG
-                        Svc.Log.Verbose($"{eff.Type}, {eff.Value} 0:{eff.Param0}, 1:{eff.Param1}, 2:{eff.Param2}, 3:{eff.Param3}, 4:{eff.Param4} | ({header->ActionId.ActionName()}) -> {Svc.Objects.First(x => x.GameObjectId == target.id).Name}, {eff.AtSource}/{eff.FromTarget}");
+                        Svc.Log.Verbose($"{eff.Type}, {eff.Value} 0:{eff.Param0}, 1:{eff.Param1}, 2:{eff.Param2}, 3:{eff.Param3}, 4:{eff.Param4} | ({header->ActionId.ActionName()}) -> {Svc.Objects.FirstOrDefault(x => x.GameObjectId == target.id)?.Name}, {eff.AtSource}/{eff.FromTarget}");
 #endif
                         if (eff.Type is ActionEffectType.Heal or ActionEffectType.Damage)
                         {
@@ -177,7 +173,6 @@ namespace WrathCombo.Data
                 if (actionType == 1)
                     ActionTimestamps[actionId] = Environment.TickCount64;
 
-                CheckForChangedTarget(actionId, ref targetObjectId);
                 TimeLastActionUsed = DateTime.Now + TimeSpan.FromMilliseconds(ActionManager.GetAdjustedCastTime((ActionType)actionType, actionId));
                 LastAction = actionId;
                 ActionType = actionType;
@@ -203,36 +198,15 @@ namespace WrathCombo.Data
                 NIN.InMudra = false;
         }
 
-        private static void CheckForChangedTarget(uint actionId, ref ulong targetObjectId)
+        private static bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
         {
-            if (actionId is not (AST.Balance or AST.Spear) ||
-                AST.QuickTargetCards.SelectedRandomMember is null ||
-                OutOfRange(actionId, Svc.ClientState.LocalPlayer!, AST.QuickTargetCards.SelectedRandomMember))
-                return;
+            replacedWith = actionId;
+            if (!P.ActionRetargeting.TryGetTargetFor(actionId, out var target, out replacedWith) ||
+                target is null)
+                return false;
 
-            // Set Default Result
-            targetObjectId = AST.QuickTargetCards.SelectedRandomMember.GameObjectId;
-
-            //Apply Overrides
-            switch ((int)AST.Config.AST_QuickTarget_Override)
-            {
-                // Case 0 is Default (SelectedRandomMember)
-
-                // Hard Target
-                case 1 when Svc.Targets.Target is not null && HasFriendlyTarget():
-                    targetObjectId = Svc.Targets.Target.GameObjectId;
-                    break;
-                // UI Mousover Override
-                case 2:
-                    if (PartyUITargeting.UiMouseOverTarget is IGameObject mouseTarget)
-                        targetObjectId = mouseTarget.GameObjectId;
-                    break;
-            }
-
-            // Log the selected target for debugging
-            ulong localTargetId = targetObjectId; // Copy to local variable, can't use for the next line
-            var selectedTarget = Svc.Objects.FirstOrDefault(x => x.GameObjectId == localTargetId);
-            Svc.Log.Debug($"Switched to {selectedTarget?.Name ?? "Unknown"}");
+            targetObjectId = target.GameObjectId;
+            return true;
         }
 
         public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
@@ -247,16 +221,16 @@ namespace WrathCombo.Data
         /// <returns>Time in milliseconds if found, else -1.</returns>
         public static float TimeSinceActionUsed(uint actionId)
         {
-            if (ActionTimestamps.ContainsKey(actionId))
-                return Environment.TickCount64 - ActionTimestamps[actionId];
+            if (ActionTimestamps.TryGetValue(actionId, out long timestamp))
+                return Environment.TickCount64 - timestamp;
 
             return -1f;
         }
 
         public static float TimeSinceLastSuccessfulCast(uint actionId)
         {
-            if (LastSuccessfulUseTime.ContainsKey(actionId))
-                return Environment.TickCount64 - LastSuccessfulUseTime[actionId];
+            if (LastSuccessfulUseTime.TryGetValue(actionId, out long timestamp))
+                return Environment.TickCount64 - timestamp;
 
             return -1f;
         }
@@ -358,19 +332,59 @@ namespace WrathCombo.Data
 
         private unsafe static bool UseActionDetour(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted)
         {
-            if (Service.Configuration.PerformanceMode)
+            try
             {
-                var result = actionId;
-                foreach (var combo in ActionReplacer.FilteredCombos)
+                if (actionType is FFXIVClientStructs.FFXIV.Client.Game.ActionType.Action or FFXIVClientStructs.FFXIV.Client.Game.ActionType.Ability)
                 {
-                    if (combo.TryInvoke(actionId, out result))
+                    var original = actionId; //Save the original action, do not modify
+                    var originalTargetId = targetId; //Save the original target, do not modify
+
+                    if (Service.Configuration.PerformanceMode) //Performance mode only logic, to modify the actionId
                     {
-                        actionId = result;
-                        break;
+                        var result = actionId;
+                        foreach (var combo in ActionReplacer.FilteredCombos)
+                        {
+                            if (combo.TryInvoke(actionId, out result))
+                            {
+                                actionId = Service.ActionReplacer.LastActionInvokeFor[actionId] = result; //Sets actionId and the LastActionInvokeFor dictionary entry to the result of the combo
+                                break;
+                            }
+                        }
                     }
+
+                    var changed = CheckForChangedTarget(original, ref targetId,
+                        out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
+
+                    var areaTargeted = Svc.Data
+                        .GetExcelSheet<Lumina.Excel.Sheets.Action>()
+                        .GetRow(replacedWith).TargetArea;
+
+                    if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
+                        if (!ActionManager.CanUseActionOnTarget(replacedWith,
+                            Svc.Objects
+                                .FirstOrDefault(x => x.GameObjectId == targetId)
+                                .Struct()))
+                            targetId = originalTargetId;
+
+                    //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
+                    var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+
+                    // If the target was changed, support changing the target for ground actions, too
+                    if (changed)
+                        ActionManager.Instance()->AreaTargetingExecuteAtObject =
+                            targetId;
+
+                    return hookResult;
+                }
+                else
+                {
+                    return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
                 }
             }
-            return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+            catch
+            {
+                return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+            }
         }
 
         public static void Enable()
@@ -416,18 +430,6 @@ namespace WrathCombo.Data
             var index = Svc.Data.GetExcelSheet<AozActionTransient>().GetRow(aozKey).Number;
 
             return $"#{index} ";
-        }
-        public static string GetStatusName(uint id) => StatusSheet.TryGetValue(id, out var status) ? status.Name.ToString() : "Unknown Status";
-
-        public static List<uint>? GetStatusesByName(string status)
-        {
-            if (statusCache.TryGetValue(status, out List<uint>? list))
-                return list;
-
-            return statusCache.TryAdd(status, StatusSheet.Where(x => x.Value.Name.ToString().Equals(status, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Key).ToList())
-                ? statusCache[status]
-                : null;
-
         }
 
         public static ActionAttackType GetAttackType(uint id)

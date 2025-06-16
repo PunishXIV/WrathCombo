@@ -30,9 +30,6 @@ internal partial class MCH
             MCH_ST_Reassembled = new("MCH_ST_Reassembled"),
             MCH_AoE_Reassembled = new("MCH_AoE_Reassembled");
 
-        public static UserBool
-            MCH_AoE_Hypercharge = new("MCH_AoE_Hypercharge");
-
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -155,12 +152,6 @@ internal partial class MCH
                 case CustomComboPreset.MCH_AoE_Adv_Queen:
                     DrawSliderInt(50, 100, MCH_AoE_TurretUsage,
                         "Battery threshold", sliderIncrement: 5);
-
-                    break;
-
-                case CustomComboPreset.MCH_AoE_Adv_GaussRicochet:
-                    DrawAdditionalBoolChoice(MCH_AoE_Hypercharge,
-                        $"Use Outwith {Hypercharge.ActionName()}", "");
 
                     break;
 

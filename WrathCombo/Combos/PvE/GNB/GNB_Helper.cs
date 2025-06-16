@@ -18,20 +18,16 @@ internal partial class GNB : Tank
     internal static byte Ammo => GetJobGauge<GNBGauge>().Ammo;
     internal static byte GunStep => GetJobGauge<GNBGauge>().AmmoComboStep;
     internal static float HPP => PlayerHealthPercentageHp();
-    internal static float GFcd => GetCooldownRemainingTime(GnashingFang);
     internal static float NMcd => GetCooldownRemainingTime(NoMercy);
-    internal static float DDcd => GetCooldownRemainingTime(DoubleDown);
     internal static float BFcd => GetCooldownRemainingTime(Bloodfest);
     internal static bool HasNM => NMcd is >= 39.5f and <= 60;
-    internal static bool HasBreak => HasStatusEffect(Buffs.ReadyToBreak);
     internal static bool HasReign => HasStatusEffect(Buffs.ReadyToReign);
     internal static bool CanBS => LevelChecked(BurstStrike) && Ammo > 0;
-    internal static bool CanFC => LevelChecked(FatedCircle) && Ammo > 0;
-    internal static bool CanGF => LevelChecked(GnashingFang) && GFcd < 0.6f && !HasStatusEffect(Buffs.ReadyToBlast) && GunStep == 0 && Ammo > 0;
-    internal static bool CanDD => LevelChecked(DoubleDown) && DDcd < 0.6f && Ammo > 0;
+    internal static bool CanGF => LevelChecked(GnashingFang) && GetCooldownRemainingTime(GnashingFang) < 0.6f && !HasStatusEffect(Buffs.ReadyToBlast) && GunStep == 0 && Ammo > 0;
+    internal static bool CanDD => LevelChecked(DoubleDown) && GetCooldownRemainingTime(DoubleDown) < 0.6f && Ammo > 0;
     internal static bool CanBF => LevelChecked(Bloodfest) && BFcd < 0.6f;
     internal static bool CanZone => LevelChecked(DangerZone) && GetCooldownRemainingTime(OriginalHook(DangerZone)) < 0.6f;
-    internal static bool CanSB => LevelChecked(SonicBreak) && HasBreak;
+    internal static bool CanSB => LevelChecked(SonicBreak) && HasStatusEffect(Buffs.ReadyToBreak);
     internal static bool CanBow => LevelChecked(BowShock) && GetCooldownRemainingTime(BowShock) < 0.6f;
     internal static bool CanContinue => LevelChecked(Continuation);
     internal static bool CanReign => LevelChecked(ReignOfBeasts) && GunStep == 0 && HasReign;
@@ -56,7 +52,7 @@ internal partial class GNB : Tank
     public static Lv90SlowEarlyNM GNBLv90SlowEarlyNM = new();
     public static Lv100SlowEarlyNM GNBLv100SlowEarlyNM = new();
 
-    public static WrathOpener Opener() => (!IsEnabled(CustomComboPreset.GNB_ST_Advanced_Opener) || !LevelChecked(DoubleDown)) ? WrathOpener.Dummy : GetOpener(Config.GNB_Opener_NM == 0);
+    public static WrathOpener Opener() => (!IsEnabled(CustomComboPreset.GNB_ST_Opener) || !LevelChecked(DoubleDown)) ? WrathOpener.Dummy : GetOpener(Config.GNB_Opener_NM == 0);
     private static WrathOpener GetOpener(bool isNormal)
     {
         if (FastGNB || MidGNB)
@@ -305,10 +301,8 @@ internal partial class GNB : Tank
     {
         if (Variant.CanCure(CustomComboPreset.GNB_Variant_Cure, Config.GNB_VariantCure))
             return Variant.Cure;
-
         if (Variant.CanSpiritDart(CustomComboPreset.GNB_Variant_SpiritDart) && CanWeave())
             return Variant.SpiritDart;
-        
         if (Variant.CanUltimatum(CustomComboPreset.GNB_Variant_Ultimatum) && CanWeave())
             return Variant.Ultimatum;
 
@@ -322,41 +316,33 @@ internal partial class GNB : Tank
         bool CanUse(uint action) => HasActionEquipped(action) && IsOffCooldown(action);
         bool IsEnabledAndUsable(CustomComboPreset preset, uint action) => IsEnabled(preset) && CanUse(action);
 
-        //Out-of-Combat
         if (!InCombat() && IsEnabledAndUsable(CustomComboPreset.GNB_Bozja_LostStealth, Bozja.LostStealth))
             return Bozja.LostStealth;
 
-        //OGCDs
         if (CanWeave())
         {
             foreach (var (preset, action) in new[]
-            {
-            (CustomComboPreset.GNB_Bozja_LostFocus, Bozja.LostFocus),
+            { (CustomComboPreset.GNB_Bozja_LostFocus, Bozja.LostFocus),
             (CustomComboPreset.GNB_Bozja_LostFontOfPower, Bozja.LostFontOfPower),
             (CustomComboPreset.GNB_Bozja_LostSlash, Bozja.LostSlash),
             (CustomComboPreset.GNB_Bozja_LostFairTrade, Bozja.LostFairTrade),
-            (CustomComboPreset.GNB_Bozja_LostAssassination, Bozja.LostAssassination),
-        })
-                if (IsEnabledAndUsable(preset, action))
-                    return action;
+            (CustomComboPreset.GNB_Bozja_LostAssassination, Bozja.LostAssassination), })
+            if (IsEnabledAndUsable(preset, action))
+                return action;
 
             foreach (var (preset, action, powerPreset) in new[]
-            {
-            (CustomComboPreset.GNB_Bozja_BannerOfNobleEnds, Bozja.BannerOfNobleEnds, CustomComboPreset.GNB_Bozja_PowerEnds),
-            (CustomComboPreset.GNB_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice, CustomComboPreset.GNB_Bozja_PowerSacrifice)
-        })
-                if (IsEnabledAndUsable(preset, action) && (!IsEnabled(powerPreset) || JustUsed(Bozja.LostFontOfPower, 5f)))
-                    return action;
+            { (CustomComboPreset.GNB_Bozja_BannerOfNobleEnds, Bozja.BannerOfNobleEnds, CustomComboPreset.GNB_Bozja_PowerEnds),
+            (CustomComboPreset.GNB_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice, CustomComboPreset.GNB_Bozja_PowerSacrifice) })
+            if (IsEnabledAndUsable(preset, action) && (!IsEnabled(powerPreset) || JustUsed(Bozja.LostFontOfPower, 5f)))
+                return action;
 
             if (IsEnabledAndUsable(CustomComboPreset.GNB_Bozja_BannerOfHonedAcuity, Bozja.BannerOfHonedAcuity) &&
                 !HasStatusEffect(Bozja.Buffs.BannerOfTranscendentFinesse))
                 return Bozja.BannerOfHonedAcuity;
         }
 
-        //GCDs
         foreach (var (preset, action, condition) in new[]
-        {
-        (CustomComboPreset.GNB_Bozja_LostDeath, Bozja.LostDeath, true),
+        { (CustomComboPreset.GNB_Bozja_LostDeath, Bozja.LostDeath, true),
         (CustomComboPreset.GNB_Bozja_LostCure, Bozja.LostCure, PlayerHealthPercentageHp() <= Config.GNB_Bozja_LostCure_Health),
         (CustomComboPreset.GNB_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(RoleActions.Magic.Buffs.Raise)),
         (CustomComboPreset.GNB_Bozja_LostReraise, Bozja.LostReraise, PlayerHealthPercentageHp() <= Config.GNB_Bozja_LostReraise_Health),
@@ -364,16 +350,14 @@ internal partial class GNB : Tank
         (CustomComboPreset.GNB_Bozja_LostShell, Bozja.LostShell, !HasStatusEffect(Bozja.Buffs.LostShell)),
         (CustomComboPreset.GNB_Bozja_LostBravery, Bozja.LostBravery, !HasStatusEffect(Bozja.Buffs.LostBravery)),
         (CustomComboPreset.GNB_Bozja_LostBubble, Bozja.LostBubble, !HasStatusEffect(Bozja.Buffs.LostBubble)),
-        (CustomComboPreset.GNB_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f))
-        })
-            if (IsEnabledAndUsable(preset, action) && condition)
-                return action;
+        (CustomComboPreset.GNB_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f)) })
+        if (IsEnabledAndUsable(preset, action) && condition)
+            return action;
 
         if (IsEnabled(CustomComboPreset.GNB_Bozja_LostSpellforge) &&
             CanUse(Bozja.LostSpellforge) &&
             (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
             return Bozja.LostSpellforge;
-
         if (IsEnabled(CustomComboPreset.GNB_Bozja_LostSteelsting) &&
             CanUse(Bozja.LostSteelsting) &&
             (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
@@ -381,41 +365,47 @@ internal partial class GNB : Tank
 
         return 0; //No conditions met
     }
-
-    #endregion
-
-    #region Cooldowns
-
-    #region OGCDs
-    internal static bool ShouldUseNoMercy()
+    internal static uint OtherAction
     {
-        var minimum = ActionReady(NoMercy) && InCombat() && HasBattleTarget();
-        var three = InOdd && (Ammo >= 2 || (ComboAction is BrutalShell && Ammo == 1)) || (!InOdd && Ammo != 3);
-        var two = TraitLevelChecked(Traits.CartridgeCharge) ? Ammo > 0 : ActionReady(NoMercy);
-        var condition = minimum && (TraitLevelChecked(Traits.CartridgeChargeII) ? three : two);
-        if ((SlowGNB && condition && CanWeave()) ||
-            (MidGNB && condition && (InOdd ? CanWeave() : CanLateWeave)) ||
-            (FastGNB && condition && CanLateWeave))
-            return true;
-
-        return false;
+        get
+        {
+            if (GetVariantAction() is uint va && va != 0)
+                return va;
+            if (Bozja.IsInBozja && GetBozjaAction() is uint ba && ba != 0)
+                return ba;
+            return 0;
+        }
     }
-    internal static bool ShouldUseBloodfest() => HasBattleTarget() && CanWeave() && CanBF && Ammo == 0;
-    internal static bool ShouldUseZone() => CanZone && CanWeave() && NMcd is < 57.5f and > 17f;
-    internal static bool ShouldUseBowShock() => CanBow && CanWeave() && NMcd is < 57.5f and >= 40;
-    internal static bool ShouldUseContinuation() => CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || 
+    internal static bool ShouldUseOther => OtherAction != 0;
+    #endregion
+
+    #region Rotation
+    internal static bool ShouldUseNoMercy
+    {
+        get
+        {
+            var minimum = NMcd < 0.6f && InCombat() && HasBattleTarget();
+            var three = (InOdd && (Ammo >= 2 || (ComboAction is BrutalShell && Ammo == 1))) || (!InOdd && Ammo != 3);
+            var two = TraitLevelChecked(Traits.CartridgeCharge) ? Ammo > 0 : NMcd < 0.6f;
+            var condition = minimum && (TraitLevelChecked(Traits.CartridgeChargeII) ? three : two);
+            return (SlowGNB && condition && CanWeave()) || (MidGNB && condition && (InOdd ? CanWeave() : CanLateWeave)) || (FastGNB && condition && CanLateWeave);
+        }
+    }
+    internal static bool ShouldUseBloodfest => HasBattleTarget() && CanWeave() && CanBF && Ammo == 0;
+    internal static bool ShouldUseZone => CanZone && CanWeave() && NMcd is < 57.5f and > 17f;
+    internal static bool ShouldUseBowShock => CanBow && CanWeave() && NMcd is < 57.5f and >= 40;
+    internal static bool ShouldUseContinuation => CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || 
         (LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast) && (LevelChecked(DoubleDown) ? (SlowGNB ? NMcd is > 1.5f || CanDelayedWeave(0.6f, 0) : (FastGNB || MidGNB)) : !LevelChecked(DoubleDown))));
-    #endregion
-
-    #region GCDs
-    internal static bool ShouldUseLightningShot() => LevelChecked(LightningShot) && !InMeleeRange() && HasBattleTarget();
-    internal static bool ShouldUseGnashingFang() => CanGF && (NMcd is > 17 and < 35 || JustUsed(NoMercy, 6f));
-    internal static bool ShouldUseDoubleDown() => CanDD && HasNM && (IsOnCooldown(GnashingFang) || Ammo == 1);
-    internal static bool ShouldUseSonicBreak() => CanSB && ((IsOnCooldown(GnashingFang) || !LevelChecked(GnashingFang)) && (IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown)));
-    internal static bool ShouldUseReignOfBeasts() => CanReign && IsOnCooldown(GnashingFang) && IsOnCooldown(DoubleDown) && !HasStatusEffect(Buffs.ReadyToBreak) && GunStep == 0;
-    internal static bool ShouldUseBurstStrike() => (CanBS && HasNM && IsOnCooldown(GnashingFang) && (IsOnCooldown(DoubleDown) || (!LevelChecked(DoubleDown) && Ammo > 0)) && !HasReign && GunStep == 0);
-    #endregion
-
+    internal static bool ShouldUseGnashingFang => CanGF && (NMcd is > 17 and < 35 || JustUsed(NoMercy, 6f));
+    internal static bool ShouldUseDoubleDown => CanDD && HasNM && (IsOnCooldown(GnashingFang) || Ammo == 1);
+    internal static bool ShouldUseSonicBreak => CanSB && ((IsOnCooldown(GnashingFang) || !LevelChecked(GnashingFang)) && (IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown)));
+    internal static bool ShouldUseReignOfBeasts => CanReign && IsOnCooldown(GnashingFang) && IsOnCooldown(DoubleDown) && !HasStatusEffect(Buffs.ReadyToBreak) && GunStep == 0;
+    internal static bool ShouldUseBurstStrike => (CanBS && HasNM && IsOnCooldown(GnashingFang) && (IsOnCooldown(DoubleDown) || (!LevelChecked(DoubleDown) && Ammo > 0)) && !HasReign && GunStep == 0);
+    internal static uint STCombo 
+        => ComboTimer > 0 ? ComboAction == KeenEdge && LevelChecked(BrutalShell) ? BrutalShell : ComboAction == BrutalShell && LevelChecked(SolidBarrel)
+        ? (Config.GNB_ST_Overcap_Choice == 0 && LevelChecked(BurstStrike) && Ammo == MaxCartridges() ? BurstStrike : SolidBarrel) : KeenEdge : KeenEdge;
+    internal static uint AOECombo => (ComboTimer > 0 && ComboAction == DemonSlice && LevelChecked(DemonSlaughter) && (Ammo != MaxCartridges() || Config.GNB_AoE_Overcap_Choice == 1)) ? DemonSlaughter : DemonSlice;
+    internal static bool ShouldUseLightningShot => LevelChecked(LightningShot) && !InMeleeRange() && HasBattleTarget();
     #endregion
 
     #region IDs
@@ -552,8 +542,8 @@ internal partial class GNB : Tank
                   PlayerHealthPercentageHp() <= Config.GNB_Mit_Corundum_Health),
         //Aurora
         (Aurora, CustomComboPreset.GNB_Mit_Aurora,
-            () => !(HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
-                    !HasFriendlyTarget() && HasStatusEffect(Buffs.Aurora, anyOwner: true)) &&
+            () => !(TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, CurrentTarget, true) ||
+                    !TargetIsFriendly() && HasStatusEffect(Buffs.Aurora, anyOwner: true)) &&
                   GetRemainingCharges(Aurora) > Config.GNB_Mit_Aurora_Charges &&
                   PlayerHealthPercentageHp() <= Config.GNB_Mit_Aurora_Health),
         //Camouflage

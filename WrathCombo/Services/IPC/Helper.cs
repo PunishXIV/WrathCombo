@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using Dalamud.Networking.Http;
 using ECommons;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
@@ -83,12 +85,11 @@ public partial class Helper(ref Leasing leasing)
             return null;
 
         // Detect the target type
-        var targetType = attr.CustomComboInfo.Name.Contains("single target", lower)
-            ? ComboTargetTypeKeys.SingleTarget
-            : (attr.CustomComboInfo.Name.Contains("- aoe", lower) ||
-               attr.CustomComboInfo.Name.Contains("aoe dps", lower))
-                ? ComboTargetTypeKeys.MultiTarget
-                : ComboTargetTypeKeys.Other;
+        var targetType = attr.CustomComboInfo.Name.Contains("single target", lower) ?
+            ComboTargetTypeKeys.SingleTarget :
+            (attr.CustomComboInfo.Name.Contains("- aoe", lower) ||
+             attr.CustomComboInfo.Name.Contains("aoe dps", lower)) ?
+                ComboTargetTypeKeys.MultiTarget : ComboTargetTypeKeys.Other;
 
         // Bail if it is not a Single-Target or Multi-Target primary preset
         if (targetType == ComboTargetTypeKeys.Other)
@@ -110,7 +111,7 @@ public partial class Helper(ref Leasing leasing)
             // Get the opposite mode
             var categorizedPreset =
                 P.IPCSearch.CurrentJobComboStatesCategorized
-                    [(Job)attr.CustomComboInfo.JobID]
+                        [(Job)attr.CustomComboInfo.JobID]
                     [targetType][simplicityLevelToSearchFor];
 
             // Return the opposite mode, as a proper preset
@@ -119,9 +120,10 @@ public partial class Helper(ref Leasing leasing)
                 Enum.Parse(typeof(CustomComboPreset), oppositeMode, true);
             return oppositeModePreset;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            ex.LogWarning("No opposite combo found, this is probably correct if this is a healer.");
+            ex.LogWarning(
+                "No opposite combo found, this is probably correct if this is a healer.");
             return null;
         }
     }
@@ -153,9 +155,9 @@ public partial class Helper(ref Leasing leasing)
     /// <seealso cref="Provider.IsCurrentJobConfiguredOn" />
     /// <seealso cref="Provider.IsCurrentJobAutoModeOn" />
     internal ComboSimplicityLevelKeys? CheckCurrentJobModeIsEnabled
-            (ComboTargetTypeKeys mode,
-            ComboStateKeys enabledStateToCheck,
-            ComboSimplicityLevelKeys? previousMatch = null)
+    (ComboTargetTypeKeys mode,
+        ComboStateKeys enabledStateToCheck,
+        ComboSimplicityLevelKeys? previousMatch = null)
     {
         if (CustomComboFunctions.LocalPlayer is null)
             return null;
@@ -176,8 +178,12 @@ public partial class Helper(ref Leasing leasing)
             .TryGetValue(ComboSimplicityLevelKeys.Simple, out var simpleResults);
         var simpleHigher = simpleResults?.FirstOrDefault();
         var simple = simpleHigher?.Value;
+
         #region Override the Values with any IPC-control
-        CustomComboPreset? simpleComboPreset = simpleHigher is null ? null : (CustomComboPreset)
+
+        CustomComboPreset? simpleComboPreset = simpleHigher is null
+            ? null
+            : (CustomComboPreset)
             Enum.Parse(typeof(CustomComboPreset), simpleHigher.Value.Key, true);
         if (simpleComboPreset is not null)
         {
@@ -187,17 +193,22 @@ public partial class Helper(ref Leasing leasing)
                 P.IPCSearch.EnabledActions.Contains(
                     (CustomComboPreset)simpleComboPreset);
         }
+
         #endregion
 
         // Get the Advanced Mode settings
-        var (advancedKey, advancedValue) = comboStates[mode][ComboSimplicityLevelKeys.Advanced].First();
+        var (advancedKey, advancedValue) =
+            comboStates[mode][ComboSimplicityLevelKeys.Advanced].First();
+
         #region Override the Values with any IPC-control
+
         var advancedComboPreset = (CustomComboPreset)
             Enum.Parse(typeof(CustomComboPreset), advancedKey, true);
         advancedValue[ComboStateKeys.AutoMode] =
             P.IPCSearch.AutoActions[advancedComboPreset];
         advancedValue[ComboStateKeys.Enabled] =
             P.IPCSearch.EnabledActions.Contains(advancedComboPreset);
+
         #endregion
 
         // If the simplicity level is set, check that specifically instead of either
@@ -212,11 +223,10 @@ public partial class Helper(ref Leasing leasing)
         }
 
         // Check for either Simple or Advanced being ready
-        return simple is not null && simple[enabledStateToCheck]
-            ? ComboSimplicityLevelKeys.Simple
-            : advancedValue[enabledStateToCheck]
-                ? ComboSimplicityLevelKeys.Advanced
-                : null;
+        return simple is not null && simple[enabledStateToCheck] ?
+            ComboSimplicityLevelKeys.Simple :
+            advancedValue[enabledStateToCheck] ? ComboSimplicityLevelKeys.Advanced :
+                null;
     }
 
     /// <summary>
@@ -361,7 +371,17 @@ public partial class Helper(ref Leasing leasing)
 
     #region Checking the repo for live IPC status
 
-    private readonly HttpClient _httpClient = new();
+    /// Dalamud's happy eyeballs handler, which handles IPv6, among other things.
+    // ReSharper disable once InconsistentNaming
+    private static readonly SocketsHttpHandler _httpHandler = new()
+    {
+        AutomaticDecompression = DecompressionMethods.All,
+        ConnectCallback = new HappyEyeballsCallback().ConnectCallback,
+    };
+
+    /// The HTTP client, setup with a short timeout and Dalamud's happy handler.
+    private readonly HttpClient _httpClient = new(_httpHandler)
+        { Timeout = TS.FromSeconds(5) };
 
     /// <summary>
     ///     The endpoint for checking the IPC status straight from the repo,
@@ -387,10 +407,10 @@ public partial class Helper(ref Leasing leasing)
     {
         get
         {
-            // If the IPC status was checked within the last 5 minutes:
+            // If the IPC status was checked within the last 20 minutes:
             // return the cached value
             if (_ipcEnabled is not null &&
-                !EZ.Throttle("ipcLastStatusChecked", TS.FromMinutes(5)))
+                !EZ.Throttle("ipcLastStatusChecked", TS.FromMinutes(20)))
                 return _ipcEnabled!.Value;
 
             // Otherwise, check the status and cache the result

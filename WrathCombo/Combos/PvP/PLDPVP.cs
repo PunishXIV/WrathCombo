@@ -27,17 +27,16 @@ namespace WrathCombo.Combos.PvP
             BladeOfTruth = 29072,
             BladeOfValor = 29073;
 
-
         internal class Buffs
         {
             internal const ushort
+                Covered = 1301,
                 ConfiteorReady = 3028,
                 HallowedGround = 1302,
                 AttonementReady = 2015,
                 SupplicationReady = 4281,
                 SepulchreReady = 4282,
                 BladeOfFaithReady = 3250;
-
         }
 
         internal class Debuffs

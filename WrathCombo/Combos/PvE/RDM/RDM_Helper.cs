@@ -134,39 +134,35 @@ internal partial class RDM
         }
     }
 
-    private static bool TryOGCDs(uint actionID, in bool SingleTarget, ref uint newActionID, bool AdvMode = false)
+    private static bool TryOGCDs(ref uint newActionID, bool engagepool = false, bool corpspool = false, bool corpsmelee = false, bool[]? oGCDs = null)
     {
         newActionID = 0; //reset just incase
         if (!CanSpellWeave()) return false;
 
         float distance = GetTargetDistance();
 
-        //Simple Settings
+        // Defaults
         bool fleche = true;
         bool contre = true;
         bool engagement = false;
+        bool corpacorps = false;
         bool vice = true;
         bool prefulg = true;
-        int engagementPool = 0;
-        bool corpacorps = false;
-        int corpsacorpsPool = 0;
-        int corpacorpsRange = 25;
 
-        if (AdvMode)
+        int engagementPool = engagepool ? 1 : 0;
+        int corpsacorpsPool = corpspool ? 1 : 0;
+        int corpacorpsRange = corpsmelee ? 3 : 25;
+
+        // Override defaults if bool array was passed
+        if (oGCDs != null && oGCDs.Length == 6)
         {
-            fleche = SingleTarget ? Config.RDM_ST_oGCD_Fleche : Config.RDM_AoE_oGCD_Fleche;
-            contre = SingleTarget ? Config.RDM_ST_oGCD_ContreSixte : Config.RDM_AoE_oGCD_ContreSixte;
-            engagement = SingleTarget ? Config.RDM_ST_oGCD_Engagement : Config.RDM_AoE_oGCD_Engagement;
-            vice = SingleTarget ? Config.RDM_ST_oGCD_ViceOfThorns : Config.RDM_AoE_oGCD_ViceOfThorns;
-            prefulg = SingleTarget ? Config.RDM_ST_oGCD_Prefulgence : Config.RDM_AoE_oGCD_Prefulgence;
-
-            engagementPool = (SingleTarget && Config.RDM_ST_oGCD_Engagement_Pooling) || (!SingleTarget && Config.RDM_AoE_oGCD_Engagement_Pooling) ? 1 : 0;
-            corpacorps = SingleTarget ? Config.RDM_ST_oGCD_CorpACorps : Config.RDM_AoE_oGCD_CorpACorps;
-            corpsacorpsPool = (SingleTarget && Config.RDM_ST_oGCD_CorpACorps_Pooling) || (!SingleTarget && Config.RDM_AoE_oGCD_CorpACorps_Pooling) ? 1 : 0;
-            corpacorpsRange = (SingleTarget && Config.RDM_ST_oGCD_CorpACorps_Melee) || (!SingleTarget && Config.RDM_AoE_oGCD_CorpACorps_Melee) ? 3 : 25;
+            fleche = oGCDs[0];
+            contre = oGCDs[1];
+            engagement = oGCDs[2];
+            corpacorps = oGCDs[3];
+            vice = oGCDs[4];
+            prefulg = oGCDs[5];
         }
-
-        //Grabs an oGCD to return based on radio options
 
         if (newActionID == 0
             && prefulg
@@ -209,29 +205,7 @@ internal partial class RDM
             && !JustUsed(Embolden, 2f)) //try not to double use, wait for next GCD
             newActionID = ViceOfThorns;
 
-        if (newActionID != 0) return true;
-
-        if (actionID is Fleche && newActionID == 0) // All actions are on cooldown, determine the lowest CD to display on Fleche.
-        {
-            newActionID = Fleche;
-            if (contre
-                && LevelChecked(ContreSixte)
-                && GetCooldownRemainingTime(newActionID) > GetCooldownRemainingTime(ContreSixte))
-                newActionID = ContreSixte;
-            if (corpacorps
-                && LevelChecked(Corpsacorps)
-                && !HasCharges(Corpsacorps)
-                && GetCooldownRemainingTime(newActionID) > GetCooldownRemainingTime(Corpsacorps))
-                newActionID = Corpsacorps;
-            if (engagement
-                && LevelChecked(Engagement)
-                && GetCooldownRemainingTime(Engagement) == 0
-                && GetCooldownRemainingTime(newActionID) > GetCooldownRemainingTime(Engagement))
-                newActionID = Engagement;
-        }
-        if (actionID is Fleche) return true;
-
-        return false;
+        return newActionID != 0;
     }
 
     private static bool TryLucidDreaming(int MPThreshold, uint ComboAction) =>
@@ -378,16 +352,14 @@ internal partial class RDM
             if (GetTargetDistance() <= 3 || MeleeEnforced)
             {
                 if ((ComboAction is Riposte or EnchantedRiposte)
-                    && LevelChecked(Zwerchhau)
-                    && ComboTimer > 0f)
+                    && LevelChecked(Zwerchhau))
                 {
                     newActionID = OriginalHook(Zwerchhau);
                     return true;
                 }
 
                 if (ComboAction is Zwerchhau
-                    && LevelChecked(Redoublement)
-                    && ComboTimer > 0f)
+                    && LevelChecked(Redoublement))
                 {
                     newActionID = OriginalHook(Redoublement);
                     return true;
@@ -533,8 +505,7 @@ internal partial class RDM
             {
                 //Finish the combo
                 if (LevelChecked(Moulinet)
-                && ComboAction is EnchantedMoulinet or EnchantedMoulinetDeux
-                && ComboTimer > 0f)
+                && ComboAction is EnchantedMoulinet or EnchantedMoulinetDeux)
                 {
                     newActionID = OriginalHook(Moulinet);
                     return true;
@@ -567,7 +538,7 @@ internal partial class RDM
             return false;
         }
 
-        internal static bool TryMeleeFinisher(ref uint newActionID)
+        internal static bool TryVerFlareVerHoly(ref uint newActionID)
         {
             if (RDMMana.ManaStacks >= 3)
             {
@@ -599,23 +570,16 @@ internal partial class RDM
                     return true;
                 }
             }
-            if ((ComboAction is Verflare or Verholy)
-                && LevelChecked(Scorch))
-            {
-                newActionID = Scorch;
-                return true;
-            }
-
-            if (ComboAction is Scorch
-                && LevelChecked(Resolution))
-            {
-                newActionID = Resolution;
-                return true;
-            }
 
             //Else
             return false;
         }
+
+        // Makes sure we return Scorch or Resolution
+        internal static bool CanScorchResolution() =>
+            ((ComboAction is Verflare or Verholy) && LevelChecked(Scorch))
+            ||
+            (ComboAction is Scorch && LevelChecked(Resolution));
     }
 
     private class SpellCombo
@@ -632,11 +596,13 @@ internal partial class RDM
 
             return false;
         }
-        internal static bool TryAcceleration(ref uint newActionID, bool swiftcast = true, bool AoEWeave = false)
+        internal static bool TryAcceleration(
+            ref uint newActionID, bool swiftcast = true, bool AoEWeave = false, 
+            bool CheckMovement = false, int AccelCharges = 0, int AccelMoveCharges = 0)
         {
             if (!CanSpellWeave()) return false;
 
-            //RDM_ST_ACCELERATION
+            // ACCELERATION
             if (InCombat()
                 && LocalPlayer.IsCasting == false
                 && RDMMana.ManaStacks == 0
@@ -652,11 +618,11 @@ internal partial class RDM
                 && !HasStatusEffect(Role.Buffs.Swiftcast))
             {
                 if (ActionReady(Acceleration)
-                    && GetRemainingCharges(Acceleration) > Config.RDM_ST_Acceleration_Charges
-                    && (!IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Movement) 
-                    || (IsEnabled(CustomComboPreset.RDM_ST_ThunderAero_Accel_Movement) 
+                    && GetRemainingCharges(Acceleration) > AccelCharges
+                    && (!CheckMovement
+                    || (CheckMovement
                     && IsMoving() 
-                    && GetRemainingCharges(Acceleration) > Config.RDM_ST_AccelerationMovement_Charges)))
+                    && GetRemainingCharges(Acceleration) > AccelMoveCharges)))
                 {
                     newActionID = Acceleration;
                     return true;

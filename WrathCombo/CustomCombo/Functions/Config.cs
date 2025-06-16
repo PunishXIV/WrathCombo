@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FFXIVClientStructs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Core;
@@ -68,6 +69,8 @@ namespace WrathCombo.CustomComboNS.Functions
 
         // Implicit conversion to int
         public static implicit operator int(UserInt o) => PluginConfiguration.GetCustomIntValue(o.pName);
+
+        public int Value { get { return this; } set { PluginConfiguration.SetCustomIntValue(this.pName, value); Service.Configuration.Save(); } }
 
         public override void ResetToDefault()
         {

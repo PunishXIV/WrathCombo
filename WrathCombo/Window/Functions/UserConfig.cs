@@ -5,9 +5,15 @@ using Dalamud.Utility;
 using ECommons.ImGuiMethods;
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
+using System.Reflection;
+using System.Text.RegularExpressions;
+using Dalamud.Interface.Components;
 using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
+using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Services;
@@ -469,7 +475,8 @@ namespace WrathCombo.Window.Functions
         /// <param name="checkboxDescription">The description of the feature</param>
         /// <param name="itemWidth"></param>
         /// <param name="isConditionalChoice"></param>
-        public static void DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false)
+        /// <param name="indentDescription"></param>
+        public static void DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false, bool indentDescription = false)
         {
             bool output = PluginConfiguration.GetCustomBoolValue(config);
             ImGui.PushItemWidth(itemWidth);
@@ -500,7 +507,13 @@ namespace WrathCombo.Window.Functions
 
             if (!checkboxDescription.IsNullOrEmpty())
             {
+                if (indentDescription)
+                    ImGui.Indent();
+
                 ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, checkboxDescription);
+
+                if (indentDescription)
+                    ImGui.Unindent();
             }
 
             //!isConditionalChoice
@@ -934,6 +947,321 @@ namespace WrathCombo.Window.Functions
             DebugFile.AddLog($"Set Config {config} to default");
             UserData.MasterList[config].ResetToDefault();
         }
+
+        #region Custom Stack Manager
+
+        private static bool _customStackIconGroupWidthSet = false;
+        private static float _customStackIconGroupWidth = ImGui.CalcTextSize("x").X;
+        private static float _customStackTallestProperty = ImGui.CalcTextSize("I").Y;
+        private static float _customStackLongestProperty =
+            ImGui.CalcTextSize("Lowest HP% Ally (If Missing HP)").X;
+
+        public static void DrawCustomStackManager
+        (string stackName,
+            ref string[] customStackSetting,
+            string[]? targetsToRemoveIfStringContains = null,
+            string helpMarkerTextForStack = "",
+            bool thisIsForRaiseStack = false)
+        {
+            #region Stack Display Sizing Variables
+
+            var currentStyle = ImGui.GetStyle();
+            var widthModifiers = (currentStyle.ItemSpacing.X * 2) +
+                                 (currentStyle.ItemInnerSpacing.X * 2);
+            var width = _customStackLongestProperty +
+                        _customStackIconGroupWidth + widthModifiers;
+            var height = (_customStackTallestProperty * 5) +
+                         (currentStyle.ItemSpacing.Y * 4 / 2) +
+                         (currentStyle.ItemInnerSpacing.Y * 5 / 2) +
+                         (currentStyle.WindowPadding.Y * 2);
+            var size = new Vector2(width, height);
+
+            #endregion
+
+            #region Stack Manager
+
+            const ImGuiWindowFlags flags =
+                ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize;
+
+            // Display the Custom Heal Stack
+            using (ImRaii.Child("###CustomStackList" + stackName, size, true, flags))
+            {
+                foreach (var item in customStackSetting)
+                {
+                    var text = TargetDisplayNameFromPropertyName(item, thisIsForRaiseStack);
+                    #region Sizing Variables
+
+                    var areaWidth = ImGui.GetContentRegionAvail().X;
+                    var textWidth = ImGui.CalcTextSize(text).X;
+                    var dummyWidth = areaWidth - textWidth -
+                                     _customStackIconGroupWidth - widthModifiers / 2;
+                    #endregion
+
+                    ImGui.TextUnformatted(text);
+
+                    ImGui.SameLine();
+                    ImGui.Dummy(new Vector2(dummyWidth, 0));
+                    ImGui.SameLine();
+
+                    DrawPropertyControlGroup(item, ref customStackSetting);
+                }
+            }
+
+            if (helpMarkerTextForStack != "")
+                ImGuiComponents.HelpMarker(helpMarkerTextForStack);
+
+            #endregion
+
+            #region Adding to the Stack
+
+            ImGuiEx.Spacing(new Vector2(5f.Scale(), 0));
+            ImGui.Text("Add to the Stack:");
+            ImGui.SameLine();
+            DrawItemAdding(stackName, targetsToRemoveIfStringContains,
+                ref customStackSetting,
+                ref _customStackLongestProperty, ref _customStackTallestProperty,
+                thisIsForRaiseStack);
+            ImGuiComponents.HelpMarker("Click this dropdown to open the list of available Target options.\nClick any entry to add it to your Custom Stack, at the bottom.\nThere is a Textbox that says 'Filter...' at the top, type into this to search the list.");
+
+            #endregion
+
+            // Utility
+            GetButtonGroupSize();
+
+            return;
+
+            void DrawPropertyControlGroup(string property, ref string[] customStack)
+            {
+                using (ImRaii.Group())
+                {
+                    ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+                    using (ImRaii.PushFont(UiBuilder.IconFont))
+                    {
+                        bool disable;
+                        // Move Up Button
+                        disable = customStack.FirstOrDefault("") == property;
+                        if (disable)
+                            ImGui.BeginDisabled();
+                        if (ImGuiEx.IconButtonScaled(FontAwesomeIcon.CaretUp,
+                                "customStack"+property+stackName+"up"))
+                            MoveStackItemUp(property, ref customStack);
+                        if (disable)
+                            ImGui.EndDisabled();
+
+                        ImGui.SameLine();
+
+                        // Move Down Button
+                        disable = customStack.LastOrDefault("") == property;
+                        if (disable)
+                            ImGui.BeginDisabled();
+                        if (ImGuiEx.IconButtonScaled(FontAwesomeIcon.CaretDown,
+                                "customStack"+property+stackName+"down"))
+                            MoveStackItemDown(property, ref customStack);
+                        if (disable)
+                            ImGui.EndDisabled();
+
+                        ImGui.SameLine();
+
+                        // Delete Button
+                        disable = customStack.Length <= 1;
+                        if (disable)
+                            ImGui.BeginDisabled();
+                        if (ImGuiEx.IconButtonScaled(FontAwesomeIcon.Times,
+                                "customStack"+property+stackName+"del"))
+                            RemoveStackItem(property, ref customStack);
+                        if (disable)
+                            ImGui.EndDisabled();
+                    }
+                    ImGui.PopStyleVar();
+                }
+
+                return;
+
+                void MoveStackItemUp
+                    (string itemName, ref string[] customStackSetting)
+                {
+                    var stack = customStackSetting;
+                    if (stack.Length < 1) return;
+
+                    var index = Array.IndexOf(stack, itemName);
+                    if (index <= 0) return;
+
+                    // Swap with the previous item
+                    (stack[index - 1], stack[index]) =
+                        (stack[index], stack[index - 1]);
+
+                    // Save
+                    customStackSetting = stack;
+                    Service.Configuration.Save();
+                }
+
+                void MoveStackItemDown
+                    (string itemName, ref string[] customStackSetting)
+                {
+                    var stack = customStackSetting;
+                    if (stack.Length < 1) return;
+
+                    var index = Array.IndexOf(stack, itemName);
+                    if (index >= stack.Length - 1) return;
+
+                    // Swap with the next item
+                    (stack[index], stack[index + 1]) =
+                        (stack[index + 1], stack[index]);
+
+                    // Save
+                    customStackSetting = stack;
+                    Service.Configuration.Save();
+                }
+
+                void RemoveStackItem
+                    (string itemName, ref string[] customStackSetting)
+                {
+                    var stack = customStackSetting;
+                    if (stack.Length < 1) return;
+
+                    var index = Array.IndexOf(stack, itemName);
+                    if (index <= -1) return;
+
+                    // Remove the item from the array
+                    var newList = stack.ToList();
+                    newList.RemoveAt(index);
+                    var newArray = newList.ToArray();
+
+                    // Save
+                    customStackSetting = newArray;
+                    Service.Configuration.Save();
+                }
+            }
+
+            // ReSharper disable once VariableHidesOuterVariable
+            void GetButtonGroupSize()
+            {
+                if (_customStackIconGroupWidthSet) return;
+
+                ImGui.SameLine();
+                var transparent = new Vector4(0f, 0f, 0f, 0f);
+                string[] blank = [];
+                using (ImRaii.PushColor(ImGuiCol.Text, transparent))
+                    DrawPropertyControlGroup("", ref blank);
+
+                _customStackIconGroupWidth = ImGui.GetItemRectSize().X;
+                _customStackTallestProperty =
+                    ImGui.GetItemRectSize().Y > _customStackTallestProperty
+                        ? ImGui.GetItemRectSize().Y
+                        : _customStackTallestProperty;
+                _customStackIconGroupWidthSet = true;
+            }
+        }
+
+        // ReSharper disable once RedundantAssignment
+        private static void DrawItemAdding
+        (string stackName,
+            string[]? unwantedTargetPieces,
+            ref string[] customStackSetting,
+            ref float longestProperty,
+            ref float tallestProperty,
+            bool thisIsForRaiseStack = false)
+        {
+            #region Combo Variables
+
+            var defaultLabel = "Select a Target to Add";
+            var minSize = ImGui.CalcTextSize(defaultLabel).X;
+
+            // List of ally-related SimpleTarget properties
+            var simpleTargetProperties = typeof(SimpleTarget)
+                .GetProperties(BindingFlags.Public |
+                               BindingFlags.Static)
+                .Select(x => x.Name)
+                .Where(x => StringContainsNoUnwantedPieces(x, unwantedTargetPieces))
+                .Prepend("default")
+                .ToArray();
+
+            // Put the ordered Party Member properties at the bottom
+            var nonPartyMembers = simpleTargetProperties
+                .Where(name => !name.StartsWith("PartyMember"));
+            var partyMembers = simpleTargetProperties
+                .Where(name => name.StartsWith("PartyMember"));
+            var simpleTargets =
+                nonPartyMembers.Concat(partyMembers).ToArray();
+
+            // Make Property names properly spaced and readable
+            var simpleTargetNames =
+                simpleTargets.ToDictionary(
+                    name => name,
+                    name => TargetDisplayNameFromPropertyName(name, thisIsForRaiseStack)
+                );
+
+            // Save some data about the sizing of the text
+            longestProperty = simpleTargetNames
+                .Select(x => x.Value)
+                .Max(x => ImGui.CalcTextSize(x).X);
+            tallestProperty =
+                ImGui.CalcTextSize("I").Y > tallestProperty
+                    ? ImGui.CalcTextSize("I").Y
+                    : tallestProperty;
+
+            #endregion
+
+            ImGui.PushItemWidth(minSize + 40f.Scale());
+            var targetToAddToStack = "default";
+            if (ImGuiEx.Combo(
+                    "##CustomStack" + stackName,
+                    ref targetToAddToStack,
+                    simpleTargets,
+                    names: simpleTargetNames
+                ))
+            {
+                if (targetToAddToStack == "default" ||
+                    customStackSetting.Contains(targetToAddToStack)) return;
+
+                // Add Item to end of list
+                var tempList = customStackSetting.ToList();
+                tempList.Add(targetToAddToStack);
+                customStackSetting = tempList.ToArray();
+
+                // Save, and reset for another add
+                Service.Configuration.Save();
+            }
+
+            return;
+
+            bool StringContainsNoUnwantedPieces
+                (string str, string[]? unwantedPieces) =>
+                unwantedPieces is null ||
+                unwantedPieces.All(piece => !str.Contains(piece));
+        }
+
+#pragma warning disable SYSLIB1045
+        internal static string TargetDisplayNameFromPropertyName
+            (string propertyName,
+                bool thisIsForRaiseStack = false)
+        {
+            var name = propertyName switch
+            {
+                "default" => "Select a Target to Add",
+                // Handle special cases
+                "UIMouseOverTarget" => "UI-MouseOver Target",
+                "ModelMouseOverTarget" => "Field-MouseOver Target",
+                "LowestHPAlly" => "Lowest HP Ally",
+                "LowestHPAllyIfMissingHP" => "Lowest HP Ally If Missing HP",
+                "LowestHPPAlly" => "Lowest HP% Ally",
+                "LowestHPPAllyIfMissingHP" => "Lowest HP% Ally If Missing HP",
+                "AnyDeadRaiserDPSIfNoneAlive" => "Any Dead Raiser DPS If None Alive",
+                // Format the rest with Regex
+                _ => Regex.Replace(propertyName,
+                    @"(?<=[a-z])(?=[A-Z0-9])", " "),
+            };
+
+            name = name.Replace(" If Missing HP", " (If Missing HP)");
+            name = name.Replace(" If None Alive", " (If None Alive)");
+            if (thisIsForRaiseStack)
+                name = name.Replace("Dead ", "");
+
+            return name;
+        }
+#pragma warning restore SYSLIB1045
+
+        #endregion
     }
 
     public static class SliderIncrements
