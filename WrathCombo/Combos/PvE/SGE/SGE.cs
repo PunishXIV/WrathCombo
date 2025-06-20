@@ -3,6 +3,8 @@ using System;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE : Healer
@@ -232,7 +234,7 @@ internal partial class SGE : Healer
                     {
                         if (Variant.CanSpiritDart(CustomComboPreset.SGE_DPS_Variant_SpiritDart)) return Variant.SpiritDart;
 
-                        if (!JustUsedOn(currentDosis.Eukrasian,CurrentTarget)) { 
+                        if (!JustUsedOn(currentDosis.Eukrasian,CurrentTarget)) {
                             // Dosis DoT Debuff
                             float dotDebuff = GetStatusEffectRemainingTime(currentDosis.DebuffID, CurrentTarget);
 
@@ -299,9 +301,11 @@ internal partial class SGE : Healer
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
                 ? IsEnabled(CustomComboPreset.SGE_Raise_Retarget)
-                    ? Egeiro.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Egeiro
+                    ? Egeiro
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Egeiro.AndRunMacro()
                 : actionID;
     }
 
