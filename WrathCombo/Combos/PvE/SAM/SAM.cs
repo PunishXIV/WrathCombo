@@ -103,7 +103,7 @@ internal partial class SAM : Melee
             if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, SAM_VariantCure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart))
                 return Variant.Rampart;
 
             if (ActionReady(Enpi) &&
@@ -272,7 +272,7 @@ internal partial class SAM : Melee
             if (Variant.CanCure(CustomComboPreset.SAM_Variant_Cure, SAM_VariantCure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.SAM_Variant_Rampart))
                 return Variant.Rampart;
 
             if (IsEnabled(CustomComboPreset.SAM_ST_RangedUptime) &&

@@ -65,7 +65,7 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
 
             //oGCDs
@@ -215,7 +215,7 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
 
             // Opener for VPR
@@ -397,7 +397,7 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
 
             if (CanWeave() && !HasDoubleWeaved())
@@ -533,7 +533,7 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
 
             if (CanWeave() && !HasDoubleWeaved())

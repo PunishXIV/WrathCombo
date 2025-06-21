@@ -56,7 +56,8 @@ internal partial class DRG : Melee
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) && CanDRGWeave(Variant.Rampart))
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) && 
+                CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
             // Piercing Talon Uptime Option
@@ -211,7 +212,8 @@ internal partial class DRG : Melee
             if (Variant.CanCure(CustomComboPreset.DRG_Variant_Cure, DRG_Variant_Cure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) && CanDRGWeave(Variant.Rampart))
+            if (Variant.CanRampart(CustomComboPreset.DRG_Variant_Rampart) &&
+                CanDRGWeave(Variant.Rampart))
                 return Variant.Rampart;
 
             // Opener for DRG

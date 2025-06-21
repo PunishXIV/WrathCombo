@@ -30,28 +30,6 @@ internal partial class NIN : Melee
         }
     }
 
-    internal class NIN_ST_ArmorCrushCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NIN_ST_ArmorCrushCombo;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not ArmorCrush)
-                return actionID;
-
-            if (ComboTimer > 0)
-            {
-                if (ComboAction is SpinningEdge && LevelChecked(GustSlash))
-                    return GustSlash;
-
-                if (ComboAction is GustSlash && LevelChecked(ArmorCrush))
-                    return ArmorCrush;
-            }
-
-            return SpinningEdge;
-        }
-    }
-
     internal class NIN_ST_AdvancedMode : CustomCombo
     {
         protected internal static NINOpenerMaxLevel4thGCDKunai NINOpener = new();
