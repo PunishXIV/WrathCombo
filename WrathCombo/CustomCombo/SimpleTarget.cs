@@ -386,8 +386,8 @@ internal static class SimpleTarget
         CustomComboFunctions
             .GetPartyMembers()
             .Select(x => x.BattleChara)
-            .Where(x => x?.IsDead() == false)
-            .OrderBy(x => x?.CurrentHp)
+            .Where(x => x.IsDead() == false)
+            .OrderBy(x => x.CurrentHp)
             .FirstOrDefault();
 
     public static IGameObject? LowestHPAllyIfMissingHP =>
@@ -397,8 +397,8 @@ internal static class SimpleTarget
         CustomComboFunctions
             .GetPartyMembers()
             .Select(x => x.BattleChara)
-            .Where(x => x?.IsDead() == false)
-            .OrderBy(x => x?.CurrentHp / x?.MaxHp * 100)
+            .Where(x => x.IsDead() == false)
+            .OrderBy(x => x.CurrentHp / x.MaxHp * 100)
             .FirstOrDefault();
 
     public static IGameObject? LowestHPPAllyIfMissingHP =>
