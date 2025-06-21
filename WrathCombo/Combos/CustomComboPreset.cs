@@ -7118,6 +7118,11 @@ public enum CustomComboPreset
     WHM_STHeals_Lucid = 19308,
 
     [ParentCombo(WHM_STHeals)]
+    [CustomComboInfo("Temperance Option", "Uses Temperance when available for mitigation and healing boost.", WHM.JobID)]
+    [PossiblyRetargeted]
+    WHM_STHeals_Temperance = 19310,
+
+    [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", WHM.JobID)]
     [PossiblyRetargeted]
     WHM_STHeals_Esuna = 19309,
@@ -7156,6 +7161,10 @@ public enum CustomComboPreset
     WHM_AoEHeals_Plenary = 19203,
 
     [ParentCombo(WHM_AoEHeals)]
+    [CustomComboInfo("Temperance Option", "Uses Temperance when available for a healing boost whenever the party average falls below the set threshold.", WHM.JobID)]
+    WHM_AoEHeals_Temperance = 19210,
+
+    [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Lucid Dreaming Option", "Uses Lucid Dreaming when available.", WHM.JobID)]
     WHM_AoEHeals_Lucid = 19204,
 
@@ -7167,6 +7176,21 @@ public enum CustomComboPreset
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Divine Caress", "Uses Divine Caress when Divine Grace from Temperance is active.", WHM.JobID)]
     WHM_AoEHeals_DivineCaress = 19207,
+
+    [ParentCombo(WHM_AoEHeals)]
+    [CustomComboInfo("Liturgy of the Bell Option", "Adds Liturgy of the Bell (Lilybell) placement to the rotation.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_LiturgyOfTheBell = 19206,
+
+    [ParentCombo(WHM_AoEHeals_LiturgyOfTheBell)]
+    [CustomComboInfo("Enemy Placement Option", "Will add an enemy hard target as the top priority placement for Liturgy of the Bell.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_LiturgyOfTheBell_Enemy = 19208,
+
+    [ParentCombo(WHM_AoEHeals_LiturgyOfTheBell)]
+    [CustomComboInfo("Ally Placement Option", "Will add any ally UI MouseOver target, focus target, soft target, or hard target as the priority placement for Liturgy of the Bell.\nBeneath the Enemy placement option, but above yourself.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_LiturgyOfTheBell_Allies = 19209,
 
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Asylum Option", "Adds Asylum placement, when standing still, to the rotation.\nWill Retarget it onto yourself.", WHM.JobID)]
@@ -7223,7 +7247,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 19029
+    // Last value = 19209
 
     #endregion
 
