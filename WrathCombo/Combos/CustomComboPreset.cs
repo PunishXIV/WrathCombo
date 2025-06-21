@@ -5002,6 +5002,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Phlegma Option", "Use Phlegma if available and within range.", SGE.JobID)]
     SGE_ST_DPS_Phlegma = 14005,
 
+    [ParentCombo(SGE_ST_DPS_Phlegma)]
+    [CustomComboInfo("Burst option", "Save Phlegma charges for burst.", SGE.JobID)]
+    SGE_ST_DPS_Phlegma_Burst = 14062,
+
     [ParentCombo(SGE_ST_DPS)]
     [CustomComboInfo("Kardia Reminder Option", "Adds Kardia when not under the effect.", SGE.JobID)]
     SGE_ST_DPS_Kardia = 14006,
@@ -5272,7 +5276,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last used number = 14061
+    // Last used number = 14062
 
     #endregion
 
