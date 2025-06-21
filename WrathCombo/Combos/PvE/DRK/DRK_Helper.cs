@@ -174,13 +174,14 @@ internal partial class DRK
     /// </returns>
     private static IGameObject? Target(Combo flags, bool restrictToHostile = true)
     {
-        switch (restrictToHostile)
-        {
-            case true when SimpleTarget.HardTarget is not null &&
-                           SimpleTarget.HardTarget.IsHostile():
-            case false when SimpleTarget.HardTarget is not null:
-                return SimpleTarget.HardTarget;
-        }
+        var target = SimpleTarget.HardTarget ?? SimpleTarget.LastHostileHardTarget;
+        if (target is not null)
+            switch (restrictToHostile)
+            {
+                case true when target.IsHostile():
+                case false:
+                    return target;
+            }
 
         if (flags.HasFlag(Combo.AoE))
             return AutoRotationController.DPSTargeting.BaseSelection

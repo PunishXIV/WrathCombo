@@ -1,10 +1,6 @@
 # Build Artifacts
-XIVSlothCombo/obj/
-XIVSlothCombo/bin/Debug/
 WrathCombo/obj/
-WrathCombo/bin/Debug/
-XIVSlothCombo/bin/Release/
-WrathCombo/bin/Release/
+WrathCombo/bin/
 
 # IDE-specific files
 .idea/

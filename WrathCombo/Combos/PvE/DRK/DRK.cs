@@ -366,13 +366,14 @@ internal partial class DRK : Tank
             if (actionID is not BlackestNight) return actionID;
 
             var target =
-                SimpleTarget.UIMouseOverTarget.IfFriendly() ??
-                SimpleTarget.HardTarget.IfFriendly() ??
+                SimpleTarget.UIMouseOverTarget.IfInParty() ??
+                SimpleTarget.HardTarget.IfInParty() ??
                 (IsEnabled(Preset.DRK_Retarget_TBN_TT) && !PlayerHasAggro
-                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                    ? SimpleTarget.TargetsTarget.IfInParty().IfNotThePlayer()
                     : null);
 
-            if (target is not null)
+            if (target is not null &&
+                CanApplyStatus(target, Buffs.BlackestNightShield))
                 return actionID.Retarget(target, dontCull: true);
 
             return actionID;
@@ -387,19 +388,21 @@ internal partial class DRK : Tank
             if (actionID is not Oblation) return actionID;
 
             var target =
-                SimpleTarget.UIMouseOverTarget.IfFriendly() ??
-                SimpleTarget.HardTarget.IfFriendly() ??
+                SimpleTarget.UIMouseOverTarget.IfInParty() ??
+                SimpleTarget.HardTarget.IfInParty() ??
                 (IsEnabled(Preset.DRK_Retarget_Oblation_TT) && !PlayerHasAggro
-                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                    ? SimpleTarget.TargetsTarget.IfInParty().IfNotThePlayer()
                     : null);
 
             var checkTarget = target ?? SimpleTarget.Self;
             if (IsEnabled(Preset.DRK_Retarget_Oblation_DoubleProtection) &&
                 (HasStatusEffect(Buffs.Oblation, checkTarget, anyOwner: true) ||
-                 JustUsedOn(Oblation, checkTarget)))
+                 JustUsedOn(Oblation, checkTarget)) &&
+                CanApplyStatus(checkTarget, Buffs.Oblation))
                 return All.SavageBlade;
 
-            if (target is not null)
+            if (target is not null &&
+                CanApplyStatus(target, Buffs.Oblation))
                 return actionID.Retarget(target, dontCull: true);
 
             return actionID;

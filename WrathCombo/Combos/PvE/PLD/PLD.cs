@@ -862,7 +862,7 @@ internal partial class PLD : Tank
                     : null) ??
                 
                 //Hard target retarget
-                SimpleTarget.HardTarget.IfInParty().IfNotThePlayer() ??
+                SimpleTarget.HardTarget.IfNotThePlayer().IfInParty() ??
                 
                 //Targets target retarget option
                 (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_TT)
@@ -872,7 +872,8 @@ internal partial class PLD : Tank
 
             // Intervention if trying to Buff an ally
             if (ActionReady(Intervention) && 
-                target != null)
+                target != null &&
+                CanApplyStatus(target, Buffs.Intervention))
                 return Intervention.Retarget([Sheltron, HolySheltron], target);
 
             return action;

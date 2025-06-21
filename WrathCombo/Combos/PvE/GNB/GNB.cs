@@ -632,7 +632,7 @@ internal partial class GNB : Tank
                     ? SimpleTarget.TargetsTarget.IfFriendly()
                     : null);
 
-            if (target != null)
+            if (target != null && CanApplyStatus(target, Buffs.Aurora))
             {
                 return !HasStatusEffect(Buffs.Aurora, target, true)
                     ? actionID.Retarget(target)
@@ -657,13 +657,13 @@ internal partial class GNB : Tank
                 return actionID;
 
             var target =
-                SimpleTarget.UIMouseOverTarget.IfFriendly() ??
-                SimpleTarget.HardTarget.IfFriendly() ??
+                SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
+                SimpleTarget.HardTarget.IfNotThePlayer().IfInParty() ??
                 (IsEnabled(CustomComboPreset.GNB_RetargetHeartofStone_TT) && !PlayerHasAggro
-                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                    ? SimpleTarget.TargetsTarget.IfNotThePlayer().IfInParty()
                     : null);
 
-            if (target is not null)
+            if (target is not null && CanApplyStatus(target, Buffs.HeartOfStone))
                 return OriginalHook(actionID).Retarget([HeartOfStone,HeartOfCorundum], target);
 
             return actionID;

@@ -443,7 +443,8 @@ internal partial class WAR : Tank
 
             // Nascent if trying to heal an ally
             if (ActionReady(NascentFlash) &&
-                target != null)
+                target != null &&
+                CanApplyStatus(target, Buffs.NascentFlashTarget))
                 return NascentFlash.Retarget([RawIntuition , Bloodwhetting], target);
 
             return action;
