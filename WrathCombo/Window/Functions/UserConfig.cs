@@ -151,7 +151,8 @@ namespace WrathCombo.Window.Functions
         /// <param name="itemWidth"> How long the slider should be. </param>
         /// <param name="hasAdditionalChoice"></param>
         /// <param name="additonalChoiceCondition"></param>
-        public static void DrawSliderFloat(float minValue, float maxValue, string config, string sliderDescription, float itemWidth = 150, bool hasAdditionalChoice = false, string additonalChoiceCondition = "")
+        /// <param name="decimals">Number of decimal places shown in the slider and input box (e.g. 1 = 0.0f, 3 = 0.000f)</param>
+        public static void DrawSliderFloat(float minValue, float maxValue, string config, string sliderDescription, float itemWidth = 150, bool hasAdditionalChoice = false, string additonalChoiceCondition = "", int decimals = 3)
         {
             float output = PluginConfiguration.GetCustomFloatValue(config, minValue);
             if (output < minValue)
@@ -164,7 +165,7 @@ namespace WrathCombo.Window.Functions
             sliderDescription = sliderDescription.Replace("%", "%%");
             float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
             float wrapPos = ImGui.GetContentRegionMax().X - 35f;
-
+            string format = $"%.{decimals}f";
 
             InfoBox box = new()
             {
@@ -196,7 +197,6 @@ namespace WrathCombo.Window.Functions
                         {
                             newLines += "\n\n";
                         }
-
                     }
 
                     if (hasAdditionalChoice)
@@ -222,7 +222,7 @@ namespace WrathCombo.Window.Functions
                     ImGui.SameLine();
                     ImGui.SetCursorPosX(currentPos.X);
                     ImGui.PushItemWidth(itemWidth);
-                    inputChanged |= ImGui.SliderFloat($"{newLines}###{config}", ref output, minValue, maxValue);
+                    inputChanged |= ImGui.SliderFloat($"{newLines}###{config}", ref output, minValue, maxValue, format);
 
                     if (inputChanged)
                     {
