@@ -1,3 +1,4 @@
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 
@@ -30,6 +31,9 @@ internal partial class RDM : Caster
 
             if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             uint NewActionID = 0;
 
@@ -92,6 +96,13 @@ internal partial class RDM : Caster
             if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
                 return Variant.Rampart;
 
+                if (OccultCrescent.ShouldUsePhantomActions())
+                    return OccultCrescent.BestPhantomAction();
+
+                // Opener for RDM
+                if (IsEnabled(CustomComboPreset.RDM_Balance_Opener) &&
+                    Opener().FullOpener(ref actionID))
+                    return actionID;
 
             // LUCID DREAMING
             if (IsEnabled(CustomComboPreset.RDM_ST_Lucid) &&
@@ -189,6 +200,9 @@ internal partial class RDM : Caster
             if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             uint NewActionID = 0;
 
             //RDM_OGCD
@@ -237,6 +251,9 @@ internal partial class RDM : Caster
 
             if (Variant.CanRampart(CustomComboPreset.RDM_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // oGCDs
             if (IsEnabled(CustomComboPreset.RDM_AoE_oGCD)

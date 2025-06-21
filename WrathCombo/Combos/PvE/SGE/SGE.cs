@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using System;
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 namespace WrathCombo.Combos.PvE;
@@ -88,6 +89,9 @@ internal partial class SGE : Healer
 
             // Variant Spirit Dart
             if (Variant.CanSpiritDart(CustomComboPreset.SGE_DPS_Variant_SpiritDart)) return Variant.SpiritDart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SGE_AoE_DPS_Lucid) && Role.CanLucidDream(Config.SGE_AoE_DPS_Lucid))
@@ -201,6 +205,9 @@ internal partial class SGE : Healer
 
             // Variant
             if (Variant.CanRampart(CustomComboPreset.SGE_DPS_Variant_Rampart)) return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Rhizomata
             if (IsEnabled(CustomComboPreset.SGE_ST_DPS_Rhizo) && CanSpellWeave() &&

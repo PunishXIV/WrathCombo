@@ -1,4 +1,5 @@
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -18,6 +19,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Stuns
             if (Role.CanInterject())
@@ -87,6 +90,9 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             #region Stuns
             if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
                 && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only interrupt circle adds in 7
@@ -184,6 +190,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
             if (Role.CanInterject())
                 return Role.Interject;
             if (Role.CanLowBlow()
@@ -249,6 +257,8 @@ internal partial class WAR : Tank
                 return action; //Our button
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // If the Burst Holding for the Squirrels in 6 is enabled, check that
             // we are either not targeting a squirrel or the fight is after 275s

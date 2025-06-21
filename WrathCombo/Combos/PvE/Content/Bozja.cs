@@ -1,4 +1,5 @@
-﻿using ContentHelper = ECommons.GameHelpers;
+﻿using WrathCombo.Data;
+using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
 
 namespace WrathCombo.Combos.PvE.Content;
@@ -141,9 +142,7 @@ internal class Bozja
 
     #endregion
 
-    public static bool InFieldOperations => ContentHelper.Content.ContentType == ContentHelper.ContentType.FieldOperations; //Southern Front, Zadnor
-    public static bool InFieldRaids => ContentHelper.Content.ContentType == ContentHelper.ContentType.FieldRaid; //Delubrum Reginae, etc.
-    public static bool IsInBozja => ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Bozja && (InFieldOperations || InFieldRaids);
+    public static bool IsInBozja => ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Bozja && (ContentCheck.IsInFieldOperations || ContentCheck.IsInFieldRaids);
 
     public static class Buffs
     {

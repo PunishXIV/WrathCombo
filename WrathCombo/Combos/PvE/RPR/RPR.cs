@@ -1,3 +1,4 @@
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.RPR.Config;
 using static WrathCombo.Data.ActionWatching;
@@ -50,6 +51,9 @@ internal partial class RPR : Melee
             //Variant Rampart
             if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             //All Weaves
             if (CanWeave() && !HasDoubleWeaved())
@@ -217,6 +221,10 @@ internal partial class RPR : Melee
             //Variant Rampart
             if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             //RPR Opener
             if (IsEnabled(CustomComboPreset.RPR_ST_Opener) &&
@@ -424,6 +432,9 @@ internal partial class RPR : Melee
             if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (CanWeave() && !HasDoubleWeaved())
             {
                 if (ActionReady(ArcaneCircle))
@@ -523,6 +534,9 @@ internal partial class RPR : Melee
 
             if (Variant.CanRampart(CustomComboPreset.RPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (CanWeave() && !HasDoubleWeaved())
             {
