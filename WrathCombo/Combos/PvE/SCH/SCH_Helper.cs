@@ -183,6 +183,7 @@ internal partial class SCH
         Physick = 190,
         Adloquium = 185,
         Succor = 186,
+        Concitation = 37013,
         Lustrate = 189,
         SacredSoil = 188,
         Indomitability = 3583,

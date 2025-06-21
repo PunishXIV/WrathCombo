@@ -5738,6 +5738,10 @@ public enum CustomComboPreset
     [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Disspation Option", "Use Dissipation when out of Aetherflow stacks.", SCH.JobID)]
     SCH_AoE_Heal_Dissipation = 16041,
+    
+    [ParentCombo(SCH_AoE_Heal)]
+    [CustomComboInfo("Recitation Option", "Use Recitation to buff the selected heals", SCH.JobID)]
+    SCH_AoE_Heal_Recitation = 16051,
 
     [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Indomitability Option", "Use Indomitability before using Succor.", SCH.JobID)]

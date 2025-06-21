@@ -14,6 +14,7 @@ internal partial class AST
     {
         public static UserInt
             AST_LucidDreaming = new("ASTLucidDreamingFeature", 8000),
+            AST_AOE_LucidDreaming = new("AST_AOE_LucidDreaming", 8000),
             AST_EssentialDignity = new("ASTCustomEssentialDignity", 50),
             AST_Spire = new("AST_Spire", 80),
             AST_Ewer = new("AST_Ewer", 80),
@@ -109,7 +110,7 @@ internal partial class AST
 
                 //AOE added
                 case CustomComboPreset.AST_AOE_Lucid:
-                    DrawSliderInt(4000, 9500, AST_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, Hundreds);
+                    DrawSliderInt(4000, 9500, AST_AOE_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, Hundreds);
                     break;
 
                 case CustomComboPreset.AST_AOE_Divination:

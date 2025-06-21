@@ -36,6 +36,7 @@ internal partial class WHM
 
         return ActionReady(dotAction) &&
                CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
                dotRemaining <= Config.WHM_ST_MainCombo_DoT_Threshold;

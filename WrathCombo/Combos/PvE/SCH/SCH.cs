@@ -1,4 +1,3 @@
-using Dalamud.Game.ClientState.Objects.Types;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -250,7 +249,7 @@ internal partial class SCH : Healer
                      Config.SCH_ST_DPS_ChainStratagemSubOption == 1 && InBossEncounter()))
                 {
                     // If CS is available and usable, or if the Impact Buff is on Player
-                    if (ActionReady(ChainStratagem) &&
+                    if (ActionReady(ChainStratagem) && CanApplyStatus(CurrentTarget, Debuffs.ChainStratagem) &&
                         !HasStatusEffect(Debuffs.ChainStratagem, CurrentTarget, true) &&
                         GetTargetHPPercent() > Config.SCH_ST_DPS_ChainStratagemOption &&
                         InCombat() &&
@@ -274,7 +273,7 @@ internal partial class SCH : Healer
 
                     float refreshTimer = Config.SCH_DPS_BioUptime_Threshold;
                     int hpThreshold = Config.SCH_DPS_BioSubOption == 1 || !InBossEncounter() ? Config.SCH_DPS_BioOption : 0;
-                    if (GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget) <= refreshTimer &&
+                    if (GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget) <= refreshTimer && CanApplyStatus(CurrentTarget, dotDebuffID) &&
                         GetTargetHPPercent() > hpThreshold)
                         return OriginalHook(Bio);
                 }
@@ -362,9 +361,16 @@ internal partial class SCH : Healer
             {
                 int index = Config.SCH_AoE_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigAoE(index, out uint spell, out bool enabled);
+                bool onIdom = IsEnabled(CustomComboPreset.SCH_AoE_Heal_Recitation) && 
+                              Config.SCH_AoE_Heal_Recitation_Actions[0] && spell is Indomitability;
+                bool onSuccor = IsEnabled(CustomComboPreset.SCH_AoE_Heal_Recitation) && 
+                                Config.SCH_AoE_Heal_Recitation_Actions[1] && spell is Succor or Concitation;
 
                 if (enabled && averagePartyHP <= config && ActionReady(spell))
-                    return spell;
+                     return ActionReady(Recitation) && (onIdom || onSuccor) ? 
+                        Recitation :
+                        spell;
+
             }
 
             return actionID;

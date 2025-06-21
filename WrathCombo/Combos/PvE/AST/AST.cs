@@ -224,7 +224,7 @@ internal partial class AST : Healer
                 return Lightspeed;            
 
             if (IsEnabled(CustomComboPreset.AST_AOE_Lucid) &&
-                Role.CanLucidDream(Config.AST_LucidDreaming))
+                Role.CanLucidDream(Config.AST_AOE_LucidDreaming))
                 return Role.LucidDreaming;
 
             //Play Card with Pooling
