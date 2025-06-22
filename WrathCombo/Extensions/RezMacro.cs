@@ -198,7 +198,7 @@ public static class RezMacro
                 payloadString += playerLoad.PlayerName;
         }
 
-        Chat.Instance.SendMessage(payloadString);
+        Chat.SendMessage(payloadString);
     }
 
     #region Methods to initiate a Macro
