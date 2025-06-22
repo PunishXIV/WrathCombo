@@ -1,17 +1,17 @@
 #region
 
-using System;
-using System.Linq;
-using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
+using System;
+using System.Linq;
 using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using EZ = ECommons.Throttlers.EzThrottler;
@@ -222,7 +222,7 @@ internal static class SimpleTarget
 
             return null;
 
-            IGameObject? CustomLogic (IGameObject? target)
+            IGameObject? CustomLogic(IGameObject? target)
             {
                 if (target is null) return null;
                 if (logicForEachEntryInStack is null) return target;
@@ -231,7 +231,7 @@ internal static class SimpleTarget
             }
         }
 
-        private static IGameObject? GetSimpleTargetValueFromName (string name)
+        private static IGameObject? GetSimpleTargetValueFromName(string name)
         {
             try
             {
@@ -343,6 +343,24 @@ internal static class SimpleTarget
             .OrderBy(x => x.CurrentHp / x.MaxHp * 100)
             .FirstOrDefault();
 
+    public static IGameObject? InterruptableEnemy =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable &&
+                        x.IsWithinRange(3) && x.IsCastInterruptible)
+            .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)
+            .FirstOrDefault();
+
+    public static IGameObject? StunnableEnemy(int restunCheck = 3) =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable &&
+                        !x.IsBoss() && x.IsWithinRange(3) && 
+                        !CustomComboFunctions.HasStatusEffect(All.Debuffs.Stun, x) && 
+                           (ICDTracker.StatusIsExpired(All.Debuffs.Stun, x.GameObjectId) || ICDTracker.Trackers.FirstOrDefault(y => y.StatusID == All.Debuffs.Stun && x.GameObjectId == y.GameObjectId)?.TimesApplied < restunCheck))
+            .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)
+            .FirstOrDefault();
+
     #endregion
 
     #region Previous Targets
@@ -386,8 +404,8 @@ internal static class SimpleTarget
         CustomComboFunctions
             .GetPartyMembers()
             .Select(x => x.BattleChara)
-            .Where(x => x?.IsDead() == false)
-            .OrderBy(x => x?.CurrentHp)
+            .Where(x => x.IsDead() == false)
+            .OrderBy(x => x.CurrentHp)
             .FirstOrDefault();
 
     public static IGameObject? LowestHPAllyIfMissingHP =>
@@ -397,8 +415,8 @@ internal static class SimpleTarget
         CustomComboFunctions
             .GetPartyMembers()
             .Select(x => x.BattleChara)
-            .Where(x => x?.IsDead() == false)
-            .OrderBy(x => x?.CurrentHp / x?.MaxHp * 100)
+            .Where(x => x.IsDead() == false)
+            .OrderBy(x => x.CurrentHp / x.MaxHp * 100)
             .FirstOrDefault();
 
     public static IGameObject? LowestHPPAllyIfMissingHP =>
@@ -445,27 +463,27 @@ internal static class SimpleTarget
     public static IGameObject? AnySupport =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.GetRole() is
-                CombatRole.Tank or CombatRole.Healer);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is
+                CombatRole.Tank or CombatRole.Healer)?.BattleChara;
 
     /// Gets any living Tank or Healer that is not the player.
     public static IGameObject? AnyLivingSupport =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer() && !x.IsDead)
-            .FirstOrDefault(x => x?.GetRole() is
-                CombatRole.Tank or CombatRole.Healer);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer() && !x.BattleChara.IsDead)
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is
+                CombatRole.Tank or CombatRole.Healer)?.BattleChara;
 
     /// Gets any DPS that is not the player.
     public static IGameObject? AnyDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.GetRole() is CombatRole.DPS);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.DPS)?.BattleChara;
 
     #region Slightly More Specific Roles
 
@@ -473,86 +491,86 @@ internal static class SimpleTarget
     public static IGameObject? AnyTank =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.GetRole() is CombatRole.Tank);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Tank)?.BattleChara;
 
     /// Gets any living Tank that is not the player.
     public static IGameObject? AnyLivingTank =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer() && !x.IsDead)
-            .FirstOrDefault(x => x?.GetRole() is CombatRole.Tank);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer() && !x.BattleChara.IsDead)
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Tank)?.BattleChara;
 
     /// Gets any Healer that is not the player.
     public static IGameObject? AnyHealer =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.GetRole() is CombatRole.Healer);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Healer)?.BattleChara;
 
     /// Gets any living Healer that is not the player.
     public static IGameObject? AnyLivingHealer =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer() && !x.IsDead)
-            .FirstOrDefault(x => x?.GetRole() is CombatRole.Healer);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer() && !x.BattleChara.IsDead)
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Healer)?.BattleChara;
 
     /// Gets any Raiser (Healer or DPS) that is not the player.
     public static IGameObject? AnyRaiser =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.GetRole() is CombatRole.Healer ||
-                x?.ClassJob.RowId is SMN.JobID or RDM.JobID);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Healer ||
+                x?.RealJob?.RowId is SMN.JobID or RDM.JobID)?.BattleChara;
 
     /// Gets any Raiser DPS that is not the player.
     public static IGameObject? AnyRaiserDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.ClassJob.RowId is SMN.JobID or RDM.JobID);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => x?.RealJob?.RowId is SMN.JobID or RDM.JobID)?.BattleChara;
 
     /// Gets any Melee DPS that is not the player.
     public static IGameObject? AnyMeleeDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.ClassJob.RowId.Role() is 2);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => x?.RealJob?.RowId.Role() is 2)?.BattleChara;
 
     /// Gets any Physical Ranged DPS that is not the player.
     public static IGameObject? AnyRangedDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.ClassJob.RowId.Role() is 3);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => x?.RealJob?.RowId.Role() is 3)?.BattleChara;
 
     /// Gets any Magical DPS that is not the player.
     public static IGameObject? AnyPhysRangeDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x?.ClassJob.RowId ?? 0) is
-                    JobRole.RangedDPS);
+                RoleAttribute.GetRoleFromJob(x?.RealJob?.RowId ?? 0) is
+                    JobRole.RangedDPS)?.BattleChara;
 
     /// Gets any Magical DPS that is not the player.
     public static IGameObject? AnyMagicalDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x?.ClassJob.RowId ?? 0) is
-                    JobRole.MagicalDPS);
+                RoleAttribute.GetRoleFromJob(x?.RealJob?.RowId ?? 0) is
+                    JobRole.MagicalDPS)?.BattleChara;
 
     #endregion
 
@@ -565,18 +583,18 @@ internal static class SimpleTarget
         {
             var tanks = CustomComboFunctions
                 .GetPartyMembers()
-                .Select(x => x.BattleChara)
-                .Where(x => x.IsNotThePlayer() && x?.GetRole() is CombatRole.Tank)
+                .Select(x => new { x.BattleChara, x.RealJob })
+                .Where(x => x.BattleChara.IsNotThePlayer() && (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Tank)
                 .ToArray();
             var deadTanks =
-                tanks.Where(x => x?.IsDead() == true).ToArray();
+                tanks.Where(x => x?.BattleChara.IsDead() == true).ToArray();
 
             if (deadTanks.Length == 0)
                 return null;
-            if (tanks.Any(x => x?.IsDead() == false))
+            if (tanks.Any(x => x?.BattleChara.IsDead() == false))
                 return null;
 
-            return deadTanks.FirstOrDefault();
+            return deadTanks.FirstOrDefault()?.BattleChara;
         }
     }
 
@@ -587,18 +605,18 @@ internal static class SimpleTarget
         {
             var healers = CustomComboFunctions
                 .GetPartyMembers()
-                .Select(x => x.BattleChara)
-                .Where(x => x?.GetRole() is CombatRole.Healer)
+                .Select(x => new { x.BattleChara, x.RealJob })
+                .Where(x => x.BattleChara.IsNotThePlayer() && (CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Healer)
                 .ToArray();
             var deadHealers =
-                healers.Where(x => x?.IsDead() == true).ToArray();
+                healers.Where(x => x?.BattleChara.IsDead() == true).ToArray();
 
             if (deadHealers.Length == 0)
                 return null;
-            if (healers.Any(x => x?.IsDead() == false))
+            if (healers.Any(x => x?.BattleChara.IsDead() == false))
                 return null;
 
-            return deadHealers.FirstOrDefault();
+            return deadHealers.FirstOrDefault()?.BattleChara;
         }
     }
 
@@ -609,20 +627,20 @@ internal static class SimpleTarget
         {
             var raisers = CustomComboFunctions
                 .GetPartyMembers()
-                .Select(x => x.BattleChara)
-                .Where(x => x.IsNotThePlayer() &&
-                            (x?.GetRole() is CombatRole.Healer ||
-                             x?.ClassJob.RowId is SMN.JobID or RDM.JobID))
+                .Select(x => new { x.BattleChara, x.RealJob })
+                .Where(x => x.BattleChara.IsNotThePlayer() &&
+                            ((CombatRole)(x?.RealJob?.Role ?? -1) is CombatRole.Healer ||
+                             x?.RealJob?.RowId is SMN.JobID or RDM.JobID))
                 .ToArray();
             var deadRaisers =
-                raisers.Where(x => x?.IsDead() == true).ToArray();
+                raisers.Where(x => x?.BattleChara.IsDead() == true).ToArray();
 
             if (deadRaisers.Length == 0)
                 return null;
-            if (raisers.Any(x => x?.IsDead() == false))
+            if (raisers.Any(x => x?.BattleChara.IsDead() == false))
                 return null;
 
-            return deadRaisers.FirstOrDefault();
+            return deadRaisers.FirstOrDefault()?.BattleChara;
         }
     }
 
@@ -633,19 +651,19 @@ internal static class SimpleTarget
         {
             var raisers = CustomComboFunctions
                 .GetPartyMembers()
-                .Select(x => x.BattleChara)
-                .Where(x => x.IsNotThePlayer() &&
-                            x?.ClassJob.RowId is SMN.JobID or RDM.JobID)
+                .Select(x => new { x.BattleChara, x.RealJob })
+                .Where(x => x.BattleChara.IsNotThePlayer() &&
+                            x?.RealJob?.RowId is SMN.JobID or RDM.JobID)
                 .ToArray();
             var deadRaisers =
-                raisers.Where(x => x?.IsDead() == true).ToArray();
+                raisers.Where(x => x?.BattleChara.IsDead() == true).ToArray();
 
             if (deadRaisers.Length == 0)
                 return null;
-            if (raisers.Any(x => x?.IsDead() == false))
+            if (raisers.Any(x => x?.BattleChara.IsDead() == false))
                 return null;
 
-            return deadRaisers.FirstOrDefault();
+            return deadRaisers.FirstOrDefault()?.BattleChara;
         }
     }
 
@@ -657,28 +675,28 @@ internal static class SimpleTarget
     public static IGameObject? AnyPureHealer =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                x?.ClassJob.RowId is WHM.JobID or AST.JobID);
+                x?.RealJob?.RowId is WHM.JobID or AST.JobID)?.BattleChara;
 
     /// Gets any Shield Healer that is not the player.
     public static IGameObject? AnyShieldHealer =>
-        CustomComboFunctions
+CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                x?.ClassJob.RowId is SCH.JobID or SGE.JobID);
+                x?.RealJob?.RowId is SCH.JobID or SGE.JobID)?.BattleChara;
 
     /// Gets any Selfish DPS that is not the player.
     public static IGameObject? AnySelfishDPS =>
         CustomComboFunctions
             .GetPartyMembers()
-            .Select(x => x.BattleChara)
-            .Where(x => x.IsNotThePlayer())
-            .FirstOrDefault(x => x?.ClassJob.RowId is
-                SAM.JobID or BLM.JobID or MCH.JobID or VPR.JobID);
+            .Select(x => new { x.BattleChara, x.RealJob })
+            .Where(x => x.BattleChara.IsNotThePlayer())
+            .FirstOrDefault(x => x?.RealJob?.RowId is
+                SAM.JobID or BLM.JobID or MCH.JobID or VPR.JobID)?.BattleChara;
 
     #endregion
 

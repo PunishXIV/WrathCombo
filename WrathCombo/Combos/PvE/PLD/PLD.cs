@@ -29,7 +29,7 @@ internal partial class PLD : Tank
             return FastBlade;
         }
     }
-    
+
     internal class PLD_ST_SimpleMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_ST_SimpleMode;
@@ -825,16 +825,16 @@ internal partial class PLD : Tank
                 return actionID;
 
             int healthThreshold = Config.PLD_RetargetClemency_Health;
-            
+
             var target =
                 //Mouseover retarget option
-                (IsEnabled(CustomComboPreset.PLD_RetargetClemency_MO) 
+                (IsEnabled(CustomComboPreset.PLD_RetargetClemency_MO)
                     ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
                     : null) ??
-                
+
                 //Hard target
                 SimpleTarget.HardTarget.IfFriendly() ??
-                
+
                 //Lowest HP option
                 (IsEnabled(CustomComboPreset.PLD_RetargetClemency_LowHP)
                  && PlayerHealthPercentageHp() > healthThreshold
@@ -854,15 +854,15 @@ internal partial class PLD : Tank
         {
             if (action is not (Sheltron or HolySheltron))
                 return action;
-            
+
             var target =
                 //Mouseover retarget option
-                (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_MO) 
+                (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_MO)
                     ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
                     : null) ??
-                
+
                 //Hard target retarget
-                SimpleTarget.HardTarget.IfInParty().IfNotThePlayer() ??
+                SimpleTarget.HardTarget.IfNotThePlayer().IfInParty() ??
                 
                 //Targets target retarget option
                 (IsEnabled(CustomComboPreset.PLD_RetargetSheltron_TT)
@@ -871,8 +871,9 @@ internal partial class PLD : Tank
                     : null);
 
             // Intervention if trying to Buff an ally
-            if (ActionReady(Intervention) && 
-                target != null)
+            if (ActionReady(Intervention) &&
+                target != null &&
+                CanApplyStatus(target, Buffs.Intervention))
                 return Intervention.Retarget([Sheltron, HolySheltron], target);
 
             return action;
@@ -898,7 +899,7 @@ internal partial class PLD : Tank
                 ))
                 return HallowedGround;
 
-            foreach(int priority in Config.PLD_Mit_Priorities.Items.OrderBy(x => x))
+            foreach (int priority in Config.PLD_Mit_Priorities.Items.OrderBy(x => x))
             {
                 int index = Config.PLD_Mit_Priorities.IndexOf(priority);
                 if (CheckMitigationConfigMeetsRequirements(index, out uint action))
@@ -932,4 +933,24 @@ internal partial class PLD : Tank
     }
 
     #endregion
+
+    internal class PLD_RetargetShieldBash : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PLD_RetargetShieldBash;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not ShieldBash)
+                return actionID;
+
+            var tar = SimpleTarget.StunnableEnemy(Config.PLD_RetargetStunLockout ? Config.PLD_RetargetShieldBash_Strength : 3);
+
+            if (tar is not null)
+                return ShieldBash.Retarget(actionID, tar);
+            else if (Config.PLD_RetargetStunLockout)
+                return All.SavageBlade;
+
+            return actionID;
+        }
+    }
 }

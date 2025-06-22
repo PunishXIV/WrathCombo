@@ -9,18 +9,18 @@ internal partial class RPR
     internal static class Config
     {
         public static UserInt
-            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
-            RPR_SoDThreshold = new("RPRSoDThreshold", 0),
-            RPR_WoDThreshold = new("RPRWoDThreshold", 1),
-            RPR_SoDRefreshRange = new("RPRSoDRefreshRange", 6),
-            RPR_ST_ArcaneCircle_SubOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
             RPR_Positional = new("RPR_Positional", 0),
-            RPR_VariantCure = new("RPRVariantCure"),
-            RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 25),
-            RPR_STBloodbathThreshold = new("RPR_STBloodbathThreshold", 40),
-            RPR_AoESecondWindThreshold = new("RPR_AoESecondWindThreshold", 25),
-            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 40),
-            RPR_Balance_Content = new("RPR_Balance_Content", 1);
+            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
+            RPR_Balance_Content = new("RPR_Balance_Content", 1),
+            RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
+            RPR_SoDThreshold = new("RPR_SoDThreshold", 0),
+            RPR_ST_ArcaneCircle_SubOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
+            RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 40),
+            RPR_STBloodbathThreshold = new("RPR_STBloodbathThreshold", 30),
+            RPR_WoDThreshold = new("RPR_WoDThreshold", 20),
+            RPR_AoESecondWindThreshold = new("RPR_AoESecondWindThreshold", 40),
+            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 30),
+            RPR_VariantCure = new("RPRVariantCure", 50);
 
         public static UserBoolArray
             RPR_SoulsowOptions = new("RPR_SoulsowOptions");
@@ -65,16 +65,16 @@ internal partial class RPR
                     break;
 
                 case CustomComboPreset.RPR_ST_SoD:
-                    DrawSliderInt(4, 8, RPR_SoDRefreshRange,
-                        $"Seconds remaining before refreshing {ShadowOfDeath.ActionName()}.");
+                    DrawSliderInt(0, 10, RPR_SoDRefreshRange,
+                        $"Seconds remaining before refreshing {ShadowOfDeath.ActionName()}.\nRecommended is 6.");
 
-                    DrawSliderInt(0, 5, RPR_SoDThreshold,
+                    DrawSliderInt(0, 100, RPR_SoDThreshold,
                         $"Set a HP% Threshold for when {ShadowOfDeath.ActionName()} will not be automatically applied to the target.");
 
                     break;
 
                 case CustomComboPreset.RPR_AoE_WoD:
-                    DrawSliderInt(0, 5, RPR_WoDThreshold,
+                    DrawSliderInt(0, 100, RPR_WoDThreshold,
                         $"Set a HP% Threshold for when {WhorlOfDeath.ActionName()} will not be automatically applied to the target.");
 
                     break;

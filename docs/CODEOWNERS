@@ -15,11 +15,11 @@
 /WrathCombo/Combos/PvE/NIN/                           @Taurenkey
 /WrathCombo/Combos/PvE/PCT/                           @Nik-Potokar @edewen
 /WrathCombo/Combos/PvE/PLD/                           @Kaeris-Tempest
-/WrathCombo/Combos/PvE/RDM/                           @Tartarga
+#/WrathCombo/Combos/PvE/RDM/                           
 /WrathCombo/Combos/PvE/RPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/SAM/                           @Kagekazu
-/WrathCombo/Combos/PvE/SCH/                           @Tartarga
-/WrathCombo/Combos/PvE/SGE/                           @Tartarga
+#/WrathCombo/Combos/PvE/SCH/                           
+/WrathCombo/Combos/PvE/SGE/                           @Kagekazu
 /WrathCombo/Combos/PvE/SMN/                           @Genesis-Nova @edewen
 /WrathCombo/Combos/PvE/VPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/WAR/                           @Akechi-kun
@@ -51,8 +51,6 @@
 /WrathCombo/Data/ConflictingPluginsCheck.cs           @zbee
 /WrathCombo/Combos/PvE/Content/Bozja.cs               @zbee @Akechi-kun
 /WrathCombo/CustomCombo/StancePartner.cs              @zbee
-/WrathCombo/Combos/PvE/ALL/                           @Tartarga
-/WrathCombo/Combos/PvE/Content/Variant/               @Tartarga
 
 # Protect the owners file
 /docs/CODEOWNERS                                      @Taurenkey @zbee

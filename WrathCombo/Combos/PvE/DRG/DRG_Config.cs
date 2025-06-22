@@ -9,17 +9,17 @@ internal partial class DRG
     internal static class Config
     {
         public static UserInt
-            DRG_Variant_Cure = new("DRG_VariantCure"),
+            DRG_SelectedOpener = new("DRG_SelectedOpener", 0),
+            DRG_Balance_Content = new("DRG_Balance_Content", 1),
             DRG_ST_Litany_SubOption = new("DRG_ST_Litany_SubOption", 1),
             DRG_ST_Lance_SubOption = new("DRG_ST_Lance_SubOption", 1),
-            DRG_ST_SecondWind_Threshold = new("DRG_STSecondWindThreshold", 25),
-            DRG_ST_Bloodbath_Threshold = new("DRG_STBloodbathThreshold", 40),
-            DRG_AoE_LitanyHP = new("DRG_AoE_LitanyHP", 5),
-            DRG_AoE_LanceChargeHP = new("DRG_AoE_LanceChargeHP", 5),
-            DRG_AoE_SecondWind_Threshold = new("DRG_AoE_SecondWindThreshold", 25),
-            DRG_AoE_Bloodbath_Threshold = new("DRG_AoE_BloodbathThreshold", 40),
-            DRG_SelectedOpener = new("DRG_SelectedOpener", 0),
-            DRG_Balance_Content = new("DRG_Balance_Content", 1);
+            DRG_ST_SecondWind_Threshold = new("DRG_STSecondWindThreshold", 40),
+            DRG_ST_Bloodbath_Threshold = new("DRG_STBloodbathThreshold", 30),
+            DRG_AoE_LitanyHP = new("DRG_AoE_LitanyHP", 20),
+            DRG_AoE_LanceChargeHP = new("DRG_AoE_LanceChargeHP", 20),
+            DRG_AoE_SecondWind_Threshold = new("DRG_AoE_SecondWindThreshold", 40),
+            DRG_AoE_Bloodbath_Threshold = new("DRG_AoE_BloodbathThreshold", 30),
+            DRG_Variant_Cure = new("DRG_Variant_Cure", 50);
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -56,12 +56,6 @@ internal partial class DRG
 
                     break;
 
-                case CustomComboPreset.DRG_Variant_Cure:
-                    DrawSliderInt(1, 100, DRG_Variant_Cure,
-                        "HP% to be at or under", 200);
-
-                    break;
-
                 case CustomComboPreset.DRG_ST_Litany:
                     DrawHorizontalRadioButton(DRG_ST_Litany_SubOption,
                         "All content", $"Uses {BattleLitany.ActionName()} regardless of content.", 0);
@@ -91,6 +85,12 @@ internal partial class DRG
                 case CustomComboPreset.DRG_AoE_Lance:
                     DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP,
                         $"Stop Using {LanceCharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    break;
+
+                case CustomComboPreset.DRG_Variant_Cure:
+                    DrawSliderInt(1, 100, DRG_Variant_Cure,
+                        "HP% to be at or under", 200);
 
                     break;
             }

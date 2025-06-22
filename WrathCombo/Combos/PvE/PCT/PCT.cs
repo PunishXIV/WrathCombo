@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 
@@ -38,6 +39,9 @@ internal partial class PCT : Caster
                     return OriginalHook(LandscapeMotif);
             }
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Burst Window lvl 100 only
             if (BurstPhaseReady)
@@ -246,8 +250,11 @@ internal partial class PCT : Caster
             }
             #endregion
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             #region Opener
-           
+
             if (openerEnabled && Opener().FullOpener(ref actionID))
                 return actionID;
 
@@ -436,6 +443,9 @@ internal partial class PCT : Caster
                     return OriginalHook(LandscapeMotif);
             }
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region OGCD
             // General Weaves
@@ -639,6 +649,9 @@ internal partial class PCT : Caster
                     return OriginalHook(LandscapeMotif);
             }
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region OGCD
             // General Weaves

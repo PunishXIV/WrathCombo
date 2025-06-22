@@ -10,23 +10,20 @@ internal partial class BLM
     internal static class Config
     {
         public static UserInt
-            BLM_VariantCure = new("BLM_VariantCure"),
-            BLM_VariantRampart = new("BLM_VariantRampart"),
+            BLM_SelectedOpener = new("BLM_SelectedOpener", 0),
+            BLM_Balance_Content = new("BLM_Balance_Content", 1),
             BLM_ST_LeyLinesCharges = new("BLM_ST_LeyLinesCharges", 1),
-            BLM_ST_ThunderOption = new("BLM_ST_ThunderOption"),
-            BLM_ST_Thunder_SubOption = new("BLM_ST_Thunder_SubOption", 1),
+            BLM_ST_ThunderOption = new("BLM_ST_ThunderOption", 10),
+            BLM_ST_Thunder_SubOption = new("BLM_ST_Thunder_SubOption", 0),
+            BLM_ST_ThunderUptime_Threshold = new("BLM_ST_ThunderUptime_Threshold", 5),
             BLM_ST_Triplecast_Movement = new("BLM_ST_Triplecast_Movement", 1),
             BLM_ST_Polyglot_Movement = new("BLM_ST_Polyglot_Movement", 1),
             BLM_ST_Polyglot_Save = new("BLM_ST_Polyglot_Save", 0),
-            BLM_ST_Manaward_Threshold = new("BLM_ST_Manaward_Threshold", 25),
+            BLM_ST_Manaward_Threshold = new("BLM_ST_Manaward_Threshold", 40),
             BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
             BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 1),
-            BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 5),
-            BLM_SelectedOpener = new("BLM_SelectedOpener", 0),
-            BLM_Balance_Content = new("BLM_Balance_Content", 1);
-
-        public static UserFloat
-            BLM_ST_ThunderUptime_Threshold = new("BLM_ST_ThunderUptime_Threshold");
+            BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 20),
+            BLM_VariantCure = new("BLM_VariantCure", 50);
 
         public static UserBoolArray
             BLM_ST_MovementOption = new("BLM_ST_MovementOption");
@@ -101,7 +98,7 @@ internal partial class BLM
                     DrawHorizontalRadioButton(BLM_ST_Thunder_SubOption,
                         "All Enemies", "Applies the HP check above to all enemies.", 1);
 
-                    DrawRoundedSliderFloat(0, 5, BLM_ST_ThunderUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+                    DrawSliderInt(0, 5, BLM_ST_ThunderUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.");
 
                     ImGui.Unindent();
 
@@ -132,12 +129,6 @@ internal partial class BLM
 
                 case CustomComboPreset.BLM_Variant_Cure:
                     DrawSliderInt(1, 100, BLM_VariantCure,
-                        "HP% to be at or under", 200);
-
-                    break;
-
-                case CustomComboPreset.BLM_Variant_Rampart:
-                    DrawSliderInt(1, 100, BLM_VariantRampart,
                         "HP% to be at or under", 200);
 
                     break;

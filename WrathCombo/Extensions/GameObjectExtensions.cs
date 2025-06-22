@@ -41,7 +41,7 @@ public static class GameObjectExtensions
     public static IGameObject? IfInParty (this IGameObject? obj) =>
         obj != null &&
         CustomComboFunctions.GetPartyMembers()
-            .Any(x => x.GameObjectId != obj.GameObjectId) ? obj : null;
+            .Any(x => x.GameObjectId == obj.GameObjectId) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -86,7 +86,7 @@ public static class GameObjectExtensions
     /// <param name="range">The range to check against. Defaults to 25 yalms.</param>
     public static IGameObject? IfWithinRange
         (this IGameObject? obj, float range = 25) =>
-    obj != null && CustomComboFunctions.IsInRange(obj, range) ? obj : null;
+        obj != null && CustomComboFunctions.IsInRange(obj, range) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -150,7 +150,7 @@ public static class GameObjectExtensions
     public static IGameObject? IfStillAround (this IGameObject? obj) =>
         obj != null &&
         Svc.Objects
-            .Any(x => x.GameObjectId != obj.GameObjectId) ? obj : null;
+            .Any(x => x.GameObjectId == obj.GameObjectId) ? obj : null;
 
     #endregion
 

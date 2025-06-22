@@ -21,6 +21,9 @@ internal partial class BLM : Caster
             if (Variant.CanRampart(CustomComboPreset.BLM_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (CanSpellWeave() && !HasDoubleWeaved())
             {
                 if (ActionReady(Amplifier) && !HasMaxPolyglotStacks)
@@ -187,6 +190,9 @@ internal partial class BLM : Caster
 
             if (Variant.CanRampart(CustomComboPreset.BLM_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Opener
             if (IsEnabled(CustomComboPreset.BLM_ST_Opener) &&
@@ -391,6 +397,9 @@ internal partial class BLM : Caster
             if (Variant.CanRampart(CustomComboPreset.BLM_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (CanSpellWeave() && !HasDoubleWeaved())
             {
                 if (ActionReady(Manafont) &&
@@ -477,6 +486,10 @@ internal partial class BLM : Caster
 
             if (Variant.CanRampart(CustomComboPreset.BLM_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             if (CanSpellWeave() && !HasDoubleWeaved())
             {

@@ -1,6 +1,7 @@
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -24,28 +25,6 @@ internal partial class NIN : Melee
 
                 if (ComboAction is GustSlash && LevelChecked(AeolianEdge))
                     return AeolianEdge;
-            }
-
-            return SpinningEdge;
-        }
-    }
-
-    internal class NIN_ST_ArmorCrushCombo : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.NIN_ST_ArmorCrushCombo;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not ArmorCrush)
-                return actionID;
-
-            if (ComboTimer > 0)
-            {
-                if (ComboAction is SpinningEdge && LevelChecked(GustSlash))
-                    return GustSlash;
-
-                if (ComboAction is GustSlash && LevelChecked(ArmorCrush))
-                    return ArmorCrush;
             }
 
             return SpinningEdge;
@@ -138,6 +117,9 @@ internal partial class NIN : Melee
 
             if (Variant.CanCure(CustomComboPreset.NIN_Variant_Cure, Config.NIN_VariantCure))
                 return Variant.Cure;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (InCombat() && !InMeleeRange())
             {
@@ -429,6 +411,9 @@ internal partial class NIN : Melee
             if (Variant.CanCure(CustomComboPreset.NIN_Variant_Cure, Config.NIN_VariantCure))
                 return Variant.Cure;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (IsEnabled(CustomComboPreset.NIN_AoE_AdvancedMode_KunaisBane))
             {
                 if (!HasStatusEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && MudraState.CastHuton(ref actionID))
@@ -619,6 +604,9 @@ internal partial class NIN : Melee
 
             if (Variant.CanCure(CustomComboPreset.NIN_Variant_Cure, Config.NIN_VariantCure))
                 return Variant.Cure;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (InCombat() && !InMeleeRange())
             {
@@ -844,6 +832,9 @@ internal partial class NIN : Melee
 
             if (Variant.CanCure(CustomComboPreset.NIN_Variant_Cure, Config.NIN_VariantCure))
                 return Variant.Cure;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (!HasStatusEffect(Buffs.ShadowWalker) && KunaisBane.LevelChecked() && GetCooldownRemainingTime(KunaisBane) < 5 && _mudraState.CastHuton(ref actionID))
                 return actionID;

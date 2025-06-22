@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -18,6 +20,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Stuns
             if (Role.CanInterject())
@@ -87,6 +91,9 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             #region Stuns
             if (IsEnabled(CustomComboPreset.WAR_ST_Interrupt)
                 && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only interrupt circle adds in 7
@@ -157,10 +164,11 @@ internal partial class WAR : Tank
                 return Upheaval;
             if (IsEnabled(CustomComboPreset.WAR_ST_PrimalWrath) && ShouldUsePrimalWrath)
                 return PrimalWrath;
-            if (IsEnabled(CustomComboPreset.WAR_ST_Onslaught) && ShouldUseOnslaught(Config.WAR_ST_Onslaught_Charges, Config.WAR_ST_Onslaught_Distance, Config.WAR_ST_Onslaught_Movement == 1 || (Config.WAR_ST_Onslaught_Movement == 0 && !IsMoving())))
+            if (IsEnabled(CustomComboPreset.WAR_ST_Onslaught) && (!IsEnabled(CustomComboPreset.WAR_ST_InnerRelease) || (IsEnabled(CustomComboPreset.WAR_ST_InnerRelease) && IR.Cooldown > 40)) &&
+                ShouldUseOnslaught(Config.WAR_ST_Onslaught_Charges, Config.WAR_ST_Onslaught_Distance, Config.WAR_ST_Onslaught_Movement == 1 || (Config.WAR_ST_Onslaught_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(Config.WAR_ST_Onslaught_TimeStill))))
                 return Onslaught;
             if (IsEnabled(CustomComboPreset.WAR_ST_PrimalRend) &&
-                ShouldUsePrimalRend(Config.WAR_ST_PrimalRend_Distance, Config.WAR_ST_PrimalRend_Movement == 1 || (Config.WAR_ST_PrimalRend_Movement == 0 && !IsMoving())) &&
+                ShouldUsePrimalRend(Config.WAR_ST_PrimalRend_Distance, (Config.WAR_ST_PrimalRend_Movement == 1 || (Config.WAR_ST_PrimalRend_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(Config.WAR_ST_PrimalRend_TimeStill)))) &&
                 (Config.WAR_ST_PrimalRend_EarlyLate == 0 || (Config.WAR_ST_PrimalRend_EarlyLate == 1 && (GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || (!HasIR.Stacks && !HasBF.Stacks && !HasWrath)))))
                 return PrimalRend;
             if (IsEnabled(CustomComboPreset.WAR_ST_PrimalRuination) && ShouldUsePrimalRuination)
@@ -184,6 +192,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
             if (Role.CanInterject())
                 return Role.Interject;
             if (Role.CanLowBlow()
@@ -249,6 +259,8 @@ internal partial class WAR : Tank
                 return action; //Our button
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // If the Burst Holding for the Squirrels in 6 is enabled, check that
             // we are either not targeting a squirrel or the fight is after 275s
@@ -316,9 +328,10 @@ internal partial class WAR : Tank
                 return LevelChecked(Orogeny) ? Orogeny : Upheaval;
             if (IsEnabled(CustomComboPreset.WAR_AoE_PrimalWrath) && ShouldUsePrimalWrath)
                 return PrimalWrath;
-            if (IsEnabled(CustomComboPreset.WAR_AoE_Onslaught) && ShouldUseOnslaught(Config.WAR_AoE_Onslaught_Charges, Config.WAR_AoE_Onslaught_Distance, Config.WAR_AoE_Onslaught_Movement == 1 || (Config.WAR_AoE_Onslaught_Movement == 0 && !IsMoving())))
+            if (IsEnabled(CustomComboPreset.WAR_AoE_Onslaught) && (!IsEnabled(CustomComboPreset.WAR_AoE_InnerRelease) || (IsEnabled(CustomComboPreset.WAR_AoE_InnerRelease) && IR.Cooldown > 40)) &&
+                ShouldUseOnslaught(Config.WAR_AoE_Onslaught_Charges, Config.WAR_AoE_Onslaught_Distance, Config.WAR_AoE_Onslaught_Movement == 1 || (Config.WAR_AoE_Onslaught_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(Config.WAR_AoE_Onslaught_TimeStill))))
                 return Onslaught;
-            if (IsEnabled(CustomComboPreset.WAR_AoE_PrimalRend) && ShouldUsePrimalRend(Config.WAR_AoE_PrimalRend_Distance, Config.WAR_AoE_PrimalRend_Movement == 1 || (Config.WAR_AoE_PrimalRend_Movement == 0 && !IsMoving())) &&
+            if (IsEnabled(CustomComboPreset.WAR_AoE_PrimalRend) && ShouldUsePrimalRend(Config.WAR_AoE_PrimalRend_Distance, Config.WAR_AoE_PrimalRend_Movement == 1 || (Config.WAR_AoE_PrimalRend_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(Config.WAR_AoE_PrimalRend_TimeStill))) &&
                 (Config.WAR_AoE_PrimalRend_EarlyLate == 0 || (Config.WAR_AoE_PrimalRend_EarlyLate == 1 && (GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || (!HasIR.Stacks && !HasBF.Stacks && !HasWrath)))))
                 return PrimalRend;
             if (IsEnabled(CustomComboPreset.WAR_AoE_PrimalRuination) && ShouldUsePrimalRuination)
@@ -370,10 +383,11 @@ internal partial class WAR : Tank
                 return Upheaval;
             if (IsEnabled(CustomComboPreset.WAR_FC_PrimalWrath) && ShouldUsePrimalWrath)
                 return PrimalWrath;
-            if (IsEnabled(CustomComboPreset.WAR_FC_Onslaught) && ShouldUseOnslaught(Config.WAR_FC_Onslaught_Charges, Config.WAR_FC_Onslaught_Distance, Config.WAR_FC_Onslaught_Movement == 1 || (Config.WAR_FC_Onslaught_Movement == 0 && !IsMoving())))
+            if (IsEnabled(CustomComboPreset.WAR_FC_Onslaught) && (!IsEnabled(CustomComboPreset.WAR_FC_InnerRelease) || (IsEnabled(CustomComboPreset.WAR_FC_InnerRelease) && IR.Cooldown > 40)) &&
+                ShouldUseOnslaught(Config.WAR_FC_Onslaught_Charges, Config.WAR_FC_Onslaught_Distance, Config.WAR_FC_Onslaught_Movement == 1 || (Config.WAR_FC_Onslaught_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(Config.WAR_FC_Onslaught_TimeStill))))
                 return Onslaught;
             if (IsEnabled(CustomComboPreset.WAR_FC_PrimalRend) &&
-                ShouldUsePrimalRend(Config.WAR_FC_PrimalRend_Distance, Config.WAR_FC_PrimalRend_Movement == 1 || (Config.WAR_FC_PrimalRend_Movement == 0 && !IsMoving())) &&
+                ShouldUsePrimalRend(Config.WAR_FC_PrimalRend_Distance, Config.WAR_FC_PrimalRend_Movement == 1 || (Config.WAR_FC_PrimalRend_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(Config.WAR_FC_PrimalRend_TimeStill))) &&
                 (Config.WAR_FC_PrimalRend_EarlyLate == 0 || (Config.WAR_FC_PrimalRend_EarlyLate == 1 && (GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || (!HasIR.Stacks && !HasBF.Stacks && !HasWrath)))))
                 return PrimalRend;
             if (IsEnabled(CustomComboPreset.WAR_FC_PrimalRuination) && ShouldUsePrimalRuination)
@@ -443,7 +457,8 @@ internal partial class WAR : Tank
 
             // Nascent if trying to heal an ally
             if (ActionReady(NascentFlash) &&
-                target != null)
+                target != null &&
+                CanApplyStatus(target, Buffs.NascentFlashTarget))
                 return NascentFlash.Retarget([RawIntuition , Bloodwhetting], target);
 
             return action;

@@ -259,7 +259,7 @@ internal partial class DNC
 
         var party = GetPartyMembers()
             .Where(member => member.GameObjectId != Player.Object.GameObjectId)
-            .Where(member => !member.BattleChara.IsDead)
+            .Where(member => member.BattleChara is not null && !member.BattleChara.IsDead)
             .Where(member => IsInRange(member.BattleChara, 30))
             .Where(member => !HasAnyPartner(member) || HasMyPartner(member))
             .Select(member => member.BattleChara)

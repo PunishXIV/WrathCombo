@@ -106,9 +106,10 @@ internal abstract partial class CustomComboFunctions
     ///     Bool indicating whether they can be interrupted or not.<br/>
     ///     (and if the cast time is over the percentage specified)
     /// </returns>
-    public static bool CanInterruptEnemy(double? minCastPercentage = null)
+    public static bool CanInterruptEnemy(double? minCastPercentage = null, IGameObject? otherTarget = null)
     {
-        if (CurrentTarget is not IBattleChara chara) return false;
+        otherTarget ??= CurrentTarget;
+        if (otherTarget is not IBattleChara chara) return false;
 
         minCastPercentage ??= Service.Configuration.InterruptDelay;
         minCastPercentage = Math.Clamp((double)minCastPercentage, 0.0d, 1.0d);

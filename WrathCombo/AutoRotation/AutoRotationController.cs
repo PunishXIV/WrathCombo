@@ -38,7 +38,7 @@ namespace WrathCombo.AutoRotation
 
         static DateTime? TimeToHeal;
 
-        static Func<WrathPartyMember, bool> RezQuery => x => x.BattleChara.IsDead && !HasStatusEffect(2648, x.BattleChara, true) && !HasStatusEffect(148, x.BattleChara, true) && x.BattleChara.IsTargetable && TimeSpentDead(x.BattleChara.GameObjectId).TotalSeconds > 2 && GetTargetDistance(x.BattleChara) <= 30;
+        static Func<WrathPartyMember, bool> RezQuery => x => x.BattleChara is not null && x.BattleChara.IsDead && !HasStatusEffect(2648, x.BattleChara, true) && !HasStatusEffect(148, x.BattleChara, true) && x.BattleChara.IsTargetable && TimeSpentDead(x.BattleChara.GameObjectId).TotalSeconds > 2 && GetTargetDistance(x.BattleChara) <= 30;
 
         public static bool LockedST
         {
@@ -568,7 +568,7 @@ namespace WrathCombo.AutoRotation
                 bool switched = SwitchOnDChole(attributes, outAct, ref target);
 
                 var canUseSelf = ActionManager.CanUseActionOnTarget(outAct, Player.GameObject);
-                var blockedSelfBuffs = outAct is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo or DNC.StandardStep or DNC.TechnicalStep or MCH.Reassemble or SAM.MeikyoShisui;
+                var blockedSelfBuffs = GetCooldown(outAct).CooldownTotal >= 5;
 
                 if (cfg.InCombatOnly && NotInCombat && !(canUseSelf && cfg.BypassBuffs && !blockedSelfBuffs))
                     return false;

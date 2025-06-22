@@ -2,6 +2,7 @@
 using ECommons.DalamudServices;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 
@@ -46,6 +47,7 @@ internal partial class All
     public static class Debuffs
     {
         public const ushort
+            Stun = 2,
             Weakness = 43,
             BrinkOfDeath = 44;
     }
@@ -67,13 +69,14 @@ internal partial class All
 
         protected override uint Invoke(uint actionID)
         {
+            var tar = IsEnabled(CustomComboPreset.ALL_Tank_Interrupt_Retarget) ? SimpleTarget.InterruptableEnemy : CurrentTarget;
             switch (actionID)
             {
-                case RoleActions.Tank.LowBlow or PLD.ShieldBash when CanInterruptEnemy() && ActionReady(RoleActions.Tank.Interject):
-                    return RoleActions.Tank.Interject;
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash when CanInterruptEnemy(null, tar) && ActionReady(RoleActions.Tank.Interject):
+                    return RoleActions.Tank.Interject.Retarget(actionID, tar);
 
-                case RoleActions.Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(RoleActions.Tank.LowBlow):
-                    return RoleActions.Tank.LowBlow;
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(RoleActions.Tank.LowBlow) && !TargetIsBoss():
+                    return RoleActions.Tank.LowBlow.Retarget(actionID, tar);
 
                 case PLD.ShieldBash when IsOnCooldown(RoleActions.Tank.LowBlow):
                 default:

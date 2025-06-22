@@ -994,6 +994,10 @@ internal partial class DRK
         // Bail if we're dead or unloaded
         if (LocalPlayer is null)
             return false;
+        
+        // Bail if we're at the status limit
+        if (!CanApplyStatus(LocalPlayer, Buffs.BlackestNightShield))
+            return false;
 
         // Bail if TBN is disabled
         if ((!aoe

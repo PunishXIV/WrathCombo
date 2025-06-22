@@ -34,6 +34,9 @@ internal partial class GNB : Tank
 
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             #region Mitigations
             if (Config.GNB_ST_MitsOptions != 1)
@@ -148,8 +151,11 @@ internal partial class GNB : Tank
                 && !InBossEncounter())
                 return Role.LowBlow;
             #endregion
+
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_ST_Mitigation) && InCombat() && !MitUsed)
@@ -274,6 +280,8 @@ internal partial class GNB : Tank
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
             if (Config.GNB_AoE_MitsOptions != 1)
@@ -351,6 +359,8 @@ internal partial class GNB : Tank
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
             if (IsEnabled(CustomComboPreset.GNB_AoE_Mitigation) && InCombat() && !MitUsed)
@@ -632,7 +642,7 @@ internal partial class GNB : Tank
                     ? SimpleTarget.TargetsTarget.IfFriendly()
                     : null);
 
-            if (target != null)
+            if (target != null && CanApplyStatus(target, Buffs.Aurora))
             {
                 return !HasStatusEffect(Buffs.Aurora, target, true)
                     ? actionID.Retarget(target)
@@ -657,13 +667,13 @@ internal partial class GNB : Tank
                 return actionID;
 
             var target =
-                SimpleTarget.UIMouseOverTarget.IfFriendly() ??
-                SimpleTarget.HardTarget.IfFriendly() ??
+                SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
+                SimpleTarget.HardTarget.IfNotThePlayer().IfInParty() ??
                 (IsEnabled(CustomComboPreset.GNB_RetargetHeartofStone_TT) && !PlayerHasAggro
-                    ? SimpleTarget.TargetsTarget.IfFriendly().IfNotThePlayer()
+                    ? SimpleTarget.TargetsTarget.IfNotThePlayer().IfInParty()
                     : null);
 
-            if (target is not null)
+            if (target is not null && CanApplyStatus(target, Buffs.HeartOfStone))
                 return OriginalHook(actionID).Retarget([HeartOfStone,HeartOfCorundum], target);
 
             return actionID;

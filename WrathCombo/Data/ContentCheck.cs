@@ -158,6 +158,39 @@ public class ContentCheck
         }
     }
 
+    /// <summary>
+    ///     Check if the current instance is a Field Operation.<br />
+    ///     (Bozja, Eureka, Occult Crescent, etc.)
+    /// </summary>
+    /// South Horn, Southern Front, etc.
+    public static bool IsInFieldOperations
+    {
+        get
+        {
+            if (!EZ.Throttle("contentCheckInFieldOperations", TS.FromSeconds(5)))
+                return field;
+
+            field = Content.ContentType is ContentType.FieldOperations;
+            return field;
+        }
+    }
+
+    /// <summary>
+    ///     Check if the current instance is a Field Raid.<br />
+    ///     (Delubrum Reginae, etc.)
+    /// </summary>
+    public static bool IsInFieldRaids
+    {
+        get
+        {
+            if (!EZ.Throttle("contentCheckInFieldOperations", TS.FromSeconds(5)))
+                return field;
+
+            field = Content.ContentType is ContentType.FieldRaid;
+            return field;
+        }
+    }
+
     #region Halved Content Lists
 
 #pragma warning disable CS1574

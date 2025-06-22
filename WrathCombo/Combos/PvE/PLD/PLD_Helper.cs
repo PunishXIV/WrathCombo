@@ -212,7 +212,8 @@ internal partial class PLD
             DivineMight = 2673,
             HolySheltron = 2674,
             PassageOfArms = 1175,
-            Sheltron = 1856;
+            Sheltron = 1856,
+            Intervention = 2020;
     }
 
     public static class Debuffs

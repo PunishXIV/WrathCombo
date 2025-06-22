@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
 using WrathCombo.Data;
@@ -104,6 +105,8 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static bool TargetHasDamageDown(IGameObject? target) => StatusCache.HasDamageDown(target);
 
+        public static bool TargetHasDamageUp(IGameObject? target) => StatusCache.HasDamageUp(target);
+
         public static bool TargetHasRezWeakness(IGameObject? target, bool checkForWeakness = true)
         {
             if (checkForWeakness && HasStatusEffect(43, target, true)) //Weakness = 43
@@ -120,6 +123,15 @@ namespace WrathCombo.CustomComboNS.Functions
         public static bool HasCleansableDebuff(IGameObject? target) => StatusCache.HasCleansableDebuff(target);
 
         /// <summary>
+        /// Checks if the target has a beneficial status.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
+
+        public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || HasStatusEffect(4355, target);
+
+        /// <summary>
         /// Checks if the target is invincible due to status effects or encounter-specific mechanics.
         /// </summary>
         /// <param name="target">The game object to check.</param>
@@ -132,14 +144,11 @@ namespace WrathCombo.CustomComboNS.Functions
         /// </summary>
         /// <param name="target"></param>
         /// <returns></returns>
-        public static bool TargetIsStatusCapped(IGameObject? target)
+        public unsafe static bool TargetIsStatusCapped(IGameObject? target)
         {
             target ??= LocalPlayer;
-            if (target is IPlayerCharacter pc)
-                return pc.StatusList.Count(x => x.StatusId != 0) == 30;
-
-            if (target is IBattleNpc npc)
-                return npc.StatusList.Count(x => x.StatusId != 0) == 60;
+            if (target is IBattleChara bc)
+                return bc.StatusList.Count(x => x.StatusId != 0) == bc.Struct()->StatusManager.NumValidStatuses;
 
             return false;
         }

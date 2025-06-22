@@ -8,26 +8,24 @@ internal partial class VPR
     internal static class Config
     {
         public static UserInt
+            VPR_Balance_Content = new("VPR_Balance_Content", 1),
             VPR_ST_SerpentsIre_SubOption = new("VPR_ST_SerpentsIre_SubOption", 1),
             VPR_ST_UncoiledFury_HoldCharges = new("VPR_ST_UncoiledFury_HoldCharges", 1),
             VPR_ST_UncoiledFury_Threshold = new("VPR_ST_UncoiledFury_Threshold", 1),
             VPR_ST_ReAwaken_SubOption = new("VPR_ST_ReAwaken_SubOption", 0),
             VPR_ST_ReAwaken_Threshold = new("VPR_ST_ReAwaken_Threshold", 1),
-            VPR_ST_SecondWind_Threshold = new("VPR_ST_SecondWindThreshold", 25),
-            VPR_ST_Bloodbath_Threshold = new("VPR_ST_BloodbathThreshold", 40),
-            VPR_Balance_Content = new("VPR_Balance_Content", 1),
+            VPR_ST_SecondWind_Threshold = new("VPR_ST_SecondWindThreshold", 40),
+            VPR_ST_Bloodbath_Threshold = new("VPR_ST_BloodbathThreshold", 30),
             VPR_AoE_UncoiledFury_Threshold = new("VPR_AoE_UncoiledFury_Threshold", 1),
             VPR_AoE_UncoiledFury_HoldCharges = new("VPR_AoE_UncoiledFury_HoldCharges", 0),
-            VPR_AoE_SecondWind_Threshold = new("VPR_AoE_SecondWindThreshold", 25),
-            VPR_AoE_Bloodbath_Threshold = new("VPR_AoE_BloodbathThreshold", 40),
-            VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton"),
-            VPR_VariantCure = new("VPR_VariantCure");
+            VPR_AoE_Reawaken_Usage = new("VPR_AoE_Reawaken_Usage", 20),
+            VPR_AoE_SecondWind_Threshold = new("VPR_AoE_SecondWindThreshold", 40),
+            VPR_AoE_Bloodbath_Threshold = new("VPR_AoE_BloodbathThreshold", 30),
+            VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton", 0),
+            VPR_VariantCure = new("VPR_VariantCure", 50);
 
         public static UserBool
             VPR_Opener_ExcludeUF = new("VPR_Opener_ExcludeUF");
-
-        public static UserFloat
-            VPR_AoE_Reawaken_Usage = new("VPR_AoE_Reawaken_Usage", 2);
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -90,9 +88,8 @@ internal partial class VPR
                     break;
 
                 case CustomComboPreset.VPR_AoE_Reawaken:
-                    DrawRoundedSliderFloat(0, 10, VPR_AoE_Reawaken_Usage,
-                        $"Stop using {Reawaken.ActionName()} at Enemy HP %. Set to Zero to disable this check.",
-                        digits: 1);
+                    DrawSliderInt(0, 100, VPR_AoE_Reawaken_Usage,
+                        $"Stop using {Reawaken.ActionName()} at Enemy HP %. Set to Zero to disable this check.");
 
                     break;
 

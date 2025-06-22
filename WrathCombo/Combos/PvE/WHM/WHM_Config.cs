@@ -1,6 +1,8 @@
 ﻿#region
 
+using System.Numerics;
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -123,8 +125,10 @@ internal partial class WHM
                         reapplyTimeRemainingDescription,
                         itemWidth: little);
                     ImGui.Unindent();
-                    DrawSliderInt(0, 100, WHM_STHeals_RegenHP,
+                    DrawSliderInt(0, 100, WHM_STHeals_RegenHPLower,
                         targetStopUsingAtDescription);
+                    DrawSliderInt(0, 100, WHM_STHeals_RegenHPUpper,
+                        targetStartUsingAtDescription);
                     break;
 
                 case CustomComboPreset.WHM_STHeals_Benediction:
@@ -132,7 +136,7 @@ internal partial class WHM
                         weaveDescription, "");
                     DrawSliderInt(1, 100, WHM_STHeals_BenedictionHP,
                         targetStartUsingAtDescription);
-                    DrawPriorityInput(WHM_ST_Heals_Priority, 4, 0,
+                    DrawPriorityInput(WHM_ST_Heals_Priority, 5, 0,
                         $"{Benediction.ActionName()} Priority: ");
                     break;
 
@@ -146,7 +150,7 @@ internal partial class WHM
                         weaveDescription, "");
                     DrawSliderInt(1, 100, WHM_STHeals_TetraHP,
                         targetStartUsingAtDescription);
-                    DrawPriorityInput(WHM_ST_Heals_Priority, 4, 1,
+                    DrawPriorityInput(WHM_ST_Heals_Priority, 5, 1,
                         $"{Tetragrammaton.ActionName()} Priority: ");
                     break;
 
@@ -155,7 +159,7 @@ internal partial class WHM
                         weaveDescription, "");
                     DrawSliderInt(1, 100, WHM_STHeals_BenisonHP,
                         targetStartUsingAtDescription);
-                    DrawPriorityInput(WHM_ST_Heals_Priority, 4, 2,
+                    DrawPriorityInput(WHM_ST_Heals_Priority, 5, 2,
                         $"{DivineBenison.ActionName()} Priority: ");
                     break;
 
@@ -164,7 +168,7 @@ internal partial class WHM
                         weaveDescription, "");
                     DrawSliderInt(1, 100, WHM_STHeals_AquaveilHP,
                         targetStartUsingAtDescription);
-                    DrawPriorityInput(WHM_ST_Heals_Priority, 4, 3,
+                    DrawPriorityInput(WHM_ST_Heals_Priority, 5, 3,
                         $"{Aquaveil.ActionName()} Priority: ");
                     break;
 
@@ -172,6 +176,17 @@ internal partial class WHM
                     DrawSliderInt(4000, 9500, WHM_STHeals_Lucid,
                         mpThresholdDescription,
                         itemWidth: medium, SliderIncrements.Hundreds);
+                    break;
+
+                case CustomComboPreset.WHM_STHeals_Temperance:
+                    DrawSliderInt(1, 100, WHM_STHeals_TemperanceHP,
+                        targetStartUsingAtDescription);
+                    DrawDifficultyMultiChoice(WHM_STHeals_TemperanceDifficulty, WHM_STHeals_TemperanceDifficultyListSet,
+                        "Select what content difficulties Temperance should be used in:");
+                    DrawAdditionalBoolChoice(WHM_STHeals_TemperanceWeave,
+                        weaveDescription, "");
+                    DrawPriorityInput(WHM_ST_Heals_Priority, 5, 4,
+                        $"{Temperance.ActionName()} Priority: ");
                     break;
 
                 case CustomComboPreset.WHM_STHeals_Esuna:
@@ -205,6 +220,36 @@ internal partial class WHM
                         "");
                     break;
 
+                case CustomComboPreset.WHM_AoEHeals_Temperance:
+                    DrawSliderInt(1, 100, WHM_AoEHeals_TemperanceHP,
+                        "Average party HP% to use at or below");
+                    DrawDifficultyMultiChoice(WHM_AoEHeals_TemperanceDifficulty, WHM_AoEHeals_TemperanceDifficultyListSet,
+                        "Select what content difficulties Temperance should be used in:");
+                    ImGui.Spacing();
+                    
+                    DrawAdditionalBoolChoice(WHM_AoEHeals_TemperanceWeave,
+                        weaveDescription,
+                        "");
+                    
+                    DrawAdditionalBoolChoice(WHM_AoEHeals_TemperanceRaidwide,
+                        "Also use for Raidwides",
+                        "Will also use for mitigation before raidwides (and a healing boost after them), if the party is low enough.",
+                        indentDescription: true);
+                    if (WHM_AoEHeals_TemperanceRaidwide)
+                    {
+                        ImGui.Indent();
+                        DrawDifficultyMultiChoice(WHM_AoEHeals_TemperanceRaidwideDifficulty, WHM_AoEHeals_TemperanceRaidwideDifficultyListSet,
+                            "Select what content difficulties the Raidwide option should apply to:");
+                    
+                        DrawAdditionalBoolChoice(WHM_AoEHeals_TemperanceRaidwidePrioritization,
+                            "Prioritize use for Raidwides",
+                            "Will ignore the Party HP% check for Raidwides, essentially using Temperance for mitigation.\n" +
+                            "Not advised in higher-end content.",
+                            indentDescription: true);
+                        ImGui.Unindent();
+                    }
+                    break;
+
                 case CustomComboPreset.WHM_AoEHeals_Lucid:
                     DrawSliderInt(4000, 9500, WHM_AoEHeals_Lucid,
                         mpThresholdDescription,
@@ -217,6 +262,36 @@ internal partial class WHM
                         reapplyTimeRemainingDescription,
                         itemWidth: little);
                     ImGui.Unindent();
+                    break;
+
+                case CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell:
+                    DrawDifficultyMultiChoice(WHM_AoEHeals_LiturgyDifficulty, WHM_AoEHeals_LiturgyDifficultyListSet,
+                        "Select what content difficulties Liturgy of the Bell should be used in:");
+                    ImGui.NewLine();
+
+                    DrawAdditionalBoolChoice(WHM_AoEHeals_LiturgyRaidwideOnly,
+                        "Only use when a Raidwide is casting",
+                        "Will not use Liturgy of the Bell in the rotation unless we detect a Raidwide is casting.",
+                        indentDescription: true);
+
+                    if (WHM_AoEHeals_LiturgyRaidwideOnly)
+                    {
+                        ImGuiEx.Spacing(new Vector2(30f, 0f));
+                        ImGui.Text("Against what enemies should we check for Raidwides:");
+                        ImGui.NewLine();
+                        DrawRadioButton(
+                            WHM_AoEHeals_LiturgyRaidwideOnlyBoss, "All Enemies",
+                            "Will check for a Raidwide before using Bell at all times, on all enemies.",
+                            outputValue: (int) BossRequirement.Off, itemWidth: 125f,
+                            descriptionAsTooltip: true);
+                        DrawRadioButton(
+                            WHM_AoEHeals_LiturgyRaidwideOnlyBoss, "Only Bosses",
+                            "Will try to only check for Raidwide when fighting bosses.\n" +
+                            "(will use on cooldown versus regular enemies)\n" +
+                            "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
+                            outputValue: (int) BossRequirement.On, itemWidth: 125f,
+                            descriptionAsTooltip: true);
+                    }
                     break;
 
                 case CustomComboPreset.WHM_AoEHeals_Asylum:
@@ -263,6 +338,15 @@ internal partial class WHM
 
         private const string mouseoverCheckingDescription =
             "Party UI Mouseover Checking";
+
+        /// <summary>
+        ///     Whether abilities should be restricted to bosses or not.
+        /// </summary>
+        internal enum BossRequirement
+        {
+            Off = 1,
+            On = 2,
+        }
 
         /// <summary>
         ///     Enemy type restriction for HP threshold checks.
@@ -408,7 +492,7 @@ internal partial class WHM
             new("WHM_STHeals_RegenTimer", 0);
 
         /// <summary>
-        ///     HP threshold to stop using Regen.
+        ///     Lower HP threshold to stop using Regen.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 30 <br />
@@ -416,8 +500,20 @@ internal partial class WHM
         ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
         /// </value>
         /// <seealso cref="CustomComboPreset.WHM_STHeals_Regen" />
-        internal static UserInt WHM_STHeals_RegenHP =
-            new("WHM_STHeals_RegenHP", 30);
+        internal static UserInt WHM_STHeals_RegenHPLower =
+            new("WHM_STHeals_RegenHPLower", 30);
+        
+        /// <summary>
+        ///     Upper HP threshold to start using Regen.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 30 <br />
+        ///     <b>Range</b>: 0 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_STHeals_Regen" />
+        internal static UserInt WHM_STHeals_RegenHPUpper =
+            new("WHM_STHeals_RegenHPUpper", 100);
 
         /// <summary>
         ///     Only use Benediction when weaving.
@@ -532,6 +628,49 @@ internal partial class WHM
             new("WHM_STHeals_Lucid", 6500);
 
         /// <summary>
+        ///     Only use Temperance when weaving.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_STHeals_Temperance" />
+        internal static UserBool WHM_STHeals_TemperanceWeave =
+            new("WHM_STHeals_TemperanceWeave", false);
+
+        /// <summary>
+        ///     HP threshold to use Temperance.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 75 <br />
+        ///     <b>Range</b>: 1 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_STHeals_Temperance" />
+        internal static UserInt WHM_STHeals_TemperanceHP =
+            new("WHM_STHeals_TemperanceHP", 75);
+
+        /// <summary>
+        ///     Content difficulty selector for ST Temperance.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_STHeals_Temperance" />
+        internal static UserBoolArray WHM_STHeals_TemperanceDifficulty =
+            new("WHM_STHeals_TemperanceDifficulty", [true, false]);
+
+        /// <summary>
+        ///     Content difficulty list set for ST Temperance, set by
+        ///     <see cref="WHM_STHeals_TemperanceDifficulty" />.
+        /// </summary>
+        /// <seealso cref="CustomComboPreset.WHM_STHeals_Temperance" />
+        internal static readonly ContentCheck.ListSet
+            WHM_STHeals_TemperanceDifficultyListSet =
+                ContentCheck.ListSet.Halved;
+
+        /// <summary>
         ///     HP threshold to stop using Esuna.
         /// </summary>
         /// <value>
@@ -592,6 +731,26 @@ internal partial class WHM
             new("WHM_AoEHeals_PlenaryWeave");
 
         /// <summary>
+        ///     Only use Temperance when weaving.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static UserBool WHM_AoEHeals_TemperanceWeave =
+            new("WHM_AoEHeals_TemperanceWeave");
+
+        /// <summary>
+        ///     Will also use Temperance for Raidwides, if the party is low enough.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static UserBool WHM_AoEHeals_TemperanceRaidwide =
+            new("WHM_AoEHeals_TemperanceRaidwide");
+
+        /// <summary>
         ///     MP threshold to use Lucid Dreaming in AoE healing.
         /// </summary>
         /// <value>
@@ -614,6 +773,117 @@ internal partial class WHM
         /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Medica2" />
         internal static UserFloat WHM_AoEHeals_MedicaTime =
             new("WHM_AoEHeals_MedicaTime");
+
+        /// <summary>
+        ///     Only use Liturgy of the Bell vs a Raidwide.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell" />
+        internal static UserBool WHM_AoEHeals_LiturgyRaidwideOnly =
+            new("WHM_AoEHeals_LiturgyRaidwideOnly");
+
+        /// <summary>
+        ///     Boss Requirement for Liturgy of the Bell, to only check for raidwides
+        ///     in boss fights, or not.<br />
+        ///     Raidwides check controlled by
+        ///     <see cref="WHM_AoEHeals_LiturgyRaidwideOnly" />.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="BossRequirement.On" /> <br />
+        ///     <b>Options</b>: <see cref="BossRequirement">BossRequirement Enum</see>
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell" />
+        public static readonly UserInt
+            WHM_AoEHeals_LiturgyRaidwideOnlyBoss =
+                new("WHM_AoEHeals_LiturgyRaidwideOnlyBoss", (int) BossRequirement.On);
+
+        /// <summary>
+        ///     Content difficulty selector for Liturgy of the Bell.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /> <br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell" />
+        internal static UserBoolArray WHM_AoEHeals_LiturgyDifficulty =
+            new("WHM_AoEHeals_LiturgyDifficulty", [true, false]);
+
+        /// <summary>
+        ///     Content difficulty list set for Liturgy of the Bell, set by
+        ///     <see cref="WHM_AoEHeals_LiturgyDifficulty" />.
+        /// </summary>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell" />
+        internal static readonly ContentCheck.ListSet
+            WHM_AoEHeals_LiturgyDifficultyListSet =
+                ContentCheck.ListSet.Halved;
+
+        /// <summary>
+        ///     Average party HP% threshold to use Temperance.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 30 <br />
+        ///     <b>Range</b>: 1 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static UserInt WHM_AoEHeals_TemperanceHP =
+            new("WHM_AoEHeals_TemperanceHP", 30);
+
+        /// <summary>
+        ///     Content difficulty selector for Temperance.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and <see cref="ContentCheck.TopHalfContent" /><br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static UserBoolArray WHM_AoEHeals_TemperanceDifficulty =
+            new("WHM_AoEHeals_TemperanceDifficulty", [true, true]);
+
+        /// <summary>
+        ///     Content difficulty list set for Temperance, set by
+        ///     <see cref="WHM_AoEHeals_TemperanceDifficulty" />.
+        /// </summary>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static readonly ContentCheck.ListSet
+            WHM_AoEHeals_TemperanceDifficultyListSet =
+                ContentCheck.ListSet.Halved;
+
+        /// <summary>
+        ///     Content difficulty selector for Temperance raidwide option.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: <see cref="ContentCheck.BottomHalfContent" /><br />
+        ///     <b>Options</b>: <see cref="ContentCheck.BottomHalfContent" />
+        ///     and/or <see cref="ContentCheck.TopHalfContent" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static UserBoolArray WHM_AoEHeals_TemperanceRaidwideDifficulty =
+            new("WHM_AoEHeals_TemperanceRaidwideDifficulty", [true, false]);
+
+        /// <summary>
+        ///     Content difficulty list set for Temperance raidwide option, set by
+        ///     <see cref="WHM_AoEHeals_TemperanceRaidwideDifficulty" />.
+        /// </summary>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static readonly ContentCheck.ListSet
+            WHM_AoEHeals_TemperanceRaidwideDifficultyListSet =
+                ContentCheck.ListSet.Halved;
+
+        /// <summary>
+        ///     Prioritizes Temperance for raidwides, by ignoring the HP% check then.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_AoEHeals_Temperance" />
+        internal static UserBool WHM_AoEHeals_TemperanceRaidwidePrioritization =
+            new("WHM_AoEHeals_TemperanceRaidwidePrioritization");
 
         /// <summary>
         ///     Only use Asylum vs a Raidwide.

@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -85,6 +86,9 @@ internal partial class AST : Healer
 
                 return actionID;
             }
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             //In combat
             if (InCombat())
@@ -215,6 +219,9 @@ internal partial class AST : Healer
             if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart))
                 return Variant.SpiritDart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (IsEnabled(CustomComboPreset.AST_AOE_LightSpeed) &&
                 ActionReady(Lightspeed) &&
                 GetTargetHPPercent() > Config.AST_AOE_LightSpeedOption &&
@@ -226,7 +233,7 @@ internal partial class AST : Healer
                 return Lightspeed;            
 
             if (IsEnabled(CustomComboPreset.AST_AOE_Lucid) &&
-                Role.CanLucidDream(Config.AST_LucidDreaming))
+                Role.CanLucidDream(Config.AST_AOE_LucidDreaming))
                 return Role.LucidDreaming;
 
             //Play Card with Pooling

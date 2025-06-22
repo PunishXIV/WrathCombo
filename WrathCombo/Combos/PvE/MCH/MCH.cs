@@ -43,6 +43,9 @@ internal partial class MCH : PhysicalRanged
             if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             //Reassemble to start before combat
             if (!HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
                 !InCombat() && TargetIsHostile() &&
@@ -182,6 +185,9 @@ internal partial class MCH : PhysicalRanged
 
             if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Opener
             if (IsEnabled(CustomComboPreset.MCH_ST_Adv_Opener) &&
@@ -356,6 +362,9 @@ internal partial class MCH : PhysicalRanged
             if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                 return Variant.Rampart;
 
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
                 return All.SavageBlade;
 
@@ -485,6 +494,9 @@ internal partial class MCH : PhysicalRanged
 
             if (Variant.CanRampart(CustomComboPreset.MCH_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (HasStatusEffect(Buffs.Flamethrower) || JustUsed(Flamethrower, 10f))
                 return All.SavageBlade;

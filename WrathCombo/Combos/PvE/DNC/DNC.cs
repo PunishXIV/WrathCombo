@@ -1,8 +1,9 @@
 ﻿#region
 
+using WrathCombo.Combos.PvE.Content;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-using WrathCombo.Core;
 
 // ReSharper disable UnusedType.Global
 // ReSharper disable ClassNeverInstantiated.Global
@@ -90,6 +91,9 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.TechnicalFinish);
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Dance Partner
 
@@ -484,6 +488,9 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
+            if (OccultCrescent.ShouldUsePhantomActions()) //not sure where to add these, sorry zeebs
+                return OccultCrescent.BestPhantomAction();
+
             #region Dance Fills
 
             // ST Standard (Dance) Steps & Fill
@@ -750,6 +757,10 @@ internal partial class DNC : PhysicalRanged
                     return ClosedPosition;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             #region Dance Fills
 
@@ -1032,6 +1043,10 @@ internal partial class DNC : PhysicalRanged
                     return ClosedPosition;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
 
             #region Dance Fills
 

@@ -252,6 +252,14 @@ internal class Debug : ConfigWindow, IDisposable
                     // Print
                     CustomStyleText(firstColumn, secondColumn, useMonofont: true);
                 }
+
+                if (ImGui.CollapsingHeader("ICD Tracker"))
+                {
+                    foreach (var t in ICDTracker.Trackers.Where(x => x.GameObjectId == chara.GameObjectId))
+                    {
+                        CustomStyleText($"{((ushort)t.StatusID).StatusName()}", $"{t.TimeUntilExpired():mm\\:ss}");
+                    }
+                }
             }
         }
 

@@ -2,6 +2,7 @@
 
 using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Combos.PvP;
 using static WrathCombo.Attributes.PossiblyRetargetedAttribute;
 
@@ -20,8 +21,375 @@ public enum CustomComboPreset
 {
     #region PvE Combos
 
-    #region Misc
+    #region PHANTOM ACTIONS
+    [OccultCrescent(OccultCrescent.JobIDs.Freelancer)]
+    [CustomComboInfo("Freelancer Job Actions", "Enable this to add Freelancer-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Freelancer = 110000,
 
+    [OccultCrescent]
+    [ParentCombo(Phantom_Freelancer)]
+    [CustomComboInfo("Occult Resuscitation", "Adds Occult Resuscitation into the rotation.", OccultCrescent.JobID)]
+    Phantom_Freelancer_OccultResuscitation = 110001,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Freelancer)]
+    [CustomComboInfo("Occult Treasuresight", "Adds Occult Treasuresight into the rotation.", OccultCrescent.JobID)]
+    Phantom_Freelancer_OccultTreasuresight = 110002,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Knight)]
+    [CustomComboInfo("Knight Job Actions", "Enable this to add Knight-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Knight = 110003,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Knight)]
+    [CustomComboInfo("Phantom Guard", "Adds Phantom Guard into the rotation.", OccultCrescent.JobID)]
+    Phantom_Knight_PhantomGuard = 110004,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Knight)]
+    [CustomComboInfo("Pray", "Adds Pray into the rotation.", OccultCrescent.JobID)]
+    Phantom_Knight_Pray = 110005,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Knight)]
+    [CustomComboInfo("Occult Heal", "Adds Occult Heal into the rotation.", OccultCrescent.JobID)]
+    Phantom_Knight_OccultHeal = 110006,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Knight)]
+    [CustomComboInfo("Pledge", "Adds Pledge into the rotation.", OccultCrescent.JobID)]
+    Phantom_Knight_Pledge = 110007,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Monk)]
+    [CustomComboInfo("Monk Job Actions", "Enable this to add Monk-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Monk = 110008,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Monk)]
+    [CustomComboInfo("Phantom Kick", "Adds Phantom Kick into the rotation.", OccultCrescent.JobID)]
+    Phantom_Monk_PhantomKick = 110009,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Monk)]
+    [CustomComboInfo("Occult Counter", "Adds Occult Counter into the rotation.", OccultCrescent.JobID)]
+    Phantom_Monk_OccultCounter = 110010,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Monk)]
+    [CustomComboInfo("Counterstance", "Adds Counterstance into the rotation.", OccultCrescent.JobID)]
+    Phantom_Monk_Counterstance = 110011,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Monk)]
+    [CustomComboInfo("Occult Chakra", "Adds Occult Chakra into the rotation.", OccultCrescent.JobID)]
+    Phantom_Monk_OccultChakra = 110012,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Thief)]
+    [CustomComboInfo("Thief Job Actions", "Enable this to add Thief-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Thief = 110013,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Thief)]
+    [CustomComboInfo("Occult Sprint", "Adds Occult Sprint into the rotation.", OccultCrescent.JobID)]
+    Phantom_Thief_OccultSprint = 110014,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Thief)]
+    [CustomComboInfo("Steal", "Adds Steal into the rotation.", OccultCrescent.JobID)]
+    Phantom_Thief_Steal = 110015,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Thief)]
+    [CustomComboInfo("Vigilance", "Adds Vigilance into the rotation.", OccultCrescent.JobID)]
+    Phantom_Thief_Vigilance = 110016,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Thief)]
+    [CustomComboInfo("Trap Detection", "Adds Trap Detection into the rotation.", OccultCrescent.JobID)]
+    Phantom_Thief_TrapDetection = 110017,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Thief)]
+    [CustomComboInfo("Pilfer Weapon", "Adds Pilfer Weapon into the rotation.", OccultCrescent.JobID)]
+    Phantom_Thief_PilferWeapon = 110018,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Samurai)]
+    [CustomComboInfo("Samurai Job Actions", "Enable this to add Samurai-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Samurai = 110053,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Samurai)]
+    [CustomComboInfo("Phantom Mineuchi", "Adds Phantom Mineuchi into the rotation.", OccultCrescent.JobID)]
+    Phantom_Samurai_Mineuchi = 110054,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Samurai)]
+    [CustomComboInfo("Phantom Shirahadori", "Adds Phantom Shirahadori into the rotation.", OccultCrescent.JobID)]
+    Phantom_Samurai_Shirahadori = 110055,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Samurai)]
+    [CustomComboInfo("Phantom Iainuki", "Adds Phantom Iainuki into the rotation.", OccultCrescent.JobID)]
+    Phantom_Samurai_Iainuki = 110056,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Samurai)]
+    [CustomComboInfo("Phantom Zeninage", "Adds Phantom Zeninage into the rotation.", OccultCrescent.JobID)]
+    Phantom_Samurai_Zeninage = 110057,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Berserker)]
+    [CustomComboInfo("Berserker Job Actions", "Enable this to add Berserker-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Berserker = 110019,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Berserker)]
+    [CustomComboInfo("Rage", "Adds Rage into the rotation.", OccultCrescent.JobID)]
+    Phantom_Berserker_Rage = 110020,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Berserker)]
+    [CustomComboInfo("Deadly Blow", "Adds Deadly Blow into the rotation.", OccultCrescent.JobID)]
+    Phantom_Berserker_DeadlyBlow = 110021,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Ranger)]
+    [CustomComboInfo("Ranger Job Actions", "Enable this to add Ranger-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Ranger = 110022,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Ranger)]
+    [CustomComboInfo("Phantom Aim", "Adds Phantom Aim into the rotation.", OccultCrescent.JobID)]
+    Phantom_Ranger_PhantomAim = 110023,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Ranger)]
+    [CustomComboInfo("Occult Featherfoot", "Adds Occult Featherfoot into the rotation.", OccultCrescent.JobID)]
+    Phantom_Ranger_OccultFeatherfoot = 110024,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Ranger)]
+    [CustomComboInfo("Occult Falcon", "Adds Occult Falcon into the rotation.", OccultCrescent.JobID)]
+    Phantom_Ranger_OccultFalcon = 110025,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Ranger)]
+    [CustomComboInfo("Occult Unicorn", "Adds Occult Unicorn into the rotation.", OccultCrescent.JobID)]
+    Phantom_Ranger_OccultUnicorn = 110026,
+
+    [OccultCrescent(OccultCrescent.JobIDs.TimeMage)]
+    [CustomComboInfo("Time Mage Job Actions", "Enable this to add Time Mage-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_TimeMage = 110027,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_TimeMage)]
+    [CustomComboInfo("Occult Slowga", "Adds Occult Slowga into the rotation.", OccultCrescent.JobID)]
+    Phantom_TimeMage_OccultSlowga = 110028,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_TimeMage_OccultSlowga)]
+    [CustomComboInfo("Wait to get Full(-ish) Effect", "Will not use Slowga if the diminishing return from repeated use is substantial, or there would be no diminishing return at all.", OccultCrescent.JobID)]
+    Phantom_TimeMage_OccultSlowga_Wait = 110075,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_TimeMage)]
+    [CustomComboInfo("Occult Comet", "Adds Occult Comet into the rotation.", OccultCrescent.JobID)]
+    Phantom_TimeMage_OccultComet = 110029,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_TimeMage)]
+    [CustomComboInfo("Occult Mage Masher", "Adds Occult Mage Masher into the rotation.", OccultCrescent.JobID)]
+    Phantom_TimeMage_OccultMageMasher = 110030,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_TimeMage)]
+    [CustomComboInfo("Occult Dispel", "Adds Occult Dispel into the rotation if the target has a known-dispellable status.", OccultCrescent.JobID)]
+    Phantom_TimeMage_OccultDispel = 110031,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_TimeMage)]
+    [CustomComboInfo("Occult Quick", "Adds Occult Quick into the rotation.", OccultCrescent.JobID)]
+    Phantom_TimeMage_OccultQuick = 110032,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Chemist)]
+    [CustomComboInfo("Chemist Job Actions", "Enable this to add Chemist-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Chemist = 110033,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Chemist)]
+    [CustomComboInfo("Occult Potion", "Adds Occult Potion into the rotation.\nRequires Occult Potions in inventory.", OccultCrescent.JobID)]
+    Phantom_Chemist_OccultPotion = 110034,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Chemist)]
+    [CustomComboInfo("Occult Ether", "Adds Occult Ether into the rotation.\nRequires Occult Potions in inventory.", OccultCrescent.JobID)]
+    Phantom_Chemist_OccultEther = 110035,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Chemist)]
+    [CustomComboInfo("Revive", "Adds Revive into the rotation.", OccultCrescent.JobID)]
+    Phantom_Chemist_Revive = 110036,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Chemist)]
+    [CustomComboInfo("Occult Elixir", "Adds Occult Elixir into the rotation.\nRequires Occult Elixir in inventory.", OccultCrescent.JobID)]
+    Phantom_Chemist_OccultElixir = 110037,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Bard)]
+    [CustomComboInfo("Bard Job Actions", "Enable this to add Bard-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Bard = 110038,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Bard)]
+    [CustomComboInfo("Mighty March", "Adds Mighty March into the rotation.", OccultCrescent.JobID)]
+    Phantom_Bard_MightyMarch = 110039,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Bard)]
+    [CustomComboInfo("Offensive Aria", "Adds Offensive Aria into the rotation.", OccultCrescent.JobID)]
+    Phantom_Bard_OffensiveAria = 110040,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Bard)]
+    [CustomComboInfo("Romeo’s Ballad", "Adds Romeo’s Ballad into the rotation.", OccultCrescent.JobID)]
+    Phantom_Bard_RomeosBallad = 110041,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Bard)]
+    [CustomComboInfo("Hero’s Rime", "Adds Hero’s Rime into the rotation.", OccultCrescent.JobID)]
+    Phantom_Bard_HerosRime = 110042,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Oracle)]
+    [CustomComboInfo("Oracle Job Actions", "Enable this to add Oracle-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle = 110043,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Predict", "Adds Predict into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_Predict = 110044,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Phantom Judgment", "Adds Phantom Judgment into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_PhantomJudgment = 110045,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Cleansing", "Adds Cleansing into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_Cleansing = 110046,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Blessing", "Adds Blessing into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_Blessing = 110047,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Starfall", "Adds Starfall into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_Starfall = 110048,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Recuperation", "Adds Recuperation into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_Recuperation = 110049,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Phantom Doom", "Adds Phantom Doom into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_PhantomDoom = 110050,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Phantom Rejuvenation", "Adds Phantom Rejuvenation into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_PhantomRejuvenation = 110051,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Oracle)]
+    [CustomComboInfo("Invulnerability", "Adds Invulnerability into the rotation.", OccultCrescent.JobID)]
+    Phantom_Oracle_Invulnerability = 110052,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Cannoneer)]
+    [CustomComboInfo("Cannoneer Job Actions", "Enable this to add Cannoneer-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Cannoneer = 110058,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Cannoneer)]
+    [CustomComboInfo("Phantom Fire", "Adds Phantom Fire into the rotation.", OccultCrescent.JobID)]
+    Phantom_Cannoneer_PhantomFire = 110059,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Cannoneer)]
+    [CustomComboInfo("Holy Cannon", "Adds Holy Cannon into the rotation.", OccultCrescent.JobID)]
+    Phantom_Cannoneer_HolyCannon = 110060,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Cannoneer)]
+    [CustomComboInfo("Dark Cannon", "Adds Dark Cannon into the rotation.", OccultCrescent.JobID)]
+    Phantom_Cannoneer_DarkCannon = 110061,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Cannoneer)]
+    [CustomComboInfo("Shock Cannon", "Adds Shock Cannon into the rotation.", OccultCrescent.JobID)]
+    Phantom_Cannoneer_ShockCannon = 110062,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Cannoneer)]
+    [CustomComboInfo("Silver Cannon", "Adds Silver Cannon into the rotation.", OccultCrescent.JobID)]
+    Phantom_Cannoneer_SilverCannon = 110063,
+
+    [OccultCrescent(OccultCrescent.JobIDs.Geomancer)]
+    [CustomComboInfo("Geomancer Job Actions", "Enable this to add Geomancer-specific actions into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer = 110064,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer)]
+    [CustomComboInfo("Battle Bell", "Adds Battle Bell into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_BattleBell = 110065,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer)]
+    [CustomComboInfo("Ringing Respite", "Adds Ringing Respite into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_RingingRespite = 110073,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer)]
+    [CustomComboInfo("Suspend", "Adds Suspend into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_Suspend = 110074,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer)]
+    [CustomComboInfo("Weather", "Adds Weather into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_Weather = 110066,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer_Weather)]
+    [CustomComboInfo("Sunbath", "Adds Sunbath into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_Sunbath = 110067,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer_Weather)]
+    [CustomComboInfo("Cloudy Caress", "Adds Cloudy Caress into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_CloudyCaress = 110068,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer_Weather)]
+    [CustomComboInfo("Blessed Rain", "Adds Blessed Rain into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_BlessedRain = 110069,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer_Weather)]
+    [CustomComboInfo("Misty Mirage", "Adds Misty Mirage into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_MistyMirage = 110070,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer_Weather)]
+    [CustomComboInfo("Hasty Mirage", "Adds Hasty Mirage into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_HastyMirage = 110071,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Geomancer_Weather)]
+    [CustomComboInfo("Aetherial Gain", "Adds Aetherial Gain into the rotation.", OccultCrescent.JobID)]
+    Phantom_Geomancer_AetherialGain = 110072,
+
+    //Last Value = 110075
     #endregion
 
     #region GLOBAL FEATURES
@@ -43,11 +411,17 @@ public enum CustomComboPreset
 
     [Role(JobRole.Tank)]
     [ReplaceSkill(RoleActions.Tank.LowBlow, PLD.ShieldBash)]
+    [ConflictingCombos(PLD_RetargetShieldBash)]
     [ParentCombo(ALL_Tank_Menu)]
     [CustomComboInfo("Tank: Interrupt Feature",
         "Replaces Low Blow (Stun) with Interject (Interrupt) when the target can be interrupted.\nPLDs can slot Shield Bash to have the feature to work with Shield Bash.",
         ADV.JobID)]
     ALL_Tank_Interrupt = 100000,
+
+    [ParentCombo(ALL_Tank_Interrupt)]
+    [Retargeted]
+    [CustomComboInfo("Retarget Interrupts", "Will retarget the interrupt if the caster is not your current target.", ADV.JobID)]
+    ALL_Tank_Interrupt_Retarget = 100005,
 
     [Role(JobRole.Tank)]
     [ReplaceSkill(RoleActions.Tank.Reprisal)]
@@ -4385,6 +4759,11 @@ public enum CustomComboPreset
     [Retargeted]
     PLD_RetargetSheltron_TT = 11070,
 
+    [Retargeted]
+    [ConflictingCombos(ALL_Tank_Interrupt)]
+    [CustomComboInfo("Retarget Shield Bash", "Redirects your Shield Bash to a stunnable enemy if your current target cannot be stunned.", PLD.JobID)]
+    PLD_RetargetShieldBash = 11073,
+
     // Variant Features
 
     [Variant]
@@ -5002,6 +5381,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Phlegma Option", "Use Phlegma if available and within range.", SGE.JobID)]
     SGE_ST_DPS_Phlegma = 14005,
 
+    [ParentCombo(SGE_ST_DPS_Phlegma)]
+    [CustomComboInfo("Burst option", "Save Phlegma charges for burst.", SGE.JobID)]
+    SGE_ST_DPS_Phlegma_Burst = 14062,
+
     [ParentCombo(SGE_ST_DPS)]
     [CustomComboInfo("Kardia Reminder Option", "Adds Kardia when not under the effect.", SGE.JobID)]
     SGE_ST_DPS_Kardia = 14006,
@@ -5272,7 +5655,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last used number = 14061
+    // Last used number = 14062
 
     #endregion
 
@@ -5738,6 +6121,10 @@ public enum CustomComboPreset
     [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Disspation Option", "Use Dissipation when out of Aetherflow stacks.", SCH.JobID)]
     SCH_AoE_Heal_Dissipation = 16041,
+    
+    [ParentCombo(SCH_AoE_Heal)]
+    [CustomComboInfo("Recitation Option", "Use Recitation to buff the selected heals", SCH.JobID)]
+    SCH_AoE_Heal_Recitation = 16051,
 
     [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Indomitability Option", "Use Indomitability before using Succor.", SCH.JobID)]
@@ -6227,7 +6614,7 @@ public enum CustomComboPreset
     VPR_ST_VicewinderCombo = 30007,
     
     [ParentCombo(VPR_ST_AdvancedMode)]
-    [CustomComboInfo("Vicewinder Weaves", "Adds Twinfang and Bloodfang to the rotation.", VPR.JobID)]
+    [CustomComboInfo("Vicewinder Weaves", "Adds Twinfang Bite and Twinblood Bite to the rotation.", VPR.JobID)]
     VPR_ST_VicewinderWeaves = 30013,
 
     [ParentCombo(VPR_ST_AdvancedMode)]
@@ -6301,7 +6688,7 @@ public enum CustomComboPreset
     VPR_AoE_VicepitCombo_DisableRange = 30113,
 
     [ParentCombo(VPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Vicepit Weaves", "Adds Twinfang and Twinblood to the rotation.", VPR.JobID)]
+    [CustomComboInfo("Vicepit Weaves", "Adds Twinfang Thresh and Twinblood Thresh to the rotation.", VPR.JobID)]
     VPR_AoE_VicepitWeaves = 30115,
 
     [ParentCombo(VPR_AoE_AdvancedMode)]
@@ -6325,7 +6712,7 @@ public enum CustomComboPreset
     VPR_AoE_Reawaken_DisableRange = 30114,
 
     [ParentCombo(VPR_AoE_AdvancedMode)]
-    [CustomComboInfo("Reawaken Combo", "Adds Generation and Legacy to the rotation.", VPR.JobID)]
+    [CustomComboInfo("Reawaken Combo", "Adds Generations and Legacy weaves to the rotation.", VPR.JobID)]
     VPR_AoE_ReawakenCombo = 30112,
 
     [ParentCombo(VPR_AoE_AdvancedMode)]
@@ -7118,6 +7505,11 @@ public enum CustomComboPreset
     WHM_STHeals_Lucid = 19308,
 
     [ParentCombo(WHM_STHeals)]
+    [CustomComboInfo("Temperance Option", "Uses Temperance when available for mitigation and healing boost.", WHM.JobID)]
+    [PossiblyRetargeted]
+    WHM_STHeals_Temperance = 19310,
+
+    [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", WHM.JobID)]
     [PossiblyRetargeted]
     WHM_STHeals_Esuna = 19309,
@@ -7156,6 +7548,10 @@ public enum CustomComboPreset
     WHM_AoEHeals_Plenary = 19203,
 
     [ParentCombo(WHM_AoEHeals)]
+    [CustomComboInfo("Temperance Option", "Uses Temperance when available for a healing boost whenever the party average falls below the set threshold.", WHM.JobID)]
+    WHM_AoEHeals_Temperance = 19210,
+
+    [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Lucid Dreaming Option", "Uses Lucid Dreaming when available.", WHM.JobID)]
     WHM_AoEHeals_Lucid = 19204,
 
@@ -7167,6 +7563,21 @@ public enum CustomComboPreset
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Divine Caress", "Uses Divine Caress when Divine Grace from Temperance is active.", WHM.JobID)]
     WHM_AoEHeals_DivineCaress = 19207,
+
+    [ParentCombo(WHM_AoEHeals)]
+    [CustomComboInfo("Liturgy of the Bell Option", "Adds Liturgy of the Bell (Lilybell) placement to the rotation.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_LiturgyOfTheBell = 19206,
+
+    [ParentCombo(WHM_AoEHeals_LiturgyOfTheBell)]
+    [CustomComboInfo("Enemy Placement Option", "Will add an enemy hard target as the top priority placement for Liturgy of the Bell.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_LiturgyOfTheBell_Enemy = 19208,
+
+    [ParentCombo(WHM_AoEHeals_LiturgyOfTheBell)]
+    [CustomComboInfo("Ally Placement Option", "Will add any ally UI MouseOver target, focus target, soft target, or hard target as the priority placement for Liturgy of the Bell.\nBeneath the Enemy placement option, but above yourself.", WHM.JobID)]
+    [Retargeted]
+    WHM_AoEHeals_LiturgyOfTheBell_Allies = 19209,
 
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Asylum Option", "Adds Asylum placement, when standing still, to the rotation.\nWill Retarget it onto yourself.", WHM.JobID)]
@@ -7223,7 +7634,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 19029
+    // Last value = 19209
 
     #endregion
 

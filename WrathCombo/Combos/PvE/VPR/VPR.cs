@@ -65,8 +65,11 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             //oGCDs
             if (CanWeave() && !HasDoubleWeaved())
@@ -215,8 +218,11 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Opener for VPR
             if (IsEnabled(CustomComboPreset.VPR_ST_Opener) &&
@@ -397,8 +403,11 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (CanWeave() && !HasDoubleWeaved())
             {
@@ -533,8 +542,11 @@ internal partial class VPR : Melee
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(CustomComboPreset.VPR_Variant_Rampart))
                 return Variant.Rampart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (CanWeave() && !HasDoubleWeaved())
             {

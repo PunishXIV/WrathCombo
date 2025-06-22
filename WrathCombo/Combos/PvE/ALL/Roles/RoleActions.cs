@@ -1,4 +1,5 @@
-﻿using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+﻿using WrathCombo.Data;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -181,7 +182,7 @@ internal static partial class RoleActions
             ActionReady(Rampart) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanLowBlow() =>
-            ActionReady(LowBlow) && TargetIsCasting();
+            ActionReady(LowBlow) && TargetIsCasting() && (ICDTracker.StatusIsExpired(All.Debuffs.Stun, CurrentTarget.GameObjectId) || ICDTracker.NumberOfTimesApplied(All.Debuffs.Stun, CurrentTarget.GameObjectId) < 3);
 
         public static bool CanProvoke() =>
             ActionReady(Provoke);
@@ -192,7 +193,7 @@ internal static partial class RoleActions
         public static bool CanReprisal(int healthPercent = 100, int? enemyCount = null, bool checkTargetForDebuff = true) =>
             (checkTargetForDebuff && !HasStatusEffect(Debuffs.Reprisal, CurrentTarget, true) || !checkTargetForDebuff) &&
             (enemyCount is null ? InActionRange(Reprisal) : CanCircleAoe(5) >= enemyCount) &&
-            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent;
+            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent && CanApplyStatus(CurrentTarget, Debuffs.Reprisal);
 
         public static bool CanShirk() =>
             ActionReady(Shirk);
