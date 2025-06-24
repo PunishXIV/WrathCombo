@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -266,13 +267,15 @@ internal partial class SGE
         AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
         DyskrasiaList = [Dyskrasia, Dyskrasia2];
 
-    internal static readonly Dictionary<uint, ushort>
-        DosisList = new()
-        {
-            { Dosis, Debuffs.EukrasianDosis },
-            { Dosis2, Debuffs.EukrasianDosis2 },
-            { Dosis3, Debuffs.EukrasianDosis3 }
-        };
+    internal static readonly FrozenDictionary<uint, ushort> DosisList = new Dictionary<uint, ushort>
+    {
+        { Dosis,  Debuffs.EukrasianDosis },
+        { Dosis2, Debuffs.EukrasianDosis2 },
+        { Dosis3, Debuffs.EukrasianDosis3 },
+        { EukrasianDosis,  Debuffs.EukrasianDosis },
+        { EukrasianDosis2, Debuffs.EukrasianDosis2 },
+        { EukrasianDosis3, Debuffs.EukrasianDosis3 }
+    }.ToFrozenDictionary();
 
     #endregion
 
