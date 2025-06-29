@@ -104,6 +104,10 @@ namespace WrathCombo.Core
 
         #endregion
 
+        public bool OutputRezMacro = false;
+
+        public string RezMacro = "Raising <t>";
+
         public bool ActionChanging = true;
 
         internal void SetActionChanging(bool? newValue = null)

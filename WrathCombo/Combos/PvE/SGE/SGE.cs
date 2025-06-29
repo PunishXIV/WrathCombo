@@ -4,6 +4,8 @@ using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Data.ActionWatching;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE : Healer
@@ -346,9 +348,10 @@ internal partial class SGE : Healer
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
                 ? IsEnabled(CustomComboPreset.SGE_Raise_Retarget)
-                    ? Egeiro.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Egeiro
+                    ? Egeiro
+                        .Retarget(Role.Swiftcast, SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Egeiro.AndRunMacro()
                 : actionID;
     }
 

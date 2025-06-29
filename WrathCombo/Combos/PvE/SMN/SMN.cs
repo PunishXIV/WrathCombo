@@ -1,9 +1,8 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using System.Linq;
-using WrathCombo.Combos.PvE.Content;
-using WrathCombo.Core;
-using WrathCombo.Extensions;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
+using System.Linq;
+using WrathCombo.Core;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -28,9 +27,11 @@ internal partial class SMN : Caster
 
             if (IsOnCooldown(Role.Swiftcast))
                 return IsEnabled(CustomComboPreset.SMN_Raise_Retarget)
-                    ? Resurrection.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Resurrection;
+                    ? Resurrection
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Resurrection.AndRunMacro();
             return actionID;
         }
     }
@@ -706,9 +707,9 @@ internal partial class SMN : Caster
 
                 #region Special Ruin 3 rule lvl 54 - 72
                 // Use Ruin III instead of Emerald Ruin III if enabled and Ruin Mastery III is not active
-                if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3) && !IsMoving())                
+                if (IsEnabled(CustomComboPreset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3) && !IsMoving())
                     return Ruin3;
-               
+
                 #endregion
 
                 if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_EgiSummons_Attacks) && GemshineReady)
