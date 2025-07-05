@@ -171,7 +171,10 @@ namespace WrathCombo.CustomComboNS.Functions
         public ulong GameObjectId;
         public uint NPCClassJob;
 
-        public ClassJob? RealJob => NPCClassJob > 0 && Svc.Data.Excel.GetSheet<ClassJob>().TryGetRow(NPCClassJob, out var r) ? r : BattleChara?.ClassJob.Value ?? Svc.Data.Excel.GetSheet<ClassJob>().GetRow(0);
+        public ClassJob? RealJob => NPCClassJob > 0 && CustomComboFunctions.JobIDs.ClassJobs.TryGetValue(NPCClassJob, out var realJob)
+            ? realJob
+            : BattleChara?.ClassJob.Value ?? CustomComboFunctions.JobIDs.ClassJobs[0];
+
         public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
         public Dictionary<ushort, long> BuffsGainedAt = new();
 

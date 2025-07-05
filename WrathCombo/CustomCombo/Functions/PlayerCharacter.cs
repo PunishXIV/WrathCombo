@@ -1,5 +1,4 @@
-﻿using System;
-using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Memory;
 using ECommons.DalamudServices;
@@ -8,9 +7,10 @@ using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
+using System;
 using System.Linq;
 using WrathCombo.Combos.PvE;
-using Action = Lumina.Excel.Sheets.Action;
+using WrathCombo.Data;
 using GameMain = FFXIVClientStructs.FFXIV.Client.Game.GameMain;
 
 namespace WrathCombo.CustomComboNS.Functions
@@ -49,12 +49,15 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> A value indicating a quest has been completed for a job action.</returns>
         public static unsafe bool IsActionUnlocked(uint id)
         {
-            var unlockLink = Svc.Data.GetExcelSheet<Action>().GetRow(id).UnlockLink.RowId;
-            if (unlockLink == 0) return true;
-            return UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(unlockLink);
+            var unlockLink = ActionWatching.ActionSheet[id].UnlockLink.RowId;
+            return unlockLink == 0 || UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(unlockLink);
         }
 
-        public static unsafe bool InFATE() => FateManager.Instance()->CurrentFate is not null && LocalPlayer.Level <= FateManager.Instance()->CurrentFate->MaxLevel;
+        public static unsafe bool InFATE()
+        {
+            var currentFate = FateManager.Instance()->CurrentFate;
+            return currentFate is not null && LocalPlayer.Level <= currentFate->MaxLevel;
+        }
 
         public static bool PlayerHasTankStance()
         {

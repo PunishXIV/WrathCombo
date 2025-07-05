@@ -553,14 +553,14 @@ public partial class WrathCombo
                 try
                 {
                     // Look up the entered job
-                    var jobSearch = Svc.Data.Excel.GetSheet<ClassJob>()
-                        .First(j => j.Abbreviation == jobName);
+                    var jobSearch = CustomComboFunctions.JobIDs.ClassJobs.Values.First(j => j.Abbreviation == jobName);
                     var jobId = jobSearch.RowId;
+
                     // Switch class to job, if necessary
                     if (jobSearch.ClassJobParent.RowId != jobSearch.RowId)
-                        jobId =
-                            CustomComboFunctions.JobIDs.ClassToJob(jobSearch.RowId);
-                    job = Svc.Data.Excel.GetSheet<ClassJob>().GetRow(jobId);
+                        jobId = CustomComboFunctions.JobIDs.ClassToJob(jobSearch.RowId);
+
+                    job = CustomComboFunctions.JobIDs.ClassJobs[jobId];
                 }
                 // the .first() failed
                 catch (InvalidOperationException)
