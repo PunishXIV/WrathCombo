@@ -41,6 +41,21 @@ internal partial class SGE : Healer
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
+            #region Hidden Feature Raidwide
+
+            if (HiddenKerachole())
+                return Kerachole;
+
+            if (HiddenHolos())
+                return Holos;
+
+            if (HiddenEprognosis())
+                return HasStatusEffect(Buffs.Eukrasia)
+                    ? OriginalHook(Prognosis)
+                    : Eukrasia;
+
+            #endregion
+
             if (CanSpellWeave() && !HasDoubleWeaved() && !HasStatusEffect(Buffs.Eukrasia))
             {
                 if (Variant.CanSpiritDart(CustomComboPreset.SGE_DPS_Variant_SpiritDart))
@@ -77,13 +92,13 @@ internal partial class SGE : Healer
             {
                 if (IsEnabled(CustomComboPreset.SGE_ST_DPS_EDosis) &&
                     LevelChecked(Eukrasia) && InCombat() &&
-                    !JustUsedOn(DosisToEDosisList[OriginalHook(Dosis)], CurrentTarget))
+                    !JustUsedOn(DosisToEDosisList[OriginalHook(Dosis)], CurrentTarget) &&
+                    CanApplyStatus(CurrentTarget, DosisList[OriginalHook(Dosis)]))
                 {
-                    float refreshTimer = SGE_ST_DPS_EDosisThreshold;
+                    float refreshTimer = SGE_ST_DPS_EDosisRefresh;
                     int hpThreshold = SGE_ST_DPS_EDosisSubOption == 1 || !InBossEncounter() ? SGE_ST_DPS_EDosisOption : 0;
 
-                    if (CanApplyStatus(CurrentTarget, DosisList[OriginalHook(Dosis)]) &&
-                        GetTargetHPPercent() > hpThreshold &&
+                    if (GetTargetHPPercent() > hpThreshold &&
                         ((DosisDebuff is null && DyskrasiaDebuff is null) ||
                          DosisDebuff?.RemainingTime <= refreshTimer ||
                          DyskrasiaDebuff?.RemainingTime <= refreshTimer))
@@ -142,6 +157,21 @@ internal partial class SGE : Healer
             //Occult skills
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+
+            #region Hidden Feature Raidwide
+
+            if (HiddenKerachole())
+                return Kerachole;
+
+            if (HiddenHolos())
+                return Holos;
+
+            if (HiddenEprognosis())
+                return HasStatusEffect(Buffs.Eukrasia)
+                    ? OriginalHook(Prognosis)
+                    : Eukrasia;
+
+            #endregion
 
             if (CanSpellWeave() && !HasDoubleWeaved())
             {
@@ -226,6 +256,21 @@ internal partial class SGE : Healer
             if (actionID is not Diagnosis)
                 return actionID;
 
+            #region Hidden Feature Raidwide
+
+            if (HiddenKerachole())
+                return Kerachole;
+
+            if (HiddenHolos())
+                return Holos;
+
+            if (HiddenEprognosis())
+                return HasStatusEffect(Buffs.Eukrasia)
+                    ? OriginalHook(Prognosis)
+                    : Eukrasia;
+
+            #endregion
+
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Esuna) &&
                 ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) >= SGE_ST_Heal_Esuna &&
@@ -278,6 +323,21 @@ internal partial class SGE : Healer
         {
             if (actionID is not Prognosis)
                 return actionID;
+
+            #region Hidden Feature Raidwide
+
+            if (HiddenKerachole())
+                return Kerachole;
+
+            if (HiddenHolos())
+                return Holos;
+
+            if (HiddenEprognosis())
+                return HasStatusEffect(Buffs.Eukrasia)
+                    ? OriginalHook(Prognosis)
+                    : Eukrasia;
+
+            #endregion
 
             //Zoe -> Pneuma like Eukrasia 
             if (IsEnabled(CustomComboPreset.SGE_AoE_Heal_ZoePneuma) &&

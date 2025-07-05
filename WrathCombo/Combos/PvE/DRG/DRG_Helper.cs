@@ -2,7 +2,6 @@
 using Dalamud.Game.ClientState.Statuses;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.DRG.Config;
@@ -19,7 +18,7 @@ internal partial class DRG
 
     internal static bool UseLifeSurge()
     {
-        if (ActionReady(LifeSurge) && CanDRGWeave(LifeSurge) && !HasStatusEffect(Buffs.LifeSurge))
+        if (ActionReady(LifeSurge) && !HasStatusEffect(Buffs.LifeSurge))
         {
             if (LevelChecked(Drakesbane) && LoTDActive &&
                 (HasStatusEffect(Buffs.LanceCharge) || HasStatusEffect(Buffs.BattleLitany)) &&
@@ -42,22 +41,7 @@ internal partial class DRG
 
     #region Animation Locks
 
-    internal static readonly List<uint> FastLocks =
-    [
-        BattleLitany,
-        LanceCharge,
-        LifeSurge,
-        Geirskogul,
-        Nastrond,
-        MirageDive,
-        WyrmwindThrust,
-        RiseOfTheDragon,
-        Starcross,
-        Variant.Rampart,
-        Role.TrueNorth
-    ];
-
-    internal static readonly List<uint> MidLocks =
+    internal static readonly HashSet<uint> MidLocks =
     [
         Jump,
         HighJump,
@@ -66,24 +50,44 @@ internal partial class DRG
 
     internal static uint SlowLock => Stardiver;
 
-    internal static bool CanDRGWeave(uint oGCD)
-    {
-        float gcdTimer = GetCooldownRemainingTime(TrueThrust);
+    //internal static bool CanDRGWeaveOld(uint oGCD)
+    //{
+    //    float remainingGCD = RemainingGCD;
 
-        //GCD Ready - No Weave
-        if (IsOffCooldown(TrueThrust))
+    //    // Cannot Weave -or- Already Double-Weaved
+    //    if (remainingGCD < 0.6f || HasDoubleWeaved())
+    //        return false;
+
+    //    // Guaranteed Weave
+    //    if (SlowLock == oGCD && remainingGCD >= 1.5f)
+    //        return true;
+
+    //    return false;
+    //}
+
+    internal static bool CanDRGWeave(float weaveTime = 0.6f, bool forceFirst = false)
+    {
+        // Cannot Weave
+        if (RemainingGCD <= weaveTime)
             return false;
 
-        if (FastLocks.Any(x => x == oGCD) && gcdTimer >= 0.6f && !HasDoubleWeaved())
-            return true;
+        // List Reference
+        List<uint> currentWeaves = WeaveActions;
+        int weaveCount = currentWeaves.Count;
 
-        if (MidLocks.Any(x => x == oGCD) && gcdTimer >= 0.8f && !HasDoubleWeaved())
-            return true;
+        // Force First Weave
+        if (forceFirst && weaveCount > 0)
+            return false;
 
-        if (SlowLock == oGCD && gcdTimer >= 1.5f && !HasDoubleWeaved())
-            return true;
+        // Already Double-Weaved
+        if (weaveCount > 1)
+            return false;
 
-        return false;
+        // Already Weaved Stardiver
+        if (currentWeaves.Contains(Stardiver))
+            return false;
+
+        return true;
     }
 
     #endregion

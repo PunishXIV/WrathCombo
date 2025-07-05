@@ -149,7 +149,7 @@ internal partial class MNK : Melee
                     : actionID;
 
             // OGCDs
-            if (CanWeave() && !HasDoubleWeaved())
+            if (CanWeave() && !HasDoubleWeaved() && M6SReady)
             {
                 if (IsEnabled(CustomComboPreset.MNK_STUseBuffs))
                 {
@@ -378,7 +378,7 @@ internal partial class MNK : Melee
                 return FormShift;
 
             // OGCD's 
-            if (CanWeave() && !HasDoubleWeaved())
+            if (CanWeave() && !HasDoubleWeaved() && M6SReady)
             {
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseBuffs))
                 {

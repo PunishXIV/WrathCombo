@@ -2545,11 +2545,7 @@ public enum CustomComboPreset
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("High Jump Option", "Adds (High) Jump to the rotation.", DRG.JobID)]
     DRG_ST_HighJump = 6113,
-
-    [ParentCombo(DRG_ST_HighJump)]
-    [CustomComboInfo("(High) Jump Melee option", "Adds (High) Jump to the rotation when in melee range.", DRG.JobID)]
-    DRG_ST_HighJump_Melee = 6114,
-
+    
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Mirage Dive Option", "Adds Mirage Dive to the rotation.", DRG.JobID)]
     DRG_ST_Mirage = 6115,
@@ -2561,11 +2557,7 @@ public enum CustomComboPreset
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Dragonfire Dive Option", "Adds Dragonfire Dive to the rotation.", DRG.JobID)]
     DRG_ST_DragonfireDive = 6107,
-
-    [ParentCombo(DRG_ST_DragonfireDive)]
-    [CustomComboInfo("Dragonfire Dive Melee option", "Adds Dragonfire Dive to the rotation when in melee range.", DRG.JobID)]
-    DRG_ST_DragonfireDive_Melee = 6108,
-
+    
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to the rotation.", DRG.JobID)]
     DRG_ST_Geirskogul = 6116,
@@ -2577,10 +2569,6 @@ public enum CustomComboPreset
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Stardiver Option", "Adds Stardiver to the rotation.", DRG.JobID)]
     DRG_ST_Stardiver = 6110,
-
-    [ParentCombo(DRG_ST_Stardiver)]
-    [CustomComboInfo("Stardiver Melee option", "Adds Stardiver to the rotation when in melee range.", DRG.JobID)]
-    DRG_ST_Stardiver_Melee = 6111,
 
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Wyrmwind Thrust Option", "Adds Wyrmwind Thrust to the rotation.", DRG.JobID)]
@@ -2647,11 +2635,7 @@ public enum CustomComboPreset
     [ParentCombo(DRG_AoE_CDs)]
     [CustomComboInfo("High Jump Option", "Adds (High) Jump to the rotation.", DRG.JobID)]
     DRG_AoE_HighJump = 6213,
-
-    [ParentCombo(DRG_AoE_HighJump)]
-    [CustomComboInfo("(High) Jump Melee option", "Adds (High) Jump to the rotation when in melee range.", DRG.JobID)]
-    DRG_AoE_HighJump_Melee = 6214,
-
+    
     [ParentCombo(DRG_AoE_CDs)]
     [CustomComboInfo("Mirage Dive Option", "Adds Mirage Dive to the rotation.", DRG.JobID)]
     DRG_AoE_Mirage = 6215,
@@ -2659,10 +2643,6 @@ public enum CustomComboPreset
     [ParentCombo(DRG_AoE_CDs)]
     [CustomComboInfo("Dragonfire Dive Option", "Adds Dragonfire Dive to the rotation.", DRG.JobID)]
     DRG_AoE_DragonfireDive = 6207,
-
-    [ParentCombo(DRG_AoE_DragonfireDive)]
-    [CustomComboInfo("Dragonfire Dive Melee option", "Adds Dragonfire Dive to the rotation when in melee range.", DRG.JobID)]
-    DRG_AoE_DragonfireDive_Melee = 6208,
 
     [ParentCombo(DRG_AoE_CDs)]
     [CustomComboInfo("Geirskogul Option", "Adds Geirskogul to the rotation.", DRG.JobID)]
@@ -2675,10 +2655,6 @@ public enum CustomComboPreset
     [ParentCombo(DRG_AoE_CDs)]
     [CustomComboInfo("Stardiver Option", "Adds Stardiver to the rotation.", DRG.JobID)]
     DRG_AoE_Stardiver = 6210,
-
-    [ParentCombo(DRG_AoE_Stardiver)]
-    [CustomComboInfo("Stardiver Melee option", "Adds Stardiver to the rotation when in melee range.", DRG.JobID)]
-    DRG_AoE_Stardiver_Melee = 6211,
 
     [ParentCombo(DRG_AoE_CDs)]
     [CustomComboInfo("Wyrmwind Option", "Adds Wyrmwind Thrust to the rotation.", DRG.JobID)]
@@ -3781,6 +3757,8 @@ public enum CustomComboPreset
     MNK_Variant_Cure = 9026,
 
     #endregion
+    
+    #region Misc
 
     [ReplaceSkill(MNK.PerfectBalance)]
     [ConflictingCombos(MNK_PerfectBalanceProtection)]
@@ -3799,6 +3777,21 @@ public enum CustomComboPreset
     [ConflictingCombos(MNK_PerfectBalance)]
     [CustomComboInfo("Perfect Balance Protection", "Replaces Perfect Balance with Savage Blade when you already have Perfect Balance active.", MNK.JobID)]
     MNK_PerfectBalanceProtection = 9042,
+    
+    #endregion
+
+    #region Hidden Features
+
+    [Hidden]
+    [CustomComboInfo("Hidden Options", "Collection of cheeky or encounter-specific extra options only available to those in the know.\nDo not expect these options to be maintained, or even kept, after they are no longer Current.", MNK.JobID)]
+    MNK_Hidden = 9300,
+
+    [ParentCombo(MNK_Hidden)]
+    [Hidden]
+    [CustomComboInfo("M6S: Hold Burst on Squirrels", "When you're targeting Squirrels in M6S add phase, hold burst.\n(until about the time the first manta is dying)", MNK.JobID)]
+    MNK_Hid_M6SHoldSquirrelBurst = 9301,
+
+    #endregion
 
     // Last value = 9042
 
@@ -5583,6 +5576,26 @@ public enum CustomComboPreset
     [ParentCombo(SGE_ST_Heal)]
     [CustomComboInfo("Pepsis Option", "Triggers Pepsis if a shield is present.", SGE.JobID)]
     SGE_ST_Heal_Pepsis = 14020,
+    
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Physis Option", "Adds Physis.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_ST_Heal_Physis = 14065,
+    
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Kerachole Option", "Adds Kerachole.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_ST_Heal_Kerachole = 14066,
+    
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Holos Option", "Adds Holos.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_ST_Heal_Holos = 14067,
+    
+    [ParentCombo(SGE_ST_Heal)]
+    [CustomComboInfo("Panhaima Option", "Adds Panhaima.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_ST_Heal_Panhaima = 14068,
 
     #endregion
 
@@ -5715,8 +5728,30 @@ public enum CustomComboPreset
     SGE_DPS_Variant_Rampart = 14049,
 
     #endregion
+    
+    #region Hidden Features
+    [CustomComboInfo("Hidden Options", "Collection of cheeky or encounter-specific extra options only available to those in the know.\nDo not expect these options to be maintained, or even kept, after they are no longer Current.", SGE.JobID)]
+    [Hidden]
+    SGE_Hidden = 14069,
+    
+    [ParentCombo(SGE_Hidden)]
+    [CustomComboInfo("Eukrasian Prognosis Option", "Will try to cast Shields when a raidwide casting is detected if shieldcheck from Eukrasian Prognosis setting passes. \nWill be used in all 4 main combos.", SGE.JobID)]
+    [Hidden]
+    SGE_Hidden_EPrognosis = 14070,
+    
+    [ParentCombo(SGE_Hidden)]
+    [CustomComboInfo("Kerachole Option", "Will try to cast Kerachole when a raidwide casting is detected. \nWill be used in all 4 main combos.", SGE.JobID)]
+    [Hidden]
+    SGE_Hidden_Kerachole = 14071,
+    
+    [ParentCombo(SGE_Hidden)]
+    [CustomComboInfo("Holos Option", "Will try to cast Holos when a raidwide casting is detected. \nWill be used in all 4 main combos.", SGE.JobID)]
+    [Hidden]
+    SGE_Hidden_Holos = 14072,
+    
+    #endregion
 
-    // Last used number = 14064
+    // Last used number = 14068
 
     #endregion
 

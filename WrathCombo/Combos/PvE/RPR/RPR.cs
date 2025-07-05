@@ -279,9 +279,10 @@ internal partial class RPR : Melee
                     //Sacrificium
                     if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
                         Lemure <= 4 && HasStatusEffect(Buffs.Oblatio) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
-                         (RPR_ST_ArcaneCircle_SubOption == 0 || RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter()) ||
-                         RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
+                        ((GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
+                          (RPR_ST_ArcaneCircle_SubOption == 0 || RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter() ||
+                           RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle))) ||
+                         IsNotEnabled(CustomComboPreset.RPR_ST_ArcaneCircle)))
                         return OriginalHook(Gluttony);
 
                     //Lemure's Slice

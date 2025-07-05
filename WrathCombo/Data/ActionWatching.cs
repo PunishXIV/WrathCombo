@@ -40,6 +40,7 @@ namespace WrathCombo.Data
         internal static readonly Dictionary<uint, long> LastSuccessfulUseTime = [];
         internal static readonly Dictionary<(uint, ulong), long> UsedOnDict = [];
 
+        internal readonly static List<uint> WeaveActions = [];
         internal readonly static List<uint> CombatActions = [];
 
         public delegate void LastActionChangeDelegate();
@@ -141,12 +142,15 @@ namespace WrathCombo.Data
                         {
                             case 2: //Spell
                                 LastSpell = header->ActionId;
+                                WeaveActions.Clear();
                                 break;
                             case 3: //Weaponskill
                                 LastWeaponskill = header->ActionId;
+                                WeaveActions.Clear();
                                 break;
                             case 4: //Ability
                                 LastAbility = header->ActionId;
+                                WeaveActions.Add(header->ActionId);
                                 break;
                         }
 
@@ -173,7 +177,10 @@ namespace WrathCombo.Data
                 OnActionSend?.Invoke();
 
                 if (!InCombat())
+                {
                     CombatActions.Clear();
+                    WeaveActions.Clear();
+                }
 
                 if (actionType == 1 && GetMaxCharges(actionId) > 0)
                     ChargeTimestamps[actionId] = Environment.TickCount64;
@@ -414,6 +421,7 @@ namespace WrathCombo.Data
             if (flag == ConditionFlag.InCombat && !value)
             {
                 CombatActions.Clear();
+                WeaveActions.Clear();
                 ActionTimestamps.Clear();
                 LastAbility = 0;
                 LastAction = 0;

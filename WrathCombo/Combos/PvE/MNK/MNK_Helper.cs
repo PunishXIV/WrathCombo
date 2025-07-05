@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.MNK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -12,6 +13,10 @@ internal partial class MNK
 {
     internal static float GCD =>
         GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
+
+    internal static bool M6SReady =>
+        !HiddenFeaturesData.IsEnabledWith(CustomComboPreset.MNK_Hid_M6SHoldSquirrelBurst, () =>
+            HiddenFeaturesData.Targeting.R6SSquirrel && CombatEngageDuration().TotalSeconds < 300);
 
     #region 1-2-3
 

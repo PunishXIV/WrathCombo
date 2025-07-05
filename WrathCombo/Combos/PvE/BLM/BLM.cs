@@ -559,10 +559,10 @@ internal partial class BLM : Caster
 
             if (IcePhase)
             {
-                if (CurMp == MP.MaxMP || HasMaxUmbralHeartStacks)
+                if (HasMaxUmbralHeartStacks)
                 {
                     if (IsNotEnabled(CustomComboPreset.BLM_AoE_Transpose) &&
-                        ActionReady(Fire2) && (TraitLevelChecked(Traits.AspectMasteryIII) || !TraitLevelChecked(Traits.UmbralHeart)))
+                        CurMp == MP.MaxMP && ActionReady(Fire2) && TraitLevelChecked(Traits.AspectMasteryIII))
                         return OriginalHook(Fire2);
 
                     if (IsEnabled(CustomComboPreset.BLM_AoE_Transpose) &&
