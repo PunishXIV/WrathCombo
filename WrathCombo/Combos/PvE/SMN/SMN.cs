@@ -196,16 +196,18 @@ internal partial class SMN : Caster
             var dontWaitForSearing = SearingCD > (Gauge.SummonTimerRemaining / 1000f) + GCDTotal;
             #endregion
 
-            #region Variants
+            #region Special Content
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
 
             if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
                 return Variant.Rampart;
-            #endregion
-
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
+
+           
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
@@ -374,16 +376,18 @@ internal partial class SMN : Caster
             var dontWaitForSearing = SearingCD > (Gauge.SummonTimerRemaining / 1000f) + GCDTotal;
             #endregion
 
-            #region Variants
+            #region Special Content
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
 
             if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
                 return Variant.Rampart;
-            #endregion
-
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
+
+            
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
@@ -569,15 +573,15 @@ internal partial class SMN : Caster
                 return actionID;
             #endregion
 
-            #region Variants
+            #region Special Content
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
             if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
                 return Variant.Rampart;
-            #endregion
-
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
+
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
@@ -784,16 +788,18 @@ internal partial class SMN : Caster
             var dontWaitForSearing = SearingCD > (Gauge.SummonTimerRemaining / 1000f) + GCDTotal;
             #endregion
 
-            #region Variant
+            #region Special Content
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
 
             if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
                 return Variant.Rampart;
-            #endregion
-
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
+
+            
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection

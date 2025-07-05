@@ -46,21 +46,22 @@ internal partial class SCH
                                        GetPartyBuffPercent(SGE.Buffs.EukrasianPrognosis) <= Config.SCH_AoE_Heal_SuccorShieldOption;
     
     #region Hidden Raidwides
-    internal static uint HiddenRaidwides(uint actionId)
+    
+    internal static bool HiddenSacredSoil()
     {
-        if (IsEnabled(CustomComboPreset.SCH_Hidden_SacredSoil) && ActionReady(SacredSoil) &&
-            !IsMoving() && CanSpellWeave())
-            return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
-                
-        if (IsEnabled(CustomComboPreset.SCH_Hidden_Expedient) &&
-            ActionReady(Expedient) && CanSpellWeave())
-            return Expedient;
-
-        if (IsEnabled(CustomComboPreset.SCH_Hidden_Succor_Raidwide) && ActionReady(OriginalHook(Succor)) && ShieldCheck)
-            return IsEnabled(CustomComboPreset.SCH_Hidden_Succor_Raidwide_Recitation) && ActionReady(Recitation)
-                ? Recitation : OriginalHook(Succor);
-        
-        return actionId;
+        return IsEnabled(CustomComboPreset.SCH_Hidden_SacredSoil) && ActionReady(SacredSoil) && CanSpellWeave() && RaidWideCasting();
+    }
+    internal static bool HiddenExpedient()
+    {
+        return IsEnabled(CustomComboPreset.SCH_Hidden_Expedient) && ActionReady(Expedient) && CanSpellWeave() && RaidWideCasting();
+    }
+    internal static bool HiddenSuccor()
+    {
+        return IsEnabled(CustomComboPreset.SCH_Hidden_Succor_Raidwide) && ActionReady(OriginalHook(Succor)) && ShieldCheck && RaidWideCasting();
+    }
+    internal static bool HiddenRecitation()
+    {
+        return IsEnabled(CustomComboPreset.SCH_Hidden_Succor_Raidwide_Recitation) && ActionReady(Recitation);
     }
     #endregion
     

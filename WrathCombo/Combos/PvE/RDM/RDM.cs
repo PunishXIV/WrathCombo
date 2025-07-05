@@ -16,7 +16,7 @@ internal partial class RDM : Caster
             if (actionID is not (Jolt or Jolt2 or Jolt3))
                 return actionID;
             
-            #region Variants
+            #region Special Content
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
                 
@@ -117,7 +117,7 @@ internal partial class RDM : Caster
             if (actionID is not (Scatter or Impact))
                 return actionID;
             
-            #region Variants
+            #region Special Content
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
                 
@@ -223,8 +223,7 @@ internal partial class RDM : Caster
                 return actionID;
             #endregion
             
-            #region Variants
-            
+            #region Special Content
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
                 
@@ -334,7 +333,7 @@ internal partial class RDM : Caster
             if (actionID is not (Scatter or Impact))
                 return actionID;
 
-            #region Variants
+            #region Special Content
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
                 

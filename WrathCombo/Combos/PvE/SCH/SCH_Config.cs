@@ -160,7 +160,7 @@ internal partial class SCH
                     if (SCH_ST_Heal_AldoquimOpts[2])
                     {
                         ImGui.Indent();
-                        DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption_Emergency,"Start using when below HP %. Set to 100 to disable this check.");
+                        DrawSliderInt(0, 100, SCH_ST_Heal_AdloquiumOption_Emergency,"Start using Emergency Tactics when below HP %.");
                         ImGui.Unindent();
                     }
                     
