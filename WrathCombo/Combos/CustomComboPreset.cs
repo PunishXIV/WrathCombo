@@ -915,6 +915,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Triplecast Option", "Add Triplecast to the rotation.\nWill only be used if Swiftcast is on cooldown.", BLM.JobID)]
     BLM_ST_Triplecast = 2115,
     
+    [ParentCombo(BLM_ST_Triplecast)]
+    [CustomComboInfo("Leyline Option", "Will use Triplecast even when under the effect of Leyline.", BLM.JobID)]
+    BLM_ST_Triplecast_Leyline = 2118,
+    
     [ParentCombo(BLM_ST_AdvancedMode)]
     [CustomComboInfo("Foul/Xenoglossy Option", "Add Foul/Xenoglossy to the rotation.", BLM.JobID)]
     BLM_ST_UsePolyglot = 2104,
