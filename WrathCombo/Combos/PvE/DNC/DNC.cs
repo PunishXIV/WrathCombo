@@ -92,9 +92,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
             #region Dance Partner
 
             // Dance Partner
@@ -173,6 +170,9 @@ internal partial class DNC : PhysicalRanged
                     : FinishOrHold(TechnicalFinish4);
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
@@ -488,9 +488,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions()) //not sure where to add these, sorry zeebs
-                return OccultCrescent.BestPhantomAction();
-
             #region Dance Fills
 
             // ST Standard (Dance) Steps & Fill
@@ -506,6 +503,9 @@ internal partial class DNC : PhysicalRanged
                     : TechnicalFinish4;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
@@ -758,10 +758,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-
             #region Dance Fills
 
             // AoE Standard (Dance) Steps & Fill
@@ -779,6 +775,9 @@ internal partial class DNC : PhysicalRanged
                     : FinishOrHold(TechnicalFinish4);
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
@@ -1044,10 +1043,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-
             #region Dance Fills
 
             // AoE Standard (Dance) Steps & Fill
@@ -1063,6 +1058,9 @@ internal partial class DNC : PhysicalRanged
                     : TechnicalFinish4;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
