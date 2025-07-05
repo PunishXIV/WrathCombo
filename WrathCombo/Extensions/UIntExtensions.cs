@@ -3,6 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using static WrathCombo.Data.ActionWatching;
 
 namespace WrathCombo.Extensions
 {
@@ -16,7 +17,7 @@ namespace WrathCombo.Extensions
 
         internal static int Role(this uint value) => CustomComboFunctions.JobIDs.JobIDToRole(value);
 
-        internal static ActionType ActionType(this uint value) => (ActionType)Svc.Data.GetExcelSheet<Action>().GetRow(value).ActionCategory.RowId;
+        internal static ActionAttackType ActionAttackType(this uint value) => (ActionAttackType)Svc.Data.GetExcelSheet<Action>().GetRow(value).ActionCategory.RowId;
     }
 
     internal static class UShortExtensions

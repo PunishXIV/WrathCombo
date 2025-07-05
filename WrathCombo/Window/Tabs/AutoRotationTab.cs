@@ -216,7 +216,7 @@ namespace WrathCombo.Window.Tabs
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRez");
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
                     "Auto-Resurrect", ref cfg.HealerSettings.AutoRez, "AutoRez");
-                ImGuiComponents.HelpMarker($"Will attempt to resurrect dead party members. Applies to {WHM.ClassID.JobAbbreviation()}, {WHM.JobID.JobAbbreviation()}, {SCH.JobID.JobAbbreviation()}, {AST.JobID.JobAbbreviation()}, {SGE.JobID.JobAbbreviation()}");
+                ImGuiComponents.HelpMarker($"Will attempt to resurrect dead party members. Applies to {WHM.ClassID.JobAbbreviation()}, {WHM.JobID.JobAbbreviation()}, {SCH.JobID.JobAbbreviation()}, {AST.JobID.JobAbbreviation()}, {SGE.JobID.JobAbbreviation()} and Occult Crescent {Svc.Data.GetExcelSheet<MKDSupportJob>().GetRow(10).Unknown0} {OccultCrescent.Revive.StatusName()}");
                 var autoRez = (bool)P.IPC.GetAutoRotationConfigState(AutoRotationConfigOption.AutoRez)!;
                 if (autoRez)
                 {

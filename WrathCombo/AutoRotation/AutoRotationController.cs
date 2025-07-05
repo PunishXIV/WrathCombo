@@ -20,6 +20,7 @@ using WrathCombo.Services;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.Data.ActionWatching;
 using Action = Lumina.Excel.Sheets.Action;
 
 #pragma warning disable CS0414 // Field is assigned but its value is never used
@@ -279,6 +280,7 @@ namespace WrathCombo.AutoRotation
 
         private static void RezParty()
         {
+            if (HasStatusEffect(418)) return;
             uint resSpell = 
                 OccultCrescent.IsEnabledAndUsable(CustomComboPreset.Phantom_Chemist_Revive, OccultCrescent.Revive) 
                 ? OccultCrescent.Revive 
@@ -309,6 +311,7 @@ namespace WrathCombo.AutoRotation
                     if (resSpell == OccultCrescent.Revive)
                     {
                         ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
+                        return;
                     }
 
                     if (Player.Job is Job.RDM)
@@ -349,6 +352,7 @@ namespace WrathCombo.AutoRotation
 
         private static void CleanseParty()
         {
+            if (HasStatusEffect(418)) return;
             if (ActionManager.Instance()->QueuedActionId == RoleActions.Healer.Esuna)
                 ActionManager.Instance()->QueuedActionId = 0;
 
@@ -361,6 +365,7 @@ namespace WrathCombo.AutoRotation
 
         private static void UpdateKardiaTarget()
         {
+            if (HasStatusEffect(418)) return;
             if (!LevelChecked(SGE.Kardia)) return;
             if (CombatEngageDuration().TotalSeconds < 3) return;
 
@@ -602,7 +607,7 @@ namespace WrathCombo.AutoRotation
                         ? GetTargetDistance(target) <= 20f
                         : InActionRange(outAct, target));
 
-                var canUse = (canUseSelf || canUseTarget || areaTargeted) && (outAct.ActionType() is { } type && (type is ActionType.Ability || type is not ActionType.Ability && RemainingGCD == 0));
+                var canUse = (canUseSelf || canUseTarget || areaTargeted) && (outAct.ActionAttackType() is { } type && (type is ActionAttackType.Ability || type is not ActionAttackType.Ability && RemainingGCD == 0));
 
                 if ((canUse || cfg.DPSSettings.AlwaysSelectTarget))
                     Svc.Targets.Target = target;
