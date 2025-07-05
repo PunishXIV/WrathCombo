@@ -13,7 +13,7 @@ namespace WrathCombo.Combos.PvE;
 internal partial class SGE
 {
     internal static Status? DosisDebuff =>
-        GetStatusEffect(DosisList[OriginalHook(Dosis)], CurrentTarget);
+        GetStatusEffect(DosisList[OriginalHook(Dosis)].Debuff, CurrentTarget);
 
     internal static Status? DyskrasiaDebuff =>
         GetStatusEffect(Debuffs.EukrasianDyskrasia, CurrentTarget);
@@ -325,24 +325,15 @@ internal partial class SGE
         AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
         DyskrasiaList = [Dyskrasia, Dyskrasia2];
 
-    internal static readonly FrozenDictionary<uint, ushort> DosisList = new Dictionary<uint, ushort>
+    internal static readonly FrozenDictionary<uint, (ushort Debuff, uint Eukrasian)> DosisList = new Dictionary<uint, (ushort D, uint E)>
     {
-        { Dosis, Debuffs.EukrasianDosis },
-        { Dosis2, Debuffs.EukrasianDosis2 },
-        { Dosis3, Debuffs.EukrasianDosis3 },
-        { EukrasianDosis, Debuffs.EukrasianDosis },
-        { EukrasianDosis2, Debuffs.EukrasianDosis2 },
-        { EukrasianDosis3, Debuffs.EukrasianDosis3 }
-    }.ToFrozenDictionary();
-
-    internal static readonly FrozenDictionary<uint, uint> DosisToEDosisList = new Dictionary<uint, uint>
-    {
-        { Dosis, EukrasianDosis },
-        { Dosis2, EukrasianDosis2 },
-        { Dosis3, EukrasianDosis3 },
-        { EukrasianDosis, EukrasianDosis },
-        { EukrasianDosis2, EukrasianDosis2 },
-        { EukrasianDosis3, EukrasianDosis3 }
+        { Dosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
+        { Dosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
+        { Dosis3, (D: Debuffs.EukrasianDosis3, E: EukrasianDosis3) },
+        //For bad latency/fps where OriginalHook(Dosis) might return an Eukrasian,
+        { EukrasianDosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
+        { EukrasianDosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
+        { EukrasianDosis3, (D: Debuffs.EukrasianDosis3, E: EukrasianDosis3) }
     }.ToFrozenDictionary();
 
     #endregion
