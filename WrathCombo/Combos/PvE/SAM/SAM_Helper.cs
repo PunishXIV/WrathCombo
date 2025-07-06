@@ -15,23 +15,28 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
 {
-    internal static SAMOpenerMaxLevel1 Opener1 = new();
+    internal static bool RefreshFugetsu =>
+        GetStatusEffectRemainingTime(Buffs.Fugetsu) < GetStatusEffectRemainingTime(Buffs.Fuka);
 
-    internal static bool RefreshFugetsu => GetStatusEffectRemainingTime(Buffs.Fugetsu) < GetStatusEffectRemainingTime(Buffs.Fuka);
+    internal static bool RefreshFuka =>
+        GetStatusEffectRemainingTime(Buffs.Fuka) < GetStatusEffectRemainingTime(Buffs.Fugetsu);
 
-    internal static bool RefreshFuka => GetStatusEffectRemainingTime(Buffs.Fuka) < GetStatusEffectRemainingTime(Buffs.Fugetsu);
+    internal static bool EnhancedSenei =>
+        TraitLevelChecked(Traits.EnhancedHissatsu);
 
-    internal static bool EnhancedSenei => TraitLevelChecked(Traits.EnhancedHissatsu);
-
-    internal static int SenCount => GetSenCount();
+    internal static int SenCount =>
+        GetSenCount();
 
     internal static bool UseTsubame =>
         LevelChecked(TsubameGaeshi) &&
         (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
          (HasStatusEffect(Buffs.TsubameReady) && (SenCount is 3 || GetCooldownRemainingTime(Senei) > 33)));
 
-    internal static bool M6SReady => !HiddenFeaturesData.IsEnabledWith(CustomComboPreset.SAM_Hid_M6SHoldSquirrelBurst, () =>
-        HiddenFeaturesData.Targeting.R6SSquirrel && CombatEngageDuration().TotalSeconds < 275);
+    internal static bool M6SReady =>
+        !HiddenFeaturesData.IsEnabledWith(CustomComboPreset.SAM_Hid_M6SHoldSquirrelBurst, () =>
+            HiddenFeaturesData.Targeting.R6SSquirrel && CombatEngageDuration().TotalSeconds < 275);
+
+    #region Meikyo
 
     internal static bool UseMeikyo()
     {
@@ -77,6 +82,10 @@ internal partial class SAM
         return false;
     }
 
+    #endregion
+
+    #region Iaijutsu
+
     internal static bool UseIaijutsu()
     {
         int higanbanaHPThreshold = SAM_ST_Higanbana_HP_Threshold;
@@ -121,17 +130,21 @@ internal partial class SAM
         return false;
     }
 
+    #endregion
+
     #region Openers
 
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked)
-            return Opener1;
+        if (StandardOpener.LevelChecked)
+            return StandardOpener;
 
         return WrathOpener.Dummy;
     }
 
-    internal class SAMOpenerMaxLevel1 : WrathOpener
+    internal static SAMStandardOpener StandardOpener = new();
+
+    internal class SAMStandardOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 

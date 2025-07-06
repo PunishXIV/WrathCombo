@@ -229,6 +229,8 @@ public enum AutoRotationConfigOption
     [ConfigValueType(typeof(bool))] OnlyAttackInCombat = 13,
 
     [ConfigValueType(typeof(bool))] OrbwalkerIntegration = 14,
+
+    [ConfigValueType(typeof(bool))] AutoRezOutOfParty = 15,
 }
 
 #region Type Attribute

@@ -33,7 +33,6 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            // Don't change anything if not basic skill
             if (actionID is not Slice)
                 return actionID;
 
@@ -207,6 +206,11 @@ internal partial class RPR : Melee
 
             int positionalChoice = RPR_Positional;
 
+            //RPR Opener
+            if (IsEnabled(CustomComboPreset.RPR_ST_Opener) &&
+                Opener().FullOpener(ref actionID))
+                return actionID;
+
             //Soulsow
             if (IsEnabled(CustomComboPreset.RPR_ST_SoulSow) &&
                 LevelChecked(Soulsow) &&
@@ -223,12 +227,6 @@ internal partial class RPR : Melee
 
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
-
-
-            //RPR Opener
-            if (IsEnabled(CustomComboPreset.RPR_ST_Opener) &&
-                Opener().FullOpener(ref actionID))
-                return actionID;
 
             //All Weaves
             if (CanWeave() && !HasDoubleWeaved())
@@ -279,9 +277,10 @@ internal partial class RPR : Melee
                     //Sacrificium
                     if (IsEnabled(CustomComboPreset.RPR_ST_Sacrificium) &&
                         Lemure <= 4 && HasStatusEffect(Buffs.Oblatio) &&
-                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
-                         (RPR_ST_ArcaneCircle_SubOption == 0 || RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter()) ||
-                         RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)))
+                        ((GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
+                          (RPR_ST_ArcaneCircle_SubOption == 0 || RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter() ||
+                           RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle))) ||
+                         IsNotEnabled(CustomComboPreset.RPR_ST_ArcaneCircle)))
                         return OriginalHook(Gluttony);
 
                     //Lemure's Slice
@@ -416,7 +415,6 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            // Don't change anything if not basic skill
             if (actionID is not SpinningScythe)
                 return actionID;
 
@@ -518,7 +516,6 @@ internal partial class RPR : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            // Don't change anything if not basic skill
             if (actionID is not SpinningScythe)
                 return actionID;
 

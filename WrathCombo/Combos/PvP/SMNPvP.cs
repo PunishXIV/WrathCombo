@@ -1,3 +1,4 @@
+using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -84,6 +85,9 @@ namespace WrathCombo.Combos.PvP
                     int radiantThreshold = PluginConfiguration.GetCustomIntValue(Config.SMNPvP_RadiantAegisThreshold);
                     #endregion
 
+                    if (PvPCommon.TargetImmuneToDamage() && HasStatusEffect(Buffs.FurtherRuin)) // Block for ruin 4 because it is on action ID
+                        return All.SavageBlade;
+                    
                     if (!PvPCommon.TargetImmuneToDamage())
                     {
                         if (canWeave)
@@ -102,6 +106,9 @@ namespace WrathCombo.Combos.PvP
 
                         if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_DeathFlare) && bahamutBurst && IsOffCooldown(DeathFlare))
                             return DeathFlare;
+
+                        if (HasStatusEffect(Buffs.FurtherRuin))
+                            return actionID;
 
                         if (IsEnabled(CustomComboPreset.SMNPvP_BurstMode_Necrotize) && GetRemainingCharges(Necrotize) > 0 && !HasStatusEffect(Buffs.FurtherRuin))
                             return Necrotize;

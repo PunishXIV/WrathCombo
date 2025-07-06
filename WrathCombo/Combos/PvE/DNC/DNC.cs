@@ -92,9 +92,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
             #region Dance Partner
 
             // Dance Partner
@@ -127,7 +124,7 @@ internal partial class DNC : PhysicalRanged
                 IsEnabled(CustomComboPreset.DNC_ST_Opener_BlockEarly))
                 return All.SavageBlade;
 
-            if (!InCombat() && TargetIsHostile())
+            if (!InCombat() && HasBattleTarget())
             {
                 // ST Standard Step (Pre-pull)
                 if (IsEnabled(CustomComboPreset.DNC_ST_Adv_SS) &&
@@ -173,6 +170,9 @@ internal partial class DNC : PhysicalRanged
                     : FinishOrHold(TechnicalFinish4);
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
@@ -469,7 +469,7 @@ internal partial class DNC : PhysicalRanged
                     (GetPartyMembers().Count > 1 || HasCompanionPresent()))
                     return ClosedPosition.Retarget(Cascade, DancePartnerResolver);
 
-                if (TargetIsHostile())
+                if (HasBattleTarget())
                 {
                     // ST Standard Step (Pre-pull)
                     if (ActionReady(StandardStep) &&
@@ -488,9 +488,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions()) //not sure where to add these, sorry zeebs
-                return OccultCrescent.BestPhantomAction();
-
             #region Dance Fills
 
             // ST Standard (Dance) Steps & Fill
@@ -506,6 +503,9 @@ internal partial class DNC : PhysicalRanged
                     : TechnicalFinish4;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
@@ -758,10 +758,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-
             #region Dance Fills
 
             // AoE Standard (Dance) Steps & Fill
@@ -779,6 +775,9 @@ internal partial class DNC : PhysicalRanged
                     : FinishOrHold(TechnicalFinish4);
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 
@@ -1044,10 +1043,6 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-
             #region Dance Fills
 
             // AoE Standard (Dance) Steps & Fill
@@ -1063,6 +1058,9 @@ internal partial class DNC : PhysicalRanged
                     : TechnicalFinish4;
 
             #endregion
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Weaves
 

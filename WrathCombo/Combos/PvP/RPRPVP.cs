@@ -78,8 +78,6 @@ namespace WrathCombo.Combos.PvP
                             "Target HP% to smite, Max damage below 25%");
 
                         break;
-
-
         }
             }
         }
@@ -183,7 +181,7 @@ namespace WrathCombo.Combos.PvP
                             }
                             // Harvest Moon Execute 
                             if (IsEnabled(CustomComboPreset.RPRPvP_Burst_RangedHarvest) && GetRemainingCharges(HarvestMoon) > 0 &&
-                                EnemyHealthCurrentHp() < 12000)
+                                GetTargetCurrentHP() < 12000)
                                 return HarvestMoon;
                         }
                     }

@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Services;
 
-
 namespace WrathCombo.Window;
 
 internal class TargetHelper : Dalamud.Interface.Windowing.Window

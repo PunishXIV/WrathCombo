@@ -74,7 +74,7 @@ namespace WrathCombo.Combos.PvP
                 if (actionID is DragonKick or TwinSnakes or Demolish or LeapingOpo or RisingRaptor or PouncingCoeurl or PhantomRush)
                 {
 
-                    if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Meteodrive) && PvPCommon.TargetImmuneToDamage() && EnemyHealthCurrentHp() <= 20000 && IsLB1Ready)
+                    if (IsEnabled(CustomComboPreset.MNKPvP_Burst_Meteodrive) && PvPCommon.TargetImmuneToDamage() && GetTargetCurrentHP() <= 20000 && IsLB1Ready)
                         return Meteordrive;
 
                     if (!PvPCommon.TargetImmuneToDamage())

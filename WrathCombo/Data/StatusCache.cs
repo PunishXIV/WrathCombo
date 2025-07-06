@@ -3,6 +3,7 @@ using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Extensions;
@@ -58,12 +59,13 @@ namespace WrathCombo.Data
         /// <summary>
         /// Lumina Status Sheet Dictionary
         /// </summary>
-        private static readonly Dictionary<uint, Lumina.Excel.Sheets.Status> StatusSheet = 
-            Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>().ToDictionary(i => i.RowId, i => i);
+        private static readonly FrozenDictionary<uint, Lumina.Excel.Sheets.Status> StatusSheet = 
+            Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>()
+                .ToFrozenDictionary(i => i.RowId);
 
-        private static readonly Dictionary<uint, Lumina.Excel.Sheets.Status> ENStatusSheet =
-            Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>(Dalamud.Game.ClientLanguage.English).ToDictionary(i => i.RowId, i => i);
-
+        private static readonly FrozenDictionary<uint, Lumina.Excel.Sheets.Status> ENStatusSheet =
+            Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>(Dalamud.Game.ClientLanguage.English)
+                .ToFrozenDictionary(i => i.RowId);
 
         private static readonly HashSet<uint> DamageDownStatuses =
             ENStatusSheet.TryGetValue(62, out var refRow)
@@ -80,6 +82,17 @@ namespace WrathCombo.Data
                 .Select(x => x.Key)] : [];
 
         public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
+        
+        public static bool HasEvasionUp(IGameObject? target)
+        {
+            HashSet<uint> evasionUpStatuses =
+                ENStatusSheet.TryGetValue(61, out var refRow)
+                    ? [.. ENStatusSheet
+                        .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                        .Select(x => x.Key)]
+                    : [];
+            return HasStatusInCacheList(evasionUpStatuses, target);
+        }
 
         /// <summary>
         /// A cached set of dispellable status IDs for quick lookup.

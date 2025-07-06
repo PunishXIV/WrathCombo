@@ -3,6 +3,7 @@ using ECommons.DalamudServices;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -19,7 +20,12 @@ internal partial class All
     private const uint
         IsleSprint = 31314;
 
-    public static class Buffs{}
+    public static class Buffs
+    {
+        public const ushort
+            Raised = 148,
+            Transcendent = 2648;
+    }
 
     public static class Enums
     {
@@ -160,6 +166,39 @@ internal partial class All
             RoleActions.Healer.Esuna.Retarget(SimpleTarget.Stack.AllyToEsuna, dontCull: true);
 
             return actionID;
+        }
+    }
+    
+    internal class ALL_Healer_RescueRetargeting : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Healer_RescueRetargeting;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not RoleActions.Healer.Rescue)
+                return actionID;
+
+            var target =
+                SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
+                
+                //Field Mouseover
+                (Config.ALL_Healer_RescueRetargetingOptions[0]
+                    ? SimpleTarget.ModelMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+
+                //Focus target retarget
+                (Config.ALL_Healer_RescueRetargetingOptions[1]
+                    ? SimpleTarget.FocusTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+                
+                //Focus target retarget
+                (Config.ALL_Healer_RescueRetargetingOptions[2]
+                    ? SimpleTarget.SoftTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+                
+                SimpleTarget.HardTarget.IfNotThePlayer().IfInParty();
+
+            return actionID.Retarget(target);
         }
     }
 

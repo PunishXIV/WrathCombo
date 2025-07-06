@@ -21,6 +21,14 @@ internal partial class DRG
             DRG_AoE_Bloodbath_Threshold = new("DRG_AoE_BloodbathThreshold", 30),
             DRG_Variant_Cure = new("DRG_Variant_Cure", 50);
 
+        public static UserBoolArray
+            DRG_ST_Jump_Options = new("DRG_ST_Jump_Options"),
+            DRG_ST_DragonfireDive_Options = new("DRG_ST_DragonfireDive_Options"),
+            DRG_ST_Stardiver_Options = new("DRG_ST_Stardiver_Options"),
+            DRG_AoE_Jump_Options = new("DRG_AoE_Jump_Options"),
+            DRG_AoE_DragonfireDive_Options = new("DRG_AoE_DragonfireDive_Options"),
+            DRG_AoE_Stardiver_Options = new("DRG_AoE_Stardiver_Options");
+
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -36,24 +44,6 @@ internal partial class DRG
 
                     ImGui.NewLine();
                     DrawBossOnlyChoice(DRG_Balance_Content);
-                    break;
-
-                case CustomComboPreset.DRG_ST_ComboHeals:
-                    DrawSliderInt(0, 100, DRG_ST_SecondWind_Threshold,
-                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
-
-                    DrawSliderInt(0, 100, DRG_ST_Bloodbath_Threshold,
-                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-
-                    break;
-
-                case CustomComboPreset.DRG_AoE_ComboHeals:
-                    DrawSliderInt(0, 100, DRG_AoE_SecondWind_Threshold,
-                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
-
-                    DrawSliderInt(0, 100, DRG_AoE_Bloodbath_Threshold,
-                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-
                     break;
 
                 case CustomComboPreset.DRG_ST_Litany:
@@ -73,6 +63,38 @@ internal partial class DRG
                     DrawHorizontalRadioButton(DRG_ST_Lance_SubOption,
                         "Boss encounters Only", $"Only uses {LanceCharge.ActionName()} when in Boss encounters.", 1);
 
+                    break;
+
+                case CustomComboPreset.DRG_ST_HighJump:
+                    DrawHorizontalMultiChoice(DRG_ST_Jump_Options,
+                        "No movement", $"Only uses {Jump.ActionName()} when not moving.", 2, 0);
+
+                    DrawHorizontalMultiChoice(DRG_ST_Jump_Options,
+                        "In Melee range", $"Only uses {Jump.ActionName()} when in melee range.", 2, 1);
+                    break;
+
+                case CustomComboPreset.DRG_ST_DragonfireDive:
+                    DrawHorizontalMultiChoice(DRG_ST_DragonfireDive_Options,
+                        "No movement", $"Only uses {DragonfireDive.ActionName()} when not moving.", 2, 0);
+
+                    DrawHorizontalMultiChoice(DRG_ST_DragonfireDive_Options,
+                        "In Melee range", $"Only uses {DragonfireDive.ActionName()} when in melee range.", 2, 1);
+                    break;
+
+                case CustomComboPreset.DRG_ST_Stardiver:
+                    DrawHorizontalMultiChoice(DRG_ST_Stardiver_Options,
+                        "No movement", $"Only uses {Stardiver.ActionName()} when not moving.", 2, 0);
+
+                    DrawHorizontalMultiChoice(DRG_ST_Stardiver_Options,
+                        "In Melee range", $"Only uses {Stardiver.ActionName()} when in melee range.", 2, 1);
+                    break;
+
+                case CustomComboPreset.DRG_ST_ComboHeals:
+                    DrawSliderInt(0, 100, DRG_ST_SecondWind_Threshold,
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
+
+                    DrawSliderInt(0, 100, DRG_ST_Bloodbath_Threshold,
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 
@@ -85,6 +107,39 @@ internal partial class DRG
                 case CustomComboPreset.DRG_AoE_Lance:
                     DrawSliderInt(0, 100, DRG_AoE_LanceChargeHP,
                         $"Stop Using {LanceCharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    break;
+
+                case CustomComboPreset.DRG_AoE_HighJump:
+                    DrawHorizontalMultiChoice(DRG_AoE_Jump_Options,
+                        "No movement", $"Only uses {Jump.ActionName()} when not moving.", 2, 0);
+
+                    DrawHorizontalMultiChoice(DRG_AoE_Jump_Options,
+                        "In Melee range", $"Only uses {Jump.ActionName()} when in melee range.", 2, 1);
+                    break;
+
+                case CustomComboPreset.DRG_AoE_DragonfireDive:
+                    DrawHorizontalMultiChoice(DRG_AoE_DragonfireDive_Options,
+                        "No movement", $"Only uses {DragonfireDive.ActionName()} when not moving.", 2, 0);
+
+                    DrawHorizontalMultiChoice(DRG_AoE_DragonfireDive_Options,
+                        "In Melee range", $"Only uses {DragonfireDive.ActionName()} when in melee range.", 2, 1);
+                    break;
+
+                case CustomComboPreset.DRG_AoE_Stardiver:
+                    DrawHorizontalMultiChoice(DRG_AoE_Stardiver_Options,
+                        "No movement", $"Only uses {Stardiver.ActionName()} when not moving.", 2, 0);
+
+                    DrawHorizontalMultiChoice(DRG_AoE_Stardiver_Options,
+                        "In Melee range", $"Only uses {Stardiver.ActionName()} when in melee range.", 2, 1);
+                    break;
+
+                case CustomComboPreset.DRG_AoE_ComboHeals:
+                    DrawSliderInt(0, 100, DRG_AoE_SecondWind_Threshold,
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
+
+                    DrawSliderInt(0, 100, DRG_AoE_Bloodbath_Threshold,
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
 
                     break;
 

@@ -103,9 +103,9 @@ namespace WrathCombo.Combos.PvP
                         {
                             if (IsEnabled(CustomComboPreset.BRDPvP_HarmonicArrow) &&    //Harmonic Logic. Slider plus execute ranges
                                (harmonicCharges >= Config.BRDPvP_HarmonicArrowCharges ||
-                               harmonicCharges == 1 && EnemyHealthCurrentHp() <= 8000 ||
-                               harmonicCharges == 2 && EnemyHealthCurrentHp() <= 12000 ||
-                               harmonicCharges == 3 && EnemyHealthCurrentHp() <= 15000))
+                               harmonicCharges == 1 && GetTargetCurrentHP() <= 8000 ||
+                               harmonicCharges == 2 && GetTargetCurrentHP() <= 12000 ||
+                               harmonicCharges == 3 && GetTargetCurrentHP() <= 15000))
                                 return OriginalHook(HarmonicArrow);
 
                             if (IsEnabled(CustomComboPreset.BRDPvP_BlastArrow) && HasStatusEffect(Buffs.BlastArrowReady)) // Blast arrow when ready

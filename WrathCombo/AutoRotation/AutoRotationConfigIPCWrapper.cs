@@ -184,6 +184,18 @@ public class HealerSettingsIPCWrapper(HealerSettings settings)
         }
     }
 
+    public bool AutoRezOutOfParty
+    {
+        get
+        {
+            var checkControlled =
+                P.UIHelper.AutoRotationConfigControlled("AutoRezOutOfParty");
+            return checkControlled is not null
+                ? checkControlled.Value.state == 1
+                : settings.AutoRezOutOfParty;
+        }
+    }
+
     public bool AutoCleanse
     {
         get

@@ -10,6 +10,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
@@ -27,6 +28,7 @@ namespace WrathCombo.CustomComboNS.Functions
         public static unsafe List<WrathPartyMember> GetPartyMembers(bool allowCache = true)
         {
             if (!Player.Available) return [];
+            _partyList.RemoveAll(x => x.BattleChara is null);
             if (allowCache && !EzThrottler.Throttle("PartyUpdateThrottle", 2000))
                 return _partyList;
 
@@ -95,6 +97,30 @@ namespace WrathCombo.CustomComboNS.Functions
 
         private static List<WrathPartyMember> _partyList = new();
 
+        [field: MaybeNull]
+        public static List<WrathPartyMember> DeadPeople
+        {
+            get
+            {
+                field ??= new();
+                foreach (var pc in Svc.Objects)
+                {
+                    if (pc is IPlayerCharacter member && member.IsDead && !member.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
+                    {
+                        if (!field.Any(x => x.GameObjectId == pc.GameObjectId))
+                            field.Add(new WrathPartyMember
+                            {
+                                GameObjectId = pc.GameObjectId,
+                                CurrentHP = member.CurrentHp,
+                                NPCClassJob = member.ClassJob.RowId
+                            });
+                    }
+                }
+                field.RemoveAll(x => x.BattleChara is null || !x.BattleChara.IsDead);
+                return field;
+            }
+        }
+
         public static float GetPartyAvgHPPercent()
         {
             float totalHP = 0;
@@ -147,7 +173,10 @@ namespace WrathCombo.CustomComboNS.Functions
         public ulong GameObjectId;
         public uint NPCClassJob;
 
-        public ClassJob? RealJob => NPCClassJob > 0 && Svc.Data.Excel.GetSheet<ClassJob>().TryGetRow(NPCClassJob, out var r) ? r : BattleChara?.ClassJob.Value ?? Svc.Data.Excel.GetSheet<ClassJob>().GetRow(0);
+        public ClassJob? RealJob => NPCClassJob > 0 && CustomComboFunctions.JobIDs.ClassJobs.TryGetValue(NPCClassJob, out var realJob)
+            ? realJob
+            : BattleChara?.ClassJob.Value ?? CustomComboFunctions.JobIDs.ClassJobs[0];
+
         public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
         public Dictionary<ushort, long> BuffsGainedAt = new();
 

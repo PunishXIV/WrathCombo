@@ -221,7 +221,8 @@ internal partial class WHM : Healer
                              !HasStatusEffect(Buffs.ThinAir) &&
                              GetRemainingCharges(ThinAir) >
                              Config.WHM_STHeals_ThinAir;
-            
+
+
             var canRegen = ActionReady(Regen) &&
                              !JustUsedOn(Regen, healTarget) &&
                              GetStatusEffectRemainingTime(Buffs.Regen, healTarget)
