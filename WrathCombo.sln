@@ -7,14 +7,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WrathCombo", "WrathCombo\Wr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8948C02A-914E-4A51-B1FE-2C608492EBF5}"
 	ProjectSection(SolutionItems) = preProject
+		CODEOWNERS = docs\CODEOWNERS
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Github Actions", "Github Actions", "{D3F73229-7C85-4017-B8C9-B7668022A4F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{B1A2C3D4-E5F6-7890-1234-56789ABCDEF0}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\build.yml = .github\workflows\build.yml
+		IPC.md = docs\IPC.md
+		IPCExample.cs = docs\IPCExample.cs
+		Retargeting.md = docs\Retargeting.md
+		RetargetingExample.cs = docs\RetargetingExample.cs
+		Setup.md = docs\Setup.md
+		Contributing.md = Contributing.md
+		BurstHoldingMacros.md = docs\BurstHoldingMacros.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ECommons", "ECommons\ECommons\ECommons.csproj", "{3E8E720E-9990-4202-9035-12F54C78CF47}"
