@@ -1,229 +1,176 @@
 ﻿using ECommons.DalamudServices;
 using Lumina.Excel.Sheets;
-using System.Collections.Generic;
+using System.Collections.Frozen;
 using System.Globalization;
-using System.Linq;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 
-namespace WrathCombo.CustomComboNS.Functions
+namespace WrathCombo.CustomComboNS.Functions;
+
+internal abstract partial class CustomComboFunctions
 {
-    internal abstract partial class CustomComboFunctions
+    /// <summary> Checks if the given preset is enabled. </summary>
+    public static bool IsEnabled(CustomComboPreset preset)
     {
-        /// <summary> Determine if the given preset is enabled. </summary>
-        /// <param name="preset"> Preset to check. </param>
-        /// <returns> A value indicating whether the preset is enabled. </returns>
-        public static bool IsEnabled(CustomComboPreset preset)
+        if ((int)preset < 100)
+            return true;
+
+        try
         {
-            if ((int)preset < 100)
-                return true;
+            (string controllers, bool enabled, bool autoMode)? checkControlled = P.UIHelper.PresetControlled(preset);
+            bool controlled = checkControlled is not null;
+            bool? controlledState = checkControlled?.enabled;
 
-            try
-            {
-                (string controllers, bool enabled, bool autoMode)? checkControlled = P.UIHelper.PresetControlled(preset);
-                bool controlled = checkControlled is not null;
-                bool? controlledState = checkControlled?.enabled;
+            return controlled
+                ? (bool)controlledState!
+                : PresetStorage.IsEnabled(preset);
+        }
+        // IPC is not loaded yet
+        catch
+        {
+            return PresetStorage.IsEnabled(preset);
+        }
+    }
 
-                return controlled
-                    ? (bool)controlledState!
-                    : PresetStorage.IsEnabled(preset);
-            }
-            // IPC is not loaded yet
-            catch
+    /// <summary> Checks if the given preset is not enabled. </summary>
+    public static bool IsNotEnabled(CustomComboPreset preset) => !IsEnabled(preset);
+
+    public class JobIDs
+    {
+        private static TextInfo? _cachedTextInfo;
+
+        public static readonly FrozenDictionary<uint, ClassJob> ClassJobs = Svc.Data.GetExcelSheet<ClassJob>()!.ToFrozenDictionary(i => i.RowId);
+
+        public static int JobIDToRole(uint jobId) => ClassJobs.TryGetValue(jobId, out var classJob) ? classJob.Role : 0;
+
+        public static uint JobIDToClassJobCategory(uint jobId) => ClassJobs.TryGetValue(jobId, out var classJob) ? classJob.ClassJobCategory.RowId : 0;
+
+        public static string JobIDToShorthand(uint jobId) => jobId != 0 && ClassJobs.TryGetValue(jobId, out var classJob) ? classJob.Abbreviation.ToString() : string.Empty;
+
+        public static string JobIDToName(uint jobId)
+        {
+            // Special Cases
+            switch (jobId)
             {
-                return PresetStorage.IsEnabled(preset);
+                case 0:     return "General/Multiple Jobs";
+                case 99:    return "Global";
+                case 100:   return OccultCrescent.ContentName;
             }
+
+            // Override DoH/DoL
+            jobId = jobId switch
+            {
+                DOH.JobID   => 8, // Carpenter
+                DOL.JobID   => 16, // Miner
+                _           => jobId
+            };
+
+            // Invalid Job
+            if (!ClassJobs.TryGetValue(jobId, out var classJob))
+                return "Unknown";
+
+            // Combat Jobs: Use Job Name
+            // DoH/DoL Jobs: Use Category Name
+            string jobName = (jobId is 8 or 16)
+                ? classJob.ClassJobCategory.Value.Name.ToString()
+                : classJob.Name.ToString();
+
+            return GetTextInfo().ToTitleCase(jobName);
         }
 
-        /// <summary> Determine if the given preset is not enabled. </summary>
-        /// <param name="preset"> Preset to check. </param>
-        /// <returns> A value indicating whether the preset is not enabled. </returns>
-        public static bool IsNotEnabled(CustomComboPreset preset) => !IsEnabled(preset);
-
-        public class JobIDs
+        public static TextInfo GetTextInfo()
         {
-            public static int JobIDToRole(uint jobID)
+            // Use cached TextInfo if available
+            // Otherwise create new and cache for future use
+            if (_cachedTextInfo is null)
             {
-                if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
-                    return Svc.Data.GetExcelSheet<ClassJob>().GetRow(jobID).Role;
-
-                return 0;
-            }
-
-            public static string JobIDToShorthand(uint key)
-            {
-                if (key == 0)
-                    return "";
-
-                if (ClassJobs.TryGetValue(key, out var job))
+                // Job names are lowercase by default
+                // This capitalizes based on regional rules
+                var cultureId = Svc.ClientState.ClientLanguage switch
                 {
-                    return job.Abbreviation.ToString();
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            private static readonly Dictionary<uint, ClassJob> ClassJobs = Svc.Data.GetExcelSheet<ClassJob>()!.ToDictionary(i => i.RowId, i => i);
-            public static string JobIDToName(uint key)
-            {
-                if (key == 0)
-                    return "General/Multiple Jobs";
-
-                if (key == 100)
-                    return "Occult Crescent";
-
-                //Override DOH/DOL
-                if (key is DOH.JobID) key = 08; //Set to Carpenter
-                if (key is DOL.JobID) key = 16; //Set to Miner
-                if (ClassJobs.TryGetValue(key, out ClassJob job))
-                {
-                    //Grab Category name for DOH/DOL, else the normal Name for the rest
-                    string jobname = key is 08 or 16 ? job.ClassJobCategory.Value.Name.ToString() : job.Name.ToString();
-                    //Job names are all lowercase by default. This capitalizes based on regional rules
-                    string cultureID = Svc.ClientState.ClientLanguage switch
-                    {
-                        Dalamud.Game.ClientLanguage.French => "fr-FR",
-                        Dalamud.Game.ClientLanguage.Japanese => "ja-JP",
-                        Dalamud.Game.ClientLanguage.German => "de-DE",
-                        _ => "en-us",
-                    };
-                    TextInfo textInfo = new CultureInfo(cultureID, false).TextInfo;
-                    jobname = textInfo.ToTitleCase(jobname);
-                    //if (key is 0) jobname = " " + jobname; //Adding space to the front of Global moves it to the top. Shit hack but works
-                    return jobname;
-
-                } //Misc or unknown
-                else return key == 99 ? "Global" : "Unknown";
-            }
-            public static uint JobIDToClassJobCategory(uint jobID)
-            {
-                if (Svc.Data.GetExcelSheet<ClassJob>().HasRow(jobID))
-                    return Svc.Data.GetExcelSheet<ClassJob>().GetRow(jobID).ClassJobCategory.RowId;
-
-                return 0;
-            }
-
-            //  Job IDs     ClassIDs (no jobstone) (Lancer, Pugilist, etc)
-            public static readonly List<byte> Melee =
-            [
-                DRG.JobID, DRG.ClassID,
-                MNK.JobID, MNK.ClassID,
-                NIN.JobID, NIN.ClassID,
-                VPR.JobID,
-                RPR.JobID,
-                SAM.JobID
-            ];
-            public static readonly List<byte> Ranged =
-            [
-                BLM.JobID, BLM.ClassID,
-                BRD.JobID, BRD.ClassID,
-                SMN.JobID, SMN.ClassID,
-                PCT.JobID,
-                MCH.JobID,
-                RDM.JobID,
-                DNC.JobID,
-                BLU.JobID
-            ];
-            public static readonly List<byte> Tank =
-            [
-                PLD.JobID, PLD.ClassID,
-                WAR.JobID, WAR.ClassID,
-                DRK.JobID,
-                GNB.JobID
-            ];
-            public static readonly List<byte> Healer =
-            [
-                WHM.JobID, WHM.ClassID,
-                SCH.JobID,
-                AST.JobID,
-                SGE.JobID
-            ];
-            public static byte JobToClass(uint jobID)
-            {
-                return jobID switch
-                {
-                    ADV.JobID => ADV.ClassID,
-                    BLM.JobID => BLM.ClassID,
-                    BRD.JobID => BRD.ClassID,
-                    DRG.JobID => DRG.ClassID,
-                    MNK.JobID => MNK.ClassID,
-                    NIN.JobID => NIN.ClassID,
-                    PLD.JobID => PLD.ClassID,
-                    SCH.JobID => SCH.ClassID,
-                    SMN.JobID => SMN.ClassID,
-                    WAR.JobID => WAR.ClassID,
-                    WHM.JobID => WHM.ClassID,
-                    _ => (byte)jobID,
+                    Dalamud.Game.ClientLanguage.French      => "fr-FR",
+                    Dalamud.Game.ClientLanguage.Japanese    => "ja-JP",
+                    Dalamud.Game.ClientLanguage.German      => "de-DE",
+                    _                                       => "en-US",
                 };
-            }
-            public static byte ClassToJob(uint classId)
-            {
-                return classId switch
-                {
-                    ADV.ClassID => ADV.JobID,
-                    BLM.ClassID => BLM.JobID,
-                    BRD.ClassID => BRD.JobID,
-                    DRG.ClassID => DRG.JobID,
-                    MNK.ClassID => MNK.JobID,
-                    NIN.ClassID => NIN.JobID,
-                    PLD.ClassID => PLD.JobID,
-                    SMN.ClassID => SMN.JobID,
-                    WAR.ClassID => WAR.JobID,
-                    WHM.ClassID => WHM.JobID,
-                    _ => (byte)classId,
-                };
+
+                _cachedTextInfo = new CultureInfo(cultureId, useUserOverride: false).TextInfo;
             }
 
-            /*
-            private static readonly Dictionary<uint, PhantomJob> PhantomJobs = Svc.Data.GetExcelSheet<PhantomJob>()!.ToDictionary(i => i.RowId, i => i);
-            public static string PhantomJobIDToName(uint key)
-            {
-                // Handle special override cases if any for Phantom Jobs
-                if (PhantomJobs.TryGetValue(key, out PhantomJob job))
-                {
-                    string jobName = job.Name.ToString();
-                    string cultureID = Svc.ClientState.ClientLanguage switch
-                    {
-                        Dalamud.Game.ClientLanguage.French => "fr-FR",
-                        Dalamud.Game.ClientLanguage.Japanese => "ja-JP",
-                        Dalamud.Game.ClientLanguage.German => "de-DE",
-                        _ => "en-us",
-                    };
-                    TextInfo textInfo = new CultureInfo(cultureID, false).TextInfo;
-                    return textInfo.ToTitleCase(jobName);
-                }
-                else
-                    return key == 99 ? "Global" : "Unknown";
-            }
-            public static uint PhantomJobIDToCategory(uint phantomJobID)
-            {
-                if (Svc.Data.GetExcelSheet<PhantomJob>().HasRow(phantomJobID))
-                    return Svc.Data.GetExcelSheet<PhantomJob>().GetRow(phantomJobID).PhantomJobCategory.RowId;
+            return _cachedTextInfo;
+        }
 
-                return 0;
-            }
+        public static readonly FrozenSet<byte> Melee =
+        [
+            DRG.JobID, DRG.ClassID,
+            MNK.JobID, MNK.ClassID,
+            NIN.JobID, NIN.ClassID,
+            VPR.JobID,
+            RPR.JobID,
+            SAM.JobID
+        ];
+        public static readonly FrozenSet<byte> Ranged =
+        [
+            BLM.JobID, BLM.ClassID,
+            BRD.JobID, BRD.ClassID,
+            SMN.JobID, SMN.ClassID,
+            PCT.JobID,
+            MCH.JobID,
+            RDM.JobID,
+            DNC.JobID,
+            BLU.JobID
+        ];
+        public static readonly FrozenSet<byte> Tank =
+        [
+            PLD.JobID, PLD.ClassID,
+            WAR.JobID, WAR.ClassID,
+            DRK.JobID,
+            GNB.JobID
+        ];
+        public static readonly FrozenSet<byte> Healer =
+        [
+            WHM.JobID, WHM.ClassID,
+            SCH.JobID,
+            AST.JobID,
+            SGE.JobID
+        ];
 
-            // Phantom Jobs list
-            public static readonly List<byte> _phantomJobs =
-            [
-                Freelancer.PhantomJobID,
-                Knight.PhantomJobID,
-                Monk.PhantomJobID,
-                Thief.PhantomJobID,
-                Berserker.PhantomJobID,
-                Ranger.PhantomJobID,
-                TimeMage.PhantomJobID,
-                Chemist.PhantomJobID,
-                Bard.PhantomJobID,
-                Oracle.PhantomJobID,
-                Cannoneer.PhantomJobID,
-                Samurai.PhantomJobID,
-                Geolancer.PhantomJobID
-            ];
-            */
+        public static byte JobToClass(uint jobId)
+        {
+            return jobId switch
+            {
+                ADV.JobID => ADV.ClassID,
+                BLM.JobID => BLM.ClassID,
+                BRD.JobID => BRD.ClassID,
+                DRG.JobID => DRG.ClassID,
+                MNK.JobID => MNK.ClassID,
+                NIN.JobID => NIN.ClassID,
+                PLD.JobID => PLD.ClassID,
+                SCH.JobID => SCH.ClassID,
+                SMN.JobID => SMN.ClassID,
+                WAR.JobID => WAR.ClassID,
+                WHM.JobID => WHM.ClassID,
+                _         => (byte)jobId,
+            };
+        }
+
+        public static byte ClassToJob(uint classId)
+        {
+            return classId switch
+            {
+                ADV.ClassID => ADV.JobID,
+                BLM.ClassID => BLM.JobID,
+                BRD.ClassID => BRD.JobID,
+                DRG.ClassID => DRG.JobID,
+                MNK.ClassID => MNK.JobID,
+                NIN.ClassID => NIN.JobID,
+                PLD.ClassID => PLD.JobID,
+                SMN.ClassID => SMN.JobID,
+                WAR.ClassID => WAR.JobID,
+                WHM.ClassID => WHM.JobID,
+                _           => (byte)classId,
+            };
         }
     }
 }

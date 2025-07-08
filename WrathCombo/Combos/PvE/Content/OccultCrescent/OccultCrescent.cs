@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ECommons.DalamudServices;
+using Lumina.Excel.Sheets;
+using System;
 using System.Linq;
 using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -11,6 +13,7 @@ namespace WrathCombo.Combos.PvE;
 internal partial class OccultCrescent
 {
     public const byte JobID = 100;
+    public static string ContentName => Svc.Data.GetExcelSheet<BannerBg>().GetRow(312).Name.ToString();
     internal static uint BestPhantomAction()
     {
         if (!IsInOccult)
@@ -32,11 +35,11 @@ internal partial class OccultCrescent
         #endregion
 
         #region Berserker
-        if (IsEnabled(CustomComboPreset.Phantom_Berserker))
+        if (IsEnabled(CustomComboPreset.Phantom_Berserker) && HasBattleTarget())
         {
-            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Berserker_Rage, Rage) && CanWeave())
+            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Berserker_Rage, Rage) && InMeleeRange() && CanWeave())
                 return Rage; //buff
-            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Berserker_DeadlyBlow, DeadlyBlow) && GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f)
+            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Berserker_DeadlyBlow, DeadlyBlow) && GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f && GetTargetDistance() <= 5f)
                 return DeadlyBlow; //action that is better when buff timer is low
         }
         #endregion
@@ -149,7 +152,7 @@ internal partial class OccultCrescent
                 return PhantomJudgment; //damage + heal
             if (IsEnabledAndUsable(CustomComboPreset.Phantom_Oracle_Cleansing, Cleansing) && HasStatusEffect(Buffs.PredictionOfCleansing)) // removed interupt. it hits 20% harder than Judgement. 120k aoe.
                 return Cleansing; //damage plus interrupt
-            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Oracle_Starfall, Starfall) && HasStatusEffect(Buffs.PredictionOfStarfall) && PlayerHealthPercentageHp() <= Config.Phantom_Oracle_Starfall_Health)
+            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Oracle_Starfall, Starfall) && HasStatusEffect(Buffs.PredictionOfStarfall) && PlayerHealthPercentageHp() >= Config.Phantom_Oracle_Starfall_Health)
                 return Starfall; //damage to targets + 90% total HP damage to self
         }
         #endregion
@@ -175,7 +178,7 @@ internal partial class OccultCrescent
                 return Mineuchi; //stun
             if (IsEnabledAndUsable(CustomComboPreset.Phantom_Samurai_Shirahadori, Shirahadori) && CanWeave() && TargetIsCasting(0.7f))
                 return Shirahadori; //inv against physical
-            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Samurai_Zeninage, Zeninage) && ActionReady(Zeninage))
+            if (IsEnabledAndUsable(CustomComboPreset.Phantom_Samurai_Zeninage, Zeninage) && ActionReady(Zeninage) && ActionWatching.NumberOfGcdsUsed > 4)
                 return Zeninage; //burst
             if (IsEnabledAndUsable(CustomComboPreset.Phantom_Samurai_Iainuki, Iainuki) && ActionReady(Iainuki) && !IsMoving())
                 return Iainuki; //cone
@@ -199,14 +202,42 @@ internal partial class OccultCrescent
         #region Time Mage
         if (IsEnabled(CustomComboPreset.Phantom_TimeMage))
         {
-            if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultQuick, OccultQuick) && !HasStatusEffect(Buffs.OccultQuick))
+            if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultQuick, OccultQuick) && !HasStatusEffect(Buffs.OccultQuick) && ActionWatching.NumberOfGcdsUsed > 3)
                 return OccultQuick; //damage buff
-            if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultDispel, OccultDispel) && TargetIsHostile() && HasPhantomDispelStatus(CurrentTarget))
+            
+            if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultDispel, OccultDispel) && HasBattleTarget() && HasPhantomDispelStatus(CurrentTarget))
                 return OccultDispel; //cleanse
+            
             if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultMageMasher, OccultMageMasher) && !HasStatusEffect(Debuffs.OccultMageMasher, CurrentTarget))
                 return OccultMageMasher; //weaken target's magic attack
+            
             if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultComet, OccultComet))
-                return OccultComet; //damage
+            {
+                // Make comet fast
+                if (Config.Phantom_TimeMage_Comet_RequireSpeed &&
+                    Config.Phantom_TimeMage_Comet_UseSpeed &&
+                    !HasStatusEffect(Buffs.OccultQuick) && !JustUsed(OccultQuick) &&
+                    !HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) && !JustUsed(RoleActions.Magic.Swiftcast) &&
+                    !HasStatusEffect(BLM.Buffs.Triplecast) && !JustUsed(BLM.Triplecast) &&
+                    !HasStatusEffect(PLD.Buffs.Requiescat) && !JustUsed(PLD.Imperator) &&
+                    !HasStatusEffect(RDM.Buffs.Dualcast))
+                {
+                    if (HasActionEquipped(OccultQuick) && ActionReady(OccultQuick))
+                        return OccultQuick;
+
+                    else if (ActionReady(RoleActions.Magic.Swiftcast))
+                        return RoleActions.Magic.Swiftcast;
+                }
+                
+                if (!Config.Phantom_TimeMage_Comet_RequireSpeed ||
+                    HasStatusEffect(Buffs.OccultQuick) ||
+                    HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) ||
+                    HasStatusEffect(BLM.Buffs.Triplecast) ||
+                    HasStatusEffect(PLD.Buffs.Requiescat) ||
+                    HasStatusEffect(RDM.Buffs.Dualcast))
+                    return OccultComet; // damage
+            }
+            
             if (IsEnabledAndUsable(CustomComboPreset.Phantom_TimeMage_OccultSlowga, OccultSlowga) && !HasStatusEffect(Debuffs.Slow, CurrentTarget) &&
                 (IsNotEnabled(CustomComboPreset.Phantom_TimeMage_OccultSlowga_Wait) || (ICDTracker.TimeUntilExpired(Debuffs.Slow, CurrentTarget.GameObjectId) < TimeSpan.FromSeconds(1.5) || ICDTracker.NumberOfTimesApplied(Debuffs.Slow, CurrentTarget.GameObjectId) < 3)))
                 return OccultSlowga; //aoe slow

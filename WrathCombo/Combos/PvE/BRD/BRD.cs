@@ -263,18 +263,17 @@ internal partial class BRD : PhysicalRanged
 
             #endregion
 
-            #region Variants
+            #region Special Content
 
             if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, Config.BRD_VariantCure))
                 return Variant.Cure;
 
             if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
-
-            #endregion
-
-            if (OccultCrescent.ShouldUsePhantomActions()) //lol hi Edewen
+                
+            if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
 
             #region Songs
 
@@ -434,20 +433,7 @@ internal partial class BRD : PhysicalRanged
             int buffThreshold = BRD_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_Adv_Buffs_Threshold : 0;
 
             #endregion
-
-            #region Variants
-
-            if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, Config.BRD_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-
-            #endregion
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
+            
             #region Opener
 
             if (IsEnabled(CustomComboPreset.BRD_ST_Adv_Balance_Standard) && HasBattleTarget() &&
@@ -464,6 +450,19 @@ internal partial class BRD : PhysicalRanged
 
                 return actionID;
             }
+            #endregion
+
+            #region Special Content
+
+            if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, Config.BRD_VariantCure))
+                return Variant.Cure;
+
+            if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
+                return Variant.Rampart;
+            
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+
             #endregion
 
             #region Songs
@@ -633,18 +632,18 @@ internal partial class BRD : PhysicalRanged
             if (actionID is not (Ladonsbite or QuickNock))
                 return actionID;
 
-            #region Variants
+            #region Special Content
 
             if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, 50))
                 return Variant.Cure;
 
             if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
-
-            #endregion
-
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+
+            #endregion
 
 
             #region Songs
@@ -779,19 +778,18 @@ internal partial class BRD : PhysicalRanged
             if (actionID is not (HeavyShot or BurstShot))
                 return actionID;
 
-            #region Variants
+            #region Special Content
 
             if (Variant.CanCure(CustomComboPreset.BRD_Variant_Cure, 50))
                 return Variant.Cure;
 
             if (Variant.CanRampart(CustomComboPreset.BRD_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
-
-            #endregion
-
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
+            #endregion
 
             #region Songs
 

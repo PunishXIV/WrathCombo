@@ -10,7 +10,7 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class RPR
 {
-    internal static RPROpenerMaxLevel1 Opener1 = new();
+    #region Enshroud
 
     internal static bool UseEnshroud()
     {
@@ -49,6 +49,10 @@ internal partial class RPR
 
         return false;
     }
+
+    #endregion
+
+    #region SoD
 
     internal static bool UseShadowOfDeath()
     {
@@ -131,6 +135,8 @@ internal partial class RPR
         return false;
     }
 
+    #endregion
+
     #region Combos
 
     internal static float GCD => GetCooldown(Slice).CooldownTotal;
@@ -155,13 +161,15 @@ internal partial class RPR
 
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked)
-            return Opener1;
+        if (StandardOpener.LevelChecked)
+            return StandardOpener;
 
         return WrathOpener.Dummy;
     }
 
-    internal class RPROpenerMaxLevel1 : WrathOpener
+    internal static RPRStandardOpener StandardOpener = new();
+
+    internal class RPRStandardOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 

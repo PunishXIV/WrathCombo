@@ -11,18 +11,17 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class VPR
 {
-    internal static VPROpenerMaxLevel1 Opener1 = new();
+    internal static float IreCD =>
+        GetCooldownRemainingTime(SerpentsIre);
 
-    #region Config
-
-    internal static float IreCD => GetCooldownRemainingTime(SerpentsIre);
-
-    internal static bool InRange() => IsInRange(CurrentTarget, 5f);
+    internal static bool InRange() =>
+        IsInRange(CurrentTarget, 5f);
     internal static bool CappedOnCoils() =>
         TraitLevelChecked(Traits.EnhancedVipersRattle) && RattlingCoilStacks > 2 ||
         !TraitLevelChecked(Traits.EnhancedVipersRattle) && RattlingCoilStacks > 1;
 
-    internal static bool HasRattlingCoilStack() => RattlingCoilStacks > 0;
+    internal static bool HasRattlingCoilStack() =>
+        RattlingCoilStacks > 0;
 
     internal static bool HasHindVenom() =>
         HasStatusEffect(Buffs.HindstungVenom) ||
@@ -32,17 +31,17 @@ internal partial class VPR
         HasStatusEffect(Buffs.FlankstungVenom) ||
         HasStatusEffect(Buffs.FlanksbaneVenom);
 
-    internal static bool NoSwiftscaled() => !HasStatusEffect(Buffs.Swiftscaled);
+    internal static bool NoSwiftscaled() =>
+        !HasStatusEffect(Buffs.Swiftscaled);
 
-    internal static bool NoHuntersInstinct() => !HasStatusEffect(Buffs.HuntersInstinct);
+    internal static bool NoHuntersInstinct() =>
+        !HasStatusEffect(Buffs.HuntersInstinct);
 
     internal static bool NoVenom() =>
         !HasStatusEffect(Buffs.FlanksbaneVenom) &&
         !HasStatusEffect(Buffs.FlankstungVenom) &&
         !HasStatusEffect(Buffs.HindsbaneVenom) &&
         !HasStatusEffect(Buffs.HindstungVenom);
-
-    #endregion Config
 
     #region Awaken
 
@@ -90,7 +89,7 @@ internal partial class VPR
     {
         if (HasStatusEffect(Buffs.Reawakened))
         {
-                #region Pre Ouroboros
+        #region Pre Ouroboros
 
             if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -114,7 +113,7 @@ internal partial class VPR
 
                 #endregion
 
-                #region With Ouroboros
+        #region With Ouroboros
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -150,7 +149,7 @@ internal partial class VPR
     {
         if (HasStatusEffect(Buffs.Reawakened))
         {
-                #region Pre Ouroboros
+        #region Pre Ouroboros
 
             if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -174,7 +173,7 @@ internal partial class VPR
 
                 #endregion
 
-                #region With Ouroboros
+        #region With Ouroboros
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -249,13 +248,15 @@ internal partial class VPR
 
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked)
-            return Opener1;
+        if (StandardOpener.LevelChecked)
+            return StandardOpener;
 
         return WrathOpener.Dummy;
     }
 
-    internal class VPROpenerMaxLevel1 : WrathOpener
+    internal static VPRStandardOpener StandardOpener = new();
+
+    internal class VPRStandardOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 

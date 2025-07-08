@@ -404,7 +404,7 @@ internal static class SimpleTarget
         CustomComboFunctions
             .GetPartyMembers()
             .Select(x => x.BattleChara)
-            .Where(x => x.IsDead() == false)
+            .Where(x => x is not null && x.IsDead() == false)
             .OrderBy(x => x.CurrentHp)
             .FirstOrDefault();
 
@@ -415,7 +415,7 @@ internal static class SimpleTarget
         CustomComboFunctions
             .GetPartyMembers()
             .Select(x => x.BattleChara)
-            .Where(x => x.IsDead() == false)
+            .Where(x => x is not null && x.IsDead() == false)
             .OrderBy(x => x.CurrentHp / x.MaxHp * 100)
             .FirstOrDefault();
 

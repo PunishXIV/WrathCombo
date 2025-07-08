@@ -42,6 +42,7 @@
         public bool AutoRez = false;
         public bool AutoRezRequireSwift = false;
         public bool AutoRezDPSJobs = false;
+        public bool AutoRezOutOfParty = false;
         public bool AutoCleanse = false;
         public bool PreEmptiveHoT = false;
         public bool IncludeNPCs = false;

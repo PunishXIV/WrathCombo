@@ -64,9 +64,6 @@ internal partial class DRK : Tank
                 !skipBecauseOpener)
                 return Unmend;
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
             // Opener
             if (IsEnabled(Preset.DRK_ST_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -80,6 +77,9 @@ internal partial class DRK : Tank
                 ]);
                 return actionID;
             }
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Bail if not in combat
             if (!InCombat())
@@ -149,14 +149,14 @@ internal partial class DRK : Tank
             var newAction = HardSlash;
             _ = IsBursting;
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
             // Unmend Option
             if (ActionReady(Unmend) &&
                 !InMeleeRange() &&
                 HasBattleTarget())
                 return Unmend;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             // Bail if not in combat
             if (!InCombat())

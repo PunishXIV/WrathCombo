@@ -71,6 +71,12 @@ internal partial class VPR : Melee
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
+            //GCDs
+            if (LevelChecked(WrithingSnap) && !InMeleeRange() && HasBattleTarget())
+                return HasRattlingCoilStack()
+                    ? UncoiledFury
+                    : WrithingSnap;
+
             //oGCDs
             if (CanWeave() && !HasDoubleWeaved())
             {
@@ -100,12 +106,6 @@ internal partial class VPR : Melee
                         return OriginalHook(Twinblood);
                 }
             }
-
-            //GCDs
-            if (LevelChecked(WrithingSnap) && !InMeleeRange() && HasBattleTarget())
-                return HasRattlingCoilStack()
-                    ? UncoiledFury
-                    : WrithingSnap;
 
             //Vicewinder Combo
             if (!HasStatusEffect(Buffs.Reawakened) && LevelChecked(Vicewinder) && InMeleeRange())
@@ -213,6 +213,11 @@ internal partial class VPR : Melee
             if (actionID is not SteelFangs)
                 return actionID;
 
+            // Opener for VPR
+            if (IsEnabled(CustomComboPreset.VPR_ST_Opener) &&
+                Opener().FullOpener(ref actionID))
+                return actionID;
+
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.VPR_Variant_Cure, VPR_VariantCure))
                 return Variant.Cure;
@@ -224,10 +229,13 @@ internal partial class VPR : Melee
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
-            // Opener for VPR
-            if (IsEnabled(CustomComboPreset.VPR_ST_Opener) &&
-                Opener().FullOpener(ref actionID))
-                return actionID;
+            //GCDs
+            if (IsEnabled(CustomComboPreset.VPR_ST_RangedUptime) &&
+                LevelChecked(WrithingSnap) && !InMeleeRange() && HasBattleTarget())
+                return IsEnabled(CustomComboPreset.VPR_ST_RangedUptimeUncoiledFury) &&
+                       HasRattlingCoilStack()
+                    ? UncoiledFury
+                    : WrithingSnap;
 
             //oGCDs
             if (CanWeave() && !HasDoubleWeaved())
@@ -266,14 +274,6 @@ internal partial class VPR : Melee
                         return OriginalHook(Twinblood);
                 }
             }
-
-            //GCDs
-            if (IsEnabled(CustomComboPreset.VPR_ST_RangedUptime) &&
-                LevelChecked(WrithingSnap) && !InMeleeRange() && HasBattleTarget())
-                return IsEnabled(CustomComboPreset.VPR_ST_RangedUptimeUncoiledFury) &&
-                       HasRattlingCoilStack()
-                    ? UncoiledFury
-                    : WrithingSnap;
 
             //Vicewinder Combo
             if (IsEnabled(CustomComboPreset.VPR_ST_VicewinderCombo) &&

@@ -129,7 +129,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns></returns>
         public static bool HasBeneficialStatus(IGameObject? target) => StatusCache.HasBeneficialStatus(target);
 
-        public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || HasStatusEffect(4355, target);
+        public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || StatusCache.TargetIsInvincible(target);
 
         /// <summary>
         /// Checks if the target is invincible due to status effects or encounter-specific mechanics.

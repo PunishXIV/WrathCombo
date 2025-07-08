@@ -224,7 +224,7 @@ internal partial class WHM : Healer
                              Config.WHM_STHeals_ThinAir;
 
 
-            var regenReady = ActionReady(Regen) &&
+            var canRegen = ActionReady(Regen) &&
                              !JustUsedOn(Regen, healTarget) &&
                              GetStatusEffectRemainingTime(Buffs.Regen, healTarget)
                              <= Config.WHM_STHeals_RegenTimer && //Refresh Time Threshold
@@ -273,7 +273,7 @@ internal partial class WHM : Healer
 
             #region GCD Tools
 
-            if (IsEnabled(CustomComboPreset.WHM_STHeals_Regen) && regenReady)
+            if (IsEnabled(CustomComboPreset.WHM_STHeals_Regen) && canRegen)
                 return Regen
                     .RetargetIfEnabled(OptionalTarget, Cure);
 

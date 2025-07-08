@@ -70,7 +70,7 @@ namespace WrathCombo.CustomComboNS.Functions
         private static void UpdateDeadtionary(IFramework framework)
         {
             if (!Player.Available) return;
-            foreach (var member in GetPartyMembers().Where(x => x.BattleChara is not null && x.BattleChara.IsDead))
+            foreach (var member in DeadPeople.Where(x => x.BattleChara is not null && x.BattleChara.IsDead))
             {
                 if (!Deadtionary.ContainsKey(member.BattleChara.GameObjectId))
                     Deadtionary[member.BattleChara.GameObjectId] = Environment.TickCount64;

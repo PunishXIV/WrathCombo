@@ -55,7 +55,7 @@ public static class GameObjectExtensions
     ///     <see langword="null" /> if the target is not a boss.
     /// </summary>
     public static IGameObject? IfBoss (this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.IsBoss(obj) ? obj : null;
+        obj != null && CustomComboFunctions.TargetIsBoss(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -179,7 +179,7 @@ public static class GameObjectExtensions
     ///     boolean check for if the target is a boss.
     /// </summary>
     public static bool IsBoss(this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.IsBoss(obj);
+        obj != null && CustomComboFunctions.TargetIsBoss(obj);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick

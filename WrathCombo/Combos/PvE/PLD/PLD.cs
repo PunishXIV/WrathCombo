@@ -70,7 +70,7 @@ internal partial class PLD : Tank
                               JustUsed(HallowedGround, 9f);
 
             #endregion
-
+            
             // Interrupt
             if (Role.CanInterject())
                 return Role.Interject;
@@ -86,6 +86,9 @@ internal partial class PLD : Tank
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
                 return Variant.Cure;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             #region Mitigations
 
@@ -269,7 +272,7 @@ internal partial class PLD : Tank
                               JustUsed(HallowedGround, 9f);
 
             #endregion
-
+            
             // Interrupt
             if (Role.CanInterject())
                 return Role.Interject;
@@ -282,6 +285,9 @@ internal partial class PLD : Tank
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
                 return Variant.Cure;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (Config.PLD_AoE_MitsOptions != 1)
             {
@@ -424,6 +430,11 @@ internal partial class PLD : Tank
 
             #endregion
 
+            //Opener
+            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_BalanceOpener) &&
+                Opener().FullOpener(ref actionID))
+                return actionID;
+
             // Interrupt
             if (IsEnabled(CustomComboPreset.PLD_ST_Interrupt)
                 && Role.CanInterject())
@@ -442,10 +453,9 @@ internal partial class PLD : Tank
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
                 return Variant.Cure;
-
-            if (IsEnabled(CustomComboPreset.PLD_ST_AdvancedMode_BalanceOpener) &&
-                Opener().FullOpener(ref actionID))
-                return actionID;
+            
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (HasBattleTarget())
             {
@@ -632,7 +642,7 @@ internal partial class PLD : Tank
                                     IsEnabled(CustomComboPreset.PLD_AoE_AdvancedMode_MP_Reserve) && playerMP >= GetResourceCost(HolySpirit) + Config.PLD_AoE_MP_Reserve;
 
             #endregion
-
+            
             // Interrupt
             if (IsEnabled(CustomComboPreset.PLD_AoE_Interrupt)
                 && Role.CanInterject())
@@ -648,6 +658,9 @@ internal partial class PLD : Tank
             // Variant Cure
             if (Variant.CanCure(CustomComboPreset.PLD_Variant_Cure, Config.PLD_VariantCure))
                 return Variant.Cure;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
 
             if (HasBattleTarget())
             {

@@ -33,7 +33,10 @@ internal partial class OccultCrescent
             Phantom_Ranger_PhantomAim_Stop = new("Phantom_Ranger_PhantomAim_Stop", 30),
             Phantom_Thief_Steal_Health = new("Phantom_Thief_Steal_Health", 10);
         
-        public static UserBool Phantom_Chemist_OccultElixir_RequireParty = new("Phantom_Chemist_OccultElixir_RequireParty", true);
+        public static UserBool
+            Phantom_Chemist_OccultElixir_RequireParty = new("Phantom_Chemist_OccultElixir_RequireParty", true),
+            Phantom_TimeMage_Comet_RequireSpeed = new("Phantom_TimeMage_Comet_RequireSpeed", true),
+            Phantom_TimeMage_Comet_UseSpeed = new("Phantom_TimeMage_Comet_UseSpeed", true);
 
         internal static void Draw(CustomComboPreset preset)
         {
@@ -82,7 +85,7 @@ internal partial class OccultCrescent
 
                 case CustomComboPreset.Phantom_Oracle_Starfall:
                     UserConfig.DrawSliderInt(91, 100, Phantom_Oracle_Starfall_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        "Player HP% to be \ngreater than or equal to:", 200);
                     break;
 
                 case CustomComboPreset.Phantom_Ranger_OccultUnicorn:
@@ -122,6 +125,19 @@ internal partial class OccultCrescent
                     ImGuiEx.TextWrapped(ImGuiColors.DalamudYellow, "Not advisable in most situations!");
                     ImGuiEx.TextWrapped(ImGuiColors.DalamudYellow, "The slider value should be rather low, if you do use it!");
                     ImGui.Unindent();
+                    break;
+                
+                case CustomComboPreset.Phantom_TimeMage_OccultComet:
+                    UserConfig.DrawAdditionalBoolChoice(Phantom_TimeMage_Comet_RequireSpeed,
+                        "Require Swiftcast or Occult Quick to use Comet", "");
+                    if (Phantom_TimeMage_Comet_RequireSpeed)
+                    {
+                        ImGui.Indent();
+                        UserConfig.DrawAdditionalBoolChoice(
+                            Phantom_TimeMage_Comet_UseSpeed,
+                            "Add Swiftcast or Occult Quick prior to using Comet", "");
+                        ImGui.Unindent();
+                    }
                     break;
             }
         }

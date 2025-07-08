@@ -49,7 +49,7 @@ internal partial class OccultCrescent
             #endregion
     }
 
-    public static ushort
+    public static uint
     //Freelancer
     OccultResuscitation = 41650,
     OccultTreasuresight = 41651,
@@ -68,10 +68,10 @@ internal partial class OccultCrescent
 
     //Thief
     OccultSprint = 41646,
-    Steal = 41647,
-    Vigilance = 41648,
-    TrapDetection = 41649,
-    PilferWeapon = 41650,
+    Steal = 41645,
+    Vigilance = 41647,
+    TrapDetection = 41648,
+    PilferWeapon = 41649,
 
     //Berserker
     Rage = 41592,

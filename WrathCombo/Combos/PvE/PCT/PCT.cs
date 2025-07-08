@@ -18,16 +18,6 @@ internal partial class PCT : Caster
             if (actionID is not FireInRed)
                 return actionID;
 
-            #region Variants
-            // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
-                return Variant.Rampart;
-            #endregion
-
             #region Prepull
             if ((!InCombat()) || (InCombat() && CurrentTarget == null))
             {
@@ -40,13 +30,23 @@ internal partial class PCT : Caster
             }
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
             #region Burst Window lvl 100 only
             if (BurstPhaseReady)
                 return BurstWindow(actionID);
 
+            #endregion
+            
+            #region Special Content
+            // Variant Cure
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
+
+            // Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
+                return Variant.Rampart;
+            
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
             #endregion
 
             #region OGCD
@@ -228,16 +228,6 @@ internal partial class PCT : Caster
 
             #endregion
 
-            #region Variants
-            // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
-                return Variant.Rampart;
-            #endregion
-
             #region Prepull
             if ((prepullEnabled && !InCombat()) || (noTargetMotifEnabled && InCombat() && CurrentTarget == null))
             {
@@ -250,9 +240,6 @@ internal partial class PCT : Caster
             }
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
             #region Opener
 
             if (openerEnabled && Opener().FullOpener(ref actionID))
@@ -264,6 +251,19 @@ internal partial class PCT : Caster
             if (burstPhaseEnabled && BurstPhaseReady)
                 return BurstWindow(actionID);
 
+            #endregion
+            
+            #region Special Content
+            // Variant Cure
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
+
+            // Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
+                return Variant.Rampart;
+            
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
             #endregion
 
             #region OGCD
@@ -422,16 +422,6 @@ internal partial class PCT : Caster
 
             #endregion
 
-            #region Variants
-            // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
-                return Variant.Rampart;
-            #endregion
-
             #region Prepull
             if ((!InCombat()) || (InCombat() && CurrentTarget == null))
             {
@@ -444,8 +434,18 @@ internal partial class PCT : Caster
             }
             #endregion
 
+            #region Special Content
+            // Variant Cure
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
+
+            // Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
+                return Variant.Rampart;
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
 
             #region OGCD
             // General Weaves
@@ -628,16 +628,6 @@ internal partial class PCT : Caster
 
             #endregion
 
-            #region Variants
-            // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
-                return Variant.Rampart;
-            #endregion
-
             #region Prepull
             if ((prepullEnabled && !InCombat()) || (noTargetMotifEnabled && InCombat() && CurrentTarget == null))
             {
@@ -650,8 +640,18 @@ internal partial class PCT : Caster
             }
             #endregion
 
+            #region Special Content
+            // Variant Cure
+            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+                return Variant.Cure;
+
+            // Variant Rampart
+            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.SpellWeave))
+                return Variant.Rampart;
+            
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
+            #endregion
 
             #region OGCD
             // General Weaves

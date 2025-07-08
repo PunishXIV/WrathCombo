@@ -365,7 +365,7 @@ internal class Debug : ConfigWindow, IDisposable
         {
             if (target is not null) { 
             CustomStyleText("Name:", target?.Name);
-            CustomStyleText("Health:", $"{EnemyHealthCurrentHp():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
+            CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
             CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
             CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
             CustomStyleText("In Melee Range:", InMeleeRange());
@@ -373,8 +373,9 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Relative Position:", AngleToTarget().ToString());
             CustomStyleText("Requires Positionals:", TargetNeedsPositionals());
             CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
+            CustomStyleText("Is Friendly:", target?.IsFriendly());
 
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 
             if (ImGui.TreeNode("Cast Data"))
             {
@@ -792,7 +793,7 @@ internal class Debug : ConfigWindow, IDisposable
 
                 CustomStyleText("Base Recast:", $"{_debugSpell.Value.Recast100ms / 10f}s");
                 CustomStyleText("Original Hook:", OriginalHook(_debugSpell.Value.RowId).ActionName());
-                CustomStyleText("Cooldown Total:", $"{ActionManager.Instance()->GetRecastTime(ActionType.Action, _debugSpell.Value.RowId)}");
+                CustomStyleText("Cooldown Total:", $"{GetCooldown(_debugSpell.Value.RowId).CooldownTotal}");
                 CustomStyleText("Current Cooldown:", GetCooldown(_debugSpell.Value.RowId).CooldownRemaining);
                 CustomStyleText("Current Cast Time:", ActionManager.GetAdjustedCastTime(ActionType.Action, _debugSpell.Value.RowId));
                 CustomStyleText("Max Charges:", $"{_debugSpell.Value.MaxCharges}");
