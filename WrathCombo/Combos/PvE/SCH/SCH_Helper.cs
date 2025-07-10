@@ -3,6 +3,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Core;
@@ -16,22 +17,20 @@ namespace WrathCombo.Combos.PvE;
 internal partial class SCH
 {
     #region Lists
+    internal static readonly FrozenDictionary<uint, ushort> BioList = new Dictionary<uint, ushort>
+    {
+        { Bio, Debuffs.Bio1 },
+        { Bio2, Debuffs.Bio2},
+        { Biolysis, Debuffs.Biolysis},
+    }.ToFrozenDictionary();
+
     internal static readonly List<uint>
         BroilList = [Ruin, Broil, Broil2, Broil3, Broil4],
         AetherflowList = [EnergyDrain, Lustrate, SacredSoil, Indomitability, Excogitation],
-        ReplacedActionsList = [Ruin, Broil, Broil2, Broil3, Broil4, Bio, Biolysis, Bio2, Ruin2, Succor, Concitation, Accession, Physick],
+        ReplacedActionsList = [Ruin, Broil, Broil2, Broil3, Broil4, Bio, Biolysis, Bio2, Ruin2, Succor, Concitation, Accession, Physick], //Used for Hidden Features Retarget Sacred Soil
         FairyList = [WhisperingDawn, FeyBlessing, FeyIllumination, Dissipation, Aetherpact, SummonSeraph];
-    
-    internal static readonly Dictionary<uint, ushort>
-        BioList = new()
-        {
-            { Bio, Debuffs.Bio1 },
-            { Bio2, Debuffs.Bio2 },
-            { Biolysis, Debuffs.Biolysis }
-        };
     #endregion
     internal static SCHGauge Gauge => GetJobGauge<SCHGauge>();
-    
     internal static IBattleChara? AetherPactTarget => Svc.Objects.Where(x => x is IBattleChara chara && chara.StatusList.Any(y => y.StatusId == 1223 && y.SourceObject.GameObjectId == Svc.Buddies.PetBuddy.ObjectId)).Cast<IBattleChara>().FirstOrDefault();
     internal static bool HasAetherflow => Gauge.Aetherflow > 0;
     internal static bool FairyDismissed => Gauge.DismissedFairy > 0;
@@ -41,9 +40,15 @@ internal partial class SCH
                                             && OriginalHook(Aetherpact) is DissolveUnion //Quick check to see if Fairy Aetherpact is Active
                                             && AetherPactTarget is not null //Null checking so GetTargetHPPercent doesn't fall back to CurrentTarget
                                             && GetTargetHPPercent(AetherPactTarget) >= Config.SCH_ST_Heal_AetherpactDissolveOption;
-    
     internal static bool ShieldCheck => GetPartyBuffPercent(Buffs.Galvanize) <= Config.SCH_AoE_Heal_SuccorShieldOption &&
-                                       GetPartyBuffPercent(SGE.Buffs.EukrasianPrognosis) <= Config.SCH_AoE_Heal_SuccorShieldOption;
+                                        GetPartyBuffPercent(SGE.Buffs.EukrasianPrognosis) <= Config.SCH_AoE_Heal_SuccorShieldOption;
+    internal static bool CanChainStrategem => ActionReady(ChainStratagem) &&
+                                              CanApplyStatus(CurrentTarget, Debuffs.ChainStratagem) &&
+                                              !HasStatusEffect(Debuffs.ChainStratagem, CurrentTarget, true);
+
+    internal static float AetherflowCD => GetCooldownRemainingTime(Aetherflow);
+    
+    internal static float ChainStrategemCD => GetCooldownRemainingTime(ChainStratagem);
     
     #region Hidden Raidwides
     
@@ -61,7 +66,7 @@ internal partial class SCH
     }
     internal static bool HiddenRecitation()
     {
-        return IsEnabled(CustomComboPreset.SCH_Hidden_Succor_Raidwide_Recitation) && ActionReady(Recitation);
+        return Config.SCH_Hidden_Succor_Raidwide_Recitation&& ActionReady(Recitation);
     }
     #endregion
     
@@ -84,11 +89,10 @@ internal partial class SCH
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Bio);
-        var hpThreshold = Config.SCH_DPS_BioSubOption == 1 ||
-                          !InBossEncounter()
-            ? Config.SCH_DPS_BioSubOption
-            : 0;
+        var hpThreshold = IsNotEnabled(CustomComboPreset.SCH_ST_Simple_DPS) &&
+            (Config.SCH_DPS_BioSubOption == 1 || !InBossEncounter())? Config.SCH_DPS_BioSubOption : 0;
         BioList.TryGetValue(dotAction, out var dotDebuffID);
+        var dotRefresh = IsNotEnabled(CustomComboPreset.SCH_ST_Simple_DPS) ? Config.SCH_DPS_BioUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -96,7 +100,7 @@ internal partial class SCH
                !JustUsedOn(dotAction, CurrentTarget, 5f) &&
                HasBattleTarget() &&
                GetTargetHPPercent() > hpThreshold &&
-               dotRemaining <= Config.SCH_DPS_BioUptime_Threshold;
+               dotRemaining <= dotRefresh;
     }
     #endregion
     

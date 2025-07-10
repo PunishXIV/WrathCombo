@@ -1,12 +1,12 @@
 ﻿#region
 
-using ECommons.DalamudServices;
-using ECommons.ExcelServices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Core;
@@ -61,7 +61,7 @@ public class Search(Leasing leasing)
                         pair.Key,
                         registration.PluginName,
                         pair.Value,
-                        registration.LastUpdated
+                        registration.LastUpdated,
                     }))
                 .GroupBy(x => x.Key)
                 .ToDictionary(
@@ -102,7 +102,7 @@ public class Search(Leasing leasing)
                         pair.Key,
                         registration.PluginName,
                         pair.Value,
-                        registration.LastUpdated
+                        registration.LastUpdated,
                     }))
                 .GroupBy(x => x.Key)
                 .ToDictionary(
@@ -153,7 +153,7 @@ public class Search(Leasing leasing)
                         registration.PluginName,
                         pair.Value.enabled,
                         pair.Value.autoMode,
-                        registration.LastUpdated
+                        registration.LastUpdated,
                     }))
                 .GroupBy(x => x.Key)
                 .ToDictionary(
@@ -170,7 +170,7 @@ public class Search(Leasing leasing)
                                 pair.Key,
                                 registration.PluginName,
                                 pair.Value,
-                                registration.LastUpdated
+                                registration.LastUpdated,
                             }))
                         .GroupBy(x => x.Key)
                         .ToDictionary(
@@ -247,7 +247,7 @@ public class Search(Leasing leasing)
     // ReSharper disable once MemberCanBePrivate.Global
     internal Dictionary<string, (Job Job, CustomComboPreset ID,
         CustomComboInfoAttribute Info, bool HasParentCombo, bool IsVariant, string
-        ParentComboName)> Presets
+        ParentComboName, ComboType ComboType)> Presets
     {
         get
         {
@@ -262,14 +262,16 @@ public class Search(Leasing leasing)
                     IsVariant = preset.Attributes().Variant != null,
                     ParentComboName = preset.Attributes().Parent != null
                         ? GetRootParent(preset).ToString()
-                        : string.Empty
+                        : string.Empty,
+                    preset.Attributes().ComboType,
                 })
                 .Where(combo =>
                     !combo.InternalName.EndsWith("any", ToLower))
                 .ToDictionary(
                     combo => combo.InternalName,
-                    combo => (combo.JobId, combo.ID, combo.Info, combo.HasParentCombo,
-                        combo.IsVariant, combo.ParentComboName)
+                    combo => (combo.JobId, combo.ID, combo.Info,
+                        combo.HasParentCombo, combo.IsVariant,
+                        combo.ParentComboName, combo.ComboType)
                 );
         }
     }
@@ -322,12 +324,13 @@ public class Search(Leasing leasing)
                             preset.Value.ID.ToString())?.autoMode ?? false;
                         var isAutoMode =
                             Service.Configuration.AutoActions.TryGetValue(
-                                preset.Value.ID, out bool autoMode) &&
-                            autoMode && preset.Value.ID.Attributes().AutoAction != null;
+                                preset.Value.ID, out var autoMode) &&
+                            autoMode && preset.Value.ID.Attributes().AutoAction !=
+                            null;
                         return new Dictionary<ComboStateKeys, bool>
                         {
                             { ComboStateKeys.Enabled, isEnabled },
-                            { ComboStateKeys.AutoMode, isAutoMode || ipcAutoMode }
+                            { ComboStateKeys.AutoMode, isAutoMode || ipcAutoMode },
                         };
                     }
                 );
@@ -413,50 +416,47 @@ public class Search(Leasing leasing)
             field = Presets
                 .Where(preset =>
                     preset.Value is
-                    { IsVariant: false, HasParentCombo: false } &&
+                        { IsVariant: false, HasParentCombo: false } &&
                     preset.Value.Job == job &&
                     !preset.Key.Contains("pvp", ToLower))
                 .SelectMany(preset => new[]
                 {
-                        new
-                        {
-                            Job = (Job)preset.Value.Info.JobID,
-                            Combo = preset.Key,
-                            preset.Value.Info
-                        }
+                    new
+                    {
+                        Job = (Job)preset.Value.Info.JobID,
+                        Combo = preset.Key,
+                        preset.Value.Info,
+                        preset.Value.ComboType,
+                    },
                 })
                 .GroupBy(x => x.Job)
                 .ToDictionary(
                     g => g.Key,
                     g => g.GroupBy(x =>
-                            x.Info.Name.Contains("heals - single", ToLower) ?
-                                ComboTargetTypeKeys.HealST :
-                                x.Info.Name.Contains("heals - aoe", ToLower) ?
-                                    ComboTargetTypeKeys.HealMT :
-                                    x.Info.Name.Contains("- aoe", ToLower) ||
-                                    x.Info.Name.Contains("aoe dps feature",
-                                        ToLower) ?
-                                        ComboTargetTypeKeys.MultiTarget :
-                                        x.Info.Name.Contains("- single target",
-                                            ToLower) ||
-                                        x.Info.Name.Contains(
-                                            "single target dps feature",
-                                            ToLower) ?
-                                            ComboTargetTypeKeys.SingleTarget :
-                                            ComboTargetTypeKeys.Other
+                            x.ComboType switch
+                            {
+                                ComboType.Healing =>
+                                    x.Info.Name.Contains("single target", ToLower)
+                                        ? ComboTargetTypeKeys.HealST
+                                        : ComboTargetTypeKeys.HealMT,
+                                ComboType.Advanced or ComboType.Simple =>
+                                    x.Info.Name.Contains("single target", ToLower)
+                                        ? ComboTargetTypeKeys.SingleTarget
+                                        : ComboTargetTypeKeys.MultiTarget,
+                                _ => ComboTargetTypeKeys.Other,
+                            }
                         )
                         .ToDictionary(
                             g2 => g2.Key,
                             g2 => g2.GroupBy(x =>
-                                    x.Info.Name.Contains("advanced mode -",
-                                        ToLower) ||
-                                    x.Info.Name.Contains("dps feature",
-                                        ToLower) ?
-                                        ComboSimplicityLevelKeys.Advanced :
-                                        x.Info.Name.Contains("simple mode -",
-                                            ToLower) ?
-                                            ComboSimplicityLevelKeys.Simple :
-                                            ComboSimplicityLevelKeys.Other
+                                    x.ComboType switch
+                                    {
+                                        ComboType.Advanced =>
+                                            ComboSimplicityLevelKeys.Advanced,
+                                        ComboType.Simple =>
+                                            ComboSimplicityLevelKeys.Simple,
+                                        _ => ComboSimplicityLevelKeys.Other,
+                                    }
                                 )
                                 .ToDictionary(
                                     g3 => g3.Key,
@@ -530,7 +530,7 @@ public class Search(Leasing leasing)
                                     {
                                         ComboStateKeys.Enabled,
                                         PresetStates[option][ComboStateKeys.Enabled]
-                                    }
+                                    },
                                 }
                             )
                     )
@@ -544,7 +544,9 @@ public class Search(Leasing leasing)
     /// </summary>
     internal Dictionary<CustomComboPreset, bool> AutoActions =>
         PresetStates
-        .Where(x => Enum.Parse<CustomComboPreset>(x.Key).Attributes().AutoAction is not null)
+            .Where(x =>
+                Enum.Parse<CustomComboPreset>(x.Key).Attributes()
+                    .AutoAction is not null)
             .ToDictionary(
                 preset => Enum.Parse<CustomComboPreset>(preset.Key),
                 preset => preset.Value[ComboStateKeys.AutoMode]

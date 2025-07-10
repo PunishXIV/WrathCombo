@@ -1,4 +1,6 @@
-﻿using Dalamud.Interface.Colors;
+﻿using System;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Style;
 using ImGuiNET;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -16,30 +18,26 @@ internal partial class SCH
             switch (preset)
             {
                 #region DPS
-                case CustomComboPreset.SCH_DPS_Balance_Opener:
+                case CustomComboPreset.SCH_ST_ADV_DPS_Balance_Opener:
                     DrawHorizontalRadioButton(SCH_ST_DPS_OpenerOption, "Dissipation First", "Uses Dissipation first, then Aetherflow", 0);
                     DrawHorizontalRadioButton(SCH_ST_DPS_OpenerOption, "Aetherflow First", "Uses Aetherflow first, then Dissipation", 1);
                     DrawBossOnlyChoice(SCH_ST_DPS_OpenerContent);
                     break;
 
-                case CustomComboPreset.SCH_DPS:
-                    DrawAdditionalBoolChoice(SCH_ST_DPS_Adv, "Advanced Action Options", "Change how actions are handled", isConditionalChoice: true);
-                    if (SCH_ST_DPS_Adv)
-                    {
-                        ImGui.Indent();
-                        ImGui.Spacing();
-                        DrawHorizontalMultiChoice(SCH_ST_DPS_Adv_Actions, "On Ruin/Broils", "Apply options to Ruin and all Broils.", 3, 0);
-                        DrawHorizontalMultiChoice(SCH_ST_DPS_Adv_Actions, "On Bio/Bio II/Biolysis", "Apply options to Bio and Biolysis.", 3, 1);
-                        DrawHorizontalMultiChoice(SCH_ST_DPS_Adv_Actions, "On Ruin II", "Apply options to Ruin II.", 3, 2);
-                        ImGui.Unindent();
-                    }
+                case CustomComboPreset.SCH_ST_ADV_DPS:
+                    DrawHorizontalRadioButton(SCH_ST_DPS_Adv_Actions, "On Ruin/Broils", "Apply options to Ruin and all Broils.", 0,
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(SCH_ST_DPS_Adv_Actions, "On Bio/Bio II/Biolysis", "Apply options to Bio and Biolysis.", 1,
+                        descriptionColor:ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(SCH_ST_DPS_Adv_Actions, "On Ruin II", "Apply options to Ruin II.", 2,
+                        descriptionColor:ImGuiColors.DalamudWhite);
                     break;
                 
-                case CustomComboPreset.SCH_DPS_Lucid:
+                case CustomComboPreset.SCH_ST_ADV_DPS_Lucid:
                     DrawSliderInt(4000, 9500, SCH_ST_DPS_LucidOption, "MP Threshold", 150, Hundreds);
                     break;
 
-                case CustomComboPreset.SCH_DPS_Bio:
+                case CustomComboPreset.SCH_ST_ADV_DPS_Bio:
 
                     DrawSliderInt(0, 50, SCH_DPS_BioOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
@@ -59,52 +57,70 @@ internal partial class SCH
 
                     break;
 
-                case CustomComboPreset.SCH_DPS_ChainStrat:
-                    DrawHorizontalRadioButton(SCH_ST_DPS_ChainStratagemSubOption,
-                        "All content",
-                        $"Uses {ActionWatching.GetActionName(ChainStratagem)} regardless of content.", 0);
-
-                    DrawHorizontalRadioButton(SCH_ST_DPS_ChainStratagemSubOption,
-                        "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(ChainStratagem)} when in Boss encounters.", 1);
-
+                case CustomComboPreset.SCH_ST_ADV_DPS_ChainStrat:
+                    
                     DrawSliderInt(0, 100, SCH_ST_DPS_ChainStratagemOption, "Stop using at Enemy HP%. Set to Zero to disable this check.");
+                    
+                    ImGui.Indent();
+                    
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    
+                    DrawHorizontalRadioButton(SCH_ST_DPS_ChainStratagemSubOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
+
+                    DrawHorizontalRadioButton(SCH_ST_DPS_ChainStratagemSubOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+                    
+                    ImGui.Unindent();
+                    
                     break;
 
-                case CustomComboPreset.SCH_DPS_EnergyDrain:
+                case CustomComboPreset.SCH_ST_ADV_DPS_EnergyDrain:
                     DrawSliderInt(0, 60, SCH_ST_DPS_EnergyDrain, "Aetherflow remaining cooldown");
+                    
+                    DrawAdditionalBoolChoice(SCH_ST_DPS_EnergyDrain_Burst, 
+                        "Energy Drain Burst", "Holds Energy Drain when Chain Stratagem is ready or has less than 10 seconds cooldown remaining.");
                     break;
                 
-                case CustomComboPreset.SCH_AoE_Lucid:
+                case CustomComboPreset.SCH_AoE_ADV_DPS_Lucid:
                     DrawSliderInt(4000, 9500, SCH_AoE_DPS_LucidOption, "MP Threshold", 150, Hundreds);
                     break;
                 
-                case CustomComboPreset.SCH_AoE_ChainStrat:
-                    DrawHorizontalRadioButton(SCH_AoE_DPS_ChainStratagemSubOption,
-                        "All content",
-                        $"Uses {ActionWatching.GetActionName(ChainStratagem)} regardless of content.", 0);
-
-                    DrawHorizontalRadioButton(SCH_AoE_DPS_ChainStratagemSubOption,
-                        "Boss encounters Only",
-                        $"Only uses {ActionWatching.GetActionName(ChainStratagem)} when in Boss encounters.", 1);
-
+                case CustomComboPreset.SCH_AoE_ADV_DPS_ChainStrat:
+                    DrawAdditionalBoolChoice(SCH_AoE_DPS_ChainStratagemBanefulOption, 
+                        "Baneful Only", "Will only use Chain Strategem when high enough level to use Baneful Impaction");
+                    
                     DrawSliderInt(0, 100, SCH_AoE_DPS_ChainStratagemOption, "Stop using at Enemy HP%. Set to Zero to disable this check.");
+                    
+                    ImGui.Indent();
+                    
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    
+                    DrawHorizontalRadioButton(SCH_AoE_DPS_ChainStratagemSubOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
+
+                    DrawHorizontalRadioButton(SCH_AoE_DPS_ChainStratagemSubOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+                    
+                    ImGui.Unindent();
+                    
                     break;
 
-                case CustomComboPreset.SCH_AoE_EnergyDrain:
+                case CustomComboPreset.SCH_AoE_ADV_DPS_EnergyDrain:
                     DrawSliderInt(0, 60, SCH_AoE_DPS_EnergyDrain, "Aetherflow remaining cooldown");
+                    
+                    DrawAdditionalBoolChoice(SCH_AoE_DPS_EnergyDrain_Burst, 
+                        "Energy Drain Burst", "Holds Energy Drain when Chain Stratagem is ready or has less than 10 seconds cooldown remaining.");
                     break;
                 #endregion
                 
                 #region Healing
                 case CustomComboPreset.SCH_ST_Heal:
-                    DrawAdditionalBoolChoice(SCH_ST_Heal_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (SCH_ST_Heal_Adv)
-                    {
+                    
                         ImGui.Indent();
-                        DrawAdditionalBoolChoice(SCH_ST_Heal_IncludeShields, "Include Shields in HP Percent Sliders", "");
+                        DrawAdditionalBoolChoice(SCH_ST_Heal_IncludeShields, "Advanced Option: Include Shields in HP Percent Sliders", "");
                         ImGui.Unindent();
-                    }
+                    
                     break;
 
                 case CustomComboPreset.SCH_ST_Heal_Lucid:
@@ -220,6 +236,16 @@ internal partial class SCH
                     DrawPriorityInput(SCH_AoE_Heals_Priority, 8, 5, $"{Indomitability.ActionName()} Priority: ");
                     break;
                 
+                case CustomComboPreset.SCH_AoE_Heal_Aetherflow:
+                    DrawAdditionalBoolChoice(SCH_AoE_Heal_Aetherflow_Indomitability,
+                        "Indomitability Ready Only Option", "Only uses Aetherflow if Indomitability is ready to use.");
+                    break;
+                
+                case CustomComboPreset.SCH_AoE_Heal_Dissipation:
+                    DrawAdditionalBoolChoice(SCH_AoE_Heal_Dissipation_Indomitability,
+                        "Indomitability Ready Only Option", "Only uses Dissipation if Indomitability is ready to use.");
+                    break;
+                
                 #endregion
                 
                 #region Standalones
@@ -256,6 +282,11 @@ internal partial class SCH
                     DrawRadioButton(SCH_Recitation_Mode, "Indomitability", "", 2);
                     DrawRadioButton(SCH_Recitation_Mode, "Excogitation", "", 3);
                     break; 
+                
+                case CustomComboPreset.SCH_Hidden_Succor_Raidwide:
+                    DrawAdditionalBoolChoice(SCH_Hidden_Succor_Raidwide_Recitation, "Recitation Option", "Use Recitation to buff before the Raidwide Succor.");
+                    break;
+                
                 #endregion
             }
         }
@@ -276,15 +307,22 @@ internal partial class SCH
             SCH_ST_DPS_EnergyDrain = new("SCH_ST_DPS_EnergyDrain", 3),
             SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1),
             SCH_AoE_DPS_EnergyDrain = new("SCH_AoE_DPS_EnergyDrain", 3),
-            SCH_AoE_DPS_ChainStratagemSubOption = new("SCH_AoE_DPS_ChainStratagemSubOption", 1);
-        public static UserBool
-            SCH_ST_DPS_Adv = new("SCH_ST_DPS_Adv");
+            SCH_AoE_DPS_ChainStratagemSubOption = new("SCH_AoE_DPS_ChainStratagemSubOption", 1),
+            SCH_ST_DPS_Adv_Actions = new("SCH_ST_DPS_Adv_Actions");
+
+        internal static UserBool
+            SCH_ST_DPS_EnergyDrain_Burst = new("SCH_ST_DPS_EnergyDrain_Burst"),
+            SCH_AoE_DPS_EnergyDrain_Burst = new("SCH_AoE_DPS_EnergyDrain_Burst"),
+            SCH_AoE_DPS_ChainStratagemBanefulOption = new("SCH_AoE_DPS_ChainStratagemBanefulOption"),
+            SCH_AoE_Heal_Aetherflow_Indomitability = new("SCH_AoE_Heal_Aetherflow_Indomitability"),
+            SCH_AoE_Heal_Dissipation_Indomitability = new("SCH_AoE_Heal_Dissipation_Indomitability"),
+            SCH_Hidden_Succor_Raidwide_Recitation = new ("SCH_Hidden_Succor_Raidwide_Recitation");
+        
 
         public static UserFloat
             SCH_DPS_BioUptime_Threshold = new("SCH_DPS_BioUptime_Threshold", 3.0f);
             
-        public static UserBoolArray
-            SCH_ST_DPS_Adv_Actions = new("SCH_ST_DPS_Adv_Actions");
+        
 
         #endregion
 

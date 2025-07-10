@@ -217,7 +217,6 @@ namespace WrathCombo.Core
             return ret;
         }
 
-
         public static bool DisablePreset(string preset, bool outputLog = false)
         {
             var pre = GetPresetByString(preset);
@@ -295,6 +294,36 @@ namespace WrathCombo.Core
                 return TogglePreset(pre.Value, outputLog);
             }
             return false;
+        }
+        
+        internal static ComboType GetComboType(CustomComboPreset preset)
+        {
+            var simple = preset.GetAttribute<SimpleCombo>();
+            var advanced = preset.GetAttribute<AdvancedCombo>();
+            var basic = preset.GetAttribute<BasicCombo>();
+            var healing = preset.GetAttribute<HealingCombo>();
+            var mitigation = preset.GetAttribute<MitigationCombo>();
+            var parent = (object?)preset.GetAttribute<ParentComboAttribute>() ??
+                         (object?)preset.GetAttribute<BozjaParentAttribute>() ??
+                         (object?)preset.GetAttribute<EurekaParentAttribute>() ??
+                         preset.GetAttribute<VariantParentAttribute>();
+            
+            if (simple != null)
+                return ComboType.Simple;
+            if (advanced != null)
+                return ComboType.Advanced;
+            if (basic != null)
+                return ComboType.Basic;
+            
+            if (healing != null)
+                return ComboType.Healing;
+            if (mitigation != null)
+                return ComboType.Mitigation;
+            
+            if (parent == null)
+                return ComboType.Feature;
+            
+            return ComboType.Option;
         }
     }
 }
