@@ -277,7 +277,7 @@ internal partial class AST : Healer
 
     internal class AST_ST_SimpleHeals : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_SimpleHeals;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_Heals;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not Benefic2)
@@ -296,7 +296,7 @@ internal partial class AST : Healer
            
             #endregion
 
-            if (IsEnabled(CustomComboPreset.AST_ST_SimpleHeals_Esuna) && ActionReady(Role.Esuna) &&
+            if (IsEnabled(CustomComboPreset.AST_ST_Heals_Esuna) && ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) >= Config.AST_ST_SimpleHeals_Esuna &&
                 HasCleansableDebuff(healTarget))
                 return Role.Esuna
@@ -323,7 +323,7 @@ internal partial class AST : Healer
 
     internal class AST_AoE_SimpleHeals : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AoE_SimpleHeals;
+        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AoE_Heals;
 
         protected override uint Invoke(uint actionID)
         {
@@ -354,7 +354,7 @@ internal partial class AST : Healer
                     ? Helios
                     : OriginalHook(AspectedHelios);
             
-            if (IsEnabled(CustomComboPreset.AST_AoE_SimpleHeals_NeutralSect) && HasStatusEffect(Buffs.Suntouched) && CanWeave())
+            if (IsEnabled(CustomComboPreset.AST_AoE_Heals_NeutralSect) && HasStatusEffect(Buffs.Suntouched) && CanWeave())
                 return SunSign;
             
             //Priority List
