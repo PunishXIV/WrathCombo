@@ -2,6 +2,7 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using ImGuiNET;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
@@ -57,17 +59,14 @@ internal abstract partial class CustomComboFunctions
     internal static bool TargetIsHostile() => HasBattleTarget();
 
     /// <summary> Checks if an object is friendly. Defaults to CurrentTarget unless specified. </summary>
-    public static bool TargetIsFriendly(IGameObject? optionalTarget = null)
+    public unsafe static bool TargetIsFriendly(IGameObject? optionalTarget = null)
     {
         if ((optionalTarget ?? CurrentTarget) is not { } chara)
             return false;
 
-        return chara.ObjectKind switch
-        {
-            ObjectKind.Player => true,
-            _ when chara is IBattleNpc npc => npc.BattleNpcKind is not BattleNpcSubKind.Enemy and not (BattleNpcSubKind)1,
-            _ => false
-        };
+        //This is a glorified universal check for friendly targets. Will return a correct value regardless of role, level or whatever.
+        var ret = ActionManager.CanUseActionOnTarget(Healer.Role.Esuna, chara.Struct());
+        return ret;
     }
 
     /// <summary> Checks if the player's current target is hostile. </summary>

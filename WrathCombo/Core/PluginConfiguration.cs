@@ -78,6 +78,8 @@ namespace WrathCombo.Core
 
         public bool RetargetHealingActionsToStack = false;
 
+        public bool AddOutOfPartyNPCsToRetargeting = false;
+
         public bool UseUIMouseoverOverridesInDefaultHealStack = false;
 
         public bool UseFieldMouseoverOverridesInDefaultHealStack = false;

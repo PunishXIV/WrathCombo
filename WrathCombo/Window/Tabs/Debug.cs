@@ -373,8 +373,9 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Relative Position:", AngleToTarget().ToString());
             CustomStyleText("Requires Positionals:", TargetNeedsPositionals());
             CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
+            CustomStyleText("Is Friendly:", target?.IsFriendly());
 
-            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 
             if (ImGui.TreeNode("Cast Data"))
             {

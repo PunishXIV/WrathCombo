@@ -338,6 +338,21 @@ namespace WrathCombo.Window.Tabs
                     "This will retarget all single target healing actions to the Heal Stack as shown below,\nsimilarly to how Redirect or Reaction would.\nThis ensures that the target used to check HP% threshold logic for healing actions is the same target that will receive that heal.\n\nIt is recommended to enable this if you customize the Heal Stack at all.\nDefault: Off");
                 Presets.DrawRetargetedSymbolForSettingsPage();
 
+                bool addNpcs = 
+                    Service.Configuration.AddOutOfPartyNPCsToRetargeting;
+
+                if (ImGui.Checkbox("Add Out of Party NPCs to Retargeting", ref addNpcs))
+                {
+                    Service.Configuration.AddOutOfPartyNPCsToRetargeting = addNpcs;
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker(
+                    "This will add any NPCs that are not in your party to the retargeting logic for healing actions.\n\n" +
+                    "This is useful for healers who want to be able to target NPCs that are not in their party, such as quest NPCs.\n\n" +
+                    "These NPCs will not work with any role based custom stacks (even if an NPC looks like a tank, they're not classed as one)\n\n" +
+                    "Default: Off");
+
                 #endregion
 
                 ImGuiEx.Spacing(new Vector2(0, 10));
