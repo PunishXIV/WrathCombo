@@ -63,29 +63,38 @@ internal partial class WHM
                     break;
 
                 case CustomComboPreset.WHM_ST_MainCombo_DoT:
-                    DrawSliderInt(0, 50, WHM_ST_DPS_AeroOption,
-                        targetStopUsingAtDescription,
+                    DrawSliderInt(0, 100, WHM_ST_DPS_AeroOptionBoss,
+                        targetStopUsingOnBossAtDescription,
                         itemWidth: medium);
 
+                    ImGui.Spacing();
+                    DrawSliderInt(0, 100, WHM_ST_DPS_AeroOptionNonBoss,
+                        targetStopUsingAtDescription,
+                        itemWidth: medium);
+      
                     ImGui.Indent();
+                    ImGui.TextUnformatted("For non-bosses, select what kind of content this applies to:");
+                    DrawHorizontalRadioButton(
+                        WHM_Dia_Uptime_Content, "All Content",
+                        "Applies to all content in the game.",
+                        outputValue: 0,
+                        descriptionColor: ImGuiColors.DalamudYellow
+                    );
+                    DrawHorizontalRadioButton(
+                        WHM_Dia_Uptime_Content, "Boss Only Content",
+                        "Only applies in instances where you directly fight a boss. Excludes many A Realm Reborn & Heavensward raids that include trash.",
+                        outputValue: 1,
+                        descriptionColor: ImGuiColors.DalamudYellow
+                    );
+                    DrawHorizontalRadioButton(
+                        WHM_Dia_Uptime_Content, "Non-Boss Only Content",
+                        "Only applies when not facing a boss. Includes many A Realm Reborn & Heavensward raids that include trash.",
+                        outputValue: 2,
+                        descriptionColor: ImGuiColors.DalamudYellow
+                    );
 
-                    ImGui.TextWrapped(
-                        "Select what kind of enemies the HP check should be applied to:");
-                    ImGui.NewLine();
-
-                    DrawHorizontalRadioButton(WHM_ST_DPS_AeroOptionSubOption,
-                        "Non-Bosses",
-                        "Only applies the HP check above to non-bosses.\n" +
-                        "Allows you to only stop DoTing early when it's not a boss.",
-                        (int)BossAvoidance.On,
-                        descriptionColor: ImGuiColors.DalamudWhite);
-
-                    DrawHorizontalRadioButton(WHM_ST_DPS_AeroOptionSubOption,
-                        "All Enemies",
-                        "Applies the HP check above to all enemies.",
-                        (int)BossAvoidance.Off,
-                        descriptionColor: ImGuiColors.DalamudWhite);
-
+                    ImGui.Spacing();
+                    ImGui.Unindent();
                     DrawRoundedSliderFloat(0, 4, WHM_ST_MainCombo_DoT_Threshold,
                         reapplyTimeRemainingDescription,
                         itemWidth: little, digits: 1);
@@ -223,14 +232,15 @@ internal partial class WHM
                 case CustomComboPreset.WHM_AoEHeals_Temperance:
                     DrawSliderInt(1, 100, WHM_AoEHeals_TemperanceHP,
                         "Average party HP% to use at or below");
-                    DrawDifficultyMultiChoice(WHM_AoEHeals_TemperanceDifficulty, WHM_AoEHeals_TemperanceDifficultyListSet,
+                    DrawDifficultyMultiChoice(WHM_AoEHeals_TemperanceDifficulty,
+                        WHM_AoEHeals_TemperanceDifficultyListSet,
                         "Select what content difficulties Temperance should be used in:");
                     ImGui.Spacing();
-                    
+
                     DrawAdditionalBoolChoice(WHM_AoEHeals_TemperanceWeave,
                         weaveDescription,
                         "");
-                    
+
                     DrawAdditionalBoolChoice(WHM_AoEHeals_TemperanceRaidwide,
                         "Also use for Raidwides",
                         "Will also use for mitigation before raidwides (and a healing boost after them), if the party is low enough.",
@@ -238,9 +248,10 @@ internal partial class WHM
                     if (WHM_AoEHeals_TemperanceRaidwide)
                     {
                         ImGui.Indent();
-                        DrawDifficultyMultiChoice(WHM_AoEHeals_TemperanceRaidwideDifficulty, WHM_AoEHeals_TemperanceRaidwideDifficultyListSet,
+                        DrawDifficultyMultiChoice(WHM_AoEHeals_TemperanceRaidwideDifficulty,
+                            WHM_AoEHeals_TemperanceRaidwideDifficultyListSet,
                             "Select what content difficulties the Raidwide option should apply to:");
-                    
+
                         DrawAdditionalBoolChoice(WHM_AoEHeals_TemperanceRaidwidePrioritization,
                             "Prioritize use for Raidwides",
                             "Will ignore the Party HP% check for Raidwides, essentially using Temperance for mitigation.\n" +
@@ -248,6 +259,7 @@ internal partial class WHM
                             indentDescription: true);
                         ImGui.Unindent();
                     }
+
                     break;
 
                 case CustomComboPreset.WHM_AoEHeals_Lucid:
@@ -282,16 +294,17 @@ internal partial class WHM
                         DrawRadioButton(
                             WHM_AoEHeals_LiturgyRaidwideOnlyBoss, "All Enemies",
                             "Will check for a Raidwide before using Bell at all times, on all enemies.",
-                            outputValue: (int) BossRequirement.Off, itemWidth: 125f,
+                            outputValue: (int)BossRequirement.Off, itemWidth: 125f,
                             descriptionAsTooltip: true);
                         DrawRadioButton(
                             WHM_AoEHeals_LiturgyRaidwideOnlyBoss, "Only Bosses",
                             "Will try to only check for Raidwide when fighting bosses.\n" +
                             "(will use on cooldown versus regular enemies)\n" +
                             "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                            outputValue: (int) BossRequirement.On, itemWidth: 125f,
+                            outputValue: (int)BossRequirement.On, itemWidth: 125f,
                             descriptionAsTooltip: true);
                     }
+
                     break;
 
                 case CustomComboPreset.WHM_AoEHeals_Asylum:
@@ -318,7 +331,11 @@ internal partial class WHM
 
         /// Bar Description for target HP% to start using plus disable text
         private const string targetStopUsingAtDescription =
-            "Target HP% to stop using (0 = Use Always)";
+            " Non-bosses HP% to stop using (0 = Use Always, 100 = Never)";
+
+        /// Bar Description for target HP% to start using plus disable text
+        private const string targetStopUsingOnBossAtDescription =
+            " Bosses HP% to stop using (0 = Use Always, 100 = Never)";
 
         /// Description for MP threshold
         private const string mpThresholdDescription =
@@ -351,10 +368,11 @@ internal partial class WHM
         /// <summary>
         ///     Enemy type restriction for HP threshold checks.
         /// </summary>
-        internal enum BossAvoidance
+        internal enum EnemyRestriction
         {
-            On = 0,
-            Off = 1,
+            NonBosses = 0,
+            AllEnemies = 1,
+            OnlyBosses = 2,
         }
 
         #endregion
@@ -397,16 +415,40 @@ internal partial class WHM
             new("WHM_Balance_Content", 0);
 
         /// <summary>
-        ///     HP threshold to stop applying DoTs.
+        ///     Content type of Balance Opener.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: All Content<br />
+        ///     <b>Options</b>: All Content or
+        ///     <see cref="ContentCheck.IsInBossOnlyContent" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_ST_MainCombo_Opener" />
+        internal static UserInt WHM_Dia_Uptime_Content =
+            new("WHM_Dia_Uptime_Content", 0);
+
+        /// <summary>
+        ///     HP threshold to stop applying DoTs on Bosses.
         /// </summary>
         /// <value>
         ///     <b>Default</b>: 0 <br />
-        ///     <b>Range</b>: 0 - 50 <br />
+        ///     <b>Range</b>: 0 - 100 <br />
         ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
         /// </value>
         /// <seealso cref="CustomComboPreset.WHM_ST_MainCombo_DoT" />
-        internal static UserInt WHM_ST_DPS_AeroOption =
-            new("WHM_ST_DPS_AeroOption");
+        internal static UserInt WHM_ST_DPS_AeroOptionBoss =
+            new("WHM_ST_DPS_AeroOptionBoss");
+
+        /// <summary>
+        ///     HP threshold to stop applying DoTs on Non-Bosses.
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: 0 <br />
+        ///     <b>Range</b>: 0 - 100 <br />
+        ///     <b>Step</b>: <see cref="SliderIncrements.Ones" />
+        /// </value>
+        /// <seealso cref="CustomComboPreset.WHM_ST_MainCombo_DoT" />
+        internal static UserInt WHM_ST_DPS_AeroOptionNonBoss =
+            new("WHM_ST_DPS_AeroOptionNonBoss");
 
         /// <summary>
         ///     Time threshold in seconds before reapplying DoT.
@@ -424,12 +466,12 @@ internal partial class WHM
         ///     Enemy type to apply the HP threshold check to.
         /// </summary>
         /// <value>
-        ///     <b>Default</b>: <see cref="BossAvoidance.On" /> <br />
-        ///     <b>Options</b>: <see cref="BossAvoidance">BossAvoidance Enum</see>
+        ///     <b>Default</b>: <see cref="EnemyRestriction.NonBosses" /> <br />
+        ///     <b>Options</b>: <see cref="EnemyRestriction">EnemyRestriction Enum</see>
         /// </value>
         /// <seealso cref="CustomComboPreset.WHM_ST_MainCombo_DoT" />
         internal static UserInt WHM_ST_DPS_AeroOptionSubOption =
-            new("WHM_ST_DPS_AeroOptionSubOption", (int)BossAvoidance.On);
+            new("WHM_ST_DPS_AeroOptionSubOption", (int)EnemyRestriction.NonBosses);
 
         /// <summary>
         ///     MP threshold to use Lucid Dreaming in single target rotations.
@@ -502,7 +544,7 @@ internal partial class WHM
         /// <seealso cref="CustomComboPreset.WHM_STHeals_Regen" />
         internal static UserInt WHM_STHeals_RegenHPLower =
             new("WHM_STHeals_RegenHPLower", 30);
-        
+
         /// <summary>
         ///     Upper HP threshold to start using Regen.
         /// </summary>
@@ -797,7 +839,7 @@ internal partial class WHM
         /// <seealso cref="CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell" />
         public static readonly UserInt
             WHM_AoEHeals_LiturgyRaidwideOnlyBoss =
-                new("WHM_AoEHeals_LiturgyRaidwideOnlyBoss", (int) BossRequirement.On);
+                new("WHM_AoEHeals_LiturgyRaidwideOnlyBoss", (int)BossRequirement.On);
 
         /// <summary>
         ///     Content difficulty selector for Liturgy of the Bell.
