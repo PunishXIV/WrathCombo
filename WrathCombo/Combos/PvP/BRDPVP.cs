@@ -74,7 +74,7 @@ namespace WrathCombo.Combos.PvP
 
                 if (actionID == PowerfulShot)
                 {
-                    var canWeave = CanWeave(0.5);
+                    var canWeave = CanWeave(0.5f);
                     uint harmonicCharges = GetRemainingCharges(HarmonicArrow);
 
                     if (IsEnabled(CustomComboPreset.BRDPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= Config.BRDPvP_EagleThreshold))

@@ -313,6 +313,23 @@ namespace WrathCombo.Window.Tabs
                 ImGuiComponents.HelpMarker("The percentage of a total cast time to wait before interrupting.\nApplies to all interrupts, in every job's combos.\n\nIt is recommend to keep this value below 50%.\nDefault: 0%");
 
                 #endregion
+                
+                #region Maximum Weaves
+
+                ImGui.PushItemWidth(75);
+                if (ImGui.InputInt("###MaximumWeaves", ref Service.Configuration.MaximumWeavesPerWindow))
+                    Service.Configuration.Save();
+
+                ImGui.SameLine();
+                ImGui.Text("oGCDs");
+
+                ImGui.SameLine(pos);
+
+                ImGui.Text($"   -   Maximum number of Weaves");
+
+                ImGuiComponents.HelpMarker("This controls how many oGCDs are allowed between GCDs.\nThe sort of 'default' for the game is double weaving, but triple weaving is completely possible to do with low enough latency (of every kind); but if you struggle with latency of some sort, single weaving may even be a good answer for you.\nTriple weaving is already done in a manner where we try to avoid clipping GCDs, and as such doesn't happen particularly often even if you do have good latency, so it is a safe option as far as parses/etc goes.\n\nDefault: 2");
+
+                #endregion
 
                 #endregion
 

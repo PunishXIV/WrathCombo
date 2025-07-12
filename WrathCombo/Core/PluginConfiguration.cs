@@ -65,6 +65,8 @@ namespace WrathCombo.Core
         public int Throttle = 50;
 
         public double InterruptDelay  = 0.0f;
+        
+        public int MaximumWeavesPerWindow = 2;
 
         public bool OpenToPvE = false;
 

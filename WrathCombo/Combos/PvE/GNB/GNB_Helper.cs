@@ -31,7 +31,7 @@ internal partial class GNB : Tank
     internal static bool CanBow => LevelChecked(BowShock) && GetCooldownRemainingTime(BowShock) < 0.6f;
     internal static bool CanContinue => LevelChecked(Continuation);
     internal static bool CanReign => LevelChecked(ReignOfBeasts) && GunStep == 0 && HasReign;
-    internal static bool CanLateWeave => CanDelayedWeave(start: 0.9f);
+    internal static bool CanLateWeave => CanDelayedWeave(weaveStart: 0.9f);
     internal static bool InOdd => BFcd is < 90 and > 20;
     internal static bool MitUsed => JustUsed(OriginalHook(HeartOfStone), 4f) || JustUsed(OriginalHook(Nebula), 5f) || JustUsed(Camouflage, 5f) || JustUsed(Role.Rampart, 5f) || JustUsed(Aurora, 5f) || JustUsed(Superbolide, 9f);
     internal static float GCDLength => ActionManager.GetAdjustedRecastTime(ActionType.Action, KeenEdge) / 1000f;

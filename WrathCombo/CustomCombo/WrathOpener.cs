@@ -198,7 +198,7 @@ namespace WrathCombo.CustomComboNS
 
                     actionID = CurrentOpenerAction = AllowUpgradeSteps.Any(x => x == OpenerStep) ? OriginalHook(OpenerActions[OpenerStep - 1]) : OpenerActions[OpenerStep - 1];
 
-                    double startValue = (VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) ? 1 : 1.25;
+                    float startValue = (VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) ? 1f : 1.25f;
                     if ((DelayedWeaveSteps.Any(x => x == OpenerStep) || VeryDelayedWeaveSteps.Any(x => x == OpenerStep)) && !CanDelayedWeave(startValue))
                     {
                         actionID = All.SavageBlade;
