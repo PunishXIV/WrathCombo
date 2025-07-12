@@ -8,23 +8,6 @@ internal partial class RPR
 {
     internal static class Config
     {
-        public static UserInt
-            RPR_Positional = new("RPR_Positional", 0),
-            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
-            RPR_Balance_Content = new("RPR_Balance_Content", 1),
-            RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
-            RPR_SoDThreshold = new("RPR_SoDThreshold", 0),
-            RPR_ST_ArcaneCircle_SubOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
-            RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 40),
-            RPR_STBloodbathThreshold = new("RPR_STBloodbathThreshold", 30),
-            RPR_WoDThreshold = new("RPR_WoDThreshold", 20),
-            RPR_AoESecondWindThreshold = new("RPR_AoESecondWindThreshold", 40),
-            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 30),
-            RPR_VariantCure = new("RPRVariantCure", 50);
-
-        public static UserBoolArray
-            RPR_SoulsowOptions = new("RPR_SoulsowOptions");
-
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -52,7 +35,6 @@ internal partial class RPR
 
                     DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
                         "Boss encounters Only", $"Only uses {ArcaneCircle.ActionName()} when in Boss encounters.", 1);
-
                     break;
 
                 case CustomComboPreset.RPR_ST_AdvancedMode:
@@ -61,7 +43,6 @@ internal partial class RPR
 
                     DrawHorizontalRadioButton(RPR_Positional, "Flank First",
                         $"First positional: {Gibbet.ActionName()}.", 1);
-
                     break;
 
                 case CustomComboPreset.RPR_ST_SoD:
@@ -70,13 +51,21 @@ internal partial class RPR
 
                     DrawSliderInt(0, 100, RPR_SoDThreshold,
                         $"Set a HP% Threshold for when {ShadowOfDeath.ActionName()} will not be automatically applied to the target.");
+                    break;
 
+                case CustomComboPreset.RPR_ST_TrueNorthDynamic:
+                    DrawAdditionalBoolChoice(RPR_ST_TrueNorthDynamic_HoldCharge,
+                        "Hold True North for Gluttony Option", "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.");
+                    break;
+
+                case CustomComboPreset.RPR_ST_RangedFiller:
+                    DrawAdditionalBoolChoice(RPR_ST_RangedFillerHarvestMoon,
+                        "Add Harvest Moon", "Adds Harvest Moon if available, when outside of melee range. Will not override Communio.");
                     break;
 
                 case CustomComboPreset.RPR_AoE_WoD:
                     DrawSliderInt(0, 100, RPR_WoDThreshold,
                         $"Set a HP% Threshold for when {WhorlOfDeath.ActionName()} will not be automatically applied to the target.");
-
                     break;
 
                 case CustomComboPreset.RPR_ST_ComboHeals:
@@ -85,7 +74,6 @@ internal partial class RPR
 
                     DrawSliderInt(0, 100, RPR_STBloodbathThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-
                     break;
 
                 case CustomComboPreset.RPR_AoE_ComboHeals:
@@ -94,7 +82,6 @@ internal partial class RPR
 
                     DrawSliderInt(0, 100, RPR_AoEBloodbathThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-
                     break;
 
                 case CustomComboPreset.RPR_Soulsow:
@@ -114,15 +101,38 @@ internal partial class RPR
 
                     DrawHorizontalMultiChoice(RPR_SoulsowOptions,
                         $"{BloodStalk.ActionName()}", $"Adds {Soulsow.ActionName()} to {BloodStalk.ActionName()}.", 5, 4);
-
                     break;
 
                 case CustomComboPreset.RPR_Variant_Cure:
                     DrawSliderInt(1, 100, RPR_VariantCure,
                         "HP% to be at or under", 200);
-
                     break;
             }
         }
+
+        #region Variables
+
+        public static UserInt
+            RPR_Positional = new("RPR_Positional", 0),
+            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
+            RPR_Balance_Content = new("RPR_Balance_Content", 1),
+            RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
+            RPR_SoDThreshold = new("RPR_SoDThreshold", 0),
+            RPR_ST_ArcaneCircle_SubOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
+            RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 40),
+            RPR_STBloodbathThreshold = new("RPR_STBloodbathThreshold", 30),
+            RPR_WoDThreshold = new("RPR_WoDThreshold", 20),
+            RPR_AoESecondWindThreshold = new("RPR_AoESecondWindThreshold", 40),
+            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 30),
+            RPR_VariantCure = new("RPRVariantCure", 50);
+
+        public static UserBool
+            RPR_ST_TrueNorthDynamic_HoldCharge = new("RPR_ST_TrueNorthDynamic_HoldCharge"),
+            RPR_ST_RangedFillerHarvestMoon = new("RPR_ST_RangedFillerHarvestMoon");
+
+        public static UserBoolArray
+            RPR_SoulsowOptions = new("RPR_SoulsowOptions");
+
+        #endregion
     }
 }

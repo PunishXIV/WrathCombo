@@ -98,17 +98,18 @@ internal partial class SAM
                 //Higanbana
                 ((SAM_ST_CDs_IaijutsuOption[0] &&
                   SenCount is 1 && GetTargetHPPercent() > higanbanaHPThreshold &&
-                  (SAM_ST_Higanbana_Suboption == 0 ||
-                   SAM_ST_Higanbana_Suboption == 1 && TargetIsBoss()) &&
+                  (SAM_ST_Higanbana_Suboption == 0 || TargetIsBoss()) &&
                   CanApplyStatus(CurrentTarget, Debuffs.Higanbana) &&
                   ((JustUsed(MeikyoShisui, 15f) && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= higanbanaRefresh) ||
                    !HasStatusEffect(Debuffs.Higanbana, CurrentTarget))) ||
 
                  //Tenka Goken
-                 (SAM_ST_CDs_IaijutsuOption[1] && SenCount is 2 && !LevelChecked(MidareSetsugekka)) ||
+                 (SAM_ST_CDs_IaijutsuOption[1] && SenCount is 2 &&
+                  !LevelChecked(MidareSetsugekka)) ||
 
                  //Midare Setsugekka
-                 (SAM_ST_CDs_IaijutsuOption[2] && SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))))
+                 (SAM_ST_CDs_IaijutsuOption[2] && SenCount is 3 &&
+                  LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))))
                 return true;
 
             if (IsEnabled(CustomComboPreset.SAM_ST_SimpleMode) &&
@@ -120,10 +121,12 @@ internal partial class SAM
                    !HasStatusEffect(Debuffs.Higanbana, CurrentTarget))) ||
 
                  //Tenka Goken
-                 (SenCount is 2 && !LevelChecked(MidareSetsugekka)) ||
+                 (SenCount is 2 &&
+                  !LevelChecked(MidareSetsugekka)) ||
 
                  //Midare Setsugekka
-                 (SenCount is 3 && LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))))
+                 (SenCount is 3 &&
+                  LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))))
                 return true;
         }
 

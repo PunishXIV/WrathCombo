@@ -34,11 +34,11 @@ internal partial class SGE
     internal static bool HiddenKerachole() =>
         IsEnabled(CustomComboPreset.SGE_Hidden_Kerachole) &&
         ActionReady(Kerachole) && HasAddersgall() &&
-        CanSpellWeave() && RaidWideCasting();
+        CanWeave() && RaidWideCasting();
 
     internal static bool HiddenHolos() =>
         IsEnabled(CustomComboPreset.SGE_Hidden_Holos) &&
-        ActionReady(Holos) && CanSpellWeave() && RaidWideCasting() &&
+        ActionReady(Holos) && CanWeave() && RaidWideCasting() &&
         GetPartyAvgHPPercent() <= SGE_Hidden_HolosOption;
 
     internal static bool HiddenEprognosis()
@@ -217,7 +217,7 @@ internal partial class SGE
 
     #region Movement Prio
 
-    private static (uint Action, CustomComboPreset Preset, System.Func<bool> Logic)[]
+    private static (uint Action, CustomComboPreset Preset, Func<bool> Logic)[]
         PrioritizedMovement =>
     [
         //Toxikon

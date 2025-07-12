@@ -41,30 +41,6 @@ internal partial class DRG
 
     #region Animation Locks
 
-    internal static readonly HashSet<uint> MidLocks =
-    [
-        Jump,
-        HighJump,
-        DragonfireDive
-    ];
-
-    internal static uint SlowLock => Stardiver;
-
-    //internal static bool CanDRGWeaveOld(uint oGCD)
-    //{
-    //    float remainingGCD = RemainingGCD;
-
-    //    // Cannot Weave -or- Already Double-Weaved
-    //    if (remainingGCD < 0.6f || HasDoubleWeaved())
-    //        return false;
-
-    //    // Guaranteed Weave
-    //    if (SlowLock == oGCD && remainingGCD >= 1.5f)
-    //        return true;
-
-    //    return false;
-    //}
-
     internal static bool CanDRGWeave(float weaveTime = 0.6f, bool forceFirst = false)
     {
         // Cannot Weave

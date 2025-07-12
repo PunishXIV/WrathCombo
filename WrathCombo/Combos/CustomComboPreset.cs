@@ -2609,11 +2609,7 @@ public enum CustomComboPreset
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Mirage Dive Option", "Adds Mirage Dive to the rotation.", DRG.JobID)]
     DRG_ST_Mirage = 6115,
-
-    [ParentCombo(DRG_ST_Mirage)]
-    [CustomComboInfo("Burst Mirage Dive During LotD", "Adds Mirage Dive to the rotation when under Life of the Dragon.", DRG.JobID)]
-    DRG_ST_DoubleMirage = 6119,
-
+    
     [ParentCombo(DRG_ST_CDs)]
     [CustomComboInfo("Dragonfire Dive Option", "Adds Dragonfire Dive to the rotation.", DRG.JobID)]
     DRG_ST_DragonfireDive = 6107,
@@ -4931,18 +4927,10 @@ public enum CustomComboPreset
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Dynamic True North Feature", "Adds True North before Gibbet/Gallows when you are not in the correct position.", RPR.JobID)]
     RPR_ST_TrueNorthDynamic = 12098,
-
-    [ParentCombo(RPR_ST_TrueNorthDynamic)]
-    [CustomComboInfo("Hold True North for Gluttony Option", "Will hold the last charge of True North for use with Gluttony, even when out of position for Gibbet/Gallows.", RPR.JobID)]
-    RPR_ST_TrueNorthDynamic_HoldCharge = 12099,
-
+    
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Ranged Filler Option", "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", RPR.JobID)]
     RPR_ST_RangedFiller = 12017,
-
-    [ParentCombo(RPR_ST_RangedFiller)]
-    [CustomComboInfo("Add Harvest Moon", "Adds Harvest Moon if available, when outside of melee range. Will not override Communio.", RPR.JobID)]
-    RPR_ST_RangedFillerHarvestMoon = 12018,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", RPR.JobID)]
@@ -5502,11 +5490,7 @@ public enum CustomComboPreset
     [ParentCombo(SGE_ST_DPS)]
     [CustomComboInfo("Phlegma Option", "Use Phlegma if available and within range.", SGE.JobID)]
     SGE_ST_DPS_Phlegma = 14005,
-
-    [ParentCombo(SGE_ST_DPS_Phlegma)]
-    [CustomComboInfo("Burst option", "Save Phlegma charges for burst.", SGE.JobID)]
-    SGE_ST_DPS_Phlegma_Burst = 14062,
-
+    
     [ParentCombo(SGE_ST_DPS)]
     [CustomComboInfo("Psyche Option", "Weaves Psyche when available.", SGE.JobID)]
     SGE_ST_DPS_Psyche = 14008,
@@ -5702,10 +5686,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Zoe Option", "Adds Zoe.", SGE.JobID)]
     SGE_AoE_Heal_Zoe = 14058,
 
-    [ParentCombo(SGE_AoE_Heal_Zoe)]
-    [CustomComboInfo("Pneuma Option", "Chain to Pneuma After.", SGE.JobID)]
-    SGE_AoE_Heal_ZoePneuma = 14060,
-    
     [ParentCombo(SGE_AoE_Heal)]
     [CustomComboInfo("Philosophia Option", "Adds Philosophia.", SGE.JobID)]
     SGE_AoE_Heal_Philosophia = 14050,
@@ -5890,18 +5870,10 @@ public enum CustomComboPreset
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Senei Option", "Adds Senei to the rotation.", SAM.JobID)]
     SAM_ST_CDs_Senei = 15020,
-
-    [ParentCombo(SAM_ST_CDs_Senei)]
-    [CustomComboInfo("Guren Option", "Adds Guren to the rotation if Senei is not unlocked.", SAM.JobID)]
-    SAM_ST_CDs_Guren = 15021,
     
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Ogi Namikiri Option", "Adds Ogi Namikiri and Kaeshi: Namikiri to the rotation.", SAM.JobID)]
     SAM_ST_CDs_OgiNamikiri = 15015,
-
-    [ParentCombo(SAM_ST_CDs_OgiNamikiri)]
-    [CustomComboInfo("Ogi Namikiri movement Option", "Adds Ogi Namikiri and Kaeshi: Namikiri when you're not moving.", SAM.JobID)]
-    SAM_ST_CDs_OgiNamikiri_Movement = 15016,
 
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Zanshin Option", "Adds Zanshin when ready to the rotation.", SAM.JobID)]
@@ -6854,11 +6826,7 @@ public enum CustomComboPreset
     [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Vicewinder", "Adds Vicewinder to the rotation.", VPR.JobID)]
     VPR_ST_Vicewinder = 30006,
-
-    [ParentCombo(VPR_ST_Vicewinder)]
-    [CustomComboInfo("True North Option", "Adds True North when available.", VPR.JobID)]
-    VPR_TrueNortVicewinder = 30016,
-
+    
     [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Vicewinder Combo", "Adds Swiftskin's Coil and Hunter's Coil to the rotation.\nWill automatically swap depending on your position.", VPR.JobID)]
     VPR_ST_VicewinderCombo = 30007,
@@ -6898,11 +6866,7 @@ public enum CustomComboPreset
     [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Ranged Uptime Option", "Adds Writhing Snap to the rotation when you are out of melee range.", VPR.JobID)]
     VPR_ST_RangedUptime = 30095,
-
-    [ParentCombo(VPR_ST_RangedUptime)]
-    [CustomComboInfo("Add Uncoiled Fury", "Adds Uncoiled Fury to the rotation when you are out of melee range and have Rattling Coil charges.", VPR.JobID)]
-    VPR_ST_RangedUptimeUncoiledFury = 30096,
-
+    
     [ParentCombo(VPR_ST_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the rotation.", VPR.JobID)]
     VPR_ST_ComboHeals = 30097,
@@ -6924,19 +6888,11 @@ public enum CustomComboPreset
     [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Vicepit", "Adds Vicepit to the rotation.", VPR.JobID)]
     VPR_AoE_Vicepit = 30105,
-
-    [ParentCombo(VPR_AoE_Vicepit)]
-    [CustomComboInfo("Disable Range Check", "Disables the range check for Vicepit, so it will be used even without a target selected.", VPR.JobID)]
-    VPR_AoE_Vicepit_DisableRange = 30111,
-
+    
     [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Vicepit Combo", "Adds Swiftskin's Den and Hunter's Den to the rotation.", VPR.JobID)]
     VPR_AoE_VicepitCombo = 30106,
-
-    [ParentCombo(VPR_AoE_VicepitCombo)]
-    [CustomComboInfo("Disable Range Check", "Disables the range check for Swiftskin's Den and Hunter's Den, so they will be used even without a target selected.", VPR.JobID)]
-    VPR_AoE_VicepitCombo_DisableRange = 30113,
-
+    
     [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Vicepit Weaves", "Adds Twinfang Thresh and Twinblood Thresh to the rotation.", VPR.JobID)]
     VPR_AoE_VicepitWeaves = 30115,
@@ -6956,11 +6912,7 @@ public enum CustomComboPreset
     [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Reawaken", "Adds Reawaken to the rotation.", VPR.JobID)]
     VPR_AoE_Reawaken = 30110,
-
-    [ParentCombo(VPR_AoE_Reawaken)]
-    [CustomComboInfo("Disable Range Check", "Disables the range check for Reawaken, so it will be used even without a target selected.", VPR.JobID)]
-    VPR_AoE_Reawaken_DisableRange = 30114,
-
+    
     [ParentCombo(VPR_AoE_AdvancedMode)]
     [CustomComboInfo("Reawaken Combo", "Adds Generations and Legacy weaves to the rotation.", VPR.JobID)]
     VPR_AoE_ReawakenCombo = 30112,
