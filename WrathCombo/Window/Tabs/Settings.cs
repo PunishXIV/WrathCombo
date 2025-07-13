@@ -155,21 +155,12 @@ namespace WrathCombo.Window.Tabs
                 ImGuiEx.Spacing(new Vector2(0, 20));
                 ImGuiEx.TextUnderlined("Rotation Behavior Options");
 
-                #region Performance Mode
-
-                if (ImGui.Checkbox("Performance Mode", ref Service.Configuration.PerformanceMode))
-                    Service.Configuration.Save();
-
-                ImGuiComponents.HelpMarker("This mode will disable actions being changed on your hotbar, but will still continue to work in the background as you press your buttons.");
-
-                #endregion
-
                 #region Spells while Moving
 
                 if (ImGui.Checkbox("Block spells if moving", ref Service.Configuration.BlockSpellOnMove))
                     Service.Configuration.Save();
 
-                ImGuiComponents.HelpMarker("Completely blocks spells from being used if you are moving, by replacing your actions with Savage Blade.\nThis would supersede combo-specific movement options, available for most jobs.");
+                ImGuiComponents.HelpMarker("Completely blocks spells from being used if you are moving, by replacing your actions with Savage Blade.\nThis would supersede combo-specific movement options, available for most jobs.\n\nIt is recommended to keep this off, as most combos already handle this more gracefully.\nDefault: Off");
 
                 #endregion
 
@@ -178,7 +169,20 @@ namespace WrathCombo.Window.Tabs
                 if (ImGui.Checkbox("Action Replacing", ref Service.Configuration.ActionChanging))
                     Service.Configuration.Save();
 
-                ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by the `/wrath combo` command.");
+                ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by the `/wrath combo` command.\n\nIt is REQUIRED to keep this on if you use want to use Wrath without Auto Rotation.\nDefault: On");
+
+                #endregion
+
+                #region Performance Mode
+
+                if (Service.Configuration.ActionChanging) {
+                    ImGui.Indent();
+                    if (ImGui.Checkbox("Performance Mode", ref Service.Configuration.PerformanceMode))
+                        Service.Configuration.Save();
+
+                    ImGuiComponents.HelpMarker("This mode will disable actions being changed on your hotbar, but will still continue to work in the background as you press your buttons.\n\nIt is recommended to try turing this on if you have performance issues.\nDefault: Off");
+                    ImGui.Unindent();
+                }
 
                 #endregion
 
@@ -312,6 +316,23 @@ namespace WrathCombo.Window.Tabs
                 ImGui.Text($"   -   Interrupt Delay");
 
                 ImGuiComponents.HelpMarker("The percentage of a total cast time to wait before interrupting.\nApplies to all interrupts, in every job's combos.\n\nIt is recommend to keep this value below 50%.\nDefault: 0%");
+
+                #endregion
+                
+                #region Maximum Weaves
+
+                ImGui.PushItemWidth(75);
+                if (ImGui.InputInt("###MaximumWeaves", ref Service.Configuration.MaximumWeavesPerWindow))
+                    Service.Configuration.Save();
+
+                ImGui.SameLine();
+                ImGui.Text("oGCDs");
+
+                ImGui.SameLine(pos);
+
+                ImGui.Text($"   -   Maximum number of Weaves");
+
+                ImGuiComponents.HelpMarker("This controls how many oGCDs are allowed between GCDs.\nThe sort of 'default' for the game is double weaving, but triple weaving is completely possible to do with low enough latency (of every kind); but if you struggle with latency of some sort, single weaving may even be a good answer for you.\nTriple weaving is already done in a manner where we try to avoid clipping GCDs, and as such doesn't happen particularly often even if you do have good latency, so it is a safe option as far as parses/etc goes.\n\nDefault: 2");
 
                 #endregion
 

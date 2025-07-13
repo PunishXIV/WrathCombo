@@ -12,6 +12,7 @@ using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
 using ECommons.Logging;
+using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -80,16 +81,17 @@ public partial class Helper(ref Leasing leasing)
         const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
         var attr = preset.Attributes();
 
-        // Bail if it is a heal preset
-        if (attr.CustomComboInfo.Name.Contains("heal", lower))
+        // Bail if it is not one of the main combos
+        if (attr.ComboType is not (ComboType.Advanced or ComboType.Simple))
             return null;
 
         // Detect the target type
-        var targetType = attr.CustomComboInfo.Name.Contains("single target", lower) ?
-            ComboTargetTypeKeys.SingleTarget :
-            (attr.CustomComboInfo.Name.Contains("- aoe", lower) ||
-             attr.CustomComboInfo.Name.Contains("aoe dps", lower)) ?
-                ComboTargetTypeKeys.MultiTarget : ComboTargetTypeKeys.Other;
+        var targetType =
+            attr.CustomComboInfo.Name.Contains("single target", lower)
+                ? ComboTargetTypeKeys.SingleTarget
+                : (attr.CustomComboInfo.Name.Contains("- aoe", lower))
+                    ? ComboTargetTypeKeys.MultiTarget
+                    : ComboTargetTypeKeys.Other;
 
         // Bail if it is not a Single-Target or Multi-Target primary preset
         if (targetType == ComboTargetTypeKeys.Other)
@@ -97,7 +99,7 @@ public partial class Helper(ref Leasing leasing)
 
         // Detect the simplicity level
         var simplicityLevel =
-            attr.CustomComboInfo.Name.Contains("simple mode", lower)
+            attr.ComboType is ComboType.Simple
                 ? ComboSimplicityLevelKeys.Simple
                 : ComboSimplicityLevelKeys.Advanced;
         // Flip the simplicity level

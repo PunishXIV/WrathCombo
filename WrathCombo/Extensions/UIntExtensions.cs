@@ -10,7 +10,7 @@ internal static class UIntExtensions
 
     internal static bool TraitLevelChecked(this uint value) => CustomComboFunctions.TraitLevelChecked(value);
 
-    internal static string ActionName(this uint value) => GetActionName(value);
+    internal static string ActionName(this uint value) => CustomComboFunctions.GetActionName(value);
 
     internal static int Role(this uint value) => CustomComboFunctions.JobIDs.JobIDToRole(value);
 

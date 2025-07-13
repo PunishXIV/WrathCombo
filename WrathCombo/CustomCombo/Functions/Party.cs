@@ -1,4 +1,5 @@
-﻿using Dalamud.Game.ClientState.Objects.SubKinds;
+﻿using Dalamud.Game.ClientState.Objects.Enums;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
@@ -78,8 +79,11 @@ namespace WrathCombo.CustomComboNS.Functions
 
             if ((Service.Configuration.AddOutOfPartyNPCsToRetargeting) || (AutoRotationController.cfg?.Enabled == true && AutoRotationController.cfg.HealerSettings.IncludeNPCs && Player.Job.IsHealer()))
             {
-                foreach (var npc in Svc.Objects.OfType<IBattleChara>().Where(x => x is not IPlayerCharacter && !existingIds.Contains(x.GameObjectId)))
+                foreach (var npc in Svc.Objects.OfType<IBattleNpc>().Where(x => !existingIds.Contains(x.GameObjectId)))
                 {
+                    if (npc.BattleNpcKind is BattleNpcSubKind.Pet) continue; // Skips carbuncles, fairies etc.
+                    if (npc.BattleNpcKind is BattleNpcSubKind.Chocobo && npc.OwnerId != Player.GameObject->GetGameObjectId()) continue; // Skips other players' chocobos
+
                     if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()))
                     {
                         WrathPartyMember wmember = new()

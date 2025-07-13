@@ -238,15 +238,13 @@ internal partial class DRG : Melee
                         //Battle Litany Feature
                         if (IsEnabled(CustomComboPreset.DRG_ST_Litany) &&
                             ActionReady(BattleLitany) &&
-                            (DRG_ST_Litany_SubOption == 0 ||
-                             DRG_ST_Litany_SubOption == 1 && InBossEncounter()))
+                            (DRG_ST_Litany_SubOption == 0 || InBossEncounter()))
                             return BattleLitany;
 
                         //Lance Charge Feature
                         if (IsEnabled(CustomComboPreset.DRG_ST_Lance) &&
                             ActionReady(LanceCharge) &&
-                            (DRG_ST_Lance_SubOption == 0 ||
-                             DRG_ST_Lance_SubOption == 1 && InBossEncounter()))
+                            (DRG_ST_Lance_SubOption == 0 || InBossEncounter()))
                             return LanceCharge;
                     }
 
@@ -262,11 +260,11 @@ internal partial class DRG : Melee
                             ActionReady(MirageDive) &&
                             HasStatusEffect(Buffs.DiveReady) &&
                             (OriginalHook(Jump) is MirageDive) &&
-                            ((IsEnabled(CustomComboPreset.DRG_ST_DoubleMirage) &&
+                            ((DRG_ST_DoubleMirage &&
                               (LoTDActive ||
                                (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
                                 GetCooldownRemainingTime(Geirskogul) > 3))) ||
-                             IsNotEnabled(CustomComboPreset.DRG_ST_DoubleMirage)))
+                             !DRG_ST_DoubleMirage))
                             return MirageDive;
 
                         //Wyrmwind Thrust Feature
@@ -319,9 +317,9 @@ internal partial class DRG : Melee
                                 return Jump;
 
                             if (LevelChecked(HighJump) &&
-                                ((IsEnabled(CustomComboPreset.DRG_ST_DoubleMirage) &&
+                                ((DRG_ST_DoubleMirage &&
                                   (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDActive)) ||
-                                 IsNotEnabled(CustomComboPreset.DRG_ST_DoubleMirage)))
+                                 !DRG_ST_DoubleMirage))
                                 return (HighJump);
                         }
 

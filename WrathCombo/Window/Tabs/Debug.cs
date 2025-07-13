@@ -383,9 +383,9 @@ internal class Debug : ConfigWindow, IDisposable
                 {
                     CustomStyleText("Cast Action:", castChara.CastActionId == 0
                         ? string.Empty
-                        : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(castChara.CastActionId))
+                        : $"{(string.IsNullOrEmpty(GetActionName(castChara.CastActionId))
                             ? "Unknown"
-                            : ActionWatching.GetActionName(castChara.CastActionId))} (ID: {castChara.CastActionId})");
+                            : GetActionName(castChara.CastActionId))} (ID: {castChara.CastActionId})");
                     CustomStyleText("Cast Time:", $"{castChara.CurrentCastTime:F2} / {castChara.TotalCastTime:F2}");
 
                     // Extract Lumina Data
@@ -396,7 +396,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText("Cast 100ms:", $"{charaSpell?.Cast100ms * 0.1f ?? 0f:F2} + {charaSpell?.ExtraCastTime100ms * 0.1f ?? 0f:F2}");
                     CustomStyleText("Cast Type:", $"{charaSpell?.CastType ?? 0}");
                     CustomStyleText("Action Type:", $"{castChara.CastActionType}");
-                    CustomStyleText("Action Range:", $"{ActionWatching.GetActionRange(charaSpell?.RowId ?? 0)}y");
+                    CustomStyleText("Action Range:", $"{GetActionRange(charaSpell?.RowId ?? 0)}y");
                     CustomStyleText("Effect Range:", $"{charaSpell?.EffectRange ?? 0}y");
                     CustomStyleText("Interruptible:", $"{castChara.IsCastInterruptible}");
                 }
@@ -570,28 +570,28 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Last Action:",
                 ActionWatching.LastAction == 0
                     ? string.Empty
-                    : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(ActionWatching.LastAction))
+                    : $"{(string.IsNullOrEmpty(GetActionName(ActionWatching.LastAction))
                         ? "Unknown"
-                        : ActionWatching.GetActionName(ActionWatching.LastAction))} (ID: {ActionWatching.LastAction})");
+                        : GetActionName(ActionWatching.LastAction))} (ID: {ActionWatching.LastAction})");
             CustomStyleText("Last Action Cost:", GetResourceCost(ActionWatching.LastAction));
             CustomStyleText("Last Action Type:", ActionWatching.GetAttackType(ActionWatching.LastAction));
-            CustomStyleText("Last Weaponskill:", ActionWatching.GetActionName(ActionWatching.LastWeaponskill));
-            CustomStyleText("Last Spell:", ActionWatching.GetActionName(ActionWatching.LastSpell));
-            CustomStyleText("Last Ability:", ActionWatching.GetActionName(ActionWatching.LastAbility));
+            CustomStyleText("Last Weaponskill:", GetActionName(ActionWatching.LastWeaponskill));
+            CustomStyleText("Last Spell:", GetActionName(ActionWatching.LastSpell));
+            CustomStyleText("Last Ability:", GetActionName(ActionWatching.LastAbility));
             CustomStyleText("Combo Timer:", $"{ComboTimer:F1}");
             CustomStyleText("Combo Action:",
                 ComboAction == 0
                     ? string.Empty
-                    : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(ComboAction))
+                    : $"{(string.IsNullOrEmpty(GetActionName(ComboAction))
                         ? "Unknown"
-                        : ActionWatching.GetActionName(ComboAction))} (ID: {ComboAction})");
+                        : GetActionName(ComboAction))} (ID: {ComboAction})");
             CustomStyleText("Cast Time:", $"{player.CurrentCastTime:F2} / {player.TotalCastTime:F2}");
             CustomStyleText("Cast Action:",
                 player.CastActionId == 0
                     ? string.Empty
-                    : $"{(string.IsNullOrEmpty(ActionWatching.GetActionName(player.CastActionId))
+                    : $"{(string.IsNullOrEmpty(GetActionName(player.CastActionId))
                         ? "Unknown"
-                        : ActionWatching.GetActionName(player.CastActionId))} (ID: {player.CastActionId})");
+                        : GetActionName(player.CastActionId))} (ID: {player.CastActionId})");
             CustomStyleText("GCD Total:", GCDTotal);
             CustomStyleText("Queued Action:", ActionManager.Instance()->QueuedActionId.ActionName());
             CustomStyleText("Animation Lock:", $"{ActionManager.Instance()->AnimationLock:F1}");
@@ -618,7 +618,7 @@ internal class Debug : ConfigWindow, IDisposable
                     {
                         CustomStyleText("Next Action:", WrathOpener.CurrentOpener.OpenerActions[WrathOpener.CurrentOpener.OpenerStep].ActionName());
                         CustomStyleText("Is Delayed Weave:", WrathOpener.CurrentOpener.DelayedWeaveSteps.Any(x => x == WrathOpener.CurrentOpener.OpenerStep));
-                        CustomStyleText("Can Delayed Weave:", CanDelayedWeave(end: 0.1));
+                        CustomStyleText("Can Delayed Weave:", CanDelayedWeave(weaveEnd: 0.1f));
                     }
                 }
 
@@ -798,7 +798,7 @@ internal class Debug : ConfigWindow, IDisposable
                 CustomStyleText("Current Cast Time:", ActionManager.GetAdjustedCastTime(ActionType.Action, _debugSpell.Value.RowId));
                 CustomStyleText("Max Charges:", $"{_debugSpell.Value.MaxCharges}");
                 CustomStyleText("Charges (Level):", $"{GetCooldown(_debugSpell.Value.RowId).MaxCharges}");
-                CustomStyleText("Range:", $"{ActionWatching.GetActionRange(_debugSpell.Value.RowId)}");
+                CustomStyleText("Range:", $"{GetActionRange(_debugSpell.Value.RowId)}");
                 CustomStyleText("Effect Range:", $"{_debugSpell.Value.EffectRange}");
                 CustomStyleText("Can Target Hostile:", $"{_debugSpell.Value.CanTargetHostile}");
                 CustomStyleText("Can Target Self:", $"{_debugSpell.Value.CanTargetSelf}");
@@ -919,7 +919,7 @@ internal class Debug : ConfigWindow, IDisposable
         {
             if (ImGui.TreeNode("Active Spells"))
             {
-                ImGui.TextUnformatted($"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(ActionWatching.GetActionName).OrderBy(x => x))}");
+                ImGui.TextUnformatted($"{string.Join("\n", Service.Configuration.ActiveBLUSpells.Select(GetActionName).OrderBy(x => x))}");
                 ImGui.TreePop();
             }
 

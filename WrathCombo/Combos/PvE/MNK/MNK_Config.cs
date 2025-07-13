@@ -8,6 +8,8 @@ internal partial class MNK
 {
     internal static class Config
     {
+        #region Variables
+
         public static UserInt
             MNK_SelectedOpener = new("MNK_SelectedOpener", 0),
             MNK_Balance_Content = new("MNK_Balance_Content", 1),
@@ -23,6 +25,7 @@ internal partial class MNK
             MNK_AoE_Bloodbath_Threshold = new("MNK_AoE_BloodbathThreshold", 30),
             MNK_VariantCure = new("MNK_Variant_Cure", 50);
 
+        #endregion
         internal static void Draw(CustomComboPreset preset)
         {
             switch (preset)
@@ -33,7 +36,6 @@ internal partial class MNK
 
                     DrawSliderInt(0, 100, MNK_ST_Bloodbath_Threshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-
                     break;
 
                 case CustomComboPreset.MNK_AoE_ComboHeals:
@@ -42,7 +44,6 @@ internal partial class MNK
 
                     DrawSliderInt(0, 100, MNK_AoE_Bloodbath_Threshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-
                     break;
 
                 case CustomComboPreset.MNK_STUseBrotherhood:
@@ -51,7 +52,6 @@ internal partial class MNK
 
                     DrawHorizontalRadioButton(MNK_ST_Brotherhood_SubOption,
                         "Boss encounters Only", $"Only uses {Brotherhood.ActionName()} when in Boss encounters.", 1);
-
                     break;
 
                 case CustomComboPreset.MNK_STUseROF:
@@ -60,7 +60,6 @@ internal partial class MNK
 
                     DrawHorizontalRadioButton(MNK_ST_RiddleOfFire_SubOption,
                         "Boss encounters Only", $"Only uses {RiddleOfFire.ActionName()}  when in Boss encounters.", 1);
-
                     break;
 
                 case CustomComboPreset.MNK_STUseROW:
@@ -69,25 +68,21 @@ internal partial class MNK
 
                     DrawHorizontalRadioButton(MNK_ST_RiddleOfWind_SubOption,
                         "Boss encounters Only", $"Only uses {RiddleOfWind.ActionName()} when in Boss encounters.", 1);
-
                     break;
 
                 case CustomComboPreset.MNK_AoEUseBrotherhood:
                     DrawSliderInt(0, 100, MNK_AoE_Brotherhood_HP,
                         $"Stop Using {Brotherhood.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
-
                     break;
 
                 case CustomComboPreset.MNK_AoEUseROF:
                     DrawSliderInt(0, 100, MNK_AoE_RiddleOfFire_HP,
                         $"Stop Using {RiddleOfFire.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
-
                     break;
 
                 case CustomComboPreset.MNK_AoEUseROW:
                     DrawSliderInt(0, 100, MNK_AoE_RiddleOfWind_HP,
                         $"Stop Using {RiddleOfWind.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
-
                     break;
 
                 case CustomComboPreset.MNK_STUseOpener:
@@ -101,13 +96,11 @@ internal partial class MNK
 
                     ImGui.NewLine();
                     DrawBossOnlyChoice(MNK_Balance_Content);
-
                     break;
 
                 case CustomComboPreset.MNK_Variant_Cure:
                     DrawSliderInt(1, 100, MNK_VariantCure,
                         "HP% to be at or under", 200);
-
                     break;
             }
         }

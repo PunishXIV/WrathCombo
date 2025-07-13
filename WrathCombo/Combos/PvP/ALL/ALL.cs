@@ -1,12 +1,12 @@
 ﻿using System;
 using Dalamud.Game.ClientState.Objects.Types;
-using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Window.Functions.UserConfig;
+using System.Collections.Frozen;
 
 namespace WrathCombo.Combos.PvP;
 
@@ -109,7 +109,7 @@ internal static class PvPCommon
     }
 
     // Lists of Excluded Actions 
-    internal static readonly HashSet<uint>
+    internal static readonly FrozenSet<uint>
         CommonActions = [Teleport, Return, Guard, Recuperate, Purify, StandardElixir, Sprint, PvPRoleAction],
         MovementActions = [
             PLDPvP.Intervene, PLDPvP.Guardian,

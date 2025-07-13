@@ -3,6 +3,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using WrathCombo.Data;
 using WrathCombo.Services;
+using static WrathCombo.Data.ActionWatching;
 
 namespace WrathCombo.CustomComboNS.Functions
 {
@@ -44,10 +45,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns> True or false. </returns>
         public static bool JustUsed(uint actionID, float variance = 3f)
         {
-            if (!ActionWatching.ActionTimestamps.TryGetValue(actionID, out long timestamp))
-                return false;
-
-            return (Environment.TickCount64 - timestamp) <= (long)(variance * 1000f);
+            return ActionTimestamps.TryGetValue(actionID, out long timestamp) && (Environment.TickCount64 - timestamp) <= (long)(variance * 1000f);
         }
 
         /// <summary> Checks if an action has just been used on a given target. </summary>
@@ -66,10 +64,7 @@ namespace WrathCombo.CustomComboNS.Functions
         /// <returns></returns>
         public static bool JustUsedOn(uint actionID, ulong targetGameobjectId, float variance = 3f)
         {
-            if (!ActionWatching.UsedOnDict.TryGetValue((actionID, targetGameobjectId), out long timestamp))
-                return false;
-
-            return (Environment.TickCount64 - timestamp) <= (long)(variance * 1000f);
+            return UsedOnDict.TryGetValue((actionID, targetGameobjectId), out long timestamp) && (Environment.TickCount64 - timestamp) <= (long)(variance * 1000f);
         }
 
         /// <summary> Gets a value indicating whether an action has any available charges. </summary>
@@ -104,6 +99,15 @@ namespace WrathCombo.CustomComboNS.Functions
 
         public static unsafe float GCDTotal => GCD->Total;
 
-        public static unsafe float RemainingGCD => GCDTotal - GCD->Elapsed;
+        public static unsafe float ElapsedGCD => GCD->Elapsed;
+
+        public static unsafe float RemainingGCD
+        {
+            get
+            {
+                var recastGCD = GCD;
+                return recastGCD->Total - recastGCD->Elapsed;
+            }
+        }
     }
 }

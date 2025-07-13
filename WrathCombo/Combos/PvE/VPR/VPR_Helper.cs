@@ -16,6 +16,7 @@ internal partial class VPR
 
     internal static bool InRange() =>
         IsInRange(CurrentTarget, 5f);
+
     internal static bool CappedOnCoils() =>
         TraitLevelChecked(Traits.EnhancedVipersRattle) && RattlingCoilStacks > 2 ||
         !TraitLevelChecked(Traits.EnhancedVipersRattle) && RattlingCoilStacks > 1;
@@ -43,7 +44,7 @@ internal partial class VPR
         !HasStatusEffect(Buffs.HindsbaneVenom) &&
         !HasStatusEffect(Buffs.HindstungVenom);
 
-    #region Awaken
+    #region Reawaken
 
     internal static bool UseReawaken()
     {
@@ -71,8 +72,8 @@ internal partial class VPR
                 return true;
 
             //non boss encounters
-            if ((IsEnabled(CustomComboPreset.VPR_ST_SimpleMode) && !InBossEncounter() ||
-                 IsEnabled(CustomComboPreset.VPR_ST_AdvancedMode) && VPR_ST_SerpentsIre_SubOption == 1 && !InBossEncounter()) &&
+            if (((IsEnabled(CustomComboPreset.VPR_ST_SimpleMode) && !InBossEncounter()) ||
+                 (IsEnabled(CustomComboPreset.VPR_ST_AdvancedMode) && VPR_ST_SerpentsIre_SubOption == 1 && !InBossEncounter())) &&
                 SerpentOffering >= 50)
                 return true;
 
@@ -404,7 +405,9 @@ internal partial class VPR
         FourthGeneration = 34630,
         FourthLegacy = 34643,
         Ouroboros = 34631,
-        LastLash = 34635;
+        LastLash = 34635,
+        TwinfangThresh = 34638,
+        TwinbloodThresh = 34639;
 
     public static class Buffs
     {

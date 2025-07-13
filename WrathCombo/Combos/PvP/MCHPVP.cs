@@ -138,7 +138,7 @@ namespace WrathCombo.Combos.PvP
 
                         if (IsEnabled(CustomComboPreset.MCHPvP_BurstMode_Analysis))
                         {
-                            if (hasPrimedBuffs && !HasStatusEffect(Buffs.Analysis) && analysisStacks > 0 &&
+                            if (hasPrimedBuffs && !HasStatusEffect(Buffs.Analysis) && !JustUsed(Analysis, 2f) && analysisStacks > 0 &&
                                 (!IsEnabled(CustomComboPreset.MCHPvP_BurstMode_AltDrill) || IsOnCooldown(Wildfire)) &&
                                 !canWeave && !overheated && bigDamageStacks > 0)
                             {
