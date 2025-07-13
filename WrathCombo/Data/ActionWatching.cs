@@ -17,6 +17,7 @@ using System.Numerics;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
@@ -28,16 +29,18 @@ namespace WrathCombo.Data;
 public static class ActionWatching
 {
     // Dictionaries
+    internal static readonly FrozenDictionary<uint, BNpcBase> BNPCSheet =
+        Svc.Data.GetExcelSheet<BNpcBase>()!
+            .ToFrozenDictionary(i => i.RowId);
+
     internal static readonly FrozenDictionary<uint, Action> ActionSheet =
         Svc.Data.GetExcelSheet<Action>()!
             .ToFrozenDictionary(i => i.RowId);
 
     internal static readonly FrozenDictionary<uint, Trait> TraitSheet =
         Svc.Data.GetExcelSheet<Trait>()!
-            .Where(i => i.ClassJobCategory.IsValid) // Player Traits Only
             .ToFrozenDictionary(i => i.RowId);
 
-    internal static readonly Dictionary<uint, long> ChargeTimestamps = [];
     internal static readonly Dictionary<uint, long> ActionTimestamps = [];
     internal static readonly Dictionary<uint, long> LastSuccessfulUseTime = [];
     internal static readonly Dictionary<(uint, ulong), long> UsedOnDict = [];
@@ -108,7 +111,7 @@ public static class ActionWatching
 
 #if DEBUG
                     Svc.Log.Verbose(
-                        $"[ActionEffect] " +
+                        $"[ReceiveActionEffectDetour] " +
                         $"Type: {effType} | " +
                         $"Value: {effValue} | " +
                         $"Params: [{eff.Param0}, {eff.Param1}, {eff.Param2}, {eff.Param3}, {eff.Param4}] | " +
@@ -218,7 +221,7 @@ public static class ActionWatching
         }
         catch (Exception ex)
         {
-            ex.Log();
+            Svc.Log.Error(ex, "ReceiveActionEffectDetour");
         }
     }
 
@@ -243,24 +246,21 @@ public static class ActionWatching
             if (actionType == 1)
             {
                 ActionTimestamps[actionId] = currentTick;
-
-                if (GetMaxCharges(actionId) > 0)
-                    ChargeTimestamps[actionId] = currentTick;
+                UsedOnDict[(actionId, targetObjectId)] = currentTick;
             }
 
             // Update Trackers
             LastAction = actionId;
             LastActionType = actionType;
-            UsedOnDict[(actionId, targetObjectId)] = currentTick;
             TimeLastActionUsed = dateNow + TimeSpan.FromMilliseconds(ActionManager.GetAdjustedCastTime((ActionType)actionType, actionId));
 
             // Update Helpers
-            UpdateMudraState(actionId);
+            NIN.InMudra = NIN.MudraSigns.Contains(actionId);
             WrathOpener.CurrentOpener?.ProgressOpener(actionId);
 
 #if DEBUG
             Svc.Log.Verbose(
-                $"[ActionSend] " +
+                $"[SendActionDetour] " +
                 $"Action: {actionId.ActionName()} (ID: {actionId}) | " +
                 $"Type: {actionType} | " +
                 $"Sequence: {sequence} | " +
@@ -278,85 +278,8 @@ public static class ActionWatching
         }
     }
 
-    private static void UpdateMudraState(uint actionId) => NIN.InMudra = NIN.MudraSigns.Contains(actionId);
-
-    private static bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
-    {
-        replacedWith = actionId;
-        if (!P.ActionRetargeting.TryGetTargetFor(actionId, out var target, out replacedWith) ||
-            target is null)
-            return false;
-
-        if (actionId == OccultCrescent.Revive)
-        {
-            target = SimpleTarget.Stack.AllyToRaise;
-            if (target is null) return false;
-        }
-
-        targetObjectId = target.GameObjectId;
-        return true;
-    }
-
-    public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
-    {
-        return ActionManager.GetActionInRangeOrLoS(actionId, source.Struct(), target.Struct()) is 566;
-    }
-
-    /// <summary> Gets the amount of time since an action was used, in milliseconds. </summary>
-    public static float TimeSinceActionUsed(uint actionId)
-    {
-        return ActionTimestamps.TryGetValue(actionId, out long timestamp)
-            ? Environment.TickCount64 - timestamp
-            : -1f;
-    }
-
-    /// <summary> Gets the amount of time since an action was successfully cast, in milliseconds. </summary>
-    public static float TimeSinceLastSuccessfulCast(uint actionId)
-    {
-        return LastSuccessfulUseTime.TryGetValue(actionId, out long timestamp)
-            ? Environment.TickCount64 - timestamp
-            : -1f;
-    }
-
-    public static uint WhichOfTheseActionsWasLast(params uint[] actions)
-    {
-        if (CombatActions.Count == 0) return 0;
-
-        int currentLastIndex = 0;
-        foreach (var action in actions)
-        {
-            if (CombatActions.Any(x => x == action))
-            {
-                int index = CombatActions.LastIndexOf(action);
-
-                if (index > currentLastIndex) currentLastIndex = index;
-            }
-        }
-
-        return CombatActions[currentLastIndex];
-    }
-
-    public static int HowManyTimesUsedAfterAnotherAction(uint lastUsedIDToCheck, uint idToCheckAgainst)
-    {
-        if (CombatActions.Count < 2) return 0;
-        if (WhichOfTheseActionsWasLast(lastUsedIDToCheck, idToCheckAgainst) != lastUsedIDToCheck) return 0;
-
-        int startingIndex = CombatActions.LastIndexOf(idToCheckAgainst);
-        if (startingIndex == -1) return 0;
-
-        int count = 0;
-        for (int i = startingIndex + 1; i < CombatActions.Count; i++)
-        {
-            if (CombatActions[i] == lastUsedIDToCheck) count++;
-        }
-
-        return count;
-    }
-
-    /// <summary> Checks if at least one ability was used between GCDs. </summary>
-    public static bool HasWeaved() => WeaveActions.Count > 0;
-
     /// <summary> Checks if at least two abilities were used between GCDs. </summary>
+    [Obsolete("CanWeave now includes a weave limiter by default. This method will be removed in a future update.")]
     public static bool HasDoubleWeaved() => WeaveActions.Count > 1;
 
     /// <summary> Gets the amount of GCDs used since combat started. </summary>
@@ -414,7 +337,7 @@ public static class ActionWatching
                 var original = actionId; //Save the original action, do not modify
                 var originalTargetId = targetId; //Save the original target, do not modify
 
-                if (Service.Configuration.PerformanceMode) //Performance mode only logic, to modify the actionId
+                if (Service.Configuration.ActionChanging && Service.Configuration.PerformanceMode) //Performance mode only logic, to modify the actionId
                 {
                     var result = actionId;
                     foreach (var combo in ActionReplacer.FilteredCombos)
@@ -454,10 +377,28 @@ public static class ActionWatching
                 return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Svc.Log.Error(ex, "UseActionDetour");
             return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         }
+    }
+
+    private static bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
+    {
+        replacedWith = actionId;
+        if (!P.ActionRetargeting.TryGetTargetFor(actionId, out var target, out replacedWith) ||
+            target is null)
+            return false;
+
+        if (actionId == OccultCrescent.Revive)
+        {
+            target = SimpleTarget.Stack.AllyToRaise;
+            if (target is null) return false;
+        }
+
+        targetObjectId = target.GameObjectId;
+        return true;
     }
 
     public static void Enable()
@@ -491,12 +432,13 @@ public static class ActionWatching
         Svc.Condition.ConditionChange -= ResetActions;
     }
 
-    public static int GetLevel(uint id) => ActionSheet.TryGetValue(id, out var action) && action.ClassJobCategory.IsValid ? action.ClassJobLevel : 255;
-    public static float GetActionCastTime(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.Cast100ms * 0.1f : 0f;
-    public unsafe static int GetActionRange(uint id) => (int)ActionManager.GetActionRange(id);
-    public static int GetActionEffectRange(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.EffectRange : -1;
-    public static int GetTraitLevel(uint id) => TraitSheet.TryGetValue(id, out var trait) ? trait.Level : 255;
-    public static string GetActionName(uint id) => ActionSheet.TryGetValue(id, out var action) ? action.Name.ToString() : "Unknown Action";
+    [Obsolete("Use CustomComboFunctions.GetActionName instead. This method will be removed in a future update.")]
+    public static string GetActionName(uint id) => CustomComboFunctions.GetActionName(id);
+
+    public static unsafe bool OutOfRange(uint actionId, IGameObject source, IGameObject target)
+    {
+        return ActionManager.GetActionInRangeOrLoS(actionId, source.Struct(), target.Struct()) is 566;
+    }
 
     public static string GetBLUIndex(uint id)
     {

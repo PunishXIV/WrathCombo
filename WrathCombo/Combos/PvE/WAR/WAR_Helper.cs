@@ -19,7 +19,10 @@ internal partial class WAR : Tank
     internal static bool CanInfuriate(int gauge = 50, int charges = 0) => InCombat() && ActionReady(Infuriate) && !HasNC && GetRemainingCharges(Infuriate) > charges && BeastGauge <= gauge;
     internal static bool CanOnslaught(int charges = 0, float distance = 20, bool movement = true) => ActionReady(Onslaught) && GetRemainingCharges(Onslaught) > charges && GetTargetDistance() <= distance && movement;
     internal static bool CanPRend(float distance = 20, bool movement = true) => LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && GetTargetDistance() <= distance && movement;
-    internal static bool CanFC(int gauge = 50) => LevelChecked(OriginalHook(InnerBeast)) && (HasIR.Stacks || (BeastGauge >= 50 && ((HasNC && BeastGauge >= gauge && LevelChecked(InnerChaos)) || IR.Cooldown is < 1f or > 40f)) || BeastGauge >= gauge);
+    internal static bool CanSpendBeastGauge(int gauge = 50, bool pooling = false) => LevelChecked(OriginalHook(InnerBeast)) && (HasIR.Stacks || (BeastGauge >= gauge || pooling));
+    internal static bool BurstPoolMinimum => BeastGauge >= 50 && IR.Cooldown is < 1 or > 40;
+    internal static bool STBurstPooling => BurstPoolMinimum && (IsEnabled(CustomComboPreset.WAR_ST_Simple) || (IsEnabled(CustomComboPreset.WAR_ST_Advanced) && Config.WAR_ST_FellCleave_BurstPooling == 0));
+    internal static bool AoEBurstPooling => BurstPoolMinimum && (IsEnabled(CustomComboPreset.WAR_AoE_Simple) || (IsEnabled(CustomComboPreset.WAR_AoE_Advanced) && Config.WAR_AoE_Decimate_BurstPooling == 0));
     internal static (float Cooldown, float Status, int Stacks) IR => (GetCooldownRemainingTime(OriginalHook(Berserk)), GetStatusEffectRemainingTime(Buffs.InnerReleaseBuff), GetStatusEffectStacks(Buffs.InnerReleaseStacks));
     internal static (float Status, int Stacks) BF => (GetStatusEffectRemainingTime(Buffs.BurgeoningFury), GetStatusEffectStacks(Buffs.BurgeoningFury));
     internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || HasStatusEffect(Buffs.InnerReleaseStacks));
@@ -177,7 +180,9 @@ internal partial class WAR : Tank
     internal static bool ShouldUseOnslaught(int charges = 0, float distance = 20, bool movement = true) => CanOnslaught(charges, distance, movement) && CanWeave() && HasST;
     internal static bool ShouldUsePrimalRuination => LevelChecked(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) && HasST;
     internal static bool ShouldUsePrimalRend(float distance = 20, bool movement = true) => CanPRend(distance, movement) && !JustUsed(InnerRelease) && HasST;
-    internal static bool ShouldUseFellCleave(int gauge = 90) => CanFC(gauge) && HasST && InMeleeRange() && Minimal;
+    internal static bool ShouldUseFellCleave(int gauge = 90) => CanSpendBeastGauge(gauge, STBurstPooling) && HasST && InMeleeRange() && Minimal;
+    internal static bool ShouldUseDecimate(int gauge = 90) => CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && InMeleeRange() && Minimal;
+
     internal static bool ShouldUseTomahawk => LevelChecked(Tomahawk) && !InMeleeRange() && HasBattleTarget();
     internal static uint STCombo 
         => ComboTimer > 0 ? LevelChecked(Maim) && ComboAction == HeavySwing ? Maim

@@ -6,6 +6,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SGE.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -21,6 +22,11 @@ internal partial class SGE
     internal static bool MaxPhlegma =>
         GetRemainingCharges(OriginalHook(Phlegma)) == GetMaxCharges(OriginalHook(Phlegma));
 
+    internal static IGameObject? Target =>
+        SimpleTarget.UIMouseOverTarget.IfCanUseOn(Kardia).IfWithinRange(30) ??
+        SimpleTarget.HardTarget.IfCanUseOn(Kardia).IfWithinRange(30) ??
+        SimpleTarget.AnyTank;
+
     internal static bool HasAddersgall() =>
         Addersgall > 0;
 
@@ -34,11 +40,11 @@ internal partial class SGE
     internal static bool HiddenKerachole() =>
         IsEnabled(CustomComboPreset.SGE_Hidden_Kerachole) &&
         ActionReady(Kerachole) && HasAddersgall() &&
-        CanSpellWeave() && RaidWideCasting();
+        CanWeave() && RaidWideCasting();
 
     internal static bool HiddenHolos() =>
         IsEnabled(CustomComboPreset.SGE_Hidden_Holos) &&
-        ActionReady(Holos) && CanSpellWeave() && RaidWideCasting() &&
+        ActionReady(Holos) && CanWeave() && RaidWideCasting() &&
         GetPartyAvgHPPercent() <= SGE_Hidden_HolosOption;
 
     internal static bool HiddenEprognosis()

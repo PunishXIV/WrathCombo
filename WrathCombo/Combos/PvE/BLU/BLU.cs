@@ -114,7 +114,7 @@ internal partial class BLU : Caster
                         return Whistle;
                     if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle) && IsOffCooldown(JKick))
                         return Tingle;
-                    if (!HasStatusEffect(Buffs.MoonFlute) && !HasStatusEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute) && !WasLastSpell(MoonFlute))
+                    if (!HasStatusEffect(Buffs.MoonFlute) && !HasStatusEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute) && !WasLastSpell(MoonFlute) && !JustUsed(MoonFlute))
                         return MoonFlute;
                     if (IsOffCooldown(JKick) && IsSpellActive(JKick))
                         return JKick;
@@ -129,7 +129,7 @@ internal partial class BLU : Caster
                         return Whistle;
                     if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle) && IsOffCooldown(JKick))
                         return Tingle;
-                    if (!HasStatusEffect(Buffs.MoonFlute) && !HasStatusEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute))
+                    if (!HasStatusEffect(Buffs.MoonFlute) && !HasStatusEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute) && !JustUsed(MoonFlute))
                         return MoonFlute;
                     if (IsOffCooldown(JKick) && IsSpellActive(JKick))
                         return JKick;
@@ -408,7 +408,7 @@ internal partial class BLU : Caster
                     if (IsSpellActive(RoseOfDestruction) && GetCooldown(RoseOfDestruction).CooldownRemaining < 1f)
                         return RoseOfDestruction;
 
-                    if (IsSpellActive(MoonFlute))
+                    if (IsSpellActive(MoonFlute) && !JustUsed(MoonFlute))
                         return MoonFlute;
                 }
 

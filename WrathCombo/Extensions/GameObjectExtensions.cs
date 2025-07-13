@@ -5,6 +5,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -151,6 +152,14 @@ public static class GameObjectExtensions
         obj != null &&
         Svc.Objects
             .Any(x => x.GameObjectId == obj.GameObjectId) ? obj : null;
+
+
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+    ///     <see langword="null" /> if the target cannot be affected by the action.
+    /// </summary>
+    public unsafe static IGameObject? IfCanUseOn(this IGameObject? obj, uint actionId) =>
+        obj != null && ActionManager.CanUseActionOnTarget(actionId, obj.Struct()) ? obj : null;
 
     #endregion
 

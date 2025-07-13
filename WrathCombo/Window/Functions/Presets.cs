@@ -52,6 +52,7 @@ namespace WrathCombo.Window.Functions
             public AutoActionAttribute? AutoAction;
             public RoleAttribute? RoleAttribute;
             public HiddenAttribute? Hidden;
+            public ComboType ComboType;
 
             public PresetAttributes(CustomComboPreset preset)
             {
@@ -72,6 +73,7 @@ namespace WrathCombo.Window.Functions
                 AutoAction = preset.GetAttribute<AutoActionAttribute>();
                 RoleAttribute = preset.GetAttribute<RoleAttribute>();
                 Hidden = preset.GetAttribute<HiddenAttribute>();
+                ComboType = PresetStorage.GetComboType(preset);
             }
         }
 

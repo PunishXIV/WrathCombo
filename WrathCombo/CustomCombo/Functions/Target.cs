@@ -1,12 +1,10 @@
-﻿using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
 using ImGuiNET;
-using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,11 +38,8 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara)
             return false;
 
-        return Svc.Data.GetExcelSheet<BNpcBase>().TryGetRow(chara.DataId, out var dataRow) && dataRow.Rank is 2 or 6;
+        return ActionWatching.BNPCSheet.TryGetValue(chara.DataId, out var charaSheet) && charaSheet.Rank is 2 or 6;
     }
-
-    [Obsolete("Use TargetIsBoss")]
-    internal static bool IsBoss(IGameObject? target) => TargetIsBoss(target);
 
     /// <summary> Checks if an object is quest-related. Defaults to CurrentTarget unless specified. </summary>
     internal static unsafe bool IsQuestMob(IGameObject? optionalTarget = null)
@@ -54,9 +49,6 @@ internal abstract partial class CustomComboFunctions
 
         return chara.Struct()->NamePlateIconId is 71204 or 71144 or 71224 or 71344;
     }
-
-    [Obsolete("Use HasBattleTarget")]
-    internal static bool TargetIsHostile() => HasBattleTarget();
 
     /// <summary> Checks if an object is friendly. Defaults to CurrentTarget unless specified. </summary>
     public unsafe static bool TargetIsFriendly(IGameObject? optionalTarget = null)
@@ -78,7 +70,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || HasStatusEffect(3808, chara, true))
             return false;
 
-        return Svc.Data.GetExcelSheet<BNpcBase>().TryGetRow(chara.DataId, out var dataRow) && !dataRow.IsOmnidirectional;
+        return ActionWatching.BNPCSheet.TryGetValue(chara.DataId, out var charaSheet) && !charaSheet.IsOmnidirectional;
     }
 
     /// <summary>
@@ -152,9 +144,6 @@ internal abstract partial class CustomComboFunctions
             ? Math.Clamp(charaHPPercent + chara.ShieldPercentage, 0f, 100f)
             : charaHPPercent;
     }
-
-    [Obsolete("Use GetTargetCurrentHP")]
-    public static float EnemyHealthCurrentHp() => GetTargetCurrentHP();
 
     /// <summary> Gets an object's maximum HP. Defaults to CurrentTarget unless specified. </summary>
     public static uint GetTargetMaxHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.MaxHp : 0;
@@ -232,7 +221,7 @@ internal abstract partial class CustomComboFunctions
         if (!ActionWatching.ActionSheet.TryGetValue(aoeSpell, out var sheetSpell))
             return 0;
 
-        if (sheetSpell.CanTargetHostile && ((target ??= CurrentTarget) is null || GetTargetDistance(target) > ActionWatching.GetActionRange(sheetSpell.RowId)))
+        if (sheetSpell.CanTargetHostile && ((target ??= CurrentTarget) is null || GetTargetDistance(target) > GetActionRange(sheetSpell.RowId)))
             return 0;
 
         int count = sheetSpell.CastType switch

@@ -1,6 +1,5 @@
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.SAM.Config;
-using static WrathCombo.Data.ActionWatching;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM : Melee
@@ -109,13 +108,8 @@ internal partial class SAM : Melee
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
-            if (ActionReady(Enpi) &&
-                !InMeleeRange() &&
-                HasBattleTarget())
-                return Enpi;
-
             //oGCDs
-            if (CanWeave() && !HasDoubleWeaved() && M6SReady)
+            if (CanWeave() && M6SReady)
             {
                 //Meikyo Features
                 if (UseMeikyo())
@@ -143,7 +137,9 @@ internal partial class SAM : Melee
                         return Senei;
 
                     //Guren if no Senei
-                    case >= 25 when !LevelChecked(Senei) && ActionReady(Guren) && InActionRange(Guren):
+                    case >= 25 when !LevelChecked(Senei) &&
+                                    ActionReady(Guren) &&
+                                    InActionRange(Guren):
                         return Guren;
                 }
 
@@ -175,6 +171,11 @@ internal partial class SAM : Melee
                     return Role.Bloodbath;
             }
 
+            //Ranged
+            if (ActionReady(Enpi) &&
+                !InMeleeRange() &&
+                HasBattleTarget())
+                return Enpi;
             if (UseTsubame)
                 return OriginalHook(TsubameGaeshi);
 
@@ -281,12 +282,8 @@ internal partial class SAM : Melee
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
-            if (IsEnabled(CustomComboPreset.SAM_ST_RangedUptime) &&
-                ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
-                return Enpi;
-
             //oGCDs
-            if (CanWeave() && !HasDoubleWeaved() && M6SReady)
+            if (CanWeave() && M6SReady)
             {
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs))
                 {
@@ -321,7 +318,7 @@ internal partial class SAM : Melee
                             return Senei;
 
                         //Guren if no Senei
-                        if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Guren) &&
+                        if (SAM_ST_CDs_Guren &&
                             !LevelChecked(Senei) &&
                             ActionReady(Guren) && InActionRange(Guren))
                             return Guren;
@@ -362,6 +359,11 @@ internal partial class SAM : Melee
                 }
             }
 
+            //Ranged
+            if (IsEnabled(CustomComboPreset.SAM_ST_RangedUptime) &&
+                ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
+                return Enpi;
+
             if (IsEnabled(CustomComboPreset.SAM_ST_Damage))
             {
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Iaijutsu) &&
@@ -370,7 +372,7 @@ internal partial class SAM : Melee
 
                 //Ogi Namikiri Features
                 if (IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri) &&
-                    (!IsEnabled(CustomComboPreset.SAM_ST_CDs_OgiNamikiri_Movement) || !IsMoving()) &&
+                    (!SAM_ST_CDs_OgiNamikiri_Movement || !IsMoving()) &&
                     ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
                     HasStatusEffect(Buffs.OgiNamikiriReady) && M6SReady &&
                     (JustUsed(Higanbana, 5f) ||
@@ -515,7 +517,7 @@ internal partial class SAM : Melee
                 return OccultCrescent.BestPhantomAction();
 
             //oGCD Features
-            if (CanWeave() && !HasDoubleWeaved() && M6SReady)
+            if (CanWeave() && M6SReady)
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -564,7 +566,8 @@ internal partial class SAM : Melee
             if (LevelChecked(TenkaGoken))
             {
                 if (LevelChecked(TsubameGaeshi) &&
-                    (HasStatusEffect(Buffs.KaeshiGokenReady) || HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
+                    (HasStatusEffect(Buffs.KaeshiGokenReady) ||
+                     HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
                     return OriginalHook(TsubameGaeshi);
 
                 if (!IsMoving() &&
@@ -625,7 +628,7 @@ internal partial class SAM : Melee
                 return OccultCrescent.BestPhantomAction();
 
             //oGCD Features
-            if (CanWeave() && !HasDoubleWeaved() && M6SReady)
+            if (CanWeave() && M6SReady)
             {
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Hagakure) &&
                     OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
@@ -693,7 +696,8 @@ internal partial class SAM : Melee
                     LevelChecked(TenkaGoken))
                 {
                     if (LevelChecked(TsubameGaeshi) &&
-                        (HasStatusEffect(Buffs.KaeshiGokenReady) || HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
+                        (HasStatusEffect(Buffs.KaeshiGokenReady) ||
+                         HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
                         return OriginalHook(TsubameGaeshi);
 
                     if (!IsMoving() &&
@@ -705,11 +709,13 @@ internal partial class SAM : Melee
 
             if (HasStatusEffect(Buffs.MeikyoShisui))
             {
-                if (!HasGetsu && HasStatusEffect(Buffs.Fuka) || !HasStatusEffect(Buffs.Fugetsu))
+                if (!HasGetsu && HasStatusEffect(Buffs.Fuka) ||
+                    !HasStatusEffect(Buffs.Fugetsu))
                     return Mangetsu;
 
                 if (IsEnabled(CustomComboPreset.SAM_AoE_Oka) &&
-                    (!HasKa && HasStatusEffect(Buffs.Fugetsu) || !HasStatusEffect(Buffs.Fuka)))
+                    (!HasKa && HasStatusEffect(Buffs.Fugetsu) ||
+                     !HasStatusEffect(Buffs.Fuka)))
                     return Oka;
             }
 

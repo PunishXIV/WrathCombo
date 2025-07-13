@@ -200,7 +200,7 @@ internal partial class SMN : Caster
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
+            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -380,7 +380,7 @@ internal partial class SMN : Caster
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
+            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -576,7 +576,7 @@ internal partial class SMN : Caster
             #region Special Content
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
-            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
+            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
@@ -792,7 +792,7 @@ internal partial class SMN : Caster
             if (Variant.CanCure(CustomComboPreset.SMN_Variant_Cure, Config.SMN_VariantCure))
                 return Variant.Cure;
 
-            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.SpellWeave))
+            if (Variant.CanRampart(CustomComboPreset.SMN_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())

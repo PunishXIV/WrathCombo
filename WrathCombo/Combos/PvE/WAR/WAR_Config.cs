@@ -22,6 +22,7 @@ internal partial class WAR
             WAR_ST_Infuriate_Charges = new("WAR_ST_Infuriate_Charges", 0),
             WAR_ST_Infuriate_Gauge = new("WAR_ST_Infuriate_Gauge", 40),
             WAR_ST_FellCleave_Gauge = new("WAR_ST_FellCleave_Gauge", 90),
+            WAR_ST_FellCleave_BurstPooling = new("WAR_ST_FellCleave_BurstPooling", 0),
             WAR_ST_Onslaught_Charges = new("WAR_ST_Onslaught_Charges", 0),
             WAR_ST_Onslaught_Movement = new("WAR_ST_Onslaught_Movement", 0),
             WAR_ST_PrimalRend_Movement = new("WAR_ST_PrimalRend_Movement", 0),
@@ -46,6 +47,7 @@ internal partial class WAR
             WAR_AoE_Infuriate_Charges = new("WAR_AoE_Infuriate_Charges", 0),
             WAR_AoE_Infuriate_Gauge = new("WAR_AoE_Infuriate_Gauge", 40),
             WAR_AoE_Decimate_Gauge = new("WAR_AoE_Decimate_Gauge", 90),
+            WAR_AoE_Decimate_BurstPooling = new("WAR_AoE_Decimate_BurstPooling", 0),
             WAR_AoE_Onslaught_Charges = new("WAR_AoE_Onslaught_Charges", 0),
             WAR_AoE_Onslaught_Movement = new("WAR_AoE_Onslaught_Movement", 0),
             WAR_AoE_PrimalRend_Movement = new("WAR_AoE_PrimalRend_Movement", 0),
@@ -164,6 +166,11 @@ internal partial class WAR
                     break;
 
                 case CustomComboPreset.WAR_ST_FellCleave:
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_FellCleave_BurstPooling,
+                        "Burst Pooling", "Allow Fell Cleave for extra use during burst windows\nNOTE: This ignores the gauge slider below when ready for or already in burst", 0);
+                    UserConfig.DrawHorizontalRadioButton(WAR_ST_FellCleave_BurstPooling,
+                        "No Burst Pooling", "Forbid Fell Cleave for extra use during burst windows\nNOTE: This fully honors the value set on the gauge slider below", 1);
+                    ImGui.Spacing();
                     UserConfig.DrawSliderInt(50, 100, WAR_ST_FellCleave_Gauge,
                         " Minimum Beast Gauge required to spend:");
                     break;
@@ -193,6 +200,11 @@ internal partial class WAR
 
                 #region AoE
                 case CustomComboPreset.WAR_AoE_Decimate:
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Decimate_BurstPooling,
+                        "Burst Pooling", "Allow Decimate for extra use during burst windows\nNOTE: This ignores the gauge slider below when ready for or already in burst", 0);
+                    UserConfig.DrawHorizontalRadioButton(WAR_AoE_Decimate_BurstPooling,
+                        "No Burst Pooling", "Forbid Decimate for extra use during burst windows\nNOTE: This fully honors the value set on the gauge slider below", 1);
+                    ImGui.Spacing();
                     UserConfig.DrawSliderInt(50, 100, WAR_AoE_Decimate_Gauge,
                         "Minimum gauge required to spend:");
                     break;

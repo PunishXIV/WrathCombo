@@ -27,11 +27,8 @@ internal partial class WHM
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Aero);
-        var hpThreshold = Config.WHM_ST_DPS_AeroOptionSubOption ==
-                          (int)Config.BossAvoidance.Off ||
-                          !InBossEncounter()
-            ? Config.WHM_ST_DPS_AeroOption
-            : 0;
+        var hpThreshold = computeHpThreshold();
+
         AeroList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
@@ -43,13 +40,32 @@ internal partial class WHM
                dotRemaining <= Config.WHM_ST_MainCombo_DoT_Threshold;
     }
 
+    internal static int computeHpThreshold()
+    {
+        if (TargetIsBoss() && InBossEncounter())
+        {
+            return Config.WHM_ST_DPS_AeroOptionBoss;
+        }
+
+        switch ((int)Config.WHM_ST_DPS_AeroOptionSubOption)
+        {
+            case (int)Config.EnemyRestriction.AllEnemies:
+                return Config.WHM_ST_DPS_AeroOptionNonBoss;
+            case (int)Config.EnemyRestriction.OnlyBosses:
+                return InBossEncounter() ? Config.WHM_ST_DPS_AeroOptionNonBoss : 0;
+            default:
+            case (int)Config.EnemyRestriction.NonBosses:
+                return !InBossEncounter() ? Config.WHM_ST_DPS_AeroOptionNonBoss : 0;
+        }
+    }
+
     internal static bool BellRaidwideCheckPassed
     {
         get
         {
             if (!IsEnabled(CustomComboPreset.WHM_AoEHeals_LiturgyOfTheBell))
                 return false;
-            
+
             // Skip any checks if Raidwide checking is not enabled
             if (!Config.WHM_AoEHeals_LiturgyRaidwideOnly)
                 return true;
@@ -59,10 +75,10 @@ internal partial class WHM
                 (int)Config.BossRequirement.On &&
                 !InBossEncounter())
                 return true;
-            
+
             if (!RaidWideCasting())
                 return false;
-            
+
             return true;
         }
     }
@@ -78,7 +94,7 @@ internal partial class WHM
         //var healTarget = optionalTarget ?? GetHealTarget(Config.WHM_STHeals_UIMouseOver);
         //leaving in case Regen gets a slider and is added
 
-        var canWeave = CanWeave(0.3);
+        var canWeave = CanWeave(0.3f);
 
         switch (i)
         {

@@ -22,19 +22,17 @@ internal partial class MCH
         GetRemainingCharges(OriginalHook(Ricochet)) > GetRemainingCharges(OriginalHook(GaussRound));
 
     internal static bool HasNotWeaved =>
-        GetAttackType(LastAction) !=
-        ActionAttackType.Ability;
+        GetAttackType(LastAction) != ActionAttackType.Ability;
 
     #region Queen
 
     internal static bool UseQueen()
     {
-        if (!HasDoubleWeaved() && !HasStatusEffect(Buffs.Wildfire) &&
+        if (!HasStatusEffect(Buffs.Wildfire) &&
             !JustUsed(OriginalHook(Heatblast)) && ActionReady(RookAutoturret) &&
             !RobotActive && Battery >= 50)
         {
-            if ((MCH_ST_Adv_Turret_SubOption == 0 ||
-                 MCH_ST_Adv_Turret_SubOption == 1 && InBossEncounter() ||
+            if ((MCH_ST_Adv_Turret_SubOption == 0 || InBossEncounter() ||
                  IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) && InBossEncounter()) &&
                 (GetCooldownRemainingTime(Wildfire) > GCD || !LevelChecked(Wildfire)))
             {
@@ -180,8 +178,7 @@ internal partial class MCH
         if ((IsEnabled(CustomComboPreset.MCH_ST_SimpleMode) && InBossEncounter() ||
              IsEnabled(CustomComboPreset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
              IsEnabled(CustomComboPreset.MCH_ST_Adv_TurretQueen) &&
-             (MCH_ST_Adv_Excavator_SubOption == 0 ||
-              MCH_ST_Adv_Excavator_SubOption == 1 && InBossEncounter())) &&
+             (MCH_ST_Adv_Excavator_SubOption == 0 || InBossEncounter())) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (BSUsed is 1 ||
              BSUsed % 3 is 2 && Battery <= 40 ||

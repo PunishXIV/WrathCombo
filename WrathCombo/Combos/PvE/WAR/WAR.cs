@@ -241,7 +241,7 @@ internal partial class WAR : Tank
                 return PrimalRend;
             if (ShouldUsePrimalRuination)
                 return PrimalRuination;
-            if (ShouldUseFellCleave())
+            if (ShouldUseDecimate())
                 return OriginalHook(Decimate);
             return AOECombo;
             #endregion
@@ -336,7 +336,7 @@ internal partial class WAR : Tank
                 return PrimalRend;
             if (IsEnabled(CustomComboPreset.WAR_AoE_PrimalRuination) && ShouldUsePrimalRuination)
                 return PrimalRuination;
-            if (IsEnabled(CustomComboPreset.WAR_AoE_Decimate) && ShouldUseFellCleave(Config.WAR_AoE_Decimate_Gauge))
+            if (IsEnabled(CustomComboPreset.WAR_AoE_Decimate) && ShouldUseDecimate(Config.WAR_AoE_Decimate_Gauge))
                 return OriginalHook(Decimate);
             return AOECombo;
             #endregion

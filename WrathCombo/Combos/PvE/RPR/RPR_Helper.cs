@@ -103,8 +103,7 @@ internal partial class RPR
                         return true;
                 }
 
-                if (RPR_ST_ArcaneCircle_SubOption == 0 ||
-                    RPR_ST_ArcaneCircle_SubOption == 1 && InBossEncounter() ||
+                if (RPR_ST_ArcaneCircle_SubOption == 0 || InBossEncounter() ||
                     IsNotEnabled(CustomComboPreset.RPR_ST_ArcaneCircle))
                 {
                     //1st part double enshroud
