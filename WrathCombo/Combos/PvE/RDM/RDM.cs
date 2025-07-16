@@ -2,6 +2,7 @@ using System;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -469,9 +470,11 @@ internal partial class RDM : Caster
                 bool schwifty = HasStatusEffect(Role.Buffs.Swiftcast);
                 if (schwifty || HasStatusEffect(Buffs.Dualcast))
                     return IsEnabled(CustomComboPreset.RDM_Raise_Retarget)
-                        ? Verraise.Retarget(Role.Swiftcast,
-                            SimpleTarget.Stack.AllyToRaise)
-                        : Verraise;
+                        ? Verraise
+                            .Retarget(Role.Swiftcast,
+                                SimpleTarget.Stack.AllyToRaise)
+                            .AndRunMacro()
+                        : Verraise.AndRunMacro();
                 if (IsEnabled(CustomComboPreset.RDM_Raise_Vercure) &&
                     !schwifty &&
                     ActionReady(Vercure) &&

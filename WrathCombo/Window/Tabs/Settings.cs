@@ -10,6 +10,7 @@ using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Window.Tabs
 {
@@ -332,6 +333,44 @@ namespace WrathCombo.Window.Tabs
                 ImGui.Text($"   -   Maximum number of Weaves");
 
                 ImGuiComponents.HelpMarker("This controls how many oGCDs are allowed between GCDs.\nThe sort of 'default' for the game is double weaving, but triple weaving is completely possible to do with low enough latency (of every kind); but if you struggle with latency of some sort, single weaving may even be a good answer for you.\nTriple weaving is already done in a manner where we try to avoid clipping GCDs, and as such doesn't happen particularly often even if you do have good latency, so it is a safe option as far as parses/etc goes.\n\nDefault: 2");
+
+                #endregion
+
+                #region Rez Macro
+
+                if (ImGui.Checkbox("Output Macro with Resurrection Casts", ref Service.Configuration.OutputRezMacro))
+                    Service.Configuration.Save();
+
+                ImGuiComponents.HelpMarker("Controls whether a configured Rez Macro will be output to party chat when a resurrection ability is used.\n\nTHIS IS RISKY, THERE IS A REASON MOST PLUGINS DO NOT OUTPUT TO CHAT!\nIf anything goes awry it could theoretically print garbage to the chat for everyone to see, or could even spam it heavily.\n\nIt is recommended to keep this off in most cases.\nDefault: Off");
+
+                if (Service.Configuration.OutputRezMacro)
+                {
+                    ImGui.Indent();
+                    ImGui.Indent();
+                    using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
+                    {
+                        ImGui.TextWrapped("USE AT YOUR OWN RISK! THERE IS A REASON MOST PLUGINS DO NOT OUTPUT TO CHAT!");
+                    }
+
+                    ImGui.TextWrapped("Macro to output:");
+                    ImGui.SameLine();
+                    ImGui.Dummy(new Vector2(100f.Scale(), 0));
+                    ImGui.SameLine();
+                    if (ImGui.Button("Test it"))
+                        RezMacro.PrintTestMacro();
+                    ImGuiComponents.HelpMarker("Will output the macro, formatted, to echo chat.");
+
+                    if (ImGui.InputTextMultiline("",
+                        ref Service.Configuration.RezMacro,
+                        177, // Maximum macro line length is 180, minus 3 for the "/p " that would be needed in a macro
+                        new Vector2(250f.Scale(), 40f.Scale())))
+                        Service.Configuration.Save();
+                    // 494 is the maximum chat message size, but that's not possible via a macro, so we're not using that as the max.
+
+                    ImGuiComponents.HelpMarker("<t> will be replaced with the character's name that is being rezzed.\nOther <placeholders> should work as normal.\nLine-breaks will be replaced with a space.\nIt is NOT advised to include <se> (sound effects).\n\nIt is recommended to keep this macro brief.\nDefault: Raising <t>");
+                    ImGui.Unindent();
+                    ImGui.Unindent();
+                }
 
                 #endregion
 
