@@ -5613,6 +5613,7 @@ public enum CustomComboPreset
 
     [ParentCombo(SGE_AoE_DPS)]
     [CustomComboInfo("Addersgall Overflow Protection", "Weaves Druochole when Addersgall gauge is greater than or equal to the specified value.", SGE.JobID)]
+    [PossiblyRetargeted]
     SGE_AoE_DPS_AddersgallProtect = 14053,
 
     [ParentCombo(SGE_AoE_DPS)]
@@ -5663,12 +5664,12 @@ public enum CustomComboPreset
     SGE_ST_Heal_Rhizomata = 14023,
 
     [ParentCombo(SGE_ST_Heal)]
-    [CustomComboInfo("Apply Kardia Option", "Applies Kardia to your target if it's not applied to anyone else.", SGE.JobID)]
-    [PossiblyRetargeted]
+    [CustomComboInfo("Apply Kardia Option", "Applies Kardia if it's not applied to anyone.", SGE.JobID)]
+    [Retargeted]
     SGE_ST_Heal_Kardia = 14016,
 
     [ParentCombo(SGE_ST_Heal)]
-    [CustomComboInfo("Esuna Option", "Applies Esuna to your target if there is a cleansable debuff.", SGE.JobID)]
+    [CustomComboInfo("Esuna Option", "Applies Esuna if there is a cleansable debuff.", SGE.JobID)]
     [PossiblyRetargeted]
     SGE_ST_Heal_Esuna = 14015,
 
@@ -5816,8 +5817,8 @@ public enum CustomComboPreset
     SGE_Rhizo = 14037,
 
     [ReplaceSkill(SGE.Taurochole)]
-    [CustomComboInfo("Taurochole to Druochole Feature", "Turns Taurochole to Druochole when Taurochole is on cooldown.",
-        SGE.JobID)]
+    [CustomComboInfo("Taurochole to Druochole Feature", "Turns Taurochole to Druochole when Taurochole is on cooldown.", SGE.JobID)]
+    [PossiblyRetargeted]
     SGE_TauroDruo = 14038,
 
     [ReplaceSkill(SGE.Pneuma)]
@@ -5840,10 +5841,12 @@ public enum CustomComboPreset
 
     [ReplaceSkill(SGE.Soteria)]
     [CustomComboInfo("Soteria to Kardia Feature", "Soteria turns into Kardia when not active or Soteria is on-cooldown.", SGE.JobID)]
+    [Retargeted]
     SGE_Kardia = 14041,
 
     [ReplaceSkill(SGE.Eukrasia)]
     [CustomComboInfo("Eukrasia Feature", "Eukrasia turns into the selected Eukrasian-type action when active.", SGE.JobID)]
+    [PossiblyRetargeted]
     SGE_Eukrasia = 14042,
     
     [Variant]
@@ -5856,6 +5859,39 @@ public enum CustomComboPreset
     [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", SGE.JobID)]
     SGE_DPS_Variant_Rampart = 14049,
 
+    #endregion
+    
+    #region Standalone Healing option
+
+    [CustomComboInfo("Retarget Options", "Retargets Single Target Healing options.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_Retarget = 14073,
+
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Haima Options", "Retargets Haima according to your Healing stack.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_Retarget_Haima = 14074,
+
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Druchole Options", "Retargets Druchole according to your Healing stack.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_Retarget_Druchole = 14075,
+
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_Retarget_Taurochole = 14076,
+
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Krasis Options", "Retargets Krasis according to your Healing stack.", SGE.JobID)]
+    [PossiblyRetargeted]
+    SGE_Retarget_Krasis = 14077,
+
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack.", SGE.JobID)]
+    [Retargeted]
+    SGE_Retarget_Kardia = 14078,
+    
     #endregion
     
     #region Hidden Features
@@ -5880,7 +5916,7 @@ public enum CustomComboPreset
     
     #endregion
 
-    // Last used number = 14072
+    // Last used number = 14078
 
     #endregion
 
