@@ -3,6 +3,10 @@
 > the IPC in your plugin.
 
 > [!TIP]
+> See [The Example Lua](IPCExample.lua) for a barebones example of how to set up
+> the IPC in your SND script.
+
+> [!TIP]
 > Please check out the Table of Contents on GitHub for easy navigation,
 > there is a lot of explanation of the IPC, but also simple code snippet usage
 > details in this guide, as well as a Changelog at the end.
@@ -177,7 +181,6 @@ comments on each method.
   - Requires a lease
   - Sets Auto-Rotation to be enabled or disabled
   - Locks the state away from the user
-  - Counts towards the lease's configuration limit
 - `bool IsCurrentJobAutoRotationReady()`
   - Checks if the current job is ready for Auto-Rotation, whether by the user or 
     another plugin
@@ -189,7 +192,6 @@ comments on each method.
     - If the job is not ready: it will turn on the job's Simple Modes, or if those 
       don't exist it will turn on the job's Advanced Modes with all options enabled
   - Locks the state away from the user
-  - Counts towards the lease's configuration limit
 - `void ReleaseControl(Guid)`
   - Requires a lease
   - Releases control of all settings
@@ -215,13 +217,11 @@ comments on each method.
 - `SetResult SetComboState(Guid, string, bool)`
   - Sets the state and Auto-Mode state of a combo
   - Locks the state away from the user
-  - Counts towards the lease's configuration limit
 - `Dictionary? GetComboOptionState(string)`
   - Gets the state of a combo option, whether by the user or another plugin
 - `SetResult SetComboOptionState(Guid, string, bool)`
   - Sets the state of a combo option
   - Locks the state away from the user
-  - Counts towards the lease's configuration limit
 - `object? GetAutoRotationConfigState(AutoRotationConfigOption)`
   - Gets the state of an Auto-Rotation configuration option, whether by the user
       or another plugin
@@ -235,7 +235,6 @@ comments on each method.
   - The `object` must be of the type specified in the enum for the option
   - Sets the state of an Auto-Rotation configuration option
   - Locks the state away from the user
-  - Counts towards the lease's configuration limit
 
 ## Setting up the Wrath Combo IPC in your plugin
 
@@ -318,7 +317,7 @@ public class MyIPC
         
         // you can also convert the `reason` back to the `CancellationReason` enum.
         // you can copy this enum into your own class from:
-        // https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L182
+        // https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L117
     }
 }
 ```
@@ -344,9 +343,10 @@ internal static Guid? CurrentLease
     }
 }
 ```
-See how AutoDuty does this [here, in `Register`]((https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCSubscriber.cs#L473)) (callback [here](https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCProvider.cs#L27) and [here](https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCSubscriber.cs#L488)).
+See how AutoDuty does this [here, in `Register`]((https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCSubscriber.cs#L581)) (callback 
+[here](https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCProvider.cs#L596)).
 
-## How to use the setup IPC
+### How to use the setup IPC
 
 Once you are set up to work with the Wrath Combo IPC, it can be very simple if all
 you are trying to do is make sure the user is set up to for Auto-Rotation:
@@ -381,7 +381,7 @@ This does require you to copy over the [`SetResult` enum](https://github.com/Pun
 Or you can make it more advanced, making sure Auto-Rotation settings are as you want
 them to be.
 
-This does require you to copy over the [`AutoRotationConfigOption` enum](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L117).
+This does require you to copy over the [`AutoRotationConfigOption` enum](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L185).
 
 ```csharp
 if (WrathIPC.IsEnabled)
@@ -397,7 +397,7 @@ if (WrathIPC.IsEnabled)
 }
 ```
 See how AutoDuty does this, and to what extent,
-[here, in `SetAutoMode`](https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCSubscriber.cs#L451).
+[here, in `SetAutoMode`](https://github.com/ffxivcode/AutoDuty/blob/master/AutoDuty/IPC/IPCSubscriber.cs#L557).
 
 Lastly, you will need to release control when you are done, you are incentivized to
 release control yourself so the user is not incentivized to revoke control from you:
@@ -427,6 +427,11 @@ resources below, or the first several sections of this guide.
 
 ## Changelog
 
+- PunishXIV/WrathCombo#682 - Caches are now built off of `ComboType` instead of 
+  string searching, Healers especially now have more reliable automatic setting,
+  `1.0.1.14`.
+- [d930e82](https://github.com/PunishXIV/WrathCombo/commit/d930e82) - All caches are now built around the current job, instead of for all jobs at once,
+  `1.0.1.0`.
 - PunishXIV/WrathCombo#319 - All `Set` methods now return a status code from the new 
   [`SetResult` enum](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L139),
   `1.0.0.11`.
@@ -437,11 +442,11 @@ resources below, or the first several sections of this guide.
   `1.0.0.10`.
 - PunishXIV/WrathCombo#293 - Add `OnlyAttackInCombat` Auto-Rotation Configuration,
   `1.0.0.10`.
-- PunishXIV/WrathCombo@3ef3109 - Methods with specific job parameters are now `uint`,
+- [3ef3109](https://github.com/PunishXIV/WrathCombo/commit/3ef3109) - Methods with specific job parameters are now `uint`,
   `1.0.0.9`.
-- PunishXIV/WrathCombo@5699d7b - Auto-Rotation Configurations enums are no longer a
+- [5699d7b](https://github.com/PunishXIV/WrathCombo/commit/5699d7b) - Auto-Rotation Configurations enums are no longer a
   subset of the full options, `1.0.0.9`.
-- PunishXIV/WrathCombo@0d8faa7 - Added `IncludeNPCs` healer option to the
+- [0d8faa7](https://github.com/PunishXIV/WrathCombo/commit/0d8faa7) - Added `IncludeNPCs` healer option to the
   `AutoRotationConfigOption`
   enum, `1.0.0.8`.
 - PunishXIV/WrathCombo#232 - Fixed capability to request a cancellation callback via
