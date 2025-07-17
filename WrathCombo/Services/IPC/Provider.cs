@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WrathCombo.Combos;
 using ECommons.DalamudServices;
@@ -126,7 +127,7 @@ public partial class Provider : IDisposable
         }
 
         // Getting the IPC status early
-        _ = P.IPC.Helper.IPCEnabled;
+        Task.Run(() => P.IPC.Helper.IPCEnabled);
 
         // Build job-specific combo state caches
         // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
