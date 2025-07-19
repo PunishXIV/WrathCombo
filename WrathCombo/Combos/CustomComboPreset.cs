@@ -1087,22 +1087,50 @@ public enum CustomComboPreset
     [CustomComboInfo("Triplecast Protection", "Replaces Triplecast with Savage Blade when you already have triplecast active.", BLM.JobID)]
     BLM_TriplecastProtection = 2056,
 
-    [ReplaceSkill(BLM.Fire)]
-    [CustomComboInfo("Fire I/III Feature", "Replaces Fire I with Fire III outside of Astral Fire or when Firestarter is up.", BLM.JobID)]
+    [ReplaceSkill(BLM.Fire, BLM.Fire3)]
+    [CustomComboInfo("Fire I/III Feature", "Replaces Fire I or Fire III.", BLM.JobID)]
     BLM_Fire1to3 = 2054,
 
-    [ReplaceSkill(BLM.Blizzard, BLM.Freeze)]
-    [CustomComboInfo("Blizzard I/III Feature", "Replaces Blizzard I with Blizzard III when out of Umbral Ice.\nReplaces Freeze with Blizzard II when synced below Lv.40.", BLM.JobID)]
+    [ReplaceSkill(BLM.Blizzard, BLM.Blizzard3)]
+    [CustomComboInfo("Blizzard I/III Feature", "Replaces Blizzard I or Blizzard III.\nReplaces Freeze with Blizzard II when synced below Lv.40.", BLM.JobID)]
     BLM_Blizzard1to3 = 2052,
 
+    [ReplaceSkill(BLM.Fire4)]
+    [ConflictingCombos(BLM_FireandIce)]
+    [CustomComboInfo("Fire 4 to 3", "Replaces Fire 4 with Fire 3 when not in Astral Fire III or not in combat.", BLM.JobID)]
+    BLM_Fire4to3 = 2059,
+
+    [ReplaceSkill(BLM.Blizzard4)]
+    [CustomComboInfo("Blizzard 4 to Despair", "Replaces Blizzard 4 with Despair when in Astral Fire.", BLM.JobID)]
+    BLM_Blizzard4toDespair = 2060,
+    
     [ReplaceSkill(BLM.Fire4, BLM.Flare)]
+    [ConflictingCombos(BLM_Fire4to3)]
     [CustomComboInfo("Fire & Ice", "Replaces Fire4 with Blizzard4 when in Umbral Ice.\nReplaces Flare with Freeze when in Umbral Ice.", BLM.JobID)]
     BLM_FireandIce = 2057,
+
+    [ReplaceSkill(BLM.Blizzard, BLM.Blizzard3)]
+    [ConflictingCombos(BLM_FreezeParadox)]
+    [CustomComboInfo("Freeze to Blizzard II", "nReplaces Freeze with Blizzard II when synced below Lv.40.", BLM.JobID)]
+    BLM_FreezeBlizzard2 = 2064,
 
     [ReplaceSkill(BLM.Fire4, BLM.Flare)]
     [CustomComboInfo(" Fire and Flare to Star", "Replaces Fire4 and Flare to Flarestar when on max stacks.", BLM.JobID)]
     BLM_FireFlarestar = 2058,
 
+    [ReplaceSkill(BLM.Freeze)]
+    [ConflictingCombos(BLM_FreezeBlizzard2)]
+    [CustomComboInfo("Freeze to Paradox", "Replaces Freeze with Ice Paradox when you have 3 Umbral Heart stacks.", BLM.JobID)]
+    BLM_FreezeParadox = 2062,
+
+    [ReplaceSkill(BLM.FlareStar)]
+    [CustomComboInfo("Flarestar to Paradox", "Replaces Flarestar with Fire Paradox when not at max Flarestar stacks.", BLM.JobID)]
+    BLM_FlareParadox = 2063,
+
+    [ReplaceSkill(BLM.Amplifier)]
+    [CustomComboInfo("Amplifier to Xenoglossy", "Replaces Amplifier with Xenoglossy when at max Polyglot stacks.", BLM.JobID)]
+    BLM_AmplifierXeno = 2061,
+    
     [ReplaceSkill(BLM.Transpose)]
     [CustomComboInfo("Umbral Soul/Transpose Feature", "Replaces Transpose with Umbral Soul when Umbral Soul is available.", BLM.JobID)]
     BLM_UmbralSoul = 2050,
@@ -1118,25 +1146,12 @@ public enum CustomComboPreset
     [ReplaceSkill(BLM.AetherialManipulation)]
     [CustomComboInfo("Aetherial Manipulation Feature", "Replaces Aetherial Manipulation with Between the Lines when you are out of active Ley Lines and standing still.", BLM.JobID)]
     BLM_Aetherial_Manipulation = 2055,
-
-    [ReplaceSkill(BLM.Fire4)]
-    [ConflictingCombos(BLM_FireandIce)]
-    [CustomComboInfo("Fire 4 to 3", "Replaces Fire 4 with Fire 3 when not in Astral Fire.", BLM.JobID)]
-    BLM_Fire4to3 = 2059,
-
-    [ReplaceSkill(BLM.Blizzard4)]
-    [CustomComboInfo("Blizzard 4 to Despair", "Replaces Blizzard 4 with Despair when in Astral Fire.", BLM.JobID)]
-    BLM_Blizzard4toDespair = 2060,
-
-    [ReplaceSkill(BLM.Amplifier)]
-    [CustomComboInfo("Amplifier to Xenoglossy", "Replaces Amplifier with Xenoglossy when at max Polyglot stacks.", BLM.JobID)]
-    BLM_AmplifierXeno = 2061,
-
+    
     #endregion
 
     // Last value ST = 2117
     //Last Value AoE = 2212
-    //Last Value misc = 2061
+    //Last Value misc = 2064
 
     #endregion
 
@@ -4159,16 +4174,11 @@ public enum CustomComboPreset
     NIN_ST_AeolianEdgeCombo = 10074,
 
     [ReplaceSkill(NIN.ArmorCrush)]
-    [CustomComboInfo("Armor Crush Combo", "Replace Armor Crush with its combo chain.", NIN.JobID)]
-    [BasicCombo]
-    NIN_ST_ArmorCrushCombo = 10075,
-
-    #endregion
-
-    [ReplaceSkill(NIN.ArmorCrush)]
     [CustomComboInfo("Armor Crush Combo Feature", "Replace Armor Crush with its combo chain.", NIN.JobID)]
     NIN_ArmorCrushCombo = 10053,
 
+    #endregion
+    
     [ReplaceSkill(NIN.Kassatsu)]
     [CustomComboInfo("Kassatsu to Trick Feature",
         "Replaces Kassatsu with Trick Attack/Kunai's Bane while Suiton or Hidden is up.\nCooldown tracking plugin recommended.",
