@@ -210,6 +210,13 @@ internal partial class AST : Healer
                     IsOffCooldown(EarthlyStar) && CanWeave())
                     return EarthlyStar.Retarget(replacedActions,
                         SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
+                
+                //Stellar Detonation
+                if (IsEnabled(CustomComboPreset.AST_ST_DPS_StellarDetonation) && CanWeave() &&
+                    HasStatusEffect(Buffs.GiantDominance, anyOwner:false) && HasBattleTarget() &&
+                    GetTargetHPPercent() <= Config.AST_ST_DPS_StellarDetonation_Threshold && 
+                    (Config.AST_ST_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
+                    return StellarDetonation;
 
                 //Oracle
                 if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
@@ -386,7 +393,14 @@ internal partial class AST : Healer
                 IsOffCooldown(EarthlyStar) && CanWeave() &&
                 ActionWatching.NumberOfGcdsUsed >= 3)
                 return EarthlyStar.Retarget(GravityList.ToArray(),
-                    SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);            
+                    SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies); 
+            
+            //Stellar Detonation
+            if (IsEnabled(CustomComboPreset.AST_AOE_DPS_StellarDetonation) && CanWeave() &&
+                HasStatusEffect(Buffs.GiantDominance, anyOwner:false) && HasBattleTarget() &&
+                GetTargetHPPercent() <= Config.AST_AOE_DPS_StellarDetonation_Threshold && 
+                (Config.AST_AOE_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
+                return StellarDetonation;
             
             //Oracle
             if (IsEnabled(CustomComboPreset.AST_AOE_Oracle) &&

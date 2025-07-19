@@ -664,6 +664,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Earthly Star Option", "Adds Earthly Star placement, but not detonation, to the rotation.\nWill be targeted to any enemy, then your focus target, then soft and hard targets, before falling back to placing it at your feet.", AST.JobID)]
     [Retargeted]
     AST_ST_DPS_EarthlyStar = 1051,
+    
+    [ParentCombo(AST_ST_DPS)]
+    [CustomComboInfo("Stellar Detonation Option", "Adds early Stellar Detonation with Giant Dominance based on targets HP percentage and type of encounter", AST.JobID)]
+    AST_ST_DPS_StellarDetonation = 1081,
 
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Lucid Dreaming Weave Option", "Adds Lucid Dreaming when MP drops below slider value", AST.JobID)]
@@ -727,6 +731,10 @@ public enum CustomComboPreset
     [CustomComboInfo("Earthly Star Option", "Adds Earthly Star placement, but not detonation, to the rotation.\nWill be targeted to your focus target, then soft and hard targets, before falling back to placing it at your feet.", AST.JobID)]
     [Retargeted]
     AST_AOE_DPS_EarthlyStar = 1052,
+    
+    [ParentCombo(AST_AOE_DPS)]
+    [CustomComboInfo("Stellar Detonation Option", "Adds early Stellar Detonation with Giant Dominance based on targets HP percentage and type of encounter", AST.JobID)]
+    AST_AOE_DPS_StellarDetonation = 1082,
 
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("MacroCosmos Option", "Adds Macrocosmos to the Aoe rotation after 3 GCDs", AST.JobID)]    

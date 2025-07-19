@@ -49,10 +49,14 @@ internal partial class AST
             AST_ST_DPS_DivinationSubOption = new("AST_ST_DPS_DivinationSubOption", 0),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
             AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
+            AST_ST_DPS_StellarDetonation_Threshold = new("AST_ST_DPS_StellarDetonation_Threshold", 0),
+            AST_ST_DPS_StellarDetonation_SubOption = new("AST_ST_DPS_StellarDetonation_SubOption", 0),
             AST_AOE_LucidDreaming = new("AST_AOE_LucidDreaming", 8000),
             AST_AOE_DivinationSubOption = new("AST_AOE_DivinationSubOption", 0),
             AST_AOE_DivinationOption = new("AST_AOE_DivinationOption"),
             AST_AOE_LightSpeedOption = new("AST_AOE_LightSpeedOption"),
+            AST_AOE_DPS_StellarDetonation_Threshold = new("AST_AOE_DPS_StellarDetonation_Threshold", 0),
+            AST_AOE_DPS_StellarDetonation_SubOption = new("AST_AOE_DPS_StellarDetonation_SubOption", 0),
             AST_AOE_DPS_MacroCosmos_SubOption = new("AST_AOE_DPS_MacroCosmos_SubOption", 0),
             AST_QuickTarget_Override = new("AST_QuickTarget_Override", 0);
 
@@ -135,6 +139,17 @@ internal partial class AST
                     DrawAdditionalBoolChoice(AST_ST_DPS_OverwriteHealCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
                     break;
                 
+                case CustomComboPreset.AST_ST_DPS_StellarDetonation:
+                    DrawHorizontalRadioButton(AST_ST_DPS_StellarDetonation_SubOption,
+                        "Non-boss Encounters Only", $"Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(AST_ST_DPS_StellarDetonation_SubOption,
+                        "All Content", $"All Content", 1);
+                    
+                    DrawSliderInt(0, 100, AST_ST_DPS_StellarDetonation_Threshold,
+                        $"Use when Target is at or below HP% (0% = Never Detonate Early, 100% = Detonate ASAP).");
+                    break;
+                
                 case CustomComboPreset.AST_AOE_Lucid:
                     DrawSliderInt(4000, 9500, AST_AOE_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, Hundreds);
                     break;
@@ -156,6 +171,17 @@ internal partial class AST
 
                 case CustomComboPreset.AST_AOE_AutoDraw:
                     DrawAdditionalBoolChoice(AST_AOE_DPS_OverwriteHealCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
+                    break;
+                
+                case CustomComboPreset.AST_AOE_DPS_StellarDetonation:
+                    DrawHorizontalRadioButton(AST_AOE_DPS_StellarDetonation_SubOption,
+                        "Non-boss Encounters Only", $"Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(AST_AOE_DPS_StellarDetonation_SubOption,
+                        "All Content", $"All Content", 1);
+                    
+                    DrawSliderInt(0, 100, AST_AOE_DPS_StellarDetonation_Threshold,
+                        $"Use when Target is at or below HP% (0% = Never Detonate Early, 100% = Detonate ASAP).");
                     break;
 
                 case CustomComboPreset.AST_AOE_DPS_MacroCosmos:
