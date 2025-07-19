@@ -128,6 +128,8 @@ namespace WrathCombo.Core
         public bool ShowHiddenFeatures = false;
 
         public bool SuppressQueuedActions = true;
+        
+        public bool UILeftColumnCollapsed = false;
 
         #endregion
 
