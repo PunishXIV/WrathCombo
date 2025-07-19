@@ -34,6 +34,7 @@ using WrathCombo.Services.IPC;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
 using ECommons.EzHookManager;
+using WrathCombo.Services.IPC_Subscriber;
 
 namespace WrathCombo;
 
@@ -166,6 +167,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.ActionReplacer = new ActionReplacer();
         ActionWatching.Enable();
         IPC = Provider.Init();
+        ConflictingPluginsChecks.Begin();
 
         ConfigWindow = new ConfigWindow();
         _majorChangesWindow = new MajorChangesWindow();
@@ -422,6 +424,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         IPC.Dispose();
         MoveHook?.Dispose();
 
+        ConflictingPluginsChecks.Dispose();
+        AllIPCSubscriptions.Dispose();
         Svc.ClientState.Login -= PrintLoginMessage;
         ECommonsMain.Dispose();
         P = null;
