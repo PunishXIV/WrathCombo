@@ -1,4 +1,4 @@
-using Dalamud.Game.ClientState.Statuses;
+﻿using Dalamud.Game.ClientState.Statuses;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -576,9 +576,11 @@ internal partial class AST : Healer
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
                 ? IsEnabled(CustomComboPreset.AST_Raise_Alternative_Retarget)
-                    ? Ascend.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Ascend
+                    ? Ascend
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Ascend.AndRunMacro()
                 : actionID;
     }
 }
