@@ -97,7 +97,7 @@ internal partial class BLM : Caster
                     !HasStatusEffect(Buffs.Firestarter) &&
                     !HasStatusEffect(Buffs.Triplecast) &&
                     !HasStatusEffect(Role.Buffs.Swiftcast))
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
                     return Role.Swiftcast;
@@ -128,7 +128,7 @@ internal partial class BLM : Caster
                     (AstralFireStacks < 3 ||
                      JustUsed(FlareStar, 5) ||
                      !LevelChecked(FlareStar) && ActionReady(Despair)))
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (FlarestarReady)
                     return FlareStar;
@@ -154,7 +154,7 @@ internal partial class BLM : Caster
                 if (UmbralHearts is 3 &&
                     UmbralIceStacks is 3 &&
                     ActiveParadox)
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (CurMp is MP.MaxMP)
                 {
@@ -337,7 +337,7 @@ internal partial class BLM : Caster
                     (AstralFireStacks < 3 ||
                      JustUsed(FlareStar, 5) ||
                      !LevelChecked(FlareStar) && ActionReady(Despair)))
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (IsEnabled(CustomComboPreset.BLM_ST_FlareStar) &&
                     FlarestarReady)
@@ -366,7 +366,7 @@ internal partial class BLM : Caster
                 if (UmbralHearts is 3 &&
                     UmbralIceStacks is 3 &&
                     ActiveParadox)
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (CurMp is MP.MaxMP)
                 {
@@ -449,7 +449,7 @@ internal partial class BLM : Caster
                 return OriginalHook(Thunder2);
 
             if (ActiveParadox && EndOfIcePhaseAoEMaxLevel)
-                return OriginalHook(Paradox);
+                return Paradox;
 
             if (FirePhase)
             {
@@ -551,7 +551,7 @@ internal partial class BLM : Caster
 
             if (IsEnabled(CustomComboPreset.BLM_AoE_ParadoxFiller) &&
                 ActiveParadox && EndOfIcePhaseAoEMaxLevel)
-                return OriginalHook(Paradox);
+                return Paradox;
 
             if (FirePhase)
             {

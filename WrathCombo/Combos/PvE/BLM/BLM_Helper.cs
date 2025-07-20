@@ -71,7 +71,7 @@ internal partial class BLM
                   !HasStatusEffect(Buffs.LeyLines)),
 
         // Paradox
-        (OriginalHook(Paradox), CustomComboPreset.BLM_ST_Movement,
+        (Paradox, CustomComboPreset.BLM_ST_Movement,
             () => Config.BLM_ST_MovementOption[1] &&
                   ActionReady(Paradox) &&
                   FirePhase && ActiveParadox &&
