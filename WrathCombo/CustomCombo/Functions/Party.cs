@@ -189,6 +189,7 @@ namespace WrathCombo.CustomComboNS.Functions
             : BattleChara?.ClassJob.Value ?? CustomComboFunctions.JobIDs.ClassJobs[0];
 
         public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
+        public IGameObject? GameObject => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId);
         public Dictionary<ushort, long> BuffsGainedAt = new();
 
         private uint _currentHP;
