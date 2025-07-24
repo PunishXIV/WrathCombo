@@ -88,7 +88,7 @@ internal static partial class RoleActions
             ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
-            ActionReady(ArmsLength) && CanCircleAoe(7) >= enemyCount &&
+            ActionReady(ArmsLength) && NumberOfEnemiesInRange(ArmsLength) >= enemyCount &&
             ((int)avoidanceSetting == (int)All.Enums.BossAvoidance.Off || !InBossEncounter());
     }
 
@@ -192,7 +192,7 @@ internal static partial class RoleActions
 
         public static bool CanReprisal(int healthPercent = 100, int? enemyCount = null, bool checkTargetForDebuff = true) =>
             (checkTargetForDebuff && !HasStatusEffect(Debuffs.Reprisal, CurrentTarget, true) || !checkTargetForDebuff) &&
-            (enemyCount is null ? InActionRange(Reprisal) : CanCircleAoe(5) >= enemyCount) &&
+            (enemyCount is null ? InActionRange(Reprisal) : NumberOfEnemiesInRange(Reprisal) >= enemyCount) &&
             ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent && CanApplyStatus(CurrentTarget, Debuffs.Reprisal);
 
         public static bool CanShirk() =>

@@ -50,7 +50,7 @@ internal partial class DNC
     ///     <see cref="TechnicalFinish4" />, <see cref="FinishingMove" />,
     ///     and <see cref="Tillana" />.
     /// </remarks>
-    private static bool EnemyIn15Yalms => CanCircleAoe(15, true) > 0;
+    private static bool EnemyIn15Yalms => NumberOfEnemiesInRange(FinishingMove) > 0;
 
     /// <summary>
     ///     Checks if any enemy is within 8 yalms.
@@ -58,7 +58,7 @@ internal partial class DNC
     /// <remarks>
     ///     This is used for <see cref="Improvisation" />.
     /// </remarks>
-    private static bool EnemyIn8Yalms => CanCircleAoe(8, true) > 0;
+    private static bool EnemyIn8Yalms => NumberOfEnemiesInRange(Improvisation) > 0;
 
     /// <summary>
     ///     Logic to pick different openers.
