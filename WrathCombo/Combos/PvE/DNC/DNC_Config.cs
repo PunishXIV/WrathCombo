@@ -10,6 +10,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
+using Preset = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable SwitchStatementMissingSomeEnumCasesNoDefault
 // ReSharper disable InconsistentNaming
@@ -109,11 +110,11 @@ internal partial class DNC
                 "This will check through your party members, and select the most desirable Partner, based on The Balance's priority list as well as stuff like Rez Sickness and Damage Downs.");
         }
 
-        internal static void Draw(CustomComboPreset preset)
+        internal static void Draw(Preset preset)
         {
             switch (preset)
             {
-                case CustomComboPreset.DNC_CustomDanceSteps:
+                case Preset.DNC_CustomDanceSteps:
                     ImGui.Indent(35f.Scale());
 
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudYellow);
@@ -174,7 +175,7 @@ internal partial class DNC
 
                 #region Advanced Single Target UI
 
-                case CustomComboPreset.DNC_ST_BalanceOpener:
+                case Preset.DNC_ST_BalanceOpener:
                     ImGui.Indent();
                     ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.DalamudGrey);
                     ImGui.TextWrapped(
@@ -218,7 +219,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_PartnerAuto:
+                case Preset.DNC_ST_Adv_PartnerAuto:
                     UserConfig.DrawAdditionalBoolChoice(DNC_Partner_FocusOverride,
                         "Prioritize your Focus Target##DPFocusOver0",
                         "If you have a focus target that is within range, it will be prioritized over The Balance's suggested Dance Partner.",
@@ -226,7 +227,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_AutoPartner:
+                case Preset.DNC_ST_Adv_AutoPartner:
                     ImGui.Indent(29f.Scale());
                     DrawPartnerInfo();
                     ImGui.Unindent(29f.Scale());
@@ -238,14 +239,14 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_EspritOvercap:
+                case Preset.DNC_ST_EspritOvercap:
                     UserConfig.DrawSliderInt(50, 100, DNCEspritThreshold_ST,
                         "Esprit",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_SS:
+                case Preset.DNC_ST_Adv_SS:
                     UserConfig.DrawSliderInt(0, 15, DNC_ST_Adv_SSBurstPercent,
                         "Target HP% to stop using Standard Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
@@ -270,7 +271,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_TS:
+                case Preset.DNC_ST_Adv_TS:
                     UserConfig.DrawSliderInt(0, 15, DNC_ST_Adv_TSBurstPercent,
                         "Target HP% to stop using Technical Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
@@ -295,14 +296,14 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_Feathers:
+                case Preset.DNC_ST_Adv_Feathers:
                     UserConfig.DrawSliderInt(0, 5, DNC_ST_Adv_FeatherBurstPercent,
                         "Target HP% to dump all pooled feathers below",
                         itemWidth: 75f);
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_Tillana:
+                case Preset.DNC_ST_Adv_Tillana:
                     ImGui.Indent();
                     UserConfig.DrawHorizontalRadioButton(
                         DNC_ST_ADV_TillanaUse,
@@ -324,7 +325,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_SaberDance:
+                case Preset.DNC_ST_Adv_SaberDance:
                     UserConfig.DrawSliderInt(50, 100,
                         DNC_ST_Adv_SaberThreshold,
                         "Esprit",
@@ -332,7 +333,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_ST_Adv_PanicHeals:
+                case Preset.DNC_ST_Adv_PanicHeals:
                     UserConfig.DrawSliderInt(0, 80,
                         DNC_ST_Adv_PanicHealWaltzPercent,
                         "Curing Waltz HP%",
@@ -348,14 +349,14 @@ internal partial class DNC
 
                 #region Advanced AoE UI
 
-                case CustomComboPreset.DNC_AoE_EspritOvercap:
+                case Preset.DNC_AoE_EspritOvercap:
                     UserConfig.DrawSliderInt(50, 100, DNCEspritThreshold_AoE,
                         "Esprit",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
-                case CustomComboPreset.DNC_AoE_Adv_SS:
+                case Preset.DNC_AoE_Adv_SS:
                     UserConfig.DrawSliderInt(0, 60, DNC_AoE_Adv_SSBurstPercent,
                         "Target HP% to stop using Standard Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
@@ -378,7 +379,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_AoE_Adv_TS:
+                case Preset.DNC_AoE_Adv_TS:
                     UserConfig.DrawSliderInt(0, 60, DNC_AoE_Adv_TSBurstPercent,
                         "Target HP% to stop using Technical Step below",
                         itemWidth: 75f, sliderIncrement: SliderIncrements.Fives);
@@ -401,14 +402,14 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_AoE_Adv_SaberDance:
+                case Preset.DNC_AoE_Adv_SaberDance:
                     UserConfig.DrawSliderInt(50, 100, DNC_AoE_Adv_SaberThreshold,
                         "Esprit",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
 
                     break;
 
-                case CustomComboPreset.DNC_AoE_Adv_PanicHeals:
+                case Preset.DNC_AoE_Adv_PanicHeals:
                     UserConfig.DrawSliderInt(0, 80,
                         DNC_AoE_Adv_PanicHealWaltzPercent,
                         "Curing Waltz HP%",
@@ -423,7 +424,7 @@ internal partial class DNC
 
                 #endregion
 
-                case CustomComboPreset.DNC_DesirablePartner:
+                case Preset.DNC_DesirablePartner:
                     ImGui.Indent(35f.Scale());
                     DrawPartnerInfo();
                     ImGui.Unindent(35f.Scale());
@@ -462,7 +463,7 @@ internal partial class DNC
 
                     break;
 
-                case CustomComboPreset.DNC_Variant_Cure:
+                case Preset.DNC_Variant_Cure:
                     UserConfig.DrawSliderInt(1, 80, DNCVariantCurePercent,
                         "HP% to be at or under",
                         itemWidth: 200f, sliderIncrement: SliderIncrements.Fives);

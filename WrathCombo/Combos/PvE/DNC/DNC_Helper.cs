@@ -519,7 +519,7 @@ internal partial class DNC
         if (!CustomDanceStepActions.Contains(action))
             return false;
 
-        for (int i = 0; i < CustomDanceStepActions.Length; i++)
+        for (var i = 0; i < CustomDanceStepActions.Length; i++)
         {
             if (CustomDanceStepActions[i] != action)
                 continue;
@@ -531,11 +531,11 @@ internal partial class DNC
                 1 => Entrechat,
                 2 => Jete,
                 3 => Pirouette,
-                _ => updatedAction
+                _ => updatedAction,
             };
         }
 
-        return false;
+        return true;
     }
 
     #endregion
