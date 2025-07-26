@@ -3,11 +3,13 @@ using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.SGE.Config;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE : Healer
 {
-    internal class SGE_ST_DPS : CustomCombo
+    internal class SGE_ST_DPS_AdvancedMode : CustomCombo
     {
         private static uint[] DosisActions => SGE_ST_DPS_Adv
             ? [Dosis2]
@@ -140,7 +142,7 @@ internal partial class SGE : Healer
         }
     }
 
-    internal class SGE_AoE_DPS : CustomCombo
+    internal class SGE_AoE_DPS_AdvancedMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.SGE_AoE_DPS;
 
@@ -187,7 +189,8 @@ internal partial class SGE : Healer
                 // Addersgall Protection
                 if (IsEnabled(CustomComboPreset.SGE_AoE_DPS_AddersgallProtect) &&
                     ActionReady(Druochole) && Addersgall >= SGE_AoE_DPS_AddersgallProtect)
-                    return Druochole;
+                    return Druochole
+                        .RetargetIfEnabled(null, OriginalHook(Dyskrasia));
 
                 // Psyche
                 if (IsEnabled(CustomComboPreset.SGE_AoE_DPS_Psyche))
@@ -244,7 +247,7 @@ internal partial class SGE : Healer
         }
     }
 
-    internal class SGE_ST_Heal : CustomCombo
+    internal class SGE_ST_Heal_AdvancedMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.SGE_ST_Heal;
 
@@ -290,7 +293,7 @@ internal partial class SGE : Healer
                 !HasStatusEffect(Buffs.Kardia) &&
                 !HasStatusEffect(Buffs.Kardion, healTarget))
                 return Kardia
-                    .RetargetIfEnabled(OptionalTarget, Diagnosis);
+                    .Retarget(actionID, Target);
 
             // Lucid Dreaming
             if (IsEnabled(CustomComboPreset.SGE_ST_Heal_Lucid) &&
@@ -314,7 +317,7 @@ internal partial class SGE : Healer
         }
     }
 
-    internal class SGE_AoE_Heal : CustomCombo
+    internal class SGE_AoE_Heal_AdvancedMode : CustomCombo
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.SGE_AoE_Heal;
 
@@ -424,7 +427,7 @@ internal partial class SGE : Healer
                 1 => OriginalHook(Diagnosis),
                 2 => OriginalHook(Prognosis),
                 3 => OriginalHook(Dyskrasia),
-                var _ => actionID
+                var _ => actionID.RetargetIfEnabled(null, EukrasianDiagnosis)
             };
         }
     }
@@ -436,7 +439,7 @@ internal partial class SGE : Healer
         protected override uint Invoke(uint actionID) =>
             actionID is Soteria &&
             (!HasStatusEffect(Buffs.Kardia) || IsOnCooldown(Soteria))
-                ? Kardia
+                ? Kardia.Retarget(actionID, Target)
                 : actionID;
     }
 
@@ -458,8 +461,8 @@ internal partial class SGE : Healer
         protected override uint Invoke(uint actionID) =>
             (actionID is Taurochole) &&
             (!LevelChecked(Taurochole) || IsOnCooldown(Taurochole))
-                ? Druochole
-                : actionID;
+                ? Druochole.RetargetIfEnabled(null, actionID)
+                : actionID.RetargetIfEnabled(null, actionID);
     }
 
     internal class SGE_ZoePneuma : CustomCombo
@@ -470,5 +473,35 @@ internal partial class SGE : Healer
             actionID is Pneuma && ActionReady(Pneuma) && IsOffCooldown(Zoe)
                 ? Zoe
                 : actionID;
+    }
+
+    internal class SGE_Retarget : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.SGE_Retarget;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (!EZ.Throttle("SGERetargetingFeature", TS.FromSeconds(5)))
+                return actionID;
+
+            IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
+
+            if (IsEnabled(CustomComboPreset.SGE_Retarget_Haima))
+                Haima.Retarget(healStack, true);
+
+            if (IsEnabled(CustomComboPreset.SGE_Retarget_Druchole))
+                Druochole.Retarget(healStack, true);
+
+            if (IsEnabled(CustomComboPreset.SGE_Retarget_Taurochole))
+                Taurochole.Retarget(healStack, true);
+
+            if (IsEnabled(CustomComboPreset.SGE_Retarget_Krasis))
+                Krasis.Retarget(healStack, true);
+
+            if (IsEnabled(CustomComboPreset.SGE_Retarget_Kardia))
+                Kardia.Retarget(Target, true);
+
+            return actionID;
+        }
     }
 }
