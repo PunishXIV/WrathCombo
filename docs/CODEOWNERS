@@ -40,6 +40,7 @@
 /WrathCombo/CustomCombo/                              @Taurenkey
 /WrathCombo/CustomCombo/Functions/                    @Taurenkey
 /WrathCombo/Core/                                     @Taurenkey
+/WrathCombo/Services/IPC_Subscriber/Orbwalker.cs      @Taurenkey
 /WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest
 /WrathCombo/Core/ActionRetargeting.cs                 @zbee
 /WrathCombo/CustomCombo/SimpleTarget.cs               @zbee
@@ -48,7 +49,8 @@
 /WrathCombo/Services/IPC/                             @zbee
 /res/ipc_status.txt                                   @zbee
 /WrathCombo/Data/ContentCheck.cs                      @zbee
-/WrathCombo/Data/ConflictingPluginsCheck.cs           @zbee
+/WrathCombo/Data/Conflicts                            @zbee
+/WrathCombo/Services/IPC_Subscriber/                  @zbee
 /WrathCombo/Combos/PvE/Content/Bozja.cs               @zbee @Akechi-kun
 /WrathCombo/CustomCombo/StancePartner.cs              @zbee
 

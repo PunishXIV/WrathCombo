@@ -19,8 +19,8 @@ using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
-using WrathCombo.Data;
 using WrathCombo.Services;
+using WrathCombo.Data.Conflicts;
 using WrathCombo.Window.Tabs;
 
 namespace WrathCombo.Window
@@ -207,37 +207,7 @@ namespace WrathCombo.Window
             ImGui.Spacing();
 #endif
 
-            var conflictingPlugins = ConflictingPluginsCheck.TryGetConflictingPlugins();
-            if (conflictingPlugins != null)
-            {
-                ImGui.Spacing();
-                ImGui.Spacing();
-                const string conflictStringStart = "Conflicting Combo";
-                const string conflictStringEnd = "Plugins Detected!";
-
-                // Chop the text in half if it doesn't fit
-                ImGuiEx.LineCentered("###ConflictingPlugins", () =>
-                {
-                    if (ImGui.GetColumnWidth() < ImGui.CalcTextSize(conflictStringStart + " " + conflictStringEnd).X.Scale())
-                        ImGui.TextColored(ImGuiColors.DalamudYellow, conflictStringStart + "\n" + conflictStringEnd);
-                    else
-                        ImGui.TextColored(ImGuiColors.DalamudYellow, conflictStringStart + " " + conflictStringEnd);
-
-                    // Tooltip with explanation
-                    if (ImGui.IsItemHovered())
-                    {
-                        var conflictingPluginsText = "- " + string.Join("\n- ", conflictingPlugins);
-                        var tooltipText =
-                            "The following plugins are known to conflict " +
-                            $"with {Svc.PluginInterface.InternalName}:\n" +
-                            conflictingPluginsText +
-                            "\n\nIt is recommended you disable these plugins to prevent\n" +
-                            "unexpected behavior and bugs.";
-
-                        ImGui.SetTooltip(tooltipText);
-                    }
-                });
-            }
+            ConflictingPlugins.Draw();
         }
 
         private void DrawBody()
