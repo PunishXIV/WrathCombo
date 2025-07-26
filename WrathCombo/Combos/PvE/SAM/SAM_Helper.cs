@@ -46,36 +46,44 @@ internal partial class SAM
         if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) && !HasStatusEffect(Buffs.MeikyoShisui) &&
             (JustUsed(Gekko) || JustUsed(Kasha) || JustUsed(Yukikaze)))
         {
-            if (EnhancedSenei)
+            if ((SAM_ST_Meikyo_Suboption == 0 || InBossEncounter() ||
+                 IsEnabled(CustomComboPreset.SAM_ST_SimpleMode) && InBossEncounter()))
             {
-                //if no opener
-                if ((IsEnabled(CustomComboPreset.SAM_ST_Opener) && SAM_Balance_Content == 1 && !InBossEncounter() ||
-                     IsNotEnabled(CustomComboPreset.SAM_ST_Opener)) &&
-                    meikyoUsed < 1 && !HasStatusEffect(Buffs.TsubameReady))
-                    return true;
-
-                if (HasStatusEffect(Buffs.TsubameReady))
+                if (EnhancedSenei)
                 {
-                    switch (gcd)
+                    //if no opener
+                    if ((IsEnabled(CustomComboPreset.SAM_ST_Opener) && SAM_Balance_Content == 1 && !InBossEncounter() ||
+                         IsNotEnabled(CustomComboPreset.SAM_ST_Opener)) &&
+                        meikyoUsed < 1 && !HasStatusEffect(Buffs.TsubameReady))
+                        return true;
+
+                    if (HasStatusEffect(Buffs.TsubameReady))
                     {
-                        //2.14 GCD
-                        case >= 2.09f when GetCooldownRemainingTime(Senei) <= 10 &&
-                                           (meikyoUsed % 7 is 1 or 2 && SenCount is 3 ||
-                                            meikyoUsed % 7 is 3 or 4 && SenCount is 2 ||
-                                            meikyoUsed % 7 is 5 or 6 && SenCount is 1):
-                        //2.08 gcd
-                        case <= 2.08f when GetCooldownRemainingTime(Senei) <= 10 && SenCount is 3:
-                            return true;
+                        switch (gcd)
+                        {
+                            //2.14 GCD
+                            case >= 2.09f when GetCooldownRemainingTime(Senei) <= 10 &&
+                                               (meikyoUsed % 7 is 1 or 2 && SenCount is 3 ||
+                                                meikyoUsed % 7 is 3 or 4 && SenCount is 2 ||
+                                                meikyoUsed % 7 is 5 or 6 && SenCount is 1):
+                            //2.08 gcd
+                            case <= 2.08f when GetCooldownRemainingTime(Senei) <= 10 && SenCount is 3:
+                                return true;
+                        }
                     }
+
+                    // reset meikyo
+                    if (gcd >= 2.09f && meikyoUsed % 7 is 0 && JustUsed(Yukikaze))
+                        return true;
                 }
 
-                // reset meikyo
-                if (gcd >= 2.09f && meikyoUsed % 7 is 0 && JustUsed(Yukikaze))
+                //Pre Enhanced Senei
+                if (!EnhancedSenei && ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
                     return true;
             }
 
-            //Pre Enhanced Senei
-            if (!EnhancedSenei && ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
+            if (IsEnabled(CustomComboPreset.SAM_ST_SimpleMode) && !InBossEncounter() ||
+                SAM_ST_Meikyo_Suboption == 1 && !InBossEncounter())
                 return true;
         }
 
