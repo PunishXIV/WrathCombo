@@ -65,17 +65,17 @@ internal partial class AST
     
     #region Hidden Raidwides
     
-    internal static bool HiddenCollectiveUnconscious()
+    internal static bool RaidwideCollectiveUnconscious()
     {
-        return IsEnabled(CustomComboPreset.AST_Hidden_CollectiveUnconscious) && ActionReady(CollectiveUnconscious) && CanWeave() && RaidWideCasting();
+        return IsEnabled(CustomComboPreset.AST_Raidwide_CollectiveUnconscious) && ActionReady(CollectiveUnconscious) && CanWeave() && RaidWideCasting();
     }
-    internal static bool HiddenNeutralSect()
+    internal static bool RaidwideNeutralSect()
     {
-        return IsEnabled(CustomComboPreset.AST_Hidden_NeutralSect) && ActionReady(OriginalHook(NeutralSect)) && CanWeave() && RaidWideCasting();
+        return IsEnabled(CustomComboPreset.AST_Raidwide_NeutralSect) && ActionReady(OriginalHook(NeutralSect)) && CanWeave() && RaidWideCasting();
     }
-    internal static bool HiddenAspectedHelios()
+    internal static bool RaidwideAspectedHelios()
     {
-        return IsEnabled(CustomComboPreset.AST_Hidden_AspectedHelios) && HasStatusEffect(Buffs.NeutralSect) && RaidWideCasting() && 
+        return IsEnabled(CustomComboPreset.AST_Raidwide_AspectedHelios) && HasStatusEffect(Buffs.NeutralSect) && RaidWideCasting() && 
                !HasStatusEffect(Buffs.NeutralSectShield);
     }
     

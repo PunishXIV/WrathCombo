@@ -70,6 +70,6 @@ internal static partial class Variant
 
     internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
         IsEnabled(preset) && ActionReady(VariantUltimatum)
-        && CanCircleAoe(5) > 0 && CheckWeave(weave);
+        && NumberOfEnemiesInRange(VariantUltimatum) > 0 && CheckWeave(weave);
 }
 #endregion

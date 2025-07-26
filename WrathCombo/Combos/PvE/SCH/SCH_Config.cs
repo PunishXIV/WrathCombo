@@ -112,6 +112,14 @@ internal partial class SCH
                     DrawAdditionalBoolChoice(SCH_AoE_DPS_EnergyDrain_Burst, 
                         "Energy Drain Burst", "Holds Energy Drain when Chain Stratagem is ready or has less than 10 seconds cooldown remaining.");
                     break;
+                
+                case CustomComboPreset.SCH_AoE_ADV_DPS_DoT:
+                    DrawSliderInt(0, 100, SCH_AoE_ADV_DPS_DoT_HPThreshold, "Target HP% to stop using (0 = Use Always, 100 = Never)");
+                    ImGui.Indent();
+                    DrawRoundedSliderFloat(0, 5, SCH_AoE_ADV_DPS_DoT_Reapply,  "Seconds remaining before reapplying (0 = Do not reapply early)", digits: 1);
+                    ImGui.Unindent();
+                    DrawSliderInt(0, 10, SCH_AoE_ADV_DPS_DoT_MaxTargets, "Maximum number of targets to employ multi-dotting ");
+                    break;
                 #endregion
                 
                 #region Healing
@@ -283,8 +291,8 @@ internal partial class SCH
                     DrawRadioButton(SCH_Recitation_Mode, "Excogitation", "", 3);
                     break; 
                 
-                case CustomComboPreset.SCH_Hidden_Succor_Raidwide:
-                    DrawAdditionalBoolChoice(SCH_Hidden_Succor_Raidwide_Recitation, "Recitation Option", "Use Recitation to buff before the Raidwide Succor.");
+                case CustomComboPreset.SCH_Raidwide_Succor:
+                    DrawAdditionalBoolChoice(SCH_Raidwide_Succor_Recitation, "Recitation Option", "Use Recitation to buff before the Raidwide Succor.");
                     break;
                 
                 #endregion
@@ -295,7 +303,7 @@ internal partial class SCH
     
         #region DPS
 
-        public static UserInt
+        internal static UserInt
             SCH_ST_DPS_LucidOption = new("SCH_ST_DPS_LucidOption", 6500),
             SCH_AoE_DPS_LucidOption = new("SCH_AoE_LucidOption", 6500),
             SCH_ST_DPS_OpenerOption = new("SCH_ST_DPS_OpenerOption"),
@@ -308,7 +316,11 @@ internal partial class SCH
             SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1),
             SCH_AoE_DPS_EnergyDrain = new("SCH_AoE_DPS_EnergyDrain", 3),
             SCH_AoE_DPS_ChainStratagemSubOption = new("SCH_AoE_DPS_ChainStratagemSubOption", 1),
+            SCH_AoE_ADV_DPS_DoT_HPThreshold = new("SCH_AoE_ADV_DPS_DoT_HPThreshold", 30),
+            SCH_AoE_ADV_DPS_DoT_MaxTargets = new ("SCH_AoE_ADV_DPS_DoT_MaxTargets", 4),
             SCH_ST_DPS_Adv_Actions = new("SCH_ST_DPS_Adv_Actions");
+        
+        
 
         internal static UserBool
             SCH_ST_DPS_EnergyDrain_Burst = new("SCH_ST_DPS_EnergyDrain_Burst"),
@@ -316,11 +328,12 @@ internal partial class SCH
             SCH_AoE_DPS_ChainStratagemBanefulOption = new("SCH_AoE_DPS_ChainStratagemBanefulOption"),
             SCH_AoE_Heal_Aetherflow_Indomitability = new("SCH_AoE_Heal_Aetherflow_Indomitability"),
             SCH_AoE_Heal_Dissipation_Indomitability = new("SCH_AoE_Heal_Dissipation_Indomitability"),
-            SCH_Hidden_Succor_Raidwide_Recitation = new ("SCH_Hidden_Succor_Raidwide_Recitation");
-        
+            SCH_Raidwide_Succor_Recitation = new ("SCH_Raidwide_Succor_Recitation");
 
-        public static UserFloat
-            SCH_DPS_BioUptime_Threshold = new("SCH_DPS_BioUptime_Threshold", 3.0f);
+
+        internal static UserFloat
+            SCH_DPS_BioUptime_Threshold = new("SCH_DPS_BioUptime_Threshold", 3.0f),
+            SCH_AoE_ADV_DPS_DoT_Reapply = new("SCH_AoE_ADV_DPS_DoT_Reapply", 0);
             
         
 

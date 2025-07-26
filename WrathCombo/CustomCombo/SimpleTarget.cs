@@ -14,6 +14,7 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using static WrathCombo.Data.ActionWatching;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -351,15 +352,48 @@ internal static class SimpleTarget
             .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)
             .FirstOrDefault();
 
-    public static IGameObject? StunnableEnemy(int restunCheck = 3) =>
+    public static IGameObject? StunnableEnemy(int reStunCheck = 3) =>
         Svc.Objects
             .OfType<IBattleChara>()
             .Where(x => x.IsHostile() && x.IsTargetable &&
                         !x.IsBoss() && x.IsWithinRange(3) &&
                         !CustomComboFunctions.HasStatusEffect(All.Debuffs.Stun, x) &&
-                           (ICDTracker.StatusIsExpired(All.Debuffs.Stun, x.GameObjectId) || ICDTracker.Trackers.FirstOrDefault(y => y.StatusID == All.Debuffs.Stun && x.GameObjectId == y.GameObjectId)?.TimesApplied < restunCheck))
+                        (ICDTracker.StatusIsExpired(All.Debuffs.Stun, x.GameObjectId) ||
+                         ICDTracker.Trackers.FirstOrDefault(y =>
+                             y.StatusID == All.Debuffs.Stun &&
+                             x.GameObjectId == y.GameObjectId)?
+                             .TimesApplied < reStunCheck))
             .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)
             .FirstOrDefault();
+
+    public static IGameObject? DottableEnemy
+    (uint dotAction,
+        ushort dotDebuff,
+        int minHPPercent = 10,
+        float reapplyThreshold = 1,
+        int maxNumberOfEnemiesInRange = 3)
+    {
+        var action = ActionSheet[dotAction];
+        var numberOfEnemiesInRange = Svc.Objects
+            .OfType<IBattleChara>()
+            .Count(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange(15f));
+
+        if (numberOfEnemiesInRange > maxNumberOfEnemiesInRange)
+            return null;
+
+        return Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.CanUseOn(dotAction) &&
+                        x.CurrentHp * 100u / x.MaxHp > minHPPercent &&
+                        !CustomComboFunctions.JustUsedOn(dotAction, x) &&
+                        CustomComboFunctions.GetStatusEffectRemainingTime
+                            (dotDebuff, x) <= reapplyThreshold &&
+                        CustomComboFunctions.CanApplyStatus(x, dotDebuff) &&
+                        x.IsWithinRange(action.Range))
+            .OrderBy(x => CustomComboFunctions.GetStatusEffectRemainingTime(dotDebuff, x))
+            .ThenByDescending(x => x.CurrentHp / x.MaxHp * 100)
+            .FirstOrDefault();
+    }
 
     #endregion
 
