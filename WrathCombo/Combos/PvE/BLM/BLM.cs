@@ -97,7 +97,7 @@ internal partial class BLM : Caster
                     !HasStatusEffect(Buffs.Firestarter) &&
                     !HasStatusEffect(Buffs.Triplecast) &&
                     !HasStatusEffect(Role.Buffs.Swiftcast))
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
                     return Role.Swiftcast;
@@ -128,7 +128,7 @@ internal partial class BLM : Caster
                     (AstralFireStacks < 3 ||
                      JustUsed(FlareStar, 5) ||
                      !LevelChecked(FlareStar) && ActionReady(Despair)))
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (FlarestarReady)
                     return FlareStar;
@@ -154,7 +154,7 @@ internal partial class BLM : Caster
                 if (UmbralHearts is 3 &&
                     UmbralIceStacks is 3 &&
                     ActiveParadox)
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (CurMp is MP.MaxMP)
                 {
@@ -337,7 +337,7 @@ internal partial class BLM : Caster
                     (AstralFireStacks < 3 ||
                      JustUsed(FlareStar, 5) ||
                      !LevelChecked(FlareStar) && ActionReady(Despair)))
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (IsEnabled(CustomComboPreset.BLM_ST_FlareStar) &&
                     FlarestarReady)
@@ -366,7 +366,7 @@ internal partial class BLM : Caster
                 if (UmbralHearts is 3 &&
                     UmbralIceStacks is 3 &&
                     ActiveParadox)
-                    return OriginalHook(Paradox);
+                    return Paradox;
 
                 if (CurMp is MP.MaxMP)
                 {
@@ -449,7 +449,7 @@ internal partial class BLM : Caster
                 return OriginalHook(Thunder2);
 
             if (ActiveParadox && EndOfIcePhaseAoEMaxLevel)
-                return OriginalHook(Paradox);
+                return Paradox;
 
             if (FirePhase)
             {
@@ -551,7 +551,7 @@ internal partial class BLM : Caster
 
             if (IsEnabled(CustomComboPreset.BLM_AoE_ParadoxFiller) &&
                 ActiveParadox && EndOfIcePhaseAoEMaxLevel)
-                return OriginalHook(Paradox);
+                return Paradox;
 
             if (FirePhase)
             {
@@ -646,8 +646,8 @@ internal partial class BLM : Caster
         protected override uint Invoke(uint actionID) =>
             actionID switch
             {
-                Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) && (IcePhase || AstralFireStacks is 1 || AstralFireStacks is 2 || HasStatusEffect(Buffs.Firestarter) || !InCombat()) => Fire3,
-                Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && FirePhase && AstralFireStacks is 3 => OriginalHook(Fire),
+                Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) && (IcePhase || ((AstralFireStacks is 1 or 2) && HasStatusEffect(Buffs.Firestarter)) || !InCombat()) && !JustUsed(Fire3) => Fire3,
+                Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && FirePhase && (AstralFireStacks is 3 || ((AstralFireStacks is 1 or 2) && !HasStatusEffect(Buffs.Firestarter))) && !JustUsed(OriginalHook(Fire)) => OriginalHook(Fire),
                 var _ => actionID
             };
     }
@@ -694,6 +694,15 @@ internal partial class BLM : Caster
             actionID is Blizzard4 && FirePhase && LevelChecked(Despair)
                 ? Despair
                 : actionID;
+    }
+
+    internal class BLM_Fire1Despair : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.BLM_Fire1Despair;
+        protected override uint Invoke(uint actionID) =>
+            actionID is Fire && FirePhase && CurMp < 2400
+                ? Despair
+                : OriginalHook(Fire);
     }
 
     internal class BLM_FreezeParadox : CustomCombo

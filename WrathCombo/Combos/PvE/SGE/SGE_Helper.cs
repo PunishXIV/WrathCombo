@@ -64,8 +64,8 @@ internal partial class SGE
         IGameObject? healTarget = optionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
         bool shieldCheck = !SGE_ST_Heal_EDiagnosisOpts[0] ||
-                           !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) ||
-                           !HasStatusEffect(Buffs.EukrasianPrognosis, healTarget, true);
+                           (!HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) &&
+                            !HasStatusEffect(Buffs.EukrasianPrognosis, healTarget, true));
 
         bool scholarShieldCheck = !SGE_ST_Heal_EDiagnosisOpts[1] ||
                                   !HasStatusEffect(SCH.Buffs.Galvanize);
@@ -112,7 +112,7 @@ internal partial class SGE
             case 7:
                 action = Eukrasia;
                 enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) &&
-                          GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= SGE_ST_Heal_EDiagnosisHP &&
+                          (GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= SGE_ST_Heal_EDiagnosisHP) &&
                           shieldCheck && scholarShieldCheck;
                 return SGE_ST_Heal_EDiagnosisHP;
 
