@@ -2,6 +2,7 @@
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using ImGuiNET;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
@@ -145,65 +146,21 @@ namespace WrathCombo.CustomComboNS.Functions
             var targetStatuses = tar.StatusList.Select(s => s.StatusId).ToHashSet();
             uint targetID = tar.DataId;
 
+            // Returning False in each case because there should be no other General Invinicibility Check needed
+            // for specified areas
             switch (Svc.ClientState.TerritoryType)
             {
-                case 174:   // Labyrinth of the Ancients
+                case 174: // Labyrinth of the Ancients
                     // Thanatos, Spooky Ghosts Only
                     if (targetID is 2350) return !HasStatusEffect(398);
-
                     // Allagan Bomb
                     if (targetID is 2407) return NumberOfObjectsInRange<SelfCircle>(30) > 1;
-
                     return false;
-                case 1248:  // Jeuno 1 Ark Angels
-                    // ArkAngel HM = 1804
-                    if (targetID is 18049 && HasStatusEffect(4410, tar, true)) return true;
 
-                    // ArkAngel MR = 18051 (A)
-                    // ArkAngel GK = 18053 (B)
-                    // ArkAngel TT = 18052 (C)
-                    if (targetID is 18051 or 18052 or 18053)
-                    {
-                        if (HasStatusEffect(4192)) return targetID != 18051; // Alliance A Red Epic
-                        if (HasStatusEffect(4194)) return targetID != 18053; // Alliance B Yellow Fated
-                        if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
-                    }
-                    return false;
-                case 917:   //Puppet's Bunker, Flight Mechs
-                    // 724P Alpha = 11792 (A)
-                    // 767P Beta  = 11793 (B)
-                    // 772P Chi   = 11794 (C)
-                    if (targetID is 11792 or 11793 or 11794)
-                    {
-                        if (HasStatusEffect(2288)) return targetID != 11792;
-                        if (HasStatusEffect(2289)) return targetID != 11793;
-                        if (HasStatusEffect(2290)) return targetID != 11794;
-                    }
-                    return false;
-                case 966: //The Tower at Paradigm's Breach, Hansel & Gretel
-                          // Hansel = 12709
-                          // Gretel = 12708
-                          // 680 Directional Parry
-                          // 2538 Strong of Shield
-                          // 2539 Stronger Together
-
-                    if (targetID is 12709 or 12708)
-                    {
-                        bool Tank = (LocalPlayer!).GetRole() is CombatRole.Tank;
-                        bool bossHasStatus = HasStatusEffect(680, tar);
-
-                        // Non Tanks should just ignore parrying boss(s)
-                        if (!Tank)
-                        {
-                            if (bossHasStatus) return true;
-                        }
-                        //Tanks should only ignore their target if it has the buff and they aren't in front.
-                        else
-                        {
-                            if (bossHasStatus && AngleToTarget(tar) != AttackAngle.Front)
-                                return true;
-                        }
-                    }
+                case 556: // The Weeping City of Mhach
+                    // Ozma - Acceleration Bomb
+                    // Technically not invincible, just need to stop attacking
+                    if (targetID is 5472 && (GetStatusEffectRemainingTime(1072, anyOwner: true) is > 0f and < 1.5f)) return true;
                     return false;
 
                 case 801 or 805 or 1122: //Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
@@ -227,15 +184,70 @@ namespace WrathCombo.CustomComboNS.Functions
                     if (StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses)) return true;
 
                     return false;
-                case 952:  //ToZ final boss (technically not invincible)
-                    if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.DataId is 13297 && !y.IsDead))
-                        return true;
 
-                    return false;
                 case 821: //Dohn Mheg Final Boss Lyre
                     if (targetID is 3939 && !HasStatusEffect(386))
                         return true; //Unfooled means you can attack the Lyre
                     return false;
+
+                case 917: //Puppet's Bunker, Flight Mechs
+                    // 724P Alpha = 11792 (A)
+                    // 767P Beta  = 11793 (B)
+                    // 772P Chi   = 11794 (C)
+                    if (targetID is 11792 or 11793 or 11794)
+                    {
+                        if (HasStatusEffect(2288)) return targetID != 11792;
+                        if (HasStatusEffect(2289)) return targetID != 11793;
+                        if (HasStatusEffect(2290)) return targetID != 11794;
+                    }
+                    return false;
+
+                case 952: // Tower of Zot final bosses
+                          // Technically not invincible, just need to ignore
+                    if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.DataId is 13297 && !y.IsDead))
+                        return true;
+                    return false;
+
+                case 966: //The Tower at Paradigm's Breach, Hansel & Gretel
+                    // Hansel = 12709
+                    // Gretel = 12708
+                    // If boss has shield or too close, boss gains 680 Parry, so easier to check for that
+                    // 680 Directional Parry
+                    // 2538 Strong of Shield
+                    // 2539 Stronger Together
+
+                    if (targetID is 12709 or 12708)
+                    {
+                        bool isTank = (LocalPlayer!).GetRole() is CombatRole.Tank;
+                        bool bossHasParry = HasStatusEffect(680, tar);
+                        bool isFrontFacing = AngleToTarget(tar) is AttackAngle.Front;
+
+                        // Non Tanks should just ignore parrying boss(s)
+                        // Tanks should only ignore their target if it has the buff and they aren't in front.
+                        if (bossHasParry && (!isTank || !isFrontFacing)) return true;
+                    }
+                    return false;
+
+                case 1198: // Vanguard - Protector's Acceleration Bomb
+                           // Technically not invincible, just need to stop attacking
+                    if (targetID is 16951 && (GetStatusEffectRemainingTime(3802, anyOwner: true) is > 0f and < 1.5f)) return true;
+                    return false;
+
+                case 1248: // Jeuno 1 Ark Angels
+                    // ArkAngel HM = 1804
+                    // ArkAngel MR = 18051 (A)
+                    // ArkAngel GK = 18053 (B)
+                    // ArkAngel TT = 18052 (C)
+                    if (targetID is 18049 && HasStatusEffect(4410, tar, true)) return true;
+
+                    if (targetID is 18051 or 18052 or 18053)
+                    {
+                        if (HasStatusEffect(4192)) return targetID != 18051; // Alliance A Red Epic
+                        if (HasStatusEffect(4194)) return targetID != 18053; // Alliance B Yellow Fated
+                        if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
+                    }
+                    return false;
+
             }
 
             // General invincibility check
