@@ -732,14 +732,6 @@ internal partial class WHM : Healer
 
             if (IsEnabled(Preset.WHM_Re_DivineBenison))
                 DivineBenison.Retarget(healStack, dontCull: true);
-                return IsEnabled(CustomComboPreset.WHM_ThinAirRaise) && canThinAir
-                    ? ThinAir
-                    : IsEnabled(CustomComboPreset.WHM_Raise_Retarget)
-                        ? Raise
-                            .Retarget(Role.Swiftcast,
-                                SimpleTarget.Stack.AllyToRaise)
-                            .AndRunMacro()
-                        : Raise.AndRunMacro();
 
             return actionID;
         }
