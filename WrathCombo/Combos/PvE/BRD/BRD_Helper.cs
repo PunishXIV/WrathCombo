@@ -42,8 +42,8 @@ internal partial class BRD
 
     //Useful Bools
     internal static bool BardHasTarget => HasBattleTarget();
-    internal static bool CanBardWeave => CanWeave() && !ActionWatching.HasDoubleWeaved();
-    internal static bool CanWeaveDelayed => CanDelayedWeave() && !ActionWatching.HasDoubleWeaved();
+    internal static bool CanBardWeave => CanWeave();
+    internal static bool CanWeaveDelayed => CanDelayedWeave();
     internal static bool CanIronJaws => LevelChecked(IronJaws);
     internal static bool BuffTime => GetCooldownRemainingTime(RagingStrikes) < 2.7;
     internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 

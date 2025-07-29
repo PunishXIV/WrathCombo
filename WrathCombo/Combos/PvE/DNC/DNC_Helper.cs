@@ -50,7 +50,7 @@ internal partial class DNC
     ///     <see cref="TechnicalFinish4" />, <see cref="FinishingMove" />,
     ///     and <see cref="Tillana" />.
     /// </remarks>
-    private static bool EnemyIn15Yalms => CanCircleAoe(15, true) > 0;
+    private static bool EnemyIn15Yalms => NumberOfEnemiesInRange(FinishingMove) > 0;
 
     /// <summary>
     ///     Checks if any enemy is within 8 yalms.
@@ -58,7 +58,7 @@ internal partial class DNC
     /// <remarks>
     ///     This is used for <see cref="Improvisation" />.
     /// </remarks>
-    private static bool EnemyIn8Yalms => CanCircleAoe(8, true) > 0;
+    private static bool EnemyIn8Yalms => NumberOfEnemiesInRange(Improvisation) > 0;
 
     /// <summary>
     ///     Logic to pick different openers.
@@ -519,7 +519,7 @@ internal partial class DNC
         if (!CustomDanceStepActions.Contains(action))
             return false;
 
-        for (int i = 0; i < CustomDanceStepActions.Length; i++)
+        for (var i = 0; i < CustomDanceStepActions.Length; i++)
         {
             if (CustomDanceStepActions[i] != action)
                 continue;
@@ -531,11 +531,11 @@ internal partial class DNC
                 1 => Entrechat,
                 2 => Jete,
                 3 => Pirouette,
-                _ => updatedAction
+                _ => updatedAction,
             };
         }
 
-        return false;
+        return true;
     }
 
     #endregion

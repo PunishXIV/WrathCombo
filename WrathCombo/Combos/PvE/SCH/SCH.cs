@@ -33,7 +33,7 @@ internal partial class SCH : Healer
                 return DissolveUnion;
             #endregion
 
-            if (InCombat() && CanSpellWeave())
+            if (InCombat() && CanWeave())
             {
                 if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
                     return Aetherflow;
@@ -70,11 +70,14 @@ internal partial class SCH : Healer
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_ST_ADV_DPS;
         protected override uint Invoke(uint actionID)
         {
-            #region Variables
             bool actionFound = Config.SCH_ST_DPS_Adv_Actions == 0 && BroilList.Contains(actionID) ||
                                Config.SCH_ST_DPS_Adv_Actions == 1 && BioList.ContainsKey(actionID) ||
                                Config.SCH_ST_DPS_Adv_Actions == 2 && actionID is Ruin2;
             
+            if (!actionFound)
+                return actionID;
+            
+            #region Variables
             int chainThreshold = Config.SCH_ST_DPS_ChainStratagemSubOption == 1 || !InBossEncounter() ? Config.SCH_ST_DPS_ChainStratagemOption : 0;
             #endregion
             
@@ -98,21 +101,18 @@ internal partial class SCH : Healer
                 return OccultCrescent.BestPhantomAction();
             #endregion
             
-            #region Dissolve Union
+            #region Healing Helpers
             if (EndAetherpact)
                 return DissolveUnion;
-            #endregion
-            
-            #region Hidden Feature Raidwide
-            if (HiddenSacredSoil())
+            if (RaidwideSacredSoil())
                 return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
-            if (HiddenExpedient())
+            if (RaidwideExpedient())
                 return Expedient;
-            if (HiddenSuccor())
-                return HiddenRecitation() ? Recitation : OriginalHook(Succor);
+            if (RaidwideSuccor())
+                return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
             #endregion
 
-            if (InCombat() && CanSpellWeave())
+            if (InCombat() && CanWeave())
             {
                 if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
                     return Aetherflow;
@@ -176,22 +176,28 @@ internal partial class SCH : Healer
                 return DissolveUnion;
             #endregion
             
-            if (!InCombat() || !CanSpellWeave()) return actionID;
-            
-            if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
+            if (!WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
                 
-            if (HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+            if (HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
                 
-            if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem)
+            if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && CanWeave())
                 return ChainStratagem;
                     
             if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
-                AetherflowCD <= 10)
+                AetherflowCD <= 10 && CanWeave())
                 return EnergyDrain;
+            
+            var dotAction = OriginalHook(Bio);
+            BioList.TryGetValue(dotAction, out var dotDebuffID);
+            var target =
+                SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 30, 3, 4);
+
+            if (ActionReady(dotAction) && target != null)
+                return OriginalHook(Bio).Retarget([ArtOfWar, ArtOfWarII], target);
                 
-            if (Role.CanLucidDream(Config.SCH_AoE_DPS_LucidOption))
+            if (Role.CanLucidDream(Config.SCH_AoE_DPS_LucidOption) && CanWeave())
                 return Role.LucidDreaming;
 
             return actionID;
@@ -228,41 +234,47 @@ internal partial class SCH : Healer
                 return OccultCrescent.BestPhantomAction();
             #endregion
             
-            #region Dissolve Union
+            #region Healing Helpers
             if (EndAetherpact)
                 return DissolveUnion;
-            #endregion
-            
-            #region Hidden Feature Raidwide
-            if (HiddenSacredSoil())
+            if (RaidwideSacredSoil())
                 return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
-            if (HiddenExpedient())
+            if (RaidwideExpedient())
                 return Expedient;
-            if (HiddenSuccor())
-                return HiddenRecitation() ? Recitation : OriginalHook(Succor);
+            if (RaidwideSuccor())
+                return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
             #endregion
             
-            if (!InCombat() || !CanSpellWeave()) return actionID;
-            
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
+            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
                 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
                 
             if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && 
-                GetTargetHPPercent() > chainThreshold &&
+                GetTargetHPPercent() > chainThreshold && CanWeave() &&
                 (LevelChecked(BanefulImpaction)|| !Config.SCH_AoE_DPS_ChainStratagemBanefulOption))
                 return ChainStratagem;
                     
             if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
-                AetherflowCD <= Config.SCH_AoE_DPS_EnergyDrain &&
+                AetherflowCD <= Config.SCH_AoE_DPS_EnergyDrain && CanWeave() &&
                 (!Config.SCH_AoE_DPS_EnergyDrain_Burst ||
                  ChainStrategemCD > 10 ||
                  !LevelChecked(ChainStratagem)))
                 return EnergyDrain;
+            
+            var dotAction = OriginalHook(Bio);
+            BioList.TryGetValue(dotAction, out var dotDebuffID);
+            var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID,
+                Config.SCH_AoE_ADV_DPS_DoT_HPThreshold,
+                Config.SCH_AoE_ADV_DPS_DoT_Reapply,
+                Config.SCH_AoE_ADV_DPS_DoT_MaxTargets);
+
+            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_DoT) &&
+                ActionReady(dotAction) && target != null)
+                return OriginalHook(Bio).Retarget([ArtOfWar, ArtOfWarII], target);
                 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_Lucid) && Role.CanLucidDream(Config.SCH_AoE_DPS_LucidOption))
+            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_Lucid) && Role.CanLucidDream(Config.SCH_AoE_DPS_LucidOption) && CanWeave())
                 return Role.LucidDreaming;
 
             return actionID;
@@ -294,26 +306,21 @@ internal partial class SCH : Healer
 
             #endregion
             
-            #region Dissolve Union
+            #region Healing Helpers
             if (EndAetherpact)
                 return DissolveUnion;
-            #endregion
-            
-            #region Hidden Feature Raidwide
-
-            if (HiddenSacredSoil())
+            if (RaidwideSacredSoil())
                 return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
-            if (HiddenExpedient())
+            if (RaidwideExpedient())
                 return Expedient;
-            if (HiddenSuccor())
-                return HiddenRecitation() ? Recitation : OriginalHook(Succor);
-           
+            if (RaidwideSuccor())
+                return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
             #endregion
             
             // Aetherflow
             if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Aetherflow) &&
                 ActionReady(Aetherflow) && !HasAetherflow &&
-                InCombat() && CanSpellWeave())
+                InCombat() && CanWeave())
                 return Aetherflow;
 
             // Dissipation
@@ -363,20 +370,15 @@ internal partial class SCH : Healer
             if (actionID is not (Succor or Concitation or Accession))
                 return actionID;
             
-            #region Dissolve Union
+            #region Healing Helpers
             if (EndAetherpact)
                 return DissolveUnion;
-            #endregion
-            
-            #region Hidden Feature Raidwide
-
-            if (HiddenSacredSoil())
+            if (RaidwideSacredSoil())
                 return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
-            if (HiddenExpedient())
+            if (RaidwideExpedient())
                 return Expedient;
-            if (HiddenSuccor())
-                return HiddenRecitation() ? Recitation : OriginalHook(Succor);
-           
+            if (RaidwideSuccor())
+                return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
             #endregion
 
             if (!HasAetherflow && InCombat())

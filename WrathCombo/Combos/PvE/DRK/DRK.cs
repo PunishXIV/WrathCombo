@@ -56,7 +56,7 @@ internal partial class DRK : Tank
             var skipBecauseOpener =
                 IsEnabled(Preset.DRK_ST_BalanceOpener) &&
                 Opener().HasCooldowns() &&
-                NumberOfEnemiesInRange(20) < 2; // don't skip if add-pulling
+                NumberOfObjectsInRange<SelfCircle>(20) < 2; // don't skip if add-pulling
             if (IsEnabled(Preset.DRK_ST_RangedUptime) &&
                 ActionReady(Unmend) &&
                 !InMeleeRange() &&

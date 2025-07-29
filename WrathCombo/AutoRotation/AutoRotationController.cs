@@ -363,7 +363,7 @@ namespace WrathCombo.AutoRotation
             if (ActionManager.Instance()->QueuedActionId == RoleActions.Healer.Esuna)
                 ActionManager.Instance()->QueuedActionId = 0;
 
-            if (GetPartyMembers().FindFirst(x => HasCleansableDebuff(x.BattleChara), out var member))
+            if (GetPartyMembers().FindFirst(x => HasCleansableDebuff(x.BattleChara) && x.GameObject.IsFriendly(), out var member))
             {
                 if (InActionRange(RoleActions.Healer.Esuna, member.BattleChara) && IsInLineOfSight(member.BattleChara))
                     ActionManager.Instance()->UseAction(ActionType.Action, RoleActions.Healer.Esuna, member.BattleChara.GameObjectId);
@@ -521,7 +521,7 @@ namespace WrathCombo.AutoRotation
                 {
 
                     var target = !cfg.DPSSettings.AoEIgnoreManual && cfg.DPSRotationMode == DPSRotationMode.Manual ? Svc.Targets.Target : DPSTargeting.BaseSelection.MaxBy(x => NumberOfEnemiesInRange(OriginalHook(gameAct), x, true));
-                    var numEnemies = NumberOfEnemiesInRange(gameAct, target, true);
+                    var numEnemies = NumberOfEnemiesInRange(OriginalHook(gameAct), target, true);
                     if (!_ninjaLockedAoE)
                     {
                         if (cfg.DPSSettings.DPSAoETargets == null || numEnemies < cfg.DPSSettings.DPSAoETargets)
@@ -539,7 +539,10 @@ namespace WrathCombo.AutoRotation
                     uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct));
                     if (outAct is All.SavageBlade) return true;
                     if (!CanQueue(outAct)) return false;
-                    if (!ActionReady(outAct))
+                    if (!ActionReady(outAct, true, true))
+                        return false;
+
+                    if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0)
                         return false;
 
                     var sheet = ActionSheet[outAct];

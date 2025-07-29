@@ -153,12 +153,11 @@ public static class GameObjectExtensions
         Svc.Objects
             .Any(x => x.GameObjectId == obj.GameObjectId) ? obj : null;
 
-
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
     ///     <see langword="null" /> if the target cannot be affected by the action.
     /// </summary>
-    public unsafe static IGameObject? IfCanUseOn(this IGameObject? obj, uint actionId) =>
+    public static unsafe IGameObject? IfCanUseOn(this IGameObject? obj, uint actionId) =>
         obj != null && ActionManager.CanUseActionOnTarget(actionId, obj.Struct()) ? obj : null;
 
     #endregion
@@ -262,6 +261,13 @@ public static class GameObjectExtensions
         obj != null &&
         Svc.Objects
             .Any(x => x.GameObjectId == obj.GameObjectId);
+
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+    ///     boolean check for if the object can be affected by the action.
+    /// </summary>
+    public static unsafe bool CanUseOn(this IGameObject? obj, uint actionId) =>
+        obj != null && ActionManager.CanUseActionOnTarget(actionId, obj.Struct());
 
     #endregion
 

@@ -50,23 +50,23 @@ internal partial class SCH
     
     internal static float ChainStrategemCD => GetCooldownRemainingTime(ChainStratagem);
     
-    #region Hidden Raidwides
+    #region Raidwides
     
-    internal static bool HiddenSacredSoil()
+    internal static bool RaidwideSacredSoil()
     {
-        return IsEnabled(CustomComboPreset.SCH_Hidden_SacredSoil) && ActionReady(SacredSoil) && CanSpellWeave() && RaidWideCasting();
+        return IsEnabled(CustomComboPreset.SCH_Raidwide_SacredSoil) && ActionReady(SacredSoil) && CanWeave() && RaidWideCasting();
     }
-    internal static bool HiddenExpedient()
+    internal static bool RaidwideExpedient()
     {
-        return IsEnabled(CustomComboPreset.SCH_Hidden_Expedient) && ActionReady(Expedient) && CanSpellWeave() && RaidWideCasting();
+        return IsEnabled(CustomComboPreset.SCH_Raidwide_Expedient) && ActionReady(Expedient) && CanWeave() && RaidWideCasting();
     }
-    internal static bool HiddenSuccor()
+    internal static bool RaidwideSuccor()
     {
-        return IsEnabled(CustomComboPreset.SCH_Hidden_Succor_Raidwide) && ActionReady(OriginalHook(Succor)) && ShieldCheck && RaidWideCasting();
+        return IsEnabled(CustomComboPreset.SCH_Raidwide_Succor) && ActionReady(OriginalHook(Succor)) && ShieldCheck && RaidWideCasting();
     }
-    internal static bool HiddenRecitation()
+    internal static bool RaidwideRecitation()
     {
-        return Config.SCH_Hidden_Succor_Raidwide_Recitation&& ActionReady(Recitation);
+        return Config.SCH_Raidwide_Succor_Recitation&& ActionReady(Recitation);
     }
     #endregion
     

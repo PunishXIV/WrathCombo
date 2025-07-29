@@ -322,7 +322,7 @@ namespace WrathCombo.Window.Tabs
                 #region Maximum Weaves
 
                 ImGui.PushItemWidth(75);
-                if (ImGui.InputInt("###MaximumWeaves", ref Service.Configuration.MaximumWeavesPerWindow))
+                if (ImGui.SliderInt("###MaximumWeaves", ref Service.Configuration.MaximumWeavesPerWindow, 1, 3))
                     Service.Configuration.Save();
 
                 ImGui.SameLine();

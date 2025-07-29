@@ -140,8 +140,7 @@ internal partial class RDM
     internal static bool HasEmbolden => HasStatusEffect(Buffs.Embolden);
     internal static bool CanAcceleration => LevelChecked(Acceleration) && !CanVerFireAndStone && HasCharges(Acceleration) && CanInstantCD && 
                                             (EmboldenCD > 15 || LevelChecked(Embolden));
-    internal static bool CanAccelerationMovement => LevelChecked(Acceleration) && IsMoving() && HasCharges(Acceleration) 
-                                                    && (!HasDualcast || !HasAccelerate || !InCombo);
+    internal static bool CanAccelerationMovement => LevelChecked(Acceleration) && IsMoving() && HasCharges(Acceleration) && CanInstantCD;
     internal static bool CanSwiftcast => Role.CanSwiftcast() && CanInstantCD && !CanVerFireAndStone && (EmboldenCD > 10 || LevelChecked(Embolden));
     internal static bool CanSwiftcastMovement => Role.CanSwiftcast() && CanInstantCD && IsMoving();
     internal static bool CanInstantCD => !InCombo && !HasSwiftcast && !CanGrandImpact && !HasEmbolden && !HasDualcast && !HasAccelerate && !InCombo;

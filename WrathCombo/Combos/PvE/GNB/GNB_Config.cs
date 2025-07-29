@@ -111,9 +111,9 @@ internal partial class GNB
 
                 case CustomComboPreset.GNB_ST_NoMercy:
                     UserConfig.DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,
-                        "All content", $"Uses {ActionWatching.GetActionName(NoMercy)} regardless of content", 0);
+                        "All content", $"Uses {CustomComboFunctions.GetActionName(NoMercy)} regardless of content", 0);
                     UserConfig.DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,
-                        "Boss encounters Only", $"Only uses {ActionWatching.GetActionName(NoMercy)} when in Boss encounters", 1);
+                        "Boss encounters Only", $"Only uses {CustomComboFunctions.GetActionName(NoMercy)} when in Boss encounters", 1);
                     
                     UserConfig.DrawSliderInt(0, 75, GNB_ST_NoMercyStop,
                         " Stop usage if Target HP% is below set value.\n  To disable this, set value to 0");

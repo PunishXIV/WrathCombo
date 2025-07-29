@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using WrathCombo.Combos;
 using ECommons.DalamudServices;
@@ -126,7 +127,7 @@ public partial class Provider : IDisposable
         }
 
         // Getting the IPC status early
-        _ = P.IPC.Helper.IPCEnabled;
+        Task.Run(() => P.IPC.Helper.IPCEnabled);
 
         // Build job-specific combo state caches
         // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
@@ -155,9 +156,14 @@ public partial class Provider : IDisposable
     #region Normal IPC Flow
 
     /// <summary>
-    /// IPC subscribers should check this before
+    ///     Checks the state of the Wrath IPC.<br />
+    ///     Subscribers should check this before using IPC methods, especially
+    ///     if working on a local build of Wrath Combo.
     /// </summary>
-    /// <returns>True once IPC has been fully initialised</returns>
+    /// <returns>
+    ///     <see langword="true" /> once IPC has been fully initialised, including
+    ///     caches.
+    /// </returns>
     [EzIPC]
     public bool IPCReady()
     {
@@ -456,10 +462,12 @@ public partial class Provider : IDisposable
     ///     combo configured.
     /// </summary>
     /// <returns>
-    ///     <see cref="ComboTargetTypeKeys.SingleTarget" /> - a <c>bool</c> indicating if
-    ///     a Single-Target combo is configured.<br />
-    ///     <see cref="ComboTargetTypeKeys.MultiTarget" /> - a <c>bool</c> indicating if
-    ///     a Multi-Target combo is configured.
+    ///     <see cref="ComboTargetTypeKeys.SingleTarget" /> - a
+    ///     <see cref="ComboSimplicityLevelKeys">SimplicityLevel?</see> indicating
+    ///     what mode, if any, is enabled for Auto-Mode for Single-Target.<br />
+    ///     <see cref="ComboTargetTypeKeys.MultiTarget" /> - a
+    ///     <see cref="ComboSimplicityLevelKeys">SimplicityLevel?</see> indicating
+    ///     what mode, if any, is enabled for Auto-Mode for Multi-Target.<br />
     /// </returns>
     /// <seealso cref="Helper.CheckCurrentJobModeIsEnabled" />
     [EzIPC]
@@ -581,7 +589,9 @@ public partial class Provider : IDisposable
     /// </summary>
     /// <param name="comboInternalName">
     ///     The internal name of the combo you want to check.<br />
-    ///     See <see cref="CustomComboPreset" /> or <see cref="GetComboNamesForJob" />.
+    ///     See <see cref="CustomComboPreset" /> or
+    ///     <see cref="GetComboNamesForJob" />.<br />
+    ///     Does also accept the ID of presets.
     /// </param>
     /// <returns>
     ///     <see cref="ComboStateKeys.Enabled" /> - a <c>bool</c> indicating if
@@ -621,7 +631,9 @@ public partial class Provider : IDisposable
     /// </param>
     /// <param name="comboInternalName">
     ///     The internal name of the combo you want to set.<br />
-    ///     See <see cref="CustomComboPreset" /> or <see cref="GetComboNamesForJob" />.
+    ///     See <see cref="CustomComboPreset" /> or
+    ///     <see cref="GetComboNamesForJob" />.<br />
+    ///     Does also accept the ID of presets.
     /// </param>
     /// <param name="comboState">
     ///     Optionally whether to enable combo.<br />
@@ -657,7 +669,8 @@ public partial class Provider : IDisposable
     ///     Gets the current state of a combo option in Wrath Combo.
     /// </summary>
     /// <param name="optionName">
-    ///     The name of the combo option you want to check.
+    ///     The internal name of the combo option you want to check.<br />
+    ///     Does also accept the ID of presets.
     /// </param>
     /// <returns>
     ///     A <c>bool</c> indicating if the combo option is enabled.
@@ -680,7 +693,8 @@ public partial class Provider : IDisposable
     ///     Your lease ID from <see cref="RegisterForLease(string,string)" />.
     /// </param>
     /// <param name="optionName">
-    ///     The name of the combo option you want to set.
+    ///     The internal name of the combo option you want to set.<br />
+    ///     Does also accept the ID of presets.
     /// </param>
     /// <param name="state">
     ///     Optionally whether to enable the combo option.<br />

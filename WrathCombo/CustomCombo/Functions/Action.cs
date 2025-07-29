@@ -115,12 +115,12 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Checks if an action is ready to use based on level required, current cooldown and unlock state. </summary>
     /// <param name="actionId"> The action ID. </param>
-    public static unsafe bool ActionReady(uint actionId)
+    public static unsafe bool ActionReady(uint actionId, bool recastCheck = false, bool castCheck = false)
     {
         uint hookedId = OriginalHook(actionId);
 
-        return (HasCharges(hookedId) || (GetAttackType(hookedId) != ActionAttackType.Ability && GetCooldownRemainingTime(hookedId) <= RemainingGCD)) &&
-            ActionManager.Instance()->GetActionStatus(ActionType.Action, hookedId, checkRecastActive: false, checkCastingActive: false) is 0 or 582 or 580;
+        return (HasCharges(hookedId) || (GetAttackType(hookedId) != ActionAttackType.Ability && GetCooldownRemainingTime(hookedId) <= RemainingGCD + BaseActionQueue)) &&
+            ActionManager.Instance()->GetActionStatus(ActionType.Action, hookedId, checkRecastActive: recastCheck, checkCastingActive: castCheck) is 0 or 582 or 580;
     }
 
     /// <summary> Checks if all passed actions are ready to be used. </summary>
@@ -253,11 +253,6 @@ internal abstract partial class CustomComboFunctions
                remainingCast <= BaseActionQueue &&                                   // Casting Threshold
                RemainingGCD > (remainingCast + estimatedWeaveTime + animationLock);  // Window End Threshold
     }
-
-    /// <summary> Checks if an action can be weaved within the GCD window when casting spells or weaponskills. </summary>
-    /// <param name="weaveEnd"> Remaining GCD time when the window ends. </param>
-    [Obsolete("Use CanWeave instead. This method will be removed in a future update.")]
-    public static bool CanSpellWeave(float weaveEnd = BaseAnimationLock) => CanWeave(weaveEnd);
 
     /// <summary> Checks if an action can be weaved within the GCD window, limited by specific GCD thresholds. </summary>
     /// <param name="weaveStart">

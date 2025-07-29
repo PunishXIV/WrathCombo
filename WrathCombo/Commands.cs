@@ -16,6 +16,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
+using WrathCombo.AutoRotation;
 
 #endregion
 
@@ -434,6 +435,38 @@ public partial class WrathCombo
 
         if (newVal != Service.Configuration.RotationConfig.Enabled)
             ToggleAutoRotation(newVal);
+            
+        // ADD: Handle targeting mode changes
+        if (argument.Length >= 4 && argument[1] == "target")
+        {
+            var role = argument[2].ToLowerInvariant();
+            var mode = argument[3];
+            
+            if (role == "damage" && Enum.TryParse<DPSRotationMode>(mode, true, out var dpsMode))
+            {
+                Service.Configuration.RotationConfig.DPSRotationMode = dpsMode;
+                Service.Configuration.Save();
+                
+                var dpsControlled = P.UIHelper.AutoRotationConfigControlled("DPSRotationMode") is not null;
+                var ctrlText = dpsControlled ? " " + OptionControlledByIPC : "";
+                
+                DuoLog.Information($"Damage targeting mode set to: {dpsMode.ToString().Replace('_', ' ')}{ctrlText}");
+            }
+            else if (role == "healer" && Enum.TryParse<HealerRotationMode>(mode, true, out var healerMode))
+            {
+                Service.Configuration.RotationConfig.HealerRotationMode = healerMode;
+                Service.Configuration.Save();
+                
+                var healerControlled = P.UIHelper.AutoRotationConfigControlled("HealerRotationMode") is not null;
+                var ctrlText = healerControlled ? " " + OptionControlledByIPC : "";
+                
+                DuoLog.Information($"Healer targeting mode set to: {healerMode.ToString().Replace('_', ' ')}{ctrlText}");
+            }
+            else
+            {
+                DuoLog.Error("Usage: /wrath auto target <damage|healer> <mode>");
+            }
+        }
     }
 
     /// <summary>

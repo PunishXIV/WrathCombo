@@ -75,7 +75,7 @@ internal static class WrathIPC
             );
             if (field is null)
                 PluginLog.Warning("Failed to register for lease. " +
-                                  "See logs from Wrath Como for why.");
+                                  "See logs from Wrath Combo for why.");
             return field;
         }
     }

@@ -19,6 +19,7 @@ using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Data.Conflicts;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -163,16 +164,20 @@ public static class DebugFile
 
     private static void AddConflictingInfo()
     {
-        var conflictingPlugins = ConflictingPluginsCheck.TryGetConflictingPlugins();
-        var conflictingPluginsCount = conflictingPlugins?.Length ?? 0;
+        var hasConflicts = ConflictingPlugins.TryGetConflicts(out var conflictsObj);
+        var conflicts = conflictsObj.ToArray();
+        var conflictingPluginsCount = conflicts.Length;
 
         AddLine($"Conflicting Plugins: {conflictingPluginsCount}");
 
-        if (conflictingPlugins == null) return;
+        if (!hasConflicts) return;
 
         AddLine("START CONFLICTING PLUGINS");
-        foreach (var plugin in conflictingPlugins)
-            AddLine($"- {plugin}");
+        foreach (var plugin in conflicts)
+            AddLine($"- {plugin.Name} v{plugin.Version} ({plugin.ConflictType}) " +
+                    (string.IsNullOrEmpty(plugin.Reason)
+                        ? ""
+                        : "reason: " + plugin.Reason));
         AddLine("END CONFLICTING PLUGINS");
     }
 

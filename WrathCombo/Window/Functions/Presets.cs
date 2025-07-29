@@ -6,9 +6,9 @@ using System.Text;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
-using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
@@ -35,6 +35,7 @@ namespace WrathCombo.Window.Functions
         private static bool _animFrame = false;
         internal class PresetAttributes
         {
+            private CustomComboPreset Preset;
             public bool IsPvP;
             public CustomComboPreset[] Conflicts;
             public CustomComboPreset? Parent;
@@ -43,6 +44,8 @@ namespace WrathCombo.Window.Functions
             public VariantParentAttribute? VariantParent;
             public PossiblyRetargetedAttribute? PossiblyRetargeted;
             public RetargetedAttribute? RetargetedAttribute;
+            public uint[] RetargetedActions => 
+                GetRetargetedActions(Preset, RetargetedAttribute, PossiblyRetargeted, Parent);
             public BozjaParentAttribute? BozjaParent;
             public EurekaParentAttribute? EurekaParent;
             public OccultCrescentAttribute? OccultCrescentJob;
@@ -56,6 +59,7 @@ namespace WrathCombo.Window.Functions
 
             public PresetAttributes(CustomComboPreset preset)
             {
+                Preset = preset;
                 IsPvP = PresetStorage.IsPvP(preset);
                 Conflicts = PresetStorage.GetConflicts(preset);
                 Parent = PresetStorage.GetParent(preset);
@@ -75,6 +79,52 @@ namespace WrathCombo.Window.Functions
                 Hidden = preset.GetAttribute<HiddenAttribute>();
                 ComboType = PresetStorage.GetComboType(preset);
             }
+        }
+        
+        private static uint[] GetRetargetedActions
+            (CustomComboPreset preset,
+                RetargetedAttribute? retargetedAttribute,
+                PossiblyRetargetedAttribute? possiblyRetargeted,
+                CustomComboPreset? parent)
+        {
+            // Pick whichever Retargeted attribute is available
+            RetargetedAttributeBase? retargetAttribute = null;
+            if (retargetedAttribute != null)
+                retargetAttribute = retargetedAttribute;
+            else if (possiblyRetargeted != null)
+                retargetAttribute = possiblyRetargeted;
+            
+            // Bail if the Preset is not Retargeted
+            if (retargetAttribute == null)
+                return [];
+            
+            try {
+                // Bail if not actually enabled
+                if (!Service.Configuration.EnabledActions.Contains(preset))
+                    return [];
+                // ReSharper disable once DuplicatedSequentialIfBodies
+                if (parent != null &&
+                    !Service.Configuration.EnabledActions
+                        .Contains((CustomComboPreset)parent))
+                    return [];
+                if (parent?.Attributes()?.Parent is { } grandParent &&
+                    !Service.Configuration.EnabledActions
+                        .Contains(grandParent))
+                    return [];
+            
+                // Bail if the Condition for PossiblyRetargeted is not satisfied
+                if (retargetAttribute is PossiblyRetargetedAttribute attribute
+                    && IsConditionSatisfied(attribute.PossibleCondition) != true)
+                    return [];
+            }
+            catch (Exception e)
+            {
+                PluginLog.Error($"Failed to check if Preset {preset} is enabled: {e.ToStringFull()}");
+                return [];
+            }
+            
+            // Set the Retargeted Actions if all bails are passed
+            return retargetAttribute.RetargetedActions;
         }
 
         internal static Dictionary<CustomComboPreset, bool> GetJobAutorots => P
@@ -217,7 +267,7 @@ namespace WrathCombo.Window.Functions
                 if (blueAttr.Actions.Count > 0)
                 {
                     ImGui.PushStyleColor(ImGuiCol.Text, blueAttr.NoneSet ? ImGuiColors.DPSRed : ImGuiColors.DalamudOrange);
-                    ImGui.Text($"{(blueAttr.NoneSet ? "No Required Spells Active:" : "Missing active spells:")} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + ActionWatching.GetActionName(x)))}");
+                    ImGui.Text($"{(blueAttr.NoneSet ? "No Required Spells Active:" : "Missing active spells:")} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + GetActionName(x)))}");
                     ImGui.PopStyleColor();
                 }
 
@@ -500,28 +550,12 @@ namespace WrathCombo.Window.Functions
 
             // Resolved the conditions if possibly retargeted
             if (possiblyRetargeted)
-            {
-                void MakeRetargeted()
+                if (IsConditionSatisfied(Attributes[preset!.Value]
+                        .PossiblyRetargeted!.PossibleCondition) == true)
                 {
                     retargeted = true;
                     possiblyRetargeted = false;
                 }
-
-                // Should have all conditions in PossiblyRetargetedAttribute.Condition
-                switch (Attributes[preset!.Value].PossiblyRetargeted!.PossibleCondition)
-                {
-                    case Condition.RetargetHealingActionsEnabled:
-                        if (Service.Configuration.RetargetHealingActionsToStack)
-                            MakeRetargeted();
-                        break;
-                    case Condition.ASTQuickTargetCardsFeatureEnabled:
-                        if (IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards))
-                            MakeRetargeted();
-                        break;
-                    default:
-                        return; // No other conditions are supported
-                }
-            }
 
             ImGui.SameLine();
 

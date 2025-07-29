@@ -208,8 +208,6 @@ internal partial class SMN : Caster
                 return OccultCrescent.BestPhantomAction();
             #endregion
 
-           
-
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
             if (DemiExists && Gauge.SummonTimerRemaining <= 2500)
@@ -387,8 +385,6 @@ internal partial class SMN : Caster
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
             #endregion
-
-            
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
@@ -583,7 +579,6 @@ internal partial class SMN : Caster
                 return OccultCrescent.BestPhantomAction();
             #endregion
 
-
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
             if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_DemiSummons_Attacks) && DemiExists && Gauge.SummonTimerRemaining <= 2500)
@@ -735,8 +730,8 @@ internal partial class SMN : Caster
                     return OriginalHook(Gemshine);
 
                 if (IfritAstralFlowCyclone && HasStatusEffect(Buffs.IfritsFavor) &&
-                   ((!Config.SMN_ST_CrimsonCycloneMelee) || (Config.SMN_ST_CrimsonCycloneMelee && InMeleeRange()))  //Melee Check
-                   || (IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
+                    GetTargetDistance() <= Config.SMN_ST_CrimsonCycloneMeleeDistance  //Melee Check
+                   || IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange()) //After Strike
                     return OriginalHook(AstralFlow);
 
                 if (IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ruin4) && HasStatusEffect(Buffs.FurtherRuin) && !HasStatusEffect(Role.Buffs.Swiftcast))
@@ -799,8 +794,6 @@ internal partial class SMN : Caster
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
             #endregion
-
-            
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
@@ -951,8 +944,8 @@ internal partial class SMN : Caster
                     return OriginalHook(PreciousBrilliance);
 
                 if (IfritAstralFlowCyclone && HasStatusEffect(Buffs.IfritsFavor) &&
-                   ((!Config.SMN_AoE_CrimsonCycloneMelee) || (Config.SMN_AoE_CrimsonCycloneMelee && InMeleeRange()))  //Melee Check
-                   || (IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())) //After Strike
+                   GetTargetDistance() <= Config.SMN_AoE_CrimsonCycloneMeleeDistance //Melee Check
+                   || IfritAstralFlowStrike && HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange()) //After Strike
                     return OriginalHook(AstralFlow);
 
                 if (IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ruin4) && HasStatusEffect(Buffs.FurtherRuin) && !HasStatusEffect(Role.Buffs.Swiftcast))

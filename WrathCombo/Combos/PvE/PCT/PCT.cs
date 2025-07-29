@@ -51,7 +51,7 @@ internal partial class PCT : Caster
 
             #region OGCD
             // General Weaves
-            if (InCombat() && CanSpellWeave())
+            if (InCombat() && CanWeave())
             {
                 // ScenicMuse pre-100
                 if (ScenicMuseReady && !LevelChecked(StarPrism))
@@ -268,7 +268,7 @@ internal partial class PCT : Caster
 
             #region OGCD
             // General Weaves
-            if (InCombat() && CanSpellWeave())
+            if (InCombat() && CanWeave())
             {
                 // ScenicMuse
                 if (scenicMuseEnabled && ScenicMuseReady && (!burstPhaseEnabled || !LevelChecked(StarPrism)))
@@ -449,7 +449,7 @@ internal partial class PCT : Caster
 
             #region OGCD
             // General Weaves
-            if (InCombat() && CanSpellWeave())
+            if (InCombat() && CanWeave())
             {
                 // ScenicMuse
                 if (ScenicMuseReady)
@@ -655,7 +655,7 @@ internal partial class PCT : Caster
 
             #region OGCD
             // General Weaves
-            if (InCombat() && CanSpellWeave())
+            if (InCombat() && CanWeave())
             {
                 // ScenicMuse
                 if (scenicMuseEnabled && ScenicMuseReady)

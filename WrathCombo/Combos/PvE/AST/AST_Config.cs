@@ -49,11 +49,17 @@ internal partial class AST
             AST_ST_DPS_DivinationSubOption = new("AST_ST_DPS_DivinationSubOption", 0),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
             AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
+            AST_ST_DPS_StellarDetonation_Threshold = new("AST_ST_DPS_StellarDetonation_Threshold", 0),
+            AST_ST_DPS_StellarDetonation_SubOption = new("AST_ST_DPS_StellarDetonation_SubOption", 0),
             AST_AOE_LucidDreaming = new("AST_AOE_LucidDreaming", 8000),
             AST_AOE_DivinationSubOption = new("AST_AOE_DivinationSubOption", 0),
             AST_AOE_DivinationOption = new("AST_AOE_DivinationOption"),
             AST_AOE_LightSpeedOption = new("AST_AOE_LightSpeedOption"),
+            AST_AOE_DPS_StellarDetonation_Threshold = new("AST_AOE_DPS_StellarDetonation_Threshold", 0),
+            AST_AOE_DPS_StellarDetonation_SubOption = new("AST_AOE_DPS_StellarDetonation_SubOption", 0),
             AST_AOE_DPS_MacroCosmos_SubOption = new("AST_AOE_DPS_MacroCosmos_SubOption", 0),
+            AST_AOE_DPS_DoT_HPThreshold = new("AST_AOE_DPS_DoT_HPThreshold", 30),
+            AST_AOE_DPS_DoT_MaxTargets = new("AST_AOE_DPS_DoT_MaxTargets", 4),
             AST_QuickTarget_Override = new("AST_QuickTarget_Override", 0);
 
         public static UserBool
@@ -79,6 +85,7 @@ internal partial class AST
             AST_AOE_DPS_OverwriteHealCards = new("AST_AOE_DPS_OverwriteHealCards"),
             AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true);
         public static UserFloat
+            AST_AOE_DPS_DoT_Reapply = new ("AST_AOE_DPS_DoT_Reapply", 2),
             AST_ST_DPS_CombustUptime_Threshold = new("AST_ST_DPS_CombustUptime_Threshold");
 
         public static UserBoolArray
@@ -135,6 +142,17 @@ internal partial class AST
                     DrawAdditionalBoolChoice(AST_ST_DPS_OverwriteHealCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
                     break;
                 
+                case CustomComboPreset.AST_ST_DPS_StellarDetonation:
+                    DrawHorizontalRadioButton(AST_ST_DPS_StellarDetonation_SubOption,
+                        "Non-boss Encounters Only", $"Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(AST_ST_DPS_StellarDetonation_SubOption,
+                        "All Content", $"All Content", 1);
+                    
+                    DrawSliderInt(0, 100, AST_ST_DPS_StellarDetonation_Threshold,
+                        $"Use when Target is at or below HP% (0% = Never Detonate Early, 100% = Detonate ASAP).");
+                    break;
+                
                 case CustomComboPreset.AST_AOE_Lucid:
                     DrawSliderInt(4000, 9500, AST_AOE_LucidDreaming, "Set value for your MP to be at or under for this feature to work", 150, Hundreds);
                     break;
@@ -157,10 +175,29 @@ internal partial class AST
                 case CustomComboPreset.AST_AOE_AutoDraw:
                     DrawAdditionalBoolChoice(AST_AOE_DPS_OverwriteHealCards, "Overwrite Non-DPS Cards", "Will draw even if you have healing cards remaining.");
                     break;
+                
+                case CustomComboPreset.AST_AOE_DPS_StellarDetonation:
+                    DrawHorizontalRadioButton(AST_AOE_DPS_StellarDetonation_SubOption,
+                        "Non-boss Encounters Only", $"Non-Boss Encounters only", 0);
+
+                    DrawHorizontalRadioButton(AST_AOE_DPS_StellarDetonation_SubOption,
+                        "All Content", $"All Content", 1);
+                    
+                    DrawSliderInt(0, 100, AST_AOE_DPS_StellarDetonation_Threshold,
+                        $"Use when Target is at or below HP% (0% = Never Detonate Early, 100% = Detonate ASAP).");
+                    break;
 
                 case CustomComboPreset.AST_AOE_DPS_MacroCosmos:
                     DrawHorizontalRadioButton(AST_AOE_DPS_MacroCosmos_SubOption, "Non-boss Encounters Only", $"Will not use on bosses", 0);
                     DrawHorizontalRadioButton(AST_AOE_DPS_MacroCosmos_SubOption, "All Content", $"Will use in all content", 1);
+                    break;
+                
+                case CustomComboPreset.AST_AOE_DPS_DoT:
+                    DrawSliderInt(0, 100, AST_AOE_DPS_DoT_HPThreshold, "Target HP% to stop using (0 = Use Always, 100 = Never)");
+                    ImGui.Indent();
+                    DrawRoundedSliderFloat(0, 5, AST_AOE_DPS_DoT_Reapply,  "Seconds remaining before reapplying (0 = Do not reapply early)", digits: 1);
+                    ImGui.Unindent();
+                    DrawSliderInt(0, 10, AST_AOE_DPS_DoT_MaxTargets, "Maximum number of targets to employ multi-dotting ");
                     break;
 
                 #endregion

@@ -90,7 +90,7 @@ internal partial class PCT
 
         if (HasStatusEffect(Buffs.StarryMuse) && GetStatusEffectRemainingTime(Buffs.StarryMuse) < 15)
         {
-            if (CanSpellWeave() && !HasStatusEffect(Buffs.MonochromeTones))
+            if (CanWeave() && !HasStatusEffect(Buffs.MonochromeTones))
             {                
                 if (ActionReady(SubtractivePalette) && !HasStatusEffect(Buffs.Starstruck) &&
                     !HasStatusEffect(Buffs.SubtractivePalette) && (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50))

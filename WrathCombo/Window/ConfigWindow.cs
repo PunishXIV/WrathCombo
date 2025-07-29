@@ -1,8 +1,12 @@
+using Dalamud.Interface;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
+using ECommons.Logging;
+using ECommons.Throttlers;
 using ImGuiNET;
 using PunishLib;
 using PunishLib.ImGuiMethods;
@@ -11,12 +15,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Colors;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
-using WrathCombo.Data;
+using WrathCombo.Services;
+using WrathCombo.Data.Conflicts;
 using WrathCombo.Window.Tabs;
 
 namespace WrathCombo.Window
@@ -27,6 +31,7 @@ namespace WrathCombo.Window
         internal static readonly Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> groupedPresets = GetGroupedPresets();
         internal static readonly Dictionary<CustomComboPreset, (CustomComboPreset Preset, CustomComboInfoAttribute Info)[]> presetChildren = GetPresetChildren();
         internal static int currentPreset = 1;
+        internal static float lastLeftColumnWidth;
         internal static Dictionary<string, List<(CustomComboPreset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets()
         {
             return Enum
@@ -56,9 +61,9 @@ namespace WrathCombo.Window
                 tpl => tpl,
                 tpl => new List<CustomComboPreset>());
 
-            foreach (CustomComboPreset preset in Enum.GetValues<CustomComboPreset>())
+            foreach (var preset in Enum.GetValues<CustomComboPreset>())
             {
-                CustomComboPreset? parent = preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
+                var parent = preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
                 if (parent != null)
                     childCombos[parent.Value].Add(preset);
             }
@@ -84,139 +89,138 @@ namespace WrathCombo.Window
             Svc.PluginInterface.UiBuilder.DefaultFontHandle.ImFontChanged += SetMinSize;
         }
 
-        private void SetMinSize(IFontHandle? fontHandle = null, ILockedImFont? lockedFont = null)
-        {
-            SizeConstraints = new()
+        private void SetMinSize(IFontHandle? fontHandle = null, ILockedImFont? lockedFont = null) =>
+            SizeConstraints = new WindowSizeConstraints
             {
-                MinimumSize = new Vector2(700, 100).Scale()
+                MinimumSize = new Vector2(700, 100).Scale(),
             };
-        }
 
         public override void Draw()
         {
             var region = ImGui.GetContentRegionAvail();
-            var itemSpacing = ImGui.GetStyle().ItemSpacing;
-
             var topLeftSideHeight = region.Y;
+            var columns = 2;
+            var tableName = "###MainTable";
+            if (Service.Configuration.UILeftColumnCollapsed)
+            {
+                columns = 1;
+                tableName = "###NoSidebarMainTable";
+            }
 
             using var style = ImRaii.PushStyle(ImGuiStyleVar.CellPadding, new Vector2(4, 0).Scale());
-            using var table = ImRaii.Table("###MainTable", 2, ImGuiTableFlags.Resizable);
-            if (!table)
-                return;
+            using (var table = ImRaii.Table(tableName, columns, ImGuiTableFlags.Resizable))
+            {
+                if (!table) return;
 
+                if (!Service.Configuration.UILeftColumnCollapsed)
+                    DrawSidebar(topLeftSideHeight);
+                else
+                    ImGui.Indent(45f.Scale());
 
-            ImGui.TableSetupColumn("##LeftColumn", ImGuiTableColumnFlags.WidthFixed, ImGui.GetWindowWidth() / 3);
+                DrawBody();
+            }
 
+            DrawCollapseButton();
+        }
+
+        private void DrawSidebar(float topLeftSideHeight)
+        {
+            var imageSize = new Vector2(125).Scale();
+            var leftColumnFlags = ImGuiTableColumnFlags.WidthFixed;
+            if (lastLeftColumnWidth < imageSize.X)
+                leftColumnFlags |= ImGuiTableColumnFlags.NoResize;
+
+            ImGui.TableSetupColumn("##LeftColumn", leftColumnFlags, imageSize.X + 10f.Scale());
             ImGui.TableNextColumn();
 
             var regionSize = ImGui.GetContentRegionAvail();
+            lastLeftColumnWidth = regionSize.X;
 
-            ImGui.PushStyleVar(ImGuiStyleVar.SelectableTextAlign, new Vector2(0.5f, 0.5f));
+            using var alignText = ImRaii.PushStyle(ImGuiStyleVar.SelectableTextAlign, new Vector2(0.5f, 0.5f));
 
-            using (var leftChild = ImRaii.Child($"###WrathLeftSide", regionSize with { Y = topLeftSideHeight }, false, ImGuiWindowFlags.NoDecoration))
+            using var leftSide = (ImRaii.Child("###WrathLeftSide", regionSize with { Y = topLeftSideHeight }, false, ImGuiWindowFlags.NoDecoration));
+            if (!leftSide)
             {
-                string? imagePath;
-                try
-                {
-                    // Use the local image over a remote one
-                    imagePath = Path.Combine(
-                        Svc.PluginInterface.AssemblyLocation.Directory?.FullName!,
-                        "images\\wrathcombo.png");
-                    if (!File.Exists(imagePath))
-                        throw new FileNotFoundException();
-                }
-                catch (Exception)
-                {
-                    // Fallback to the remote icon if there are any issues
-                    imagePath = PunishLibMain.PluginManifest.IconUrl ?? "";
-                }
-
-                if (ThreadLoadImageHandler.TryGetTextureWrap(imagePath, out var logo))
-                {
-                    ImGuiEx.LineCentered("###WrathLogo", () =>
-                    {
-                        ImGui.Image(logo.ImGuiHandle, new Vector2(125).Scale());
-                    });
-
-                }
-                ImGui.Spacing();
-                ImGui.Separator();
-
-                if (ImGui.Selectable("PvE Features", OpenWindow == OpenWindow.PvE))
-                {
-                    OpenWindow = OpenWindow.PvE;
-                }
-                ImGui.Spacing();
-                if (ImGui.Selectable("PvP Features", OpenWindow == OpenWindow.PvP))
-                {
-                    OpenWindow = OpenWindow.PvP;
-                }
-                ImGui.Spacing();
-                if (ImGui.Selectable("Auto-Rotation", OpenWindow == OpenWindow.AutoRotation))
-                {
-                    OpenWindow = OpenWindow.AutoRotation;
-                }
-                ImGui.Spacing();
-                ImGui.Spacing();
-                ImGui.Spacing();
-                if (ImGui.Selectable("Settings", OpenWindow == OpenWindow.Settings))
-                {
-                    OpenWindow = OpenWindow.Settings;
-                }
-                ImGui.Spacing();
-                if (ImGui.Selectable("About", OpenWindow == OpenWindow.About))
-                {
-                    OpenWindow = OpenWindow.About;
-                }
-
-#if DEBUG
-                ImGui.Spacing();
-                ImGui.Spacing();
-                ImGui.Spacing();
-                if (ImGui.Selectable("DEBUG", OpenWindow == OpenWindow.Debug))
-                {
-                    OpenWindow = OpenWindow.Debug;
-                }
-                ImGui.Spacing();
-#endif
-
-                var conflictingPlugins = ConflictingPluginsCheck.TryGetConflictingPlugins();
-                if (conflictingPlugins != null)
-                {
-                    ImGui.Spacing();
-                    ImGui.Spacing();
-                    const string conflictStringStart = "Conflicting Combo";
-                    const string conflictStringEnd = "Plugins Detected!";
-
-                    // Chop the text in half if it doesn't fit
-                    ImGuiEx.LineCentered("###ConflictingPlugins", () =>
-                    {
-                        if (ImGui.GetColumnWidth() < ImGui.CalcTextSize(conflictStringStart + " " + conflictStringEnd).X.Scale())
-                            ImGui.TextColored(ImGuiColors.DalamudYellow, conflictStringStart + "\n" + conflictStringEnd);
-                        else
-                            ImGui.TextColored(ImGuiColors.DalamudYellow, conflictStringStart + " " + conflictStringEnd);
-
-                        // Tooltip with explanation
-                        if (ImGui.IsItemHovered())
-                        {
-                            var conflictingPluginsText = "- " + string.Join("\n- ", conflictingPlugins);
-                            var tooltipText =
-                                "The following plugins are known to conflict " +
-                                $"with {Svc.PluginInterface.InternalName}:\n" +
-                                conflictingPluginsText +
-                                "\n\nIt is recommended you disable these plugins to prevent\n" +
-                                "unexpected behavior and bugs.";
-
-                            ImGui.SetTooltip(tooltipText);
-                        }
-                    });
-                }
-
+                ImGui.Dummy(Vector2.Zero);
+                return;
             }
 
-            ImGui.PopStyleVar();
+            string? imagePath;
+            try
+            {
+                // Use the local image over a remote one
+                imagePath = Path.Combine(
+                    Svc.PluginInterface.AssemblyLocation.Directory?.FullName!,
+                    "images\\wrathcombo.png");
+                if (EzThrottler.Throttle("logTypeOfWrathIconUsed", 45000))
+                    PluginLog.Verbose("Using Local WrathCombo Icon");
+            }
+            catch (Exception)
+            {
+                // Fallback to the remote icon if there are any issues
+                imagePath = PunishLibMain.PluginManifest.IconUrl ?? "";
+                if (EzThrottler.Throttle("logTypeOfWrathIconUsed", 45000))
+                    PluginLog.Verbose(
+                        "Using Remote WrathCombo Icon\n             " +
+                        Svc.PluginInterface.AssemblyLocation.Directory?.FullName! +
+                        "images\\wrathcombo.png");
+            }
+
+            if (ThreadLoadImageHandler.TryGetTextureWrap(imagePath, out var logo))
+                ImGuiEx.LineCentered("###WrathLogo", () =>
+                    ImGui.Image(logo.ImGuiHandle, imageSize));
+
+            ImGui.Spacing();
+            ImGui.Separator();
+
+            ImGui.Spacing();
+            if (ImGui.Selectable("PvE Features", OpenWindow == OpenWindow.PvE))
+                OpenWindow = OpenWindow.PvE;
+
+            ImGui.Spacing();
+            if (ImGui.Selectable("PvP Features", OpenWindow == OpenWindow.PvP))
+                OpenWindow = OpenWindow.PvP;
+
+            ImGui.Spacing();
+            if (ImGui.Selectable("Auto-Rotation", OpenWindow == OpenWindow.AutoRotation))
+                OpenWindow = OpenWindow.AutoRotation;
+
+            ImGui.Spacing();
+            ImGui.Spacing();
+
+            ImGui.Spacing();
+            if (ImGui.Selectable("Settings", OpenWindow == OpenWindow.Settings))
+                OpenWindow = OpenWindow.Settings;
+
+            ImGui.Spacing();
+            if (ImGui.Selectable("About", OpenWindow == OpenWindow.About))
+                OpenWindow = OpenWindow.About;
+
+#if DEBUG
+            ImGui.Spacing();
+            ImGui.Spacing();
+
+            ImGui.Spacing();
+            if (ImGui.Selectable("DEBUG", OpenWindow == OpenWindow.Debug))
+                OpenWindow = OpenWindow.Debug;
+
+            ImGui.Spacing();
+#endif
+
+            ConflictingPlugins.Draw();
+        }
+
+        private void DrawBody()
+        {
+            ImGui.TableSetupColumn("##RightColumn", ImGuiTableColumnFlags.WidthStretch);
             ImGui.TableNextColumn();
-            using var rightChild = ImRaii.Child($"###WrathRightSide", Vector2.Zero, false);
+
+            using var rightChild = ImRaii.Child("###WrathRightSide", Vector2.Zero, false);
+            if (!rightChild) return;
+
+            if (OpenWindow == OpenWindow.None)
+                OpenWindow = OpenWindow.PvE;
+
             switch (OpenWindow)
             {
                 case OpenWindow.PvE:
@@ -237,11 +241,58 @@ namespace WrathCombo.Window
                 case OpenWindow.AutoRotation:
                     AutoRotationTab.Draw();
                     break;
-                default:
-                    break;
-            };
+            }
+            ;
         }
 
+        private void DrawCollapseButton()
+        {
+            var collapsed = Service.Configuration.UILeftColumnCollapsed;
+
+            // Go to the bottom of the window
+            ImGui.SetCursorPos(ImGui.GetCursorPos() with
+            {
+                X = 12f.Scale(),
+                Y = ImGui.GetContentRegionMax().Y - 45f.Scale(),
+            });
+
+            // Calculate the size needed for the button
+            var fPad = ImGui.GetStyle().FramePadding;
+            Vector2 faSz;
+            using (ImRaii.PushFont(UiBuilder.IconFont))
+            {
+                faSz = ImGui.CalcTextSize("\uF0D9");
+            }
+
+            // Draw a window for the button, so clicks don't leak behind it
+            using var overlay = ImRaii.Child("ButtonOverlay",
+                new Vector2(faSz.X * 2 + fPad.X * 2,
+                    faSz.Y + 10f.Scale() + fPad.Y * 2),
+                false, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBackground);
+            if (!overlay) return;
+
+            // Set up how the button should display
+            var icon = FontAwesomeIcon.CaretLeft;
+            var hoverText = "Collapse Sidebar";
+            ImGui.SetWindowFontScale(1.5f.Scale());
+            if (collapsed)
+            {
+                icon = FontAwesomeIcon.CaretRight;
+                hoverText = "Expand Sidebar";
+            }
+
+            // Draw the button
+            if (ImGuiEx.IconButton(icon, "CollapseButton"))
+            {
+                Service.Configuration.UILeftColumnCollapsed = !collapsed;
+                Service.Configuration.Save();
+            }
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip(hoverText);
+
+
+            ImGui.SetWindowFontScale(1f);
+        }
 
 
         public void Dispose()

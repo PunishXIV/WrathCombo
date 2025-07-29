@@ -47,15 +47,15 @@ internal partial class MCH
 
                 case CustomComboPreset.MCH_ST_Adv_TurretQueen:
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
-                        "All content", $"Uses {AutomatonQueen.ActionName()} logic regardless of content.", 0);
+                        "Use The Balance Logic in all content", $"Uses {AutomatonQueen.ActionName()} logic regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
-                        "Boss encounters Only", $"Only uses {AutomatonQueen.ActionName()} logic when in Boss encounters.", 1);
+                        "Use The Balance logic only in Boss encounters", $"Only uses {AutomatonQueen.ActionName()} logic when in Boss encounters.", 1);
 
                     if (MCH_ST_Adv_Turret_SubOption == 1)
                     {
                         DrawSliderInt(50, 100, MCH_ST_TurretUsage,
-                            $"Uses {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.\n Only counts for 'Boss encounters Only setting'.");
+                            $"Uses {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.");
                     }
                     break;
 

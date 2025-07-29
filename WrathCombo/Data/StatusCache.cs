@@ -1,12 +1,11 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
-using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Status = Dalamud.Game.ClientState.Statuses.Status; // conflicts with structs if not defined
 
@@ -120,7 +119,7 @@ namespace WrathCombo.Data
         /// <remarks>
         /// Includes statuses like Hallowed Ground (151), Living Dead (325), etc.
         /// </remarks>
-        private static readonly HashSet<uint> InvincibleStatuses = GenerateInv();
+        internal static readonly HashSet<uint> InvincibleStatuses = GenerateInv();
 
         private static HashSet<uint> GenerateInv()
         {
@@ -134,83 +133,7 @@ namespace WrathCombo.Data
             return invincibles;
         }
 
-        public static bool TargetIsInvincible(IGameObject? target)
-        {
-            if (target is not IBattleChara tar)
-                return false;
-
-            // Turn Target's status to uint hashset
-            var targetStatuses = tar.StatusList.Select(s => s.StatusId).ToHashSet();
-            uint targetID = tar.DataId;
-
-            switch (Svc.ClientState.TerritoryType)
-            {
-                case 174:   // Labyrinth of the Ancients
-                    // Thanatos, Spooky Ghosts Only
-                    if (targetID is 2350) return !HasStatusEffect(398);
-
-                    // Allagan Bomb
-                    if (targetID is 2407) return NumberOfEnemiesInRange(30) > 1;
-
-                    return false;
-                case 1248:  // Jeuno 1 Ark Angels
-                    // ArkAngel HM = 1804
-                    if (targetID is 18049 && HasStatusEffect(4410, tar, true)) return true;
-
-                    // ArkAngel MR = 18051 (A)
-                    // ArkAngel GK = 18053 (B)
-                    // ArkAngel TT = 18052 (C)
-                    if (targetID is 18051 or 18052 or 18053)
-                    {
-                        if (HasStatusEffect(4192)) return targetID != 18051; // Alliance A Red Epic
-                        if (HasStatusEffect(4194)) return targetID != 18053; // Alliance B Yellow Fated
-                        if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
-                    }
-                    return false;
-                case 917:   //Puppet's Bunker, Flight Mechs
-                    // 724P Alpha = 11792 (A)
-                    // 767P Beta  = 11793 (B)
-                    // 772P Chi   = 11794 (C)
-                    if (targetID is 11792 or 11793 or 11794)
-                    {
-                        if (HasStatusEffect(2288)) return targetID != 11792;
-                        if (HasStatusEffect(2289)) return targetID != 11793;
-                        if (HasStatusEffect(2290)) return targetID != 11794;
-                    }
-                    return false;
-                case 801 or 805 or 1122: //Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
-                    // Omega-M = 9339
-                    // Omega-F = 9340
-                    if (targetID is 9339 or 9340) //numbers are for Regular
-                    {
-                        if (HasStatusEffect(1660)) return targetID == 9339; // Packet Filter M
-                        if (HasStatusEffect(1661)) return targetID == 9340; // Packet Filter F
-                        if (targetID is 9340) return HasStatusEffect(671, tar, true); // F being covered by M
-                    }
-
-                    //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500.
-                    //Also, SE, why use a new Omega-M status and reuse the old Omega-F? -_-'
-                    //Wonder if targetIDs are the same......
-                    if ((tar.StatusList.Any(x => x.StatusId == 3454) && HasStatusEffect(3499)) ||
-                        (tar.StatusList.Any(x => x.StatusId == 1675) && HasStatusEffect(3500)))
-                        return true;
-
-                    //Check for any ol invincibility
-                    if (CompareLists(InvincibleStatuses, targetStatuses)) return true;
-
-                    return false;
-                case 952:  //ToZ final boss (technically not invincible)
-                    if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.DataId is 13297 && !y.IsDead))
-                        return true;
-
-                    return false;
-            }
-
-            // General invincibility check
-            // Due to large size of InvincibleStatuses, best to check process this way
-            if (CompareLists(InvincibleStatuses, targetStatuses)) return true;
-            return false;
-        }
+        
 
         /// <summary>
         /// Looks up the name of a Status by ID in Lumina Sheets
@@ -261,7 +184,7 @@ namespace WrathCombo.Data
         /// <param name="statusList"></param>
         /// <param name="charaStatusList"></param>
         /// <returns></returns>
-        private static bool CompareLists(HashSet<uint> statusList, HashSet<uint> charaStatusList) => 
+        internal static bool CompareLists(HashSet<uint> statusList, HashSet<uint> charaStatusList) => 
             charaStatusList.Any(id => statusList.Contains(id));
     }
 }

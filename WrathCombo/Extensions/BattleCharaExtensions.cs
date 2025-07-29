@@ -1,11 +1,21 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.GameFunctions;
 using System;
 using System.Linq;
+using WrathCombo.CustomComboNS.Functions;
 
 namespace WrathCombo.Extensions
 {
     internal static class BattleCharaExtensions
     {
+        public unsafe static CombatRole GetRole(this WrathPartyMember chara)
+        {
+            if (chara.RealJob?.Role == 1) return CombatRole.Tank;
+            if (chara.RealJob?.Role == 2) return CombatRole.DPS;
+            if (chara.RealJob?.Role == 3) return CombatRole.DPS;
+            if (chara.RealJob?.Role == 4) return CombatRole.Healer;
+            return CombatRole.NonCombat;
+        }
         public unsafe static uint RawShieldValue(this IBattleChara chara)
         {
             FFXIVClientStructs.FFXIV.Client.Game.Character.BattleChara* baseVal = (FFXIVClientStructs.FFXIV.Client.Game.Character.BattleChara*)chara.Address;

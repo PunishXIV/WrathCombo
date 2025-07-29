@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Core;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 
@@ -114,7 +116,7 @@ internal abstract partial class CustomComboFunctions
     /// </returns>
     public static bool CanInterruptEnemy(float? minCastPercent = null, IGameObject? optionalTarget = null)
     {
-        if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || !chara.IsCasting || !chara.IsCastInterruptible)
+        if ((optionalTarget ?? CurrentTarget) is not IBattleChara { IsCasting: true } chara || !chara.IsCastInterruptible)
             return false;
 
         float minThreshold = Math.Clamp(minCastPercent ?? (float)Service.Configuration.InterruptDelay, 0f, 1f);
@@ -216,36 +218,94 @@ internal abstract partial class CustomComboFunctions
     ///     Gets the number of enemies within range of an AoE action. <br/>
     ///     If the action requires a target, defaults to CurrentTarget unless specified.
     /// </summary>
-    public static int NumberOfEnemiesInRange(uint aoeSpell, IGameObject? target, bool checkIgnoredList = false)
+    /// <param name="aoeSpell">
+    ///     The Action ID to check. <br />
+    ///     This will be used to load up all required data from the Action Sheet.
+    /// </param>
+    /// <param name="target">
+    ///     Target for targeted AoE shapes (all but <see cref="SelfCircle"/>). <br />
+    ///     (Optional, defaults to <see cref="CurrentTarget" />)
+    /// </param>
+    /// <param name="checkIgnoredList">
+    ///     Whether to check the 
+    ///     <see cref="PluginConfiguration.IgnoredNPCs"/> list. <br />
+    ///     (Optional, defaults to false)
+    /// </param>
+    /// <returns>
+    ///     Number of enemies within the specified action's range.
+    /// </returns>
+    public static int NumberOfEnemiesInRange
+        (uint aoeSpell, IGameObject? target = null, bool checkIgnoredList = false)
     {
         if (!ActionWatching.ActionSheet.TryGetValue(aoeSpell, out var sheetSpell))
             return 0;
 
-        if (sheetSpell.CanTargetHostile && ((target ??= CurrentTarget) is null || GetTargetDistance(target) > GetActionRange(sheetSpell.RowId)))
+        if (sheetSpell.CanTargetHostile &&
+            ((target ??= CurrentTarget) is null ||
+             GetTargetDistance(target) > GetActionRange(sheetSpell.RowId)))
             return 0;
 
-        int count = sheetSpell.CastType switch
+        var count = sheetSpell.CastType switch
         {
             1 => 1,
             2 => sheetSpell.CanTargetSelf
-                ? CanCircleAoe(sheetSpell.EffectRange, checkIgnoredList)
-                : CanRangedCircleAoe(target, sheetSpell.EffectRange, checkIgnoredList),
-            3 => CanConeAoe(target, sheetSpell.Range, checkIgnoredList),
-            4 => CanLineAoe(target, sheetSpell.Range, sheetSpell.XAxisModifier, checkIgnoredList),
-            _ => 0
+                ? NumberOfObjectsInRange<SelfCircle>(sheetSpell.EffectRange,
+                    checkIgnoredList: checkIgnoredList)
+                : NumberOfObjectsInRange<Circle>(sheetSpell.EffectRange, target,
+                    checkIgnoredList: checkIgnoredList),
+            3 => NumberOfObjectsInRange<Cone>(sheetSpell.Range, target,
+                checkIgnoredList: checkIgnoredList),
+            4 => NumberOfObjectsInRange<Line>(sheetSpell.Range, target,
+                sheetSpell.XAxisModifier, checkIgnoredList: checkIgnoredList),
+            _ => 0,
         };
 
         return count;
     }
 
-    /// <summary> Gets the number of enemies within a given range from the player. </summary>
-    public static int NumberOfEnemiesInRange(float range)
+    /// <summary>
+    ///     Gets the number of allies within range of an AoE action. <br/>
+    ///     If the action requires a target, defaults to CurrentTarget unless specified.
+    /// </summary>
+    /// <param name="aoeSpell">
+    ///     The Action ID to check. <br />
+    ///     This will be used to load up all required data from the Action Sheet.
+    /// </param>
+    /// <param name="target">
+    ///     Target for targeted AoE shapes (all but <see cref="SelfCircle"/>). <br />
+    ///     (Optional, defaults to <see cref="CurrentTarget" />)
+    /// </param>
+    /// <returns>
+    ///     Number of allies within the specified action's range.
+    /// </returns>
+    public static int NumberOfAlliesInRange
+        (uint aoeSpell, IGameObject? target = null)
     {
-        return Svc.Objects.Count(o =>
-            o.ObjectKind == ObjectKind.BattleNpc &&
-            o.IsTargetable &&
-            o.IsHostile() &&
-            GetTargetDistance(o) <= range);
+        if (!ActionWatching.ActionSheet.TryGetValue(aoeSpell, out var sheetSpell))
+            return 0;
+
+        if (sheetSpell.CanTargetAlly &&
+            ((target ??= CurrentTarget) is null ||
+             GetTargetDistance(target) > GetActionRange(sheetSpell.RowId)))
+            return 0;
+
+        var count = sheetSpell.CastType switch
+        {
+            1 => 1,
+            2 => sheetSpell.CanTargetSelf
+                ? NumberOfObjectsInRange<SelfCircle>(sheetSpell.EffectRange,
+                    enemies: false)
+                : NumberOfObjectsInRange<Circle>(sheetSpell.EffectRange, target,
+                    enemies: false),
+            // No current cones or lines for allies, but may as well have them here
+            3 => NumberOfObjectsInRange<Cone>(sheetSpell.Range, target,
+                enemies: false),
+            4 => NumberOfObjectsInRange<Line>(sheetSpell.Range, target,
+                sheetSpell.XAxisModifier, enemies: false),
+            _ => 0,
+        };
+
+        return count;
     }
 
     /// <summary> Checks if an object is within line of sight of the player. </summary>
@@ -293,9 +353,14 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Gets the player's position relative to the target. </summary>
     /// <returns> Front, Flank, Rear or Unknown as AttackAngle type. </returns>
-    public static AttackAngle AngleToTarget()
+    public static AttackAngle AngleToTarget(IGameObject? optionalTarget = null)
     {
-        if (LocalPlayer is not { } player || CurrentTarget is not IBattleChara target || target.ObjectKind != ObjectKind.BattleNpc)
+        if (LocalPlayer is not { } player)
+            return AttackAngle.Unknown;
+
+        var target = optionalTarget ?? CurrentTarget;
+
+        if (target is null)
             return AttackAngle.Unknown;
 
         float rotation = PositionalMath.GetRotation(target.Position, player.Position) - target.Rotation;
@@ -303,11 +368,11 @@ internal abstract partial class CustomComboFunctions
 
         return regionDegrees switch
         {
-            >= 315f or <= 45f       => AttackAngle.Front,   // 0° ± 45°
-            >= 45f and <= 135f      => AttackAngle.Flank,   // 90° ± 45°
-            >= 135f and <= 225f     => AttackAngle.Rear,    // 180° ± 45°
-            >= 225f and <= 315f     => AttackAngle.Flank,   // 270° ± 45°
-            _                       => AttackAngle.Unknown
+            >= 315f or <= 45f => AttackAngle.Front,   // 0° ± 45°
+            >= 45f and <= 135f => AttackAngle.Flank,   // 90° ± 45°
+            >= 135f and <= 225f => AttackAngle.Rear,    // 180° ± 45°
+            >= 225f and <= 315f => AttackAngle.Flank,   // 270° ± 45°
+            _ => AttackAngle.Unknown
         };
     }
 
@@ -333,67 +398,117 @@ internal abstract partial class CustomComboFunctions
 
     #region Shape Checks
 
-    /// <summary> Gets the number of enemies within range of a point-blank AoE. </summary>
-    public static int CanCircleAoe(float effectRange, bool checkIgnoredList = false)
+    /// <summary>
+    ///     Gets the number of enemies within range of a specified AoE shape type.
+    /// </summary>
+    /// <typeparam name="T">
+    ///     The AoE shape type (<see cref="SelfCircle"/>,
+    ///     <see cref="Circle"/>, <see cref="Cone"/>, <see cref="Line"/>)<br />
+    ///     Types that implement <see cref="IAoeShape" />.
+    /// </typeparam>
+    /// <param name="size">
+    ///     The radius of the AoE (or length, for Line AoEs).
+    /// </param>
+    /// <param name="target">
+    ///     Target for targeted AoE shapes (all but <see cref="SelfCircle"/>). <br />
+    ///     (Optional, defaults to <see cref="CurrentTarget" />)
+    /// </param>
+    /// <param name="width">
+    ///     Width parameter - Only for Line AoEs.  <br />
+    ///     In the sheets, this column is labeled as "X Axis Modifier", and is
+    ///     usually 0-5. <br />
+    ///     (Optional, defaults to 0, which is the value for many Line AoEs)
+    /// </param>
+    /// <param name="checkIgnoredList">
+    ///     Whether to check the 
+    ///     <see cref="PluginConfiguration.IgnoredNPCs"/> list. <br />
+    ///     (Optional, defaults to false)
+    /// </param>
+    /// <param name="enemies">
+    ///     Whether enemy targets are what is searched;
+    ///     if <see langword="false" /> then will search for allies instead.
+    /// </param>
+    /// <returns>
+    ///     Number of enemies within the specified AoE shape.
+    /// </returns>
+    /// <remarks>
+    ///     In almost every situation you should instead use
+    ///     <see cref="NumberOfEnemiesInRange(uint, IGameObject?, bool)"/>.
+    /// </remarks>
+    internal static int NumberOfObjectsInRange<T>
+    (float size,
+        IGameObject? target = null,
+        float width = 0f,
+        bool checkIgnoredList = false,
+        bool enemies = true)
+        where T : IAoeShape
     {
-        if (LocalPlayer is not { } player) return 0;
+        // Bail if the player is not available
+        if (LocalPlayer is not { } player)
+            return 0;
+        
+        // Bail if the target is required and not available
+        if (typeof(T) != typeof(SelfCircle) && (target ??= CurrentTarget) is null)
+            return 0;
 
-        return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
-                                      o.IsTargetable &&
-                                      o.IsHostile() &&
-                                      !TargetIsInvincible(o) &&
-                                      (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId)) &&
-                                      PointInCircle(o.Position - player.Position, effectRange + o.HitboxRadius));
-    }
+        // Get all possible enemies to search for the positions of
+        var targets = Svc.Objects.Where(IsValidTarget);
 
-    /// <summary> Gets the number of enemies within range of a targeted AoE. </summary>
-    public static int CanRangedCircleAoe(IGameObject? target, float effectRange, bool checkIgnoredList = false)
-    {
-        if (target is null) return 0;
+        // Circle AoEs positioned on self
+        if (typeof(T) == typeof(SelfCircle))
+            return targets.Count(o =>
+                PointInCircle(o.Position - player.Position,
+                    size + o.HitboxRadius));
 
-        return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
-                                      o.IsTargetable &&
-                                      o.IsHostile() &&
-                                      !TargetIsInvincible(o) &&
-                                      (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId)) &&
-                                      PointInCircle(o.Position - target.Position, effectRange + o.HitboxRadius));
-    }
-
-    /// <summary> Gets the number of enemies within range of a cone AoE. </summary>
-    public static int CanConeAoe(IGameObject? target, float range, bool checkIgnoredList = false)
-    {
-        if (LocalPlayer is not { } player || target is null) return 0;
-
-        Vector3 direction = PositionalMath.GetDirection(player.Position, target.Position);
-
-        return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
-                                      o.IsTargetable &&
-                                      o.IsHostile() &&
-                                      !TargetIsInvincible(o) &&
-                                      GetTargetDistance(o) <= range &&
-                                      (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId)) &&
-                                      PointInCone(o.Position - player.Position, direction, 45f));
-    }
-
-    /// <summary> Gets the number of enemies within range of a line AoE. </summary>
-    public static int CanLineAoe(IGameObject? target, float range, float xAxisModifier, bool checkIgnoredList = false)
-    {
-        if (LocalPlayer is not { } player || target is null) return 0;
-
-        float halfLength = range * 0.5f;
-        float halfWidth = xAxisModifier * 0.5f;
-        float rotation = PositionalMath.GetRotation(player.Position, target.Position);
-
-        return Svc.Objects.Count(o => o.ObjectKind == ObjectKind.BattleNpc &&
-                                      o.IsTargetable &&
-                                      o.IsHostile() &&
-                                      !TargetIsInvincible(o) &&
-                                      GetTargetDistance(o) <= range &&
-                                      (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId)) &&
-                                      HitboxInRect(o, rotation, halfLength, halfWidth));
+        // Circle AoEs centered on a target
+        if (typeof(T) == typeof(Circle))
+            return targets.Count(o => 
+                PointInCircle(o.Position - target.Position,
+                    size + o.HitboxRadius));
+        
+        // Cone AoEs
+        if (typeof(T) == typeof(Cone))
+            return targets.Count(o =>
+                GetTargetDistance(o) <= size &&
+                PointInCone(o.Position - player.Position,
+                    PositionalMath.GetDirection(player.Position, target.Position),
+                    45f));
+        
+        // Line AoEs
+        if (typeof(T) == typeof(Line))
+            return targets.Count(o =>
+                GetTargetDistance(o) <= size &&
+                HitboxInRect(o,
+                    PositionalMath.GetRotation(player.Position, target.Position),
+                    size * 0.5f, width * 0.5f));
+        
+        // If it was not a supported type
+        return 0;
+        
+        bool IsValidTarget(IGameObject o)
+        {
+            if (!enemies)
+                return o is IBattleChara &&
+                       o.IsTargetable &&
+                       o.IsWithinRange(60f) &&
+                       o.IsFriendly();
+            
+            return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
+                   o.IsWithinRange(60f) &&
+                   o.IsHostile() &&
+                   !TargetIsInvincible(o) &&
+                   (!checkIgnoredList ||
+                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId));
+        }
     }
 
     #region Shape Helpers
+    
+    public interface IAoeShape { }
+    public struct SelfCircle : IAoeShape { }
+    public struct Circle : IAoeShape { }
+    public struct Cone : IAoeShape { }
+    public struct Line : IAoeShape { }
 
     #region Point in Circle
     public static bool PointInCircle(Vector3 offsetFromOrigin, float radius)

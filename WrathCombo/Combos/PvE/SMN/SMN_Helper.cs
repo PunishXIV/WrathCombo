@@ -174,7 +174,7 @@ internal partial class SMN
     internal static bool DemiNotPheonix => CurrentDemiSummon is not DemiSummon.Phoenix;
     internal static bool DemiPheonix => CurrentDemiSummon is DemiSummon.Phoenix;
     internal static bool SearingBurstDriftCheck => SearingCD >=3 && SearingCD <=8;
-    internal static bool SummonerWeave => CanSpellWeave() && !ActionWatching.HasDoubleWeaved();
+    internal static bool SummonerWeave => CanWeave();
     internal static float SearingCD => GetCooldownRemainingTime(SearingLight);
    
     #endregion

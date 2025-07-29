@@ -509,6 +509,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText("MP:", $"{member.CurrentMP:N0} / {member.BattleChara.MaxMp:N0}");
                     CustomStyleText("Job:", $"{member.RealJob?.NameEnglish} (ID: {member.RealJob?.RowId})");
                     CustomStyleText("Dead Timer:", TimeSpentDead(member.BattleChara.GameObjectId));
+                    CustomStyleText("Role:", $"{member?.GetRole()}");
 
                     if (ImGui.TreeNode("Data Dump"))
                     {

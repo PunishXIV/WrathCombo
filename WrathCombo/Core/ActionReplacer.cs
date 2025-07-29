@@ -175,7 +175,7 @@ internal sealed class ActionReplacer : IDisposable
             return false;
 
         if ((Svc.ClientState.LocalPlayer.ClassJob.RowId is 1 or 2 or 3 or 4 or 5 or 6 or 7 or 26 or 29) &&
-            Svc.Condition[ConditionFlag.BoundByDuty] &&
+            Svc.Condition[ConditionFlag.BoundByDuty56] && // in an instance duty
             Svc.ClientState.LocalPlayer.Level > 35) return true;
 
         return false;

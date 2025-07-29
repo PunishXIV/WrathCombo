@@ -54,7 +54,9 @@ internal partial class VPR
             !IsEmpowermentExpiring(6))
         {
             //Use whenever
-            if (SerpentOffering >= 50 && TargetIsBoss() && GetTargetHPPercent() < VPR_ST_ReAwaken_Threshold)
+            if (SerpentOffering >= 50 && TargetIsBoss() &&
+                ((IsEnabled(CustomComboPreset.VPR_ST_SimpleMode) && GetTargetHPPercent() < 5) ||
+                 (IsEnabled(CustomComboPreset.VPR_ST_AdvancedMode) && GetTargetHPPercent() < VPR_ST_ReAwaken_Threshold)))
                 return true;
 
             //2min burst

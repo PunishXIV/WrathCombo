@@ -34,14 +34,7 @@ internal partial class DRK
     /// </summary>
     /// <seealso cref="CustomComboFunctions.CanWeave(double)" />
     /// <seealso cref="CanDelayedWeave(double,double)" />
-    private static bool CanWeave =>
-        (IsEnabled(Preset.DRK_ST_Adv) &&
-         IsEnabled(Preset.DRK_PreventTripleWeaves) &&
-         CanWeave() &&
-         !ActionWatching.HasDoubleWeaved()) ||
-        ((IsNotEnabled(Preset.DRK_ST_Adv) ||
-          IsNotEnabled(Preset.DRK_PreventTripleWeaves)) &&
-         (CanWeave() || CanDelayedWeave()));
+    private static bool CanWeave => CanWeave() || CanDelayedWeave();
 
     /// <summary>
     ///     DRK's job gauge.
@@ -210,7 +203,7 @@ internal partial class DRK
     {
         if (castLocations.Contains(currentAction) &&
             (Gauge.HasDarkArts || LocalPlayer.CurrentMp > 3000) &&
-            CanWeave() && !ActionWatching.HasDoubleWeaved())
+            CanWeave())
             action = OriginalHook(EdgeOfDarkness);
     }
 

@@ -44,6 +44,15 @@ internal partial class SAM
                     }
                     break;
 
+                case CustomComboPreset.SAM_ST_CDs_MeikyoShisui:
+                    DrawHorizontalRadioButton(SAM_ST_Meikyo_Suboption,
+                        "Use The Balance Logic in all content", $"Uses {MeikyoShisui.ActionName()} logic regardless of content.", 0);
+
+                    DrawHorizontalRadioButton(SAM_ST_Meikyo_Suboption,
+                        "Use The Balance logic only in Boss encounters", $"Only uses {MeikyoShisui.ActionName()} logic when in Boss encounters." +
+                                                                         $"\nWill use Meikyo every minute regardless of sen count outside of boss encounters.", 1);
+                    break;
+
                 case CustomComboPreset.SAM_ST_ComboHeals:
                     DrawSliderInt(0, 100, SAM_STSecondWindThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
@@ -141,6 +150,7 @@ internal partial class SAM
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_Higanbana_Suboption = new("SAM_ST_Higanbana_Suboption", 1),
+            SAM_ST_Meikyo_Suboption = new("SAM_ST_Meikyo_Suboption", 1),
             SAM_ST_Higanbana_HP_Threshold = new("SAM_ST_Higanbana_HP_Threshold", 0),
             SAM_ST_Higanbana_Refresh = new("SAM_ST_Higanbana_Refresh", 15),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),

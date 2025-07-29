@@ -173,7 +173,8 @@ public class ActionRetargeting : IDisposable
             showResolver: true, retarget: retarget);
 
         // Run the target resolver
-        RemoveRetarget(retarget.ID);
+        if (!retarget.DontCull)
+            RemoveRetarget(retarget.ID);
         try
         {
             target = retarget.Resolver.Invoke();

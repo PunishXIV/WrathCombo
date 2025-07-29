@@ -190,6 +190,7 @@ namespace WrathCombo.CustomComboNS.Functions
             : BattleChara?.ClassJob.Value ?? CustomComboFunctions.JobIDs.ClassJobs[0];
 
         public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
+        public IGameObject? GameObject => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId);
         public Dictionary<ushort, long> BuffsGainedAt = new();
         /// You really shouldn't have a reason to use this ...
         public IPlayerCharacter? PlayerChara;
