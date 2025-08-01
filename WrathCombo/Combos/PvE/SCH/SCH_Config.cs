@@ -1,7 +1,7 @@
 ﻿using System;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Style;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.Extensions.UIntExtensions;

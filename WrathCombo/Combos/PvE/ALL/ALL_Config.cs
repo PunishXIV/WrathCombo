@@ -1,6 +1,6 @@
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Microsoft.VisualBasic.ApplicationServices;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;

@@ -4,7 +4,7 @@ using Dalamud.Interface.Utility.Raii;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Linq;
 using System.Numerics;
 using ECommons.Logging;
@@ -76,7 +76,7 @@ namespace WrathCombo.Window.Tabs
                                     var padSize = (iconMaxSize - imgSize.X) / 2f;
                                     if (padSize > 0)
                                         ImGui.SetCursorPosX(ImGui.GetCursorPosX() + padSize);
-                                    ImGui.Image(icon.ImGuiHandle, imgSize);
+                                    ImGui.Image(icon.Handle, imgSize);
                                 }
                                 else
                                 {
@@ -122,7 +122,7 @@ namespace WrathCombo.Window.Tabs
                                 var padSize = (iconMaxSize - imgSize.X) / 2f;
                                 if (padSize > 0)
                                     ImGui.SetCursorPosX(ImGui.GetCursorPosX() + padSize);
-                                ImGui.Image(icon.ImGuiHandle, imgSize);
+                                ImGui.Image(icon.Handle, imgSize);
                             }
                             else
                             {

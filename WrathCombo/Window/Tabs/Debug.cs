@@ -19,7 +19,7 @@ using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using WrathCombo.AutoRotation;
@@ -134,7 +134,7 @@ internal class Debug : ConfigWindow, IDisposable
         // Custom 2-Column Styling
         static void CustomStyleText(string firstColumn, object? secondColumn, bool useMonofont = false, Vector4? optionalColor = null)
         {
-            ImGui.Columns(2, null, false);
+            ImGui.Columns(2, (byte*)null, false);
             if (!string.IsNullOrEmpty(firstColumn))
             {
                 ImGui.TextUnformatted(firstColumn);
@@ -779,7 +779,7 @@ internal class Debug : ConfigWindow, IDisposable
             if (_debugSpell != null)
             {
                 var actionStatus = ActionManager.Instance()->GetActionStatus(ActionType.Action, _debugSpell.Value.RowId);
-                var icon = Svc.Texture.GetFromGameIcon(new(_debugSpell.Value.Icon)).GetWrapOrEmpty().ImGuiHandle;
+                var icon = Svc.Texture.GetFromGameIcon(new(_debugSpell.Value.Icon)).GetWrapOrEmpty().Handle;
 
                 ImGui.Image(icon, new Vector2(60).Scale());
                 ImGui.SameLine();

@@ -13,7 +13,7 @@ using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
@@ -511,7 +511,7 @@ namespace WrathCombo.Window.Functions
                     foreach (var icon in att.ActionIcons)
                     {
                         var img = Svc.Texture.GetFromGameIcon(new(icon)).GetWrapOrEmpty();
-                        ImGui.Image(img.ImGuiHandle, (img.Size / 2f) * ImGui.GetIO().FontGlobalScale);
+                        ImGui.Image(img.Handle, (img.Size / 2f) * ImGui.GetIO().FontGlobalScale);
                         ImGui.SameLine();
                     }
                     ImGui.EndTooltip();
@@ -648,7 +648,7 @@ namespace WrathCombo.Window.Functions
             var imgSize = new Vector2(icon.Size.X * scale, icon.Size.Y * scale);
 
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 6f.Scale());
-            ImGui.Image(icon.ImGuiHandle, imgSize);
+            ImGui.Image(icon.Handle, imgSize);
             return true;
         }
 

@@ -1,7 +1,7 @@
 #region
 
 using ECommons.ImGuiMethods;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;

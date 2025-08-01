@@ -7,7 +7,7 @@ using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.Throttlers;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using PunishLib;
 using PunishLib.ImGuiMethods;
 using System;
@@ -168,7 +168,7 @@ namespace WrathCombo.Window
 
             if (ThreadLoadImageHandler.TryGetTextureWrap(imagePath, out var logo))
                 ImGuiEx.LineCentered("###WrathLogo", () =>
-                    ImGui.Image(logo.ImGuiHandle, imageSize));
+                    ImGui.Image(logo.Handle, imageSize));
 
             ImGui.Spacing();
             ImGui.Separator();

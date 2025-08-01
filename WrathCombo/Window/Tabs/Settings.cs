@@ -2,7 +2,7 @@
 using System.Linq;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons.GameHelpers;

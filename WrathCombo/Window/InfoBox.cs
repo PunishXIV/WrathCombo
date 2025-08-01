@@ -1,8 +1,8 @@
 ﻿using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
 using System;
 using System.Numerics;
+using Dalamud.Bindings.ImGui;
 
 namespace WrathCombo.Window
 {

@@ -12,7 +12,7 @@ using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Common.Math;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using WrathCombo.Core;
 using WrathCombo.Services;
 using Vector4 = System.Numerics.Vector4;
