@@ -1,18 +1,16 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
-
+using Preset = WrathCombo.Combos.CustomComboPreset;
+using static WrathCombo.Combos.PvE.PCT.Config;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PCT : Caster
 {
-
     #region Single Target Combos
     internal class PCT_ST_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PCT_ST_SimpleMode;
-
+        protected internal override Preset Preset => Preset.PCT_ST_SimpleMode;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not FireInRed)
@@ -33,16 +31,15 @@ internal partial class PCT : Caster
             #region Burst Window lvl 100 only
             if (BurstPhaseReady)
                 return BurstWindow(actionID);
-
             #endregion
             
             #region Special Content
             // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+            if (Variant.CanCure(Preset.PCT_Variant_Cure, PCT_VariantCure))
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(Preset.PCT_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -80,7 +77,7 @@ internal partial class PCT : Caster
                     return SubtractivePalette;
 
                 //LucidDreaming
-                if (Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
+                if (Role.CanLucidDream(PCT_ST_AdvancedMode_LucidOption))
                     return Role.LucidDreaming;
             }
             #endregion
@@ -96,7 +93,6 @@ internal partial class PCT : Caster
                 if (LandscapeMotifReady)
                     return OriginalHook(LandscapeMotif);
             }
-
             #endregion
 
             #region Moving
@@ -121,11 +117,9 @@ internal partial class PCT : Caster
                     (CreatureMotifReady || WeaponMotifReady || LandscapeMotifReady))
                     return Role.Swiftcast;
             }
-
             #endregion
 
             #region Pre_Burst Motifs
-
             //Prepare for Burst
             if (GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
@@ -138,11 +132,9 @@ internal partial class PCT : Caster
                 if (WeaponMotifReady && GetTargetHPPercent() > 10)
                     return OriginalHook(WeaponMotif);
             }
-
             #endregion
 
             #region GCDs
-
             //StarPrism
             if (HasStatusEffect(Buffs.Starstruck))
                 return StarPrism;
@@ -181,51 +173,43 @@ internal partial class PCT : Caster
             return actionID;
             #endregion
         }
-
     }   
-
     internal class PCT_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PCT_ST_AdvancedMode;
-
+        protected internal override Preset Preset => Preset.PCT_ST_AdvancedMode;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not FireInRed)
                 return actionID;
 
             #region Enables and Configs
-           
-            int creatureStop = Config.PCT_ST_CreatureStop;
-            int landscapeStop = Config.PCT_ST_LandscapeStop;
-            int weaponStop = Config.PCT_ST_WeaponStop;
+            int creatureStop = PCT_ST_CreatureStop;
+            int landscapeStop = PCT_ST_LandscapeStop;
+            int weaponStop = PCT_ST_WeaponStop;
 
-            bool prepullEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_PrePullMotifs);
-            bool openerEnabled = IsEnabled(CustomComboPreset.PCT_ST_Advanced_Openers);
-            bool burstPhaseEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_Burst_Phase);
-            bool noTargetMotifEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_NoTargetMotifs);
-            bool scenicMuseEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_ScenicMuse);
-            bool livingMuseEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LivingMuse);
-            bool steelMuseEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SteelMuse);
-            bool portraitEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MogOfTheAges);
-            bool paletteEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SubtractivePalette);
-            bool lucidDreamingEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LucidDreaming);
-            bool swiftMotifEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwiftMotifs);
-            bool hammerMovementEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo);
-            bool cometMovementEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack);
-            bool holyMovementEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite);
-            bool swiftcastMotifMovementEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_SwitfcastOption);
-            bool landscapeMotifEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_LandscapeMotif);
-            bool creatureMotifEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_CreatureMotif);
-            bool weaponMotifEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_WeaponMotif);
-            bool starPrismEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_StarPrism);
-            bool rainbowDripEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_RainbowDrip);
-            bool cometEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_CometinBlack);
-            bool hammerEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_HammerStampCombo);
-            bool blizzardComboEnabled = IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_BlizzardInCyan);
-
-
-
-
+            bool prepullEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_PrePullMotifs);
+            bool openerEnabled = IsEnabled(Preset.PCT_ST_Advanced_Openers);
+            bool burstPhaseEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_Burst_Phase);
+            bool noTargetMotifEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_NoTargetMotifs);
+            bool scenicMuseEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_ScenicMuse);
+            bool livingMuseEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_LivingMuse);
+            bool steelMuseEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_SteelMuse);
+            bool portraitEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_MogOfTheAges);
+            bool paletteEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_SubtractivePalette);
+            bool lucidDreamingEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_LucidDreaming);
+            bool swiftMotifEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_SwiftMotifs);
+            bool hammerMovementEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_MovementOption_HammerStampCombo);
+            bool cometMovementEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_MovementOption_CometinBlack);
+            bool holyMovementEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite);
+            bool swiftcastMotifMovementEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_SwitfcastOption);
+            bool landscapeMotifEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_LandscapeMotif);
+            bool creatureMotifEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_CreatureMotif);
+            bool weaponMotifEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_WeaponMotif);
+            bool starPrismEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_StarPrism);
+            bool rainbowDripEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_RainbowDrip);
+            bool cometEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_CometinBlack);
+            bool hammerEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_HammerStampCombo);
+            bool blizzardComboEnabled = IsEnabled(Preset.PCT_ST_AdvancedMode_BlizzardInCyan);
             #endregion
 
             #region Prepull
@@ -241,25 +225,22 @@ internal partial class PCT : Caster
             #endregion
 
             #region Opener
-
             if (openerEnabled && Opener().FullOpener(ref actionID))
                 return actionID;
-
             #endregion
 
             #region Burst Window
             if (burstPhaseEnabled && BurstPhaseReady)
                 return BurstWindow(actionID);
-
             #endregion
             
             #region Special Content
             // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+            if (Variant.CanCure(Preset.PCT_Variant_Cure, PCT_VariantCure))
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(Preset.PCT_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -297,7 +278,7 @@ internal partial class PCT : Caster
                     return SubtractivePalette;
                         
                 //LucidDreaming
-                if (lucidDreamingEnabled && Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
+                if (lucidDreamingEnabled && Role.CanLucidDream(PCT_ST_AdvancedMode_LucidOption))
                     return Role.LucidDreaming;
             }
             #endregion
@@ -313,7 +294,6 @@ internal partial class PCT : Caster
                 if (LandscapeMotifReady && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
             }
-
             #endregion
 
             #region Moving
@@ -338,11 +318,9 @@ internal partial class PCT : Caster
                     (CreatureMotifReady || WeaponMotifReady || LandscapeMotifReady))
                     return Role.Swiftcast;
             }
-
             #endregion
 
             #region Pre_Burst Motifs
-
             //Prepare for Burst
             if (GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
@@ -355,11 +333,9 @@ internal partial class PCT : Caster
                 if (weaponMotifEnabled && WeaponMotifReady && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(WeaponMotif);
             }
-
             #endregion
 
             #region GCDs
-
             //StarPrism
             if (starPrismEnabled && HasStatusEffect(Buffs.Starstruck))
                 return StarPrism;
@@ -399,27 +375,23 @@ internal partial class PCT : Caster
             #endregion
         }
     }
-
     #endregion
 
     #region AOE Combos
 
     internal class PCT_AoE_SimpleMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PCT_AoE_SimpleMode;
-
+        protected internal override Preset Preset => Preset.PCT_AoE_SimpleMode;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not FireIIinRed)
                 return actionID;
 
             #region Enables and Configs
-
-            int creatureStop = 10;
-            int landscapeStop = 10;
-            int weaponStop = 10;
-            int holdPaintCharges = 2;
-
+            const int creatureStop = 10;
+            const int landscapeStop = 10;
+            const int weaponStop = 10;
+            const int holdPaintCharges = 2;
             #endregion
 
             #region Prepull
@@ -436,11 +408,11 @@ internal partial class PCT : Caster
 
             #region Special Content
             // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+            if (Variant.CanCure(Preset.PCT_Variant_Cure, PCT_VariantCure))
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(Preset.PCT_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -478,7 +450,7 @@ internal partial class PCT : Caster
                     return SubtractivePalette;
 
                 //LucidDreaming
-                if (Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
+                if (Role.CanLucidDream(PCT_ST_AdvancedMode_LucidOption))
                     return Role.LucidDreaming;
             }
             #endregion
@@ -494,7 +466,6 @@ internal partial class PCT : Caster
                 if (LandscapeMotifReady && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
             }
-
             #endregion
 
             #region Moving
@@ -519,11 +490,9 @@ internal partial class PCT : Caster
                     (CreatureMotifReady || WeaponMotifReady || LandscapeMotifReady))
                     return Role.Swiftcast;
             }
-
             #endregion
 
             #region Pre_Burst Motifs
-
             //Prepare for Burst
             if (GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
@@ -536,11 +505,9 @@ internal partial class PCT : Caster
                 if (WeaponMotifReady && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(WeaponMotif);
             }
-
             #endregion
 
             #region GCDs
-
             //StarPrism
             if (HasStatusEffect(Buffs.Starstruck))
                 return StarPrism;
@@ -581,51 +548,45 @@ internal partial class PCT : Caster
                 return OriginalHook(HolyInWhite);
 
             return actionID;
-
             #endregion
-
         }
     }
-
     internal class PCT_AoE_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PCT_AoE_AdvancedMode;
-
+        protected internal override Preset Preset => Preset.PCT_AoE_AdvancedMode;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not FireIIinRed)
                 return actionID;
 
             #region Enables and Configs
+            int creatureStop = PCT_AoE_CreatureStop;
+            int landscapeStop = PCT_AoE_LandscapeStop;
+            int weaponStop = PCT_AoE_WeaponStop;
+            int holdPaintCharges = PCT_AoE_AdvancedMode_HolyinWhiteOption;
 
-            int creatureStop = Config.PCT_AoE_CreatureStop;
-            int landscapeStop = Config.PCT_AoE_LandscapeStop;
-            int weaponStop = Config.PCT_AoE_WeaponStop;
-            int holdPaintCharges = Config.PCT_AoE_AdvancedMode_HolyinWhiteOption;
-
-            bool prepullEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_PrePullMotifs);
-            bool noTargetMotifEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_NoTargetMotifs);
-            bool scenicMuseEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_ScenicMuse);
-            bool livingMuseEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LivingMuse);
-            bool steelMuseEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SteelMuse);
-            bool portraitEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MogOfTheAges);
-            bool paletteEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SubtractivePalette);
-            bool lucidDreamingEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LucidDreaming);
-            bool swiftMotifEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SwiftMotifs);
-            bool hammerMovementEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_HammerStampCombo);
-            bool cometMovementEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_CometinBlack);
-            bool holyMovementEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_MovementOption_HolyInWhite);
-            bool swiftcastMotifMovementEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_SwitfcastOption);
-            bool landscapeMotifEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_LandscapeMotif);
-            bool creatureMotifEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_CreatureMotif);
-            bool weaponMotifEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_WeaponMotif);
-            bool starPrismEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_StarPrism);
-            bool rainbowDripEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_RainbowDrip);
-            bool cometEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_CometinBlack);
-            bool hammerEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_HammerStampCombo);
-            bool blizzardComboEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_BlizzardInCyan);
-            bool holyInWhiteEnabled = IsEnabled(CustomComboPreset.PCT_AoE_AdvancedMode_HolyinWhite);
-
+            bool prepullEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_PrePullMotifs);
+            bool noTargetMotifEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_NoTargetMotifs);
+            bool scenicMuseEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_ScenicMuse);
+            bool livingMuseEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_LivingMuse);
+            bool steelMuseEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_SteelMuse);
+            bool portraitEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_MogOfTheAges);
+            bool paletteEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_SubtractivePalette);
+            bool lucidDreamingEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_LucidDreaming);
+            bool swiftMotifEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_SwiftMotifs);
+            bool hammerMovementEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_MovementOption_HammerStampCombo);
+            bool cometMovementEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_MovementOption_CometinBlack);
+            bool holyMovementEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_MovementOption_HolyInWhite);
+            bool swiftcastMotifMovementEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_SwitfcastOption);
+            bool landscapeMotifEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_LandscapeMotif);
+            bool creatureMotifEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_CreatureMotif);
+            bool weaponMotifEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_WeaponMotif);
+            bool starPrismEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_StarPrism);
+            bool rainbowDripEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_RainbowDrip);
+            bool cometEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_CometinBlack);
+            bool hammerEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_HammerStampCombo);
+            bool blizzardComboEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_BlizzardInCyan);
+            bool holyInWhiteEnabled = IsEnabled(Preset.PCT_AoE_AdvancedMode_HolyinWhite);
             #endregion
 
             #region Prepull
@@ -642,11 +603,11 @@ internal partial class PCT : Caster
 
             #region Special Content
             // Variant Cure
-            if (Variant.CanCure(CustomComboPreset.PCT_Variant_Cure, Config.PCT_VariantCure))
+            if (Variant.CanCure(Preset.PCT_Variant_Cure, PCT_VariantCure))
                 return Variant.Cure;
 
             // Variant Rampart
-            if (Variant.CanRampart(CustomComboPreset.PCT_Variant_Rampart, WeaveTypes.Weave))
+            if (Variant.CanRampart(Preset.PCT_Variant_Rampart, WeaveTypes.Weave))
                 return Variant.Rampart;
             
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -684,7 +645,7 @@ internal partial class PCT : Caster
                     return SubtractivePalette;
 
                 //LucidDreaming
-                if (lucidDreamingEnabled && Role.CanLucidDream(Config.PCT_ST_AdvancedMode_LucidOption))
+                if (lucidDreamingEnabled && Role.CanLucidDream(PCT_ST_AdvancedMode_LucidOption))
                     return Role.LucidDreaming;
             }
             #endregion
@@ -700,7 +661,6 @@ internal partial class PCT : Caster
                 if (LandscapeMotifReady && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
             }
-
             #endregion
 
             #region Moving
@@ -725,11 +685,9 @@ internal partial class PCT : Caster
                     (CreatureMotifReady || WeaponMotifReady || LandscapeMotifReady))
                     return Role.Swiftcast;
             }
-
             #endregion
 
             #region Pre_Burst Motifs
-
             //Prepare for Burst
             if (GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
@@ -742,11 +700,9 @@ internal partial class PCT : Caster
                 if (weaponMotifEnabled && WeaponMotifReady && GetTargetHPPercent() > weaponStop)
                     return OriginalHook(WeaponMotif);
             }
-
             #endregion
 
             #region GCDs
-
             //StarPrism
             if (starPrismEnabled && HasStatusEffect(Buffs.Starstruck))
                 return StarPrism;
@@ -787,85 +743,72 @@ internal partial class PCT : Caster
                 return OriginalHook(HolyInWhite);
 
             return actionID;
-
             #endregion
         }
     }
-
     #endregion
 
     #region Smaller Features
-
     internal class CombinedAetherhues : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.CombinedAetherhues;
-
+        protected internal override Preset Preset => Preset.CombinedAetherhues;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not (FireInRed or FireIIinRed))
                 return actionID;
 
-            int choice = Config.CombinedAetherhueChoices;
+            int choice = CombinedAetherhueChoices;
 
             if (actionID == FireInRed && choice is 0 or 1)
             {
                 if (HasStatusEffect(Buffs.SubtractivePalette))
                     return OriginalHook(BlizzardinCyan);
             }
-
             if (actionID == FireIIinRed && choice is 0 or 2)
             {
                 if (HasStatusEffect(Buffs.SubtractivePalette))
                     return OriginalHook(BlizzardIIinCyan);
             }
-
             return actionID;
         }
     }
-
     internal class CombinedMotifs : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.CombinedMotifs;
-
+        protected internal override Preset Preset => Preset.CombinedMotifs;
         protected override uint Invoke(uint actionID)
         {
             PCTGauge gauge = GetJobGauge<PCTGauge>();
 
             if (actionID == CreatureMotif)
             {
-                if ((Config.CombinedMotifsMog && gauge.MooglePortraitReady) || (Config.CombinedMotifsMadeen && gauge.MadeenPortraitReady && IsOffCooldown(OriginalHook(MogoftheAges))))
+                if ((CombinedMotifsMog && gauge.MooglePortraitReady) || (CombinedMotifsMadeen && gauge.MadeenPortraitReady && IsOffCooldown(OriginalHook(MogoftheAges))))
                     return OriginalHook(MogoftheAges);
 
                 if (gauge.CreatureMotifDrawn)
                     return OriginalHook(LivingMuse);
             }
-
             if (actionID == WeaponMotif)
             {
-                if (Config.CombinedMotifsWeapon && HasStatusEffect(Buffs.HammerTime))
+                if (CombinedMotifsWeapon && HasStatusEffect(Buffs.HammerTime))
                     return OriginalHook(HammerStamp);
 
                 if (gauge.WeaponMotifDrawn)
                     return OriginalHook(SteelMuse);
             }
-
             if (actionID == LandscapeMotif)
             {
-                if (Config.CombinedMotifsLandscape && HasStatusEffect(Buffs.Starstruck))
+                if (CombinedMotifsLandscape && HasStatusEffect(Buffs.Starstruck))
                     return OriginalHook(StarPrism);
 
                 if (gauge.LandscapeMotifDrawn)
                     return OriginalHook(ScenicMuse);
             }
-
             return actionID;
         }
     }
-
     internal class CombinedPaint : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.CombinedPaint;
-
+        protected internal override Preset Preset => Preset.CombinedPaint;
         protected override uint Invoke(uint actionID)
         {
             if (actionID != HolyInWhite)
@@ -875,6 +818,5 @@ internal partial class PCT : Caster
             return actionID;
         }
     }
-
     #endregion
 }

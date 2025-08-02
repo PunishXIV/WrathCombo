@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Combos.PvE.RDM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 #endregion
 
@@ -252,8 +253,8 @@ internal partial class RDM
     internal static GapClosing Opener2 = new();
     internal static WrathOpener Opener()
     {
-        if (Config.RDM_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
-        if (Config.RDM_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
+        if (RDM_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
+        if (RDM_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
         
         return  (Opener1.LevelChecked) ? Opener1 : WrathOpener.Dummy;
     }
@@ -306,7 +307,7 @@ internal partial class RDM
             ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
         ];
 
-        internal override UserData? ContentCheckConfig => Config.RDM_BalanceOpener_Content;
+        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
 
             public override bool HasCooldowns()
             {
@@ -368,7 +369,7 @@ internal partial class RDM
             ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
         ];
 
-        internal override UserData? ContentCheckConfig => Config.RDM_BalanceOpener_Content;
+        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
 
         public override bool HasCooldowns()
         {

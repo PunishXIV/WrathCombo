@@ -6,6 +6,8 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using WrathCombo.Extensions;
+using Preset = WrathCombo.Combos.CustomComboPreset;
+using static WrathCombo.Combos.PvE.PCT.Config;
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -13,11 +15,8 @@ namespace WrathCombo.Combos.PvE;
 internal partial class PCT
 {
     #region Variables
-
     // Gauge Stuff
     internal static PCTGauge gauge = GetJobGauge<PCTGauge>();
-
-
     //Useful Bools
     internal static bool ScenicMuseReady => gauge.LandscapeMotifDrawn && ActionReady(ScenicMuse);
     internal static bool LivingMuseReady => ActionReady(LivingMuse) && gauge.CreatureMotifDrawn;
@@ -30,14 +29,9 @@ internal partial class PCT
                                             (HasStatusEffect(Buffs.SubtractiveSpectrum) || gauge.PalleteGauge >= 50 && ScenicCD > 40 || gauge.PalleteGauge == 100);
     internal static bool HasPaint => gauge.Paint > 0;
     internal static bool BurstPhaseReady => LevelChecked(StarPrism) && InCombat() && (ScenicCD <= 5 || HasStatusEffect(Buffs.StarryMuse) && gauge.PalleteGauge >= 50);
-
-
-
     //Buff Tracking
     internal static float ScenicCD => GetCooldownRemainingTime(StarryMuse);
     internal static float SteelCD => GetCooldownRemainingTime(StrikingMuse);
-
-
     #endregion
 
     #region Functions
@@ -48,18 +42,15 @@ internal partial class PCT
     {
         if (GetStatusEffectStacks(Buffs.Hyperphantasia) > 0 && HasStatusEffect(Buffs.Inspiration) && HasPaint)
         {
-            if ((IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) || IsEnabled(CustomComboPreset.PCT_ST_SimpleMode)) 
+            if ((IsEnabled(Preset.PCT_ST_AdvancedMode_MovementOption_HolyInWhite) || IsEnabled(Preset.PCT_ST_SimpleMode)) 
                 && HolyInWhite.LevelChecked())
                 return true;
-
-            if ((IsEnabled(CustomComboPreset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) || IsEnabled(CustomComboPreset.PCT_ST_SimpleMode)) 
+            if ((IsEnabled(Preset.PCT_ST_AdvancedMode_MovementOption_CometinBlack) || IsEnabled(Preset.PCT_ST_SimpleMode)) 
                 && CometinBlack.LevelChecked())
                 return true;
         }
         return false;
     }
-
-
     internal static uint BurstWindow(uint actionId)
     {
         if (LandscapeMotifReady) //Emergency Landscape Paint if someone started a fight with no motifs.
@@ -81,7 +72,6 @@ internal partial class PCT
             if (ScenicMuseReady && (CanDelayedWeave() || !CanWeave()) && IsOffCooldown(ScenicMuse)) // The !canweave option is specifically so that it can minimize drift IF it does not catch the delayed weave in time.
                 return OriginalHook(ScenicMuse);            
         }
-
         if (HyperPhantasiaMovementPaint() && IsMoving())
             return HasStatusEffect(Buffs.MonochromeTones) ? OriginalHook(CometinBlack) : OriginalHook(HolyInWhite);
 
@@ -123,8 +113,6 @@ internal partial class PCT
         }
         return actionId;
     }
-
-   
     #endregion
 
     #region ID's
@@ -195,7 +183,6 @@ internal partial class PCT
     #endregion
 
     #region Openers
-
     internal static PCTopenerMaxLevel1 Opener1 = new();
     internal static PCTopenerMaxLevel2 Opener2 = new();
 
@@ -203,15 +190,12 @@ internal partial class PCT
 
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked && Config.PCT_Opener_Choice == 0)
+        if (Opener1.LevelChecked && PCT_Opener_Choice == 0)
             return Opener1;
-
-        if (Opener2.LevelChecked && Config.PCT_Opener_Choice == 1)
+        if (Opener2.LevelChecked && PCT_Opener_Choice == 1)
             return Opener2;
-
         return WrathOpener.Dummy;
     }
-
     public static bool HasMotifs()
     {
 
@@ -226,12 +210,10 @@ internal partial class PCT
 
         return true;
     }
-
     internal class PCTopenerMaxLevel1 : WrathOpener
     {
         //2nd GCD Starry Opener
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -256,7 +238,7 @@ internal partial class PCT
             ClawMotif,
             ClawedMuse,//20
         ];
-        internal override UserData? ContentCheckConfig => Config.PCT_Balance_Content;
+        internal override UserData? ContentCheckConfig => PCT_Balance_Content;
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
 [
@@ -290,12 +272,10 @@ internal partial class PCT
             return true;
         }
     }
-
     internal class PCTopenerMaxLevel2 : WrathOpener
     {
         //3rd GCD Starry Opener
         public override int MinOpenerLevel => 100;
-
         public override int MaxOpenerLevel => 109;
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -322,7 +302,7 @@ internal partial class PCT
             ClawMotif,
             ClawedMuse
         ];
-        internal override UserData? ContentCheckConfig => Config.PCT_Balance_Content;
+        internal override UserData? ContentCheckConfig => PCT_Balance_Content;
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([18], () => !HasStatusEffect(Buffs.RainbowBright))];
 
@@ -357,7 +337,6 @@ internal partial class PCT
 
             return true;
         }
-        
     }
 #endregion
 }

@@ -5536,16 +5536,6 @@ public enum CustomComboPreset
     [CustomComboInfo("OGCDs One Button Feature",
         "Replaces Fleche with Contre Sixte, Vice of Thorns, Prefulgence, Engagement, and 1 charge of Corps-a-corps.", RDM.JobID)]
     RDM_OGCDs = 13420,
-    
-    [ParentCombo(RDM_OGCDs)]
-    [CustomComboInfo("Engagement Pooling Option",
-        "Will not spend both Engagement Charges unless you have Embolden.", RDM.JobID)]
-    RDM_OGCDs_EngagementPool = 13421,
-    
-    [ParentCombo(RDM_OGCDs)]
-    [CustomComboInfo("Corps-a-corps Melee only Option",
-        "Needs to be in melee range to use Corps-a-corps.", RDM.JobID)]
-    RDM_OGCDs_CorpsMelee = 13422,
 
     [Variant]
     [VariantParent(RDM_ST_DPS, RDM_ST_SimpleMode, RDM_AoE_DPS, RDM_AoE_SimpleMode)]
