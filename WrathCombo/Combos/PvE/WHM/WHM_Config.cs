@@ -153,8 +153,8 @@ internal partial class WHM
                     break;
 
                 case Preset.WHM_STHeals_Aquaveil:
-                    DrawAdditionalBoolChoice(WHM_STHeals_AquaveilWeave,
-                        weaveDescription, "");
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Only Weave", weaveDescription, 2, 0);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Not On Bosses", nonBossesDescription, 2, 1);
                     DrawSliderInt(1, 100, WHM_STHeals_AquaveilHP,
                         targetStartUsingAtDescription);
                     DrawPriorityInput(WHM_ST_Heals_Priority, 9, 3,
@@ -351,8 +351,8 @@ internal partial class WHM
                     if (WHM_AquaveilOptions[1])
                     {
                         ImGui.Indent();
-                        DrawSliderInt(0, 100, WHM_Aquaveil_TetraThreshold,
-                            "Target HP% to use Tetra at or below (100 = Disable check)");
+                        DrawSliderInt(1, 100, WHM_Aquaveil_TetraThreshold,
+                            "Target HP% to use Tetra below)");
                         ImGui.Unindent();
                     }
                     break;
@@ -373,7 +373,7 @@ internal partial class WHM
                 
                 case Preset.WHM_Re_LiturgyOfTheBell:
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudGrey, "Options to try to Retarget Asylum to before Self:");
+                    ImGui.TextColored(ImGuiColors.DalamudGrey, "Options to try to Retarget Liturgy of the Bell to before Self:");
                     ImGui.Unindent();
                     DrawHorizontalMultiChoice(WHM_LiturgyOfTheBellOptions,
                         "Enemy Hard Target", "Will place at hard target if enemy", 2, 0);
@@ -759,14 +759,14 @@ internal partial class WHM
             new("WHM_STHeals_AquaveilHP", 90);
 
         /// <summary>
-        ///     Only use Aquaveil when weaving.
+        ///     Aquaveil weaving and boss options
         /// </summary>
         /// <value>
         ///     <b>Default</b>: false
         /// </value>
         /// <seealso cref="CustomComboPreset.WHM_STHeals_Aquaveil" />
-        internal static UserBool WHM_STHeals_AquaveilWeave =
-            new("WHM_STHeals_AquaveilWeave", false);
+        internal static UserBoolArray WHM_STHeals_AquaveilOptions =
+            new("WHM_STHeals_AquaveilOptions");
 
         /// <summary>
         ///     MP threshold to use Lucid Dreaming in single target healing.

@@ -61,6 +61,7 @@ public partial class Provider
                 arcOption.SingleTargetHPP => arcH.SingleTargetHPP,
                 arcOption.AoETargetHPP => arcH.AoETargetHPP,
                 arcOption.SingleTargetRegenHPP => arcH.SingleTargetRegenHPP,
+                arcOption.SingleTargetExcogHPP => arcH.SingleTargetExcogHPP,
                 arcOption.ManageKardia => arcH.ManageKardia,
                 arcOption.AutoRez => arcH.AutoRez,
                 arcOption.AutoRezDPSJobs => arcH.AutoRezDPSJobs,

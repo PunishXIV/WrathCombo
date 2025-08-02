@@ -231,6 +231,8 @@ public enum AutoRotationConfigOption
     [ConfigValueType(typeof(bool))] OrbwalkerIntegration = 14,
 
     [ConfigValueType(typeof(bool))] AutoRezOutOfParty = 15,
+    
+    [ConfigValueType(typeof(int))] SingleTargetExcogHPP = 16,
 }
 
 #region Type Attribute

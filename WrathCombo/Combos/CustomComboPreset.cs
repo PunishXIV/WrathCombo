@@ -616,6 +616,11 @@ public enum CustomComboPreset
     [CustomComboInfo("Combust Uptime Option",
         "Adds Combust to the DPS feature if it's not present on current target, or is about to expire.", AST.JobID)]
     AST_ST_DPS_CombustUptime = 1018,
+    
+    [ParentCombo(AST_ST_DPS)]
+    [CustomComboInfo("Combust Movement Option", "\"Will reapply DoT early to all enemies within range while moving.\"", AST.JobID)]
+    [Retargeted]
+    AST_ST_DPS_Move_DoT = 1084,
 
     [ParentCombo(AST_ST_DPS)]
     [CustomComboInfo("Lightspeed Weave Option", "Adds Lightspeed when moving", AST.JobID)]
@@ -860,16 +865,23 @@ public enum CustomComboPreset
     [ParentCombo(AST_AoE_Heals)]
     [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel)", AST.JobID)]
     AST_AoE_Heals_CollectiveUnconscious = 1074,
+    #endregion
+    
+    #region Cards
+    [CustomComboInfo("Quick Target Damage Cards",
+        "When you play the Balance or Spear in a combo, this will automatically target the buff on to a party member.\nIt will look at DPS that suit the card first, following The Balance's priorities; if none found or they have buffs already, will look at the other DPS instead.\nWill try to skip party members that have damage downs or rez sickness.\nWill default to you if no suitable party members were found.",
+        AST.JobID)]
+    [Retargeted(AST.Play1, AST.Balance, AST.Spear)]
+    AST_Cards_QuickTargetCards = 1029,
+    #endregion
 
+    #region Standalones
     [ReplaceSkill(AST.Benefic2)]
     [CustomComboInfo("Benefic 2 Downgrade", "Changes Benefic 2 to Benefic when Benefic 2 is not unlocked or available.",
         AST.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Cure", Condition.ASTRetargetingFeaturesEnabledForBenefic)]
     AST_Benefic = 1002,
-
-    #endregion
-
-    #region Utility
-
+    
     [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Alternative Raise Feature", "Changes Swiftcast to Ascend", AST.JobID)]
@@ -882,34 +894,16 @@ public enum CustomComboPreset
 
     [ReplaceSkill(AST.Lightspeed)]
     [CustomComboInfo("Lightspeed Overwrite Protection Feature", "Blocks the Lightspeed Button while buff is active.", AST.JobID)]
-    AST_Lightspeed_Protection = 1065,    
-
-    [ReplaceSkill(AST.EssentialDignity)]
-    [CustomComboInfo("Retarget Essential Dignity Feature", "Will Retarget Essential Dignity outside of Healing combos to your Heal Stack.", AST.JobID)]
-    [Retargeted(AST.EssentialDignity)]
-    AST_RetargetEssentialDignity = 1059,
-
-    [Variant]
-    [VariantParent(AST_ST_DPS_CombustUptime)]
-    [CustomComboInfo("Spirit Dart Option",
-        "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", AST.JobID)]
-    AST_Variant_SpiritDart = 1035,
-
-    [Variant]
-    [VariantParent(AST_ST_DPS)]
-    [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", AST.JobID)]
-    AST_Variant_Rampart = 1036,
-
-    #endregion
-
-    #region Cards
-
-    [CustomComboInfo("Quick Target Damage Cards",
-        "When you play the Balance or Spear in a combo, this will automatically target the buff on to a party member.\nIt will look at DPS that suit the card first, following The Balance's priorities; if none found or they have buffs already, will look at the other DPS instead.\nWill try to skip party members that have damage downs or rez sickness.\nWill default to you if no suitable party members were found.",
-        AST.JobID)]
-    [Retargeted(AST.Play1, AST.Balance, AST.Spear)]
-    AST_Cards_QuickTargetCards = 1029,
-
+    AST_Lightspeed_Protection = 1065,   
+    
+    [ReplaceSkill(AST.Exaltation)]
+    [CustomComboInfo("Mitigation Feature - Single Target", "Changes Exaltation into Essential Dignity and/or Celestial Intersection after use.\nEach action can be Retargeted with the Retargeting Features below.", AST.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Exaltation (and optionally Essential Dignity and Celestial Intersection", Condition.ASTRetargetingFeaturesEnabledForSTMit)]
+    AST_Mit_ST = 1094,
+    
+    [ReplaceSkill(AST.CollectiveUnconscious)]
+    [CustomComboInfo("Mitigation Feature - AoE", "Changes Collective Unconscious into Neutral Sect/Sun Sign and/or Aspected Helios/Helios Conjuction for shield after use.", AST.JobID)]
+    AST_Mit_AoE = 1095,
     #endregion
     
     #region Raidwide Features
@@ -933,8 +927,74 @@ public enum CustomComboPreset
     AST_Raidwide_AspectedHelios = 1078,
     
     #endregion
+    
+    #region Retargeting
+    [CustomComboInfo("Retargeting Features", "Collection of Options to Retarget Manually-Used Single Target Heals.", AST.JobID)]
+    AST_Retargets = 1085,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.Benefic, AST.Benefic2)]
+    [CustomComboInfo("Benefic Option", "Retargets Benefic and Benefic II to the heal stack (even from the Benefic 2 Downgrade Feature above).", AST.JobID)]
+    [Retargeted(AST.Benefic, AST.Benefic2)]
+    AST_Retargets_Benefic = 1086,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.AspectedBenefic)]
+    [CustomComboInfo("Aspected Benefic Option", "Retargets Aspected Benefic to the heal stack.", AST.JobID)]
+    [Retargeted(AST.AspectedBenefic)]
+    AST_Retargets_AspectedBenefic = 1087,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.EssentialDignity)]
+    [CustomComboInfo("Essential Dignity Option", "Retargets Essential Dignity to the heal stack.", AST.JobID)]
+    [Retargeted(AST.EssentialDignity)]
+    AST_Retargets_EssentialDignity = 1059,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.Exaltation)]
+    [CustomComboInfo("Exaltation Option", "Retargets Exaltation to the heal stack.", AST.JobID)]
+    [Retargeted(AST.Exaltation)]
+    AST_Retargets_Exaltation = 1089,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.Synastry)]
+    [CustomComboInfo("Synastry Option", "Retargets Synastry to the heal stack.", AST.JobID)]
+    [Retargeted(AST.Synastry)]
+    AST_Retargets_Synastry = 1090,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.CelestialIntersection)]
+    [CustomComboInfo("Celestial Intersection Option", "Retargets Celestial Intersection to the heal stack.", AST.JobID)]
+    [Retargeted(AST.CelestialIntersection)]
+    AST_Retargets_CelestialIntersection = 1091,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.Play2, AST.Play3)]
+    [CustomComboInfo("Healing Cards Option", "Retargets the 4 Healing Cards (Ewer, Arrow, Bole, Spire) to the heal stack.", AST.JobID)]
+    [Retargeted(AST.Play2, AST.Play3)]
+    AST_Retargets_HealCards = 1092,
+    
+    [ParentCombo(AST_Retargets)]
+    [ReplaceSkill(AST.EarthlyStar)]
+    [CustomComboInfo("Earthly Star Option", "Retargets Earthly Star to the the ground Under yourself.", AST.JobID)]
+    [Retargeted(AST.EarthlyStar)]
+    AST_Retargets_EarthlyStar = 1093,
+    #endregion
+    
+    #region Variants
+    [Variant]
+    [VariantParent(AST_ST_DPS_CombustUptime)]
+    [CustomComboInfo("Spirit Dart Option",
+        "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", AST.JobID)]
+    AST_Variant_SpiritDart = 1035,
 
-    // Last value = 1083
+    [Variant]
+    [VariantParent(AST_ST_DPS)]
+    [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", AST.JobID)]
+    AST_Variant_Rampart = 1036,
+    #endregion
+
+    // Last value = 1095
 
     #endregion
 
@@ -5574,10 +5634,31 @@ public enum CustomComboPreset
 
     #region SAGE
 
+    #region Simple Mode
+
+    [AutoAction(false, false)]
+    [ReplaceSkill(SGE.Dosis, SGE.Dosis2, SGE.Dosis3)]
+    [ConflictingCombos(SGE_ST_DPS)]
+    [CustomComboInfo("Simple DPS Mode - Single Target", "Replaces Dosis with a full one-button single target rotation. \nThis is the ideal option for newcomers to the job.",
+        SGE.JobID)]
+    [SimpleCombo] 
+    SGE_ST_Simple_DPS = 14084,
+
+    [AutoAction(true, false)]
+    [ReplaceSkill(SGE.Dyskrasia, SGE.Dyskrasia2)]
+    [ConflictingCombos(SGE_AoE_DPS)]
+    [CustomComboInfo("Simple DPS Mode - AoE", "Replaces Dyskrasia with a full one-button AoE rotation. \nThis is the ideal option for newcomers to the job.",
+        SGE.JobID)]
+    [SimpleCombo]
+    SGE_AoE_Simple_DPS = 14085,
+
+    #endregion
+
     #region Single Target DPS Feature
 
     [AutoAction(false, false)]
     [ReplaceSkill(SGE.Dosis, SGE.Dosis2, SGE.Dosis3)]
+    [ConflictingCombos(SGE_ST_Simple_DPS)]
     [CustomComboInfo("Advanced DPS Mode - Single Target", "Adds various options to Dosis I/II/III.", SGE.JobID)]
     [AdvancedCombo]
     SGE_ST_DPS = 14001,
@@ -5630,6 +5711,7 @@ public enum CustomComboPreset
 
     [AutoAction(true, false)]
     [ReplaceSkill(SGE.Dyskrasia, SGE.Dyskrasia2)]
+    [ConflictingCombos(SGE_AoE_Simple_DPS)]
     [CustomComboInfo("Advanced DPS Mode - AoE", "Adds various options to Dyskrasia I & II. Requires a target.", SGE.JobID)]
     [AdvancedCombo]
     SGE_AoE_DPS = 14009,
@@ -5843,20 +5925,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Rhizomata Feature", "Replaces Addersgall skills with Rhizomata when empty.", SGE.JobID)]
     SGE_Rhizo = 14037,
 
-    [ConflictingCombos(SGE_Retarget_Taurochole)]
-    [ReplaceSkill(SGE.Taurochole)]
-    [CustomComboInfo("Taurochole to Druochole Feature", "Turns Taurochole to Druochole when Taurochole is on cooldown.", SGE.JobID)]
-    [PossiblyRetargeted]
-    SGE_TauroDruo = 14038,
-
-    [ReplaceSkill(SGE.Pneuma)]
-    [CustomComboInfo("Zoe Pneuma Feature", "Places Zoe on top of Pneuma when both actions are on cooldown.", SGE.JobID)]
-    SGE_ZoePneuma = 14039,
-
-    #endregion
-
-    #region Utility
-
     [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
     [CustomComboInfo("Swiftcast Raise Feature", "Changes Swiftcast to Egeiro while Swiftcast is on cooldown.", SGE.JobID)]
@@ -5866,34 +5934,51 @@ public enum CustomComboPreset
     [CustomComboInfo("Retarget Raise", "Will Retarget the Raise affected here to your Heal Stack.", SGE.JobID)]
     [Retargeted(SGE.Egeiro)]
     SGE_Raise_Retarget = 14061,
+    
+    [ReplaceSkill(SGE.Pneuma)]
+    [CustomComboInfo("Zoe Pneuma Feature", "Places Zoe on top of Pneuma when both actions are on cooldown.", SGE.JobID)]
+    SGE_ZoePneuma = 14039,
 
     [ReplaceSkill(SGE.Soteria)]
     [CustomComboInfo("Soteria to Kardia Feature", "Soteria turns into Kardia when not active or Soteria is on-cooldown.", SGE.JobID)]
-    [Retargeted]
+    [PossiblyRetargeted("Retargeting Features below, Enable Kardia", Condition.SGERetargetingFeaturesEnabledForKardia)]
     SGE_Kardia = 14041,
 
     [ReplaceSkill(SGE.Eukrasia)]
     [CustomComboInfo("Eukrasia Feature", "Eukrasia turns into the selected Eukrasian-type action when active.", SGE.JobID)]
-    [PossiblyRetargeted]
+    [PossiblyRetargeted("Retargeting Features below, Enable Eukrasion Diagnosis", Condition.SGERetargetingFeaturesEnabledForEDiagnosis)]
     SGE_Eukrasia = 14042,
+   
+    [ReplaceSkill(SGE.Taurochole)]
+    [CustomComboInfo("Taurochole to Druochole Feature", "Turns Taurochole to Druochole when Taurochole is on cooldown.", SGE.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Druochole and Taurochole", Condition.SGERetargetingFeaturesEnabledForTauroDruo)]
+    SGE_TauroDruo = 14038,
     
-    [Variant]
-    [VariantParent(SGE_ST_DPS_EDosis, SGE_AoE_DPS)]
-    [CustomComboInfo("Spirit Dart Option", "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", SGE.JobID)]
-    SGE_DPS_Variant_SpiritDart = 14048,
-
-    [Variant]
-    [VariantParent(SGE_ST_DPS, SGE_AoE_DPS)]
-    [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", SGE.JobID)]
-    SGE_DPS_Variant_Rampart = 14049,
-
-    #endregion
+    [ReplaceSkill(SGE.Krasis)]
+    [CustomComboInfo("Mitigation Feature - Single Target", "Changes Krasis into Eukrasian Diagnosis and/or Taurochole/Haima after use.\nEach action can be Retargeted with the Retargeting Features below.", SGE.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Krasis, Haima, Eukrasian Diagnosis, and Taurochole", Condition.SGERetargetingFeaturesEnabledForSTMit)]
+    SGE_Mit_ST = 14081,
+    
+    [ReplaceSkill(SGE.Holos)]
+    [CustomComboInfo("Mitigation Feature - AoE", "Changes Holos into Eukrasion Prognosis to apply shields.", SGE.JobID)]
+    SGE_Mit_AoE = 14082,
     
     #region Standalone Healing option
 
     [CustomComboInfo("Retarget Options", "Retargets Single Target Healing options.", SGE.JobID)]
     [Retargeted]
     SGE_Retarget = 14073,
+    
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Diagnosis Options", "Retargets Diagnosis according to your Healing stack.", SGE.JobID)]
+    [Retargeted(SGE.Diagnosis)]
+    SGE_Retarget_Diagnosis = 14079,
+    
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Eukrasian Diagnosis Options", "Retargets Eukrasian Diagnosis according to your Healing stack." +
+                                                    "(even from the Eukrasia Feature above)", SGE.JobID)]
+    [Retargeted(SGE.EukrasianDiagnosis)]
+    SGE_Retarget_EukrasianDiagnosis = 14080,
 
     [ParentCombo(SGE_Retarget)]
     [CustomComboInfo("Haima Options", "Retargets Haima according to your Healing stack.", SGE.JobID)]
@@ -5901,13 +5986,14 @@ public enum CustomComboPreset
     SGE_Retarget_Haima = 14074,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Druochole Options", "Retargets Druochole according to your Healing stack.", SGE.JobID)]
+    [CustomComboInfo("Druochole Options", "Retargets Druochole according to your Healing stack." +
+                                          "(even from the Taurochole to Druochole Feature above)", SGE.JobID)]
     [Retargeted(SGE.Druochole)]
     SGE_Retarget_Druochole = 14075,
     
-    [ConflictingCombos(SGE_TauroDruo)]
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack.", SGE.JobID)]
+    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack." +
+                                           "(even from the Taurochole to Druochole Feature above)", SGE.JobID)]
     [Retargeted(SGE.Taurochole)]
     SGE_Retarget_Taurochole = 14076,
 
@@ -5917,35 +6003,51 @@ public enum CustomComboPreset
     SGE_Retarget_Krasis = 14077,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack.", SGE.JobID)]
+    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack." +
+                                       "(even from the Soteria to Kardia Feature above)", SGE.JobID)]
     [Retargeted(SGE.Kardia)]
     SGE_Retarget_Kardia = 14078,
     
+    [ParentCombo(SGE_Retarget)]
+    [CustomComboInfo("Icarus Movement Option", "Retargets Icarus to UI/Field Mouseover", SGE.JobID)]
+    [Retargeted(SGE.Icarus)]
+    SGE_Retarget_Icarus = 14083,
+    
     #endregion
     
-    #region Hidden Features
-    [CustomComboInfo("Hidden Options", "Collection of cheeky or encounter-specific extra options only available to those in the know.\nDo not expect these options to be maintained, or even kept, after they are no longer Current.", SGE.JobID)]
-    [Hidden]
-    SGE_Hidden = 14069,
+    #region Raidwide Features
+    [CustomComboInfo("Raidwide Options", "Collection of tools designed to try and cast during a raidwide attack when detected." +
+                                         "\nThis will work for most, but not all raidwide attacks and is no substitute for learning the fight", SGE.JobID)]
+    SGE_Raidwide = 14069,
     
-    [ParentCombo(SGE_Hidden)]
+    [ParentCombo(SGE_Raidwide)]
     [CustomComboInfo("Eukrasian Prognosis Option", "Will try to cast Shields when a raidwide casting is detected if shieldcheck from Eukrasian Prognosis setting passes. \nWill be used in all 4 main combos.", SGE.JobID)]
-    [Hidden]
-    SGE_Hidden_EPrognosis = 14070,
+    SGE_Raidwide_EPrognosis = 14070,
     
-    [ParentCombo(SGE_Hidden)]
+    [ParentCombo(SGE_Raidwide)]
     [CustomComboInfo("Kerachole Option", "Will try to cast Kerachole when a raidwide casting is detected. \nWill be used in all 4 main combos.", SGE.JobID)]
-    [Hidden]
-    SGE_Hidden_Kerachole = 14071,
+    SGE_Raidwide_Kerachole = 14071,
     
-    [ParentCombo(SGE_Hidden)]
+    [ParentCombo(SGE_Raidwide)]
     [CustomComboInfo("Holos Option", "Will try to cast Holos when a raidwide casting is detected. \nWill be used in all 4 main combos.", SGE.JobID)]
-    [Hidden]
-    SGE_Hidden_Holos = 14072,
+    SGE_Raidwide_Holos = 14072,
+    #endregion
     
+    #region Variant
+    [Variant]
+    [VariantParent(SGE_ST_DPS_EDosis, SGE_AoE_DPS)]
+    [CustomComboInfo("Spirit Dart Option", "Use Variant Spirit Dart whenever the debuff is not present or less than 3s.", SGE.JobID)]
+    SGE_DPS_Variant_SpiritDart = 14048,
+
+    [Variant]
+    [VariantParent(SGE_ST_DPS, SGE_AoE_DPS)]
+    [CustomComboInfo("Rampart Option", "Use Variant Rampart on cooldown.", SGE.JobID)]
+    SGE_DPS_Variant_Rampart = 14049,
     #endregion
 
-    // Last used number = 14078
+    #endregion
+
+    // Last used number = 140835
 
     #endregion
 
@@ -6538,31 +6640,19 @@ public enum CustomComboPreset
     [ReplaceSkill(SCH.Lustrate)]
     [CustomComboInfo("Lustrate to Excogitation Feature",
         "Change Lustrate into Excogitation when Excogitation is ready.", SCH.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Lustrate and Excogitation", Condition.SCHRetargetingFeaturesEnabledForLustcog)]
     SCH_Lustrate = 16014,
-    
-    [ReplaceSkill(SCH.SacredSoil)]
-    [CustomComboInfo("Sacred Soil Retargetting", "Adds Self retargetting to Sacred Soil", SCH.JobID)]
-    [Retargeted(SCH.SacredSoil)]
-    SCH_SacredSoil = 16066,
-    
-    [ParentCombo(SCH_SacredSoil)]
-    [CustomComboInfo("Ally Placement Option", "Will add any ally UI MouseOver target, focus target, soft target, or hard target as the priority Retarget for Sacred Soil.\nBeneath the Enemy placement option, but above yourself.", SCH.JobID)]
-    [Retargeted]
-    SCH_SacredSoil_Allies = 16061,
-    
-    [ParentCombo(SCH_SacredSoil)]
-    [CustomComboInfo("Enemy Placement Option", "Will add an enemy hard target as the top priority Retarget for Sacred Soil", SCH.JobID)]
-    [Retargeted]
-    SCH_SacredSoil_Enemy = 16060,
     
     [ReplaceSkill(SCH.Recitation)]
     [CustomComboInfo("Recitation Combo Feature",
         "Change Recitation into either Adloquium, Succor, Indomitability, or Excogitation when used.", SCH.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Adloquium and Excogitation", Condition.SCHRetargetingFeaturesEnabledForAdlocog)]
     SCH_Recitation = 16015,
     
     [ReplaceSkill(SCH.DeploymentTactics)]
     [CustomComboInfo("Deployment Tactics Feature",
         "Changes Deployment Tactics to Adloquium until a party member has the Galvanize buff.", SCH.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Adloquium and Deployment Tactics", Condition.SCHRetargetingFeaturesEnabledForAdloDeployment)]
     SCH_DeploymentTactics = 16034,
 
     [ParentCombo(SCH_DeploymentTactics)]
@@ -6614,26 +6704,92 @@ public enum CustomComboPreset
 
     #endregion
     
+    #region Mitigation Features
+
+    [ReplaceSkill(SCH.Protraction)]
+    [CustomComboInfo("Mitigation Feature - Single Target", "Changes Protraction into (Optional Recitation)Adloquium followed by (Optional Deployment Tactics and Excogitation)" +
+                                                           "\nEach action can be Retargeted with the Retargeting Features below.", SCH.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Protraction and Adloquium (and optionally Deployment Tactics and Excogitation)", Condition.SCHRetargetingFeaturesEnabledForSTMit)]
+    SCH_Mit_ST = 16083,
+    
+    [ReplaceSkill(SCH.SacredSoil)]
+    [CustomComboInfo("Mitigation Feature - AoE", "Changes Sacred Soil into (optional Fey Illumination) " +
+                                                 "\nthen Succor or (Optional Self Targetted Recitation-Adloquium-Deployment Tactics)" +
+                                                 "\nFinished with (Optional Expedient) and (Optional Seraph/Consolation)" +
+                                                 "\nCan be Retargeted with the Retargeting Features below.", SCH.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Sacred Soil", Condition.SCHRetargetingFeaturesEnabledForAoEMit)]
+    SCH_Mit_AoE = 16082,
+
+    #endregion
+    
+    #region Standalone Healing option
+
+    [CustomComboInfo("Retarget Options", "Retargets Single Target Healing options. \nEven in the Standalone Features Above.", SCH.JobID)]
+    [Retargeted]
+    SCH_Retarget = 16073,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Physick Options", "Retargets Physick according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.Physick)]
+    SCH_Retarget_Physick = 16074,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Adloquium Options", "Retargets Adloquium according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.Adloquium)]
+    SCH_Retarget_Adloquium = 16081,
+   
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Lustrate Options", "Retargets Lustrate according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.Lustrate)]
+    SCH_Retarget_Lustrate = 16075,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Protraction Options", "Retargets Protraction according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.Protraction)]
+    SCH_Retarget_Protraction = 16076,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Deployment Tactics Options", "Retargets Deployment Tactics according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.DeploymentTactics)]
+    SCH_Retarget_DeploymentTactics = 16077,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Excogitation Options", "Retargets Excogitation according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.Excogitation)]
+    SCH_Retarget_Excogitation = 16078,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Aetherpact Options", "Retargets Aetherpact according to your Healing stack.", SCH.JobID)]
+    [Retargeted(SCH.Aetherpact)]
+    SCH_Retarget_Aetherpact = 16079,
+    
+    [ParentCombo(SCH_Retarget)]
+    [CustomComboInfo("Sacred Soil Options", "Retargets Sacred Soil to yourself.", SCH.JobID)]
+    [Retargeted(SCH.SacredSoil)]
+    SCH_Retarget_SacredSoil = 16080,
+    
+    #endregion
+    
     #region Raidwide Features
     [CustomComboInfo("Raidwide Options", "Collection of tools designed to try and cast during a raidwide attack when detected." +
                                          "\nThis will work for most, but not all raidwide attacks and is no substitute for learning the fight", SCH.JobID)]
-    SCH_Hidden = 16065,
+    SCH_Raidwide = 16065,
     
-    [ParentCombo(SCH_Hidden)]
+    [ParentCombo(SCH_Raidwide)]
     [CustomComboInfo("RaidWide Succor Option", "Will try to cast Succor when a raidwide casting is detected if shieldcheck from succor setting passes. \nWill be used in all 4 Advanced combos.", SCH.JobID)]
     SCH_Raidwide_Succor = 16062,
     
-    [ParentCombo(SCH_Hidden)]
+    [ParentCombo(SCH_Raidwide)]
     [CustomComboInfo("Sacred Soil Option", "Will try to use Sacred Soil on self when a raidwide casting is detected.\nWill be used in all 4 Advanced combos", SCH.JobID)]
     [Retargeted(SCH.SacredSoil)]
     SCH_Raidwide_SacredSoil = 16059,
     
-    [ParentCombo(SCH_Hidden)]
+    [ParentCombo(SCH_Raidwide)]
     [CustomComboInfo("Expedient Raidwide Option", "Will try to use Expedient when a raidwide casting is detected. \nWill be used in all 4 Advanced combos.", SCH.JobID)]
     SCH_Raidwide_Expedient = 16064,
     #endregion
 
-    // Last value = 16072
+    // Last value = 16082
 
     #endregion
 
@@ -7979,63 +8135,7 @@ public enum CustomComboPreset
     
     #endregion
     
-    #region Mitigation Features
-
-    [ReplaceSkill(WHM.Aquaveil)]
-    [CustomComboInfo("Mitigation Feature - Single Target", "Changes Aquaveil into Tetragrammaton and/or Divine Benison after use.\nEach action can be Retargeted with the Retargeting Features below.", WHM.JobID)]
-    [PossiblyRetargeted("Retargeting Features below, Enable Aquaveil (and optionally Tetra and Benison)", Condition.WHMRetargetingFeaturesEnabledForSTMit)]
-    WHM_Mit_ST = 19041,
-    
-    [ReplaceSkill(WHM.Asylum)]
-    [CustomComboInfo("Mitigation Feature - AoE", "Changes Asylum into Temperance and then Divine Caress after use.\nCan be Retargeted with the Retargeting Features below.", WHM.JobID)]
-    [PossiblyRetargeted("Retargeting Features below, Enable Asylum", Condition.WHMRetargetingFeaturesEnabledForAoEMit)]
-    WHM_Mit_AoE = 19040,
-
-    #endregion
-    
-    #region Raidwide Heals
-    
-    [CustomComboInfo("Boss Raidwide Options",
-        "Collection of tools designed to try and cast during a raidwide attack when detected." +
-        "\nThis will work for most, but not all raidwide attacks and is no substitute for learning the fight", WHM.JobID)]
-    WHM_Raidwide = 19220,
-    
-    [ParentCombo(WHM_Raidwide)]
-    [CustomComboInfo("RaidWide Asylum Option", "Will try to Weave Asylum when a raidwide casting. \nWill be used in all 4 main combos.", WHM.JobID)]
-    WHM_Raidwide_Asylum = 19221,
-    
-    [ParentCombo(WHM_Raidwide)]
-    [CustomComboInfo("RaidWide Temperance Combo Option",
-        "Will try to Weave Temperance and Divine Caress when a raidwide casting. " +
-        "\nWill be used in all 4 main combos.", WHM.JobID)]
-    WHM_Raidwide_Temperance = 19222,
-    
-    [ParentCombo(WHM_Raidwide)]
-    [CustomComboInfo("RaidWide LiturgyOfTheBell Option",
-        "Will try to weave LiturgyOfTheBell when a raidwide casting. " +
-        "\nWill be used in all 4 main combos.", WHM.JobID)]
-    WHM_Raidwide_LiturgyOfTheBell = 19223,
-    
-    #endregion
-    
     #region Small Features
-    
-    [ReplaceSkill(WHM.AfflatusSolace)]
-    [CustomComboInfo("Solace into Misery Feature",
-        "Replaces Afflatus Solace with Afflatus Misery when it is ready to be used.\nSolace can be Retargeted with the Retargeting Features below.", WHM.JobID)]
-    [PossiblyRetargeted("Retargeting Features below, Enable Afflatus Solace", 
-        Condition.WHMRetargetingFeaturesEnabledForSolace)]
-    WHM_SolaceMisery = 19000,
-
-    [ReplaceSkill(WHM.AfflatusRapture)]
-    [CustomComboInfo("Rapture into Misery Feature",
-        "Replaces Afflatus Rapture with Afflatus Misery when it is ready to be used.", WHM.JobID)]
-    WHM_RaptureMisery = 19001,
-
-    [ReplaceSkill(WHM.Cure2)]
-    [CustomComboInfo("Cure II Sync Feature", "Changes Cure II to Cure when synced below Lv.30.\nCan be Retargeted with the Retargeting Features below.", WHM.JobID)]
-    [PossiblyRetargeted("Retargeting Features below, Enable Cure", Condition.WHMRetargetingFeaturesEnabledForCure)]
-    WHM_CureSync = 19002,
 
     [ReplaceSkill( RoleActions.Magic.Swiftcast)]
     [ConflictingCombos(ALL_Healer_Raise)]
@@ -8051,6 +8151,36 @@ public enum CustomComboPreset
     [CustomComboInfo("Thin Air Raise Feature", "Adds Thin Air to the Global Raise Feature/Alternative Raise Feature.",
         WHM.JobID)]
     WHM_ThinAirRaise = 19014,
+    
+    [ReplaceSkill(WHM.AfflatusRapture)]
+    [CustomComboInfo("Rapture into Misery Feature",
+        "Replaces Afflatus Rapture with Afflatus Misery when it is ready to be used.", WHM.JobID)]
+    WHM_RaptureMisery = 19001,
+
+    [ReplaceSkill(WHM.AfflatusSolace)]
+    [CustomComboInfo("Solace into Misery Feature",
+        "Replaces Afflatus Solace with Afflatus Misery when it is ready to be used.\nSolace can be Retargeted with the Retargeting Features below.", WHM.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Afflatus Solace", 
+        Condition.WHMRetargetingFeaturesEnabledForSolace)]
+    WHM_SolaceMisery = 19000,
+    
+    [ReplaceSkill(WHM.Cure2)]
+    [CustomComboInfo("Cure II Sync Feature", "Changes Cure II to Cure when synced below Lv.30.\nCan be Retargeted with the Retargeting Features below.", WHM.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Cure", Condition.WHMRetargetingFeaturesEnabledForCure)]
+    WHM_CureSync = 19002,
+    #endregion
+    
+    #region Mitigation Features
+
+    [ReplaceSkill(WHM.Aquaveil)]
+    [CustomComboInfo("Mitigation Feature - Single Target", "Changes Aquaveil into Tetragrammaton and/or Divine Benison after use.\nEach action can be Retargeted with the Retargeting Features below.", WHM.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Aquaveil (and optionally Tetra and Benison)", Condition.WHMRetargetingFeaturesEnabledForSTMit)]
+    WHM_Mit_ST = 19041,
+    
+    [ReplaceSkill(WHM.Asylum)]
+    [CustomComboInfo("Mitigation Feature - AoE", "Changes Asylum into Temperance and then Divine Caress after use.\nCan be Retargeted with the Retargeting Features below.", WHM.JobID)]
+    [PossiblyRetargeted("Retargeting Features below, Enable Asylum", Condition.WHMRetargetingFeaturesEnabledForAoEMit)]
+    WHM_Mit_AoE = 19040,
 
     #endregion
 
@@ -8119,6 +8249,31 @@ public enum CustomComboPreset
     [Retargeted(WHM.DivineBenison)]
     WHM_Re_DivineBenison = 19035,
 
+    #endregion
+    
+    #region Raidwide Heals
+    
+    [CustomComboInfo("Boss Raidwide Options",
+        "Collection of tools designed to try and cast during a raidwide attack when detected." +
+        "\nThis will work for most, but not all raidwide attacks and is no substitute for learning the fight", WHM.JobID)]
+    WHM_Raidwide = 19220,
+    
+    [ParentCombo(WHM_Raidwide)]
+    [CustomComboInfo("RaidWide Asylum Option", "Will try to Weave Asylum when a raidwide casting. \nWill be used in all 4 main combos.", WHM.JobID)]
+    WHM_Raidwide_Asylum = 19221,
+    
+    [ParentCombo(WHM_Raidwide)]
+    [CustomComboInfo("RaidWide Temperance Combo Option",
+        "Will try to Weave Temperance and Divine Caress when a raidwide casting. " +
+        "\nWill be used in all 4 main combos.", WHM.JobID)]
+    WHM_Raidwide_Temperance = 19222,
+    
+    [ParentCombo(WHM_Raidwide)]
+    [CustomComboInfo("RaidWide LiturgyOfTheBell Option",
+        "Will try to weave LiturgyOfTheBell when a raidwide casting. " +
+        "\nWill be used in all 4 main combos.", WHM.JobID)]
+    WHM_Raidwide_LiturgyOfTheBell = 19223,
+    
     #endregion
 
     #region Variants

@@ -191,6 +191,11 @@ namespace WrathCombo.Window.Tabs
                 changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
                     "Single Target HP% Threshold (target has Regen/Aspected Benefic)", ref cfg.HealerSettings.SingleTargetRegenHPP, "SingleTargetRegenHPP");
                 ImGuiComponents.HelpMarker("You typically want to set this lower than the above setting.");
+                
+                P.UIHelper.ShowIPCControlledIndicatorIfNeeded("SingleTargetExcogHPP");
+                changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
+                    "Single Target HP% Threshold (target has Excogitation)", ref cfg.HealerSettings.SingleTargetExcogHPP, "SingleTargetExcogHPP");
+                ImGuiComponents.HelpMarker("You typically want to set this lower than the above setting.");
 
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AoETargetHPP");
                 changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(

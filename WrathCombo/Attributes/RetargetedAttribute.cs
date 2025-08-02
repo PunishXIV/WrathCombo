@@ -89,10 +89,21 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
     {
         RetargetHealingActionsEnabled,
         ASTQuickTargetCardsFeatureEnabled,
+        ASTRetargetingFeaturesEnabledForBenefic,
+        ASTRetargetingFeaturesEnabledForSTMit,
         WHMRetargetingFeaturesEnabledForSTMit,
         WHMRetargetingFeaturesEnabledForAoEMit,
         WHMRetargetingFeaturesEnabledForSolace,
         WHMRetargetingFeaturesEnabledForCure,
+        SGERetargetingFeaturesEnabledForKardia,
+        SGERetargetingFeaturesEnabledForEDiagnosis,
+        SGERetargetingFeaturesEnabledForTauroDruo,
+        SGERetargetingFeaturesEnabledForSTMit,
+        SCHRetargetingFeaturesEnabledForLustcog,
+        SCHRetargetingFeaturesEnabledForAdlocog,
+        SCHRetargetingFeaturesEnabledForAdloDeployment,
+        SCHRetargetingFeaturesEnabledForSTMit,
+        SCHRetargetingFeaturesEnabledForAoEMit
     }
     
     /// <summary>
@@ -115,6 +126,15 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
                 return Service.Configuration.RetargetHealingActionsToStack;
             case Condition.ASTQuickTargetCardsFeatureEnabled:
                 return IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards);
+            case Condition.ASTRetargetingFeaturesEnabledForBenefic:
+                return IsEnabled(CustomComboPreset.AST_Retargets_Benefic);
+            case Condition.ASTRetargetingFeaturesEnabledForSTMit:
+                return IsEnabled(CustomComboPreset.AST_Retargets) &&
+                       IsEnabled(CustomComboPreset.AST_Retargets_Exaltation) &&
+                       (AST.Config.AST_Mit_ST_Options[0] != true ||
+                        IsEnabled(CustomComboPreset.AST_Retargets_CelestialIntersection)) &&
+                       (AST.Config.AST_Mit_ST_Options[1] != true ||
+                        IsEnabled(CustomComboPreset.AST_Retargets_EssentialDignity));
             case Condition.WHMRetargetingFeaturesEnabledForSTMit:
                 return IsEnabled(CustomComboPreset.WHM_Retargets) &&
                        IsEnabled(CustomComboPreset.WHM_Re_Aquaveil) &&
@@ -131,6 +151,49 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
             case Condition.WHMRetargetingFeaturesEnabledForCure:
                 return IsEnabled(CustomComboPreset.WHM_Retargets) &&
                        IsEnabled(CustomComboPreset.WHM_Re_Cure);
+            case Condition.SGERetargetingFeaturesEnabledForKardia:
+                return IsEnabled(CustomComboPreset.SGE_Retarget) &&
+                       IsEnabled(CustomComboPreset.SGE_Retarget_Kardia);
+            case Condition.SGERetargetingFeaturesEnabledForEDiagnosis:
+                return IsEnabled(CustomComboPreset.SGE_Retarget) &&
+                       SGE.Config.SGE_Eukrasia_Mode == 1 &&
+                       IsEnabled(CustomComboPreset.SGE_Retarget_EukrasianDiagnosis);
+            case Condition.SGERetargetingFeaturesEnabledForTauroDruo:
+                return IsEnabled(CustomComboPreset.SGE_Retarget) &&
+                       IsEnabled(CustomComboPreset.SGE_Retarget_Druochole) &&
+                       IsEnabled(CustomComboPreset.SGE_Retarget_Taurochole);
+            case Condition.SGERetargetingFeaturesEnabledForSTMit:
+                return IsEnabled(CustomComboPreset.SGE_Retarget) &&
+                       IsEnabled(CustomComboPreset.SGE_Retarget_Krasis) &&
+                       IsEnabled(CustomComboPreset.SGE_Retarget_EukrasianDiagnosis) &&
+                       (SGE.Config.SGE_Mit_ST_Options[1] != true ||
+                       IsEnabled(CustomComboPreset.SGE_Retarget_Taurochole)) &&
+                       (SGE.Config.SGE_Mit_ST_Options[0] != true ||
+                       IsEnabled(CustomComboPreset.SGE_Retarget_Haima));
+            case Condition.SCHRetargetingFeaturesEnabledForLustcog:
+                return IsEnabled(CustomComboPreset.SCH_Retarget) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Excogitation) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Lustrate);
+            case Condition.SCHRetargetingFeaturesEnabledForAdlocog:
+                return IsEnabled(CustomComboPreset.SCH_Retarget) &&
+                       (SCH.Config.SCH_Recitation_Mode == 3 &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Excogitation) ||
+                       SCH.Config.SCH_Recitation_Mode == 0 &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Adloquium));
+            case Condition.SCHRetargetingFeaturesEnabledForAdloDeployment:
+                return IsEnabled(CustomComboPreset.SCH_Retarget) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Adloquium) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_DeploymentTactics);
+            case Condition.SCHRetargetingFeaturesEnabledForSTMit:
+                return IsEnabled(CustomComboPreset.SCH_Retarget) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Adloquium) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Protraction) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_DeploymentTactics) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_Excogitation);
+            case Condition.SCHRetargetingFeaturesEnabledForAoEMit:
+                return IsEnabled(CustomComboPreset.SCH_Retarget) &&
+                       IsEnabled(CustomComboPreset.SCH_Retarget_SacredSoil);
+            
             default:
                 PluginLog.Error($"Unknown PossiblyRetargeted Condition: {condition}");
                 return null;
