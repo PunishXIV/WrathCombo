@@ -119,15 +119,13 @@ internal partial class SAM : Melee
                 if (ActionReady(Ikishoten) &&
                     !HasStatusEffect(Buffs.ZanshinReady))
                 {
-                    switch (Kenki)
+                    return Kenki switch
                     {
                         //Dumps Kenki in preparation for Ikishoten
-                        case >= 50:
-                            return Shinten;
+                        >= 50 => Shinten,
 
-                        case < 50:
-                            return Ikishoten;
-                    }
+                        < 50 => Ikishoten
+                    };
                 }
 
                 switch (Kenki)
@@ -244,6 +242,7 @@ internal partial class SAM : Melee
                 if (ComboAction is Shifu && LevelChecked(Kasha))
                     return Kasha;
             }
+
             return actionID;
         }
     }
@@ -296,15 +295,13 @@ internal partial class SAM : Melee
                     if (IsEnabled(CustomComboPreset.SAM_ST_CDs_Ikishoten) &&
                         ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
                     {
-                        switch (Kenki)
+                        return Kenki switch
                         {
                             //Dumps Kenki in preparation for Ikishoten
-                            case >= 50:
-                                return Shinten;
+                            >= 50 => Shinten,
 
-                            case < 50:
-                                return Ikishoten;
-                        }
+                            < 50 => Ikishoten
+                        };
                     }
                 }
 
@@ -524,15 +521,13 @@ internal partial class SAM : Melee
 
                 if (ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
                 {
-                    switch (Kenki)
+                    return Kenki switch
                     {
                         //Dumps Kenki in preparation for Ikishoten
-                        case >= 50:
-                            return Kyuten;
+                        >= 50 => Kyuten,
 
-                        case < 50:
-                            return Ikishoten;
-                    }
+                        < 50 => Ikishoten
+                    };
                 }
 
                 if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.MeikyoShisui))
@@ -643,15 +638,13 @@ internal partial class SAM : Melee
                     if (IsEnabled(CustomComboPreset.SAM_AOE_CDs_Ikishoten) &&
                         ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
                     {
-                        switch (Kenki)
+                        return Kenki switch
                         {
                             //Dumps Kenki in preparation for Ikishoten
-                            case >= 50:
-                                return Kyuten;
+                            >= 50 => Kyuten,
 
-                            case < 50:
-                                return Ikishoten;
-                        }
+                            < 50 => Ikishoten
+                        };
                     }
                 }
 

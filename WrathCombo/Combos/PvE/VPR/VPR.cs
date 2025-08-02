@@ -45,7 +45,7 @@ internal partial class VPR : Melee
             //LowLevels
             if (LevelChecked(ReavingFangs) &&
                 (HasStatusEffect(Buffs.HonedReavers) ||
-                 (!HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel))))
+                 !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
                 return OriginalHook(ReavingFangs);
             return actionID;
         }
@@ -134,8 +134,8 @@ internal partial class VPR : Melee
 
             //Overcap protection
             if (CappedOnCoils() &&
-                ((HasCharges(Vicewinder) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
-                  !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.Reawakened)) || //spend if Vicewinder is up, after Reawaken
+                (HasCharges(Vicewinder) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
+                 !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
                  IreCD <= GCD * 5)) //spend in case under Reawaken right as Ire comes up
                 return UncoiledFury;
 
@@ -143,7 +143,7 @@ internal partial class VPR : Melee
             if (HasStatusEffect(Buffs.Swiftscaled) && !IsComboExpiring(3) &&
                 ActionReady(Vicewinder) && !HasStatusEffect(Buffs.Reawakened) &&
                 InMeleeRange() &&
-                ((IreCD >= GCD * 5) || !LevelChecked(SerpentsIre)) &&
+                (IreCD >= GCD * 5 || !LevelChecked(SerpentsIre)) &&
                 !IsVenomExpiring(3) && !IsHoningExpiring(3))
                 return Role.CanTrueNorth()
                     ? Role.TrueNorth
@@ -794,20 +794,13 @@ internal partial class VPR : Melee
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_UncoiledTwins;
 
-        protected override uint Invoke(uint actionID)
-        {
-            switch (actionID)
+        protected override uint Invoke(uint actionID) =>
+            actionID switch
             {
-                case UncoiledFury when HasStatusEffect(Buffs.PoisedForTwinfang):
-                    return OriginalHook(Twinfang);
-
-                case UncoiledFury when HasStatusEffect(Buffs.PoisedForTwinblood):
-                    return OriginalHook(Twinblood);
-
-                default:
-                    return actionID;
-            }
-        }
+                UncoiledFury when HasStatusEffect(Buffs.PoisedForTwinfang) => OriginalHook(Twinfang),
+                UncoiledFury when HasStatusEffect(Buffs.PoisedForTwinblood) => OriginalHook(Twinblood),
+                var _ => actionID
+            };
     }
 
     internal class VPR_ReawakenLegacy : CustomCombo
@@ -844,29 +837,15 @@ internal partial class VPR : Melee
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_TwinTails;
 
-        protected override uint Invoke(uint actionID)
-        {
-            switch (actionID)
+        protected override uint Invoke(uint actionID) =>
+            actionID switch
             {
                 // Death Rattle / Legacy Weaves
-                case SerpentsTail when LevelChecked(SerpentsTail) &&
-                                       OriginalHook(SerpentsTail) is not SerpentsTail:
-                    return OriginalHook(SerpentsTail);
-
-                case SerpentsTail when HasStatusEffect(Buffs.PoisedForTwinfang) ||
-                                       HasStatusEffect(Buffs.HuntersVenom) ||
-                                       HasStatusEffect(Buffs.FellhuntersVenom):
-                    return OriginalHook(Twinfang);
-
-                case SerpentsTail when HasStatusEffect(Buffs.PoisedForTwinblood) ||
-                                       HasStatusEffect(Buffs.SwiftskinsVenom) ||
-                                       HasStatusEffect(Buffs.FellskinsVenom):
-                    return OriginalHook(Twinblood);
-
-                default:
-                    return actionID;
-            }
-        }
+                SerpentsTail when LevelChecked(SerpentsTail) && OriginalHook(SerpentsTail) is not SerpentsTail => OriginalHook(SerpentsTail),
+                SerpentsTail when HasStatusEffect(Buffs.PoisedForTwinfang) || HasStatusEffect(Buffs.HuntersVenom) || HasStatusEffect(Buffs.FellhuntersVenom) => OriginalHook(Twinfang),
+                SerpentsTail when HasStatusEffect(Buffs.PoisedForTwinblood) || HasStatusEffect(Buffs.SwiftskinsVenom) || HasStatusEffect(Buffs.FellskinsVenom) => OriginalHook(Twinblood),
+                var _ => actionID
+            };
     }
 
     internal class VPR_Legacies : CustomCombo
@@ -879,16 +858,14 @@ internal partial class VPR : Melee
                 return actionID;
 
             //Reawaken combo
-            switch (actionID)
+            return actionID switch
             {
-                case SteelFangs when JustUsed(OriginalHook(SteelFangs)) && AnguineTribute is 4:
-                case ReavingFangs when JustUsed(OriginalHook(ReavingFangs)) && AnguineTribute is 3:
-                case HuntersCoil when JustUsed(OriginalHook(HuntersCoil)) && AnguineTribute is 2:
-                case SwiftskinsCoil when JustUsed(OriginalHook(SwiftskinsCoil)) && AnguineTribute is 1:
-                    return OriginalHook(SerpentsTail);
-            }
-
-            return actionID;
+                SteelFangs when JustUsed(OriginalHook(SteelFangs)) && AnguineTribute is 4 => OriginalHook(SerpentsTail),
+                ReavingFangs when JustUsed(OriginalHook(ReavingFangs)) && AnguineTribute is 3 => OriginalHook(SerpentsTail),
+                HuntersCoil when JustUsed(OriginalHook(HuntersCoil)) && AnguineTribute is 2 => OriginalHook(SerpentsTail),
+                SwiftskinsCoil when JustUsed(OriginalHook(SwiftskinsCoil)) && AnguineTribute is 1 => OriginalHook(SerpentsTail),
+                var _ => actionID
+            };
         }
     }
 
@@ -896,23 +873,12 @@ internal partial class VPR : Melee
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.VPR_SerpentsTail;
 
-        protected override uint Invoke(uint actionID)
-        {
-            switch (actionID)
+        protected override uint Invoke(uint actionID) =>
+            actionID switch
             {
-                case SteelFangs or ReavingFangs when
-                    OriginalHook(SerpentsTail) is DeathRattle &&
-                    (JustUsed(FlankstingStrike) || JustUsed(FlanksbaneFang) ||
-                     JustUsed(HindstingStrike) || JustUsed(HindsbaneFang)):
-
-                case SteelMaw or ReavingMaw when
-                    OriginalHook(SerpentsTail) is LastLash &&
-                    (JustUsed(JaggedMaw) || JustUsed(BloodiedMaw)):
-                    return OriginalHook(SerpentsTail);
-
-                default:
-                    return actionID;
-            }
-        }
+                SteelFangs or ReavingFangs when OriginalHook(SerpentsTail) is DeathRattle && (JustUsed(FlankstingStrike) || JustUsed(FlanksbaneFang) || JustUsed(HindstingStrike) || JustUsed(HindsbaneFang)) => OriginalHook(SerpentsTail),
+                SteelMaw or ReavingMaw when OriginalHook(SerpentsTail) is LastLash && (JustUsed(JaggedMaw) || JustUsed(BloodiedMaw)) => OriginalHook(SerpentsTail),
+                var _ => actionID
+            };
     }
 }

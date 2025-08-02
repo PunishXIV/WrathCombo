@@ -335,8 +335,8 @@ internal partial class RPR : Melee
                      !HasStatusEffect(Buffs.EnhancedGallows)))
                 {
                     return IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
-                           ((RPR_ST_TrueNorthDynamic_HoldCharge &&
-                             GetRemainingCharges(Role.TrueNorth) < 2) ||
+                           (RPR_ST_TrueNorthDynamic_HoldCharge &&
+                            GetRemainingCharges(Role.TrueNorth) < 2 ||
                             !RPR_ST_TrueNorthDynamic_HoldCharge) &&
                            Role.CanTrueNorth() && !OnTargetsFlank()
                         ? Role.TrueNorth
@@ -349,8 +349,8 @@ internal partial class RPR : Melee
                      !HasStatusEffect(Buffs.EnhancedGallows)))
                 {
                     return IsEnabled(CustomComboPreset.RPR_ST_TrueNorthDynamic) &&
-                           ((RPR_ST_TrueNorthDynamic_HoldCharge &&
-                             GetRemainingCharges(Role.TrueNorth) < 2) ||
+                           (RPR_ST_TrueNorthDynamic_HoldCharge &&
+                            GetRemainingCharges(Role.TrueNorth) < 2 ||
                             !RPR_ST_TrueNorthDynamic_HoldCharge) &&
                            Role.CanTrueNorth() && !OnTargetsRear()
                         ? Role.TrueNorth
@@ -895,19 +895,12 @@ internal partial class RPR : Melee
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.RPR_EnshroudCommunio;
 
-        protected override uint Invoke(uint actionID)
-        {
-            switch (actionID)
+        protected override uint Invoke(uint actionID) =>
+            actionID switch
             {
-                case Enshroud when HasStatusEffect(Buffs.PerfectioParata):
-                    return OriginalHook(Communio);
-
-                case Enshroud when HasStatusEffect(Buffs.Enshrouded):
-                    return Communio;
-
-                default:
-                    return actionID;
-            }
-        }
+                Enshroud when HasStatusEffect(Buffs.PerfectioParata) => OriginalHook(Communio),
+                Enshroud when HasStatusEffect(Buffs.Enshrouded) => Communio,
+                var _ => actionID
+            };
     }
 }

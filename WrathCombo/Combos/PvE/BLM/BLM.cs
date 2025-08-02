@@ -73,7 +73,7 @@ internal partial class BLM : Caster
 
             if (LevelChecked(Thunder) && HasStatusEffect(Buffs.Thunderhead) &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
-                ((ThunderDebuffST is null && ThunderDebuffAoE is null) ||
+                (ThunderDebuffST is null && ThunderDebuffAoE is null ||
                  ThunderDebuffST?.RemainingTime <= 3 ||
                  ThunderDebuffAoE?.RemainingTime <= 3) &&
                 GetTargetHPPercent() > 0)
@@ -84,7 +84,7 @@ internal partial class BLM : Caster
                 HasMaxPolyglotStacks)
                 return Xenoglossy;
 
-            if (IsMoving() && InCombat())
+            if (IsMoving() && InCombat() && HasBattleTarget())
             {
                 if (ActionReady(Triplecast) &&
                     !HasStatusEffect(Buffs.Triplecast) &&
@@ -113,7 +113,7 @@ internal partial class BLM : Caster
             if (FirePhase)
             {
                 // TODO: Revisit when Raid Buff checks are in place
-                if ((PolyglotStacks > 1))
+                if (PolyglotStacks > 1)
                     return LevelChecked(Xenoglossy)
                         ? Xenoglossy
                         : Foul;
@@ -233,7 +233,7 @@ internal partial class BLM : Caster
                         ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                         (BLM_ST_Triplecast_SubOption == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
-                        ((BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_Movement) ||
+                        (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_Movement ||
                          !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !ActionReady(Manafont))
                         return Triplecast;
 
@@ -261,7 +261,7 @@ internal partial class BLM : Caster
                             ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                             !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                             (BLM_ST_Triplecast_SubOption == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
-                            ((BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_Movement) ||
+                            (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_Movement ||
                              !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !ActionReady(Manafont))
                             return Triplecast;
                     }
@@ -290,7 +290,7 @@ internal partial class BLM : Caster
                 int hpThreshold = BLM_ST_Thunder_SubOption == 1 || !InBossEncounter() ? BLM_ST_ThunderOption : 0;
 
                 if (CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
-                    ((ThunderDebuffST is null && ThunderDebuffAoE is null) ||
+                    (ThunderDebuffST is null && ThunderDebuffAoE is null ||
                      ThunderDebuffST?.RemainingTime <= refreshTimer ||
                      ThunderDebuffAoE?.RemainingTime <= refreshTimer) &&
                     GetTargetHPPercent() > hpThreshold)
@@ -304,7 +304,7 @@ internal partial class BLM : Caster
                 HasMaxPolyglotStacks)
                 return Xenoglossy;
 
-            if (IsMoving() && InCombat())
+            if (IsMoving() && InCombat() && HasBattleTarget())
             {
                 foreach(int priority in BLM_ST_Movement_Priority.Items.OrderBy(x => x))
                 {
@@ -318,11 +318,11 @@ internal partial class BLM : Caster
             {
                 // TODO: Revisit when Raid Buff checks are in place
                 if (IsEnabled(CustomComboPreset.BLM_ST_UsePolyglot) &&
-                    ((BLM_ST_MovementOption[3] &&
-                      PolyglotStacks > BLM_ST_Polyglot_Movement &&
-                      PolyglotStacks > BLM_ST_Polyglot_Save) ||
-                     (!BLM_ST_MovementOption[3] &&
-                      PolyglotStacks > BLM_ST_Polyglot_Save)))
+                    (BLM_ST_MovementOption[3] &&
+                     PolyglotStacks > BLM_ST_Polyglot_Movement &&
+                     PolyglotStacks > BLM_ST_Polyglot_Save ||
+                     !BLM_ST_MovementOption[3] &&
+                     PolyglotStacks > BLM_ST_Polyglot_Save))
                     return LevelChecked(Xenoglossy)
                         ? Xenoglossy
                         : Foul;
@@ -442,7 +442,7 @@ internal partial class BLM : Caster
             if (HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
                 GetTargetHPPercent() > 1 &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
-                ((ThunderDebuffAoE is null && ThunderDebuffST is null) ||
+                (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
                  ThunderDebuffST?.RemainingTime <= 3) &&
                 (EndOfFirePhase || EndOfIcePhase || EndOfIcePhaseAoEMaxLevel))
@@ -542,8 +542,8 @@ internal partial class BLM : Caster
             if (IsEnabled(CustomComboPreset.BLM_AoE_Thunder) &&
                 HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
-                (GetTargetHPPercent() > BLM_AoE_ThunderHP) &&
-                ((ThunderDebuffAoE is null && ThunderDebuffST is null) ||
+                GetTargetHPPercent() > BLM_AoE_ThunderHP &&
+                (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
                  ThunderDebuffST?.RemainingTime <= 3) &&
                 (EndOfFirePhase || EndOfIcePhase || EndOfIcePhaseAoEMaxLevel))
@@ -646,8 +646,18 @@ internal partial class BLM : Caster
         protected override uint Invoke(uint actionID) =>
             actionID switch
             {
-                Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) && (IcePhase || ((AstralFireStacks is 1 or 2) && HasStatusEffect(Buffs.Firestarter)) || !InCombat()) && !JustUsed(Fire3) => Fire3,
-                Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && FirePhase && (AstralFireStacks is 3 || ((AstralFireStacks is 1 or 2) && !HasStatusEffect(Buffs.Firestarter))) && !JustUsed(OriginalHook(Fire)) => OriginalHook(Fire),
+                Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) &&
+                          (AstralFireStacks is 1 or 2 && HasStatusEffect(Buffs.Firestarter) ||
+                           LevelChecked(Paradox) && !ActiveParadox ||
+                           !InCombat() && LevelChecked(Fire4) ||
+                           IcePhase && !ActiveParadox ||
+                           !LevelChecked(Fire4) && HasStatusEffect(Buffs.Firestarter)) &&
+                          !JustUsed(Fire3) => Fire3,
+
+                Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && FirePhase &&
+                           (LevelChecked(Paradox) && ActiveParadox && AstralFireStacks is 3 ||
+                            !LevelChecked(Fire4) && !HasStatusEffect(Buffs.Firestarter)) &&
+                           !JustUsed(OriginalHook(Fire)) => OriginalHook(Fire),
                 var _ => actionID
             };
     }
@@ -691,18 +701,23 @@ internal partial class BLM : Caster
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.BLM_Blizzard4toDespair;
         protected override uint Invoke(uint actionID) =>
-            actionID is Blizzard4 && FirePhase && LevelChecked(Despair)
-                ? Despair
-                : actionID;
+            actionID switch
+            {
+                Blizzard4 when BLM_B4toDespair == 0 && FirePhase && LevelChecked(Despair) => Despair,
+                Blizzard3 when BLM_B4toDespair == 1 && FirePhase && LevelChecked(Despair) => Despair,
+                var _ => actionID
+            };
     }
 
     internal class BLM_Fire1Despair : CustomCombo
     {
         protected internal override CustomComboPreset Preset => CustomComboPreset.BLM_Fire1Despair;
         protected override uint Invoke(uint actionID) =>
-            actionID is Fire && FirePhase && CurMp < 2400
-                ? Despair
-                : OriginalHook(Fire);
+            actionID is not Fire
+                ? actionID
+                : FirePhase && CurMp < 2400
+                    ? Despair
+                    : OriginalHook(Fire);
     }
 
     internal class BLM_FreezeParadox : CustomCombo

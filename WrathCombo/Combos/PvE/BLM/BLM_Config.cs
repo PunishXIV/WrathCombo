@@ -143,6 +143,14 @@ internal partial class BLM
                     DrawRadioButton(BLM_F1to3,
                         $"Replaces {Fire3.ActionName()}", $"Replaces {Fire3.ActionName()} with {Fire.ActionName()} when in Astral Fire III.", 1);
                     break;
+
+                case CustomComboPreset.BLM_Blizzard4toDespair:
+                    DrawRadioButton(BLM_B4toDespair,
+                        $"Replaces {Blizzard4.ActionName()}", $"Replaces {Blizzard4.ActionName()} with {Despair.ActionName()} when in Astral Fire.", 0);
+
+                    DrawRadioButton(BLM_B4toDespair,
+                        $"Replaces {Blizzard3.ActionName()}", $"Replaces {Blizzard3.ActionName()} with {Despair.ActionName()} when in Astral Fire.", 1);
+                    break;
             }
         }
 
@@ -165,6 +173,7 @@ internal partial class BLM
             BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 20),
             BLM_VariantCure = new("BLM_VariantCure", 50),
             BLM_B1to3 = new("BLM_B1to3", 0),
+            BLM_B4toDespair = new("BLM_B4toDespair", 0),
             BLM_F1to3 = new("BLM_F1to3", 0);
 
         public static UserBoolArray

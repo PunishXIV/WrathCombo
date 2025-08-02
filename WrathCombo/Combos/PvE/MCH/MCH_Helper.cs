@@ -171,7 +171,6 @@ internal partial class MCH
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
         {
             actionID = Excavator;
-
             return true;
         }
 
@@ -187,7 +186,6 @@ internal partial class MCH
              GetStatusEffectRemainingTime(Buffs.ExcavatorReady) <= 6))
         {
             actionID = Excavator;
-
             return true;
         }
 
@@ -197,7 +195,6 @@ internal partial class MCH
             GetCooldownRemainingTime(Chainsaw) <= GCD / 2)
         {
             actionID = Chainsaw;
-
             return true;
         }
 
@@ -207,7 +204,6 @@ internal partial class MCH
             GetCooldownRemainingTime(AirAnchor) <= GCD / 2)
         {
             actionID = AirAnchor;
-
             return true;
         }
 
@@ -217,7 +213,6 @@ internal partial class MCH
             ActionReady(Drill) && GetCooldownRemainingTime(Wildfire) is >= 20 or <= 10)
         {
             actionID = Drill;
-
             return true;
         }
 
@@ -227,7 +222,6 @@ internal partial class MCH
             GetCooldownRemainingTime(HotShot) <= GCD / 2)
         {
             actionID = HotShot;
-
             return true;
         }
 
@@ -270,6 +264,7 @@ internal partial class MCH
         public override int MinOpenerLevel => 100;
 
         public override int MaxOpenerLevel => 109;
+        
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,
@@ -330,6 +325,7 @@ internal partial class MCH
         public override int MinOpenerLevel => 90;
 
         public override int MaxOpenerLevel => 99;
+        
         public override List<uint> OpenerActions { get; set; } =
         [
             Reassemble,

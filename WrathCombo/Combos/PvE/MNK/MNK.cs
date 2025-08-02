@@ -92,9 +92,9 @@ internal partial class MNK : Melee
 
             if (HasStatusEffect(Buffs.WindsRumination) &&
                 !HasStatusEffect(Buffs.PerfectBalance) &&
-                ((GetCooldownRemainingTime(RiddleOfFire) > 10) ||
+                (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
                  HasStatusEffect(Buffs.RiddleOfFire) ||
-                 (GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2) ||
+                 GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
                  !InMeleeRange()))
                 return WindsReply;
 
@@ -174,6 +174,7 @@ internal partial class MNK : Melee
                         (MNK_ST_RiddleOfWind_SubOption == 0 || InBossEncounter()))
                         return RiddleOfWind;
                 }
+
                 if (IsEnabled(CustomComboPreset.MNK_STUsePerfectBalance) &&
                     UsePerfectBalanceST())
                     return PerfectBalance;
@@ -224,9 +225,9 @@ internal partial class MNK : Melee
                 if (IsEnabled(CustomComboPreset.MNK_STUseWindsReply) &&
                     HasStatusEffect(Buffs.WindsRumination) &&
                     !HasStatusEffect(Buffs.PerfectBalance) &&
-                    ((GetCooldownRemainingTime(RiddleOfFire) > 10) ||
+                    (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
                      HasStatusEffect(Buffs.RiddleOfFire) ||
-                     (GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2) ||
+                     GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
                      !InMeleeRange()))
                     return WindsReply;
             }
@@ -321,7 +322,7 @@ internal partial class MNK : Melee
 
             if (HasStatusEffect(Buffs.WindsRumination) &&
                 !HasStatusEffect(Buffs.PerfectBalance) &&
-                ((GetCooldownRemainingTime(RiddleOfFire) > 10) ||
+                (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
                  HasStatusEffect(Buffs.RiddleOfFire)))
                 return WindsReply;
 
@@ -449,7 +450,7 @@ internal partial class MNK : Melee
                 if (IsEnabled(CustomComboPreset.MNK_AoEUseWindsReply) &&
                     HasStatusEffect(Buffs.WindsRumination) &&
                     !HasStatusEffect(Buffs.PerfectBalance) &&
-                    ((GetCooldownRemainingTime(RiddleOfFire) > 10) ||
+                    (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
                      HasStatusEffect(Buffs.RiddleOfFire)))
                     return WindsReply;
             }
@@ -473,6 +474,34 @@ internal partial class MNK : Melee
 
             if (HasStatusEffect(Buffs.CoeurlForm) && LevelChecked(Rockbreaker))
                 return Rockbreaker;
+
+            return actionID;
+        }
+    }
+
+    internal class MNK_BeastChakras : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
+                actionID is Bootshine or LeapingOpo)
+                return OpoOpo is 0 && LevelChecked(DragonKick)
+                    ? DragonKick
+                    : OriginalHook(Bootshine);
+
+            if (IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
+                actionID is TrueStrike or RisingRaptor)
+                return Raptor is 0 && LevelChecked(TwinSnakes)
+                    ? TwinSnakes
+                    : OriginalHook(TrueStrike);
+
+            if (IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
+                actionID is SnapPunch or PouncingCoeurl)
+                return Coeurl is 0 && LevelChecked(Demolish)
+                    ? Demolish
+                    : OriginalHook(SnapPunch);
 
             return actionID;
         }
@@ -510,34 +539,6 @@ internal partial class MNK : Melee
             ActionReady(RiddleOfFire) && IsOnCooldown(Brotherhood)
                 ? RiddleOfFire
                 : actionID;
-    }
-
-    internal class MNK_BeastChakras : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset => CustomComboPreset.MNK_ST_BeastChakras;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (IsEnabled(CustomComboPreset.MNK_BC_OPOOPO) &&
-                actionID is Bootshine or LeapingOpo)
-                return OpoOpo is 0 && LevelChecked(DragonKick)
-                    ? DragonKick
-                    : OriginalHook(Bootshine);
-
-            if (IsEnabled(CustomComboPreset.MNK_BC_RAPTOR) &&
-                actionID is TrueStrike or RisingRaptor)
-                return Raptor is 0 && LevelChecked(TwinSnakes)
-                    ? TwinSnakes
-                    : OriginalHook(TrueStrike);
-
-            if (IsEnabled(CustomComboPreset.MNK_BC_COEURL) &&
-                actionID is SnapPunch or PouncingCoeurl)
-                return Coeurl is 0 && LevelChecked(Demolish)
-                    ? Demolish
-                    : OriginalHook(SnapPunch);
-
-            return actionID;
-        }
     }
 
     internal class MNK_PerfectBalanceProtection : CustomCombo

@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
@@ -58,7 +59,7 @@ internal partial class MNK
 
     internal static bool InMasterfulRange()
     {
-        if (NumberOfEnemiesInRange(ElixirField, null) >= 1 &&
+        if (NumberOfEnemiesInRange(ElixirField) >= 1 &&
             (OriginalHook(MasterfulBlitz) == ElixirField ||
              OriginalHook(MasterfulBlitz) == FlintStrike ||
              OriginalHook(MasterfulBlitz) == ElixirBurst ||
@@ -83,7 +84,7 @@ internal partial class MNK
         ActionReady(RiddleOfFire) &&
         !HasStatusEffect(Buffs.FiresRumination) &&
         (JustUsed(Brotherhood, GCD) ||
-         (GetCooldownRemainingTime(Brotherhood) is > 50 and < 65) ||
+         GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 ||
          !LevelChecked(Brotherhood) ||
          HasStatusEffect(Buffs.Brotherhood));
 
@@ -307,6 +308,8 @@ internal partial class MNK
 
         public override List<uint> OpenerActions { get; set; } =
         [
+            ForbiddenMeditation,
+            FormShift,
             DragonKick,
             PerfectBalance,
             LeapingOpo,
@@ -329,6 +332,12 @@ internal partial class MNK
             LeapingOpo
         ];
 
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => Chakra >= 5),
+            ([2], () => HasStatusEffect(Buffs.FormlessFist))
+        ];
+
         internal override UserData ContentCheckConfig => MNK_Balance_Content;
 
         public override bool HasCooldowns() =>
@@ -349,6 +358,8 @@ internal partial class MNK
 
         public override List<uint> OpenerActions { get; set; } =
         [
+            ForbiddenMeditation,
+            FormShift,
             DragonKick,
             PerfectBalance,
             TwinSnakes,
@@ -369,6 +380,12 @@ internal partial class MNK
             DragonKick,
             ElixirBurst,
             LeapingOpo
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => Chakra >= 5),
+            ([2], () => HasStatusEffect(Buffs.FormlessFist))
         ];
 
         internal override UserData ContentCheckConfig => MNK_Balance_Content;

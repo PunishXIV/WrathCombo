@@ -18,8 +18,8 @@ internal partial class DRG : Melee
             {
                 if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
                     return LevelChecked(Disembowel) &&
-                           ((LevelChecked(ChaosThrust) && ChaosDebuff is null &&
-                             CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)])) ||
+                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
+                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
                             GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
                         ? OriginalHook(Disembowel)
                         : OriginalHook(VorpalThrust);
@@ -87,10 +87,10 @@ internal partial class DRG : Melee
                     //Mirage Feature
                     if (ActionReady(MirageDive) &&
                         HasStatusEffect(Buffs.DiveReady) &&
-                        (OriginalHook(Jump) is MirageDive) &&
+                        OriginalHook(Jump) is MirageDive &&
                         (LoTDActive ||
-                         (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                          GetCooldownRemainingTime(Geirskogul) > 3)))
+                         GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                         GetCooldownRemainingTime(Geirskogul) > 3))
                         return MirageDive;
 
                     //Wyrmwind Thrust Feature
@@ -161,23 +161,19 @@ internal partial class DRG : Melee
             {
                 if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
                     return LevelChecked(Disembowel) &&
-                           ((LevelChecked(ChaosThrust) && ChaosDebuff is null &&
-                             CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)])) ||
+                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
+                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
                             GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
                         ? OriginalHook(Disembowel)
                         : OriginalHook(VorpalThrust);
 
                 if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
-                    return Role.CanTrueNorth() &&
-                           CanDRGWeave() &&
-                           !OnTargetsRear()
+                    return Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
                         ? Role.TrueNorth
                         : OriginalHook(ChaosThrust);
 
                 if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
-                    return Role.CanTrueNorth() &&
-                           CanDRGWeave() &&
-                           !OnTargetsRear()
+                    return Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
                         ? Role.TrueNorth
                         : WheelingThrust;
 
@@ -185,9 +181,7 @@ internal partial class DRG : Melee
                     return OriginalHook(FullThrust);
 
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
-                    return Role.CanTrueNorth() &&
-                           CanDRGWeave() &&
-                           !OnTargetsFlank()
+                    return Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsFlank()
                         ? Role.TrueNorth
                         : FangAndClaw;
 
@@ -260,10 +254,10 @@ internal partial class DRG : Melee
                             ActionReady(MirageDive) &&
                             HasStatusEffect(Buffs.DiveReady) &&
                             (OriginalHook(Jump) is MirageDive) &&
-                            ((DRG_ST_DoubleMirage &&
-                              (LoTDActive ||
-                               (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                                GetCooldownRemainingTime(Geirskogul) > 3))) ||
+                            (DRG_ST_DoubleMirage &&
+                             (LoTDActive ||
+                              GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                              GetCooldownRemainingTime(Geirskogul) > 3) ||
                              !DRG_ST_DoubleMirage))
                             return MirageDive;
 
@@ -317,8 +311,8 @@ internal partial class DRG : Melee
                                 return Jump;
 
                             if (LevelChecked(HighJump) &&
-                                ((DRG_ST_DoubleMirage &&
-                                  (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDActive)) ||
+                                (DRG_ST_DoubleMirage &&
+                                 (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDActive) ||
                                  !DRG_ST_DoubleMirage))
                                 return (HighJump);
                         }
@@ -364,25 +358,21 @@ internal partial class DRG : Melee
             {
                 if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
                     return LevelChecked(Disembowel) &&
-                           ((LevelChecked(ChaosThrust) && ChaosDebuff is null &&
-                             CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)])) ||
+                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
+                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
                             GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
                         ? OriginalHook(Disembowel)
                         : OriginalHook(VorpalThrust);
 
                 if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
                     return IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                           Role.CanTrueNorth() &&
-                           CanDRGWeave() &&
-                           !OnTargetsRear()
+                           Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
                         ? Role.TrueNorth
                         : OriginalHook(ChaosThrust);
 
                 if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
                     return IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                           Role.CanTrueNorth() &&
-                           CanDRGWeave() &&
-                           !OnTargetsRear()
+                           Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
                         ? Role.TrueNorth
                         : WheelingThrust;
 
@@ -391,9 +381,7 @@ internal partial class DRG : Melee
 
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                     return IsEnabled(CustomComboPreset.DRG_TrueNorthDynamic) &&
-                           Role.CanTrueNorth() &&
-                           CanDRGWeave() &&
-                           !OnTargetsFlank()
+                           Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsFlank()
                         ? Role.TrueNorth
                         : FangAndClaw;
 
@@ -472,10 +460,10 @@ internal partial class DRG : Melee
 
                     if (ActionReady(MirageDive) &&
                         HasStatusEffect(Buffs.DiveReady) &&
-                        (OriginalHook(Jump) is MirageDive) &&
+                        OriginalHook(Jump) is MirageDive &&
                         (LoTDActive ||
-                         (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                          GetCooldownRemainingTime(Geirskogul) > 3)))
+                         GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                         GetCooldownRemainingTime(Geirskogul) > 3))
                         return MirageDive;
 
                     //Nastrond Feature
@@ -624,10 +612,10 @@ internal partial class DRG : Melee
                         if (IsEnabled(CustomComboPreset.DRG_AoE_Mirage) &&
                             ActionReady(MirageDive) &&
                             HasStatusEffect(Buffs.DiveReady) &&
-                            (OriginalHook(Jump) is MirageDive) &&
+                            OriginalHook(Jump) is MirageDive &&
                             (LoTDActive ||
-                             (GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                              GetCooldownRemainingTime(Geirskogul) > 3)))
+                             GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                             GetCooldownRemainingTime(Geirskogul) > 3))
                             return MirageDive;
 
                         //Nastrond Feature
