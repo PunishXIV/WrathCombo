@@ -152,7 +152,9 @@ namespace WrathCombo.CustomComboNS.Functions
                     if (targetID is 2350) return !HasStatusEffect(398);
 
                     // Allagan Bomb
-                    if (targetID is 2407) return NumberOfObjectsInRange<SelfCircle>(30) > 1;
+                    if (targetID is 2407)
+                        return NumberOfObjectsInRange<SelfCircle>(30,
+                            checkInvincible: false) > 1;
 
                     return false;
                 case 1248:  // Jeuno 1 Ark Angels
