@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
 using WrathCombo.Data;
@@ -137,30 +138,17 @@ namespace WrathCombo.CustomComboNS.Functions
         /// </summary>
         public static bool PlayerHasActionPenalty()
         {
-            static bool CheckStatus()
-            {
-                return Svc.ClientState.TerritoryType switch
-                {
-                    // Weeping City, Ozma's Bomb
-                    556 => GetStatusEffectRemainingTime(1072, anyOwner: true) is > 0f and < 1.5f,
-                    // Deltascape 4.0 Pyretic
-                    694 => HasStatusEffect(960, anyOwner: true),
-                    // Vanguard, Protector's Bomb
-                    1198 => GetStatusEffectRemainingTime(3802, anyOwner: true) is > 0f and < 1.5f,
+            bool hasActionPenalty = 
+                //Player.IsInDuty &&  <-?
+                Player.Status.Any(s =>
+                    // Acceleration Bomb within Timeframe
+                    (StatusCache.AccelerationBombs.Contains(s.StatusId) &&
+                        GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
 
-                    // Fallback: general lists
-                    _ => Svc.ClientState.LocalPlayer?.StatusList.Any(s =>
-                            // Acceleration Bomb within Timeframe
-                            (StatusCache.AccelerationBombs.Contains(s.StatusId) &&
-                             GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+                    // Pyretic
+                    StatusCache.Pyretics.Contains(s.StatusId)
 
-                            // Pyretic
-                            StatusCache.Pyretics.Contains(s.StatusId)
-                        ) == true
-                };
-            }
-
-            bool hasActionPenalty = CheckStatus();
+                ) == true;
 
             if (hasActionPenalty)
                 Svc.Targets.Target = null;
