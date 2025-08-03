@@ -2,7 +2,6 @@
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using ImGuiNET;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
@@ -133,6 +132,43 @@ namespace WrathCombo.CustomComboNS.Functions
         public static bool HasPhantomDispelStatus(IGameObject? target) => StatusCache.HasDamageUp(target) || StatusCache.HasEvasionUp(target) || HasStatusEffect(4355, target) || TargetIsInvincible(target);
 
         /// <summary>
+        /// Checks to see if the player has a status that should stop all actions and unselect targets
+        /// Acceleration bombs and Pyretics
+        /// </summary>
+        public static bool PlayerHasActionPenalty()
+        {
+            static bool CheckStatus()
+            {
+                return Svc.ClientState.TerritoryType switch
+                {
+                    // Weeping City, Ozma's Bomb
+                    556 => GetStatusEffectRemainingTime(1072, anyOwner: true) is > 0f and < 1.5f,
+                    // Deltascape 4.0 Pyretic
+                    694 => HasStatusEffect(960, anyOwner: true),
+                    // Vanguard, Protector's Bomb
+                    1198 => GetStatusEffectRemainingTime(3802, anyOwner: true) is > 0f and < 1.5f,
+
+                    // Fallback: general lists
+                    _ => Svc.ClientState.LocalPlayer?.StatusList.Any(s =>
+                            // Acceleration Bomb within Timeframe
+                            (StatusCache.AccelerationBombs.Contains(s.StatusId) &&
+                             GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+
+                            // Pyretic
+                            StatusCache.Pyretics.Contains(s.StatusId)
+                        ) == true
+                };
+            }
+
+            bool hasActionPenalty = CheckStatus();
+
+            if (hasActionPenalty)
+                Svc.Targets.Target = null;
+
+            return hasActionPenalty;
+        }
+
+        /// <summary>
         /// Checks if the target is invincible due to status effects or encounter-specific mechanics.
         /// </summary>
         /// <param name="target">The game object to check.</param>
@@ -155,12 +191,6 @@ namespace WrathCombo.CustomComboNS.Functions
                     if (targetID is 2350) return !HasStatusEffect(398);
                     // Allagan Bomb
                     if (targetID is 2407) return NumberOfObjectsInRange<SelfCircle>(30) > 1;
-                    return false;
-
-                case 556: // The Weeping City of Mhach
-                    // Ozma - Acceleration Bomb
-                    // Technically not invincible, just need to stop attacking
-                    if (targetID is 5472 && (GetStatusEffectRemainingTime(1072, anyOwner: true) is > 0f and < 1.5f)) return true;
                     return false;
 
                 case 801 or 805 or 1122: //Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
@@ -226,11 +256,6 @@ namespace WrathCombo.CustomComboNS.Functions
                         // Tanks should only ignore their target if it has the buff and they aren't in front.
                         if (bossHasParry && (!isTank || !isFrontFacing)) return true;
                     }
-                    return false;
-
-                case 1198: // Vanguard - Protector's Acceleration Bomb
-                           // Technically not invincible, just need to stop attacking
-                    if (targetID is 16951 && (GetStatusEffectRemainingTime(3802, anyOwner: true) is > 0f and < 1.5f)) return true;
                     return false;
 
                 case 1248: // Jeuno 1 Ark Angels

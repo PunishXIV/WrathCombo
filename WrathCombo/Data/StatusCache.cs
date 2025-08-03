@@ -121,20 +121,39 @@ namespace WrathCombo.Data
         /// </summary>
         /// <remarks>
         /// Includes statuses like Hallowed Ground (151), Living Dead (325), etc.
+        /// Icon from StatusSheet.FirstOrDefault(row => row.Value.RowId == 325).Value.Icon; (General Invincibility)
         /// </remarks>
-        internal static readonly FrozenSet<uint> InvincibleStatuses = GenerateInv().ToFrozenSet();
+        internal static readonly FrozenSet<uint> InvincibleStatuses =
+            StatusSheet
+                .Where(row => row.Value.Icon == 215024)
+                .Select(row => row.Key)
+                .Concat(new uint[] {
+                    151, 198, 469, 592, 1240, 1302, 1303,
+                    1567, 1936, 2413, 2654, 3012, 3039,
+                    3052, 3054, 4175
+                })
+                .ToFrozenSet();
 
-        private static HashSet<uint> GenerateInv()
-        {
-            //Search by Invincibility Icon
-            uint targetIcon = 215024; //StatusSheet.FirstOrDefault(row => row.Value.RowId == 325).Value.Icon;
-            //Svc.Log.Debug($"Invincible Icon: {targetIcon}");
+        internal static readonly FrozenSet<uint> AccelerationBombs =
+            new HashSet<uint>(
+                StatusSheet
+                    .Where(row => row.Value.Icon == 215727) // Acceleration Bomb Icon
+                    .Select(row => row.Key)
+            )
+            {
+                4130 // Authority's Hold
+            }.ToFrozenSet();
 
-            var invincibles = StatusSheet.Where(row => row.Value.Icon == targetIcon).Select(row => row.Key).ToHashSet();
-            //Add Random Invulnerabilities not yet assigned to TerritoryType
-            invincibles.UnionWith([151, 198, 469, 592, 1240, 1302, 1303, 1567, 1936, 2413, 2654, 3012, 3039, 3052, 3054, 4175]);
-            return invincibles;
-        }
+        internal static readonly FrozenSet<uint> Pyretics =
+            new HashSet<uint>(
+                StatusSheet
+                    .Where(row => row.Value.Icon == 215647) // Pyretic Icon
+                    .Select(row => row.Key)
+            )
+            {
+                514 // Causality
+            }.ToFrozenSet();
+
 
         /// <summary>
         /// Looks up the name of a Status by ID in Lumina Sheets
