@@ -4,6 +4,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.CustomComboNS.Functions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -150,7 +151,7 @@ internal partial class All
                 return actionID.Retarget(replacedActions.ToArray(),
                     SimpleTarget.Stack.AllyToRaise, dontCull: true);
 
-            return actionID;
+            return actionID.AndRunMacro();
         }
     }
 
@@ -230,10 +231,13 @@ internal partial class All
             if (HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) ||
                 HasStatusEffect(RDM.Buffs.Dualcast))
                 if (IsEnabled(CustomComboPreset.ALL_Caster_Raise_Retarget))
-                    return actionID.Retarget(replacedActions.ToArray(),
-                        SimpleTarget.Stack.AllyToRaise, dontCull: true);
+                    return actionID
+                        .Retarget(replacedActions.ToArray(),
+                            SimpleTarget.Stack.AllyToRaise,
+                            dontCull: true)
+                        .AndRunMacro();
                 else
-                    return actionID;
+                    return actionID.AndRunMacro();
 
             if (IsOffCooldown(RoleActions.Magic.Swiftcast))
                 return RoleActions.Magic.Swiftcast;
@@ -246,7 +250,7 @@ internal partial class All
                 return actionID.Retarget(replacedActions.ToArray(),
                     SimpleTarget.Stack.AllyToRaise, dontCull: true);
 
-            return actionID;
+            return actionID.AndRunMacro();
         }
     }
 

@@ -1,6 +1,8 @@
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
+
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SCH : Healer
@@ -554,9 +556,11 @@ internal partial class SCH : Healer
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
                 ? IsEnabled(CustomComboPreset.SCH_Raise_Retarget)
-                    ? Resurrection.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Resurrection
+                    ? Resurrection
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Resurrection.AndRunMacro()
                 : actionID;
     }
     #endregion
@@ -583,7 +587,7 @@ internal partial class SCH : Healer
             var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
-            if (!HasStatusEffect(Buffs.Galvanize, healTarget)) 
+            if (!HasStatusEffect(Buffs.Galvanize, healTarget))
             {
                 if (IsEnabled(CustomComboPreset.SCH_DeploymentTactics_Recitation) && ActionReady(Recitation))
                     return Recitation;
