@@ -308,6 +308,33 @@ public static class ConflictingPlugins
 
         #endregion
 
+        #region PandorasBox
+
+        if (ConflictingPluginsChecks.PandorasBox.Conflicted)
+        {
+            var pandoraCheck = ConflictingPluginsChecks.PandorasBox;
+            
+            // Add targeting conflicts if any
+            if (pandoraCheck.ConflictingTargetingFeatures.Length > 0)
+            {
+                conflicts = conflicts.Append(new Conflict(
+                        "Pandora's Box", ConflictType.Targeting,
+                        string.Join(",", pandoraCheck.ConflictingTargetingFeatures)))
+                    .ToArray();
+            }
+            
+            // Add action conflicts as settings conflicts if any
+            if (pandoraCheck.ConflictingActionFeatures.Length > 0)
+            {
+                conflicts = conflicts.Append(new Conflict(
+                        "Pandora's Box", ConflictType.Settings,
+                        $"Auto features enabled: {string.Join(", ", pandoraCheck.ConflictingActionFeatures)}"))
+                    .ToArray();
+            }
+        }
+
+        #endregion
+
         return conflicts.Length > 0;
     }
 

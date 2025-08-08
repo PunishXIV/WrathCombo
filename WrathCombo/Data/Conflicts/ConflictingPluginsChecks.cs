@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ECommons.DalamudServices;
 using ECommons.Logging;
@@ -33,6 +34,7 @@ public static class ConflictingPluginsChecks
         ReAction.CheckForConflict();
         ReActionEx.CheckForConflict();
         MOAction.CheckForConflict();
+        PandorasBox.CheckForConflict();
 
         Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(4.11));
     };
@@ -43,6 +45,7 @@ public static class ConflictingPluginsChecks
     internal static ReActionCheck ReAction { get; } = new();
     internal static ReActionCheck ReActionEx { get; } = new(true);
     internal static MOActionCheck MOAction { get; } = new();
+    internal static PandorasBoxCheck PandorasBox { get; } = new();
 
     public static void Begin()
     {
@@ -64,6 +67,7 @@ public static class ConflictingPluginsChecks
         ReAction.Dispose();
         ReActionEx.Dispose();
         MOAction.Dispose();
+        PandorasBox.Dispose();
     }
 
     internal sealed class BossModCheck(bool reborn = false)
@@ -367,6 +371,42 @@ public static class ConflictingPluginsChecks
             // ReSharper disable once InvertIf
             if (!conflictedThisCheck && Conflicted)
                 Conflicted = false;
+        }
+    }
+
+    internal sealed class PandorasBoxCheck() : ConflictCheck(new PandorasBoxIPC())
+    {
+        public string[] ConflictingActionFeatures = [];
+        public string[] ConflictingTargetingFeatures = [];
+        protected override PandorasBoxIPC IPC => (PandorasBoxIPC)_ipc;
+
+        public override void CheckForConflict()
+        {
+            if (!ThrottlePassed())
+                return;
+
+            // Get all enabled conflicting features in one pass (optimized)
+            var actionConflicts = IPC.GetEnabledActionConflicts();
+            var targetingConflicts = IPC.GetEnabledTargetingConflicts();
+
+            ConflictingActionFeatures = actionConflicts.ToArray();
+            ConflictingTargetingFeatures = targetingConflicts.ToArray();
+
+            if (ConflictingActionFeatures.Length > 0 || ConflictingTargetingFeatures.Length > 0)
+            {
+                var allConflicts = new List<string>();
+                allConflicts.AddRange(ConflictingActionFeatures);
+                allConflicts.AddRange(ConflictingTargetingFeatures);
+                
+                PluginLog.Verbose(
+                    $"[ConflictingPlugins] [{Name}] {allConflicts.Count} " +
+                    $"conflicting features enabled: {string.Join(", ", allConflicts)}");
+                MarkConflict();
+            }
+            else
+            {
+                Conflicted = false;
+            }
         }
     }
 
