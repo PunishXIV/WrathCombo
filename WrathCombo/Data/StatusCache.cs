@@ -1,12 +1,10 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
-using ECommons.GameFunctions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Status = Dalamud.Game.ClientState.Statuses.Status; // conflicts with structs if not defined
 
 namespace WrathCombo.Data
@@ -66,50 +64,55 @@ namespace WrathCombo.Data
             Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>(Dalamud.Game.ClientLanguage.English)
                 .ToFrozenDictionary(i => i.RowId);
 
-        private static readonly HashSet<uint> DamageDownStatuses =
+        private static readonly FrozenSet<uint> DamageDownStatuses =
             ENStatusSheet.TryGetValue(62, out var refRow)
-                ? [.. ENStatusSheet
-                .Where(x => x.Value.Name.ToString().Equals(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                .Select(x => x.Key)] : [];
+                ? ENStatusSheet
+                    .Where(x => x.Value.Name.ToString().Equals(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    .Select(x => x.Key)
+                    .ToFrozenSet()
+                : [];
 
         public static bool HasDamageDown(IGameObject? target) => HasStatusInCacheList(DamageDownStatuses, target);
 
-        private static readonly HashSet<uint> DamageUpStatuses =
+        private static readonly FrozenSet<uint> DamageUpStatuses =
             ENStatusSheet.TryGetValue(61, out var refRow)
-                 ? [.. ENStatusSheet
-                .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                .Select(x => x.Key)] : [];
+                ? ENStatusSheet
+                    .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    .Select(x => x.Key)
+                    .ToFrozenSet()
+                : [];
 
         public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
         
-        public static bool HasEvasionUp(IGameObject? target)
-        {
-            HashSet<uint> evasionUpStatuses =
-                ENStatusSheet.TryGetValue(61, out var refRow)
-                    ? [.. ENStatusSheet
-                        .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
-                        .Select(x => x.Key)]
-                    : [];
-            return HasStatusInCacheList(evasionUpStatuses, target);
-        }
+        private static readonly FrozenSet<uint> evasionUpStatuses =
+            ENStatusSheet.TryGetValue(61, out var refRow)
+                ? ENStatusSheet
+                    .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    .Select(x => x.Key)
+                    .ToFrozenSet()
+                : [];
+
+        public static bool HasEvasionUp(IGameObject? target) => HasStatusInCacheList(evasionUpStatuses, target);
 
         /// <summary>
         /// A cached set of dispellable status IDs for quick lookup.
         /// </summary>
-        private static readonly HashSet<uint> DispellableStatuses = [..
+        private static readonly FrozenSet<uint> DispellableStatuses = 
             StatusSheet
                 .Where(kvp => kvp.Value.CanDispel)
-                .Select(kvp => kvp.Key)];
+                .Select(kvp => kvp.Key)
+                .ToFrozenSet();
 
         public static bool HasCleansableDebuff(IGameObject? target) => HasStatusInCacheList(DispellableStatuses, target);
 
         /// <summary>
         /// A cached set of beneficial status IDs for quick lookup.
         /// </summary>
-        private static readonly HashSet<uint> BeneficialStatuses = [..
+        private static readonly FrozenSet<uint> BeneficialStatuses =
             StatusSheet
                 .Where(kvp => kvp.Value.StatusCategory == 1)
-                .Select(kvp => kvp.Key)];
+                .Select(kvp => kvp.Key)
+                .ToFrozenSet();
 
         public static bool HasBeneficialStatus(IGameObject? targt) => HasStatusInCacheList(BeneficialStatuses, targt);
 
@@ -118,22 +121,39 @@ namespace WrathCombo.Data
         /// </summary>
         /// <remarks>
         /// Includes statuses like Hallowed Ground (151), Living Dead (325), etc.
+        /// Icon from StatusSheet.FirstOrDefault(row => row.Value.RowId == 325).Value.Icon; (General Invincibility)
         /// </remarks>
-        internal static readonly HashSet<uint> InvincibleStatuses = GenerateInv();
+        internal static readonly FrozenSet<uint> InvincibleStatuses =
+            StatusSheet
+                .Where(row => row.Value.Icon == 215024)
+                .Select(row => row.Key)
+                .Concat(new uint[] {
+                    151, 198, 469, 592, 1240, 1302, 1303,
+                    1567, 1936, 2413, 2654, 3012, 3039,
+                    3052, 3054, 4175
+                })
+                .ToFrozenSet();
 
-        private static HashSet<uint> GenerateInv()
-        {
-            //Search by Invincibility Icon
-            uint targetIcon = 215024; //StatusSheet.FirstOrDefault(row => row.Value.RowId == 325).Value.Icon;
-            //Svc.Log.Debug($"Invincible Icon: {targetIcon}");
+        internal static readonly FrozenSet<uint> AccelerationBombs =
+            new HashSet<uint>(
+                StatusSheet
+                    .Where(row => row.Value.Icon == 215727) // Acceleration Bomb Icon
+                    .Select(row => row.Key)
+            )
+            {
+                4130 // Authority's Hold
+            }.ToFrozenSet();
 
-            var invincibles = StatusSheet.Where(row => row.Value.Icon == targetIcon).Select(row => row.Key).ToHashSet();
-            //Add Random Invulnerabilities not yet assigned to TerritoryType
-            invincibles.UnionWith([151, 198, 469, 592, 1240, 1302, 1303, 1567, 1936, 2413, 2654, 3012, 3039, 3052, 3054, 4175]);
-            return invincibles;
-        }
+        internal static readonly FrozenSet<uint> Pyretics =
+            new HashSet<uint>(
+                StatusSheet
+                    .Where(row => row.Value.Icon == 215647) // Pyretic Icon
+                    .Select(row => row.Key)
+            )
+            {
+                514 // Causality
+            }.ToFrozenSet();
 
-        
 
         /// <summary>
         /// Looks up the name of a Status by ID in Lumina Sheets
@@ -164,7 +184,7 @@ namespace WrathCombo.Data
         /// <param name="statusList">Hashset of Status IDs to check</param>
         /// <param name="gameObject">GameObject to check</param>
         /// <returns></returns>
-        internal static bool HasStatusInCacheList(HashSet<uint> statusList, IGameObject? gameObject = null)
+        internal static bool HasStatusInCacheList(FrozenSet<uint> statusList, IGameObject? gameObject = null)
         {
             if (gameObject is not IBattleChara chara)
                 return false;
@@ -184,7 +204,7 @@ namespace WrathCombo.Data
         /// <param name="statusList"></param>
         /// <param name="charaStatusList"></param>
         /// <returns></returns>
-        internal static bool CompareLists(HashSet<uint> statusList, HashSet<uint> charaStatusList) => 
+        internal static bool CompareLists(FrozenSet<uint> statusList, HashSet<uint> charaStatusList) => 
             charaStatusList.Any(id => statusList.Contains(id));
     }
 }
