@@ -1,5 +1,5 @@
-using Dalamud.Interface.Colors;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -26,8 +26,34 @@ internal partial class BLM
                     break;
 
                 case CustomComboPreset.BLM_ST_LeyLines:
-                    DrawSliderInt(0, 1, BLM_ST_LeyLinesCharges,
-                        $"How many charges of {LeyLines.ActionName()} to keep ready?");
+
+                    DrawHorizontalRadioButton(BLM_ST_LeyLinesMovement,
+                        "Stationary Only", "Uses Leylines only while stationary", 0);
+
+                    DrawHorizontalRadioButton(BLM_ST_LeyLinesMovement,
+                        "Any Movement", "Uses Leylines regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+
+                    ImGui.Spacing();
+                    if (BLM_ST_LeyLinesMovement == 0)
+                    {
+                        ImGui.SetCursorPosX(48);
+                        DrawSliderFloat(0, 3, BLM_ST_LeyLinesTimeStill,
+                            " Stationary Delay Check (in seconds):", decimals: 1);
+                    }
+
+                    ImGui.SetCursorPosX(48);
+                    DrawSliderInt(0, 2, BLM_ST_LeyLinesCharges,
+                        " How many charges to keep ready?\n (0 = Use All)");
+
+                    DrawSliderInt(0, 50, BLM_ST_LeyLinesOption,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                    ImGui.Indent();
+
+                    DrawHorizontalRadioButton(BLM_ST_LeyLinesSubOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+
+                    DrawHorizontalRadioButton(BLM_ST_LeyLinesSubOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
                     break;
 
                 case CustomComboPreset.BLM_ST_Movement:
@@ -109,8 +135,27 @@ internal partial class BLM
                     break;
 
                 case CustomComboPreset.BLM_AoE_LeyLines:
-                    DrawSliderInt(0, 1, BLM_AoE_LeyLinesCharges,
-                        $"How many charges of {LeyLines.ActionName()} to keep ready? (0 = Use all)");
+
+                    DrawHorizontalRadioButton(BLM_AoE_LeyLinesMovement,
+                        "Stationary Only", "Uses Leylines only while stationary", 0);
+
+                    DrawHorizontalRadioButton(BLM_AoE_LeyLinesMovement,
+                        "Any Movement", "Uses Leylines regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+
+                    ImGui.Spacing();
+                    if (BLM_AoE_LeyLinesMovement == 0)
+                    {
+                        ImGui.SetCursorPosX(48);
+                        DrawSliderFloat(0, 3, BLM_AoE_LeyLinesTimeStill,
+                            " Stationary Delay Check (in seconds):", decimals: 1);
+                    }
+
+                    ImGui.SetCursorPosX(48);
+                    DrawSliderInt(0, 2, BLM_AoE_LeyLinesCharges,
+                        " How many charges to keep ready?\n (0 = Use All)");
+
+                    DrawSliderInt(0, 50, BLM_AoE_LeyLinesOption,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
                     break;
 
                 case CustomComboPreset.BLM_AoE_Triplecast:
@@ -160,6 +205,9 @@ internal partial class BLM
             BLM_SelectedOpener = new("BLM_SelectedOpener", 0),
             BLM_Balance_Content = new("BLM_Balance_Content", 1),
             BLM_ST_LeyLinesCharges = new("BLM_ST_LeyLinesCharges", 1),
+            BLM_ST_LeyLinesMovement = new("BLM_ST_LeyLinesMovement", 0),
+            BLM_ST_LeyLinesOption = new("BLM_ST_LeyLinesOption", 25),
+            BLM_ST_LeyLinesSubOption = new("BLM_ST_LeyLinesSubOption", 0),
             BLM_ST_ThunderOption = new("BLM_ST_ThunderOption", 10),
             BLM_ST_Thunder_SubOption = new("BLM_ST_Thunder_SubOption", 0),
             BLM_ST_Triplecast_SubOption = new("BLM_ST_Triplecast_SubOption", 1),
@@ -169,12 +217,18 @@ internal partial class BLM
             BLM_ST_Polyglot_Save = new("BLM_ST_Polyglot_Save", 0),
             BLM_ST_Manaward_Threshold = new("BLM_ST_Manaward_Threshold", 40),
             BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
-            BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 1),
+            BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 0),
+            BLM_AoE_LeyLinesMovement = new("BLM_AoE_LeyLinesMovement", 0),
+            BLM_AoE_LeyLinesOption = new("BLM_AoE_LeyLinesOption", 40),
             BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 20),
             BLM_VariantCure = new("BLM_VariantCure", 50),
             BLM_B1to3 = new("BLM_B1to3", 0),
             BLM_B4toDespair = new("BLM_B4toDespair", 0),
             BLM_F1to3 = new("BLM_F1to3", 0);
+
+        public static UserFloat
+            BLM_ST_LeyLinesTimeStill = new("BLM_ST_LeyLinesTimeStill", 2.5f),
+            BLM_AoE_LeyLinesTimeStill = new("BLM_AoE_LeyLinesTimeStill", 2.5f);
 
         public static UserBoolArray
             BLM_ST_MovementOption = new("BLM_ST_MovementOption");

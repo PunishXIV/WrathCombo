@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Combos.PvE.BLM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
@@ -54,6 +55,17 @@ internal partial class BLM
     internal static bool HasMaxUmbralHeartStacks =>
         UmbralHearts is 3;
 
+    internal static int HPThresholdLeylines =>
+        BLM_ST_LeyLinesSubOption == 1 ||
+        !InBossEncounter() ? BLM_ST_LeyLinesSubOption : 0;
+
+    internal static float RefreshTimerThunder =>
+        BLM_ST_ThunderUptime_Threshold;
+
+    internal static int HPThresholdThunder =>
+        BLM_ST_Thunder_SubOption == 1 ||
+        !InBossEncounter() ? BLM_ST_ThunderOption : 0;
+
     internal static bool HasPolyglotStacks() =>
         PolyglotStacks > 0;
 
@@ -64,7 +76,7 @@ internal partial class BLM
     [
         //Triplecast
         (Triplecast, CustomComboPreset.BLM_ST_Movement,
-            () => Config.BLM_ST_MovementOption[0] &&
+            () => BLM_ST_MovementOption[0] &&
                   ActionReady(Triplecast) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast) &&
@@ -72,7 +84,7 @@ internal partial class BLM
 
         // Paradox
         (OriginalHook(Paradox), CustomComboPreset.BLM_ST_Movement,
-            () => Config.BLM_ST_MovementOption[1] &&
+            () => BLM_ST_MovementOption[1] &&
                   ActionReady(Paradox) &&
                   FirePhase && ActiveParadox &&
                   !HasStatusEffect(Buffs.Firestarter) &&
@@ -81,13 +93,13 @@ internal partial class BLM
 
         //Swiftcast
         (Role.Swiftcast, CustomComboPreset.BLM_ST_Movement,
-            () => Config.BLM_ST_MovementOption[2] &&
+            () => BLM_ST_MovementOption[2] &&
                   ActionReady(Role.Swiftcast) &&
                   !HasStatusEffect(Buffs.Triplecast)),
 
         //Xeno
         (Xenoglossy, CustomComboPreset.BLM_ST_Movement,
-            () => Config.BLM_ST_MovementOption[3] &&
+            () => BLM_ST_MovementOption[3] &&
                   HasPolyglotStacks() &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast))
@@ -109,11 +121,11 @@ internal partial class BLM
     internal static WrathOpener Opener()
     {
         if (StandardOpener.LevelChecked &&
-            Config.BLM_SelectedOpener == 0)
+            BLM_SelectedOpener == 0)
             return StandardOpener;
 
         if (FlareOpener.LevelChecked &&
-            Config.BLM_SelectedOpener == 1)
+            BLM_SelectedOpener == 1)
             return FlareOpener;
 
         return WrathOpener.Dummy;
@@ -163,7 +175,7 @@ internal partial class BLM
             Fire3
         ];
 
-        internal override UserData ContentCheckConfig => Config.BLM_Balance_Content;
+        internal override UserData ContentCheckConfig => BLM_Balance_Content;
 
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
@@ -216,7 +228,7 @@ internal partial class BLM
             Fire3
         ];
 
-        internal override UserData ContentCheckConfig => Config.BLM_Balance_Content;
+        internal override UserData ContentCheckConfig => BLM_Balance_Content;
 
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 

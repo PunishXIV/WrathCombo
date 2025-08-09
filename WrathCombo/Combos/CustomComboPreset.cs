@@ -1018,6 +1018,15 @@ public enum CustomComboPreset
 
     #endregion
 
+    #region Movement
+    
+    [ConflictingCombos(BLM_Aetherial_Manipulation)]
+    [CustomComboInfo("Aetherial Manipulation Movement option", "Retargets Aetherial Manipulation to UI/Field Mouseover", BLM.JobID)]
+    [Retargeted(BLM.AetherialManipulation)]
+    BLM_Retargetting_Aetherial_Manipulation = 2066,
+
+    #endregion
+
     #region Single Target - Advanced
 
     [AutoAction(false, false)]
@@ -1123,6 +1132,10 @@ public enum CustomComboPreset
     BLM_AoE_Thunder = 2209,
 
     [ParentCombo(BLM_AoE_AdvancedMode)]
+    [CustomComboInfo("Movement Option", "Add Triplecast while moving.", BLM.JobID)]
+    BLM_AoE_Movement = 2213,
+
+    [ParentCombo(BLM_AoE_AdvancedMode)]
     [CustomComboInfo("Foul Option", "Add Foul to the rotation.", BLM.JobID)]
     BLM_AoE_UsePolyglot = 2203,
 
@@ -1155,7 +1168,7 @@ public enum CustomComboPreset
     [ReplaceSkill(BLM.Triplecast)]
     [CustomComboInfo("Triplecast Protection", "Replaces Triplecast with Savage Blade when you already have triplecast active.", BLM.JobID)]
     BLM_TriplecastProtection = 2056,
-
+    
     [ReplaceSkill(BLM.Fire, BLM.Fire3)]
     [ConflictingCombos(BLM_ST_AdvancedMode, BLM_ST_SimpleMode, BLM_Fire1Despair)]
     [CustomComboInfo("Fire I/III Feature", "Replaces Fire I or Fire III.", BLM.JobID)]
@@ -1208,6 +1221,14 @@ public enum CustomComboPreset
     [ReplaceSkill(BLM.Amplifier)]
     [CustomComboInfo("Amplifier to Xenoglossy", "Replaces Amplifier with Xenoglossy when at max Polyglot stacks.", BLM.JobID)]
     BLM_AmplifierXeno = 2061,
+
+    [ReplaceSkill(BLM.Xenoglossy)]
+    [CustomComboInfo("Xenoglossy to Thunder", "Replaces Xenoglossy with Thunder when Thunder is 3 secs or lower.", BLM.JobID)]
+    BLM_XenoThunder = 2067,
+
+    [ReplaceSkill(BLM.Foul)]
+    [CustomComboInfo("Foul to Thunder II", "Replaces Foul with Thunder II when Thunder is 3 secs or lower.", BLM.JobID)]
+    BLM_FoulThunder = 2068,
     
     [ReplaceSkill(BLM.Transpose)]
     [CustomComboInfo("Umbral Soul/Transpose Feature", "Replaces Transpose with Umbral Soul when Umbral Soul is available.", BLM.JobID)]
@@ -1222,14 +1243,15 @@ public enum CustomComboPreset
     BLM_Between_The_LeyLines = 2051,
 
     [ReplaceSkill(BLM.AetherialManipulation)]
+    [ConflictingCombos(BLM_Retargetting_Aetherial_Manipulation)]
     [CustomComboInfo("Aetherial Manipulation Feature", "Replaces Aetherial Manipulation with Between the Lines when you are out of active Ley Lines and standing still.", BLM.JobID)]
     BLM_Aetherial_Manipulation = 2055,
     
     #endregion
 
     // Last value ST = 2117
-    //Last Value AoE = 2212
-    //Last Value misc = 2065
+    //Last Value AoE = 2213
+    //Last Value misc = 2068
 
     #endregion
 

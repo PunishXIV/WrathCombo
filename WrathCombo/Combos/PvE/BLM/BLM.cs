@@ -1,4 +1,6 @@
+using System;
 using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.BLM.Config;
 namespace WrathCombo.Combos.PvE;
@@ -28,7 +30,9 @@ internal partial class BLM : Caster
                 if (ActionReady(Amplifier) && !HasMaxPolyglotStacks)
                     return Amplifier;
 
-                if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines))
+                if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
+                    GetRemainingCharges(LeyLines) > 1 &&
+                    !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(2.5f))
                     return LeyLines;
 
                 if (EndOfFirePhase)
@@ -40,8 +44,12 @@ internal partial class BLM : Caster
                         !ActionReady(Manafont) && !HasStatusEffect(Buffs.Triplecast))
                         return Role.Swiftcast;
 
+                    if (ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
+                        !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
+                        !HasStatusEffect(Buffs.LeyLines) && JustUsed(Despair) && !ActionReady(Manafont))
+                        return Triplecast;
+
                     if (ActionReady(Transpose) &&
-                        LevelChecked(Fire3) &&
                         (HasStatusEffect(Role.Buffs.Swiftcast) ||
                          HasStatusEffect(Buffs.Triplecast)))
                         return Transpose;
@@ -49,8 +57,7 @@ internal partial class BLM : Caster
 
                 if (IcePhase)
                 {
-                    if (CurMp is MP.MaxMP &&
-                        JustUsed(Paradox) &&
+                    if (CurMp is MP.MaxMP && JustUsed(Paradox) &&
                         ActionReady(Transpose))
                         return Transpose;
 
@@ -66,6 +73,7 @@ internal partial class BLM : Caster
             if (IsMoving() && !LevelChecked(Triplecast))
                 return Scathe;
 
+            //Overcap protection
             if (HasMaxPolyglotStacks && PolyglotTimer <= 5000)
                 return LevelChecked(Xenoglossy)
                     ? Xenoglossy
@@ -74,9 +82,8 @@ internal partial class BLM : Caster
             if (LevelChecked(Thunder) && HasStatusEffect(Buffs.Thunderhead) &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
                 (ThunderDebuffST is null && ThunderDebuffAoE is null ||
-                 ThunderDebuffST?.RemainingTime <= 3 ||
-                 ThunderDebuffAoE?.RemainingTime <= 3) &&
-                GetTargetHPPercent() > 0)
+                 ThunderDebuffST?.RemainingTime <= RefreshTimerThunder ||
+                 ThunderDebuffAoE?.RemainingTime <= RefreshTimerThunder))
                 return OriginalHook(Thunder);
 
             if (LevelChecked(Amplifier) &&
@@ -113,7 +120,7 @@ internal partial class BLM : Caster
             if (FirePhase)
             {
                 // TODO: Revisit when Raid Buff checks are in place
-                if (PolyglotStacks > 1)
+                if (HasPolyglotStacks())
                     return LevelChecked(Xenoglossy)
                         ? Xenoglossy
                         : Foul;
@@ -161,7 +168,8 @@ internal partial class BLM : Caster
                     if (LevelChecked(Fire3))
                         return Fire3;
 
-                    if (ActionReady(Transpose) && !LevelChecked(Blizzard3))
+                    if (ActionReady(Transpose) &&
+                        !LevelChecked(Blizzard3))
                         return Transpose;
                 }
 
@@ -215,7 +223,10 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(CustomComboPreset.BLM_ST_LeyLines) &&
                     ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
-                    GetRemainingCharges(LeyLines) > BLM_ST_LeyLinesCharges)
+                    GetRemainingCharges(LeyLines) > BLM_ST_LeyLinesCharges &&
+                    (BLM_ST_LeyLinesMovement == 1 ||
+                     BLM_ST_LeyLinesMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_ST_LeyLinesTimeStill)) &&
+                    GetTargetHPPercent() > HPThresholdLeylines)
                     return LeyLines;
 
                 if (EndOfFirePhase)
@@ -284,18 +295,13 @@ internal partial class BLM : Caster
                     : Foul;
 
             if (IsEnabled(CustomComboPreset.BLM_ST_Thunder) &&
-                LevelChecked(Thunder) && HasStatusEffect(Buffs.Thunderhead))
-            {
-                float refreshTimer = BLM_ST_ThunderUptime_Threshold;
-                int hpThreshold = BLM_ST_Thunder_SubOption == 1 || !InBossEncounter() ? BLM_ST_ThunderOption : 0;
-
-                if (CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
-                    (ThunderDebuffST is null && ThunderDebuffAoE is null ||
-                     ThunderDebuffST?.RemainingTime <= refreshTimer ||
-                     ThunderDebuffAoE?.RemainingTime <= refreshTimer) &&
-                    GetTargetHPPercent() > hpThreshold)
-                    return OriginalHook(Thunder);
-            }
+                LevelChecked(Thunder) && HasStatusEffect(Buffs.Thunderhead) &&
+                CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder)]) &&
+                (ThunderDebuffST is null && ThunderDebuffAoE is null ||
+                 ThunderDebuffST?.RemainingTime <= RefreshTimerThunder ||
+                 ThunderDebuffAoE?.RemainingTime <= RefreshTimerThunder) &&
+                GetTargetHPPercent() > HPThresholdThunder)
+                return OriginalHook(Thunder);
 
             if (IsEnabled(CustomComboPreset.BLM_ST_Amplifier) &&
                 IsEnabled(CustomComboPreset.BLM_ST_UsePolyglot) &&
@@ -415,23 +421,27 @@ internal partial class BLM : Caster
 
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
-
+            
             if (CanWeave())
             {
+                if (IsMoving() && InCombat() && HasBattleTarget() &&
+                    ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
+                    return Triplecast;
+
                 if (ActionReady(Manafont) &&
                     EndOfFirePhase)
                     return Manafont;
 
                 if (ActionReady(Transpose) &&
-                    (EndOfFirePhase ||
-                     EndOfIcePhaseAoEMaxLevel))
+                    (EndOfFirePhase || EndOfIcePhaseAoEMaxLevel))
                     return Transpose;
 
                 if (ActionReady(Amplifier) && PolyglotTimer >= 20000)
                     return Amplifier;
 
                 if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
-                    GetRemainingCharges(LeyLines) > 1)
+                    !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_AoE_LeyLinesTimeStill) &&
+                    GetTargetHPPercent() > 40)
                     return LeyLines;
             }
 
@@ -440,7 +450,6 @@ internal partial class BLM : Caster
                 return Foul;
 
             if (HasStatusEffect(Buffs.Thunderhead) && LevelChecked(Thunder2) &&
-                GetTargetHPPercent() > 1 &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
@@ -456,26 +465,23 @@ internal partial class BLM : Caster
                 if (FlarestarReady)
                     return FlareStar;
 
-                if (LevelChecked(Fire2) && !TraitLevelChecked(Traits.UmbralHeart))
+                if (ActionReady(Fire2) && !TraitLevelChecked(Traits.UmbralHeart))
                     return OriginalHook(Fire2);
 
                 if (!HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
-                    GetRemainingCharges(Triplecast) > 1 && HasMaxUmbralHeartStacks &&
-                    !ActionReady(Manafont))
+                    HasMaxUmbralHeartStacks && !ActionReady(Manafont))
                     return Triplecast;
 
                 if (ActionReady(Flare))
                     return Flare;
 
-                if (ActionReady(Transpose) &&
-                    !LevelChecked(Fire3) &&
-                    CurMp < MP.FireAoE)
+                if (ActionReady(Transpose) && CurMp < MP.FireAoE)
                     return Transpose;
             }
 
             if (IcePhase)
             {
-                if ((CurMp is MP.MaxMP || HasMaxUmbralHeartStacks) &&
+                if ((HasMaxUmbralHeartStacks || CurMp is MP.MaxMP) &&
                     ActionReady(Transpose))
                     return Transpose;
 
@@ -510,10 +516,14 @@ internal partial class BLM : Caster
 
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
-
-
+            
             if (CanWeave())
             {
+                if (IsEnabled(CustomComboPreset.BLM_AoE_Movement) &&
+                    IsMoving() && InCombat() && HasBattleTarget() &&
+                    ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
+                    return Triplecast;
+
                 if (IsEnabled(CustomComboPreset.BLM_AoE_Manafont) &&
                     ActionReady(Manafont) &&
                     EndOfFirePhase)
@@ -530,7 +540,10 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(CustomComboPreset.BLM_AoE_LeyLines) &&
                     ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
-                    GetRemainingCharges(LeyLines) > BLM_AoE_LeyLinesCharges)
+                    GetRemainingCharges(LeyLines) > BLM_AoE_LeyLinesCharges &&
+                    (BLM_AoE_LeyLinesMovement == 1 ||
+                     BLM_AoE_LeyLinesMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_AoE_LeyLinesTimeStill)) &&
+                    GetTargetHPPercent() > BLM_AoE_LeyLinesOption)
                     return LeyLines;
             }
 
@@ -614,6 +627,16 @@ internal partial class BLM : Caster
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && Variant.CanRaise(CustomComboPreset.BLM_Variant_Raise)
                 ? Variant.Raise
+                : actionID;
+    }
+
+    internal class BLM_Retargetting_Aetherial_Manipulation : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.BLM_Retargetting_Aetherial_Manipulation;
+
+        protected override uint Invoke(uint actionID) =>
+            actionID is AetherialManipulation
+                ? AetherialManipulation.Retarget(SimpleTarget.Stack.MouseOver ?? SimpleTarget.HardTarget, true)
                 : actionID;
     }
 
@@ -704,8 +727,8 @@ internal partial class BLM : Caster
         protected override uint Invoke(uint actionID) =>
             actionID switch
             {
-                Blizzard4 when BLM_B4toDespair == 0 && FirePhase && LevelChecked(Despair) => Despair,
-                Blizzard3 when BLM_B4toDespair == 1 && FirePhase && LevelChecked(Despair) => Despair,
+                Blizzard4 when BLM_B4toDespair == 0 && FirePhase && LevelChecked(Despair) && CurMp >= 800 => Despair,
+                Blizzard3 when BLM_B4toDespair == 1 && FirePhase && LevelChecked(Despair) && CurMp >= 800 => Despair,
                 var _ => actionID
             };
     }
@@ -754,6 +777,24 @@ internal partial class BLM : Caster
         protected override uint Invoke(uint actionID) =>
             actionID is Amplifier && HasMaxPolyglotStacks
                 ? Xenoglossy
+                : actionID;
+    }
+
+    internal class BLM_XenoThunder : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.BLM_XenoThunder;
+        protected override uint Invoke(uint actionID) =>
+            actionID is Xenoglossy && ThunderDebuffST.RemainingTime <= 3
+                ? OriginalHook(Thunder)
+                : actionID;
+    }
+
+    internal class BLM_FoulThunder : CustomCombo
+    {
+        protected internal override CustomComboPreset Preset => CustomComboPreset.BLM_FoulThunder;
+        protected override uint Invoke(uint actionID) =>
+            actionID is Foul && ThunderDebuffAoE.RemainingTime <= 3
+                ? OriginalHook(Thunder2)
                 : actionID;
     }
 
