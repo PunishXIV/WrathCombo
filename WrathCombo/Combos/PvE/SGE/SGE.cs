@@ -17,7 +17,7 @@ internal partial class SGE : Healer
     {
         private static uint[] DosisActions => [.. DosisList.Keys];
 
-        protected internal override Preset Preset => Preset.SGE_ST_DPS;
+        protected internal override Preset Preset => Preset.SGE_ST_Simple_DPS;
 
         protected override uint Invoke(uint actionID)
         {

@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ECommons.DalamudServices;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
-using WrathCombo.Data;
 using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
@@ -157,15 +157,18 @@ internal partial class All
     internal class ALL_Healer_EsunaRetargeting : CustomCombo
     {
         protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.ALL_Healer_EsunaRetargeting;
-
+        
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not RoleActions.Healer.Esuna)
                 return actionID;
 
-            RoleActions.Healer.Esuna.Retarget(SimpleTarget.Stack.AllyToEsuna, dontCull: true);
+            var target = SimpleTarget.UIMouseOverTarget.IfHasCleansable() ??
+                         SimpleTarget.ModelMouseOverTarget.IfHasCleansable() ??
+                         SimpleTarget.HardTarget.IfHasCleansable() ??
+                         GetPartyMembers().FirstOrDefault(x => x.BattleChara.IfHasCleansable() != null)?.BattleChara;
 
-            return actionID;
+            return target is null ? SavageBlade : RoleActions.Healer.Esuna.Retarget(target, dontCull: true);
         }
     }
     
