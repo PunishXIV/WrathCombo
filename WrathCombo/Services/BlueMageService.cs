@@ -1,24 +1,22 @@
 ﻿using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
+namespace WrathCombo.Services;
 
-namespace WrathCombo.Services
+internal unsafe static class BlueMageService
 {
-    internal unsafe static class BlueMageService
+    public static void PopulateBLUSpells()
     {
-        public static void PopulateBLUSpells()
+        var prevList = Service.Configuration.ActiveBLUSpells.ToList();
+        Service.Configuration.ActiveBLUSpells.Clear();
+
+        for (int i = 0; i <= 24; i++)
         {
-            var prevList = Service.Configuration.ActiveBLUSpells.ToList();
-            Service.Configuration.ActiveBLUSpells.Clear();
-
-            for (int i = 0; i <= 24; i++)
-            {
-                var id = ActionManager.Instance()->GetActiveBlueMageActionInSlot(i);
-                if (id != 0)
-                    Service.Configuration.ActiveBLUSpells.Add(id);
-            }
-
-            if (Service.Configuration.ActiveBLUSpells.Except(prevList).Any())
-                Service.Configuration.Save();
+            var id = ActionManager.Instance()->GetActiveBlueMageActionInSlot(i);
+            if (id != 0)
+                Service.Configuration.ActiveBLUSpells.Add(id);
         }
+
+        if (Service.Configuration.ActiveBLUSpells.Except(prevList).Any())
+            Service.Configuration.Save();
     }
 }

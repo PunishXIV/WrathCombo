@@ -1,9 +1,9 @@
 ﻿#region
 
-using System;
 using ECommons;
 using ECommons.EzIpcManager;
 using ECommons.Logging;
+using System;
 
 // ReSharper disable InlineTemporaryVariable
 

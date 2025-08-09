@@ -1,6 +1,5 @@
 ﻿using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class RoleActions
@@ -87,9 +86,9 @@ internal static partial class RoleActions
         public static bool CanSecondWind(int healthPercent) =>
             ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthPercent;
 
-        public static bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
+        public static bool CanArmsLength(int enemyCount, ALL.Enums.BossAvoidance avoidanceSetting) =>
             ActionReady(ArmsLength) && NumberOfEnemiesInRange(ArmsLength) >= enemyCount &&
-            ((int)avoidanceSetting == (int)All.Enums.BossAvoidance.Off || !InBossEncounter());
+            ((int)avoidanceSetting == (int)ALL.Enums.BossAvoidance.Off || !InBossEncounter());
     }
 
     public static class PhysRanged
@@ -182,7 +181,7 @@ internal static partial class RoleActions
             ActionReady(Rampart) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanLowBlow() =>
-            ActionReady(LowBlow) && TargetIsCasting() && (ICDTracker.StatusIsExpired(All.Debuffs.Stun, CurrentTarget.GameObjectId) || ICDTracker.NumberOfTimesApplied(All.Debuffs.Stun, CurrentTarget.GameObjectId) < 3);
+            ActionReady(LowBlow) && TargetIsCasting() && (ICDTracker.StatusIsExpired(ALL.Debuffs.Stun, CurrentTarget.GameObjectId) || ICDTracker.NumberOfTimesApplied(ALL.Debuffs.Stun, CurrentTarget.GameObjectId) < 3);
 
         public static bool CanProvoke() =>
             ActionReady(Provoke);

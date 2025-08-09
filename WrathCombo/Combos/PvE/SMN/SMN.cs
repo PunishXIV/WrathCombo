@@ -1,11 +1,10 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System.Linq;
 using WrathCombo.Core;
-using WrathCombo.Extensions;
 using WrathCombo.CustomComboNS;
-using Preset = WrathCombo.Combos.CustomComboPreset;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SMN.Config;
-
+using Preset = WrathCombo.Combos.CustomComboPreset;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SMN : Caster

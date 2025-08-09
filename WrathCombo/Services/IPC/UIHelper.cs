@@ -1,14 +1,13 @@
 ﻿#region
 
+using Dalamud.Interface.Colors;
+using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Bindings.ImGui;
-using Dalamud.Interface.Colors;
-using ECommons.ExcelServices;
-using ECommons.ImGuiMethods;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;

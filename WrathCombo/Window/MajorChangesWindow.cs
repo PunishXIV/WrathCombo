@@ -1,8 +1,5 @@
 ﻿#region
 
-using System;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
@@ -12,7 +9,9 @@ using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Common.Math;
-using Dalamud.Bindings.ImGui;
+using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using WrathCombo.Core;
 using WrathCombo.Services;
 using Vector4 = System.Numerics.Vector4;

@@ -4,10 +4,9 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SCH.Config;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using EZ = ECommons.Throttlers.EzThrottler;
+using Preset = WrathCombo.Combos.CustomComboPreset;
 using TS = System.TimeSpan;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SCH : Healer

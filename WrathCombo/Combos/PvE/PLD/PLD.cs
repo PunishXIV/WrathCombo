@@ -3,7 +3,6 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PLD : Tank
@@ -961,7 +960,7 @@ internal partial class PLD : Tank
             if (tar is not null)
                 return ShieldBash.Retarget(actionID, tar);
             else if (Config.PLD_RetargetStunLockout)
-                return All.SavageBlade;
+                return ALL.SavageBlade;
 
             return actionID;
         }

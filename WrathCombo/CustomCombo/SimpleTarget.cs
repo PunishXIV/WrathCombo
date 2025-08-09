@@ -357,10 +357,10 @@ internal static class SimpleTarget
             .OfType<IBattleChara>()
             .Where(x => x.IsHostile() && x.IsTargetable &&
                         !x.IsBoss() && x.IsWithinRange(3) &&
-                        !CustomComboFunctions.HasStatusEffect(All.Debuffs.Stun, x) &&
-                        (ICDTracker.StatusIsExpired(All.Debuffs.Stun, x.GameObjectId) ||
+                        !CustomComboFunctions.HasStatusEffect(ALL.Debuffs.Stun, x) &&
+                        (ICDTracker.StatusIsExpired(ALL.Debuffs.Stun, x.GameObjectId) ||
                          ICDTracker.Trackers.FirstOrDefault(y =>
-                             y.StatusID == All.Debuffs.Stun &&
+                             y.StatusID == ALL.Debuffs.Stun &&
                              x.GameObjectId == y.GameObjectId)?
                              .TimesApplied < reStunCheck))
             .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)

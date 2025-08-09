@@ -1,20 +1,20 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameHelpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Options = WrathCombo.Combos.CustomComboPreset;
 using EZ = ECommons.Throttlers.EzThrottler;
+using Options = WrathCombo.Combos.CustomComboPreset;
 using TS = System.TimeSpan;
 
 // ReSharper disable ReturnTypeCanBeNotNullable
@@ -132,7 +132,7 @@ internal partial class DNC
     /// <returns>
     ///     The Finisher to use, or if
     ///     <see cref="CustomComboPreset.DNC_ST_BlockFinishes" /> is enabled and
-    ///     there is no enemy in range: <see cref="All.SavageBlade" />.
+    ///     there is no enemy in range: <see cref="ALL.SavageBlade" />.
     /// </returns>
     private static uint FinishOrHold(uint desiredFinish)
     {
@@ -150,7 +150,7 @@ internal partial class DNC
 
         // If there is no enemy in range, hold the finish
         if (!EnemyIn15Yalms)
-            return All.SavageBlade;
+            return ALL.SavageBlade;
 
         // If there is an enemy in range, or as a fallback, return the desired finish
         return desiredFinish;
@@ -514,7 +514,7 @@ internal partial class DNC
     /// <returns>If the action was assigned as a custom dance step.</returns>
     private static bool GetCustomDanceStep(uint action, out uint updatedAction)
     {
-        updatedAction = All.SavageBlade;
+        updatedAction = ALL.SavageBlade;
 
         if (!CustomDanceStepActions.Contains(action))
             return false;

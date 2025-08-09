@@ -1,15 +1,14 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 using System;
 using System.Collections.Generic;
-using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Dalamud.Game.ClientState.Objects.Types;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using static WrathCombo.Combos.PvE.SMN.Config;
-
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using Preset = WrathCombo.Combos.CustomComboPreset;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SMN

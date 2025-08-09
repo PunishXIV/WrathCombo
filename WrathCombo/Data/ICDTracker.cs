@@ -1,60 +1,54 @@
-﻿using FFXIVClientStructs;
-using Lumina.Excel.Sheets;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+namespace WrathCombo.Data;
 
-namespace WrathCombo.Data
+internal class ICDTracker
 {
-    internal class ICDTracker
+    public uint StatusID;
+
+    public ulong GameObjectId;
+
+    public DateTime ICDClearedTime;
+
+    public int TimesApplied;
+
+    public ICDTracker(uint statusID, ulong gameObjectId, TimeSpan icdDuration)
     {
-        public uint StatusID;
+        StatusID = statusID;
+        GameObjectId = gameObjectId;
+        ICDClearedTime = DateTime.Now + icdDuration;
+        TimesApplied = 1;
+    }
 
-        public ulong GameObjectId;
+    public static List<ICDTracker> Trackers = new();
 
-        public DateTime ICDClearedTime;
+    public static void ClearExpiredTrackers() => Trackers.RemoveAll(x => x.ICDClearedTime < DateTime.Now);
 
-        public int TimesApplied;
+    public static bool StatusIsExpired(uint statusId, ulong gameObjectId)
+    {
+        ClearExpiredTrackers();
+        return !Trackers.Any(x => x.GameObjectId == gameObjectId && x.StatusID == statusId);
+    }
 
-        public ICDTracker(uint statusID, ulong gameObjectId, TimeSpan icdDuration)
-        {
-            StatusID = statusID;
-            GameObjectId = gameObjectId;
-            ICDClearedTime = DateTime.Now + icdDuration;
-            TimesApplied = 1;
-        }
+    public static TimeSpan TimeUntilExpired(uint statusId, ulong gameObjectId)
+    {
+        ClearExpiredTrackers();
+        if (StatusIsExpired(statusId, gameObjectId))
+            return TimeSpan.Zero;
 
-        public static List<ICDTracker> Trackers = new();
+        return Trackers.First(x => x.GameObjectId == gameObjectId && x.StatusID == statusId).ICDClearedTime - DateTime.Now;
+    }
 
-        public static void ClearExpiredTrackers() => Trackers.RemoveAll(x => x.ICDClearedTime < DateTime.Now);
-
-        public static bool StatusIsExpired(uint statusId, ulong gameObjectId)
-        {
-            ClearExpiredTrackers();
-            return !Trackers.Any(x => x.GameObjectId == gameObjectId && x.StatusID == statusId);
-        }
-
-        public static TimeSpan TimeUntilExpired(uint statusId, ulong gameObjectId)
-        {
-            ClearExpiredTrackers();
-            if (StatusIsExpired(statusId, gameObjectId))
-                return TimeSpan.Zero;
-
-            return Trackers.First(x => x.GameObjectId == gameObjectId && x.StatusID == statusId).ICDClearedTime - DateTime.Now;
-        }
-
-        public TimeSpan TimeUntilExpired()
-        {
-            var remaining = ICDClearedTime - DateTime.Now;
-            return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
-        }
+    public TimeSpan TimeUntilExpired()
+    {
+        var remaining = ICDClearedTime - DateTime.Now;
+        return remaining > TimeSpan.Zero ? remaining : TimeSpan.Zero;
+    }
         
-        public static int NumberOfTimesApplied(uint statusId, ulong gameObjectId)
-        {
-            ClearExpiredTrackers();
-            return Trackers.FirstOrDefault(x => x.GameObjectId == gameObjectId && x.StatusID == statusId)?.TimesApplied ?? 0;
-        }
+    public static int NumberOfTimesApplied(uint statusId, ulong gameObjectId)
+    {
+        ClearExpiredTrackers();
+        return Trackers.FirstOrDefault(x => x.GameObjectId == gameObjectId && x.StatusID == statusId)?.TimesApplied ?? 0;
     }
 }

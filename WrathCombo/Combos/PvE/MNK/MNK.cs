@@ -546,7 +546,7 @@ internal partial class MNK : Melee
             actionID is PerfectBalance &&
             HasStatusEffect(Buffs.PerfectBalance) &&
             LevelChecked(PerfectBalance)
-                ? All.SavageBlade
+                ? ALL.SavageBlade
                 : actionID;
     }
 }

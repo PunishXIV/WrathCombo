@@ -1,12 +1,12 @@
 ﻿#region
 
+using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using ECommons.DalamudServices;
-using ECommons.ExcelServices;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Core;

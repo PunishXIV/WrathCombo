@@ -4,7 +4,6 @@ using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
-
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions

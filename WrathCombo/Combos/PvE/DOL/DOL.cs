@@ -1,6 +1,5 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.CustomComboNS;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class DOL

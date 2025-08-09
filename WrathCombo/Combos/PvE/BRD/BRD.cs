@@ -2,8 +2,8 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using static WrathCombo.Combos.PvE.BRD.Config;
+using Preset = WrathCombo.Combos.CustomComboPreset;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BRD : PhysicalRanged

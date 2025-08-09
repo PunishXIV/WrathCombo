@@ -1,6 +1,6 @@
 #region Dependencies
+
 using System.Linq;
-using ECommons.Logging;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -646,12 +646,12 @@ internal partial class GNB : Tank
             {
                 return !HasStatusEffect(Buffs.Aurora, target, true)
                     ? actionID.Retarget(target)
-                    : All.SavageBlade;
+                    : ALL.SavageBlade;
             }
 
             return !HasStatusEffect(Buffs.Aurora, SimpleTarget.Self, true)
                 ? actionID
-                : All.SavageBlade;
+                : ALL.SavageBlade;
         }
     }
     #endregion

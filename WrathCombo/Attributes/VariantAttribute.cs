@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace WrathCombo.Attributes
+namespace WrathCombo.Attributes;
+
+/// <summary> Attribute designating variant combos. </summary>
+[AttributeUsage(AttributeTargets.Field)]
+internal class VariantAttribute : Attribute
 {
-    /// <summary> Attribute designating variant combos. </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    internal class VariantAttribute : Attribute
-    {
-    }
 }

@@ -2,16 +2,14 @@
 
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.GameFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ECommons.GameFunctions;
 using WrathCombo.AutoRotation;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 

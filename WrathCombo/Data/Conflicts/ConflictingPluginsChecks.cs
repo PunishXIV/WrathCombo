@@ -1,9 +1,9 @@
 ﻿#region
 
-using System;
-using System.Linq;
 using ECommons.DalamudServices;
 using ECommons.Logging;
+using System;
+using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
 using WrathCombo.Extensions;

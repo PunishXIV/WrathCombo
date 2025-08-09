@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace WrathCombo.Attributes
+namespace WrathCombo.Attributes;
+
+[AttributeUsage(AttributeTargets.Field)]
+internal class AutoActionAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Field)]
-    internal class AutoActionAttribute : Attribute
-    {
-        public bool IsAoE;
-        public bool IsHeal;
-        internal AutoActionAttribute(bool isAoE, bool isHeal) 
-        { 
-            IsAoE = isAoE;
-            IsHeal = isHeal;
-        }
+    public bool IsAoE;
+    public bool IsHeal;
+    internal AutoActionAttribute(bool isAoE, bool isHeal) 
+    { 
+        IsAoE = isAoE;
+        IsHeal = isHeal;
     }
 }

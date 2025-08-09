@@ -1,13 +1,14 @@
 #region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
@@ -16,7 +17,6 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
-using WrathCombo.AutoRotation;
 
 #endregion
 

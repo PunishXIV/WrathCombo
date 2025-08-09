@@ -1,7 +1,6 @@
 ﻿using WrathCombo.Data;
 using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
-
 namespace WrathCombo.Combos.PvE.Content;
 
 internal class Bozja

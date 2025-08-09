@@ -10,7 +10,6 @@ using TS = System.TimeSpan;
 // ReSharper disable CheckNamespace
 
 #endregion
-
 namespace WrathCombo.Combos.PvE;
 
 /// <summary>

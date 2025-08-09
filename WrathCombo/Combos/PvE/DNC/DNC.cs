@@ -122,7 +122,7 @@ internal partial class DNC : PhysicalRanged
                     Config.DNC_ST_OpenerDifficulty, ContentCheck.ListSet.BossOnly) &&
                 IsEnabled(Preset.DNC_ST_BalanceOpener) &&
                 IsEnabled(Preset.DNC_ST_Opener_BlockEarly))
-                return All.SavageBlade;
+                return ALL.SavageBlade;
 
             if (!InCombat() && HasBattleTarget())
             {
@@ -1387,7 +1387,7 @@ internal partial class DNC : PhysicalRanged
             return (int)Config.DNC_Partner_ActionToShow switch
             {
                 (int)Config.PartnerShowAction.ClosedPosition => ClosedPosition,
-                (int)Config.PartnerShowAction.SavageBlade => All.SavageBlade,
+                (int)Config.PartnerShowAction.SavageBlade => ALL.SavageBlade,
                 _ => OriginalHook(actionID),
             };
         }

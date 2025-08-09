@@ -1,7 +1,6 @@
 #region
 
 using System.Linq;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -412,7 +411,7 @@ internal partial class DRK : Tank
                 (HasStatusEffect(Buffs.Oblation, checkTarget, anyOwner: true) ||
                  JustUsedOn(Oblation, checkTarget)) &&
                 CanApplyStatus(checkTarget, Buffs.Oblation))
-                return All.SavageBlade;
+                return ALL.SavageBlade;
 
             if (target is not null &&
                 CanApplyStatus(target, Buffs.Oblation))

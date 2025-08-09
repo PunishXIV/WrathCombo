@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
@@ -7,9 +5,10 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using System;
+using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-
 namespace WrathCombo.Extensions;
 
 public static class GameObjectExtensions

@@ -1,7 +1,6 @@
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class NIN

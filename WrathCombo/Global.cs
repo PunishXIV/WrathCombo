@@ -1,1 +1,2 @@
-﻿global using static WrathCombo.WrathCombo;
+﻿global using Dalamud.Bindings.ImGui;
+global using static WrathCombo.WrathCombo;

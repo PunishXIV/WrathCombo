@@ -1,13 +1,11 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameFunctions;
+namespace WrathCombo.Extensions;
 
-namespace WrathCombo.Extensions
+internal static class TargetExtensions
 {
-    internal static class TargetExtensions
+    public unsafe static uint GetNameId(this IGameObject t)
     {
-        public unsafe static uint GetNameId(this IGameObject t)
-        {
-            return t.Struct()->GetNameId();
-        }
+        return t.Struct()->GetNameId();
     }
 }

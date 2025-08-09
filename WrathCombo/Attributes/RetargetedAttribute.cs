@@ -1,7 +1,7 @@
 #region
 
-using System;
 using ECommons.Logging;
+using System;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;

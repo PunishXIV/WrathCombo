@@ -1,8 +1,10 @@
 ﻿#region
 
+using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -10,9 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using WrathCombo.Combos;
-using ECommons.DalamudServices;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 

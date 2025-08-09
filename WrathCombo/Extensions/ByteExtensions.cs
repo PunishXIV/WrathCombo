@@ -1,5 +1,4 @@
 ﻿using WrathCombo.CustomComboNS.Functions;
-
 namespace WrathCombo.Extensions;
 
 internal static class ByteExtensions

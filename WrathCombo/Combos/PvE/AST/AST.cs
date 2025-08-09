@@ -4,11 +4,10 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using static WrathCombo.Combos.PvE.AST.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
+using Preset = WrathCombo.Combos.CustomComboPreset;
 using TS = System.TimeSpan;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST : Healer
@@ -658,7 +657,7 @@ internal partial class AST : Healer
         protected internal override Preset Preset => Preset.AST_Lightspeed_Protection; 
         protected override uint Invoke(uint actionID) =>
             actionID is Lightspeed && HasStatusEffect(Buffs.Lightspeed)
-                ? All.SavageBlade
+                ? ALL.SavageBlade
                 : actionID;
     }
     internal class AST_Raise_Alternative : CustomCombo

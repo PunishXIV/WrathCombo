@@ -1,14 +1,13 @@
 #region
 
-using ECommons.ImGuiMethods;
-using Dalamud.Bindings.ImGui;
-using System.Numerics;
 using Dalamud.Interface.Colors;
+using ECommons.ImGuiMethods;
+using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
-using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
-using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
+using BossAvoidance = WrathCombo.Combos.PvE.ALL.Enums.BossAvoidance;
+using PartyRequirement = WrathCombo.Combos.PvE.ALL.Enums.PartyRequirement;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable once GrammarMistakeInComment

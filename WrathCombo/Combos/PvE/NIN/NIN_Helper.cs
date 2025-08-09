@@ -6,7 +6,6 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class NIN

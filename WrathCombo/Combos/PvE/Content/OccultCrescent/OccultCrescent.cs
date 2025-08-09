@@ -5,7 +5,6 @@ using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class OccultCrescent

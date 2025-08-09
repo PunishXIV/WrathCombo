@@ -1,7 +1,6 @@
 ﻿using ECommons.DalamudServices;
 using static WrathCombo.Combos.PvE.RoleActions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE.Content;
 
 #region Variant Actions and Functions

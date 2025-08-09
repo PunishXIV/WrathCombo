@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Frozen;
-using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using Lumina.Excel.Sheets;
+using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Core;
 using WrathCombo.Extensions;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Lumina.Excel.Sheets;
-using Status = Dalamud.Game.ClientState.Statuses.Status;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using static WrathCombo.Combos.PvE.AST.Config;
-
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using Preset = WrathCombo.Combos.CustomComboPreset;
+using Status = Dalamud.Game.ClientState.Statuses.Status;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST

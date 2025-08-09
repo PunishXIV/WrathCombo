@@ -1,13 +1,10 @@
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
-using Dalamud.Bindings.ImGui;
-using Microsoft.VisualBasic.ApplicationServices;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
-
 namespace WrathCombo.Combos.PvE;
 
-internal partial class All
+internal partial class ALL
 {
     internal static class Config
     {

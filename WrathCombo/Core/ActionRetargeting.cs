@@ -1,11 +1,11 @@
 #region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;

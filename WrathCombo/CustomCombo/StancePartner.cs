@@ -1,11 +1,11 @@
 #region
 
-using System;
-using System.Threading.Tasks;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
+using System.Threading.Tasks;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;

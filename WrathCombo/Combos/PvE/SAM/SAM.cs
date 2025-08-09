@@ -891,7 +891,7 @@ internal partial class SAM : Melee
             actionID is MeikyoShisui &&
             HasStatusEffect(Buffs.MeikyoShisui) &&
             ActionReady(MeikyoShisui)
-                ? All.SavageBlade
+                ? ALL.SavageBlade
                 : actionID;
     }
 

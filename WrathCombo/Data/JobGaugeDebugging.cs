@@ -2,10 +2,8 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
-using InteropGenerator.Runtime;
 using System;
 using System.Runtime.InteropServices;
-
 namespace WrathCombo.Data;
 
 public unsafe class TmpSCHGauge

@@ -3,13 +3,11 @@ using Dalamud.Interface.Utility;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Dalamud.Bindings.ImGui;
 using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Services;
-
 namespace WrathCombo.Window;
 
 internal class TargetHelper : Dalamud.Interface.Windowing.Window

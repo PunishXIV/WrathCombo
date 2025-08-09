@@ -1,8 +1,8 @@
 #region
 
-using System;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameHelpers;
+using System;
 using WrathCombo.Combos;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;

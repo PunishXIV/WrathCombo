@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace WrathCombo.Attributes
+namespace WrathCombo.Attributes;
+
+/// <summary> Attribute designating secret combos. </summary>
+[AttributeUsage(AttributeTargets.Field)]
+internal class PvPCustomComboAttribute : Attribute
 {
-    /// <summary> Attribute designating secret combos. </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    internal class PvPCustomComboAttribute : Attribute
-    {
-    }
 }

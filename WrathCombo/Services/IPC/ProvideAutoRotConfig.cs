@@ -1,7 +1,7 @@
 ﻿#region
 
-using System;
 using ECommons.EzIpcManager;
+using System;
 using arcOption = WrathCombo.Services.IPC.AutoRotationConfigOption;
 
 #endregion

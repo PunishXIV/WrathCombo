@@ -1,17 +1,17 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using Dalamud.Networking.Http;
 using ECommons;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
 using ECommons.Logging;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;

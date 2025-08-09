@@ -1,14 +1,14 @@
 ﻿#region
-using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 using static WrathCombo.Combos.PvE.WHM.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using Preset = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable ConditionIsAlwaysTrueOrFalse

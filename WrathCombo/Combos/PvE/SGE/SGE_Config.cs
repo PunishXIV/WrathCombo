@@ -1,5 +1,4 @@
 ﻿using Dalamud.Interface.Colors;
-using Dalamud.Bindings.ImGui;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;

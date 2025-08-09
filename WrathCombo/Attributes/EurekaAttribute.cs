@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace WrathCombo.Attributes
+namespace WrathCombo.Attributes;
+
+/// <summary> Attribute designating Eureka combos. </summary>
+[AttributeUsage(AttributeTargets.Field)]
+internal class EurekaAttribute : Attribute
 {
-    /// <summary> Attribute designating Eureka combos. </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    internal class EurekaAttribute : Attribute
-    {
-    }
 }

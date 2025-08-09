@@ -1,11 +1,11 @@
 #region
 
-using System;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using System;
 using WrathCombo.Extensions;
 using GameObject = FFXIVClientStructs.FFXIV.Client.Game.Object.GameObject;
 

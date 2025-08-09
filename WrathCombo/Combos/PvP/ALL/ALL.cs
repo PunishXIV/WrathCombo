@@ -1,13 +1,12 @@
-﻿using System;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using System;
+using System.Collections.Frozen;
 using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Window.Functions.UserConfig;
-using System.Collections.Frozen;
-
 namespace WrathCombo.Combos.PvP;
 
 internal static class PvPCommon
@@ -143,7 +142,7 @@ internal static class PvPCommon
                 if (actionID is Guard)
                     return Guard;
 
-                return All.SavageBlade;
+                return ALL.SavageBlade;
             }
 
             if (Execute() && InPvP() &&
@@ -191,7 +190,7 @@ internal static class PvPCommon
                     return Guard;
                 }
 
-                return All.SavageBlade;
+                return ALL.SavageBlade;
             }
 
             if (Execute() && InPvP() &&
@@ -246,7 +245,7 @@ internal static class PvPCommon
                 if (actionID is Guard)
                     return Guard;
 
-                return All.SavageBlade;
+                return ALL.SavageBlade;
             }
 
             if (Execute() && InPvP() &&

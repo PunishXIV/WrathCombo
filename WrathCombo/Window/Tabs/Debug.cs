@@ -1,11 +1,8 @@
 ﻿#region Directives
 
-using System;
-using System.Linq;
-using System.Numerics;
-using System.Text;
 using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
@@ -19,9 +16,12 @@ using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Numerics;
+using System.Text;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -34,7 +34,6 @@ using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
-using Dalamud.Interface;
 
 #endregion
 
