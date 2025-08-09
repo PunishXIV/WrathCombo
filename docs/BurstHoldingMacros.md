@@ -183,14 +183,8 @@ Below is a community-provided list of basic burst-holding macros for each job.
 <summary>BRD</summary>
 
 ```
-/wrath toggle 3049
-/wrath toggle 3050
-/wrath toggle 3051
-/wrath toggle 3052
-/wrath toggle 3053
-/wrath toggle 3054
-/wrath toggle 3055
-/wrath toggle 3056
+/wrath toggle 3017
+/wrath toggle 3032
 ```
 
 </details>

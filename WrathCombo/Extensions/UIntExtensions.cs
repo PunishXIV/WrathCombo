@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using ECommons.DalamudServices;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -18,6 +19,9 @@ internal static class UIntExtensions
     internal static int Role(this uint value) => CustomComboFunctions.JobIDs.JobIDToRole(value);
 
     internal static ActionAttackType ActionAttackType(this uint value) => (ActionAttackType)ActionSheet[value].ActionCategory.RowId;
+    
+    internal static float ActionRange(this uint value) =>
+        ActionManager.GetActionRange(value);
     
     internal static bool IsGroundTargeted(this uint value) =>
         ActionSheet.FirstOrDefault(x => x.Value.RowId == value).Value.TargetArea;

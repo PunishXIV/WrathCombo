@@ -1435,39 +1435,9 @@ public enum CustomComboPreset
        BRD.JobID)]
     BRD_Adv_DoT = 3010,
 
-    [ParentCombo(BRD_Adv_DoT)]
-    [CustomComboInfo("Iron Jaws Option", "Enable the refreshing of dots with Ironjaws", BRD.JobID)]
-    BRD_Adv_IronJaws = 3060,
-
-    [ParentCombo(BRD_Adv_DoT)]
-    [CustomComboInfo("Dot Application Option",
-        "Enable the application of dots outside of the opener", BRD.JobID)]
-    BRD_Adv_ApplyDots = 3059,
-
-    [ParentCombo(BRD_Adv_DoT)]
-    [CustomComboInfo("Raging Jaws Option",
-        "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes below:", BRD.JobID)]
-    BRD_Adv_RagingJaws = 3025,
-
     [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Buffs Option", "Adds buffs onto the Advanced Bard feature. \nEnable all to follow balance buff windows \nDisabling any buff will follow simple priority", BRD.JobID)]
     BRD_Adv_Buffs = 3017,
-
-    [ParentCombo(BRD_Adv_Buffs)]
-    [CustomComboInfo("Raging Strikes Option", "Adds Raging Strikes", BRD.JobID)]
-    BRD_Adv_Buffs_Raging = 3049,
-
-    [ParentCombo(BRD_Adv_Buffs)]
-    [CustomComboInfo("Battlevoice Option", "Adds Battle Voice", BRD.JobID)]
-    BRD_Adv_Buffs_Battlevoice = 3050,
-
-    [ParentCombo(BRD_Adv_Buffs)]
-    [CustomComboInfo("Radiant Finale Option", "Adds Radiant Finale", BRD.JobID)]
-    BRD_Adv_Buffs_RadiantFinale = 3051,
-
-    [ParentCombo(BRD_Adv_Buffs)]
-    [CustomComboInfo("Barrage Option", "Adds Barrage", BRD.JobID)]
-    BRD_Adv_Buffs_Barrage = 3052,
 
     [ParentCombo(BRD_ST_AdvMode)]
     [CustomComboInfo("Resonant Option", "Adds Resonant Arrow to the Rotation after Barrage.", BRD.JobID)]
@@ -1506,11 +1476,6 @@ public enum CustomComboPreset
     [CustomComboInfo("Self Cleanse Option", "Uses Wardens Paeon when you have a cleansable debuff.", BRD.JobID)]
     BRD_ST_Wardens = 3047,
 
-    [ParentCombo(BRD_ST_Wardens)]
-    [CustomComboInfo("Party Cleanse Option", "Uses Wardens Paeon when someone in the party has a cleansable debuff using the Retargeting Function following party list", BRD.JobID)]
-    [Retargeted(BRD.TheWardensPaeon)]
-    BRD_ST_WardensAuto = 3064,
-
     [AutoAction(true, false)]
     [ConflictingCombos(BRD_AoE_Combo, BRD_AoE_SimpleMode)]
     [ReplaceSkill(BRD.QuickNock, BRD.Ladonsbite)]
@@ -1519,6 +1484,10 @@ public enum CustomComboPreset
         BRD.JobID)]
     [AdvancedCombo]
     BRD_AoE_AdvMode = 3015,
+    
+    [ParentCombo(BRD_AoE_AdvMode)]
+    [CustomComboInfo("Bard Dot Option", "Will maintain dots on up to 3 targets.", BRD.JobID)]
+    BRD_AoE_Adv_Multidot = 3065,
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Bard Song Option", "Weave Songs on the Advanced AoE.", BRD.JobID)]
@@ -1527,22 +1496,6 @@ public enum CustomComboPreset
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("AoE Buffs Option", "Adds buffs onto the Advance AoE Bard feature.\nEnable all to follow balance buff windows \nDisabling any buff will follow simple priority", BRD.JobID)]
     BRD_AoE_Adv_Buffs = 3032,
-
-    [ParentCombo(BRD_AoE_Adv_Buffs)]
-    [CustomComboInfo("Raging Strikes Option", "Adds Raging Strikes", BRD.JobID)]
-    BRD_AoE_Adv_Buffs_Raging = 3053,
-
-    [ParentCombo(BRD_AoE_Adv_Buffs)]
-    [CustomComboInfo("Battlevoice Option", "Adds Battle Voice", BRD.JobID)]
-    BRD_AoE_Adv_Buffs_Battlevoice = 3054,
-
-    [ParentCombo(BRD_AoE_Adv_Buffs)]
-    [CustomComboInfo("Radiant Finale Option", "Adds Radiant Finale", BRD.JobID)]
-    BRD_AoE_Adv_Buffs_RadiantFinale = 3055,
-
-    [ParentCombo(BRD_AoE_Adv_Buffs)]
-    [CustomComboInfo("Barrage Option", "Adds Barrage", BRD.JobID)]
-    BRD_AoE_Adv_Buffs_Barrage = 3056,
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("oGcd Option",
@@ -1580,11 +1533,6 @@ public enum CustomComboPreset
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Self Cleanse Option", "Uses Wardens Paeon when you have a cleansable debuff.", BRD.JobID)]
     BRD_AoE_Wardens = 3046,
-
-    [ParentCombo(BRD_AoE_Wardens)]
-    [CustomComboInfo("Party Cleanse Option", "Uses Wardens Paeon when someone in the party has a cleansable debuff using the Retargeting Function following party list.", BRD.JobID)]
-    [Retargeted(BRD.TheWardensPaeon)]
-    BRD_AoE_WardensAuto = 3063,
 
     #endregion
 
@@ -1679,7 +1627,7 @@ public enum CustomComboPreset
 
     #endregion
 
-    // Last value = 3063
+    // Last value = 3066
 
     #endregion
 

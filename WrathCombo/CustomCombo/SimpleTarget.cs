@@ -1,19 +1,20 @@
 #region
 
+using System;
+using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
-using System;
-using System.Linq;
 using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
-using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+// ReSharper disable once RedundantUsingDirective
 using static WrathCombo.Data.ActionWatching;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -76,8 +77,8 @@ internal static class SimpleTarget
         ///     A very common stack to pick a heal target, whether the user is
         ///     using the Default or Custom Heal Stack.
         /// </summary>
-        /// <seealso cref="DefaultHealStack"/>
-        /// <seealso cref="CustomHealStack"/>
+        /// <seealso cref="DefaultHealStack" />
+        /// <seealso cref="CustomHealStack" />
         public static IGameObject? AllyToHeal => GetStack();
 
         /// <summary>
@@ -93,8 +94,8 @@ internal static class SimpleTarget
         /// <summary>
         ///     The Custom Heal Stack, fully user-made.
         /// </summary>
-        /// <seealso cref="PluginConfiguration.CustomHealStack"/>
-        /// <seealso cref="GetStack"/>
+        /// <seealso cref="PluginConfiguration.CustomHealStack" />
+        /// <seealso cref="GetStack" />
         internal static IGameObject? CustomHealStack =>
             GetStack(StackOption.CustomHealStack);
 
@@ -104,7 +105,7 @@ internal static class SimpleTarget
         /// </summary>
         public static IGameObject? AllyToEsuna =>
             GetStack(logicForEachEntryInStack:
-                (target) => target.IfHasCleansable());
+                target => target.IfHasCleansable());
 
         /// <summary>
         ///     The Customizable Raise Stack.
@@ -125,16 +126,17 @@ internal static class SimpleTarget
         /// <param name="logicForEachEntryInStack">
         ///     A short method, probably of <see cref="GameObjectExtensions" />,
         ///     to apply to each entry in the stack.<br />
-        ///     <see cref="AllyToEsuna"/> for an example.
+        ///     <see cref="AllyToEsuna" /> for an example.
         /// </param>
         /// <returns>
         ///     The first matching target in the stack, or <see langword="null" />.
         /// </returns>
         private static IGameObject? GetStack
-            (StackOption stack = StackOption.UserChosenHealStack,
-                Func<IGameObject?, IGameObject?>? logicForEachEntryInStack = null)
+        (StackOption stack = StackOption.UserChosenHealStack,
+            Func<IGameObject?, IGameObject?>? logicForEachEntryInStack = null)
         {
             #region Default Heal Stack
+
             if (stack is StackOption.DefaultHealStack ||
                 (stack is StackOption.UserChosenHealStack &&
                  !cfg.UseCustomHealStack))
@@ -154,9 +156,11 @@ internal static class SimpleTarget
                         ? CustomLogic(LowestHPPAlly.IfWithinRange().IfMissingHP())
                         : null) ??
                     Self;
+
             #endregion
 
             #region Custom Heal Stack
+
             if (stack is StackOption.CustomHealStack ||
                 (stack is StackOption.UserChosenHealStack &&
                  cfg.UseCustomHealStack))
@@ -167,7 +171,8 @@ internal static class SimpleTarget
                 {
                     var resolved = GetSimpleTargetValueFromName(name);
                     var target =
-                        CustomLogic(resolved.IfFriendly().IfTargetable().IfWithinRange());
+                        CustomLogic(resolved.IfFriendly().IfTargetable()
+                            .IfWithinRange());
 
                     // Only include Missing-HP options if they are missing HP
                     if (name.Contains("Missing"))
@@ -189,9 +194,11 @@ internal static class SimpleTarget
                 if (Service.Configuration.CustomHealStack.Length <= 3)
                     return Self;
             }
+
             #endregion
 
             #region Raise Stack
+
             if (stack is StackOption.RaiseStack)
             {
                 var logging = EZ.Throttle("raiseStackLog", TS.FromSeconds(10));
@@ -217,8 +224,10 @@ internal static class SimpleTarget
 
                 // Fall back to Hard Target, if the stack is small and returned nothing
                 if (Service.Configuration.RaiseStack.Length <= 4)
-                    return HardTarget.IfCanUseOn(WHM.Raise).IfDead() ?? AnyDeadPartyMember;
+                    return HardTarget.IfCanUseOn(WHM.Raise).IfDead() ??
+                           AnyDeadPartyMember;
             }
+
             #endregion
 
             return null;
@@ -243,8 +252,9 @@ internal static class SimpleTarget
             }
             catch (Exception e)
             {
-                PluginLog.Warning($"Error getting target value from name: '{name}'. " +
-                                  $"Edited value?\n{e}");
+                PluginLog.Warning(
+                    $"Error getting target value from name: '{name}'. " +
+                    $"Edited value?\n{e}");
                 return null;
             }
         }
@@ -349,7 +359,8 @@ internal static class SimpleTarget
             .OfType<IBattleChara>()
             .Where(x => x.IsHostile() && x.IsTargetable &&
                         x.IsWithinRange(3) && x.IsCastInterruptible)
-            .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)
+            .OrderByDescending(x =>
+                Svc.Targets.Target?.GameObjectId == x.GameObjectId)
             .FirstOrDefault();
 
     public static IGameObject? StunnableEnemy(int reStunCheck = 3) =>
@@ -357,13 +368,15 @@ internal static class SimpleTarget
             .OfType<IBattleChara>()
             .Where(x => x.IsHostile() && x.IsTargetable &&
                         !x.IsBoss() && x.IsWithinRange(3) &&
-                        !CustomComboFunctions.HasStatusEffect(All.Debuffs.Stun, x) &&
-                        (ICDTracker.StatusIsExpired(All.Debuffs.Stun, x.GameObjectId) ||
+                        !HasStatusEffect(All.Debuffs.Stun, x) &&
+                        (ICDTracker.StatusIsExpired(All.Debuffs.Stun,
+                             x.GameObjectId) ||
                          ICDTracker.Trackers.FirstOrDefault(y =>
-                             y.StatusID == All.Debuffs.Stun &&
-                             x.GameObjectId == y.GameObjectId)?
+                                 y.StatusID == All.Debuffs.Stun &&
+                                 x.GameObjectId == y.GameObjectId)?
                              .TimesApplied < reStunCheck))
-            .OrderByDescending(x => Svc.Targets.Target?.GameObjectId == x.GameObjectId)
+            .OrderByDescending(x =>
+                Svc.Targets.Target?.GameObjectId == x.GameObjectId)
             .FirstOrDefault();
 
     public static IGameObject? DottableEnemy
@@ -373,24 +386,55 @@ internal static class SimpleTarget
         float reapplyThreshold = 1,
         int maxNumberOfEnemiesInRange = 3)
     {
-        var action = ActionSheet[dotAction];
-        var numberOfEnemiesInRange = Svc.Objects
+        var range = dotAction.ActionRange();
+        var nearbyEnemies = Svc.Objects
             .OfType<IBattleChara>()
-            .Count(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange(15f));
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange(range))
+            .ToArray();
 
-        if (numberOfEnemiesInRange > maxNumberOfEnemiesInRange)
+        if (nearbyEnemies.Length > maxNumberOfEnemiesInRange)
             return null;
 
-        return Svc.Objects
-            .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && x.IsTargetable && x.CanUseOn(dotAction) &&
-                        (float)(x.CurrentHp / x.MaxHp) * 100f > minHPPercent &&
-                        !CustomComboFunctions.JustUsedOn(dotAction, x) &&
-                        CustomComboFunctions.GetStatusEffectRemainingTime
+        return nearbyEnemies
+            .Where(x => x.CanUseOn(dotAction) &&
+                        (float)x.CurrentHp / x.MaxHp * 100f > minHPPercent &&
+                        !JustUsedOn(dotAction, x) &&
+                        GetStatusEffectRemainingTime
                             (dotDebuff, x) <= reapplyThreshold &&
-                        CustomComboFunctions.CanApplyStatus(x, dotDebuff) &&
-                        x.IsWithinRange(action.Range))
-            .OrderBy(x => CustomComboFunctions.GetStatusEffectRemainingTime(dotDebuff, x))
+                        CanApplyStatus(x, dotDebuff))
+            .OrderBy(x => GetStatusEffectRemainingTime(dotDebuff, x))
+            .ThenByDescending(x => (float)x.CurrentHp / x.MaxHp)
+            .FirstOrDefault();
+    }
+
+    public static IGameObject? BardRefreshableEnemy
+    (uint refreshAction,
+        ushort dotDebuff1,
+        ushort dotDebuff2,
+        int minHPPercent = 10,
+        float minTime = 1,
+        int maxNumberOfEnemiesInRange = 3)
+    {
+        var range = refreshAction.ActionRange();
+        var nearbyEnemies = Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange(range))
+            .ToArray();
+
+        if (nearbyEnemies.Length > maxNumberOfEnemiesInRange)
+            return null;
+
+        return nearbyEnemies
+            .Where(x => x.CanUseOn(refreshAction) &&
+                        (float)x.CurrentHp / x.MaxHp * 100f > minHPPercent &&
+                        !JustUsedOn(refreshAction, x) &&
+                        HasStatusEffect(dotDebuff1, x) &&
+                        HasStatusEffect(dotDebuff2, x) &&
+                        (GetStatusEffectRemainingTime(dotDebuff1, x) <= minTime ||
+                         GetStatusEffectRemainingTime(dotDebuff2, x) <= minTime) &&
+                        CanApplyStatus(x, dotDebuff1) &&
+                        CanApplyStatus(x, dotDebuff2))
+            .OrderBy(x => GetStatusEffectRemainingTime(dotDebuff1, x))
             .ThenByDescending(x => (float)x.CurrentHp / x.MaxHp)
             .FirstOrDefault();
     }
@@ -418,11 +462,10 @@ internal static class SimpleTarget
         Svc.Objects
             .OfType<IBattleChara>()
             .FirstOrDefault(x =>
-                CustomComboFunctions.HasStatusEffect(SGE.Buffs.Kardion, x));
+                HasStatusEffect(SGE.Buffs.Kardion, x));
 
     public static IGameObject? AnyDeadPartyMember =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Select(x => x.BattleChara)
             .FirstOrDefault(x => x?.IsDead() == true);
 
@@ -435,8 +478,7 @@ internal static class SimpleTarget
     #region HP-Based Targets
 
     public static IGameObject? LowestHPAlly =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Select(x => x.BattleChara)
             .Where(x => x is not null && x.IsDead() == false)
             .OrderBy(x => x.CurrentHp)
@@ -446,8 +488,7 @@ internal static class SimpleTarget
         LowestHPAlly?.IfMissingHP();
 
     public static IGameObject? LowestHPPAlly =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Select(x => x.BattleChara)
             .Where(x => x is not null && x.IsDead() == false)
             .OrderBy(x => (float)x.CurrentHp / x.MaxHp)
@@ -495,24 +536,21 @@ internal static class SimpleTarget
 
     /// Gets any Tank or Healer that is not the player.
     public static IGameObject? AnySupport =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x => x.GetRole() is
                 CombatRole.Tank or CombatRole.Healer)?.BattleChara;
 
     /// Gets any living Tank or Healer that is not the player.
     public static IGameObject? AnyLivingSupport =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer() && !x.BattleChara.IsDead)
             .FirstOrDefault(x => x.GetRole() is
                 CombatRole.Tank or CombatRole.Healer)?.BattleChara;
 
     /// Gets any DPS that is not the player.
     public static IGameObject? AnyDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x => x.GetRole() is CombatRole.DPS)?.BattleChara;
 
@@ -520,77 +558,69 @@ internal static class SimpleTarget
 
     /// Gets any Tank that is not the player.
     public static IGameObject? AnyTank =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x => x.GetRole() is CombatRole.Tank)?.BattleChara;
 
     /// Gets any living Tank that is not the player.
     public static IGameObject? AnyLivingTank =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer() && !x.BattleChara.IsDead)
             .FirstOrDefault(x => x.GetRole() is CombatRole.Tank)?.BattleChara;
 
     /// Gets any Healer that is not the player.
     public static IGameObject? AnyHealer =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x => x.GetRole() is CombatRole.Healer)?.BattleChara;
 
     /// Gets any living Healer that is not the player.
     public static IGameObject? AnyLivingHealer =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer() && !x.BattleChara.IsDead)
             .FirstOrDefault(x => x.GetRole() is CombatRole.Healer)?.BattleChara;
 
     /// Gets any Raiser (Healer or DPS) that is not the player.
     public static IGameObject? AnyRaiser =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x => x.GetRole() is CombatRole.Healer ||
-                x?.RealJob?.RowId is SMN.JobID or RDM.JobID)?.BattleChara;
+                                 x.RealJob?.RowId is SMN.JobID or RDM.JobID)
+            ?.BattleChara;
 
     /// Gets any Raiser DPS that is not the player.
     public static IGameObject? AnyRaiserDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
-            .FirstOrDefault(x => x?.RealJob?.RowId is SMN.JobID or RDM.JobID)?.BattleChara;
+            .FirstOrDefault(x => x.RealJob?.RowId is SMN.JobID or RDM.JobID)
+            ?.BattleChara;
 
     /// Gets any Melee DPS that is not the player.
     public static IGameObject? AnyMeleeDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
-            .FirstOrDefault(x => x?.RealJob?.RowId.Role() is 2)?.BattleChara;
+            .FirstOrDefault(x => x.RealJob?.RowId.Role() is 2)?.BattleChara;
 
     /// Gets any Physical Ranged DPS that is not the player.
     public static IGameObject? AnyRangedDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
-            .FirstOrDefault(x => x?.RealJob?.RowId.Role() is 3)?.BattleChara;
+            .FirstOrDefault(x => x.RealJob?.RowId.Role() is 3)?.BattleChara;
 
     /// Gets any Magical DPS that is not the player.
     public static IGameObject? AnyPhysRangeDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x?.RealJob?.RowId ?? 0) is
+                RoleAttribute.GetRoleFromJob(x.RealJob?.RowId ?? 0) is
                     JobRole.RangedDPS)?.BattleChara;
 
     /// Gets any Magical DPS that is not the player.
     public static IGameObject? AnyMagicalDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x?.RealJob?.RowId ?? 0) is
+                RoleAttribute.GetRoleFromJob(x.RealJob?.RowId ?? 0) is
                     JobRole.MagicalDPS)?.BattleChara;
 
     #endregion
@@ -602,16 +632,16 @@ internal static class SimpleTarget
     {
         get
         {
-            var tanks = CustomComboFunctions
-                .GetPartyMembers()
-                .Where(x => x.BattleChara.IsNotThePlayer() && x.GetRole() is CombatRole.Tank)
+            var tanks = GetPartyMembers()
+                .Where(x =>
+                    x.BattleChara.IsNotThePlayer() && x.GetRole() is CombatRole.Tank)
                 .ToArray();
             var deadTanks =
-                tanks.Where(x => x?.BattleChara.IsDead() == true).ToArray();
+                tanks.Where(x => x.BattleChara.IsDead()).ToArray();
 
             if (deadTanks.Length == 0)
                 return null;
-            if (tanks.Any(x => x?.BattleChara.IsDead() == false))
+            if (tanks.Any(x => !x.BattleChara.IsDead()))
                 return null;
 
             return deadTanks.FirstOrDefault()?.BattleChara;
@@ -623,16 +653,17 @@ internal static class SimpleTarget
     {
         get
         {
-            var healers = CustomComboFunctions
-                .GetPartyMembers()
-                .Where(x => x.BattleChara.IsNotThePlayer() && x.GetRole() is CombatRole.Healer)
+            var healers = GetPartyMembers()
+                .Where(x =>
+                    x.BattleChara.IsNotThePlayer() &&
+                    x.GetRole() is CombatRole.Healer)
                 .ToArray();
             var deadHealers =
-                healers.Where(x => x?.BattleChara.IsDead() == true).ToArray();
+                healers.Where(x => x.BattleChara.IsDead()).ToArray();
 
             if (deadHealers.Length == 0)
                 return null;
-            if (healers.Any(x => x?.BattleChara.IsDead() == false))
+            if (healers.Any(x => x.BattleChara.IsDead() == false))
                 return null;
 
             return deadHealers.FirstOrDefault()?.BattleChara;
@@ -644,18 +675,17 @@ internal static class SimpleTarget
     {
         get
         {
-            var raisers = CustomComboFunctions
-                .GetPartyMembers()
+            var raisers = GetPartyMembers()
                 .Where(x => x.BattleChara.IsNotThePlayer() &&
                             (x.GetRole() is CombatRole.Healer ||
-                             x?.RealJob?.RowId is SMN.JobID or RDM.JobID))
+                             x.RealJob?.RowId is SMN.JobID or RDM.JobID))
                 .ToArray();
             var deadRaisers =
-                raisers.Where(x => x?.BattleChara.IsDead() == true).ToArray();
+                raisers.Where(x => x.BattleChara.IsDead()).ToArray();
 
             if (deadRaisers.Length == 0)
                 return null;
-            if (raisers.Any(x => x?.BattleChara.IsDead() == false))
+            if (raisers.Any(x => x.BattleChara.IsDead() == false))
                 return null;
 
             return deadRaisers.FirstOrDefault()?.BattleChara;
@@ -667,17 +697,16 @@ internal static class SimpleTarget
     {
         get
         {
-            var raisers = CustomComboFunctions
-                .GetPartyMembers()
+            var raisers = GetPartyMembers()
                 .Where(x => x.BattleChara.IsNotThePlayer() &&
-                            x?.RealJob?.RowId is SMN.JobID or RDM.JobID)
+                            x.RealJob?.RowId is SMN.JobID or RDM.JobID)
                 .ToArray();
             var deadRaisers =
-                raisers.Where(x => x?.BattleChara.IsDead() == true).ToArray();
+                raisers.Where(x => x.BattleChara.IsDead()).ToArray();
 
             if (deadRaisers.Length == 0)
                 return null;
-            if (raisers.Any(x => x?.BattleChara.IsDead() == false))
+            if (raisers.Any(x => x.BattleChara.IsDead() == false))
                 return null;
 
             return deadRaisers.FirstOrDefault()?.BattleChara;
@@ -690,26 +719,23 @@ internal static class SimpleTarget
 
     /// Gets any Pure Healer that is not the player.
     public static IGameObject? AnyPureHealer =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                x?.RealJob?.RowId is WHM.JobID or AST.JobID)?.BattleChara;
+                x.RealJob?.RowId is WHM.JobID or AST.JobID)?.BattleChara;
 
     /// Gets any Shield Healer that is not the player.
     public static IGameObject? AnyShieldHealer =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                x?.RealJob?.RowId is SCH.JobID or SGE.JobID)?.BattleChara;
+                x.RealJob?.RowId is SCH.JobID or SGE.JobID)?.BattleChara;
 
     /// Gets any Selfish DPS that is not the player.
     public static IGameObject? AnySelfishDPS =>
-        CustomComboFunctions
-            .GetPartyMembers()
+        GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
-            .FirstOrDefault(x => x?.RealJob?.RowId is
+            .FirstOrDefault(x => x.RealJob?.RowId is
                 SAM.JobID or BLM.JobID or MCH.JobID or VPR.JobID)?.BattleChara;
 
     #endregion
