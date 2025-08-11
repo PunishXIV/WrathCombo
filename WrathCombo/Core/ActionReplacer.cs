@@ -155,6 +155,8 @@ internal sealed class ActionReplacer : IDisposable
         }
     }
 
+    internal static bool DisableJobCheck = false;
+
     /// <summary>
     ///     Checks if the player could be on a job instead of a class.
     /// </summary>
@@ -163,6 +165,8 @@ internal sealed class ActionReplacer : IDisposable
     /// </returns>
     public static unsafe bool ClassLocked()
     {
+        if (DisableJobCheck) return false;
+        
         if (Svc.ClientState.LocalPlayer is null) return false;
 
         if (Svc.ClientState.LocalPlayer.Level <= 35) return false;

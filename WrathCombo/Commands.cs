@@ -105,6 +105,11 @@ public partial class WrathCombo
             case "dbg": // unlisted
             case "debugtab": // unlisted
                 HandleOpenCommand(tab: OpenWindow.Debug, forceOpen: true); break;
+            
+            // "IPromiseIWillDoMyJobQuestsLater" will be accepted
+            // ReSharper disable once StringLiteralTypo
+            case "ipromiseiwilldomyjobquestslater": // unlisted
+                HandleJobStoneCheckCommand(); break;
 
             default:
                 HandleOpenCommand(argumentParts); break;
@@ -726,5 +731,26 @@ public partial class WrathCombo
         ConfigWindow.IsOpen = true;
         ConfigWindow.OpenWindow = OpenWindow.PvE;
         PvEFeatures.OpenJob = jobName;
+    }
+
+    /// <summary>
+    ///     Disables job stone checking for the session.<br />
+    ///     This is used to allow the user to play classes without being
+    ///     prompted to use a job stone.<br />
+    ///     Disables <see cref="ActionReplacer.ClassLocked" />.
+    /// </summary>
+    private void HandleJobStoneCheckCommand()
+    {
+        if (ActionReplacer.DisableJobCheck)
+        {
+            DuoLog.Information("Job Stone Checking is already disabled.");
+            return;
+        }
+        
+        ActionReplacer.DisableJobCheck = true;
+        DuoLog.Information("Job Stone Checking has been disabled for this session.");
+        DuoLog.Warning("Please do not play Classes with other people, " +
+                       "it is objectively worse in every way, and you will lack " +
+                       "a significant amount of functionality anyway.");
     }
 }
