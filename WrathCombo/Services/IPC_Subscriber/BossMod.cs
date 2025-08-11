@@ -60,7 +60,7 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var aiConfig = ai.GetFoP("Config");
+        var aiConfig = ai.GetFoP("Config") ?? ai.GetFoP("_config");
         if (aiConfig == null)
         {
             PluginLog.Debug(
@@ -68,14 +68,17 @@ internal sealed class BossModIPC(
             return false;
         }
 
-        var aiEnabled = aiConfig.GetFoP<bool>("Enabled");
+        var aiEnabled = (bool)(aiConfig.GetFoP("Enabled") ??
+                         (ai.GetFoP("Beh") is not null));
         var aiDisableTargeting = aiConfig.GetFoP<bool>("ForbidActions");
+        var aiManualTargeting = (bool)(aiConfig.GetFoP("ManualTarget") ?? false);
+        var targetingDisabled = aiDisableTargeting || aiManualTargeting;
 
         PluginLog.Verbose(
             $"[ConflictingPlugins] [{PluginName}] `AI.Enabled`: {aiEnabled}, " +
-            $"`AI.DisableTargeting`: {aiDisableTargeting}");
+            $"`AI.DisableTargeting`: {targetingDisabled}");
 
-        return aiEnabled && aiDisableTargeting != true;
+        return aiEnabled && !targetingDisabled;
     }
 
     public DateTime LastModified()
@@ -96,10 +99,10 @@ internal sealed class BossModIPC(
     }
 
 #pragma warning disable CS0649, CS8618 // Complaints of the method
-    [EzIPC("Rotation.ActionQueue.HasEntries")]
+    [EzIPC("BossMod.Rotation.ActionQueue.HasEntries", false)]
     private readonly Func<bool> _hasEntries = null!;
 
-    [EzIPC("Configuration.LastModified")]
+    [EzIPC("BossMod.Configuration.LastModified", false)]
     private readonly Func<DateTime> _lastModified = null!;
 #pragma warning restore CS8618, CS0649
 }

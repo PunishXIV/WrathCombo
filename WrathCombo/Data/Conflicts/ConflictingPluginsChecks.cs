@@ -108,6 +108,7 @@ public static class ConflictingPluginsChecks
                     $"or config updated");
                 Conflicted = false;
                 _conflictsInARow = 0;
+                _conflictRegistered = null;
                 return;
             }
 
@@ -175,7 +176,7 @@ public static class ConflictingPluginsChecks
         ///     <b>Key <c>1</c></b> is Beneficial Actions enabled meta action,<br />
         ///     <b>Key <c>3</c>+</b> are all overlapping action retargets.
         /// </remarks>
-        public uint[] ConflictingActions = [];
+        public uint[] ConflictingActions = [0, 0];
 
         protected override RedirectIPC IPC => (RedirectIPC)_ipc;
 
@@ -184,7 +185,7 @@ public static class ConflictingPluginsChecks
             if (!ThrottlePassed())
                 return;
 
-            ConflictingActions = [];
+            ConflictingActions = [0, 0];
 
             var conflictedThisCheck = false;
             var wrathRetargeted = PresetStorage.AllRetargetedActions.ToHashSet();
@@ -195,7 +196,7 @@ public static class ConflictingPluginsChecks
             {
                 PluginLog.Verbose(
                     $"[ConflictingPlugins] [{Name}] Ground Targeted Actions are Redirected");
-                ConflictingActions = [1];
+                ConflictingActions[0] = 1;
                 MarkConflict();
                 conflictedThisCheck = true;
             }
@@ -206,10 +207,7 @@ public static class ConflictingPluginsChecks
             {
                 PluginLog.Verbose(
                     $"[ConflictingPlugins] [{Name}] Beneficial Actions are Redirected");
-                if (ConflictingActions.Length == 0)
-                    ConflictingActions = [0, 1];
-                else
-                    ConflictingActions = [1, 1];
+                ConflictingActions[1] = 1;
                 MarkConflict();
                 conflictedThisCheck = true;
             }

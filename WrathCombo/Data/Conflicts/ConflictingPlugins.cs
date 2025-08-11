@@ -340,6 +340,18 @@ public static class ConflictingPlugins
 
         #endregion
 
+        #region BossModReborn
+
+        if (ConflictingPluginsChecks.BossModReborn.SettingConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossModReborn", ConflictType.Settings,
+                    "AI is enabled WITH targeting [check 'Manual targeting']"))
+                .ToArray();
+        }
+
+        #endregion
+
         #region Redirect
 
         if (ConflictingPluginsChecks.Redirect.Conflicted)
