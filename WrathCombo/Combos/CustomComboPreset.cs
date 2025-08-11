@@ -8173,13 +8173,13 @@ public enum Preset
     WHM_Retargets = 19037,
     
     [ParentCombo(WHM_Retargets)]
-    [ReplaceSkill(WHM.Aquaveil)]
+    [ReplaceSkill(WHM.Cure, WHM.Cure2)]
     [CustomComboInfo("Cure Option", "Retargets Cure and Cure II to the heal stack (even from the Cure II Sync Feature above).", WHM.JobID)]
     [Retargeted(WHM.Cure, WHM.Cure2)]
     WHM_Re_Cure = 19038,
     
     [ParentCombo(WHM_Retargets)]
-    [ReplaceSkill(WHM.Aquaveil)]
+    [ReplaceSkill(WHM.AfflatusSolace)]
     [CustomComboInfo("Afflatus Solace Option", "Retargets Afflatus Solace to the heal stack (even from the Solace into Misery Feature above).", WHM.JobID)]
     [Retargeted(WHM.AfflatusSolace)]
     WHM_Re_Solace = 19039,
