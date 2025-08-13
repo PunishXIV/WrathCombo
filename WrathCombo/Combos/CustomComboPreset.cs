@@ -2847,9 +2847,14 @@ public enum Preset
     #region Basic Combo
 
     [ReplaceSkill(DRG.FullThrust, DRG.HeavensThrust)]
-    [CustomComboInfo("Basic Combo", "Replace Full Thrust/Heavens' Thrust with the basic combo chain.", DRG.JobID)]
+    [CustomComboInfo("Full / Heavens Thrust Combo", "Replace Full Thrust/Heavens' Thrust with the basic combo chain.", DRG.JobID)]
     [BasicCombo]
-    DRG_BasicCombo = 6304,
+    DRG_HeavensThrust = 6304,
+
+    [ReplaceSkill(DRG.ChaosThrust, DRG.ChaoticSpring)]
+    [CustomComboInfo("Chaos / Chaotic Combo", "Replace Chaos Thrust / Chaotic Spring with the basic combo chain.", DRG.JobID)]
+    [BasicCombo]
+    DRG_ChaoticSpring = 6305,
     
     #endregion
 

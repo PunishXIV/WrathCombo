@@ -5,9 +5,9 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG : Melee
 {
-    internal class DRG_BasicCombo : CustomCombo
+    internal class DRG_HeavensThrust : CustomCombo
     {
-        protected internal override Preset Preset => Preset.DRG_BasicCombo;
+        protected internal override Preset Preset => Preset.DRG_HeavensThrust;
 
         protected override uint Invoke(uint actionID)
         {
@@ -17,18 +17,7 @@ internal partial class DRG : Melee
             if (ComboTimer > 0)
             {
                 if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
-                    return LevelChecked(Disembowel) &&
-                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
-                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
-                            GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
-                        ? OriginalHook(Disembowel)
-                        : OriginalHook(VorpalThrust);
-
-                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
-                    return OriginalHook(ChaosThrust);
-
-                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
-                    return WheelingThrust;
+                    return OriginalHook(VorpalThrust);
 
                 if (ComboAction == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
                     return OriginalHook(FullThrust);
@@ -36,7 +25,35 @@ internal partial class DRG : Melee
                 if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
                     return FangAndClaw;
 
-                if (ComboAction is WheelingThrust or FangAndClaw && LevelChecked(Drakesbane))
+                if (ComboAction == FangAndClaw && LevelChecked(Drakesbane))
+                    return Drakesbane;
+            }
+
+            return OriginalHook(TrueThrust);
+        }
+    }
+
+    internal class DRG_ChaoticSpring : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRG_ChaoticSpring;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (ChaosThrust or ChaoticSpring))
+                return actionID;
+
+            if (ComboTimer > 0)
+            {
+                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(Disembowel))
+                    return OriginalHook(Disembowel);
+
+                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
+                    return OriginalHook(ChaosThrust);
+
+                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
+                    return WheelingThrust;
+
+                if (ComboAction == WheelingThrust && LevelChecked(Drakesbane))
                     return Drakesbane;
             }
 
