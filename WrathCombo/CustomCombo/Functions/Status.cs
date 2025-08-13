@@ -256,6 +256,7 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4543)) return targetID != 18577; // Beta
                     if (HasStatusEffect(4544)) return targetID != 18578; // Gamma
                     if (HasStatusEffect(4545)) return targetID != 18579; // Delta
+                    if (!HasStatusEffect(4542) && !HasStatusEffect(4543) && !HasStatusEffect(4544) && !HasStatusEffect(4545)) return false; //Your Debuff is gone
                 }
                 return false;
         }

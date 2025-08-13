@@ -275,6 +275,13 @@ public static class GameObjectExtensions
     /// </summary>
     public static unsafe bool CanUseOn(this IGameObject? obj, uint actionId) =>
         obj != null && ActionManager.CanUseActionOnTarget(actionId, obj.Struct());
+    
+/// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+    ///     boolean check for if the object is in combat.
+    /// </summary>
+    public static unsafe bool IsInCombat(this IGameObject? obj) =>
+        obj != null && obj is IBattleChara c && c.Struct()->InCombat;
 
     #endregion
 
