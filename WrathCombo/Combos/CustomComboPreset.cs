@@ -1263,8 +1263,9 @@ public enum Preset
         BLU.MatraMagic, BLU.PhantomFlurry, BLU.Bristle)]
     [ConflictingCombos(BLU_Opener)]
     [CustomComboInfo("BLU Moon Flute Opener (Level 80)",
-        "Turns Moon Flute into a full opener.\nUse the remaining 2 charges of Winged Reprobation before starting the opener again!\nCan be done with 2.50 spell speed",
+        "Turns Moon Flute into a full opener.\nUse the remaining 2 charges of Winged Reprobation before starting the opener again!\nCan be done with 2.50 spell speed.\nFeather Rain is Retargeted to your target, so you don't have to place it.",
         BLU.JobID)]
+    [Retargeted(BLU.FeatherRain)]
     BLU_NewMoonFluteOpener = 70021,
 
     [BlueInactive(BLU.BreathOfMagic, BLU.MortalFlame)]
@@ -1280,19 +1281,22 @@ public enum Preset
     [ReplaceSkill(BLU.MoonFlute)]
     [ConflictingCombos(BLU_NewMoonFluteOpener)]
     [CustomComboInfo("BLU Moon Flute Opener (Level 70)",
-        "Turns Moon Flute into a full opener. Here for historical value; level 80 opener is more potent.", BLU.JobID)]
+        "Turns Moon Flute into a full opener. Here for historical value; level 80 opener is more potent.\nFeather Rain is Retargeted to your target, so you don't have to place it.", BLU.JobID)]
+    [Retargeted(BLU.FeatherRain)]
     BLU_Opener = 70001,
 
     [BlueInactive(BLU.MoonFlute, BLU.Tingle, BLU.ShockStrike, BLU.Whistle, BLU.FinalSting)]
     [ReplaceSkill(BLU.FinalSting)]
     [CustomComboInfo("Final Sting Combo",
-        "Turns Final Sting into the buff combo of: Moon Flute > Tingle > Whistle > Final Sting.", BLU.JobID)]
+        "Turns Final Sting into the buff combo of: Moon Flute > Tingle > Whistle > Final Sting.\nFeather Rain is Retargeted to your target, so you don't have to place it.", BLU.JobID)]
+    [Retargeted(BLU.FeatherRain)]
     BLU_FinalSting = 70002,
 
     [BlueInactive(BLU.RoseOfDestruction, BLU.FeatherRain, BLU.GlassDance, BLU.JKick)]
     [ParentCombo(BLU_FinalSting)]
     [CustomComboInfo("Off-cooldown Primal Additions",
-        "Adds Rose of Destruction, Feather Rain, Glass Dance, and J Kick to the combo.", BLU.JobID)]
+        "Adds Rose of Destruction, Feather Rain, Glass Dance, and J Kick to the combo.\nFeather Rain is Retargeted to your target, so you don't have to place it.", BLU.JobID)]
+    [Retargeted(BLU.FeatherRain)]
     BLU_Primals = 70003,
 
     [BlueInactive(BLU.BasicInstinct)]
@@ -1315,8 +1319,9 @@ public enum Preset
     [BlueInactive(BLU.FeatherRain, BLU.ShockStrike, BLU.RoseOfDestruction, BLU.GlassDance)]
     [ReplaceSkill(BLU.FeatherRain)]
     [CustomComboInfo("Primal Feature",
-        "Turns Feather Rain into Shock Strike, Rose of Destruction, and Glass Dance.\nWill cause primals to desync from Moon Flute burst phases if used on cooldown.",
+        "Turns Feather Rain into Shock Strike, Rose of Destruction, and Glass Dance.\nWill cause primals to desync from Moon Flute burst phases if used on cooldown.\nFeather Rain is Retargeted to your target, so you don't have to place it.",
         BLU.JobID)]
+    [Retargeted(BLU.FeatherRain)]
     BLU_PrimalCombo = 70008,
 
     [BlueInactive(BLU.FeatherRain, BLU.ShockStrike, BLU.RoseOfDestruction, BLU.GlassDance)]
