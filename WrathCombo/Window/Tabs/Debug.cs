@@ -1042,7 +1042,7 @@ internal class Debug : ConfigWindow, IDisposable
                     ImGui.NewLine();
                     ImGuiEx.Spacing(new Vector2(10, 0));
                     ImGui.SameLine();
-                    if (ImGui.Button("Release"))
+                    if (ImGui.Button("Release##releaseFromList" + registration.Key))
                     {
                         P.IPC.ReleaseControl(registration.Key);
                     }
