@@ -17,41 +17,41 @@ internal partial class MCH
                     break;
 
                 case Preset.MCH_ST_Adv_WildFire:
-                    DrawHorizontalRadioButton(MCH_ST_Adv_Wildfire_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_WildfireBossOption,
                         "All content", $"Uses {Wildfire.ActionName()} regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_Adv_Wildfire_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_WildfireBossOption,
                         "Bosses Only", $"Only uses {Wildfire.ActionName()} when the targeted enemy is a boss.", 1);
                     break;
 
                 case Preset.MCH_ST_Adv_Stabilizer:
                     ImGui.Indent();
-                    DrawHorizontalRadioButton(MCH_ST_Adv_BarrelStabiliser_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_BarrelStabiliserBossOption,
                         "All content", $"Uses {BarrelStabilizer.ActionName()} regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_Adv_BarrelStabiliser_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_BarrelStabiliserBossOption,
                         "Boss encounters Only", $"Only uses {BarrelStabilizer.ActionName()} when in Boss encounters.", 1);
                     ImGui.Unindent();
                     break;
 
                 case Preset.MCH_ST_Adv_Stabilizer_FullMetalField:
                     ImGui.Indent();
-                    DrawHorizontalRadioButton(MCH_ST_Adv_FullMetalMachinist_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_FullMetalMachinistBossOption,
                         "All content", $"Uses {FullMetalField.ActionName()} regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_Adv_FullMetalMachinist_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_FullMetalMachinistBossOption,
                         "Boss encounters Only", $"Only uses {FullMetalField.ActionName()} when in Boss encounters.", 1);
                     ImGui.Unindent();
                     break;
 
                 case Preset.MCH_ST_Adv_TurretQueen:
-                    DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_TurretBossOption,
                         "Use The Balance Logic in all content", $"Uses {AutomatonQueen.ActionName()} logic regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_Adv_Turret_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_TurretBossOption,
                         "Use The Balance logic only in Boss encounters", $"Only uses {AutomatonQueen.ActionName()} logic when in Boss encounters.", 1);
 
-                    if (MCH_ST_Adv_Turret_SubOption == 1)
+                    if (MCH_ST_Adv_TurretBossOption == 1)
                     {
                         DrawSliderInt(50, 100, MCH_ST_TurretUsage,
                             $"Uses {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.");
@@ -59,10 +59,10 @@ internal partial class MCH
                     break;
 
                 case Preset.MCH_ST_Adv_Excavator:
-                    DrawHorizontalRadioButton(MCH_ST_Adv_Excavator_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_ExcavatorBossOption,
                         "All content", $"Uses {Excavator.ActionName()} logic regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_Adv_Excavator_SubOption,
+                    DrawHorizontalRadioButton(MCH_ST_Adv_ExcavatorBossOption,
                         "Boss encounters Only", $"Only uses {Excavator.ActionName()} logic when in Boss encounters.", 1);
                     break;
 
@@ -88,7 +88,7 @@ internal partial class MCH
                     break;
 
                 case Preset.MCH_ST_Adv_SecondWind:
-                    DrawSliderInt(0, 100, MCH_ST_SecondWindThreshold,
+                    DrawSliderInt(0, 100, MCH_ST_SecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
                     break;
 
@@ -109,13 +109,43 @@ internal partial class MCH
                     break;
 
                 case Preset.MCH_AoE_Adv_SecondWind:
-                    DrawSliderInt(0, 100, MCH_AoE_SecondWindThreshold,
+                    DrawSliderInt(0, 100, MCH_AoE_SecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
                     break;
 
                 case Preset.MCH_AoE_Adv_Queen:
                     DrawSliderInt(50, 100, MCH_AoE_TurretUsage,
                         "Battery threshold", sliderIncrement: 5);
+                    break;
+
+                case Preset.MCH_AoE_Adv_FlameThrower:
+
+                    DrawHorizontalRadioButton(MCH_AoE_FlamethrowerMovement,
+                        "Stationary Only", $"Uses {Flamethrower.ActionName()} only while stationary", 0);
+
+                    DrawHorizontalRadioButton(MCH_AoE_FlamethrowerMovement,
+                        "Any Movement", $"Uses {Flamethrower.ActionName()} regardless of any movement conditions.", 1);
+
+                    ImGui.Spacing();
+                    if (MCH_AoE_FlamethrowerMovement == 0)
+                    {
+                        ImGui.SetCursorPosX(48);
+                        DrawSliderFloat(0, 3, MCH_AoE_FlamehrowerTimeStill,
+                            " Stationary Delay Check (in seconds):", decimals: 1);
+                    }
+
+                    DrawSliderInt(0, 50, MCH_AoE_FlamethrowerHPOption,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                    ImGui.Indent();
+                    break;
+
+
+                case Preset.MCH_GaussRoundRicochet:
+                    DrawHorizontalRadioButton(MCH_GaussRico,
+                        $"Change {GaussRound.ActionName()} / {DoubleCheck.ActionName()}", $"Changes to {Ricochet.ActionName()} / {CheckMate.ActionName()} depending on charges and what was used last", 0);
+
+                    DrawHorizontalRadioButton(MCH_GaussRico,
+                        $"Change {Ricochet.ActionName()} / {CheckMate.ActionName()}", $"Changes to {GaussRound.ActionName()} / {DoubleCheck.ActionName()} depending on charges and what was used last", 1);
                     break;
 
                 //Variant
@@ -131,20 +161,26 @@ internal partial class MCH
         public static UserInt
             MCH_Balance_Content = new("MCH_Balance_Content", 1),
             MCH_ST_QueenOverDrive = new("MCH_ST_QueenOverDrive", 1),
-            MCH_ST_Adv_Excavator_SubOption = new("MCH_ST_Adv_Excavator_SubOption", 1),
-            MCH_ST_Adv_Turret_SubOption = new("MCH_ST_Adv_Turret_SubOption", 1),
-            MCH_ST_Adv_BarrelStabiliser_SubOption = new("MCH_ST_Adv_BarrelStabiliser_SubOption", 1),
-            MCH_ST_Adv_Wildfire_SubOption = new("MCH_ST_Adv_Wildfire_SubOption", 1),
-            MCH_ST_Adv_FullMetalMachinist_SubOption = new("MCH_ST_Adv_FullMetalMachinist_SubOption", 1),
+            MCH_ST_Adv_ExcavatorBossOption = new("MCH_ST_Adv_Excavator_SubOption", 1),
+            MCH_ST_Adv_TurretBossOption = new("MCH_ST_Adv_Turret_SubOption", 1),
+            MCH_ST_Adv_BarrelStabiliserBossOption = new("MCH_ST_Adv_BarrelStabiliser_SubOption", 1),
+            MCH_ST_Adv_WildfireBossOption = new("MCH_ST_Adv_Wildfire_SubOption", 1),
+            MCH_ST_Adv_FullMetalMachinistBossOption = new("MCH_ST_Adv_FullMetalMachinist_SubOption", 1),
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
             MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool", 0),
             MCH_ST_GaussRicoPool = new("MCH_ST_GaussRicoPool", 0),
             MCH_AoE_QueenOverDrive = new("MCH_AoE_QueenOverDrive", 20),
-            MCH_ST_SecondWindThreshold = new("MCH_ST_SecondWindThreshold", 40),
+            MCH_ST_SecondWindHPThreshold = new("MCH_ST_SecondWindThreshold", 40),
             MCH_AoE_ReassemblePool = new("MCH_AoE_ReassemblePool", 0),
             MCH_AoE_TurretUsage = new("MCH_AoE_TurretUsage", 100),
-            MCH_AoE_SecondWindThreshold = new("MCH_AoE_SecondWindThreshold", 40),
+            MCH_AoE_FlamethrowerMovement = new("MCH_AoE_FlamethrowerMovement", 0),
+            MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 50),
+            MCH_AoE_SecondWindHPThreshold = new("MCH_AoE_SecondWindThreshold", 40),
+            MCH_GaussRico = new("MCHGaussRico", 0),
             MCH_VariantCure = new("MCH_VariantCure", 50);
+
+        public static UserFloat
+            MCH_AoE_FlamehrowerTimeStill = new("MCH_AoE_FlamehrowerTimeStill", 2.5f);
 
         public static UserBoolArray
             MCH_ST_Reassembled = new("MCH_ST_Reassembled"),

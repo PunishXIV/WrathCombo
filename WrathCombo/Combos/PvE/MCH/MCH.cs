@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.Statuses;
+using System;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.MCH.Config;
 namespace WrathCombo.Combos.PvE;
@@ -215,7 +216,7 @@ internal partial class MCH : PhysicalRanged
 
                 // Wildfire
                 if (IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
-                    (MCH_ST_Adv_Wildfire_SubOption == 0 || TargetIsBoss()) &&
+                    (MCH_ST_Adv_WildfireBossOption == 0 || TargetIsBoss()) &&
                     CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
                     JustUsed(Hypercharge) && ActionReady(Wildfire) &&
                     !HasStatusEffect(Buffs.Wildfire))
@@ -225,7 +226,7 @@ internal partial class MCH : PhysicalRanged
                 {
                     // BarrelStabilizer
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
-                        (MCH_ST_Adv_BarrelStabiliser_SubOption == 0 || TargetIsBoss()) &&
+                        (MCH_ST_Adv_BarrelStabiliserBossOption == 0 || TargetIsBoss()) &&
                         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
@@ -281,7 +282,7 @@ internal partial class MCH : PhysicalRanged
 
                     // Healing
                     if (IsEnabled(Preset.MCH_ST_Adv_SecondWind) &&
-                        Role.CanSecondWind(MCH_ST_SecondWindThreshold))
+                        Role.CanSecondWind(MCH_ST_SecondWindHPThreshold))
                         return Role.SecondWind;
                 }
 
@@ -304,7 +305,7 @@ internal partial class MCH : PhysicalRanged
 
             // Full Metal Field
             if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer_FullMetalField) &&
-                (MCH_ST_Adv_FullMetalMachinist_SubOption == 0 || TargetIsBoss()) &&
+                (MCH_ST_Adv_FullMetalMachinistBossOption == 0 || TargetIsBoss()) &&
                 HasStatusEffect(Buffs.FullMetalMachinist, out Status? fullMetal) &&
                 !JustUsed(BarrelStabilizer) &&
                 (fullMetal.RemainingTime <= 6 ||
@@ -426,7 +427,10 @@ internal partial class MCH : PhysicalRanged
                     CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                     return OriginalHook(BioBlaster);
 
-                if (ActionReady(Flamethrower) && !IsMoving())
+                if (ActionReady(Flamethrower) &&
+                    !HasStatusEffect(Buffs.Reassembled) &&
+                    !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(2.5f) &&
+                    GetTargetHPPercent() > 50)
                     return OriginalHook(Flamethrower);
 
                 if (LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
@@ -550,7 +554,7 @@ internal partial class MCH : PhysicalRanged
                     }
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_SecondWind) &&
-                        Role.CanSecondWind(MCH_AoE_SecondWindThreshold))
+                        Role.CanSecondWind(MCH_AoE_SecondWindHPThreshold))
                         return Role.SecondWind;
                 }
 
@@ -583,7 +587,11 @@ internal partial class MCH : PhysicalRanged
                     return OriginalHook(BioBlaster);
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_FlameThrower) &&
-                    ActionReady(Flamethrower) && !IsMoving())
+                    ActionReady(Flamethrower) &&
+                    !HasStatusEffect(Buffs.Reassembled) &&
+                    (MCH_AoE_FlamethrowerMovement == 1 ||
+                     MCH_AoE_FlamethrowerMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(MCH_AoE_FlamehrowerTimeStill)) &&
+                    GetTargetHPPercent() > MCH_AoE_FlamethrowerHPOption)
                     return OriginalHook(Flamethrower);
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_Excavator) &&
@@ -706,14 +714,14 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (GaussRound or Ricochet or CheckMate or DoubleCheck))
                 return actionID;
 
-            if (ActionReady(GaussRound) &&
-                (UseGaussRound || !LevelChecked(Ricochet)))
-                return OriginalHook(GaussRound);
-
-            if (ActionReady(Ricochet) && UseRicochet)
-                return OriginalHook(Ricochet);
-
-            return actionID;
+            return actionID switch
+            {
+                GaussRound or DoubleCheck when MCH_GaussRico == 0 && ActionReady(GaussRound) && (UseGaussRound || !LevelChecked(Ricochet)) => OriginalHook(GaussRound),
+                GaussRound or DoubleCheck when MCH_GaussRico == 0 && ActionReady(Ricochet) && UseRicochet => OriginalHook(Ricochet),
+                Ricochet or CheckMate when MCH_GaussRico == 1 && ActionReady(GaussRound) && (UseGaussRound || !LevelChecked(Ricochet)) => OriginalHook(GaussRound),
+                Ricochet or CheckMate when MCH_GaussRico == 1 && ActionReady(Ricochet) && UseRicochet => OriginalHook(Ricochet),
+                var _ => actionID
+            };
         }
     }
 
@@ -738,25 +746,18 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Drill or HotShot or AirAnchor or Chainsaw))
+            if (actionID is not HotShot)
                 return actionID;
 
-            if (LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
-                return CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill);
-
-            if (LevelChecked(Chainsaw))
-                return CalcBestAction(actionID, Chainsaw, AirAnchor, Drill);
-
-            if (LevelChecked(AirAnchor))
-                return CalcBestAction(actionID, AirAnchor, Drill);
-
-            if (LevelChecked(Drill))
-                return CalcBestAction(actionID, Drill, HotShot);
-
-            if (!LevelChecked(Drill))
-                return HotShot;
-
-            return actionID;
+            return actionID switch
+            {
+                HotShot when LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) => CalcBestAction(actionID, Excavator, Chainsaw, AirAnchor, Drill),
+                HotShot when LevelChecked(Chainsaw) => CalcBestAction(actionID, Chainsaw, AirAnchor, Drill),
+                HotShot when LevelChecked(AirAnchor) => CalcBestAction(actionID, AirAnchor, Drill),
+                HotShot when LevelChecked(Drill) => CalcBestAction(actionID, Drill, HotShot),
+                HotShot when !LevelChecked(Drill) => HotShot,
+                var _ => actionID
+            };
         }
     }
 

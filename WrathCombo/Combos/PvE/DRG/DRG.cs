@@ -232,13 +232,13 @@ internal partial class DRG : Melee
                         //Battle Litany Feature
                         if (IsEnabled(Preset.DRG_ST_Litany) &&
                             ActionReady(BattleLitany) &&
-                            (DRG_ST_Litany_SubOption == 0 || InBossEncounter()))
+                            (DRG_ST_LitanyBossOption == 0 || InBossEncounter()))
                             return BattleLitany;
 
                         //Lance Charge Feature
                         if (IsEnabled(Preset.DRG_ST_Lance) &&
                             ActionReady(LanceCharge) &&
-                            (DRG_ST_Lance_SubOption == 0 || InBossEncounter()))
+                            (DRG_ST_LanceBossOption == 0 || InBossEncounter()))
                             return LanceCharge;
                     }
 
@@ -301,10 +301,10 @@ internal partial class DRG : Melee
                     {
                         //(High) Jump Feature   
                         if (IsEnabled(Preset.DRG_ST_HighJump) &&
-                            (!DRG_ST_Jump_Options[0] ||
-                             DRG_ST_Jump_Options[0] && !IsMoving()) &&
-                            (!DRG_ST_Jump_Options[1] ||
-                             DRG_ST_Jump_Options[1] && InMeleeRange()) &&
+                            (!DRG_ST_JumpMovingOptions[0] ||
+                             DRG_ST_JumpMovingOptions[0] && !IsMoving()) &&
+                            (!DRG_ST_JumpMovingOptions[1] ||
+                             DRG_ST_JumpMovingOptions[1] && InMeleeRange()) &&
                             ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
                         {
                             if (!LevelChecked(HighJump))
@@ -319,10 +319,10 @@ internal partial class DRG : Melee
 
                         //Dragonfire Dive Feature
                         if (IsEnabled(Preset.DRG_ST_DragonfireDive) &&
-                            (!DRG_ST_DragonfireDive_Options[0] ||
-                             DRG_ST_DragonfireDive_Options[0] && !IsMoving()) &&
-                            (!DRG_ST_DragonfireDive_Options[1] ||
-                             DRG_ST_DragonfireDive_Options[1] && InMeleeRange()) &&
+                            (!DRG_ST_DragonfireDiveMovingOptions[0] ||
+                             DRG_ST_DragonfireDiveMovingOptions[0] && !IsMoving()) &&
+                            (!DRG_ST_DragonfireDiveMovingOptions[1] ||
+                             DRG_ST_DragonfireDiveMovingOptions[1] && InMeleeRange()) &&
                             ActionReady(DragonfireDive) &&
                             !HasStatusEffect(Buffs.DragonsFlight) &&
                             (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
@@ -331,10 +331,10 @@ internal partial class DRG : Melee
 
                     //StarDiver Feature
                     if (IsEnabled(Preset.DRG_ST_Stardiver) &&
-                        (!DRG_ST_Stardiver_Options[0] ||
-                         DRG_ST_Stardiver_Options[0] && !IsMoving()) &&
-                        (!DRG_ST_Stardiver_Options[1] ||
-                         DRG_ST_Stardiver_Options[1] && InMeleeRange()) &&
+                        (!DRG_ST_StardiverMovingOptions[0] ||
+                         DRG_ST_StardiverMovingOptions[0] && !IsMoving()) &&
+                        (!DRG_ST_StardiverMovingOptions[1] ||
+                         DRG_ST_StardiverMovingOptions[1] && InMeleeRange()) &&
                         ActionReady(Stardiver) &&
                         CanDRGWeave(1.5f, true) &&
                         LoTDActive &&
@@ -346,10 +346,10 @@ internal partial class DRG : Melee
             // healing
             if (IsEnabled(Preset.DRG_ST_ComboHeals))
             {
-                if (Role.CanSecondWind(DRG_ST_SecondWind_Threshold))
+                if (Role.CanSecondWind(DRG_ST_SecondWindHPThreshold))
                     return Role.SecondWind;
 
-                if (Role.CanBloodBath(DRG_ST_Bloodbath_Threshold))
+                if (Role.CanBloodBath(DRG_ST_BloodbathHPThreshold))
                     return Role.Bloodbath;
             }
 
@@ -562,13 +562,13 @@ internal partial class DRG : Melee
                         //Lance Charge Feature
                         if (IsEnabled(Preset.DRG_AoE_Lance) &&
                             ActionReady(LanceCharge) &&
-                            GetTargetHPPercent() >= DRG_AoE_LanceChargeHP)
+                            GetTargetHPPercent() >= DRG_AoE_LanceChargeHPTreshold)
                             return LanceCharge;
 
                         //Battle Litany Feature
                         if (IsEnabled(Preset.DRG_AoE_Litany) &&
                             ActionReady(BattleLitany) &&
-                            GetTargetHPPercent() >= DRG_AoE_LitanyHP)
+                            GetTargetHPPercent() >= DRG_AoE_LitanyHPTreshold)
                             return BattleLitany;
                     }
 
@@ -633,10 +633,10 @@ internal partial class DRG : Melee
                     {
                         //(High) Jump Feature   
                         if (IsEnabled(Preset.DRG_AoE_HighJump) &&
-                            (!DRG_AoE_Jump_Options[0] ||
-                             DRG_AoE_Jump_Options[0] && !IsMoving()) &&
-                            (!DRG_AoE_Jump_Options[1] ||
-                             DRG_AoE_Jump_Options[1] && InMeleeRange()) &&
+                            (!DRG_AoE_JumpMovingOptions[0] ||
+                             DRG_AoE_JumpMovingOptions[0] && !IsMoving()) &&
+                            (!DRG_AoE_JumpMovingOptions[1] ||
+                             DRG_AoE_JumpMovingOptions[1] && InMeleeRange()) &&
                             ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
                             return (LevelChecked(HighJump))
                                 ? HighJump
@@ -644,10 +644,10 @@ internal partial class DRG : Melee
 
                         //Dragonfire Dive Feature
                         if (IsEnabled(Preset.DRG_AoE_DragonfireDive) &&
-                            (!DRG_AoE_DragonfireDive_Options[0] ||
-                             DRG_AoE_DragonfireDive_Options[0] && !IsMoving()) &&
-                            (!DRG_AoE_DragonfireDive_Options[1] ||
-                             DRG_AoE_DragonfireDive_Options[1] && InMeleeRange()) &&
+                            (!DRG_AoE_DragonfireDiveMovingOptions[0] ||
+                             DRG_AoE_DragonfireDiveMovingOptions[0] && !IsMoving()) &&
+                            (!DRG_AoE_DragonfireDiveMovingOptions[1] ||
+                             DRG_AoE_DragonfireDiveMovingOptions[1] && InMeleeRange()) &&
                             ActionReady(DragonfireDive) &&
                             !HasStatusEffect(Buffs.DragonsFlight) &&
                             (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
@@ -656,10 +656,10 @@ internal partial class DRG : Melee
 
                     //StarDiver Feature
                     if (IsEnabled(Preset.DRG_AoE_Stardiver) &&
-                        (!DRG_AoE_Stardiver_Options[0] ||
-                         DRG_AoE_Stardiver_Options[0] && !IsMoving()) &&
-                        (!DRG_AoE_Stardiver_Options[1] ||
-                         DRG_AoE_Stardiver_Options[1] && InMeleeRange()) &&
+                        (!DRG_AoE_StardiverMovingOptions[0] ||
+                         DRG_AoE_StardiverMovingOptions[0] && !IsMoving()) &&
+                        (!DRG_AoE_StardiverMovingOptions[1] ||
+                         DRG_AoE_StardiverMovingOptions[1] && InMeleeRange()) &&
                         ActionReady(Stardiver) &&
                         CanDRGWeave(1.5f, true) &&
                         LoTDActive &&
@@ -671,10 +671,10 @@ internal partial class DRG : Melee
             // healing
             if (IsEnabled(Preset.DRG_AoE_ComboHeals))
             {
-                if (Role.CanSecondWind(DRG_AoE_SecondWind_Threshold))
+                if (Role.CanSecondWind(DRG_AoE_SecondWindHPThreshold))
                     return Role.SecondWind;
 
-                if (Role.CanBloodBath(DRG_AoE_Bloodbath_Threshold))
+                if (Role.CanBloodBath(DRG_AoE_BloodbathHPThreshold))
                     return Role.Bloodbath;
             }
 

@@ -97,10 +97,10 @@ internal partial class SGE
                     break;
 
                 case Preset.SGE_AoE_DPS_Pneuma:
-                    DrawHorizontalRadioButton(SGE_AoE_DPS_Pneuma_SubOption,
+                    DrawHorizontalRadioButton(SGE_AoE_DPS_PneumaBossOption,
                         "All content", $"Uses {Pneuma.ActionName()} regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(SGE_AoE_DPS_Pneuma_SubOption,
+                    DrawHorizontalRadioButton(SGE_AoE_DPS_PneumaBossOption,
                         "Bosses Only", $"Only uses {Pneuma.ActionName()} when the targeted enemy is a boss.", 1);
                     break;
 
@@ -406,7 +406,7 @@ internal partial class SGE
             SGE_AoE_DPS_Lucid = new("SGE_AoE_Phlegma_Lucid", 6500),
             SGE_AoE_DPS_Rhizo = new("SGE_AoE_DPS_Rhizo", 1),
             SGE_AoE_DPS_AddersgallProtect = new("SGE_AoE_DPS_AddersgallProtect", 3),
-            SGE_AoE_DPS_Pneuma_SubOption = new("SGE_AoE_DPS_Pneuma_SubOption", 1),
+            SGE_AoE_DPS_PneumaBossOption = new("SGE_AoE_DPS_Pneuma_SubOption", 1),
             SGE_Balance_Content = new("SGE_Balance_Content", 1);
 
         public static UserFloat

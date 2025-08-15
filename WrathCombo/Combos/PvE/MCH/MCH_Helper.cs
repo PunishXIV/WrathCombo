@@ -32,7 +32,7 @@ internal partial class MCH
             !JustUsed(OriginalHook(Heatblast)) && ActionReady(RookAutoturret) &&
             !RobotActive && Battery >= 50)
         {
-            if ((MCH_ST_Adv_Turret_SubOption == 0 || InBossEncounter() ||
+            if ((MCH_ST_Adv_TurretBossOption == 0 || InBossEncounter() ||
                  IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter()) &&
                 (GetCooldownRemainingTime(Wildfire) > GCD || !LevelChecked(Wildfire)))
             {
@@ -62,7 +62,7 @@ internal partial class MCH
             }
 
             if (IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() && Battery is 100 ||
-                MCH_ST_Adv_Turret_SubOption == 1 && !InBossEncounter() && Battery >= MCH_ST_TurretUsage)
+                MCH_ST_Adv_TurretBossOption == 1 && !InBossEncounter() && Battery >= MCH_ST_TurretUsage)
                 return true;
         }
 
@@ -104,7 +104,7 @@ internal partial class MCH
         {
             if ((IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() ||
                  IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[0] &&
-                 (MCH_ST_Adv_Excavator_SubOption == 1 && !InBossEncounter() ||
+                 (MCH_ST_Adv_ExcavatorBossOption == 1 && !InBossEncounter() ||
                   IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen))) &&
                 LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                 return true;
@@ -112,8 +112,8 @@ internal partial class MCH
             if ((IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter() ||
                  IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[0] &&
                  IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
-                 (MCH_ST_Adv_Excavator_SubOption == 0 ||
-                  MCH_ST_Adv_Excavator_SubOption == 1 && InBossEncounter())) &&
+                 (MCH_ST_Adv_ExcavatorBossOption == 0 ||
+                  MCH_ST_Adv_ExcavatorBossOption == 1 && InBossEncounter())) &&
                 LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
                 (BSUsed is 1 ||
                  BSUsed % 3 is 2 && Battery <= 40 ||
@@ -166,7 +166,7 @@ internal partial class MCH
     {
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() ||
              IsEnabled(Preset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
-             (MCH_ST_Adv_Excavator_SubOption == 1 && !InBossEncounter() ||
+             (MCH_ST_Adv_ExcavatorBossOption == 1 && !InBossEncounter() ||
               IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen))) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
         {
@@ -177,7 +177,7 @@ internal partial class MCH
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter() ||
              IsEnabled(Preset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
              IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
-             (MCH_ST_Adv_Excavator_SubOption == 0 || InBossEncounter())) &&
+             (MCH_ST_Adv_ExcavatorBossOption == 0 || InBossEncounter())) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (BSUsed is 1 ||
              BSUsed % 3 is 2 && Battery <= 40 ||

@@ -329,7 +329,7 @@ internal partial class SAM : Melee
                         HasStatusEffect(Buffs.ZanshinReady) &&
                         (JustUsed(Higanbana) ||
                          JustUsed(OriginalHook(OgiNamikiri)) ||
-                         SAM_ST_Higanbana_Suboption == 1 && !TargetIsBoss() ||
+                         SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss() ||
                          GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8))
                         return Zanshin;
 
@@ -348,10 +348,10 @@ internal partial class SAM : Melee
                 // healing
                 if (IsEnabled(Preset.SAM_ST_ComboHeals))
                 {
-                    if (Role.CanSecondWind(SAM_STSecondWindThreshold))
+                    if (Role.CanSecondWind(SAM_STSecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(SAM_STBloodbathThreshold))
+                    if (Role.CanBloodBath(SAM_STBloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
             }
@@ -373,7 +373,7 @@ internal partial class SAM : Melee
                     ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
                     HasStatusEffect(Buffs.OgiNamikiriReady) && M6SReady &&
                     (JustUsed(Higanbana, 5f) ||
-                     SAM_ST_Higanbana_Suboption == 1 && !TargetIsBoss() ||
+                     SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss() ||
                      GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) || NamikiriReady)
                     return OriginalHook(OgiNamikiri);
 
@@ -670,10 +670,10 @@ internal partial class SAM : Melee
 
                 if (IsEnabled(Preset.SAM_AoE_ComboHeals))
                 {
-                    if (Role.CanSecondWind(SAM_AoESecondWindThreshold))
+                    if (Role.CanSecondWind(SAM_AoESecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(SAM_AoEBloodbathThreshold))
+                    if (Role.CanBloodBath(SAM_AoEBloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
             }

@@ -28,43 +28,43 @@ internal partial class SAM
                     if (SAM_ST_CDs_IaijutsuOption[0])
                     {
                         ImGui.Indent();
-                        DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
+                        DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
                             "All Enemies", $"Uses {Higanbana.ActionName()} regardless of targeted enemy type.", 0);
 
-                        DrawHorizontalRadioButton(SAM_ST_Higanbana_Suboption,
+                        DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
                             "Bosses Only", $"Only uses {Higanbana.ActionName()} when the targeted enemy is a boss.", 1);
                         ImGui.Unindent();
 
-                        DrawSliderInt(0, 10, SAM_ST_Higanbana_HP_Threshold,
+                        DrawSliderInt(0, 10, SAM_ST_HiganbanaHPThreshold,
                             $"Stop using {Higanbana.ActionName()} on targets below this HP % (0% = always use).");
 
-                        DrawSliderInt(0, 15, SAM_ST_Higanbana_Refresh,
+                        DrawSliderInt(0, 15, SAM_ST_HiganbanaRefresh,
                             $"Seconds remaining before reapplying {Higanbana.ActionName()}. Set to Zero to disable this check.");
                     }
                     break;
 
                 case Preset.SAM_ST_CDs_MeikyoShisui:
-                    DrawHorizontalRadioButton(SAM_ST_Meikyo_Suboption,
+                    DrawHorizontalRadioButton(SAM_ST_MeikyoBossOption,
                         "Use The Balance Logic in all content", $"Uses {MeikyoShisui.ActionName()} logic regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(SAM_ST_Meikyo_Suboption,
+                    DrawHorizontalRadioButton(SAM_ST_MeikyoBossOption,
                         "Use The Balance logic only in Boss encounters", $"Only uses {MeikyoShisui.ActionName()} logic when in Boss encounters." +
                                                                          $"\nWill use Meikyo every minute regardless of sen count outside of boss encounters.", 1);
                     break;
 
                 case Preset.SAM_ST_ComboHeals:
-                    DrawSliderInt(0, 100, SAM_STSecondWindThreshold,
+                    DrawSliderInt(0, 100, SAM_STSecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
-                    DrawSliderInt(0, 100, SAM_STBloodbathThreshold,
+                    DrawSliderInt(0, 100, SAM_STBloodbathHPThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
                 case Preset.SAM_AoE_ComboHeals:
-                    DrawSliderInt(0, 100, SAM_AoESecondWindThreshold,
+                    DrawSliderInt(0, 100, SAM_AoESecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
-                    DrawSliderInt(0, 100, SAM_AoEBloodbathThreshold,
+                    DrawSliderInt(0, 100, SAM_AoEBloodbathHPThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
@@ -148,16 +148,16 @@ internal partial class SAM
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
-            SAM_ST_Higanbana_Suboption = new("SAM_ST_Higanbana_Suboption", 1),
-            SAM_ST_Meikyo_Suboption = new("SAM_ST_Meikyo_Suboption", 1),
-            SAM_ST_Higanbana_HP_Threshold = new("SAM_ST_Higanbana_HP_Threshold", 0),
-            SAM_ST_Higanbana_Refresh = new("SAM_ST_Higanbana_Refresh", 15),
+            SAM_ST_HiganbanaBossOption = new("SAM_ST_Higanbana_Suboption", 1),
+            SAM_ST_MeikyoBossOption = new("SAM_ST_Meikyo_Suboption", 1),
+            SAM_ST_HiganbanaHPThreshold = new("SAM_ST_Higanbana_HP_Threshold", 0),
+            SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
-            SAM_STSecondWindThreshold = new("SAM_STSecondWindThreshold", 40),
-            SAM_STBloodbathThreshold = new("SAM_STBloodbathThreshold", 30),
+            SAM_STSecondWindHPThreshold = new("SAM_STSecondWindThreshold", 40),
+            SAM_STBloodbathHPThreshold = new("SAM_STBloodbathThreshold", 30),
             SAM_AoE_KenkiOvercapAmount = new("SAM_AoE_KenkiOvercapAmount", 50),
-            SAM_AoESecondWindThreshold = new("SAM_AoESecondWindThreshold", 40),
-            SAM_AoEBloodbathThreshold = new("SAM_AoEBloodbathThreshold", 30),
+            SAM_AoESecondWindHPThreshold = new("SAM_AoESecondWindThreshold", 40),
+            SAM_AoEBloodbathHPThreshold = new("SAM_AoEBloodbathThreshold", 30),
             SAM_Gekko_KenkiOvercapAmount = new("SAM_Gekko_KenkiOvercapAmount", 65),
             SAM_Kasha_KenkiOvercapAmount = new("SAM_Kasha_KenkiOvercapAmount", 65),
             SAM_Yukaze_KenkiOvercapAmount = new("SAM_Yukaze_KenkiOvercapAmount", 65),

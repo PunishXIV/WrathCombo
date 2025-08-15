@@ -46,7 +46,7 @@ internal partial class SAM
         if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) && !HasStatusEffect(Buffs.MeikyoShisui) &&
             (JustUsed(Gekko) || JustUsed(Kasha) || JustUsed(Yukikaze)))
         {
-            if ((SAM_ST_Meikyo_Suboption == 0 || InBossEncounter() ||
+            if ((SAM_ST_MeikyoBossOption == 0 || InBossEncounter() ||
                  IsEnabled(Preset.SAM_ST_SimpleMode) && InBossEncounter()))
             {
                 if (EnhancedSenei)
@@ -83,7 +83,7 @@ internal partial class SAM
             }
 
             if (IsEnabled(Preset.SAM_ST_SimpleMode) && !InBossEncounter() ||
-                SAM_ST_Meikyo_Suboption == 1 && !InBossEncounter())
+                SAM_ST_MeikyoBossOption == 1 && !InBossEncounter())
                 return true;
         }
 
@@ -96,8 +96,8 @@ internal partial class SAM
 
     internal static bool UseIaijutsu()
     {
-        int higanbanaHPThreshold = SAM_ST_Higanbana_HP_Threshold;
-        int higanbanaRefresh = SAM_ST_Higanbana_Refresh;
+        int higanbanaHPThreshold = SAM_ST_HiganbanaHPThreshold;
+        int higanbanaRefresh = SAM_ST_HiganbanaRefresh;
 
         if (LevelChecked(Iaijutsu))
         {
@@ -106,7 +106,7 @@ internal partial class SAM
                 //Higanbana
                 (SAM_ST_CDs_IaijutsuOption[0] &&
                  SenCount is 1 && GetTargetHPPercent() > higanbanaHPThreshold &&
-                 (SAM_ST_Higanbana_Suboption == 0 || TargetIsBoss()) &&
+                 (SAM_ST_HiganbanaBossOption == 0 || TargetIsBoss()) &&
                  CanApplyStatus(CurrentTarget, Debuffs.Higanbana) &&
                  (JustUsed(MeikyoShisui, 15f) && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) <= higanbanaRefresh ||
                   !HasStatusEffect(Debuffs.Higanbana, CurrentTarget)) ||

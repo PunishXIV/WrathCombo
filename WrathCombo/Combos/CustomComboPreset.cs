@@ -3739,7 +3739,7 @@ public enum Preset
     [CustomComboInfo("Overdrive Feature", "Replace Rook Autoturret and Automaton Queen with Overdrive while active.", MCH.JobID)]
     MCH_Overdrive = 8002,
 
-    [ReplaceSkill(MCH.Drill, MCH.AirAnchor, MCH.HotShot, MCH.Chainsaw)]
+    [ReplaceSkill(MCH.HotShot)]
     [CustomComboInfo("Big Hitter Feature", "Replace Hot Shot, Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown.", MCH.JobID)]
     MCH_HotShotDrillChainsawExcavator = 8004,
 
@@ -3912,22 +3912,7 @@ public enum Preset
     [ConflictingCombos(MNK_ST_AdvancedMode, MNK_ST_SimpleMode)]
     [CustomComboInfo("Beast Chakra Handlers", "Merge single target GCDs which share the same beast chakra", MNK.JobID)]
     MNK_ST_BeastChakras = 9019,
-
-    [ReplaceSkill(MNK.Bootshine)]
-    [CustomComboInfo("Opo-opo Option", "Replace Bootshine/Leaping Opo with Dragon Kick.", MNK.JobID)]
-    [ParentCombo(MNK_ST_BeastChakras)]
-    MNK_BC_OPOOPO = 9020,
-
-    [ReplaceSkill(MNK.TrueStrike)]
-    [CustomComboInfo("Raptor Option", "Replace True Strike/Rising Raptor with Twin Snakes.", MNK.JobID)]
-    [ParentCombo(MNK_ST_BeastChakras)]
-    MNK_BC_RAPTOR = 9021,
-
-    [ReplaceSkill(MNK.SnapPunch)]
-    [CustomComboInfo("Coeurl Option", "Replace Snap Punch/Pouncing Coeurl with Demolish.", MNK.JobID)]
-    [ParentCombo(MNK_ST_BeastChakras)]
-    MNK_BC_COEURL = 9022,
-
+    
     #endregion
     
     #region Misc

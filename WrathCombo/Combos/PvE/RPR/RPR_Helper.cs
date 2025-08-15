@@ -91,12 +91,12 @@ internal partial class RPR
 
             if (IsEnabled(Preset.RPR_ST_AdvancedMode))
             {
-                if (RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter() &&
+                if (RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() &&
                     !HasStatusEffect(Buffs.Enshrouded) &&
                     GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= RPR_SoDRefreshRange)
                     return true;
 
-                if (RPR_ST_ArcaneCircle_SubOption == 0 || InBossEncounter() ||
+                if (RPR_ST_ArcaneCircleBossOption == 0 || InBossEncounter() ||
                     IsNotEnabled(Preset.RPR_ST_ArcaneCircle))
                 {
                     //Double enshroud

@@ -445,7 +445,7 @@ internal partial class SGE : Healer
 
             //Pneuma
             if (IsEnabled(Preset.SGE_AoE_DPS_Pneuma) &&
-                (SGE_AoE_DPS_Pneuma_SubOption == 0 || TargetIsBoss()) &&
+                (SGE_AoE_DPS_PneumaBossOption == 0 || TargetIsBoss()) &&
                 ActionReady(Pneuma) && HasBattleTarget() &&
                 InActionRange(Pneuma))
                 return Pneuma;

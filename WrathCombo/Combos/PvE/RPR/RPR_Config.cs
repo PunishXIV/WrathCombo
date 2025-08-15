@@ -29,10 +29,10 @@ internal partial class RPR
                     break;
 
                 case Preset.RPR_ST_ArcaneCircle:
-                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
+                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircleBossOption,
                         "All content", $"Uses {ArcaneCircle.ActionName()} regardless of content.", 0);
 
-                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircle_SubOption,
+                    DrawHorizontalRadioButton(RPR_ST_ArcaneCircleBossOption,
                         "Boss encounters Only", $"Only uses {ArcaneCircle.ActionName()} when in Boss encounters.", 1);
                     break;
 
@@ -48,7 +48,7 @@ internal partial class RPR
                     DrawSliderInt(0, 10, RPR_SoDRefreshRange,
                         $"Seconds remaining before refreshing {ShadowOfDeath.ActionName()}.\nRecommended is 6.");
 
-                    DrawSliderInt(0, 100, RPR_SoDThreshold,
+                    DrawSliderInt(0, 100, RPR_SoDHPThreshold,
                         $"Set a HP% Threshold for when {ShadowOfDeath.ActionName()} will not be automatically applied to the target.");
                     break;
 
@@ -63,23 +63,23 @@ internal partial class RPR
                     break;
 
                 case Preset.RPR_AoE_WoD:
-                    DrawSliderInt(0, 100, RPR_WoDThreshold,
+                    DrawSliderInt(0, 100, RPR_WoDHPThreshold,
                         $"Set a HP% Threshold for when {WhorlOfDeath.ActionName()} will not be automatically applied to the target.");
                     break;
 
                 case Preset.RPR_ST_ComboHeals:
-                    DrawSliderInt(0, 100, RPR_STSecondWindThreshold,
+                    DrawSliderInt(0, 100, RPR_STSecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
-                    DrawSliderInt(0, 100, RPR_STBloodbathThreshold,
+                    DrawSliderInt(0, 100, RPR_STBloodbathHPThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
                 case Preset.RPR_AoE_ComboHeals:
-                    DrawSliderInt(0, 100, RPR_AoESecondWindThreshold,
+                    DrawSliderInt(0, 100, RPR_AoESecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
 
-                    DrawSliderInt(0, 100, RPR_AoEBloodbathThreshold,
+                    DrawSliderInt(0, 100, RPR_AoEBloodbathHPThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
@@ -116,13 +116,13 @@ internal partial class RPR
             RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
             RPR_Balance_Content = new("RPR_Balance_Content", 1),
             RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
-            RPR_SoDThreshold = new("RPR_SoDThreshold", 0),
-            RPR_ST_ArcaneCircle_SubOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
-            RPR_STSecondWindThreshold = new("RPR_STSecondWindThreshold", 40),
-            RPR_STBloodbathThreshold = new("RPR_STBloodbathThreshold", 30),
-            RPR_WoDThreshold = new("RPR_WoDThreshold", 20),
-            RPR_AoESecondWindThreshold = new("RPR_AoESecondWindThreshold", 40),
-            RPR_AoEBloodbathThreshold = new("RPR_AoEBloodbathThreshold", 30),
+            RPR_SoDHPThreshold = new("RPR_SoDThreshold", 0),
+            RPR_ST_ArcaneCircleBossOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
+            RPR_STSecondWindHPThreshold = new("RPR_STSecondWindThreshold", 40),
+            RPR_STBloodbathHPThreshold = new("RPR_STBloodbathThreshold", 30),
+            RPR_WoDHPThreshold = new("RPR_WoDThreshold", 20),
+            RPR_AoESecondWindHPThreshold = new("RPR_AoESecondWindThreshold", 40),
+            RPR_AoEBloodbathHPThreshold = new("RPR_AoEBloodbathThreshold", 30),
             RPR_VariantCure = new("RPRVariantCure", 50);
 
         public static UserBool
