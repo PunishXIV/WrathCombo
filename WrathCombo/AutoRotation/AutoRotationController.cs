@@ -606,7 +606,9 @@ internal unsafe static class AutoRotationController
                     Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct,
                     (mustTarget && target != null) || switched ? target.GameObjectId : Player.Object.GameObjectId);
 
-                if (outAct is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo && ret)
+                if (outAct is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo 
+                    or NIN.TCJFumaShurikenTen or NIN.TCJFumaShurikenChi or NIN.TCJFumaShurikenJin or NIN.TCJKaton or NIN.TCJRaiton && ret)
+                    
                     _ninjaLockedAoE = true;
                 else
                     _ninjaLockedAoE = false;

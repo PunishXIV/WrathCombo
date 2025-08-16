@@ -129,17 +129,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 <summary>NIN</summary>
 
 ```
-/wrath toggle 10018
-/wrath toggle 10019
-/wrath toggle 10042
-/wrath toggle 10017
-/wrath toggle 10036
+/wrath toggle 10006
+/wrath toggle 10007
+/wrath toggle 10022
 /wrath toggle 10023
-/wrath toggle 10046
-/wrath toggle 10024
-/wrath toggle 10047
-/wrath toggle 10025
-/wrath toggle 10048
 ```
 
 </details>
