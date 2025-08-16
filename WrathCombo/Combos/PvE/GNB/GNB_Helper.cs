@@ -410,8 +410,7 @@ internal partial class GNB : Tank
     #endregion
 
     #region IDs
-    public const byte JobID = 37; //Gunbreaker (GNB)
-
+    
     public const uint //Actions
     #region Offensive
 

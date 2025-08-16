@@ -9,9 +9,6 @@ internal static class SCHPvP
 {
         #region IDS
 
-    public const byte ClassID = 26;
-    public const byte JobID = 28;       
-
     internal class Role : PvPHealer;
 
     public const uint

@@ -264,9 +264,6 @@ internal partial class WAR : Tank
 
     #region IDs
 
-    public const byte ClassID = 3; //Marauder (MRD)
-    public const byte JobID = 21; //Warrior (WAR)
-
     #region Actions
     public const uint
 

@@ -3,6 +3,8 @@ using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
+using ECommons.GameHelpers;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Frozen;
@@ -250,8 +252,8 @@ internal partial class AST
     {
         get
         {
-            if (Svc.ClientState.LocalPlayer is null ||
-                Svc.ClientState.LocalPlayer.ClassJob.RowId != JobID ||
+            if (Player.Object is null ||
+                Player.Job != WrathCombo.JobID ||
                 Svc.Condition[ConditionFlag.BetweenAreas] ||
                 Svc.Condition[ConditionFlag.Unconscious] ||
                 Gauge.DrawnCards[0] == CardType.None ||
@@ -307,12 +309,12 @@ internal partial class AST
                 !HasStatusEffect(Buffs.SpearBuff, thisTarget, true);
 
             bool IsMeleeOrTank (ClassJob job) =>
-                JobIDs.Melee.Contains((byte)job.RowId) ||
-                JobIDs.Tank.Contains((byte)job.RowId);
+                JobRoles.Melee.Contains(job.RowId) ||
+                JobRoles.Tank.Contains(job.RowId);
 
             bool IsRangedOrHealer(ClassJob job) =>
-                JobIDs.Ranged.Contains((byte)job.RowId) ||
-                JobIDs.Healer.Contains((byte)job.RowId);
+                JobRoles.Ranged.Contains(job.RowId) ||
+                JobRoles.Healer.Contains(job.RowId);
 
             bool DamageDownFree(IGameObject? thisTarget) =>
                 !TargetHasDamageDown(thisTarget);
@@ -360,7 +362,7 @@ internal partial class AST
                 filter = filter
                     .OrderBy(x =>
                         _cardPriorities.GetValueOrDefault(
-                            (byte)x.RealJob!.Value.RowId, byte.MaxValue))
+                            (Job)x.RealJob!.Value.RowId, byte.MaxValue))
                     .ThenByDescending(x => x.BattleChara.MaxHp)
                     .ToList();
                 
@@ -373,28 +375,28 @@ internal partial class AST
 
     #region Static Priority Data
 
-    private static Dictionary<byte, int> _cardPriorities = new()
+    private static Dictionary<Job, int> _cardPriorities = new()
     {
-        { SAM.JobID, 1 },
-        { NIN.JobID, 2 },
-        { VPR.JobID, 3 },
-        { DRG.JobID, 4 },
-        { MNK.JobID, 5 },
-        { DRK.JobID, 6 },
-        { RPR.JobID, 7 },
-        { GNB.JobID, 8 },
-        { PLD.JobID, 9 },
-        { WAR.JobID, 10 },
-        { PCT.JobID, 11 },
-        { SMN.JobID, 12 },
-        { MCH.JobID, 13 },
-        { BRD.JobID, 14 },
-        { RDM.JobID, 15 },
-        { DNC.JobID, 16 },
-        { BLM.JobID, 17 },
-        { WHM.JobID, 18 },
-        { SGE.JobID, 19 },
-        { SCH.JobID, 20 },
+        { Job.SAM, 1 },
+        { Job.NIN, 2 },
+        { Job.VPR, 3 },
+        { Job.DRG, 4 },
+        { Job.MNK, 5 },
+        { Job.DRK, 6 },
+        { Job.RPR, 7 },
+        { Job.GNB, 8 },
+        { Job.PLD, 9 },
+        { Job.WAR, 10 },
+        { Job.PCT, 11 },
+        { Job.SMN, 12 },
+        { Job.MCH, 13 },
+        { Job.BRD, 14 },
+        { Job.RDM, 15 },
+        { Job.DNC, 16 },
+        { Job.BLM, 17 },
+        { Job.WHM, 18 },
+        { Job.SGE, 19 },
+        { Job.SCH, 20 },
         
     };
 
@@ -494,8 +496,6 @@ internal partial class AST
     #endregion
 
     #region ID's
-
-    internal const byte JobID = 33;
 
     internal const uint
         //DPS

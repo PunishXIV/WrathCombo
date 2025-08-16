@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using System;
@@ -270,29 +271,29 @@ public abstract class WrathOpener
 
     internal static void SelectOpener()
     {
-        CurrentOpener = Player.JobId switch
+        CurrentOpener = Player.Job switch
         {
-            AST.JobID => AST.Opener(),
-            BLM.JobID => BLM.Opener(),
-            BRD.JobID => BRD.Opener(),
-            DRG.JobID => DRG.Opener(),
-            DNC.JobID => DNC.Opener(),
-            DRK.JobID => DRK.Opener(),
-            GNB.JobID => GNB.Opener(),
-            MCH.JobID => MCH.Opener(),
-            MNK.JobID => MNK.Opener(),
-            NIN.JobID => NIN.Opener(),
-            PCT.JobID => PCT.Opener(),
-            PLD.JobID => PLD.Opener(),
-            RDM.JobID => RDM.Opener(),
-            RPR.JobID => RPR.Opener(),
-            SAM.JobID => SAM.Opener(),
-            SMN.JobID => SMN.Opener(),
-            SCH.JobID => SCH.Opener(),
-            SGE.JobID => SGE.Opener(),
-            VPR.JobID => VPR.Opener(),
-            WAR.JobID => WAR.Opener(),
-            WHM.JobID => WHM.Opener(),
+            Job.AST => AST.Opener(),
+            Job.BLM => BLM.Opener(),
+            Job.BRD => BRD.Opener(),
+            Job.DRG => DRG.Opener(),
+            Job.DNC => DNC.Opener(),
+            Job.DRK => DRK.Opener(),
+            Job.GNB => GNB.Opener(),
+            Job.MCH => MCH.Opener(),
+            Job.MNK => MNK.Opener(),
+            Job.NIN => NIN.Opener(),
+            Job.PCT => PCT.Opener(),
+            Job.PLD => PLD.Opener(),
+            Job.RDM => RDM.Opener(),
+            Job.RPR => RPR.Opener(),
+            Job.SAM => SAM.Opener(),
+            Job.SMN => SMN.Opener(),
+            Job.SCH => SCH.Opener(),
+            Job.SGE => SGE.Opener(),
+            Job.VPR => VPR.Opener(),
+            Job.WAR => WAR.Opener(),
+            Job.WHM => WHM.Opener(),
             _ => Dummy
         };
     }

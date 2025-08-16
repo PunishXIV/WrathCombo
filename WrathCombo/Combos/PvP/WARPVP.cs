@@ -10,9 +10,6 @@ internal static class WARPvP
 {
         #region IDS
 
-    public const byte ClassID = 3;
-    public const byte JobID = 21;
-
     internal class Role : PvPTank;
 
     internal const uint

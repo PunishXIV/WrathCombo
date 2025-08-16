@@ -8,9 +8,7 @@ namespace WrathCombo.Combos.PvP;
 internal static class VPRPvP
 {
         #region IDS
-    public const byte JobID = 41;
-
-    internal class Role : PvPMelee;
+   internal class Role : PvPMelee;
 
     internal const uint
         SteelFangs = 39157,

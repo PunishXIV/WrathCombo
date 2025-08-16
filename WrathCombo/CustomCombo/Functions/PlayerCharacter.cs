@@ -2,7 +2,9 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Memory;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameFunctions;
+using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game.Fate;
 using FFXIVClientStructs.FFXIV.Client.Game.Group;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
@@ -60,13 +62,13 @@ internal abstract partial class CustomComboFunctions
 
     public static bool PlayerHasTankStance()
     {
-        return LocalPlayer.ClassJob.RowId switch
+        return Player.Job switch
         {
-            PLD.JobID or PLD.ClassID => HasStatusEffect(PLD.Buffs.IronWill),
-            WAR.JobID or WAR.ClassID => HasStatusEffect(WAR.Buffs.Defiance),
-            DRK.JobID => HasStatusEffect(DRK.Buffs.Grit),
-            GNB.JobID => HasStatusEffect(GNB.Buffs.RoyalGuard),
-            BLU.JobID => HasStatusEffect(BLU.Buffs.TankMimicry),
+            Job.GLA or Job.PLD => HasStatusEffect(PLD.Buffs.IronWill),
+            Job.MRD or Job.WAR => HasStatusEffect(WAR.Buffs.Defiance),
+            Job.DRK => HasStatusEffect(DRK.Buffs.Grit),
+            Job.GNB => HasStatusEffect(GNB.Buffs.RoyalGuard),
+            Job.BLU => HasStatusEffect(BLU.Buffs.TankMimicry),
             _ => false
         };
     }

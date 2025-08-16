@@ -8,8 +8,6 @@ namespace WrathCombo.Combos.PvP;
 internal static class SAMPvP
 {
         #region IDS
-    public const byte JobID = 34;
-
     internal class Role : PvPMelee;
 
     public const uint

@@ -9,7 +9,6 @@ internal static class SGEPvP
 {
         #region IDS
 
-    public const byte JobID = 40;
     internal class Role : PvPHealer;
 
     internal const uint

@@ -10,8 +10,6 @@ internal static class BLMPvP
 {
         #region IDs
 
-    public const byte JobID = 25;
-        
     internal class Role : PvPCaster;
 
     public const uint

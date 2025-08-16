@@ -287,8 +287,6 @@ internal partial class DRK
 
     #region IDs
 
-    public const byte JobID = 32;
-
     #region Actions
 
     public const uint

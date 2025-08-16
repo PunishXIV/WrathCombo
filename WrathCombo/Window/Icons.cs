@@ -2,53 +2,75 @@
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
-using ECommons.Throttlers;
+using ECommons.ExcelServices;
 using Lumina.Data.Files;
+using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
-using WrathCombo.Combos.PvE;
+using System.Linq;
+using WrathCombo.Attributes;
 namespace WrathCombo.Window;
 
 internal static class Icons
 {
     public static Dictionary<uint, IDalamudTextureWrap> CachedModdedIcons = new();
-    public static Dictionary<int, IDalamudTextureWrap?> OccultIcons = [];
-    private static int OccultIdx = -1; // Instead of 0 to show Freelancer
-    public static IDalamudTextureWrap? GetJobIcon(uint jobId)
+    
+    public static class Occult
     {
-        switch (jobId)
+        private const int MaxJobId = 12; // Change later when new Occult classes have sprites
+        private const int AnimationOffset = 30;
+
+        public static readonly Lazy<FrozenDictionary<int, IDalamudTextureWrap?[]>> JobSprites =
+            new(() => LoadOccultJobIcons());
+
+        private static FrozenDictionary<int, IDalamudTextureWrap?[]> LoadOccultJobIcons()
         {
-            case All.JobID: jobId = 62146; break; //Adventurer / General
-            case > All.JobID and <= 42: jobId += 62100; break; //Classes
-            case DOL.JobID: jobId = 82096; break;
-            case OccultCrescent.JobID: return GetOccultIcon();
-            default: return null; //Unknown, return null
+            var dict = new Dictionary<int, IDalamudTextureWrap?[]>();
+
+            var uld = Svc.PluginInterface.UiBuilder.LoadUld("ui/uld/MKDSupportJob.uld");
+
+            for (int jobId = 0; jobId <= MaxJobId; jobId++)
+            {
+                var frames = new IDalamudTextureWrap?[2];
+                frames[0] = uld.LoadTexturePart("ui/uld/MKDSupportJob_hr1.tex", jobId);
+                frames[1] = uld.LoadTexturePart("ui/uld/MKDSupportJob_hr1.tex", jobId + AnimationOffset);
+
+                dict[jobId] = frames;
+            }
+
+            return dict.ToFrozenDictionary();
         }
-        return GetTextureFromIconId(jobId);
     }
 
-    private static IDalamudTextureWrap? GetOccultIcon()
+    public static class Role
     {
-        if (OccultIcons.Count < 26)
+        private const uint RoleBaseIconID = 62580;
+
+        public static IDalamudTextureWrap? GetRoleIcon(JobRole jobRole)
         {
-            for (int i = 0; i <= 25; i++)
+            uint? iconID = jobRole switch
             {
-                var uld = Svc.PluginInterface.UiBuilder.LoadUld("ui/uld/MKDSupportJob.uld");
-                OccultIcons[i] = uld.LoadTexturePart("ui/uld/MKDSupportJob_hr1.tex", i);
-            }
-            for (int i = 30; i <= 55; i++)
-            {
-                var uld = Svc.PluginInterface.UiBuilder.LoadUld("ui/uld/MKDSupportJob.uld");
-                OccultIcons[i] = uld.LoadTexturePart("ui/uld/MKDSupportJob_hr1.tex", i);
-            }
+                JobRole.Tank => RoleBaseIconID + 1,
+                JobRole.Healer => RoleBaseIconID + 2,
+                JobRole.MeleeDPS => RoleBaseIconID + 4,
+                JobRole.RangedDPS => RoleBaseIconID + 6,
+                JobRole.MagicalDPS => RoleBaseIconID + 7,
+                _ => null
+            };
+            return iconID is null ? null : GetTextureFromIconId(iconID.Value);
         }
+    }
 
-        if (EzThrottler.Throttle("OccultAnimateIdx", 800))
-            OccultIdx++;
+    public static IDalamudTextureWrap? GetJobIcon(Job job)
+    {
+        uint iconID = job switch
+        {
+            Job.ADV => 62146,
+            Job.MIN or Job.BTN or Job.FSH => 82096,
+            _ => (uint)ExcelJobHelper.GetIcon(job)
+        };
 
-        if (OccultIdx == 13) // Only cycle through the current ones, set to 26 after new ones added
-            OccultIdx = 0;
-
-        return OccultIcons[OccultIdx];
+        return GetTextureFromIconId(iconID);
     }
 
     private static string ResolvePath(string path) => Svc.TextureSubstitution.GetSubstitutedPath(path);

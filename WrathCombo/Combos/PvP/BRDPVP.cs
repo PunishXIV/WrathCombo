@@ -9,9 +9,6 @@ internal static class BRDPvP
 {
         #region IDs
 
-    public const byte ClassID = 5;
-    public const byte JobID = 23;
-
     internal class Role : PvPPhysRanged;
 
     public const uint

@@ -371,7 +371,7 @@ public partial class Leasing
             return SetResult.PlayerNotAvailable;
         }
 
-        var job = (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
+        var job = Player.Job.GetUpgradedJob();
         if (jobOverride is not null)
             job = jobOverride.Value;
 
@@ -399,14 +399,14 @@ public partial class Leasing
             locking = true;
             stringKeys = [];
             combos = P.IPCSearch.EnabledActions
-                .Where(a => a.Attributes().CustomComboInfo.JobID
-                           == (uint)job)
+                .Where(a => a.Attributes().CustomComboInfo.Job
+                           == job)
                 .Where(a => a.Attributes().Parent is null)
                 .Select(a => a.ToString())
                 .ToList();
             options = P.IPCSearch.EnabledActions
-                .Where(a => a.Attributes().CustomComboInfo.JobID
-                           == (uint)job)
+                .Where(a => a.Attributes().CustomComboInfo.Job
+                           == job)
                 .Where(a => a.Attributes().Parent is not null)
                 .Select(a => a.ToString())
                 .ToList();

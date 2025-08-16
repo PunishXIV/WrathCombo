@@ -8,8 +8,6 @@ namespace WrathCombo.Combos.PvP;
 internal static class ASTPvP
 {
         #region IDS
-    internal const byte JobID = 33;
-        
     internal class Role : PvPHealer;
 
     internal const uint

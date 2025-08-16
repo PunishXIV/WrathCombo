@@ -1,14 +1,15 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Collections.Generic;
 using WrathCombo.Attributes;
-using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services;
+using ECommonsJob = ECommons.ExcelServices.Job;
 
 namespace WrathCombo.CustomComboNS;
 
@@ -19,8 +20,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
     protected CustomCombo()
     {
         CustomComboInfoAttribute? presetInfo = Preset.GetAttribute<CustomComboInfoAttribute>();
-        JobID = presetInfo.JobID;
-        ClassID = JobIDs.JobToClass(JobID);
+        Job = presetInfo.Job;
     }
 
     protected IGameObject? OptionalTarget;
@@ -28,11 +28,8 @@ internal abstract partial class CustomCombo : CustomComboFunctions
     /// <summary> Gets the preset associated with this combo. </summary>
     protected internal abstract Preset Preset { get; }
 
-    /// <summary> Gets the class ID associated with this combo. </summary>
-    protected byte ClassID { get; }
-
-    /// <summary> Gets the job ID associated with this combo. </summary>
-    protected uint JobID { get; }
+    /// <summary> Gets the job associated with this combo. </summary>
+    protected ECommonsJob Job { get; }
 
     /// <summary>
     ///     This is a list of presets and their actions that are exceptions to
@@ -74,13 +71,12 @@ internal abstract partial class CustomCombo : CustomComboFunctions
         if (Player.Object is null) return false; //Safeguard. LocalPlayer shouldn't be null at this point anyways.
         if (Player.IsDead) return false; //Don't do combos while dead
 
-        uint classJobID = LocalPlayer!.ClassJob.RowId;
+        Job classJobID = Player.Job.GetUpgradedJob();
 
-        if (classJobID is >= 16 and <= 18)
-            classJobID = DOL.JobID;
+        if (classJobID is Job.MIN or Job.BTN or Job.FSH)
+            classJobID = Job.MIN;
 
-        if (JobID != All.JobID && ClassID != All.ClassID &&
-            JobID != classJobID && ClassID != classJobID)
+        if (Job != Job.ADV && Job != classJobID )
             return false;
 
         OptionalTarget = targetOverride;

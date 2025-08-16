@@ -347,9 +347,6 @@ internal partial class WHM
 
     #region ID's
 
-    public const byte ClassID = 6;
-    public const byte JobID = 24;
-
     public const uint
         // DPS
         Glare1 = 16533,

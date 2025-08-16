@@ -8,8 +8,6 @@ namespace WrathCombo.Combos.PvP;
 internal static class GNBPvP
 {
         #region IDS
-    public const byte JobID = 37;
-
     internal class Role : PvPTank;
 
     public const uint

@@ -9,8 +9,6 @@ internal class DRKPvP
 {
         #region IDS
 
-    public const byte JobID = 32;
-
     internal class Role : PvPTank;
 
     public const uint

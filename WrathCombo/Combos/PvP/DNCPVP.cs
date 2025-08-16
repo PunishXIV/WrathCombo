@@ -9,7 +9,6 @@ namespace WrathCombo.Combos.PvP;
 internal static class DNCPvP
 {
         #region IDS
-    public const byte JobID = 38;
 
     internal class Role : PvPPhysRanged;
 

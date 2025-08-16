@@ -9,8 +9,6 @@ internal static class PLDPvP
 {
         #region IDS
 
-    public const byte JobID = 19;
-
     internal class Role : PvPTank;
 
     public const uint

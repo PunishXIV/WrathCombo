@@ -227,9 +227,6 @@ internal partial class BRD
 
     #region ID's
 
-    public const byte ClassID = 5;
-    public const byte JobID = 23;
-
     public const uint
         HeavyShot = 97,
         StraightShot = 98,

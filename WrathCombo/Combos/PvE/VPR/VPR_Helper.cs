@@ -360,8 +360,6 @@ internal partial class VPR
 
     #region ID's
 
-    public const byte JobID = 41;
-
     public const uint
         ReavingFangs = 34607,
         ReavingMaw = 34615,

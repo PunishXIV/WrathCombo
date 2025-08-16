@@ -14,9 +14,6 @@ internal partial class SMN
 {
     #region ID's
 
-    public const byte ClassID = 26;
-    public const byte JobID = 27;
-
     public const float CooldownThreshold = 0.5f;
 
     public const uint

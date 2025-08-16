@@ -183,9 +183,9 @@ public class WrathPartyMember
     public uint NPCClassJob;
     public bool IsOutOfPartyNPC = false;
 
-    public ClassJob? RealJob => NPCClassJob > 0 && CustomComboFunctions.JobIDs.ClassJobs.TryGetValue(NPCClassJob, out var realJob)
+    public ClassJob? RealJob => NPCClassJob > 0 && ExcelJobHelper.TryGetJobById(NPCClassJob, out var realJob)
         ? realJob
-        : BattleChara?.ClassJob.Value ?? CustomComboFunctions.JobIDs.ClassJobs[0];
+        : BattleChara?.ClassJob.Value ?? ExcelJobHelper.GetJobById(0);
 
     public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
     public IGameObject? GameObject => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId);

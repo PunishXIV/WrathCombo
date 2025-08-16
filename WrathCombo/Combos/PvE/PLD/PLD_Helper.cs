@@ -153,9 +153,6 @@ internal partial class PLD
 
     #region ID's
 
-    public const byte ClassID = 1;
-    public const byte JobID = 19;
-
     public const float CooldownThreshold = 0.5f;
 
     public const uint

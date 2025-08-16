@@ -4,8 +4,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLU : Caster
 {
-    public const byte JobID = 36;
-
     public const uint
         RoseOfDestruction = 23275,
         ShockStrike = 11429,

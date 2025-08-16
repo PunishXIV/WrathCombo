@@ -436,9 +436,6 @@ internal partial class MNK
 
     #region ID's
 
-    public const byte ClassID = 2;
-    public const byte JobID = 20;
-
     public const uint
         Bootshine = 53,
         TrueStrike = 54,

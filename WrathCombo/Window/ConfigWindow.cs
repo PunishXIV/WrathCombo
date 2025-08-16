@@ -3,6 +3,7 @@ using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.Throttlers;
@@ -25,27 +26,28 @@ namespace WrathCombo.Window;
 /// <summary> Plugin configuration window. </summary>
 internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 {
-    internal static readonly Dictionary<string, List<(Preset Preset, CustomComboInfoAttribute Info)>> groupedPresets = GetGroupedPresets();
+    internal static readonly Dictionary<Job, List<(Preset Preset, CustomComboInfoAttribute Info)>> groupedPresets = GetGroupedPresets();
     internal static readonly Dictionary<Preset, (Preset Preset, CustomComboInfoAttribute Info)[]> presetChildren = GetPresetChildren();
     internal static int currentPreset = 1;
     internal static float lastLeftColumnWidth;
-    internal static Dictionary<string, List<(Preset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets()
+    internal static Dictionary<Job, List<(Preset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets()
     {
         return Enum
             .GetValues<Preset>()
             .Where(preset => (int)preset > 100)
             .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
             .Where(tpl => tpl.Info != null && PresetStorage.GetParent(tpl.Preset) == null)
-            .OrderByDescending(tpl => tpl.Info.Role == 1)
-            .ThenByDescending(tpl => tpl.Info.Role == 4)
-            .ThenByDescending(tpl => tpl.Info.Role == 2)
-            .ThenByDescending(tpl => tpl.Info.Role == 3)
-            .ThenByDescending(tpl => tpl.Info.JobID == 0)
-            .ThenByDescending(tpl => tpl.Info.JobID == DOL.JobID)
-            .ThenBy(tpl => tpl.Info.ClassJobCategory)
-            .ThenBy(tpl => tpl.Info.JobName)
+            .OrderByDescending(tpl => tpl.Info.Role is JobRole.Tank)
+            .ThenByDescending(tpl => tpl.Info.Role is JobRole.Healer)
+            .ThenByDescending(tpl => tpl.Info.Role is JobRole.MeleeDPS)
+            .ThenByDescending(tpl => tpl.Info.Role is JobRole.RangedDPS)
+            .ThenByDescending(tpl => tpl.Info.Role is JobRole.MagicalDPS)
+            .ThenByDescending(tpl => tpl.Info.Job is Job.ADV)
+            .ThenByDescending(tpl => tpl.Info.Job is Job.MIN)
+            //.ThenBy(tpl => tpl.Info.ClassJobCategory)
+            .ThenBy(tpl => tpl.Info.Job)
             .ThenBy(tpl => tpl.Info.Order)
-            .GroupBy(tpl => tpl.Info.JobName)
+            .GroupBy(tpl => tpl.Info.Job)
             .ToDictionary(
                 tpl => tpl.Key,
                 tpl => tpl.ToList())!;

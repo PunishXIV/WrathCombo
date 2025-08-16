@@ -13,8 +13,6 @@ internal static class UIntExtensions
 
     internal static string ActionName(this uint value) => CustomComboFunctions.GetActionName(value);
 
-    internal static int Role(this uint value) => CustomComboFunctions.JobIDs.JobIDToRole(value);
-
     internal static ActionAttackType ActionAttackType(this uint value) => (ActionAttackType)ActionSheet[value].ActionCategory.RowId;
     
     internal static float ActionRange(this uint value) =>

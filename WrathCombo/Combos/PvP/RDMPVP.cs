@@ -12,8 +12,6 @@ internal static class RDMPvP
 {
         #region IDs
 
-    public const byte JobID = 35;
-
     internal class Role : PvPCaster;
 
     public const uint

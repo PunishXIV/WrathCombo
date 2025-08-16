@@ -13,9 +13,6 @@ internal partial class NIN
 {
     #region ID's
 
-    public const byte ClassID = 29;
-    public const byte JobID = 30;
-
     public const uint
         SpinningEdge = 2240,
         ShadeShift = 2241,

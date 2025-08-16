@@ -8,9 +8,6 @@ namespace WrathCombo.Combos.PvP;
 internal static class MNKPvP
 {
         #region IDS
-    public const byte ClassID = 2;
-    public const byte JobID = 20;
-
     internal class Role : PvPMelee;
 
     public const uint

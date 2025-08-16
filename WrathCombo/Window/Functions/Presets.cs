@@ -5,6 +5,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ECommons;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
@@ -126,7 +127,7 @@ internal class Presets : ConfigWindow
     }
 
     internal static Dictionary<Preset, bool> GetJobAutorots => P
-        .IPCSearch.AutoActions.Where(x => x.Key.Attributes().IsPvP == CustomComboFunctions.InPvP() && (Player.JobId == x.Key.Attributes().CustomComboInfo.JobID || CustomComboFunctions.JobIDs.ClassToJob((byte)Player.Job) == x.Key.Attributes().CustomComboInfo.JobID) && x.Value && CustomComboFunctions.IsEnabled(x.Key) && x.Key.Attributes().Parent == null).ToDictionary();
+        .IPCSearch.AutoActions.Where(x => x.Key.Attributes().IsPvP == CustomComboFunctions.InPvP() && (Player.Job == x.Key.Attributes().CustomComboInfo.Job || Player.Job.GetUpgradedJob() == x.Key.Attributes().CustomComboInfo.Job) && x.Value && CustomComboFunctions.IsEnabled(x.Key) && x.Key.Attributes().Parent == null).ToDictionary();
 
     internal static void DrawPreset(Preset preset, CustomComboInfoAttribute info)
     {
@@ -196,6 +197,9 @@ internal class Presets : ConfigWindow
         DrawReplaceAttribute(preset);
 
         DrawRetargetedAttribute(preset);
+
+        if (DrawRoleIcon(preset))
+            ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 8f.Scale());
 
         if (DrawOccultJobIcon(preset))
             ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 8f.Scale());
@@ -357,64 +361,67 @@ internal class Presets : ConfigWindow
         {
             if (!pvp)
             {
-                switch (info.JobID)
+                switch (info.Job)
                 {
-                    case All.JobID: All.Config.Draw(preset); break;
-                    case AST.JobID: AST.Config.Draw(preset); break;
-                    case BLM.JobID: BLM.Config.Draw(preset); break;
-                    case BLU.JobID: BLU.Config.Draw(preset); break;
-                    case BRD.JobID: BRD.Config.Draw(preset); break;
-                    case DNC.JobID: DNC.Config.Draw(preset); break;
-                    case DOL.JobID: DOL.Config.Draw(preset); break;
-                    case DRG.JobID: DRG.Config.Draw(preset); break;
-                    case DRK.JobID: DRK.Config.Draw(preset); break;
-                    case GNB.JobID: GNB.Config.Draw(preset); break;
-                    case MCH.JobID: MCH.Config.Draw(preset); break;
-                    case MNK.JobID: MNK.Config.Draw(preset); break;
-                    case NIN.JobID: NIN.Config.Draw(preset); break;
-                    case PCT.JobID: PCT.Config.Draw(preset); break;
-                    case PLD.JobID: PLD.Config.Draw(preset); break;
-                    case RPR.JobID: RPR.Config.Draw(preset); break;
-                    case RDM.JobID: RDM.Config.Draw(preset); break;
-                    case SAM.JobID: SAM.Config.Draw(preset); break;
-                    case SCH.JobID: SCH.Config.Draw(preset); break;
-                    case SGE.JobID: SGE.Config.Draw(preset); break;
-                    case SMN.JobID: SMN.Config.Draw(preset); break;
-                    case VPR.JobID: VPR.Config.Draw(preset); break;
-                    case WAR.JobID: WAR.Config.Draw(preset); break;
-                    case WHM.JobID: WHM.Config.Draw(preset); break;
-                    case OccultCrescent.JobID: OccultCrescent.Config.Draw(preset); break;
+                    case Job.ADV:
+                    {
+                        All.Config.Draw(preset);
+                        OccultCrescent.Config.Draw(preset);
+                        break;
+                    }
+                    case Job.AST: AST.Config.Draw(preset); break;
+                    case Job.BLM: BLM.Config.Draw(preset); break;
+                    case Job.BLU: BLU.Config.Draw(preset); break;
+                    case Job.BRD: BRD.Config.Draw(preset); break;
+                    case Job.DNC: DNC.Config.Draw(preset); break;
+                    case Job.MIN: DOL.Config.Draw(preset); break;
+                    case Job.DRG: DRG.Config.Draw(preset); break;
+                    case Job.DRK: DRK.Config.Draw(preset); break;
+                    case Job.GNB: GNB.Config.Draw(preset); break;
+                    case Job.MCH: MCH.Config.Draw(preset); break;
+                    case Job.MNK: MNK.Config.Draw(preset); break;
+                    case Job.NIN: NIN.Config.Draw(preset); break;
+                    case Job.PCT: PCT.Config.Draw(preset); break;
+                    case Job.PLD: PLD.Config.Draw(preset); break;
+                    case Job.RPR: RPR.Config.Draw(preset); break;
+                    case Job.RDM: RDM.Config.Draw(preset); break;
+                    case Job.SAM: SAM.Config.Draw(preset); break;
+                    case Job.SCH: SCH.Config.Draw(preset); break;
+                    case Job.SGE: SGE.Config.Draw(preset); break;
+                    case Job.SMN: SMN.Config.Draw(preset); break;
+                    case Job.VPR: VPR.Config.Draw(preset); break;
+                    case Job.WAR: WAR.Config.Draw(preset); break;
+                    case Job.WHM: WHM.Config.Draw(preset); break;
                     default:
                         break;
                 }
             }
             else
             {
-                switch (info.JobID)
+                switch (info.Job)
                 {
-                    case All.JobID: PvPCommon.Config.Draw(preset); break;
-                    case AST.JobID: ASTPvP.Config.Draw(preset); break;
-                    case BLM.JobID: BLMPvP.Config.Draw(preset); break;
-                    //case BLU.JobID: BLU.Config.Draw(preset); break;
-                    case BRD.JobID: BRDPvP.Config.Draw(preset); break;
-                    case DNC.JobID: DNCPvP.Config.Draw(preset); break;
-                    case DRG.JobID: DRGPvP.Config.Draw(preset); break;
-                    case DRK.JobID: DRKPvP.Config.Draw(preset); break;
-                    case GNB.JobID: GNBPvP.Config.Draw(preset); break;
-                    case MCH.JobID: MCHPvP.Config.Draw(preset); break;
-                    case MNK.JobID: MNKPvP.Config.Draw(preset); break;
-                    case NIN.JobID: NINPvP.Config.Draw(preset); break;
-                    case PCT.JobID: PCTPvP.Config.Draw(preset); break;
-                    case PLD.JobID: PLDPvP.Config.Draw(preset); break;
-                    case RPR.JobID: RPRPvP.Config.Draw(preset); break;
-                    case RDM.JobID: RDMPvP.Config.Draw(preset); break;
-                    case SAM.JobID: SAMPvP.Config.Draw(preset); break;
-                    case SCH.JobID: SCHPvP.Config.Draw(preset); break;
-                    case SGE.JobID: SGEPvP.Config.Draw(preset); break;
-                    case SMN.JobID: SMNPvP.Config.Draw(preset); break;
-                    case VPR.JobID: VPRPvP.Config.Draw(preset); break;
-                    case WAR.JobID: WARPvP.Config.Draw(preset); break;
-                    case WHM.JobID: WHMPvP.Config.Draw(preset); break;
+                    case Job.ADV: PvPCommon.Config.Draw(preset); break;
+                    case Job.AST: ASTPvP.Config.Draw(preset); break;
+                    case Job.BLM: BLMPvP.Config.Draw(preset); break;
+                    case Job.BRD: BRDPvP.Config.Draw(preset); break;
+                    case Job.DNC: DNCPvP.Config.Draw(preset); break;
+                    case Job.DRG: DRGPvP.Config.Draw(preset); break;
+                    case Job.DRK: DRKPvP.Config.Draw(preset); break;
+                    case Job.GNB: GNBPvP.Config.Draw(preset); break;
+                    case Job.MCH: MCHPvP.Config.Draw(preset); break;
+                    case Job.MNK: MNKPvP.Config.Draw(preset); break;
+                    case Job.NIN: NINPvP.Config.Draw(preset); break;
+                    case Job.PCT: PCTPvP.Config.Draw(preset); break;
+                    case Job.PLD: PLDPvP.Config.Draw(preset); break;
+                    case Job.RPR: RPRPvP.Config.Draw(preset); break;
+                    case Job.RDM: RDMPvP.Config.Draw(preset); break;
+                    case Job.SAM: SAMPvP.Config.Draw(preset); break;
+                    case Job.SCH: SCHPvP.Config.Draw(preset); break;
+                    case Job.SGE: SGEPvP.Config.Draw(preset); break;
+                    case Job.SMN: SMNPvP.Config.Draw(preset); break;
+                    case Job.VPR: VPRPvP.Config.Draw(preset); break;
+                    case Job.WAR: WARPvP.Config.Draw(preset); break;
+                    case Job.WHM: WHMPvP.Config.Draw(preset); break;
                     default:
                         break;
                 }
@@ -614,31 +621,51 @@ internal class Presets : ConfigWindow
         }
     }
 
+    private static bool DrawRoleIcon(Preset preset)
+    {
+        if (preset.Attributes().RoleAttribute == null) return false;
+        if (preset.Attributes().Parent != null) return false;
+        var role = preset.Attributes().RoleAttribute.Role;
+        //if (jobID == -1) return false;
+        var icon = Icons.Role.GetRoleIcon(role);
+        if (icon is null) return false;
+        ImGui.SameLine();
+        ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 3f.Scale());
+        ImGui.Image(icon.Handle, (icon.Size / 2f) * ImGui.GetIO().FontGlobalScale);
+        ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 3f.Scale());
+        return true;
+    }
+
     private static bool DrawOccultJobIcon(Preset preset)
     {
         if (preset.Attributes().OccultCrescentJob == null) return false;
-        var jobID = preset.Attributes().OccultCrescentJob.JobId;
-        if (jobID == -1) return false;
-            
-            #region Error Handling
+        var baseJobID = preset.Attributes().OccultCrescentJob.JobId;
+        if (baseJobID == -1) return false;
+
+        #region Error Handling
         string? error = null;
 
-        if (_animFrame)
-            jobID += 30;
-
+        // Flip _animFrame every 400ms via throttler
         if (EzThrottler.Throttle("AnimFrameUpdater", 400))
             _animFrame = !_animFrame;
 
-        if (!Icons.OccultIcons.TryGetValue(jobID, out var icon))
+        if (!Icons.Occult.JobSprites.Value.TryGetValue(baseJobID, out var frames))
             error = "FIND";
+
+        if (frames is null || frames.Length < 2)
+            error = "LOAD";
+
+        var icon = (error == null) ? frames[_animFrame ? 1 : 0] : null;
+
         if (icon is null)
             error = "LOAD";
+
         if (error is not null)
         {
-            PluginLog.Error($"Failed to {error} Occult Crescent job icon for Preset:{preset} using JobID:{jobID}");
+            PluginLog.Error($"Failed to {error} Occult Crescent job icon for Preset:{preset} using JobID:{baseJobID}");
             return false;
         }
-            #endregion
+        #endregion
 
         var iconMaxSize = 32f.Scale();
         ImGui.SameLine();
@@ -647,8 +674,10 @@ internal class Presets : ConfigWindow
 
         ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 6f.Scale());
         ImGui.Image(icon.Handle, imgSize);
+        ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 6f.Scale());
         return true;
     }
+
 
     internal static int AllChildren((Preset Preset, CustomComboInfoAttribute Info)[] children)
     {

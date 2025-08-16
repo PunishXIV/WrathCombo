@@ -11,9 +11,6 @@ internal static class SMNPvP
 {
         #region IDs
 
-    public const byte ClassID = 26;
-    public const byte JobID = 27;
-
     internal class Role : PvPCaster;
 
     internal const uint

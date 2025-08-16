@@ -388,8 +388,6 @@ internal partial class SGE
 
     #region ID's
 
-    internal const byte JobID = 40;
-
     // Actions
     internal const uint
 

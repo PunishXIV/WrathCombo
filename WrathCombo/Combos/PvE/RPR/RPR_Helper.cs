@@ -228,8 +228,6 @@ internal partial class RPR
 
     #region ID's
 
-    public const byte JobID = 39;
-
     public const uint
 
         // Single Target

@@ -3,13 +3,14 @@
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using ECommons.GameHelpers;
+using ECommons.ExcelServices;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.AutoRotation;
-using WrathCombo.Combos;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -17,6 +18,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
+using static ECommons.ExcelServices.ExcelJobHelper;
 
 #endregion
 
@@ -582,36 +584,34 @@ public partial class WrathCombo
                     return;
                 }
 
-                var jobName = argument[1].ToUpperInvariant();
+                var jobAbbr = argument[1].ToUpperInvariant();
                 try
                 {
                     // Look up the entered job
-                    var jobSearch = CustomComboFunctions.JobIDs.ClassJobs.Values.First(j => j.Abbreviation == jobName);
-                    var jobId = jobSearch.RowId;
+                    if (TryGetJobByAbbreviation(jobAbbr, out ClassJob jobSearch))
+                    {
+                        //ClassJob -> enum,
+                        //Check if Class and change to Job
+                        //Retrieve final ClassJob
+                        job = jobSearch.GetJob().GetUpgradedJob().GetData();
 
-                    // Switch class to job, if necessary
-                    if (jobSearch.ClassJobParent.RowId != jobSearch.RowId)
-                        jobId = CustomComboFunctions.JobIDs.ClassToJob(jobSearch.RowId);
-
-                    job = CustomComboFunctions.JobIDs.ClassJobs[jobId];
+                        if (job.Value.RowId != Player.JobId)
+                            DuoLog.Warning($"You are not on {job.Value.Name()}");
+                    }
                 }
                 // the .first() failed
                 catch (InvalidOperationException)
                 {
-                    DuoLog.Error($"Invalid job abbreviation, '{jobName}'");
+                    DuoLog.Error($"Invalid job abbreviation, '{jobAbbr}'");
                     throw;
                 }
                 // unknown
                 catch (Exception ex)
                 {
-                    DuoLog.Error($"Error looking up job abbreviation, '{jobName}'");
+                    DuoLog.Error($"Error looking up job abbreviation, '{jobAbbr}'");
                     Svc.Log.Error(ex, "Debug Log");
                     throw;
                 }
-
-                if (job.Value.RowId !=
-                    Svc.ClientState.LocalPlayer.ClassJob.Value.RowId)
-                    DuoLog.Warning($"You are not on {job.Value.Name}");
             }
 
             // Request a debug file, with null, or the entered Job
@@ -711,20 +711,22 @@ public partial class WrathCombo
             // Skip trying to process arguments
             return;
         }
-
+        
         // Open to specified job
-        var jobName = argument[0].ToUpperInvariant();
-        jobName = ConfigWindow.groupedPresets
-            .FirstOrDefault(x =>
-                x.Value.Any(y => y.Info.JobShorthand == jobName)).Key;
-        if (jobName is null)
+        var jobAbbrev = argument[0];
+
+        if (TryGetJobByAbbreviation(jobAbbrev, out var job))
+        {
+            ConfigWindow.IsOpen = true;
+            ConfigWindow.OpenWindow = OpenWindow.PvE;
+            PvEFeatures.OpenJob = job.GetJob();
+        } 
+        else
         {
             DuoLog.Error($"{argument[0]} is not a correct job abbreviation.");
             return;
         }
 
-        ConfigWindow.IsOpen = true;
-        ConfigWindow.OpenWindow = OpenWindow.PvE;
-        PvEFeatures.OpenJob = jobName;
+        
     }
 }

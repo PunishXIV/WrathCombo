@@ -106,8 +106,6 @@ internal partial class PCT
 
     #region ID's
 
-    public const byte JobID = 42;
-
     public const uint
         BlizzardinCyan = 34653,
         StoneinYellow = 34654,

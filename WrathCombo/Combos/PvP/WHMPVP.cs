@@ -9,9 +9,6 @@ internal static class WHMPvP
 {
         #region IDS
 
-    public const byte ClassID = 6;
-    public const byte JobID = 24;
-
     internal class Role : PvPHealer;
 
     public const uint

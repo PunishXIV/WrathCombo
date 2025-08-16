@@ -4,9 +4,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DOL
 {
-    public const byte ClassID = 0;
-    public const byte JobID = 51;
-
     internal const uint
         //BTN & MIN
         AgelessWords = 215,

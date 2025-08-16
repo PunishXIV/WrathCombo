@@ -10,8 +10,6 @@ internal static class PCTPvP
 
         #region IDs
 
-    public const byte JobID = 42;
-
     internal class Role : PvPCaster;
 
     internal const uint

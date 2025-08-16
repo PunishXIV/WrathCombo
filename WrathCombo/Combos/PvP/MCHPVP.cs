@@ -9,8 +9,6 @@ internal static class MCHPvP
 {
         #region IDS
 
-    public const byte JobID = 31;
-
     internal class Role : PvPPhysRanged;
 
     public const uint

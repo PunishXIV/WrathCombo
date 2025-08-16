@@ -409,8 +409,6 @@ internal partial class MCH
 
     #region ID's
 
-    public const byte JobID = 31;
-
     public const uint
         CleanShot = 2873,
         HeatedCleanShot = 7413,

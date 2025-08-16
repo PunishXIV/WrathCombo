@@ -250,8 +250,6 @@ internal partial class SAM
 
     #region ID's
 
-    public const byte JobID = 34;
-
     public const uint
         Hakaze = 7477,
         Yukikaze = 7480,

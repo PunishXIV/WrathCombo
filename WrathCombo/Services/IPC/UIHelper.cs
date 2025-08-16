@@ -11,6 +11,7 @@ using System.Numerics;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 // ReSharper disable VariableHidesOuterVariable
 
@@ -70,9 +71,9 @@ public class UIHelper(Leasing leasing)
     private Dictionary<string, (string controllers, bool state)>
         JobsControlled { get; } = new();
 
-    internal (string controllers, bool state)? JobControlled(uint job)
+    internal (string controllers, bool state)? JobControlled(Job job)
     {
-        var jobName = CustomComboFunctions.JobIDs.JobIDToShorthand(job);
+        var jobName = job.Shorthand();
 
         if (_jobsUpdated != _leasing.JobsUpdated)
             JobsControlled.Clear();
@@ -280,7 +281,7 @@ public class UIHelper(Leasing leasing)
     // Method to display the controlled indicator, which lists the plugins
     private bool ShowIPCControlledIndicator
     (bool? forAutoRotation = null,
-        uint? forJob = null,
+        Job? forJob = null,
         Preset? forPreset = null,
         string? forAutoRotationConfig = null,
         bool showX = true,
@@ -298,9 +299,9 @@ public class UIHelper(Leasing leasing)
             revokeID += "ar" + forAutoRotation;
         }
 
-        if (forJob is not null)
+        if (forJob is Job job)
         {
-            if ((controlled = JobControlled((uint)forJob)) is null)
+            if ((controlled = JobControlled(job)) is null)
                 return false;
             revokeID += "jb" + forJob;
         }
@@ -384,7 +385,7 @@ public class UIHelper(Leasing leasing)
     private bool ShowIPCControlledCheckbox
     (string label, ref bool backupVar,
         bool? forAutoRotation = null,
-        uint? forJob = null,
+        Job? forJob = null,
         Preset? forPreset = null,
         bool presetShowState = true,
         string? forAutoRotationConfig = null)
@@ -402,8 +403,8 @@ public class UIHelper(Leasing leasing)
         {
             if (forAutoRotation is not null)
                 controlled = AutoRotationStateControlled();
-            if (forJob is not null)
-                controlled = JobControlled((uint)forJob);
+            if (forJob is Job job)
+                controlled = JobControlled(job);
             if (forPreset is not null)
             {
                 var check =
@@ -665,7 +666,7 @@ public class UIHelper(Leasing leasing)
         ShowIPCControlledIndicator(forAutoRotation: true);
 
     public bool ShowIPCControlledIndicatorIfNeeded
-        (uint job, bool showX = true, bool shortDisplay = false) =>
+        (Job job, bool showX = true, bool shortDisplay = false) =>
         ShowIPCControlledIndicator
             (forJob: job, showX: showX, shortDisplay: shortDisplay);
 
@@ -684,7 +685,7 @@ public class UIHelper(Leasing leasing)
         ShowIPCControlledCheckbox(label, ref backupVar, forAutoRotation: true);
 
     public bool ShowIPCControlledCheckboxIfNeeded
-        (string label, ref bool backupVar, uint job) =>
+        (string label, ref bool backupVar, Job job) =>
         ShowIPCControlledCheckbox(label, ref backupVar, forJob: job);
 
     public bool ShowIPCControlledCheckboxIfNeeded

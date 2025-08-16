@@ -15,6 +15,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Window.Tabs;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+using static ECommons.ExcelServices.ExcelJobHelper;
 
 #endregion
 
@@ -255,7 +256,7 @@ public class Search(Leasing leasing)
                 .Select(preset => new
                 {
                     ID = preset,
-                    JobId = (Job)preset.Attributes().CustomComboInfo.JobID,
+                    JobId = preset.Attributes().CustomComboInfo.Job,
                     InternalName = preset.ToString(),
                     Info = preset.Attributes().CustomComboInfo!,
                     HasParentCombo = preset.Attributes().Parent != null,
@@ -408,7 +409,7 @@ public class Search(Leasing leasing)
     {
         get
         {
-            var job = (Job)CustomComboFunctions.JobIDs.ClassToJob(JobID!.Value);
+            Job job = (WrathCombo.JobID!.Value).GetUpgradedJob();
 
             if (field != null && field.ContainsKey(job))
                 return field;
@@ -423,7 +424,7 @@ public class Search(Leasing leasing)
                 {
                     new
                     {
-                        Job = (Job)preset.Value.Info.JobID,
+                        Job = preset.Value.Info.Job,
                         Combo = preset.Key,
                         preset.Value.Info,
                         preset.Value.ComboType,

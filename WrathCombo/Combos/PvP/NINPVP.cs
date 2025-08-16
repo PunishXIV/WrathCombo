@@ -9,9 +9,6 @@ namespace WrathCombo.Combos.PvP;
 internal static class NINPvP
 {
         #region IDS
-    public const byte ClassID = 29;
-    public const byte JobID = 30;
-
     internal class Role : PvPMelee;
 
     internal const uint

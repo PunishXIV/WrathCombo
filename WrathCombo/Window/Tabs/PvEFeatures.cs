@@ -7,17 +7,16 @@ using ECommons.Logging;
 using System;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using WrathCombo.Window.MessagesNS;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions.JobIDs;
 namespace WrathCombo.Window.Tabs;
 
 internal class PvEFeatures : ConfigWindow
 {
-    internal static string OpenJob = string.Empty;
+    internal static Job? OpenJob = null;
     internal static int ColCount = 1;
     internal static new void Draw()
     {
@@ -36,7 +35,7 @@ internal class PvEFeatures : ConfigWindow
             var iconMaxSize = 34f.Scale();
             var verticalCenteringPadding = (iconMaxSize - ImGui.GetTextLineHeight()) / 2f;
 
-            if (OpenJob == string.Empty)
+            if (OpenJob is null)
             {
                 ImGui.SameLine(indentwidth);
                 ImGuiEx.LineCentered(() =>
@@ -53,18 +52,19 @@ internal class PvEFeatures : ConfigWindow
                     if (!tab)
                         return;
 
-                    foreach (string? jobName in groupedPresets.Keys)
+                    foreach (Job job in groupedPresets.Keys)
                     {
-                        string abbreviation = groupedPresets[jobName].First().Info.JobShorthand;
+                        string jobName = groupedPresets[job].First().Info.JobName;
+                        string abbreviation = groupedPresets[job].First().Info.JobShorthand;
                         string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
-                        var id = groupedPresets[jobName].First().Info.JobID;
+                        var id = groupedPresets[job].First().Info.Job;
                         IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
                         ImGuiEx.Spacing(new Vector2(0, 2f.Scale()));
                         using (var disabled = ImRaii.Disabled(DisabledJobsPVE.Any(x => x == id)))
                         {
-                            if (ImGui.Selectable($"###{header}", OpenJob == jobName, ImGuiSelectableFlags.None, new Vector2(0, iconMaxSize)))
+                            if (ImGui.Selectable($"###{header}", OpenJob == job, ImGuiSelectableFlags.None, new Vector2(0, iconMaxSize)))
                             {
-                                OpenJob = jobName;
+                                OpenJob = job;
                             }
                             ImGui.SameLine(indentwidth);
                             if (icon != null)
@@ -100,14 +100,14 @@ internal class PvEFeatures : ConfigWindow
             }
             else
             {
-                var id = groupedPresets[OpenJob].First().Info.JobID;
+                var id = groupedPresets[OpenJob.Value].First().Info.Job;
                 IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
 
                 using (ImRaii.Child("HeadingTab", new Vector2(ImGui.GetContentRegionAvail().X, iconMaxSize)))
                 {
                     if (ImGui.Button("Back", new Vector2(0, 24f.Scale())))
                     {
-                        OpenJob = "";
+                        OpenJob = null;
                         return;
                     }
                     ImGui.SameLine();
@@ -128,7 +128,7 @@ internal class PvEFeatures : ConfigWindow
                         }
                         ImGui.SameLine();
                         ImGuiEx.Spacing(new Vector2(0, verticalCenteringPadding-2f.Scale()));
-                        ImGuiEx.Text($"{OpenJob}");
+                        ImGuiEx.Text($"{OpenJob.Value.Name()}");
                     });
 
                     if (P.UIHelper.JobControlled(id) is not null)
@@ -145,36 +145,46 @@ internal class PvEFeatures : ConfigWindow
                     currentPreset = 1;
                     try
                     {
-                        if (ImGui.BeginTabBar($"subTab{OpenJob}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
+                        if (ImGui.BeginTabBar($"subTab{OpenJob.Value.Name()}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
                         {
-                            if (ImGui.BeginTabItem("Normal"))
+                            string mainTabName = OpenJob is Job.ADV ? "Job Roles" : "Normal";
+                            if (ImGui.BeginTabItem(mainTabName))
                             {
-                                DrawHeadingContents(OpenJob);
+                                DrawHeadingContents(OpenJob.Value);
                                 ImGui.EndTabItem();
                             }
 
-                            if (groupedPresets[OpenJob].Any(x => PresetStorage.IsVariant(x.Preset)))
+                            if (groupedPresets[OpenJob.Value].Any(x => PresetStorage.IsVariant(x.Preset)))
                             {
                                 if (ImGui.BeginTabItem("Variant Dungeons"))
                                 {
-                                    DrawVariantContents(OpenJob);
+                                    DrawVariantContents(OpenJob.Value);
                                     ImGui.EndTabItem();
                                 }
                             }
 
-                            if (groupedPresets[OpenJob].Any(x => PresetStorage.IsBozja(x.Preset)))
+                            if (groupedPresets[OpenJob.Value].Any(x => PresetStorage.IsBozja(x.Preset)))
                             {
                                 if (ImGui.BeginTabItem("Bozja"))
                                 {
-                                    DrawBozjaContents(OpenJob);
+                                    DrawBozjaContents(OpenJob.Value);
                                     ImGui.EndTabItem();
                                 }
                             }
 
-                            if (groupedPresets[OpenJob].Any(x => PresetStorage.IsEureka(x.Preset)))
+                            if (groupedPresets[OpenJob.Value].Any(x => PresetStorage.IsEureka(x.Preset)))
                             {
                                 if (ImGui.BeginTabItem("Eureka"))
                                 {
+                                    ImGui.EndTabItem();
+                                }
+                            }
+
+                            if (groupedPresets[OpenJob.Value].Any(x => PresetStorage.IsOccultCrescent(x.Preset)))
+                            {
+                                if (ImGui.BeginTabItem("Occult Crescent"))
+                                {
+                                    DrawOccultContents(OpenJob.Value);
                                     ImGui.EndTabItem();
                                 }
                             }
@@ -193,9 +203,9 @@ internal class PvEFeatures : ConfigWindow
         }
     }
 
-    private static void DrawVariantContents(string jobName)
+    private static void DrawVariantContents(Job job)
     {
-        foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
+        foreach (var (preset, info) in groupedPresets[job].Where(x =>
             PresetStorage.IsVariant(x.Preset) &&
             !PresetStorage.ShouldBeHidden(x.Preset)))
         {
@@ -204,9 +214,10 @@ internal class PvEFeatures : ConfigWindow
             ImGuiEx.Spacing(new Vector2(0, 12));
         }
     }
-    private static void DrawBozjaContents(string jobName)
+
+    private static void DrawBozjaContents(Job job)
     {
-        foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
+        foreach (var (preset, info) in groupedPresets[job].Where(x =>
             PresetStorage.IsBozja(x.Preset) &&
             !PresetStorage.ShouldBeHidden(x.Preset)))
         {
@@ -216,15 +227,28 @@ internal class PvEFeatures : ConfigWindow
         }
     }
 
-    internal static void DrawHeadingContents(string jobName)
+    private static void DrawOccultContents(Job job)
     {
-        if (!Messages.PrintBLUMessage(jobName)) return;
+        foreach (var (preset, info) in groupedPresets[job].Where(x =>
+            PresetStorage.IsOccultCrescent(x.Preset) &&
+            !PresetStorage.ShouldBeHidden(x.Preset)))
+        {
+            InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
+            presetBox.Draw();
+            ImGuiEx.Spacing(new Vector2(0, 12));
+        }
+    }
 
-        foreach (var (preset, info) in groupedPresets[jobName].Where(x =>
+    internal static void DrawHeadingContents(Job job)
+    {
+        if (!Messages.PrintBLUMessage(job)) return;
+
+        foreach (var (preset, info) in groupedPresets[job].Where(x =>
             !PresetStorage.IsPvP(x.Preset) &&
             !PresetStorage.IsVariant(x.Preset) &&
             !PresetStorage.IsBozja(x.Preset) &&
             !PresetStorage.IsEureka(x.Preset) &&
+            !PresetStorage.IsOccultCrescent(x.Preset) &&
             !PresetStorage.ShouldBeHidden(x.Preset)))
         {
             InfoBox presetBox = new() { Color = Colors.Grey, BorderThickness = 2f.Scale(), ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info); } };
@@ -287,12 +311,12 @@ internal class PvEFeatures : ConfigWindow
 
         if (Player.Job.IsDol())
         {
-            OpenJob = JobIDToName(DOL.JobID);
+            OpenJob = Job.MIN;
             return;
         }
 
-        var job = JobIDToName(ClassToJob((uint)Player.Job));
-        if (groupedPresets.TryGetValue(job, out var foundJob))
-            OpenJob = foundJob.First().Info.JobName;
+        var job = Player.Job.GetUpgradedJob();
+        if (groupedPresets.ContainsKey(job))
+            OpenJob = job;
     }
 }

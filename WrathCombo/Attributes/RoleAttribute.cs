@@ -83,11 +83,14 @@ internal class RoleAttribute : Attribute
 
 public enum JobRole
 {
+    //Please don't change the order of items All -> Healer
+    //The order lines up with Role numbers from FFXIV Sheets
     All,
     Tank,
-    Healer,
     MeleeDPS,
     RangedDPS,
+    Healer,
+    //
     MagicalDPS,
     DoH,
     DoL,

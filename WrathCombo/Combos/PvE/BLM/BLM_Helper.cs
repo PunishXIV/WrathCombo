@@ -300,9 +300,6 @@ internal partial class BLM
 
     #region ID's
 
-    public const byte ClassID = 7;
-    public const byte JobID = 25;
-
     public const uint
         Fire = 141,
         Blizzard = 142,

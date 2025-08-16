@@ -170,9 +170,6 @@ internal partial class DRG
 
     #region ID's
 
-    public const byte ClassID = 4;
-    public const byte JobID = 22;
-
     public const uint
         PiercingTalon = 90,
         ElusiveJump = 94,

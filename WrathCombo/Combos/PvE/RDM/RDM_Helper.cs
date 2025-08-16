@@ -14,8 +14,7 @@ namespace WrathCombo.Combos.PvE;
 internal partial class RDM
 {
     #region ID's
-    public const byte JobID = 35;
-    
+   
     #region Spells
     public const uint
         Verthunder = 7505,
