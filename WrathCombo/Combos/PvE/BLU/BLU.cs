@@ -1,12 +1,12 @@
 ﻿using Dalamud.Game.ClientState.Conditions;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 
 namespace WrathCombo.Combos.PvE;
 
 internal partial class BLU : Caster
 {
-    public const byte JobID = 36;
-
     public const uint
         RoseOfDestruction = 23275,
         ShockStrike = 11429,
@@ -83,7 +83,7 @@ internal partial class BLU : Caster
 
     internal class BLU_BuffedSoT : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_BuffedSoT;
+        protected internal override Preset Preset => Preset.BLU_BuffedSoT;
 
         protected override uint Invoke(uint actionID)
         {
@@ -101,7 +101,7 @@ internal partial class BLU : Caster
 
     internal class BLU_Opener : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_Opener;
+        protected internal override Preset Preset => Preset.BLU_Opener;
 
         protected override uint Invoke(uint actionID)
         {
@@ -140,7 +140,9 @@ internal partial class BLU : Caster
                 if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction))
                     return RoseOfDestruction;
                 if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain))
-                    return FeatherRain;
+                    return FeatherRain.Retarget(MoonFlute,
+                        SimpleTarget.HardTarget.IfHostile() ??
+                        SimpleTarget.LastHostileHardTarget);
                 if (IsOffCooldown(Eruption) && IsSpellActive(Eruption))
                     return Eruption;
                 if (!HasStatusEffect(Buffs.Bristle) && IsOffCooldown(Role.Swiftcast) && IsSpellActive(Bristle))
@@ -165,13 +167,13 @@ internal partial class BLU : Caster
 
     internal class BLU_FinalSting : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_FinalSting;
+        protected internal override Preset Preset => Preset.BLU_FinalSting;
 
         protected override uint Invoke(uint actionID)
         {
             if (actionID is FinalSting)
             {
-                if (IsEnabled(CustomComboPreset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !HasStatusEffect(Buffs.BasicInstinct) && GetPartyMembers().Count == 0 && IsSpellActive(BasicInstinct))
+                if (IsEnabled(Preset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !HasStatusEffect(Buffs.BasicInstinct) && GetPartyMembers().Count == 0 && IsSpellActive(BasicInstinct))
                     return BasicInstinct;
                 if (!HasStatusEffect(Buffs.Whistle) && IsSpellActive(Whistle) && !WasLastAction(Whistle))
                     return Whistle;
@@ -179,12 +181,14 @@ internal partial class BLU : Caster
                     return Tingle;
                 if (!HasStatusEffect(Buffs.MoonFlute) && !WasLastSpell(MoonFlute) && IsSpellActive(MoonFlute))
                     return MoonFlute;
-                if (IsEnabled(CustomComboPreset.BLU_Primals))
+                if (IsEnabled(Preset.BLU_Primals))
                 {
                     if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction))
                         return RoseOfDestruction;
                     if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain))
-                        return FeatherRain;
+                        return FeatherRain.Retarget(FinalSting,
+                            SimpleTarget.HardTarget.IfHostile() ??
+                            SimpleTarget.LastHostileHardTarget);
                     if (IsOffCooldown(Eruption) && IsSpellActive(Eruption))
                         return Eruption;
                     if (IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
@@ -207,13 +211,13 @@ internal partial class BLU : Caster
 
     internal class BLU_Ultravibrate : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_Ultravibrate;
+        protected internal override Preset Preset => Preset.BLU_Ultravibrate;
 
         protected override uint Invoke(uint actionID)
         {
             if (actionID is Ultravibration)
             {
-                if (IsEnabled(CustomComboPreset.BLU_HydroPull) && !InMeleeRange() && IsSpellActive(HydroPull))
+                if (IsEnabled(Preset.BLU_HydroPull) && !InMeleeRange() && IsSpellActive(HydroPull))
                     return HydroPull;
                 if (!HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true) && IsOffCooldown(Ultravibration) && IsSpellActive(RamsVoice))
                     return RamsVoice;
@@ -233,7 +237,7 @@ internal partial class BLU : Caster
 
     internal class BLU_DebuffCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_DebuffCombo;
+        protected internal override Preset Preset => Preset.BLU_DebuffCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -255,14 +259,14 @@ internal partial class BLU : Caster
 
     internal class BLU_Addle : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_Addle;
+        protected internal override Preset Preset => Preset.BLU_Addle;
 
         protected override uint Invoke(uint actionID) => (actionID is MagicHammer && IsOnCooldown(MagicHammer) && IsOffCooldown(Role.Addle) && !HasStatusEffect(Role.Debuffs.Addle, CurrentTarget) && !HasStatusEffect(Debuffs.Conked, CurrentTarget)) ? Role.Addle : actionID;
     }
 
     internal class BLU_PrimalCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_PrimalCombo;
+        protected internal override Preset Preset => Preset.BLU_PrimalCombo;
         internal static bool surpanakhaReady = false;
 
         protected override uint Invoke(uint actionID)
@@ -274,32 +278,34 @@ internal partial class BLU : Caster
 
                 if (!HasStatusEffect(Buffs.PhantomFlurry))
                 {
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_WingedReprobation) && GetStatusEffect(Buffs.WingedReprobation)?.Param > 1 && IsOffCooldown(WingedReprobation))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) && GetStatusEffect(Buffs.WingedReprobation)?.Param > 1 && IsOffCooldown(WingedReprobation))
                         return OriginalHook(WingedReprobation);
 
                     if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain) &&
-                        (IsNotEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) || (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
-                        return FeatherRain;
+                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
+                        return FeatherRain.Retarget([FeatherRain, Eruption],
+                            SimpleTarget.HardTarget.IfHostile() ??
+                            SimpleTarget.LastHostileHardTarget);
                     if (IsOffCooldown(Eruption) && IsSpellActive(Eruption) &&
-                        (IsNotEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) || (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
+                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
                         return Eruption;
                     if (IsOffCooldown(ShockStrike) && IsSpellActive(ShockStrike) &&
-                        (IsNotEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) || (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 60 || IsOffCooldown(Nightbloom)))))
+                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 60 || IsOffCooldown(Nightbloom)))))
                         return ShockStrike;
                     if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction) &&
-                        (IsNotEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) || (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
+                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
                         return RoseOfDestruction;
                     if (IsOffCooldown(GlassDance) && IsSpellActive(GlassDance) &&
-                        (IsNotEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) || (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 90 || IsOffCooldown(Nightbloom)))))
+                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 90 || IsOffCooldown(Nightbloom)))))
                         return GlassDance;
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_JKick) && IsOffCooldown(JKick) && IsSpellActive(JKick) &&
-                        (IsNotEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) || (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 60 || IsOffCooldown(Nightbloom)))))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_JKick) && IsOffCooldown(JKick) && IsSpellActive(JKick) &&
+                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 60 || IsOffCooldown(Nightbloom)))))
                         return JKick;
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Nightbloom) && IsOffCooldown(Nightbloom) && IsSpellActive(Nightbloom))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_Nightbloom) && IsOffCooldown(Nightbloom) && IsSpellActive(Nightbloom))
                         return Nightbloom;
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Matra) && IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_Matra) && IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
                         return MatraMagic;
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_Suparnakha) && IsSpellActive(Surpanakha))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_Suparnakha) && IsSpellActive(Surpanakha))
                     {
                         if (GetRemainingCharges(Surpanakha) == 4)
                             surpanakhaReady = true;
@@ -309,13 +315,13 @@ internal partial class BLU : Caster
                             surpanakhaReady = false;
                     }
 
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_WingedReprobation) && IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) && IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation))
                         return OriginalHook(WingedReprobation);
 
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_SeaShanty) && IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_SeaShanty) && IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
                         return SeaShanty;
 
-                    if (IsEnabled(CustomComboPreset.BLU_PrimalCombo_PhantomFlurry) && IsOffCooldown(PhantomFlurry) && IsSpellActive(PhantomFlurry))
+                    if (IsEnabled(Preset.BLU_PrimalCombo_PhantomFlurry) && IsOffCooldown(PhantomFlurry) && IsSpellActive(PhantomFlurry))
                         return PhantomFlurry;
                 }
             }
@@ -326,7 +332,7 @@ internal partial class BLU : Caster
 
     internal class BLU_KnightCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_KnightCombo;
+        protected internal override Preset Preset => Preset.BLU_KnightCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -344,7 +350,7 @@ internal partial class BLU : Caster
 
     internal class BLU_LightHeadedCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_LightHeadedCombo;
+        protected internal override Preset Preset => Preset.BLU_LightHeadedCombo;
 
         protected override uint Invoke(uint actionID)
         {
@@ -362,21 +368,21 @@ internal partial class BLU : Caster
 
     internal class BLU_PerpetualRayStunCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_PerpetualRayStunCombo;
+        protected internal override Preset Preset => Preset.BLU_PerpetualRayStunCombo;
 
         protected override uint Invoke(uint actionID) => (actionID is PerpetualRay && (HasStatusEffect(Debuffs.Stun, CurrentTarget, true) || WasLastAction(PerpetualRay)) && IsSpellActive(SharpenedKnife) && InMeleeRange()) ? SharpenedKnife : actionID;
     }
 
     internal class BLU_MeleeCombo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_MeleeCombo;
+        protected internal override Preset Preset => Preset.BLU_MeleeCombo;
 
         protected override uint Invoke(uint actionID) => (actionID is SonicBoom && GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife)) ? SharpenedKnife : actionID;
     }
 
     internal class BLU_PeatClean : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_PeatClean;
+        protected internal override Preset Preset => Preset.BLU_PeatClean;
 
         protected override uint Invoke(uint actionID)
         {
@@ -391,7 +397,7 @@ internal partial class BLU : Caster
     }
     internal class BLU_NewMoonFluteOpener : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.BLU_NewMoonFluteOpener;
+        protected internal override Preset Preset => Preset.BLU_NewMoonFluteOpener;
 
         protected override uint Invoke(uint actionID)
         {
@@ -421,7 +427,7 @@ internal partial class BLU : Caster
                 if (IsSpellActive(Nightbloom) && IsOffCooldown(Nightbloom))
                     return Nightbloom;
 
-                if (IsEnabled(CustomComboPreset.BLU_NewMoonFluteOpener_DoTOpener))
+                if (IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
                 {
                     if ((!HasStatusEffect(Debuffs.BreathOfMagic, CurrentTarget, true) && IsSpellActive(BreathOfMagic)) || (!HasStatusEffect(Debuffs.MortalFlame, CurrentTarget, true) && IsSpellActive(MortalFlame)))
                     {
@@ -429,7 +435,9 @@ internal partial class BLU : Caster
                             return Bristle;
 
                         if (IsSpellActive(FeatherRain) && IsOffCooldown(FeatherRain))
-                            return FeatherRain;
+                            return FeatherRain.Retarget(MoonFlute,
+                                SimpleTarget.HardTarget.IfHostile() ??
+                                SimpleTarget.LastHostileHardTarget);
 
                         if (IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
                             return SeaShanty;
@@ -446,7 +454,9 @@ internal partial class BLU : Caster
                         return WingedReprobation;
 
                     if (IsSpellActive(FeatherRain) && IsOffCooldown(FeatherRain))
-                        return FeatherRain;
+                        return FeatherRain.Retarget(MoonFlute,
+                            SimpleTarget.HardTarget.IfHostile() ??
+                            SimpleTarget.LastHostileHardTarget);
 
                     if (IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
                         return SeaShanty;
@@ -458,7 +468,7 @@ internal partial class BLU : Caster
                 if (IsSpellActive(ShockStrike) && IsOffCooldown(ShockStrike))
                     return ShockStrike;
 
-                if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsNotEnabled(CustomComboPreset.BLU_NewMoonFluteOpener_DoTOpener))
+                if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsNotEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
                     return BeingMortal;
 
                 if (IsSpellActive(Bristle) && !HasStatusEffect(Buffs.Bristle) && IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
@@ -476,7 +486,7 @@ internal partial class BLU : Caster
                 if (IsSpellActive(MatraMagic) && HasStatusEffect(Role.Buffs.Swiftcast))
                     return MatraMagic;
 
-                if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsEnabled(CustomComboPreset.BLU_NewMoonFluteOpener_DoTOpener))
+                if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
                     return BeingMortal;
 
                 if (IsSpellActive(PhantomFlurry) && IsOffCooldown(PhantomFlurry))

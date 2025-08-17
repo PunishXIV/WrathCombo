@@ -1,7 +1,6 @@
 ﻿using ECommons.DalamudServices;
 using static WrathCombo.Combos.PvE.RoleActions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE.Content;
 
 #region Variant Actions and Functions
@@ -52,23 +51,23 @@ internal static partial class Variant
             SustainedDamage = 3359;
     }
 
-    internal static bool CanRampart(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+    internal static bool CanRampart(Preset preset, WeaveTypes weave = WeaveTypes.None) =>
         IsEnabled(preset) && ActionReady(VariantRampart) &&
         CheckWeave(weave);
 
-    internal static bool CanSpiritDart(CustomComboPreset preset) =>
+    internal static bool CanSpiritDart(Preset preset) =>
         IsEnabled(preset) && ActionReady(VariantSpiritDart) &&
         HasBattleTarget() && GetStatusEffectRemainingTime(Debuffs.SustainedDamage, CurrentTarget) <= 3;
 
-    internal static bool CanCure(CustomComboPreset preset, int healthpercent) =>
+    internal static bool CanCure(Preset preset, int healthpercent) =>
         IsEnabled(preset) && ActionReady(VariantCure) &&
         PlayerHealthPercentageHp() <= healthpercent;
 
-    internal static bool CanRaise(CustomComboPreset preset) =>
+    internal static bool CanRaise(Preset preset) =>
         IsEnabled(preset) && ActionReady(VariantRaise)
         && HasStatusEffect(Magic.Buffs.Swiftcast);
 
-    internal static bool CanUltimatum(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+    internal static bool CanUltimatum(Preset preset, WeaveTypes weave = WeaveTypes.None) =>
         IsEnabled(preset) && ActionReady(VariantUltimatum)
         && NumberOfEnemiesInRange(VariantUltimatum) > 0 && CheckWeave(weave);
 }

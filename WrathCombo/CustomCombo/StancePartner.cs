@@ -1,11 +1,12 @@
 #region
 
-using System;
-using System.Threading.Tasks;
 using ECommons;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
+using System.Threading.Tasks;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -68,23 +69,23 @@ public static class StancePartner
 
         #region Tank Stance
 
-        Cast(PLD.JobID, PLD.IronWill, PLD.Buffs.IronWill,
+        Cast(Job.PLD, PLD.IronWill, PLD.Buffs.IronWill,
             null, ref callAgainToConfirm);
 
-        Cast(WAR.JobID, WAR.Defiance, WAR.Buffs.Defiance,
+        Cast(Job.WAR, WAR.Defiance, WAR.Buffs.Defiance,
             null, ref callAgainToConfirm);
 
-        Cast(DRK.JobID, DRK.Grit, DRK.Buffs.Grit,
+        Cast(Job.DRK, DRK.Grit, DRK.Buffs.Grit,
             null, ref callAgainToConfirm);
 
-        Cast(GNB.JobID, GNB.RoyalGuard, GNB.Buffs.RoyalGuard,
+        Cast(Job.GNB, GNB.RoyalGuard, GNB.Buffs.RoyalGuard,
             null, ref callAgainToConfirm);
 
         #endregion
 
         #region Dance Partner
 
-        Cast(DNC.JobID, DNC.ClosedPosition, DNC.Buffs.ClosedPosition,
+        Cast(Job.DNC, DNC.ClosedPosition, DNC.Buffs.ClosedPosition,
             DNC.DesiredDancePartner, ref callAgainToConfirm);
 
         #endregion
@@ -128,10 +129,10 @@ public static class StancePartner
     ///     A reference to whether <see cref="CheckStancePartner" /> should be called again.
     /// </param>
     private static unsafe void Cast
-    (byte job, uint action, ushort buff, ulong? target, ref bool
+    (Job job, uint action, ushort buff, ulong? target, ref bool
         callAgain)
     {
-        if (JobID != job || CustomComboFunctions.HasStatusEffect(buff))
+        if (WrathCombo.JobID != job || CustomComboFunctions.HasStatusEffect(buff))
             return;
         PluginLog.Verbose(
             $"OnIPCInstanceChange: Trying to cast {action.ActionName()}");

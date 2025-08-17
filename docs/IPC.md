@@ -427,6 +427,12 @@ resources below, or the first several sections of this guide.
 
 ## Changelog
 
+
+- PunishXIV/WrathCombo#728 - Added `DPSAoETargets` Auto-Rotation Configuration
+  (could set it to something like `99` to effectively disable AoE),
+  `1.0.2.1`.
+- PunishXIV/WrathCombo#720 - Added the new `SingleTargetExcogHPP` Auto-Rotation
+  Configuration, `1.0.2.1`.
 - PunishXIV/WrathCombo#682 - Caches are now built off of `ComboType` instead of 
   string searching, Healers especially now have more reliable automatic setting,
   `1.0.1.14`.

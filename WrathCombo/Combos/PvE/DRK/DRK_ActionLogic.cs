@@ -2,10 +2,10 @@
 
 using System;
 using WrathCombo.Data;
+using static WrathCombo.Combos.PvE.DRK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
 // ReSharper disable InconsistentNaming
@@ -42,7 +42,7 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Cure))) &&
                 ActionReady(Variant.Cure) &&
-                PlayerHealthPercentageHp() <= Config.DRK_VariantCure)
+                PlayerHealthPercentageHp() <= DRK_VariantCure)
                 return (action = Variant.Cure) != 0;
 
             #endregion
@@ -148,14 +148,14 @@ internal partial class DRK
             #region Variables
 
             var shadowContentHPThreshold = flags.HasFlag(Combo.ST)
-                ? Config.DRK_ST_LivingShadowThresholdDifficulty
-                : Config.DRK_AoE_LivingShadowThresholdDifficulty;
+                ? DRK_ST_LivingShadowThresholdDifficulty
+                : DRK_AoE_LivingShadowThresholdDifficulty;
             var shadowInHPContent =
                 flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
                     shadowContentHPThreshold, ContentCheck.ListSet.Halved);
             var shadowHPThreshold = flags.HasFlag(Combo.ST)
-                ? Config.DRK_ST_LivingShadowThreshold
-                : Config.DRK_AoE_LivingShadowThreshold;
+                ? DRK_ST_LivingShadowThreshold
+                : DRK_AoE_LivingShadowThreshold;
             var shadowHPMatchesThreshold =
                 flags.HasFlag(Combo.Simple) || !shadowInHPContent ||
                 (shadowInHPContent &&
@@ -207,14 +207,14 @@ internal partial class DRK
             #region Variables
 
             var deliriumContentHPThreshold = flags.HasFlag(Combo.ST)
-                ? Config.DRK_ST_DeliriumThresholdDifficulty
-                : Config.DRK_AoE_DeliriumThresholdDifficulty;
+                ? DRK_ST_DeliriumThresholdDifficulty
+                : DRK_AoE_DeliriumThresholdDifficulty;
             var deliriumInHPContent =
                 flags.HasFlag(Combo.Adv) && ContentCheck.IsInConfiguredContent(
                     deliriumContentHPThreshold, ContentCheck.ListSet.Halved);
             var deliriumHPThreshold = flags.HasFlag(Combo.ST)
-                ? Config.DRK_ST_DeliriumThreshold
-                : Config.DRK_AoE_DeliriumThreshold;
+                ? DRK_ST_DeliriumThreshold
+                : DRK_AoE_DeliriumThreshold;
             var deliriumHPMatchesThreshold =
                 flags.HasFlag(Combo.Simple) || !deliriumInHPContent ||
                 (deliriumInHPContent &&
@@ -253,7 +253,7 @@ internal partial class DRK
             var saltHPThreshold =
                 flags.HasFlag(Combo.AoE)
                     ? flags.HasFlag(Combo.Adv)
-                        ? Config.DRK_AoE_SaltThreshold
+                        ? DRK_AoE_SaltThreshold
                         : 30
                     : 0;
 
@@ -326,7 +326,7 @@ internal partial class DRK
             #region Variables
 
             var drainHPThreshold = flags.HasFlag(Combo.Adv)
-                ? Config.DRK_AoE_DrainThreshold
+                ? DRK_AoE_DrainThreshold
                 : 60;
 
             #endregion
@@ -389,11 +389,11 @@ internal partial class DRK
             // Bail if Simple mode and mitigation is disabled
             if (flags.HasFlag(Combo.Simple) &&
                 ((flags.HasFlag(Combo.ST) &&
-                  (int)Config.DRK_ST_SimpleMitigation ==
-                  (int)Config.SimpleMitigation.Off) ||
+                  (int)DRK_ST_SimpleMitigation ==
+                  (int)SimpleMitigation.Off) ||
                  (flags.HasFlag(Combo.AoE) &&
-                  (int)Config.DRK_AoE_SimpleMitigation ==
-                  (int)Config.SimpleMitigation.Off)))
+                  (int)DRK_AoE_SimpleMitigation ==
+                  (int)SimpleMitigation.Off)))
                 return false;
 
             #region Living Dead
@@ -401,17 +401,17 @@ internal partial class DRK
             #region Variables
 
             var bossRestrictionLivingDead = flags.HasFlag(Combo.Adv)
-                ? (int)Config.DRK_ST_LivingDeadBossRestriction
+                ? (int)DRK_ST_LivingDeadBossRestriction
                 : (int)BossAvoidance.Off;
             var livingDeadSelfThreshold = flags.HasFlag(Combo.Adv) ?
                 flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_LivingDeadSelfThreshold
-                    : Config.DRK_AoE_LivingDeadSelfThreshold :
+                    ? DRK_ST_LivingDeadSelfThreshold
+                    : DRK_AoE_LivingDeadSelfThreshold :
                 flags.HasFlag(Combo.ST) ? 15 : 20;
             var livingDeadTargetThreshold = flags.HasFlag(Combo.Adv) ?
                 flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_LivingDeadTargetThreshold
-                    : Config.DRK_AoE_LivingDeadTargetThreshold :
+                    ? DRK_ST_LivingDeadTargetThreshold
+                    : DRK_AoE_LivingDeadTargetThreshold :
                 flags.HasFlag(Combo.ST) ? 1 : 15;
 
             #endregion
@@ -453,13 +453,13 @@ internal partial class DRK
 
             var oblationCharges = flags.HasFlag(Combo.Adv)
                 ? flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_OblationCharges
-                    : Config.DRK_AoE_OblationCharges
+                    ? DRK_ST_OblationCharges
+                    : DRK_AoE_OblationCharges
                 : 0;
             var oblationThreshold = flags.HasFlag(Combo.Adv)
                 ? flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_Mit_OblationThreshold
-                    : Config.DRK_AoE_Mit_OblationThreshold
+                    ? DRK_ST_Mit_OblationThreshold
+                    : DRK_AoE_Mit_OblationThreshold
                 : 90;
 
             #endregion
@@ -481,11 +481,11 @@ internal partial class DRK
 
             var reprisalThreshold =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? Config.DRK_AoE_Mit_ReprisalThreshold
+                    ? DRK_AoE_Mit_ReprisalThreshold
                     : 100;
             var reprisalTargetCount =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? Config.DRK_AoE_ReprisalEnemyCount
+                    ? DRK_AoE_ReprisalEnemyCount
                     : 1;
             var reprisalUseForRaidwides =
                 flags.HasFlag(Combo.AoE) || RaidWideCasting();
@@ -511,7 +511,7 @@ internal partial class DRK
 
             var missionaryThreshold =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_Mit_MissionaryThreshold
+                    ? DRK_ST_Mit_MissionaryThreshold
                     : 100;
             var missionaryAvoidanceSatisfied =
                 flags.HasFlag(Combo.AoE) ||
@@ -541,7 +541,7 @@ internal partial class DRK
 
             var darkMindThreshold =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? Config.DRK_AoE_Mit_DarkMindThreshold
+                    ? DRK_AoE_Mit_DarkMindThreshold
                     : 100;
 
             #endregion
@@ -561,7 +561,7 @@ internal partial class DRK
 
             var rampartThreshold =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? Config.DRK_AoE_Mit_RampartThreshold
+                    ? DRK_AoE_Mit_RampartThreshold
                     : 100;
 
             #endregion
@@ -579,7 +579,7 @@ internal partial class DRK
             #region Variables
 
             var armsLengthEnemyCount = flags.HasFlag(Combo.Adv)
-                ? Config.DRK_AoE_ArmsLengthEnemyCount
+                ? DRK_AoE_ArmsLengthEnemyCount
                 : 3;
 
             #endregion
@@ -598,8 +598,8 @@ internal partial class DRK
 
             var vigilHealthThreshold = flags.HasFlag(Combo.Adv) ?
                 flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_ShadowedVigilThreshold
-                    : Config.DRK_AoE_ShadowedVigilThreshold :
+                    ? DRK_ST_ShadowedVigilThreshold
+                    : DRK_AoE_ShadowedVigilThreshold :
                 flags.HasFlag(Combo.ST) ? 40 : 50;
 
             #endregion
@@ -735,8 +735,8 @@ internal partial class DRK
 
             var overcapThreshold = flags.HasFlag(Combo.Adv)
                 ? flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_BloodOvercapThreshold
-                    : Config.DRK_AoE_BloodOvercapThreshold
+                    ? DRK_ST_BloodOvercapThreshold
+                    : DRK_AoE_BloodOvercapThreshold
                 : 90;
 
             var beforeSouleater =
@@ -774,28 +774,28 @@ internal partial class DRK
             var mana = (int)LocalPlayer.CurrentMp;
             var manaPooling =
                 ContentCheck.IsInConfiguredContent(
-                    Config.DRK_ST_ManaSpenderPoolingDifficulty,
-                    Config.DRK_ST_ManaSpenderPoolingDifficultyListSet);
+                    DRK_ST_ManaSpenderPoolingDifficulty,
+                    DRK_ST_ManaSpenderPoolingDifficultyListSet);
             var manaPool = flags.HasFlag(Combo.Adv)
                 ? flags.HasFlag(Combo.ST)
-                    ? manaPooling ? (int)Config.DRK_ST_ManaSpenderPooling : 0
-                    : (int)Config.DRK_AoE_ManaSpenderPooling
+                    ? manaPooling ? (int)DRK_ST_ManaSpenderPooling : 0
+                    : (int)DRK_AoE_ManaSpenderPooling
                 : 0;
 
             // Set the pool to save a tbn in simple, if mitigation is enabled
             if (flags.HasFlag(Combo.Simple) &&
                 ((flags.HasFlag(Combo.ST) &&
-                  (int)Config.DRK_ST_SimpleMitigation ==
-                  (int)Config.SimpleMitigation.On) ||
+                  (int)DRK_ST_SimpleMitigation ==
+                  (int)SimpleMitigation.On) ||
                  (flags.HasFlag(Combo.AoE) &&
-                  (int)Config.DRK_AoE_SimpleMitigation ==
-                  (int)Config.SimpleMitigation.On)))
+                  (int)DRK_AoE_SimpleMitigation ==
+                  (int)SimpleMitigation.On)))
                 manaPool = 3000;
 
             var hasEnoughMana = mana >= (manaPool + 3000) || Gauge.HasDarkArts;
             var secondsBeforeBurst =
                 flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST)
-                    ? Config.DRK_ST_BurstSoonThreshold
+                    ? DRK_ST_BurstSoonThreshold
                     : 20;
             var evenBurstSoon =
                 IsOnCooldown(LivingShadow) &&
@@ -1014,15 +1014,15 @@ internal partial class DRK
         // Bail if TBN is disabled
         if ((!aoe &&
              (simple &&
-              (int)Config.DRK_ST_SimpleMitigation !=
-              (int)Config.SimpleMitigation.On) ||
+              (int)DRK_ST_SimpleMitigation !=
+              (int)SimpleMitigation.On) ||
              (!simple &&
               (!IsEnabled(Preset.DRK_ST_Mitigation) ||
                !IsEnabled(Preset.DRK_ST_Mit_TBN)))) ||
             (aoe &&
              (simple &&
-              (int)Config.DRK_AoE_SimpleMitigation !=
-              (int)Config.SimpleMitigation.On) ||
+              (int)DRK_AoE_SimpleMitigation !=
+              (int)SimpleMitigation.On) ||
              (!simple &&
               (!IsEnabled(Preset.DRK_AoE_Mitigation) ||
                !IsEnabled(Preset.DRK_AoE_Mit_TBN)))))
@@ -1037,14 +1037,14 @@ internal partial class DRK
             return false;
 
         var hpRemaining = PlayerHealthPercentageHp();
-        var hpThreshold = !aoe ? (float)Config.DRK_ST_TBNThreshold : 90f;
+        var hpThreshold = !aoe ? (float)DRK_ST_TBNThreshold : 90f;
 
         // Bail if we're above the threshold
         if (hpRemaining > hpThreshold)
             return false;
 
         var bossRestriction = !aoe
-            ? (int)Config.DRK_ST_TBNBossRestriction
+            ? (int)DRK_ST_TBNBossRestriction
             : (int)BossAvoidance.Off; // Don't avoid bosses in AoE
 
         // Bail if we're trying to avoid bosses and we're in a boss fight
@@ -1086,26 +1086,26 @@ internal partial class DRK
     [
         (BlackestNight, Preset.DRK_Mit_TheBlackestNight,
             () => !HasAnyTBN && LocalPlayer.CurrentMp > 3000 &&
-                  PlayerHealthPercentageHp() <= Config.DRK_Mit_TBN_Health),
+                  PlayerHealthPercentageHp() <= DRK_Mit_TBN_Health),
         (Oblation, Preset.DRK_Mit_Oblation,
             () => !((TargetIsFriendly() &&
                      HasStatusEffect(Buffs.Oblation, CurrentTarget, true)) ||
                     (!TargetIsFriendly() &&
                      HasStatusEffect(Buffs.Oblation, anyOwner: true))) &&
-                  GetRemainingCharges(Oblation) > Config.DRK_Mit_Oblation_Charges),
+                  GetRemainingCharges(Oblation) > DRK_Mit_Oblation_Charges),
         (Role.Reprisal, Preset.DRK_Mit_Reprisal,
             () => Role.CanReprisal(checkTargetForDebuff: false)),
         (DarkMissionary, Preset.DRK_Mit_DarkMissionary,
-            () => Config.DRK_Mit_DarkMissionary_PartyRequirement ==
+            () => DRK_Mit_DarkMissionary_PartyRequirement ==
                 (int)PartyRequirement.No || IsInParty()),
         (Role.Rampart, Preset.DRK_Mit_Rampart,
-            () => Role.CanRampart(Config.DRK_Mit_Rampart_Health)),
+            () => Role.CanRampart(DRK_Mit_Rampart_Health)),
         (DarkMind, Preset.DRK_Mit_DarkMind, () => true),
         (Role.ArmsLength, Preset.DRK_Mit_ArmsLength,
-            () => Role.CanArmsLength(Config.DRK_Mit_ArmsLength_EnemyCount,
-                Config.DRK_Mit_ArmsLength_Boss)),
+            () => Role.CanArmsLength(DRK_Mit_ArmsLength_EnemyCount,
+                DRK_Mit_ArmsLength_Boss)),
         (OriginalHook(ShadowWall), Preset.DRK_Mit_ShadowWall,
-            () => PlayerHealthPercentageHp() <= Config.DRK_Mit_ShadowWall_Health),
+            () => PlayerHealthPercentageHp() <= DRK_Mit_ShadowWall_Health),
     ];
 
     /// <summary>
@@ -1114,7 +1114,7 @@ internal partial class DRK
     /// </summary>
     /// <param name="index">
     ///     The index of the mitigation in <see cref="PrioritizedMitigation" />,
-    ///     which is the order of the mitigation in <see cref="CustomComboPreset" />.
+    ///     which is the order of the mitigation in <see cref="Preset" />.
     /// </param>
     /// <param name="action">
     ///     The variable to set to the action to, if the mitigation is set to be

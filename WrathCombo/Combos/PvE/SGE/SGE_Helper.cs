@@ -27,6 +27,9 @@ internal partial class SGE
         SimpleTarget.HardTarget.IfCanUseOn(Kardia).IfWithinRange(30) ??
         SimpleTarget.AnyTank;
 
+    internal static IGameObject? HealStack =>
+        SimpleTarget.Stack.AllyToHeal;
+
     internal static bool HasAddersgall() =>
         Addersgall > 0;
 
@@ -35,24 +38,24 @@ internal partial class SGE
 
     #region Healing
 
-    #region Hidden Raidwides
+    #region Raidwides
 
-    internal static bool HiddenKerachole() =>
-        IsEnabled(CustomComboPreset.SGE_Hidden_Kerachole) &&
+    internal static bool RaidwideKerachole() =>
+        IsEnabled(Preset.SGE_Raidwide_Kerachole) &&
         ActionReady(Kerachole) && HasAddersgall() &&
         CanWeave() && RaidWideCasting();
 
-    internal static bool HiddenHolos() =>
-        IsEnabled(CustomComboPreset.SGE_Hidden_Holos) &&
+    internal static bool RaidwideHolos() =>
+        IsEnabled(Preset.SGE_Raidwide_Holos) &&
         ActionReady(Holos) && CanWeave() && RaidWideCasting() &&
-        GetPartyAvgHPPercent() <= SGE_Hidden_HolosOption;
+        GetPartyAvgHPPercent() <= SGE_Raidwide_HolosOption;
 
-    internal static bool HiddenEprognosis()
+    internal static bool RaidwideEprognosis()
     {
         bool shieldCheck = GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= SGE_AoE_Heal_EPrognosisOption &&
                            GetPartyBuffPercent(SCH.Buffs.Galvanize) <= SGE_AoE_Heal_EPrognosisOption;
 
-        return IsEnabled(CustomComboPreset.SGE_Hidden_EPrognosis) && shieldCheck && RaidWideCasting();
+        return IsEnabled(Preset.SGE_Raidwide_EPrognosis) && shieldCheck && RaidWideCasting();
     }
 
     #endregion
@@ -74,69 +77,71 @@ internal partial class SGE
         {
             case 0:
                 action = Soteria;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Soteria);
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Soteria);
                 return SGE_ST_Heal_Soteria;
 
             case 1:
                 action = Zoe;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Zoe);
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Zoe);
                 return SGE_ST_Heal_Zoe;
 
             case 2:
                 action = Pepsis;
 
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Pepsis) &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Pepsis) &&
                           HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget);
                 return SGE_ST_Heal_Pepsis;
 
             case 3:
                 action = Taurochole;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Taurochole) && HasAddersgall();
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Taurochole) && HasAddersgall();
                 return SGE_ST_Heal_Taurochole;
 
             case 4:
                 action = Haima;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Haima);
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Haima) &&
+                          (!SGE_ST_Heal_HaimaBossOption || !InBossEncounter());
                 return SGE_ST_Heal_Haima;
 
             case 5:
                 action = Krasis;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Krasis);
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Krasis) &&
+                          (!SGE_ST_Heal_KrasisBossOption || !InBossEncounter());
                 return SGE_ST_Heal_Krasis;
 
             case 6:
                 action = Druochole;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Druochole) && HasAddersgall();
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Druochole) && HasAddersgall();
                 return SGE_ST_Heal_Druochole;
 
             case 7:
                 action = Eukrasia;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_EDiagnosis) &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_EDiagnosis) &&
                           (GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= SGE_ST_Heal_EDiagnosisHP) &&
                           shieldCheck && scholarShieldCheck;
                 return SGE_ST_Heal_EDiagnosisHP;
 
             case 8:
                 action = Kerachole;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Kerachole) && HasAddersgall() &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Kerachole) && HasAddersgall() &&
                           (!SGE_ST_Heal_KeracholeBossOption || !InBossEncounter());
                 return SGE_ST_Heal_KeracholeHP;
 
             case 9:
                 action = OriginalHook(Physis);
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Physis) &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Physis) &&
                           (!SGE_ST_Heal_PhysisBossOption || !InBossEncounter());
                 return SGE_ST_Heal_PhysisHP;
 
             case 10:
                 action = Panhaima;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Panhaima) &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Panhaima) &&
                           (!SGE_ST_Heal_PanhaimaBossOption || !InBossEncounter());
                 return SGE_ST_Heal_PanhaimaHP;
 
             case 11:
                 action = Holos;
-                enabled = IsEnabled(CustomComboPreset.SGE_ST_Heal_Holos) &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Holos) &&
                           (!SGE_ST_Heal_HolosBossOption || !InBossEncounter());
                 return SGE_ST_Heal_HolosHP;
         }
@@ -162,7 +167,7 @@ internal partial class SGE
         {
             case 0:
                 action = Kerachole;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Kerachole) &&
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Kerachole) &&
                           (!SGE_AoE_Heal_KeracholeTrait ||
                            SGE_AoE_Heal_KeracholeTrait && TraitLevelChecked(Traits.EnhancedKerachole)) &&
                           HasAddersgall();
@@ -170,44 +175,44 @@ internal partial class SGE
 
             case 1:
                 action = Ixochole;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Ixochole) &&
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Ixochole) &&
                           HasAddersgall();
                 return SGE_AoE_Heal_IxocholeOption;
 
             case 2:
                 action = OriginalHook(Physis);
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Physis);
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Physis);
                 return SGE_AoE_Heal_PhysisOption;
 
             case 3:
                 action = Holos;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Holos);
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Holos);
                 return SGE_AoE_Heal_HolosOption;
 
             case 4:
                 action = Panhaima;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Panhaima) && anyPanhaima;
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Panhaima) && anyPanhaima;
                 return SGE_AoE_Heal_PanhaimaOption;
 
             case 5:
                 action = Pepsis;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Pepsis) &&
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Pepsis) &&
                           HasStatusEffect(Buffs.EukrasianPrognosis);
                 return SGE_AoE_Heal_PepsisOption;
 
             case 6:
                 action = Philosophia;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Philosophia);
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Philosophia);
                 return SGE_AoE_Heal_PhilosophiaOption;
 
             case 7:
                 action = Zoe;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_Zoe);
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_Zoe);
                 return SGE_AoE_Heal_ZoeOption;
 
             case 8:
                 action = Eukrasia;
-                enabled = IsEnabled(CustomComboPreset.SGE_AoE_Heal_EPrognosis)
+                enabled = IsEnabled(Preset.SGE_AoE_Heal_EPrognosis)
                           && shieldCheck;
                 return 100; //Don't HP Check
         }
@@ -223,21 +228,21 @@ internal partial class SGE
 
     #region Movement Prio
 
-    private static (uint Action, CustomComboPreset Preset, System.Func<bool> Logic)[]
+    private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
         PrioritizedMovement =>
     [
         //Toxikon
-        (OriginalHook(Toxikon), CustomComboPreset.SGE_ST_DPS_Movement,
+        (OriginalHook(Toxikon), Preset.SGE_ST_DPS_Movement,
             () => SGE_ST_DPS_Movement[0] &&
                   ActionReady(Toxikon) &&
                   HasAddersting()),
         // Dyskrasia
-        (OriginalHook(Dyskrasia), CustomComboPreset.SGE_ST_DPS_Movement,
+        (OriginalHook(Dyskrasia), Preset.SGE_ST_DPS_Movement,
             () => SGE_ST_DPS_Movement[1] &&
                   ActionReady(Dyskrasia) &&
                   InActionRange(Dyskrasia)),
         //Eukrasia
-        (Eukrasia, CustomComboPreset.SGE_ST_DPS_Movement,
+        (Eukrasia, Preset.SGE_ST_DPS_Movement,
             () => SGE_ST_DPS_Movement[2] &&
                   ActionReady(Eukrasia) &&
                   !HasStatusEffect(Buffs.Eukrasia))
@@ -383,8 +388,6 @@ internal partial class SGE
 
     #region ID's
 
-    internal const byte JobID = 40;
-
     // Actions
     internal const uint
 
@@ -423,6 +426,9 @@ internal partial class SGE
         EukrasianDyskrasia = 37032,
         Psyche = 37033,
 
+        //Movement
+        Icarus = 24295,
+
         // Buffs
         Soteria = 24294,
         Zoe = 24300,
@@ -452,6 +458,7 @@ internal partial class SGE
             Panhaima = 2613,
             Kerachole = 2618,
             Zoe = 2611,
+            Holosakos = 3365,
             Eudaimonia = 3899;
     }
 

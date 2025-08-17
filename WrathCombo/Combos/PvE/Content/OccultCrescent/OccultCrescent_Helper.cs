@@ -96,7 +96,7 @@ internal partial class OccultCrescent
         AetherialGain = 41618,
         RingingRespite = 41619,
         Suspend = 41620;
-    internal static bool IsEnabledAndUsable(CustomComboPreset preset, uint action) => IsEnabled(preset) && HasActionEquipped(action) && ActionReady(action);
+    internal static bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && HasActionEquipped(action) && ActionReady(action);
 
     public static class JobIDs
     {

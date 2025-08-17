@@ -1,30 +1,38 @@
 ﻿#region Dependencies
-
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
-using ECommons.DalamudServices;
-using ECommons.GameHelpers;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using WrathCombo.Extensions;
+using static WrathCombo.Combos.PvE.BRD.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
-
 #endregion
 
 namespace WrathCombo.Combos.PvE;
-
 internal partial class BRD
 {
     #region Variables
-
+    internal static readonly FrozenDictionary<uint, ushort> PurpleList = new Dictionary<uint, ushort>
+    {
+        { VenomousBite, Debuffs.VenomousBite },
+        { CausticBite, Debuffs.CausticBite }
+    }.ToFrozenDictionary();
+    
+    internal static readonly FrozenDictionary<uint, ushort> BlueList = new Dictionary<uint, ushort>
+    {
+        { Windbite, Debuffs.Windbite },
+        { Stormbite, Debuffs.Stormbite }
+    }.ToFrozenDictionary();
+    
+    
+    
     // Gauge Stuff
     internal static BRDGauge? gauge = GetJobGauge<BRDGauge>();
     internal static int SongTimerInSeconds => gauge.SongTimer / 1000;
@@ -95,7 +103,7 @@ internal partial class BRD
             if (BuffWindow && RagingStrikesDuration < 18 || RagingCD > 30)
                     return true;
             
-           return false;
+            return false;
         }
 
         //Bloodletter & Rain of Death Logic
@@ -114,38 +122,26 @@ internal partial class BRD
         #endregion
 
         #region Dot Management
-
         //Iron Jaws dot refreshing
         internal static bool UseIronJaws()
         {
-            if (ActionReady(IronJaws) && Purple is not null && Blue is not null &&
-                    (PurpleRemaining < 4 || BlueRemaining < 4))
-                return true;
-            return false;
+            return ActionReady(IronJaws) && Purple is not null && Blue is not null &&
+                   (PurpleRemaining < 4 || BlueRemaining < 4);
         }
-
         //Blue dot application and low level refresh
         internal static bool ApplyBlueDot()
         {
-            if (ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < 4))
-                return true;
-            return false;
+            return ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < 4);
         }
-
         //Purple dot application and low level refresh
         internal static bool ApplyPurpleDot()
         {
-            if (ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < 4))
-                return true;
-            return false;
+            return ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < 4);
         }
-
         //Raging jaws option dot refresh for snapshot
         internal static bool RagingJawsRefresh()
         {
-            if (ActionReady(IronJaws) && HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35)
-                return true;
-            return false;
+            return ActionReady(IronJaws) && HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
         }
         #endregion
 
@@ -153,111 +149,83 @@ internal partial class BRD
         //RadiantFinale Buff
         internal static bool UseRadiantBuff()
         {
-            if (ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady))
-                return true;
-            return false;
+            return ActionReady(RadiantFinale) && RagingCD < 2.2 && CanWeaveDelayed && !HasStatusEffect(Buffs.RadiantEncoreReady);
         } 
-
         //BattleVoice Buff
         internal static bool UseBattleVoiceBuff()
         {
-            if (ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale)))
-                return true;
-            return false;
+            return ActionReady(BattleVoice) && (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
         }
-    
         //RagingStrikes Buff
         internal static bool UseRagingStrikesBuff()
         {
-            if (ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasStatusEffect(Buffs.BattleVoice)))
-                return true;
-            return false;
-
+            return ActionReady(RagingStrikes) && (JustUsed(BattleVoice) || !LevelChecked(BattleVoice) || HasStatusEffect(Buffs.BattleVoice));
         } 
-
         //Barrage Buff
         internal static bool UseBarrageBuff()
         {
-            if (ActionReady(Barrage) && HasStatusEffect(Buffs.RagingStrikes) && !HasStatusEffect(Buffs.ResonantArrowReady))
-                return true;
+            return ActionReady(Barrage) && HasStatusEffect(Buffs.RagingStrikes) && !HasStatusEffect(Buffs.ResonantArrowReady);
+        }
+        #endregion
+    
+        #region Songs
+        internal static bool WandererSong()
+        {
+            if (ActionReady(WanderersMinuet))
+            {
+                if (SongNone) // No song, use wanderer first
+                   return true;
+                    
+                if (SongArmy && (CanWeaveDelayed || !BardHasTarget) && (SongTimerInSeconds <= 12 || gauge.Repertoire == 4)) //Transition to wanderer as soon as it is ready
+                    return true;
+            }
             return false;
         }
-    #endregion
-
-        #region Songs
-
-    internal static bool WandererSong()
-    {
-        if (ActionReady(WanderersMinuet))
+        internal static bool MagesSong()
         {
-            if (SongNone) // No song, use wanderer first
-               return true;
-                
-            if (SongArmy && (CanWeaveDelayed || !BardHasTarget) && (SongTimerInSeconds <= 12 || gauge.Repertoire == 4)) //Transition to wanderer as soon as it is ready
-                return true;
+            if (ActionReady(MagesBallad) && (CanBardWeave || !BardHasTarget))
+            {
+                if (SongNone && !ActionReady(WanderersMinuet)) //No song, Use Mages if wanderer is on cd or not aquaired yet
+                    return true;
+
+                if (SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire == 0) //Swap to mages after wanderer and no pitch perfect to spend
+                    return true;
+            }
+            return false;
         }
-        return false;
-    }
-    internal static bool MagesSong()
-    {
-        if (ActionReady(MagesBallad) && (CanBardWeave || !BardHasTarget))
+        internal static bool ArmySong()
         {
-            if (SongNone && !ActionReady(WanderersMinuet)) //No song, Use Mages if wanderer is on cd or not aquaired yet
-                return true;
+            if (ActionReady(ArmysPaeon) && (CanBardWeave || !BardHasTarget))
+            {
+                if (SongNone && !ActionReady(MagesBallad) && !ActionReady(WanderersMinuet)) //No song, Use army as last resort
+                    return true;
 
-            if (SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire == 0) //Swap to mages after wanderer and no pitch perfect to spend
-                return true;
+                if (SongMage && SongTimerInSeconds <= 3) //Transition to army after mages
+                    return true;
+            }
+            return false;
         }
-        return false;
-    }
-
-    internal static bool ArmySong()
-    {
-        if (ActionReady(ArmysPaeon) && (CanBardWeave || !BardHasTarget))
+        internal static bool SongChangeEmpyreal()
         {
-            if (SongNone && !ActionReady(MagesBallad) && !ActionReady(WanderersMinuet)) //No song, Use army as last resort
-                return true;
-
-            if (SongMage && SongTimerInSeconds <= 3) //Transition to army after mages
-                return true;
+            return SongMage && SongTimerInSeconds <= 3 && ActionReady(ArmysPaeon) && ActionReady(EmpyrealArrow) && BardHasTarget && CanBardWeave; // Uses Empyreal before transiitoning to Army if possible
         }
-        return false;
-    }
-
-    internal static bool SongChangeEmpyreal()
-    {
-        if (SongMage && SongTimerInSeconds <= 3 && ActionReady(ArmysPaeon) && ActionReady(EmpyrealArrow) && BardHasTarget && CanBardWeave) // Uses Empyreal before transiitoning to Army if possible
-            return true;
-        
-        return false;
-    }
-
-    internal static bool SongChangePitchPerfect()
-    {
-        if (SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire > 0 && BardHasTarget && CanBardWeave) // Dumps the Pitch perfect stacks before transition to mages
-            return true;
-
-        return false;
-    }
-    #endregion
+        internal static bool SongChangePitchPerfect()
+        {
+            return SongWanderer && SongTimerInSeconds <= 3 && gauge.Repertoire > 0 && BardHasTarget && CanBardWeave; // Dumps the Pitch perfect stacks before transition to mages
+        }
+        #endregion
 
         #region Warden Resolver
         [ActionRetargeting.TargetResolver]
         private static IGameObject? WardenResolver() =>
-         GetPartyMembers()
-              .Select(member => member.BattleChara)
-              .Where(member => member.IsNotThePlayer() && !member.IsDead && member.IsCleansable() && InActionRange(TheWardensPaeon, member))          
-              .FirstOrDefault();
+            GetPartyMembers()
+                .Select(member => member.BattleChara)          
+                .FirstOrDefault(member => member.IsNotThePlayer() && !member.IsDead && member.IsCleansable() && InActionRange(TheWardensPaeon, member));
         #endregion
-
-
-
+        
     #endregion
 
     #region ID's
-
-    public const byte ClassID = 5;
-    public const byte JobID = 23;
 
     public const uint
         HeavyShot = 97,
@@ -329,21 +297,18 @@ internal partial class BRD
     #endregion
 
     #region Openers
-
     public static BRDStandard Opener1 = new();
     public static BRDAdjusted Opener2 = new();
     public static BRDComfy Opener3 = new();
     internal static WrathOpener Opener()
     {
-        if (IsEnabled(CustomComboPreset.BRD_ST_AdvMode))
+        if (IsEnabled(Preset.BRD_ST_AdvMode))
         {
-            if (Config.BRD_Adv_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
-            if (Config.BRD_Adv_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
-            if (Config.BRD_Adv_Opener_Selection == 2 && Opener3.LevelChecked) return Opener3;
+            if (BRD_Adv_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
+            if (BRD_Adv_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
+            if (BRD_Adv_Opener_Selection == 2 && Opener3.LevelChecked) return Opener3;
         }
-
-        if (Opener1.LevelChecked) return Opener1;
-        return WrathOpener.Dummy;
+        return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
 
     internal class BRDStandard : WrathOpener
@@ -370,21 +335,17 @@ internal partial class BRD
             IronJaws,
             BurstShot
         ];
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([6, 9, 16, 17, 19], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
-
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             5
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
-        internal override UserData ContentCheckConfig => Config.BRD_Balance_Content;
-
+        internal override UserData ContentCheckConfig => BRD_Balance_Content;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&
@@ -393,7 +354,6 @@ internal partial class BRD
             IsOffCooldown(Barrage) &&
             IsOffCooldown(Sidewinder);
     }
-
     internal class BRDAdjusted : WrathOpener
     {
         public override List<uint> OpenerActions { get; set; } =
@@ -419,22 +379,17 @@ internal partial class BRD
             IronJaws,
             BurstShot
         ];
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([7, 10, 17, 18, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
-
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             6
         ];
-
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
-        internal override UserData ContentCheckConfig => Config.BRD_Balance_Content;
-
+        internal override UserData ContentCheckConfig => BRD_Balance_Content;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&
@@ -443,7 +398,6 @@ internal partial class BRD
             IsOffCooldown(Barrage) &&
             IsOffCooldown(Sidewinder);
     }
-
     internal class BRDComfy : WrathOpener
     {
         public override List<uint> OpenerActions { get; set; } =
@@ -469,17 +423,13 @@ internal partial class BRD
             IronJaws,
             BurstShot
         ];
-
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
         [
             ([7, 10, 16, 18, 20], RefulgentArrow, () => HasStatusEffect(Buffs.HawksEye))
         ];
-
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
-        internal override UserData ContentCheckConfig => Config.BRD_Balance_Content;
-
+        internal override UserData ContentCheckConfig => BRD_Balance_Content;
         public override bool HasCooldowns() =>
             IsOffCooldown(WanderersMinuet) &&
             IsOffCooldown(BattleVoice) &&
@@ -488,6 +438,5 @@ internal partial class BRD
             IsOffCooldown(Barrage) &&
             IsOffCooldown(Sidewinder);
     }
-
     #endregion
 }

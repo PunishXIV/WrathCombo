@@ -1,13 +1,12 @@
-﻿using System;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using System;
+using System.Collections.Frozen;
 using System.Linq;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Window.Functions.UserConfig;
-using System.Collections.Frozen;
-
 namespace WrathCombo.Combos.PvP;
 
 internal static class PvPCommon
@@ -60,11 +59,11 @@ internal static class PvPCommon
         public static UserBoolArray
             QuickPurifyStatuses = new("QuickPurifyStatuses");
 
-        internal static void Draw(CustomComboPreset preset)
+        internal static void Draw(Preset preset)
         {
             switch (preset)
             {
-                case CustomComboPreset.PvP_EmergencyHeals:
+                case Preset.PvP_EmergencyHeals:
                     string baseMessage = $"Uses Recuperate when at or under the threshold.\n" +
                          $"Calculated from (MaxHP - {RecuperateAmount:N0}) to prevent overhealing.";
 
@@ -81,11 +80,11 @@ internal static class PvPCommon
                     }
                     break;
 
-                case CustomComboPreset.PvP_EmergencyGuard:
+                case Preset.PvP_EmergencyGuard:
                     DrawSliderInt(1, 100, EmergencyGuardThreshold, "Uses Guard when at or under:");
                     break;
 
-                case CustomComboPreset.PvP_QuickPurify:
+                case Preset.PvP_QuickPurify:
                     DrawPvPStatusMultiChoice(QuickPurifyStatuses);
                     break;
             }
@@ -134,11 +133,11 @@ internal static class PvPCommon
 
     internal class GlobalEmergencyHeals : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PvP_EmergencyHeals;
+        protected internal override Preset Preset => Preset.PvP_EmergencyHeals;
 
         protected override uint Invoke(uint actionID)
         {
-            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
             {
                 if (actionID is Guard)
                     return Guard;
@@ -174,17 +173,17 @@ internal static class PvPCommon
 
     internal class GlobalEmergencyGuard : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PvP_EmergencyGuard;
+        protected internal override Preset Preset => Preset.PvP_EmergencyGuard;
 
         protected override uint Invoke(uint actionID)
         {
-            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
             {
                 if (actionID is Guard)
                 {
                     var player = LocalPlayer;
 
-                    if (IsEnabled(CustomComboPreset.PvP_MashCancelRecup) && !JustUsed(Guard, 2f) &&
+                    if (IsEnabled(Preset.PvP_MashCancelRecup) && !JustUsed(Guard, 2f) &&
                         player.CurrentMp >= RecuperateCost && player.CurrentHp <= player.MaxHp - RecuperateAmount) 
                         return Recuperate;
 
@@ -225,7 +224,7 @@ internal static class PvPCommon
 
     internal class QuickPurify : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.PvP_QuickPurify;
+        protected internal override Preset Preset => Preset.PvP_QuickPurify;
 
         public static (ushort debuff, string label)[] Statuses =
         [
@@ -241,7 +240,7 @@ internal static class PvPCommon
 
         protected override uint Invoke(uint actionID)
         {
-            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(CustomComboPreset.PvP_MashCancel))
+            if ((HasStatusEffect(Buffs.Guard) || JustUsed(Guard)) && IsEnabled(Preset.PvP_MashCancel))
             {
                 if (actionID is Guard)
                     return Guard;

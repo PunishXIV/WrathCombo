@@ -2,7 +2,7 @@
 *
 
 # PvE Combos
-/WrathCombo/Combos/PvE/AST/                           @Taurenkey
+/WrathCombo/Combos/PvE/AST/                           @edewen
 /WrathCombo/Combos/PvE/BLM/                           @Kagekazu
 /WrathCombo/Combos/PvE/BLU/                           @zbee
 /WrathCombo/Combos/PvE/BRD/                           @edewen
@@ -12,21 +12,21 @@
 /WrathCombo/Combos/PvE/GNB/                           @Akechi-kun
 /WrathCombo/Combos/PvE/MCH/                           @Kagekazu
 /WrathCombo/Combos/PvE/MNK/                           @Kagekazu
-/WrathCombo/Combos/PvE/NIN/                           @Taurenkey
-/WrathCombo/Combos/PvE/PCT/                           @Nik-Potokar @edewen
+/WrathCombo/Combos/PvE/NIN/                           @edewen
+/WrathCombo/Combos/PvE/PCT/                           @edewen
 /WrathCombo/Combos/PvE/PLD/                           @Kaeris-Tempest
 /WrathCombo/Combos/PvE/RDM/                           @edewen
 /WrathCombo/Combos/PvE/RPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/SAM/                           @Kagekazu
 /WrathCombo/Combos/PvE/SCH/                           @edewen
 /WrathCombo/Combos/PvE/SGE/                           @Kagekazu
-/WrathCombo/Combos/PvE/SMN/                           @Genesis-Nova @edewen
+/WrathCombo/Combos/PvE/SMN/                           @edewen
 /WrathCombo/Combos/PvE/VPR/                           @Kagekazu
 /WrathCombo/Combos/PvE/WAR/                           @Akechi-kun
-/WrathCombo/Combos/PvE/WHM/                           @zbee
+/WrathCombo/Combos/PvE/WHM/                           @zbee @edewen
 
 # PvP Combos
-/WrathCombo/Combos/PvP/                               @Nik-Potokar @Kaeris-Tempest @edewen
+/WrathCombo/Combos/PvP/                               @Kaeris-Tempest @edewen
 /WrathCombo/Combos/PvP/BRDPVP.cs                      @edewen
 /WrathCombo/Combos/PvP/BLMPVP.cs                      @Kaeris-Tempest
 /WrathCombo/Combos/PvP/RDMPVP.cs                      @Kaeris-Tempest

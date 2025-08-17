@@ -1,17 +1,18 @@
 #region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Hooking;
 using ECommons;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -126,8 +127,8 @@ internal sealed class ActionReplacer : IDisposable
         try
         {
             if (ClassLocked() ||
-                (DisabledJobsPVE.Any(x => x == Svc.ClientState.LocalPlayer.ClassJob.RowId) && !Svc.ClientState.IsPvP) ||
-                (DisabledJobsPVP.Any(x => x == Svc.ClientState.LocalPlayer.ClassJob.RowId) && Svc.ClientState.IsPvP))
+                (DisabledJobsPVE.Any(x => x == Player.Job) && !Svc.ClientState.IsPvP) ||
+                (DisabledJobsPVP.Any(x => x == Player.Job) && Svc.ClientState.IsPvP))
                 return OriginalHook(actionID);
 
             foreach (CustomCombo? combo in FilteredCombos)
@@ -155,6 +156,8 @@ internal sealed class ActionReplacer : IDisposable
         }
     }
 
+    internal static bool DisableJobCheck = false;
+
     /// <summary>
     ///     Checks if the player could be on a job instead of a class.
     /// </summary>
@@ -163,20 +166,22 @@ internal sealed class ActionReplacer : IDisposable
     /// </returns>
     public static unsafe bool ClassLocked()
     {
-        if (Svc.ClientState.LocalPlayer is null) return false;
+        if (DisableJobCheck) return false;
+        
+        if (Player.Object is null) return false;
 
-        if (Svc.ClientState.LocalPlayer.Level <= 35) return false;
+        if (Player.Level <= 35) return false;
 
-        if (Svc.ClientState.LocalPlayer.ClassJob.RowId is
-            (>= 8 and <= 25) or 27 or 28 or >= 30)
+        // DoL and higher except arcanist and rogue
+        if (Player.Job is >= Job.MIN and not (Job.ACN or Job.ROG))
             return false;
 
         if (!UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(66049))
             return false;
 
-        if ((Svc.ClientState.LocalPlayer.ClassJob.RowId is 1 or 2 or 3 or 4 or 5 or 6 or 7 or 26 or 29) &&
+        if ((Player.Job is Job.GLA or Job.PGL or Job.MRD or Job.LNC or Job.ARC or Job.CNJ or Job.THM or Job.ACN or Job.ROG) &&
             Svc.Condition[ConditionFlag.BoundByDuty56] && // in an instance duty
-            Svc.ClientState.LocalPlayer.Level > 35) return true;
+            Player.Level > 35) return true;
 
         return false;
     }
@@ -192,8 +197,7 @@ internal sealed class ActionReplacer : IDisposable
         FilteredCombos = CustomCombos.Where(x =>
             x.Preset.Attributes() is not null && x.Preset.Attributes().IsPvP == CustomComboFunctions.InPvP() &&
             ((x.Preset.Attributes().RoleAttribute is not null && x.Preset.Attributes().RoleAttribute.PlayerIsRole()) ||
-             x.Preset.Attributes().CustomComboInfo.JobID == Player.JobId ||
-             x.Preset.Attributes().CustomComboInfo.JobID == CustomComboFunctions.JobIDs.ClassToJob(Player.JobId)));
+             x.Preset.Attributes().CustomComboInfo.Job == Player.Job.GetUpgradedJob()));
         var filteredCombos = FilteredCombos as CustomCombo[] ?? FilteredCombos.ToArray();
         Svc.Log.Debug(
             $"Now running {filteredCombos.Count()} combos\n{string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().CustomComboInfo.Name))}");

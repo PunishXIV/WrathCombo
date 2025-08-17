@@ -1,20 +1,22 @@
 ﻿#region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using static WrathCombo.Combos.PvE.DNC.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Options = WrathCombo.Combos.CustomComboPreset;
 using EZ = ECommons.Throttlers.EzThrottler;
+using Options = WrathCombo.Combos.Preset;
 using TS = System.TimeSpan;
 
 // ReSharper disable ReturnTypeCanBeNotNullable
@@ -66,28 +68,28 @@ internal partial class DNC
     /// <returns>The chosen Opener.</returns>
     internal static WrathOpener Opener()
     {
-        if (Config.DNC_ST_OpenerSelection ==
-            (int)Config.Openers.FifteenSecond &&
+        if (DNC_ST_OpenerSelection ==
+            (int)Openers.FifteenSecond &&
             Opener15S.LevelChecked)
             return Opener15S;
 
-        if (Config.DNC_ST_OpenerSelection ==
-            (int)Config.Openers.SevenSecond &&
+        if (DNC_ST_OpenerSelection ==
+            (int)Openers.SevenSecond &&
             Opener07S.LevelChecked)
             return Opener07S;
 
-        if (Config.DNC_ST_OpenerSelection ==
-            (int)Config.Openers.ThirtySecondTech &&
+        if (DNC_ST_OpenerSelection ==
+            (int)Openers.ThirtySecondTech &&
             Opener30STech.LevelChecked)
             return Opener30STech;
 
-        if (Config.DNC_ST_OpenerSelection ==
-            (int)Config.Openers.SevenPlusSecondTech &&
+        if (DNC_ST_OpenerSelection ==
+            (int)Openers.SevenPlusSecondTech &&
             Opener07PlusSTech.LevelChecked)
             return Opener07PlusSTech;
 
-        if (Config.DNC_ST_OpenerSelection ==
-            (int)Config.Openers.SevenSecondTech &&
+        if (DNC_ST_OpenerSelection ==
+            (int)Openers.SevenSecondTech &&
             Opener07STech.LevelChecked)
             return Opener07STech;
 
@@ -131,7 +133,7 @@ internal partial class DNC
     /// </param>
     /// <returns>
     ///     The Finisher to use, or if
-    ///     <see cref="CustomComboPreset.DNC_ST_BlockFinishes" /> is enabled and
+    ///     <see cref="Preset.DNC_ST_BlockFinishes" /> is enabled and
     ///     there is no enemy in range: <see cref="All.SavageBlade" />.
     /// </returns>
     private static uint FinishOrHold(uint desiredFinish)
@@ -245,7 +247,7 @@ internal partial class DNC
 
         // Check if we have a target overriding any searching
         var focusTarget = SimpleTarget.FocusTarget;
-        if (Config.DNC_Partner_FocusOverride &&
+        if (DNC_Partner_FocusOverride &&
             focusTarget is IBattleChara &&
             !focusTarget.IsDead &&
             focusTarget.IsInParty() &&
@@ -319,22 +321,19 @@ internal partial class DNC
             #endregion
 
             if (restrictions.HasFlag(PartnerPriority.Restrictions.Melee))
-                filter = filter
-                    .Where(x => x.ClassJob.RowId.Role() is melee).ToList();
+                filter = [.. filter.Where(x => x.ClassJob.Value.Role is melee)];
 
             if (restrictions.HasFlag(PartnerPriority.Restrictions.DPS))
-                filter = filter
-                    .Where(x => x.ClassJob.RowId.Role() is melee or ranged)
-                    .ToList();
+                filter = [.. filter.Where(x => x.ClassJob.Value.Role is melee or ranged)];
 
             if (restrictions.HasFlag(PartnerPriority.Restrictions.NotDD))
-                filter = filter.Where(DamageDownFree).ToList();
+                filter = [.. filter.Where(DamageDownFree)];
 
             if (restrictions.HasFlag(PartnerPriority.Restrictions.NotSick))
-                filter = filter.Where(SicknessFree).ToList();
+                filter = [.. filter.Where(SicknessFree)];
 
             if (restrictions.HasFlag(PartnerPriority.Restrictions.NotBrink))
-                filter = filter.Where(BrinkFree).ToList();
+                filter = [.. filter.Where(BrinkFree)];
 
             // Run the next step if no matches were found
             if (filter.Count == 0 &&
@@ -353,7 +352,7 @@ internal partial class DNC
             var orderedFilter = filter
                 .OrderBy(x =>
                     PartnerPriority.RolePrio.GetValueOrDefault(
-                        x.ClassJob.RowId.Role(), int.MaxValue));
+                        x.ClassJob.Value.Role, int.MaxValue));
 
             switch (Player.Level)
             {
@@ -361,13 +360,13 @@ internal partial class DNC
                     orderedFilter = orderedFilter
                         .ThenBy(x =>
                             PartnerPriority.Job090Prio.GetValueOrDefault(
-                                x.ClassJob.RowId, int.MaxValue));
+                                (Job)x.ClassJob.RowId, int.MaxValue));
                     break;
                 case >= 100:
                     orderedFilter = orderedFilter
                         .ThenBy(x =>
                             PartnerPriority.Job100Prio.GetValueOrDefault(
-                                x.ClassJob.RowId, int.MaxValue));
+                                (Job)x.ClassJob.RowId, int.MaxValue));
                     break;
             }
 
@@ -403,38 +402,38 @@ internal partial class DNC
             { (int)Role.Healer, 3 },
         };
 
-        internal static readonly Dictionary<uint, int> Job100Prio = new()
+        internal static readonly Dictionary<Job, int> Job100Prio = new()
         {
-            { SAM.JobID, 1 },
-            { PCT.JobID, 2 },
-            { RPR.JobID, 2 },
-            { VPR.JobID, 2 },
-            { MNK.JobID, 2 },
-            { NIN.JobID, 2 },
-            { DRG.JobID, 3 },
-            { BLM.JobID, 3 },
-            { RDM.JobID, 4 },
-            { SMN.JobID, 5 },
-            { MCH.JobID, 6 },
-            { BRD.JobID, 7 },
-            { JobID, 8 },
+            { Job.SAM, 1 },
+            { Job.PCT, 2 },
+            { Job.RPR, 2 },
+            { Job.VPR, 2 },
+            { Job.MNK, 2 },
+            { Job.NIN, 2 },
+            { Job.DRG, 3 },
+            { Job.BLM, 3 },
+            { Job.RDM, 4 },
+            { Job.SMN, 5 },
+            { Job.MCH, 6 },
+            { Job.BRD, 7 },
+            { Job.DNC, 8 },
         };
 
-        internal static readonly Dictionary<uint, int> Job090Prio = new()
+        internal static readonly Dictionary<Job, int> Job090Prio = new()
         {
-            { PCT.JobID, 1 },
-            { SAM.JobID, 1 },
-            { NIN.JobID, 2 },
-            { MNK.JobID, 3 },
-            { RPR.JobID, 4 },
-            { BLM.JobID, 5 },
-            { DRG.JobID, 6 },
-            { VPR.JobID, 7 },
-            { SMN.JobID, 8 },
-            { RDM.JobID, 9 },
-            { MCH.JobID, 10 },
-            { BRD.JobID, 11 },
-            { JobID, 12 },
+            { Job.PCT, 1 },
+            { Job.SAM, 1 },
+            { Job.NIN, 2 },
+            { Job.MNK, 3 },
+            { Job.RPR, 4 },
+            { Job.BLM, 5 },
+            { Job.DRG, 6 },
+            { Job.VPR, 7 },
+            { Job.SMN, 8 },
+            { Job.RDM, 9 },
+            { Job.MCH, 10 },
+            { Job.BRD, 11 },
+            { Job.DNC, 12 },
         };
 
         internal static readonly Restrictions[] RestrictionSteps =
@@ -585,7 +584,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 7),
-            ([5], () => (!Config.DNC_ST_OpenerOption_Peloton ? 12 : 5)),
+            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 12 : 5)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -613,11 +612,11 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], () => !Config.DNC_ST_OpenerOption_Peloton),
+            ([4], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
-            Config.DNC_ST_OpenerDifficulty;
+            DNC_ST_OpenerDifficulty;
 
         public override bool HasCooldowns()
         {
@@ -685,7 +684,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 2),
-            ([5], () => (!Config.DNC_ST_OpenerOption_Peloton ? 4 : 2)),
+            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 4 : 2)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -713,11 +712,11 @@ internal partial class DNC
             set;
         } =
         [
-            ([4], () => !Config.DNC_ST_OpenerOption_Peloton),
+            ([4], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
-            Config.DNC_ST_OpenerDifficulty;
+            DNC_ST_OpenerDifficulty;
 
         public override bool HasCooldowns()
         {
@@ -789,7 +788,7 @@ internal partial class DNC
         } =
         [
             ([5], () => 1),
-            ([6], () => (!Config.DNC_ST_OpenerOption_Peloton ? 7 : 6)),
+            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 7 : 6)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -817,11 +816,11 @@ internal partial class DNC
             set;
         } =
         [
-            ([5], () => !Config.DNC_ST_OpenerOption_Peloton),
+            ([5], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
-            Config.DNC_ST_OpenerDifficulty;
+            DNC_ST_OpenerDifficulty;
 
         public override bool HasCooldowns()
         {
@@ -903,7 +902,7 @@ internal partial class DNC
         ];
 
         internal override UserData? ContentCheckConfig =>
-            Config.DNC_ST_OpenerDifficulty;
+            DNC_ST_OpenerDifficulty;
 
         public override bool HasCooldowns()
         {
@@ -993,11 +992,11 @@ internal partial class DNC
             set;
         } =
         [
-            ([6], () => !Config.DNC_ST_OpenerOption_Peloton),
+            ([6], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
         internal override UserData? ContentCheckConfig =>
-            Config.DNC_ST_OpenerDifficulty;
+            DNC_ST_OpenerDifficulty;
 
         public override bool HasCooldowns()
         {
@@ -1029,8 +1028,6 @@ internal partial class DNC
     #endregion
 
     #region IDs
-
-    public const byte JobID = 38;
 
     #region Actions
 

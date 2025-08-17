@@ -2,30 +2,29 @@
 using System.Collections.Generic;
 using WrathCombo.Data;
 
-namespace WrathCombo.Attributes
+namespace WrathCombo.Attributes;
+
+/// <summary> Attribute documenting which skill each preset replace. </summary>
+[AttributeUsage(AttributeTargets.Field)]
+public class ReplaceSkillAttribute : Attribute
 {
-    /// <summary> Attribute documenting which skill each preset replace. </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    public class ReplaceSkillAttribute : Attribute
+    /// <summary> List of each action the feature replaces. Initializes a new instance of the <see cref="ReplaceSkillAttribute"/> class. </summary>
+    /// <param name="actionIDs"> List of actions the preset replaces. </param>
+    internal ReplaceSkillAttribute(params uint[] actionIDs)
     {
-        /// <summary> List of each action the feature replaces. Initializes a new instance of the <see cref="ReplaceSkillAttribute"/> class. </summary>
-        /// <param name="actionIDs"> List of actions the preset replaces. </param>
-        internal ReplaceSkillAttribute(params uint[] actionIDs)
+        foreach (uint id in actionIDs)
         {
-            foreach (uint id in actionIDs)
+            if (ActionWatching.ActionSheet.TryGetValue(id, out var action))
             {
-                if (ActionWatching.ActionSheet.TryGetValue(id, out var action))
-                {
-                    ActionIDs.Add(id);
-                    ActionNames.Add($"{action.Name}");
-                    ActionIcons.Add(action.Icon);
-                }
+                ActionIDs.Add(id);
+                ActionNames.Add($"{action.Name}");
+                ActionIcons.Add(action.Icon);
             }
         }
-
-        internal List<uint> ActionIDs { get; set; } = [];
-        internal List<string> ActionNames { get; set; } = [];
-
-        internal List<ushort> ActionIcons { get; set; } = [];
     }
+
+    internal List<uint> ActionIDs { get; set; } = [];
+    internal List<string> ActionNames { get; set; } = [];
+
+    internal List<ushort> ActionIcons { get; set; } = [];
 }

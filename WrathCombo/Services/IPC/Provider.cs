@@ -1,8 +1,10 @@
 ﻿#region
 
+using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -10,9 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using WrathCombo.Combos;
-using ECommons.DalamudServices;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -134,7 +134,7 @@ public partial class Provider : IDisposable
         P.IPCSearch.ComboStatesByJob.TryGetValue(Player.Job, out _);
 
         // Build UI-state caches
-        P.UIHelper.PresetControlled(CustomComboPreset.AST_ST_DPS);
+        P.UIHelper.PresetControlled(Preset.AST_ST_DPS);
 
         // Mark IPC as ready after caches are built
         output._ipcReady = true;
@@ -589,7 +589,7 @@ public partial class Provider : IDisposable
     /// </summary>
     /// <param name="comboInternalName">
     ///     The internal name of the combo you want to check.<br />
-    ///     See <see cref="CustomComboPreset" /> or
+    ///     See <see cref="Preset" /> or
     ///     <see cref="GetComboNamesForJob" />.<br />
     ///     Does also accept the ID of presets.
     /// </param>
@@ -631,7 +631,7 @@ public partial class Provider : IDisposable
     /// </param>
     /// <param name="comboInternalName">
     ///     The internal name of the combo you want to set.<br />
-    ///     See <see cref="CustomComboPreset" /> or
+    ///     See <see cref="Preset" /> or
     ///     <see cref="GetComboNamesForJob" />.<br />
     ///     Does also accept the ID of presets.
     /// </param>

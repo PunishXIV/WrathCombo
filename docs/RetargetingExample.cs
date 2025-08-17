@@ -6,7 +6,7 @@ class Example1_SimpleFeature
 {
     internal class DNC_DesirablePartner : CustomCombo
     {
-        protected internal override CustomComboPreset Preset => CustomComboPreset.DNC_DesirablePartner;
+        protected internal override Preset Preset => Preset.DNC_DesirablePartner;
 
         protected override uint Invoke(uint actionID)
         {
@@ -26,7 +26,7 @@ class Example2_StandardCombo
 {
     internal class DNC_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset => CustomComboPreset.DNC_ST_AdvancedMode;
+        protected internal override Preset Preset => Preset.DNC_ST_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
@@ -53,7 +53,7 @@ class Example3_StandardComboWithComplexTargetResolving
 {
     internal class DNC_ST_AdvancedMode : CustomCombo
     {
-        protected internal override CustomComboPreset Preset => CustomComboPreset.DNC_ST_AdvancedMode;
+        protected internal override Preset Preset => Preset.DNC_ST_AdvancedMode;
 
         // If this attribute is lacking on a TargetResolver provided to Retarget,
         // you will get warnings

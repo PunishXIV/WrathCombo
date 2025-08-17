@@ -14,9 +14,9 @@ using System.Text;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
+using CancellationReasonEnum = WrathCombo.Services.IPC.CancellationReason;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
-using CancellationReasonEnum = WrathCombo.Services.IPC.CancellationReason;
 
 // ReSharper disable UseSymbolAlias
 // ReSharper disable UnusedMember.Global
@@ -107,11 +107,11 @@ public class Lease(
 
     internal Dictionary<Job, bool> JobsControlled { get; set; } = new();
 
-    internal Dictionary<CustomComboPreset, (bool enabled, bool autoMode)>
+    internal Dictionary<Preset, (bool enabled, bool autoMode)>
         CombosControlled
     { get; set; } = new();
 
-    internal Dictionary<CustomComboPreset, bool> OptionsControlled { get; set; } =
+    internal Dictionary<Preset, bool> OptionsControlled { get; set; } =
         new();
 
     #endregion
@@ -371,7 +371,7 @@ public partial class Leasing
             return SetResult.PlayerNotAvailable;
         }
 
-        var job = (Job)CustomComboFunctions.JobIDs.ClassToJob((uint)Player.Job);
+        var job = Player.Job.GetUpgradedJob();
         if (jobOverride is not null)
             job = jobOverride.Value;
 
@@ -399,14 +399,14 @@ public partial class Leasing
             locking = true;
             stringKeys = [];
             combos = P.IPCSearch.EnabledActions
-                .Where(a => a.Attributes().CustomComboInfo.JobID
-                           == (uint)job)
+                .Where(a => a.Attributes().CustomComboInfo.Job
+                           == job)
                 .Where(a => a.Attributes().Parent is null)
                 .Select(a => a.ToString())
                 .ToList();
             options = P.IPCSearch.EnabledActions
-                .Where(a => a.Attributes().CustomComboInfo.JobID
-                           == (uint)job)
+                .Where(a => a.Attributes().CustomComboInfo.Job
+                           == job)
                 .Where(a => a.Attributes().Parent is not null)
                 .Select(a => a.ToString())
                 .ToList();
@@ -434,8 +434,8 @@ public partial class Leasing
             var state = true;
             if (locking)
             {
-                var ccpOption = (CustomComboPreset)
-                    Enum.Parse(typeof(CustomComboPreset), option);
+                var ccpOption = (Preset)
+                    Enum.Parse(typeof(Preset), option);
                 state = CustomComboFunctions.IsEnabled(ccpOption);
             }
 
@@ -515,11 +515,11 @@ public partial class Leasing
     /// <seealso cref="Provider.GetComboState" />
     internal (bool enabled, bool autoMode)? CheckComboControlled(string combo)
     {
-        CustomComboPreset customComboPreset;
+        Preset Preset;
         try
         {
-            customComboPreset = (CustomComboPreset)
-                Enum.Parse(typeof(CustomComboPreset), combo, true);
+            Preset = (Preset)
+                Enum.Parse(typeof(Preset), combo, true);
         }
         catch
         {
@@ -527,11 +527,11 @@ public partial class Leasing
         }
 
         var lease = Registrations.Values
-            .Where(l => l.CombosControlled.ContainsKey(customComboPreset))
+            .Where(l => l.CombosControlled.ContainsKey(Preset))
             .OrderByDescending(l => l.LastUpdated)
             .FirstOrDefault();
 
-        return lease?.CombosControlled[customComboPreset];
+        return lease?.CombosControlled[Preset];
     }
 
     /// <summary>
@@ -548,13 +548,13 @@ public partial class Leasing
         (Guid lease, string combo, bool newState, bool newAutoState)
     {
         var registration = Registrations[lease];
-        var preset = (CustomComboPreset)
-            Enum.Parse(typeof(CustomComboPreset), combo, true);
+        var preset = (Preset)
+            Enum.Parse(typeof(Preset), combo, true);
 
         // Disable the combo of the opposite type mode, if one exists
         var oppositeModeCombo = Helper.GetOppositeModeCombo(preset);
         if (oppositeModeCombo is not null)
-            registration.CombosControlled[(CustomComboPreset)oppositeModeCombo] =
+            registration.CombosControlled[(Preset)oppositeModeCombo] =
                 (false, false);
         var oppositeText = oppositeModeCombo is not null
             ? $" (Disabled opposite combo: {oppositeModeCombo})"
@@ -589,11 +589,11 @@ public partial class Leasing
     /// <seealso cref="Provider.GetComboOptionState" />
     internal bool? CheckComboOptionControlled(string option)
     {
-        CustomComboPreset customComboPreset;
+        Preset Preset;
         try
         {
-            customComboPreset = (CustomComboPreset)
-                Enum.Parse(typeof(CustomComboPreset), option, true);
+            Preset = (Preset)
+                Enum.Parse(typeof(Preset), option, true);
         }
         catch
         {
@@ -601,11 +601,11 @@ public partial class Leasing
         }
 
         var lease = Registrations.Values
-            .Where(l => l.OptionsControlled.ContainsKey(customComboPreset))
+            .Where(l => l.OptionsControlled.ContainsKey(Preset))
             .OrderByDescending(l => l.LastUpdated)
             .FirstOrDefault();
 
-        return lease?.OptionsControlled[customComboPreset];
+        return lease?.OptionsControlled[Preset];
     }
 
     /// <summary>
@@ -621,8 +621,8 @@ public partial class Leasing
         (Guid lease, string option, bool newState)
     {
         var registration = Registrations[lease];
-        var preset = (CustomComboPreset)
-            Enum.Parse(typeof(CustomComboPreset), option, true);
+        var preset = (Preset)
+            Enum.Parse(typeof(Preset), option, true);
 
         registration.OptionsControlled[preset] = newState;
 

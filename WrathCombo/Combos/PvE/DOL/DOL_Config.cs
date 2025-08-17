@@ -6,7 +6,7 @@ internal partial class DOL
     {
         //Config goes here
 
-        internal static void Draw(CustomComboPreset preset)
+        internal static void Draw(Preset preset)
         {
             //switch (preset)
             //{

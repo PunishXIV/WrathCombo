@@ -1,11 +1,7 @@
 ﻿#region Directives
 
-using System;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using Dalamud.Game.ClientState.Objects.Enums;
 using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
@@ -19,9 +15,12 @@ using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using ImGuiNET;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
+using System;
+using System.Linq;
+using System.Numerics;
+using System.Text;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -32,9 +31,9 @@ using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Services.IPC;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
+using BattleNPCSubKind = Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
-using Dalamud.Interface;
 
 #endregion
 
@@ -134,7 +133,7 @@ internal class Debug : ConfigWindow, IDisposable
         // Custom 2-Column Styling
         static void CustomStyleText(string firstColumn, object? secondColumn, bool useMonofont = false, Vector4? optionalColor = null)
         {
-            ImGui.Columns(2, null, false);
+            ImGui.Columns(2, border: false);
             if (!string.IsNullOrEmpty(firstColumn))
             {
                 ImGui.TextUnformatted(firstColumn);
@@ -463,7 +462,7 @@ internal class Debug : ConfigWindow, IDisposable
                     .Where(x => x.ObjectKind == ObjectKind.BattleNpc &&
                                 x.IsTargetable &&
                                 !x.IsDead &&
-                                x.BattleNpcKind is BattleNpcSubKind.Enemy or BattleNpcSubKind.BattleNpcPart);
+                                x.BattleNpcKind is BattleNPCSubKind.Enemy or BattleNPCSubKind.BattleNpcPart);
 
                     foreach (var enemy in enemies)
                     {
@@ -779,7 +778,7 @@ internal class Debug : ConfigWindow, IDisposable
             if (_debugSpell != null)
             {
                 var actionStatus = ActionManager.Instance()->GetActionStatus(ActionType.Action, _debugSpell.Value.RowId);
-                var icon = Svc.Texture.GetFromGameIcon(new(_debugSpell.Value.Icon)).GetWrapOrEmpty().ImGuiHandle;
+                var icon = Svc.Texture.GetFromGameIcon(new(_debugSpell.Value.Icon)).GetWrapOrEmpty().Handle;
 
                 ImGui.Image(icon, new Vector2(60).Scale());
                 ImGui.SameLine();
@@ -1043,7 +1042,7 @@ internal class Debug : ConfigWindow, IDisposable
                     ImGui.NewLine();
                     ImGuiEx.Spacing(new Vector2(10, 0));
                     ImGui.SameLine();
-                    if (ImGui.Button("Release"))
+                    if (ImGui.Button("Release##releaseFromList" + registration.Key))
                     {
                         P.IPC.ReleaseControl(registration.Key);
                     }

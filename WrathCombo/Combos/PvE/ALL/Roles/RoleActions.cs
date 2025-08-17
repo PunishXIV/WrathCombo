@@ -1,6 +1,5 @@
 ﻿using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-
 namespace WrathCombo.Combos.PvE;
 
 internal static partial class RoleActions
@@ -117,7 +116,7 @@ internal static partial class RoleActions
         public static bool CanPeloton() =>
             ActionReady(Peloton);
 
-        public static bool CanHeadGraze(CustomComboPreset preset, WeaveTypes weave = WeaveTypes.None) =>
+        public static bool CanHeadGraze(Preset preset, WeaveTypes weave = WeaveTypes.None) =>
             IsEnabled(preset) && CanInterruptEnemy() && ActionReady(HeadGraze) && CheckWeave(weave);
 
         public static bool CanHeadGraze(bool simpleMode, WeaveTypes weave = WeaveTypes.None) =>

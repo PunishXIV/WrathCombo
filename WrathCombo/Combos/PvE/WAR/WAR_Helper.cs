@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Combos.PvE.WAR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 #endregion
@@ -21,8 +22,8 @@ internal partial class WAR : Tank
     internal static bool CanPRend(float distance = 20, bool movement = true) => LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && GetTargetDistance() <= distance && movement;
     internal static bool CanSpendBeastGauge(int gauge = 50, bool pooling = false) => LevelChecked(OriginalHook(InnerBeast)) && (HasIR.Stacks || (BeastGauge >= gauge || pooling));
     internal static bool BurstPoolMinimum => BeastGauge >= 50 && IR.Cooldown is < 1 or > 40;
-    internal static bool STBurstPooling => BurstPoolMinimum && (IsEnabled(CustomComboPreset.WAR_ST_Simple) || (IsEnabled(CustomComboPreset.WAR_ST_Advanced) && Config.WAR_ST_FellCleave_BurstPooling == 0));
-    internal static bool AoEBurstPooling => BurstPoolMinimum && (IsEnabled(CustomComboPreset.WAR_AoE_Simple) || (IsEnabled(CustomComboPreset.WAR_AoE_Advanced) && Config.WAR_AoE_Decimate_BurstPooling == 0));
+    internal static bool STBurstPooling => BurstPoolMinimum && (IsEnabled(Preset.WAR_ST_Simple) || (IsEnabled(Preset.WAR_ST_Advanced) && WAR_ST_FellCleave_BurstPooling == 0));
+    internal static bool AoEBurstPooling => BurstPoolMinimum && (IsEnabled(Preset.WAR_AoE_Simple) || (IsEnabled(Preset.WAR_AoE_Advanced) && WAR_AoE_Decimate_BurstPooling == 0));
     internal static (float Cooldown, float Status, int Stacks) IR => (GetCooldownRemainingTime(OriginalHook(Berserk)), GetStatusEffectRemainingTime(Buffs.InnerReleaseBuff), GetStatusEffectStacks(Buffs.InnerReleaseStacks));
     internal static (float Status, int Stacks) BF => (GetStatusEffectRemainingTime(Buffs.BurgeoningFury), GetStatusEffectStacks(Buffs.BurgeoningFury));
     internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || HasStatusEffect(Buffs.InnerReleaseStacks));
@@ -77,7 +78,7 @@ internal partial class WAR : Tank
         ];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-        internal override UserData ContentCheckConfig => Config.WAR_BalanceOpener_Content;
+        internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
         public override bool HasCooldowns() => IsOffCooldown(InnerRelease) && IsOffCooldown(Upheaval) && GetRemainingCharges(Infuriate) >= 2 && GetRemainingCharges(Onslaught) >= 3;
     }
 
@@ -86,11 +87,11 @@ internal partial class WAR : Tank
     #region Helpers
     internal static uint GetVariantAction()
     {
-        if (Variant.CanCure(CustomComboPreset.WAR_Variant_Cure, Config.WAR_VariantCure))
+        if (Variant.CanCure(Preset.WAR_Variant_Cure, WAR_VariantCure))
             return Variant.Cure;
-        if (Variant.CanSpiritDart(CustomComboPreset.WAR_Variant_SpiritDart) && CanWeave())
+        if (Variant.CanSpiritDart(Preset.WAR_Variant_SpiritDart) && CanWeave())
             return Variant.SpiritDart;
-        if (Variant.CanUltimatum(CustomComboPreset.WAR_Variant_Ultimatum) && CanWeave())
+        if (Variant.CanUltimatum(Preset.WAR_Variant_Ultimatum) && CanWeave())
             return Variant.Ultimatum;
 
         return 0; //No conditions met
@@ -101,57 +102,57 @@ internal partial class WAR : Tank
             return 0;
 
         bool CanUse(uint action) => HasActionEquipped(action) && IsOffCooldown(action);
-        bool IsEnabledAndUsable(CustomComboPreset preset, uint action) => IsEnabled(preset) && CanUse(action);
+        bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && CanUse(action);
 
         //Out-of-Combat
-        if (!InCombat() && IsEnabledAndUsable(CustomComboPreset.WAR_Bozja_LostStealth, Bozja.LostStealth))
+        if (!InCombat() && IsEnabledAndUsable(Preset.WAR_Bozja_LostStealth, Bozja.LostStealth))
             return Bozja.LostStealth;
         //OGCDs
         if (CanWeave())
         {
             foreach (var (preset, action) in new[]
             {
-            (CustomComboPreset.WAR_Bozja_LostFocus, Bozja.LostFocus),
-            (CustomComboPreset.WAR_Bozja_LostFontOfPower, Bozja.LostFontOfPower),
-            (CustomComboPreset.WAR_Bozja_LostSlash, Bozja.LostSlash),
-            (CustomComboPreset.WAR_Bozja_LostFairTrade, Bozja.LostFairTrade),
-            (CustomComboPreset.WAR_Bozja_LostAssassination, Bozja.LostAssassination),
+            (Preset.WAR_Bozja_LostFocus, Bozja.LostFocus),
+            (Preset.WAR_Bozja_LostFontOfPower, Bozja.LostFontOfPower),
+            (Preset.WAR_Bozja_LostSlash, Bozja.LostSlash),
+            (Preset.WAR_Bozja_LostFairTrade, Bozja.LostFairTrade),
+            (Preset.WAR_Bozja_LostAssassination, Bozja.LostAssassination),
         })
                 if (IsEnabledAndUsable(preset, action))
                     return action;
 
             foreach (var (preset, action, powerPreset) in new[]
             {
-            (CustomComboPreset.WAR_Bozja_BannerOfNobleEnds, Bozja.BannerOfNobleEnds, CustomComboPreset.WAR_Bozja_PowerEnds),
-            (CustomComboPreset.WAR_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice, CustomComboPreset.WAR_Bozja_PowerSacrifice)
+            (Preset.WAR_Bozja_BannerOfNobleEnds, Bozja.BannerOfNobleEnds, Preset.WAR_Bozja_PowerEnds),
+            (Preset.WAR_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice, Preset.WAR_Bozja_PowerSacrifice)
         })
                 if (IsEnabledAndUsable(preset, action) && (!IsEnabled(powerPreset) || JustUsed(Bozja.LostFontOfPower, 5f)))
                     return action;
 
-            if (IsEnabledAndUsable(CustomComboPreset.WAR_Bozja_BannerOfHonedAcuity, Bozja.BannerOfHonedAcuity) &&
+            if (IsEnabledAndUsable(Preset.WAR_Bozja_BannerOfHonedAcuity, Bozja.BannerOfHonedAcuity) &&
                 !HasStatusEffect(Bozja.Buffs.BannerOfTranscendentFinesse))
                 return Bozja.BannerOfHonedAcuity;
         }
         //GCDs
         foreach (var (preset, action, condition) in new[]
         {
-        (CustomComboPreset.WAR_Bozja_LostDeath, Bozja.LostDeath, true),
-        (CustomComboPreset.WAR_Bozja_LostCure, Bozja.LostCure, PlayerHealthPercentageHp() <= Config.WAR_Bozja_LostCure_Health),
-        (CustomComboPreset.WAR_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(RoleActions.Magic.Buffs.Raise)),
-        (CustomComboPreset.WAR_Bozja_LostReraise, Bozja.LostReraise, PlayerHealthPercentageHp() <= Config.WAR_Bozja_LostReraise_Health),
-        (CustomComboPreset.WAR_Bozja_LostProtect, Bozja.LostProtect, !HasStatusEffect(Bozja.Buffs.LostProtect)),
-        (CustomComboPreset.WAR_Bozja_LostShell, Bozja.LostShell, !HasStatusEffect(Bozja.Buffs.LostShell)),
-        (CustomComboPreset.WAR_Bozja_LostBravery, Bozja.LostBravery, !HasStatusEffect(Bozja.Buffs.LostBravery)),
-        (CustomComboPreset.WAR_Bozja_LostBubble, Bozja.LostBubble, !HasStatusEffect(Bozja.Buffs.LostBubble)),
-        (CustomComboPreset.WAR_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f))
+        (Preset.WAR_Bozja_LostDeath, Bozja.LostDeath, true),
+        (Preset.WAR_Bozja_LostCure, Bozja.LostCure, PlayerHealthPercentageHp() <= WAR_Bozja_LostCure_Health),
+        (Preset.WAR_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(RoleActions.Magic.Buffs.Raise)),
+        (Preset.WAR_Bozja_LostReraise, Bozja.LostReraise, PlayerHealthPercentageHp() <= WAR_Bozja_LostReraise_Health),
+        (Preset.WAR_Bozja_LostProtect, Bozja.LostProtect, !HasStatusEffect(Bozja.Buffs.LostProtect)),
+        (Preset.WAR_Bozja_LostShell, Bozja.LostShell, !HasStatusEffect(Bozja.Buffs.LostShell)),
+        (Preset.WAR_Bozja_LostBravery, Bozja.LostBravery, !HasStatusEffect(Bozja.Buffs.LostBravery)),
+        (Preset.WAR_Bozja_LostBubble, Bozja.LostBubble, !HasStatusEffect(Bozja.Buffs.LostBubble)),
+        (Preset.WAR_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f))
         })
             if (IsEnabledAndUsable(preset, action) && condition)
                 return action;
-        if (IsEnabled(CustomComboPreset.WAR_Bozja_LostSpellforge) &&
+        if (IsEnabled(Preset.WAR_Bozja_LostSpellforge) &&
             CanUse(Bozja.LostSpellforge) &&
             (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
             return Bozja.LostSpellforge;
-        if (IsEnabled(CustomComboPreset.WAR_Bozja_LostSteelsting) &&
+        if (IsEnabled(Preset.WAR_Bozja_LostSteelsting) &&
             CanUse(Bozja.LostSteelsting) &&
             (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
             return Bozja.LostSteelsting;
@@ -187,7 +188,7 @@ internal partial class WAR : Tank
     internal static uint STCombo 
         => ComboTimer > 0 ? LevelChecked(Maim) && ComboAction == HeavySwing ? Maim
         : LevelChecked(StormsPath) && ComboAction == Maim
-        ? (LevelChecked(StormsEye) && ((IsEnabled(CustomComboPreset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) || (IsEnabled(CustomComboPreset.WAR_ST_Advanced) && IsEnabled(CustomComboPreset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= Config.WAR_SurgingRefreshRange))
+        ? (LevelChecked(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) || (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_SurgingRefreshRange))
         ? StormsEye : StormsPath) : HeavySwing : HeavySwing;
     internal static uint AOECombo => (ComboTimer > 0 && LevelChecked(MythrilTempest) && ComboAction == Overpower) ? MythrilTempest : Overpower;
     #endregion
@@ -196,7 +197,7 @@ internal partial class WAR : Tank
     /// <summary>
     /// The list of Mitigations to use in the One-Button Mitigation combo.<br />
     /// The order of the list needs to match the order in
-    /// <see cref="CustomComboPreset" />.
+    /// <see cref="Preset" />.
     /// </summary>
     /// <value>
     /// <c>Action</c> is the action to use.<br />
@@ -209,33 +210,33 @@ internal partial class WAR : Tank
     /// and <see cref="LevelChecked(uint)">level-checked</see>.<br />
     /// Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
-    private static (uint Action, CustomComboPreset Preset, System.Func<bool> Logic)[]
+    private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
         PrioritizedMitigation =>
         [
             //Bloodwhetting
-            (OriginalHook(RawIntuition), CustomComboPreset.WAR_Mit_Bloodwhetting,
-            () => !HasStatusEffect(Buffs.RawIntuition) && !HasStatusEffect(Buffs.BloodwhettingDefenseLong) && PlayerHealthPercentageHp() <= Config.WAR_Mit_Bloodwhetting_Health),
+            (OriginalHook(RawIntuition), Preset.WAR_Mit_Bloodwhetting,
+            () => !HasStatusEffect(Buffs.RawIntuition) && !HasStatusEffect(Buffs.BloodwhettingDefenseLong) && PlayerHealthPercentageHp() <= WAR_Mit_Bloodwhetting_Health),
             //Equilibrium
-            (Equilibrium, CustomComboPreset.WAR_Mit_Equilibrium,
-            () => PlayerHealthPercentageHp() <= Config.WAR_Mit_Equilibrium_Health),
+            (Equilibrium, Preset.WAR_Mit_Equilibrium,
+            () => PlayerHealthPercentageHp() <= WAR_Mit_Equilibrium_Health),
             // Reprisal
-            (Role.Reprisal, CustomComboPreset.WAR_Mit_Reprisal,
+            (Role.Reprisal, Preset.WAR_Mit_Reprisal,
             () => Role.CanReprisal(checkTargetForDebuff: false)),
             //Thrill of Battle
-            (ThrillOfBattle, CustomComboPreset.WAR_Mit_ThrillOfBattle,
-            () => PlayerHealthPercentageHp() <= Config.WAR_Mit_ThrillOfBattle_Health),
+            (ThrillOfBattle, Preset.WAR_Mit_ThrillOfBattle,
+            () => PlayerHealthPercentageHp() <= WAR_Mit_ThrillOfBattle_Health),
             //Rampart
-            (Role.Rampart, CustomComboPreset.WAR_Mit_Rampart,
-            () => Role.CanRampart(Config.WAR_Mit_Rampart_Health)),
+            (Role.Rampart, Preset.WAR_Mit_Rampart,
+            () => Role.CanRampart(WAR_Mit_Rampart_Health)),
             //Shake it Off
-            (ShakeItOff, CustomComboPreset.WAR_Mit_ShakeItOff,
-            () => !HasStatusEffect(Buffs.ShakeItOff) && (Config.WAR_Mit_ShakeItOff_PartyRequirement == (int)PartyRequirement.No || IsInParty())),
+            (ShakeItOff, Preset.WAR_Mit_ShakeItOff,
+            () => !HasStatusEffect(Buffs.ShakeItOff) && (WAR_Mit_ShakeItOff_PartyRequirement == (int)PartyRequirement.No || IsInParty())),
             //Arm's Length
-            (Role.ArmsLength, CustomComboPreset.WAR_Mit_ArmsLength,
-            () => Role.CanArmsLength(Config.WAR_Mit_ArmsLength_EnemyCount, Config.WAR_Mit_ArmsLength_Boss)),
+            (Role.ArmsLength, Preset.WAR_Mit_ArmsLength,
+            () => Role.CanArmsLength(WAR_Mit_ArmsLength_EnemyCount, WAR_Mit_ArmsLength_Boss)),
             //Vengeance
-            (OriginalHook(Vengeance), CustomComboPreset.WAR_Mit_Vengeance,
-            () => PlayerHealthPercentageHp() <= Config.WAR_Mit_Vengeance_Health)
+            (OriginalHook(Vengeance), Preset.WAR_Mit_Vengeance,
+            () => PlayerHealthPercentageHp() <= WAR_Mit_Vengeance_Health)
         ];
 
     /// <summary>
@@ -244,7 +245,7 @@ internal partial class WAR : Tank
     /// </summary>
     /// <param name="index">
     /// The index of the mitigation in <see cref="PrioritizedMitigation" />,
-    /// which is the order of the mitigation in <see cref="CustomComboPreset" />.
+    /// which is the order of the mitigation in <see cref="Preset" />.
     /// </param>
     /// <param name="action">
     /// The variable to set to the action to, if the mitigation is set to be used.
@@ -262,9 +263,6 @@ internal partial class WAR : Tank
     #endregion
 
     #region IDs
-
-    public const byte ClassID = 3; //Marauder (MRD)
-    public const byte JobID = 21; //Warrior (WAR)
 
     #region Actions
     public const uint

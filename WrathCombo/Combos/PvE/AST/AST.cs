@@ -4,14 +4,17 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using static WrathCombo.Combos.PvE.AST.Config;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST : Healer
 {
+    #region Simple Combos
     internal class AST_ST_Simple_DPS : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_Simple_DPS;
-
+        protected internal override Preset Preset => Preset.AST_ST_Simple_DPS;
         protected override uint Invoke(uint actionID)
         {
             #region Variables
@@ -21,31 +24,124 @@ internal partial class AST : Healer
 
             if (!actionFound)
                 return actionID;
-
+            
+            #region Out of combat
             // Out-of-combat Card Draw
             if (!InCombat())
             {
                 if (ActionReady(OriginalHook(AstralDraw)) && HasNoDPSCard)
                     return OriginalHook(AstralDraw);
             }
+            #endregion
+            
+            #region Special Content
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+            
+            if (Variant.CanRampart(Preset.AST_Variant_Rampart))
+                return Variant.Rampart;
+
+            if (Variant.CanSpiritDart(Preset.AST_Variant_SpiritDart) && HasBattleTarget())
+                return Variant.SpiritDart;
+            #endregion
+            
+            #region OGCDs
+            if (CanWeave() && InCombat())
+            {
+                //Lightspeed Movement
+                if (ActionReady(Lightspeed) &&
+                    IsMoving() &&
+                    !HasStatusEffect(Buffs.Lightspeed))
+                    return Lightspeed;
+
+                //Lucid Dreaming
+                if (Role.CanLucidDream(6500))
+                    return Role.LucidDreaming;
+
+                //Play Card
+                if (HasDPSCard)
+                    return OriginalHook(Play1).Retarget(replacedActions, CardResolver);
+
+                //Minor Arcana / Lord of Crowns
+                if (ActionReady(OriginalHook(MinorArcana)) &&
+                    HasLord && HasBattleTarget())
+                    return OriginalHook(MinorArcana);
+
+                //Card Draw
+                if (ActionReady(OriginalHook(AstralDraw)) &&
+                    HasNoDPSCard)
+                    return OriginalHook(AstralDraw);
+
+                //Divination
+                if (IsEnabled(Preset.AST_DPS_Divination) &&
+                    HasBattleTarget() &&
+                    ActionReady(Divination) &&
+                    !HasDivination &&
+                    !HasStatusEffect(Buffs.Divining) &&
+                    ActionWatching.NumberOfGcdsUsed >= 3)
+                    return Divination;
+
+                //Earthly Star
+                if (!HasStatusEffect(Buffs.EarthlyDominance) &&
+                    ActionReady(EarthlyStar) &&
+                    IsOffCooldown(EarthlyStar))
+                    return EarthlyStar.Retarget(replacedActions, SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
+
+                //Oracle
+                if (HasStatusEffect(Buffs.Divining))
+                    return Oracle;
+            }
+            #endregion
+            
+            #region GCDS
+            
+            #region Movement Options
+            if (IsMoving())
+            {
+                var dotAction = OriginalHook(Combust);
+                CombustList.TryGetValue(dotAction, out var dotDebuffID);
+                var target = SimpleTarget.DottableEnemy(
+                    dotAction, dotDebuffID, 0, 20, 99);
+                
+                if (target is not null && !HasStatusEffect(Buffs.Lightspeed))
+                    return dotAction.Retarget(MaleficList.ToArray(), target);
+            }
+            #endregion
+            
+            return NeedsDoT() ? 
+                OriginalHook(Combust): 
+                actionID;
+            
+            #endregion
+        }
+    }
+    internal class AST_AOE_Simple_DPS : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.AST_AOE_Simple_DPS;
+        protected override uint Invoke(uint actionID)
+        {
+            if (!GravityList.Contains(actionID))
+                return actionID;
+
+            #region Special Content
+
+            if (Variant.CanRampart(Preset.AST_Variant_Rampart))
+                return Variant.Rampart;
+
+            if (Variant.CanSpiritDart(Preset.AST_Variant_SpiritDart))
+                return Variant.SpiritDart;
 
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
 
-            //In combat
+            #endregion
+
+            #region OGCDs
             if (InCombat())
             {
-                //Variant stuff
-                if (Variant.CanRampart(CustomComboPreset.AST_Variant_Rampart))
-                    return Variant.Rampart;
-
-                if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart) && HasBattleTarget())
-                    return Variant.SpiritDart;
-
                 //Lightspeed Movement
-                if (ActionReady(Lightspeed) &&
-                    IsMoving() && !HasStatusEffect(Buffs.Lightspeed))
-                    return Lightspeed;  
+                if (ActionReady(Lightspeed) && IsMoving() && !HasStatusEffect(Buffs.Lightspeed))
+                    return Lightspeed;
 
                 //Lucid Dreaming
                 if (Role.CanLucidDream(6500))
@@ -53,249 +149,41 @@ internal partial class AST : Healer
 
                 //Play Card
                 if (HasDPSCard && CanWeave())
-                    return OriginalHook(Play1).Retarget(replacedActions, CardResolver);
-                       
+                    return OriginalHook(Play1).Retarget(GravityList.ToArray(), CardResolver);
 
                 //Minor Arcana / Lord of Crowns
-                if (ActionReady(OriginalHook(MinorArcana)) &&
+                if (ActionReady(OriginalHook(MinorArcana)) && 
                     HasLord && HasBattleTarget() && CanWeave())
                     return OriginalHook(MinorArcana);
 
                 //Card Draw
-                if (ActionReady(OriginalHook(AstralDraw)) && HasNoDPSCard && CanWeave())
+                if (ActionReady(OriginalHook(AstralDraw)) && 
+                    HasNoDPSCard && CanWeave())
                     return OriginalHook(AstralDraw);
 
                 //Divination
-                if (IsEnabled(CustomComboPreset.AST_DPS_Divination) && HasBattleTarget() &&
-                    ActionReady(Divination) && !HasDivination &&
-                    !HasStatusEffect(Buffs.Divining) &&
-                    CanWeave() && ActionWatching.NumberOfGcdsUsed >= 3)
+                if (HasBattleTarget() && ActionReady(Divination) && 
+                    !HasDivination && CanWeave() && ActionWatching.NumberOfGcdsUsed >= 3)
                     return Divination;
 
                 //Earthly Star
-                if (!HasStatusEffect(Buffs.EarthlyDominance) && ActionReady(EarthlyStar) &&
-                    IsOffCooldown(EarthlyStar) && CanWeave())
-                    return EarthlyStar.Retarget(replacedActions, SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
+                if (!IsMoving() && !HasStatusEffect(Buffs.EarthlyDominance) && 
+                    ActionReady(EarthlyStar) && IsOffCooldown(EarthlyStar) 
+                    && CanWeave() && ActionWatching.NumberOfGcdsUsed >= 3)
+                    return EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
 
                 //Oracle
                 if (HasStatusEffect(Buffs.Divining) && CanWeave())
                     return Oracle;
 
-                if (NeedsDoT())
-                    return OriginalHook(Combust);
+                //MacroCosmos
+                if (ActionReady(Macrocosmos) && !HasStatusEffect(Buffs.Macrocosmos) &&
+                    ActionWatching.NumberOfGcdsUsed >= 3 && !InBossEncounter())
+                    return Macrocosmos;
             }
-            return actionID;
-        }
-    }
-    
-    internal class AST_ST_DPS : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_DPS;
-
-        protected override uint Invoke(uint actionID)
-        {
-            #region Variables
-            bool alternateMode = Config.AST_ST_DPS_AltMode > 0; //(0 or 1 radio values)
-            bool actionFound = !alternateMode && MaleficList.Contains(actionID) ||
-                               alternateMode && CombustList.ContainsKey(actionID);
-            bool cardPooling = IsEnabled(CustomComboPreset.AST_DPS_CardPool);
-            bool lordPooling = IsEnabled(CustomComboPreset.AST_DPS_LordPool);
-            var replacedActions = alternateMode
-                ? CombustList.Keys.ToArray()
-                : MaleficList.ToArray();
-            int divHPThreshold = Config.AST_ST_DPS_DivinationSubOption == 1 || !InBossEncounter() ? Config.AST_ST_DPS_DivinationOption : 0;
             #endregion
-
-            if (!actionFound)
-                return actionID;
-
-            // Out-of-combat Card Draw
-            if (!InCombat())
-            {
-                if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
-                    ActionReady(OriginalHook(AstralDraw)) &&
-                    (HasNoCards || HasNoDPSCard && Config.AST_ST_DPS_OverwriteHealCards))
-                    return OriginalHook(AstralDraw);
-            }
-
-            if (IsEnabled(CustomComboPreset.AST_ST_DPS_Opener) &&
-                Opener().FullOpener(ref actionID))
-            {
-                if (actionID is EarthlyStar && IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar))
-                    return actionID.Retarget(replacedActions,
-                        SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
-                if (actionID is (Balance or Spear) && IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards))
-                    return actionID.Retarget(replacedActions, CardResolver);
-                return actionID;
-            }
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-            //In combat
-            if (InCombat())
-            {
-                //Variant stuff
-                if (Variant.CanRampart(CustomComboPreset.AST_Variant_Rampart))
-                    return Variant.Rampart;
-
-                if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart) && HasBattleTarget())
-                    return Variant.SpiritDart;
-
-                //Lightspeed Movement
-                if (IsEnabled(CustomComboPreset.AST_DPS_LightSpeed) &&
-                    ActionReady(Lightspeed) &&
-                    GetTargetHPPercent() > Config.AST_ST_DPS_LightSpeedOption &&
-                    IsMoving() && !HasStatusEffect(Buffs.Lightspeed) &&
-                    (IsNotEnabled(CustomComboPreset.AST_DPS_LightSpeedHold) ||
-                    LightspeedChargeCD < DivinationCD ||
-                    !LevelChecked(Divination)))
-                    return Lightspeed;  
-                
-                #region Healing Helper
-
-                if (RaidwideCollectiveUnconscious())
-                    return CollectiveUnconscious;
-                if (RaidwideNeutralSect())
-                    return OriginalHook(NeutralSect);
-                if (RaidwideAspectedHelios())
-                    return OriginalHook(AspectedHelios);
-           
-                #endregion
-
-                //Lucid Dreaming
-                if (IsEnabled(CustomComboPreset.AST_DPS_Lucid) &&
-                    Role.CanLucidDream(Config.AST_ST_DPS_LucidDreaming))
-                    return Role.LucidDreaming;
-
-                //Play Card
-                if (IsEnabled(CustomComboPreset.AST_DPS_AutoPlay) &&
-                    HasDPSCard && CanWeave() &&
-                    (HasDivination || !cardPooling || !LevelChecked(Divination)))
-                    return IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards)
-                        ? OriginalHook(Play1).Retarget(replacedActions, CardResolver)
-                        : OriginalHook(Play1);
-
-                //Minor Arcana / Lord of Crowns
-                if (ActionReady(OriginalHook(MinorArcana)) &&
-                    IsEnabled(CustomComboPreset.AST_DPS_LazyLord) &&
-                    HasLord && HasBattleTarget() && CanWeave() &&
-                    (HasDivination || !lordPooling || !LevelChecked(Divination)))
-                    return OriginalHook(MinorArcana);
-
-                //Card Draw
-                if (IsEnabled(CustomComboPreset.AST_DPS_AutoDraw) &&
-                    ActionReady(OriginalHook(AstralDraw)) &&
-                    (HasNoCards || HasNoDPSCard && Config.AST_ST_DPS_OverwriteHealCards) &&
-                    CanWeave())
-                    return OriginalHook(AstralDraw);
-
-                //Lightspeed Burst
-                if (IsEnabled(CustomComboPreset.AST_DPS_LightspeedBurst) &&
-                    ActionReady(Lightspeed) && !HasStatusEffect(Buffs.Lightspeed) &&
-                    DivinationCD < 5 && CanWeave())
-                    return Lightspeed;
-
-                //Divination
-                if (IsEnabled(CustomComboPreset.AST_DPS_Divination) && HasBattleTarget() &&
-                    ActionReady(Divination) && !HasDivination && //Overwrite protection
-                    !HasStatusEffect(Buffs.Divining) &&
-                    GetTargetHPPercent() > divHPThreshold &&
-                    CanWeave() && ActionWatching.NumberOfGcdsUsed >= 3)
-                    return Divination;
-
-                //Earthly Star
-                if (IsEnabled(CustomComboPreset.AST_ST_DPS_EarthlyStar) &&
-                    !HasStatusEffect(Buffs.EarthlyDominance) && ActionReady(EarthlyStar) &&
-                    IsOffCooldown(EarthlyStar) && CanWeave())
-                    return EarthlyStar.Retarget(replacedActions,
-                        SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
-                
-                //Stellar Detonation
-                if (IsEnabled(CustomComboPreset.AST_ST_DPS_StellarDetonation) && CanWeave() &&
-                    HasStatusEffect(Buffs.GiantDominance, anyOwner:false) && HasBattleTarget() &&
-                    GetTargetHPPercent() <= Config.AST_ST_DPS_StellarDetonation_Threshold && 
-                    (Config.AST_ST_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
-                    return StellarDetonation;
-
-                //Oracle
-                if (IsEnabled(CustomComboPreset.AST_DPS_Oracle) &&
-                    HasStatusEffect(Buffs.Divining) && CanWeave())
-                    return Oracle;
-                
-                //Combust
-                if (IsEnabled(CustomComboPreset.AST_ST_DPS_CombustUptime) && NeedsDoT())
-                    return OriginalHook(Combust);
-
-                //Alternate Mode (idles as Malefic)
-                if (alternateMode)
-                    return OriginalHook(Malefic);
-                
             
-            }
-            return actionID;
-        }
-    }
-    
-    internal class AST_AOE_Simple_DPS : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AOE_Simple_DPS;
-        protected override uint Invoke(uint actionID)
-        {
-            if (!GravityList.Contains(actionID))
-                return actionID;
-
-            //Variant stuff
-            if (Variant.CanRampart(CustomComboPreset.AST_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart))
-                return Variant.SpiritDart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-            //Lightspeed Movement
-            if (ActionReady(Lightspeed) && IsMoving() && !HasStatusEffect(Buffs.Lightspeed))
-                return Lightspeed;  
-
-            //Lucid Dreaming
-            if (Role.CanLucidDream(6500))
-                return Role.LucidDreaming;
-
-            //Play Card
-            if (HasDPSCard && CanWeave())
-                return OriginalHook(Play1).Retarget(GravityList.ToArray(), CardResolver);
-
-            //Minor Arcana / Lord of Crowns
-            if (ActionReady(OriginalHook(MinorArcana)) && HasLord &&
-                HasBattleTarget() && CanWeave())
-                return OriginalHook(MinorArcana);
-
-            //Card Draw
-            if (ActionReady(OriginalHook(AstralDraw)) && HasNoDPSCard && CanWeave())
-                return OriginalHook(AstralDraw);
-
-            //Divination
-            if (HasBattleTarget() && ActionReady(Divination) && !HasDivination && CanWeave() &&
-                ActionWatching.NumberOfGcdsUsed >= 3)
-                return Divination;
-
-            //Earthly Star
-            if (!IsMoving() && !HasStatusEffect(Buffs.EarthlyDominance) && ActionReady(EarthlyStar) &&
-                IsOffCooldown(EarthlyStar) && CanWeave() &&
-                ActionWatching.NumberOfGcdsUsed >= 3)
-                return EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);            
-            
-            //Oracle
-            if (HasStatusEffect(Buffs.Divining) && CanWeave())
-                return Oracle;
-
-            //MacroCosmos
-            if (ActionReady(Macrocosmos) && !HasStatusEffect(Buffs.Macrocosmos) &&
-                ActionWatching.NumberOfGcdsUsed >= 3 && !InBossEncounter())
-                return Macrocosmos;
-            
+            #region GCDs
             var dotAction = OriginalHook(Combust);
             CombustList.TryGetValue(dotAction, out var dotDebuffID);
             var target =
@@ -305,42 +193,220 @@ internal partial class AST : Healer
                 return OriginalHook(Combust).Retarget([Gravity, Gravity2], target);
 
             return actionID;
+            #endregion
         }
     }
-
-    internal class AST_AOE_DPS : CustomCombo
+    
+    #endregion
+    
+    #region Advanced DPS Combos
+    internal class AST_ST_DPS : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AOE_DPS;
+        protected internal override Preset Preset => Preset.AST_ST_DPS;
         protected override uint Invoke(uint actionID)
         {
-            #region Variables
-            bool cardPooling = IsEnabled(CustomComboPreset.AST_AOE_CardPool);
-            bool lordPooling = IsEnabled(CustomComboPreset.AST_AOE_LordPool);
-            int divHPThreshold = Config.AST_ST_DPS_DivinationSubOption == 1 || !InBossEncounter() ? Config.AST_ST_DPS_DivinationOption : 0;
+            #region Button Selection
+            bool alternateMode = AST_ST_DPS_AltMode > 0; //(0 or 1 radio values)
+            bool actionFound = !alternateMode && MaleficList.Contains(actionID) ||
+                               alternateMode && CombustList.ContainsKey(actionID);
+            var replacedActions = alternateMode
+                ? CombustList.Keys.ToArray()
+                : MaleficList.ToArray();
             #endregion
 
+            if (!actionFound)
+                return actionID;
+            
+            #region Variables
+            bool cardPooling = IsEnabled(Preset.AST_DPS_CardPool);
+            bool lordPooling = IsEnabled(Preset.AST_DPS_LordPool);
+            int divHPThreshold = AST_ST_DPS_DivinationSubOption == 1 || !InBossEncounter() ? AST_ST_DPS_DivinationOption : 0;
+            #endregion
+
+            #region Out of Combat
+            if (!InCombat())
+            {
+                if (IsEnabled(Preset.AST_DPS_AutoDraw) &&
+                    ActionReady(OriginalHook(AstralDraw)) &&
+                    (HasNoCards || HasNoDPSCard && AST_ST_DPS_OverwriteHealCards))
+                    return OriginalHook(AstralDraw);
+            }
+            #endregion
+            
+            #region Opener
+            if (IsEnabled(Preset.AST_ST_DPS_Opener) &&
+                Opener().FullOpener(ref actionID))
+            {
+                if (actionID is EarthlyStar && IsEnabled(Preset.AST_ST_DPS_EarthlyStar))
+                    return actionID.Retarget(replacedActions,
+                        SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
+                if (actionID is (Balance or Spear) && IsEnabled(Preset.AST_Cards_QuickTargetCards))
+                    return actionID.Retarget(replacedActions, CardResolver);
+                return actionID;
+            }
+            #endregion
+            
+            #region Special Content
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+            
+            if (Variant.CanRampart(Preset.AST_Variant_Rampart))
+                return Variant.Rampart;
+
+            if (Variant.CanSpiritDart(Preset.AST_Variant_SpiritDart) && HasBattleTarget())
+                return Variant.SpiritDart;
+            #endregion
+            
+            #region Healing Helper
+
+            if (RaidwideCollectiveUnconscious())
+                return CollectiveUnconscious;
+            if (RaidwideNeutralSect())
+                return OriginalHook(NeutralSect);
+            if (RaidwideAspectedHelios())
+                return OriginalHook(AspectedHelios);
+           
+            #endregion
+            
+            if (InCombat())
+            {
+                #region OGCDs
+                //Lightspeed Movement
+                if (IsEnabled(Preset.AST_DPS_LightSpeed) &&
+                    ActionReady(Lightspeed) &&
+                    GetTargetHPPercent() > AST_ST_DPS_LightSpeedOption &&
+                    IsMoving() && !HasStatusEffect(Buffs.Lightspeed) &&
+                    (IsNotEnabled(Preset.AST_DPS_LightSpeedHold) ||
+                    LightspeedChargeCD < DivinationCD ||
+                    !LevelChecked(Divination)))
+                    return Lightspeed;  
+
+                //Lucid Dreaming
+                if (IsEnabled(Preset.AST_DPS_Lucid) &&
+                    Role.CanLucidDream(AST_ST_DPS_LucidDreaming))
+                    return Role.LucidDreaming;
+
+                //Play Card
+                if (IsEnabled(Preset.AST_DPS_AutoPlay) &&
+                    HasDPSCard && CanWeave() &&
+                    (HasDivination || !cardPooling || !LevelChecked(Divination)))
+                    return IsEnabled(Preset.AST_Cards_QuickTargetCards)
+                        ? OriginalHook(Play1).Retarget(replacedActions, CardResolver)
+                        : OriginalHook(Play1);
+
+                //Minor Arcana / Lord of Crowns
+                if (ActionReady(OriginalHook(MinorArcana)) &&
+                    IsEnabled(Preset.AST_DPS_LazyLord) &&
+                    HasLord && 
+                    HasBattleTarget() && 
+                    CanWeave() &&
+                    (HasDivination || !lordPooling || !LevelChecked(Divination)))
+                    return OriginalHook(MinorArcana);
+
+                //Card Draw
+                if (IsEnabled(Preset.AST_DPS_AutoDraw) &&
+                    ActionReady(OriginalHook(AstralDraw)) && 
+                    CanWeave() &&
+                    (HasNoCards || HasNoDPSCard && AST_ST_DPS_OverwriteHealCards))
+                    return OriginalHook(AstralDraw);
+
+                //Lightspeed Burst
+                if (IsEnabled(Preset.AST_DPS_LightspeedBurst) &&
+                    ActionReady(Lightspeed) && 
+                    CanWeave() &&
+                    !HasStatusEffect(Buffs.Lightspeed) &&
+                    DivinationCD < 5)
+                    return Lightspeed;
+
+                //Divination
+                if (IsEnabled(Preset.AST_DPS_Divination) && 
+                    HasBattleTarget() &&
+                    ActionReady(Divination) && 
+                    CanWeave() &&
+                    !HasDivination &&
+                    !HasStatusEffect(Buffs.Divining) &&
+                    GetTargetHPPercent() > divHPThreshold &&
+                    ActionWatching.NumberOfGcdsUsed >= 3)
+                    return Divination;
+
+                //Earthly Star
+                if (IsEnabled(Preset.AST_ST_DPS_EarthlyStar) &&
+                    !HasStatusEffect(Buffs.EarthlyDominance) && 
+                    IsOffCooldown(EarthlyStar) && 
+                    CanWeave())
+                    return EarthlyStar.Retarget(replacedActions,
+                        SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
+                
+                //Stellar Detonation
+                if (IsEnabled(Preset.AST_ST_DPS_StellarDetonation) && 
+                    CanWeave() &&
+                    HasStatusEffect(Buffs.GiantDominance, anyOwner:false) && 
+                    HasBattleTarget() &&
+                    GetTargetHPPercent() <= AST_ST_DPS_StellarDetonation_Threshold && 
+                    (AST_ST_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
+                    return StellarDetonation;
+
+                //Oracle
+                if (IsEnabled(Preset.AST_DPS_Oracle) &&
+                    HasStatusEffect(Buffs.Divining) && 
+                    CanWeave())
+                    return Oracle;
+                
+                #endregion
+                
+                #region GCDs
+                
+                #region Movement Options
+
+                if (IsMoving())
+                {
+                    var dotAction = OriginalHook(Combust);
+                    CombustList.TryGetValue(dotAction, out var dotDebuffID);
+                    var target = SimpleTarget.DottableEnemy(
+                        dotAction, dotDebuffID, 0, 30, 99);
+                    if (IsEnabled(Preset.AST_ST_DPS_Move_DoT) &&
+                        !HasStatusEffect(Buffs.Lightspeed) &&
+                        target is not null)
+                        return dotAction.Retarget(replacedActions, target);
+                }
+                #endregion
+                
+                if (IsEnabled(Preset.AST_ST_DPS_CombustUptime) 
+                    && NeedsDoT())
+                    return OriginalHook(Combust);
+
+                //Alternate Mode (idles as Malefic)
+                if (alternateMode)
+                    return OriginalHook(Malefic);
+                #endregion
+            }
+            return actionID;
+        }
+    }
+    internal class AST_AOE_DPS : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.AST_AOE_DPS;
+        protected override uint Invoke(uint actionID)
+        {
             if (!GravityList.Contains(actionID))
                 return actionID;
 
-            //Variant stuff
-            if (Variant.CanRampart(CustomComboPreset.AST_Variant_Rampart))
+            #region Variables
+            bool cardPooling = IsEnabled(Preset.AST_AOE_CardPool);
+            bool lordPooling = IsEnabled(Preset.AST_AOE_LordPool);
+            int divHPThreshold = AST_ST_DPS_DivinationSubOption == 1 || !InBossEncounter() ? AST_ST_DPS_DivinationOption : 0;
+            #endregion
+            
+            #region Special Content
+            if (Variant.CanRampart(Preset.AST_Variant_Rampart))
                 return Variant.Rampart;
 
-            if (Variant.CanSpiritDart(CustomComboPreset.AST_Variant_SpiritDart))
+            if (Variant.CanSpiritDart(Preset.AST_Variant_SpiritDart))
                 return Variant.SpiritDart;
 
             if (OccultCrescent.ShouldUsePhantomActions())
                 return OccultCrescent.BestPhantomAction();
-
-            //Lightspeed Movement
-            if (IsEnabled(CustomComboPreset.AST_AOE_LightSpeed) &&
-                ActionReady(Lightspeed) &&
-                GetTargetHPPercent() > Config.AST_AOE_LightSpeedOption &&
-                IsMoving() && !HasStatusEffect(Buffs.Lightspeed) &&
-                (IsNotEnabled(CustomComboPreset.AST_AOE_LightSpeedHold) ||
-                LightspeedChargeCD < DivinationCD  ||
-                !LevelChecked(Divination)))
-                return Lightspeed;  
+            #endregion
             
             #region Healing Helper
 
@@ -353,95 +419,106 @@ internal partial class AST : Healer
            
             #endregion
 
-            //Lucid Dreaming
-            if (IsEnabled(CustomComboPreset.AST_AOE_Lucid) &&
-                Role.CanLucidDream(Config.AST_AOE_LucidDreaming))
-                return Role.LucidDreaming;
+            #region OGCDs
+            if (InCombat())
+            {
+                //Lightspeed Movement
+                if (IsEnabled(Preset.AST_AOE_LightSpeed) && ActionReady(Lightspeed) &&
+                    GetTargetHPPercent() > AST_AOE_LightSpeedOption && IsMoving() && 
+                    !HasStatusEffect(Buffs.Lightspeed) &&
+                    (IsNotEnabled(Preset.AST_AOE_LightSpeedHold) || LightspeedChargeCD < DivinationCD || !LevelChecked(Divination)))
+                    return Lightspeed;
 
-            //Play Card
-            if (IsEnabled(CustomComboPreset.AST_AOE_AutoPlay) &&
-                HasDPSCard && CanWeave() && 
-                (HasDivination || !cardPooling || !LevelChecked(Divination)))
-                return IsEnabled(CustomComboPreset.AST_Cards_QuickTargetCards)
-                    ? OriginalHook(Play1).Retarget(GravityList.ToArray(),
-                        CardResolver)
-                    : OriginalHook(Play1);
+                //Lucid Dreaming
+                if (IsEnabled(Preset.AST_AOE_Lucid) && Role.CanLucidDream(AST_AOE_LucidDreaming))
+                    return Role.LucidDreaming;
 
-            //Minor Arcana / Lord of Crowns
-            if (ActionReady(OriginalHook(MinorArcana)) &&
-                IsEnabled(CustomComboPreset.AST_AOE_LazyLord) && HasLord &&
-                HasBattleTarget() && CanWeave() &&
-                (HasDivination || !lordPooling || !LevelChecked(Divination)))
-                return OriginalHook(MinorArcana);
+                //Play Card
+                if (IsEnabled(Preset.AST_AOE_AutoPlay) && HasDPSCard && CanWeave() &&
+                    (HasDivination || !cardPooling || !LevelChecked(Divination)))
+                    return IsEnabled(Preset.AST_Cards_QuickTargetCards)
+                        ? OriginalHook(Play1).Retarget(GravityList.ToArray(),
+                            CardResolver)
+                        : OriginalHook(Play1);
 
-            //Card Draw
-            if (IsEnabled(CustomComboPreset.AST_AOE_AutoDraw) &&
-                ActionReady(OriginalHook(AstralDraw)) &&
-                (HasNoCards || HasNoDPSCard && Config.AST_AOE_DPS_OverwriteHealCards) &&
-                CanWeave())
-                return OriginalHook(AstralDraw);
+                //Minor Arcana / Lord of Crowns
+                if (ActionReady(OriginalHook(MinorArcana)) && IsEnabled(Preset.AST_AOE_LazyLord) && 
+                    HasLord && HasBattleTarget() && CanWeave() &&
+                    (HasDivination || !lordPooling || !LevelChecked(Divination)))
+                    return OriginalHook(MinorArcana);
+
+                //Card Draw
+                if (IsEnabled(Preset.AST_AOE_AutoDraw) &&
+                    ActionReady(OriginalHook(AstralDraw)) &&
+                    (HasNoCards || HasNoDPSCard && AST_AOE_DPS_OverwriteHealCards) &&
+                    CanWeave())
+                    return OriginalHook(AstralDraw);
+
+                //Lightspeed Burst
+                if (IsEnabled(Preset.AST_AOE_LightspeedBurst) &&
+                    ActionReady(Lightspeed) && !HasStatusEffect(Buffs.Lightspeed) &&
+                    DivinationCD < 5 && ActionWatching.NumberOfGcdsUsed >= 3 &&
+                    CanWeave())
+                    return Lightspeed;
+
+                //Divination
+                if (IsEnabled(Preset.AST_AOE_Divination) && HasBattleTarget() &&
+                    ActionReady(Divination) && !HasDivination && //Overwrite protection
+                    GetTargetHPPercent() > divHPThreshold && CanWeave() &&
+                    ActionWatching.NumberOfGcdsUsed >= 3)
+                    return Divination;
+
+                //Earthly Star
+                if (IsEnabled(Preset.AST_AOE_DPS_EarthlyStar) && !IsMoving() &&
+                    !HasStatusEffect(Buffs.EarthlyDominance) && ActionReady(EarthlyStar) &&
+                    IsOffCooldown(EarthlyStar) && CanWeave() &&
+                    ActionWatching.NumberOfGcdsUsed >= 3)
+                    return EarthlyStar.Retarget(GravityList.ToArray(),
+                        SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies);
+
+                //Stellar Detonation
+                if (IsEnabled(Preset.AST_AOE_DPS_StellarDetonation) && CanWeave() &&
+                    HasStatusEffect(Buffs.GiantDominance, anyOwner: false) && HasBattleTarget() &&
+                    GetTargetHPPercent() <= AST_AOE_DPS_StellarDetonation_Threshold &&
+                    (AST_AOE_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
+                    return StellarDetonation;
+
+                //Oracle
+                if (IsEnabled(Preset.AST_AOE_Oracle) &&
+                    HasStatusEffect(Buffs.Divining) && CanWeave())
+                    return Oracle;
+
+                //MacroCosmos
+                if (IsEnabled(Preset.AST_AOE_DPS_MacroCosmos) && ActionReady(Macrocosmos) &&
+                    !HasStatusEffect(Buffs.Macrocosmos) && ActionWatching.NumberOfGcdsUsed >= 3 &&
+                    (AST_AOE_DPS_MacroCosmos_SubOption == 1 || !InBossEncounter()))
+                    return Macrocosmos;
+            }
+            #endregion
             
-            //Lightspeed Burst
-            if (IsEnabled(CustomComboPreset.AST_AOE_LightspeedBurst) &&
-                ActionReady(Lightspeed) && !HasStatusEffect(Buffs.Lightspeed) &&
-                DivinationCD < 5 && ActionWatching.NumberOfGcdsUsed >= 3 &&
-                CanWeave())
-                return Lightspeed;
-
-            //Divination
-            if (IsEnabled(CustomComboPreset.AST_AOE_Divination) && HasBattleTarget() &&
-                ActionReady(Divination) && !HasDivination && //Overwrite protection
-                GetTargetHPPercent() > divHPThreshold && CanWeave() &&
-                ActionWatching.NumberOfGcdsUsed >= 3)
-                return Divination;
-
-            //Earthly Star
-            if (IsEnabled(CustomComboPreset.AST_AOE_DPS_EarthlyStar) && !IsMoving() &&
-                !HasStatusEffect(Buffs.EarthlyDominance) && ActionReady(EarthlyStar) &&
-                IsOffCooldown(EarthlyStar) && CanWeave() &&
-                ActionWatching.NumberOfGcdsUsed >= 3)
-                return EarthlyStar.Retarget(GravityList.ToArray(),
-                    SimpleTarget.AnyEnemy ?? SimpleTarget.Stack.Allies); 
-            
-            //Stellar Detonation
-            if (IsEnabled(CustomComboPreset.AST_AOE_DPS_StellarDetonation) && CanWeave() &&
-                HasStatusEffect(Buffs.GiantDominance, anyOwner:false) && HasBattleTarget() &&
-                GetTargetHPPercent() <= Config.AST_AOE_DPS_StellarDetonation_Threshold && 
-                (Config.AST_AOE_DPS_StellarDetonation_SubOption == 1 || !InBossEncounter()))
-                return StellarDetonation;
-            
-            //Oracle
-            if (IsEnabled(CustomComboPreset.AST_AOE_Oracle) &&
-                HasStatusEffect(Buffs.Divining) && CanWeave())
-                return Oracle;
-
-            //MacroCosmos
-            if (IsEnabled(CustomComboPreset.AST_AOE_DPS_MacroCosmos) &&
-                ActionReady(Macrocosmos) &&
-                !HasStatusEffect(Buffs.Macrocosmos) &&
-                ActionWatching.NumberOfGcdsUsed >= 3 &&
-                (Config.AST_AOE_DPS_MacroCosmos_SubOption == 1 ||
-                !InBossEncounter()))
-                return Macrocosmos;
+            #region GCDS
             
             var dotAction = OriginalHook(Combust);
             CombustList.TryGetValue(dotAction, out var dotDebuffID);
             var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID,
-                Config.AST_AOE_DPS_DoT_HPThreshold,
-                Config.AST_AOE_DPS_DoT_Reapply,
-                Config.AST_AOE_DPS_DoT_MaxTargets);
+                AST_AOE_DPS_DoT_HPThreshold,
+                AST_AOE_DPS_DoT_Reapply,
+                AST_AOE_DPS_DoT_MaxTargets);
 
-            if (IsEnabled(CustomComboPreset.AST_AOE_DPS_DoT) &&
+            if (IsEnabled(Preset.AST_AOE_DPS_DoT) &&
                 ActionReady(dotAction) && target != null)
                 return OriginalHook(Combust).Retarget([Gravity, Gravity2], target);
 
             return actionID;
+            #endregion
         }
     }
-
-    internal class AST_ST_SimpleHeals : CustomCombo
+    #endregion
+    
+    #region Healing
+    internal class AST_ST_Heals : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_ST_Heals;
+        protected internal override Preset Preset => Preset.AST_ST_Heals;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not Benefic2)
@@ -460,21 +537,21 @@ internal partial class AST : Healer
            
             #endregion
 
-            if (IsEnabled(CustomComboPreset.AST_ST_Heals_Esuna) && ActionReady(Role.Esuna) &&
-                GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) >= Config.AST_ST_SimpleHeals_Esuna &&
+            if (IsEnabled(Preset.AST_ST_Heals_Esuna) && ActionReady(Role.Esuna) &&
+                GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) >= AST_ST_SimpleHeals_Esuna &&
                 HasCleansableDebuff(healTarget))
                 return Role.Esuna
                     .RetargetIfEnabled(OptionalTarget, Benefic2);
             
             //Priority List
-            for(int i = 0; i < Config.AST_ST_SimpleHeals_Priority.Count; i++)
+            for(int i = 0; i < AST_ST_SimpleHeals_Priority.Count; i++)
             {
-                int index = Config.AST_ST_SimpleHeals_Priority.IndexOf(i + 1);
+                int index = AST_ST_SimpleHeals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
 
                 if (enabled)
                 {
-                    if (GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields) <= config &&
+                    if (GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) <= config &&
                         ActionReady(spell))
                         return spell.RetargetIfEnabled(OptionalTarget, Benefic2);
                 }
@@ -484,14 +561,13 @@ internal partial class AST : Healer
                 Benefic.RetargetIfEnabled(OptionalTarget, Benefic2);
         }
     }
-
-    internal class AST_AoE_SimpleHeals : CustomCombo
+    internal class AST_AoE_Heals : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_AoE_Heals;
+        protected internal override Preset Preset => Preset.AST_AoE_Heals;
 
         protected override uint Invoke(uint actionID)
         {
-            bool nonAspectedMode = Config.AST_AoE_SimpleHeals_AltMode > 0; //(0 or 1 radio values)
+            bool nonAspectedMode = AST_AoE_SimpleHeals_AltMode > 0; //(0 or 1 radio values)
 
             if ((!nonAspectedMode || actionID is not Helios) &&
                 (nonAspectedMode || actionID is not (AspectedHelios or HeliosConjuction)))
@@ -518,14 +594,15 @@ internal partial class AST : Healer
                     ? Helios
                     : OriginalHook(AspectedHelios);
             
-            if (IsEnabled(CustomComboPreset.AST_AoE_Heals_NeutralSect) && HasStatusEffect(Buffs.Suntouched) && CanWeave())
+            //Check for Suntouched to finish the combo after Neutral sect regardless of priorities
+            if (IsEnabled(Preset.AST_AoE_Heals_NeutralSect) && HasStatusEffect(Buffs.Suntouched) && CanWeave())
                 return SunSign;
             
             //Priority List
             float averagePartyHP = GetPartyAvgHPPercent();
-            for(int i = 0; i < Config.AST_AoE_SimpleHeals_Priority.Count; i++)
+            for(int i = 0; i < AST_AoE_SimpleHeals_Priority.Count; i++)
             {
-                int index = Config.AST_AoE_SimpleHeals_Priority.IndexOf(i + 1);
+                int index = AST_AoE_SimpleHeals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigAoE(index, out uint spell, out bool enabled);
 
                 if (enabled && averagePartyHP <= config && ActionReady(spell))
@@ -541,25 +618,16 @@ internal partial class AST : Healer
                 actionID;
         }
     }
-
-    internal class AST_RetargetEssentialDignity : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_RetargetEssentialDignity;
-
-        protected override uint Invoke(uint actionID) =>
-            actionID is not EssentialDignity
-                ? actionID
-                : actionID.Retarget(SimpleTarget.Stack.AllyToHeal, dontCull: true);
-    }
-
+    #endregion 
+    
+    #region Standalone Features
     internal class AST_RetargetManualCards : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Cards_QuickTargetCards;
-
+        protected internal override Preset Preset => Preset.AST_Cards_QuickTargetCards;
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not Play1 ||
-                !Config.AST_QuickTarget_Manuals)
+                !AST_QuickTarget_Manuals)
                 return actionID;
 
             OriginalHook(Play1).Retarget(Play1, CardResolver, dontCull: true);
@@ -567,34 +635,36 @@ internal partial class AST : Healer
             return actionID;
         }
     }
-    
     internal class AST_Benefic : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Benefic;
+        protected internal override Preset Preset => Preset.AST_Benefic;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Benefic2)
+                return actionID;
 
-        protected override uint Invoke(uint actionID) =>
-            actionID is Benefic2 && !ActionReady(Benefic2)
-                ? Benefic
-                : actionID;
+            var healStack = SimpleTarget.Stack.AllyToHeal;
+            
+            if (!LevelChecked(Benefic2))
+                return IsEnabled(Preset.AST_Retargets_Benefic) ? Benefic.Retarget(healStack, dontCull: true) : Benefic;
+            
+            return IsEnabled(Preset.AST_Retargets_Benefic) ? Benefic2.Retarget(healStack, dontCull: true) : Benefic2;
+        }
     }
-
     internal class AST_Lightspeed : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Lightspeed_Protection;       
-
+        protected internal override Preset Preset => Preset.AST_Lightspeed_Protection; 
         protected override uint Invoke(uint actionID) =>
             actionID is Lightspeed && HasStatusEffect(Buffs.Lightspeed)
                 ? All.SavageBlade
                 : actionID;
     }
-
     internal class AST_Raise_Alternative : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.AST_Raise_Alternative;
-
+        protected internal override Preset Preset => Preset.AST_Raise_Alternative;
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? IsEnabled(CustomComboPreset.AST_Raise_Alternative_Retarget)
+                ? IsEnabled(Preset.AST_Raise_Alternative_Retarget)
                     ? Ascend
                         .Retarget(Role.Swiftcast,
                             SimpleTarget.Stack.AllyToRaise)
@@ -602,4 +672,110 @@ internal partial class AST : Healer
                     : Ascend.AndRunMacro()
                 : actionID;
     }
+    internal class AST_Mit_ST : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.AST_Mit_ST;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Exaltation)
+                return actionID;
+            
+            var healStack = SimpleTarget.Stack.AllyToHeal;
+            
+            if (ActionReady(Exaltation))
+                return IsEnabled(Preset.AST_Retargets_Exaltation)
+                    ? Exaltation.Retarget(healStack, dontCull: true)
+                    : Exaltation;
+            
+            if (AST_Mit_ST_Options[0] && 
+                ActionReady(CelestialIntersection) && 
+                !HasStatusEffect(Buffs.Intersection, target: healStack))
+                return IsEnabled(Preset.AST_Retargets_CelestialIntersection)
+                    ? CelestialIntersection.Retarget(Exaltation ,healStack, dontCull: true)
+                    : CelestialIntersection;
+            
+            if (AST_Mit_ST_Options[1] &&
+                ActionReady(EssentialDignity) &&
+                GetTargetHPPercent(healStack) < AST_Mit_ST_EssentialDignityThreshold)
+                return IsEnabled(Preset.AST_Retargets_EssentialDignity)
+                    ? EssentialDignity.Retarget(Exaltation, healStack, dontCull: true)
+                    : EssentialDignity;
+            
+            return actionID;
+        }
+    }
+    internal class AST_Mit_AoE : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.AST_Mit_AoE;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not CollectiveUnconscious)
+                return actionID;
+
+            if (ActionReady(CollectiveUnconscious))
+                return CollectiveUnconscious;
+
+            if (ActionReady(OriginalHook(NeutralSect)))
+                return OriginalHook(NeutralSect);
+
+            if (HasStatusEffect(Buffs.NeutralSect) && !HasStatusEffect(Buffs.NeutralSectShield))
+                return OriginalHook(AspectedHelios);
+
+            return actionID;
+        }
+    }
+    internal class AST_Retargets : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.AST_Retargets;
+        protected override uint Invoke(uint actionID)
+        {
+            var healStack = SimpleTarget.Stack.AllyToHeal;
+            
+            if (!EZ.Throttle("ASTRetargetingFeature", TS.FromSeconds(.1)))
+                return actionID;
+
+            if (IsEnabled(Preset.AST_Retargets_Benefic))
+            {
+                Benefic.Retarget(healStack, dontCull: true);
+                Benefic2.Retarget(healStack, dontCull: true);
+            }
+
+            if (IsEnabled(Preset.AST_Retargets_AspectedBenefic))
+                AspectedBenefic.Retarget(healStack, dontCull: true);
+
+            if (IsEnabled(Preset.AST_Retargets_EssentialDignity))
+                EssentialDignity.Retarget(healStack, dontCull: true);
+
+            if (IsEnabled(Preset.AST_Retargets_Exaltation))
+                Exaltation.Retarget(healStack, dontCull: true);
+
+            if (IsEnabled(Preset.AST_Retargets_Synastry))
+                Synastry.Retarget(healStack, dontCull: true);
+
+            if (IsEnabled(Preset.AST_Retargets_CelestialIntersection))
+                CelestialIntersection.Retarget(healStack, dontCull: true);
+
+            if (IsEnabled(Preset.AST_Retargets_HealCards))
+            {
+                OriginalHook(Play2).Retarget(Play2, healStack, dontCull: true);
+                OriginalHook(Play3).Retarget(Play3, healStack, dontCull: true);
+            }
+
+            if (IsEnabled(Preset.AST_Retargets_EarthlyStar))
+            {
+                var starTarget =
+                    (AST_EarthlyStarOptions[0]
+                        ? SimpleTarget.HardTarget.IfHostile()
+                        : null) ??
+                    (AST_EarthlyStarOptions[1]
+                        ? SimpleTarget.HardTarget.IfFriendly()
+                        : null) ??
+                    SimpleTarget.Self;
+                EarthlyStar.Retarget(starTarget, dontCull: true);
+            }
+
+            return actionID;
+        }
+    }
+    #endregion
 }

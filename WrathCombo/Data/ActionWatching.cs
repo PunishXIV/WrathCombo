@@ -23,7 +23,6 @@ using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
-
 namespace WrathCombo.Data;
 
 public static class ActionWatching

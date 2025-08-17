@@ -1,5 +1,6 @@
 using Dalamud.Configuration;
 using ECommons.DalamudServices;
+using ECommons.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
-using ECommons.Logging;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.Extensions;
@@ -15,415 +15,414 @@ using WrathCombo.Services;
 using WrathCombo.Window;
 using Debug = WrathCombo.Window.Tabs.Debug;
 
-namespace WrathCombo.Core
+namespace WrathCombo.Core;
+
+/// <summary> Plugin configuration. </summary>
+[Serializable]
+public class PluginConfiguration : IPluginConfiguration
 {
-    /// <summary> Plugin configuration. </summary>
-    [Serializable]
-    public class PluginConfiguration : IPluginConfiguration
-    {
         #region Version
 
-        /// <summary> Gets or sets the configuration version. </summary>
-        public int Version { get; set; } = 5;
+    /// <summary> Gets or sets the configuration version. </summary>
+    public int Version { get; set; } = 5;
 
         #endregion
 
         #region EnabledActions
 
-        /// <summary> Gets or sets the collection of enabled combos. </summary>
-        [JsonProperty("EnabledActionsV6")]
-        public HashSet<CustomComboPreset> EnabledActions { get; set; } = [];
+    /// <summary> Gets or sets the collection of enabled combos. </summary>
+    [JsonProperty("EnabledActionsV6")]
+    public HashSet<Preset> EnabledActions { get; set; } = [];
 
         #endregion
 
         #region Settings Options
 
-        /// <summary> Gets or sets a value indicating whether to output combat log to the chatbox. </summary>
-        public bool EnabledOutputLog { get; set; } = false;
+    /// <summary> Gets or sets a value indicating whether to output combat log to the chatbox. </summary>
+    public bool EnabledOutputLog { get; set; } = false;
 
-        /// <summary> Gets or sets a value indicating whether to hide combos which conflict with enabled presets. </summary>
-        public bool HideConflictedCombos { get; set; } = false;
+    /// <summary> Gets or sets a value indicating whether to hide combos which conflict with enabled presets. </summary>
+    public bool HideConflictedCombos { get; set; } = false;
 
-        /// <summary> Gets or sets a value indicating whether to hide the children of a feature if it is disabled. </summary>
-        public bool HideChildren { get; set; } = false;
+    /// <summary> Gets or sets a value indicating whether to hide the children of a feature if it is disabled. </summary>
+    public bool HideChildren { get; set; } = false;
 
-        /// <summary> Gets or sets the offset of the melee range check. Default is 0. </summary>
-        public double MeleeOffset { get; set; } = 0;
+    /// <summary> Gets or sets the offset of the melee range check. Default is 0. </summary>
+    public double MeleeOffset { get; set; } = 0;
 
-        public bool BlockSpellOnMove = false;
+    public bool BlockSpellOnMove = false;
 
-        public Vector4 TargetHighlightColor { get; set; } = new() { W = 1, X = 0.5f, Y = 0.5f, Z = 0.5f };
+    public Vector4 TargetHighlightColor { get; set; } = new() { W = 1, X = 0.5f, Y = 0.5f, Z = 0.5f };
 
-        public bool OutputOpenerLogs;
+    public bool OutputOpenerLogs;
 
-        public float MovementLeeway = 0f;
+    public float MovementLeeway = 0f;
 
-        public float OpenerTimeout = 4f;
+    public float OpenerTimeout = 4f;
 
-        public bool PerformanceMode = false;
+    public bool PerformanceMode = false;
 
-        public int Throttle = 50;
+    public int Throttle = 50;
 
-        public double InterruptDelay  = 0.0f;
+    public double InterruptDelay  = 0.0f;
         
-        public int MaximumWeavesPerWindow = 2;
+    public int MaximumWeavesPerWindow = 2;
 
-        public bool OpenToPvE = false;
+    public bool OpenToPvE = false;
 
-        public bool OpenToPvP = false;
+    public bool OpenToPvP = false;
 
-        public bool OpenToCurrentJob = false;
+    public bool OpenToCurrentJob = false;
 
-        public bool OpenToCurrentJobOnSwitch = false;
+    public bool OpenToCurrentJobOnSwitch = false;
 
         #region Target Settings
 
-        public bool RetargetHealingActionsToStack = false;
+    public bool RetargetHealingActionsToStack = false;
 
-        public bool AddOutOfPartyNPCsToRetargeting = false;
+    public bool AddOutOfPartyNPCsToRetargeting = false;
 
-        public bool UseUIMouseoverOverridesInDefaultHealStack = false;
+    public bool UseUIMouseoverOverridesInDefaultHealStack = false;
 
-        public bool UseFieldMouseoverOverridesInDefaultHealStack = false;
+    public bool UseFieldMouseoverOverridesInDefaultHealStack = false;
 
-        public bool UseFocusTargetOverrideInDefaultHealStack = false;
+    public bool UseFocusTargetOverrideInDefaultHealStack = false;
 
-        public bool UseLowestHPOverrideInDefaultHealStack = false;
+    public bool UseLowestHPOverrideInDefaultHealStack = false;
 
-        public bool UseCustomHealStack = false;
+    public bool UseCustomHealStack = false;
 
-        // Just has value so the UI element for it is more obvious from the get-go
-        public string[] CustomHealStack = [
-            "FocusTarget",
-            "HardTarget",
-            "Self",
-        ];
+    // Just has value so the UI element for it is more obvious from the get-go
+    public string[] CustomHealStack = [
+        "FocusTarget",
+        "HardTarget",
+        "Self",
+    ];
 
-        public string[] RaiseStack = [
-            "AnyHealer",
-            "AnyTank",
-            "AnyRaiser",
-            "AnyDeadPartyMember",
-        ];
+    public string[] RaiseStack = [
+        "AnyHealer",
+        "AnyTank",
+        "AnyRaiser",
+        "AnyDeadPartyMember",
+    ];
 
-        #endregion
+    #endregion
 
-        public bool OutputRezMacro = false;
+    public bool OutputRezMacro = false;
 
-        public string RezMacro = "Raising <t>";
+    public string RezMacro = "Raising <t>";
 
-        public bool ActionChanging = true;
+    public bool ActionChanging = true;
 
-        internal void SetActionChanging(bool? newValue = null)
+    internal void SetActionChanging(bool? newValue = null)
+    {
+        if (newValue is not null && newValue != ActionChanging)
         {
-            if (newValue is not null && newValue != ActionChanging)
-            {
-                ActionChanging = newValue.Value;
-                Save();
-            }
-
-            // Checks if action replacing is not in line with the setting
-            if (ActionChanging && !Service.ActionReplacer.getActionHook.IsEnabled)
-                Service.ActionReplacer.getActionHook.Enable();
-            if (!ActionChanging && Service.ActionReplacer.getActionHook.IsEnabled)
-                Service.ActionReplacer.getActionHook.Disable();
+            ActionChanging = newValue.Value;
+            Save();
         }
 
-        public bool ShowHiddenFeatures = false;
+        // Checks if action replacing is not in line with the setting
+        if (ActionChanging && !Service.ActionReplacer.getActionHook.IsEnabled)
+            Service.ActionReplacer.getActionHook.Enable();
+        if (!ActionChanging && Service.ActionReplacer.getActionHook.IsEnabled)
+            Service.ActionReplacer.getActionHook.Disable();
+    }
 
-        public bool SuppressQueuedActions = true;
+    public bool ShowHiddenFeatures = false;
+
+    public bool SuppressQueuedActions = true;
         
-        public bool UILeftColumnCollapsed = false;
+    public bool UILeftColumnCollapsed = false;
 
         #endregion
 
         #region AutoAction Settings
-        public Dictionary<CustomComboPreset, bool> AutoActions { get; set; } = [];
+    public Dictionary<Preset, bool> AutoActions { get; set; } = [];
 
-        public AutoRotationConfig RotationConfig { get; set; } = new();
+    public AutoRotationConfig RotationConfig { get; set; } = new();
 
-        public Dictionary<uint, uint> IgnoredNPCs { get; set; } = new();
+    public Dictionary<uint, uint> IgnoredNPCs { get; set; } = new();
 
         #endregion
 
         #region Custom Float Values
 
-        [JsonProperty("CustomFloatValuesV6")]
-        internal static Dictionary<string, float> CustomFloatValues { get; set; } = [];
+    [JsonProperty("CustomFloatValuesV6")]
+    internal static Dictionary<string, float> CustomFloatValues { get; set; } = [];
 
-        /// <summary> Gets a custom float value. </summary>
-        public static float GetCustomFloatValue(string config, float defaultMinValue = 0)
+    /// <summary> Gets a custom float value. </summary>
+    public static float GetCustomFloatValue(string config, float defaultMinValue = 0)
+    {
+        if (!CustomFloatValues.TryGetValue(config, out float configValue))
         {
-            if (!CustomFloatValues.TryGetValue(config, out float configValue))
-            {
-                SetCustomFloatValue(config, defaultMinValue);
-                return defaultMinValue;
-            }
-
-            return configValue;
+            SetCustomFloatValue(config, defaultMinValue);
+            return defaultMinValue;
         }
 
-        /// <summary> Sets a custom float value. </summary>
-        public static void SetCustomFloatValue(string config, float value) => CustomFloatValues[config] = value;
+        return configValue;
+    }
+
+    /// <summary> Sets a custom float value. </summary>
+    public static void SetCustomFloatValue(string config, float value) => CustomFloatValues[config] = value;
 
         #endregion
 
         #region Custom Int Values
 
-        [JsonProperty("CustomIntValuesV6")]
-        internal static Dictionary<string, int> CustomIntValues { get; set; } = [];
+    [JsonProperty("CustomIntValuesV6")]
+    internal static Dictionary<string, int> CustomIntValues { get; set; } = [];
 
-        /// <summary> Gets a custom integer value. </summary>
-        public static int GetCustomIntValue(string config, int defaultMinVal = 0)
+    /// <summary> Gets a custom integer value. </summary>
+    public static int GetCustomIntValue(string config, int defaultMinVal = 0)
+    {
+        if (!CustomIntValues.TryGetValue(config, out int configValue))
         {
-            if (!CustomIntValues.TryGetValue(config, out int configValue))
-            {
-                SetCustomIntValue(config, defaultMinVal);
-                return defaultMinVal;
-            }
-
-            return configValue;
+            SetCustomIntValue(config, defaultMinVal);
+            return defaultMinVal;
         }
 
-        /// <summary> Sets a custom integer value. </summary>
-        public static void SetCustomIntValue(string config, int value) => CustomIntValues[config] = value;
+        return configValue;
+    }
+
+    /// <summary> Sets a custom integer value. </summary>
+    public static void SetCustomIntValue(string config, int value) => CustomIntValues[config] = value;
 
         #endregion
 
         #region Custom Int Array Values
-        [JsonProperty("CustomIntArrayValuesV6")]
-        internal static Dictionary<string, int[]> CustomIntArrayValues { get; set; } = [];
+    [JsonProperty("CustomIntArrayValuesV6")]
+    internal static Dictionary<string, int[]> CustomIntArrayValues { get; set; } = [];
 
-        /// <summary> Gets a custom integer array value. </summary>
-        public static int[] GetCustomIntArrayValue(string config)
+    /// <summary> Gets a custom integer array value. </summary>
+    public static int[] GetCustomIntArrayValue(string config)
+    {
+        if (!CustomIntArrayValues.TryGetValue(config, out int[]? configValue))
         {
-            if (!CustomIntArrayValues.TryGetValue(config, out int[]? configValue))
-            {
-                SetCustomIntArrayValue(config, []);
-                return [];
-            }
-
-            return configValue;
+            SetCustomIntArrayValue(config, []);
+            return [];
         }
 
-        /// <summary> Sets a custom integer array value. </summary>
-        public static void SetCustomIntArrayValue(string config, int[] value) => CustomIntArrayValues[config] = value;
+        return configValue;
+    }
+
+    /// <summary> Sets a custom integer array value. </summary>
+    public static void SetCustomIntArrayValue(string config, int[] value) => CustomIntArrayValues[config] = value;
 
         #endregion
 
         #region Custom Bool Values
 
-        [JsonProperty("CustomBoolValuesV6")]
-        internal static Dictionary<string, bool> CustomBoolValues { get; set; } = [];
+    [JsonProperty("CustomBoolValuesV6")]
+    internal static Dictionary<string, bool> CustomBoolValues { get; set; } = [];
 
-        /// <summary> Gets a custom boolean value. </summary>
-        public static bool GetCustomBoolValue(string config)
+    /// <summary> Gets a custom boolean value. </summary>
+    public static bool GetCustomBoolValue(string config)
+    {
+        if (!CustomBoolValues.TryGetValue(config, out bool configValue))
         {
-            if (!CustomBoolValues.TryGetValue(config, out bool configValue))
-            {
-                SetCustomBoolValue(config, false);
-                return false;
-            }
-
-            return configValue;
+            SetCustomBoolValue(config, false);
+            return false;
         }
 
-        /// <summary> Sets a custom boolean value. </summary>
-        public static void SetCustomBoolValue(string config, bool value) => CustomBoolValues[config] = value;
+        return configValue;
+    }
+
+    /// <summary> Sets a custom boolean value. </summary>
+    public static void SetCustomBoolValue(string config, bool value) => CustomBoolValues[config] = value;
 
         #endregion
 
         #region Custom Bool Array Values
 
-        [JsonProperty("CustomBoolArrayValuesV6")]
-        internal static Dictionary<string, bool[]> CustomBoolArrayValues { get; set; } = [];
+    [JsonProperty("CustomBoolArrayValuesV6")]
+    internal static Dictionary<string, bool[]> CustomBoolArrayValues { get; set; } = [];
 
-        /// <summary> Gets a custom boolean array value. </summary>
-        public static bool[] GetCustomBoolArrayValue(string config)
+    /// <summary> Gets a custom boolean array value. </summary>
+    public static bool[] GetCustomBoolArrayValue(string config)
+    {
+        if (!CustomBoolArrayValues.TryGetValue(config, out bool[]? configValue))
         {
-            if (!CustomBoolArrayValues.TryGetValue(config, out bool[]? configValue))
-            {
-                SetCustomBoolArrayValue(config, Array.Empty<bool>());
-                return Array.Empty<bool>();
-            }
-
-            return configValue;
+            SetCustomBoolArrayValue(config, Array.Empty<bool>());
+            return Array.Empty<bool>();
         }
 
-        /// <summary> Sets a custom boolean array value. </summary>
-        public static void SetCustomBoolArrayValue(string config, bool[] value) => CustomBoolArrayValues[config] = value;
+        return configValue;
+    }
+
+    /// <summary> Sets a custom boolean array value. </summary>
+    public static void SetCustomBoolArrayValue(string config, bool[] value) => CustomBoolArrayValues[config] = value;
 
         #endregion
 
         #region Job-specific
 
-        /// <summary> Gets active Blue Mage (BLU) spells. </summary>
-        public List<uint> ActiveBLUSpells { get; set; } = [];
+    /// <summary> Gets active Blue Mage (BLU) spells. </summary>
+    public List<uint> ActiveBLUSpells { get; set; } = [];
 
-        /// <summary> Gets or sets an array of 4 ability IDs to interact with the <see cref="CustomComboPreset.DNC_CustomDanceSteps"/> combo. </summary>
-        public uint[] DancerDanceCompatActionIDs { get; set; } = [ 0, 0, 0, 0, ];
+    /// <summary> Gets or sets an array of 4 ability IDs to interact with the <see cref="Preset.DNC_CustomDanceSteps"/> combo. </summary>
+    public uint[] DancerDanceCompatActionIDs { get; set; } = [ 0, 0, 0, 0, ];
 
         #endregion
 
         #region Preset Resetting
 
-        [JsonProperty]
-        private static Dictionary<string, bool> ResetFeatureCatalog { get; set; } = [];
+    [JsonProperty]
+    private static Dictionary<string, bool> ResetFeatureCatalog { get; set; } = [];
 
-        private static bool GetResetValues(string config)
+    private static bool GetResetValues(string config)
+    {
+        if (ResetFeatureCatalog.TryGetValue(config, out var value)) return value;
+
+        return false;
+    }
+
+    private static void SetResetValues(string config, bool value)
+    {
+        ResetFeatureCatalog[config] = value;
+    }
+
+    public void ResetFeatures(string config, int[] values)
+    {
+        Svc.Log.Debug($"{config} {GetResetValues(config)}");
+        if (!GetResetValues(config))
         {
-            if (ResetFeatureCatalog.TryGetValue(config, out var value)) return value;
+            bool needToResetMessagePrinted = false;
 
-            return false;
-        }
+            var presets = Enum.GetValues<Preset>().Cast<int>();
 
-        private static void SetResetValues(string config, bool value)
-        {
-            ResetFeatureCatalog[config] = value;
-        }
-
-        public void ResetFeatures(string config, int[] values)
-        {
-            Svc.Log.Debug($"{config} {GetResetValues(config)}");
-            if (!GetResetValues(config))
+            foreach (int value in values)
             {
-                bool needToResetMessagePrinted = false;
-
-                var presets = Enum.GetValues<CustomComboPreset>().Cast<int>();
-
-                foreach (int value in values)
+                Svc.Log.Debug(value.ToString());
+                if (presets.Contains(value))
                 {
-                    Svc.Log.Debug(value.ToString());
-                    if (presets.Contains(value))
+                    var preset = Enum.GetValues<Preset>()
+                        .Where(preset => (int)preset == value)
+                        .First();
+
+                    if (!PresetStorage.IsEnabled(preset)) continue;
+
+                    if (!needToResetMessagePrinted)
                     {
-                        var preset = Enum.GetValues<CustomComboPreset>()
-                            .Where(preset => (int)preset == value)
-                            .First();
-
-                        if (!PresetStorage.IsEnabled(preset)) continue;
-
-                        if (!needToResetMessagePrinted)
-                        {
-                            DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
-                            needToResetMessagePrinted = !needToResetMessagePrinted;
-                        }
-
-                        var info = preset.GetComboAttribute();
-                        DuoLog.Error($"- {info.JobName}: {info.Name}");
-                        EnabledActions.Remove(preset);
+                        DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
+                        needToResetMessagePrinted = !needToResetMessagePrinted;
                     }
-                }
 
-                if (needToResetMessagePrinted)
-                    DuoLog.Error($"Please re-enable these features to use them again. We apologise for the inconvenience");
+                    var info = preset.GetComboAttribute();
+                    DuoLog.Error($"- {info.JobName}: {info.Name}");
+                    EnabledActions.Remove(preset);
+                }
             }
-            SetResetValues(config, true);
-            Save();
+
+            if (needToResetMessagePrinted)
+                DuoLog.Error($"Please re-enable these features to use them again. We apologise for the inconvenience");
         }
+        SetResetValues(config, true);
+        Save();
+    }
 
         #endregion
 
         #region Other (SpecialEvent, MotD)
 
-        /// <summary> Hides the message of the day. </summary>
-        public bool HideMessageOfTheDay { get; set; } = false;
+    /// <summary> Hides the message of the day. </summary>
+    public bool HideMessageOfTheDay { get; set; } = false;
 
-        /// <summary>
-        ///     Whether the Major Changes window was hidden for a
-        ///     specific version.
-        /// </summary>
-        /// <seealso cref="MajorChangesWindow"/>
-        public Version HideMajorChangesForVersion { get; set; } =
-            System.Version.Parse("0.0.0");
+    /// <summary>
+    ///     Whether the Major Changes window was hidden for a
+    ///     specific version.
+    /// </summary>
+    /// <seealso cref="MajorChangesWindow"/>
+    public Version HideMajorChangesForVersion { get; set; } =
+        System.Version.Parse("0.0.0");
 
-        /// <summary>
-        ///     If the DTR Bar text should be shortened.
-        /// </summary>
-        public bool ShortDTRText { get; set; } = false;
+    /// <summary>
+    ///     If the DTR Bar text should be shortened.
+    /// </summary>
+    public bool ShortDTRText { get; set; } = false;
 
         #endregion
 
         #region Saving
 
-        /// <summary>
-        ///     The queue of items to be saved.
-        /// </summary>
-        internal static readonly Queue<(PluginConfiguration, StackTrace)> SaveQueue = [];
+    /// <summary>
+    ///     The queue of items to be saved.
+    /// </summary>
+    internal static readonly Queue<(PluginConfiguration, StackTrace)> SaveQueue = [];
 
-        /// <summary>
-        ///     Whether an item is currently being saved.
-        /// </summary>
-        private static bool _isSaving;
+    /// <summary>
+    ///     Whether an item is currently being saved.
+    /// </summary>
+    private static bool _isSaving;
 
-        /// <summary>
-        ///     Process the <see cref="SaveQueue"/>, trying to save each item.
-        /// </summary>
-        /// <seealso cref="Save"/>
-        internal static void ProcessSaveQueue()
+    /// <summary>
+    ///     Process the <see cref="SaveQueue"/>, trying to save each item.
+    /// </summary>
+    /// <seealso cref="Save"/>
+    internal static void ProcessSaveQueue()
+    {
+        if (_isSaving || SaveQueue.Count == 0) return;
+
+        _isSaving = true;
+        var (config, trace) = SaveQueue.Dequeue();
+
+        try
         {
-            if (_isSaving || SaveQueue.Count == 0) return;
+            Svc.PluginInterface.SavePluginConfig(config);
+            _isSaving = false;
+        }
+        catch (Exception)
+        {
+            Svc.Framework.Run(() => RetrySave(config, trace));
+        }
+    }
 
-            _isSaving = true;
-            var (config, trace) = SaveQueue.Dequeue();
+    internal static void RetrySave
+        (PluginConfiguration config, StackTrace trace)
+    {
+        var success = false;
+        var retryCount = 0;
 
+        while (!success)
+        {
             try
             {
                 Svc.PluginInterface.SavePluginConfig(config);
+                success = true;
+            }
+            catch (Exception e)
+            {
+                retryCount++;
+                if (retryCount < 3)
+                {
+                    Task.Delay(20).Wait();
+                    continue;
+                }
+
+                PluginLog.Error(
+                    "Failed to save configuration after 3 retries.\n" +
+                    e.Message + "\n" + trace);
                 _isSaving = false;
-            }
-            catch (Exception)
-            {
-                Svc.Framework.Run(() => RetrySave(config, trace));
-            }
-        }
-
-        internal static void RetrySave
-            (PluginConfiguration config, StackTrace trace)
-        {
-            var success = false;
-            var retryCount = 0;
-
-            while (!success)
-            {
-                try
-                {
-                    Svc.PluginInterface.SavePluginConfig(config);
-                    success = true;
-                }
-                catch (Exception e)
-                {
-                    retryCount++;
-                    if (retryCount < 3)
-                    {
-                        Task.Delay(20).Wait();
-                        continue;
-                    }
-
-                    PluginLog.Error(
-                        "Failed to save configuration after 3 retries.\n" +
-                        e.Message + "\n" + trace);
-                    _isSaving = false;
-                    return;
-                }
-            }
-
-            _isSaving = false;
-        }
-
-        /// <summary> Set the configuration to be saved to disk. </summary>
-        /// <remarks>
-        ///     Configurations set to be saved will be processed in the order they
-        ///     were added, each frame.
-        /// </remarks>
-        /// <seealso cref="SaveQueue"/>
-        public void Save()
-        {
-            if (Debug.DebugConfig)
                 return;
-
-            SaveQueue.Enqueue((this, new StackTrace()));
+            }
         }
+
+        _isSaving = false;
+    }
+
+    /// <summary> Set the configuration to be saved to disk. </summary>
+    /// <remarks>
+    ///     Configurations set to be saved will be processed in the order they
+    ///     were added, each frame.
+    /// </remarks>
+    /// <seealso cref="SaveQueue"/>
+    public void Save()
+    {
+        if (Debug.DebugConfig)
+            return;
+
+        SaveQueue.Enqueue((this, new StackTrace()));
+    }
 
         #endregion
-    }
 }

@@ -122,7 +122,7 @@ You would simply return the action, with Retargeting:
 return action.Retarget(SimpleTarget.AnyEnemy);
 ```
 
-Then you would tag the Preset in `CustomComboPreset.cs` with the
+Then you would tag the Preset in `Preset.cs` with the
 `[Retargeted]` or `[PossiblyRetargeted]` attribute, depending on whether the Preset
 is always Retargeted or if it depends on another setting, respectively.
 ```csharp

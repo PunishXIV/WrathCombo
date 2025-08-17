@@ -1,6 +1,8 @@
 #region
 
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using Lumina.Excel.Sheets;
@@ -11,8 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.GameFunctions;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;

@@ -12,7 +12,6 @@ using WrathCombo.Core;
 using WrathCombo.Data;
 using WrathCombo.Services;
 using static WrathCombo.Data.ActionWatching;
-
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions

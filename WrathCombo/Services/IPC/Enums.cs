@@ -135,7 +135,8 @@ public enum CancellationReason
                  "https://github.com/PunishXIV/WrathCombo/commits/main/res/ipc_status.txt")]
     AllServicesSuspended = 4,
 
-    [Description("Player job has been changed and leases will have to be reapplied.")]
+    [Description(
+        "Player job has been changed and leases will have to be reapplied.")]
     JobChanged = 5,
 }
 
@@ -157,11 +158,9 @@ public enum SetResult
     [Description("IPC services are currently disabled.")]
     IPCDisabled = 10,
 
-    [Description("Invalid lease.")]
-    InvalidLease = 11,
+    [Description("Invalid lease.")] InvalidLease = 11,
 
-    [Description("Blacklisted lease.")]
-    BlacklistedLease = 12,
+    [Description("Blacklisted lease.")] BlacklistedLease = 12,
 
     [Description("Configuration you are trying to set is already set.")]
     Duplicate = 13,
@@ -222,15 +221,22 @@ public enum AutoRotationConfigOption
     /// <seealso cref="HealerSettings.AutoCleanse" />
     [ConfigValueType(typeof(bool))] AutoCleanse = 11,
 
-    /// <seealso cref="HealerSettings.IncludeNPCs"/>
+    /// <seealso cref="HealerSettings.IncludeNPCs" />
     [ConfigValueType(typeof(bool))] IncludeNPCs = 12,
 
     /// <seealso cref="DPSSettings.OnlyAttackInCombat" />
     [ConfigValueType(typeof(bool))] OnlyAttackInCombat = 13,
 
+    /// <seealso cref="AutoRotationConfig.OrbwalkerIntegration" />
     [ConfigValueType(typeof(bool))] OrbwalkerIntegration = 14,
 
+    /// <seealso cref="HealerSettings.AutoRezOutOfParty" />
     [ConfigValueType(typeof(bool))] AutoRezOutOfParty = 15,
+
+    /// <seealso cref="DPSSettings.DPSAoETargets" />
+    [ConfigValueType(typeof(int))] DPSAoETargets = 16,
+
+    [ConfigValueType(typeof(int))] SingleTargetExcogHPP = 17,
 }
 
 #region Type Attribute

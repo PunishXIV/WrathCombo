@@ -4,7 +4,6 @@ using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
-using ImGuiNET;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +14,6 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
-
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -428,6 +426,11 @@ internal abstract partial class CustomComboFunctions
     ///     Whether enemy targets are what is searched;
     ///     if <see langword="false" /> then will search for allies instead.
     /// </param>
+    /// <param name="checkInvincible">
+    ///     Whether enemies should be checked for invincibility.<br />
+    ///     Should only be set to <see langword="false" /> by
+    ///     <see cref="CustomComboFunctions.TargetIsInvincible"/>.
+    /// </param>
     /// <returns>
     ///     Number of enemies within the specified AoE shape.
     /// </returns>
@@ -440,7 +443,8 @@ internal abstract partial class CustomComboFunctions
         IGameObject? target = null,
         float width = 0f,
         bool checkIgnoredList = false,
-        bool enemies = true)
+        bool enemies = true,
+        bool checkInvincible = true)
         where T : IAoeShape
     {
         // Bail if the player is not available
@@ -496,7 +500,8 @@ internal abstract partial class CustomComboFunctions
             return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
                    o.IsWithinRange(60f) &&
                    o.IsHostile() &&
-                   !TargetIsInvincible(o) &&
+                   (!checkInvincible ||
+                    !TargetIsInvincible(o)) &&
                    (!checkIgnoredList ||
                     !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId));
         }

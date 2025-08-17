@@ -5,7 +5,7 @@ Per [Issue #99](https://github.com/PunishXIV/WrathCombo/issues/99), Burst Holdin
 As a workaround until such time though, you can create a macro to toggle off the burst parts of Jobs within Wrath, to achieve a similar result.
 
 You can toggle off these options with `/wrath toggle <x>` in game.
-You can find the ID or internal name to provide as `<x>` by using `/wrath list set <y>` (replace `<y>` with your current job, like `/wrath list set DRK`), or by looking at the [`CustomComboPreset` File](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Combos/CustomComboPreset.cs) (see [this image](https://i.imgur.com/LsJ06DW.png) for how to read this)
+You can find the ID or internal name to provide as `<x>` by using `/wrath list set <y>` (replace `<y>` with your current job, like `/wrath list set DRK`), or by looking at the [`Preset` File](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Combos/Preset.cs) (see [this image](https://i.imgur.com/LsJ06DW.png) for how to read this)
 
 Below is a community-provided list of basic burst-holding macros for each job.
 
@@ -129,17 +129,10 @@ Below is a community-provided list of basic burst-holding macros for each job.
 <summary>NIN</summary>
 
 ```
-/wrath toggle 10018
-/wrath toggle 10019
-/wrath toggle 10042
-/wrath toggle 10017
-/wrath toggle 10036
+/wrath toggle 10006
+/wrath toggle 10007
+/wrath toggle 10022
 /wrath toggle 10023
-/wrath toggle 10046
-/wrath toggle 10024
-/wrath toggle 10047
-/wrath toggle 10025
-/wrath toggle 10048
 ```
 
 </details>
@@ -183,14 +176,8 @@ Below is a community-provided list of basic burst-holding macros for each job.
 <summary>BRD</summary>
 
 ```
-/wrath toggle 3049
-/wrath toggle 3050
-/wrath toggle 3051
-/wrath toggle 3052
-/wrath toggle 3053
-/wrath toggle 3054
-/wrath toggle 3055
-/wrath toggle 3056
+/wrath toggle 3017
+/wrath toggle 3032
 ```
 
 </details>

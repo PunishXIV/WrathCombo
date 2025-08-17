@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
@@ -7,9 +5,10 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using System;
+using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-
 namespace WrathCombo.Extensions;
 
 public static class GameObjectExtensions
@@ -160,6 +159,14 @@ public static class GameObjectExtensions
     public static unsafe IGameObject? IfCanUseOn(this IGameObject? obj, uint actionId) =>
         obj != null && ActionManager.CanUseActionOnTarget(actionId, obj.Struct()) ? obj : null;
 
+
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+    ///     <see langword="null" /> if the target is not in combat.
+    /// </summary>
+    public static unsafe IGameObject? IfInCombat(this IGameObject? obj) =>
+        obj != null && obj is IBattleChara c && c.Struct()->InCombat ? obj : null;
+
     #endregion
 
     #region Target Checking (same as above, but returns a boolean)
@@ -268,6 +275,13 @@ public static class GameObjectExtensions
     /// </summary>
     public static unsafe bool CanUseOn(this IGameObject? obj, uint actionId) =>
         obj != null && ActionManager.CanUseActionOnTarget(actionId, obj.Struct());
+    
+/// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
+    ///     boolean check for if the object is in combat.
+    /// </summary>
+    public static unsafe bool IsInCombat(this IGameObject? obj) =>
+        obj != null && obj is IBattleChara c && c.Struct()->InCombat;
 
     #endregion
 

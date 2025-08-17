@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <ECommonsLocalPath>..\..\ECommons\ECommons\ECommons.csproj</ECommonsLocalPath>
+  </PropertyGroup>
+
+  <ItemGroup Condition="
+    '$(MSBuildProjectName)' == 'PunishLib' 
+    and Exists('$(ECommonsLocalPath)')">
+    <PackageReference Remove="ECommons" />
+    <ProjectReference Include="$(ECommonsLocalPath)" />
+  </ItemGroup>
+</Project>

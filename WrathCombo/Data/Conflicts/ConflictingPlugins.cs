@@ -1,14 +1,13 @@
 ﻿#region
 
-using System;
-using System.Linq;
-using System.Numerics;
 using Dalamud.Interface.Colors;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
-using ImGuiNET;
+using System;
+using System.Linq;
+using System.Numerics;
 using WrathCombo.Extensions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -123,7 +122,7 @@ public static class ConflictingPlugins
                                      : $" ({x.Reason})")));
             var tooltipText =
                 "The following plugins are known to conflict " +
-                $"with {Svc.PluginInterface.InternalName}:\n" +
+                $"with {P.Name}:\n" +
                 conflictingPluginsText +
                 "\n\nIt is recommended you disable these plugins, or their " +
                 "rotation\ncomponents, to prevent unexpected behavior and bugs.";
@@ -140,7 +139,7 @@ public static class ConflictingPlugins
 
             var tooltipText =
                 "The following plugins are known to conflict with\n" +
-                $"{Svc.PluginInterface.InternalName}'s Settings, which you have enabled:\n" +
+                $"{P.Name}'s Settings, which you have enabled:\n" +
                 conflictingSettingsText +
                 "\n\nIt is recommended you disable these plugins, or\n" +
                 "remove the conflicting setting in the plugins\n" +
@@ -155,18 +154,18 @@ public static class ConflictingPlugins
             currentConflicts = conflicts[ConflictType.Targeting];
             var tooltipText =
                 "Your configuration in the following plugins will conflict\n" +
-                $"with {Svc.PluginInterface.InternalName}'s enabled Action Retargeting:";
+                $"with {P.Name}'s enabled Action Retargeting:";
 
             foreach (var conflict in conflicts[ConflictType.Targeting])
                 tooltipText +=
                     $"\n- {conflict.Name} v{conflict.Version}" +
-                    $"\n    Actions Retargeted there and in {Svc.PluginInterface.InternalName}:\n        - " +
+                    $"\n    Actions Retargeted there and in {P.Name}:\n        - " +
                     string.Join("\n        - ", conflict.Reason.Split(','));
 
             tooltipText +=
                 "\n\nIt is recommended you disable these plugins, or\n" +
                 "remove the conflicting actions from their settings, or\n" +
-                $"disable Retargeting for the action in {Svc.PluginInterface.InternalName},\n" +
+                $"disable Retargeting for the action in {P.Name},\n" +
                 "to prevent unexpected behavior and bugs.";
 
             ShowWarning(ConflictType.Targeting, tooltipText, hasComboConflicts);
@@ -336,6 +335,18 @@ public static class ConflictingPlugins
             conflicts = conflicts.Append(new Conflict(
                     "BossMod", ConflictType.Settings,
                     "AI is enabled WITH targeting [check 'Disable auto-targeting']"))
+                .ToArray();
+        }
+
+        #endregion
+
+        #region BossModReborn
+
+        if (ConflictingPluginsChecks.BossModReborn.SettingConflicted)
+        {
+            conflicts = conflicts.Append(new Conflict(
+                    "BossModReborn", ConflictType.Settings,
+                    "AI is enabled WITH targeting [check 'Manual targeting']"))
                 .ToArray();
         }
 

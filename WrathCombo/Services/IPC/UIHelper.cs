@@ -1,19 +1,18 @@
 ﻿#region
 
+using Dalamud.Interface.Colors;
+using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Colors;
-using Dalamud.Interface.Utility;
-using ECommons.DalamudServices;
-using ECommons.ExcelServices;
-using ECommons.ImGuiMethods;
-using ImGuiNET;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
+
 // ReSharper disable VariableHidesOuterVariable
 
 #endregion
@@ -72,9 +71,9 @@ public class UIHelper(Leasing leasing)
     private Dictionary<string, (string controllers, bool state)>
         JobsControlled { get; } = new();
 
-    internal (string controllers, bool state)? JobControlled(uint job)
+    internal (string controllers, bool state)? JobControlled(Job job)
     {
-        var jobName = CustomComboFunctions.JobIDs.JobIDToShorthand(job);
+        var jobName = job.Shorthand();
 
         if (_jobsUpdated != _leasing.JobsUpdated)
             JobsControlled.Clear();
@@ -121,11 +120,12 @@ public class UIHelper(Leasing leasing)
 
     private DateTime? _presetsUpdated;
 
-    private ConcurrentDictionary<string, (string controllers, bool enabled, bool autoMode)>
+    private ConcurrentDictionary<string, (string controllers, bool enabled, bool
+            autoMode)>
         PresetsControlled { get; } = new();
 
     internal (string controllers, bool enabled, bool autoMode)?
-        PresetControlled(CustomComboPreset preset)
+        PresetControlled(Preset preset)
     {
         var presetName = preset.ToString();
 
@@ -281,8 +281,8 @@ public class UIHelper(Leasing leasing)
     // Method to display the controlled indicator, which lists the plugins
     private bool ShowIPCControlledIndicator
     (bool? forAutoRotation = null,
-        uint? forJob = null,
-        CustomComboPreset? forPreset = null,
+        Job? forJob = null,
+        Preset? forPreset = null,
         string? forAutoRotationConfig = null,
         bool showX = true,
         bool shortDisplay = false)
@@ -299,16 +299,16 @@ public class UIHelper(Leasing leasing)
             revokeID += "ar" + forAutoRotation;
         }
 
-        if (forJob is not null)
+        if (forJob is Job job)
         {
-            if ((controlled = JobControlled((uint)forJob)) is null)
+            if ((controlled = JobControlled(job)) is null)
                 return false;
             revokeID += "jb" + forJob;
         }
 
         if (forPreset is not null)
         {
-            var check = PresetControlled((CustomComboPreset)forPreset);
+            var check = PresetControlled((Preset)forPreset);
             if (check is null)
                 return false;
             controlled = (check.Value.controllers, check.Value.enabled);
@@ -385,8 +385,8 @@ public class UIHelper(Leasing leasing)
     private bool ShowIPCControlledCheckbox
     (string label, ref bool backupVar,
         bool? forAutoRotation = null,
-        uint? forJob = null,
-        CustomComboPreset? forPreset = null,
+        Job? forJob = null,
+        Preset? forPreset = null,
         bool presetShowState = true,
         string? forAutoRotationConfig = null)
     {
@@ -403,12 +403,12 @@ public class UIHelper(Leasing leasing)
         {
             if (forAutoRotation is not null)
                 controlled = AutoRotationStateControlled();
-            if (forJob is not null)
-                controlled = JobControlled((uint)forJob);
+            if (forJob is Job job)
+                controlled = JobControlled(job);
             if (forPreset is not null)
             {
                 var check =
-                    PresetControlled((CustomComboPreset)forPreset);
+                    PresetControlled((Preset)forPreset);
                 if (check is null)
                     controlled = null;
                 else
@@ -461,9 +461,9 @@ public class UIHelper(Leasing leasing)
         ImGui.SameLine();
 
         if (forPreset is null)
-            ImGuiHelpers.SafeTextColoredWrapped(ImGuiColors.DalamudGrey, label);
+            ImGui.TextColoredWrapped(ImGuiColors.DalamudGrey, label);
         else
-            ImGuiHelpers.SafeTextColoredWrapped(ImGuiColors.DalamudGrey,
+            ImGui.TextColoredWrapped(ImGuiColors.DalamudGrey,
                 label.Contains("Auto") ? "" : label.Split('#')[0]);
 
         ImGui.PopStyleColor(2);
@@ -496,7 +496,6 @@ public class UIHelper(Leasing leasing)
 
             if (controlled is null)
             {
-                ImGuiEx.SetNextItemWidthScaled(200);
                 return DefaultUI(label, ref backupVar);
             }
         }
@@ -520,7 +519,7 @@ public class UIHelper(Leasing leasing)
         ImGui.EndDisabled();
 
         ImGui.SameLine();
-        ImGuiHelpers.SafeTextColoredWrapped(ImGuiColors.DalamudGrey, label);
+        ImGui.TextColoredWrapped(ImGuiColors.DalamudGrey, label);
 
         ImGui.PopStyleColor(3);
         ImGui.EndGroup();
@@ -595,6 +594,54 @@ public class UIHelper(Leasing leasing)
         return false;
     }
 
+    private bool ShowIPCControlledNumberInput
+        (string label, ref int? backupVar, string? forAutoRotationConfig = null)
+    {
+        bool DefaultUI(string label, ref int? backupVar)
+        {
+            return ImGuiEx.InputInt(100f.Scale(), label, ref backupVar);
+        }
+
+        (string controllers, int state)? controlled = null;
+
+        #region Bail if not needed
+
+        try
+        {
+            if (forAutoRotationConfig is not null)
+                controlled = AutoRotationConfigControlled(forAutoRotationConfig);
+
+            if (controlled is null)
+            {
+                return DefaultUI(label, ref backupVar);
+            }
+        }
+        catch (Exception e)
+        {
+            Logging.Error("Error in UIHelper.\n" + e.Message);
+            return DefaultUI(label, ref backupVar);
+        }
+
+        #endregion
+
+        ImGui.BeginGroup();
+        ImGui.PushStyleColor(ImGuiCol.FrameBg, _backgroundColor);
+        ImGui.PushStyleColor(ImGuiCol.TextDisabled, _textColor);
+
+        var _ = controlled?.state;
+        ImGui.BeginDisabled();
+        ImGuiEx.InputInt(100f.Scale(), label, ref _);
+        ImGui.EndDisabled();
+
+        ImGui.PopStyleColor(2);
+        ImGui.EndGroup();
+
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip(OptionTooltip);
+
+        return false;
+    }
+
     /// <summary>
     ///     Button click method for Indicator to cancel plugin control.
     /// </summary>
@@ -619,11 +666,11 @@ public class UIHelper(Leasing leasing)
         ShowIPCControlledIndicator(forAutoRotation: true);
 
     public bool ShowIPCControlledIndicatorIfNeeded
-        (uint job, bool showX = true, bool shortDisplay = false) =>
+        (Job job, bool showX = true, bool shortDisplay = false) =>
         ShowIPCControlledIndicator
             (forJob: job, showX: showX, shortDisplay: shortDisplay);
 
-    public bool ShowIPCControlledIndicatorIfNeeded(CustomComboPreset preset) =>
+    public bool ShowIPCControlledIndicatorIfNeeded(Preset preset) =>
         ShowIPCControlledIndicator(forPreset: preset);
 
     public bool ShowIPCControlledIndicatorIfNeeded(string configName) =>
@@ -638,11 +685,11 @@ public class UIHelper(Leasing leasing)
         ShowIPCControlledCheckbox(label, ref backupVar, forAutoRotation: true);
 
     public bool ShowIPCControlledCheckboxIfNeeded
-        (string label, ref bool backupVar, uint job) =>
+        (string label, ref bool backupVar, Job job) =>
         ShowIPCControlledCheckbox(label, ref backupVar, forJob: job);
 
     public bool ShowIPCControlledCheckboxIfNeeded
-    (string label, ref bool backupVar, CustomComboPreset preset,
+    (string label, ref bool backupVar, Preset preset,
         bool showState) =>
         ShowIPCControlledCheckbox
             (label, ref backupVar, forPreset: preset, presetShowState: showState);
@@ -663,6 +710,11 @@ public class UIHelper(Leasing leasing)
         string? configName = null) =>
         ShowIPCControlledCombo(
             label, useDPSVar, ref dpsVar, ref healVar,
+            forAutoRotationConfig: configName);
+    
+    public bool ShowIPCControlledNumberInputIfNeeded
+    (string label, ref int? backupVar, string configName) =>
+        ShowIPCControlledNumberInput(label, ref backupVar,
             forAutoRotationConfig: configName);
 
     #endregion

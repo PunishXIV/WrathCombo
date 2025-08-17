@@ -1,12 +1,12 @@
 ﻿#region
 
+using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using ECommons.DalamudServices;
-using ECommons.ExcelServices;
 using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Core;
@@ -15,6 +15,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Window.Tabs;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+using static ECommons.ExcelServices.ExcelJobHelper;
 
 #endregion
 
@@ -128,7 +129,7 @@ public class Search(Leasing leasing)
     ///     Include both combos and options, but also jobs' options.
     /// </summary>
     [field: AllowNull, MaybeNull]
-    internal Dictionary<CustomComboPreset,
+    internal Dictionary<Preset,
             Dictionary<string, (bool enabled, bool autoMode)>>
         AllPresetsControlled
     {
@@ -218,21 +219,21 @@ public class Search(Leasing leasing)
     private DateTime _lastCacheUpdateForPresetStates = DateTime.MinValue;
 
     /// <summary>
-    ///     Recursively finds the root parent of a given CustomComboPreset.
+    ///     Recursively finds the root parent of a given Preset.
     /// </summary>
-    /// <param name="preset">The CustomComboPreset to find the root parent for.</param>
-    /// <returns>The root parent CustomComboPreset.</returns>
-    public CustomComboPreset GetRootParent(CustomComboPreset preset)
+    /// <param name="preset">The Preset to find the root parent for.</param>
+    /// <returns>The root parent Preset.</returns>
+    public Preset GetRootParent(Preset preset)
     {
         if (!Attribute.IsDefined(
-                typeof(CustomComboPreset).GetField(preset.ToString())!,
+                typeof(Preset).GetField(preset.ToString())!,
                 typeof(ParentComboAttribute)))
         {
             return preset;
         }
 
         var parentAttribute = (ParentComboAttribute)Attribute.GetCustomAttribute(
-            typeof(CustomComboPreset).GetField(preset.ToString())!,
+            typeof(Preset).GetField(preset.ToString())!,
             typeof(ParentComboAttribute)
         )!;
 
@@ -240,12 +241,12 @@ public class Search(Leasing leasing)
     }
 
     /// <summary>
-    ///     Cached list of <see cref="CustomComboPreset">Presets</see>, and most of
+    ///     Cached list of <see cref="Preset">Presets</see>, and most of
     ///     their attribute-based information.
     /// </summary>
     [field: AllowNull, MaybeNull]
     // ReSharper disable once MemberCanBePrivate.Global
-    internal Dictionary<string, (Job Job, CustomComboPreset ID,
+    internal Dictionary<string, (Job Job, Preset ID,
         CustomComboInfoAttribute Info, bool HasParentCombo, bool IsVariant, string
         ParentComboName, ComboType ComboType)> Presets
     {
@@ -255,7 +256,7 @@ public class Search(Leasing leasing)
                 .Select(preset => new
                 {
                     ID = preset,
-                    JobId = (Job)preset.Attributes().CustomComboInfo.JobID,
+                    JobId = preset.Attributes().CustomComboInfo.Job,
                     InternalName = preset.ToString(),
                     Info = preset.Attributes().CustomComboInfo!,
                     HasParentCombo = preset.Attributes().Parent != null,
@@ -277,7 +278,7 @@ public class Search(Leasing leasing)
     }
 
     /// <summary>
-    ///     Cached list of <see cref="CustomComboPreset">Presets</see>, and the
+    ///     Cached list of <see cref="Preset">Presets</see>, and the
     ///     state and Auto-Mode state of each.
     /// </summary>
     /// <remarks>
@@ -408,7 +409,7 @@ public class Search(Leasing leasing)
     {
         get
         {
-            var job = (Job)CustomComboFunctions.JobIDs.ClassToJob(JobID!.Value);
+            Job job = (WrathCombo.JobID!.Value).GetUpgradedJob();
 
             if (field != null && field.ContainsKey(job))
                 return field;
@@ -423,7 +424,7 @@ public class Search(Leasing leasing)
                 {
                     new
                     {
-                        Job = (Job)preset.Value.Info.JobID,
+                        Job = preset.Value.Info.Job,
                         Combo = preset.Key,
                         preset.Value.Info,
                         preset.Value.ComboType,
@@ -542,13 +543,13 @@ public class Search(Leasing leasing)
     ///     A wrapper for <see cref="Core.PluginConfiguration.AutoActions" /> with
     ///     IPC settings on top.
     /// </summary>
-    internal Dictionary<CustomComboPreset, bool> AutoActions =>
+    internal Dictionary<Preset, bool> AutoActions =>
         PresetStates
             .Where(x =>
-                Enum.Parse<CustomComboPreset>(x.Key).Attributes()
+                Enum.Parse<Preset>(x.Key).Attributes()
                     .AutoAction is not null)
             .ToDictionary(
-                preset => Enum.Parse<CustomComboPreset>(preset.Key),
+                preset => Enum.Parse<Preset>(preset.Key),
                 preset => preset.Value[ComboStateKeys.AutoMode]
             );
 
@@ -556,10 +557,10 @@ public class Search(Leasing leasing)
     ///     A wrapper for <see cref="Core.PluginConfiguration.EnabledActions" /> with
     ///     IPC settings on top.
     /// </summary>
-    internal HashSet<CustomComboPreset> EnabledActions =>
+    internal HashSet<Preset> EnabledActions =>
         PresetStates
             .Where(preset => preset.Value[ComboStateKeys.Enabled])
-            .Select(preset => Enum.Parse<CustomComboPreset>(preset.Key))
+            .Select(preset => Enum.Parse<Preset>(preset.Key))
             .ToHashSet();
 
     #endregion

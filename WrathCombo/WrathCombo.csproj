@@ -5,7 +5,7 @@
     <PropertyGroup>
         <Authors>Team Wrath</Authors>
         <Company>-</Company>
-        <Version>1.0.1.17</Version>
+        <Version>1.0.2.3</Version>
         <!-- This is the version that will be used when pushing to the repo.-->
         <Description>XIVCombo for very lazy players</Description>
         <Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
@@ -77,7 +77,7 @@
 
     <!-- Dalamud Packaging -->
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="12.0.0" />
+        <PackageReference Include="DalamudPackager" Version="13.0.0" />
         <PackageReference Include="ILRepack" Version="2.0.18"/>
     </ItemGroup>
 
@@ -105,13 +105,18 @@
             <Private>False</Private>
         </Reference>
 
-        <Reference Include="ImGui.NET">
-            <HintPath>$(DalamudLibPath)ImGui.NET.dll</HintPath>
+        <Reference Include="Dalamud.Bindings.ImGui">
+            <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGui.dll</HintPath>
             <Private>False</Private>
         </Reference>
 
-        <Reference Include="ImGuiScene">
-            <HintPath>$(DalamudLibPath)ImGuiScene.dll</HintPath>
+        <Reference Include="Dalamud.Bindings.ImPlot">
+            <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImPlot.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+
+        <Reference Include="Dalamud.Bindings.ImGuizmo">
+            <HintPath>$(DalamudLibPath)Dalamud.Bindings.ImGuizmo.dll</HintPath>
             <Private>False</Private>
         </Reference>
 

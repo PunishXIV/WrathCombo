@@ -28,7 +28,7 @@ internal partial class RPR
 
             // Prep for double Enshroud
             if (LevelChecked(PlentifulHarvest) &&
-                GetCooldownRemainingTime(ArcaneCircle) <= GCD * 2 + 1.5)
+                GetCooldownRemainingTime(ArcaneCircle) <= GCD + 1.5f)
                 return true;
 
             //2nd part of Double Enshroud
@@ -62,7 +62,7 @@ internal partial class RPR
             CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath))
         {
-            if (IsEnabled(CustomComboPreset.RPR_ST_SimpleMode))
+            if (IsEnabled(Preset.RPR_ST_SimpleMode))
             {
                 if (!InBossEncounter() && LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
                     GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= 8)
@@ -70,15 +70,10 @@ internal partial class RPR
 
                 if (InBossEncounter())
                 {
-                    //1st part double enshroud
-                    if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                        GetCooldownRemainingTime(ArcaneCircle) <= GCD * 2 + 1.5 && JustUsed(Enshroud))
-                        return true;
-
-                    //2nd part double enshroud
+                    //Double enshroud
                     if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
                         (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
-                        (JustUsed(VoidReaping) || JustUsed(CrossReaping)))
+                        (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                         return true;
 
                     //lvl 88+ general use
@@ -94,27 +89,20 @@ internal partial class RPR
                 }
             }
 
-            if (IsEnabled(CustomComboPreset.RPR_ST_AdvancedMode))
+            if (IsEnabled(Preset.RPR_ST_AdvancedMode))
             {
-                if (RPR_ST_ArcaneCircle_SubOption == 1 && !InBossEncounter())
-                {
-                    if (!HasStatusEffect(Buffs.Enshrouded) &&
-                        GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= RPR_SoDRefreshRange)
-                        return true;
-                }
+                if (RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() &&
+                    !HasStatusEffect(Buffs.Enshrouded) &&
+                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= RPR_SoDRefreshRange)
+                    return true;
 
-                if (RPR_ST_ArcaneCircle_SubOption == 0 || InBossEncounter() ||
-                    IsNotEnabled(CustomComboPreset.RPR_ST_ArcaneCircle))
+                if (RPR_ST_ArcaneCircleBossOption == 0 || InBossEncounter() ||
+                    IsNotEnabled(Preset.RPR_ST_ArcaneCircle))
                 {
-                    //1st part double enshroud
-                    if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                        GetCooldownRemainingTime(ArcaneCircle) <= GCD * 2 + 1.5 && JustUsed(Enshroud))
-                        return true;
-
-                    //2nd part double enshroud
+                    //Double enshroud
                     if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
                         (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
-                        (JustUsed(VoidReaping) || JustUsed(CrossReaping)))
+                        (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                         return true;
 
                     //lvl 88+ general use
@@ -239,8 +227,6 @@ internal partial class RPR
     #endregion
 
     #region ID's
-
-    public const byte JobID = 39;
 
     public const uint
 

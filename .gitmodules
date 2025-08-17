@@ -11,3 +11,4 @@
 [submodule "PunishLib"]
 	path = PunishLib
 	url = https://github.com/PunishXIV/PunishLib.git
+	branch = master

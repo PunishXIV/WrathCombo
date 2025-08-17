@@ -1,13 +1,13 @@
 #region
-
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-using Preset = WrathCombo.Combos.CustomComboPreset;
+using static WrathCombo.Combos.PvE.WHM.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
+
 
 // ReSharper disable AccessToStaticMemberViaDerivedType
 // ReSharper disable UnusedType.Global
@@ -181,7 +181,7 @@ internal partial class WHM : Healer
         {
             #region Button Selection
             
-            var replacedAction = (int)Config.WHM_ST_MainCombo_Actions switch
+            var replacedAction = (int)WHM_ST_MainCombo_Actions switch
             {
                 1 => AeroList.Keys.ToArray(),
                 2 => [Stone2],
@@ -235,7 +235,7 @@ internal partial class WHM : Healer
                     return Assize;
 
                 if (IsEnabled(Preset.WHM_ST_MainCombo_Lucid) &&
-                    Role.CanLucidDream(Config.WHM_STDPS_Lucid))
+                    Role.CanLucidDream(WHM_STDPS_Lucid))
                     return Role.LucidDreaming;
 
                 if (Variant.CanSpiritDart(
@@ -343,7 +343,7 @@ internal partial class WHM : Healer
                     return PresenceOfMind;
 
                 if (IsEnabled(Preset.WHM_AoE_DPS_Lucid) &&
-                    Role.CanLucidDream(Config.WHM_AoEDPS_Lucid))
+                    Role.CanLucidDream(WHM_AoEDPS_Lucid))
                     return Role.LucidDreaming;
 
                 if (Variant.CanRampart(Preset.WHM_DPS_Variant_Rampart))
@@ -376,9 +376,9 @@ internal partial class WHM : Healer
             var dotAction = OriginalHook(Aero);
             AeroList.TryGetValue(dotAction, out var dotDebuffID);
             var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID,
-                Config.WHM_AoE_MainCombo_DoT_HPThreshold,
-                Config.WHM_AoE_MainCombo_DoT_Reapply,
-                Config.WHM_AoE_MainCombo_DoT_MaxTargets);
+                WHM_AoE_MainCombo_DoT_HPThreshold,
+                WHM_AoE_MainCombo_DoT_Reapply,
+                WHM_AoE_MainCombo_DoT_MaxTargets);
 
             if (IsEnabled(Preset.WHM_AoE_MainCombo_DoT) &&
                 ActionReady(dotAction) && target != null)
@@ -410,7 +410,7 @@ internal partial class WHM : Healer
             var canThinAir = LevelChecked(ThinAir) &&
                              !HasStatusEffect(Buffs.ThinAir) &&
                              GetRemainingCharges(ThinAir) >
-                             Config.WHM_STHeals_ThinAir;
+                             WHM_STHeals_ThinAir;
 
             #endregion
 
@@ -430,8 +430,8 @@ internal partial class WHM : Healer
             if (IsEnabled(Preset.WHM_STHeals_Esuna) &&
                 ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(
-                    healTarget, Config.WHM_STHeals_IncludeShields) >=
-                Config.WHM_STHeals_Esuna &&
+                    healTarget, WHM_STHeals_IncludeShields) >=
+                WHM_STHeals_Esuna &&
                 HasCleansableDebuff(healTarget))
                 return Role.Esuna
                     .RetargetIfEnabled(OptionalTarget, Cure);
@@ -439,27 +439,27 @@ internal partial class WHM : Healer
             #endregion
 
             if (IsEnabled(Preset.WHM_STHeals_Lucid) && CanWeave() &&
-                Role.CanLucidDream(Config.WHM_STHeals_Lucid))
+                Role.CanLucidDream(WHM_STHeals_Lucid))
                 return Role.LucidDreaming;
 
             // Divine Caress
             if (IsEnabled(Preset.WHM_STHeals_Temperance) &&
                 HasStatusEffect(Buffs.DivineGrace) &&
-                (!Config.WHM_STHeals_TemperanceOptions[1] || !InBossEncounter()) &&
-                (!Config.WHM_STHeals_TemperanceOptions[0] || CanWeave()))
+                (!WHM_STHeals_TemperanceOptions[1] || !InBossEncounter()) &&
+                (!WHM_STHeals_TemperanceOptions[0] || CanWeave()))
                 return OriginalHook(Temperance);
 
             //Priority List
-            for (var i = 0; i < Config.WHM_ST_Heals_Priority.Count; i++)
+            for (var i = 0; i < WHM_ST_Heals_Priority.Count; i++)
             {
-                var index = Config.WHM_ST_Heals_Priority.IndexOf(i + 1);
+                var index = WHM_ST_Heals_Priority.IndexOf(i + 1);
                 var config = GetMatchingConfigST(index, OptionalTarget,
                     out var spell, out var enabled);
 
                 if (enabled)
                 {
                     if (GetTargetHPPercent(healTarget,
-                            Config.WHM_STHeals_IncludeShields) <= config &&
+                            WHM_STHeals_IncludeShields) <= config &&
                         ActionReady(spell))
                         return spell.RetargetIfEnabled(OptionalTarget, Cure);
                 }
@@ -488,7 +488,7 @@ internal partial class WHM : Healer
             var canThinAir = LevelChecked(ThinAir) &&
                              !HasStatusEffect(Buffs.ThinAir) &&
                              GetRemainingCharges(ThinAir) >
-                             Config.WHM_AoEHeals_ThinAir;
+                             WHM_AoEHeals_ThinAir;
 
             #endregion
 
@@ -505,7 +505,7 @@ internal partial class WHM : Healer
 
             if (IsEnabled(Preset.WHM_AoEHeals_Lucid) &&
                 CanWeave() &&
-                Role.CanLucidDream(Config.WHM_AoEHeals_Lucid))
+                Role.CanLucidDream(WHM_AoEHeals_Lucid))
                 return Role.LucidDreaming;
 
             // Blood Overcap
@@ -514,9 +514,9 @@ internal partial class WHM : Healer
                 return AfflatusMisery;
 
             //Priority List
-            for (var i = 0; i < Config.WHM_AoE_Heals_Priority.Count; i++)
+            for (var i = 0; i < WHM_AoE_Heals_Priority.Count; i++)
             {
-                var index = Config.WHM_AoE_Heals_Priority.IndexOf(i + 1);
+                var index = WHM_AoE_Heals_Priority.IndexOf(i + 1);
                 var config = GetMatchingConfigAoE(index, OptionalTarget,
                     out var spell, out var enabled);
 
@@ -578,7 +578,7 @@ internal partial class WHM : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Cure)
+            if (actionID is not Cure2)
                 return actionID;
 
             if (!LevelChecked(Cure2))
@@ -587,7 +587,7 @@ internal partial class WHM : Healer
                     : Cure;
 
             return IsEnabled(Preset.WHM_Re_Cure)
-                ? Cure2.Retarget(SimpleTarget.Stack.AllyToHeal)
+                ? Cure2.Retarget(Cure2, SimpleTarget.Stack.AllyToHeal)
                 : Cure2;
         }
     }
@@ -635,16 +635,16 @@ internal partial class WHM : Healer
                     ? Aquaveil.Retarget(Aquaveil, SimpleTarget.Stack.AllyToHeal)
                     : Aquaveil;
 
-            if (Config.WHM_AquaveilOptions[0] &&
+            if (WHM_AquaveilOptions[0] &&
                 ActionReady(DivineBenison) &&
                 benisonShield == null)
                 return IsEnabled(Preset.WHM_Re_DivineBenison)
                     ? DivineBenison.Retarget(Aquaveil, SimpleTarget.Stack.AllyToHeal)
                     : DivineBenison;
 
-            if (Config.WHM_AquaveilOptions[1] &&
+            if (WHM_AquaveilOptions[1] &&
                 ActionReady(Tetragrammaton) &&
-                GetTargetHPPercent(healTarget) < Config.WHM_Aquaveil_TetraThreshold)
+                GetTargetHPPercent(healTarget) < WHM_Aquaveil_TetraThreshold)
                 return IsEnabled(Preset.WHM_Re_Tetragrammaton)
                     ? Tetragrammaton.Retarget(Aquaveil, SimpleTarget.Stack
                         .AllyToHeal)
@@ -664,10 +664,10 @@ internal partial class WHM : Healer
                 return actionID;
 
             var asylumTarget =
-                (Config.WHM_AsylumOptions[0]
+                (WHM_AsylumOptions[0]
                     ? SimpleTarget.HardTarget.IfHostile()
                     : null) ??
-                (Config.WHM_AsylumOptions[1]
+                (WHM_AsylumOptions[1]
                     ? SimpleTarget.HardTarget.IfFriendly()
                     : null) ??
                 SimpleTarget.Self;
@@ -688,10 +688,10 @@ internal partial class WHM : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            if (!EZ.Throttle("WHMRetargetingFeature", TS.FromSeconds(5)))
-                return actionID;
-            
             var healStack = SimpleTarget.Stack.AllyToHeal;
+            
+            if (!EZ.Throttle("WHMRetargetingFeature", TS.FromSeconds(.1)))
+                return actionID;
 
             if (IsEnabled(Preset.WHM_Re_Cure))
             {
@@ -705,19 +705,32 @@ internal partial class WHM : Healer
             if (IsEnabled(Preset.WHM_Re_Aquaveil))
                 Aquaveil.Retarget(healStack, dontCull: true);
 
+            if (IsEnabled(Preset.WHM_Re_Asylum))
+            {
+                var asylumTarget =
+                    (WHM_AsylumOptions[0]
+                        ? SimpleTarget.HardTarget.IfHostile()
+                        : null) ??
+                    (WHM_AsylumOptions[1]
+                        ? SimpleTarget.HardTarget.IfFriendly()
+                        : null) ??
+                    SimpleTarget.Self;
+                Asylum.Retarget(asylumTarget, dontCull: true);
+            }
+
             if (IsEnabled(Preset.WHM_Re_LiturgyOfTheBell))
             {
                 var bellTarget =
-                    (Config.WHM_LiturgyOfTheBellOptions[0]
+                    (WHM_LiturgyOfTheBellOptions[0]
                         ? SimpleTarget.HardTarget.IfHostile()
                         : null) ??
-                    (Config.WHM_LiturgyOfTheBellOptions[1]
+                    (WHM_LiturgyOfTheBellOptions[1]
                         ? SimpleTarget.HardTarget.IfFriendly()
                         : null) ??
                     SimpleTarget.Self;
                 LiturgyOfTheBell.Retarget(bellTarget, dontCull: true);
             }
-
+            
             if (IsEnabled(Preset.WHM_Re_Cure3))
                 Cure3.Retarget(healStack, dontCull: true);
 

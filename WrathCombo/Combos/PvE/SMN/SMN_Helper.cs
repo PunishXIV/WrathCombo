@@ -1,23 +1,18 @@
-﻿using Dalamud.Game.ClientState.JobGauge.Types;
+﻿using Dalamud.Game.ClientState.JobGauge.Enums;
+using Dalamud.Game.ClientState.JobGauge.Types;
+using Dalamud.Game.ClientState.Objects.Types;
 using FFXIVClientStructs.FFXIV.Client.Game.Gauge;
 using System;
 using System.Collections.Generic;
-using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.Combos.PvE.SMN.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Dalamud.Game.ClientState.Objects.Types;
-using WrathCombo.Data;
-using System.Diagnostics.Metrics;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SMN
 {
     #region ID's
-
-    public const byte ClassID = 26;
-    public const byte JobID = 27;
 
     public const float CooldownThreshold = 0.5f;
 
@@ -194,7 +189,6 @@ internal partial class SMN
     #endregion
 
     #region Demi Summon Detector
-
     internal static DemiSummon CurrentDemiSummon
     {
         get
@@ -221,7 +215,6 @@ internal partial class SMN
     #endregion
 
     #region Egi Priority
-
     public static int GetMatchingConfigST(
         int i,
         IGameObject? optionalTarget,
@@ -233,19 +226,19 @@ internal partial class SMN
             case 0:
                 action = OriginalHook(SummonTopaz);
 
-                enabled = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Titan) && Gauge.IsTitanReady;
+                enabled = IsEnabled(Preset.SMN_ST_Advanced_Combo_Titan) && Gauge.IsTitanReady;
                 return 0;
 
             case 1:
                 action = OriginalHook(SummonEmerald);
 
-                enabled = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Garuda) && Gauge.IsGarudaReady;
+                enabled = IsEnabled(Preset.SMN_ST_Advanced_Combo_Garuda) && Gauge.IsGarudaReady;
                 return 0;
 
             case 2:
                 action = OriginalHook(SummonRuby);
 
-                enabled = IsEnabled(CustomComboPreset.SMN_ST_Advanced_Combo_Ifrit) && Gauge.IsIfritReady;
+                enabled = IsEnabled(Preset.SMN_ST_Advanced_Combo_Ifrit) && Gauge.IsIfritReady;
                 return 0;
         }
 
@@ -266,17 +259,17 @@ internal partial class SMN
             case 0:
                 action = OriginalHook(SummonTopaz);
 
-                enabled = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Titan) && Gauge.IsTitanReady;
+                enabled = IsEnabled(Preset.SMN_AoE_Advanced_Combo_Titan) && Gauge.IsTitanReady;
                 return 0;
             case 1:
                 action = OriginalHook(SummonEmerald);
 
-                enabled = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Garuda) && Gauge.IsGarudaReady;
+                enabled = IsEnabled(Preset.SMN_AoE_Advanced_Combo_Garuda) && Gauge.IsGarudaReady;
                 return 0;
             case 2:
                 action = OriginalHook(SummonRuby);
 
-                enabled = IsEnabled(CustomComboPreset.SMN_AoE_Advanced_Combo_Ifrit) && Gauge.IsIfritReady;
+                enabled = IsEnabled(Preset.SMN_AoE_Advanced_Combo_Ifrit) && Gauge.IsIfritReady;
                 return 0;
         }
 
@@ -285,18 +278,13 @@ internal partial class SMN
 
         return 0;
     }
-
     #endregion   
 
     #region Opener
-
     internal static SMNOpenerMaxLevel1 Opener1 = new();
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked)
-            return Opener1;
-
-        return WrathOpener.Dummy;
+        return Opener1.LevelChecked ? Opener1 : WrathOpener.Dummy;
     }
 
     internal class SMNOpenerMaxLevel1 : WrathOpener
@@ -338,10 +326,10 @@ internal partial class SMN
             4,
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([26], () => Config.SMN_Opener_SkipSwiftcast == 2)];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([26], () => SMN_Opener_SkipSwiftcast == 2)];
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-        internal override UserData? ContentCheckConfig => Config.SMN_Balance_Content;
+        internal override UserData? ContentCheckConfig => SMN_Balance_Content;
 
         public override bool HasCooldowns()
         {

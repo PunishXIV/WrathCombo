@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Frozen;
-using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
+using ECommons.ExcelServices;
+using ECommons.GameHelpers;
+using Lumina.Excel.Sheets;
+using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Core;
 using WrathCombo.Extensions;
+using static WrathCombo.Combos.PvE.AST.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Lumina.Excel.Sheets;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class AST
 {
+    #region Variables
     internal static readonly List<uint>
         MaleficList = [Malefic, Malefic2, Malefic3, Malefic4, FallMalefic],
         GravityList = [Gravity, Gravity2];
@@ -44,14 +47,15 @@ internal partial class AST
     internal static bool HasDivination=> HasStatusEffect(Buffs.Divination, anyOwner: true) || JustUsed(Divination);
     internal static float DivinationCD => GetCooldownRemainingTime(Divination);
     internal static float LightspeedChargeCD => GetCooldownChargeRemainingTime(Lightspeed);
+    #endregion
     
     #region Dot Checker
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Combust);
-        var hpThreshold = IsNotEnabled(CustomComboPreset.AST_ST_Simple_DPS) && (Config.AST_ST_DPS_CombustSubOption == 1 || !InBossEncounter()) ? Config.AST_ST_DPS_CombustOption : 0;
+        var hpThreshold = IsNotEnabled(Preset.AST_ST_Simple_DPS) && (AST_ST_DPS_CombustSubOption == 1 || !InBossEncounter()) ? AST_ST_DPS_CombustOption : 0;
         CombustList.TryGetValue(dotAction, out var dotDebuffID);
-        var dotRefresh = IsNotEnabled(CustomComboPreset.AST_ST_Simple_DPS) ? Config.AST_ST_DPS_CombustUptime_Threshold : 2.5;
+        var dotRefresh = IsNotEnabled(Preset.AST_ST_Simple_DPS) ? AST_ST_DPS_CombustUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -67,15 +71,15 @@ internal partial class AST
     
     internal static bool RaidwideCollectiveUnconscious()
     {
-        return IsEnabled(CustomComboPreset.AST_Raidwide_CollectiveUnconscious) && ActionReady(CollectiveUnconscious) && CanWeave() && RaidWideCasting();
+        return IsEnabled(Preset.AST_Raidwide_CollectiveUnconscious) && ActionReady(CollectiveUnconscious) && CanWeave() && RaidWideCasting();
     }
     internal static bool RaidwideNeutralSect()
     {
-        return IsEnabled(CustomComboPreset.AST_Raidwide_NeutralSect) && ActionReady(OriginalHook(NeutralSect)) && CanWeave() && RaidWideCasting();
+        return IsEnabled(Preset.AST_Raidwide_NeutralSect) && ActionReady(OriginalHook(NeutralSect)) && CanWeave() && RaidWideCasting();
     }
     internal static bool RaidwideAspectedHelios()
     {
-        return IsEnabled(CustomComboPreset.AST_Raidwide_AspectedHelios) && HasStatusEffect(Buffs.NeutralSect) && RaidWideCasting() && 
+        return IsEnabled(Preset.AST_Raidwide_AspectedHelios) && HasStatusEffect(Buffs.NeutralSect) && RaidWideCasting() && 
                !HasStatusEffect(Buffs.NeutralSectShield);
     }
     
@@ -85,8 +89,8 @@ internal partial class AST
     internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
     {
         IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
-        bool stopHot = Config.AST_ST_SimpleHeals_AspectedBeneficLow <= GetTargetHPPercent(healTarget, Config.AST_ST_SimpleHeals_IncludeShields);
-        int refreshTime = Config.AST_ST_SimpleHeals_AspectedBeneficRefresh;
+        bool stopHot = AST_ST_SimpleHeals_AspectedBeneficLow <= GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields);
+        int refreshTime = AST_ST_SimpleHeals_AspectedBeneficRefresh;
         Status? aspectedBeneficHoT = GetStatusEffect(Buffs.AspectedBenefic, healTarget);
         Status? neutralSectShield = GetStatusEffect(Buffs.NeutralSectShield, healTarget);
         
@@ -94,72 +98,74 @@ internal partial class AST
         {
             case 0:
                 action = CelestialIntersection;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_CelestialIntersection) &&
-                          ActionReady(CelestialIntersection) && !(healTarget as IBattleChara)!.HasShield() &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveIntersection);
-                return Config.AST_ST_SimpleHeals_CelestialIntersection;
+                enabled = IsEnabled(Preset.AST_ST_Heals_CelestialIntersection) &&
+                          ActionReady(CelestialIntersection) && !HasStatusEffect(Buffs.Intersection, healTarget) &&
+                          GetRemainingCharges(CelestialIntersection) > AST_ST_SimpleHeals_CelestialIntersectionCharges &&
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveIntersection);
+                return AST_ST_SimpleHeals_CelestialIntersection;
             case 1:
                 action = EssentialDignity;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_EssentialDignity) &&
+                enabled = IsEnabled(Preset.AST_ST_Heals_EssentialDignity) &&
                           ActionReady(EssentialDignity) &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveDignity);
-                return Config.AST_ST_SimpleHeals_EssentialDignity;
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveDignity);
+                return AST_ST_SimpleHeals_EssentialDignity;
             case 2:
                 action = Exaltation;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_Exaltation) &&
+                enabled = IsEnabled(Preset.AST_ST_Heals_Exaltation) &&
                           ActionReady(Exaltation) &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveExalt);
-                return Config.AST_ST_SimpleHeals_Exaltation;
+                          (CanWeave() || !AST_ST_SimpleHeals_ExaltationOptions[0]) &&
+                          (!InBossEncounter() || !AST_ST_SimpleHeals_ExaltationOptions[1]);
+                return AST_ST_SimpleHeals_Exaltation;
             case 3:
                 action = Bole;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_Bole) &&
+                enabled = IsEnabled(Preset.AST_ST_Heals_Bole) &&
                           HasBole &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveBole);
-                return Config.AST_ST_SimpleHeals_Bole;
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveBole);
+                return AST_ST_SimpleHeals_Bole;
             case 4:
                 action = Arrow;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_Arrow) &&
+                enabled = IsEnabled(Preset.AST_ST_Heals_Arrow) &&
                           HasArrow &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveArrow);
-                return Config.AST_ST_SimpleHeals_Arrow;
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveArrow);
+                return AST_ST_SimpleHeals_Arrow;
             case 5:
                 action = Ewer;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_Ewer) &&
+                enabled = IsEnabled(Preset.AST_ST_Heals_Ewer) &&
                           HasEwer &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveEwer);
-                return Config.AST_ST_SimpleHeals_Ewer;
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveEwer);
+                return AST_ST_SimpleHeals_Ewer;
             case 6:
                 action = Spire;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_Spire) &&
+                enabled = IsEnabled(Preset.AST_ST_Heals_Spire) &&
                           HasSpire &&
-                          (CanWeave() || !Config.AST_ST_SimpleHeals_WeaveSpire);
-                return Config.AST_ST_SimpleHeals_Spire;
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveSpire);
+                return AST_ST_SimpleHeals_Spire;
             case 7:
                 action = AspectedBenefic;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_AspectedBenefic) && 
+                enabled = IsEnabled(Preset.AST_ST_Heals_AspectedBenefic) && 
                           ActionReady(AspectedBenefic) && stopHot &&
                           (aspectedBeneficHoT is null || 
                            aspectedBeneficHoT.RemainingTime <= refreshTime || 
                            neutralSectShield is null && HasStatusEffect(Buffs.NeutralSect));
-                return Config.AST_ST_SimpleHeals_AspectedBeneficHigh;
+                return AST_ST_SimpleHeals_AspectedBeneficHigh;
             case 8:
                 action = CelestialOpposition;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_CelestialOpposition) && ActionReady(CelestialOpposition) &&
-                            (!Config.AST_ST_SimpleHeals_CelestialOppositionOptions[1] || !InBossEncounter()) &&
-                            (!Config.AST_ST_SimpleHeals_CelestialOppositionOptions[0] || CanWeave());
-                return Config.AST_ST_SimpleHeals_CelestialOpposition;
+                enabled = IsEnabled(Preset.AST_ST_Heals_CelestialOpposition) && ActionReady(CelestialOpposition) &&
+                            (!AST_ST_SimpleHeals_CelestialOppositionOptions[1] || !InBossEncounter()) &&
+                            (!AST_ST_SimpleHeals_CelestialOppositionOptions[0] || CanWeave());
+                return AST_ST_SimpleHeals_CelestialOpposition;
             case 9:
                 action = CollectiveUnconscious;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_CollectiveUnconscious) && ActionReady(CollectiveUnconscious) &&
-                          (!Config.AST_ST_SimpleHeals_CollectiveUnconsciousOptions[1] || !InBossEncounter()) &&
-                          (!Config.AST_ST_SimpleHeals_CollectiveUnconsciousOptions[0] || CanWeave());
-                return Config.AST_ST_SimpleHeals_CollectiveUnconscious;
+                enabled = IsEnabled(Preset.AST_ST_Heals_CollectiveUnconscious) && ActionReady(CollectiveUnconscious) &&
+                          (!AST_ST_SimpleHeals_CollectiveUnconsciousOptions[1] || !InBossEncounter()) &&
+                          (!AST_ST_SimpleHeals_CollectiveUnconsciousOptions[0] || CanWeave());
+                return AST_ST_SimpleHeals_CollectiveUnconscious;
             case 10:
                 action = LadyOfCrown;
-                enabled = IsEnabled(CustomComboPreset.AST_ST_Heals_SoloLady) && HasLady &&
-                          (!Config.AST_ST_SimpleHeals_SoloLadyOptions[1] || !InBossEncounter()) &&
-                          (!Config.AST_ST_SimpleHeals_SoloLadyOptions[0] || CanWeave());
-                return Config.AST_ST_SimpleHeals_SoloLady;
+                enabled = IsEnabled(Preset.AST_ST_Heals_SoloLady) && HasLady &&
+                          (!AST_ST_SimpleHeals_SoloLadyOptions[1] || !InBossEncounter()) &&
+                          (!AST_ST_SimpleHeals_SoloLadyOptions[0] || CanWeave());
+                return AST_ST_SimpleHeals_SoloLady;
         }
 
         enabled = false;
@@ -175,59 +181,59 @@ internal partial class AST
         {
             case 0:
                 action = LadyOfCrown;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_LazyLady) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_LazyLady) &&
                           ActionReady(MinorArcana) && HasLady &&
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveLady);
-                return Config.AST_AoE_SimpleHeals_LazyLady;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveLady);
+                return AST_AoE_SimpleHeals_LazyLady;
             case 1:
                 action = CelestialOpposition;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_CelestialOpposition) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_CelestialOpposition) &&
                           ActionReady(CelestialOpposition) &&
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveOpposition);
-                return Config.AST_AoE_SimpleHeals_CelestialOpposition;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveOpposition);
+                return AST_AoE_SimpleHeals_CelestialOpposition;
             case 2:
                 action = Horoscope;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_Horoscope) && ActionReady(Horoscope) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_Horoscope) && ActionReady(Horoscope) &&
                           !HasStatusEffect(Buffs.Horoscope) && !HasStatusEffect(Buffs.HoroscopeHelios) &&
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveHoroscope);
-                return Config.AST_AoE_SimpleHeals_Horoscope;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveHoroscope);
+                return AST_AoE_SimpleHeals_Horoscope;
             case 3:
                 action = HoroscopeHeal;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_HoroscopeHeal) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_HoroscopeHeal) &&
                           HasStatusEffect(Buffs.HoroscopeHelios) &&
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveHoroscopeHeal);
-                return Config.AST_AoE_SimpleHeals_HoroscopeHeal;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveHoroscopeHeal);
+                return AST_AoE_SimpleHeals_HoroscopeHeal;
             case 4:
                 action = NeutralSect;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_NeutralSect) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_NeutralSect) &&
                           ActionReady(OriginalHook(NeutralSect)) &&
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveNeutralSect);
-                return Config.AST_AoE_SimpleHeals_NeutralSect;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveNeutralSect);
+                return AST_AoE_SimpleHeals_NeutralSect;
             case 5:
                 action = StellarDetonation;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_StellarDetonation) && 
+                enabled = IsEnabled(Preset.AST_AoE_Heals_StellarDetonation) && 
                           HasStatusEffect(Buffs.GiantDominance) && 
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveStellarDetonation);
-                return Config.AST_AoE_SimpleHeals_StellarDetonation;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveStellarDetonation);
+                return AST_AoE_SimpleHeals_StellarDetonation;
             case 6:
                 action = OriginalHook(AspectedHelios);
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_Aspected) && ActionReady(AspectedHelios) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_Aspected) && ActionReady(AspectedHelios) &&
                           (LevelChecked(HeliosConjuction) && !HasStatusEffect(Buffs.HeliosConjunction) || 
                            !LevelChecked(HeliosConjuction) && !HasStatusEffect(Buffs.AspectedHelios) ||
                            HasStatusEffect(Buffs.NeutralSect) && !HasStatusEffect(Buffs.NeutralSectShield));
-                return Config.AST_AoE_SimpleHeals_Aspected;
+                return AST_AoE_SimpleHeals_Aspected;
             
             case 7:
                 action = Helios;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_Helios);
-                return Config.AST_AoE_SimpleHeals_Helios;
+                enabled = IsEnabled(Preset.AST_AoE_Heals_Helios);
+                return AST_AoE_SimpleHeals_Helios;
             
             case 8:
                 action = CollectiveUnconscious;
-                enabled = IsEnabled(CustomComboPreset.AST_AoE_Heals_CollectiveUnconscious) &&
+                enabled = IsEnabled(Preset.AST_AoE_Heals_CollectiveUnconscious) &&
                           ActionReady(CollectiveUnconscious) &&
-                          (CanWeave() || !Config.AST_AoE_SimpleHeals_WeaveCollectiveUnconscious);
-                return Config.AST_AoE_SimpleHeals_CollectiveUnconscious;
+                          (CanWeave() || !AST_AoE_SimpleHeals_WeaveCollectiveUnconscious);
+                return AST_AoE_SimpleHeals_CollectiveUnconscious;
         }
 
         enabled = false;
@@ -246,8 +252,8 @@ internal partial class AST
     {
         get
         {
-            if (Svc.ClientState.LocalPlayer is null ||
-                Svc.ClientState.LocalPlayer.ClassJob.RowId != JobID ||
+            if (Player.Object is null ||
+                Player.Job != WrathCombo.JobID ||
                 Svc.Condition[ConditionFlag.BetweenAreas] ||
                 Svc.Condition[ConditionFlag.Unconscious] ||
                 Gauge.DrawnCards[0] == CardType.None ||
@@ -256,10 +262,10 @@ internal partial class AST
                 return field = null;
 
             // Check if we have a target overriding any searching
-            if (Config.AST_QuickTarget_Override != 0)
+            if (AST_QuickTarget_Override != 0)
             {
                 var targetOverride =
-                    (int)Config.AST_QuickTarget_Override switch
+                    (int)AST_QuickTarget_Override switch
                     {
                         1 => SimpleTarget.HardTarget,
                         2 => SimpleTarget.UIMouseOverTarget,
@@ -303,12 +309,12 @@ internal partial class AST
                 !HasStatusEffect(Buffs.SpearBuff, thisTarget, true);
 
             bool IsMeleeOrTank (ClassJob job) =>
-                JobIDs.Melee.Contains((byte)job.RowId) ||
-                JobIDs.Tank.Contains((byte)job.RowId);
+                JobRoles.Melee.Contains(job.RowId) ||
+                JobRoles.Tank.Contains(job.RowId);
 
             bool IsRangedOrHealer(ClassJob job) =>
-                JobIDs.Ranged.Contains((byte)job.RowId) ||
-                JobIDs.Healer.Contains((byte)job.RowId);
+                JobRoles.Ranged.Contains(job.RowId) ||
+                JobRoles.Healer.Contains(job.RowId);
 
             bool DamageDownFree(IGameObject? thisTarget) =>
                 !TargetHasDamageDown(thisTarget);
@@ -356,7 +362,7 @@ internal partial class AST
                 filter = filter
                     .OrderBy(x =>
                         _cardPriorities.GetValueOrDefault(
-                            (byte)x.RealJob!.Value.RowId, byte.MaxValue))
+                            (Job)x.RealJob!.Value.RowId, byte.MaxValue))
                     .ThenByDescending(x => x.BattleChara.MaxHp)
                     .ToList();
                 
@@ -369,28 +375,28 @@ internal partial class AST
 
     #region Static Priority Data
 
-    private static Dictionary<byte, int> _cardPriorities = new()
+    private static Dictionary<Job, int> _cardPriorities = new()
     {
-        { SAM.JobID, 1 },
-        { NIN.JobID, 2 },
-        { VPR.JobID, 3 },
-        { DRG.JobID, 4 },
-        { MNK.JobID, 5 },
-        { DRK.JobID, 6 },
-        { RPR.JobID, 7 },
-        { GNB.JobID, 8 },
-        { PLD.JobID, 9 },
-        { WAR.JobID, 10 },
-        { PCT.JobID, 11 },
-        { SMN.JobID, 12 },
-        { MCH.JobID, 13 },
-        { BRD.JobID, 14 },
-        { RDM.JobID, 15 },
-        { DNC.JobID, 16 },
-        { BLM.JobID, 17 },
-        { WHM.JobID, 18 },
-        { SGE.JobID, 19 },
-        { SCH.JobID, 20 },
+        { Job.SAM, 1 },
+        { Job.NIN, 2 },
+        { Job.VPR, 3 },
+        { Job.DRG, 4 },
+        { Job.MNK, 5 },
+        { Job.DRK, 6 },
+        { Job.RPR, 7 },
+        { Job.GNB, 8 },
+        { Job.PLD, 9 },
+        { Job.WAR, 10 },
+        { Job.PCT, 11 },
+        { Job.SMN, 12 },
+        { Job.MCH, 13 },
+        { Job.BRD, 14 },
+        { Job.RDM, 15 },
+        { Job.DNC, 16 },
+        { Job.BLM, 17 },
+        { Job.WHM, 18 },
+        { Job.SGE, 19 },
+        { Job.SCH, 20 },
         
     };
 
@@ -462,7 +468,7 @@ internal partial class AST
         public override int MinOpenerLevel => 92;
         public override int MaxOpenerLevel => 109;
 
-        internal override UserData? ContentCheckConfig => Config.AST_ST_DPS_Balance_Content;
+        internal override UserData? ContentCheckConfig => AST_ST_DPS_Balance_Content;
 
         public override bool HasCooldowns()
         {
@@ -490,8 +496,6 @@ internal partial class AST
     #endregion
 
     #region ID's
-
-    internal const byte JobID = 33;
 
     internal const uint
         //DPS
@@ -558,6 +562,7 @@ internal partial class AST
             AspectedBenefic = 835,
             AspectedHelios = 836,
             HeliosConjunction = 3894,
+            Intersection = 1889,
             Horoscope = 1890,
             HoroscopeHelios = 1891,
             NeutralSect = 1892,

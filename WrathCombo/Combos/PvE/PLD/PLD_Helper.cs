@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using static WrathCombo.Combos.PvE.PLD.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
-
 namespace WrathCombo.Combos.PvE;
 
 internal partial class PLD
@@ -18,7 +18,7 @@ internal partial class PLD
     /// <summary>
     ///     The list of Mitigations to use in the One-Button Mitigation combo.<br />
     ///     The order of the list needs to match the order in
-    ///     <see cref="CustomComboPreset" />.
+    ///     <see cref="Preset" />.
     /// </summary>
     /// <value>
     ///     <c>Action</c> is the action to use.<br />
@@ -27,49 +27,49 @@ internal partial class PLD
     /// </value>
     /// <remarks>
     ///     Each logic check is already combined with checking if the preset
-    ///     <see cref="IsEnabled(CustomComboPreset)">is enabled</see>
+    ///     <see cref="IsEnabled(Preset)">is enabled</see>
     ///     and if the action is <see cref="ActionReady(uint)">ready</see> and
     ///     <see cref="LevelChecked(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
-    private static (uint Action, CustomComboPreset Preset, System.Func<bool> Logic)[]
+    private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
         PrioritizedMitigation =>
     [
         //Sheltron
-        (OriginalHook(Sheltron), CustomComboPreset.PLD_Mit_Sheltron,
+        (OriginalHook(Sheltron), Preset.PLD_Mit_Sheltron,
             () => Gauge.OathGauge >= 50),
         // Reprisal
-        (Role.Reprisal, CustomComboPreset.PLD_Mit_Reprisal,
+        (Role.Reprisal, Preset.PLD_Mit_Reprisal,
             () => Role.CanReprisal(checkTargetForDebuff: false)),
         //Divine Veil
-        (DivineVeil, CustomComboPreset.PLD_Mit_DivineVeil,
-            () => Config.PLD_Mit_DivineVeil_PartyRequirement ==
+        (DivineVeil, Preset.PLD_Mit_DivineVeil,
+            () => PLD_Mit_DivineVeil_PartyRequirement ==
                   (int)PartyRequirement.No ||
                   IsInParty()),
         //Rampart
-        (Role.Rampart, CustomComboPreset.PLD_Mit_Rampart,
-            () => Role.CanRampart(Config.PLD_Mit_Rampart_Health)),
+        (Role.Rampart, Preset.PLD_Mit_Rampart,
+            () => Role.CanRampart(PLD_Mit_Rampart_Health)),
         //Sentinel
-        (OriginalHook(Sentinel), CustomComboPreset.PLD_Mit_Sentinel,
-            () => PlayerHealthPercentageHp() <= Config.PLD_Mit_Sentinel_Health),
+        (OriginalHook(Sentinel), Preset.PLD_Mit_Sentinel,
+            () => PlayerHealthPercentageHp() <= PLD_Mit_Sentinel_Health),
         //Arm's Length
-        (Role.ArmsLength, CustomComboPreset.PLD_Mit_ArmsLength,
-            () => Role.CanArmsLength(Config.PLD_Mit_ArmsLength_EnemyCount,
-                Config.PLD_Mit_ArmsLength_Boss)),
+        (Role.ArmsLength, Preset.PLD_Mit_ArmsLength,
+            () => Role.CanArmsLength(PLD_Mit_ArmsLength_EnemyCount,
+                PLD_Mit_ArmsLength_Boss)),
         //Bulwark
-        (Bulwark, CustomComboPreset.PLD_Mit_Bulwark,
-            () => PlayerHealthPercentageHp() <= Config.PLD_Mit_Bulwark_Health),
+        (Bulwark, Preset.PLD_Mit_Bulwark,
+            () => PlayerHealthPercentageHp() <= PLD_Mit_Bulwark_Health),
         //Hallowed Ground
-        (HallowedGround, CustomComboPreset.PLD_Mit_HallowedGround,
-            () => PlayerHealthPercentageHp() <= Config.PLD_Mit_HallowedGround_Health &&
+        (HallowedGround, Preset.PLD_Mit_HallowedGround,
+            () => PlayerHealthPercentageHp() <= PLD_Mit_HallowedGround_Health &&
                   ContentCheck.IsInConfiguredContent(
-                      Config.PLD_Mit_HallowedGround_Difficulty,
-                      Config.PLD_Mit_HallowedGround_DifficultyListSet
+                      PLD_Mit_HallowedGround_Difficulty,
+                      PLD_Mit_HallowedGround_DifficultyListSet
                   )),
         //Clemency
-        (Clemency, CustomComboPreset.PLD_Mit_Clemency,
+        (Clemency, Preset.PLD_Mit_Clemency,
             () => LocalPlayer.CurrentMp >= 2000 &&
-                  PlayerHealthPercentageHp() <= Config.PLD_Mit_Clemency_Health)
+                  PlayerHealthPercentageHp() <= PLD_Mit_Clemency_Health)
     ];
 
     /// <summary>
@@ -78,7 +78,7 @@ internal partial class PLD
     /// </summary>
     /// <param name="index">
     ///     The index of the mitigation in <see cref="PrioritizedMitigation" />,
-    ///     which is the order of the mitigation in <see cref="CustomComboPreset" />.
+    ///     which is the order of the mitigation in <see cref="Preset" />.
     /// </param>
     /// <param name="action">
     ///     The variable to set to the action to, if the mitigation is set to be
@@ -138,7 +138,7 @@ internal partial class PLD
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
 
-        internal override UserData ContentCheckConfig => Config.PLD_Balance_Content;
+        internal override UserData ContentCheckConfig => PLD_Balance_Content;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(FightOrFlight) &&
@@ -152,9 +152,6 @@ internal partial class PLD
     #endregion
 
     #region ID's
-
-    public const byte ClassID = 1;
-    public const byte JobID = 19;
 
     public const float CooldownThreshold = 0.5f;
 

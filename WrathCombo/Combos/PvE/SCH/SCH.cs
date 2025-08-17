@@ -1,8 +1,11 @@
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
-
+using static WrathCombo.Combos.PvE.SCH.Config;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SCH : Healer
@@ -10,7 +13,8 @@ internal partial class SCH : Healer
     #region Simple ST DPS
     internal class SCH_ST_Simple_DPS : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_ST_Simple_DPS;
+        protected internal override Preset Preset => Preset.SCH_ST_Simple_DPS;
+
         protected override uint Invoke(uint actionID)
         {
             if (!BroilList.Contains(actionID))
@@ -20,10 +24,10 @@ internal partial class SCH : Healer
                 return SummonEos;
             
             #region Special Content
-            if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
+            if (Variant.CanRampart(Preset.SCH_DPS_Variant_Rampart))
                 return Variant.Rampart;
             
-            if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
+            if (Variant.CanSpiritDart(Preset.SCH_DPS_Variant_SpiritDart))
                 return Variant.SpiritDart;
 
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -66,94 +70,11 @@ internal partial class SCH : Healer
     }
     #endregion
     
-    #region Advanced ST DPS
-    internal class SCH_ST_ADV_DPS : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_ST_ADV_DPS;
-        protected override uint Invoke(uint actionID)
-        {
-            bool actionFound = Config.SCH_ST_DPS_Adv_Actions == 0 && BroilList.Contains(actionID) ||
-                               Config.SCH_ST_DPS_Adv_Actions == 1 && BioList.ContainsKey(actionID) ||
-                               Config.SCH_ST_DPS_Adv_Actions == 2 && actionID is Ruin2;
-            
-            if (!actionFound)
-                return actionID;
-            
-            #region Variables
-            int chainThreshold = Config.SCH_ST_DPS_ChainStratagemSubOption == 1 || !InBossEncounter() ? Config.SCH_ST_DPS_ChainStratagemOption : 0;
-            #endregion
-            
-            if (!actionFound)
-                return actionID;
-
-            if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_FairyReminder) && NeedToSummon)
-                return SummonEos;
-            //Opener
-            if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_Balance_Opener) && Opener().FullOpener(ref actionID))
-                return actionID;
-            
-            #region Special Content
-            if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
-                return Variant.Rampart;
-            
-            if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
-                return Variant.SpiritDart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-            #endregion
-            
-            #region Healing Helpers
-            if (EndAetherpact)
-                return DissolveUnion;
-            if (RaidwideSacredSoil())
-                return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
-            if (RaidwideExpedient())
-                return Expedient;
-            if (RaidwideSuccor())
-                return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
-            #endregion
-
-            if (InCombat() && CanWeave())
-            {
-                if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
-                    return Aetherflow;
-                
-                if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
-                    return BanefulImpaction;
-                
-                if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem &&
-                    GetTargetHPPercent() > chainThreshold)
-                    return ChainStratagem;
-                    
-                if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
-                    AetherflowCD <= Config.SCH_ST_DPS_EnergyDrain &&
-                    (!Config.SCH_ST_DPS_EnergyDrain_Burst ||
-                     ChainStrategemCD > 10 ||
-                     !LevelChecked(ChainStratagem)))
-                    return EnergyDrain;
-                
-                if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_Lucid) && Role.CanLucidDream(Config.SCH_ST_DPS_LucidOption))
-                    return Role.LucidDreaming;
-            }
-            
-            //Bio/Biolysis
-            if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_Bio) && NeedsDoT() && InCombat())
-                return OriginalHook(Bio);
-
-            //Ruin 2 Movement
-            if (IsEnabled(CustomComboPreset.SCH_ST_ADV_DPS_Ruin2Movement) && ActionReady(Ruin2) && IsMoving() && InCombat())
-                return OriginalHook(Ruin2);
-            
-            return actionID;
-        }
-    }
-    #endregion
-    
     #region Simple AoE DPS
     internal class SCH_AoE_Simple_DPS : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_AoE_Simple_DPS;
+        protected internal override Preset Preset => Preset.SCH_AoE_Simple_DPS;
+
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not (ArtOfWar or ArtOfWarII))
@@ -163,10 +84,10 @@ internal partial class SCH : Healer
                 return SummonEos;
             
             #region Special Content
-            if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
+            if (Variant.CanRampart(Preset.SCH_DPS_Variant_Rampart))
                 return Variant.Rampart;
 
-            if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
+            if (Variant.CanSpiritDart(Preset.SCH_DPS_Variant_SpiritDart))
                 return Variant.SpiritDart;
 
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -187,7 +108,7 @@ internal partial class SCH : Healer
             if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && CanWeave())
                 return ChainStratagem;
                     
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
                 AetherflowCD <= 10 && CanWeave())
                 return EnergyDrain;
             
@@ -199,7 +120,7 @@ internal partial class SCH : Healer
             if (ActionReady(dotAction) && target != null)
                 return OriginalHook(Bio).Retarget([ArtOfWar, ArtOfWarII], target);
                 
-            if (Role.CanLucidDream(Config.SCH_AoE_DPS_LucidOption) && CanWeave())
+            if (Role.CanLucidDream(SCH_AoE_DPS_LucidOption) && CanWeave())
                 return Role.LucidDreaming;
 
             return actionID;
@@ -208,28 +129,114 @@ internal partial class SCH : Healer
 
     #endregion
     
+    #region Advanced ST DPS
+    internal class SCH_ST_ADV_DPS : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.SCH_ST_ADV_DPS;
+
+        protected override uint Invoke(uint actionID)
+        {
+            bool actionFound = SCH_ST_DPS_Adv_Actions == 0 && BroilList.Contains(actionID) ||
+                               SCH_ST_DPS_Adv_Actions == 1 && BioList.ContainsKey(actionID) ||
+                               SCH_ST_DPS_Adv_Actions == 2 && actionID is Ruin2;
+            
+            if (!actionFound)
+                return actionID;
+            
+            #region Variables
+            int chainThreshold = SCH_ST_DPS_ChainStratagemSubOption == 1 || !InBossEncounter() ? SCH_ST_DPS_ChainStratagemOption : 0;
+            #endregion
+            
+            if (!actionFound)
+                return actionID;
+
+            if (IsEnabled(Preset.SCH_ST_ADV_DPS_FairyReminder) && NeedToSummon)
+                return SummonEos;
+            //Opener
+            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Balance_Opener) && Opener().FullOpener(ref actionID))
+                return actionID;
+            
+            #region Special Content
+            if (Variant.CanRampart(Preset.SCH_DPS_Variant_Rampart))
+                return Variant.Rampart;
+            
+            if (Variant.CanSpiritDart(Preset.SCH_DPS_Variant_SpiritDart))
+                return Variant.SpiritDart;
+
+            if (OccultCrescent.ShouldUsePhantomActions())
+                return OccultCrescent.BestPhantomAction();
+            #endregion
+            
+            #region Healing Helpers
+            if (EndAetherpact)
+                return DissolveUnion;
+            if (RaidwideSacredSoil())
+                return SacredSoil.Retarget(ReplacedActionsList.ToArray(), SimpleTarget.Self);
+            if (RaidwideExpedient())
+                return Expedient;
+            if (RaidwideSuccor())
+                return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
+            #endregion
+
+            if (InCombat() && CanWeave())
+            {
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow)
+                    return Aetherflow;
+                
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem))
+                    return BanefulImpaction;
+                
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem &&
+                    GetTargetHPPercent() > chainThreshold)
+                    return ChainStratagem;
+                    
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
+                    AetherflowCD <= SCH_ST_DPS_EnergyDrain &&
+                    (!SCH_ST_DPS_EnergyDrain_Burst ||
+                     ChainStrategemCD > 10 ||
+                     !LevelChecked(ChainStratagem)))
+                    return EnergyDrain;
+                
+                if (IsEnabled(Preset.SCH_ST_ADV_DPS_Lucid) && Role.CanLucidDream(SCH_ST_DPS_LucidOption))
+                    return Role.LucidDreaming;
+            }
+            
+            //Bio/Biolysis
+            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Bio) && NeedsDoT() && InCombat())
+                return OriginalHook(Bio);
+
+            //Ruin 2 Movement
+            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Ruin2Movement) && ActionReady(Ruin2) && IsMoving() && InCombat())
+                return OriginalHook(Ruin2);
+            
+            return actionID;
+        }
+    }
+    #endregion
+    
     #region Advanced AoE DPS
     internal class SCH_AoE_ADV_DPS : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_AoE_ADV_DPS;
+        protected internal override Preset Preset => Preset.SCH_AoE_ADV_DPS;
+
         protected override uint Invoke(uint actionID)
         {
             #region Variables
-            int chainThreshold = Config.SCH_AoE_DPS_ChainStratagemSubOption == 1 || !InBossEncounter() ? Config.SCH_AoE_DPS_ChainStratagemOption : 0;
+            int chainThreshold = SCH_AoE_DPS_ChainStratagemSubOption == 1 || !InBossEncounter() ? SCH_AoE_DPS_ChainStratagemOption : 0;
             #endregion
             
             if (actionID is not (ArtOfWar or ArtOfWarII))
                 return actionID;
 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_FairyReminder) &&
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_FairyReminder) &&
                 NeedToSummon)
                 return SummonEos;
             
             #region Special Content
-            if (Variant.CanRampart(CustomComboPreset.SCH_DPS_Variant_Rampart))
+            if (Variant.CanRampart(Preset.SCH_DPS_Variant_Rampart))
                 return Variant.Rampart;
 
-            if (Variant.CanSpiritDart(CustomComboPreset.SCH_DPS_Variant_SpiritDart))
+            if (Variant.CanSpiritDart(Preset.SCH_DPS_Variant_SpiritDart))
                 return Variant.SpiritDart;
 
             if (OccultCrescent.ShouldUsePhantomActions())
@@ -247,20 +254,20 @@ internal partial class SCH : Healer
                 return RaidwideRecitation() ? Recitation : OriginalHook(Succor);
             #endregion
             
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_Aetherflow) && !WasLastAction(Dissipation) && ActionReady(Aetherflow) && !HasAetherflow && CanWeave())
                 return Aetherflow;
                 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_BanefulImpact) && HasStatusEffect(Buffs.ImpactImminent) && !JustUsed(ChainStratagem) && CanWeave())
                 return BanefulImpaction;
                 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && 
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_ChainStrat) && ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && 
                 GetTargetHPPercent() > chainThreshold && CanWeave() &&
-                (LevelChecked(BanefulImpaction)|| !Config.SCH_AoE_DPS_ChainStratagemBanefulOption))
+                (LevelChecked(BanefulImpaction)|| !SCH_AoE_DPS_ChainStratagemBanefulOption))
                 return ChainStratagem;
                     
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
-                AetherflowCD <= Config.SCH_AoE_DPS_EnergyDrain && CanWeave() &&
-                (!Config.SCH_AoE_DPS_EnergyDrain_Burst ||
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) && 
+                AetherflowCD <= SCH_AoE_DPS_EnergyDrain && CanWeave() &&
+                (!SCH_AoE_DPS_EnergyDrain_Burst ||
                  ChainStrategemCD > 10 ||
                  !LevelChecked(ChainStratagem)))
                 return EnergyDrain;
@@ -268,15 +275,15 @@ internal partial class SCH : Healer
             var dotAction = OriginalHook(Bio);
             BioList.TryGetValue(dotAction, out var dotDebuffID);
             var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID,
-                Config.SCH_AoE_ADV_DPS_DoT_HPThreshold,
-                Config.SCH_AoE_ADV_DPS_DoT_Reapply,
-                Config.SCH_AoE_ADV_DPS_DoT_MaxTargets);
+                SCH_AoE_ADV_DPS_DoT_HPThreshold,
+                SCH_AoE_ADV_DPS_DoT_Reapply,
+                SCH_AoE_ADV_DPS_DoT_MaxTargets);
 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_DoT) &&
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_DoT) &&
                 ActionReady(dotAction) && target != null)
                 return OriginalHook(Bio).Retarget([ArtOfWar, ArtOfWarII], target);
                 
-            if (IsEnabled(CustomComboPreset.SCH_AoE_ADV_DPS_Lucid) && Role.CanLucidDream(Config.SCH_AoE_DPS_LucidOption) && CanWeave())
+            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_Lucid) && Role.CanLucidDream(SCH_AoE_DPS_LucidOption) && CanWeave())
                 return Role.LucidDreaming;
 
             return actionID;
@@ -288,7 +295,8 @@ internal partial class SCH : Healer
     #region ST Heal
     internal class SCH_ST_Heal : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_ST_Heal;
+        protected internal override Preset Preset => Preset.SCH_ST_Heal;
+
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not Physick)
@@ -300,9 +308,9 @@ internal partial class SCH : Healer
             
             #region Priority Cleansing
             
-            if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Esuna) && 
+            if (IsEnabled(Preset.SCH_ST_Heal_Esuna) && 
                 ActionReady(Role.Esuna) && HasCleansableDebuff(healTarget) &&
-                GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) >= Config.SCH_ST_Heal_EsunaOption)
+                GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) >= SCH_ST_Heal_EsunaOption)
                 return Role.Esuna
                     .RetargetIfEnabled(OptionalTarget, Physick);
 
@@ -320,13 +328,13 @@ internal partial class SCH : Healer
             #endregion
             
             // Aetherflow
-            if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Aetherflow) &&
+            if (IsEnabled(Preset.SCH_ST_Heal_Aetherflow) &&
                 ActionReady(Aetherflow) && !HasAetherflow &&
                 InCombat() && CanWeave())
                 return Aetherflow;
 
             // Dissipation
-            if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Dissipation)
+            if (IsEnabled(Preset.SCH_ST_Heal_Dissipation)
                 && ActionReady(Dissipation)
                 && !HasAetherflow
                 && InCombat()
@@ -334,25 +342,25 @@ internal partial class SCH : Healer
                 return Dissipation;
 
             // Lucid Dreaming
-            if (IsEnabled(CustomComboPreset.SCH_ST_Heal_Lucid) &&
-                Role.CanLucidDream(Config.SCH_ST_Heal_LucidOption))
+            if (IsEnabled(Preset.SCH_ST_Heal_Lucid) &&
+                Role.CanLucidDream(SCH_ST_Heal_LucidOption))
                 return Role.LucidDreaming;
 
             //Priority List
-            for(int i = 0; i < Config.SCH_ST_Heals_Priority.Count; i++)
+            for(int i = 0; i < SCH_ST_Heals_Priority.Count; i++)
             {
-                int index = Config.SCH_ST_Heals_Priority.IndexOf(i + 1);
+                int index = SCH_ST_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
 
                 if (enabled)
                 {
-                    if (Config.SCH_ST_Heal_AldoquimOpts[2] && ActionReady(OriginalHook(EmergencyTactics)) &&
+                    if (SCH_ST_Heal_AldoquimOpts[2] && ActionReady(OriginalHook(EmergencyTactics)) &&
                         spell is Adloquium or Manifestation && 
-                        GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) <=
-                        Config.SCH_ST_Heal_AdloquiumOption_Emergency)
+                        GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) <=
+                        SCH_ST_Heal_AdloquiumOption_Emergency)
                         return OriginalHook(EmergencyTactics);
                     
-                    if (GetTargetHPPercent(healTarget, Config.SCH_ST_Heal_IncludeShields) <= config &&
+                    if (GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) <= config &&
                         ActionReady(spell))
                         return spell.RetargetIfEnabled(OptionalTarget, Physick);
                 }
@@ -366,7 +374,8 @@ internal partial class SCH : Healer
     #region Aoe Heal 
     internal class SCH_AoE_Heal : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_AoE_Heal;
+        protected internal override Preset Preset => Preset.SCH_AoE_Heal;
+
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not (Succor or Concitation or Accession))
@@ -385,25 +394,25 @@ internal partial class SCH : Healer
 
             if (!HasAetherflow && InCombat())
             {
-                if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Aetherflow) && ActionReady(Aetherflow) && 
-                    (!Config.SCH_AoE_Heal_Aetherflow_Indomitability || GetCooldownRemainingTime(Indomitability) <= 1))
+                if (IsEnabled(Preset.SCH_AoE_Heal_Aetherflow) && ActionReady(Aetherflow) && 
+                    (!SCH_AoE_Heal_Aetherflow_Indomitability || GetCooldownRemainingTime(Indomitability) <= 1))
                     return Aetherflow;
 
-                if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Dissipation) && ActionReady(Dissipation) && !FairyBusy &&
-                    (!Config.SCH_AoE_Heal_Dissipation_Indomitability || GetCooldownRemainingTime(Indomitability) <= 1))
+                if (IsEnabled(Preset.SCH_AoE_Heal_Dissipation) && ActionReady(Dissipation) && !FairyBusy &&
+                    (!SCH_AoE_Heal_Dissipation_Indomitability || GetCooldownRemainingTime(Indomitability) <= 1))
                     return Dissipation;
             }
-            if (IsEnabled(CustomComboPreset.SCH_AoE_Heal_Lucid) && Role.CanLucidDream(Config.SCH_AoE_Heal_LucidOption))
+            if (IsEnabled(Preset.SCH_AoE_Heal_Lucid) && Role.CanLucidDream(SCH_AoE_Heal_LucidOption))
                 return Role.LucidDreaming;
 
             //Priority List
             float averagePartyHP = GetPartyAvgHPPercent();
-            for(int i = 0; i < Config.SCH_AoE_Heals_Priority.Count; i++)
+            for(int i = 0; i < SCH_AoE_Heals_Priority.Count; i++)
             {
-                int index = Config.SCH_AoE_Heals_Priority.IndexOf(i + 1);
+                int index = SCH_AoE_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigAoE(index, out uint spell, out bool enabled);
-                bool onIdom = Config.SCH_AoE_Heal_Indomitability_Recitation && spell is Indomitability;
-                bool onSuccor = Config.SCH_AoE_Heal_Succor_Options[1] && spell is Succor or Concitation or Accession;
+                bool onIdom = SCH_AoE_Heal_Indomitability_Recitation && spell is Indomitability;
+                bool onSuccor = SCH_AoE_Heal_Succor_Options[1] && spell is Succor or Concitation or Accession;
 
                 if (enabled && averagePartyHP <= config && ActionReady(spell))
                      return ActionReady(Recitation) && (onIdom || onSuccor) ? 
@@ -411,7 +420,7 @@ internal partial class SCH : Healer
                         spell;
             }
 
-            if (Config.SCH_AoE_Heal_Succor_Options[0] && ActionReady(EmergencyTactics))
+            if (SCH_AoE_Heal_Succor_Options[0] && ActionReady(EmergencyTactics))
                 return OriginalHook(EmergencyTactics);
             
             return !LevelChecked(Succor)?
@@ -424,33 +433,11 @@ internal partial class SCH : Healer
     
     #region Standalone Features
     
-    #region Sacred Soil Retarget
-    internal class SCH_SacredSoil : CustomCombo
-    {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_SacredSoil;
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not SacredSoil)
-                return actionID;
-            
-            var sacredSoilTarget =
-                    (IsEnabled(CustomComboPreset.SCH_SacredSoil_Enemy)
-                        ? SimpleTarget.HardTarget
-                        : null) ??
-                    (IsEnabled(CustomComboPreset.SCH_SacredSoil_Allies)
-                        ? SimpleTarget.Stack.OverridesAllies
-                        : null) ??
-                    SimpleTarget.Self;
-                
-            return IsEnabled(CustomComboPreset.SCH_SacredSoil)? SacredSoil.Retarget(sacredSoilTarget) : actionID;
-        }
-    }
-    #endregion
-    
     #region Fey Blessing to Consolation
     internal class SCH_Consolation : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Consolation;
+        protected internal override Preset Preset => Preset.SCH_Consolation;
+
         protected override uint Invoke(uint actionID)
             => actionID is FeyBlessing && LevelChecked(SummonSeraph) && Gauge.SeraphTimer > 0 ? Consolation : actionID;
     }
@@ -459,32 +446,58 @@ internal partial class SCH : Healer
     #region Lustrate to Excogitation
     internal class SCH_Lustrate : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Lustrate;
-        protected override uint Invoke(uint actionID) =>
-            actionID is Lustrate &&
-            LevelChecked(Excogitation) && IsOffCooldown(Excogitation)
-                ? Excogitation
-                : actionID;
+        protected internal override Preset Preset => Preset.SCH_Lustrate;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Lustrate)
+                return actionID;
+            
+            IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
+            
+            if (ActionReady(Excogitation))
+                return IsEnabled(Preset.SCH_Retarget_Excogitation)
+                    ? Excogitation.Retarget(Lustrate, healStack, true)
+                    : Excogitation;
+            
+            return IsEnabled(Preset.SCH_Retarget_Lustrate)
+                ? Lustrate.Retarget(healStack, true)
+                : Lustrate;
+        }
     }
     #endregion
     
     #region Recitation to Selected Option
     internal class SCH_Recitation : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Recitation;
+        protected internal override Preset Preset => Preset.SCH_Recitation;
+
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Recitation || !HasStatusEffect(Buffs.Recitation))
+            if (actionID is not Recitation)
                 return actionID;
 
-            return Config.SCH_Recitation_Mode.Value switch
+            IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
+            
+            if (ActionReady(Recitation))
+                return Recitation;
+            
+            if (!HasStatusEffect(Buffs.Recitation) || !ActionReady(Recitation))
             {
-                0 => OriginalHook(Adloquium),
-                1 => OriginalHook(Succor),
-                2 => OriginalHook(Indomitability),
-                3 => OriginalHook(Excogitation),
-                _ => actionID,
-            };
+                if (SCH_Recitation_Mode == 1 && ActionReady(OriginalHook(Succor)))
+                    return OriginalHook(Succor);
+                if (SCH_Recitation_Mode == 2 && ActionReady(OriginalHook(Indomitability)))
+                    return OriginalHook(Indomitability);
+                if (SCH_Recitation_Mode == 3)
+                    return IsEnabled(Preset.SCH_Retarget_Excogitation) && ActionReady(OriginalHook(Excogitation))
+                        ? Excogitation.Retarget(Recitation, healStack, true)
+                        : Excogitation;
+                if (SCH_Recitation_Mode == 0)
+                    return IsEnabled(Preset.SCH_Retarget_Adloquium)
+                        ? OriginalHook(Adloquium).Retarget(Recitation, healStack, true)
+                        : OriginalHook(Adloquium);
+            }
+            return actionID;
         }
     }
     #endregion
@@ -492,7 +505,8 @@ internal partial class SCH : Healer
     #region Aetherflow Reminder
     internal class SCH_Aetherflow : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Aetherflow;
+        protected internal override Preset Preset => Preset.SCH_Aetherflow;
+
         protected override uint Invoke(uint actionID)
         {
             if (!AetherflowList.Contains(actionID) || !LevelChecked(Aetherflow))
@@ -500,14 +514,14 @@ internal partial class SCH : Healer
 
             bool hasAetherFlows = HasAetherflow; //False if Zero stacks
 
-            if (IsEnabled(CustomComboPreset.SCH_Aetherflow_Recite) &&
+            if (IsEnabled(Preset.SCH_Aetherflow_Recite) &&
                 LevelChecked(Recitation) &&
                 (IsOffCooldown(Recitation) || HasStatusEffect(Buffs.Recitation)))
             {
                 //Recitation Indominability and Excogitation, with optional check against AF zero stack count
-                bool alwaysShowReciteExcog = Config.SCH_Aetherflow_Recite_ExcogMode == 1;
+                bool alwaysShowReciteExcog = SCH_Aetherflow_Recite_ExcogMode == 1;
 
-                if (Config.SCH_Aetherflow_Recite_Excog &&
+                if (SCH_Aetherflow_Recite_Excog &&
                     (alwaysShowReciteExcog ||
                      !alwaysShowReciteExcog && !hasAetherFlows) && actionID is Excogitation)
                 {
@@ -517,9 +531,9 @@ internal partial class SCH : Healer
                         : Recitation;
                 }
 
-                bool alwaysShowReciteIndom = Config.SCH_Aetherflow_Recite_IndomMode == 1;
+                bool alwaysShowReciteIndom = SCH_Aetherflow_Recite_IndomMode == 1;
 
-                if (Config.SCH_Aetherflow_Recite_Indom &&
+                if (SCH_Aetherflow_Recite_Indom &&
                     (alwaysShowReciteIndom ||
                      !alwaysShowReciteIndom && !hasAetherFlows) && actionID is Indomitability)
                 {
@@ -531,12 +545,12 @@ internal partial class SCH : Healer
             }
             if (!hasAetherFlows)
             {
-                bool showAetherflowOnAll = Config.SCH_Aetherflow_Display == 1;
+                bool showAetherflowOnAll = SCH_Aetherflow_Display == 1;
 
                 if ((actionID is EnergyDrain && !showAetherflowOnAll || showAetherflowOnAll) &&
                     IsOffCooldown(actionID))
                 {
-                    if (IsEnabled(CustomComboPreset.SCH_Aetherflow_Dissipation) &&
+                    if (IsEnabled(Preset.SCH_Aetherflow_Dissipation) &&
                         ActionReady(Dissipation) && IsOnCooldown(Aetherflow) && HasPetPresent())
                         //Dissipation requires fairy, can't seem to make it replace dissipation with fairy summon feature *shrug*
                         return Dissipation;
@@ -552,10 +566,11 @@ internal partial class SCH : Healer
     #region Swiftcast to Raise
     internal class SCH_Raise : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Raise;
+        protected internal override Preset Preset => Preset.SCH_Raise;
+
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
-                ? IsEnabled(CustomComboPreset.SCH_Raise_Retarget)
+                ? IsEnabled(Preset.SCH_Raise_Retarget)
                     ? Resurrection
                         .Retarget(Role.Swiftcast,
                             SimpleTarget.Stack.AllyToRaise)
@@ -568,7 +583,8 @@ internal partial class SCH : Healer
     #region Fairy Reminder
     internal class SCH_FairyReminder : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_FairyReminder;
+        protected internal override Preset Preset => Preset.SCH_FairyReminder;
+
         protected override uint Invoke(uint actionID)
             => FairyList.Contains(actionID) && NeedToSummon ? SummonEos : actionID;
     }
@@ -577,24 +593,29 @@ internal partial class SCH : Healer
     #region Deployment Tactics to Adloquium
     internal class SCH_DeploymentTactics : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_DeploymentTactics;
+        protected internal override Preset Preset => Preset.SCH_DeploymentTactics;
+
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not DeploymentTactics || !ActionReady(DeploymentTactics))
+            if (actionID is not DeploymentTactics)
                 return actionID;
 
             //Grab our target
-            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+            IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
 
             //Check for the Galvanize shield buff. Start applying if it doesn't exist
-            if (!HasStatusEffect(Buffs.Galvanize, healTarget))
+            if (!HasStatusEffect(Buffs.Galvanize, healStack)) 
             {
-                if (IsEnabled(CustomComboPreset.SCH_DeploymentTactics_Recitation) && ActionReady(Recitation))
+                if (IsEnabled(Preset.SCH_DeploymentTactics_Recitation) && ActionReady(Recitation))
                     return Recitation;
 
-                return OriginalHook(Adloquium);
+                return IsEnabled(Preset.SCH_Retarget_Adloquium)
+                    ? OriginalHook(Adloquium).Retarget(DeploymentTactics ,healStack, true)
+                    : OriginalHook(Adloquium);
             }
-            return actionID;
+            return IsEnabled(Preset.SCH_Retarget_DeploymentTactics)
+                ? DeploymentTactics.Retarget(healStack, true)
+                : actionID;
         }
     }
     #endregion
@@ -602,7 +623,8 @@ internal partial class SCH : Healer
     #region Whispering Dawn to Fairy Abilities
     internal class SCH_Fairy_Combo : CustomCombo
     {
-        protected internal override CustomComboPreset Preset { get; } = CustomComboPreset.SCH_Fairy_Combo;
+        protected internal override Preset Preset => Preset.SCH_Fairy_Combo;
+
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not WhisperingDawn)
@@ -618,11 +640,160 @@ internal partial class SCH : Healer
                 if (ActionReady(FeyBlessing) && !(Gauge.SeraphTimer > 0))
                     return OriginalHook(FeyBlessing);
 
-                if (IsEnabled(CustomComboPreset.SCH_Fairy_Combo_Consolation) && ActionReady(WhisperingDawn))
+                if (IsEnabled(Preset.SCH_Fairy_Combo_Consolation) && ActionReady(WhisperingDawn))
                     return OriginalHook(actionID);
 
-                if (IsEnabled(CustomComboPreset.SCH_Fairy_Combo_Consolation) && Gauge.SeraphTimer > 0 && GetRemainingCharges(Consolation) > 0)
+                if (IsEnabled(Preset.SCH_Fairy_Combo_Consolation) && Gauge.SeraphTimer > 0 && GetRemainingCharges(Consolation) > 0)
                     return OriginalHook(Consolation);
+            }
+            return actionID;
+        }
+    }
+    #endregion
+    
+    internal class SCH_Mit_ST : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.SCH_Mit_ST;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Protraction)
+                return actionID;
+            
+            IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
+
+            if (ActionReady(Protraction))
+                return IsEnabled(Preset.SCH_Retarget_Protraction)
+                    ? Protraction.Retarget(healStack, dontCull: true)
+                    : actionID;
+
+            if (SCH_Mit_STOptions[0] && 
+                ActionReady(Recitation))
+                return Recitation;
+            
+            if (ActionReady(Adloquium) && 
+                !HasStatusEffect(Buffs.Galvanize, healStack))
+                return IsEnabled(Preset.SCH_Retarget_Adloquium)
+                ? OriginalHook(Adloquium).Retarget(Protraction, healStack, true)
+                : OriginalHook(Adloquium);
+
+            if (SCH_Mit_STOptions[1] &&
+                ActionReady(DeploymentTactics) &&
+                HasStatusEffect(Buffs.Catalyze, healStack))
+                return IsEnabled(Preset.SCH_Retarget_DeploymentTactics)
+                    ? DeploymentTactics.Retarget(Protraction, healStack, true)
+                    : DeploymentTactics;
+
+            if (SCH_Mit_STOptions[2] && ActionReady(Excogitation))
+                return IsEnabled(Preset.SCH_Retarget_Excogitation)
+                    ? Excogitation.Retarget(Protraction, healStack, true)
+                    : Excogitation;
+            
+            return actionID;
+        }
+    }
+    internal class SCH_Mit_AoE : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.SCH_Mit_AoE;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not SacredSoil)
+                return actionID;
+            
+            var soilTarget =
+                (SCH_Retarget_SacredSoilOptions[0]
+                    ? SimpleTarget.HardTarget.IfHostile()
+                    : null) ??
+                (SCH_Retarget_SacredSoilOptions[1]
+                    ? SimpleTarget.HardTarget.IfFriendly()
+                    : null) ??
+                SimpleTarget.Self;
+            
+            if (ActionReady(SacredSoil))
+                return IsEnabled(Preset.SCH_Retarget_SacredSoil) 
+                    ? SacredSoil.Retarget(soilTarget) 
+                    : actionID;
+
+            if (SCH_Mit_AoEOptions[0] &&
+                ActionReady(FeyIllumination) && HasPetPresent() && !FairyBusy)
+                return FeyIllumination;
+
+            if (SCH_Mit_AoEOptions[1])
+            {
+                if (ActionReady(Recitation) && ActionReady(DeploymentTactics))
+                    return Recitation;
+
+                if (HasStatusEffect(Buffs.Recitation))
+                    return Adloquium.Retarget(SacredSoil, SimpleTarget.Self);
+                
+                if (ActionReady(DeploymentTactics) && HasStatusEffect(Buffs.Catalyze))
+                    return DeploymentTactics.Retarget(SacredSoil ,SimpleTarget.Self);
+            }
+
+            if (!HasStatusEffect(Buffs.Galvanize) &&
+                !HasStatusEffect(SGE.Buffs.EukrasianPrognosis))
+                return OriginalHook(Succor);
+
+            if (SCH_Mit_AoEOptions[2] &&
+                ActionReady(Expedient))
+                return Expedient;
+
+            if (SCH_Mit_AoEOptions[3] &&
+                ActionReady(SummonSeraph) &&
+                HasPetPresent() && !FairyBusy)
+                return SummonSeraph;
+            
+            if (ActionReady(Consolation) && 
+                !JustUsed(Consolation))
+                return Consolation;
+
+            return actionID;
+        }
+    }
+    
+    #region Retargeting Standalone
+    internal class SCH_Retarget : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.SCH_Retarget;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (!EZ.Throttle("SCHRetargetingFeature", TS.FromSeconds(.1)))
+                return actionID;
+            
+            IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
+
+            if (IsEnabled(Preset.SCH_Retarget_Adloquium))
+                OriginalHook(Adloquium).Retarget(healStack, true);
+            
+            if (IsEnabled(Preset.SCH_Retarget_Physick))
+                Physick.Retarget(healStack, true);
+            
+            if (IsEnabled(Preset.SCH_Retarget_Lustrate))
+                Lustrate.Retarget(healStack, true);
+
+            if (IsEnabled(Preset.SCH_Retarget_Excogitation))
+                Excogitation.Retarget(healStack, true);
+
+            if (IsEnabled(Preset.SCH_Retarget_DeploymentTactics))
+                DeploymentTactics.Retarget(healStack, true);
+
+            if (IsEnabled(Preset.SCH_Retarget_Protraction))
+                Protraction.Retarget(healStack, true);
+
+            if (IsEnabled(Preset.SCH_Retarget_Aetherpact))
+                Aetherpact.Retarget(healStack, true);
+            
+            if (IsEnabled(Preset.SCH_Retarget_SacredSoil))
+            {
+                var soilTarget =
+                    (SCH_Retarget_SacredSoilOptions[0]
+                        ? SimpleTarget.HardTarget.IfHostile()
+                        : null) ??
+                    (SCH_Retarget_SacredSoilOptions[1]
+                        ? SimpleTarget.HardTarget.IfFriendly()
+                        : null) ??
+                    SimpleTarget.Self;
+                SacredSoil.Retarget(soilTarget, dontCull: true);
             }
             return actionID;
         }

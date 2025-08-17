@@ -1,35 +1,31 @@
 <Solution>
-    <Folder Name="/Docs/">
-        <File Path="Contributing.md" />
-        <File Path="docs/BurstHoldingMacros.md" />
-        <File Path="docs/IPC.md" />
-        <File Path="docs/IPCExample.cs" />
-        <File Path="docs/Retargeting.md" />
-        <File Path="docs/RetargetingExample.cs" />
-        <File Path="docs/Setup.md" />
-        <File Path="docs/AutoRotation.md" />
-        <File Path="docs/HealerSettings.md" />
-    </Folder>
-    <Folder Name="/Solution Items/">
-        <File Path=".editorconfig" />
-        <File Path=".gitignore" />
-        <File Path="docs/CODEOWNERS" />
-        <File Path="README.md" />
-    </Folder>
-
-    <Configurations>
-        <BuildType Name="Debug" />
-        <BuildType Name="Release" />
-        <Platform Name="x64" />
-    </Configurations>
-
-    <Project Path="ECommons/ECommons/ECommons.csproj">
-        <Platform Project="x64" />
-    </Project>
-    <Project Path="PunishLib/PunishLib/PunishLib.csproj">
-        <Platform Project="x64" />
-    </Project>
-    <Project Path="WrathCombo/WrathCombo.csproj">
-        <Platform Project="x64" />
-    </Project>
+  <Configurations>
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Docs/">
+    <File Path="Contributing.md" />
+    <File Path="docs/BurstHoldingMacros.md" />
+    <File Path="docs/IPC.md" />
+    <File Path="docs/IPCExample.cs" />
+    <File Path="docs/Retargeting.md" />
+    <File Path="docs/RetargetingExample.cs" />
+    <File Path="docs/Setup.md" />
+    <File Path="docs/AutoRotation.md" />
+    <File Path="docs/HealerSettings.md" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitignore" />
+    <File Path="docs/CODEOWNERS" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ECommons/ECommons/ECommons.csproj">
+  	<Platform Project="x64" />
+  </Project>
+  <Project Path="PunishLib/PunishLib/PunishLib.csproj">
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="WrathCombo/WrathCombo.csproj">
+  	<Platform Project="x64" />
+  </Project>
 </Solution>

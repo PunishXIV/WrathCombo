@@ -1,10 +1,10 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static FFXIVClientStructs.FFXIV.Client.Game.ActionManager;
 using static WrathCombo.Combos.PvE.VPR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -55,8 +55,8 @@ internal partial class VPR
         {
             //Use whenever
             if (SerpentOffering >= 50 && TargetIsBoss() &&
-                ((IsEnabled(CustomComboPreset.VPR_ST_SimpleMode) && GetTargetHPPercent() < 5) ||
-                 (IsEnabled(CustomComboPreset.VPR_ST_AdvancedMode) && GetTargetHPPercent() < VPR_ST_ReAwaken_Threshold)))
+                (IsEnabled(Preset.VPR_ST_SimpleMode) && GetTargetHPPercent() < 5 ||
+                 IsEnabled(Preset.VPR_ST_AdvancedMode) && GetTargetHPPercent() < VPR_ST_ReAwaken_Threshold))
                 return true;
 
             //2min burst
@@ -74,8 +74,8 @@ internal partial class VPR
                 return true;
 
             //non boss encounters
-            if (((IsEnabled(CustomComboPreset.VPR_ST_SimpleMode) && !InBossEncounter()) ||
-                 (IsEnabled(CustomComboPreset.VPR_ST_AdvancedMode) && VPR_ST_SerpentsIre_SubOption == 1 && !InBossEncounter())) &&
+            if ((IsEnabled(Preset.VPR_ST_SimpleMode) && !InBossEncounter() ||
+                 IsEnabled(Preset.VPR_ST_AdvancedMode) && VPR_ST_SerpentsIre_SubOption == 1 && !InBossEncounter()) &&
                 SerpentOffering >= 50)
                 return true;
 
@@ -242,7 +242,7 @@ internal partial class VPR
     {
         float gcd = GCD * times;
 
-        return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
+        return Instance()->Combo.Timer != 0 && Instance()->Combo.Timer < gcd;
     }
 
     #endregion
@@ -359,8 +359,6 @@ internal partial class VPR
     #endregion
 
     #region ID's
-
-    public const byte JobID = 41;
 
     public const uint
         ReavingFangs = 34607,

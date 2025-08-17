@@ -65,7 +65,7 @@ includes Combos and Options.\
 It does not include [Configs](#configs), which come from `_Config.cs` files, and are 
 mostly UI code.
 
-Presets are all defined in [`CustomComboPreset.cs`](/WrathCombo/Combos/CustomComboPreset.cs).
+Presets are all defined in [`Preset.cs`](/WrathCombo/Combos/Preset.cs).
 
 ## Terminology
 - **Combos**

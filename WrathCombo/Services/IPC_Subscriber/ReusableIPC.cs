@@ -1,10 +1,10 @@
 ﻿#region
 
-using System;
 using Dalamud.Plugin;
 using ECommons;
 using ECommons.EzIpcManager;
 using ECommons.Reflection;
+using System;
 
 #endregion
 
