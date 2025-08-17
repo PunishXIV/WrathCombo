@@ -3,7 +3,6 @@
 using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
-using Preset = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedType.Global

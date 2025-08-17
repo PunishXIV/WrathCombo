@@ -7,7 +7,6 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using Options = WrathCombo.Combos.CustomComboPreset;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable InconsistentNaming
@@ -61,13 +60,13 @@ internal partial class BLU
         private readonly DoT[] _dots =
         [
             new(Debuffs.FeatherRain, FeatherRain_Spell44,
-                Options.BLU_Tank_DoT),
+                Preset.BLU_Tank_DoT),
             new(Debuffs.SongOfTorment, SongofTorment_Spell9,
-                Options.BLU_DPS_DoT),
+                Preset.BLU_DPS_DoT),
             new(Debuffs.BreathOfMagic, BreathofMagic_Spell109,
-                Options.BLU_DPS_DoT_Breath),
+                Preset.BLU_DPS_DoT_Breath),
             new(Debuffs.MortalFlame, MortalFlame_Spell121,
-                Options.BLU_DPS_DoT_Flame, InCombat),
+                Preset.BLU_DPS_DoT_Flame, InCombat),
         ];
     }
 
@@ -250,12 +249,12 @@ internal partial class BLU
 public class DoT(
     ushort debuffID,
     uint actionID,
-    Options preset,
+    Preset preset,
     Func<bool>? logic = null)
 {
     public ushort DebuffID { get; } = debuffID;
     public uint ActionID { get; } = actionID;
-    public Options Preset { get; } = preset;
+    public Preset Preset { get; } = preset;
     public Func<bool> Logic { get; } = logic ?? (() => true);
 }
 
