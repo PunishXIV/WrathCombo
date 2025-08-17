@@ -3,8 +3,6 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 using System.Linq;
 using WrathCombo.Core;
-using WrathCombo.CustomComboNS;
-using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SMN.Config;
 namespace WrathCombo.Combos.PvE;
 
