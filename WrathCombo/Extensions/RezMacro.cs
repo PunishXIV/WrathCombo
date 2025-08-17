@@ -148,7 +148,7 @@ public static class RezMacro
         }
 
         // Actually request the macro be printed
-        PrintMacro(targetObj!);
+        PrintMacro(targetObj);
     }
 
     /// <summary>
@@ -189,7 +189,7 @@ public static class RezMacro
             payloadString += "/p ";
         else
             payloadString += "/e ";
-        payloadString = "/e ";
+        payloadString = "/e "; // todo: temporary to ensure only echo
         foreach (var payload in payloads)
         {
             if (payload is TextPayload textLoad)
