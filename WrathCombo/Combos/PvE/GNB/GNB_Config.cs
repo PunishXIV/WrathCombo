@@ -12,7 +12,7 @@ internal partial class GNB
     internal static class Config
     {
         public static UserInt
-            GNB_Opener_StartChoice = new ("GNB_Opener_StartChoice", 0),
+            GNB_Opener_StartChoice = new("GNB_Opener_StartChoice", 0),
             GNB_Opener_NM = new("GNB_Opener_NM", 0),
             GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 0),
             GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
@@ -67,7 +67,6 @@ internal partial class GNB
             GNB_Mit_ArmsLength_Boss = new("GNB_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
             GNB_Mit_ArmsLength_EnemyCount = new("GNB_Mit_ArmsLength_EnemyCount", 0),
             GNB_Mit_Nebula_Health = new("GNB_Mit_Nebula_Health", 50),
-            GNB_VariantCure = new("GNB_VariantCure"),
             GNB_Bozja_LostCure_Health = new("GNB_Bozja_LostCure_Health", 50),
             GNB_Bozja_LostCure2_Health = new("GNB_Bozja_LostCure2_Health", 50),
             GNB_Bozja_LostCure3_Health = new("GNB_Bozja_LostCure3_Health", 50),
@@ -95,16 +94,16 @@ internal partial class GNB
                         $"Normal {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} normally in all openers", 0);
                     DrawHorizontalRadioButton(GNB_Opener_NM,
                         $"Early {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} as soon as possible in all openers", 1);
-                    
+
                     if (DrawHorizontalRadioButton(GNB_Opener_StartChoice,
                         $"Normal Opener", $"Starts opener with {LightningShot.ActionName()}", 0))
                     {
                         if (!CustomComboFunctions.InCombat())
                             Opener().OpenerStep = 1;
-                    }    
+                    }
                     DrawHorizontalRadioButton(GNB_Opener_StartChoice,
                         $"Early Opener", $"Starts opener with {KeenEdge.ActionName()} instead, skipping {LightningShot.ActionName()}", 1);
-                    
+
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
                     break;
 
@@ -113,7 +112,7 @@ internal partial class GNB
                         "All content", $"Uses {CustomComboFunctions.GetActionName(NoMercy)} regardless of content", 0);
                     DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,
                         "Boss encounters Only", $"Only uses {CustomComboFunctions.GetActionName(NoMercy)} when in Boss encounters", 1);
-                    
+
                     DrawSliderInt(0, 75, GNB_ST_NoMercyStop,
                         " Stop usage if Target HP% is below set value.\n  To disable this, set value to 0");
                     break;
@@ -336,11 +335,11 @@ internal partial class GNB
 
                 case Preset.GNB_Mit_ArmsLength:
                     ImGui.Indent();
-                    DrawHorizontalRadioButton(GNB_Mit_ArmsLength_Boss, 
+                    DrawHorizontalRadioButton(GNB_Mit_ArmsLength_Boss,
                         "All Enemies", "Will use Arm's Length regardless of the type of enemy.",
                         (int)BossAvoidance.Off, 125f);
                     DrawHorizontalRadioButton(
-                        GNB_Mit_ArmsLength_Boss, 
+                        GNB_Mit_ArmsLength_Boss,
                         "Avoid Bosses", "Will try not to use Arm's Length when in a boss fight.",
                         (int)BossAvoidance.On, 125f);
                     ImGui.Unindent();
@@ -428,10 +427,6 @@ internal partial class GNB
                         "Player HP% to be \nless than or equal to:", 200);
                     break;
 
-                case Preset.GNB_Variant_Cure:
-                    DrawSliderInt(1, 100, GNB_VariantCure,
-                        "Player HP% to be \nless than or equal to:", 200);
-                    break;
                     #endregion
             }
         }

@@ -61,16 +61,8 @@ internal partial class VPR : Melee
             if (actionID is not SteelFangs)
                 return actionID;
 
-            // Variant Cure
-            if (Variant.CanCure(Preset.VPR_Variant_Cure, VPR_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.VPR_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             //oGCDs
             if (CanWeave()
@@ -230,16 +222,8 @@ internal partial class VPR : Melee
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            // Variant Cure
-            if (Variant.CanCure(Preset.VPR_Variant_Cure, VPR_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.VPR_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             //oGCDs
             if (CanWeave())
@@ -416,16 +400,8 @@ internal partial class VPR : Melee
             if (actionID is not SteelMaw)
                 return actionID;
 
-            // Variant Cure
-            if (Variant.CanCure(Preset.VPR_Variant_Cure, VPR_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.VPR_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave())
             {
@@ -561,16 +537,8 @@ internal partial class VPR : Melee
             if (actionID is not SteelMaw)
                 return actionID;
 
-            // Variant Cure
-            if (Variant.CanCure(Preset.VPR_Variant_Cure, VPR_VariantCure))
-                return Variant.Cure;
-
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.VPR_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave())
             {
@@ -807,17 +775,17 @@ internal partial class VPR : Melee
             {
                 case Reawaken when VPR_ReawakenLegacyButton == 0 && HasStatusEffect(Buffs.Reawakened):
                 case ReavingFangs when VPR_ReawakenLegacyButton == 1 && HasStatusEffect(Buffs.Reawakened):
-                {
-                    // Legacy Weaves
-                    if (IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
-                        TraitLevelChecked(Traits.SerpentsLegacy) && HasStatusEffect(Buffs.Reawakened)
-                        && OriginalHook(SerpentsTail) is not SerpentsTail)
-                        return OriginalHook(SerpentsTail);
+                    {
+                        // Legacy Weaves
+                        if (IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
+                            TraitLevelChecked(Traits.SerpentsLegacy) && HasStatusEffect(Buffs.Reawakened)
+                            && OriginalHook(SerpentsTail) is not SerpentsTail)
+                            return OriginalHook(SerpentsTail);
 
-                    if (ReawakenComboST(ref actionID))
-                        return actionID;
-                    break;
-                }
+                        if (ReawakenComboST(ref actionID))
+                            return actionID;
+                        break;
+                    }
             }
 
             return actionID;

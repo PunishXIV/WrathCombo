@@ -77,8 +77,8 @@ internal partial class DRK : Tank
                 return actionID;
             }
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Bail if not in combat
             if (!InCombat())
@@ -94,9 +94,6 @@ internal partial class DRK : Tank
                 !InMeleeRange() &&
                 HasBattleTarget())
                 return Unmend;
-
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
-                return newAction;
 
             var inMitigationContent =
                 ContentCheck.IsInConfiguredContent(
@@ -154,8 +151,8 @@ internal partial class DRK : Tank
                 HasBattleTarget())
                 return Unmend;
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Bail if not in combat
             if (!InCombat())
@@ -164,9 +161,6 @@ internal partial class DRK : Tank
                     return newAction;
                 return HardSlash;
             }
-
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
-                return newAction;
 
             if (TryGetAction<Mitigation>(comboFlags, ref newAction))
                 return newAction;
@@ -199,8 +193,8 @@ internal partial class DRK : Tank
             const Combo comboFlags = Combo.AoE | Combo.Adv;
             var newAction = Unleash;
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Bail if not in combat
             if (!InCombat())
@@ -209,9 +203,6 @@ internal partial class DRK : Tank
                     return newAction;
                 return Unleash;
             }
-
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
-                return newAction;
 
             if (IsEnabled(Preset.DRK_AoE_CDs) &&
                 TryGetAction<Cooldown>(comboFlags, ref newAction))
@@ -244,8 +235,8 @@ internal partial class DRK : Tank
             const Combo comboFlags = Combo.AoE | Combo.Simple;
             var newAction = Unleash;
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Bail if not in combat
             if (!InCombat())
@@ -254,9 +245,6 @@ internal partial class DRK : Tank
                     return newAction;
                 return Unleash;
             }
-
-            if (TryGetAction<VariantAction>(comboFlags, ref newAction))
-                return newAction;
 
             if (TryGetAction<Cooldown>(comboFlags, ref newAction))
                 return newAction;

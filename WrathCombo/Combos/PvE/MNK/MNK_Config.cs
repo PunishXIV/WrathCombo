@@ -79,11 +79,6 @@ internal partial class MNK
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
-                case Preset.MNK_Variant_Cure:
-                    DrawSliderInt(1, 100, MNK_VariantCure,
-                        "HP% to be at or under", 200);
-                    break;
-
                 case Preset.MNK_Brotherhood_Riddle:
                     DrawRadioButton(MNK_BH_RoF,
                         $"Replaces {Brotherhood.ActionName()}", $"Replaces {Brotherhood.ActionName()} with {RiddleOfFire.ActionName()} when {Brotherhood.ActionName()} is on cooldown.", 0);
@@ -124,7 +119,6 @@ internal partial class MNK
             MNK_AoE_RiddleOfFireHPTreshold = new("MNK_AoE_RiddleOfFire_HP", 20),
             MNK_AoE_SecondWindHPThreshold = new("MNK_AoE_SecondWindThreshold", 40),
             MNK_AoE_BloodbathHPThreshold = new("MNK_AoE_BloodbathThreshold", 30),
-            MNK_VariantCure = new("MNK_Variant_Cure", 50),
             MNK_BH_RoF = new("MNK_BH_RoF", 0);
 
         public static UserBool

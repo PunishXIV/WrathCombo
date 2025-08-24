@@ -17,14 +17,8 @@ internal partial class BRD : PhysicalRanged
                 return actionID;
 
             #region Special Content
-            if (Variant.CanCure(Preset.BRD_Variant_Cure, BRD_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region Songs
@@ -137,9 +131,9 @@ internal partial class BRD : PhysicalRanged
 
             if (HasStatusEffect(Buffs.HawksEye) && ActionReady(WideVolley))
                 return OriginalHook(WideVolley);
-            
+
             #region Multidot Management
-            
+
             #region Dottable Variables
             var blueDotAction = OriginalHook(Windbite);
             var purpleDotAction = OriginalHook(VenomousBite);
@@ -149,18 +143,18 @@ internal partial class BRD : PhysicalRanged
             var blueTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, 50, 0);
             var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, 50, 0);
             #endregion
-            
+
             if (ironTarget is not null && LevelChecked(IronJaws))
                 return IronJaws.Retarget([Ladonsbite, QuickNock], ironTarget);
-            
+
             if (blueTarget is not null && LevelChecked(Windbite))
                 return blueDotAction.Retarget([Ladonsbite, QuickNock], blueTarget);
-            
+
             if (purpleTarget is not null && LevelChecked(VenomousBite))
                 return purpleDotAction.Retarget([Ladonsbite, QuickNock], purpleTarget);
-            
+
             #endregion
-            
+
             #endregion
 
             return actionID;
@@ -176,14 +170,8 @@ internal partial class BRD : PhysicalRanged
                 return actionID;
 
             #region Special Content
-            if (Variant.CanCure(Preset.BRD_Variant_Cure, BRD_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region Songs
@@ -275,7 +263,7 @@ internal partial class BRD : PhysicalRanged
             #endregion
 
             #region Primary Dot Management
-            
+
             if (UseIronJaws())
                 return IronJaws;
             if (ApplyBlueDot())
@@ -284,7 +272,7 @@ internal partial class BRD : PhysicalRanged
                 return OriginalHook(VenomousBite);
             if (RagingJawsRefresh() && RagingStrikesDuration < 6)
                 return IronJaws;
-            
+
             #endregion
 
             #region GCDS
@@ -305,9 +293,9 @@ internal partial class BRD : PhysicalRanged
 
             if (HasStatusEffect(Buffs.HawksEye))
                 return OriginalHook(StraightShot);
-            
+
             #region Multidot Management
-            
+
             #region Dottable Variables
             var blueDotAction = OriginalHook(Windbite);
             var purpleDotAction = OriginalHook(VenomousBite);
@@ -317,18 +305,18 @@ internal partial class BRD : PhysicalRanged
             var blueTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, 50, 0);
             var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, 50, 0);
             #endregion
-            
+
             if (ironTarget is not null && LevelChecked(IronJaws))
                 return IronJaws.Retarget([HeavyShot, BurstShot], ironTarget);
-            
+
             if (blueTarget is not null && LevelChecked(Windbite))
                 return blueDotAction.Retarget([HeavyShot, BurstShot], blueTarget);
-            
+
             if (purpleTarget is not null && LevelChecked(VenomousBite))
                 return purpleDotAction.Retarget([HeavyShot, BurstShot], purpleTarget);
-            
+
             #endregion
-            
+
             #endregion
 
             return actionID;
@@ -355,14 +343,8 @@ internal partial class BRD : PhysicalRanged
             #endregion
 
             #region Special Content
-            if (Variant.CanCure(Preset.BRD_Variant_Cure, BRD_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-                
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region Songs
@@ -452,7 +434,7 @@ internal partial class BRD : PhysicalRanged
             {
                 if (IsEnabled(Preset.BRD_AoE_SecondWind) && Role.CanSecondWind(BRD_STSecondWindThreshold))
                     return Role.SecondWind;
-               
+
                 if (IsEnabled(Preset.BRD_AoE_Wardens) && ActionReady(TheWardensPaeon))
                 {
                     if (HasCleansableDebuff(LocalPlayer))
@@ -460,7 +442,7 @@ internal partial class BRD : PhysicalRanged
 
                     if (BRD_AoE_Wardens_Auto && WardenResolver() is not null)
                         return TheWardensPaeon.Retarget([Ladonsbite, QuickNock], WardenResolver);
-                }                   
+                }
             }
             #endregion
 
@@ -489,10 +471,10 @@ internal partial class BRD : PhysicalRanged
 
             if (HasStatusEffect(Buffs.HawksEye) && ActionReady(WideVolley))
                 return OriginalHook(WideVolley);
-            
+
             #region Multidot Management
             if (IsEnabled(Preset.BRD_AoE_Adv_Multidot))
-            {    
+            {
                 #region Dottable Variables
                 var blueDotAction = OriginalHook(Windbite);
                 var purpleDotAction = OriginalHook(VenomousBite);
@@ -502,20 +484,20 @@ internal partial class BRD : PhysicalRanged
                 var blueTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, BRD_AoE_Adv_Multidot_HPThreshold, 0);
                 var purpleTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, BRD_AoE_Adv_Multidot_HPThreshold, 0);
                 #endregion
-                
+
                 if (ironTarget is not null && LevelChecked(IronJaws))
                     return IronJaws.Retarget([Ladonsbite, QuickNock], ironTarget);
-                
+
                 if (blueTarget is not null && LevelChecked(Windbite))
                     return blueDotAction.Retarget([Ladonsbite, QuickNock], blueTarget);
-                
+
                 if (purpleTarget is not null && LevelChecked(VenomousBite))
                     return purpleDotAction.Retarget([Ladonsbite, QuickNock], purpleTarget);
-                
-                
+
+
             }
             #endregion
-            
+
             #endregion
 
             return actionID;
@@ -540,7 +522,7 @@ internal partial class BRD : PhysicalRanged
             int dotThreshold = BRD_Adv_DoT_SubOption == 1 || !InBossEncounter() ? BRD_Adv_DoT_Threshold : 0;
             int buffThreshold = BRD_Adv_Buffs_SubOption == 1 || !InBossEncounter() ? BRD_Adv_Buffs_Threshold : 0;
             #endregion
-            
+
             #region Opener
             if (IsEnabled(Preset.BRD_ST_Adv_Balance_Standard) && HasBattleTarget() &&
                 Opener().FullOpener(ref actionID))
@@ -559,14 +541,8 @@ internal partial class BRD : PhysicalRanged
             #endregion
 
             #region Special Content
-            if (Variant.CanCure(Preset.BRD_Variant_Cure, BRD_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BRD_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region Songs
@@ -594,13 +570,13 @@ internal partial class BRD : PhysicalRanged
             if (IsEnabled(Preset.BRD_Adv_Buffs) && CanBardWeave && GetTargetHPPercent() > buffThreshold)
             {
                 if (allBuffsEnabled && !SongNone && LevelChecked(MagesBallad))
-                {                    
+                {
                     if (UseRadiantBuff())
                         return RadiantFinale;
 
                     if (UseBattleVoiceBuff())
                         return BattleVoice;
-                                        
+
                     if (UseRagingStrikesBuff())
                         return RagingStrikes;
 
@@ -635,7 +611,7 @@ internal partial class BRD : PhysicalRanged
                 if (PitchPerfected())
                     return OriginalHook(PitchPerfect);
 
-                if (ActionReady(Sidewinder) && 
+                if (ActionReady(Sidewinder) &&
                     (IsEnabled(Preset.BRD_Adv_Pooling) && UsePooledSidewinder() || !IsEnabled(Preset.BRD_Adv_Pooling)))
                     return Sidewinder;
 
@@ -678,7 +654,7 @@ internal partial class BRD : PhysicalRanged
 
                     if (ApplyPurpleDot())
                         return OriginalHook(VenomousBite);
-                }   
+                }
                 if (BRD_Adv_DoT_Options[2] && RagingJawsRefresh() && RagingStrikesDuration < ragingJawsRenewTime)
                     return IronJaws;
             }
@@ -688,7 +664,7 @@ internal partial class BRD : PhysicalRanged
             if (HasStatusEffect(Buffs.Barrage))
                 return OriginalHook(StraightShot);
 
-            if (IsEnabled(Preset.BRD_Adv_BuffsEncore) && HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16 && 
+            if (IsEnabled(Preset.BRD_Adv_BuffsEncore) && HasStatusEffect(Buffs.RadiantEncoreReady) && RadiantFinaleDuration < 16 &&
                (HasStatusEffect(Buffs.RagingStrikes) || !ragingEnabled))
                 return OriginalHook(RadiantEncore);
 
@@ -706,12 +682,12 @@ internal partial class BRD : PhysicalRanged
 
             if (HasStatusEffect(Buffs.HawksEye))
                 return OriginalHook(StraightShot);
-            
+
             #region Multidot Management
             if (BRD_Adv_DoT_Options[3])
             {
                 #region Dottable Variables
-               
+
                 var blueDotAction = OriginalHook(Windbite);
                 var purpleDotAction = OriginalHook(VenomousBite);
                 BlueList.TryGetValue(blueDotAction, out var blueDotDebuffID);
@@ -738,7 +714,7 @@ internal partial class BRD : PhysicalRanged
         }
     }
     #endregion
-    
+
     #region Smaller features
     internal class BRD_StraightShotUpgrade : CustomCombo
     {

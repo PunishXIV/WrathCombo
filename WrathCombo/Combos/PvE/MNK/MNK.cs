@@ -31,16 +31,8 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(Preset.MNK_Variant_Cure, MNK_VariantCure))
-                return Variant.Cure;
-
-            //Variant Rampart
-            if (Variant.CanRampart(Preset.MNK_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // OGCDs
             if (CanWeave())
@@ -141,16 +133,8 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(Preset.MNK_Variant_Cure, MNK_VariantCure))
-                return Variant.Cure;
-
-            //Variant Rampart
-            if (Variant.CanRampart(Preset.MNK_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // OGCDs
             if (CanWeave() && M6SReady)
@@ -262,16 +246,8 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(Preset.MNK_Variant_Cure, MNK_VariantCure))
-                return Variant.Cure;
-
-            //Variant Rampart
-            if (Variant.CanRampart(Preset.MNK_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // OGCD's
             if (CanWeave())
@@ -373,18 +349,10 @@ internal partial class MNK : Melee
                 !HasStatusEffect(Buffs.CoeurlForm))
                 return FormShift;
 
-            //Variant Cure
-            if (Variant.CanCure(Preset.MNK_Variant_Cure, MNK_VariantCure))
-                return Variant.Cure;
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
-            //Variant Rampart
-            if (Variant.CanRampart(Preset.MNK_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-            // OGCD's 
+            // OGCD's
             if (CanWeave() && M6SReady)
             {
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&

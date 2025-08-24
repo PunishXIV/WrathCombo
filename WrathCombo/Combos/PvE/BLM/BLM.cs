@@ -16,14 +16,8 @@ internal partial class BLM : Caster
             if (actionID is not Fire)
                 return actionID;
 
-            if (Variant.CanCure(Preset.BLM_Variant_Cure, BLM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BLM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave())
             {
@@ -209,14 +203,8 @@ internal partial class BLM : Caster
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (Variant.CanCure(Preset.BLM_Variant_Cure, BLM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BLM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave())
             {
@@ -318,7 +306,7 @@ internal partial class BLM : Caster
 
             if (IsMoving() && InCombat() && HasBattleTarget())
             {
-                foreach(int priority in BLM_ST_Movement_Priority.Items.OrderBy(x => x))
+                foreach (int priority in BLM_ST_Movement_Priority.Items.OrderBy(x => x))
                 {
                     int index = BLM_ST_Movement_Priority.IndexOf(priority);
                     if (CheckMovementConfigMeetsRequirements(index, out uint action))
@@ -419,14 +407,8 @@ internal partial class BLM : Caster
             if (actionID is not (Blizzard2 or HighBlizzard2))
                 return actionID;
 
-            if (Variant.CanCure(Preset.BLM_Variant_Cure, BLM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BLM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave())
             {
@@ -514,14 +496,8 @@ internal partial class BLM : Caster
             if (actionID is not (Blizzard2 or HighBlizzard2))
                 return actionID;
 
-            if (Variant.CanCure(Preset.BLM_Variant_Cure, BLM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.BLM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave())
             {
@@ -623,21 +599,6 @@ internal partial class BLM : Caster
             }
 
             return actionID;
-        }
-    }
-
-    internal class BLM_Variant_Raise : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.BLM_Variant_Raise;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID != Role.Swiftcast)
-                return actionID;
-
-            return actionID == Role.Swiftcast && Variant.CanRaise(Preset.BLM_Variant_Raise)
-                ? Variant.Raise
-                : actionID;
         }
     }
 

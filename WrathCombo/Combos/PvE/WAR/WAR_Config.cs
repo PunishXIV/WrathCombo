@@ -69,7 +69,6 @@ internal partial class WAR
             WAR_AoE_ArmsLength_Health = new("WAR_AoE_ArmsLength_Health", 80),
             WAR_AoE_MitsOptions = new("WAR_AoE_MitsOptions", 0),
             WAR_AoE_IRStop = new("WAR_AoE_IRStop", 0),
-            WAR_VariantCure = new("WAR_VariantCure"),
             WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1),
             WAR_FC_IRStop = new("WAR_FC_IRStop", 0),
             WAR_FC_Infuriate_Charges = new("WAR_FC_Infuriate_Charges", 0),
@@ -227,7 +226,7 @@ internal partial class WAR
                     DrawHorizontalRadioButton(WAR_AoE_Onslaught_Movement,
                             "Any Movement", "Uses Onslaught regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
                     ImGui.Spacing();
-                    if (WAR_AoE_Onslaught_Movement == 0) 
+                    if (WAR_AoE_Onslaught_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_AoE_Onslaught_TimeStill,
@@ -562,11 +561,6 @@ internal partial class WAR
                 case Preset.WAR_EyePath:
                     DrawSliderInt(0, 30, WAR_EyePath_Refresh,
                         $" Seconds remaining before refreshing {Buffs.SurgingTempest.StatusName()} buff:");
-                    break;
-
-                case Preset.WAR_Variant_Cure:
-                    DrawSliderInt(1, 100, WAR_VariantCure,
-                        " Player HP% to be less than or equal to:", 200);
                     break;
 
                 case Preset.WAR_RawIntuition_Targeting_TT:

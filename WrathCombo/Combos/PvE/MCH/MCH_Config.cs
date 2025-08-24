@@ -148,11 +148,6 @@ internal partial class MCH
                         $"Change {Ricochet.ActionName()} / {CheckMate.ActionName()}", $"Changes to {GaussRound.ActionName()} / {DoubleCheck.ActionName()} depending on charges and what was used last", 1);
                     break;
 
-                //Variant
-                case Preset.MCH_Variant_Cure:
-                    DrawSliderInt(1, 100, MCH_VariantCure,
-                        "HP% to be at or under", 200);
-                    break;
             }
         }
 
@@ -176,8 +171,7 @@ internal partial class MCH
             MCH_AoE_FlamethrowerMovement = new("MCH_AoE_FlamethrowerMovement", 0),
             MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 50),
             MCH_AoE_SecondWindHPThreshold = new("MCH_AoE_SecondWindThreshold", 40),
-            MCH_GaussRico = new("MCHGaussRico", 0),
-            MCH_VariantCure = new("MCH_VariantCure", 50);
+            MCH_GaussRico = new("MCHGaussRico", 0);
 
         public static UserFloat
             MCH_AoE_FlamehrowerTimeStill = new("MCH_AoE_FlamehrowerTimeStill", 2.5f);

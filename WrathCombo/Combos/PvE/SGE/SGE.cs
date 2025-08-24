@@ -29,19 +29,12 @@ internal partial class SGE : Healer
                 return Kardia
                     .Retarget(actionID, Target);
 
-            // Variant
-            if (Variant.CanRampart(Preset.SGE_DPS_Variant_Rampart))
-                return Variant.Rampart;
-
-            //Occult skills
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            //Content skills
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (CanWeave() && !HasStatusEffect(Buffs.Eukrasia))
             {
-                if (Variant.CanSpiritDart(Preset.SGE_DPS_Variant_SpiritDart))
-                    return Variant.SpiritDart;
-
                 // Lucid Dreaming
                 if (Role.CanLucidDream(7500))
                     return Role.LucidDreaming;
@@ -125,13 +118,9 @@ internal partial class SGE : Healer
                 HasStatusEffect(Buffs.Eukrasia))
                 return actionID;
 
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.SGE_DPS_Variant_Rampart))
-                return Variant.Rampart;
-
             //Occult skills
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             if (ActionReady(Kerachole) && HasAddersgall() &&
                 CanWeave() && RaidWideCasting())
@@ -148,10 +137,6 @@ internal partial class SGE : Healer
 
             if (CanWeave())
             {
-                // Variant Spirit Dart
-                if (Variant.CanSpiritDart(Preset.SGE_DPS_Variant_SpiritDart))
-                    return Variant.SpiritDart;
-
                 // Lucid Dreaming
                 if (Role.CanLucidDream(7500))
                     return Role.LucidDreaming;
@@ -209,7 +194,7 @@ internal partial class SGE : Healer
     }
 
     #endregion
-    
+
     #region Advanced ST
 
     internal class SGE_ST_DPS_AdvancedMode : CustomCombo
@@ -238,13 +223,9 @@ internal partial class SGE : Healer
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            // Variant
-            if (Variant.CanRampart(Preset.SGE_DPS_Variant_Rampart))
-                return Variant.Rampart;
-
-            //Occult skills
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            //Content Actions
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Raidwide Feature
 
@@ -263,9 +244,6 @@ internal partial class SGE : Healer
 
             if (CanWeave() && !HasStatusEffect(Buffs.Eukrasia))
             {
-                if (Variant.CanSpiritDart(Preset.SGE_DPS_Variant_SpiritDart))
-                    return Variant.SpiritDart;
-
                 // Lucid Dreaming
                 if (IsEnabled(Preset.SGE_ST_DPS_Lucid) &&
                     Role.CanLucidDream(SGE_ST_DPS_Lucid))
@@ -332,7 +310,7 @@ internal partial class SGE : Healer
                 if (IsEnabled(Preset.SGE_ST_DPS_Movement) &&
                     InCombat() && IsMoving())
                 {
-                    foreach(int priority in SGE_ST_DPS_Movement_Priority.Items.OrderBy(x => x))
+                    foreach (int priority in SGE_ST_DPS_Movement_Priority.Items.OrderBy(x => x))
                     {
                         int index = SGE_ST_DPS_Movement_Priority.IndexOf(priority);
                         if (CheckMovementConfigMeetsRequirements(index, out uint action))
@@ -359,13 +337,9 @@ internal partial class SGE : Healer
                 HasStatusEffect(Buffs.Eukrasia))
                 return actionID;
 
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.SGE_DPS_Variant_Rampart))
-                return Variant.Rampart;
-
             //Occult skills
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Raidwide Feature
 
@@ -384,10 +358,6 @@ internal partial class SGE : Healer
 
             if (CanWeave())
             {
-                // Variant Spirit Dart
-                if (Variant.CanSpiritDart(Preset.SGE_DPS_Variant_SpiritDart))
-                    return Variant.SpiritDart;
-
                 // Lucid Dreaming
                 if (IsEnabled(Preset.SGE_AoE_DPS_Lucid) &&
                     Role.CanLucidDream(SGE_AoE_DPS_Lucid))
@@ -511,7 +481,7 @@ internal partial class SGE : Healer
                 Role.CanLucidDream(SGE_ST_Heal_LucidOption))
                 return Role.LucidDreaming;
 
-            for(int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
+            for (int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
             {
                 int index = SGE_ST_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
@@ -574,7 +544,7 @@ internal partial class SGE : Healer
                 return Role.LucidDreaming;
 
             float averagePartyHP = GetPartyAvgHPPercent();
-            for(int i = 0; i < SGE_AoE_Heals_Priority.Count; i++)
+            for (int i = 0; i < SGE_AoE_Heals_Priority.Count; i++)
             {
                 int index = SGE_AoE_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigAoE(index, out uint spell, out bool enabled);
@@ -588,7 +558,7 @@ internal partial class SGE : Healer
     }
 
     #endregion
-    
+
     #region Standalones
 
     internal class SGE_OverProtect : CustomCombo

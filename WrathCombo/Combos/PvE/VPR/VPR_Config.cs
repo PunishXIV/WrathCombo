@@ -114,11 +114,6 @@ internal partial class VPR
                         $"Replaces {ReavingFangs.ActionName()}", $"Replaces {ReavingFangs.ActionName()} with Full Generation - Legacy combo.", 1);
                     break;
 
-                case Preset.VPR_Variant_Cure:
-                    DrawSliderInt(1, 100, VPR_VariantCure,
-                        "HP% to be at or under", 200);
-                    break;
-
                 case Preset.VPR_Retarget_Slither:
                     DrawAdditionalBoolChoice(VPR_Slither_FieldMouseover,
                         "Add Field Mouseover", "Adds Field mouseover targetting");
@@ -145,8 +140,7 @@ internal partial class VPR
             VPR_AoE_Reawaken_SubOption = new("VPR_AoE_Reawaken_SubOption", 0),
             VPR_AoE_SecondWind_Threshold = new("VPR_AoE_SecondWindThreshold", 40),
             VPR_AoE_Bloodbath_Threshold = new("VPR_AoE_BloodbathThreshold", 30),
-            VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton", 0),
-            VPR_VariantCure = new("VPR_VariantCure", 50);
+            VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton", 0);
 
         public static UserBool
             VPR_Opener_ExcludeUF = new("VPR_Opener_ExcludeUF"),

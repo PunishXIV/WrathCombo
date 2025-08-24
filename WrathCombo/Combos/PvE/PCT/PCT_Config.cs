@@ -14,7 +14,6 @@ internal partial class PCT
             PCT_ST_AdvancedMode_LucidOption = new("PCT_ST_AdvancedMode_LucidOption", 6500),
             PCT_AoE_AdvancedMode_HolyinWhiteOption = new("PCT_AoE_AdvancedMode_HolyinWhiteOption", 0),
             PCT_AoE_AdvancedMode_LucidOption = new("PCT_AoE_AdvancedMode_LucidOption", 6500),
-            PCT_VariantCure = new("PCT_VariantCure"),
             PCT_ST_CreatureStop = new("PCT_ST_CreatureStop"),
             PCT_AoE_CreatureStop = new("PCT_AoE_CreatureStop"),
             PCT_ST_WeaponStop = new("PCT_ST_WeaponStop"),
@@ -111,10 +110,6 @@ internal partial class PCT
                         $"Add {HammerStamp.ActionName()} when under the effect of {Buffs.HammerTime.StatusName()}.");
                     DrawAdditionalBoolChoice(CombinedMotifsLandscape, $"{StarPrism.ActionName()} Feature",
                         $"Add {StarPrism.ActionName()} when under the effect of {Buffs.Starstruck.StatusName()}.");
-                    break;
-
-                case Preset.PCT_Variant_Cure:
-                    DrawSliderInt(1, 100, PCT_VariantCure, "HP% to be at or under", 200);
                     break;
 
                 #endregion

@@ -70,15 +70,8 @@ internal partial class DRG : Melee
             if (actionID is not TrueThrust)
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (ActionReady(PiercingTalon) &&
@@ -224,15 +217,8 @@ internal partial class DRG : Melee
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (IsEnabled(Preset.DRG_ST_RangedUptime) &&
@@ -419,15 +405,8 @@ internal partial class DRG : Melee
             if (actionID is not DoomSpike)
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (LevelChecked(PiercingTalon) &&
@@ -555,15 +534,8 @@ internal partial class DRG : Melee
             if (actionID is not DoomSpike)
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (IsEnabled(Preset.DRG_AoE_RangedUptime) &&

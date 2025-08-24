@@ -92,7 +92,7 @@ internal partial class VPR
     {
         if (HasStatusEffect(Buffs.Reawakened))
         {
-        #region Pre Ouroboros
+            #region Pre Ouroboros
 
             if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -114,9 +114,9 @@ internal partial class VPR
                         return true;
                 }
 
-                #endregion
+            #endregion
 
-        #region With Ouroboros
+            #region With Ouroboros
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -142,7 +142,7 @@ internal partial class VPR
                         return true;
                 }
 
-                #endregion
+            #endregion
         }
 
         return false;
@@ -152,7 +152,7 @@ internal partial class VPR
     {
         if (HasStatusEffect(Buffs.Reawakened))
         {
-        #region Pre Ouroboros
+            #region Pre Ouroboros
 
             if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -174,9 +174,9 @@ internal partial class VPR
                         return true;
                 }
 
-                #endregion
+            #endregion
 
-        #region With Ouroboros
+            #region With Ouroboros
 
             if (TraitLevelChecked(Traits.EnhancedSerpentsLineage))
                 switch (AnguineTribute)
@@ -202,7 +202,7 @@ internal partial class VPR
                         return true;
                 }
 
-                #endregion
+            #endregion
         }
         return false;
     }

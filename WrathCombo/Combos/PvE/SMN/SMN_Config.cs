@@ -15,12 +15,11 @@ internal partial class SMN
             SMN_ST_SwiftcastPhase = new("SMN_SwiftcastPhase", 1),
             SMN_ST_CrimsonCycloneMeleeDistance = new("SMN_ST_CrimsonCycloneMeleeDistance", 25),
             SMN_Opener_SkipSwiftcast = new("SMN_Opener_SkipSwiftcast", 1),
-            
+
             SMN_AoE_Lucid = new("SMN_AoE_Lucid", 8000),
             SMN_AoE_CrimsonCycloneMeleeDistance = new("SMN_AoE_CrimsonCycloneMeleeDistance", 25),
             SMN_AoE_SwiftcastPhase = new("SMN_AoE_SwiftcastPhase", 1),
-            
-            SMN_VariantCure = new("SMN_VariantCure"),
+
             SMN_Balance_Content = new("SMN_Balance_Content", 1);
 
         public static UserBoolArray
@@ -64,19 +63,19 @@ internal partial class SMN
                     DrawPriorityInput(SMN_ST_Egi_Priority, 3, 2,
                         $"{SummonRuby.ActionName()} Priority: ");
                     break;
-                
+
                 case Preset.SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi:
                     DrawHorizontalRadioButton(SMN_ST_SwiftcastPhase, "Garuda", "Swiftcasts Slipstream", 1);
                     DrawHorizontalRadioButton(SMN_ST_SwiftcastPhase, "Ifrit", "Swiftcasts Ruby Ruin/Ruby Rite", 2);
                     DrawHorizontalRadioButton(SMN_ST_SwiftcastPhase, "Flexible (SpS) Option",
                         "Swiftcasts the first available Egi when Swiftcast is ready.", 3);
                     break;
-                
+
                 case Preset.SMN_ST_Advanced_Combo_Lucid:
                     DrawSliderInt(4000, 9500, SMN_ST_Lucid, "Set value for your MP to be at or under for this feature to take effect.", 150,
                         SliderIncrements.Hundreds);
                     break;
-                
+
                 case Preset.SMN_ST_Advanced_Combo_Egi_AstralFlow:
                     DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Mountain Buster", "", 4, 0);
                     DrawHorizontalMultiChoice(SMN_ST_Egi_AstralFlow, "Add Crimson Cyclone", "", 4, 1);
@@ -89,7 +88,7 @@ internal partial class SMN
                     }
                     break;
                 #endregion
-                
+
                 #region AoE
                 case Preset.SMN_AoE_Advanced_Combo_Titan:
                     DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 0,
@@ -105,19 +104,19 @@ internal partial class SMN
                     DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 2,
                         $"{SummonRuby.ActionName()} Priority: ");
                     break;
-                
+
                 case Preset.SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi:
                     DrawHorizontalRadioButton(SMN_AoE_SwiftcastPhase, "Garuda", "Swiftcasts Slipstream", 1);
                     DrawHorizontalRadioButton(SMN_AoE_SwiftcastPhase, "Ifrit", "Swiftcasts Ruby Ruin/Ruby Rite", 2);
                     DrawHorizontalRadioButton(SMN_AoE_SwiftcastPhase, "Flexible (SpS) Option",
                         "Swiftcasts the first available Egi when Swiftcast is ready.", 3);
                     break;
-                
+
                 case Preset.SMN_AoE_Advanced_Combo_Lucid:
                     DrawSliderInt(4000, 9500, SMN_AoE_Lucid, "Set value for your MP to be at or under for this feature to take effect.", 150,
                         SliderIncrements.Hundreds);
                     break;
-                
+
                 case Preset.SMN_AoE_Advanced_Combo_Egi_AstralFlow:
                     DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Mountain Buster", "", 4, 0);
                     DrawHorizontalMultiChoice(SMN_AoE_Egi_AstralFlow, "Add Crimson Cyclone", "", 4, 1);
@@ -129,13 +128,10 @@ internal partial class SMN
                         DrawSliderInt(0, 25, SMN_AoE_CrimsonCycloneMeleeDistance, " Maximum range to use Crimson Cyclone.");
                     }
                     break;
-                #endregion
-                
-                #region Standalones
-                case Preset.SMN_Variant_Cure:
-                    DrawSliderInt(1, 100, SMN_VariantCure, "HP% to be at or under", 200);
-                    break;
-                #endregion
+                    #endregion
+
+                    #region Standalones
+                    #endregion
             }
         }
     }

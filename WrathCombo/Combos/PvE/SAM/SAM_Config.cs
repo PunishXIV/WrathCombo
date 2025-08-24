@@ -136,10 +136,6 @@ internal partial class SAM
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
                     break;
 
-                case Preset.SAM_Variant_Cure:
-                    DrawSliderInt(1, 100, SAM_VariantCure,
-                        "HP% to be at or under", 200);
-                    break;
             }
         }
         #region Variables
@@ -162,8 +158,7 @@ internal partial class SAM
             SAM_Kasha_KenkiOvercapAmount = new("SAM_Kasha_KenkiOvercapAmount", 65),
             SAM_Yukaze_KenkiOvercapAmount = new("SAM_Yukaze_KenkiOvercapAmount", 65),
             SAM_Oka_KenkiOvercapAmount = new("SAM_Oka_KenkiOvercapAmount", 50),
-            SAM_Mangetsu_KenkiOvercapAmount = new("SAM_Mangetsu_KenkiOvercapAmount", 50),
-            SAM_VariantCure = new("SAM_VariantCure", 50);
+            SAM_Mangetsu_KenkiOvercapAmount = new("SAM_Mangetsu_KenkiOvercapAmount", 50);
 
         public static UserBool
             SAM_Gekko_KenkiOvercap = new("SAM_Gekko_KenkiOvercap"),

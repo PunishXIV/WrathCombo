@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using WrathCombo.Attributes;
 using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
@@ -134,7 +135,7 @@ internal unsafe static class AutoRotationController
     internal static void Run()
     {
         cfg ??= new AutoRotationConfigIPCWrapper(Service.Configuration.RotationConfig);
-          
+
         // Early exit for all conditions that should prevent autorotation
         if (ShouldSkipAutorotation())
             return;
@@ -191,7 +192,10 @@ internal unsafe static class AutoRotationController
             return;
 
         // Healer cleanse/rez logic
-        if (isHealer || (Player.Job is Job.SMN or Job.RDM && cfg.HealerSettings.AutoRezDPSJobs) || OccultCrescent.IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, OccultCrescent.Revive))
+        if (isHealer ||
+            (Player.Job is Job.SMN or Job.RDM && cfg.HealerSettings.AutoRezDPSJobs) ||
+            OccultCrescent.IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, OccultCrescent.Revive) ||
+            Variant.CanRaise())
         {
             if (!needsHeal)
             {
@@ -323,18 +327,28 @@ internal unsafe static class AutoRotationController
     private static void RezParty()
     {
         if (HasStatusEffect(418)) return;
-        uint resSpell = 
-            OccultCrescent.IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, OccultCrescent.Revive) 
-                ? OccultCrescent.Revive 
-                : Player.Job switch
-                {
-                    Job.CNJ or Job.WHM => WHM.Raise,
-                    Job.SCH or Job.SMN => SCH.Resurrection,
-                    Job.AST => AST.Ascend,
-                    Job.SGE => SGE.Egeiro,
-                    Job.RDM => RDM.Verraise,
-                    _ => 0,
-                };
+        uint resSpell = 0;
+
+        if (OccultCrescent.IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, OccultCrescent.Revive))
+        {
+            resSpell = OccultCrescent.Revive;
+        }
+        else if (Variant.CanRaise())
+        {
+            resSpell = Variant.Raise;
+        }
+        else
+        {
+            resSpell = Player.Job switch
+            {
+                Job.CNJ or Job.WHM => WHM.Raise,
+                Job.SCH or Job.SMN => SCH.Resurrection,
+                Job.AST => AST.Ascend,
+                Job.SGE => SGE.Egeiro,
+                Job.RDM => RDM.Verraise,
+                _ => 0,
+            };
+        }
 
         if (resSpell == 0)
             return;
@@ -354,6 +368,28 @@ internal unsafe static class AutoRotationController
                 {
                     ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
                     return;
+                }
+
+                if (resSpell is Variant.Raise)
+                {
+                    //Try to Swiftcast if Magic DPS
+                    if (RoleAttribute.GetRoleFromJob(Player.Job) is JobRole.MagicalDPS)
+                    {
+                        if (ActionReady(RoleActions.Magic.Swiftcast) && !HasStatusEffect(RDM.Buffs.Dualcast))
+                        {
+                            if (ActionManager.Instance()->GetActionStatus(ActionType.Action, RoleActions.Magic.Swiftcast) == 0)
+                            {
+                                ActionManager.Instance()->UseAction(ActionType.Action, RoleActions.Magic.Swiftcast);
+                                return;
+                            }
+                        }
+                    }
+
+                    if (HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) || HasStatusEffect(RDM.Buffs.Dualcast) || !IsMoving())
+                    {
+                        ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
+                        return;
+                    }
                 }
 
                 if (Player.Job is Job.RDM)
@@ -607,9 +643,9 @@ internal unsafe static class AutoRotationController
                     Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct,
                     (mustTarget && target != null) || switched ? target.GameObjectId : Player.Object.GameObjectId);
 
-                if (outAct is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo 
+                if (outAct is NIN.Ten or NIN.Chi or NIN.Jin or NIN.TenCombo or NIN.ChiCombo or NIN.JinCombo
                     or NIN.TCJFumaShurikenTen or NIN.TCJFumaShurikenChi or NIN.TCJFumaShurikenJin or NIN.TCJKaton or NIN.TCJRaiton && ret)
-                    
+
                     _ninjaLockedAoE = true;
                 else
                     _ninjaLockedAoE = false;
@@ -655,7 +691,7 @@ internal unsafe static class AutoRotationController
                     : InActionRange(outAct, target));
 
             var canUse = (canUseSelf || canUseTarget || areaTargeted) && outAct.ActionAttackType() is { } type && (type is ActionAttackType.Ability || type is not ActionAttackType.Ability && RemainingGCD == 0);
-            
+
             if (canUse || cfg.DPSSettings.AlwaysSelectTarget)
                 Svc.Targets.Target = target;
             
@@ -827,9 +863,9 @@ internal unsafe static class AutoRotationController
         {
             if (Svc.Targets.Target == null) return null;
             var t = Svc.Targets.Target;
-            bool goodToHeal = GetTargetHPPercent(t) <= 
-                              (TargetHasExcog(t) ? cfg.HealerSettings.SingleTargetExcogHPP : 
-                                  TargetHasRegen(t) ? cfg.HealerSettings.SingleTargetRegenHPP : 
+            bool goodToHeal = GetTargetHPPercent(t) <=
+                              (TargetHasExcog(t) ? cfg.HealerSettings.SingleTargetExcogHPP :
+                                  TargetHasRegen(t) ? cfg.HealerSettings.SingleTargetRegenHPP :
                                   cfg.HealerSettings.SingleTargetHPP);
             if (goodToHeal && !t.IsHostile())
             {
@@ -844,9 +880,9 @@ internal unsafe static class AutoRotationController
                 .Where(x => !x.BattleChara.IsDead &&
                             x.BattleChara.IsTargetable &&
                             GetTargetDistance(x.BattleChara) <= QueryRange &&
-                            GetTargetHPPercent(x.BattleChara) <= 
-                            (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP : 
-                                TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP : 
+                            GetTargetHPPercent(x.BattleChara) <=
+                            (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
+                                TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :
                                 cfg.HealerSettings.SingleTargetHPP) &&
                             IsInLineOfSight(x.BattleChara))
                 .OrderByDescending(x => GetTargetHPPercent(x.BattleChara)).FirstOrDefault();
@@ -860,9 +896,9 @@ internal unsafe static class AutoRotationController
                 .Where(x => !x.BattleChara.IsDead &&
                             x.BattleChara.IsTargetable &&
                             GetTargetDistance(x.BattleChara) <= QueryRange &&
-                            GetTargetHPPercent(x.BattleChara) <= 
-                            (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP : 
-                                TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP : 
+                            GetTargetHPPercent(x.BattleChara) <=
+                            (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
+                                TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :
                                 cfg.HealerSettings.SingleTargetHPP) &&
                             IsInLineOfSight(x.BattleChara))
                 .OrderBy(x => GetTargetHPPercent(x.BattleChara)).FirstOrDefault();

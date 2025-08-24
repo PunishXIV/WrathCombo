@@ -99,14 +99,8 @@ internal partial class SAM : Melee
                 !InCombat() && HasBattleTarget())
                 return MeikyoShisui;
 
-            if (Variant.CanCure(Preset.SAM_Variant_Cure, SAM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SAM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             //oGCDs
             if (CanWeave() && M6SReady)
@@ -272,14 +266,8 @@ internal partial class SAM : Melee
                 !InCombat() && HasBattleTarget())
                 return MeikyoShisui;
 
-            if (Variant.CanCure(Preset.SAM_Variant_Cure, SAM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SAM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             //oGCDs
             if (CanWeave() && M6SReady)
@@ -504,14 +492,8 @@ internal partial class SAM : Melee
             if (actionID is not (Fuga or Fuko))
                 return actionID;
 
-            if (Variant.CanCure(Preset.SAM_Variant_Cure, SAM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SAM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             //oGCD Features
             if (CanWeave() && M6SReady)
@@ -613,14 +595,8 @@ internal partial class SAM : Melee
 
             float kenkiOvercapAoE = SAM_AoE_KenkiOvercapAmount;
 
-            if (Variant.CanCure(Preset.SAM_Variant_Cure, SAM_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SAM_Variant_Rampart))
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             //oGCD Features
             if (CanWeave() && M6SReady)
