@@ -584,10 +584,10 @@ internal partial class WHM : Healer
                 }
             }
 
-            if (LevelChecked(Cure2))
-                return IsEnabled(Preset.WHM_STHeals_ThinAir) && canThinAir
-                    ? ThinAir
-                    : Cure2.RetargetIfEnabled(OptionalTarget, Cure);
+            // Default: prefer Cure unless a priority explicitly selects another spell.
+            // Still allow Thin Air if the option is enabled and we can use it.
+            if (IsEnabled(Preset.WHM_STHeals_ThinAir) && canThinAir)
+                return ThinAir;
 
             return Cure.RetargetIfEnabled(OptionalTarget);
         }
