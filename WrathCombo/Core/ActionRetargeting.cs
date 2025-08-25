@@ -162,10 +162,17 @@ public class ActionRetargeting : IDisposable
         target = null;
         replacedWith = action;
         // Find the Retarget object
-        if (!Retargets.TryGetValue(action, out var retarget) || 
-            !Service.ActionReplacer.LastActionInvokeFor
-            .TryGetValue(action, out var lastAction) ||
-            lastAction != retarget.Action)
+        if (!Retargets.TryGetValue(action, out var retarget))
+            return false;
+
+        // Verify the mapping: if LastActionInvokeFor isn't populated yet (e.g., right after startup),
+        // assume "no change" semantics and allow self-retarget features to work.
+        var mappedAction = Service.ActionReplacer.LastActionInvokeFor
+            .TryGetValue(action, out var lastAction)
+                ? lastAction
+                : action; // fallback helps features that retarget the same action
+
+        if (mappedAction != retarget.Action)
             return false;
 
         replacedWith = retarget.Action;
