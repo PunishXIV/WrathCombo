@@ -722,10 +722,14 @@ internal partial class WHM : Healer
                 (ThinAir);
 
             if (HasStatusEffect(Role.Buffs.Swiftcast))
-                return IsEnabled(Preset.WHM_ThinAirRaise) && canThinAir ? ThinAir :
-                    IsEnabled(Preset.WHM_Raise_Retarget) ? Raise.Retarget(
-                        Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise) : Raise;
+                return IsEnabled(Preset.WHM_ThinAirRaise) && canThinAir
+                    ? ThinAir
+                    : IsEnabled(Preset.WHM_Raise_Retarget)
+                        ? Raise
+                            .Retarget(Role.Swiftcast,
+                                SimpleTarget.Stack.AllyToRaise)
+                            .AndRunMacro()
+                        : Raise.AndRunMacro();
 
             return actionID;
         }

@@ -4,6 +4,7 @@ using ECommons.GameFunctions;
 using WrathCombo.Extensions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SGE.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -758,9 +759,10 @@ internal partial class SGE : Healer
 
             return IsOnCooldown(Role.Swiftcast)
                 ? IsEnabled(Preset.SGE_Raise_Retarget)
-                    ? Egeiro.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Egeiro
+                    ? Egeiro
+                        .Retarget(Role.Swiftcast, SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Egeiro.AndRunMacro()
                 : actionID;
         }
     }

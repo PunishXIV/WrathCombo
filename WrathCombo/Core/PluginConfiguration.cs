@@ -106,7 +106,11 @@ public class PluginConfiguration : IPluginConfiguration
         "AnyDeadPartyMember",
     ];
 
-        #endregion
+    #endregion
+
+    public bool OutputRezMacro = false;
+
+    public string RezMacro = "Raising <t>";
 
     public bool ActionChanging = true;
 
