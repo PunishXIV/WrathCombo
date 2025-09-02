@@ -412,10 +412,14 @@ public static class ActionWatching
             //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
             var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
+            #region Extra Retargeting Logic
+
             // Fallback if the Retargeted ground action couldn't be placed intelligently
             if (changed && replacedWith.IsGroundTargeted())
                 ActionManager.Instance()->AreaTargetingExecuteAtObject =
                     targetId;
+
+            #endregion
 
             return hookResult;
         }
