@@ -167,38 +167,58 @@ internal partial class BLM
                         $"Stop Using {Thunder2.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
                     break;
 
-                case Preset.BLM_Variant_Cure:
-                    DrawSliderInt(1, 100, BLM_VariantCure,
-                        "HP% to be at or under", 200);
+                case Preset.BLM_Retargetting_Aetherial_Manipulation:
+                    DrawAdditionalBoolChoice(BLM_AM_FieldMouseover,
+                        "Add Field Mouseover", "Adds Field mouseover targetting.");
                     break;
 
-                case Preset.BLM_Blizzard1to3:
-                    DrawRadioButton(BLM_B1to3,
-                        $"Replaces {Blizzard.ActionName()}", $"Replaces {Blizzard.ActionName()} with {Blizzard3.ActionName()} when out of Umbral Ice III.", 0);
 
-                    DrawRadioButton(BLM_B1to3,
-                        $"Replaces {Blizzard3.ActionName()}", $"Replaces {Blizzard3.ActionName()} with {Blizzard.ActionName()} when in Umbral Ice III.", 1);
-                    break;
-
-                case Preset.BLM_Fire1to3:
+                case Preset.BLM_Fire1and3:
                     DrawRadioButton(BLM_F1to3,
                         $"Replaces {Fire.ActionName()}", $"Replaces {Fire.ActionName()} with {Fire3.ActionName()} when out of Astral Fire III or not in combat.", 0);
+
+                    if (BLM_F1to3 == 0)
+                    {
+                        DrawAdditionalBoolChoice(BLM_Fire1_Despair,
+                            "Despair", "Adds Despair when in Astral Fire and below 2400 MP.");
+                    }
 
                     DrawRadioButton(BLM_F1to3,
                         $"Replaces {Fire3.ActionName()}", $"Replaces {Fire3.ActionName()} with {Fire.ActionName()} when in Astral Fire III.", 1);
                     break;
 
-                case Preset.BLM_Blizzard4toDespair:
-                    DrawRadioButton(BLM_B4toDespair,
-                        $"Replaces {Blizzard4.ActionName()}", $"Replaces {Blizzard4.ActionName()} with {Despair.ActionName()} when in Astral Fire.", 0);
+                case Preset.BLM_Fire4:
+                    DrawAdditionalBoolChoice(BLM_Fire4_FlareStar,
+                        "Flarestar", "Adds Flarestar in Astral Fire when ready.");
 
-                    DrawRadioButton(BLM_B4toDespair,
-                        $"Replaces {Blizzard3.ActionName()}", $"Replaces {Blizzard3.ActionName()} with {Despair.ActionName()} when in Astral Fire.", 1);
+                    DrawAdditionalBoolChoice(BLM_Fire4_Fire3,
+                        "Fire I / III", "Adds Fire I / III when in Astral Fire and stack is less than 3");
+
+                    DrawRadioButton(BLM_Fire4_FireAndIce,
+                        "Use Ice in Umbral Ice", "Adds Blizzard I / III / IV in Umbral Ice depending on stacks and level", 0);
+
+                    DrawRadioButton(BLM_Fire4_FireAndIce,
+                        "Use Fire in Umbral Ice", "Leaves Fire in Umbral Ice \nWill Use Fire I / III if selected above.", 1);
                     break;
 
-                case Preset.BLM_Retargetting_Aetherial_Manipulation:
-                    DrawAdditionalBoolChoice(BLM_AM_FieldMouseover,
-                        "Add Field Mouseover", "Adds Field mouseover targetting.");
+                case Preset.BLM_Flare:
+                    DrawAdditionalBoolChoice(BLM_Flare_FlareStar,
+                        "Flarestar", "Adds Flarestar in Astral Fire when ready.");
+                    break;
+
+                case Preset.BLM_Blizzard1and3:
+                    DrawRadioButton(BLM_B1to3,
+                        $"Replaces {Blizzard.ActionName()}",
+                        $"Replaces {Blizzard.ActionName()} with {Blizzard3.ActionName()} when out of Umbral Ice III.", 0);
+
+                    DrawRadioButton(BLM_B1to3,
+                        $"Replaces {Blizzard3.ActionName()}",
+                        $"Replaces {Blizzard3.ActionName()} with {Blizzard.ActionName()} when in Umbral Ice III.", 1);
+                    if (BLM_B1to3 == 1)
+                    {
+                        DrawAdditionalBoolChoice(BLM_Blizzard3_Despair,
+                            "Despair", "Adds Despair when in Astral Fire and above 800 MP.");
+                    }
                     break;
 
                 case Preset.BLM_AmplifierXeno:
@@ -230,10 +250,10 @@ internal partial class BLM
             BLM_AoE_LeyLinesMovement = new("BLM_AoE_LeyLinesMovement", 0),
             BLM_AoE_LeyLinesOption = new("BLM_AoE_LeyLinesOption", 40),
             BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 20),
-            BLM_VariantCure = new("BLM_VariantCure", 50),
             BLM_B1to3 = new("BLM_B1to3", 0),
             BLM_B4toDespair = new("BLM_B4toDespair", 0),
-            BLM_F1to3 = new("BLM_F1to3", 0);
+            BLM_F1to3 = new("BLM_F1to3", 0),
+            BLM_Fire4_FireAndIce = new("BLM_Fire4_FireAndIce", 0);
 
         public static UserFloat
             BLM_ST_LeyLinesTimeStill = new("BLM_ST_LeyLinesTimeStill", 2.5f),
@@ -241,7 +261,12 @@ internal partial class BLM
 
         public static UserBool
             BLM_AM_FieldMouseover = new("BLM_AM_FieldMouseover"),
-            BLM_AmplifierXenoCD = new("BLM_AmplifierXenoCD");
+            BLM_AmplifierXenoCD = new("BLM_AmplifierXenoCD"),
+            BLM_Fire4_FlareStar = new("BLM_Fire4_FlareStar"),
+            BLM_Flare_FlareStar = new("BLM_Flare_FlareStar"),
+            BLM_Fire1_Despair = new("BLM_Fire1_Despair"),
+            BLM_Blizzard3_Despair = new("BLM_Blizzard3_Despair"),
+            BLM_Fire4_Fire3 = new("BLM_Fire4_Fire3");
 
         public static UserBoolArray
             BLM_ST_MovementOption = new("BLM_ST_MovementOption");

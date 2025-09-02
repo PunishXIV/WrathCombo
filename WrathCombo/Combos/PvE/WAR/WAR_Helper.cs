@@ -42,7 +42,7 @@ internal partial class WAR : Tank
     {
         if (Opener1.LevelChecked)
             return Opener1;
-        
+
         return WrathOpener.Dummy;
     }
 
@@ -85,17 +85,6 @@ internal partial class WAR : Tank
     #endregion
 
     #region Helpers
-    internal static uint GetVariantAction()
-    {
-        if (Variant.CanCure(Preset.WAR_Variant_Cure, WAR_VariantCure))
-            return Variant.Cure;
-        if (Variant.CanSpiritDart(Preset.WAR_Variant_SpiritDart) && CanWeave())
-            return Variant.SpiritDart;
-        if (Variant.CanUltimatum(Preset.WAR_Variant_Ultimatum) && CanWeave())
-            return Variant.Ultimatum;
-
-        return 0; //No conditions met
-    }
     internal static uint GetBozjaAction()
     {
         if (!Bozja.IsInBozja)
@@ -163,8 +152,6 @@ internal partial class WAR : Tank
     {
         get
         {
-            if (GetVariantAction() is uint va && va != 0)
-                return va;
             if (Bozja.IsInBozja && GetBozjaAction() is uint ba && ba != 0)
                 return ba;
             return 0;
@@ -185,7 +172,7 @@ internal partial class WAR : Tank
     internal static bool ShouldUseDecimate(int gauge = 90) => CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && InMeleeRange() && Minimal;
 
     internal static bool ShouldUseTomahawk => LevelChecked(Tomahawk) && !InMeleeRange() && HasBattleTarget();
-    internal static uint STCombo 
+    internal static uint STCombo
         => ComboTimer > 0 ? LevelChecked(Maim) && ComboAction == HeavySwing ? Maim
         : LevelChecked(StormsPath) && ComboAction == Maim
         ? (LevelChecked(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) || (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_SurgingRefreshRange))

@@ -28,7 +28,6 @@ internal partial class NIN
             NIN_AoE_AdvancedMode_Mug_SubOption = new("NIN_AoE_AdvancedMode_Mug_SubOption", 0),
             NIN_AoE_AdvancedMode_TrickAttack_Threshold = new("NIN_AoE_AdvancedMode_TrickAttack_Threshold", 40),
             NIN_AoE_AdvancedMode_TrickAttack_SubOption = new("NIN_AoE_AdvancedMode_TrickAttack_SubOption", 0),
-            NIN_VariantCure = new("NIN_VariantCure"),
             NIN_Adv_Opener_Selection = new("NIN_Adv_Opener_Selection", 0),
             NIN_Balance_Content = new("NIN_Balance_Content", 1),
             NIN_SimpleMudra_Choice = new("NIN_SimpleMudra_Choice", 1);
@@ -52,20 +51,24 @@ internal partial class NIN
             NIN_ST_AdvancedMode_TenChiJin_Options = new("NIN_ST_AdvancedMode_TenChiJin_Options"),
             NIN_AoE_AdvancedMode_Ninjitsus_Options = new("NIN_AoE_AdvancedMode_Ninjitsus_Options"),
             NIN_AoE_AdvancedMode_Katon_Options = new("NIN_AoE_AdvancedMode_Katon_Options"),
-            NIN_AoE_AdvancedMode_TenChiJin_Options = new("NIN_AoE_AdvancedMode_TenChiJin_Options");
-        #endregion
+            NIN_AoE_AdvancedMode_TenChiJin_Options = new("NIN_AoE_AdvancedMode_TenChiJin_Options"),
+            NIN_MudraProtection_Options = new("NIN_MudraProtection_Options");
         
+        internal static UserFloat
+            NIN_AoE_AdvancedMode_Doton_TimeStill = new("NIN_AoE_AdvancedMode_Doton_TimeStill");
+        #endregion
+
         internal static void Draw(Preset preset)
         {
             switch (preset)
             {
                 #region ST
                 case Preset.NIN_ST_AdvancedMode:
-                    DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_TrueNorth, "Dynamic True North", 
+                    DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_TrueNorth, "Dynamic True North",
                         "Dynamic choice of combo finisher based on position and available charges.\nGo to Flank to build charges, Rear to spend them. \nPrevents overcap or waste and will use true north as needed.");
                     DrawSliderInt(0, 10, NIN_ST_AdvancedMode_BurnKazematoi, $"Focus on using {AeolianEdge.ActionName()} to use Kazematoi when target is below Health %");
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_BalanceOpener:
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 4th GCD {KunaisBane.ActionName()}", "", 0);
                     DrawRadioButton(NIN_Adv_Opener_Selection, $"Standard Opener - 3rd GCD {Dokumori.ActionName()}", "", 1);
@@ -73,7 +76,7 @@ internal partial class NIN
 
                     DrawBossOnlyChoice(NIN_Balance_Content);
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_Mug:
                     DrawSliderInt(0, 100, NIN_ST_AdvancedMode_Mug_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
@@ -85,7 +88,7 @@ internal partial class NIN
                         "All Content", $"Applies HP Check to All Content", 1);
                     ImGui.Unindent();
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_TrickAttack:
                     DrawSliderInt(0, 100, NIN_ST_AdvancedMode_TrickAttack_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
@@ -97,7 +100,7 @@ internal partial class NIN
                         "All Content", $"Applies HP Check to All Content", 1);
                     ImGui.Unindent();
                     break;
-                    
+
 
                 case Preset.NIN_ST_AdvancedMode_Ninjitsus:
                     DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_Ninjitsus_Options, "Raiton/Fuma Shuriken",
@@ -120,22 +123,22 @@ internal partial class NIN
                             "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Suiton.");
                     }
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_TenChiJin:
                     DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_TenChiJin_Options, "Auto TCJ Option",
                         "Will automatically Fuma Shuriken then Raiton then Suiton", 2, 0);
                     DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_TenChiJin_Options, "TenriJindo Option",
                         "Will weave followup OGCD, TenriJindo, when available", 2, 1);
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_Bhavacakra:
                     DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_Bhavacakra_Pooling, "Bhavacakra Pooling", "Will pool Ninki for the buff windows, while preventing overcap");
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_Raiju:
                     DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_ForkedRaiju, "Forked Raiju", "Allows the Use of forked Raiju instead of Fleeting if out of melee range. (Gap Closer)");
                     break;
-                
+
                 case Preset.NIN_ST_AdvancedMode_SecondWind:
                     DrawSliderInt(0, 100, NIN_ST_AdvancedMode_SecondWindThreshold,
                         "Set a HP% threshold for when Second Wind will be used.");
@@ -152,7 +155,7 @@ internal partial class NIN
                         "Set a HP% threshold for when Bloodbath will be used.");
                     break;
                 #endregion
-                
+
                 #region AoE
                 case Preset.NIN_AoE_AdvancedMode_Ninjitsus:
                     DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Ninjitsus_Options, "Katon/Fuma Shuriken",
@@ -180,9 +183,12 @@ internal partial class NIN
                     {
                         DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Doton_Threshold,
                             "Sets the max remaining HP percentage of the current target to cast Doton.");
+                        ImGui.Indent(); DrawSliderFloat(0, 3, NIN_AoE_AdvancedMode_Doton_TimeStill,"How Long Standing still before using Doton (in seconds):", decimals: 1);
+                        
+                        ImGui.Unindent();
                     }
                     break;
-                
+
                 case Preset.NIN_AoE_AdvancedMode_Mug:
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Mug_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
@@ -194,7 +200,7 @@ internal partial class NIN
                         "All Content", $"Applies HP Check to All Content", 1);
                     ImGui.Unindent();
                     break;
-                
+
                 case Preset.NIN_AoE_AdvancedMode_TrickAttack:
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_TrickAttack_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
@@ -206,15 +212,15 @@ internal partial class NIN
                         "All Content", $"Applies HP Check to All Content", 1);
                     ImGui.Unindent();
                     break;
-                
-                
+
+
                 case Preset.NIN_AoE_AdvancedMode_TenChiJin:
                     DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "Auto TCJ Option",
                         "Will automatically Fuma Shuriken then Raiton then Suiton", 2, 0);
                     DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "TenriJindo Option",
                         "Will weave followup OGCD, TenriJindo, when available", 2, 1);
                     break;
-                
+
                 case Preset.NIN_AoE_AdvancedMode_SecondWind:
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_SecondWindThreshold, "Set a HP% threshold for when Second Wind will be used.");
                     break;
@@ -229,29 +235,25 @@ internal partial class NIN
                     break;
 
                 case Preset.NIN_AoE_AdvancedMode_HellfrogMedium:
-                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_HellfrogMedium_Pooling, "Hellfrog Pooling","Will pool Ninki for the buff windows, while preventing overcap");
+                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_HellfrogMedium_Pooling, "Hellfrog Pooling", "Will pool Ninki for the buff windows, while preventing overcap");
                     break;
                 #endregion
-                
+
                 #region Standalone
                 case Preset.NIN_Simple_Mudras:
-                                    DrawRadioButton(NIN_SimpleMudra_Choice, "Mudra Path Set 1",
-                                        $"1. {Ten.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Raiton.ActionName()}/{HyoshoRanryu.ActionName()}, {Suiton.ActionName()} " +
-                                        $"({Doton.ActionName()} under {Kassatsu.ActionName()}).\n{Chi.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Hyoton.ActionName()}, " +
-                                        $"{Huton.ActionName()}.\n{Jin.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Katon.ActionName()}/{GokaMekkyaku.ActionName()}, {Doton.ActionName()}",
-                                        1);
-                                    DrawRadioButton(NIN_SimpleMudra_Choice, "Mudra Path Set 2",
-                                        $"2. {Ten.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Hyoton.ActionName()}/{HyoshoRanryu.ActionName()}, {Doton.ActionName()}.\n{Chi.ActionName()} " +
-                                        $"Mudras -> {FumaShuriken.ActionName()}, {Katon.ActionName()}, {Suiton.ActionName()}.\n{Jin.ActionName()} Mudras -> {FumaShuriken.ActionName()}, " +
-                                        $"{Raiton.ActionName()}/{GokaMekkyaku.ActionName()}, {Huton.ActionName()} ({Doton.ActionName()} under {Kassatsu.ActionName()}).",
-                                        2);
-                                    break;
-                
-                
-                case Preset.NIN_Variant_Cure:
-                    DrawSliderInt(1, 100, NIN_VariantCure, "HP% to be at or under", 200);
+                    DrawRadioButton(NIN_SimpleMudra_Choice, "Mudra Path Set 1",
+                        $"1. {Ten.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Raiton.ActionName()}/{HyoshoRanryu.ActionName()}, {Suiton.ActionName()} " +
+                        $"({Doton.ActionName()} under {Kassatsu.ActionName()}).\n{Chi.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Hyoton.ActionName()}, " +
+                        $"{Huton.ActionName()}.\n{Jin.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Katon.ActionName()}/{GokaMekkyaku.ActionName()}, {Doton.ActionName()}",
+                        1);
+                    DrawRadioButton(NIN_SimpleMudra_Choice, "Mudra Path Set 2",
+                        $"2. {Ten.ActionName()} Mudras -> {FumaShuriken.ActionName()}, {Hyoton.ActionName()}/{HyoshoRanryu.ActionName()}, {Doton.ActionName()}.\n{Chi.ActionName()} " +
+                        $"Mudras -> {FumaShuriken.ActionName()}, {Katon.ActionName()}, {Suiton.ActionName()}.\n{Jin.ActionName()} Mudras -> {FumaShuriken.ActionName()}, " +
+                        $"{Raiton.ActionName()}/{GokaMekkyaku.ActionName()}, {Huton.ActionName()} ({Doton.ActionName()} under {Kassatsu.ActionName()}).",
+                        2);
                     break;
-                
+
+
                 case Preset.NIN_HideMug:
                     DrawAdditionalBoolChoice(NIN_HideMug_Mug, "Mug", "Adds Mug when in Combat");
                     DrawAdditionalBoolChoice(NIN_HideMug_Toggle, "Hide Quick Toggle", "Instantly toggles off hidden so you can use it to reset mudra cooldown.");
@@ -269,7 +271,19 @@ internal partial class NIN
                     }
                     ImGui.Unindent();
                     break;
+
+                
+                case Preset.NIN_MudraProtection:
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Shade Shift", "Replaces with Savage Blade while in Mudra.", 6, 0);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Shukuchi", "Replaces with Savage Blade while in Mudra.", 6, 1);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Feint", "Replaces with Savage Blade while in Mudra or Current Target already has Feint", 6, 2);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Bloodbath", "Replaces with Savage Blade while in Mudra.", 6, 3);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Second Wind", "Replaces with Savage Blade while in Mudra.", 6, 4);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Leg Sweep", "Replaces with Savage Blade while in Mudra.", 6, 5);
+                    break;
+                    
                 #endregion
+
             }
         }
     }

@@ -253,7 +253,7 @@ internal partial class AST
         get
         {
             if (Player.Object is null ||
-                Player.Job != WrathCombo.JobID ||
+                Player.Job != Job.AST ||
                 Svc.Condition[ConditionFlag.BetweenAreas] ||
                 Svc.Condition[ConditionFlag.Unconscious] ||
                 Gauge.DrawnCards[0] == CardType.None ||
@@ -550,6 +550,7 @@ internal partial class AST
         HoroscopeHeal = 16558,
         Exaltation = 25873,
         Macrocosmos = 25874,
+        MicroCosmos = 25875,
         Synastry = 3612,
         NeutralSect = 16559,
         SunSign = 37031,

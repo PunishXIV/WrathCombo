@@ -286,7 +286,7 @@ internal partial class WHM
     internal static WHMGauge gauge = GetJobGauge<WHMGauge>();
     internal static bool CanLily => gauge.Lily > 0;
     internal static bool FullLily => gauge.Lily == 3;
-    internal static bool AlmostFullLily => gauge is { Lily: 2, LilyTimer: >= 17000 };
+    internal static bool AlmostFullLily => gauge is { Lily: 2, LilyTimer: >= 8000 };
     internal static bool BloodLilyReady => gauge.BloodLily == 3;
 
     #endregion

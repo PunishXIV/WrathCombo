@@ -91,7 +91,7 @@ public class UIHelper(Leasing leasing)
         // Bail if the job is not controlled, fast
         if ((JobsControlled.TryGetValue(jobName, out var jobNotControlled) &&
              string.IsNullOrEmpty(jobNotControlled.controllers)) ||
-            _leasing.CheckJobControlled((int)job) is null)
+            _leasing.CheckJobControlled(job) is null)
         {
             if (string.IsNullOrEmpty(jobNotControlled.controllers))
             {

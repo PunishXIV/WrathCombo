@@ -102,17 +102,28 @@ internal static class SimpleTarget
 
         /// <summary>
         ///     The <see cref="AllyToHeal">Heal Stack</see>, but filtered to
-        ///     those with a cleansable status effect.
+        ///     those with a cleansable status effect, and falling back to
+        ///     <see cref="AnyCleansableAlly"/> if no such status effect is
+        ///     found in the stack.
         /// </summary>
         public static IGameObject? AllyToEsuna =>
-            GetStack(logicForEachEntryInStack:
-                target => target.IfHasCleansable());
+            GetStack(logicForEachEntryInStack: 
+                target => target.IfHasCleansable()) ??
+            AnyCleansableAlly;
 
         /// <summary>
         ///     The Customizable Raise Stack.
         /// </summary>
         public static IGameObject? AllyToRaise =>
             GetStack(StackOption.RaiseStack);
+        
+        /// <summary>
+        ///     The <see cref="AllyToHeal">Heal Stack</see>, but filtered to
+        ///     those in Line of Sight.
+        /// </summary>
+        public static IGameObject? AllyToHealPVP =>
+            GetStack(logicForEachEntryInStack:
+                target => target.IfWithinLineOfSight());
 
         #region Custom Stack Resolving
 
@@ -156,7 +167,7 @@ internal static class SimpleTarget
                     (cfg.UseLowestHPOverrideInDefaultHealStack
                         ? CustomLogic(LowestHPPAlly.IfWithinRange().IfMissingHP())
                         : null) ??
-                    Self;
+                   Self;
 
             #endregion
 
@@ -485,6 +496,12 @@ internal static class SimpleTarget
             .Where(x => x.IsAPlayer() && x.IsTargetable &&
                         !x.IsInParty())
             .FirstOrDefault(x => x.IsDead());
+
+    public static IGameObject? AnyCleansableAlly =>
+        GetPartyMembers()
+            .Select(x => x.BattleChara)
+            .Where(x => x is not null && x.IsDead() == false && HasCleansableDebuff(x) && IsInLineOfSight(x))
+            .FirstOrDefault();
 
     #region HP-Based Targets
 

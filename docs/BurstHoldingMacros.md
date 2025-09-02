@@ -5,7 +5,7 @@ Per [Issue #99](https://github.com/PunishXIV/WrathCombo/issues/99), Burst Holdin
 As a workaround until such time though, you can create a macro to toggle off the burst parts of Jobs within Wrath, to achieve a similar result.
 
 You can toggle off these options with `/wrath toggle <x>` in game.
-You can find the ID or internal name to provide as `<x>` by using `/wrath list set <y>` (replace `<y>` with your current job, like `/wrath list set DRK`), or by looking at the [`Preset` File](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Combos/Preset.cs) (see [this image](https://i.imgur.com/LsJ06DW.png) for how to read this)
+You can find the ID or internal name to provide as `<x>` by using `/wrath list set <y>` (replace `<y>` with your current job, like `/wrath list set DRK`), or by looking at the [`Preset` File](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Combos/CustomComboPreset.cs) (see [this image](https://i.imgur.com/LsJ06DW.png) for how to read this)
 
 Below is a community-provided list of basic burst-holding macros for each job.
 

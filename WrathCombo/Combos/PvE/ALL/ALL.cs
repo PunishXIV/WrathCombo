@@ -1,5 +1,4 @@
-﻿using ECommons.DalamudServices;
-using ECommons.ExcelServices;
+﻿using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,12 +11,6 @@ internal partial class All
 {
     /// Used to block user input.
     public const uint SavageBlade = 11;
-
-    public const uint
-        Sprint = 3;
-
-    private const uint
-        IsleSprint = 31314;
 
     public static class Buffs
     {
@@ -62,16 +55,21 @@ internal partial class All
 
         protected override uint Invoke(uint actionID)
         {
+            if (actionID is not (RoleActions.Tank.Interject or RoleActions.Tank.LowBlow or PLD.ShieldBash))
+                return actionID;
+
             var tar = IsEnabled(Preset.ALL_Tank_Interrupt_Retarget) ? SimpleTarget.InterruptableEnemy : CurrentTarget;
             switch (actionID)
             {
                 case RoleActions.Tank.LowBlow or PLD.ShieldBash when CanInterruptEnemy(null, tar) && ActionReady(RoleActions.Tank.Interject):
                     return RoleActions.Tank.Interject.Retarget(actionID, tar);
 
-                case RoleActions.Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(RoleActions.Tank.LowBlow) && !TargetIsBoss():
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(RoleActions.Tank.LowBlow) && !TargetIsBoss() && !JustUsed(RoleActions.Tank.Interject):
                     return RoleActions.Tank.LowBlow.Retarget(actionID, tar);
 
-                case PLD.ShieldBash when IsOnCooldown(RoleActions.Tank.LowBlow):
+                case PLD.ShieldBash when IsOnCooldown(RoleActions.Tank.LowBlow) && !JustUsed(RoleActions.Tank.Interject) && !JustUsed(PLD.ShieldBash, 7):
+                    return PLD.ShieldBash.Retarget(actionID, tar);
+
                 default:
                     return actionID;
             }
@@ -157,10 +155,10 @@ internal partial class All
                          SimpleTarget.HardTarget.IfHasCleansable() ??
                          GetPartyMembers().FirstOrDefault(x => x.BattleChara.IfHasCleansable() != null)?.BattleChara;
 
-            return target is null ? SavageBlade : RoleActions.Healer.Esuna.Retarget(target, dontCull: true);
+            return RoleActions.Healer.Esuna.Retarget(target, dontCull: true);
         }
     }
-    
+
     internal class ALL_Healer_RescueRetargeting : CustomCombo
     {
         protected internal override Preset Preset => Preset.ALL_Healer_RescueRetargeting;
@@ -172,7 +170,7 @@ internal partial class All
 
             var target =
                 SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
-                
+
                 //Field Mouseover
                 (Config.ALL_Healer_RescueRetargetingOptions[0]
                     ? SimpleTarget.ModelMouseOverTarget.IfNotThePlayer().IfInParty()
@@ -182,12 +180,12 @@ internal partial class All
                 (Config.ALL_Healer_RescueRetargetingOptions[1]
                     ? SimpleTarget.FocusTarget.IfNotThePlayer().IfInParty()
                     : null) ??
-                
+
                 //Focus target retarget
                 (Config.ALL_Healer_RescueRetargetingOptions[2]
                     ? SimpleTarget.SoftTarget.IfNotThePlayer().IfInParty()
                     : null) ??
-                
+
                 SimpleTarget.HardTarget.IfNotThePlayer().IfInParty();
 
             return actionID.Retarget(target);

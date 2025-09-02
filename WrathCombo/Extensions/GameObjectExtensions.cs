@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Extensions;
 
 public static class GameObjectExtensions
@@ -32,7 +33,7 @@ public static class GameObjectExtensions
     ///     See <see cref="SimpleTarget.Stack.AllyToHeal"/> for a use case.
     /// </remarks>
     public static IGameObject? IfFriendly (this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.TargetIsFriendly(obj) ? obj : null;
+        obj != null && TargetIsFriendly(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -40,7 +41,7 @@ public static class GameObjectExtensions
     /// </summary>
     public static IGameObject? IfInParty (this IGameObject? obj) =>
         obj != null &&
-        CustomComboFunctions.GetPartyMembers()
+        GetPartyMembers()
             .Any(x => x.GameObjectId == obj.GameObjectId) ? obj : null;
 
     /// <summary>
@@ -55,7 +56,7 @@ public static class GameObjectExtensions
     ///     <see langword="null" /> if the target is not a boss.
     /// </summary>
     public static IGameObject? IfBoss (this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.TargetIsBoss(obj) ? obj : null;
+        obj != null && TargetIsBoss(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -69,7 +70,7 @@ public static class GameObjectExtensions
     ///     <see langword="null" /> if the target does not need positionals.
     /// </summary>
     public static IGameObject? IfNeedsPositionals (this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.TargetNeedsPositionals(obj) ? obj : null;
+        obj != null && TargetNeedsPositionals(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -86,7 +87,16 @@ public static class GameObjectExtensions
     /// <param name="range">The range to check against. Defaults to 25 yalms.</param>
     public static IGameObject? IfWithinRange
         (this IGameObject? obj, float range = 25) =>
-        obj != null && CustomComboFunctions.IsInRange(obj, range) ? obj : null;
+        obj != null && IsInRange(obj, range) ? obj : null;
+    
+    /// <summary>
+    ///     Can be chained onto a <see cref="IGameObject" /> to make it return
+    ///     <see langword="null" /> if the target is not within line of sight.
+    /// </summary>
+    /// <param name="obj"></param>
+    public static IGameObject? IfWithinLineOfSight
+        (this IGameObject? obj) =>
+        obj != null && IsInLineOfSight(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -103,7 +113,7 @@ public static class GameObjectExtensions
     ///     <see langword="null" /> if the target is not invulnerable/invincible.
     /// </summary>
     public static IGameObject? IfNotInvincible (this IGameObject? obj) =>
-        obj != null && !CustomComboFunctions.TargetIsInvincible(obj) ? obj : null;
+        obj != null && !TargetIsInvincible(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -111,7 +121,7 @@ public static class GameObjectExtensions
     ///     debuff.
     /// </summary>
     public static IGameObject? IfHasCleansable (this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.HasCleansableDebuff(obj) ? obj : null;
+        obj != null && HasCleansableDebuff(obj) ? obj : null;
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -176,7 +186,7 @@ public static class GameObjectExtensions
     ///     boolean check for if the target is friendly.
     /// </summary>
     public static bool IsFriendly(this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.TargetIsFriendly(obj);
+        obj != null && TargetIsFriendly(obj);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -184,7 +194,7 @@ public static class GameObjectExtensions
     /// </summary>
     public static bool IsInParty(this IGameObject? obj) =>
         obj != null &&
-        CustomComboFunctions.GetPartyMembers()
+        GetPartyMembers()
             .Any(x => x.GameObjectId == obj.GameObjectId);
 
     // `IsHostile` already exists, and works the exact same as we would write here
@@ -194,7 +204,7 @@ public static class GameObjectExtensions
     ///     boolean check for if the target is a boss.
     /// </summary>
     public static bool IsBoss(this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.TargetIsBoss(obj);
+        obj != null && TargetIsBoss(obj);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -208,7 +218,7 @@ public static class GameObjectExtensions
     ///     boolean check for if the target needs positionals.
     /// </summary>
     public static bool NeedsPositionals(this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.TargetNeedsPositionals(obj);
+        obj != null && TargetNeedsPositionals(obj);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -222,7 +232,7 @@ public static class GameObjectExtensions
     ///     boolean check for if the target is within range.
     /// </summary>
     public static bool IsWithinRange(this IGameObject? obj, float range = 25) =>
-        obj != null && CustomComboFunctions.IsInRange(obj, range);
+        obj != null && IsInRange(obj, range);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -236,14 +246,14 @@ public static class GameObjectExtensions
     ///     boolean check for if the object is not invulnerable/invincible.
     /// </summary>
     public static bool IsNotInvincible(this IGameObject? obj) =>
-        obj != null && !CustomComboFunctions.TargetIsInvincible(obj);
+        obj != null && !TargetIsInvincible(obj);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
     ///     boolean check for if the object has a cleansable debuff.
     /// </summary>
     public static bool IsCleansable(this IGameObject? obj) =>
-        obj != null && CustomComboFunctions.HasCleansableDebuff(obj);
+        obj != null && HasCleansableDebuff(obj);
 
     /// <summary>
     ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -285,6 +295,16 @@ public static class GameObjectExtensions
 
     #endregion
 
+    public static CombatRole GetRole(this IGameObject? obj)
+    {
+        if (obj is not IBattleChara battleChara ||
+            battleChara.ClassJob.ValueNullable is null)
+            return CombatRole.NonCombat;
+
+        var role = battleChara.ClassJob.Value.Role;
+        return (CombatRole)role;
+    }
+
     /// <summary>
     ///     Checks if the object is dead, and should be raised.<br />
     ///     Checks for them being dead but targetable, not having Transcendence or
@@ -294,10 +314,10 @@ public static class GameObjectExtensions
     {
         return obj.IsDead &&
                obj.IsAPlayer() &&
-               !CustomComboFunctions.HasStatusEffect(2648, obj, true) &&
-               !CustomComboFunctions.HasStatusEffect(148, obj, true) &&
+               !HasStatusEffect(2648, obj, true) &&
+               !HasStatusEffect(148, obj, true) &&
                obj.IsTargetable &&
-               (CustomComboFunctions.TimeSpentDead(obj.GameObjectId)
+               (TimeSpentDead(obj.GameObjectId)
                    .TotalSeconds > 2 || !obj.IsInParty());
     }
 }

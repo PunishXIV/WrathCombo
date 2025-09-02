@@ -36,8 +36,8 @@ internal partial class GNB : Tank
 
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
 
             #region Mitigations
@@ -157,8 +157,8 @@ internal partial class GNB : Tank
 
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Mitigations
             if (IsEnabled(Preset.GNB_ST_Mitigation) && InCombat() && !MitUsed)
@@ -284,8 +284,8 @@ internal partial class GNB : Tank
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Mitigations
             if (GNB_AoE_MitsOptions != 1)
@@ -364,8 +364,8 @@ internal partial class GNB : Tank
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Mitigations
             if (IsEnabled(Preset.GNB_AoE_Mitigation) && InCombat() && !MitUsed)

@@ -10,18 +10,17 @@ internal partial class PCT
     {
         #region Options
         public static UserInt
-            CombinedAetherhueChoices = new("CombinedAetherhueChoices"),
+            CombinedAetherhueChoices = new("CombinedAetherhueChoices", 0),
             PCT_ST_AdvancedMode_LucidOption = new("PCT_ST_AdvancedMode_LucidOption", 6500),
-            PCT_AoE_AdvancedMode_HolyinWhiteOption = new("PCT_AoE_AdvancedMode_HolyinWhiteOption", 0),
+            PCT_AoE_AdvancedMode_HolyinWhiteOption = new("PCT_AoE_AdvancedMode_HolyinWhiteOption", 2),
             PCT_AoE_AdvancedMode_LucidOption = new("PCT_AoE_AdvancedMode_LucidOption", 6500),
-            PCT_VariantCure = new("PCT_VariantCure"),
-            PCT_ST_CreatureStop = new("PCT_ST_CreatureStop"),
-            PCT_AoE_CreatureStop = new("PCT_AoE_CreatureStop"),
-            PCT_ST_WeaponStop = new("PCT_ST_WeaponStop"),
-            PCT_AoE_WeaponStop = new("PCT_AoE_WeaponStop"),
-            PCT_ST_LandscapeStop = new("PCT_ST_LandscapeStop"),
-            PCT_AoE_LandscapeStop = new("PCT_AoE_LandscapeStop"),
-            PCT_Opener_Choice = new("PCT_Opener_Choice"),
+            PCT_ST_CreatureStop = new("PCT_ST_CreatureStop", 10),
+            PCT_AoE_CreatureStop = new("PCT_AoE_CreatureStop", 10),
+            PCT_ST_WeaponStop = new("PCT_ST_WeaponStop", 10),
+            PCT_AoE_WeaponStop = new("PCT_AoE_WeaponStop", 10),
+            PCT_ST_LandscapeStop = new("PCT_ST_LandscapeStop", 10),
+            PCT_AoE_LandscapeStop = new("PCT_AoE_LandscapeStop", 10),
+            PCT_Opener_Choice = new("PCT_Opener_Choice", 0),
             PCT_Balance_Content = new("PCT_Balance_Content", 1);
 
         public static UserBool
@@ -111,10 +110,6 @@ internal partial class PCT
                         $"Add {HammerStamp.ActionName()} when under the effect of {Buffs.HammerTime.StatusName()}.");
                     DrawAdditionalBoolChoice(CombinedMotifsLandscape, $"{StarPrism.ActionName()} Feature",
                         $"Add {StarPrism.ActionName()} when under the effect of {Buffs.Starstruck.StatusName()}.");
-                    break;
-
-                case Preset.PCT_Variant_Cure:
-                    DrawSliderInt(1, 100, PCT_VariantCure, "HP% to be at or under", 200);
                     break;
 
                 #endregion

@@ -1,4 +1,5 @@
-﻿using System.Collections.Frozen;
+﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using WrathCombo.CustomComboNS;
@@ -29,6 +30,8 @@ internal partial class NIN
     #region Ninjutsu Logic
     internal static bool HasDoton => HasStatusEffect(Buffs.Doton);
     internal static float DotonRemaining => GetStatusEffectRemainingTime(Buffs.Doton);
+    internal static bool DotonStoppedMoving => TimeStoodStill >= TimeSpan.FromSeconds(DotonTimeStill);
+    internal static float DotonTimeStill => AoESimpleMode ? 1.5f : NIN_AoE_AdvancedMode_Doton_TimeStill;
     
     internal static bool CanUseFumaShuriken => LevelChecked(FumaShuriken) && MudraReady;
      
@@ -49,7 +52,7 @@ internal partial class NIN
                                           NIN_AoE_AdvancedMode_Katon_Options[1] && !InMeleeRange() && 
                                           GetCooldownChargeRemainingTime(Ten) <= TrickCD - 10); //Uptime option
     
-    internal static bool CanUseDoton => LevelChecked(Doton) && MudraReady && 
+    internal static bool CanUseDoton => LevelChecked(Doton) && MudraReady && DotonStoppedMoving &&
                                         (!HasDoton || DotonRemaining <= 2) &&
                                         (TrickDebuff || //Buff Window
                                          GetCooldownChargeRemainingTime(Ten) < 3); // Use if you have Kassatsu before you get Hosho Ranryu
@@ -91,15 +94,15 @@ internal partial class NIN
     internal static float TrickCD => GetCooldownRemainingTime(OriginalHook(TrickAttack));
     internal static float MugCD => GetCooldownRemainingTime(OriginalHook(Mug));
     
-    internal static bool CanTrickST => ActionReady(OriginalHook(TrickAttack)) && NinjaWeave && HasStatusEffect(Buffs.ShadowWalker) && !MudraPhase &&
+    internal static bool CanTrickST => ActionReady(OriginalHook(TrickAttack)) && NinjaWeave && CanApplyStatus(CurrentTarget, [Debuffs.TrickAttack, Debuffs.KunaisBane]) && HasStatusEffect(Buffs.ShadowWalker) && !MudraPhase &&
                                      (MugDebuff || MugCD >= 45 || MugDisabledST);
-    internal static bool CanTrickAoE => ActionReady(OriginalHook(TrickAttack)) && NinjaWeave && HasStatusEffect(Buffs.ShadowWalker) && !MudraPhase &&
+    internal static bool CanTrickAoE => ActionReady(OriginalHook(TrickAttack)) && NinjaWeave && CanApplyStatus(CurrentTarget, [Debuffs.TrickAttack, Debuffs.KunaisBane])&& HasStatusEffect(Buffs.ShadowWalker) && !MudraPhase &&
                                      (MugDebuff || MugCD >= 45 || MugDisabledAoE);
     
-    internal static bool CanMugST => ActionReady(OriginalHook(Mug)) && CanDelayedWeave(1.25f, .6f, 10) && !MudraPhase &&
+    internal static bool CanMugST => ActionReady(OriginalHook(Mug)) && CanApplyStatus(CurrentTarget, [Debuffs.Mug, Debuffs.Dokumori])&& CanDelayedWeave(1.25f, .6f, 10) && !MudraPhase &&
                                    (TrickCD <= 6 || TrickDisabledST) && 
                                    (LevelChecked(Dokumori) && GetTargetDistance() <= 8 ||InMeleeRange());
-    internal static bool CanMugAoE => ActionReady(OriginalHook(Mug)) && CanDelayedWeave(1.25f, .6f, 10) && !MudraPhase &&
+    internal static bool CanMugAoE => ActionReady(OriginalHook(Mug)) && CanApplyStatus(CurrentTarget, [Debuffs.Mug, Debuffs.Dokumori])&& CanDelayedWeave(1.25f, .6f, 10) && !MudraPhase &&
                                    (TrickCD <= 6 || TrickDisabledAoE) && 
                                    (LevelChecked(Dokumori) && GetTargetDistance() <= 8 ||InMeleeRange());
     
@@ -476,6 +479,76 @@ internal partial class NIN
     }
     #endregion
     
+    #region Mudra Standalone Logic
+     // Single Target
+    internal static uint UseFumaShuriken(uint actionId)
+    {
+        return OriginalHook(Ninjutsu) == FumaShuriken ? OriginalHook(Ninjutsu) : Ten;
+    }
+    internal static uint UseRaiton(uint actionId) // Ten Chi
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu) 
+            return HasKassatsu ? TenCombo : Ten;
+        return OriginalHook(Ninjutsu) == FumaShuriken &&
+               ActionWatching.LastAction is TenCombo or Ten or JinCombo or Jin 
+            ? ChiCombo 
+            : OriginalHook(Ninjutsu);
+    }
+    internal static uint UseHyoshoRanryu(uint actionId) // Ten Jin
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return TenCombo;
+        return OriginalHook(Ninjutsu) == FumaShuriken &&
+               ActionWatching.LastAction is TenCombo 
+            ? JinCombo 
+            : OriginalHook(Ninjutsu);
+    }
+    internal static uint UseSuiton(uint actionId) // Ten Chi Jin
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return Ten;
+        if (ActionWatching.LastAction is Ten)
+            return ChiCombo;
+        return ActionWatching.LastAction is ChiCombo ? JinCombo : OriginalHook(Ninjutsu);
+    }
+    //Multi Target
+    internal static uint UseGokaMekkyaku(uint actionId) // Chi Ten
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return HasKassatsu ? ChiCombo : Chi;
+        return OriginalHook(Ninjutsu) == FumaShuriken && 
+               ActionWatching.LastAction is Chi or ChiCombo 
+            ? TenCombo 
+            : OriginalHook(Ninjutsu);
+    }
+    internal static uint UseKaton(uint actionId) // Chi Ten
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return HasKassatsu ? ChiCombo : Chi;
+        return OriginalHook(Ninjutsu) == FumaShuriken && 
+               ActionWatching.LastAction is Jin or JinCombo or ChiCombo or Chi
+            ? TenCombo 
+            : OriginalHook(Ninjutsu);
+    }
+    internal static uint UseDoton(uint actionId)  //Jin Ten Chi
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return HasKassatsu ? JinCombo : Jin;
+        if (ActionWatching.LastAction is Jin or JinCombo)
+            return TenCombo;
+        return ActionWatching.LastAction is TenCombo ? ChiCombo : OriginalHook(Ninjutsu);
+    }
+
+    internal static uint UseHuton(uint actionId) // Jin Chi Ten
+    {
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return Chi;
+        if (ActionWatching.LastAction is Chi or ChiCombo)
+            return JinCombo;
+        return ActionWatching.LastAction is JinCombo ? TenCombo : Huton;
+    }
+    #endregion
+
     #region Opener
     internal static NINOpenerMaxLevel4thGCDKunai Opener1 = new();
     internal static NINOpenerMaxLevel3rdGCDDokumori Opener2 = new();
@@ -698,6 +771,7 @@ internal partial class NIN
         DeathBlossom = 2254,
         AeolianEdge = 2255,
         TrickAttack = 2258,
+        Shukuchi = 2262,
         Kassatsu = 2264,
         ArmorCrush = 3563,
         DreamWithinADream = 3566,

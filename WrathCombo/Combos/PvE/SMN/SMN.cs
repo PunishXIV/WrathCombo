@@ -17,12 +17,6 @@ internal partial class SMN : Caster
             if (actionID != Role.Swiftcast)
                 return actionID;
 
-            if (Variant.CanRaise(Preset.SMN_Variant_Raise))
-                return IsEnabled(Preset.SMN_Raise_Retarget)
-                    ? Variant.Raise.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Variant.Raise;
-
             if (IsOnCooldown(Role.Swiftcast))
                 return IsEnabled(Preset.SMN_Raise_Retarget)
                     ? Resurrection.Retarget(Role.Swiftcast,
@@ -175,24 +169,18 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (Variant.CanCure(Preset.SMN_Variant_Cure, SMN_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SMN_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region OGCD
             //Emergency Demi Attack Dump, Probably not needed anymore without burst delay selection
             if (DemiExists && Gauge.SummonTimerRemaining <= 2500)
             {
-                 if (ActionReady(OriginalHook(EnkindleBahamut)))
+                if (ActionReady(OriginalHook(EnkindleBahamut)))
                     return OriginalHook(EnkindleBahamut);
 
-                 if (ActionReady(AstralFlow) && DemiNotPheonix)
+                if (ActionReady(AstralFlow) && DemiNotPheonix)
                     return OriginalHook(AstralFlow);
             }
 
@@ -299,7 +287,7 @@ internal partial class SMN : Caster
             #region Ifrit Phase
 
             if (IsIfritAttuned || OriginalHook(AstralFlow) is CrimsonCyclone or CrimsonStrike)
-            {                
+            {
                 if (GemshineReady && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(Gemshine);
 
@@ -314,7 +302,7 @@ internal partial class SMN : Caster
             #region Egi Priority
             // Egi Order
             if (!ActionReady(OriginalHook(Aethercharge)) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0)
-            {               
+            {
                 if (Gauge.IsTitanReady)
                     return OriginalHook(SummonTopaz);
 
@@ -351,14 +339,8 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (Variant.CanCure(Preset.SMN_Variant_Cure, SMN_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SMN_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region OGCD
@@ -458,7 +440,7 @@ internal partial class SMN : Caster
 
                 if (GemshineReady)
                     return OriginalHook(PreciousBrilliance);
-            }    
+            }
             #endregion
 
             #region Garuda Phase
@@ -490,7 +472,7 @@ internal partial class SMN : Caster
             }
             #endregion
 
-            // Egi Order 
+            // Egi Order
             if (!ActionReady(OriginalHook(Aethercharge)) && Gauge.SummonTimerRemaining == 0 && Gauge.AttunementTimerRemaining == 0)
             {
                 if (Gauge.IsTitanReady)
@@ -545,12 +527,8 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (Variant.CanCure(Preset.SMN_Variant_Cure, SMN_VariantCure))
-                return Variant.Cure;
-            if (Variant.CanRampart(Preset.SMN_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region OGCD
@@ -644,6 +622,11 @@ internal partial class SMN : Caster
                 // Lucid Dreaming
                 if (IsEnabled(Preset.SMN_ST_Advanced_Combo_Lucid) && Role.CanLucidDream(lucidThreshold))
                     return Role.LucidDreaming;
+                
+                if (IsEnabled(Preset.SMN_ST_Advanced_Combo_Addle) && 
+                    Role.CanAddle()  &&
+                    RaidWideCasting())
+                    return Role.Addle;
             }
             #endregion
 
@@ -668,21 +651,21 @@ internal partial class SMN : Caster
 
             #region Garuda Phase
             if (IsGarudaAttuned || OriginalHook(AstralFlow) is Slipstream)
-            {               
+            {
                 if (GarudaAstralFlow && HasStatusEffect(Buffs.GarudasFavor))
                 {
                     if (IsEnabled(Preset.SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 1 or 3 && Role.CanSwiftcast()) // Forced Swiftcast option
                         return Role.Swiftcast;
-                    
+
                     if (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast))
-                        return OriginalHook(AstralFlow);                    
+                        return OriginalHook(AstralFlow);
                 }
 
                 #region Special Ruin 3 rule lvl 54 - 72
                 // Use Ruin III instead of Emerald Ruin III if enabled and Ruin Mastery III is not active
-                if (IsEnabled(Preset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3) && !IsMoving())                
+                if (IsEnabled(Preset.SMN_ST_Ruin3_Emerald_Ruin3) && !TraitLevelChecked(Traits.RuinMastery3) && LevelChecked(Ruin3) && !IsMoving())
                     return Ruin3;
-               
+
                 #endregion
 
                 if (IsEnabled(Preset.SMN_ST_Advanced_Combo_EgiSummons_Attacks) && GemshineReady)
@@ -699,7 +682,7 @@ internal partial class SMN : Caster
                 if (IsEnabled(Preset.SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 2 or 3 && Role.CanSwiftcast())
                     return Role.Swiftcast;
 
-                if (IsEnabled(Preset.SMN_ST_Advanced_Combo_EgiSummons_Attacks) && GemshineReady && 
+                if (IsEnabled(Preset.SMN_ST_Advanced_Combo_EgiSummons_Attacks) && GemshineReady &&
                     (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(Gemshine);
 
@@ -728,7 +711,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Ruin 4 Dump
-            if (IsEnabled(Preset.SMN_ST_Advanced_Combo_Ruin4) && !IsAttunedAny  && DemiNone && HasStatusEffect(Buffs.FurtherRuin))
+            if (IsEnabled(Preset.SMN_ST_Advanced_Combo_Ruin4) && !IsAttunedAny && DemiNone && HasStatusEffect(Buffs.FurtherRuin))
                 return Ruin4;
             #endregion
 
@@ -758,14 +741,8 @@ internal partial class SMN : Caster
             #endregion
 
             #region Special Content
-            if (Variant.CanCure(Preset.SMN_Variant_Cure, SMN_VariantCure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.SMN_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
-            
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             #endregion
 
             #region OGCD
@@ -892,10 +869,10 @@ internal partial class SMN : Caster
                 {
                     if (IsEnabled(Preset.SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 1 or 3 && Role.CanSwiftcast()) // Forced Swiftcast option
                         return Role.Swiftcast;
-                   
+
                     if (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast))
                         return OriginalHook(AstralFlow);
-                }                
+                }
 
                 if (IsEnabled(Preset.SMN_AoE_Advanced_Combo_EgiSummons_Attacks) && GemshineReady)
                     return OriginalHook(PreciousBrilliance);
@@ -912,7 +889,7 @@ internal partial class SMN : Caster
                 if (IsEnabled(Preset.SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi) && swiftcastPhase is 2 or 3 && (Role.CanSwiftcast()))
                     return Role.Swiftcast;
 
-                if (IsEnabled(Preset.SMN_AoE_Advanced_Combo_EgiSummons_Attacks) && GemshineReady && 
+                if (IsEnabled(Preset.SMN_AoE_Advanced_Combo_EgiSummons_Attacks) && GemshineReady &&
                     (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(PreciousBrilliance);
 

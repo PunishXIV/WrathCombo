@@ -5,62 +5,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG : Melee
 {
-    internal class DRG_HeavensThrust : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.DRG_HeavensThrust;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not (FullThrust or HeavensThrust))
-                return actionID;
-
-            if (ComboTimer > 0)
-            {
-                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
-                    return OriginalHook(VorpalThrust);
-
-                if (ComboAction == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
-                    return OriginalHook(FullThrust);
-
-                if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
-                    return FangAndClaw;
-
-                if (ComboAction == FangAndClaw && LevelChecked(Drakesbane))
-                    return Drakesbane;
-            }
-
-            return OriginalHook(TrueThrust);
-        }
-    }
-
-    internal class DRG_ChaoticSpring : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.DRG_ChaoticSpring;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not (ChaosThrust or ChaoticSpring))
-                return actionID;
-
-            if (ComboTimer > 0)
-            {
-                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(Disembowel))
-                    return OriginalHook(Disembowel);
-
-                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
-                    return OriginalHook(ChaosThrust);
-
-                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
-                    return WheelingThrust;
-
-                if (ComboAction == WheelingThrust && LevelChecked(Drakesbane))
-                    return Drakesbane;
-            }
-
-            return OriginalHook(TrueThrust);
-        }
-    }
-
     internal class DRG_ST_SimpleMode : CustomCombo
     {
         protected internal override Preset Preset => Preset.DRG_ST_SimpleMode;
@@ -70,15 +14,8 @@ internal partial class DRG : Melee
             if (actionID is not TrueThrust)
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out uint contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (ActionReady(PiercingTalon) &&
@@ -136,6 +73,12 @@ internal partial class DRG : Melee
                         HasStatusEffect(Buffs.NastrondReady) &&
                         LoTDActive)
                         return Nastrond;
+
+                    if (Role.CanSecondWind(25))
+                        return Role.SecondWind;
+
+                    if (Role.CanBloodBath(40))
+                        return Role.Bloodbath;
                 }
 
                 if (CanDRGWeave(0.8f))
@@ -166,12 +109,6 @@ internal partial class DRG : Melee
                     LoTDActive && InMeleeRange())
                     return Stardiver;
             }
-
-            if (Role.CanSecondWind(25))
-                return Role.SecondWind;
-
-            if (Role.CanBloodBath(40))
-                return Role.Bloodbath;
 
             //1-2-3 Combo
             if (ComboTimer > 0)
@@ -210,6 +147,135 @@ internal partial class DRG : Melee
         }
     }
 
+    internal class DRG_AoE_SimpleMode : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRG_AoE_SimpleMode;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not DoomSpike)
+                return actionID;
+
+            if (ContentSpecificActions.TryGet(out uint contentAction))
+                return contentAction;
+
+            // Piercing Talon Uptime Option
+            if (LevelChecked(PiercingTalon) &&
+                !InMeleeRange() && HasBattleTarget())
+                return PiercingTalon;
+
+            if (HasStatusEffect(Buffs.PowerSurge))
+            {
+                if (CanDRGWeave())
+                {
+                    //Lance Charge Feature
+                    if (ActionReady(LanceCharge))
+                        return LanceCharge;
+
+                    //Battle Litany Feature
+                    if (ActionReady(BattleLitany))
+                        return BattleLitany;
+
+                    //Life Surge Feature
+                    if (ActionReady(LifeSurge) &&
+                        !HasStatusEffect(Buffs.LifeSurge) &&
+                        (JustUsed(SonicThrust) && LevelChecked(CoerthanTorment) ||
+                         JustUsed(DoomSpike) && LevelChecked(SonicThrust) ||
+                         JustUsed(DoomSpike) && !LevelChecked(SonicThrust)))
+                        return LifeSurge;
+
+                    //Wyrmwind Thrust Feature
+                    if (ActionReady(WyrmwindThrust) &&
+                        FirstmindsFocus is 2 &&
+                        (LoTDActive || HasStatusEffect(Buffs.DraconianFire)))
+                        return WyrmwindThrust;
+
+                    //Geirskogul Feature
+                    if (ActionReady(Geirskogul) &&
+                        !LoTDActive)
+                        return Geirskogul;
+
+                    //Starcross Feature
+                    if (ActionReady(Starcross) &&
+                        HasStatusEffect(Buffs.StarcrossReady))
+                        return Starcross;
+
+                    //Rise of the Dragon Feature
+                    if (ActionReady(RiseOfTheDragon) &&
+                        HasStatusEffect(Buffs.DragonsFlight))
+                        return RiseOfTheDragon;
+
+                    if (ActionReady(MirageDive) &&
+                        HasStatusEffect(Buffs.DiveReady) &&
+                        OriginalHook(Jump) is MirageDive &&
+                        (LoTDActive ||
+                         GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                         GetCooldownRemainingTime(Geirskogul) > 3))
+                        return MirageDive;
+
+                    //Nastrond Feature
+                    if (ActionReady(Nastrond) &&
+                        HasStatusEffect(Buffs.NastrondReady) &&
+                        LoTDActive)
+                        return Nastrond;
+
+                    if (Role.CanSecondWind(25))
+                        return Role.SecondWind;
+
+                    if (Role.CanBloodBath(40))
+                        return Role.Bloodbath;
+                }
+
+                if (CanDRGWeave(0.8f))
+                {
+                    //(High) Jump Feature   
+                    if (ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
+                        return (LevelChecked(HighJump))
+                            ? HighJump
+                            : Jump;
+
+                    //Dragonfire Dive Feature
+                    if (ActionReady(DragonfireDive) &&
+                        !HasStatusEffect(Buffs.DragonsFlight) && InMeleeRange() &&
+                        (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
+                        return DragonfireDive;
+                }
+
+                //StarDiver Feature
+                if (ActionReady(Stardiver) &&
+                    CanDRGWeave(1.5f, true) &&
+                    !HasStatusEffect(Buffs.StarcrossReady) &&
+                    LoTDActive && InMeleeRange())
+                    return Stardiver;
+            }
+
+            if (ComboTimer > 0)
+            {
+                if (!LevelChecked(SonicThrust))
+                {
+                    if (ComboAction == TrueThrust && LevelChecked(Disembowel))
+                        return Disembowel;
+
+                    if (ComboAction == Disembowel && LevelChecked(ChaosThrust))
+                        return OriginalHook(ChaosThrust);
+                }
+
+                else
+                {
+                    if (ComboAction is DoomSpike or DraconianFury && LevelChecked(SonicThrust))
+                        return SonicThrust;
+
+                    if (ComboAction == SonicThrust && LevelChecked(CoerthanTorment))
+                        return CoerthanTorment;
+                }
+            }
+
+            return !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust)
+                ? OriginalHook(TrueThrust)
+                : actionID;
+        }
+    }
+
     internal class DRG_ST_AdvancedMode : CustomCombo
     {
         protected internal override Preset Preset => Preset.DRG_ST_AdvancedMode;
@@ -224,15 +290,8 @@ internal partial class DRG : Melee
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out uint contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (IsEnabled(Preset.DRG_ST_RangedUptime) &&
@@ -310,6 +369,26 @@ internal partial class DRG : Melee
                             LoTDActive)
                             return Nastrond;
                     }
+
+                    if (IsEnabled(Preset.DRG_ST_Feint) &&
+                        Role.CanFeint() &&
+                        RaidWideCasting())
+                        return Role.Feint;
+
+                    // healing
+                    if (IsEnabled(Preset.DRG_ST_ComboHeals))
+                    {
+                        if (Role.CanSecondWind(DRG_ST_SecondWindHPThreshold))
+                            return Role.SecondWind;
+
+                        if (Role.CanBloodBath(DRG_ST_BloodbathHPThreshold))
+                            return Role.Bloodbath;
+                    }
+
+                    if (IsEnabled(Preset.DRG_ST_StunInterupt) &&
+                        RoleActions.Melee.CanLegSweep() &&
+                        !TargetIsBoss() && TargetIsCasting())
+                        return Role.LegSweep;
                 }
 
                 if (IsEnabled(Preset.DRG_ST_CDs))
@@ -360,16 +439,6 @@ internal partial class DRG : Melee
                 }
             }
 
-            // healing
-            if (IsEnabled(Preset.DRG_ST_ComboHeals))
-            {
-                if (Role.CanSecondWind(DRG_ST_SecondWindHPThreshold))
-                    return Role.SecondWind;
-
-                if (Role.CanBloodBath(DRG_ST_BloodbathHPThreshold))
-                    return Role.Bloodbath;
-            }
-
             //1-2-3 Combo
             if (ComboTimer > 0)
             {
@@ -410,160 +479,17 @@ internal partial class DRG : Melee
         }
     }
 
-    internal class DRG_AOE_SimpleMode : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.DRG_AOE_SimpleMode;
-
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is not DoomSpike)
-                return actionID;
-
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
-
-            // Piercing Talon Uptime Option
-            if (LevelChecked(PiercingTalon) &&
-                !InMeleeRange() && HasBattleTarget())
-                return PiercingTalon;
-
-            if (HasStatusEffect(Buffs.PowerSurge))
-            {
-                if (CanDRGWeave())
-                {
-                    //Lance Charge Feature
-                    if (ActionReady(LanceCharge))
-                        return LanceCharge;
-
-                    //Battle Litany Feature
-                    if (ActionReady(BattleLitany))
-                        return BattleLitany;
-
-                    //Life Surge Feature
-                    if (ActionReady(LifeSurge) &&
-                        !HasStatusEffect(Buffs.LifeSurge) &&
-                        (JustUsed(SonicThrust) && LevelChecked(CoerthanTorment) ||
-                         JustUsed(DoomSpike) && LevelChecked(SonicThrust) ||
-                         JustUsed(DoomSpike) && !LevelChecked(SonicThrust)))
-                        return LifeSurge;
-
-                    //Wyrmwind Thrust Feature
-                    if (ActionReady(WyrmwindThrust) &&
-                        FirstmindsFocus is 2 &&
-                        (LoTDActive || HasStatusEffect(Buffs.DraconianFire)))
-                        return WyrmwindThrust;
-
-                    //Geirskogul Feature
-                    if (ActionReady(Geirskogul) &&
-                        !LoTDActive)
-                        return Geirskogul;
-
-                    //Starcross Feature
-                    if (ActionReady(Starcross) &&
-                        HasStatusEffect(Buffs.StarcrossReady))
-                        return Starcross;
-
-                    //Rise of the Dragon Feature
-                    if (ActionReady(RiseOfTheDragon) &&
-                        HasStatusEffect(Buffs.DragonsFlight))
-                        return RiseOfTheDragon;
-
-                    if (ActionReady(MirageDive) &&
-                        HasStatusEffect(Buffs.DiveReady) &&
-                        OriginalHook(Jump) is MirageDive &&
-                        (LoTDActive ||
-                         GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                         GetCooldownRemainingTime(Geirskogul) > 3))
-                        return MirageDive;
-
-                    //Nastrond Feature
-                    if (ActionReady(Nastrond) &&
-                        HasStatusEffect(Buffs.NastrondReady) &&
-                        LoTDActive)
-                        return Nastrond;
-                }
-
-                if (CanDRGWeave(0.8f))
-                {
-                    //(High) Jump Feature   
-                    if (ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
-                        return (LevelChecked(HighJump))
-                            ? HighJump
-                            : Jump;
-
-                    //Dragonfire Dive Feature
-                    if (ActionReady(DragonfireDive) &&
-                        !HasStatusEffect(Buffs.DragonsFlight) && InMeleeRange() &&
-                        (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
-                        return DragonfireDive;
-                }
-
-                //StarDiver Feature
-                if (ActionReady(Stardiver) &&
-                    CanDRGWeave(1.5f, true) &&
-                    !HasStatusEffect(Buffs.StarcrossReady) &&
-                    LoTDActive && InMeleeRange())
-                    return Stardiver;
-            }
-
-            if (Role.CanSecondWind(25))
-                return Role.SecondWind;
-
-            if (Role.CanBloodBath(40))
-                return Role.Bloodbath;
-
-            if (ComboTimer > 0)
-            {
-                if (!SonicThrust.LevelChecked())
-                {
-                    if (ComboAction == TrueThrust && LevelChecked(Disembowel))
-                        return Disembowel;
-
-                    if (ComboAction == Disembowel && LevelChecked(ChaosThrust))
-                        return OriginalHook(ChaosThrust);
-                }
-
-                else
-                {
-                    if (ComboAction is DoomSpike or DraconianFury && LevelChecked(SonicThrust))
-                        return SonicThrust;
-
-                    if (ComboAction == SonicThrust && LevelChecked(CoerthanTorment))
-                        return CoerthanTorment;
-                }
-            }
-
-            return !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust)
-                ? OriginalHook(TrueThrust)
-                : actionID;
-        }
-    }
-
     internal class DRG_AOE_AdvancedMode : CustomCombo
     {
-        protected internal override Preset Preset => Preset.DRG_AOE_AdvancedMode;
+        protected internal override Preset Preset => Preset.DRG_AoE_AdvancedMode;
 
         protected override uint Invoke(uint actionID)
         {
             if (actionID is not DoomSpike)
                 return actionID;
 
-            if (Variant.CanCure(Preset.DRG_Variant_Cure, DRG_Variant_Cure))
-                return Variant.Cure;
-
-            if (Variant.CanRampart(Preset.DRG_Variant_Rampart) &&
-                CanDRGWeave())
-                return Variant.Rampart;
-
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out uint contentAction))
+                return contentAction;
 
             // Piercing Talon Uptime Option
             if (IsEnabled(Preset.DRG_AoE_RangedUptime) &&
@@ -642,6 +568,21 @@ internal partial class DRG : Melee
                             LoTDActive)
                             return Nastrond;
                     }
+
+                    // healing
+                    if (IsEnabled(Preset.DRG_AoE_ComboHeals))
+                    {
+                        if (Role.CanSecondWind(DRG_AoE_SecondWindHPThreshold))
+                            return Role.SecondWind;
+
+                        if (Role.CanBloodBath(DRG_AoE_BloodbathHPThreshold))
+                            return Role.Bloodbath;
+                    }
+
+                    if (IsEnabled(Preset.DRG_AoE_StunInterupt) &&
+                        RoleActions.Melee.CanLegSweep() &&
+                        !TargetIsBoss() && TargetIsCasting())
+                        return Role.LegSweep;
                 }
 
                 if (IsEnabled(Preset.DRG_AoE_CDs))
@@ -685,16 +626,6 @@ internal partial class DRG : Melee
                 }
             }
 
-            // healing
-            if (IsEnabled(Preset.DRG_AoE_ComboHeals))
-            {
-                if (Role.CanSecondWind(DRG_AoE_SecondWindHPThreshold))
-                    return Role.SecondWind;
-
-                if (Role.CanBloodBath(DRG_AoE_BloodbathHPThreshold))
-                    return Role.Bloodbath;
-            }
-
             if (ComboTimer > 0)
             {
                 if (IsEnabled(Preset.DRG_AoE_Disembowel) &&
@@ -721,6 +652,73 @@ internal partial class DRG : Melee
                    !HasStatusEffect(Buffs.PowerSurge) && !LevelChecked(SonicThrust)
                 ? OriginalHook(TrueThrust)
                 : actionID;
+        }
+    }
+
+    internal class DRG_HeavensThrust : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRG_HeavensThrust;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (FullThrust or HeavensThrust))
+                return actionID;
+
+            if (ComboTimer > 0)
+            {
+                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
+                    return DRG_Heavens_Basic && LevelChecked(Disembowel) &&
+                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
+                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
+                            GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
+                        ? OriginalHook(Disembowel)
+                        : OriginalHook(VorpalThrust);
+
+                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
+                    return OriginalHook(ChaosThrust);
+
+                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
+                    return WheelingThrust;
+
+                if (ComboAction == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
+                    return OriginalHook(FullThrust);
+
+                if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
+                    return FangAndClaw;
+
+                if (ComboAction is WheelingThrust or FangAndClaw && LevelChecked(Drakesbane))
+                    return Drakesbane;
+            }
+
+            return OriginalHook(TrueThrust);
+        }
+    }
+
+    internal class DRG_ChaoticSpring : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRG_ChaoticSpring;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (ChaosThrust or ChaoticSpring))
+                return actionID;
+
+            if (ComboTimer > 0)
+            {
+                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(Disembowel))
+                    return OriginalHook(Disembowel);
+
+                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
+                    return OriginalHook(ChaosThrust);
+
+                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
+                    return WheelingThrust;
+
+                if (ComboAction == WheelingThrust && LevelChecked(Drakesbane))
+                    return Drakesbane;
+            }
+
+            return OriginalHook(TrueThrust);
         }
     }
 

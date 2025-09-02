@@ -102,10 +102,6 @@ internal partial class RPR
                         $"{BloodStalk.ActionName()}", $"Adds {Soulsow.ActionName()} to {BloodStalk.ActionName()}.", 5, 4);
                     break;
 
-                case Preset.RPR_Variant_Cure:
-                    DrawSliderInt(1, 100, RPR_VariantCure,
-                        "HP% to be at or under", 200);
-                    break;
             }
         }
 
@@ -122,8 +118,7 @@ internal partial class RPR
             RPR_STBloodbathHPThreshold = new("RPR_STBloodbathThreshold", 30),
             RPR_WoDHPThreshold = new("RPR_WoDThreshold", 20),
             RPR_AoESecondWindHPThreshold = new("RPR_AoESecondWindThreshold", 40),
-            RPR_AoEBloodbathHPThreshold = new("RPR_AoEBloodbathThreshold", 30),
-            RPR_VariantCure = new("RPRVariantCure", 50);
+            RPR_AoEBloodbathHPThreshold = new("RPR_AoEBloodbathThreshold", 30);
 
         public static UserBool
             RPR_ST_TrueNorthDynamic_HoldCharge = new("RPR_ST_TrueNorthDynamic_HoldCharge"),

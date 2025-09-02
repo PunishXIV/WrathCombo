@@ -1,13 +1,14 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Window.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.GNBPvP.Config;
 
 namespace WrathCombo.Combos.PvP;
 
 internal static class GNBPvP
 {
-        #region IDS
+    #region IDS
     internal class Role : PvPTank;
 
     public const uint
@@ -30,7 +31,6 @@ internal static class GNBPvP
         BlastingZone = 29128,
         HeartOfCorundum = 41443;
 
-
     internal class Debuffs
     {
         internal const ushort
@@ -50,12 +50,10 @@ internal static class GNBPvP
             AbdomenTear = 3049,
             EyeGouge = 3050,
             ReadyToRaze = 4293;
-
     }
+    #endregion
 
-        #endregion
-
-        #region Config
+    #region Config
     public static class Config
     {
         public static UserInt
@@ -68,31 +66,24 @@ internal static class GNBPvP
             switch (preset)
             {
                 case Preset.GNBPvP_Rampart:
-                    UserConfig.DrawSliderInt(1, 100, GNBPvP_RampartThreshold,
-                        "Use Rampart below set threshold for self");
+                    DrawSliderInt(1, 100, GNBPvP_RampartThreshold, "Use Rampart below set threshold for self");
                     break;
 
                 case Preset.GNBPvP_Corundum:
-                    UserConfig.DrawSliderInt(1, 100,
-                        GNBPvP_CorundumThreshold,
-                        "HP% to be at or Below to use " +
-                        "(100 = Use Always)",
+                    DrawSliderInt(1, 100, GNBPvP_CorundumThreshold, "HP% to be at or Below to use (100 = Use Always)",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
                     break;
 
                 case Preset.GNBPvP_BlastingZone:
 
-                    UserConfig.DrawSliderInt(1, 100,
-                        GNBPvP_BlastingZoneThreshold,
-                        "Hp % of target to use Blasting zone. Most powerful below 50% " +
-                        "(100 = Use Always)",
+                    DrawSliderInt(1, 100, GNBPvP_BlastingZoneThreshold,
+                        "Hp % of target to use Blasting zone. Most powerful below 50% (100 = Use Always)",
                         itemWidth: 150f, sliderIncrement: SliderIncrements.Fives);
                     break;
-
             }
         }
     }
-        #endregion
+    #endregion
             
     internal class GNBPvP_Burst : CustomCombo
     {
@@ -100,64 +91,62 @@ internal static class GNBPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is KeenEdge or BrutalShell or SolidBarrel or BurstStrike)
+            if (actionID is not (KeenEdge or BrutalShell or SolidBarrel or BurstStrike)) return actionID;
+            int corundumThreshold = GNBPvP_CorundumThreshold;
+            int blastingZoneThreshold = GNBPvP_BlastingZoneThreshold; 
+
+            if (CanWeave() && IsEnabled(Preset.GNBPvP_Corundum) && PlayerHealthPercentageHp() <= corundumThreshold && IsOffCooldown(HeartOfCorundum))
+                return HeartOfCorundum;
+
+            if (IsEnabled(Preset.GNBPvP_Rampart) && PvPTank.CanRampart(GNBPvP_RampartThreshold))
+                return PvPTank.Rampart;
+
+            if (!PvPCommon.TargetImmuneToDamage())
             {
-                int corundumThreshold = GNBPvP_CorundumThreshold;
-                int blastingZoneThreshold = GNBPvP_BlastingZoneThreshold; 
-
-                if (CanWeave() && IsEnabled(Preset.GNBPvP_Corundum) && PlayerHealthPercentageHp() <= corundumThreshold && IsOffCooldown(HeartOfCorundum))
-                    return HeartOfCorundum;
-
-                if (IsEnabled(Preset.GNBPvP_Rampart) && PvPTank.CanRampart(GNBPvP_RampartThreshold))
-                    return PvPTank.Rampart;
-
-                if (!PvPCommon.TargetImmuneToDamage())
+                if (CanWeave()) //Weave section
                 {
-                    if (CanWeave()) //Weave section
-                    {
-                        //Continuation
-                        if (IsEnabled(Preset.GNBPvP_ST_Continuation) && OriginalHook(Continuation) != Continuation) // Weaving followup button, whenever it changes to something useable, it will fire
-                            return OriginalHook(Continuation);
+                    //Continuation
+                    if (IsEnabled(Preset.GNBPvP_ST_Continuation) && OriginalHook(Continuation) != Continuation) // Weaving followup button, whenever it changes to something useable, it will fire
+                        return OriginalHook(Continuation);
 
-                        if (IsEnabled(Preset.GNBPvP_BlastingZone) && IsOffCooldown(BlastingZone) && GetTargetHPPercent() < blastingZoneThreshold)  // Removed nomercy requirement bc of hp threshold.
-                            return BlastingZone;
-                    }
-
-                    //RoughDivide overcap protection
-                    if (IsEnabled(Preset.GNBPvP_RoughDivide))
-                    {
-                        if (HasCharges(RoughDivide) && !HasStatusEffect(Buffs.NoMercy) && !JustUsed(RoughDivide, 3f) &&
-                            (ActionReady(FatedCircle)|| ActionReady(GnashingFang) || GetRemainingCharges(RoughDivide) == 2)) // Will RD for for no mercy when at 2 charges, or before the fated circle or gnashing fang combo
-                            return RoughDivide;
-                    }
-
-                    //Fated Circle and Followup
-                    if (IsEnabled(Preset.GNBPvP_FatedCircle))
-                    {
-                        if (ActionReady(FatedCircle) && HasStatusEffect(Buffs.NoMercy) && OriginalHook(Continuation) == Continuation)
-                            return FatedCircle;
-                    }
-
-                    //GnashingFang
-                    if (IsEnabled(Preset.GNBPvP_ST_GnashingFang) && (ActionReady(GnashingFang) || OriginalHook(GnashingFang) != GnashingFang))
-                        return OriginalHook(GnashingFang);
-
+                    if (IsEnabled(Preset.GNBPvP_BlastingZone) && IsOffCooldown(BlastingZone) && GetTargetHPPercent() < blastingZoneThreshold)  // Removed nomercy requirement bc of hp threshold.
+                        return BlastingZone;
                 }
-            }
 
+                //RoughDivide overcap protection
+                if (IsEnabled(Preset.GNBPvP_RoughDivide))
+                {
+                    if (HasCharges(RoughDivide) && !HasStatusEffect(Buffs.NoMercy) && !JustUsed(RoughDivide, 3f) &&
+                        (ActionReady(FatedCircle)|| ActionReady(GnashingFang) || GetRemainingCharges(RoughDivide) == 2)) // Will RD for for no mercy when at 2 charges, or before the fated circle or gnashing fang combo
+                        return RoughDivide;
+                }
+
+                //Fated Circle and Followup
+                if (IsEnabled(Preset.GNBPvP_FatedCircle))
+                {
+                    if (ActionReady(FatedCircle) && HasStatusEffect(Buffs.NoMercy) && OriginalHook(Continuation) == Continuation)
+                        return FatedCircle;
+                }
+
+                //GnashingFang
+                if (IsEnabled(Preset.GNBPvP_ST_GnashingFang) && (ActionReady(GnashingFang) || OriginalHook(GnashingFang) != GnashingFang))
+                    return OriginalHook(GnashingFang);
+            }
             return actionID;
         }
     }
-
     internal class GNBPvP_GnashingFang : CustomCombo
     {
         protected internal override Preset Preset => Preset.GNBPvP_GnashingFang;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not GnashingFang)
+                return actionID;
 
-        protected override uint Invoke(uint actionID) =>
-            actionID is GnashingFang &&
-            CanWeave() && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge))
+            return CanWeave() && 
+                   (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge))
                 ? OriginalHook(Continuation)
                 : actionID;
+        }
     }
-
 }

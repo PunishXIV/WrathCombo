@@ -46,7 +46,8 @@ internal static partial class RoleActions
         }
 
         public static bool CanAddle() =>
-            ActionReady(Addle) && !HasStatusEffect(Debuffs.Addle, CurrentTarget, true);
+            ActionReady(Addle) && !HasStatusEffect(Debuffs.Addle, CurrentTarget, true) &&
+            CanApplyStatus(CurrentTarget, Debuffs.Addle);
 
         public static bool CanSleep() =>
             ActionReady(Sleep);
@@ -153,7 +154,8 @@ internal static partial class RoleActions
             ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanFeint() =>
-            ActionReady(Feint) && !HasStatusEffect(Debuffs.Feint, CurrentTarget, true);
+            ActionReady(Feint) && !HasStatusEffect(Debuffs.Feint, CurrentTarget, true) &&
+            CanApplyStatus(CurrentTarget, Debuffs.Feint);
 
         public static bool CanTrueNorth() =>
             ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasStatusEffect(Buffs.TrueNorth) && CanDelayedWeave();

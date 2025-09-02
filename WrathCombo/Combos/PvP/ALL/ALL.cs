@@ -54,7 +54,8 @@ internal static class PvPCommon
     {
         public static UserInt
             EmergencyHealThreshold = new("EmergencyHealThreshold"),
-            EmergencyGuardThreshold = new("EmergencyGuardThreshold");
+            EmergencyGuardThreshold = new("EmergencyGuardThreshold"),
+            PurifyMPThreshold = new("PurifyMPThreshold");
 
         public static UserBoolArray
             QuickPurifyStatuses = new("QuickPurifyStatuses");
@@ -85,6 +86,7 @@ internal static class PvPCommon
                     break;
 
                 case Preset.PvP_QuickPurify:
+                    DrawSliderInt(2500, 10000, PurifyMPThreshold, "Do not use Purify below set MP", sliderIncrement:100);
                     DrawPvPStatusMultiChoice(QuickPurifyStatuses);
                     break;
             }
@@ -248,8 +250,9 @@ internal static class PvPCommon
                 return All.SavageBlade;
             }
 
-            if (Execute() && InPvP() &&
-                !CommonActions.Contains(actionID))
+            if (Execute() && InPvP() && IsOffCooldown(Purify) &&
+                !CommonActions.Contains(actionID) && 
+                LocalPlayer.CurrentMp >= Config.PurifyMPThreshold)
                 return OriginalHook(Purify);
 
             return actionID;

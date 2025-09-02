@@ -298,17 +298,6 @@ internal partial class GNB : Tank
 
     #region Helpers
     internal static int MaxCartridges() => TraitLevelChecked(Traits.CartridgeChargeII) ? 3 : TraitLevelChecked(Traits.CartridgeCharge) ? 2 : 0;
-    internal static uint GetVariantAction()
-    {
-        if (Variant.CanCure(Preset.GNB_Variant_Cure, GNB_VariantCure))
-            return Variant.Cure;
-        if (Variant.CanSpiritDart(Preset.GNB_Variant_SpiritDart) && CanWeave())
-            return Variant.SpiritDart;
-        if (Variant.CanUltimatum(Preset.GNB_Variant_Ultimatum) && CanWeave())
-            return Variant.Ultimatum;
-
-        return 0; //No conditions met
-    }
     internal static uint GetBozjaAction()
     {
         if (!Bozja.IsInBozja)
@@ -328,14 +317,14 @@ internal partial class GNB : Tank
             (Preset.GNB_Bozja_LostSlash, Bozja.LostSlash),
             (Preset.GNB_Bozja_LostFairTrade, Bozja.LostFairTrade),
             (Preset.GNB_Bozja_LostAssassination, Bozja.LostAssassination), })
-            if (IsEnabledAndUsable(preset, action))
-                return action;
+                if (IsEnabledAndUsable(preset, action))
+                    return action;
 
             foreach (var (preset, action, powerPreset) in new[]
             { (Preset.GNB_Bozja_BannerOfNobleEnds, Bozja.BannerOfNobleEnds, Preset.GNB_Bozja_PowerEnds),
             (Preset.GNB_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice, Preset.GNB_Bozja_PowerSacrifice) })
-            if (IsEnabledAndUsable(preset, action) && (!IsEnabled(powerPreset) || JustUsed(Bozja.LostFontOfPower, 5f)))
-                return action;
+                if (IsEnabledAndUsable(preset, action) && (!IsEnabled(powerPreset) || JustUsed(Bozja.LostFontOfPower, 5f)))
+                    return action;
 
             if (IsEnabledAndUsable(Preset.GNB_Bozja_BannerOfHonedAcuity, Bozja.BannerOfHonedAcuity) &&
                 !HasStatusEffect(Bozja.Buffs.BannerOfTranscendentFinesse))
@@ -352,8 +341,8 @@ internal partial class GNB : Tank
         (Preset.GNB_Bozja_LostBravery, Bozja.LostBravery, !HasStatusEffect(Bozja.Buffs.LostBravery)),
         (Preset.GNB_Bozja_LostBubble, Bozja.LostBubble, !HasStatusEffect(Bozja.Buffs.LostBubble)),
         (Preset.GNB_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f)) })
-        if (IsEnabledAndUsable(preset, action) && condition)
-            return action;
+            if (IsEnabledAndUsable(preset, action) && condition)
+                return action;
 
         if (IsEnabled(Preset.GNB_Bozja_LostSpellforge) &&
             CanUse(Bozja.LostSpellforge) &&
@@ -370,8 +359,6 @@ internal partial class GNB : Tank
     {
         get
         {
-            if (GetVariantAction() is uint va && va != 0)
-                return va;
             if (Bozja.IsInBozja && GetBozjaAction() is uint ba && ba != 0)
                 return ba;
             return 0;
@@ -395,14 +382,14 @@ internal partial class GNB : Tank
     internal static bool ShouldUseBloodfest => HasBattleTarget() && CanWeave() && CanBF && Ammo == 0;
     internal static bool ShouldUseZone => CanZone && CanWeave() && NMcd is < 57.5f and > 17f;
     internal static bool ShouldUseBowShock => CanBow && CanWeave() && NMcd is < 57.5f and >= 40;
-    internal static bool ShouldUseContinuation => CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) || 
+    internal static bool ShouldUseContinuation => CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) ||
         (LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast) && (LevelChecked(DoubleDown) ? (SlowGNB ? NMcd is > 1.5f || CanDelayedWeave(0.6f, 0) : (FastGNB || MidGNB)) : !LevelChecked(DoubleDown))));
     internal static bool ShouldUseGnashingFang => CanGF && (NMcd is > 17 and < 35 || JustUsed(NoMercy, 6f));
     internal static bool ShouldUseDoubleDown => CanDD && HasNM && (IsOnCooldown(GnashingFang) || Ammo == 1);
     internal static bool ShouldUseSonicBreak => CanSB && ((IsOnCooldown(GnashingFang) || !LevelChecked(GnashingFang)) && (IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown)));
     internal static bool ShouldUseReignOfBeasts => CanReign && IsOnCooldown(GnashingFang) && IsOnCooldown(DoubleDown) && !HasStatusEffect(Buffs.ReadyToBreak) && GunStep == 0;
     internal static bool ShouldUseBurstStrike => (CanBS && HasNM && IsOnCooldown(GnashingFang) && (IsOnCooldown(DoubleDown) || (!LevelChecked(DoubleDown) && Ammo > 0)) && !HasReign && GunStep == 0);
-    internal static uint STCombo 
+    internal static uint STCombo
         => ComboTimer > 0 ? ComboAction == KeenEdge && LevelChecked(BrutalShell) ? BrutalShell : ComboAction == BrutalShell && LevelChecked(SolidBarrel)
         ? (GNB_ST_Overcap_Choice == 0 && LevelChecked(BurstStrike) && Ammo == MaxCartridges() ? BurstStrike : SolidBarrel) : KeenEdge : KeenEdge;
     internal static uint AOECombo => (ComboTimer > 0 && ComboAction == DemonSlice && LevelChecked(DemonSlaughter) && (Ammo != MaxCartridges() || GNB_AoE_Overcap_Choice == 1)) ? DemonSlaughter : DemonSlice;
@@ -410,7 +397,7 @@ internal partial class GNB : Tank
     #endregion
 
     #region IDs
-    
+
     public const uint //Actions
     #region Offensive
 

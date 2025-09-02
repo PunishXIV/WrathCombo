@@ -1,13 +1,13 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.MNKPvP.Config;
 
 namespace WrathCombo.Combos.PvP;
 
 internal static class MNKPvP
 {
-        #region IDS
+    #region IDS
     internal class Role : PvPMelee;
 
     public const uint
@@ -33,17 +33,15 @@ internal static class MNKPvP
             FiresRumination = 4301,
             FireResonance = 3170,
             EarthResonance = 3171;
-
     }
-
     public static class Debuffs
     {
         public const ushort
             PressurePoint = 3172;
     }
-        #endregion
+    #endregion
 
-        #region Config
+    #region Config
     public static class Config
     {
         public static UserInt
@@ -54,64 +52,59 @@ internal static class MNKPvP
             switch (preset)
             {
                 case Preset.MNKPvP_Smite:
-                    UserConfig.DrawSliderInt(0, 100, MNKPvP_SmiteThreshold,
-                        "Target HP% to smite, Max damage below 25%");
+                    DrawSliderInt(0, 100, MNKPvP_SmiteThreshold, "Target HP% to smite, Max damage below 25%");
                     break;
             }
         }
     }
-
-        #endregion
+    #endregion
        
     internal class MNKPvP_Burst : CustomCombo
     {
         protected internal override Preset Preset => Preset.MNKPvP_Burst;
-
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is DragonKick or TwinSnakes or Demolish or LeapingOpo or RisingRaptor or PouncingCoeurl or PhantomRush)
+            if (actionID is not (DragonKick or TwinSnakes or Demolish or LeapingOpo or RisingRaptor or PouncingCoeurl or PhantomRush)) 
+                return actionID;
+            
+            if (IsEnabled(Preset.MNKPvP_Burst_Meteodrive) && PvPCommon.TargetImmuneToDamage() && GetTargetCurrentHP() <= 20000 && IsLB1Ready)
+                return Meteordrive;
+
+            if (!PvPCommon.TargetImmuneToDamage())
             {
+                if (IsEnabled(Preset.MNKPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                    GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
+                    return PvPMelee.Smite;
 
-                if (IsEnabled(Preset.MNKPvP_Burst_Meteodrive) && PvPCommon.TargetImmuneToDamage() && GetTargetCurrentHP() <= 20000 && IsLB1Ready)
-                    return Meteordrive;
-
-                if (!PvPCommon.TargetImmuneToDamage())
+                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix))
                 {
-                    if (IsEnabled(Preset.MNKPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
-                        GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
-                        return PvPMelee.Smite;
+                    if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
+                        return OriginalHook(RisingPhoenix);
+                    if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
+                        return actionID;
+                }
 
-                    if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix))
-                    {
-                        if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
-                            return OriginalHook(RisingPhoenix);
-                        if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
-                            return actionID;
-                    }
+                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
+                    return OriginalHook(RiddleOfEarth);
 
-                    if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
-                        return OriginalHook(RiddleOfEarth);
+                if (IsEnabled(Preset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(Thunderclap) > 0 && !InMeleeRange())
+                    return OriginalHook(Thunderclap);
 
-                    if (IsEnabled(Preset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(Thunderclap) > 0 && !InMeleeRange())
-                        return OriginalHook(Thunderclap);
+                if (IsEnabled(Preset.MNKPvP_Burst_WindsReply) && InActionRange(WindsReply) && IsOffCooldown(WindsReply))
+                    return WindsReply;
 
-                    if (IsEnabled(Preset.MNKPvP_Burst_WindsReply) && InActionRange(WindsReply) && IsOffCooldown(WindsReply))
-                        return WindsReply;
+                if (CanWeave())
+                {
+                    if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && HasStatusEffect(Buffs.EarthResonance) && GetStatusEffectRemainingTime(Buffs.EarthResonance) < 6)
+                        return OriginalHook(EarthsReply);
+                }
 
-                    if (CanWeave())
-                    {
-                        if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && HasStatusEffect(Buffs.EarthResonance) && GetStatusEffectRemainingTime(Buffs.EarthResonance) < 6)
-                            return OriginalHook(EarthsReply);
-                    }
-
-                    if (IsEnabled(Preset.MNKPvP_Burst_FlintsReply))
-                    {
-                        if (GetRemainingCharges(FlintsReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)) || HasStatusEffect(Buffs.FiresRumination) && !WasLastAction(PouncingCoeurl))
-                            return OriginalHook(FlintsReply);
-                    }
+                if (IsEnabled(Preset.MNKPvP_Burst_FlintsReply))
+                {
+                    if (GetRemainingCharges(FlintsReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)) || HasStatusEffect(Buffs.FiresRumination) && !WasLastAction(PouncingCoeurl))
+                        return OriginalHook(FlintsReply);
                 }
             }
-
             return actionID;
         }
     }

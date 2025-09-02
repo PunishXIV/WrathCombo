@@ -23,61 +23,6 @@ internal partial class DRK
     ///     Actions in this Provider:
     ///     <list type="bullet">
     ///         <item>
-    ///             <term>Variant Cure</term>
-    ///         </item>
-    ///         <item>
-    ///             <term>Variant Ultimatum</term>
-    ///         </item>
-    ///         <item>
-    ///             <term>Variant Spirit Dart</term>
-    ///         </item>
-    ///     </list>
-    /// </remarks>
-    private class VariantAction : IActionProvider
-    {
-        public bool TryGetAction(Combo flags, ref uint action, bool? _)
-        {
-            #region Heal
-
-            if ((flags.HasFlag(Combo.Simple) ||
-                 (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Cure))) &&
-                ActionReady(Variant.Cure) &&
-                PlayerHealthPercentageHp() <= DRK_VariantCure)
-                return (action = Variant.Cure) != 0;
-
-            #endregion
-
-            // Bail if we can't weave anything
-            if (!CanWeave) return false;
-
-            #region Aggro + Stun
-
-            if ((flags.HasFlag(Combo.Simple) ||
-                 (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Ulti))) &&
-                ActionReady(Variant.Ultimatum))
-                return (action = Variant.Ultimatum) != 0;
-
-            #endregion
-
-            #region Damage over Time
-
-            if ((flags.HasFlag(Combo.Simple) ||
-                 (flags.HasFlag(Combo.Adv) && IsEnabled(Preset.DRK_Var_Dart))) &&
-                ActionReady(Variant.SpiritDart) &&
-                GetStatusEffectRemainingTime(Content.Variant.Debuffs.SustainedDamage,
-                    Target(flags)) <= 3)
-                return (action = Variant.SpiritDart) != 0;
-
-            #endregion
-
-            return false;
-        }
-    }
-
-    /// <remarks>
-    ///     Actions in this Provider:
-    ///     <list type="bullet">
-    ///         <item>
     ///             <term>Disesteem</term>
     ///         </item>
     ///         <item>
@@ -1077,7 +1022,7 @@ internal partial class DRK
     /// <remarks>
     ///     Each logic check is already combined with checking if the preset
     ///     <see cref="IsEnabled">is enabled</see>
-    ///     and if the action is <see cref="ActionReady(uint)">ready</see> and
+    ///     and if the action is <see cref="ActionReady(uint,bool,bool)">ready</see> and
     ///     <see cref="LevelChecked(uint)">level-checked</see>.<br />
     ///     Do not add any of these checks to <c>Logic</c>.
     /// </remarks>
@@ -1180,7 +1125,6 @@ internal partial class DRK
     /// <param name="extraParam">Any extra parameter to pass through.</param>
     /// <returns>Whether the <c>action</c> was changed.</returns>
     /// <seealso cref="IActionProvider.TryGetAction" />
-    /// <seealso cref="VariantAction" />
     /// <seealso cref="Mitigation" />
     /// <seealso cref="Spender" />
     /// <seealso cref="Cooldown" />

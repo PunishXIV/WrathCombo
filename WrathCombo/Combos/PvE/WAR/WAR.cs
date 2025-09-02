@@ -21,8 +21,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Stuns
             if (Role.CanInterject())
@@ -93,8 +93,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Stuns
             if (IsEnabled(Preset.WAR_ST_Interrupt)
@@ -195,8 +195,8 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
             if (Role.CanInterject())
                 return Role.Interject;
             if (Role.CanLowBlow()
@@ -263,8 +263,8 @@ internal partial class WAR : Tank
                 return action; //Our button
             if (ShouldUseOther)
                 return OtherAction;
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             // If the Burst Holding for the Squirrels in 6 is enabled, check that
             // we are either not targeting a squirrel or the fight is after 275s

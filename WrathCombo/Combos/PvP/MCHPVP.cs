@@ -1,16 +1,14 @@
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.MCHPvP.Config;
 
 namespace WrathCombo.Combos.PvP;
 
 internal static class MCHPvP
 {
-        #region IDS
-
+    #region IDS
     internal class Role : PvPPhysRanged;
-
     public const uint
         BlastCharge = 29402,
         BlazingShot = 41468,
@@ -43,10 +41,9 @@ internal static class MCHPvP
         public const ushort
             Wildfire = 1323;
     }
+    #endregion
 
-        #endregion
-
-        #region Config
+    #region Config
     public static class Config
     {
         public static UserInt
@@ -59,26 +56,22 @@ internal static class MCHPvP
             switch (preset)
             {
                 case Preset.MCHPvP_BurstMode_MarksmanSpite:
-                    UserConfig.DrawSliderInt(0, 36000, MCHPvP_MarksmanSpite,
-                        "Use Marksman's Spite when the target is below set HP");
-
+                    DrawSliderInt(0, 36000, MCHPvP_MarksmanSpite, "Use Marksman's Spite when the target is below set HP");
                     break;
 
                 case Preset.MCHPvP_BurstMode_FullMetalField:
                     ImGui.Indent();
-                    UserConfig.DrawHorizontalRadioButton(MCHPvP_FMFOption, "Full Metal Field Wildfire combo",
+                    DrawHorizontalRadioButton(MCHPvP_FMFOption, "Full Metal Field Wildfire combo",
                         "Uses Full Metal Field when Wildfire is ready.", 1);
 
-                    UserConfig.DrawHorizontalRadioButton(MCHPvP_FMFOption, "Full Metal Field only when Overheated",
+                    DrawHorizontalRadioButton(MCHPvP_FMFOption, "Full Metal Field only when Overheated",
                         "Only uses Full Metal Field while Overheated.", 2);
                     ImGui.Unindent();
-
                     break;
 
                 case Preset.MCHPvP_Eagle:
-                    UserConfig.DrawSliderInt(0, 100, MCHPvP_EagleThreshold,
+                    DrawSliderInt(0, 100, MCHPvP_EagleThreshold,
                         "Target HP percent threshold to use Eagle Eye Shot Below.");
-
                     break;
             }
         }            
@@ -88,81 +81,74 @@ internal static class MCHPvP
     internal class MCHPvP_BurstMode : CustomCombo
     {
         protected internal override Preset Preset => Preset.MCHPvP_BurstMode;
-
         protected override uint Invoke(uint actionID)
         {
-            if (actionID == BlastCharge)
+            if (actionID is not BlastCharge) 
+                return actionID;
+
+            #region Variables
+            var canWeave = CanWeave();
+            var analysisStacks = GetRemainingCharges(Analysis);
+            var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
+            var overheated = HasStatusEffect(Buffs.Overheated);
+            #endregion
+
+            if (IsEnabled(Preset.MCHPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= MCHPvP_EagleThreshold))
+                return PvPPhysRanged.EagleEyeShot;
+
+            if (!PvPCommon.TargetImmuneToDamage() && HasBattleTarget())
             {
-                    #region Variables
+                // MarksmanSpite execute condition
+                if (IsEnabled(Preset.MCHPvP_BurstMode_MarksmanSpite) && HasBattleTarget() && GetTargetCurrentHP() < MCHPvP_MarksmanSpite && IsLB1Ready)
+                    return MarksmanSpite;
 
-                var canWeave = CanWeave();
-                var analysisStacks = GetRemainingCharges(Analysis);
-                var bigDamageStacks = GetRemainingCharges(OriginalHook(Drill));
-                var overheated = HasStatusEffect(Buffs.Overheated);
+                if (IsEnabled(Preset.MCHPvP_BurstMode_Wildfire) && canWeave && overheated && IsOffCooldown(Wildfire))
+                    return OriginalHook(Wildfire);
 
-                    #endregion
-
-                if (IsEnabled(Preset.MCHPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= MCHPvP_EagleThreshold))
-                    return PvPPhysRanged.EagleEyeShot;
-
-                if (!PvPCommon.TargetImmuneToDamage() && HasBattleTarget())
+                // FullMetalField condition when not overheated or if overheated and FullMetalField is off cooldown
+                if (IsEnabled(Preset.MCHPvP_BurstMode_FullMetalField) && IsOffCooldown(FullMetalField))
                 {
-                    // MarksmanSpite execute condition - todo add config
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_MarksmanSpite) && HasBattleTarget() && GetTargetCurrentHP() < MCHPvP_MarksmanSpite && IsLB1Ready)
-                        return MarksmanSpite;
-
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_Wildfire) && canWeave && overheated && IsOffCooldown(Wildfire))
-                        return OriginalHook(Wildfire);
-
-                    // FullMetalField condition when not overheated or if overheated and FullMetalField is off cooldown
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_FullMetalField) && IsOffCooldown(FullMetalField))
+                    if (MCHPvP_FMFOption == 1)
                     {
-                        if (MCHPvP_FMFOption == 1)
-                        {
-                            if (!overheated && IsOffCooldown(Wildfire))
-                                return FullMetalField;
-                        }
-                        if (MCHPvP_FMFOption == 2)
-                        {
-                            if (overheated)
-                                return FullMetalField;
-                        }
+                        if (!overheated && IsOffCooldown(Wildfire))
+                            return FullMetalField;
                     }
-
-                    // Check if primed buffs and analysis conditions are met
-                    bool hasPrimedBuffs = HasStatusEffect(Buffs.DrillPrimed) ||
-                                          (HasStatusEffect(Buffs.ChainSawPrimed) && !IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis)) ||
-                                          (HasStatusEffect(Buffs.AirAnchorPrimed) && IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis));
-
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_Analysis))
+                    if (MCHPvP_FMFOption == 2)
                     {
-                        if (hasPrimedBuffs && !HasStatusEffect(Buffs.Analysis) && !JustUsed(Analysis, 2f) && analysisStacks > 0 &&
-                            (!IsEnabled(Preset.MCHPvP_BurstMode_AltDrill) || IsOnCooldown(Wildfire)) &&
-                            !canWeave && !overheated && bigDamageStacks > 0)
-                        {
-                            return OriginalHook(Analysis);
-                        }
-                    }
-
-                    // BigDamageStacks logic with checks for primed buffs
-                    if (bigDamageStacks > 0)
-                    {
-                        if (IsEnabled(Preset.MCHPvP_BurstMode_Drill) && HasStatusEffect(Buffs.DrillPrimed))
-                            return OriginalHook(Drill);
-
-                        if (IsEnabled(Preset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && GetTargetDistance() <= 12)
-                            return OriginalHook(BioBlaster);
-
-                        if (IsEnabled(Preset.MCHPvP_BurstMode_AirAnchor) && HasStatusEffect(Buffs.AirAnchorPrimed))
-                            return OriginalHook(AirAnchor);
-
-                        if (IsEnabled(Preset.MCHPvP_BurstMode_ChainSaw) && HasStatusEffect(Buffs.ChainSawPrimed))
-                            return OriginalHook(ChainSaw);
+                        if (overheated)
+                            return FullMetalField;
                     }
                 }
+                // Check if primed buffs and analysis conditions are met
+                bool hasPrimedBuffs = HasStatusEffect(Buffs.DrillPrimed) ||
+                                      (HasStatusEffect(Buffs.ChainSawPrimed) && !IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis)) ||
+                                      (HasStatusEffect(Buffs.AirAnchorPrimed) && IsEnabled(Preset.MCHPvP_BurstMode_AltAnalysis));
 
+                if (IsEnabled(Preset.MCHPvP_BurstMode_Analysis))
+                {
+                    if (hasPrimedBuffs && !HasStatusEffect(Buffs.Analysis) && !JustUsed(Analysis, 2f) && analysisStacks > 0 &&
+                        (!IsEnabled(Preset.MCHPvP_BurstMode_AltDrill) || IsOnCooldown(Wildfire)) &&
+                        !canWeave && !overheated && bigDamageStacks > 0)
+                    {
+                        return OriginalHook(Analysis);
+                    }
+                }
+                // BigDamageStacks logic with checks for primed buffs
+                if (bigDamageStacks > 0)
+                {
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_Drill) && HasStatusEffect(Buffs.DrillPrimed))
+                        return OriginalHook(Drill);
+
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && GetTargetDistance() <= 12)
+                        return OriginalHook(BioBlaster);
+
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_AirAnchor) && HasStatusEffect(Buffs.AirAnchorPrimed))
+                        return OriginalHook(AirAnchor);
+
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_ChainSaw) && HasStatusEffect(Buffs.ChainSawPrimed))
+                        return OriginalHook(ChainSaw);
+                }
             }
-
             return actionID;
         }
     }

@@ -422,6 +422,7 @@ public partial class WrathCombo
     ///     Handles the auto command, which calls <see cref="ToggleAutoRotation" />.
     /// </summary>
     /// <value>
+    ///     <c>target</c> - modify targeting mode<br />
     ///     <c>&lt;blank&gt;</c> - toggle<br />
     ///     <c>on</c> - enable<br />
     ///     <c>off</c> - disable<br />
@@ -433,6 +434,43 @@ public partial class WrathCombo
     /// </param>
     private void HandleAutoCommands(string[] argument)
     {
+        // ADD: Handle targeting mode changes
+        if (argument.Length >= 4 && argument[1] == "target")
+        {
+            var role = argument[2].ToLowerInvariant();
+            var mode = argument[3];
+            
+            switch (role)
+            {
+                case "damage" when Enum.TryParse<DPSRotationMode>(mode, true, out var dpsMode):
+                {
+                    Service.Configuration.RotationConfig.DPSRotationMode = dpsMode;
+                    Service.Configuration.Save();
+                
+                    var dpsControlled = P.UIHelper.AutoRotationConfigControlled("DPSRotationMode") is not null;
+                    var ctrlText = dpsControlled ? " " + OptionControlledByIPC : "";
+                
+                    DuoLog.Information($"Damage targeting mode set to: {dpsMode.ToString().Replace('_', ' ')}{ctrlText}");
+                    return;
+                }
+                case "healer" when Enum.TryParse<HealerRotationMode>(mode, true, out var healerMode):
+                {
+                    Service.Configuration.RotationConfig.HealerRotationMode = healerMode;
+                    Service.Configuration.Save();
+                
+                    var healerControlled = P.UIHelper.AutoRotationConfigControlled("HealerRotationMode") is not null;
+                    var ctrlText = healerControlled ? " " + OptionControlledByIPC : "";
+                
+                    DuoLog.Information($"Healer targeting mode set to: {healerMode.ToString().Replace('_', ' ')}{ctrlText}");
+                    return;
+                }
+                default:
+                    DuoLog.Error("Usage: /wrath auto target <damage|healer> <mode>");
+                    return;
+            }
+        }
+        
+        // Handle Normal Toggling of Auto-Rotation
         var toggledVal = !Service.Configuration.RotationConfig.Enabled;
         var newVal = argument.Length > 1
             ? argument[1] == "toggle"
@@ -442,38 +480,6 @@ public partial class WrathCombo
 
         if (newVal != Service.Configuration.RotationConfig.Enabled)
             ToggleAutoRotation(newVal);
-            
-        // ADD: Handle targeting mode changes
-        if (argument.Length >= 4 && argument[1] == "target")
-        {
-            var role = argument[2].ToLowerInvariant();
-            var mode = argument[3];
-            
-            if (role == "damage" && Enum.TryParse<DPSRotationMode>(mode, true, out var dpsMode))
-            {
-                Service.Configuration.RotationConfig.DPSRotationMode = dpsMode;
-                Service.Configuration.Save();
-                
-                var dpsControlled = P.UIHelper.AutoRotationConfigControlled("DPSRotationMode") is not null;
-                var ctrlText = dpsControlled ? " " + OptionControlledByIPC : "";
-                
-                DuoLog.Information($"Damage targeting mode set to: {dpsMode.ToString().Replace('_', ' ')}{ctrlText}");
-            }
-            else if (role == "healer" && Enum.TryParse<HealerRotationMode>(mode, true, out var healerMode))
-            {
-                Service.Configuration.RotationConfig.HealerRotationMode = healerMode;
-                Service.Configuration.Save();
-                
-                var healerControlled = P.UIHelper.AutoRotationConfigControlled("HealerRotationMode") is not null;
-                var ctrlText = healerControlled ? " " + OptionControlledByIPC : "";
-                
-                DuoLog.Information($"Healer targeting mode set to: {healerMode.ToString().Replace('_', ' ')}{ctrlText}");
-            }
-            else
-            {
-                DuoLog.Error("Usage: /wrath auto target <damage|healer> <mode>");
-            }
-        }
     }
 
     /// <summary>

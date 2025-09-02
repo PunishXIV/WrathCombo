@@ -379,7 +379,7 @@ internal partial class SGE
                         "Start using when below party average HP % to not waste the heal portion if desired. Set to 100 to disable this check");
                     break;
 
-                #endregion
+                    #endregion
             }
         }
 

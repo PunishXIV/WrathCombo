@@ -1,14 +1,14 @@
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
+using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.RPRPvP.Config;
 
 namespace WrathCombo.Combos.PvP;
 
 internal static class RPRPvP
 {
-        #region IDS
+    #region IDS
     internal class Role : PvPMelee;
 
     internal const uint
@@ -44,9 +44,9 @@ internal static class RPRPvP
         internal const ushort
             DeathWarrant = 3206;
     }
-        #endregion
+    #endregion
 
-        #region Config
+    #region Config
     public static class Config
     {
         public static UserInt
@@ -60,26 +60,20 @@ internal static class RPRPvP
             switch (preset)
             {
                 case Preset.RPRPvP_Burst_ImmortalPooling:
-                    UserConfig.DrawSliderInt(0, 8, RPRPvP_ImmortalStackThreshold,
-                        "Set a value of Immortal Sacrifice Stacks to hold for burst.");
-
+                    DrawSliderInt(0, 8, RPRPvP_ImmortalStackThreshold, "Set a value of Immortal Sacrifice Stacks to hold for burst.");
                     break;
 
                 case Preset.RPRPvP_Burst_ArcaneCircle:
-                    UserConfig.DrawSliderInt(5, 90, RPRPvP_ArcaneCircleThreshold,
-                        "Set a HP percentage value. Caps at 90 to prevent waste.");
-
+                    DrawSliderInt(5, 90, RPRPvP_ArcaneCircleThreshold, "Set a HP percentage value. Caps at 90 to prevent waste.");
                     break;
 
                 case Preset.RPRPvP_Smite:
-                    UserConfig.DrawSliderInt(0, 100, RPRPvP_SmiteThreshold,
-                        "Target HP% to smite, Max damage below 25%");
-
+                    DrawSliderInt(0, 100, RPRPvP_SmiteThreshold, "Target HP% to smite, Max damage below 25%");
                     break;
             }
         }
     }
-        #endregion
+    #endregion
     
     internal class RPRPvP_Burst : CustomCombo
     {
@@ -87,105 +81,104 @@ internal static class RPRPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is Slice or WaxingSlice or InfernalSlice)
+            if (actionID is not (Slice or WaxingSlice or InfernalSlice)) 
+                return actionID;
+
+            #region Variables
+            double distance = GetTargetDistance();
+            bool canWeave = CanWeave();                    
+            bool canBind = !HasStatusEffect(PvPCommon.Debuffs.Bind, CurrentTarget);
+            bool deathWarrantReady = IsOffCooldown(DeathWarrant);
+            bool plentifulReady = IsOffCooldown(PlentifulHarvest);
+            bool enshrouded = HasStatusEffect(Buffs.Enshrouded);
+            float enshroudStacks = GetStatusEffectStacks(Buffs.Enshrouded);
+            float immortalStacks = GetStatusEffectStacks(Buffs.ImmortalSacrifice);
+            int immortalThreshold = RPRPvP_ImmortalStackThreshold;
+            #endregion
+
+            // Arcane Cirle Option
+            if (IsEnabled(Preset.RPRPvP_Burst_ArcaneCircle)
+                && ActionReady(ArcaneCrest) && PlayerHealthPercentageHp() <= RPRPvP_ArcaneCircleThreshold)
+                return ArcaneCrest;
+
+            if (!PvPCommon.TargetImmuneToDamage()) // Guard check on target
             {
-                    #region types
-                double distance = GetTargetDistance();
-                bool canWeave = CanWeave();                    
-                bool canBind = !HasStatusEffect(PvPCommon.Debuffs.Bind, CurrentTarget);
-                bool deathWarrantReady = IsOffCooldown(DeathWarrant);
-                bool plentifulReady = IsOffCooldown(PlentifulHarvest);
-                bool enshrouded = HasStatusEffect(Buffs.Enshrouded);
-                float enshroudStacks = GetStatusEffectStacks(Buffs.Enshrouded);
-                float immortalStacks = GetStatusEffectStacks(Buffs.ImmortalSacrifice);
-                int immortalThreshold = RPRPvP_ImmortalStackThreshold;
-                    #endregion
+                //Smite
+                if (IsEnabled(Preset.RPRPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                    GetTargetHPPercent() <= RPRPvP_SmiteThreshold)
+                    return PvPMelee.Smite;
 
-                // Arcane Cirle Option
-                if (IsEnabled(Preset.RPRPvP_Burst_ArcaneCircle)
-                    && ActionReady(ArcaneCrest) && PlayerHealthPercentageHp() <= RPRPvP_ArcaneCircleThreshold)
-                    return ArcaneCrest;
+                // Harvest Moon Ranged Option
+                if (IsEnabled(Preset.RPRPvP_Burst_RangedHarvest) && distance > 5)
+                    return HarvestMoon;
 
-                if (!PvPCommon.TargetImmuneToDamage()) // Guard check on target
+                // Enshroud
+                if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded) && enshrouded)
                 {
-                    //Smite
-                    if (IsEnabled(Preset.RPRPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
-                        GetTargetHPPercent() <= RPRPvP_SmiteThreshold)
-                        return PvPMelee.Smite;
-
-                    // Harvest Moon Ranged Option
-                    if (IsEnabled(Preset.RPRPvP_Burst_RangedHarvest) && distance > 5)
-                        return HarvestMoon;
-
-                    // Enshroud
-                    if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded) && enshrouded)
+                    if (canWeave)
                     {
-                        if (canWeave)
-                        {
-                            // Enshrouded Death Warrant Option
-                            if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded_DeathWarrant) &&
-                                deathWarrantReady && enshroudStacks >= 3 && distance <= 25 || HasStatusEffect(Buffs.DeathWarrant) && GetStatusEffectRemainingTime(Buffs.DeathWarrant) <= 3)
-                                return OriginalHook(DeathWarrant);
+                        // Enshrouded Death Warrant Option
+                        if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded_DeathWarrant) &&
+                            deathWarrantReady && enshroudStacks >= 3 && distance <= 25 || HasStatusEffect(Buffs.DeathWarrant) && GetStatusEffectRemainingTime(Buffs.DeathWarrant) <= 3)
+                            return OriginalHook(DeathWarrant);
 
-                            // Lemure's Slice
-                            if (ActionReady(LemuresSlice) && canBind && distance <= 8)
-                                return LemuresSlice;
-                        }
-
-                        // Communio Option
-                        if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded_Communio) &&
-                            enshroudStacks == 1 && distance <= 25)
-                        {
-                            // Holds Communio when moving & Enshrouded Time Remaining > 2s
-                            // Returns a Void/Cross Reaping if under 2s to avoid charge waste
-                            if (IsMoving() && GetStatusEffectRemainingTime(Buffs.Enshrouded) > 2)
-                                return BLM.Xenoglossy;
-
-                            // Returns Communio if stationary
-                            if (!IsMoving())
-                                return Communio;
-                        }
+                        // Lemure's Slice
+                        if (ActionReady(LemuresSlice) && canBind && distance <= 8)
+                            return LemuresSlice;
                     }
 
-                    // Outside of Enshroud
-                    if (!enshrouded)
+                    // Communio Option
+                    if (IsEnabled(Preset.RPRPvP_Burst_Enshrouded_Communio) &&
+                        enshroudStacks == 1 && distance <= 25)
                     {
-                        if (HasStatusEffect(Buffs.PerfectioParata))
-                            return OriginalHook(TenebraeLemurum);
+                        // Holds Communio when moving & Enshrouded Time Remaining > 2s
+                        // Returns a Void/Cross Reaping if under 2s to avoid charge waste
+                        if (IsMoving() && GetStatusEffectRemainingTime(Buffs.Enshrouded) > 2)
+                            return BLM.Xenoglossy;
 
-                        // Pooling Plentiful with Death warrant
-                        if (IsEnabled(Preset.RPRPvP_Burst_ImmortalPooling))
-                        {
-                            if (IsEnabled(Preset.RPRPvP_Burst_DeathWarrant) && deathWarrantReady && distance <= 25 &&
-                                (GetCooldownRemainingTime(PlentifulHarvest) > 20 ||     //if plentiful will be back for the next death warrant
-                                 (plentifulReady && immortalStacks >= immortalThreshold) || // if plentiful is ready for this death warrant and you have the charges you want
-                                 (plentifulReady && immortalStacks <= immortalThreshold - 2))) // if plentiful is ready, but 2 grim swathes away from having the immortal threshold. Early fight. 
-                                return OriginalHook(DeathWarrant);
-
-                            if (plentifulReady && immortalStacks >= immortalThreshold &&
-                                HasStatusEffect(Debuffs.DeathWarrant, CurrentTarget) && distance <= 15)
-                                return PlentifulHarvest;
-                        }
-
-                        // Weaves
-                        if (canWeave)
-                        {                               
-                            // Death Warrant without pooling
-                            if (!IsEnabled(Preset.RPRPvP_Burst_ImmortalPooling) && IsEnabled(Preset.RPRPvP_Burst_DeathWarrant) && deathWarrantReady && distance <= 25)
-                                return OriginalHook(DeathWarrant);
-
-                            // Grim Swathe Option
-                            if (IsEnabled(Preset.RPRPvP_Burst_GrimSwathe) && ActionReady(GrimSwathe) && distance <= 8)
-                                return GrimSwathe;
-                        }
-                        // Harvest Moon Execute 
-                        if (IsEnabled(Preset.RPRPvP_Burst_RangedHarvest) && GetRemainingCharges(HarvestMoon) > 0 &&
-                            GetTargetCurrentHP() < 12000)
-                            return HarvestMoon;
+                        // Returns Communio if stationary
+                        if (!IsMoving())
+                            return Communio;
                     }
                 }
-            }
 
+                // Outside of Enshroud
+                if (!enshrouded)
+                {
+                    if (HasStatusEffect(Buffs.PerfectioParata))
+                        return OriginalHook(TenebraeLemurum);
+
+                    // Pooling Plentiful with Death warrant
+                    if (IsEnabled(Preset.RPRPvP_Burst_ImmortalPooling))
+                    {
+                        if (IsEnabled(Preset.RPRPvP_Burst_DeathWarrant) && deathWarrantReady && distance <= 25 &&
+                            (GetCooldownRemainingTime(PlentifulHarvest) > 20 ||     //if plentiful will be back for the next death warrant
+                             (plentifulReady && immortalStacks >= immortalThreshold) || // if plentiful is ready for this death warrant and you have the charges you want
+                             (plentifulReady && immortalStacks <= immortalThreshold - 2))) // if plentiful is ready, but 2 grim swathes away from having the immortal threshold. Early fight. 
+                            return OriginalHook(DeathWarrant);
+
+                        if (plentifulReady && immortalStacks >= immortalThreshold &&
+                            HasStatusEffect(Debuffs.DeathWarrant, CurrentTarget) && distance <= 15)
+                            return PlentifulHarvest;
+                    }
+
+                    // Weaves
+                    if (canWeave)
+                    {                               
+                        // Death Warrant without pooling
+                        if (!IsEnabled(Preset.RPRPvP_Burst_ImmortalPooling) && IsEnabled(Preset.RPRPvP_Burst_DeathWarrant) && deathWarrantReady && distance <= 25)
+                            return OriginalHook(DeathWarrant);
+
+                        // Grim Swathe Option
+                        if (IsEnabled(Preset.RPRPvP_Burst_GrimSwathe) && ActionReady(GrimSwathe) && distance <= 8)
+                            return GrimSwathe;
+                    }
+                    // Harvest Moon Execute 
+                    if (IsEnabled(Preset.RPRPvP_Burst_RangedHarvest) && GetRemainingCharges(HarvestMoon) > 0 &&
+                        GetTargetCurrentHP() < 12000)
+                        return HarvestMoon;
+                }
+            }
             return actionID;
         }
     }

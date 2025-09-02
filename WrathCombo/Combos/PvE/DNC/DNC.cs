@@ -171,8 +171,8 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Weaves
 
@@ -180,7 +180,7 @@ internal partial class DNC : PhysicalRanged
             if (IsEnabled(Preset.DNC_ST_Adv_Devilment) &&
                 CanWeave() &&
                 LevelChecked(Devilment) &&
-                GetCooldownRemainingTime(Devilment) < GCD/2 &&
+                GetCooldownRemainingTime(Devilment) < GCD / 2 &&
                 (HasStatusEffect(Buffs.TechnicalFinish) ||
                  WasLastAction(TechnicalFinish4) ||
                  !LevelChecked(TechnicalStep)))
@@ -230,18 +230,10 @@ internal partial class DNC : PhysicalRanged
                     ? Ending
                     : ClosedPosition.Retarget(Cascade, DancePartnerResolver);
 
-            // Variant Cure
-            if (Variant.CanCure(Preset.DNC_Variant_Cure, DNCVariantCurePercent))
-                return Variant.Cure;
-
             // ST Interrupt
             if (Role.CanHeadGraze(Preset.DNC_ST_Adv_Interrupt, WeaveTypes.Weave) &&
                 !HasStatusEffect(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
-
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.DNC_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
@@ -286,6 +278,12 @@ internal partial class DNC : PhysicalRanged
                     if (!LevelChecked(TechnicalStep) && Gauge.Feathers > 0)
                         return FanDance1;
                 }
+                
+                if (ActionReady(ShieldSamba) &&
+                    IsEnabled(Preset.DNC_ST_Adv_ShieldSamba) && RaidWideCasting() && 
+                    NumberOfAlliesInRange(ShieldSamba) >= GetPartyMembers().Count * .75 &&
+                    !HasAnyStatusEffects ([BRD.Buffs.Troubadour, Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
+                    return ShieldSamba;
 
                 // ST Panic Heals
                 if (IsEnabled(Preset.DNC_ST_Adv_PanicHeals))
@@ -506,8 +504,8 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Weaves
 
@@ -559,18 +557,10 @@ internal partial class DNC : PhysicalRanged
                     ? Ending
                     : ClosedPosition.Retarget(Cascade, DancePartnerResolver);
 
-            // Variant Cure
-            if (Variant.CanCure(Preset.DNC_Variant_Cure, 50))
-                return Variant.Cure;
-
             // ST Interrupt
             if (Role.CanHeadGraze(Preset.DNC_ST_SimpleMode, WeaveTypes.Weave) &&
                 !HasStatusEffect(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
-
-            // Variant Rampart
-            if (Variant.CanRampart(Preset.DNC_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
@@ -779,8 +769,8 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Weaves
 
@@ -810,16 +800,10 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.FinishingMoveReady))
                 return Flourish;
 
-            if (Variant.CanCure(Preset.DNC_Variant_Cure, DNCVariantCurePercent))
-                return Variant.Cure;
-
             // AoE Interrupt
             if (Role.CanHeadGraze(Preset.DNC_AoE_Adv_Interrupt, WeaveTypes.Weave) &&
                 !HasStatusEffect(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
-
-            if (Variant.CanRampart(Preset.DNC_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {
@@ -1060,8 +1044,8 @@ internal partial class DNC : PhysicalRanged
 
             #endregion
 
-            if (OccultCrescent.ShouldUsePhantomActions())
-                return OccultCrescent.BestPhantomAction();
+            if (ContentSpecificActions.TryGet(out var contentAction))
+                return contentAction;
 
             #region Weaves
 
@@ -1089,16 +1073,10 @@ internal partial class DNC : PhysicalRanged
                 !HasStatusEffect(Buffs.FinishingMoveReady))
                 return Flourish;
 
-            if (Variant.CanCure(Preset.DNC_Variant_Cure, 50))
-                return Variant.Cure;
-
             // AoE Interrupt
-            if (Role.CanHeadGraze(Preset.DNC_AoE_SimpleMode, WeaveTypes.Weave)&&
+            if (Role.CanHeadGraze(Preset.DNC_AoE_SimpleMode, WeaveTypes.Weave) &&
                 !HasStatusEffect(Buffs.TechnicalFinish))
                 return Role.HeadGraze;
-
-            if (Variant.CanRampart(Preset.DNC_Variant_Rampart, WeaveTypes.Weave))
-                return Variant.Rampart;
 
             if (CanWeave() && !WasLastWeaponskill(TechnicalFinish4))
             {

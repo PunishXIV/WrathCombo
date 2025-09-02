@@ -23,7 +23,7 @@ public static class HealRetargeting
     /// Just a buffer for checking the
     /// <see cref="PluginConfiguration.RetargetHealingActionsToStack" />
     /// setting.
-    private static bool RetargetSettingOn
+    internal static bool RetargetSettingOn
     {
         get
         {

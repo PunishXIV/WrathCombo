@@ -6,7 +6,6 @@ using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Window.Functions;
-using static WrathCombo.Window.Functions.UserConfig;
 using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
@@ -77,21 +76,21 @@ internal partial class DRK
                         "Will use Unmend to pull, if selected.\n" +
                         "Should start at -1.0 seconds.\n\n" +
                         "Recommended by The Balance.",
-                        outputValue: (int) PullAction.Unmend,
+                        outputValue: (int)PullAction.Unmend,
                         descriptionAsTooltip: true);
                     UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
                         "Shadowstride",
                         "Will use Shadowstride to pull, if selected.\n" +
                         "Will use an extra Hard Slash before Disesteem.\n" +
                         "Should start at -0.7 seconds.",
-                        outputValue: (int) PullAction.Shadowstride,
+                        outputValue: (int)PullAction.Shadowstride,
                         descriptionAsTooltip: true);
                     UserConfig.DrawRadioButton(DRK_ST_OpenerAction,
                         "Hard Slash (Face or Manual Pulling)",
                         "Will use nothing to pull, if selected, just going straight to Hard Slash.\n" +
                         "Will use an extra Hard Slash before Disesteem.\n" +
                         "Should start at 0.0 seconds.",
-                        outputValue: (int) PullAction.HardSlash,
+                        outputValue: (int)PullAction.HardSlash,
                         descriptionAsTooltip: true);
                     break;
 
@@ -99,12 +98,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_CDsBossRequirement, "All Enemies",
                         "Will use Cooldowns regardless of the type of enemy.",
-                        outputValue: (int) BossRequirement.Off, itemWidth: 125f);
+                        outputValue: (int)BossRequirement.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_CDsBossRequirement, "Only Bosses",
                         "Will try to use Cooldowns only when you're in a boss fight.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int) BossRequirement.On, itemWidth: 125f);
+                        outputValue: (int)BossRequirement.On, itemWidth: 125f);
 
                     break;
 
@@ -174,12 +173,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "All Enemies",
                         "Will use The Blackest Night regardless of the type of enemy.",
-                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_TBNBossRestriction, "Avoid Bosses",
                         "Will try not to use Blackest Night when in a boss fight.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
                     ImGui.Unindent();
 
                     break;
@@ -219,12 +218,12 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "All Enemies",
                         "Will use Living Dead regardless of the type of enemy.",
-                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_ST_LivingDeadBossRestriction, "Avoid Bosses",
                         "Will try not to use Living Dead when your target is a boss.\n" +
                         "(Note: don't rely on this 100%, square sometimes marks enemies inconsistently)",
-                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
                     ImGui.Unindent();
 
                     break;
@@ -342,14 +341,7 @@ internal partial class DRK
 
                     break;
 
-                #endregion
-
-                case Preset.DRK_Var_Cure:
-                    DrawSliderInt(5, 70, DRK_VariantCure,
-                        startUsingAtDescription,
-                        itemWidth: biggest, sliderIncrement: SliderIncrements.Fives);
-
-                    break;               
+                #endregion             
 
                 #region One-Button Mitigation
 
@@ -401,12 +393,12 @@ internal partial class DRK
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Require party",
                         "Will not use Dark Missionary unless there are 2 or more party members.",
-                        outputValue: (int) PartyRequirement.Yes, itemWidth: medium);
+                        outputValue: (int)PartyRequirement.Yes, itemWidth: medium);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_DarkMissionary_PartyRequirement,
                         "Use Always",
                         "Will not require a party for Dark Missionary.",
-                        outputValue: (int) PartyRequirement.No, itemWidth: medium);
+                        outputValue: (int)PartyRequirement.No, itemWidth: medium);
                     ImGui.Unindent();
 
                     ImGui.NewLine();
@@ -439,11 +431,11 @@ internal partial class DRK
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, "All Enemies",
                         "Will use Arm's Length regardless of the type of enemy.",
-                        outputValue: (int) BossAvoidance.Off, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.Off, itemWidth: 125f);
                     UserConfig.DrawHorizontalRadioButton(
                         DRK_Mit_ArmsLength_Boss, "Avoid Bosses",
                         "Will try not to use Arm's Length when in a boss fight.",
-                        outputValue: (int) BossAvoidance.On, itemWidth: 125f);
+                        outputValue: (int)BossAvoidance.On, itemWidth: 125f);
                     ImGui.Unindent();
 
                     ImGui.NewLine();
@@ -490,7 +482,7 @@ internal partial class DRK
                     ImGui.Unindent(34f.Scale());
                     break;
 
-                #endregion
+                    #endregion
             }
         }
 
@@ -625,7 +617,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="Preset.DRK_ST_CDs" />
         public static readonly UserInt DRK_ST_CDsBossRequirement =
-            new("DRK_ST_CDsBossRequirement", (int) BossRequirement.Off);
+            new("DRK_ST_CDsBossRequirement", (int)BossRequirement.Off);
 
         /// <summary>
         ///     Target HP% to use Delirium above for Single Target.
@@ -794,7 +786,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="Preset.DRK_ST_Mit_TBN" />
         public static readonly UserInt DRK_ST_TBNBossRestriction =
-            new("DRK_ST_TBNBossRestriction", (int) BossAvoidance.Off);
+            new("DRK_ST_TBNBossRestriction", (int)BossAvoidance.Off);
 
         /// <summary>
         ///     The number of Oblation charges to keep for manual use.
@@ -877,7 +869,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="Preset.DRK_ST_Mit_LivingDead" />
         public static readonly UserInt DRK_ST_LivingDeadBossRestriction =
-            new("DRK_ST_LivingDeadBossRestriction", (int) BossAvoidance.On);
+            new("DRK_ST_LivingDeadBossRestriction", (int)BossAvoidance.On);
 
         #endregion
 
@@ -1122,18 +1114,6 @@ internal partial class DRK
 
         #endregion
 
-        /// <summary>
-        ///     Variant Cure.
-        /// </summary>
-        /// <value>
-        ///     <b>Default</b>: 30 <br />
-        ///     <b>Range</b>: 5 - 70 <br />
-        ///     <b>Step</b>: <see cref="SliderIncrements.Fives" />
-        /// </value>
-        /// <seealso cref="Preset.DRK_Var_Cure" />
-        public static readonly UserInt DRK_VariantCure =
-            new("DRKVariantCure", 30);
-
         #region One-Button Mitigation
 
         /// <summary>
@@ -1199,7 +1179,7 @@ internal partial class DRK
         public static readonly UserInt
             DRK_Mit_DarkMissionary_PartyRequirement =
                 new("DRK_Mit_DarkMissionary_PartyRequirement",
-                    (int) PartyRequirement.Yes);
+                    (int)PartyRequirement.Yes);
 
         /// <summary>
         ///     Self HP% to use Rampart below in the Mitigation Rotation.
@@ -1222,7 +1202,7 @@ internal partial class DRK
         /// </value>
         /// <seealso cref="Preset.DRK_Mit_ArmsLength" />
         public static readonly UserInt DRK_Mit_ArmsLength_Boss =
-            new("DRK_Mit_ArmsLength_Boss", (int) BossAvoidance.On);
+            new("DRK_Mit_ArmsLength_Boss", (int)BossAvoidance.On);
 
         /// <summary>
         ///     The number of enemies to be nearby for Arm's Length.

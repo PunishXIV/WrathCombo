@@ -43,7 +43,6 @@ internal partial class PLD
             PLD_Requiescat_SubOption = new("PLD_Requiescat_SubOption", 1),
             PLD_SpiritsWithin_SubOption = new("PLD_SpiritsWithin_SubOption", 1),
             PLD_RetargetClemency_Health = new("PLD_RetargetClemency_Health", 30),
-            PLD_VariantCure = new("PLD_VariantCure"),
             PLD_Balance_Content = new("PLD_Balance_Content", 1),
             PLD_ST_MitsOptions = new("PLD_ST_MitsOptions", 0),
             PLD_AoE_MitsOptions = new("PLD_AoE_MitsOptions", 0),
@@ -257,12 +256,6 @@ internal partial class PLD
                 // Retarget Clemency Feature
                 case Preset.PLD_RetargetClemency_LowHP:
                     DrawSliderInt(1, 100, PLD_RetargetClemency_Health, "Player HP%", 200);
-
-                    break;
-
-                // Variant Cure Feature
-                case Preset.PLD_Variant_Cure:
-                    DrawSliderInt(1, 100, PLD_VariantCure, "Player HP%", 200);
 
                     break;
 

@@ -1,16 +1,15 @@
 ﻿using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Window.Functions;
+using WrathCombo.Extensions;
+using static WrathCombo.Window.Functions.UserConfig;
 using static WrathCombo.Combos.PvP.PLDPvP.Config;
 
 namespace WrathCombo.Combos.PvP;
 
 internal static class PLDPvP
 {
-        #region IDS
-
+    #region IDS
     internal class Role : PvPTank;
-
     public const uint
         FastBlade = 29058,
         RiotBlade = 29059,
@@ -44,27 +43,30 @@ internal static class PLDPvP
             Stun = 1343,
             ShieldSmite = 4283;
     }
-        #endregion
+    #endregion
 
-        #region Config
+    #region Config
     public static class Config
     {
         public static UserInt
-            PLDPvP_RampartThreshold = new("PLDPvP_RampartThreshold");
+            PLDPvP_RampartThreshold = new("PLDPvP_RampartThreshold"),
+            PLDPvP_HolySpirit_Threshold = new("PLDPvP_HolySpirit_Threshold");
 
         internal static void Draw(Preset preset)
         {
             switch (preset)
             {
                 case Preset.PLDPvP_Rampart:
-                    UserConfig.DrawSliderInt(1, 100, PLDPvP_RampartThreshold,
-                        "Use Rampart below set threshold for self");
+                    DrawSliderInt(1, 100, PLDPvP_RampartThreshold, "Use Rampart below set threshold for self");
                     break;
-
+                
+                case Preset.PLDPvP_HolySpirit:
+                    DrawSliderInt(0, 6000, PLDPvP_HolySpirit_Threshold, "Must be missing this much health to use Holy Spirit", sliderIncrement:1000);
+                    break;
             }
         }
     }
-        #endregion
+    #endregion
 
     internal class PLDPvP_Burst : CustomCombo
     {
@@ -72,45 +74,44 @@ internal static class PLDPvP
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is FastBlade or RiotBlade or RoyalAuthority)
+            if (actionID is not (FastBlade or RiotBlade or RoyalAuthority)) 
+                return actionID;
+            
+            if (IsEnabled(Preset.PLDPvP_Rampart) && PvPTank.CanRampart(PLDPvP_RampartThreshold))
+                return PvPTank.Rampart;
+
+            if (IsEnabled(Preset.PLDPvP_Intervene) && !InMeleeRange() && IsOffCooldown(Intervene) || IsEnabled(Preset.PLDPvP_Intervene_Melee) && InMeleeRange() && IsOffCooldown(Intervene))
+                return Intervene;
+
+            // Check conditions for Holy Sheltron
+            if (IsEnabled(Preset.PLDPvP_Sheltron) && IsOffCooldown(HolySheltron) && InCombat() && InMeleeRange())
+                return HolySheltron;
+
+            // Check conditions for ShieldSmite
+            if (IsEnabled(Preset.PLDPvP_ShieldSmite) && IsOffCooldown(ShieldSmite) && InCombat() && InMeleeRange())
+                return ShieldSmite;
+
+            // Prioritize Imperator
+            if (IsEnabled(Preset.PLDPvP_Imperator) && IsOffCooldown(Imperator) && InMeleeRange() && CanWeave())
+                return Imperator;
+
+            if (IsEnabled(Preset.PLDPvP_PhalanxCombo))
             {
-                if (IsEnabled(Preset.PLDPvP_Rampart) && PvPTank.CanRampart(PLDPvP_RampartThreshold))
-                    return PvPTank.Rampart;
-
-                if (IsEnabled(Preset.PLDPvP_Intervene) && !InMeleeRange() && IsOffCooldown(Intervene) || IsEnabled(Preset.PLDPvP_Intervene_Melee) && InMeleeRange() && IsOffCooldown(Intervene))
-                    return Intervene;
-
-                // Check conditions for Holy Sheltron
-                if (IsEnabled(Preset.PLDPvP_Sheltron) && IsOffCooldown(HolySheltron) && InCombat() && InMeleeRange())
-                    return HolySheltron;
-
-                // Check conditions for ShieldSmite
-                if (IsEnabled(Preset.PLDPvP_ShieldSmite) && IsOffCooldown(ShieldSmite) && InCombat() && InMeleeRange())
-                    return ShieldSmite;
-
-                // Prioritize Imperator
-                if (IsEnabled(Preset.PLDPvP_Imperator) && IsOffCooldown(Imperator) && InMeleeRange() && CanWeave())
-                    return Imperator;
-
-                if (IsEnabled(Preset.PLDPvP_PhalanxCombo))
-                {
-                    if (HasStatusEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
-                        return OriginalHook(Phalanx);
-                }
-
-                // Check if the custom combo preset is enabled and ConfiteorReady is active
-                if (IsEnabled(Preset.PLDPvP_Confiteor) && HasStatusEffect(Buffs.ConfiteorReady))
-                    return OriginalHook(Imperator);
-
-
-                if (IsEnabled(Preset.PLDPvP_HolySpirit))
-                {
-                    if (IsOffCooldown(HolySpirit) && !InMeleeRange() || IsOffCooldown(HolySpirit) && (!HasStatusEffect(Buffs.AttonementReady) && !HasStatusEffect(Buffs.SupplicationReady) && !HasStatusEffect(Buffs.SepulchreReady)))
-                        return HolySpirit;
-                }
-
+                if (HasStatusEffect(Buffs.BladeOfFaithReady) || WasLastSpell(BladeOfTruth) || WasLastSpell(BladeOfFaith))
+                    return OriginalHook(Phalanx);
             }
 
+            // Check if the custom combo preset is enabled and ConfiteorReady is active
+            if (IsEnabled(Preset.PLDPvP_Confiteor) && HasStatusEffect(Buffs.ConfiteorReady))
+                return OriginalHook(Imperator);
+
+            var missinghealth = LocalPlayer.MaxHp - LocalPlayer.CurrentHp;
+
+            if (IsEnabled(Preset.PLDPvP_HolySpirit) && ActionReady(HolySpirit) && missinghealth >= PLDPvP_HolySpirit_Threshold)
+            {
+                if (!InMeleeRange() || !HasStatusEffect(Buffs.AttonementReady) && !HasStatusEffect(Buffs.SupplicationReady) && !HasStatusEffect(Buffs.SepulchreReady))
+                    return HolySpirit;
+            }
             return actionID;
         }
     }

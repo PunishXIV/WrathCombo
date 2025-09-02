@@ -156,7 +156,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
         catch (Exception)
         {
             // Fallback to the remote icon if there are any issues
-            imagePath = PunishLibMain.PluginManifest.IconUrl ?? "";
+            imagePath = Svc.PluginInterface.Manifest.IconUrl ?? "";
             if (EzThrottler.Throttle("logTypeOfWrathIconUsed", 45000))
                 PluginLog.Verbose(
                     "Using Remote WrathCombo Icon\n             " +

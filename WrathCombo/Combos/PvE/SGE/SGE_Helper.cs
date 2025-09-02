@@ -455,6 +455,7 @@ internal partial class SGE
             Eukrasia = 2606,
             EukrasianDiagnosis = 2607,
             EukrasianPrognosis = 2609,
+            Haima = 2612,
             Panhaima = 2613,
             Kerachole = 2618,
             Zoe = 2611,

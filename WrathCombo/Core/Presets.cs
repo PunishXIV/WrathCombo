@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Attributes;
-using WrathCombo.Combos;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
@@ -23,11 +22,13 @@ internal static class PresetStorage
     private static HashSet<Preset>? EurekaCombos;
     private static Dictionary<Preset, Preset[]>? ConflictingCombos;
     private static Dictionary<Preset, Preset?>? ParentCombos;  // child: parent
-        
+
     public static HashSet<Preset>? AllPresets;
-        
-    public static HashSet<uint> AllRetargetedActions {
-        get {
+
+    public static HashSet<uint> AllRetargetedActions
+    {
+        get
+        {
             if (!EZ.Throttle("allRetargetedActions", TS.FromSeconds(3)))
                 return field;
             var result = Enum.GetValues<Preset>()
@@ -77,7 +78,7 @@ internal static class PresetStorage
         {
             Presets.Attributes.Add(preset, new Presets.PresetAttributes(preset));
         }
-        PluginLog.Information($"Cached {Presets.Attributes.Count} preset attributes."); 
+        PluginLog.Information($"Cached {Presets.Attributes.Count} preset attributes.");
     }
 
 
@@ -305,7 +306,7 @@ internal static class PresetStorage
         }
         return false;
     }
-        
+
     internal static ComboType GetComboType(Preset preset)
     {
         var simple = preset.GetAttribute<SimpleCombo>();
@@ -315,24 +316,23 @@ internal static class PresetStorage
         var mitigation = preset.GetAttribute<MitigationCombo>();
         var parent = (object?)preset.GetAttribute<ParentComboAttribute>() ??
                      (object?)preset.GetAttribute<BozjaParentAttribute>() ??
-                     (object?)preset.GetAttribute<EurekaParentAttribute>() ??
-                     preset.GetAttribute<VariantParentAttribute>();
-            
+                     (object?)preset.GetAttribute<EurekaParentAttribute>();
+
         if (simple != null)
             return ComboType.Simple;
         if (advanced != null)
             return ComboType.Advanced;
         if (basic != null)
             return ComboType.Basic;
-            
+
         if (healing != null)
             return ComboType.Healing;
         if (mitigation != null)
             return ComboType.Mitigation;
-            
+
         if (parent == null)
             return ComboType.Feature;
-            
+
         return ComboType.Option;
     }
 }

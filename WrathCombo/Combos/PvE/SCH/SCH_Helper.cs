@@ -36,10 +36,12 @@ internal partial class SCH
     internal static bool FairyDismissed => Gauge.DismissedFairy > 0;
     internal static bool FairyBusy => JustUsed(WhisperingDawn, 2f) || JustUsed(FeyIllumination, 2f) || JustUsed(FeyBlessing, 2f) || 
                                       JustUsed(Aetherpact, 2f) || JustUsed(Dissipation, 2f) || JustUsed(Consolation, 2f) || JustUsed(SummonSeraph, 2f);
-    internal static bool EndAetherpact => IsEnabled(Preset.SCH_ST_Heal_Aetherpact) && IsEnabled(Preset.SCH_ST_Heal)
-                                            && OriginalHook(Aetherpact) is DissolveUnion //Quick check to see if Fairy Aetherpact is Active
-                                            && AetherPactTarget is not null //Null checking so GetTargetHPPercent doesn't fall back to CurrentTarget
-                                            && GetTargetHPPercent(AetherPactTarget) >= SCH_ST_Heal_AetherpactDissolveOption;
+    internal static bool EndAetherpact => OriginalHook(Aetherpact) is DissolveUnion &&  //Quick check to see if Fairy Aetherpact is Active
+                                          AetherPactTarget is not null && //Null checking so GetTargetHPPercent doesn't fall back to CurrentTarget
+                                          (IsEnabled(Preset.SCH_ST_Heal_Aetherpact) && IsEnabled(Preset.SCH_ST_Heal) && GetTargetHPPercent(AetherPactTarget) >= SCH_ST_Heal_AetherpactDissolveOption ||
+                                           IsEnabled(Preset.SCH_Simple_ST_Heal) && GetTargetHPPercent(AetherPactTarget) >= 95) ;
+                                            
+                                            
     internal static bool ShieldCheck => GetPartyBuffPercent(Buffs.Galvanize) <= SCH_AoE_Heal_SuccorShieldOption &&
                                         GetPartyBuffPercent(SGE.Buffs.EukrasianPrognosis) <= SCH_AoE_Heal_SuccorShieldOption;
     internal static bool CanChainStrategem => ActionReady(ChainStratagem) &&
@@ -90,7 +92,7 @@ internal partial class SCH
     {
         var dotAction = OriginalHook(Bio);
         var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) &&
-            (SCH_DPS_BioSubOption == 1 || !InBossEncounter())? SCH_DPS_BioSubOption : 0;
+            (SCH_DPS_BioSubOption == 1 || !InBossEncounter())? SCH_DPS_BioOption : 0;
         BioList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? SCH_DPS_BioUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
