@@ -213,7 +213,7 @@ internal partial class BLM : Caster
                     return Manafont;
 
                 if (ActionReady(Transpose) &&
-                    (EndOfFirePhase || EndOfIcePhaseAoEMaxLevel))
+                    (EndOfFirePhase || EndOfIcePhaseAoE))
                     return Transpose;
 
                 if (ActionReady(Amplifier) && PolyglotTimer >= 20000)
@@ -225,8 +225,7 @@ internal partial class BLM : Caster
                     return LeyLines;
             }
 
-            if ((EndOfFirePhase || EndOfIcePhaseAoEEarlyLevel ||
-                 EndOfIcePhaseAoEMidLevel || EndOfIcePhaseAoEMaxLevel) &&
+            if ((EndOfFirePhase || EndOfIcePhaseAoE) &&
                 HasPolyglotStacks())
                 return Foul;
 
@@ -234,12 +233,10 @@ internal partial class BLM : Caster
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
-                 ThunderDebuffST?.RemainingTime <= 3) &&
-                (EndOfFirePhase || EndOfIcePhaseAoEEarlyLevel ||
-                 EndOfIcePhaseAoEMidLevel || EndOfIcePhaseAoEMaxLevel))
+                 ThunderDebuffST?.RemainingTime <= 3))
                 return OriginalHook(Thunder2);
 
-            if (ActiveParadox && EndOfIcePhaseAoEMaxLevel)
+            if (ActiveParadox && EndOfIcePhaseAoE)
                 return Paradox;
 
             if (FirePhase)
@@ -403,7 +400,7 @@ internal partial class BLM : Caster
 
             if (IsMoving() && InCombat() && HasBattleTarget())
             {
-                foreach (int priority in BLM_ST_Movement_Priority.Items.OrderBy(x => x))
+                foreach(int priority in BLM_ST_Movement_Priority.Items.OrderBy(x => x))
                 {
                     int index = BLM_ST_Movement_Priority.IndexOf(priority);
                     if (CheckMovementConfigMeetsRequirements(index, out uint action))
@@ -521,7 +518,7 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(Preset.BLM_AoE_Transpose) &&
                     ActionReady(Transpose) &&
-                    (EndOfFirePhase || EndOfIcePhaseAoEMaxLevel))
+                    (EndOfFirePhase || EndOfIcePhaseAoE))
                     return Transpose;
 
                 if (IsEnabled(Preset.BLM_AoE_Amplifier) &&
@@ -538,8 +535,7 @@ internal partial class BLM : Caster
             }
 
             if (IsEnabled(Preset.BLM_AoE_UsePolyglot) &&
-                (EndOfFirePhase || EndOfIcePhaseAoEEarlyLevel ||
-                 EndOfIcePhaseAoEMidLevel || EndOfIcePhaseAoEMaxLevel) &&
+                (EndOfFirePhase || EndOfIcePhaseAoE) &&
                 HasPolyglotStacks())
                 return Foul;
 
@@ -549,13 +545,11 @@ internal partial class BLM : Caster
                 GetTargetHPPercent() > BLM_AoE_ThunderHP &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
-                 ThunderDebuffST?.RemainingTime <= 3) &&
-                (EndOfFirePhase || EndOfIcePhaseAoEEarlyLevel ||
-                 EndOfIcePhaseAoEMidLevel || EndOfIcePhaseAoEMaxLevel))
+                 ThunderDebuffST?.RemainingTime <= 3))
                 return OriginalHook(Thunder2);
 
             if (IsEnabled(Preset.BLM_AoE_ParadoxFiller) &&
-                ActiveParadox && EndOfIcePhaseAoEMaxLevel)
+                ActiveParadox && EndOfIcePhaseAoE)
                 return Paradox;
 
             if (FirePhase)
@@ -654,7 +648,7 @@ internal partial class BLM : Caster
             return actionID switch
             {
                 Fire when BLM_F1to3 == 0 && BLM_Fire1_Despair && FirePhase && CurMp < 2400 && LevelChecked(Despair) => Despair,
-                
+
                 Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) &&
                           (AstralFireStacks is 1 or 2 && HasStatusEffect(Buffs.Firestarter) ||
                            LevelChecked(Paradox) && !ActiveParadox ||
@@ -662,7 +656,7 @@ internal partial class BLM : Caster
                            IcePhase && !ActiveParadox ||
                            !LevelChecked(Fire4) &&
                            HasStatusEffect(Buffs.Firestarter)) && !JustUsed(Fire3) => Fire3,
-                
+
                 Fire3 when BLM_F1to3 == 1 && LevelChecked(Fire3) && FirePhase &&
                            (LevelChecked(Paradox) && ActiveParadox && AstralFireStacks is 3 ||
                             !LevelChecked(Fire4) && !HasStatusEffect(Buffs.Firestarter)) &&
