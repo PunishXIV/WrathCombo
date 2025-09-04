@@ -4,7 +4,6 @@ using Dalamud.Hooking;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
-using ECommons.GameHelpers;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -17,6 +16,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using ECommons.GameHelpers;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -370,19 +370,36 @@ public static class ActionWatching
                     out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
                 var areaTargeted = ActionSheet[replacedWith].TargetArea;
+                var targetObject = targetId.GetObject();
 
                 if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
                     if (!ActionManager.CanUseActionOnTarget(replacedWith,
-                        Svc.Objects
-                            .FirstOrDefault(x => x.GameObjectId == targetId)
-                            .Struct()))
+                        targetObject.Struct()))
                         targetId = originalTargetId;
+
+                // Support Retargeted ground actions
+                if (changed && areaTargeted)
+                {
+                    var location = Player.Position;
+                    
+                    if (IsOverGround(targetObject) &&
+                        Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
+                        location = targetObject.Position;
+                    else if (TryGetNearestGroundPointWithinRange(
+                                 targetObject, out var newLoc,
+                                 replacedWith.ActionRange()) &&
+                             newLoc is not null)
+                        location = (Vector3)newLoc;
+                    
+                    return ActionManager.Instance()->UseActionLocation
+                        (actionType, replacedWith, location: &location);
+                }
 
                 //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
                 var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
-                // If the target was changed, support changing the target for ground actions, too
-                if (changed)
+                // Fallback if the Retargeted ground action couldn't be placed smartly
+                if (changed && areaTargeted)
                     ActionManager.Instance()->AreaTargetingExecuteAtObject =
                         targetId;
 

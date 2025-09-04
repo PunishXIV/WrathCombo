@@ -22,6 +22,22 @@ public static class GameObjectExtensions
     public static unsafe IGameObject? GetObjectFrom(GameObject* ptr) =>
         ptr == null ? null : Svc.Objects
             .FirstOrDefault(x => x.Address == (IntPtr)ptr);
+    
+    /// <summary>
+    ///     Converts a GameObjectID to an IGameObject from the object table.
+    /// </summary>
+    /// <param name="id">The GameObjectID to convert.</param>
+    /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
+    public static IGameObject? GetObjectFrom(ulong id) =>
+        Svc.Objects.FirstOrDefault(x => x.GameObjectId == id);
+    
+    /// <summary>
+    ///     Converts a GameObjectID to an IGameObject from the object table.
+    /// </summary>
+    /// <param name="id">The GameObjectID to convert.</param>
+    /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
+    public static IGameObject? GetObject(this ulong id) =>
+        GetObjectFrom(id);
 
     #region Target Classification
 
