@@ -402,6 +402,8 @@ internal unsafe static class AutoRotationController
 
                     if (ActionManager.GetAdjustedCastTime(ActionType.Action, resSpell) == 0)
                     {
+                        if (member.PlayerChara is not null)
+                                RezMacro.RunMacro(member.PlayerChara);
                         ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
                     }
 
@@ -421,7 +423,12 @@ internal unsafe static class AutoRotationController
                     {
 
                         if ((cfg is not null) && ((cfg.HealerSettings.AutoRezRequireSwift && ActionManager.GetAdjustedCastTime(ActionType.Action, resSpell) == 0) || !cfg.HealerSettings.AutoRezRequireSwift))
-                            ActionManager.Instance()->UseAction(ActionType.Action, resSpell, member.BattleChara.GameObjectId);
+                        {
+                            if (member.PlayerChara is not null)
+                                RezMacro.RunMacro(member.PlayerChara);
+                            ActionManager.Instance()->UseAction(ActionType.Action,
+                                resSpell, member.BattleChara.GameObjectId);
+                        }
                     }
                 }
             }

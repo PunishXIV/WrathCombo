@@ -1,8 +1,8 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
-using System.Linq;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
+using System.Linq;
+using WrathCombo.Core;
 using static WrathCombo.Combos.PvE.SMN.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -19,9 +19,11 @@ internal partial class SMN : Caster
 
             if (IsOnCooldown(Role.Swiftcast))
                 return IsEnabled(Preset.SMN_Raise_Retarget)
-                    ? Resurrection.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Resurrection;
+                    ? Resurrection
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Resurrection.AndRunMacro();
             return actionID;
         }
     }

@@ -59,6 +59,7 @@ internal abstract partial class CustomComboFunctions
                     WrathPartyMember wmember = new()
                     {
                         GameObjectId = chara.GameObjectId,
+                        PlayerChara = member as IPlayerCharacter,
                         CurrentHP = chara.CurrentHp
                     };
                     if (member is IBattleNpc)
@@ -191,6 +192,8 @@ public class WrathPartyMember
     public IGameObject? GameObject => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId);
     public Dictionary<ushort, long> BuffsGainedAt = new();
 
+    /// You really shouldn't have a reason to use this ...
+    public IPlayerCharacter? PlayerChara;
     private uint _currentHP;
     public uint CurrentHP
     {

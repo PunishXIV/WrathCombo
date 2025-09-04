@@ -684,9 +684,11 @@ internal partial class SCH : Healer
         protected override uint Invoke(uint actionID) =>
             actionID == Role.Swiftcast && IsOnCooldown(Role.Swiftcast)
                 ? IsEnabled(Preset.SCH_Raise_Retarget)
-                    ? Resurrection.Retarget(Role.Swiftcast,
-                        SimpleTarget.Stack.AllyToRaise)
-                    : Resurrection
+                    ? Resurrection
+                        .Retarget(Role.Swiftcast,
+                            SimpleTarget.Stack.AllyToRaise)
+                        .AndRunMacro()
+                    : Resurrection.AndRunMacro()
                 : actionID;
     }
     #endregion
