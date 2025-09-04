@@ -114,9 +114,9 @@ internal partial class MNK
             MNK_ST_RiddleOfWindBossOption = new("MNK_ST_RiddleOfWind_SubOption", 1),
             MNK_ST_SecondWindHPThreshold = new("MNK_ST_SecondWindThreshold", 40),
             MNK_ST_BloodbathHPThreshold = new("MNK_ST_BloodbathThreshold", 30),
-            MNK_AoE_BrotherhoodHPThreshold = new("MNK_AoE_Brotherhood_HP", 20),
-            MNK_AoE_RiddleOfWindHPTreshold = new("MNK_AoE_RiddleOfWind_HP", 20),
-            MNK_AoE_RiddleOfFireHPTreshold = new("MNK_AoE_RiddleOfFire_HP", 20),
+            MNK_AoE_BrotherhoodHPThreshold = new("MNK_AoE_Brotherhood_HP", 40),
+            MNK_AoE_RiddleOfWindHPTreshold = new("MNK_AoE_RiddleOfWind_HP", 40),
+            MNK_AoE_RiddleOfFireHPTreshold = new("MNK_AoE_RiddleOfFire_HP", 40),
             MNK_AoE_SecondWindHPThreshold = new("MNK_AoE_SecondWindThreshold", 40),
             MNK_AoE_BloodbathHPThreshold = new("MNK_AoE_BloodbathThreshold", 30),
             MNK_BH_RoF = new("MNK_BH_RoF", 0);

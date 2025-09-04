@@ -136,7 +136,7 @@ internal partial class VPR
             VPR_AoE_UncoiledFury_HoldCharges = new("VPR_AoE_UncoiledFury_HoldCharges", 0),
             VPR_AoE_Vicepit_SubOption = new("VPR_AoE_Vicepit_SubOption", 0),
             VPR_AoE_VicepitCombo_SubOption = new("VPR_AoE_VicepitCombo_SubOption", 0),
-            VPR_AoE_Reawaken_Usage = new("VPR_AoE_Reawaken_Usage", 20),
+            VPR_AoE_Reawaken_Usage = new("VPR_AoE_Reawaken_Usage", 40),
             VPR_AoE_Reawaken_SubOption = new("VPR_AoE_Reawaken_SubOption", 0),
             VPR_AoE_SecondWind_Threshold = new("VPR_AoE_SecondWindThreshold", 40),
             VPR_AoE_Bloodbath_Threshold = new("VPR_AoE_BloodbathThreshold", 30),

@@ -32,7 +32,7 @@ internal partial class MCH
             !JustUsed(OriginalHook(Heatblast)) && ActionReady(RookAutoturret) &&
             !RobotActive && Battery >= 50)
         {
-            if ((MCH_ST_Adv_TurretBossOption == 0 || InBossEncounter() ||
+            if ((MCH_ST_QueenBossOption == 0 || InBossEncounter() ||
                  IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter()) &&
                 (GetCooldownRemainingTime(Wildfire) > GCD || !LevelChecked(Wildfire)))
             {
@@ -62,12 +62,28 @@ internal partial class MCH
             }
 
             if (IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() && Battery is 100 ||
-                MCH_ST_Adv_TurretBossOption == 1 && !InBossEncounter() && Battery >= MCH_ST_TurretUsage)
+                MCH_ST_QueenBossOption == 1 && !InBossEncounter() && Battery >= MCH_ST_TurretUsage)
                 return true;
         }
 
         return false;
     }
+
+    #endregion
+
+    #region HP Treshold
+
+    internal static int HPThresholdHyperchargeST =>
+        MCH_ST_HyperchargeBossOption == 1 ||
+        !TargetIsBoss() ? MCH_ST_HyperchargeHPOption : 0;
+
+    internal static int HPThresholdReassembleST =>
+        MCH_ST_ReassembleBossOption == 1 ||
+        !TargetIsBoss() ? MCH_ST_ReassembleHPOption : 0;
+
+    internal static int HPThresholdChainsawST =>
+        MCH_ST_ChainsawBossOption == 1 ||
+        !TargetIsBoss() ? MCH_ST_ChainsawHPOption : 0;
 
     #endregion
 
@@ -104,16 +120,13 @@ internal partial class MCH
         {
             if ((IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() ||
                  IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[0] &&
-                 (MCH_ST_Adv_ExcavatorBossOption == 1 && !InBossEncounter() ||
-                  IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen))) &&
+                 IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen)) &&
                 LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                 return true;
 
             if ((IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter() ||
                  IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[0] &&
-                 IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
-                 (MCH_ST_Adv_ExcavatorBossOption == 0 ||
-                  MCH_ST_Adv_ExcavatorBossOption == 1 && InBossEncounter())) &&
+                 IsEnabled(Preset.MCH_ST_Adv_TurretQueen)) &&
                 LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
                 (BSUsed is 1 ||
                  BSUsed % 3 is 2 && Battery <= 40 ||
@@ -166,8 +179,7 @@ internal partial class MCH
     {
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() ||
              IsEnabled(Preset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
-             (MCH_ST_Adv_ExcavatorBossOption == 1 && !InBossEncounter() ||
-              IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen))) &&
+             IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen)) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
         {
             actionID = Excavator;
@@ -176,8 +188,7 @@ internal partial class MCH
 
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter() ||
              IsEnabled(Preset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
-             IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
-             (MCH_ST_Adv_ExcavatorBossOption == 0 || InBossEncounter())) &&
+             IsEnabled(Preset.MCH_ST_Adv_TurretQueen)) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (BSUsed is 1 ||
              BSUsed % 3 is 2 && Battery <= 40 ||
@@ -192,7 +203,8 @@ internal partial class MCH
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) ||
              IsEnabled(Preset.MCH_ST_Adv_Chainsaw) && ReassembledChainsawST) &&
             !MaxBattery && !HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Chainsaw) &&
-            GetCooldownRemainingTime(Chainsaw) <= GCD / 2)
+            GetCooldownRemainingTime(Chainsaw) <= GCD / 2 &&
+            GetTargetHPPercent() > HPThresholdChainsawST)
         {
             actionID = Chainsaw;
             return true;
