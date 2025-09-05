@@ -134,8 +134,12 @@ internal partial class SCH : Healer
             if (EndAetherpact)
                 return DissolveUnion;
             
-            if (ActionReady(Role.Esuna) && HasCleansableDebuff(healTarget) &&
-                GetTargetHPPercent(healTarget) >= 40)
+            bool cleansableTarget =
+                HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
+                HasCleansableDebuff(healTarget);
+            
+            if (ActionReady(Role.Esuna) && GetTargetHPPercent(healTarget) >= 40 &&
+                cleansableTarget)
                 return Role.Esuna.RetargetIfEnabled(healTarget, Physick);
             
             if (ActionReady(Aetherflow) && !HasAetherflow &&
@@ -422,9 +426,13 @@ internal partial class SCH : Healer
             #endregion
 
             #region Priority Cleansing
+            
+            bool cleansableTarget =
+                HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
+                HasCleansableDebuff(healTarget);
 
             if (IsEnabled(Preset.SCH_ST_Heal_Esuna) &&
-                ActionReady(Role.Esuna) && HasCleansableDebuff(healTarget) &&
+                ActionReady(Role.Esuna) && cleansableTarget &&
                 GetTargetHPPercent(healTarget, SCH_ST_Heal_IncludeShields) >= SCH_ST_Heal_EsunaOption)
                 return Role.Esuna
                     .RetargetIfEnabled(OptionalTarget, Physick);

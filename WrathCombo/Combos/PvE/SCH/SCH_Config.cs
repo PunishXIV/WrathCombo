@@ -117,8 +117,8 @@ internal partial class SCH
                     DrawSliderInt(0, 10, SCH_AoE_ADV_DPS_DoT_MaxTargets, "Maximum number of targets to employ multi-dotting ");
                     break;
                 #endregion
-
-                #region Healing
+                
+                #region ST Healing
                 case Preset.SCH_ST_Heal:
 
                     ImGui.Indent();
@@ -133,44 +133,70 @@ internal partial class SCH
 
                 case Preset.SCH_ST_Heal_Lustrate:
                     DrawSliderInt(0, 100, SCH_ST_Heal_LustrateOption, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 0, $"{Lustrate.ActionName()} Priority: ");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 0, $"{Lustrate.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_Excogitation:
                     DrawSliderInt(0, 100, SCH_ST_Heal_ExcogitationOption, "Start using when below HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SCH_ST_Heal_ExcogitationBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 1, $"{Excogitation.ActionName()} Priority: ");
+                    DrawAdditionalBoolChoice(SCH_ST_Heal_ExcogitationTankOption, "Only on Tanks", "Will only use on a Tank.");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 1, $"{Excogitation.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_Protraction:
                     DrawSliderInt(0, 100, SCH_ST_Heal_ProtractionOption, "Start using when below HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SCH_ST_Heal_ProtractionBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 2, $"{Protraction.ActionName()} Priority: ");
+                    DrawAdditionalBoolChoice(SCH_ST_Heal_ProtractionTankOption, "Only on Tanks", "Will only use on a Tank.");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 2, $"{Protraction.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_Aetherpact:
                     DrawSliderInt(0, 100, SCH_ST_Heal_AetherpactOption, "Start using when below HP %. Set to 100 to disable this check");
                     DrawSliderInt(0, 100, SCH_ST_Heal_AetherpactDissolveOption, "Stop using when above HP %.");
                     DrawSliderInt(10, 100, SCH_ST_Heal_AetherpactFairyGauge, "Minimal Fairy Gauge to start using Aetherpact", sliderIncrement: Tens);
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 3, $"{Aetherpact.ActionName()} Priority: ");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 3, $"{Aetherpact.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_WhisperingDawn:
                     DrawSliderInt(0, 100, SCH_ST_Heal_WhisperingDawnOption, "Start using when below HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SCH_ST_Heal_WhisperingDawnBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 5, $"{WhisperingDawn.ActionName()} Priority: ");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 5, $"{WhisperingDawn.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_FeyIllumination:
                     DrawSliderInt(0, 100, SCH_ST_Heal_FeyIlluminationOption, "Start using when below HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SCH_ST_Heal_FeyIlluminationBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 6, $"{FeyIllumination.ActionName()} Priority: ");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 6, $"{FeyIllumination.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_FeyBlessing:
                     DrawSliderInt(0, 100, SCH_ST_Heal_FeyBlessingOption, "Start using when below HP %. Set to 100 to disable this check");
                     DrawAdditionalBoolChoice(SCH_ST_Heal_FeyBlessingBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 7, $"{FeyBlessing.ActionName()} Priority: ");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 7, $"{FeyBlessing.ActionName()} Priority: ");
+                    break;
+                
+                case Preset.SCH_ST_Heal_Seraphism:
+                    DrawSliderInt(0, 100, SCH_ST_Heal_SeraphismOption, "Start using when below HP %. Set to 100 to disable this check");
+                    DrawAdditionalBoolChoice(SCH_ST_Heal_SeraphismBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 8, $"{Seraphism.ActionName()} Priority: ");
+                    break;
+                
+                case Preset.SCH_ST_Heal_Expedient:
+                    DrawSliderInt(0, 100, SCH_ST_Heal_ExpedientOption, "Start using when below HP %. Set to 100 to disable this check");
+                    DrawAdditionalBoolChoice(SCH_ST_Heal_ExpedientBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 9, $"{Expedient.ActionName()} Priority: ");
+                    break;
+                
+                case Preset.SCH_ST_Heal_SummonSeraph:
+                    DrawSliderInt(0, 100, SCH_ST_Heal_SummonSeraphOption, "Start using when below HP %. Set to 100 to disable this check");
+                    DrawAdditionalBoolChoice(SCH_ST_Heal_SummonSeraphBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 10, $"{SummonSeraph.ActionName()} Priority: ");
+                    break;
+                
+                case Preset.SCH_ST_Heal_Consolation:
+                    DrawSliderInt(0, 100, SCH_ST_Heal_ConsolationOption, "Start using when below HP %. Set to 100 to disable this check");
+                    DrawAdditionalBoolChoice(SCH_ST_Heal_ConsolationBossOption, "Not on Bosses", "Will not use on ST in Boss encounters.");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 11, $"{Consolation.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_Adloquium:
@@ -186,13 +212,16 @@ internal partial class SCH
                         ImGui.Unindent();
                     }
 
-                    DrawPriorityInput(SCH_ST_Heals_Priority, 8, 4, $"{Adloquium.ActionName()} Priority: ");
+                    DrawPriorityInput(SCH_ST_Heals_Priority, 12, 4, $"{Adloquium.ActionName()} Priority: ");
                     break;
 
                 case Preset.SCH_ST_Heal_Esuna:
                     DrawSliderInt(0, 100, SCH_ST_Heal_EsunaOption, "Stop using when below HP %. Set to Zero to disable this check");
                     break;
+                
+                #endregion
 
+                #region AoE Healing
                 case Preset.SCH_AoE_Heal_Lucid:
                     DrawSliderInt(4000, 9500, SCH_AoE_Heal_LucidOption, "MP Threshold", 150, Hundreds);
                     break;
@@ -363,37 +392,47 @@ internal partial class SCH
             SCH_AoE_Heal_LucidOption = new("SCH_AoE_Heal_LucidOption", 8000),
             SCH_AoE_Heal_SuccorShieldOption = new("SCH_AoE_Heal_SuccorShieldCount", 50),
             SCH_AoE_Heal_WhisperingDawnOption = new("SCH_AoE_Heal_WhisperingDawnOption", 70),
-            SCH_AoE_Heal_FeyIlluminationOption = new("SCH_AoE_Heal_FeyIlluminationOption", 50),
-            SCH_AoE_Heal_ConsolationOption = new("SCH_AoE_Heal_ConsolationOption", 60),
-            SCH_AoE_Heal_FeyBlessingOption = new("SCH_AoE_Heal_FeyBlessingOption", 60),
-            SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption", 30),
+            SCH_AoE_Heal_FeyIlluminationOption = new("SCH_AoE_Heal_FeyIlluminationOption", 70),
+            SCH_AoE_Heal_ConsolationOption = new("SCH_AoE_Heal_ConsolationOption", 70),
+            SCH_AoE_Heal_FeyBlessingOption = new("SCH_AoE_Heal_FeyBlessingOption", 70),
+            SCH_AoE_Heal_SeraphismOption = new("SCH_AoE_Heal_SeraphismOption", 70),
             SCH_AoE_Heal_IndomitabilityOption = new("SCH_AoE_Heal_IndomitabilityOption", 70),
-            SCH_AoE_Heal_SummonSeraph = new("SCH_AoE_Heal_SummonSeraph", 40),
+            SCH_AoE_Heal_SummonSeraph = new("SCH_AoE_Heal_SummonSeraph", 70),
             SCH_ST_Heal_LucidOption = new("SCH_ST_Heal_LucidOption", 8000),
             SCH_ST_Heal_AdloquiumOption = new("SCH_ST_Heal_AdloquiumOption", 70),
             SCH_ST_Heal_AdloquiumOption_Emergency = new("SCH_ST_Heal_AdloquiumOption_Emergency", 30),
             SCH_ST_Heal_LustrateOption = new("SCH_ST_Heal_LustrateOption", 70),
-            SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption", 50),
-            SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption", 30),
-            SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 60),
+            SCH_ST_Heal_ExcogitationOption = new("SCH_ST_Heal_ExcogitationOption", 70),
+            SCH_ST_Heal_ProtractionOption = new("SCH_ST_Heal_ProtractionOption", 70),
+            SCH_ST_Heal_AetherpactOption = new("SCH_ST_Heal_AetherpactOption", 70),
             SCH_ST_Heal_AetherpactDissolveOption = new("SCH_ST_Heal_AetherpactDissolveOption", 90),
             SCH_ST_Heal_AetherpactFairyGauge = new("SCH_ST_Heal_AetherpactFairyGauge", 50),
             SCH_ST_Heal_WhisperingDawnOption = new("SCH_ST_Heal_WhisperingDawnOption", 70),
             SCH_ST_Heal_FeyIlluminationOption = new("SCH_ST_Heal_FeyIlluminationOption", 70),
             SCH_ST_Heal_FeyBlessingOption = new("SCH_ST_Heal_FeyBlessingOption", 70),
-            SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 30);
+            SCH_ST_Heal_SeraphismOption = new("SCH_ST_Heal_SeraphismOption", 70),
+            SCH_ST_Heal_ExpedientOption = new("SCH_ST_Heal_ExpedientOption", 70),
+            SCH_ST_Heal_SummonSeraphOption = new("SCH_ST_Heal_SummonSeraphOption", 70),
+            SCH_ST_Heal_ConsolationOption = new("SCH_ST_Heal_ConsolationOption", 70),
+            SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 40);
         public static UserIntArray
-            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority"),
-            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority");
+            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [11, 5, 6, 7, 12, 3, 2, 4, 8, 9, 10, 1]),
+            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority", [1, 2, 3, 4, 5, 6, 7, 8]);
 
         public static UserBool
             SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),
             SCH_ST_Heal_WhisperingDawnBossOption = new("SCH_ST_Heal_WhisperingDawnBossOption"),
             SCH_ST_Heal_FeyIlluminationBossOption = new("SCH_ST_Heal_FeyIlluminationBossOption"),
             SCH_ST_Heal_FeyBlessingBossOption = new("SCH_ST_Heal_FeyBlessingBossOption"),
-            SCH_AoE_Heal_Indomitability_Recitation = new("SCH_AoE_Heal_Indomitability_Recitation"),
             SCH_ST_Heal_ExcogitationBossOption = new("SCH_ST_Heal_ExcogitationBossOption"),
-            SCH_ST_Heal_ProtractionBossOption = new("SCH_ST_Heal_ProtractionBossOption");
+            SCH_ST_Heal_ExcogitationTankOption = new("SCH_ST_Heal_ExcogitationTankOption"),
+            SCH_ST_Heal_ProtractionBossOption = new("SCH_ST_Heal_ProtractionBossOption"),
+            SCH_ST_Heal_ProtractionTankOption = new("SCH_ST_Heal_ProtractionTankOption"),
+            SCH_ST_Heal_SeraphismBossOption = new("SCH_ST_Heal_SeraphismBossOption"),
+            SCH_ST_Heal_ExpedientBossOption = new("SCH_ST_Heal_ExpedientBossOption"),
+            SCH_ST_Heal_SummonSeraphBossOption = new("SCH_ST_Heal_SummonSeraphBossOption"),
+            SCH_ST_Heal_ConsolationBossOption = new("SCH_ST_Heal_ConsolationBossOption"),
+            SCH_AoE_Heal_Indomitability_Recitation = new("SCH_AoE_Heal_Indomitability_Recitation");
 
         public static UserBoolArray
             SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts"),

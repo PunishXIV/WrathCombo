@@ -11,27 +11,28 @@ internal partial class AST
     {
         #region Options
         public static UserIntArray
-            AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority"),
-            AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority");
+            AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [12,11,10,6,7,8,9,5,4,3,2,1]),
+            AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 7, 1, 4, 6, 2, 8, 9, 5]);
         
         public static UserInt
             //HEALS
-            AST_ST_SimpleHeals_Spire = new("AST_ST_SimpleHeals_Spire", 80),
-            AST_ST_SimpleHeals_Ewer = new("AST_ST_SimpleHeals_Ewer", 80),
-            AST_ST_SimpleHeals_Arrow = new("AST_ST_SimpleHeals_Arrow", 80),
-            AST_ST_SimpleHeals_Bole = new("AST_ST_SimpleHeals_Bole", 80),
-            AST_ST_SimpleHeals_CelestialIntersection = new("AST_ST_SimpleHeals_CelestialIntersection", 80),
+            AST_ST_SimpleHeals_Spire = new("AST_ST_SimpleHeals_Spire", 70),
+            AST_ST_SimpleHeals_Ewer = new("AST_ST_SimpleHeals_Ewer", 70),
+            AST_ST_SimpleHeals_Arrow = new("AST_ST_SimpleHeals_Arrow", 70),
+            AST_ST_SimpleHeals_Bole = new("AST_ST_SimpleHeals_Bole", 70),
+            AST_ST_SimpleHeals_CelestialIntersection = new("AST_ST_SimpleHeals_CelestialIntersection", 70),
             AST_ST_SimpleHeals_CelestialIntersectionCharges = new ("AST_ST_SimpleHeals_CelestialIntersectionCharges", 1),
-            AST_ST_SimpleHeals_EssentialDignity = new("AST_ST_SimpleHeals_EssentialDignity", 50),
-            AST_ST_SimpleHeals_Exaltation = new("AST_ST_SimpleHeals_Exaltation", 50),
-            AST_ST_SimpleHeals_Esuna = new("AST_ST_SimpleHeals_Esuna", 100),
-            AST_ST_SimpleHeals_AspectedBeneficHigh = new("AST_ST_SimpleHeals_AspectedBeneficHigh", 90),
+            AST_ST_SimpleHeals_EssentialDignity = new("AST_ST_SimpleHeals_EssentialDignity", 70),
+            AST_ST_SimpleHeals_Exaltation = new("AST_ST_SimpleHeals_Exaltation", 70),
+            AST_ST_SimpleHeals_Esuna = new("AST_ST_SimpleHeals_Esuna", 40),
+            AST_ST_SimpleHeals_AspectedBeneficHigh = new("AST_ST_SimpleHeals_AspectedBeneficHigh", 100),
             AST_ST_SimpleHeals_AspectedBeneficLow = new("AST_ST_SimpleHeals_AspectedBeneficLow", 40),
             AST_ST_SimpleHeals_AspectedBeneficRefresh = new("AST_ST_SimpleHeals_AspectedBeneficRefresh", 3),
-            AST_ST_SimpleHeals_CollectiveUnconscious = new("AST_ST_SimpleHeals_CollectiveUnconscious", 80),
-            AST_ST_SimpleHeals_CelestialOpposition = new("AST_ST_SimpleHeals_CelestialOpposition", 80),
-            AST_ST_SimpleHeals_SoloLady = new("AST_ST_SimpleHeals_SoloLady", 80),
-            AST_AoE_SimpleHeals_AltMode = new("AST_AoE_SimpleHeals_AltMode"),
+            AST_ST_SimpleHeals_CollectiveUnconscious = new("AST_ST_SimpleHeals_CollectiveUnconscious", 70),
+            AST_ST_SimpleHeals_CelestialOpposition = new("AST_ST_SimpleHeals_CelestialOpposition", 70),
+            AST_ST_SimpleHeals_SoloLady = new("AST_ST_SimpleHeals_SoloLady", 70),
+            AST_ST_SimpleHeals_EmergencyED_Threshold = new("AST_ST_SimpleHeals_EmergencyED_Threshold", 30),
+            AST_AoE_SimpleHeals_AltMode = new("AST_AoE_SimpleHeals_AltMode", 1),
             AST_AoE_SimpleHeals_LazyLady = new("AST_AoE_SimpleHeals_LazyLady", 80),
             AST_AoE_SimpleHeals_Horoscope = new("AST_AoE_SimpleHeals_Horoscope", 80),
             AST_AoE_SimpleHeals_CelestialOpposition = new("AST_AoE_SimpleHeals_CelestialOpposition", 80),
@@ -67,15 +68,12 @@ internal partial class AST
 
         public static UserBool
             //HEALS
-            AST_ST_SimpleHeals_Adv = new("AST_ST_SimpleHeals_Adv"),
             AST_ST_SimpleHeals_IncludeShields = new("AST_ST_SimpleHeals_IncludeShields"),
             AST_ST_SimpleHeals_WeaveDignity = new("AST_ST_SimpleHeals_WeaveDignity"),
             AST_ST_SimpleHeals_WeaveIntersection = new("AST_ST_SimpleHeals_WeaveIntersection"),
             AST_ST_SimpleHeals_WeaveEwer = new("AST_ST_SimpleHeals_WeaveEwer"),
             AST_ST_SimpleHeals_WeaveSpire = new("AST_ST_SimpleHeals_WeaveSpire"),
-            AST_ST_SimpleHeals_WeaveArrow = new("AST_ST_SimpleHeals_WeaveArrow"),
-            AST_ST_SimpleHeals_WeaveBole = new("AST_ST_SimpleHeals_WeaveBole"),
-            AST_ST_SimpleHeals_WeaveExalt = new("AST_ST_SimpleHeals_WeaveExalt"),
+            AST_ST_SimpleHeals_WeaveEmergencyED = new("AST_ST_SimpleHeals_WeaveEmergencyED"),
             AST_AoE_SimpleHeals_WeaveLady = new("AST_AoE_SimpleHeals_WeaveLady"),
             AST_AoE_SimpleHeals_WeaveOpposition = new("AST_AoE_SimpleHeals_WeaveOpposition"),
             AST_AoE_SimpleHeals_WeaveCollectiveUnconscious = new("AST_AoE_SimpleHeals_WeaveCollectiveUnconscious"),
@@ -96,6 +94,8 @@ internal partial class AST
             AST_ST_SimpleHeals_CollectiveUnconsciousOptions = new("AST_ST_SimpleHeals_CollectiveUnconsciousOptions"),
             AST_ST_SimpleHeals_SoloLadyOptions = new("AST_ST_SimpleHeals_SoloLadyOptions"),
             AST_ST_SimpleHeals_ExaltationOptions = new("AST_ST_SimpleHeals_ExaltationOptions"),
+            AST_ST_SimpleHeals_BoleOptions = new("AST_ST_SimpleHeals_BoleOptions"),
+            AST_ST_SimpleHeals_ArrowOptions = new("AST_ST_SimpleHeals_ArrowOptions"),
             AST_Mit_ST_Options = new("AST_Mit_ST_Options"),
             AST_EarthlyStarOptions = new("AST_EarthlyStarOptions");
 
@@ -211,14 +211,7 @@ internal partial class AST
                 
                 #region ST Heals
                 case Preset.AST_ST_Heals:
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_Adv, "Advanced Options", "", isConditionalChoice: true);
-                    if (AST_ST_SimpleHeals_Adv)
-                    {
-                        ImGui.Indent();
-                        ImGui.Spacing();
-                        DrawAdditionalBoolChoice(AST_ST_SimpleHeals_IncludeShields, "Include Shields in HP Percent Sliders", "");
-                        ImGui.Unindent();
-                    }
+                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_IncludeShields, "Include Shields in HP Percent Sliders", "");
                     break;
                 
                 case Preset.AST_ST_Heals_Esuna:
@@ -228,73 +221,82 @@ internal partial class AST
                 case Preset.AST_ST_Heals_CelestialIntersection:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_CelestialIntersection, "Start using when below HP %. Set to 100 to disable this check");
                     DrawSliderInt(0, 1, AST_ST_SimpleHeals_CelestialIntersectionCharges, "How many charges to retain for manual use. Set to 0 to disable this check.");
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveIntersection, "Only Weave", "Will only weave this action.");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 0, $"{CelestialIntersection.ActionName()} Priority: ");
+                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveIntersection, "Only Weave", "");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 1, $"{CelestialIntersection.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_EssentialDignity:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_EssentialDignity, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveDignity, "Only Weave", "Will only weave this action.");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 1, $"{EssentialDignity.ActionName()} Priority: ");
+                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveDignity, "Only Weave", "");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 0, $"Standard {EssentialDignity.ActionName()} Priority: ");
+                    break;
+                
+                case Preset.AST_ST_Heals_EssentialDignity_Emergency:
+                    DrawSliderInt(0, 100, AST_ST_SimpleHeals_EmergencyED_Threshold, "Start using when below HP %. Set to 100 to disable this check");
+                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveEmergencyED, "Only Weave", "");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 11, $"Emergency {EssentialDignity.ActionName()} Priority:");
                     break;
                 
                 case Preset.AST_ST_Heals_Exaltation:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_Exaltation, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ExaltationOptions, "Only Weave", "Will only weave this action.", 2, 0);
-                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ExaltationOptions," Not On Bosses", "Will not use in Boss encounters.", 2, 1);
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 2, $"{Exaltation.ActionName()} Priority: ");
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ExaltationOptions, "Only Weave", "Will only weave this action.", 3, 0);
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ExaltationOptions," Not On Bosses", "Will not use in Boss encounters.", 3, 1);
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ExaltationOptions," Tanks Only", "Will only use on Tanks", 3, 2);
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 2, $"{Exaltation.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_Bole:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_Bole, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveBole, "Only Weave", "Will only weave this action.");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 3, $"{Bole.ActionName()} Priority: ");
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_BoleOptions, "Only Weave", "Will only weave this action.", 2, 0);
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_BoleOptions," Tanks Only", "Will only use on Tanks", 2, 1);
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 3, $"{Bole.ActionName()} Priority: ");
                     break;
 
                 case Preset.AST_ST_Heals_Arrow:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_Arrow, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveArrow, "Only Weave", "Will only weave this action.");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 4, $"{Arrow.ActionName()} Priority: ");
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ArrowOptions, "Only Weave", "Will only weave this action.", 2, 0);
+                    DrawHorizontalMultiChoice(AST_ST_SimpleHeals_ArrowOptions," Tanks Only", "Will only use on Tanks", 2, 1);
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 4, $"{Arrow.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_Ewer:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_Ewer, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveEwer, "Only Weave", "Will only weave this action.");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 5, $"{Ewer.ActionName()} Priority: ");
+                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveEwer, "Only Weave", "");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 5, $"{Ewer.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_Spire:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_Spire, "Start using when below HP %. Set to 100 to disable this check");
-                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveSpire, "Only Weave", "Will only weave this action.");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 6, $"{Spire.ActionName()} Priority: ");
+                    DrawAdditionalBoolChoice(AST_ST_SimpleHeals_WeaveSpire, "Only Weave", "");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 6, $"{Spire.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_AspectedBenefic:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_AspectedBeneficHigh, "Start using when below HP %. Set to 100 to disable this check");
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_AspectedBeneficLow, "Stop using when below set percentage");
                     DrawSliderInt(0, 15, AST_ST_SimpleHeals_AspectedBeneficRefresh, "Seconds remaining before reapplying (0 = Do not reapply early)");
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 7, $"{AspectedBenefic.ActionName()} Priority: ");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 7, $"{AspectedBenefic.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_CelestialOpposition:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_CelestialOpposition, "Start using when below HP %. Set to 100 to disable this check");
                     DrawHorizontalMultiChoice(AST_ST_SimpleHeals_CelestialOppositionOptions,"Only Weave", "Will only weave this action.", 2, 0);
                     DrawHorizontalMultiChoice(AST_ST_SimpleHeals_CelestialOppositionOptions," Not On Bosses", "Will not use on ST in Boss encounters.", 2, 1);
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 8, $"{CelestialOpposition.ActionName()} Priority: ");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 8, $"{CelestialOpposition.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_CollectiveUnconscious:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_CollectiveUnconscious, "Start using when below HP %. Set to 100 to disable this check");
                     DrawHorizontalMultiChoice(AST_ST_SimpleHeals_CollectiveUnconsciousOptions,"Only Weave", "Will only weave this action.", 2, 0);
                     DrawHorizontalMultiChoice(AST_ST_SimpleHeals_CollectiveUnconsciousOptions," Not On Bosses", "Will not use on ST in Boss encounters.", 2, 1);
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 9, $"{CollectiveUnconscious.ActionName()} Priority: ");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 9, $"{CollectiveUnconscious.ActionName()} Priority: ");
                     break;
                 
                 case Preset.AST_ST_Heals_SoloLady:
                     DrawSliderInt(0, 100, AST_ST_SimpleHeals_SoloLady, "Start using when below HP %. Set to 100 to disable this check");
                     DrawHorizontalMultiChoice(AST_ST_SimpleHeals_SoloLadyOptions,"Only Weave", "Will only weave this action.", 2, 0);
                     DrawHorizontalMultiChoice(AST_ST_SimpleHeals_SoloLadyOptions," Not On Bosses", "Will not use on ST in Boss encounters.", 2, 1);
-                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 11, 10, $"{LadyOfCrown.ActionName()} Priority: ");
+                    DrawPriorityInput(AST_ST_SimpleHeals_Priority, 12, 10, $"{LadyOfCrown.ActionName()} Priority: ");
                     break;
                 
                 

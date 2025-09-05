@@ -6,8 +6,10 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using ECommons.GameFunctions;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SCH.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -110,6 +112,7 @@ internal partial class SCH
     internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
     {
         IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        bool tankCheck = healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
                            !HasStatusEffect(Buffs.Galvanize, healTarget, true) || 
                            HasStatusEffect(Buffs.EmergencyTactics);
@@ -129,12 +132,15 @@ internal partial class SCH
                 return SCH_ST_Heal_LustrateOption;
             case 1:
                 action = Excogitation;
-                enabled = IsEnabled(Preset.SCH_ST_Heal_Excogitation) && (HasAetherflow || HasStatusEffect(Buffs.Recitation)) &&
+                enabled = IsEnabled(Preset.SCH_ST_Heal_Excogitation) && 
+                          (HasAetherflow || HasStatusEffect(Buffs.Recitation)) &&
+                          (tankCheck || !IsInParty() || !SCH_ST_Heal_ExcogitationTankOption) &&
                           (!SCH_ST_Heal_ExcogitationBossOption || !InBossEncounter());;
                 return SCH_ST_Heal_ExcogitationOption;
             case 2:
                 action = Protraction;
                 enabled = IsEnabled(Preset.SCH_ST_Heal_Protraction) &&
+                          (tankCheck || !IsInParty() || !SCH_ST_Heal_ProtractionTankOption) &&
                           (!SCH_ST_Heal_ProtractionBossOption || !InBossEncounter());
                 return SCH_ST_Heal_ProtractionOption;
             case 3:
@@ -163,6 +169,26 @@ internal partial class SCH
                 enabled = IsEnabled(Preset.SCH_ST_Heal_FeyBlessing) && HasPetPresent() && !FairyBusy &&
                           (!SCH_ST_Heal_FeyBlessingBossOption || !InBossEncounter());
                 return SCH_ST_Heal_FeyBlessingOption;
+            case 8:
+                action = Seraphism;
+                enabled = IsEnabled(Preset.SCH_ST_Heal_Seraphism) && HasPetPresent() && !FairyBusy &&
+                          (!SCH_ST_Heal_SeraphismBossOption || !InBossEncounter());
+                return SCH_ST_Heal_SeraphismOption;
+            case 9:
+                action = Expedient;
+                enabled = IsEnabled(Preset.SCH_ST_Heal_Expedient) &&
+                          (!SCH_ST_Heal_ExpedientBossOption || !InBossEncounter());
+                return SCH_ST_Heal_ExpedientOption;
+            case 10:
+                action = SummonSeraph;
+                enabled = IsEnabled(Preset.SCH_ST_Heal_SummonSeraph) && HasPetPresent() && !FairyBusy &&
+                          (!SCH_ST_Heal_SummonSeraphBossOption || !InBossEncounter());
+                return SCH_ST_Heal_SummonSeraphOption;
+            case 11:
+                action = Consolation;
+                enabled = IsEnabled(Preset.SCH_ST_Heal_Consolation) && Gauge.SeraphTimer > 0 && !FairyBusy &&
+                          (!SCH_ST_Heal_ConsolationBossOption || !InBossEncounter());
+                return SCH_ST_Heal_ConsolationOption;
         }
 
         enabled = false;

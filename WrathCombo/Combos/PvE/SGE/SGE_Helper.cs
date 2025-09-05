@@ -4,6 +4,7 @@ using Dalamud.Game.ClientState.Statuses;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using ECommons.GameFunctions;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -72,6 +73,7 @@ internal partial class SGE
 
         bool scholarShieldCheck = !SGE_ST_Heal_EDiagnosisOpts[1] ||
                                   !HasStatusEffect(SCH.Buffs.Galvanize);
+        bool tankCheck = healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank;
 
         switch (i)
         {
@@ -94,19 +96,22 @@ internal partial class SGE
 
             case 3:
                 action = Taurochole;
-                enabled = IsEnabled(Preset.SGE_ST_Heal_Taurochole) && HasAddersgall();
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Taurochole) && HasAddersgall() &&
+                          (tankCheck || !IsInParty() || !SGE_ST_Heal_Taurochole_TankOnly);
                 return SGE_ST_Heal_Taurochole;
 
             case 4:
                 action = Haima;
                 enabled = IsEnabled(Preset.SGE_ST_Heal_Haima) &&
-                          (!SGE_ST_Heal_HaimaBossOption || !InBossEncounter());
+                          (!SGE_ST_Heal_HaimaBossOption || !InBossEncounter()) &&
+                          (tankCheck || !IsInParty() || !SGE_ST_Heal_Haima_TankOnly);
                 return SGE_ST_Heal_Haima;
 
             case 5:
                 action = Krasis;
                 enabled = IsEnabled(Preset.SGE_ST_Heal_Krasis) &&
-                          (!SGE_ST_Heal_KrasisBossOption || !InBossEncounter());
+                          (!SGE_ST_Heal_KrasisBossOption || !InBossEncounter()) &&
+                          (tankCheck || !IsInParty() || !SGE_ST_Heal_Krasis_TankOnly);
                 return SGE_ST_Heal_Krasis;
 
             case 6:
