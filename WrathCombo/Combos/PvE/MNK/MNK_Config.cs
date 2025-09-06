@@ -89,7 +89,18 @@ internal partial class MNK
 
                 case Preset.MNK_Retarget_Thunderclap:
                     DrawAdditionalBoolChoice(MNK_Thunderclap_FieldMouseover,
-                        "Add Field Mouseover", "Add Field Mouseover targetting");
+                        "Add Field Mouseover", "Add Field Mouseover targetting.");
+                    break;
+
+                case Preset.MNK_ST_UseRoE:
+                    DrawAdditionalBoolChoice(MNK_ST_EarthsReply,
+                        $"Add {EarthsReply.ActionName()}", $"Add {EarthsReply.ActionName()} to the rotation.");
+
+                    if (MNK_ST_EarthsReply)
+                    {
+                        DrawSliderInt(0, 100, MNK_ST_EarthsReplyHPThreshold,
+                            $"Add {EarthsReply.ActionName()} when average HP% of the party is at or below.");
+                    }
                     break;
 
                 case Preset.MNK_ST_BeastChakras:
@@ -112,6 +123,7 @@ internal partial class MNK
             MNK_ST_BrotherhoodBossOption = new("MNK_ST_Brotherhood_SubOption", 1),
             MNK_ST_RiddleOfFireBossOption = new("MNK_ST_RiddleOfFire_SubOption", 1),
             MNK_ST_RiddleOfWindBossOption = new("MNK_ST_RiddleOfWind_SubOption", 1),
+            MNK_ST_EarthsReplyHPThreshold = new("MNK_ST_EarthsReplyHPThreshold", 50),
             MNK_ST_SecondWindHPThreshold = new("MNK_ST_SecondWindThreshold", 40),
             MNK_ST_BloodbathHPThreshold = new("MNK_ST_BloodbathThreshold", 30),
             MNK_AoE_BrotherhoodHPThreshold = new("MNK_AoE_Brotherhood_HP", 20),
@@ -122,7 +134,8 @@ internal partial class MNK
             MNK_BH_RoF = new("MNK_BH_RoF", 0);
 
         public static UserBool
-            MNK_Thunderclap_FieldMouseover = new("MNK_Thunderclap_FieldMouseover");
+            MNK_Thunderclap_FieldMouseover = new("MNK_Thunderclap_FieldMouseover"),
+            MNK_ST_EarthsReply = new("MNK_ST_EarthsReply");
 
         public static UserBoolArray
             MNK_BasicCombo = new("MNK_BasicCombo");

@@ -3903,6 +3903,14 @@ public enum Preset
     [CustomComboInfo("Feint Raidwide Option", "Adds Feint when Raidwide is detected casting.", Job.MNK)]
     MNK_ST_Feint = 9095,
 
+    [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo("Riddle of Earth Raidwide Option", "Adds Riddle of Earth when Raidwide is detected casting.", Job.MNK)]
+    MNK_ST_UseRoE = 9096,
+
+    [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo("Mantra Raidwide Option", "Adds Mantra when Raidwide is detected casting.", Job.MNK)]
+    MNK_ST_UseMantra = 9097,
+
     #endregion
 
     #region Monk Advanced AOE

@@ -144,7 +144,6 @@ internal partial class SAM
                         DrawSliderInt(25, 100, SAM_Mangetsu_KenkiOvercapAmount,
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
                     break;
-
             }
         }
         #region Variables
