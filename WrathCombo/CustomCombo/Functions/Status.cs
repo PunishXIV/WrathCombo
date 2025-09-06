@@ -64,21 +64,21 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="statusId">List Of StatusIDs</param>
     /// <param name="target">Optional Target</param>
-    /// <param name="anyOwner">Check if the Player owns/created the statuses, true means anyone owns</param> 
+    /// <param name="anyOwner">Check if the Player owns/created the statuses, true means anyone owns</param>
     /// <seealso cref="HasStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)"/>
     public static bool HasAnyStatusEffects(ushort[] status, IGameObject? target = null, bool anyOwner = false) =>
         status.Any(statusId => HasStatusEffect(statusId, target ?? LocalPlayer, anyOwner));
-    
+
     /// <summary>
     /// Checks to see if all statuses are on the Player or an optional target
     /// </summary>
     /// <param name="statusId">List Of StatusIDs</param>
     /// <param name="target">Optional Target</param>
-    /// <param name="anyOwner">Check if the Player owns/created the statuses, true means anyone owns</param>  
+    /// <param name="anyOwner">Check if the Player owns/created the statuses, true means anyone owns</param>
     /// <seealso cref="HasStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)"/>
     public static bool HasAllStatusEffects(ushort[] status, IGameObject? target = null, bool anyOwner = false) =>
         status.All(statusId => HasStatusEffect(statusId, target ?? LocalPlayer, anyOwner));
-    
+
     /// <summary>
     /// Gets remaining time of a Status Effect
     /// </summary>
@@ -158,7 +158,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     public static bool PlayerHasActionPenalty()
     {
-        bool hasActionPenalty = 
+        bool hasActionPenalty =
             //Player.IsInDuty &&  <-?
             Player.Status.Any(s =>
                 // Acceleration Bomb within Timeframe
@@ -204,7 +204,19 @@ internal abstract partial class CustomComboFunctions
 
                 return false;
 
-            case 801 or 805 or 1122: //Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
+            case 508: // The Void Ark
+                // Sawtooth 5103
+                // Irminsul 5105
+                if ((targetID is 5105 or 5103) &&
+                    ((Player.Job.IsPhysicalRangedDps() && HasStatusEffect(941, tar, true)) ||
+                     (Player.Job.IsMagicalRangedDps() && HasStatusEffect(942, tar, true))
+                    )
+                   ) return true;
+                // Cuchulainn 5139, Checking one of the Stoneskins
+                if (targetID is 5139 && HasStatusEffect(152, tar, true)) return true;
+                return false;
+
+            case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
                 // Omega-M = 9339
                 // Omega-F = 9340
                 if (targetID is 9339 or 9340) //numbers are for Regular
@@ -283,12 +295,12 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
                 }
                 return false;
-            
+
             case 1267: //Sunken Temple of Qarn Temple Guardian
                 if (targetID is 18300 && HasStatusEffect(350, tar, true)) return true;
                 return false;
-            
-            case 1292: //Meso Terminal 
+
+            case 1292: //Meso Terminal
                 // Bloody Headsman = 18576 a
                 // Pale Headsman = 18577 b
                 // Ravenous Headsman = 18578 y
@@ -299,7 +311,7 @@ internal abstract partial class CustomComboFunctions
                 // Beta = 4543 Player / 4547 Boss
                 // Gamma = 4544 Player / 4548 Boss
                 // Delta = 4545 Player / 4549 Boss
-                
+
                 if (targetID is 18576 or 18577 or 18578 or 18579 or 18642)
                 {
                     if (HasStatusEffect(3065)) return targetID != 18642; // Hellmaker checking for fire floor debuff
@@ -333,7 +345,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     /// <summary>
-    /// Checks if the target has any remaining entries in the status list to be able to add a new status, or if the status is already on them from the player. 
+    /// Checks if the target has any remaining entries in the status list to be able to add a new status, or if the status is already on them from the player.
     /// <para>Does not actually validate status logic i.e player buffs on enemies isn't checked.</para>
     /// </summary>
     /// <param name="target"></param>
