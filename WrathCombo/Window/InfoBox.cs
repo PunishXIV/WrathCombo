@@ -2,18 +2,23 @@
 using Dalamud.Interface.Utility.Raii;
 using System;
 using System.Numerics;
+using Dalamud.Interface.Style;
+
 namespace WrathCombo.Window;
 
 internal class InfoBox
 {
-    public Vector4 Color { get; set; } = Colors.White;
+    private static StyleModelV1 DalamudStyle => StyleModelV1.Get();
+    
+    public Vector4 Color { get; set; } = DalamudStyle.Colors[nameof(ImGuiCol.Border)];
+    
     public Action ContentsAction { get; set; } = null!;
     public Func<bool> ContentsFunc { get; set; } = null!;
     public bool FuncRes { get; set; }
     public float CurveRadius { get; set; } = 1f;
     public float ContentsOffset { get; set; } = 0f;
     public Vector2 Size { get; set; } = Vector2.Zero;
-    public float BorderThickness { get; set; } = 2.0f;
+    public float BorderThickness { get; set; } = 1f;
     public int SegmentResolution { get; set; } = 10;
     public Vector2 Offset { get; set; } = Vector2.Zero;
     public string Label { get; set; } = " "; // Can't be a completely empty string, as it causes CTDs on API13. AIP-ing it, but leaving it in place if someone wants to build it out later
@@ -21,9 +26,10 @@ internal class InfoBox
     private static ImDrawListPtr DrawList => ImGui.GetWindowDrawList();
     private uint ColorU32 => ImGui.GetColorU32(Color);
     private Vector2 StartPosition { get; set; }
-    public bool Debug { get; set; } = false;
     public bool HasMaxWidth { get; set; } = false;
     public bool IsSubBox { get; set; } = false;
+    
+    public bool Debug { get; } = false;
 
     public void Draw()
     {

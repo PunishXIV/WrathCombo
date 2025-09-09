@@ -136,8 +136,8 @@ internal partial class DRG
             DRG_ST_LanceBossOption = new("DRG_ST_Lance_SubOption", 1),
             DRG_ST_SecondWindHPThreshold = new("DRG_STSecondWindThreshold", 40),
             DRG_ST_BloodbathHPThreshold = new("DRG_STBloodbathThreshold", 30),
-            DRG_AoE_LitanyHPTreshold = new("DRG_AoE_LitanyHP", 20),
-            DRG_AoE_LanceChargeHPTreshold = new("DRG_AoE_LanceChargeHP", 20),
+            DRG_AoE_LitanyHPTreshold = new("DRG_AoE_LitanyHP", 40),
+            DRG_AoE_LanceChargeHPTreshold = new("DRG_AoE_LanceChargeHP", 40),
             DRG_AoE_SecondWindHPThreshold = new("DRG_AoE_SecondWindThreshold", 40),
             DRG_AoE_BloodbathHPThreshold = new("DRG_AoE_BloodbathThreshold", 30);
 

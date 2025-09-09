@@ -67,6 +67,11 @@ internal partial class RPR
                         $"Set a HP% Threshold for when {WhorlOfDeath.ActionName()} will not be automatically applied to the target.");
                     break;
 
+                case Preset.RPR_AoE_ArcaneCircle:
+                    DrawSliderInt(0, 100, RPR_AoE_ArcaneCircleHPThreshold,
+                        $"Stop Using {ArcaneCircle.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                    break;
+
                 case Preset.RPR_ST_ComboHeals:
                     DrawSliderInt(0, 100, RPR_STSecondWindHPThreshold,
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
@@ -101,7 +106,6 @@ internal partial class RPR
                     DrawHorizontalMultiChoice(RPR_SoulsowOptions,
                         $"{BloodStalk.ActionName()}", $"Adds {Soulsow.ActionName()} to {BloodStalk.ActionName()}.", 5, 4);
                     break;
-
             }
         }
 
@@ -116,7 +120,8 @@ internal partial class RPR
             RPR_ST_ArcaneCircleBossOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
             RPR_STSecondWindHPThreshold = new("RPR_STSecondWindThreshold", 40),
             RPR_STBloodbathHPThreshold = new("RPR_STBloodbathThreshold", 30),
-            RPR_WoDHPThreshold = new("RPR_WoDThreshold", 20),
+            RPR_WoDHPThreshold = new("RPR_WoDThreshold", 40),
+            RPR_AoE_ArcaneCircleHPThreshold = new("RPR_AoE_ArcaneCircleHPThreshold", 40),
             RPR_AoESecondWindHPThreshold = new("RPR_AoESecondWindThreshold", 40),
             RPR_AoEBloodbathHPThreshold = new("RPR_AoEBloodbathThreshold", 30);
 

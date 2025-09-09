@@ -763,7 +763,7 @@ public enum Preset
     [AutoAction(true, true)]
     [ReplaceSkill(AST.Helios)]
     [ConflictingCombos(AST_AoE_Heals)]
-    [CustomComboInfo("Simple Healing Mode - Single Target", "Replaces Helios with a full one-button single target healing utility." +
+    [CustomComboInfo("Simple Healing Mode - AoE", "Replaces Helios with a full one-button single target healing utility." +
                                                             "\nThis is the ideal option for newcomers to the job. Particularly with autorotation.", Job.AST)]
     [SimpleCombo]
     [PossiblyRetargeted]
@@ -932,6 +932,7 @@ public enum Preset
 
     [AutoAction(false, true)]
     [ReplaceSkill(AST.Benefic)]
+    [ConflictingCombos(AST_Simple_ST_Heals)]
     [CustomComboInfo("Advanced Healing Mode - Single Target", "Replaces Benefic with a one button healing replacement.",
         Job.AST)]
     [PossiblyRetargeted(AST.Benefic2)]
@@ -953,6 +954,12 @@ public enum Preset
         "Essential Dignity will be added when the target is at or below the value set", Job.AST)]
     [PossiblyRetargeted(AST.EssentialDignity)]
     AST_ST_Heals_EssentialDignity = 1024,
+    
+    [ParentCombo(AST_ST_Heals_EssentialDignity)]
+    [CustomComboInfo("Emergency Essential Dignity Option",
+        "Will retain a charge of Essential Dignity to use at a different threshold.", Job.AST)]
+    [PossiblyRetargeted(AST.EssentialDignity)]
+    AST_ST_Heals_EssentialDignity_Emergency = 1096,
 
     [ParentCombo(AST_ST_Heals)]
     [CustomComboInfo("Celestial Intersection Option", "Adds Celestial Intersection.", Job.AST)]
@@ -998,6 +1005,7 @@ public enum Preset
 
     [AutoAction(true, true)]
     [ReplaceSkill(AST.Helios, AST.AspectedHelios, AST.HeliosConjuction)]
+    [ConflictingCombos(AST_Simple_AoE_Heals)]
     [CustomComboInfo("Advanced Healing Mode - AoE",
         "Replaces Aspected Helios/Helios Conjunction or Helios with a one button healing replacement."
         + "This Spell will be consider the bottom priority with no checks regardless of below settings.", Job.AST)]
@@ -1095,7 +1103,7 @@ public enum Preset
     AST_Raidwide_NeutralSect = 1077,
 
     [ParentCombo(AST_Raidwide)]
-    [CustomComboInfo("RaidWide Aspected Helios Option", "Additionally, Will try to cast Aspected Helios for with Neutral Sect Buff for shields when a raidwide casting. " +
+    [CustomComboInfo("RaidWide Aspected Helios Option", "Additionally, Will try to cast Aspected Helios with Neutral Sect Buff for shields when a raidwide casting. " +
                                                            "\nWill be used in all 4 main combos.", Job.AST)]
     AST_Raidwide_AspectedHelios = 1078,
 
@@ -3903,6 +3911,14 @@ public enum Preset
     [CustomComboInfo("Feint Raidwide Option", "Adds Feint when Raidwide is detected casting.", Job.MNK)]
     MNK_ST_Feint = 9095,
 
+    [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo("Riddle of Earth Raidwide Option", "Adds Riddle of Earth when Raidwide is detected casting.", Job.MNK)]
+    MNK_ST_UseRoE = 9096,
+
+    [ParentCombo(MNK_ST_AdvancedMode)]
+    [CustomComboInfo("Mantra Raidwide Option", "Adds Mantra when Raidwide is detected casting.", Job.MNK)]
+    MNK_ST_UseMantra = 9097,
+
     #endregion
 
     #region Monk Advanced AOE
@@ -5589,7 +5605,7 @@ public enum Preset
     [AutoAction(true, true)]
     [ReplaceSkill(SGE.Prognosis)]
     [ConflictingCombos(SGE_AoE_Heal)]
-    [CustomComboInfo("Simple Healing Mode - Single Target", "Replaces Prognosis with a full one-button single target healing utility." +
+    [CustomComboInfo("Simple Healing Mode - AoE", "Replaces Prognosis with a full one-button single target healing utility." +
                                                             "\nThis is the ideal option for newcomers to the job. Particularly with autorotation.", Job.SGE)]
     [SimpleCombo]
     [PossiblyRetargeted]
@@ -5702,6 +5718,7 @@ public enum Preset
 
     [AutoAction(false, true)]
     [ReplaceSkill(SGE.Diagnosis)]
+    [ConflictingCombos(SGE_Simple_ST_Heal)]
     [CustomComboInfo("Advanced Healing Mode - Single Target", "Change Diagnosis into various options.", Job.SGE)]
     [PossiblyRetargeted(SGE.Diagnosis)]
     [HealingCombo]
@@ -5788,6 +5805,7 @@ public enum Preset
 
     [AutoAction(true, true)]
     [ReplaceSkill(SGE.Prognosis)]
+    [ConflictingCombos(SGE_Simple_AoE_Heal)]
     [CustomComboInfo("Advanced Healing Mode - AoE", "Change Prognosis into various options.", Job.SGE)]
     [HealingCombo]
     SGE_AoE_Heal = 14026,
@@ -6354,7 +6372,7 @@ public enum Preset
     [AutoAction(true, true)]
     [ReplaceSkill(SCH.Succor)]
     [ConflictingCombos(SCH_AoE_Heal)]
-    [CustomComboInfo("Simple Healing Mode - Single Target", "Replaces Succor with a full one-button single target healing utility." +
+    [CustomComboInfo("Simple Healing Mode - AoE", "Replaces Succor with a full one-button single target healing utility." +
                                                             "\nThis is the ideal option for newcomers to the job. Particularly with autorotation.", Job.SCH)]
     [SimpleCombo]
     [PossiblyRetargeted]
@@ -6458,6 +6476,7 @@ public enum Preset
     #region  ST Healing
     [AutoAction(false, true)]
     [ReplaceSkill(SCH.Physick)]
+    [ConflictingCombos(SCH_Simple_ST_Heal)]
     [CustomComboInfo("Advanced Healing Mode - Single Target",
         "Change Physick based on the below options::", Job.SCH)]
     [PossiblyRetargeted(SCH.Physick)]
@@ -6517,16 +6536,32 @@ public enum Preset
     [ParentCombo(SCH_ST_Heal)]
     [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing", Job.SCH)]
     SCH_ST_Heal_FeyBlessing = 16069,
-
-    [AutoAction(true, true)]
-    [ReplaceSkill(SCH.Succor)]
-    [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below:", Job.SCH)]
-    [HealingCombo]
-    SCH_AoE_Heal = 16018,
-
+    
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Seraphism Option", "Use Seraphism", Job.SCH)]
+    SCH_ST_Heal_Seraphism = 16086,
+    
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Expedient Option", "Use Expedient", Job.SCH)]
+    SCH_ST_Heal_Expedient = 16087,
+    
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph", Job.SCH)]
+    SCH_ST_Heal_SummonSeraph = 16088,
+    
+    [ParentCombo(SCH_ST_Heal)]
+    [CustomComboInfo("Consolation Option", "Use Consolation", Job.SCH)]
+    SCH_ST_Heal_Consolation = 16089,
     #endregion
 
     #region AoE Healing
+    [AutoAction(true, true)]
+    [ReplaceSkill(SCH.Succor)]
+    [ConflictingCombos(SCH_Simple_AoE_Heal)]
+    [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below:", Job.SCH)]
+    [HealingCombo]
+    SCH_AoE_Heal = 16018,
+    
     [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Indomitability Option", "Use Indomitabilty", Job.SCH)]
     SCH_AoE_Heal_Indomitability = 16022,
@@ -6726,7 +6761,7 @@ public enum Preset
     SCH_Raidwide_Expedient = 16064,
     #endregion
 
-    // Last value = 16082
+    // Last value = 16089
 
     #endregion
 
@@ -7817,11 +7852,10 @@ public enum Preset
     [PossiblyRetargeted]
     WHM_SimpleSTHeals = 19052,
 
-
     [AutoAction(true, true)]
     [ReplaceSkill(WHM.Medica1)]
     [ConflictingCombos(WHM_AoEHeals)]
-    [CustomComboInfo("Simple Healing Mode - Single Target", "Replaces Medica with a full one-button single target healing utility." +
+    [CustomComboInfo("Simple Healing Mode - AoE", "Replaces Medica with a full one-button single target healing utility." +
                                                             "\nThis is the ideal option for newcomers to the job. Particularly with autorotation.", Job.WHM)]
     [SimpleCombo]
     [PossiblyRetargeted]
@@ -7939,6 +7973,7 @@ public enum Preset
 
     [AutoAction(false, true)]
     [ReplaceSkill(WHM.Cure)]
+    [ConflictingCombos(WHM_SimpleSTHeals)]
     [CustomComboInfo("Advanced Healing Mode - Single Target", "Replaces Cure with a one button single target healing setup.",
         Job.WHM)]
     [PossiblyRetargeted(WHM.Cure)]
@@ -7957,6 +7992,12 @@ public enum Preset
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Thin Air Option", "Adds Thin Air.", Job.WHM)]
     WHM_STHeals_ThinAir = 19304,
+    
+    [ParentCombo(WHM_STHeals)]
+    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
+                                               "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
+    [Retargeted]
+    WHM_STHeals_Misery = 19313,
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Regen Option", "Adds Regen.", Job.WHM)]
@@ -8009,6 +8050,7 @@ public enum Preset
 
     [AutoAction(true, true)]
     [ReplaceSkill(WHM.Medica1)]
+    [ConflictingCombos(WHM_Simple_AoEHeals)]
     [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Medica with a one button AoE healing setup.", Job.WHM)]
     [HealingCombo]
     WHM_AoEHeals = 19007,
@@ -8022,7 +8064,9 @@ public enum Preset
     WHM_AoEHeals_ThinAir = 19200,
 
     [ParentCombo(WHM_AoEHeals)]
-    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery when available.", Job.WHM)]
+    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
+                                               "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
+    [Retargeted]
     WHM_AoEHeals_Misery = 19010,
 
     [ParentCombo(WHM_AoEHeals)]

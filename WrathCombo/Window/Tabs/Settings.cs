@@ -21,12 +21,12 @@ internal class Settings : ConfigWindow
         {
             ImGui.Text("This tab allows you to customise your options for Wrath Combo.");
 
-                #region UI Options
+            #region UI Options
 
             ImGuiEx.Spacing(new Vector2(0, 20));
             ImGuiEx.TextUnderlined("Main UI Options");
 
-                #region SubCombos
+            #region SubCombos
 
             var hideChildren = Service.Configuration.HideChildren;
 
@@ -38,9 +38,9 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("Hides the sub-options of disabled features.");
 
-                #endregion
+            #endregion
 
-                #region Conflicting
+            #region Conflicting
 
             bool hideConflicting = Service.Configuration.HideConflictedCombos;
             if (ImGui.Checkbox("Hide Conflicted Combos", ref hideConflicting))
@@ -51,9 +51,9 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("Hides any combos that conflict with others you have selected.");
 
-                #endregion
+            #endregion
 
-                #region Shorten DTR bar text
+            #region Shorten DTR bar text
 
             bool shortDTRText = Service.Configuration.ShortDTRText;
 
@@ -70,9 +70,9 @@ internal class Settings : ConfigWindow
                 "\nThis option will make the number of active Auto-Mode combos not show."
             );
 
-                #endregion
+            #endregion
 
-                #region Message of the Day
+            #region Message of the Day
 
             bool motd = Service.Configuration.HideMessageOfTheDay;
 
@@ -84,9 +84,9 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("Disables the Message of the Day message in your chat when you login.");
 
-                #endregion
+            #endregion
 
-                #region TargetHelper
+            #region TargetHelper
 
             Vector4 colour = Service.Configuration.TargetHighlightColor;
             if (ImGui.ColorEdit4("Target Highlight Colour", ref colour, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaPreview | ImGuiColorEditFlags.AlphaBar))
@@ -100,11 +100,25 @@ internal class Settings : ConfigWindow
             ImGui.SameLine();
             ImGui.TextColored(ImGuiColors.DalamudGrey, $"(Only used by {Job.AST.Name()} currently)");
 
-                #endregion
+            #endregion
+
+            #region Child Borders
+
+            bool childBorders = Service.Configuration.ShowBorderAroundOptionsWithChildren;
+
+            if (ImGui.Checkbox("Show Borders around Job Options with sub-options", ref childBorders))
+            {
+                Service.Configuration.ShowBorderAroundOptionsWithChildren = childBorders;
+                Service.Configuration.Save();
+            }
+
+            ImGuiComponents.HelpMarker("Toggles the borders that show around jobs' options that have multiple children");
+
+            #endregion
 
             ImGuiEx.Spacing(new Vector2(0, 10));
 
-                #region Open to PvE
+            #region Open to PvE
 
             if (ImGui.Checkbox("Open Wrath to the PvE Features tab", ref
                 Service.Configuration.OpenToPvE))
@@ -113,9 +127,9 @@ internal class Settings : ConfigWindow
             ImGuiComponents.HelpMarker("When you open Wrath with `/wrath`, it will open to the PvE Features tab, instead of the last tab you were on." +
                                        "\nSame as always using the `/wrath pve` command to open Wrath.");
 
-                #endregion
+            #endregion
 
-                #region Open to PvP
+            #region Open to PvP
 
             if (ImGui.Checkbox("Open Wrath to the PvP Features tab in PvP areas", ref
                 Service.Configuration.OpenToPvP))
@@ -127,52 +141,52 @@ internal class Settings : ConfigWindow
             ImGui.SameLine();
             ImGui.TextColored(ImGuiColors.DalamudGrey, $"(Will override the option above)");
 
-                #endregion
+            #endregion
 
-                #region Open to Current Job
+            #region Open to Current Job
 
             if (ImGui.Checkbox("Open PvE Features UI to Current Job on Opening", ref Service.Configuration.OpenToCurrentJob))
                 Service.Configuration.Save();
 
             ImGuiComponents.HelpMarker("When you open Wrath's UI, if your last tab was PvE, it will automatically open to the job you are currently playing.");
 
-                #endregion
+            #endregion
 
-                #region Open to Current Job on Switching
+            #region Open to Current Job on Switching
 
             if (ImGui.Checkbox("Open PvE Features UI to Current Job on Switching Jobs", ref Service.Configuration.OpenToCurrentJobOnSwitch))
                 Service.Configuration.Save();
 
             ImGuiComponents.HelpMarker("When you switch jobs, it will automatically switch the PvE Features tab to the job you are currently playing.");
 
-                #endregion
+            #endregion
 
-                #endregion
+            #endregion
 
-                #region Rotation Behavior Options
+            #region Rotation Behavior Options
 
             ImGuiEx.Spacing(new Vector2(0, 20));
             ImGuiEx.TextUnderlined("Rotation Behavior Options");
 
-                #region Spells while Moving
+            #region Spells while Moving
 
             if (ImGui.Checkbox("Block spells if moving", ref Service.Configuration.BlockSpellOnMove))
                 Service.Configuration.Save();
 
             ImGuiComponents.HelpMarker("Completely blocks spells from being used if you are moving, by replacing your actions with Savage Blade.\nThis would supersede combo-specific movement options, available for most jobs.\n\nIt is recommended to keep this off, as most combos already handle this more gracefully.\nDefault: Off");
 
-                #endregion
+            #endregion
 
-                #region Action Changing
+            #region Action Changing
 
             if (ImGui.Checkbox("Action Replacing", ref Service.Configuration.ActionChanging))
                 Service.Configuration.Save();
 
             ImGuiComponents.HelpMarker("Controls whether Actions will be Intercepted Replaced with combos from the plugin.\nIf disabled, your manual presses of abilities will no longer be affected by your Wrath settings.\n\nAuto-Rotation will work regardless of the setting.\n\nControlled by the `/wrath combo` command.\n\nIt is REQUIRED to keep this on if you use want to use Wrath without Auto Rotation.\nDefault: On");
 
-                #endregion
+            #endregion
 
-                #region Performance Mode
+            #region Performance Mode
 
             if (Service.Configuration.ActionChanging) {
                 ImGui.Indent();
@@ -183,9 +197,9 @@ internal class Settings : ConfigWindow
                 ImGui.Unindent();
             }
 
-                #endregion
+            #endregion
 
-                #region Queued Action Suppression
+            #region Queued Action Suppression
 
             if (ImGui.Checkbox($"Queued Action Suppression", ref Service.Configuration.SuppressQueuedActions))
                 Service.Configuration.Save();
@@ -211,9 +225,9 @@ internal class Settings : ConfigWindow
                                        $"\nThis was not part of the first feature, therefore an incorrect action." +
                                        $"\n\nOur workaround for this is to disable all other actions being replaced if they don't match the queued action, which this setting controls.");
 
-                #endregion
+            #endregion
 
-                #region Throttle
+            #region Throttle
 
             var len = ImGui.CalcTextSize("milliseconds").X;
 
@@ -244,9 +258,9 @@ internal class Settings : ConfigWindow
                 "\nValues over 500ms are NOT recommended." +
                 "\nDefault: 50");
 
-                #endregion
+            #endregion
 
-                #region Movement Check Delay
+            #region Movement Check Delay
 
             ImGui.PushItemWidth(75);
             if (ImGui.InputFloat("###MovementLeeway", ref Service.Configuration.MovementLeeway))
@@ -261,9 +275,9 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("Many features check if you are moving to decide actions, this will allow you to set a delay on how long you need to be moving before it recognizes you as moving.\nThis allows you to not have to worry about small movements affecting your rotation, primarily for casters.\n\nIt is recommended to keep this value between 0 and 1 seconds.\nDefault: 0.0");
 
-                #endregion
+            #endregion
 
-                #region Opener Failure Timeout
+            #region Opener Failure Timeout
 
             if (ImGui.InputFloat("###OpenerTimeout", ref Service.Configuration.OpenerTimeout))
                 Service.Configuration.Save();
@@ -277,9 +291,9 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("During an opener if this amount of time has passed since your last action, it will fail the opener and resume with non-opener functionality.\n\nIt is recommended to keep this value below 6.\nDefault: 4.0");
 
-                #endregion
+            #endregion
 
-                #region Melee Offset
+            #region Melee Offset
             var offset = (float)Service.Configuration.MeleeOffset;
 
             if (ImGui.InputFloat("###MeleeOffset", ref offset))
@@ -295,9 +309,9 @@ internal class Settings : ConfigWindow
             ImGui.Text($"   -   Melee Distance Offset");
 
             ImGuiComponents.HelpMarker("Offset of melee check distance.\nFor those who don't want to immediately use their ranged attack if the boss walks slightly out of range.\n\nFor example, a value of -0.5 would make you have to be 0.5 yalms closer to the target,\nor a value of 2 would disable triggering of ranged features until you are 2 yalms further from the hitbox.\n\nIt is recommended to keep this value at 0.\nDefault: 0.0");
-                #endregion
+            #endregion
 
-                #region Interrupt Delay
+            #region Interrupt Delay
 
             var delay = (int)(Service.Configuration.InterruptDelay * 100d);
 
@@ -316,9 +330,9 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("The percentage of a total cast time to wait before interrupting.\nApplies to all interrupts, in every job's combos.\n\nIt is recommend to keep this value below 50%.\nDefault: 0%");
 
-                #endregion
+            #endregion
                 
-                #region Maximum Weaves
+            #region Maximum Weaves
 
             ImGui.PushItemWidth(75);
             if (ImGui.SliderInt("###MaximumWeaves", ref Service.Configuration.MaximumWeavesPerWindow, 1, 3))
@@ -333,18 +347,18 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("This controls how many oGCDs are allowed between GCDs.\nThe sort of 'default' for the game is double weaving, but triple weaving is completely possible to do with low enough latency (of every kind); but if you struggle with latency of some sort, single weaving may even be a good answer for you.\nTriple weaving is already done in a manner where we try to avoid clipping GCDs, and as such doesn't happen particularly often even if you do have good latency, so it is a safe option as far as parses/etc goes.\n\nDefault: 2");
 
-                #endregion
+            #endregion
 
-                #endregion
+            #endregion
 
-                #region Targeting Options
+            #region Targeting Options
 
             ImGuiEx.Spacing(new Vector2(0, 20));
             ImGuiEx.TextUnderlined("Targeting Options");
 
             var useCusHealStack = Service.Configuration.UseCustomHealStack;
 
-                #region Retarget ST Healing Actions
+            #region Retarget ST Healing Actions
 
             bool retargetHealingActions =
                 Service.Configuration.RetargetHealingActionsToStack;
@@ -374,11 +388,11 @@ internal class Settings : ConfigWindow
                 "These NPCs will not work with any role based custom stacks (even if an NPC looks like a tank, they're not classed as one)\n\n" +
                 "Default: Off");
 
-                #endregion
+            #endregion
 
             ImGuiEx.Spacing(new Vector2(0, 10));
 
-                #region Current Heal Stack
+            #region Current Heal Stack
 
             ImGui.TextUnformatted("Current Heal Stack:");
 
@@ -418,9 +432,9 @@ internal class Settings : ConfigWindow
 
             ImGuiEx.Spacing(new Vector2(0, 10));
 
-                #endregion
+            #endregion
 
-                #region Heal Stack Customization Options
+            #region Heal Stack Customization Options
 
             var labelText = "Heal Stack Customization Options";
             // Nest the Collapse into a Child of varying size, to be able to limit its width
@@ -440,7 +454,7 @@ internal class Settings : ConfigWindow
             {
                 ImGui.BeginGroup();
 
-                    #region Default Heal Stack Include: UI MouseOver
+                #region Default Heal Stack Include: UI MouseOver
 
                 if (useCusHealStack) ImGui.BeginDisabled();
 
@@ -457,9 +471,9 @@ internal class Settings : ConfigWindow
 
                 ImGuiComponents.HelpMarker("This will add any UI MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI.\n\nIt is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have UI MouseOver targets in your Redirect/Reaction configuration).\nDefault: Off");
 
-                    #endregion
+                #endregion
 
-                    #region Default Heal Stack Include: Field MouseOver
+                #region Default Heal Stack Include: Field MouseOver
 
                 if (useCusHealStack) ImGui.BeginDisabled();
 
@@ -476,9 +490,9 @@ internal class Settings : ConfigWindow
 
                 ImGuiComponents.HelpMarker("This will add any MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any nameplate UI or character model.\n\nIt is recommended to enable this only if you regularly intentionally use field mouseover targeting already.\nDefault: Off");
 
-                    #endregion
+                #endregion
 
-                    #region Default Heal Stack Include: Focus Target
+                #region Default Heal Stack Include: Focus Target
 
                 if (useCusHealStack) ImGui.BeginDisabled();
 
@@ -495,9 +509,9 @@ internal class Settings : ConfigWindow
 
                 ImGuiComponents.HelpMarker("This will add your focus target under your hard and soft targets in the Default Heal Stack, overriding the rest of the stack if you have a living focus target.\n\nDefault: Off");
 
-                    #endregion
+                #endregion
 
-                    #region Default Heal Stack Include: Lowest HP Ally
+                #region Default Heal Stack Include: Lowest HP Ally
 
                 if (useCusHealStack) ImGui.BeginDisabled();
 
@@ -522,13 +536,13 @@ internal class Settings : ConfigWindow
                 }
                 if (useCusHealStack) ImGui.EndDisabled();
 
-                    #endregion
+                #endregion
 
                 ImGuiEx.Spacing(new Vector2(5, 5));
                 ImGui.TextUnformatted("Or");
                 ImGuiEx.Spacing(new Vector2(0, 5));
 
-                    #region Use Custom Heal Stack
+                #region Use Custom Heal Stack
 
                 bool useCustomHealStack = Service.Configuration.UseCustomHealStack;
                 if (ImGui.Checkbox("Use a Custom Heal Stack Instead", ref useCustomHealStack))
@@ -539,9 +553,9 @@ internal class Settings : ConfigWindow
 
                 ImGuiComponents.HelpMarker("Select this if you would rather make your own stack of target priorities for Heal Targets instead of using our default stack.\n\nIt is recommended to use this to align with your Redirect/Reaction configuration if you're not using the Retarget Healing Actions setup; otherwise it is preference.\nDefault: Off");
 
-                    #endregion
+                #endregion
 
-                    #region Custom Heal Stack Manager
+                #region Custom Heal Stack Manager
 
                 if (Service.Configuration.UseCustomHealStack)
                 {
@@ -564,7 +578,7 @@ internal class Settings : ConfigWindow
                     ImGui.Unindent();
                 }
 
-                    #endregion
+                #endregion
 
                 ImGui.EndGroup();
 
@@ -578,11 +592,11 @@ internal class Settings : ConfigWindow
             if (_unCollapsed)
                 ImGuiEx.Spacing(new Vector2(0, 10));
 
-                #endregion
+            #endregion
 
             ImGuiEx.Spacing(new Vector2(0, 10));
 
-                #region Raise Stack Manager
+            #region Raise Stack Manager
 
             ImGui.TextUnformatted("Current Raise Stack:");
 
@@ -610,16 +624,16 @@ internal class Settings : ConfigWindow
             ImGui.TextDisabled("(all targets are checked for rezz-ability)");
             ImGui.Unindent();
 
-                #endregion
+            #endregion
 
-                #endregion
+            #endregion
 
-                #region Troubleshooting Options
+            #region Troubleshooting Options
 
             ImGuiEx.Spacing(new Vector2(0, 20));
             ImGuiEx.TextUnderlined("Troubleshooting / Analysis Options");
 
-                #region Combat Log
+            #region Combat Log
 
             bool showCombatLog = Service.Configuration.EnabledOutputLog;
 
@@ -630,17 +644,17 @@ internal class Settings : ConfigWindow
             }
 
             ImGuiComponents.HelpMarker("Every time you use an action, the plugin will print it to the chat.");
-                #endregion
+            #endregion
 
-                #region Opener Log
+            #region Opener Log
 
             if (ImGui.Checkbox($"Output opener status to chat", ref Service.Configuration.OutputOpenerLogs))
                 Service.Configuration.Save();
 
             ImGuiComponents.HelpMarker("Every time your class's opener is ready, fails, or finishes as expected, it will print to the chat.");
-                #endregion
+            #endregion
 
-                #region Debug File
+            #region Debug File
 
             if (ImGui.Button("Create Debug File"))
             {
@@ -652,16 +666,16 @@ internal class Settings : ConfigWindow
 
             ImGuiComponents.HelpMarker("Will generate a debug file on your desktop.\nUseful to give developers to help troubleshoot issues.\nThe same as using the following command: /wrath debug");
 
-                #endregion
+            #endregion
 
-                #endregion
+            #endregion
         }
     }
 
-        #region Custom Heal Stack Manager Methods
+    #region Custom Heal Stack Manager Methods
 
     private static bool _unCollapsed;
     private static float _healStackCustomizationHeight = 0;
 
-        #endregion
+    #endregion
 }

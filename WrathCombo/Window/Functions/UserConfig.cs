@@ -900,7 +900,7 @@ public static class UserConfig
                 ImGui.SameLine();
                 ImGui.PushItemWidth(100f);
 
-                if (ImGui.InputInt($"###Priority{config.Name}{currentItem}", ref curVal))
+                if (ImGui.InputInt($"###Priority{config.Name}{currentItem}", ref curVal, 1))
                 {
                     for (int i = 0; i < maxValues; i++)
                     {

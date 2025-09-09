@@ -249,7 +249,7 @@ internal partial class BLM
             BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 0),
             BLM_AoE_LeyLinesMovement = new("BLM_AoE_LeyLinesMovement", 0),
             BLM_AoE_LeyLinesOption = new("BLM_AoE_LeyLinesOption", 40),
-            BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 20),
+            BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 40),
             BLM_B1to3 = new("BLM_B1to3", 0),
             BLM_B4toDespair = new("BLM_B4toDespair", 0),
             BLM_F1to3 = new("BLM_F1to3", 0),

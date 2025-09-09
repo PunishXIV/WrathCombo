@@ -167,7 +167,7 @@ internal static class SimpleTarget
                     (cfg.UseLowestHPOverrideInDefaultHealStack
                         ? CustomLogic(LowestHPPAlly.IfWithinRange().IfMissingHP())
                         : null) ??
-                   Self;
+                   CustomLogic(Self);
 
             #endregion
 
@@ -204,7 +204,7 @@ internal static class SimpleTarget
 
                 // Fall back to Self, if the stack is small and returned nothing
                 if (Service.Configuration.CustomHealStack.Length <= 3)
-                    return Self;
+                    return CustomLogic(Self);
             }
 
             #endregion
@@ -335,6 +335,12 @@ internal static class SimpleTarget
                                  x.IsWithinRange());
 
     #region Enemies
+    public static IGameObject? NearestEnemyTarget =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsInCombat() && x.IsNotInvincible())
+            .OrderBy(x => GetTargetDistance(x))
+            .FirstOrDefault();
 
     public static IGameObject? LowestHPEnemy =>
         Svc.Objects
@@ -423,7 +429,6 @@ internal static class SimpleTarget
             .ThenByDescending(x => (float)x.CurrentHp / x.MaxHp)
             .FirstOrDefault();
     }
-
     public static IGameObject? BardRefreshableEnemy
     (uint refreshAction,
         ushort dotDebuff1,

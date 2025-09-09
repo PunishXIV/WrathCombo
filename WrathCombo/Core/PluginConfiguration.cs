@@ -21,22 +21,22 @@ namespace WrathCombo.Core;
 [Serializable]
 public class PluginConfiguration : IPluginConfiguration
 {
-        #region Version
+    #region Version
 
     /// <summary> Gets or sets the configuration version. </summary>
     public int Version { get; set; } = 5;
 
-        #endregion
+    #endregion
 
-        #region EnabledActions
+    #region EnabledActions
 
     /// <summary> Gets or sets the collection of enabled combos. </summary>
     [JsonProperty("EnabledActionsV6")]
     public HashSet<Preset> EnabledActions { get; set; } = [];
 
-        #endregion
+    #endregion
 
-        #region Settings Options
+    #region Settings Options
 
     /// <summary> Gets or sets a value indicating whether to output combat log to the chatbox. </summary>
     public bool EnabledOutputLog { get; set; } = false;
@@ -53,6 +53,8 @@ public class PluginConfiguration : IPluginConfiguration
     public bool BlockSpellOnMove = false;
 
     public Vector4 TargetHighlightColor { get; set; } = new() { W = 1, X = 0.5f, Y = 0.5f, Z = 0.5f };
+    
+    public bool ShowBorderAroundOptionsWithChildren = true;
 
     public bool OutputOpenerLogs;
 
@@ -76,7 +78,7 @@ public class PluginConfiguration : IPluginConfiguration
 
     public bool OpenToCurrentJobOnSwitch = false;
 
-        #region Target Settings
+    #region Target Settings
 
     public bool RetargetHealingActionsToStack = false;
 
@@ -106,7 +108,7 @@ public class PluginConfiguration : IPluginConfiguration
         "AnyDeadPartyMember",
     ];
 
-        #endregion
+    #endregion
 
     public bool ActionChanging = true;
 
@@ -131,127 +133,18 @@ public class PluginConfiguration : IPluginConfiguration
         
     public bool UILeftColumnCollapsed = false;
 
-        #endregion
+    #endregion
 
-        #region AutoAction Settings
+    #region AutoAction Settings
     public Dictionary<Preset, bool> AutoActions { get; set; } = [];
 
     public AutoRotationConfig RotationConfig { get; set; } = new();
 
     public Dictionary<uint, uint> IgnoredNPCs { get; set; } = new();
 
-        #endregion
+    #endregion
 
-        #region Custom Float Values
-
-    [JsonProperty("CustomFloatValuesV6")]
-    internal static Dictionary<string, float> CustomFloatValues { get; set; } = [];
-
-    /// <summary> Gets a custom float value. </summary>
-    public static float GetCustomFloatValue(string config, float defaultMinValue = 0)
-    {
-        if (!CustomFloatValues.TryGetValue(config, out float configValue))
-        {
-            SetCustomFloatValue(config, defaultMinValue);
-            return defaultMinValue;
-        }
-
-        return configValue;
-    }
-
-    /// <summary> Sets a custom float value. </summary>
-    public static void SetCustomFloatValue(string config, float value) => CustomFloatValues[config] = value;
-
-        #endregion
-
-        #region Custom Int Values
-
-    [JsonProperty("CustomIntValuesV6")]
-    internal static Dictionary<string, int> CustomIntValues { get; set; } = [];
-
-    /// <summary> Gets a custom integer value. </summary>
-    public static int GetCustomIntValue(string config, int defaultMinVal = 0)
-    {
-        if (!CustomIntValues.TryGetValue(config, out int configValue))
-        {
-            SetCustomIntValue(config, defaultMinVal);
-            return defaultMinVal;
-        }
-
-        return configValue;
-    }
-
-    /// <summary> Sets a custom integer value. </summary>
-    public static void SetCustomIntValue(string config, int value) => CustomIntValues[config] = value;
-
-        #endregion
-
-        #region Custom Int Array Values
-    [JsonProperty("CustomIntArrayValuesV6")]
-    internal static Dictionary<string, int[]> CustomIntArrayValues { get; set; } = [];
-
-    /// <summary> Gets a custom integer array value. </summary>
-    public static int[] GetCustomIntArrayValue(string config)
-    {
-        if (!CustomIntArrayValues.TryGetValue(config, out int[]? configValue))
-        {
-            SetCustomIntArrayValue(config, []);
-            return [];
-        }
-
-        return configValue;
-    }
-
-    /// <summary> Sets a custom integer array value. </summary>
-    public static void SetCustomIntArrayValue(string config, int[] value) => CustomIntArrayValues[config] = value;
-
-        #endregion
-
-        #region Custom Bool Values
-
-    [JsonProperty("CustomBoolValuesV6")]
-    internal static Dictionary<string, bool> CustomBoolValues { get; set; } = [];
-
-    /// <summary> Gets a custom boolean value. </summary>
-    public static bool GetCustomBoolValue(string config)
-    {
-        if (!CustomBoolValues.TryGetValue(config, out bool configValue))
-        {
-            SetCustomBoolValue(config, false);
-            return false;
-        }
-
-        return configValue;
-    }
-
-    /// <summary> Sets a custom boolean value. </summary>
-    public static void SetCustomBoolValue(string config, bool value) => CustomBoolValues[config] = value;
-
-        #endregion
-
-        #region Custom Bool Array Values
-
-    [JsonProperty("CustomBoolArrayValuesV6")]
-    internal static Dictionary<string, bool[]> CustomBoolArrayValues { get; set; } = [];
-
-    /// <summary> Gets a custom boolean array value. </summary>
-    public static bool[] GetCustomBoolArrayValue(string config)
-    {
-        if (!CustomBoolArrayValues.TryGetValue(config, out bool[]? configValue))
-        {
-            SetCustomBoolArrayValue(config, Array.Empty<bool>());
-            return Array.Empty<bool>();
-        }
-
-        return configValue;
-    }
-
-    /// <summary> Sets a custom boolean array value. </summary>
-    public static void SetCustomBoolArrayValue(string config, bool[] value) => CustomBoolArrayValues[config] = value;
-
-        #endregion
-
-        #region Job-specific
+    #region Job-specific
 
     /// <summary> Gets active Blue Mage (BLU) spells. </summary>
     public List<uint> ActiveBLUSpells { get; set; } = [];
@@ -259,9 +152,29 @@ public class PluginConfiguration : IPluginConfiguration
     /// <summary> Gets or sets an array of 4 ability IDs to interact with the <see cref="Preset.DNC_CustomDanceSteps"/> combo. </summary>
     public uint[] DancerDanceCompatActionIDs { get; set; } = [ 0, 0, 0, 0, ];
 
-        #endregion
+    #endregion
 
-        #region Preset Resetting
+    #region Other (SpecialEvent, MotD)
+
+    /// <summary> Hides the message of the day. </summary>
+    public bool HideMessageOfTheDay { get; set; } = false;
+
+    /// <summary>
+    ///     Whether the Major Changes window was hidden for a
+    ///     specific version.
+    /// </summary>
+    /// <seealso cref="MajorChangesWindow"/>
+    public Version HideMajorChangesForVersion { get; set; } =
+        System.Version.Parse("0.0.0");
+
+    /// <summary>
+    ///     If the DTR Bar text should be shortened.
+    /// </summary>
+    public bool ShortDTRText { get; set; } = false;
+
+    #endregion
+
+    #region Preset Resetting
 
     [JsonProperty]
     private static Dictionary<string, bool> ResetFeatureCatalog { get; set; } = [];
@@ -317,29 +230,122 @@ public class PluginConfiguration : IPluginConfiguration
         Save();
     }
 
-        #endregion
+    #endregion
 
-        #region Other (SpecialEvent, MotD)
+    #region Configs
 
-    /// <summary> Hides the message of the day. </summary>
-    public bool HideMessageOfTheDay { get; set; } = false;
+    #region Custom Float Values
 
-    /// <summary>
-    ///     Whether the Major Changes window was hidden for a
-    ///     specific version.
-    /// </summary>
-    /// <seealso cref="MajorChangesWindow"/>
-    public Version HideMajorChangesForVersion { get; set; } =
-        System.Version.Parse("0.0.0");
+    [JsonProperty("CustomFloatValuesV6")]
+    internal static Dictionary<string, float> CustomFloatValues { get; set; } = [];
 
-    /// <summary>
-    ///     If the DTR Bar text should be shortened.
-    /// </summary>
-    public bool ShortDTRText { get; set; } = false;
+    /// <summary> Gets a custom float value. </summary>
+    public static float GetCustomFloatValue(string config, float defaultMinValue = 0)
+    {
+        if (!CustomFloatValues.TryGetValue(config, out float configValue))
+        {
+            SetCustomFloatValue(config, defaultMinValue);
+            return defaultMinValue;
+        }
 
-        #endregion
+        return configValue;
+    }
 
-        #region Saving
+    /// <summary> Sets a custom float value. </summary>
+    public static void SetCustomFloatValue(string config, float value) => CustomFloatValues[config] = value;
+
+    #endregion
+
+    #region Custom Int Values
+
+    [JsonProperty("CustomIntValuesV6")]
+    internal static Dictionary<string, int> CustomIntValues { get; set; } = [];
+
+    /// <summary> Gets a custom integer value. </summary>
+    public static int GetCustomIntValue(string config, int defaultMinVal = 0)
+    {
+        if (!CustomIntValues.TryGetValue(config, out int configValue))
+        {
+            SetCustomIntValue(config, defaultMinVal);
+            return defaultMinVal;
+        }
+
+        return configValue;
+    }
+
+    /// <summary> Sets a custom integer value. </summary>
+    public static void SetCustomIntValue(string config, int value) => CustomIntValues[config] = value;
+
+    #endregion
+
+    #region Custom Int Array Values
+    [JsonProperty("CustomIntArrayValuesV6")]
+    internal static Dictionary<string, int[]> CustomIntArrayValues { get; set; } = [];
+
+    /// <summary> Gets a custom integer array value. </summary>
+    public static int[] GetCustomIntArrayValue(string config)
+    {
+        if (!CustomIntArrayValues.TryGetValue(config, out int[]? configValue))
+        {
+            SetCustomIntArrayValue(config, []);
+            return [];
+        }
+
+        return configValue;
+    }
+
+    /// <summary> Sets a custom integer array value. </summary>
+    public static void SetCustomIntArrayValue(string config, int[] value) => CustomIntArrayValues[config] = value;
+
+    #endregion
+
+    #region Custom Bool Values
+
+    [JsonProperty("CustomBoolValuesV6")]
+    internal static Dictionary<string, bool> CustomBoolValues { get; set; } = [];
+
+    /// <summary> Gets a custom boolean value. </summary>
+    public static bool GetCustomBoolValue(string config)
+    {
+        if (!CustomBoolValues.TryGetValue(config, out bool configValue))
+        {
+            SetCustomBoolValue(config, false);
+            return false;
+        }
+
+        return configValue;
+    }
+
+    /// <summary> Sets a custom boolean value. </summary>
+    public static void SetCustomBoolValue(string config, bool value) => CustomBoolValues[config] = value;
+
+    #endregion
+
+    #region Custom Bool Array Values
+
+    [JsonProperty("CustomBoolArrayValuesV6")]
+    internal static Dictionary<string, bool[]> CustomBoolArrayValues { get; set; } = [];
+
+    /// <summary> Gets a custom boolean array value. </summary>
+    public static bool[] GetCustomBoolArrayValue(string config)
+    {
+        if (!CustomBoolArrayValues.TryGetValue(config, out bool[]? configValue))
+        {
+            SetCustomBoolArrayValue(config, Array.Empty<bool>());
+            return Array.Empty<bool>();
+        }
+
+        return configValue;
+    }
+
+    /// <summary> Sets a custom boolean array value. </summary>
+    public static void SetCustomBoolArrayValue(string config, bool[] value) => CustomBoolArrayValues[config] = value;
+
+    #endregion
+
+    #endregion
+
+    #region Saving
 
     /// <summary>
     ///     The queue of items to be saved.
@@ -420,5 +426,5 @@ public class PluginConfiguration : IPluginConfiguration
         SaveQueue.Enqueue((this, new StackTrace()));
     }
 
-        #endregion
+    #endregion
 }

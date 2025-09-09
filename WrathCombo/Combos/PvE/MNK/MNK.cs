@@ -35,7 +35,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCDs
-            if (CanWeave())
+            if (CanWeave() && InCombat())
             {
                 if (UsePerfectBalanceST())
                     return PerfectBalance;
@@ -55,7 +55,7 @@ internal partial class MNK : Melee
                 if (Role.CanBloodBath(40))
                     return Role.Bloodbath;
 
-                if (Chakra >= 5 && InCombat() && LevelChecked(SteeledMeditation) &&
+                if (Chakra >= 5 && LevelChecked(SteeledMeditation) &&
                     !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire) &&
                     InActionRange(OriginalHook(SteeledMeditation)))
                     return OriginalHook(SteeledMeditation);
@@ -127,7 +127,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCD's
-            if (CanWeave())
+            if (CanWeave() && InCombat())
             {
                 if (UsePerfectBalanceAoE())
                     return PerfectBalance;
@@ -149,8 +149,8 @@ internal partial class MNK : Melee
 
                 if (Chakra >= 5 &&
                     LevelChecked(InspiritedMeditation) &&
-                    HasBattleTarget() && InCombat() &&
-                    !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire) &&
+                    HasBattleTarget() && !JustUsed(Brotherhood) &&
+                    !JustUsed(RiddleOfFire) &&
                     InActionRange(OriginalHook(InspiritedMeditation)))
                     return OriginalHook(InspiritedMeditation);
             }
@@ -238,7 +238,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCDs
-            if (CanWeave() && M6SReady)
+            if (CanWeave() && M6SReady && InCombat())
             {
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
                     UsePerfectBalanceST())
@@ -267,6 +267,16 @@ internal partial class MNK : Melee
                     RaidWideCasting())
                     return Role.Feint;
 
+                if (IsEnabled(Preset.MNK_ST_UseRoE) &&
+                    (UseRoE() ||
+                     MNK_ST_EarthsReply &&
+                     UseEarthsReply()))
+                    return OriginalHook(RiddleOfEarth);
+
+                if (IsEnabled(Preset.MNK_ST_UseMantra) &&
+                    UseMantra())
+                    return Mantra;
+
                 if (IsEnabled(Preset.MNK_ST_ComboHeals))
                 {
                     if (Role.CanSecondWind(MNK_ST_SecondWindHPThreshold))
@@ -282,8 +292,7 @@ internal partial class MNK : Melee
                     return Role.LegSweep;
 
                 if (IsEnabled(Preset.MNK_STUseTheForbiddenChakra) &&
-                    Chakra >= 5 && InCombat() &&
-                    LevelChecked(SteeledMeditation) &&
+                    Chakra >= 5 && LevelChecked(SteeledMeditation) &&
                     !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire) &&
                     InActionRange(OriginalHook(SteeledMeditation)))
                     return OriginalHook(SteeledMeditation);
@@ -363,7 +372,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCD's
-            if (CanWeave() && M6SReady)
+            if (CanWeave() && M6SReady && InCombat())
             {
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
                     UsePerfectBalanceAoE())
@@ -402,7 +411,7 @@ internal partial class MNK : Melee
                     return Role.LegSweep;
 
                 if (IsEnabled(Preset.MNK_AoEUseHowlingFist) &&
-                    Chakra >= 5 && HasBattleTarget() && InCombat() &&
+                    Chakra >= 5 && HasBattleTarget() &&
                     LevelChecked(InspiritedMeditation) &&
                     !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire) &&
                     InActionRange(OriginalHook(InspiritedMeditation)))

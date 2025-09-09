@@ -417,8 +417,10 @@ internal class Presets : ConfigWindow
                     if (PresetStorage.ShouldBeHidden(childPreset)) continue;
 
                     presetChildren.TryGetValue(childPreset, out var grandchildren);
-                    InfoBox box = new() { HasMaxWidth = true, Color = Colors.Grey, BorderThickness = 1f, CurveRadius = 4f, ContentsAction = () => { DrawPreset(childPreset, childInfo); } };
-                    Action draw = grandchildren?.Count() > 0 ? () => box.Draw() : () => DrawPreset(childPreset, childInfo);
+                    InfoBox box = new() { HasMaxWidth = true, CurveRadius = 4f, ContentsAction = () => { DrawPreset(childPreset, childInfo); } };
+                    Action draw = grandchildren?.Count() > 0 && IsEnabled(childPreset) && Service.Configuration.ShowBorderAroundOptionsWithChildren
+                        ? () => box.Draw()
+                        : () => DrawPreset(childPreset, childInfo);
 
                     if (Service.Configuration.HideConflictedCombos)
                     {

@@ -120,7 +120,7 @@ internal partial class WHM
                         "");
                     break;
                 
-                case Preset.WHM_STHeals_Benediction:
+                case Preset.WHM_STHeals_Benediction: 
                     DrawAdditionalBoolChoice(WHM_STHeals_BenedictionWeave,
                         weaveDescription, "");
                     DrawSliderInt(1, 100, WHM_STHeals_BenedictionHP,
@@ -130,6 +130,8 @@ internal partial class WHM
                     break;
 
                 case Preset.WHM_STHeals_Tetragrammaton:
+                    DrawAdditionalBoolChoice(WHM_STHeals_TetraBalance, 
+                        "Balance Charges Option", "Will only use if Tetra Charges are greater than or equal to Divine Benison Charges.");
                     DrawAdditionalBoolChoice(WHM_STHeals_TetraWeave,
                         weaveDescription, "");
                     DrawSliderInt(1, 100, WHM_STHeals_TetraHP,
@@ -139,6 +141,8 @@ internal partial class WHM
                     break;
 
                 case Preset.WHM_STHeals_Benison:
+                    DrawAdditionalBoolChoice(WHM_STHeals_BenisonBalance, 
+                        "Balance Charges Option", "Will only use if Divine Benison Charges are greater than or equal to Tetragrammaton Charges.");
                     DrawAdditionalBoolChoice(WHM_STHeals_BenisonWeave,
                         weaveDescription, "");
                     DrawSliderInt(0, 1, WHM_STHeals_BenisonCharges, 
@@ -150,8 +154,9 @@ internal partial class WHM
                     break;
 
                 case Preset.WHM_STHeals_Aquaveil:
-                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Only Weave", weaveDescription, 2, 0);
-                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Not On Bosses", nonBossesDescription, 2, 1);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Only Weave", weaveDescription, 3, 0);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Not On Bosses", nonBossesDescription, 3, 1);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions,"Tanks Only", "Only on Tanks", 3, 2);
                     DrawSliderInt(1, 100, WHM_STHeals_AquaveilHP,
                         targetStartUsingAtDescription);
                     DrawPriorityInput(WHM_ST_Heals_Priority, 9, 3,
@@ -226,7 +231,7 @@ internal partial class WHM
 
                 #region AoE Heals
                 
-                case Preset.WHM_AoEHeals_Medica2:
+                case Preset.WHM_AoEHeals_Medica2: 
                     DrawSliderInt(1, 100, WHM_AoEHeals_Medica2HP,
                         partyStartUsingAtDescription);
                     ImGui.Indent();
@@ -602,7 +607,7 @@ internal partial class WHM
         ///     Priority order for single target healing abilities.
         /// </summary>
         internal static UserIntArray WHM_ST_Heals_Priority =
-            new("WHM_ST_Heals_Priority");
+            new("WHM_ST_Heals_Priority", [1,7,8,5,9,6,3,2,4]);
 
         /// <summary>
         ///     Time threshold in seconds before refreshing Regen.
@@ -696,6 +701,16 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_STHeals_Tetragrammaton" />
         internal static UserBool WHM_STHeals_TetraWeave =
             new("WHM_STHeals_TetraWeave", false);
+        
+        
+        /// <summary>
+        ///     Only use Tetragrammaton when it has greater than or equal charges to divine Benison
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="Preset.WHM_STHeals_Tetragrammaton" />
+        internal static UserBool WHM_STHeals_TetraBalance = new("WHM_STHeals_TetraBalance", false);
 
         /// <summary>
         ///     HP threshold to use Tetragrammaton.
@@ -718,6 +733,16 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_STHeals_Benison" />
         internal static UserBool WHM_STHeals_BenisonWeave =
             new("WHM_STHeals_BenisonWeave", false);
+        
+        /// <summary>
+        ///     Only use Divine Benison when it has greater than or equal charges to Tetragrammaton
+        /// </summary>
+        /// <value>
+        ///     <b>Default</b>: false
+        /// </value>
+        /// <seealso cref="Preset.WHM_STHeals_Benison" />
+        
+        internal static UserBool WHM_STHeals_BenisonBalance = new("WHM_STHeals_BenisonBalance", false);
         
         /// <summary>
         ///     Charges to keep of Divine Benison.
@@ -863,7 +888,7 @@ internal partial class WHM
         ///     Priority order for AoE healing abilities.
         /// </summary>
         internal static UserIntArray WHM_AoE_Heals_Priority =
-            new("WHM_AoE_Heals_Priority");
+            new("WHM_AoE_Heals_Priority",[7,6,4,8,3,9,5,2,1]);
 
         /// <summary>
         ///     Number of Thin Air charges to reserve in AoE healing.

@@ -1,3 +1,5 @@
+using System.Numerics;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
@@ -27,13 +29,13 @@ internal partial class SAM
 
                     if (SAM_ST_CDs_IaijutsuOption[0])
                     {
-                        ImGui.Indent();
+                        ImGui.Dummy(new Vector2(12f.Scale(), 0));
+                        ImGui.SameLine();
                         DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
                             "All Enemies", $"Uses {Higanbana.ActionName()} regardless of targeted enemy type.", 0);
 
                         DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
                             "Bosses Only", $"Only uses {Higanbana.ActionName()} when the targeted enemy is a boss.", 1);
-                        ImGui.Unindent();
 
                         DrawSliderInt(0, 10, SAM_ST_HiganbanaHPThreshold,
                             $"Stop using {Higanbana.ActionName()} on targets below this HP % (0% = always use).");
@@ -144,7 +146,6 @@ internal partial class SAM
                         DrawSliderInt(25, 100, SAM_Mangetsu_KenkiOvercapAmount,
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
                     break;
-
             }
         }
         #region Variables

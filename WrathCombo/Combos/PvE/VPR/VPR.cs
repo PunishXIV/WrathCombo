@@ -805,17 +805,17 @@ internal partial class VPR : Melee
             {
                 case Reawaken when VPR_ReawakenLegacyButton == 0 && HasStatusEffect(Buffs.Reawakened):
                 case ReavingFangs when VPR_ReawakenLegacyButton == 1 && HasStatusEffect(Buffs.Reawakened):
-                    {
-                        // Legacy Weaves
-                        if (IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
-                            TraitLevelChecked(Traits.SerpentsLegacy) && HasStatusEffect(Buffs.Reawakened)
-                            && OriginalHook(SerpentsTail) is not SerpentsTail)
-                            return OriginalHook(SerpentsTail);
+                {
+                    // Legacy Weaves
+                    if (IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
+                        TraitLevelChecked(Traits.SerpentsLegacy) && HasStatusEffect(Buffs.Reawakened)
+                        && OriginalHook(SerpentsTail) is not SerpentsTail)
+                        return OriginalHook(SerpentsTail);
 
-                        if (ReawakenComboST(ref actionID))
-                            return actionID;
-                        break;
-                    }
+                    if (ReawakenComboST(ref actionID))
+                        return actionID;
+                    break;
+                }
             }
 
             return actionID;

@@ -362,17 +362,17 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("Target Data"))
         {
-            if (target is not null) { 
-            CustomStyleText("Name:", target?.Name);
-            CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
-            CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
-            CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
-            CustomStyleText("In Melee Range:", InMeleeRange());
-            CustomStyleText("Height Difference:", $"{MathF.Round(GetTargetHeightDifference(), 2)}y");
-            CustomStyleText("Relative Position:", AngleToTarget().ToString());
-            CustomStyleText("Requires Positionals:", TargetNeedsPositionals());
-            CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
-            CustomStyleText("Is Friendly:", target?.IsFriendly());
+            if (target is not null) {
+                CustomStyleText("Name:", target?.Name);
+                CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
+                CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
+                CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
+                CustomStyleText("In Melee Range:", InMeleeRange());
+                CustomStyleText("Height Difference:", $"{MathF.Round(GetTargetHeightDifference(), 2)}y");
+                CustomStyleText("Relative Position:", AngleToTarget().ToString());
+                CustomStyleText("Requires Positionals:", TargetNeedsPositionals());
+                CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
+                CustomStyleText("Is Friendly:", target?.IsFriendly());
 
                 ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 

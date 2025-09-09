@@ -10,9 +10,11 @@ using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using ECommons.GameFunctions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.AST.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -44,7 +46,9 @@ internal partial class AST
     internal static bool HasEwer => Gauge.DrawnCards[2] == CardType.Ewer;
     internal static bool HasArrow => Gauge.DrawnCards[1] == CardType.Arrow;
     internal static bool HasBole => Gauge.DrawnCards[1] == CardType.Bole;
-    internal static bool HasDivination=> HasStatusEffect(Buffs.Divination, anyOwner: true) || JustUsed(Divination);
+    internal static bool HasDivination => HasStatusEffect(Buffs.Divination, anyOwner: true) || JustUsed(Divination);
+    internal static bool StandStill => TimeStoodStill >= TimeSpan.FromSeconds(3);
+    internal static bool WaitGCDs => ActionWatching.NumberOfGcdsUsed >= 10;
     internal static float DivinationCD => GetCooldownRemainingTime(Divination);
     internal static float LightspeedChargeCD => GetCooldownChargeRemainingTime(Lightspeed);
     #endregion
@@ -89,6 +93,7 @@ internal partial class AST
     internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
     {
         IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        bool tankCheck = healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank;
         bool stopHot = AST_ST_SimpleHeals_AspectedBeneficLow <= GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields);
         int refreshTime = AST_ST_SimpleHeals_AspectedBeneficRefresh;
         Status? aspectedBeneficHoT = GetStatusEffect(Buffs.AspectedBenefic, healTarget);
@@ -107,6 +112,7 @@ internal partial class AST
                 action = EssentialDignity;
                 enabled = IsEnabled(Preset.AST_ST_Heals_EssentialDignity) &&
                           ActionReady(EssentialDignity) &&
+                          (GetRemainingCharges(EssentialDignity) > 1 || IsNotEnabled(Preset.AST_ST_Heals_EssentialDignity_Emergency)) &&
                           (CanWeave() || !AST_ST_SimpleHeals_WeaveDignity);
                 return AST_ST_SimpleHeals_EssentialDignity;
             case 2:
@@ -114,19 +120,22 @@ internal partial class AST
                 enabled = IsEnabled(Preset.AST_ST_Heals_Exaltation) &&
                           ActionReady(Exaltation) &&
                           (CanWeave() || !AST_ST_SimpleHeals_ExaltationOptions[0]) &&
+                          (tankCheck || !IsInParty() || !AST_ST_SimpleHeals_ExaltationOptions[2]) &&
                           (!InBossEncounter() || !AST_ST_SimpleHeals_ExaltationOptions[1]);
                 return AST_ST_SimpleHeals_Exaltation;
             case 3:
                 action = Bole;
                 enabled = IsEnabled(Preset.AST_ST_Heals_Bole) &&
                           HasBole &&
-                          (CanWeave() || !AST_ST_SimpleHeals_WeaveBole);
+                          (tankCheck || !IsInParty() || !AST_ST_SimpleHeals_BoleOptions[1]) &&
+                          (CanWeave() || !AST_ST_SimpleHeals_BoleOptions[0]);
                 return AST_ST_SimpleHeals_Bole;
             case 4:
                 action = Arrow;
                 enabled = IsEnabled(Preset.AST_ST_Heals_Arrow) &&
                           HasArrow &&
-                          (CanWeave() || !AST_ST_SimpleHeals_WeaveArrow);
+                          (tankCheck || !IsInParty() || !AST_ST_SimpleHeals_ArrowOptions[1]) &&
+                          (CanWeave() || !AST_ST_SimpleHeals_ArrowOptions[0]);
                 return AST_ST_SimpleHeals_Arrow;
             case 5:
                 action = Ewer;
@@ -166,6 +175,13 @@ internal partial class AST
                           (!AST_ST_SimpleHeals_SoloLadyOptions[1] || !InBossEncounter()) &&
                           (!AST_ST_SimpleHeals_SoloLadyOptions[0] || CanWeave());
                 return AST_ST_SimpleHeals_SoloLady;
+            
+            case 11:
+                action = EssentialDignity;
+                enabled = IsEnabled(Preset.AST_ST_Heals_EssentialDignity_Emergency) &&
+                          ActionReady(EssentialDignity) &&
+                          (CanWeave() || !AST_ST_SimpleHeals_WeaveEmergencyED);
+                return AST_ST_SimpleHeals_EmergencyED_Threshold;
         }
 
         enabled = false;

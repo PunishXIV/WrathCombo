@@ -378,9 +378,14 @@ internal partial class WHM : Healer
                 GetTargetHPPercent(healTarget) <= 50)
                 return Tetragrammaton.RetargetIfEnabled(healTarget, Cure);
             
-            if (ActionReady(Role.Esuna) && GetTargetHPPercent(healTarget) >= 40 &&
-                HasCleansableDebuff(healTarget))
-                return Role.Esuna.RetargetIfEnabled(healTarget, Cure);
+            bool cleansableTarget =
+                HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
+                HasCleansableDebuff(healTarget);
+            
+            if (ActionReady(Role.Esuna) &&
+                GetTargetHPPercent(healTarget) >= 40 &&
+                cleansableTarget)
+                return Role.Esuna.RetargetIfEnabled(OptionalTarget, Cure);
             
             if (CanWeave() && Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
@@ -408,7 +413,7 @@ internal partial class WHM : Healer
             
             if (ActionReady(AfflatusSolace))
                 return BloodLilyReady
-                    ? AfflatusMisery
+                    ? AfflatusMisery.Retarget(Cure, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget)
                     : AfflatusSolace.RetargetIfEnabled(healTarget, Cure);
 
             if (ActionReady(ThinAir) && GetRemainingCharges(ThinAir) == 2)
@@ -460,7 +465,7 @@ internal partial class WHM : Healer
             
             if (ActionReady(AfflatusRapture))
                 return BloodLilyReady
-                    ? AfflatusMisery
+                    ? AfflatusMisery.Retarget(Medica1, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget)
                     : AfflatusRapture;
             
             if (ActionReady(ThinAir) && GetRemainingCharges(ThinAir) == 2)
@@ -514,15 +519,16 @@ internal partial class WHM : Healer
             #endregion
 
             #region Priority Cleansing
-
+            
+            bool cleansableTarget =
+                HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
+                HasCleansableDebuff(healTarget);
+            
             if (IsEnabled(Preset.WHM_STHeals_Esuna) &&
                 ActionReady(Role.Esuna) &&
-                GetTargetHPPercent(
-                    healTarget, WHM_STHeals_IncludeShields) >=
-                WHM_STHeals_Esuna &&
-                HasCleansableDebuff(healTarget))
-                return Role.Esuna
-                    .RetargetIfEnabled(OptionalTarget, Cure);
+                GetTargetHPPercent(healTarget, WHM_STHeals_IncludeShields) >= WHM_STHeals_Esuna &&
+                cleansableTarget)
+                return Role.Esuna.RetargetIfEnabled(OptionalTarget, Cure);
 
             #endregion
 
@@ -544,8 +550,8 @@ internal partial class WHM : Healer
                 var config = GetMatchingConfigST(index, OptionalTarget,
                     out var spell, out var enabled);
                 
-                if (IsEnabled(Preset.WHM_AoEHeals_Misery) && BloodLilyReady && spell is AfflatusSolace)
-                    return AfflatusMisery;
+                if (IsEnabled(Preset.WHM_STHeals_Misery) && BloodLilyReady && spell is AfflatusSolace)
+                    return AfflatusMisery.Retarget(Cure, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget);
 
                 if (enabled)
                 {
@@ -608,7 +614,7 @@ internal partial class WHM : Healer
                 
                 // Blood Overcap
                 if (IsEnabled(Preset.WHM_AoEHeals_Misery) && BloodLilyReady && spell is AfflatusRapture)
-                    return AfflatusMisery;
+                    return AfflatusMisery.Retarget(Medica1, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget);
 
                 if (enabled && GetPartyAvgHPPercent() <= config &&
                     ActionReady(spell))

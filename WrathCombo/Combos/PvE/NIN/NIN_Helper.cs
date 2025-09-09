@@ -573,8 +573,8 @@ internal partial class NIN
         //4th GCD Kunai
         public override List<uint> OpenerActions { get; set; } =
         [
-            Chi, //1
-            TenCombo, //2
+            Ten, //1
+            ChiCombo, //2
             JinCombo, //3
             Suiton, //4
             Kassatsu, //5
@@ -637,8 +637,8 @@ internal partial class NIN
         //3rd GCD Dokumori
         public override List<uint> OpenerActions { get; set; } =
         [
-            Chi, //1
-            TenCombo, //2
+            Ten, //1
+            ChiCombo, //2
             JinCombo, //3
             Suiton, //4
             Kassatsu, //5
@@ -700,8 +700,8 @@ internal partial class NIN
         //3rd GCD Kunai
         public override List<uint> OpenerActions { get; set; } =
         [
-            Chi, //1
-            TenCombo, //2
+            Ten, //1
+            ChiCombo, //2
             JinCombo, //3
             Suiton, //4
             Kassatsu, //5

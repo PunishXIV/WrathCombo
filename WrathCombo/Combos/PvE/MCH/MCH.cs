@@ -24,7 +24,7 @@ internal partial class MCH : PhysicalRanged
                  ActionReady(Drill)))
                 return Reassemble;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (!HasStatusEffect(Buffs.Reassembled) && ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             // All weaves
@@ -50,7 +50,7 @@ internal partial class MCH : PhysicalRanged
                     {
                         // Ensures Hypercharge is double weaved with WF
                         if (LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
-                            GetCooldownRemainingTime(Wildfire) < GCD ||
+                            GetCooldownRemainingTime(Wildfire) < GCD / 2 ||
                             !LevelChecked(FullMetalField) && ActionReady(Wildfire) ||
                             !LevelChecked(Wildfire))
                             return Hypercharge;
@@ -286,7 +286,7 @@ internal partial class MCH : PhysicalRanged
 
                 // Wildfire
                 if (IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
-                    (MCH_ST_Adv_WildfireBossOption == 0 || TargetIsBoss()) &&
+                    (MCH_ST_WildfireBossOption == 0 || TargetIsBoss()) &&
                     CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
                     JustUsed(Hypercharge) && ActionReady(Wildfire) &&
                     !HasStatusEffect(Buffs.Wildfire))
@@ -296,7 +296,7 @@ internal partial class MCH : PhysicalRanged
                 {
                     // BarrelStabilizer
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
-                        (MCH_ST_Adv_BarrelStabiliserBossOption == 0 || TargetIsBoss()) &&
+                        (MCH_ST_BarrelStabilizerBossOption == 0 || TargetIsBoss()) &&
                         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
 
@@ -304,11 +304,11 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&
                         (Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) &&
                         !IsComboExpiring(6) && ActionReady(Hypercharge) &&
-                        GetTargetHPPercent() > MCH_ST_HyperchargeHPThreshold)
+                        GetTargetHPPercent() > HPThresholdHyperchargeST)
                     {
                         // Ensures Hypercharge is double weaved with WF
                         if (LevelChecked(FullMetalField) && JustUsed(FullMetalField) &&
-                            GetCooldownRemainingTime(Wildfire) < GCD ||
+                            GetCooldownRemainingTime(Wildfire) < GCD / 2 ||
                             !LevelChecked(FullMetalField) && ActionReady(Wildfire) ||
                             !LevelChecked(Wildfire))
                             return Hypercharge;
@@ -330,7 +330,8 @@ internal partial class MCH : PhysicalRanged
                     // Reassemble
                     if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
                         GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool &&
-                        Reassembled())
+                        Reassembled() &&
+                        GetTargetHPPercent() > HPThresholdReassembleST)
                         return Reassemble;
 
                     // Gauss Round and Ricochet outside HC
@@ -392,7 +393,6 @@ internal partial class MCH : PhysicalRanged
 
             // Full Metal Field
             if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer_FullMetalField) &&
-                (MCH_ST_Adv_FullMetalMachinistBossOption == 0 || TargetIsBoss()) &&
                 HasStatusEffect(Buffs.FullMetalMachinist, out Status? fullMetal) &&
                 !JustUsed(BarrelStabilizer) &&
                 (fullMetal.RemainingTime <= 6 ||
@@ -476,18 +476,19 @@ internal partial class MCH : PhysicalRanged
                     // BarrelStabilizer
                     if (IsEnabled(Preset.MCH_AoE_Adv_Stabilizer) &&
                         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
-                        GetTargetHPPercent() >= MCH_ST_BarrelStabilizerHPThreshold)
+                        GetTargetHPPercent() > MCH_AoE_BarrelStabilizerHPThreshold)
                         return BarrelStabilizer;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Queen) &&
-                        Battery >= MCH_AoE_TurretBatteryUsage)
+                        Battery >= MCH_AoE_TurretBatteryUsage &&
+                        GetTargetHPPercent() > MCH_AoE_QueenHpThreshold)
                         return OriginalHook(RookAutoturret);
 
                     // Hypercharge
                     if (IsEnabled(Preset.MCH_AoE_Adv_Hypercharge) &&
                         (Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                         LevelChecked(AutoCrossbow) &&
-                        GetTargetHPPercent() >= MCH_AoE_HyperchargeHPThreshold &&
+                        GetTargetHPPercent() > MCH_AoE_HyperchargeHPThreshold &&
                         (LevelChecked(BioBlaster) && GetCooldownRemainingTime(BioBlaster) > 10 ||
                          !LevelChecked(BioBlaster) || IsNotEnabled(Preset.MCH_AoE_Adv_Bioblaster)) &&
                         (LevelChecked(Flamethrower) && GetCooldownRemainingTime(Flamethrower) > 10 ||
@@ -495,7 +496,7 @@ internal partial class MCH : PhysicalRanged
                         return Hypercharge;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Reassemble) &&
-                        GetTargetHPPercent() >= MCH_AoE_ReassembleHPThreshold &&
+                        GetTargetHPPercent() > MCH_AoE_ReassembleHPThreshold &&
                         ActionReady(Reassemble) && !HasStatusEffect(Buffs.Wildfire) &&
                         !HasStatusEffect(Buffs.Reassembled) && !JustUsed(Flamethrower, 10f) &&
                         GetRemainingCharges(Reassemble) > MCH_AoE_ReassemblePool &&
@@ -546,8 +547,7 @@ internal partial class MCH : PhysicalRanged
             {
                 //Full Metal Field
                 if (IsEnabled(Preset.MCH_AoE_Adv_Stabilizer_FullMetalField) &&
-                    HasStatusEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField) &&
-                    GetTargetHPPercent() >= MCH_AoE_FullMetalFieldHPThreshold)
+                    HasStatusEffect(Buffs.FullMetalMachinist) && LevelChecked(FullMetalField))
                     return FullMetalField;
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_Bioblaster) &&
@@ -566,7 +566,6 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_Excavator) &&
                     reassembledExcavatorAoE &&
-                    GetTargetHPPercent() >= MCH_AoE_ExcavatorHPThreshold &&
                     LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                     return Excavator;
 
@@ -578,7 +577,6 @@ internal partial class MCH : PhysicalRanged
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_AirAnchor) &&
                     reassembledAirAnchorAoE &&
-                    GetTargetHPPercent() >= MCH_AoE_AirAnchorHPThreshold &&
                     LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                     return AirAnchor;
 

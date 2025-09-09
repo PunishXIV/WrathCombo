@@ -101,6 +101,22 @@ internal partial class MNK
         ActionReady(RiddleOfWind) &&
         !HasStatusEffect(Buffs.WindsRumination);
 
+    internal static bool UseMantra() =>
+        ActionReady(Mantra) &&
+        !HasStatusEffect(Buffs.Mantra) &&
+        RaidWideCasting();
+
+    internal static bool UseRoE() =>
+        ActionReady(RiddleOfEarth) &&
+        RaidWideCasting() &&
+        !HasStatusEffect(Buffs.RiddleOfEarth) &&
+        !HasStatusEffect(Buffs.EarthsRumination);
+
+    internal static bool UseEarthsReply() =>
+        HasStatusEffect(Buffs.EarthsRumination) &&
+        NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
+        GetPartyAvgHPPercent() <= MNK_ST_EarthsReplyHPThreshold;
+
     #endregion
 
     #region PB
@@ -495,17 +511,20 @@ internal partial class MNK
     {
         public const ushort
             TwinSnakes = 101,
+            Mantra = 102,
             OpoOpoForm = 107,
             RaptorForm = 108,
             CoeurlForm = 109,
             PerfectBalance = 110,
+            RiddleOfEarth = 1179,
             RiddleOfFire = 1181,
-            RiddleOfWind = 2687,
-            FormlessFist = 2513,
+            Brotherhood = 1185,
             TrueNorth = 1250,
+            FormlessFist = 2513,
+            RiddleOfWind = 2687,
+            EarthsRumination = 3841,
             WindsRumination = 3842,
-            FiresRumination = 3843,
-            Brotherhood = 1185;
+            FiresRumination = 3843;
     }
 
     #endregion
