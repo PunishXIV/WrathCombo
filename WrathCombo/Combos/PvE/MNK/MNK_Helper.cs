@@ -104,11 +104,11 @@ internal partial class MNK
     internal static bool UseMantra() =>
         ActionReady(Mantra) &&
         !HasStatusEffect(Buffs.Mantra) &&
-        RaidWideCasting();
+        RaidWideCasting(3f);
 
     internal static bool UseRoE() =>
         ActionReady(RiddleOfEarth) &&
-        RaidWideCasting() &&
+        RaidWideCasting(2f) &&
         !HasStatusEffect(Buffs.RiddleOfEarth) &&
         !HasStatusEffect(Buffs.EarthsRumination);
 

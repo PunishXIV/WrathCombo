@@ -1,4 +1,3 @@
-using System.Numerics;
 using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -21,28 +20,20 @@ internal partial class SAM
                         $"Delay from first {MeikyoShisui.ActionName()} to next step. (seconds)\nDelay is enforced by replacing your button with Savage Blade.");
                     break;
 
-                case Preset.SAM_ST_CDs_Iaijutsu:
-                    DrawHorizontalMultiChoice(SAM_ST_CDs_IaijutsuOption, $"Add {Higanbana.ActionName()}", "Will use Higanbana depending on suboptions.", 4, 0);
-                    DrawHorizontalMultiChoice(SAM_ST_CDs_IaijutsuOption, $"Add {TenkaGoken.ActionName()}", "Will Use Tenka Goken when lvlsynched below lvl 50.", 4, 1);
-                    DrawHorizontalMultiChoice(SAM_ST_CDs_IaijutsuOption, $"Use {MidareSetsugekka.ActionName()}", "Will use Midare Setsugekka and Tendo Setsugekka.", 4, 2);
-                    DrawHorizontalMultiChoice(SAM_ST_CDs_IaijutsuOption, $"Use {TsubameGaeshi.ActionName()}", "Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka.", 4, 3);
+                case Preset.SAM_ST_CDs_UseHiganbana:
+                    ImGui.Dummy(new(12f.Scale(), 0));
+                    ImGui.SameLine();
+                    DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
+                        "All Enemies", $"Uses {Higanbana.ActionName()} regardless of targeted enemy type.", 0);
 
-                    if (SAM_ST_CDs_IaijutsuOption[0])
-                    {
-                        ImGui.Dummy(new Vector2(12f.Scale(), 0));
-                        ImGui.SameLine();
-                        DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
-                            "All Enemies", $"Uses {Higanbana.ActionName()} regardless of targeted enemy type.", 0);
+                    DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
+                        "Bosses Only", $"Only uses {Higanbana.ActionName()} when the targeted enemy is a boss.", 1);
 
-                        DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
-                            "Bosses Only", $"Only uses {Higanbana.ActionName()} when the targeted enemy is a boss.", 1);
+                    DrawSliderInt(0, 10, SAM_ST_HiganbanaHPThreshold,
+                        $"Stop using {Higanbana.ActionName()} on targets below this HP % (0% = always use).");
 
-                        DrawSliderInt(0, 10, SAM_ST_HiganbanaHPThreshold,
-                            $"Stop using {Higanbana.ActionName()} on targets below this HP % (0% = always use).");
-
-                        DrawSliderInt(0, 15, SAM_ST_HiganbanaRefresh,
-                            $"Seconds remaining before reapplying {Higanbana.ActionName()}. Set to Zero to disable this check.");
-                    }
+                    DrawSliderInt(0, 15, SAM_ST_HiganbanaRefresh,
+                        $"Seconds remaining before reapplying {Higanbana.ActionName()}. Set to Zero to disable this check.");
                     break;
 
                 case Preset.SAM_ST_CDs_MeikyoShisui:
@@ -126,6 +117,12 @@ internal partial class SAM
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
                     break;
 
+                case Preset.SAM_ST_Meditate:
+                    ImGui.SetCursorPosX(48);
+                    DrawSliderFloat(0, 3, SAM_ST_MeditateTimeStill,
+                        " Stationary Delay Check (in seconds):", decimals: 1);
+                    break;
+
                 case Preset.SAM_AoE_OkaCombo:
                     DrawAdditionalBoolChoice(SAM_Oka_KenkiOvercap,
                         "Kenki Overcap Protection", "Spends Kenki when at the set value or above.");
@@ -153,11 +150,11 @@ internal partial class SAM
         public static UserInt
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
-            SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_HiganbanaBossOption = new("SAM_ST_Higanbana_Suboption", 1),
             SAM_ST_MeikyoBossOption = new("SAM_ST_Meikyo_Suboption", 1),
             SAM_ST_HiganbanaHPThreshold = new("SAM_ST_Higanbana_HP_Threshold", 0),
             SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
+            SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
             SAM_STSecondWindHPThreshold = new("SAM_STSecondWindThreshold", 40),
             SAM_STBloodbathHPThreshold = new("SAM_STBloodbathThreshold", 30),
@@ -182,8 +179,8 @@ internal partial class SAM
             SAM_Oka_KenkiOvercap = new("SAM_Oka_KenkiOvercap"),
             SAM_Mangetsu_KenkiOvercap = new("SAM_Mangetsu_KenkiOvercap");
 
-        public static UserBoolArray
-            SAM_ST_CDs_IaijutsuOption = new("SAM_ST_CDs_IaijutsuOption");
+        public static UserFloat
+            SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);
 
         #endregion
     }

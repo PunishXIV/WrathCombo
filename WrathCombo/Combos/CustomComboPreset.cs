@@ -6070,6 +6070,22 @@ public enum Preset
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Iaijutsu Option", "Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation.", Job.SAM)]
     SAM_ST_CDs_Iaijutsu = 15013,
+    
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Higanbana", "Will use Higanbana depending on suboptions.", Job.SAM)]
+    SAM_ST_CDs_UseHiganbana = 15024,
+
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Tenka Goken", "Will Use Tenka Goken when lvlsynched below lvl 50.", Job.SAM)]
+    SAM_ST_CDs_UseTenkaGoken = 15025,
+
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Midare Setsugekka", "Will use Midare Setsugekka and Tendo Setsugekka.", Job.SAM)]
+    SAM_ST_CDs_UseMidare = 15026,
+
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Tsubame-gaeshi", "Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka.", Job.SAM)]
+    SAM_ST_CDs_UseTsubame = 15027,
 
     [ParentCombo(SAM_ST_CDs_Iaijutsu)]
     [CustomComboInfo("Iajutsu movement Option", "Adds Midare: Setsugekka and Higanbana when you're not moving.", Job.SAM)]
@@ -6094,7 +6110,7 @@ public enum Preset
     #endregion
 
     [ParentCombo(SAM_ST_AdvancedMode)]
-    [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation", Job.SAM)]
+    [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation.\nWill pool kenki for burst.", Job.SAM)]
     SAM_ST_Shinten = 15008,
 
     [ParentCombo(SAM_ST_AdvancedMode)]
@@ -6116,6 +6132,14 @@ public enum Preset
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Feint Raidwide Option", "Adds Feint when Raidwide is detected casting.", Job.SAM)]
     SAM_ST_Feint = 15095,
+
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("Third Eye Raidwide Option", "Adds Third Eye when Raidwide is detected casting.", Job.SAM)]
+    SAM_ST_ThirdEye = 15094,
+
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("Meditate Option", "Adds Meditate when not moving, not having a target and being in combat.", Job.SAM)]
+    SAM_ST_Meditate = 15093,
 
     #endregion
 
@@ -6333,7 +6357,7 @@ public enum Preset
 
     #endregion
 
-    // Last Value ST = 15023
+    // Last Value ST = 15027
     // Last Value AoE = 15113
     // Last Value Misc = 15255
     // Last Value Hidden = 15301
