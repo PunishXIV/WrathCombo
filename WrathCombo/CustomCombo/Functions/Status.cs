@@ -204,6 +204,13 @@ internal abstract partial class CustomComboFunctions
 
                 return false;
 
+            case 189: // Amdapor Keep (Hard), Ferdidad
+                if ((targetID is 3432) && (
+                     // Stoneskins or multiple adds
+                     HasStatusEffect(152, tar, true) || NumberOfObjectsInRange<SelfCircle>(30, checkInvincible: false) > 1))
+                    return true;
+                return false;
+
             case 508: // The Void Ark
                 // Sawtooth 5103
                 // Irminsul 5105

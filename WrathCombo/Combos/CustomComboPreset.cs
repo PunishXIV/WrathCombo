@@ -954,7 +954,7 @@ public enum Preset
         "Essential Dignity will be added when the target is at or below the value set", Job.AST)]
     [PossiblyRetargeted(AST.EssentialDignity)]
     AST_ST_Heals_EssentialDignity = 1024,
-    
+
     [ParentCombo(AST_ST_Heals_EssentialDignity)]
     [CustomComboInfo("Emergency Essential Dignity Option",
         "Will retain a charge of Essential Dignity to use at a different threshold.", Job.AST)]
@@ -4240,7 +4240,7 @@ public enum Preset
     [ReplaceSkill(NIN.ShadeShift, NIN.Shukuchi, RoleActions.Melee.Feint, RoleActions.Melee.Bloodbath, RoleActions.Physical.SecondWind)]
     [CustomComboInfo("Mudra Protection", "Replaces with Savage Blade during Mudra Phase to help prevent manual usage Mudra fails.", Job.NIN)]
     NIN_MudraProtection = 10046,
-    
+
 
     [ReplaceSkill(NIN.Kassatsu)]
     [CustomComboInfo("Kassatsu to Trick Feature",
@@ -5358,7 +5358,7 @@ public enum Preset
     [ParentCombo(RDM_ST_DPS)]
     [CustomComboInfo("Magick Barrier Raidwide Option", "Adds Magick Barrier when Raidwide is detected casting.", Job.RDM)]
     RDM_ST_MagickBarrier = 13025,
-    
+
     [ParentCombo(RDM_ST_DPS)]
     [CustomComboInfo("Vercure Solo Option", "Adds Vercure on self when solo or in a party with no healers.", Job.RDM)]
     RDM_ST_VerCure = 13026,
@@ -5454,11 +5454,11 @@ public enum Preset
     [CustomComboInfo("Lucid Dreaming Option", "Weaves Lucid Dreaming when your MP drops below the specified value.",
         Job.RDM)]
     RDM_AoE_Lucid = 13220,
-    
+
     [ParentCombo(RDM_AoE_DPS)]
     [CustomComboInfo("Vercure Solo Option", "Adds Vercure on self when solo or in a party with no healers.", Job.RDM)]
     RDM_AoE_VerCure = 13222,
-    
+
     //Last Used 13222
 
     #endregion
@@ -5936,7 +5936,7 @@ public enum Preset
     SGE_Retarget_Diagnosis = 14079,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Eukrasian Diagnosis Options", "Retargets Eukrasian Diagnosis according to your Healing stack." +
+    [CustomComboInfo("Eukrasian Diagnosis Options", "Retargets Eukrasian Diagnosis according to your Healing stack " +
                                                     "(even from the Eukrasia Feature above)", Job.SGE)]
     [Retargeted(SGE.EukrasianDiagnosis)]
     SGE_Retarget_EukrasianDiagnosis = 14080,
@@ -5947,13 +5947,13 @@ public enum Preset
     SGE_Retarget_Haima = 14074,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Druochole Options", "Retargets Druochole according to your Healing stack." +
+    [CustomComboInfo("Druochole Options", "Retargets Druochole according to your Healing stack " +
                                           "(even from the Taurochole to Druochole Feature above)", Job.SGE)]
     [Retargeted(SGE.Druochole)]
     SGE_Retarget_Druochole = 14075,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack." +
+    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack " +
                                            "(even from the Taurochole to Druochole Feature above)", Job.SGE)]
     [Retargeted(SGE.Taurochole)]
     SGE_Retarget_Taurochole = 14076,
@@ -5964,7 +5964,7 @@ public enum Preset
     SGE_Retarget_Krasis = 14077,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack." +
+    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack " +
                                        "(even from the Soteria to Kardia Feature above)", Job.SGE)]
     [Retargeted(SGE.Kardia)]
     SGE_Retarget_Kardia = 14078,
@@ -6536,19 +6536,19 @@ public enum Preset
     [ParentCombo(SCH_ST_Heal)]
     [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing", Job.SCH)]
     SCH_ST_Heal_FeyBlessing = 16069,
-    
+
     [ParentCombo(SCH_ST_Heal)]
     [CustomComboInfo("Seraphism Option", "Use Seraphism", Job.SCH)]
     SCH_ST_Heal_Seraphism = 16086,
-    
+
     [ParentCombo(SCH_ST_Heal)]
     [CustomComboInfo("Expedient Option", "Use Expedient", Job.SCH)]
     SCH_ST_Heal_Expedient = 16087,
-    
+
     [ParentCombo(SCH_ST_Heal)]
     [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph", Job.SCH)]
     SCH_ST_Heal_SummonSeraph = 16088,
-    
+
     [ParentCombo(SCH_ST_Heal)]
     [CustomComboInfo("Consolation Option", "Use Consolation", Job.SCH)]
     SCH_ST_Heal_Consolation = 16089,
@@ -6561,7 +6561,7 @@ public enum Preset
     [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below:", Job.SCH)]
     [HealingCombo]
     SCH_AoE_Heal = 16018,
-    
+
     [ParentCombo(SCH_AoE_Heal)]
     [CustomComboInfo("Indomitability Option", "Use Indomitabilty", Job.SCH)]
     SCH_AoE_Heal_Indomitability = 16022,
@@ -7992,7 +7992,7 @@ public enum Preset
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Thin Air Option", "Adds Thin Air.", Job.WHM)]
     WHM_STHeals_ThinAir = 19304,
-    
+
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
                                                "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
