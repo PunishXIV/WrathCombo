@@ -1,9 +1,9 @@
 using Dalamud.Game.ClientState.Objects.Types;
-using System.Linq;
 using ECommons.GameFunctions;
-using WrathCombo.Extensions;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.SGE.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -32,7 +32,7 @@ internal partial class SGE : Healer
                     .Retarget(actionID, Target);
 
             //Content skills
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             if (CanWeave() && !HasStatusEffect(Buffs.Eukrasia))
@@ -90,6 +90,12 @@ internal partial class SGE : Healer
                         return OriginalHook(Phlegma);
                 }
 
+                //Addersting  protection
+                if (HasMaxAddersting() &&
+                    (HasStatusEffect(Buffs.EukrasianDiagnosis) ||
+                     HasStatusEffect(Buffs.EukrasianPrognosis)))
+                    return OriginalHook(Toxikon);
+
                 // Movement Options
                 if (InCombat() && IsMoving() && HasBattleTarget())
                 {
@@ -121,7 +127,7 @@ internal partial class SGE : Healer
                 return actionID;
 
             //Occult skills
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             if (ActionReady(Kerachole) && HasAddersgall() &&
@@ -196,7 +202,7 @@ internal partial class SGE : Healer
     }
 
     #endregion
-    
+
     #region Advanced DPS Mode
 
     internal class SGE_ST_DPS_AdvancedMode : CustomCombo
@@ -226,7 +232,7 @@ internal partial class SGE : Healer
                 return actionID;
 
             //Content Actions
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             #region Raidwide Feature
@@ -308,11 +314,18 @@ internal partial class SGE : Healer
                         return OriginalHook(Phlegma);
                 }
 
+                //Addersting  protection
+                if (IsEnabled(Preset.SGE_ST_DPS_AdderstinggallProtect) &&
+                    HasMaxAddersting() &&
+                    (HasStatusEffect(Buffs.EukrasianDiagnosis) ||
+                     HasStatusEffect(Buffs.EukrasianPrognosis)))
+                    return OriginalHook(Toxikon);
+
                 // Movement Options
                 if (IsEnabled(Preset.SGE_ST_DPS_Movement) &&
                     InCombat() && IsMoving())
                 {
-                    foreach (int priority in SGE_ST_DPS_Movement_Priority.Items.OrderBy(x => x))
+                    foreach(int priority in SGE_ST_DPS_Movement_Priority.Items.OrderBy(x => x))
                     {
                         int index = SGE_ST_DPS_Movement_Priority.IndexOf(priority);
                         if (CheckMovementConfigMeetsRequirements(index, out uint action))
@@ -336,7 +349,7 @@ internal partial class SGE : Healer
                 return actionID;
 
             //Occult skills
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             #region Raidwide Feature
@@ -423,8 +436,9 @@ internal partial class SGE : Healer
     }
 
     #endregion
-    
+
     #region Simple Healing
+
     internal class SGE_Simple_ST_Heal : CustomCombo
     {
         protected internal override Preset Preset => Preset.SGE_Simple_ST_Heal;
@@ -436,7 +450,7 @@ internal partial class SGE : Healer
             if (actionID is not Diagnosis)
                 return actionID;
 
-            if (LevelChecked(Kardia) && 
+            if (LevelChecked(Kardia) &&
                 !HasStatusEffect(Buffs.Kardia))
                 return Kardia.Retarget(Diagnosis, SimpleTarget.AnyLivingTank);
 
@@ -451,20 +465,20 @@ internal partial class SGE : Healer
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
 
-            if (ActionReady(Rhizomata) && !HasAddersgall() && 
+            if (ActionReady(Rhizomata) && !HasAddersgall() &&
                 CanWeave())
                 return Rhizomata;
 
-            if (ActionReady(Soteria) && HasStatusEffect(Buffs.Kardia) && 
+            if (ActionReady(Soteria) && HasStatusEffect(Buffs.Kardia) &&
                 CanWeave())
                 return Soteria;
 
-            if (ActionReady(OriginalHook(Physis)) && 
+            if (ActionReady(OriginalHook(Physis)) &&
                 !InBossEncounter())
                 return OriginalHook(Physis);
 
-            if (ActionReady(Kerachole) && 
-                TraitLevelChecked(Traits.EnhancedKerachole) && 
+            if (ActionReady(Kerachole) &&
+                TraitLevelChecked(Traits.EnhancedKerachole) &&
                 HasAddersgall() &&
                 !InBossEncounter())
                 return Kerachole;
@@ -478,10 +492,10 @@ internal partial class SGE : Healer
                 if (ActionReady(Haima) && !HasStatusEffect(Buffs.Panhaima, healTarget))
                     return Haima.RetargetIfEnabled(healTarget, Diagnosis);
             }
-            
+
             if (ActionReady(Druochole) && HasAddersgall())
                 return Druochole.RetargetIfEnabled(healTarget, Diagnosis);
-            
+
             if (!InBossEncounter())
             {
                 if (ActionReady(Holos))
@@ -515,28 +529,28 @@ internal partial class SGE : Healer
 
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
-            
-            if (ActionReady(Rhizomata) && !HasAddersgall() && 
+
+            if (ActionReady(Rhizomata) && !HasAddersgall() &&
                 CanWeave())
                 return Rhizomata;
-           
+
             if (ActionReady(OriginalHook(Physis)))
                 return OriginalHook(Physis);
 
-            if (ActionReady(Kerachole) && 
-                TraitLevelChecked(Traits.EnhancedKerachole) && 
+            if (ActionReady(Kerachole) &&
+                TraitLevelChecked(Traits.EnhancedKerachole) &&
                 HasAddersgall())
                 return Kerachole;
-            
+
             if (ActionReady(Holos))
                 return Holos;
-            
+
             if (ActionReady(Ixochole) && HasAddersgall())
                 return Ixochole;
-            
+
             if (ActionReady(Philosophia) && !HasStatusEffect(Buffs.Panhaima))
                 return Philosophia;
-            
+
             if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia))
                 return Panhaima;
 
@@ -544,13 +558,13 @@ internal partial class SGE : Healer
                 return ActionReady(Pneuma) && !HasStatusEffect(Buffs.Zoe) || !LevelChecked(Pneuma)
                     ? Zoe
                     : Pneuma;
-            
+
             if (ActionReady(Pepsis) &&
                 HasStatusEffect(Buffs.EukrasianPrognosis))
                 return Pepsis;
 
-            if (ActionReady(Eukrasia) && 
-                (GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 || 
+            if (ActionReady(Eukrasia) &&
+                (GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 ||
                  GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50))
                 return HasStatusEffect(Buffs.Eukrasia)
                     ? EukrasianPrognosis
@@ -559,7 +573,7 @@ internal partial class SGE : Healer
             return actionID;
         }
     }
-    
+
     #endregion
 
     #region Advanced Healing
@@ -620,7 +634,7 @@ internal partial class SGE : Healer
                 Role.CanLucidDream(SGE_ST_Heal_LucidOption))
                 return Role.LucidDreaming;
 
-            for (int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
+            for(int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
             {
                 int index = SGE_ST_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
@@ -679,7 +693,7 @@ internal partial class SGE : Healer
                 return Role.LucidDreaming;
 
             float averagePartyHP = GetPartyAvgHPPercent();
-            for (int i = 0; i < SGE_AoE_Heals_Priority.Count; i++)
+            for(int i = 0; i < SGE_AoE_Heals_Priority.Count; i++)
             {
                 int index = SGE_AoE_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigAoE(index, out uint spell, out bool enabled);

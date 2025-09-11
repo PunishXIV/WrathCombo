@@ -5636,6 +5636,10 @@ public enum Preset
     SGE_ST_DPS_AddersgallProtect = 14054,
 
     [ParentCombo(SGE_ST_DPS)]
+    [CustomComboInfo("Addersting Overflow Protection", "Uses Toxikon when about to overcap on Addersting charges.", Job.SGE)]
+    SGE_ST_DPS_AdderstinggallProtect = 14088,
+
+    [ParentCombo(SGE_ST_DPS)]
     [CustomComboInfo("Rhizomata Option", "Weaves Rhizomata when Addersgall gauge falls below the specified value.", Job.SGE)]
     SGE_ST_DPS_Rhizo = 14007,
 
@@ -5996,7 +6000,7 @@ public enum Preset
 
     #endregion
 
-    // Last used number = 14087
+    // Last used number = 14088
 
     #endregion
 

@@ -1,10 +1,10 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.GameFunctions;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using ECommons.GameFunctions;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -36,6 +36,9 @@ internal partial class SGE
 
     internal static bool HasAddersting() =>
         Addersting > 0;
+
+    internal static bool HasMaxAddersting() =>
+        Addersting == 3;
 
     #region Healing
 
