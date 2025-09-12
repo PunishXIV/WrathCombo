@@ -315,7 +315,7 @@ internal partial class SGE : Healer
                 }
 
                 //Addersting  protection
-                if (IsEnabled(Preset.SGE_ST_DPS_AdderstinggallProtect) &&
+                if (IsEnabled(Preset.SGE_ST_DPS_AdderstingProtect) &&
                     HasMaxAddersting() &&
                     (HasStatusEffect(Buffs.EukrasianDiagnosis) ||
                      HasStatusEffect(Buffs.EukrasianPrognosis)))
