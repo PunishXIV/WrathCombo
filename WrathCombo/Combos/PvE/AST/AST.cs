@@ -99,7 +99,7 @@ internal partial class AST : Healer
             }
             #endregion
 
-            return NeedsDoT() ?
+            return NeedsDoT() && PartyInCombat()?
                 OriginalHook(Combust) :
                 actionID;
 
@@ -330,7 +330,7 @@ internal partial class AST : Healer
             #endregion
 
             if (IsEnabled(Preset.AST_ST_DPS_CombustUptime)
-                && NeedsDoT())
+                && NeedsDoT() && PartyInCombat())
                 return OriginalHook(Combust);
 
             //Alternate Mode (idles as Malefic)
@@ -491,10 +491,10 @@ internal partial class AST : Healer
                 return Role.LucidDreaming;
             
             if (ActionReady(EssentialDignity) && GetTargetHPPercent(healTarget) <= 30)
-                return EssentialDignity.RetargetIfEnabled(healTarget, Benefic);
+                return EssentialDignity.RetargetIfEnabled(OptionalTarget, Benefic);
             
             if (ActionReady(Exaltation) && (healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank || !IsInParty()))
-                return Exaltation.RetargetIfEnabled(healTarget, Benefic);
+                return Exaltation.RetargetIfEnabled(OptionalTarget, Benefic);
 
             if (!InBossEncounter())
             {
@@ -514,24 +514,24 @@ internal partial class AST : Healer
             if (ActionReady(AspectedBenefic) &&
                 (!HasStatusEffect(Buffs.AspectedBenefic, healTarget) ||
                  !HasStatusEffect(Buffs.NeutralSectShield, healTarget) && HasStatusEffect(Buffs.NeutralSect)))
-                return OriginalHook(AspectedBenefic).RetargetIfEnabled(healTarget, Benefic);
+                return OriginalHook(AspectedBenefic).RetargetIfEnabled(OptionalTarget, Benefic);
             
             if ((HasArrow || HasBole) && 
                 (healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank || !IsInParty())) 
-                return OriginalHook(Play2).RetargetIfEnabled(healTarget, Benefic);
+                return OriginalHook(Play2).RetargetIfEnabled(OptionalTarget, Benefic);
             
             if (HasEwer || HasSpire) 
-                return OriginalHook(Play3).RetargetIfEnabled(healTarget, Benefic);
+                return OriginalHook(Play3).RetargetIfEnabled(OptionalTarget, Benefic);
             
             if (ActionReady(CelestialIntersection) && !HasStatusEffect(Buffs.Intersection) && GetRemainingCharges(EssentialDignity) <= GetRemainingCharges(CelestialIntersection))
-                return CelestialIntersection.RetargetIfEnabled(healTarget, Benefic);
+                return CelestialIntersection.RetargetIfEnabled(OptionalTarget, Benefic);
             
             if (ActionReady(EssentialDignity))
-                return EssentialDignity.RetargetIfEnabled(healTarget, Benefic);
+                return EssentialDignity.RetargetIfEnabled(OptionalTarget, Benefic);
 
             return !LevelChecked(Benefic2)
-                ? actionID.RetargetIfEnabled(healTarget)
-                : Benefic2.RetargetIfEnabled(healTarget, Benefic);
+                ? actionID.RetargetIfEnabled(OptionalTarget)
+                : Benefic2.RetargetIfEnabled(OptionalTarget, Benefic);
         }
     }
     

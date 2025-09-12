@@ -155,7 +155,7 @@ internal partial class All
                          SimpleTarget.HardTarget.IfHasCleansable() ??
                          GetPartyMembers().FirstOrDefault(x => x.BattleChara.IfHasCleansable() != null)?.BattleChara;
 
-            return RoleActions.Healer.Esuna.Retarget(target, dontCull: true);
+            return RoleActions.Healer.Esuna.Retarget(target, dontCull: false);
         }
     }
 

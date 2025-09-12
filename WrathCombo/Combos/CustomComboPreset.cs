@@ -951,7 +951,7 @@ public enum Preset
 
     [ParentCombo(AST_ST_Heals)]
     [CustomComboInfo("Essential Dignity Option",
-        "Essential Dignity will be added when the target is at or below the value set", Job.AST)]
+        "Essential Dignity will be added when the target is at or below the value set.", Job.AST)]
     [PossiblyRetargeted(AST.EssentialDignity)]
     AST_ST_Heals_EssentialDignity = 1024,
     
@@ -972,31 +972,31 @@ public enum Preset
     AST_ST_Heals_Exaltation = 1028,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Spire Option", "Adds The Spire (Shield) when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Spire Option", "Adds The Spire (Shield) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Spire)]
     AST_ST_Heals_Spire = 1030,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Ewer Option", "Adds The Ewer (Heal over time) when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Ewer Option", "Adds The Ewer (Heal over time) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Ewer)]
     AST_ST_Heals_Ewer = 1032,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Arrow Option", "Adds The Arrow (increased healing)  when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Arrow Option", "Adds The Arrow (increased healing) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Arrow)]
     AST_ST_Heals_Arrow = 1049,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Bole Option", "Adds The Bole (Reduced Damage) when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Bole Option", "Adds The Bole (Reduced Damage) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Bole)]
     AST_ST_Heals_Bole = 1050,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition", Job.AST)]
+    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition.", Job.AST)]
     AST_ST_Heals_CelestialOpposition = 1068,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel)", Job.AST)]
+    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel).", Job.AST)]
     AST_ST_Heals_CollectiveUnconscious = 1069,
 
     [ParentCombo(AST_ST_Heals)]
@@ -1012,19 +1012,19 @@ public enum Preset
     AST_AoE_Heals = 1010,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Aspected Helios Option", "Adds Aspected Helios/Helios Conjunction", Job.AST)]
+    [CustomComboInfo("Aspected Helios Option", "Adds Aspected Helios/Helios Conjunction.", Job.AST)]
     AST_AoE_Heals_Aspected = 1053,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Helios Option", "Adds Helios", Job.AST)]
+    [CustomComboInfo("Helios Option", "Adds Helios.", Job.AST)]
     AST_AoE_Heals_Helios = 1073,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition", Job.AST)]
+    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition.", Job.AST)]
     AST_AoE_Heals_CelestialOpposition = 1021,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Lazy Lady Option", "Adds Lady of Crowns, if the card is drawn", Job.AST)]
+    [CustomComboInfo("Lazy Lady Option", "Adds Lady of Crowns, if the card is drawn.", Job.AST)]
     AST_AoE_Heals_LazyLady = 1022,
 
     [ParentCombo(AST_AoE_Heals)]
@@ -1040,11 +1040,11 @@ public enum Preset
     AST_AoE_Heals_NeutralSect = 1067,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Stellar Detonation Option", "Adds Stellar Detonation when under the effect of Giant Dominance", Job.AST)]
+    [CustomComboInfo("Stellar Detonation Option", "Adds Stellar Detonation when under the effect of Giant Dominance.", Job.AST)]
     AST_AoE_Heals_StellarDetonation = 1072,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel)", Job.AST)]
+    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel).", Job.AST)]
     AST_AoE_Heals_CollectiveUnconscious = 1074,
     #endregion
 
@@ -6501,56 +6501,56 @@ public enum Preset
     SCH_ST_Heal_Esuna = 16026,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Adloquium Option", "Use Adloquium", Job.SCH)]
+    [CustomComboInfo("Adloquium Option", "Use Adloquium.", Job.SCH)]
     [PossiblyRetargeted(SCH.Adloquium)]
     SCH_ST_Heal_Adloquium = 16027,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Lustrate Option", "Use Lustrate", Job.SCH)]
+    [CustomComboInfo("Lustrate Option", "Use Lustrate.", Job.SCH)]
     [PossiblyRetargeted(SCH.Lustrate)]
     SCH_ST_Heal_Lustrate = 16028,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Excogitation Option", "Use Excogitation", Job.SCH)]
+    [CustomComboInfo("Excogitation Option", "Use Excogitation.", Job.SCH)]
     [PossiblyRetargeted(SCH.Excogitation)]
     SCH_ST_Heal_Excogitation = 16038,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Protraction Option", "Use Protraction", Job.SCH)]
+    [CustomComboInfo("Protraction Option", "Use Protraction.", Job.SCH)]
     [PossiblyRetargeted(SCH.Protraction)]
     SCH_ST_Heal_Protraction = 16039,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Aetherpact Option", "Use Aetherpact", Job.SCH)]
+    [CustomComboInfo("Aetherpact Option", "Use Aetherpact.", Job.SCH)]
     [PossiblyRetargeted(SCH.Aetherpact)]
     SCH_ST_Heal_Aetherpact = 16047,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn", Job.SCH)]
+    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn.", Job.SCH)]
     SCH_ST_Heal_WhisperingDawn = 16067,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination", Job.SCH)]
+    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination.", Job.SCH)]
     SCH_ST_Heal_FeyIllumination = 16068,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing", Job.SCH)]
+    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing.", Job.SCH)]
     SCH_ST_Heal_FeyBlessing = 16069,
     
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Seraphism Option", "Use Seraphism", Job.SCH)]
+    [CustomComboInfo("Seraphism Option", "Use Seraphism.", Job.SCH)]
     SCH_ST_Heal_Seraphism = 16086,
     
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Expedient Option", "Use Expedient", Job.SCH)]
+    [CustomComboInfo("Expedient Option", "Use Expedient.", Job.SCH)]
     SCH_ST_Heal_Expedient = 16087,
     
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph", Job.SCH)]
+    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph.", Job.SCH)]
     SCH_ST_Heal_SummonSeraph = 16088,
     
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Consolation Option", "Use Consolation", Job.SCH)]
+    [CustomComboInfo("Consolation Option", "Use Consolation.", Job.SCH)]
     SCH_ST_Heal_Consolation = 16089,
     #endregion
 
@@ -6558,36 +6558,36 @@ public enum Preset
     [AutoAction(true, true)]
     [ReplaceSkill(SCH.Succor)]
     [ConflictingCombos(SCH_Simple_AoE_Heal)]
-    [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below:", Job.SCH)]
+    [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below.", Job.SCH)]
     [HealingCombo]
     SCH_AoE_Heal = 16018,
     
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Indomitability Option", "Use Indomitabilty", Job.SCH)]
+    [CustomComboInfo("Indomitability Option", "Use Indomitabilty.", Job.SCH)]
     SCH_AoE_Heal_Indomitability = 16022,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn", Job.SCH)]
+    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn.", Job.SCH)]
     SCH_AoE_Heal_WhisperingDawn = 16043,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination", Job.SCH)]
+    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination.", Job.SCH)]
     SCH_AoE_Heal_FeyIllumination = 16042,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing", Job.SCH)]
+    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing.", Job.SCH)]
     SCH_AoE_Heal_FeyBlessing = 16045,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Seraphism Option", "Use Seraphism", Job.SCH)]
+    [CustomComboInfo("Seraphism Option", "Use Seraphism.", Job.SCH)]
     SCH_AoE_Heal_Seraphism = 16044,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph", Job.SCH)]
+    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph.", Job.SCH)]
     SCH_AoE_Heal_SummonSeraph = 16063,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Consolation Option", "Use Consolation", Job.SCH)]
+    [CustomComboInfo("Consolation Option", "Use Consolation.", Job.SCH)]
     SCH_AoE_Heal_Consolation = 16046,
 
     [ParentCombo(SCH_AoE_Heal)]
@@ -7899,7 +7899,7 @@ public enum Preset
     [ParentCombo(WHM_ST_MainCombo)]
     [CustomComboInfo("Afflatus Misery Option",
         "Adds Afflatus Misery to the single target combo when it is ready to be used.", Job.WHM)]
-    WHM_ST_MainCombo_Misery_oGCD = 19017,
+    WHM_ST_MainCombo_Misery = 19017,
 
     [ParentCombo(WHM_ST_MainCombo)]
     [CustomComboInfo("Lily Overcap Protection Option",
@@ -7992,12 +7992,6 @@ public enum Preset
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Thin Air Option", "Adds Thin Air.", Job.WHM)]
     WHM_STHeals_ThinAir = 19304,
-    
-    [ParentCombo(WHM_STHeals)]
-    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
-                                               "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
-    [Retargeted]
-    WHM_STHeals_Misery = 19313,
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Regen Option", "Adds Regen.", Job.WHM)]
@@ -8036,7 +8030,6 @@ public enum Preset
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Asylum Option", "Adds Asylum.", Job.WHM)]
-    [PossiblyRetargeted]
     WHM_STHeals_Asylum = 19311,
 
     [ParentCombo(WHM_STHeals)]
@@ -8062,12 +8055,6 @@ public enum Preset
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Thin Air Option", "Uses Thin Air when available.", Job.WHM)]
     WHM_AoEHeals_ThinAir = 19200,
-
-    [ParentCombo(WHM_AoEHeals)]
-    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
-                                               "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
-    [Retargeted]
-    WHM_AoEHeals_Misery = 19010,
 
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Medica II Option",

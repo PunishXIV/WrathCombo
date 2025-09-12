@@ -43,6 +43,7 @@ internal static class ASTPvP
         internal static UserBool
             ASTPvP_Heal_DoubleCast = new("ASTPvP_Heal_DoubleCast"),
             ASTPvP_BurstHealRetarget = new("ASTPvP_BurstHealRetarget"),
+            ASTPvP_BurstHeal_DoubleCast = new("ASTPvP_BurstHeal_DoubleCast"),
             ASTPvP_Heal_Retarget = new("ASTPvP_Heal_Retarget");
         internal static UserInt
             ASTPvP_Burst_PlayCardOption = new("ASTPvP_Burst_PlayCardOption"),
@@ -69,6 +70,7 @@ internal static class ASTPvP
                 
                 case Preset.ASTPvP_Burst_Heal:
                     DrawAdditionalBoolChoice(ASTPvP_BurstHealRetarget, "Retarget", "Retargets Aspected Benefic to the Heal Stack(In Wrath Settings)");
+                    DrawAdditionalBoolChoice(ASTPvP_BurstHeal_DoubleCast, "Double Cast", "Adds Doublecast to Aspected Benefic");
                     DrawSliderInt(1, 100, ASTPvP_Burst_HealThreshold, "HP% to use Aspected Benefic");
                     break;
                     
@@ -137,6 +139,12 @@ internal static class ASTPvP
                 if (IsEnabled(Preset.ASTPvP_Burst_Heal))
                 {
                     IGameObject? healTarget = ASTPvP_BurstHealRetarget ? SimpleTarget.Stack.AllyToHealPVP : SimpleTarget.Stack.Allies;
+                    
+                    if (ASTPvP_BurstHeal_DoubleCast && CanWeave() && ComboAction == AspectedBenefic && HasCharges(DoubleCast))
+                        return ASTPvP_BurstHealRetarget
+                            ? OriginalHook(DoubleCast).Retarget(Malefic, SimpleTarget.Stack.AllyToHealPVP)
+                            : OriginalHook(DoubleCast);
+                    
                 
                     if (!HasStatusEffect(Buffs.DiurnalBenefic, healTarget) && GetTargetHPPercent(healTarget) <= ASTPvP_Burst_HealThreshold && ActionReady(AspectedBenefic))
                         return ASTPvP_BurstHealRetarget
@@ -181,7 +189,9 @@ internal static class ASTPvP
                 return actionID;
             
             if (ASTPvP_Heal_DoubleCast && CanWeave() && ComboAction == AspectedBenefic && HasCharges(DoubleCast))
-                return OriginalHook(DoubleCast);
+                return ASTPvP_Heal_Retarget
+                ? OriginalHook(DoubleCast).Retarget(AspectedBenefic, SimpleTarget.Stack.AllyToHealPVP)
+                : OriginalHook(DoubleCast);
             
             return ASTPvP_Heal_Retarget
                 ? actionID.Retarget(SimpleTarget.Stack.AllyToHealPVP)

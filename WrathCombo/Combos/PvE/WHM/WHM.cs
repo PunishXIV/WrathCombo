@@ -38,7 +38,7 @@ internal partial class WHM : Healer
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
-            if (!InCombat()) return actionID;
+            if (!PartyInCombat()) return actionID;
 
             #region Weaves
 
@@ -65,7 +65,7 @@ internal partial class WHM : Healer
                 return OriginalHook(Aero);
             
             // Blood Lily Spend
-            if (BloodLilyReady && (AlmostFullLily || HasStatusEffect(Buffs.PresenceOfMind)))
+            if (BloodLilyReady)
                 return AfflatusMisery;
 
             // Glare IV
@@ -130,8 +130,7 @@ internal partial class WHM : Healer
 
             #region GCDS and Casts
             
-            if (HasBattleTarget() && BloodLilyReady && 
-                (AlmostFullLily || HasStatusEffect(Buffs.PresenceOfMind)))
+            if (HasBattleTarget() && BloodLilyReady)
                 return AfflatusMisery;
           
             if (HasStatusEffect(Buffs.SacredSight))
@@ -190,7 +189,7 @@ internal partial class WHM : Healer
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
-            if (!InCombat()) return actionID;
+            if (!PartyInCombat()) return actionID;
 
             #region Special Feature Raidwide
 
@@ -231,8 +230,8 @@ internal partial class WHM : Healer
                 return OriginalHook(Aero);
             
             // Blood Lily Spend
-            if (IsEnabled(Preset.WHM_ST_MainCombo_Misery_oGCD) &&
-                BloodLilyReady && (AlmostFullLily || HasStatusEffect(Buffs.PresenceOfMind)))
+            if (IsEnabled(Preset.WHM_ST_MainCombo_Misery) && BloodLilyReady && 
+                (AlmostFullLily || HasStatusEffect(Buffs.PresenceOfMind) || WHM_ST_MainCombo_Misery_Option == 1))
                 return AfflatusMisery;
 
             // Glare IV
@@ -326,8 +325,8 @@ internal partial class WHM : Healer
 
             #region GCDS and Casts
 
-            if (IsEnabled(Preset.WHM_AoE_DPS_Misery) && HasBattleTarget() &&
-                BloodLilyReady && (AlmostFullLily || HasStatusEffect(Buffs.PresenceOfMind)))
+            if (IsEnabled(Preset.WHM_AoE_DPS_Misery) && HasBattleTarget() && BloodLilyReady && 
+                (AlmostFullLily || HasStatusEffect(Buffs.PresenceOfMind) || WHM_AoE_DPS_Misery_Option == 1))
                 return AfflatusMisery;
             
             if (IsEnabled(Preset.WHM_AoE_DPS_GlareIV) &&
@@ -372,11 +371,11 @@ internal partial class WHM : Healer
             
             if (ActionReady(Benediction) && 
                 GetTargetHPPercent(healTarget) <= 20)
-                return Benediction.RetargetIfEnabled(healTarget, Cure);
+                return Benediction.RetargetIfEnabled(OptionalTarget, Cure);
             
             if (ActionReady(Tetragrammaton) && 
                 GetTargetHPPercent(healTarget) <= 50)
-                return Tetragrammaton.RetargetIfEnabled(healTarget, Cure);
+                return Tetragrammaton.RetargetIfEnabled(OptionalTarget, Cure);
             
             bool cleansableTarget =
                 HealRetargeting.RetargetSettingOn && SimpleTarget.Stack.AllyToEsuna is not null ||
@@ -398,30 +397,28 @@ internal partial class WHM : Healer
             if (ActionReady(Regen) && 
                 GetStatusEffect(Buffs.Regen, healTarget) == null &&  
                 GetTargetHPPercent(healTarget) >= 40)
-                return Regen.RetargetIfEnabled(healTarget, Cure);
+                return Regen.RetargetIfEnabled(OptionalTarget, Cure);
 
             if (ActionReady(DivineBenison) && 
                 GetStatusEffect(Buffs.DivineBenison, healTarget) == null)
-                return DivineBenison.RetargetIfEnabled(healTarget, Cure);
+                return DivineBenison.RetargetIfEnabled(OptionalTarget, Cure);
 
             if (ActionReady(Aquaveil) && IsOffCooldown(Aquaveil) && (healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank || !IsInParty()))
-                return Aquaveil.RetargetIfEnabled(healTarget, Cure);
+                return Aquaveil.RetargetIfEnabled(OptionalTarget, Cure);
 
             if (ActionReady(OriginalHook(Temperance)) && 
                 !InBossEncounter())
                 return OriginalHook(Temperance);
             
-            if (ActionReady(AfflatusSolace))
-                return BloodLilyReady
-                    ? AfflatusMisery.Retarget(Cure, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget)
-                    : AfflatusSolace.RetargetIfEnabled(healTarget, Cure);
+            if (ActionReady(AfflatusSolace) && !BloodLilyReady)
+                return AfflatusSolace.RetargetIfEnabled(OptionalTarget, Cure);
 
             if (ActionReady(ThinAir) && GetRemainingCharges(ThinAir) == 2)
                 return ThinAir;
             
             return LevelChecked(Cure2)
-                ? Cure2.RetargetIfEnabled(healTarget, Cure)
-                : Cure.RetargetIfEnabled(healTarget);
+                ? Cure2.RetargetIfEnabled(OptionalTarget, Cure)
+                : Cure.RetargetIfEnabled(OptionalTarget);
         }
     }
     
@@ -433,8 +430,6 @@ internal partial class WHM : Healer
         {
             if (actionID is not Medica1)
                 return actionID;
-            
-            var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
             if (ActionReady(Assize))
                 return Assize;
@@ -463,17 +458,15 @@ internal partial class WHM : Healer
                  RaidWideCasting()))
                 return PlenaryIndulgence;
             
-            if (ActionReady(AfflatusRapture))
-                return BloodLilyReady
-                    ? AfflatusMisery.Retarget(Medica1, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget)
-                    : AfflatusRapture;
+            if (ActionReady(AfflatusRapture) && !BloodLilyReady)
+                return AfflatusRapture;
             
             if (ActionReady(ThinAir) && GetRemainingCharges(ThinAir) == 2)
                 return ThinAir;
 
             if (ActionReady(Cure3) &&
                 NumberOfAlliesInRange(Cure3) >= GetPartyMembers().Count * .75)
-                return Cure3.RetargetIfEnabled(healTarget, Medica1);
+                return Cure3.RetargetIfEnabled(OptionalTarget, Medica1);
 
             if (ActionReady(OriginalHook(Medica2)) &&
                 !HasStatusEffect(Buffs.Medica2) &&
@@ -549,9 +542,6 @@ internal partial class WHM : Healer
                 var index = WHM_ST_Heals_Priority.IndexOf(i + 1);
                 var config = GetMatchingConfigST(index, OptionalTarget,
                     out var spell, out var enabled);
-                
-                if (IsEnabled(Preset.WHM_STHeals_Misery) && BloodLilyReady && spell is AfflatusSolace)
-                    return AfflatusMisery.Retarget(Cure, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget);
 
                 if (enabled)
                 {
@@ -611,10 +601,6 @@ internal partial class WHM : Healer
                 var index = WHM_AoE_Heals_Priority.IndexOf(i + 1);
                 var config = GetMatchingConfigAoE(index, OptionalTarget,
                     out var spell, out var enabled);
-                
-                // Blood Overcap
-                if (IsEnabled(Preset.WHM_AoEHeals_Misery) && BloodLilyReady && spell is AfflatusRapture)
-                    return AfflatusMisery.Retarget(Medica1, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.NearestEnemyTarget);
 
                 if (enabled && GetPartyAvgHPPercent() <= config &&
                     ActionReady(spell))

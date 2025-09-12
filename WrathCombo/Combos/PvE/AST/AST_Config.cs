@@ -11,8 +11,8 @@ internal partial class AST
     {
         #region Options
         public static UserIntArray
-            AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [12,11,10,6,7,8,9,5,4,3,2,1]),
-            AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 7, 1, 4, 6, 2, 8, 9, 5]);
+            AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [12,11,10,9,8,6,7,5,4,3,2,1]),
+            AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 6, 1, 4, 7, 2, 8, 9, 5]);
         
         public static UserInt
             //HEALS
