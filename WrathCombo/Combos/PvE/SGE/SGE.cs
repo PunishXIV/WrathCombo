@@ -91,7 +91,7 @@ internal partial class SGE : Healer
                 }
 
                 //Addersting  protection
-                if (HasMaxAddersting() &&
+                if (HasMaxAddersting() && RaidWideCasting(3f) &&
                     (HasStatusEffect(Buffs.EukrasianDiagnosis) ||
                      HasStatusEffect(Buffs.EukrasianPrognosis)))
                     return OriginalHook(Toxikon);
@@ -316,7 +316,7 @@ internal partial class SGE : Healer
 
                 //Addersting  protection
                 if (IsEnabled(Preset.SGE_ST_DPS_AdderstingProtect) &&
-                    HasMaxAddersting() &&
+                    HasMaxAddersting() && RaidWideCasting(3f) &&
                     (HasStatusEffect(Buffs.EukrasianDiagnosis) ||
                      HasStatusEffect(Buffs.EukrasianPrognosis)))
                     return OriginalHook(Toxikon);
