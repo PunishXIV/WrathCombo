@@ -260,7 +260,9 @@ internal partial class BLM : Caster
 
             if (IcePhase)
             {
-                if ((HasMaxUmbralHeartStacks || CurMp is MP.MaxMP) &&
+                if ((HasMaxUmbralHeartStacks ||
+                     CurMp is MP.MaxMP && !LevelChecked(Flare) ||
+                     CurMp >= 5000 && LevelChecked(Flare)) &&
                     ActionReady(Transpose))
                     return Transpose;
 
@@ -580,7 +582,9 @@ internal partial class BLM : Caster
 
             if (IcePhase)
             {
-                if (HasMaxUmbralHeartStacks || CurMp is MP.MaxMP)
+                if (HasMaxUmbralHeartStacks ||
+                    CurMp is MP.MaxMP && !LevelChecked(Flare) ||
+                    CurMp >= 5000 && LevelChecked(Flare))
                 {
                     if (IsNotEnabled(Preset.BLM_AoE_Transpose) &&
                         LevelChecked(Fire2) && TraitLevelChecked(Traits.AspectMasteryIII))
@@ -794,7 +798,7 @@ internal partial class BLM : Caster
             if (actionID is not Amplifier)
                 return actionID;
 
-            return BLM_AmplifierXenoCD && IsOnCooldown(Amplifier) || HasMaxPolyglotStacks
+            return BLM_AmplifierXenoCD && IsOnCooldown(Amplifier) && HasPolyglotStacks() || HasMaxPolyglotStacks
                 ? Xenoglossy
                 : actionID;
         }
