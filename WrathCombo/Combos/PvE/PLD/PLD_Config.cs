@@ -18,7 +18,7 @@ internal partial class PLD
             PLD_ST_FoF_Trigger = new("PLD_ST_FoF_Trigger", 0),
             PLD_AoE_FoF_Trigger = new("PLD_AoE_FoF_Trigger", 0),
             PLD_ST_SheltronOption = new("PLD_ST_SheltronOption", 50),
-            PLD_ST_Sheltron_SubOption = new("PLD_ST_Sheltron_SubOption", 1),
+            PLD_ST_Sheltron_Health = new("PLD_ST_Sheltron_Health", 95),
             PLD_ST_Rampart_Health = new("PLD_ST_Rampart_Health", 80),
             PLD_ST_Rampart_SubOption = new("PLD_ST_Rampart_SubOption", 1),
             PLD_ST_Sentinel_Health = new("PLD_ST_Sentinel_Health", 60),
@@ -26,7 +26,7 @@ internal partial class PLD
             PLD_ST_HallowedGround_Health = new("PLD_ST_HallowedGround_Health", 30),
             PLD_ST_HallowedGround_SubOption = new("PLD_ST_HallowedGround_SubOption", 1),
             PLD_AoE_SheltronOption = new("PLD_AoE_SheltronOption", 50),
-            PLD_AoE_Sheltron_SubOption = new("PLD_AoE_Sheltron_SubOption", 1),
+            PLD_AoE_Sheltron_Health = new("PLD_AoE_Sheltron_Health", 95),
             PLD_AoE_Rampart_Health = new("PLD_AoE_Rampart_Health", 80),
             PLD_AoE_Rampart_SubOption = new("PLD_AoE_Rampart_SubOption", 1),
             PLD_AoE_Sentinel_Health = new("PLD_AoE_Sentinel_Health", 60),
@@ -61,7 +61,9 @@ internal partial class PLD
 
 
         public static UserBool
-            PLD_RetargetStunLockout = new("PLD_RetargetStunLockout");
+            PLD_RetargetStunLockout = new("PLD_RetargetStunLockout"),
+            PLD_ST_Sheltron_Threat = new("PLD_ST_Sheltron_Threat"),
+            PLD_AoE_Sheltron_Threat = new("PLD_AoE_Sheltron_Threat");
 
         public static UserIntArray
             PLD_Mit_Priorities = new("PLD_Mit_Priorities");
@@ -99,25 +101,15 @@ internal partial class PLD
 
                 // Sheltron
                 case Preset.PLD_ST_AdvancedMode_Sheltron:
-                    DrawSliderInt(50, 100, PLD_ST_SheltronOption, "Oath Gauge", 200, 5);
-
-                    DrawHorizontalRadioButton(PLD_ST_Sheltron_SubOption, "All Enemies",
-                        "Uses Sheltron regardless of targeted enemy type.", 1);
-
-                    DrawHorizontalRadioButton(PLD_ST_Sheltron_SubOption, "Bosses Only",
-                        "Only uses Sheltron when the targeted enemy is a boss.", 2);
-
+                    DrawSliderInt(1, 100, PLD_ST_Sheltron_Health, "Player HP%", 200);
+                    DrawSliderInt(50, 100, PLD_ST_SheltronOption, "Minimum Oath Gauge", 200, 5);
+                    DrawAdditionalBoolChoice(PLD_ST_Sheltron_Threat, "Require threat", "Will only work when Tanking");
                     break;
 
                 case Preset.PLD_AoE_AdvancedMode_Sheltron:
-                    DrawSliderInt(50, 100, PLD_AoE_SheltronOption, "Oath Gauge", 200, 5);
-
-                    DrawHorizontalRadioButton(PLD_AoE_Sheltron_SubOption, "All Enemies",
-                        "Uses Sheltron regardless of targeted enemy type.", 1);
-
-                    DrawHorizontalRadioButton(PLD_AoE_Sheltron_SubOption, "Bosses Only",
-                        "Only uses Sheltron when the targeted enemy is a boss.", 2);
-
+                    DrawSliderInt(1, 100, PLD_AoE_Sheltron_Health, "Player HP%", 200);
+                    DrawSliderInt(50, 100, PLD_AoE_SheltronOption, "Minimum Oath Gauge", 200, 5);
+                    DrawAdditionalBoolChoice(PLD_AoE_Sheltron_Threat, "Require threat", "Will only work when Tanking");
                     break;
 
                 // Rampart

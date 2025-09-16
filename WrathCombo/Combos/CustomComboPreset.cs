@@ -4697,7 +4697,7 @@ public enum Preset
     PLD_ST_AdvancedMode_Mitigation = 11038,
 
     [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Required gauge threshold:", Job.PLD)]
+    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Player HP must be at or under:", Job.PLD)]
     PLD_ST_AdvancedMode_Sheltron = 11007,
 
     [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
@@ -4801,7 +4801,7 @@ public enum Preset
     PLD_AoE_AdvancedMode_Mitigation = 11042,
 
     [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Required gauge threshold:", Job.PLD)]
+    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Player HP must be at or under:", Job.PLD)]
     PLD_AoE_AdvancedMode_Sheltron = 11023,
 
     [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
