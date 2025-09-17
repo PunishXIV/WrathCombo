@@ -348,67 +348,80 @@ public static class ActionWatching
     {
         try
         {
-            if (actionType is ActionType.Action or ActionType.Ability)
-            {
-                var original = actionId; //Save the original action, do not modify
-                var originalTargetId = targetId; //Save the original target, do not modify
-
-                if (Service.Configuration.ActionChanging && Service.Configuration.PerformanceMode) //Performance mode only logic, to modify the actionId
-                {
-                    var result = actionId;
-                    foreach (var combo in ActionReplacer.FilteredCombos)
-                    {
-                        if (combo.TryInvoke(actionId, out result))
-                        {
-                            actionId = Service.ActionReplacer.LastActionInvokeFor[actionId] = result; //Sets actionId and the LastActionInvokeFor dictionary entry to the result of the combo
-                            break;
-                        }
-                    }
-                }
-
-                var changed = CheckForChangedTarget(original, ref targetId,
-                    out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
-
-                var areaTargeted = ActionSheet[replacedWith].TargetArea;
-                var targetObject = targetId.GetObject();
-
-                if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
-                    if (!ActionManager.CanUseActionOnTarget(replacedWith,
-                        targetObject.Struct()))
-                        targetId = originalTargetId;
-
-                // Support Retargeted ground actions
-                if (changed && areaTargeted)
-                {
-                    var location = Player.Position;
-                    
-                    if (IsOverGround(targetObject) &&
-                        Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
-                        location = targetObject.Position;
-                    else if (TryGetNearestGroundPointWithinRange(
-                                 targetObject, out var newLoc,
-                                 replacedWith.ActionRange()) &&
-                             newLoc is not null)
-                        location = (Vector3)newLoc;
-                    
-                    return ActionManager.Instance()->UseActionLocation
-                        (actionType, replacedWith, location: &location);
-                }
-
-                //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
-                var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
-
-                // Fallback if the Retargeted ground action couldn't be placed smartly
-                if (changed && areaTargeted)
-                    ActionManager.Instance()->AreaTargetingExecuteAtObject =
-                        targetId;
-
-                return hookResult;
-            }
-            else
-            {
+            if (actionType is not (ActionType.Action or ActionType.Ability))
                 return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+
+            //Save the original action and target, do not modify
+            var original = actionId;
+            var originalTargetId = targetId;
+
+            #region Performance Mode Logic
+
+            // Updates the action ID
+            if (Service.Configuration.ActionChanging &&
+                Service.Configuration.PerformanceMode)
+                foreach (var combo in ActionReplacer.FilteredCombos)
+                {
+                    if (!combo.TryInvoke(actionId, out var result)) continue;
+                
+                    //Sets actionId and the LastActionInvokeFor dictionary entry to the result of the combo
+                    actionId = Service.ActionReplacer
+                            .LastActionInvokeFor[actionId] =
+                        result;
+                    break;
+                }
+
+            #endregion
+
+            var combosActionID = Service.ActionReplacer
+                .LastActionInvokeFor[actionId];
+
+            #region Retargeting Logic
+
+            //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
+            var changed = CheckForChangedTarget(original, ref targetId,
+                out var replacedWith);
+            var targetObject = targetId.GetObject();
+
+            //Check if the action can be used on the target, and if not revert to original
+            if (changed && !replacedWith.IsGroundTargeted())
+                if (!ActionManager.CanUseActionOnTarget(replacedWith,
+                        targetObject.Struct()))
+                    targetId = originalTargetId;
+
+            // Support Retargeted ground actions intelligently
+            if (changed && replacedWith.IsGroundTargeted())
+            {
+                var location = Player.Position;
+
+                if (IsOverGround(targetObject) &&
+                    Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
+                    location = targetObject.Position;
+                else if (TryGetNearestGroundPointWithinRange(
+                             targetObject, out var newLoc,
+                             replacedWith.ActionRange()) &&
+                         newLoc is not null)
+                    location = (Vector3)newLoc;
+
+                return ActionManager.Instance()->UseActionLocation
+                    (actionType, replacedWith, location: &location);
             }
+
+            #endregion
+
+            //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
+            var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+
+            #region Extra Retargeting Logic
+
+            // Fallback if the Retargeted ground action couldn't be placed intelligently
+            if (changed && replacedWith.IsGroundTargeted())
+                ActionManager.Instance()->AreaTargetingExecuteAtObject =
+                    targetId;
+
+            #endregion
+
+            return hookResult;
         }
         catch (Exception ex)
         {
@@ -424,7 +437,9 @@ public static class ActionWatching
             target is null)
             return false;
 
-        if (actionId == OccultCrescent.Revive)
+        var comboActionID = Service.ActionReplacer
+            .LastActionInvokeFor[actionId];
+        if (comboActionID == OccultCrescent.Revive)
         {
             target = SimpleTarget.Stack.AllyToRaise;
             if (target is null) return false;
