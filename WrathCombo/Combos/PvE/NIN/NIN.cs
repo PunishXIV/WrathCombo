@@ -20,13 +20,15 @@ internal partial class NIN : Melee
                 return actionID;
 
             NINGauge gauge = GetJobGauge<NINGauge>();
+            
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+                ActionWatching.LastAction == Katon)
+                MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
-            
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu))
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
             
             if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
@@ -138,13 +140,15 @@ internal partial class NIN : Melee
         {
             if (actionID is not DeathBlossom)
                 return actionID;
+            
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+                ActionWatching.LastAction == Katon)
+                MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
-            
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu))
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
             
             if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
@@ -254,8 +258,16 @@ internal partial class NIN : Melee
         {
             if (actionID is not SpinningEdge)
                 return actionID;
+            
+            //PluginLog.Debug($"Current MudraState: {MudraState.CurrentMudra}");
 
             NINGauge gauge = GetJobGauge<NINGauge>();
+            
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+                ActionWatching.LastAction == Katon)
+                MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -264,10 +276,6 @@ internal partial class NIN : Melee
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) &&
                 OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
-            
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu))
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
             
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
@@ -409,14 +417,16 @@ internal partial class NIN : Melee
         {
             if (actionID is not DeathBlossom)
                 return actionID;
+            
+            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+                ActionWatching.LastAction == Katon)
+                MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) &&
                 OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
-            
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu))
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
             
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;

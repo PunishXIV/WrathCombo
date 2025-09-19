@@ -29,7 +29,7 @@ internal partial class SCH
     internal static readonly List<uint>
         BroilList = [Ruin, Broil, Broil2, Broil3, Broil4],
         AetherflowList = [EnergyDrain, Lustrate, SacredSoil, Indomitability, Excogitation],
-        ReplacedActionsList = [Ruin, Broil, Broil2, Broil3, Broil4, Bio, Biolysis, Bio2, Ruin2, Succor, Concitation, Accession, Physick], //Used for Hidden Features Retarget Sacred Soil
+        ReplacedActionsList = [Ruin, Broil, Broil2, Broil3, Broil4, Bio, Biolysis, Bio2, Ruin2, Succor, Concitation, Accession, Physick, ArtOfWar, ArtOfWarII], //Used for Hidden Features Retarget Sacred Soil
         FairyList = [WhisperingDawn, FeyBlessing, FeyIllumination, Dissipation, Aetherpact, SummonSeraph, Seraphism];
     #endregion
     internal static SCHGauge Gauge => GetJobGauge<SCHGauge>();

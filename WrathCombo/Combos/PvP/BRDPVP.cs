@@ -86,7 +86,7 @@ internal static class BRDPvP
                         return OriginalHook(FinalFantasia);
                 }
 
-                if (IsEnabled(Preset.BRDPvP_ApexArrow) && ActionReady(ApexArrow)) // Use on cd to keep up buff
+                if (IsEnabled(Preset.BRDPvP_ApexArrow) && ActionReady(ApexArrow) && !HasStatusEffect(Buffs.BlastArrowReady)) // Use on cd to keep up buff
                     return OriginalHook(ApexArrow);
 
                 if (HasStatusEffect(Buffs.FrontlineMarch))
