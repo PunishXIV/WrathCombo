@@ -45,22 +45,6 @@ internal partial class SAM
                                                                          $"\nWill use Meikyo every minute regardless of sen count outside of boss encounters.", 1);
                     break;
 
-                case Preset.SAM_ST_ComboHeals:
-                    DrawSliderInt(0, 100, SAM_STSecondWindHPThreshold,
-                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
-
-                    DrawSliderInt(0, 100, SAM_STBloodbathHPThreshold,
-                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-                    break;
-
-                case Preset.SAM_AoE_ComboHeals:
-                    DrawSliderInt(0, 100, SAM_AoESecondWindHPThreshold,
-                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
-
-                    DrawSliderInt(0, 100, SAM_AoEBloodbathHPThreshold,
-                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
-                    break;
-
                 case Preset.SAM_ST_CDs_Senei:
                     DrawAdditionalBoolChoice(SAM_ST_CDs_Guren,
                         "Guren Option", "Adds Guren to the rotation if Senei is not unlocked.");
@@ -77,11 +61,6 @@ internal partial class SAM
 
                     DrawSliderInt(0, 100, SAM_ST_ExecuteThreshold,
                         "HP percent threshold to not save Kenki");
-                    break;
-
-                case Preset.SAM_AoE_Kyuten:
-                    DrawSliderInt(25, 85, SAM_AoE_KenkiOvercapAmount,
-                        "Set the Kenki overcap amount for AOE combos.");
                     break;
 
                 case Preset.SAM_ST_GekkoCombo:
@@ -123,6 +102,19 @@ internal partial class SAM
                         " Stationary Delay Check (in seconds):", decimals: 1);
                     break;
 
+                case Preset.SAM_ST_ComboHeals:
+                    DrawSliderInt(0, 100, SAM_STSecondWindHPThreshold,
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
+
+                    DrawSliderInt(0, 100, SAM_STBloodbathHPThreshold,
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
+                    break;
+
+                case Preset.SAM_AoE_Kyuten:
+                    DrawSliderInt(25, 85, SAM_AoE_KenkiOvercapAmount,
+                        "Set the Kenki overcap amount for AOE combos.");
+                    break;
+
                 case Preset.SAM_AoE_OkaCombo:
                     DrawAdditionalBoolChoice(SAM_Oka_KenkiOvercap,
                         "Kenki Overcap Protection", "Spends Kenki when at the set value or above.");
@@ -142,6 +134,14 @@ internal partial class SAM
                     if (SAM_Mangetsu_KenkiOvercap)
                         DrawSliderInt(25, 100, SAM_Mangetsu_KenkiOvercapAmount,
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
+                    break;
+
+                case Preset.SAM_AoE_ComboHeals:
+                    DrawSliderInt(0, 100, SAM_AoESecondWindHPThreshold,
+                        $"{Role.SecondWind.ActionName()} HP percentage threshold");
+
+                    DrawSliderInt(0, 100, SAM_AoEBloodbathHPThreshold,
+                        $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
             }
         }

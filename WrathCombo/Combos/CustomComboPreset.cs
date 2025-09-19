@@ -6273,7 +6273,7 @@ public enum Preset
     [ParentCombo(SAM_Iaijutsu)]
     [CustomComboInfo("Iaijutsu to Ogi Namikiri", "Replace Iaijutsu with Ogi Namikiri and Kaeshi: Namikiri when buffed with Ogi Namikiri Ready.", Job.SAM)]
     SAM_Iaijutsu_OgiNamikiri = 15204,
-
+    
     #endregion
 
     #region Shinten Features
@@ -6287,13 +6287,17 @@ public enum Preset
     SAM_Shinten_Shoha = 15205,
 
     [ParentCombo(SAM_Shinten)]
-    [CustomComboInfo("Shinten to Senei", "Replace Hissatsu: Shinten with Senei when its cooldown is up.", Job.SAM)]
+    [CustomComboInfo("Shinten to Senei", "Replace Hissatsu: Shinten with Senei when off cooldown.", Job.SAM)]
     SAM_Shinten_Senei = 15206,
 
     [ParentCombo(SAM_Shinten)]
     [CustomComboInfo("Shinten to Zanshin", "Replace Hissatsu: Shinten with Zanshin when usable.", Job.SAM)]
     SAM_Shinten_Zanshin = 15207,
 
+    [ParentCombo(SAM_Shinten)]
+    [CustomComboInfo("Shinten to Ikishoten", "Replace Hissatsu: Shinten with Ikishoten when off cooldown and Kenki is below 50.", Job.SAM)]
+    SAM_Shinten_Ikishoten = 15256,
+    
     #endregion
 
     #region Kyuten Features
@@ -6307,13 +6311,17 @@ public enum Preset
     SAM_Kyuten_Shoha = 15208,
 
     [ParentCombo(SAM_Kyuten)]
-    [CustomComboInfo("Kyuten to Guren", "Replace Hissatsu: Kyuten with Guren when its cooldown is up.", Job.SAM)]
+    [CustomComboInfo("Kyuten to Guren", "Replace Hissatsu: Kyuten with Guren when off cooldown.", Job.SAM)]
     SAM_Kyuten_Guren = 15209,
 
     [ParentCombo(SAM_Kyuten)]
     [CustomComboInfo("Kyuten to Zanshin", "Replace Hissatsu: Kyuten with Zanshin when usable.", Job.SAM)]
     SAM_Kyuten_Zanshin = 15210,
 
+    [ParentCombo(SAM_Kyuten)]
+    [CustomComboInfo("Kyuten to Zanshin", "Replace Hissatsu: Kyuten with Ikishoten when off cooldown and Kenki is below 50.", Job.SAM)]
+    SAM_Kyuten_Ikishoten = 15257,
+    
     #endregion
 
     #region Ikishoten Features
@@ -6329,7 +6337,7 @@ public enum Preset
     [ParentCombo(SAM_Ikishoten)]
     [CustomComboInfo("Ikishoten to Shoha", "Replace Ikishoten with Shoha when Meditation is full before Ogi Namikiri.", Job.SAM)]
     SAM_Ikishoten_Shoha = 15213,
-
+    
     #endregion
 
     #region Other
@@ -6359,7 +6367,7 @@ public enum Preset
 
     // Last Value ST = 15027
     // Last Value AoE = 15113
-    // Last Value Misc = 15255
+    // Last Value Misc = 15257
     // Last Value Hidden = 15301
 
     #endregion
