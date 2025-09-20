@@ -55,7 +55,7 @@ internal class StatusCache
     /// <summary>
     /// Lumina Status Sheet Dictionary
     /// </summary>
-    private static readonly FrozenDictionary<uint, Lumina.Excel.Sheets.Status> StatusSheet = 
+    private static readonly FrozenDictionary<uint, Lumina.Excel.Sheets.Status> StatusSheet =
         Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>()
             .ToFrozenDictionary(i => i.RowId);
 
@@ -82,7 +82,7 @@ internal class StatusCache
             : [];
 
     public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
-        
+
     private static readonly FrozenSet<uint> evasionUpStatuses =
         ENStatusSheet.TryGetValue(61, out var refRow)
             ? ENStatusSheet
@@ -96,7 +96,7 @@ internal class StatusCache
     /// <summary>
     /// A cached set of dispellable status IDs for quick lookup.
     /// </summary>
-    private static readonly FrozenSet<uint> DispellableStatuses = 
+    private static readonly FrozenSet<uint> DispellableStatuses =
         StatusSheet
             .Where(kvp => kvp.Value.CanDispel)
             .Select(kvp => kvp.Key)
@@ -133,26 +133,33 @@ internal class StatusCache
             })
             .ToFrozenSet();
 
-    internal static readonly FrozenSet<uint> AccelerationBombs =
-        new HashSet<uint>(
-            StatusSheet
-                .Where(row => row.Value.Icon == 215727) // Acceleration Bomb Icon
-                .Select(row => row.Key)
-        )
-        {
+    public static class PausingStatuses
+    {
+        internal static readonly FrozenSet<uint> AccelerationBombs =
+            new HashSet<uint>(
+                StatusSheet
+                    .Where(row => row.Value.Icon == 215727) // Acceleration Bomb Icon
+                    .Select(row => row.Key)
+            )
+            {
             4130 // Authority's Hold
-        }.ToFrozenSet();
+            }.ToFrozenSet();
 
-    internal static readonly FrozenSet<uint> Pyretics =
-        new HashSet<uint>(
-            StatusSheet
-                .Where(row => row.Value.Icon == 215647) // Pyretic Icon
-                .Select(row => row.Key)
-        )
-        {
+        internal static readonly FrozenSet<uint> Pyretics =
+            new HashSet<uint>(
+                StatusSheet
+                    .Where(row => row.Value.Icon == 215647) // Pyretic Icon
+                    .Select(row => row.Key)
+            )
+            {
             514 // Causality
+            }.ToFrozenSet();
+
+        internal static readonly FrozenSet<uint> Misc = new uint[] {
+            1735 // The Orbonne Monastary - Heavenly Shield
         }.ToFrozenSet();
 
+    }
 
     /// <summary>
     /// Looks up the name of a Status by ID in Lumina Sheets
@@ -203,6 +210,6 @@ internal class StatusCache
     /// <param name="statusList"></param>
     /// <param name="charaStatusList"></param>
     /// <returns></returns>
-    internal static bool CompareLists(FrozenSet<uint> statusList, HashSet<uint> charaStatusList) => 
+    internal static bool CompareLists(FrozenSet<uint> statusList, HashSet<uint> charaStatusList) =>
         charaStatusList.Any(id => statusList.Contains(id));
 }

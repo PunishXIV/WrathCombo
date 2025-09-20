@@ -162,11 +162,14 @@ internal abstract partial class CustomComboFunctions
             //Player.IsInDuty &&  <-?
             Player.Status.Any(s =>
                 // Acceleration Bomb within Timeframe
-                (StatusCache.AccelerationBombs.Contains(s.StatusId) &&
+                (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
                     GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
 
                 // Pyretic
-                StatusCache.Pyretics.Contains(s.StatusId)
+                StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
+
+                // Others
+                StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
 
             ) == true;
 
@@ -200,6 +203,7 @@ internal abstract partial class CustomComboFunctions
                 // Allagan Bomb
                 if (targetID is 2407)
                     return NumberOfObjectsInRange<SelfCircle>(30,
+                        target, // 30 yalms radius range of Allagan Bomb
                         checkInvincible: false) > 1;
 
                 return false;
@@ -221,6 +225,11 @@ internal abstract partial class CustomComboFunctions
                    ) return true;
                 // Cuchulainn 5139, Checking one of the Stoneskins
                 if (targetID is 5139 && HasStatusEffect(152, tar, true)) return true;
+                return false;
+
+            case 582: // Heart of the Creator
+                if ((targetID is 6101) && // Plasma Shield
+                    AngleToTarget(tar) is not AttackAngle.Front) return true;
                 return false;
 
             case 801 or 805 or 1122: // Interdimensional Rift (Omega 12 / Alphascape 4), Regular/Savage?/Ultimate?
