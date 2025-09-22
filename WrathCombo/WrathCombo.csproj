@@ -33,7 +33,7 @@
 
     <!-- Styling Rules -->
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig"/>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
     <!-- Required Paths -->
@@ -72,19 +72,19 @@
 
     <!-- Logo -->
     <ItemGroup>
-        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
+        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <!-- Dalamud Packaging -->
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="13.0.0" />
-        <PackageReference Include="ILRepack" Version="2.0.18"/>
+        <PackageReference Include="ILRepack" Version="2.0.18" />
     </ItemGroup>
 
     <!-- Dependencies -->
     <ItemGroup>
-        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj"/>
-        <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj"/>
+        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+        <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj" />
     </ItemGroup>
 
     <!-- Dalamud Libraries -->
