@@ -26,20 +26,18 @@ internal partial class SAM : Melee
             //oGCDs
             if (CanWeave())
             {
-                //Meikyo Features
+                //Meikyo Feature
                 if (UseMeikyo())
                     return MeikyoShisui;
 
-                //Ikishoten Features
-                if (ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady) && Kenki <= 50 &&
-                    (JustUsed(TendoKaeshiSetsugekka) || !LevelChecked(TendoKaeshiSetsugekka)))
+                //Ikishoten Feature
+                if (UseIkishoten())
                     return Ikishoten;
 
-
-                //Senei Features
+                //Senei Feature
                 if (Kenki >= SAMKenki.Senei)
                 {
-                    if (ActionReady(Senei))
+                    if (UseSenei())
                         return Senei;
 
                     //Guren if no Senei
@@ -49,23 +47,14 @@ internal partial class SAM : Melee
                 }
 
                 //Zanshin Usage
-                //TODO Buffcheck
-                if (ActionReady(Zanshin) && Kenki >= SAMKenki.Zanshin &&
-                    InActionRange(Zanshin) &&
-                    HasStatusEffect(Buffs.ZanshinReady) &&
-                    (JustUsed(Higanbana) ||
-                     JustUsed(OriginalHook(OgiNamikiri)) ||
-                     GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8))
+                if (UseZanshin())
                     return Zanshin;
 
-                if (ActionReady(Shoha) && MeditationStacks is 3 &&
-                    InActionRange(Shoha) &&
-                    (JustUsed(KaeshiSetsugekka) ||
-                     JustUsed(TendoKaeshiSetsugekka) ||
-                     JustUsed(Higanbana) ||
-                     JustUsed(OriginalHook(OgiNamikiri))))
+                //Shoha Usage
+                if (UseShoha())
                     return Shoha;
 
+                //Shinten Usage
                 if (UseShinten())
                     return Shinten;
 
@@ -76,28 +65,23 @@ internal partial class SAM : Melee
                 if (Role.CanBloodBath(SAM_STBloodbathHPThreshold))
                     return Role.Bloodbath;
 
-
                 if (RoleActions.Melee.CanLegSweep() &&
                     !TargetIsBoss() && TargetIsCasting())
                     return Role.LegSweep;
             }
 
             //Ranged
-            if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
+            if (UseRanged(true, true))
                 return Enpi;
 
-            if (UseTsubame)
+            if (UseTsubame())
                 return OriginalHook(TsubameGaeshi);
 
-            //Ogi Namikiri Features
-            if (!IsMoving() &&
-                ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
-                HasStatusEffect(Buffs.OgiNamikiriReady) && M6SReady &&
-                (JustUsed(Higanbana, 5f) ||
-                 GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) || NamikiriReady)
+            //Ogi Namikiri feature
+            if (!IsMoving() && UseOgi())
                 return OriginalHook(OgiNamikiri);
 
-            // Iaijutsu Features
+            // Iaijutsu feature
             if (!IsMoving() &&
                 UseIaijutsu(true, true, true))
                 return OriginalHook(Iaijutsu);
@@ -164,8 +148,8 @@ internal partial class SAM : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            //oGCD Features
-            if (CanWeave() && M6SReady)
+            //oGCD feature
+            if (CanWeave())
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -205,7 +189,7 @@ internal partial class SAM : Melee
                     return Role.Bloodbath;
             }
 
-            if (ActionReady(OgiNamikiri) && M6SReady &&
+            if (ActionReady(OgiNamikiri) &&
                 !IsMoving() && (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
@@ -295,25 +279,24 @@ internal partial class SAM : Melee
                         InCombat() && !HasBattleTarget())
                         return Meditate;
 
-                    //Meikyo Features
+                    //Meikyo feature
                     if (IsEnabled(Preset.SAM_ST_CDs_MeikyoShisui) &&
                         UseMeikyo())
                         return MeikyoShisui;
 
-                    //Ikishoten Features
+                    //Ikishoten feature
                     if (IsEnabled(Preset.SAM_ST_CDs_Ikishoten) &&
-                        ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady) && Kenki <= 50 &&
-                        (JustUsed(TendoKaeshiSetsugekka) || !LevelChecked(TendoKaeshiSetsugekka)))
+                        UseIkishoten())
                         return Ikishoten;
                 }
 
                 if (IsEnabled(Preset.SAM_ST_Damage))
                 {
-                    //Senei Features
+                    //Senei feature
                     if (IsEnabled(Preset.SAM_ST_CDs_Senei)
                         && Kenki >= SAMKenki.Senei)
                     {
-                        if (ActionReady(Senei))
+                        if (UseSenei())
                             return Senei;
 
                         //Guren if no Senei
@@ -324,24 +307,12 @@ internal partial class SAM : Melee
                     }
 
                     //Zanshin Usage
-                    //TODO Buffcheck
                     if (IsEnabled(Preset.SAM_ST_CDs_Zanshin) &&
-                        ActionReady(Zanshin) && Kenki >= SAMKenki.Zanshin &&
-                        InActionRange(Zanshin) &&
-                        HasStatusEffect(Buffs.ZanshinReady) &&
-                        (JustUsed(Higanbana) ||
-                         JustUsed(OriginalHook(OgiNamikiri)) ||
-                         SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss() ||
-                         GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8))
+                        UseZanshin())
                         return Zanshin;
 
                     if (IsEnabled(Preset.SAM_ST_CDs_Shoha) &&
-                        ActionReady(Shoha) && MeditationStacks is 3 &&
-                        InActionRange(Shoha) &&
-                        (JustUsed(KaeshiSetsugekka) ||
-                         JustUsed(TendoKaeshiSetsugekka) ||
-                         JustUsed(Higanbana) ||
-                         JustUsed(OriginalHook(OgiNamikiri))))
+                        UseShoha())
                         return Shoha;
                 }
                 if (IsEnabled(Preset.SAM_ST_Shinten) &&
@@ -371,28 +342,23 @@ internal partial class SAM : Melee
 
             //Ranged
             if (IsEnabled(Preset.SAM_ST_RangedUptime) &&
-                ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
+                UseRanged(SAM_ST_RangedOptions[0], SAM_ST_RangedOptions[1]))
                 return Enpi;
 
             if (IsEnabled(Preset.SAM_ST_Damage))
             {
                 if (IsEnabled(Preset.SAM_ST_CDs_Iaijutsu) &&
                     IsEnabled(Preset.SAM_ST_CDs_UseTsubame) &&
-                    UseTsubame)
+                    UseTsubame())
                     return OriginalHook(TsubameGaeshi);
 
-                //Ogi Namikiri Features
+                //Ogi Namikiri Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_OgiNamikiri) &&
                     (!SAM_ST_CDs_OgiNamikiri_Movement || !IsMoving()) &&
-                    ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
-                    HasStatusEffect(Buffs.OgiNamikiriReady) && M6SReady &&
-                    (IsNotEnabled(Preset.SAM_ST_CDs_UseHiganbana) && JustUsed(Ikishoten) ||
-                     JustUsed(Higanbana, 5f) ||
-                     SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss() ||
-                     GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) || NamikiriReady)
+                    M6SReady && UseOgi())
                     return OriginalHook(OgiNamikiri);
 
-                // Iaijutsu Features
+                // Iaijutsu Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_Iaijutsu) &&
                     (!IsEnabled(Preset.SAM_ST_CDs_Iaijutsu_Movement) || !IsMoving()) &&
                     UseIaijutsu(IsEnabled(Preset.SAM_ST_CDs_UseHiganbana), IsEnabled(Preset.SAM_ST_CDs_UseTenkaGoken), IsEnabled(Preset.SAM_ST_CDs_UseMidare)))
@@ -472,7 +438,7 @@ internal partial class SAM : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            //oGCD Features
+            //oGCD feature
             if (CanWeave() && M6SReady)
             {
                 if (IsEnabled(Preset.SAM_AoE_Hagakure) &&

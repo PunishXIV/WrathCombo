@@ -27,11 +27,6 @@ internal partial class SAM
     internal static int SenCount =>
         GetSenCount();
 
-    internal static bool UseTsubame =>
-        LevelChecked(TsubameGaeshi) &&
-        (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
-         HasStatusEffect(Buffs.TsubameReady) && (SenCount is 3 || GetCooldownRemainingTime(Senei) > 33));
-
     internal static bool M6SReady =>
         !HiddenFeaturesData.IsEnabledWith(Preset.SAM_Hid_M6SHoldSquirrelBurst, () =>
             HiddenFeaturesData.Targeting.R6SSquirrel && CombatEngageDuration().TotalSeconds < 275);
@@ -46,8 +41,8 @@ internal partial class SAM
         if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) && !HasStatusEffect(Buffs.MeikyoShisui) &&
             (JustUsed(Gekko) || JustUsed(Kasha) || JustUsed(Yukikaze)))
         {
-            if ((SAM_ST_MeikyoBossOption == 0 || InBossEncounter() ||
-                 IsEnabled(Preset.SAM_ST_SimpleMode) && InBossEncounter()))
+            if (SAM_ST_MeikyoLogic == 1 && (SAM_ST_MeikyoBossOption == 0 || InBossEncounter()) ||
+                IsEnabled(Preset.SAM_ST_SimpleMode) && InBossEncounter())
             {
                 if (EnhancedSenei)
                 {
@@ -83,9 +78,13 @@ internal partial class SAM
             }
 
             if (IsEnabled(Preset.SAM_ST_SimpleMode) && !InBossEncounter() ||
-                SAM_ST_MeikyoBossOption == 1 && !InBossEncounter())
+                SAM_ST_MeikyoLogic == 1 && SAM_ST_MeikyoBossOption == 1 && !InBossEncounter())
+                return true;
+
+            if (SAM_ST_MeikyoLogic == 0 && SenCount is 3)
                 return true;
         }
+
 
         return false;
     }
@@ -99,7 +98,7 @@ internal partial class SAM
         int higanbanaHPThreshold = SAM_ST_HiganbanaHPThreshold;
         int higanbanaRefresh = SAM_ST_HiganbanaRefresh;
 
-        if (LevelChecked(Iaijutsu))
+        if (LevelChecked(Iaijutsu) && InActionRange(OriginalHook(Iaijutsu)))
         {
             //Higanbana
             if (IsEnabled(Preset.SAM_ST_AdvancedMode) &&
@@ -115,6 +114,7 @@ internal partial class SAM
             if (useTenkaGoken && SenCount is 2 &&
                 !LevelChecked(MidareSetsugekka))
                 return true;
+
             //Midare Setsugekka
             if (useMidare && SenCount is 3 &&
                 LevelChecked(MidareSetsugekka) && !HasStatusEffect(Buffs.TsubameReady))
@@ -134,33 +134,18 @@ internal partial class SAM
 
     #endregion
 
-    #region Burst Management
+    #region Ranged Option
 
-    internal static bool UseShinten()
+    internal static bool UseRanged(bool useOgi, bool useIaijutsu)
     {
-        int shintenTreshhold = SAM_ST_ExecuteThreshold;
-
-        if (ActionReady(Shinten) && Kenki >= SAMKenki.Shinten)
+        if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
         {
-            if (GetTargetHPPercent() < shintenTreshhold)
+            //Ogi option
+            if (useOgi && (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady) && !InActionRange(OriginalHook(OgiNamikiri)))
                 return true;
 
-            if (Kenki >= 95)
-                return true;
-
-            if (EnhancedSenei &&
-                !HasStatusEffect(Buffs.ZanshinReady))
-            {
-                if (JustUsed(Senei, 20f) &&
-                    !JustUsed(Ikishoten))
-                    return true;
-
-                if (GetCooldownRemainingTime(Senei) >= 25 &&
-                    Kenki >= SAM_ST_KenkiOvercapAmount)
-                    return true;
-            }
-
-            if (!EnhancedSenei && Kenki >= SAM_ST_KenkiOvercapAmount)
+            //Iaijutsu option
+            if (useIaijutsu && (!IsOriginal(Iaijutsu) && !InActionRange(OriginalHook(Iaijutsu)) || UseTsubame() && !InActionRange(OriginalHook(TsubameGaeshi))))
                 return true;
         }
         return false;
@@ -181,6 +166,96 @@ internal partial class SAM
         internal static int Guren => GetResourceCost(SAM.Guren);
 
         internal static int Shinten => GetResourceCost(SAM.Shinten);
+    }
+
+    #endregion
+
+    #region Burst Management
+
+    internal static bool UseIkishoten() =>
+        ActionReady(Ikishoten) &&
+        !HasStatusEffect(Buffs.ZanshinReady) && Kenki <= 50 &&
+        NumberOfGcdsUsed >= 2 &&
+        (JustUsed(TendoKaeshiSetsugekka, 15f) ||
+         !LevelChecked(TendoKaeshiSetsugekka));
+
+    internal static bool UseSenei() =>
+        ActionReady(Senei) && NumberOfGcdsUsed >= 4 &&
+        (!LevelChecked(KaeshiSetsugekka) ||
+         LevelChecked(KaeshiSetsugekka) &&
+         (JustUsed(KaeshiSetsugekka, 5f) ||
+          JustUsed(TendoSetsugekka, 5f)));
+
+    internal static bool UseTsubame() =>
+        LevelChecked(TsubameGaeshi) &&
+        (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
+         HasStatusEffect(Buffs.TsubameReady) && (SenCount is 3 || GetCooldownRemainingTime(Senei) > 33));
+
+    internal static bool UseShoha() =>
+        ActionReady(Shoha) && MeditationStacks is 3 &&
+        InActionRange(Shoha) &&
+        (EnhancedSenei && JustUsed(Senei, 20f) ||
+         !EnhancedSenei && JustUsed(KaeshiSetsugekka, 10f));
+
+    //TODO Buffcheck
+    internal static bool UseZanshin() =>
+        ActionReady(Zanshin) && Kenki >= SAMKenki.Zanshin &&
+        InActionRange(Zanshin) && HasStatusEffect(Buffs.ZanshinReady) &&
+        (JustUsed(Senei, 20f) || GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8);
+
+    internal static bool UseShinten()
+    {
+        int shintenTreshhold = SAM_ST_ExecuteThreshold;
+
+        if (ActionReady(Shinten) && Kenki >= SAMKenki.Shinten)
+        {
+            if (GetTargetHPPercent() < shintenTreshhold)
+                return true;
+
+            if (Kenki >= 95)
+                return true;
+
+            if (EnhancedSenei &&
+                !HasStatusEffect(Buffs.ZanshinReady))
+            {
+                if (JustUsed(Senei, 15f) &&
+                    !JustUsed(Ikishoten))
+                    return true;
+
+                if (GetCooldownRemainingTime(Senei) >= 25 &&
+                    Kenki >= SAM_ST_KenkiOvercapAmount)
+                    return true;
+            }
+
+            if (!EnhancedSenei && Kenki >= SAM_ST_KenkiOvercapAmount)
+                return true;
+        }
+        return false;
+    }
+
+    internal static bool UseOgi()
+    {
+        if (ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
+            HasStatusEffect(Buffs.OgiNamikiriReady))
+        {
+            if (NamikiriReady)
+                return true;
+
+            if (GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8)
+                return true;
+
+            if (IsEnabled(Preset.SAM_ST_AdvancedMode) &&
+                IsNotEnabled(Preset.SAM_ST_CDs_UseHiganbana) && JustUsed(Ikishoten, 15f))
+                return true;
+
+            if (JustUsed(Higanbana, 15f))
+                return true;
+
+            if (IsEnabled(Preset.SAM_ST_AdvancedMode) &&
+                SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss())
+                return true;
+        }
+        return false;
     }
 
     #endregion
@@ -241,7 +316,8 @@ internal partial class SAM
 
         public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
         [
-            ([2], 11, () => !TargetNeedsPositionals())
+            ([2], 11, () => !TargetNeedsPositionals()),
+            ([20], Shinten, () => Kenki >= SAMKenki.Shinten)
         ];
 
         public override bool HasCooldowns() =>
