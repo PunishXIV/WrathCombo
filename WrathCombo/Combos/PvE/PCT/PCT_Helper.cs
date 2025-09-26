@@ -174,34 +174,44 @@ internal partial class PCT
     #endregion
 
     #region Openers
-    internal static PCTopenerMaxLevel1 Opener1 = new();
-    internal static PCTopenerMaxLevel2 Opener2 = new();
-
-    private static PCTGauge Gauge = GetJobGauge<PCTGauge>();
-
+    internal static PCT2ndStarryMaxLvl SecondStarryMaxLvl = new();
+    internal static PCT3rdStarryMaxLvl ThirdStarryMaxLvl = new();
+    internal static PCT2ndStarryLvl90 SecondStarryLvl90 = new();
+    internal static PCT3rdStarryLvl90 ThirdStarryLvl90 = new();
+    
     internal static WrathOpener Opener()
     {
-        if (Opener1.LevelChecked && PCT_Opener_Choice == 0)
-            return Opener1;
-        if (Opener2.LevelChecked && PCT_Opener_Choice == 1)
-            return Opener2;
+        if (SecondStarryLvl90.LevelChecked && PCT_Opener_Choice == 0)
+            return SecondStarryLvl90;
+
+        if (ThirdStarryLvl90.LevelChecked && PCT_Opener_Choice == 1)
+            return ThirdStarryLvl90;
+        
+        if (SecondStarryMaxLvl.LevelChecked && PCT_Opener_Choice == 0)
+            return SecondStarryMaxLvl;
+        
+        if (ThirdStarryMaxLvl.LevelChecked && PCT_Opener_Choice == 1)
+            return ThirdStarryMaxLvl;
+        
         return WrathOpener.Dummy;
     }
+    
     public static bool HasMotifs()
     {
 
-        if (!Gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Pom))
+        if (!gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Pom))
             return false;
 
-        if (!Gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Weapon))
+        if (!gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Weapon))
             return false;
 
-        if (!Gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Landscape))
+        if (!gauge.CanvasFlags.HasFlag(Dalamud.Game.ClientState.JobGauge.Enums.CanvasFlags.Landscape))
             return false;
 
         return true;
     }
-    internal class PCTopenerMaxLevel1 : WrathOpener
+    
+    internal class PCT2ndStarryMaxLvl : WrathOpener
     {
         //2nd GCD Starry Opener
         public override int MinOpenerLevel => 100;
@@ -263,7 +273,8 @@ internal partial class PCT
             return true;
         }
     }
-    internal class PCTopenerMaxLevel2 : WrathOpener
+    
+    internal class PCT3rdStarryMaxLvl : WrathOpener
     {
         //3rd GCD Starry Opener
         public override int MinOpenerLevel => 100;
@@ -329,5 +340,127 @@ internal partial class PCT
             return true;
         }
     }
+    
+     internal class PCT2ndStarryLvl90 : WrathOpener
+    {
+        //2nd GCD Starry Opener
+        public override int MinOpenerLevel => 90;
+        public override int MaxOpenerLevel => 99;
+        
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            FireInRed,
+            StrikingMuse,
+            AeroInGreen,
+            StarryMuse,
+            HammerStamp,
+            PomMuse,
+            SubtractivePalette,
+            WingMotif,
+            WingedMuse,
+            HammerBrush,
+            MogoftheAges,
+            PolishingHammer,
+            ThunderinMagenta,
+            BlizzardinCyan,
+            StoneinYellow,//15
+            CometinBlack,
+            WaterInBlue,
+            FireInRed//20
+        ];
+        internal override UserData? ContentCheckConfig => PCT_Balance_Content;
+
+        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+[
+            ([13, 14, 15], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
+            ([13, 14, 15], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
+            ([13, 14, 15], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
+            ([16], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+        ];
+
+        public override bool HasCooldowns()
+        {
+            if (!IsOffCooldown(StarryMuse))
+                return false;
+
+            if (GetRemainingCharges(LivingMuse) < 3)
+                return false;
+
+            if (GetRemainingCharges(SteelMuse) < 2)
+                return false;
+
+            if (!HasMotifs())
+                return false;
+
+            if (HasStatusEffect(Buffs.SubtractivePalette))
+                return false;
+
+            return true;
+        }
+    }
+     
+     internal class PCT3rdStarryLvl90 : WrathOpener
+    {
+        //3rd GCD Starry Opener
+        public override int MinOpenerLevel => 90;
+        public override int MaxOpenerLevel => 99;
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            FireInRed,
+            StrikingMuse,
+            AeroInGreen,
+            WaterInBlue,
+            StarryMuse,
+            HammerStamp,
+            PomMuse,
+            SubtractivePalette,
+            WingMotif,
+            WingedMuse,
+            HammerBrush,
+            MogoftheAges,
+            PolishingHammer,
+            BlizzardinCyan,
+            StoneinYellow,
+            ThunderinMagenta,
+            CometinBlack,
+            FireInRed,
+            AeroInGreen,
+            Role.Swiftcast, //20
+            WaterInBlue
+        ];
+        internal override UserData? ContentCheckConfig => PCT_Balance_Content;
+        
+        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+        [
+            ([14, 15, 16], BlizzardinCyan, () => OriginalHook(BlizzardinCyan) == BlizzardinCyan),
+             ([14, 15, 16], StoneinYellow, () => OriginalHook(BlizzardinCyan) == StoneinYellow),
+            ([14,15,16], ThunderinMagenta, () => OriginalHook(BlizzardinCyan) == ThunderinMagenta),
+            ([17], HolyInWhite, () => !HasStatusEffect(Buffs.MonochromeTones)),
+        ];
+
+        public override bool HasCooldowns()
+        {
+            if (!IsOffCooldown(StarryMuse))
+                return false;
+
+            if (GetRemainingCharges(LivingMuse) < 3)
+                return false;
+
+            if (GetRemainingCharges(SteelMuse) < 2)
+                return false;
+
+            if (!HasMotifs())
+                return false;
+
+            if (HasStatusEffect(Buffs.SubtractivePalette))
+                return false;
+
+            if (IsOnCooldown(Role.Swiftcast))
+                return false;
+
+            return true;
+        }
+    }
+     
 #endregion
 }
