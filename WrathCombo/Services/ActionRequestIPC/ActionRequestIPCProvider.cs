@@ -1,4 +1,6 @@
-﻿using ECommons.EzIpcManager;
+﻿using ECommons.DalamudServices;
+using ECommons.EzIpcManager;
+using FFXIVClientStructs;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
@@ -60,5 +62,28 @@ public static class ActionRequestIPCProvider
             ActionRequests[d] = v;
         }
         v.Add(new(Environment.TickCount64 + timeMs, targetLocation));
+    }
+
+    public static void Initialize()
+    {
+        EzIPC.Init(typeof(ActionRequestIPCProvider), $"{Svc.PluginInterface.InternalName}.ActionRequest");
+    }
+
+    public static float GetArtificialCooldown(ActionType actionType, uint actionID)
+    {
+        var currentTick = Environment.TickCount64;
+        if(ActionBlacklist.TryGetValue(new(actionType, actionID), out var request))
+        {
+            var ret = 0L;
+            for(var i = request.Count - 1; i >= 0; i--)
+            {
+                var x = request[i];
+                var d = x.Deadline - currentTick;
+                if(d > ret) ret = d;
+                if(d < 0) request.RemoveAt(i);
+            }
+            return ret;
+        }
+        return 0;
     }
 }
