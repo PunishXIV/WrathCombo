@@ -13,7 +13,7 @@ namespace WrathCombo.Services.ActionRequestIPC;
 //this is static to maximize performance
 public static class ActionRequestIPCProvider
 {
-    public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionRequests = [];
+    //public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionRequests = [];
     public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionBlacklist = [];
 
     [EzIPC]
@@ -28,7 +28,7 @@ public static class ActionRequestIPCProvider
         v.Add(new(Environment.TickCount64 + timeMs));
     }
 
-    [EzIPC]
+    /*[EzIPC]
     public static void RequestAction(ActionType actionType, uint actionID, int timeMs)
     {
         ActionDescriptor d = new(actionType, actionID);
@@ -62,7 +62,7 @@ public static class ActionRequestIPCProvider
             ActionRequests[d] = v;
         }
         v.Add(new(Environment.TickCount64 + timeMs, targetLocation));
-    }
+    }*/
 
     public static void Initialize()
     {
