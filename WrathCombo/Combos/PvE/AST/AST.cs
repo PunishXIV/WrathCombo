@@ -53,7 +53,7 @@ internal partial class AST : Healer
                     return Role.LucidDreaming;
 
                 //Play Card
-                if (HasDPSCard)
+                if (HasDPSCard && LevelChecked(Play1))
                     return OriginalHook(Play1).Retarget(replacedActions, CardResolver);
 
                 //Minor Arcana / Lord of Crowns
@@ -134,7 +134,7 @@ internal partial class AST : Healer
                     return Role.LucidDreaming;
 
                 //Play Card
-                if (HasDPSCard)
+                if (HasDPSCard && LevelChecked(Play1))
                     return OriginalHook(Play1).Retarget(GravityList.ToArray(), CardResolver);
 
                 //Minor Arcana / Lord of Crowns
@@ -260,7 +260,7 @@ internal partial class AST : Healer
                     return Role.LucidDreaming;
 
                 //Play Card
-                if (IsEnabled(Preset.AST_DPS_AutoPlay) && HasDPSCard &&
+                if (IsEnabled(Preset.AST_DPS_AutoPlay) && HasDPSCard && LevelChecked(Play1) &&
                     (HasDivination || !cardPooling || !LevelChecked(Divination)))
                     return IsEnabled(Preset.AST_Cards_QuickTargetCards)
                         ? OriginalHook(Play1).Retarget(replacedActions, CardResolver)
@@ -386,7 +386,7 @@ internal partial class AST : Healer
                     return Role.LucidDreaming;
 
                 //Play Card
-                if (IsEnabled(Preset.AST_AOE_AutoPlay) && HasDPSCard && 
+                if (IsEnabled(Preset.AST_AOE_AutoPlay) && HasDPSCard && LevelChecked(Play1) &&
                     (HasDivination || !cardPooling || !LevelChecked(Divination)))
                     return IsEnabled(Preset.AST_Cards_QuickTargetCards)
                         ? OriginalHook(Play1).Retarget(GravityList.ToArray(), CardResolver)

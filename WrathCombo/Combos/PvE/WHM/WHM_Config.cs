@@ -86,6 +86,10 @@ internal partial class WHM
                     DrawHorizontalRadioButton(WHM_ST_MainCombo_Misery_Option, "Hold for Burst", "Will attempt to hold for burst as long as possible without overcapping. \nWill prevent afflatus heals from being possible when at full Blood Lily stacks.", 0, descriptionColor: ImGuiColors.DalamudWhite);
                     DrawHorizontalRadioButton(WHM_ST_MainCombo_Misery_Option, "Use Immediately", "Will Use Immediately to make sure you are free to use Afflatus heals. ", 1, descriptionColor: ImGuiColors.DalamudWhite);
                     break;
+                
+                case Preset.WHM_ST_MainCombo_LilyOvercap:
+                    DrawSliderInt(0, 10, WHM_STDPS_LilyOvercap, "Time in Seconds to use Afflatus Rapture before overcapping Lily stacks", itemWidth: medium);
+                    break;
 
                 case Preset.WHM_ST_MainCombo_Lucid:
                     DrawSliderInt(4000, 9500, WHM_STDPS_Lucid,
@@ -118,6 +122,10 @@ internal partial class WHM
                 case Preset.WHM_AoE_DPS_Misery:
                     DrawHorizontalRadioButton(WHM_AoE_DPS_Misery_Option, "Hold for Burst", "Will attempt to hold for burst as long as possible without overcapping. \nWill prevent afflatus heals from being possible when at full Blood Lily stacks.", 0 ,descriptionColor: ImGuiColors.DalamudWhite);
                     DrawHorizontalRadioButton(WHM_AoE_DPS_Misery_Option, "Use Immediately", "Will Use Immediately to make sure you are free to use Afflatus heals. ", 1 ,descriptionColor: ImGuiColors.DalamudWhite);
+                    break;
+                
+                case Preset.WHM_AoE_DPS_LilyOvercap:
+                    DrawSliderInt(0, 10, WHM_AoEDPS_LilyOvercap, "Time in Seconds to use Afflatus Rapture before overcapping Lily stacks", itemWidth: medium);
                     break;
 
                 #endregion
@@ -541,6 +549,14 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_ST_MainCombo_Misery" />
         public static UserInt WHM_ST_MainCombo_Misery_Option = 
             new("WHM_ST_MainCombo_Misery_Option", 1);
+        
+        /// <summary>
+        ///     Overcap Prevention Slider for Afflatus Rapture
+        ///     Default 8 = Use Rapture if Lily will overcap in 8 seconds
+        /// </summary>
+        /// <seealso cref="Preset.WHM_ST_MainCombo_LilyOvercap" />
+        public static UserInt WHM_STDPS_LilyOvercap = 
+            new("WHM_STDPS_LilyOvercap", 8);
 
         /// <summary>
         ///     MP threshold to use Lucid Dreaming in single target rotations.
@@ -612,6 +628,14 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoE_DPS_Misery" />
         public static UserInt WHM_AoE_DPS_Misery_Option = 
             new("WHM_AoE_DPS_Misery_Option", 1);
+        
+        /// <summary>
+        ///     Overcap Prevention Slider for Afflatus Rapture
+        ///     Default 8 = Use Rapture if Lily will overcap in 8 seconds
+        /// </summary>
+        /// <seealso cref="Preset.WHM_AoE_DPS_LilyOvercap" />
+        public static UserInt WHM_AoEDPS_LilyOvercap = 
+            new("WHM_AoEDPS_LilyOvercap", 8);
 
         #endregion
 
