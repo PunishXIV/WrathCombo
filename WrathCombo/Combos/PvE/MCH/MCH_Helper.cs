@@ -336,7 +336,7 @@ internal partial class MCH
     {
         public override int MinOpenerLevel => 90;
 
-        public override int MaxOpenerLevel => 99;
+        public override int MaxOpenerLevel => 90;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -381,15 +381,7 @@ internal partial class MCH
         [
             14
         ];
-
-        public override List<int> AllowUpgradeSteps { get; set; } =
-        [
-            3, 4,
-            8, 9,
-            11, 12,
-            19, 21, 23, 25
-        ];
-
+        
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&

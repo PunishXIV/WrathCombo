@@ -54,7 +54,7 @@ internal partial class SCH : Healer
                     return Role.LucidDreaming;
             }
             //Bio/Biolysis
-            if (NeedsDoT() && InCombat())
+            if (NeedsDoT() && PartyInCombat())
                 return OriginalHook(Bio);
 
             //Ruin 2 Movement
@@ -158,21 +158,21 @@ internal partial class SCH : Healer
             
             if (ActionReady(Excogitation) &&
                 GetTargetHPPercent(healTarget) <= 50)
-                return Excogitation.RetargetIfEnabled(healTarget, Physick);
+                return Excogitation.RetargetIfEnabled(OptionalTarget, Physick);
             
             if (ActionReady(Lustrate) &&
                 GetTargetHPPercent(healTarget) <= 50)
-                return Lustrate.RetargetIfEnabled(healTarget, Physick);
+                return Lustrate.RetargetIfEnabled(OptionalTarget, Physick);
             
             if (ActionReady(SacredSoil) && !InBossEncounter() &&
                 TimeStoodStill >= TS.FromSeconds(5))
                 return SacredSoil.Retarget(Physick, SimpleTarget.Self);
             
             if (ActionReady(Protraction) && (healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank || !IsInParty())) 
-                return Protraction.RetargetIfEnabled(healTarget, Physick);
+                return Protraction.RetargetIfEnabled(OptionalTarget, Physick);
             
             if (Gauge.FairyGauge >= 50 && IsOriginal(Aetherpact) && !FairyBusy)
-                return Aetherpact.RetargetIfEnabled(healTarget, Physick);
+                return Aetherpact.RetargetIfEnabled(OptionalTarget, Physick);
 
             if (!InBossEncounter() && HasPetPresent() && !FairyBusy)
             {
@@ -198,9 +198,9 @@ internal partial class SCH : Healer
             if (ActionReady(OriginalHook(Adloquium)))
                 return ActionReady(OriginalHook(EmergencyTactics)) && (HasStatusEffect(Buffs.Galvanize, healTarget, true) || !HasStatusEffect(Buffs.EmergencyTactics))
                     ? OriginalHook(EmergencyTactics)
-                    : OriginalHook(Adloquium).RetargetIfEnabled(healTarget, Physick);
+                    : OriginalHook(Adloquium).RetargetIfEnabled(OptionalTarget, Physick);
             
-            return actionID.RetargetIfEnabled(healTarget);
+            return actionID.RetargetIfEnabled(OptionalTarget);
         }
     }
     
@@ -280,9 +280,6 @@ internal partial class SCH : Healer
             int chainThreshold = SCH_ST_DPS_ChainStratagemSubOption == 1 || !InBossEncounter() ? SCH_ST_DPS_ChainStratagemOption : 0;
             #endregion
 
-            if (!actionFound)
-                return actionID;
-
             if (IsEnabled(Preset.SCH_ST_ADV_DPS_FairyReminder) && NeedToSummon)
                 return SummonEos;
             //Opener
@@ -329,7 +326,7 @@ internal partial class SCH : Healer
             }
 
             //Bio/Biolysis
-            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Bio) && NeedsDoT() && InCombat())
+            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Bio) && NeedsDoT() && PartyInCombat())
                 return OriginalHook(Bio);
 
             //Ruin 2 Movement

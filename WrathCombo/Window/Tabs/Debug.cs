@@ -509,6 +509,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText("Job:", $"{member.RealJob?.NameEnglish} (ID: {member.RealJob?.RowId})");
                     CustomStyleText("Dead Timer:", TimeSpentDead(member.BattleChara.GameObjectId));
                     CustomStyleText("Role:", $"{member?.GetRole()}");
+                    CustomStyleText("Out of Party NPC:", member.IsOutOfPartyNPC);
 
                     if (ImGui.TreeNode("Data Dump"))
                     {

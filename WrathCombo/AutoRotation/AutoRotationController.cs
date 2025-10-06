@@ -582,10 +582,10 @@ internal unsafe static class AutoRotationController
 
                     var ret = ActionManager.Instance()->UseAction(ActionType.Action, Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct);
 
-                    if (ret)
+                    if (!ret)
                         LastHealAt = Environment.TickCount64 + castTime;
 
-                    return ret;
+                    return !ret;
                 }
             }
             else
@@ -703,10 +703,10 @@ internal unsafe static class AutoRotationController
             if (canUse && (inRange || areaTargeted))
             {
                 var ret = ActionManager.Instance()->UseAction(ActionType.Action, Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct, canUseTarget || areaTargeted ? target.GameObjectId : Player.Object.GameObjectId);
-                if (mode is HealerRotationMode && ret)
+                if (mode is HealerRotationMode && !ret)
                     LastHealAt = Environment.TickCount64 + castTime;
 
-                return ret;
+                return !ret;
             }
 
             return false;

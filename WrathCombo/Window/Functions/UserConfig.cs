@@ -125,7 +125,8 @@ public static class UserConfig
         return box.FuncRes;
     }
 
-    private static void DrawResetContextMenu(string config, int occurrence = 0)
+    private static void DrawResetContextMenu
+        (string config, int occurrence = 0)
     {
         if (ImGui.IsItemClicked(ImGuiMouseButton.Right))
             ImGui.OpenPopup($"##ResetConfig{config}{occurrence}");
@@ -133,10 +134,11 @@ public static class UserConfig
         using var contextMenu = ImRaii.Popup($"##ResetConfig{config}{occurrence}");
         if (!contextMenu) return;
 
-        if (ImGui.MenuItem("Reset to Default"))
-        {
+        var allText = UserData.MasterList[config] is UserIntArray
+            ? " all priorities"
+            : "";
+        if (ImGui.MenuItem($"Reset{allText} to Default"))
             ResetToDefault(config);
-        }
     }
 
     /// <summary> Draws a slider that lets the user set a given value for their feature. </summary>
@@ -915,12 +917,13 @@ public static class UserConfig
                         }
                     }
                 }
+                DrawResetContextMenu(config, currentItem);
             }
         };
 
         ImGui.Indent();
         box.Draw();
-        if (ImGui.IsItemHovered())
+        if (ImGui.IsItemHovered() && !ImGui.IsItemClicked(ImGuiMouseButton.Right))
         {
             ImGui.BeginTooltip();
             ImGui.Text("Smaller Number = Higher Priority");
@@ -941,8 +944,7 @@ public static class UserConfig
         DebugFile.AddLog($"Set Config {config} to default");
         UserData.MasterList[config].ResetToDefault();
     }
-
-        #region Custom Stack Manager
+    #region Custom Stack Manager
 
     private static bool _customStackIconGroupWidthSet = false;
     private static float _customStackIconGroupWidth = ImGui.CalcTextSize("x").X;
@@ -1255,7 +1257,7 @@ public static class UserConfig
     }
 #pragma warning restore SYSLIB1045
 
-        #endregion
+    #endregion
 }
 
 public static class SliderIncrements

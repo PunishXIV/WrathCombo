@@ -951,10 +951,10 @@ public enum Preset
 
     [ParentCombo(AST_ST_Heals)]
     [CustomComboInfo("Essential Dignity Option",
-        "Essential Dignity will be added when the target is at or below the value set", Job.AST)]
+        "Essential Dignity will be added when the target is at or below the value set.", Job.AST)]
     [PossiblyRetargeted(AST.EssentialDignity)]
     AST_ST_Heals_EssentialDignity = 1024,
-    
+
     [ParentCombo(AST_ST_Heals_EssentialDignity)]
     [CustomComboInfo("Emergency Essential Dignity Option",
         "Will retain a charge of Essential Dignity to use at a different threshold.", Job.AST)]
@@ -972,31 +972,31 @@ public enum Preset
     AST_ST_Heals_Exaltation = 1028,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Spire Option", "Adds The Spire (Shield) when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Spire Option", "Adds The Spire (Shield) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Spire)]
     AST_ST_Heals_Spire = 1030,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Ewer Option", "Adds The Ewer (Heal over time) when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Ewer Option", "Adds The Ewer (Heal over time) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Ewer)]
     AST_ST_Heals_Ewer = 1032,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Arrow Option", "Adds The Arrow (increased healing)  when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Arrow Option", "Adds The Arrow (increased healing) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Arrow)]
     AST_ST_Heals_Arrow = 1049,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("The Bole Option", "Adds The Bole (Reduced Damage) when the card has been drawn", Job.AST)]
+    [CustomComboInfo("The Bole Option", "Adds The Bole (Reduced Damage) when the card has been drawn.", Job.AST)]
     [PossiblyRetargeted(AST.Bole)]
     AST_ST_Heals_Bole = 1050,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition", Job.AST)]
+    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition.", Job.AST)]
     AST_ST_Heals_CelestialOpposition = 1068,
 
     [ParentCombo(AST_ST_Heals)]
-    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel)", Job.AST)]
+    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel).", Job.AST)]
     AST_ST_Heals_CollectiveUnconscious = 1069,
 
     [ParentCombo(AST_ST_Heals)]
@@ -1012,19 +1012,19 @@ public enum Preset
     AST_AoE_Heals = 1010,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Aspected Helios Option", "Adds Aspected Helios/Helios Conjunction", Job.AST)]
+    [CustomComboInfo("Aspected Helios Option", "Adds Aspected Helios/Helios Conjunction.", Job.AST)]
     AST_AoE_Heals_Aspected = 1053,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Helios Option", "Adds Helios", Job.AST)]
+    [CustomComboInfo("Helios Option", "Adds Helios.", Job.AST)]
     AST_AoE_Heals_Helios = 1073,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition", Job.AST)]
+    [CustomComboInfo("Celestial Opposition Option", "Adds Celestial Opposition.", Job.AST)]
     AST_AoE_Heals_CelestialOpposition = 1021,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Lazy Lady Option", "Adds Lady of Crowns, if the card is drawn", Job.AST)]
+    [CustomComboInfo("Lazy Lady Option", "Adds Lady of Crowns, if the card is drawn.", Job.AST)]
     AST_AoE_Heals_LazyLady = 1022,
 
     [ParentCombo(AST_AoE_Heals)]
@@ -1040,11 +1040,11 @@ public enum Preset
     AST_AoE_Heals_NeutralSect = 1067,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Stellar Detonation Option", "Adds Stellar Detonation when under the effect of Giant Dominance", Job.AST)]
+    [CustomComboInfo("Stellar Detonation Option", "Adds Stellar Detonation when under the effect of Giant Dominance.", Job.AST)]
     AST_AoE_Heals_StellarDetonation = 1072,
 
     [ParentCombo(AST_AoE_Heals)]
-    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel)", Job.AST)]
+    [CustomComboInfo("Collective Unconscious Option", "Adds Collective Unconscious (for the regen so it will not channel).", Job.AST)]
     AST_AoE_Heals_CollectiveUnconscious = 1074,
     #endregion
 
@@ -3605,7 +3605,7 @@ public enum Preset
     MCH_ST_AdvancedMode = 8100,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener", "Adds the Balance opener at lvl 90+.", Job.MCH)]
+    [CustomComboInfo("Balance Opener (Level 90/100)", "Adds the Balance opener at lvl 90/100.", Job.MCH)]
     MCH_ST_Adv_Opener = 8101,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
@@ -4240,7 +4240,7 @@ public enum Preset
     [ReplaceSkill(NIN.ShadeShift, NIN.Shukuchi, RoleActions.Melee.Feint, RoleActions.Melee.Bloodbath, RoleActions.Physical.SecondWind)]
     [CustomComboInfo("Mudra Protection", "Replaces with Savage Blade during Mudra Phase to help prevent manual usage Mudra fails.", Job.NIN)]
     NIN_MudraProtection = 10046,
-    
+
 
     [ReplaceSkill(NIN.Kassatsu)]
     [CustomComboInfo("Kassatsu to Trick Feature",
@@ -4322,8 +4322,8 @@ public enum Preset
     PCT_ST_AdvancedMode = 20005,
 
     [ParentCombo(PCT_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)",
-        "Adds the Balance opener at level 100.",
+    [CustomComboInfo("Balance Opener (Level 90/100)",
+        "Adds the Balance opener at level 90/100.",
         Job.PCT)]
     PCT_ST_Advanced_Openers = 20006,
 
@@ -4565,6 +4565,11 @@ public enum Preset
     #endregion
 
     #region PALADIN
+
+    [ReplaceSkill(PLD.PassageOfArms)]
+    [CustomComboInfo("Block Combos for Passage of Arms",
+        "Will block the main Combos with Savage Blade while Passage of Arms is still active, to prevent actions from those combos cancelling Passage of Arms early.\nThis will leave it up to you to cancel Passage of Arms via other actions or movement (or letting it be used fully).", Job.PLD)]
+    PLD_BlockForWings = 11074,
 
     #region Simple Mode
 
@@ -4943,7 +4948,7 @@ public enum Preset
 
     #endregion
 
-    //// Last value = 11072
+    //// Last value = 11074
 
     #endregion
 
@@ -5283,6 +5288,11 @@ public enum Preset
     [CustomComboInfo("Include Riposte",
         "Adds Riposte to start the combo. Recommended for Auto Rotation. \n**Must be in melee range or have gap-close with Corps-a-corps enabled**", Job.RDM)]
     RDM_ST_MeleeCombo_IncludeRiposte = 13007,
+    
+    [ParentCombo(RDM_ST_MeleeCombo)]
+    [CustomComboInfo("Include Reprise",
+        "Adds Reprise when outside of range during the melee combo. Will retain enough mana in order to finish the current combo.", Job.RDM)]
+    RDM_ST_MeleeCombo_IncludeReprise = 13027,
 
     [ParentCombo(RDM_ST_MeleeCombo)]
     [CustomComboInfo("Gap-Close with Corps-a-corps Option",
@@ -5358,12 +5368,12 @@ public enum Preset
     [ParentCombo(RDM_ST_DPS)]
     [CustomComboInfo("Magick Barrier Raidwide Option", "Adds Magick Barrier when Raidwide is detected casting.", Job.RDM)]
     RDM_ST_MagickBarrier = 13025,
-    
+
     [ParentCombo(RDM_ST_DPS)]
     [CustomComboInfo("Vercure Solo Option", "Adds Vercure on self when solo or in a party with no healers.", Job.RDM)]
     RDM_ST_VerCure = 13026,
 
-    //Last Used 13026
+    //Last Used 13027
     #endregion
 
     #region AoE DPS
@@ -5454,11 +5464,11 @@ public enum Preset
     [CustomComboInfo("Lucid Dreaming Option", "Weaves Lucid Dreaming when your MP drops below the specified value.",
         Job.RDM)]
     RDM_AoE_Lucid = 13220,
-    
+
     [ParentCombo(RDM_AoE_DPS)]
     [CustomComboInfo("Vercure Solo Option", "Adds Vercure on self when solo or in a party with no healers.", Job.RDM)]
     RDM_AoE_VerCure = 13222,
-    
+
     //Last Used 13222
 
     #endregion
@@ -5936,7 +5946,7 @@ public enum Preset
     SGE_Retarget_Diagnosis = 14079,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Eukrasian Diagnosis Options", "Retargets Eukrasian Diagnosis according to your Healing stack." +
+    [CustomComboInfo("Eukrasian Diagnosis Options", "Retargets Eukrasian Diagnosis according to your Healing stack " +
                                                     "(even from the Eukrasia Feature above)", Job.SGE)]
     [Retargeted(SGE.EukrasianDiagnosis)]
     SGE_Retarget_EukrasianDiagnosis = 14080,
@@ -5947,13 +5957,13 @@ public enum Preset
     SGE_Retarget_Haima = 14074,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Druochole Options", "Retargets Druochole according to your Healing stack." +
+    [CustomComboInfo("Druochole Options", "Retargets Druochole according to your Healing stack " +
                                           "(even from the Taurochole to Druochole Feature above)", Job.SGE)]
     [Retargeted(SGE.Druochole)]
     SGE_Retarget_Druochole = 14075,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack." +
+    [CustomComboInfo("Taurochole Options", "Retargets Taurochole according to your Healing stack " +
                                            "(even from the Taurochole to Druochole Feature above)", Job.SGE)]
     [Retargeted(SGE.Taurochole)]
     SGE_Retarget_Taurochole = 14076,
@@ -5964,7 +5974,7 @@ public enum Preset
     SGE_Retarget_Krasis = 14077,
 
     [ParentCombo(SGE_Retarget)]
-    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack." +
+    [CustomComboInfo("Kardia Options", "Retargets Kardia according to your Healing stack " +
                                        "(even from the Soteria to Kardia Feature above)", Job.SGE)]
     [Retargeted(SGE.Kardia)]
     SGE_Retarget_Kardia = 14078,
@@ -6030,7 +6040,7 @@ public enum Preset
     SAM_ST_AdvancedMode = 15003,
 
     [ParentCombo(SAM_ST_AdvancedMode)]
-    [CustomComboInfo("Balance Opener (Level 100)", "Adds the Balance opener at level 100.", Job.SAM)]
+    [CustomComboInfo("Balance Opener (Level 70/80/90/100)", "Adds the Balance opener at level 70/80/90/100.", Job.SAM)]
     SAM_ST_Opener = 15006,
 
     [ParentCombo(SAM_ST_AdvancedMode)]
@@ -6070,6 +6080,22 @@ public enum Preset
     [ParentCombo(SAM_ST_Damage)]
     [CustomComboInfo("Iaijutsu Option", "Adds Midare: Setsugekka, Higanbana, and Kaeshi: Setsugekka to the rotation.", Job.SAM)]
     SAM_ST_CDs_Iaijutsu = 15013,
+    
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Higanbana", "Will use Higanbana depending on suboptions.", Job.SAM)]
+    SAM_ST_CDs_UseHiganbana = 15024,
+
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Tenka Goken", "Will Use Tenka Goken when lvlsynched below lvl 50.", Job.SAM)]
+    SAM_ST_CDs_UseTenkaGoken = 15025,
+
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Midare Setsugekka", "Will use Midare Setsugekka and Tendo Setsugekka.", Job.SAM)]
+    SAM_ST_CDs_UseMidare = 15026,
+
+    [ParentCombo(SAM_ST_CDs_Iaijutsu)]
+    [CustomComboInfo("Add Tsubame-gaeshi", "Will use Tsubame-gaeshi and Tendo Kaeshi Setsugekka.", Job.SAM)]
+    SAM_ST_CDs_UseTsubame = 15027,
 
     [ParentCombo(SAM_ST_CDs_Iaijutsu)]
     [CustomComboInfo("Iajutsu movement Option", "Adds Midare: Setsugekka and Higanbana when you're not moving.", Job.SAM)]
@@ -6094,7 +6120,7 @@ public enum Preset
     #endregion
 
     [ParentCombo(SAM_ST_AdvancedMode)]
-    [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation", Job.SAM)]
+    [CustomComboInfo("Shinten Option", "Adds Shinten to the rotation.\nWill pool kenki for burst.", Job.SAM)]
     SAM_ST_Shinten = 15008,
 
     [ParentCombo(SAM_ST_AdvancedMode)]
@@ -6116,6 +6142,14 @@ public enum Preset
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Feint Raidwide Option", "Adds Feint when Raidwide is detected casting.", Job.SAM)]
     SAM_ST_Feint = 15095,
+
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("Third Eye Raidwide Option", "Adds Third Eye when Raidwide is detected casting.", Job.SAM)]
+    SAM_ST_ThirdEye = 15094,
+
+    [ParentCombo(SAM_ST_AdvancedMode)]
+    [CustomComboInfo("Meditate Option", "Adds Meditate when not moving, not having a target and being in combat.", Job.SAM)]
+    SAM_ST_Meditate = 15093,
 
     #endregion
 
@@ -6249,7 +6283,7 @@ public enum Preset
     [ParentCombo(SAM_Iaijutsu)]
     [CustomComboInfo("Iaijutsu to Ogi Namikiri", "Replace Iaijutsu with Ogi Namikiri and Kaeshi: Namikiri when buffed with Ogi Namikiri Ready.", Job.SAM)]
     SAM_Iaijutsu_OgiNamikiri = 15204,
-
+    
     #endregion
 
     #region Shinten Features
@@ -6263,13 +6297,17 @@ public enum Preset
     SAM_Shinten_Shoha = 15205,
 
     [ParentCombo(SAM_Shinten)]
-    [CustomComboInfo("Shinten to Senei", "Replace Hissatsu: Shinten with Senei when its cooldown is up.", Job.SAM)]
+    [CustomComboInfo("Shinten to Senei", "Replace Hissatsu: Shinten with Senei when off cooldown.", Job.SAM)]
     SAM_Shinten_Senei = 15206,
 
     [ParentCombo(SAM_Shinten)]
     [CustomComboInfo("Shinten to Zanshin", "Replace Hissatsu: Shinten with Zanshin when usable.", Job.SAM)]
     SAM_Shinten_Zanshin = 15207,
 
+    [ParentCombo(SAM_Shinten)]
+    [CustomComboInfo("Shinten to Ikishoten", "Replace Hissatsu: Shinten with Ikishoten when off cooldown and Kenki is below 50.", Job.SAM)]
+    SAM_Shinten_Ikishoten = 15256,
+    
     #endregion
 
     #region Kyuten Features
@@ -6283,13 +6321,17 @@ public enum Preset
     SAM_Kyuten_Shoha = 15208,
 
     [ParentCombo(SAM_Kyuten)]
-    [CustomComboInfo("Kyuten to Guren", "Replace Hissatsu: Kyuten with Guren when its cooldown is up.", Job.SAM)]
+    [CustomComboInfo("Kyuten to Guren", "Replace Hissatsu: Kyuten with Guren when off cooldown.", Job.SAM)]
     SAM_Kyuten_Guren = 15209,
 
     [ParentCombo(SAM_Kyuten)]
     [CustomComboInfo("Kyuten to Zanshin", "Replace Hissatsu: Kyuten with Zanshin when usable.", Job.SAM)]
     SAM_Kyuten_Zanshin = 15210,
 
+    [ParentCombo(SAM_Kyuten)]
+    [CustomComboInfo("Kyuten to Zanshin", "Replace Hissatsu: Kyuten with Ikishoten when off cooldown and Kenki is below 50.", Job.SAM)]
+    SAM_Kyuten_Ikishoten = 15257,
+    
     #endregion
 
     #region Ikishoten Features
@@ -6305,7 +6347,7 @@ public enum Preset
     [ParentCombo(SAM_Ikishoten)]
     [CustomComboInfo("Ikishoten to Shoha", "Replace Ikishoten with Shoha when Meditation is full before Ogi Namikiri.", Job.SAM)]
     SAM_Ikishoten_Shoha = 15213,
-
+    
     #endregion
 
     #region Other
@@ -6333,9 +6375,9 @@ public enum Preset
 
     #endregion
 
-    // Last Value ST = 15023
+    // Last Value ST = 15027
     // Last Value AoE = 15113
-    // Last Value Misc = 15255
+    // Last Value Misc = 15257
     // Last Value Hidden = 15301
 
     #endregion
@@ -6501,56 +6543,56 @@ public enum Preset
     SCH_ST_Heal_Esuna = 16026,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Adloquium Option", "Use Adloquium", Job.SCH)]
+    [CustomComboInfo("Adloquium Option", "Use Adloquium.", Job.SCH)]
     [PossiblyRetargeted(SCH.Adloquium)]
     SCH_ST_Heal_Adloquium = 16027,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Lustrate Option", "Use Lustrate", Job.SCH)]
+    [CustomComboInfo("Lustrate Option", "Use Lustrate.", Job.SCH)]
     [PossiblyRetargeted(SCH.Lustrate)]
     SCH_ST_Heal_Lustrate = 16028,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Excogitation Option", "Use Excogitation", Job.SCH)]
+    [CustomComboInfo("Excogitation Option", "Use Excogitation.", Job.SCH)]
     [PossiblyRetargeted(SCH.Excogitation)]
     SCH_ST_Heal_Excogitation = 16038,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Protraction Option", "Use Protraction", Job.SCH)]
+    [CustomComboInfo("Protraction Option", "Use Protraction.", Job.SCH)]
     [PossiblyRetargeted(SCH.Protraction)]
     SCH_ST_Heal_Protraction = 16039,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Aetherpact Option", "Use Aetherpact", Job.SCH)]
+    [CustomComboInfo("Aetherpact Option", "Use Aetherpact.", Job.SCH)]
     [PossiblyRetargeted(SCH.Aetherpact)]
     SCH_ST_Heal_Aetherpact = 16047,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn", Job.SCH)]
+    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn.", Job.SCH)]
     SCH_ST_Heal_WhisperingDawn = 16067,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination", Job.SCH)]
+    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination.", Job.SCH)]
     SCH_ST_Heal_FeyIllumination = 16068,
 
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing", Job.SCH)]
+    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing.", Job.SCH)]
     SCH_ST_Heal_FeyBlessing = 16069,
-    
+
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Seraphism Option", "Use Seraphism", Job.SCH)]
+    [CustomComboInfo("Seraphism Option", "Use Seraphism.", Job.SCH)]
     SCH_ST_Heal_Seraphism = 16086,
-    
+
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Expedient Option", "Use Expedient", Job.SCH)]
+    [CustomComboInfo("Expedient Option", "Use Expedient.", Job.SCH)]
     SCH_ST_Heal_Expedient = 16087,
-    
+
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph", Job.SCH)]
+    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph.", Job.SCH)]
     SCH_ST_Heal_SummonSeraph = 16088,
-    
+
     [ParentCombo(SCH_ST_Heal)]
-    [CustomComboInfo("Consolation Option", "Use Consolation", Job.SCH)]
+    [CustomComboInfo("Consolation Option", "Use Consolation.", Job.SCH)]
     SCH_ST_Heal_Consolation = 16089,
     #endregion
 
@@ -6558,36 +6600,36 @@ public enum Preset
     [AutoAction(true, true)]
     [ReplaceSkill(SCH.Succor)]
     [ConflictingCombos(SCH_Simple_AoE_Heal)]
-    [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below:", Job.SCH)]
+    [CustomComboInfo("Advanced Healing Mode - AoE", "Replaces Succor with options below.", Job.SCH)]
     [HealingCombo]
     SCH_AoE_Heal = 16018,
-    
+
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Indomitability Option", "Use Indomitabilty", Job.SCH)]
+    [CustomComboInfo("Indomitability Option", "Use Indomitabilty.", Job.SCH)]
     SCH_AoE_Heal_Indomitability = 16022,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn", Job.SCH)]
+    [CustomComboInfo("Whispering Dawn Option", "Use Whispering Dawn.", Job.SCH)]
     SCH_AoE_Heal_WhisperingDawn = 16043,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination", Job.SCH)]
+    [CustomComboInfo("Fey Illumination Option", "Use Fey Illumination.", Job.SCH)]
     SCH_AoE_Heal_FeyIllumination = 16042,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing", Job.SCH)]
+    [CustomComboInfo("Fey Blessing Option", "Use Fey Blessing.", Job.SCH)]
     SCH_AoE_Heal_FeyBlessing = 16045,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Seraphism Option", "Use Seraphism", Job.SCH)]
+    [CustomComboInfo("Seraphism Option", "Use Seraphism.", Job.SCH)]
     SCH_AoE_Heal_Seraphism = 16044,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph", Job.SCH)]
+    [CustomComboInfo("Summon Seraph Option", "Use Summon Seraph.", Job.SCH)]
     SCH_AoE_Heal_SummonSeraph = 16063,
 
     [ParentCombo(SCH_AoE_Heal)]
-    [CustomComboInfo("Consolation Option", "Use Consolation", Job.SCH)]
+    [CustomComboInfo("Consolation Option", "Use Consolation.", Job.SCH)]
     SCH_AoE_Heal_Consolation = 16046,
 
     [ParentCombo(SCH_AoE_Heal)]
@@ -7899,7 +7941,7 @@ public enum Preset
     [ParentCombo(WHM_ST_MainCombo)]
     [CustomComboInfo("Afflatus Misery Option",
         "Adds Afflatus Misery to the single target combo when it is ready to be used.", Job.WHM)]
-    WHM_ST_MainCombo_Misery_oGCD = 19017,
+    WHM_ST_MainCombo_Misery = 19017,
 
     [ParentCombo(WHM_ST_MainCombo)]
     [CustomComboInfo("Lily Overcap Protection Option",
@@ -7992,12 +8034,6 @@ public enum Preset
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Thin Air Option", "Adds Thin Air.", Job.WHM)]
     WHM_STHeals_ThinAir = 19304,
-    
-    [ParentCombo(WHM_STHeals)]
-    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
-                                               "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
-    [Retargeted]
-    WHM_STHeals_Misery = 19313,
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Regen Option", "Adds Regen.", Job.WHM)]
@@ -8036,7 +8072,6 @@ public enum Preset
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Asylum Option", "Adds Asylum.", Job.WHM)]
-    [PossiblyRetargeted]
     WHM_STHeals_Asylum = 19311,
 
     [ParentCombo(WHM_STHeals)]
@@ -8062,12 +8097,6 @@ public enum Preset
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Thin Air Option", "Uses Thin Air when available.", Job.WHM)]
     WHM_AoEHeals_ThinAir = 19200,
-
-    [ParentCombo(WHM_AoEHeals)]
-    [CustomComboInfo("Afflatus Misery Option", "Uses Afflatus Misery to prevent overcap." +
-                                               "\nHostile Hard Target > Nearest Hostile Target", Job.WHM)]
-    [Retargeted]
-    WHM_AoEHeals_Misery = 19010,
 
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Medica II Option",

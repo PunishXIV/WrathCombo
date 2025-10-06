@@ -138,7 +138,7 @@ internal partial class PCT : Caster
                 return OriginalHook(CometinBlack);
 
             //Hammer Stamp Combo
-            if (ActionReady(OriginalHook(HammerStamp)) && ScenicCD > 10)
+            if (ActionReady(OriginalHook(HammerStamp)) && (ScenicCD > 10 || !LevelChecked(ScenicMuse)))
                 return OriginalHook(HammerStamp);
 
             // LandscapeMotif
@@ -349,7 +349,7 @@ internal partial class PCT : Caster
                 return OriginalHook(CometinBlack);
 
             //Hammer Stamp Combo
-            if (hammerEnabled && ActionReady(OriginalHook(HammerStamp)) && ScenicCD > 10)
+            if (hammerEnabled && ActionReady(OriginalHook(HammerStamp)) && (ScenicCD > 10 || !LevelChecked(ScenicMuse)))
                 return OriginalHook(HammerStamp);
 
             // LandscapeMotif
@@ -513,7 +513,7 @@ internal partial class PCT : Caster
                 return OriginalHook(CometinBlack);
 
             //Hammer Stamp Combo
-            if (ActionReady(OriginalHook(HammerStamp)) && ScenicCD > 10)
+            if (ActionReady(OriginalHook(HammerStamp)) && (ScenicCD > 10 || !LevelChecked(ScenicMuse)))
                 return OriginalHook(HammerStamp);
 
             // LandscapeMotif
@@ -700,7 +700,7 @@ internal partial class PCT : Caster
                 return OriginalHook(CometinBlack);
 
             //Hammer Stamp Combo
-            if (hammerEnabled && ActionReady(OriginalHook(HammerStamp)) && ScenicCD > 10)
+            if (hammerEnabled && ActionReady(OriginalHook(HammerStamp)) && (ScenicCD > 10 || !LevelChecked(ScenicMuse)))
                 return OriginalHook(HammerStamp);
 
             // LandscapeMotif

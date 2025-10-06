@@ -37,6 +37,8 @@ internal class Presets : ConfigWindow
         public bool IsPvP;
         public Preset[] Conflicts;
         public Preset? Parent;
+        public Preset? GrandParent;
+        public Preset? GreatGrandParent;
         public BlueInactiveAttribute? BlueInactive;
         public VariantAttribute? Variant;
         public PossiblyRetargetedAttribute? PossiblyRetargeted;
@@ -74,6 +76,11 @@ internal class Presets : ConfigWindow
             RoleAttribute = preset.GetAttribute<RoleAttribute>();
             Hidden = preset.GetAttribute<HiddenAttribute>();
             ComboType = PresetStorage.GetComboType(preset);
+
+            if (Parent is not null)
+                GrandParent = PresetStorage.GetParent(Parent.Value);
+            if (GrandParent is not null)
+                GreatGrandParent = PresetStorage.GetParent(GrandParent.Value);
         }
     }
 
@@ -143,6 +150,8 @@ internal class Presets : ConfigWindow
         var eurekaParents = Attributes[preset].EurekaParent;
         var auto = Attributes[preset].AutoAction;
         var hidden = Attributes[preset].Hidden;
+        var presetName = info.Name;
+        var currentJob = Attributes[preset].CustomComboInfo.Job;
 
         ImGui.Spacing();
 
@@ -174,8 +183,11 @@ internal class Presets : ConfigWindow
             if (P.UIHelper.PresetControlled(preset) is not null)
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded(preset);
 
+        if (IsSearching)
+            presetName = preset.NameWithFullLineage(currentJob);
+
         if (P.UIHelper.ShowIPCControlledCheckboxIfNeeded
-            ($"{info.Name}###{preset}", ref enabled, preset, true))
+            ($"{presetName}###{preset}", ref enabled, preset, true))
         {
             if (enabled)
             {
@@ -204,10 +216,20 @@ internal class Presets : ConfigWindow
         Vector2 length = new();
         using (var styleCol = ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey))
         {
-            if (currentPreset != -1)
+            if (FeaturesWindow.CurrentPreset != -1)
             {
-                ImGui.Text($"#{currentPreset}: ");
-                length = ImGui.CalcTextSize($"#{currentPreset}: ");
+                string idForShow;
+                if (Service.Configuration.UIShowPresetIDs)
+                {
+                    var idToShow = ((int)preset).ToString();
+                    idForShow = $"#{idToShow}:".PadLeft(8);
+                }
+                else
+                {
+                    idForShow = " ".PadLeft(10);
+                }
+                ImGui.Text(idForShow);
+                length = ImGui.CalcTextSize(idForShow);
                 ImGui.SameLine();
                 ImGui.PushItemWidth(length.Length());
             }
@@ -231,31 +253,14 @@ internal class Presets : ConfigWindow
         if (conflicts.Length > 0)
         {
             ImGui.TextColored(ImGuiColors.DalamudRed, "Conflicts with:");
-            StringBuilder conflictBuilder = new();
             ImGui.Indent();
             foreach (var conflict in conflicts)
-            {
-                var comboInfo = Attributes[conflict].CustomComboInfo;
-                conflictBuilder.Insert(0, $"{comboInfo.Name}");
-                var par2 = conflict;
-
-                while (PresetStorage.GetParent(par2) != null)
-                {
-                    var subpar = PresetStorage.GetParent(par2);
-                    if (subpar != null)
-                    {
-                        conflictBuilder.Insert(0, $"{Attributes[subpar.Value].CustomComboInfo.Name} -> ");
-                        par2 = subpar!.Value;
-                    }
-
-                }
-
-                if (!string.IsNullOrEmpty(comboInfo.JobShorthand))
-                    conflictBuilder.Insert(0, $"[{comboInfo.JobShorthand}] ");
-
-                ImGuiEx.Text(GradientColor.Get(ImGuiColors.DalamudRed, CustomComboFunctions.IsEnabled(conflict) ? ImGuiColors.HealerGreen : ImGuiColors.DalamudRed, 1500), $"- {conflictBuilder}");
-                conflictBuilder.Clear();
-            }
+                ImGuiEx.Text(GradientColor.Get(
+                        ImGuiColors.DalamudRed,
+                        IsEnabled(conflict)
+                            ? ImGuiColors.HealerGreen
+                            : ImGuiColors.DalamudRed, 1500),
+                    $"- {conflict.NameWithFullLineage(currentJob)}");
             ImGui.Unindent();
             ImGui.Spacing();
         }
@@ -402,7 +407,7 @@ internal class Presets : ConfigWindow
         }
 
         ImGui.Spacing();
-        currentPreset++;
+        FeaturesWindow.CurrentPreset++;
 
         presetChildren.TryGetValue(preset, out var children);
 
@@ -448,7 +453,7 @@ internal class Presets : ConfigWindow
                             }
 
                             // Keep removed items in the counter
-                            currentPreset += 1 + AllChildren(presetChildren[childPreset]);
+                            FeaturesWindow.CurrentPreset += 1 + AllChildren(presetChildren[childPreset]);
                         }
 
                         else
@@ -470,7 +475,7 @@ internal class Presets : ConfigWindow
             }
             else
             {
-                currentPreset += AllChildren(presetChildren[preset]);
+                FeaturesWindow.CurrentPreset += AllChildren(presetChildren[preset]);
 
             }
         }

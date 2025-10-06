@@ -484,7 +484,10 @@ internal partial class OccultCrescent
         // GCDs
         if (CanWeaveNow || !HasTargetNow) return false;
         
-        if (IsEnabledAndUsable(Preset.Phantom_Cannoneer_SilverCannon, SilverCannon))
+        if (IsEnabledAndUsable(Preset.Phantom_Cannoneer_SilverCannon, SilverCannon) &&
+            (!HasStatusEffect(Debuffs.SilverSickness, CurrentTarget, anyOwner:true) || 
+             GetStatusEffectRemainingTime(Debuffs.SilverSickness, CurrentTarget, anyOwner:true) < 30f) || 
+             IsNotEnabled(Preset.Phantom_Cannoneer_HolyCannon))
         {
             actionID = SilverCannon; // debuff
             return true;

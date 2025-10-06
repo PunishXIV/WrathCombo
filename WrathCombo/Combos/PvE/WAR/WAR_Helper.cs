@@ -169,7 +169,7 @@ internal partial class WAR : Tank
     internal static bool ShouldUsePrimalRuination => LevelChecked(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) && HasST;
     internal static bool ShouldUsePrimalRend(float distance = 20, bool movement = true) => CanPRend(distance, movement) && !JustUsed(InnerRelease) && HasST;
     internal static bool ShouldUseFellCleave(int gauge = 90) => CanSpendBeastGauge(gauge, STBurstPooling) && HasST && InMeleeRange() && Minimal;
-    internal static bool ShouldUseDecimate(int gauge = 90) => CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && InMeleeRange() && Minimal;
+    internal static bool ShouldUseDecimate(int gauge = 90) => CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && InMeleeRange() && Minimal && LevelChecked(SteelCyclone);
 
     internal static bool ShouldUseTomahawk => LevelChecked(Tomahawk) && !InMeleeRange() && HasBattleTarget();
     internal static uint STCombo

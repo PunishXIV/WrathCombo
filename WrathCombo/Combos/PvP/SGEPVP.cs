@@ -90,7 +90,7 @@ internal static class SGEPvP
                     return PvPHealer.Diabrosis;
 
                 // Psyche after Phlegma
-                if (IsEnabled(Preset.SGEPvP_BurstMode_Psyche) && WasLastSpell(Phlegma))
+                if (IsEnabled(Preset.SGEPvP_BurstMode_Psyche) && ComboAction is Phlegma)
                     return Psyche;
 
                 if (IsEnabled(Preset.SGEPvP_BurstMode_Pneuma) && !GetCooldown(Pneuma).IsCooldown)

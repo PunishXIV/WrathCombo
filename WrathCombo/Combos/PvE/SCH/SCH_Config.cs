@@ -416,8 +416,8 @@ internal partial class SCH
             SCH_ST_Heal_ConsolationOption = new("SCH_ST_Heal_ConsolationOption", 70),
             SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 40);
         public static UserIntArray
-            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [11, 5, 6, 7, 12, 3, 2, 4, 8, 9, 10, 1]),
-            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority", [1, 2, 3, 4, 5, 6, 7, 8]);
+            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [11,5,6,7,12,3,2,4,10,8,9,1]),
+            SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority", [3,2,4,1,6,7,5,8]);
 
         public static UserBool
             SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),

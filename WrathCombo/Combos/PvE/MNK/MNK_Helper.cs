@@ -58,7 +58,25 @@ internal partial class MNK
 
     #endregion
 
-    #region Masterfull Blitz
+    #region Masterful Blitz
+
+    internal static bool UseMasterfulBlitz()
+    {
+        if (LevelChecked(MasterfulBlitz) &&
+            !HasStatusEffect(Buffs.PerfectBalance) &&
+            InMasterfulRange() && !IsOriginal(MasterfulBlitz))
+        {
+            //Only use when buff is active
+            if (LevelChecked(RiddleOfFire) && HasStatusEffect(Buffs.RiddleOfFire))
+                return true;
+
+            //Use whenver since no buff
+            if (!LevelChecked(RiddleOfFire))
+                return true;
+        }
+
+        return false;
+    }
 
     internal static bool InMasterfulRange()
     {
@@ -80,6 +98,56 @@ internal partial class MNK
 
     #endregion
 
+    #region Chakra
+
+    internal static bool UseFormshift() =>
+        LevelChecked(FormShift) && !InCombat() &&
+        !HasStatusEffect(Buffs.FormlessFist) &&
+        !HasStatusEffect(Buffs.PerfectBalance) &&
+        !HasStatusEffect(Buffs.OpoOpoForm) &&
+        !HasStatusEffect(Buffs.RaptorForm) &&
+        !HasStatusEffect(Buffs.CoeurlForm);
+
+    #region ST
+
+    internal static bool UseMeditationST() =>
+        LevelChecked(SteeledMeditation) &&
+        (!InCombat() || !InMeleeRange()) &&
+        Chakra < 5 &&
+        IsOriginal(MasterfulBlitz) &&
+        !HasStatusEffect(Buffs.RiddleOfFire) &&
+        !HasStatusEffect(Buffs.WindsRumination) &&
+        !HasStatusEffect(Buffs.FiresRumination);
+
+    internal static bool UseChakraST() =>
+        Chakra >= 5 && LevelChecked(SteeledMeditation) &&
+        !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire) &&
+        InActionRange(OriginalHook(SteeledMeditation));
+
+    #endregion
+
+    #region AoE
+
+    internal static bool UseMeditationAoE() =>
+        LevelChecked(InspiritedMeditation) &&
+        (!InCombat() || !InMeleeRange()) &&
+        Chakra < 5 &&
+        IsOriginal(MasterfulBlitz) &&
+        !HasStatusEffect(Buffs.RiddleOfFire) &&
+        !HasStatusEffect(Buffs.WindsRumination) &&
+        !HasStatusEffect(Buffs.FiresRumination);
+
+    internal static bool UseChakraAoE() =>
+        Chakra >= 5 &&
+        LevelChecked(InspiritedMeditation) &&
+        HasBattleTarget() && !JustUsed(Brotherhood) &&
+        !JustUsed(RiddleOfFire) &&
+        InActionRange(OriginalHook(InspiritedMeditation));
+
+    #endregion
+
+    #endregion
+
     #region Buffs
 
     //RoF
@@ -91,24 +159,41 @@ internal partial class MNK
          !LevelChecked(Brotherhood) ||
          HasStatusEffect(Buffs.Brotherhood));
 
+    internal static bool UseFiresReply() =>
+        HasStatusEffect(Buffs.FiresRumination) &&
+        !HasStatusEffect(Buffs.FormlessFist) &&
+        !HasStatusEffect(Buffs.PerfectBalance) &&
+        IsOriginal(MasterfulBlitz) &&
+        (JustUsed(OriginalHook(Bootshine)) ||
+         JustUsed(DragonKick) ||
+         GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCD * 2 ||
+         !InMeleeRange());
+
     //Brotherhood
     internal static bool UseBrotherhood() =>
         ActionReady(Brotherhood) &&
-        GetCooldownRemainingTime(RiddleOfFire) < 1;
+        ActionReady(RiddleOfFire);
 
     //RoW
     internal static bool UseRoW() =>
         ActionReady(RiddleOfWind) &&
         !HasStatusEffect(Buffs.WindsRumination);
 
+    internal static bool UseWindsReply() =>
+        HasStatusEffect(Buffs.WindsRumination) &&
+        (GetCooldownRemainingTime(RiddleOfFire) > 5 ||
+         HasStatusEffect(Buffs.RiddleOfFire) ||
+         GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
+         !InMeleeRange());
+
     internal static bool UseMantra() =>
         ActionReady(Mantra) &&
         !HasStatusEffect(Buffs.Mantra) &&
-        RaidWideCasting();
+        RaidWideCasting(3f);
 
     internal static bool UseRoE() =>
         ActionReady(RiddleOfEarth) &&
-        RaidWideCasting() &&
+        RaidWideCasting(2f) &&
         !HasStatusEffect(Buffs.RiddleOfEarth) &&
         !HasStatusEffect(Buffs.EarthsRumination);
 
@@ -134,7 +219,7 @@ internal partial class MNK
 
             // Even window first use
             if ((JustUsed(OriginalHook(Bootshine), GCD) || JustUsed(DragonKick, GCD)) &&
-                GetCooldownRemainingTime(Brotherhood) <= GCD * 2 && GetCooldownRemainingTime(RiddleOfFire) <= GCD * 2)
+                GetCooldownRemainingTime(Brotherhood) <= GCD * 3 && GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3)
                 return true;
 
             // Even window second use

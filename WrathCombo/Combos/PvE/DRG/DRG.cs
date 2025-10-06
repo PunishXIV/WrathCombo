@@ -159,11 +159,6 @@ internal partial class DRG : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            // Piercing Talon Uptime Option
-            if (LevelChecked(PiercingTalon) &&
-                !InMeleeRange() && HasBattleTarget())
-                return PiercingTalon;
-
             if (HasStatusEffect(Buffs.PowerSurge))
             {
                 if (CanDRGWeave())

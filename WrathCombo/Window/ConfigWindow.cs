@@ -28,8 +28,18 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 {
     internal static readonly Dictionary<Job, List<(Preset Preset, CustomComboInfoAttribute Info)>> groupedPresets = GetGroupedPresets();
     internal static readonly Dictionary<Preset, (Preset Preset, CustomComboInfoAttribute Info)[]> presetChildren = GetPresetChildren();
-    internal static int currentPreset = 1;
+
     internal static float lastLeftColumnWidth;
+
+    #region Search Variables
+    internal static string Search = string.Empty;
+    internal static string UsableSearch => Search.Trim().ToLowerInvariant();
+    internal static bool SearchDescription = true;
+
+    internal static bool IsSearching => !UsableSearch.IsNullOrWhitespace() &&
+                                        UsableSearch.Length > 2;
+    #endregion
+
     internal static Dictionary<Job, List<(Preset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets()
     {
         return Enum
@@ -73,7 +83,15 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
                 .OrderBy(tpl => tpl.Info.Order).ToArray())!;
     }
 
-    public OpenWindow OpenWindow { get; set; } = OpenWindow.PvE;
+    public OpenWindow OpenWindow
+    {
+        get;
+        set
+        {
+            ClearAnySearches();
+            field = value;
+        }
+    } = OpenWindow.PvE;
 
     /// <summary> Initializes a new instance of the <see cref="ConfigWindow"/> class. </summary>
     public ConfigWindow() : base($"{P.Name} {P.GetType().Assembly.GetName().Version}###WrathCombo")
@@ -119,6 +137,20 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
         }
 
         DrawCollapseButton();
+    }
+    
+    public static void ClearAnySearches()
+    {
+        Search = string.Empty;
+        SearchDescription = true;
+    }
+
+    public override void OnClose()
+    {
+        ClearAnySearches();
+
+        // Normal close
+        base.OnClose();
     }
 
     private void DrawSidebar(float topLeftSideHeight)
@@ -239,8 +271,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             case OpenWindow.AutoRotation:
                 AutoRotationTab.Draw();
                 break;
-        }
-        ;
+        };
     }
 
     private static void DrawCollapseButton()

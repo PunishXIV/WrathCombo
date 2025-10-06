@@ -1,3 +1,4 @@
+using System;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.SAM.Config;
 namespace WrathCombo.Combos.PvE;
@@ -14,7 +15,8 @@ internal partial class SAM : Melee
                 return actionID;
 
             //Meikyo to start before combat
-            if (!HasStatusEffect(Buffs.MeikyoShisui) && ActionReady(MeikyoShisui) &&
+            if (ActionReady(MeikyoShisui) &&
+                !HasStatusEffect(Buffs.MeikyoShisui) &&
                 !InCombat() && HasBattleTarget())
                 return MeikyoShisui;
 
@@ -22,85 +24,66 @@ internal partial class SAM : Melee
                 return contentAction;
 
             //oGCDs
-            if (CanWeave() && M6SReady)
+            if (CanWeave())
             {
-                //Meikyo Features
+                //Meikyo Feature
                 if (UseMeikyo())
                     return MeikyoShisui;
 
-                //Ikishoten Features
-                if (ActionReady(Ikishoten) &&
-                    !HasStatusEffect(Buffs.ZanshinReady))
-                {
-                    return Kenki switch
-                    {
-                        //Dumps Kenki in preparation for Ikishoten
-                        >= 50 => Shinten,
+                //Ikishoten Feature
+                if (UseIkishoten())
+                    return Ikishoten;
 
-                        < 50 => Ikishoten
-                    };
-                }
-
-                switch (Kenki)
+                //Senei Feature
+                if (Kenki >= SAMKenki.Senei)
                 {
-                    //Senei Features
-                    case >= 25 when ActionReady(Senei):
+                    if (UseSenei())
                         return Senei;
 
                     //Guren if no Senei
-                    case >= 25 when !LevelChecked(Senei) &&
-                                    ActionReady(Guren) &&
-                                    InActionRange(Guren):
+                    if (!LevelChecked(Senei) &&
+                        ActionReady(Guren) && InActionRange(Guren))
                         return Guren;
                 }
 
                 //Zanshin Usage
-                //TODO Buffcheck
-                if (ActionReady(Zanshin) && Kenki >= 50 &&
-                    InActionRange(Zanshin) &&
-                    HasStatusEffect(Buffs.ZanshinReady) &&
-                    (JustUsed(Higanbana) ||
-                     JustUsed(OriginalHook(OgiNamikiri)) ||
-                     GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8))
+                if (UseZanshin())
                     return Zanshin;
 
-                if (ActionReady(Shoha) &&
-                    MeditationStacks is 3 &&
-                    InActionRange(Shoha))
+                //Shoha Usage
+                if (UseShoha())
                     return Shoha;
 
-                if (ActionReady(Shinten) &&
-                    !HasStatusEffect(Buffs.ZanshinReady) && !ActionReady(Senei) &&
-                    (Kenki >= 65 || GetTargetHPPercent() <= 1 && Kenki >= 25))
+                //Shinten Usage
+                if (UseShinten())
                     return Shinten;
 
                 // healing
-                if (Role.CanSecondWind(25))
+                if (Role.CanSecondWind(SAM_STSecondWindHPThreshold))
                     return Role.SecondWind;
 
-                if (Role.CanBloodBath(40))
+                if (Role.CanBloodBath(SAM_STBloodbathHPThreshold))
                     return Role.Bloodbath;
+
+                if (RoleActions.Melee.CanLegSweep() &&
+                    !TargetIsBoss() && TargetIsCasting())
+                    return Role.LegSweep;
             }
 
             //Ranged
-            if (ActionReady(Enpi) &&
-                !InMeleeRange() &&
-                HasBattleTarget())
+            if (UseRanged(true, true))
                 return Enpi;
-            if (UseTsubame)
+
+            if (UseTsubame())
                 return OriginalHook(TsubameGaeshi);
 
-            //Ogi Namikiri Features
-            if (ActionReady(OgiNamikiri) && M6SReady &&
-                InActionRange(OriginalHook(OgiNamikiri)) &&
-                HasStatusEffect(Buffs.OgiNamikiriReady) &&
-                (JustUsed(Higanbana, 5f) ||
-                 !TargetIsBoss() ||
-                 GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) || NamikiriReady)
+            //Ogi Namikiri feature
+            if (!IsMoving() && UseOgi())
                 return OriginalHook(OgiNamikiri);
 
-            // Iaijutsu Features
-            if (UseIaijutsu() && !IsMoving())
+            // Iaijutsu feature
+            if (!IsMoving() &&
+                UseIaijutsu(true, true, true))
                 return OriginalHook(Iaijutsu);
 
             if (HasStatusEffect(Buffs.MeikyoShisui))
@@ -125,6 +108,10 @@ internal partial class SAM : Melee
             {
                 if (ComboAction is Hakaze or Gyofu)
                 {
+                    if (!HasSetsu && LevelChecked(Yukikaze) &&
+                        HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
+                        return Yukikaze;
+
                     if (LevelChecked(Jinpu) &&
                         (RefreshFugetsu && !HasGetsu ||
                          !HasStatusEffect(Buffs.Fugetsu) ||
@@ -136,10 +123,6 @@ internal partial class SAM : Melee
                          !HasStatusEffect(Buffs.Fuka) ||
                          SenCount is 3 && RefreshFuka))
                         return Shifu;
-
-                    if (!HasSetsu && LevelChecked(Yukikaze) &&
-                        HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
-                        return Yukikaze;
                 }
 
                 if (ComboAction is Jinpu && LevelChecked(Gekko))
@@ -165,8 +148,8 @@ internal partial class SAM : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            //oGCD Features
-            if (CanWeave() && M6SReady)
+            //oGCD feature
+            if (CanWeave())
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
@@ -206,7 +189,7 @@ internal partial class SAM : Melee
                     return Role.Bloodbath;
             }
 
-            if (ActionReady(OgiNamikiri) && M6SReady &&
+            if (ActionReady(OgiNamikiri) &&
                 !IsMoving() && (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
@@ -262,9 +245,6 @@ internal partial class SAM : Melee
             if (actionID is not (Hakaze or Gyofu))
                 return actionID;
 
-            int kenkiOvercap = SAM_ST_KenkiOvercapAmount;
-            int shintenTreshhold = SAM_ST_ExecuteThreshold;
-
             // Opener for SAM
             if (IsEnabled(Preset.SAM_ST_Opener) &&
                 Opener().FullOpener(ref actionID))
@@ -286,32 +266,37 @@ internal partial class SAM : Melee
             {
                 if (IsEnabled(Preset.SAM_ST_CDs))
                 {
-                    //Meikyo Features
+                    //Auto Third Eye
+                    if (IsEnabled(Preset.SAM_ST_ThirdEye) &&
+                        ActionReady(OriginalHook(ThirdEye)) &&
+                        (RaidWideCasting(2f) || !IsInParty()))
+                        return OriginalHook(ThirdEye);
+
+                    //Auto Meditate
+                    if (IsEnabled(Preset.SAM_ST_Meditate) &&
+                        ActionReady(Meditate) &&
+                        !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(SAM_ST_MeditateTimeStill) &&
+                        InCombat() && !HasBattleTarget())
+                        return Meditate;
+
+                    //Meikyo feature
                     if (IsEnabled(Preset.SAM_ST_CDs_MeikyoShisui) &&
                         UseMeikyo())
                         return MeikyoShisui;
 
-                    //Ikishoten Features
+                    //Ikishoten feature
                     if (IsEnabled(Preset.SAM_ST_CDs_Ikishoten) &&
-                        ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
-                    {
-                        return Kenki switch
-                        {
-                            //Dumps Kenki in preparation for Ikishoten
-                            >= 50 => Shinten,
-
-                            < 50 => Ikishoten
-                        };
-                    }
+                        UseIkishoten())
+                        return Ikishoten;
                 }
 
                 if (IsEnabled(Preset.SAM_ST_Damage))
                 {
-                    //Senei Features
+                    //Senei feature
                     if (IsEnabled(Preset.SAM_ST_CDs_Senei)
-                        && Kenki >= 25)
+                        && Kenki >= SAMKenki.Senei)
                     {
-                        if (ActionReady(Senei))
+                        if (UseSenei())
                             return Senei;
 
                         //Guren if no Senei
@@ -322,27 +307,16 @@ internal partial class SAM : Melee
                     }
 
                     //Zanshin Usage
-                    //TODO Buffcheck
                     if (IsEnabled(Preset.SAM_ST_CDs_Zanshin) &&
-                        ActionReady(Zanshin) && Kenki >= 50 &&
-                        InActionRange(Zanshin) &&
-                        HasStatusEffect(Buffs.ZanshinReady) &&
-                        (JustUsed(Higanbana) ||
-                         JustUsed(OriginalHook(OgiNamikiri)) ||
-                         SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss() ||
-                         GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8))
+                        UseZanshin())
                         return Zanshin;
 
                     if (IsEnabled(Preset.SAM_ST_CDs_Shoha) &&
-                        ActionReady(Shoha) && MeditationStacks is 3 &&
-                        InActionRange(Shoha))
+                        UseShoha())
                         return Shoha;
                 }
                 if (IsEnabled(Preset.SAM_ST_Shinten) &&
-                    ActionReady(Shinten) && !HasStatusEffect(Buffs.ZanshinReady) &&
-                    (IsEnabled(Preset.SAM_ST_CDs_Senei) && !ActionReady(Senei) ||
-                     IsNotEnabled(Preset.SAM_ST_CDs_Senei)) &&
-                    (Kenki >= kenkiOvercap || GetTargetHPPercent() <= shintenTreshhold && Kenki >= 25))
+                    UseShinten())
                     return Shinten;
 
                 if (IsEnabled(Preset.SAM_ST_Feint) &&
@@ -368,29 +342,26 @@ internal partial class SAM : Melee
 
             //Ranged
             if (IsEnabled(Preset.SAM_ST_RangedUptime) &&
-                ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
+                UseRanged(SAM_ST_RangedOptions[0], SAM_ST_RangedOptions[1]))
                 return Enpi;
 
             if (IsEnabled(Preset.SAM_ST_Damage))
             {
                 if (IsEnabled(Preset.SAM_ST_CDs_Iaijutsu) &&
-                    SAM_ST_CDs_IaijutsuOption[3] && UseTsubame)
+                    IsEnabled(Preset.SAM_ST_CDs_UseTsubame) &&
+                    UseTsubame())
                     return OriginalHook(TsubameGaeshi);
 
-                //Ogi Namikiri Features
+                //Ogi Namikiri Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_OgiNamikiri) &&
                     (!SAM_ST_CDs_OgiNamikiri_Movement || !IsMoving()) &&
-                    ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
-                    HasStatusEffect(Buffs.OgiNamikiriReady) && M6SReady &&
-                    (JustUsed(Higanbana, 5f) ||
-                     SAM_ST_HiganbanaBossOption == 1 && !TargetIsBoss() ||
-                     GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8) || NamikiriReady)
+                    M6SReady && UseOgi())
                     return OriginalHook(OgiNamikiri);
 
-                // Iaijutsu Features
+                // Iaijutsu Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_Iaijutsu) &&
                     (!IsEnabled(Preset.SAM_ST_CDs_Iaijutsu_Movement) || !IsMoving()) &&
-                    UseIaijutsu())
+                    UseIaijutsu(IsEnabled(Preset.SAM_ST_CDs_UseHiganbana), IsEnabled(Preset.SAM_ST_CDs_UseTenkaGoken), IsEnabled(Preset.SAM_ST_CDs_UseMidare)))
                     return OriginalHook(Iaijutsu);
             }
 
@@ -421,6 +392,11 @@ internal partial class SAM : Melee
             {
                 if (ComboAction is Hakaze or Gyofu)
                 {
+                    if (IsEnabled(Preset.SAM_ST_Yukikaze) &&
+                        !HasSetsu && LevelChecked(Yukikaze) &&
+                        HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
+                        return Yukikaze;
+
                     if (IsEnabled(Preset.SAM_ST_Gekko) &&
                         LevelChecked(Jinpu) &&
                         (RefreshFugetsu && !HasGetsu ||
@@ -434,11 +410,6 @@ internal partial class SAM : Melee
                          !HasStatusEffect(Buffs.Fuka) ||
                          SenCount is 3 && RefreshFuka))
                         return Shifu;
-
-                    if (IsEnabled(Preset.SAM_ST_Yukikaze) &&
-                        !HasSetsu && LevelChecked(Yukikaze) &&
-                        HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
-                        return Yukikaze;
                 }
 
                 if (ComboAction is Jinpu && LevelChecked(Gekko))
@@ -467,7 +438,7 @@ internal partial class SAM : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            //oGCD Features
+            //oGCD feature
             if (CanWeave() && M6SReady)
             {
                 if (IsEnabled(Preset.SAM_AoE_Hagakure) &&
@@ -861,14 +832,21 @@ internal partial class SAM : Melee
                 return actionID;
 
             if (IsEnabled(Preset.SAM_Shinten_Shoha) &&
-                ActionReady(Shoha) && MeditationStacks is 3)
+                ActionReady(Shoha) &&
+                MeditationStacks is 3)
                 return Shoha;
+
+            if (IsEnabled(Preset.SAM_Shinten_Ikishoten) &&
+                ActionReady(Ikishoten) &&
+                Gauge.Kenki < 50)
+                return Ikishoten;
 
             if (IsEnabled(Preset.SAM_Shinten_Senei) &&
                 ActionReady(Senei))
                 return Senei;
 
             if (IsEnabled(Preset.SAM_Shinten_Zanshin) &&
+                ActionReady(Zanshin) &&
                 HasStatusEffect(Buffs.ZanshinReady))
                 return Zanshin;
 
@@ -885,17 +863,26 @@ internal partial class SAM : Melee
             if (actionID is not Kyuten)
                 return actionID;
 
+            if (IsEnabled(Preset.SAM_Kyuten_Shoha) &&
+                ActionReady(Shoha) &&
+                MeditationStacks is 3)
+                return Shoha;
+
+            if (IsEnabled(Preset.SAM_Kyuten_Ikishoten) &&
+                ActionReady(Ikishoten) &&
+                Gauge.Kenki < 50)
+                return Ikishoten;
+
             if (IsEnabled(Preset.SAM_Kyuten_Guren) &&
                 ActionReady(Guren))
                 return Guren;
 
             if (IsEnabled(Preset.SAM_Kyuten_Zanshin) &&
+                ActionReady(Zanshin) &&
                 HasStatusEffect(Buffs.ZanshinReady))
                 return Zanshin;
 
-            if (IsEnabled(Preset.SAM_Kyuten_Shoha) &&
-                ActionReady(Shoha) && MeditationStacks is 3)
-                return Shoha;
+
 
             return actionID;
         }
@@ -917,7 +904,8 @@ internal partial class SAM : Melee
                 return Shoha;
 
             if (IsEnabled(Preset.SAM_Ikishoten_Namikiri) &&
-                (ActionReady(OgiNamikiri) && HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
+                ActionReady(OgiNamikiri) &&
+                (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
             return actionID;

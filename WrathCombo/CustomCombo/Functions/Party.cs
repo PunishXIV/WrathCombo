@@ -112,9 +112,13 @@ internal abstract partial class CustomComboFunctions
         get
         {
             field ??= new();
-            foreach (var pc in Svc.Objects)
+            foreach (var pc in GetPartyMembers())
             {
-                if (pc is IPlayerCharacter member && member.IsDead && !member.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
+                if (pc.IsOutOfPartyNPC || pc.BattleChara is null)
+                    continue;
+
+                var member = pc.BattleChara;
+                if (member.IsDead && !member.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
                 {
                     if (!field.Any(x => x.GameObjectId == pc.GameObjectId))
                         field.Add(new WrathPartyMember

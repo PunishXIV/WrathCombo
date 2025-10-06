@@ -115,7 +115,7 @@ internal partial class WHM
             case 4:
                 action = AfflatusSolace;
                 enabled = IsEnabled(Preset.WHM_STHeals_Solace) &&
-                          CanLily;
+                          CanLily && !BloodLilyReady;
                 return WHM_STHeals_SolaceHP;
             case 5:
                 action = Regen;
@@ -230,7 +230,7 @@ internal partial class WHM
             case 6:
                 action = AfflatusRapture;
                 enabled = IsEnabled(Preset.WHM_AoEHeals_Rapture) &&
-                          CanLily;
+                          CanLily && !BloodLilyReady;
                 return WHM_AoEHeals_RaptureHP;
 
             case 7:
@@ -297,7 +297,7 @@ internal partial class WHM
     internal static WHMGauge gauge = GetJobGauge<WHMGauge>();
     internal static bool CanLily => gauge.Lily > 0;
     internal static bool FullLily => gauge.Lily == 3;
-    internal static bool AlmostFullLily => gauge is { Lily: 2, LilyTimer: >= 8000 };
+    internal static bool AlmostFullLily => gauge is { Lily: 2, LilyTimer: >= 12000 };
     internal static bool BloodLilyReady => gauge.BloodLily == 3;
 
     #endregion

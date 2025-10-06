@@ -40,6 +40,9 @@ internal partial class PLD : Tank
         {
             if (actionID is not FastBlade)
                 return actionID;
+            
+            if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
+                return All.SavageBlade;
 
             #region Variables
 
@@ -241,6 +244,9 @@ internal partial class PLD : Tank
         {
             if (actionID is not TotalEclipse)
                 return actionID;
+            
+            if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
+                return All.SavageBlade;
 
             #region Variables
 
@@ -374,6 +380,9 @@ internal partial class PLD : Tank
         {
             if (actionID is not FastBlade)
                 return actionID;
+            
+            if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms)))
+                return All.SavageBlade;
 
             #region Variables
 
@@ -586,6 +595,9 @@ internal partial class PLD : Tank
         {
             if (actionID is not TotalEclipse)
                 return actionID;
+            
+            if (IsEnabled(Preset.PLD_BlockForWings) && (HasStatusEffect(Buffs.PassageOfArms) || JustUsed(PassageOfArms, 0.5f)))
+                return All.SavageBlade;
 
             #region Variables
 

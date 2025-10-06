@@ -78,6 +78,13 @@ internal partial class RDM : Caster
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return EnchantedRiposte;
             }
+            
+            if (LevelChecked(Reprise) &&
+                GetTargetDistance() >= 5 &&
+                (ComboAction is Zwerchhau or EnchantedZwerchhau && RedoublementRepriseMana || 
+                 ComboAction is  Riposte or EnchantedRiposte && ZwerchhauRepriseMana))
+                return EnchantedReprise;
+            
             #endregion
 
             #region GCD Casts
@@ -278,6 +285,13 @@ internal partial class RDM : Caster
 
             if (IsEnabled(Preset.RDM_ST_MeleeCombo))
             {
+                
+                if (IsEnabled(Preset.RDM_ST_MeleeCombo_IncludeReprise) && LevelChecked(Reprise) &&
+                    GetTargetDistance() >= RDM_ST_MeleeCombo_IncludeReprise_Distance && 
+                    (ComboAction is Zwerchhau or EnchantedZwerchhau && RedoublementRepriseMana || 
+                     ComboAction is  Riposte or EnchantedRiposte && ZwerchhauRepriseMana))
+                    return EnchantedReprise;
+                
                 if ((InMeleeRange() || IsEnabled(Preset.RDM_ST_MeleeCombo_MeleeCheck)) && (HasEnoughManaForCombo || CanMagickedSwordplay))
                 {
                     if (ComboAction is Zwerchhau or EnchantedZwerchhau && LevelChecked(Redoublement))

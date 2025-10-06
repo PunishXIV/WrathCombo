@@ -51,6 +51,7 @@ internal partial class RDM
         EnchantedMoulinetTrois = 37003,
         Corpsacorps = 7506,
         Displacement = 7515,
+        EnchantedReprise = 16528,
         Reprise = 16529,
         ViceOfThorns = 37005,
         GrandImpact = 37006,
@@ -120,6 +121,8 @@ internal partial class RDM
     internal static bool HasManaStacks => Gauge.ManaStacks == 3;
     internal static bool CanFlare => BlackHigher && Gauge.BlackMana - Gauge.WhiteMana < 18;
     internal static bool CanHoly => WhiteHigher && Gauge.WhiteMana - Gauge.BlackMana < 18;
+    internal static bool RedoublementRepriseMana => Gauge is { WhiteMana: >= 20, BlackMana: >= 20 };
+    internal static bool ZwerchhauRepriseMana => Gauge is { WhiteMana: >= 35, BlackMana: >= 35 };
     
     //Floats
     internal static float EmboldenCD => GetCooldownRemainingTime(Embolden);
@@ -163,7 +166,7 @@ internal partial class RDM
                 case > 80:
                     return 60; //Fresh out of Embolden window requiring slightly higher to keep a third melee combo from happening before a few of the procs can be used
                 case > 40 and <= 80:
-                    return 50; // Normal operating fire at 50
+                    return 55; // Normal operating fire at 50
                 case > 15 and <= 40:
                     return 70; // As it gets closer increases level so if we do a melee combo we still have enough for double melee burst
                 case <= 15:

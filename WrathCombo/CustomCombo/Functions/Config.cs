@@ -186,7 +186,7 @@ internal class UserIntArray : UserData
 
     public override void ResetToDefault()
     {
-        PluginConfiguration.SetCustomIntArrayValue(this.pName, Default);
+        PluginConfiguration.SetCustomIntArrayValue(this.pName, (int[])Default.Clone());
         Service.Configuration.Save();
     }
 }

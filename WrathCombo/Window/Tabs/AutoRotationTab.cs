@@ -11,6 +11,7 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Services.IPC;
+using WrathCombo.Services.IPC_Subscriber;
 namespace WrathCombo.Window.Tabs;
 
 internal class AutoRotationTab : ConfigWindow
@@ -278,14 +279,14 @@ internal class AutoRotationTab : ConfigWindow
         changed |= ImGui.InputInt("Throttle Delay (ms)", ref cfg.Throttler);
         ImGuiComponents.HelpMarker("Auto-Rotation has a built in throttler to only run every so many milliseconds for performance reasons. If you experience issues with frame rate, try increasing this value. Do note this may have a side-effect of introducing clipping if set too high, so experiment with the value.");
 
-        var orbwalker = (bool)P.IPC.GetAutoRotationConfigState(AutoRotationConfigOption.OrbwalkerIntegration)!;
+        var orbwalker = OrbwalkerIPC.IsEnabled && OrbwalkerIPC.PluginEnabled();
         using (ImRaii.Disabled(!orbwalker))
         {
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("OrbwalkerIntegration");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
                 "Enable Orbwalker Integration", ref cfg.OrbwalkerIntegration, "OrbwalkerIntegration");
 
-            ImGuiComponents.HelpMarker($"This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast.");
+            ImGuiComponents.HelpMarker($"This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast. You may need to enable \"Buffer Initial Cast\" setting in Orbwalker if not already enabled. Requires an Orbwalker plugin to be installed and enabled.");
         }
 
         if (changed)

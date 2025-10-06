@@ -19,6 +19,7 @@ internal partial class RDM
             RDM_ST_Corpsacorps_Time = new("RDM_ST_Corpsacorps_Time", 0),
             RDM_ST_GapCloseCorpsacorps_Time = new("RDM_ST_GapCloseCorpsacorps_Time", 0),
             RDM_ST_VerCureThreshold = new("RDM_ST_VerCureThreshold", 40),
+            RDM_ST_MeleeCombo_IncludeReprise_Distance = new("RDM_ST_MeleeCombo_IncludeReprise_Distance", 5),
             RDM_AoE_Corpsacorps_Distance = new("RDM_AoE_Corpsacorps_Distance", 25),
             RDM_AoE_Corpsacorps_Time = new("RDM_AoE_Corpsacorps_Time", 0),
             RDM_AoE_GapCloseCorpsacorps_Time = new("RDM_AoE_GapCloseCorpsacorps_Time", 0),
@@ -87,6 +88,12 @@ internal partial class RDM
                     DrawSliderInt(0, 5, RDM_ST_GapCloseCorpsacorps_Time,
                         " How long you need to be stationary to use. Zero to disable");
                     break;
+                
+                case Preset.RDM_ST_MeleeCombo_IncludeReprise:
+                    DrawSliderInt(4, 25, RDM_ST_MeleeCombo_IncludeReprise_Distance,
+                        "Use when Distance from target is greater than or equal to:");
+                    break;
+                    
                 #endregion
 
                 #region AOE
