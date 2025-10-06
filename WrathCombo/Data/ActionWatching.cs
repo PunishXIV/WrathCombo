@@ -365,6 +365,8 @@ public static class ActionWatching
                     if (!combo.TryInvoke(actionId, out var result)) continue;
                 
                     //Sets actionId and the LastActionInvokeFor dictionary entry to the result of the combo
+                    Service.ActionReplacer.LastPresetInvokeFor[actionId] =
+                        combo.Preset;
                     actionId = Service.ActionReplacer
                             .LastActionInvokeFor[actionId] =
                         result;
@@ -375,6 +377,8 @@ public static class ActionWatching
 
             var combosActionID = Service.ActionReplacer
                 .LastActionInvokeFor[actionId];
+            var combosPreset = Service.ActionReplacer
+                .LastPresetInvokeFor[actionId];
 
             #region Retargeting Logic
 
