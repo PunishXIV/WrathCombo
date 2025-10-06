@@ -385,7 +385,8 @@ public static class ActionWatching
 
             //Check if the action can be used on the target, and if not revert to original
             if (changed && !replacedWith.IsGroundTargeted())
-                if (!ActionManager.CanUseActionOnTarget(replacedWith,
+                if (targetObject is null ||
+                    !ActionManager.CanUseActionOnTarget(replacedWith,
                         targetObject.Struct()))
                     targetId = originalTargetId;
 
