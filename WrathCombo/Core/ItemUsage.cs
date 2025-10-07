@@ -4,6 +4,7 @@ using System;
 using ECommons.Logging;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
+using WrathCombo.CustomComboNS.Functions;
 
 #endregion
 
@@ -16,7 +17,7 @@ public enum Item
     HealingPotion = 2,
 }
 
-public enum StatPotion
+public enum StatPotionType
 {
     Strength = 0,
     Dexterity = 1,
@@ -27,6 +28,13 @@ public enum StatPotion
 
 public enum HealingPotion
 {
+}
+
+public enum PotionLevel
+{
+    Highest = 0,
+    TrySecondHighest = 1,
+    SecondHighestOnly = 2,
 }
 
 public class ItemUsage : IDisposable
@@ -49,24 +57,38 @@ internal static class ItemUsageExtensions
     ///     Just return like this in your combo:
     ///     <code>
     ///     if (timeToPot)
-    ///       return this.UsePotion();
+    ///       return this.UsePotion(My_PotionType_UserInt,
+    ///                             My_PotionLevel_UserInt);
     ///     </code>
-    ///     The <c>this</c> is your current combo (so this can access the
+    ///     The <c>this</c> is your current combo (so <c>ItemUsage</c> can access the
     ///     <c>Preset</c> property), and the <c>UsePotion</c> method will return
-    ///     <see cref="All.Item" />, which will make the combo system use the
-    ///     potion defined on the preset.
+    ///     <see cref="All.Item" />, which will make the combo system try to use the
+    ///     potion defined by the two <see cref="UserInt" /> paremeters
+    ///     (they are implicitly converted).
     /// </example>
     /// <returns>
     ///     <see cref="All.Item" />
     /// </returns>
-    internal static uint UsePotion(this CustomCombo combo)
+    internal static uint UsePotion
+    (this CustomCombo combo,
+        StatPotionType potionType,
+        PotionLevel potionLevel)
     {
         var preset = combo.Preset;
 
         return All.Item;
     }
 
-    internal static uint UsePotion(this uint actionID, Preset preset)
+    /// <summary>
+    ///     This is just a variant of
+    ///     <see cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)" />
+    ///     that allows for the manual passing of the <c>Preset</c>.
+    /// </summary>
+    /// <seealso cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)"/>
+    internal static uint UsePotion
+    (this uint actionID, Preset preset,
+        StatPotionType potionType,
+        PotionLevel potionLevel)
     {
         if (actionID is not All.Item)
         {

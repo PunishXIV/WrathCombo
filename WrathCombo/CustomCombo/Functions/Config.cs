@@ -65,8 +65,18 @@ internal class UserInt : UserData
         MasterList.Add(this.pName, this);
     }
 
-    // Implicit conversion to int
-    public static implicit operator int(UserInt o) => PluginConfiguration.GetCustomIntValue(o.pName);
+    #region Implicit Conversions
+
+    public static implicit operator int(UserInt o) =>
+        PluginConfiguration.GetCustomIntValue(o.pName);
+    
+    public static implicit operator StatPotionType(UserInt o) =>
+        (StatPotionType)PluginConfiguration.GetCustomIntValue(o.pName);
+    
+    public static implicit operator PotionLevel(UserInt o) =>
+        (PotionLevel)PluginConfiguration.GetCustomIntValue(o.pName);
+
+    #endregion
 
     public int Value { get { return this; } set { PluginConfiguration.SetCustomIntValue(this.pName, value); Service.Configuration.Save(); } }
 
