@@ -1,20 +1,31 @@
 #region
 
 using System;
+using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.GameHelpers;
 using ECommons.Logging;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
 
 #endregion
 
 namespace WrathCombo.Core;
 
+#region Enums
+
 public enum Item
 {
-    PhoenixDown = 0,
+    Item = 0,
     StatPotion = 1,
-    HealingPotion = 2,
+    ManaPotion = 2, // todo: not yet implemented
+    HealingPotion = 3, // todo: not yet implemented
+}
+
+public enum ItemType
+{
+    PhoenixDown = 0,
 }
 
 public enum StatPotionType
@@ -28,6 +39,7 @@ public enum StatPotionType
 
 public enum HealingPotion
 {
+    // todo: not yet implemented
 }
 
 public enum PotionLevel
@@ -36,6 +48,8 @@ public enum PotionLevel
     TrySecondHighest = 1,
     SecondHighestOnly = 2,
 }
+
+#endregion
 
 public class ItemUsage : IDisposable
 {
@@ -52,6 +66,38 @@ public class ItemUsage : IDisposable
 internal static class ItemUsageExtensions
 {
     /// <summary>
+    ///     Adds a registration to use an Item, optionally on a specified target,
+    ///     and returns <see cref="All.Item" /> to indicate that that registration
+    ///     should be found.
+    /// </summary>
+    /// <returns>
+    ///     <see cref="All.Item" />
+    /// </returns>
+    /// <remarks>
+    ///     For items, like <see cref="ItemType.PhoenixDown">Phoenix Down</see>, not
+    ///     potions.
+    /// </remarks>
+    internal static uint UseItem
+    (this CustomCombo combo,
+        ItemType itemType = ItemType.PhoenixDown,
+        IGameObject? target = null)
+    {
+        var preset = combo.Preset;
+
+        if (target is null && itemType is ItemType.PhoenixDown)
+            target = SimpleTarget.AnyDeadHealerIfNoneAlive.IfWithinRange(15) ??
+                     SimpleTarget.AnyDeadRaiserIfNoneAlive.IfWithinRange(15) ??
+                     SimpleTarget.AnyDeadTankIfNoneAlive.IfWithinRange(15) ??
+                     SimpleTarget.AnyDeadPartyMember.IfWithinRange(15);
+        target ??= Player.Object;
+
+        return All.Item;
+    }
+
+    /// <summary>
+    ///     Adds a registration to use a stat-boosting potion according to the type
+    ///     and level specified, and returns <see cref="All.Item" /> to indicate that
+    ///     that registration should be found.
     /// </summary>
     /// <example>
     ///     Just return like this in your combo:
@@ -69,7 +115,7 @@ internal static class ItemUsageExtensions
     /// <returns>
     ///     <see cref="All.Item" />
     /// </returns>
-    internal static uint UsePotion
+    public static uint UsePotion
     (this CustomCombo combo,
         StatPotionType potionType,
         PotionLevel potionLevel)
@@ -84,8 +130,11 @@ internal static class ItemUsageExtensions
     ///     <see cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)" />
     ///     that allows for the manual passing of the <c>Preset</c>.
     /// </summary>
+    /// <returns>
+    ///     <see cref="All.Item" />
+    /// </returns>
     /// <seealso cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)"/>
-    internal static uint UsePotion
+    public static uint UsePotion
     (this uint actionID, Preset preset,
         StatPotionType potionType,
         PotionLevel potionLevel)
