@@ -133,6 +133,10 @@ internal static class ItemUsageExtensions
     /// <returns>
     ///     <see cref="All.Item" />
     /// </returns>
+    /// <remarks>
+    ///     Should only be used if the <see cref="CustomCombo" /> is not
+    ///     available, for example in <c>_ActionLogic.cs</c> files.
+    /// </remarks>
     /// <seealso cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)"/>
     public static uint UsePotion
     (this uint actionID, Preset preset,
