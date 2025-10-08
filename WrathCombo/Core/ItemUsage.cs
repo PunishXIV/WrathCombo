@@ -1,6 +1,7 @@
 #region
 
 using System;
+using System.Collections.Generic;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameHelpers;
 using ECommons.Logging;
@@ -37,7 +38,7 @@ public enum StatPotionType
     Mind = 4,
 }
 
-public enum HealingPotion
+public enum HealingPotionType
 {
     // todo: not yet implemented
 }
@@ -53,13 +54,86 @@ public enum PotionLevel
 
 public class ItemUsage : IDisposable
 {
+    internal readonly Dictionary<Preset, ItemUse> ItemUses = [];
+
     public void Dispose()
     {
-        // TODO release managed resources here
+        // todo: release managed resources here
     }
 
-    private class ItemUse
+    internal class ItemUse
     {
+        public DateTime Created = DateTime.Now;
+        public Item Item;
+        public uint ItemID;
+        public Preset Preset;
+
+        /// <summary>
+        ///     For <see cref="Item.Item">Items</see>,
+        ///     like <see cref="ItemType.PhoenixDown" />.
+        /// </summary>
+        public ItemUse
+            (Preset preset, ItemType itemType, IGameObject target)
+        {
+            Preset = preset;
+            Item = Item.Item;
+            ItemType = itemType;
+            Target = target;
+        }
+
+        /// <summary>
+        ///     For <see cref="Item.StatPotion">Stat Potions</see>.
+        /// </summary>
+        public ItemUse
+            (Preset preset, StatPotionType potionType, PotionLevel potionLevel)
+        {
+            Preset = preset;
+            Item = Item.StatPotion;
+            PotionType = potionType;
+            PotionLevel = potionLevel;
+        }
+
+        /// <summary>
+        ///     For <see cref="Item.ManaPotion">Mana Potions</see>.
+        /// </summary>
+        public ItemUse
+            (Preset preset)
+        {
+            Preset = preset;
+            Item = Item.ManaPotion;
+        }
+
+        /// <summary>
+        ///     For <see cref="Item.HealingPotion">Healing Potions</see>.
+        /// </summary>
+        public ItemUse
+            (Preset preset, HealingPotionType potionType)
+        {
+            Preset = preset;
+            Item = Item.HealingPotion;
+            HealingPotionType = potionType;
+        }
+
+        public IGameObject UsableTarget => Target ?? Player.Object;
+
+        public int ID => HashCode.Combine(
+            (int)Preset,
+            (int?)ItemType,
+            Target?.GameObjectId,
+            (int?)PotionType,
+            (int?)HealingPotionType,
+            (int?)PotionLevel
+        );
+
+        #region Conditional Fields
+
+        public HealingPotionType? HealingPotionType;
+        public ItemType? ItemType;
+        public PotionLevel? PotionLevel;
+        public StatPotionType? PotionType;
+        public IGameObject? Target;
+
+        #endregion
     }
 }
 
@@ -137,7 +211,7 @@ internal static class ItemUsageExtensions
     ///     Should only be used if the <see cref="CustomCombo" /> is not
     ///     available, for example in <c>_ActionLogic.cs</c> files.
     /// </remarks>
-    /// <seealso cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)"/>
+    /// <seealso cref="UsePotion(CustomCombo, StatPotionType, PotionLevel)" />
     public static uint UsePotion
     (this uint actionID, Preset preset,
         StatPotionType potionType,
