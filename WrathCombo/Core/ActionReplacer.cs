@@ -35,6 +35,7 @@ internal sealed class ActionReplacer : IDisposable
     private readonly Hook<IsActionReplaceableDelegate> isActionReplaceableHook;
 
     public readonly Dictionary<uint, uint> LastActionInvokeFor = [];
+    public readonly Dictionary<uint, Preset> LastPresetInvokeFor = [];
 
     /// <summary>
     ///     Critical for the hook, do not remove or modify.
@@ -111,7 +112,9 @@ internal sealed class ActionReplacer : IDisposable
                 return LastActionInvokeFor[BRD.HeavyShot] = BRD.HeavyShot;
 
             // Actually get the action
-            LastActionInvokeFor[actionID] = GetAdjustedAction(actionID);
+            LastActionInvokeFor[actionID] = GetAdjustedAction(actionID, out var preset);
+            if (preset is not null)
+                LastPresetInvokeFor[actionID] = preset.Value;
             return LastActionInvokeFor[actionID];
         }
         catch (Exception e)
@@ -126,9 +129,11 @@ internal sealed class ActionReplacer : IDisposable
     ///     Replaces an action with the result from a combo.
     /// </summary>
     /// <param name="actionID">The action a combo replaces.</param>
+    /// <param name="preset">The combo's preset that returned the action.</param>
     /// <returns>The action a combo returns.</returns>
-    private unsafe uint GetAdjustedAction(uint actionID)
+    private unsafe uint GetAdjustedAction(uint actionID, out Preset? preset)
     {
+        preset = null;
         try
         {
             if (ClassLocked() ||
@@ -147,6 +152,7 @@ internal sealed class ActionReplacer : IDisposable
                         return All.SavageBlade;
                     }
 
+                    preset = combo.Preset;
                     return newActionID;
                 }
             }
