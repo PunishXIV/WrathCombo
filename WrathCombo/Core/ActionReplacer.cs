@@ -17,6 +17,7 @@ using System.Reflection;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 
@@ -176,6 +177,9 @@ internal sealed class ActionReplacer : IDisposable
         if (Player.Object is null) return false;
 
         if (Player.Level <= 35) return false;
+
+        if (ContentCheck.IsInPOTD)
+            return false;
 
         // DoL and higher except arcanist and rogue
         if (Player.Job is >= Job.MIN and not (Job.ACN or Job.ROG))
