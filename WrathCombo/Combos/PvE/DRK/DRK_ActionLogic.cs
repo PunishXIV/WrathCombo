@@ -443,7 +443,7 @@ internal partial class DRK
                 reprisalUseForRaidwides &&
                 Role.CanReprisal(reprisalThreshold, reprisalTargetCount,
                     !flags.HasFlag(Combo.AoE)) &&
-                HiddenFeaturesData.IsEnabledWith(
+                HiddenFeaturesData.NonBlockingIsEnabledWith(
                     Preset.DRK_Hid_R6SNoAutoGroupMits,
                     () => !HiddenFeaturesData.Content.InR6S))
                 return (action = Role.Reprisal) != 0;
@@ -473,7 +473,7 @@ internal partial class DRK
                 RaidWideCasting() &&
                 missionaryAvoidanceSatisfied &&
                 PlayerHealthPercentageHp() <= missionaryThreshold &&
-                HiddenFeaturesData.IsEnabledWith(
+                HiddenFeaturesData.NonBlockingIsEnabledWith(
                     Preset.DRK_Hid_R6SNoAutoGroupMits,
                     () => !HiddenFeaturesData.Content.InR6S))
                 return (action = DarkMissionary) != 0;

@@ -296,7 +296,7 @@ internal partial class WAR : Tank
                         (WAR_AoE_Rampart_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Rampart_SubOption == 1)))
                         return Role.Rampart;
                     if (IsEnabled(Preset.WAR_AoE_Reprisal) && Role.CanReprisal(WAR_AoE_Reprisal_Health, checkTargetForDebuff: false) &&
-                        HiddenFeaturesData.IsEnabledWith( // Skip mit if in 6
+                        HiddenFeaturesData.NonBlockingIsEnabledWith( // Skip mit if in 6
                                 Preset.WAR_Hid_R6SNoAutoGroupMits,
                                 () => !HiddenFeaturesData.Content.InR6S) &&
                         (WAR_AoE_Reprisal_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Reprisal_SubOption == 1)))
@@ -305,9 +305,6 @@ internal partial class WAR : Tank
                         return Role.ArmsLength;
                 }
                 if (IsEnabled(Preset.WAR_AoE_Thrill) && ActionReady(ThrillOfBattle) && PlayerHealthPercentageHp() <= WAR_AoE_Thrill_Health &&
-                    HiddenFeaturesData.IsEnabledWith( // Skip mit if in 6
-                        Preset.WAR_Hid_R6SNoAutoGroupMits,
-                        () => !HiddenFeaturesData.Content.InR6S) &&
                     (WAR_AoE_Thrill_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Thrill_SubOption == 1)))
                     return ThrillOfBattle;
                 if (IsEnabled(Preset.WAR_AoE_Equilibrium) && ActionReady(Equilibrium) && PlayerHealthPercentageHp() <= WAR_AoE_Equilibrium_Health &&

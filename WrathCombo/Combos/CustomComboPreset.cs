@@ -7848,7 +7848,7 @@ public enum Preset
     WAR_Hid_R6SStunJabberOnly = 18115,
 
     [ParentCombo(WAR_Hidden)]
-    [CustomComboInfo("R6S: Save Reprisal and Dark Missionary", "When in R6S, never try use Reprisal or Shake it Off automatically.", Job.WAR)]
+    [CustomComboInfo("R6S: Save Reprisal ", "When in R6S, never try use Reprisal automatically.", Job.WAR)]
     [Hidden]
     WAR_Hid_R6SNoAutoGroupMits = 18116,
 

@@ -3,7 +3,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameHelpers;
 using System;
-using WrathCombo.Combos;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using ContentInfo = ECommons.GameHelpers.Content;
@@ -61,6 +60,17 @@ internal static class HiddenFeaturesData
         (Preset preset, Func<bool> condition, Func<bool> logic) =>
         (!FeaturesEnabled || !IsEnabled(preset) || !condition()) ||
         (FeaturesEnabled && IsEnabled(preset) && condition() && logic());
+
+    /// <summary>
+    ///     Similar to
+    ///     <see cref="NonBlockingIsEnabledWith(Preset, Func{bool}, Func{bool})" />,
+    ///     but without condition to be met as well.<br />
+    ///     Will only return False if the Feature is fully enabled, but the logic fails.
+    /// </summary>
+    /// <seealso cref="NonBlockingIsEnabledWith(Preset, Func{bool}, Func{bool})" />
+    public static bool NonBlockingIsEnabledWith
+        (Preset preset, Func<bool> logic) =>
+        NonBlockingIsEnabledWith(preset, () => true, logic);
 
     /// <summary>
     ///     Check if a Hidden Feature Preset is enabled, and meets your conditions,
