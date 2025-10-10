@@ -124,19 +124,6 @@ internal partial class SGE : Healer
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
 
-            if (ActionReady(Kerachole) && HasAddersgall() &&
-                CanWeave() && RaidWideCasting())
-                return Kerachole;
-
-            if (ActionReady(Holos) && CanWeave() && RaidWideCasting() &&
-                GetPartyAvgHPPercent() <= 70)
-                return Holos;
-
-            if (RaidwideEprognosis())
-                return HasStatusEffect(Buffs.Eukrasia)
-                    ? OriginalHook(Prognosis)
-                    : Eukrasia;
-
             if (CanWeave())
             {
                 // Lucid Dreaming
