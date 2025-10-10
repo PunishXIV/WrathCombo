@@ -148,7 +148,7 @@ internal static partial class RoleActions
         }
 
         public static bool CanLegSweep() =>
-            ActionReady(LegSweep);
+            ActionReady(LegSweep) && CanStunToInterruptEnemy();
 
         public static bool CanBloodBath(int healthPercent) =>
             ActionReady(Bloodbath) && PlayerHealthPercentageHp() <= healthPercent;
@@ -183,7 +183,7 @@ internal static partial class RoleActions
             ActionReady(Rampart) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanLowBlow() =>
-            ActionReady(LowBlow) && TargetIsCasting() && (ICDTracker.StatusIsExpired(All.Debuffs.Stun, CurrentTarget.GameObjectId) || ICDTracker.NumberOfTimesApplied(All.Debuffs.Stun, CurrentTarget.GameObjectId) < 3);
+            ActionReady(LowBlow) && CanStunToInterruptEnemy();
 
         public static bool CanProvoke() =>
             ActionReady(Provoke);

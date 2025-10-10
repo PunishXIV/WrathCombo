@@ -27,10 +27,7 @@ internal partial class GNB : Tank
             #region Stuns
             if (Role.CanInterject())
                 return Role.Interject;
-            if (!TargetIsBoss()
-                && Role.CanLowBlow()
-                && !JustUsed(Role.Interject)
-                && !InBossEncounter())
+            if (Role.CanLowBlow())
                 return Role.LowBlow;
             #endregion
 
@@ -148,10 +145,7 @@ internal partial class GNB : Tank
             if (IsEnabled(Preset.GNB_ST_Interrupt) && Role.CanInterject())
                 return Role.Interject;
             if (IsEnabled(Preset.GNB_ST_Stun)
-                && !TargetIsBoss()
-                && Role.CanLowBlow()
-                && !JustUsed(Role.Interject)
-                && !InBossEncounter())
+                && Role.CanLowBlow())
                 return Role.LowBlow;
             #endregion
 
@@ -280,7 +274,7 @@ internal partial class GNB : Tank
             #region Non-Rotation
             if (Role.CanInterject())
                 return Role.Interject;
-            if (Role.CanLowBlow() && !JustUsed(Role.Interject))
+            if (Role.CanLowBlow())
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;
@@ -360,7 +354,7 @@ internal partial class GNB : Tank
 
             if (IsEnabled(Preset.GNB_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
-            if (IsEnabled(Preset.GNB_AoE_Stun) && Role.CanLowBlow() && !JustUsed(Role.Interject))
+            if (IsEnabled(Preset.GNB_AoE_Stun) && Role.CanLowBlow())
                 return Role.LowBlow;
             if (ShouldUseOther)
                 return OtherAction;

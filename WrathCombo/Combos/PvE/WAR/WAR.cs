@@ -27,10 +27,7 @@ internal partial class WAR : Tank
             #region Stuns
             if (Role.CanInterject())
                 return Role.Interject;
-            if (!TargetIsBoss()
-                && Role.CanLowBlow()
-                && !JustUsed(Role.Interject)
-                && !InBossEncounter())
+            if (Role.CanLowBlow())
                 return Role.LowBlow;
             #endregion
 
@@ -105,10 +102,7 @@ internal partial class WAR : Tank
                 && Role.CanInterject())
                 return Role.Interject;
             if (IsEnabled(Preset.WAR_ST_Stun)
-                && !TargetIsBoss()
-                && Role.CanLowBlow()
-                && !JustUsed(Role.Interject)
-                && !InBossEncounter())
+                && Role.CanLowBlow())
                 return Role.LowBlow;
             #endregion
 
@@ -199,8 +193,7 @@ internal partial class WAR : Tank
                 return contentAction;
             if (Role.CanInterject())
                 return Role.Interject;
-            if (Role.CanLowBlow()
-                && !JustUsed(Role.Interject))
+            if (Role.CanLowBlow())
                 return Role.LowBlow;
 
             #region Mitigations
@@ -275,7 +268,7 @@ internal partial class WAR : Tank
 
             if (IsEnabled(Preset.WAR_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
-            if (IsEnabled(Preset.WAR_AoE_Stun) && !JustUsed(Role.Interject) && Role.CanLowBlow() && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only stun the jabber, if in 6
+            if (IsEnabled(Preset.WAR_AoE_Stun) && Role.CanLowBlow() && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only stun the jabber, if in 6
                     Preset.WAR_Hid_R6SStunJabberOnly,
                     () => HiddenFeaturesData.Content.InR6S,
                     () => HiddenFeaturesData.Targeting.R6SJabber))

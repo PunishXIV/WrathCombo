@@ -135,14 +135,11 @@ internal partial class DRK
             if ((flags.HasFlag(Combo.Simple) ||
                  IsSTEnabled(flags, Preset.DRK_ST_CD_Stun) ||
                  IsAoEEnabled(flags, Preset.DRK_AoE_Stun)) &&
-                !TargetIsBoss() &&
-                !JustUsed(Role.Interject) &&
                 Role.CanLowBlow() &&
                 HiddenFeaturesData.NonBlockingIsEnabledWith(
                     Preset.DRK_Hid_R6SStunJabberOnly,
                     () => HiddenFeaturesData.Content.InR6S,
-                    () => HiddenFeaturesData.Targeting.R6SJabber) &&
-                !InBossEncounter())
+                    () => HiddenFeaturesData.Targeting.R6SJabber))
                 return (action = Role.LowBlow) != 0;
 
             #endregion

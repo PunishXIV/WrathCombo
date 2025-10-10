@@ -61,13 +61,20 @@ internal partial class All
             var tar = IsEnabled(Preset.ALL_Tank_Interrupt_Retarget) ? SimpleTarget.InterruptableEnemy : CurrentTarget;
             switch (actionID)
             {
-                case RoleActions.Tank.LowBlow or PLD.ShieldBash when CanInterruptEnemy(null, tar) && ActionReady(RoleActions.Tank.Interject):
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash
+                    when ActionReady(RoleActions.Tank.Interject) &&
+                         CanInterruptEnemy(null, tar):
                     return RoleActions.Tank.Interject.Retarget(actionID, tar);
 
-                case RoleActions.Tank.LowBlow or PLD.ShieldBash when TargetIsCasting() && ActionReady(RoleActions.Tank.LowBlow) && !TargetIsBoss() && !JustUsed(RoleActions.Tank.Interject):
+                case RoleActions.Tank.LowBlow or PLD.ShieldBash
+                    when ActionReady(RoleActions.Tank.LowBlow) &&
+                         !CanStunToInterruptEnemy(null, tar):
                     return RoleActions.Tank.LowBlow.Retarget(actionID, tar);
 
-                case PLD.ShieldBash when IsOnCooldown(RoleActions.Tank.LowBlow) && !JustUsed(RoleActions.Tank.Interject) && !JustUsed(PLD.ShieldBash, 7):
+                case PLD.ShieldBash
+                    when IsOnCooldown(RoleActions.Tank.LowBlow) &&
+                         !CanStunToInterruptEnemy(null, tar) &&
+                         !JustUsedOn(PLD.ShieldBash, tar, 7):
                     return PLD.ShieldBash.Retarget(actionID, tar);
 
                 default:

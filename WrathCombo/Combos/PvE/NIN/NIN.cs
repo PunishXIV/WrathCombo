@@ -328,7 +328,7 @@ internal partial class NIN : Melee
                     return OriginalHook(TrickAttack);
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_StunInterupt) && CanWeave() && !MudraPhase &&
-                    RoleActions.Melee.CanLegSweep() && !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
             #endregion
@@ -482,7 +482,7 @@ internal partial class NIN : Melee
                     return OriginalHook(TrickAttack);
                 
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_StunInterupt) && CanWeave() && !MudraPhase &&
-                    RoleActions.Melee.CanLegSweep() && !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
             #endregion

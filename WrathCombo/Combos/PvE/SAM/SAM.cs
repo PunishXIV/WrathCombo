@@ -65,8 +65,7 @@ internal partial class SAM : Melee
                 if (Role.CanBloodBath(SAM_STBloodbathHPThreshold))
                     return Role.Bloodbath;
 
-                if (RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                if (RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 
@@ -335,8 +334,7 @@ internal partial class SAM : Melee
                 }
 
                 if (IsEnabled(Preset.SAM_ST_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 
@@ -494,8 +492,7 @@ internal partial class SAM : Melee
                 }
 
                 if (IsEnabled(Preset.SAM_AoE_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 
