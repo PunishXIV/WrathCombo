@@ -3657,7 +3657,7 @@ public enum Preset
     MCH_ST_Adv_Chainsaw = 8112,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.", Job.MCH)]
+    [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.\nWill follow Balance logic if selected on Turret/Queen.", Job.MCH)]
     MCH_ST_Adv_Excavator = 8116,
 
     [ParentCombo(MCH_ST_AdvancedMode)]
@@ -6117,6 +6117,10 @@ public enum Preset
     [CustomComboInfo("Shoha Option", "Adds Shoha when you have three meditation stacks.", Job.SAM)]
     SAM_ST_CDs_Shoha = 15019,
 
+    [ParentCombo(SAM_ST_Damage)]
+    [CustomComboInfo("Ranged Uptime Feature", "Adds Enpi to the rotation when you are out of range.\nWill use Ogi or Iaijutsu when possible and enabled.", Job.SAM)]
+    SAM_ST_RangedUptime = 15097,
+
     #endregion
 
     [ParentCombo(SAM_ST_AdvancedMode)]
@@ -6130,11 +6134,7 @@ public enum Preset
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Leg Sweep Option", "Adds Leg Sweep when target non-boss is casting.", Job.SAM)]
     SAM_ST_StunInterupt = 15096,
-
-    [ParentCombo(SAM_ST_AdvancedMode)]
-    [CustomComboInfo("Ranged Uptime Feature", "Adds Enpi to the rotation when you are out of range.", Job.SAM)]
-    SAM_ST_RangedUptime = 15097,
-
+    
     [ParentCombo(SAM_ST_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", Job.SAM)]
     SAM_ST_ComboHeals = 15098,

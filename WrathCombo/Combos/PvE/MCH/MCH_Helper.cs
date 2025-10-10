@@ -113,6 +113,27 @@ internal partial class MCH
         !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_ST_ReassemblePool ||
         !IsEnabled(Preset.MCH_ST_Adv_Reassemble);
 
+    internal static bool ReassembledExcavatorAoE =
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[3] && HasStatusEffect(Buffs.Reassembled) ||
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && !MCH_AoE_Reassembled[3] && !HasStatusEffect(Buffs.Reassembled) ||
+        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_AoE_ReassemblePool ||
+        !IsEnabled(Preset.MCH_AoE_Adv_Reassemble);
+
+    internal static bool ReassembledChainsawAoE =
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[2] && HasStatusEffect(Buffs.Reassembled) ||
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && !MCH_AoE_Reassembled[2] && !HasStatusEffect(Buffs.Reassembled) ||
+        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_AoE_ReassemblePool ||
+        !IsEnabled(Preset.MCH_AoE_Adv_Reassemble);
+
+    internal static bool ReassembledAirAnchorAoE =
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[1] && HasStatusEffect(Buffs.Reassembled) ||
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && !MCH_AoE_Reassembled[1] && !HasStatusEffect(Buffs.Reassembled) ||
+        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_AoE_ReassemblePool ||
+        !IsEnabled(Preset.MCH_AoE_Adv_Reassemble);
+
+    internal static bool ReassembledScattergunAoE =
+        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[0] && HasStatusEffect(Buffs.Reassembled);
+
     internal static bool Reassembled()
     {
         if (!JustUsed(OriginalHook(Heatblast)) && !HasStatusEffect(Buffs.Reassembled) &&
@@ -179,7 +200,7 @@ internal partial class MCH
     {
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) && !InBossEncounter() ||
              IsEnabled(Preset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
-             IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen)) &&
+             (IsNotEnabled(Preset.MCH_ST_Adv_TurretQueen) || MCH_ST_QueenBossOption == 1 && !InBossEncounter())) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
         {
             actionID = Excavator;
@@ -188,7 +209,7 @@ internal partial class MCH
 
         if ((IsEnabled(Preset.MCH_ST_SimpleMode) && InBossEncounter() ||
              IsEnabled(Preset.MCH_ST_Adv_Excavator) && ReassembledExcavatorST &&
-             IsEnabled(Preset.MCH_ST_Adv_TurretQueen)) &&
+             IsEnabled(Preset.MCH_ST_Adv_TurretQueen) && (MCH_ST_QueenBossOption == 0 || InBossEncounter())) &&
             LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) &&
             (BSUsed is 1 ||
              BSUsed % 3 is 2 && Battery <= 40 ||
@@ -293,8 +314,8 @@ internal partial class MCH
             CheckMate,
             Wildfire,
             FullMetalField,
-            DoubleCheck,
             Hypercharge,
+            DoubleCheck,
             BlazingShot,
             CheckMate,
             BlazingShot,
@@ -381,7 +402,7 @@ internal partial class MCH
         [
             14
         ];
-        
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(Reassemble) is 2 &&
             GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&

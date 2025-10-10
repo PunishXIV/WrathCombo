@@ -108,14 +108,6 @@ internal partial class SAM
                             "Kenki Amount", sliderIncrement: SliderIncrements.Fives);
                     break;
 
-                case Preset.SAM_ST_RangedUptime:
-                    DrawHorizontalMultiChoice(SAM_ST_RangedOptions,
-                        $"Include {OgiNamikiri.ActionName()}", $"Replace Enpi with {OgiNamikiri.ActionName()} and {KaeshiNamikiri.ActionName()} when applicable.", 2, 0);
-
-                    DrawHorizontalMultiChoice(SAM_ST_RangedOptions,
-                        $"Include {Iaijutsu.ActionName()}", $"Replace Enpi with {Iaijutsu.ActionName()} and Kaeshi variant when applicable.", 2, 1);
-                    break;
-
                 case Preset.SAM_ST_Meditate:
                     ImGui.SetCursorPosX(48f.Scale());
                     DrawSliderFloat(0, 3, SAM_ST_MeditateTimeStill,
@@ -199,9 +191,6 @@ internal partial class SAM
             SAM_ST_CDs_OgiNamikiri_Movement = new("SAM_ST_CDs_OgiNamikiri_Movement"),
             SAM_Oka_KenkiOvercap = new("SAM_Oka_KenkiOvercap"),
             SAM_Mangetsu_KenkiOvercap = new("SAM_Mangetsu_KenkiOvercap");
-
-        public static UserBoolArray
-            SAM_ST_RangedOptions = new("SAM_ST_RangedOptions");
 
         public static UserFloat
             SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);

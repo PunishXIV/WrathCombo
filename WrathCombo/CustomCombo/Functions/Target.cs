@@ -38,7 +38,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara)
             return false;
 
-        return ActionWatching.BNPCSheet.TryGetValue(chara.DataId, out var charaSheet) && charaSheet.Rank is 2 or 6;
+        return ActionWatching.BNPCSheet.TryGetValue(chara.BaseId, out var charaSheet) && charaSheet.Rank is 2 or 6;
     }
 
     /// <summary> Checks if an object is quest-related. Defaults to CurrentTarget unless specified. </summary>
@@ -70,7 +70,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || HasStatusEffect(3808, chara, true))
             return false;
 
-        return ActionWatching.BNPCSheet.TryGetValue(chara.DataId, out var charaSheet) && !charaSheet.IsOmnidirectional;
+        return ActionWatching.BNPCSheet.TryGetValue(chara.BaseId, out var charaSheet) && !charaSheet.IsOmnidirectional;
     }
 
     /// <summary>
@@ -589,7 +589,7 @@ internal abstract partial class CustomComboFunctions
                    (!checkInvincible ||
                     !TargetIsInvincible(o)) &&
                    (!checkIgnoredList ||
-                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId));
+                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId));
         }
     }
 

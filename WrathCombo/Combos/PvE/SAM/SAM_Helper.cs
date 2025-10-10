@@ -134,36 +134,6 @@ internal partial class SAM
 
     #endregion
 
-    #region Ranged Option
-
-    internal static bool UseRanged(bool useOgi, bool useIaijutsu)
-    {
-        if (ActionReady(Enpi) && !InMeleeRange() && HasBattleTarget())
-        {
-            //Ogi option
-            if (useOgi &&
-                ((HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady) &&
-                 !InActionRange(OriginalHook(OgiNamikiri)) ||
-                 !HasStatusEffect(Buffs.OgiNamikiriReady) && !NamikiriReady))
-                return true;
-
-            //Iaijutsu option
-            if (useIaijutsu &&
-                (SenCount is 0 or 2 && !UseTsubame() ||
-                 SenCount is 1 && GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) > 15 ||
-                 SenCount is 3 && !InActionRange((MidareSetsugekka)) ||
-                 UseTsubame() && !InActionRange(TsubameGaeshi)))
-                return true;
-
-            //default - both disabled
-            if (!useOgi && !useIaijutsu)
-                return true;
-        }
-        return false;
-    }
-
-    #endregion
-
     #region Rescourses
 
     internal static class SAMKenki
@@ -219,7 +189,7 @@ internal partial class SAM
     {
         int shintenTreshhold = SAM_ST_ExecuteThreshold;
 
-        if (ActionReady(Shinten) && Kenki >= SAMKenki.Shinten)
+        if (ActionReady(Shinten) && Kenki >= SAMKenki.Shinten && InActionRange(Shinten))
         {
             if (GetTargetHPPercent() < shintenTreshhold)
                 return true;
@@ -251,7 +221,7 @@ internal partial class SAM
             return true;
 
         if (ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
-            HasStatusEffect(Buffs.OgiNamikiriReady))
+            HasStatusEffect(Buffs.OgiNamikiriReady) && NumberOfGcdsUsed >= 5)
         {
             if (GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8)
                 return true;
@@ -334,7 +304,7 @@ internal partial class SAM
 
         public override bool HasCooldowns() =>
             IsOffCooldown(MeikyoShisui) &&
-            GetRemainingCharges(Role.TrueNorth) is 2 &&
+            GetRemainingCharges(Role.TrueNorth) >= 1 &&
             IsOffCooldown(Guren) &&
             IsOffCooldown(Ikishoten) &&
             SenCount is 0;
@@ -383,7 +353,7 @@ internal partial class SAM
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            GetRemainingCharges(Role.TrueNorth) is 2 &&
+            GetRemainingCharges(Role.TrueNorth) >= 1 &&
             IsOffCooldown(Senei) &&
             IsOffCooldown(Ikishoten) &&
             SenCount is 0;
@@ -434,7 +404,7 @@ internal partial class SAM
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            GetRemainingCharges(Role.TrueNorth) is 2 &&
+            GetRemainingCharges(Role.TrueNorth) >= 1 &&
             IsOffCooldown(Senei) &&
             IsOffCooldown(Ikishoten) &&
             SenCount is 0;
@@ -490,7 +460,7 @@ internal partial class SAM
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
-            GetRemainingCharges(Role.TrueNorth) is 2 &&
+            GetRemainingCharges(Role.TrueNorth) >= 1 &&
             IsOffCooldown(Senei) &&
             IsOffCooldown(Ikishoten) &&
             SenCount is 0;
