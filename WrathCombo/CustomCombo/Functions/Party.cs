@@ -15,6 +15,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 namespace WrathCombo.CustomComboNS.Functions;
 
@@ -112,20 +113,16 @@ internal abstract partial class CustomComboFunctions
         get
         {
             field ??= new();
-            foreach (var pc in GetPartyMembers())
+            foreach (var pc in Svc.Objects.Where(x => x is IBattleChara chara && chara.IsFriendly()).Cast<IBattleChara>().ToList())
             {
-                if (pc.IsOutOfPartyNPC || pc.BattleChara is null)
-                    continue;
-
-                var member = pc.BattleChara;
-                if (member.IsDead && !member.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
+                if (pc.IsDead && !pc.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
                 {
                     if (!field.Any(x => x.GameObjectId == pc.GameObjectId))
                         field.Add(new WrathPartyMember
                         {
                             GameObjectId = pc.GameObjectId,
-                            CurrentHP = member.CurrentHp,
-                            NPCClassJob = member.ClassJob.RowId
+                            CurrentHP = pc.CurrentHp,
+                            NPCClassJob = pc.ClassJob.RowId
                         });
                 }
             }

@@ -38,7 +38,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara)
             return false;
 
-        return ActionWatching.BNPCSheet.TryGetValue(chara.DataId, out var charaSheet) && charaSheet.Rank is 2 or 6;
+        return ActionWatching.BNPCSheet.TryGetValue(chara.BaseId, out var charaSheet) && charaSheet.Rank is 2 or 6;
     }
 
     /// <summary> Checks if an object is quest-related. Defaults to CurrentTarget unless specified. </summary>
@@ -70,7 +70,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara || HasStatusEffect(3808, chara, true))
             return false;
 
-        return ActionWatching.BNPCSheet.TryGetValue(chara.DataId, out var charaSheet) && !charaSheet.IsOmnidirectional;
+        return ActionWatching.BNPCSheet.TryGetValue(chara.BaseId, out var charaSheet) && !charaSheet.IsOmnidirectional;
     }
 
     /// <summary>
@@ -108,6 +108,9 @@ internal abstract partial class CustomComboFunctions
     ///     As a float representation of a percentage, value should be between
     ///     0.0f (0%) and 1.0f (100%).
     /// </param>
+    /// <param name="optionalTarget">
+    ///     A target to use other than <see cref="CurrentTarget"/>.
+    /// </param>
     /// <returns>
     ///     Bool indicating whether they can be interrupted or not.<br/>
     ///     (and if the cast time is over the percentage specified)
@@ -118,6 +121,60 @@ internal abstract partial class CustomComboFunctions
             return false;
 
         float minThreshold = Math.Clamp(minCastPercent ?? (float)Service.Configuration.InterruptDelay, 0f, 1f);
+
+        return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
+    }
+
+    /// <summary>
+    ///     Checks if a (non-boss) enemy is casting and is available for stuns.<br/>
+    ///     Optionally, limit by percentage of cast time.<br/>
+    ///     Defaults to CurrentTarget unless specified.<br/>
+    ///     Similar to <see cref="CanInterruptEnemy"/>, but also checks the
+    ///     <see cref="ICDTracker">Internal Cooldown Tracker</see> for Stuns.
+    /// </summary>
+    /// <param name="minCastPercent">
+    ///     The minimum percentage of the cast time completed required.<br/>
+    ///     Default is 0%.<br/>
+    ///     As a float representation of a percentage, value should be between
+    ///     0.0f (0%) and 1.0f (100%).
+    /// </param>
+    /// <param name="optionalTarget">
+    ///     A target to use other than <see cref="CurrentTarget"/>.
+    /// </param>
+    /// <returns>
+    ///     Bool indicating whether they can be stunned to interrupt or not.<br/>
+    ///     (and if the cast time is over the percentage specified, plus if the
+    ///     target is probably stunnable, plus if another interrupt/stun was not
+    ///     recently used)
+    /// </returns>
+    public static bool CanStunToInterruptEnemy(float? minCastPercent = null,
+        IGameObject? optionalTarget = null)
+    {
+        var target = optionalTarget ?? CurrentTarget;
+
+        // Bail if the target is not casting (and is a valid target)
+        if (target is not IBattleChara { IsCasting: true } chara)
+            return false;
+
+        // Bail if it fails the Internal Cooldown tracker for Stuns
+        if (!(ICDTracker.StatusIsExpired(All.Debuffs.Stun,
+                  CurrentTarget.GameObjectId) ||
+              ICDTracker.NumberOfTimesApplied(All.Debuffs.Stun,
+                  CurrentTarget.GameObjectId) < 3))
+            return false;
+
+        // Bail if the target is a boss
+        if (TargetIsBoss(target))
+            return false;
+        
+        // Bail if another form of interrupt was recently used
+        if (JustUsedOn(RoleActions.Melee.LegSweep, target) ||
+            JustUsedOn(RoleActions.Tank.Interject, target) ||
+            JustUsedOn(RoleActions.Tank.LowBlow, target) ||
+            JustUsedOn(PLD.ShieldBash, target))
+            return false;
+
+        var minThreshold = Math.Clamp(minCastPercent ?? (float)Service.Configuration.InterruptDelay, 0f, 1f);
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }
@@ -589,7 +646,7 @@ internal abstract partial class CustomComboFunctions
                    (!checkInvincible ||
                     !TargetIsInvincible(o)) &&
                    (!checkIgnoredList ||
-                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.DataId));
+                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId));
         }
     }
 

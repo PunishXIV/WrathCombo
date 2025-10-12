@@ -80,12 +80,8 @@ internal partial class PLD : Tank
                 return Role.Interject;
 
             // Stun
-            if (!TargetIsBoss()
-                && TargetIsCasting()
-                && !JustUsed(Role.Interject)
-                && !InBossEncounter())
-                if (Role.CanLowBlow())
-                    return Role.LowBlow;
+            if (Role.CanLowBlow())
+                return Role.LowBlow;
 
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
@@ -273,9 +269,8 @@ internal partial class PLD : Tank
                 return Role.Interject;
 
             // Stun
-            if (TargetIsCasting() && !JustUsed(Role.Interject))
-                if (Role.CanLowBlow())
-                    return Role.LowBlow;
+            if (Role.CanLowBlow())
+                return Role.LowBlow;
 
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
@@ -426,13 +421,10 @@ internal partial class PLD : Tank
                 return Role.Interject;
 
             // Stun
-            if (!TargetIsBoss()
-                && TargetIsCasting()
-                && !JustUsed(Role.Interject)
-                && !InBossEncounter())
-                if (IsEnabled(Preset.PLD_ST_ShieldBash) && ActionReady(ShieldBash) && !JustUsed(Role.LowBlow) && !JustUsedOn(ShieldBash, CurrentTarget, 10))
+            if (CanStunToInterruptEnemy())
+                if (IsEnabled(Preset.PLD_ST_ShieldBash) && ActionReady(ShieldBash) && !JustUsedOn(ShieldBash, CurrentTarget, 10))
                     return ShieldBash;
-                else if (IsEnabled(Preset.PLD_ST_LowBlow) && Role.CanLowBlow() && !JustUsed(ShieldBash))
+                else if (IsEnabled(Preset.PLD_ST_LowBlow) && Role.CanLowBlow())
                     return Role.LowBlow;
 
             if (ContentSpecificActions.TryGet(out var contentAction))
@@ -625,10 +617,10 @@ internal partial class PLD : Tank
                 return Role.Interject;
 
             // Stun
-            if (TargetIsCasting() && !JustUsed(Role.Interject))
-                if (IsEnabled(Preset.PLD_AoE_ShieldBash) && ActionReady(ShieldBash) && !JustUsed(Role.LowBlow) && !JustUsedOn(ShieldBash, CurrentTarget, 10))
+            if (CanStunToInterruptEnemy())
+                if (IsEnabled(Preset.PLD_AoE_ShieldBash) && ActionReady(ShieldBash) && !JustUsedOn(ShieldBash, CurrentTarget, 10))
                     return ShieldBash;
-                else if (IsEnabled(Preset.PLD_AoE_LowBlow) && Role.CanLowBlow() && !JustUsed(ShieldBash))
+                else if (IsEnabled(Preset.PLD_AoE_LowBlow) && Role.CanLowBlow())
                     return Role.LowBlow;
 
             if (ContentSpecificActions.TryGet(out var contentAction))

@@ -289,12 +289,14 @@ internal partial class WHM : Healer
 
             if (IsEnabled(Preset.WHM_AoE_DPS_SwiftHoly) &&
                 ActionReady(Role.Swiftcast) &&
+                LevelChecked(Holy) &&
                 AssizeCount == 0 && !IsMoving() && InCombat())
                 return Role.Swiftcast;
 
             if (IsEnabled(Preset.WHM_AoE_DPS_SwiftHoly) &&
-                WasLastAction(Role.Swiftcast))
-                return actionID;
+                WasLastAction(Role.Swiftcast) &&
+                LevelChecked(Holy))
+                return OriginalHook(Holy);
 
             #endregion
 

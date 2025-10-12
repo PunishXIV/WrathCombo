@@ -174,7 +174,8 @@ internal partial class MNK : Melee
                 UseMeditationST())
                 return OriginalHook(SteeledMeditation);
 
-            if (UseFormshift())
+            if (IsEnabled(Preset.MNK_STUseFormShift) &&
+                UseFormshift())
                 return FormShift;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -235,8 +236,7 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_ST_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 
@@ -329,8 +329,7 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_AoE_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 

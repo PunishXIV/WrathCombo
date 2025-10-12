@@ -381,8 +381,7 @@ internal partial class DRG : Melee
                     }
 
                     if (IsEnabled(Preset.DRG_ST_StunInterupt) &&
-                        RoleActions.Melee.CanLegSweep() &&
-                        !TargetIsBoss() && TargetIsCasting())
+                        RoleActions.Melee.CanLegSweep())
                         return Role.LegSweep;
                 }
 
@@ -575,8 +574,7 @@ internal partial class DRG : Melee
                     }
 
                     if (IsEnabled(Preset.DRG_AoE_StunInterupt) &&
-                        RoleActions.Melee.CanLegSweep() &&
-                        !TargetIsBoss() && TargetIsCasting())
+                        RoleActions.Melee.CanLegSweep())
                         return Role.LegSweep;
                 }
 

@@ -368,8 +368,7 @@ internal partial class VPR : Melee
                 }
 
                 if (IsEnabled(Preset.VPR_ST_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 
@@ -552,8 +551,7 @@ internal partial class VPR : Melee
                 }
 
                 if (IsEnabled(Preset.VPR_AoE_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 

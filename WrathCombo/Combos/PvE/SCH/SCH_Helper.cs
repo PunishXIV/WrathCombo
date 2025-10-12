@@ -33,7 +33,7 @@ internal partial class SCH
         FairyList = [WhisperingDawn, FeyBlessing, FeyIllumination, Dissipation, Aetherpact, SummonSeraph, Seraphism];
     #endregion
     internal static SCHGauge Gauge => GetJobGauge<SCHGauge>();
-    internal static IBattleChara? AetherPactTarget => Svc.Objects.Where(x => x is IBattleChara chara && chara.StatusList.Any(y => y.StatusId == 1223 && y.SourceObject.GameObjectId == Svc.Buddies.PetBuddy.ObjectId)).Cast<IBattleChara>().FirstOrDefault();
+    internal static IBattleChara? AetherPactTarget => Svc.Objects.Where(x => x is IBattleChara chara && chara.StatusList.Any(y => y.StatusId == 1223 && y.SourceObject.GameObjectId == Svc.Buddies.PetBuddy.GameObject.GameObjectId)).Cast<IBattleChara>().FirstOrDefault();
     internal static bool HasAetherflow => Gauge.Aetherflow > 0;
     internal static bool FairyDismissed => Gauge.DismissedFairy > 0;
     internal static bool FairyBusy => JustUsed(WhisperingDawn, 2f) || JustUsed(FeyIllumination, 2f) || JustUsed(FeyBlessing, 2f) || 

@@ -407,7 +407,7 @@ internal class Debug : ConfigWindow, IDisposable
 
             if (ImGui.TreeNode("Object Data"))
             {
-                CustomStyleText("DataId:", target?.DataId);
+                CustomStyleText("DataId:", target?.BaseId);
 
                 // Display 'EntityId' only if it differs from 'GameObjectId'
                 if (target is not null && target.EntityId != target.GameObjectId)

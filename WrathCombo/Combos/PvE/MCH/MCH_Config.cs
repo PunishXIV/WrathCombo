@@ -65,7 +65,6 @@ internal partial class MCH
                     }
                     break;
 
-
                 case Preset.MCH_ST_Adv_GaussRicochet:
                     DrawSliderInt(0, 2, MCH_ST_GaussRicoPool,
                         "Number of Charges of to Save for Manual Use");
@@ -98,8 +97,6 @@ internal partial class MCH
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Drill.ActionName()}", "", 5, 3);
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {CleanShot.ActionName()}", "", 5, 4);
                     break;
-
-
 
                 case Preset.MCH_ST_Adv_Chainsaw:
 
@@ -215,7 +212,6 @@ internal partial class MCH
             MCH_Balance_Content = new("MCH_Balance_Content", 1),
             MCH_ST_QueenOverDriveHPThreshold = new("MCH_ST_QueenOverDrive", 1),
             MCH_ST_QueenBossOption = new("MCH_ST_QueenBossOption", 0),
-            MCH_ST_QueenHPOption = new("MCH_ST_QueenHPOption", 10),
             MCH_ST_BarrelStabilizerBossOption = new("MCH_ST_BarrelStabilizerBossOption", 1),
             MCH_ST_WildfireBossOption = new("MCH_ST_WildfireBossOption", 1),
             MCH_ST_HyperchargeBossOption = new("MCH_ST_HyperchargeBossOption", 0),

@@ -191,7 +191,7 @@ internal abstract partial class CustomComboFunctions
 
         // Turn Target's status to uint hashset
         var targetStatuses = tar.StatusList.Select(s => s.StatusId).ToHashSet();
-        uint targetID = tar.DataId;
+        uint targetID = tar.BaseId;
 
         // Returning False in each case because there should be no other General Invincibility Check needed
         // for specified areas
@@ -273,7 +273,7 @@ internal abstract partial class CustomComboFunctions
 
             case 952: // Tower of Zot final bosses
                       // Technically not invincible, just need to ignore
-                if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.DataId is 13297 && !y.IsDead))
+                if (targetID is (13298 or 13299) && Svc.Objects.Any(y => y.BaseId is 13297 && !y.IsDead))
                     return true;
                 return false;
 

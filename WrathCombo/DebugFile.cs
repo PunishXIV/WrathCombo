@@ -221,23 +221,47 @@ public static class DebugFile
 
         if (target is null) return;
 
+        bool? failedSheetFind = null;
         IBattleChara? battleTarget = null;
+        BNpcBase? battleNPCRow = null;
         if (target is IBattleChara)
+        {
             battleTarget = target as IBattleChara;
+            if (ActionWatching.BNPCSheet.TryGetValue(battleTarget.BaseId,
+                    out var sheetRow))
+            {
+                battleNPCRow = sheetRow;
+                failedSheetFind = false;
+            }
+            else
+                failedSheetFind = true;
+        }
 
         AddLine("START TARGET INFO");
-        AddLine($"Targetable: {target.IsTargetable}");
         AddLine($"Hostile: {target.IsHostile()}");
+        AddLine($"Boss: {battleTarget.IsBoss()}");
         AddLine($"Dead: {target.IsDead}");
         AddLine($"Distance: {GetTargetDistance(target):F1}y");
         if (battleTarget is not null)
         {
+            AddLine($"IDs: entity:{battleTarget.EntityId}, " +
+                    $"base/data:{battleTarget.BaseId}");
             AddLine($"Level: {battleTarget.Level}");
             AddLine($"Is Casting: {battleTarget.IsCasting}");
             AddLine($"Is Cast Interruptable: {battleTarget.IsCastInterruptible}");
             AddLine();
             AddLine($"HP: {(battleTarget.CurrentHp / battleTarget.MaxHp * 100):F0}%");
             AddLine($"+Shield: {battleTarget.ShieldPercentage:F0}%");
+
+            if (battleNPCRow is not null)
+            {
+                AddLine();
+                AddLine($"Rank: {battleNPCRow.Value.Rank}");
+            }
+            if (failedSheetFind is not null)
+            {
+                AddLine($"Found Sheet: {(failedSheetFind is true ? "yes" : "no")}");
+            }
         }
         AddLine("END TARGET INFO");
 

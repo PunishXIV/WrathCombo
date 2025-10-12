@@ -362,8 +362,7 @@ internal partial class RPR : Melee
                 }
 
                 if (IsEnabled(Preset.RPR_ST_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 
@@ -544,8 +543,7 @@ internal partial class RPR : Melee
                 }
 
                 if (IsEnabled(Preset.RPR_AoE_StunInterupt) &&
-                    RoleActions.Melee.CanLegSweep() &&
-                    !TargetIsBoss() && TargetIsCasting())
+                    RoleActions.Melee.CanLegSweep())
                     return Role.LegSweep;
             }
 

@@ -240,7 +240,7 @@ public abstract class WrathOpener
 
                 while (OpenerStep > 1 && !ActionReady(CurrentOpenerAction) &&
                        !SkipSteps.Any(x => x.Steps.Any(y => y == OpenerStep - 1)) &&
-                       ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, GCDTotal))
+                       ActionWatching.TimeSinceLastAction.TotalSeconds > Math.Max(1.5, Math.Max(GCDTotal, Player.Object.TotalCastTime + 0.2f)))
                 {
                     if (OpenerStep >= OpenerActions.Count)
                         break;
