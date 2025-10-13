@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Dalamud.Game;
 using ECommons.DalamudServices;
@@ -36,15 +37,20 @@ public class Inventory
         foreach (var typeOfItem in Enum.GetValues<Core.Item>())
         {
             _usersItems[typeOfItem] = new Dictionary<int, uint[]>();
-            switch (typeOfItem)
+
+            var enumToBuildOut = typeOfItem switch
             {
-                case Core.Item.Item:
-                    foreach (var itemType in Enum.GetValues<ItemType>())
-                    {
-                        _usersItems[typeOfItem][(int)itemType] = [];
-                    }
-                    break;
-            }
+                Core.Item.Item          => typeof(ItemType),
+                Core.Item.StatPotion    => typeof(StatPotionType),
+                Core.Item.ManaPotion    => typeof(ManaPotionType),
+                Core.Item.HealingPotion => typeof(HealingPotionType),
+                _ => throw new ArgumentOutOfRangeException("",
+                    "Core.ItemUsage.Item has an enum value not handled " +
+                    "in Services.Inventory.ctor()"),
+            };
+
+            foreach (var itemType in Enum.GetValues(enumToBuildOut))
+                _usersItems[typeOfItem][(int)itemType] = [];
         }
     }
 
@@ -99,7 +105,7 @@ public class Inventory
 
 internal enum ItemStatus
 {
-    WellFed = 48,
+    WellFed   = 48,
     Medicated = 49,
 }
 
@@ -147,7 +153,7 @@ internal static class ItemExtensions
         if (SavedBaseParams.TryGetValue(itemID, out var savedParams))
             return savedParams;
 
-        var row = item.FoodRow(hq);
+        var row         = item.FoodRow(hq);
         var foundParams = row?.Params.Select(x => x.BaseParam.RowId).ToArray();
         SavedBaseParams[itemID] = foundParams;
 
@@ -159,10 +165,11 @@ internal static class ItemExtensions
 
     #region Static Data
 
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum DataKeys
     {
-        Status = 0,
-        ItemFoodRowId = 1,
+        Status         = 0,
+        ItemFoodRowId  = 1,
         StatusDuration = 2,
     }
 

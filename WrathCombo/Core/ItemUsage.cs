@@ -18,9 +18,9 @@ namespace WrathCombo.Core;
 
 public enum Item
 {
-    Item = 0,
-    StatPotion = 1,
-    ManaPotion = 2, // todo: not yet implemented
+    Item          = 0,
+    StatPotion    = 1,
+    ManaPotion    = 2, // todo: not yet implemented
     HealingPotion = 3, // todo: not yet implemented
 }
 
@@ -31,11 +31,16 @@ public enum ItemType
 
 public enum StatPotionType
 {
-    Strength = 0,
-    Dexterity = 1,
-    Vitality = 2,
+    Strength     = 0,
+    Dexterity    = 1,
+    Vitality     = 2,
     Intelligence = 3,
-    Mind = 4,
+    Mind         = 4,
+}
+
+public enum ManaPotionType
+{
+    // todo: not yet implemented
 }
 
 public enum HealingPotionType
@@ -45,8 +50,8 @@ public enum HealingPotionType
 
 public enum PotionLevel
 {
-    Highest = 0,
-    TrySecondHighest = 1,
+    Highest           = 0,
+    TrySecondHighest  = 1,
     SecondHighestOnly = 2,
 }
 
@@ -64,9 +69,9 @@ public class ItemUsage : IDisposable
     internal class ItemUse
     {
         public DateTime Created = DateTime.Now;
-        public Item Item;
-        public uint ItemID;
-        public Preset Preset;
+        public Item     Item;
+        public uint     ItemID;
+        public Preset   Preset;
 
         /// <summary>
         ///     For <see cref="Item.Item">Items</see>,
@@ -75,10 +80,10 @@ public class ItemUsage : IDisposable
         public ItemUse
             (Preset preset, ItemType itemType, IGameObject target)
         {
-            Preset = preset;
-            Item = Item.Item;
+            Preset   = preset;
+            Item     = Item.Item;
             ItemType = itemType;
-            Target = target;
+            Target   = target;
         }
 
         /// <summary>
@@ -87,9 +92,9 @@ public class ItemUsage : IDisposable
         public ItemUse
             (Preset preset, StatPotionType potionType, PotionLevel potionLevel)
         {
-            Preset = preset;
-            Item = Item.StatPotion;
-            PotionType = potionType;
+            Preset      = preset;
+            Item        = Item.StatPotion;
+            PotionType  = potionType;
             PotionLevel = potionLevel;
         }
 
@@ -100,7 +105,7 @@ public class ItemUsage : IDisposable
             (Preset preset)
         {
             Preset = preset;
-            Item = Item.ManaPotion;
+            Item   = Item.ManaPotion;
         }
 
         /// <summary>
@@ -109,8 +114,8 @@ public class ItemUsage : IDisposable
         public ItemUse
             (Preset preset, HealingPotionType potionType)
         {
-            Preset = preset;
-            Item = Item.HealingPotion;
+            Preset            = preset;
+            Item              = Item.HealingPotion;
             HealingPotionType = potionType;
         }
 
@@ -128,10 +133,10 @@ public class ItemUsage : IDisposable
         #region Conditional Fields
 
         public HealingPotionType? HealingPotionType;
-        public ItemType? ItemType;
-        public PotionLevel? PotionLevel;
-        public StatPotionType? PotionType;
-        public IGameObject? Target;
+        public ItemType?          ItemType;
+        public PotionLevel?       PotionLevel;
+        public StatPotionType?    PotionType;
+        public IGameObject?       Target;
 
         #endregion
     }
