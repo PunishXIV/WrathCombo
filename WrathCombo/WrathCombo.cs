@@ -163,6 +163,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         Service.ComboCache = new CustomComboCache();
         Service.ActionReplacer = new ActionReplacer();
+        Service.Inventory = new Inventory();
         ActionWatching.Enable();
         IPC = Provider.Init();
         ConflictingPluginsChecks.Begin();
