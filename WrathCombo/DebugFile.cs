@@ -260,7 +260,7 @@ public static class DebugFile
             }
             if (failedSheetFind is not null)
             {
-                AddLine($"Found Sheet: {(failedSheetFind is true ? "yes" : "no")}");
+                AddLine($"Found Sheet: {(failedSheetFind is true ? "no" : "yes")}");
             }
         }
         AddLine("END TARGET INFO");

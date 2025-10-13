@@ -113,7 +113,9 @@ internal abstract partial class CustomComboFunctions
         get
         {
             field ??= new();
-            foreach (var pc in Svc.Objects.Where(x => x is IBattleChara chara && chara.IsFriendly()).Cast<IBattleChara>().ToList())
+            foreach (var pc in Svc.Objects
+                         .Where(x => x is IBattleChara && x.CanUseOn(WHM.Raise))
+                         .Cast<IBattleChara>().ToList())
             {
                 if (pc.IsDead && !pc.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
                 {
