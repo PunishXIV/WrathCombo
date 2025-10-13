@@ -1,6 +1,7 @@
 #region
 
 using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Linq;
 using Dalamud.Game;
 using ECommons.DalamudServices;
@@ -88,14 +89,21 @@ internal static class ItemExtensions
         return null;
     }
 
+    private static readonly Dictionary<uint, uint[]?> SavedBaseParams = [];
+    
     internal static uint[]? BaseParams(this Item item, bool? hq = null)
     {
-        var row = item.FoodRow();
-        
-        if (row is null)
-            return null;
+        var itemID = hq is true ? item.RowId.HQ() : item.RowId;
 
-        return row.Value.Params.Select(x => x.BaseParam.RowId).ToArray();
+        // Return cached values
+        if (SavedBaseParams.TryGetValue(itemID, out var savedParams))
+            return savedParams;
+
+        var row = item.FoodRow(hq);
+        var foundParams = row?.Params.Select(x => x.BaseParam.RowId).ToArray();
+        SavedBaseParams[itemID] = foundParams;
+
+        return foundParams;
     }
     
     internal static uint HQ(this uint itemID) =>
