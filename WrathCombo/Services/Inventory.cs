@@ -1,5 +1,6 @@
 #region
 
+using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ using ECommons.ExcelServices.Enums;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
+using WrathCombo.Core;
+using Item = Lumina.Excel.Sheets.Item;
 
 #endregion
 
@@ -17,13 +20,33 @@ namespace WrathCombo.Services;
 
 public class Inventory
 {
-    private readonly unsafe InventoryManager* _manager =
-        InventoryManager.Instance();
-
     private readonly FrozenDictionary<uint, Item> _itemSheet =
         Svc.Data.GetExcelSheet<Item>(ClientLanguage.English)
             .Where(IsItemWeCareAbout)
             .ToFrozenDictionary(i => i.RowId);
+
+    private readonly unsafe InventoryManager* _manager =
+        InventoryManager.Instance();
+
+    private readonly Dictionary<Core.Item, Dictionary<int, uint[]>>
+        _usersItems = [];
+
+    public Inventory()
+    {
+        foreach (var typeOfItem in Enum.GetValues<Core.Item>())
+        {
+            _usersItems[typeOfItem] = new Dictionary<int, uint[]>();
+            switch (typeOfItem)
+            {
+                case Core.Item.Item:
+                    foreach (var itemType in Enum.GetValues<ItemType>())
+                    {
+                        _usersItems[typeOfItem][(int)itemType] = [];
+                    }
+                    break;
+            }
+        }
+    }
 
     public unsafe void DebugInventory()
     {
