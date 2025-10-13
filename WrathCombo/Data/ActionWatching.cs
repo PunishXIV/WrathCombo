@@ -375,10 +375,16 @@ public static class ActionWatching
 
             #endregion
 
-            var combosActionID = Service.ActionReplacer
-                .LastActionInvokeFor[actionId];
-            var combosPreset = Service.ActionReplacer
-                .LastPresetInvokeFor[actionId];
+            #region Combo Information
+
+            uint? combosActionID = null;
+            if (Service.ActionReplacer.LastActionInvokeFor.TryGetValue(actionId, out var cA))
+                combosActionID = cA;
+            Preset? combosPreset = null;
+            if (Service.ActionReplacer.LastPresetInvokeFor.TryGetValue(actionId, out var cP))
+                combosPreset = cP;
+
+            #endregion
 
             #region Retargeting Logic
 
