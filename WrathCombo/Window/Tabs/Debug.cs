@@ -362,8 +362,23 @@ internal class Debug : ConfigWindow, IDisposable
 
         if (ImGui.CollapsingHeader("Target Data"))
         {
-            if (target is not null) {
+            if (target is not null)
+            {
+                bool? foundSheet = null;
+                BNpcBase? battleNPCRow = null;
+                if (ActionWatching.BNPCSheet.TryGetValue(target.BaseId,
+                        out var sheetRow))
+                {
+                    battleNPCRow = sheetRow;
+                    foundSheet = true;
+                }
+                else
+                    foundSheet = false;
+                
                 CustomStyleText("Name:", target?.Name);
+                CustomStyleText("IDs: (<entity>/<data or base>)", $"{target?.EntityId} / {target?.BaseId}");
+                CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
+                CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
                 CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
                 CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
                 CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
@@ -371,7 +386,10 @@ internal class Debug : ConfigWindow, IDisposable
                 CustomStyleText("Height Difference:", $"{MathF.Round(GetTargetHeightDifference(), 2)}y");
                 CustomStyleText("Relative Position:", AngleToTarget().ToString());
                 CustomStyleText("Requires Positionals:", TargetNeedsPositionals());
+                CustomStyleText("In Boss Encounter:", InBossEncounter());
+                CustomStyleText("Is Boss:", target?.IsBoss());
                 CustomStyleText("Is Invincible:", TargetIsInvincible(target!));
+                CustomStyleText("Is Hostile:", target?.IsHostile());
                 CustomStyleText("Is Friendly:", target?.IsFriendly());
 
                 ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
