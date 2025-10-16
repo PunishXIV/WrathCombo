@@ -8,6 +8,7 @@ using Dalamud.Game;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.ExcelServices.Enums;
+using ECommons.GameHelpers;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
@@ -64,37 +65,53 @@ public class Inventory
     }
 
     /// <summary>
-    ///     Fills <see cref="_usersItems"/> with what is in the user's inventory.
+    ///     Fills <see cref="_usersItems" /> with what is in the user's inventory.
     /// </summary>
+    /// <returns>
+    ///     Whether the inventory was filled correctly.
+    /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
     ///     <see cref="GetAssociatedAssociatedWhereMethod" />.
     /// </exception>
-    private unsafe void FillUserInventory()
+    private unsafe bool FillUserInventory()
     {
-        foreach (var typeOfItem in Enum.GetValues<Core.Item>())
+        try
         {
-            var enumToFill = GetAssociatedSubEnum(typeOfItem);
+            if (!Player.Available || !_manager->Inventories->IsLoaded)
+                return false;
 
-            foreach (var itemType in Enum.GetValues(enumToFill))
+            foreach (var typeOfItem in Enum.GetValues<Core.Item>())
             {
-                var whereFunc =
-                    GetAssociatedAssociatedWhereMethod(enumToFill, (int)itemType);
-                List<uint> foundItems = [];
-                var itemsToLookFor = _itemSheet
-                    .Select(x => x.Value).Where(whereFunc)
-                    .Select(x => x.RowId).ToArray();
+                var enumToFill = GetAssociatedSubEnum(typeOfItem);
 
-                foreach (var item in itemsToLookFor)
+                foreach (var itemType in Enum.GetValues(enumToFill))
                 {
-                    var nq = _manager->GetInventoryItemCount(item, false);
-                    var hq = _manager->GetInventoryItemCount(item.HQ(), true);
-                    if (nq > 0 || hq > 0)
-                        foundItems.Add(item);
+                    var whereFunc =
+                        GetAssociatedAssociatedWhereMethod(enumToFill,
+                            (int)itemType);
+                    List<uint> foundItems = [];
+                    var itemsToLookFor = _itemSheet
+                        .Select(x => x.Value).Where(whereFunc)
+                        .Select(x => x.RowId).ToArray();
+
+                    foreach (var item in itemsToLookFor)
+                    {
+                        var nq = _manager->GetInventoryItemCount(item);
+                        var hq = _manager->GetInventoryItemCount(item.HQ(), true);
+                        if (nq > 0 || hq > 0)
+                            foundItems.Add(item);
+                    }
+
+                    _usersItems[typeOfItem][(int)itemType] = foundItems.ToArray();
                 }
-                
-                _usersItems[typeOfItem][(int)itemType] = foundItems.ToArray();
             }
+
+            return true;
+        }
+        catch
+        {
+            return false;
         }
     }
 
