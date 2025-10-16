@@ -1,7 +1,6 @@
 #region
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -21,10 +20,10 @@ namespace WrathCombo.Services;
 
 public class Inventory
 {
-    private readonly FrozenDictionary<uint, Item> _itemSheet =
+    private readonly Dictionary<uint, Item> _itemSheet =
         Svc.Data.GetExcelSheet<Item>(ClientLanguage.English)
             .Where(IsItemWeCareAbout)
-            .ToFrozenDictionary(i => i.RowId);
+            .ToDictionary(i => i.RowId);
 
     private readonly unsafe InventoryManager* _manager =
         InventoryManager.Instance();
@@ -32,22 +31,20 @@ public class Inventory
     private readonly Dictionary<Core.Item, Dictionary<int, uint[]>>
         _usersItems = [];
 
+    /// <summary>
+    ///     Builds out the <see cref="_usersItems" /> Data Structure.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
+    ///     <see cref="GetAssociatedSubEnum" />.
+    /// </exception>
     public Inventory()
     {
         foreach (var typeOfItem in Enum.GetValues<Core.Item>())
         {
             _usersItems[typeOfItem] = new Dictionary<int, uint[]>();
 
-            var enumToBuildOut = typeOfItem switch
-            {
-                Core.Item.Item          => typeof(ItemType),
-                Core.Item.StatPotion    => typeof(StatPotionType),
-                Core.Item.ManaPotion    => typeof(ManaPotionType),
-                Core.Item.HealingPotion => typeof(HealingPotionType),
-                _ => throw new ArgumentOutOfRangeException("",
-                    "Core.ItemUsage.Item has an enum value not handled " +
-                    "in Services.Inventory.ctor()"),
-            };
+            var enumToBuildOut = GetAssociatedSubEnum(typeOfItem);
 
             foreach (var itemType in Enum.GetValues(enumToBuildOut))
                 _usersItems[typeOfItem][(int)itemType] = [];
@@ -65,6 +62,112 @@ public class Inventory
             ", quantity pot: " + _manager->GetInventoryItemCount(38956u.HQ(), true)
         );
     }
+
+    /// <summary>
+    ///     Fills <see cref="_usersItems"/> with what is in the user's inventory.
+    /// </summary>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
+    ///     <see cref="GetAssociatedAssociatedWhereMethod" />.
+    /// </exception>
+    private unsafe void FillUserInventory()
+    {
+        foreach (var typeOfItem in Enum.GetValues<Core.Item>())
+        {
+            var enumToFill = GetAssociatedSubEnum(typeOfItem);
+
+            foreach (var itemType in Enum.GetValues(enumToFill))
+            {
+                var whereFunc =
+                    GetAssociatedAssociatedWhereMethod(enumToFill, (int)itemType);
+                List<uint> foundItems = [];
+                var itemsToLookFor = _itemSheet
+                    .Select(x => x.Value).Where(whereFunc)
+                    .Select(x => x.RowId).ToArray();
+
+                foreach (var item in itemsToLookFor)
+                {
+                    var nq = _manager->GetInventoryItemCount(item, false);
+                    var hq = _manager->GetInventoryItemCount(item.HQ(), true);
+                    if (nq > 0 || hq > 0)
+                        foundItems.Add(item);
+                }
+                
+                _usersItems[typeOfItem][(int)itemType] = foundItems.ToArray();
+            }
+        }
+    }
+
+    #region Utility Methods
+
+    // ReSharper disable once EntityNameCapturedOnly.Local
+    /// <summary>
+    ///     Gets the associated <c>.Where()</c> associated with each entry in
+    ///     <see cref="Core.Item" /> (and specific ones for
+    ///     <see cref="StatPotionType" />).<br />
+    ///     (<see cref="IsHPPotion" />, <see cref="IsStatPotionStr" />, etc)
+    /// </summary>
+    /// <param name="enumToMatch">
+    ///     The <see cref="Core.Item" /> Enum to get the associated method for.
+    /// </param>
+    /// <param name="pot">
+    ///     The ID of the Enum, to be used for <see cref="StatPotionType" />-specific
+    ///     methods.
+    /// </param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     If there is a <see cref="Core.Item" /> or <see cref="StatPotionType" />
+    ///     Enum that is not also present in the <see langword="switch" /> here.
+    /// </exception>
+    private Func<Item, bool>
+        GetAssociatedAssociatedWhereMethod(Type enumToMatch, int pot) =>
+        nameof(enumToMatch) switch
+        {
+            nameof(ItemType)          => IsPhoenixDown,
+            nameof(ManaPotionType)    => IsMPPotion,
+            nameof(HealingPotionType) => IsHPPotion,
+            nameof(StatPotionType) when pot is (int)StatPotionType.Strength
+                => IsStatPotionStr,
+            nameof(StatPotionType) when pot is (int)StatPotionType.Dexterity
+                => IsStatPotionDex,
+            nameof(StatPotionType) when pot is (int)StatPotionType.Vitality
+                => IsStatPotionVit,
+            nameof(StatPotionType) when pot is (int)StatPotionType
+                    .Intelligence
+                => IsStatPotionInt,
+            nameof(StatPotionType) when pot is (int)StatPotionType.Mind
+                => IsStatPotionMnd,
+            _ => throw new ArgumentOutOfRangeException("",
+                "Core.ItemUsage.Item has an enum value not handled " +
+                "in Services.Inventory.GetAssociatedWhereMethod()"),
+        };
+
+    /// <summary>
+    ///     Gets the associated &gt;Item&lt;Type Enum associated with each entry in
+    ///     <see cref="Core.Item" />.<br />
+    ///     (<see cref="ItemType" />, <see cref="StatPotionType" />, etc)
+    /// </summary>
+    /// <param name="item">
+    ///     The <see cref="Core.Item" /> Enum to get the associated Enum of.
+    /// </param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
+    ///     the <see langword="switch" /> here.
+    /// </exception>
+    private Type GetAssociatedSubEnum(Core.Item item) =>
+        item switch
+        {
+            Core.Item.Item          => typeof(ItemType),
+            Core.Item.StatPotion    => typeof(StatPotionType),
+            Core.Item.ManaPotion    => typeof(ManaPotionType),
+            Core.Item.HealingPotion => typeof(HealingPotionType),
+            _ => throw new ArgumentOutOfRangeException(nameof(item),
+                "Core.ItemUsage.Item has an enum value not handled " +
+                "in Services.Inventory.GetAssociatedSubEnum()"),
+        };
+
+    #endregion
 
     #region .Where() Methods
 
@@ -91,6 +194,30 @@ public class Inventory
                 (uint)BaseParamEnum.Vitality or
                 (uint)BaseParamEnum.Intelligence or
                 (uint)BaseParamEnum.Mind);
+
+    #region Stat Potion-specific .Where() Methods
+
+    private static bool IsStatPotionStr(Item item) =>
+        (item.BaseParams() ?? []).Any(param =>
+            param is (uint)BaseParamEnum.Strength);
+
+    private static bool IsStatPotionDex(Item item) =>
+        (item.BaseParams() ?? []).Any(param =>
+            param is (uint)BaseParamEnum.Dexterity);
+
+    private static bool IsStatPotionVit(Item item) =>
+        (item.BaseParams() ?? []).Any(param =>
+            param is (uint)BaseParamEnum.Vitality);
+
+    private static bool IsStatPotionInt(Item item) =>
+        (item.BaseParams() ?? []).Any(param =>
+            param is (uint)BaseParamEnum.Intelligence);
+
+    private static bool IsStatPotionMnd(Item item) =>
+        (item.BaseParams() ?? []).Any(param =>
+            param is (uint)BaseParamEnum.Mind);
+
+    #endregion
 
     private static bool IsHPPotion(Item item) =>
         (item.BaseParams() ?? []).Any(param => param == (uint)BaseParamEnum.HP);
@@ -162,6 +289,9 @@ internal static class ItemExtensions
 
     internal static uint HQ(this uint itemID) =>
         itemID + 1_000_000;
+
+    internal static uint NQ(this uint itemID) =>
+        itemID - 1_000_000;
 
     #region Static Data
 
