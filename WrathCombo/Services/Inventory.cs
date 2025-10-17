@@ -25,14 +25,24 @@ namespace WrathCombo.Services;
 
 public class Inventory : IDisposable
 {
+    /// The <see cref="Item"/> sheet, limited to items we are set up to use.
     private readonly Dictionary<uint, Item> _itemSheet =
         Svc.Data.GetExcelSheet<Item>(ClientLanguage.English)
             .Where(IsItemWeCareAbout)
             .ToDictionary(i => i.RowId);
 
+    /// An <see cref="InventoryManager"/> Instance.
     private readonly unsafe InventoryManager* _manager =
         InventoryManager.Instance();
 
+    /// <summary>
+    ///     All the user's items in their inventory that we are set up to use,
+    ///     sorted under <see cref="Core.Item"/> and then the enum for that type
+    ///     (<see cref="ItemType"/>, <see cref="StatPotionType"/>, etc.)
+    /// </summary>
+    /// <remarks>
+    ///     WARNING: This does contain HQ and NQ item IDs.
+    /// </remarks>
     private readonly Dictionary<Core.Item, Dictionary<int, uint[]>>
         _usersItems = [];
 
@@ -116,10 +126,17 @@ public class Inventory : IDisposable
                     foreach (var item in itemsToLookFor)
                     {
                         var nq = _manager->GetInventoryItemCount(item);
-                        var hq = _manager->GetInventoryItemCount(item.HQ(), true);
-                        if (nq > 0 || hq > 0)
+                        if (nq > 0)
                             foundItems.Add(item);
+                        var hq = _manager->GetInventoryItemCount(item.HQ(), true);
+                        if (hq > 0)
+                            foundItems.Add(item.HQ());
                     }
+
+                    foundItems = foundItems
+                        .OrderByDescending(x =>
+                            x.BaseParams<Maxes>().FirstOrNull() ?? 0)
+                        .ToList();
 
                     _usersItems[typeOfItem][(int)itemType] = foundItems.ToArray();
                 }
@@ -397,6 +414,24 @@ internal static class ItemExtensions
     }
 
     /// <summary>
+    ///     Gets the <see cref="Item"/> row and uses it to call
+    ///     <see cref="BaseParams{T}(Item, bool?)"/>.
+    /// </summary>
+    /// <param name="itemID">
+    ///     (Will be corrected to the NQ version, if HQ)
+    /// </param>
+    /// <param name="hq">
+    ///     (Not necessary, will be set by checking the <paramref name="itemID"/>
+    ///     provided)
+    /// </param>
+    /// <seealso cref="BaseParams{T}(Item, bool?)"/>
+    internal static uint[] BaseParams<T>(this uint itemID, bool? hq = null)
+        where T : IBaseParamTypeToGet =>
+        Svc.Data.GetExcelSheet<Item>().TryGetRow(itemID.SafeNQ(), out var item)
+            ? item.BaseParams<T>(hq ?? IsHQ(itemID))
+            : [];
+
+    /// <summary>
     ///     Get the actual stat that gets boosted, and by how much, for a food item.
     /// </summary>
     /// <param name="item">
@@ -492,6 +527,12 @@ internal static class ItemExtensions
 
     internal static uint NQ(this uint itemID) =>
         itemID - 1_000_000;
+
+    internal static uint SafeHQ(this uint itemID) =>
+        IsHQ(itemID) ? itemID : itemID.HQ();
+
+    internal static uint SafeNQ(this uint itemID) =>
+        IsHQ(itemID) ? itemID.NQ() : itemID;
 
     #region Static Data
 
