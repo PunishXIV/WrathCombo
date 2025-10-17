@@ -519,18 +519,35 @@ internal static class ItemExtensions
         #endregion
     }
 
+    /// <summary>
+    ///     Checks if a given Item ID is High-Quality or not.
+    /// </summary>
     internal static bool IsHQ(this uint itemID) =>
         itemID > 1_000_000;
 
+    /// <summary>
+    ///     Converts a given Item ID to its High-Quality variant.
+    /// </summary>
     internal static uint HQ(this uint itemID) =>
         itemID + 1_000_000;
 
+    /// <summary>
+    ///     Converts a given Item ID to its Normal-Quality variant.
+    /// </summary>
     internal static uint NQ(this uint itemID) =>
         itemID - 1_000_000;
-
+    
+    /// <summary>
+    ///     Converts a given Item ID to its High-Quality variant.<br/>
+    ///     (If it is not already)
+    /// </summary>
     internal static uint SafeHQ(this uint itemID) =>
         IsHQ(itemID) ? itemID : itemID.HQ();
 
+    /// <summary>
+    ///     Converts a given Item ID to its Normal-Quality variant.<br/>
+    ///     (If it is not already)
+    /// </summary>
     internal static uint SafeNQ(this uint itemID) =>
         IsHQ(itemID) ? itemID.NQ() : itemID;
 
