@@ -79,6 +79,16 @@ public class Inventory : IDisposable
             JsonSerializer.Serialize(_usersItems,
                 new JsonSerializerOptions { WriteIndented = true })
         );
+        if (Svc.Data.GetExcelSheet<Item>().TryGetRow(23168u, out var item))
+            PluginLog.Debug(
+                "[InventoryService] super ether Info: " +
+                $"is mp pot: {IsMPPotion(item)}, " +
+                $"is med(false): {IsMedicine(item, false)}, " + 
+                $"is med(true): {IsMedicine(item, true)}, " +
+                $"baseparams<IDs>: {string.Join(',', item.BaseParams<IDs>())}, " +
+                $"valid action: {item.ItemAction.IsValid}, " +
+                $"action Type: {item.ItemAction.Value.Type}"
+            );
     }
 
     /// <summary>
@@ -311,19 +321,20 @@ public class Inventory : IDisposable
         item.ItemUICategory.RowId == (uint)ItemUICategoryEnum.Medicine &&
         item.ItemAction is { IsValid: true, RowId: (uint)ItemAction.PhoenixDown };
 
-    private static bool IsMedicine(Item item) =>
+    private static bool IsMedicine(Item item, bool checkGivesMedicated) =>
         item.ItemUICategory.RowId == (uint)ItemUICategoryEnum.Medicine &&
         item.ItemAction.IsValid &&
-        item.GivesStatus(ItemStatus.Medicated);
+        (!checkGivesMedicated || item.GivesStatus(ItemStatus.Medicated));
 
     private static bool IsItemWeCareAbout(Item item) =>
         IsPhoenixDown(item) ||
-        (IsMedicine(item) &&
+        (IsMedicine(item, false) &&
          (IsStatPotion(item) ||
           IsHPPotion(item) ||
           IsMPPotion(item)));
 
     private static bool IsStatPotion(Item item) =>
+        IsMedicine(item, true) &&
         item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Strength or
                 (uint)BaseParamEnum.Dexterity or
@@ -377,6 +388,12 @@ internal enum ItemAction
     PhoenixDown = 44,
 }
 
+internal enum ItemActionType
+{
+    HP = 847,
+    MP = 848,
+}
+
 #endregion
 
 internal static class ItemExtensions
@@ -392,6 +409,19 @@ internal static class ItemExtensions
         item.ItemAction.IsValid &&
         (item.ItemAction.Value.Data[(int)DataKeys.Status] == (ushort)status ||
          item.ItemAction.Value.DataHQ[(int)DataKeys.Status] == (ushort)status);
+
+    internal static Lumina.Excel.Sheets.ItemAction? ActionRow
+        (this Item item)
+    {
+        if (!item.ItemAction.IsValid)
+            return null;
+        
+        if (Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.ItemAction>()
+                .TryGetRow(item.ItemAction.Value.RowId, out var row))
+            return row;
+
+        return null;
+    }
 
     internal static ItemFood? FoodRow(this Item item, bool? hq = null)
     {
@@ -479,28 +509,57 @@ internal static class ItemExtensions
         if (SavedBaseParams.TryGetValue(item.RowId, out var savedParams))
             return savedParams[mainKey][subKey];
 
-        var row = item.FoodRow(hq);
+        var row           = item.FoodRow(hq);
+        var actionRow     = item.ActionRow();
 
-        var ids = Extract(p => p.BaseParam.RowId);
+        var ids     = Extract(p => p.BaseParam.RowId);
+        var maxNQ   = Extract(p => (uint)p.Max);
+        var maxHQ   = Extract(p => (uint)p.MaxHQ);
+        var valueNQ = Extract(p => (uint)p.Value);
+        var valueHQ = Extract(p => (uint)p.ValueHQ);
+
+        #region Populate Params for HP/MP Potions
+
+        if (row is null && actionRow is not null)
+        {
+            if (actionRow?.Type == (ushort)ItemActionType.HP)
+            {
+                ids     = [(uint)BaseParamEnum.HP];
+                maxNQ   = [actionRow.Value.Data[(int)OtherDataKeys.Amount]];
+                maxHQ   = [actionRow.Value.DataHQ[(int)OtherDataKeys.Amount]];
+                valueNQ = [actionRow.Value.Data[(int)OtherDataKeys.PercentageIfHP]];
+                valueHQ =
+                    [actionRow.Value.DataHQ[(int)OtherDataKeys.PercentageIfHP]];
+            }
+            if (actionRow?.Type == (ushort)ItemActionType.MP)
+            {
+                ids   = [(uint)BaseParamEnum.MP];
+                maxNQ = [actionRow.Value.Data[(int)OtherDataKeys.Amount]];
+                maxHQ = [actionRow.Value.DataHQ[(int)OtherDataKeys.Amount]];
+            }
+        }
+
+        #endregion
+        
         var foundData =
             new Dictionary<BaseParamKey, Dictionary<BaseParamSubKey, uint[]>>
             {
                 [BaseParamKey.IDs] = new()
                 {
-                    [BaseParamSubKey.NQ] = ids,
-                    [BaseParamSubKey.HQ] = ids,
+                    [BaseParamSubKey.NQ] = ids ?? [],
+                    [BaseParamSubKey.HQ] = ids ?? [],
                 },
 
                 [BaseParamKey.Maxes] = new()
                 {
-                    [BaseParamSubKey.NQ] = Extract(p => (uint)p.Max),
-                    [BaseParamSubKey.HQ] = Extract(p => (uint)p.MaxHQ),
+                    [BaseParamSubKey.NQ] = maxNQ ?? [],
+                    [BaseParamSubKey.HQ] = maxHQ ?? [],
                 },
 
                 [BaseParamKey.Values] = new()
                 {
-                    [BaseParamSubKey.NQ] = Extract(p => (uint)p.Value),
-                    [BaseParamSubKey.HQ] = Extract(p => (uint)p.ValueHQ),
+                    [BaseParamSubKey.NQ] = valueNQ ?? [],
+                    [BaseParamSubKey.HQ] = valueHQ ?? [],
                 },
             };
 
@@ -510,8 +569,8 @@ internal static class ItemExtensions
 
         #region Food Row LINQ Helper
 
-        uint[] Extract(Func<ItemFood.ParamsStruct, uint> selector) =>
-            (row?.Params ?? [])
+        uint[]? Extract(Func<ItemFood.ParamsStruct, uint> selector) =>
+            row?.Params
             .Select(selector)
             .Where(v => v != 0)
             .ToArray();
@@ -559,6 +618,13 @@ internal static class ItemExtensions
         Status         = 0,
         ItemFoodRowId  = 1,
         StatusDuration = 2,
+    }
+
+    [SuppressMessage("ReSharper", "UnusedMember.Local")]
+    private enum OtherDataKeys
+    {
+        PercentageIfHP = 0,
+        Amount         = 1,
     }
 
     #endregion

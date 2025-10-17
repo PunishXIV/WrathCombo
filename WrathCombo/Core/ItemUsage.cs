@@ -20,8 +20,8 @@ public enum Item
 {
     Item          = 0,
     StatPotion    = 1,
-    ManaPotion    = 2, // todo: not yet implemented
-    HealingPotion = 3, // todo: not yet implemented
+    ManaPotion    = 2,
+    HealingPotion = 3,
 }
 
 public enum ItemType
@@ -40,12 +40,14 @@ public enum StatPotionType
 
 public enum ManaPotionType
 {
-    // todo: not yet implemented
+    Ether,
+    // todo: are there other types?
 }
 
 public enum HealingPotionType
 {
-    // todo: not yet implemented
+    Potion,
+    // todo: potd / over-time pots
 }
 
 public enum PotionLevel
