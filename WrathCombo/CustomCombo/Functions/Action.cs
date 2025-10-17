@@ -293,6 +293,9 @@ internal abstract partial class CustomComboFunctions
         _ => false
     };
 
+    //Check if there has been no weave at all.
+    public static bool HasNotWeaved => GetAttackType(LastAction) != ActionAttackType.Ability;
+
     /// <summary> Gets the current combo timer. </summary>
     public static unsafe float ComboTimer => ActionManager.Instance()->Combo.Timer;
 
@@ -317,7 +320,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     private static bool _raidwideInc;
-    public static unsafe bool RaidWideCasting(float timeRemaining = 0f)
+    public static bool RaidWideCasting(float timeRemaining = 0f)
     {
         if (!EzThrottler.Throttle("RaidWideCheck", 100))
             return _raidwideInc;

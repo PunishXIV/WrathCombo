@@ -3607,6 +3607,8 @@ public enum Preset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Balance Opener (Level 90/100)", "Adds the Balance opener at lvl 90/100.", Job.MCH)]
     MCH_ST_Adv_Opener = 8101,
+    
+    #region BS
 
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Barrel Stabilizer Option", "Adds Barrel Stabilizer to the rotation.", Job.MCH)]
@@ -3615,14 +3617,14 @@ public enum Preset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Full Metal Field Option", "Adds Full Metal Field to the rotation.", Job.MCH)]
     MCH_ST_Adv_Stabilizer_FullMetalField = 8111,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate option", "Adds Gauss Round and Ricochet or Double Check and Checkmate to the rotation. Will prevent overcapping.", Job.MCH)]
-    MCH_ST_Adv_GaussRicochet = 8104,
-
+    
+    #endregion
+    
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Wildfire Option", "Adds Wildfire to the rotation.", Job.MCH)]
     MCH_ST_Adv_WildFire = 8108,
+    
+    #region Hypercharge
 
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Hypercharge Option", "Adds Hypercharge to the rotation.", Job.MCH)]
@@ -3631,7 +3633,43 @@ public enum Preset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Heat Blast / Blazing Shot Option", "Adds Heat Blast or Blazing Shot to the rotation", Job.MCH)]
     MCH_ST_Adv_Heatblast = 8106,
+    
+    #endregion
 
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate option", "Adds Gauss Round and Ricochet or Double Check and Checkmate to the rotation. Will prevent overcapping.", Job.MCH)]
+    MCH_ST_Adv_GaussRicochet = 8104,
+    
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Reassemble Option", "Adds Reassemble to the rotation.\nWill be used priority based.\nOrder from highest to lowest priority :\nExcavator - Chainsaw - Air Anchor - Drill - Clean Shot", Job.MCH)]
+    MCH_ST_Adv_Reassemble = 8103,
+    
+    #region Tools
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Tools", "Adds Hotshot, Drill, Air Anchor, Chainsaw and Excavator to the rotation.", Job.MCH)]
+    MCH_ST_Adv_Tools = 8119,
+
+    [ParentCombo(MCH_ST_Adv_Tools)]
+    [CustomComboInfo("Drill Option", "Adds Drill to the rotation.", Job.MCH)]
+    MCH_ST_Adv_Drill = 8109,
+
+    [ParentCombo(MCH_ST_Adv_Tools)]
+    [CustomComboInfo("Hot Shot / Air Anchor Option", "Adds Hot Shot/Air Anchor to the rotation.", Job.MCH)]
+    MCH_ST_Adv_AirAnchor = 8102,
+
+    [ParentCombo(MCH_ST_Adv_Tools)]
+    [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the rotation.", Job.MCH)]
+    MCH_ST_Adv_Chainsaw = 8112,
+
+    [ParentCombo(MCH_ST_Adv_Tools)]
+    [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.\nWill follow Balance logic if selected on Turret/Queen.", Job.MCH)]
+    MCH_ST_Adv_Excavator = 8116,
+
+    #endregion
+
+    #region Queen
+    
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Rook Autoturret/Automaton Queen Option", "Adds Rook Autoturret or Automaton Queen to the rotation.", Job.MCH)]
     MCH_ST_Adv_TurretQueen = 8107,
@@ -3639,31 +3677,9 @@ public enum Preset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Rook / Queen Overdrive Option", "Adds Rook or Queen Overdrive to the rotation.", Job.MCH)]
     MCH_ST_Adv_QueenOverdrive = 8115,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Reassemble Option", "Adds Reassemble to the rotation.\nWill be used priority based.\nOrder from highest to lowest priority :\nExcavator - Chainsaw - Air Anchor - Drill - Clean Shot", Job.MCH)]
-    MCH_ST_Adv_Reassemble = 8103,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Drill Option", "Adds Drill to the rotation.", Job.MCH)]
-    MCH_ST_Adv_Drill = 8109,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Hot Shot / Air Anchor Option", "Adds Hot Shot/Air Anchor to the rotation.", Job.MCH)]
-    MCH_ST_Adv_AirAnchor = 8102,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the rotation.", Job.MCH)]
-    MCH_ST_Adv_Chainsaw = 8112,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.\nWill follow Balance logic if selected on Turret/Queen.", Job.MCH)]
-    MCH_ST_Adv_Excavator = 8116,
-
-    [ParentCombo(MCH_ST_AdvancedMode)]
-    [CustomComboInfo("Tactician Raidwide Option", "Adds Tactician when Raidwide is detected casting.", Job.MCH)]
-    MCH_ST_Adv_Tactician = 8118,
-
+    
+    #endregion
+    
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Head Graze Option", "Uses Head Graze to interrupt during the rotation, where applicable.", Job.MCH)]
     MCH_ST_Adv_Interrupt = 8113,
@@ -3671,10 +3687,18 @@ public enum Preset
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Second Wind Option", "Use Second Wind when below the set HP percentage.", Job.MCH)]
     MCH_ST_Adv_SecondWind = 8114,
+    
+    #region Raidwides
 
     [ParentCombo(MCH_ST_AdvancedMode)]
     [CustomComboInfo("Dismantle Raidwide Option", "Adds Dismantle when Raidwide is detected casting.", Job.MCH)]
     MCH_ST_Dismantle = 8195,
+
+    [ParentCombo(MCH_ST_AdvancedMode)]
+    [CustomComboInfo("Tactician Raidwide Option", "Adds Tactician when Raidwide is detected casting.", Job.MCH)]
+    MCH_ST_Adv_Tactician = 8118,
+    
+    #endregion
 
     #endregion
 
@@ -3690,6 +3714,8 @@ public enum Preset
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Flamethrower Option", "Adds Flamethrower to the rotation.\n Changes to Savage blade when in use to prevent cancelling.", Job.MCH)]
     MCH_AoE_Adv_FlameThrower = 8305,
+    
+    #region BS
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Barrel Stabilizer Option", "Adds Barrel Stabilizer to the rotation.", Job.MCH)]
@@ -3698,6 +3724,8 @@ public enum Preset
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Full Metal Field Option", "Adds Full Metal Field to the rotation.", Job.MCH)]
     MCH_AoE_Adv_Stabilizer_FullMetalField = 8308,
+    
+    #endregion
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate option", "Adds Gauss Round and Ricochet or Double Check and Checkmate to the rotation.", Job.MCH)]
@@ -3706,6 +3734,8 @@ public enum Preset
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Hypercharge Option", "Adds Hypercharge to the rotation.", Job.MCH)]
     MCH_AoE_Adv_Hypercharge = 8303,
+    
+    #region Queen
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Rook Autoturret/Automaton Queen Option", "Adds Rook Autoturret or Automaton Queen to the rotation.", Job.MCH)]
@@ -3714,26 +3744,36 @@ public enum Preset
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Rook / Queen Overdrive Option", "Adds Rook or Queen Overdrive to the rotation.", Job.MCH)]
     MCH_AoE_Adv_QueenOverdrive = 8314,
+    
+    #endregion
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Reassemble Option", "Adds Reassemble to the rotation.", Job.MCH)]
     MCH_AoE_Adv_Reassemble = 8301,
+    
+    #region Tools
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
+    [CustomComboInfo("Tools", "Adds Bioblaster, Air Anchor, Chainsaw and Excavator to the rotation.", Job.MCH)]
+    MCH_AoE_Adv_Tools = 8315,
+
+    [ParentCombo(MCH_AoE_Adv_Tools)]
     [CustomComboInfo("Bioblaster Option", "Adds Bioblaster to the rotation.", Job.MCH)]
     MCH_AoE_Adv_Bioblaster = 8306,
 
-    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [ParentCombo(MCH_AoE_Adv_Tools)]
     [CustomComboInfo("Air Anchor Option", "Adds Air Anchor to the the rotation.", Job.MCH)]
     MCH_AoE_Adv_AirAnchor = 8313,
 
-    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [ParentCombo(MCH_AoE_Adv_Tools)]
     [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the the rotation.", Job.MCH)]
     MCH_AoE_Adv_Chainsaw = 8309,
 
-    [ParentCombo(MCH_AoE_AdvancedMode)]
+    [ParentCombo(MCH_AoE_Adv_Tools)]
     [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.", Job.MCH)]
     MCH_AoE_Adv_Excavator = 8310,
+    
+    #endregion
 
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Head Graze Option", "Uses Head Graze to interrupt during the rotation, where applicable.", Job.MCH)]
@@ -3812,8 +3852,8 @@ public enum Preset
     [CustomComboInfo("Gauss Round / Ricochet \nDouble Check / Checkmate Feature", "Replace Gauss Round and Ricochet or Double Check and Checkmate with one or the other depending on which has more charges.", Job.MCH)]
     MCH_GaussRoundRicochet = 8003,
 
-    // Last value ST = 8117
-    // Last value AoE = 8314
+    // Last value ST = 8119
+    // Last value AoE = 8315
     // Last value Misc = 8058
 
     #endregion
