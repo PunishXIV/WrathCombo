@@ -275,5 +275,6 @@ internal partial class BLM
             BLM_ST_Movement_Priority = new("BLM_ST_Movement_Priority");
 
         #endregion
+
     }
 }

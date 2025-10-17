@@ -75,7 +75,7 @@ internal partial class VPR : Melee
             }
 
             //Reawakend Usage
-            if (UseReawaken())
+            if (UseReawaken(true))
                 return Reawaken;
 
             //Overcap protection
@@ -109,7 +109,7 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             //Reawaken combo
-            if (ReawakenComboST(ref actionID))
+            if (ReawakenCombo(ref actionID, true, false))
                 return actionID;
 
             //1-2-3 (4-5-6) Combo
@@ -248,7 +248,7 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             //Reawaken combo
-            if (ReawakenComboAoE(ref actionID))
+            if (ReawakenCombo(ref actionID, false, true))
                 return actionID;
 
             // healing
@@ -436,7 +436,7 @@ internal partial class VPR : Melee
 
             //Reawaken combo
             if (IsEnabled(Preset.VPR_ST_GenerationCombo) &&
-                ReawakenComboST(ref actionID))
+                ReawakenCombo(ref actionID, true, false))
                 return actionID;
 
             //1-2-3 (4-5-6) Combo
@@ -608,7 +608,7 @@ internal partial class VPR : Melee
 
             //Reawaken combo
             if (IsEnabled(Preset.VPR_AoE_ReawakenCombo) &&
-                ReawakenComboAoE(ref actionID))
+                ReawakenCombo(ref actionID, false, true))
                 return actionID;
 
             //1-2-3 (4-5-6) Combo
@@ -810,7 +810,7 @@ internal partial class VPR : Melee
                         && OriginalHook(SerpentsTail) is not SerpentsTail)
                         return OriginalHook(SerpentsTail);
 
-                    if (ReawakenComboST(ref actionID))
+                    if (ReawakenCombo(ref actionID, true, false))
                         return actionID;
                     break;
                 }

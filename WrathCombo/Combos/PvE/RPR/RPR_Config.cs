@@ -133,5 +133,6 @@ internal partial class RPR
             RPR_SoulsowOptions = new("RPR_SoulsowOptions");
 
         #endregion
+
     }
 }

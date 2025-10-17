@@ -1,10 +1,10 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.GameFunctions;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using ECommons.GameFunctions;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
@@ -14,44 +14,44 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE
 {
-    internal static Status? DosisDebuff =>
+    private static Status? DosisDebuff =>
         GetStatusEffect(DosisList[OriginalHook(Dosis)].Debuff, CurrentTarget);
 
-    internal static Status? DyskrasiaDebuff =>
+    private static Status? DyskrasiaDebuff =>
         GetStatusEffect(Debuffs.EukrasianDyskrasia, CurrentTarget);
 
-    internal static bool MaxPhlegma =>
+    private static bool MaxPhlegma =>
         GetRemainingCharges(OriginalHook(Phlegma)) == GetMaxCharges(OriginalHook(Phlegma));
 
-    internal static IGameObject? Target =>
+    private static IGameObject? Target =>
         SimpleTarget.UIMouseOverTarget.IfCanUseOn(Kardia).IfWithinRange(30) ??
         SimpleTarget.HardTarget.IfCanUseOn(Kardia).IfWithinRange(30) ??
         SimpleTarget.AnyTank;
 
-    internal static IGameObject? HealStack =>
+    private static IGameObject? HealStack =>
         SimpleTarget.Stack.AllyToHeal;
 
-    internal static bool HasAddersgall() =>
+    private static bool HasAddersgall() =>
         Addersgall > 0;
 
-    internal static bool HasAddersting() =>
+    private static bool HasAddersting() =>
         Addersting > 0;
 
     #region Healing
 
     #region Raidwides
 
-    internal static bool RaidwideKerachole() =>
+    private static bool RaidwideKerachole() =>
         IsEnabled(Preset.SGE_Raidwide_Kerachole) &&
         ActionReady(Kerachole) && HasAddersgall() &&
         CanWeave() && RaidWideCasting();
 
-    internal static bool RaidwideHolos() =>
+    private static bool RaidwideHolos() =>
         IsEnabled(Preset.SGE_Raidwide_Holos) &&
         ActionReady(Holos) && CanWeave() && RaidWideCasting() &&
         GetPartyAvgHPPercent() <= SGE_Raidwide_HolosOption;
 
-    internal static bool RaidwideEprognosis()
+    private static bool RaidwideEprognosis()
     {
         bool shieldCheck = GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= SGE_AoE_Heal_EPrognosisOption &&
                            GetPartyBuffPercent(SCH.Buffs.Galvanize) <= SGE_AoE_Heal_EPrognosisOption;
@@ -63,13 +63,13 @@ internal partial class SGE
 
     #region ST
 
-    internal static int GetMatchingConfigST(int i, IGameObject? optionalTarget, out uint action, out bool enabled)
+    private static int GetMatchingConfigST(int i, IGameObject? optionalTarget, out uint action, out bool enabled)
     {
         IGameObject? healTarget = optionalTarget ?? SimpleTarget.Stack.AllyToHeal;
 
         bool shieldCheck = !SGE_ST_Heal_EDiagnosisOpts[0] ||
-                           (!HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) &&
-                            !HasStatusEffect(Buffs.EukrasianPrognosis, healTarget, true));
+                           !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) &&
+                           !HasStatusEffect(Buffs.EukrasianPrognosis, healTarget, true);
 
         bool scholarShieldCheck = !SGE_ST_Heal_EDiagnosisOpts[1] ||
                                   !HasStatusEffect(SCH.Buffs.Galvanize);
@@ -122,7 +122,7 @@ internal partial class SGE
             case 7:
                 action = Eukrasia;
                 enabled = IsEnabled(Preset.SGE_ST_Heal_EDiagnosis) &&
-                          (GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= SGE_ST_Heal_EDiagnosisHP) &&
+                          GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= SGE_ST_Heal_EDiagnosisHP &&
                           shieldCheck && scholarShieldCheck;
                 return SGE_ST_Heal_EDiagnosisHP;
 
@@ -161,7 +161,7 @@ internal partial class SGE
 
     #region AoE
 
-    internal static int GetMatchingConfigAoE(int i, out uint action, out bool enabled)
+    private static int GetMatchingConfigAoE(int i, out uint action, out bool enabled)
     {
         bool shieldCheck = GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= SGE_AoE_Heal_EPrognosisOption &&
                            GetPartyBuffPercent(SCH.Buffs.Galvanize) <= SGE_AoE_Heal_EPrognosisOption;
@@ -233,7 +233,7 @@ internal partial class SGE
 
     #region Movement Prio
 
-    private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
+    private static (uint Action, Preset Preset, Func<bool> Logic)[]
         PrioritizedMovement =>
     [
         //Toxikon
@@ -368,17 +368,17 @@ internal partial class SGE
 
     #region Gauge
 
-    internal static SGEGauge Gauge = GetJobGauge<SGEGauge>();
+    private static SGEGauge Gauge = GetJobGauge<SGEGauge>();
 
-    internal static byte Addersgall => Gauge.Addersgall;
+    private static byte Addersgall => Gauge.Addersgall;
 
-    internal static byte Addersting => Gauge.Addersting;
+    private static byte Addersting => Gauge.Addersting;
 
-    internal static readonly List<uint>
+    private static readonly List<uint>
         AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
         DyskrasiaList = [Dyskrasia, Dyskrasia2];
 
-    internal static readonly FrozenDictionary<uint, (ushort Debuff, uint Eukrasian)> DosisList = new Dictionary<uint, (ushort D, uint E)>
+    private static readonly FrozenDictionary<uint, (ushort Debuff, uint Eukrasian)> DosisList = new Dictionary<uint, (ushort D, uint E)>
     {
         { Dosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
         { Dosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
@@ -485,4 +485,5 @@ internal partial class SGE
     }
 
     #endregion
+
 }

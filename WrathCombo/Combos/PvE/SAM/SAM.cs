@@ -27,7 +27,7 @@ internal partial class SAM : Melee
             if (CanWeave())
             {
                 //Meikyo Feature
-                if (UseMeikyo())
+                if (UseMeikyo(true))
                     return MeikyoShisui;
 
                 //Ikishoten Feature
@@ -73,12 +73,12 @@ internal partial class SAM : Melee
                 return OriginalHook(TsubameGaeshi);
 
             //Ogi Namikiri feature
-            if (!IsMoving() && UseOgi())
+            if (!IsMoving() && UseOgi(true))
                 return OriginalHook(OgiNamikiri);
 
             // Iaijutsu feature
             if (!IsMoving() &&
-                UseIaijutsu(true, true, true))
+                UseIaijutsu(true, true, true, true))
                 return OriginalHook(Iaijutsu);
 
             //Ranged
