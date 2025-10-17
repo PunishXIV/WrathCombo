@@ -50,9 +50,9 @@ public enum HealingPotionType
 
 public enum PotionLevel
 {
-    Highest           = 0,
-    TrySecondHighest  = 1,
-    SecondHighestOnly = 2,
+    Highest       = 0,
+    SecondHighest = 1,
+    Custom        = 50,
 }
 
 #endregion
@@ -178,12 +178,26 @@ internal static class ItemUsageExtensions
     ///     and level specified, and returns <see cref="All.Item" /> to indicate that
     ///     that registration should be found.
     /// </summary>
+    /// <param name="combo">
+    ///     The <see cref="CustomCombo" /> Class that contains this call.
+    /// </param>
+    /// <param name="potionType">
+    ///     <see cref="UserInt" /> used in your <c>_Config</c> for the
+    ///     Potion Type Selector UI or a static <see cref="StatPotionType" />
+    ///     (if your class should not use more than 1 type of potion in any content).
+    /// </param>
+    /// <param name="potionSelection">
+    ///     The <see cref="UserInt" /> used in your <c>_Config</c> for the
+    ///     Potion Selector UI.<br />
+    ///     (A <see cref="PotionLevel" />, or a custom Item ID)
+    /// </param>
     /// <example>
     ///     Just return like this in your combo:
     ///     <code>
     ///     if (timeToPot)
-    ///       return this.UsePotion(My_PotionType_UserInt,
-    ///                             My_PotionLevel_UserInt);
+    ///       return this.UsePotion(
+    ///           My_PotionType_UserInt, // Or a static `StatPotionType`
+    ///           My_PotionSelection_UserInt);
     ///     </code>
     ///     The <c>this</c> is your current combo (so <c>ItemUsage</c> can access the
     ///     <c>Preset</c> property), and the <c>UsePotion</c> method will return
@@ -197,9 +211,12 @@ internal static class ItemUsageExtensions
     public static uint UsePotion
     (this CustomCombo combo,
         StatPotionType potionType,
-        PotionLevel potionLevel)
+        int potionSelection)
     {
-        var preset = combo.Preset;
+        var preset      = combo.Preset;
+        var potionLevel = PotionLevel.Custom;
+        if (potionSelection < (int)PotionLevel.Custom)
+            potionLevel = (PotionLevel)potionSelection;
 
         return All.Item;
     }
@@ -220,13 +237,17 @@ internal static class ItemUsageExtensions
     public static uint UsePotion
     (this uint actionID, Preset preset,
         StatPotionType potionType,
-        PotionLevel potionLevel)
+        int potionSelection)
     {
         if (actionID is not All.Item)
         {
             PluginLog.Error("bad!");
             return All.Item;
         }
+
+        var potionLevel = PotionLevel.Custom;
+        if (potionSelection < (int)PotionLevel.Custom)
+            potionLevel = (PotionLevel)potionSelection;
 
         return All.Item;
     }

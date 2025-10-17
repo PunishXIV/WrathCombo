@@ -62,13 +62,12 @@ public class Inventory : IDisposable
             "[InventoryService] " +
             "inventory loaded: " + _manager->Inventories->IsLoaded +
             ", found items: " + _itemSheet.Count +
-            ", item names: " + string.Join(", ", _itemSheet
-                .Select(x => x.Value.GetName())) +
             ", quantity pot: " + _manager->GetInventoryItemCount(38956u.HQ(), true)
         );
         PluginLog.Debug(
             "[InventoryService] Loaded User Inventory: " +
-            JsonSerializer.Serialize(_usersItems, new JsonSerializerOptions() {WriteIndented = true})
+            JsonSerializer.Serialize(_usersItems,
+                new JsonSerializerOptions { WriteIndented = true })
         );
     }
 
@@ -146,7 +145,7 @@ public class Inventory : IDisposable
     private readonly unsafe Action _tryFillInventory = () =>
     {
         // Bail if cancelled
-        if (Service.Inventory.CancelChecks)
+        if (Service.Inventory._cancelChecks)
             return;
 
         // Check that our requirements are loaded
@@ -188,12 +187,12 @@ public class Inventory : IDisposable
                               "Loaded Inventory");
     };
 
-    private bool CancelChecks;
+    private bool _cancelChecks;
 
     public readonly Action RefreshInventory = () =>
     {
         // Bail if cancelled
-        if (Service.Inventory.CancelChecks)
+        if (Service.Inventory._cancelChecks)
             return;
 
         // Wait (a limited amount of time) for the screen to be ready
@@ -212,7 +211,7 @@ public class Inventory : IDisposable
 
     public void Dispose()
     {
-        CancelChecks = true;
+        _cancelChecks = true;
     }
 
     #endregion
@@ -223,7 +222,7 @@ public class Inventory : IDisposable
     ///     Gets the associated <c>.Where()</c> associated with each entry in
     ///     <see cref="Core.Item" /> (and specific ones for
     ///     <see cref="StatPotionType" />).<br />
-    ///     (<see cref="IsHPPotion" />, <see cref="IsStatPotionStr" />, etc)
+    ///     (<see cref="IsHPPotion" />, <see cref="IsStatPotionStr" />, etc.)
     /// </summary>
     /// <param name="enumToMatch">
     ///     The <see cref="Core.Item" /> Enum (as a string) to get the associated
@@ -258,14 +257,14 @@ public class Inventory : IDisposable
                 => IsStatPotionMnd,
             _ => throw new ArgumentOutOfRangeException("",
                 "Core.ItemUsage.Item has an enum value not handled " +
-                "in Services.Inventory.GetAssociatedWhereMethod(): " + 
+                "in Services.Inventory.GetAssociatedWhereMethod(): " +
                 $"Got {enumToMatch.Split('.').Last()} ({pot})"),
         };
 
     /// <summary>
     ///     Gets the associated &gt;Item&lt;Type Enum associated with each entry in
     ///     <see cref="Core.Item" />.<br />
-    ///     (<see cref="ItemType" />, <see cref="StatPotionType" />, etc)
+    ///     (<see cref="ItemType" />, <see cref="StatPotionType" />, etc.)
     /// </summary>
     /// <param name="item">
     ///     The <see cref="Core.Item" /> Enum to get the associated Enum of.

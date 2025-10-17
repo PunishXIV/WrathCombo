@@ -295,9 +295,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
             JobID = Player.Job;
             CustomComboFunctions.IsMoving(); //Hacky workaround to ensure it's always running
         }
-        
-        if (EzThrottler.Throttle("debugging", TimeSpan.FromSeconds(5)))
-            Service.Inventory.DebugInventory();
 
         BlueMageService.PopulateBLUSpells();
         TargetHelper.Draw();
