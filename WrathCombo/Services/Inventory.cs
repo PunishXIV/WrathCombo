@@ -307,7 +307,7 @@ public class Inventory : IDisposable
           IsMPPotion(item)));
 
     private static bool IsStatPotion(Item item) =>
-        (item.BaseParams() ?? []).Any(param =>
+        item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Strength or
                 (uint)BaseParamEnum.Dexterity or
                 (uint)BaseParamEnum.Vitality or
@@ -317,32 +317,32 @@ public class Inventory : IDisposable
     #region Stat Potion-specific .Where() Methods
 
     private static bool IsStatPotionStr(Item item) =>
-        (item.BaseParams() ?? []).Any(param =>
+        item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Strength);
 
     private static bool IsStatPotionDex(Item item) =>
-        (item.BaseParams() ?? []).Any(param =>
+        item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Dexterity);
 
     private static bool IsStatPotionVit(Item item) =>
-        (item.BaseParams() ?? []).Any(param =>
+        item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Vitality);
 
     private static bool IsStatPotionInt(Item item) =>
-        (item.BaseParams() ?? []).Any(param =>
+        item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Intelligence);
 
     private static bool IsStatPotionMnd(Item item) =>
-        (item.BaseParams() ?? []).Any(param =>
+        item.BaseParams<IDs>().Any(param =>
             param is (uint)BaseParamEnum.Mind);
 
     #endregion
 
     private static bool IsHPPotion(Item item) =>
-        (item.BaseParams() ?? []).Any(param => param == (uint)BaseParamEnum.HP);
+        item.BaseParams<IDs>().Any(param => param == (uint)BaseParamEnum.HP);
 
     private static bool IsMPPotion(Item item) =>
-        (item.BaseParams() ?? []).Any(param => param == (uint)BaseParamEnum.MP);
+        item.BaseParams<IDs>().Any(param => param == (uint)BaseParamEnum.MP);
 
     #endregion
 }
@@ -364,7 +364,12 @@ internal enum ItemAction
 
 internal static class ItemExtensions
 {
-    private static readonly Dictionary<uint, uint[]?> SavedBaseParams = [];
+    private static readonly
+        Dictionary<uint,
+            Dictionary<BaseParamKey,
+                Dictionary<BaseParamSubKey,
+                    uint[]>>>
+        SavedBaseParams = [];
 
     internal static bool GivesStatus(this Item item, ItemStatus status) =>
         item.ItemAction.IsValid &&
@@ -391,20 +396,96 @@ internal static class ItemExtensions
         return null;
     }
 
-    internal static uint[]? BaseParams(this Item item, bool? hq = null)
+    /// <summary>
+    ///     Get the actual stat that gets boosted, and by how much, for a food item.
+    /// </summary>
+    /// <param name="item">
+    ///     The <see cref="Item" /> to get the BaseParams for.
+    /// </param>
+    /// <param name="hq">
+    ///     Whether the High Quality Stats should be returned.
+    /// </param>
+    /// <typeparam name="T">
+    ///     The <see cref="IBaseParamTypeToGet" />-implementing class to specify
+    ///     the type of stats to return.<br />
+    ///     (<see cref="IDs" />, <see cref="Maxes" />, etc.)
+    /// </typeparam>
+    /// <returns>
+    ///     An Array of the values requested.<br />
+    ///     You can just use
+    ///     <see
+    ///         cref="System.Linq.Enumerable.First{TSource}(System.Collections.Generic.IEnumerable{TSource})">
+    ///         Linq.Enumerable.First()
+    ///     </see>
+    ///     for things other than <see cref="IDs" /> (and even then, you can for
+    ///     pots, but not food).
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     If the <typeparamref name="T" /> used was not a
+    ///     <see cref="IBaseParamTypeToGet" />-implementing class handled in the
+    ///     <see langword="switch" /> here.
+    /// </exception>
+    internal static uint[] BaseParams<T>(this Item item, bool? hq = null)
+        where T : IBaseParamTypeToGet
     {
-        var itemID = hq is true ? item.RowId.HQ() : item.RowId;
+        var mainKey = typeof(T) switch
+        {
+            var t when t == typeof(IDs)    => BaseParamKey.IDs,
+            var t when t == typeof(Maxes)  => BaseParamKey.Maxes,
+            var t when t == typeof(Values) => BaseParamKey.Values,
+            _ => throw new ArgumentOutOfRangeException(nameof(T),
+                "Services.Inventory.ItemExtensions.BaseParams() was called with " +
+                "a Type it does not support. Use a class implementing " +
+                "`IBaseParamTypeToGet`."),
+        };
+        var subKey = hq == true ? BaseParamSubKey.HQ : BaseParamSubKey.NQ;
 
         // Return cached values
-        if (SavedBaseParams.TryGetValue(itemID, out var savedParams))
-            return savedParams;
+        if (SavedBaseParams.TryGetValue(item.RowId, out var savedParams))
+            return savedParams[mainKey][subKey];
 
-        var row         = item.FoodRow(hq);
-        var foundParams = row?.Params.Select(x => x.BaseParam.RowId).ToArray();
-        SavedBaseParams[itemID] = foundParams;
+        var row = item.FoodRow(hq);
 
-        return foundParams;
+        var ids = Extract(p => p.BaseParam.RowId);
+        var foundData =
+            new Dictionary<BaseParamKey, Dictionary<BaseParamSubKey, uint[]>>
+            {
+                [BaseParamKey.IDs] = new()
+                {
+                    [BaseParamSubKey.NQ] = ids,
+                    [BaseParamSubKey.HQ] = ids,
+                },
+
+                [BaseParamKey.Maxes] = new()
+                {
+                    [BaseParamSubKey.NQ] = Extract(p => (uint)p.Max),
+                    [BaseParamSubKey.HQ] = Extract(p => (uint)p.MaxHQ),
+                },
+
+                [BaseParamKey.Values] = new()
+                {
+                    [BaseParamSubKey.NQ] = Extract(p => (uint)p.Value),
+                    [BaseParamSubKey.HQ] = Extract(p => (uint)p.ValueHQ),
+                },
+            };
+
+        SavedBaseParams[item.RowId] = foundData;
+
+        return foundData[mainKey][subKey];
+
+        #region Food Row LINQ Helper
+
+        uint[] Extract(Func<ItemFood.ParamsStruct, uint> selector) =>
+            (row?.Params ?? [])
+            .Select(selector)
+            .Where(v => v != 0)
+            .ToArray();
+
+        #endregion
     }
+
+    internal static bool IsHQ(this uint itemID) =>
+        itemID > 1_000_000;
 
     internal static uint HQ(this uint itemID) =>
         itemID + 1_000_000;
@@ -424,3 +505,41 @@ internal static class ItemExtensions
 
     #endregion
 }
+
+#region Base Params call Classes
+
+internal interface IBaseParamTypeToGet
+{
+}
+
+// ReSharper disable once InconsistentNaming
+internal class IDs : IBaseParamTypeToGet
+{
+}
+
+internal class Maxes : IBaseParamTypeToGet
+{
+}
+
+internal class Values : IBaseParamTypeToGet
+{
+}
+
+#endregion
+
+#region Saved Params Keys
+
+internal enum BaseParamKey
+{
+    IDs    = 0,
+    Maxes  = 1,
+    Values = 2,
+}
+
+internal enum BaseParamSubKey
+{
+    NQ = 0,
+    HQ = 1,
+}
+
+#endregion
