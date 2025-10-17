@@ -36,6 +36,7 @@ public enum StatPotionType
     Vitality     = 2,
     Intelligence = 3,
     Mind         = 4,
+    // todo: other possibly-useful types, similar to Vitality?
 }
 
 public enum ManaPotionType

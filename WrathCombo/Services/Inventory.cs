@@ -319,7 +319,8 @@ public class Inventory : IDisposable
 
     private static bool IsPhoenixDown(Item item) =>
         item.ItemUICategory.RowId == (uint)ItemUICategoryEnum.Medicine &&
-        item.ItemAction is { IsValid: true, RowId: (uint)ItemAction.PhoenixDown };
+        item.ItemAction is
+            { IsValid: true, RowId: (uint)ItemActionKnownRowID.PhoenixDown };
 
     private static bool IsMedicine(Item item, bool checkGivesMedicated) =>
         item.ItemUICategory.RowId == (uint)ItemUICategoryEnum.Medicine &&
@@ -383,12 +384,12 @@ internal enum ItemStatus
     Medicated = 49,
 }
 
-internal enum ItemAction
+internal enum ItemActionKnownRowID
 {
     PhoenixDown = 44,
 }
 
-internal enum ItemActionType
+internal enum ItemActionKnownType
 {
     HP = 847,
     MP = 848,
@@ -410,13 +411,13 @@ internal static class ItemExtensions
         (item.ItemAction.Value.Data[(int)DataKeys.Status] == (ushort)status ||
          item.ItemAction.Value.DataHQ[(int)DataKeys.Status] == (ushort)status);
 
-    internal static Lumina.Excel.Sheets.ItemAction? ActionRow
+    internal static ItemAction? ActionRow
         (this Item item)
     {
         if (!item.ItemAction.IsValid)
             return null;
         
-        if (Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.ItemAction>()
+        if (Svc.Data.GetExcelSheet<ItemAction>()
                 .TryGetRow(item.ItemAction.Value.RowId, out var row))
             return row;
 
@@ -522,7 +523,7 @@ internal static class ItemExtensions
 
         if (row is null && actionRow is not null)
         {
-            if (actionRow?.Type == (ushort)ItemActionType.HP)
+            if (actionRow.Value.Type == (ushort)ItemActionKnownType.HP)
             {
                 ids     = [(uint)BaseParamEnum.HP];
                 maxNQ   = [actionRow.Value.Data[(int)OtherDataKeys.Amount]];
@@ -531,7 +532,7 @@ internal static class ItemExtensions
                 valueHQ =
                     [actionRow.Value.DataHQ[(int)OtherDataKeys.PercentageIfHP]];
             }
-            if (actionRow?.Type == (ushort)ItemActionType.MP)
+            if (actionRow.Value.Type == (ushort)ItemActionKnownType.MP)
             {
                 ids   = [(uint)BaseParamEnum.MP];
                 maxNQ = [actionRow.Value.Data[(int)OtherDataKeys.Amount]];
