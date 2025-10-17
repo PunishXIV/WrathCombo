@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 using Dalamud.Game;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.ExcelServices.Enums;
@@ -13,13 +16,14 @@ using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using Lumina.Excel.Sheets;
 using WrathCombo.Core;
+using Action = System.Action;
 using Item = Lumina.Excel.Sheets.Item;
 
 #endregion
 
 namespace WrathCombo.Services;
 
-public class Inventory
+public class Inventory : IDisposable
 {
     private readonly Dictionary<uint, Item> _itemSheet =
         Svc.Data.GetExcelSheet<Item>(ClientLanguage.English)
@@ -62,6 +66,10 @@ public class Inventory
                 .Select(x => x.Value.GetName())) +
             ", quantity pot: " + _manager->GetInventoryItemCount(38956u.HQ(), true)
         );
+        PluginLog.Debug(
+            "[InventoryService] Loaded User Inventory: " +
+            JsonSerializer.Serialize(_usersItems, new JsonSerializerOptions() {WriteIndented = true})
+        );
     }
 
     /// <summary>
@@ -78,8 +86,19 @@ public class Inventory
     {
         try
         {
-            if (!Player.Available || !_manager->Inventories->IsLoaded)
+            if (!Player.Available)
+            {
+                PluginLog.Verbose("[InventoryService] [FillUserInventory] " +
+                                  "Player not available");
                 return false;
+            }
+
+            if (!_manager->Inventories->IsLoaded)
+            {
+                PluginLog.Verbose("[InventoryService] [FillUserInventory] " +
+                                  "Inventory not available");
+                return false;
+            }
 
             foreach (var typeOfItem in Enum.GetValues<Core.Item>())
             {
@@ -88,7 +107,7 @@ public class Inventory
                 foreach (var itemType in Enum.GetValues(enumToFill))
                 {
                     var whereFunc =
-                        GetAssociatedAssociatedWhereMethod(enumToFill,
+                        GetAssociatedAssociatedWhereMethod(enumToFill.ToString(),
                             (int)itemType);
                     List<uint> foundItems = [];
                     var itemsToLookFor = _itemSheet
@@ -107,17 +126,99 @@ public class Inventory
                 }
             }
 
+            PluginLog.Verbose("[InventoryService] [FillUserInventory] " +
+                              "Inventory filled");
             return true;
         }
-        catch
+        catch (Exception ex)
         {
+            PluginLog.Error("[InventoryService] [FillUserInventory] " +
+                            "Failed with error:\n" +
+                            ex.ToStringFull());
             return false;
         }
     }
 
+    #region Actions (for refreshing inventory)
+
+    private int _inventoryFillAttempts;
+
+    private readonly unsafe Action _tryFillInventory = () =>
+    {
+        // Bail if cancelled
+        if (Service.Inventory.CancelChecks)
+            return;
+
+        // Check that our requirements are loaded
+        if (!Player.Available)
+        {
+            PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+                              "Waiting for player object ...");
+            Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory,
+                TimeSpan.FromSeconds(1));
+            return;
+        }
+
+        if (!Service.Inventory._manager->Inventories->IsLoaded)
+        {
+            PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+                              "Waiting for inventory to load ...");
+            Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory,
+                TimeSpan.FromSeconds(1));
+            return;
+        }
+
+        // Fail out if too many attempts
+        if (Service.Inventory._inventoryFillAttempts > 20)
+        {
+            PluginLog.Warning("[InventoryService] [OnInstanceChange] " +
+                              "Failed to load Inventory");
+            return;
+        }
+
+        // Try to load the inventory
+        PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+                          "Trying to fill inventory ...");
+        Service.Inventory._inventoryFillAttempts++;
+        if (!Service.Inventory.FillUserInventory())
+            Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory,
+                TimeSpan.FromSeconds(1));
+        else
+            PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+                              "Loaded Inventory");
+    };
+
+    private bool CancelChecks;
+
+    public readonly Action RefreshInventory = () =>
+    {
+        // Bail if cancelled
+        if (Service.Inventory.CancelChecks)
+            return;
+
+        // Wait (a limited amount of time) for the screen to be ready
+        PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+                          "Waiting for screen ...");
+        byte count = 0;
+        while (!GenericHelpers.IsScreenReady())
+        {
+            if (count > 50) return;
+            count++;
+            Task.Delay(400).Wait();
+        }
+
+        Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory);
+    };
+
+    public void Dispose()
+    {
+        CancelChecks = true;
+    }
+
+    #endregion
+
     #region Utility Methods
 
-    // ReSharper disable once EntityNameCapturedOnly.Local
     /// <summary>
     ///     Gets the associated <c>.Where()</c> associated with each entry in
     ///     <see cref="Core.Item" /> (and specific ones for
@@ -125,7 +226,8 @@ public class Inventory
     ///     (<see cref="IsHPPotion" />, <see cref="IsStatPotionStr" />, etc)
     /// </summary>
     /// <param name="enumToMatch">
-    ///     The <see cref="Core.Item" /> Enum to get the associated method for.
+    ///     The <see cref="Core.Item" /> Enum (as a string) to get the associated
+    ///     method for.
     /// </param>
     /// <param name="pot">
     ///     The ID of the Enum, to be used for <see cref="StatPotionType" />-specific
@@ -137,8 +239,8 @@ public class Inventory
     ///     Enum that is not also present in the <see langword="switch" /> here.
     /// </exception>
     private Func<Item, bool>
-        GetAssociatedAssociatedWhereMethod(Type enumToMatch, int pot) =>
-        nameof(enumToMatch) switch
+        GetAssociatedAssociatedWhereMethod(string enumToMatch, int pot) =>
+        enumToMatch.Split('.').Last() switch
         {
             nameof(ItemType)          => IsPhoenixDown,
             nameof(ManaPotionType)    => IsMPPotion,
@@ -156,7 +258,8 @@ public class Inventory
                 => IsStatPotionMnd,
             _ => throw new ArgumentOutOfRangeException("",
                 "Core.ItemUsage.Item has an enum value not handled " +
-                "in Services.Inventory.GetAssociatedWhereMethod()"),
+                "in Services.Inventory.GetAssociatedWhereMethod(): " + 
+                $"Got {enumToMatch.Split('.').Last()} ({pot})"),
         };
 
     /// <summary>

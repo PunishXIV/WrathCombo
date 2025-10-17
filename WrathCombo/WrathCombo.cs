@@ -22,6 +22,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ECommons.Throttlers;
 using WrathCombo.Attributes;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
@@ -191,8 +192,12 @@ public sealed partial class WrathCombo : IDalamudPlugin
         new TextPayload("Click to toggle Wrath Combo's Auto-Rotation.\n"),
         new TextPayload("Disable this icon in /xlsettings -> Server Info Bar"));
 
-        Svc.ClientState.Login += PrintLoginMessage;
-        if (Svc.ClientState.IsLoggedIn) ResetFeatures();
+        Svc.ClientState.Login += ClientState_Login;
+        if (Svc.ClientState.IsLoggedIn)
+        {
+            ResetFeatures();
+            Task.Run(Service.Inventory.RefreshInventory);
+        }
 
         Svc.Framework.Update += OnFrameworkUpdate;
         Svc.ClientState.TerritoryChanged += ClientState_TerritoryChanged;
@@ -257,6 +262,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         UpdateCaches(false, true, false);
 
         Task.Run(StancePartner.CheckForIPCControl);
+        Task.Run(Service.Inventory.RefreshInventory);
     }
 
     public const string OptionControlledByIPC =
@@ -289,6 +295,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
             JobID = Player.Job;
             CustomComboFunctions.IsMoving(); //Hacky workaround to ensure it's always running
         }
+        
+        if (EzThrottler.Throttle("debugging", TimeSpan.FromSeconds(5)))
+            Service.Inventory.DebugInventory();
 
         BlueMageService.PopulateBLUSpells();
         TargetHelper.Draw();
@@ -345,9 +354,11 @@ public sealed partial class WrathCombo : IDalamudPlugin
         ConfigWindow.Draw();
     }
 
-    private void PrintLoginMessage()
+    private void ClientState_Login()
     {
         Task.Delay(TimeSpan.FromSeconds(5)).ContinueWith(_ => ResetFeatures());
+        Task.Delay(TimeSpan.FromSeconds(5))
+            .ContinueWith(_ => Service.Inventory.RefreshInventory());
 
         if (!Service.Configuration.HideMessageOfTheDay)
             Task.Delay(TimeSpan.FromSeconds(3)).ContinueWith(_ => PrintMotD());
@@ -412,6 +423,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         
         Service.ActionReplacer.Dispose();
         Service.ComboCache.Dispose();
+        Service.Inventory.Dispose();
         ActionWatching.Dispose();
         CustomComboFunctions.TimerDispose();
         IPC.Dispose();
@@ -419,7 +431,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         ConflictingPluginsChecks.Dispose();
         AllStaticIPCSubscriptions.Dispose();
-        Svc.ClientState.Login -= PrintLoginMessage;
+        Svc.ClientState.Login -= ClientState_Login;
         ECommonsMain.Dispose();
         P = null;
     }
