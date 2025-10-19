@@ -16,73 +16,62 @@ public static class ActionRequestIPCProvider
     //public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionRequests = [];
     public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionBlacklist = [];
 
+    /// <summary>
+    /// Requests an action to be blacklisted
+    /// </summary>
+    /// <param name="actionType">Action type</param>
+    /// <param name="actionID">Action ID</param>
+    /// <param name="timeMs">For how much time it should be blacklisted</param>
     [EzIPC]
     public static void RequestBlacklist(ActionType actionType, uint actionID, int timeMs)
     {
-        ActionDescriptor d = new(actionType, actionID);
-        if(!ActionBlacklist.TryGetValue(d, out var v))
+        ActionDescriptor descriptor = new(actionType, actionID);
+        if(!ActionBlacklist.TryGetValue(descriptor, out var value))
         {
-            v = [];
-            ActionBlacklist[d] = v;
+            value = [];
+            ActionBlacklist[descriptor] = value;
         }
-        v.Add(new(Environment.TickCount64 + timeMs));
+        value.Add(new(Environment.TickCount64 + timeMs));
     }
 
-    /*[EzIPC]
-    public static void RequestAction(ActionType actionType, uint actionID, int timeMs)
-    {
-        ActionDescriptor d = new(actionType, actionID);
-        if(!ActionRequests.TryGetValue(d, out var v))
-        {
-            v = [];
-            ActionRequests[d] = v;
-        }
-        v.Add(new(Environment.TickCount64 + timeMs));
-    }
-
+    /// <summary>
+    /// Resets 
+    /// </summary>
+    /// <param name="actionType"></param>
+    /// <param name="actionID"></param>
     [EzIPC]
-    public static void RequestActionOnTarget(ActionType actionType, uint actionID, uint targetEntityId, int timeMs)
+    public static void ResetBlacklist(ActionType actionType, uint actionID)
     {
-        ActionDescriptor d = new(actionType, actionID);
-        if(!ActionRequests.TryGetValue(d, out var v))
-        {
-            v = [];
-            ActionRequests[d] = v;
-        }
-        v.Add(new(Environment.TickCount64 + timeMs, targetEntityId));
+        ActionDescriptor descriptor = new(actionType, actionID);
+        ActionBlacklist.Remove(descriptor);
     }
-
-    [EzIPC]
-    public static void RequestActionLocation(ActionType actionType, uint actionID, Vector3 targetLocation, int timeMs)
-    {
-        ActionDescriptor d = new(actionType, actionID);
-        if(!ActionRequests.TryGetValue(d, out var v))
-        {
-            v = [];
-            ActionRequests[d] = v;
-        }
-        v.Add(new(Environment.TickCount64 + timeMs, targetLocation));
-    }*/
 
     public static void Initialize()
     {
         EzIPC.Init(typeof(ActionRequestIPCProvider), $"{Svc.PluginInterface.InternalName}.ActionRequest");
     }
 
+    /// <summary>
+    /// Retrieves artificial cooldown for a specific action; while doing so, purges requests that have expired
+    /// </summary>
+    /// <param name="actionType"></param>
+    /// <param name="actionID"></param>
+    /// <returns></returns>
+    [EzIPC]
     public static float GetArtificialCooldown(ActionType actionType, uint actionID)
     {
         var currentTick = Environment.TickCount64;
         if(ActionBlacklist.TryGetValue(new(actionType, actionID), out var request))
         {
-            var ret = 0L;
-            for(var i = request.Count - 1; i >= 0; i--)
+            var maxDeadline = 0L;
+            for(var idx = request.Count - 1; idx >= 0; idx--)
             {
-                var x = request[i];
-                var d = x.Deadline - currentTick;
-                if(d > ret) ret = d;
-                if(d < 0) request.RemoveAt(i);
+                var currentRequest = request[idx];
+                var currentDeadline = currentRequest.Deadline - currentTick;
+                if(currentDeadline > maxDeadline) maxDeadline = currentDeadline;
+                if(currentDeadline < 0) request.RemoveAt(idx);
             }
-            return ret;
+            return maxDeadline;
         }
         return 0;
     }
