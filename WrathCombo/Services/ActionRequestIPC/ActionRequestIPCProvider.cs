@@ -35,7 +35,7 @@ public static class ActionRequestIPCProvider
     }
 
     /// <summary>
-    /// Resets 
+    /// Resets blacklist for a specific action
     /// </summary>
     /// <param name="actionType"></param>
     /// <param name="actionID"></param>
@@ -44,6 +44,15 @@ public static class ActionRequestIPCProvider
     {
         ActionDescriptor descriptor = new(actionType, actionID);
         ActionBlacklist.Remove(descriptor);
+    }
+
+    /// <summary>
+    /// Clears entire blacklist
+    /// </summary>
+    [EzIPC]
+    public static void ResetAllBlacklist()
+    {
+        ActionBlacklist.Clear();
     }
 
     public static void Initialize()
