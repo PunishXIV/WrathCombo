@@ -619,19 +619,16 @@ internal partial class RDM : Caster
                 if (HasManaStacks)
                     return UseHolyFlare(actionID);
             }
+            
+            if (ComboAction is Zwerchhau or EnchantedZwerchhau && LevelChecked(Redoublement))
+                return OriginalHook(Redoublement);
 
-            if (HasEnoughManaForCombo || CanMagickedSwordplay)
-            {
-                if (ComboAction is Zwerchhau or EnchantedZwerchhau && LevelChecked(Redoublement))
-                    return EnchantedRedoublement;
-
-                if (ComboAction is Riposte or EnchantedRiposte && LevelChecked(Zwerchhau))
-                    return EnchantedZwerchhau;
-            }
-
+            if (ComboAction is Riposte or EnchantedRiposte && LevelChecked(Zwerchhau))
+                return OriginalHook(Zwerchhau);
+            
             if (IsEnabled(Preset.RDM_Riposte_NoWaste) && !HasEnoughManaToStartStandalone && !CanMagickedSwordplay)
                 return All.SavageBlade;
-
+            
             return actionID;
         }
     }
