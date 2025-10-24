@@ -4,6 +4,7 @@ using Dalamud.Hooking;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using ECommons.GameHelpers;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -16,7 +17,7 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using ECommons.GameHelpers;
+using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -24,7 +25,6 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
-using static FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentFreeCompanyProfile.FCProfile;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 namespace WrathCombo.Data;
@@ -261,7 +261,7 @@ public static class ActionWatching
                 UpdateActionTask = Svc.Framework.RunOnTick(() =>
                 UpdateLastUsedAction(actionId, actionType, targetObjectId, castTime),
                 TimeSpan.FromMilliseconds(castTime), cancellationToken: token);
-                
+
                 // Update Helpers
                 NIN.InMudra = NIN.MudraSigns.Contains(actionId);
 
@@ -282,7 +282,7 @@ public static class ActionWatching
                 );
 #endif
             }
-                SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
+            SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
         }
         catch (Exception ex)
         {
@@ -349,6 +349,7 @@ public static class ActionWatching
     {
         try
         {
+
             if (actionType is ActionType.Action or ActionType.Ability)
             {
                 var original = actionId; //Save the original action, do not modify
@@ -382,7 +383,7 @@ public static class ActionWatching
                 if (changed && areaTargeted)
                 {
                     var location = Player.Position;
-                    
+
                     if (IsOverGround(targetObject) &&
                         Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
                         location = targetObject.Position;
@@ -391,13 +392,14 @@ public static class ActionWatching
                                  replacedWith.ActionRange()) &&
                              newLoc is not null)
                         location = (Vector3)newLoc;
-                    
+
                     return ActionManager.Instance()->UseActionLocation
                         (actionType, replacedWith, location: &location);
                 }
 
                 //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
-                var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+                var hookResult = AutoRotationController.CurrentActIsAutorot ? UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
+                    UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
                 // Fallback if the Retargeted ground action couldn't be placed smartly
                 if (changed && areaTargeted)
