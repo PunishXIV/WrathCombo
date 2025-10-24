@@ -47,7 +47,10 @@ public class Inventory : IDisposable
         _usersItems = [];
 
     /// <summary>
-    ///     Builds out the <see cref="_usersItems" /> Data Structure.
+    ///     Builds out the <see cref="_usersItems" /> Data Structure,
+    ///     namely the Enum keys:<br/>
+    ///     <see cref="Core.Item"/> and then the enum for that type
+    ///     (<see cref="ItemType"/>, <see cref="StatPotionType"/>, etc.)
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
@@ -99,6 +102,7 @@ public class Inventory : IDisposable
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
+    ///     <see cref="GetAssociatedSubEnum"/> and also
     ///     <see cref="GetAssociatedAssociatedWhereMethod" />.
     /// </exception>
     private unsafe bool FillUserInventory()
@@ -119,20 +123,25 @@ public class Inventory : IDisposable
                 return false;
             }
 
+            // Each over the categories of items we care about
             foreach (var typeOfItem in Enum.GetValues<Core.Item>())
             {
+                // Get the associated Sub-Enum
                 var enumToFill = GetAssociatedSubEnum(typeOfItem);
 
+                // Each over every subtype of item we care about
                 foreach (var itemType in Enum.GetValues(enumToFill))
                 {
+                    List<uint> foundItems = [];
+                    // Get a method to restrict the item sheet just to this subtype
                     var whereFunc =
                         GetAssociatedAssociatedWhereMethod(enumToFill.ToString(),
                             (int)itemType);
-                    List<uint> foundItems = [];
                     var itemsToLookFor = _itemSheet
                         .Select(x => x.Value).Where(whereFunc)
                         .Select(x => x.RowId).ToArray();
 
+                    // Check each item from the sheet for presence in inventory
                     foreach (var item in itemsToLookFor)
                     {
                         var nq = _manager->GetInventoryItemCount(item);
@@ -143,6 +152,7 @@ public class Inventory : IDisposable
                             foundItems.Add(item.HQ());
                     }
 
+                    // Order those items found by how much stat they give
                     foundItems = foundItems
                         .OrderByDescending(x =>
                             x.BaseParams<Maxes>().FirstOrNull() ?? 0)
@@ -169,6 +179,14 @@ public class Inventory : IDisposable
 
     private int _inventoryFillAttempts;
 
+    /// <summary>
+    ///     Tries to <see cref="FillUserInventory">Load the User's Inventory</see>
+    ///     on-tick, but across up to 20 attempts on different
+    ///     ticks based on numerous bails and fail outs.
+    /// </summary>
+    /// <remarks>
+    ///     Can be stopped by <see cref="_cancelChecks">Cancelling Checks</see>.
+    /// </remarks>
     private readonly unsafe Action _tryFillInventory = () =>
     {
         // Bail if cancelled
@@ -178,16 +196,15 @@ public class Inventory : IDisposable
         // Check that our requirements are loaded
         if (!Player.Available)
         {
-            PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+            PluginLog.Verbose("[InventoryService] [RefreshInventory] " +
                               "Waiting for player object ...");
             Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory,
                 TimeSpan.FromSeconds(1));
             return;
         }
-
         if (!Service.Inventory._manager->Inventories->IsLoaded)
         {
-            PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+            PluginLog.Verbose("[InventoryService] [RefreshInventory] " +
                               "Waiting for inventory to load ...");
             Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory,
                 TimeSpan.FromSeconds(1));
@@ -197,25 +214,37 @@ public class Inventory : IDisposable
         // Fail out if too many attempts
         if (Service.Inventory._inventoryFillAttempts > 20)
         {
-            PluginLog.Warning("[InventoryService] [OnInstanceChange] " +
+            PluginLog.Warning("[InventoryService] [RefreshInventory] " +
                               "Failed to load Inventory");
             return;
         }
 
         // Try to load the inventory
-        PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+        PluginLog.Verbose("[InventoryService] [RefreshInventory] " +
                           "Trying to fill inventory ...");
         Service.Inventory._inventoryFillAttempts++;
         if (!Service.Inventory.FillUserInventory())
             Svc.Framework.RunOnTick(Service.Inventory._tryFillInventory,
-                TimeSpan.FromSeconds(1));
+                TimeSpan.FromSeconds(1)); // Try again if it failed
         else
-            PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+            PluginLog.Verbose("[InventoryService] [RefreshInventory] " +
                               "Loaded Inventory");
     };
 
+    /// <summary>
+    ///     Can be used to stop <see cref="_tryFillInventory"/> and
+    ///     <see cref="RefreshInventory"/>.
+    /// </summary>
     private bool _cancelChecks;
 
+    /// <summary>
+    ///     This action waits for the <see cref="GenericHelpers.IsScreenReady">
+    ///     Screen to be ready</see> and then begins trying to freshly
+    ///     <see cref="_tryFillInventory">Load the User's Inventory</see>.
+    /// </summary>
+    /// <remarks>
+    ///     Can be stopped by <see cref="_cancelChecks">Cancelling Checks</see>.
+    /// </remarks>
     public readonly Action RefreshInventory = () =>
     {
         // Bail if cancelled
@@ -223,7 +252,7 @@ public class Inventory : IDisposable
             return;
 
         // Wait (a limited amount of time) for the screen to be ready
-        PluginLog.Verbose("[InventoryService] [OnInstanceChange] " +
+        PluginLog.Verbose("[InventoryService] [RefreshInventory] " +
                           "Waiting for screen ...");
         byte count = 0;
         while (!GenericHelpers.IsScreenReady())
@@ -378,17 +407,27 @@ public class Inventory : IDisposable
 
 #region Static Data
 
+/// <summary>
+///     Different status IDs that can be given, according to <c>ItemAction</c> data.
+/// </summary>
+/// <seealso cref="ItemExtensions.GivesStatus"/>
 internal enum ItemStatus
 {
     WellFed   = 48,
     Medicated = 49,
 }
 
+/// <summary>
+///     Known <c>ItemAction</c> Row IDs.
+/// </summary>
 internal enum ItemActionKnownRowID
 {
     PhoenixDown = 44,
 }
 
+/// <summary>
+///     Known <c>ItemAction</c> <c>Type</c> values.
+/// </summary>
 internal enum ItemActionKnownType
 {
     HP = 847,
@@ -399,6 +438,14 @@ internal enum ItemActionKnownType
 
 internal static class ItemExtensions
 {
+    /// <summary>
+    ///     Caching for items' <c>BaseParams</c> (including derived ones,
+    ///     for HP/MP).
+    /// </summary>
+    /// <value>
+    ///     <see cref="BaseParamKey"/> then <see cref="BaseParamSubKey"/><br/>
+    ///     (ID/Max/Value then NQ/HQ)
+    /// </value>
     private static readonly
         Dictionary<uint,
             Dictionary<BaseParamKey,
@@ -406,11 +453,17 @@ internal static class ItemExtensions
                     uint[]>>>
         SavedBaseParams = [];
 
+    /// <summary>
+    ///     Check if an item will provide the given <see cref="ItemStatus"/>.
+    /// </summary>
     internal static bool GivesStatus(this Item item, ItemStatus status) =>
         item.ItemAction.IsValid &&
         (item.ItemAction.Value.Data[(int)DataKeys.Status] == (ushort)status ||
          item.ItemAction.Value.DataHQ[(int)DataKeys.Status] == (ushort)status);
 
+    /// <summary>
+    ///     Get the associated <see cref="ItemAction"/> Row for a given item.
+    /// </summary>
     internal static ItemAction? ActionRow
         (this Item item)
     {
@@ -424,6 +477,16 @@ internal static class ItemExtensions
         return null;
     }
 
+    /// <summary>
+    ///     Get the associated <see cref="ItemFood"/> Row for a given item.
+    /// </summary>
+    /// <param name="item"></param>
+    /// <param name="hq">
+    ///     Whether to get the <see cref="ItemFood"/> Row associated with the
+    ///     normal or high quality version of the item.<br/>
+    ///     Only necessary to provide if looking specifically for the high quality
+    ///     stats; defaults to normal quality, if that is found.
+    /// </param>
     internal static ItemFood? FoodRow(this Item item, bool? hq = null)
     {
         if (!item.ItemAction.IsValid)
@@ -613,18 +676,44 @@ internal static class ItemExtensions
 
     #region Static Data
 
+    /// <summary>
+    ///     Keys for navigating the <c>Data</c> values directly on <c>ItemAction</c>
+    ///     rows, for (most) items (at least food and stat pots).
+    /// </summary>
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum DataKeys
     {
+        /// <summary>
+        ///     This key is used to access the status (<see cref="ItemStatus"/>).
+        /// </summary>
         Status         = 0,
+        /// <summary>
+        ///     This key is used to access the Row ID for the associated
+        ///     <c>ItemFood</c> row (<see cref="FoodRow"/>).
+        /// </summary>
         ItemFoodRowId  = 1,
+        /// <summary>
+        ///     This key is used to access the duration of the <see cref="Status"/>.
+        /// </summary>
         StatusDuration = 2,
     }
 
+    /// <summary>
+    ///     Keys for navigating the <c>Data</c> values directly on <c>ItemAction</c>
+    ///     rows, for HP and MP pot items.
+    /// </summary>
     [SuppressMessage("ReSharper", "UnusedMember.Local")]
     private enum OtherDataKeys
     {
+        /// <summary>
+        ///     This key is used to access the percentage stat gain
+        ///     (<see cref="BaseParamKey.Values"/>) for HP pot items.
+        /// </summary>
         PercentageIfHP = 0,
+        /// <summary>
+        ///     This key is used to access the actual maximum amount of stat gain
+        ///     (<see cref="BaseParamKey.Maxes"/>) for HP <i>and</i> MP pot items.
+        /// </summary>
         Amount         = 1,
     }
 
@@ -633,19 +722,28 @@ internal static class ItemExtensions
 
 #region Base Params call Classes
 
+/// <summary>
+///     An interface for empty classes meant to map to <see cref="BaseParamKey"/>.
+/// </summary>
+/// <seealso cref="IDs"/>
+/// <seealso cref="Maxes"/>
+/// <seealso cref="Values"/>
 internal interface IBaseParamTypeToGet
 {
 }
 
+/// <seealso cref="BaseParamKey.IDs"/>
 // ReSharper disable once InconsistentNaming
 internal class IDs : IBaseParamTypeToGet
 {
 }
 
+/// <seealso cref="BaseParamKey.Maxes"/>
 internal class Maxes : IBaseParamTypeToGet
 {
 }
 
+/// <seealso cref="BaseParamKey.Values"/>
 internal class Values : IBaseParamTypeToGet
 {
 }
@@ -654,13 +752,23 @@ internal class Values : IBaseParamTypeToGet
 
 #region Saved Params Keys
 
+/// <summary>
+///     The primary key for <see cref="ItemExtensions.SavedBaseParams"/>.
+/// </summary>
 internal enum BaseParamKey
 {
+    // ReSharper disable once InconsistentNaming
+    /// The stat IDs that can be provided.
     IDs    = 0,
+    /// The maximum stat this can provide.
     Maxes  = 1,
+    /// The amount that will be given, up to the maximum. Normally a percentage.
     Values = 2,
 }
 
+/// <summary>
+///     The secondary key for <see cref="ItemExtensions.SavedBaseParams"/>.
+/// </summary>
 internal enum BaseParamSubKey
 {
     NQ = 0,
