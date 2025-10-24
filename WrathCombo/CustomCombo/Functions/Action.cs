@@ -292,7 +292,7 @@ internal abstract partial class CustomComboFunctions
         WeaveTypes.DelayWeave => CanDelayedWeave(),
         _ => false
     };
-
+    
     /// <summary> Gets the current combo timer. </summary>
     public static unsafe float ComboTimer => ActionManager.Instance()->Combo.Timer;
 
@@ -317,7 +317,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     private static bool _raidwideInc;
-    public static unsafe bool RaidWideCasting(float timeRemaining = 0f)
+    public static bool RaidWideCasting(float timeRemaining = 0f)
     {
         if (!EzThrottler.Throttle("RaidWideCheck", 100))
             return _raidwideInc;

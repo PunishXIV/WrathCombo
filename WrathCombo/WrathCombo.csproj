@@ -5,7 +5,7 @@
     <PropertyGroup>
         <Authors>Team Wrath</Authors>
         <Company>-</Company>
-        <Version>1.0.2.12</Version>
+        <Version>1.0.2.16</Version>
         <!-- This is the version that will be used when pushing to the repo.-->
         <Description>XIVCombo for very lazy players</Description>
         <Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
@@ -33,7 +33,7 @@
 
     <!-- Styling Rules -->
     <ItemGroup>
-        <None Include="..\.editorconfig" Link=".editorconfig"/>
+        <None Include="..\.editorconfig" Link=".editorconfig" />
     </ItemGroup>
 
     <!-- Required Paths -->
@@ -72,19 +72,19 @@
 
     <!-- Logo -->
     <ItemGroup>
-        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
+        <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
     </ItemGroup>
 
     <!-- Dalamud Packaging -->
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="13.0.0" />
-        <PackageReference Include="ILRepack" Version="2.0.18"/>
+        <PackageReference Include="ILRepack" Version="2.0.18" />
     </ItemGroup>
 
     <!-- Dependencies -->
     <ItemGroup>
-        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj"/>
-        <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj"/>
+        <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+        <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj" />
     </ItemGroup>
 
     <!-- Dalamud Libraries -->

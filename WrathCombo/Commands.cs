@@ -684,7 +684,7 @@ public partial class WrathCombo
     ///         </item>
     ///     </list>
     /// </remarks>
-    private void HandleOpenCommand
+    internal void HandleOpenCommand
         (string[]? argument = null, OpenWindow? tab = null, bool? forceOpen = null)
     {
         argument ??= [""];

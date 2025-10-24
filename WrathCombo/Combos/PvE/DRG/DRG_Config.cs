@@ -1,3 +1,4 @@
+using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -24,21 +25,23 @@ internal partial class DRG
                     DrawBossOnlyChoice(DRG_Balance_Content);
                     break;
 
-                case Preset.DRG_ST_Litany:
-                    DrawHorizontalRadioButton(DRG_ST_LitanyBossOption,
-                        "All content", $"Uses {BattleLitany.ActionName()} regardless of content.", 0);
+                case Preset.DRG_ST_Buffs:
 
-                    DrawHorizontalRadioButton(DRG_ST_LitanyBossOption,
-                        "Boss encounters Only", $"Only uses {BattleLitany.ActionName()} when in Boss encounters.", 1);
-                    break;
+                    DrawSliderInt(0, 50, DRG_ST_BuffsHPOption,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
-                case Preset.DRG_ST_Lance:
+                    ImGui.Indent();
 
-                    DrawHorizontalRadioButton(DRG_ST_LanceBossOption,
-                        "All content", $"Uses {LanceCharge.ActionName()} regardless of content.", 0);
+                    ImGui.TextColored(ImGuiColors.DalamudYellow,
+                        "Select what kind of enemies the HP check should be applied to:");
 
-                    DrawHorizontalRadioButton(DRG_ST_LanceBossOption,
-                        "Boss encounters Only", $"Only uses {LanceCharge.ActionName()} when in Boss encounters.", 1);
+                    DrawHorizontalRadioButton(DRG_ST_BuffsBossOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
+
+                    DrawHorizontalRadioButton(DRG_ST_BuffsBossOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+                    ImGui.Unindent();
                     break;
 
                 case Preset.DRG_ST_HighJump:
@@ -78,14 +81,9 @@ internal partial class DRG
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
-                case Preset.DRG_AoE_Litany:
+                case Preset.DRG_AoE_Buffs:
                     DrawSliderInt(0, 100, DRG_AoE_LitanyHPTreshold,
-                        $"Stop Using {BattleLitany.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
-                    break;
-
-                case Preset.DRG_AoE_Lance:
-                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHPTreshold,
-                        $"Stop Using {LanceCharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                        "Stop using Buffs when target HP% is at or below (Set to 0 to Disable This Check)");
                     break;
 
                 case Preset.DRG_AoE_HighJump:
@@ -132,8 +130,8 @@ internal partial class DRG
         public static UserInt
             DRG_SelectedOpener = new("DRG_SelectedOpener", 0),
             DRG_Balance_Content = new("DRG_Balance_Content", 1),
-            DRG_ST_LitanyBossOption = new("DRG_ST_Litany_SubOption", 1),
-            DRG_ST_LanceBossOption = new("DRG_ST_Lance_SubOption", 1),
+            DRG_ST_BuffsHPOption = new("DRG_ST_BuffsHPOption", 10),
+            DRG_ST_BuffsBossOption = new("DRG_ST_BuffsBossOption", 0),
             DRG_ST_SecondWindHPThreshold = new("DRG_STSecondWindThreshold", 40),
             DRG_ST_BloodbathHPThreshold = new("DRG_STBloodbathThreshold", 30),
             DRG_AoE_LitanyHPTreshold = new("DRG_AoE_LitanyHP", 40),
@@ -154,5 +152,6 @@ internal partial class DRG
             DRG_AoE_StardiverMovingOptions = new("DRG_AoE_Stardiver_Options");
 
         #endregion
+
     }
 }

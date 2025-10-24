@@ -891,6 +891,9 @@ internal partial class PLD : Tank
             if (ActionReady(Role.Reprisal))
                 return Role.Reprisal;
 
+            if (ActionReady(DivineVeil))
+                return DivineVeil;
+
             if (ActionReady(PassageOfArms) &&
                 IsEnabled(Preset.PLD_Mit_Party_Wings) &&
                 !HasStatusEffect(Buffs.PassageOfArms, anyOwner: true))

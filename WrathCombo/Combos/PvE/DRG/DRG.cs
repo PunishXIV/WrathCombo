@@ -35,7 +35,7 @@ internal partial class DRG : Melee
                         return LanceCharge;
 
                     //Life Surge Feature
-                    if (UseLifeSurge())
+                    if (CanLifeSurge())
                         return LifeSurge;
 
                     //Mirage Feature
@@ -84,14 +84,14 @@ internal partial class DRG : Melee
                 if (CanDRGWeave(0.8f))
                 {
                     //(High) Jump Feature   
-                    if (ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
+                    if (ActionReady(Jump) && OriginalHook(Jump) is Jump or HighJump)
                     {
                         if (!LevelChecked(HighJump))
                             return Jump;
 
                         if (LevelChecked(HighJump) &&
                             (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDActive))
-                            return (HighJump);
+                            return HighJump;
                     }
 
                     //Dragonfire Dive Feature
@@ -224,8 +224,8 @@ internal partial class DRG : Melee
                 if (CanDRGWeave(0.8f))
                 {
                     //(High) Jump Feature   
-                    if (ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
-                        return (LevelChecked(HighJump))
+                    if (ActionReady(Jump) && OriginalHook(Jump) is Jump or HighJump)
+                        return LevelChecked(HighJump)
                             ? HighJump
                             : Jump;
 
@@ -298,18 +298,17 @@ internal partial class DRG : Melee
             {
                 if (CanDRGWeave())
                 {
-                    if (IsEnabled(Preset.DRG_ST_Buffs))
+                    if (IsEnabled(Preset.DRG_ST_Buffs) &&
+                        GetTargetHPPercent() > HPThresholdBuffs)
                     {
                         //Battle Litany Feature
                         if (IsEnabled(Preset.DRG_ST_Litany) &&
-                            ActionReady(BattleLitany) &&
-                            (DRG_ST_LitanyBossOption == 0 || InBossEncounter()))
+                            ActionReady(BattleLitany))
                             return BattleLitany;
 
                         //Lance Charge Feature
                         if (IsEnabled(Preset.DRG_ST_Lance) &&
-                            ActionReady(LanceCharge) &&
-                            (DRG_ST_LanceBossOption == 0 || InBossEncounter()))
+                            ActionReady(LanceCharge))
                             return LanceCharge;
                     }
 
@@ -317,14 +316,14 @@ internal partial class DRG : Melee
                     {
                         //Life Surge Feature
                         if (IsEnabled(Preset.DRG_ST_LifeSurge) &&
-                            UseLifeSurge())
+                            CanLifeSurge())
                             return LifeSurge;
 
                         //Mirage Feature
                         if (IsEnabled(Preset.DRG_ST_Mirage) &&
                             ActionReady(MirageDive) &&
                             HasStatusEffect(Buffs.DiveReady) &&
-                            (OriginalHook(Jump) is MirageDive) &&
+                            OriginalHook(Jump) is MirageDive &&
                             (DRG_ST_DoubleMirage &&
                              (LoTDActive ||
                               GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
@@ -395,7 +394,7 @@ internal partial class DRG : Melee
                              DRG_ST_JumpMovingOptions[0] && !IsMoving()) &&
                             (!DRG_ST_JumpMovingOptions[1] ||
                              DRG_ST_JumpMovingOptions[1] && InMeleeRange()) &&
-                            ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
+                            ActionReady(Jump) && OriginalHook(Jump) is Jump or HighJump)
                         {
                             if (!LevelChecked(HighJump))
                                 return Jump;
@@ -404,7 +403,7 @@ internal partial class DRG : Melee
                                 (DRG_ST_DoubleMirage &&
                                  (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDActive) ||
                                  !DRG_ST_DoubleMirage))
-                                return (HighJump);
+                                return HighJump;
                         }
 
                         //Dragonfire Dive Feature
@@ -588,8 +587,8 @@ internal partial class DRG : Melee
                              DRG_AoE_JumpMovingOptions[0] && !IsMoving()) &&
                             (!DRG_AoE_JumpMovingOptions[1] ||
                              DRG_AoE_JumpMovingOptions[1] && InMeleeRange()) &&
-                            ActionReady(Jump) && (OriginalHook(Jump) is Jump or HighJump))
-                            return (LevelChecked(HighJump))
+                            ActionReady(Jump) && OriginalHook(Jump) is Jump or HighJump)
+                            return LevelChecked(HighJump)
                                 ? HighJump
                                 : Jump;
 

@@ -51,6 +51,7 @@ public static class ActionWatching
     // Lists
     internal readonly static List<uint> WeaveActions = [];
     internal readonly static List<uint> CombatActions = [];
+    internal readonly static HashSet<uint> BossesBaseIds = [.. Svc.Data.GetExcelSheet<BNpcBase>().Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId)];
 
     // Delegates
     public delegate void LastActionChangeDelegate();

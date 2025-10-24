@@ -27,17 +27,17 @@ internal partial class SAM : Melee
             if (CanWeave())
             {
                 //Meikyo Feature
-                if (UseMeikyo())
+                if (CanMeikyo(true))
                     return MeikyoShisui;
 
                 //Ikishoten Feature
-                if (UseIkishoten())
+                if (CanIkishoten())
                     return Ikishoten;
 
                 //Senei Feature
                 if (Kenki >= SAMKenki.Senei)
                 {
-                    if (UseSenei())
+                    if (CanSenei())
                         return Senei;
 
                     //Guren if no Senei
@@ -47,15 +47,15 @@ internal partial class SAM : Melee
                 }
 
                 //Zanshin Usage
-                if (UseZanshin())
+                if (CanZanshin())
                     return Zanshin;
 
                 //Shoha Usage
-                if (UseShoha())
+                if (CanShoha())
                     return Shoha;
 
                 //Shinten Usage
-                if (UseShinten())
+                if (CanShinten())
                     return Shinten;
 
                 // healing
@@ -69,16 +69,16 @@ internal partial class SAM : Melee
                     return Role.LegSweep;
             }
 
-            if (UseTsubame())
+            if (CanTsubame())
                 return OriginalHook(TsubameGaeshi);
 
             //Ogi Namikiri feature
-            if (!IsMoving() && UseOgi())
+            if (!IsMoving() && CanOgi(true))
                 return OriginalHook(OgiNamikiri);
 
             // Iaijutsu feature
             if (!IsMoving() &&
-                UseIaijutsu(true, true, true))
+                CanUseIaijutsu(true, true, true, true))
                 return OriginalHook(Iaijutsu);
 
             //Ranged
@@ -280,12 +280,12 @@ internal partial class SAM : Melee
 
                     //Meikyo feature
                     if (IsEnabled(Preset.SAM_ST_CDs_MeikyoShisui) &&
-                        UseMeikyo())
+                        CanMeikyo())
                         return MeikyoShisui;
 
                     //Ikishoten feature
                     if (IsEnabled(Preset.SAM_ST_CDs_Ikishoten) &&
-                        UseIkishoten())
+                        CanIkishoten())
                         return Ikishoten;
                 }
 
@@ -295,7 +295,7 @@ internal partial class SAM : Melee
                     if (IsEnabled(Preset.SAM_ST_CDs_Senei)
                         && Kenki >= SAMKenki.Senei)
                     {
-                        if (UseSenei())
+                        if (CanSenei())
                             return Senei;
 
                         //Guren if no Senei
@@ -307,15 +307,15 @@ internal partial class SAM : Melee
 
                     //Zanshin Usage
                     if (IsEnabled(Preset.SAM_ST_CDs_Zanshin) &&
-                        UseZanshin())
+                        CanZanshin())
                         return Zanshin;
 
                     if (IsEnabled(Preset.SAM_ST_CDs_Shoha) &&
-                        UseShoha())
+                        CanShoha())
                         return Shoha;
                 }
                 if (IsEnabled(Preset.SAM_ST_Shinten) &&
-                    UseShinten())
+                    CanShinten())
                     return Shinten;
 
                 if (IsEnabled(Preset.SAM_ST_Feint) &&
@@ -342,19 +342,19 @@ internal partial class SAM : Melee
             {
                 if (IsEnabled(Preset.SAM_ST_CDs_Iaijutsu) &&
                     IsEnabled(Preset.SAM_ST_CDs_UseTsubame) &&
-                    UseTsubame())
+                    CanTsubame())
                     return OriginalHook(TsubameGaeshi);
 
                 //Ogi Namikiri Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_OgiNamikiri) &&
                     (!SAM_ST_CDs_OgiNamikiri_Movement || !IsMoving()) &&
-                    M6SReady && UseOgi())
+                    M6SReady && CanOgi())
                     return OriginalHook(OgiNamikiri);
 
                 // Iaijutsu Feature
                 if (IsEnabled(Preset.SAM_ST_CDs_Iaijutsu) &&
                     (!IsEnabled(Preset.SAM_ST_CDs_Iaijutsu_Movement) || !IsMoving()) &&
-                    UseIaijutsu(IsEnabled(Preset.SAM_ST_CDs_UseHiganbana), IsEnabled(Preset.SAM_ST_CDs_UseTenkaGoken), IsEnabled(Preset.SAM_ST_CDs_UseMidare)))
+                    CanUseIaijutsu(IsEnabled(Preset.SAM_ST_CDs_UseHiganbana), IsEnabled(Preset.SAM_ST_CDs_UseTenkaGoken), IsEnabled(Preset.SAM_ST_CDs_UseMidare)))
                     return OriginalHook(Iaijutsu);
 
                 //Ranged

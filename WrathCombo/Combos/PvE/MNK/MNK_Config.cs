@@ -1,3 +1,4 @@
+using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -24,28 +25,23 @@ internal partial class MNK
                     DrawBossOnlyChoice(MNK_Balance_Content);
                     break;
 
-                case Preset.MNK_STUseBrotherhood:
-                    DrawHorizontalRadioButton(MNK_ST_BrotherhoodBossOption,
-                        "All content", $"Uses {Brotherhood.ActionName()} regardless of content.", 0);
+                case Preset.MNK_STUseBuffs:
 
-                    DrawHorizontalRadioButton(MNK_ST_BrotherhoodBossOption,
-                        "Boss encounters Only", $"Only uses {Brotherhood.ActionName()} when in Boss encounters.", 1);
-                    break;
+                    DrawSliderInt(0, 50, MNK_ST_BuffsHPThreshold,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
-                case Preset.MNK_STUseROF:
-                    DrawHorizontalRadioButton(MNK_ST_RiddleOfFireBossOption,
-                        "All content", $"Uses {RiddleOfFire.ActionName()}  regardless of content.", 0);
+                    ImGui.Indent();
 
-                    DrawHorizontalRadioButton(MNK_ST_RiddleOfFireBossOption,
-                        "Boss encounters Only", $"Only uses {RiddleOfFire.ActionName()}  when in Boss encounters.", 1);
-                    break;
+                    ImGui.TextColored(ImGuiColors.DalamudYellow,
+                        "Select what kind of enemies the HP check should be applied to:");
 
-                case Preset.MNK_STUseROW:
-                    DrawHorizontalRadioButton(MNK_ST_RiddleOfWindBossOption,
-                        "All content", $"Uses {RiddleOfWind.ActionName()}  regardless of content.", 0);
+                    DrawHorizontalRadioButton(MNK_ST_BuffsBossOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
 
-                    DrawHorizontalRadioButton(MNK_ST_RiddleOfWindBossOption,
-                        "Boss encounters Only", $"Only uses {RiddleOfWind.ActionName()} when in Boss encounters.", 1);
+                    DrawHorizontalRadioButton(MNK_ST_BuffsBossOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+                    ImGui.Unindent();
                     break;
 
                 case Preset.MNK_ST_ComboHeals:
@@ -56,19 +52,14 @@ internal partial class MNK
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
-                case Preset.MNK_AoEUseBrotherhood:
-                    DrawSliderInt(0, 100, MNK_AoE_BrotherhoodHPThreshold,
-                        $"Stop Using {Brotherhood.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                case Preset.MNK_AoEUseBuffs:
+                    DrawSliderInt(0, 100, MNK_AoE_BuffsHPThreshold,
+                        "Stop Using Buffs When Target HP% is at or Below (Set to 0 to Disable This Check)");
                     break;
 
-                case Preset.MNK_AoEUseROF:
-                    DrawSliderInt(0, 100, MNK_AoE_RiddleOfFireHPTreshold,
-                        $"Stop Using {RiddleOfFire.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
-                    break;
-
-                case Preset.MNK_AoEUseROW:
-                    DrawSliderInt(0, 100, MNK_AoE_RiddleOfWindHPTreshold,
-                        $"Stop Using {RiddleOfWind.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                case Preset.MNK_AoEUsePerfectBalance:
+                    DrawSliderInt(0, 100, MNK_AoE_PerfectBalanceHPThreshold,
+                        $"Stop Using {PerfectBalance.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
                     break;
 
                 case Preset.MNK_AoE_ComboHeals:
@@ -89,7 +80,7 @@ internal partial class MNK
 
                 case Preset.MNK_Retarget_Thunderclap:
                     DrawAdditionalBoolChoice(MNK_Thunderclap_FieldMouseover,
-                        "Add Field Mouseover", "Add Field Mouseover targetting.");
+                        "Add Field Mouseover", "Add Field Mouseover targeting.");
                     break;
 
                 case Preset.MNK_ST_UseRoE:
@@ -115,20 +106,19 @@ internal partial class MNK
                     break;
             }
         }
+
         #region Variables
 
         public static UserInt
             MNK_SelectedOpener = new("MNK_SelectedOpener", 0),
             MNK_Balance_Content = new("MNK_Balance_Content", 1),
-            MNK_ST_BrotherhoodBossOption = new("MNK_ST_Brotherhood_SubOption", 1),
-            MNK_ST_RiddleOfFireBossOption = new("MNK_ST_RiddleOfFire_SubOption", 1),
-            MNK_ST_RiddleOfWindBossOption = new("MNK_ST_RiddleOfWind_SubOption", 1),
+            MNK_ST_BuffsBossOption = new("MNK_ST_BuffsBossOption", 0),
+            MNK_ST_BuffsHPThreshold = new("MNK_ST_BuffsHPThreshold", 10),
             MNK_ST_EarthsReplyHPThreshold = new("MNK_ST_EarthsReplyHPThreshold", 50),
-            MNK_ST_SecondWindHPThreshold = new("MNK_ST_SecondWindThreshold", 40),
-            MNK_ST_BloodbathHPThreshold = new("MNK_ST_BloodbathThreshold", 30),
-            MNK_AoE_BrotherhoodHPThreshold = new("MNK_AoE_Brotherhood_HP", 40),
-            MNK_AoE_RiddleOfWindHPTreshold = new("MNK_AoE_RiddleOfWind_HP", 40),
-            MNK_AoE_RiddleOfFireHPTreshold = new("MNK_AoE_RiddleOfFire_HP", 40),
+            MNK_ST_SecondWindHPThreshold = new("MNK_ST_SecondWindHPThreshold", 40),
+            MNK_ST_BloodbathHPThreshold = new("MNK_ST_BloodbathHPThreshold", 30),
+            MNK_AoE_BuffsHPThreshold = new("MNK_AoE_BuffsHPThreshold", 40),
+            MNK_AoE_PerfectBalanceHPThreshold = new("MNK_AoE_PerfectBalanceHPThreshold", 40),
             MNK_AoE_SecondWindHPThreshold = new("MNK_AoE_SecondWindThreshold", 40),
             MNK_AoE_BloodbathHPThreshold = new("MNK_AoE_BloodbathThreshold", 30),
             MNK_BH_RoF = new("MNK_BH_RoF", 0);
@@ -141,5 +131,6 @@ internal partial class MNK
             MNK_BasicCombo = new("MNK_BasicCombo");
 
         #endregion
+
     }
 }

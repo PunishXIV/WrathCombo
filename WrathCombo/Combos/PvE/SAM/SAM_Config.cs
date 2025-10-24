@@ -157,6 +157,7 @@ internal partial class SAM
                     break;
             }
         }
+
         #region Variables
 
         public static UserInt
@@ -196,5 +197,6 @@ internal partial class SAM
             SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);
 
         #endregion
+
     }
 }

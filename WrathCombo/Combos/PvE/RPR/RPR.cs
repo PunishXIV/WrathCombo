@@ -32,7 +32,7 @@ internal partial class RPR : Melee
                     return ArcaneCircle;
 
                 //Enshroud
-                if (UseEnshroud())
+                if (CanEnshroud())
                     return Enshroud;
 
                 //Gluttony/Bloodstalk
@@ -93,7 +93,7 @@ internal partial class RPR : Melee
             }
 
             //Shadow Of Death
-            if (UseShadowOfDeath())
+            if (CanUseShadowOfDeath(true))
                 return ShadowOfDeath;
 
             //Perfectio
@@ -112,7 +112,7 @@ internal partial class RPR : Melee
 
                 //Gallows
                 if (HasStatusEffect(Buffs.EnhancedGallows) ||
-                    (!HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows)))
+                    !HasStatusEffect(Buffs.EnhancedGibbet) && !HasStatusEffect(Buffs.EnhancedGallows))
                     return Role.CanTrueNorth() && !OnTargetsRear()
                         ? Role.TrueNorth
                         : OriginalHook(Gallows);
@@ -298,7 +298,7 @@ internal partial class RPR : Melee
 
                 //Enshroud
                 if (IsEnabled(Preset.RPR_ST_Enshroud) &&
-                    UseEnshroud())
+                    CanEnshroud())
                     return Enshroud;
 
                 //Gluttony/Bloodstalk
@@ -333,10 +333,10 @@ internal partial class RPR : Melee
                     //Sacrificium
                     if (IsEnabled(Preset.RPR_ST_Sacrificium) &&
                         Lemure <= 4 && HasStatusEffect(Buffs.Oblatio) &&
-                        ((GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
-                          (RPR_ST_ArcaneCircleBossOption == 0 ||
-                           InBossEncounter() ||
-                           RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle))) ||
+                        (GetCooldownRemainingTime(ArcaneCircle) > GCD * 3 && !JustUsed(ArcaneCircle, 2) &&
+                         (RPR_ST_ArcaneCircleBossOption == 0 ||
+                          InBossEncounter() ||
+                          RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() && IsOffCooldown(ArcaneCircle)) ||
                          IsNotEnabled(Preset.RPR_ST_ArcaneCircle)))
                         return OriginalHook(Gluttony);
 
@@ -384,7 +384,7 @@ internal partial class RPR : Melee
 
             //Shadow Of Death
             if (IsEnabled(Preset.RPR_ST_SoD) &&
-                UseShadowOfDeath() && GetTargetHPPercent() > RPR_SoDHPThreshold)
+                CanUseShadowOfDeath() && GetTargetHPPercent() > RPR_SoDHPThreshold)
                 return ShadowOfDeath;
 
             //Perfectio
@@ -399,8 +399,8 @@ internal partial class RPR : Melee
             {
                 //Gibbet
                 if (HasStatusEffect(Buffs.EnhancedGibbet) ||
-                    (positionalChoice is 1 && !HasStatusEffect(Buffs.EnhancedGibbet) &&
-                     !HasStatusEffect(Buffs.EnhancedGallows)))
+                    positionalChoice is 1 && !HasStatusEffect(Buffs.EnhancedGibbet) &&
+                    !HasStatusEffect(Buffs.EnhancedGallows))
                 {
                     return IsEnabled(Preset.RPR_ST_TrueNorthDynamic) &&
                            (RPR_ST_TrueNorthDynamic_HoldCharge &&
@@ -413,8 +413,8 @@ internal partial class RPR : Melee
 
                 //Gallows
                 if (HasStatusEffect(Buffs.EnhancedGallows) ||
-                    (positionalChoice is 0 && !HasStatusEffect(Buffs.EnhancedGibbet) &&
-                     !HasStatusEffect(Buffs.EnhancedGallows)))
+                    positionalChoice is 0 && !HasStatusEffect(Buffs.EnhancedGibbet) &&
+                    !HasStatusEffect(Buffs.EnhancedGallows))
                 {
                     return IsEnabled(Preset.RPR_ST_TrueNorthDynamic) &&
                            (RPR_ST_TrueNorthDynamic_HoldCharge &&
@@ -519,7 +519,7 @@ internal partial class RPR : Melee
                     !HasStatusEffect(Buffs.SoulReaver) && !HasStatusEffect(Buffs.ImmortalSacrifice) &&
                     Soul >= 50 &&
                     (!LevelChecked(Gluttony) ||
-                     (LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5))))
+                     LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5)))
                     return GrimSwathe;
 
                 if (HasStatusEffect(Buffs.Enshrouded))

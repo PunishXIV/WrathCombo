@@ -13,6 +13,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using WrathCombo.Core;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using WrathCombo.Services;
 using Vector4 = System.Numerics.Vector4;
 
@@ -31,7 +32,8 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
             "MajorChangesWindow: " +
             $"IsVersionProblematic: {DoesVersionHaveChange}, " +
             $"IsSuggestionHiddenForThisVersion: {IsPopupHiddenForThisVersion}, " +
-            $"WasUsingOldMouseOverConfigs: {WasUsingOldMouseOverConfigs}"
+            $"WasUsingOldMCHTools: {WasUsingOldMCHTools}, " +
+            $"WasUsingOldMNKBurstOptions: {WasUsingOldMNKConfigs}"
         );
         if (DoesVersionHaveChange &&
             !IsPopupHiddenForThisVersion)
@@ -49,27 +51,27 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
     {
         PadOutMinimumWidthFor("Wrath Combo | New Changes");
 
-        #region MouseOver Options moved
+        #region MCH
 
-        ImGuiEx.TextUnderlined("Healer MouseOver Options are Moved!");
-        if (WasUsingOldMouseOverConfigs)
+        ImGuiEx.TextUnderlined("MCH Tools are now under their own Section");
+        if (WasUsingOldMCHTools)
             ImGuiEx.Text(ImGuiColors.DalamudYellow,
                 "You were using one of these options! Please Read!");
         ImGuiEx.Text(
-            "The option for each healer's healing combos to check MouseOver are gone,\n" +
-            "and now are replaced with a global mouseover option (and some new ones).\n\n" +
-            "You can find this new setting under:\n" +
-            "Settings > 'Target Options' > 'Heal Stack Customization Options'"
+            "All MCH Tool Options in the Single-Target Advanced Combo are now under their own section,\n" +
+            "and this section needs enabled itself in order for the Tools Features to continue working.\n\n" +
+            "You can find this new section under:\n" +
+            "PvE Features > MCH > Single Target Advanced > Tools"
         );
         ImGui.NewLine();
-        if (ImGui.Button("> Open the Settings Tab##majorSettings1"))
-            P.OnOpenConfigUi();
-        if (ImGui.Button("> Enable the new UI MouseOver option for me"))
+        if (ImGui.Button("> Open Machinists Config##majorSettings1"))
+            P.HandleOpenCommand(["MCH"], forceOpen: true);
+        if (ImGui.Button("> Enable the new Section for me"))
         {
-            Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack = true;
+            PresetStorage.EnablePreset(Preset.MCH_ST_Adv_Tools);
             Service.Configuration.Save();
         }
-        if (Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack)
+        if (IsEnabled(Preset.MCH_ST_Adv_Tools))
         {
             ImGui.SameLine();
             FontAwesome.Print(ImGuiColors.HealerGreen, FontAwesomeIcon.Check);
@@ -85,74 +87,19 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
 
         #region Retargeting
 
-        ImGuiEx.TextUnderlined("New Feature: Action Retargeting!");
+        ImGuiEx.TextUnderlined("MNK Burst settings have moved slightly");
+        if (WasUsingOldMNKConfigs)
+            ImGuiEx.Text(ImGuiColors.DalamudYellow,
+                "You were using one of these options! Please Read!");
         ImGuiEx.Text(
-            "Action Retargeting allows us to pick actions' targets for you, based on\n" +
-            "The Balance's recommendations and your options, without you having to\n" +
-            "setup Redirect or Reaction.");
-        ImGuiComponents.HelpMarker(
-            "Previously there were a few features (like AST's Earthly Star) that\n" +
-            "required Redirect or Reaction to work, and Single-Target Healing combos\n" +
-            "were checking HP of your MouseOver (optionally) > Soft Target > Hard Target,\n" +
-            "which may not have lined up with your targeting, and used the 'wrong' heals.\n\n" +
-            "Action Retargeting addresses that!"
-        );
-        ImGuiEx.Text(
-            "Additionally, we have added the ability to control the 'Stack' of targets\n" +
-            "that Healing combos will use to check HP and choose to cast different heals,\n" +
-            "and an option to also Retarget all Single-Target Healing actions to that same Stack.\n" +
-            "(This option, 'Retarget Healing Actions', is highly recommended!)");
-        ImGuiEx.Text(
-            "You can find these new settings under:\n" +
-            "Settings > 'Target Options' (and the collapsed 'Heal Stack Customization Options')"
-        );
+            "Monk's Burst settings (like the HP Slider and Boss-only option) are no longer on each Burst action,\n" +
+            "and are instead now all together on the Burst section.\n" +
+            "If you were using one of these options then you'll need to adjust these new settings.\n\n" +
+            "You can find these moved settings here:\n" +
+            "PvE Features > MNK > Single Target Advanced > Buffs Option");
         ImGui.NewLine();
-        if (ImGui.Button("> Open the Settings Tab##majorSettings2"))
-            P.OnOpenConfigUi();
-        if (ImGui.Button("> Enable the Retarget Healing Actions option for me"))
-        {
-            Service.Configuration.RetargetHealingActionsToStack = true;
-            Service.Configuration.Save();
-        }
-        if (Service.Configuration.RetargetHealingActionsToStack)
-        {
-            ImGui.SameLine();
-            FontAwesome.Print(ImGuiColors.HealerGreen, FontAwesomeIcon.Check);
-            ImGui.SameLine();
-            ImGuiEx.Text($"Enabled");
-        }
-        ImGui.NewLine();
-        ImGuiEx.Text(
-            "You will find new symbols indicating if a Feature's actions are Retargeted:"
-        );
-        ImGuiEx.Text("Depending on settings, MAY be Retargeted:");
-        ImGui.SameLine();
-        using (ImRaii.PushFont(UiBuilder.IconFont))
-        {
-            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudYellow))
-                ImGui.Text(FontAwesomeIcon.Random.ToIconString());
-        }
-        ImGui.SameLine();
-        ImGuiEx.Text("WILL always be Retargeted:");
-        ImGui.SameLine();
-        using (ImRaii.PushFont(UiBuilder.IconFont))
-        {
-            using (ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.ParsedGreen))
-                ImGui.Text(FontAwesomeIcon.Random.ToIconString());
-        }
-        ImGui.NewLine();
-        ImGuiEx.Text(ImGuiColors.DalamudYellow,
-            "If you previously had Redirect/Reaction configured for actions that are\n" +
-            "now Retargeted, or had Reaction's/Bossmod's Instant Ground Target options,\n" +
-            "you may likely want to disable those options.");
-        ImGuiEx.Text(
-            "That incudes AST Cards, DNC Partner, and (if enabled:)\n" +
-            "Single-Target Healing Actions");
-        ImGuiComponents.HelpMarker(
-            "Healing actions is up to preference whether you choose to enable that\n" +
-            "in settings (highly recommended), but Dance Partner and Cards are now smarter\n" +
-            "than simple retargeting of actions (following The Balance's priorities,\n" +
-            "checking for damage downs, etc).");
+        if (ImGui.Button("> Open Monks Config##majorSettings2"))
+            P.HandleOpenCommand(["MNK"], forceOpen: true);
 
         #endregion
 
@@ -218,7 +165,7 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
     ///     The version where the problem was introduced.
     /// </summary>
     private static readonly Version VersionWhereChangeIntroduced =
-        new(1, 0, 1, 6);
+        new(1, 0, 2, 15);
 
     /// <summary>
     ///     Whether the current version is problematic.
@@ -241,14 +188,21 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
         PluginConfiguration.GetCustomBoolValue(config);
 
     /// <summary>
-    ///     If the user was using MouseOver options.
+    ///     If the user was using MCH's Tools Presets.
     /// </summary>
-    private static bool WasUsingOldMouseOverConfigs =>
-        _getConfigValue("AST_ST_SimpleHeals_UIMouseOver") ||
-        _getConfigValue("SCH_ST_Heal_UIMouseOver") ||
-        _getConfigValue("SCH_DeploymentTactics_UIMouseOver") ||
-        _getConfigValue("SGE_ST_Heal_UIMouseOver") ||
-        _getConfigValue("WHM_STHeals_UIMouseOver");
+    private static bool WasUsingOldMCHTools =>
+        IsEnabled(Preset.MCH_ST_Adv_Drill) ||
+        IsEnabled(Preset.MCH_ST_Adv_AirAnchor) ||
+        IsEnabled(Preset.MCH_ST_Adv_Chainsaw) ||
+        IsEnabled(Preset.MCH_ST_Adv_Excavator);
+
+    /// <summary>
+    ///     If the user was using MNK's old Burst Configs
+    /// </summary>
+    private static bool WasUsingOldMNKConfigs =>
+        _getConfigValue("MNK_ST_BrotherhoodBossOption") ||
+        _getConfigValue("MNK_ST_RiddleOfFire_SubOption") ||
+        _getConfigValue("MNK_ST_RiddleOfWind_SubOption");
 
     #endregion
 

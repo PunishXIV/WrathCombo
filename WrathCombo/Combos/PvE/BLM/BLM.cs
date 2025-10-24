@@ -22,7 +22,7 @@ internal partial class BLM : Caster
             if (CanWeave())
             {
                 if (ActionReady(Manaward) &&
-                    (PlayerHealthPercentageHp() < 40 && RaidWideCasting()))
+                    PlayerHealthPercentageHp() < 40 && RaidWideCasting())
                     return Manaward;
 
                 if (ActionReady(Amplifier) && !HasMaxPolyglotStacks)
@@ -57,7 +57,7 @@ internal partial class BLM : Caster
 
                 if (IcePhase)
                 {
-                    if (CurMp is MP.MaxMP && JustUsed(Paradox) &&
+                    if (MP.IsFull && JustUsed(Paradox) &&
                         ActionReady(Transpose))
                         return Transpose;
 
@@ -129,16 +129,16 @@ internal partial class BLM : Caster
                     return Fire3;
 
                 if (ActiveParadox &&
-                    CurMp > 1600 &&
+                    MP.Cur > 1600 &&
                     (AstralFireStacks < 3 ||
                      JustUsed(FlareStar, 5) ||
                      !LevelChecked(FlareStar) && ActionReady(Despair)))
                     return Paradox;
 
-                if (FlarestarReady)
+                if (CanFlarestar)
                     return FlareStar;
 
-                if (ActionReady(FireSpam) && (LevelChecked(Despair) && CurMp - MP.FireI >= 800 || !LevelChecked(Despair)))
+                if (ActionReady(FireSpam) && (LevelChecked(Despair) && MP.Cur - MP.FireI >= 800 || !LevelChecked(Despair)))
                     return FireSpam;
 
                 if (ActionReady(Despair))
@@ -150,7 +150,7 @@ internal partial class BLM : Caster
 
                 if (ActionReady(Transpose) &&
                     !LevelChecked(Fire3) &&
-                    CurMp < MP.FireI)
+                    MP.Cur < MP.FireI)
                     return Transpose;
             }
 
@@ -161,7 +161,7 @@ internal partial class BLM : Caster
                     ActiveParadox)
                     return Paradox;
 
-                if (CurMp is MP.MaxMP)
+                if (MP.IsFull)
                 {
                     if (LevelChecked(Fire3))
                         return Fire3;
@@ -182,7 +182,7 @@ internal partial class BLM : Caster
             }
 
             if (LevelChecked(Fire3))
-                return CurMp >= 7500
+                return MP.Cur >= 7500
                     ? Fire3
                     : Blizzard3;
 
@@ -241,7 +241,7 @@ internal partial class BLM : Caster
 
             if (FirePhase)
             {
-                if (FlarestarReady)
+                if (CanFlarestar)
                     return FlareStar;
 
                 if (ActionReady(Fire2) && !TraitLevelChecked(Traits.UmbralHeart))
@@ -254,15 +254,15 @@ internal partial class BLM : Caster
                 if (ActionReady(Flare))
                     return Flare;
 
-                if (ActionReady(Transpose) && CurMp < MP.FireAoE)
+                if (ActionReady(Transpose) && MP.Cur < MP.FireAoE)
                     return Transpose;
             }
 
             if (IcePhase)
             {
                 if ((HasMaxUmbralHeartStacks ||
-                     CurMp is MP.MaxMP && !LevelChecked(Flare) ||
-                     CurMp >= 5000 && LevelChecked(Flare)) &&
+                     MP.IsFull && !LevelChecked(Flare) ||
+                     MP.Cur >= 5000 && LevelChecked(Flare)) &&
                     ActionReady(Transpose))
                     return Transpose;
 
@@ -350,7 +350,7 @@ internal partial class BLM : Caster
                 if (IcePhase)
                 {
                     if (IsEnabled(Preset.BLM_ST_Transpose) &&
-                        CurMp is MP.MaxMP && JustUsed(Paradox) &&
+                        MP.IsFull && JustUsed(Paradox) &&
                         ActionReady(Transpose))
                         return Transpose;
 
@@ -429,17 +429,17 @@ internal partial class BLM : Caster
                     return Fire3;
 
                 if (ActiveParadox &&
-                    CurMp > 1600 &&
+                    MP.Cur > 1600 &&
                     (AstralFireStacks < 3 ||
                      JustUsed(FlareStar, 5) ||
                      !LevelChecked(FlareStar) && ActionReady(Despair)))
                     return Paradox;
 
                 if (IsEnabled(Preset.BLM_ST_FlareStar) &&
-                    FlarestarReady)
+                    CanFlarestar)
                     return FlareStar;
 
-                if (ActionReady(FireSpam) && (LevelChecked(Despair) && CurMp - MP.FireI >= 800 || !LevelChecked(Despair)))
+                if (ActionReady(FireSpam) && (LevelChecked(Despair) && MP.Cur - MP.FireI >= 800 || !LevelChecked(Despair)))
                     return FireSpam;
 
                 if (IsEnabled(Preset.BLM_ST_Despair) &&
@@ -453,7 +453,7 @@ internal partial class BLM : Caster
                 if (IsEnabled(Preset.BLM_ST_Transpose) &&
                     ActionReady(Transpose) &&
                     !LevelChecked(Fire3) &&
-                    CurMp < MP.FireI)
+                    MP.Cur < MP.FireI)
                     return Transpose;
             }
 
@@ -464,7 +464,7 @@ internal partial class BLM : Caster
                     ActiveParadox)
                     return Paradox;
 
-                if (CurMp is MP.MaxMP)
+                if (MP.IsFull)
                 {
                     if (LevelChecked(Fire3))
                         return Fire3;
@@ -486,7 +486,7 @@ internal partial class BLM : Caster
             }
 
             if (LevelChecked(Fire3))
-                return CurMp >= 7500
+                return MP.Cur >= 7500
                     ? Fire3
                     : Blizzard3;
 
@@ -556,7 +556,7 @@ internal partial class BLM : Caster
 
             if (FirePhase)
             {
-                if (FlarestarReady)
+                if (CanFlarestar)
                     return FlareStar;
 
                 if (ActionReady(Fire2) && !TraitLevelChecked(Traits.UmbralHeart))
@@ -576,15 +576,15 @@ internal partial class BLM : Caster
                     return OriginalHook(Blizzard2);
 
                 if (IsEnabled(Preset.BLM_AoE_Transpose) &&
-                    ActionReady(Transpose) && CurMp < MP.FireAoE)
+                    ActionReady(Transpose) && MP.Cur < MP.FireAoE)
                     return Transpose;
             }
 
             if (IcePhase)
             {
                 if (HasMaxUmbralHeartStacks ||
-                    CurMp is MP.MaxMP && !LevelChecked(Flare) ||
-                    CurMp >= 5000 && LevelChecked(Flare))
+                    MP.IsFull && !LevelChecked(Flare) ||
+                    MP.Cur >= 5000 && LevelChecked(Flare))
                 {
                     if (IsNotEnabled(Preset.BLM_AoE_Transpose) &&
                         LevelChecked(Fire2) && TraitLevelChecked(Traits.AspectMasteryIII))
@@ -651,7 +651,7 @@ internal partial class BLM : Caster
 
             return actionID switch
             {
-                Fire when BLM_F1to3 == 0 && BLM_Fire1_Despair && FirePhase && CurMp < 2400 && LevelChecked(Despair) => Despair,
+                Fire when BLM_F1to3 == 0 && BLM_Fire1_Despair && FirePhase && MP.Cur < 2400 && LevelChecked(Despair) => Despair,
 
                 Fire when BLM_F1to3 == 0 && LevelChecked(Fire3) &&
                           (AstralFireStacks is 1 or 2 && HasStatusEffect(Buffs.Firestarter) ||
@@ -690,7 +690,7 @@ internal partial class BLM : Caster
 
             return IcePhase switch
             {
-                false when BLM_Fire4_FlareStar && FlarestarReady && LevelChecked(FlareStar) => FlareStar,
+                false when BLM_Fire4_FlareStar && CanFlarestar && LevelChecked(FlareStar) => FlareStar,
                 false when BLM_Fire4_Fire3 && AstralFireStacks < 3 => LevelChecked(Fire3) ? Fire3 : Fire,
                 false => actionID,
 
@@ -713,7 +713,7 @@ internal partial class BLM : Caster
 
             return actionID switch
             {
-                Flare when BLM_Flare_FlareStar && FirePhase && FlarestarReady => FlareStar,
+                Flare when BLM_Flare_FlareStar && FirePhase && CanFlarestar => FlareStar,
                 Flare when FirePhase && LevelChecked(Flare) => Flare,
                 Flare when IcePhase && LevelChecked(Freeze) => Freeze,
                 var _ => actionID
@@ -738,7 +738,7 @@ internal partial class BLM : Caster
                                UmbralIceStacks is 2) => Blizzard3,
 
                 Blizzard3 when BLM_B1to3 == 1 && LevelChecked(Blizzard3) && IcePhase && UmbralIceStacks is 3 => OriginalHook(Blizzard),
-                Blizzard3 when BLM_Blizzard3_Despair && FirePhase && LevelChecked(Despair) && CurMp >= 800 => Despair,
+                Blizzard3 when BLM_Blizzard3_Despair && FirePhase && LevelChecked(Despair) && MP.Cur >= 800 => Despair,
 
                 var _ => actionID
             };
@@ -753,7 +753,7 @@ internal partial class BLM : Caster
             if (actionID is not Blizzard4)
                 return actionID;
 
-            return FirePhase && LevelChecked(Despair) && CurMp >= 800
+            return FirePhase && LevelChecked(Despair) && MP.Cur >= 800
                 ? Despair
                 : actionID;
         }

@@ -1,5 +1,6 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Statuses;
+using ECommons.GameHelpers;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,59 +12,56 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
 {
-    internal static uint CurMp =>
-        GetPartyMembers().First().CurrentMP;
-
-    internal static int MaxPolyglot =>
+    private static int MaxPolyglot =>
         TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 :
         TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
 
-    internal static bool EndOfFirePhase =>
+    private static bool EndOfFirePhase =>
         FirePhase && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
 
-    internal static bool EndOfIcePhaseAoE =>
+    private static bool EndOfIcePhaseAoE =>
         IcePhase && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
 
-    internal static bool FlarestarReady =>
+    private static bool CanFlarestar =>
         LevelChecked(FlareStar) && AstralSoulStacks is 6;
 
-    internal static Status? ThunderDebuffST =>
+    private static Status? ThunderDebuffST =>
         GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
 
-    internal static Status? ThunderDebuffAoE =>
+    private static Status? ThunderDebuffAoE =>
         GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
-    internal static float TimeSinceFirestarterBuff =>
+    private static float TimeSinceFirestarterBuff =>
         HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
 
-    internal static bool HasMaxPolyglotStacks =>
+    private static bool HasMaxPolyglotStacks =>
         PolyglotStacks == MaxPolyglot;
 
-    internal static uint FireSpam =>
+    private static uint FireSpam =>
         LevelChecked(Fire4)
             ? Fire4
             : Fire;
 
-    internal static uint BlizzardSpam =>
+    private static uint BlizzardSpam =>
         LevelChecked(Blizzard4)
             ? Blizzard4
             : Blizzard;
 
-    internal static bool HasMaxUmbralHeartStacks =>
+    private static bool HasMaxUmbralHeartStacks =>
         UmbralHearts is 3;
 
-    internal static int HPThresholdLeylines =>
+    private static int HPThresholdLeylines =>
         BLM_ST_LeyLinesBossOption == 1 || !InBossEncounter()
             ? BLM_ST_LeyLinesHPOption : 0;
 
-    internal static float RefreshTimerThunder =>
+    private static float RefreshTimerThunder =>
         BLM_ST_ThunderRefresh;
 
-    internal static int HPThresholdThunder =>
+    private static int HPThresholdThunder =>
         BLM_ST_ThunderBossOption == 1 ||
         !InBossEncounter() ? BLM_ST_ThunderHPOption : 0;
 
-    internal static bool HasPolyglotStacks() =>
+    private static bool HasPolyglotStacks() =>
         PolyglotStacks > 0;
 
     #region Movement Prio
@@ -177,7 +175,7 @@ internal partial class BLM
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
-            CurMp is MP.MaxMP &&
+            MP.IsFull &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -230,7 +228,7 @@ internal partial class BLM
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
-            CurMp is MP.MaxMP &&
+            MP.IsFull &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -242,29 +240,34 @@ internal partial class BLM
 
     #region Gauge
 
-    internal static BLMGauge Gauge = GetJobGauge<BLMGauge>();
+    private static BLMGauge Gauge = GetJobGauge<BLMGauge>();
 
-    internal static bool FirePhase => Gauge.InAstralFire;
+    private static bool FirePhase => Gauge.InAstralFire;
 
-    internal static byte AstralFireStacks => Gauge.AstralFireStacks;
+    private static byte AstralFireStacks => Gauge.AstralFireStacks;
 
-    internal static bool IcePhase => Gauge.InUmbralIce;
+    private static bool IcePhase => Gauge.InUmbralIce;
 
-    internal static byte UmbralIceStacks => Gauge.UmbralIceStacks;
+    private static byte UmbralIceStacks => Gauge.UmbralIceStacks;
 
-    internal static byte UmbralHearts => Gauge.UmbralHearts;
+    private static byte UmbralHearts => Gauge.UmbralHearts;
 
-    internal static bool ActiveParadox => Gauge.IsParadoxActive;
+    private static bool ActiveParadox => Gauge.IsParadoxActive;
 
-    internal static int AstralSoulStacks => Gauge.AstralSoulStacks;
+    private static int AstralSoulStacks => Gauge.AstralSoulStacks;
 
-    internal static byte PolyglotStacks => Gauge.PolyglotStacks;
+    private static byte PolyglotStacks => Gauge.PolyglotStacks;
 
-    internal static short PolyglotTimer => Gauge.EnochianTimer;
+    private static short PolyglotTimer => Gauge.EnochianTimer;
 
-    internal static class MP
+    private static class MP
     {
-        internal const int MaxMP = 10000;
+
+        private static unsafe uint Max => Player.Character->MaxMana;
+
+        internal static bool IsFull => Max == Cur;
+
+        internal static unsafe uint Cur => Player.Character->Mana;
 
         internal static int FireI => GetResourceCost(OriginalHook(Fire));
 
@@ -283,7 +286,7 @@ internal partial class BLM
         internal static int Despair => GetResourceCost(OriginalHook(BLM.Despair));
     }
 
-    internal static readonly FrozenDictionary<uint, ushort> ThunderList = new Dictionary<uint, ushort>
+    private static readonly FrozenDictionary<uint, ushort> ThunderList = new Dictionary<uint, ushort>
     {
         { Thunder, Debuffs.Thunder },
         { Thunder2, Debuffs.Thunder2 },
@@ -368,4 +371,5 @@ internal partial class BLM
     }
 
     #endregion
+
 }

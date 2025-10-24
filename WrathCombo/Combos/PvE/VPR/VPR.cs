@@ -22,7 +22,7 @@ internal partial class VPR : Melee
                 )
             {
                 //Serpents Ire
-                if (InCombat() && !CappedOnCoils() &&
+                if (InCombat() && !MaxCoils() &&
                     ActionReady(SerpentsIre))
                     return SerpentsIre;
 
@@ -75,11 +75,11 @@ internal partial class VPR : Melee
             }
 
             //Reawakend Usage
-            if (UseReawaken())
+            if (CanReawaken(true))
                 return Reawaken;
 
             //Overcap protection
-            if (CappedOnCoils() &&
+            if (MaxCoils() &&
                 (HasCharges(Vicewinder) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
                  !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
                  IreCD <= GCD * 5)) //spend in case under Reawaken right as Ire comes up
@@ -109,7 +109,7 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             //Reawaken combo
-            if (ReawakenComboST(ref actionID))
+            if (ReawakenCombo(ref actionID, true, false))
                 return actionID;
 
             //1-2-3 (4-5-6) Combo
@@ -199,7 +199,7 @@ internal partial class VPR : Melee
                         return OriginalHook(Twinblood);
 
                     //Serpents Ire usage
-                    if (!CappedOnCoils() && ActionReady(SerpentsIre))
+                    if (!MaxCoils() && ActionReady(SerpentsIre))
                         return SerpentsIre;
                 }
             }
@@ -227,7 +227,7 @@ internal partial class VPR : Melee
 
             //Overcap protection
             if ((HasCharges(Vicepit) && !HasStatusEffect(Buffs.FellskinsVenom) && !HasStatusEffect(Buffs.FellhuntersVenom) ||
-                 IreCD <= GCD * 2) && !HasStatusEffect(Buffs.Reawakened) && CappedOnCoils())
+                 IreCD <= GCD * 2) && !HasStatusEffect(Buffs.Reawakened) && MaxCoils())
                 return UncoiledFury;
 
             //Vicepit Usage
@@ -248,7 +248,7 @@ internal partial class VPR : Melee
                 return UncoiledFury;
 
             //Reawaken combo
-            if (ReawakenComboAoE(ref actionID))
+            if (ReawakenCombo(ref actionID, false, true))
                 return actionID;
 
             // healing
@@ -320,7 +320,7 @@ internal partial class VPR : Melee
             {
                 //Serpents Ire
                 if (IsEnabled(Preset.VPR_ST_SerpentsIre) && InCombat() &&
-                    !CappedOnCoils() && ActionReady(SerpentsIre) &&
+                    !MaxCoils() && ActionReady(SerpentsIre) &&
                     (VPR_ST_SerpentsIre_SubOption == 0 || InBossEncounter()))
                     return SerpentsIre;
 
@@ -402,12 +402,12 @@ internal partial class VPR : Melee
 
             //Reawakend Usage
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
-                UseReawaken() &&
+                CanReawaken() &&
                 (VPR_ST_ReAwaken_SubOption == 0 || InBossEncounter()))
                 return Reawaken;
 
             //Overcap protection
-            if (IsEnabled(Preset.VPR_ST_UncoiledFury) && CappedOnCoils() &&
+            if (IsEnabled(Preset.VPR_ST_UncoiledFury) && MaxCoils() &&
                 (HasCharges(Vicewinder) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
                  !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
                  IreCD <= GCD * 5)) //spend in case under Reawaken right as Ire comes up
@@ -436,7 +436,7 @@ internal partial class VPR : Melee
 
             //Reawaken combo
             if (IsEnabled(Preset.VPR_ST_GenerationCombo) &&
-                ReawakenComboST(ref actionID))
+                ReawakenCombo(ref actionID, true, false))
                 return actionID;
 
             //1-2-3 (4-5-6) Combo
@@ -536,7 +536,7 @@ internal partial class VPR : Melee
 
                     //Serpents Ire usage
                     if (IsEnabled(Preset.VPR_AoE_SerpentsIre) &&
-                        !CappedOnCoils() && ActionReady(SerpentsIre))
+                        !MaxCoils() && ActionReady(SerpentsIre))
                         return SerpentsIre;
                 }
 
@@ -583,7 +583,7 @@ internal partial class VPR : Melee
             //Overcap protection
             if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
                 (HasCharges(Vicepit) && !HasStatusEffect(Buffs.FellskinsVenom) && !HasStatusEffect(Buffs.FellhuntersVenom) ||
-                 IreCD <= GCD * 2) && !HasStatusEffect(Buffs.Reawakened) && CappedOnCoils())
+                 IreCD <= GCD * 2) && !HasStatusEffect(Buffs.Reawakened) && MaxCoils())
                 return UncoiledFury;
 
             //Vicepit Usage
@@ -608,7 +608,7 @@ internal partial class VPR : Melee
 
             //Reawaken combo
             if (IsEnabled(Preset.VPR_AoE_ReawakenCombo) &&
-                ReawakenComboAoE(ref actionID))
+                ReawakenCombo(ref actionID, false, true))
                 return actionID;
 
             //1-2-3 (4-5-6) Combo
@@ -810,7 +810,7 @@ internal partial class VPR : Melee
                         && OriginalHook(SerpentsTail) is not SerpentsTail)
                         return OriginalHook(SerpentsTail);
 
-                    if (ReawakenComboST(ref actionID))
+                    if (ReawakenCombo(ref actionID, true, false))
                         return actionID;
                     break;
                 }

@@ -13,7 +13,6 @@ internal partial class MCH
             switch (preset)
             {
                 case Preset.MCH_ST_Adv_Opener:
-                    ImGui.Indent();
                     DrawBossOnlyChoice(MCH_Balance_Content);
                     break;
 
@@ -98,9 +97,9 @@ internal partial class MCH
                     DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {CleanShot.ActionName()}", "", 5, 4);
                     break;
 
-                case Preset.MCH_ST_Adv_Chainsaw:
+                case Preset.MCH_ST_Adv_Tools:
 
-                    DrawSliderInt(0, 50, MCH_ST_ChainsawHPOption,
+                    DrawSliderInt(0, 50, MCH_ST_ToolsHPOption,
                         "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
                     ImGui.Indent();
@@ -108,10 +107,10 @@ internal partial class MCH
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         "Select what kind of enemies the HP check should be applied to:");
 
-                    DrawHorizontalRadioButton(MCH_ST_ChainsawBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_ToolsBossOption,
                         "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_ChainsawBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_ToolsBossOption,
                         "All Enemies", "Applies the HP check above to all enemies.", 1);
 
                     ImGui.Unindent();
@@ -171,7 +170,7 @@ internal partial class MCH
                     if (MCH_AoE_FlamethrowerMovement == 0)
                     {
                         ImGui.SetCursorPosX(48);
-                        DrawSliderFloat(0, 3, MCH_AoE_FlamehrowerTimeStill,
+                        DrawSliderFloat(0, 3, MCH_AoE_FlamethrowerTimeStill,
                             " Stationary Delay Check (in seconds):", decimals: 1);
                     }
 
@@ -185,9 +184,9 @@ internal partial class MCH
                         $"Stop Using {Hypercharge.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
                     break;
 
-                case Preset.MCH_AoE_Adv_Chainsaw:
-                    DrawSliderInt(0, 100, MCH_AoE_ChainsawHPThreshold,
-                        $"Stop Using {Chainsaw.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
+                case Preset.MCH_AoE_Adv_Tools:
+                    DrawSliderInt(0, 100, MCH_AoE_ToolsHPThreshold,
+                        "Stop Using Tools When Target HP% is at or Below (Set to 0 to Disable This Check)");
                     break;
 
                 case Preset.MCH_AoE_Adv_Stabilizer:
@@ -218,8 +217,8 @@ internal partial class MCH
             MCH_ST_HyperchargeHPOption = new("MCH_ST_HyperchargeHPOption", 10),
             MCH_ST_ReassembleBossOption = new("MCH_ST_ReassembleBossOption", 0),
             MCH_ST_ReassembleHPOption = new("MCH_ST_ReassembleHPOption", 10),
-            MCH_ST_ChainsawBossOption = new("MCH_ST_ChainsawBossOption", 0),
-            MCH_ST_ChainsawHPOption = new("MCH_ST_ChainsawHPOption", 10),
+            MCH_ST_ToolsBossOption = new("MCH_ST_ToolsBossOption", 0),
+            MCH_ST_ToolsHPOption = new("MCH_ST_ToolsHPOption", 10),
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
             MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool", 0),
             MCH_ST_GaussRicoPool = new("MCH_ST_GaussRicoPool", 0),
@@ -230,7 +229,7 @@ internal partial class MCH
             MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 40),
             MCH_AoE_HyperchargeHPThreshold = new("MCH_AoE_HyperchargeHPThreshold", 40),
             MCH_AoE_ReassembleHPThreshold = new("MCH_AoE_ReassembleHPThreshold", 40),
-            MCH_AoE_ChainsawHPThreshold = new("MCH_AoE_ChainsawHPThreshold", 40),
+            MCH_AoE_ToolsHPThreshold = new("MCH_AoE_ToolsHPThreshold", 40),
             MCH_AoE_QueenHpThreshold = new("MCH_AoE_QueenHpThreshold", 40),
             MCH_AoE_BarrelStabilizerHPThreshold = new("MCH_AoE_BarrelStabilizerHPThreshold", 40),
             MCH_AoE_QueenOverDriveHPThreshold = new("MCH_AoE_QueenOverDrive", 20),
@@ -238,12 +237,12 @@ internal partial class MCH
             MCH_GaussRico = new("MCHGaussRico", 0);
 
         public static UserFloat
-            MCH_AoE_FlamehrowerTimeStill = new("MCH_AoE_FlamehrowerTimeStill", 2.5f);
-
+            MCH_AoE_FlamethrowerTimeStill = new("MCH_AoE_FlamethrowerTimeStill", 2.5f);
         public static UserBoolArray
             MCH_ST_Reassembled = new("MCH_ST_Reassembled"),
             MCH_AoE_Reassembled = new("MCH_AoE_Reassembled");
 
         #endregion
+
     }
 }

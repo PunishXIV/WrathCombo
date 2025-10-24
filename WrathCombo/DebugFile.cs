@@ -238,10 +238,13 @@ public static class DebugFile
         }
 
         AddLine("START TARGET INFO");
-        AddLine($"Hostile: {target.IsHostile()}");
-        AddLine($"Boss: {battleTarget.IsBoss()}");
-        AddLine($"Dead: {target.IsDead}");
+        AddLine($"Is Hostile: {target.IsHostile()}");
+        AddLine($"In Combat: {target.IsInCombat()}");
+        AddLine($"Is Boss: {battleTarget.IsBoss()}");
+        AddLine($"(In Boss Encounter: {InBossEncounter()})");
+        AddLine($"Is Dead: {target.IsDead}");
         AddLine($"Distance: {GetTargetDistance(target):F1}y");
+        AddLine($"Nameplate: {target.GetNameplateKind()}");
         if (battleTarget is not null)
         {
             AddLine($"IDs: entity:{battleTarget.EntityId}, " +
