@@ -258,7 +258,7 @@ internal partial class BLM
 
     private static byte PolyglotStacks => Gauge.PolyglotStacks;
 
-    private static short PolyglotTimer => Gauge.EnochianTimer;
+    private static int PolyglotTimer => Gauge.EnochianTimer / 1000;
 
     private static class MP
     {

@@ -72,7 +72,7 @@ internal partial class BLM : Caster
                 return Scathe;
 
             //Overcap protection
-            if (HasMaxPolyglotStacks && PolyglotTimer <= 5000)
+            if (HasMaxPolyglotStacks && PolyglotTimer <= 5)
                 return LevelChecked(Xenoglossy)
                     ? Xenoglossy
                     : Foul;
@@ -161,7 +161,7 @@ internal partial class BLM : Caster
                     ActiveParadox)
                     return Paradox;
 
-                if (MP.IsFull)
+                if (MP.IsFull || JustUsed(Blizzard4))
                 {
                     if (LevelChecked(Fire3))
                         return Fire3;
@@ -216,7 +216,7 @@ internal partial class BLM : Caster
                     (EndOfFirePhase || EndOfIcePhaseAoE))
                     return Transpose;
 
-                if (ActionReady(Amplifier) && PolyglotTimer >= 20000)
+                if (ActionReady(Amplifier) && PolyglotTimer >= 20)
                     return Amplifier;
 
                 if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
@@ -379,7 +379,7 @@ internal partial class BLM : Caster
 
             //Overcap protection
             if (IsEnabled(Preset.BLM_ST_UsePolyglot) &&
-                HasMaxPolyglotStacks && PolyglotTimer <= 5000)
+                HasMaxPolyglotStacks && PolyglotTimer <= 5)
                 return LevelChecked(Xenoglossy)
                     ? Xenoglossy
                     : Foul;
@@ -464,7 +464,7 @@ internal partial class BLM : Caster
                     ActiveParadox)
                     return Paradox;
 
-                if (MP.IsFull)
+                if (MP.IsFull || JustUsed(Blizzard4))
                 {
                     if (LevelChecked(Fire3))
                         return Fire3;
@@ -524,7 +524,7 @@ internal partial class BLM : Caster
                     return Transpose;
 
                 if (IsEnabled(Preset.BLM_AoE_Amplifier) &&
-                    ActionReady(Amplifier) && PolyglotTimer >= 20000)
+                    ActionReady(Amplifier) && PolyglotTimer >= 20)
                     return Amplifier;
 
                 if (IsEnabled(Preset.BLM_AoE_LeyLines) &&

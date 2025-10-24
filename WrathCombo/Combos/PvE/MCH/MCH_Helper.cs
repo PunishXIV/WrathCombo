@@ -83,8 +83,7 @@ internal partial class MCH
 
         if (!onAoE &&
             (Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) &&
-            !IsComboExpiring(6) && ActionReady(Hypercharge) &&
-            CanWeave(GCD / 2))
+            !IsComboExpiring(6) && ActionReady(Hypercharge))
         {
             // Ensures Hypercharge is double weaved with WF
             if (LevelChecked(FullMetalField) && JustUsed(FullMetalField) ||
@@ -192,32 +191,27 @@ internal partial class MCH
                     return true;
             }
 
-            switch (onChainsaw)
-            {
-                case true when
-                    !LevelChecked(Excavator) && !MaxBattery &&
-                    LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) < GCD:
-                    return true;
-            }
+            if (onChainsaw &&
+                !LevelChecked(Excavator) && !MaxBattery &&
+                LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) < GCD)
+                return true;
 
-            switch (onAirAnchor)
-            {
-                case true when
-                    !MaxBattery && LevelChecked(AirAnchor) &&
-                    GetCooldownRemainingTime(AirAnchor) < GCD &&
-                    (!LevelChecked(Chainsaw) ||
-                     LevelChecked(Chainsaw) && MCH_ST_Reassembled[1] && GetCooldownRemainingTime(Chainsaw) > 40 ||
-                     LevelChecked(Excavator) && MCH_ST_Reassembled[0] && GetCooldownRemainingTime(Chainsaw) > 40):
-                    return true;
-            }
+            if (onAirAnchor &&
+                !MaxBattery && LevelChecked(AirAnchor) &&
+                GetCooldownRemainingTime(AirAnchor) < GCD &&
+                (MCH_ST_Reassembled[1] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[1] ||
+                 MCH_ST_Reassembled[0] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[0]))
+                return true;
 
-            switch (onDrill)
-            {
-                case true when
-                    LevelChecked(Drill) &&
-                    (!LevelChecked(AirAnchor) && MCH_ST_Reassembled[2] || !MCH_ST_Reassembled[2]) && ActionReady(Drill):
-                    return true;
-            }
+            if (onDrill &&
+                LevelChecked(Drill) &&
+                (!TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) < GCD ||
+                 TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) is 1 or 2) &&
+                (!MCH_ST_Reassembled[2] ||
+                 MCH_ST_Reassembled[2] && GetCooldownRemainingTime(AirAnchor) > 20 &&
+                 (MCH_ST_Reassembled[1] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[1] ||
+                  MCH_ST_Reassembled[0] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[0])))
+                return true;
         }
 
         return false;

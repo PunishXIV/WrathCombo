@@ -88,9 +88,9 @@ internal partial class VPR
         return false;
     }
 
-    private static bool ReawakenCombo(ref uint actionID, bool ST, bool AoE)
+    private static bool ReawakenCombo(ref uint actionID, bool canAoE = false)
     {
-        if (ST && HasStatusEffect(Buffs.Reawakened))
+        if (!canAoE && HasStatusEffect(Buffs.Reawakened))
         {
 
             #region Pre Ouroboros
@@ -147,7 +147,7 @@ internal partial class VPR
 
         }
 
-        if (AoE && HasStatusEffect(Buffs.Reawakened))
+        if (canAoE && HasStatusEffect(Buffs.Reawakened))
         {
 
             #region Pre Ouroboros
@@ -355,6 +355,15 @@ internal partial class VPR
     private static bool SwiftskinsDenReady => DreadCombo is DreadCombo.SwiftskinsDen;
 
     private static bool HuntersDenReady => DreadCombo is DreadCombo.HuntersDen;
+
+    private static SerpentCombo SerpentCombo => Gauge.SerpentCombo;
+
+    private static bool Legacyweaves => SerpentCombo.HasFlag(SerpentCombo.FirstLegacy) || SerpentCombo.HasFlag(SerpentCombo.SecondLegacy) ||
+                                        SerpentCombo.HasFlag(SerpentCombo.ThirdLegacy) || SerpentCombo.HasFlag(SerpentCombo.FourthLegacy);
+
+    private static bool DeathRattleWeave => Gauge.SerpentCombo is SerpentCombo.DeathRattle;
+
+    private static bool LastLashWeave => Gauge.SerpentCombo is SerpentCombo.LastLash;
 
     #endregion
 

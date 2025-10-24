@@ -16,10 +16,10 @@ namespace WrathCombo.Combos.PvE;
 internal partial class SAM
 {
     private static bool RefreshFugetsu =>
-        GetStatusEffectRemainingTime(Buffs.Fugetsu) < GetStatusEffectRemainingTime(Buffs.Fuka);
+        GetStatusEffectRemainingTime(Buffs.Fugetsu) < 8;
 
     private static bool RefreshFuka =>
-        GetStatusEffectRemainingTime(Buffs.Fuka) < GetStatusEffectRemainingTime(Buffs.Fugetsu);
+        GetStatusEffectRemainingTime(Buffs.Fuka) < 8;
 
     private static bool EnhancedSenei =>
         TraitLevelChecked(Traits.EnhancedHissatsu);
@@ -31,65 +31,52 @@ internal partial class SAM
         !HiddenFeaturesData.IsEnabledWith(Preset.SAM_Hid_M6SHoldSquirrelBurst, () =>
             HiddenFeaturesData.Targeting.R6SSquirrel && CombatEngageDuration().TotalSeconds < 275);
 
-    #region Meikyo
 
-    private static bool CanMeikyo(bool simpleMode = false)
+    #region Basic Combo
+
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorthIfEnabled = true, bool SimpleMode = false)
     {
-        int meikyoUsed = CombatActions.Count(x => x == MeikyoShisui);
-        float gcd = GetAdjustedRecastTime(ActionType.Action, Hakaze) / 100f;
-
-        if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) && !HasStatusEffect(Buffs.MeikyoShisui) &&
-            (JustUsed(Gekko) || JustUsed(Kasha) || JustUsed(Yukikaze)))
+        if (ComboTimer > 0)
         {
-            if (SAM_ST_MeikyoLogic == 1 && (SAM_ST_MeikyoBossOption == 0 || InBossEncounter()) ||
-                simpleMode && InBossEncounter())
+            if (ComboAction is Hakaze or Gyofu)
             {
-                switch (EnhancedSenei)
-                {
-                    //if no opener
-                    case true when (IsEnabled(Preset.SAM_ST_Opener) && SAM_Balance_Content == 1 && !InBossEncounter() ||
-                                    IsNotEnabled(Preset.SAM_ST_Opener)) &&
-                                   meikyoUsed < 1 && !HasStatusEffect(Buffs.TsubameReady):
-                        return true;
+                if ((SimpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
+                    !HasSetsu && LevelChecked(Yukikaze) &&
+                    HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
+                    return Yukikaze;
 
-                    case true:
-                    {
-                        if (HasStatusEffect(Buffs.TsubameReady))
-                        {
-                            switch (gcd)
-                            {
-                                //2.14 GCD
-                                case >= 2.09f when GetCooldownRemainingTime(Senei) <= 10 &&
-                                                   (meikyoUsed % 7 is 1 or 2 && SenCount is 3 ||
-                                                    meikyoUsed % 7 is 3 or 4 && SenCount is 2 ||
-                                                    meikyoUsed % 7 is 5 or 6 && SenCount is 1):
-                                //2.08 gcd
-                                case <= 2.08f when GetCooldownRemainingTime(Senei) <= 10 && SenCount is 3:
-                                    return true;
-                            }
-                        }
+                if ((SimpleMode || IsEnabled(Preset.SAM_ST_Gekko)) &&
+                    LevelChecked(Jinpu) &&
+                    ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
+                     OnTargetsFlank() && HasKa ||
+                     !HasStatusEffect(Buffs.Fugetsu) ||
+                     SenCount is 3 && RefreshFugetsu))
+                    return Jinpu;
 
-                        // reset meikyo
-                        if (gcd >= 2.09f && meikyoUsed % 7 is 0 && JustUsed(Yukikaze))
-                            return true;
-                        break;
-                    }
-                }
-
-                //Pre Enhanced Senei
-                if (!EnhancedSenei && ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
-                    return true;
+                if ((SimpleMode || IsEnabled(Preset.SAM_ST_Kasha)) &&
+                    LevelChecked(Shifu) &&
+                    ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
+                     OnTargetsRear() && HasGetsu ||
+                     !HasStatusEffect(Buffs.Fuka) ||
+                     SenCount is 3 && RefreshFuka))
+                    return Shifu;
             }
 
-            if (simpleMode && !InBossEncounter() ||
-                SAM_ST_MeikyoLogic == 1 && SAM_ST_MeikyoBossOption == 1 && !InBossEncounter())
-                return true;
+            if (ComboAction is Jinpu && LevelChecked(Gekko))
+                return !OnTargetsRear() &&
+                       Role.CanTrueNorth() &&
+                       useTrueNorthIfEnabled
+                    ? Role.TrueNorth
+                    : Gekko;
 
-            if (SAM_ST_MeikyoLogic == 0 && SenCount is 3)
-                return true;
+            if (ComboAction is Shifu && LevelChecked(Kasha))
+                return !OnTargetsFlank() &&
+                       Role.CanTrueNorth() &&
+                       useTrueNorthIfEnabled
+                    ? Role.TrueNorth
+                    : Kasha;
         }
-
-        return false;
+        return actionId;
     }
 
     #endregion
@@ -149,6 +136,102 @@ internal partial class SAM
         internal static int Guren => GetResourceCost(SAM.Guren);
 
         internal static int Shinten => GetResourceCost(SAM.Shinten);
+    }
+
+    #endregion
+
+    #region Meikyo
+
+    private static bool CanMeikyo(bool simpleMode = false)
+    {
+        int meikyoUsed = CombatActions.Count(x => x == MeikyoShisui);
+        float gcd = GetAdjustedRecastTime(ActionType.Action, Hakaze) / 100f;
+
+        if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) && !HasStatusEffect(Buffs.MeikyoShisui) &&
+            (JustUsed(Gekko) || JustUsed(Kasha) || JustUsed(Yukikaze)))
+        {
+            if (SAM_ST_MeikyoLogic == 1 && (SAM_ST_MeikyoBossOption == 0 || InBossEncounter()) ||
+                simpleMode && InBossEncounter())
+            {
+                switch (EnhancedSenei)
+                {
+                    //if no opener
+                    case true when (IsEnabled(Preset.SAM_ST_Opener) && SAM_Balance_Content == 1 && !InBossEncounter() ||
+                                    IsNotEnabled(Preset.SAM_ST_Opener)) &&
+                                   meikyoUsed < 1 && !HasStatusEffect(Buffs.TsubameReady):
+                        return true;
+
+                    case true:
+                    {
+                        if (HasStatusEffect(Buffs.TsubameReady))
+                        {
+                            //2.14 GCD
+                            if (gcd >= 2.09f && IsEnabled(Preset.SAM_ST_CDs_UseHiganbana) &&
+                                GetCooldownRemainingTime(Senei) <= 10 &&
+                                (meikyoUsed % 7 is 1 or 2 && SenCount is 3 ||
+                                 meikyoUsed % 7 is 3 or 4 && SenCount is 2 ||
+                                 meikyoUsed % 7 is 5 or 6 && SenCount is 1) ||
+
+                                //2.08 gcd
+                                (gcd <= 2.08f || IsNotEnabled(Preset.SAM_ST_CDs_UseHiganbana)) &&
+                                GetCooldownRemainingTime(Senei) <= 10 && SenCount is 3)
+                                return true;
+
+                        }
+
+                        // reset meikyo
+                        if (gcd >= 2.09f && meikyoUsed % 7 is 0 && JustUsed(Yukikaze))
+                            return true;
+                        break;
+                    }
+                }
+
+                //Pre Enhanced Senei
+                if (!EnhancedSenei && ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.TsubameReady))
+                    return true;
+            }
+
+            if (simpleMode && !InBossEncounter() ||
+                SAM_ST_MeikyoLogic == 1 && SAM_ST_MeikyoBossOption == 1 && !InBossEncounter())
+                return true;
+
+            if (SAM_ST_MeikyoLogic == 0 && SenCount is 3)
+                return true;
+        }
+
+        return false;
+    }
+
+    private static uint DoMeikyoCombo(uint actionId, bool useTrueNorthIfEnabled = true, bool SimpleMode = false)
+    {
+        if ((SimpleMode || IsEnabled(Preset.SAM_ST_Gekko)) &&
+            LevelChecked(Jinpu) &&
+            ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
+             OnTargetsFlank() && HasKa ||
+             !HasStatusEffect(Buffs.Fugetsu)))
+            return !OnTargetsRear() &&
+                   Role.CanTrueNorth() &&
+                   useTrueNorthIfEnabled
+                ? Role.TrueNorth
+                : Gekko;
+
+        if ((SimpleMode || IsEnabled(Preset.SAM_ST_Kasha)) &&
+            LevelChecked(Shifu) &&
+            ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
+             OnTargetsRear() && HasGetsu ||
+             !HasStatusEffect(Buffs.Fuka)))
+            return !OnTargetsFlank() &&
+                   Role.CanTrueNorth() &&
+                   useTrueNorthIfEnabled
+                ? Role.TrueNorth
+                : Kasha;
+
+        if ((SimpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
+            !HasSetsu && LevelChecked(Yukikaze) &&
+            HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
+            return Yukikaze;
+
+        return actionId;
     }
 
     #endregion
