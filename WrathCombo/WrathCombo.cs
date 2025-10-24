@@ -30,6 +30,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Services.IPC;
@@ -302,6 +303,12 @@ public sealed partial class WrathCombo : IDalamudPlugin
         PluginConfiguration.ProcessSaveQueue();
 
         Service.Configuration.SetActionChanging();
+        
+        // Refresh the user's inventory periodically throughout fights
+        if (Player.Available &&
+            CustomComboFunctions.CombatEngageDuration() > TimeSpan.FromSeconds(45) &&
+            EzThrottler.Throttle("UserInventoryRefresh", TimeSpan.FromMinutes(3)))
+            Task.Run(Service.Inventory.RefreshInventory);
 
         if (Player.Available && Player.IsDead)
             ActionRetargeting.Retargets.Clear();
