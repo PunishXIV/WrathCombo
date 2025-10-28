@@ -13,6 +13,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading.Tasks;
+using ECommons.Reflection;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvP;
@@ -22,6 +24,9 @@ using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using WrathCombo.Window.Functions;
+using Dalamud.Game.Config;
+using ECommons;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 #endregion
@@ -101,12 +106,13 @@ public static class DebugFile
         {
             AddLine("START DEBUG LOG");
             AddLine();
+            
+            AddLine($"Log at: {DateTimeOffset.UtcNow:yyyy-MM-ddTHH:mm:sszzz}");
+            AddLine();
 
             AddPluginInfo();
             AddIPCInfo();
-            AddLine();
             AddConflictingInfo();
-            AddLine();
 
             AddPlayerInfo();
             AddTargetInfo();
@@ -117,22 +123,20 @@ public static class DebugFile
             AddFeatures(job);
             AddConfigs(job);
             AddStatusEffects();
-            AddLine();
 
             AddRedundantIDs();
-            AddLine();
 
             AddDebugCode();
-            AddLogHistory();
+            AddSettingsHistory();
+            AddDalamudLog();
 
-            AddLine();
             AddLine("END DEBUG LOG");
 
             DuoLog.Information(
                 "WrathDebug.txt created on your desktop, for " +
                 (job is null ? "all jobs" : job.Value.Abbreviation.ToString()) +
                 ". Upload this file where requested.\n" +
-                "If you're unsure of where the file was created, use /wrath debug path");
+                "If you're unsure of where the file was created, use: /wrath debug path");
         }
     }
 
@@ -154,23 +158,34 @@ public static class DebugFile
 
         AddLine($"Plugins controlling via IPC: {leaseesCount}");
 
-        if (leaseesCount <= 0) return;
+        if (leaseesCount <= 0)
+        {
+            AddLine();
+            return;
+        }
 
         AddLine("START IPC LEASES");
         foreach (var leasee in leasees)
             AddLine($"- {leasee.pluginName} ({leasee.configurationsCount} configs)");
         AddLine("END IPC LEASES");
+
+        AddLine();
     }
 
     private static void AddConflictingInfo()
     {
-        var hasConflicts = ConflictingPlugins.TryGetConflicts(out var conflictsObj);
+        var hasConflicts = ConflictingPlugins
+            .TryGetConflicts(out var conflictsObj, true);
         var conflicts = conflictsObj.ToArray();
         var conflictingPluginsCount = conflicts.Length;
 
         AddLine($"Conflicting Plugins: {conflictingPluginsCount}");
 
-        if (!hasConflicts) return;
+        if (!hasConflicts)
+        {
+            AddLine();
+            return;
+        }
 
         AddLine("START CONFLICTING PLUGINS");
         foreach (var plugin in conflicts)
@@ -179,23 +194,15 @@ public static class DebugFile
                         ? ""
                         : "reason: " + plugin.Reason));
         AddLine("END CONFLICTING PLUGINS");
+
+        AddLine();
     }
 
     private static void AddPlayerInfo()
     {
         var player = Svc.ClientState.LocalPlayer;
         var job = player.ClassJob.Value;
-        var currentZone = "Unknown";
-        try
-        {
-            currentZone = Svc.Data.GetExcelSheet<TerritoryType>()
-                .FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType)
-                .PlaceName.Value.Name.ToString();
-        }
-        catch
-        {
-            // ignored
-        }
+        var currentZone = Content.ContentName ?? "Unknown";
 
         AddLine("START PLAYER INFO");
         AddLine($"Job: {job.Abbreviation} / {job.Name} / {job.NameEnglish}");
@@ -219,7 +226,11 @@ public static class DebugFile
 
         AddLine($"Target: {target?.GameObjectId.ToString() ?? "None"}");
 
-        if (target is null) return;
+        if (target is null)
+        {
+            AddLine();
+            return;
+        }
 
         bool? failedSheetFind = null;
         IBattleChara? battleTarget = null;
@@ -273,15 +284,106 @@ public static class DebugFile
 
     private static void AddSettingsInfo()
     {
+        Dictionary<string, Dictionary<object, object>>
+            settingsToDisplay = new()
+            {
+                // Section Name
+                ["Rotation Behavior"] = new Dictionary<object, object>
+                {
+                    // Key in Settings           Alias for Setting
+                    ["BlockSpellOnMove"]       = "Block Spell on Move",
+                    ["ActionChanging"]         = "Action Replacing",
+                    ["PerformanceMode"]        = "Performance Mode",
+                    ["SuppressQueuedActions"]  = "Queued Action Suppression",
+                    ["Throttle"]               = "Throttle (ms)",
+                    ["MovementLeeway"]         = "Movement Delay (s)",
+                    ["OpenerTimeout"]          = "Opener Timeout (s)",
+                    ["MeleeOffset"]            = "Melee Offset (y)",
+                    ["InterruptDelay"]         = "Interrupt/Stun Delay (%)",
+                    ["MaximumWeavesPerWindow"] = "Maximum Weaves Per Window",
+                },
+                ["Targeting"] = new Dictionary<object, object>
+                {
+                    ["RetargetHealingActionsToStack"] = "Retarget Healing Actions",
+                    ["CustomHealStack"]               = "Heal Stack",
+                    ["RaiseStack"]                    = "Raise Stack",
+                },
+                ["XIV"] = new Dictionary<object, object>
+                {
+                    [UiControlOption.AutoFaceTargetOnAction] = "Auto Face Target",
+                },
+            };
+
         AddLine("START SETTINGS INFO");
-        AddLine($"Throttle: {Service.Configuration.Throttle}ms");
-        AddLine($"Performance Mode: {(Service.Configuration.PerformanceMode ? "ON" : "OFF")}");
-        AddLine($"Suppress Queued Actions: {(Service.Configuration.SuppressQueuedActions ? "ON" : "OFF")}");
-        AddLine($"Block Spell on Move: {(Service.Configuration.BlockSpellOnMove ? "ON" : "OFF")}");
-        AddLine($"Movement Delay: {Service.Configuration.MovementLeeway}s");
-        AddLine($"Opener Timeout: {Service.Configuration.OpenerTimeout}s");
-        AddLine($"Melee Offset: {Service.Configuration.MeleeOffset}y");
-        AddLine($"Interrupt Delay: {Service.Configuration.InterruptDelay*100}%");
+
+        foreach (var (section, settings) in settingsToDisplay)
+        {
+            AddLine($"---{section}---");
+            foreach (var (property, alias) in settings)
+            {
+                var value = Service.Configuration.GetFoP(property.ToString());
+                if (value == null)
+                {
+                    #region Try to get FFXIV options
+                    // Currently only supports boolean-compatibles.
+                    // could have try-catch's into supporting ints,
+                    // and that would cover most
+                    // (note: we're only getting the values - the types only have to be compatible, not actually correct)
+                    if (section == "XIV")
+                    {
+                        try
+                        {
+                            switch (property)
+                            {
+                                case UiControlOption uiOpt:
+                                {
+                                    if (Svc.GameConfig.TryGet(uiOpt, out bool gameVal))
+                                        value = gameVal;
+                                    break;
+                                }
+                                case SystemConfigOption sysOpt:
+                                {
+                                    if (Svc.GameConfig.TryGet(sysOpt, out bool gameVal))
+                                        value = gameVal;
+                                    break;
+                                }
+                                default:
+                                    value = null;
+                                    break;
+                            }
+                        }
+                        catch
+                        {
+                            value = null;
+                        }
+                    }
+                    #endregion
+
+                    if (value == null)
+                    {
+                        PluginLog.Information(
+                            $"failed to get setting: {section}.{property}");
+                        continue;
+                    }
+                }
+
+                var displayValue = property switch
+                {
+                    "InterruptDelay" => $"{(double)value * 100}",
+                    "CustomHealStack" => Service.Configuration.UseCustomHealStack
+                        .DisplayStack(separator: " > "),
+                    "RaiseStack" => ((string[])value).StackString(" > ", true),
+                    _ when value is bool b => b ? "ON" : "OFF",
+                    _ => value.ToString(),
+                };
+
+                AddLine($"{alias}: {displayValue}");
+            }
+
+            if (!section.Equals(settingsToDisplay.Keys.Last()))
+                AddLine();
+        }
+
         AddLine("END SETTINGS INFO");
 
         AddLine();
@@ -326,8 +428,6 @@ public static class DebugFile
                     }
                     catch
                     {
-                        PluginLog.Debug(
-                            $"Error printing AutoRotation property: {property.Name}");
                         AddLine($"{prefix}{property.Name}: {value}");
                     }
                 }
@@ -350,7 +450,7 @@ public static class DebugFile
                     continue;
                 }
 
-                var line = $"{(int)preset} - {preset}";
+                var line = $"{(int)preset} - {preset}".PadRight(70);
                 if (leaseesCount > 0)
                     if (P.UIHelper.PresetControlled(preset) is not null)
                         line += " (IPC)";
@@ -543,7 +643,11 @@ public static class DebugFile
         AddLine($"Status Effects found: {statusEffectsCount} " +
                 $"(max: {statusEffects.Count()})");
 
-        if (statusEffectsCount <= 0) return;
+        if (statusEffectsCount <= 0)
+        {
+            AddLine();
+            return;
+        }
 
         AddLine("START STATUS EFFECTS");
         foreach (var effect in statusEffects)
@@ -554,18 +658,25 @@ public static class DebugFile
                     .SourceId)}, " +
                 $"NAME: {GetStatusName(effect.StatusId)}");
         AddLine("END STATUS EFFECTS");
+
+        AddLine();
     }
 
     private static void AddRedundantIDs()
     {
         AddLine($"Redundant IDs found: {_redundantIDs.Length}");
 
-        if (_redundantIDs.Length <= 0) return;
+        if (_redundantIDs.Length <= 0)
+        {
+            AddLine();
+            return;
+        }
 
         AddLine("START REDUNDANT IDS");
         foreach (var id in _redundantIDs)
             AddLine(id.ToString());
         AddLine("END REDUNDANT IDS");
+        AddLine();
     }
 
     /// Get the debug code by itself.
@@ -584,22 +695,187 @@ public static class DebugFile
         AddLine();
     }
 
-    private static void AddLogHistory()
+    private static void AddSettingsHistory()
     {
-        AddLine($"Setting Changes log Count: {DebugLog.Count}");
+        AddLine($"Setting Changes History Count: {DebugLog.Count}");
 
-        if (DebugLog.Count < 1) return;
+        if (DebugLog.Count < 1)
+        {
+            AddLine();
+            return;
+        }
 
         var logsCopy = DebugLog.ToList();
         logsCopy.Reverse();
 
-        AddLine("START LOG HISTORY (most recent first)");
+        AddLine("START SETTINGS CHANGES HISTORY (most recent first)");
         AddLine(string.Join("\n", logsCopy));
-        AddLine("END LOG HISTORY");
+        AddLine("END SETTINGS CHANGES HISTORY");
+
+        AddLine();
     }
 
-    public static void AddLog(string log)
+    public static void AddSettingLog(string log)
     {
         DebugLog.Add($"{DateTime.UtcNow} | {log}");
+    }
+    
+    /// <summary>
+    ///     Gets the last lines of the dalamud log file.
+    /// </summary>
+    /// <param name="count">
+    ///     How many lines to get.
+    /// </param>
+    /// <param name="onlyOurs">
+    ///     Whether to filter the lines to those that mention the plugin.
+    /// </param>
+    /// <returns>
+    ///     A list of the last lines of the debug file.
+    /// </returns>
+    /// <remarks>
+    ///     Complexity is to handle multi-line log entries correctly and to avoid
+    ///     trying to load the entire file into memory.
+    /// </remarks>
+    public static List<string> GetLastLogs(int count = 100, bool onlyOurs = false)
+    {
+        try
+        {
+            var parent = Svc.PluginInterface.ConfigDirectory.Parent.Parent;
+            if (parent is null)
+            {
+                PluginLog.Error(
+                    $"Failed to locate dalamud.log folder: no parent directory ({parent})");
+                return new List<string>();
+            }
+            var path = Path.Combine(parent.FullName, "dalamud.log");
+            if (!File.Exists(path))
+            {
+                PluginLog.Error(
+                    $"Failed to locate dalamud.log: file does not exist ({path})");
+                return new List<string>();
+            }
+
+            var mergedEntries = new List<string>();
+            var currentEntry = new StringBuilder();
+            var foundEntries = 0;
+
+            const int bufferSize = 4096;
+            using var stream = new FileStream(path, FileMode.Open,
+                FileAccess.Read, FileShare.ReadWrite | FileShare.Delete,
+                bufferSize,
+                FileOptions.SequentialScan);
+            var buffer = new byte[bufferSize];
+            var leftOver = string.Empty;
+
+            var headerRegex = new System.Text.RegularExpressions.Regex(
+                @"^(?:\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d{3}|\d{2}:\d{2}:\d{2}\.\d{3})",
+                System.Text.RegularExpressions.RegexOptions.Compiled);
+
+            var stop = false;
+            for (long i = stream.Length; i > 0; )
+            {
+                var readSize = (int)Math.Min(bufferSize, i);
+                i -= readSize;
+                stream.Position = i;
+                stream.ReadExactly(buffer, 0, readSize);
+
+                var chunk = Encoding.UTF8.GetString(buffer, 0, readSize) + leftOver;
+                var lines = chunk.Split('\n');
+
+                if (i > 0)
+                {
+                    // first line is likely partial (cut), save it for the next iteration
+                    leftOver = lines[0];
+                    lines = lines.Skip(1).ToArray();
+                }
+                else
+                {
+                    leftOver = string.Empty;
+                }
+
+                // Process chunk lines in reverse (from file end backwards)
+                for (var j = lines.Length - 1; j >= 0; j--)
+                {
+                    var line = lines[j].TrimEnd('\r');
+                    if (string.IsNullOrWhiteSpace(line)) continue;
+
+                    var isHeader = headerRegex.IsMatch(line.TrimStart());
+                    if (isHeader)
+                    {
+                        // Completed a log entry: currentEntry holds the lines that came after this header
+                        if (currentEntry.Length > 0)
+                        {
+                            var entryText = currentEntry.ToString();
+                            if (!onlyOurs || entryText.Contains("WrathCombo"))
+                            {
+                                mergedEntries.Add(entryText);
+                                foundEntries++;
+                                if (foundEntries >= count)
+                                {
+                                    stop = true;
+                                    break;
+                                }
+                            }
+
+                            currentEntry.Clear();
+                        }
+
+                        // Start the new current entry with this header line
+                        currentEntry.Insert(0, line);
+                    }
+                    else
+                    {
+                        // Continuation line: prepend it to the currentEntry with a newline
+                        if (currentEntry.Length > 0)
+                        {
+                            currentEntry.Insert(0, "\n");
+                            currentEntry.Insert(0, line);
+                        }
+                        else
+                        {
+                            // If we haven't seen a header yet (very start of file), treat as part of current entry
+                            currentEntry.Insert(0, line);
+                        }
+                    }
+                }
+
+                if (stop) break;
+            }
+
+            // After reading, ensure the most-recent (last) assembled entry is included if needed
+            if (currentEntry.Length > 0 && foundEntries < count)
+            {
+                var entryText = currentEntry.ToString();
+                if (!onlyOurs || entryText.Contains("WrathCombo"))
+                {
+                    mergedEntries.Add(entryText);
+                }
+            }
+
+            return mergedEntries;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Error("Failed to read dalamud log: " + ex.ToStringFull());
+            return new List<string>();
+        }
+    }
+
+    private static void AddDalamudLog()
+    {
+        var logs = GetLastLogs(onlyOurs: true);
+
+        if (logs.Count < 1)
+        {
+            AddLine("No Dalamud log entries found.");
+            AddLine();
+            return;
+        }
+        
+        AddLine("START DALAMUD LOG HISTORY (most recent first)");
+        AddLine(string.Join("\n", logs));
+        AddLine("END DALAMUD LOG HISTORY");
+
+        AddLine();
     }
 }

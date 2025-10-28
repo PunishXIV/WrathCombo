@@ -109,7 +109,7 @@ public static class UserConfig
                         if (output > maxValue) output = maxValue;
                     }
 
-                    DebugFile.AddLog($"Set Config {config} to {output}");
+                    DebugFile.AddSettingLog($"Set Config {config} to {output}");
                     PluginConfiguration.SetCustomIntValue(config, output);
                     Service.Configuration.Save();
                 }
@@ -223,7 +223,7 @@ public static class UserConfig
 
                 if (inputChanged)
                 {
-                    DebugFile.AddLog($"Set Config {config} to {output}");
+                    DebugFile.AddSettingLog($"Set Config {config} to {output}");
                     PluginConfiguration.SetCustomFloatValue(config, output);
                     Service.Configuration.Save();
                 }
@@ -318,7 +318,7 @@ public static class UserConfig
 
                 if (inputChanged)
                 {
-                    DebugFile.AddLog($"Set Config {config} to {output}");
+                    DebugFile.AddSettingLog($"Set Config {config} to {output}");
                     PluginConfiguration.SetCustomFloatValue(config, output);
                     Service.Configuration.Save();
                 }
@@ -350,7 +350,7 @@ public static class UserConfig
 
         if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
         {
-            DebugFile.AddLog($"Set Config {config} to {output}");
+            DebugFile.AddSettingLog($"Set Config {config} to {output}");
             PluginConfiguration.SetCustomIntValue(config, outputValue);
             Service.Configuration.Save();
         }
@@ -403,7 +403,7 @@ public static class UserConfig
         {
             if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
             {
-                DebugFile.AddLog($"Set Config {config} to {output}");
+                DebugFile.AddSettingLog($"Set Config {config} to {output}");
                 PluginConfiguration.SetCustomIntValue(config, outputValue);
                 Service.Configuration.Save();
                 o = true;
@@ -447,7 +447,7 @@ public static class UserConfig
                 for (var i = 0; i < values.Length; i++)
                     values[i] = false;
                 values[choice] = true;
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
+                DebugFile.AddSettingLog($"Set Config {config} to {string.Join(", ", values)}");
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
             }
@@ -494,7 +494,7 @@ public static class UserConfig
         }
         if (ImGui.Checkbox($"{checkBoxName}##{config}", ref output))
         {
-            DebugFile.AddLog($"Set Config {config} to {output}");
+            DebugFile.AddSettingLog($"Set Config {config} to {output}");
             PluginConfiguration.SetCustomBoolValue(config, output);
             Service.Configuration.Save();
         }
@@ -553,7 +553,7 @@ public static class UserConfig
 
             if (ImGui.Checkbox($"{checkBoxName}###{config}{choice}", ref values[choice]))
             {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
+                DebugFile.AddSettingLog($"Set Config {config} to {string.Join(", ", values)}");
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
             }
@@ -589,7 +589,7 @@ public static class UserConfig
             var status = PvPCommon.QuickPurify.Statuses[i];
             if (ImGui.Checkbox($"{status.label}###{config}{i}", ref values[i]))
             {
-                DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
+                DebugFile.AddSettingLog($"Set Config {config} to {string.Join(", ", values)}");
                 PluginConfiguration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
             }
@@ -941,7 +941,7 @@ public static class UserConfig
 
     private static void ResetToDefault(string config)
     {
-        DebugFile.AddLog($"Set Config {config} to default");
+        DebugFile.AddSettingLog($"Set Config {config} to default");
         UserData.MasterList[config].ResetToDefault();
     }
     #region Custom Stack Manager
@@ -1258,6 +1258,43 @@ public static class UserConfig
 #pragma warning restore SYSLIB1045
 
     #endregion
+}
+
+public static class HealStackExtensions
+{
+    public static string StackString
+    (this string[] stack,
+        string separator = "   >   ",
+        bool raiseStack = false) =>
+        string.Join(separator,
+            stack.Select(x =>
+                UserConfig.TargetDisplayNameFromPropertyName(x, raiseStack)));
+
+    public static string DisplayStack
+    (this bool useCustomStack,
+        string[]? stack = null,
+        string separator = "   >   ",
+        bool raiseStack = false)
+    {
+        stack ??= Service.Configuration.CustomHealStack;
+
+        if (useCustomStack)
+            return stack.StackString(separator, raiseStack);
+
+        var stackText = "";
+        if (Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack)
+            stackText += "UI-MouseOver Target" + separator;
+        if (Service.Configuration.UseFieldMouseoverOverridesInDefaultHealStack)
+            stackText += "Field-MouseOver Target" + separator;
+        stackText += "Soft Target" + separator;
+        stackText += "Hard Target" + separator;
+        if (Service.Configuration.UseFocusTargetOverrideInDefaultHealStack)
+            stackText += "Focus Target" + separator;
+        if (Service.Configuration.UseLowestHPOverrideInDefaultHealStack)
+            stackText += "Lowest HP% Ally" + separator;
+        stackText += "Self";
+        return stackText;
+    }
 }
 
 public static class SliderIncrements

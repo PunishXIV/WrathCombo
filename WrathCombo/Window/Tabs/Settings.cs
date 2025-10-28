@@ -429,34 +429,9 @@ internal class Settings : ConfigWindow
                 "If the 'Retarget Healing Actions' option is disabled, that is just the target that will be used for checking the HP threshold to trigger different healing actions to show up in their rotations.\n" +
                 "If the 'Retarget Healing Actions' option is enabled, that target is also the one that healing actions will be targeted onto (even when the action does not first check the HP of that target, like the combo's Replaced Action, for example).");
 
-            var healStackText = "";
-            var nextStackItemMarker = "   >   ";
-            if (useCusHealStack)
-            {
-                foreach (var item in Service.Configuration.CustomHealStack
-                    .Select((value, index) => new { value, index }))
-                {
-                    healStackText += UserConfig.TargetDisplayNameFromPropertyName(item.value);
-                    if (item.index < Service.Configuration.CustomHealStack.Length - 1)
-                        healStackText += nextStackItemMarker;
-                }
-            }
-            else
-            {
-                if (Service.Configuration.UseUIMouseoverOverridesInDefaultHealStack)
-                    healStackText += "UI-MouseOver Target" + nextStackItemMarker;
-                if (Service.Configuration.UseFieldMouseoverOverridesInDefaultHealStack)
-                    healStackText += "Field-MouseOver Target" + nextStackItemMarker;
-                healStackText += "Soft Target" + nextStackItemMarker;
-                healStackText += "Hard Target" + nextStackItemMarker;
-                if (Service.Configuration.UseFocusTargetOverrideInDefaultHealStack)
-                    healStackText += "Focus Target" + nextStackItemMarker;
-                if (Service.Configuration.UseLowestHPOverrideInDefaultHealStack)
-                    healStackText += "Lowest HP% Ally" + nextStackItemMarker;
-                healStackText += "Self";
-            }
             ImGuiEx.Spacing(new Vector2(10, 0));
-            ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, healStackText);
+            ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey,
+                useCusHealStack.DisplayStack());
 
             ImGuiEx.Spacing(new Vector2(0, 10));
 

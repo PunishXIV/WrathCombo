@@ -92,7 +92,42 @@ internal class Debug : ConfigWindow, IDisposable
         {
             try
             {
-                var base64 = Convert.FromBase64String(_debugConfig);
+                // Trim off anything extra copied from that section of the file
+                var stripped = _debugConfig;
+                const string startMarker = "START DEBUG CODE";
+                const string endMarker = "END DEBUG CODE";
+                var startIdx = stripped.IndexOf(startMarker, StringComparison.OrdinalIgnoreCase);
+                if (startIdx >= 0)
+                {
+                    startIdx += startMarker.Length;
+                    var endIdx = stripped.IndexOf(endMarker, startIdx, StringComparison.OrdinalIgnoreCase);
+                    stripped = endIdx >= 0 ? stripped.Substring(startIdx, endIdx - startIdx) : stripped[startIdx..];
+                }
+                // Remove all whitespace characters (spaces, tabs, newlines)
+                stripped = new string(stripped
+                    .Where(c => !char.IsWhiteSpace(c)).ToArray());
+
+                // Try to load the data from the string
+                byte[] base64;
+                try
+                {
+                    base64 = Convert.FromBase64String(stripped);
+                }
+                // Fix when editors don't want to copy the padding at the end
+                catch (FormatException)
+                {
+                    // If there's not a padding issue, re-throw the error
+                    if (stripped.Length % 4 == 0)
+                        throw;
+                    
+                    // Try to fix padding issues
+                    var paddingNeeded = 4 - (stripped.Length % 4);
+                    stripped = stripped
+                        .PadRight(stripped.Length + paddingNeeded, '=');
+                    base64 = Convert.FromBase64String(stripped);
+                }
+
+                // Decode the data
                 var decode = Encoding.UTF8.GetString(base64);
                 var config = JsonConvert.DeserializeObject<PluginConfiguration>(decode);
                 if (config != null)
@@ -117,7 +152,9 @@ internal class Debug : ConfigWindow, IDisposable
             "Paste a base64 encoded configuration here to load it into the plugin." +
             "\nThis comes from a debug file." +
             "\nThis will overwrite your current configuration temporarily, restoring your own configuration when you disable debug mode." +
-            "\nDebug mode will also be disabled if you unload the plugin.");
+            "\nDebug mode will also be disabled if you unload the plugin." +
+            "\n\nTip: To make it easier to copy from the file, you can select 'Start Debug Code' thru 'End Debug Code'" +
+            "(the extra stuff will be trimmed off)");
 
         if (DebugConfig)
             if (ImGui.Button("Disable Debug Config Mode"))

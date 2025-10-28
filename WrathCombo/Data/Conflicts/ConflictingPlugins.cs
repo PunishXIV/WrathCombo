@@ -29,14 +29,19 @@ public static class ConflictingPlugins
     /// <param name="conflicts">
     ///     The output list of conflicts.
     /// </param>
+    /// <param name="forceRefresh">
+    ///     Whether to force a refresh of the conflicts, ignoring the cache.
+    /// </param>
     /// <returns>
     ///     Whether there are any conflicts at all.
     /// </returns>
-    public static bool TryGetConflicts(out Conflicts conflicts)
+    public static bool TryGetConflicts
+        (out Conflicts conflicts, bool forceRefresh = false)
     {
         // Only check for new conflicts periodically, not refreshed on demand anyway
         if (!EZ.Throttle("conflictCheck", TS.FromSeconds(1.5)) &&
-            _cachedConflicts is not null)
+            _cachedConflicts is not null &&
+            !forceRefresh)
         {
             conflicts = _cachedConflicts;
             return _cachedConflicts.ToArray().Length > 0;

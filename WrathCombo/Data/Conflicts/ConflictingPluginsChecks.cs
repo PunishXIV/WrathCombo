@@ -18,6 +18,22 @@ namespace WrathCombo.Data.Conflicts;
 public static class ConflictingPluginsChecks
 {
     private static bool _cancelConflictChecks;
+    
+    internal static readonly Action ForceRunChecks = () =>
+    {
+        if (_cancelConflictChecks)
+            return;
+
+        PluginLog.Verbose(
+            "[ConflictingPlugins] Forcing immediate check for conflicting plugins");
+
+        BossMod.CheckForConflict(true);
+        BossModReborn.CheckForConflict(true);
+        Redirect.CheckForConflict(true);
+        ReAction.CheckForConflict(true);
+        ReActionEx.CheckForConflict(true);
+        MOAction.CheckForConflict(true);
+    };
 
     private static readonly Action RunChecks = () =>
     {
@@ -80,9 +96,9 @@ public static class ConflictingPluginsChecks
 
         protected override BossModIPC IPC => (BossModIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed(8, false))
+            if (!ThrottlePassed(8, false, forceRefresh))
                 return;
 #if DEBUG
             _maxConflictsInARow = 1;
@@ -141,9 +157,9 @@ public static class ConflictingPluginsChecks
         public uint[] ConflictingActions = [];
         protected override MOActionIPC IPC => (MOActionIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed())
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
             var moActionRetargeted = IPC.GetRetargetedActions().ToHashSet();
@@ -180,9 +196,9 @@ public static class ConflictingPluginsChecks
 
         protected override RedirectIPC IPC => (RedirectIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed())
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
             ConflictingActions = [0, 0];
@@ -257,9 +273,9 @@ public static class ConflictingPluginsChecks
 
         protected override ReActionIPC IPC => (ReActionIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed())
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
             ConflictingActions = [];
@@ -393,7 +409,7 @@ public static class ConflictingPluginsChecks
         public virtual void Dispose() => _ipc.Dispose();
 
         // ReSharper disable once UnusedMemberInSuper.Global
-        public abstract void CheckForConflict();
+        public abstract void CheckForConflict(bool forceRefresh = false);
 
         /// <summary>
         ///     Checks if an EZ Throttle passes, and if the plugin is enabled.
@@ -405,13 +421,18 @@ public static class ConflictingPluginsChecks
         /// <param name="enabledCheck">
         ///     Whether to check if the plugin is enabled as well.
         /// </param>
+        /// <param name="forceRefresh">
+        ///     Whether to skip the throttle check.
+        /// </param>
         /// <returns>
         ///     If the <see cref="CheckForConflict" /> should be run or not.
         /// </returns>
-        protected bool ThrottlePassed(int frequency = 5, bool enabledCheck = true)
+        protected bool ThrottlePassed
+            (int frequency = 5, bool enabledCheck = true, bool forceRefresh = false)
         {
             if (!EZ.Throttle($"conflictCheck{Name}",
-                    TS.FromSeconds(frequency)))
+                    TS.FromSeconds(frequency)) &&
+                !forceRefresh)
                 return false;
             if (enabledCheck && !_ipc.IsEnabled)
             {

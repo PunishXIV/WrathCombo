@@ -10,10 +10,12 @@ using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Data.Conflicts;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window;
@@ -552,6 +554,8 @@ public partial class WrathCombo
     ///     <c>&lt;blank&gt;</c> - current job<br />
     ///     <c>&lt;job abbr&gt;</c> - that job<br />
     ///     <c>all</c> - all jobs<br />
+    ///     <c>path</c> - prints the path to the debug file<br />
+    ///     <c>string</c> - puts the debug string on the clipboard<br />
     /// </value>
     /// <param name="argument">
     ///     The job abbreviation to provide the debug file for (or "all").<br />
@@ -627,7 +631,10 @@ public partial class WrathCombo
 
             // Request a debug file, with null, or the entered Job
             // (if converted successfully)
-            DebugFile.MakeDebugFile(job);
+            Svc.Framework.RunOnTick(ConflictingPluginsChecks.ForceRunChecks)
+                .ContinueWith(_ =>
+                    Svc.Framework.RunOnTick(() =>
+                        DebugFile.MakeDebugFile(job)));
         }
         catch (Exception ex)
         {
