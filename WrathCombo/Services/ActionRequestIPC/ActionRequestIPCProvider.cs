@@ -1,5 +1,8 @@
-﻿using ECommons.DalamudServices;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.DalamudServices;
+using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
+using ECommons.GameHelpers;
 using FFXIVClientStructs;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
@@ -8,13 +11,16 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using WrathCombo.Combos.PvE;
+using WrathCombo.CustomComboNS.Functions;
+using static ECommons.UIHelpers.AddonMasterImplementations.AddonMaster;
 
 namespace WrathCombo.Services.ActionRequestIPC;
 //this is static to maximize performance
 public static class ActionRequestIPCProvider
 {
-    //public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionRequests = [];
-    public static Dictionary<ActionDescriptor, List<ActionRequest>> ActionBlacklist = [];
+    public static List<ActionRequest> ActionRequests = [];
+    public static List<ActionRequest> ActionBlacklist = [];
 
     /// <summary>
     /// Requests an action to be blacklisted
@@ -26,12 +32,7 @@ public static class ActionRequestIPCProvider
     public static void RequestBlacklist(ActionType actionType, uint actionID, int timeMs)
     {
         ActionDescriptor descriptor = new(actionType, actionID);
-        if(!ActionBlacklist.TryGetValue(descriptor, out var value))
-        {
-            value = [];
-            ActionBlacklist[descriptor] = value;
-        }
-        value.Add(new(Environment.TickCount64 + timeMs));
+        ActionBlacklist.Add(new(descriptor, Environment.TickCount64 + timeMs));
     }
 
     /// <summary>
@@ -42,8 +43,8 @@ public static class ActionRequestIPCProvider
     [EzIPC]
     public static void ResetBlacklist(ActionType actionType, uint actionID)
     {
-        ActionDescriptor descriptor = new(actionType, actionID);
-        ActionBlacklist.Remove(descriptor);
+        var descriptor = new ActionDescriptor(actionType, actionID);
+        ActionBlacklist.RemoveAll(item => item.Descriptor == descriptor);
     }
 
     /// <summary>
@@ -69,19 +70,106 @@ public static class ActionRequestIPCProvider
     [EzIPC]
     public static float GetArtificialCooldown(ActionType actionType, uint actionID)
     {
+        var d = new ActionDescriptor(actionType, actionID);
         var currentTick = Environment.TickCount64;
-        if(ActionBlacklist.TryGetValue(new(actionType, actionID), out var request))
+        for(var idx = ActionBlacklist.Count - 1; idx >= 0; idx--)
         {
             var maxDeadline = 0L;
-            for(var idx = request.Count - 1; idx >= 0; idx--)
+            var currentRequest = ActionBlacklist[idx];
+            if(!currentRequest.IsActive)
             {
-                var currentRequest = request[idx];
+                ActionBlacklist.RemoveAt(idx);
+            }
+            else
+            {
                 var currentDeadline = currentRequest.Deadline - currentTick;
                 if(currentDeadline > maxDeadline) maxDeadline = currentDeadline;
-                if(currentDeadline < 0) request.RemoveAt(idx);
             }
-            return maxDeadline;
         }
         return 0;
+    }
+
+    [EzIPC]
+    public static void RequestActionUse(ActionType actionType, uint actionID, int timeMs)
+    {
+        ActionDescriptor descriptor = new(actionType, actionID);
+        ActionRequests.Add(new(descriptor, Environment.TickCount64 + timeMs));
+    }
+
+    [EzIPC]
+    public static void ResetRequest(ActionType actionType, uint actionID)
+    {
+        var descriptor = new ActionDescriptor(actionType, actionID);
+        ActionRequests.RemoveAll(item => item.Descriptor == descriptor);
+    }
+
+    [EzIPC]
+    public static void ResetAllRequests(ActionType actionType, uint actionID)
+    {
+        ActionRequests.Clear();
+    }
+
+    public static IEnumerable<ActionDescriptor> GetRequestedActions()
+    {
+        if(ActionRequests.Count == 0)
+        {
+            yield break;
+        }
+        for(var idx = ActionRequests.Count - 1; idx >= 0; idx--)
+        {
+            var currentRequest = ActionRequests[idx];
+            if(!currentRequest.IsActive)
+            {
+                ActionRequests.RemoveAt(idx);
+            }
+            else
+            {
+                yield return currentRequest.Descriptor;
+            }
+        }
+    }
+
+    private static uint InvokeRequest(uint originalActionId)
+    {
+        foreach(var action in GetRequestedActions())
+        {
+            if(action.ActionType == ActionType.Action)
+            {
+                if(CustomComboFunctions.ActionReady(action.ActionID))
+                {
+                    return action.ActionID;
+                }
+            }
+        }
+        return originalActionId;
+    }
+
+    public unsafe static bool TryInvoke(uint actionID, out uint newActionID, IGameObject? targetOverride = null)
+    {
+        newActionID = 0;
+
+        if(Player.Object is null) return false; //Safeguard. LocalPlayer shouldn't be null at this point anyways.
+        if(Player.IsDead) return false; //Don't do combos while dead
+
+        Job classJobID = Player.Job.GetUpgradedJob();
+
+        //OptionalTarget = targetOverride; //TODO: figure out
+        uint resultingActionID = InvokeRequest(actionID);
+        //OptionalTarget = null;
+
+        if(resultingActionID == 0 || actionID == resultingActionID)
+            return false;
+
+        if(Service.Configuration.SuppressQueuedActions && !Svc.ClientState.IsPvP && ActionManager.Instance()->QueuedActionType == ActionType.Action && ActionManager.Instance()->QueuedActionId != actionID)
+        {
+            // todo: tauren: remember why this condition was in the if below:
+            //      `&& WrathOpener.CurrentOpener?.OpenerStep <= 1`
+            // todo: figure it out
+            if(resultingActionID != All.SavageBlade)
+                return false;
+        }
+        newActionID = resultingActionID;
+
+        return true;
     }
 }
