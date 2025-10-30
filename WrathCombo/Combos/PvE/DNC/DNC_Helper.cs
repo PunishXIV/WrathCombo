@@ -8,6 +8,7 @@ using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
@@ -201,6 +202,13 @@ internal partial class DNC
             if (!EZ.Throttle("dncPartnerDesiredCheck", TS.FromSeconds(2)) &&
                 field is not null)
                 return field;
+            
+            if (Player.Object is null ||
+                Player.Job != Job.DNC ||
+                Svc.Condition[ConditionFlag.BetweenAreas] ||
+                Svc.Condition[ConditionFlag.Unconscious] ||
+                !LevelChecked(ClosedPosition))
+                return field = null;
 
             field = TryGetDancePartner(out var partner)
                 ? partner.GameObjectId

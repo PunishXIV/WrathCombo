@@ -52,6 +52,8 @@ public class PluginConfiguration : IPluginConfiguration
 
     public bool BlockSpellOnMove = false;
 
+    public bool ShowTargetHighlight = false;
+
     public Vector4 TargetHighlightColor { get; set; } = new() { W = 1, X = 0.5f, Y = 0.5f, Z = 0.5f };
     
     public bool ShowBorderAroundOptionsWithChildren = true;

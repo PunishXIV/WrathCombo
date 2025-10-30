@@ -86,19 +86,44 @@ internal class Settings : ConfigWindow
 
             #endregion
 
-            #region TargetHelper
+            #region Target Helper
 
-            Vector4 colour = Service.Configuration.TargetHighlightColor;
-            if (ImGui.ColorEdit4("Target Highlight Colour", ref colour, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaPreview | ImGuiColorEditFlags.AlphaBar))
+            #region Target Helper Display
+            var targetHelperDisplay = Service.Configuration.ShowTargetHighlight;
+
+            if (ImGui.Checkbox("Show Target Highlighter", ref targetHelperDisplay))
             {
-                Service.Configuration.TargetHighlightColor = colour;
+                Service.Configuration.ShowTargetHighlight = targetHelperDisplay;
                 Service.Configuration.Save();
             }
 
-            ImGuiComponents.HelpMarker("Draws a box around party members in the vanilla Party List, as targeted by certain features.\nSet Alpha to 0 to hide the box.");
+            ImGuiComponents.HelpMarker("Draws a box around party members in the vanilla Party List, as targeted by certain features.");
 
             ImGui.SameLine();
-            ImGui.TextColored(ImGuiColors.DalamudGrey, $"(Only used by {Job.AST.Name()} currently)");
+            ImGui.TextColored(ImGuiColors.DalamudGrey, $"(Only used by {Job.AST.Name()} and {Job.DNC.Name()} currently)");
+
+            #endregion
+
+            #region Target Helper Color
+
+            if (targetHelperDisplay)
+            {
+                ImGui.Indent();
+                var targetHelperColor = Service.Configuration.TargetHighlightColor;
+                if (ImGui.ColorEdit4("Highlight Color", ref targetHelperColor,
+                        ImGuiColorEditFlags.NoInputs |
+                        ImGuiColorEditFlags.AlphaPreview |
+                        ImGuiColorEditFlags.AlphaBar))
+                {
+                    Service.Configuration.TargetHighlightColor = targetHelperColor;
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker("Controls the color of the box drawn around party members.");
+                ImGui.Unindent();
+            }
+
+            #endregion
 
             #endregion
 
