@@ -42,7 +42,8 @@ internal partial class SAM
             {
                 if ((SimpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
                     !HasSetsu && LevelChecked(Yukikaze) &&
-                    HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
+                    (HasStatusEffect(Buffs.Fugetsu) || IsNotEnabled(Preset.SAM_ST_Gekko)) &&
+                    (HasStatusEffect(Buffs.Fuka) || IsNotEnabled(Preset.SAM_ST_Kasha)))
                     return Yukikaze;
 
                 if ((SimpleMode || IsEnabled(Preset.SAM_ST_Gekko)) &&
@@ -204,11 +205,17 @@ internal partial class SAM
 
     private static uint DoMeikyoCombo(uint actionId, bool useTrueNorthIfEnabled = true, bool SimpleMode = false)
     {
+        if ((SimpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
+            LevelChecked(Yukikaze) && !HasSetsu &&
+            (HasKa || IsNotEnabled(Preset.SAM_ST_Gekko)) &&
+            (HasGetsu || IsNotEnabled(Preset.SAM_ST_Kasha)))
+            return Yukikaze;
+
         if ((SimpleMode || IsEnabled(Preset.SAM_ST_Gekko)) &&
-            LevelChecked(Jinpu) &&
+            LevelChecked(Gekko) &&
             ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
              OnTargetsFlank() && HasKa ||
-             !HasStatusEffect(Buffs.Fugetsu)))
+             !HasStatusEffect(Buffs.Fugetsu) && !HasGetsu))
             return !OnTargetsRear() &&
                    Role.CanTrueNorth() &&
                    useTrueNorthIfEnabled
@@ -216,20 +223,15 @@ internal partial class SAM
                 : Gekko;
 
         if ((SimpleMode || IsEnabled(Preset.SAM_ST_Kasha)) &&
-            LevelChecked(Shifu) &&
+            LevelChecked(Kasha) &&
             ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
              OnTargetsRear() && HasGetsu ||
-             !HasStatusEffect(Buffs.Fuka)))
+             !HasStatusEffect(Buffs.Fuka) && !HasKa))
             return !OnTargetsFlank() &&
                    Role.CanTrueNorth() &&
                    useTrueNorthIfEnabled
                 ? Role.TrueNorth
                 : Kasha;
-
-        if ((SimpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
-            !HasSetsu && LevelChecked(Yukikaze) &&
-            HasStatusEffect(Buffs.Fugetsu) && HasStatusEffect(Buffs.Fuka))
-            return Yukikaze;
 
         return actionId;
     }

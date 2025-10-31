@@ -38,12 +38,12 @@ internal partial class BLM
         PolyglotStacks == MaxPolyglot;
 
     private static uint FireSpam =>
-        LevelChecked(Fire4)
+        ActionReady(Fire4)
             ? Fire4
             : Fire;
 
     private static uint BlizzardSpam =>
-        LevelChecked(Blizzard4)
+        ActionReady(Blizzard4)
             ? Blizzard4
             : Blizzard;
 
@@ -175,7 +175,7 @@ internal partial class BLM
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
-            MP.IsFull &&
+            MP.Full &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -228,7 +228,7 @@ internal partial class BLM
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
-            MP.IsFull &&
+            MP.Full &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -265,7 +265,7 @@ internal partial class BLM
 
         private static unsafe uint Max => Player.Character->MaxMana;
 
-        internal static bool IsFull => Max == Cur;
+        internal static bool Full => Max == Cur;
 
         internal static unsafe uint Cur => Player.Character->Mana;
 
