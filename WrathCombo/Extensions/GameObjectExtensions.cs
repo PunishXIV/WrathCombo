@@ -38,6 +38,14 @@ public static class GameObjectExtensions
     /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
     public static IGameObject? GetObject(this ulong id) =>
         GetObjectFrom(id);
+    
+    /// <summary>
+    ///     Converts a GameObjectID(?) to an IGameObject from the object table.
+    /// </summary>
+    /// <param name="id">The GameObjectID to convert.</param>
+    /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
+    public static IGameObject? GetObject(this ulong? id) =>
+        id == null ? null : GetObjectFrom((ulong)id);
 
     #region Target Classification
 

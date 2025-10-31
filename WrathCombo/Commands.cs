@@ -675,7 +675,7 @@ public partial class WrathCombo
     ///         </item>
     ///         <item>
     ///             Open to current job setting
-    ///             (if <see cref="PluginConfiguration.OpenToCurrentJob" />)
+    ///             (if <see cref="Configuration.OpenToCurrentJob" />)
     ///         </item>
     ///         <item>
     ///             Open to specified job

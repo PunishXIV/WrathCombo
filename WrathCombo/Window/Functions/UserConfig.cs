@@ -31,11 +31,11 @@ public static class UserConfig
     public static bool DrawSliderInt(int minValue, int maxValue, string config, string sliderDescription, float itemWidth = 150, uint sliderIncrement = SliderIncrements.Ones, bool hasAdditionalChoice = false, string additonalChoiceCondition = "")
     {
         ImGui.Indent();
-        int output = PluginConfiguration.GetCustomIntValue(config, minValue);
+        int output = Configuration.GetCustomIntValue(config, minValue);
         if (output < minValue)
         {
             output = minValue;
-            PluginConfiguration.SetCustomIntValue(config, output);
+            Configuration.SetCustomIntValue(config, output);
             Service.Configuration.Save();
         }
 
@@ -110,7 +110,7 @@ public static class UserConfig
                     }
 
                     DebugFile.AddLog($"Set Config {config} to {output}");
-                    PluginConfiguration.SetCustomIntValue(config, output);
+                    Configuration.SetCustomIntValue(config, output);
                     Service.Configuration.Save();
                 }
 
@@ -152,11 +152,11 @@ public static class UserConfig
     /// <param name="decimals">Number of decimal places shown in the slider and input box (e.g. 1 = 0.0f, 3 = 0.000f)</param>
     public static void DrawSliderFloat(float minValue, float maxValue, string config, string sliderDescription, float itemWidth = 150, bool hasAdditionalChoice = false, string additonalChoiceCondition = "", int decimals = 3)
     {
-        float output = PluginConfiguration.GetCustomFloatValue(config, minValue);
+        float output = Configuration.GetCustomFloatValue(config, minValue);
         if (output < minValue)
         {
             output = minValue;
-            PluginConfiguration.SetCustomFloatValue(config, output);
+            Configuration.SetCustomFloatValue(config, output);
             Service.Configuration.Save();
         }
 
@@ -224,7 +224,7 @@ public static class UserConfig
                 if (inputChanged)
                 {
                     DebugFile.AddLog($"Set Config {config} to {output}");
-                    PluginConfiguration.SetCustomFloatValue(config, output);
+                    Configuration.SetCustomFloatValue(config, output);
                     Service.Configuration.Save();
                 }
             }
@@ -246,11 +246,11 @@ public static class UserConfig
     /// <param name="digits"></param>
     public static void DrawRoundedSliderFloat(float minValue, float maxValue, string config, string sliderDescription, float itemWidth = 150, bool hasAdditionalChoice = false, string additonalChoiceCondition = "", int digits = 1)
     {
-        float output = PluginConfiguration.GetCustomFloatValue(config, minValue);
+        float output = Configuration.GetCustomFloatValue(config, minValue);
         if (output < minValue)
         {
             output = minValue;
-            PluginConfiguration.SetCustomFloatValue(config, output);
+            Configuration.SetCustomFloatValue(config, output);
             Service.Configuration.Save();
         }
 
@@ -319,7 +319,7 @@ public static class UserConfig
                 if (inputChanged)
                 {
                     DebugFile.AddLog($"Set Config {config} to {output}");
-                    PluginConfiguration.SetCustomFloatValue(config, output);
+                    Configuration.SetCustomFloatValue(config, output);
                     Service.Configuration.Save();
                 }
             }
@@ -342,7 +342,7 @@ public static class UserConfig
     {
         ImGui.Indent();
         if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudYellow;
-        int output = PluginConfiguration.GetCustomIntValue(config, outputValue);
+        int output = Configuration.GetCustomIntValue(config, outputValue);
         ImGui.PushItemWidth(itemWidth);
         ImGui.SameLine();
         ImGuiEx.Spacing(new Vector2(21, 0));
@@ -351,7 +351,7 @@ public static class UserConfig
         if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
         {
             DebugFile.AddLog($"Set Config {config} to {output}");
-            PluginConfiguration.SetCustomIntValue(config, outputValue);
+            Configuration.SetCustomIntValue(config, outputValue);
             Service.Configuration.Save();
         }
 
@@ -388,7 +388,7 @@ public static class UserConfig
     public static bool DrawHorizontalRadioButton(string config, string checkBoxName, string checkboxDescription, int outputValue, float itemWidth = 150, Vector4 descriptionColor = new Vector4())
     {
         if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudYellow;
-        int output = PluginConfiguration.GetCustomIntValue(config);
+        int output = Configuration.GetCustomIntValue(config);
         ImGui.SameLine();
         ImGui.PushItemWidth(itemWidth);
         var labelW = ImGui.CalcTextSize(checkBoxName);
@@ -404,7 +404,7 @@ public static class UserConfig
             if (ImGui.RadioButton($"{checkBoxName}###{config}{outputValue}", enabled))
             {
                 DebugFile.AddLog($"Set Config {config} to {output}");
-                PluginConfiguration.SetCustomIntValue(config, outputValue);
+                Configuration.SetCustomIntValue(config, outputValue);
                 Service.Configuration.Save();
                 o = true;
             }
@@ -437,7 +437,7 @@ public static class UserConfig
         checkBoxName, string checkboxDescription, int choice, float itemWidth = 150, Vector4 descriptionColor = new Vector4())
     {
         if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudYellow;
-        bool[]? values = PluginConfiguration.GetCustomBoolArrayValue(config);
+        bool[]? values = Configuration.GetCustomBoolArrayValue(config);
         ImGui.PushItemWidth(itemWidth);
 
         using (ImRaii.PushColor(ImGuiCol.Text, descriptionColor))
@@ -448,7 +448,7 @@ public static class UserConfig
                     values[i] = false;
                 values[choice] = true;
                 DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
+                Configuration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
             }
 
@@ -474,7 +474,7 @@ public static class UserConfig
     /// <param name="indentDescription"></param>
     public static void DrawAdditionalBoolChoice(string config, string checkBoxName, string checkboxDescription, float itemWidth = 150, bool isConditionalChoice = false, bool indentDescription = false)
     {
-        bool output = PluginConfiguration.GetCustomBoolValue(config);
+        bool output = Configuration.GetCustomBoolValue(config);
         ImGui.PushItemWidth(itemWidth);
         if (!isConditionalChoice)
             ImGui.Indent();
@@ -495,7 +495,7 @@ public static class UserConfig
         if (ImGui.Checkbox($"{checkBoxName}##{config}", ref output))
         {
             DebugFile.AddLog($"Set Config {config} to {output}");
-            PluginConfiguration.SetCustomBoolValue(config, output);
+            Configuration.SetCustomBoolValue(config, output);
             Service.Configuration.Save();
         }
 
@@ -528,13 +528,13 @@ public static class UserConfig
     {
         ImGui.Indent();
         if (descriptionColor == new Vector4()) descriptionColor = ImGuiColors.DalamudWhite;
-        bool[]? values = PluginConfiguration.GetCustomBoolArrayValue(config);
+        bool[]? values = Configuration.GetCustomBoolArrayValue(config);
 
         //If new saved options or amount of choices changed, resize and save
         if (values.Length == 0 || values.Length != totalChoices)
         {
             Array.Resize(ref values, totalChoices);
-            PluginConfiguration.SetCustomBoolArrayValue(config, values);
+            Configuration.SetCustomBoolArrayValue(config, values);
             Service.Configuration.Save();
         }
 
@@ -554,7 +554,7 @@ public static class UserConfig
             if (ImGui.Checkbox($"{checkBoxName}###{config}{choice}", ref values[choice]))
             {
                 DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
+                Configuration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
             }
 
@@ -578,7 +578,7 @@ public static class UserConfig
     /// </seealso>
     public static void DrawPvPStatusMultiChoice(string config)
     {
-        bool[]? values = PluginConfiguration.GetCustomBoolArrayValue(config);
+        bool[]? values = Configuration.GetCustomBoolArrayValue(config);
         Array.Resize(ref values, PvPCommon.QuickPurify.Statuses.Length);
 
         ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedPink);
@@ -590,7 +590,7 @@ public static class UserConfig
             if (ImGui.Checkbox($"{status.label}###{config}{i}", ref values[i]))
             {
                 DebugFile.AddLog($"Set Config {config} to {string.Join(", ", values)}");
-                PluginConfiguration.SetCustomBoolArrayValue(config, values);
+                Configuration.SetCustomBoolArrayValue(config, values);
                 Service.Configuration.Save();
             }
 

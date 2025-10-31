@@ -7,51 +7,66 @@ using System;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 namespace WrathCombo.Window;
 
 internal class TargetHelper : Dalamud.Interface.Windowing.Window
 {
-    internal TargetHelper() : base("###WrathComboTargeteHelper", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysUseWindowPadding | ImGuiWindowFlags.AlwaysAutoResize, true)
+    internal TargetHelper() : base("###WrathComboTargetHelper", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.AlwaysUseWindowPadding | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoInputs, true)
     {
-        this.IsOpen = true;
-        this.RespectCloseHotkey = false;
+        IsOpen = true;
+        RespectCloseHotkey = false;
     }
+
+    private static IGameObject? SuggestedTarget =>
+        Combos.PvE.AST.CardTarget ??
+        Combos.PvE.DNC.DesiredDancePartner.GetObject();
 
     internal unsafe void DrawTargetHelper()
     {
-        if (Combos.PvE.AST.CardTarget is not null)
+        if (!Service.Configuration.ShowTargetHighlight ||
+            SuggestedTarget is null)
         {
-            IntPtr partyPTR = Svc.GameGui.GetAddonByName("_PartyList", 1);
-            if (partyPTR == IntPtr.Zero)
-                return;
+            IsOpen = false;
+            return;
+        }
+        
+        IntPtr partyPointer = Svc.GameGui.GetAddonByName("_PartyList", 1);
+        if (partyPointer == IntPtr.Zero)
+        {
+            IsOpen = false;
+            return;
+        }
 
-            AddonPartyList plist = Marshal.PtrToStructure<AddonPartyList>(partyPTR);
-            if (!plist.IsVisible) return;
+        var plist = Marshal.PtrToStructure<AddonPartyList>(partyPointer);
+        if (!plist.IsVisible)
+        {
+            IsOpen = false;
+            return;
+        }
 
-            for (int i = 1; i <= 8; i++)
+        for (var i = 1; i <= 8; i++)
+        {
+            var slot = SimpleTarget.GetPartyMemberInSlotSlot(i);
+            if (slot is null) continue;
+            if (slot.GameObjectId != SuggestedTarget.GameObjectId) continue;
+            
+            var member = i switch
             {
-                IGameObject? slot = SimpleTarget.GetPartyMemberInSlotSlot(i);
-                if (slot is null) continue;
-                if (slot.GameObjectId == Combos.PvE.AST.CardTarget.GameObjectId)
-                {
-                    var member = i switch
-                    {
-                        1 => plist.PartyMembers[0].TargetGlow,
-                        2 => plist.PartyMembers[1].TargetGlow,
-                        3 => plist.PartyMembers[2].TargetGlow,
-                        4 => plist.PartyMembers[3].TargetGlow,
-                        5 => plist.PartyMembers[4].TargetGlow,
-                        6 => plist.PartyMembers[5].TargetGlow,
-                        7 => plist.PartyMembers[6].TargetGlow,
-                        8 => plist.PartyMembers[7].TargetGlow,
-                        _ => plist.PartyMembers[0].TargetGlow,
-                    };
+                1 => plist.PartyMembers[0].TargetGlow,
+                2 => plist.PartyMembers[1].TargetGlow,
+                3 => plist.PartyMembers[2].TargetGlow,
+                4 => plist.PartyMembers[3].TargetGlow,
+                5 => plist.PartyMembers[4].TargetGlow,
+                6 => plist.PartyMembers[5].TargetGlow,
+                7 => plist.PartyMembers[6].TargetGlow,
+                8 => plist.PartyMembers[7].TargetGlow,
+                _ => plist.PartyMembers[0].TargetGlow,
+            };
 
-                    DrawOutline(member->AtkResNode.PrevSiblingNode);
-
-                }
-            }
+            DrawOutline(member->AtkResNode.PrevSiblingNode);
+            IsOpen = true;
         }
     }
 
@@ -64,9 +79,12 @@ internal class TargetHelper : Dalamud.Interface.Windowing.Window
         position += ImGuiHelpers.MainViewport.Pos;
 
         var colour = Service.Configuration.TargetHighlightColor;
-        ImGui.GetForegroundDrawList(ImGuiHelpers.MainViewport).AddRect(position, position + size, ImGui.GetColorU32(colour), 0, ImDrawFlags.RoundCornersAll, 2);
+        ImGui.GetForegroundDrawList(ImGuiHelpers.MainViewport).AddRect(
+            position, position + size, ImGui.GetColorU32(colour),
+            0, ImDrawFlags.RoundCornersAll, 2);
     }
-    public unsafe Vector2 GetNodePosition(AtkResNode* node)
+    
+    internal static unsafe Vector2 GetNodePosition(AtkResNode* node)
     {
         var pos = new Vector2(node->X, node->Y);
         var par = node->ParentNode;
@@ -80,7 +98,7 @@ internal class TargetHelper : Dalamud.Interface.Windowing.Window
         return pos;
     }
 
-    public unsafe Vector2 GetNodeScale(AtkResNode* node)
+    internal static unsafe Vector2 GetNodeScale(AtkResNode* node)
     {
         if (node == null) return new Vector2(1, 1);
         var scale = new Vector2(node->ScaleX, node->ScaleY);

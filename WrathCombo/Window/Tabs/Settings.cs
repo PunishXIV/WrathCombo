@@ -86,19 +86,44 @@ internal class Settings : ConfigWindow
 
             #endregion
 
-            #region TargetHelper
+            #region Target Helper
 
-            Vector4 colour = Service.Configuration.TargetHighlightColor;
-            if (ImGui.ColorEdit4("Target Highlight Colour", ref colour, ImGuiColorEditFlags.NoInputs | ImGuiColorEditFlags.AlphaPreview | ImGuiColorEditFlags.AlphaBar))
+            #region Target Helper Display
+            var targetHelperDisplay = Service.Configuration.ShowTargetHighlight;
+
+            if (ImGui.Checkbox("Show Target Highlighter", ref targetHelperDisplay))
             {
-                Service.Configuration.TargetHighlightColor = colour;
+                Service.Configuration.ShowTargetHighlight = targetHelperDisplay;
                 Service.Configuration.Save();
             }
 
-            ImGuiComponents.HelpMarker("Draws a box around party members in the vanilla Party List, as targeted by certain features.\nSet Alpha to 0 to hide the box.");
+            ImGuiComponents.HelpMarker("Draws a box around party members in the vanilla Party List, as targeted by certain features.");
 
             ImGui.SameLine();
-            ImGui.TextColored(ImGuiColors.DalamudGrey, $"(Only used by {Job.AST.Name()} currently)");
+            ImGui.TextColored(ImGuiColors.DalamudGrey, $"(Only used by {Job.AST.Name()} and {Job.DNC.Name()} currently)");
+
+            #endregion
+
+            #region Target Helper Color
+
+            if (targetHelperDisplay)
+            {
+                ImGui.Indent();
+                var targetHelperColor = Service.Configuration.TargetHighlightColor;
+                if (ImGui.ColorEdit4("Highlight Color", ref targetHelperColor,
+                        ImGuiColorEditFlags.NoInputs |
+                        ImGuiColorEditFlags.AlphaPreview |
+                        ImGuiColorEditFlags.AlphaBar))
+                {
+                    Service.Configuration.TargetHighlightColor = targetHelperColor;
+                    Service.Configuration.Save();
+                }
+
+                ImGuiComponents.HelpMarker("Controls the color of the box drawn around party members.");
+                ImGui.Unindent();
+            }
+
+            #endregion
 
             #endregion
 
@@ -322,11 +347,11 @@ internal class Settings : ConfigWindow
             #endregion
 
             #region Melee Offset
-            var offset = (float)Service.Configuration.MeleeOffset;
+            var offset = Service.Configuration.MeleeOffset;
 
             if (ImGui.InputFloat("###MeleeOffset", ref offset))
             {
-                Service.Configuration.MeleeOffset = (double)offset;
+                Service.Configuration.MeleeOffset = offset;
                 Service.Configuration.Save();
             }
 
@@ -341,14 +366,14 @@ internal class Settings : ConfigWindow
 
             #region Interrupt Delay
 
-            var delay = (int)(Service.Configuration.InterruptDelay * 100d);
+            var delay = (int)(Service.Configuration.InterruptDelay * 100f);
 
             if (ImGui.SliderInt("###InterruptDelay",
                 ref delay, 0, 100))
             {
                 delay = delay.RoundOff(SliderIncrements.Fives);
 
-                Service.Configuration.InterruptDelay = ((double)delay) / 100d;
+                Service.Configuration.InterruptDelay = delay / 100f;
                 Service.Configuration.Save();
             }
             ImGui.SameLine();
