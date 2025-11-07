@@ -487,13 +487,14 @@ internal partial class NIN
     }
     internal static uint UseRaiton(uint actionId) // Ten Chi
     {
-        if (ActionWatching.LastAction is Ten or Jin)
-            return ChiCombo;
-
-        if (ActionWatching.LastAction is ChiCombo)
-            return Raiton;
-
-        return actionId;
+        
+        if (OriginalHook(Ninjutsu) == Ninjutsu)
+            return HasKassatsu ? TenCombo : Ten;
+        
+        return OriginalHook(Ninjutsu) == FumaShuriken && 
+               ActionWatching.LastAction is Ten or TenCombo or JinCombo or Jin
+            ? ChiCombo
+            : OriginalHook(Ninjutsu);
     }
     internal static uint UseHyoshoRanryu(uint actionId) // Ten Jin
     {
