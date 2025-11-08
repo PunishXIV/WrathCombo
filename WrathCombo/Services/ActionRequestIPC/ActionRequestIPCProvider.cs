@@ -72,10 +72,11 @@ public static class ActionRequestIPCProvider
     {
         var d = new ActionDescriptor(actionType, actionID);
         var currentTick = Environment.TickCount64;
+        var maxDeadline = 0L;
         for(var idx = ActionBlacklist.Count - 1; idx >= 0; idx--)
         {
-            var maxDeadline = 0L;
             var currentRequest = ActionBlacklist[idx];
+            if(currentRequest.Descriptor != d) continue;
             if(!currentRequest.IsActive)
             {
                 ActionBlacklist.RemoveAt(idx);
@@ -86,7 +87,7 @@ public static class ActionRequestIPCProvider
                 if(currentDeadline > maxDeadline) maxDeadline = currentDeadline;
             }
         }
-        return 0;
+        return maxDeadline / 1000f;
     }
 
     [EzIPC]
