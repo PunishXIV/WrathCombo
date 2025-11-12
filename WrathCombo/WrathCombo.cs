@@ -34,6 +34,7 @@ using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Services.IPC;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
+using WrathCombo.Services.ActionRequestIPC;
 namespace WrathCombo;
 
 /// <summary> Main plugin implementation. </summary>
@@ -164,6 +165,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         pluginInterface.Create<Service>();
         ECommonsMain.Init(pluginInterface, this, Module.All);
         PunishLibMain.Init(pluginInterface, "Wrath Combo");
+
+        ActionRequestIPCProvider.Initialize();
 
         TM = new();
         RemoveNullAutos(); 
