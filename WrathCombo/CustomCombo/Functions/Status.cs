@@ -317,15 +317,25 @@ internal abstract partial class CustomComboFunctions
                 // Wolf of Stone = 18225
                 if (targetID is 18219 or 18225)
                 {
-                    if (HasStatusEffect(4389)) return targetID != 18219; // Target Wolf of Stone
-                    if (HasStatusEffect(4390)) return targetID != 18225; // Target Wolf of Wind
+                    if (HasStatusEffect(4389)) return targetID != 18225; // Target Wolf of Wind
+                    if (HasStatusEffect(4390)) return targetID != 18219; // Target Wolf of Stone
                 }
                 return false;
             
             case 1267: //Sunken Temple of Qarn Temple Guardian
                 if (targetID is 18300 && HasStatusEffect(350, tar, true)) return true;
                 return false;
-
+            
+            case 1290: //Pilgrim's Traverse
+                // Eminent Grief = 18666
+                // Devoured Eater = 18667
+                if (targetID is 18666 or 18667)
+                {
+                    if (HasStatusEffect(4559)) return targetID != 18667; // Target Eminent Grief
+                    if (HasStatusEffect(4560)) return targetID != 18666; // Target Devoured Eater
+                }
+                return false;
+            
             case 1292: //Meso Terminal
                 // Bloody Headsman = 18576 a
                 // Pale Headsman = 18577 b
