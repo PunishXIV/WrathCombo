@@ -167,8 +167,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         TM = new();
         RemoveNullAutos(); 
-        Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
-        Service.Address = new PluginAddressResolver();
+        Service.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        Service.Address = new AddressResolver();
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
         PresetStorage.Init();
@@ -304,7 +304,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         BlueMageService.PopulateBLUSpells();
         TargetHelper.Draw();
         AutoRotationController.Run();
-        PluginConfiguration.ProcessSaveQueue();
+        Configuration.ProcessSaveQueue();
 
         Service.Configuration.SetActionChanging();
 
@@ -406,12 +406,12 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Debug.Dispose();
 
         // Try to force a config save if there are some pending
-        if (PluginConfiguration.SaveQueue.Count > 0)
-            lock (PluginConfiguration.SaveQueue)
+        if (Configuration.SaveQueue.Count > 0)
+            lock (Configuration.SaveQueue)
             {
-                PluginConfiguration.SaveQueue.Clear();
+                Configuration.SaveQueue.Clear();
                 Service.Configuration.Save();
-                PluginConfiguration.ProcessSaveQueue();
+                Configuration.ProcessSaveQueue();
             }
 
         ws.RemoveAllWindows();

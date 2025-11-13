@@ -13,7 +13,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 using ECommons.Reflection;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
@@ -28,6 +27,9 @@ using WrathCombo.Window.Functions;
 using Dalamud.Game.Config;
 using ECommons;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using UIConfig = Dalamud.Game.Config.UiConfigOption;
+using UIControl = Dalamud.Game.Config.UiControlOption;
+using SysConfig = Dalamud.Game.Config.SystemConfigOption;
 
 #endregion
 
@@ -310,7 +312,8 @@ public static class DebugFile
                 },
                 ["XIV"] = new Dictionary<object, object>
                 {
-                    [UiControlOption.AutoFaceTargetOnAction] = "Auto Face Target",
+                    [UIControl.AutoFaceTargetOnAction] = "Auto Face Target",
+                    [UIConfig.GroundTargetActionExcuteType] = "2x-Press Ground Actions",
                 },
             };
 
@@ -335,15 +338,21 @@ public static class DebugFile
                         {
                             switch (property)
                             {
-                                case UiControlOption uiOpt:
+                                case UIControl opt:
                                 {
-                                    if (Svc.GameConfig.TryGet(uiOpt, out bool gameVal))
+                                    if (Svc.GameConfig.TryGet(opt, out bool gameVal))
                                         value = gameVal;
                                     break;
                                 }
-                                case SystemConfigOption sysOpt:
+                                case UIConfig opt:
                                 {
-                                    if (Svc.GameConfig.TryGet(sysOpt, out bool gameVal))
+                                    if (Svc.GameConfig.TryGet(opt, out bool gameVal))
+                                        value = gameVal;
+                                    break;
+                                }
+                                case SysConfig opt:
+                                {
+                                    if (Svc.GameConfig.TryGet(opt, out bool gameVal))
                                         value = gameVal;
                                     break;
                                 }
@@ -369,7 +378,7 @@ public static class DebugFile
 
                 var displayValue = property switch
                 {
-                    "InterruptDelay" => $"{(double)value * 100}",
+                    "InterruptDelay" => $"{(float)value * 100}",
                     "CustomHealStack" => Service.Configuration.UseCustomHealStack
                         .DisplayStack(separator: " > "),
                     "RaiseStack" => ((string[])value).StackString(" > ", true),
@@ -509,31 +518,31 @@ public static class DebugFile
         if (job is null)
         {
             AddLine("---INT VALUES---");
-            foreach (var config in PluginConfiguration.CustomIntValues)
+            foreach (var config in Configuration.CustomIntValues)
                 AddLine($"{config.Key.Trim()}: {config.Value}");
 
             AddLine();
 
             AddLine("---INT ARRAY VALUES---");
-            foreach (var config in PluginConfiguration.CustomIntArrayValues)
+            foreach (var config in Configuration.CustomIntArrayValues)
                 AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
 
             AddLine();
 
             AddLine("---FLOAT VALUES---");
-            foreach (var config in PluginConfiguration.CustomFloatValues)
+            foreach (var config in Configuration.CustomFloatValues)
                 AddLine($"{config.Key.Trim()}: {config.Value}");
 
             AddLine();
 
             AddLine("---BOOL VALUES---");
-            foreach (var config in PluginConfiguration.CustomBoolValues)
+            foreach (var config in Configuration.CustomBoolValues)
                 AddLine($"{config.Key.Trim()}: {config.Value}");
 
             AddLine();
 
             AddLine("---BOOL ARRAY VALUES---");
-            foreach (var config in PluginConfiguration.CustomBoolArrayValues)
+            foreach (var config in Configuration.CustomBoolArrayValues)
                 AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
         }
         else
@@ -550,35 +559,35 @@ public static class DebugFile
                         .GetValue(val1).ToString()!;
                 }
 
-                if (PluginConfiguration.CustomIntValues
+                if (Configuration.CustomIntValues
                     .TryGetValue(key, out var intVal))
                 {
                     AddLine($"{key}: {intVal}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomFloatValues
+                if (Configuration.CustomFloatValues
                     .TryGetValue(key, out var floatVal))
                 {
                     AddLine($"{key}: {floatVal}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomBoolValues
+                if (Configuration.CustomBoolValues
                     .TryGetValue(key, out var boolVal))
                 {
                     AddLine($"{key}: {boolVal}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomBoolArrayValues
+                if (Configuration.CustomBoolArrayValues
                     .TryGetValue(key, out var boolArrVal))
                 {
                     AddLine($"{key}: {string.Join(", ", boolArrVal)}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomIntArrayValues
+                if (Configuration.CustomIntArrayValues
                     .TryGetValue(key, out var intArrVal))
                 {
                     AddLine($"{key}: {string.Join(", ", intArrVal)}");

@@ -347,11 +347,11 @@ internal class Settings : ConfigWindow
             #endregion
 
             #region Melee Offset
-            var offset = (float)Service.Configuration.MeleeOffset;
+            var offset = Service.Configuration.MeleeOffset;
 
             if (ImGui.InputFloat("###MeleeOffset", ref offset))
             {
-                Service.Configuration.MeleeOffset = (double)offset;
+                Service.Configuration.MeleeOffset = offset;
                 Service.Configuration.Save();
             }
 
@@ -366,14 +366,14 @@ internal class Settings : ConfigWindow
 
             #region Interrupt Delay
 
-            var delay = (int)(Service.Configuration.InterruptDelay * 100d);
+            var delay = (int)(Service.Configuration.InterruptDelay * 100f);
 
             if (ImGui.SliderInt("###InterruptDelay",
                 ref delay, 0, 100))
             {
                 delay = delay.RoundOff(SliderIncrements.Fives);
 
-                Service.Configuration.InterruptDelay = ((double)delay) / 100d;
+                Service.Configuration.InterruptDelay = delay / 100f;
                 Service.Configuration.Save();
             }
             ImGui.SameLine();

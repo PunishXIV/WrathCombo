@@ -121,7 +121,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara { IsCasting: true } chara || !chara.IsCastInterruptible)
             return false;
 
-        float minThreshold = Math.Clamp(minCastPercent ?? (float)Service.Configuration.InterruptDelay, 0f, 1f);
+        float minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 1f);
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }
@@ -175,7 +175,7 @@ internal abstract partial class CustomComboFunctions
             JustUsedOn(PLD.ShieldBash, target))
             return false;
 
-        var minThreshold = Math.Clamp(minCastPercent ?? (float)Service.Configuration.InterruptDelay, 0f, 1f);
+        var minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 1f);
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }
@@ -219,7 +219,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not { } chara)
             return false;
 
-        return GetTargetDistance(chara) <= (InPvP() ? 5f : 3f) + (float)Service.Configuration.MeleeOffset;
+        return GetTargetDistance(chara) <= (InPvP() ? 5f : 3f) + Service.Configuration.MeleeOffset;
     }
 
     /// <summary> Checks if an object is within a given range. Defaults to CurrentTarget unless specified. </summary>
@@ -284,7 +284,7 @@ internal abstract partial class CustomComboFunctions
     /// </param>
     /// <param name="checkIgnoredList">
     ///     Whether to check the 
-    ///     <see cref="PluginConfiguration.IgnoredNPCs"/> list. <br />
+    ///     <see cref="Configuration.IgnoredNPCs"/> list. <br />
     ///     (Optional, defaults to false)
     /// </param>
     /// <returns>
@@ -563,7 +563,7 @@ internal abstract partial class CustomComboFunctions
     /// </param>
     /// <param name="checkIgnoredList">
     ///     Whether to check the 
-    ///     <see cref="PluginConfiguration.IgnoredNPCs"/> list. <br />
+    ///     <see cref="Configuration.IgnoredNPCs"/> list. <br />
     ///     (Optional, defaults to false)
     /// </param>
     /// <param name="enemies">

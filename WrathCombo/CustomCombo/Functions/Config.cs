@@ -26,9 +26,9 @@ internal class UserFloat : UserData
     // Constructor with both string and float parameters
     public UserFloat(string v, float defaults) : base(v) // Overload constructor to preload data
     {
-        if (!PluginConfiguration.CustomFloatValues.ContainsKey(this.pName)) // if it isn't there, set
+        if (!Configuration.CustomFloatValues.ContainsKey(this.pName)) // if it isn't there, set
         {
-            PluginConfiguration.SetCustomFloatValue(this.pName, defaults);
+            Configuration.SetCustomFloatValue(this.pName, defaults);
             Service.Configuration.Save();
         }
 
@@ -37,11 +37,11 @@ internal class UserFloat : UserData
     }
 
     // Implicit conversion to float
-    public static implicit operator float(UserFloat o) => PluginConfiguration.GetCustomFloatValue(o.pName);
+    public static implicit operator float(UserFloat o) => Configuration.GetCustomFloatValue(o.pName);
 
     public override void ResetToDefault()
     {
-        PluginConfiguration.SetCustomFloatValue(this.pName, Default);
+        Configuration.SetCustomFloatValue(this.pName, Default);
         Service.Configuration.Save();
     }
 }
@@ -55,9 +55,9 @@ internal class UserInt : UserData
     // Constructor with both string and int parameters
     public UserInt(string v, int defaults) : base(v) // Overload constructor to preload data
     {
-        if (!PluginConfiguration.CustomIntValues.ContainsKey(this.pName)) // if it isn't there, set
+        if (!Configuration.CustomIntValues.ContainsKey(this.pName)) // if it isn't there, set
         {
-            PluginConfiguration.SetCustomIntValue(this.pName, defaults);
+            Configuration.SetCustomIntValue(this.pName, defaults);
             Service.Configuration.Save();
         }
 
@@ -66,13 +66,13 @@ internal class UserInt : UserData
     }
 
     // Implicit conversion to int
-    public static implicit operator int(UserInt o) => PluginConfiguration.GetCustomIntValue(o.pName);
+    public static implicit operator int(UserInt o) => Configuration.GetCustomIntValue(o.pName);
 
-    public int Value { get { return this; } set { PluginConfiguration.SetCustomIntValue(this.pName, value); Service.Configuration.Save(); } }
+    public int Value { get { return this; } set { Configuration.SetCustomIntValue(this.pName, value); Service.Configuration.Save(); } }
 
     public override void ResetToDefault()
     {
-        PluginConfiguration.SetCustomIntValue(this.pName, Default);
+        Configuration.SetCustomIntValue(this.pName, Default);
         Service.Configuration.Save();
     }
 }
@@ -87,9 +87,9 @@ internal class UserBool : UserData
     // Constructor with both string and bool parameters
     public UserBool(string v, bool defaults) : base(v) // Overload constructor to preload data
     {
-        if (!PluginConfiguration.CustomBoolValues.ContainsKey(this.pName)) // if it isn't there, set
+        if (!Configuration.CustomBoolValues.ContainsKey(this.pName)) // if it isn't there, set
         {
-            PluginConfiguration.SetCustomBoolValue(this.pName, defaults);
+            Configuration.SetCustomBoolValue(this.pName, defaults);
             Service.Configuration.Save();
         }
 
@@ -98,11 +98,11 @@ internal class UserBool : UserData
     }
 
     // Implicit conversion to bool
-    public static implicit operator bool(UserBool o) => PluginConfiguration.GetCustomBoolValue(o.pName);
+    public static implicit operator bool(UserBool o) => Configuration.GetCustomBoolValue(o.pName);
 
     public override void ResetToDefault()
     {
-        PluginConfiguration.SetCustomBoolValue(this.pName, Default);
+        Configuration.SetCustomBoolValue(this.pName, Default);
         Service.Configuration.Save();
     }
 }
@@ -112,9 +112,9 @@ internal class UserIntArray : UserData
     public string Name => pName;
 
     public int[] Default;
-    public int Count => PluginConfiguration.GetCustomIntArrayValue(this.pName).Length;
-    public bool Any(Func<int, bool> func) => PluginConfiguration.GetCustomIntArrayValue(this.pName).Any(func);
-    public int[] Items => PluginConfiguration.GetCustomIntArrayValue(this.pName);
+    public int Count => Configuration.GetCustomIntArrayValue(this.pName).Length;
+    public bool Any(Func<int, bool> func) => Configuration.GetCustomIntArrayValue(this.pName).Any(func);
+    public int[] Items => Configuration.GetCustomIntArrayValue(this.pName);
     public int IndexOf(int item)
     {
         for (int i = 0; i < Count; i++)
@@ -127,17 +127,17 @@ internal class UserIntArray : UserData
 
     public void Clear(int maxValues)
     {
-        var array = PluginConfiguration.GetCustomIntArrayValue(this.pName);
+        var array = Configuration.GetCustomIntArrayValue(this.pName);
         Array.Resize(ref array, maxValues);
-        PluginConfiguration.SetCustomIntArrayValue(this.pName, array);
+        Configuration.SetCustomIntArrayValue(this.pName, array);
         Service.Configuration.Save();
     }
 
     public UserIntArray(string v, int[] defaults) : base(v)
     {
-        if (!PluginConfiguration.CustomIntArrayValues.ContainsKey(this.pName))
+        if (!Configuration.CustomIntArrayValues.ContainsKey(this.pName))
         {
-            PluginConfiguration.SetCustomIntArrayValue(this.pName, defaults);
+            Configuration.SetCustomIntArrayValue(this.pName, defaults);
             Service.Configuration.Save();
         }
 
@@ -147,9 +147,9 @@ internal class UserIntArray : UserData
 
     public UserIntArray(string v) : base(v)
     {
-        if (!PluginConfiguration.CustomIntArrayValues.ContainsKey(this.pName))
+        if (!Configuration.CustomIntArrayValues.ContainsKey(this.pName))
         {
-            PluginConfiguration.SetCustomIntArrayValue(this.pName, []);
+            Configuration.SetCustomIntArrayValue(this.pName, []);
             Service.Configuration.Save();
         }
 
@@ -157,7 +157,7 @@ internal class UserIntArray : UserData
         MasterList.Add(this.pName, this);
     }
 
-    public static implicit operator int[](UserIntArray o) => PluginConfiguration.GetCustomIntArrayValue(o.pName);
+    public static implicit operator int[](UserIntArray o) => Configuration.GetCustomIntArrayValue(o.pName);
 
     public int this[int index]
     {
@@ -165,19 +165,19 @@ internal class UserIntArray : UserData
         {
             if (index >= this.Count)
             {
-                var array = PluginConfiguration.GetCustomIntArrayValue(this.pName);
+                var array = Configuration.GetCustomIntArrayValue(this.pName);
                 Array.Resize(ref array, index + 1);
                 array[index] = 0;
-                PluginConfiguration.SetCustomIntArrayValue(this.pName, array);
+                Configuration.SetCustomIntArrayValue(this.pName, array);
                 Service.Configuration.Save();
             }
-            return PluginConfiguration.GetCustomIntArrayValue(this.pName)[index];
+            return Configuration.GetCustomIntArrayValue(this.pName)[index];
         }
         set
         {
             if (index < this.Count)
             {
-                var array = PluginConfiguration.GetCustomIntArrayValue(this.pName);
+                var array = Configuration.GetCustomIntArrayValue(this.pName);
                 array[index] = value;
                 Service.Configuration.Save();
             }
@@ -186,7 +186,7 @@ internal class UserIntArray : UserData
 
     public override void ResetToDefault()
     {
-        PluginConfiguration.SetCustomIntArrayValue(this.pName, (int[])Default.Clone());
+        Configuration.SetCustomIntArrayValue(this.pName, (int[])Default.Clone());
         Service.Configuration.Save();
     }
 }
@@ -201,9 +201,9 @@ internal class UserBoolArray : UserData
     // Constructor with both string and bool array parameters
     public UserBoolArray(string v, bool[] defaults) : base(v)
     {
-        if (!PluginConfiguration.CustomBoolArrayValues.ContainsKey(this.pName))
+        if (!Configuration.CustomBoolArrayValues.ContainsKey(this.pName))
         {
-            PluginConfiguration.SetCustomBoolArrayValue(this.pName, defaults);
+            Configuration.SetCustomBoolArrayValue(this.pName, defaults);
             Service.Configuration.Save();
         }
 
@@ -211,33 +211,33 @@ internal class UserBoolArray : UserData
         MasterList.Add(this.pName, this);
     }
 
-    public int Count => PluginConfiguration.GetCustomBoolArrayValue(this.pName).Length;
-    public static implicit operator bool[](UserBoolArray o) => PluginConfiguration.GetCustomBoolArrayValue(o.pName);
+    public int Count => Configuration.GetCustomBoolArrayValue(this.pName).Length;
+    public static implicit operator bool[](UserBoolArray o) => Configuration.GetCustomBoolArrayValue(o.pName);
     public bool this[int index]
     {
         get
         {
             if (index >= this.Count)
             {
-                var array = PluginConfiguration.GetCustomBoolArrayValue(this.pName);
+                var array = Configuration.GetCustomBoolArrayValue(this.pName);
                 Array.Resize(ref array, index + 1);
                 array[index] = false;
-                PluginConfiguration.SetCustomBoolArrayValue(this.pName, array);
+                Configuration.SetCustomBoolArrayValue(this.pName, array);
                 Service.Configuration.Save();
             }
-            return PluginConfiguration.GetCustomBoolArrayValue(this.pName)[index];
+            return Configuration.GetCustomBoolArrayValue(this.pName)[index];
         }
     }
 
     public bool All(Func<bool, bool> predicate)
     {
-        var array = PluginConfiguration.GetCustomBoolArrayValue(this.pName);
+        var array = Configuration.GetCustomBoolArrayValue(this.pName);
         return array.All(predicate);
     }
 
     public override void ResetToDefault()
     {
-        PluginConfiguration.SetCustomBoolArrayValue(this.pName, Default);
+        Configuration.SetCustomBoolArrayValue(this.pName, Default);
         Service.Configuration.Save();
     }
 }
