@@ -2706,28 +2706,8 @@ public enum Preset
     [Hidden]
     DRK_Hidden = 5200,
 
-    [ParentCombo(DRK_Hidden)]
-    [CustomComboInfo("R6S: Hold Burst on Squirrels", "When you're targeting Squirrels in R6S add phase, hold burst.\n(until about the time the first manta is dying)", Job.DRK)]
-    [Hidden]
-    DRK_Hid_R6SHoldSquirrelBurst = 5201,
-
-    [ParentCombo(DRK_Hidden)]
-    [CustomComboInfo("R6S: Only Stun Jabberwock", "When in R6S, stun will only ever be used on the Jabberwock.", Job.DRK)]
-    [Hidden]
-    DRK_Hid_R6SStunJabberOnly = 5202,
-
-    [ParentCombo(DRK_Hidden)]
-    [CustomComboInfo("R6S: Save Reprisal and Dark Missionary", "When in R6S, never try use Reprisal or Dark Missionary automatically.", Job.DRK)]
-    [Hidden]
-    DRK_Hid_R6SNoAutoGroupMits = 5203,
-
-    [ParentCombo(DRK_Hidden)]
-    [CustomComboInfo("R7S: Only Interrupt the adds casting Circle AoEs", "When you're in R7S, Interrupting will only work when you're targeting an add casting the circle AoE.", Job.DRK)]
-    [Hidden]
-    DRK_Hid_R7SCircleCastOnly = 5204,
-
     #endregion
-    // Last value = 5204
+    // Last value = 5200
 
     #endregion
 
