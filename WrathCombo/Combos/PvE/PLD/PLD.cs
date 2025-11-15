@@ -15,7 +15,7 @@ internal partial class PLD : Tank
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not RageOfHalone)
+            if (actionID is not (RageOfHalone or RoyalAuthority))
                 return actionID;
 
             if (ComboTimer > 0)

@@ -4865,8 +4865,8 @@ public enum Preset
 
     #region Basic combo
 
-    [ReplaceSkill(PLD.RageOfHalone)]
-    [CustomComboInfo("Basic Combo", "Replace Rage Of Halone with its combo chain.", Job.PLD)]
+    [ReplaceSkill(PLD.RageOfHalone, PLD.RoyalAuthority)]
+    [CustomComboInfo("Basic Combo", "Replace Rage Of Halone or Royal Authority with its combo chain.", Job.PLD)]
     [BasicCombo]
     PLD_ST_BasicCombo = 11061,
 
