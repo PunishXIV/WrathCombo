@@ -111,7 +111,7 @@ internal partial class PCT : Caster
 
             #region Pre_Burst Motifs
             //Prepare for Burst
-            if (GetCooldownRemainingTime(ScenicMuse) <= 20)
+            if (LevelChecked(ScenicMuse) && GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
                 if (LandscapeMotifReady && GetTargetHPPercent() > 10)
                     return OriginalHook(LandscapeMotif);
@@ -322,7 +322,7 @@ internal partial class PCT : Caster
 
             #region Pre_Burst Motifs
             //Prepare for Burst
-            if (GetCooldownRemainingTime(ScenicMuse) <= 20)
+            if (LevelChecked(ScenicMuse) && GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
                 if (landscapeMotifEnabled && LandscapeMotifReady && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
@@ -486,7 +486,7 @@ internal partial class PCT : Caster
 
             #region Pre_Burst Motifs
             //Prepare for Burst
-            if (GetCooldownRemainingTime(ScenicMuse) <= 20)
+            if (LevelChecked(ScenicMuse) && GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
                 if (LandscapeMotifReady && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
@@ -673,7 +673,7 @@ internal partial class PCT : Caster
 
             #region Pre_Burst Motifs
             //Prepare for Burst
-            if (GetCooldownRemainingTime(ScenicMuse) <= 20)
+            if (LevelChecked(ScenicMuse) && GetCooldownRemainingTime(ScenicMuse) <= 20)
             {
                 if (landscapeMotifEnabled && LandscapeMotifReady && GetTargetHPPercent() > landscapeStop)
                     return OriginalHook(LandscapeMotif);
