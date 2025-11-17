@@ -372,6 +372,9 @@ internal partial class WHM : Healer
         {
             if (actionID is not Cure)
                 return actionID;
+
+            if (ContentSpecificActions.TryGet(out var contentAction, healing: true))
+                return contentAction;
             
             var healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
             
@@ -494,6 +497,9 @@ internal partial class WHM : Healer
         {
             if (actionID is not Cure)
                 return actionID;
+
+            if (ContentSpecificActions.TryGet(out var contentAction, healing: true))
+                return contentAction;
 
             #region Variables
 

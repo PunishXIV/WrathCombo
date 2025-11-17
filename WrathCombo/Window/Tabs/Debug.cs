@@ -414,7 +414,6 @@ internal class Debug : ConfigWindow, IDisposable
                     foundSheet = false;
                 
                 CustomStyleText("Name:", target?.Name);
-                CustomStyleText("IDs: (<entity>/<data or base>)", $"{target?.EntityId} / {target?.BaseId}");
                 CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
                 CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
                 CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
@@ -463,7 +462,7 @@ internal class Debug : ConfigWindow, IDisposable
 
             if (ImGui.TreeNode("Object Data"))
             {
-                CustomStyleText("DataId:", target?.BaseId);
+                CustomStyleText("Data/BaseId:", target?.BaseId);
 
                 // Display 'EntityId' only if it differs from 'GameObjectId'
                 if (target is not null && target.EntityId != target.GameObjectId)
@@ -473,6 +472,7 @@ internal class Debug : ConfigWindow, IDisposable
                 }
 
                 CustomStyleText("ObjectId:", target?.GameObjectId);
+                CustomStyleText("NameId:", target?.GetNameId());
                 CustomStyleText("ObjectKind:", target?.ObjectKind);
                 CustomStyleText("ObjectSubKind:", target?.SubKind);
                 CustomStyleText("ObjectType:", target?.GetType()?.Name);
