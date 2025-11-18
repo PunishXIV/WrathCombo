@@ -76,7 +76,7 @@ internal partial class GNB : Tank
                 return LightningShot;
             if (ShouldUseBloodfest)
                 return Bloodfest;
-            if (ShouldUseNoMercy)
+            if (ShouldUseNoMercy(TraitLevelChecked(Traits.CartridgeCharge)))
                 return NoMercy;
             if (JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast))
             {
@@ -209,7 +209,7 @@ internal partial class GNB : Tank
             {
                 if (IsEnabled(Preset.GNB_ST_Bloodfest) && ShouldUseBloodfest)
                     return Bloodfest;
-                if (IsEnabled(Preset.GNB_ST_NoMercy) && ShouldUseNoMercy && GetTargetHPPercent() > STStopNM &&
+                if (IsEnabled(Preset.GNB_ST_NoMercy) && ShouldUseNoMercy(TraitLevelChecked(Traits.CartridgeCharge)) && GetTargetHPPercent() > STStopNM &&
                     (GNB_ST_NoMercy_SubOption == 0 || GNB_ST_NoMercy_SubOption == 1 && InBossEncounter()))
                     return NoMercy;
                 if (IsEnabled(Preset.GNB_ST_Continuation) && IsEnabled(Preset.GNB_ST_NoMercy) &&
@@ -314,7 +314,7 @@ internal partial class GNB : Tank
             {
                 if (CanWeave())
                 {
-                    if (ActionReady(NoMercy) && GetTargetHPPercent() > 10)
+                    if (ShouldUseNoMercy(LevelChecked(DemonSlaughter)) && GetTargetHPPercent() > 10)
                         return NoMercy;
                     if (LevelChecked(FatedBrand) && HasStatusEffect(Buffs.ReadyToRaze))
                         return FatedBrand;
@@ -405,7 +405,7 @@ internal partial class GNB : Tank
             {
                 if (CanWeave())
                 {
-                    if (IsEnabled(Preset.GNB_AoE_NoMercy) && ShouldUseNoMercy && GetTargetHPPercent() > AoEStopNM)
+                    if (IsEnabled(Preset.GNB_AoE_NoMercy) && ShouldUseNoMercy(LevelChecked(DemonSlaughter)) && GetTargetHPPercent() > AoEStopNM)
                         return NoMercy;
                     if (IsEnabled(Preset.GNB_AoE_BowShock) && ShouldUseBowShock)
                         return BowShock;
@@ -427,7 +427,7 @@ internal partial class GNB : Tank
                     if ((HasNM && (IsOnCooldown(DoubleDown) || !LevelChecked(DoubleDown) || !IsEnabled(Preset.GNB_AoE_DoubleDown)) && GunStep == 0) || //burst
                         (LevelChecked(Bloodfest) && IsEnabled(Preset.GNB_AoE_Bloodfest) && BFcd < 6) || //Bloodfest prep
                         (GNB_AoE_Overcap_Choice == 0 && ComboAction == DemonSlice && Ammo == MaxCartridges()))
-                        return LevelChecked(FatedCircle) ? FatedCircle : GNB_AoE_FatedCircle_BurstStrike == 0 ? BurstStrike : ComboAction == DemonSlice ? DemonSlaughter : DemonSlice;
+                        return LevelChecked(FatedCircle) ? FatedCircle : GNB_AoE_FatedCircle_BurstStrike == 0 ? BurstStrike : LevelChecked(DemonSlaughter)  && ComboAction == DemonSlice ? DemonSlaughter : DemonSlice;
                 }
             }
             return AOECombo;
@@ -458,7 +458,7 @@ internal partial class GNB : Tank
                 }
                 if (IsEnabled(Preset.GNB_GF_Bloodfest) && ShouldUseBloodfest)
                     return Bloodfest;
-                if (IsEnabled(Preset.GNB_GF_NoMercy) && ShouldUseNoMercy)
+                if (IsEnabled(Preset.GNB_GF_NoMercy) && ShouldUseNoMercy(TraitLevelChecked(Traits.CartridgeCharge)))
                     return NoMercy;
                 if (IsEnabled(Preset.GNB_GF_Continuation) && JustUsed(BurstStrike, 5f) && LevelChecked(Hypervelocity) && HasStatusEffect(Buffs.ReadyToBlast))
                 {
