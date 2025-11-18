@@ -794,10 +794,10 @@ internal partial class SGE : Healer
 
             if (!LevelChecked(Taurochole) || IsOnCooldown(Taurochole))
                 return IsEnabled(Preset.SGE_Retarget_Druochole)
-                    ? Druochole.Retarget(Taurochole, HealStack, true)
+                    ? Druochole.Retarget(Taurochole, HealStack)
                     : Druochole;
             return IsEnabled(Preset.SGE_Retarget_Taurochole)
-                ? Taurochole.Retarget(HealStack, true)
+                ? Taurochole.Retarget(HealStack)
                 : Taurochole;
         }
     }
@@ -813,7 +813,7 @@ internal partial class SGE : Healer
 
             if (!HasStatusEffect(Buffs.Kardia) || IsOnCooldown(Soteria))
                 return IsEnabled(Preset.SGE_Retarget_Kardia)
-                    ? Kardia.Retarget(actionID, HealStack, true)
+                    ? Kardia.Retarget(actionID, HealStack)
                     : Kardia;
 
             return actionID;
@@ -830,7 +830,7 @@ internal partial class SGE : Healer
 
             if (ActionReady(Krasis))
                 return IsEnabled(Preset.SGE_Retarget_Krasis)
-                    ? Krasis.Retarget(HealStack, true)
+                    ? Krasis.Retarget(HealStack)
                     : actionID;
 
             if (!HasStatusEffect(Buffs.EukrasianDiagnosis, HealStack))
@@ -839,21 +839,21 @@ internal partial class SGE : Healer
                     return Eukrasia;
 
                 return IsEnabled(Preset.SGE_Retarget_EukrasianDiagnosis)
-                    ? EukrasianDiagnosis.Retarget(Krasis, HealStack, true)
+                    ? EukrasianDiagnosis.Retarget(Krasis, HealStack)
                     : EukrasianDiagnosis;
             }
 
             if (SGE_Mit_ST_Options[0] && !ActionReady(Krasis) &&
                 ActionReady(Haima))
                 return IsEnabled(Preset.SGE_Retarget_Haima)
-                    ? Haima.Retarget(Krasis, HealStack, true)
+                    ? Haima.Retarget(Krasis, HealStack)
                     : Haima;
 
             if (SGE_Mit_ST_Options[1] && !ActionReady(Krasis) &&
                 ActionReady(Taurochole) &&
                 GetTargetHPPercent(HealStack) <= SGE_Mit_ST_TaurocholeThreshold)
                 return IsEnabled(Preset.SGE_Retarget_Taurochole)
-                    ? Taurochole.Retarget(Krasis, HealStack, true)
+                    ? Taurochole.Retarget(Krasis, HealStack)
                     : Taurochole;
 
             return actionID;
@@ -906,28 +906,28 @@ internal partial class SGE : Healer
                 return actionID;
 
             if (IsEnabled(Preset.SGE_Retarget_Diagnosis))
-                OriginalHook(Diagnosis).Retarget(HealStack, true);
+                OriginalHook(Diagnosis).Retarget(HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_EukrasianDiagnosis))
-                EukrasianDiagnosis.Retarget(Diagnosis, HealStack, true);
+                EukrasianDiagnosis.Retarget(Diagnosis, HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_Haima))
-                Haima.Retarget(HealStack, true);
+                Haima.Retarget(HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_Druochole))
-                Druochole.Retarget(HealStack, true);
+                Druochole.Retarget(HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_Taurochole))
-                Taurochole.Retarget(HealStack, true);
+                Taurochole.Retarget(HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_Krasis))
-                Krasis.Retarget(HealStack, true);
+                Krasis.Retarget(HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_Kardia))
-                Kardia.Retarget(HealStack, true);
+                Kardia.Retarget(HealStack);
 
             if (IsEnabled(Preset.SGE_Retarget_Icarus))
-                Icarus.Retarget(SimpleTarget.Stack.MouseOver ?? SimpleTarget.HardTarget, true);
+                Icarus.Retarget(SimpleTarget.Stack.MouseOver ?? SimpleTarget.HardTarget);
 
             return actionID;
         }

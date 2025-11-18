@@ -55,12 +55,10 @@ public static class HealRetargeting
     /// <seealso cref="UIntExtensions.Retarget(uint,IGameObject?,bool)" />
     public static uint RetargetIfEnabled
     (this uint actionID,
-        IGameObject? optionalTarget,
-        bool dontCull = false) =>
+        IGameObject? optionalTarget) =>
         RetargetSettingOn && optionalTarget is null
             ? actionID.Retarget(
-                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack,
-                dontCull)
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
             : actionID;
 
     /// <summary>
@@ -74,12 +72,10 @@ public static class HealRetargeting
     public static uint RetargetIfEnabled
     (this uint actionID,
         IGameObject? optionalTarget,
-        uint replaced,
-        bool dontCull = false) =>
+        uint replaced) =>
         RetargetSettingOn && optionalTarget is null
             ? actionID.Retarget(replaced,
-                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack,
-                dontCull)
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
             : actionID;
 
     /// <summary>
@@ -93,11 +89,9 @@ public static class HealRetargeting
     public static uint RetargetIfEnabled
     (this uint actionID,
         IGameObject? optionalTarget,
-        uint[] replaced,
-        bool dontCull = false) =>
+        uint[] replaced) =>
         RetargetSettingOn && optionalTarget is null
             ? actionID.Retarget(replaced,
-                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack,
-                dontCull)
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
             : actionID;
 }

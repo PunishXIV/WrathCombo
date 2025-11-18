@@ -954,7 +954,7 @@ internal class Debug : ConfigWindow, IDisposable
 
                     var createdTimeString = retarget.Created.ToString(@"HH\:mm\:ss");
                     CustomStyleText($"Created: {createdTimeString}",
-                        $"Don't Cull Setting: {(retarget.DontCull ? "On" : "Off")}");
+                        $"");
 
                     ImGui.Unindent();
 

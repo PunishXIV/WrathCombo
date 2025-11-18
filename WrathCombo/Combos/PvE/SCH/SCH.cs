@@ -1,6 +1,5 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameFunctions;
-using ECommons.Logging;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -575,11 +574,11 @@ internal partial class SCH : Healer
 
             if (ActionReady(Excogitation))
                 return IsEnabled(Preset.SCH_Retarget_Excogitation)
-                    ? Excogitation.Retarget(Lustrate, healStack, true)
+                    ? Excogitation.Retarget(Lustrate, healStack)
                     : Excogitation;
 
             return IsEnabled(Preset.SCH_Retarget_Lustrate)
-                ? Lustrate.Retarget(healStack, true)
+                ? Lustrate.Retarget(healStack)
                 : Lustrate;
         }
     }
@@ -608,11 +607,11 @@ internal partial class SCH : Healer
                     return OriginalHook(Indomitability);
                 if (SCH_Recitation_Mode == 3)
                     return IsEnabled(Preset.SCH_Retarget_Excogitation) && ActionReady(OriginalHook(Excogitation))
-                        ? Excogitation.Retarget(Recitation, healStack, true)
+                        ? Excogitation.Retarget(Recitation, healStack)
                         : Excogitation;
                 if (SCH_Recitation_Mode == 0)
                     return IsEnabled(Preset.SCH_Retarget_Adloquium)
-                        ? OriginalHook(Adloquium).Retarget(Recitation, healStack, true)
+                        ? OriginalHook(Adloquium).Retarget(Recitation, healStack)
                         : OriginalHook(Adloquium);
             }
             return actionID;
@@ -726,11 +725,11 @@ internal partial class SCH : Healer
                     return Recitation;
 
                 return IsEnabled(Preset.SCH_Retarget_Adloquium)
-                    ? OriginalHook(Adloquium).Retarget(DeploymentTactics, healStack, true)
+                    ? OriginalHook(Adloquium).Retarget(DeploymentTactics, healStack)
                     : OriginalHook(Adloquium);
             }
             return IsEnabled(Preset.SCH_Retarget_DeploymentTactics)
-                ? DeploymentTactics.Retarget(healStack, true)
+                ? DeploymentTactics.Retarget(healStack)
                 : actionID;
         }
     }
@@ -779,7 +778,7 @@ internal partial class SCH : Healer
 
             if (ActionReady(Protraction))
                 return IsEnabled(Preset.SCH_Retarget_Protraction)
-                    ? Protraction.Retarget(healStack, dontCull: true)
+                    ? Protraction.Retarget(healStack)
                     : actionID;
 
             if (SCH_Mit_STOptions[0] &&
@@ -789,19 +788,19 @@ internal partial class SCH : Healer
             if (ActionReady(Adloquium) &&
                 !HasStatusEffect(Buffs.Galvanize, healStack))
                 return IsEnabled(Preset.SCH_Retarget_Adloquium)
-                ? OriginalHook(Adloquium).Retarget(Protraction, healStack, true)
+                ? OriginalHook(Adloquium).Retarget(Protraction, healStack)
                 : OriginalHook(Adloquium);
 
             if (SCH_Mit_STOptions[1] &&
                 ActionReady(DeploymentTactics) &&
                 HasStatusEffect(Buffs.Catalyze, healStack))
                 return IsEnabled(Preset.SCH_Retarget_DeploymentTactics)
-                    ? DeploymentTactics.Retarget(Protraction, healStack, true)
+                    ? DeploymentTactics.Retarget(Protraction, healStack)
                     : DeploymentTactics;
 
             if (SCH_Mit_STOptions[2] && ActionReady(Excogitation))
                 return IsEnabled(Preset.SCH_Retarget_Excogitation)
-                    ? Excogitation.Retarget(Protraction, healStack, true)
+                    ? Excogitation.Retarget(Protraction, healStack)
                     : Excogitation;
 
             return actionID;
@@ -879,25 +878,25 @@ internal partial class SCH : Healer
             IGameObject? healStack = SimpleTarget.Stack.AllyToHeal;
 
             if (IsEnabled(Preset.SCH_Retarget_Adloquium))
-                OriginalHook(Adloquium).Retarget(healStack, true);
+                OriginalHook(Adloquium).Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_Physick))
-                Physick.Retarget(healStack, true);
+                Physick.Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_Lustrate))
-                Lustrate.Retarget(healStack, true);
+                Lustrate.Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_Excogitation))
-                Excogitation.Retarget(healStack, true);
+                Excogitation.Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_DeploymentTactics))
-                DeploymentTactics.Retarget(healStack, true);
+                DeploymentTactics.Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_Protraction))
-                Protraction.Retarget(healStack, true);
+                Protraction.Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_Aetherpact))
-                Aetherpact.Retarget(healStack, true);
+                Aetherpact.Retarget(healStack);
 
             if (IsEnabled(Preset.SCH_Retarget_SacredSoil))
             {
@@ -909,7 +908,7 @@ internal partial class SCH : Healer
                         ? SimpleTarget.HardTarget.IfFriendly()
                         : null) ??
                     SimpleTarget.Self;
-                SacredSoil.Retarget(soilTarget, dontCull: true);
+                SacredSoil.Retarget(soilTarget);
             }
             return actionID;
         }

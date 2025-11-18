@@ -8,7 +8,7 @@ using static WrathCombo.Combos.PvE.WAR.Config;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class WAR : Tank
+internal partial class WAR
 {
     #region Simple Mode - Single Target
     internal class WAR_ST_Simple : CustomCombo
@@ -485,7 +485,7 @@ internal partial class WAR : Tank
     {
         protected internal override Preset Preset => Preset.WAR_RetargetHolmgang;
 
-        protected override uint Invoke(uint actionID) => actionID != Holmgang ? actionID : actionID.Retarget(SimpleTarget.Self, dontCull: true);
+        protected override uint Invoke(uint actionID) => actionID != Holmgang ? actionID : actionID.Retarget(SimpleTarget.Self);
     }
     #endregion
 

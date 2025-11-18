@@ -148,7 +148,7 @@ internal static class ASTPvP
                 
                     if (!HasStatusEffect(Buffs.DiurnalBenefic, healTarget) && GetTargetHPPercent(healTarget) <= ASTPvP_Burst_HealThreshold && ActionReady(AspectedBenefic))
                         return ASTPvP_BurstHealRetarget
-                            ? AspectedBenefic.Retarget(Malefic, healTarget, true)
+                            ? AspectedBenefic.Retarget(Malefic, healTarget)
                             : AspectedBenefic;
                 }
             }

@@ -379,7 +379,7 @@ internal partial class DRK : Tank
 
             if (target is not null &&
                 CanApplyStatus(target, Buffs.BlackestNightShield))
-                return actionID.Retarget(target, dontCull: true);
+                return actionID.Retarget(target);
 
             return actionID;
         }
@@ -408,7 +408,7 @@ internal partial class DRK : Tank
 
             if (target is not null &&
                 CanApplyStatus(target, Buffs.Oblation))
-                return actionID.Retarget(target, dontCull: true);
+                return actionID.Retarget(target);
 
             return actionID;
         }
