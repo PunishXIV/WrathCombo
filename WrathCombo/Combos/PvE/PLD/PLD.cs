@@ -868,7 +868,7 @@ internal partial class PLD : Tank
                 ))
                 return HallowedGround;
 
-            foreach (int priority in PLD_Mit_Priorities.Items.OrderBy(x => x))
+            foreach (int priority in PLD_Mit_Priorities.OrderBy(x => x))
             {
                 int index = PLD_Mit_Priorities.IndexOf(priority);
                 if (CheckMitigationConfigMeetsRequirements(index, out uint action))

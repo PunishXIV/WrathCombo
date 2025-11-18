@@ -540,7 +540,7 @@ public class Search(Leasing leasing)
     #endregion
 
     /// <summary>
-    ///     A wrapper for <see cref="Core.PluginConfiguration.AutoActions" /> with
+    ///     A wrapper for <see cref="Configuration.AutoActions" /> with
     ///     IPC settings on top.
     /// </summary>
     internal Dictionary<Preset, bool> AutoActions =>
@@ -554,7 +554,7 @@ public class Search(Leasing leasing)
             );
 
     /// <summary>
-    ///     A wrapper for <see cref="Core.PluginConfiguration.EnabledActions" /> with
+    ///     A wrapper for <see cref="Configuration.EnabledActions" /> with
     ///     IPC settings on top.
     /// </summary>
     internal HashSet<Preset> EnabledActions =>

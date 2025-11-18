@@ -333,7 +333,7 @@ internal partial class DRK : Tank
                 ))
                 return LivingDead;
 
-            foreach (var priority in DRK_Mit_Priorities.Items.OrderBy(x => x))
+            foreach (var priority in DRK_Mit_Priorities.OrderBy(x => x))
             {
                 var index = DRK_Mit_Priorities.IndexOf(priority);
                 if (CheckMitigationConfigMeetsRequirements(index, out var action))
