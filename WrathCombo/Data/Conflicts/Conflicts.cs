@@ -16,6 +16,7 @@ public enum ConflictType
     Combo,
     Targeting,
     Settings,
+    GameSetting,
 }
 
 /// <summary>
@@ -71,24 +72,32 @@ public class Conflict
         var search = Svc.PluginInterface.InstalledPlugins
             .FirstOrDefault(x => x.InternalName == internalName);
 
-        _plugin = search ?? throw new KeyNotFoundException(
-            $"Plugin with internal name '{internalName}' not found.");
+        if (conflictType is ConflictType.GameSetting)
+            _xiv = true;
+
+        _plugin = search ??
+                  (_xiv
+                      ? null!
+                      : throw new KeyNotFoundException(
+                          $"Plugin with internal name '{internalName}' not found."));
         ConflictType = conflictType;
         Reason = reason;
     }
 
+    private readonly bool _xiv;
+
     /// The display name of the plugin.
-    public string Name => _plugin.Name;
+    public string Name => _xiv ? "XIV" : _plugin.Name;
 
     /// <summary>
     ///     The internal name of the plugin, which can be used for getting a
     ///     <see cref="IExposedPlugin" /> instance from
     ///     <see cref="Svc.PluginInterface">Svc.PluginInterface.InstalledPlugins</see>.
     /// </summary>
-    internal string InternalName => _plugin.InternalName;
+    internal string InternalName =>_xiv ? "XIV" :  _plugin.InternalName;
 
     /// The version of the plugin, as a string.
-    public string Version => _plugin.Version.ToString();
+    public string Version => _xiv ? "" :  "v" + _plugin.Version;
 
     /// What
     /// <see cref="ConflictType">type</see>
@@ -117,6 +126,7 @@ public class Conflict
             ConflictType.Combo => [ComboConflictStart, ComboConflictEnd],
             ConflictType.Targeting => [TargetingConflictStart, TargetingConflictEnd],
             ConflictType.Settings => [SettingsConflictStart, SettingsConflictEnd],
+            ConflictType.GameSetting => [GameConflictStart, GameConflictEnd],
             _ => throw new ArgumentOutOfRangeException(nameof(ConflictType),
                 $"Unknown conflict type: {ConflictType}"),
         };
@@ -131,6 +141,9 @@ public class Conflict
 
     private const string SettingsConflictStart = "Conflicting Plugin";
     private const string SettingsConflictEnd = "Setting(s) Detected!";
+
+    private const string GameConflictStart = "Conflicting Game";
+    private const string GameConflictEnd = "Setting(s) Detected!";
 
     #endregion
 }

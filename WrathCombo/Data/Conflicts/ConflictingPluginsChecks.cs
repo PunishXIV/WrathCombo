@@ -4,6 +4,7 @@ using ECommons.DalamudServices;
 using ECommons.Logging;
 using System;
 using System.Linq;
+using Dalamud.Game.Config;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
@@ -33,6 +34,7 @@ public static class ConflictingPluginsChecks
         ReAction.CheckForConflict(true);
         ReActionEx.CheckForConflict(true);
         MOAction.CheckForConflict(true);
+        XIV.CheckForConflict(true);
     };
 
     private static readonly Action RunChecks = () =>
@@ -49,6 +51,7 @@ public static class ConflictingPluginsChecks
         ReAction.CheckForConflict();
         ReActionEx.CheckForConflict();
         MOAction.CheckForConflict();
+        XIV.CheckForConflict();
 
         Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(4.11));
     };
@@ -59,6 +62,7 @@ public static class ConflictingPluginsChecks
     internal static ReActionCheck ReAction { get; } = new();
     internal static ReActionCheck ReActionEx { get; } = new(true);
     internal static MOActionCheck MOAction { get; } = new();
+    internal static XIVCheck XIV { get; } = new();
 
     public static void Begin()
     {
@@ -80,6 +84,7 @@ public static class ConflictingPluginsChecks
         ReAction.Dispose();
         ReActionEx.Dispose();
         MOAction.Dispose();
+        XIV.Dispose();
     }
 
     internal sealed class BossModCheck(bool reborn = false)
@@ -92,7 +97,8 @@ public static class ConflictingPluginsChecks
         private int _conflictsInARow;
         private int _maxConflictsInARow = 4;
 
-        public bool SettingConflicted;
+        public bool TargetingSettingConflicted;
+        public bool QueueSettingConflicted;
 
         protected override BossModIPC IPC => (BossModIPC)_ipc;
 
@@ -129,9 +135,12 @@ public static class ConflictingPluginsChecks
             }
 
             // Check for a targeting conflict
-            SettingConflicted =
+            TargetingSettingConflicted =
                 IPC.IsAutoTargetingEnabled() &&
                 AutoRotationController.cfg.DPSRotationMode != DPSRotationMode.Manual;
+
+            // Check for a queue conflict
+            QueueSettingConflicted = IPC.IsUsingCustomQueuing();
 
             // Check for a combo conflict
             if (IPC.HasAutomaticActionsQueued())
@@ -384,10 +393,88 @@ public static class ConflictingPluginsChecks
         }
     }
 
+    internal sealed class XIVCheck() : ConflictCheck()
+    {
+        protected override ReusableIPC IPC => null!;
+
+        public bool GroundTargetingPlacementConflicted;
+        public bool AutoFaceTargetConflicted;
+
+        public override void CheckForConflict(bool forceRefresh = false)
+        {
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
+                return;
+
+            #region Ground Targeting Placement Conflict
+
+            bool doublePressGroundActions;
+            try
+            {
+                if (!Svc.GameConfig.TryGet(
+                        UiConfigOption.GroundTargetActionExcuteType,
+                        out doublePressGroundActions))
+                    throw new AccessViolationException();
+            }
+            catch
+            {
+                PluginLog.Warning(
+                    $"[ConflictingPlugins] [{Name}] " +
+                    $"Could not access UIConfig.DoublePressGroundActions");
+                doublePressGroundActions = false;
+            }
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] `UIConfig.DoublePressGroundActions`: {doublePressGroundActions}");
+            
+            var wrathRetargeted = PresetStorage.AllRetargetedActions.ToHashSet();
+            
+            GroundTargetingPlacementConflicted =
+                doublePressGroundActions &&
+                wrathRetargeted.Any(x => x.IsGroundTargeted());
+
+            #endregion
+
+            #region Auto Face Target Conflict
+
+            bool autoFaceEnabled;
+            try
+            {
+                if (!Svc.GameConfig.TryGet(
+                        UiControlOption.AutoFaceTargetOnAction,
+                        out autoFaceEnabled))
+                    throw new AccessViolationException();
+            }
+            catch
+            {
+                PluginLog.Warning(
+                    $"[ConflictingPlugins] [{Name}] " +
+                    $"Could not access UIControl.AutoFace");
+                autoFaceEnabled = false;
+            }
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] `UIControl.AutoFace`: {autoFaceEnabled}");
+            
+            AutoFaceTargetConflicted = !autoFaceEnabled;
+
+            #endregion
+
+            if (GroundTargetingPlacementConflicted || AutoFaceTargetConflicted)
+                MarkConflict();
+            else
+                Conflicted = false;
+        }
+    }
+
     internal abstract class ConflictCheck : IDisposable
     {
         // ReSharper disable once InconsistentNaming
         protected readonly ReusableIPC _ipc;
+
+        protected ConflictCheck()
+        {
+            _ipc = new XIVSettingsIPC();
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] Setup for Checking");
+        }
 
         protected ConflictCheck(ReusableIPC ipc)
         {
@@ -454,6 +541,10 @@ public static class ConflictingPluginsChecks
                 PluginLog.Information($"[ConflictingPlugins] [{Name}] " +
                                       "Marked Conflict!");
             Conflicted = true;
+        }
+
+        private class XIVSettingsIPC() : ReusableIPC("XIV", new Version(0, 0))
+        {
         }
     }
 }

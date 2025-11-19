@@ -179,7 +179,7 @@ public static class DebugFile
         var conflicts = conflictsObj.ToArray();
         var conflictingPluginsCount = conflicts.Length;
 
-        AddLine($"Conflicting Plugins: {conflictingPluginsCount}");
+        AddLine($"Conflicts: {conflictingPluginsCount}");
 
         if (!hasConflicts)
         {
@@ -187,13 +187,13 @@ public static class DebugFile
             return;
         }
 
-        AddLine("START CONFLICTING PLUGINS");
+        AddLine("START CONFLICTS");
         foreach (var plugin in conflicts)
-            AddLine($"- {plugin.Name} v{plugin.Version} ({plugin.ConflictType}) " +
+            AddLine($"- {plugin.Name} {plugin.Version} ({plugin.ConflictType}) " +
                     (string.IsNullOrEmpty(plugin.Reason)
                         ? ""
-                        : "reason: " + plugin.Reason));
-        AddLine("END CONFLICTING PLUGINS");
+                        : "reason: " + plugin.Reason.Split("    ")[0]));
+        AddLine("END CONFLICTS");
 
         AddLine();
     }

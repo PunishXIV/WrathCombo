@@ -8049,7 +8049,7 @@ public enum Preset
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Afflatus Solace Option", "Adds Afflatus Solace.", Job.WHM)]
-    [PossiblyRetargeted]
+    [PossiblyRetargeted(WHM.AfflatusSolace)]
     WHM_STHeals_Solace = 19303,
 
     [ParentCombo(WHM_STHeals)]
@@ -8069,21 +8069,21 @@ public enum Preset
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Benediction Option", "Adds Benediciton.", Job.WHM)]
-    [PossiblyRetargeted]
+    [PossiblyRetargeted(WHM.Benediction)]
     WHM_STHeals_Benediction = 19302,
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Temperance Option", "Adds Temperance and it's followup Divine Caress.", Job.WHM)]
-    [PossiblyRetargeted]
     WHM_STHeals_Temperance = 19310,
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("Asylum Option", "Adds Asylum.", Job.WHM)]
+    [Retargeted(WHM.Asylum)]
     WHM_STHeals_Asylum = 19311,
 
     [ParentCombo(WHM_STHeals)]
     [CustomComboInfo("LiturgyOfTheBell Option", "Adds LiturgyOfTheBell.", Job.WHM)]
-    [PossiblyRetargeted]
+    [PossiblyRetargeted(WHM.LiturgyOfTheBell, WHM.LiturgyOfTheBellRecast)]
     WHM_STHeals_LiturgyOfTheBell = 19312,
 
     #endregion
@@ -8129,7 +8129,7 @@ public enum Preset
 
     [ParentCombo(WHM_AoEHeals)]
     [CustomComboInfo("Asylum Option", "Adds Asylum placement, when standing still, to the rotation.\nWill Retarget it onto yourself.", Job.WHM)]
-    [Retargeted]
+    [Retargeted(WHM.Asylum)]
     WHM_AoEHeals_Asylum = 19028,
 
     [ParentCombo(WHM_AoEHeals)]
