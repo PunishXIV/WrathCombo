@@ -4939,7 +4939,7 @@ public enum Preset
 
     [ReplaceSkill(PLD.Sheltron)]
     [CustomComboInfo("Sheltron to Intervention Feature", "Will use intervention on your Hard Target if target is a friendly party member, if not then Sheltron." +
-                                                         "\n- UI Mousover > Hard target > Target's target > Self Sheltron", Job.PLD)]
+                                                         "\n- UI Mouseover > Hard target > Target's target > Self Sheltron", Job.PLD)]
     [Retargeted(PLD.Sheltron)]
     PLD_RetargetSheltron = 11068,
 
@@ -4957,10 +4957,16 @@ public enum Preset
     [ConflictingCombos(ALL_Tank_Interrupt)]
     [CustomComboInfo("Retarget Shield Bash", "Redirects your Shield Bash to a stunnable enemy if your current target cannot be stunned.", Job.PLD)]
     PLD_RetargetShieldBash = 11073,
+    
+    [ReplaceSkill(PLD.Cover)]
+    [CustomComboInfo("Retarget Cover Feature", "Will retarget Cover according to the following." +
+                                               "\n- UI Mouseover > Field Mouseover > Hard target", Job.PLD)]
+    [Retargeted(PLD.Cover)]
+    PLD_RetargetCover = 11075,
 
     #endregion
 
-    //// Last value = 11074
+    //// Last value = 11075
 
     #endregion
 

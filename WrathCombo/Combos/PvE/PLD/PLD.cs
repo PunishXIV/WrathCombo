@@ -924,4 +924,26 @@ internal partial class PLD : Tank
             return actionID;
         }
     }
+    
+    internal class PLD_RetargetCover : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.PLD_RetargetCover;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID != Cover)
+                return actionID;
+
+            var target =
+                //Mouseover
+                SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
+
+                //Field mouseover
+                SimpleTarget.ModelMouseOverTarget.IfNotThePlayer().IfInParty();
+
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
+    }
 }
