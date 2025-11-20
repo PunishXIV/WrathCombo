@@ -28,14 +28,14 @@ internal partial class NIN : Melee
                 ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
                 ActionWatching.LastAction == Katon)
                 MudraState.CurrentMudra = MudraCasting.MudraState.None;
-
+            
+            if (STTenChiJin(ref actionID))
+                return actionID;
+            
             if (OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
             
             if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
-                return actionID;
-            
-            if (STTenChiJin(ref actionID))
                 return actionID;
 
             #region Special Content
@@ -149,14 +149,14 @@ internal partial class NIN : Melee
                 ActionWatching.LastAction == Katon)
                 MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
+            if (DotonRemaining < 3 && AoETenChiJinDoton(ref actionID) ||
+                DotonRemaining >= 3 && AoETenChiJinSuiton(ref actionID))
+                return actionID;
+
             if (OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
             
             if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
-                return actionID;
-
-            if (DotonRemaining < 3 && AoETenChiJinDoton(ref actionID) ||
-                DotonRemaining >= 3 && AoETenChiJinSuiton(ref actionID))
                 return actionID;
 
             #region Special Content
@@ -273,16 +273,16 @@ internal partial class NIN : Melee
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
                 return actionID;
+            
+            if (NIN_ST_AdvancedMode_TenChiJin_Options[0] &&
+                STTenChiJin(ref actionID))
+                return actionID;
 
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) &&
                 OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
             
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
-                return actionID;
-            
-            if (NIN_ST_AdvancedMode_TenChiJin_Options[0] &&
-                STTenChiJin(ref actionID))
                 return actionID;
 
             #region Special Content
@@ -424,16 +424,16 @@ internal partial class NIN : Melee
                 ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
                 ActionWatching.LastAction == Katon)
                 MudraState.CurrentMudra = MudraCasting.MudraState.None;
+            
+            if (NIN_AoE_AdvancedMode_TenChiJin_Options[0])
+                if ((NIN_AoE_AdvancedMode_Ninjitsus_Options[2] && DotonRemaining < 3 && AoETenChiJinDoton(ref actionID)) || AoETenChiJinSuiton(ref actionID))
+                    return actionID;
 
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) &&
                 OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
             
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
-                return actionID;
-           
-            if (NIN_AoE_AdvancedMode_TenChiJin_Options[0])
-                if ((NIN_AoE_AdvancedMode_Ninjitsus_Options[2] && DotonRemaining < 3 && AoETenChiJinDoton(ref actionID)) || AoETenChiJinSuiton(ref actionID))
                 return actionID;
 
             #region Special Content

@@ -174,7 +174,7 @@ internal partial class NIN
     #region TCJ Methods
     internal static bool STTenChiJin(ref uint actionID)
     {
-        if (!JustUsed(TenChiJin, 6f))
+        if (!HasStatusEffect(Buffs.TenChiJin))
             return false;
 
         var original = actionID;
@@ -191,7 +191,7 @@ internal partial class NIN
     }
     internal static bool AoETenChiJinDoton(ref uint actionID)
     {
-        if (!JustUsed(TenChiJin, 6f))
+        if (!HasStatusEffect(Buffs.TenChiJin))
             return false;
 
         var original = actionID;
@@ -208,7 +208,7 @@ internal partial class NIN
 
     internal static bool AoETenChiJinSuiton(ref uint actionID)
     {
-        if (!JustUsed(TenChiJin, 6f))
+        if (!HasStatusEffect(Buffs.TenChiJin))
             return false;
 
         var original = actionID;
