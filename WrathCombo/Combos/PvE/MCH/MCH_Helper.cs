@@ -326,19 +326,23 @@ internal partial class MCH
 
     internal static WrathOpener Opener()
     {
-        if (Lvl90EarlyTools.LevelChecked)
-            return Lvl90EarlyTools;
+        if (Lvl100StandardOpener.LevelChecked && MCH_SelectedOpener == 0)
+            return Lvl100StandardOpener;
 
-        if (StandardOpener.LevelChecked)
-            return StandardOpener;
+        if (Lvl100EarlyWFOpener.LevelChecked && MCH_SelectedOpener == 1)
+            return Lvl100EarlyWFOpener;
+
+        if (Lvl90EarlyTools.LevelChecked && (MCH_SelectedOpener == 0 || MCH_SelectedOpener == 1))
+            return Lvl90EarlyTools;
 
         return WrathOpener.Dummy;
     }
 
-    internal static MCHStandardOpener StandardOpener = new();
     internal static MCHLvl90EarlyToolsOpener Lvl90EarlyTools = new();
+    internal static MCHLvl100EarlyWFOpener Lvl100EarlyWFOpener = new();
+    internal static MCHLvl100StandardOpener Lvl100StandardOpener = new();
 
-    internal class MCHStandardOpener : WrathOpener
+    internal class MCHLvl100StandardOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 
@@ -377,6 +381,67 @@ internal partial class MCH
             CheckMate,
             HeatedSplitShot,
             DoubleCheck,
+            HeatedSlugShot,
+            HeatedCleanShot
+        ];
+
+        internal override UserData ContentCheckConfig => MCH_Balance_Content;
+
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
+        [
+            ([2], () => 4)
+        ];
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(Reassemble) is 2 &&
+            GetRemainingCharges(OriginalHook(GaussRound)) is 3 &&
+            GetRemainingCharges(OriginalHook(Ricochet)) is 3 &&
+            IsOffCooldown(Chainsaw) &&
+            IsOffCooldown(Wildfire) &&
+            IsOffCooldown(BarrelStabilizer) &&
+            IsOffCooldown(Excavator) &&
+            IsOffCooldown(FullMetalField);
+    }
+
+    internal class MCHLvl100EarlyWFOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Reassemble,
+            AirAnchor,
+            CheckMate,
+            DoubleCheck,
+            Drill,
+            BarrelStabilizer,
+            Reassemble,
+            Chainsaw,
+            DoubleCheck,
+            Wildfire,
+            Excavator,
+            Hypercharge,
+            AutomatonQueen,
+            BlazingShot,
+            CheckMate,
+            BlazingShot,
+            DoubleCheck,
+            BlazingShot,
+            CheckMate,
+            BlazingShot,
+            DoubleCheck,
+            BlazingShot,
+            CheckMate,
+            Drill,
+            DoubleCheck,
+            CheckMate,
+            FullMetalField,
+            DoubleCheck,
+            CheckMate,
+            Drill,
+            HeatedSplitShot,
             HeatedSlugShot,
             HeatedCleanShot
         ];

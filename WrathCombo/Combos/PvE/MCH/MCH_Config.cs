@@ -16,6 +16,12 @@ internal partial class MCH
                 #region ST
 
                 case Preset.MCH_ST_Adv_Opener:
+                    DrawHorizontalRadioButton(MCH_SelectedOpener,
+                        "Standard opener", "Uses Standard Lvl 100 opener", 0);
+
+                    DrawHorizontalRadioButton(MCH_SelectedOpener,
+                        $"Early {Wildfire.ActionName()} opener", $"Uses Early {Wildfire.ActionName()} Lvl 100 opener", 1);
+
                     DrawBossOnlyChoice(MCH_Balance_Content);
                     break;
 
@@ -245,6 +251,7 @@ internal partial class MCH
 
         public static UserInt
             MCH_Balance_Content = new("MCH_Balance_Content", 1),
+            MCH_SelectedOpener = new("MCH_SelectedOpener", 0),
             MCH_ST_QueenOverDriveHPThreshold = new("MCH_ST_QueenOverDrive", 1),
             MCH_ST_BarrelStabilizerBossOption = new("MCH_ST_BarrelStabilizerBossOption", 1),
             MCH_ST_BarrelStabilizerHPOption = new("MCH_ST_BarrelStabilizerHPOption", 10),

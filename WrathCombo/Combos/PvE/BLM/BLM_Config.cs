@@ -79,7 +79,7 @@ internal partial class BLM
 
                     DrawPriorityInput(BLM_ST_Movement_Priority,
                         5, 3, $"{Xenoglossy.ActionName()} Priority: ");
-                    
+
                     DrawHorizontalMultiChoice(BLM_ST_MovementOption,
                         $"Use {Scathe.ActionName()}", "", 5, 4);
 

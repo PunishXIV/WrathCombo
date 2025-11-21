@@ -98,7 +98,7 @@ internal partial class BLM
                   HasPolyglotStacks() &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast)),
-        
+
         //Scathe
         (Scathe, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[4] &&

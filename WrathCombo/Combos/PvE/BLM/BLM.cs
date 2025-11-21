@@ -40,12 +40,12 @@ internal partial class BLM : Caster
 
                     if (ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
                         !ActionReady(Manafont) && !HasStatusEffect(Buffs.Triplecast) &&
-                        HasBattleTarget())
+                        InActionRange(Fire) && HasBattleTarget())
                         return Role.Swiftcast;
 
                     if (ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
-                        HasBattleTarget() && !HasStatusEffect(Buffs.LeyLines) &&
+                        InActionRange(Fire) && HasBattleTarget() && !HasStatusEffect(Buffs.LeyLines) &&
                         JustUsed(Despair) && !ActionReady(Manafont))
                         return Triplecast;
 
@@ -63,7 +63,7 @@ internal partial class BLM : Caster
 
                     if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
                         ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
-                        HasBattleTarget())
+                        HasBattleTarget() && InActionRange(Fire))
                         return Role.Swiftcast;
                 }
             }
@@ -90,7 +90,8 @@ internal partial class BLM : Caster
                 HasMaxPolyglotStacks)
                 return Xenoglossy;
 
-            if (IsMoving() && InCombat() && HasBattleTarget())
+            if (IsMoving() && InCombat() &&
+                HasBattleTarget() && InActionRange(Fire))
             {
                 if (ActionReady(Triplecast) &&
                     !HasStatusEffect(Buffs.Triplecast) &&
@@ -148,7 +149,8 @@ internal partial class BLM : Caster
                     return Despair;
 
                 if (ActionReady(Blizzard3) &&
-                    !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
+                    !HasStatusEffect(Role.Buffs.Swiftcast) &&
+                    !HasStatusEffect(Buffs.Triplecast))
                     return Blizzard3;
 
                 if (ActionReady(Transpose) &&
@@ -207,7 +209,7 @@ internal partial class BLM : Caster
 
             if (CanWeave())
             {
-                if (IsMoving() && InCombat() && HasBattleTarget() &&
+                if (IsMoving() && InCombat() && InActionRange(Fire2) && HasBattleTarget() &&
                     ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
                     return Triplecast;
 
@@ -251,6 +253,7 @@ internal partial class BLM : Caster
                     return OriginalHook(Fire2);
 
                 if (!HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
+                    HasBattleTarget() && InActionRange(Fire2) &&
                     HasMaxUmbralHeartStacks && !ActionReady(Manafont))
                     return Triplecast;
 
@@ -331,12 +334,14 @@ internal partial class BLM : Caster
 
                     if (IsEnabled(Preset.BLM_ST_Swiftcast) &&
                         ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
-                        HasBattleTarget() && !ActionReady(Manafont) &&
+                        HasBattleTarget() && InActionRange(Fire) &&
+                        !ActionReady(Manafont) &&
                         !HasStatusEffect(Buffs.Triplecast))
                         return Role.Swiftcast;
 
                     if (IsEnabled(Preset.BLM_ST_Triplecast) &&
-                        ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) && HasBattleTarget() &&
+                        ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
+                        HasBattleTarget() && InActionRange(Fire) &&
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                         (BLM_ST_Triplecast_WhenToUse == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
                         (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_MovementCharges ||
@@ -362,11 +367,12 @@ internal partial class BLM : Caster
                         if (IsEnabled(Preset.BLM_ST_Swiftcast) &&
                             ActionReady(Role.Swiftcast) &&
                             !HasStatusEffect(Buffs.Triplecast) &&
-                            HasBattleTarget())
+                            HasBattleTarget() && InActionRange(Fire))
                             return Role.Swiftcast;
 
                         if (IsEnabled(Preset.BLM_ST_Triplecast) &&
-                            ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) && HasBattleTarget() &&
+                            ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
+                            HasBattleTarget() && InActionRange(Fire) &&
                             !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                             (BLM_ST_Triplecast_WhenToUse == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
                             (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_MovementCharges ||
@@ -399,7 +405,8 @@ internal partial class BLM : Caster
                 HasMaxPolyglotStacks)
                 return Xenoglossy;
 
-            if (IsMoving() && InCombat() && HasBattleTarget())
+            if (IsMoving() && InCombat() &&
+                HasBattleTarget() && InActionRange(Fire))
             {
                 foreach(int priority in BLM_ST_Movement_Priority.Items.OrderBy(x => x))
                 {
@@ -510,7 +517,8 @@ internal partial class BLM : Caster
             if (CanWeave())
             {
                 if (IsEnabled(Preset.BLM_AoE_Movement) &&
-                    IsMoving() && InCombat() && HasBattleTarget() &&
+                    IsMoving() && InCombat() &&
+                    HasBattleTarget() && InActionRange(Fire2) &&
                     ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
                     return Triplecast;
 
@@ -565,6 +573,7 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(Preset.BLM_AoE_Triplecast) &&
                     !HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
+                    HasBattleTarget() && InActionRange(Fire2) &&
                     GetRemainingCharges(Triplecast) > BLM_AoE_Triplecast_HoldCharges && HasMaxUmbralHeartStacks &&
                     !ActionReady(Manafont))
                     return Triplecast;
