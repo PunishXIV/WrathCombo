@@ -431,9 +431,9 @@ internal partial class NIN : Melee
             
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
-           
-            if (NIN_AoE_AdvancedMode_TenChiJin_Options[0])
-                if ((NIN_AoE_AdvancedMode_Ninjitsus_Options[2] && DotonRemaining < 3 && AoETenChiJinDoton(ref actionID)) || AoETenChiJinSuiton(ref actionID))
+
+            if (NIN_AoE_AdvancedMode_TenChiJin_Options[0] &&
+                (DotonRemaining < 3 && DotonStoppedMoving && AoETenChiJinDoton(ref actionID) || AoETenChiJinSuiton(ref actionID))) 
                 return actionID;
 
             #region Special Content
