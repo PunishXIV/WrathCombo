@@ -302,7 +302,7 @@ internal partial class NIN : Melee
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_TenChiJin) && CanTenChiJin)
                     return TenChiJin;
 
-                if (NIN_ST_AdvancedMode_TenChiJin_Options[0] && CanTenriJindo)
+                if (NIN_ST_AdvancedMode_TenChiJin_Options[1] && CanTenriJindo)
                     return TenriJendo;
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Assassinate) && CanAssassinate)
@@ -453,7 +453,7 @@ internal partial class NIN : Melee
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_TenChiJin) && CanTenChiJinAoE)
                     return TenChiJin;
 
-                if (NIN_AoE_AdvancedMode_TenChiJin_Options[0] && CanTenriJindo)
+                if (NIN_AoE_AdvancedMode_TenChiJin_Options[1] && CanTenriJindo)
                     return TenriJendo;
 
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Assassinate) && CanAssassinateAoE)
