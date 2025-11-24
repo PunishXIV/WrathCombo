@@ -498,7 +498,7 @@ internal partial class NIN : Melee
                     NIN_AoE_AdvancedMode_Ninjitsus_Options[0] &&
                     CanUseKaton && MudraState.CastKaton(ref actionID) ||
                     NIN_AoE_AdvancedMode_Ninjitsus_Options[0] &&
-                    CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID))
+                    CanUseFumaShuriken && !LevelChecked(Katon) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
             #endregion
