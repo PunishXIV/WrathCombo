@@ -20,8 +20,6 @@ internal partial class NIN : Melee
         {
             if (actionID is not SpinningEdge)
                 return actionID;
-
-            NINGauge gauge = GetJobGauge<NINGauge>();
             
             if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
                 ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
@@ -138,7 +136,6 @@ internal partial class NIN : Melee
         protected internal MudraCasting MudraState = new();
         protected internal override Preset Preset => Preset.NIN_AoE_SimpleMode;
         protected override uint Invoke(uint actionID)
-
         {
             if (actionID is not DeathBlossom)
                 return actionID;
@@ -259,10 +256,6 @@ internal partial class NIN : Melee
         {
             if (actionID is not SpinningEdge)
                 return actionID;
-            
-            //PluginLog.Debug($"Current MudraState: {MudraState.CurrentMudra}");
-
-            NINGauge gauge = GetJobGauge<NINGauge>();
             
             if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
                 ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
