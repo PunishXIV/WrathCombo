@@ -216,9 +216,12 @@ internal partial class NIN
 
                 case Preset.NIN_AoE_AdvancedMode_TenChiJin:
                     DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "Auto AoE TCJ Option",
-                        "Will automatically Fuma Shuriken then Katon and then Doton or Suiton", 2, 0);
+                        "Will automatically Fuma Shuriken then Katon and then Suiton", 3, 0);
                     DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "TenriJindo Option",
-                        "Will weave followup OGCD, TenriJindo, when available", 2, 1);
+                        "Will weave followup OGCD, TenriJindo, when available", 3, 1);
+                    if (NIN_AoE_AdvancedMode_TenChiJin_Options[0]) 
+                        DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "AoE TCJ Doton Option",
+                        "Will automatically Fuma Shuriken then Katon and then Doton if no Doton is active.", 3, 2);
                     break;
 
                 case Preset.NIN_AoE_AdvancedMode_SecondWind:

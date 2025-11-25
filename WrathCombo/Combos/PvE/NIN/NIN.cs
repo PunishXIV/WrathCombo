@@ -433,7 +433,7 @@ internal partial class NIN : Melee
                 return actionID;
 
             if (NIN_AoE_AdvancedMode_TenChiJin_Options[0] &&
-                (DotonRemaining < 3 && DotonStoppedMoving && AoETenChiJinDoton(ref actionID) || AoETenChiJinSuiton(ref actionID))) 
+                (NIN_AoE_AdvancedMode_TenChiJin_Options[2] && DotonRemaining < 3 && AoETenChiJinDoton(ref actionID) || AoETenChiJinSuiton(ref actionID))) 
                 return actionID;
 
             #region Special Content
