@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -856,6 +857,31 @@ internal partial class NIN : Melee
                 default:
                     return actionID;
             }
+        }
+    }
+    
+    internal class NIN_Retarget_Shukuchi : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.NIN_Retarget_Shukuchi;
+
+        protected override uint Invoke(uint actionID)
+        {
+            var target =
+                (IsEnabled(Preset.NIN_Retarget_Shukuchi_UI_MO)
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+
+                (IsEnabled(Preset.NIN_Retarget_Shukuchi_Focus)
+                    ? SimpleTarget.FocusTarget
+                    : null) ??
+
+                (IsEnabled(Preset.NIN_Retarget_Shukuchi_Hard)
+                    ? SimpleTarget.HardTarget
+                    : null);
+            
+            Shukuchi.Retarget(target);
+
+            return actionID;
         }
     }
     

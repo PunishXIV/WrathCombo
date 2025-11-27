@@ -4292,9 +4292,29 @@ public enum Preset
     [CustomComboInfo("Ten Chi Jin Feature", "Turns Ten Chi Jin (the move) into Ten, Chi, and Jin.", Job.NIN)]
     NIN_TCJ = 10040,
 
+    [ReplaceSkill(NIN.Shukuchi)]
+    [Retargeted(NIN.Shukuchi)]
+    [ConflictingCombos(NIN_MudraProtection)]
+    [CustomComboInfo("Retarget Shukuchi Feature", "Will retarget Shukuchi according to what is checked." +
+                                                  "\n If none of the checked conditions are fulfilled, fallback to normal behaviour." +
+                                                  "\nPriority: UI Mouseover > Focus target > Hard target > Normal behaviour", Job.NIN)]
+    NIN_Retarget_Shukuchi = 10047,
+    
+    [ParentCombo(NIN_Retarget_Shukuchi)]
+    [CustomComboInfo("Retarget Shukuchi on UI Mouseover", "Will retarget to any party member on UI Mouseover", Job.NIN)]
+    NIN_Retarget_Shukuchi_UI_MO = 10048,
+    
+    [ParentCombo(NIN_Retarget_Shukuchi)]
+    [CustomComboInfo("Retarget Shukuchi to focus target", "Will retarget to ANY focus target", Job.NIN)]
+    NIN_Retarget_Shukuchi_Focus = 10049,
+    
+    [ParentCombo(NIN_Retarget_Shukuchi)]
+    [CustomComboInfo("Retarget Shukuchi to hard target", "Will retarget to ANY hard target", Job.NIN)]
+    NIN_Retarget_Shukuchi_Hard = 10050,
+
     #endregion
 
-    // Last value = 10045
+    // Last value = 10050
 
     #endregion
 
