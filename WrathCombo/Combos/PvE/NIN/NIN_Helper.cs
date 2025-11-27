@@ -1,5 +1,4 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using ECommons.DalamudServices;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
@@ -186,7 +185,6 @@ internal partial class NIN
             _ => actionID,
         };
 
-        Svc.Log.Debug($"{ActionWatching.LastAction is not TCJSuiton && original != actionID}");
         return ActionWatching.LastAction is not TCJSuiton && original != actionID;
     }
     internal static bool AoETenChiJinDoton(ref uint actionID)
@@ -230,7 +228,6 @@ internal partial class NIN
         #region Mudra State Stuff
 
         public MudraState CurrentMudra = MudraState.None;
-
         public enum MudraState
         {
             None,
@@ -246,28 +243,14 @@ internal partial class NIN
 
         public bool ContinueCurrentMudra(ref uint actionID)
         {
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 2 && OriginalHook(Ninjutsu) is Rabbit or Ninjutsu)
+            if (OriginalHook(Ninjutsu) is Rabbit or Ninjutsu || ActionWatching.TimeSinceLastAction.TotalSeconds >= 5)
             {
                 InMudra = false;
-                ActionWatching.LastAction = 0;
                 CurrentMudra = MudraState.None;
+                
                 return false;
             }
-
-            if (ActionWatching.LastAction == FumaShuriken ||
-                ActionWatching.LastAction == Katon ||
-                ActionWatching.LastAction == Raiton ||
-                ActionWatching.LastAction == Hyoton ||
-                ActionWatching.LastAction == Huton ||
-                ActionWatching.LastAction == Doton ||
-                ActionWatching.LastAction == Suiton ||
-                ActionWatching.LastAction == GokaMekkyaku ||
-                ActionWatching.LastAction == HyoshoRanryu)
-            {
-                CurrentMudra = MudraState.None;
-                InMudra = false;
-            }
-
+            
             return CurrentMudra switch
             {
                 MudraState.None => false,
@@ -287,14 +270,14 @@ internal partial class NIN
         #region Mudra Cast Check
         public static bool CanCast()
         {
-            if (InMudra) return true;
-
-            if (GetCooldown(GustSlash).CooldownTotal == 0.5) return true;
-
+            if (InMudra)
+                return true;
+            
             if (GetRemainingCharges(Ten) == 0 &&
                 !HasStatusEffect(Buffs.Mudra) &&
                 !HasStatusEffect(Buffs.Kassatsu))
                 return false;
+            
             return true;
         }
         #endregion
@@ -302,14 +285,8 @@ internal partial class NIN
         #region Fuma Shuriken
         public bool CastFumaShuriken(ref uint actionID) // Ten
         {
-            if (CurrentMudra is MudraState.None or MudraState.CastingFumaShuriken)
+            if (FumaShuriken.LevelChecked() && CurrentMudra is MudraState.None or MudraState.CastingFumaShuriken)
             {
-                // Reset State
-                if (!CanCast() || ActionWatching.LastAction == FumaShuriken)
-                {
-                    CurrentMudra = MudraState.None;
-                    return false;
-                }
                 // Finish the Mudra
                 if (ActionWatching.LastAction is Ten or TenCombo)
                 {
@@ -321,7 +298,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? TenCombo : Ten;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -346,7 +323,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? TenCombo : Ten;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -374,7 +351,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? TenCombo : Ten;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -399,7 +376,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? TenCombo : Ten;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -424,7 +401,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? ChiCombo : Chi;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -452,7 +429,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? JinCombo : Jin;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -480,7 +457,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? JinCombo : Jin;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
@@ -505,7 +482,7 @@ internal partial class NIN
                 actionID = HasStatusEffect(Buffs.Kassatsu) ? JinCombo : Jin;
                 return true;
             }
-            CurrentMudra = MudraState.None;
+
             return false;
         }
         #endregion
