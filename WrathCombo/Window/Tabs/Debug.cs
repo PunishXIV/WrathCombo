@@ -22,19 +22,20 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using WrathCombo.AutoRotation;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using WrathCombo.Services.IPC_Subscriber;
+using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
+using WrathCombo.Services.IPC_Subscriber;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using BattleNPCSubKind = Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.Status;
-using WrathCombo.Combos.PvE;
 
 #endregion
 
@@ -1144,6 +1145,13 @@ internal class Debug : ConfigWindow, IDisposable
                 }
                 ImGui.Unindent();
             }
+        }
+
+        if(ImGui.CollapsingHeader("Action Request"))
+        {
+            ImGui.Indent();
+            ActionRequestDebugUI.Draw();
+            ImGui.Unindent();
         }
 
         #endregion

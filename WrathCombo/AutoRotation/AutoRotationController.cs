@@ -16,6 +16,7 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -770,14 +771,22 @@ internal unsafe static class AutoRotationController
             var outAct = attributes.ReplaceSkill.ActionIDs.FirstOrDefault();
             foreach (var actToCheck in attributes.ReplaceSkill.ActionIDs)
             {
-                var customCombo = Service.ActionReplacer.CustomCombos.FirstOrDefault(x => x.Preset == preset);
-                if (customCombo != null)
+                if(ActionRequestIPCProvider.TryInvoke(actToCheck, out var newActionID))
                 {
-                    if (customCombo.TryInvoke(actToCheck, out var changedAct, optionalTarget))
+                    originalAct = actToCheck;
+                    outAct = newActionID;
+                }
+                else
+                {
+                    var customCombo = Service.ActionReplacer.CustomCombos.FirstOrDefault(x => x.Preset == preset);
+                    if(customCombo != null)
                     {
-                        originalAct = actToCheck;
-                        outAct = changedAct;
-                        break;
+                        if(customCombo.TryInvoke(actToCheck, out var changedAct, optionalTarget))
+                        {
+                            originalAct = actToCheck;
+                            outAct = changedAct;
+                            break;
+                        }
                     }
                 }
             }

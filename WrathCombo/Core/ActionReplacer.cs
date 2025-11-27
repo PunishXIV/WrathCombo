@@ -20,6 +20,8 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using WrathCombo.Services.ActionRequestIPC;
+using static FFXIVClientStructs.FFXIV.Client.Game.UI.LimitBreakController.Delegates;
 
 #endregion
 
@@ -132,6 +134,20 @@ internal sealed class ActionReplacer : IDisposable
                 (DisabledJobsPVE.Any(x => x == Player.Job) && !Svc.ClientState.IsPvP) ||
                 (DisabledJobsPVP.Any(x => x == Player.Job) && Svc.ClientState.IsPvP))
                 return OriginalHook(actionID);
+
+            {
+                if(ActionRequestIPCProvider.TryInvoke(actionID, out var newActionID))
+                {
+                    if(Service.Configuration.BlockSpellOnMove &&
+                            ActionManager.GetAdjustedCastTime(ActionType.Action, newActionID) > 0 &&
+                            CustomComboFunctions.TimeMoving.Ticks > 0)
+                    {
+                        return All.SavageBlade;
+                    }
+
+                    return newActionID;
+                }
+            }
 
             foreach (CustomCombo? combo in FilteredCombos)
             {
