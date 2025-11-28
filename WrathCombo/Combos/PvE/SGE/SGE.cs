@@ -300,7 +300,7 @@ internal partial class SGE : Healer
                 if (IsEnabled(Preset.SGE_ST_DPS_Movement) &&
                     InCombat() && IsMoving())
                 {
-                    foreach(int priority in SGE_ST_DPS_Movement_Priority.Items.OrderBy(x => x))
+                    foreach(int priority in SGE_ST_DPS_Movement_Priority.OrderBy(x => x))
                     {
                         int index = SGE_ST_DPS_Movement_Priority.IndexOf(priority);
                         if (CheckMovementConfigMeetsRequirements(index, out uint action))
