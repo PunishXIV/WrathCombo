@@ -934,7 +934,26 @@ internal partial class PLD : Tank
             if (actionID != Cover)
                 return actionID;
 
-            return actionID.Retarget(SimpleTarget.Stack.MouseOver ?? SimpleTarget.HardTarget);
+            int healthThreshold = PLD_RetargetCover_Health;
+
+            var target =
+                //Mouseover retarget option
+                (IsEnabled(Preset.PLD_RetargetCover_MO)
+                    ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
+                    : null) ??
+
+                //Hard target
+                SimpleTarget.HardTarget.IfFriendly() ??
+
+                //Lowest HP option
+                (IsEnabled(Preset.PLD_RetargetCover_LowHP)
+                 && PlayerHealthPercentageHp() > healthThreshold
+                    ? SimpleTarget.LowestHPAlly.IfNotThePlayer().IfAlive()
+                    : null);
+
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
         }
     }
 }
