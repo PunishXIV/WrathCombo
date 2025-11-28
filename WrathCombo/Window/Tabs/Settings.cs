@@ -72,6 +72,20 @@ internal class Settings : ConfigWindow
 
             #endregion
 
+            #region Suppress Set Commands
+
+            bool suppress = Service.Configuration.SuppressSetCommands;
+
+            if (ImGui.Checkbox("Suppress Set and Unset commands feedback", ref suppress))
+            {
+                Service.Configuration.SuppressSetCommands = suppress;
+                Service.Configuration.Save();
+            }
+
+            ImGuiComponents.HelpMarker("Hides feedback from Wrath when using `/wrath set` and `/wrath unset` commands.\n(Will still show feedback if the command is being overriden by IPC)");
+
+            #endregion
+
             #region Message of the Day
 
             bool motd = Service.Configuration.HideMessageOfTheDay;

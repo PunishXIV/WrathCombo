@@ -247,8 +247,9 @@ public partial class WrathCombo
                 ? " " + OptionControlledByIPC
                 : "";
 
-            DuoLog.Information(
-                $"{usablePreset.Attributes().CustomComboInfo.Name} {action} {ctrlText}");
+            if (!Service.Configuration.SuppressSetCommands && ctrlText == "")
+                DuoLog.Information(
+                    $"{usablePreset.Attributes().CustomComboInfo.Name} {action} {ctrlText}");
         }
     }
 

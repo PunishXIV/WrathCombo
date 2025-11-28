@@ -80,6 +80,8 @@ public class PluginConfiguration : IPluginConfiguration
 
     public bool OpenToCurrentJobOnSwitch = false;
 
+    public bool SuppressSetCommands = false;
+
     #region Target Settings
 
     public bool RetargetHealingActionsToStack = false;
