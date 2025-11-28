@@ -152,11 +152,13 @@ internal partial class SAM : Melee
             {
                 if (LevelChecked(TsubameGaeshi) &&
                     (HasStatusEffect(Buffs.KaeshiGokenReady) ||
+                     HasStatusEffect(Buffs.TsubameReady) ||
                      HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
                     return OriginalHook(TsubameGaeshi);
 
                 if (!IsMoving() &&
                     (OriginalHook(Iaijutsu) is TenkaGoken ||
+                     OriginalHook(Iaijutsu) is MidareSetsugekka ||
                      OriginalHook(Iaijutsu) is TendoGoken))
                     return OriginalHook(Iaijutsu);
             }
@@ -399,11 +401,13 @@ internal partial class SAM : Melee
                 {
                     if (LevelChecked(TsubameGaeshi) &&
                         (HasStatusEffect(Buffs.KaeshiGokenReady) ||
+                         HasStatusEffect(Buffs.TsubameReady) ||
                          HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
                         return OriginalHook(TsubameGaeshi);
 
                     if (!IsMoving() &&
                         (OriginalHook(Iaijutsu) is TenkaGoken ||
+                         OriginalHook(Iaijutsu) is MidareSetsugekka ||
                          OriginalHook(Iaijutsu) is TendoGoken))
                         return OriginalHook(Iaijutsu);
                 }
@@ -468,7 +472,8 @@ internal partial class SAM : Melee
             {
                 if (ComboAction is Hakaze or Gyofu)
                 {
-                    if (!HasSetsu && LevelChecked(Yukikaze) &&
+                    if (LevelChecked(Yukikaze) &&
+                        !HasSetsu &&
                         (HasStatusEffect(Buffs.Fugetsu) || !SAM_Yukaze_Gekko) &&
                         (HasStatusEffect(Buffs.Fuka) || !SAM_Yukaze_Kasha))
                         return Yukikaze;
@@ -476,17 +481,19 @@ internal partial class SAM : Melee
                     if (SAM_Yukaze_Gekko &&
                         LevelChecked(Jinpu) &&
                         ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
-                         OnTargetsFlank() && HasKa ||
                          !HasStatusEffect(Buffs.Fugetsu) ||
-                         SenCount is 3 && RefreshFugetsu))
+                         SenCount is 3 &&
+                         GetStatusEffectRemainingTime(Buffs.Fugetsu) <=
+                         GetStatusEffectRemainingTime(Buffs.Fuka)))
                         return Jinpu;
 
                     if (SAM_Yukaze_Kasha &&
                         LevelChecked(Shifu) &&
                         ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
-                         OnTargetsRear() && HasGetsu ||
                          !HasStatusEffect(Buffs.Fuka) ||
-                         SenCount is 3 && RefreshFuka))
+                         SenCount is 3 &&
+                         GetStatusEffectRemainingTime(Buffs.Fuka) <=
+                         GetStatusEffectRemainingTime(Buffs.Fugetsu)))
                         return Shifu;
                 }
 
