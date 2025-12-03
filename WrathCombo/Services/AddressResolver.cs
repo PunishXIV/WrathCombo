@@ -5,7 +5,7 @@ using System;
 namespace WrathCombo.Core;
 
 /// <summary> Plugin address resolver. </summary>
-internal class PluginAddressResolver
+internal class AddressResolver
 {
     /// <summary> Gets the address of fpIsIconReplacable. </summary>
     public IntPtr IsActionIdReplaceable { get; private set; }

@@ -8,6 +8,7 @@ using WrathCombo.Attributes;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
+using static WrathCombo.Core.Configuration;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -173,96 +174,6 @@ internal static class PresetStorage
         return null;
     }
 
-    /// <summary> Iterates up a preset's parent tree, enabling each of them. </summary>
-    /// <param name="preset"> Combo preset to enabled. </param>
-    public static void EnableParentPresets(Preset preset)
-    {
-        var parentMaybe = GetParent(preset);
-
-        while (parentMaybe != null)
-        {
-            EnablePreset(parentMaybe.Value);
-            parentMaybe = GetParent(parentMaybe.Value);
-        }
-    }
-
-    public static void DisableAllConflicts(Preset preset)
-    {
-        var conflicts = GetConflicts(preset);
-        foreach (var conflict in conflicts)
-        {
-            Service.Configuration.EnabledActions.Remove(conflict);
-        }
-    }
-
-    public static bool EnablePreset(string preset, bool outputLog = false)
-    {
-        var pre = GetPresetByString(preset);
-        if (pre != null)
-        {
-            return EnablePreset(pre.Value, outputLog);
-        }
-        return false;
-    }
-
-    public static bool EnablePreset(int preset, bool outputLog = false)
-    {
-        var pre = GetPresetByInt(preset);
-        if (pre != null)
-        {
-            return EnablePreset(pre.Value, outputLog);
-        }
-        return false;
-    }
-
-    public static bool EnablePreset(Preset preset, bool outputLog = false)
-    {
-        var ctrlText = GetControlledText(preset);
-        EnableParentPresets(preset);
-        var ret = Service.Configuration.EnabledActions.Add(preset);
-        DisableAllConflicts(preset);
-
-        if (outputLog)
-            DuoLog.Information($"{(int)preset} - {preset} SET{ctrlText}");
-
-        return ret;
-    }
-
-    public static bool DisablePreset(string preset, bool outputLog = false)
-    {
-        var pre = GetPresetByString(preset);
-        if (pre != null)
-        {
-            return DisablePreset(pre.Value, outputLog);
-        }
-        return false;
-    }
-
-    public static bool DisablePreset(int preset, bool outputLog = false)
-    {
-        var pre = GetPresetByInt(preset);
-        if (pre != null)
-        {
-            return DisablePreset(pre.Value, outputLog);
-        }
-        return false;
-    }
-
-    public static bool DisablePreset(Preset preset, bool outputLog = false)
-    {
-        if (Service.Configuration.EnabledActions.Remove(preset))
-        {
-            var ctrlText = GetControlledText(preset);
-
-            if (outputLog)
-                DuoLog.Information($"{(int)preset} - {preset} UNSET{ctrlText}");
-
-            return true;
-        }
-
-        return false;
-    }
-
     private static object GetControlledText(Preset preset)
     {
         var controlled = P.UIHelper.PresetControlled(preset) is not null;
@@ -271,41 +182,241 @@ internal static class PresetStorage
         return ctrlText;
     }
 
-    public static bool TogglePreset(Preset preset, bool outputLog = false)
+    public static void HandleDuplicatePresets()
     {
-        var ctrlText = GetControlledText(preset);
+        if (!EZ.Throttle("PeriodicPresetDeDuplicating", TS.FromSeconds(15)))
+            return;
+
+        var redundantIDs = Service.Configuration.EnabledActions.Where(x => int.TryParse(x.ToString(), out _)).OrderBy(x => x).Cast<int>().ToList();
+        foreach (var id in redundantIDs)
+            Service.Configuration.EnabledActions.RemoveWhere(x => (int)x == id);
+
+        Service.Configuration.Save();
+    }
+
+    public static void HandleCurrentConflicts()
+    {
+        if (!EZ.Throttle("PeriodicPresetDeconflicting", TS.FromSeconds(7)))
+            return;
+
+        var enabledPresets = Service.Configuration.EnabledActions.ToArray();
+        List<Preset> removedPresets = [];
+
+        foreach (var preset in enabledPresets)
+        {
+            if (removedPresets.Contains(preset))
+                continue;
+
+            foreach (var conflict in preset.Attributes().Conflicts)
+            {
+                if (!IsEnabled(conflict))
+                    continue;
+                
+                if (DisablePreset(conflict, ConfigChangeSource.Task))
+                    removedPresets.Add(conflict);
+            }
+        }
+    }
+
+    public static void DisableAllConflicts(Preset preset)
+    {
+        var conflicts = GetConflicts(preset);
+        foreach (var conflict in conflicts)
+            DisablePreset(conflict, ConfigChangeSource.AutomaticReaction);
+    }
+
+    #region Toggling Presets
+
+    /// <summary> Iterates up a preset's parent tree, enabling each of them. </summary>
+    /// <param name="preset"> Combo preset to enable. </param>
+    public static void EnableParentPresets(Preset preset)
+    {
+        var parentMaybe = GetParent(preset);
+
+        while (parentMaybe != null)
+        {
+            if (!IsEnabled(parentMaybe.Value))
+                EnablePreset(parentMaybe.Value);
+            parentMaybe = GetParent(parentMaybe.Value);
+        }
+    }
+
+    public static bool EnablePreset
+        (Preset preset, ConfigChangeSource? source = null)
+    {
+        // Bail if already satisfied
+        if (!Service.Configuration.EnabledActions.Add(preset))
+            return false;
+
+        // Handle Parents and Conflicts
+        if (GetParent(preset) is not null)
+            EnableParentPresets(preset);
+        DisableAllConflicts(preset);
+
+        // Notify of change and save
+        Service.Configuration.TriggerUserConfigChanged(
+            ConfigChangeType.Preset, source ?? ConfigChangeSource.UI,
+            preset.ToString(), true);
+        P.IPCSearch.UpdateActiveJobPresets();
+        Service.Configuration.Save();
+
+        return true;
+    }
+
+    public static bool EnablePreset
+        (string preset, ConfigChangeSource? source = null) =>
+        GetPresetByString(preset) is { } pre &&
+        EnablePreset(pre, source);
+
+    public static bool EnablePreset
+        (int preset, ConfigChangeSource? source = null) =>
+        GetPresetByInt(preset) is { } pre &&
+        EnablePreset(pre, source);
+
+    public static bool DisablePreset
+        (Preset preset, ConfigChangeSource? source = null)
+    {
+        // Bail if already satisfied
+        if (!Service.Configuration.EnabledActions.Remove(preset))
+            return false;
+
+        // Notify of change and save
+        Service.Configuration.TriggerUserConfigChanged(
+            ConfigChangeType.Preset, source ?? ConfigChangeSource.UI,
+            preset.ToString(), false);
+        P.IPCSearch.UpdateActiveJobPresets();
+        Service.Configuration.Save();
+
+        return true;
+    }
+
+    public static bool DisablePreset
+        (string preset, ConfigChangeSource? source = null) =>
+        GetPresetByString(preset) is { } pre &&
+        DisablePreset(pre, source);
+
+    public static bool DisablePreset
+        (int preset, ConfigChangeSource? source = null) =>
+        GetPresetByInt(preset) is { } pre &&
+        DisablePreset(pre, source);
+
+    public static bool TogglePreset
+        (Preset preset, ConfigChangeSource? source = null)
+    {
+        // If not already listed, enable it
         if (!Service.Configuration.EnabledActions.Remove(preset))
         {
-            var ret = EnablePreset(preset);
-            if (outputLog)
-                DuoLog.Information($"{(int)preset} - {preset} SET{ctrlText}");
+            return EnablePreset(preset);
         }
-        else if (outputLog)
-        {
-            DuoLog.Information($"{(int)preset} - {preset} UNSET{ctrlText}");
-        }
-        return false;
+
+        // Notify of change and save (only if disabling, manually)
+        Service.Configuration.TriggerUserConfigChanged(
+            ConfigChangeType.Preset, source ?? ConfigChangeSource.UI,
+            preset.ToString(), false);
+        P.IPCSearch.UpdateActiveJobPresets();
+        Service.Configuration.Save();
+        return true;
     }
 
-    public static bool TogglePreset(string preset, bool outputLog = false)
+    public static bool TogglePreset
+        (string preset, ConfigChangeSource? source = null) =>
+        GetPresetByString(preset) is { } pre &&
+        TogglePreset(pre, source);
+
+    public static bool TogglePreset
+        (int preset, ConfigChangeSource? source = null) =>
+        GetPresetByInt(preset) is { } pre &&
+        TogglePreset(pre, source);
+
+    #region Auto-Mode
+    
+    public static bool EnableAutoModeForPreset
+        (Preset preset, ConfigChangeSource? source = null)
     {
-        var pre = GetPresetByString(preset);
-        if (pre != null)
-        {
-            return TogglePreset(pre.Value, outputLog);
-        }
-        return false;
+        // Ensure the preset exists in the dictionary
+        Service.Configuration.AutoActions.TryAdd(preset, false);
+
+        Service.Configuration.AutoActions[preset] = true;
+
+        // Notify of change and save
+        Service.Configuration.TriggerUserConfigChanged(
+            ConfigChangeType.PresetAutoMode, source ?? ConfigChangeSource.UI,
+            preset.ToString(), true);
+        P.IPCSearch.UpdateActiveJobPresets();
+        Service.Configuration.Save();
+
+        return true;
     }
 
-    public static bool TogglePreset(int preset, bool outputLog = false)
+    public static bool EnableAutoModeForPreset
+        (string preset, ConfigChangeSource? source = null) =>
+        GetPresetByString(preset) is { } pre &&
+        EnableAutoModeForPreset(pre, source);
+
+    public static bool EnableAutoModeForPreset
+        (int preset, ConfigChangeSource? source = null) =>
+        GetPresetByInt(preset) is { } pre &&
+        EnableAutoModeForPreset(pre, source);
+    
+    public static bool DisableAutoModeForPreset
+        (Preset preset, ConfigChangeSource? source = null)
     {
-        var pre = GetPresetByInt(preset);
-        if (pre != null)
-        {
-            return TogglePreset(pre.Value, outputLog);
-        }
-        return false;
+        // Ensure the preset exists in the dictionary
+        Service.Configuration.AutoActions.TryAdd(preset, false);
+
+        Service.Configuration.AutoActions[preset] = false;
+
+        // Notify of change and save
+        Service.Configuration.TriggerUserConfigChanged(
+            ConfigChangeType.PresetAutoMode, source ?? ConfigChangeSource.UI,
+            preset.ToString(), false);
+        P.IPCSearch.UpdateActiveJobPresets();
+        Service.Configuration.Save();
+
+        return true;
     }
+
+    public static bool DisableAutoModeForPreset
+        (string preset, ConfigChangeSource? source = null) =>
+        GetPresetByString(preset) is { } pre &&
+        DisableAutoModeForPreset(pre, source);
+
+    public static bool DisableAutoModeForPreset
+        (int preset, ConfigChangeSource? source = null) =>
+        GetPresetByInt(preset) is { } pre &&
+        DisableAutoModeForPreset(pre, source);
+
+    public static bool ToggleAutoModeForPreset
+        (Preset preset, ConfigChangeSource? source = null)
+    {
+        // Ensure the preset exists in the dictionary
+        Service.Configuration.AutoActions.TryAdd(preset, false);
+
+        var newValue = Service.Configuration.AutoActions[preset] =
+            !Service.Configuration.AutoActions[preset];
+
+        // Notify of change and save
+        Service.Configuration.TriggerUserConfigChanged(
+            ConfigChangeType.PresetAutoMode, source ?? ConfigChangeSource.UI,
+            preset.ToString(), newValue);
+        P.IPCSearch.UpdateActiveJobPresets();
+        Service.Configuration.Save();
+        return true;
+    }
+
+    public static bool ToggleAutoModeForPreset
+        (string preset, ConfigChangeSource? source = null) =>
+        GetPresetByString(preset) is { } pre &&
+        ToggleAutoModeForPreset(pre, source);
+
+    public static bool ToggleAutoModeForPreset
+        (int preset, ConfigChangeSource? source = null) =>
+        GetPresetByInt(preset) is { } pre &&
+        ToggleAutoModeForPreset(pre, source);
+
+    #endregion
+
+    #endregion
 
     internal static ComboType GetComboType(Preset preset)
     {

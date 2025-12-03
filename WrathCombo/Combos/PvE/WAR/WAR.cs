@@ -351,7 +351,7 @@ internal partial class WAR
                 PlayerHealthPercentageHp() <= WAR_Mit_Holmgang_Health &&
                 ContentCheck.IsInConfiguredContent(WAR_Mit_Holmgang_Difficulty, WAR_Mit_Holmgang_DifficultyListSet))
                 return Holmgang;
-            foreach(int priority in WAR_Mit_Priorities.Items.OrderBy(x => x))
+            foreach(int priority in WAR_Mit_Priorities.OrderBy(x => x))
             {
                 int index = WAR_Mit_Priorities.IndexOf(priority);
                 if (CheckMitigationConfigMeetsRequirements(index, out uint actionID))

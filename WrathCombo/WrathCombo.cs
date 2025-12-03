@@ -44,7 +44,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
     internal readonly ConfigWindow ConfigWindow;
     private readonly MajorChangesWindow _majorChangesWindow;
     private readonly TargetHelper TargetHelper;
-    internal static DateTime LastPresetDeconflictTime = DateTime.MinValue;
     internal static WrathCombo? P;
     private readonly WindowSystem ws;
     private static readonly SocketsHttpHandler httpHandler = new()
@@ -57,7 +56,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     internal Provider IPC;
     internal Search IPCSearch = null!;
     internal UIHelper UIHelper = null!;
-    internal ActionRetargeting ActionRetargeting = new();
+    internal ActionRetargeting ActionRetargeting = null!;
     internal MovementHook MoveHook;
 
     private readonly TextPayload starterMotd = new("[Wrath Message of the Day] ");
@@ -170,14 +169,15 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         TM = new();
         RemoveNullAutos(); 
-        Service.Configuration = pluginInterface.GetPluginConfig() as PluginConfiguration ?? new PluginConfiguration();
-        Service.Address = new PluginAddressResolver();
+        Service.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        Service.Address = new AddressResolver();
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
         PresetStorage.Init();
 
         Service.ComboCache = new CustomComboCache();
         Service.ActionReplacer = new ActionReplacer();
+        ActionRetargeting = new ActionRetargeting();
         ActionWatching.Enable();
         IPC = Provider.Init();
         ConflictingPluginsChecks.Begin();
@@ -189,6 +189,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         ws.AddWindow(ConfigWindow);
         ws.AddWindow(_majorChangesWindow);
         ws.AddWindow(TargetHelper);
+        
+        Configuration.ConfigChanged += DebugFile.LoggingConfigChanges;
 
         Svc.PluginInterface.UiBuilder.Draw += ws.Draw;
         Svc.PluginInterface.UiBuilder.OpenMainUi += OnOpenMainUi;
@@ -210,13 +212,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         Svc.Framework.Update += OnFrameworkUpdate;
         Svc.ClientState.TerritoryChanged += ClientState_TerritoryChanged;
-
-        if (DateTime.UtcNow - LastPresetDeconflictTime > TimeSpan.FromSeconds(3))
-        {
-            KillRedundantIDs();
-            HandleConflictedCombos();
-            LastPresetDeconflictTime = DateTime.UtcNow;
-        }
+        
+        PresetStorage.HandleDuplicatePresets();
+        PresetStorage.HandleCurrentConflicts();
         CustomComboFunctions.TimerSetup();
 
         // Starts Retarget list cleaning process after a delay
@@ -276,26 +274,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
     public const string OptionControlledByIPC =
         "(being overwritten by another plugin, check the setting in /wrath)";
 
-    private static void HandleConflictedCombos()
-    {
-        var enabledCopy = Service.Configuration.EnabledActions.ToHashSet(); //Prevents issues later removing during enumeration
-        foreach (var preset in enabledCopy)
-        {
-            if (!PresetStorage.IsEnabled(preset)) continue;
-
-            var conflictingCombos = preset.GetAttribute<ConflictingCombosAttribute>();
-            if (conflictingCombos == null) continue;
-
-            foreach (var conflict in conflictingCombos.ConflictingPresets)
-                if (PresetStorage.IsEnabled(conflict))
-                    if (Service.Configuration.EnabledActions.Remove(conflict))
-                    {
-                        PluginLog.Debug($"Removed {conflict} due to conflict with {preset}");
-                        Service.Configuration.Save();
-                    }
-        }
-    }
-
     private void OnFrameworkUpdate(IFramework framework)
     {
         if (Player.Object is not null)
@@ -307,12 +285,15 @@ public sealed partial class WrathCombo : IDalamudPlugin
         BlueMageService.PopulateBLUSpells();
         TargetHelper.Draw();
         AutoRotationController.Run();
-        PluginConfiguration.ProcessSaveQueue();
+        Configuration.ProcessSaveQueue();
 
         Service.Configuration.SetActionChanging();
 
         if (Player.Available && Player.IsDead)
             ActionRetargeting.Retargets.Clear();
+        
+        PresetStorage.HandleDuplicatePresets();
+        PresetStorage.HandleCurrentConflicts();
 
         // Skip the IPC checking if hidden
         if (DtrBarEntry.UserHidden) return;
@@ -332,15 +313,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         var payloadText = new TextPayload(text + ipcControlledText);
         DtrBarEntry.Text = new SeString(icon, payloadText);
-    }
-
-    private static void KillRedundantIDs()
-    {
-        var redundantIDs = Service.Configuration.EnabledActions.Where(x => int.TryParse(x.ToString(), out _)).OrderBy(x => x).Cast<int>().ToList();
-        foreach (var id in redundantIDs)
-            Service.Configuration.EnabledActions.RemoveWhere(x => (int)x == id);
-
-        Service.Configuration.Save();
     }
 
     private static void ResetFeatures()
@@ -409,16 +381,17 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Debug.Dispose();
 
         // Try to force a config save if there are some pending
-        if (PluginConfiguration.SaveQueue.Count > 0)
-            lock (PluginConfiguration.SaveQueue)
+        if (Configuration.SaveQueue.Count > 0)
+            lock (Configuration.SaveQueue)
             {
-                PluginConfiguration.SaveQueue.Clear();
+                Configuration.SaveQueue.Clear();
                 Service.Configuration.Save();
-                PluginConfiguration.ProcessSaveQueue();
+                Configuration.ProcessSaveQueue();
             }
 
         ws.RemoveAllWindows();
         Svc.DtrBar.Remove("Wrath Combo");
+        Configuration.ConfigChanged -= DebugFile.LoggingConfigChanges;
         Svc.Framework.Update -= OnFrameworkUpdate;
         Svc.ClientState.TerritoryChanged -= ClientState_TerritoryChanged;
         Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;

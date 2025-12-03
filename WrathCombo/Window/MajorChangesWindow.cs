@@ -185,7 +185,7 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
     #region Specific Info to Display for Update
 
     private static bool _getConfigValue(string config) =>
-        PluginConfiguration.GetCustomBoolValue(config);
+        Configuration.GetCustomBoolValue(config);
 
     /// <summary>
     ///     If the user was using MCH's Tools Presets.

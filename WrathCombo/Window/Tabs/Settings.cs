@@ -1,4 +1,6 @@
-﻿using Dalamud.Interface.Colors;
+﻿#region
+
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.ExcelServices;
@@ -7,10 +9,16 @@ using ECommons.ImGuiMethods;
 using System;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.CustomComboNS.Functions;
+using ECommons.Logging;
+using WrathCombo.Core;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
+
+#endregion
+
 namespace WrathCombo.Window.Tabs;
 
 internal class Settings : ConfigWindow
@@ -20,6 +28,40 @@ internal class Settings : ConfigWindow
         using (ImRaii.Child("main", new Vector2(0, 0), true))
         {
             ImGui.Text("This tab allows you to customise your options for Wrath Combo.");
+
+            #region Load Settings
+
+            var settings = typeof(Configuration)
+                .GetFields()
+                .Select(rawSetting =>
+                {
+                    try
+                    {
+                        return new Setting(rawSetting.Name);
+                    }
+                    catch (Exception e)
+                    {
+                        // Skip raw settings that fail to construct.
+                        if (EZ.Throttle("logFailedSettings", TS.FromSeconds(10)))
+                            PluginLog.Verbose(e.Message);
+                        return null;
+                    }
+                })
+                .Where(setting => setting != null)
+                .ToList();
+
+            #endregion
+
+            foreach (var setting in settings)
+            {
+                ImGui.Text($"Setting: {setting.Name}");
+            }
+            
+            ImGui.NewLine();
+            ImGuiEx.Spacing(new Vector2(5,20));
+            ImGui.Separator();
+            ImGui.Separator();
+            ImGuiEx.Spacing(new Vector2(5,20));
 
             #region UI Options
 
@@ -361,11 +403,11 @@ internal class Settings : ConfigWindow
             #endregion
 
             #region Melee Offset
-            var offset = (float)Service.Configuration.MeleeOffset;
+            var offset = Service.Configuration.MeleeOffset;
 
             if (ImGui.InputFloat("###MeleeOffset", ref offset))
             {
-                Service.Configuration.MeleeOffset = (double)offset;
+                Service.Configuration.MeleeOffset = offset;
                 Service.Configuration.Save();
             }
 
@@ -380,14 +422,14 @@ internal class Settings : ConfigWindow
 
             #region Interrupt Delay
 
-            var delay = (int)(Service.Configuration.InterruptDelay * 100d);
+            var delay = (int)(Service.Configuration.InterruptDelay * 100f);
 
             if (ImGui.SliderInt("###InterruptDelay",
                 ref delay, 0, 100))
             {
                 delay = delay.RoundOff(SliderIncrements.Fives);
 
-                Service.Configuration.InterruptDelay = ((double)delay) / 100d;
+                Service.Configuration.InterruptDelay = delay / 100f;
                 Service.Configuration.Save();
             }
             ImGui.SameLine();

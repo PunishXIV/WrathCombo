@@ -150,21 +150,10 @@ internal class PvPFeatures : FeaturesWindow
 
                 if (conflictOriginals.Any(PresetStorage.IsEnabled))
                 {
-                    if (DateTime.UtcNow - LastPresetDeconflictTime > TimeSpan.FromSeconds(3))
-                    {
-                        if (Service.Configuration.EnabledActions.Remove(preset))
-                        {
-                            PluginLog.Debug($"Removed {preset} due to conflict");
-                            Service.Configuration.Save();
-                        }
-                        LastPresetDeconflictTime = DateTime.UtcNow;
-                    }
-
-                    // Keep removed items in the counter
+                    // Keep conflicted items in the counter
                     var parent = PresetStorage.GetParent(preset) ?? preset;
                     CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent]);
                 }
-
                 else
                 {
                     presetBox.Draw();

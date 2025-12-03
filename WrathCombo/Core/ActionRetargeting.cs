@@ -45,6 +45,11 @@ public class ActionRetargeting : IDisposable
     /// List of Retargets for actions, keyed with the action and replaced action(s).
     internal readonly Dictionary<uint, Retargeting> Retargets = [];
 
+    public ActionRetargeting()
+    {
+        Configuration.ConfigChanged += ClearCachedRetargetsOnConfigChange;
+    }
+
     /// <summary>
     ///     Register an action and its replaced actions as one you want Retargeted.
     /// </summary>
@@ -393,8 +398,18 @@ public class ActionRetargeting : IDisposable
         log("cleared cached Retargets", logLevel: 1);
     }
 
+    private void ClearCachedRetargetsOnConfigChange
+        (object? _, Configuration.ConfigChangeEventArgs args)
+    {
+        if (args.Type == Configuration.ConfigChangeType.Preset)
+            // todo: restrict this to only clear the retargets associated
+            //  with the preset, once Retargeting is based on Presets.
+            ClearCachedRetargets();
+    }
+
     public void Dispose()
     {
+        Configuration.ConfigChanged -= ClearCachedRetargetsOnConfigChange;
         Retargets.Clear();
         CancelCacheClearing = true;
     }

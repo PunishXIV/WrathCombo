@@ -157,8 +157,7 @@ internal class Presets : ConfigWindow
 
         if (auto != null)
         {
-            if (!Service.Configuration.AutoActions.ContainsKey(preset))
-                Service.Configuration.AutoActions[preset] = false;
+            Service.Configuration.AutoActions.TryAdd(preset, false);
 
             var label = "Auto-Mode";
             var labelSize = ImGui.CalcTextSize(label);
@@ -166,12 +165,7 @@ internal class Presets : ConfigWindow
             bool autoOn = Service.Configuration.AutoActions[preset];
             if (P.UIHelper.ShowIPCControlledCheckboxIfNeeded
                 ($"###AutoAction{preset}", ref autoOn, preset, false))
-            {
-                DebugFile.AddSettingLog($"Set Auto-Mode for {preset} to {autoOn}");
-                P.IPCSearch.UpdateActiveJobPresets();
-                Service.Configuration.AutoActions[preset] = autoOn;
-                Service.Configuration.Save();
-            }
+                PresetStorage.ToggleAutoModeForPreset(preset);
             ImGui.SameLine();
             ImGui.Text(label);
             ImGuiComponents.HelpMarker($"Add this feature to Auto-Rotation.\n" +
@@ -188,20 +182,7 @@ internal class Presets : ConfigWindow
 
         if (P.UIHelper.ShowIPCControlledCheckboxIfNeeded
             ($"{presetName}###{preset}", ref enabled, preset, true))
-        {
-            if (enabled)
-            {
-                PresetStorage.EnablePreset(preset);
-            }
-            else
-            {
-                PresetStorage.DisablePreset(preset);
-            }
-            P.IPCSearch.UpdateActiveJobPresets();
-            DebugFile.AddSettingLog($"Set {preset} to {enabled}");
-
-            Service.Configuration.Save();
-        }
+            PresetStorage.TogglePreset(preset);
 
         DrawReplaceAttribute(preset);
 
@@ -442,20 +423,9 @@ internal class Presets : ConfigWindow
 
                         if (conflictOriginals.Any(PresetStorage.IsEnabled))
                         {
-                            if (DateTime.UtcNow - LastPresetDeconflictTime > TimeSpan.FromSeconds(3))
-                            {
-                                if (Service.Configuration.EnabledActions.Remove(childPreset))
-                                {
-                                    PluginLog.Debug($"Removed {childPreset} due to conflict with {preset}");
-                                    Service.Configuration.Save();
-                                }
-                                LastPresetDeconflictTime = DateTime.UtcNow;
-                            }
-
-                            // Keep removed items in the counter
+                            // Keep conflicted items in the counter
                             FeaturesWindow.CurrentPreset += 1 + AllChildren(presetChildren[childPreset]);
                         }
-
                         else
                         {
                             draw();

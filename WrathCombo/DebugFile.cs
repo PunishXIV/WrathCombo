@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -24,7 +25,6 @@ using WrathCombo.Data.Conflicts;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
-using Dalamud.Game.Config;
 using ECommons;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using UIConfig = Dalamud.Game.Config.UiConfigOption;
@@ -66,6 +66,19 @@ public static class DebugFile
     /// List of many things the user has done in the current session (Toggles, config changes etc.)
     /// </summary>
     internal static List<string> DebugLog = [];
+
+    internal static void LoggingConfigChanges
+        (object? _, Configuration.ConfigChangeEventArgs argument) {
+        var displayValue = argument.NewValue switch
+        {
+            Array arr => string.Join(", ", arr.Cast<object?>()),
+            _         => argument.NewValue.ToString(),
+        };
+        
+        DebugLog.Add($"{DateTime.Now} | [{argument.Source}] " +
+                     $"Changed {argument.Type} `{argument.Key}` to " +
+                     $"'{displayValue}'");
+    }
 
     /// Get the path to the debug file.
     public static string GetDebugFilePath() {
@@ -109,7 +122,8 @@ public static class DebugFile
             AddLine("START DEBUG LOG");
             AddLine();
             
-            AddLine($"Log at: {DateTimeOffset.UtcNow:yyyy-MM-ddTHH:mm:sszzz}");
+            AddLine($"Log at: {DateTimeOffset.Now:yyyy-MM-ddTHH:mm:sszzz}     " +
+                    $"(everything in user's timezone)");
             AddLine();
 
             AddPluginInfo();
@@ -378,7 +392,7 @@ public static class DebugFile
 
                 var displayValue = property switch
                 {
-                    "InterruptDelay" => $"{(double)value * 100}",
+                    "InterruptDelay" => $"{(float)value * 100}",
                     "CustomHealStack" => Service.Configuration.UseCustomHealStack
                         .DisplayStack(separator: " > "),
                     "RaiseStack" => ((string[])value).StackString(" > ", true),
@@ -518,31 +532,31 @@ public static class DebugFile
         if (job is null)
         {
             AddLine("---INT VALUES---");
-            foreach (var config in PluginConfiguration.CustomIntValues)
+            foreach (var config in Configuration.CustomIntValues)
                 AddLine($"{config.Key.Trim()}: {config.Value}");
 
             AddLine();
 
             AddLine("---INT ARRAY VALUES---");
-            foreach (var config in PluginConfiguration.CustomIntArrayValues)
+            foreach (var config in Configuration.CustomIntArrayValues)
                 AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
 
             AddLine();
 
             AddLine("---FLOAT VALUES---");
-            foreach (var config in PluginConfiguration.CustomFloatValues)
+            foreach (var config in Configuration.CustomFloatValues)
                 AddLine($"{config.Key.Trim()}: {config.Value}");
 
             AddLine();
 
             AddLine("---BOOL VALUES---");
-            foreach (var config in PluginConfiguration.CustomBoolValues)
+            foreach (var config in Configuration.CustomBoolValues)
                 AddLine($"{config.Key.Trim()}: {config.Value}");
 
             AddLine();
 
             AddLine("---BOOL ARRAY VALUES---");
-            foreach (var config in PluginConfiguration.CustomBoolArrayValues)
+            foreach (var config in Configuration.CustomBoolArrayValues)
                 AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
         }
         else
@@ -555,39 +569,39 @@ public static class DebugFile
                 var val1 = field.GetValue(null);
                 if (val1.GetType().BaseType == typeof(UserData))
                 {
-                    key = val1.GetType().BaseType.GetField("pName")
+                    key = val1.GetType().BaseType.GetField("ConfigName")
                         .GetValue(val1).ToString()!;
                 }
 
-                if (PluginConfiguration.CustomIntValues
+                if (Configuration.CustomIntValues
                     .TryGetValue(key, out var intVal))
                 {
                     AddLine($"{key}: {intVal}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomFloatValues
+                if (Configuration.CustomFloatValues
                     .TryGetValue(key, out var floatVal))
                 {
                     AddLine($"{key}: {floatVal}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomBoolValues
+                if (Configuration.CustomBoolValues
                     .TryGetValue(key, out var boolVal))
                 {
                     AddLine($"{key}: {boolVal}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomBoolArrayValues
+                if (Configuration.CustomBoolArrayValues
                     .TryGetValue(key, out var boolArrVal))
                 {
                     AddLine($"{key}: {string.Join(", ", boolArrVal)}");
                     return;
                 }
 
-                if (PluginConfiguration.CustomIntArrayValues
+                if (Configuration.CustomIntArrayValues
                     .TryGetValue(key, out var intArrVal))
                 {
                     AddLine($"{key}: {string.Join(", ", intArrVal)}");
@@ -691,9 +705,21 @@ public static class DebugFile
     /// Get the debug code by itself.
     public static string GetDebugCode()
     {
-        var bytes = Encoding.UTF8.GetBytes(
-            JsonConvert.SerializeObject(Service.Configuration));
-        return Convert.ToBase64String(bytes);
+        var json  = JsonConvert.SerializeObject(
+            Service.Configuration, Formatting.None);
+        var bytes = Encoding.UTF8.GetBytes(json);
+
+        // Compress the config
+        using var output = new MemoryStream();
+        using (var brotli = new BrotliStream(output, CompressionLevel.SmallestSize, leaveOpen: true))
+        {
+            brotli.Write(bytes);
+        }
+        output.Position = 0;
+        var compressed = output.ToArray();
+
+        // Base64 encode the compressed config
+        return Convert.ToBase64String(compressed);
     }
 
     private static void AddDebugCode()
@@ -722,11 +748,6 @@ public static class DebugFile
         AddLine("END SETTINGS CHANGES HISTORY");
 
         AddLine();
-    }
-
-    public static void AddSettingLog(string log)
-    {
-        DebugLog.Add($"{DateTime.UtcNow} | {log}");
     }
     
     /// <summary>

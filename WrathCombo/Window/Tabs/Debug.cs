@@ -18,6 +18,8 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
 using System.Text;
@@ -47,7 +49,7 @@ internal class Debug : ConfigWindow, IDisposable
     private static int _sheetCustomId = 0;
     private static string _debugError = string.Empty;
     private static string _debugConfig = string.Empty;
-    private static PluginConfiguration? _previousConfig;
+    private static Configuration? _previousConfig;
 
     private static Guid? _wrathLease;
     private static Action? _debugSpell;
@@ -128,10 +130,37 @@ internal class Debug : ConfigWindow, IDisposable
                         .PadRight(stripped.Length + paddingNeeded, '=');
                     base64 = Convert.FromBase64String(stripped);
                 }
+                
+                // Decompress the data
+                byte[] decompressedBytes;
+                try
+                {
+                    // Attempt Brotli decompression (new format)
+                    using var compressedStream = new MemoryStream(base64);
+                    using var brotliStream = new BrotliStream(compressedStream, CompressionMode.Decompress);
+                    using var decompressedStream = new MemoryStream();
+                    brotliStream.CopyTo(decompressedStream);
+                    decompressedBytes = decompressedStream.ToArray();
+                }
+                catch (InvalidDataException)
+                {
+                    // Old format, no compression
+                    decompressedBytes = base64;
+                }
 
                 // Decode the data
-                var decode = Encoding.UTF8.GetString(base64);
-                var config = JsonConvert.DeserializeObject<PluginConfiguration>(decode);
+                Configuration? config;
+                try
+                {
+                    var decode = Encoding.UTF8.GetString(decompressedBytes);
+                    config = JsonConvert.DeserializeObject<Configuration>(decode);
+                }
+                // Fallback to decoding the non-decompressed data
+                catch (Exception)
+                {
+                    var decode = Encoding.UTF8.GetString(base64);
+                    config = JsonConvert.DeserializeObject<Configuration>(decode);
+                }
                 if (config != null)
                 {
                     DebugConfig = true;
@@ -1186,8 +1215,8 @@ internal class Debug : ConfigWindow, IDisposable
         DebugConfig = false;
         Service.Configuration =
             _previousConfig ??
-            Svc.PluginInterface.GetPluginConfig() as PluginConfiguration ??
-            new PluginConfiguration();
+            Svc.PluginInterface.GetPluginConfig() as Configuration ??
+            new Configuration();
         _previousConfig = null;
 
         P.IPC = Provider.Init();

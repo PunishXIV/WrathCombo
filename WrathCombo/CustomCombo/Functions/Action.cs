@@ -244,7 +244,7 @@ internal abstract partial class CustomComboFunctions
     /// </param>
     /// <param name="maxWeaves">
     ///     Maximum amount of weaves allowed per window.<br/>
-    ///     Defaults to <see cref="PluginConfiguration.MaximumWeavesPerWindow"/>.
+    ///     Defaults to <see cref="Configuration.MaximumWeavesPerWindow"/>.
     /// </param>
     public static unsafe bool CanWeave(float estimatedWeaveTime = BaseAnimationLock, int? maxWeaves = null)
     {
@@ -270,7 +270,7 @@ internal abstract partial class CustomComboFunctions
     /// </param>
     /// <param name="maxWeaves">
     ///     Maximum amount of weaves allowed per window.<br/>
-    ///     Defaults to <see cref="PluginConfiguration.MaximumWeavesPerWindow"/>.
+    ///     Defaults to <see cref="Configuration.MaximumWeavesPerWindow"/>.
     /// </param>
     public static unsafe bool CanDelayedWeave(float weaveStart = 1.25f, float weaveEnd = BaseAnimationLock, int? maxWeaves = null)
     {

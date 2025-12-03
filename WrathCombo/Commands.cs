@@ -10,16 +10,15 @@ using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WrathCombo.AutoRotation;
 using WrathCombo.Core;
-using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
+using static WrathCombo.Core.Configuration;
 using static ECommons.ExcelServices.ExcelJobHelper;
 
 #endregion
@@ -118,8 +117,6 @@ public partial class WrathCombo
             default:
                 HandleOpenCommand(argumentParts); break;
         }
-
-        Service.Configuration.Save();
     }
 
     /// <summary>
@@ -216,7 +213,7 @@ public partial class WrathCombo
         }
 
         // Give the correct method for the action
-        Func<Preset, bool, bool> method = action switch
+        Func<Preset, ConfigChangeSource?, bool> method = action switch
         {
             toggle => PresetStorage.TogglePreset,
             set => PresetStorage.EnablePreset,
@@ -234,7 +231,7 @@ public partial class WrathCombo
         else
         {
             var usablePreset = (Preset)preset!;
-            method(usablePreset, false);
+            method(usablePreset, ConfigChangeSource.Command);
 
             if (action == toggle)
                 action =
@@ -541,6 +538,7 @@ public partial class WrathCombo
         if (Service.Configuration.IgnoredNPCs.All(x => x.Key != target.BaseId))
         {
             Service.Configuration.IgnoredNPCs.Add(target.BaseId, target.GetNameId());
+            Service.Configuration.Save();
 
             DuoLog.Information(
                 $"Successfully added {target.Name} (ID: {target.BaseId}) to ignored list");
@@ -683,7 +681,7 @@ public partial class WrathCombo
     ///         </item>
     ///         <item>
     ///             Open to current job setting
-    ///             (if <see cref="PluginConfiguration.OpenToCurrentJob" />)
+    ///             (if <see cref="Configuration.OpenToCurrentJob" />)
     ///         </item>
     ///         <item>
     ///             Open to specified job
