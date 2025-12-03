@@ -1,6 +1,10 @@
+using ECommons.DalamudServices;
+using ECommons.GameFunctions;
 using System;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.RDM.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -316,7 +320,7 @@ internal partial class RDM : Caster
             
             if (IsEnabled(Preset.RDM_ST_VerCure) && ActionReady(Vercure) && 
                 PlayerHealthPercentageHp() <= RDM_ST_VerCureThreshold &&
-                (!InDuty() || InFATE() || !IsInParty()))
+                !GetPartyMembers().Any(x => x.GetRole() is CombatRole.Healer))
                 return Vercure;
 
             if (IsEnabled(Preset.RDM_ST_FireStone))
@@ -426,7 +430,7 @@ internal partial class RDM : Caster
             
             if (IsEnabled(Preset.RDM_AoE_VerCure) && ActionReady(Vercure) && 
                 PlayerHealthPercentageHp() <= RDM_AoE_VerCureThreshold && !CanInstantCast &&
-                (!InDuty() || InFATE() || !IsInParty()))
+                !GetPartyMembers().Any(x => x.GetRole() is CombatRole.Healer))
                 return Vercure;            
 
             if (IsEnabled(Preset.RDM_AoE_ThunderAero) && !CanInstantCast)
