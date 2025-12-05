@@ -199,6 +199,7 @@ internal partial class PLD
     {
         public const ushort
             IronWill = 79,
+            HallowedGround = 82,
             Requiescat = 1368,
             AtonementReady = 1902, // First Atonement Buff
             SupplicationReady = 3827, // Second Atonement Buff

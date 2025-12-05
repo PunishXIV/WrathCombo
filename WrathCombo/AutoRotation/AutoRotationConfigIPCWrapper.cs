@@ -245,6 +245,8 @@ public class HealerSettingsIPCWrapper(HealerSettings settings)
     public bool KardiaTanksOnly => settings.KardiaTanksOnly;
 
     public bool PreEmptiveHoT => settings.PreEmptiveHoT;
+    
+    public bool AutoRezDPSJobsHealersOnly => settings.AutoRezDPSJobsHealersOnly;
 
     #endregion
 }

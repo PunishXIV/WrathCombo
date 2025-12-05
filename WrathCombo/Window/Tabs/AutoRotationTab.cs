@@ -249,6 +249,15 @@ internal class AutoRotationTab : ConfigWindow
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
                     $"Apply to {Job.SMN.Shorthand()} & {Job.RDM.Shorthand()}", ref cfg.HealerSettings.AutoRezDPSJobs, "AutoRezDPSJobs");
                 ImGuiComponents.HelpMarker($"When playing as {Job.SMN.Shorthand()} or {Job.RDM.Shorthand()}, also attempt to raise a dead party member. {Job.RDM.Shorthand()} will only resurrect with {RoleActions.Magic.Buffs.Swiftcast.StatusName()} or {RDM.Buffs.Dualcast.StatusName()} active.");
+                
+                if (cfg.HealerSettings.AutoRezDPSJobs)
+                {
+                    ImGuiExtensions.Prefix(true);
+                    P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezDPSJobsHealersOnly");
+                    changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                        $"Only Raise Raisers", ref cfg.HealerSettings.AutoRezDPSJobsHealersOnly, "AutoRezDPSJobsHealersOnly");
+                    ImGuiComponents.HelpMarker($"When playing as {Job.SMN.Shorthand()} or {Job.RDM.Shorthand()}, Will only attempt to res Healers and Raisers");
+                }
             }
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoCleanse");
@@ -266,8 +275,8 @@ internal class AutoRotationTab : ConfigWindow
                 changed |= ImGui.Checkbox($"Limit {SGE.Kardia.ActionName()} swapping to tanks only", ref cfg.HealerSettings.KardiaTanksOnly);
             }
 
-            changed |= ImGui.Checkbox($"[{Job.WHM.Shorthand()}/{Job.AST.Shorthand()}] Pre-emptively apply heal over time on focus target", ref cfg.HealerSettings.PreEmptiveHoT);
-            ImGuiComponents.HelpMarker($"Applies {WHM.Regen.ActionName()}/{AST.AspectedBenefic.ActionName()} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses \"Only in Combat\" setting)");
+            changed |= ImGui.Checkbox($"[{Job.WHM.Shorthand()}/{Job.AST.Shorthand()}/{Job.SCH.Shorthand()}/{Job.SGE.Shorthand()}] Pre-emptively apply Heal Over Time/Shields on focus target", ref cfg.HealerSettings.PreEmptiveHoT);
+            ImGuiComponents.HelpMarker($"Applies {WHM.Regen.ActionName()}/{AST.AspectedBenefic.ActionName()}/{SGE.EukrasianDiagnosis.ActionName()}/{SCH.Adloquium.ActionName()} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses \"Only in Combat\" setting)");
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("IncludeNPCs");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded("Heal Friendly NPCs", ref cfg.HealerSettings.IncludeNPCs);

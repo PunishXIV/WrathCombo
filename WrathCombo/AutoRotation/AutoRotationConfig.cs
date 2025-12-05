@@ -44,6 +44,7 @@ public class HealerSettings
     public bool AutoRez = false;
     public bool AutoRezRequireSwift = false;
     public bool AutoRezDPSJobs = false;
+    public bool AutoRezDPSJobsHealersOnly = false;
     public bool AutoRezOutOfParty = false;
     public bool AutoCleanse = false;
     public bool PreEmptiveHoT = false;

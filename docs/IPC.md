@@ -427,7 +427,8 @@ resources below, or the first several sections of this guide.
 
 ## Changelog
 
-
+- PunishXIV/WrathCombo#916 - Added `AutoRezDPSJobsHealersOnly` DPS Auto Res for healers only,
+  `1.0.2.24`.
 - PunishXIV/WrathCombo#728 - Added `DPSAoETargets` Auto-Rotation Configuration
   (could set it to something like `99` to effectively disable AoE),
   `1.0.2.1`.
