@@ -1,4 +1,3 @@
-using System;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.SAM.Config;
 namespace WrathCombo.Combos.PvE;
@@ -57,6 +56,10 @@ internal partial class SAM : Melee
                 //Shinten Usage
                 if (CanShinten())
                     return Shinten;
+
+                //Auto Third Eye
+                if (CanUseThirdEye)
+                    return OriginalHook(ThirdEye);
 
                 // healing
                 if (Role.CanSecondWind(SAM_STSecondWindHPThreshold))
@@ -211,19 +214,6 @@ internal partial class SAM : Melee
             {
                 if (IsEnabled(Preset.SAM_ST_CDs))
                 {
-                    //Auto Third Eye
-                    if (IsEnabled(Preset.SAM_ST_ThirdEye) &&
-                        ActionReady(OriginalHook(ThirdEye)) &&
-                        (RaidWideCasting(2f) || !IsInParty()))
-                        return OriginalHook(ThirdEye);
-
-                    //Auto Meditate
-                    if (IsEnabled(Preset.SAM_ST_Meditate) &&
-                        ActionReady(Meditate) &&
-                        !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(SAM_ST_MeditateTimeStill) &&
-                        InCombat() && !HasBattleTarget())
-                        return Meditate;
-
                     //Meikyo feature
                     if (IsEnabled(Preset.SAM_ST_CDs_MeikyoShisui) &&
                         CanMeikyo())
@@ -260,6 +250,7 @@ internal partial class SAM : Melee
                         CanShoha())
                         return Shoha;
                 }
+                
                 if (IsEnabled(Preset.SAM_ST_Shinten) &&
                     CanShinten())
                     return Shinten;
@@ -268,6 +259,16 @@ internal partial class SAM : Melee
                     Role.CanFeint() &&
                     RaidWideCasting())
                     return Role.Feint;
+
+                //Auto Third Eye
+                if (IsEnabled(Preset.SAM_ST_ThirdEye) &&
+                    CanUseThirdEye)
+                    return OriginalHook(ThirdEye);
+
+                //Auto Meditate
+                if (IsEnabled(Preset.SAM_ST_Meditate) &&
+                    CanUseMEditate)
+                    return Meditate;
 
                 // healing
                 if (IsEnabled(Preset.SAM_ST_ComboHeals))
@@ -483,8 +484,7 @@ internal partial class SAM : Melee
                         ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
                          !HasStatusEffect(Buffs.Fugetsu) ||
                          SenCount is 3 &&
-                         GetStatusEffectRemainingTime(Buffs.Fugetsu) <=
-                         GetStatusEffectRemainingTime(Buffs.Fuka)))
+                         RefreshFugetsu))
                         return Jinpu;
 
                     if (SAM_Yukaze_Kasha &&
@@ -492,8 +492,7 @@ internal partial class SAM : Melee
                         ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
                          !HasStatusEffect(Buffs.Fuka) ||
                          SenCount is 3 &&
-                         GetStatusEffectRemainingTime(Buffs.Fuka) <=
-                         GetStatusEffectRemainingTime(Buffs.Fugetsu)))
+                         RefreshFuka))
                         return Shifu;
                 }
 
@@ -610,13 +609,15 @@ internal partial class SAM : Melee
                 if (LevelChecked(Mangetsu) &&
                     !HasGetsu ||
                     !SAM_Mangetsu_Oka ||
-                    !HasStatusEffect(Buffs.Fugetsu))
+                    !HasStatusEffect(Buffs.Fugetsu) ||
+                    SenCount is 2 or 3 && RefreshFugetsu)
                     return Mangetsu;
 
                 if (SAM_Mangetsu_Oka &&
                     LevelChecked(Oka) &&
                     !HasKa ||
-                    !HasStatusEffect(Buffs.Fuka))
+                    !HasStatusEffect(Buffs.Fuka) ||
+                    SenCount is 2 or 3 && RefreshFuka)
                     return Oka;
             }
 

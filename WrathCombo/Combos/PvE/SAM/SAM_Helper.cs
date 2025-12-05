@@ -14,17 +14,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SAM
 {
-    private static bool RefreshFugetsu =>
-        GetStatusEffectRemainingTime(Buffs.Fugetsu) < 8;
-
-    private static bool RefreshFuka =>
-        GetStatusEffectRemainingTime(Buffs.Fuka) < 8;
-
-    private static bool EnhancedSenei =>
-        TraitLevelChecked(Traits.EnhancedHissatsu);
-
-    private static int SenCount =>
-        GetSenCount();
 
     #region Basic Combo
 
@@ -132,6 +121,34 @@ internal partial class SAM
 
         internal static int Shinten => GetResourceCost(SAM.Shinten);
     }
+
+    #endregion
+
+    #region Misc
+
+    private static bool RefreshFugetsu =>
+        GetStatusEffectRemainingTime(Buffs.Fugetsu) <=
+        GetStatusEffectRemainingTime(Buffs.Fuka);
+
+    private static bool RefreshFuka =>
+        GetStatusEffectRemainingTime(Buffs.Fuka) <=
+        GetStatusEffectRemainingTime(Buffs.Fugetsu);
+
+    private static bool EnhancedSenei =>
+        TraitLevelChecked(Traits.EnhancedHissatsu);
+
+    private static int SenCount =>
+        GetSenCount();
+
+    private static bool CanUseThirdEye =>
+        ActionReady(OriginalHook(ThirdEye)) &&
+        (RaidWideCasting(2f) || !IsInParty());
+
+    //Auto Meditate
+    private static bool CanUseMEditate =>
+        ActionReady(Meditate) &&
+        !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(SAM_ST_MeditateTimeStill) &&
+        InCombat() && !HasBattleTarget();
 
     #endregion
 
