@@ -70,6 +70,10 @@ internal partial class RPR : Melee
                         return OriginalHook(BloodStalk);
                 }
 
+                //Auto Arcane Crest
+                if (CanUseArcaneCrest)
+                    return ArcaneCrest;
+
                 //Healing
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -346,10 +350,16 @@ internal partial class RPR : Melee
                         return OriginalHook(BloodStalk);
                 }
 
+                //Auto Feint
                 if (IsEnabled(Preset.RPR_ST_Feint) &&
                     Role.CanFeint() &&
                     RaidWideCasting())
                     return Role.Feint;
+
+                //Auto Arcane Crest
+                if (IsEnabled(Preset.RPR_ST_ArcaneCrest) &&
+                    CanUseArcaneCrest)
+                    return ArcaneCrest;
 
                 //Healing
                 if (IsEnabled(Preset.RPR_ST_ComboHeals))

@@ -5087,8 +5087,12 @@ public enum Preset
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Feint Raidwide Option", "Adds Feint when Raidwide is detected casting.", Job.RPR)]
     RPR_ST_Feint = 12095,
-
-    //last value = 12021
+    
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Arcane Crest Raidwide Option", "Adds Arcane Crest when Raidwide is detected casting.", Job.RPR)]
+    RPR_ST_ArcaneCrest = 12022,
+    
+    //last value = 12022
 
     #endregion
 
