@@ -34,31 +34,30 @@ internal partial class NIN
     internal static bool HasDoton => HasStatusEffect(Buffs.Doton);
     internal static float DotonRemaining => GetStatusEffectRemainingTime(Buffs.Doton);
     internal static bool DotonStoppedMoving => TimeStoodStill >= TimeSpan.FromSeconds(DotonTimeStill);
-    internal static float DotonTimeStill => AoESimpleMode ? 1.5f : NIN_AoE_AdvancedMode_Doton_TimeStill;
+    internal static float DotonTimeStill => AoESimpleMode ? 1.5f : NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill;
 
     internal static bool CanUseFumaShuriken => LevelChecked(FumaShuriken) && MudraReady;
 
     internal static bool CanUseRaiton => LevelChecked(Raiton) && MudraReady &&
-                                          (!HasKassatsu || !NIN_ST_AdvancedMode_Ninjitsus_Options[2] && !STSimpleMode || !LevelChecked(HyoshoRanryu)) && //Use kassatsu on it if Hyosho isn't selected. 
+                                          (!HasKassatsu || IsNotEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) && !STSimpleMode || !LevelChecked(HyoshoRanryu)) && //Use kassatsu on it if Hyosho isn't selected. 
                                            (TrickDebuff || // Buff Window
                                            !LevelChecked(Suiton) || //Dont Pool because of Suiton not learned yet
                                            GetCooldownChargeRemainingTime(Ten) < 1 || // Spend to avoid cap
-                                           !NIN_ST_AdvancedMode_Raiton_Options[0] && !STSimpleMode || //Dont Pool because of Raiton Option
-                                           NIN_ST_AdvancedMode_Raiton_Options[1] && !InMeleeRange() && GetCooldownChargeRemainingTime(Ten) <= TrickCD - 10); //Uptime option
+                                           !NIN_ST_AdvancedMode_Ninjitsus_Raiton_Pooling && !STSimpleMode || //Dont Pool because of Raiton Option
+                                           NIN_ST_AdvancedMode_Ninjitsus_Raiton_Uptime && !InMeleeRange() && GetCooldownChargeRemainingTime(Ten) <= TrickCD - 10); //Uptime option
 
     internal static bool CanUseKaton => LevelChecked(Katon) && MudraReady &&
-                                         (!HasKassatsu || !NIN_AoE_AdvancedMode_Ninjitsus_Options[2] && !STSimpleMode) &&
+                                         (!HasKassatsu || IsNotEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Goka) && !STSimpleMode) &&
                                          (TrickDebuff || //Buff Window
                                           !LevelChecked(Huton) || //Dont Pool because of Huton not learned yet
                                           GetCooldownChargeRemainingTime(Ten) < 1 || // Spend to avoid cap
-                                          !NIN_AoE_AdvancedMode_Katon_Options[0] && !AoESimpleMode || //Dont Pool because of Raiton Option
-                                          NIN_AoE_AdvancedMode_Katon_Options[1] && !InMeleeRange() &&
+                                          !NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling && !AoESimpleMode || //Dont Pool
+                                          NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime && !InMeleeRange() &&
                                           GetCooldownChargeRemainingTime(Ten) <= TrickCD - 10); //Uptime option
 
     internal static bool CanUseDoton => LevelChecked(Doton) && MudraReady && DotonStoppedMoving && !JustUsed(Doton) &&
-                                        (!HasDoton || DotonRemaining <= 2) &&
-                                        (TrickDebuff || //Buff Window
-                                         GetCooldownChargeRemainingTime(Ten) < 3); // Use if you have Kassatsu before you get Hosho Ranryu
+                                        (!HasDoton || DotonRemaining <= 2) && //No doton down
+                                        (TrickDebuff || GetCooldownChargeRemainingTime(Ten) < 3); //Pool for buff window
 
     internal static bool CanUseSuiton => LevelChecked(Suiton) && MudraReady && !HasStatusEffect(Buffs.ShadowWalker);
 
@@ -649,7 +648,10 @@ internal partial class NIN
             Raiton, //32
             FleetingRaiju, //33
         ];
-
+       
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps 
+        { get; set; } = [([1,2,3], () => OriginalHook(Ninjutsu) == Suiton)];
+       
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             12
@@ -714,7 +716,10 @@ internal partial class NIN
             Bhavacakra, //33
             SpinningEdge //34
         ];
-
+        
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps 
+        { get; set; } = [([1,2,3], () => OriginalHook(Ninjutsu) == Suiton)];
+        
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             12
@@ -776,7 +781,10 @@ internal partial class NIN
             Raiton, //32
             FleetingRaiju, //33
         ];
-
+        
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps 
+        { get; set; } = [([1,2,3], () => OriginalHook(Ninjutsu) == Suiton)];
+        
         public override List<int> DelayedWeaveSteps { get; set; } =
         [
             11
