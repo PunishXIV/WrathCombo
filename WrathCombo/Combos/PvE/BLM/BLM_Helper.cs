@@ -12,6 +12,9 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
 {
+
+    #region Misc
+
     private static int MaxPolyglot =>
         TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 :
         TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
@@ -63,6 +66,8 @@ internal partial class BLM
 
     private static bool HasPolyglotStacks() =>
         PolyglotStacks > 0;
+
+    #endregion
 
     #region Movement Prio
 

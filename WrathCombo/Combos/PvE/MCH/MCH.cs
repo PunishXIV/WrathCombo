@@ -93,13 +93,13 @@ internal partial class MCH : PhysicalRanged
                             return OriginalHook(Ricochet);
                     }
 
-                    // Interrupt
-                    if (Role.CanHeadGraze(true))
-                        return Role.HeadGraze;
-
                     // Healing
                     if (Role.CanSecondWind(40))
                         return Role.SecondWind;
+
+                    // Interrupt
+                    if (Role.CanHeadGraze(true))
+                        return Role.HeadGraze;
                 }
             }
 
@@ -373,10 +373,6 @@ internal partial class MCH : PhysicalRanged
                         !HasAnyStatusEffects([BRD.Buffs.Troubadour, DNC.Buffs.ShieldSamba, Buffs.Tactician], anyOwner: true))
                         return Tactician;
 
-                    // Interrupt
-                    if (Role.CanHeadGraze(Preset.MCH_ST_Adv_Interrupt))
-                        return Role.HeadGraze;
-
                     if (IsEnabled(Preset.MCH_ST_Dismantle) &&
                         ActionReady(Dismantle) &&
                         !HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) &&
@@ -388,6 +384,10 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(Preset.MCH_ST_Adv_SecondWind) &&
                         Role.CanSecondWind(MCH_ST_SecondWindHPThreshold))
                         return Role.SecondWind;
+
+                    // Interrupt
+                    if (Role.CanHeadGraze(Preset.MCH_ST_Adv_Interrupt))
+                        return Role.HeadGraze;
                 }
             }
 

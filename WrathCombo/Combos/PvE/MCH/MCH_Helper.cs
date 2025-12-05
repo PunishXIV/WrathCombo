@@ -11,8 +11,13 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH
 {
+
+    #region Misc
+
     private static float WFCD =>
         GetCooldownRemainingTime(Wildfire);
+
+    #endregion
 
     #region Hypercharge
 

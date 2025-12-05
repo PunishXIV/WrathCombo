@@ -21,10 +21,6 @@ internal partial class BLM : Caster
 
             if (CanWeave())
             {
-                if (ActionReady(Manaward) &&
-                    PlayerHealthPercentageHp() < 40 && RaidWideCasting())
-                    return Manaward;
-
                 if (ActionReady(Amplifier) && !HasMaxPolyglotStacks)
                     return Amplifier;
 
@@ -66,6 +62,10 @@ internal partial class BLM : Caster
                         HasBattleTarget() && InActionRange(Fire))
                         return Role.Swiftcast;
                 }
+
+                if (ActionReady(Manaward) &&
+                    PlayerHealthPercentageHp() < 40 && RaidWideCasting())
+                    return Manaward;
             }
 
             if (IsMoving() && !LevelChecked(Triplecast) &&
@@ -305,15 +305,6 @@ internal partial class BLM : Caster
 
             if (CanWeave())
             {
-                if (IsEnabled(Preset.BLM_ST_Manaward) &&
-                    ActionReady(Manaward) &&
-                    PlayerHealthPercentageHp() < BLM_ST_Manaward_Threshold && RaidWideCasting())
-                    return Manaward;
-
-                if (IsEnabled(Preset.BLM_ST_Addle) &&
-                    Role.CanAddle() && RaidWideCasting())
-                    return Role.Addle;
-
                 if (IsEnabled(Preset.BLM_ST_Amplifier) &&
                     ActionReady(Amplifier) && !HasMaxPolyglotStacks)
                     return Amplifier;
@@ -380,6 +371,15 @@ internal partial class BLM : Caster
                             return Triplecast;
                     }
                 }
+
+                if (IsEnabled(Preset.BLM_ST_Manaward) &&
+                    ActionReady(Manaward) &&
+                    PlayerHealthPercentageHp() < BLM_ST_Manaward_Threshold && RaidWideCasting())
+                    return Manaward;
+
+                if (IsEnabled(Preset.BLM_ST_Addle) &&
+                    Role.CanAddle() && RaidWideCasting())
+                    return Role.Addle;
             }
 
             //Overcap protection

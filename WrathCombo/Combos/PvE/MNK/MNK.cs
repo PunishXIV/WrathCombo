@@ -210,20 +210,18 @@ internal partial class MNK : Melee
                     CanUseChakra())
                     return OriginalHook(SteeledMeditation);
 
-                if (IsEnabled(Preset.MNK_ST_Feint) &&
-                    Role.CanFeint() &&
-                    RaidWideCasting())
-                    return Role.Feint;
-
-                if (IsEnabled(Preset.MNK_ST_UseRoE) &&
-                    (CanRoE() ||
-                     MNK_ST_EarthsReply &&
-                     CanEarthsReply()))
-                    return OriginalHook(RiddleOfEarth);
-
                 if (IsEnabled(Preset.MNK_ST_UseMantra) &&
                     CanMantra())
                     return Mantra;
+
+                if (IsEnabled(Preset.MNK_ST_UseRoE) &&
+                    (CanRoE() ||
+                     MNK_ST_EarthsReply && CanEarthsReply()))
+                    return OriginalHook(RiddleOfEarth);
+
+                if (IsEnabled(Preset.MNK_ST_Feint) &&
+                    Role.CanFeint() && RaidWideCasting())
+                    return Role.Feint;
 
                 if (IsEnabled(Preset.MNK_ST_ComboHeals))
                 {

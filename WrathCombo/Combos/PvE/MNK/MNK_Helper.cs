@@ -10,12 +10,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class MNK
 {
-    private static float GCD =>
-        GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
-
-    private static int HPThresholdBuffs =>
-        MNK_ST_BuffsBossOption == 1 ||
-        !InBossEncounter() ? MNK_ST_BuffsHPThreshold : 0;
 
     #region Basic Combo
 
@@ -257,6 +251,33 @@ internal partial class MNK
 
     #endregion
 
+    #region Misc
+
+    private static float GCD =>
+        GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
+
+    private static int HPThresholdBuffs =>
+        MNK_ST_BuffsBossOption == 1 ||
+        !InBossEncounter() ? MNK_ST_BuffsHPThreshold : 0;
+
+    private static bool CanMantra() =>
+        ActionReady(Mantra) &&
+        !HasStatusEffect(Buffs.Mantra) &&
+        RaidWideCasting(3f);
+
+    private static bool CanRoE() =>
+        ActionReady(RiddleOfEarth) &&
+        RaidWideCasting(2f) &&
+        !HasStatusEffect(Buffs.RiddleOfEarth) &&
+        !HasStatusEffect(Buffs.EarthsRumination);
+
+    private static bool CanEarthsReply() =>
+        HasStatusEffect(Buffs.EarthsRumination) &&
+        NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
+        GetPartyAvgHPPercent() <= MNK_ST_EarthsReplyHPThreshold;
+
+    #endregion
+
     #region Masterful Blitz
 
     private static bool CanMasterfulBlitz(bool onAoE)
@@ -404,22 +425,6 @@ internal partial class MNK
          HasStatusEffect(Buffs.RiddleOfFire) ||
          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
          !InMeleeRange());
-
-    private static bool CanMantra() =>
-        ActionReady(Mantra) &&
-        !HasStatusEffect(Buffs.Mantra) &&
-        RaidWideCasting(3f);
-
-    private static bool CanRoE() =>
-        ActionReady(RiddleOfEarth) &&
-        RaidWideCasting(2f) &&
-        !HasStatusEffect(Buffs.RiddleOfEarth) &&
-        !HasStatusEffect(Buffs.EarthsRumination);
-
-    private static bool CanEarthsReply() =>
-        HasStatusEffect(Buffs.EarthsRumination) &&
-        NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
-        GetPartyAvgHPPercent() <= MNK_ST_EarthsReplyHPThreshold;
 
     #endregion
 
