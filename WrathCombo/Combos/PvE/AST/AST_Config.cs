@@ -49,10 +49,11 @@ internal partial class AST
             AST_ST_DPS_AltMode = new("AST_ST_DPS_AltMode"),
             AST_ST_DPS_LucidDreaming = new("AST_ST_DPS_LucidDreaming", 8000),
             AST_ST_DPS_LightSpeedOption = new("AST_ST_DPS_LightSpeedOption"),
-            AST_ST_DPS_CombustOption = new("AST_ST_DPS_CombustOption"),
+            AST_ST_DPS_CombustBossOption = new("AST_ST_DPS_CombustBossOption", 0),
+            AST_ST_DPS_CombustBossAddsOption = new("AST_ST_DPS_CombustBossAddsOption", 80),
+            AST_ST_DPS_CombustTrashOption = new("AST_ST_DPS_CombustTrashOption", 50),
             AST_ST_DPS_DivinationSubOption = new("AST_ST_DPS_DivinationSubOption", 0),
             AST_ST_DPS_Balance_Content = new("AST_ST_DPS_Balance_Content", 1),
-            AST_ST_DPS_CombustSubOption = new("AST_ST_DPS_CombustSubOption", 0),
             AST_ST_DPS_EarthlyStarSubOption = new("AST_ST_DPS_EarthlyStarSubOption", 0),
             AST_ST_DPS_StellarDetonation_Threshold = new("AST_ST_DPS_StellarDetonation_Threshold", 0),
             AST_ST_DPS_StellarDetonation_SubOption = new("AST_ST_DPS_StellarDetonation_SubOption", 0),
@@ -112,8 +113,9 @@ internal partial class AST
                     break;
 
                 case Preset.AST_ST_DPS:
-                    DrawRadioButton(AST_ST_DPS_AltMode, $"On {Malefic.ActionName()}", "", 0);
-                    DrawRadioButton(AST_ST_DPS_AltMode, $"On {Combust.ActionName()}", $"Alternative DPS Mode. Leaves {Malefic.ActionName()} alone for pure DPS, becomes {Malefic.ActionName()} when features are on cooldown", 1);
+                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, $"On {Malefic.ActionName()}", "Applies options to all Malefics.", 0);
+                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, $"On {Combust.ActionName()}", "Applies options to all Combusts.", 1);
+                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, $"On {Malefic2.ActionName()}", "Applies options to Malefic 2 only.", 2);
                     break;
 
                 case Preset.AST_DPS_Lucid:
@@ -121,13 +123,10 @@ internal partial class AST
                     break;
 
                 case Preset.AST_ST_DPS_CombustUptime:
-                    DrawSliderInt(0, 50, AST_ST_DPS_CombustOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                    DrawSliderInt(0, 100, AST_ST_DPS_CombustBossOption, "Bosses Only. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, AST_ST_DPS_CombustBossAddsOption, "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, AST_ST_DPS_CombustTrashOption, "Non boss encounter. Stop using at Enemy HP %.");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
-                    DrawHorizontalRadioButton(AST_ST_DPS_CombustSubOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
-                    DrawHorizontalRadioButton(AST_ST_DPS_CombustSubOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
                     DrawRoundedSliderFloat(0, 4, AST_ST_DPS_CombustUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
                     ImGui.Unindent();
                     break;

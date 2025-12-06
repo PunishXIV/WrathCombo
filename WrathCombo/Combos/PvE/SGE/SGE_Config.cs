@@ -1,5 +1,4 @@
-﻿using Dalamud.Interface.Colors;
-using WrathCombo.CustomComboNS.Functions;
+﻿using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -28,25 +27,16 @@ internal partial class SGE
                     break;
 
                 case Preset.SGE_ST_DPS:
-                    DrawAdditionalBoolChoice(SGE_ST_DPS_Adv,
-                        $"Apply all selected options to {Dosis2.ActionName()}", $"{Dosis.ActionName()} & {Dosis3.ActionName()} will behave normally.");
+                    DrawHorizontalRadioButton(SGE_ST_DPS_Adv, $"On All {Dosis.ActionName()}", "Applies options to all Dosis.", 0);
+                    DrawHorizontalRadioButton(SGE_ST_DPS_Adv, $"On {Dosis2.ActionName()}", "Applies options to ONLY Dosis 2.", 1);
                     break;
 
                 case Preset.SGE_ST_DPS_EDosis:
-                    DrawSliderInt(0, 50, SGE_ST_DPS_EDosisHPOption,
-                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
-
+                    DrawSliderInt(0, 100, SGE_ST_DPS_EukrasianDosisBossOption, "Bosses Only. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, SGE_ST_DPS_EukrasianDosisBossAddsOption, "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, SGE_ST_DPS_EukrasianDosisTrashOption, "Non boss encounter. Stop using at Enemy HP %.");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
-
-                    DrawHorizontalRadioButton(SGE_ST_DPS_EDosisBossOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
-
-                    DrawHorizontalRadioButton(SGE_ST_DPS_EDosisBossOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
-
-                    DrawRoundedSliderFloat(0, 5, SGE_ST_DPS_EDosisRefresh,
-                        "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
+                    DrawRoundedSliderFloat(0, 4, SGE_ST_DPS_EukrasianDosisUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
                     ImGui.Unindent();
                     break;
 
@@ -327,9 +317,6 @@ internal partial class SGE
                     DrawSliderInt(0, 100, SGE_AoE_Heal_ZoeOption,
                         "Start using when below party average HP %. Set to 100 to disable this check");
 
-                    DrawAdditionalBoolChoice(SGE_AoE_Heal_ZoePneuma,
-                        "Pneuma Option", "Chain to Pneuma After.");
-
                     DrawPriorityInput(SGE_AoE_Heals_Priority,
                         9, 7, $"{Zoe.ActionName()} Priority: ");
                     break;
@@ -397,20 +384,21 @@ internal partial class SGE
         #region DPS
 
         public static UserBool
-            SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv"),
             SGE_ST_DPS_Phlegma_Burst = new("SGE_ST_DPS_Phlegma_Burst");
 
         public static UserBoolArray
             SGE_ST_DPS_Movement = new("SGE_ST_DPS_Movement");
 
         public static UserInt
+            SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv", 0),
             SGE_Eukrasia_Mode = new("SGE_Eukrasia_Mode", 1),
             SGE_SelectedOpener = new("SGE_SelectedOpener", 0),
             SGE_ST_DPS_Lucid = new("SGE_ST_DPS_Lucid", 6500),
             SGE_ST_DPS_Rhizo = new("SGE_ST_DPS_Rhizo", 1),
             SGE_ST_DPS_Phlegma = new("SGE_ST_DPS_Phlegma", 0),
-            SGE_ST_DPS_EDosisBossOption = new("SGE_ST_DPS_EDosisSubOption", 0),
-            SGE_ST_DPS_EDosisHPOption = new("SGE_ST_DPS_EDosisOption", 10),
+            SGE_ST_DPS_EukrasianDosisBossOption = new("SGE_ST_DPS_EukrasianDosisBossOption", 0),
+            SGE_ST_DPS_EukrasianDosisBossAddsOption = new("SGE_ST_DPS_EukrasianDosisBossAddsOption", 100),
+            SGE_ST_DPS_EukrasianDosisTrashOption = new("SGE_ST_DPS_EukrasianDosisTrashOption", 50),
             SGE_ST_DPS_AddersgallProtect = new("SGE_ST_DPS_AddersgallProtect", 3),
             SGE_AoE_DPS_Lucid = new("SGE_AoE_Phlegma_Lucid", 6500),
             SGE_AoE_DPS_Rhizo = new("SGE_AoE_DPS_Rhizo", 1),
@@ -419,7 +407,7 @@ internal partial class SGE
             SGE_Balance_Content = new("SGE_Balance_Content", 1);
 
         public static UserFloat
-            SGE_ST_DPS_EDosisRefresh = new("SGE_ST_DPS_EDosisRefresh", 5.0f);
+            SGE_ST_DPS_EukrasianDosisUptime_Threshold = new("SGE_ST_DPS_EukrasianDosisUptime_Threshold", 5.0f);
 
         public static UserIntArray
             SGE_ST_DPS_Movement_Priority = new("SGE_ST_Movement_Priority");
@@ -439,8 +427,7 @@ internal partial class SGE
             SGE_ST_Heal_Haima_TankOnly = new("SGE_ST_Heal_Haima_TankOnly"),
             SGE_ST_Heal_Krasis_TankOnly = new("SGE_ST_Heal_Krasis_TankOnly"),
             SGE_ST_Heal_Taurochole_TankOnly = new("SGE_ST_Heal_Taurochole_TankOnly"),
-            SGE_AoE_Heal_KeracholeTrait = new("SGE_AoE_Heal_KeracholeTrait"),
-            SGE_AoE_Heal_ZoePneuma = new("SGE_AoE_Heal_ZoePneuma");
+            SGE_AoE_Heal_KeracholeTrait = new("SGE_AoE_Heal_KeracholeTrait");
 
         public static UserInt
             SGE_ST_Heal_LucidOption = new("SGE_ST_Heal_LucidOption", 6500),

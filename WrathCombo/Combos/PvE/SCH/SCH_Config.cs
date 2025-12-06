@@ -34,23 +34,12 @@ internal partial class SCH
                     break;
 
                 case Preset.SCH_ST_ADV_DPS_Bio:
-
-                    DrawSliderInt(0, 50, SCH_DPS_BioOption, "Stop using at Enemy HP %. Set to Zero to disable this check.");
-
+                    DrawSliderInt(0, 100, SCH_ST_DPS_BioBossOption, "Bosses Only. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, SCH_ST_DPS_BioBossAddsOption, "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, SCH_ST_DPS_BioTrashOption, "Non boss encounter. Stop using at Enemy HP %.");
                     ImGui.Indent();
-
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
-
-                    DrawHorizontalRadioButton(SCH_DPS_BioSubOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
-
-                    DrawHorizontalRadioButton(SCH_DPS_BioSubOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
-
-                    DrawRoundedSliderFloat(0, 4, SCH_DPS_BioUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
-
+                    DrawRoundedSliderFloat(0, 4, SCH_ST_DPS_BioUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
                     ImGui.Unindent();
-
                     break;
 
                 case Preset.SCH_ST_ADV_DPS_ChainStrat:
@@ -355,9 +344,10 @@ internal partial class SCH
             SCH_ST_DPS_OpenerOption = new("SCH_ST_DPS_OpenerOption"),
             SCH_ST_DPS_OpenerContent = new("SCH_ST_DPS_OpenerContent", 1),
             SCH_ST_DPS_ChainStratagemOption = new("SCH_ST_DPS_ChainStratagemOption", 10),
+            SCH_ST_DPS_BioBossOption = new("SCH_ST_DPS_BioBossOption", 0),
+            SCH_ST_DPS_BioBossAddsOption = new("SCH_ST_DPS_BioBossAddsOption", 100),
+            SCH_ST_DPS_BioTrashOption = new("SCH_ST_DPS_BioTrashOption", 50),
             SCH_AoE_DPS_ChainStratagemOption = new("SCH_AoE_DPS_ChainStratagemOption", 10),
-            SCH_DPS_BioOption = new("SCH_DPS_BioOption"),
-            SCH_DPS_BioSubOption = new("SCH_DPS_BioSubOption", 0),
             SCH_ST_DPS_EnergyDrain = new("SCH_ST_DPS_EnergyDrain", 3),
             SCH_ST_DPS_ChainStratagemSubOption = new("SCH_ST_DPS_ChainStratagemSubOption", 1),
             SCH_AoE_DPS_EnergyDrain = new("SCH_AoE_DPS_EnergyDrain", 3),
@@ -378,7 +368,7 @@ internal partial class SCH
 
 
         internal static UserFloat
-            SCH_DPS_BioUptime_Threshold = new("SCH_DPS_BioUptime_Threshold", 3.0f),
+            SCH_ST_DPS_BioUptime_Threshold = new("SCH_ST_DPS_BioUptime_Threshold", 3.0f),
             SCH_AoE_ADV_DPS_DoT_Reapply = new("SCH_AoE_ADV_DPS_DoT_Reapply", 0);
 
 

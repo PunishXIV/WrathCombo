@@ -61,19 +61,9 @@ internal partial class SGE : Healer
 
             if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia))
             {
-                if (LevelChecked(Eukrasia) && PartyInCombat() &&
-                    !JustUsedOn(DosisList[OriginalHook(Dosis)].Eukrasian, CurrentTarget) &&
-                    CanApplyStatus(CurrentTarget, DosisList[OriginalHook(Dosis)].Debuff))
-                {
-                    const float refreshTimer = 5;
-                    const int hpThreshold = 1;
-
-                    if (GetTargetHPPercent() > hpThreshold &&
-                        (DosisDebuff is null && DyskrasiaDebuff is null ||
-                         DosisDebuff?.RemainingTime <= refreshTimer ||
-                         DyskrasiaDebuff?.RemainingTime <= refreshTimer))
-                        return Eukrasia;
-                }
+                //Eukrasia for DoT
+                if (NeedsDoT() && PartyInCombat())
+                    return Eukrasia;
 
                 // Phlegma
                 if (InCombat() && InActionRange(OriginalHook(Phlegma)) &&
@@ -189,14 +179,16 @@ internal partial class SGE : Healer
 
     internal class SGE_ST_DPS_AdvancedMode : CustomCombo
     {
-        private static uint[] DosisActions => SGE_ST_DPS_Adv
-            ? [Dosis2]
-            : [.. DosisList.Keys];
-
         protected internal override Preset Preset => Preset.SGE_ST_DPS;
 
         protected override uint Invoke(uint actionID)
         {
+            var DosisActions = (int)SGE_ST_DPS_Adv switch
+            {
+                1 => [Dosis2],
+                _ => DosisList.Keys.ToArray(),
+            };
+
             if (!DosisActions.Contains(actionID))
                 return actionID;
 
@@ -263,20 +255,8 @@ internal partial class SGE : Healer
 
             if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia))
             {
-                if (IsEnabled(Preset.SGE_ST_DPS_EDosis) &&
-                    LevelChecked(Eukrasia) && PartyInCombat() &&
-                    !JustUsedOn(DosisList[OriginalHook(Dosis)].Eukrasian, CurrentTarget) &&
-                    CanApplyStatus(CurrentTarget, DosisList[OriginalHook(Dosis)].Debuff))
-                {
-                    float refreshTimer = SGE_ST_DPS_EDosisRefresh;
-                    int hpThreshold = SGE_ST_DPS_EDosisBossOption == 1 || !InBossEncounter() ? SGE_ST_DPS_EDosisHPOption : 0;
-
-                    if (GetTargetHPPercent() > hpThreshold &&
-                        (DosisDebuff is null && DyskrasiaDebuff is null ||
-                         DosisDebuff?.RemainingTime <= refreshTimer ||
-                         DyskrasiaDebuff?.RemainingTime <= refreshTimer))
-                        return Eukrasia;
-                }
+                if (IsEnabled(Preset.SGE_ST_DPS_EDosis) && NeedsDoT() && PartyInCombat())
+                    return Eukrasia;
 
                 // Phlegma
                 if (IsEnabled(Preset.SGE_ST_DPS_Phlegma) &&
@@ -504,9 +484,6 @@ internal partial class SGE : Healer
 
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
-            
-            if (ActionReady(Pneuma) && HasStatusEffect(Buffs.Zoe))
-                return Pneuma;
 
             if (ActionReady(Rhizomata) && !HasAddersgall() &&
                 CanWeave())
@@ -648,12 +625,7 @@ internal partial class SGE : Healer
                     : Eukrasia;
 
             #endregion
-
-            //Zoe -> Pneuma like Eukrasia 
-            if (SGE_AoE_Heal_ZoePneuma && ActionReady(Pneuma) &&
-                HasStatusEffect(Buffs.Zoe))
-                return Pneuma;
-
+           
             if (IsEnabled(Preset.SGE_AoE_Heal_EPrognosis) &&
                 HasStatusEffect(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);

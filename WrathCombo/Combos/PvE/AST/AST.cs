@@ -190,17 +190,20 @@ internal partial class AST : Healer
         protected override uint Invoke(uint actionID)
         {
             #region Button Selection
-            bool alternateMode = AST_ST_DPS_AltMode > 0; //(0 or 1 radio values)
-            bool actionFound = !alternateMode && MaleficList.Contains(actionID) ||
-                               alternateMode && CombustList.ContainsKey(actionID);
-            var replacedActions = alternateMode
-                ? CombustList.Keys.ToArray()
-                : MaleficList.ToArray();
-            #endregion
 
-            if (!actionFound)
+            bool alternateMode = AST_ST_DPS_AltMode > 0;
+            var replacedActions = (int)AST_ST_DPS_AltMode switch
+            {
+                1 => CombustList.Keys.ToArray(),
+                2 => [Malefic2],
+                _ => MaleficList.ToArray(),
+            };
+
+            if (!replacedActions.Contains(actionID))
                 return actionID;
 
+            #endregion
+            
             #region Variables
             bool cardPooling = IsEnabled(Preset.AST_DPS_CardPool);
             bool lordPooling = IsEnabled(Preset.AST_DPS_LordPool);

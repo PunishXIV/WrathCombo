@@ -57,7 +57,7 @@ internal partial class AST
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Combust);
-        var hpThreshold = IsNotEnabled(Preset.AST_ST_Simple_DPS) && (AST_ST_DPS_CombustSubOption == 1 || !InBossEncounter()) ? AST_ST_DPS_CombustOption : 0;
+        var hpThreshold = IsNotEnabled(Preset.AST_ST_Simple_DPS) ? computeHpThreshold() : 0;
         CombustList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.AST_ST_Simple_DPS) ? AST_ST_DPS_CombustUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
@@ -70,6 +70,15 @@ internal partial class AST
                dotRemaining <= dotRefresh;
     }
     #endregion
+    
+    internal static int computeHpThreshold()
+    {
+        if (InBossEncounter())
+        {
+            return TargetIsBoss() ? AST_ST_DPS_CombustBossOption : AST_ST_DPS_CombustBossAddsOption;
+        }
+        return AST_ST_DPS_CombustTrashOption;
+    }
     
     #region Hidden Raidwides
     

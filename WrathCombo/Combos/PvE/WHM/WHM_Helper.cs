@@ -31,13 +31,9 @@ internal partial class WHM
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Aero);
-        var hpThreshold = IsNotEnabled(Preset.WHM_ST_Simple_DPS)
-            ? computeHpThreshold()
-            : 0;
+        var hpThreshold = IsNotEnabled(Preset.WHM_ST_Simple_DPS) ? computeHpThreshold() : 0;
         AeroList.TryGetValue(dotAction, out var dotDebuffID);
-        var dotRefresh = IsNotEnabled(Preset.WHM_ST_Simple_DPS)
-            ? WHM_ST_MainCombo_DoT_Threshold
-            : 2.5;
+        var dotRefresh = IsNotEnabled(Preset.WHM_ST_Simple_DPS) ? WHM_ST_DPS_AeroUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -50,21 +46,11 @@ internal partial class WHM
 
     internal static int computeHpThreshold()
     {
-        if (TargetIsBoss() && InBossEncounter())
+        if (InBossEncounter())
         {
-            return WHM_ST_DPS_AeroOptionBoss;
+            return TargetIsBoss() ? WHM_ST_DPS_AeroBossOption : WHM_ST_DPS_AeroBossAddsOption;
         }
-
-        switch ((int)WHM_ST_DPS_AeroOptionSubOption)
-        {
-            case (int)EnemyRestriction.AllEnemies:
-                return WHM_ST_DPS_AeroOptionNonBoss;
-            case (int)EnemyRestriction.OnlyBosses:
-                return InBossEncounter() ? WHM_ST_DPS_AeroOptionNonBoss : 0;
-            default:
-            case (int)EnemyRestriction.NonBosses:
-                return !InBossEncounter() ? WHM_ST_DPS_AeroOptionNonBoss : 0;
-        }
+        return WHM_ST_DPS_AeroTrashOption;
     }
 
     #region Get ST Heals
