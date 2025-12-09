@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using ECommons;
+using ECommons.GameFunctions;
+using ECommons.Throttlers;
+using Lumina.Excel.Sheets;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
@@ -115,7 +118,13 @@ internal class PvEFeatures : FeaturesWindow
                             ImGuiTabBarFlags.AutoSelectNewTabs))
                         return;
 
-                    var mainTabName = OpenJob is Job.ADV ? "Job Roles" : "Normal";
+                    var mainTabName = OpenJob switch
+                    {
+                        Job.BLU => "Miscellaneous",
+                        Job.ADV => "Job Roles",
+                        _       => "Normal",
+                    };
+
                     if (ImGui.BeginTabItem(mainTabName))
                     {
                         SetCurrentTab(FeatureTab.Normal);
@@ -163,6 +172,36 @@ internal class PvEFeatures : FeaturesWindow
                         {
                             SetCurrentTab(FeatureTab.OccultCrescent);
                             DrawOccultContents(openJob);
+                            ImGui.EndTabItem();
+                        }
+                    }
+
+                    if (groupedPresets[openJob].Any(x => x.Preset.IsBlueDPS))
+                    {
+                        if (ImGui.BeginTabItem("DPS"))
+                        {
+                            SetCurrentTab(FeatureTab.BlueDPS);
+                            DrawBlueContents(CombatRole.DPS);
+                            ImGui.EndTabItem();
+                        }
+                    }
+
+                    if (groupedPresets[openJob].Any(x => x.Preset.IsBlueTank))
+                    {
+                        if (ImGui.BeginTabItem("Tank"))
+                        {
+                            SetCurrentTab(FeatureTab.BlueDPS);
+                            DrawBlueContents(CombatRole.Tank);
+                            ImGui.EndTabItem();
+                        }
+                    }
+
+                    if (groupedPresets[openJob].Any(x => x.Preset.IsBlueHealer))
+                    {
+                        if (ImGui.BeginTabItem("Healer"))
+                        {
+                            SetCurrentTab(FeatureTab.BlueDPS);
+                            DrawBlueContents(CombatRole.Healer);
                             ImGui.EndTabItem();
                         }
                     }
@@ -263,6 +302,36 @@ internal class PvEFeatures : FeaturesWindow
         ShowSearchErrorIfNoResults();
     }
 
+    private static void DrawBlueContents(CombatRole role = CombatRole.NonCombat)
+    {
+        if (!Messages.PrintBLUMessage(Job.BLU)) return;
+
+        List<Preset> alreadyShown = [];
+        foreach (var (preset, info) in groupedPresets[Job.BLU].Where(x =>
+            x.Preset.BlueRole == role &&
+            !PresetStorage.ShouldBeHidden(x.Preset)))
+        {
+            if (IsSearching && !PresetMatchesSearch(preset))
+                continue;
+            alreadyShown.Add(preset);
+
+            InfoBox presetBox = new() { CurveRadius = 8f, ContentsAction = () => { Presets.DrawPreset(preset, info); } };
+            presetBox.Draw();
+            ImGuiEx.Spacing(new Vector2(0, 12));
+        }
+
+        // Search for children if nothing was found at the root
+        if (IsSearching)
+            SearchMorePresets(PresetStorage.AllPresets!
+                .Where(x =>
+                    x.BlueRole == role &&
+                    !PresetStorage.ShouldBeHidden(x) &&
+                    x.Attributes().CustomComboInfo.Job == Job.BLU)
+                .ToArray(),
+                alreadyShown);
+        ShowSearchErrorIfNoResults();
+    }
+
     internal static void DrawHeadingContents(Job job)
     {
         if (!Messages.PrintBLUMessage(job)) return;
@@ -274,7 +343,8 @@ internal class PvEFeatures : FeaturesWindow
                    !PresetStorage.IsBozja(preset) &&
                    !PresetStorage.IsEureka(preset) &&
                    !PresetStorage.IsOccultCrescent(preset) &&
-                   !PresetStorage.ShouldBeHidden(preset);
+                   !PresetStorage.ShouldBeHidden(preset) &&
+                   preset.BlueRole == CombatRole.NonCombat;
         }
 
         List<Preset> alreadyShown = [];

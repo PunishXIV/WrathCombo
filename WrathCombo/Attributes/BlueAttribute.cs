@@ -37,3 +37,27 @@ public class BlueInactiveAttribute : Attribute
     internal List<uint> MasterActions { get; set; } = [];
     internal bool NoneSet { get; set; } = false;
 }
+
+/// <summary>
+///     Flags a Preset as a BLU DPS roled one.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field)]
+internal class BlueDPSAttribute : Attribute
+{
+}
+
+/// <summary>
+///     Flags a Preset as a BLU DPS roled one.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field)]
+internal class BlueTankAttribute : Attribute
+{
+}
+
+/// <summary>
+///     Flags a Preset as a BLU DPS roled one.
+/// </summary>
+[AttributeUsage(AttributeTargets.Field)]
+internal class BlueHealerAttribute : Attribute
+{
+}

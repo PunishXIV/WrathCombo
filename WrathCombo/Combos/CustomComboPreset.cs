@@ -1410,41 +1410,25 @@ public enum Preset
     #endregion
     // last value = 70003
 
-    #region Organizing Parent Options
-
-    [CustomComboInfo("General Combos", "Non-specific spell combo options.", Job.BLU)]
-    BLU_Parent_General = 70005,
-    [CustomComboInfo("DPS Combos", "Combo options for The Balance's DPS spell configuration.", Job.BLU)]
-    BLU_Parent_DPS = 70006,
-    [CustomComboInfo("Tank Combos", "Combo options for The Balance's Tank spell configuration.", Job.BLU)]
-    BLU_Parent_Tank = 70007,
-    [CustomComboInfo("Healer Combos", "Combo options for The Balance's Healer spell configuration.", Job.BLU)]
-    BLU_Parent_Healer = 70008,
-
-    #endregion
-    // last value = 70008
-
     #region General Combos
 
-        [ParentCombo(BLU_Parent_General)]
-        [BlueInactive(BLU.MoonFlute_Spell39, BLU.Tingle_Spell82, BLU.ShockStrike_Spell47, BLU.Whistle_Spell64, BLU.FinalSting_Spell8)]
-        [ReplaceSkill(BLU.FinalSting_Spell8)]
-        [CustomComboInfo("Final Sting Combo", "Turns Final Sting into the buff combo of: Moon Flute > Tingle > Whistle > Final Sting.", Job.BLU)]
-        [Retargeted(BLU.FeatherRain_Spell44)]
-        BLU_FinalSting = 70010,
+    [BlueInactive(BLU.MoonFlute_Spell39, BLU.Tingle_Spell82, BLU.ShockStrike_Spell47, BLU.Whistle_Spell64, BLU.FinalSting_Spell8)]
+    [ReplaceSkill(BLU.FinalSting_Spell8)]
+    [CustomComboInfo("Final Sting Combo", "Turns Final Sting into the buff combo of: Moon Flute > Tingle > Whistle > Final Sting.", Job.BLU)]
+    [Retargeted(BLU.FeatherRain_Spell44)]
+    BLU_FinalSting = 70010,
 
-        [BlueInactive(BLU.RoseofDestruction_Spell90, BLU.FeatherRain_Spell44, BLU.GlassDance_Spell48, BLU.JKick_Spell80)]
-        [ParentCombo(BLU_FinalSting)]
-        [CustomComboInfo("Off-cooldown Primal Additions", "Adds Rose of Destruction, Feather Rain, Glass Dance, and J Kick to the combo.", Job.BLU)]
-        [Retargeted(BLU.FeatherRain_Spell44)]
-        BLU_Primals = 70011,
+    [BlueInactive(BLU.RoseofDestruction_Spell90, BLU.FeatherRain_Spell44, BLU.GlassDance_Spell48, BLU.JKick_Spell80)]
+    [ParentCombo(BLU_FinalSting)]
+    [CustomComboInfo("Off-cooldown Primal Additions", "Adds Rose of Destruction, Feather Rain, Glass Dance, and J Kick to the combo.", Job.BLU)]
+    [Retargeted(BLU.FeatherRain_Spell44)]
+    BLU_Primals = 70011,
 
     [BlueInactive(BLU.BasicInstinct_Spell91)]
     [ParentCombo(BLU_FinalSting)]
     [CustomComboInfo("Solo Mode", "Uses Basic Instinct if you're in an instance and on your own.", Job.BLU)]
     BLU_SoloMode = 70012,
 
-    [ParentCombo(BLU_Parent_General)]
     [BlueInactive(BLU.RamsVoice_Spell33, BLU.Ultravibration_Spell92)]
     [ReplaceSkill(BLU.Ultravibration_Spell92)]
     [CustomComboInfo("Vibe Combo", "Turns Ultravibration into Ram's Voice if Deep Freeze isn't on the target. Will swiftcast Ultravibration if available.", Job.BLU)]
@@ -1515,17 +1499,17 @@ public enum Preset
 
     #region DPS Combos
 
-    [ParentCombo(BLU_Parent_DPS)]
     [ReplaceSkill(BLU.TripleTrident_Spell81)]
     [BlueInactive(BLU.TripleTrident_Spell81, BLU.Whistle_Spell64, BLU.Tingle_Spell82)]
     [CustomComboInfo("Triple Trident Melee", "Turns Triple Trident into its buffed combo.", Job.BLU)]
+    [BlueDPS]
     BLU_TridentCombo = 70058,
 
-    [ParentCombo(BLU_Parent_DPS)]
     [BlueInactive(BLU.SongofTorment_Spell9, BLU.Bristle_Spell12)]
     [ReplaceSkill(BLU.SongofTorment_Spell9)]
     [CustomComboInfo("DoT Combo", "Turns Song of Torment into a one-button DoT-maintaining combo." +
                                   "\nWill buff Song of Torment with Bristle.", Job.BLU)]
+    [BlueDPS]
     BLU_DPS_DoT = 70050,
 
     [ParentCombo(BLU_DPS_DoT)]
@@ -1547,11 +1531,11 @@ public enum Preset
 
     #region Tank Combos
 
-    [ParentCombo(BLU_Parent_Tank)]
     [BlueInactive(BLU.GoblinPunch_Spell105)]
     [ReplaceSkill(BLU.GoblinPunch_Spell105)]
     [CustomComboInfo("Advanced Mode - Single Target",
         "Build a one button combo with your choice of The Balance's recommended tank spells.", Job.BLU)]
+    [BlueTank]
     BLU_Tank_Advanced = 70069,
 
     [ParentCombo(BLU_Tank_Advanced)]
@@ -1596,13 +1580,13 @@ public enum Preset
         Job.BLU)]
     BLU_Tank_Advanced_DoTs = 70070,
 
-    [ParentCombo(BLU_Parent_Tank)]
     [BlueInactive(BLU.FeatherRain_Spell44)]
     [ReplaceSkill(BLU.FeatherRain_Spell44)]
     [CustomComboInfo("DoT Combo",
         "Turns Feather Rain into a one-button DoT-maintaining combo." +
         "\nTo be used in conjunction with Redirect/Reaction/etc",
         Job.BLU)]
+    [BlueTank]
     BLU_Tank_DoT = 70061,
 
     [ParentCombo(BLU_Tank_DoT)]
@@ -1624,16 +1608,16 @@ public enum Preset
     [CustomComboInfo("Mortal Flame", "Adds Mortal Flame to the combo, if available, with the same Waste Protection rules.", Job.BLU)]
     BLU_Tank_DoT_Flame = 70067,
 
-    [ParentCombo(BLU_Parent_Tank)]
     [BlueInactive(BLU.Offguard_Spell20, BLU.BadBreath_Spell28, BLU.Devour_Spell75)]
     [ReplaceSkill(BLU.Devour_Spell75)]
     [CustomComboInfo("Tank Debuff", "Puts Devour, Off-Guard, Lucid Dreaming, and Bad Breath into one button when under Tank Mimicry.", Job.BLU)]
+    [BlueTank]
     BLU_DebuffCombo = 70056,
 
-    [ParentCombo(BLU_Parent_Tank)]
     [BlueInactive(BLU.MagicHammer_Spell60)]
     [ReplaceSkill(BLU.MagicHammer_Spell60)]
     [CustomComboInfo("Addle & Magic Hammer Debuff", "Turns Magic Hammer into Addle when off cooldown.", Job.BLU)]
+    [BlueTank]
     BLU_Addle = 70054,
 
     #endregion

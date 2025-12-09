@@ -4,6 +4,7 @@ using ECommons.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ECommons.GameFunctions;
 using WrathCombo.Attributes;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
@@ -124,6 +125,32 @@ internal static class PresetStorage
     /// <returns> The boolean representation. </returns>
     public static bool IsRetargeted(Preset preset) =>
         preset.GetAttribute<RetargetedAttribute>() != null;
+
+    extension(Preset preset)
+    {
+        public CombatRole BlueRole
+        {
+            get
+            {
+                if (preset.IsBlueDPS)
+                    return CombatRole.DPS;
+                if (preset.IsBlueTank)
+                    return CombatRole.Tank;
+                if (preset.IsBlueHealer)
+                    return CombatRole.Healer;
+                return CombatRole.NonCombat;
+            }
+        }
+        
+        public bool IsBlueDPS =>
+            preset.GetAttribute<BlueDPSAttribute>() != null;
+
+        public bool IsBlueTank =>
+            preset.GetAttribute<BlueTankAttribute>() != null;
+
+        public bool IsBlueHealer =>
+            preset.GetAttribute<BlueHealerAttribute>() != null;
+    }
 
     /// <summary> Gets a value indicating whether a preset is secret. </summary>
     /// <param name="preset"> Preset to check. </param>
