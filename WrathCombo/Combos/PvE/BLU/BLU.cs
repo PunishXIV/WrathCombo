@@ -3,6 +3,7 @@
 using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 
 // ReSharper disable ClassNeverInstantiated.Global
 // ReSharper disable UnusedType.Global
@@ -73,7 +74,9 @@ internal partial class BLU : Caster
 
                     if (IsSpellActive(FeatherRain_Spell44) &&
                         IsOffCooldown(FeatherRain_Spell44))
-                        return FeatherRain_Spell44;
+                        return FeatherRain_Spell44.Retarget(MoonFlute_Spell39,
+                            SimpleTarget.HardTarget.IfHostile() ??
+                            SimpleTarget.LastHostileHardTarget);
 
                     if (IsSpellActive(SeaShanty_Spell122) &&
                         IsOffCooldown(SeaShanty_Spell122))
@@ -99,7 +102,9 @@ internal partial class BLU : Caster
 
                 if (IsSpellActive(FeatherRain_Spell44) &&
                     IsOffCooldown(FeatherRain_Spell44))
-                    return FeatherRain_Spell44;
+                    return FeatherRain_Spell44.Retarget(MoonFlute_Spell39,
+                        SimpleTarget.HardTarget.IfHostile() ??
+                        SimpleTarget.LastHostileHardTarget);
 
                 if (IsSpellActive(SeaShanty_Spell122) &&
                     IsOffCooldown(SeaShanty_Spell122))
@@ -192,7 +197,9 @@ internal partial class BLU : Caster
                  (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
                   (GetCooldownRemainingTime(Nightbloom_Spell104) > 30 ||
                    IsOffCooldown(Nightbloom_Spell104)))))
-                return FeatherRain_Spell44;
+                return FeatherRain_Spell44.Retarget(Eruption_Spell45,
+                        SimpleTarget.HardTarget.IfHostile() ??
+                        SimpleTarget.LastHostileHardTarget);
             if (IsOffCooldown(Eruption_Spell45) &&
                 IsSpellActive(Eruption_Spell45) &&
                 (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
@@ -309,7 +316,9 @@ internal partial class BLU : Caster
                     return RoseofDestruction_Spell90;
                 if (IsOffCooldown(FeatherRain_Spell44) &&
                     IsSpellActive(FeatherRain_Spell44))
-                    return FeatherRain_Spell44;
+                    return FeatherRain_Spell44.Retarget(FinalSting_Spell8,
+                        SimpleTarget.HardTarget.IfHostile() ??
+                        SimpleTarget.LastHostileHardTarget);
                 if (IsOffCooldown(Eruption_Spell45) &&
                     IsSpellActive(Eruption_Spell45))
                     return Eruption_Spell45;
