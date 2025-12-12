@@ -285,7 +285,7 @@ internal partial class RPR
 
     #region Gauge
 
-    private static RPRGauge Gauge = GetJobGauge<RPRGauge>();
+    private static RPRGauge Gauge => GetJobGauge<RPRGauge>();
 
     private static byte Shroud => Gauge.Shroud;
 

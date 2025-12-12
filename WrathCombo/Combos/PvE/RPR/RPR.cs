@@ -325,9 +325,12 @@ internal partial class RPR : Melee
                     //Bloodstalk
                     if (IsEnabled(Preset.RPR_ST_Bloodstalk) &&
                         LevelChecked(BloodStalk) &&
-                        (!LevelChecked(Gluttony) ||
-                         LevelChecked(Gluttony) && IsOnCooldown(Gluttony) &&
-                         (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 4)))
+                        (LevelChecked(Gluttony) &&
+                         (IsEnabled(Preset.RPR_ST_Gluttony) && 
+                          (Soul is 100 && IsOnCooldown(Gluttony) || 
+                           GetCooldownRemainingTime(Gluttony) > GCD * 4) ||
+                          !IsEnabled(Preset.RPR_ST_Gluttony) && Soul is 100) ||
+                         !LevelChecked(Gluttony)))
                         return OriginalHook(BloodStalk);
                 }
 
