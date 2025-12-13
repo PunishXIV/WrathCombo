@@ -183,10 +183,10 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            var DosisActions = (int)SGE_ST_DPS_Adv switch
+            uint[] DosisActions = (int)SGE_ST_DPS_Adv switch
             {
                 1 => [Dosis2],
-                _ => DosisList.Keys.ToArray(),
+                var _ => DosisList.Keys.ToArray()
             };
 
             if (!DosisActions.Contains(actionID))
@@ -508,10 +508,10 @@ internal partial class SGE : Healer
 
             if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia))
                 return Panhaima;
-            
+
             if (ActionReady(Zoe) && (ActionReady(Pneuma) || !LevelChecked(Pneuma)))
                 return Zoe;
-            
+
             if (ActionReady(Pepsis) &&
                 HasStatusEffect(Buffs.EukrasianPrognosis))
                 return Pepsis;
@@ -625,7 +625,7 @@ internal partial class SGE : Healer
                     : Eukrasia;
 
             #endregion
-           
+
             if (IsEnabled(Preset.SGE_AoE_Heal_EPrognosis) &&
                 HasStatusEffect(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);

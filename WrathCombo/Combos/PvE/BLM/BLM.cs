@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.BLM.Config;

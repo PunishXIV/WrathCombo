@@ -128,19 +128,19 @@ internal partial class VPR
             VPR_ST_SerpentsIre_SubOption = new("VPR_ST_SerpentsIre_SubOption", 1),
             VPR_ST_UncoiledFury_HoldCharges = new("VPR_ST_UncoiledFury_HoldCharges", 1),
             VPR_ST_UncoiledFury_Threshold = new("VPR_ST_UncoiledFury_Threshold", 1),
-            VPR_ST_ReAwaken_SubOption = new("VPR_ST_ReAwaken_SubOption", 0),
+            VPR_ST_ReAwaken_SubOption = new("VPR_ST_ReAwaken_SubOption"),
             VPR_ST_ReAwaken_Threshold = new("VPR_ST_ReAwaken_Threshold", 1),
             VPR_ST_SecondWind_Threshold = new("VPR_ST_SecondWindThreshold", 40),
             VPR_ST_Bloodbath_Threshold = new("VPR_ST_BloodbathThreshold", 30),
             VPR_AoE_UncoiledFury_Threshold = new("VPR_AoE_UncoiledFury_Threshold", 1),
-            VPR_AoE_UncoiledFury_HoldCharges = new("VPR_AoE_UncoiledFury_HoldCharges", 0),
-            VPR_AoE_Vicepit_SubOption = new("VPR_AoE_Vicepit_SubOption", 0),
-            VPR_AoE_VicepitCombo_SubOption = new("VPR_AoE_VicepitCombo_SubOption", 0),
+            VPR_AoE_UncoiledFury_HoldCharges = new("VPR_AoE_UncoiledFury_HoldCharges"),
+            VPR_AoE_Vicepit_SubOption = new("VPR_AoE_Vicepit_SubOption"),
+            VPR_AoE_VicepitCombo_SubOption = new("VPR_AoE_VicepitCombo_SubOption"),
             VPR_AoE_Reawaken_Usage = new("VPR_AoE_Reawaken_Usage", 40),
-            VPR_AoE_Reawaken_SubOption = new("VPR_AoE_Reawaken_SubOption", 0),
+            VPR_AoE_Reawaken_SubOption = new("VPR_AoE_Reawaken_SubOption"),
             VPR_AoE_SecondWind_Threshold = new("VPR_AoE_SecondWindThreshold", 40),
             VPR_AoE_Bloodbath_Threshold = new("VPR_AoE_BloodbathThreshold", 30),
-            VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton", 0);
+            VPR_ReawakenLegacyButton = new("VPR_ReawakenLegacyButton");
 
         public static UserBool
             VPR_Opener_ExcludeUF = new("VPR_Opener_ExcludeUF"),

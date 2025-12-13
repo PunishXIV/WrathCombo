@@ -273,7 +273,7 @@ internal partial class BLM
 
     #region Gauge
 
-    private static BLMGauge Gauge = GetJobGauge<BLMGauge>();
+    private static BLMGauge Gauge => GetJobGauge<BLMGauge>();
 
     private static bool FirePhase => Gauge.InAstralFire;
 

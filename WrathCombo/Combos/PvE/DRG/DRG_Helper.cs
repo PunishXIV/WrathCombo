@@ -163,7 +163,7 @@ internal partial class DRG
 
     #region Gauge
 
-    private static DRGGauge Gauge = GetJobGauge<DRGGauge>();
+    private static DRGGauge Gauge => GetJobGauge<DRGGauge>();
 
     private static bool LoTDActive => Gauge.IsLOTDActive;
 

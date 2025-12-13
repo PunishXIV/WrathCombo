@@ -339,7 +339,7 @@ internal partial class VPR
 
     #region Gauge
 
-    private static VPRGauge Gauge = GetJobGauge<VPRGauge>();
+    private static VPRGauge Gauge => GetJobGauge<VPRGauge>();
 
     private static byte RattlingCoilStacks => Gauge.RattlingCoilStacks;
 

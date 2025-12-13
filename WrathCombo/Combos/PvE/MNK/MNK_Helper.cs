@@ -668,7 +668,7 @@ internal partial class MNK
 
     #region Gauge
 
-    private static MNKGauge Gauge = GetJobGauge<MNKGauge>();
+    private static MNKGauge Gauge => GetJobGauge<MNKGauge>();
 
     private static byte Chakra => Gauge.Chakra;
 

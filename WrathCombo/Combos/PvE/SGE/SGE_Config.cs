@@ -390,13 +390,13 @@ internal partial class SGE
             SGE_ST_DPS_Movement = new("SGE_ST_DPS_Movement");
 
         public static UserInt
-            SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv", 0),
+            SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv"),
             SGE_Eukrasia_Mode = new("SGE_Eukrasia_Mode", 1),
-            SGE_SelectedOpener = new("SGE_SelectedOpener", 0),
+            SGE_SelectedOpener = new("SGE_SelectedOpener"),
             SGE_ST_DPS_Lucid = new("SGE_ST_DPS_Lucid", 6500),
             SGE_ST_DPS_Rhizo = new("SGE_ST_DPS_Rhizo", 1),
-            SGE_ST_DPS_Phlegma = new("SGE_ST_DPS_Phlegma", 0),
-            SGE_ST_DPS_EukrasianDosisBossOption = new("SGE_ST_DPS_EukrasianDosisBossOption", 0),
+            SGE_ST_DPS_Phlegma = new("SGE_ST_DPS_Phlegma"),
+            SGE_ST_DPS_EukrasianDosisBossOption = new("SGE_ST_DPS_EukrasianDosisBossOption"),
             SGE_ST_DPS_EukrasianDosisBossAddsOption = new("SGE_ST_DPS_EukrasianDosisBossAddsOption", 100),
             SGE_ST_DPS_EukrasianDosisTrashOption = new("SGE_ST_DPS_EukrasianDosisTrashOption", 50),
             SGE_ST_DPS_AddersgallProtect = new("SGE_ST_DPS_AddersgallProtect", 3),
