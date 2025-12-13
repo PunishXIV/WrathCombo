@@ -126,6 +126,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
     public static void UpdateCaches
         (bool onJobChange, bool onTerritoryChange, bool firstRun)
     {
+        WrathOpener.CurrentOpener?.CacheReady = false;
+        WrathOpener.CurrentOpener?.ResetOpener(); //Clears opener values, just in case
         TM.DelayNext(1000);
         TM.Enqueue(() =>
         {

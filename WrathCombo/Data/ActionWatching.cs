@@ -235,9 +235,6 @@ public static class ActionWatching
             }
         }
 
-        if (castTime == 0)
-            WrathOpener.CurrentOpener?.ProgressOpener(actionId);
-
         if (Service.Configuration.EnabledOutputLog)
             OutputLog();
     }
@@ -411,12 +408,18 @@ public static class ActionWatching
 
                 var success = hookResult && !(mode == ActionManager.UseActionMode.None && actionManager->QueuedActionId > 0);
 
-                if (NIN.MudraSigns.Contains(modifiedAction) && success)
+                if (success)
                 {
-                    Svc.Log.Debug($"Mudra used: {modifiedAction.ActionName()}");
-                    NIN.InMudra = true;
+                    if (NIN.MudraSigns.Contains(modifiedAction))
+                    {
+                        Svc.Log.Debug($"Mudra used: {modifiedAction.ActionName()}");
+                        NIN.InMudra = true;
+                    }
+                    var castTime = ActionManager.GetAdjustedCastTime(actionType, modifiedAction);
                     LastAction = modifiedAction;
                     TimeLastActionUsed = DateTime.Now;
+                    if (castTime == 0)
+                        WrathOpener.CurrentOpener?.ProgressOpener(modifiedAction);
                 }
 
                 return hookResult;
