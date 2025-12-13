@@ -3626,22 +3626,6 @@ public enum Preset
     [CustomComboInfo("Tools", "Adds Hotshot, Drill, Air Anchor, Chainsaw and Excavator to the rotation.", Job.MCH)]
     MCH_ST_Adv_Tools = 8119,
 
-    [ParentCombo(MCH_ST_Adv_Tools)]
-    [CustomComboInfo("Drill Option", "Adds Drill to the rotation.", Job.MCH)]
-    MCH_ST_Adv_Drill = 8109,
-
-    [ParentCombo(MCH_ST_Adv_Tools)]
-    [CustomComboInfo("Hot Shot / Air Anchor Option", "Adds Hot Shot/Air Anchor to the rotation.", Job.MCH)]
-    MCH_ST_Adv_AirAnchor = 8102,
-
-    [ParentCombo(MCH_ST_Adv_Tools)]
-    [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the rotation.", Job.MCH)]
-    MCH_ST_Adv_Chainsaw = 8112,
-
-    [ParentCombo(MCH_ST_Adv_Tools)]
-    [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.\nWill follow Balance logic if selected on Turret/Queen.", Job.MCH)]
-    MCH_ST_Adv_Excavator = 8116,
-
     #endregion
 
     #region Queen
@@ -3732,22 +3716,6 @@ public enum Preset
     [ParentCombo(MCH_AoE_AdvancedMode)]
     [CustomComboInfo("Tools", "Adds Bioblaster, Air Anchor, Chainsaw and Excavator to the rotation.", Job.MCH)]
     MCH_AoE_Adv_Tools = 8315,
-
-    [ParentCombo(MCH_AoE_Adv_Tools)]
-    [CustomComboInfo("Bioblaster Option", "Adds Bioblaster to the rotation.", Job.MCH)]
-    MCH_AoE_Adv_Bioblaster = 8306,
-
-    [ParentCombo(MCH_AoE_Adv_Tools)]
-    [CustomComboInfo("Air Anchor Option", "Adds Air Anchor to the the rotation.", Job.MCH)]
-    MCH_AoE_Adv_AirAnchor = 8313,
-
-    [ParentCombo(MCH_AoE_Adv_Tools)]
-    [CustomComboInfo("Chain Saw Option", "Adds Chain Saw to the the rotation.", Job.MCH)]
-    MCH_AoE_Adv_Chainsaw = 8309,
-
-    [ParentCombo(MCH_AoE_Adv_Tools)]
-    [CustomComboInfo("Excavator Option", "Adds Excavator to the rotation.", Job.MCH)]
-    MCH_AoE_Adv_Excavator = 8310,
     
     #endregion
 

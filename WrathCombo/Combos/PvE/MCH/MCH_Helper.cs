@@ -1,5 +1,4 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
-using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
@@ -11,14 +10,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class MCH
 {
-
-    #region Misc
-
-    private static float WFCD =>
-        GetCooldownRemainingTime(Wildfire);
-
-    #endregion
-
     #region Hypercharge
 
     private static bool CanHypercharge(bool onAoE = false)
@@ -41,11 +32,10 @@ internal partial class MCH
                 (Heat >= 50 || HasStatusEffect(Buffs.Hypercharged)) && LevelChecked(Hypercharge) &&
                 LevelChecked(AutoCrossbow) &&
                 (LevelChecked(BioBlaster) && GetCooldownRemainingTime(BioBlaster) > 10 ||
-                 !LevelChecked(BioBlaster) || IsNotEnabled(Preset.MCH_AoE_Adv_Bioblaster)) &&
+                 !LevelChecked(BioBlaster)) &&
                 (LevelChecked(Flamethrower) && GetCooldownRemainingTime(Flamethrower) > 10 ||
                  !LevelChecked(Flamethrower) || IsNotEnabled(Preset.MCH_AoE_Adv_FlameThrower)):
                 return true;
-
         }
 
         return false;
@@ -78,7 +68,6 @@ internal partial class MCH
 
                         case > 90 when ComboAction == OriginalHook(SlugShot):
                             return true;
-
                     }
                 }
 
@@ -88,6 +77,55 @@ internal partial class MCH
 
             if (!LevelChecked(Wildfire) && Battery >= MCH_ST_TurretUsage)
                 return true;
+        }
+
+        return false;
+    }
+
+    #endregion
+
+    #region Reassembled
+
+    private static bool CanReassemble()
+    {
+        if (HasStatusEffect(Buffs.Reassembled) && !JustUsed(Reassemble, 1.5f))
+            return false;
+
+        ushort maxCharges = GetMaxCharges(Reassemble);
+        uint remainingCharges = GetRemainingCharges(Reassemble);
+
+        switch (maxCharges)
+        {
+            case 1 when remainingCharges == 1 && (ActionReady(Drill) || LevelChecked(AirAnchor) && ActionReady(AirAnchor)):
+                return true;
+
+            case 2:
+            {
+                int numberOfReadyTools = 0;
+
+                if (ActionReady(Drill))
+                    numberOfReadyTools += (int)GetRemainingCharges(Drill);
+
+                if (ActionReady(Chainsaw))
+                    numberOfReadyTools++;
+
+                if (ActionReady(AirAnchor))
+                    numberOfReadyTools++;
+
+                if (ActionReady(Excavator))
+                    numberOfReadyTools++;
+
+                switch (remainingCharges)
+                {
+                    case 2 when numberOfReadyTools >= 2:
+
+                    //Kage tweak this last number if needed, it could maybe go to 50
+                    case 1 when numberOfReadyTools >= 1 && GetCooldownChargeRemainingTime(Reassemble) >= 45:
+                        return true;
+                }
+
+                break;
+            }
         }
 
         return false;
@@ -142,111 +180,6 @@ internal partial class MCH
 
     #endregion
 
-    #region Reassembled
-
-    #region Variables
-
-    private static bool ReassembledExcavatorST =>
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[0] && (HasStatusEffect(Buffs.Reassembled) || !HasStatusEffect(Buffs.Reassembled)) ||
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && !MCH_ST_Reassembled[0] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_ST_ReassemblePool ||
-        !IsEnabled(Preset.MCH_ST_Adv_Reassemble);
-
-    private static bool ReassembledChainsawST =>
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[1] && (HasStatusEffect(Buffs.Reassembled) || !HasStatusEffect(Buffs.Reassembled)) ||
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && !MCH_ST_Reassembled[1] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_ST_ReassemblePool ||
-        !IsEnabled(Preset.MCH_ST_Adv_Reassemble);
-
-    private static bool ReassembledAnchorST =>
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[2] && (HasStatusEffect(Buffs.Reassembled) || !HasStatusEffect(Buffs.Reassembled)) ||
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && !MCH_ST_Reassembled[2] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_ST_ReassemblePool ||
-        !IsEnabled(Preset.MCH_ST_Adv_Reassemble);
-
-    private static bool ReassembledDrillST =>
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[3] && (HasStatusEffect(Buffs.Reassembled) || !HasStatusEffect(Buffs.Reassembled)) ||
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && !MCH_ST_Reassembled[3] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_ST_ReassemblePool ||
-        !IsEnabled(Preset.MCH_ST_Adv_Reassemble);
-
-    private static bool ReassembledHotShotST =>
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[2] && (HasStatusEffect(Buffs.Reassembled) || !HasStatusEffect(Buffs.Reassembled)) ||
-        IsEnabled(Preset.MCH_ST_Adv_Reassemble) && !MCH_ST_Reassembled[2] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_ST_ReassemblePool ||
-        !IsEnabled(Preset.MCH_ST_Adv_Reassemble);
-
-    private static bool ReassembledExcavatorAoE =>
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[3] && HasStatusEffect(Buffs.Reassembled) ||
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && !MCH_AoE_Reassembled[3] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_AoE_ReassemblePool ||
-        !IsEnabled(Preset.MCH_AoE_Adv_Reassemble);
-
-    private static bool ReassembledChainsawAoE =>
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[2] && HasStatusEffect(Buffs.Reassembled) ||
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && !MCH_AoE_Reassembled[2] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_AoE_ReassemblePool ||
-        !IsEnabled(Preset.MCH_AoE_Adv_Reassemble);
-
-    private static bool ReassembledAirAnchorAoE =>
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[1] && HasStatusEffect(Buffs.Reassembled) ||
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && !MCH_AoE_Reassembled[1] && !HasStatusEffect(Buffs.Reassembled) ||
-        !HasStatusEffect(Buffs.Reassembled) && GetRemainingCharges(Reassemble) <= MCH_AoE_ReassemblePool ||
-        !IsEnabled(Preset.MCH_AoE_Adv_Reassemble);
-
-    private static bool ReassembledScattergunAoE =>
-        IsEnabled(Preset.MCH_AoE_Adv_Reassemble) && MCH_AoE_Reassembled[0] && HasStatusEffect(Buffs.Reassembled);
-
-    #endregion
-
-    private static bool CanReassemble(bool onExcavator, bool onChainsaw, bool onAirAnchor, bool onDrill)
-    {
-        if (!JustUsed(OriginalHook(Heatblast)) &&
-            !HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble))
-        {
-            if (onExcavator &&
-                LevelChecked(Excavator) && Battery < 90 &&
-                HasStatusEffect(Buffs.ExcavatorReady) &&
-                InActionRange(Excavator))
-                return true;
-
-            if (onChainsaw &&
-                LevelChecked(Chainsaw) && Battery < 90 &&
-                GetCooldownRemainingTime(Chainsaw) < GCD &&
-                InActionRange(Chainsaw) &&
-                (!LevelChecked(Excavator) || !MCH_ST_Reassembled[0]))
-                return true;
-
-            if (onAirAnchor &&
-                LevelChecked(AirAnchor) && Battery < 90 &&
-                GetCooldownRemainingTime(AirAnchor) < GCD &&
-                InActionRange(AirAnchor) &&
-                (!LevelChecked(Excavator) || MCH_ST_Reassembled[0] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[0]))
-                return true;
-
-            if (onDrill &&
-                LevelChecked(Drill) &&
-                (TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) is 1 or 2 ||
-                 GetCooldownRemainingTime(Drill) < GCD) &&
-                InActionRange(Drill) &&
-                !WFCD.InRange(11, 21) &&
-                (!LevelChecked(AirAnchor) || MCH_ST_Reassembled[2] && GetCooldownRemainingTime(AirAnchor) > 20 || !MCH_ST_Reassembled[2]) &&
-                (!LevelChecked(Chainsaw) || MCH_ST_Reassembled[1] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[1]) &&
-                (!LevelChecked(Excavator) || MCH_ST_Reassembled[0] && GetCooldownRemainingTime(Chainsaw) > 40 || !MCH_ST_Reassembled[0]))
-                return true;
-
-            if (onAirAnchor && Battery < 90 &&
-                !LevelChecked(CleanShot) &&
-                GetCooldownRemainingTime(HotShot) < GCD &&
-                InActionRange(HotShot))
-                return true;
-        }
-
-        return false;
-    }
-
-    #endregion
-
     #region Cooldowns
 
     private static bool DrillCD =>
@@ -262,53 +195,38 @@ internal partial class MCH
         !LevelChecked(Chainsaw) ||
         LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) >= 9;
 
-    private static bool CanUseTools(ref uint actionID, bool useExcavator, bool useChainsaw, bool useAirAnchor, bool useDrill)
+    private static bool CanUseTools(ref uint actionID)
     {
-        if (useExcavator &&
-            ReassembledExcavatorST &&
-            LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
-        {
-            actionID = Excavator;
-            return true;
-        }
-
-        if (useChainsaw &&
-            ReassembledChainsawST &&
-            !HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Chainsaw) &&
-            GetCooldownRemainingTime(Chainsaw) <= GCD / 2)
-        {
-            actionID = Chainsaw;
-            return true;
-        }
-
-        if (useAirAnchor &&
-            ReassembledAnchorST &&
-            LevelChecked(AirAnchor) &&
-            GetCooldownRemainingTime(AirAnchor) <= GCD / 2)
+        if (LevelChecked(AirAnchor) && ActionReady(AirAnchor))
         {
             actionID = AirAnchor;
             return true;
         }
 
-        if (useDrill &&
-            ReassembledDrillST &&
-            LevelChecked(Drill) &&
-            (TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) is 1 or 2 ||
-             GetCooldownRemainingTime(Drill) < GCD / 2) &&
-            !WFCD.InRange(11, 21))
+        if (ActionReady(Chainsaw))
+        {
+            actionID = Chainsaw;
+            return true;
+        }
+
+        if (ActionReady(Excavator))
+        {
+            actionID = Excavator;
+            return true;
+        }
+
+        if (ActionReady(Drill))
         {
             actionID = Drill;
             return true;
         }
 
-        if (useAirAnchor &&
-            ReassembledHotShotST &&
-            LevelChecked(HotShot) && !LevelChecked(AirAnchor) &&
-            GetCooldownRemainingTime(HotShot) <= GCD / 2)
+        if (ActionReady(HotShot))
         {
             actionID = HotShot;
             return true;
         }
+
         return false;
     }
 
@@ -325,7 +243,7 @@ internal partial class MCH
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-  #endregion
+    #endregion
 
     #region Openers
 
@@ -534,19 +452,15 @@ internal partial class MCH
 
     #region Gauge
 
-    private static MCHGauge Gauge = GetJobGauge<MCHGauge>();
+    private static MCHGauge Gauge => GetJobGauge<MCHGauge>();
 
     private static bool IsOverheated => Gauge.IsOverheated;
 
     private static bool RobotActive => Gauge.IsRobotActive;
 
-    private static byte LastSummonBattery => Gauge.LastSummonBatteryPower;
-
     private static byte Heat => Gauge.Heat;
 
     private static byte Battery => Gauge.Battery;
-
-    private static bool MaxBattery => Battery >= 90;
 
     #endregion
 
@@ -616,5 +530,4 @@ internal partial class MCH
     }
 
     #endregion
-
 }

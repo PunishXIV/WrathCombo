@@ -15,14 +15,10 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (SplitShot or HeatedSplitShot))
                 return actionID;
 
-            //Reassemble to start before combat
-            if (!HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
-                !InCombat() && HasBattleTarget() &&
-                (HasStatusEffect(Buffs.ExcavatorReady) && InActionRange(Excavator) ||
-                 ActionReady(Chainsaw) && InActionRange(Chainsaw) ||
-                 LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor) && InActionRange(AirAnchor) ||
-                 ActionReady(Drill) && InActionRange(Drill) ||
-                 !LevelChecked(CleanShot) && ActionReady(HotShot) && InActionRange(HotShot)))
+            //Reassemble
+            if (CanReassemble() &&
+                !InCombat() &&
+                HasBattleTarget())
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -73,7 +69,7 @@ internal partial class MCH : PhysicalRanged
                         return OriginalHook(RookAutoturret);
 
                     // Reassemble
-                    if (CanReassemble(true, true, true, true))
+                    if (CanReassemble())
                         return Reassemble;
 
                     // Hypercharge
@@ -112,7 +108,7 @@ internal partial class MCH : PhysicalRanged
                 return FullMetalField;
 
             //Tools
-            if (CanUseTools(ref actionID, true, true, true, true) && !IsOverheated)
+            if (CanUseTools(ref actionID) && !IsOverheated)
                 return actionID;
 
             // Heatblast
@@ -221,14 +217,14 @@ internal partial class MCH : PhysicalRanged
                     HasStatusEffect(Buffs.FullMetalMachinist))
                     return FullMetalField;
 
-                if (ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-                    !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
-                    return OriginalHook(BioBlaster);
-
                 if (ActionReady(Flamethrower) &&
                     !HasStatusEffect(Buffs.Reassembled) &&
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(3))
                     return OriginalHook(Flamethrower);
+
+                if (ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
+                    !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
+                    return OriginalHook(BioBlaster);
 
                 if (LevelChecked(Excavator) &&
                     HasStatusEffect(Buffs.ExcavatorReady))
@@ -274,13 +270,8 @@ internal partial class MCH : PhysicalRanged
 
             //Reassemble to start before combat
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                !HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble) &&
                 !InCombat() && HasBattleTarget() &&
-                (MCH_ST_Reassembled[0] && HasStatusEffect(Buffs.ExcavatorReady) && InActionRange(Excavator) ||
-                 MCH_ST_Reassembled[1] && ActionReady(Chainsaw) && InActionRange(Chainsaw) ||
-                 MCH_ST_Reassembled[2] && LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor) && InActionRange(AirAnchor) ||
-                 MCH_ST_Reassembled[3] && ActionReady(Drill) && InActionRange(Drill) ||
-                 MCH_ST_Reassembled[4] && !LevelChecked(CleanShot) && ActionReady(HotShot) && InActionRange(HotShot)))
+                CanReassemble())
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -342,7 +333,7 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
                         GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool &&
                         GetTargetHPPercent() > HPThresholdReassemble &&
-                        CanReassemble(MCH_ST_Reassembled[0], MCH_ST_Reassembled[1], MCH_ST_Reassembled[2], MCH_ST_Reassembled[3]))
+                        CanReassemble())
                         return Reassemble;
 
                     // Hypercharge
@@ -401,9 +392,9 @@ internal partial class MCH : PhysicalRanged
                 return FullMetalField;
 
             //Tools
-            if (IsEnabled(Preset.MCH_ST_Adv_Tools) && GetTargetHPPercent() > HPThresholdTools &&
-                CanUseTools(ref actionID, IsEnabled(Preset.MCH_ST_Adv_Excavator), IsEnabled(Preset.MCH_ST_Adv_Chainsaw),
-                    IsEnabled(Preset.MCH_ST_Adv_AirAnchor), IsEnabled(Preset.MCH_ST_Adv_Drill)) && !IsOverheated)
+            if (IsEnabled(Preset.MCH_ST_Adv_Tools) &&
+                GetTargetHPPercent() > HPThresholdTools &&
+                CanUseTools(ref actionID) && !IsOverheated)
                 return actionID;
 
             // Heatblast
@@ -417,7 +408,7 @@ internal partial class MCH : PhysicalRanged
                 if (ComboAction is SplitShot && LevelChecked(SlugShot))
                     return OriginalHook(SlugShot);
 
-                if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) && MCH_ST_Reassembled[4] &&
+                if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
                     ComboAction is SlugShot && !LevelChecked(Drill) && LevelChecked(CleanShot) &&
                     !HasStatusEffect(Buffs.Reassembled) && ActionReady(Reassemble))
                     return Reassemble;
@@ -492,10 +483,10 @@ internal partial class MCH : PhysicalRanged
                         ActionReady(Reassemble) && !HasStatusEffect(Buffs.Reassembled) &&
                         !JustUsed(Flamethrower, 10f) &&
                         GetRemainingCharges(Reassemble) > MCH_AoE_ReassemblePool &&
-                        (MCH_AoE_Reassembled[0] && LevelChecked(Scattergun) ||
-                         MCH_AoE_Reassembled[1] && GetCooldownRemainingTime(AirAnchor) < GCD && LevelChecked(AirAnchor) ||
-                         MCH_AoE_Reassembled[2] && GetCooldownRemainingTime(Chainsaw) < GCD && LevelChecked(Chainsaw) ||
-                         MCH_AoE_Reassembled[3] && GetCooldownRemainingTime(OriginalHook(Chainsaw)) < GCD && LevelChecked(Excavator)))
+                        (LevelChecked(Scattergun) ||
+                         GetCooldownRemainingTime(AirAnchor) < GCD && LevelChecked(AirAnchor) ||
+                         GetCooldownRemainingTime(Chainsaw) < GCD && LevelChecked(Chainsaw) ||
+                         GetCooldownRemainingTime(OriginalHook(Chainsaw)) < GCD && LevelChecked(Excavator)))
                         return Reassemble;
 
                     // Hypercharge
@@ -531,42 +522,31 @@ internal partial class MCH : PhysicalRanged
                     LevelChecked(FullMetalField) && HasStatusEffect(Buffs.FullMetalMachinist))
                     return FullMetalField;
 
-                if (IsEnabled(Preset.MCH_AoE_Adv_Tools) &&
-                    IsEnabled(Preset.MCH_AoE_Adv_Bioblaster) &&
-                    GetTargetHPPercent() >= MCH_AoE_ToolsHPThreshold &&
-                    ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-                    !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
-                    return OriginalHook(BioBlaster);
-
                 if (IsEnabled(Preset.MCH_AoE_Adv_FlameThrower) &&
                     ActionReady(Flamethrower) &&
                     !HasStatusEffect(Buffs.Reassembled) &&
                     (MCH_AoE_FlamethrowerMovement == 1 ||
-                     MCH_AoE_FlamethrowerMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(MCH_AoE_FlamethrowerTimeStill)) &&
+                     MCH_AoE_FlamethrowerMovement == 0 && !IsMoving() &&
+                     TimeStoodStill > TimeSpan.FromSeconds(MCH_AoE_FlamethrowerTimeStill)) &&
                     GetTargetHPPercent() > MCH_AoE_FlamethrowerHPOption)
                     return OriginalHook(Flamethrower);
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_Tools) &&
                     GetTargetHPPercent() >= MCH_AoE_ToolsHPThreshold)
                 {
-                    if (IsEnabled(Preset.MCH_AoE_Adv_Excavator) &&
-                        ReassembledExcavatorAoE &&
-                        LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+                    if (ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
+                        !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
+                        return OriginalHook(BioBlaster);
+
+                    if (LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                         return Excavator;
 
-                    if (IsEnabled(Preset.MCH_AoE_Adv_Chainsaw) &&
-                        ReassembledChainsawAoE &&
-                        ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+                    if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
                         return Chainsaw;
 
-                    if (IsEnabled(Preset.MCH_AoE_Adv_AirAnchor) &&
-                        ReassembledAirAnchorAoE &&
-                        LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
+                    if (LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
                         return AirAnchor;
                 }
-
-                if (ReassembledScattergunAoE)
-                    return OriginalHook(Scattergun);
             }
 
             if (ActionReady(BlazingShot) && IsOverheated)
