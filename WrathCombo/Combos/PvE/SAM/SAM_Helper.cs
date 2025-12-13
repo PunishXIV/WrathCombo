@@ -330,8 +330,14 @@ internal partial class SAM
                     return true;
             }
 
-            if (!EnhancedSenei && Kenki >= SAM_ST_KenkiOvercapAmount)
-                return true;
+            if (!EnhancedSenei)
+            {
+                if ( GetCooldownRemainingTime(Ikishoten) > 10 && Kenki >= SAM_ST_KenkiOvercapAmount)
+                    return true;
+
+                if (GetCooldownRemainingTime(Ikishoten) <= 10 && Kenki > 50)
+                    return true;
+            }
         }
         return false;
     }
@@ -591,7 +597,7 @@ internal partial class SAM
 
     #region Gauge
 
-    private static SAMGauge Gauge = GetJobGauge<SAMGauge>();
+    private static SAMGauge Gauge => GetJobGauge<SAMGauge>();
 
     private static bool HasGetsu => Gauge.HasGetsu;
 

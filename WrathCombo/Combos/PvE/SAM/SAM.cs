@@ -103,6 +103,12 @@ internal partial class SAM : Melee
             if (actionID is not (Fuga or Fuko))
                 return actionID;
 
+            //Meikyo to start before combat
+            if (ActionReady(MeikyoShisui) &&
+                !HasStatusEffect(Buffs.MeikyoShisui) &&
+                !InCombat() && HasBattleTarget())
+                return MeikyoShisui;
+
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
@@ -111,6 +117,11 @@ internal partial class SAM : Melee
             {
                 if (OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure))
                     return Hagakure;
+
+                if (ActionReady(MeikyoShisui) &&
+                    !HasStatusEffect(Buffs.MeikyoShisui) &&
+                    ComboTimer is 0)
+                    return MeikyoShisui;
 
                 if (ActionReady(Ikishoten) && !HasStatusEffect(Buffs.ZanshinReady))
                 {
@@ -122,9 +133,6 @@ internal partial class SAM : Melee
                         < 50 => Ikishoten
                     };
                 }
-
-                if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.MeikyoShisui))
-                    return MeikyoShisui;
 
                 if (ActionReady(Zanshin) && HasStatusEffect(Buffs.ZanshinReady) && Kenki >= 50)
                     return Zanshin;
@@ -322,10 +330,18 @@ internal partial class SAM : Melee
 
         protected override uint Invoke(uint actionID)
         {
+            float kenkiOvercapAoE = SAM_AoE_KenkiOvercapAmount;
+
             if (actionID is not (Fuga or Fuko))
                 return actionID;
 
-            float kenkiOvercapAoE = SAM_AoE_KenkiOvercapAmount;
+            //Meikyo to start before combat
+            if (IsEnabled(Preset.SAM_AoE_CDs) &&
+                IsEnabled(Preset.SAM_AoE_MeikyoShisui) &&
+                ActionReady(MeikyoShisui) &&
+                !HasStatusEffect(Buffs.MeikyoShisui) &&
+                !InCombat() && HasBattleTarget())
+                return MeikyoShisui;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
@@ -340,7 +356,9 @@ internal partial class SAM : Melee
                 if (IsEnabled(Preset.SAM_AoE_CDs))
                 {
                     if (IsEnabled(Preset.SAM_AoE_MeikyoShisui) &&
-                        ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.MeikyoShisui))
+                        ActionReady(MeikyoShisui) &&
+                        !HasStatusEffect(Buffs.MeikyoShisui) &&
+                        ComboTimer is 0)
                         return MeikyoShisui;
 
                     if (IsEnabled(Preset.SAM_AOE_CDs_Ikishoten) &&

@@ -6133,7 +6133,7 @@ public enum Preset
     SAM_ST_CDs_MeikyoShisui = 15018,
 
     [ParentCombo(SAM_ST_CDs)]
-    [CustomComboInfo("Ikishoten Option", "Adds Ikishoten when at or below 50 Kenki.\nWill dump Kenki at 10 seconds left to allow Ikishoten to be used.", Job.SAM)]
+    [CustomComboInfo("Ikishoten Option", "Adds Ikishoten when at or below 50 Kenki.\nPRE 94: Will dump Kenki at 10 seconds left to allow Ikishoten to be used.\nPOST 94: Will use during burst window.", Job.SAM)]
     SAM_ST_CDs_Ikishoten = 15012,
 
     #endregion
