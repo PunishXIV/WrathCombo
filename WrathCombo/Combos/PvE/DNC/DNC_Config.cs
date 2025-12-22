@@ -307,9 +307,17 @@ internal partial class DNC
                     DrawHorizontalRadioButton(
                         DNC_ST_ADV_TillanaUse,
                         "Use Tillana Normally",
-                        "Will use Tillana as recommended by The Balance" +
+                        "Will use Tillana as recommended by The Balance." +
                         "\nCan allow Tillana to drift out of burst windows.",
-                        outputValue: (int)TillanaDriftProtection.None,
+                        outputValue: (int)TillanaUsageManner.Normally,
+                        itemWidth: 125f);
+                    DrawHorizontalRadioButton(
+                        DNC_ST_ADV_TillanaUse,
+                        "Use Normally, but Prevent Drops",
+                        "Will use Tillana as recommended by The Balance," +
+                        "\nbut will also use it if about to expire." +
+                        "\nNot really recommended.",
+                        outputValue: (int)TillanaUsageManner.NormallyPreventDrops,
                         itemWidth: 125f);
                     DrawHorizontalRadioButton(
                         DNC_ST_ADV_TillanaUse,
@@ -317,8 +325,8 @@ internal partial class DNC
                         "Will perform Tillana over Saber or Dance of the Dawn, even if above 50 Esprit." +
                         "\nCan prevent Tillana from drifting out of burst windows." +
                         "\nShould be used with Saber Dance's Esprit slider being >50." +
-                        "\nNOT recommended.",
-                        outputValue: (int)TillanaDriftProtection.Favor,
+                        "\nNOT recommended. Only for Esprit-Micro-Managers.",
+                        outputValue: (int)TillanaUsageManner.FavorOverEsprit,
                         itemWidth: 125f);
                     ImGui.Unindent();
 
@@ -482,10 +490,11 @@ internal partial class DNC
             Yes,
         }
 
-        public enum TillanaDriftProtection
+        public enum TillanaUsageManner
         {
-            None,
-            Favor,
+            Normally = 0,
+            NormallyPreventDrops = 2,
+            FavorOverEsprit = 1,
         }
 
         public enum AntiDrift
@@ -621,12 +630,12 @@ internal partial class DNC
         ///     Tillana drift protection for Single Target.
         /// </summary>
         /// <value>
-        ///     <b>Default</b>: <see cref="TillanaDriftProtection.None" /> <br />
-        ///     <b>Options</b>: <see cref="TillanaDriftProtection" /> Enum.
+        ///     <b>Default</b>: <see cref="TillanaUsageManner.Normally" /> <br />
+        ///     <b>Options</b>: <see cref="TillanaUsageManner" /> Enum.
         /// </value>
         /// <seealso cref="Preset.DNC_ST_Adv_Tillana" />
         public static readonly UserInt DNC_ST_ADV_TillanaUse =
-            new("DNC_ST_ADV_TillanaUse", (int)TillanaDriftProtection.None);
+            new("DNC_ST_ADV_TillanaUse", (int)TillanaUsageManner.Normally);
 
         /// <summary>
         ///     Esprit threshold for Saber Dance in Single Target.
