@@ -1,4 +1,5 @@
 ﻿using ECommons.EzIpcManager;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,12 @@ public partial class Provider
         recastCheck ??= false;
         castCheck ??= false;
         return CustomComboFunctions.ActionReady(actionId, recastCheck.Value, castCheck.Value);
+    }
+
+    [EzIPC]
+    public bool JustUsed(uint actionID, float? variance)
+    {
+        variance ??= 3f;
+        return CustomComboFunctions.JustUsed(actionID, variance.Value);
     }
 }

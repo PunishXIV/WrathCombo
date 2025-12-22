@@ -247,6 +247,10 @@ public static class ActionWatching
     {
         try
         {
+            if(P.IPC.OnActionUsedProvider.SubscriptionCount > 0)
+            {
+                P.IPC.OnActionUsedProvider.SendMessage((ActionType)actionType, actionId);
+            }
             if (actionType is 1)
             {
                 OnActionSend?.Invoke();

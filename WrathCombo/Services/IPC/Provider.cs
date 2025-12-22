@@ -1,9 +1,11 @@
 ﻿#region
 
+using Dalamud.Plugin.Ipc;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.EzIpcManager;
 using ECommons.GameHelpers;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -88,6 +90,8 @@ public partial class Provider : IDisposable
 
         return output;
     }
+
+    public ICallGateProvider<ActionType, uint, object> OnActionUsedProvider = Svc.PluginInterface.GetIpcProvider<ActionType, uint, object>("OnActionUsed");
 
     /// <summary>
     ///     A token to cancel <see cref="BuildCaches" /> if the IPC is disabled.
