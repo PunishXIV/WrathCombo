@@ -217,7 +217,7 @@ internal partial class All
         protected override uint Invoke(uint actionID)
         {
             List<uint> replacedActions =
-                [BLU.AngelWhisper, RDM.Verraise, SMN.Resurrection];
+                [BLU.AngelWhisper_Spell72, RDM.Verraise, SMN.Resurrection];
             if (!replacedActions.Contains(actionID))
                 return actionID;
             if (actionID is SMN.Resurrection &&
