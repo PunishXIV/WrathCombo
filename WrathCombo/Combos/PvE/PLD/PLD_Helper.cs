@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -91,6 +92,9 @@ internal partial class PLD
     private static int HPThresholdFoF =>
         PLD_ST_FoF_BossOption == 1 ||
         !TargetIsBoss() ? PLD_ST_FoF_HPOption : 0;
+
+    private static int RoyalAuthorityCount =>
+        ActionWatching.CombatActions.Count(x => x == OriginalHook(RageOfHalone));
 
     #endregion
 

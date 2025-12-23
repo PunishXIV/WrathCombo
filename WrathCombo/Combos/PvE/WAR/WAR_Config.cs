@@ -180,6 +180,12 @@ internal partial class WAR
                     DrawSliderInt(1, 100, WAR_ST_Bloodwhetting_Health,
                         "Player HP%", 200);
 
+                    DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_Boss,
+                        "All Enemies", $"Uses {Bloodwhetting.ActionName()} regardless of targeted enemy type", 0);
+
+                    DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_Boss,
+                        "Bosses Only", $"Only uses {Bloodwhetting.ActionName()} when the targeted enemy is a boss", 1);
+
                     break;
 
                 case Preset.WAR_AoE_Bloodwhetting:
@@ -446,6 +452,7 @@ internal partial class WAR
             WAR_ST_PrimalRend_Movement = new("WAR_ST_PrimalRend_Movement"),
             WAR_ST_PrimalRend_EarlyLate = new("WAR_ST_PrimalRend_EarlyLate"),
             WAR_ST_Bloodwhetting_Health = new("WAR_ST_BloodwhettingOption", 85),
+            WAR_ST_Bloodwhetting_Boss = new("WAR_ST_Bloodwhetting_Boss"),
             WAR_ST_Equilibrium_Health = new("WAR_ST_EquilibriumOption", 50),
             WAR_ST_Thrill_Health = new("WAR_ST_Thrill_Health", 70),
             WAR_ST_Vengeance_Health = new("WAR_ST_Vengeance_Health", 60),

@@ -7594,7 +7594,7 @@ public enum Preset
     [CustomComboInfo("Reprisal Option", "Adds Reprisal.\n- Player HP must be under:", Job.WAR)]
     WAR_AoE_Reprisal = 18063,
 
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
+    [ParentCombo(WAR_AoE_Mitigation)]
     [CustomComboInfo("Shake it Off Option", "Adds Shake it Off.\n- Player HP must be under:", Job.WAR)]
     WAR_AoE_ShakeItOff = 18133,
 

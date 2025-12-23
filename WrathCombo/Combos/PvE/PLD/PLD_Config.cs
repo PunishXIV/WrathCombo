@@ -87,21 +87,22 @@ internal partial class PLD
                 case Preset.PLD_ST_AdvancedMode_Intervene:
                     DrawHorizontalRadioButton(PLD_ST_Intervene_Movement,
                         "Stationary Only", "Uses Intervene only while stationary", 0);
+
                     DrawHorizontalRadioButton(PLD_ST_Intervene_Movement,
                         "Any Movement", "Uses Intervene regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+
                     ImGui.Spacing();
                     if (PLD_ST_Intervene_Movement == 0)
                     {
-                        ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, PLD_ST_InterveneTimeStill,
                             " Stationary Delay Check (in seconds):", decimals: 1);
                     }
-                    ImGui.SetCursorPosX(48);
+
                     DrawSliderInt(0, 2, PLD_ST_Intervene_Charges,
                         " How many charges to keep ready?\n (0 = Use All)");
-                    ImGui.SetCursorPosX(48);
-                    DrawSliderFloat(1, 20, PLD_ST_Intervene_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+
+                    DrawSliderInt(1, 20, PLD_ST_Intervene_Distance,
+                        " Use when Distance from target is less than or equal to:");
                     break;
 
                 // Shield Lob
@@ -178,21 +179,22 @@ internal partial class PLD
                 case Preset.PLD_AoE_AdvancedMode_Intervene:
                     DrawHorizontalRadioButton(PLD_AoE_Intervene_Movement,
                         "Stationary Only", "Uses Intervene only while stationary", 0);
+
                     DrawHorizontalRadioButton(PLD_AoE_Intervene_Movement,
                         "Any Movement", "Uses Intervene regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+
                     ImGui.Spacing();
                     if (PLD_AoE_Intervene_Movement == 0)
                     {
-                        ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, PLD_AoE_InterveneTimeStill,
                             " Stationary Delay Check (in seconds):", decimals: 1);
                     }
-                    ImGui.SetCursorPosX(48);
+
                     DrawSliderInt(0, 2, PLD_AoE_Intervene_Charges,
                         " How many charges to keep ready?\n (0 = Use All)");
-                    ImGui.SetCursorPosX(48);
-                    DrawSliderFloat(1, 20, PLD_AoE_Intervene_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+
+                    DrawSliderInt(1, 20, PLD_AoE_Intervene_Distance,
+                        " Use when Distance from target is less than or equal to:");
                     break;
 
                 case Preset.PLD_AoE_AdvancedMode_MP_Reserve:
