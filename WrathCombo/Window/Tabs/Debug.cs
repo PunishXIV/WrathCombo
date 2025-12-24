@@ -428,6 +428,30 @@ internal class Debug : ConfigWindow, IDisposable
             }
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+
+            if (ImGui.TreeNode("Content Data"))
+            {
+                CustomStyleText("Content Name:",
+                    $"content:{Content.ContentName ?? "??"}, territory:{Content.TerritoryName ?? "??"}");
+                CustomStyleText("Content IDs:",
+                    $"territory:{Content.TerritoryID}, cfc:{Content.ContentFinderConditionRow?.RowId.ToString() ?? "??"}, map:{Content.MapID}");
+                CustomStyleText("Content Type:", Content.ContentType?.ToString() ?? "??");
+                CustomStyleText("Intended Use:", Content.TerritoryIntendedUse?.ToString() ?? "??");
+                CustomStyleText("Difficulty:",
+                    $"from name:{Content.ContentDifficultyFromName ?? "??"}, determined:{Content.ContentDifficulty?.ToString() ?? "??"}");
+                CustomStyleText("CDF Boss-Only:", ContentCheck.IsInBossOnlyContent());
+                CustomStyleText("CDF Halved:",
+                    $"bottom:{ContentCheck.IsInBottomHalfContent()}, top:{ContentCheck.IsInTopHalfContent()}");
+                CustomStyleText("CDF Casual VS Hard:",
+                    $"casual:{ContentCheck.IsInCasualContent()}, hard:{ContentCheck.IsInHardContent()}");
+                CustomStyleText("CDF Cored:",
+                    $"soft:{ContentCheck.IsInSoftCoreContent()}, mid:{ContentCheck.IsInMidCoreContent()}, hard:{ContentCheck.IsInHardCoreContent()}");
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
+            }
+
+            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
         }
 
         if (ImGui.CollapsingHeader("Target Data"))
