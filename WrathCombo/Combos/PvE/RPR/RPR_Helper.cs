@@ -15,8 +15,9 @@ internal partial class RPR
 
     //Auto Arcane Crest
     private static bool CanUseArcaneCrest =>
-        ActionReady(ArcaneCrest) &&
-        (RaidWideCasting(3f) || !IsInParty());
+        ActionReady(ArcaneCrest) && InCombat() &&
+        (RaidWideCasting(3f) ||
+         !IsInParty() && IsPlayerTargeted());
 
     #endregion
 

@@ -417,7 +417,7 @@ internal partial class RPR : Melee
                 {
                     return IsEnabled(Preset.RPR_ST_TrueNorthDynamic) &&
                            (RPR_ST_TrueNorthDynamic_HoldCharge &&
-                            GetRemainingCharges(Role.TrueNorth) < 2 ||
+                            GetRemainingCharges(Role.TrueNorth) is 2 ||
                             !RPR_ST_TrueNorthDynamic_HoldCharge) &&
                            Role.CanTrueNorth() && !OnTargetsFlank()
                         ? Role.TrueNorth
@@ -431,7 +431,7 @@ internal partial class RPR : Melee
                 {
                     return IsEnabled(Preset.RPR_ST_TrueNorthDynamic) &&
                            (RPR_ST_TrueNorthDynamic_HoldCharge &&
-                            GetRemainingCharges(Role.TrueNorth) < 2 ||
+                            GetRemainingCharges(Role.TrueNorth) is 2 ||
                             !RPR_ST_TrueNorthDynamic_HoldCharge) &&
                            Role.CanTrueNorth() && !OnTargetsRear()
                         ? Role.TrueNorth
