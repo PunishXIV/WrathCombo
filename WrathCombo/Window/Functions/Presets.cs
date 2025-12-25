@@ -585,11 +585,19 @@ internal class Presets : ConfigWindow
         return true;
     }
 
-    private static bool DrawOccultJobIcon(Preset preset)
+    private static bool DrawOccultJobIcon(Preset? preset, int? jobID = null)
     {
-        if (preset.Attributes().OccultCrescentJob == null) return false;
-        var baseJobID = preset.Attributes().OccultCrescentJob.JobId;
-        if (baseJobID == -1) return false;
+        int baseJobID;
+        if (preset is {} realPreset)
+        {
+            if (realPreset.Attributes().OccultCrescentJob == null) return false;
+            baseJobID = realPreset.Attributes().OccultCrescentJob.JobId;
+            if (baseJobID == -1) return false;
+        }
+        else if (jobID is not null)
+            baseJobID = jobID.Value;
+        else
+            return false;
 
         #region Error Handling
         string? error = null;
@@ -621,11 +629,17 @@ internal class Presets : ConfigWindow
         var scale = Math.Min(iconMaxSize / icon.Size.X, iconMaxSize / icon.Size.Y);
         var imgSize = new Vector2(icon.Size.X * scale, icon.Size.Y * scale);
 
+        if (jobID is not null)
+            imgSize *= 3f;
+
         ImGui.SetCursorPosY(ImGui.GetCursorPosY() - 6f.Scale());
         ImGui.Image(icon.Handle, imgSize);
         ImGui.SetCursorPosY(ImGui.GetCursorPosY() + 6f.Scale());
         return true;
     }
+
+    internal static void DrawOccultJobIcon(int jobID) =>
+        DrawOccultJobIcon(null, jobID);
 
 
     internal static int AllChildren((Preset Preset, CustomComboInfoAttribute Info)[] children)

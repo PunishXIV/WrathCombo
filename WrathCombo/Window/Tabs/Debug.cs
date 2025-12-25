@@ -22,6 +22,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
@@ -34,6 +35,7 @@ using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
 using WrathCombo.Services.IPC_Subscriber;
+using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using BattleNPCSubKind = Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind;
@@ -1023,6 +1025,38 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Countdown Active:", $"{CountdownActive}");
             CustomStyleText("Countdown Remaining:", $"{CountdownRemaining}");
             CustomStyleText("Raidwide Incoming:", $"{RaidWideCasting()}");
+
+            ImGui.Indent();
+            if (ImGui.CollapsingHeader("Occult Crescent Job Icons"))
+            {
+                ImGui.Text("Icons in `ui/uld/MKDSupportJob.uld`");
+                ImGui.NewLine();
+                var counter = 0;
+                for (var icon = 0; icon <= 25; icon++)
+                {
+                    if (!JobIDExtensions.GetActiveFromValue(icon))
+                        continue;
+                    
+                    counter++;
+                    ImGui.BeginGroup();
+                    
+                    ImGui.Text(
+                        $"{icon}: " +
+                        $"{JobIDExtensions.GetNameFromValue(icon) ?? "Unknown"}");
+                    ImGui.NewLine();
+                    Presets.DrawOccultJobIcon(icon);
+                    ImGui.EndGroup();
+
+                    if (counter >= 7)
+                    {
+                        ImGui.NewLine();
+                        counter = 0;
+                    }
+                    else
+                        ImGui.SameLine();
+                }
+            }
+            ImGui.Unindent();
         }
 
         #endregion

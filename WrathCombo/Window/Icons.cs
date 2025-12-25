@@ -7,8 +7,9 @@ using Lumina.Data.Files;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using System.Linq;
 using WrathCombo.Attributes;
+using WrathCombo.Combos.PvE;
+
 namespace WrathCombo.Window;
 
 internal static class Icons
@@ -17,8 +18,8 @@ internal static class Icons
     
     public static class Occult
     {
-        private const int MaxJobId = 12; // Change later when new Occult classes have sprites
-        private const int AnimationOffset = 30;
+        private static int MaxJobId = JobIDExtensions.GetHighestActiveOccultID();
+        private const  int AnimationOffset = 30;
 
         public static readonly Lazy<FrozenDictionary<int, IDalamudTextureWrap?[]>> JobSprites =
             new(() => LoadOccultJobIcons());

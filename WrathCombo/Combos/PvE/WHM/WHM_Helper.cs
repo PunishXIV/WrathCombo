@@ -165,6 +165,7 @@ internal partial class WHM
             case 0:
                 action = OriginalHook(Medica2);
                 enabled = IsEnabled(Preset.WHM_AoEHeals_Medica2) &&
+                          !IsMoving() && !JustUsed(OriginalHook(Medica2)) &&
                           (LevelChecked(Medica3) && medica3Check ||
                            !LevelChecked(Medica3) && medica2Check);
                 return WHM_AoEHeals_Medica2HP;
@@ -172,8 +173,8 @@ internal partial class WHM
             case 1:
                 action = Cure3;
                 enabled = IsEnabled(Preset.WHM_AoEHeals_Cure3) &&
-                          NumberOfAlliesInRange(Cure3, OptionalTarget)
-                          >= WHM_AoEHeals_Cure3Allies &&
+                          !IsMoving() &&
+                          NumberOfAlliesInRange(Cure3, OptionalTarget) >= WHM_AoEHeals_Cure3Allies &&
                           (LocalPlayer.CurrentMp >= WHM_AoEHeals_Cure3MP ||
                            HasStatusEffect(Buffs.ThinAir));
                 return WHM_AoEHeals_Cure3HP;

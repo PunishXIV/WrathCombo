@@ -1,5 +1,7 @@
 ﻿#region Dependencies
 
+using System;
+using static WrathCombo.Combos.PvE.JobIDExtensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 #endregion
@@ -95,42 +97,82 @@ internal partial class OccultCrescent
         HastyMirage = 41617,
         AetherialGain = 41618,
         RingingRespite = 41619,
-        Suspend = 41620;
+        Suspend = 41620,
+        
+        //Mystic Knight
+        MagicShell = 46590,
+        SunderingSpellblade = 46591,
+        HolySpellblade = 46592,
+        BlazingSpellblade = 46593,
+        
+        //Dancer
+        Dance = 46598,
+        PoisedToSwordDance = 46599,
+        TemptedToTango = 46600,
+        Jitterbug = 46601,
+        WillingToWaltz = 46602,
+        Quickstep = 46603,
+        SteadfastStance = 46604,
+        Mesmerize = 46605,
+    
+        //Gladiator
+        Finisher = 46594,
+        Defend = 46595,
+        LongReach = 46596,
+        BladeBlitz = 46597;
+            
+        
     internal static bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && HasActionEquipped(action) && ActionReady(action);
 
-    public static class JobIDs
+
+    /// <summary>
+    ///     Job identifiers and which Icon is their own. <br />
+    ///     Matched to their Icon via FFV Job Sprites: <br />
+    ///     https://finalfantasy.fandom.com/wiki/Final_Fantasy_V_jobs
+    /// </summary>
+    /// <seealso cref="Window.Icons.Occult.JobSprites"/>
+    /// <seealso cref="Window.Functions.Presets.DrawOccultJobIcon(int)">
+    ///     Window.Functions.Presets.DrawOccultJobIcon()
+    /// </seealso>
+    /// <seealso cref="JobIDExtensions"/>
+    internal enum JobIDs
     {
-        public const int
-            Freelancer = 0,
-            Knight = 1,
-            Berserker = 2,
-            Monk = 3,
-            Ranger = 4,
-            Samurai = 5,
-            Bard = 6,
-            Geomancer = 7,
-            TimeMage = 8,
-            Cannoneer = 9,
-            Chemist = 10,
-            Oracle = 11,
-            Thief = 12,
-            #region Not Yet Added
+        // 7.25
+        Freelancer = 0,
+        Knight = 1,
+        Berserker = 2,
+        Monk = 3,
+        Ranger = 4,
+        Samurai = 5,
+        Bard = 6,
+        Geomancer = 7,
+        TimeMage = 8,
+        Cannoneer = 9,
+        Chemist = 10,
+        Oracle = 11,
+        Thief = 12,
 
-            Dragoon = 13,
-            WhiteMage = 14,
-            BlackMage = 15,
-            Ninja = 16,
-            Summoner = 17,
-            Dancer = 18,
-            RedMage = 19,
-            BlueMage = 20,
-            Gladiator = 21,
-            MysticKnight = 22,
-            BeastMaster = 23,
-            Necromancer = 24,
-            Mime = 25;
+        // 7.4
+        MysticKnight = 13,
+        Gladiator = 14,
+        Dancer = 15,
 
-            #endregion
+        // (if they follow what they did in 7.4)
+        // Any future jobs should directly follow the ID of the last-active job.
+        // Remove NotYetImplemented from all of them to get icons to show in Debug.
+        [NotYetImplemented] Ninja = 16,
+        [NotYetImplemented] Summoner = 17,
+        [NotYetImplemented] BlackMage = 18,
+        [NotYetImplemented] RedMage = 19,
+        [NotYetImplemented] BlueMage = 20,
+        [NotYetImplemented] WhiteMage = 21,
+        [NotYetImplemented] Dragoon = 22,
+        [NotYetImplemented] BeastMaster = 23,
+        [NotYetImplemented] Necromancer = 24,
+        [NotYetImplemented] Mime = 25,
+        
+        // N/A
+        N_A = -1,
     }
 
     public static class Buffs
@@ -173,7 +215,9 @@ internal partial class OccultCrescent
             Invulnerability = 4275,
             Shirahadori = 4245,
             Vigilance = 4277,
-            CloudyCaress = 4280;
+            CloudyCaress = 4280,
+            BlazingSpellblade = 4790,
+            Quickstep = 4798;
     }
 
     public static class Debuffs
@@ -208,5 +252,77 @@ internal partial class OccultCrescent
         public static ushort
             OccultPotion = 47741,
             OccultElixir = 47743;
+    }
+}
+
+/// <summary>
+/// Provides helper methods for working with <see cref="OccultCrescent.JobIDs"/>.
+/// </summary>
+internal static class JobIDExtensions
+{
+    /// <summary>
+    /// Marks job identifiers that are not yet implemented.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field)]
+    internal sealed class NotYetImplemented : Attribute
+    {
+    }
+
+    /// <summary>
+    /// Determines whether the specified job identifier represents an active job.
+    /// </summary>
+    public static bool IsActive(this OccultCrescent.JobIDs jobID)
+    {
+        var member = typeof(OccultCrescent.JobIDs).GetField(jobID.ToString()!);
+        return member is not null && !Attribute.IsDefined(member, typeof(NotYetImplemented));
+    }
+
+    /// <summary>
+    /// Gets the name of the job associated with the provided numeric value.
+    /// </summary>
+    public static string? GetNameFromValue(int value)
+    {
+        return Enum.IsDefined(typeof(OccultCrescent.JobIDs), value)
+            ? Enum.GetName(typeof(OccultCrescent.JobIDs), value)
+            : null;
+    }
+
+    /// <summary>
+    /// Determines whether the specified numeric value corresponds to an active <see cref="OccultCrescent.JobIDs"/> entry.
+    /// </summary>
+    public static bool GetActiveFromValue(int value)
+    {
+        if (!Enum.IsDefined(typeof(OccultCrescent.JobIDs), value))
+        {
+            return false;
+        }
+
+        var jobID = (OccultCrescent.JobIDs)value;
+        return jobID.IsActive();
+    }
+
+    /// <summary>
+    /// Gets the highest numeric value among active job identifiers.
+    /// </summary>
+    public static int GetHighestActiveOccultID()
+    {
+        // Iterate through defined jobs, tracking the highest active numeric value.
+        var highest = -1;
+        foreach (OccultCrescent.JobIDs job in
+                 Enum.GetValues(typeof(OccultCrescent.JobIDs)))
+        {
+            if (!job.IsActive())
+            {
+                continue;
+            }
+
+            var value = (int)job;
+            if (value > highest)
+            {
+                highest = value;
+            }
+        }
+
+        return highest;
     }
 }

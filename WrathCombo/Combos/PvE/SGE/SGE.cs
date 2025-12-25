@@ -839,17 +839,17 @@ internal partial class SGE : Healer
             if (actionID is not Holos)
                 return actionID;
 
-            if (SGE_Mit_AoE_Options[0] &&
+            if (SGE_Mit_AoE_Options[1] &&
                 ActionReady(Kerachole) &&
                 !HasStatusEffect(Buffs.Kerachole, anyOwner: true) &&
                 !HasStatusEffect(SCH.Buffs.SacredSoil, anyOwner: true))
                 return Kerachole;
 
-            if (SGE_Mit_AoE_Options[1] &&
+            if (SGE_Mit_AoE_Options[0] &&
                 ActionReady(Philosophia))
                 return Philosophia;
 
-            if (GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= SGE_Mit_AoE_PrognosisOption)
+            if (GetPartyBuffPercent(Buffs.EukrasianPrognosis) < SGE_Mit_AoE_PrognosisOption)
                 return HasStatusEffect(Buffs.Eukrasia)
                     ? OriginalHook(Prognosis)
                     : Eukrasia;

@@ -31,8 +31,9 @@ internal partial class SGE
     private static IGameObject? HealStack =>
         SimpleTarget.Stack.AllyToHeal;
 
-    private static bool HasAddersgall() =>
-        Addersgall > 0;
+    private static bool HasAddersgall() => Addersgall > 0;
+    
+    private static bool AdvancedHasAddersgall() => Addersgall > SGE_Heal_HoldAddersgall;
 
     private static bool HasAddersting() =>
         Addersting > 0;
@@ -106,7 +107,7 @@ internal partial class SGE
 
     private static bool RaidwideKerachole() =>
         IsEnabled(Preset.SGE_Raidwide_Kerachole) &&
-        ActionReady(Kerachole) && HasAddersgall() &&
+        ActionReady(Kerachole) && AdvancedHasAddersgall() &&
         CanWeave() && RaidWideCasting();
 
     private static bool RaidwideHolos() =>
@@ -159,7 +160,7 @@ internal partial class SGE
 
             case 3:
                 action = Taurochole;
-                enabled = IsEnabled(Preset.SGE_ST_Heal_Taurochole) && HasAddersgall() &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Taurochole) && AdvancedHasAddersgall() &&
                           (tankCheck || !IsInParty() || !SGE_ST_Heal_Taurochole_TankOnly);
                 return SGE_ST_Heal_Taurochole;
 
@@ -179,7 +180,7 @@ internal partial class SGE
 
             case 6:
                 action = Druochole;
-                enabled = IsEnabled(Preset.SGE_ST_Heal_Druochole) && HasAddersgall();
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Druochole) && AdvancedHasAddersgall();
                 return SGE_ST_Heal_Druochole;
 
             case 7:
@@ -191,7 +192,7 @@ internal partial class SGE
 
             case 8:
                 action = Kerachole;
-                enabled = IsEnabled(Preset.SGE_ST_Heal_Kerachole) && HasAddersgall() &&
+                enabled = IsEnabled(Preset.SGE_ST_Heal_Kerachole) && AdvancedHasAddersgall() &&
                           (!SGE_ST_Heal_KeracholeBossOption || !InBossEncounter());
                 return SGE_ST_Heal_KeracholeHP;
 
@@ -238,13 +239,13 @@ internal partial class SGE
                 enabled = IsEnabled(Preset.SGE_AoE_Heal_Kerachole) &&
                           (!SGE_AoE_Heal_KeracholeTrait ||
                            SGE_AoE_Heal_KeracholeTrait && TraitLevelChecked(Traits.EnhancedKerachole)) &&
-                          HasAddersgall();
+                          AdvancedHasAddersgall();
                 return SGE_AoE_Heal_KeracholeOption;
 
             case 1:
                 action = Ixochole;
                 enabled = IsEnabled(Preset.SGE_AoE_Heal_Ixochole) &&
-                          HasAddersgall();
+                          AdvancedHasAddersgall();
                 return SGE_AoE_Heal_IxocholeOption;
 
             case 2:

@@ -47,6 +47,9 @@ internal partial class OccultCrescent
         if (TryGetOracleAction(ref actionID)) return true;
         if (TryGetCannoneerAction(ref actionID)) return true;
         if (TryGetGeomancerAction(ref actionID)) return true;
+        if (TryGetDancerAction(ref actionID)) return true;
+        if (TryGetMysticKnightAction(ref actionID)) return true;
+        if (TryGetGladiatorAction(ref actionID)) return true;
 
         return false;
     }
@@ -588,6 +591,119 @@ internal partial class OccultCrescent
 
         // GCDs
 
+        return false;
+    }
+    
+    private static bool TryGetMysticKnightAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_MysticKnight))
+            return false;
+        
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_MagicShell, MagicShell) && CanWeave() && InCombat())
+        {
+            actionID = MagicShell;
+            return true;
+        }
+      
+        if (CanWeaveNow) return false;
+        
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_BlazingSpellblade, BlazingSpellblade) && !HasStatusEffect(Buffs.BlazingSpellblade) && !CanWeave())
+        {
+            actionID = BlazingSpellblade;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_HolySpellblade, HolySpellblade) && !CanWeave())
+        {
+            actionID = HolySpellblade;
+            return true;
+        }
+
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_SunderingSpellblade, SunderingSpellblade) && !CanWeave())
+        {
+            actionID = SunderingSpellblade;
+            return true;
+        }
+        
+        return false;
+    }
+    
+    private static bool TryGetDancerAction(ref uint actionID)
+    {
+        if (!IsEnabled(Preset.Phantom_Dancer))
+            return false;
+        
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, Dance) && CanWeave())
+        {
+            actionID = Dance;
+            return true;
+        }
+        
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Mesmerize, Mesmerize) && InCombat() && CanWeave())
+        {
+            actionID = Mesmerize; //Damage Debuff
+            return true;
+        }
+        
+        if (CanWeaveNow) return false;
+        
+        #region Dances
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, PoisedToSwordDance))
+        {
+            actionID = PoisedToSwordDance;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, TemptedToTango))
+        {
+            actionID = TemptedToTango;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, Jitterbug))
+        {
+            actionID = Jitterbug;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_Dance, WillingToWaltz))
+        {
+            actionID = WillingToWaltz;
+            return true;
+        }
+        #endregion
+        
+        if (IsEnabledAndUsable(Preset.Phantom_Dancer_QuickStep, Quickstep) && !HasStatusEffect(Buffs.Quickstep))
+        {
+            actionID = Quickstep; //Evasion self buff
+            return true;
+        }
+        
+        return false;
+    }
+    
+    private static bool TryGetGladiatorAction(ref uint actionID)
+    {
+        if (CanWeaveNow) return false;
+        
+        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Finisher, Finisher) && HasBattleTarget() && InMeleeRange())
+        {
+            actionID = Finisher;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Defend, Defend))
+        {
+            actionID = Defend;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_LongReach, LongReach) && HasBattleTarget())
+        {
+            actionID = LongReach;
+            return true;
+        }
+        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_BladeBlitz, BladeBlitz) && InCombat() && InActionRange(BladeBlitz))
+        {
+            actionID = BladeBlitz;
+            return true;
+        }
+        
         return false;
     }
 }
