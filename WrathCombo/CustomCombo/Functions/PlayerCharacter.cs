@@ -44,7 +44,7 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Checks if the player is in a PVP enabled zone. </summary>
     /// <returns> A value indicating whether the player is in a PVP enabled zone. </returns>
-    public static bool InPvP() => GameMain.IsInPvPArea() || GameMain.IsInPvPInstance();
+    public static bool InPvP() => ContentCheck.IsInPVPContent;
 
     /// <summary> Checks if the player has completed the required job quest for the ability. </summary>
     /// <returns> A value indicating a quest has been completed for a job action.</returns>
