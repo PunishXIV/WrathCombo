@@ -21,6 +21,7 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
+using WrathCombo.Window;
 using static FFXIVClientStructs.FFXIV.Client.Game.UI.LimitBreakController.Delegates;
 
 #endregion
@@ -107,7 +108,9 @@ internal sealed class ActionReplacer : IDisposable
             // Only refresh every so often
             if (!EzThrottler.Throttle("Actions" + actionID,
                     Service.Configuration.Throttle))
+            {
                 return LastActionInvokeFor[actionID];
+            }
 
             // Actually get the action
             LastActionInvokeFor[actionID] = GetAdjustedAction(actionID);
