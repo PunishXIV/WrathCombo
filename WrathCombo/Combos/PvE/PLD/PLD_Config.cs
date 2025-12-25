@@ -384,7 +384,7 @@ internal partial class PLD
             PLD_ST_Intervene_Movement = new("PLD_ST_Intervene_Movement"),
             PLD_ST_Intervene_Distance = new("PLD_ST_Intervene_Distance", 3),
             PLD_ST_MP_Reserve = new("PLD_ST_MP_Reserve", 1000),
-            PLD_ST_MitOptions = new("PLD_ST_MitOptions"),
+            PLD_ST_MitOptions = new("PLD_ST_MitOptions", 1),
             PLD_ST_SheltronOption = new("PLD_ST_SheltronOption", 50),
             PLD_ST_Sheltron_Health = new("PLD_ST_Sheltron_Health", 85),
             PLD_ST_Sentinel_Health = new("PLD_ST_Sentinel_Health", 50),
@@ -398,7 +398,7 @@ internal partial class PLD
 
             //AoE
             PLD_AoE_FoF_Trigger = new("PLD_AoE_FoF_Trigger", 25),
-            PLD_AoE_MitOptions = new("PLD_AoE_MitOptions"),
+            PLD_AoE_MitOptions = new("PLD_AoE_MitOptions", 1),
             PLD_AoE_SheltronOption = new("PLD_AoE_SheltronOption", 50),
             PLD_AoE_Sheltron_Health = new("PLD_AoE_Sheltron_Health", 85),
             PLD_AoE_DivineVeil_Health = new("PLD_AoE_DivineVeil_Health", 75),

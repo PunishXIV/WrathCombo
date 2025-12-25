@@ -37,7 +37,10 @@ internal partial class WAR
 
             #region Mitigations
 
-            if (WAR_ST_MitsOptions == 0 && InCombat() && !MitUsed)
+            var mitigationsOn =
+                WAR_ST_MitsOptions != 1 ||
+                (P.UIHelper.PresetControlled(Preset)?.enabled == true);
+            if (mitigationsOn && InCombat() && !MitUsed)
             {
                 if (ActionReady(Holmgang) && PlayerHealthPercentageHp() < 30)
                     return Holmgang;
@@ -226,7 +229,10 @@ internal partial class WAR
 
             #region Mitigations
 
-            if (WAR_AoE_MitsOptions != 1)
+            var mitigationsOn =
+                WAR_AoE_MitsOptions != 1 ||
+                (P.UIHelper.PresetControlled(Preset)?.enabled == true);
+            if (mitigationsOn)
             {
                 if (InCombat() && !MitUsed)
                 {

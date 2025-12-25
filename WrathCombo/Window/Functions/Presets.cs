@@ -173,8 +173,12 @@ internal class Presets : ConfigWindow
             ImGui.Separator();
         }
 
+        var ipcControl = P.UIHelper.PresetControlled(preset);
+        if (ipcControl is not null)
+            enabled = ipcControl.Value.enabled;
+
         if (info.Name.Contains(" - AoE") || info.Name.Contains(" - Sin"))
-            if (P.UIHelper.PresetControlled(preset) is not null)
+            if (ipcControl is not null)
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded(preset);
 
         if (IsSearching)

@@ -38,7 +38,10 @@ internal partial class GNB : Tank
 
 
             #region Mitigations
-            if (GNB_ST_MitsOptions != 1)
+            var mitigationsOn =
+                GNB_ST_MitsOptions != 1 ||
+                (P.UIHelper.PresetControlled(Preset)?.enabled == true);
+            if (mitigationsOn)
             {
                 if (InCombat() && !MitUsed)
                 {
@@ -282,7 +285,10 @@ internal partial class GNB : Tank
                 return contentAction;
 
             #region Mitigations
-            if (GNB_AoE_MitsOptions != 1)
+            var mitigationsOn =
+                GNB_AoE_MitsOptions != 1 ||
+                (P.UIHelper.PresetControlled(Preset)?.enabled == true);
+            if (mitigationsOn)
             {
                 if (InCombat() && !MitUsed)
                 {

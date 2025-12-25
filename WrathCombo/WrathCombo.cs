@@ -129,6 +129,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
     {
         WrathOpener.CurrentOpener?.CacheReady = false;
         WrathOpener.CurrentOpener?.ResetOpener(); //Clears opener values, just in case
+        ActionRequestIPCProvider.ResetAllBlacklist();
+        ActionRequestIPCProvider.ResetAllRequests();
         TM.DelayNext(1000);
         TM.Enqueue(() =>
         {

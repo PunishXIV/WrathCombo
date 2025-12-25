@@ -14,7 +14,7 @@ internal partial class GNB
         public static UserInt
             GNB_Opener_StartChoice = new("GNB_Opener_StartChoice", 0),
             GNB_Opener_NM = new("GNB_Opener_NM", 0),
-            GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 0),
+            GNB_ST_MitsOptions = new("GNB_ST_MitsOptions", 1),
             GNB_ST_Corundum_Health = new("GNB_ST_CorundumOption", 90),
             GNB_ST_Corundum_SubOption = new("GNB_ST_Corundum_Option", 0),
             GNB_ST_Aurora_Health = new("GNB_ST_Aurora_Health", 99),
@@ -34,7 +34,7 @@ internal partial class GNB
             GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop", 5),
             GNB_ST_NoMercy_SubOption = new("GNB_ST_NoMercy_SubOption", 1),
             GNB_ST_Overcap_Choice = new("GNB_ST_Overcap_Choice", 0),
-            GNB_AoE_MitsOptions = new("GNB_AoE_MitsOptions", 0),
+            GNB_AoE_MitsOptions = new("GNB_AoE_MitsOptions", 1),
             GNB_AoE_Corundum_Health = new("GNB_AoE_CorundumOption", 90),
             GNB_AoE_Corundum_SubOption = new("GNB_AoE_Corundum_Option", 0),
             GNB_AoE_Aurora_Health = new("GNB_AoE_Aurora_Health", 99),

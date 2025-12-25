@@ -40,7 +40,10 @@ internal partial class PLD : Tank
 
             #region Mitigations
 
-            if (PLD_ST_MitOptions == 0)
+            var mitigationsOn =
+                PLD_ST_MitOptions != 1 ||
+                (P.UIHelper.PresetControlled(Preset)?.enabled == true);
+            if (mitigationsOn)
             {
                 // Mitigation
                 if (IsPlayerTargeted() &&
@@ -219,7 +222,10 @@ internal partial class PLD : Tank
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            if (PLD_AoE_MitOptions == 0)
+            var mitigationsOn =
+                PLD_AoE_MitOptions != 1 ||
+                (P.UIHelper.PresetControlled(Preset)?.enabled == true);
+            if (mitigationsOn)
             {
                 // Mitigation
                 if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Mitigation) &&
