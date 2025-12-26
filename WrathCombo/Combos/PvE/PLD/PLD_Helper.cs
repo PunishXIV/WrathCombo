@@ -226,7 +226,7 @@ internal partial class PLD
             ([11, 13], () => !HasCharges(Intervene))
         ];
 
-
+        public override Preset Preset => Preset.PLD_ST_AdvancedMode_BalanceOpener;
         internal override UserData ContentCheckConfig => PLD_Balance_Content;
 
         public override bool HasCooldowns() =>

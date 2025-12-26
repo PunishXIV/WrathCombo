@@ -659,7 +659,7 @@ internal partial class NIN
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => NIN_Balance_Content;
-
+        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
         public override bool HasCooldowns()
         {
             if (GetRemainingCharges(Ten) < 1) return false;
@@ -723,6 +723,8 @@ internal partial class NIN
         [
             12
         ];
+
+        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
         internal override UserData? ContentCheckConfig => NIN_Balance_Content;
@@ -788,6 +790,8 @@ internal partial class NIN
         [
             11
         ];
+
+        public override Preset Preset => Preset.NIN_ST_AdvancedMode_BalanceOpener;
         internal override UserData? ContentCheckConfig => NIN_Balance_Content;
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;

@@ -303,7 +303,7 @@ internal partial class SCH
 
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
+        public override Preset Preset => Preset.SCH_ST_ADV_DPS_Balance_Opener;
         internal override UserData ContentCheckConfig => SCH_ST_DPS_OpenerContent;
 
         public override bool HasCooldowns()

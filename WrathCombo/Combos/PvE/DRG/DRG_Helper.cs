@@ -105,6 +105,8 @@ internal partial class DRG
             WyrmwindThrust
         ];
 
+        public override Preset Preset => Preset.DRG_ST_Opener;
+
         internal override UserData ContentCheckConfig => DRG_Balance_Content;
 
         public override bool HasCooldowns() =>
@@ -149,6 +151,7 @@ internal partial class DRG
             WyrmwindThrust
         ];
 
+        public override Preset Preset => Preset.DRG_ST_Opener;
         internal override UserData ContentCheckConfig => DRG_Balance_Content;
 
         public override bool HasCooldowns() =>

@@ -22,61 +22,82 @@ internal static partial class PresetExtensions
     public static string Name(this Preset? preset) =>
         preset is null ? "" : preset.Value.Name();
 
-    public static string Name(this Preset preset)
+    extension(Preset preset)
     {
-        var attributes = preset.Attributes();
-
-        if (attributes?.CustomComboInfo is null)
-            return preset.ToString();
-
-        return attributes.CustomComboInfo.Name;
-    }
-
-    public static string NameWithFullLineage
-        (this Preset preset, Job? currentJob = null)
-    {
-        var attributes = preset.Attributes();
-
-        if (attributes?.CustomComboInfo is null)
-            return preset.ToString();
-
-        var name = new StringBuilder(preset.Name());
-
-        Preset? inspectingPreset = preset;
-        while (inspectingPreset is not null)
+        public string Name()
         {
-            var parent = Presets.Attributes[inspectingPreset.Value].Parent;
-            if (parent is not null)
-            {
-                name.Insert(0, $"{parent.Name()} > ");
-            }
-            // Insert the job name at the beginning
-            else
-            {
-                string lastPresetJob;
-                var lastPresetInfo = inspectingPreset.Value.Attributes()
-                    .CustomComboInfo;
+            var attributes = preset.Attributes();
 
-                if (currentJob is not null && lastPresetInfo.Job == currentJob)
-                    break;
+            if (attributes?.CustomComboInfo is null)
+                return preset.ToString();
 
-                if (lastPresetInfo.Job == Job.ADV)
-                {
-                    lastPresetJob = "[Roles And Content] ";
-                    if (PresetStorage.IsVariant(inspectingPreset.Value))
-                        lastPresetJob += "Variant > ";
-                    if (PresetStorage.IsOccultCrescent(inspectingPreset.Value))
-                        lastPresetJob += "Occult Crescent > ";
-                }
-                else
-                    lastPresetJob = $"[{lastPresetInfo.JobShorthand}] ";
-
-                name.Insert(0, lastPresetJob);
-            }
-
-            inspectingPreset = parent;
+            return attributes.CustomComboInfo.Name;
         }
 
-        return name.ToString();
+        public string NameWithFullLineage
+            (Job? currentJob = null)
+        {
+            var attributes = preset.Attributes();
+
+            if (attributes?.CustomComboInfo is null)
+                return preset.ToString();
+
+            var name = new StringBuilder(preset.Name());
+
+            Preset? inspectingPreset = preset;
+            while (inspectingPreset is not null)
+            {
+                var parent = Presets.Attributes[inspectingPreset.Value].Parent;
+                if (parent is not null)
+                {
+                    name.Insert(0, $"{parent.Name()} > ");
+                }
+                // Insert the job name at the beginning
+                else
+                {
+                    string lastPresetJob;
+                    var lastPresetInfo = inspectingPreset.Value.Attributes()
+                        .CustomComboInfo;
+
+                    if (currentJob is not null && lastPresetInfo.Job == currentJob)
+                        break;
+
+                    if (lastPresetInfo.Job == Job.ADV)
+                    {
+                        lastPresetJob = "[Roles And Content] ";
+                        if (PresetStorage.IsVariant(inspectingPreset.Value))
+                            lastPresetJob += "Variant > ";
+                        if (PresetStorage.IsOccultCrescent(inspectingPreset.Value))
+                            lastPresetJob += "Occult Crescent > ";
+                    }
+                    else
+                        lastPresetJob = $"[{lastPresetInfo.JobShorthand}] ";
+
+                    name.Insert(0, lastPresetJob);
+                }
+
+                inspectingPreset = parent;
+            }
+
+            return name.ToString();
+        }
+
+        public bool Enabled() =>
+            PresetStorage.IsEnabled(preset);
+
+        public bool FullLineageEnabled()
+        {
+            Preset? inspectingPreset = preset;
+            while (inspectingPreset is not null)
+            {
+                if (!PresetStorage.IsEnabled(inspectingPreset.Value))
+                    return false;
+
+                var parent = Presets.Attributes[inspectingPreset.Value].Parent;
+                inspectingPreset = parent;
+            }
+
+            return true;
+        }
     }
 }

@@ -150,6 +150,10 @@ public abstract class WrathOpener
 
     public bool LevelChecked => Svc.PlayerState.EffectiveLevel >= MinOpenerLevel && Svc.PlayerState.EffectiveLevel <= MaxOpenerLevel;
 
+    public abstract Preset Preset { get; }
+
+    public bool Enabled => Preset.FullLineageEnabled();
+
     public abstract bool HasCooldowns();
 
     public bool CacheReady = false;
@@ -354,6 +358,8 @@ public class DummyOpener : WrathOpener
     public override List<uint> OpenerActions { get; set; } = [];
     public override int MinOpenerLevel => 1;
     public override int MaxOpenerLevel => 10000;
+
+    public override Preset Preset { get; } 
 
     internal override UserData? ContentCheckConfig => null;
 

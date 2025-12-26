@@ -493,6 +493,8 @@ internal partial class AST
         public override int MinOpenerLevel => 92;
         public override int MaxOpenerLevel => 109;
 
+        public override Preset Preset => Preset.AST_ST_DPS_Opener;
+
         internal override UserData? ContentCheckConfig => AST_ST_DPS_Balance_Content;
 
         public override bool HasCooldowns()

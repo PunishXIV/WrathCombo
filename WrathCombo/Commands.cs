@@ -21,6 +21,7 @@ using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
 using static WrathCombo.Core.Configuration;
 using static ECommons.ExcelServices.ExcelJobHelper;
+using WrathCombo.CustomComboNS;
 
 #endregion
 
@@ -115,9 +116,31 @@ public partial class WrathCombo
             case "ipromiseiwilldomyjobquestslater": // unlisted
                 HandleJobStoneCheckCommand(); break;
 
+            case "opener":
+                OutputOpenerStatus(); break;
             default:
                 HandleOpenCommand(argumentParts); break;
         }
+    }
+
+    private void OutputOpenerStatus()
+    {
+        Svc.Log.Debug($"{WrathOpener.CurrentOpener.Enabled}");
+        if (WrathOpener.CurrentOpener is not null && WrathOpener.CurrentOpener != WrathOpener.Dummy && WrathOpener.CurrentOpener.Enabled)
+        {
+            string status = WrathOpener.CurrentOpener.CurrentState switch
+            {
+                Combos.PvE.Enums.OpenerState.OpenerNotReady => $"Opener Not Ready Yet",
+                Combos.PvE.Enums.OpenerState.OpenerReady => "Opener Ready to Start",
+                Combos.PvE.Enums.OpenerState.InOpener => "In Progress",
+                Combos.PvE.Enums.OpenerState.OpenerFinished => "Finished",
+                Combos.PvE.Enums.OpenerState.FailedOpener => "Failed",
+                _ => "Unknown"
+            };
+            DuoLog.Information($"Opener status: {status}");
+        }
+        else
+            DuoLog.Warning("No valid opener active.");
     }
 
     /// <summary>

@@ -98,7 +98,7 @@ internal partial class WAR : Tank
         [
             ([9, 11], () => !HasCharges(Onslaught))
         ];
-
+        public override Preset Preset => Preset.WAR_ST_BalanceOpener;
         internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
         public override bool HasCooldowns() => IsOffCooldown(InnerRelease) && IsOffCooldown(Upheaval) && GetRemainingCharges(Infuriate) >= 2 && GetRemainingCharges(Onslaught) >= 3;
     }

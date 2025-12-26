@@ -336,7 +336,7 @@ internal partial class WHM
         ];
 
         internal override UserData ContentCheckConfig => WHM_Balance_Content;
-        
+        public override Preset Preset => Preset.WHM_ST_MainCombo_Opener;
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([7], () => !BloodLilyReady)];
 
         public override bool HasCooldowns()
