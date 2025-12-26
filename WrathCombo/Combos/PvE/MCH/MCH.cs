@@ -15,9 +15,8 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (SplitShot or HeatedSplitShot))
                 return actionID;
 
-            //Reassemble
-            if (CanReassemble() &&
-                !InCombat())
+            //Reassemble to start before combat/During downtime
+            if (CanReassemble())
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -267,9 +266,9 @@ internal partial class MCH : PhysicalRanged
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            //Reassemble to start before combat
+            //Reassemble to start before combat/During downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                !InCombat() && CanReassemble())
+                CanReassemble())
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))

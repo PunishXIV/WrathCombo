@@ -97,7 +97,7 @@ internal partial class MCH
         switch (maxCharges)
         {
             case 1 when remainingCharges == 1 && InActionRange(Drill) &&
-                (ActionReady(Drill) || LevelChecked(AirAnchor) && ActionReady(AirAnchor)):
+                        (ActionReady(Drill) || LevelChecked(AirAnchor) && ActionReady(AirAnchor)):
                 return true;
 
             case 2:
