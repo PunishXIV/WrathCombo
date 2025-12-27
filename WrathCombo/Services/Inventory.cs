@@ -90,7 +90,7 @@ public class Inventory : IDisposable
                 $"is med(true): {IsMedicine(item, true)}, " +
                 $"baseparams<IDs>: {string.Join(',', item.BaseParams<IDs>())}, " +
                 $"valid action: {item.ItemAction.IsValid}, " +
-                $"action Type: {item.ItemAction.Value.Type}"
+                $"action Type: {item.ItemAction.Value.Action.Value.RowId}"
             );
     }
 
@@ -586,7 +586,7 @@ internal static class ItemExtensions
 
         if (row is null && actionRow is not null)
         {
-            if (actionRow.Value.Type == (ushort)ItemActionKnownType.HP)
+            if (actionRow.Value.Action.RowId == (ushort)ItemActionKnownType.HP)
             {
                 ids     = [(uint)BaseParamEnum.HP];
                 maxNQ   = [actionRow.Value.Data[(int)OtherDataKeys.Amount]];
@@ -595,7 +595,7 @@ internal static class ItemExtensions
                 valueHQ =
                     [actionRow.Value.DataHQ[(int)OtherDataKeys.PercentageIfHP]];
             }
-            if (actionRow.Value.Type == (ushort)ItemActionKnownType.MP)
+            if (actionRow.Value.Action.RowId == (ushort)ItemActionKnownType.MP)
             {
                 ids   = [(uint)BaseParamEnum.MP];
                 maxNQ = [actionRow.Value.Data[(int)OtherDataKeys.Amount]];

@@ -121,7 +121,7 @@ public class ItemUsage : IDisposable
             HealingPotionType = potionType;
         }
 
-        public IGameObject UsableTarget => Target ?? Player.Object;
+        public IGameObject UsableTarget => Target ?? Player.Object!;
 
         public int ID => HashCode.Combine(
             (int)Preset,
