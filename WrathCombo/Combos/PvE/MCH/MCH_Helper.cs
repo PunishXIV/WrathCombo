@@ -41,7 +41,7 @@ internal partial class MCH
         return false;
     }
 
-        #endregion
+    #endregion
 
     #region Queen
 
@@ -86,51 +86,51 @@ internal partial class MCH
 
     #region Reassembled
 
+    private static int ReadyTools()
+    {
+        int numberOfReadyTools = 0;
+
+        if (ActionReady(Drill))
+            numberOfReadyTools += (int)GetRemainingCharges(Drill);
+
+        if (ActionReady(Chainsaw))
+        {
+            numberOfReadyTools++;
+            if (LevelChecked(Excavator))
+                numberOfReadyTools++;
+        }
+
+        if (ActionReady(AirAnchor))
+            numberOfReadyTools++;
+
+        return numberOfReadyTools;
+    }
+
     private static bool CanReassemble()
     {
-        if (HasStatusEffect(Buffs.Reassembled) || !HasBattleTarget())
+        if (HasStatusEffect(Buffs.Reassembled) || !HasBattleTarget() || !InActionRange(Drill))
             return false;
 
         ushort maxCharges = GetMaxCharges(Reassemble);
         uint remainingCharges = GetRemainingCharges(Reassemble);
 
-        switch (maxCharges)
+        var numberOfReadyTools = ReadyTools();
+
+        bool enoughToolsForBurst = numberOfReadyTools >= remainingCharges;
+
+        if (!LevelChecked(Excavator))
+            return enoughToolsForBurst;
+
+        switch (remainingCharges)
         {
-            case 1 when remainingCharges == 1 && InActionRange(Drill) &&
-                (ActionReady(Drill) || LevelChecked(AirAnchor) && ActionReady(AirAnchor)):
+            case 2 when enoughToolsForBurst:
+            case 1 when enoughToolsForBurst && JustUsed(Reassemble, 8):
                 return true;
-
-            case 2:
-            {
-                int numberOfReadyTools = 0;
-
-                if (ActionReady(Drill))
-                    numberOfReadyTools += (int)GetRemainingCharges(Drill);
-
-                if (ActionReady(Chainsaw))
-                    numberOfReadyTools++;
-
-                if (ActionReady(AirAnchor))
-                    numberOfReadyTools++;
-
-                if (ActionReady(Excavator))
-                    numberOfReadyTools++;
-
-                switch (remainingCharges)
-                {
-                    case 2 when numberOfReadyTools >= 2 && InActionRange(Drill):
-
-                    //Kage tweak this last number if needed, it could maybe go to 50
-                    case 1 when numberOfReadyTools >= 1 && GetCooldownChargeRemainingTime(Reassemble) >= 45 && InActionRange(Drill):
-                        return true;
-                }
-
-                break;
-            }
         }
 
         return false;
     }
+
 
     #endregion
 
@@ -198,11 +198,7 @@ internal partial class MCH
 
     private static bool CanUseTools(ref uint actionID)
     {
-        if (LevelChecked(AirAnchor) && ActionReady(AirAnchor))
-        {
-            actionID = AirAnchor;
-            return true;
-        }
+        var reassembleCD = GetCooldown(Reassemble);
 
         if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
         {
@@ -210,21 +206,27 @@ internal partial class MCH
             return true;
         }
 
-        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+        if (ActionReady(Excavator))
         {
             actionID = Excavator;
+            return true;
+        }
+
+        if (ActionReady(AirAnchor) && LevelChecked(AirAnchor))
+        {
+            actionID = AirAnchor;
+            return true;
+        }
+
+        if (ActionReady(HotShot) && !LevelChecked(AirAnchor))
+        {
+            actionID = HotShot;
             return true;
         }
 
         if (ActionReady(Drill))
         {
             actionID = Drill;
-            return true;
-        }
-
-        if (ActionReady(HotShot))
-        {
-            actionID = HotShot;
             return true;
         }
 

@@ -315,6 +315,13 @@ internal partial class MCH : PhysicalRanged
 
                 if (!IsOverheated)
                 {
+                    // Reassemble
+                    if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
+                        GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool &&
+                        GetTargetHPPercent() > HPThresholdReassemble &&
+                        CanReassemble())
+                        return Reassemble;
+
                     // BarrelStabilizer
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
                         (MCH_ST_BarrelStabilizerBossOption == 0 && GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss()) &&
@@ -326,13 +333,6 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
                         CanQueen())
                         return OriginalHook(RookAutoturret);
-
-                    // Reassemble
-                    if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                        GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool &&
-                        GetTargetHPPercent() > HPThresholdReassemble &&
-                        CanReassemble())
-                        return Reassemble;
 
                     // Hypercharge
                     if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&
