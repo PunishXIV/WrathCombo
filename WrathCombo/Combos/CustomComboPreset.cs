@@ -4613,8 +4613,42 @@ public enum Preset
     #endregion
 
     #region PALADIN
-
-    [ReplaceSkill(PLD.PassageOfArms)]
+    [CustomComboInfo("Mitigation Options", "Mitigation Options for Paladin. Enable in each combo", Job.PLD)]
+    PLD_Mitigation = 11086,
+    
+    [ParentCombo(PLD_Mitigation)]
+    [CustomComboInfo("Non Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.PLD)]
+    PLD_Mitigation_NonBoss = 11087,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Rampart Option", "Adds Rampart when 3 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_Rampart = 11088,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Sentinel/Guardian Option", "Adds Sentinel/Guardian when 3 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_Sentinel = 11089,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Bulwark Option", "Adds Bulwark when 3 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_Bulwark = 11090,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Hallowed Ground Option", "Adds Hallowed Ground when 5 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_HallowedGround = 11091,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Arm's Length/Reprisal Option", "Adds Arm's Length and Reprisal together when 5 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_ArmsReprisal = 11092,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Sheltron Option", "Adds Sheltron when available. Will overlap with others.", Job.PLD)]
+    PLD_Mitigation_NonBoss_Sheltron = 11093,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Divine Veil Option", "Adds Divine Veil for healing.", Job.PLD)]
+    PLD_Mitigation_NonBoss_DivineVeil = 11094,
+    
+    [ParentCombo(PLD_Mitigation)]
     [CustomComboInfo("Block Combos for Passage of Arms",
         "Will block the main Combos with Savage Blade while Passage of Arms is still active, to prevent actions from those combos cancelling Passage of Arms early.\nThis will leave it up to you to cancel Passage of Arms via other actions or movement (or letting it be used fully).", Job.PLD)]
     PLD_BlockForWings = 11074,
@@ -4741,42 +4775,6 @@ public enum Preset
         Job.PLD)]
     PLD_ST_AdvancedMode_MP_Reserve = 11035,
 
-    // ST Mitigation Options
-
-    [ParentCombo(PLD_ST_AdvancedMode)]
-    [CustomComboInfo("Mitigation Options",
-        "Adds defensive actions to Advanced Mode.\n- Will not override offensive actions.\n- Uses only when being targeted.",
-        Job.PLD)]
-    PLD_ST_AdvancedMode_Mitigation = 11038,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Required gauge threshold:", Job.PLD)]
-    PLD_ST_AdvancedMode_Sheltron = 11007,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Uses Reprisal when a raidwide is in the process of casting.", Job.PLD)]
-    PLD_ST_AdvancedMode_Reprisal = 11080,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Divine Veil Option", "Uses Divine Veil when a raidwide is in the process of casting.", Job.PLD)]
-    PLD_ST_AdvancedMode_DivineVeil = 11081,
-
-    [ParentCombo(PLD_ST_AdvancedMode_DivineVeil)]
-    [CustomComboInfo("Avoid Doubling up on Group Mit", "Won't use Divine Veil if your own Reprisal is on the target.", Job.PLD)]
-    PLD_ST_AdvancedMode_DivineVeilAvoid = 11082,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Bulwark Option", "Adds Bulwark.\n- Player HP must be under:", Job.PLD)]
-    PLD_ST_AdvancedMode_Bulwark = 11079,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sentinel Option", "Adds Sentinel.\n- Player HP must be under:", Job.PLD)]
-    PLD_ST_AdvancedMode_Sentinel = 11040,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Hallowed Ground Option", "Adds Hallowed Ground.\n- Player HP must be under:", Job.PLD)]
-    PLD_ST_AdvancedMode_HallowedGround = 11041,
-
     #endregion
 
     #region AoE Advanced Mode
@@ -4858,45 +4856,6 @@ public enum Preset
     PLD_AoE_AdvancedMode_MP_Reserve = 11036,
 
     // AoE Mitigation Options
-
-    [ParentCombo(PLD_AoE_AdvancedMode)]
-    [CustomComboInfo("Mitigation Options",
-        "Adds defensive actions to Advanced Mode.\n- Will not override offensive actions.\n- Uses only when being targeted.",
-        Job.PLD)]
-    PLD_AoE_AdvancedMode_Mitigation = 11042,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Required gauge threshold:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Sheltron = 11023,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Reprisal = 11083,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Divine Veil Option", "Adds Divine Veil.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_DivineVeil = 11084,
-    
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Rampart Option", "Adds Rampart.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Rampart = 11043,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Arms's Length Option", "Adds Arm's Length.", Job.PLD)]
-    PLD_AoE_AdvancedMode_ArmsLength = 11085,
-    
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Bulwark Option", "Adds Bulwark.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Bulwark = 11078,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sentinel Option", "Adds Sentinel.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Sentinel = 11044,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Hallowed Ground Option", "Adds Hallowed Ground.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_HallowedGround = 11045,
-
     #endregion
 
     #region Basic combo
@@ -7594,7 +7553,7 @@ public enum Preset
     [CustomComboInfo("Reprisal Option", "Adds Reprisal.\n- Player HP must be under:", Job.WAR)]
     WAR_AoE_Reprisal = 18063,
 
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
+    [ParentCombo(WAR_AoE_Mitigation)]
     [CustomComboInfo("Shake it Off Option", "Adds Shake it Off.\n- Player HP must be under:", Job.WAR)]
     WAR_AoE_ShakeItOff = 18133,
 

@@ -311,7 +311,7 @@ internal partial class WAR
             #region Mitigations
 
             // Mitigation
-            if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Mitigation) &&
+            if (IsEnabled(Preset.WAR_AoE_Mitigation) &&
                 IsPlayerTargeted() && !MitUsed && InCombat())
             {
                 if (IsEnabled(Preset.WAR_AoE_Holmgang) &&

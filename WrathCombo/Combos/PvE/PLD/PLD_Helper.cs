@@ -72,10 +72,10 @@ internal partial class PLD
 
     private static bool JustMitted =>
         JustUsed(OriginalHook(Bulwark)) ||
-        JustUsed(OriginalHook(Sentinel), 4f) ||
-        JustUsed(DivineVeil, 4f) ||
-        JustUsed(Role.Rampart, 4f) ||
-        JustUsed(HallowedGround, 9f);
+        JustUsed(OriginalHook(Sentinel)) ||
+        JustUsed(OriginalHook(Sheltron)) ||
+        JustUsed(Role.Rampart) ||
+        JustUsed(HallowedGround);
 
     private static bool IsAboveMPReserveAoE =>
         IsNotEnabled(Preset.PLD_AoE_AdvancedMode_MP_Reserve) ||
@@ -179,6 +179,79 @@ internal partial class PLD
     }
 
     #endregion
+
+    internal static bool MitigationRunning =>
+        HasStatusEffect(Role.Buffs.ArmsLength) && HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget) ||
+        HasStatusEffect(Role.Buffs.Rampart) || 
+        HasStatusEffect(Buffs.HallowedGround) ||
+        HasStatusEffect(Buffs.Bulwark) ||
+        HasStatusEffect(Buffs.Sentinel) || HasStatusEffect(Buffs.Guardian);
+    
+    private static bool CanUseNonBossMits(ref uint actionID)
+    {
+        if (!InCombat() || !CanWeave() || InBossEncounter() || JustMitted) return false;
+        
+        if (IsEnabled(Preset.PLD_Mitigation_NonBoss_Sheltron) && ActionReady(OriginalHook(Sheltron)) && !HasStatusEffect(Buffs.Sheltron) && Gauge.OathGauge >= 50)
+        {
+            actionID = OriginalHook(Sheltron);
+            return true;
+        }
+        
+        if (IsEnabled(Preset.PLD_Mitigation_NonBoss_DivineVeil) && ActionReady(DivineVeil) && PlayerHealthPercentageHp() <= PLD_Mitigation_NonBoss_DivineVeil_Health)
+        {
+            actionID = DivineVeil;
+            return true;
+        }
+         
+        if (MitigationRunning) return false;
+        
+        switch (NumberOfEnemiesInRange(Role.Reprisal))
+        {
+            case >= 5:
+            {
+                if (ActionReady(HallowedGround) && IsEnabled(Preset.PLD_Mitigation_NonBoss_HallowedGround))
+                {
+                    actionID = HallowedGround;
+                    return true;
+                }
+                    
+                if (Role.CanArmsLength(5) && IsEnabled(Preset.PLD_Mitigation_NonBoss_ArmsReprisal))
+                {
+                    actionID = Role.ArmsLength;
+                    return true;
+                }
+                    
+                if (Role.CanReprisal(enemyCount:5) && IsEnabled(Preset.PLD_Mitigation_NonBoss_ArmsReprisal))
+                {
+                    actionID = Role.Reprisal;
+                    return true;
+                }
+
+                break;
+            }
+
+            case >= 3:
+            {
+                if (Role.CanRampart() && IsEnabled(Preset.PLD_Mitigation_NonBoss_Rampart))
+                {
+                    actionID = Role.Rampart;
+                    return true;
+                }
+                if (ActionReady(Bulwark) && IsEnabled(Preset.PLD_Mitigation_NonBoss_Bulwark))
+                {
+                    actionID = Bulwark;
+                    return true;
+                }
+                if (ActionReady(OriginalHook(Sentinel)) && IsEnabled(Preset.PLD_Mitigation_NonBoss_Sentinel))
+                {
+                    actionID = OriginalHook(Sentinel);
+                    return true;
+                }
+                break;
+            }
+        }
+        return false;
+    }
 
     #region Openers
 
@@ -301,7 +374,10 @@ internal partial class PLD
             HolySheltron = 2674,
             PassageOfArms = 1175,
             Sheltron = 1856,
-            Intervention = 2020;
+            Intervention = 2020,
+            Guardian = 3829,
+            Sentinel = 74,
+            Bulwark = 77;
     }
 
     public static class Debuffs

@@ -174,6 +174,11 @@ internal static partial class RoleActions
             Reprisal = 7535,
             Shirk = 7537;
 
+        public static class Buffs
+        {
+            public const ushort
+            Rampart = 1191;
+        }
         public static class Debuffs
         {
             public const ushort

@@ -17,6 +17,16 @@ internal partial class PLD
             switch (preset)
             {
                 #region ST
+                
+                case Preset.PLD_ST_AdvancedMode:
+                    DrawHorizontalRadioButton(PLD_ST_Advanced_MitOptions,
+                        "Include Mitigations",
+                        "Enables the use of mitigations.", 0);
+
+                    DrawHorizontalRadioButton(PLD_ST_Advanced_MitOptions,
+                        "Exclude Mitigations",
+                        "Disables the use of mitigations.", 1);
+                    break;
 
                 case Preset.PLD_ST_AdvancedMode_BalanceOpener:
                     DrawBossOnlyChoice(PLD_Balance_Content);
@@ -39,49 +49,7 @@ internal partial class PLD
                         "All Enemies", "Apply the HP check above to all enemies.", 1);
                     ImGui.Unindent();
                     break;
-
-                case Preset.PLD_ST_AdvancedMode_Mitigation:
-                    DrawDifficultyMultiChoice(PLD_ST_Mit_Difficulty, PLD_ST_Mit_DifficultyListSet,
-                        "Select what difficulties mitigations should be used in:");
-                    break;
-
-                // Sheltron
-                case Preset.PLD_ST_AdvancedMode_Sheltron:
-                    DrawSliderInt(50, 100, PLD_ST_SheltronOption, "Oath Gauge", 200, 5);
-
-                    DrawSliderInt(1, 100, PLD_ST_Sheltron_Health, "Player HP%", 200);
-
-                    DrawHorizontalRadioButton(PLD_ST_MitSheltronBoss,
-                        "All Enemies", "Will use Sheltron regardless of the type of enemy.", (int)BossAvoidance.Off, 125f);
-
-                    DrawHorizontalRadioButton(PLD_ST_MitSheltronBoss,
-                        "Avoid Bosses", "Will try not to use Sheltron when in a boss fight.", (int)BossAvoidance.On, 125f);
-
-                    break;
-
-                // Sentinel / Guardian
-                case Preset.PLD_ST_AdvancedMode_Sentinel:
-                    DrawSliderInt(1, 100, PLD_ST_Sentinel_Health, "Player HP%", 200);
-
-                    break;
-
-                // Bulwark
-                case Preset.PLD_ST_AdvancedMode_Bulwark:
-                    DrawSliderInt(1, 100, PLD_ST_Bulwark_Health, "Player HP%", 200);
-
-                    break;
-
-                // Hallowed Ground
-                case Preset.PLD_ST_AdvancedMode_HallowedGround:
-                    DrawSliderInt(1, 100, PLD_ST_HallowedGround_Health, "Player HP%", 200);
-
-                    DrawHorizontalRadioButton(PLD_ST_MitHallowedGroundBoss,
-                        "All Enemies", "Will use Hallowed Ground regardless of the type of enemy.", (int)BossAvoidance.Off, 125f);
-
-                    DrawHorizontalRadioButton(PLD_ST_MitHallowedGroundBoss,
-                        "Avoid Bosses", "Will try not to use Hallowed Ground when in a boss fight.", (int)BossAvoidance.On, 125f);
-
-                    break;
+                
 
                 // Intervene
                 case Preset.PLD_ST_AdvancedMode_Intervene:
@@ -123,56 +91,19 @@ internal partial class PLD
                 #endregion
 
                 #region AoE
+                
+                case Preset.PLD_AoE_AdvancedMode:
+                    DrawHorizontalRadioButton(PLD_AoE_Advanced_MitOptions,
+                        "Include Mitigations",
+                        "Enables the use of mitigations.", 0);
 
-                case Preset.PLD_AoE_AdvancedMode_Sheltron:
-
-                    DrawSliderInt(1, 100, PLD_AoE_Sheltron_Health, "Player HP%", 200);
-
-                    DrawSliderInt(50, 100, PLD_AoE_SheltronOption, "Oath Gauge", 200, 5);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_Reprisal:
-
-                    DrawSliderInt(1, 100, PLD_AoE_Reprisal_Health, "Player HP%", 200);
-
-                    DrawSliderInt(1, 5, PLD_AoE_Reprisal_Count, "# enemies in range", 200);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_DivineVeil:
-                    DrawSliderInt(1, 100, PLD_AoE_DivineVeil_Health, "Player HP%", 200);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_Rampart:
-                    DrawSliderInt(1, 100, PLD_AoE_Rampart_Health, "Player HP%", 200);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_ArmsLength:
-                    DrawSliderInt(1, 5, PLD_AoE_ArmsLength_Count, "# enemies in range", 200);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_Sentinel:
-                    DrawSliderInt(1, 100, PLD_AoE_Sentinel_Health, "Player HP%", 200);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_Bulwark:
-                    DrawSliderInt(1, 100, PLD_AoE_Bulwark_Health, "Player HP%", 200);
-
+                    DrawHorizontalRadioButton(PLD_AoE_Advanced_MitOptions,
+                        "Exclude Mitigations",
+                        "Disables the use of mitigations.", 1);
                     break;
 
                 case Preset.PLD_AoE_AdvancedMode_FoF:
                     DrawSliderInt(0, 50, PLD_AoE_FoF_Trigger, "Target HP%", 200);
-
-                    break;
-
-                case Preset.PLD_AoE_AdvancedMode_HallowedGround:
-                    DrawSliderInt(1, 100, PLD_AoE_HallowedGround_Health, "Player HP%", 200);
-
                     break;
 
                 case Preset.PLD_AoE_AdvancedMode_Intervene:
@@ -208,27 +139,30 @@ internal partial class PLD
                 case Preset.PLD_ST_SimpleMode:
                     DrawHorizontalRadioButton(PLD_ST_MitOptions,
                         "Include Mitigations",
-                        "Enables the use of mitigations in Simple Mode.", 0);
+                        "Enables the use of mitigations.", 0);
 
                     DrawHorizontalRadioButton(PLD_ST_MitOptions,
                         "Exclude Mitigations",
-                        "Disables the use of mitigations in Simple Mode.", 1);
+                        "Disables the use of mitigations.", 1);
                     break;
 
                 // Simple AoE Mitigations Option
                 case Preset.PLD_AoE_SimpleMode:
                     DrawHorizontalRadioButton(PLD_AoE_MitOptions,
                         "Include Mitigations",
-                        "Enables the use of mitigations in Simple Mode.", 0);
+                        "Enables the use of mitigations.", 0);
 
                     DrawHorizontalRadioButton(PLD_AoE_MitOptions,
                         "Exclude Mitigations",
-                        "Disables the use of mitigations in Simple Mode.", 1);
+                        "Disables the use of mitigations.", 1);
                     break;
 
                 #endregion
 
                 #region Standalones
+                case Preset.PLD_Mitigation_NonBoss_DivineVeil:
+                    DrawSliderInt(1,100, PLD_Mitigation_NonBoss_DivineVeil_Health, "Player HP% to use Divine Veil at or below (100 = Disable check)");
+                    break;
 
                 // Requiescat Spender Feature
                 case Preset.PLD_Requiescat_Options:
@@ -379,42 +313,28 @@ internal partial class PLD
 
         public static UserInt
             //ST
+            PLD_ST_Advanced_MitOptions = new("PLD_ST_Advanced_MitOptions"),
             PLD_Balance_Content = new("PLD_Balance_Content", 1),
             PLD_ST_Intervene_Charges = new("PLD_ST_Intervene_Charges"),
             PLD_ST_Intervene_Movement = new("PLD_ST_Intervene_Movement"),
             PLD_ST_Intervene_Distance = new("PLD_ST_Intervene_Distance", 3),
             PLD_ST_MP_Reserve = new("PLD_ST_MP_Reserve", 1000),
             PLD_ST_MitOptions = new("PLD_ST_MitOptions"),
-            PLD_ST_SheltronOption = new("PLD_ST_SheltronOption", 50),
-            PLD_ST_Sheltron_Health = new("PLD_ST_Sheltron_Health", 85),
-            PLD_ST_Sentinel_Health = new("PLD_ST_Sentinel_Health", 50),
-            PLD_ST_Bulwark_Health = new("PLD_ST_Bulwark_Health", 60),
-            PLD_ST_HallowedGround_Health = new("PLD_ST_HallowedGround_Health", 30),
             PLD_ST_FoF_BossOption = new("PLD_ST_FoF_BossOption"),
             PLD_ST_FoF_HPOption = new("PLD_ST_FoF_HPOption", 10),
             PLD_ST_ShieldLob_SubOption = new("PLD_ST_ShieldLob_SubOption"),
-            PLD_ST_MitHallowedGroundBoss = new("PLD_ST_MitHallowedGroundBoss", (int)BossAvoidance.On),
-            PLD_ST_MitSheltronBoss = new("PLD_ST_MitSheltronBoss", (int)BossAvoidance.Off),
 
             //AoE
+            PLD_AoE_Advanced_MitOptions = new("PLD_AoE_Advanced_MitOptions"),
             PLD_AoE_FoF_Trigger = new("PLD_AoE_FoF_Trigger", 25),
             PLD_AoE_MitOptions = new("PLD_AoE_MitOptions"),
-            PLD_AoE_SheltronOption = new("PLD_AoE_SheltronOption", 50),
-            PLD_AoE_Sheltron_Health = new("PLD_AoE_Sheltron_Health", 85),
-            PLD_AoE_DivineVeil_Health = new("PLD_AoE_DivineVeil_Health", 75),
-            PLD_AoE_Rampart_Health = new("PLD_AoE_Rampart_Health", 50),
-            PLD_AoE_Reprisal_Health = new("PLD_AoE_Reprisal_Health", 80),
-            PLD_AoE_Reprisal_Count = new("PLD_AoE_Reprisal_Count", 3),
-            PLD_AoE_ArmsLength_Count = new("PLD_AoE_ArmsLength_Count", 3),
-            PLD_AoE_Sentinel_Health = new("PLD_AoE_Sentinel_Health", 50),
-            PLD_AoE_Bulwark_Health = new("PLD_AoE_Bulwark_Health", 60),
-            PLD_AoE_HallowedGround_Health = new("PLD_AoE_HallowedGround_Health", 30),
             PLD_AoE_Intervene_Charges = new("PLD_AoE_Intervene_Charges"),
             PLD_AoE_Intervene_Movement = new("PLD_AoE_Intervene_Movement"),
             PLD_AoE_Intervene_Distance = new("PLD_AoE_Intervene_Distance", 3),
             PLD_AoE_MP_Reserve = new("PLD_AoE_MP_Reserve", 1000),
 
             //Standalone
+            PLD_Mitigation_NonBoss_DivineVeil_Health = new("PLD_Mitigation_NonBoss_DivineVeil_Health", 80),
             PLD_Requiescat_SubOption = new("PLD_Requiescat_SubOption"),
             PLD_SpiritsWithin_SubOption = new("PLD_SpiritsWithin_SubOption", 1),
 
