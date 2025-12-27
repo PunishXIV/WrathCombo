@@ -26,7 +26,7 @@ internal partial class SAM : Melee
             if (CanWeave())
             {
                 //Meikyo Feature
-                if (CanMeikyo(true))
+                if (CanMeikyo())
                     return MeikyoShisui;
 
                 //Ikishoten Feature
