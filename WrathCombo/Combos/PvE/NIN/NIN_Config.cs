@@ -11,7 +11,6 @@ internal partial class NIN
         #region Options
         internal static UserInt
             NIN_ST_AdvancedMode_BurnKazematoi = new("NIN_ST_AdvancedMode_BurnKazematoi", 10),
-            NIN_ST_AdvancedMode_SuitonSetup = new("NIN_ST_AdvancedMode_SuitonSetup", 18),
             NIN_ST_AdvancedMode_SecondWindThreshold = new("NIN_ST_AdvancedMode_SecondWindThreshold", 40),
             NIN_ST_AdvancedMode_ShadeShiftThreshold = new("NIN_ST_AdvancedMode_ShadeShiftThreshold", 20),
             NIN_ST_AdvancedMode_BloodbathThreshold = new("NIN_ST_AdvancedMode_BloodbathThreshold", 40),
@@ -19,11 +18,12 @@ internal partial class NIN
             NIN_ST_AdvancedMode_Mug_SubOption = new("NIN_ST_AdvancedMode_Mug_SubOption", 0),
             NIN_ST_AdvancedMode_TrickAttack_Threshold = new("NIN_ST_AdvancedMode_TrickAttack_Threshold", 40),
             NIN_ST_AdvancedMode_TrickAttack_SubOption = new("NIN_ST_AdvancedMode_TrickAttack_SubOption", 0),
+            NIN_ST_AdvancedMode_Ninjitsus_Suiton_Setup = new("NIN_ST_AdvancedMode_Ninjitsus_Suiton_Setup", 18),
             NIN_AoE_AdvancedMode_SecondWindThreshold = new("NIN_AoE_AdvancedMode_SecondWindThreshold", 40),
+            NIN_AoE_AdvancedMode_Ninjitsus_Huton_Setup = new("NIN_AoE_AdvancedMode_Ninjitsus_Huton_Setup", 18),
+            NIN_AoE_AdvancedMode_Ninjitsus_Doton_Threshold = new("NIN_AoE_AdvancedMode_Ninjitsus_Doton_Threshold", 40),
             NIN_AoE_AdvancedMode_ShadeShiftThreshold = new("NIN_AoE_AdvancedMode_ShadeShiftThreshold", 20),
             NIN_AoE_AdvancedMode_BloodbathThreshold = new("NIN_AoE_AdvancedMode_BloodbathThreshold", 40),
-            NIN_AoE_AdvancedMode_HutonSetup = new("NIN_AoE_AdvancedMode_HutonSetup", 18),
-            NIN_AoE_AdvancedMode_Doton_Threshold = new("NIN_AoE_AdvancedMode_Doton_Threshold", 20),
             NIN_AoE_AdvancedMode_Mug_Threshold = new("NIN_AoE_AdvancedMode_Mug_Threshold", 40),
             NIN_AoE_AdvancedMode_Mug_SubOption = new("NIN_AoE_AdvancedMode_Mug_SubOption", 0),
             NIN_AoE_AdvancedMode_TrickAttack_Threshold = new("NIN_AoE_AdvancedMode_TrickAttack_Threshold", 40),
@@ -37,6 +37,13 @@ internal partial class NIN
             NIN_ST_AdvancedMode_TrueNorth = new("NIN_ST_AdvancedMode_TrueNorth"),
             NIN_ST_AdvancedMode_ShadeShiftRaidwide = new("NIN_ST_AdvancedMode_ShadeShiftRaidwide"),
             NIN_ST_AdvancedMode_ForkedRaiju = new("NIN_ST_AdvancedMode_ForkedRaiju"),
+            NIN_ST_AdvancedMode_Ninjitsus_Raiton_Pooling = new("NIN_ST_AdvancedMode_Ninjitsus_Raiton_Pooling"),
+            NIN_ST_AdvancedMode_Ninjitsus_Raiton_Uptime = new("NIN_ST_AdvancedMode_Ninjitsus_Raiton_Uptime"),
+            NIN_ST_AdvancedMode_TenChiJin_Auto = new("NIN_ST_AdvancedMode_TenChiJin_Auto"),
+            NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling = new("NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling"),
+            NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime = new("NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime"),
+            NIN_AoE_AdvancedMode_TenChiJin_Auto = new("NIN_AoE_AdvancedMode_TenChiJin_Auto"),
+            NIN_AoE_AdvancedMode_TenChiJin_Doton = new("NIN_AoE_AdvancedMode_TenChiJin_Doton"),
             NIN_AoE_AdvancedMode_HellfrogMedium_Pooling = new("Ninki_HellfrogPooling"),
             NIN_AoE_AdvancedMode_ShadeShiftRaidwide = new("NIN_AoE_AdvancedMode_ShadeShiftRaidwide"),
             NIN_HideMug_TrickAfterMug = new("NIN_HideMug_TrickAfterMug"),
@@ -46,16 +53,10 @@ internal partial class NIN
             NIN_HideMug_Mug = new("NIN_HideMug_Mug");
 
         internal static UserBoolArray
-            NIN_ST_AdvancedMode_Ninjitsus_Options = new("NIN_ST_AdvancedMode_Ninjitsus_Options"),
-            NIN_ST_AdvancedMode_Raiton_Options = new("NIN_ST_AdvancedMode_Raiton_Options"),
-            NIN_ST_AdvancedMode_TenChiJin_Options = new("NIN_ST_AdvancedMode_TenChiJin_Options"),
-            NIN_AoE_AdvancedMode_Ninjitsus_Options = new("NIN_AoE_AdvancedMode_Ninjitsus_Options"),
-            NIN_AoE_AdvancedMode_Katon_Options = new("NIN_AoE_AdvancedMode_Katon_Options"),
-            NIN_AoE_AdvancedMode_TenChiJin_Options = new("NIN_AoE_AdvancedMode_TenChiJin_Options"),
             NIN_MudraProtection_Options = new("NIN_MudraProtection_Options");
         
         internal static UserFloat
-            NIN_AoE_AdvancedMode_Doton_TimeStill = new("NIN_AoE_AdvancedMode_Doton_TimeStill");
+            NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill = new("NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill", 3f);
         #endregion
 
         internal static void Draw(Preset preset)
@@ -101,34 +102,21 @@ internal partial class NIN
                     ImGui.Unindent();
                     break;
 
-
-                case Preset.NIN_ST_AdvancedMode_Ninjitsus:
-                    DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_Ninjitsus_Options, "Raiton/Fuma Shuriken",
-                        "Adds Raiton to the rotation, will use Fuma Shuriken if below level", 3, 0);
-                    DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_Ninjitsus_Options, "Suiton",
-                        "Adds Suiton to the rotation when trick attack cooldown will be ready.", 3, 1);
-                    DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_Ninjitsus_Options, "Hyosho Ranryu",
-                        "Adds Hyosho Ranryu to the rotation when you have Kassatsu", 3, 2);
-                    if (NIN_ST_AdvancedMode_Ninjitsus_Options[0])
-                    {
-                        DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_Raiton_Options, "Raiton Pooling",
-                            "Will Pool the charges, saving them for Trick Window", 2, 0);
-                        DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_Raiton_Options, "Raiton Uptime",
-                            "Will Use Raiton when out of Melee range of the target, " +
-                            "\nThis can negatively affect your burst windows", 2, 1);
-                    }
-                    if (NIN_ST_AdvancedMode_Ninjitsus_Options[1])
-                    {
-                        DrawSliderInt(0, 21, NIN_ST_AdvancedMode_SuitonSetup,
-                            "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Suiton.");
-                    }
+                case Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton:
+                    DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_Ninjitsus_Raiton_Pooling, "Raiton Pooling",
+                        "Will Pool the charges, saving them for Trick Window");
+                    DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_Ninjitsus_Raiton_Uptime, "Raiton Uptime",
+                        "Will Use Raiton when out of Melee range of the target, " +
+                        "\nThis can negatively affect your burst windows");
+                    break;
+                    
+                case Preset.NIN_ST_AdvancedMode_Ninjitsus_Suiton:
+                    DrawSliderInt(0, 21, NIN_ST_AdvancedMode_Ninjitsus_Suiton_Setup,
+                        "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Suiton.");
                     break;
 
                 case Preset.NIN_ST_AdvancedMode_TenChiJin:
-                    DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_TenChiJin_Options, "Auto TCJ Option",
-                        "Will automatically Fuma Shuriken then Raiton then Suiton", 2, 0);
-                    DrawHorizontalMultiChoice(NIN_ST_AdvancedMode_TenChiJin_Options, "TenriJindo Option",
-                        "Will weave followup OGCD, TenriJindo, when available", 2, 1);
+                    DrawAdditionalBoolChoice(NIN_ST_AdvancedMode_TenChiJin_Auto, "Auto TCJ Option", "Will automatically Fuma Shuriken then Raiton then Suiton");
                     break;
 
                 case Preset.NIN_ST_AdvancedMode_Bhavacakra:
@@ -157,36 +145,24 @@ internal partial class NIN
                 #endregion
 
                 #region AoE
-                case Preset.NIN_AoE_AdvancedMode_Ninjitsus:
-                    DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Ninjitsus_Options, "Katon/Fuma Shuriken",
-                        "Adds Katon to the rotation, will use Fuma Shuriken if below level", 4, 0);
-                    DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Ninjitsus_Options, "Huton",
-                        "Adds Huton to the rotation when trick attack cooldown will be ready.", 4, 1);
-                    DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Ninjitsus_Options, "Doton",
-                        "Adds Doton to the rotation when you dont current have one down.", 4, 2);
-                    DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Ninjitsus_Options, "Goka Mekkyaku",
-                        "Adds Goka Mekkyaku to the rotation when you have Kassatsu", 4, 3);
-                    if (NIN_ST_AdvancedMode_Ninjitsus_Options[0])
-                    {
-                        DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Katon_Options, "Katon Pooling",
-                            "Will Pool the charges, saving them for Trick Window", 2, 0);
-                        DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_Katon_Options, "Katon Uptime",
-                            "Will Use Katon when out of Melee range of the target, " +
-                            "\nThis can negatively affect your burst windows", 2, 1);
-                    }
-                    if (NIN_ST_AdvancedMode_Ninjitsus_Options[1])
-                    {
-                        DrawSliderInt(0, 21, NIN_AoE_AdvancedMode_HutonSetup,
-                            "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Huton.");
-                    }
-                    if (NIN_AoE_AdvancedMode_Ninjitsus_Options[2])
-                    {
-                        DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Doton_Threshold,
-                            "Sets the max remaining HP percentage of the current target to cast Doton.");
-                        ImGui.Indent(); DrawSliderFloat(0, 3, NIN_AoE_AdvancedMode_Doton_TimeStill,"How Long Standing still before using Doton (in seconds):", decimals: 1);
-                        
-                        ImGui.Unindent();
-                    }
+                case Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon:
+                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling, "Katon Pooling", 
+                        "Will Pool the charges, saving them for Trick Window");
+                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime, "Katon Uptime", 
+                        "Will Use Katon when out of Melee range of the target, " +
+                        "\nThis can negatively affect your burst windows");
+                    break;
+                case Preset.NIN_AoE_AdvancedMode_Ninjitsus_Huton:
+                    DrawSliderInt(0, 21, NIN_AoE_AdvancedMode_Ninjitsus_Huton_Setup,
+                        "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Huton.");
+                    break;
+                  
+                case Preset.NIN_AoE_AdvancedMode_Ninjitsus_Doton:
+                    DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Ninjitsus_Doton_Threshold,
+                        "Sets the max remaining HP percentage of the current target to cast Doton.");
+                    ImGui.Indent(); 
+                    DrawSliderFloat(0, 3, NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill,"How Long Standing still before using Doton (in seconds):", decimals: 1);
+                    ImGui.Unindent(); 
                     break;
 
                 case Preset.NIN_AoE_AdvancedMode_Mug:
@@ -215,10 +191,11 @@ internal partial class NIN
 
 
                 case Preset.NIN_AoE_AdvancedMode_TenChiJin:
-                    DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "Auto TCJ Option",
-                        "Will automatically Fuma Shuriken then Raiton then Suiton", 2, 0);
-                    DrawHorizontalMultiChoice(NIN_AoE_AdvancedMode_TenChiJin_Options, "TenriJindo Option",
-                        "Will weave followup OGCD, TenriJindo, when available", 2, 1);
+                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_TenChiJin_Auto, "Auto TCJ Option", "Will automatically Fuma Shuriken then Raiton then Suiton");
+                    if (NIN_AoE_AdvancedMode_TenChiJin_Auto)
+                    {
+                        DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_TenChiJin_Doton, "Doton Option", "Adds Doton to Auto TCJ Option when no Doton is Down");
+                    }
                     break;
 
                 case Preset.NIN_AoE_AdvancedMode_SecondWind:

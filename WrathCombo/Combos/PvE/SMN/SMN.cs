@@ -291,7 +291,8 @@ internal partial class SMN : Caster
                 if (GemshineReady && (!IsMoving() || HasStatusEffect(Role.Buffs.Swiftcast)))
                     return OriginalHook(Gemshine);
 
-                if (HasStatusEffect(Buffs.IfritsFavor) || HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())
+                if (HasStatusEffect(Buffs.IfritsFavor) && (InMeleeRange() ||  SMN_ST_Simple_Combo_Gapclose > 0)
+                    || HasStatusEffect(Buffs.CrimsonStrike) && InMeleeRange())
                     return OriginalHook(AstralFlow);
 
                 if (ActionReady(Ruin4) && !HasStatusEffect(Role.Buffs.Swiftcast) && GemshineReady)
@@ -697,7 +698,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Egi Priority
-            foreach (var prio in SMN_ST_Egi_Priority.Items.OrderBy(x => x))
+            foreach (var prio in SMN_ST_Egi_Priority.OrderBy(x => x))
             {
                 var index = SMN_ST_Egi_Priority.IndexOf(prio);
                 var config = GetMatchingConfigST(index, OptionalTarget,
@@ -904,7 +905,7 @@ internal partial class SMN : Caster
             #endregion
 
             #region Egi Priority
-            foreach (var prio in SMN_AoE_Egi_Priority.Items.OrderBy(x => x))
+            foreach (var prio in SMN_AoE_Egi_Priority.OrderBy(x => x))
             {
                 var index = SMN_AoE_Egi_Priority.IndexOf(prio);
                 var config = GetMatchingConfigAoE(index, OptionalTarget,

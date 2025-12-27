@@ -1,6 +1,8 @@
 ﻿using Dalamud.Interface;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility.Raii;
+using ECommons;
 using ECommons.ExcelServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
@@ -8,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using ECommons;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
@@ -34,6 +35,18 @@ internal class PvPFeatures : FeaturesWindow
                     ImGui.SameLine();
                     ImGui.PushFont(UiBuilder.IconFont);
                     ImGui.TextWrapped($"{FontAwesomeIcon.SkullCrossbones.ToIconString()}");
+                    ImGui.PopFont();
+                });
+                ImGuiEx.LineCentered($"pvpWarning", () =>
+                {
+                    ImGui.PushFont(UiBuilder.IconFont);
+                    ImGuiEx.TextWrapped(ImGuiColors.DalamudYellow, $"{FontAwesomeIcon.ExclamationTriangle.ToIconString()}");
+                    ImGui.PopFont();
+                    ImGui.SameLine();
+                    ImGuiEx.TextWrapped(ImGuiColors.DalamudYellow, "Auto-Rotation is unavailable for PvP.");
+                    ImGui.SameLine();
+                    ImGui.PushFont(UiBuilder.IconFont);
+                    ImGuiEx.TextWrapped(ImGuiColors.DalamudYellow, $"{FontAwesomeIcon.ExclamationTriangle.ToIconString()}");
                     ImGui.PopFont();
                 });
                 ImGuiEx.LineCentered($"pvpDesc2", () =>
@@ -150,21 +163,10 @@ internal class PvPFeatures : FeaturesWindow
 
                 if (conflictOriginals.Any(PresetStorage.IsEnabled))
                 {
-                    if (DateTime.UtcNow - LastPresetDeconflictTime > TimeSpan.FromSeconds(3))
-                    {
-                        if (Service.Configuration.EnabledActions.Remove(preset))
-                        {
-                            PluginLog.Debug($"Removed {preset} due to conflict");
-                            Service.Configuration.Save();
-                        }
-                        LastPresetDeconflictTime = DateTime.UtcNow;
-                    }
-
-                    // Keep removed items in the counter
+                    // Keep conflicted items in the counter
                     var parent = PresetStorage.GetParent(preset) ?? preset;
                     CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent]);
                 }
-
                 else
                 {
                     presetBox.Draw();

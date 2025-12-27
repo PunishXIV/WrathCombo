@@ -116,7 +116,7 @@ internal partial class All
             if (IsEnabled(Preset.ALL_Tank_ShirkRetargeting_Fallback))
                 target ??= SimpleTarget.AnyLivingSupport;
 
-            RoleActions.Tank.Shirk.Retarget(target, dontCull: true);
+            RoleActions.Tank.Shirk.Retarget(target);
 
             return actionID;
         }
@@ -148,7 +148,7 @@ internal partial class All
 
             if (IsEnabled(Preset.ALL_Healer_Raise_Retarget))
                 return actionID.Retarget(replacedActions.ToArray(),
-                    SimpleTarget.Stack.AllyToRaise, dontCull: true);
+                    SimpleTarget.Stack.AllyToRaise);
 
             return actionID;
         }
@@ -168,7 +168,7 @@ internal partial class All
                          SimpleTarget.HardTarget.IfHasCleansable() ??
                          GetPartyMembers().FirstOrDefault(x => x.BattleChara.IfHasCleansable() != null)?.BattleChara;
 
-            return RoleActions.Healer.Esuna.Retarget(target, dontCull: false);
+            return RoleActions.Healer.Esuna.Retarget(target);
         }
     }
 
@@ -234,7 +234,7 @@ internal partial class All
                 HasStatusEffect(RDM.Buffs.Dualcast))
                 if (IsEnabled(Preset.ALL_Caster_Raise_Retarget))
                     return actionID.Retarget(replacedActions.ToArray(),
-                        SimpleTarget.Stack.AllyToRaise, dontCull: true);
+                        SimpleTarget.Stack.AllyToRaise);
                 else
                     return actionID;
 
@@ -247,7 +247,7 @@ internal partial class All
 
             if (IsEnabled(Preset.ALL_Caster_Raise_Retarget))
                 return actionID.Retarget(replacedActions.ToArray(),
-                    SimpleTarget.Stack.AllyToRaise, dontCull: true);
+                    SimpleTarget.Stack.AllyToRaise);
 
             return actionID;
         }

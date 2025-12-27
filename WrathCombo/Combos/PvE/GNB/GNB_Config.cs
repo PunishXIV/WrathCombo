@@ -63,10 +63,8 @@ internal partial class GNB
             GNB_Mit_Aurora_Charges = new("GNB_Mit_Aurora_Charges", 0),
             GNB_Mit_Aurora_Health = new("GNB_Mit_Aurora_Health", 60),
             GNB_Mit_HeartOfLight_PartyRequirement = new("GNB_Mit_HeartOfLight_PartyRequirement", (int)PartyRequirement.Yes),
-            GNB_Mit_Rampart_Health = new("GNB_Mit_Rampart_Health", 65),
             GNB_Mit_ArmsLength_Boss = new("GNB_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
             GNB_Mit_ArmsLength_EnemyCount = new("GNB_Mit_ArmsLength_EnemyCount", 0),
-            GNB_Mit_Nebula_Health = new("GNB_Mit_Nebula_Health", 50),
             GNB_Bozja_LostCure_Health = new("GNB_Bozja_LostCure_Health", 50),
             GNB_Bozja_LostCure2_Health = new("GNB_Bozja_LostCure2_Health", 50),
             GNB_Bozja_LostCure3_Health = new("GNB_Bozja_LostCure3_Health", 50),
@@ -320,15 +318,11 @@ internal partial class GNB
                         "Use Always", "Will not require a party for Heart of Light.",
                         (int)PartyRequirement.No);
                     ImGui.Unindent();
-                    ImGui.NewLine();
                     DrawPriorityInput(GNB_Mit_Priorities, NumMitigationOptions, 4,
                         "Heart of Light Priority:");
                     break;
 
                 case Preset.GNB_Mit_Rampart:
-                    DrawSliderInt(1, 100, GNB_Mit_Rampart_Health,
-                        "HP% to use at or below (100 = Disable check)",
-                        sliderIncrement: SliderIncrements.Ones);
                     DrawPriorityInput(GNB_Mit_Priorities, NumMitigationOptions, 5,
                         "Rampart Priority:");
                     break;
@@ -343,17 +337,13 @@ internal partial class GNB
                         "Avoid Bosses", "Will try not to use Arm's Length when in a boss fight.",
                         (int)BossAvoidance.On, 125f);
                     ImGui.Unindent();
-                    ImGui.NewLine();
-                    DrawSliderInt(0, 3, GNB_Mit_ArmsLength_EnemyCount,
+                    DrawSliderInt(0, 5, GNB_Mit_ArmsLength_EnemyCount,
                         "How many enemies should be nearby? (0 = No Requirement)");
                     DrawPriorityInput(GNB_Mit_Priorities, NumMitigationOptions, 6,
                         "Arm's Length Priority:");
                     break;
 
                 case Preset.GNB_Mit_Nebula:
-                    DrawSliderInt(1, 100, GNB_Mit_Nebula_Health,
-                        "HP% to use at or below (100 = Disable check)",
-                        sliderIncrement: SliderIncrements.Ones);
                     DrawPriorityInput(GNB_Mit_Priorities, NumMitigationOptions, 7,
                         "Nebula Priority:");
                     break;

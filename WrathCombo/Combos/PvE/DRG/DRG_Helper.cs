@@ -10,13 +10,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG
 {
-    private static Status? ChaosDebuff =>
-        GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
-
-    private static int HPThresholdBuffs =>
-        DRG_ST_BuffsBossOption == 1 ||
-        !InBossEncounter() ? DRG_ST_BuffsHPOption : 0;
-
     #region Lifesurge
 
     private static bool CanLifeSurge()
@@ -48,6 +41,17 @@ internal partial class DRG
         !HasWeavedAction(Stardiver) && (!forceFirst || !HasWeaved()) && CanWeave(weaveTime);
 
     #endregion
+
+    #region Misc
+
+    private static IStatus? ChaosDebuff =>
+        GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
+
+    private static int HPThresholdBuffs =>
+        DRG_ST_BuffsBossOption == 1 ||
+        !InBossEncounter() ? DRG_ST_BuffsHPOption : 0;
+
+  #endregion
 
     #region Openers
 
@@ -158,7 +162,7 @@ internal partial class DRG
 
     #region Gauge
 
-    private static DRGGauge Gauge = GetJobGauge<DRGGauge>();
+    private static DRGGauge Gauge => GetJobGauge<DRGGauge>();
 
     private static bool LoTDActive => Gauge.IsLOTDActive;
 
@@ -238,5 +242,4 @@ internal partial class DRG
     }
 
     #endregion
-
 }

@@ -12,3 +12,6 @@
 	path = PunishLib
 	url = https://github.com/PunishXIV/PunishLib.git
 	branch = master
+[submodule "WrathCombo.API"]
+	path = WrathCombo.API
+	url = https://github.com/PunishXIV/WrathCombo.API.git

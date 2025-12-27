@@ -93,10 +93,9 @@ internal partial class SCH
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Bio);
-        var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) &&
-            (SCH_DPS_BioSubOption == 1 || !InBossEncounter())? SCH_DPS_BioOption : 0;
+        var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? computeHpThreshold() : 0;
         BioList.TryGetValue(dotAction, out var dotDebuffID);
-        var dotRefresh = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? SCH_DPS_BioUptime_Threshold : 2.5;
+        var dotRefresh = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? SCH_ST_DPS_BioUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -106,13 +105,22 @@ internal partial class SCH
                GetTargetHPPercent() > hpThreshold &&
                dotRemaining <= dotRefresh;
     }
+    
+    internal static int computeHpThreshold()
+    {
+        if (InBossEncounter())
+        {
+            return TargetIsBoss() ? SCH_ST_DPS_BioBossOption : SCH_ST_DPS_BioBossAddsOption;
+        }
+        return SCH_ST_DPS_BioTrashOption;
+    }
     #endregion
     
     #region Get ST Heals
     internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
     {
         IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
-        bool tankCheck = healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank;
+        bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
                            !HasStatusEffect(Buffs.Galvanize, healTarget, true) || 
                            HasStatusEffect(Buffs.EmergencyTactics);
@@ -286,6 +294,11 @@ internal partial class SCH
         [
             ([3], Aetherflow, () => SCH_ST_DPS_OpenerOption == 1),
             ([13], Dissipation, () => SCH_ST_DPS_OpenerOption == 1)
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([7,9,11,17,19,21], () => Gauge.Aetherflow == 0)
         ];
 
         public override int MinOpenerLevel => 100;

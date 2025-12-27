@@ -12,24 +12,70 @@ internal partial class MCH
         {
             switch (preset)
             {
+                #region ST
+
                 case Preset.MCH_ST_Adv_Opener:
+                    DrawHorizontalRadioButton(MCH_SelectedOpener,
+                        "Standard opener", "Uses Standard Lvl 100 opener", 0);
+
+                    DrawHorizontalRadioButton(MCH_SelectedOpener,
+                        $"Early {Wildfire.ActionName()} opener", $"Uses Early {Wildfire.ActionName()} Lvl 100 opener", 1);
+
                     DrawBossOnlyChoice(MCH_Balance_Content);
                     break;
 
                 case Preset.MCH_ST_Adv_WildFire:
                     DrawHorizontalRadioButton(MCH_ST_WildfireBossOption,
-                        "All content", $"Uses {Wildfire.ActionName()} regardless of content.", 0);
+                        "All content", $"Use {Wildfire.ActionName()} regardless of content.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_WildfireBossOption,
-                        "Bosses Only", $"Only uses {Wildfire.ActionName()} when the targeted enemy is a boss.", 1);
+                        "Bosses Only", $"Only use {Wildfire.ActionName()} when the targeted enemy is a boss.", 1);
 
+                    if (MCH_ST_WildfireBossOption == 0)
+                    {
+                        DrawSliderInt(0, 50, MCH_ST_WildfireHPOption,
+                            "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+                        ImGui.Indent();
+
+                        ImGui.TextColored(ImGuiColors.DalamudYellow,
+                            "Select what kind of enemies the HP check should be applied to:");
+
+                        DrawHorizontalRadioButton(MCH_ST_WildfireBossHPOption,
+                            "Non-Bosses", "Only apply the HP check above to non-bosses.", 0);
+
+                        DrawHorizontalRadioButton(MCH_ST_WildfireBossHPOption,
+                            "All Enemies", "Apply the HP check above to all enemies.", 1);
+
+                        ImGui.Unindent();
+                    }
                     break;
 
                 case Preset.MCH_ST_Adv_Stabilizer:
                     DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerBossOption,
-                        "All content", $"Uses {BarrelStabilizer.ActionName()} regardless of content.", 0);
+                        "All content", $"Use {BarrelStabilizer.ActionName()} regardless of content.", 0);
+
                     DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerBossOption,
-                        "Bosses Only", $"Only uses {BarrelStabilizer.ActionName()} when the targeted enemy is a boss.", 1);
+                        "Bosses Only", $"Only use {BarrelStabilizer.ActionName()} when the targeted enemy is a boss.", 1);
+
+                    if (MCH_ST_BarrelStabilizerBossOption == 0)
+                    {
+                        DrawSliderInt(0, 50, MCH_ST_BarrelStabilizerHPOption,
+                            "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+                        ImGui.Indent();
+
+                        ImGui.TextColored(ImGuiColors.DalamudYellow,
+                            "Select what kind of enemies the HP check should be applied to:");
+
+                        DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerHPBossOption,
+                            "Non-Bosses", "Only apply the HP check above to non-bosses.", 0);
+
+                        DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerHPBossOption,
+                            "All Enemies", "Apply the HP check above to all enemies.", 1);
+
+                        ImGui.Unindent();
+                    }
                     break;
 
                 case Preset.MCH_ST_Adv_Hypercharge:
@@ -42,26 +88,17 @@ internal partial class MCH
                         "Select what kind of enemies the HP check should be applied to:");
 
                     DrawHorizontalRadioButton(MCH_ST_HyperchargeBossOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+                        "Non-Bosses", "Only apply the HP check above to non-bosses.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_HyperchargeBossOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+                        "All Enemies", "Apply the HP check above to all enemies.", 1);
 
                     ImGui.Unindent();
                     break;
 
                 case Preset.MCH_ST_Adv_TurretQueen:
-                    DrawHorizontalRadioButton(MCH_ST_QueenBossOption,
-                        "Use The Balance Logic in all content", $"Uses {AutomatonQueen.ActionName()} logic regardless of content.", 0);
-
-                    DrawHorizontalRadioButton(MCH_ST_QueenBossOption,
-                        "Use The Balance logic only in Boss encounters", $"Only uses {AutomatonQueen.ActionName()} logic when in Boss encounters.", 1);
-
-                    if (MCH_ST_QueenBossOption == 1)
-                    {
-                        DrawSliderInt(50, 100, MCH_ST_TurretUsage,
-                            $"Uses {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.");
-                    }
+                    DrawSliderInt(50, 100, MCH_ST_TurretUsage,
+                        $"Use {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.");
                     break;
 
                 case Preset.MCH_ST_Adv_GaussRicochet:
@@ -80,21 +117,16 @@ internal partial class MCH
                         "Select what kind of enemies the HP check should be applied to:");
 
                     DrawHorizontalRadioButton(MCH_ST_ReassembleBossOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+                        "Non-Bosses", "Only apply the HP check above to non-bosses.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_ReassembleBossOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+                        "All Enemies", "Apply the HP check above to all enemies.", 1);
 
                     ImGui.Unindent();
 
                     DrawSliderInt(0, 1, MCH_ST_ReassemblePool,
                         "Number of Charges to Save for Manual Use");
 
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Excavator.ActionName()}", "", 5, 0);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Chainsaw.ActionName()}", "", 5, 1);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {AirAnchor.ActionName()}", "", 5, 2);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {Drill.ActionName()}", "", 5, 3);
-                    DrawHorizontalMultiChoice(MCH_ST_Reassembled, $"Use on {CleanShot.ActionName()}", "", 5, 4);
                     break;
 
                 case Preset.MCH_ST_Adv_Tools:
@@ -108,10 +140,10 @@ internal partial class MCH
                         "Select what kind of enemies the HP check should be applied to:");
 
                     DrawHorizontalRadioButton(MCH_ST_ToolsBossOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+                        "Non-Bosses", "Only apply the HP check above to non-bosses.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_ToolsBossOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+                        "All Enemies", "Apply the HP check above to all enemies.", 1);
 
                     ImGui.Unindent();
                     break;
@@ -126,18 +158,16 @@ internal partial class MCH
                         $"{Role.SecondWind.ActionName()} HP percentage threshold");
                     break;
 
-                //AoE
+                #endregion
+
+                #region AoE
+
                 case Preset.MCH_AoE_Adv_Reassemble:
                     DrawSliderInt(0, 100, MCH_AoE_ReassembleHPThreshold,
                         $"Stop Using {Reassemble.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
 
                     DrawSliderInt(0, 2, MCH_AoE_ReassemblePool,
                         "Number of Charges to Save for Manual Use");
-
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {SpreadShot.ActionName()}/{Scattergun.ActionName()}", "", 4, 0);
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {AirAnchor.ActionName()}", "", 4, 1);
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {Chainsaw.ActionName()}", "", 4, 2);
-                    DrawHorizontalMultiChoice(MCH_AoE_Reassembled, $"Use on {Excavator.ActionName()}", "", 4, 3);
                     break;
 
                 case Preset.MCH_AoE_Adv_QueenOverdrive:
@@ -161,10 +191,10 @@ internal partial class MCH
                 case Preset.MCH_AoE_Adv_FlameThrower:
 
                     DrawHorizontalRadioButton(MCH_AoE_FlamethrowerMovement,
-                        "Stationary Only", $"Uses {Flamethrower.ActionName()} only while stationary", 0);
+                        "Stationary Only", $"Use {Flamethrower.ActionName()} only while stationary", 0);
 
                     DrawHorizontalRadioButton(MCH_AoE_FlamethrowerMovement,
-                        "Any Movement", $"Uses {Flamethrower.ActionName()} regardless of any movement conditions.", 1);
+                        "Any Movement", $"Use {Flamethrower.ActionName()} regardless of any movement conditions.", 1);
 
                     ImGui.Spacing();
                     if (MCH_AoE_FlamethrowerMovement == 0)
@@ -194,6 +224,7 @@ internal partial class MCH
                         $"Stop Using {BarrelStabilizer.ActionName()} When Target HP% is at or Below (Set to 0 to Disable This Check)");
                     break;
 
+                #endregion
 
                 case Preset.MCH_GaussRoundRicochet:
                     DrawHorizontalRadioButton(MCH_GaussRico,
@@ -209,23 +240,27 @@ internal partial class MCH
 
         public static UserInt
             MCH_Balance_Content = new("MCH_Balance_Content", 1),
+            MCH_SelectedOpener = new("MCH_SelectedOpener"),
             MCH_ST_QueenOverDriveHPThreshold = new("MCH_ST_QueenOverDrive", 1),
-            MCH_ST_QueenBossOption = new("MCH_ST_QueenBossOption", 0),
             MCH_ST_BarrelStabilizerBossOption = new("MCH_ST_BarrelStabilizerBossOption", 1),
+            MCH_ST_BarrelStabilizerHPOption = new("MCH_ST_BarrelStabilizerHPOption", 10),
+            MCH_ST_BarrelStabilizerHPBossOption = new("MCH_ST_BarrelStabilizerHPBossOption"),
             MCH_ST_WildfireBossOption = new("MCH_ST_WildfireBossOption", 1),
-            MCH_ST_HyperchargeBossOption = new("MCH_ST_HyperchargeBossOption", 0),
+            MCH_ST_WildfireHPOption = new("MCH_ST_WildfireHPOption", 10),
+            MCH_ST_WildfireBossHPOption = new("MCH_ST_WildfireBossHPOption"),
+            MCH_ST_HyperchargeBossOption = new("MCH_ST_HyperchargeBossOption"),
             MCH_ST_HyperchargeHPOption = new("MCH_ST_HyperchargeHPOption", 10),
-            MCH_ST_ReassembleBossOption = new("MCH_ST_ReassembleBossOption", 0),
+            MCH_ST_ReassembleBossOption = new("MCH_ST_ReassembleBossOption"),
             MCH_ST_ReassembleHPOption = new("MCH_ST_ReassembleHPOption", 10),
-            MCH_ST_ToolsBossOption = new("MCH_ST_ToolsBossOption", 0),
+            MCH_ST_ToolsBossOption = new("MCH_ST_ToolsBossOption"),
             MCH_ST_ToolsHPOption = new("MCH_ST_ToolsHPOption", 10),
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
-            MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool", 0),
-            MCH_ST_GaussRicoPool = new("MCH_ST_GaussRicoPool", 0),
+            MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool"),
+            MCH_ST_GaussRicoPool = new("MCH_ST_GaussRicoPool"),
             MCH_ST_SecondWindHPThreshold = new("MCH_ST_SecondWindThreshold", 40),
-            MCH_AoE_ReassemblePool = new("MCH_AoE_ReassemblePool", 0),
+            MCH_AoE_ReassemblePool = new("MCH_AoE_ReassemblePool"),
             MCH_AoE_TurretBatteryUsage = new("MCH_AoE_TurretUsage", 100),
-            MCH_AoE_FlamethrowerMovement = new("MCH_AoE_FlamethrowerMovement", 0),
+            MCH_AoE_FlamethrowerMovement = new("MCH_AoE_FlamethrowerMovement"),
             MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 40),
             MCH_AoE_HyperchargeHPThreshold = new("MCH_AoE_HyperchargeHPThreshold", 40),
             MCH_AoE_ReassembleHPThreshold = new("MCH_AoE_ReassembleHPThreshold", 40),
@@ -234,15 +269,11 @@ internal partial class MCH
             MCH_AoE_BarrelStabilizerHPThreshold = new("MCH_AoE_BarrelStabilizerHPThreshold", 40),
             MCH_AoE_QueenOverDriveHPThreshold = new("MCH_AoE_QueenOverDrive", 20),
             MCH_AoE_SecondWindHPThreshold = new("MCH_AoE_SecondWindThreshold", 40),
-            MCH_GaussRico = new("MCHGaussRico", 0);
+            MCH_GaussRico = new("MCHGaussRico");
 
         public static UserFloat
             MCH_AoE_FlamethrowerTimeStill = new("MCH_AoE_FlamethrowerTimeStill", 2.5f);
-        public static UserBoolArray
-            MCH_ST_Reassembled = new("MCH_ST_Reassembled"),
-            MCH_AoE_Reassembled = new("MCH_AoE_Reassembled");
 
         #endregion
-
     }
 }

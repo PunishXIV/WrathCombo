@@ -1,16 +1,18 @@
+using Dalamud.Game.ClientState.Objects.Types;
 using System;
-using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using static WrathCombo.Combos.PvE.All.Enums;
 using static WrathCombo.Combos.PvE.WAR.Config;
 
 namespace WrathCombo.Combos.PvE;
 
-internal partial class WAR : Tank
+internal partial class WAR
 {
     #region Simple Mode - Single Target
+
     internal class WAR_ST_Simple : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_ST_Simple;
@@ -21,17 +23,20 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             #region Stuns
+
             if (Role.CanInterject())
                 return Role.Interject;
             if (Role.CanLowBlow())
                 return Role.LowBlow;
+
             #endregion
 
             #region Mitigations
+
             if (WAR_ST_MitsOptions == 0 && InCombat() && !MitUsed)
             {
                 if (ActionReady(Holmgang) && PlayerHealthPercentageHp() < 30)
@@ -52,9 +57,11 @@ internal partial class WAR : Tank
                 if (ActionReady(OriginalHook(RawIntuition)) && PlayerHealthPercentageHp() < 90)
                     return OriginalHook(Bloodwhetting);
             }
+
             #endregion
 
             #region Rotation
+
             if (ShouldUseTomahawk)
                 return Tomahawk;
             if (ShouldUseInnerRelease())
@@ -74,12 +81,15 @@ internal partial class WAR : Tank
             if (ShouldUseFellCleave())
                 return OriginalHook(InnerBeast);
             return STCombo;
+
             #endregion
         }
     }
+
     #endregion
 
     #region Advanced Mode - Single Target
+
     internal class WAR_ST_Advanced : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_ST_Advanced;
@@ -90,10 +100,11 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             #region Stuns
+
             if (IsEnabled(Preset.WAR_ST_Interrupt)
                 && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only interrupt circle adds in 7
                     Preset.WAR_Hid_R7SCircleCastOnly,
@@ -104,50 +115,65 @@ internal partial class WAR : Tank
             if (IsEnabled(Preset.WAR_ST_Stun)
                 && Role.CanLowBlow())
                 return Role.LowBlow;
+
             #endregion
 
             #region Mitigations
-            if (IsEnabled(Preset.WAR_ST_Mitigation) && InCombat() && !MitUsed)
+
+            // Mitigation
+            if (IsEnabled(Preset.WAR_ST_Mitigation) && InCombat() && !MitUsed &&
+                InMitigationContent && IsPlayerTargeted())
             {
-                if (IsEnabled(Preset.WAR_ST_Holmgang) && ActionReady(Holmgang) &&
+                // Holmgang
+                if (IsEnabled(Preset.WAR_ST_Holmgang) &&
+                    ActionReady(Holmgang) &&
                     PlayerHealthPercentageHp() <= WAR_ST_Holmgang_Health &&
-                    (WAR_ST_Holmgang_SubOption == 0 || (TargetIsBoss() && WAR_ST_Holmgang_SubOption == 1)))
+                    (WAR_ST_HolmgangBoss == (int)BossAvoidance.On && InBossEncounter() ||
+                     WAR_ST_HolmgangBoss == (int)BossAvoidance.Off))
                     return Holmgang;
-                if (IsPlayerTargeted())
-                {
-                    if (IsEnabled(Preset.WAR_ST_Vengeance) && ActionReady(OriginalHook(Vengeance)) &&
-                        PlayerHealthPercentageHp() <= WAR_ST_Vengeance_Health &&
-                        (WAR_ST_Vengeance_SubOption == 0 || (TargetIsBoss() && WAR_ST_Vengeance_SubOption == 1)))
-                        return OriginalHook(Vengeance);
-                    if (IsEnabled(Preset.WAR_ST_Rampart) &&
-                        Role.CanRampart(WAR_ST_Rampart_Health) &&
-                        (WAR_ST_Rampart_SubOption == 0 || (TargetIsBoss() && WAR_ST_Rampart_SubOption == 1)))
-                        return Role.Rampart;
-                    if (IsEnabled(Preset.WAR_ST_Reprisal) &&
-                        Role.CanReprisal(WAR_ST_Reprisal_Health) &&
-                        (WAR_ST_Reprisal_SubOption == 0 || (TargetIsBoss() && WAR_ST_Reprisal_SubOption == 1)))
-                        return Role.Reprisal;
-                    if (IsEnabled(Preset.WAR_ST_ArmsLength) && Role.CanArmsLength() &&
-                        PlayerHealthPercentageHp() <= WAR_ST_ArmsLength_Health)
-                        return Role.ArmsLength;
-                }
-                if (IsEnabled(Preset.WAR_ST_Thrill) && ActionReady(ThrillOfBattle) &&
-                    PlayerHealthPercentageHp() <= WAR_ST_Thrill_Health &&
-                    (WAR_ST_Thrill_SubOption == 0 || (TargetIsBoss() && WAR_ST_Thrill_SubOption == 1)))
-                    return ThrillOfBattle;
-                if (IsEnabled(Preset.WAR_ST_Equilibrium) && ActionReady(Equilibrium) &&
-                    PlayerHealthPercentageHp() <= WAR_ST_Equilibrium_Health &&
-                    (WAR_ST_Equilibrium_SubOption == 0 || (TargetIsBoss() && WAR_ST_Equilibrium_SubOption == 1)))
-                    return Equilibrium;
-                if (IsEnabled(Preset.WAR_ST_Bloodwhetting) && ActionReady(OriginalHook(RawIntuition)) &&
-                    PlayerHealthPercentageHp() <= WAR_AoE_Bloodwhetting_Health &&
-                    (WAR_AoE_Bloodwhetting_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Bloodwhetting_SubOption == 1)))
+
+                // Raw Intuition/Bloodwhetting
+                if (IsEnabled(Preset.WAR_ST_Bloodwhetting) &&
+                    ActionReady(OriginalHook(RawIntuition)) &&
+                    PlayerHealthPercentageHp() <= WAR_ST_Bloodwhetting_Health)
                     return OriginalHook(RawIntuition);
+
+                // Reprisal
+                if (IsEnabled(Preset.WAR_ST_Reprisal) &&
+                    Role.CanReprisal() && RaidWideCasting(5f))
+                    return Role.Reprisal;
+
+                // Shake It Off
+                if (IsEnabled(Preset.WAR_ST_ShakeItOff) &&
+                    ActionReady(ShakeItOff) && RaidWideCasting(5f) &&
+                    NumberOfAlliesInRange(ShakeItOff) >= GetPartyMembers().Count * .75 &&
+                    (IsNotEnabled(Preset.WAR_ST_ShakeItOffAvoid) ||
+                     !HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget, true)))
+                    return OriginalHook(ShakeItOff);
+
+                // Vengeance
+                if (IsEnabled(Preset.WAR_ST_Vengeance) &&
+                    ActionReady(OriginalHook(Vengeance)) &&
+                    PlayerHealthPercentageHp() <= WAR_ST_Vengeance_Health)
+                    return OriginalHook(Vengeance);
+
+                // Thrill
+                if (IsEnabled(Preset.WAR_ST_Thrill) &&
+                    ActionReady(ThrillOfBattle) &&
+                    PlayerHealthPercentageHp() <= WAR_ST_Thrill_Health)
+                    return ThrillOfBattle;
+
+                // Equilibrium
+                if (IsEnabled(Preset.WAR_ST_Equilibrium) &&
+                    ActionReady(Equilibrium) &&
+                    PlayerHealthPercentageHp() <= WAR_ST_Equilibrium_Health)
+                    return Equilibrium;
             }
 
             #endregion
 
             #region Rotation
+
             if (IsEnabled(Preset.WAR_ST_BalanceOpener) && Opener().FullOpener(ref action))
                 return action;
             if (IsEnabled(Preset.WAR_ST_RangedUptime) && ShouldUseTomahawk)
@@ -172,6 +198,7 @@ internal partial class WAR : Tank
             if (IsEnabled(Preset.WAR_ST_FellCleave) && ShouldUseFellCleave(WAR_ST_FellCleave_Gauge))
                 return OriginalHook(InnerBeast);
             return STCombo;
+
             #endregion
         }
     }
@@ -179,6 +206,7 @@ internal partial class WAR : Tank
     #endregion
 
     #region Simple Mode - AoE
+
     internal class WAR_AoE_Simple : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_AoE_Simple;
@@ -189,7 +217,7 @@ internal partial class WAR : Tank
                 return action;
             if (ShouldUseOther)
                 return OtherAction;
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
             if (Role.CanInterject())
                 return Role.Interject;
@@ -197,6 +225,7 @@ internal partial class WAR : Tank
                 return Role.LowBlow;
 
             #region Mitigations
+
             if (WAR_AoE_MitsOptions != 1)
             {
                 if (InCombat() && !MitUsed)
@@ -220,9 +249,11 @@ internal partial class WAR : Tank
                         return OriginalHook(Bloodwhetting);
                 }
             }
+
             #endregion
 
             #region Rotation
+
             if (ShouldUseInfuriate())
                 return Infuriate;
             if (ShouldUseInnerRelease())
@@ -240,12 +271,15 @@ internal partial class WAR : Tank
             if (ShouldUseDecimate())
                 return OriginalHook(Decimate);
             return AOECombo;
+
             #endregion
         }
     }
+
     #endregion
 
     #region Advanced Mode - AoE
+
     internal class WAR_AoE_Advanced : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_AoE_Advanced;
@@ -256,12 +290,12 @@ internal partial class WAR : Tank
                 return action; //Our button
             if (ShouldUseOther)
                 return OtherAction;
-            if (ContentSpecificActions.TryGet(out var contentAction))
+            if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             // If the Burst Holding for the Squirrels in 6 is enabled, check that
             // we are either not targeting a squirrel or the fight is after 275s
-            var r6SReady = !HiddenFeaturesData.IsEnabledWith(
+            bool r6SReady = !HiddenFeaturesData.IsEnabledWith(
                 Preset.WAR_Hid_R6SHoldSquirrelBurst,
                 () => HiddenFeaturesData.Targeting.R6SSquirrel &&
                       CombatEngageDuration().TotalSeconds < 275);
@@ -269,49 +303,67 @@ internal partial class WAR : Tank
             if (IsEnabled(Preset.WAR_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
             if (IsEnabled(Preset.WAR_AoE_Stun) && Role.CanLowBlow() && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only stun the jabber, if in 6
-                    Preset.WAR_Hid_R6SStunJabberOnly,
-                    () => HiddenFeaturesData.Content.InR6S,
-                    () => HiddenFeaturesData.Targeting.R6SJabber))
+                Preset.WAR_Hid_R6SStunJabberOnly,
+                () => HiddenFeaturesData.Content.InR6S,
+                () => HiddenFeaturesData.Targeting.R6SJabber))
                 return Role.LowBlow;
 
             #region Mitigations
-            if (IsEnabled(Preset.WAR_AoE_Mitigation) && InCombat() && !MitUsed)
+
+            // Mitigation
+            if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Mitigation) &&
+                IsPlayerTargeted() && !MitUsed && InCombat())
             {
-                if (IsEnabled(Preset.WAR_AoE_Holmgang) && ActionReady(Holmgang) && PlayerHealthPercentageHp() <= WAR_AoE_Holmgang_Health &&
-                    (WAR_AoE_Holmgang_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Holmgang_SubOption == 1)))
+                if (IsEnabled(Preset.WAR_AoE_Holmgang) &&
+                    ActionReady(Holmgang) &&
+                    PlayerHealthPercentageHp() <= WAR_AoE_Holmgang_Health)
                     return Holmgang;
-                if (IsPlayerTargeted())
-                {
-                    if (IsEnabled(Preset.WAR_AoE_Vengeance) && ActionReady(OriginalHook(Vengeance)) && PlayerHealthPercentageHp() <= WAR_AoE_Vengeance_Health &&
-                        (WAR_AoE_Vengeance_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Vengeance_SubOption == 1)))
-                        return OriginalHook(Vengeance);
-                    if (IsEnabled(Preset.WAR_AoE_Rampart) && Role.CanRampart(WAR_AoE_Rampart_Health) &&
-                        (WAR_AoE_Rampart_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Rampart_SubOption == 1)))
-                        return Role.Rampart;
-                    if (IsEnabled(Preset.WAR_AoE_Reprisal) && Role.CanReprisal(WAR_AoE_Reprisal_Health, checkTargetForDebuff: false) &&
-                        HiddenFeaturesData.NonBlockingIsEnabledWith( // Skip mit if in 6
-                                Preset.WAR_Hid_R6SNoAutoGroupMits,
-                                () => !HiddenFeaturesData.Content.InR6S) &&
-                        (WAR_AoE_Reprisal_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Reprisal_SubOption == 1)))
-                        return Role.Reprisal;
-                    if (IsEnabled(Preset.WAR_AoE_ArmsLength) && PlayerHealthPercentageHp() <= WAR_AoE_ArmsLength_Health && Role.CanArmsLength())
-                        return Role.ArmsLength;
-                }
-                if (IsEnabled(Preset.WAR_AoE_Thrill) && ActionReady(ThrillOfBattle) && PlayerHealthPercentageHp() <= WAR_AoE_Thrill_Health &&
-                    (WAR_AoE_Thrill_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Thrill_SubOption == 1)))
-                    return ThrillOfBattle;
-                if (IsEnabled(Preset.WAR_AoE_Equilibrium) && ActionReady(Equilibrium) && PlayerHealthPercentageHp() <= WAR_AoE_Equilibrium_Health &&
-                    (WAR_AoE_Equilibrium_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Equilibrium_SubOption == 1)))
-                    return Equilibrium;
-                if (IsEnabled(Preset.WAR_AoE_Bloodwhetting) && ActionReady(OriginalHook(RawIntuition)) && PlayerHealthPercentageHp() <= WAR_AoE_Bloodwhetting_Health &&
-                    (WAR_AoE_Bloodwhetting_SubOption == 0 || (TargetIsBoss() && WAR_AoE_Bloodwhetting_SubOption == 1)))
+
+                if (IsEnabled(Preset.WAR_AoE_Bloodwhetting) &&
+                    ActionReady(OriginalHook(RawIntuition)) &&
+                    PlayerHealthPercentageHp() <= WAR_AoE_Bloodwhetting_Health)
                     return OriginalHook(RawIntuition);
+
+                if (IsEnabled(Preset.WAR_AoE_Reprisal) &&
+                    Role.CanReprisal(WAR_AoE_Reprisal_Health, WAR_AoE_Reprisal_Count, false))
+                    return Role.Reprisal;
+
+                if (IsEnabled(Preset.WAR_AoE_ShakeItOff) &&
+                    ActionReady(ShakeItOff) &&
+                    NumberOfAlliesInRange(ShakeItOff) >= GetPartyMembers().Count * .75 &&
+                    PlayerHealthPercentageHp() < WAR_AoE_ShakeItOff_Health)
+                    return ShakeItOff;
+
+                if (IsEnabled(Preset.WAR_AoE_Rampart) &&
+                    Role.CanRampart(WAR_AoE_Rampart_Health))
+                    return Role.Rampart;
+
+                if (IsEnabled(Preset.WAR_AoE_ArmsLength) &&
+                    Role.CanArmsLength(WAR_AoE_ArmsLength_Count))
+                    return Role.ArmsLength;
+
+                if (IsEnabled(Preset.WAR_AoE_Vengeance) &&
+                    ActionReady(OriginalHook(Vengeance)) &&
+                    PlayerHealthPercentageHp() <= WAR_AoE_Vengeance_Health)
+                    return OriginalHook(Vengeance);
+
+                if (IsEnabled(Preset.WAR_AoE_Thrill) &&
+                    ActionReady(ThrillOfBattle) &&
+                    PlayerHealthPercentageHp() <= WAR_AoE_Thrill_Health)
+                    return ThrillOfBattle;
+
+                if (IsEnabled(Preset.WAR_AoE_Equilibrium) &&
+                    ActionReady(Equilibrium) &&
+                    PlayerHealthPercentageHp() <= WAR_AoE_Equilibrium_Health)
+                    return Equilibrium;
             }
+
             #endregion
 
             if (!r6SReady) return AOECombo;
 
             #region Rotation
+
             if (IsEnabled(Preset.WAR_AoE_RangedUptime) && ShouldUseTomahawk)
                 return CanPRend(WAR_AoE_PrimalRend_Distance, WAR_AoE_PrimalRend_Movement == 1 || (WAR_AoE_PrimalRend_Movement == 0 && !IsMoving())) ? PrimalRend : CanWeave() && CanOnslaught(WAR_AoE_Onslaught_Charges, WAR_AoE_Onslaught_Distance, WAR_AoE_Onslaught_Movement == 1 || (WAR_AoE_Onslaught_Movement == 0 && !IsMoving())) ? Onslaught : Tomahawk;
             if (IsEnabled(Preset.WAR_AoE_InnerRelease) && ShouldUseInnerRelease(WAR_AoE_IRStop))
@@ -333,12 +385,15 @@ internal partial class WAR : Tank
             if (IsEnabled(Preset.WAR_AoE_Decimate) && ShouldUseDecimate(WAR_AoE_Decimate_Gauge))
                 return OriginalHook(Decimate);
             return AOECombo;
+
             #endregion
         }
     }
+
     #endregion
 
     #region One-Button Mitigation
+
     internal class WAR_Mit_OneButton : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_Mit_OneButton;
@@ -347,11 +402,14 @@ internal partial class WAR : Tank
         {
             if (action != ThrillOfBattle)
                 return action;
-            if (IsEnabled(Preset.WAR_Mit_Holmgang_Max) && ActionReady(Holmgang) &&
+
+            if (IsEnabled(Preset.WAR_Mit_Holmgang_Max) &&
+                ActionReady(Holmgang) &&
                 PlayerHealthPercentageHp() <= WAR_Mit_Holmgang_Health &&
-                ContentCheck.IsInConfiguredContent(WAR_Mit_Holmgang_Difficulty, WAR_Mit_Holmgang_DifficultyListSet))
+                ContentCheck.IsInConfiguredContent(WAR_Mit_Holmgang_Max_Difficulty, WAR_Mit_Holmgang_Max_DifficultyListSet))
                 return Holmgang;
-            foreach(int priority in WAR_Mit_Priorities.Items.OrderBy(x => x))
+
+            foreach(int priority in WAR_Mit_Priorities.OrderBy(x => x))
             {
                 int index = WAR_Mit_Priorities.IndexOf(priority);
                 if (CheckMitigationConfigMeetsRequirements(index, out uint actionID))
@@ -360,9 +418,11 @@ internal partial class WAR : Tank
             return action;
         }
     }
+
     #endregion
 
     #region Fell Cleave Features
+
     internal class WAR_FC_Features : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_FC_Features;
@@ -391,17 +451,21 @@ internal partial class WAR : Tank
             return action;
         }
     }
+
     #endregion
 
     #region Storm's Eye -> Storm's Path
+
     internal class WAR_EyePath : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_EyePath;
         protected override uint Invoke(uint action) => action != StormsPath ? action : GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_EyePath_Refresh ? StormsEye : action;
     }
+
     #endregion
 
     #region Primal Combo -> Inner Release
+
     internal class WAR_PrimalCombo_InnerRelease : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_PrimalCombo_InnerRelease;
@@ -410,28 +474,34 @@ internal partial class WAR : Tank
             LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) ? PrimalRend :
             LevelChecked(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) ? PrimalRuination : OriginalHook(action);
     }
+
     #endregion
 
     #region Infuriate -> Fell Cleave / Decimate
+
     internal class WAR_InfuriateFellCleave : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_InfuriateFellCleave;
 
         protected override uint Invoke(uint action) => action is not (InnerBeast or FellCleave or SteelCyclone or Decimate) ? action :
             (InCombat() && BeastGauge <= WAR_Infuriate_Range && GetRemainingCharges(Infuriate) > WAR_Infuriate_Charges && ActionReady(Infuriate) &&
-            !HasNC && (!HasIR.Stacks || IsNotEnabled(Preset.WAR_InfuriateFellCleave_IRFirst))) ? OriginalHook(Infuriate) : action;
+             !HasNC && (!HasIR.Stacks || IsNotEnabled(Preset.WAR_InfuriateFellCleave_IRFirst))) ? OriginalHook(Infuriate) : action;
     }
+
     #endregion
 
     #region Nascent Flash -> Raw Intuition
+
     internal class WAR_NascentFlash : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_NascentFlash;
         protected override uint Invoke(uint actionID) => actionID != NascentFlash ? actionID : LevelChecked(NascentFlash) ? NascentFlash : RawIntuition;
     }
+
     #endregion
 
     #region Raw Intuition -> Nascent Flash
+
     internal class WAR_RawIntuition_Targeting : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_RawIntuition_Targeting;
@@ -440,8 +510,8 @@ internal partial class WAR : Tank
         {
             if (action is not (RawIntuition or Bloodwhetting))
                 return action;
-            
-            var target =
+
+            IGameObject? target =
                 //Mouseover Retarget
                 (IsEnabled(Preset.WAR_RawIntuition_Targeting_MO)
                     ? SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty()
@@ -457,39 +527,47 @@ internal partial class WAR : Tank
             if (ActionReady(NascentFlash) &&
                 target != null &&
                 CanApplyStatus(target, Buffs.NascentFlashTarget))
-                return NascentFlash.Retarget([RawIntuition , Bloodwhetting], target);
+                return NascentFlash.Retarget([RawIntuition, Bloodwhetting], target);
 
             return action;
         }
     }
+
     #endregion
 
     #region Thrill of Battle -> Equilibrium
+
     internal class WAR_ThrillEquilibrium : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_ThrillEquilibrium;
         protected override uint Invoke(uint action) => action != Equilibrium ? action : ActionReady(ThrillOfBattle) ? ThrillOfBattle : action;
     }
+
     #endregion
 
     #region Reprisal -> Shake It Off
+
     internal class WAR_Mit_Party : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_Mit_Party;
-        protected override uint Invoke(uint action) => action != ShakeItOff ? action : ActionReady(Role.Reprisal) ? Role.Reprisal : action;
+        protected override uint Invoke(uint action) => action != ShakeItOff ? action : Role.CanReprisal() ? Role.Reprisal : action;
     }
+
     #endregion
 
     #region MyRegion
+
     internal class WAR_RetargetHolmgang : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_RetargetHolmgang;
 
-        protected override uint Invoke(uint actionID) => actionID != Holmgang ? actionID : actionID.Retarget(SimpleTarget.Self, dontCull: true);
+        protected override uint Invoke(uint actionID) => actionID != Holmgang ? actionID : actionID.Retarget(SimpleTarget.Self);
     }
+
     #endregion
 
     #region Basic Combos
+
     internal class WAR_ST_StormsPathCombo : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_ST_StormsPathCombo;
@@ -499,6 +577,7 @@ internal partial class WAR : Tank
             (ComboTimer > 0 && ComboAction == Maim && LevelChecked(StormsPath)) ? StormsPath :
             HeavySwing;
     }
+
     internal class WAR_ST_StormsEyeCombo : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_ST_StormsEyeCombo;
@@ -508,5 +587,6 @@ internal partial class WAR : Tank
             (ComboTimer > 0 && ComboAction == Maim && LevelChecked(StormsEye)) ? StormsEye :
             HeavySwing;
     }
+
     #endregion
 }

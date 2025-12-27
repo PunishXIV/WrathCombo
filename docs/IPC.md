@@ -1,10 +1,11 @@
 ﻿> [!TIP]
 > See [The Example C#](IPCExample.cs) for a barebones example of how to set up
-> the IPC in your plugin.
+> the IPC in your plugin, or [The Example Lua](IPCExample.lua) to set it up in a 
+> SND script.
 
 > [!TIP]
-> See [The Example Lua](IPCExample.lua) for a barebones example of how to set up
-> the IPC in your SND script.
+> Use the [WrathCombo.API](https://github.com/PunishXIV/WrathCombo.API) package
+> to get all Enums needed to work with the IPC.
 
 > [!TIP]
 > Please check out the Table of Contents on GitHub for easy navigation,
@@ -33,7 +34,7 @@ These are the settings that are not accessible via the IPC:
 - **All** Auto-Rotation configuration options
     - There is a subset of options that have higher reliability and may actually
       need controlled by other plugins
-    - Please see the actual [Enums](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs)
+    - Please see the actual [Enums](https://github.com/PunishXIV/WrathCombo.API/tree/main/Enum)
       for these subsets of options
 - PvP Combos and Options
     - These may be accessible in some cases, but are not actually supported
@@ -117,7 +118,7 @@ If Registered with a Callback, the reason a lease was cancelled, and any additio
 information, will be provided to the callback method.
 
 There is a list of cancellation reasons and explanations in the
-[CancellationReason Enum here](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L117).
+[CancellationReason Enum here](https://github.com/PunishXIV/WrathCombo.API/blob/main/Enum/CancellationReason.cs).
 
 To reiterate: these limitations are not designed to impede the use of the IPC in
 any significant way. If you find that they are, please report it as a bug.
@@ -226,7 +227,7 @@ comments on each method.
   - Gets the state of an Auto-Rotation configuration option, whether by the user
       or another plugin
   - The `AutoRotationConfigOption` enum is in the [`AutoRotationConfigOption` 
-      enum](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L182)
+      enum](https://github.com/PunishXIV/WrathCombo.API/blob/main/Enum/AutoRotationConfigOption.cs)
       and must be copied over to your plugin for use with this method
     - You can safely pass in enum values that are not yet released; they will 
       just provide a warning you can ignore.
@@ -316,8 +317,9 @@ public class MyIPC
                             "We are suspended from creating a new lease for now.");
         
         // you can also convert the `reason` back to the `CancellationReason` enum.
+        // you can use the WrathCombo.API package to get this enum, or
         // you can copy this enum into your own class from:
-        // https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L117
+        // https://github.com/PunishXIV/WrathCombo.API/blob/main/Enum/CancellationReason.cs
     }
 }
 ```
@@ -376,12 +378,17 @@ if (WrathIPC.IsEnabled)
         PluginLog.Information("Job has been made ready for Auto-Rotation.");
 }
 ```
-This does require you to copy over the [`SetResult` enum](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L139).
+This does require you to use the [`WrathCombo.API` package](https://github.com/PunishXIV/WrathCombo.API),
+(or copy over the 
+[`SetResult` enum](https://github.com/PunishXIV/WrathCombo.API/blob/main/Enum/SetResult.cs)).
 
 Or you can make it more advanced, making sure Auto-Rotation settings are as you want
 them to be.
 
-This does require you to copy over the [`AutoRotationConfigOption` enum](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Services/IPC/Enums.cs#L185).
+This does require you to use the [`WrathCombo.API` package](https://github.com/PunishXIV/WrathCombo.API),
+(or copy over the
+[`AutoRotationConfigOption` enum]
+(https://github.com/PunishXIV/WrathCombo.API/blob/main/Enum/AutoRotationConfigOption.cs)).
 
 ```csharp
 if (WrathIPC.IsEnabled)
@@ -427,7 +434,11 @@ resources below, or the first several sections of this guide.
 
 ## Changelog
 
-
+- PunishXIV/WrathCombo#948 - Added the `WrathCombo.API` package and now suggest 
+  using that instead of copying over Enums (no actual change for current usage),
+  `1.0.3.1`.
+- PunishXIV/WrathCombo#916 - Added `AutoRezDPSJobsHealersOnly` DPS Auto Res for healers only,
+  `1.0.2.24`.
 - PunishXIV/WrathCombo#728 - Added `DPSAoETargets` Auto-Rotation Configuration
   (could set it to something like `99` to effectively disable AoE),
   `1.0.2.1`.

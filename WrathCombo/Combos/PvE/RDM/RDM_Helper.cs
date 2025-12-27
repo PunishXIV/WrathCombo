@@ -26,10 +26,13 @@ internal partial class RDM
         Impact = 16526,
         Redoublement = 7516,
         EnchantedRedoublement = 7529,
+        EnchantedRedoublementManafication = 45962,
         Zwerchhau = 7512,
         EnchantedZwerchhau = 7528,
+        EnchantedZwerchhauManafication = 45961,
         Riposte = 7504,
         EnchantedRiposte = 7527,
+        EnchantedRiposteManafication = 45960,
         Scatter = 7509,
         Verstone = 7511,
         Verfire = 7510,
@@ -141,6 +144,7 @@ internal partial class RDM
     internal static bool HasAccelerate => HasStatusEffect(Buffs.Acceleration);
     internal static bool HasSwiftcast => HasStatusEffect(Buffs.Swiftcast);
     internal static bool HasEmbolden => HasStatusEffect(Buffs.Embolden);
+    internal static bool HasManafication => HasStatusEffect(Buffs.Manafication);
     internal static bool CanAcceleration => LevelChecked(Acceleration) && !CanVerFireAndStone && HasCharges(Acceleration) && CanInstantCD && 
                                             (EmboldenCD > 15 || LevelChecked(Embolden));
     internal static bool CanAccelerationMovement => LevelChecked(Acceleration) && IsMoving() && HasCharges(Acceleration) && CanInstantCD;
@@ -273,11 +277,11 @@ internal partial class RDM
             Verthunder3,
             Embolden,
             Manafication,
-            EnchantedRiposte, //10
+            EnchantedRiposteManafication, //10
             ContreSixte,
-            EnchantedZwerchhau,
+            EnchantedZwerchhauManafication,
             Engagement,
-            EnchantedRedoublement,
+            EnchantedRedoublementManafication,
             Corpsacorps, //15
             Verholy,
             ViceOfThorns,
@@ -308,6 +312,8 @@ internal partial class RDM
         [
             ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
         ];
+        
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([13, 15, 19, 20], () => !InMeleeRange())];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
 
@@ -335,20 +341,20 @@ internal partial class RDM
             Verthunder3,
             Embolden,
             Manafication,
-            GrandImpact, //10
-            Corpsacorps,
+            EnchantedRiposteManafication, //10
             ContreSixte,
-            EnchantedRiposte,
-            Engagement,
-            EnchantedZwerchhau, //15
-            EnchantedRedoublement,
+            EnchantedZwerchhauManafication,
+            Corpsacorps,
+            EnchantedRedoublementManafication,
+            Engagement, //15
             Verholy,
             ViceOfThorns,
             Scorch,
+            Corpsacorps,
             Engagement, //20
-            Corpsacorps, 
             Resolution,
             Prefulgence,
+            GrandImpact,
             Acceleration,
             Verfire,   //25
             GrandImpact,
@@ -370,6 +376,8 @@ internal partial class RDM
         [
             ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
         ];
+        
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([15, 20], () => !InMeleeRange())];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
 

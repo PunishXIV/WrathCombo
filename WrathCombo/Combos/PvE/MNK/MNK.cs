@@ -50,7 +50,7 @@ internal partial class MNK : Melee
 
             // GCDs
             if (HasStatusEffect(Buffs.FormlessFist))
-                return OpoOpo is 0
+                return OpoOpoStacks is 0
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
@@ -67,7 +67,7 @@ internal partial class MNK : Melee
             // Perfect Balance or Standard Beast Chakra's
             return DoPerfectBalanceCombo(ref actionID)
                 ? actionID
-                : DetermineCoreAbility(actionID);
+                : DoBasicCombo(actionID);
         }
     }
 
@@ -182,7 +182,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCDs
-            if (CanWeave() && M6SReady && InCombat())
+            if (CanWeave() && InCombat())
             {
                 if (IsEnabled(Preset.MNK_STUseBuffs) &&
                     GetTargetHPPercent() > HPThresholdBuffs)
@@ -210,20 +210,18 @@ internal partial class MNK : Melee
                     CanUseChakra())
                     return OriginalHook(SteeledMeditation);
 
-                if (IsEnabled(Preset.MNK_ST_Feint) &&
-                    Role.CanFeint() &&
-                    RaidWideCasting())
-                    return Role.Feint;
-
-                if (IsEnabled(Preset.MNK_ST_UseRoE) &&
-                    (CanRoE() ||
-                     MNK_ST_EarthsReply &&
-                     CanEarthsReply()))
-                    return OriginalHook(RiddleOfEarth);
-
                 if (IsEnabled(Preset.MNK_ST_UseMantra) &&
                     CanMantra())
                     return Mantra;
+
+                if (IsEnabled(Preset.MNK_ST_UseRoE) &&
+                    (CanRoE() ||
+                     MNK_ST_EarthsReply && CanEarthsReply()))
+                    return OriginalHook(RiddleOfEarth);
+
+                if (IsEnabled(Preset.MNK_ST_Feint) &&
+                    Role.CanFeint() && RaidWideCasting())
+                    return Role.Feint;
 
                 if (IsEnabled(Preset.MNK_ST_ComboHeals))
                 {
@@ -241,7 +239,7 @@ internal partial class MNK : Melee
 
             // GCDs
             if (HasStatusEffect(Buffs.FormlessFist))
-                return OpoOpo is 0
+                return OpoOpoStacks is 0
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
@@ -261,7 +259,7 @@ internal partial class MNK : Melee
             // Perfect Balance or Standard Beast Chakra's
             return DoPerfectBalanceCombo(ref actionID)
                 ? actionID
-                : DetermineCoreAbility(actionID, IsEnabled(Preset.MNK_STUseTrueNorth));
+                : DoBasicCombo(actionID, IsEnabled(Preset.MNK_STUseTrueNorth));
         }
     }
 
@@ -286,7 +284,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCD's
-            if (CanWeave() && M6SReady && InCombat())
+            if (CanWeave() && InCombat())
             {
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&
                     GetTargetHPPercent() >= MNK_AoE_BuffsHPThreshold)
@@ -382,19 +380,19 @@ internal partial class MNK : Melee
 
             if (MNK_BasicCombo[0] &&
                 actionID is Bootshine or LeapingOpo)
-                return OpoOpo is 0 && LevelChecked(DragonKick)
+                return OpoOpoStacks is 0 && LevelChecked(DragonKick)
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
             if (MNK_BasicCombo[1] &&
                 actionID is TrueStrike or RisingRaptor)
-                return Raptor is 0 && LevelChecked(TwinSnakes)
+                return RaptorStacks is 0 && LevelChecked(TwinSnakes)
                     ? TwinSnakes
                     : OriginalHook(TrueStrike);
 
             if (MNK_BasicCombo[2] &&
                 actionID is SnapPunch or PouncingCoeurl)
-                return Coeurl is 0 && LevelChecked(Demolish)
+                return CoeurlStacks is 0 && LevelChecked(Demolish)
                     ? Demolish
                     : OriginalHook(SnapPunch);
 
@@ -412,8 +410,8 @@ internal partial class MNK : Melee
                 return actionID;
 
             return MNK_Thunderclap_FieldMouseover
-                ? Thunderclap.Retarget(SimpleTarget.UIMouseOverTarget ?? SimpleTarget.ModelMouseOverTarget ?? SimpleTarget.HardTarget, true)
-                : Thunderclap.Retarget(SimpleTarget.UIMouseOverTarget ?? SimpleTarget.HardTarget, true);
+                ? Thunderclap.Retarget(SimpleTarget.UIMouseOverTarget ?? SimpleTarget.ModelMouseOverTarget ?? SimpleTarget.HardTarget)
+                : Thunderclap.Retarget(SimpleTarget.UIMouseOverTarget ?? SimpleTarget.HardTarget);
         }
     }
 

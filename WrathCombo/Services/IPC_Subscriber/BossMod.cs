@@ -81,6 +81,47 @@ internal sealed class BossModIPC(
         return aiEnabled && !targetingDisabled;
     }
 
+    public bool IsUsingCustomQueuing()
+    {
+        if (!PluginIsLoaded)
+        {
+            PluginLog.Debug($"[ConflictingPlugins] [{PluginName}] " +
+                            $"Plugin is not loaded.");
+            return false;
+        }
+
+        var amex = Plugin.GetFoP("_amex");
+        if (amex == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx field");
+            return false;
+        }
+
+        var manualQueue = amex.GetFoP("_manualQueue");
+        if (manualQueue == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx.Manual field");
+            return false;
+        }
+
+        var manualQueueConfig = manualQueue.GetFoP("_config");
+        if (manualQueueConfig == null)
+        {
+            PluginLog.Debug(
+                $"[ConflictingPlugins] [{PluginName}] Could not access AMEx.Manual.Config field");
+            return false;
+        }
+
+        var customQueuingEnabled = manualQueueConfig.GetFoP<bool>("UseManualQueue");
+
+        PluginLog.Verbose(
+            $"[ConflictingPlugins] [{PluginName}] `ManualQueue.Enabled`: {customQueuingEnabled}");
+        
+        return customQueuingEnabled;
+    }
+
     public DateTime LastModified()
     {
         if (!IsEnabled) return DateTime.MinValue;

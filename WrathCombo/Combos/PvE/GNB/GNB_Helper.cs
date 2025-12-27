@@ -24,8 +24,8 @@ internal partial class GNB : Tank
     internal static bool HasNM => NMcd is >= 39.5f and <= 60;
     internal static bool HasReign => HasStatusEffect(Buffs.ReadyToReign);
     internal static bool CanBS => LevelChecked(BurstStrike) && Ammo > 0;
-    internal static bool CanGF => LevelChecked(GnashingFang) && GetCooldownRemainingTime(GnashingFang) < 0.6f && !HasStatusEffect(Buffs.ReadyToBlast) && GunStep == 0 && Ammo > 0;
-    internal static bool CanDD => LevelChecked(DoubleDown) && GetCooldownRemainingTime(DoubleDown) < 0.6f && Ammo > 0;
+    internal static bool CanGF => LevelChecked(GnashingFang) && GetCooldownChargeRemainingTime(GnashingFang) < 0.6f && !HasStatusEffect(Buffs.ReadyToBlast) && GunStep == 0 && Ammo > 0;
+    internal static bool CanDD => LevelChecked(DoubleDown) && GetCooldownRemainingTime(DoubleDown) < 0.6f && Ammo >= 2;
     internal static bool CanBF => LevelChecked(Bloodfest) && BFcd < 0.6f;
     internal static bool CanZone => LevelChecked(DangerZone) && GetCooldownRemainingTime(OriginalHook(DangerZone)) < 0.6f;
     internal static bool CanSB => LevelChecked(SonicBreak) && HasStatusEffect(Buffs.ReadyToBreak);
@@ -84,14 +84,13 @@ internal partial class GNB : Tank
         public override List<uint> OpenerActions { get; set; } =
         [
             LightningShot,
+            Bloodfest, //+3 (3)
             KeenEdge,
             BrutalShell,
-            SolidBarrel, //+1 (1)
             NoMercy, //LateWeave
-            GnashingFang, //-1 (0)
-            Bloodfest, //+3 (3)
+            GnashingFang, //-1 (2)
             JugularRip,
-            DoubleDown, //-1 (2)
+            DoubleDown, //-1 (0)
             BlastingZone,
             BowShock,
             SonicBreak,
@@ -99,10 +98,13 @@ internal partial class GNB : Tank
             AbdomenTear,
             WickedTalon,
             EyeGouge,
-            BurstStrike, //-1 (1)
-            Hypervelocity,
-            BurstStrike, //-1 (0)
-            Hypervelocity
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
 
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
@@ -112,25 +114,27 @@ internal partial class GNB : Tank
         public override List<uint> OpenerActions { get; set; } =
         [
             LightningShot,
+            Bloodfest, //+3 (3)
             KeenEdge,
             BrutalShell,
             NoMercy,
-            Bloodfest, //+3 (3)
             GnashingFang, //-1 (2)
             JugularRip,
-            BowShock,
-            DoubleDown, //-1 (1)
+            DoubleDown, //-1 (0)
             BlastingZone,
+            BowShock,
             SonicBreak,
             SavageClaw,
             AbdomenTear,
             WickedTalon,
             EyeGouge,
-            BurstStrike, //-1 (0)
-            Hypervelocity,
             SolidBarrel, //+1 (1)
-            BurstStrike, //-1 (0)
-            Hypervelocity
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
     }
     internal class Lv90FastEarlyNM : GNBOpenerLv90Base
@@ -143,7 +147,7 @@ internal partial class GNB : Tank
             NoMercy, //LateWeave
             GnashingFang, //-1 (2)
             JugularRip,
-            DoubleDown, //-1 (1)
+            DoubleDown, //-1 (0)
             BlastingZone,
             BowShock,
             SonicBreak,
@@ -151,8 +155,14 @@ internal partial class GNB : Tank
             AbdomenTear,
             WickedTalon,
             EyeGouge,
-            BurstStrike, //-1 (0)
-            Hypervelocity,
+            BrutalShell,
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
 
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [4];
@@ -162,21 +172,27 @@ internal partial class GNB : Tank
         public override List<uint> OpenerActions { get; set; } =
         [
             LightningShot,
-            KeenEdge,
             Bloodfest, //+3 (3)
+            KeenEdge,
             NoMercy,
             GnashingFang, //-1 (2)
             JugularRip,
-            BowShock,
-            DoubleDown, //-1 (1)
+            DoubleDown, //-1 (0)
             BlastingZone,
+            BowShock,
             SonicBreak,
             SavageClaw,
             AbdomenTear,
             WickedTalon,
             EyeGouge,
-            BurstStrike, //-1 (0)
-            Hypervelocity,
+            BrutalShell,
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
     }
     #endregion
@@ -203,7 +219,7 @@ internal partial class GNB : Tank
             GnashingFang, //-1 (2)
             JugularRip,
             BowShock,
-            DoubleDown, //-1 (1)
+            DoubleDown, //-1 (0)
             BlastingZone,
             SonicBreak,
             SavageClaw,
@@ -213,8 +229,13 @@ internal partial class GNB : Tank
             ReignOfBeasts,
             NobleBlood,
             LionHeart,
-            BurstStrike, //-1 (0)
-            Hypervelocity
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
     }
@@ -225,10 +246,9 @@ internal partial class GNB : Tank
             LightningShot,
             Bloodfest, //+3 (3)
             KeenEdge,
-            BurstStrike, //-1 (2)
+            BrutalShell,
             NoMercy,
-            Hypervelocity,
-            GnashingFang, //-1 (1)
+            GnashingFang, //-1 (2)
             JugularRip,
             BowShock,
             DoubleDown, //-1 (0)
@@ -240,7 +260,14 @@ internal partial class GNB : Tank
             EyeGouge,
             ReignOfBeasts,
             NobleBlood,
-            LionHeart
+            LionHeart,
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
     }
     internal class Lv100FastEarlyNM : GNBOpenerLv100Base
@@ -253,7 +280,7 @@ internal partial class GNB : Tank
             GnashingFang, //-1 (2)
             JugularRip,
             BowShock,
-            DoubleDown, //-1 (1)
+            DoubleDown, //-1 (0)
             BlastingZone,
             SonicBreak,
             SavageClaw,
@@ -263,8 +290,15 @@ internal partial class GNB : Tank
             ReignOfBeasts,
             NobleBlood,
             LionHeart,
-            BurstStrike, //-1 (0)
-            Hypervelocity,
+            KeenEdge,
+            BrutalShell,
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
         public override List<int> VeryDelayedWeaveSteps { get; set; } = [3];
     }
@@ -274,10 +308,8 @@ internal partial class GNB : Tank
         [
             LightningShot,
             Bloodfest, //+3 (3)
-            BurstStrike, //-1 (2)
-            NoMercy, //LateWeave
-            Hypervelocity,
-            GnashingFang, //-1 (1)
+            NoMercy,
+            GnashingFang, //-1 (2)
             JugularRip,
             BowShock,
             DoubleDown, //-1 (0)
@@ -289,7 +321,16 @@ internal partial class GNB : Tank
             EyeGouge,
             ReignOfBeasts,
             NobleBlood,
-            LionHeart
+            LionHeart,
+            KeenEdge,
+            BrutalShell,
+            SolidBarrel, //+1 (1)
+            GnashingFang, //-1 (0)
+            JugularRip,
+            SavageClaw,
+            AbdomenTear,
+            WickedTalon,
+            EyeGouge
         ];
     }
     #endregion
@@ -297,7 +338,13 @@ internal partial class GNB : Tank
     #endregion
 
     #region Helpers
-    internal static int MaxCartridges() => TraitLevelChecked(Traits.CartridgeChargeII) ? 3 : TraitLevelChecked(Traits.CartridgeCharge) ? 2 : 0;
+    internal static int MaxCartridges() => 
+        TraitLevelChecked(Traits.CartridgeChargeII) ? 
+            HasStatusEffect(Buffs.Bloodfest) ? 6 : 3 : 
+        TraitLevelChecked(Traits.CartridgeCharge) ?
+            HasStatusEffect(Buffs.Bloodfest) ? 4 : 2 : 0;
+
+    //TODO: revise Bozja stuff - this shit looks crazy
     internal static uint GetBozjaAction()
     {
         if (!Bozja.IsInBozja)
@@ -368,18 +415,15 @@ internal partial class GNB : Tank
     #endregion
 
     #region Rotation
-    internal static bool ShouldUseNoMercy
+    internal static bool ShouldUseNoMercy(bool aoeBreakpoint)
     {
-        get
-        {
-            var minimum = NMcd < 0.6f && InCombat() && HasBattleTarget();
-            var three = (InOdd && (Ammo >= 2 || (ComboAction is BrutalShell && Ammo == 1))) || (!InOdd && Ammo != 3);
-            var two = TraitLevelChecked(Traits.CartridgeCharge) ? Ammo > 0 : NMcd < 0.6f;
-            var condition = minimum && (TraitLevelChecked(Traits.CartridgeChargeII) ? three : two);
-            return (SlowGNB && condition && CanWeave()) || (MidGNB && condition && (InOdd ? CanWeave() : CanLateWeave)) || (FastGNB && condition && CanLateWeave);
-        }
+        var minimum = NMcd < 0.6f && InCombat() && HasBattleTarget();
+        var three = (InOdd && (Ammo >= 2 || (ComboAction is BrutalShell && Ammo == 1))) || (!InOdd && Ammo != 3);
+        var two = aoeBreakpoint ? Ammo > 0 : NMcd < 0.6f;
+        var condition = minimum && (TraitLevelChecked(Traits.CartridgeChargeII) ? three : two);
+        return (SlowGNB && condition && CanWeave()) || (MidGNB && condition && (InOdd ? CanWeave() : CanLateWeave)) || (FastGNB && condition && CanLateWeave);
     }
-    internal static bool ShouldUseBloodfest => HasBattleTarget() && CanWeave() && CanBF && Ammo == 0;
+    internal static bool ShouldUseBloodfest => HasBattleTarget() && CanWeave() && CanBF;
     internal static bool ShouldUseZone => CanZone && CanWeave() && NMcd is < 57.5f and > 17f;
     internal static bool ShouldUseBowShock => CanBow && CanWeave() && NMcd is < 57.5f and >= 40;
     internal static bool ShouldUseContinuation => CanContinue && (HasStatusEffect(Buffs.ReadyToRip) || HasStatusEffect(Buffs.ReadyToTear) || HasStatusEffect(Buffs.ReadyToGouge) ||
@@ -474,7 +518,8 @@ internal partial class GNB : Tank
             GreatNebula = 3838, //applied by Nebula to self
             ReadyToRaze = 3839, //applied by Fated Circle to self
             ReadyToBreak = 3886, //applied by No mercy to self
-            ReadyToReign = 3840; //applied by Bloodfest to target
+            ReadyToReign = 3840, //applied by Bloodfest to target
+            Bloodfest = 5051; //applied by Bloodfest to target
     }
     public static class Debuffs
     {
@@ -545,14 +590,14 @@ internal partial class GNB : Tank
                   IsInParty()),
         //Rampart
         (Role.Rampart, Preset.GNB_Mit_Rampart,
-            () => Role.CanRampart(GNB_Mit_Rampart_Health)),
+            () => Role.CanRampart()),
         //Arm's Length
         (Role.ArmsLength, Preset.GNB_Mit_ArmsLength,
             () => Role.CanArmsLength(GNB_Mit_ArmsLength_EnemyCount,
                 GNB_Mit_ArmsLength_Boss)),
         //Nebula
         (OriginalHook(Nebula), Preset.GNB_Mit_Nebula,
-            () => PlayerHealthPercentageHp() <= GNB_Mit_Nebula_Health)
+            () => true)
     ];
 
     ///<summary>

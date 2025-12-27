@@ -1,4 +1,5 @@
-﻿using WrathCombo.CustomComboNS.Functions;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
@@ -121,7 +122,7 @@ internal static partial class RoleActions
     internal interface IRampart
     {
         uint Rampart { get; }
-        bool CanRampart(int healthPercent);
+        bool CanRampart(int healthPercent = 100);
     }
 
     internal interface ILowBlow
@@ -145,7 +146,7 @@ internal static partial class RoleActions
     internal interface IReprisal
     {
         uint Reprisal { get; }
-        bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true);
+        bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true, IGameObject? target = null);
     }
 
     internal interface IShirk

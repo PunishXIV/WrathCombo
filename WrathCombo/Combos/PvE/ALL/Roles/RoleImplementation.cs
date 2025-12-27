@@ -1,4 +1,5 @@
-﻿using WrathCombo.CustomComboNS.Functions;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
@@ -240,7 +241,7 @@ internal static partial class RoleActions
                 public bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
                     RoleActions.Physical.CanArmsLength(enemyCount, avoidanceSetting);
 
-                public bool CanRampart(int healthPercent) =>
+                public bool CanRampart(int healthPercent = 100) =>
                     RoleActions.Tank.CanRampart(healthPercent);
 
                 public bool CanLowBlow() =>
@@ -252,8 +253,8 @@ internal static partial class RoleActions
                 public bool CanInterject() =>
                     RoleActions.Tank.CanInterject();
 
-                public bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true) =>
-                    RoleActions.Tank.CanReprisal(healthPercent, enemyCount, checkTargetForDebuff);
+                public bool CanReprisal(int healthPercent = 101, int? enemyCount = null, bool checkTargetForDebuff = true, IGameObject? target = null) =>
+                    RoleActions.Tank.CanReprisal(healthPercent, enemyCount, checkTargetForDebuff, target);
 
                 public bool CanShirk() =>
                     RoleActions.Tank.CanShirk();

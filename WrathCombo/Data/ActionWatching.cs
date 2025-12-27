@@ -4,6 +4,7 @@ using Dalamud.Hooking;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using ECommons.GameHelpers;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
@@ -16,15 +17,15 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using ECommons.GameHelpers;
+using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using WrathCombo.Services.ActionRequestIPC;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
-using static FFXIVClientStructs.FFXIV.Client.UI.Agent.AgentFreeCompanyProfile.FCProfile;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 namespace WrathCombo.Data;
@@ -179,7 +180,7 @@ public static class ActionWatching
                 }
             }
 
-            if (ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea)
+            if (casterEntityId == Player.Object.EntityId && ActionSheet.TryGetValue(actionId, out var actionSheet) && actionSheet.TargetArea)
             {
                 UpdateLastUsedAction(actionId, 1, 0, 0);
             }
@@ -261,7 +262,7 @@ public static class ActionWatching
                 UpdateActionTask = Svc.Framework.RunOnTick(() =>
                 UpdateLastUsedAction(actionId, actionType, targetObjectId, castTime),
                 TimeSpan.FromMilliseconds(castTime), cancellationToken: token);
-                
+
                 // Update Helpers
                 NIN.InMudra = NIN.MudraSigns.Contains(actionId);
 
@@ -282,7 +283,7 @@ public static class ActionWatching
                 );
 #endif
             }
-                SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
+            SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
         }
         catch (Exception ex)
         {
@@ -349,7 +350,7 @@ public static class ActionWatching
     {
         try
         {
-            if (actionType is not (ActionType.Action or ActionType.Ability))
+            if (actionType is not ActionType.Action)
                 return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
             //Save the original action and target, do not modify
@@ -422,6 +423,9 @@ public static class ActionWatching
             #endregion
 
             //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
+            targetId = AutoRotationController.CurrentActIsAutorot
+                ? originalTargetId
+                : targetId;
             var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
             #region Extra Retargeting Logic
@@ -432,6 +436,23 @@ public static class ActionWatching
                     targetId;
 
             #endregion
+            
+            // This really only works if no other plugin is forcing these values to be any different than vanilla for whatever reason
+            // Hookresult should only return true when an action is actually used, or when it gets queued
+            // So part 2 just makes sure it's returning true only when it's not being queued
+            var success = hookResult && !(mode == ActionManager.UseActionMode.None && actionManager->QueuedActionId > 0);
+
+            //if (success)
+            //{
+            //    if (NIN.MudraSigns.Contains(modifiedAction))
+            //    {
+            //        Svc.Log.Debug($"Mudra used: {modifiedAction.ActionName()}");
+            //        NIN.InMudra = true;
+            //    }
+            //    var castTime = ActionManager.GetAdjustedCastTime(actionType, modifiedAction);
+            //    LastAction = modifiedAction;
+            //    TimeLastActionUsed = DateTime.Now;
+            //}
 
             return hookResult;
         }

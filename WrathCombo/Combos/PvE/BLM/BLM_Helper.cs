@@ -12,6 +12,8 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
 {
+    #region Misc
+
     private static int MaxPolyglot =>
         TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 :
         TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
@@ -25,10 +27,10 @@ internal partial class BLM
     private static bool CanFlarestar =>
         LevelChecked(FlareStar) && AstralSoulStacks is 6;
 
-    private static Status? ThunderDebuffST =>
-        GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
+    private static IStatus? ThunderDebuffST =>
+        GetStatusEffect(ThunderList[OriginalHook(Thunder)],CurrentTarget);
 
-    private static Status? ThunderDebuffAoE =>
+    private static IStatus? ThunderDebuffAoE =>
         GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
     private static float TimeSinceFirestarterBuff =>
@@ -38,12 +40,12 @@ internal partial class BLM
         PolyglotStacks == MaxPolyglot;
 
     private static uint FireSpam =>
-        LevelChecked(Fire4)
+        ActionReady(Fire4)
             ? Fire4
             : Fire;
 
     private static uint BlizzardSpam =>
-        LevelChecked(Blizzard4)
+        ActionReady(Blizzard4)
             ? Blizzard4
             : Blizzard;
 
@@ -54,15 +56,38 @@ internal partial class BLM
         BLM_ST_LeyLinesBossOption == 1 || !InBossEncounter()
             ? BLM_ST_LeyLinesHPOption : 0;
 
-    private static float RefreshTimerThunder =>
-        BLM_ST_ThunderRefresh;
-
-    private static int HPThresholdThunder =>
-        BLM_ST_ThunderBossOption == 1 ||
-        !InBossEncounter() ? BLM_ST_ThunderHPOption : 0;
-
     private static bool HasPolyglotStacks() =>
         PolyglotStacks > 0;
+
+    #endregion
+
+    #region Thunder
+
+    internal static bool CanUseThunder()
+    {
+        uint dotAction = OriginalHook(Thunder);
+        int hpThreshold = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? ComputeHpThreshold() : 0;
+        ThunderList.TryGetValue(dotAction, out ushort dotDebuffID);
+        int dotRefresh = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? BLM_ST_ThunderRefresh : 5;
+        float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+
+        return ActionReady(dotAction) &&
+               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               !JustUsedOn(dotAction, CurrentTarget, 5f) &&
+               HasBattleTarget() &&
+               GetTargetHPPercent() > hpThreshold &&
+               dotRemaining <= dotRefresh;
+    }
+
+    internal static int ComputeHpThreshold()
+    {
+        if (InBossEncounter())
+            return TargetIsBoss() ? BLM_ST_ThunderBossOption : BLM_ST_ThunderBossAddsOption;
+
+        return BLM_ST_ThunderTrashOption;
+    }
+
+    #endregion
 
     #region Movement Prio
 
@@ -96,6 +121,13 @@ internal partial class BLM
         (Xenoglossy, Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[3] &&
                   HasPolyglotStacks() &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+
+        //Scathe
+        (Scathe, Preset.BLM_ST_Movement,
+            () => BLM_ST_MovementOption[4] &&
+                  ActionReady(Scathe) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast))
     ];
@@ -175,7 +207,7 @@ internal partial class BLM
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
-            MP.IsFull &&
+            MP.Full &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -228,7 +260,7 @@ internal partial class BLM
         public override List<int> DelayedWeaveSteps { get; set; } = [6];
 
         public override bool HasCooldowns() =>
-            MP.IsFull &&
+            MP.Full &&
             IsOffCooldown(Manafont) &&
             GetRemainingCharges(Triplecast) >= 1 &&
             GetRemainingCharges(LeyLines) >= 1 &&
@@ -240,7 +272,7 @@ internal partial class BLM
 
     #region Gauge
 
-    private static BLMGauge Gauge = GetJobGauge<BLMGauge>();
+    private static BLMGauge Gauge => GetJobGauge<BLMGauge>();
 
     private static bool FirePhase => Gauge.InAstralFire;
 
@@ -258,32 +290,19 @@ internal partial class BLM
 
     private static byte PolyglotStacks => Gauge.PolyglotStacks;
 
-    private static short PolyglotTimer => Gauge.EnochianTimer;
+    private static int PolyglotTimer => Gauge.EnochianTimer / 1000;
 
     private static class MP
     {
-
         private static unsafe uint Max => Player.Character->MaxMana;
 
-        internal static bool IsFull => Max == Cur;
+        internal static bool Full => Max == Cur;
 
         internal static unsafe uint Cur => Player.Character->Mana;
 
         internal static int FireI => GetResourceCost(OriginalHook(Fire));
 
-        internal static int FlareAoE => GetResourceCost(OriginalHook(Flare));
-
         internal static int FireAoE => GetResourceCost(OriginalHook(Fire2));
-
-        internal static int FireIII => GetResourceCost(OriginalHook(Fire3));
-
-        internal static int BlizzardAoE => GetResourceCost(OriginalHook(Blizzard2));
-
-        internal static int BlizzardI => GetResourceCost(OriginalHook(Blizzard));
-
-        internal static int Freeze => GetResourceCost(OriginalHook(BLM.Freeze));
-
-        internal static int Despair => GetResourceCost(OriginalHook(BLM.Despair));
     }
 
     private static readonly FrozenDictionary<uint, ushort> ThunderList = new Dictionary<uint, ushort>
@@ -371,5 +390,4 @@ internal partial class BLM
     }
 
     #endregion
-
 }

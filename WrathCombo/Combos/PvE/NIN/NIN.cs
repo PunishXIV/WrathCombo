@@ -1,5 +1,7 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -18,14 +20,12 @@ internal partial class NIN : Melee
         {
             if (actionID is not SpinningEdge)
                 return actionID;
-
-            NINGauge gauge = GetJobGauge<NINGauge>();
             
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
-                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
-                ActionWatching.LastAction == Katon)
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
+            //if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+            //    ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+            //    ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+            //    ActionWatching.LastAction == Katon)
+            //    MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
@@ -33,8 +33,8 @@ internal partial class NIN : Melee
             if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
             
-            if (HasStatusEffect(Buffs.TenChiJin))
-                return STTenChiJin(actionID);
+            if (STTenChiJin(ref actionID))
+                return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction) && !MudraPhase)
@@ -74,10 +74,10 @@ internal partial class NIN : Melee
             #endregion
 
             #region Ninjutsu
-            if (CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID) ||
-                CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID) ||
-                CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
-                CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID))
+            if ((CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID)) ||
+                (CanUseSuiton && TrickCD <= 18 && MudraState.CastSuiton(ref actionID)) ||
+                (CanUseRaiton && MudraState.CastRaiton(ref actionID)) ||
+                (CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID)))
                 return actionID;
             #endregion
 
@@ -141,11 +141,11 @@ internal partial class NIN : Melee
             if (actionID is not DeathBlossom)
                 return actionID;
             
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
-                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
-                ActionWatching.LastAction == Katon)
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
+            //if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+            //    ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+            //    ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+            //    ActionWatching.LastAction == Katon)
+            //    MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
                 return OriginalHook(Ninjutsu);
@@ -153,10 +153,9 @@ internal partial class NIN : Melee
             if (InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
 
-            if (HasStatusEffect(Buffs.TenChiJin))
-                return DotonRemaining < 3
-                    ? AoETenChiJinDoton(actionID)
-                    : AoETenChiJinSuiton(actionID);
+            if (DotonRemaining < 3 && AoETenChiJinDoton(ref actionID) ||
+                DotonRemaining >= 3 && AoETenChiJinSuiton(ref actionID))
+                return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction) && !MudraPhase)
@@ -196,11 +195,11 @@ internal partial class NIN : Melee
             #endregion
 
             #region Ninjutsu
-            if (CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID) ||
-                CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID) ||
-                CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID) ||
-                CanUseKaton && MudraState.CastKaton(ref actionID) ||
-                CanUseFumaShuriken && !LevelChecked(Katon) && MudraState.CastFumaShuriken(ref actionID))
+            if ((CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID)) ||
+                (CanUseHuton && TrickCD <= 18 && MudraState.CastHuton(ref actionID)) ||
+                (CanUseDoton && GetTargetHPPercent() >= 30 && MudraState.CastDoton(ref actionID)) ||
+                (CanUseKaton && MudraState.CastKaton(ref actionID)) ||
+                (CanUseFumaShuriken && !LevelChecked(Katon) && MudraState.CastFumaShuriken(ref actionID)))
                 return actionID;
             #endregion
 
@@ -259,15 +258,14 @@ internal partial class NIN : Melee
             if (actionID is not SpinningEdge)
                 return actionID;
             
+            //Troubleshooting tool Do Not Remove Please
             //PluginLog.Debug($"Current MudraState: {MudraState.CurrentMudra}");
-
-            NINGauge gauge = GetJobGauge<NINGauge>();
             
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
-                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
-                ActionWatching.LastAction == Katon)
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
+            //if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+            //    ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+            //    ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+            //    ActionWatching.LastAction == Katon)
+            //    MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_BalanceOpener) &&
                 Opener().FullOpener(ref actionID))
@@ -280,9 +278,9 @@ internal partial class NIN : Melee
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
             
-            if (NIN_ST_AdvancedMode_TenChiJin_Options[0] &&
-                HasStatusEffect(Buffs.TenChiJin))
-                return STTenChiJin(actionID);
+            if (NIN_ST_AdvancedMode_TenChiJin_Auto &&
+                STTenChiJin(ref actionID))
+                return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction) && !MudraPhase)
@@ -301,7 +299,7 @@ internal partial class NIN : Melee
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_TenChiJin) && CanTenChiJin)
                     return TenChiJin;
 
-                if (NIN_ST_AdvancedMode_TenChiJin_Options[0] && CanTenriJindo)
+                if (IsEnabled(Preset.NIN_ST_AdvancedMode_TenriJindo) && CanTenriJindo)
                     return TenriJendo;
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Assassinate) && CanAssassinate)
@@ -336,13 +334,13 @@ internal partial class NIN : Melee
             #region Ninjutsu
             if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus))
             {
-                if (NIN_ST_AdvancedMode_Ninjitsus_Options[2] &&
+                if (IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) &&
                     CanUseHyoshoRanryu && MudraState.CastHyoshoRanryu(ref actionID) ||
-                    NIN_ST_AdvancedMode_Ninjitsus_Options[1] &&
-                    CanUseSuiton && TrickCD <= NIN_ST_AdvancedMode_SuitonSetup && MudraState.CastSuiton(ref actionID) ||
-                    NIN_ST_AdvancedMode_Ninjitsus_Options[0] &&
+                    IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Suiton) &&
+                    CanUseSuiton && TrickCD <= NIN_ST_AdvancedMode_Ninjitsus_Suiton_Setup && MudraState.CastSuiton(ref actionID) ||
+                    IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton) &&
                     CanUseRaiton && MudraState.CastRaiton(ref actionID) ||
-                    NIN_ST_AdvancedMode_Ninjitsus_Options[0] &&
+                    IsEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Raiton) &&
                     CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
@@ -418,11 +416,11 @@ internal partial class NIN : Melee
             if (actionID is not DeathBlossom)
                 return actionID;
             
-            if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
-                ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
-                ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
-                ActionWatching.LastAction == Katon)
-                MudraState.CurrentMudra = MudraCasting.MudraState.None;
+            //if (ActionWatching.TimeSinceLastAction.TotalSeconds >= 5 && !InCombat() ||
+            //    ActionWatching.LastAction == OriginalHook(Ninjutsu) ||
+            //    ActionWatching.LastAction == Raiton || //added because oddly, raiton and katon were not resetting the mudra state with original hook. 
+            //    ActionWatching.LastAction == Katon)
+            //    MudraState.CurrentMudra = MudraCasting.MudraState.None;
 
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) &&
                 OriginalHook(Ninjutsu) is Rabbit or Huton or Suiton or Doton or GokaMekkyaku or HyoshoRanryu)
@@ -431,11 +429,10 @@ internal partial class NIN : Melee
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus) && InMudra && MudraState.ContinueCurrentMudra(ref actionID))
                 return actionID;
            
-            if (NIN_AoE_AdvancedMode_TenChiJin_Options[0] &&
-                HasStatusEffect(Buffs.TenChiJin))
-                return NIN_AoE_AdvancedMode_Ninjitsus_Options[2] && DotonRemaining < 3
-                ? AoETenChiJinDoton(actionID)
-                : AoETenChiJinSuiton(actionID);
+            if (NIN_AoE_AdvancedMode_TenChiJin_Auto && 
+                (NIN_AoE_AdvancedMode_TenChiJin_Doton && DotonRemaining < 3 && AoETenChiJinDoton(ref actionID) || 
+                 AoETenChiJinSuiton(ref actionID)))
+                return actionID;
 
             #region Special Content
             if (ContentSpecificActions.TryGet(out var contentAction) && !MudraPhase)
@@ -454,7 +451,7 @@ internal partial class NIN : Melee
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_TenChiJin) && CanTenChiJinAoE)
                     return TenChiJin;
 
-                if (NIN_AoE_AdvancedMode_TenChiJin_Options[0] && CanTenriJindo)
+                if (IsEnabled(Preset.NIN_AoE_AdvancedMode_TenriJindo) && CanTenriJindo)
                     return TenriJendo;
 
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Assassinate) && CanAssassinateAoE)
@@ -490,16 +487,16 @@ internal partial class NIN : Melee
             #region Ninjutsu
             if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus))
             {
-                if (NIN_AoE_AdvancedMode_Ninjitsus_Options[3] &&
+                if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Goka) &&
                     CanUseGokaMekkyaku && MudraState.CastGokaMekkyaku(ref actionID) ||
-                    NIN_AoE_AdvancedMode_Ninjitsus_Options[2] &&
-                    CanUseDoton && GetTargetHPPercent() >= NIN_AoE_AdvancedMode_Doton_Threshold && MudraState.CastDoton(ref actionID) ||
-                    NIN_AoE_AdvancedMode_Ninjitsus_Options[1] &&
-                    CanUseHuton && TrickCD <= NIN_ST_AdvancedMode_SuitonSetup && MudraState.CastHuton(ref actionID) ||
-                    NIN_AoE_AdvancedMode_Ninjitsus_Options[0] &&
+                    IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Huton) &&
+                    CanUseHuton && TrickCD <= NIN_AoE_AdvancedMode_Ninjitsus_Huton_Setup && MudraState.CastHuton(ref actionID) ||
+                    IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Doton) &&
+                    CanUseDoton && GetTargetHPPercent() >= NIN_AoE_AdvancedMode_Ninjitsus_Doton_Threshold && MudraState.CastDoton(ref actionID) ||
+                    IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon) &&
                     CanUseKaton && MudraState.CastKaton(ref actionID) ||
-                    NIN_AoE_AdvancedMode_Ninjitsus_Options[0] &&
-                    CanUseFumaShuriken && !LevelChecked(Raiton) && MudraState.CastFumaShuriken(ref actionID))
+                    IsEnabled(Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon) &&
+                    CanUseFumaShuriken && !LevelChecked(Katon) && MudraState.CastFumaShuriken(ref actionID))
                     return actionID;
             }
             #endregion
@@ -685,8 +682,8 @@ internal partial class NIN : Melee
             if (actionID is not TenChiJin)
                 return actionID;
 
-            if (HasStatusEffect(Buffs.TenChiJin) && IsEnabled(Preset.NIN_TCJ))
-                return STTenChiJin(actionID);
+            if (IsEnabled(Preset.NIN_TCJ) && STTenChiJin(ref actionID))
+                return actionID;
 
             return HasStatusEffect(Buffs.ShadowWalker)
                 ? Meisui
@@ -826,31 +823,34 @@ internal partial class NIN : Melee
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Ten or Chi or Jin) || !HasStatusEffect(Buffs.Mudra))
+            if (!MudraSigns.Any(x => x == actionID) || (!InMudra && !Rabbitting))
                 return actionID;
-            
+
+            if (Rabbitting)
+                return Rabbit;
+
             switch (actionID)
             {
-                case Ten when LevelChecked(HyoshoRanryu) && MudraReady && HasKassatsu:
-                    return UseHyoshoRanryu(actionID);
-                case Ten when LevelChecked(Suiton) && MudraReady && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
-                    return UseSuiton(actionID);
-                case Ten when MudraReady:
+                case Ten when LevelChecked(HyoshoRanryu) && HasKassatsu:
+                    return UseHyoshoRanryu(ref actionID);
+                case Ten when LevelChecked(Suiton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
+                    return UseSuiton(ref actionID);
+                case Ten:
                     return LevelChecked(Raiton)
-                        ? UseRaiton(actionID)
-                        : UseFumaShuriken(actionID);
-                case Chi when LevelChecked(GokaMekkyaku) && MudraReady && HasKassatsu:
-                    return UseGokaMekkyaku(actionID);
-                case Chi when LevelChecked(Huton) && MudraReady && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
-                    return UseHuton(actionID);
-                case Chi when MudraReady:
+                        ? UseRaiton(ref actionID)
+                        : UseFumaShuriken(ref actionID);
+                case Chi when LevelChecked(GokaMekkyaku) && HasKassatsu:
+                    return UseGokaMekkyaku(ref actionID);
+                case Chi when LevelChecked(Huton) && !HasStatusEffect(Buffs.ShadowWalker) && TrickCD <= 20:
+                    return UseHuton(ref actionID);
+                case Chi:
                     return LevelChecked(Katon)
-                        ? UseKaton(actionID)
-                        : UseFumaShuriken(actionID);
+                        ? UseKaton(ref actionID)
+                        : UseFumaShuriken(ref actionID);
                 case Jin:
                     return LevelChecked(Doton)
-                        ? UseDoton(actionID)
-                        : UseFumaShuriken(actionID);
+                        ? UseDoton(ref actionID)
+                        : UseFumaShuriken(ref actionID);
                 default:
                     return actionID;
             }

@@ -21,19 +21,19 @@ internal partial class SAM
                     break;
 
                 case Preset.SAM_ST_CDs_UseHiganbana:
-                    ImGui.Dummy(new(12f.Scale(), 0));
-                    ImGui.SameLine();
-                    DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
-                        "All Enemies", $"Uses {Higanbana.ActionName()} regardless of targeted enemy type.", 0);
+                    DrawSliderInt(0, 100, SAM_ST_HiganbanaBossOption,
+                        "Bosses Only. Stop using at Enemy HP %.");
 
-                    DrawHorizontalRadioButton(SAM_ST_HiganbanaBossOption,
-                        "Bosses Only", $"Only uses {Higanbana.ActionName()} when the targeted enemy is a boss.", 1);
+                    DrawSliderInt(0, 100, SAM_ST_HiganbanaBossAddsOption,
+                        "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
 
-                    DrawSliderInt(0, 10, SAM_ST_HiganbanaHPThreshold,
-                        $"Stop using {Higanbana.ActionName()} on targets below this HP % (0% = always use).");
+                    DrawSliderInt(0, 100, SAM_ST_HiganbanaTrashOption,
+                        "Non boss encounter. Stop using at Enemy HP %.");
 
+                    ImGui.Indent();
                     DrawSliderInt(0, 15, SAM_ST_HiganbanaRefresh,
                         $"Seconds remaining before reapplying {Higanbana.ActionName()}. Set to Zero to disable this check.");
+                    ImGui.Unindent();
                     break;
 
                 case Preset.SAM_ST_CDs_MeikyoShisui:
@@ -164,9 +164,10 @@ internal partial class SAM
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
             SAM_ST_MeikyoLogic = new("SAM_ST_MeikyoLogic", 1),
-            SAM_ST_HiganbanaBossOption = new("SAM_ST_Higanbana_Suboption", 1),
+            SAM_ST_HiganbanaBossOption = new("SAM_ST_HiganbanaBossOption"),
+            SAM_ST_HiganbanaBossAddsOption = new("SAM_ST_HiganbanaBossAddsOption", 50),
+            SAM_ST_HiganbanaTrashOption = new("SAM_ST_HiganbanaTrashOption", 100),
             SAM_ST_MeikyoBossOption = new("SAM_ST_Meikyo_Suboption", 1),
-            SAM_ST_HiganbanaHPThreshold = new("SAM_ST_Higanbana_HP_Threshold", 0),
             SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
@@ -197,6 +198,5 @@ internal partial class SAM
             SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);
 
         #endregion
-
     }
 }

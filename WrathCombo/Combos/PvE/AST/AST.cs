@@ -190,17 +190,20 @@ internal partial class AST : Healer
         protected override uint Invoke(uint actionID)
         {
             #region Button Selection
-            bool alternateMode = AST_ST_DPS_AltMode > 0; //(0 or 1 radio values)
-            bool actionFound = !alternateMode && MaleficList.Contains(actionID) ||
-                               alternateMode && CombustList.ContainsKey(actionID);
-            var replacedActions = alternateMode
-                ? CombustList.Keys.ToArray()
-                : MaleficList.ToArray();
-            #endregion
 
-            if (!actionFound)
+            bool alternateMode = AST_ST_DPS_AltMode > 0;
+            var replacedActions = (int)AST_ST_DPS_AltMode switch
+            {
+                1 => CombustList.Keys.ToArray(),
+                2 => [Malefic2],
+                _ => MaleficList.ToArray(),
+            };
+
+            if (!replacedActions.Contains(actionID))
                 return actionID;
 
+            #endregion
+            
             #region Variables
             bool cardPooling = IsEnabled(Preset.AST_DPS_CardPool);
             bool lordPooling = IsEnabled(Preset.AST_DPS_LordPool);
@@ -278,7 +281,7 @@ internal partial class AST : Healer
                     return OriginalHook(AstralDraw);
 
                 //Lightspeed Burst
-                if (IsEnabled(Preset.AST_DPS_LightspeedBurst) && ActionReady(Lightspeed) &&
+                if (IsEnabled(Preset.AST_DPS_LightspeedBurst) && IsEnabled(Preset.AST_DPS_Divination) && ActionReady(Lightspeed) &&
                     !HasStatusEffect(Buffs.Lightspeed) && DivinationCD < 5 && WaitGCDs)
                     return Lightspeed;
 
@@ -294,8 +297,9 @@ internal partial class AST : Healer
                 if (IsEnabled(Preset.AST_ST_DPS_EarthlyStar) && IsOffCooldown(EarthlyStar) && 
                     LevelChecked(EarthlyStar) && !HasStatusEffect(Buffs.EarthlyDominance) &&
                     (WaitGCDs || StandStill))
-                    return EarthlyStar.Retarget
-                        (replacedActions, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
+                    return AST_ST_DPS_EarthlyStarSubOption == 1 
+                        ? EarthlyStar.Retarget(replacedActions, SimpleTarget.Self) 
+                        : EarthlyStar.Retarget(replacedActions, SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
 
                 //Stellar Detonation
                 if (IsEnabled(Preset.AST_ST_DPS_StellarDetonation) &&
@@ -404,7 +408,7 @@ internal partial class AST : Healer
                     return OriginalHook(AstralDraw);
 
                 //Lightspeed Burst
-                if (IsEnabled(Preset.AST_AOE_LightspeedBurst) && ActionReady(Lightspeed) && 
+                if (IsEnabled(Preset.AST_AOE_LightspeedBurst) && IsEnabled(Preset.AST_AOE_Divination) && ActionReady(Lightspeed) && 
                     !HasStatusEffect(Buffs.Lightspeed) &&
                     DivinationCD < 5 && WaitGCDs)
                     return Lightspeed;
@@ -422,8 +426,9 @@ internal partial class AST : Healer
                     LevelChecked(EarthlyStar) && IsOffCooldown(EarthlyStar) &&
                     !HasStatusEffect(Buffs.EarthlyDominance) && 
                     (WaitGCDs || StandStill))
-                    return EarthlyStar.Retarget(GravityList.ToArray(),
-                        SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
+                    return AST_AOE_DPS_EarthlyStarSubOption == 1 
+                        ? EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.Self) 
+                        : EarthlyStar.Retarget(GravityList.ToArray(), SimpleTarget.HardTarget.IfHostile() ?? SimpleTarget.Stack.Allies);
 
                 //Stellar Detonation
                 if (IsEnabled(Preset.AST_AOE_DPS_StellarDetonation) &&
@@ -493,7 +498,7 @@ internal partial class AST : Healer
             if (ActionReady(EssentialDignity) && GetTargetHPPercent(healTarget) <= 30)
                 return EssentialDignity.RetargetIfEnabled(OptionalTarget, Benefic);
             
-            if (ActionReady(Exaltation) && (healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank || !IsInParty()))
+            if (ActionReady(Exaltation) && (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty()))
                 return Exaltation.RetargetIfEnabled(OptionalTarget, Benefic);
 
             if (!InBossEncounter())
@@ -517,7 +522,7 @@ internal partial class AST : Healer
                 return OriginalHook(AspectedBenefic).RetargetIfEnabled(OptionalTarget, Benefic);
             
             if ((HasArrow || HasBole) && 
-                (healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank || !IsInParty())) 
+                (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty())) 
                 return OriginalHook(Play2).RetargetIfEnabled(OptionalTarget, Benefic);
             
             if (HasEwer || HasSpire) 
@@ -685,7 +690,7 @@ internal partial class AST : Healer
             }
 
             //Hot Check for if you are in Aspected Helios Mode
-            Status? hotCheck = HeliosConjuction.LevelChecked() ? GetStatusEffect(Buffs.HeliosConjunction) : GetStatusEffect(Buffs.AspectedHelios);
+            IStatus? hotCheck = HeliosConjuction.LevelChecked() ? GetStatusEffect(Buffs.HeliosConjunction) : GetStatusEffect(Buffs.AspectedHelios);
             if (!nonAspectedMode && hotCheck is not null && hotCheck.RemainingTime > GetActionCastTime(OriginalHook(AspectedHelios)) + 1f)
                 return Helios;
 
@@ -705,7 +710,7 @@ internal partial class AST : Healer
                 !AST_QuickTarget_Manuals)
                 return actionID;
 
-            OriginalHook(Play1).Retarget(Play1, CardResolver, dontCull: true);
+            OriginalHook(Play1).Retarget(Play1, CardResolver);
 
             return actionID;
         }
@@ -721,9 +726,9 @@ internal partial class AST : Healer
             var healStack = SimpleTarget.Stack.AllyToHeal;
 
             if (!LevelChecked(Benefic2))
-                return IsEnabled(Preset.AST_Retargets_Benefic) ? Benefic.Retarget(healStack, dontCull: true) : Benefic;
+                return IsEnabled(Preset.AST_Retargets_Benefic) ? Benefic.Retarget(healStack) : Benefic;
 
-            return IsEnabled(Preset.AST_Retargets_Benefic) ? Benefic2.Retarget(healStack, dontCull: true) : Benefic2;
+            return IsEnabled(Preset.AST_Retargets_Benefic) ? Benefic2.Retarget(healStack) : Benefic2;
         }
     }
     internal class AST_Lightspeed : CustomCombo
@@ -757,21 +762,21 @@ internal partial class AST : Healer
 
             if (ActionReady(Exaltation))
                 return IsEnabled(Preset.AST_Retargets_Exaltation)
-                    ? Exaltation.Retarget(healStack, dontCull: true)
+                    ? Exaltation.Retarget(healStack)
                     : Exaltation;
 
             if (AST_Mit_ST_Options[0] &&
                 ActionReady(CelestialIntersection) &&
                 !HasStatusEffect(Buffs.Intersection, target: healStack))
                 return IsEnabled(Preset.AST_Retargets_CelestialIntersection)
-                    ? CelestialIntersection.Retarget(Exaltation, healStack, dontCull: true)
+                    ? CelestialIntersection.Retarget(Exaltation, healStack)
                     : CelestialIntersection;
 
             if (AST_Mit_ST_Options[1] &&
                 ActionReady(EssentialDignity) &&
                 GetTargetHPPercent(healStack) < AST_Mit_ST_EssentialDignityThreshold)
                 return IsEnabled(Preset.AST_Retargets_EssentialDignity)
-                    ? EssentialDignity.Retarget(Exaltation, healStack, dontCull: true)
+                    ? EssentialDignity.Retarget(Exaltation, healStack)
                     : EssentialDignity;
 
             return actionID;
@@ -809,29 +814,29 @@ internal partial class AST : Healer
 
             if (IsEnabled(Preset.AST_Retargets_Benefic))
             {
-                Benefic.Retarget(healStack, dontCull: true);
-                Benefic2.Retarget(healStack, dontCull: true);
+                Benefic.Retarget(healStack);
+                Benefic2.Retarget(healStack);
             }
 
             if (IsEnabled(Preset.AST_Retargets_AspectedBenefic))
-                AspectedBenefic.Retarget(healStack, dontCull: true);
+                AspectedBenefic.Retarget(healStack);
 
             if (IsEnabled(Preset.AST_Retargets_EssentialDignity))
-                EssentialDignity.Retarget(healStack, dontCull: true);
+                EssentialDignity.Retarget(healStack);
 
             if (IsEnabled(Preset.AST_Retargets_Exaltation))
-                Exaltation.Retarget(healStack, dontCull: true);
+                Exaltation.Retarget(healStack);
 
             if (IsEnabled(Preset.AST_Retargets_Synastry))
-                Synastry.Retarget(healStack, dontCull: true);
+                Synastry.Retarget(healStack);
 
             if (IsEnabled(Preset.AST_Retargets_CelestialIntersection))
-                CelestialIntersection.Retarget(healStack, dontCull: true);
+                CelestialIntersection.Retarget(healStack);
 
             if (IsEnabled(Preset.AST_Retargets_HealCards))
             {
-                OriginalHook(Play2).Retarget(Play2, healStack, dontCull: true);
-                OriginalHook(Play3).Retarget(Play3, healStack, dontCull: true);
+                OriginalHook(Play2).Retarget(Play2, healStack);
+                OriginalHook(Play3).Retarget(Play3, healStack);
             }
 
             if (IsEnabled(Preset.AST_Retargets_EarthlyStar))
@@ -844,7 +849,7 @@ internal partial class AST : Healer
                         ? SimpleTarget.HardTarget.IfFriendly()
                         : null) ??
                     SimpleTarget.Self;
-                EarthlyStar.Retarget(starTarget, dontCull: true);
+                EarthlyStar.Retarget(starTarget);
             }
 
             return actionID;

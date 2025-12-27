@@ -112,11 +112,11 @@ internal partial class RPR
         #region Variables
 
         public static UserInt
-            RPR_Positional = new("RPR_Positional", 0),
-            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice", 0),
+            RPR_Positional = new("RPR_Positional"),
+            RPR_Opener_StartChoice = new("RPR_Opener_StartChoice"),
             RPR_Balance_Content = new("RPR_Balance_Content", 1),
             RPR_SoDRefreshRange = new("RPR_SoDRefreshRange", 6),
-            RPR_SoDHPThreshold = new("RPR_SoDThreshold", 0),
+            RPR_SoDHPThreshold = new("RPR_SoDThreshold"),
             RPR_ST_ArcaneCircleBossOption = new("RPR_ST_ArcaneCircle_SubOption", 1),
             RPR_STSecondWindHPThreshold = new("RPR_STSecondWindThreshold", 40),
             RPR_STBloodbathHPThreshold = new("RPR_STBloodbathThreshold", 30),
@@ -133,6 +133,5 @@ internal partial class RPR
             RPR_SoulsowOptions = new("RPR_SoulsowOptions");
 
         #endregion
-
     }
 }

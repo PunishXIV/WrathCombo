@@ -14,14 +14,14 @@ namespace WrathCombo.Combos.PvE;
 
 /// <summary>
 ///     Should be the same as <see cref="UIntExtensions" />, but with checking
-///     the <see cref="PluginConfiguration.RetargetHealingActionsToStack" /> setting,
+///     the <see cref="Configuration.RetargetHealingActionsToStack" /> setting,
 ///     and automatically setting the target to the
 ///     <see cref="SimpleTarget.Stack.AllyToHeal">Heal Stack</see>.
 /// </summary>
 public static class HealRetargeting
 {
     /// Just a buffer for checking the
-    /// <see cref="PluginConfiguration.RetargetHealingActionsToStack" />
+    /// <see cref="Configuration.RetargetHealingActionsToStack" />
     /// setting.
     internal static bool RetargetSettingOn
     {
@@ -47,7 +47,7 @@ public static class HealRetargeting
 
     /// <summary>
     ///     Retargets the action if the
-    ///     <see cref="PluginConfiguration.RetargetHealingActionsToStack">
+    ///     <see cref="Configuration.RetargetHealingActionsToStack">
     ///         option to do so
     ///     </see>
     ///     is enabled, and there is no target override.
@@ -55,17 +55,15 @@ public static class HealRetargeting
     /// <seealso cref="UIntExtensions.Retarget(uint,IGameObject?,bool)" />
     public static uint RetargetIfEnabled
     (this uint actionID,
-        IGameObject? optionalTarget,
-        bool dontCull = false) =>
+        IGameObject? optionalTarget) =>
         RetargetSettingOn && optionalTarget is null
             ? actionID.Retarget(
-                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack,
-                dontCull)
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
             : actionID;
 
     /// <summary>
     ///     Retargets the action if the
-    ///     <see cref="PluginConfiguration.RetargetHealingActionsToStack">
+    ///     <see cref="Configuration.RetargetHealingActionsToStack">
     ///         option to do so
     ///     </see>
     ///     is enabled, and there is no target override.
@@ -74,17 +72,15 @@ public static class HealRetargeting
     public static uint RetargetIfEnabled
     (this uint actionID,
         IGameObject? optionalTarget,
-        uint replaced,
-        bool dontCull = false) =>
+        uint replaced) =>
         RetargetSettingOn && optionalTarget is null
             ? actionID.Retarget(replaced,
-                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack,
-                dontCull)
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
             : actionID;
 
     /// <summary>
     ///     Retargets the action if the
-    ///     <see cref="PluginConfiguration.RetargetHealingActionsToStack">
+    ///     <see cref="Configuration.RetargetHealingActionsToStack">
     ///         option to do so
     ///     </see>
     ///     is enabled, and there is no target override.
@@ -93,11 +89,9 @@ public static class HealRetargeting
     public static uint RetargetIfEnabled
     (this uint actionID,
         IGameObject? optionalTarget,
-        uint[] replaced,
-        bool dontCull = false) =>
+        uint[] replaced) =>
         RetargetSettingOn && optionalTarget is null
             ? actionID.Retarget(replaced,
-                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack,
-                dontCull)
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
             : actionID;
 }

@@ -7,7 +7,7 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Services;
-using Status = Dalamud.Game.ClientState.Statuses.Status;
+using Status = Dalamud.Game.ClientState.Statuses.IStatus;
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -215,6 +215,18 @@ internal abstract partial class CustomComboFunctions
                     return true;
                 return false;
 
+            case 281: //Whorleater (Hard)
+                if ((targetID is 2663 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478)) ||
+                    (targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477)))
+                    return true;
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+                
+            case 359: //Whorleater (Extreme)
+                if (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478) ||
+                    targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477))
+                    return true;
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+            
             case 508: // The Void Ark
                 // Sawtooth 5103
                 // Irminsul 5105
@@ -296,7 +308,16 @@ internal abstract partial class CustomComboFunctions
                     if (bossHasParry && (!isTank || !isFrontFacing)) return true;
                 }
                 return false;
+            case 1174:
+                // Colossus Rubricatus = 9511
+                // No point attacking anymore when it begins to cast self-detonate = 14574
 
+                if (targetID is 9511)
+                {
+                    return tar.CastActionId == 14574;
+                }
+
+                return false;
             case 1248: // Jeuno 1 Ark Angels
                 // ArkAngel HM = 1804
                 // ArkAngel MR = 18051 (A)
@@ -311,11 +332,31 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
                 }
                 return false;
-
+            
+            case 1263: // M8S
+                // Wolf of Wind = 18219
+                // Wolf of Stone = 18225
+                if (targetID is 18219 or 18225)
+                {
+                    if (HasStatusEffect(4389)) return targetID != 18225; // Target Wolf of Wind
+                    if (HasStatusEffect(4390)) return targetID != 18219; // Target Wolf of Stone
+                }
+                return false;
+            
             case 1267: //Sunken Temple of Qarn Temple Guardian
                 if (targetID is 18300 && HasStatusEffect(350, tar, true)) return true;
                 return false;
-
+            
+            case 1290: //Pilgrim's Traverse
+                // Eminent Grief = 18666
+                // Devoured Eater = 18667
+                if (targetID is 18666 or 18667)
+                {
+                    if (HasStatusEffect(4559)) return targetID != 18667; // Target Eminent Grief
+                    if (HasStatusEffect(4560)) return targetID != 18666; // Target Devoured Eater
+                }
+                return false;
+            
             case 1292: //Meso Terminal
                 // Bloody Headsman = 18576 a
                 // Pale Headsman = 18577 b
@@ -351,7 +392,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="target"></param>
     /// <returns></returns>
-    public unsafe static bool TargetIsStatusCapped(IGameObject? target)
+    public static unsafe bool TargetIsStatusCapped(IGameObject? target)
     {
         target ??= LocalPlayer;
         if (target is IBattleChara bc)

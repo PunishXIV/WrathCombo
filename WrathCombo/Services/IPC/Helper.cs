@@ -12,8 +12,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using WrathCombo.API.Enum;
+using WrathCombo.API.Extension;
 using WrathCombo.Attributes;
-using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using EZ = ECommons.Throttlers.EzThrottler;
@@ -43,7 +44,7 @@ public partial class Helper(ref Leasing leasing)
         // Bail if IPC is disabled
         if (!IPCEnabled)
         {
-            Logging.Warn(BailMessages.LiveDisabled);
+            Logging.Warn(BailMessage.LiveDisabled.Description);
             result = SetResult.IPCDisabled;
             return true;
         }
@@ -52,7 +53,7 @@ public partial class Helper(ref Leasing leasing)
         if (lease is not null &&
             !_leasing.CheckLeaseExists(lease.Value))
         {
-            Logging.Warn(BailMessages.InvalidLease);
+            Logging.Warn(BailMessage.InvalidLease.Description);
             result = SetResult.InvalidLease;
             return true;
         }
@@ -61,7 +62,7 @@ public partial class Helper(ref Leasing leasing)
         if (lease is not null &&
             _leasing.CheckBlacklist(lease.Value))
         {
-            Logging.Warn(BailMessages.BlacklistedLease);
+            Logging.Warn(BailMessage.BlacklistedLease.Description);
             result = SetResult.BlacklistedLease;
             return true;
         }

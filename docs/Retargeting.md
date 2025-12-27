@@ -77,8 +77,7 @@ class at the bottom of [ActionRetargeting.cs](https://github.com/PunishXIV/Wrath
 internal static uint Retarget
         (this uint action,
         [uint OR uint[]] replaced,                    // Optional, choice via overloads
-        [IGameObject? OR Func<IGameObject?>] target,  // Choice via overloads
-        bool dontCull = false)                        // Optional
+        [IGameObject? OR Func<IGameObject?>] target)  // Choice via overloads
 ```
 
 Parameters:
@@ -99,11 +98,6 @@ Parameters:
     ```
     Just provide the same thing but without the `()` at the end of your method's 
     name.
-- `dontCull` - Whether to cull the action in periodic cleaning culls.
-  - The Retarget *will* still be culled when changing instances or jobs.
-  - This should only be used when providing a Retarget for an action that may sit 
-    on the hotbar without being used for a long time.\
-    (For example, DNC's Desirable Partner Feature)
 
 ## Using Retargeting
 

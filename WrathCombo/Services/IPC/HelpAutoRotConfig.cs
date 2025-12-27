@@ -2,6 +2,7 @@
 
 using System;
 using System.Linq;
+using WrathCombo.API.Enum;
 
 #endregion
 
@@ -56,27 +57,5 @@ public partial class Leasing
 
         Logging.Log($"{registration.PluginName}: Registered Auto-Rotation Config ({option} to {value})");
         return SetResult.Okay;
-    }
-}
-
-public partial class Helper
-{
-    /// <summary>
-    ///     Determine the type the value for a given option should be.
-    /// </summary>
-    /// <param name="option">The option to check the value type for.</param>
-    /// <returns>
-    ///     The type as defined in <see cref="AutoRotationConfigOption" /> in the
-    ///     <see cref="ConfigValueTypeAttribute" />.
-    /// </returns>
-    public static Type GetAutoRotationConfigType(AutoRotationConfigOption option)
-    {
-        var type = option.GetType()
-            .GetField(option.ToString())!
-            .GetCustomAttributes(typeof(ConfigValueTypeAttribute), false)
-            .Cast<ConfigValueTypeAttribute>()
-            .First().ValueType;
-
-        return type;
     }
 }

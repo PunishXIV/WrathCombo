@@ -9,6 +9,7 @@ using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services;
+using WrathCombo.Services.ActionRequestIPC;
 using ECommonsJob = ECommons.ExcelServices.Job;
 
 namespace WrathCombo.CustomComboNS;
@@ -78,6 +79,13 @@ internal abstract partial class CustomCombo : CustomComboFunctions
 
         if (Job != Job.ADV && Job != classJobID )
             return false;
+
+
+        if(ActionRequestIPCProvider.TryGetRequestedAction(out var id))
+        {
+            newActionID = id;
+            return true;
+        }
 
         OptionalTarget = targetOverride;
         uint resultingActionID = Invoke(actionID);

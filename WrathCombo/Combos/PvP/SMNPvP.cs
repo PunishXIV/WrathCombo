@@ -78,7 +78,7 @@ internal static class SMNPvP
             bool bahamutBurst = OriginalHook(Ruin3) is AstralImpulse;
             bool phoenixBurst = OriginalHook(Ruin3) is FountainOfFire;
             double playerHP = PlayerHealthPercentageHp();
-            int radiantThreshold = PluginConfiguration.GetCustomIntValue(SMNPvP_RadiantAegisThreshold);
+            int radiantThreshold = SMNPvP_RadiantAegisThreshold;
             #endregion
 
             if (PvPCommon.TargetImmuneToDamage() && HasStatusEffect(Buffs.FurtherRuin)) // Block for ruin 4 because it is on action ID

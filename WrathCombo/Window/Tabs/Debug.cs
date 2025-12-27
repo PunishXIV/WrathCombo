@@ -18,22 +18,27 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using WrathCombo.Services.IPC_Subscriber;
+using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
+using WrathCombo.Services.IPC_Subscriber;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using BattleNPCSubKind = Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
-using Status = Dalamud.Game.ClientState.Statuses.Status;
+using Status = Dalamud.Game.ClientState.Statuses.IStatus;
 
 #endregion
 
@@ -45,7 +50,7 @@ internal class Debug : ConfigWindow, IDisposable
     private static int _sheetCustomId = 0;
     private static string _debugError = string.Empty;
     private static string _debugConfig = string.Empty;
-    private static PluginConfiguration? _previousConfig;
+    private static Configuration? _previousConfig;
 
     private static Guid? _wrathLease;
     private static Action? _debugSpell;
@@ -92,9 +97,71 @@ internal class Debug : ConfigWindow, IDisposable
         {
             try
             {
-                var base64 = Convert.FromBase64String(_debugConfig);
-                var decode = Encoding.UTF8.GetString(base64);
-                var config = JsonConvert.DeserializeObject<PluginConfiguration>(decode);
+                // Trim off anything extra copied from that section of the file
+                var stripped = _debugConfig;
+                const string startMarker = "START DEBUG CODE";
+                const string endMarker = "END DEBUG CODE";
+                var startIdx = stripped.IndexOf(startMarker, StringComparison.OrdinalIgnoreCase);
+                if (startIdx >= 0)
+                {
+                    startIdx += startMarker.Length;
+                    var endIdx = stripped.IndexOf(endMarker, startIdx, StringComparison.OrdinalIgnoreCase);
+                    stripped = endIdx >= 0 ? stripped.Substring(startIdx, endIdx - startIdx) : stripped[startIdx..];
+                }
+                // Remove all whitespace characters (spaces, tabs, newlines)
+                stripped = new string(stripped
+                    .Where(c => !char.IsWhiteSpace(c)).ToArray());
+
+                // Try to load the data from the string
+                byte[] base64;
+                try
+                {
+                    base64 = Convert.FromBase64String(stripped);
+                }
+                // Fix when editors don't want to copy the padding at the end
+                catch (FormatException)
+                {
+                    // If there's not a padding issue, re-throw the error
+                    if (stripped.Length % 4 == 0)
+                        throw;
+                    
+                    // Try to fix padding issues
+                    var paddingNeeded = 4 - (stripped.Length % 4);
+                    stripped = stripped
+                        .PadRight(stripped.Length + paddingNeeded, '=');
+                    base64 = Convert.FromBase64String(stripped);
+                }
+                
+                // Decompress the data
+                byte[] decompressedBytes;
+                try
+                {
+                    // Attempt Brotli decompression (new format)
+                    using var compressedStream = new MemoryStream(base64);
+                    using var brotliStream = new BrotliStream(compressedStream, CompressionMode.Decompress);
+                    using var decompressedStream = new MemoryStream();
+                    brotliStream.CopyTo(decompressedStream);
+                    decompressedBytes = decompressedStream.ToArray();
+                }
+                catch (InvalidDataException)
+                {
+                    // Old format, no compression
+                    decompressedBytes = base64;
+                }
+
+                // Decode the data
+                Configuration? config;
+                try
+                {
+                    var decode = Encoding.UTF8.GetString(decompressedBytes);
+                    config = JsonConvert.DeserializeObject<Configuration>(decode);
+                }
+                // Fallback to decoding the non-decompressed data
+                catch (Exception)
+                {
+                    var decode = Encoding.UTF8.GetString(base64);
+                    config = JsonConvert.DeserializeObject<Configuration>(decode);
+                }
                 if (config != null)
                 {
                     DebugConfig = true;
@@ -117,7 +184,9 @@ internal class Debug : ConfigWindow, IDisposable
             "Paste a base64 encoded configuration here to load it into the plugin." +
             "\nThis comes from a debug file." +
             "\nThis will overwrite your current configuration temporarily, restoring your own configuration when you disable debug mode." +
-            "\nDebug mode will also be disabled if you unload the plugin.");
+            "\nDebug mode will also be disabled if you unload the plugin." +
+            "\n\nTip: To make it easier to copy from the file, you can select 'Start Debug Code' thru 'End Debug Code'" +
+            "(the extra stuff will be trimmed off)");
 
         if (DebugConfig)
             if (ImGui.Button("Disable Debug Config Mode"))
@@ -128,7 +197,7 @@ internal class Debug : ConfigWindow, IDisposable
         ImGuiEx.Spacing(new Vector2(0f, SpacingMedium));
 
         var target = Svc.Targets.Target;
-        var player = Svc.ClientState.LocalPlayer;
+        var player = Player.Object;
 
         // Custom 2-Column Styling
         static void CustomStyleText(string firstColumn, object? secondColumn, bool useMonofont = false, Vector4? optionalColor = null)
@@ -276,6 +345,7 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Health:", $"{player.CurrentHp:N0} / {player.MaxHp:N0} ({MathF.Round(PlayerHealthPercentageHp(), 2)}%)");
             CustomStyleText("MP:", $"{player.CurrentMp:N0} / {player.MaxMp:N0}");
             CustomStyleText("Job:", $"{player.ClassJob.Value.NameEnglish} (ID: {player.ClassJob.RowId})");
+            CustomStyleText($"Level (synced):", $"{Player.Level} ({Svc.PlayerState.EffectiveLevel})");
             CustomStyleText("Zone:", $"{Svc.Data.GetExcelSheet<TerritoryType>().FirstOrDefault(x => x.RowId == Svc.ClientState.TerritoryType).PlaceName.Value.Name} (ID: {Svc.ClientState.TerritoryType})");
             CustomStyleText("In PvP:", InPvP());
             CustomStyleText("In FATE:", InFATE());
@@ -376,7 +446,6 @@ internal class Debug : ConfigWindow, IDisposable
                     foundSheet = false;
                 
                 CustomStyleText("Name:", target?.Name);
-                CustomStyleText("IDs: (<entity>/<data or base>)", $"{target?.EntityId} / {target?.BaseId}");
                 CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
                 CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
                 CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
@@ -425,7 +494,7 @@ internal class Debug : ConfigWindow, IDisposable
 
             if (ImGui.TreeNode("Object Data"))
             {
-                CustomStyleText("DataId:", target?.BaseId);
+                CustomStyleText("Data/BaseId:", target?.BaseId);
 
                 // Display 'EntityId' only if it differs from 'GameObjectId'
                 if (target is not null && target.EntityId != target.GameObjectId)
@@ -435,6 +504,7 @@ internal class Debug : ConfigWindow, IDisposable
                 }
 
                 CustomStyleText("ObjectId:", target?.GameObjectId);
+                CustomStyleText("NameId:", target?.GetNameId());
                 CustomStyleText("ObjectKind:", target?.ObjectKind);
                 CustomStyleText("ObjectSubKind:", target?.SubKind);
                 CustomStyleText("ObjectType:", target?.GetType()?.Name);
@@ -619,6 +689,7 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText($"Duty Action 3:", $"{Action3.ActionName()}");
             CustomStyleText($"Duty Action 4:", $"{Action4.ActionName()}");
             CustomStyleText($"Duty Action 5:", $"{Action5.ActionName()}");
+            CustomStyleText($"In Mudra:", NIN.InMudra);
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
 
@@ -627,6 +698,8 @@ internal class Debug : ConfigWindow, IDisposable
                 if (WrathOpener.CurrentOpener is not null)
                 {
                     CustomStyleText("Current Opener", WrathOpener.CurrentOpener.GetType().Name);
+                    CustomStyleText($"Cache:", WrathOpener.CurrentOpener?.CacheReady);
+                    CustomStyleText($"Pre-Checks:", $"Level: {WrathOpener.CurrentOpener?.LevelChecked}({Svc.PlayerState.EffectiveLevel}), CDs: {WrathOpener.CurrentOpener?.HasCooldowns()}");
                     CustomStyleText("Opener State:", WrathOpener.CurrentOpener.CurrentState);
                     CustomStyleText("Current Opener Action:", WrathOpener.CurrentOpener.CurrentOpenerAction.ActionName());
                     CustomStyleText("Current Opener Step:", WrathOpener.CurrentOpener.OpenerStep);
@@ -915,7 +988,7 @@ internal class Debug : ConfigWindow, IDisposable
 
                     var createdTimeString = retarget.Created.ToString(@"HH\:mm\:ss");
                     CustomStyleText($"Created: {createdTimeString}",
-                        $"Don't Cull Setting: {(retarget.DontCull ? "On" : "Off")}");
+                        $"");
 
                     ImGui.Unindent();
 
@@ -1107,6 +1180,13 @@ internal class Debug : ConfigWindow, IDisposable
             }
         }
 
+        if(ImGui.CollapsingHeader("Action Request"))
+        {
+            ImGui.Indent();
+            ActionRequestDebugUI.Draw();
+            ImGui.Unindent();
+        }
+
         #endregion
 
         ImGuiEx.Spacing(new Vector2(0, SpacingMedium));
@@ -1139,8 +1219,8 @@ internal class Debug : ConfigWindow, IDisposable
         DebugConfig = false;
         Service.Configuration =
             _previousConfig ??
-            Svc.PluginInterface.GetPluginConfig() as PluginConfiguration ??
-            new PluginConfiguration();
+            Svc.PluginInterface.GetPluginConfig() as Configuration ??
+            new Configuration();
         _previousConfig = null;
 
         P.IPC = Provider.Init();

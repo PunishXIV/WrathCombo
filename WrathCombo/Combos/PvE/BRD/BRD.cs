@@ -696,7 +696,7 @@ internal partial class BRD : PhysicalRanged
                 return OriginalHook(StraightShot);
 
             #region Multidot Management
-            if (BRD_Adv_DoT_Options[3])
+            if (BRD_Adv_DoT_Options[3] && IsEnabled(Preset.BRD_Adv_DoT))
             {
                 #region Dottable Variables
 

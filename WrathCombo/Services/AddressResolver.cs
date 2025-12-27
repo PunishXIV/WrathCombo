@@ -1,17 +1,15 @@
-using Dalamud.Game;
+using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
-using System;
-
 namespace WrathCombo.Core;
 
 /// <summary> Plugin address resolver. </summary>
-internal class PluginAddressResolver
+internal class AddressResolver
 {
     /// <summary> Gets the address of fpIsIconReplacable. </summary>
-    public IntPtr IsActionIdReplaceable { get; private set; }
+    public nint IsActionIdReplaceable { get; private set; }
 
-    /// <inheritdoc/>
-    public unsafe void Setup(ISigScanner scanner)
+    /// <inheritdoc />
+    public void Setup(ISigScanner scanner)
     {
         IsActionIdReplaceable = scanner.ScanText("40 53 48 83 EC 20 8B D9 48 8B 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 85 C0 74 1F");
 

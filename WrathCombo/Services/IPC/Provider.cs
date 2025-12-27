@@ -12,6 +12,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using WrathCombo.API.Enum;
+using WrathCombo.API.Extension;
 using WrathCombo.Combos;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -446,7 +448,7 @@ public partial class Provider : IDisposable
         // Bail if the lease does not exist
         if (!Leasing.CheckLeaseExists(lease))
         {
-            Logging.Warn(BailMessages.InvalidLease);
+            Logging.Warn(BailMessage.InvalidLease.Description);
             return;
         }
 

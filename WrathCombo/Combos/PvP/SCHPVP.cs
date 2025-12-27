@@ -100,7 +100,7 @@ internal static class SCHPvP
                 
                 if (!HasStatusEffect(Buffs.Catalyze, healTarget) && GetTargetHPPercent(healTarget) <= SCHPvP_AdloThreshold && ActionReady(Adloquilum))
                     return SCHPvP_Adlo_Retarget
-                        ? Adloquilum.Retarget(Broil, healTarget, true)
+                        ? Adloquilum.Retarget(Broil, healTarget)
                         : Adloquilum;
             }
             return actionID;

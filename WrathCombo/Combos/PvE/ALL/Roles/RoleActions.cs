@@ -1,4 +1,5 @@
-﻿using WrathCombo.Data;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
@@ -191,10 +192,10 @@ internal static partial class RoleActions
         public static bool CanInterject() =>
             ActionReady(Interject) && CanInterruptEnemy();
 
-        public static bool CanReprisal(int healthPercent = 100, int? enemyCount = null, bool checkTargetForDebuff = true) =>
-            (checkTargetForDebuff && !HasStatusEffect(Debuffs.Reprisal, CurrentTarget, true) || !checkTargetForDebuff) &&
+        public static bool CanReprisal(int healthPercent = 100, int? enemyCount = null, bool checkTargetForDebuff = true, IGameObject? target = null) =>
+            (!checkTargetForDebuff || !HasStatusEffect(Debuffs.Reprisal, target ?? CurrentTarget, true)) &&
             (enemyCount is null ? InActionRange(Reprisal) : NumberOfEnemiesInRange(Reprisal) >= enemyCount) &&
-            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent && CanApplyStatus(CurrentTarget, Debuffs.Reprisal);
+            ActionReady(Reprisal) && PlayerHealthPercentageHp() <= healthPercent && CanApplyStatus(target ?? CurrentTarget, Debuffs.Reprisal);
 
         public static bool CanShirk() =>
             ActionReady(Shirk);

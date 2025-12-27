@@ -110,9 +110,9 @@ internal partial class MNK
         #region Variables
 
         public static UserInt
-            MNK_SelectedOpener = new("MNK_SelectedOpener", 0),
+            MNK_SelectedOpener = new("MNK_SelectedOpener"),
             MNK_Balance_Content = new("MNK_Balance_Content", 1),
-            MNK_ST_BuffsBossOption = new("MNK_ST_BuffsBossOption", 0),
+            MNK_ST_BuffsBossOption = new("MNK_ST_BuffsBossOption"),
             MNK_ST_BuffsHPThreshold = new("MNK_ST_BuffsHPThreshold", 10),
             MNK_ST_EarthsReplyHPThreshold = new("MNK_ST_EarthsReplyHPThreshold", 50),
             MNK_ST_SecondWindHPThreshold = new("MNK_ST_SecondWindHPThreshold", 40),
@@ -121,7 +121,7 @@ internal partial class MNK
             MNK_AoE_PerfectBalanceHPThreshold = new("MNK_AoE_PerfectBalanceHPThreshold", 40),
             MNK_AoE_SecondWindHPThreshold = new("MNK_AoE_SecondWindThreshold", 40),
             MNK_AoE_BloodbathHPThreshold = new("MNK_AoE_BloodbathThreshold", 30),
-            MNK_BH_RoF = new("MNK_BH_RoF", 0);
+            MNK_BH_RoF = new("MNK_BH_RoF");
 
         public static UserBool
             MNK_Thunderclap_FieldMouseover = new("MNK_Thunderclap_FieldMouseover"),
@@ -131,6 +131,5 @@ internal partial class MNK
             MNK_BasicCombo = new("MNK_BasicCombo");
 
         #endregion
-
     }
 }

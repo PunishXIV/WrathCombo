@@ -2,7 +2,9 @@
 
 using ECommons.EzIpcManager;
 using System;
-using arcOption = WrathCombo.Services.IPC.AutoRotationConfigOption;
+using WrathCombo.API.Enum;
+using WrathCombo.API.Extension;
+using arcOption = WrathCombo.API.Enum.AutoRotationConfigOption;
 
 #endregion
 
@@ -31,7 +33,7 @@ public partial class Provider
             var checkControlled = Leasing.CheckAutoRotationConfigControlled(option);
             if (checkControlled is not null)
             {
-                var type = Helper.GetAutoRotationConfigType(option);
+                var type = option.ValueType;
                 return type.IsEnum
                     ? checkControlled.Value
                     : Convert.ChangeType(checkControlled.Value, type);
@@ -65,6 +67,7 @@ public partial class Provider
                 arcOption.ManageKardia => arcH.ManageKardia,
                 arcOption.AutoRez => arcH.AutoRez,
                 arcOption.AutoRezDPSJobs => arcH.AutoRezDPSJobs,
+                arcOption.AutoRezDPSJobsHealersOnly => arcH.AutoRezDPSJobsHealersOnly,
                 arcOption.AutoCleanse => arcH.AutoCleanse,
                 arcOption.IncludeNPCs => arcH.IncludeNPCs,
                 arcOption.OnlyAttackInCombat => arcD.OnlyAttackInCombat,
@@ -118,7 +121,7 @@ public partial class Provider
             option = (arcOption)Convert.ToInt32(passedOption);
 
             // Try to convert the value to the correct type
-            type = Helper.GetAutoRotationConfigType(option);
+            type = option.ValueType;
             typeCode = Type.GetTypeCode(type);
         }
         catch (Exception)

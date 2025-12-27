@@ -1,4 +1,6 @@
 ﻿#region
+
+using System;
 using Dalamud.Game.ClientState.JobGauge.Types;
 using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
@@ -31,13 +33,9 @@ internal partial class WHM
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Aero);
-        var hpThreshold = IsNotEnabled(Preset.WHM_ST_Simple_DPS)
-            ? computeHpThreshold()
-            : 0;
+        var hpThreshold = IsNotEnabled(Preset.WHM_ST_Simple_DPS) ? computeHpThreshold() : 0;
         AeroList.TryGetValue(dotAction, out var dotDebuffID);
-        var dotRefresh = IsNotEnabled(Preset.WHM_ST_Simple_DPS)
-            ? WHM_ST_MainCombo_DoT_Threshold
-            : 2.5;
+        var dotRefresh = IsNotEnabled(Preset.WHM_ST_Simple_DPS) ? WHM_ST_DPS_AeroUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -50,21 +48,11 @@ internal partial class WHM
 
     internal static int computeHpThreshold()
     {
-        if (TargetIsBoss() && InBossEncounter())
+        if (InBossEncounter())
         {
-            return WHM_ST_DPS_AeroOptionBoss;
+            return TargetIsBoss() ? WHM_ST_DPS_AeroBossOption : WHM_ST_DPS_AeroBossAddsOption;
         }
-
-        switch ((int)WHM_ST_DPS_AeroOptionSubOption)
-        {
-            case (int)EnemyRestriction.AllEnemies:
-                return WHM_ST_DPS_AeroOptionNonBoss;
-            case (int)EnemyRestriction.OnlyBosses:
-                return InBossEncounter() ? WHM_ST_DPS_AeroOptionNonBoss : 0;
-            default:
-            case (int)EnemyRestriction.NonBosses:
-                return !InBossEncounter() ? WHM_ST_DPS_AeroOptionNonBoss : 0;
-        }
+        return WHM_ST_DPS_AeroTrashOption;
     }
 
     #region Get ST Heals
@@ -77,9 +65,9 @@ internal partial class WHM
                        GetTargetHPPercent(healTarget,
                            WHM_STHeals_IncludeShields);
         float refreshTime = WHM_STHeals_RegenTimer;
-        bool tankCheck = healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank;
-        Status? regenHoT = GetStatusEffect(Buffs.Regen, healTarget);
-        Status? BenisonShield = GetStatusEffect(Buffs.DivineBenison, healTarget);
+        bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
+        IStatus? regenHoT = GetStatusEffect(Buffs.Regen, healTarget);
+        IStatus? BenisonShield = GetStatusEffect(Buffs.DivineBenison, healTarget);
 
         switch (i)
         {
@@ -276,6 +264,13 @@ internal partial class WHM
                !HasStatusEffect(Buffs.LiturgyOfTheBell) &&
                RaidWideCasting() && CanWeave();
     }
+    internal static bool RaidwidePlenaryIndulgence()
+    {
+        return IsEnabled(Preset.WHM_Raidwide_PlenaryIndulgence) &&
+               ActionReady(PlenaryIndulgence) &&
+               RaidWideCasting() && CanWeave();
+    }
+
 
     #endregion
 
@@ -326,21 +321,23 @@ internal partial class WHM
             Dia,
             Glare3,
             Glare3,
-            PresenceOfMind,
+            PresenceOfMind, //5
             Glare4,
+            AfflatusMisery,
             Assize,
             Glare4,
-            Glare4,
+            Glare4, //10
             Glare3,
             Glare3,
             Glare3,
             Glare3,
-            Glare3,
-            Glare3,
-            Dia,
+            Glare3, //15
+            Dia
         ];
 
         internal override UserData ContentCheckConfig => WHM_Balance_Content;
+        
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([7], () => !BloodLilyReady)];
 
         public override bool HasCooldowns()
         {

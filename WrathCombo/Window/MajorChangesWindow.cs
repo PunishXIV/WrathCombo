@@ -32,8 +32,7 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
             "MajorChangesWindow: " +
             $"IsVersionProblematic: {DoesVersionHaveChange}, " +
             $"IsSuggestionHiddenForThisVersion: {IsPopupHiddenForThisVersion}, " +
-            $"WasUsingOldMCHTools: {WasUsingOldMCHTools}, " +
-            $"WasUsingOldMNKBurstOptions: {WasUsingOldMNKConfigs}"
+            $"WasUsingOldNINJitsuOptions: {WasUsingOldNINConfigs}"
         );
         if (DoesVersionHaveChange &&
             !IsPopupHiddenForThisVersion)
@@ -51,55 +50,27 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
     {
         PadOutMinimumWidthFor("Wrath Combo | New Changes");
 
-        #region MCH
-
-        ImGuiEx.TextUnderlined("MCH Tools are now under their own Section");
-        if (WasUsingOldMCHTools)
-            ImGuiEx.Text(ImGuiColors.DalamudYellow,
-                "You were using one of these options! Please Read!");
-        ImGuiEx.Text(
-            "All MCH Tool Options in the Single-Target Advanced Combo are now under their own section,\n" +
-            "and this section needs enabled itself in order for the Tools Features to continue working.\n\n" +
-            "You can find this new section under:\n" +
-            "PvE Features > MCH > Single Target Advanced > Tools"
-        );
-        ImGui.NewLine();
-        if (ImGui.Button("> Open Machinists Config##majorSettings1"))
-            P.HandleOpenCommand(["MCH"], forceOpen: true);
-        if (ImGui.Button("> Enable the new Section for me"))
-        {
-            PresetStorage.EnablePreset(Preset.MCH_ST_Adv_Tools);
-            Service.Configuration.Save();
-        }
-        if (IsEnabled(Preset.MCH_ST_Adv_Tools))
-        {
-            ImGui.SameLine();
-            FontAwesome.Print(ImGuiColors.HealerGreen, FontAwesomeIcon.Check);
-            ImGui.SameLine();
-            ImGuiEx.Text($"Enabled");
-        }
-
-        #endregion
-
-        ImGuiEx.Spacing(new System.Numerics.Vector2(0, 10));
+        /*ImGuiEx.Spacing(new System.Numerics.Vector2(0, 10));
         ImGui.Separator();
-        ImGuiEx.Spacing(new System.Numerics.Vector2(0, 10));
+        ImGuiEx.Spacing(new System.Numerics.Vector2(0, 10));*/
 
-        #region Retargeting
+        #region NIN
 
-        ImGuiEx.TextUnderlined("MNK Burst settings have moved slightly");
-        if (WasUsingOldMNKConfigs)
+        ImGuiEx.TextUnderlined("NIN Ninjitsu-related settings have been restructured");
+        if (WasUsingOldNINConfigs)
             ImGuiEx.Text(ImGuiColors.DalamudYellow,
                 "You were using one of these options! Please Read!");
         ImGuiEx.Text(
-            "Monk's Burst settings (like the HP Slider and Boss-only option) are no longer on each Burst action,\n" +
-            "and are instead now all together on the Burst section.\n" +
-            "If you were using one of these options then you'll need to adjust these new settings.\n\n" +
+            "Ninja's Ninjitsu-related settings are now each their own Feature,\n" +
+            "instead of checkboxes under the Ninjitsu Option.\n" +
+            "If you were using one of these options then you'll need to setup these new settings.\n\n" +
             "You can find these moved settings here:\n" +
-            "PvE Features > MNK > Single Target Advanced > Buffs Option");
+            "PvE Features > NIN > Single Target and AoE Advanced > Ninjitsu Option");
         ImGui.NewLine();
-        if (ImGui.Button("> Open Monks Config##majorSettings2"))
-            P.HandleOpenCommand(["MNK"], forceOpen: true);
+        if (ImGui.Button("> Open Ninja's Config##majorSettings2"))
+            P.HandleOpenCommand(["NIN"], forceOpen: true);
+        ImGui.SameLine();
+        ImGui.Text("(then just search for Ninjitsu)");
 
         #endregion
 
@@ -165,7 +136,7 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
     ///     The version where the problem was introduced.
     /// </summary>
     private static readonly Version VersionWhereChangeIntroduced =
-        new(1, 0, 2, 15);
+        new(1, 0, 2, 24);
 
     /// <summary>
     ///     Whether the current version is problematic.
@@ -185,24 +156,23 @@ internal class MajorChangesWindow : Dalamud.Interface.Windowing.Window
     #region Specific Info to Display for Update
 
     private static bool _getConfigValue(string config) =>
-        PluginConfiguration.GetCustomBoolValue(config);
-
-    /// <summary>
-    ///     If the user was using MCH's Tools Presets.
-    /// </summary>
-    private static bool WasUsingOldMCHTools =>
-        IsEnabled(Preset.MCH_ST_Adv_Drill) ||
-        IsEnabled(Preset.MCH_ST_Adv_AirAnchor) ||
-        IsEnabled(Preset.MCH_ST_Adv_Chainsaw) ||
-        IsEnabled(Preset.MCH_ST_Adv_Excavator);
+        Configuration.GetCustomBoolArrayValue(config) != Array.Empty<bool>() ||
+        Configuration.GetCustomIntValue(config) > 0;
 
     /// <summary>
     ///     If the user was using MNK's old Burst Configs
     /// </summary>
-    private static bool WasUsingOldMNKConfigs =>
-        _getConfigValue("MNK_ST_BrotherhoodBossOption") ||
-        _getConfigValue("MNK_ST_RiddleOfFire_SubOption") ||
-        _getConfigValue("MNK_ST_RiddleOfWind_SubOption");
+    private static bool WasUsingOldNINConfigs =>
+        _getConfigValue("NIN_ST_AdvancedMode_TenChiJin_Options") ||
+        _getConfigValue("NIN_ST_AdvancedMode_Ninjitsus_Options") ||
+        _getConfigValue("NIN_AoE_AdvancedMode_TenChiJin_Options") ||
+        _getConfigValue("NIN_AoE_AdvancedMode_Ninjitsus_Options") ||
+        _getConfigValue("NIN_AoE_AdvancedMode_Doton_Threshold") ||
+        _getConfigValue("NIN_AoE_AdvancedMode_HutonSetup") ||
+        _getConfigValue("NIN_ST_AdvancedMode_Raiton_Options") ||
+        _getConfigValue("NIN_AoE_AdvancedMode_Katon_Options") ||
+        _getConfigValue("NIN_AoE_AdvancedMode_Doton_TimeStill") ||
+        _getConfigValue("NIN_ST_AdvancedMode_SuitonSetup");
 
     #endregion
 

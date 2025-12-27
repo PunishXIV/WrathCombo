@@ -8,9 +8,8 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.AutoRotation;
-using WrathCombo.Combos;
-using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.API.Attribute;
+using WrathCombo.API.Enum;
 using WrathCombo.Extensions;
 
 // ReSharper disable VariableHidesOuterVariable

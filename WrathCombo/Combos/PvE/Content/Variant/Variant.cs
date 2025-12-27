@@ -45,6 +45,11 @@ internal static partial class Variant
                         actionID = SpiritDart;
                         return true;
                     }
+                    if (CheckEagleEyeShot(Preset.Variant_Tank_EagleEyeShot))
+                    {
+                        actionID = EagleEyeShot;
+                        return true;
+                    }
                 }
                 break;
 
@@ -64,6 +69,11 @@ internal static partial class Variant
                     if (CheckRampart(Preset.Variant_Healer_Rampart))
                     {
                         actionID = Rampart;
+                        return true;
+                    }
+                    if (CheckEagleEyeShot(Preset.Variant_Healer_EagleEyeShot))
+                    {
+                        actionID = EagleEyeShot;
                         return true;
                     }
                 }
@@ -92,6 +102,11 @@ internal static partial class Variant
                         actionID = Rampart;
                         return true;
                     }
+                    if (CheckEagleEyeShot(Preset.Variant_PhysRanged_EagleEyeShot))
+                    {
+                        actionID = EagleEyeShot;
+                        return true;
+                    }
                 }
                 break;
 
@@ -118,6 +133,11 @@ internal static partial class Variant
                         actionID = Rampart;
                         return true;
                     }
+                    if (CheckEagleEyeShot(Preset.Variant_Melee_EagleEyeShot))
+                    {
+                        actionID = EagleEyeShot;
+                        return true;
+                    }
                 }
                 break;
 
@@ -142,6 +162,11 @@ internal static partial class Variant
                     if (CheckRampart(Preset.Variant_Magic_Rampart))
                     {
                         actionID = Rampart;
+                        return true;
+                    }
+                    if (CheckEagleEyeShot(Preset.Variant_Magic_EagleEyeShot))
+                    {
+                        actionID = EagleEyeShot;
                         return true;
                     }
                 }

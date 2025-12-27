@@ -116,7 +116,7 @@ internal static class SGEPvP
                 IGameObject? healTarget = SimpleTarget.Stack.AllyToHealPVP;
                 
                 if (SGEPvP_BurstMode_KardiaReminder_Retarget && CanWeave() && GetTargetHPPercent(healTarget) <= SGEPvP_KardiaThreshold)
-                    return Kardia.Retarget(Dosis, healTarget, true);
+                    return Kardia.Retarget(Dosis, healTarget);
             }
             return actionID;
         }

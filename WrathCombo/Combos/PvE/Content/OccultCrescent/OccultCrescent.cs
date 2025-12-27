@@ -2,6 +2,7 @@
 using Lumina.Excel.Sheets;
 using System;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using static WrathCombo.Combos.PvE.OccultCrescent.Config;
 using ContentHelper = ECommons.GameHelpers;
@@ -361,7 +362,7 @@ internal partial class OccultCrescent
         if (CanWeaveNow) return false;
         
         if (IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, Revive) &&
-            TargetIsFriendly() && TargetIsDead())
+            CurrentTarget.IfCanUseOn(Revive).IfDead() is not null)
         {
             actionID = Revive;
             return true;

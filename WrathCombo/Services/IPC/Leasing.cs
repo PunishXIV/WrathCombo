@@ -11,10 +11,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using WrathCombo.API.Enum;
 using WrathCombo.Combos;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
-using CancellationReasonEnum = WrathCombo.Services.IPC.CancellationReason;
+using CancellationReasonEnum = WrathCombo.API.Enum.CancellationReason;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 

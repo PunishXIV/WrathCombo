@@ -1,3 +1,5 @@
+using WrathCombo.Combos.PvE.Content;
+
 namespace WrathCombo.Combos.PvE;
 
 /// <summary>
@@ -14,15 +16,24 @@ public static class ContentSpecificActions
     ///     Defaults to <see cref="All.SavageBlade"/> when the
     ///     <see langword="return"/> would be <see langword="false"/>.
     /// </param>
+    /// <param name="healing">
+    ///     Whether the Combo executing this is a healing Combo.
+    /// </param>
     /// <returns>
     ///     Whether any content-specific actions are suggested.
     /// </returns>
-    public static bool TryGet(out uint actionID)
+    public static bool TryGet(out uint actionID, bool healing = false)
     {
         actionID = All.SavageBlade;
         
         // The methods below must check (first) that the player is in
         // the appropriate area (that should not be checked here)
+
+        if (Quests.TryGetQuestActionFix(ref actionID))
+            return true;
+
+        // Skip checking for Combat Actions if this is a Healing Combo
+        if (healing) return false;
 
         if (OccultCrescent.TryGetPhantomAction(ref actionID))
             return true;

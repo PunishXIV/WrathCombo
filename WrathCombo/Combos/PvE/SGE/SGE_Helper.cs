@@ -14,10 +14,10 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class SGE
 {
-    private static Status? DosisDebuff =>
+    private static IStatus? DosisDebuff =>
         GetStatusEffect(DosisList[OriginalHook(Dosis)].Debuff, CurrentTarget);
 
-    private static Status? DyskrasiaDebuff =>
+    private static IStatus? DyskrasiaDebuff =>
         GetStatusEffect(Debuffs.EukrasianDyskrasia, CurrentTarget);
 
     private static bool MaxPhlegma =>
@@ -36,6 +36,69 @@ internal partial class SGE
 
     private static bool HasAddersting() =>
         Addersting > 0;
+
+    #region Lists
+
+    internal static readonly FrozenDictionary<uint, ushort> EukrasianDosisList = new Dictionary<uint, ushort>
+    {
+        { Dosis, Debuffs.EukrasianDosis },
+        { Dosis2, Debuffs.EukrasianDosis2 },
+        { Dosis3, Debuffs.EukrasianDosis3 }
+    }.ToFrozenDictionary();
+
+    private static readonly List<uint>
+        AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
+        DyskrasiaList = [Dyskrasia, Dyskrasia2];
+
+    private static readonly FrozenDictionary<uint, (ushort Debuff, uint Eukrasian)> DosisList = new Dictionary<uint, (ushort D, uint E)>
+    {
+        { Dosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
+        { Dosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
+        { Dosis3, (D: Debuffs.EukrasianDosis3, E: EukrasianDosis3) },
+        //For bad latency/fps where OriginalHook(Dosis) might return an Eukrasian,
+        { EukrasianDosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
+        { EukrasianDosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
+        { EukrasianDosis3, (D: Debuffs.EukrasianDosis3, E: EukrasianDosis3) }
+    }.ToFrozenDictionary();
+
+    #endregion
+
+    #region Gauge
+
+    private static SGEGauge Gauge => GetJobGauge<SGEGauge>();
+
+    private static byte Addersgall => Gauge.Addersgall;
+
+    private static byte Addersting => Gauge.Addersting;
+
+    #endregion
+
+    #region Dot Checker
+
+    internal static bool NeedsDoT()
+    {
+        uint dotAction = OriginalHook(Dosis);
+        int hpThreshold = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? ComputeHpThreshold() : 0;
+        EukrasianDosisList.TryGetValue(dotAction, out ushort dotDebuffID);
+        double dotRefresh = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? SGE_ST_DPS_EukrasianDosisUptime_Threshold : 2.5;
+        float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
+
+        return ActionReady(Eukrasia) &&
+               CanApplyStatus(CurrentTarget, dotDebuffID) &&
+               HasBattleTarget() &&
+               GetTargetHPPercent() > hpThreshold &&
+               dotRemaining <= dotRefresh;
+    }
+
+    internal static int ComputeHpThreshold()
+    {
+        if (InBossEncounter())
+            return TargetIsBoss() ? SGE_ST_DPS_EukrasianDosisBossOption : SGE_ST_DPS_EukrasianDosisBossAddsOption;
+
+        return SGE_ST_DPS_EukrasianDosisTrashOption;
+    }
+
+    #endregion
 
     #region Healing
 
@@ -73,7 +136,7 @@ internal partial class SGE
 
         bool scholarShieldCheck = !SGE_ST_Heal_EDiagnosisOpts[1] ||
                                   !HasStatusEffect(SCH.Buffs.Galvanize);
-        bool tankCheck = healTarget.IsInParty() && healTarget.GetRole() is CombatRole.Tank;
+        bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
 
         switch (i)
         {
@@ -366,31 +429,6 @@ internal partial class SGE
 
     #endregion
 
-    #region Gauge
-
-    private static SGEGauge Gauge = GetJobGauge<SGEGauge>();
-
-    private static byte Addersgall => Gauge.Addersgall;
-
-    private static byte Addersting => Gauge.Addersting;
-
-    private static readonly List<uint>
-        AddersgallList = [Taurochole, Druochole, Ixochole, Kerachole],
-        DyskrasiaList = [Dyskrasia, Dyskrasia2];
-
-    private static readonly FrozenDictionary<uint, (ushort Debuff, uint Eukrasian)> DosisList = new Dictionary<uint, (ushort D, uint E)>
-    {
-        { Dosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
-        { Dosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
-        { Dosis3, (D: Debuffs.EukrasianDosis3, E: EukrasianDosis3) },
-        //For bad latency/fps where OriginalHook(Dosis) might return an Eukrasian,
-        { EukrasianDosis, (D: Debuffs.EukrasianDosis, E: EukrasianDosis) },
-        { EukrasianDosis2, (D: Debuffs.EukrasianDosis2, E: EukrasianDosis2) },
-        { EukrasianDosis3, (D: Debuffs.EukrasianDosis3, E: EukrasianDosis3) }
-    }.ToFrozenDictionary();
-
-    #endregion
-
     #region ID's
 
     // Actions
@@ -485,5 +523,4 @@ internal partial class SGE
     }
 
     #endregion
-
 }

@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using WrathCombo.API.Enum;
 
 #endregion
 
@@ -9,7 +10,7 @@ namespace WrathCombo.AutoRotation;
 public class AutoRotationConfigIPCWrapper(AutoRotationConfig? config)
 {
     public bool Enabled =>
-        P?.UIHelper?.AutoRotationStateControlled()?.state ??
+        P?.UIHelper.AutoRotationStateControlled()?.state ??
         config?.Enabled ??
         false;
 
@@ -245,6 +246,8 @@ public class HealerSettingsIPCWrapper(HealerSettings settings)
     public bool KardiaTanksOnly => settings.KardiaTanksOnly;
 
     public bool PreEmptiveHoT => settings.PreEmptiveHoT;
+    
+    public bool AutoRezDPSJobsHealersOnly => settings.AutoRezDPSJobsHealersOnly;
 
     #endregion
 }

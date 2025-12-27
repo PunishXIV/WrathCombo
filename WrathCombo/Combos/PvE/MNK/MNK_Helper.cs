@@ -2,58 +2,45 @@
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.MNK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class MNK
 {
-    private static float GCD =>
-        GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
+    #region Basic Combo
 
-    private static int HPThresholdBuffs =>
-        MNK_ST_BuffsBossOption == 1 ||
-        !InBossEncounter() ? MNK_ST_BuffsHPThreshold : 0;
-
-    private static bool M6SReady =>
-        !HiddenFeaturesData.IsEnabledWith(Preset.MNK_Hid_M6SHoldSquirrelBurst, () =>
-            HiddenFeaturesData.Targeting.R6SSquirrel && CombatEngageDuration().TotalSeconds < 300);
-
-    #region 1-2-3
-
-    private static uint DetermineCoreAbility(uint actionId, bool useTrueNorthIfEnabled = true)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorthIfEnabled = true)
     {
         if (!LevelChecked(TrueStrike))
             return Bootshine;
 
         if (HasStatusEffect(Buffs.OpoOpoForm) || HasStatusEffect(Buffs.FormlessFist))
-            return OpoOpo is 0 && LevelChecked(DragonKick)
+            return OpoOpoStacks is 0 && LevelChecked(DragonKick)
                 ? DragonKick
                 : OriginalHook(Bootshine);
 
         if (HasStatusEffect(Buffs.RaptorForm))
-            return Raptor is 0 && LevelChecked(TwinSnakes)
+            return RaptorStacks is 0 && LevelChecked(TwinSnakes)
                 ? TwinSnakes
                 : OriginalHook(TrueStrike);
 
         if (HasStatusEffect(Buffs.CoeurlForm))
         {
-            if (Coeurl is 0 && LevelChecked(Demolish))
+            if (CoeurlStacks is 0 && LevelChecked(Demolish))
                 return !OnTargetsRear() &&
                        Role.CanTrueNorth() &&
                        useTrueNorthIfEnabled
-                    ? TrueNorth
+                    ? Role.TrueNorth
                     : Demolish;
 
             if (LevelChecked(SnapPunch))
                 return !OnTargetsFlank() &&
                        Role.CanTrueNorth() &&
                        useTrueNorthIfEnabled
-                    ? TrueNorth
+                    ? Role.TrueNorth
                     : OriginalHook(SnapPunch);
         }
 
@@ -66,6 +53,7 @@ internal partial class MNK
 
     private static bool CanPerfectBalance(bool onAoE = false)
     {
+        bool targetCheck = onAoE || HasBattleTarget();
         switch (onAoE)
         {
             case false when
@@ -98,7 +86,7 @@ internal partial class MNK
 
             case true when
                 ActionReady(PerfectBalance) && !HasStatusEffect(Buffs.PerfectBalance) &&
-                !HasStatusEffect(Buffs.FormlessFist) && HasBattleTarget() &&
+                !HasStatusEffect(Buffs.FormlessFist) && targetCheck && IsOriginal(MasterfulBlitz) &&
                 GetTargetHPPercent() >= MNK_AoE_PerfectBalanceHPThreshold:
             {
                 //Initial/Failsafe
@@ -135,12 +123,11 @@ internal partial class MNK
         {
             case false when HasStatusEffect(Buffs.PerfectBalance):
             {
-
             #region Open Lunar
 
                 if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
                 {
-                    switch (OpoOpo)
+                    switch (OpoOpoStacks)
                     {
                         case 0:
                             actionID = DragonKick;
@@ -152,15 +139,15 @@ internal partial class MNK
                     }
                 }
 
-        #endregion
+            #endregion
 
             #region Open Solar
 
-                if (!SolarNadi && !BothNadisOpen)
+                if (!SolarNadi && LunarNadi)
                 {
-                    if (CoeurlChakra is 0)
+                    if (Gauge.BeastChakra[0] is BeastChakra.None)
                     {
-                        switch (Coeurl)
+                        switch (CoeurlStacks)
                         {
                             case 0:
                                 actionID = Demolish;
@@ -172,9 +159,9 @@ internal partial class MNK
                         }
                     }
 
-                    if (RaptorChakra is 0)
+                    if (Gauge.BeastChakra[1] is BeastChakra.None)
                     {
-                        switch (Raptor)
+                        switch (RaptorStacks)
                         {
                             case 0:
                                 actionID = TwinSnakes;
@@ -186,9 +173,9 @@ internal partial class MNK
                         }
                     }
 
-                    if (OpoOpoChakra is 0)
+                    if (Gauge.BeastChakra[2] is BeastChakra.None)
                     {
-                        switch (OpoOpo)
+                        switch (OpoOpoStacks)
                         {
                             case 0:
                                 actionID = DragonKick;
@@ -201,13 +188,13 @@ internal partial class MNK
                     }
                 }
 
-        #endregion
+            #endregion
 
                 break;
             }
+
             case true when HasStatusEffect(Buffs.PerfectBalance):
             {
-
             #region Open Lunar
 
                 if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
@@ -225,31 +212,32 @@ internal partial class MNK
                     }
                 }
 
-        #endregion
+            #endregion
 
             #region Open Solar
 
-                switch (SolarNadi)
+                if (!SolarNadi && LunarNadi)
                 {
-                    case false when !BothNadisOpen:
-                        switch (GetStatusEffectStacks(Buffs.PerfectBalance))
-                        {
-                            case 3:
-                                actionID = OriginalHook(ArmOfTheDestroyer);
-                                return true;
+                    if (Gauge.BeastChakra[0] is BeastChakra.None)
+                    {
+                        actionID = OriginalHook(ArmOfTheDestroyer);
+                        return true;
+                    }
 
-                            case 2:
-                                actionID = FourPointFury;
-                                return true;
+                    if (Gauge.BeastChakra[1] is BeastChakra.None)
+                    {
+                        actionID = FourPointFury;
+                        return true;
+                    }
 
-                            case 1:
-                                actionID = Rockbreaker;
-                                return true;
-                        }
-                        break;
+                    if (Gauge.BeastChakra[2] is BeastChakra.None)
+                    {
+                        actionID = Rockbreaker;
+                        return true;
+                    }
                 }
 
-        #endregion
+            #endregion
 
                 break;
             }
@@ -257,6 +245,33 @@ internal partial class MNK
 
         return false;
     }
+
+    #endregion
+
+    #region Misc
+
+    private static float GCD =>
+        GetCooldown(OriginalHook(Bootshine)).CooldownTotal;
+
+    private static int HPThresholdBuffs =>
+        MNK_ST_BuffsBossOption == 1 ||
+        !InBossEncounter() ? MNK_ST_BuffsHPThreshold : 0;
+
+    private static bool CanMantra() =>
+        ActionReady(Mantra) &&
+        !HasStatusEffect(Buffs.Mantra) &&
+        RaidWideCasting(3f);
+
+    private static bool CanRoE() =>
+        ActionReady(RiddleOfEarth) &&
+        RaidWideCasting(2f) &&
+        !HasStatusEffect(Buffs.RiddleOfEarth) &&
+        !HasStatusEffect(Buffs.EarthsRumination);
+
+    private static bool CanEarthsReply() =>
+        HasStatusEffect(Buffs.EarthsRumination) &&
+        NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
+        GetPartyAvgHPPercent() <= MNK_ST_EarthsReplyHPThreshold;
 
     #endregion
 
@@ -271,13 +286,18 @@ internal partial class MNK
                 !HasStatusEffect(Buffs.PerfectBalance) &&
                 InMasterfulRange() && !IsOriginal(MasterfulBlitz):
             {
-                //Only use when buff is active
+                //Failsafe to use AFTER buffs are gone
+                if (BlitzTimer <= GCD * 3)
+                    return true;
+
+                //Use when buff is active
                 if (LevelChecked(RiddleOfFire) && HasStatusEffect(Buffs.RiddleOfFire))
                     return true;
 
                 //Use whenever since no buff
                 if (!LevelChecked(RiddleOfFire))
                     return true;
+
                 break;
             }
 
@@ -291,23 +311,11 @@ internal partial class MNK
         return false;
     }
 
-    internal static bool InMasterfulRange()
-    {
-        if (NumberOfEnemiesInRange(ElixirField) >= 1 &&
-            (OriginalHook(MasterfulBlitz) == ElixirField ||
-             OriginalHook(MasterfulBlitz) == FlintStrike ||
-             OriginalHook(MasterfulBlitz) == ElixirBurst ||
-             OriginalHook(MasterfulBlitz) == RisingPhoenix))
-            return true;
-
-        if (NumberOfEnemiesInRange(TornadoKick, CurrentTarget) >= 1 &&
-            (OriginalHook(MasterfulBlitz) == TornadoKick ||
-             OriginalHook(MasterfulBlitz) == CelestialRevolution ||
-             OriginalHook(MasterfulBlitz) == PhantomRush))
-            return true;
-
-        return false;
-    }
+    internal static bool InMasterfulRange() =>
+        NumberOfEnemiesInRange(ElixirField) >= 1 &&
+        OriginalHook(MasterfulBlitz) is ElixirField or FlintStrike or ElixirBurst or RisingPhoenix ||
+        NumberOfEnemiesInRange(TornadoKick, CurrentTarget) >= 1 &&
+        OriginalHook(MasterfulBlitz) is TornadoKick or CelestialRevolution or PhantomRush;
 
     #endregion
 
@@ -333,6 +341,7 @@ internal partial class MNK
                 !HasStatusEffect(Buffs.RiddleOfFire) &&
                 !HasStatusEffect(Buffs.WindsRumination) &&
                 !HasStatusEffect(Buffs.FiresRumination):
+
             case true when
                 LevelChecked(InspiritedMeditation) &&
                 (!InCombat() || !InMeleeRange()) &&
@@ -346,7 +355,6 @@ internal partial class MNK
             default:
                 return false;
         }
-
     }
 
     private static bool CanUseChakra(bool onAoE = false)
@@ -369,7 +377,6 @@ internal partial class MNK
             default:
                 return false;
         }
-
     }
 
     #endregion
@@ -380,7 +387,7 @@ internal partial class MNK
     private static bool CanRoF() =>
         ActionReady(RiddleOfFire) &&
         !HasStatusEffect(Buffs.FiresRumination) &&
-        (HasWeavedAction(Brotherhood) ||
+        (JustUsed(Brotherhood, GCD * 1.5f) ||
          GetCooldownRemainingTime(Brotherhood) is > 50 and < 65 ||
          !LevelChecked(Brotherhood));
 
@@ -389,6 +396,8 @@ internal partial class MNK
         !HasStatusEffect(Buffs.FormlessFist) &&
         !HasStatusEffect(Buffs.PerfectBalance) &&
         IsOriginal(MasterfulBlitz) &&
+        !JustUsed(RiddleOfFire, 5f) &&
+        InActionRange(FiresReply) &&
         (JustUsed(OriginalHook(Bootshine)) ||
          JustUsed(DragonKick) ||
          GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCD * 2 ||
@@ -397,8 +406,7 @@ internal partial class MNK
     //Brotherhood
     private static bool CanBrotherhood() =>
         ActionReady(Brotherhood) &&
-        ActionReady(RiddleOfFire) &&
-        CanWeave(GCD / 2);
+        ActionReady(RiddleOfFire);
 
     //RoW
     private static bool CanRoW() =>
@@ -407,26 +415,11 @@ internal partial class MNK
 
     private static bool CanWindsReply() =>
         HasStatusEffect(Buffs.WindsRumination) &&
+        InActionRange(WindsReply) &&
         (GetCooldownRemainingTime(RiddleOfFire) > 5 ||
          HasStatusEffect(Buffs.RiddleOfFire) ||
          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
          !InMeleeRange());
-
-    private static bool CanMantra() =>
-        ActionReady(Mantra) &&
-        !HasStatusEffect(Buffs.Mantra) &&
-        RaidWideCasting(3f);
-
-    private static bool CanRoE() =>
-        ActionReady(RiddleOfEarth) &&
-        RaidWideCasting(2f) &&
-        !HasStatusEffect(Buffs.RiddleOfEarth) &&
-        !HasStatusEffect(Buffs.EarthsRumination);
-
-    private static bool CanEarthsReply() =>
-        HasStatusEffect(Buffs.EarthsRumination) &&
-        NumberOfAlliesInRange(EarthsReply) >= GetPartyMembers().Count * .75 &&
-        GetPartyAvgHPPercent() <= MNK_ST_EarthsReplyHPThreshold;
 
     #endregion
 
@@ -434,21 +427,33 @@ internal partial class MNK
 
     internal static WrathOpener Opener()
     {
-        if (LLOpener.LevelChecked &&
-            MNK_SelectedOpener == 0)
-            return LLOpener;
+        if (MNK_SelectedOpener == 0)
+        {
+            if (Lvl100LLOpener.LevelChecked)
+                return Lvl100LLOpener;
 
-        if (SLOpener.LevelChecked &&
-            MNK_SelectedOpener == 1)
-            return SLOpener;
+            if (Lvl90LLOpener.LevelChecked)
+                return Lvl90LLOpener;
+        }
+
+        if (MNK_SelectedOpener == 1)
+        {
+            if (Lvl100SLOpener.LevelChecked)
+                return Lvl100SLOpener;
+
+            if (Lvl90SLOpener.LevelChecked)
+                return Lvl90SLOpener;
+        }
 
         return WrathOpener.Dummy;
     }
 
-    internal static MNKLLOpener LLOpener = new();
-    internal static MNKSLOpener SLOpener = new();
+    internal static MNKLvl90LLOpener Lvl90LLOpener = new();
+    internal static MNKLvl100LLOpener Lvl100LLOpener = new();
+    internal static MNKLvl90SLOpener Lvl90SLOpener = new();
+    internal static MNKLvl100SLOpener Lvl100SLOpener = new();
 
-    internal class MNKLLOpener : WrathOpener
+    internal class MNKLvl100LLOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 
@@ -493,12 +498,13 @@ internal partial class MNK
             IsOffCooldown(Brotherhood) &&
             IsOffCooldown(RiddleOfFire) &&
             IsOffCooldown(RiddleOfWind) &&
-            Nadi is Nadi.None &&
-            Raptor is 0 &&
-            Coeurl is 0;
+            NadiFlag is Nadi.None &&
+            OpoOpoStacks is 0 &&
+            RaptorStacks is 0 &&
+            CoeurlStacks is 0;
     }
 
-    internal class MNKSLOpener : WrathOpener
+    internal class MNKLvl100SLOpener : WrathOpener
     {
         public override int MinOpenerLevel => 100;
 
@@ -543,38 +549,139 @@ internal partial class MNK
             IsOffCooldown(Brotherhood) &&
             IsOffCooldown(RiddleOfFire) &&
             IsOffCooldown(RiddleOfWind) &&
-            Nadi is Nadi.None &&
-            Raptor is 0 &&
-            Coeurl is 0;
+            NadiFlag is Nadi.None &&
+            OpoOpoStacks is 0 &&
+            RaptorStacks is 0 &&
+            CoeurlStacks is 0;
+    }
+
+    internal class MNKLvl90LLOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 90;
+
+        public override int MaxOpenerLevel => 90;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            ForbiddenMeditation,
+            FormShift,
+            TwinSnakes,
+            Demolish,
+            TheForbiddenChakra,
+            DragonKick,
+            Brotherhood,
+            PerfectBalance,
+            Bootshine,
+            RiddleOfWind,
+            RiddleOfFire,
+            DragonKick,
+            Bootshine,
+            ElixirField,
+            DragonKick,
+            TwinSnakes,
+            Demolish,
+            Bootshine,
+            PerfectBalance,
+            DragonKick,
+            Bootshine,
+            DragonKick,
+            ElixirField
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => Chakra >= 5),
+            ([2], () => HasStatusEffect(Buffs.FormlessFist))
+        ];
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(PerfectBalance) is 2 &&
+            IsOffCooldown(Brotherhood) &&
+            IsOffCooldown(RiddleOfFire) &&
+            IsOffCooldown(RiddleOfWind) &&
+            NadiFlag is Nadi.None &&
+            OpoOpoStacks is 0 &&
+            RaptorStacks is 0 &&
+            CoeurlStacks is 0;
+    }
+
+    internal class MNKLvl90SLOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 90;
+
+        public override int MaxOpenerLevel => 90;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            ForbiddenMeditation,
+            FormShift,
+            TwinSnakes,
+            Demolish,
+            TheForbiddenChakra,
+            DragonKick,
+            Brotherhood,
+            PerfectBalance,
+            TwinSnakes,
+            RiddleOfWind,
+            RiddleOfFire,
+            Demolish,
+            Bootshine,
+            RisingPhoenix,
+            DragonKick,
+            TwinSnakes,
+            Demolish,
+            Bootshine,
+            PerfectBalance,
+            DragonKick,
+            Bootshine,
+            DragonKick,
+            ElixirField
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => Chakra >= 5),
+            ([2], () => HasStatusEffect(Buffs.FormlessFist))
+        ];
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(PerfectBalance) is 2 &&
+            IsOffCooldown(Brotherhood) &&
+            IsOffCooldown(RiddleOfFire) &&
+            IsOffCooldown(RiddleOfWind) &&
+            NadiFlag is Nadi.None &&
+            OpoOpoStacks is 0 &&
+            RaptorStacks is 0 &&
+            CoeurlStacks is 0;
     }
 
     #endregion
 
     #region Gauge
 
-    private static MNKGauge Gauge = GetJobGauge<MNKGauge>();
+    private static MNKGauge Gauge => GetJobGauge<MNKGauge>();
 
     private static byte Chakra => Gauge.Chakra;
 
-    private static int OpoOpoChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.OpoOpo);
+    private static int OpoOpoStacks => Gauge.OpoOpoFury;
 
-    private static int OpoOpo => Gauge.OpoOpoFury;
+    private static int RaptorStacks => Gauge.RaptorFury;
 
-    private static int RaptorChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.Raptor);
+    private static int CoeurlStacks => Gauge.CoeurlFury;
 
-    private static int Raptor => Gauge.RaptorFury;
+    private static Nadi NadiFlag => Gauge.Nadi;
 
-    private static int CoeurlChakra => Gauge.BeastChakra.Count(x => x == BeastChakra.Coeurl);
+    private static bool BothNadisOpen => NadiFlag.HasFlag(Nadi.Lunar) && NadiFlag.HasFlag(Nadi.Solar);
 
-    private static int Coeurl => Gauge.CoeurlFury;
+    private static bool SolarNadi => NadiFlag is Nadi.Solar;
 
-    private static Nadi Nadi => Gauge.Nadi;
+    private static bool LunarNadi => NadiFlag is Nadi.Lunar;
 
-    private static bool BothNadisOpen => Nadi.ToString() == "Lunar, Solar";
-
-    private static bool SolarNadi => Nadi is Nadi.Solar;
-
-    private static bool LunarNadi => Nadi is Nadi.Lunar;
+    private static int BlitzTimer => Gauge.BlitzTimeRemaining / 1000;
 
     #endregion
 
@@ -598,7 +705,6 @@ internal partial class MNK
         LeapingOpo = 36945,
         RisingRaptor = 36946,
         PouncingCoeurl = 36947,
-        TrueNorth = 7546,
 
         //Blitzes
         PerfectBalance = 69,
@@ -642,7 +748,6 @@ internal partial class MNK
             RiddleOfEarth = 1179,
             RiddleOfFire = 1181,
             Brotherhood = 1185,
-            TrueNorth = 1250,
             FormlessFist = 2513,
             RiddleOfWind = 2687,
             EarthsRumination = 3841,
@@ -651,5 +756,4 @@ internal partial class MNK
     }
 
     #endregion
-
 }

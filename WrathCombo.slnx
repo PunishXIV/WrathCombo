@@ -25,6 +25,9 @@
   <Project Path="PunishLib/PunishLib/PunishLib.csproj">
     <Platform Project="x64" />
   </Project>
+  <Project Path="WrathCombo.API/WrathCombo.API.csproj">
+    <Platform Project="x64" />
+  </Project>
   <Project Path="WrathCombo/WrathCombo.csproj">
   	<Platform Project="x64" />
   </Project>

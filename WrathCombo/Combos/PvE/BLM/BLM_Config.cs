@@ -1,4 +1,3 @@
-using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -57,28 +56,34 @@ internal partial class BLM
 
                 case Preset.BLM_ST_Movement:
                     DrawHorizontalMultiChoice(BLM_ST_MovementOption,
-                        $"Use {Triplecast.ActionName()}", "", 4, 0);
+                        $"Use {Triplecast.ActionName()}", "", 5, 0);
 
                     DrawPriorityInput(BLM_ST_Movement_Priority,
-                        4, 0, $"{Triplecast.ActionName()} Priority: ");
+                        5, 0, $"{Triplecast.ActionName()} Priority: ");
 
                     DrawHorizontalMultiChoice(BLM_ST_MovementOption,
-                        $"Use {Paradox.ActionName()}", "", 4, 1);
+                        $"Use {Paradox.ActionName()}", "", 5, 1);
 
                     DrawPriorityInput(BLM_ST_Movement_Priority,
-                        4, 1, $"{Paradox.ActionName()} Priority: ");
+                        5, 1, $"{Paradox.ActionName()} Priority: ");
 
                     DrawHorizontalMultiChoice(BLM_ST_MovementOption,
-                        $"Use {Role.Swiftcast.ActionName()}", "", 4, 2);
+                        $"Use {Role.Swiftcast.ActionName()}", "", 5, 2);
 
                     DrawPriorityInput(BLM_ST_Movement_Priority,
-                        4, 2, $"{Role.Swiftcast.ActionName()} Priority: ");
+                        5, 2, $"{Role.Swiftcast.ActionName()} Priority: ");
 
                     DrawHorizontalMultiChoice(BLM_ST_MovementOption,
-                        $"Use {Foul.ActionName()} / {Xenoglossy.ActionName()}", "", 4, 3);
+                        $"Use {Foul.ActionName()} / {Xenoglossy.ActionName()}", "", 5, 3);
 
                     DrawPriorityInput(BLM_ST_Movement_Priority,
-                        4, 3, $"{Xenoglossy.ActionName()} Priority: ");
+                        5, 3, $"{Xenoglossy.ActionName()} Priority: ");
+
+                    DrawHorizontalMultiChoice(BLM_ST_MovementOption,
+                        $"Use {Scathe.ActionName()}", "", 5, 4);
+
+                    DrawPriorityInput(BLM_ST_Movement_Priority,
+                        5, 4, $"{Scathe.ActionName()} Priority: ");
                     break;
 
                 case Preset.BLM_ST_UsePolyglot:
@@ -108,23 +113,18 @@ internal partial class BLM
 
                 case Preset.BLM_ST_Thunder:
 
-                    DrawSliderInt(0, 50, BLM_ST_ThunderHPOption,
-                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
+                    DrawSliderInt(0, 100, BLM_ST_ThunderBossOption,
+                        "Bosses Only. Stop using at Enemy HP %.");
+
+                    DrawSliderInt(0, 100, BLM_ST_ThunderBossAddsOption,
+                        "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+
+                    DrawSliderInt(0, 100, BLM_ST_ThunderTrashOption,
+                        "Non boss encounter. Stop using at Enemy HP %.");
 
                     ImGui.Indent();
-
-                    ImGui.TextColored(ImGuiColors.DalamudYellow,
-                        "Select what kind of enemies the HP check should be applied to:");
-
-                    DrawHorizontalRadioButton(BLM_ST_ThunderBossOption,
-                        "Non-Bosses", "Only applies the HP check above to non-bosses.\nAllows you to only stop DoTing early when it's not a boss.", 0);
-
-                    DrawHorizontalRadioButton(BLM_ST_ThunderBossOption,
-                        "All Enemies", "Applies the HP check above to all enemies.", 1);
-
                     DrawSliderInt(0, 5, BLM_ST_ThunderRefresh,
                         "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.");
-
                     ImGui.Unindent();
                     break;
 
@@ -231,29 +231,30 @@ internal partial class BLM
         #region Variables
 
         public static UserInt
-            BLM_SelectedOpener = new("BLM_SelectedOpener", 0),
+            BLM_SelectedOpener = new("BLM_SelectedOpener"),
             BLM_Balance_Content = new("BLM_Balance_Content", 1),
             BLM_ST_LeyLinesCharges = new("BLM_ST_LeyLinesCharges", 1),
-            BLM_ST_LeyLinesMovement = new("BLM_ST_LeyLinesMovement", 0),
+            BLM_ST_LeyLinesMovement = new("BLM_ST_LeyLinesMovement"),
             BLM_ST_LeyLinesHPOption = new("BLM_ST_LeyLinesOption", 25),
-            BLM_ST_LeyLinesBossOption = new("BLM_ST_LeyLinesSubOption", 0),
-            BLM_ST_ThunderHPOption = new("BLM_ST_ThunderOption", 10),
-            BLM_ST_ThunderBossOption = new("BLM_ST_Thunder_SubOption", 0),
+            BLM_ST_LeyLinesBossOption = new("BLM_ST_LeyLinesSubOption"),
+            BLM_ST_ThunderBossOption = new("BLM_ST_ThunderBossOption"),
+            BLM_ST_ThunderBossAddsOption = new("BLM_ST_ThunderBossAddsOption", 50),
+            BLM_ST_ThunderTrashOption = new("BLM_ST_ThunderTrashOption", 50),
             BLM_ST_Triplecast_WhenToUse = new("BLM_ST_Triplecast_WhenToUse", 1),
             BLM_ST_ThunderRefresh = new("BLM_ST_ThunderUptime_Threshold", 5),
             BLM_ST_Triplecast_MovementCharges = new("BLM_ST_Triplecast_MovementCharges", 1),
             BLM_ST_Polyglot_Movement = new("BLM_ST_Polyglot_Movement", 1),
-            BLM_ST_Polyglot_Save = new("BLM_ST_Polyglot_Save", 0),
+            BLM_ST_Polyglot_Save = new("BLM_ST_Polyglot_Save"),
             BLM_ST_Manaward_Threshold = new("BLM_ST_Manaward_Threshold", 40),
-            BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges", 0),
-            BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges", 0),
-            BLM_AoE_LeyLinesMovement = new("BLM_AoE_LeyLinesMovement", 0),
+            BLM_AoE_Triplecast_HoldCharges = new("BLM_AoE_Triplecast_HoldCharges"),
+            BLM_AoE_LeyLinesCharges = new("BLM_AoE_LeyLinesCharges"),
+            BLM_AoE_LeyLinesMovement = new("BLM_AoE_LeyLinesMovement"),
             BLM_AoE_LeyLinesOption = new("BLM_AoE_LeyLinesOption", 40),
             BLM_AoE_ThunderHP = new("BLM_AoE_ThunderHP", 40),
-            BLM_B1to3 = new("BLM_B1to3", 0),
-            BLM_B4toDespair = new("BLM_B4toDespair", 0),
-            BLM_F1to3 = new("BLM_F1to3", 0),
-            BLM_Fire4_FireAndIce = new("BLM_Fire4_FireAndIce", 0);
+            BLM_B1to3 = new("BLM_B1to3"),
+            BLM_B4toDespair = new("BLM_B4toDespair"),
+            BLM_F1to3 = new("BLM_F1to3"),
+            BLM_Fire4_FireAndIce = new("BLM_Fire4_FireAndIce");
 
         public static UserFloat
             BLM_ST_LeyLinesTimeStill = new("BLM_ST_LeyLinesTimeStill", 2.5f),
@@ -275,6 +276,5 @@ internal partial class BLM
             BLM_ST_Movement_Priority = new("BLM_ST_Movement_Priority");
 
         #endregion
-
     }
 }

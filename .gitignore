@@ -7,3 +7,4 @@ WrathCombo/bin/
 /WrathCombo.sln.DotSettings.user
 .vs/
 *.v2
+/WrathCombo/packages.lock.json

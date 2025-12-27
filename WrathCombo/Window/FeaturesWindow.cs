@@ -180,7 +180,7 @@ internal class FeaturesWindow : ConfigWindow
         ImGui.SameLine();
         ImGui.SetNextItemWidth(searchWidth);
         ImGui.InputTextWithHint(
-            "", searchHintText,
+            "##featureSearch", searchHintText,
             ref Search, 30,
             ImGuiInputTextFlags.AutoSelectAll);
         ImGui.SameLine();

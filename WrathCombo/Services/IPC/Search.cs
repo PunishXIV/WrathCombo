@@ -7,15 +7,14 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using WrathCombo.API.Enum;
 using WrathCombo.Attributes;
-using WrathCombo.Combos;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Tabs;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
-using static ECommons.ExcelServices.ExcelJobHelper;
 
 #endregion
 
@@ -540,7 +539,7 @@ public class Search(Leasing leasing)
     #endregion
 
     /// <summary>
-    ///     A wrapper for <see cref="Core.PluginConfiguration.AutoActions" /> with
+    ///     A wrapper for <see cref="Configuration.AutoActions" /> with
     ///     IPC settings on top.
     /// </summary>
     internal Dictionary<Preset, bool> AutoActions =>
@@ -554,7 +553,7 @@ public class Search(Leasing leasing)
             );
 
     /// <summary>
-    ///     A wrapper for <see cref="Core.PluginConfiguration.EnabledActions" /> with
+    ///     A wrapper for <see cref="Configuration.EnabledActions" /> with
     ///     IPC settings on top.
     /// </summary>
     internal HashSet<Preset> EnabledActions =>

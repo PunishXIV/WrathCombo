@@ -1357,7 +1357,7 @@ internal partial class DNC : PhysicalRanged
                 //StatusManager.ExecuteStatusOff(Buffs.ClosedPosition);
 
                 return ClosedPosition.Retarget([ClosedPosition, Ending],
-                    DancePartnerResolver, dontCull: true);
+                    DancePartnerResolver);
             }
 
             return (int)DNC_Partner_ActionToShow switch

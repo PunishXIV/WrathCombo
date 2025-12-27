@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
-using Status = Dalamud.Game.ClientState.Statuses.Status; // conflicts with structs if not defined
+using Status = Dalamud.Game.ClientState.Statuses.IStatus; // conflicts with structs if not defined
 namespace WrathCombo.Data;
 
 internal partial class CustomComboCache : IDisposable

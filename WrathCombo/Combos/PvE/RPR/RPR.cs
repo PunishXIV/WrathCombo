@@ -70,6 +70,10 @@ internal partial class RPR : Melee
                         return OriginalHook(BloodStalk);
                 }
 
+                //Auto Arcane Crest
+                if (CanUseArcaneCrest)
+                    return ArcaneCrest;
+
                 //Healing
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -321,9 +325,12 @@ internal partial class RPR : Melee
                     //Bloodstalk
                     if (IsEnabled(Preset.RPR_ST_Bloodstalk) &&
                         LevelChecked(BloodStalk) &&
-                        (!LevelChecked(Gluttony) ||
-                         LevelChecked(Gluttony) && IsOnCooldown(Gluttony) &&
-                         (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 4)))
+                        (LevelChecked(Gluttony) &&
+                         (IsEnabled(Preset.RPR_ST_Gluttony) &&
+                          (Soul is 100 && IsOnCooldown(Gluttony) ||
+                           GetCooldownRemainingTime(Gluttony) > GCD * 4) ||
+                          !IsEnabled(Preset.RPR_ST_Gluttony) && Soul is 100) ||
+                         !LevelChecked(Gluttony)))
                         return OriginalHook(BloodStalk);
                 }
 
@@ -346,10 +353,16 @@ internal partial class RPR : Melee
                         return OriginalHook(BloodStalk);
                 }
 
+                //Auto Feint
                 if (IsEnabled(Preset.RPR_ST_Feint) &&
                     Role.CanFeint() &&
                     RaidWideCasting())
                     return Role.Feint;
+
+                //Auto Arcane Crest
+                if (IsEnabled(Preset.RPR_ST_ArcaneCrest) &&
+                    CanUseArcaneCrest)
+                    return ArcaneCrest;
 
                 //Healing
                 if (IsEnabled(Preset.RPR_ST_ComboHeals))

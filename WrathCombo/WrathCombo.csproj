@@ -5,7 +5,7 @@
     <PropertyGroup>
         <Authors>Team Wrath</Authors>
         <Company>-</Company>
-        <Version>1.0.2.16</Version>
+        <Version>1.0.3.1</Version>
         <!-- This is the version that will be used when pushing to the repo.-->
         <Description>XIVCombo for very lazy players</Description>
         <Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
@@ -17,7 +17,7 @@
     <!-- Build Parameters -->
     <PropertyGroup>
         <AssemblyName>WrathCombo</AssemblyName>
-        <TargetFramework>net9.0-windows</TargetFramework>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <Configurations>Debug;Release</Configurations>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <NoWarn>CS1591</NoWarn>
@@ -77,14 +77,14 @@
 
     <!-- Dalamud Packaging -->
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="13.0.0" />
-        <PackageReference Include="ILRepack" Version="2.0.18" />
+        <PackageReference Include="DalamudPackager" Version="14.0.1" />
     </ItemGroup>
 
     <!-- Dependencies -->
     <ItemGroup>
         <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
         <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj" />
+        <ProjectReference Include="..\WrathCombo.API\WrathCombo.API.csproj" />
     </ItemGroup>
 
     <!-- Dalamud Libraries -->

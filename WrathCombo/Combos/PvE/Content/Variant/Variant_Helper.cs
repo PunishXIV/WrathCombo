@@ -1,5 +1,4 @@
 ﻿using ECommons.DalamudServices;
-using static WrathCombo.Combos.PvE.RoleActions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE
@@ -10,7 +9,8 @@ namespace WrathCombo.Combos.PvE
         public const uint
             Ultimatum = 29730,
             Raise = 29731,
-            Raise2 = 29734;
+            Raise2 = 29734,
+            EagleEyeShot = 46942;
 
         public static uint Cure => Svc.ClientState.TerritoryType switch
         {
@@ -70,6 +70,10 @@ namespace WrathCombo.Combos.PvE
         private static bool CheckUltimatum(Preset preset) =>
             IsEnabled(preset) && ActionReady(Ultimatum)
             && NumberOfEnemiesInRange(Ultimatum) > 0;
+
+        private static bool CheckEagleEyeShot(Preset preset) =>
+            IsEnabled(preset) && ActionReady(EagleEyeShot)
+            && HasBattleTarget();
 
         #endregion
 

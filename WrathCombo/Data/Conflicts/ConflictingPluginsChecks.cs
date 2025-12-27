@@ -4,8 +4,12 @@ using ECommons.DalamudServices;
 using ECommons.Logging;
 using System;
 using System.Linq;
+using Dalamud.Game.Config;
+using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
+using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
+using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services.IPC_Subscriber;
 using EZ = ECommons.Throttlers.EzThrottler;
@@ -18,6 +22,23 @@ namespace WrathCombo.Data.Conflicts;
 public static class ConflictingPluginsChecks
 {
     private static bool _cancelConflictChecks;
+    
+    internal static readonly Action ForceRunChecks = () =>
+    {
+        if (_cancelConflictChecks)
+            return;
+
+        PluginLog.Verbose(
+            "[ConflictingPlugins] Forcing immediate check for conflicting plugins");
+
+        BossMod.CheckForConflict(true);
+        BossModReborn.CheckForConflict(true);
+        Redirect.CheckForConflict(true);
+        ReAction.CheckForConflict(true);
+        ReActionEx.CheckForConflict(true);
+        MOAction.CheckForConflict(true);
+        XIV.CheckForConflict(true);
+    };
 
     private static readonly Action RunChecks = () =>
     {
@@ -33,6 +54,7 @@ public static class ConflictingPluginsChecks
         ReAction.CheckForConflict();
         ReActionEx.CheckForConflict();
         MOAction.CheckForConflict();
+        XIV.CheckForConflict();
 
         Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(4.11));
     };
@@ -43,6 +65,7 @@ public static class ConflictingPluginsChecks
     internal static ReActionCheck ReAction { get; } = new();
     internal static ReActionCheck ReActionEx { get; } = new(true);
     internal static MOActionCheck MOAction { get; } = new();
+    internal static XIVCheck XIV { get; } = new();
 
     public static void Begin()
     {
@@ -64,6 +87,7 @@ public static class ConflictingPluginsChecks
         ReAction.Dispose();
         ReActionEx.Dispose();
         MOAction.Dispose();
+        XIV.Dispose();
     }
 
     internal sealed class BossModCheck(bool reborn = false)
@@ -76,13 +100,14 @@ public static class ConflictingPluginsChecks
         private int _conflictsInARow;
         private int _maxConflictsInARow = 4;
 
-        public bool SettingConflicted;
+        public bool TargetingSettingConflicted;
+        public bool QueueSettingConflicted;
 
         protected override BossModIPC IPC => (BossModIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed(8, false))
+            if (!ThrottlePassed(8, false, forceRefresh))
                 return;
 #if DEBUG
             _maxConflictsInARow = 1;
@@ -113,9 +138,12 @@ public static class ConflictingPluginsChecks
             }
 
             // Check for a targeting conflict
-            SettingConflicted =
+            TargetingSettingConflicted =
                 IPC.IsAutoTargetingEnabled() &&
                 AutoRotationController.cfg.DPSRotationMode != DPSRotationMode.Manual;
+
+            // Check for a queue conflict
+            QueueSettingConflicted = IPC.IsUsingCustomQueuing();
 
             // Check for a combo conflict
             if (IPC.HasAutomaticActionsQueued())
@@ -141,9 +169,9 @@ public static class ConflictingPluginsChecks
         public uint[] ConflictingActions = [];
         protected override MOActionIPC IPC => (MOActionIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed())
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
             var moActionRetargeted = IPC.GetRetargetedActions().ToHashSet();
@@ -178,14 +206,34 @@ public static class ConflictingPluginsChecks
         /// </remarks>
         public uint[] ConflictingActions = [0, 0];
 
+        public bool BunnyConflict;
+
+        private DateTime _lastBunnyReload = DateTime.Now;
+
         protected override RedirectIPC IPC => (RedirectIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed())
+            if (!IPC.IsEnabled)
+            {
+                BunnyConflict = false;
+                _lastBunnyReload = DateTime.Now;
+            }
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
             ConflictingActions = [0, 0];
+
+            // Check if the user has bunny recently
+            if (CustomComboFunctions.JustUsed(NIN.Rabbit, 45) &&
+                DateTime.Now - _lastBunnyReload > TS.FromSeconds(30))
+            {
+                PluginLog.Verbose(
+                    $"[ConflictingPlugins] [{Name}] Recent Bunny Detected");
+                BunnyConflict = true;
+            }
+            else
+                BunnyConflict = false;
 
             var conflictedThisCheck = false;
             var wrathRetargeted = PresetStorage.AllRetargetedActions.ToHashSet();
@@ -257,9 +305,9 @@ public static class ConflictingPluginsChecks
 
         protected override ReActionIPC IPC => (ReActionIPC)_ipc;
 
-        public override void CheckForConflict()
+        public override void CheckForConflict(bool forceRefresh = false)
         {
-            if (!ThrottlePassed())
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
             ConflictingActions = [];
@@ -368,10 +416,88 @@ public static class ConflictingPluginsChecks
         }
     }
 
+    internal sealed class XIVCheck() : ConflictCheck()
+    {
+        protected override ReusableIPC IPC => null!;
+
+        public bool GroundTargetingPlacementConflicted;
+        public bool AutoFaceTargetConflicted;
+
+        public override void CheckForConflict(bool forceRefresh = false)
+        {
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
+                return;
+
+            #region Ground Targeting Placement Conflict
+
+            bool doublePressGroundActions;
+            try
+            {
+                if (!Svc.GameConfig.TryGet(
+                        UiConfigOption.GroundTargetActionExcuteType,
+                        out doublePressGroundActions))
+                    throw new AccessViolationException();
+            }
+            catch
+            {
+                PluginLog.Warning(
+                    $"[ConflictingPlugins] [{Name}] " +
+                    $"Could not access UIConfig.DoublePressGroundActions");
+                doublePressGroundActions = false;
+            }
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] `UIConfig.DoublePressGroundActions`: {doublePressGroundActions}");
+            
+            var wrathRetargeted = PresetStorage.AllRetargetedActions.ToHashSet();
+            
+            GroundTargetingPlacementConflicted =
+                doublePressGroundActions &&
+                wrathRetargeted.Any(x => x.IsGroundTargeted());
+
+            #endregion
+
+            #region Auto Face Target Conflict
+
+            bool autoFaceEnabled;
+            try
+            {
+                if (!Svc.GameConfig.TryGet(
+                        UiControlOption.AutoFaceTargetOnAction,
+                        out autoFaceEnabled))
+                    throw new AccessViolationException();
+            }
+            catch
+            {
+                PluginLog.Warning(
+                    $"[ConflictingPlugins] [{Name}] " +
+                    $"Could not access UIControl.AutoFace");
+                autoFaceEnabled = false;
+            }
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] `UIControl.AutoFace`: {autoFaceEnabled}");
+            
+            AutoFaceTargetConflicted = !autoFaceEnabled;
+
+            #endregion
+
+            if (GroundTargetingPlacementConflicted || AutoFaceTargetConflicted)
+                MarkConflict();
+            else
+                Conflicted = false;
+        }
+    }
+
     internal abstract class ConflictCheck : IDisposable
     {
         // ReSharper disable once InconsistentNaming
         protected readonly ReusableIPC _ipc;
+
+        protected ConflictCheck()
+        {
+            _ipc = new XIVSettingsIPC();
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] Setup for Checking");
+        }
 
         protected ConflictCheck(ReusableIPC ipc)
         {
@@ -393,7 +519,7 @@ public static class ConflictingPluginsChecks
         public virtual void Dispose() => _ipc.Dispose();
 
         // ReSharper disable once UnusedMemberInSuper.Global
-        public abstract void CheckForConflict();
+        public abstract void CheckForConflict(bool forceRefresh = false);
 
         /// <summary>
         ///     Checks if an EZ Throttle passes, and if the plugin is enabled.
@@ -405,13 +531,18 @@ public static class ConflictingPluginsChecks
         /// <param name="enabledCheck">
         ///     Whether to check if the plugin is enabled as well.
         /// </param>
+        /// <param name="forceRefresh">
+        ///     Whether to skip the throttle check.
+        /// </param>
         /// <returns>
         ///     If the <see cref="CheckForConflict" /> should be run or not.
         /// </returns>
-        protected bool ThrottlePassed(int frequency = 5, bool enabledCheck = true)
+        protected bool ThrottlePassed
+            (int frequency = 5, bool enabledCheck = true, bool forceRefresh = false)
         {
             if (!EZ.Throttle($"conflictCheck{Name}",
-                    TS.FromSeconds(frequency)))
+                    TS.FromSeconds(frequency)) &&
+                !forceRefresh)
                 return false;
             if (enabledCheck && !_ipc.IsEnabled)
             {
@@ -433,6 +564,10 @@ public static class ConflictingPluginsChecks
                 PluginLog.Information($"[ConflictingPlugins] [{Name}] " +
                                       "Marked Conflict!");
             Conflicted = true;
+        }
+
+        private class XIVSettingsIPC() : ReusableIPC("XIV", new Version(0, 0))
+        {
         }
     }
 }

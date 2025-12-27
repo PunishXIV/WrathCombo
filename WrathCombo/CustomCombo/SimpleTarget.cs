@@ -71,7 +71,7 @@ internal static class SimpleTarget
             HardTarget.IfFriendly() ?? Self;
 
         /// A little mask for Plugin Configuration to make the string a bit shorter.
-        private static PluginConfiguration cfg =>
+        private static Configuration cfg =>
             Service.Configuration;
 
         /// <summary>
@@ -95,7 +95,7 @@ internal static class SimpleTarget
         /// <summary>
         ///     The Custom Heal Stack, fully user-made.
         /// </summary>
-        /// <seealso cref="PluginConfiguration.CustomHealStack" />
+        /// <seealso cref="Configuration.CustomHealStack" />
         /// <seealso cref="GetStack" />
         internal static IGameObject? CustomHealStack =>
             GetStack(StackOption.CustomHealStack);

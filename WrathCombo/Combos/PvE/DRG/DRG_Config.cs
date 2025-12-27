@@ -54,7 +54,7 @@ internal partial class DRG
 
                 case Preset.DRG_ST_Mirage:
                     DrawAdditionalBoolChoice(DRG_ST_DoubleMirage,
-                        "Burst Mirage Dive During LotD", "Adds Mirage Dive to the rotation when under Life of the Dragon.");
+                        "Burst Mirage Dive During LotD", "Adds Mirage Dive to the rotation when under Life of the Dragon.\nWorks best on 2.50 GCD.");
                     break;
 
                 case Preset.DRG_ST_DragonfireDive:
@@ -128,10 +128,10 @@ internal partial class DRG
         #region Variables
 
         public static UserInt
-            DRG_SelectedOpener = new("DRG_SelectedOpener", 0),
+            DRG_SelectedOpener = new("DRG_SelectedOpener"),
             DRG_Balance_Content = new("DRG_Balance_Content", 1),
             DRG_ST_BuffsHPOption = new("DRG_ST_BuffsHPOption", 10),
-            DRG_ST_BuffsBossOption = new("DRG_ST_BuffsBossOption", 0),
+            DRG_ST_BuffsBossOption = new("DRG_ST_BuffsBossOption"),
             DRG_ST_SecondWindHPThreshold = new("DRG_STSecondWindThreshold", 40),
             DRG_ST_BloodbathHPThreshold = new("DRG_STBloodbathThreshold", 30),
             DRG_AoE_LitanyHPTreshold = new("DRG_AoE_LitanyHP", 40),
@@ -152,6 +152,5 @@ internal partial class DRG
             DRG_AoE_StardiverMovingOptions = new("DRG_AoE_Stardiver_Options");
 
         #endregion
-
     }
 }
