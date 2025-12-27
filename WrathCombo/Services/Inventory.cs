@@ -25,20 +25,24 @@ namespace WrathCombo.Services;
 
 public class Inventory : IDisposable
 {
-    /// The <see cref="Item"/> sheet, limited to items we are set up to use.
+    /// The
+    /// <see cref="Item" />
+    /// sheet, limited to items we are set up to use.
     private readonly Dictionary<uint, Item> _itemSheet =
         Svc.Data.GetExcelSheet<Item>(ClientLanguage.English)
             .Where(IsItemWeCareAbout)
             .ToDictionary(i => i.RowId);
 
-    /// An <see cref="InventoryManager"/> Instance.
+    /// An
+    /// <see cref="InventoryManager" />
+    /// Instance.
     private readonly unsafe InventoryManager* _manager =
         InventoryManager.Instance();
 
     /// <summary>
     ///     All the user's items in their inventory that we are set up to use,
-    ///     sorted under <see cref="Core.Item"/> and then the enum for that type
-    ///     (<see cref="ItemType"/>, <see cref="StatPotionType"/>, etc.)
+    ///     sorted under <see cref="Core.Item" /> and then the enum for that type
+    ///     (<see cref="ItemType" />, <see cref="StatPotionType" />, etc.)
     /// </summary>
     /// <remarks>
     ///     WARNING: This does contain HQ and NQ item IDs.
@@ -48,9 +52,9 @@ public class Inventory : IDisposable
 
     /// <summary>
     ///     Builds out the <see cref="_usersItems" /> Data Structure,
-    ///     namely the Enum keys:<br/>
-    ///     <see cref="Core.Item"/> and then the enum for that type
-    ///     (<see cref="ItemType"/>, <see cref="StatPotionType"/>, etc.)
+    ///     namely the Enum keys:<br />
+    ///     <see cref="Core.Item" /> and then the enum for that type
+    ///     (<see cref="ItemType" />, <see cref="StatPotionType" />, etc.)
     /// </summary>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
@@ -86,7 +90,7 @@ public class Inventory : IDisposable
             PluginLog.Debug(
                 "[InventoryService] super ether Info: " +
                 $"is mp pot: {IsMPPotion(item)}, " +
-                $"is med(false): {IsMedicine(item, false)}, " + 
+                $"is med(false): {IsMedicine(item, false)}, " +
                 $"is med(true): {IsMedicine(item, true)}, " +
                 $"baseparams<IDs>: {string.Join(',', item.BaseParams<IDs>())}, " +
                 $"valid action: {item.ItemAction.IsValid}, " +
@@ -102,7 +106,7 @@ public class Inventory : IDisposable
     /// </returns>
     /// <exception cref="ArgumentOutOfRangeException">
     ///     If there is a <see cref="Core.Item" /> Enum that is not also present in
-    ///     <see cref="GetAssociatedSubEnum"/> and also
+    ///     <see cref="GetAssociatedSubEnum" /> and also
     ///     <see cref="GetAssociatedAssociatedWhereMethod" />.
     /// </exception>
     private unsafe bool FillUserInventory()
@@ -164,6 +168,7 @@ public class Inventory : IDisposable
 
             PluginLog.Verbose("[InventoryService] [FillUserInventory] " +
                               "Inventory filled");
+            DebugInventory();
             return true;
         }
         catch (Exception ex)
@@ -202,6 +207,7 @@ public class Inventory : IDisposable
                 TimeSpan.FromSeconds(1));
             return;
         }
+
         if (!Service.Inventory._manager->Inventories->IsLoaded)
         {
             PluginLog.Verbose("[InventoryService] [RefreshInventory] " +
@@ -232,14 +238,17 @@ public class Inventory : IDisposable
     };
 
     /// <summary>
-    ///     Can be used to stop <see cref="_tryFillInventory"/> and
-    ///     <see cref="RefreshInventory"/>.
+    ///     Can be used to stop <see cref="_tryFillInventory" /> and
+    ///     <see cref="RefreshInventory" />.
     /// </summary>
     private bool _cancelChecks;
 
     /// <summary>
-    ///     This action waits for the <see cref="GenericHelpers.IsScreenReady">
-    ///     Screen to be ready</see> and then begins trying to freshly
+    ///     This action waits for the
+    ///     <see cref="GenericHelpers.IsScreenReady">
+    ///         Screen to be ready
+    ///     </see>
+    ///     and then begins trying to freshly
     ///     <see cref="_tryFillInventory">Load the User's Inventory</see>.
     /// </summary>
     /// <remarks>
@@ -410,7 +419,7 @@ public class Inventory : IDisposable
 /// <summary>
 ///     Different status IDs that can be given, according to <c>ItemAction</c> data.
 /// </summary>
-/// <seealso cref="ItemExtensions.GivesStatus"/>
+/// <seealso cref="ItemExtensions.GivesStatus" />
 internal enum ItemStatus
 {
     WellFed   = 48,
@@ -443,7 +452,7 @@ internal static class ItemExtensions
     ///     for HP/MP).
     /// </summary>
     /// <value>
-    ///     <see cref="BaseParamKey"/> then <see cref="BaseParamSubKey"/><br/>
+    ///     <see cref="BaseParamKey" /> then <see cref="BaseParamSubKey" /><br />
     ///     (ID/Max/Value then NQ/HQ)
     /// </value>
     private static readonly
@@ -454,7 +463,7 @@ internal static class ItemExtensions
         SavedBaseParams = [];
 
     /// <summary>
-    ///     Check if an item will provide the given <see cref="ItemStatus"/>.
+    ///     Check if an item will provide the given <see cref="ItemStatus" />.
     /// </summary>
     internal static bool GivesStatus(this Item item, ItemStatus status) =>
         item.ItemAction.IsValid &&
@@ -462,28 +471,28 @@ internal static class ItemExtensions
          item.ItemAction.Value.DataHQ[(int)DataKeys.Status] == (ushort)status);
 
     /// <summary>
-    ///     Get the associated <see cref="ItemAction"/> Row for a given item.
+    ///     Get the associated <see cref="ItemAction" /> Row for a given item.
     /// </summary>
     internal static ItemAction? ActionRow
         (this Item item)
     {
         if (!item.ItemAction.IsValid)
             return null;
-        
+
         if (Svc.Data.GetExcelSheet<ItemAction>()
-                .TryGetRow(item.ItemAction.Value.RowId, out var row))
+            .TryGetRow(item.ItemAction.Value.RowId, out var row))
             return row;
 
         return null;
     }
 
     /// <summary>
-    ///     Get the associated <see cref="ItemFood"/> Row for a given item.
+    ///     Get the associated <see cref="ItemFood" /> Row for a given item.
     /// </summary>
     /// <param name="item"></param>
     /// <param name="hq">
-    ///     Whether to get the <see cref="ItemFood"/> Row associated with the
-    ///     normal or high quality version of the item.<br/>
+    ///     Whether to get the <see cref="ItemFood" /> Row associated with the
+    ///     normal or high quality version of the item.<br />
     ///     Only necessary to provide if looking specifically for the high quality
     ///     stats; defaults to normal quality, if that is found.
     /// </param>
@@ -508,21 +517,21 @@ internal static class ItemExtensions
     }
 
     /// <summary>
-    ///     Gets the <see cref="Item"/> row and uses it to call
-    ///     <see cref="BaseParams{T}(Item, bool?)"/>.
+    ///     Gets the <see cref="Item" /> row and uses it to call
+    ///     <see cref="BaseParams{T}(Item, bool?)" />.
     /// </summary>
     /// <param name="itemID">
     ///     (Will be corrected to the NQ version, if HQ)
     /// </param>
     /// <param name="hq">
-    ///     (Not necessary, will be set by checking the <paramref name="itemID"/>
+    ///     (Not necessary, will be set by checking the <paramref name="itemID" />
     ///     provided)
     /// </param>
-    /// <seealso cref="BaseParams{T}(Item, bool?)"/>
+    /// <seealso cref="BaseParams{T}(Item, bool?)" />
     internal static uint[] BaseParams<T>(this uint itemID, bool? hq = null)
         where T : IBaseParamTypeToGet =>
         Svc.Data.GetExcelSheet<Item>().TryGetRow(itemID.SafeNQ(), out var item)
-            ? item.BaseParams<T>(hq ?? IsHQ(itemID))
+            ? item.BaseParams<T>(hq ?? itemID.IsHQ())
             : [];
 
     /// <summary>
@@ -573,8 +582,8 @@ internal static class ItemExtensions
         if (SavedBaseParams.TryGetValue(item.RowId, out var savedParams))
             return savedParams[mainKey][subKey];
 
-        var row           = item.FoodRow(hq);
-        var actionRow     = item.ActionRow();
+        var row       = item.FoodRow(hq);
+        var actionRow = item.ActionRow();
 
         var ids     = Extract(p => p.BaseParam.RowId);
         var maxNQ   = Extract(p => (uint)p.Max);
@@ -595,6 +604,7 @@ internal static class ItemExtensions
                 valueHQ =
                     [actionRow.Value.DataHQ[(int)OtherDataKeys.PercentageIfHP]];
             }
+
             if (actionRow.Value.Action.RowId == (ushort)ItemActionKnownType.MP)
             {
                 ids   = [(uint)BaseParamEnum.MP];
@@ -604,7 +614,7 @@ internal static class ItemExtensions
         }
 
         #endregion
-        
+
         var foundData =
             new Dictionary<BaseParamKey, Dictionary<BaseParamSubKey, uint[]>>
             {
@@ -635,9 +645,9 @@ internal static class ItemExtensions
 
         uint[]? Extract(Func<ItemFood.ParamsStruct, uint> selector) =>
             row?.Params
-            .Select(selector)
-            .Where(v => v != 0)
-            .ToArray();
+                .Select(selector)
+                .Where(v => v != 0)
+                .ToArray();
 
         #endregion
     }
@@ -659,20 +669,20 @@ internal static class ItemExtensions
     /// </summary>
     internal static uint NQ(this uint itemID) =>
         itemID - 1_000_000;
-    
+
     /// <summary>
-    ///     Converts a given Item ID to its High-Quality variant.<br/>
+    ///     Converts a given Item ID to its High-Quality variant.<br />
     ///     (If it is not already)
     /// </summary>
     internal static uint SafeHQ(this uint itemID) =>
-        IsHQ(itemID) ? itemID : itemID.HQ();
+        itemID.IsHQ() ? itemID : itemID.HQ();
 
     /// <summary>
-    ///     Converts a given Item ID to its Normal-Quality variant.<br/>
+    ///     Converts a given Item ID to its Normal-Quality variant.<br />
     ///     (If it is not already)
     /// </summary>
     internal static uint SafeNQ(this uint itemID) =>
-        IsHQ(itemID) ? itemID.NQ() : itemID;
+        itemID.IsHQ() ? itemID.NQ() : itemID;
 
     #region Static Data
 
@@ -684,16 +694,18 @@ internal static class ItemExtensions
     private enum DataKeys
     {
         /// <summary>
-        ///     This key is used to access the status (<see cref="ItemStatus"/>).
+        ///     This key is used to access the status (<see cref="ItemStatus" />).
         /// </summary>
-        Status         = 0,
+        Status = 0,
+
         /// <summary>
         ///     This key is used to access the Row ID for the associated
-        ///     <c>ItemFood</c> row (<see cref="FoodRow"/>).
+        ///     <c>ItemFood</c> row (<see cref="FoodRow" />).
         /// </summary>
-        ItemFoodRowId  = 1,
+        ItemFoodRowId = 1,
+
         /// <summary>
-        ///     This key is used to access the duration of the <see cref="Status"/>.
+        ///     This key is used to access the duration of the <see cref="Status" />.
         /// </summary>
         StatusDuration = 2,
     }
@@ -707,14 +719,15 @@ internal static class ItemExtensions
     {
         /// <summary>
         ///     This key is used to access the percentage stat gain
-        ///     (<see cref="BaseParamKey.Values"/>) for HP pot items.
+        ///     (<see cref="BaseParamKey.Values" />) for HP pot items.
         /// </summary>
         PercentageIfHP = 0,
+
         /// <summary>
         ///     This key is used to access the actual maximum amount of stat gain
-        ///     (<see cref="BaseParamKey.Maxes"/>) for HP <i>and</i> MP pot items.
+        ///     (<see cref="BaseParamKey.Maxes" />) for HP <i>and</i> MP pot items.
         /// </summary>
-        Amount         = 1,
+        Amount = 1,
     }
 
     #endregion
@@ -723,27 +736,27 @@ internal static class ItemExtensions
 #region Base Params call Classes
 
 /// <summary>
-///     An interface for empty classes meant to map to <see cref="BaseParamKey"/>.
+///     An interface for empty classes meant to map to <see cref="BaseParamKey" />.
 /// </summary>
-/// <seealso cref="IDs"/>
-/// <seealso cref="Maxes"/>
-/// <seealso cref="Values"/>
+/// <seealso cref="IDs" />
+/// <seealso cref="Maxes" />
+/// <seealso cref="Values" />
 internal interface IBaseParamTypeToGet
 {
 }
 
-/// <seealso cref="BaseParamKey.IDs"/>
+/// <seealso cref="BaseParamKey.IDs" />
 // ReSharper disable once InconsistentNaming
 internal class IDs : IBaseParamTypeToGet
 {
 }
 
-/// <seealso cref="BaseParamKey.Maxes"/>
+/// <seealso cref="BaseParamKey.Maxes" />
 internal class Maxes : IBaseParamTypeToGet
 {
 }
 
-/// <seealso cref="BaseParamKey.Values"/>
+/// <seealso cref="BaseParamKey.Values" />
 internal class Values : IBaseParamTypeToGet
 {
 }
@@ -753,21 +766,23 @@ internal class Values : IBaseParamTypeToGet
 #region Saved Params Keys
 
 /// <summary>
-///     The primary key for <see cref="ItemExtensions.SavedBaseParams"/>.
+///     The primary key for <see cref="ItemExtensions.SavedBaseParams" />.
 /// </summary>
 internal enum BaseParamKey
 {
     // ReSharper disable once InconsistentNaming
     /// The stat IDs that can be provided.
-    IDs    = 0,
+    IDs = 0,
+
     /// The maximum stat this can provide.
-    Maxes  = 1,
+    Maxes = 1,
+
     /// The amount that will be given, up to the maximum. Normally a percentage.
     Values = 2,
 }
 
 /// <summary>
-///     The secondary key for <see cref="ItemExtensions.SavedBaseParams"/>.
+///     The secondary key for <see cref="ItemExtensions.SavedBaseParams" />.
 /// </summary>
 internal enum BaseParamSubKey
 {
