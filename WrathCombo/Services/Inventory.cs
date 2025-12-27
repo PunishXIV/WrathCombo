@@ -463,60 +463,6 @@ internal static class ItemExtensions
         SavedBaseParams = [];
 
     /// <summary>
-    ///     Check if an item will provide the given <see cref="ItemStatus" />.
-    /// </summary>
-    internal static bool GivesStatus(this Item item, ItemStatus status) =>
-        item.ItemAction.IsValid &&
-        (item.ItemAction.Value.Data[(int)DataKeys.Status] == (ushort)status ||
-         item.ItemAction.Value.DataHQ[(int)DataKeys.Status] == (ushort)status);
-
-    /// <summary>
-    ///     Get the associated <see cref="ItemAction" /> Row for a given item.
-    /// </summary>
-    internal static ItemAction? ActionRow
-        (this Item item)
-    {
-        if (!item.ItemAction.IsValid)
-            return null;
-
-        if (Svc.Data.GetExcelSheet<ItemAction>()
-            .TryGetRow(item.ItemAction.Value.RowId, out var row))
-            return row;
-
-        return null;
-    }
-
-    /// <summary>
-    ///     Get the associated <see cref="ItemFood" /> Row for a given item.
-    /// </summary>
-    /// <param name="item"></param>
-    /// <param name="hq">
-    ///     Whether to get the <see cref="ItemFood" /> Row associated with the
-    ///     normal or high quality version of the item.<br />
-    ///     Only necessary to provide if looking specifically for the high quality
-    ///     stats; defaults to normal quality, if that is found.
-    /// </param>
-    internal static ItemFood? FoodRow(this Item item, bool? hq = null)
-    {
-        if (!item.ItemAction.IsValid)
-            return null;
-
-        if (hq is null or false &&
-            Svc.Data.GetExcelSheet<ItemFood>()
-                .TryGetRow(item.ItemAction.Value.Data[(int)DataKeys.ItemFoodRowId],
-                    out var row))
-            return row;
-
-        if (hq is null or true &&
-            Svc.Data.GetExcelSheet<ItemFood>()
-                .TryGetRow(item.ItemAction.Value.DataHQ[(int)DataKeys.ItemFoodRowId],
-                    out var rowHQ))
-            return rowHQ;
-
-        return null;
-    }
-
-    /// <summary>
     ///     Gets the <see cref="Item" /> row and uses it to call
     ///     <see cref="BaseParams{T}(Item, bool?)" />.
     /// </summary>
@@ -652,37 +598,98 @@ internal static class ItemExtensions
         #endregion
     }
 
-    /// <summary>
-    ///     Checks if a given Item ID is High-Quality or not.
-    /// </summary>
-    internal static bool IsHQ(this uint itemID) =>
-        itemID > 1_000_000;
+    extension(Item item)
+    {
+        /// <summary>
+        ///     Check if an item will provide the given <see cref="ItemStatus" />.
+        /// </summary>
+        internal bool GivesStatus(ItemStatus status) =>
+            item.ItemAction.IsValid &&
+            (item.ItemAction.Value.Data[(int)DataKeys.Status] == (ushort)status ||
+             item.ItemAction.Value.DataHQ[(int)DataKeys.Status] == (ushort)status);
 
-    /// <summary>
-    ///     Converts a given Item ID to its High-Quality variant.
-    /// </summary>
-    internal static uint HQ(this uint itemID) =>
-        itemID + 1_000_000;
+        /// <summary>
+        ///     Get the associated <see cref="ItemAction" /> Row for a given item.
+        /// </summary>
+        internal ItemAction? ActionRow
+            ()
+        {
+            if (!item.ItemAction.IsValid)
+                return null;
 
-    /// <summary>
-    ///     Converts a given Item ID to its Normal-Quality variant.
-    /// </summary>
-    internal static uint NQ(this uint itemID) =>
-        itemID - 1_000_000;
+            if (Svc.Data.GetExcelSheet<ItemAction>()
+                .TryGetRow(item.ItemAction.Value.RowId, out var row))
+                return row;
 
-    /// <summary>
-    ///     Converts a given Item ID to its High-Quality variant.<br />
-    ///     (If it is not already)
-    /// </summary>
-    internal static uint SafeHQ(this uint itemID) =>
-        itemID.IsHQ() ? itemID : itemID.HQ();
+            return null;
+        }
 
-    /// <summary>
-    ///     Converts a given Item ID to its Normal-Quality variant.<br />
-    ///     (If it is not already)
-    /// </summary>
-    internal static uint SafeNQ(this uint itemID) =>
-        itemID.IsHQ() ? itemID.NQ() : itemID;
+        /// <summary>
+        ///     Get the associated <see cref="ItemFood" /> Row for a given item.
+        /// </summary>
+        /// <param name="hq">
+        ///     Whether to get the <see cref="ItemFood" /> Row associated with the
+        ///     normal or high quality version of the item.<br />
+        ///     Only necessary to provide if looking specifically for the high quality
+        ///     stats; defaults to normal quality, if that is found.
+        /// </param>
+        internal ItemFood? FoodRow(bool? hq = null)
+        {
+            if (!item.ItemAction.IsValid)
+                return null;
+
+            if (hq is null or false &&
+                Svc.Data.GetExcelSheet<ItemFood>()
+                    .TryGetRow(
+                        item.ItemAction.Value.Data[(int)DataKeys.ItemFoodRowId],
+                        out var row))
+                return row;
+
+            if (hq is null or true &&
+                Svc.Data.GetExcelSheet<ItemFood>()
+                    .TryGetRow(
+                        item.ItemAction.Value.DataHQ[(int)DataKeys.ItemFoodRowId],
+                        out var rowHQ))
+                return rowHQ;
+
+            return null;
+        }
+    }
+
+    extension(uint itemID)
+    {
+        /// <summary>
+        ///     Checks if a given Item ID is High-Quality or not.
+        /// </summary>
+        internal bool IsHQ() =>
+            itemID > 1_000_000;
+
+        /// <summary>
+        ///     Converts a given Item ID to its High-Quality variant.
+        /// </summary>
+        internal uint HQ() =>
+            itemID + 1_000_000;
+
+        /// <summary>
+        ///     Converts a given Item ID to its Normal-Quality variant.
+        /// </summary>
+        internal uint NQ() =>
+            itemID - 1_000_000;
+
+        /// <summary>
+        ///     Converts a given Item ID to its High-Quality variant.<br />
+        ///     (If it is not already)
+        /// </summary>
+        internal uint SafeHQ() =>
+            itemID.IsHQ() ? itemID : itemID.HQ();
+
+        /// <summary>
+        ///     Converts a given Item ID to its Normal-Quality variant.<br />
+        ///     (If it is not already)
+        /// </summary>
+        internal uint SafeNQ() =>
+            itemID.IsHQ() ? itemID.NQ() : itemID;
+    }
 
     #region Static Data
 
