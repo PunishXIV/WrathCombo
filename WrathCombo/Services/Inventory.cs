@@ -89,6 +89,7 @@ public class Inventory : IDisposable
         if (Svc.Data.GetExcelSheet<Item>().TryGetRow(23168u, out var item))
             PluginLog.Debug(
                 "[InventoryService] super ether Info: " +
+                $"cooldown remaining: {item.CooldownRemaining(false)}, " +
                 $"is mp pot: {IsMPPotion(item)}, " +
                 $"is med(false): {IsMedicine(item, false)}, " +
                 $"is med(true): {IsMedicine(item, true)}, " +
@@ -654,6 +655,17 @@ internal static class ItemExtensions
 
             return null;
         }
+        
+        private unsafe float CooldownTotal(bool? hq = null) =>
+            ActionManager.Instance()->GetRecastTime(ActionType.Item,
+                hq is true ? item.RowId.SafeHQ() : item.RowId.SafeNQ());
+        
+        private unsafe float CooldownElapsed(bool? hq = null) =>
+            ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Item,
+                hq is true ? item.RowId.SafeHQ() : item.RowId.SafeNQ());
+        
+        public float CooldownRemaining(bool? hq = null) =>
+            Math.Max(0, item.CooldownTotal(hq) - item.CooldownElapsed(hq));
     }
 
     extension(uint itemID)
