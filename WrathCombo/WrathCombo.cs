@@ -303,7 +303,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         // Refresh the user's inventory periodically throughout fights
         if (Player.Available &&
             CustomComboFunctions.CombatEngageDuration() > TimeSpan.FromSeconds(45) &&
-            EzThrottler.Throttle("UserInventoryRefresh", TimeSpan.FromMinutes(3)))
+            EzThrottler.Throttle("UserInventoryRefresh", TimeSpan.FromMinutes(1)))
             Task.Run(Service.Inventory.RefreshInventory);
 
         if (Player.Available && Player.IsDead)
