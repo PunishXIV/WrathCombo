@@ -1,13 +1,16 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
 using System.Linq;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
-using Status = Dalamud.Game.ClientState.Statuses.IStatus;
+
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -19,7 +22,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <param name="target">Optional target</param>
     /// <returns>Status object or null.</returns>
-    public static Status? GetStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)
+    public static IStatus? GetStatusEffect(ushort statusId, IGameObject? target = null, bool anyOwner = false)
     {
         // Default to LocalPlayer if no target/bad target
         target ??= LocalPlayer;
@@ -52,7 +55,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <param name="status">Retrieved Status object</param>
     /// <returns>Boolean if the status effect exists or not</returns>
-    public static bool HasStatusEffect(ushort statusId, out Status? status, IGameObject? target = null, bool anyOwner = false)
+    public static bool HasStatusEffect(ushort statusId, out IStatus? status, IGameObject? target = null, bool anyOwner = false)
     {
         target ??= LocalPlayer;
         status = GetStatusEffect(statusId, target, anyOwner);
@@ -84,7 +87,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="effect">Dalamud Status object</param>
     /// <returns>Float representing remaining status effect time</returns>
-    public unsafe static float GetStatusEffectRemainingTime(Status? effect)
+    public unsafe static float GetStatusEffectRemainingTime(IStatus? effect)
     {
         if (effect is null) return 0;
         if (effect.RemainingTime < 0) return (effect.RemainingTime * -1) + ActionManager.Instance()->AnimationLock;
@@ -106,7 +109,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="effect">Dalamud Status object</param>
     /// <returns>Integer representing status effect stack count</returns>
-    public static ushort GetStatusEffectStacks(Status? effect) => effect?.Param ?? 0;
+    public static ushort GetStatusEffectStacks(IStatus? effect) => effect?.Param ?? 0;
 
     /// <summary>
     /// Retrieves the status effect stack count
@@ -220,13 +223,13 @@ internal abstract partial class CustomComboFunctions
                     (targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477)))
                     return true;
                 return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
-                
+
             case 359: //Whorleater (Extreme)
                 if (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478) ||
                     targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477))
                     return true;
                 return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
-            
+
             case 508: // The Void Ark
                 // Sawtooth 5103
                 // Irminsul 5105
@@ -332,7 +335,7 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
                 }
                 return false;
-            
+
             case 1263: // M8S
                 // Wolf of Wind = 18219
                 // Wolf of Stone = 18225
@@ -342,11 +345,11 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4390)) return targetID != 18219; // Target Wolf of Stone
                 }
                 return false;
-            
+
             case 1267: //Sunken Temple of Qarn Temple Guardian
                 if (targetID is 18300 && HasStatusEffect(350, tar, true)) return true;
                 return false;
-            
+
             case 1290: //Pilgrim's Traverse
                 // Eminent Grief = 18666
                 // Devoured Eater = 18667
@@ -356,7 +359,7 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4560)) return targetID != 18666; // Target Devoured Eater
                 }
                 return false;
-            
+
             case 1292: //Meso Terminal
                 // Bloody Headsman = 18576 a
                 // Pale Headsman = 18577 b
@@ -423,4 +426,90 @@ internal abstract partial class CustomComboFunctions
     /// <seealso cref="CanApplyStatus(IGameObject?,ushort)"/>
     public static bool CanApplyStatus(IGameObject? target, ushort[] status) =>
         status.Any(statusId => CanApplyStatus(target, statusId));
+    
+    private const StringComparison Lower = StringComparison.OrdinalIgnoreCase;
+
+    /// <summary>
+    /// Text Comparison for Tank Buster VFX Paths
+    /// </summary>
+    /// <param name="vfx">The VFX to check the Path of</param>
+    /// <returns>Bool if vfx path matches</returns>
+    private static bool IsTankBusterEffectPath(VfxInfo vfx)
+    {
+        return vfx.Path.StartsWith("vfx/lockon/eff/tank_lockon", Lower) ||
+               vfx.Path.StartsWith("vfx/lockon/eff/tank_laser", Lower);
+    }
+
+    /// <summary>
+    /// Text Comparison for Shared Damage Effect VFX Paths
+    /// </summary>
+    /// <param name="vfx">The VFX to check the Path of</param>
+    /// <returns></returns>
+    private static bool IsShareDamageEffectPath(VfxInfo vfx)
+    {
+        return vfx.Path.StartsWith("vfx/lockon/eff/coshare", Lower) ||
+               vfx.Path.StartsWith("vfx/lockon/eff/share_laser", Lower) ||
+               vfx.Path.StartsWith("vfx/lockon/eff/com_share", Lower);
+    }
+
+    /// <summary>
+    /// Determines whether any active visual effects correspond to a shared damage effect.
+    /// </summary>
+    /// <returns>true if at least one active visual effect is identified as a shared damage effect; otherwise, false.</returns>
+    public static bool CheckForSharedDamageEffect()
+    {
+        return VfxManager.TrackedEffects.Any(IsShareDamageEffectPath);
+    }
+
+    /// <summary>
+    /// Attempts to retrieve the current target of a detected tank buster visual effect.
+    /// </summary>
+    /// <remarks>This method searches for an active tank buster visual effect and attempts to resolve its
+    /// target to a battle character. If no such effect is present or the target cannot be resolved, target is set to
+    /// null and the method returns false. Probably won't work in dual tank situation.</remarks>
+    /// <param name="target">When this method returns, contains the battle character targeted by the tank buster effect, if found; otherwise,
+    /// null. This parameter is passed uninitialized.</param>
+    /// <returns>true if a tank buster target is found and assigned to target; otherwise, false.</returns>
+    public static bool TryGetTankBusterTarget(out IBattleChara? target)
+    {
+        VfxInfo? tankBusterVfx = VfxManager.TrackedEffects
+            .FilterToTargeted()
+            .FilterToTargetRole(CombatRole.Tank) // Ignore DPS and un-targeted
+            .Where(x => x.TargetID.GetObject().IsInParty())
+            .FirstOrDefault(IsTankBusterEffectPath);
+
+        // If VfxInfo is a struct: check Path or VfxID instead of null
+        if (tankBusterVfx == null || tankBusterVfx?.VfxID == 0)
+        {
+            target = null;
+            return false;
+        }
+
+        target = tankBusterVfx?.TargetID.GetObject() as IBattleChara;
+        return target != null; // in case object ID is invalid/stale
+    }
+
+    /// <summary>
+    /// Checks if the specified character has an active tank buster marker on them.
+    /// </summary>
+    /// <param name="targetObject">The character to check. Defaults to the local player.</param>
+    /// <param name="maxAgeSeconds">Optional: Ignore VFX older than this many seconds (default 10).</param>
+    /// <returns>true if the target has an active tank buster effect, false otherwise.</returns>
+    public static bool HasIncomingTankBusterEffect(
+        IGameObject? targetObject = null) //,float maxAgeSeconds = 10f)
+    {
+        // Default to local player if none provided
+        targetObject ??= Player.Object;
+
+        if (targetObject == null)
+            return false;
+
+        ulong targetId = targetObject.GameObjectId;
+
+        return VfxManager.TrackedEffects
+            .FilterToTarget(targetId)
+            .Any(IsTankBusterEffectPath);
+            //&& vfx.AgeSeconds <= maxAgeSeconds); // Covers both styles
+    }
+
 }
