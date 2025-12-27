@@ -153,7 +153,7 @@ internal partial class SCH
                 return SCH_ST_Heal_ProtractionOption;
             case 3:
                 action = Aetherpact;
-                enabled = IsEnabled(Preset.SCH_ST_Heal_Aetherpact) && Gauge.FairyGauge >= SCH_ST_Heal_AetherpactFairyGauge && IsOriginal(Aetherpact) && !FairyBusy;
+                enabled = IsEnabled(Preset.SCH_ST_Heal_Aetherpact) && Gauge.FairyGauge >= SCH_ST_Heal_AetherpactFairyGauge && IsOriginal(Aetherpact) && !FairyBusy && ActionReady(Aetherpact);
                 return SCH_ST_Heal_AetherpactOption;
             case 4:
                 action = OriginalHook(Adloquium);

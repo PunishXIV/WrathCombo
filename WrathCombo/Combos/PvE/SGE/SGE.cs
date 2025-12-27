@@ -414,7 +414,7 @@ internal partial class SGE : Healer
             if (ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
-                return Role.Esuna.RetargetIfEnabled(OptionalTarget, Diagnosis);
+                return Role.Esuna.RetargetIfEnabled(healTarget, Diagnosis);
 
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
@@ -440,15 +440,15 @@ internal partial class SGE : Healer
             if (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty())
             {
                 if (ActionReady(Krasis))
-                    return Krasis.RetargetIfEnabled(OptionalTarget, Diagnosis);
+                    return Krasis.RetargetIfEnabled(healTarget, Diagnosis);
                 if (ActionReady(Taurochole) && HasAddersgall())
-                    return Taurochole.RetargetIfEnabled(OptionalTarget, Diagnosis);
+                    return Taurochole.RetargetIfEnabled(healTarget, Diagnosis);
                 if (ActionReady(Haima) && !HasStatusEffect(Buffs.Panhaima, healTarget))
-                    return Haima.RetargetIfEnabled(OptionalTarget, Diagnosis);
+                    return Haima.RetargetIfEnabled(healTarget, Diagnosis);
             }
 
             if (ActionReady(Druochole) && HasAddersgall())
-                return Druochole.RetargetIfEnabled(OptionalTarget, Diagnosis);
+                return Druochole.RetargetIfEnabled(healTarget, Diagnosis);
 
             if (!InBossEncounter())
             {
@@ -468,7 +468,7 @@ internal partial class SGE : Healer
                     ? EukrasianDiagnosis
                     : Eukrasia;
 
-            return actionID.RetargetIfEnabled(OptionalTarget, Diagnosis);
+            return actionID.RetargetIfEnabled(healTarget, Diagnosis);
         }
     }
 
@@ -562,11 +562,11 @@ internal partial class SGE : Healer
                 GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) >= SGE_ST_Heal_Esuna &&
                 cleansableTarget)
                 return Role.Esuna
-                    .RetargetIfEnabled(OptionalTarget, Diagnosis);
+                    .RetargetIfEnabled(healTarget, Diagnosis);
 
             if (HasStatusEffect(Buffs.Eukrasia))
                 return EukrasianDiagnosis
-                    .RetargetIfEnabled(OptionalTarget, Diagnosis);
+                    .RetargetIfEnabled(healTarget, Diagnosis);
 
             if (IsEnabled(Preset.SGE_ST_Heal_Rhizomata) &&
                 ActionReady(Rhizomata) && !HasAddersgall())
@@ -593,11 +593,11 @@ internal partial class SGE : Healer
                     if (GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= config &&
                         ActionReady(spell))
                         return spell
-                            .RetargetIfEnabled(OptionalTarget, Diagnosis);
+                            .RetargetIfEnabled(healTarget, Diagnosis);
             }
 
             return actionID
-                .RetargetIfEnabled(OptionalTarget, Diagnosis);
+                .RetargetIfEnabled(healTarget, Diagnosis);
         }
     }
 
