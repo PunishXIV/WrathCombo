@@ -89,7 +89,7 @@ public class Inventory : IDisposable
         if (Svc.Data.GetExcelSheet<Item>().TryGetRow(23168u, out var item))
             PluginLog.Debug(
                 "[InventoryService] super ether Info: " +
-                $"cooldown remaining: {item.CooldownRemaining(false)}, " +
+                $"cooldown remaining: {item.RowId.CooldownRemaining(false)}, " +
                 $"is mp pot: {IsMPPotion(item)}, " +
                 $"is med(false): {IsMedicine(item, false)}, " +
                 $"is med(true): {IsMedicine(item, true)}, " +
@@ -180,6 +180,58 @@ public class Inventory : IDisposable
             return false;
         }
     }
+
+    #region Item Ready Methods
+
+    public bool IsItemReady(ItemType itemType)
+    {
+        // Check if the user has the item
+        if (!_usersItems[Core.Item.Item]
+                .TryGetValue((int)itemType, out var items) ||
+            items.Length > 0)
+            return false;
+
+        // Try to load the Item ID
+        var rawItemID = items.FirstOrNull();
+        if (rawItemID is null)
+            return false;
+        var itemID = rawItemID.Value;
+
+        // Check the cooldown
+        if (itemID.CooldownRemaining() > 0.1f)
+            return false;
+        
+        return true;
+    }
+    
+    public bool IsStatPotionReady(StatPotionType potionType, int level)
+    {
+        // Check if the user has the item
+        if (!_usersItems[Core.Item.StatPotion]
+                .TryGetValue((int)potionType, out var items) ||
+            items.Length > 0)
+            return false;
+
+        // Try to load the Item ID
+        uint? rawItemID;
+        if (level < (int)PotionLevel.Custom)
+            rawItemID = items[level];
+        else
+        {
+            rawItemID = items.Where(id => id == level).FirstOrNull();
+        }
+        if (rawItemID is null)
+            return false;
+        var itemID = rawItemID.Value;
+
+        // Check the cooldown
+        if (itemID.CooldownRemaining() > 0.1f)
+            return false;
+        
+        return true;
+    }
+
+    #endregion
 
     #region Actions (for refreshing inventory)
 
@@ -655,17 +707,6 @@ internal static class ItemExtensions
 
             return null;
         }
-        
-        private unsafe float CooldownTotal(bool? hq = null) =>
-            ActionManager.Instance()->GetRecastTime(ActionType.Item,
-                hq is true ? item.RowId.SafeHQ() : item.RowId.SafeNQ());
-        
-        private unsafe float CooldownElapsed(bool? hq = null) =>
-            ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Item,
-                hq is true ? item.RowId.SafeHQ() : item.RowId.SafeNQ());
-        
-        public float CooldownRemaining(bool? hq = null) =>
-            Math.Max(0, item.CooldownTotal(hq) - item.CooldownElapsed(hq));
     }
 
     extension(uint itemID)
@@ -701,6 +742,17 @@ internal static class ItemExtensions
         /// </summary>
         internal uint SafeNQ() =>
             itemID.IsHQ() ? itemID.NQ() : itemID;
+        
+        private unsafe float CooldownTotal(bool? hq = null) =>
+            ActionManager.Instance()->GetRecastTime(ActionType.Item,
+                hq is true ? itemID.SafeHQ() : itemID.SafeNQ());
+        
+        private unsafe float CooldownElapsed(bool? hq = null) =>
+            ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Item,
+                hq is true ? itemID.SafeHQ() : itemID.SafeNQ());
+        
+        public float CooldownRemaining(bool? hq = null) =>
+            Math.Max(0, itemID.CooldownTotal(hq) - itemID.CooldownElapsed(hq));
     }
 
     #region Static Data
