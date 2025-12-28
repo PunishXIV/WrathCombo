@@ -262,16 +262,16 @@ public static class ActionWatching
                 }
 
                 var castTime = ActionManager.GetAdjustedCastTime((ActionType)actionType, actionId);
-                token = source.Token;
-                UpdateActionTask = Svc.Framework.RunOnTick(() =>
-                UpdateLastUsedAction(actionId, actionType, targetObjectId, castTime),
-                TimeSpan.FromMilliseconds(castTime), cancellationToken: token);
 
-                // Update Helpers
-                NIN.InMudra = NIN.MudraSigns.Contains(actionId);
-
-                if (castTime > 0)
+                if (castTime >= 0)
                 {
+                    token = source.Token;
+                    UpdateActionTask = Svc.Framework.RunOnTick(() =>
+                            UpdateLastUsedAction(actionId, actionType, targetObjectId, castTime),
+                        TimeSpan.FromMilliseconds(castTime), cancellationToken: token);
+
+                    NIN.InMudra = NIN.MudraSigns.Contains(actionId);
+
                     TimeLastActionUsed = DateTime.Now;
                     WrathOpener.CurrentOpener?.ProgressOpener(actionId);
                 }
@@ -281,6 +281,8 @@ public static class ActionWatching
                     $"[SendActionDetour] " +
                     $"Action: {actionId.ActionName()} (ID: {actionId}) | " +
                     $"Type: {actionType} | " +
+                    $"TSL: {DateTime.Now-TimeLastActionUsed} | " +
+                    $"Cast Time: {castTime} | " +
                     $"Sequence: {sequence} | " +
                     $"Target: {Svc.Objects.FirstOrDefault(x => x.GameObjectId == targetObjectId)?.Name ?? "Unknown"} | " +
                     $"Params: [{a5}, {a6}, {a7}, {a8}, {a9}]"
