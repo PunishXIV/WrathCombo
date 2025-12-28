@@ -442,18 +442,6 @@ public static class ActionWatching
             // So part 2 just makes sure it's returning true only when it's not being queued
             var success = hookResult && !(mode == ActionManager.UseActionMode.None && actionManager->QueuedActionId > 0);
 
-            //if (success)
-            //{
-            //    if (NIN.MudraSigns.Contains(modifiedAction))
-            //    {
-            //        Svc.Log.Debug($"Mudra used: {modifiedAction.ActionName()}");
-            //        NIN.InMudra = true;
-            //    }
-            //    var castTime = ActionManager.GetAdjustedCastTime(actionType, modifiedAction);
-            //    LastAction = modifiedAction;
-            //    TimeLastActionUsed = DateTime.Now;
-            //}
-
             return hookResult;
         }
         catch (Exception ex)
