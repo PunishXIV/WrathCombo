@@ -153,7 +153,7 @@ internal partial class SCH
                 return SCH_ST_Heal_ProtractionOption;
             case 3:
                 action = Aetherpact;
-                enabled = IsEnabled(Preset.SCH_ST_Heal_Aetherpact) && Gauge.FairyGauge >= SCH_ST_Heal_AetherpactFairyGauge && IsOriginal(Aetherpact) && !FairyBusy;
+                enabled = IsEnabled(Preset.SCH_ST_Heal_Aetherpact) && Gauge.FairyGauge >= SCH_ST_Heal_AetherpactFairyGauge && IsOriginal(Aetherpact) && !FairyBusy && ActionReady(Aetherpact);
                 return SCH_ST_Heal_AetherpactOption;
             case 4:
                 action = OriginalHook(Adloquium);
@@ -303,7 +303,7 @@ internal partial class SCH
 
         public override int MinOpenerLevel => 100;
         public override int MaxOpenerLevel => 109;
-
+        public override Preset Preset => Preset.SCH_ST_ADV_DPS_Balance_Opener;
         internal override UserData ContentCheckConfig => SCH_ST_DPS_OpenerContent;
 
         public override bool HasCooldowns()

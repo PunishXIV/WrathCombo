@@ -133,6 +133,8 @@ public static class DebugFile
             AddPlayerInfo();
             AddTargetInfo();
 
+            AddContentInfo();
+
             AddSettingsInfo();
             AddAutoRotationInfo();
 
@@ -219,7 +221,9 @@ public static class DebugFile
     {
         var player = Player.Object;
         var job = player.ClassJob.Value;
-        var currentZone = Content.ContentName ?? "Unknown";
+        var currentZone = Content.ContentName is null or ""
+            ? Content.TerritoryName
+            : Content.ContentName;
 
         AddLine("START PLAYER INFO");
         AddLine($"Job: {job.Abbreviation} / {job.Name} / {job.NameEnglish}");
@@ -298,6 +302,39 @@ public static class DebugFile
             }
         }
         AddLine("END TARGET INFO");
+
+        AddLine();
+    }
+    
+    private static void AddContentInfo()
+    {
+        AddLine("START CONTENT INFO");
+        AddLine($"Content Name: " +
+                $"content:{Content.ContentName ?? "??"}, " +
+                $"territory:{Content.TerritoryName ?? "??"}");
+        AddLine($"Content IDs: " +
+                $"territory:{Content.TerritoryID}, " +
+                $"cfc:{Content.ContentFinderConditionRow?.RowId.ToString() ?? 
+                "??"}, " +
+                $"map: {Content.MapID}");
+        AddLine($"Content Type: {Content.ContentType.ToString() ?? "??"}");
+        AddLine($"Intended Use: {Content.TerritoryIntendedUse.ToString() ?? "??"}");
+        AddLine($"Difficulty: " +
+                $"from name:{Content.ContentDifficultyFromName ?? "??"}, " +
+                $"determined:{Content.ContentDifficulty.ToString() ?? "??"}");
+        AddLine($"CDF PVP: {ContentCheck.IsInPVPContent}");
+        AddLine($"CDF Boss-Only: {ContentCheck.IsInBossOnlyContent()}");
+        AddLine($"CDF Halved: " +
+                $"bottom:{ContentCheck.IsInBottomHalfContent()}, " +
+                $"top:{ContentCheck.IsInTopHalfContent()}");
+        AddLine($"CDF Casual VS Hard: " +
+                $"casual:{ContentCheck.IsInCasualContent()}, " +
+                $"hard:{ContentCheck.IsInHardContent()}");
+        AddLine($"CDF Cored: " +
+                $"soft:{ContentCheck.IsInSoftCoreContent()}, " +
+                $"mid:{ContentCheck.IsInMidCoreContent()}, " +
+                $"hard:{ContentCheck.IsInHardCoreContent()}");
+        AddLine("END CONTENT INFO");
 
         AddLine();
     }

@@ -207,7 +207,7 @@ internal unsafe static class AutoRotationController
             OccultCrescent.IsEnabledAndUsable(Preset.Phantom_Chemist_Revive, OccultCrescent.Revive) ||
             Variant.CanRaise())
         {
-            if (!needsHeal && WrathOpener.CurrentOpener.CurrentState is not 
+            if (!needsHeal && WrathOpener.CurrentOpener?.CurrentState is not 
                 OpenerState.InOpener)
             {
                 if (cfg.HealerSettings.AutoCleanse && isHealer)
@@ -718,14 +718,21 @@ internal unsafe static class AutoRotationController
                         LockedST = false;
                     }
                 }
-                uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct));
+                OverrideTarget = target;
+                uint outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, target));
                 if (outAct is All.SavageBlade) return true;
                 if (!CanQueue(outAct)) return false;
                 if (!ActionReady(outAct, true, true))
+                {
+                    OverrideTarget = null;
                     return false;
+                }
 
                 if (ActionManager.Instance()->GetActionStatus(ActionType.Action, outAct) != 0)
+                {
+                    OverrideTarget = null;
                     return false;
+                }
 
                 var sheet = ActionSheet[outAct];
                 var mustTarget = sheet.CanTargetHostile;
@@ -734,9 +741,12 @@ internal unsafe static class AutoRotationController
                 var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
                 bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
                 if (TimeMoving.TotalMilliseconds > 0 && castTime > 0 && !orbwalking)
+                {
+                    OverrideTarget = null;
                     return false;
+                }
 
-                if (mustTarget || cfg.DPSSettings.AlwaysSelectTarget)
+                if (cfg.DPSSettings.AlwaysHardTarget)
                     Svc.Targets.Target = target;
 
                 if (mustTarget && target is not null)
@@ -754,6 +764,7 @@ internal unsafe static class AutoRotationController
                     Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct,
                     (mustTarget && target != null) || switched ? target.GameObjectId : Player.Object.GameObjectId);
 
+                OverrideTarget = null;
                 if (NIN.MudraSigns.Contains(outAct))
                     _lockedAoE = true;
                 else
@@ -768,7 +779,7 @@ internal unsafe static class AutoRotationController
         public static bool ExecuteST(Enum mode, Preset preset, Presets.PresetAttributes attributes, uint gameAct)
         {
             var target = GetSingleTarget(mode);
-
+            OverrideTarget = target;
             var outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, target));
             if (!CanQueue(outAct))
             {
@@ -786,10 +797,16 @@ internal unsafe static class AutoRotationController
             var blockedSelfBuffs = GetCooldown(outAct).CooldownTotal >= 5;
 
             if (cfg.InCombatOnly && NotInCombat && !CombatBypass && !(canUseSelf && cfg.BypassBuffs && !blockedSelfBuffs))
+            {
+                OverrideTarget = null;
                 return false;
+            }
 
             if (target is null && !canUseSelf)
+            {
+                OverrideTarget = null;
                 return false;
+            }
 
             var areaTargeted = ActionSheet[outAct].TargetArea;
             var canUseTarget = target is not null && ActionManager.CanUseActionOnTarget(outAct, target.Struct());
@@ -801,21 +818,25 @@ internal unsafe static class AutoRotationController
                     : InActionRange(outAct, target));
 
             var canUse = (canUseSelf || canUseTarget || areaTargeted) && outAct.ActionAttackType() is { } type && (type is ActionAttackType.Ability || type is not ActionAttackType.Ability && RemainingGCD == 0);
+            var isHeal = attributes.AutoAction!.IsHeal;
 
-            if (canUse || cfg.DPSSettings.AlwaysSelectTarget)
+            if ((!isHeal && cfg.DPSSettings.AlwaysHardTarget) || (isHeal && cfg.HealerSettings.AlwaysHardTarget))
                 Svc.Targets.Target = target;
 
             var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
             bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
             if (TimeMoving.TotalMilliseconds > 0 && castTime > 0 && !orbwalking)
+            {
+                OverrideTarget = null;
                 return false;
+            } 
 
             if (canUse && (inRange || areaTargeted))
             {
-                var isHeal = attributes.AutoAction!.IsHeal;
                 if (isHeal) CurrentActIsAutorot = true;
                 var ret = ActionManager.Instance()->UseAction(ActionType.Action, Service.ActionReplacer.getActionHook.IsEnabled ? gameAct : outAct, canUseTarget || areaTargeted ? target.GameObjectId : Player.Object.GameObjectId);
                 CurrentActIsAutorot = false;
+                OverrideTarget = null;
 
                 if (isHeal && !ret)
                     LastHealAt = Environment.TickCount64 + castTime;

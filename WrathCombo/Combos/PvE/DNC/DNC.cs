@@ -34,9 +34,12 @@ internal partial class DNC : PhysicalRanged
             var targetHpThresholdFeather = DNC_ST_Adv_FeatherBurstPercent;
             var targetHpThresholdStandard = DNC_ST_Adv_SSBurstPercent;
             var targetHpThresholdTechnical = DNC_ST_Adv_TSBurstPercent;
+            var tillanaDropProtectionActive =
+                DNC_ST_ADV_TillanaUse ==
+                (int)TillanaUsageManner.NormallyPreventDrops;
             var tillanaDriftProtectionActive =
                 DNC_ST_ADV_TillanaUse ==
-                (int)TillanaDriftProtection.Favor;
+                (int)TillanaUsageManner.FavorOverEsprit;
 
             // Thresholds to wait for TS/SS to come off CD
             var longAlignmentThreshold = 0.6f;
@@ -339,6 +342,12 @@ internal partial class DNC : PhysicalRanged
                 GetStatusEffectRemainingTime(Buffs.FlourishingStarfall) < 4)
                 return StarfallDance;
 
+            // ST Tillana (Emergency Use)
+            if (GetStatusEffectRemainingTime(Buffs.FlourishingFinish) < GCD * 2.5 &&
+                tillanaDropProtectionActive &&
+                EnemyIn15Yalms)
+                return Tillana;
+
             // ST Dance of the Dawn
             if (IsEnabled(Preset.DNC_ST_Adv_DawnDance) &&
                 HasStatusEffect(Buffs.DanceOfTheDawnReady) &&
@@ -634,6 +643,12 @@ internal partial class DNC : PhysicalRanged
             if (HasStatusEffect(Buffs.FlourishingStarfall) &&
                 GetStatusEffectRemainingTime(Buffs.FlourishingStarfall) < 4)
                 return StarfallDance;
+
+            // ST Tillana (Emergency Use)
+            if (GetStatusEffectRemainingTime(Buffs.FlourishingFinish) < GCD * 1.5 &&
+                Gauge.Esprit < 100 &&
+                EnemyIn15Yalms)
+                return Tillana;
 
             // ST Dance of the Dawn
             if (HasStatusEffect(Buffs.DanceOfTheDawnReady) &&

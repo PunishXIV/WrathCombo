@@ -1,7 +1,9 @@
-﻿using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using ECommons.DalamudServices;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using WrathCombo.Services.ActionRequestIPC;
 namespace WrathCombo.Data;
+using Action = Lumina.Excel.Sheets.Action;
 
 internal class CooldownData
 {
@@ -68,4 +70,9 @@ internal class CooldownData
             return Math.Max(a, ret);
         }
     }
+
+    /// <summary>
+    /// Base Cooldown taken from the sheets without any adjustments.
+    /// </summary>
+    public float BaseCooldown => Svc.Data.GetExcelSheet<Action>().GetRow(ActionID).Recast100ms;
 }

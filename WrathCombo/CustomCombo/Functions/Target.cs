@@ -18,8 +18,22 @@ namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
 {
+    /// <summary> Will be checked at CurrentTarget, if set then this takes priority otherwise hard target.
+    /// <br />Main use will be for Autorotation so we don't have to enforce actual targeting. </summary>
+    public static IGameObject? OverrideTarget
+    {
+        get
+        {
+            if (field.IsStillAround())
+                return field;
+            else
+                return null;
+        }
+        set;
+    } = null;
+
     /// <summary> Gets the current target or null. </summary>
-    public static IGameObject? CurrentTarget => Svc.Targets.Target;
+    public static IGameObject? CurrentTarget => OverrideTarget ?? Svc.Targets.Target;
 
     #region Target Checks
 
@@ -59,13 +73,13 @@ internal abstract partial class CustomComboFunctions
 
         //This is a glorified universal check for friendly targets. Will return a correct value regardless of role, level or whatever.
         var isFriendly = chara.CanUseOn(Healer.Role.Esuna);
-        
+
         // Try to handle heal-able job NPCs being difficult
         if (!isFriendly && chara.ObjectKind == ObjectKind.EventNpc)
         {
             isFriendly = chara.CanUseOn(WHM.Cure);
         }
-        
+
         return isFriendly;
     }
 
@@ -174,7 +188,7 @@ internal abstract partial class CustomComboFunctions
         // Bail if the target is a boss
         if (TargetIsBoss(target))
             return false;
-        
+
         // Bail if another form of interrupt was recently used
         if (JustUsedOn(RoleActions.Melee.LegSweep, target) ||
             JustUsedOn(RoleActions.Tank.Interject, target) ||
@@ -221,12 +235,15 @@ internal abstract partial class CustomComboFunctions
     #region Distance Checks
 
     /// <summary> Checks if an object is within melee range. Defaults to CurrentTarget unless specified. </summary>
-    public static bool InMeleeRange(IGameObject? optionalTarget = null)
+    public unsafe static bool InMeleeRange(IGameObject? optionalTarget = null)
     {
-        if ((optionalTarget ?? CurrentTarget) is not { } chara)
+        if ((optionalTarget ?? CurrentTarget) is not { } chara || LocalPlayer is not { })
             return false;
 
-        return GetTargetDistance(chara) <= (InPvP() ? 5f : 3f) + Service.Configuration.MeleeOffset;
+        var inRangeActionManagerCheck = ActionManager.GetActionInRangeOrLoS(7, LocalPlayer.GameObject(), chara.Struct()) is 0 or 565;
+        var distance = GetTargetDistance(chara);
+
+        return distance <= (InPvP() ? 5f : 3f) + Service.Configuration.MeleeOffset && inRangeActionManagerCheck;
     }
 
     /// <summary> Checks if an object is within a given range. Defaults to CurrentTarget unless specified. </summary>
@@ -235,7 +252,11 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not { } chara)
             return false;
 
-        return GetTargetDistance(chara) <= range;
+        var distance = GetTargetDistance(chara);
+        var height   = GetTargetHeightDifference(optionalTarget);
+        var largest = Math.Max(distance, height);
+
+        return largest <= range;
     }
 
     /// <summary>
@@ -402,7 +423,7 @@ internal abstract partial class CustomComboFunctions
         var down = new Vector3(0, -1, 0);
         RaycastHit hit;
         var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-        
+
         return Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &targetPos, &down, 5, 1, flags);
     }
 
@@ -416,7 +437,7 @@ internal abstract partial class CustomComboFunctions
         var down = new Vector3(0, -1, 0);
         RaycastHit hit;
         var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-        
+
         var result = Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &pointToCheck, &down, 5, 1, flags);
         groundPoint = hit.Point;
         return result;
@@ -601,7 +622,7 @@ internal abstract partial class CustomComboFunctions
         // Bail if the player is not available
         if (LocalPlayer is not { } player)
             return 0;
-        
+
         // Bail if the target is required and not available
         if (typeof(T) != typeof(SelfCircle) && (target ??= CurrentTarget) is null)
             return 0;
@@ -617,10 +638,10 @@ internal abstract partial class CustomComboFunctions
 
         // Circle AoEs centered on a target
         if (typeof(T) == typeof(Circle))
-            return targets.Count(o => 
+            return targets.Count(o =>
                 PointInCircle(o.Position - target.Position,
                     size + o.HitboxRadius));
-        
+
         // Cone AoEs
         if (typeof(T) == typeof(Cone))
             return targets.Count(o =>
@@ -628,7 +649,7 @@ internal abstract partial class CustomComboFunctions
                 PointInCone(o.Position - player.Position,
                     PositionalMath.GetDirection(player.Position, target.Position),
                     45f));
-        
+
         // Line AoEs
         if (typeof(T) == typeof(Line))
             return targets.Count(o =>
@@ -636,10 +657,10 @@ internal abstract partial class CustomComboFunctions
                 HitboxInRect(o,
                     PositionalMath.GetRotation(player.Position, target.Position),
                     size * 0.5f, width * 0.5f));
-        
+
         // If it was not a supported type
         return 0;
-        
+
         bool IsValidTarget(IGameObject o)
         {
             if (!enemies)
@@ -647,7 +668,7 @@ internal abstract partial class CustomComboFunctions
                        o.IsTargetable &&
                        o.IsWithinRange(60f) &&
                        o.IsFriendly();
-            
+
             return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
                    o.IsWithinRange(60f) &&
                    o.IsHostile() &&
@@ -659,7 +680,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     #region Shape Helpers
-    
+
     public interface IAoeShape { }
     public struct SelfCircle : IAoeShape { }
     public struct Circle : IAoeShape { }

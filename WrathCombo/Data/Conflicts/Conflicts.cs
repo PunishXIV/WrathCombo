@@ -16,6 +16,7 @@ public enum ConflictType
     Combo,
     Targeting,
     Settings,
+    WrathSetting,
     GameSetting,
 }
 
@@ -74,9 +75,11 @@ public class Conflict
 
         if (conflictType is ConflictType.GameSetting)
             _xiv = true;
+        if (conflictType is ConflictType.WrathSetting)
+            _wrath = true;
 
         _plugin = search ??
-                  (_xiv
+                  (_xiv || _wrath
                       ? null!
                       : throw new KeyNotFoundException(
                           $"Plugin with internal name '{internalName}' not found."));
@@ -84,20 +87,22 @@ public class Conflict
         Reason = reason;
     }
 
+    private readonly bool _wrath;
+
     private readonly bool _xiv;
 
     /// The display name of the plugin.
-    public string Name => _xiv ? "XIV" : _plugin.Name;
+    public string Name => _xiv || _wrath ? "XIV" : _plugin.Name;
 
     /// <summary>
     ///     The internal name of the plugin, which can be used for getting a
     ///     <see cref="IExposedPlugin" /> instance from
     ///     <see cref="Svc.PluginInterface">Svc.PluginInterface.InstalledPlugins</see>.
     /// </summary>
-    internal string InternalName =>_xiv ? "XIV" :  _plugin.InternalName;
+    internal string InternalName =>_xiv || _wrath ? "XIV" :  _plugin.InternalName;
 
     /// The version of the plugin, as a string.
-    public string Version => _xiv ? "" :  "v" + _plugin.Version;
+    public string Version => _xiv || _wrath ? "" :  "v" + _plugin.Version;
 
     /// What
     /// <see cref="ConflictType">type</see>
@@ -126,6 +131,7 @@ public class Conflict
             ConflictType.Combo => [ComboConflictStart, ComboConflictEnd],
             ConflictType.Targeting => [TargetingConflictStart, TargetingConflictEnd],
             ConflictType.Settings => [SettingsConflictStart, SettingsConflictEnd],
+            ConflictType.WrathSetting => [WrathConflictStart, WrathConflictEnd],
             ConflictType.GameSetting => [GameConflictStart, GameConflictEnd],
             _ => throw new ArgumentOutOfRangeException(nameof(ConflictType),
                 $"Unknown conflict type: {ConflictType}"),
@@ -141,6 +147,9 @@ public class Conflict
 
     private const string SettingsConflictStart = "Conflicting Plugin";
     private const string SettingsConflictEnd = "Setting(s) Detected!";
+
+    private const string WrathConflictStart = "Conflicting Wrath";
+    private const string WrathConflictEnd = "Setting(s) Detected!";
 
     private const string GameConflictStart = "Conflicting Game";
     private const string GameConflictEnd = "Setting(s) Detected!";

@@ -36,27 +36,6 @@ internal partial class SAM
                     ImGui.Unindent();
                     break;
 
-                case Preset.SAM_ST_CDs_MeikyoShisui:
-                    DrawHorizontalRadioButton(SAM_ST_MeikyoLogic,
-                        "Use Simple Logic", $"Uses {MeikyoShisui.ActionName()} when u have 3 sens.", 0);
-
-                    DrawHorizontalRadioButton(SAM_ST_MeikyoLogic,
-                        "Use The Balance Logic", "Uses The Balance logic.", 1);
-
-                    if (SAM_ST_MeikyoLogic == 1)
-                    {
-                        ImGui.Dummy(new(12f.Scale(), 0));
-                        ImGui.NewLine();
-
-                        DrawHorizontalRadioButton(SAM_ST_MeikyoBossOption,
-                            "All content", "Uses The Balance logic regardless of content.", 0);
-
-                        DrawHorizontalRadioButton(SAM_ST_MeikyoBossOption,
-                            "Only in Boss encounters", $"Only uses The Balance logic when in Boss encounters." +
-                                                       $"\nWill use Meikyo every minute regardless of sen count outside of boss encounters.", 1);
-                    }
-                    break;
-
                 case Preset.SAM_ST_CDs_Senei:
                     DrawAdditionalBoolChoice(SAM_ST_CDs_Guren,
                         "Guren Option", $"Adds {Guren.ActionName()} to the rotation if Senei is not unlocked.");
@@ -68,7 +47,7 @@ internal partial class SAM
                     break;
 
                 case Preset.SAM_ST_Shinten:
-                    DrawSliderInt(25, 85, SAM_ST_KenkiOvercapAmount,
+                    DrawSliderInt(50, 85, SAM_ST_KenkiOvercapAmount,
                         "Set the Kenki overcap amount for ST combos.");
 
                     DrawSliderInt(0, 100, SAM_ST_ExecuteThreshold,
@@ -163,11 +142,9 @@ internal partial class SAM
         public static UserInt
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
-            SAM_ST_MeikyoLogic = new("SAM_ST_MeikyoLogic", 1),
             SAM_ST_HiganbanaBossOption = new("SAM_ST_HiganbanaBossOption"),
             SAM_ST_HiganbanaBossAddsOption = new("SAM_ST_HiganbanaBossAddsOption", 50),
             SAM_ST_HiganbanaTrashOption = new("SAM_ST_HiganbanaTrashOption", 100),
-            SAM_ST_MeikyoBossOption = new("SAM_ST_Meikyo_Suboption", 1),
             SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),

@@ -136,7 +136,7 @@ public class DPSSettingsIPCWrapper(DPSSettings settings)
 
     public float MaxDistance => settings.MaxDistance;
 
-    public bool AlwaysSelectTarget => settings.AlwaysSelectTarget;
+    public bool AlwaysHardTarget => settings.AlwaysHardTarget;
 
     public bool AoEIgnoreManual => settings.AoEIgnoreManual;
     
@@ -248,6 +248,8 @@ public class HealerSettingsIPCWrapper(HealerSettings settings)
     public bool PreEmptiveHoT => settings.PreEmptiveHoT;
     
     public bool AutoRezDPSJobsHealersOnly => settings.AutoRezDPSJobsHealersOnly;
+
+    public bool AlwaysHardTarget => settings.AlwaysHardTarget;
 
     #endregion
 }

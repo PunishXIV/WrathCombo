@@ -625,6 +625,8 @@ internal partial class DNC
             ([4], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
+        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
+
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
 
@@ -725,6 +727,7 @@ internal partial class DNC
             ([4], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
+        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
 
@@ -829,6 +832,7 @@ internal partial class DNC
             ([5], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
+        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
 
@@ -911,6 +915,7 @@ internal partial class DNC
                 HasStatusEffect(Buffs.SilkenFlow) || HasStatusEffect(Buffs.FlourishingFlow)),
         ];
 
+        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
 
@@ -1005,6 +1010,7 @@ internal partial class DNC
             ([6], () => !DNC_ST_OpenerOption_Peloton),
         ];
 
+        public override Preset Preset => Preset.DNC_ST_BalanceOpener;
         internal override UserData? ContentCheckConfig =>
             DNC_ST_OpenerDifficulty;
 

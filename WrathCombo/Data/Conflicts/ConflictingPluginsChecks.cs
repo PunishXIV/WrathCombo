@@ -11,7 +11,9 @@ using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
+using WrathCombo.Services;
 using WrathCombo.Services.IPC_Subscriber;
+using WrathCombo.Window.Functions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -37,6 +39,7 @@ public static class ConflictingPluginsChecks
         ReAction.CheckForConflict(true);
         ReActionEx.CheckForConflict(true);
         MOAction.CheckForConflict(true);
+        Wrath.CheckForConflict(true);
         XIV.CheckForConflict(true);
     };
 
@@ -54,6 +57,7 @@ public static class ConflictingPluginsChecks
         ReAction.CheckForConflict();
         ReActionEx.CheckForConflict();
         MOAction.CheckForConflict();
+        Wrath.CheckForConflict();
         XIV.CheckForConflict();
 
         Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(4.11));
@@ -65,6 +69,7 @@ public static class ConflictingPluginsChecks
     internal static ReActionCheck ReAction { get; } = new();
     internal static ReActionCheck ReActionEx { get; } = new(true);
     internal static MOActionCheck MOAction { get; } = new();
+    internal static WrathCheck Wrath { get; } = new();
     internal static XIVCheck XIV { get; } = new();
 
     public static void Begin()
@@ -487,14 +492,72 @@ public static class ConflictingPluginsChecks
         }
     }
 
+    internal sealed class WrathCheck() : ConflictCheck(wrath: true)
+    {
+        protected override ReusableIPC IPC => null!;
+
+        public bool ActionReplacingOffNoAutos;
+        public bool ActionReplacingOffInPvP;
+
+        public override void CheckForConflict(bool forceRefresh = false)
+        {
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
+                return;
+
+            #region Action Replacing Off with no Auto-Mode Combos
+
+            var wrathNumberAutoModePresetsOnJob = Presets.GetJobAutorots
+                .Count(x => x.Value);
+            
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] `ActionReplacing`: " + 
+                $"{Service.Configuration.ActionChanging}, " +
+                $"`NumberAuto-ModeCombosOnJob`: " +
+                $"{wrathNumberAutoModePresetsOnJob}");
+            
+            ActionReplacingOffNoAutos =
+                !Service.Configuration.ActionChanging &&
+                wrathNumberAutoModePresetsOnJob < 1 &&
+                !ContentCheck.IsInPVPContent;
+
+            #endregion
+
+            #region Action Replacing Off in PvP with PvP Combos
+
+            var filteredCombos = ActionReplacer.FilteredCombos ?? [];
+            var wrathNumberPvPPresetsOnJob = filteredCombos
+                .Count(x => x.Preset.Attributes() is not null &&
+                            x.Preset.Attributes().IsPvP);
+            
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{Name}] `ActionReplacing`: " + 
+                $"{Service.Configuration.ActionChanging}, " +
+                $"`NumberPvPCombosOnJob`: " +
+                $"{wrathNumberAutoModePresetsOnJob}," +
+                $"`InPvP`: {ContentCheck.IsInPVPContent}");
+            
+            ActionReplacingOffInPvP =
+                !Service.Configuration.ActionChanging &&
+                wrathNumberPvPPresetsOnJob > 0 &&
+                ContentCheck.IsInPVPContent;
+
+            #endregion
+
+            if (ActionReplacingOffNoAutos || ActionReplacingOffInPvP)
+                MarkConflict();
+            else
+                Conflicted = false;
+        }
+    }
+
     internal abstract class ConflictCheck : IDisposable
     {
         // ReSharper disable once InconsistentNaming
         protected readonly ReusableIPC _ipc;
 
-        protected ConflictCheck()
+        protected ConflictCheck(bool wrath = false)
         {
-            _ipc = new XIVSettingsIPC();
+            _ipc = wrath ? new WrathSettingsIPC() : new XIVSettingsIPC();
             PluginLog.Verbose(
                 $"[ConflictingPlugins] [{Name}] Setup for Checking");
         }
@@ -564,6 +627,10 @@ public static class ConflictingPluginsChecks
                 PluginLog.Information($"[ConflictingPlugins] [{Name}] " +
                                       "Marked Conflict!");
             Conflicted = true;
+        }
+
+        private class WrathSettingsIPC() : ReusableIPC("Wrath", new Version(0, 0))
+        {
         }
 
         private class XIVSettingsIPC() : ReusableIPC("XIV", new Version(0, 0))

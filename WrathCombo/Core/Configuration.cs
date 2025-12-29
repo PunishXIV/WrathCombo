@@ -232,7 +232,9 @@ public partial class Configuration : IPluginConfiguration
         recommendedValue: "On (This is essentially turning OFF most of Wrath)",
         defaultValue: "On",
         warningMark: "Wrath is largely designed with Action Replacing in mind.\n" +
-                     "Disabling it may lead to unexpected behavior, such as regarding Retargeting.")]
+                     "Only Auto-Rotation will work if this is disabled.\n" +
+                     "Disabling it may also lead to unexpected behavior, such as " +
+                     "regarding Retargeting.")]
     public bool ActionChanging = true;
 
     /// Whether actions should only be replaced with a value from a Combo at Use time. Default: false.

@@ -1,4 +1,5 @@
 ﻿using System;
+using WrathCombo.Combos.PvE;
 
 namespace WrathCombo.Attributes;
 
@@ -6,9 +7,10 @@ namespace WrathCombo.Attributes;
 [AttributeUsage(AttributeTargets.Field)]
 internal class OccultCrescentAttribute : Attribute
 {
-    internal OccultCrescentAttribute(int jobId = -1)
+    internal OccultCrescentAttribute(
+        OccultCrescent.JobIDs job = OccultCrescent.JobIDs.N_A)
     {
-        JobId = jobId;
+        JobId = (int)job;
     }
 
     public int JobId { get; }

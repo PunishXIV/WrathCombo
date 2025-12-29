@@ -8,6 +8,7 @@ using ECommons.Logging;
 using System;
 using System.Linq;
 using System.Numerics;
+using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -104,6 +105,19 @@ public static class ConflictingPlugins
                 e.ToStringFull());
         }
 
+        try
+        {
+            if (TryGetWrathSettingConflicts(out var wrathConflicts))
+                conflicts[ConflictType.WrathSetting] = wrathConflicts;
+        }
+        catch (Exception e)
+        {
+            PluginLog.Error(
+                "[ConflictingPlugins] Failed to check for wrath setting conflicts:" +
+                " " +
+                e.ToStringFull());
+        }
+
         _cachedConflicts = conflicts;
         return conflicts.ToArray().Length > 0;
     }
@@ -123,6 +137,7 @@ public static class ConflictingPlugins
         Conflict[] currentConflicts;
         var hasComboConflicts = conflicts[ConflictType.Combo].Length > 0;
         var hasSettingsConflicts = conflicts[ConflictType.Settings].Length > 0;
+        var hasWrathConflicts = conflicts[ConflictType.WrathSetting].Length > 0;
         var hasGameConflicts = conflicts[ConflictType.GameSetting].Length > 0;
         var hasTargetingConflicts = conflicts[ConflictType.Targeting].Length > 0;
 
@@ -191,6 +206,30 @@ public static class ConflictingPlugins
                 hasComboConflicts || hasTargetingConflicts || hasSettingsConflicts);
         }
 
+        if (hasWrathConflicts)
+        {
+            currentConflicts = conflicts[ConflictType.WrathSetting];
+
+            var tooltipText =
+                $"The following {P.Name} Settings might not make sense:";
+
+            foreach (var conflict in conflicts[ConflictType.WrathSetting])
+            {
+                var reasonSplit = conflict.Reason.Split("    ");
+                tooltipText +=
+                    $"\n- Setting: {reasonSplit[0]}" +
+                    $"\n    Problem: {reasonSplit[1]}";
+            }
+
+            tooltipText +=
+                "\n\nIt is recommended you change these settings, " +
+                "if you want Wrath to work.";
+
+            ShowWarning(ConflictType.WrathSetting, tooltipText,
+                hasComboConflicts || hasTargetingConflicts ||
+                hasSettingsConflicts || hasGameConflicts);
+        }
+
         if (hasTargetingConflicts)
         {
             currentConflicts = conflicts[ConflictType.Targeting];
@@ -212,7 +251,7 @@ public static class ConflictingPlugins
 
             ShowWarning(ConflictType.Targeting, tooltipText,
                 hasComboConflicts || hasTargetingConflicts ||
-                hasSettingsConflicts || hasGameConflicts);
+                hasSettingsConflicts || hasGameConflicts || hasWrathConflicts);
         }
 
         return;
@@ -221,10 +260,11 @@ public static class ConflictingPlugins
         {
             var color = type switch
             {
-                ConflictType.Combo => ImGuiColors.DalamudRed,
-                ConflictType.Targeting => ImGuiColors.DalamudYellow,
-                ConflictType.Settings => ImGuiColors.DalamudOrange,
-                ConflictType.GameSetting => ImGuiColors.DalamudOrange,
+                ConflictType.Combo        => ImGuiColors.DalamudRed,
+                ConflictType.Targeting    => ImGuiColors.DalamudYellow,
+                ConflictType.Settings     => ImGuiColors.DalamudOrange,
+                ConflictType.WrathSetting => ImGuiColors.DalamudYellow,
+                ConflictType.GameSetting  => ImGuiColors.DalamudOrange,
                 _ => throw new ArgumentOutOfRangeException(nameof(type),
                     $"Unknown conflict type: {type}"),
             };
@@ -542,6 +582,58 @@ public static class ConflictingPlugins
                         "    " +
                         "Ground Actions cannot be Retargeted without additional click."))
                     .ToArray();
+        }
+
+        return conflicts.Length > 0;
+    }
+
+    #endregion
+
+    #region Wrath Setting Conflicts
+
+    /// <summary>
+    ///     Checks for specific settings within Wrath, that don't make sense in
+    ///     the current context, like Action Replacing being off in PvP
+    /// </summary>
+    /// <param name="conflicts">
+    ///     The output list of conflicting wrath settings.
+    /// </param>
+    /// <returns>
+    ///     Whether there are wrath settings conflicts.
+    /// </returns>
+    private static bool TryGetWrathSettingConflicts(out Conflict[] conflicts)
+    {
+        conflicts = [];
+
+        if (ConflictingPluginsChecks.Wrath.Conflicted)
+        {
+            if (ConflictingPluginsChecks.Wrath.ActionReplacingOffNoAutos)
+                conflicts = conflicts.Append(new Conflict(
+                        "Wrath", ConflictType.WrathSetting,
+                        "Action Replacing OFF" +
+                        "    " +
+                        "Your current job has no Combos enabled in Auto-Mode; " +
+                        "Wrath cannot work in this state."))
+                    .ToArray();
+
+            if (ConflictingPluginsChecks.Wrath.ActionReplacingOffInPvP)
+                conflicts = conflicts.Append(new Conflict(
+                        "Wrath", ConflictType.WrathSetting,
+                        "Action Replacing OFF" +
+                        "    " +
+                        "Your current job has PvP Combos on, " +
+                        "and you're in a PVP zone; " +
+                        "Wrath cannot work in this state."))
+                    .ToArray();
+
+#if !DEBUG
+            if ((ConflictingPluginsChecks.Wrath.ActionReplacingOffNoAutos ||
+                 ConflictingPluginsChecks.Wrath.ActionReplacingOffInPvP) &&
+                EZ.Throttle("conflictActionReplacingNotice", TS.FromSeconds(30)) &&
+                !CustomComboFunctions.InCombat())
+                DuoLog.Debug($"Combos cannot run in this configuration! " +
+                             $"Open the UI for Conflict details.");
+#endif
         }
 
         return conflicts.Length > 0;

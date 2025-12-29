@@ -22,6 +22,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
@@ -34,6 +35,7 @@ using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
 using WrathCombo.Services.IPC_Subscriber;
+using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
 using BattleNPCSubKind = Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind;
@@ -196,7 +198,7 @@ internal class Debug : ConfigWindow, IDisposable
 
         ImGuiEx.Spacing(new Vector2(0f, SpacingMedium));
 
-        var target = Svc.Targets.Target;
+        var target = CurrentTarget;
         var player = Player.Object;
 
         // Custom 2-Column Styling
@@ -425,6 +427,30 @@ internal class Debug : ConfigWindow, IDisposable
                 case Job.PCT:
                     Util.ShowStruct(&JobGaugeManager.Instance()->Pictomancer);
                     break;
+            }
+
+            ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+
+            if (ImGui.TreeNode("Content Data"))
+            {
+                CustomStyleText("Content Name:",
+                    $"content:{Content.ContentName ?? "??"}, territory:{Content.TerritoryName ?? "??"}");
+                CustomStyleText("Content IDs:",
+                    $"territory:{Content.TerritoryID}, cfc:{Content.ContentFinderConditionRow?.RowId.ToString() ?? "??"}, map:{Content.MapID}");
+                CustomStyleText("Content Type:", Content.ContentType?.ToString() ?? "??");
+                CustomStyleText("Intended Use:", Content.TerritoryIntendedUse?.ToString() ?? "??");
+                CustomStyleText("Difficulty:",
+                    $"from name:{Content.ContentDifficultyFromName ?? "??"}, determined:{Content.ContentDifficulty?.ToString() ?? "??"}");
+                CustomStyleText("CDF Boss-Only:", ContentCheck.IsInBossOnlyContent());
+                CustomStyleText("CDF Halved:",
+                    $"bottom:{ContentCheck.IsInBottomHalfContent()}, top:{ContentCheck.IsInTopHalfContent()}");
+                CustomStyleText("CDF Casual VS Hard:",
+                    $"casual:{ContentCheck.IsInCasualContent()}, hard:{ContentCheck.IsInHardContent()}");
+                CustomStyleText("CDF Cored:",
+                    $"soft:{ContentCheck.IsInSoftCoreContent()}, mid:{ContentCheck.IsInMidCoreContent()}, hard:{ContentCheck.IsInHardCoreContent()}");
+
+                ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
+                ImGui.TreePop();
             }
 
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
@@ -884,6 +910,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText("Quest:", $"{unlockQuest.Name} ({(UIState.Instance()->IsUnlockLinkUnlockedOrQuestCompleted(_debugSpell.Value.UnlockLink.RowId) ? "Completed" : "Not Completed")})");
 
                 CustomStyleText("Base Recast:", $"{_debugSpell.Value.Recast100ms / 10f}s");
+                CustomStyleText("Base Recast Total:", $"{GetCooldown(_debugSpell.Value.RowId).BaseCooldownTotal}");
                 CustomStyleText("Original Hook:", OriginalHook(_debugSpell.Value.RowId).ActionName());
                 CustomStyleText("Cooldown Total:", $"{GetCooldown(_debugSpell.Value.RowId).CooldownTotal}");
                 CustomStyleText("Current Cooldown:", GetCooldown(_debugSpell.Value.RowId).CooldownRemaining);
@@ -1023,6 +1050,38 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Countdown Active:", $"{CountdownActive}");
             CustomStyleText("Countdown Remaining:", $"{CountdownRemaining}");
             CustomStyleText("Raidwide Incoming:", $"{RaidWideCasting()}");
+
+            ImGui.Indent();
+            if (ImGui.CollapsingHeader("Occult Crescent Job Icons"))
+            {
+                ImGui.Text("Icons in `ui/uld/MKDSupportJob.uld`");
+                ImGui.NewLine();
+                var counter = 0;
+                for (var icon = 0; icon <= 25; icon++)
+                {
+                    if (!JobIDExtensions.GetActiveFromValue(icon))
+                        continue;
+                    
+                    counter++;
+                    ImGui.BeginGroup();
+                    
+                    ImGui.Text(
+                        $"{icon}: " +
+                        $"{JobIDExtensions.GetNameFromValue(icon) ?? "Unknown"}");
+                    ImGui.NewLine();
+                    Presets.DrawOccultJobIcon(icon);
+                    ImGui.EndGroup();
+
+                    if (counter >= 7)
+                    {
+                        ImGui.NewLine();
+                        counter = 0;
+                    }
+                    else
+                        ImGui.SameLine();
+                }
+            }
+            ImGui.Unindent();
         }
 
         #endregion

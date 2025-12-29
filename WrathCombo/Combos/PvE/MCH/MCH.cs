@@ -15,9 +15,8 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (SplitShot or HeatedSplitShot))
                 return actionID;
 
-            //Reassemble
-            if (CanReassemble() &&
-                !InCombat())
+            //Reassemble to start before combat/after downtime
+            if (CanReassemble() && !IsOverheated && !HasWeaved())
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -267,9 +266,9 @@ internal partial class MCH : PhysicalRanged
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
-            //Reassemble to start before combat
+            //Reassemble to start before combat/after downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                !InCombat() && CanReassemble())
+                CanReassemble() && !IsOverheated && !HasWeaved())
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -315,6 +314,13 @@ internal partial class MCH : PhysicalRanged
 
                 if (!IsOverheated)
                 {
+                    // Reassemble
+                    if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
+                        GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool &&
+                        GetTargetHPPercent() > HPThresholdReassemble &&
+                        CanReassemble())
+                        return Reassemble;
+
                     // BarrelStabilizer
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
                         (MCH_ST_BarrelStabilizerBossOption == 0 && GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss()) &&
@@ -326,13 +332,6 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
                         CanQueen())
                         return OriginalHook(RookAutoturret);
-
-                    // Reassemble
-                    if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                        GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool &&
-                        GetTargetHPPercent() > HPThresholdReassemble &&
-                        CanReassemble())
-                        return Reassemble;
 
                     // Hypercharge
                     if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&

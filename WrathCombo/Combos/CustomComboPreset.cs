@@ -759,8 +759,75 @@ public enum Preset
     [ParentCombo(Phantom_Geomancer_Weather)]
     [CustomComboInfo("Aetherial Gain", "Adds Aetherial Gain into the rotation.", Job.ADV)]
     Phantom_Geomancer_AetherialGain = 110072,
+    
+    [OccultCrescent(OccultCrescent.JobIDs.Dancer)]
+    [CustomComboInfo("Dancer Job Actions", "Enable this to add Dancer-specific actions into the rotation.", Job.ADV)]
+    Phantom_Dancer = 110076,
 
-    //Last Value = 110075
+    [OccultCrescent]
+    [ParentCombo(Phantom_Dancer)]
+    [CustomComboInfo("Dance", "Adds Dance and its followup GCD attacks into the rotation.", Job.ADV)]
+    Phantom_Dancer_Dance = 110077,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_Dancer)]
+    [CustomComboInfo("Quickstep", "Adds Quickstep into the rotation when targetted by an enemy.", Job.ADV)]
+    Phantom_Dancer_QuickStep = 110078,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_Dancer)]
+    [CustomComboInfo("Mesmermize", "Adds Mesmerize into the rotation.", Job.ADV)]
+    Phantom_Dancer_Mesmerize = 110079,
+    
+    [OccultCrescent(OccultCrescent.JobIDs.MysticKnight)]
+    [CustomComboInfo("Mystic Knight Job Actions", "Enable this to add Mystic Knight-specific actions into the rotation.", Job.ADV)]
+    Phantom_MysticKnight = 110080,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_MysticKnight)]
+    [CustomComboInfo("Sundering Spellblade", "Adds Sundering Spellblade into the rotation.", Job.ADV)]
+    Phantom_MysticKnight_SunderingSpellblade = 110081,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_MysticKnight)]
+    [CustomComboInfo("Holy Spellblade", "Adds Holy Spellblade into the rotation.", Job.ADV)]
+    Phantom_MysticKnight_HolySpellblade = 110082,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_MysticKnight)]
+    [CustomComboInfo("Blazing Spellblade", "Adds Blazing Spellblade into the rotation when the buff is not present.", Job.ADV)]
+    Phantom_MysticKnight_BlazingSpellblade = 110083,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_MysticKnight)]
+    [CustomComboInfo("Magic Shell", "Adds Magic Shell into the rotation.", Job.ADV)]
+    Phantom_MysticKnight_MagicShell = 110084,
+    
+    [OccultCrescent(OccultCrescent.JobIDs.Gladiator)]
+    [CustomComboInfo("Gladiator Job Actions", "Enable this to add Gladiator-specific actions into the rotation.", Job.ADV)]
+    Phantom_Gladiator = 110085,
+
+    [OccultCrescent]
+    [ParentCombo(Phantom_Gladiator)]
+    [CustomComboInfo("Finisher", "Adds Finisher into the rotation.", Job.ADV)]
+    Phantom_Gladiator_Finisher = 110086,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_Gladiator)]
+    [CustomComboInfo("Defend", "Adds Defend into the rotation.", Job.ADV)]
+    Phantom_Gladiator_Defend = 110087,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_Gladiator)]
+    [CustomComboInfo("Long Reach", "Adds Long Reach into the rotation.", Job.ADV)]
+    Phantom_Gladiator_LongReach = 110088,
+    
+    [OccultCrescent]
+    [ParentCombo(Phantom_Gladiator)]
+    [CustomComboInfo("Blade Blitz", "Adds Blade Blitz into the rotation.", Job.ADV)]
+    Phantom_Gladiator_BladeBlitz = 110089,
+
+    //Last Value = 110089
     #endregion
 
     // Jobs
@@ -6153,7 +6220,7 @@ public enum Preset
     SAM_ST_CDs = 15011,
 
     [ParentCombo(SAM_ST_CDs)]
-    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.\n Dynamically changes usage for 2.14 or 2.08 GCD", Job.SAM)]
+    [CustomComboInfo("Meikyo Shisui Option", "Adds Meikyo Shisui to the rotation.", Job.SAM)]
     SAM_ST_CDs_MeikyoShisui = 15018,
 
     [ParentCombo(SAM_ST_CDs)]
@@ -7594,7 +7661,7 @@ public enum Preset
     [CustomComboInfo("Reprisal Option", "Adds Reprisal.\n- Player HP must be under:", Job.WAR)]
     WAR_AoE_Reprisal = 18063,
 
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
+    [ParentCombo(WAR_AoE_Mitigation)]
     [CustomComboInfo("Shake it Off Option", "Adds Shake it Off.\n- Player HP must be under:", Job.WAR)]
     WAR_AoE_ShakeItOff = 18133,
 

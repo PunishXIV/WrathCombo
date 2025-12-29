@@ -323,7 +323,7 @@ internal partial class VPR
         ];
 
         internal override UserData ContentCheckConfig => VPR_Balance_Content;
-
+        public override Preset Preset => Preset.VPR_ST_Opener;
         public override bool HasCooldowns() =>
             IsOriginal(ReavingFangs) &&
             GetRemainingCharges(Vicewinder) is 2 &&

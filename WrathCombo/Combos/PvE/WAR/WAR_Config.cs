@@ -180,6 +180,12 @@ internal partial class WAR
                     DrawSliderInt(1, 100, WAR_ST_Bloodwhetting_Health,
                         "Player HP%", 200);
 
+                    DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_Boss,
+                        "All Enemies", $"Uses {Bloodwhetting.ActionName()} regardless of targeted enemy type", 0);
+
+                    DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_Boss,
+                        "Bosses Only", $"Only uses {Bloodwhetting.ActionName()} when the targeted enemy is a boss", 1);
+
                     break;
 
                 case Preset.WAR_AoE_Bloodwhetting:
@@ -446,11 +452,12 @@ internal partial class WAR
             WAR_ST_PrimalRend_Movement = new("WAR_ST_PrimalRend_Movement"),
             WAR_ST_PrimalRend_EarlyLate = new("WAR_ST_PrimalRend_EarlyLate"),
             WAR_ST_Bloodwhetting_Health = new("WAR_ST_BloodwhettingOption", 85),
+            WAR_ST_Bloodwhetting_Boss = new("WAR_ST_Bloodwhetting_Boss"),
             WAR_ST_Equilibrium_Health = new("WAR_ST_EquilibriumOption", 50),
             WAR_ST_Thrill_Health = new("WAR_ST_Thrill_Health", 70),
             WAR_ST_Vengeance_Health = new("WAR_ST_Vengeance_Health", 60),
             WAR_ST_Holmgang_Health = new("WAR_ST_Holmgang_Health", 30),
-            WAR_ST_MitsOptions = new("WAR_ST_MitsOptions"),
+            WAR_ST_MitsOptions = new("WAR_ST_MitsOptions", 1),
             WAR_ST_IRStop = new("WAR_ST_IRStop"),
             WAR_AoE_Infuriate_Charges = new("WAR_AoE_Infuriate_Charges"),
             WAR_AoE_Infuriate_Gauge = new("WAR_AoE_Infuriate_Gauge", 40),
@@ -471,7 +478,7 @@ internal partial class WAR
             WAR_AoE_ShakeItOff_Health = new("WAR_AoE_ShakeItOff_Health", 80),
             WAR_AoE_Reprisal_Count = new("WAR_AoE_Reprisal_Count", 3),
             WAR_AoE_ArmsLength_Count = new("WAR_AoE_ArmsLength_Count", 3),
-            WAR_AoE_MitsOptions = new("WAR_AoE_MitsOptions"),
+            WAR_AoE_MitsOptions = new("WAR_AoE_MitsOptions", 1),
             WAR_AoE_IRStop = new("WAR_AoE_IRStop"),
             WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1),
             WAR_FC_IRStop = new("WAR_FC_IRStop"),

@@ -490,16 +490,16 @@ internal partial class AST : Healer
             if (ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
-                return Role.Esuna.RetargetIfEnabled(OptionalTarget, Benefic);
+                return Role.Esuna.RetargetIfEnabled(healTarget, Benefic);
             
             if (CanWeave() && Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
             
             if (ActionReady(EssentialDignity) && GetTargetHPPercent(healTarget) <= 30)
-                return EssentialDignity.RetargetIfEnabled(OptionalTarget, Benefic);
+                return EssentialDignity.RetargetIfEnabled(healTarget, Benefic);
             
             if (ActionReady(Exaltation) && (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty()))
-                return Exaltation.RetargetIfEnabled(OptionalTarget, Benefic);
+                return Exaltation.RetargetIfEnabled(healTarget, Benefic);
 
             if (!InBossEncounter())
             {
@@ -519,24 +519,24 @@ internal partial class AST : Healer
             if (ActionReady(AspectedBenefic) &&
                 (!HasStatusEffect(Buffs.AspectedBenefic, healTarget) ||
                  !HasStatusEffect(Buffs.NeutralSectShield, healTarget) && HasStatusEffect(Buffs.NeutralSect)))
-                return OriginalHook(AspectedBenefic).RetargetIfEnabled(OptionalTarget, Benefic);
+                return OriginalHook(AspectedBenefic).RetargetIfEnabled(healTarget, Benefic);
             
             if ((HasArrow || HasBole) && 
                 (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty())) 
-                return OriginalHook(Play2).RetargetIfEnabled(OptionalTarget, Benefic);
+                return OriginalHook(Play2).RetargetIfEnabled(healTarget, Benefic);
             
             if (HasEwer || HasSpire) 
-                return OriginalHook(Play3).RetargetIfEnabled(OptionalTarget, Benefic);
+                return OriginalHook(Play3).RetargetIfEnabled(healTarget, Benefic);
             
             if (ActionReady(CelestialIntersection) && !HasStatusEffect(Buffs.Intersection) && GetRemainingCharges(EssentialDignity) <= GetRemainingCharges(CelestialIntersection))
-                return CelestialIntersection.RetargetIfEnabled(OptionalTarget, Benefic);
+                return CelestialIntersection.RetargetIfEnabled(healTarget, Benefic);
             
             if (ActionReady(EssentialDignity))
-                return EssentialDignity.RetargetIfEnabled(OptionalTarget, Benefic);
+                return EssentialDignity.RetargetIfEnabled(healTarget, Benefic);
 
             return !LevelChecked(Benefic2)
-                ? actionID.RetargetIfEnabled(OptionalTarget)
-                : Benefic2.RetargetIfEnabled(OptionalTarget, Benefic);
+                ? actionID.RetargetIfEnabled(healTarget)
+                : Benefic2.RetargetIfEnabled(healTarget, Benefic);
         }
     }
     
@@ -620,7 +620,7 @@ internal partial class AST : Healer
                 ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) >= AST_ST_SimpleHeals_Esuna &&
                 cleansableTarget)
-                return Role.Esuna.RetargetIfEnabled(OptionalTarget, Benefic);
+                return Role.Esuna.RetargetIfEnabled(healTarget, Benefic);
             
             //Priority List
             for (int i = 0; i < AST_ST_SimpleHeals_Priority.Count; i++)
@@ -632,12 +632,12 @@ internal partial class AST : Healer
                 {
                     if (GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields) <= config &&
                         ActionReady(spell))
-                        return spell.RetargetIfEnabled(OptionalTarget, Benefic);
+                        return spell.RetargetIfEnabled(healTarget, Benefic);
                 }
             }
             return !LevelChecked(Benefic2) ?
-                actionID.RetargetIfEnabled(OptionalTarget, Benefic):
-                Benefic2.RetargetIfEnabled(OptionalTarget, Benefic);
+                actionID.RetargetIfEnabled(healTarget, Benefic):
+                Benefic2.RetargetIfEnabled(healTarget, Benefic);
         }
     }
     

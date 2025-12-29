@@ -314,8 +314,17 @@ internal partial class DRK
                 HasStatusEffect(Buffs.UndeadRebirth))
                 return false;
 
+            // (Don't bail for Simple Mode if turned on via IPC)
+            var ipcControlledSimpleMode =
+                flags.HasFlag(Combo.Simple) && (flags.HasFlag(Combo.ST)
+                    ? P.UIHelper.PresetControlled(Preset.DRK_ST_Simple)?.enabled ==
+                      true
+                    : P.UIHelper.PresetControlled(Preset.DRK_AoE_Simple)?.enabled ==
+                      true);
+
             // Bail if Simple mode and mitigation is disabled
             if (flags.HasFlag(Combo.Simple) &&
+                !ipcControlledSimpleMode &&
                 ((flags.HasFlag(Combo.ST) &&
                   (int)DRK_ST_SimpleMitigation ==
                   (int)SimpleMitigation.Off) ||
