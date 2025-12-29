@@ -74,6 +74,8 @@ public static class ActionWatching
     private static CancellationTokenSource source = new CancellationTokenSource();
     private static CancellationToken token;
 
+    public static bool UpdatingActions;
+
     /// <summary> Handles logic when an action causes an effect. </summary>
     private unsafe static void ReceiveActionEffectDetour(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds)
     {
@@ -240,6 +242,8 @@ public static class ActionWatching
 
         if (Service.Configuration.EnabledOutputLog)
             OutputLog();
+
+        UpdatingActions = false;
     }
 
     /// <summary> Handles logic when an action is sent. </summary>
@@ -263,6 +267,7 @@ public static class ActionWatching
 
                 var castTime = ActionManager.GetAdjustedCastTime((ActionType)actionType, actionId);
                 token = source.Token;
+                UpdatingActions = true;
                 UpdateActionTask = Svc.Framework.RunOnTick(() =>
                 UpdateLastUsedAction(actionId, actionType, targetObjectId, castTime),
                 TimeSpan.FromMilliseconds(castTime), cancellationToken: token);
@@ -347,6 +352,7 @@ public static class ActionWatching
     {
         source.Cancel();
         source = new CancellationTokenSource();
+        UpdatingActions = false;
     }
 
     /// <summary> Handles logic when an action is used. </summary>

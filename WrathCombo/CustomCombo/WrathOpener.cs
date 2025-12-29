@@ -30,7 +30,7 @@ public abstract class WrathOpener
             CurrentOpener.FullOpener(ref _);
         }
 
-            
+
     }
 
     public void ProgressOpener(uint actionId)
@@ -180,7 +180,7 @@ public abstract class WrathOpener
 
         if (CurrentState is OpenerState.OpenerReady or OpenerState.InOpener)
         {
-            if (!HasCooldowns() && OpenerStep == 1)
+            if (!ActionWatching.UpdatingActions && !HasCooldowns() && OpenerStep == 1)
             {
                 ResetOpener();
                 return false;
@@ -188,7 +188,7 @@ public abstract class WrathOpener
 
             if (OpenerStep > 1)
             {
-                bool prevStepSkipping = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep  - 1, out var t), out var p);
+                bool prevStepSkipping = SkipSteps.FindFirst(x => x.Steps.FindFirst(y => y == OpenerStep - 1, out var t), out var p);
                 if (prevStepSkipping)
                     prevStepSkipping = p.Condition();
 
@@ -359,7 +359,7 @@ public class DummyOpener : WrathOpener
     public override int MinOpenerLevel => 1;
     public override int MaxOpenerLevel => 10000;
 
-    public override Preset Preset { get; } 
+    public override Preset Preset { get; }
 
     internal override UserData? ContentCheckConfig => null;
 
