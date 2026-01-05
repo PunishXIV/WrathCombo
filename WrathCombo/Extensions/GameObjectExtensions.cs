@@ -197,12 +197,20 @@ public static class GameObjectExtensions
         ///     <see langword="null" /> if the target is not still loaded in the player's
         ///     game.
         /// </summary>
-        public IGameObject? IfStillAround() =>
-            obj != null &&
-            Svc.Objects
-                .Any(x => x.GameObjectId == obj.GameObjectId)
-                ? obj
-                : null;
+        public IGameObject? IfStillAround()
+        {
+            try
+            {
+                if (Svc.Objects.Any(x => x.GameObjectId == obj.GameObjectId))
+                    return obj;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return null;
+        }
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it return
@@ -317,10 +325,20 @@ public static class GameObjectExtensions
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
         ///     boolean check for if the object is still loaded in the player's game.
         /// </summary>
-        public bool IsStillAround() =>
-            obj != null &&
-            Svc.Objects
-                .Any(x => x.GameObjectId == obj.GameObjectId);
+        public bool IsStillAround()
+        {
+            try
+            {
+                if (Svc.Objects.Any(x => x.GameObjectId == obj.GameObjectId))
+                    return true;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return false;
+        }
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
