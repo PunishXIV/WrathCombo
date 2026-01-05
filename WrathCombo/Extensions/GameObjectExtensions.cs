@@ -198,7 +198,9 @@ public static class GameObjectExtensions
         ///     game.
         /// </summary>
         public IGameObject? IfStillAround() =>
-            obj != null && Svc.Objects.SearchById(obj.GameObjectId) != null
+            obj != null &&
+            Svc.Objects
+                .Any(x => x.GameObjectId == obj.GameObjectId)
                 ? obj
                 : null;
 
@@ -315,7 +317,10 @@ public static class GameObjectExtensions
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
         ///     boolean check for if the object is still loaded in the player's game.
         /// </summary>
-        public bool IsStillAround() => IfStillAround(obj) != null;
+        public bool IsStillAround() =>
+            obj != null &&
+            Svc.Objects
+                .Any(x => x.GameObjectId == obj.GameObjectId);
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
@@ -345,10 +350,10 @@ public static class GameObjectExtensions
     /// <param name="ptr">The GameObject pointer to convert.</param>
     /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
     public static unsafe IGameObject? GetObjectFrom(GameObject* ptr) =>
-       ptr == null
-           ? null
-           : Svc.Objects
-               .FirstOrDefault(x => x.Address == (IntPtr)ptr);
+        ptr == null
+            ? null
+            : Svc.Objects
+                .FirstOrDefault(x => x.Address == (IntPtr)ptr);
 
     /// <summary>
     ///     Converts a GameObjectID to an IGameObject from the object table.
