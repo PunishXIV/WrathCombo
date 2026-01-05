@@ -325,20 +325,7 @@ public static class GameObjectExtensions
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
         ///     boolean check for if the object is still loaded in the player's game.
         /// </summary>
-        public bool IsStillAround()
-        {
-            try
-            {
-                if (Svc.Objects.Any(x => x.GameObjectId == obj.GameObjectId))
-                    return true;
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return false;
-        }
+        public bool IsStillAround() => obj.IfStillAround() != null;
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
