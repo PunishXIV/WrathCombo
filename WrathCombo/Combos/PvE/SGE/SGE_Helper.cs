@@ -108,11 +108,11 @@ internal partial class SGE
     private static bool RaidwideKerachole() =>
         IsEnabled(Preset.SGE_Raidwide_Kerachole) &&
         ActionReady(Kerachole) && AdvancedHasAddersgall() &&
-        CanWeave() && RaidWideCasting();
+        CanWeave() && GroupDamageIncoming();
 
     private static bool RaidwideHolos() =>
         IsEnabled(Preset.SGE_Raidwide_Holos) &&
-        ActionReady(Holos) && CanWeave() && RaidWideCasting() &&
+        ActionReady(Holos) && CanWeave() && GroupDamageIncoming() &&
         GetPartyAvgHPPercent() <= SGE_Raidwide_HolosOption;
 
     private static bool RaidwideEprognosis()
@@ -120,7 +120,7 @@ internal partial class SGE
         bool shieldCheck = GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= SGE_AoE_Heal_EPrognosisOption &&
                            GetPartyBuffPercent(SCH.Buffs.Galvanize) <= SGE_AoE_Heal_EPrognosisOption;
 
-        return IsEnabled(Preset.SGE_Raidwide_EPrognosis) && shieldCheck && RaidWideCasting();
+        return IsEnabled(Preset.SGE_Raidwide_EPrognosis) && shieldCheck && GroupDamageIncoming();
     }
 
     #endregion

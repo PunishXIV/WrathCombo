@@ -220,7 +220,7 @@ internal partial class MNK : Melee
                     return OriginalHook(RiddleOfEarth);
 
                 if (IsEnabled(Preset.MNK_ST_Feint) &&
-                    Role.CanFeint() && RaidWideCasting())
+                    Role.CanFeint() && GroupDamageIncoming())
                     return Role.Feint;
 
                 if (IsEnabled(Preset.MNK_ST_ComboHeals))

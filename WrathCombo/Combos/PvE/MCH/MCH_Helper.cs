@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.MCH.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
@@ -109,25 +108,43 @@ internal partial class MCH
 
     private static bool CanReassemble()
     {
+        uint remainingCharges = GetRemainingCharges(Reassemble);
+
         if (HasStatusEffect(Buffs.Reassembled) || !HasBattleTarget() || !InActionRange(Drill))
             return false;
-        
-        uint remainingCharges = GetRemainingCharges(Reassemble);
 
         if (remainingCharges == 0)
             return false;
 
-        int numberOfReadyTools = ReadyTools();
-
-        bool enoughToolsForBurst = numberOfReadyTools >= remainingCharges;
-
-        if (!LevelChecked(Excavator))
-            return enoughToolsForBurst;
-
-        switch (remainingCharges)
+        if (MCH_ST_Adv_ReassembleChoice == 0)
         {
-            case 2 when enoughToolsForBurst:
-            case 1 when enoughToolsForBurst && JustUsed(Reassemble, 8):
+            int numberOfReadyTools = ReadyTools();
+
+            bool enoughToolsForBurst = numberOfReadyTools >= remainingCharges;
+
+            if (!LevelChecked(Excavator))
+                return enoughToolsForBurst;
+
+            switch (remainingCharges)
+            {
+                case 2 when enoughToolsForBurst:
+                case 1 when enoughToolsForBurst && JustUsed(Reassemble, 8):
+                    return true;
+            }
+        }
+
+        if (MCH_ST_Adv_ReassembleChoice == 1)
+        {
+            if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+                return true;
+
+            if (ActionReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
+                return true;
+
+            if (ActionReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2))
+                return true;
+
+            if (!LevelChecked(CleanShot) && ActionReady(HotShot))
                 return true;
         }
 
@@ -183,7 +200,7 @@ internal partial class MCH
 
     #endregion
 
-    #region Cooldowns
+    #region Tools
 
     private static bool DrillCD =>
         !LevelChecked(Drill) ||

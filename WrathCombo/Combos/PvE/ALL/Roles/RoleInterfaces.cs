@@ -191,6 +191,7 @@ internal static partial class RoleActions
 
     internal interface ITankBuffs : IPhysicalRoleBuffs
     {
+        ushort Rampart { get; }
     }
 
     internal interface ICasterDebuffs

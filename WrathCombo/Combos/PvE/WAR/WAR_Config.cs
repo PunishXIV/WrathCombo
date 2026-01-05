@@ -17,6 +17,84 @@ internal partial class WAR
         {
             switch (preset)
             {
+                #region Combo Mitigations
+                case Preset.WAR_ST_Simple:
+                    DrawHorizontalRadioButton(WAR_ST_MitsOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
+                    DrawHorizontalRadioButton(WAR_ST_MitsOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
+                    break;
+
+                case Preset.WAR_AoE_Simple:
+                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
+                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
+                    break;
+                case Preset.WAR_ST_Advanced:
+                    DrawHorizontalRadioButton(WAR_ST_Advanced_MitsOptions, "Include Advanced Mitigations", "Enables the use of mitigations.", 0);
+                    DrawHorizontalRadioButton(WAR_ST_Advanced_MitsOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
+                    break;
+
+                case Preset.WAR_AoE_Advanced:
+                    DrawHorizontalRadioButton(WAR_AoE_Advanced_MitsOptions, "Include Advanced Mitigations", "Enables the use of advanced mitigations.", 0);
+                    DrawHorizontalRadioButton(WAR_AoE_Advanced_MitsOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
+                    break;
+                case Preset.WAR_Mitigation_NonBoss:
+                    DrawSliderFloat(0, 100, WAR_Mitigation_NonBoss_MitigationThreshold, "Stop using when average health percentage of nearby enemies is below set. \n(Set to 0 to disable this check) ", decimals: 0);
+                    break;
+                case Preset.WAR_Mitigation_NonBoss_ShakeItOff:
+                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_ShakeItOff_Health, "Player HP% to use Shake It Off at or below (100 = Disable check)");
+                    break;
+                case Preset.WAR_Mitigation_NonBoss_Equilibrium:
+                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_Equilibrium_Health, "Player HP% to use Equilibrium at or below (100 = Disable check)");
+                    break;
+                case Preset.WAR_Mitigation_NonBoss_Holmgang:
+                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_Holmgang_Health, "Player HP% to use Holmgang at or below (100 = Disable check)");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_Equilibrium:
+                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_Equilibrium_Health, "Player HP% to use Equilibrium at or below (100 = Disable check)");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_RawIntuition_OnCD:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_RawIntuition_OnCD_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_RawIntuition_Health, "Player HP% to use Raw Intuition/Bloodwhetting at or below (100 = Disable check)");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_RawIntuition_TankBuster:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_RawIntuition_TankBuster_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_Rampart:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_Rampart_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_Vengeance:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_Vengeance_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    DrawAdditionalBoolChoice(WAR_Mitigation_Boss_Vengeance_First, "Use Vengeance First", "Uses Vengeance before Rampart");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_ThrillOfBattle:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_ThrillOfBattle_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    DrawSliderFloat(1, 100, WAR_Mitigation_Boss_ThrillOfBattle_Threshold, "Will use Thrill Of Battle as extra tankbuster mitigation if under this HP%", decimals: 0);
+                    DrawAdditionalBoolChoice(WAR_Mitigation_Boss_ThrillOfBattle_Align, "Align Thrill Of Battle", "Tries to align Thrill Of Battle with Rampart for tankbusters.");
+                    break;
+                
+                case Preset.WAR_Mitigation_Boss_ShakeItOff:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_ShakeItOff_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    break;
+                    
+                case Preset.WAR_Mitigation_Boss_Reprisal:
+                    DrawDifficultyMultiChoice(WAR_Mitigation_Boss_Reprisal_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
+                        "Select which difficulties the ability should be used in:");
+                    break;
+                
+                
+                #endregion
+                
                 #region Single-Target
 
                 case Preset.WAR_ST_BalanceOpener:
@@ -169,98 +247,6 @@ internal partial class WAR
 
                 #endregion
 
-                #region Mitigations
-
-                case Preset.WAR_ST_Mitigation:
-                    DrawDifficultyMultiChoice(WAR_ST_Mit_Difficulty, WAR_ST_Mit_DifficultyListSet,
-                        "Select what difficulties mitigations should be used in:");
-                    break;
-
-                case Preset.WAR_ST_Bloodwhetting:
-                    DrawSliderInt(1, 100, WAR_ST_Bloodwhetting_Health,
-                        "Player HP%", 200);
-
-                    DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_Boss,
-                        "All Enemies", $"Uses {Bloodwhetting.ActionName()} regardless of targeted enemy type", 0);
-
-                    DrawHorizontalRadioButton(WAR_ST_Bloodwhetting_Boss,
-                        "Bosses Only", $"Only uses {Bloodwhetting.ActionName()} when the targeted enemy is a boss", 1);
-
-                    break;
-
-                case Preset.WAR_AoE_Bloodwhetting:
-                    DrawSliderInt(1, 100, WAR_AoE_Bloodwhetting_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_ST_Equilibrium:
-                    DrawSliderInt(1, 100, WAR_ST_Equilibrium_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_AoE_Equilibrium:
-                    DrawSliderInt(1, 100, WAR_AoE_Equilibrium_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_AoE_Rampart:
-                    DrawSliderInt(1, 100, WAR_AoE_Rampart_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_ST_Thrill:
-                    DrawSliderInt(1, 100, WAR_ST_Thrill_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_AoE_Thrill:
-                    DrawSliderInt(1, 100, WAR_AoE_Thrill_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_ST_Vengeance:
-                    DrawSliderInt(1, 100, WAR_ST_Vengeance_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_AoE_Vengeance:
-                    DrawSliderInt(1, 100, WAR_AoE_Vengeance_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_ST_Holmgang:
-                    DrawSliderInt(1, 100, WAR_ST_Holmgang_Health, "Player HP%", 200);
-
-                    DrawHorizontalRadioButton(WAR_ST_HolmgangBoss,
-                        "All Enemies", "Will use Holmgang regardless of the type of enemy.", (int)BossAvoidance.Off, 125f);
-                    DrawHorizontalRadioButton(WAR_ST_HolmgangBoss,
-                        "Avoid Bosses", "Will try not to use Holmgang when in a boss fight.", (int)BossAvoidance.On, 125f);
-                    break;
-
-                case Preset.WAR_AoE_Holmgang:
-                    DrawSliderInt(1, 100, WAR_AoE_Holmgang_Health,
-                        "Player HP%", 200);
-                    break;
-
-                case Preset.WAR_AoE_Reprisal:
-
-                    DrawSliderInt(1, 100, WAR_AoE_Reprisal_Health, "Player HP%", 200);
-
-                    DrawSliderInt(1, 5, WAR_AoE_Reprisal_Count, "# enemies in range", 200);
-
-                    break;
-
-                case Preset.WAR_AoE_ShakeItOff:
-                    DrawSliderInt(1, 100, WAR_AoE_ShakeItOff_Health, "Player HP%", 200);
-
-                    break;
-
-                case Preset.WAR_AoE_ArmsLength:
-                    DrawSliderInt(1, 5, WAR_AoE_ArmsLength_Count, "# enemies in range", 200);
-
-                    break;
-
-
                 #region One-Button Mitigation
 
                 case Preset.WAR_Mit_Holmgang_Max:
@@ -338,8 +324,6 @@ internal partial class WAR
 
                 #endregion
 
-                #endregion
-
                 #region Other
 
                 case Preset.WAR_FC_InnerRelease:
@@ -395,19 +379,7 @@ internal partial class WAR
                         " Use when Distance from target is less than or equal to:", decimals: 1);
                     break;
 
-                case Preset.WAR_ST_Simple:
-                    DrawHorizontalRadioButton(WAR_ST_MitsOptions,
-                        "Include Mitigations", "Enables the use of mitigations in Simple Mode.", 0);
-                    DrawHorizontalRadioButton(WAR_ST_MitsOptions,
-                        "Exclude Mitigations", "Disables the use of mitigations in Simple Mode.", 1);
-                    break;
-
-                case Preset.WAR_AoE_Simple:
-                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions,
-                        "Include Mitigations", "Enables the use of mitigations in Simple Mode.", 0);
-                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions,
-                        "Exclude Mitigations", "Disables the use of mitigations in Simple Mode.", 1);
-                    break;
+                
 
                 case Preset.WAR_InfuriateFellCleave:
                     DrawSliderInt(0, 2, WAR_Infuriate_Charges,
@@ -439,6 +411,15 @@ internal partial class WAR
 
         private const int NumMitigationOptions = 8;
         public static UserInt
+            WAR_ST_MitsOptions = new("WAR_ST_MitsOptions"),
+            WAR_AoE_MitsOptions = new("WAR_AoE_MitsOptions"),
+            WAR_ST_Advanced_MitsOptions = new("WAR_ST_Advanced_MitsOptions"),
+            WAR_AoE_Advanced_MitsOptions = new("WAR_AoE_Advanced_MitsOptions"),
+            WAR_Mitigation_NonBoss_ShakeItOff_Health = new("WAR_Mitigation_NonBoss_ShakeItOff_Health", 80),
+            WAR_Mitigation_NonBoss_Equilibrium_Health = new("WAR_Mitigation_NonBoss_Equilibrium_Health", 50),
+            WAR_Mitigation_NonBoss_Holmgang_Health = new("WAR_Mitigation_NonBoss_Holmgang_Health", 20),
+            WAR_Mitigation_Boss_RawIntuition_Health = new("WAR_Mitigation_Boss_RawIntuition_Health", 99),
+            WAR_Mitigation_Boss_Equilibrium_Health = new("WAR_Mitigation_Boss_Equilibrium_Health", 30),
             WAR_Infuriate_Charges = new("WAR_Infuriate_Charges"),
             WAR_Infuriate_Range = new("WAR_Infuriate_Range"),
             WAR_SurgingRefreshRange = new("WAR_SurgingRefreshRange", 10),
@@ -451,13 +432,7 @@ internal partial class WAR
             WAR_ST_Onslaught_Movement = new("WAR_ST_Onslaught_Movement"),
             WAR_ST_PrimalRend_Movement = new("WAR_ST_PrimalRend_Movement"),
             WAR_ST_PrimalRend_EarlyLate = new("WAR_ST_PrimalRend_EarlyLate"),
-            WAR_ST_Bloodwhetting_Health = new("WAR_ST_BloodwhettingOption", 85),
-            WAR_ST_Bloodwhetting_Boss = new("WAR_ST_Bloodwhetting_Boss"),
-            WAR_ST_Equilibrium_Health = new("WAR_ST_EquilibriumOption", 50),
-            WAR_ST_Thrill_Health = new("WAR_ST_Thrill_Health", 70),
-            WAR_ST_Vengeance_Health = new("WAR_ST_Vengeance_Health", 60),
-            WAR_ST_Holmgang_Health = new("WAR_ST_Holmgang_Health", 30),
-            WAR_ST_MitsOptions = new("WAR_ST_MitsOptions", 1),
+            
             WAR_ST_IRStop = new("WAR_ST_IRStop"),
             WAR_AoE_Infuriate_Charges = new("WAR_AoE_Infuriate_Charges"),
             WAR_AoE_Infuriate_Gauge = new("WAR_AoE_Infuriate_Gauge", 40),
@@ -468,17 +443,7 @@ internal partial class WAR
             WAR_AoE_PrimalRend_Movement = new("WAR_AoE_PrimalRend_Movement"),
             WAR_AoE_PrimalRend_EarlyLate = new("WAR_AoE_PrimalRend_EarlyLate"),
             WAR_AoE_OrogenyUpheaval = new("WAR_AoE_OrogenyUpheaval"),
-            WAR_AoE_Bloodwhetting_Health = new("WAR_AoE_BloodwhettingOption", 85),
-            WAR_AoE_Equilibrium_Health = new("WAR_AoE_EquilibriumOption", 50),
-            WAR_AoE_Rampart_Health = new("WAR_AoE_Rampart_Health", 50),
-            WAR_AoE_Thrill_Health = new("WAR_AoE_Thrill_Health", 70),
-            WAR_AoE_Vengeance_Health = new("WAR_AoE_Vengeance_Health", 60),
-            WAR_AoE_Holmgang_Health = new("WAR_AoE_Holmgang_Health", 30),
-            WAR_AoE_Reprisal_Health = new("WAR_AoE_Reprisal_Health", 80),
-            WAR_AoE_ShakeItOff_Health = new("WAR_AoE_ShakeItOff_Health", 80),
-            WAR_AoE_Reprisal_Count = new("WAR_AoE_Reprisal_Count", 3),
-            WAR_AoE_ArmsLength_Count = new("WAR_AoE_ArmsLength_Count", 3),
-            WAR_AoE_MitsOptions = new("WAR_AoE_MitsOptions", 1),
+            
             WAR_AoE_IRStop = new("WAR_AoE_IRStop"),
             WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1),
             WAR_FC_IRStop = new("WAR_FC_IRStop"),
@@ -493,17 +458,14 @@ internal partial class WAR
             WAR_Mit_Equilibrium_Health = new("WAR_Mit_Equilibrium_Health", 45),
             WAR_Mit_ThrillOfBattle_Health = new("WAR_Mit_ThrillOfBattle_Health", 60),
             WAR_Mit_ShakeItOff_PartyRequirement = new("WAR_Mit_ShakeItOff_PartyRequirement", (int)PartyRequirement.Yes),
-            WAR_ST_HolmgangBoss = new("WAR_ST_HolmgangBoss", (int)BossAvoidance.On),
             WAR_Mit_ArmsLength_Boss = new("WAR_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
             WAR_Mit_ArmsLength_EnemyCount = new("WAR_Mit_ArmsLength_EnemyCount"),
             WAR_Bozja_LostCure_Health = new("WAR_Bozja_LostCure_Health", 50),
-            WAR_Bozja_LostCure2_Health = new("WAR_Bozja_LostCure2_Health", 50),
-            WAR_Bozja_LostCure3_Health = new("WAR_Bozja_LostCure3_Health", 50),
-            WAR_Bozja_LostCure4_Health = new("WAR_Bozja_LostCure4_Health", 50),
-            WAR_Bozja_LostAethershield_Health = new("WAR_Bozja_LostAethershield_Health", 70),
             WAR_Bozja_LostReraise_Health = new("WAR_Bozja_LostReraise_Health", 10);
 
         public static UserFloat
+            WAR_Mitigation_NonBoss_MitigationThreshold = new("WAR_Mitigation_NonBoss_MitigationThreshold", 20f),
+            WAR_Mitigation_Boss_ThrillOfBattle_Threshold = new("WAR_Mitigation_Boss_ThrillOfBattle_Threshold", 20f),
             WAR_ST_Onslaught_Distance = new("WAR_ST_Ons_Distance", 3.0f),
             WAR_ST_PrimalRend_Distance = new("WAR_ST_PR_Distance", 3.0f),
             WAR_AoE_Onslaught_Distance = new("WAR_AoE_Ons_Distance", 3.0f),
@@ -517,16 +479,26 @@ internal partial class WAR
             WAR_FC_Onslaught_TimeStill = new("WAR_FC_Onslaught_TimeStill"),
             WAR_FC_PrimalRend_TimeStill = new("WAR_FC_PrimalRend_TimeStill");
 
+        public static UserBool
+            WAR_Mitigation_Boss_ThrillOfBattle_Align = new("WAR_Mitigation_Boss_ThrillOfBattle_Align", true),
+            WAR_Mitigation_Boss_Vengeance_First = new("WAR_Mitigation_Boss_Vengeance_First", true);
+
         public static UserIntArray
             WAR_Mit_Priorities = new("WAR_Mit_Priorities");
 
-        public static UserBoolArray
-            WAR_Mit_Holmgang_Max_Difficulty = new("WAR_Mit_Holmgang_Max_Difficulty", [true, false]),
-            WAR_ST_Mit_Difficulty = new("WAR_ST_Mit_Difficulty", [true, false]);
+       public static UserBoolArray
+            WAR_Mitigation_Boss_RawIntuition_OnCD_Difficulty = new("WAR_Mitigation_Boss_RawIntuition_Difficulty", [true, false]),
+            WAR_Mitigation_Boss_RawIntuition_TankBuster_Difficulty = new("WAR_Mitigation_Boss_RawIntuition_TankBuster_Difficulty", [true, false]),
+            WAR_Mitigation_Boss_Rampart_Difficulty = new("WAR_Mitigation_Boss_Rampart_Difficulty", [true, false]),
+            WAR_Mitigation_Boss_Vengeance_Difficulty = new("WAR_Mitigation_Boss_Vengeance_Difficulty", [true, false]),
+            WAR_Mitigation_Boss_ThrillOfBattle_Difficulty = new("WAR_Mitigation_Boss_ThrillOfBattle_Difficulty", [true, false]),
+            WAR_Mitigation_Boss_ShakeItOff_Difficulty = new("WAR_Mitigation_Boss_ShakeItOff_Difficulty", [true, false]),
+            WAR_Mitigation_Boss_Reprisal_Difficulty = new("WAR_Mitigation_Boss_Reprisal_Difficulty", [true, false]),
+            WAR_Mit_Holmgang_Max_Difficulty = new("WAR_Mit_Holmgang_Max_Difficulty", [true, false]);
 
         public static readonly ContentCheck.ListSet
-            WAR_Mit_Holmgang_Max_DifficultyListSet = ContentCheck.ListSet.Halved,
-            WAR_ST_Mit_DifficultyListSet = ContentCheck.ListSet.Halved;
+            WAR_Mit_Holmgang_Max_DifficultyListSet = ContentCheck.ListSet.CasualVSHard,
+            WAR_Boss_Mit_DifficultyListSet = ContentCheck.ListSet.CasualVSHard;
 
         #endregion
     }

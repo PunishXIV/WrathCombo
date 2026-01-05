@@ -78,8 +78,11 @@ internal abstract partial class CustomComboFunctions
         var deadCopy = Deadtionary.ToList();
         foreach (var member in deadCopy)
         {
-            if (!Svc.Objects.Any(x => x.GameObjectId == member.Key) || !Svc.Objects.First(x => x.GameObjectId == member.Key).IsDead)
+            var obj = Svc.Objects.SearchById(member.Key);
+            if (obj == null || !obj.IsDead)  // Not found OR no longer dead
+            {
                 Deadtionary.Remove(member.Key);
+            }
         }
     }
 

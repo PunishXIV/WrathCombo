@@ -49,6 +49,7 @@ internal static partial class RoleActions
 
     internal class TankBuffs : PhysicalRoleBuffs, ITankBuffs
     {
+        public ushort Rampart => RoleActions.Tank.Buffs.Rampart;
     }
 
     internal class TankDebuffs : ITankDebuffs

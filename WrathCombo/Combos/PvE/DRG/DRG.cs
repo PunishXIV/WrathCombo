@@ -366,7 +366,7 @@ internal partial class DRG : Melee
 
                     if (IsEnabled(Preset.DRG_ST_Feint) &&
                         Role.CanFeint() &&
-                        RaidWideCasting())
+                        GroupDamageIncoming())
                         return Role.Feint;
 
                     // healing

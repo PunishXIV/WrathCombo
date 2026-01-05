@@ -434,6 +434,9 @@ resources below, or the first several sections of this guide.
 
 ## Changelog
 
+- [9d80540](https://github.com/PunishXIV/WrathCombo/commit/9d80540) - Added `SetAutoRotationConfigState` values 
+  `DPSAlwaysHardTarget` and `HealerAlwaysHardTarget` now that Auto
+  Rotation does not change the target by default, `1.0.3.4`.
 - PunishXIV/WrathCombo#948 - Added the `WrathCombo.API` package and now suggest 
   using that instead of copying over Enums (no actual change for current usage),
   `1.0.3.1`.

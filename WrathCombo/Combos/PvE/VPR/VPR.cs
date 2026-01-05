@@ -360,7 +360,7 @@ internal partial class VPR : Melee
                 
                 if (IsEnabled(Preset.VPR_ST_Feint) &&
                     Role.CanFeint() &&
-                    RaidWideCasting())
+                    GroupDamageIncoming())
                     return Role.Feint;
 
                 // healing

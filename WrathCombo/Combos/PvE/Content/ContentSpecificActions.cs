@@ -41,9 +41,11 @@ public static class ContentSpecificActions
         if (Variant.TryGetVariantAction(ref actionID))
             return true;
 
-        // Bozja actions next
+        if (Bozja.TryGetBozjaAction(ref actionID))
+            return true;
+
         // Deep dungeons next?
-        
+
         return false;
     }
 }

@@ -73,6 +73,12 @@ internal partial class SAM
                     break;
 
                 case Preset.SAM_ST_YukikazeCombo:
+                    DrawHorizontalRadioButton(SAM_ST_YukikazeCombo_Prio,
+                        "Prio sen generation", "Will prioritise generating all 3 sens before checking buffs.", 0);
+
+                    DrawHorizontalRadioButton(SAM_ST_YukikazeCombo_Prio,
+                        "Prio buff upkeep", "Will prioritise having both buffs before finishing sens.", 1);
+
                     DrawAdditionalBoolChoice(SAM_Yukaze_Gekko,
                         "Add Gekko Combo", "Adds Gekko combo when applicable.");
 
@@ -147,6 +153,7 @@ internal partial class SAM
             SAM_ST_HiganbanaTrashOption = new("SAM_ST_HiganbanaTrashOption", 100),
             SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
+            SAM_ST_YukikazeCombo_Prio = new("SAM_ST_YukikazeCombo_Prio", 1),
             SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
             SAM_STSecondWindHPThreshold = new("SAM_STSecondWindThreshold", 40),
             SAM_STBloodbathHPThreshold = new("SAM_STBloodbathThreshold", 30),

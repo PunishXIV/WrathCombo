@@ -24,6 +24,9 @@ internal sealed class RedirectIPC(
     private bool AutoMouseoverBeneficial =>
         Configuration.GetFoP<bool>("DefaultMouseoverFriendly");
 
+    private bool AutoMouseoverHostile =>
+        Configuration.GetFoP<bool>("DefaultMouseoverHostile");
+
     private bool AutoMouseoverGround =>
         Configuration.GetFoP<bool>("DefaultMouseoverGround");
 
@@ -88,6 +91,25 @@ internal sealed class RedirectIPC(
         {
             PluginLog.Warning($"[ConflictingPlugins] [{PluginName}] " +
                               $"Checking `AutoMouseoverBeneficial` failed: " +
+                              $"{e.ToStringFull()}");
+            return false;
+        }
+    }
+
+    public bool AreHostileActionsRedirected()
+    {
+        try
+        {
+            PluginLog.Verbose(
+                $"[ConflictingPlugins] [{PluginName}] " +
+                $"Has `AutoMouseoverHostile`: {AutoMouseoverHostile}");
+
+            return AutoMouseoverHostile;
+        }
+        catch (Exception e)
+        {
+            PluginLog.Warning($"[ConflictingPlugins] [{PluginName}] " +
+                              $"Checking `AutoMouseoverHostile` failed: " +
                               $"{e.ToStringFull()}");
             return false;
         }

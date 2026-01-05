@@ -173,9 +173,22 @@ internal abstract partial class CustomComboFunctions
         IGameObject? optionalTarget = null)
     {
         var target = optionalTarget ?? CurrentTarget;
+        IBattleChara chara;
 
         // Bail if the target is not casting (and is a valid target)
-        if (target is not IBattleChara { IsCasting: true } chara)
+        try
+        {
+            if (target is not IBattleChara { IsCasting: true } character)
+                return false;
+            chara = character;
+        }
+        catch
+        {
+            return false;
+        }
+
+        // Bail if blacklisted
+        if (Service.Configuration.StatusBlacklist.Any(x => x.Status == All.Debuffs.Stun && x.BaseId == chara.BaseId))
             return false;
 
         // Bail if it fails the Internal Cooldown tracker for Stuns
@@ -229,6 +242,24 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Gets an object's current HP. Defaults to CurrentTarget unless specified. </summary>
     public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.CurrentHp : 0;
+    
+    /// <summary> Gets the average HP percentage of all enemies within a specified range. </summary>
+    public static float GetAvgEnemyHPPercentInRange(float range)
+    {
+        var enemies = Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && !x.IsDead && x.IsTargetable &&
+                        IsInRange(x, range))
+            .ToList();
+
+        if (enemies.Count == 0)
+            return float.NaN;
+
+        var totalHpPercent = enemies
+            .Sum(enemy => enemy.CurrentHp * 100f / enemy.MaxHp);
+
+        return totalHpPercent / enemies.Count;
+    }
 
     #endregion
 
@@ -240,10 +271,15 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not { } chara || LocalPlayer is not { })
             return false;
 
-        var inRangeActionManagerCheck = ActionManager.GetActionInRangeOrLoS(7, LocalPlayer.GameObject(), chara.Struct()) is 0 or 565;
+        uint actionId = (uint)(InPvP() ? 29058 : 2); //PvP Check against PLD Fast Blade (range 5) and outside PvP check interaction range
+        var inRangeActionManagerCheck = ActionManager.GetActionInRangeOrLoS(actionId, LocalPlayer.GameObject(), chara.Struct()) is 0 or 565;
         var distance = GetTargetDistance(chara);
 
-        return distance <= (InPvP() ? 5f : 3f) + Service.Configuration.MeleeOffset && inRangeActionManagerCheck;
+        var distanceCheck = (InPvP() ? 5f : 3f);
+        if (distance <= distanceCheck)
+            return inRangeActionManagerCheck;
+        else
+            return distance <= distanceCheck + Service.Configuration.MeleeOffset;
     }
 
     /// <summary> Checks if an object is within a given range. Defaults to CurrentTarget unless specified. </summary>

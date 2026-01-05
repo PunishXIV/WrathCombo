@@ -80,6 +80,15 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "Off")]
     public bool SuppressSetCommands = false;
 
+    /// Hides the Autorot set message. Default: false.
+    /// <seealso cref="WrathCombo.PrintLoginMessage"/>
+    [SettingCategory(Main_UI_Options)]
+    [Setting("Suppress Auto-Rotation commands feedback",
+        "Will hide chat feedback for /wrath auto commands",
+        recommendedValue: "Preference",
+        defaultValue: "Off")]
+    public bool SuppressAutorotCommand = false;
+
     /// Hides the message of the day. Default: false.
     /// <seealso cref="WrathCombo.PrintLoginMessage"/>
     [SettingCategory(Main_UI_Options)]
@@ -637,6 +646,8 @@ public partial class Configuration : IPluginConfiguration
         CustomBoolArrayValues { get; set; } = [];
 
     #endregion
+
+    public HashSet<(ushort Status, uint BaseId)> StatusBlacklist = [];
 
     #endregion
 }

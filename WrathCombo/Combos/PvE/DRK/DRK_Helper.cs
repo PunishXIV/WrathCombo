@@ -9,6 +9,7 @@ using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.DRK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using EZ = ECommons.Throttlers.EzThrottler;
@@ -31,8 +32,8 @@ internal partial class DRK
     ///     Checking if there is space to weave an oGCD, with consideration for
     ///     whether triple weaves should be avoided or not.
     /// </summary>
-    /// <seealso cref="CustomComboFunctions.CanWeave(double)" />
-    /// <seealso cref="CanDelayedWeave(double,double)" />
+    /// <seealso cref="CustomComboFunctions.CanWeave(float, int?)" />
+    /// <seealso cref="CanDelayedWeave(float,float,int?)" />
     private static bool CanWeave => CanWeave() || CanDelayedWeave();
 
     /// <summary>
@@ -194,7 +195,71 @@ internal partial class DRK
 
         return WrathOpener.Dummy;
     }
+    
+    #region Mitigation
 
+    #region TBN
+
+    /// <summary>
+    ///     Whether the player has a shield from TBN from themselves.
+    /// </summary>
+    /// <seealso cref="Buffs.BlackestNightShield" />
+    private static bool HasOwnTBN
+    {
+        get
+        {
+            var has = false;
+            if (LocalPlayer is not null)
+                has = HasStatusEffect(Buffs.BlackestNightShield);
+
+            return has;
+        }
+    }
+
+    /// <summary>
+    ///     Whether the player has a shield from TBN from anyone.
+    /// </summary>
+    /// <seealso cref="Buffs.BlackestNightShield" />
+    private static bool HasAnyTBN
+    {
+        get
+        {
+            var has = false;
+            if (LocalPlayer is not null)
+                has = HasStatusEffect(Buffs.BlackestNightShield, anyOwner: true);
+
+            return has;
+        }
+    }
+
+    #endregion
+
+    private static bool InSavagePlus => ContentCheck.IsInSavagePlusContent;
+
+    /// <summary>
+    ///     Whether mitigation was very recently used, depending on the duration and
+    ///     strength of the mitigation.
+    /// </summary>
+    private static bool JustUsedMitigation =>
+        JustUsed(DarkMind) ||
+        JustUsed(Role.Reprisal) ||
+        JustUsed(Role.Rampart) ||
+        JustUsed(Role.ArmsLength, (InSavagePlus ? 0f : 3f)) ||
+        JustUsed(OriginalHook(ShadowWall)) ||
+        JustUsed(LivingDead);
+
+    internal static bool MitigationRunning =>
+        HasStatusEffect(Role.Buffs.ArmsLength) ||
+        HasStatusEffect(Role.Buffs.Rampart) ||
+        HasStatusEffect(Buffs.LivingDead) ||
+        HasStatusEffect(Buffs.UndeadRebirth) ||
+        HasStatusEffect(Buffs.DarkMind) ||
+        HasStatusEffect(Buffs.ShadowedVigil) ||
+        HasStatusEffect(Buffs.ShadowWall) ||
+        HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+
+    #endregion
+    
     #region Openers
 
     private static void handleEdgeCasts
@@ -426,6 +491,15 @@ internal partial class DRK
 
         /// Damage Reduction part of Vigil
         public const ushort ShadowedVigil = 3835;
+        
+        /// Shadow Wall Active
+        public const ushort ShadowWall = 747;
+        
+        /// Dark Missionary Active
+        public const ushort DarkMissionary = 1894;
+        
+        /// DarkMind Active
+        public const ushort DarkMind = 746;
 
         /// The triggered part of Vigil that needs procc'd to heal (happens below 50%)
         public const ushort ShadowedVigilant = 3902;

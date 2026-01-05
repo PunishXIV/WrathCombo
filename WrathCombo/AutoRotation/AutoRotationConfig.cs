@@ -27,7 +27,7 @@ public class DPSSettings
     public int? DPSAoETargets = 3;
     public bool PreferNonCombat = false;
     public bool OnlyAttackInCombat = false;
-    public bool AlwaysHardTarget = false;
+    public bool DPSAlwaysHardTarget = false;
     public float MaxDistance = 25;
     public bool AoEIgnoreManual = false;
     public bool UnTargetAndDisableForPenalty = false;
@@ -51,6 +51,6 @@ public class HealerSettings
     public bool AutoCleanse = false;
     public bool PreEmptiveHoT = false;
     public bool IncludeNPCs = false;
-    public bool AlwaysHardTarget = false;
+    public bool HealerAlwaysHardTarget = false;
 
 }

@@ -192,8 +192,8 @@ public class WrathPartyMember
         ? realJob
         : BattleChara?.ClassJob.Value ?? ExcelJobHelper.GetJobById(0);
 
-    public IBattleChara? BattleChara => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId) as IBattleChara;
-    public IGameObject? GameObject => Svc.Objects.FirstOrDefault(x => x.GameObjectId == GameObjectId);
+    public IBattleChara? BattleChara => Svc.Objects.SearchById(GameObjectId) as IBattleChara;
+    public IGameObject? GameObject => Svc.Objects.SearchById(GameObjectId);
     public Dictionary<ushort, long> BuffsGainedAt = new();
 
     private uint _currentHP;

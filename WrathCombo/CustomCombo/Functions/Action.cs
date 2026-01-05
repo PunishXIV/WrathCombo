@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.Data;
+using WrathCombo.Extensions;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using static WrathCombo.Data.ActionWatching;
@@ -322,8 +323,23 @@ internal abstract partial class CustomComboFunctions
                ActionReady(actionId);                              // Action Ready
     }
 
+    public static bool GroupDamageIncoming(float? maxTimeRemaining = null) =>
+        RaidwideCasting(maxTimeRemaining) ||
+        (CheckForSharedDamageEffect(out var target, out _) &&
+         target.IsWithinRange(6));
+
+    public static bool GroupDamageIncoming
+        (out bool isMultiHit, float? maxTimeRemaining = null)
+    {
+        isMultiHit = false;
+        
+        return (CheckForSharedDamageEffect(out var target, out isMultiHit) &&
+                target.IsWithinRange(6)) ||
+               RaidwideCasting(maxTimeRemaining);
+    }
+
     private static bool _raidwideInc;
-    public static bool RaidWideCasting(float timeRemaining = 0f)
+    public static bool RaidwideCasting(float? maxTimeRemaining = null)
     {
         if (!EzThrottler.Throttle("RaidWideCheck", 100))
             return _raidwideInc;
@@ -337,10 +353,10 @@ internal abstract partial class CustomComboFunctions
             {
                 if (spellSheet.CastType is 2 or 5 && spellSheet.EffectRange >= 30)
                 {
-                    if (timeRemaining == 0f)
+                    if (maxTimeRemaining is null)
                         return _raidwideInc = true;
-                   
-                    if ((caster.TotalCastTime - caster.CurrentCastTime) <= timeRemaining)
+
+                    if ((caster.TotalCastTime - caster.CurrentCastTime) <= maxTimeRemaining)
                         return _raidwideInc = true;
                 }
             }

@@ -200,6 +200,231 @@ public enum Preset
 
     #endregion
 
+    #region BOZJA ACTIONS
+
+    [Bozja]
+    [Role(JobRole.Tank)]
+    [CustomComboInfo("Bozja Tank", "Adds Tank-relative Bozja actions into the rotation.", Job.ADV)]
+    Bozja_Tank = 210000,
+
+    #region Tank
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Focus", "Use Lost Focus when available.", Job.ADV)]
+    Bozja_Tank_LostFocus = 210001,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Font of Power", "Use Lost Font of Power when available.", Job.ADV)]
+    Bozja_Tank_LostFontOfPower = 210002,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Slash", "Use Lost Slash when available.", Job.ADV)]
+    Bozja_Tank_LostSlash = 210003,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Death", "Use Lost Death when available.", Job.ADV)]
+    Bozja_Tank_LostDeath = 210004,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Banner of Noble Ends", "Use Banner of Noble Ends when available.", Job.ADV)]
+    Bozja_Tank_BannerOfNobleEnds = 210005,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank_BannerOfNobleEnds)]
+    [CustomComboInfo("Only with 'Lost Font of Power'", "Use Banner of Noble Ends only when under Lost Font of Power.", Job.ADV)]
+    Bozja_Tank_PowerEnds = 210006,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Banner of Honored Sacrifice", "Use Banner of Honored Sacrifice when available.", Job.ADV)]
+    Bozja_Tank_BannerOfHonoredSacrifice = 210007,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank_BannerOfHonoredSacrifice)]
+    [CustomComboInfo("Only with 'Lost Font of Power'", "Use Banner of Honored Sacrifice only when under Lost Font of Power.", Job.ADV)]
+    Bozja_Tank_PowerSacrifice = 210008,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Banner of Honed Acuity", "Use Banner of Honed Acuity when available.", Job.ADV)]
+    Bozja_Tank_BannerOfHonedAcuity = 210009,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Fair Trade", "Use Lost Fair Trade when available.", Job.ADV)]
+    Bozja_Tank_LostFairTrade = 210010,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Assassination", "Use Lost Assassination when available.", Job.ADV)]
+    Bozja_Tank_LostAssassination = 210011,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Manawall", "Use Lost Manawall when available.", Job.ADV)]
+    Bozja_Tank_LostManawall = 210012,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Banner of Tireless Conviction", "Use Banner of Tireless Conviction when available.", Job.ADV)]
+    Bozja_Tank_BannerOfTirelessConviction = 210013,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Blood Rage", "Use Lost Blood Rage when available.", Job.ADV)]
+    Bozja_Tank_LostBloodRage = 210014,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Banner of Solemn Clarity", "Use Banner of Solemn Clarity when available.", Job.ADV)]
+    Bozja_Tank_BannerOfSolemnClarity = 210015,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Cure", "Use Lost Cure when available.", Job.ADV)]
+    Bozja_Tank_LostCure = 210016,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Cure II", "Use Lost Cure II when available.", Job.ADV)]
+    Bozja_Tank_LostCure2 = 210017,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Cure III", "Use Lost Cure III when available.", Job.ADV)]
+    Bozja_Tank_LostCure3 = 210018,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Cure IV", "Use Lost Cure IV when available.", Job.ADV)]
+    Bozja_Tank_LostCure4 = 210019,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Arise", "Use Lost Arise when available.", Job.ADV)]
+    Bozja_Tank_LostArise = 210020,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Sacrifice", "Use Lost Sacrifice when available.", Job.ADV)]
+    Bozja_Tank_LostSacrifice = 210021,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Reraise", "Use Lost Reraise when available.", Job.ADV)]
+    Bozja_Tank_LostReraise = 210022,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Spellforge", "Use Lost Spellforge when available.", Job.ADV)]
+    Bozja_Tank_LostSpellforge = 210023,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Steel Sting", "Use Lost Steel Sting when available.", Job.ADV)]
+    Bozja_Tank_LostSteelsting = 210024,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Protect", "Use Lost Protect when available.", Job.ADV)]
+    Bozja_Tank_LostProtect = 210025,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Shell", "Use Lost Shell when available.", Job.ADV)]
+    Bozja_Tank_LostShell = 210026,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Reflect", "Use Lost Reflect when available.", Job.ADV)]
+    Bozja_Tank_LostReflect = 210027,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Bravery", "Use Lost Bravery when available.", Job.ADV)]
+    Bozja_Tank_LostBravery = 210028,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Aethershield", "Use Lost Aether Shield when available.", Job.ADV)]
+    Bozja_Tank_LostAethershield = 210029,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Protect II", "Use Lost Protect II when available.", Job.ADV)]
+    Bozja_Tank_LostProtect2 = 210030,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Shell II", "Use Lost Shell II when available.", Job.ADV)]
+    Bozja_Tank_LostShell2 = 210031,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Bubble", "Use Lost Bubble when available.", Job.ADV)]
+    Bozja_Tank_LostBubble = 210032,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Stealth", "Use Lost Stealth when available.", Job.ADV)]
+    Bozja_Tank_LostStealth = 210033,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Swift", "Use Lost Swift when available.", Job.ADV)]
+    Bozja_Tank_LostSwift = 210034,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Font of Skill", "Use Lost Font of Skill when available.", Job.ADV)]
+    Bozja_Tank_LostFontOfSkill = 210035,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Impetus", "Use Lost Impetus when available.", Job.ADV)]
+    Bozja_Tank_LostImpetus = 210036,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Paralyze III", "Use Lost Paralyze III when available.", Job.ADV)]
+    Bozja_Tank_LostParalyze3 = 210037,
+
+    [Bozja]
+    [ParentCombo(Bozja_Tank)]
+    [CustomComboInfo("Lost Rampage", "Use Lost Rampage when available.", Job.ADV)]
+    Bozja_Tank_LostRampage = 210038,
+    #endregion
+
+    #region Healer
+
+    // TODO: maybe someday
+
+    #endregion
+
+    #region Melee
+
+    // TODO: maybe someday
+
+    #endregion
+
+    #region Ranged
+
+    // TODO: maybe someday 
+
+    #endregion
+
+    #region Caster
+
+    // TODO: maybe someday
+
+    #endregion
+
+    #endregion
+
     #region VARIANT ACTIONS
     [Variant]
     [Role(JobRole.Tank)]
@@ -963,6 +1188,7 @@ public enum Preset
 
     [ParentCombo(AST_AOE_DPS)]
     [CustomComboInfo("Multitarget Dot Option", "Maintains dots on multiple targets.", Job.AST)]
+    [Retargeted(AST.Combust, AST.Combust2, AST.Combust3)]
     AST_AOE_DPS_DoT = 1083,
 
     [ParentCombo(AST_AOE_DPS)]
@@ -1751,6 +1977,7 @@ public enum Preset
 
     [ParentCombo(BRD_AoE_AdvMode)]
     [CustomComboInfo("Bard Dot Option", "Will maintain dots on up to 3 targets.", Job.BRD)]
+    [Retargeted(BRD.Windbite, BRD.VenomousBite, BRD.IronJaws, BRD.CausticBite, BRD.Stormbite)]
     BRD_AoE_Adv_Multidot = 3065,
 
     [ParentCombo(BRD_AoE_AdvMode)]
@@ -2331,7 +2558,7 @@ public enum Preset
 
     #endregion
     // Last value = 5003
-
+    
     #region Advanced Single Target Combo
 
     [AutoAction(false, false)]
@@ -2471,44 +2698,6 @@ public enum Preset
 
     #endregion
 
-    #region Mitigation Options
-
-    [ParentCombo(DRK_ST_Adv)]
-    [CustomComboInfo("Mitigation Options", "Collection of Mitigations to add to the rotation.", Job.DRK)]
-    DRK_ST_Mitigation = 5031,
-
-    [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("The Blackest Night Option",
-        "Uses The Blackest Night based on Health Remaining.\n" +
-        "(Note: makes no attempt to ensure shield will break)", Job.DRK)]
-    DRK_ST_Mit_TBN = 5032,
-
-    [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("Oblation Option", "Uses Oblation based on Health Remaining.", Job.DRK)]
-    DRK_ST_Mit_Oblation = 5033,
-
-    [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Uses Reprisal when a raidwide is in the process of casting.", Job.DRK)]
-    DRK_ST_Mit_Reprisal = 5034,
-
-    [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("Dark Missionary Option", "Uses Dark Missionary when a raidwide is in the process of casting.", Job.DRK)]
-    DRK_ST_Mit_Missionary = 5035,
-
-    [ParentCombo(DRK_ST_Mit_Missionary)]
-    [CustomComboInfo("Avoid Doubling up on Group Mit", "Won't use Dark Missionary if your own Reprisal is on the target.", Job.DRK)]
-    DRK_ST_Mit_MissionaryAvoid = 5039,
-
-    [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("Shadowed Vigil Option", "Uses Shadowed Vigil based on Health Remaining.", Job.DRK)]
-    DRK_ST_Mit_Vigil = 5036,
-
-    [ParentCombo(DRK_ST_Mitigation)]
-    [CustomComboInfo("Living Dead Option", "Uses Living Dead based on Health Remaining.", Job.DRK)]
-    DRK_ST_Mit_LivingDead = 5037,
-
-    #endregion
-
     #endregion
     // Last value = 5040
 
@@ -2617,55 +2806,107 @@ public enum Preset
 
     #endregion
 
-    #region Mitigation Options
-
-    [ParentCombo(DRK_AoE_Adv)]
-    [CustomComboInfo("Mitigation Options", "Collection of Mitigations to add to the rotation.", Job.DRK)]
-    DRK_AoE_Mitigation = 5067,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("The Blackest Night Option", "Adds The Blackest Night to the rotation.", Job.DRK)]
-    DRK_AoE_Mit_TBN = 5068,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Oblation Option", "Uses Oblation based on Health Remaining.", Job.DRK)]
-    DRK_AoE_Mit_Oblation = 5069,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal to the rotation.", Job.DRK)]
-    DRK_AoE_Mit_Reprisal = 5070,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Dark Mind Option", "Adds Dark Mind to the rotation.", Job.DRK)]
-    DRK_AoE_Mit_DarkMind = 5075,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Rampart Option", "Adds Rampart to the rotation.", Job.DRK)]
-    DRK_AoE_Mit_Rampart = 5071,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length to the rotation, when the set number of enemies are within range of you.", Job.DRK)]
-    DRK_AoE_Mit_ArmsLength = 5072,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Shadowed Vigil Option", "Uses Shadowed Vigil based on Health Remaining.", Job.DRK)]
-    DRK_AoE_Mit_Vigil = 5073,
-
-    [ParentCombo(DRK_AoE_Mitigation)]
-    [CustomComboInfo("Living Dead Option", "Uses Living Dead based on your and your enemy's Remaining Health.", Job.DRK)]
-    DRK_AoE_Mit_LivingDead = 5074,
-
-    #endregion
-
     #endregion
     // Last value = 5075
+    
+    #region Advanced Mitigation
+    [CustomComboInfo("Advanced Mitigation Options",
+        "Options for Advanced Combos' In-Combo Mitigation.\n" +
+        "Enable Mitigation in each Advanced Combo to use these options.\n" +
+        "(Simple Mode does not use these Options, instead Recommended Values in " +
+        "place of them)", Job.DRK)]
+    DRK_Mitigation = 5300,
+    
+    [ParentCombo(DRK_Mitigation)]
+    [CustomComboInfo("Non Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.DRK)]
+    DRK_Mitigation_NonBoss = 5301,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("The Blackest Night Option", "Adds The Blackest Night when available. Will overlap with others.", Job.DRK)]
+    DRK_Mitigation_NonBoss_BlackestNight = 5307,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Living Dead Option", "Adds Living Dead based on set health threshold.", Job.DRK)]
+    DRK_Mitigation_NonBoss_LivingDead = 5305,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Rampart Option", "Adds Rampart when 3 or more targets.", Job.DRK)]
+    DRK_Mitigation_NonBoss_Rampart = 5302,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Dark Mind Option", "Adds Dark Mind when 3 or more targets.", Job.DRK)]
+    DRK_Mitigation_NonBoss_DarkMind = 5304,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Shadow Wall/Shadowed Vigil", "Adds Shadow Wall/Shadowed Vigil when 5 or more targets.", Job.DRK)]
+    DRK_Mitigation_NonBoss_ShadowWall = 5303,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length when 5 or more targets.", Job.DRK)]
+    DRK_Mitigation_NonBoss_ArmsLength = 5306,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets.", Job.DRK)]
+    DRK_Mitigation_NonBoss_Reprisal= 5313,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Dark Missionary Option", "Adds Dark Missionary when 5 or more targets. Will overlap with others.", Job.DRK)]
+    DRK_Mitigation_NonBoss_DarkMissionary = 5308,
+    
+    [ParentCombo(DRK_Mitigation_NonBoss)]
+    [CustomComboInfo("Oblation Option", "Adds Oblation when 5 or more targets. Will overlap with others.", Job.DRK)]
+    DRK_Mitigation_NonBoss_Oblation = 5318,
+    
+    [ParentCombo(DRK_Mitigation)]
+    [CustomComboInfo("Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter.", Job.DRK)]
+    DRK_Mitigation_Boss = 5309,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("The Blackest Night Emergency Usage", "Adds The Blackest Night when below HP threshold and targeted.", Job.DRK)]
+    DRK_Mitigation_Boss_BlackestNight_OnCD = 5310,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("The Blackest Night Tankbuster Option", "Adds The Blackest Night when an incoming tankbuster is detected.", Job.DRK)]
+    DRK_Mitigation_Boss_BlackestNight_TB = 5314,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("Oblation Tankbuster Option", "Adds Oblation when an incoming tankbuster is detected.", Job.DRK)]
+    DRK_Mitigation_Boss_Oblation = 5319,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("Rampart Tankbuster Option", "Adds Rampart when an incoming tankbuster is detected. Will Not Overlap with Shadow Wall/Shadowed Vigil.", Job.DRK)]
+    DRK_Mitigation_Boss_Rampart = 5316,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("Shadow Wall/Shadowed Vigil Tankbuster Option", "Adds Shadow Wall/Shadowed Vigil when an incoming tankbuster is detected. Will not overlap with Rampart.", Job.DRK)]
+    DRK_Mitigation_Boss_ShadowWall = 5315,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("Dark Mind Tankbuster Option", "Adds Dark Mind when an incoming tankbuster is detected. Will not overlap unless below set threshold or aligned with rampart.", Job.DRK)]
+    DRK_Mitigation_Boss_DarkMind = 5317,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Reprisal Option", "Adds Reprisal when raidwide casting is detected.", Job.DRK)]
+    DRK_Mitigation_Boss_Reprisal = 5311,
+    
+    [ParentCombo(DRK_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Dark Missionary Option", "Adds Dark Missionary when raidwide casting is detected.", Job.DRK)]
+    DRK_Mitigation_Boss_DarkMissionary = 5312,
+
+    #endregion
+    // Lastvalue = 5319
 
     #region Basic combo
 
     [ReplaceSkill(DRK.Souleater)]
-    [CustomComboInfo("Basic Combo", "Replace Souleater with its combo chain.", Job.DRK)]
+    [CustomComboInfo("ST Basic Combo", "Replace Souleater with its combo chain.", Job.DRK)]
     [BasicCombo]
     DRK_ST_BasicCombo = 5003,
+    
+    [ReplaceSkill(DRK.StalwartSoul)]
+    [CustomComboInfo("AoE Basic Combo", "Replace Stalwart Soul with its combo chain.", Job.DRK)]
+    [BasicCombo]
+    DRK_AoE_BasicCombo = 5004,
 
     #endregion
 
@@ -3114,10 +3355,6 @@ public enum Preset
     GNB_ST_Reign = 7014,
 
     [ParentCombo(GNB_ST_Advanced)]
-    [CustomComboInfo("Scuffed Option", "Adds Solid Barrel into the rotation under scuffed conditions:\n- Level 90 or above\n- No Mercy is active\n- Only 1 cartridge available\n- Last combo action was Brutal Shell\n- Gnashing Fang combo is still not active", Job.GNB)]
-    GNB_ST_Scuffed = 7372,
-
-    [ParentCombo(GNB_ST_Advanced)]
     [CustomComboInfo("Lightning Shot Uptime Option", "Adds Lightning Shot to the main combo when you are out of range.", Job.GNB)]
     GNB_ST_RangedUptime = 7004,
 
@@ -3128,46 +3365,6 @@ public enum Preset
     [ParentCombo(GNB_ST_Advanced)]
     [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting.\nNot advised outside of overworld content, as it can waste a lot of Low Blows on un-stun-able enemies, etc. Will try to not use it in boss fights.", Job.GNB)]
     GNB_ST_Stun = 7086,
-
-    #region Mitigations
-
-    [ParentCombo(GNB_ST_Advanced)]
-    [CustomComboInfo("Mitigation Options", "Collection of Mitigation features.", Job.GNB)]
-    GNB_ST_Mitigation = 7019,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Corundum = 7020,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Aurora Option", "Adds Aurora into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Aurora = 7024,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Rampart Option", "Adds Rampart into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Rampart = 7025,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Camouflage Option", "Adds Camouflage into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Camouflage = 7026,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Nebula Option", "Adds Nebula into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Nebula = 7021,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Superbolide Option", "Adds Superbolide into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Superbolide = 7022,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_Reprisal = 7027,
-
-    [ParentCombo(GNB_ST_Mitigation)]
-    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_ST_ArmsLength = 7028,
-
-    #endregion
 
     #endregion
 
@@ -3220,46 +3417,92 @@ public enum Preset
     [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting, interruptible or not.", Job.GNB)]
     GNB_AoE_Stun = 7223,
 
-    #region Mitigations
-
-    [ParentCombo(GNB_AoE_Advanced)]
-    [CustomComboInfo("Mitigation Options", "Collection of Mitigation features.", Job.GNB)]
-    GNB_AoE_Mitigation = 7216,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Heart of Corundum Option", "Adds Heart of Stone / Corundum into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Corundum = 7213,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Aurora Option", "Adds Aurora into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Aurora = 7217,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Rampart Option", "Adds Rampart into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Rampart = 7218,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Camouflage Option", "Adds Camouflage into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Camouflage = 7219,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Nebula Option", "Adds Nebula into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Nebula = 7214,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Superbolide Option", "Adds Superbolide into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Superbolide = 7215,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_Reprisal = 7220,
-
-    [ParentCombo(GNB_AoE_Mitigation)]
-    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length into the rotation based on Health percentage remaining.", Job.GNB)]
-    GNB_AoE_ArmsLength = 7221,
-
     #endregion
-
+    
+    #region Advanced Mitigation 
+    //7700s LastUsed 7713
+    [CustomComboInfo("Advanced Mitigation Options",
+        "Options for Advanced Combos' In-Combo Mitigation.\n" +
+        "Enable Mitigation in each Advanced Combo to use these options.\n" +
+        "(Simple Mode does not use these Options, instead Recommended Values in " +
+        "place of them)", Job.GNB)]
+    GNB_Mitigation = 7700,
+    
+    [ParentCombo(GNB_Mitigation)]
+    [CustomComboInfo("Non Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.GNB)]
+    GNB_Mitigation_NonBoss = 7701,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Rampart Option", "Adds Rampart when 3 or more targets", Job.GNB)]
+    GNB_Mitigation_NonBoss_Rampart = 7702,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Nebula Option", "Adds Nebula/Great Nebula when 3 or more targets", Job.GNB)]
+    GNB_Mitigation_NonBoss_Nebula = 7703,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Camouflage Option", "Adds Camouflage when 3 or more targets", Job.GNB)]
+    GNB_Mitigation_NonBoss_Camouflage = 7704,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Aurora Option", "Adds Aurora when 3 or more targets. Will overlap with other mits.", Job.GNB)]
+    GNB_Mitigation_NonBoss_Aurora = 7705,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Superbolide Option", "Adds Superbolide when 5 or more targets", Job.GNB)]
+    GNB_Mitigation_NonBoss_Superbolide = 7706,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length when 5 or more targets", Job.GNB)]
+    GNB_Mitigation_NonBoss_ArmsLength = 7707,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets. Will overlap with others.", Job.GNB)]
+    GNB_Mitigation_NonBoss_Reprisal= 7708,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Heart of Light Option", "Adds Heart of Light when 5 or more targets. Will overlap with others.", Job.GNB)]
+    GNB_Mitigation_NonBoss_HeartOfLight = 7709,
+    
+    [ParentCombo(GNB_Mitigation_NonBoss)]
+    [CustomComboInfo("Heart of Stone/Corundrum Option", "Adds Heart of Stone/Corundrum when available. Will overlap with others.", Job.GNB)]
+    GNB_Mitigation_NonBoss_HeartOfStone = 7710,
+    
+    [ParentCombo(GNB_Mitigation)]
+    [CustomComboInfo("Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.GNB)]
+    GNB_Mitigation_Boss = 7711,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Aurora Option", "Adds Aurora when below threshold.", Job.GNB)]
+    GNB_Mitigation_Boss_Aurora = 7712,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Heart Of Stone/Corundrum on Cooldown Option", "Adds Heart Of Stone/Corundrum on CD when below threshold.", Job.GNB)]
+    GNB_Mitigation_Boss_HeartOfStone_OnCD = 7716,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Heart Of Stone/Corundrum Tankbuster Option", "Adds Heart Of Stone/Corundrum when tankbuster is detected.", Job.GNB)]
+    GNB_Mitigation_Boss_HeartOfStone_TankBuster = 7717,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Rampart Tankbuster Option", "Adds Rampart when tankbuster is detected. Will not overlap with Nebula/Great Nebula.", Job.GNB)]
+    GNB_Mitigation_Boss_Rampart = 7719,
+        
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Nebula/Great Nebula Tankbuster Option", "Adds Nebula/Great Nebula when tankbuster is detected. Will not overlap with Rampart.", Job.GNB)]
+    GNB_Mitigation_Boss_Nebula = 7718,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Camouflage Tankbuster Option", "Adds Camouflage when tankbuster is detected. Will not overlap unless below set threshold or aligned with rampart.", Job.GNB)]
+    GNB_Mitigation_Boss_Camouflage = 7720,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Reprisal Option", "Adds Reprisal when raidwide casting is detected.", Job.GNB)]
+    GNB_Mitigation_Boss_Reprisal = 7713,
+    
+    [ParentCombo(GNB_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Heart Of Light Option", "Adds Heart Of Light when raidwide casting is detected.", Job.GNB)]
+    GNB_Mitigation_Boss_HeartOfLight = 7714,
     #endregion
 
     #region One-Button Mitigation
@@ -3317,9 +3560,14 @@ public enum Preset
     #region Basic combo
 
     [ReplaceSkill(GNB.SolidBarrel)]
-    [CustomComboInfo("Basic Combo", "Replace Solid Barrel with its combo chain.", Job.GNB)]
+    [CustomComboInfo("ST Basic Combo", "Replace Solid Barrel with its combo chain.", Job.GNB)]
     [BasicCombo]
     GNB_ST_BasicCombo = 7100,
+    
+    [ReplaceSkill(GNB.DemonSlaughter)]
+    [CustomComboInfo("AoE Basic Combo", "Replace Demon Slaughter with its combo chain.", Job.GNB)]
+    [BasicCombo]
+    GNB_AoE_BasicCombo = 7101,
 
     #endregion
 
@@ -3481,168 +3729,6 @@ public enum Preset
     [CustomComboInfo("Heart of Stone Target's Target Option", "Retargets Heart of Stone/Corundum to the Target's Target you do not have Aggro, can still be overridden with mouseover.", Job.GNB)]
     [Retargeted(GNB.HeartOfCorundum, GNB.HeartOfStone)]
     GNB_RetargetHeartofStone_TT = 7090,
-    #endregion
-
-    #region Bozja
-
-    [Bozja]
-    [CustomComboInfo("Lost Focus Option", "Use Lost Focus when available.", Job.GNB)]
-    GNB_Bozja_LostFocus = 7070,
-
-    [Bozja]
-    [CustomComboInfo("Lost Font Of Power Option", "Use Lost Font Of Power when available.", Job.GNB)]
-    GNB_Bozja_LostFontOfPower = 7036,
-
-    [Bozja]
-    [CustomComboInfo("Lost Slash Option", "Use Lost Slash when available.", Job.GNB)]
-    GNB_Bozja_LostSlash = 7037,
-
-    [Bozja]
-    [CustomComboInfo("Lost Death Option", "Use Lost Death when available.", Job.GNB)]
-    GNB_Bozja_LostDeath = 7038,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Noble Ends Option", "Use Banner Of Noble Ends when available.", Job.GNB)]
-    GNB_Bozja_BannerOfNobleEnds = 7039,
-
-    [Bozja]
-    [ParentCombo(GNB_Bozja_BannerOfNobleEnds)]
-    [CustomComboInfo("Only with `Lost Font Of Power` Option",
-        "Use Banner Of Noble Ends only when under Lost Font of Power.", Job.GNB)]
-    GNB_Bozja_PowerEnds = 7040,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Honored Sacrifice Option", "Use Banner Of Honored Sacrifice when available.",
-        Job.GNB)]
-    GNB_Bozja_BannerOfHonoredSacrifice = 7041,
-
-    [Bozja]
-    [ParentCombo(GNB_Bozja_BannerOfHonoredSacrifice)]
-    [CustomComboInfo("Only with `Lost Font Of Power` Option",
-        "Use Banner Of Honored Sacrifice only when under Lost Font of Power.", Job.GNB)]
-    GNB_Bozja_PowerSacrifice = 7042,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Honed Acuity Option", "Use Banner Of Honed Acuity when available.", Job.GNB)]
-    GNB_Bozja_BannerOfHonedAcuity = 7043,
-
-    [Bozja]
-    [CustomComboInfo("Lost Fair Trade Option", "Use Lost Fair Trade when available.", Job.GNB)]
-    GNB_Bozja_LostFairTrade = 7044,
-
-    [Bozja]
-    [CustomComboInfo("Lost Assassination Option", "Use Lost Assassination when available.", Job.GNB)]
-    GNB_Bozja_LostAssassination = 7045,
-
-    [Bozja]
-    [CustomComboInfo("Lost Manawall Option", "Use Lost Manawall when available.", Job.GNB)]
-    GNB_Bozja_LostManawall = 7046,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Tireless Conviction Option", "Use Banner Of Tireless Conviction when available.",
-        Job.GNB)]
-    GNB_Bozja_BannerOfTirelessConviction = 7047,
-
-    [Bozja]
-    [CustomComboInfo("Lost Blood Rage Option", "Use Lost Blood Rage when available.", Job.GNB)]
-    GNB_Bozja_LostBloodRage = 7048,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Solemn Clarity Option", "Use Banner Of Solemn Clarity when available.", Job.GNB)]
-    GNB_Bozja_BannerOfSolemnClarity = 7049,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure Option", "Use Lost Cure when available.", Job.GNB)]
-    GNB_Bozja_LostCure = 7050,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure II Option", "Use Lost Cure II when available.", Job.GNB)]
-    GNB_Bozja_LostCure2 = 7051,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure III Option", "Use Lost Cure III when available.", Job.GNB)]
-    GNB_Bozja_LostCure3 = 7052,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure IV Option", "Use Lost Cure IV when available.", Job.GNB)]
-    GNB_Bozja_LostCure4 = 7053,
-
-    [Bozja]
-    [CustomComboInfo("Lost Arise Option", "Use Lost Arise when available.", Job.GNB)]
-    GNB_Bozja_LostArise = 7054,
-
-    [Bozja]
-    [CustomComboInfo("Lost Sacrifice Option", "Use Lost Sacrifice when available.", Job.GNB)]
-    GNB_Bozja_LostSacrifice = 7055,
-
-    [Bozja]
-    [CustomComboInfo("Lost Reraise Option", "Use Lost Reraise when available.", Job.GNB)]
-    GNB_Bozja_LostReraise = 7056,
-
-    [Bozja]
-    [CustomComboInfo("Lost Spellforge Option", "Use Lost Spellforge when available.", Job.GNB)]
-    GNB_Bozja_LostSpellforge = 7057,
-
-    [Bozja]
-    [CustomComboInfo("Lost Steel Sting Option", "Use Lost Steel Sting when available.", Job.GNB)]
-    GNB_Bozja_LostSteelsting = 7058,
-
-    [Bozja]
-    [CustomComboInfo("Lost Protect Option", "Use Lost Protect when available.", Job.GNB)]
-    GNB_Bozja_LostProtect = 7059,
-
-    [Bozja]
-    [CustomComboInfo("Lost Shell Option", "Use Lost Shell when available.", Job.GNB)]
-    GNB_Bozja_LostShell = 7060,
-
-    [Bozja]
-    [CustomComboInfo("Lost Reflect Option", "Use Lost Reflect when available.", Job.GNB)]
-    GNB_Bozja_LostReflect = 7061,
-
-    [Bozja]
-    [CustomComboInfo("Lost Bravery Option", "Use Lost Bravery when available.", Job.GNB)]
-    GNB_Bozja_LostBravery = 7062,
-
-    [Bozja]
-    [CustomComboInfo("Lost Aethershield Option", "Use Lost Aether Shield when available.", Job.GNB)]
-    GNB_Bozja_LostAethershield = 7063,
-
-    [Bozja]
-    [CustomComboInfo("Lost Protect II Option", "Use Lost Protect II when available.", Job.GNB)]
-    GNB_Bozja_LostProtect2 = 7064,
-
-    [Bozja]
-    [CustomComboInfo("Lost Shell II Option", "Use Lost Shell II when available.", Job.GNB)]
-    GNB_Bozja_LostShell2 = 7065,
-
-    [Bozja]
-    [CustomComboInfo("Lost Bubble Option", "Use Lost Bubble when available.", Job.GNB)]
-    GNB_Bozja_LostBubble = 7066,
-
-    [Bozja]
-    [CustomComboInfo("Lost Stealth Option", "Use Lost Stealth when available.", Job.GNB)]
-    GNB_Bozja_LostStealth = 7067,
-
-    [Bozja]
-    [CustomComboInfo("Lost Swift Option", "Use Lost Swift when available.", Job.GNB)]
-    GNB_Bozja_LostSwift = 7068,
-
-    [Bozja]
-    [CustomComboInfo("Lost Font Of Skill Option", "Use Lost Font Of Skill when available.", Job.GNB)]
-    GNB_Bozja_LostFontOfSkill = 7069,
-
-    [Bozja]
-    [CustomComboInfo("Lost Impetus Option", "Use Lost Impetus when available.", Job.GNB)]
-    GNB_Bozja_LostImpetus = 7071,
-
-    [Bozja]
-    [CustomComboInfo("Lost Paralyze III Option", "Use Lost Paralyze III when available.", Job.GNB)]
-    GNB_Bozja_LostParalyze3 = 7072,
-
-    [Bozja]
-    [CustomComboInfo("Lost Rampage Option", "Use Lost Rampage when available.", Job.GNB)]
-    GNB_Bozja_LostRampage = 7073,
-
     #endregion
 
     #endregion
@@ -4680,12 +4766,7 @@ public enum Preset
     #endregion
 
     #region PALADIN
-
-    [ReplaceSkill(PLD.PassageOfArms)]
-    [CustomComboInfo("Block Combos for Passage of Arms",
-        "Will block the main Combos with Savage Blade while Passage of Arms is still active, to prevent actions from those combos cancelling Passage of Arms early.\nThis will leave it up to you to cancel Passage of Arms via other actions or movement (or letting it be used fully).", Job.PLD)]
-    PLD_BlockForWings = 11074,
-
+    
     #region Simple Mode
 
     // Simple Modes
@@ -4808,42 +4889,6 @@ public enum Preset
         Job.PLD)]
     PLD_ST_AdvancedMode_MP_Reserve = 11035,
 
-    // ST Mitigation Options
-
-    [ParentCombo(PLD_ST_AdvancedMode)]
-    [CustomComboInfo("Mitigation Options",
-        "Adds defensive actions to Advanced Mode.\n- Will not override offensive actions.\n- Uses only when being targeted.",
-        Job.PLD)]
-    PLD_ST_AdvancedMode_Mitigation = 11038,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Required gauge threshold:", Job.PLD)]
-    PLD_ST_AdvancedMode_Sheltron = 11007,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Uses Reprisal when a raidwide is in the process of casting.", Job.PLD)]
-    PLD_ST_AdvancedMode_Reprisal = 11080,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Divine Veil Option", "Uses Divine Veil when a raidwide is in the process of casting.", Job.PLD)]
-    PLD_ST_AdvancedMode_DivineVeil = 11081,
-
-    [ParentCombo(PLD_ST_AdvancedMode_DivineVeil)]
-    [CustomComboInfo("Avoid Doubling up on Group Mit", "Won't use Divine Veil if your own Reprisal is on the target.", Job.PLD)]
-    PLD_ST_AdvancedMode_DivineVeilAvoid = 11082,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Bulwark Option", "Adds Bulwark.\n- Player HP must be under:", Job.PLD)]
-    PLD_ST_AdvancedMode_Bulwark = 11079,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sentinel Option", "Adds Sentinel.\n- Player HP must be under:", Job.PLD)]
-    PLD_ST_AdvancedMode_Sentinel = 11040,
-
-    [ParentCombo(PLD_ST_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Hallowed Ground Option", "Adds Hallowed Ground.\n- Player HP must be under:", Job.PLD)]
-    PLD_ST_AdvancedMode_HallowedGround = 11041,
-
     #endregion
 
     #region AoE Advanced Mode
@@ -4925,53 +4970,102 @@ public enum Preset
     PLD_AoE_AdvancedMode_MP_Reserve = 11036,
 
     // AoE Mitigation Options
-
-    [ParentCombo(PLD_AoE_AdvancedMode)]
-    [CustomComboInfo("Mitigation Options",
-        "Adds defensive actions to Advanced Mode.\n- Will not override offensive actions.\n- Uses only when being targeted.",
-        Job.PLD)]
-    PLD_AoE_AdvancedMode_Mitigation = 11042,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sheltron Option", "Adds Sheltron.\n- Required gauge threshold:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Sheltron = 11023,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Reprisal = 11083,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Divine Veil Option", "Adds Divine Veil.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_DivineVeil = 11084,
+    #endregion
     
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Rampart Option", "Adds Rampart.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Rampart = 11043,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Arms's Length Option", "Adds Arm's Length.", Job.PLD)]
-    PLD_AoE_AdvancedMode_ArmsLength = 11085,
+    #region Advanced Mitigation
     
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Bulwark Option", "Adds Bulwark.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Bulwark = 11078,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Sentinel Option", "Adds Sentinel.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_Sentinel = 11044,
-
-    [ParentCombo(PLD_AoE_AdvancedMode_Mitigation)]
-    [CustomComboInfo("Hallowed Ground Option", "Adds Hallowed Ground.\n- Player HP must be under:", Job.PLD)]
-    PLD_AoE_AdvancedMode_HallowedGround = 11045,
-
+    [CustomComboInfo("Advanced Mitigation Options",
+        "Options for Advanced Combos' In-Combo Mitigation.\n" +
+        "Enable Mitigation in each Advanced Combo to use these options.\n" +
+        "(Simple Mode does not use these Options, instead Recommended Values in " +
+        "place of them)", Job.PLD)]
+    PLD_Mitigation = 11086,
+    
+    [ParentCombo(PLD_Mitigation)]
+    [CustomComboInfo("Non Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.PLD)]
+    PLD_Mitigation_NonBoss = 11087,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Rampart Option", "Adds Rampart when 3 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_Rampart = 11088,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Sentinel/Guardian Option", "Adds Sentinel/Guardian when 5 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_Sentinel = 11089,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Bulwark Option", "Adds Bulwark when 3 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_Bulwark = 11090,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Hallowed Ground Option", "Adds Hallowed Ground when 5 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_HallowedGround = 11091,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length when 5 or more targets", Job.PLD)]
+    PLD_Mitigation_NonBoss_ArmsLength = 11092,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets. Will overlap with others.", Job.PLD)]
+    PLD_Mitigation_NonBoss_Reprisal= 11099,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Sheltron Option", "Adds Sheltron when available. Will overlap with others.", Job.PLD)]
+    PLD_Mitigation_NonBoss_Sheltron = 11093,
+    
+    [ParentCombo(PLD_Mitigation_NonBoss)]
+    [CustomComboInfo("Divine Veil Option", "Adds Divine Veil for healing.", Job.PLD)]
+    PLD_Mitigation_NonBoss_DivineVeil = 11094,
+    
+    [ParentCombo(PLD_Mitigation)]
+    [CustomComboInfo("Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. \nTankbuster Detection Experimental", Job.PLD)]
+    PLD_Mitigation_Boss = 11095,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Sheltron Overcap Option", "Adds Sheltron when Above Selected Oath Gauge and targetted", Job.PLD)]
+    PLD_Mitigation_Boss_SheltronOvercap = 11096,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Sheltron Tankbuster Option", "Adds Sheltron when an incoming tankbuster is detected", Job.PLD)]
+    PLD_Mitigation_Boss_SheltronTankbuster = 11100,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Rampart Tankbuster Option", "Adds Rampart when an incoming tankbuster is detected. Will Not Overlap with Sentinel/Guardian.", Job.PLD)]
+    PLD_Mitigation_Boss_Rampart = 11102,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Sentinel/Guardian Tankbuster Option", "Adds Sentinel/Guardian when an incoming tankbuster is detected. Will not overlap with Rampart.", Job.PLD)]
+    PLD_Mitigation_Boss_Sentinel = 11101,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Bulwark Tankbuster Option", "Adds Bulwark when an incoming tankbuster is detected. Will not overlap unless below set threshold or aligned with rampart.", Job.PLD)]
+    PLD_Mitigation_Boss_Bulwark = 11103,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Reprisal Option", "Adds Reprisal when raidwide casting is detected.", Job.PLD)]
+    PLD_Mitigation_Boss_Reprisal = 11097,
+    
+    [ParentCombo(PLD_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Divine Veil Option", "Adds Divine Veil when raidwide casting is detected.", Job.PLD)]
+    PLD_Mitigation_Boss_DivineVeil = 11098,
+    
+    [ParentCombo(PLD_Mitigation)]
+    [CustomComboInfo("Block Combos for Passage of Arms",
+        "Will block the main Combos with Savage Blade while Passage of Arms is still active, to prevent actions from those combos cancelling Passage of Arms early.\nThis will leave it up to you to cancel Passage of Arms via other actions or movement (or letting it be used fully).", Job.PLD)]
+    PLD_BlockForWings = 11074,
     #endregion
 
     #region Basic combo
 
     [ReplaceSkill(PLD.RageOfHalone, PLD.RoyalAuthority)]
-    [CustomComboInfo("Basic Combo", "Replace Rage Of Halone or Royal Authority with its combo chain.", Job.PLD)]
+    [CustomComboInfo("ST Basic Combo", "Replace Rage Of Halone or Royal Authority with its combo chain.", Job.PLD)]
     [BasicCombo]
     PLD_ST_BasicCombo = 11061,
+    
+    [ReplaceSkill(PLD.RageOfHalone, PLD.Prominence)]
+    [CustomComboInfo("AoE Basic Combo", "Replace Prominence with its combo chain.", Job.PLD)]
+    [BasicCombo]
+    PLD_AoE_BasicCombo =11078,
 
     #endregion
 
@@ -5102,7 +5196,7 @@ public enum Preset
 
     #endregion
 
-    //// Last value = 11085
+    //// Last value = 11099
 
     #endregion
 
@@ -5204,8 +5298,12 @@ public enum Preset
     RPR_ST_StunInterupt = 12096,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
-    [CustomComboInfo("Ranged Filler Option", "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", Job.RPR)]
+    [CustomComboInfo("Harpe Option", "Replaces the combo chain with Harpe when outside of melee range. Will not override Communio.", Job.RPR)]
     RPR_ST_RangedFiller = 12017,
+    
+    [ParentCombo(RPR_ST_AdvancedMode)]
+    [CustomComboInfo("Harvest Moon Option", "Replaces the combo chain with Harvest Moon when outside of melee range.", Job.RPR)]
+    RPR_ST_RangedFillerHarvestMoon = 12024,
 
     [ParentCombo(RPR_ST_AdvancedMode)]
     [CustomComboInfo("Combo Heals Option", "Adds Bloodbath and Second Wind to the combo, using them when below the HP Percentage threshold.", Job.RPR)]
@@ -5219,7 +5317,7 @@ public enum Preset
     [CustomComboInfo("Arcane Crest Raidwide Option", "Adds Arcane Crest when Raidwide is detected casting.", Job.RPR)]
     RPR_ST_ArcaneCrest = 12022,
     
-    //last value = 12022
+    //last value = 12024
 
     #endregion
 
@@ -5306,6 +5404,10 @@ public enum Preset
     [CustomComboInfo("Basic Combo", "Replace Infernal Slice with its combo chain.", Job.RPR)]
     [BasicCombo]
     RPR_ST_BasicCombo = 12021,
+
+    [ParentCombo(RPR_ST_BasicCombo)]
+    [CustomComboInfo("Shadow Of Death Option", "Adds Shadow of Death to the rotation.", Job.RPR)]
+    RPR_ST_BasicCombo_SoD = 12023,
 
     #endregion
 
@@ -5421,8 +5523,8 @@ public enum Preset
     RDM_ST_DPS = 13001,
 
     [ParentCombo(RDM_ST_DPS)]
-    [CustomComboInfo("Opener (Level 100)",
-        "Adds the opener at level 100.\n**Standard Opener must move into melee range to use Corps/Engagement**", Job.RDM)]
+    [CustomComboInfo("Balance Opener (Level 100)",
+        "Adds the Balance opener at level 100.\nEnsure your opener timeout setting is higher than your Veraero III cast time!!!\n**Standard Opener must move into melee range to use Corps/Engagement**", Job.RDM)]
     RDM_Balance_Opener = 13002,
 
     [ParentCombo(RDM_ST_DPS)]
@@ -6419,7 +6521,7 @@ public enum Preset
 
     [ReplaceSkill(SAM.MeikyoShisui)]
     [ConflictingCombos(SAM_MeikyoSens)]
-    [CustomComboInfo("Meikyo Shisui Protection", "Replaces Meikyo Shisui with Savage Blade when you already have Meikyo Shisui active.", Job.SAM)]
+    [CustomComboInfo("Meikyo Shisui Protection", "Blocks Meikyo Shisui with Savage Blade when you already have Meikyo Shisui active.", Job.SAM)]
     SAM_MeikyoShisuiProtection = 15214,
 
     #endregion
@@ -6636,6 +6738,7 @@ public enum Preset
 
     [ParentCombo(SCH_AoE_ADV_DPS)]
     [CustomComboInfo("Multitarget Dot Option", "Maintains dots on multiple targets.", Job.SCH)]
+    [Retargeted(SCH.Bio, SCH.Bio2, SCH.Biolysis)]
     SCH_AoE_ADV_DPS_DoT = 16072,
 
     [ParentCombo(SCH_AoE_ADV_DPS)]
@@ -7474,7 +7577,7 @@ public enum Preset
     #endregion
 
     #region WARRIOR
-
+    
     #region Simple Mode
     [AutoAction(false, false)]
     [ConflictingCombos(WAR_ST_Advanced)]
@@ -7555,45 +7658,6 @@ public enum Preset
     [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the rotation when your target is casting.\nNot advised outside of overworld content, as it can waste a lot of Low Blows on un-stun-able enemies, etc. Will try to not use it in boss fights.", Job.WAR)]
     WAR_ST_Stun = 18112,
 
-    #region Mitigations
-    [ParentCombo(WAR_ST_Advanced)]
-    [CustomComboInfo("Mitigation Options", "Adds defensive actions into the rotation based on Health percentage remaining.", Job.WAR)]
-    WAR_ST_Mitigation = 18040,
-
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Bloodwhetting Option", "Adds Raw Intuition / Bloodwhetting.\n- Player HP must be under:", Job.WAR)]
-    WAR_ST_Bloodwhetting = 18031,
-    
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Uses Reprisal when a raidwide is in the process of casting.", Job.WAR)]
-    WAR_ST_Reprisal = 18061,
-
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Shake it Off Option", "Uses Shake it Off when a raidwide is in the process of casting.", Job.WAR)]
-    WAR_ST_ShakeItOff = 18131,
-
-    [ParentCombo(WAR_ST_ShakeItOff)]
-    [CustomComboInfo("Avoid Doubling up on Group Mit", "Won't use Shake it Off if your own Reprisal is on the target.", Job.WAR)]
-    WAR_ST_ShakeItOffAvoid = 18132,
-
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Equilibrium Option", "Adds Equilibrium.\n- Player HP must be under:", Job.WAR)]
-    WAR_ST_Equilibrium = 18043,
-    
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Thrill of Battle Option", "Adds Thrill of Battle.\n- Player HP must be under:", Job.WAR)]
-    WAR_ST_Thrill = 18042,
-
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Vengeance Option", "Adds Vengeance / Damnation.\n- Player HP must be under:", Job.WAR)]
-    WAR_ST_Vengeance = 18033,
-
-    [ParentCombo(WAR_ST_Mitigation)]
-    [CustomComboInfo("Holmgang Option", "Adds Holmgang.\n- Player HP must be under:", Job.WAR)]
-    WAR_ST_Holmgang = 18034,
-
-    #endregion
-
     #endregion
 
     #region Advanced AoE
@@ -7648,48 +7712,91 @@ public enum Preset
     [CustomComboInfo("Interrupt with Stun Option", "Adds Low Blow to the AoE rotation when your target is casting, interruptible or not.", Job.WAR)]
     WAR_AoE_Stun = 18068,
 
-    #region Mitigations
-    [ParentCombo(WAR_AoE_Advanced)]
-    [CustomComboInfo("Mitigation Options", "Adds defensive actions into the rotation based on Health percentage remaining.", Job.WAR)]
-    WAR_AoE_Mitigation = 18035,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Bloodwhetting Option", "Adds Raw Intuition / Bloodwhetting.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Bloodwhetting = 18036,
-    
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Reprisal = 18063,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Shake it Off Option", "Adds Shake it Off.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_ShakeItOff = 18133,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Rampart Option", "Adds Rampart.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Rampart = 18037,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length.", Job.WAR)]
-    WAR_AoE_ArmsLength = 18064,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Equilibrium Option", "Adds Equilibrium.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Equilibrium = 18044,
-    
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Thrill of Battle Option", "Adds Thrill of Battle.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Thrill = 18041,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Vengeance Option", "Adds Vengeance / Damnation.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Vengeance = 18038,
-
-    [ParentCombo(WAR_AoE_Mitigation)]
-    [CustomComboInfo("Holmgang Option", "Adds Holmgang.\n- Player HP must be under:", Job.WAR)]
-    WAR_AoE_Holmgang = 18039,
-    
     #endregion
+    
+    #region Advanced Mitigation
+    [CustomComboInfo("Advanced Mitigation Options",
+        "Options for Advanced Combos' In-Combo Mitigation.\n" +
+        "Enable Mitigation in each Advanced Combo to use these options.\n" +
+        "(Simple Mode does not use these Options, instead Recommended Values in " +
+        "place of them)", Job.WAR)]
+    WAR_Mitigation = 18131,
+    
+    [ParentCombo(WAR_Mitigation)]
+    [CustomComboInfo("Non Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.WAR)]
+    WAR_Mitigation_NonBoss = 18132,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Rampart Option", "Adds Rampart when 3 or more targets", Job.WAR)]
+    WAR_Mitigation_NonBoss_Rampart = 18133,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Thrill Of Battle Option", "Adds Thrill Of Battle when 3 or more targets", Job.WAR)]
+    WAR_Mitigation_NonBoss_ThrillOfBattle = 18134,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Vengeance/Damnation Option", "Adds Vengeance/Damnation when 5 or more targets", Job.WAR)]
+    WAR_Mitigation_NonBoss_Vengeance = 18135,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Arm's Length Option", "Adds Arm's Length when 5 or more targets", Job.WAR)]
+    WAR_Mitigation_NonBoss_ArmsLength = 18136,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets.", Job.WAR)]
+    WAR_Mitigation_NonBoss_Reprisal= 18137,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Raw Intuition/Bloodwhetting Option", "Adds Raw Intuition/Bloodwhetting when available. Will overlap with others.", Job.WAR)]
+    WAR_Mitigation_NonBoss_RawIntuition = 18138,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Shake It Off Option", "Adds Shake It Off for healing. Will not use when it would result in loss of Mitigation buffs. ", Job.WAR)]
+    WAR_Mitigation_NonBoss_ShakeItOff = 18139,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Equilibrium Option", "Adds Equilibrium for healing.", Job.WAR)]
+    WAR_Mitigation_NonBoss_Equilibrium = 18140,
+    
+    [ParentCombo(WAR_Mitigation_NonBoss)]
+    [CustomComboInfo("Holmgang Option", "Adds Holmgang for Emergency Invuln.", Job.WAR)]
+    WAR_Mitigation_NonBoss_Holmgang= 18141,
+    
+    [ParentCombo(WAR_Mitigation)]
+    [CustomComboInfo("Boss Encounter Mitigation", "Adds Mitigation to the combos when not in a boss encounter. Will not overlap separate options unless stated.", Job.WAR)]
+    WAR_Mitigation_Boss = 18142,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Equilibrium Option", "Adds Equilibrium for Healing.", Job.WAR)]
+    WAR_Mitigation_Boss_Equilibrium = 18146,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Raw Intuition/Bloodwhetting on Cooldown Option", "Adds Raw Intuition/Bloodwhetting on CD when targetted", Job.WAR)]
+    WAR_Mitigation_Boss_RawIntuition_OnCD = 18143,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Raw Intuition/Bloodwhetting Tankbuster Option", "Adds Raw Intuition/Bloodwhetting when tankbuster is detected.", Job.WAR)]
+    WAR_Mitigation_Boss_RawIntuition_TankBuster = 18147,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Rampart Tankbuster Option", "Adds Rampart when tankbuster is detected. Will not overlap with Vengeance/Damnation.", Job.WAR)]
+    WAR_Mitigation_Boss_Rampart = 18149,
+        
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Vengeance/Damnation Tankbuster Option", "Adds Vengeance/Damnation when tankbuster is detected. Will not overlap with Rampart.", Job.WAR)]
+    WAR_Mitigation_Boss_Vengeance = 18148,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Thrill of Battle Tankbuster Option", "Adds Thrill of Battle when tankbuster is detected. Will not overlap unless below set threshold or aligned with rampart.", Job.WAR)]
+    WAR_Mitigation_Boss_ThrillOfBattle = 18150,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Reprisal Option", "Adds Reprisal when raidwide casting is detected.", Job.WAR)]
+    WAR_Mitigation_Boss_Reprisal = 18144,
+    
+    [ParentCombo(WAR_Mitigation_Boss)]
+    [CustomComboInfo("Raidwide Shake It Off Option", "Adds Shake it Off when raidwide casting is detected.", Job.WAR)]
+    WAR_Mitigation_Boss_ShakeItOff = 18145,
 
     #endregion
 
@@ -7786,6 +7893,10 @@ public enum Preset
     [ReplaceSkill(WAR.StormsEye)]
     [CustomComboInfo("Storm's Eye Combo", "Replace Storm's Eye with its combo chain.", Job.WAR)]
     WAR_ST_StormsEyeCombo = 18070,
+    
+    [ReplaceSkill(WAR.MythrilTempest)]
+    [CustomComboInfo("Mythril Tempest Combo", "Replace Mythril Tempest with its combo chain.", Job.WAR)]
+    WAR_AoE_BasicCombo = 18151,
     #endregion
 
     [ReplaceSkill(WAR.FellCleave, WAR.Decimate)]
@@ -7833,163 +7944,6 @@ public enum Preset
     [Retargeted(WAR.Holmgang)]
     WAR_RetargetHolmgang = 18130,
 
-    #region Bozja
-    [Bozja]
-    [CustomComboInfo("Lost Focus Option", "Use Lost Focus when available.", Job.WAR)]
-    WAR_Bozja_LostFocus = 18072,
-
-    [Bozja]
-    [CustomComboInfo("Lost Font Of Power Option", "Use Lost Font Of Power when available.", Job.WAR)]
-    WAR_Bozja_LostFontOfPower = 18073,
-
-    [Bozja]
-    [CustomComboInfo("Lost Slash Option", "Use Lost Slash when available.", Job.WAR)]
-    WAR_Bozja_LostSlash = 18074,
-
-    [Bozja]
-    [CustomComboInfo("Lost Death Option", "Use Lost Death when available.", Job.WAR)]
-    WAR_Bozja_LostDeath = 18075,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Noble Ends Option", "Use Banner Of Noble Ends when available.", Job.WAR)]
-    WAR_Bozja_BannerOfNobleEnds = 18076,
-
-    [Bozja]
-    [ParentCombo(WAR_Bozja_BannerOfNobleEnds)]
-    [CustomComboInfo("Only with `Lost Font Of Power` Option", "Use only under Lost Font of Power.", Job.WAR)]
-    WAR_Bozja_PowerEnds = 18077,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Honored Sacrifice Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_BannerOfHonoredSacrifice = 18078,
-
-    [Bozja]
-    [ParentCombo(WAR_Bozja_BannerOfHonoredSacrifice)]
-    [CustomComboInfo("Only with `Lost Font Of Power` Option", "Use only under Lost Font of Power.", Job.WAR)]
-    WAR_Bozja_PowerSacrifice = 18079,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Honed Acuity Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_BannerOfHonedAcuity = 18080,
-
-    [Bozja]
-    [CustomComboInfo("Lost Fair Trade Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostFairTrade = 18081,
-
-    [Bozja]
-    [CustomComboInfo("Lost Assassination Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostAssassination = 18082,
-
-    [Bozja]
-    [CustomComboInfo("Lost Manawall Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostManawall = 18083,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Tireless Conviction Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_BannerOfTirelessConviction = 18084,
-
-    [Bozja]
-    [CustomComboInfo("Lost Blood Rage Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostBloodRage = 18085,
-
-    [Bozja]
-    [CustomComboInfo("Banner Of Solemn Clarity Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_BannerOfSolemnClarity = 18086,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostCure = 18087,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure II Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostCure2 = 18088,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure III Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostCure3 = 18089,
-
-    [Bozja]
-    [CustomComboInfo("Lost Cure IV Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostCure4 = 18090,
-
-    [Bozja]
-    [CustomComboInfo("Lost Arise Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostArise = 18091,
-
-    [Bozja]
-    [CustomComboInfo("Lost Sacrifice Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostSacrifice = 18092,
-
-    [Bozja]
-    [CustomComboInfo("Lost Reraise Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostReraise = 18093,
-
-    [Bozja]
-    [CustomComboInfo("Lost Spellforge Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostSpellforge = 18094,
-
-    [Bozja]
-    [CustomComboInfo("Lost Steel Sting Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostSteelsting = 18095,
-
-    [Bozja]
-    [CustomComboInfo("Lost Protect Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostProtect = 18096,
-
-    [Bozja]
-    [CustomComboInfo("Lost Shell Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostShell = 18097,
-
-    [Bozja]
-    [CustomComboInfo("Lost Reflect Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostReflect = 18098,
-
-    [Bozja]
-    [CustomComboInfo("Lost Bravery Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostBravery = 18099,
-
-    [Bozja]
-    [CustomComboInfo("Lost Aethershield Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostAethershield = 18100,
-
-    [Bozja]
-    [CustomComboInfo("Lost Protect II Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostProtect2 = 18101,
-
-    [Bozja]
-    [CustomComboInfo("Lost Shell II Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostShell2 = 18102,
-
-    [Bozja]
-    [CustomComboInfo("Lost Bubble Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostBubble = 18103,
-
-    [Bozja]
-    [CustomComboInfo("Lost Stealth Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostStealth = 18104,
-
-    [Bozja]
-    [CustomComboInfo("Lost Swift Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostSwift = 18105,
-
-    [Bozja]
-    [CustomComboInfo("Lost Font Of Skill Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostFontOfSkill = 18106,
-
-    [Bozja]
-    [CustomComboInfo("Lost Impetus Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostImpetus = 18107,
-
-    [Bozja]
-    [CustomComboInfo("Lost Paralyze III Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostParalyze3 = 18108,
-
-    [Bozja]
-    [CustomComboInfo("Lost Rampage Option", "Use when available.", Job.WAR)]
-    WAR_Bozja_LostRampage = 18109,
-
-    #endregion
-
     #region Hidden Features
 
     [CustomComboInfo("Hidden Options", "Collection of cheeky or encounter-specific extra options only available to those in the know.\nDo not expect these options to be maintained, or even kept, after they are no longer Current.", Job.WAR)]
@@ -8018,10 +7972,8 @@ public enum Preset
 
     #endregion
 
-    // Last value = 18130
-
     #endregion
-
+    // Last value = 18145
     #endregion
 
     #region WHITE MAGE

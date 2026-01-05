@@ -74,6 +74,8 @@ public partial class Provider
                 arcOption.OrbwalkerIntegration => arc.OrbwalkerIntegration,
                 arcOption.AutoRezOutOfParty => arcH.AutoRezOutOfParty,
                 arcOption.DPSAoETargets => arcD.DPSAoETargets,
+                arcOption.DPSAlwaysHardTarget => arcD.DPSAlwaysHardTarget,
+                arcOption.HealerAlwaysHardTarget  => arcH.HealerAlwaysHardTarget ,
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(passedOption), passedOption, null),
             };

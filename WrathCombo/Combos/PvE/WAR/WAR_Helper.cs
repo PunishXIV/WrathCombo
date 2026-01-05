@@ -37,15 +37,28 @@ internal partial class WAR : Tank
     internal static bool HasNC => HasStatusEffect(Buffs.NascentChaos);
     internal static bool HasWrath => HasStatusEffect(Buffs.Wrathful);
     internal static bool Minimal => InCombat() && HasBattleTarget();
-    internal static bool MitUsed =>
-        JustUsed(OriginalHook(RawIntuition), 4f) ||
-        JustUsed(OriginalHook(Vengeance), 5f) ||
-        JustUsed(ThrillOfBattle, 5f) ||
-        JustUsed(Role.Rampart, 5f) ||
-        JustUsed(Holmgang, 9f);
 
-    private static bool InMitigationContent =>
-        ContentCheck.IsInConfiguredContent(WAR_ST_Mit_Difficulty, WAR_ST_Mit_DifficultyListSet);
+    internal static bool SafeToShakeItOff => !HasAnyStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.VengeanceDefense, Buffs.BloodwhettingDefenseLong]);
+    
+    
+    
+    private static bool JustMitted =>
+        JustUsed(OriginalHook(ThrillOfBattle)) ||
+        JustUsed(OriginalHook(Vengeance)) ||
+        JustUsed(OriginalHook(RawIntuition)) ||
+        JustUsed(Role.Reprisal) ||
+        JustUsed(Role.ArmsLength) ||
+        JustUsed(Role.Rampart) ||
+        JustUsed(Holmgang);
+    
+    internal static bool MitigationRunning =>
+        HasStatusEffect(Role.Buffs.ArmsLength) ||
+        HasStatusEffect(Role.Buffs.Rampart) || 
+        HasStatusEffect(Buffs.Holmgang) ||
+        HasStatusEffect(Buffs.ThrillOfBattle) ||
+        HasStatusEffect(Buffs.VengeanceDefense) || 
+        HasStatusEffect(Buffs.Damnation) ||
+        HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
 
     #endregion
 
@@ -102,84 +115,6 @@ internal partial class WAR : Tank
         internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
         public override bool HasCooldowns() => IsOffCooldown(InnerRelease) && IsOffCooldown(Upheaval) && GetRemainingCharges(Infuriate) >= 2 && GetRemainingCharges(Onslaught) >= 3;
     }
-
-    #endregion
-
-    #region Helpers
-
-    internal static uint GetBozjaAction()
-    {
-        if (!Bozja.IsInBozja)
-            return 0;
-
-        bool CanUse(uint action) => HasActionEquipped(action) && IsOffCooldown(action);
-        bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && CanUse(action);
-
-        //Out-of-Combat
-        if (!InCombat() && IsEnabledAndUsable(Preset.WAR_Bozja_LostStealth, Bozja.LostStealth))
-            return Bozja.LostStealth;
-        //OGCDs
-        if (CanWeave())
-        {
-            foreach((Preset preset, uint action) in new[]
-            {
-                (Preset.WAR_Bozja_LostFocus, Bozja.LostFocus),
-                (Preset.WAR_Bozja_LostFontOfPower, Bozja.LostFontOfPower),
-                (Preset.WAR_Bozja_LostSlash, Bozja.LostSlash),
-                (Preset.WAR_Bozja_LostFairTrade, Bozja.LostFairTrade),
-                (Preset.WAR_Bozja_LostAssassination, Bozja.LostAssassination)
-            })
-                if (IsEnabledAndUsable(preset, action))
-                    return action;
-
-            foreach((Preset preset, uint action, Preset powerPreset) in new[]
-            {
-                (Preset.WAR_Bozja_BannerOfNobleEnds, Bozja.BannerOfNobleEnds, Preset.WAR_Bozja_PowerEnds),
-                (Preset.WAR_Bozja_BannerOfHonoredSacrifice, Bozja.BannerOfHonoredSacrifice, Preset.WAR_Bozja_PowerSacrifice)
-            })
-                if (IsEnabledAndUsable(preset, action) && (!IsEnabled(powerPreset) || JustUsed(Bozja.LostFontOfPower, 5f)))
-                    return action;
-
-            if (IsEnabledAndUsable(Preset.WAR_Bozja_BannerOfHonedAcuity, Bozja.BannerOfHonedAcuity) &&
-                !HasStatusEffect(Bozja.Buffs.BannerOfTranscendentFinesse))
-                return Bozja.BannerOfHonedAcuity;
-        }
-        //GCDs
-        foreach((Preset preset, uint action, bool condition) in new[]
-        {
-            (Preset.WAR_Bozja_LostDeath, Bozja.LostDeath, true),
-            (Preset.WAR_Bozja_LostCure, Bozja.LostCure, PlayerHealthPercentageHp() <= WAR_Bozja_LostCure_Health),
-            (Preset.WAR_Bozja_LostArise, Bozja.LostArise, GetTargetHPPercent() == 0 && !HasStatusEffect(RoleActions.Magic.Buffs.Raise)),
-            (Preset.WAR_Bozja_LostReraise, Bozja.LostReraise, PlayerHealthPercentageHp() <= WAR_Bozja_LostReraise_Health),
-            (Preset.WAR_Bozja_LostProtect, Bozja.LostProtect, !HasStatusEffect(Bozja.Buffs.LostProtect)),
-            (Preset.WAR_Bozja_LostShell, Bozja.LostShell, !HasStatusEffect(Bozja.Buffs.LostShell)),
-            (Preset.WAR_Bozja_LostBravery, Bozja.LostBravery, !HasStatusEffect(Bozja.Buffs.LostBravery)),
-            (Preset.WAR_Bozja_LostBubble, Bozja.LostBubble, !HasStatusEffect(Bozja.Buffs.LostBubble)),
-            (Preset.WAR_Bozja_LostParalyze3, Bozja.LostParalyze3, !JustUsed(Bozja.LostParalyze3, 60f))
-        })
-            if (IsEnabledAndUsable(preset, action) && condition)
-                return action;
-        if (IsEnabled(Preset.WAR_Bozja_LostSpellforge) &&
-            CanUse(Bozja.LostSpellforge) &&
-            (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
-            return Bozja.LostSpellforge;
-        if (IsEnabled(Preset.WAR_Bozja_LostSteelsting) &&
-            CanUse(Bozja.LostSteelsting) &&
-            (!HasStatusEffect(Bozja.Buffs.LostSpellforge) || !HasStatusEffect(Bozja.Buffs.LostSteelsting)))
-            return Bozja.LostSteelsting;
-
-        return 0; //No conditions met
-    }
-    internal static uint OtherAction
-    {
-        get
-        {
-            if (Bozja.IsInBozja && GetBozjaAction() is uint ba && ba != 0)
-                return ba;
-            return 0;
-        }
-    }
-    internal static bool ShouldUseOther => OtherAction != 0;
 
     #endregion
 
@@ -276,6 +211,256 @@ internal partial class WAR : Tank
                IsEnabled(PrioritizedMitigation[index].Preset);
     }
 
+    #endregion
+    
+    #region Auto Mitigation System
+    
+    [Flags]
+    private enum RotationMode{
+        simple = 1 << 0,
+        advanced = 1 << 1
+    }
+    
+    private static bool TryUseMits(RotationMode rotationFlags, ref uint actionID) => CanUseNonBossMits(rotationFlags, ref actionID) || CanUseBossMits(rotationFlags, ref actionID);
+    
+    private static bool CanUseNonBossMits(RotationMode rotationFlags, ref uint actionID)
+    {
+        #region Initial Bailout
+        if (!InCombat() ||  InBossEncounter() ||  !IsEnabled(Preset.WAR_Mitigation_NonBoss)) 
+            return false;
+        #endregion
+        
+        #region HolmGang Invulnerability
+        var holmgangThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 10 : WAR_Mitigation_NonBoss_Holmgang_Health;
+        
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_Holmgang) && ActionReady(Holmgang) &&
+            PlayerHealthPercentageHp() <= holmgangThreshold)
+        {
+            actionID = Holmgang;
+            return true;
+        }
+        #endregion
+        
+        #region Raw Intuition/Bloodwhetting
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_RawIntuition) && 
+            ActionReady(OriginalHook(RawIntuition)) && CanWeave() && !JustMitted)
+        {
+            actionID = OriginalHook(RawIntuition);
+            return true;
+        }
+        #endregion
+        
+        #region Mitigation Threshold Bailout Canweave/Justmitted Check
+        float mitigationThreshold = rotationFlags.HasFlag(RotationMode.simple) 
+            ? 10 
+            : WAR_Mitigation_NonBoss_MitigationThreshold;
+        if (GetAvgEnemyHPPercentInRange(10f) <= mitigationThreshold || !CanWeave() || JustMitted) 
+            return false;
+        #endregion
+        
+        #region Equilibrium
+        var equilibriumThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 65 : WAR_Mitigation_NonBoss_Equilibrium_Health;
+        
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_Equilibrium) && 
+            ActionReady(Equilibrium) &&
+            PlayerHealthPercentageHp() <= equilibriumThreshold)
+        {
+            actionID = Equilibrium;
+            return true;
+        }
+        #endregion
+        
+        #region Shake It Off
+        var shakeItOffThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 80 : WAR_Mitigation_NonBoss_ShakeItOff_Health;
+        
+        if (IsEnabled(Preset.WAR_Mitigation_NonBoss_ShakeItOff) && 
+            ActionReady(ShakeItOff) && SafeToShakeItOff &&
+            PlayerHealthPercentageHp() <= shakeItOffThreshold)
+        {
+            actionID = ShakeItOff;
+            return true;
+        }
+        #endregion
+        
+        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
+        
+        if (MitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
+        
+        #region Mitigation 5+
+        if (numberOfEnemies >= 5)
+        {
+            if (ActionReady(OriginalHook(Vengeance)) && IsEnabled(Preset.WAR_Mitigation_NonBoss_Vengeance))
+            {
+                actionID = OriginalHook(Vengeance);
+                return true;
+            }
+            if (ActionReady(Role.ArmsLength) && IsEnabled(Preset.WAR_Mitigation_NonBoss_ArmsLength))
+            {
+                actionID = Role.ArmsLength;
+                return true;
+            }
+            if (ActionReady(Role.Reprisal) && IsEnabled(Preset.WAR_Mitigation_NonBoss_Reprisal))
+            {
+                actionID = Role.Reprisal;
+                return true;
+            }
+        }
+        #endregion
+        
+        #region Mitigation 3+
+        if (Role.CanRampart() && IsEnabled(Preset.WAR_Mitigation_NonBoss_Rampart))
+        {
+            actionID = Role.Rampart;
+            return true;
+        }
+            
+        if (ActionReady(ThrillOfBattle) && IsEnabled(Preset.WAR_Mitigation_NonBoss_ThrillOfBattle))
+        {
+            actionID = ThrillOfBattle;
+            return true;
+        }
+        #endregion
+        
+        return false;
+        
+        bool IsEnabled(Preset preset)
+        {
+            if (rotationFlags.HasFlag(RotationMode.simple))
+                return true;
+            
+            return CustomComboFunctions.IsEnabled(preset);
+        }
+    }
+    
+    private static bool CanUseBossMits(RotationMode rotationFlags, ref uint actionID)
+    {
+        #region Initial Bailout
+        if (!InCombat() || !CanWeave() || !InBossEncounter() || !IsEnabled(Preset.WAR_Mitigation_Boss)) return false;
+        #endregion
+        
+        #region Vengeance
+        var vengeanceFirst = rotationFlags.HasFlag(RotationMode.simple)
+            ? false
+            : WAR_Mitigation_Boss_Vengeance_First;
+        
+        var vengeanceInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) || 
+                                           ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_Vengeance_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+        
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Vengeance) && 
+            ActionReady(OriginalHook(Vengeance)) && vengeanceInMitigationContent && HasIncomingTankBusterEffect() 
+            && !JustUsed(Role.Rampart, 20f) && // Prevent double big mits
+            (!ActionReady(Role.Rampart) || vengeanceFirst)) //Vengeance First or don't use unless rampart is on cd.
+        {
+            actionID = OriginalHook(Vengeance);
+            return true;
+        }
+        #endregion
+        
+        #region Rampart
+        var rampartInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) || 
+                                         ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_Rampart_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+        
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Rampart) && 
+            ActionReady(Role.Rampart) && rampartInMitigationContent && HasIncomingTankBusterEffect() && 
+            !JustUsed(OriginalHook(Vengeance), 15f)) // Prevent double big mits
+        {
+            actionID = Role.Rampart;
+            return true;
+        }
+        #endregion
+        
+        #region Raw Intuition/Bloodwhetting
+        var RawIntuitionOnCDInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
+                                              ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_RawIntuition_OnCD_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+        
+        var RawIntuitionTankBusterInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
+                                              ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_RawIntuition_TankBuster_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+        var RawIntuitionHealthThreshold = rotationFlags.HasFlag(RotationMode.simple) 
+            ? 80
+            : WAR_Mitigation_Boss_RawIntuition_Health;
+        
+        bool rawIntuitionOnCD = IsEnabled(Preset.WAR_Mitigation_Boss_RawIntuition_OnCD) &&  PlayerHealthPercentageHp() <= RawIntuitionHealthThreshold && IsPlayerTargeted() && RawIntuitionOnCDInMitigationContent;
+        bool RawIntuitionTankbuster = IsEnabled(Preset.WAR_Mitigation_Boss_RawIntuition_TankBuster) && HasIncomingTankBusterEffect() && RawIntuitionTankBusterInMitigationContent;
+            
+        if (ActionReady(OriginalHook(RawIntuition)) && (rawIntuitionOnCD || RawIntuitionTankbuster))
+        {
+            actionID = OriginalHook(RawIntuition);
+            return true;
+        }
+        #endregion
+        
+        #region Thrill of Battle
+        float emergencyThrillThreshold = rotationFlags.HasFlag(RotationMode.simple)
+            ? 80
+            : WAR_Mitigation_Boss_ThrillOfBattle_Threshold;
+        
+        var alignThrillOfBattle = rotationFlags.HasFlag(RotationMode.simple)
+            ? true
+            : WAR_Mitigation_Boss_ThrillOfBattle_Align;
+        
+        var ThrillOfBattleInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) || 
+                                         ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_ThrillOfBattle_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+
+        bool emergencyThrillOfBattle = PlayerHealthPercentageHp() <= emergencyThrillThreshold;
+        bool noOtherMitsToUse = !ActionReady(OriginalHook(Vengeance)) && !JustUsed(OriginalHook(Vengeance), 13f) && !ActionReady(Role.Rampart) && !JustUsed(Role.Rampart, 18f);
+        bool alignThrillOfBattleWithRampart = JustUsed(Role.Rampart, 20f) && alignThrillOfBattle;
+        
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_ThrillOfBattle) && ActionReady(ThrillOfBattle) && HasIncomingTankBusterEffect() && ThrillOfBattleInMitigationContent &&
+            (emergencyThrillOfBattle || noOtherMitsToUse || alignThrillOfBattleWithRampart))
+        {
+            actionID = ThrillOfBattle;
+            return true;
+        }
+        #endregion
+        
+        #region Equilibrium
+        var equilibriumThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 50 : WAR_Mitigation_Boss_Equilibrium_Health;
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Equilibrium) && 
+            ActionReady(Equilibrium) &&
+            PlayerHealthPercentageHp() <= equilibriumThreshold)
+        {
+            actionID = Equilibrium;
+            return true;
+        }
+        #endregion
+        
+        #region Reprisal
+        var ReprisalInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
+                                          ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_Reprisal_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+        
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_Reprisal) && 
+            Role.CanReprisal(enemyCount:1) && GroupDamageIncoming() && ReprisalInMitigationContent &&
+            !JustUsed(ShakeItOff, 10f))
+        {
+            actionID = Role.Reprisal;
+            return true;
+        }
+        #endregion
+        
+        #region Shake it Off
+        var ShakeItOffInMitigationContent = rotationFlags.HasFlag(RotationMode.simple) ||
+                                            ContentCheck.IsInConfiguredContent(WAR_Mitigation_Boss_ShakeItOff_Difficulty, WAR_Boss_Mit_DifficultyListSet);
+        
+        if (IsEnabled(Preset.WAR_Mitigation_Boss_ShakeItOff) && 
+            !JustUsed(Role.Reprisal, 10f) && GroupDamageIncoming() && ShakeItOffInMitigationContent &&
+            ActionReady(ShakeItOff))
+        {
+            actionID = ShakeItOff;
+            return true;
+        }
+        #endregion
+       
+        return false;
+        
+        bool IsEnabled(Preset preset)
+        {
+            if (rotationFlags.HasFlag(RotationMode.simple))
+                return true;
+            
+            return CustomComboFunctions.IsEnabled(preset);
+        }
+    }
+    
     #endregion
 
     #region IDs

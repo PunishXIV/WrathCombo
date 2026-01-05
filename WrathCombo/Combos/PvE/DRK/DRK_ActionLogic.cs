@@ -1,10 +1,10 @@
 #region
 
 using System;
+using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.DRK.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
-using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
 
 // ReSharper disable ConditionIsAlwaysTrueOrFalse
@@ -308,61 +308,61 @@ internal partial class DRK
     {
         public bool TryGetAction(Combo flags, ref uint action, bool? _)
         {
-            // Bail if we're trying to Invuln or actively Invulnerable
-            if (HasStatusEffect(Buffs.LivingDead) ||
-                HasStatusEffect(Buffs.WalkingDead) ||
-                HasStatusEffect(Buffs.UndeadRebirth))
+            #region Variables
+
+            var preset = flags.HasFlag(Combo.ST)
+                ? flags.HasFlag(Combo.Adv)
+                    ? Preset.DRK_ST_Adv
+                    : Preset.DRK_ST_Simple
+                : flags.HasFlag(Combo.Adv)
+                    ? Preset.DRK_AoE_Adv
+                    : Preset.DRK_AoE_Simple;
+
+            var config = flags.HasFlag(Combo.ST)
+                ? flags.HasFlag(Combo.Adv)
+                    ? DRK_ST_AdvancedMitigation
+                    : DRK_ST_SimpleMitigation
+                : flags.HasFlag(Combo.Adv)
+                    ? DRK_AoE_AdvancedMitigation
+                    : DRK_AoE_SimpleMitigation;
+
+            #endregion
+
+            // Bail if Mitigation is not enabled for this combo
+            // (unless IPC-controlled)
+            if (config != 1 || P.UIHelper.PresetControlled(preset)?.enabled == true)
                 return false;
 
-            // (Don't bail for Simple Mode if turned on via IPC)
-            var ipcControlledSimpleMode =
-                flags.HasFlag(Combo.Simple) && (flags.HasFlag(Combo.ST)
-                    ? P.UIHelper.PresetControlled(Preset.DRK_ST_Simple)?.enabled ==
-                      true
-                    : P.UIHelper.PresetControlled(Preset.DRK_AoE_Simple)?.enabled ==
-                      true);
+            if (InBossEncounter())
+            {
+                if (TryGetBossMitigation(flags, ref action))
+                    return true;
+            }
+            else if (TryGetNonBossMitigation(flags, ref action))
+                return true;
 
-            // Bail if Simple mode and mitigation is disabled
-            if (flags.HasFlag(Combo.Simple) &&
-                !ipcControlledSimpleMode &&
-                ((flags.HasFlag(Combo.ST) &&
-                  (int)DRK_ST_SimpleMitigation ==
-                  (int)SimpleMitigation.Off) ||
-                 (flags.HasFlag(Combo.AoE) &&
-                  (int)DRK_AoE_SimpleMitigation ==
-                  (int)SimpleMitigation.Off)))
+            return false;
+        }
+
+        private static bool TryGetNonBossMitigation(Combo flags, ref uint action)
+        {
+            // Bail if non-boss mitigation is not enabled
+            if (!IsEnabled(Preset.DRK_Mitigation_NonBoss))
                 return false;
 
             #region Living Dead
 
             #region Variables
 
-            var bossRestrictionLivingDead = flags.HasFlag(Combo.Adv)
-                ? (int)DRK_ST_LivingDeadBossRestriction
-                : (int)BossAvoidance.Off;
-            var livingDeadSelfThreshold = flags.HasFlag(Combo.Adv) ?
-                flags.HasFlag(Combo.ST)
-                    ? DRK_ST_LivingDeadSelfThreshold
-                    : DRK_AoE_LivingDeadSelfThreshold :
-                flags.HasFlag(Combo.ST) ? 15 : 20;
-            var livingDeadTargetThreshold = flags.HasFlag(Combo.Adv) ?
-                flags.HasFlag(Combo.ST)
-                    ? DRK_ST_LivingDeadTargetThreshold
-                    : DRK_AoE_LivingDeadTargetThreshold :
-                flags.HasFlag(Combo.ST) ? 1 : 15;
+            var livingDeadThreshold = flags.HasFlag(Combo.Simple)
+                ? 10
+                : DRK_Mit_NonBoss_LivingDead_Health;
 
             #endregion
 
-            if ((flags.HasFlag(Combo.Simple) ||
-                 IsSTEnabled(flags, Preset.DRK_ST_Mit_LivingDead) ||
-                 IsAoEEnabled(flags, Preset.DRK_AoE_Mit_LivingDead)) &&
+            if (IsEnabled(Preset.DRK_Mitigation_NonBoss_LivingDead) &&
                 ActionReady(LivingDead) &&
-                PlayerHealthPercentageHp() <= livingDeadSelfThreshold &&
-                GetTargetHPPercent(Target(flags)) >= livingDeadTargetThreshold &&
-                // Checking if the target matches the boss avoidance option
-                ((bossRestrictionLivingDead is (int)BossAvoidance.On &&
-                  InBossEncounter()) ||
-                 bossRestrictionLivingDead is (int)BossAvoidance.Off))
+                PlayerHealthPercentageHp() <= livingDeadThreshold)
                 return (action = LivingDead) != 0;
 
             #endregion
@@ -372,14 +372,179 @@ internal partial class DRK
             // Bail if we just used mitigation
             if (JustUsedMitigation) return false;
 
+            var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
+
             #region TBN
 
-            if ((flags.HasFlag(Combo.Simple) ||
-                 IsSTEnabled(flags, Preset.DRK_ST_Mit_TBN) ||
-                 IsAoEEnabled(flags, Preset.DRK_AoE_Mit_TBN)) &&
+            if (IsEnabled(Preset.DRK_Mitigation_NonBoss_BlackestNight) &&
                 ActionReady(BlackestNight) &&
-                LocalPlayer.CurrentMp >= 3000 &&
-                ShouldTBNSelf(flags.HasFlag(Combo.AoE), flags.HasFlag(Combo.Simple)))
+                // Read others' TBNs as our own, unless burst is near (need darkside)
+                (!HasAnyTBN || GetCooldownRemainingTime(LivingShadow) < 30))
+                return (action = BlackestNight) != 0;
+
+            #endregion
+
+            #region Dark Missionary
+
+            if (IsEnabled(Preset.DRK_Mitigation_NonBoss_DarkMissionary) &&
+                ActionReady(DarkMissionary) &&
+                numberOfEnemies > 4 &&
+                !JustUsed(OriginalHook(ShadowWall), 15f))
+                return (action = DarkMissionary) != 0;
+
+            #endregion
+
+            #region Oblation
+
+            if (ActionReady(Oblation) &&
+                IsEnabled(Preset.DRK_Mitigation_NonBoss_Oblation) &&
+                numberOfEnemies > 4 &&
+                !JustUsed(OriginalHook(Oblation), 10f) &&
+                !JustUsed(OriginalHook(ShadowWall), 15f))
+                return (action = Oblation) != 0;
+
+            #endregion
+
+            // Bail if average enemy HP% is below threshold
+            if (GetAvgEnemyHPPercentInRange(10f) <=
+                (flags.HasFlag(Combo.Simple) ? 10 : DRK_Mit_NonBoss_Threshold))
+                return false;
+            //Bail if already Mitted or too few enemies
+            if (MitigationRunning || numberOfEnemies < 3)
+                return false;
+
+            #region Mitigation 5+
+
+            if (numberOfEnemies >= 5)
+            {
+                if (IsEnabled(Preset.DRK_Mitigation_NonBoss_ShadowWall) &&
+                    ActionReady(OriginalHook(ShadowWall)))
+                    return (action = OriginalHook(ShadowWall)) != 0;
+
+                if (IsEnabled(Preset.DRK_Mitigation_NonBoss_Reprisal) &&
+                    ActionReady(Role.Reprisal))
+                    return (action = Role.Reprisal) != 0;
+
+                if (IsEnabled(Preset.DRK_Mitigation_NonBoss_ArmsLength) &&
+                    ActionReady(Role.ArmsLength))
+                    return (action = Role.ArmsLength) != 0;
+            }
+
+            #endregion
+
+            #region Mitigation 3+
+
+            if (IsEnabled(Preset.DRK_Mitigation_NonBoss_DarkMind) &&
+                ActionReady(DarkMind))
+                return (action = DarkMind) != 0;
+
+            if (Role.CanRampart() &&
+                IsEnabled(Preset.DRK_Mitigation_NonBoss_Rampart))
+                return (action = Role.Rampart) != 0;
+
+            #endregion
+
+            return false;
+
+            bool IsEnabled(Preset preset) =>
+                flags.HasFlag(Combo.Simple) ||
+                CustomComboFunctions.IsEnabled(preset);
+        }
+
+        private static bool TryGetBossMitigation(Combo flags, ref uint action)
+        {
+            // Bail if boss mitigation is not enabled
+            if (!IsEnabled(Preset.DRK_Mitigation_Boss)) return false;
+            // Bail if we can't weave any other mitigations
+            if (!CanWeave) return false;
+
+            #region Blackest Night (Tank Buster)
+
+            #region Variables
+
+            var blackestNightInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_BlackestNight_TankBuster_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
+
+            #endregion
+
+            if (ActionReady(BlackestNight) &&
+                IsEnabled(Preset.DRK_Mitigation_Boss_BlackestNight_TB) &&
+                HasIncomingTankBusterEffect() &&
+                blackestNightInMitigationContent)
+                return (action = BlackestNight) != 0;
+
+            #endregion
+
+            #region Shadow Wall
+
+            #region Variables
+
+            var shadowWallFirst = flags.HasFlag(Combo.Simple)
+                ? false
+                : DRK_Mit_Boss_ShadowWall_First;
+
+            var shadowWallInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_ShadowWall_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
+
+            #endregion
+
+            if (IsEnabled(Preset.DRK_Mitigation_Boss_ShadowWall) &&
+                ActionReady(OriginalHook(ShadowWall)) &&
+                shadowWallInMitigationContent &&
+                HasIncomingTankBusterEffect() &&
+                !JustUsed(Role.Rampart, 20f) &&
+                (!ActionReady(Role.Rampart) || shadowWallFirst))
+                return (action = OriginalHook(ShadowWall)) != 0;
+
+            #endregion
+
+            #region Rampart
+
+            #region Variables
+
+            var rampartInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_Rampart_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
+
+            #endregion
+
+            if (IsEnabled(Preset.DRK_Mitigation_Boss_Rampart) &&
+                ActionReady(Role.Rampart) && rampartInMitigationContent &&
+                HasIncomingTankBusterEffect() &&
+                !JustUsed(OriginalHook(ShadowWall), 15f))
+                return (action = Role.Rampart) != 0;
+
+            #endregion
+
+            #region Blackest Night (on CD)
+
+            #region Variables
+
+            var blackestNightOnCDInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_BlackestNight_OnCD_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
+
+            var blackestNightHealthThreshold = flags.HasFlag(Combo.Simple)
+                ? 25
+                : DRK_Mit_Boss_BlackestNight_Health;
+
+            #endregion
+
+            if (ActionReady(BlackestNight) &&
+                IsEnabled(Preset.DRK_Mitigation_Boss_BlackestNight_OnCD) &&
+                PlayerHealthPercentageHp() <= blackestNightHealthThreshold &&
+                IsPlayerTargeted() &&
+                blackestNightOnCDInMitigationContent)
                 return (action = BlackestNight) != 0;
 
             #endregion
@@ -388,27 +553,54 @@ internal partial class DRK
 
             #region Variables
 
-            var oblationCharges = flags.HasFlag(Combo.Adv)
-                ? flags.HasFlag(Combo.ST)
-                    ? DRK_ST_OblationCharges
-                    : DRK_AoE_OblationCharges
-                : 0;
-            var oblationThreshold = flags.HasFlag(Combo.Adv)
-                ? flags.HasFlag(Combo.ST)
-                    ? DRK_ST_Mit_OblationThreshold
-                    : DRK_AoE_Mit_OblationThreshold
-                : 90;
+            var oblationInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_Oblation_TankBuster_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
 
             #endregion
 
-            if ((flags.HasFlag(Combo.Simple) ||
-                 IsSTEnabled(flags, Preset.DRK_ST_Mit_Oblation) ||
-                 IsAoEEnabled(flags, Preset.DRK_AoE_Mit_Oblation)) &&
-                ActionReady(Oblation) &&
-                !HasStatusEffect(Buffs.Oblation, anyOwner: true) &&
-                GetRemainingCharges(Oblation) > oblationCharges &&
-                PlayerHealthPercentageHp() <= oblationThreshold)
+            if (ActionReady(Oblation) &&
+                IsEnabled(Preset.DRK_Mitigation_Boss_Oblation) &&
+                HasIncomingTankBusterEffect() &&
+                !JustUsed(OriginalHook(Oblation), 10f) &&
+                oblationInMitigationContent)
                 return (action = Oblation) != 0;
+
+            #endregion
+
+            #region Dark Mind
+
+            #region Variables
+
+            float emergencyDarkMindThreshold = flags.HasFlag(Combo.Simple)
+                ? 80
+                : DRK_Mit_Boss_DarkMind_Threshold;
+
+            var alignDarkMind = flags.HasFlag(Combo.Simple)
+                ? true
+                : DRK_Mit_Boss_DarkMind_Align;
+
+            var darkMindInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_DarkMind_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
+
+            #endregion
+
+            if (IsEnabled(Preset.DRK_Mitigation_Boss_DarkMind) &&
+                ActionReady(DarkMind) && HasIncomingTankBusterEffect() &&
+                darkMindInMitigationContent &&
+                (PlayerHealthPercentageHp() <= emergencyDarkMindThreshold ||
+                 (!ActionReady(OriginalHook(ShadowWall)) &&
+                  !JustUsed(OriginalHook(ShadowWall), 13f) &&
+                  !ActionReady(Role.Rampart) &&
+                  !JustUsed(Role.Rampart, 18f)) ||
+                 (JustUsed(Role.Rampart, 20f) &&
+                  alignDarkMind)))
+                return (action = DarkMind) != 0;
 
             #endregion
 
@@ -416,135 +608,49 @@ internal partial class DRK
 
             #region Variables
 
-            var reprisalThreshold =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? DRK_AoE_Mit_ReprisalThreshold
-                    : 100;
-            var reprisalTargetCount =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? DRK_AoE_ReprisalEnemyCount
-                    : 1;
-            var reprisalUseForRaidwides =
-                flags.HasFlag(Combo.AoE) || RaidWideCasting();
+            var reprisalInMitigationContent =
+                flags.HasFlag(Combo.Simple) ||
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_Reprisal_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
 
             #endregion
 
-            if ((flags.HasFlag(Combo.Simple) ||
-                 IsSTEnabled(flags, Preset.DRK_ST_Mit_Reprisal) ||
-                 IsAoEEnabled(flags, Preset.DRK_AoE_Mit_Reprisal)) &&
-                reprisalUseForRaidwides &&
-                Role.CanReprisal(reprisalThreshold, reprisalTargetCount,
-                    target: Target(flags)))
+            if (IsEnabled(Preset.DRK_Mitigation_Boss_Reprisal) &&
+                reprisalInMitigationContent &&
+                !JustUsed(DarkMissionary, 10f) &&
+                Role.CanReprisal(enemyCount: 1) &&
+                GroupDamageIncoming())
                 return (action = Role.Reprisal) != 0;
 
             #endregion
 
-            #region Dark Missionary (ST only)
+            #region Dark Missionary
 
             #region Variables
 
-            var missionaryThreshold =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST)
-                    ? DRK_ST_Mit_MissionaryThreshold
-                    : 100;
-            var missionaryAvoidanceSatisfied =
-                flags.HasFlag(Combo.AoE) ||
+            var darkMissionaryInMitigationContent =
                 flags.HasFlag(Combo.Simple) ||
-                IsNotEnabled(Preset.DRK_ST_Mit_MissionaryAvoid) ||
-                !HasStatusEffect(Role.Debuffs.Reprisal, Target(flags), true);
+                ContentCheck.IsInConfiguredContent(
+                    DRK_Mit_Boss_DarkMissionary_Difficulty,
+                    DRK_Boss_Mit_DifficultyListSet);
 
             #endregion
 
-            if (flags.HasFlag(Combo.ST) &&
-                (flags.HasFlag(Combo.Simple) ||
-                 IsEnabled(Preset.DRK_ST_Mit_Missionary)) &&
+            if (IsEnabled(Preset.DRK_Mitigation_Boss_DarkMissionary) &&
+                darkMissionaryInMitigationContent &&
+                !JustUsed(Role.Reprisal, 10f) &&
                 ActionReady(DarkMissionary) &&
-                RaidWideCasting() &&
-                missionaryAvoidanceSatisfied &&
-                PlayerHealthPercentageHp() <= missionaryThreshold)
+                GroupDamageIncoming())
                 return (action = DarkMissionary) != 0;
 
             #endregion
 
-            #region Dark Mind (AoE only)
-
-            #region Variables
-
-            var darkMindThreshold =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? DRK_AoE_Mit_DarkMindThreshold
-                    : 100;
-
-            #endregion
-
-            if (flags.HasFlag(Combo.AoE) &&
-                (flags.HasFlag(Combo.Simple) ||
-                 IsEnabled(Preset.DRK_AoE_Mit_DarkMind)) &&
-                ActionReady(DarkMind) &&
-                PlayerHealthPercentageHp() <= darkMindThreshold)
-                return (action = DarkMind) != 0;
-
-            #endregion
-
-            #region Rampart (AoE only)
-
-            #region Variables
-
-            var rampartThreshold =
-                flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE)
-                    ? DRK_AoE_Mit_RampartThreshold
-                    : 100;
-
-            #endregion
-
-            if (flags.HasFlag(Combo.AoE) &&
-                (flags.HasFlag(Combo.Simple) ||
-                 IsEnabled(Preset.DRK_AoE_Mit_Rampart)) &&
-                Role.CanRampart(rampartThreshold))
-                return (action = Role.Rampart) != 0;
-
-            #endregion
-
-            #region Arms Length (AoE only)
-
-            #region Variables
-
-            var armsLengthEnemyCount = flags.HasFlag(Combo.Adv)
-                ? DRK_AoE_ArmsLengthEnemyCount
-                : 3;
-
-            #endregion
-
-            if (flags.HasFlag(Combo.AoE) &&
-                (flags.HasFlag(Combo.Simple) ||
-                 IsEnabled(Preset.DRK_AoE_Mit_ArmsLength)) &&
-                Role.CanArmsLength(armsLengthEnemyCount))
-                return (action = Role.ArmsLength) != 0;
-
-            #endregion
-
-            #region Shadowed Vigil
-
-            #region Variables
-
-            var vigilHealthThreshold = flags.HasFlag(Combo.Adv) ?
-                flags.HasFlag(Combo.ST)
-                    ? DRK_ST_ShadowedVigilThreshold
-                    : DRK_AoE_ShadowedVigilThreshold :
-                flags.HasFlag(Combo.ST) ? 40 : 50;
-
-            #endregion
-
-            if ((flags.HasFlag(Combo.Simple) ||
-                 IsSTEnabled(flags, Preset.DRK_ST_Mit_Vigil) ||
-                 IsAoEEnabled(flags, Preset.DRK_AoE_Mit_Vigil)) &&
-                ActionReady(ShadowedVigil) &&
-                PlayerHealthPercentageHp() <= vigilHealthThreshold)
-                return (action = OriginalHook(ShadowWall)) != 0;
-
-            #endregion
-
             return false;
+
+            bool IsEnabled(Preset preset) =>
+                flags.HasFlag(Combo.Simple) ||
+                CustomComboFunctions.IsEnabled(preset);
         }
     }
 
@@ -863,135 +969,6 @@ internal partial class DRK
             return false;
         }
     }
-
-    #region JustUsedMit
-
-    private static bool InSavagePlus => ContentCheck.IsInSavagePlusContent;
-
-    /// <summary>
-    ///     Whether mitigation was very recently used, depending on the duration and
-    ///     strength of the mitigation.
-    /// </summary>
-    private static bool JustUsedMitigation =>
-        JustUsed(BlackestNight, (InSavagePlus ? 3f : 4f)) ||
-        JustUsed(Oblation, (InSavagePlus ? 6f : 4f)) ||
-        JustUsed(DarkMind, (InSavagePlus ? 6f : 4f)) ||
-        JustUsed(Role.Reprisal, (InSavagePlus ? 1f : 4f)) ||
-        JustUsed(DarkMissionary, (InSavagePlus ? 0f : 5f)) ||
-        JustUsed(Role.Rampart, 6f) ||
-        JustUsed(Role.ArmsLength, (InSavagePlus ? 0f : 4f)) ||
-        JustUsed(ShadowedVigil, (InSavagePlus ? 11f : 6f)) ||
-        JustUsed(LivingDead, (InSavagePlus ? 13f : 7f));
-
-    #endregion
-
-    #region TBN
-
-    /// <summary>
-    ///     Whether the player has a shield from TBN from themselves.
-    /// </summary>
-    /// <seealso cref="Buffs.BlackestNightShield" />
-    private static bool HasOwnTBN
-    {
-        get
-        {
-            var has = false;
-            if (LocalPlayer is not null)
-                has = HasStatusEffect(Buffs.BlackestNightShield);
-
-            return has;
-        }
-    }
-
-    /// <summary>
-    ///     Whether the player has a shield from TBN from anyone.
-    /// </summary>
-    /// <seealso cref="Buffs.BlackestNightShield" />
-    private static bool HasAnyTBN
-    {
-        get
-        {
-            var has = false;
-            if (LocalPlayer is not null)
-                has = HasStatusEffect(Buffs.BlackestNightShield, anyOwner: true);
-
-            return has;
-        }
-    }
-
-    /// <summary>
-    ///     Decides if the player should use TBN on themselves,
-    ///     based on general rules and the player's configuration.
-    /// </summary>
-    /// <param name="aoe">Whether AoE or ST options should be checked.</param>
-    /// <param name="simple">Whether Simple mode options should be checked.</param>
-    /// <returns>Whether TBN should be used on self.</returns>
-    /// <seealso cref="BlackestNight" />
-    /// <seealso cref="Buffs.BlackestNightShield" />
-    /// <seealso cref="Preset.DRK_ST_Mit_TBN" />
-    /// <seealso cref="Config.DRK_ST_TBNThreshold" />
-    /// <seealso cref="Config.DRK_ST_TBNBossRestriction" />
-    /// <seealso cref="Preset.DRK_AoE_Mit_TBN" />
-    private static bool ShouldTBNSelf(bool aoe = false, bool simple = false)
-    {
-        // Bail if we're dead or unloaded
-        if (LocalPlayer is null)
-            return false;
-
-        // Bail if we're at the status limit
-        if (!CanApplyStatus(LocalPlayer, Buffs.BlackestNightShield))
-            return false;
-
-        // Bail if TBN is disabled
-        if ((!aoe &&
-             (simple &&
-              (int)DRK_ST_SimpleMitigation !=
-              (int)SimpleMitigation.On) ||
-             (!simple &&
-              (!IsEnabled(Preset.DRK_ST_Mitigation) ||
-               !IsEnabled(Preset.DRK_ST_Mit_TBN)))) ||
-            (aoe &&
-             (simple &&
-              (int)DRK_AoE_SimpleMitigation !=
-              (int)SimpleMitigation.On) ||
-             (!simple &&
-              (!IsEnabled(Preset.DRK_AoE_Mitigation) ||
-               !IsEnabled(Preset.DRK_AoE_Mit_TBN)))))
-            return false;
-
-        // Bail if we already have TBN
-        if (HasOwnTBN)
-            return false;
-
-        // Bail if we have no target
-        if (!HasBattleTarget())
-            return false;
-
-        var hpRemaining = PlayerHealthPercentageHp();
-        var hpThreshold = !aoe ? (float)DRK_ST_TBNThreshold : 90f;
-
-        // Bail if we're above the threshold
-        if (hpRemaining > hpThreshold)
-            return false;
-
-        var bossRestriction = !aoe
-            ? (int)DRK_ST_TBNBossRestriction
-            : (int)BossAvoidance.Off; // Don't avoid bosses in AoE
-
-        // Bail if we're trying to avoid bosses and we're in a boss fight
-        if (bossRestriction is (int)BossAvoidance.On
-            && InBossEncounter())
-            return false;
-
-        // Bail if we have a TBN and burst is >30s away ()
-        if (GetCooldownRemainingTime(LivingShadow) > 30
-            && HasAnyTBN)
-            return false;
-
-        return true;
-    }
-
-    #endregion
 
     #region One-Button Mitigation
 

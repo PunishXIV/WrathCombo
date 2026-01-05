@@ -248,14 +248,14 @@ internal partial class WHM
     {
         return IsEnabled(Preset.WHM_Raidwide_Asylum) &&
                ActionReady(Asylum) &&
-               CanWeave() && RaidWideCasting();
+               CanWeave() && GroupDamageIncoming();
     }
 
     internal static bool RaidwideTemperance()
     {
         return IsEnabled(Preset.WHM_Raidwide_Temperance) &&
                ActionReady(OriginalHook(Temperance)) &&
-               CanWeave() && RaidWideCasting();
+               CanWeave() && GroupDamageIncoming();
     }
 
     internal static bool RaidwideLiturgyOfTheBell()
@@ -263,13 +263,13 @@ internal partial class WHM
         return IsEnabled(Preset.WHM_Raidwide_LiturgyOfTheBell) &&
                ActionReady(LiturgyOfTheBell) &&
                !HasStatusEffect(Buffs.LiturgyOfTheBell) &&
-               RaidWideCasting() && CanWeave();
+               GroupDamageIncoming() && CanWeave();
     }
     internal static bool RaidwidePlenaryIndulgence()
     {
         return IsEnabled(Preset.WHM_Raidwide_PlenaryIndulgence) &&
                ActionReady(PlenaryIndulgence) &&
-               RaidWideCasting() && CanWeave();
+               GroupDamageIncoming() && CanWeave();
     }
 
 

@@ -265,7 +265,7 @@ internal partial class SAM : Melee
 
                 if (IsEnabled(Preset.SAM_ST_Feint) &&
                     Role.CanFeint() &&
-                    RaidWideCasting())
+                    GroupDamageIncoming())
                     return Role.Feint;
 
                 //Auto Third Eye
@@ -492,24 +492,25 @@ internal partial class SAM : Melee
                 {
                     if (LevelChecked(Yukikaze) &&
                         !HasSetsu &&
-                        (HasStatusEffect(Buffs.Fugetsu) || !SAM_Yukaze_Gekko) &&
-                        (HasStatusEffect(Buffs.Fuka) || !SAM_Yukaze_Kasha))
+                        (SAM_ST_YukikazeCombo_Prio == 0 ||
+                         (HasStatusEffect(Buffs.Fugetsu) || !SAM_Yukaze_Gekko) &&
+                         (HasStatusEffect(Buffs.Fuka) || !SAM_Yukaze_Kasha)))
                         return Yukikaze;
 
                     if (SAM_Yukaze_Gekko &&
                         LevelChecked(Jinpu) &&
                         ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
-                         !HasStatusEffect(Buffs.Fugetsu) ||
-                         SenCount is 3 &&
-                         RefreshFugetsu))
+                         HasKa && !HasGetsu ||
+                         SAM_ST_YukikazeCombo_Prio == 1 && !HasStatusEffect(Buffs.Fugetsu) ||
+                         SenCount is 3 && RefreshFugetsu))
                         return Jinpu;
 
                     if (SAM_Yukaze_Kasha &&
                         LevelChecked(Shifu) &&
                         ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
-                         !HasStatusEffect(Buffs.Fuka) ||
-                         SenCount is 3 &&
-                         RefreshFuka))
+                         HasGetsu && !HasKa ||
+                         SAM_ST_YukikazeCombo_Prio == 1 && !HasStatusEffect(Buffs.Fuka) ||
+                         SenCount is 3 && RefreshFuka))
                         return Shifu;
                 }
 

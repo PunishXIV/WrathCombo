@@ -1,12 +1,9 @@
-﻿using WrathCombo.Data;
-using ContentHelper = ECommons.GameHelpers;
-using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
-namespace WrathCombo.Combos.PvE.Content;
+﻿namespace WrathCombo.Combos.PvE;
 
-internal class Bozja
+internal static partial class Bozja
 {
     public const uint
-        
+
     #region Offensive
 
         LostFocus = 20714,
@@ -23,7 +20,7 @@ internal class Bozja
         LostAssassination = 23914,
 
     #endregion
-        
+
     #region Defensive
 
         LostManawall = 20703,
@@ -34,7 +31,7 @@ internal class Bozja
         LostBloodRage = 23921,
 
     #endregion
-        
+
     #region Restorative
 
         BannerOfSolemnClarity = 20724,
@@ -48,7 +45,7 @@ internal class Bozja
         LostFullCure = 23920,
 
     #endregion
-        
+
     #region Beneficial
 
         LostSpellforge = 20706,
@@ -66,7 +63,7 @@ internal class Bozja
         LostBubble = 23917,
 
     #endregion
-        
+
     #region Tactical
 
         LostStealth = 20705,
@@ -77,7 +74,7 @@ internal class Bozja
         LostImpetus = 23918,
 
     #endregion
-        
+
     #region Detrimental
 
         LostParalyze3 = 20701,
@@ -89,7 +86,7 @@ internal class Bozja
         LostRampage = 23910,
 
     #endregion
-        
+
     #region Item-related
 
         DynamisDice = 20734,
@@ -141,12 +138,11 @@ internal class Bozja
 
     #endregion
 
-    public static bool IsInBozja => ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Bozja && (ContentCheck.IsInFieldOperations || ContentCheck.IsInFieldRaids);
 
     public static class Buffs
     {
         public const ushort
-            
+
         #region Lost Actions
 
             LostFontOfPower = 2346, //granted by Lost Font of Power action or Lost Assasination
@@ -170,7 +166,7 @@ internal class Bozja
             LostSwift = 2335, //granted by Lost Swift
 
         #endregion
-            
+
         #region Banners
 
             BannerOfNobleEnds = 2326, //granted by Banner of Noble Ends
@@ -184,7 +180,7 @@ internal class Bozja
             BannerOfLimitlessGrace = 2353, //granted by 4 stacks of Banner of Solemn Clarity
 
         #endregion
-            
+
         #region Misc
 
             MPRefresh = 909,
@@ -203,7 +199,7 @@ internal class Bozja
             ClericStance = 2484, //granted by Lost Seraph Strike 
 
         #endregion
-            
+
         #region Essences
 
             SpiritOfTheAetherweaver = 2311, //granted by any Essence of the Aetherweaver

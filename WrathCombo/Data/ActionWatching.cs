@@ -110,7 +110,7 @@ public static class ActionWatching
                 // Cache Data
                 var targetId = target.id;
 #if DEBUG
-                var debugTargetName = debugObjectTable.FirstOrDefault(x => x.GameObjectId == targetId)?.Name ?? "Unknown";
+                var debugTargetName = debugObjectTable.SearchById(targetId)?.Name ?? "Unknown";
 #endif
 
                 foreach (var eff in target.effects)
@@ -119,6 +119,7 @@ public static class ActionWatching
                     var effType = eff.Type;
                     var effValue = eff.Value;
                     var effObjectId = eff.AtSource ? casterEntityId : targetId;
+                    var dataId = Svc.Objects.FirstOrDefault(x => x.GameObjectId == effObjectId)?.BaseId;
 
 #if DEBUG
                     Svc.Log.Verbose(
@@ -174,10 +175,29 @@ public static class ActionWatching
                     {
                         if (ICDTracker.Trackers.TryGetFirst(x => x.StatusID == effValue && x.GameObjectId == effObjectId, out var icd))
                         {
+                            //This section here is just to clear out any erroneous times a status was added to the blacklist when it shouldn't have due to potential timings
+                            if (dataId is uint val && Service.Configuration.StatusBlacklist.Any(x => x.Status == effValue && x.BaseId == dataId))
+                            {
+                                var p = Service.Configuration.StatusBlacklist.First(x => x.Status == effValue && x.BaseId == dataId);
+                                Service.Configuration.StatusBlacklist.Remove(p);
+                                Service.Configuration.Save();
+                            }
                             icd.ICDClearedTime = dateNow + TimeSpan.FromSeconds(60);
                             icd.TimesApplied += 1;
                         }
                         else ICDTracker.Trackers.Add(new(effValue, effObjectId, TimeSpan.FromSeconds(60)));
+                    }
+
+                    if (effType is ActionEffectType.FullResistStatus)
+                    {
+                        if (!ICDTracker.Trackers.Any(x => x.StatusID == effValue && x.GameObjectId == effObjectId))
+                        {
+                            if (dataId is uint val)
+                            {
+                                Service.Configuration.StatusBlacklist.Add((effValue, val));
+                                Service.Configuration.Save();
+                            }
+                        }
                     }
                 }
             }
@@ -235,6 +255,9 @@ public static class ActionWatching
                 ActionTimestamps[actionId] = currentTick;
                 UsedOnDict[(actionId, targetObjectId)] = currentTick;
             }
+
+            if (actionSheet.Unknown4 != 1 && castTime > 0)
+                AutoRotationController.HealThrottle = Environment.TickCount64 + 1000;
         }
 
         if (castTime == 0)
@@ -287,7 +310,7 @@ public static class ActionWatching
                     $"Action: {actionId.ActionName()} (ID: {actionId}) | " +
                     $"Type: {actionType} | " +
                     $"Sequence: {sequence} | " +
-                    $"Target: {Svc.Objects.FirstOrDefault(x => x.GameObjectId == targetObjectId)?.Name ?? "Unknown"} | " +
+                    $"Target: {Svc.Objects.SearchById(targetObjectId)?.Name ?? "Unknown"} | " +
                     $"Params: [{a5}, {a6}, {a7}, {a8}, {a9}]"
                 );
 #endif
@@ -413,7 +436,7 @@ public static class ActionWatching
                     targetId = originalTargetId;
 
             // Support Retargeted ground actions intelligently
-            if (changed && replacedWith.IsGroundTargeted())
+            if ((changed && replacedWith.IsGroundTargeted()) || AutoRotationController.WouldLikeToGroundTarget)
             {
                 var location = Player.Position;
 
@@ -433,10 +456,10 @@ public static class ActionWatching
             #endregion
 
             //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
-            targetId = AutoRotationController.CurrentActIsAutorot
+            var hookRunTargetId = changed
                 ? originalTargetId
                 : targetId;
-            var hookResult = UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+            var hookResult = UseActionHook.Original(actionManager, actionType, actionId, hookRunTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
             #region Extra Retargeting Logic
 
@@ -456,7 +479,7 @@ public static class ActionWatching
         }
     }
 
-    private static bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
+    public static bool CheckForChangedTarget(uint actionId, ref ulong targetObjectId, out uint replacedWith)
     {
         replacedWith = actionId;
         if (!P.ActionRetargeting.TryGetTargetFor(actionId, out var target, out replacedWith) ||

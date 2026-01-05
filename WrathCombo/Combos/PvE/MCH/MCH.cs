@@ -356,7 +356,7 @@ internal partial class MCH : PhysicalRanged
                     }
 
                     if (ActionReady(Tactician) &&
-                        IsEnabled(Preset.MCH_ST_Adv_Tactician) && RaidWideCasting() &&
+                        IsEnabled(Preset.MCH_ST_Adv_Tactician) && GroupDamageIncoming() &&
                         NumberOfAlliesInRange(Tactician) >= GetPartyMembers().Count * .75 &&
                         !HasAnyStatusEffects([BRD.Buffs.Troubadour, DNC.Buffs.ShieldSamba, Buffs.Tactician], anyOwner: true))
                         return Tactician;
@@ -365,7 +365,7 @@ internal partial class MCH : PhysicalRanged
                         ActionReady(Dismantle) &&
                         !HasStatusEffect(Debuffs.Dismantled, CurrentTarget, true) &&
                         CanApplyStatus(CurrentTarget, Debuffs.Dismantled) &&
-                        RaidWideCasting())
+                        GroupDamageIncoming())
                         return Dismantle;
 
                     // Healing

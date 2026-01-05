@@ -626,7 +626,7 @@ internal partial class SMN : Caster
                 
                 if (IsEnabled(Preset.SMN_ST_Advanced_Combo_Addle) && 
                     Role.CanAddle()  &&
-                    RaidWideCasting())
+                    GroupDamageIncoming())
                     return Role.Addle;
             }
             #endregion

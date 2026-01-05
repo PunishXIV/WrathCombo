@@ -321,11 +321,12 @@ public static class ConflictingPlugins
 
         #region Redirect
 
-        if (ConflictingPluginsChecks.Redirect.Conflicted)
+        if (ConflictingPluginsChecks.Redirect.Conflicted &&
+            ConflictingPluginsChecks.Redirect.ConflictingActions.Length > 3)
         {
             var actions = ConflictingPluginsChecks.Redirect.ConflictingActions;
             var conflictMessage = actions
-                .Where((action, i) => action is not (0 or 1) || i >= 2)
+                .Where((action, i) => action is not (0 or 1) || i >= 3)
                 .Aggregate("",
                     (current, action) => current + action.ActionName() + ",");
             conflictMessage = conflictMessage[..^1]; // remove last comma
@@ -466,6 +467,11 @@ public static class ConflictingPlugins
                 conflicts = conflicts.Append(new Conflict(
                         "Redirect", ConflictType.Settings,
                         "Options > Treat all friendly actions as mouseovers"))
+                    .ToArray();
+            if (ConflictingPluginsChecks.Redirect.ConflictingActions[2] is 1)
+                conflicts = conflicts.Append(new Conflict(
+                        "Redirect", ConflictType.Settings,
+                        "Options > Treat all hostile actions as mouseovers"))
                     .ToArray();
         }
         if (ConflictingPluginsChecks.Redirect.BunnyConflict)

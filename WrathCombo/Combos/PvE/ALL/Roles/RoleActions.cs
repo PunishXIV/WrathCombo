@@ -89,7 +89,8 @@ internal static partial class RoleActions
             ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthPercent;
 
         public static bool CanArmsLength(int enemyCount, All.Enums.BossAvoidance avoidanceSetting) =>
-            ActionReady(ArmsLength) && NumberOfEnemiesInRange(ArmsLength) >= enemyCount &&
+            ActionReady(ArmsLength) &&
+            NumberOfEnemiesInRange(Tank.Reprisal) >= enemyCount &&
             ((int)avoidanceSetting == (int)All.Enums.BossAvoidance.Off || !InBossEncounter());
     }
 
@@ -174,6 +175,11 @@ internal static partial class RoleActions
             Reprisal = 7535,
             Shirk = 7537;
 
+        public static class Buffs
+        {
+            public const ushort
+            Rampart = 1191;
+        }
         public static class Debuffs
         {
             public const ushort

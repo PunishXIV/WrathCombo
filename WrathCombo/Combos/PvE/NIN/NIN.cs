@@ -87,7 +87,7 @@ internal partial class NIN : Melee
                 if (Role.CanSecondWind(40))
                     return Role.SecondWind;
 
-                if (ActionReady(ShadeShift) && (PlayerHealthPercentageHp() < 60 || RaidWideCasting()))
+                if (ActionReady(ShadeShift) && (PlayerHealthPercentageHp() < 60 || GroupDamageIncoming()))
                     return ShadeShift;
 
                 if (Role.CanBloodBath(40))
@@ -209,7 +209,7 @@ internal partial class NIN : Melee
                 if (Role.CanSecondWind(40))
                     return Role.SecondWind;
 
-                if (ActionReady(ShadeShift) && (PlayerHealthPercentageHp() < 60 || RaidWideCasting()))
+                if (ActionReady(ShadeShift) && (PlayerHealthPercentageHp() < 60 || GroupDamageIncoming()))
                     return ShadeShift;
 
                 if (Role.CanBloodBath(40))
@@ -351,7 +351,7 @@ internal partial class NIN : Melee
             {
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Feint) && 
                     Role.CanFeint() &&
-                    RaidWideCasting())
+                    GroupDamageIncoming())
                     return Role.Feint;
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_SecondWind) &&
@@ -360,7 +360,7 @@ internal partial class NIN : Melee
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_ShadeShift) && ActionReady(ShadeShift) &&
                     (PlayerHealthPercentageHp() < NIN_ST_AdvancedMode_ShadeShiftThreshold ||
-                     NIN_ST_AdvancedMode_ShadeShiftRaidwide && RaidWideCasting()))
+                     NIN_ST_AdvancedMode_ShadeShiftRaidwide && GroupDamageIncoming()))
                     return ShadeShift;
 
                 if (IsEnabled(Preset.NIN_ST_AdvancedMode_Bloodbath) &&
@@ -510,7 +510,7 @@ internal partial class NIN : Melee
 
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_ShadeShift) && ActionReady(ShadeShift) &&
                     (PlayerHealthPercentageHp() < NIN_AoE_AdvancedMode_ShadeShiftThreshold ||
-                     NIN_AoE_AdvancedMode_ShadeShiftRaidwide && RaidWideCasting()))
+                     NIN_AoE_AdvancedMode_ShadeShiftRaidwide && GroupDamageIncoming()))
                     return ShadeShift;
 
                 if (IsEnabled(Preset.NIN_AoE_AdvancedMode_Bloodbath) &&

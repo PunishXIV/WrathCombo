@@ -73,6 +73,14 @@ internal class StatusCache
 
     public static bool HasDamageDown(IGameObject? target) => HasStatusInCacheList(DamageDownStatuses, target);
 
+    private static readonly FrozenSet<uint> CleansableDoomStatuses =
+        StatusSheet
+        .Where(x => x.Value.Icon == 215503 && x.Value.CanDispel)
+        .Select(x => x.Key)
+        .ToFrozenSet();
+
+    public static bool HasCleansableDoom(IGameObject? target) => HasStatusInCacheList(CleansableDoomStatuses, target);
+
     private static readonly FrozenSet<uint> DamageUpStatuses =
         ENStatusSheet.TryGetValue(61, out var refRow)
             ? ENStatusSheet

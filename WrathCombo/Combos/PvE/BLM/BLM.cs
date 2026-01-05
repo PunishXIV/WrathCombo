@@ -63,7 +63,7 @@ internal partial class BLM : Caster
                 }
 
                 if (ActionReady(Manaward) &&
-                    PlayerHealthPercentageHp() < 40 && RaidWideCasting())
+                    PlayerHealthPercentageHp() < 40 && GroupDamageIncoming())
                     return Manaward;
             }
 
@@ -369,11 +369,11 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(Preset.BLM_ST_Manaward) &&
                     ActionReady(Manaward) &&
-                    PlayerHealthPercentageHp() < BLM_ST_Manaward_Threshold && RaidWideCasting())
+                    PlayerHealthPercentageHp() < BLM_ST_Manaward_Threshold && GroupDamageIncoming())
                     return Manaward;
 
                 if (IsEnabled(Preset.BLM_ST_Addle) &&
-                    Role.CanAddle() && RaidWideCasting())
+                    Role.CanAddle() && GroupDamageIncoming())
                     return Role.Addle;
             }
 

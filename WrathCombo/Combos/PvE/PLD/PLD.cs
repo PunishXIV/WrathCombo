@@ -42,50 +42,11 @@ internal partial class PLD : Tank
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            #region Mitigations
-
-            if (PLD_ST_MitOptions == 0)
+            if (PLD_ST_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
             {
-                // Mitigation
-                if (IsPlayerTargeted() &&
-                    !JustMitted && InCombat())
-                {
-                    // Hallowed Ground
-                    if (ActionReady(HallowedGround) &&
-                        PlayerHealthPercentageHp() < 30)
-                        return HallowedGround;
-
-                    // Sheltron
-                    if (LevelChecked(Sheltron) &&
-                        Gauge.OathGauge >= 50 &&
-                        PlayerHealthPercentageHp() < 95 &&
-                        !HasStatusEffect(Buffs.Sheltron) &&
-                        !HasStatusEffect(Buffs.HolySheltron))
-                        return OriginalHook(Sheltron);
-
-                    // Reprisal
-                    if (Role.CanReprisal() && RaidWideCasting(5f))
-                        return Role.Reprisal;
-
-                    // Divine Veil
-                    if (ActionReady(DivineVeil) && RaidWideCasting(5f) &&
-                        NumberOfAlliesInRange(DivineVeil) >= GetPartyMembers().Count * .75 &&
-                        !HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget, true))
-                        return OriginalHook(DivineVeil);
-
-                    // Sentinel / Guardian
-                    if (ActionReady(OriginalHook(Sentinel)) &&
-                        PlayerHealthPercentageHp() < 50)
-                        return OriginalHook(Sentinel);
-
-                    // Bulwark
-                    if (ActionReady(Bulwark) &&
-                        PlayerHealthPercentageHp() < 60)
-                        return Bulwark;
-                }
+                if (TryUseMits(RotationMode.simple, ref actionID))
+                    return actionID;
             }
-
-            #endregion
 
             if (HasBattleTarget())
             {
@@ -144,46 +105,6 @@ internal partial class PLD : Tank
                     if (LevelChecked(BladeOfHonor) &&
                         OriginalHook(Requiescat) == BladeOfHonor)
                         return OriginalHook(Requiescat);
-
-                    // Mitigation
-                    var mitigationsOn =
-                        PLD_ST_MitOptions != 1 ||
-                        (P.UIHelper.PresetControlled(Preset)?.enabled == true);
-                    if (mitigationsOn && IsPlayerTargeted() &&
-                        !JustMitted && InCombat())
-                    {
-                        // Hallowed Ground
-                        if (ActionReady(HallowedGround) &&
-                            PlayerHealthPercentageHp() < 30)
-                            return HallowedGround;
-
-                        // Sheltron
-                        if (LevelChecked(Sheltron) &&
-                            Gauge.OathGauge >= 50 &&
-                            PlayerHealthPercentageHp() < 95 &&
-                            !HasStatusEffect(Buffs.Sheltron) && !HasStatusEffect(Buffs.HolySheltron))
-                            return OriginalHook(Sheltron);
-
-                        // Reprisal
-                        if (Role.CanReprisal() && RaidWideCasting(5f))
-                            return Role.Reprisal;
-
-                        // Divine Veil
-                        if (ActionReady(DivineVeil) && RaidWideCasting(5f) &&
-                            NumberOfAlliesInRange(DivineVeil) >= GetPartyMembers().Count * .75 &&
-                            !HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget, true))
-                            return OriginalHook(DivineVeil);
-
-                        // Sentinel / Guardian
-                        if (ActionReady(OriginalHook(Sentinel)) &&
-                            PlayerHealthPercentageHp() < 50)
-                            return OriginalHook(Sentinel);
-
-                        // Bulwark
-                        if (ActionReady(Bulwark) &&
-                            PlayerHealthPercentageHp() < 60)
-                            return Bulwark;
-                    }
                 }
 
                 // Requiescat Phase
@@ -284,6 +205,12 @@ internal partial class PLD : Tank
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
+            if (PLD_AoE_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
+            {
+                if (TryUseMits(RotationMode.simple, ref actionID))
+                    return actionID;
+            }
+
             if (HasBattleTarget())
             {
                 // Weavables
@@ -322,60 +249,10 @@ internal partial class PLD : Tank
                     // Blade of Honor
                     if (LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)
                         return OriginalHook(Requiescat);
-
-                    // Mitigation
-                    var mitigationsOn =
-                        PLD_AoE_MitOptions != 1 ||
-                        (P.UIHelper.PresetControlled(Preset)?.enabled == true);
-                    if (mitigationsOn &&
-                        IsPlayerTargeted() && !JustMitted && InCombat())
-                    {
-                        // Hallowed Ground
-                        if (ActionReady(HallowedGround) &&
-                            PlayerHealthPercentageHp() < 30)
-                            return HallowedGround;
-
-                        // Sheltron
-                        if (LevelChecked(Sheltron) &&
-                            Gauge.OathGauge >= 50 &&
-                            PlayerHealthPercentageHp() < 95 &&
-                            !HasStatusEffect(Buffs.Sheltron) &&
-                            !HasStatusEffect(Buffs.HolySheltron))
-                            return OriginalHook(Sheltron);
-
-                        // Reprisal
-                        if (Role.CanReprisal(80, 3, false))
-                            return Role.Reprisal;
-
-                        // Divine Veil
-                        if (ActionReady(DivineVeil) &&
-                            NumberOfAlliesInRange(DivineVeil) >= GetPartyMembers().Count * .75 &&
-                            PlayerHealthPercentageHp() < 75)
-                            return DivineVeil;
-
-                        // Rampart
-                        if (Role.CanRampart(50))
-                            return Role.Rampart;
-
-                        // Arm's Length
-                        if (Role.CanArmsLength(3))
-                            return Role.ArmsLength;
-
-                        // Bulwark
-                        if (ActionReady(Bulwark) &&
-                            PlayerHealthPercentageHp() < 60)
-                            return Bulwark;
-
-                        // Sentinel / Guardian
-                        if (ActionReady(OriginalHook(Sentinel)) &&
-                            PlayerHealthPercentageHp() < 50)
-                            return OriginalHook(Sentinel);
-                    }
+                    
                 }
-
                 // Confiteor & Blades
-                if (HasDivineMagicMP && (HasStatusEffect(Buffs.ConfiteorReady) ||
-                                         LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
+                if (HasDivineMagicMP && (HasStatusEffect(Buffs.ConfiteorReady) || LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
                     return OriginalHook(Confiteor);
             }
 
@@ -430,6 +307,12 @@ internal partial class PLD : Tank
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
+
+            if (PLD_ST_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
+            {
+                if (TryUseMits(RotationMode.advanced, ref actionID))
+                    return actionID;
+            }
 
             if (HasBattleTarget())
             {
@@ -492,55 +375,6 @@ internal partial class PLD : Tank
                     if (IsEnabled(Preset.PLD_ST_AdvancedMode_BladeOfHonor) &&
                         LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)
                         return OriginalHook(Requiescat);
-
-                    // Mitigation
-                    if (IsEnabled(Preset.PLD_ST_AdvancedMode_Mitigation) &&
-                        InMitigationContent && IsPlayerTargeted() &&
-                        !JustMitted && InCombat())
-                    {
-                        // Hallowed Ground
-                        if (IsEnabled(Preset.PLD_ST_AdvancedMode_HallowedGround) &&
-                            ActionReady(HallowedGround) &&
-                            PlayerHealthPercentageHp() < PLD_ST_HallowedGround_Health &&
-                            (PLD_ST_MitHallowedGroundBoss == (int)BossAvoidance.On && InBossEncounter() ||
-                             PLD_ST_MitHallowedGroundBoss == (int)BossAvoidance.Off))
-                            return HallowedGround;
-
-                        // Sheltron
-                        if (IsEnabled(Preset.PLD_ST_AdvancedMode_Sheltron) &&
-                            LevelChecked(Sheltron) &&
-                            Gauge.OathGauge >= PLD_ST_SheltronOption &&
-                            PlayerHealthPercentageHp() < PLD_ST_Sheltron_Health &&
-                            !HasStatusEffect(Buffs.Sheltron) && !HasStatusEffect(Buffs.HolySheltron) &&
-                            (PLD_ST_MitSheltronBoss == (int)BossAvoidance.On && InBossEncounter() ||
-                             PLD_ST_MitSheltronBoss == (int)BossAvoidance.Off))
-                            return OriginalHook(Sheltron);
-
-                        // Reprisal
-                        if (IsEnabled(Preset.PLD_ST_AdvancedMode_Reprisal) &&
-                            Role.CanReprisal() && RaidWideCasting(5f))
-                            return Role.Reprisal;
-
-                        // Divine Veil
-                        if (IsEnabled(Preset.PLD_ST_AdvancedMode_DivineVeil) &&
-                            ActionReady(DivineVeil) && RaidWideCasting(5f) &&
-                            NumberOfAlliesInRange(DivineVeil) >= GetPartyMembers().Count * .75 &&
-                            (IsNotEnabled(Preset.PLD_ST_AdvancedMode_DivineVeilAvoid) ||
-                             !HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget, true)))
-                            return OriginalHook(DivineVeil);
-
-                        // Sentinel / Guardian
-                        if (IsEnabled(Preset.PLD_ST_AdvancedMode_Sentinel) &&
-                            ActionReady(OriginalHook(Sentinel)) &&
-                            PlayerHealthPercentageHp() < PLD_ST_Sentinel_Health)
-                            return OriginalHook(Sentinel);
-
-                        // Bulwark
-                        if (IsEnabled(Preset.PLD_ST_AdvancedMode_Bulwark) &&
-                            ActionReady(Bulwark) &&
-                            PlayerHealthPercentageHp() < PLD_ST_Bulwark_Health)
-                            return Bulwark;
-                    }
                 }
 
                 // Requiescat Phase
@@ -648,6 +482,12 @@ internal partial class PLD : Tank
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
+            
+            if (PLD_AoE_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
+            {
+                if (TryUseMits(RotationMode.advanced, ref actionID))
+                    return actionID;
+            }
 
             if (HasBattleTarget())
             {
@@ -691,60 +531,6 @@ internal partial class PLD : Tank
                     if (IsEnabled(Preset.PLD_AoE_AdvancedMode_BladeOfHonor) &&
                         LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)
                         return OriginalHook(Requiescat);
-
-                    // Mitigation
-                    if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Mitigation) &&
-                        IsPlayerTargeted() && !JustMitted && InCombat())
-                    {
-                        // Hallowed Ground
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_HallowedGround) &&
-                            ActionReady(HallowedGround) &&
-                            PlayerHealthPercentageHp() < PLD_AoE_HallowedGround_Health)
-                            return HallowedGround;
-
-                        // Sheltron
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Sheltron) &&
-                            LevelChecked(Sheltron) &&
-                            Gauge.OathGauge >= PLD_AoE_SheltronOption &&
-                            PlayerHealthPercentageHp() < PLD_AoE_Sheltron_Health &&
-                            !HasStatusEffect(Buffs.Sheltron) &&
-                            !HasStatusEffect(Buffs.HolySheltron))
-                            return OriginalHook(Sheltron);
-
-                        // Reprisal
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Reprisal) &&
-                            Role.CanReprisal(PLD_AoE_Reprisal_Health, PLD_AoE_Reprisal_Count, false))
-                            return Role.Reprisal;
-
-                        // Divine Veil
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_DivineVeil) &&
-                            ActionReady(DivineVeil) &&
-                            NumberOfAlliesInRange(DivineVeil) >= GetPartyMembers().Count * .75 &&
-                            PlayerHealthPercentageHp() < PLD_AoE_DivineVeil_Health)
-                            return DivineVeil;
-
-                        // Rampart
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Rampart) &&
-                            Role.CanRampart(PLD_AoE_Rampart_Health))
-                            return Role.Rampart;
-
-                        // Arm's Length
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_ArmsLength) &&
-                            Role.CanArmsLength(PLD_AoE_ArmsLength_Count))
-                            return Role.ArmsLength;
-
-                        // Bulwark
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Bulwark) &&
-                            ActionReady(Bulwark) &&
-                            PlayerHealthPercentageHp() < PLD_AoE_Bulwark_Health)
-                            return Bulwark;
-
-                        // Sentinel / Guardian
-                        if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Sentinel) &&
-                            ActionReady(OriginalHook(Sentinel)) &&
-                            PlayerHealthPercentageHp() < PLD_AoE_Sentinel_Health)
-                            return OriginalHook(Sentinel);
-                    }
                 }
 
                 // Confiteor & Blades
@@ -790,6 +576,22 @@ internal partial class PLD : Tank
             }
 
             return FastBlade;
+        }
+    }
+    
+    internal class PLD_AoE_BasicCombo : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.PLD_AoE_BasicCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Prominence)
+                return actionID;
+            
+            if (ComboAction is TotalEclipse && ComboTimer > 0 && LevelChecked(Prominence))
+                return Prominence;
+
+            return TotalEclipse;
         }
     }
 

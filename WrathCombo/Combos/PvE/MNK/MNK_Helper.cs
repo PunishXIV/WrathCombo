@@ -260,11 +260,11 @@ internal partial class MNK
     private static bool CanMantra() =>
         ActionReady(Mantra) &&
         !HasStatusEffect(Buffs.Mantra) &&
-        RaidWideCasting(3f);
+        GroupDamageIncoming(3f);
 
     private static bool CanRoE() =>
         ActionReady(RiddleOfEarth) &&
-        RaidWideCasting(2f) &&
+        GroupDamageIncoming(2f) &&
         !HasStatusEffect(Buffs.RiddleOfEarth) &&
         !HasStatusEffect(Buffs.EarthsRumination);
 

@@ -207,6 +207,7 @@ public static class ConflictingPluginsChecks
         /// <remarks>
         ///     <b>Key <c>0</c></b> is Ground Targeting enabled meta action,<br />
         ///     <b>Key <c>1</c></b> is Beneficial Actions enabled meta action,<br />
+        ///     <b>Key <c>2</c></b> is Hostile Actions enabled meta action,<br />
         ///     <b>Key <c>3</c>+</b> are all overlapping action retargets.
         /// </remarks>
         public uint[] ConflictingActions = [0, 0];
@@ -227,7 +228,7 @@ public static class ConflictingPluginsChecks
             if (!ThrottlePassed(forceRefresh: forceRefresh))
                 return;
 
-            ConflictingActions = [0, 0];
+            ConflictingActions = [0, 0, 0];
 
             // Check if the user has bunny recently
             if (CustomComboFunctions.JustUsed(NIN.Rabbit, 45) &&
@@ -261,6 +262,17 @@ public static class ConflictingPluginsChecks
                 PluginLog.Verbose(
                     $"[ConflictingPlugins] [{Name}] Beneficial Actions are Redirected");
                 ConflictingActions[1] = 1;
+                MarkConflict();
+                conflictedThisCheck = true;
+            }
+            
+            // Check if all Hostile Actions are redirected
+            if (IPC.AreHostileActionsRedirected() &&
+                wrathRetargeted.Any(x => x.IsEnemyTargetable()))
+            {
+                PluginLog.Verbose(
+                    $"[ConflictingPlugins] [{Name}] Hostile Actions are Redirected");
+                ConflictingActions[2] = 1;
                 MarkConflict();
                 conflictedThisCheck = true;
             }

@@ -95,7 +95,7 @@ internal partial class SCH : Healer
             if (ActionWatching.NumberOfGcdsUsed > 3 && CanChainStrategem && CanWeave())
                 return ChainStratagem;
 
-            if (IsEnabled(Preset.SCH_AoE_ADV_DPS_EnergyDrain) && ActionReady(EnergyDrain) &&
+            if (ActionReady(EnergyDrain) &&
                 AetherflowCD <= 10 && CanWeave())
                 return EnergyDrain;
 
@@ -215,10 +215,10 @@ internal partial class SCH : Healer
             if (EndAetherpact)
                 return DissolveUnion;
             
-            if (ActionReady(Expedient) && RaidWideCasting())
+            if (ActionReady(Expedient) && GroupDamageIncoming())
                 return Expedient;
             
-            if (ActionReady(SacredSoil) && RaidWideCasting())
+            if (ActionReady(SacredSoil) && GroupDamageIncoming())
                 return SacredSoil.Retarget([Succor, Concitation], SimpleTarget.Self);
             
             if (ActionReady(Aetherflow) && !HasAetherflow &&

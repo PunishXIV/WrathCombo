@@ -327,6 +327,7 @@ internal class Presets : ConfigWindow
                     case Job.ADV:
                         {
                             All.Config.Draw(preset);
+                            Bozja.Config.Draw(preset);
                             Variant.Config.Draw(preset);
                             OccultCrescent.Config.Draw(preset);
                             break;

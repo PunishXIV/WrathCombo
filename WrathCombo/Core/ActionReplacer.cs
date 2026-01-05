@@ -9,7 +9,6 @@ using ECommons.GameHelpers;
 using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +19,6 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using WrathCombo.Services.ActionRequestIPC;
-using static FFXIVClientStructs.FFXIV.Client.Game.UI.LimitBreakController.Delegates;
 
 #endregion
 
@@ -58,7 +55,7 @@ internal sealed class ActionReplacer : IDisposable
 
         // ReSharper disable once RedundantCast
         // Must keep the nint cast
-        getActionHook = Svc.Hook.HookFromAddress<GetActionDelegate>((nint) ActionManager.Addresses.GetAdjustedActionId.Value, GetAdjustedActionDetour);
+        getActionHook = Svc.Hook.HookFromAddress<GetActionDelegate>((nint)ActionManager.Addresses.GetAdjustedActionId.Value, GetAdjustedActionDetour);
         isActionReplaceableHook = Svc.Hook.HookFromAddress<IsActionReplaceableDelegate>(Service.Address.IsActionIdReplaceable, IsActionReplaceableDetour);
 
         getActionHook.Enable();
@@ -80,6 +77,19 @@ internal sealed class ActionReplacer : IDisposable
     /// <returns> The result from the hook. </returns>
     internal uint OriginalHook(uint actionID) =>
         getActionHook.Original(_actionManager, actionID);
+
+    private bool actionReplacementEnabled;
+    public void EnableActionReplacingIfRequired()
+    {
+        if (actionReplacementEnabled)
+            Service.ActionReplacer.getActionHook.Enable();
+    }
+
+    public void DisableActionReplacingIfRequired()
+    {
+        actionReplacementEnabled = Service.ActionReplacer.getActionHook.IsEnabled;
+        Service.ActionReplacer.getActionHook.Disable();
+    }
 
 #pragma warning disable CS1573
     /// <summary>
@@ -177,7 +187,7 @@ internal sealed class ActionReplacer : IDisposable
     public static unsafe bool ClassLocked()
     {
         if (DisableJobCheck) return false;
-        
+
         if (Player.Object is null) return false;
 
         if (Player.Level <= 35) return false;

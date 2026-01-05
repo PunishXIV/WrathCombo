@@ -153,7 +153,7 @@ internal partial class SAM
 
     private static bool CanUseThirdEye =>
         ActionReady(OriginalHook(ThirdEye)) &&
-        (RaidWideCasting(2f) || !IsInParty());
+        (GroupDamageIncoming(2f) || !IsInParty());
 
     //Auto Meditate
     private static bool CanUseMeditate =>
@@ -172,8 +172,9 @@ internal partial class SAM
     {
         float gcd = GetAdjustedRecastTime(ActionType.Action, Hakaze) / 100f;
 
-        if (ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.Tendo) &&
-            !HasStatusEffect(Buffs.MeikyoShisui) && InActionRange(OriginalHook(Hakaze)) &&
+        if (ActionReady(MeikyoShisui) &&
+            !HasStatusEffect(Buffs.Tendo) &&
+            !HasStatusEffect(Buffs.MeikyoShisui) &&
             (JustUsed(Yukikaze, 2f) || HasSetsu && (JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f))))
         {
             if (InBossEncounter())
@@ -406,7 +407,7 @@ internal partial class SAM
         ];
 
         internal override UserData ContentCheckConfig => SAM_Balance_Content;
-        public override Preset Preset => Preset.SAM_ST_Opener;
+
         public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays { get; set; } =
         [
             ([2], () => SAM_Opener_PrePullDelay)
@@ -416,6 +417,8 @@ internal partial class SAM
         [
             ([2], 11, () => !TargetNeedsPositionals())
         ];
+
+        public override Preset Preset => Preset.SAM_ST_Opener;
 
         public override bool HasCooldowns() =>
             IsOffCooldown(MeikyoShisui) &&
@@ -465,7 +468,9 @@ internal partial class SAM
         [
             ([2], 11, () => !TargetNeedsPositionals())
         ];
+
         public override Preset Preset => Preset.SAM_ST_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
             GetRemainingCharges(Role.TrueNorth) >= 1 &&
@@ -516,7 +521,9 @@ internal partial class SAM
         [
             ([2], 11, () => !TargetNeedsPositionals())
         ];
+
         public override Preset Preset => Preset.SAM_ST_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
             GetRemainingCharges(Role.TrueNorth) >= 1 &&
@@ -550,12 +557,12 @@ internal partial class SAM
             Shoha,
             KaeshiNamikiri,
             Kasha,
-            Shinten,
+            Shinten, //18
             Gekko,
             Gyoten, //20
             Gyofu,
             Yukikaze,
-            Shinten,
+            Shinten, //23
             TendoSetsugekka,
             Gyoten, //25
             TendoKaeshiSetsugekka
@@ -575,9 +582,12 @@ internal partial class SAM
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([25], () => Kenki < SAMKenki.Gyoten)
+            ([18, 23], () => Kenki < SAMKenki.Shinten),
+            ([20, 25], () => Kenki < SAMKenki.Gyoten)
         ];
+
         public override Preset Preset => Preset.SAM_ST_Opener;
+
         public override bool HasCooldowns() =>
             GetRemainingCharges(MeikyoShisui) is 2 &&
             GetRemainingCharges(Role.TrueNorth) >= 1 &&

@@ -289,49 +289,56 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
     private void OnFrameworkUpdate(IFramework framework)
     {
-        if (Player.Object is not null)
+        try
         {
-            JobID = Player.Job;
-            CustomComboFunctions.IsMoving(); //Hacky workaround to ensure it's always running
+            if (Player.Object is not null)
+            {
+                JobID = Player.Job;
+                CustomComboFunctions.IsMoving(); //Hacky workaround to ensure it's always running
+            }
+
+            BlueMageService.PopulateBLUSpells();
+            TargetHelper.Draw();
+            AutoRotationController.Run();
+            Configuration.ProcessSaveQueue();
+
+            Service.Configuration.SetActionChanging();
+
+            // Refresh the user's inventory periodically throughout fights
+            if (Player.Available &&
+                CustomComboFunctions.CombatEngageDuration() > TimeSpan.FromSeconds(45) &&
+                EzThrottler.Throttle("UserInventoryRefresh", TimeSpan.FromMinutes(1)))
+                Task.Run(Service.Inventory.RefreshInventory);
+
+            if (Player.Available && Player.IsDead)
+                ActionRetargeting.Retargets.Clear();
+
+            PresetStorage.HandleDuplicatePresets();
+            PresetStorage.HandleCurrentConflicts();
+
+            // Skip the IPC checking if hidden
+            if (DtrBarEntry.UserHidden) return;
+
+            var autoOn = IPC.GetAutoRotationState();
+            var icon = new IconPayload(autoOn
+                ? BitmapFontIcon.SwordUnsheathed
+                : BitmapFontIcon.SwordSheathed);
+
+            var text = autoOn ? ": On" : ": Off";
+            if (!Service.Configuration.ShortDTRText && autoOn)
+                text += $" ({P.IPCSearch.ActiveJobPresets} active)";
+            var ipcControlledText =
+                P.UIHelper.AutoRotationStateControlled() is not null
+                    ? " (Locked)"
+                    : "";
+
+            var payloadText = new TextPayload(text + ipcControlledText);
+            DtrBarEntry.Text = new SeString(icon, payloadText);
         }
-
-        BlueMageService.PopulateBLUSpells();
-        TargetHelper.Draw();
-        AutoRotationController.Run();
-        Configuration.ProcessSaveQueue();
-
-        Service.Configuration.SetActionChanging();
-        
-        // Refresh the user's inventory periodically throughout fights
-        if (Player.Available &&
-            CustomComboFunctions.CombatEngageDuration() > TimeSpan.FromSeconds(45) &&
-            EzThrottler.Throttle("UserInventoryRefresh", TimeSpan.FromMinutes(1)))
-            Task.Run(Service.Inventory.RefreshInventory);
-
-        if (Player.Available && Player.IsDead)
-            ActionRetargeting.Retargets.Clear();
-        
-        PresetStorage.HandleDuplicatePresets();
-        PresetStorage.HandleCurrentConflicts();
-
-        // Skip the IPC checking if hidden
-        if (DtrBarEntry.UserHidden) return;
-
-        var autoOn = IPC.GetAutoRotationState();
-        var icon = new IconPayload(autoOn
-            ? BitmapFontIcon.SwordUnsheathed
-            : BitmapFontIcon.SwordSheathed);
-
-        var text = autoOn ? ": On" : ": Off";
-        if (!Service.Configuration.ShortDTRText && autoOn)
-            text += $" ({P.IPCSearch.ActiveJobPresets} active)";
-        var ipcControlledText =
-            P.UIHelper.AutoRotationStateControlled() is not null
-                ? " (Locked)"
-                : "";
-
-        var payloadText = new TextPayload(text + ipcControlledText);
-        DtrBarEntry.Text = new SeString(icon, payloadText);
+        catch(Exception ex)
+        {
+            ex.Log($"Pls no crash game ty");
+        }
     }
 
     private static void ResetFeatures()

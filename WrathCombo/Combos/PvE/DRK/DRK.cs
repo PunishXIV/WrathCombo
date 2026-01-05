@@ -1,6 +1,5 @@
 #region
 
-using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -35,6 +34,25 @@ internal partial class DRK : Tank
                 return newAction;
 
             return HardSlash;
+        }
+    }
+    
+    internal class DRK_AoE_BasicCombo : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRK_AoE_BasicCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not StalwartSoul)
+                return actionID;
+            
+            const Combo comboFlags = Combo.AoE | Combo.Basic;
+            var newAction = Unleash;
+
+            if (TryGetAction<Core>(comboFlags, ref newAction))
+                return newAction;
+
+            return Unleash;
         }
     }
     
@@ -95,15 +113,7 @@ internal partial class DRK : Tank
                 HasBattleTarget())
                 return Unmend;
 
-            var inMitigationContent =
-                ContentCheck.IsInConfiguredContent(
-                    DRK_ST_MitDifficulty,
-                    DRK_ST_MitDifficultyListSet
-                );
-
-            if (IsEnabled(Preset.DRK_ST_Mitigation) &&
-                inMitigationContent &&
-                TryGetAction<Mitigation>(comboFlags, ref newAction))
+            if (TryGetAction<Mitigation>(comboFlags, ref newAction))
                 return newAction;
 
             var specialManaOnly = true;
@@ -207,9 +217,8 @@ internal partial class DRK : Tank
             if (IsEnabled(Preset.DRK_AoE_CDs) &&
                 TryGetAction<Cooldown>(comboFlags, ref newAction))
                 return newAction;
-
-            if (IsEnabled(Preset.DRK_AoE_Mitigation) &&
-                TryGetAction<Mitigation>(comboFlags, ref newAction))
+            
+            if (TryGetAction<Mitigation>(comboFlags, ref newAction))
                 return newAction;
 
             if (IsEnabled(Preset.DRK_AoE_Spenders) &&

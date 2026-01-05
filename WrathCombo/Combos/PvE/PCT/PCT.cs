@@ -265,11 +265,11 @@ internal partial class PCT : Caster
                 
                 if (IsEnabled(Preset.PCT_ST_AdvancedMode_Addle) && 
                     Role.CanAddle()  && CanWeave() &&
-                    RaidWideCasting())
+                    GroupDamageIncoming())
                     return Role.Addle;
 
                 if (IsEnabled(Preset.PCT_ST_AdvancedMode_Tempura) && CanWeave() &&
-                    RaidWideCasting() && !JustUsed(Role.Addle, 6))
+                    GroupDamageIncoming() && !JustUsed(Role.Addle, 6))
                 {
                     if (LevelChecked(TempuraCoat) && IsOffCooldown(TempuraCoat))
                         return TempuraCoat;

@@ -108,6 +108,12 @@ internal partial class MCH
 
                 case Preset.MCH_ST_Adv_Reassemble:
 
+                    DrawHorizontalRadioButton(MCH_ST_Adv_ReassembleChoice,
+                        "Save for 2 minute windows", "Saves Reassemble for 2 minute windows/nTHIS WILL OVERCAP UR REASSEMBLE.", 0);
+
+                    DrawHorizontalRadioButton(MCH_ST_Adv_ReassembleChoice,
+                        "Use every minute", "Uses Reassemble every minute/whenever ur highest lvl tool is off cooldown.", 1);
+
                     DrawSliderInt(0, 50, MCH_ST_ReassembleHPOption,
                         "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
@@ -251,6 +257,7 @@ internal partial class MCH
             MCH_ST_HyperchargeBossOption = new("MCH_ST_HyperchargeBossOption"),
             MCH_ST_HyperchargeHPOption = new("MCH_ST_HyperchargeHPOption", 10),
             MCH_ST_ReassembleBossOption = new("MCH_ST_ReassembleBossOption"),
+            MCH_ST_Adv_ReassembleChoice = new("MCH_ST_Adv_ReassembleChoice"),
             MCH_ST_ReassembleHPOption = new("MCH_ST_ReassembleHPOption", 10),
             MCH_ST_ToolsBossOption = new("MCH_ST_ToolsBossOption"),
             MCH_ST_ToolsHPOption = new("MCH_ST_ToolsHPOption", 10),

@@ -313,7 +313,11 @@ internal partial class RDM
             ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([13, 15, 19, 20], () => !InMeleeRange())];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([13, 15, 19, 20], () => !InMeleeRange()),
+            ([35],() => !HasStatusEffect(Buffs.Swiftcast))
+        ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
         public override Preset Preset => Preset.RDM_Balance_Opener;
@@ -377,7 +381,11 @@ internal partial class RDM
             ([1], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
         ];
 
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([15, 20], () => !InMeleeRange())];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = 
+        [
+            ([15, 20], () => !InMeleeRange()),
+            ([35], () => !HasStatusEffect(Buffs.Swiftcast))
+        ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
         public override Preset Preset => Preset.RDM_Balance_Opener;
