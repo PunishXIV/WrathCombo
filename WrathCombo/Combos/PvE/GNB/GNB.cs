@@ -488,7 +488,7 @@ internal partial class GNB : Tank
                 return SonicBreak;
 
             //Reign of Beasts
-            if (ShouldUseReignOfBeasts(Preset.GNB_GF_Reign))
+            if (ShouldUseReignOfBeastsGF(Preset.GNB_GF_Reign))
                 return OriginalHook(ReignOfBeasts);
 
             //Gnashing Fang 2 - filler boogaloo

@@ -146,6 +146,9 @@ internal sealed class ActionReplacer : IDisposable
         try
         {
             if (ClassLocked() ||
+                Player.Object is null ||
+                !GenericHelpers.IsScreenReady() ||
+                !Svc.ClientState.IsLoggedIn ||
                 (DisabledJobsPVE.Any(x => x == Player.Job) && !Svc.ClientState.IsPvP) ||
                 (DisabledJobsPVP.Any(x => x == Player.Job) && Svc.ClientState.IsPvP))
                 return OriginalHook(actionID);

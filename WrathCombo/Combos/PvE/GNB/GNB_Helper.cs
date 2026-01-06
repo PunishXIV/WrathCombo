@@ -720,7 +720,20 @@ internal partial class GNB : Tank
         GunStep == 0 && //not in GF combo
         IsOnCooldown(DoubleDown) && //DD is on cooldown
         GetRemainingCharges(GnashingFang) < 2 && //has less than 2 GF charges
-        (!Slow || !HasStatusEffect(Buffs.ReadyToBreak)); //Sonic Break safety - if we're 2.5 & we have Sonic Break, we want to use it first before Reign - otherwise just send it after everything
+        (!Slow || 
+         !HasStatusEffect(Buffs.ReadyToBreak) || 
+         IsEnabled(Preset.GNB_ST_Advanced) && IsNotEnabled(Preset.GNB_ST_SonicBreak)); //Sonic Break safety - if we're 2.5 & we have Sonic Break, we want to use it first before Reign - otherwise just send it after everything
+    
+    private static bool ShouldUseReignOfBeastsGF(Preset preset) =>
+        IsEnabled(preset) && //option enabled
+        CanReign && //can use
+        HasNM && //has No Mercy buff
+        GunStep == 0 && //not in GF combo
+        IsOnCooldown(DoubleDown) && //DD is on cooldown
+        GetRemainingCharges(GnashingFang) < 2 && //has less than 2 GF charges
+        (!Slow || 
+         !HasStatusEffect(Buffs.ReadyToBreak) || 
+         IsNotEnabled(Preset.GNB_GF_SonicBreak)); //Sonic Break safety - if we're 2.5 & we have Sonic Break, we want to use it first before Reign - otherwise just send it after everything
 
     private static bool ShouldUseLightningShot(Preset preset, int holdforproc) =>
         IsEnabled(preset) && //option enabled

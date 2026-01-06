@@ -38,6 +38,8 @@ using WrathCombo.Services.IPC;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
 using WrathCombo.Services.ActionRequestIPC;
+using GenericHelpers = ECommons.GenericHelpers;
+
 namespace WrathCombo;
 
 /// <summary> Main plugin implementation. </summary>
@@ -291,33 +293,50 @@ public sealed partial class WrathCombo : IDalamudPlugin
     {
         try
         {
-            if (Player.Object is not null)
-            {
-                JobID = Player.Job;
-                CustomComboFunctions.IsMoving(); //Hacky workaround to ensure it's always running
-            }
+            #region Checks that don't require the Player to be loaded
+
+            Service.Configuration.SetActionChanging();
+            Configuration.ProcessSaveQueue();
+
+            PresetStorage.HandleDuplicatePresets();
+            PresetStorage.HandleCurrentConflicts();
+
+            //Hacky workaround to ensure it's always running
+            CustomComboFunctions.IsMoving();
+
+            #endregion
+
+            // Skip Player-requiring code if not ready
+            if (Player.Object is null ||
+                !GenericHelpers.IsScreenReady() ||
+                !Svc.ClientState.IsLoggedIn)
+                return;
+
+            #region Checks and Updates that require the Player
+
+            JobID = Player.Job;
 
             BlueMageService.PopulateBLUSpells();
             TargetHelper.Draw();
+
             AutoRotationController.Run();
-            Configuration.ProcessSaveQueue();
 
             Service.Configuration.SetActionChanging();
 
             // Refresh the user's inventory periodically throughout fights
-            if (Player.Available &&
-                CustomComboFunctions.CombatEngageDuration() > TimeSpan.FromSeconds(45) &&
+            if (CustomComboFunctions.CombatEngageDuration() > TimeSpan.FromSeconds(45) &&
                 EzThrottler.Throttle("UserInventoryRefresh", TimeSpan.FromMinutes(1)))
                 Task.Run(Service.Inventory.RefreshInventory);
 
             if (Player.Available && Player.IsDead)
                 ActionRetargeting.Retargets.Clear();
 
-            PresetStorage.HandleDuplicatePresets();
-            PresetStorage.HandleCurrentConflicts();
+            #endregion
 
             // Skip the IPC checking if hidden
             if (DtrBarEntry.UserHidden) return;
+
+            #region DTR Bar Updating
 
             var autoOn = IPC.GetAutoRotationState();
             var icon = new IconPayload(autoOn
@@ -334,10 +353,12 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
             var payloadText = new TextPayload(text + ipcControlledText);
             DtrBarEntry.Text = new SeString(icon, payloadText);
+
+            #endregion
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            ex.Log($"Pls no crash game ty");
+            ex.Log("Pls no crash game ty");
         }
     }
 

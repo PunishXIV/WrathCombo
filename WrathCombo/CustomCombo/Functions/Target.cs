@@ -18,19 +18,15 @@ namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
 {
+    private static ulong? OverrideTargetID;
+
     /// <summary> Will be checked at CurrentTarget, if set then this takes priority otherwise hard target.
     /// <br />Main use will be for Autorotation so we don't have to enforce actual targeting. </summary>
     public static IGameObject? OverrideTarget
     {
-        get
-        {
-            if (field.IsStillAround())
-                return field;
-            else
-                return null;
-        }
-        set;
-    } = null;
+        get => OverrideTargetID.GetObject();
+        set => OverrideTargetID = value?.GameObjectId;
+    }
 
     /// <summary> Gets the current target or null. </summary>
     public static IGameObject? CurrentTarget => OverrideTarget ?? Svc.Targets.Target;

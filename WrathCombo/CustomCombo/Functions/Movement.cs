@@ -18,6 +18,8 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Checks if the player is moving. </summary>
     public static unsafe bool IsMoving()
     {
+        if (Player.Object is null)
+            return false;
         var agentMap = AgentMap.Instance();
         if (agentMap is null)
             return false;

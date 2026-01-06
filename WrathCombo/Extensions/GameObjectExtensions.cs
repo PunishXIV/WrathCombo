@@ -194,16 +194,6 @@ public static class GameObjectExtensions
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it return
-        ///     <see langword="null" /> if the target is not still loaded in the player's
-        ///     game.
-        /// </summary>
-        public IGameObject? IfStillAround() =>
-            obj != null && Svc.Objects.SearchById(obj.GameObjectId) != null
-                ? obj
-                : null;
-
-        /// <summary>
-        ///     Can be chained onto a <see cref="IGameObject" /> to make it return
         ///     <see langword="null" /> if the target cannot be affected by the action.
         /// </summary>
         public unsafe IGameObject? IfCanUseOn(uint actionId) =>
@@ -310,12 +300,6 @@ public static class GameObjectExtensions
         /// </summary>
         public bool IsAPlayer() =>
             obj != null && obj is IPlayerCharacter;
-
-        /// <summary>
-        ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
-        ///     boolean check for if the object is still loaded in the player's game.
-        /// </summary>
-        public bool IsStillAround() => IfStillAround(obj) != null;
 
         /// <summary>
         ///     Can be chained onto a <see cref="IGameObject" /> to make it a quick
