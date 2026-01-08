@@ -1,4 +1,10 @@
-﻿using Dalamud.Interface.Colors;
+﻿using System;
+using System.Linq;
+using System.Numerics;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
+using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
@@ -13,6 +19,24 @@ internal partial class AST
         public static UserIntArray
             AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [12,11,10,9,8,6,7,5,4,3,2,1]),
             AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 6, 1, 4, 7, 2, 8, 9, 5]);
+        
+        public static UserIntArray AST_CardPriorities_Balance = new(
+            "AST_CardPriorities_Balance",
+            // Actual Priorities
+            [(int)Job.SAM, (int)Job.NIN, (int)Job.DRG, (int)Job.MNK, (int)Job.VPR, 
+             (int)Job.DRK, (int)Job.RPR,
+             // The rest ...
+             (int)Job.GNB, (int)Job.WAR, (int)Job.PLD,
+            ]);
+        
+        public static UserIntArray AST_CardPriorities_Spear = new(
+            "AST_CardPriorities_Spear",
+            // Actual Priorities
+            [(int)Job.PCT, (int)Job.RDM, (int)Job.SMN, (int)Job.MCH, (int)Job.BRD, 
+             (int)Job.BLM, (int)Job.DNC,
+             // The rest ...
+             (int)Job.SGE, (int)Job.WHM, (int)Job.SCH, (int)Job.AST,
+            ]);
         
         public static UserInt
             //HEALS
@@ -394,6 +418,26 @@ internal partial class AST
                     DrawRadioButton(AST_QuickTarget_Override, "Hard Target Override", "Overrides selection with hard target, if you have one that is in range and does not have damage down or rez sickness.", 1, descriptionAsTooltip: true);
                     DrawRadioButton(AST_QuickTarget_Override, "UI MouseOver Override", "Overrides selection with UI MouseOver target, if you have one that is in range and does not have damage down or rez sickness.", 2, descriptionAsTooltip: true);
                     DrawRadioButton(AST_QuickTarget_Override, "Any MouseOver Override", "Overrides selection with UI or Nameplate or Model MouseOver target (in that order), if you have one that is in range and does not have damage down or rez sickness.", 3, descriptionAsTooltip: true);
+                    
+                    ImGuiEx.Spacing(new Vector2(0f, 20f));
+                    
+                    DrawJobPriorityDragDrop(
+                        AST_CardPriorities_Balance,
+                        Enum.GetValues<Job>().Where(IsMeleeOrTank).ToList(),
+                        description: "Drag to set balance targeting priority");
+                    DrawJobPriorityDragDrop(
+                        AST_CardPriorities_Spear,
+                        Enum.GetValues<Job>().Where(IsRangedOrHealer).ToList(),
+                        description: "Drag to set spear targeting priority");
+
+                    bool IsMeleeOrTank (Job job) =>
+                        DefaultCombatJobs.Contains(job) &&
+                        (CustomComboFunctions.JobRoles.Melee.Contains((uint)job) ||
+                         CustomComboFunctions.JobRoles.Tank.Contains((uint)job));
+
+                    bool IsRangedOrHealer(Job job) =>
+                        DefaultCombatJobs.Contains(job) &&
+                        CustomComboFunctions.JobRoles.Ranged.Contains((uint)job);
                     break;
                 
                 case Preset.AST_Retargets_EarthlyStar:
