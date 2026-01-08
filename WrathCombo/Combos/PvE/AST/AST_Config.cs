@@ -109,6 +109,7 @@ internal partial class AST
             AST_AoE_SimpleHeals_WeaveHoroscopeHeal = new("AST_AoE_SimpleHeals_WeaveHoroscopeHeal"),
             AST_AoE_SimpleHeals_WeaveStellarDetonation = new("AST_AoE_SimpleHeals_WeaveStellarDetonation"),
             //DPS
+            AST_Cards_QuickTargetCards_Custom = new("AST_Cards_QuickTargetCards_Custom"),
             AST_ST_DPS_OverwriteHealCards = new("AST_ST_DPS_OverwriteHealCards"),
             AST_AOE_DPS_OverwriteHealCards = new("AST_AOE_DPS_OverwriteHealCards"),
             AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true);
@@ -405,6 +406,38 @@ internal partial class AST
                 
                 #region Standalone
                 case Preset.AST_Cards_QuickTargetCards:
+                    
+                    DrawAdditionalBoolChoice(AST_Cards_QuickTargetCards_Custom,
+                        "Use Custom Priority", "",
+                        indentDescription: true);
+                    if (AST_Cards_QuickTargetCards_Custom)
+                    {
+                        ImGui.Indent();
+                        ImGui.TextWrapped("Will search the list from top to bottom for the first eligible (No DD / Sickness) within the appropriate role for the card." +
+                                          "\nIf no eligible party member is found within the appropriate role, it will search for the first eligible party member from the other role.");
+                        ImGui.Unindent();
+                        
+                        ImGuiEx.Spacing(new Vector2(0f, 20f));
+
+                        DrawJobPriorityDragDrop(
+                            AST_CardPriorities_Balance,
+                            Enum.GetValues<Job>().Where(IsMeleeOrTank).ToList(),
+                            description: "Drag to set balance targeting priority");
+                        DrawJobPriorityDragDrop(
+                            AST_CardPriorities_Spear,
+                            Enum.GetValues<Job>().Where(IsRangedOrHealer).ToList(),
+                            description: "Drag to set spear targeting priority");
+
+                        bool IsMeleeOrTank(Job job) =>
+                            DefaultCombatJobs.Contains(job) &&
+                            (CustomComboFunctions.JobRoles.Melee.Contains((uint)job) ||
+                             CustomComboFunctions.JobRoles.Tank.Contains((uint)job));
+
+                        bool IsRangedOrHealer(Job job) =>
+                            DefaultCombatJobs.Contains(job) &&
+                            CustomComboFunctions.JobRoles.Ranged.Contains((uint)job);
+                    }
+                    
                     DrawAdditionalBoolChoice(AST_QuickTarget_Manuals,
                         "Also Retarget manually-used Cards",
                         "Will also automatically target Cards that you manually use, as in, those outside of your damage rotations.",
@@ -419,26 +452,8 @@ internal partial class AST
                     DrawRadioButton(AST_QuickTarget_Override, "UI MouseOver Override", "Overrides selection with UI MouseOver target, if you have one that is in range and does not have damage down or rez sickness.", 2, descriptionAsTooltip: true);
                     DrawRadioButton(AST_QuickTarget_Override, "Any MouseOver Override", "Overrides selection with UI or Nameplate or Model MouseOver target (in that order), if you have one that is in range and does not have damage down or rez sickness.", 3, descriptionAsTooltip: true);
                     
-                    ImGuiEx.Spacing(new Vector2(0f, 20f));
+                    break; 
                     
-                    DrawJobPriorityDragDrop(
-                        AST_CardPriorities_Balance,
-                        Enum.GetValues<Job>().Where(IsMeleeOrTank).ToList(),
-                        description: "Drag to set balance targeting priority");
-                    DrawJobPriorityDragDrop(
-                        AST_CardPriorities_Spear,
-                        Enum.GetValues<Job>().Where(IsRangedOrHealer).ToList(),
-                        description: "Drag to set spear targeting priority");
-
-                    bool IsMeleeOrTank (Job job) =>
-                        DefaultCombatJobs.Contains(job) &&
-                        (CustomComboFunctions.JobRoles.Melee.Contains((uint)job) ||
-                         CustomComboFunctions.JobRoles.Tank.Contains((uint)job));
-
-                    bool IsRangedOrHealer(Job job) =>
-                        DefaultCombatJobs.Contains(job) &&
-                        CustomComboFunctions.JobRoles.Ranged.Contains((uint)job);
-                    break;
                 
                 case Preset.AST_Retargets_EarthlyStar:
                     ImGui.Indent();
