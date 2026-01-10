@@ -26,6 +26,9 @@ internal class FeaturesWindow : ConfigWindow
         Bozja,
         Eureka,
         OccultCrescent,
+        BlueDPS,
+        BlueTank,
+        BlueHealer,
     }
 
     private const StringComparison Lower = StringComparison.OrdinalIgnoreCase;
