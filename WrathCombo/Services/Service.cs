@@ -16,4 +16,7 @@ internal class Service
 
     /// <summary> Gets or sets the plugin icon replacer. </summary>
     internal static ActionReplacer ActionReplacer { get; set; } = null!;
+
+    /// <summary> Gets or sets the inventory service. </summary>
+    internal static Inventory Inventory { get; set; } = null!;
 }

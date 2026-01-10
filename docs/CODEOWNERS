@@ -42,6 +42,10 @@
 /WrathCombo/Core/                                     @Taurenkey
 /WrathCombo/Services/IPC_Subscriber/Orbwalker.cs      @Taurenkey
 /WrathCombo/CustomCombo/Functions/Target.cs           @Taurenkey @Kaeris-Tempest
+/WrathCombo/Extensions/GameObjectExtensions.cs        @zbee
+/WrathCombo/Extensions/UIntExtensions.cs              @zbee
+/WrathCombo/Core/ItemUsage.cs                         @zbee
+/WrathCombo/Services/Inventory.cs                     @zbee
 /WrathCombo/Core/ActionRetargeting.cs                 @zbee
 /WrathCombo/CustomCombo/SimpleTarget.cs               @zbee
 /docs/                                                @zbee

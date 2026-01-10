@@ -54,8 +54,18 @@ internal class UserInt : UserData
         MasterList.Add(ConfigName, this);
     }
 
+    #region Implicit Conversions
+
     public static implicit operator int(UserInt o) =>
         Configuration.GetCustomIntValue(o.ConfigName);
+    
+    public static implicit operator StatPotionType(UserInt o) =>
+        (StatPotionType)Configuration.GetCustomIntValue(o.ConfigName);
+    
+    public static implicit operator PotionLevel(UserInt o) =>
+        (PotionLevel)Configuration.GetCustomIntValue(o.ConfigName);
+
+    #endregion
 
     public int Value
     {

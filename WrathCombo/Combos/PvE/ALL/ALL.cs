@@ -12,6 +12,12 @@ internal partial class All
     /// Used to block user input.
     public const uint SavageBlade = 11;
 
+    /// <summary>
+    ///     Used to convey an item will be used.<br/>
+    ///     Usually Potions, but also Phoenix Down.
+    /// </summary>
+    public const uint Item = 16436;
+
     public static class Buffs
     {
         public const ushort
