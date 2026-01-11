@@ -335,6 +335,9 @@ internal partial class DRK
             // Skip the late LivingShadow and aligning HardSlash, if Standard
             ([6, 9], () => HasOtherJobsBuffs ||
                 DRK_ST_OpenerAction == (int)PullAction.Unmend),
+            // Skip Blood spenders when no Blood
+            ([18], () =>
+                Gauge.Blood < 50),
         ];
 
         public override Preset Preset => Preset.DRK_ST_BalanceOpener;
