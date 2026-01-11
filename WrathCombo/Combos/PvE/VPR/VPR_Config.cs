@@ -27,11 +27,14 @@ internal partial class VPR
                     break;
 
                 case Preset.VPR_ST_Reawaken:
-                    DrawHorizontalRadioButton(VPR_ST_ReAwaken_SubOption,
-                        "All content", $"Uses {Reawaken.ActionName()} regardless of content.", 0);
+                    DrawSliderInt(0, 100, VPR_ST_ReawakenBossOption,
+                        "Bosses Only. Stop using at Enemy HP %.");
 
-                    DrawHorizontalRadioButton(VPR_ST_ReAwaken_SubOption,
-                        "Boss encounters Only", $"Only uses {Reawaken.ActionName()} when in Boss encounters.", 1);
+                    DrawSliderInt(0, 100, VPR_ST_ReawakenBossAddsOption,
+                        "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+
+                    DrawSliderInt(0, 100, VPR_ST_ReawakenTrashOption,
+                        "Non boss encounter. Stop using at Enemy HP %.");
 
                     DrawSliderInt(0, 5, VPR_ST_ReAwaken_Threshold,
                         $"Set a HP% threshold to use {Reawaken.ActionName()} whenever available. (Bosses Only)");
@@ -128,8 +131,10 @@ internal partial class VPR
             VPR_ST_SerpentsIre_SubOption = new("VPR_ST_SerpentsIre_SubOption", 1),
             VPR_ST_UncoiledFury_HoldCharges = new("VPR_ST_UncoiledFury_HoldCharges", 1),
             VPR_ST_UncoiledFury_Threshold = new("VPR_ST_UncoiledFury_Threshold", 1),
-            VPR_ST_ReAwaken_SubOption = new("VPR_ST_ReAwaken_SubOption"),
-            VPR_ST_ReAwaken_Threshold = new("VPR_ST_ReAwaken_Threshold", 1),
+            VPR_ST_ReawakenBossOption = new("VPR_ST_ReawakenBossOption"),
+            VPR_ST_ReawakenBossAddsOption = new("VPR_ST_ReawakenBossAddsOption", 10),
+            VPR_ST_ReawakenTrashOption = new("VPR_ST_ReawakenTrashOption", 25),
+            VPR_ST_ReAwaken_Threshold = new("VPR_ST_ReAwaken_Threshold", 5),
             VPR_ST_SecondWind_Threshold = new("VPR_ST_SecondWindThreshold", 40),
             VPR_ST_Bloodbath_Threshold = new("VPR_ST_BloodbathThreshold", 30),
             VPR_AoE_UncoiledFury_Threshold = new("VPR_AoE_UncoiledFury_Threshold", 1),
