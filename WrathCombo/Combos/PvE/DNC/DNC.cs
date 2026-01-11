@@ -89,8 +89,6 @@ internal partial class DNC : PhysicalRanged
                 GetCooldownRemainingTime(StandardStep) <
                 longAlignmentThreshold && // Up or about to be (some anti-drift)
                 !HasStatusEffect(Buffs.FinishingMoveReady) &&
-                (IsOffCooldown(Flourish) ||
-                 GetCooldownRemainingTime(Flourish) > 5) &&
                 !HasStatusEffect(Buffs.TechnicalFinish);
 
             #endregion
@@ -386,14 +384,14 @@ internal partial class DNC : PhysicalRanged
                 return Tillana;
 
             // ST Saber Dance
-            if (IsEnabled(Preset.DNC_ST_Adv_SaberDance) &&
+            if ((IsEnabled(Preset.DNC_ST_Adv_SaberDance) &&
                 ActionReady(SaberDance) &&
                 Gauge.Esprit >=
-                DNC_ST_Adv_SaberThreshold || // Above esprit threshold use
+                DNC_ST_Adv_SaberThreshold) || // Above esprit threshold use
                 (HasStatusEffect(Buffs.TechnicalFinish) &&
-                 Gauge.Esprit >= 50) && // Burst
+                 Gauge.Esprit >= 50 && // Burst
                 (GetCooldownRemainingTime(TechnicalStep) > 5 ||
-                 IsOffCooldown(TechnicalStep))) // Tech is up
+                 IsOffCooldown(TechnicalStep)))) // Tech is up
                 return SaberDance;
 
             // ST combos and burst attacks
@@ -734,9 +732,6 @@ internal partial class DNC : PhysicalRanged
             var needToStandardOrFinish =
                 ActionReady(StandardStep) && // Up
                 GetTargetHPPercent() > targetHpThresholdStandard && // HP% check
-                (IsOffCooldown(
-                     TechnicalStep) || // Checking burst is ready for standard
-                 GetCooldownRemainingTime(TechnicalStep) > 5) && // Don't mangle
                 LevelChecked(StandardStep);
 
             var needToFinish =
@@ -748,8 +743,6 @@ internal partial class DNC : PhysicalRanged
                 IsEnabled(Preset.DNC_AoE_Adv_SS) && // Enabled
                 DNC_AoE_Adv_SS_IncludeSS == (int)IncludeStep.Yes &&
                 !HasStatusEffect(Buffs.FinishingMoveReady) &&
-                (IsOffCooldown(Flourish) ||
-                 GetCooldownRemainingTime(Flourish) > 5) &&
                 !HasStatusEffect(Buffs.TechnicalFinish);
 
             #endregion
