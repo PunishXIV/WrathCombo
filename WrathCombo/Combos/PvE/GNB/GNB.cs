@@ -1,6 +1,5 @@
 #region Dependencies
 
-using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -55,7 +54,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //No Mercy
-            if (ShouldUseNoMercy(Preset.GNB_ST_Simple, 0, 0))
+            if (ShouldUseNoMercy(Preset.GNB_ST_Simple, 0))
                 return NoMercy;
 
             //Bloodfest
@@ -182,7 +181,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //No Mercy
-            if (ShouldUseNoMercy(Preset.GNB_ST_NoMercy, GNB_ST_NoMercyStop, GNB_ST_NoMercy_SubOption))
+            if (ShouldUseNoMercy(Preset.GNB_ST_NoMercy, HPThresholNM))
                 return NoMercy;
 
             //Bloodfest
@@ -298,7 +297,7 @@ internal partial class GNB : Tank
             {
                 if (CanWeave())
                 {
-                    if (ShouldUseNoMercy(Preset.GNB_AoE_NoMercy, 10, 0))
+                    if (ShouldUseNoMercy(Preset.GNB_AoE_NoMercy, 10))
                         return NoMercy;
 
                     if (LevelChecked(FatedBrand) &&
@@ -370,7 +369,7 @@ internal partial class GNB : Tank
             {
                 if (CanWeave())
                 {
-                    if (ShouldUseNoMercy(Preset.GNB_AoE_NoMercy, GNB_AoE_NoMercyStop, 0))
+                    if (ShouldUseNoMercy(Preset.GNB_AoE_NoMercy, GNB_AoE_NoMercyStop))
                         return NoMercy;
 
                     if (LevelChecked(FatedBrand) &&
@@ -436,7 +435,7 @@ internal partial class GNB : Tank
                 return OriginalHook(Continuation);
 
             //No Mercy
-            if (ShouldUseNoMercy(Preset.GNB_GF_NoMercy, 0, 0))
+            if (ShouldUseNoMercy(Preset.GNB_GF_NoMercy, 0))
                 return NoMercy;
 
             //Bloodfest

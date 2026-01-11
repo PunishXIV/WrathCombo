@@ -152,7 +152,7 @@ internal partial class PLD : Tank
                 if (!InMeleeRange())
                 {
                     // Holy Spirit (Not Moving)
-                    if (HasDivineMagicMP &&
+                    if (HasDivineMagicMP && LevelChecked(HolySpirit) &&
                         TimeMoving.Ticks == 0)
                         return HolySpirit;
 

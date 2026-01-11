@@ -3,8 +3,6 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
@@ -78,6 +76,10 @@ internal partial class GNB : Tank
         JustUsed(Role.ArmsLength) ||
         JustUsed(Role.Rampart) ||
         JustUsed(Superbolide);
+
+    private static int HPThresholNM =>
+        GNB_ST_NM_BossOption == 1 ||
+        !TargetIsBoss() ? GNB_ST_NM_HPOption : 0;
     #endregion
     
     #region Auto Mitigation System
@@ -93,13 +95,25 @@ internal partial class GNB : Tank
     private static bool CanUseNonBossMits(RotationMode rotationFlags, ref uint actionID)
     {
         #region Initial Bailout
-        if (!InCombat() || !CanWeave() || InBossEncounter() || JustMitted || !IsEnabled(Preset.GNB_Mitigation_NonBoss))  
+        if (!InCombat() || InBossEncounter() || !IsEnabled(Preset.GNB_Mitigation_NonBoss))  
             return false;
+        #endregion
+        
+        #region Superbolide Invulnerability
+        var bolideThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 20 : GNB_Mitigation_NonBoss_SuperBolide_Health;
+        
+        if (IsEnabled(Preset.GNB_Mitigation_NonBoss_SuperBolideEmergency) && ActionReady(Superbolide) &&
+            PlayerHealthPercentageHp() <= bolideThreshold)
+        {
+            actionID = Superbolide;
+            return true;
+        }
         #endregion
         
         #region Heart Of Stone/Corundrum Use Always
         if (IsEnabled(Preset.GNB_Mitigation_NonBoss_HeartOfStone) && 
             ActionReady(OriginalHook(HeartOfStone)) && 
+            CanWeave() && !JustMitted &&
             !HasStatusEffect(Buffs.Superbolide))
         {
             actionID = OriginalHook(HeartOfStone);
@@ -112,7 +126,7 @@ internal partial class GNB : Tank
             ? 10 
             : GNB_Mitigation_NonBoss_MitigationThreshold;
         
-        if (GetAvgEnemyHPPercentInRange(5f) <= mitigationThreshold) 
+        if (GetAvgEnemyHPPercentInRange(5f) <= mitigationThreshold || !CanWeave() || JustMitted) 
             return false;
         #endregion
         
@@ -632,7 +646,7 @@ internal partial class GNB : Tank
     #endregion
 
     #region Rotation
-    private static bool ShouldUseNoMercy(Preset preset, int stop, int boss)
+    private static bool ShouldUseNoMercy(Preset preset, int stop)
     {
         var condition =
             IsEnabled(preset) && //option enabled
@@ -640,9 +654,8 @@ internal partial class GNB : Tank
             NMcd < 0.5f && //off cooldown
             HasBattleTarget() && //has a battle target
             GetTargetDistance() <= 5 && //not far from target
-            GetTargetHPPercent() > stop && //HP% stop condition
-            (boss == 0 || boss == 1 && InBossEncounter()); //boss encounter condition
-
+            GetTargetHPPercent() > stop; //HP% stop condition
+        
         return
             (Slow && condition && CanWeave()) || //weave anywhere
             (Fast && condition && CanDelayedWeave(0.9f)); //late weave only

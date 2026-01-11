@@ -40,6 +40,9 @@ internal partial class PLD
                 case Preset.PLD_Mitigation_NonBoss:
                     DrawSliderFloat(0, 100, PLD_Mitigation_NonBoss_MitigationThreshold, "Stop using when average health percentage of nearby enemies is below set. \n(Set to 0 to disable this check) ", decimals: 0);
                     break;
+                case Preset.PLD_Mitigation_NonBoss_HallowedGroundEmergency:
+                    DrawSliderInt(1,100, PLD_Mitigation_NonBoss_HallowedGround_Health, "Player HP% to use Emergency Hallowed Ground at or below.");
+                    break;
                 case Preset.PLD_Mitigation_NonBoss_DivineVeil:
                     DrawSliderInt(1,100, PLD_Mitigation_NonBoss_DivineVeil_Health, "Player HP% to use Divine Veil at or below (100 = Disable check)");
                     break;
@@ -335,6 +338,7 @@ internal partial class PLD
             PLD_AoE_MitOptions = new("PLD_AoE_MitOptions"),
             PLD_ST_Advanced_MitOptions = new("PLD_ST_Advanced_MitOptions"),
             PLD_AoE_Advanced_MitOptions = new("PLD_AoE_Advanced_MitOptions"),
+            PLD_Mitigation_NonBoss_HallowedGround_Health = new("PLD_Mitigation_NonBoss_HallowedGround_Health", 20),
             PLD_Mitigation_NonBoss_DivineVeil_Health = new("PLD_Mitigation_NonBoss_DivineVeil_Health", 80),
             PLD_Mitigation_Boss_SheltronOvercap_Threshold = new("PLD_Mitigation_Boss_SheltronOvercap_Threshold", 100),
             

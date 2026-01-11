@@ -1,3 +1,4 @@
+using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -11,43 +12,45 @@ internal partial class GNB
 {
     internal static class Config
     {
+        private const int NumMitigationOptions = 8;
         public static UserInt
             GNB_ST_MitOptions = new("GNB_ST_MitOptions"),
             GNB_AoE_MitOptions = new("GNB_AoE_MitOptions"),
             GNB_ST_Advanced_MitOptions = new("GNB_ST_Advanced_MitOptions"),
             GNB_AoE_Advanced_MitOptions = new("GNB_AoE_Advanced_MitOptions"),
+            GNB_Mitigation_NonBoss_SuperBolide_Health = new("GNB_Mitigation_NonBoss_SuperBolide_Health", 20),
             GNB_Mitigation_Boss_Aurora_Health = new("GNB_Mitigation_Boss_Aurora_Health", 99),
             GNB_Mitigation_Boss_HeartOfStone_Health = new("GNB_Mitigation_Boss_HeartOfStone_Health", 80),
-            
-            GNB_Opener_StartChoice = new("GNB_Opener_StartChoice", 0),
-            GNB_Opener_NM = new("GNB_Opener_NM", 0),
-            GNB_ST_NoMercyStop = new("GNB_ST_NoMercyStop", 5),
+            GNB_Opener_StartChoice = new("GNB_Opener_StartChoice"),
+            GNB_Opener_NM = new("GNB_Opener_NM"),
+            GNB_ST_NM_BossOption = new("GNB_ST_NM_BossOption"),
+            GNB_ST_NM_HPOption = new("GNB_ST_NM_HPOption", 10),
             GNB_ST_NoMercy_SubOption = new("GNB_ST_NoMercy_SubOption", 1),
-            GNB_ST_Overcap_Choice = new("GNB_ST_Overcap_Choice", 0),
-            GNB_ST_HoldLightningShot = new("GNB_ST_HoldLightningShot", 0),
-            GNB_ST_BurstStrike_Setup = new("GNB_ST_BurstStrike_Setup", 0),
+            GNB_ST_Overcap_Choice = new("GNB_ST_Overcap_Choice"),
+            GNB_ST_HoldLightningShot = new("GNB_ST_HoldLightningShot"),
+            GNB_ST_BurstStrike_Setup = new("GNB_ST_BurstStrike_Setup"),
             GNB_AoE_FatedCircle_BurstStrike = new("GNB_AoE_FatedCircle_BurstStrike", 1),
-            GNB_AoE_Overcap_Choice = new("GNB_AoE_Overcap_Choice", 0),
+            GNB_AoE_Overcap_Choice = new("GNB_AoE_Overcap_Choice"),
             GNB_AoE_NoMercyStop = new("GNB_AoE_NoMercyStop", 5),
-            GNB_AoE_FatedCircle_Setup = new("GNB_AoE_FatedCircle_Setup", 0),
-            GNB_AoE_SonicBreak_EarlyOrLate = new("GNB_AoE_SonicBreak_EarlyOrLate", 0),
-            GNB_NM_Features_Weave = new("GNB_NM_Feature_Weave", 0),
-            GNB_GF_Features_Choice = new("GNB_GF_Choice", 0),
-            GNB_GF_Overcap_Choice = new("GNB_GF_Overcap_Choice", 0),
-            GNB_GF_BurstStrike_Setup = new("GNB_GF_BurstStrike_Setup", 0),
+            GNB_AoE_FatedCircle_Setup = new("GNB_AoE_FatedCircle_Setup"),
+            GNB_AoE_SonicBreak_EarlyOrLate = new("GNB_AoE_SonicBreak_EarlyOrLate"),
+            GNB_NM_Features_Weave = new("GNB_NM_Feature_Weave"),
+            GNB_GF_Features_Choice = new("GNB_GF_Choice"),
+            GNB_GF_Overcap_Choice = new("GNB_GF_Overcap_Choice"),
+            GNB_GF_BurstStrike_Setup = new("GNB_GF_BurstStrike_Setup"),
             GNB_ST_Balance_Content = new("GNB_ST_Balance_Content", 1),
             GNB_Mit_Superbolide_Health = new("GNB_Mit_Superbolide_Health", 30),
             GNB_Mit_Corundum_Health = new("GNB_Mit_Corundum_Health", 60),
-            GNB_Mit_Aurora_Charges = new("GNB_Mit_Aurora_Charges", 0),
+            GNB_Mit_Aurora_Charges = new("GNB_Mit_Aurora_Charges"),
             GNB_Mit_Aurora_Health = new("GNB_Mit_Aurora_Health", 60),
             GNB_Mit_HeartOfLight_PartyRequirement = new("GNB_Mit_HeartOfLight_PartyRequirement", (int)PartyRequirement.Yes),
             GNB_Mit_ArmsLength_Boss = new("GNB_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
-            GNB_Mit_ArmsLength_EnemyCount = new("GNB_Mit_ArmsLength_EnemyCount", 0);
+            GNB_Mit_ArmsLength_EnemyCount = new("GNB_Mit_ArmsLength_EnemyCount");
 
         public static UserFloat
             GNB_Mitigation_Boss_Camouflage_Threshold = new("GNB_Mitigation_Boss_Camouflage_Threshold", 80f),
             GNB_Mitigation_NonBoss_MitigationThreshold = new("GNB_Mitigation_NonBoss_MitigationThreshold", 20f);
-        
+
         public static UserBool
             GNB_Mitigation_Boss_Camouflage_Align = new("GNB_Mitigation_Boss_Camouflage_Align", true),
             GNB_Mitigation_Boss_Nebula_First = new("GNB_Mitigation_Boss_Nebula_First", true);
@@ -65,86 +68,91 @@ internal partial class GNB
             GNB_Mitigation_Boss_Reprisal_Difficulty = new("GNB_Mitigation_Boss_Reprisal_Difficulty", [true, false]),
             GNB_Mit_Superbolide_Difficulty = new("GNB_Mit_Superbolide_Difficulty", [true, false]);
 
-        public static readonly ContentCheck.ListSet 
+        public static readonly ContentCheck.ListSet
             GNB_Boss_Mit_DifficultyListSet = ContentCheck.ListSet.CasualVSHard,
             GNB_Mit_Superbolide_DifficultyListSet = ContentCheck.ListSet.CasualVSHard;
-
-        private const int NumMitigationOptions = 8;
 
         internal static void Draw(Preset preset)
         {
             switch (preset)
             {
                 #region Combo Mitigations
+
                 case Preset.GNB_ST_Simple:
                     DrawHorizontalRadioButton(GNB_ST_MitOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(GNB_ST_MitOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
                     break;
-               
+
                 case Preset.GNB_AoE_Simple:
                     DrawHorizontalRadioButton(GNB_AoE_MitOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(GNB_AoE_MitOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
                     break;
-                
+
                 case Preset.GNB_ST_Advanced:
                     DrawHorizontalRadioButton(GNB_ST_Advanced_MitOptions, "Include Advanced Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(GNB_ST_Advanced_MitOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
                     break;
-                
+
                 case Preset.GNB_AoE_Advanced:
                     DrawHorizontalRadioButton(GNB_AoE_Advanced_MitOptions, "Include Advanced Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(GNB_AoE_Advanced_MitOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
                     break;
-                
+
                 case Preset.GNB_Mitigation_NonBoss:
                     DrawSliderFloat(0, 100, GNB_Mitigation_NonBoss_MitigationThreshold, "Stop using when average health percentage of nearby enemies is below set. \n(Set to 0 to disable this check) ", decimals: 0);
                     break;
-                
-                case Preset.GNB_Mitigation_Boss_Aurora:
-                    DrawSliderInt(1, 100, GNB_Mitigation_Boss_Aurora_Health, "Player HP% to use Aurora at or below (100 = Disable check)");
+
+                case Preset.GNB_Mitigation_NonBoss_SuperBolideEmergency:
+                    DrawSliderInt(1, 100, GNB_Mitigation_NonBoss_SuperBolide_Health, "Player HP% to use Emergency Superbolide at or below.");
                     break;
-                
+
+                case Preset.GNB_Mitigation_Boss_Aurora:
+                    DrawSliderInt(1, 100, GNB_Mitigation_Boss_Aurora_Health, "Player HP% to use Aurora at or below. (100 = Disable check)");
+                    break;
+
                 case Preset.GNB_Mitigation_Boss_HeartOfStone_OnCD:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_HeartOfStone_OnCD_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_HeartOfStone_OnCD_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     DrawSliderInt(1, 100, GNB_Mitigation_Boss_HeartOfStone_Health, "Player HP% to use Heart of Stone/Corundum at or below (100 = Disable check)");
                     break;
-                
+
                 case Preset.GNB_Mitigation_Boss_HeartOfStone_TankBuster:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_HeartOfStone_TankBuster_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_HeartOfStone_TankBuster_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                
+
                 case Preset.GNB_Mitigation_Boss_Rampart:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Rampart_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Rampart_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                
+
                 case Preset.GNB_Mitigation_Boss_Nebula:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Nebula_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Nebula_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     DrawAdditionalBoolChoice(GNB_Mitigation_Boss_Nebula_First, "Use Nebula First", "Uses Nebula before Rampart");
                     break;
-                
+
                 case Preset.GNB_Mitigation_Boss_Camouflage:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Camouflage_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Camouflage_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     DrawSliderFloat(1, 100, GNB_Mitigation_Boss_Camouflage_Threshold, "Will use Camouflage as extra tankbuster mitigation if under this HP%", decimals: 0);
                     DrawAdditionalBoolChoice(GNB_Mitigation_Boss_Camouflage_Align, "Align Camouflage", "Tries to align Camouflage with Rampart for tankbusters.");
                     break;
-                
+
                 case Preset.GNB_Mitigation_Boss_HeartOfLight:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_HeartOfLight_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_HeartOfLight_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                    
+
                 case Preset.GNB_Mitigation_Boss_Reprisal:
-                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Reprisal_Difficulty, GNB_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(GNB_Mitigation_Boss_Reprisal_Difficulty, GNB_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
+
                 #endregion
-                
+
                 #region Single-Target
+
                 case Preset.GNB_ST_Opener:
                     DrawHorizontalRadioButton(GNB_Opener_NM,
                         $"Normal {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} normally in all openers", 0);
@@ -152,25 +160,31 @@ internal partial class GNB
                         $"Early {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} as soon as possible in all openers", 1);
                     ImGui.Spacing();
                     if (DrawHorizontalRadioButton(GNB_Opener_StartChoice,
-                        $"Normal Opener", $"Starts opener with {LightningShot.ActionName()}", 0))
+                        "Normal Opener", $"Starts opener with {LightningShot.ActionName()}", 0))
                     {
                         if (!CustomComboFunctions.InCombat())
                             Opener().OpenerStep = 1;
                     }
                     DrawHorizontalRadioButton(GNB_Opener_StartChoice,
-                        $"Early Opener", $"Starts opener with {KeenEdge.ActionName()} instead, skipping {LightningShot.ActionName()}", 1);
+                        "Early Opener", $"Starts opener with {KeenEdge.ActionName()} instead, skipping {LightningShot.ActionName()}", 1);
                     ImGui.Spacing();
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
                     break;
 
                 case Preset.GNB_ST_NoMercy:
-                    DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,
-                        "All content", $"Uses {CustomComboFunctions.GetActionName(NoMercy)} regardless of content", 0);
-                    DrawHorizontalRadioButton(GNB_ST_NoMercy_SubOption,
-                        "Boss encounters Only", $"Only uses {CustomComboFunctions.GetActionName(NoMercy)} when in Boss encounters", 1);
+                    DrawSliderInt(0, 50, GNB_ST_NM_HPOption,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
-                    DrawSliderInt(0, 75, GNB_ST_NoMercyStop,
-                        " Stop usage if Target HP% is below set value.\n  To disable this, set value to 0");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow,
+                        "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(GNB_ST_NM_BossOption,
+                        "Non-Bosses", "Only apply the HP check above to non-bosses.", 0);
+
+                    DrawHorizontalRadioButton(GNB_ST_NM_BossOption,
+                        "All Enemies", "Apply the HP check above to all enemies.", 1);
+                    ImGui.Unindent();
                     break;
 
                 case Preset.GNB_ST_BurstStrike:
@@ -195,6 +209,7 @@ internal partial class GNB
                 #endregion
 
                 #region AoE
+
                 case Preset.GNB_AoE_NoMercy:
                     DrawSliderInt(0, 75, GNB_AoE_NoMercyStop,
                         " Stop usage if Target HP% is below set value.\n To disable this, set value to 0");
@@ -223,6 +238,7 @@ internal partial class GNB
                     DrawHorizontalRadioButton(GNB_AoE_SonicBreak_EarlyOrLate,
                         "Late Usage", $"Uses {SonicBreak.ActionName()} as the last GCD in burst", 1);
                     break;
+
                 #endregion
 
                 #region One-Button Mitigation
@@ -299,9 +315,11 @@ internal partial class GNB
                     DrawPriorityInput(GNB_Mit_Priorities, NumMitigationOptions, 7,
                         "Nebula Priority:");
                     break;
+
                 #endregion
 
                 #region Other
+
                 case Preset.GNB_NM_Features:
                     DrawHorizontalRadioButton(GNB_NM_Features_Weave,
                         "Weave-Only", "Uses cooldowns only when inside a weave window (excludes No Mercy)", 0);
