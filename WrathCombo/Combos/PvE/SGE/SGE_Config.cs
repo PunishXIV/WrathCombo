@@ -37,6 +37,7 @@ internal partial class SGE
                     ImGui.Indent();
                     DrawRoundedSliderFloat(0, 4, SGE_ST_DPS_EukrasianDosisUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
                     ImGui.Unindent();
+                    DrawAdditionalBoolChoice(SGE_ST_DPS_EDosis_TwoTarget, "Two target dotting", "Will maintain Damage over time spells on two targets if applicable.");
                     break;
 
                 case Preset.SGE_ST_DPS_Lucid:
@@ -389,19 +390,20 @@ internal partial class SGE
         #region DPS
 
         public static UserBool
-            SGE_ST_DPS_Phlegma_Burst = new("SGE_ST_DPS_Phlegma_Burst");
+            SGE_ST_DPS_EDosis_TwoTarget = new("SGE_ST_DPS_EDosis_TwoTarget", true),
+            SGE_ST_DPS_Phlegma_Burst = new("SGE_ST_DPS_Phlegma_Burst", true);
 
         public static UserBoolArray
-            SGE_ST_DPS_Movement = new("SGE_ST_DPS_Movement");
+            SGE_ST_DPS_Movement = new("SGE_ST_DPS_Movement", [true, true, true]);
 
         public static UserInt
             SGE_ST_DPS_Adv = new("SGE_ST_DPS_Adv"),
-            SGE_Eukrasia_Mode = new("SGE_Eukrasia_Mode", 1),
+            SGE_Eukrasia_Mode = new("SGE_Eukrasia_Mode", 2),
             SGE_SelectedOpener = new("SGE_SelectedOpener"),
             SGE_ST_DPS_Lucid = new("SGE_ST_DPS_Lucid", 6500),
             SGE_ST_DPS_Rhizo = new("SGE_ST_DPS_Rhizo", 1),
             SGE_ST_DPS_Phlegma = new("SGE_ST_DPS_Phlegma"),
-            SGE_ST_DPS_EukrasianDosisBossOption = new("SGE_ST_DPS_EukrasianDosisBossOption"),
+            SGE_ST_DPS_EukrasianDosisBossOption = new("SGE_ST_DPS_EukrasianDosisBossOption", 0),
             SGE_ST_DPS_EukrasianDosisBossAddsOption = new("SGE_ST_DPS_EukrasianDosisBossAddsOption", 100),
             SGE_ST_DPS_EukrasianDosisTrashOption = new("SGE_ST_DPS_EukrasianDosisTrashOption", 50),
             SGE_ST_DPS_AddersgallProtect = new("SGE_ST_DPS_AddersgallProtect", 3),
@@ -422,17 +424,17 @@ internal partial class SGE
         #region Healing
 
         public static UserBool
-            SGE_ST_Heal_IncludeShields = new("SGE_ST_Heal_IncludeShields"),
-            SGE_ST_Heal_KeracholeBossOption = new("SGE_ST_Heal_KeracholeBossOption"),
-            SGE_ST_Heal_PanhaimaBossOption = new("SGE_ST_Heal_PanhaimaBossOption"),
-            SGE_ST_Heal_PhysisBossOption = new("SGE_ST_Heal_PhysisBossOption"),
-            SGE_ST_Heal_HolosBossOption = new("SGE_ST_Heal_HolosBossOption"),
+            SGE_ST_Heal_IncludeShields = new("SGE_ST_Heal_IncludeShields", true),
+            SGE_ST_Heal_KeracholeBossOption = new("SGE_ST_Heal_KeracholeBossOption", true),
+            SGE_ST_Heal_PanhaimaBossOption = new("SGE_ST_Heal_PanhaimaBossOption", true),
+            SGE_ST_Heal_PhysisBossOption = new("SGE_ST_Heal_PhysisBossOption", true),
+            SGE_ST_Heal_HolosBossOption = new("SGE_ST_Heal_HolosBossOption", true),
             SGE_ST_Heal_HaimaBossOption = new("SGE_ST_Heal_HaimaBossOption"),
             SGE_ST_Heal_KrasisBossOption = new("SGE_ST_Heal_KrasisBossOption"),
-            SGE_ST_Heal_Haima_TankOnly = new("SGE_ST_Heal_Haima_TankOnly"),
-            SGE_ST_Heal_Krasis_TankOnly = new("SGE_ST_Heal_Krasis_TankOnly"),
-            SGE_ST_Heal_Taurochole_TankOnly = new("SGE_ST_Heal_Taurochole_TankOnly"),
-            SGE_AoE_Heal_KeracholeTrait = new("SGE_AoE_Heal_KeracholeTrait");
+            SGE_ST_Heal_Haima_TankOnly = new("SGE_ST_Heal_Haima_TankOnly", true),
+            SGE_ST_Heal_Krasis_TankOnly = new("SGE_ST_Heal_Krasis_TankOnly", true),
+            SGE_ST_Heal_Taurochole_TankOnly = new("SGE_ST_Heal_Taurochole_TankOnly", true),
+            SGE_AoE_Heal_KeracholeTrait = new("SGE_AoE_Heal_KeracholeTrait", true);
 
         public static UserInt
             SGE_Heal_HoldAddersgall = new("SGE_Heal_HoldAddersgall", 1),
@@ -465,8 +467,8 @@ internal partial class SGE
             SGE_Mit_AoE_PrognosisOption = new("SGE_Mit_AoE_PrognosisOption");
 
         public static UserIntArray
-            SGE_ST_Heals_Priority = new("SGE_ST_Heals_Priority", [3, 11, 10, 6, 7, 8, 9, 12, 1, 2, 4, 5]),
-            SGE_AoE_Heals_Priority = new("SGE_AoE_Heals_Priority", [1, 7, 2, 3, 5, 8, 4, 6, 9]);
+            SGE_ST_Heals_Priority = new("SGE_ST_Heals_Priority", [5, 10, 11, 7, 6, 8, 9, 12, 1, 2, 3, 4]),
+            SGE_AoE_Heals_Priority = new("SGE_AoE_Heals_Priority", [1, 3, 2, 7, 8, 4, 5, 6, 9]);
 
         public static UserBoolArray
             SGE_ST_Heal_EDiagnosisOpts = new("SGE_ST_Heal_EDiagnosisOpts"),

@@ -1327,6 +1327,10 @@ public enum Preset
     [ParentCombo(AST_ST_Heals)]
     [CustomComboInfo("Lady Option", "Adds Lady of Crowns, if the card is drawn.", Job.AST)]
     AST_ST_Heals_SoloLady = 1070,
+    
+    [ParentCombo(AST_ST_Heals)]
+    [CustomComboInfo("Neutral Sect Option", "Adds Neutral Sect/Sun Sign.", Job.AST)]
+    AST_ST_Heals_NeutralSect = 1097,
 
     [AutoAction(true, true)]
     [ReplaceSkill(AST.Helios, AST.AspectedHelios, AST.HeliosConjuction)]
@@ -1487,7 +1491,7 @@ public enum Preset
     AST_Retargets_EarthlyStar = 1093,
     #endregion
 
-    // Last value = 1095
+    // Last value = 1097
 
     #endregion
 
@@ -2091,7 +2095,7 @@ public enum Preset
 
     #endregion
 
-    // Last value = 3069
+    // Last value = 3070
 
     #endregion
 
@@ -8181,7 +8185,7 @@ public enum Preset
     WHM_STHeals_Temperance = 19310,
 
     [ParentCombo(WHM_STHeals)]
-    [CustomComboInfo("Asylum Option", "Adds Asylum.", Job.WHM)]
+    [CustomComboInfo("Asylum Option", "Adds Asylum at your feet.", Job.WHM)]
     [Retargeted(WHM.Asylum)]
     WHM_STHeals_Asylum = 19311,
 

@@ -85,24 +85,16 @@ internal partial class AST : Healer
             #endregion
 
             #region GCDS
+            var dotAction = OriginalHook(Combust);
+            CombustList.TryGetValue(dotAction, out var dotDebuffID);
+            var target = IsMoving() && !HasStatusEffect(Buffs.Lightspeed)
+                ? SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 30, 99)
+                : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 2);
+            
+            if (target is not null && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
+                return dotAction.Retarget(replacedActions, target);
 
-            #region Movement Options
-            if (IsMoving())
-            {
-                var dotAction = OriginalHook(Combust);
-                CombustList.TryGetValue(dotAction, out var dotDebuffID);
-                var target = SimpleTarget.DottableEnemy(
-                    dotAction, dotDebuffID, 0, 20, 99);
-
-                if (target is not null && !HasStatusEffect(Buffs.Lightspeed))
-                    return dotAction.Retarget(MaleficList.ToArray(), target);
-            }
-            #endregion
-
-            return NeedsDoT() && PartyInCombat()?
-                OriginalHook(Combust) :
-                actionID;
-
+            return actionID;
             #endregion
         }
     }
@@ -333,9 +325,20 @@ internal partial class AST : Healer
             }
             #endregion
 
-            if (IsEnabled(Preset.AST_ST_DPS_CombustUptime)
-                && NeedsDoT() && PartyInCombat())
-                return OriginalHook(Combust);
+            if (IsEnabled(Preset.AST_ST_DPS_CombustUptime) && PartyInCombat())
+            {
+                var dotAction = OriginalHook(Combust);
+                CombustList.TryGetValue(dotAction, out var dotDebuffID);
+                var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, computeHpThreshold(), AST_ST_DPS_CombustUptime_Threshold, 2);
+                
+                //Single Target Dotting, needed because dottableenemy will not maintain single dot on main target of more than one target exists. 
+                if (NeedsDoT()) 
+                    return OriginalHook(Combust);
+                
+                //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
+                if (target is not null && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && AST_ST_DPS_CombustUptime_TwoTarget)
+                    return dotAction.Retarget(replacedActions, target);
+            }
 
             //Alternate Mode (idles as Malefic)
             if (alternateMode)

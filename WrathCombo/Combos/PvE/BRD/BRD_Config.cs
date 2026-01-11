@@ -21,13 +21,18 @@ internal partial class BRD
             BRD_AoESecondWindThreshold = new("BRD_AoESecondWindThreshold", 40),
             BRD_Adv_Opener_Selection = new("BRD_Adv_Opener_Selection", 0),
             BRD_Balance_Content = new("BRD_Balance_Content", 1),
-            BRD_Adv_DoT_Threshold = new("BRD_Adv_DoT_Threshold", 30),
-            BRD_Adv_DoT_SubOption = new("BRD_Adv_DoT_SubOption", 0),
+            BRD_Adv_DoT_Refresh = new("BRD_Adv_DoT_Refresh", 4),
+            BRD_ST_DPS_DotBossOption = new("BRD_ST_DPS_DotBossOption", 0),
+            BRD_ST_DPS_DotBossAddsOption = new("BRD_ST_DPS_DotBossAddsOption", 100),
+            BRD_ST_DPS_DotTrashOption = new("BRD_ST_DPS_DotTrashOption", 30),
             BRD_Adv_Buffs_Threshold = new("BRD_Adv_Buffs_Threshold", 30),
             BRD_Adv_Buffs_SubOption = new("BRD_Adv_Buffs_SubOption", 0),
+            BRD_AoE_Adv_MultidotBossOption = new("BRD_AoE_Adv_MultidotBossOption", 0),
+            BRD_AoE_Adv_MultidotBossAddsOption = new("BRD_AoE_Adv_MultidotBossAddsOption", 100),
+            BRD_AoE_Adv_MultidotTrashOption = new("BRD_AoE_Adv_MultidotTrashOption", 30),
+            BRD_AoE_Adv_Multidot_Refresh = new("BRD_AoE_Adv_Multidot_Refresh", 4),
             BRD_AoE_Adv_Buffs_Threshold = new("BRD_AoE_Adv_Buffs_Threshold", 30),
-            BRD_AoE_Adv_Buffs_SubOption = new("BRD_AoE_Adv_Buffs_SubOption", 0),
-            BRD_AoE_Adv_Multidot_HPThreshold = new("BRD_AoE_Adv_Multidot_HPThreshold", 40);
+            BRD_AoE_Adv_Buffs_SubOption = new("BRD_AoE_Adv_Buffs_SubOption", 0);
 
         public static UserBoolArray
             BRD_AoE_Adv_Buffs_Options = new("BRD_AoE_Adv_Buffs_Options"),
@@ -52,18 +57,13 @@ internal partial class BRD
                     break;
 
                 case Preset.BRD_Adv_DoT:
-                    DrawSliderInt(0, 100, BRD_Adv_DoT_Threshold,
-                        $"Stop using Dots on targets below this HP % (0% = always use, 100% = never use).");
-                    ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
-                    DrawHorizontalRadioButton(BRD_Adv_DoT_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
-                    DrawHorizontalRadioButton(BRD_Adv_DoT_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
-                    ImGui.Unindent();
+                    DrawSliderInt(0, 100, BRD_ST_DPS_DotBossOption, "Bosses Only. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, BRD_ST_DPS_DotBossAddsOption, "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, BRD_ST_DPS_DotTrashOption, "Non boss encounter. Stop using at Enemy HP %.");
+                    DrawSliderInt(3, 10, BRD_Adv_DoT_Refresh, "Renew time for dots (In seconds).");
                     DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Iron Jaws Option", "Enable the refreshing of dots with Ironjaws", 4, 0);
                     DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Dot Application Option", "Enable the application of dots outside of the opener", 4, 1);
-                    DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Raging Jaws Optionn", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes", 4, 2);
+                    DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Raging Jaws Option", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes", 4, 2);
                     DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "MultiDot Option", "Will maintain dots on up to 3 targets.", 4, 3);
 
                     if (BRD_Adv_DoT_Options[2])
@@ -121,7 +121,10 @@ internal partial class BRD
                     break;
 
                 case Preset.BRD_AoE_Adv_Multidot:
-                    DrawSliderInt(0, 100, BRD_AoE_Adv_Multidot_HPThreshold, "Target HP% to stop using (0 = Use Always, 100 = Never)");
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_MultidotBossOption, "Bosses Only. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_MultidotBossAddsOption, "Boss Encounter Non Bosses. Stop using at Enemy HP %.");
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_MultidotTrashOption, "Non boss encounter. Stop using at Enemy HP %.");
+                    DrawSliderInt(3, 10, BRD_AoE_Adv_Multidot_Refresh, "Renew time for dots (In seconds).");
                     break;
 
                 case Preset.BRD_AoE_Wardens:

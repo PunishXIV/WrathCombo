@@ -47,6 +47,7 @@ internal partial class WHM
                     ImGui.Indent();
                     DrawRoundedSliderFloat(0, 4, WHM_ST_DPS_AeroUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
                     ImGui.Unindent();
+                    DrawAdditionalBoolChoice(WHM_ST_MainCombo_DoT_TwoTarget, "Two target dotting", "Will maintain Damage over time spells on two targets if applicable.");
                     break;
                 
                 case Preset.WHM_ST_MainCombo_Misery:
@@ -474,6 +475,13 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_ST_MainCombo_DoT" />
         public static UserInt WHM_ST_DPS_AeroBossOption =
             new("WHM_ST_DPS_AeroBossOption", 0);
+        
+        /// <summary>
+        ///     Two Target option
+        /// </summary> 
+        /// <seealso cref="Preset.WHM_ST_MainCombo_DoT" />
+        public static UserBool WHM_ST_MainCombo_DoT_TwoTarget = 
+            new("WHM_ST_MainCombo_DoT_TwoTarget", true);
 
         /// <summary>
         ///     HP threshold to stop applying DoTs on Non-Bosses in boss encounters.
@@ -634,7 +642,7 @@ internal partial class WHM
         ///     Priority order for single target healing abilities.
         /// </summary>
         public static UserIntArray WHM_ST_Heals_Priority =
-            new("WHM_ST_Heals_Priority", [1,8,7,6,9,5,2,3,4]);
+            new("WHM_ST_Heals_Priority", [1,7,6,5,9,8,2,3,4]);
 
         /// <summary>
         ///     Time threshold in seconds before refreshing Regen.
@@ -692,7 +700,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Benediction" />
         public static UserInt WHM_STHeals_BenedictionHP =
-            new("WHM_STHeals_BenedictionHP", 40);
+            new("WHM_STHeals_BenedictionHP", 20);
         
         /// <summary>
         ///     HP threshold to use Afflatus Solace.
@@ -705,7 +713,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_STHeals_Solace" />
         
         public static UserInt WHM_STHeals_SolaceHP = 
-            new("WHM_STHeals_SolaceHP", 80);
+            new("WHM_STHeals_SolaceHP", 70);
 
         /// <summary>
         ///     Number of Thin Air charges to reserve.
@@ -717,7 +725,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_ThinAir" />
         public static UserInt WHM_STHeals_ThinAir =
-            new("WHM_STHeals_ThinAir", 0);
+            new("WHM_STHeals_ThinAir", 1);
 
         /// <summary>
         ///     Only use Tetragrammaton when weaving.
@@ -737,7 +745,7 @@ internal partial class WHM
         ///     <b>Default</b>: false
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Tetragrammaton" />
-        public static UserBool WHM_STHeals_TetraBalance = new("WHM_STHeals_TetraBalance", false);
+        public static UserBool WHM_STHeals_TetraBalance = new("WHM_STHeals_TetraBalance", true);
 
         /// <summary>
         ///     HP threshold to use Tetragrammaton.
@@ -749,7 +757,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Tetragrammaton" />
         public static UserInt WHM_STHeals_TetraHP =
-            new("WHM_STHeals_TetraHP", 50);
+            new("WHM_STHeals_TetraHP", 70);
 
         /// <summary>
         ///     Only use Divine Benison when weaving.
@@ -769,7 +777,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Benison" />
         
-        public static UserBool WHM_STHeals_BenisonBalance = new("WHM_STHeals_BenisonBalance", false);
+        public static UserBool WHM_STHeals_BenisonBalance = new("WHM_STHeals_BenisonBalance", true);
         
         /// <summary>
         ///     Charges to keep of Divine Benison.
@@ -793,7 +801,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Benison" />
         public static UserInt WHM_STHeals_BenisonHP =
-            new("WHM_STHeals_BenisonHP", 99);
+            new("WHM_STHeals_BenisonHP", 70);
 
         /// <summary>
         ///     HP threshold to use Aquaveil.
@@ -805,7 +813,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Aquaveil" />
         public static UserInt WHM_STHeals_AquaveilHP =
-            new("WHM_STHeals_AquaveilHP", 90);
+            new("WHM_STHeals_AquaveilHP", 70);
 
         /// <summary>
         ///     Aquaveil weaving and boss options
@@ -815,7 +823,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Aquaveil" />
         public static UserBoolArray WHM_STHeals_AquaveilOptions =
-            new("WHM_STHeals_AquaveilOptions");
+            new("WHM_STHeals_AquaveilOptions", [false, true, true]);
 
         /// <summary>
         ///     MP threshold to use Lucid Dreaming in single target healing.
@@ -837,7 +845,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Temperance" />
         public static UserBoolArray WHM_STHeals_TemperanceOptions =
-            new("WHM_STHeals_TemperanceOptions");
+            new("WHM_STHeals_TemperanceOptions", [false, true]);
 
         /// <summary>
         ///     HP threshold to use Temperance.
@@ -849,7 +857,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Temperance" />
         public static UserInt WHM_STHeals_TemperanceHP =
-            new("WHM_STHeals_TemperanceHP", 75);
+            new("WHM_STHeals_TemperanceHP", 70);
 
         /// <summary>
         ///     Weaving and boss selection options for Asylum.
@@ -859,7 +867,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Asylum" />
         public static UserBoolArray WHM_STHeals_AsylumOptions =
-            new("WHM_STHeals_AsylumOptions");
+            new("WHM_STHeals_AsylumOptions", [false, true]);
 
         /// <summary>
         ///     HP threshold to use Asylum.
@@ -871,7 +879,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_Asylum" />
         public static UserInt WHM_STHeals_AsylumHP =
-            new("WHM_STHeals_AsylumHP", 75);
+            new("WHM_STHeals_AsylumHP", 70);
         
         /// <summary>
         ///     Weaving and boss selection options for LiturgyOfTheBell.
@@ -881,7 +889,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_LiturgyOfTheBell" />
         public static UserBoolArray WHM_STHeals_LiturgyOfTheBellOptions =
-            new("WHM_STHeals_LiturgyOfTheBellOptions");
+            new("WHM_STHeals_LiturgyOfTheBellOptions", [false, true]);
 
         /// <summary>
         ///     HP threshold to use LiturgyOfTheBell.
@@ -893,7 +901,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_STHeals_LiturgyOfTheBell" />
         public static UserInt WHM_STHeals_LiturgyOfTheBellHP =
-            new("WHM_STHeals_LiturgyOfTheBellHP", 75);
+            new("WHM_STHeals_LiturgyOfTheBellHP", 70);
 
         /// <summary>
         ///     HP threshold to stop using Esuna.
@@ -940,7 +948,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_Cure3" />
         
         public static UserInt WHM_AoEHeals_Cure3HP = 
-            new("WHM_AoEHeals_Cure3HP", 100);
+            new("WHM_AoEHeals_Cure3HP", 50);
         
         /// <summary>
         ///     Minimum Party Members In range of target to use Cure 3.
@@ -953,7 +961,7 @@ internal partial class WHM
         /// <seealso cref="Preset.WHM_AoEHeals_Cure3" />
         
         public static UserInt WHM_AoEHeals_Cure3Allies = 
-            new("WHM_AoEHeals_Cure3Allies", 2);
+            new("WHM_AoEHeals_Cure3Allies", 4);
 
         /// <summary>
         ///     MP threshold to use Cure III.
@@ -965,7 +973,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Cure3" />
         public static UserInt WHM_AoEHeals_Cure3MP =
-            new("WHM_AoE_Cure3MP");
+            new("WHM_AoE_Cure3MP", 6500);
 
         /// <summary>
         ///     Average party HP% threshold to use Assize.
@@ -1161,7 +1169,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Temperance" />
         public static UserBoolArray WHM_AoEHeals_TemperanceDifficulty =
-            new("WHM_AoEHeals_TemperanceDifficulty", [true, true]);
+            new("WHM_AoEHeals_TemperanceDifficulty", [true, false]);
 
         /// <summary>
         ///     Content difficulty list set for Temperance, set by
@@ -1182,7 +1190,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Asylum" />
         public static UserInt WHM_AoEHeals_AsylumHP =
-            new("WHM_AoEHeals_AsylumHP", 30);
+            new("WHM_AoEHeals_AsylumHP", 70);
         
         /// <summary>
         ///     Only use Asylum when weaving.
@@ -1205,7 +1213,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_AoEHeals_Asylum" />
         public static UserBoolArray WHM_AoEHeals_AsylumDifficulty =
-            new("WHM_AoEHeals_AsylumDifficulty", [true, true]);
+            new("WHM_AoEHeals_AsylumDifficulty", [true, false]);
 
         /// <summary>
         ///     Content difficulty list set for Asylum, set by

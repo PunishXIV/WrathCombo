@@ -189,8 +189,12 @@ Below is a community-provided list of basic burst-holding macros for each job.
 /wrath toggle 8108
 /wrath toggle 8107
 /wrath toggle 8103
-/wrath toggle 8102
-/wrath toggle 8112
+/wrath toggle 8119
+
+/wrath toggle 8301
+/wrath toggle 8304
+/wrath toggle 8307
+/wrath toggle 8315
 ```
 
 </details>

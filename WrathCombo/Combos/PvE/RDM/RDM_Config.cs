@@ -66,8 +66,7 @@ internal partial class RDM
 
 
                 case Preset.RDM_ST_MeleeCombo:
-                    if (P.IPCSearch.AutoActions[Preset.RDM_ST_DPS] == true &&
-                        CustomComboFunctions.IsNotEnabled(Preset.RDM_ST_MeleeCombo_IncludeRiposte))
+                    if (CustomComboFunctions.IsNotEnabled(Preset.RDM_ST_MeleeCombo_IncludeRiposte))
                     {
                         ImGui.Indent();
                         ImGui.TextColored(ImGuiColors.DalamudRed, "WARNING: RIPOSTE IS NOT ENABLED.");

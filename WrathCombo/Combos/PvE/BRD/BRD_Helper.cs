@@ -50,6 +50,7 @@ internal partial class BRD
 
     //Useful Bools
     internal static bool BardHasTarget => HasBattleTarget();
+    internal static bool JustSangSong => JustUsed(WanderersMinuet) || JustUsed(MagesBallad) || JustUsed(ArmysPaeon);
     internal static bool CanBardWeave => CanWeave();
     internal static bool CanWeaveDelayed => CanDelayedWeave();
     internal static bool CanIronJaws => LevelChecked(IronJaws);
@@ -57,7 +58,7 @@ internal partial class BRD
     internal static bool BuffWindow => HasStatusEffect(Buffs.RagingStrikes) && 
                                        (HasStatusEffect(Buffs.BattleVoice) || !LevelChecked(BattleVoice)) &&
                                        (HasStatusEffect(Buffs.RadiantFinale) || !LevelChecked(RadiantFinale));
-
+    
     //Buff Tracking
     internal static float RagingCD => GetCooldownRemainingTime(RagingStrikes);
     internal static float BattleVoiceCD => GetCooldownRemainingTime(BattleVoice);
@@ -126,23 +127,44 @@ internal partial class BRD
         internal static bool UseIronJaws()
         {
             return ActionReady(IronJaws) && Purple is not null && Blue is not null &&
-                   (PurpleRemaining < 4 || BlueRemaining < 4);
+                   (PurpleRemaining < computeRefresh() || BlueRemaining < computeRefresh());
         }
         //Blue dot application and low level refresh
         internal static bool ApplyBlueDot()
         {
-            return ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < 4);
+            return ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < computeRefresh());
         }
         //Purple dot application and low level refresh
         internal static bool ApplyPurpleDot()
         {
-            return ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < 4);
+            return ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < computeRefresh());
         }
         //Raging jaws option dot refresh for snapshot
         internal static bool RagingJawsRefresh()
         {
             return ActionReady(IronJaws) && HasStatusEffect(Buffs.RagingStrikes) && PurpleRemaining < 35 && BlueRemaining < 35;
         }
+        internal static int computeHpThreshold()
+        {
+            if (InBossEncounter())
+            {
+                return TargetIsBoss() ? BRD_ST_DPS_DotBossOption : BRD_ST_DPS_DotBossAddsOption;
+            }
+            return BRD_ST_DPS_DotTrashOption;
+        }
+        internal static int computeAoEDoTHpThreshold()
+        {
+            if (InBossEncounter())
+            {
+                return TargetIsBoss() ? BRD_AoE_Adv_MultidotBossOption : BRD_AoE_Adv_MultidotBossAddsOption;
+            }
+            return BRD_AoE_Adv_MultidotTrashOption;
+        }
+
+        internal static int computeAoERefresh() => IsEnabled(Preset.BRD_AoE_SimpleMode) ? 5 : BRD_AoE_Adv_Multidot_Refresh;
+
+        internal static int computeRefresh() => IsEnabled(Preset.BRD_ST_SimpleMode) ? 4 : BRD_Adv_DoT_Refresh;
+        
         #endregion
 
         #region Buff Timing
@@ -171,7 +193,7 @@ internal partial class BRD
         #region Songs
         internal static bool WandererSong()
         {
-            if (ActionReady(WanderersMinuet))
+            if (ActionReady(WanderersMinuet) && !JustSangSong)
             {
                 if (SongNone) // No song, use wanderer first
                    return true;
@@ -183,7 +205,7 @@ internal partial class BRD
         }
         internal static bool MagesSong()
         {
-            if (ActionReady(MagesBallad) && (CanBardWeave || !BardHasTarget))
+            if (ActionReady(MagesBallad) && !JustSangSong && (CanBardWeave || !BardHasTarget))
             {
                 if (SongNone && !ActionReady(WanderersMinuet)) //No song, Use Mages if wanderer is on cd or not aquaired yet
                     return true;
@@ -195,7 +217,7 @@ internal partial class BRD
         }
         internal static bool ArmySong()
         {
-            if (ActionReady(ArmysPaeon) && (CanBardWeave || !BardHasTarget))
+            if (ActionReady(ArmysPaeon) && !JustSangSong && (CanBardWeave || !BardHasTarget))
             {
                 if (SongNone && !ActionReady(MagesBallad) && !ActionReady(WanderersMinuet)) //No song, Use army as last resort
                     return true;

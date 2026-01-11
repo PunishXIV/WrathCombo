@@ -316,7 +316,7 @@ internal partial class RDM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([13, 15, 19, 20], () => !InMeleeRange()),
-            ([35],() => !HasStatusEffect(Buffs.Swiftcast))
+            ([35],() => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
@@ -384,7 +384,7 @@ internal partial class RDM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = 
         [
             ([15, 20], () => !InMeleeRange()),
-            ([35], () => !HasStatusEffect(Buffs.Swiftcast))
+            ([35], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;

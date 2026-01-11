@@ -24,6 +24,8 @@ internal partial class PCT
             PCT_Balance_Content = new("PCT_Balance_Content", 1);
 
         public static UserBool
+            PCT_ST_AdvancedMode_ScenicMuse_MovementOption = new("PCT_ST_AdvancedMode_ScenicMuse_MovementOption"),
+            PCT_AoE_AdvancedMode_ScenicMuse_MovementOption = new("PCT_AoE_AdvancedMode_ScenicMuse_MovementOption"),
             CombinedMotifsMog = new("CombinedMotifsMog"),
             CombinedMotifsMadeen = new("CombinedMotifsMadeen"),
             CombinedMotifsWeapon = new("CombinedMotifsWeapon"),
@@ -49,6 +51,13 @@ internal partial class PCT
                 case Preset.PCT_ST_AdvancedMode_LucidDreaming:
                     DrawSliderInt(0, 10000, PCT_ST_AdvancedMode_LucidOption,
                         "Add Lucid Dreaming when below this MP", sliderIncrement: SliderIncrements.Hundreds);
+                    break;
+                
+                case Preset.PCT_ST_AdvancedMode_ScenicMuse:
+                    DrawAdditionalBoolChoice(PCT_ST_AdvancedMode_ScenicMuse_MovementOption, "Dont Use if Moving", "Will only use if not moving.");
+                    break;
+                case Preset.PCT_AoE_AdvancedMode_ScenicMuse:
+                    DrawAdditionalBoolChoice(PCT_AoE_AdvancedMode_ScenicMuse_MovementOption, "Dont Use if Moving", "Will only use if not moving.");
                     break;
 
                 case Preset.PCT_ST_AdvancedMode_LandscapeMotif:

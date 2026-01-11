@@ -25,7 +25,7 @@ internal partial class SCH
                         descriptionColor: ImGuiColors.DalamudWhite);
                     DrawHorizontalRadioButton(SCH_ST_DPS_Adv_Actions, "On Bio/Bio II/Biolysis", "Apply options to Bio and Biolysis.", 1,
                         descriptionColor: ImGuiColors.DalamudWhite);
-                    DrawHorizontalRadioButton(SCH_ST_DPS_Adv_Actions, "On Ruin II", "Apply options to Ruin II.", 2,
+                    DrawHorizontalRadioButton(SCH_ST_DPS_Adv_Actions, "On Broil II", "Apply options to Broil II.", 2,
                         descriptionColor: ImGuiColors.DalamudWhite);
                     break;
 
@@ -40,6 +40,7 @@ internal partial class SCH
                     ImGui.Indent();
                     DrawRoundedSliderFloat(0, 4, SCH_ST_DPS_BioUptime_Threshold, "Seconds remaining before reapplying the DoT. Set to Zero to disable this check.", digits: 1);
                     ImGui.Unindent();
+                    DrawAdditionalBoolChoice(SCH_ST_ADV_DPS_Bio_TwoTarget, "Two target dotting", "Will maintain Damage over time spells on two targets if applicable.");
                     break;
 
                 case Preset.SCH_ST_ADV_DPS_ChainStrat:
@@ -359,6 +360,7 @@ internal partial class SCH
 
 
         internal static UserBool
+            SCH_ST_ADV_DPS_Bio_TwoTarget = new("SCH_ST_ADV_DPS_Bio_TwoTarget"),
             SCH_ST_DPS_EnergyDrain_Burst = new("SCH_ST_DPS_EnergyDrain_Burst"),
             SCH_AoE_DPS_EnergyDrain_Burst = new("SCH_AoE_DPS_EnergyDrain_Burst"),
             SCH_AoE_DPS_ChainStratagemBanefulOption = new("SCH_AoE_DPS_ChainStratagemBanefulOption"),
@@ -406,27 +408,27 @@ internal partial class SCH
             SCH_ST_Heal_ConsolationOption = new("SCH_ST_Heal_ConsolationOption", 70),
             SCH_ST_Heal_EsunaOption = new("SCH_ST_Heal_EsunaOption", 40);
         public static UserIntArray
-            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [11,5,6,7,12,3,2,4,10,8,9,1]),
+            SCH_ST_Heals_Priority = new("SCH_ST_Heals_Priority", [11,10,9,8,12,7,6,5,4,1,2,3]),
             SCH_AoE_Heals_Priority = new("SCH_AoE_Heals_Priority", [3,2,4,1,6,7,5,8]);
 
         public static UserBool
             SCH_ST_Heal_IncludeShields = new("SCH_ST_Heal_IncludeShields"),
-            SCH_ST_Heal_WhisperingDawnBossOption = new("SCH_ST_Heal_WhisperingDawnBossOption"),
-            SCH_ST_Heal_FeyIlluminationBossOption = new("SCH_ST_Heal_FeyIlluminationBossOption"),
-            SCH_ST_Heal_FeyBlessingBossOption = new("SCH_ST_Heal_FeyBlessingBossOption"),
+            SCH_ST_Heal_WhisperingDawnBossOption = new("SCH_ST_Heal_WhisperingDawnBossOption", true),
+            SCH_ST_Heal_FeyIlluminationBossOption = new("SCH_ST_Heal_FeyIlluminationBossOption", true),
+            SCH_ST_Heal_FeyBlessingBossOption = new("SCH_ST_Heal_FeyBlessingBossOption", true),
             SCH_ST_Heal_ExcogitationBossOption = new("SCH_ST_Heal_ExcogitationBossOption"),
-            SCH_ST_Heal_ExcogitationTankOption = new("SCH_ST_Heal_ExcogitationTankOption"),
+            SCH_ST_Heal_ExcogitationTankOption = new("SCH_ST_Heal_ExcogitationTankOption", true),
             SCH_ST_Heal_ProtractionBossOption = new("SCH_ST_Heal_ProtractionBossOption"),
-            SCH_ST_Heal_ProtractionTankOption = new("SCH_ST_Heal_ProtractionTankOption"),
-            SCH_ST_Heal_SeraphismBossOption = new("SCH_ST_Heal_SeraphismBossOption"),
-            SCH_ST_Heal_ExpedientBossOption = new("SCH_ST_Heal_ExpedientBossOption"),
-            SCH_ST_Heal_SummonSeraphBossOption = new("SCH_ST_Heal_SummonSeraphBossOption"),
-            SCH_ST_Heal_ConsolationBossOption = new("SCH_ST_Heal_ConsolationBossOption"),
+            SCH_ST_Heal_ProtractionTankOption = new("SCH_ST_Heal_ProtractionTankOption", true),
+            SCH_ST_Heal_SeraphismBossOption = new("SCH_ST_Heal_SeraphismBossOption", true),
+            SCH_ST_Heal_ExpedientBossOption = new("SCH_ST_Heal_ExpedientBossOption", true),
+            SCH_ST_Heal_SummonSeraphBossOption = new("SCH_ST_Heal_SummonSeraphBossOption", true),
+            SCH_ST_Heal_ConsolationBossOption = new("SCH_ST_Heal_ConsolationBossOption", true),
             SCH_AoE_Heal_Indomitability_Recitation = new("SCH_AoE_Heal_Indomitability_Recitation");
 
         public static UserBoolArray
-            SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts"),
-            SCH_AoE_Heal_Succor_Options = new("SCH_AoE_Heal_Succor_Options");
+            SCH_ST_Heal_AldoquimOpts = new("SCH_ST_Heal_AldoquimOpts", [true, true, true]),
+            SCH_AoE_Heal_Succor_Options = new("SCH_AoE_Heal_Succor_Options", [true, false]);
 
         #endregion
 

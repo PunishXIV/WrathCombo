@@ -77,7 +77,7 @@ internal partial class RDM : Caster
                 if (ComboAction is Riposte or EnchantedRiposte && LevelChecked(Zwerchhau))
                     return OriginalHook(Zwerchhau);
 
-                if (ActionReady(EnchantedRiposte) && InMeleeRange() && !HasDualcast && !HasAccelerate && !HasSwiftcast &&
+                if (ActionReady(EnchantedRiposte) && !HasDualcast && !HasAccelerate && !HasSwiftcast &&
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return OriginalHook(Riposte);
             }

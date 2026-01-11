@@ -60,10 +60,15 @@ internal partial class WHM : Healer
             #endregion
 
             #region GCDS and Casts
-
-            // DoTs
-            if (NeedsDoT())
-                return OriginalHook(Aero);
+            
+            var dotAction = OriginalHook(Aero);
+            AeroList.TryGetValue(dotAction, out var dotDebuffID);
+            var target = IsMoving() && !BloodLilyReady && !HasStatusEffect(Buffs.SacredSight) && !FullLily
+                ? SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 30, 99) //if moving and dont have other mobile gcds
+                : SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 2); 
+            
+            if (target is not null && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target))
+                return dotAction.Retarget(StoneGlareList.ToArray(), target);
             
             // Blood Lily Spend
             if (BloodLilyReady)
@@ -77,20 +82,6 @@ internal partial class WHM : Healer
             if (ActionReady(AfflatusRapture) &&
                 (FullLily || AlmostFullLily))
                 return AfflatusRapture;
-
-            #region Movement Options
-
-            if (IsMoving())
-            {
-                var dotAction = OriginalHook(Aero);
-                AeroList.TryGetValue(dotAction, out var dotDebuffID);
-                var target = SimpleTarget.DottableEnemy(
-                    dotAction, dotDebuffID, 0, 20, 99);
-                if (target is not null)
-                    return dotAction.Retarget(StoneGlareList.ToArray(), target);
-            }
-
-            #endregion
 
             return actionID;
 
@@ -229,9 +220,22 @@ internal partial class WHM : Healer
 
             #region GCDS and Casts
 
-            // DoTs
-            if (IsEnabled(Preset.WHM_ST_MainCombo_DoT) && NeedsDoT())
-                return OriginalHook(Aero);
+            
+            
+            if (IsEnabled(Preset.WHM_ST_MainCombo_DoT))
+            {
+                var dotAction = OriginalHook(Aero);
+                AeroList.TryGetValue(dotAction, out var dotDebuffID);
+                var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, computeHpThreshold(), WHM_ST_DPS_AeroUptime_Threshold, 2);
+                
+                //Single Target Dotting, needed because dottableenemy will not maintain single dot on main target of more than one target exists. 
+                if (NeedsDoT()) 
+                    return OriginalHook(Aero);
+                
+                //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
+                if (target is not null && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && WHM_ST_MainCombo_DoT_TwoTarget)
+                    return dotAction.Retarget(replacedAction, target);
+            }
             
             // Blood Lily Spend
             if (IsEnabled(Preset.WHM_ST_MainCombo_Misery) && BloodLilyReady && 
@@ -567,10 +571,12 @@ internal partial class WHM : Healer
                     if (GetTargetHPPercent(healTarget,
                             WHM_STHeals_IncludeShields) <= config &&
                         ActionReady(spell))
-                        return spell.RetargetIfEnabled(healTarget, Cure);
+                        return spell is Asylum or LiturgyOfTheBell
+                            ? spell.Retarget(Cure,SimpleTarget.Self)
+                            : spell.RetargetIfEnabled(healTarget, Cure);
                 }
             }
-
+            
             if (LevelChecked(Cure2))
                 return IsEnabled(Preset.WHM_STHeals_ThinAir) && canThinAir
                     ? ThinAir
@@ -625,10 +631,15 @@ internal partial class WHM : Healer
 
                 if (enabled && GetPartyAvgHPPercent() <= config &&
                     ActionReady(spell))
-                    return IsEnabled(Preset.WHM_AoEHeals_ThinAir) && canThinAir &&
-                           spell is Cure3 or Medica2 or Medica3
-                        ? ThinAir
+                {
+                    if (IsEnabled(Preset.WHM_AoEHeals_ThinAir) && canThinAir && spell is Cure3 or Medica2 or Medica3)
+                        return ThinAir;
+                    
+                    return spell is Asylum or LiturgyOfTheBell
+                        ? spell.Retarget(Medica1, SimpleTarget.Self)
                         : spell.RetargetIfEnabled(healTarget, Medica1);
+                }
+                   
             }
             return actionID;
         }

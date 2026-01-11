@@ -238,7 +238,8 @@ internal partial class PCT : Caster
                     return SubtractivePalette;
 
                 // ScenicMuse
-                if (scenicMuseEnabled && ScenicMuseReady && CanDelayedWeave())
+                if (scenicMuseEnabled && ScenicMuseReady && CanDelayedWeave() &&
+                    (!IsMoving() || !PCT_ST_AdvancedMode_ScenicMuse_MovementOption))
                     return OriginalHook(ScenicMuse);
 
                 // LivingMuse
@@ -603,7 +604,8 @@ internal partial class PCT : Caster
             if (InCombat() && CanWeave())
             {
                 // ScenicMuse
-                if (scenicMuseEnabled && ScenicMuseReady)
+                if (scenicMuseEnabled && ScenicMuseReady &&
+                    (!IsMoving() || !PCT_AoE_AdvancedMode_ScenicMuse_MovementOption))
                     return OriginalHook(ScenicMuse);
 
                 // LivingMuse

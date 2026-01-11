@@ -1,5 +1,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.GameFunctions;
+using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -53,8 +54,12 @@ internal partial class SCH : Healer
                     return Role.LucidDreaming;
             }
             //Bio/Biolysis
-            if (NeedsDoT() && PartyInCombat())
-                return OriginalHook(Bio);
+            var dotAction = OriginalHook(Bio);
+            BioList.TryGetValue(dotAction, out var dotDebuffID);
+            var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, 0, 3, 2);
+            
+            if (target is not null && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && PartyInCombat())
+                return dotAction.Retarget(BroilList.ToArray(), target);
 
             //Ruin 2 Movement
             if (ActionReady(Ruin2) && IsMoving() && InCombat())
@@ -268,11 +273,15 @@ internal partial class SCH : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            bool actionFound = SCH_ST_DPS_Adv_Actions == 0 && BroilList.Contains(actionID) ||
-                               SCH_ST_DPS_Adv_Actions == 1 && BioList.ContainsKey(actionID) ||
-                               SCH_ST_DPS_Adv_Actions == 2 && actionID is Ruin2;
+            bool alternateMode = SCH_ST_DPS_Adv_Actions > 0;
+            var replacedActions = (int)SCH_ST_DPS_Adv_Actions switch
+            {
+                1 => BioList.Keys.ToArray(),
+                2 => [Broil2],
+                _ => BroilList.ToArray(),
+            };
 
-            if (!actionFound)
+            if (!replacedActions.Contains(actionID))
                 return actionID;
 
             #region Variables
@@ -325,12 +334,27 @@ internal partial class SCH : Healer
             }
 
             //Bio/Biolysis
-            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Bio) && NeedsDoT() && PartyInCombat())
-                return OriginalHook(Bio);
+            if (IsEnabled(Preset.SCH_ST_ADV_DPS_Bio) && PartyInCombat())
+            {
+                var dotAction = OriginalHook(Bio);
+                BioList.TryGetValue(dotAction, out var dotDebuffID);
+                var target = SimpleTarget.DottableEnemy(dotAction, dotDebuffID, computeHpThreshold(), SCH_ST_DPS_BioUptime_Threshold, 2);
+                
+                //Single Target Dotting, needed because dottableenemy will not maintain single dot on main target of more than one target exists. 
+                if (NeedsDoT()) 
+                    return OriginalHook(Bio);
+                
+                //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
+                if (target is not null && CanApplyStatus(target, dotDebuffID) && !JustUsedOn(dotAction, target) && SCH_ST_ADV_DPS_Bio_TwoTarget)
+                    return dotAction.Retarget(replacedActions, target);
+            }
 
             //Ruin 2 Movement
             if (IsEnabled(Preset.SCH_ST_ADV_DPS_Ruin2Movement) && ActionReady(Ruin2) && IsMoving() && InCombat())
                 return OriginalHook(Ruin2);
+            
+            if (alternateMode)
+                return OriginalHook(Ruin);
 
             return actionID;
         }
