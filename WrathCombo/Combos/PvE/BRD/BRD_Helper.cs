@@ -125,18 +125,18 @@ internal partial class BRD
         //Iron Jaws dot refreshing
         internal static bool UseIronJaws()
         {
-            return ActionReady(IronJaws) && Purple is not null && Blue is not null &&
+            return CurrentTarget is null ? false : ActionReady(IronJaws) && Purple is not null && Blue is not null &&
                    (PurpleRemaining < 4 || BlueRemaining < 4);
         }
         //Blue dot application and low level refresh
         internal static bool ApplyBlueDot()
         {
-            return ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < 4);
+            return CurrentTarget is null ? false : ActionReady(Windbite) && DebuffCapCanBlue && (Blue is null || !CanIronJaws && BlueRemaining < 4);
         }
         //Purple dot application and low level refresh
         internal static bool ApplyPurpleDot()
         {
-            return ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < 4);
+            return CurrentTarget is null ? false : ActionReady(VenomousBite) && DebuffCapCanPurple && (Purple is null || !CanIronJaws && PurpleRemaining < 4);
         }
         //Raging jaws option dot refresh for snapshot
         internal static bool RagingJawsRefresh()

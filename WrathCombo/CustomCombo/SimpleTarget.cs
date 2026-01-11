@@ -429,6 +429,31 @@ internal static class SimpleTarget
             .ThenByDescending(x => (float)x.CurrentHp / x.MaxHp)
             .FirstOrDefault();
     }
+
+    public static IGameObject? TargetWithDoTLowestRemainingTimer
+        (uint dotAction,
+        ushort dotDebuff)
+    {
+        var range = dotAction.ActionRange();
+        var nearbyEnemies = Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() &&
+                        x.IsTargetable &&
+                        x.IsInCombat() &&
+                        x.IsNotInvincible() &&
+                        x.IsWithinRange(range))
+            .ToArray();
+
+        return nearbyEnemies
+            .Where(x => x.CanUseOn(dotAction) &&
+                        IsInLineOfSight(x) &&
+                        GetStatusEffectRemainingTime
+                            (dotDebuff, x) > 0 &&
+                        CanApplyStatus(x, dotDebuff))
+            .OrderBy(x => GetStatusEffectRemainingTime(dotDebuff, x))
+            .FirstOrDefault();
+    }
+
     public static IGameObject? BardRefreshableEnemy
     (uint refreshAction,
         ushort dotDebuff1,

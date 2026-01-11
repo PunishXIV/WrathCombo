@@ -11,6 +11,7 @@ using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using Lumina.Excel.Sheets;
 
 namespace WrathCombo.CustomComboNS.Functions;
 
@@ -442,6 +443,14 @@ internal abstract partial class CustomComboFunctions
     public static bool CanApplyStatus(IGameObject? target, ushort statusId)
     {
         target ??= LocalPlayer;
+        if (target is null)
+            return false;
+
+        //Check to see if it's a buff or debuff and therefore if the target is suitable for the status
+        var status = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>().GetRow(statusId);
+        if ((target.IsHostile() && status.StatusCategory != 2) || (target.IsFriendly() && status.StatusCategory != 1))
+            return false;
+
         if (!TargetIsStatusCapped(target) || HasStatusEffect(statusId, target))
             return true;
 

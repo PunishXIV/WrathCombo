@@ -2089,9 +2089,24 @@ public enum Preset
         "Add Mage's Ballad and Army's Paeon to Wanderer's Minuet depending on cooldowns.", Job.BRD)]
     BRD_OneButtonSongs = 3014,
 
+    [ReplaceSkill(BRD.VenomousBite, BRD.CausticBite)]
+    [CustomComboInfo("One Button Dots Feature", "Replaces Venomous Bite/Caustic Bite with Windbite/Stormbite if target is missing that DoT.", Job.BRD)]
+    BRD_OneButtonDots = 3004,
+
+    [ParentCombo(BRD_OneButtonDots)]
+    [CustomComboInfo("Iron Jaws Reapply Feature", "If both DoTs are applied, returns Iron Jaws if able to be used.", Job.BRD)]
+    BRD_OneButtonDots_IronJaws = 3071,
+
+    [Retargeted]
+    [ParentCombo(BRD_OneButtonDots)]
+    [CustomComboInfo("Multi-Target Feature", "Will apply DoTs to as many targets you're in combat with as possible.", Job.BRD)]
+    BRD_OneButtonDots_Retargeted = 3072,
+
+
+
     #endregion
 
-    // Last value = 3069
+    // Last value = 3072
 
     #endregion
 

@@ -1,4 +1,5 @@
 using Dalamud.Game.ClientState.JobGauge.Enums;
+using ECommons.DalamudServices;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -805,7 +806,74 @@ internal partial class BRD : PhysicalRanged
             return actionID;
         }
     }
-    
+
+    internal class BRD_One_Button_Dot : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BRD_OneButtonDots;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not VenomousBite and not CausticBite)
+                return actionID;
+
+            bool retargeted = IsEnabled(Preset.BRD_OneButtonDots_Retargeted);
+            bool ironJaws = IsEnabled(Preset.BRD_OneButtonDots_IronJaws);
+            var blueDotAction = OriginalHook(Windbite);
+            var purpleDotAction = OriginalHook(VenomousBite);
+            BlueList.TryGetValue(blueDotAction, out var blueDotDebuffID);
+            PurpleList.TryGetValue(purpleDotAction, out var purpleDotDebuffID);
+
+            if (!retargeted)
+            {
+                var purpleDotRemaining = GetStatusEffectRemainingTime(purpleDotDebuffID, CurrentTarget);
+                var blueDotRemaining = GetStatusEffectRemainingTime(blueDotDebuffID, CurrentTarget);
+
+                if (ironJaws && purpleDotRemaining > 0 && blueDotRemaining > 0 && ActionReady(IronJaws))
+                    return IronJaws;
+
+                if (purpleDotRemaining <= blueDotRemaining && ActionReady(purpleDotAction))
+                    return purpleDotAction;
+
+                if (blueDotRemaining <= purpleDotRemaining && ActionReady(blueDotAction))
+                    return blueDotAction;
+            }
+            else
+            {
+                var lowestPurple = SimpleTarget.TargetWithDoTLowestRemainingTimer(purpleDotAction, purpleDotDebuffID);
+                var lowestBlue = SimpleTarget.TargetWithDoTLowestRemainingTimer(purpleDotAction, purpleDotDebuffID);
+                var lowestPurpleRemaining = GetStatusEffectRemainingTime(purpleDotDebuffID, lowestPurple);
+                var lowestBlueRemaining = GetStatusEffectRemainingTime(blueDotDebuffID, lowestBlue);
+
+                var purpleDotTarget = SimpleTarget.DottableEnemy(purpleDotAction, purpleDotDebuffID, maxNumberOfEnemiesInRange: 99);
+                var blueDotTarget = SimpleTarget.DottableEnemy(blueDotAction, blueDotDebuffID, maxNumberOfEnemiesInRange: 99);
+
+                if (ironJaws && InCombat() && purpleDotTarget == null && blueDotTarget == null && ActionReady(IronJaws))
+                {
+                    if (lowestPurpleRemaining <= lowestBlueRemaining)
+                        return IronJaws.Retarget([CausticBite, VenomousBite], lowestPurple);
+                    else
+                        return IronJaws.Retarget([CausticBite, VenomousBite], lowestBlue);
+                }
+
+                if (purpleDotTarget != null && ActionReady(purpleDotAction))
+                    return purpleDotAction.Retarget([CausticBite, VenomousBite], purpleDotTarget);
+
+                if (blueDotTarget != null && ActionReady(blueDotAction))
+                    return blueDotAction.Retarget([CausticBite, VenomousBite], blueDotTarget);
+
+                if (lowestPurple != null && lowestBlue != null)
+                {
+                    if (lowestPurpleRemaining <= lowestBlueRemaining)
+                        return purpleDotAction.Retarget([CausticBite, VenomousBite], lowestPurple);
+                    else
+                        return blueDotAction.Retarget([CausticBite, VenomousBite], lowestBlue);
+                }
+            }
+
+            return actionID;
+        }
+    }
+
     internal class BRD_AoE_oGCD : CustomCombo
     {
         protected internal override Preset Preset => Preset.BRD_AoE_oGCD;
