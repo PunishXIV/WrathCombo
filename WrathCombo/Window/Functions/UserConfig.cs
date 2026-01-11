@@ -3,12 +3,17 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
+using ECommons.ExcelServices;
 using ECommons.ImGuiMethods;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using ECommons.DalamudServices;
+using Lumina.Excel.Sheets;
 using WrathCombo.Combos.PvP;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -889,6 +894,211 @@ public static class UserConfig
         ImGui.Unindent();
         ImGui.Spacing();
     }
+
+    #region Job Priority DragDrop
+
+    /// <summary>
+    ///     Cache for <see cref="ImGuiEx.RealtimeDragDrop{T}"/> instances per config.
+    /// </summary>
+    private static readonly Dictionary<string, ImGuiEx.RealtimeDragDrop<Job>> JobDragDropCache = [];
+
+    /// <summary>
+    ///     Default list of all combat jobs (non-crafter, non-gatherer, non-base-class, non-limited).
+    /// </summary>
+    internal static readonly List<Job> DefaultCombatJobs =
+    [
+        // Tanks
+        Job.PLD, Job.WAR, Job.DRK, Job.GNB,
+        // Healers
+        Job.WHM, Job.SCH, Job.AST, Job.SGE,
+        // Melee DPS
+        Job.MNK, Job.DRG, Job.NIN, Job.SAM, Job.RPR, Job.VPR,
+        // Physical Ranged DPS
+        Job.BRD, Job.MCH, Job.DNC,
+        // Magical Ranged DPS
+        Job.BLM, Job.SMN, Job.RDM, Job.PCT,
+    ];
+
+    /// <summary>
+    ///     Draws a horizontal drag-and-drop list for job priority ordering.
+    /// </summary>
+    /// <param name="config">The <see cref="UserIntArray"/> config to store the job order.</param>
+    /// <param name="jobs">
+    ///     Optional subset of jobs to display and order. If null, defaults to all combat jobs
+    ///     (non-crafter, non-gatherer, non-base-class, non-limited).
+    ///     This list will be reordered based on user interaction.
+    /// </param>
+    /// <param name="description">Optional description to display above the drag-drop list.</param>
+    /// <param name="horizontal">Whether to display the jobs horizontally (true) or vertically (false).</param>
+    /// <remarks>
+    ///     The job order is stored as an array of <see cref="Job"/> byte values in the config.
+    ///     Lower index = higher priority.
+    /// </remarks>
+    internal static void DrawJobPriorityDragDrop(
+        UserIntArray config,
+        List<Job>? jobs = null,
+        string description = "")
+    {
+        // Use default combat jobs if no subset provided
+        // Copy the list so we don't mutate the original
+        var jobList = jobs ?? DefaultCombatJobs;
+
+        // Ensure we have a cached DragDrop instance for this config
+        if (!JobDragDropCache.TryGetValue(config.ConfigName, out var dragDrop))
+        {
+            dragDrop = new ImGuiEx.RealtimeDragDrop<Job>(
+                $"JobPriority_{config.ConfigName}",
+                job => job.ToString(),
+                smallButton: true);
+            JobDragDropCache[config.ConfigName] = dragDrop;
+        }
+
+        // Load saved order from config into the jobs list
+        LoadJobOrderFromConfig(config, jobList);
+
+        ImGui.Indent();
+
+        // Draw description if provided
+        if (!string.IsNullOrEmpty(description))
+        {
+            ImGui.TextWrapped(description);
+            ImGui.Spacing();
+        }
+
+        // Begin the drag-drop session
+        dragDrop.Begin();
+
+        // Draw each job as a draggable item
+        for (int i = 0; i < jobList.Count; i++)
+        {
+            var job = jobList[i];
+
+            // Mark the start of this row (for the drag-drop system)
+            dragDrop.NextRow();
+
+            // Draw the job box with drag button
+            DrawJobBox(dragDrop, job, jobList, i);
+        }
+
+        // Finalize the drag-drop overlay
+        dragDrop.End();
+
+        // Save the updated order to config after any changes
+        SaveJobOrderToConfig(config, jobList);
+
+        // Add tooltip and context menu
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text("Drag jobs to reorder. Left = Higher Priority.");
+            ImGui.EndTooltip();
+        }
+
+        DrawResetContextMenu(config.ConfigName);
+
+        ImGui.Unindent();
+        ImGui.Spacing();
+    }
+
+    /// <summary>
+    ///     Draws a single job box with its drag handle.
+    /// </summary>
+    private static void DrawJobBox(
+        ImGuiEx.RealtimeDragDrop<Job> dragDrop,
+        Job job,
+        List<Job> jobs,
+        int index)
+    {
+        var classJobRow = Svc.Data.GetExcelSheet<ClassJob>()
+            .GetRowOrDefault((uint)job);
+        var color = dragDrop.SetRowColor(job, false)
+            ? ImGuiColors.ParsedGreen
+            : ImGuiColors.DalamudWhite;
+
+        // Register the drag target and place the button next to it.
+        dragDrop.DrawButtonDummy(job, jobs, index);
+        ImGui.SameLine();
+
+        // Apply the desired frame styling for the button border.
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameRounding, 3f);
+        ImGui.PushStyleColor(ImGuiCol.Border, color);
+
+        ImGui.TextColored(color,
+            CultureInfo.CurrentCulture.TextInfo.ToTitleCase(
+                classJobRow?.Name.ToString() ?? job.ToString()));
+
+        ImGui.PopStyleColor();
+        ImGui.PopStyleVar();
+        ImGui.PopStyleVar();
+    }
+
+    /// <summary>
+    ///     Loads the job order from the config into the jobs list, reordering it accordingly.
+    /// </summary>
+    private static void LoadJobOrderFromConfig(UserIntArray config, List<Job> jobs)
+    {
+        // If config is empty or size mismatch, initialize with current order
+        if (config.Count != jobs.Count || config.Any(x => x == 0))
+        {
+            SaveJobOrderToConfig(config, jobs);
+            return;
+        }
+
+        // Build the ordered list from stored job IDs
+        var orderedJobs = new List<Job>(jobs.Count);
+        for (int i = 0; i < config.Count; i++)
+        {
+            var jobId = (Job)config[i];
+            if (jobs.Contains(jobId))
+                orderedJobs.Add(jobId);
+        }
+
+        // Add any jobs that weren't in the config (e.g., new jobs)
+        foreach (var job in jobs)
+        {
+            if (!orderedJobs.Contains(job))
+                orderedJobs.Add(job);
+        }
+
+        // Update the original list with the ordered jobs
+        jobs.Clear();
+        jobs.AddRange(orderedJobs);
+    }
+
+    /// <summary>
+    ///     Saves the current job order from the list to the config.
+    /// </summary>
+    private static void SaveJobOrderToConfig(UserIntArray config, List<Job> jobs)
+    {
+        // Resize if needed
+        if (config.Count != jobs.Count)
+            config.Clear(jobs.Count);
+
+        // Store each job's byte value
+        for (int i = 0; i < jobs.Count; i++)
+            config[i] = (int)jobs[i];
+    }
+
+    /// <summary>
+    ///     Converts a <see cref="UserIntArray"/> job priority config to a
+    ///     <see cref="Dictionary{Job, int}"/> for use in priority lookups.
+    /// </summary>
+    /// <param name="config">The config containing the ordered job IDs.</param>
+    /// <returns>A dictionary mapping each Job to its priority (0 = highest).</returns>
+    internal static Dictionary<Job, int> GetJobPriorityDictionary(UserIntArray 
+            config)
+    {
+        var dict = new Dictionary<Job, int>();
+        for (int i = 0; i < config.Count; i++)
+        {
+            var job = (Job)config[i];
+            dict[job] = i;
+        }
+        return dict;
+    }
+
+    #endregion
 
     public static int RoundOff(this int i, uint sliderIncrement)
     {

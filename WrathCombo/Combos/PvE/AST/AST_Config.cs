@@ -1,4 +1,10 @@
-﻿using Dalamud.Interface.Colors;
+﻿using System;
+using System.Linq;
+using System.Numerics;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility.Raii;
+using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
@@ -13,6 +19,24 @@ internal partial class AST
         public static UserIntArray
             AST_ST_SimpleHeals_Priority = new("AST_ST_SimpleHeals_Priority", [12,11,10,9,8,6,7,5,4,3,2,1]),
             AST_AoE_SimpleHeals_Priority = new("AST_AoE_SimpleHeals_Priority", [3, 6, 1, 4, 7, 2, 8, 9, 5]);
+        
+        public static UserIntArray AST_CardPriorities_Balance = new(
+            "AST_CardPriorities_Balance",
+            // Actual Priorities
+            [(int)Job.SAM, (int)Job.NIN, (int)Job.DRG, (int)Job.MNK, (int)Job.VPR, 
+             (int)Job.DRK, (int)Job.RPR,
+             // The rest ...
+             (int)Job.GNB, (int)Job.WAR, (int)Job.PLD,
+            ]);
+        
+        public static UserIntArray AST_CardPriorities_Spear = new(
+            "AST_CardPriorities_Spear",
+            // Actual Priorities
+            [(int)Job.PCT, (int)Job.RDM, (int)Job.SMN, (int)Job.MCH, (int)Job.BRD, 
+             (int)Job.BLM, (int)Job.DNC,
+             // The rest ...
+             (int)Job.SGE, (int)Job.WHM, (int)Job.SCH, (int)Job.AST,
+            ]);
         
         public static UserInt
             //HEALS
@@ -85,6 +109,7 @@ internal partial class AST
             AST_AoE_SimpleHeals_WeaveHoroscopeHeal = new("AST_AoE_SimpleHeals_WeaveHoroscopeHeal"),
             AST_AoE_SimpleHeals_WeaveStellarDetonation = new("AST_AoE_SimpleHeals_WeaveStellarDetonation"),
             //DPS
+            AST_Cards_QuickTargetCards_Custom = new("AST_Cards_QuickTargetCards_Custom"),
             AST_ST_DPS_OverwriteHealCards = new("AST_ST_DPS_OverwriteHealCards"),
             AST_AOE_DPS_OverwriteHealCards = new("AST_AOE_DPS_OverwriteHealCards"),
             AST_QuickTarget_Manuals = new("AST_QuickTarget_Manuals", true);
@@ -381,6 +406,38 @@ internal partial class AST
                 
                 #region Standalone
                 case Preset.AST_Cards_QuickTargetCards:
+                    
+                    DrawAdditionalBoolChoice(AST_Cards_QuickTargetCards_Custom,
+                        "Use Custom Priority", "",
+                        indentDescription: true);
+                    if (AST_Cards_QuickTargetCards_Custom)
+                    {
+                        ImGui.Indent();
+                        ImGui.TextWrapped("Will search the list from top to bottom for the first eligible (No DD / Sickness) within the appropriate role for the card." +
+                                          "\nIf no eligible party member is found within the appropriate role, it will search for the first eligible party member from the other role.");
+                        ImGui.Unindent();
+                        
+                        ImGuiEx.Spacing(new Vector2(0f, 20f));
+
+                        DrawJobPriorityDragDrop(
+                            AST_CardPriorities_Balance,
+                            Enum.GetValues<Job>().Where(IsMeleeOrTank).ToList(),
+                            description: "Drag to set balance targeting priority");
+                        DrawJobPriorityDragDrop(
+                            AST_CardPriorities_Spear,
+                            Enum.GetValues<Job>().Where(IsRangedOrHealer).ToList(),
+                            description: "Drag to set spear targeting priority");
+
+                        bool IsMeleeOrTank(Job job) =>
+                            DefaultCombatJobs.Contains(job) &&
+                            (CustomComboFunctions.JobRoles.Melee.Contains((uint)job) ||
+                             CustomComboFunctions.JobRoles.Tank.Contains((uint)job));
+
+                        bool IsRangedOrHealer(Job job) =>
+                            DefaultCombatJobs.Contains(job) &&
+                            CustomComboFunctions.JobRoles.Ranged.Contains((uint)job);
+                    }
+                    
                     DrawAdditionalBoolChoice(AST_QuickTarget_Manuals,
                         "Also Retarget manually-used Cards",
                         "Will also automatically target Cards that you manually use, as in, those outside of your damage rotations.",
@@ -394,7 +451,9 @@ internal partial class AST
                     DrawRadioButton(AST_QuickTarget_Override, "Hard Target Override", "Overrides selection with hard target, if you have one that is in range and does not have damage down or rez sickness.", 1, descriptionAsTooltip: true);
                     DrawRadioButton(AST_QuickTarget_Override, "UI MouseOver Override", "Overrides selection with UI MouseOver target, if you have one that is in range and does not have damage down or rez sickness.", 2, descriptionAsTooltip: true);
                     DrawRadioButton(AST_QuickTarget_Override, "Any MouseOver Override", "Overrides selection with UI or Nameplate or Model MouseOver target (in that order), if you have one that is in range and does not have damage down or rez sickness.", 3, descriptionAsTooltip: true);
-                    break;
+                    
+                    break; 
+                    
                 
                 case Preset.AST_Retargets_EarthlyStar:
                     ImGui.Indent();
