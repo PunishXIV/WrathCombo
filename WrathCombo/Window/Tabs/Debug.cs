@@ -10,7 +10,6 @@ using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
-using ECommons.GameHelpers.LegacyPlayer;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
@@ -41,7 +40,6 @@ using Action = Lumina.Excel.Sheets.Action;
 using BattleNPCSubKind = Dalamud.Game.ClientState.Objects.Enums.BattleNpcSubKind;
 using ObjectKind = Dalamud.Game.ClientState.Objects.Enums.ObjectKind;
 using Status = Dalamud.Game.ClientState.Statuses.IStatus;
-using Player = ECommons.GameHelpers.Player;
 
 #endregion
 
@@ -594,17 +592,6 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Party Combat Time:", PartyEngageDuration().ToString("mm\\:ss\\:ff"));
             CustomStyleText("Alliance Group:", GetAllianceGroup());
 
-            if (CheckForSharedDamageEffect(out var poorsap, out bool multihit))
-            {
-                CustomStyleText($"Shared Damage Effect Detected On", $"{poorsap.Name}");
-                CustomStyleText($"Shared Damage is Multi-Hit", $"{multihit}");
-            }
-
-            if (TryGetTankBusterTarget(out var tankBusterTarget))
-            {
-                CustomStyleText($"Tankbuster Detected On", $"{tankBusterTarget.Name}");
-            }
-
             ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
         }
 
@@ -1091,6 +1078,10 @@ internal class Debug : ConfigWindow, IDisposable
         if (ImGui.CollapsingHeader("VFX Info"))
         {
             ImGui.Indent();
+
+            CustomStyleText($"Shared Damage Effect On", CheckForSharedDamageEffect(out float distance, out bool multihit, out var poorsap) ? $"{poorsap?.Name} {distance:F1}y Multi-Hit {multihit}" : "");
+            CustomStyleText($"Tankbuster Detected On", $"{(TryGetTankBusterTarget(out var tankBusterTarget) ? tankBusterTarget?.Name : "")}");
+
             if (ImGui.CollapsingHeader("Friendly Target VFX"))
             {
                 ImGuiEx.TextWrapped($"Mainly to be used with ARR and real party members since they don't actually get added to the party for some reason.");

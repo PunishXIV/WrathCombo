@@ -299,7 +299,7 @@ internal abstract partial class CustomComboFunctions
         WeaveTypes.DelayWeave => CanDelayedWeave(),
         _ => false
     };
-    
+
     /// <summary> Gets the current combo timer. </summary>
     public static unsafe float ComboTimer => ActionManager.Instance()->Combo.Timer;
 
@@ -325,16 +325,15 @@ internal abstract partial class CustomComboFunctions
 
     public static bool GroupDamageIncoming(float? maxTimeRemaining = null) =>
         RaidwideCasting(maxTimeRemaining) ||
-        (CheckForSharedDamageEffect(out var target, out _) &&
-         target.IsWithinRange(6));
+        (CheckForSharedDamageEffect(out float distance, out _, out _) &&
+         distance <= 6);
 
     public static bool GroupDamageIncoming
         (out bool isMultiHit, float? maxTimeRemaining = null)
     {
         isMultiHit = false;
-        
-        return (CheckForSharedDamageEffect(out var target, out isMultiHit) &&
-                target.IsWithinRange(6)) ||
+        return (CheckForSharedDamageEffect(out float distance, out isMultiHit, out _) &&
+                distance <= 6) ||
                RaidwideCasting(maxTimeRemaining);
     }
 

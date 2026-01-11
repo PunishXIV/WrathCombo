@@ -6,7 +6,6 @@ using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -104,7 +103,7 @@ internal abstract partial class CustomComboFunctions
     /// <returns>Float representing remaining status effect time</returns>
     public unsafe static float GetStatusEffectRemainingTime(ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectRemainingTime(GetStatusEffect(effectId, target, anyOwner));
-    
+
     /// <summary>
     ///     Same as <see cref="GetStatusEffectRemainingTime(ushort, IGameObject?, bool)"/>,
     ///     but returns NaN if the status effect is not found, failing
@@ -455,144 +454,6 @@ internal abstract partial class CustomComboFunctions
     public static bool CanApplyStatus(IGameObject? target, ushort[] status) =>
         status.Any(statusId => CanApplyStatus(target, statusId));
 
-    private const StringComparison Lower = StringComparison.OrdinalIgnoreCase;
-
-    /// <summary>
-    /// Text Comparison for Tank Buster VFX Paths
-    /// </summary>
-    /// <param name="vfx">The VFX to check the Path of</param>
-    /// <returns>Bool if vfx path matches</returns>
-    public static bool IsTankBusterEffectPath(VfxInfo vfx)
-    {
-        return TankbusterPaths.Any(x => vfx.Path.StartsWith(x, Lower));
-    }
-
-    private static List<string> TankbusterPaths =
-    [
-        "vfx/lockon/eff/tank", //Generic TB check
-        "vfx/lockon/eff/x6fe_fan100_50_0t1", //Necron Blue Shockwave - Cone Tankbuster
-        "vfx/common/eff/mon_eisyo03t", //M10 Deep Impact AoE TB (also generic?)
-        "vfx/lockon/eff/m0676trg_tw_d0t1p", //M10 Hot Impact shared TB
-        "vfx/lockon/eff/m0676trg_tw_s6_d0t1p", //M11 Raw Steel
-        "vfx/lockon/eff/z6r2b3_8sec_lockon_c0a1", //Kam'lanaut Princely Blow
-        "vfx/lockon/eff/m0742trg_b1t1", //M7 Abominable Blink
-        "vfx/lockon/eff/x6r9_tank_lockonae" //M9 Hardcore Large TB
-    ];
-
-    /// <summary>
-    /// Text Comparison for Shared Damage Effect VFX Paths
-    /// </summary>
-    /// <param name="vfx">The VFX to check the Path of</param>
-    /// <returns></returns>
-    private static bool IsShareDamageEffectPath(VfxInfo vfx)
-    {
-        return vfx.Path.StartsWith("vfx/lockon/eff/coshare", Lower) ||
-               vfx.Path.StartsWith("vfx/lockon/eff/share_laser", Lower) ||
-               vfx.Path.StartsWith("vfx/lockon/eff/com_share", Lower);
-    }
-
-    private static bool IsMultiHitSharedDamageEffectPath(VfxInfo vfx)
-    {
-        return vfx.Path.StartsWith("vfx/lockon/eff/com_share5a1", Lower) ||
-            vfx.Path.StartsWith("vfx/lockon/eff/m0922trg_t2w", Lower);
-    }
-
-    /// <summary>
-    /// Checks for the presence of a shared damage effect on any party member and identifies the target and whether the
-    /// effect is multi-hit.
-    /// </summary>
-    /// <remarks>Only effects targeting party members are considered.</remarks>
-    /// <param name="target">When this method returns, contains the party member affected by the shared damage effect, or null if no such
-    /// effect is found.</param>
-    /// <param name="isMultiHit">When this method returns, contains a value indicating whether the detected shared damage effect is a multi-hit
-    /// effect.</param>
-    /// <returns>true if a shared damage effect is detected on a party member; otherwise, false.</returns>
-    public static bool CheckForSharedDamageEffect(out IBattleChara? target, out bool isMultiHit)
-    {
-        target = null;
-        isMultiHit = false;
-
-        var AoEEffects = VfxManager.TrackedEffects
-            .FilterToTargeted()
-            .Where(x => x.TargetID.GetObject().IsInParty())
-            .ToList();
-
-        if (AoEEffects.Count == 0)
-            return false;
-
-        // First: Check for multi-hit specific paths (vfx path is more specific so higher priority)
-        VfxInfo multiHitVfx = AoEEffects.FirstOrDefault(IsMultiHitSharedDamageEffectPath);
-        if (multiHitVfx.VfxID != 0)
-        {
-            target = multiHitVfx.TargetID.GetObject() as IBattleChara;
-            if (target != null)
-            {
-                isMultiHit = true;
-                return true;
-            }
-        }
-
-        // Then: Check for regular shared damage
-        VfxInfo regularVfx = AoEEffects.FirstOrDefault(IsShareDamageEffectPath);
-        if (regularVfx.VfxID != 0)
-        {
-            target = regularVfx.TargetID.GetObject() as IBattleChara;
-            return target != null;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to retrieve the current target of a detected tank buster visual effect.
-    /// </summary>
-    /// <remarks>This method searches for an active tank buster visual effect and attempts to resolve its
-    /// target to a battle character. If no such effect is present or the target cannot be resolved, target is set to
-    /// null and the method returns false. Probably won't work in dual tank situation.</remarks>
-    /// <param name="target">When this method returns, contains the battle character targeted by the tank buster effect, if found; otherwise,
-    /// null. This parameter is passed uninitialized.</param>
-    /// <returns>true if a tank buster target is found and assigned to target; otherwise, false.</returns>
-    public static bool TryGetTankBusterTarget(out IBattleChara target)
-    {
-        target = null!;
-
-        var tankBusterVfx = VfxManager.TrackedEffects
-            .FilterToTargeted()
-            .FilterToTargetRole(CombatRole.Tank)
-            .Where(x => x.TargetID.GetObject().IsInParty())
-            .FirstOrDefault(IsTankBusterEffectPath);
-
-        if (tankBusterVfx.VfxID == 0)
-            return false;
-
-        if (tankBusterVfx.TargetID.GetObject() is not IBattleChara battleChara)
-            return false;
-
-        target = battleChara;
-        return true;
-    }
-
-    /// <summary>
-    /// Checks if the specified character has an active tank buster marker on them.
-    /// </summary>
-    /// <param name="targetObject">The character to check. Defaults to the local player.</param>
-    /// <returns>true if the target has an active tank buster effect, false otherwise.</returns>
-    public static bool HasIncomingTankBusterEffect(
-        IGameObject? targetObject = null)
-    {
-        // Default to local player if none provided
-        targetObject ??= Player.Object;
-
-        if (targetObject == null)
-            return false;
-
-        ulong targetId = targetObject.GameObjectId;
-
-        return VfxManager.TrackedEffects
-            .FilterToTarget(targetId)
-            .Any(IsTankBusterEffectPath);
-    }
-
     public static bool HasCleansableDoom(IGameObject? target = null)
     {
         target ??= CurrentTarget;
@@ -603,4 +464,5 @@ internal abstract partial class CustomComboFunctions
 
         return StatusCache.HasCleansableDoom(target);
     }
+
 }
