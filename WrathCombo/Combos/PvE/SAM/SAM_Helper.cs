@@ -15,7 +15,7 @@ internal partial class SAM
 {
     #region Basic Combo
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorthIfEnabled = true, bool simpleMode = false)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true, bool simpleMode = false)
     {
         if (ComboTimer > 0)
         {
@@ -47,14 +47,14 @@ internal partial class SAM
             if (ComboAction is Jinpu && LevelChecked(Gekko))
                 return !OnTargetsRear() &&
                        Role.CanTrueNorth() &&
-                       useTrueNorthIfEnabled
+                       useTrueNorth
                     ? Role.TrueNorth
                     : Gekko;
 
             if (ComboAction is Shifu && LevelChecked(Kasha))
                 return !OnTargetsFlank() &&
                        Role.CanTrueNorth() &&
-                       useTrueNorthIfEnabled
+                       useTrueNorth
                     ? Role.TrueNorth
                     : Kasha;
         }
@@ -161,9 +161,6 @@ internal partial class SAM
         !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(SAM_ST_MeditateTimeStill) &&
         InCombat() && !HasBattleTarget();
 
-    //  private static bool HasMaxMeikyoCharges =>
-    //    GetRemainingCharges(MeikyoShisui) == GetMaxCharges(MeikyoShisui);
-
     #endregion
 
     #region Meikyo
@@ -205,7 +202,7 @@ internal partial class SAM
         return false;
     }
 
-    private static uint DoMeikyoCombo(uint actionId, bool useTrueNorthIfEnabled = true, bool simpleMode = false)
+    private static uint DoMeikyoCombo(uint actionId, bool useTrueNorth = true, bool simpleMode = false)
     {
         if ((simpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
             LevelChecked(Yukikaze) && !HasSetsu &&
@@ -220,7 +217,7 @@ internal partial class SAM
              OnTargetsFlank() && HasKa))
             return !OnTargetsRear() &&
                    Role.CanTrueNorth() &&
-                   useTrueNorthIfEnabled
+                   useTrueNorth
                 ? Role.TrueNorth
                 : Gekko;
 
@@ -231,7 +228,7 @@ internal partial class SAM
              OnTargetsRear() && HasGetsu))
             return !OnTargetsFlank() &&
                    Role.CanTrueNorth() &&
-                   useTrueNorthIfEnabled
+                   useTrueNorth
                 ? Role.TrueNorth
                 : Kasha;
 
@@ -300,7 +297,7 @@ internal partial class SAM
                     Kenki >= 90)
                     return true;
 
-                if (JustUsed(Senei, 15f) &&
+                if (JustUsed(Senei, 20f) &&
                     !JustUsed(Ikishoten))
                     return true;
 
@@ -342,10 +339,10 @@ internal partial class SAM
                 return true;
 
             if (!simpleMode &&
-                IsNotEnabled(Preset.SAM_ST_CDs_UseHiganbana) && JustUsed(Ikishoten, 15f))
+                IsNotEnabled(Preset.SAM_ST_CDs_UseHiganbana) && JustUsed(Ikishoten, 20f))
                 return true;
 
-            if (JustUsed(TendoKaeshiSetsugekka, 15f) &&
+            if (JustUsed(TendoKaeshiSetsugekka, 20f) &&
                 GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget) > 8)
                 return true;
 
@@ -583,7 +580,7 @@ internal partial class SAM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([18, 23], () => Kenki < SAMKenki.Shinten),
-            ([20, 25], () => Kenki < SAMKenki.Gyoten)
+            ([20, 25], () => Kenki < SAMKenki.Gyoten || IsOnCooldown(Gyoten) || SAM_Opener_IncludeGyoten == 1)
         ];
 
         public override Preset Preset => Preset.SAM_ST_Opener;

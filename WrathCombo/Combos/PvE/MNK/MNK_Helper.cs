@@ -12,7 +12,7 @@ internal partial class MNK
 {
     #region Basic Combo
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorthIfEnabled = true)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true)
     {
         if (!LevelChecked(TrueStrike))
             return Bootshine;
@@ -32,14 +32,14 @@ internal partial class MNK
             if (CoeurlStacks is 0 && LevelChecked(Demolish))
                 return !OnTargetsRear() &&
                        Role.CanTrueNorth() &&
-                       useTrueNorthIfEnabled
+                       useTrueNorth
                     ? Role.TrueNorth
                     : Demolish;
 
             if (LevelChecked(SnapPunch))
                 return !OnTargetsFlank() &&
                        Role.CanTrueNorth() &&
-                       useTrueNorthIfEnabled
+                       useTrueNorth
                     ? Role.TrueNorth
                     : OriginalHook(SnapPunch);
         }

@@ -18,6 +18,12 @@ internal partial class SAM
                     ImGui.NewLine();
                     DrawSliderInt(0, 13, SAM_Opener_PrePullDelay,
                         $"Delay from first {MeikyoShisui.ActionName()} to next step. (seconds)\nDelay is enforced by replacing your button with Savage Blade.");
+
+                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        $"Include {Gyoten.ActionName()}", $"Include {Gyoten.ActionName()}", 0);
+
+                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        $"Skip {Gyoten.ActionName()}", $"Skip {Gyoten.ActionName()} in the opener.", 1);
                     break;
 
                 case Preset.SAM_ST_CDs_UseHiganbana:
@@ -148,6 +154,7 @@ internal partial class SAM
         public static UserInt
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
+            SAM_Opener_IncludeGyoten = new("SAM_Opener_IncludeGyoten"),
             SAM_ST_HiganbanaBossOption = new("SAM_ST_HiganbanaBossOption"),
             SAM_ST_HiganbanaBossAddsOption = new("SAM_ST_HiganbanaBossAddsOption", 50),
             SAM_ST_HiganbanaTrashOption = new("SAM_ST_HiganbanaTrashOption", 100),

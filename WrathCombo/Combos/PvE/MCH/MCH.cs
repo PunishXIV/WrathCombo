@@ -268,7 +268,8 @@ internal partial class MCH : PhysicalRanged
 
             //Reassemble to start before combat/after downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                CanReassemble() && !IsOverheated && !HasWeaved())
+                CanReassemble() && !IsOverheated && !HasWeaved() &&
+                GetRemainingCharges(Reassemble) > MCH_ST_ReassemblePool)
                 return Reassemble;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -550,7 +551,8 @@ internal partial class MCH : PhysicalRanged
                 return HasBattleTarget() &&
                        (!LevelChecked(CheckMate) ||
                         LevelChecked(CheckMate) &&
-                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
+                        IsNotEnabled(Preset.MCH_AoE_Adv_GaussRicochet))
                     ? AutoCrossbow
                     : BlazingShot;
 

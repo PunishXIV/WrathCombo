@@ -97,7 +97,7 @@ internal partial class RPR : Melee
             }
 
             //Shadow Of Death
-            if (CanUseShadowOfDeath(true))
+            if (CanUseShadowOfDeath())
                 return ShadowOfDeath;
 
             //Perfectio

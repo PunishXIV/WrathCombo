@@ -110,40 +110,7 @@ internal partial class DRG : Melee
                     return Stardiver;
             }
 
-            //1-2-3 Combo
-            if (ComboTimer > 0)
-            {
-                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
-                    return LevelChecked(Disembowel) &&
-                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
-                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
-                            GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
-                        ? OriginalHook(Disembowel)
-                        : OriginalHook(VorpalThrust);
-
-                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
-                    return Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
-                        ? Role.TrueNorth
-                        : OriginalHook(ChaosThrust);
-
-                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
-                    return Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
-                        ? Role.TrueNorth
-                        : WheelingThrust;
-
-                if (ComboAction == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
-                    return OriginalHook(FullThrust);
-
-                if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
-                    return Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsFlank()
-                        ? Role.TrueNorth
-                        : FangAndClaw;
-
-                if (ComboAction is WheelingThrust or FangAndClaw && LevelChecked(Drakesbane))
-                    return Drakesbane;
-            }
-
-            return actionID;
+            return BasicCombo(actionID,true);
         }
     }
 
@@ -433,42 +400,7 @@ internal partial class DRG : Melee
             }
 
             //1-2-3 Combo
-            if (ComboTimer > 0)
-            {
-                if (ComboAction is TrueThrust or RaidenThrust && LevelChecked(VorpalThrust))
-                    return LevelChecked(Disembowel) &&
-                           (LevelChecked(ChaosThrust) && ChaosDebuff is null &&
-                            CanApplyStatus(CurrentTarget, ChaoticList[OriginalHook(ChaosThrust)]) ||
-                            GetStatusEffectRemainingTime(Buffs.PowerSurge) < 15)
-                        ? OriginalHook(Disembowel)
-                        : OriginalHook(VorpalThrust);
-
-                if (ComboAction == OriginalHook(Disembowel) && LevelChecked(ChaosThrust))
-                    return IsEnabled(Preset.DRG_TrueNorthDynamic) &&
-                           Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
-                        ? Role.TrueNorth
-                        : OriginalHook(ChaosThrust);
-
-                if (ComboAction == OriginalHook(ChaosThrust) && LevelChecked(WheelingThrust))
-                    return IsEnabled(Preset.DRG_TrueNorthDynamic) &&
-                           Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsRear()
-                        ? Role.TrueNorth
-                        : WheelingThrust;
-
-                if (ComboAction == OriginalHook(VorpalThrust) && LevelChecked(FullThrust))
-                    return OriginalHook(FullThrust);
-
-                if (ComboAction == OriginalHook(FullThrust) && LevelChecked(FangAndClaw))
-                    return IsEnabled(Preset.DRG_TrueNorthDynamic) &&
-                           Role.CanTrueNorth() && CanDRGWeave() && !OnTargetsFlank()
-                        ? Role.TrueNorth
-                        : FangAndClaw;
-
-                if (ComboAction is WheelingThrust or FangAndClaw && LevelChecked(Drakesbane))
-                    return Drakesbane;
-            }
-
-            return actionID;
+            return BasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic));
         }
     }
 
@@ -486,7 +418,9 @@ internal partial class DRG : Melee
 
             // Piercing Talon Uptime Option
             if (IsEnabled(Preset.DRG_AoE_RangedUptime) &&
-                LevelChecked(PiercingTalon) && !InMeleeRange() && HasBattleTarget())
+                ActionReady(PiercingTalon) && 
+                !InActionRange(DoomSpike) && HasBattleTarget() && 
+                !CanDRGWeave())
                 return PiercingTalon;
 
             if (HasStatusEffect(Buffs.PowerSurge))

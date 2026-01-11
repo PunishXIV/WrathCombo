@@ -65,72 +65,41 @@ internal partial class RPR
 
     #region SoD
 
-    private static bool CanUseShadowOfDeath(bool simpleMode = false)
+    private static bool CanUseShadowOfDeath()
     {
+        int dotRefresh = IsNotEnabled(Preset.RPR_ST_SimpleMode) ? RPR_SoDRefreshRange : 8;
+
         if (LevelChecked(ShadowOfDeath) && !HasStatusEffect(Buffs.SoulReaver) &&
             !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.PerfectioParata) &&
             !HasStatusEffect(Buffs.ImmortalSacrifice) && !IsComboExpiring(3) &&
             CanApplyStatus(CurrentTarget, Debuffs.DeathsDesign) &&
             !JustUsed(ShadowOfDeath))
         {
-            switch (simpleMode)
+            if ((IsNotEnabled(Preset.RPR_ST_SimpleMode) && RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() ||
+                 IsEnabled(Preset.RPR_ST_SimpleMode) && !InBossEncounter()) &&
+                !HasStatusEffect(Buffs.Enshrouded) &&
+                GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
+                return true;
+
+            if (RPR_ST_ArcaneCircleBossOption == 0 || InBossEncounter() ||
+                IsNotEnabled(Preset.RPR_ST_ArcaneCircle))
             {
-                case true when !InBossEncounter() && LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
-                               GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= 8:
-                    return true;
-                case true:
-                {
-                    if (InBossEncounter())
-                    {
-                        //Double enshroud
-                        if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                            (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
-                            (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
-                            return true;
-
-                        //lvl 88+ general use
-                        if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
-                            GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= 8 &&
-                            (GetCooldownRemainingTime(ArcaneCircle) > GCD * 8 || IsOffCooldown(ArcaneCircle)))
-                            return true;
-
-                        //below lvl 88 use
-                        if (!LevelChecked(PlentifulHarvest) &&
-                            GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= 8)
-                            return true;
-                    }
-                    break;
-                }
-
-                case false when RPR_ST_ArcaneCircleBossOption == 1 && !InBossEncounter() &&
-                                !HasStatusEffect(Buffs.Enshrouded) &&
-                                GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= RPR_SoDRefreshRange:
+                //Double enshroud
+                if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
+                    (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
+                    (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
                     return true;
 
-                case false:
-                {
-                    if (RPR_ST_ArcaneCircleBossOption == 0 || InBossEncounter() ||
-                        IsNotEnabled(Preset.RPR_ST_ArcaneCircle))
-                    {
-                        //Double enshroud
-                        if (LevelChecked(PlentifulHarvest) && HasStatusEffect(Buffs.Enshrouded) &&
-                            (GetCooldownRemainingTime(ArcaneCircle) <= GCD || IsOffCooldown(ArcaneCircle)) &&
-                            (JustUsed(VoidReaping, 2f) || JustUsed(CrossReaping, 2f)))
-                            return true;
+                //lvl 88+ general use
+                if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
+                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh &&
+                    (GetCooldownRemainingTime(ArcaneCircle) > GCD * 8 || IsOffCooldown(ArcaneCircle)))
+                    return true;
 
-                        //lvl 88+ general use
-                        if (LevelChecked(PlentifulHarvest) && !HasStatusEffect(Buffs.Enshrouded) &&
-                            GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= RPR_SoDRefreshRange &&
-                            (GetCooldownRemainingTime(ArcaneCircle) > GCD * 8 || IsOffCooldown(ArcaneCircle)))
-                            return true;
-
-                        //below lvl 88 use
-                        if (!LevelChecked(PlentifulHarvest) &&
-                            GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= RPR_SoDRefreshRange)
-                            return true;
-                    }
-                    break;
-                }
+                //below lvl 88 use
+                if (!LevelChecked(PlentifulHarvest) &&
+                    GetStatusEffectRemainingTime(Debuffs.DeathsDesign, CurrentTarget) <= dotRefresh)
+                    return true;
             }
         }
 
