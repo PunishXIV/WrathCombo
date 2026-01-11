@@ -28,7 +28,7 @@ internal partial class BLM
         LevelChecked(FlareStar) && AstralSoulStacks is 6;
 
     private static IStatus? ThunderDebuffST =>
-        GetStatusEffect(ThunderList[OriginalHook(Thunder)],CurrentTarget);
+        GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
 
     private static IStatus? ThunderDebuffAoE =>
         GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);

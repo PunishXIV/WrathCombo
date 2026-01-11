@@ -1701,7 +1701,7 @@ public enum Preset
     [ConflictingCombos(BLM_Retargetting_Aetherial_Manipulation)]
     [CustomComboInfo("Aetherial Manipulation Feature", "Replaces Aetherial Manipulation with Between the Lines when you are out of active Ley Lines and standing still.", Job.BLM)]
     BLM_Aetherial_Manipulation = 2055,
-
+    
     #endregion
 
     // Last value ST = 2117
@@ -9252,8 +9252,18 @@ public enum Preset
     [PvPCustomCombo]
     [CustomComboInfo("Phantom Dart Option", "Uses Phantom Dart (if selected) when available at or below set health threshold.", Job.PCT)]
     PCTPvP_PhantomDart = 140009,
+    
+    [PvPCustomCombo]
+    [ReplaceSkill(PCTPvP.LivingMuse)]
+    [CustomComboInfo("One Button Motifs", "Replaces Living Muse with One button Motifs", Job.PCT)]
+    PCTPvP_OneButtonMotifs = 140010,
 
-    // Last value = 140009
+    [PvPCustomCombo]
+    [ParentCombo(PCTPvP_OneButtonMotifs)]
+    [CustomComboInfo("Star Prism Option", "Adds Star Prism.", Job.PCT)]
+    PCTPvP_StarPrismOneButtonMotifs = 140011,
+
+    // Last value = 140011
 
     #endregion
 
@@ -9766,8 +9776,13 @@ public enum Preset
     [ParentCombo(WHMPvP_Heals)]
     [CustomComboInfo("Aquaveil Option", "Adds Aquaviel to Cure II when available.", Job.WHM)]
     WHMPvP_Aquaveil = 129007,
+    
+    [PvPCustomCombo]
+    [ReplaceSkill(WHMPvP.SeraphStrike)]
+    [CustomComboInfo("Seraph Strike to Glare 4", "Replaces Seraph Strike with Glare 4", Job.WHM)]
+    WHMPvP_Seraphstrike = 129011,
 
-    // Last value = 129010
+    // Last value = 129011
 
     #endregion
 
