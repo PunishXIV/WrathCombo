@@ -109,8 +109,6 @@ internal sealed class ActionReplacer : IDisposable
                 UpdateFilteredCombos();
 
             // Bail if not wanting to replace actions in this manner
-            if (Service.Configuration.PerformanceMode)
-                return OriginalHook(actionID);
             if (!Player.Available)
                 return OriginalHook(actionID);
 

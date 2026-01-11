@@ -389,20 +389,6 @@ public static class ActionWatching
                 var original = actionId; //Save the original action, do not modify
                 var originalTargetId = targetId; //Save the original target, do not modify
 
-                if (Service.Configuration.ActionChanging && Service.Configuration.PerformanceMode) //Performance mode only logic, to modify the actionId
-                {
-                    var result = actionId;
-
-                    foreach(var combo in ActionReplacer.FilteredCombos)
-                    {
-                        if(combo.TryInvoke(actionId, out result))
-                        {
-                            actionId = Service.ActionReplacer.LastActionInvokeFor[actionId] = result; //Sets actionId and the LastActionInvokeFor dictionary entry to the result of the combo
-                            break;
-                        }
-                    }
-                }
-
                 var modifiedAction = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
                 var changed = CheckForChangedTarget(original, ref targetId,
                     out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
@@ -433,7 +419,7 @@ public static class ActionWatching
                         (actionType, replacedWith, location: &location);
                 }
 
-                //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
+                //Important to pass actionId here and not replaced.
                 var hookResult = changed ? UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
                     UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 

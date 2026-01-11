@@ -246,20 +246,6 @@ public partial class Configuration : IPluginConfiguration
                      "regarding Retargeting.")]
     public bool ActionChanging = true;
 
-    /// Whether actions should only be replaced with a value from a Combo at Use time. Default: false.
-    /// <seealso cref="Data.ActionWatching.UseActionDetour"/>
-    [SettingParent(nameof(ActionChanging))]
-    [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Performance Mode",
-        "Controls whether Action Replacing will actually only work in the background.\n" +
-        "This will prevent Combos from running on your Hotbar, but will still replace Actions before they are submitted to the server.\n",
-        recommendedValue: "Off (But do try it if you have performance issues)",
-        defaultValue: "Off",
-        warningMark: "Wrath is largely designed with Action Replacing in mind.\n" +
-                     "Disabling it -even partially, like with this option- may lead\n" +
-                     "to unexpected behavior, such as regarding Retargeting AND Openers.")]
-    public bool PerformanceMode = false;
-
     /// Whether to suppress other combos when an action is queued. Default: true.
     /// <seealso cref="CustomComboNS.CustomCombo.TryInvoke"/>
     [SettingCategory(Rotation_Behavior_Options)]
@@ -273,8 +259,7 @@ public partial class Configuration : IPluginConfiguration
         "Combos will not be disabled when actions are queued from a combo.\n" +
         "- This prevents your hotbars 'flashing', that is the only real benefit.\n" +
         "- This does however allow Combos to conflict with each other, if one combo returns an action that another combo has as its Replaced Action.\n" +
-        "We do NOT mark these types of conflicts, and we do NOT try to avoid them as we add new features.\n\n" +
-        "If the 'flashing' bothers you it is MUCH more advised to use Performance Mode, instead of turning this off.",
+        "We do NOT mark these types of conflicts, and we do NOT try to avoid them as we add new features",
         recommendedValue: "On (NO SUPPORT if off)",
         defaultValue: "On",
         extraHelpMark: "With this enabled, whenever you queue an action that is not the same as the button you are pressing, it will disable every other button's feature from running. " +
@@ -310,7 +295,7 @@ public partial class Configuration : IPluginConfiguration
         "If you are looking for some (fairly minor) FPS gains then you can increase this value to make Combos run less often.\n" +
         "This makes your combos less responsive, and perhaps even clips GCDs.\n" +
         "At high values this will clip your GCDs by several seconds or break your rotation altogether.",
-        recommendedValue: "20-200 (More substantial performance issues should be handled with Performance Mode instead)",
+        recommendedValue: "20-200",
         defaultValue: "50",
         unitLabel: "milliseconds",
         type: Setting.Type.Number_Int,

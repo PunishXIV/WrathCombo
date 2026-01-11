@@ -350,7 +350,6 @@ public static class DebugFile
                     // Key in Settings           Alias for Setting
                     ["BlockSpellOnMove"]       = "Block Spell on Move",
                     ["ActionChanging"]         = "Action Replacing",
-                    ["PerformanceMode"]        = "Performance Mode",
                     ["SuppressQueuedActions"]  = "Queued Action Suppression",
                     ["Throttle"]               = "Throttle (ms)",
                     ["MovementLeeway"]         = "Movement Delay (s)",
