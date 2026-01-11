@@ -1,5 +1,6 @@
 ﻿#region
 
+using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -1466,6 +1467,9 @@ internal partial class DNC : PhysicalRanged
         protected override uint Invoke(uint actionID)
         {
             if (!Gauge.IsDancing) return actionID;
+            
+            if (WrathOpener.CurrentOpener?.CurrentState is OpenerState.InOpener)
+                return actionID;
 
             if (GetCustomDanceStep(actionID, out var danceStep))
                 return danceStep;

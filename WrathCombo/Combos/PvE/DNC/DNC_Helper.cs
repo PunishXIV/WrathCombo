@@ -594,7 +594,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 7),
-            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 12 : 5)),
+            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 13 : 6)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -696,7 +696,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 2),
-            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 4 : 2)),
+            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 5 : 3)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -801,7 +801,7 @@ internal partial class DNC
         } =
         [
             ([5], () => 1),
-            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 7 : 6)),
+            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 8 : 7)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -979,7 +979,7 @@ internal partial class DNC
             set;
         } =
         [
-            ([7], () => 2),
+            ([7], () => (!DNC_ST_OpenerOption_Peloton ? 3 : 2)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
