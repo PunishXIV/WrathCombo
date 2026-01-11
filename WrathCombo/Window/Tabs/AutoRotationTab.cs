@@ -71,6 +71,14 @@ internal class AutoRotationTab : ConfigWindow
         changed |= ImGui.Checkbox("Enable Automatically in Instanced Content", ref cfg.EnableInInstance);
         changed |= ImGui.Checkbox("Disable After Leaving Instanced Content", ref cfg.DisableAfterInstance);
 
+        ImGuiEx.SetNextItemWidthScaled(100);
+        changed |= ImGuiEx.SliderFloat("Queue Window (s)", ref cfg.QueueWindow, 0f, 0.5f);
+        ImGuiComponents.HelpMarker("This will determine how soon before the GCD is finished to queue up the next weaponskill or spell. Your latency may have an effect on what actions are performed so please adjust this if you're noticing improper action use, i.e double Blizzard IV casts due to MP not updating in time.");
+        if (cfg.QueueWindow > 0.5f)
+            cfg.QueueWindow = 0.5f;
+        if (cfg.QueueWindow < 0)
+            cfg.QueueWindow = 0;
+
         if (ImGui.CollapsingHeader("Damage Settings"))
         {
             ImGuiEx.TextUnderlined($"Targeting Mode");

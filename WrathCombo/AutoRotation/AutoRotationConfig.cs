@@ -18,6 +18,7 @@ public class AutoRotationConfig
     public DPSSettings DPSSettings = new();
     public int Throttler = 50;
     public bool OrbwalkerIntegration;
+    public float QueueWindow = 0.3f;
 }
 
 public class DPSSettings

@@ -79,6 +79,8 @@ public class AutoRotationConfigIPCWrapper(AutoRotationConfig? config)
 
     public int Throttler => config.Throttler;
 
+    public float QueueWindow => config.QueueWindow;
+
     #endregion
 }
 

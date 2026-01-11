@@ -300,6 +300,27 @@ public partial class Configuration : IPluginConfiguration
                      "Disabling it WILL lead to unexpected behavior, which we DO NOT support.")]
     public bool SuppressQueuedActions = true;
 
+    [SettingCategory(Rotation_Behavior_Options)]
+    [Setting("Custom Manual Queue Window",
+    "Allows you to adjust your queue window to any time during the GCD rather than just within the last 0.3-0.5s. Useful if you're not mashing " +
+    "the key or using Auto-Rotation and wish to manually intervene.",
+    recommendedValue: "On",
+    defaultValue: "Off")]
+    public bool QueueAdjust = false;
+
+    [SettingParent(nameof(QueueAdjust))]
+    [SettingCategory(Rotation_Behavior_Options)]
+    [Setting("Allow Queueing At",
+        "Will allow you to queue when the GCD is at this time or less.",
+        recommendedValue: "1.5-2.5",
+        defaultValue: "1.5",
+        warningMark: "Setting this too low or to zero will make it really hard to manually queue.",
+        unitLabel: "ms",
+        type: Setting.Type.Slider_Float,
+        sliderMin: 0f,
+        sliderMax: 2.5f)]
+    public float QueueAdjustThreshold = 1.5f;
+
     /// The throttle for how often the hotbar gets walked. Default: 50.
     /// <seealso cref="ActionChanging"/>
     /// <seealso cref="ActionReplacer.GetAdjustedActionDetour"/>
