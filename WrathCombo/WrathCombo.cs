@@ -170,12 +170,13 @@ public sealed partial class WrathCombo : IDalamudPlugin
         P = this;
         pluginInterface.Create<Service>();
         ECommonsMain.Init(pluginInterface, this, Module.All);
+        ECommonsMain.Init(pluginInterface, this, Module.VfxTracking);
         PunishLibMain.Init(pluginInterface, "Wrath Combo");
 
         ActionRequestIPCProvider.Initialize();
 
         TM = new();
-        RemoveNullAutos(); 
+        RemoveNullAutos();
         Service.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Service.Address = new AddressResolver();
         Service.Address.Setup(Svc.SigScanner);
@@ -196,7 +197,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         ws.AddWindow(ConfigWindow);
         ws.AddWindow(_majorChangesWindow);
         ws.AddWindow(TargetHelper);
-        
+
         Configuration.ConfigChanged += DebugFile.LoggingConfigChanges;
 
         Svc.PluginInterface.UiBuilder.Draw += ws.Draw;
@@ -219,7 +220,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         Svc.Framework.Update += OnFrameworkUpdate;
         Svc.ClientState.TerritoryChanged += ClientState_TerritoryChanged;
-        
+
         PresetStorage.HandleDuplicatePresets();
         PresetStorage.HandleCurrentConflicts();
         CustomComboFunctions.TimerSetup();
@@ -352,7 +353,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         // Enumerable.Range is a start and count, not a start and end.
         // Enumerable.Range(Start, Count)
         Service.Configuration.ResetFeatures("1.0.0.6_DNCRework", Enumerable.Range(4000, 150).ToArray());
-        Service.Configuration.ResetFeatures("1.0.0.11_DRKRework", Enumerable.Range(5000, 200).ToArray()); 
+        Service.Configuration.ResetFeatures("1.0.0.11_DRKRework", Enumerable.Range(5000, 200).ToArray());
         Service.Configuration.ResetFeatures("1.0.1.11_RDMRework", Enumerable.Range(13000, 999).ToArray());
         Service.Configuration.ResetFeatures("1.0.2.3_NINRework", Enumerable.Range(10000, 100).ToArray());
     }
@@ -428,7 +429,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Svc.ClientState.TerritoryChanged -= ClientState_TerritoryChanged;
         Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
         Svc.PluginInterface.UiBuilder.Draw -= DrawUI;
-        
+
         Service.ActionReplacer.Dispose();
         Service.ComboCache.Dispose();
         ActionWatching.Dispose();
