@@ -65,11 +65,6 @@
         <OutputPath>bin\Release</OutputPath>
     </PropertyGroup>
 
-    <!-- Build Parameter Overrides for Optimization even in Debug -->
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-        <Optimize>True</Optimize>
-    </PropertyGroup>
-
     <!-- Logo -->
     <ItemGroup>
         <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
