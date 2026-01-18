@@ -93,7 +93,7 @@ internal unsafe static class AutoRotationController
                || Player.Mounted
                || !EzThrottler.Throttle("Autorot", cfg.Throttler)
                || (cfg.DPSSettings.UnTargetAndDisableForPenalty && PlayerHasActionPenalty())
-               || (Service.Configuration.OverwriteQueue && ActionManager.Instance()->QueuedActionId > 0);
+               || (ActionManager.Instance()->QueuedActionId > 0);
     }
 
     private static bool IsOccupied()
@@ -254,12 +254,8 @@ internal unsafe static class AutoRotationController
                 continue;
 
             uint gameAct = attributes.ReplaceSkill!.ActionIDs.First();
-
-            // Skip if action is unavailable
-            if (ActionManager.Instance()->GetActionStatus(ActionType.Action, gameAct) == 639)
+            if (!ActionReady(gameAct))
                 continue;
-
-            var outAct = OriginalHook(AutoRotationHelper.InvokeCombo(entry.Preset, attributes, ref _));
 
             if (action.IsHeal)
             {

@@ -8050,7 +8050,7 @@ public enum Preset
 
     [AutoAction(false, true)]
     [ReplaceSkill(WHM.Cure)]
-    [ConflictingCombos(WHM_STHeals)]
+    [ConflictingCombos(WHM_STHeals, WHM_Re_Cure)]
     [CustomComboInfo("Simple Healing Mode - Single Target", "Replaces Cure with a full one-button single target healing utility." +
                                                             "\nThis is the ideal option for newcomers to the job. Particularly with autorotation.", Job.WHM)]
     [SimpleCombo]
@@ -8178,7 +8178,7 @@ public enum Preset
 
     [AutoAction(false, true)]
     [ReplaceSkill(WHM.Cure)]
-    [ConflictingCombos(WHM_SimpleSTHeals)]
+    [ConflictingCombos(WHM_SimpleSTHeals, WHM_Re_Cure)]
     [CustomComboInfo("Advanced Healing Mode - Single Target", "Replaces Cure with a one button single target healing setup.",
         Job.WHM)]
     [PossiblyRetargeted(WHM.Cure)]
@@ -8357,11 +8357,18 @@ public enum Preset
     [CustomComboInfo("Retargeting Features", "Collection of Options to Retarget Manually-Used Single Target Heals.", Job.WHM)]
     WHM_Retargets = 19037,
 
+    [ConflictingCombos(WHM_SimpleSTHeals, WHM_STHeals)]
     [ParentCombo(WHM_Retargets)]
-    [ReplaceSkill(WHM.Cure, WHM.Cure2)]
-    [CustomComboInfo("Cure Option", "Retargets Cure and Cure II to the heal stack (even from the Cure II Sync Feature above).", Job.WHM)]
-    [Retargeted(WHM.Cure, WHM.Cure2)]
+    [ReplaceSkill(WHM.Cure)]
+    [CustomComboInfo("Cure Option", "Retargets Cure to the heal stack (even from the Cure II Sync Feature above).", Job.WHM)]
+    [Retargeted(WHM.Cure)]
     WHM_Re_Cure = 19038,
+
+    [ParentCombo(WHM_Retargets)]
+    [ReplaceSkill(WHM.Cure2)]
+    [CustomComboInfo("Cure II Option", "Retargets Cure II to the heal stack.", Job.WHM)]
+    [Retargeted(WHM.Cure2)]
+    WHM_Re_Cure2 = 19055,
 
     [ParentCombo(WHM_Retargets)]
     [ReplaceSkill(WHM.AfflatusSolace)]

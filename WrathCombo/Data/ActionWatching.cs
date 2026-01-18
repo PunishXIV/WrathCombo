@@ -421,15 +421,27 @@ public static class ActionWatching
     {
         try
         {
-
             if (actionType is ActionType.Action)
             {
                 var original = actionId; //Save the original action, do not modify
                 var originalTargetId = targetId; //Save the original target, do not modify
+                var changedTargetId = targetId; //This will get modified and used elsewhere
 
                 var modifiedAction = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
-                var changed = CheckForChangedTarget(original, ref targetId,
+                var changed = CheckForChangedTarget(original, ref changedTargetId,
                     out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
+
+                // If retargeting kicks in, update target ID
+                if (changed)
+                    targetId = changedTargetId;
+
+                // Clear any dodgy leftover targets
+                if (!Svc.Objects.Any(x => x.GameObjectId == actionManager->QueuedTargetId.Id))
+                    actionManager->QueuedTargetId = 0;
+
+                // However, if we have a queued target ID assume that's what we want and not whatever current retargeting is. TODO: Setting?
+                if (actionManager->QueuedTargetId.Id != 0)
+                    targetId = actionManager->QueuedTargetId.Id;
 
                 var areaTargeted = ActionSheet[replacedWith].TargetArea;
                 var targetObject = targetId.GetObject();
@@ -460,6 +472,20 @@ public static class ActionWatching
                 if (Service.Configuration.OverwriteQueue && actionManager->QueuedActionId != 0 && CanQueueCS(actionId))
                     actionManager->QueuedActionId = actionId;
 
+                // Determine if the action will queue according to user settings
+                bool willQueue = CanQueueCS(actionId) && RemainingGCD > 0;
+
+                // If the action is going to queue, and we've retargeted, update the queued target to match the retargeted target at time of queue
+                if (willQueue && changed)
+                {
+                    Svc.Log.Verbose($"[QueuedTargetUpdate] Updating queued target ID to {Svc.Objects.SearchById(changedTargetId)?.Name}");
+
+                    // Only sets the queued target once if overwrite is not enabled, otherwise will update each button press
+                    if (actionManager->QueuedTargetId.Id == 0 || Service.Configuration.OverwriteQueue)
+                    actionManager->QueuedTargetId = changedTargetId;
+                }
+
+                Svc.Log.Verbose($"[QueuedTargetUpdate] A:{actionManager->QueuedActionId.ActionName()} Q:{Svc.Objects.SearchById(actionManager->QueuedTargetId)?.Name} T:{Svc.Objects.SearchById(targetId)?.Name} M:{mode} W:{willQueue}");
                 //Important to pass actionId here and not replaced.
                 var hookResult = changed ? UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
                     UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);

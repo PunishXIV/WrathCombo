@@ -698,7 +698,7 @@ internal partial class WHM : Healer
                     ? Cure.Retarget(Cure2, SimpleTarget.Stack.AllyToHeal)
                     : Cure;
 
-            return IsEnabled(Preset.WHM_Re_Cure)
+            return IsEnabled(Preset.WHM_Re_Cure2)
                 ? Cure2.Retarget(Cure2, SimpleTarget.Stack.AllyToHeal)
                 : Cure2;
         }
@@ -802,10 +802,10 @@ internal partial class WHM : Healer
                 return actionID;
 
             if (IsEnabled(Preset.WHM_Re_Cure))
-            {
                 Cure.Retarget(healStack);
+
+            if (IsEnabled(Preset.WHM_Re_Cure2))
                 Cure2.Retarget(healStack);
-            }
 
             if (IsEnabled(Preset.WHM_Re_Solace))
                 AfflatusSolace.Retarget(healStack);

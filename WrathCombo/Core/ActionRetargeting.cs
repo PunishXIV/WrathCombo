@@ -116,7 +116,7 @@ public class ActionRetargeting : IDisposable
         // Remove the old Retarget
         if (overwriting.Length != 0)
         {
-            RemoveRetarget(oldRetarget?.ID ?? 0);
+            //RemoveRetarget(oldRetarget?.ID ?? 0); // Let's not remove the retargeting here, let the config change handle it?
 
             // Elevate to a debug message if the overwriting method is not equivalent
             var logLevel = overwriting[0] == overwriting[1] ? 0 : 1;

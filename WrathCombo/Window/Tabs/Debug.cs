@@ -973,18 +973,18 @@ internal class Debug : ConfigWindow, IDisposable
                 ImGuiEx.TextUnderlined("Retargets:");
                 var first = true;
                 var distinctRetargets = retargets
-                    .DistinctBy(x => x.Value.ID)
-                    .Select(x => x.Value)
-                    .OrderBy(x => x.Action);
+                    .OrderBy(x => x.Key);
+
                 foreach (var retarget in distinctRetargets)
                 {
+                    var val = retarget.Value;
                     if (!first) ImGuiEx.Spacing(new Vector2(0f, SpacingSmall/2));
 
-                    CustomStyleText($"Action: {retarget.Action.ActionName()}",
-                        $"ID: {retarget.ID,20}");
+                    CustomStyleText($"Action: {val.Action.ActionName()} (Key: {retarget.Key.ActionName()})",
+                        $"ID: {val.ID,20}");
                     // Set a set amount of distance to the right of the ID,
                     // so the help mark doesn't move
-                    var width = ImGui.CalcTextSize($"ID: {retarget.ID,20}").X;
+                    var width = ImGui.CalcTextSize($"ID: {val.ID,20}").X;
                     ImGui.SameLine();
                     ImGui.SetCursorPosX(ImGui.GetCursorPosX() + 110f.Scale() - width);
                     ImGui.Text("");
@@ -994,17 +994,17 @@ internal class Debug : ConfigWindow, IDisposable
 
                     ImGui.Indent(10f.Scale());
                     var replacedActionsString = string.Join(", ",
-                        retarget.ReplacedActions.Select(x => x.ActionName()));
+                        val.ReplacedActions.Select(x => x.ActionName()));
                     ImGuiEx.Text("Replaced Actions:");
                     ImGui.SameLine();
                     ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey, replacedActionsString);
                     ImGui.Unindent(10f.Scale());
 
-                    CustomStyleText($"Resolver: {retarget.ResolverName}",
-                        $"Resolved Target: '{retarget.Resolver()?.Name ?? "Null"}'");
+                    CustomStyleText($"Resolver: {val.ResolverName}",
+                        $"Resolved Target: '{val.Resolver()?.Name ?? "Null"}'");
                     ImGuiComponents.HelpMarker("Resolvers may only resolve to a fallback target,\nexcept under conditions where the Retargeting would actually be applied.");
 
-                    var createdTimeString = retarget.Created.ToString(@"HH\:mm\:ss");
+                    var createdTimeString = val.Created.ToString(@"HH\:mm\:ss");
                     CustomStyleText($"Created: {createdTimeString}",
                         $"");
 
