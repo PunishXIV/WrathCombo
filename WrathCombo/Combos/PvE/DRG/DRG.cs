@@ -42,15 +42,15 @@ internal partial class DRG : Melee
                     if (CanMirageDive())
                         return MirageDive;
 
-                    //Wyrmwind Thrust Feature
-                    if (CanWyrmwind)
-                        return WyrmwindThrust;
-
                     //Geirskogul Feature
                     if (ActionReady(Geirskogul) &&
                         !LoTDActive &&
                         InActionRange(Geirskogul))
                         return Geirskogul;
+
+                    //Wyrmwind Thrust Feature
+                    if (CanWyrmwind)
+                        return WyrmwindThrust;
 
                     //Starcross Feature
                     if (ActionReady(Starcross) &&
@@ -151,15 +151,21 @@ internal partial class DRG : Melee
                          JustUsed(DoomSpike) && !LevelChecked(SonicThrust)))
                         return LifeSurge;
 
-                    //Wyrmwind Thrust Feature
-                    if (CanWyrmwind)
-                        return WyrmwindThrust;
+                    if (ActionReady(MirageDive) &&
+                        HasStatusEffect(Buffs.DiveReady) &&
+                        OriginalHook(Jump) is MirageDive &&
+                        InActionRange(MirageDive))
+                        return MirageDive;
 
                     //Geirskogul Feature
                     if (ActionReady(Geirskogul) &&
                         !LoTDActive &&
                         InActionRange(Geirskogul))
                         return Geirskogul;
+
+                    //Wyrmwind Thrust Feature
+                    if (CanWyrmwind)
+                        return WyrmwindThrust;
 
                     //Starcross Feature
                     if (ActionReady(Starcross) &&
@@ -172,9 +178,6 @@ internal partial class DRG : Melee
                         HasStatusEffect(Buffs.DragonsFlight) &&
                         InActionRange(RiseOfTheDragon))
                         return RiseOfTheDragon;
-
-                    if (CanMirageDive(true))
-                        return MirageDive;
 
                     //Nastrond Feature
                     if (ActionReady(Nastrond) &&
@@ -293,17 +296,17 @@ internal partial class DRG : Melee
                             CanMirageDive())
                             return MirageDive;
 
-                        //Wyrmwind Thrust Feature
-                        if (IsEnabled(Preset.DRG_ST_Wyrmwind) &&
-                            CanWyrmwind)
-                            return WyrmwindThrust;
-
                         //Geirskogul Feature
                         if (IsEnabled(Preset.DRG_ST_Geirskogul) &&
                             ActionReady(Geirskogul) &&
                             !LoTDActive &&
                             InActionRange(Geirskogul))
                             return Geirskogul;
+
+                        //Wyrmwind Thrust Feature
+                        if (IsEnabled(Preset.DRG_ST_Wyrmwind) &&
+                            CanWyrmwind)
+                            return WyrmwindThrust;
 
                         //Starcross Feature
                         if (IsEnabled(Preset.DRG_ST_Starcross) &&
@@ -454,10 +457,13 @@ internal partial class DRG : Melee
                              JustUsed(DoomSpike) && !LevelChecked(SonicThrust)))
                             return LifeSurge;
 
-                        //Wyrmwind Thrust Feature
-                        if (IsEnabled(Preset.DRG_AoE_Wyrmwind) &&
-                            CanWyrmwind)
-                            return WyrmwindThrust;
+                        //Mirage Feature
+                        if (IsEnabled(Preset.DRG_AoE_Mirage) &&
+                            ActionReady(MirageDive) &&
+                            HasStatusEffect(Buffs.DiveReady) &&
+                            OriginalHook(Jump) is MirageDive &&
+                            InActionRange(MirageDive))
+                            return MirageDive;
 
                         //Geirskogul Feature
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
@@ -465,6 +471,11 @@ internal partial class DRG : Melee
                             !LoTDActive &&
                             InActionRange(Geirskogul))
                             return Geirskogul;
+
+                        //Wyrmwind Thrust Feature
+                        if (IsEnabled(Preset.DRG_AoE_Wyrmwind) &&
+                            CanWyrmwind)
+                            return WyrmwindThrust;
 
                         //Starcross Feature
                         if (IsEnabled(Preset.DRG_AoE_Starcross) &&
@@ -479,11 +490,6 @@ internal partial class DRG : Melee
                             HasStatusEffect(Buffs.DragonsFlight) &&
                             InActionRange(RiseOfTheDragon))
                             return RiseOfTheDragon;
-
-                        //Mirage Feature
-                        if (IsEnabled(Preset.DRG_AoE_Mirage) &&
-                            CanMirageDive(true))
-                            return MirageDive;
 
                         //Nastrond Feature
                         if (IsEnabled(Preset.DRG_AoE_Nastrond) &&

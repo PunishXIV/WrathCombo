@@ -7618,7 +7618,7 @@ public enum Preset
     
     [ReplaceSkill(VPR.Vicewinder, VPR.Vicepit)]
     [ConflictingCombos(VPR_VicepitDens, VPR_VicewinderCoils)]
-    [CustomComboInfo("Perfect Balance Protection", "Replaces Perfect Balance with Savage Blade when you already have Perfect Balance active.", Job.VPR)]
+    [CustomComboInfo("Vicewinder / Vicepit Protection", "Replaces Vicewinder / Vicepit with Savage Blade when you already have Vicewinder / Vicepit active.", Job.VPR)]
     VPR_VicewinderProtection = 30212,
 
     #endregion

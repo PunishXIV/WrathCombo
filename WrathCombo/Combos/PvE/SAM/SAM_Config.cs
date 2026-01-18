@@ -1,4 +1,5 @@
 using ECommons.ImGuiMethods;
+using System.Numerics;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
@@ -14,16 +15,32 @@ internal partial class SAM
             switch (preset)
             {
                 case Preset.SAM_ST_Opener:
+                    ImGui.Indent();
                     DrawBossOnlyChoice(SAM_Balance_Content);
-                    ImGui.NewLine();
+                    ImGui.Unindent();
+
+                    ImGuiEx.Spacing(new Vector2(0, 10));
+
                     DrawSliderInt(0, 13, SAM_Opener_PrePullDelay,
-                        $"Delay from first {MeikyoShisui.ActionName()} to next step. (seconds)\nDelay is enforced by replacing your button with Savage Blade.");
+                        $"Seconds to delay from first {MeikyoShisui.ActionName()} to next step (hover for details)", 75f.Scale());
+
+                    if (ImGui.IsItemHovered())
+                        ImGui.SetTooltip("Delay is enforced by replacing your button with Savage Blade.");
+
+                    ImGuiEx.Spacing(new Vector2(0, 10));
+                    ImGui.NewLine();
 
                     DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
-                        $"Include {Gyoten.ActionName()}", $"Include {Gyoten.ActionName()}", 0);
+                        $"Include 2x {Gyoten.ActionName()}", $"Includes both usages of {Gyoten.ActionName()}", 0);
 
                     DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
-                        $"Skip {Gyoten.ActionName()}", $"Skip {Gyoten.ActionName()} in the opener.", 1);
+                        "Skip Both", $"Skips both usages of {Gyoten.ActionName()} in the opener.", 1);
+
+                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        "Skip First", $"Skips first usage of {Gyoten.ActionName()} in the opener, keeps the second.", 2);
+
+                    DrawHorizontalRadioButton(SAM_Opener_IncludeGyoten,
+                        "Skip Second", $"Skips second usage of {Gyoten.ActionName()} in the opener, keeps the first.", 3);
                     break;
 
                 case Preset.SAM_ST_CDs_UseHiganbana:

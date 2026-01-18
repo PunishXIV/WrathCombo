@@ -101,32 +101,18 @@ internal partial class DRG
          NumberOfEnemiesInRange(WyrmwindThrust, CurrentTarget) >= 2) &&
         InActionRange(WyrmwindThrust);
 
-    private static bool CanMirageDive(bool isAoE = false)
+    private static bool CanMirageDive()
     {
-        bool mirageBurst = IsNotEnabled(Preset.DRG_ST_SimpleMode) ? DRG_ST_DoubleMirage : false;
+        bool burstEnabled = IsEnabled(Preset.DRG_ST_SimpleMode) || DRG_ST_DoubleMirage;
 
-        if (ActionReady(MirageDive) &&
-            HasStatusEffect(Buffs.DiveReady) &&
-            OriginalHook(Jump) is MirageDive &&
-            InActionRange(MirageDive))
-        {
-            switch (isAoE)
-            {
-                case false when
-                    mirageBurst &&
-                    (LoTDActive ||
-                     GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                     GetCooldownRemainingTime(Geirskogul) > 3):
-
-                case true when
-                    LoTDActive ||
-                    GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
-                    GetCooldownRemainingTime(Geirskogul) > 3:
-                    return true;
-            }
-        }
-
-        return false;
+        return ActionReady(MirageDive) &&
+               HasStatusEffect(Buffs.DiveReady) &&
+               OriginalHook(Jump) is MirageDive &&
+               InActionRange(MirageDive) &&
+               (burstEnabled && (LoTDActive ||
+                                 GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                                 GetCooldownRemainingTime(Geirskogul) > 3) ||
+                !burstEnabled);
     }
 
     private static uint OutsideOfMeleeNoWeave(uint actionId, bool simpleMode = false)

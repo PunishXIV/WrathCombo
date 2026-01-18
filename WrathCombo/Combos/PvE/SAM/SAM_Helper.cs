@@ -167,26 +167,30 @@ internal partial class SAM
             !HasStatusEffect(Buffs.MeikyoShisui) &&
             !JustUsed(MeikyoShisui) &&
             TargetIsBoss() && GetTargetHPPercent() < SAM_ST_MeikyoExecuteThreshold &&
-            JustUsed(Yukikaze, 2f) || JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f))
+            (JustUsed(Yukikaze, 2f) || JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f)))
             return true;
 
         if (ActionReady(MeikyoShisui) &&
             !HasStatusEffect(Buffs.Tendo) &&
             !HasStatusEffect(Buffs.MeikyoShisui) &&
             !JustUsed(MeikyoShisui) &&
-            (JustUsed(Yukikaze, 2f) || HasSetsu && (JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f))))
+            (JustUsed(Yukikaze, 2f) ||
+             HasSetsu && (JustUsed(Gekko, 2f) ||
+                          JustUsed(Kasha, 2f) ||
+                          JustUsed(KaeshiSetsugekka, 2f) && SenCount is 3)))
         {
             if (InBossEncounter())
             {
                 switch (EnhancedSenei)
                 {
-                    case true when GetRemainingCharges(MeikyoShisui) is 1 && JustUsed(MeikyoShisui, 10f) && JustUsed(Senei, 10f):
+                    case true when GetRemainingCharges(MeikyoShisui) >= 1 && JustUsed(KaeshiNamikiri, 10f) &&
+                                   GetCooldownChargeRemainingTime(MeikyoShisui) is >= 35 and <= 43:
 
                     case true when SenCount is 0 && GetCooldownRemainingTime(Senei) <= 14 && JustUsed(MidareSetsugekka, 5f) ||
-                                   SenCount is 0 && GetCooldownRemainingTime(Senei) <= 10 && JustUsed(Higanbana, 5f) ||
-                                   SenCount is 1 && GetCooldownRemainingTime(Senei) <= 8 ||
-                                   SenCount is 2 && GetCooldownRemainingTime(Senei) <= 6 ||
-                                   SenCount is 3 && GetCooldownRemainingTime(Senei) <= 4:
+                                   SenCount is 0 && GetCooldownRemainingTime(Senei) <= 11 && JustUsed(Higanbana, 5f) ||
+                                   SenCount is 1 && GetCooldownRemainingTime(Senei) <= 9 ||
+                                   SenCount is 2 && GetCooldownRemainingTime(Senei) <= 7 ||
+                                   SenCount is 3 && GetCooldownRemainingTime(Senei) <= 5:
 
                     // Pre 94
                     case false when
@@ -255,11 +259,12 @@ internal partial class SAM
         ActionReady(Senei) && NumberOfGcdsUsed >= 4 &&
         InActionRange(Senei) &&
         (LevelChecked(TendoKaeshiSetsugekka) &&
-         (SenCount is 3 && HasStatusEffect(Buffs.Tendo) || JustUsed(TendoSetsugekka, 15f)) ||
+         (SenCount is 3 && HasStatusEffect(Buffs.Tendo) ||
+          JustUsed(TendoSetsugekka, 15f)) ||
          !LevelChecked(TendoKaeshiSetsugekka));
 
     private static bool CanTsubame() =>
-        LevelChecked(TsubameGaeshi) && ActionReady(TsubameGaeshi) &&
+        ActionReady(TsubameGaeshi) &&
         (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
          HasStatusEffect(Buffs.TsubameReady)) &&
         (SenCount is 3 ||
@@ -267,18 +272,21 @@ internal partial class SAM
          GetStatusEffectRemainingTime(Buffs.TsubameReady) < 5);
 
     private static bool CanShoha() =>
-        ActionReady(Shoha) && MeditationStacks is 3 &&
+        ActionReady(Shoha) &&
+        MeditationStacks is 3 &&
         InActionRange(Shoha) &&
-        (MeditationStacks is 3 && SenCount is 3 ||
-         MeditationStacks is 3 && HasStatusEffect(Buffs.OgiNamikiriReady) ||
+        (SenCount is 3 ||
+         HasStatusEffect(Buffs.OgiNamikiriReady) ||
          EnhancedSenei && JustUsed(Senei, 20f) ||
          !EnhancedSenei && JustUsed(KaeshiSetsugekka, 10f));
 
     //TODO Buffcheck
     private static bool CanZanshin() =>
         ActionReady(Zanshin) &&
-        InActionRange(Zanshin) && HasStatusEffect(Buffs.ZanshinReady) &&
-        (JustUsed(Senei, 20f) || GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8);
+        InActionRange(Zanshin) &&
+        HasStatusEffect(Buffs.ZanshinReady) &&
+        (JustUsed(Senei, 20f) ||
+         GetStatusEffectRemainingTime(Buffs.ZanshinReady) <= 8);
 
     private static bool CanShinten()
     {
@@ -337,7 +345,8 @@ internal partial class SAM
             return true;
 
         if (ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
-            HasStatusEffect(Buffs.OgiNamikiriReady) && NumberOfGcdsUsed >= 5)
+            HasStatusEffect(Buffs.OgiNamikiriReady) && NumberOfGcdsUsed >= 5 &&
+            (!SAM_ST_CDs_OgiNamikiri_Movement || !IsMoving() || simpleMode && !IsMoving()))
         {
             if (GetStatusEffectRemainingTime(Buffs.OgiNamikiriReady) <= 8)
                 return true;
@@ -566,13 +575,13 @@ internal partial class SAM
             Kasha,
             Ikishoten,
             Yukikaze,
-            TendoSetsugekka, //8
+            TendoSetsugekka, //7
             Senei,
-            TendoKaeshiSetsugekka, //10
+            TendoKaeshiSetsugekka, //9
             MeikyoShisui,
             Gekko,
             Zanshin,
-            Higanbana,
+            Higanbana, //13
             OgiNamikiri,
             Shoha,
             KaeshiNamikiri,
@@ -603,9 +612,11 @@ internal partial class SAM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([18, 23], () => !ActionReady(Shinten)),
-            ([20, 25], () => !ActionReady(Gyoten) || SAM_Opener_IncludeGyoten == 1),
-            ([8, 24], () => SenCount is not 3),
-            ([10, 26], () => !HasStatusEffect(Buffs.TsubameReady))
+            ([20], () => !ActionReady(Gyoten) || (int)SAM_Opener_IncludeGyoten is 1 or 2),
+            ([25], () => !ActionReady(Gyoten) || (int)SAM_Opener_IncludeGyoten is 1 or 3),
+            ([7, 24], () => SenCount is not 3 && !(SenCount is 2 && JustUsed(Yukikaze))),
+            ([9, 26], () => !HasStatusEffect(Buffs.TsubameReady) && !JustUsed(TendoSetsugekka)),
+            ([13], () => SenCount is not 1 && !(SenCount is 2 && JustUsed(Gekko)))
         ];
 
         public override Preset Preset => Preset.SAM_ST_Opener;
