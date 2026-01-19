@@ -262,9 +262,9 @@ internal class Presets : ConfigWindow
 
             else
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.Text("All required spells active!");
-                ImGui.PopStyleColor();
+                //ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
+                //ImGui.Text("All required spells active!");
+                //ImGui.PopStyleColor();
             }
         }
 

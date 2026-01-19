@@ -1,169 +1,287 @@
-﻿using Dalamud.Game.ClientState.Conditions;
+﻿#region
+
+using Dalamud.Game.ClientState.Conditions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
 
+// ReSharper disable ClassNeverInstantiated.Global
+// ReSharper disable UnusedType.Global
+// ReSharper disable InconsistentNaming
+// ReSharper disable CheckNamespace
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable MemberHidesStaticFromOuterClass
+// ReSharper disable IdentifierTypo
+// ReSharper disable CommentTypo
+
 namespace WrathCombo.Combos.PvE;
+
+#endregion
 
 internal partial class BLU : Caster
 {
-    public const uint
-        RoseOfDestruction = 23275,
-        ShockStrike = 11429,
-        FeatherRain = 11426,
-        JKick = 18325,
-        Eruption = 11427,
-        SharpenedKnife = 11400,
-        GlassDance = 11430,
-        SonicBoom = 18308,
-        Surpanakha = 18323,
-        Nightbloom = 23290,
-        MoonFlute = 11415,
-        Whistle = 18309,
-        Tingle = 23265,
-        TripleTrident = 23264,
-        MatraMagic = 23285,
-        FinalSting = 11407,
-        Bristle = 11393,
-        PhantomFlurry = 23288,
-        PerpetualRay = 18314,
-        AngelWhisper = 18317,
-        SongOfTorment = 11386,
-        RamsVoice = 11419,
-        Ultravibration = 23277,
-        Devour = 18320,
-        Offguard = 11411,
-        BadBreath = 11388,
-        MagicHammer = 18305,
-        WhiteKnightsTour = 18310,
-        BlackKnightsTour = 18311,
-        PeripheralSynthesis = 23286,
-        BasicInstinct = 23276,
-        HydroPull = 23282,
-        MustardBomb = 23279,
-        WingedReprobation = 34576,
-        SeaShanty = 34580,
-        BeingMortal = 34582,
-        BreathOfMagic = 34567,
-        MortalFlame = 34579,
-        PeatPelt = 34569,
-        DeepClean = 34570;
+    #region Openers
 
-    public static class Buffs
+    internal class BLU_NewMoonFluteOpener : CustomCombo
     {
-        public const ushort
-            MoonFlute = 1718,
-            Bristle = 1716,
-            WaningNocturne = 1727,
-            PhantomFlurry = 2502,
-            Tingle = 2492,
-            Whistle = 2118,
-            TankMimicry = 2124,
-            DPSMimicry = 2125,
-            BasicInstinct = 2498,
-            WingedReprobation = 3640;
-    }
-
-    public static class Debuffs
-    {
-        public const ushort
-            Slow = 9,
-            Bind = 13,
-            Stun = 142,
-            SongOfTorment = 273,
-            DeepFreeze = 1731,
-            Offguard = 1717,
-            Malodorous = 1715,
-            Conked = 2115,
-            Lightheaded = 2501,
-            MortalFlame = 3643,
-            BreathOfMagic = 3712,
-            Begrimed = 3636;
-    }
-
-    internal class BLU_BuffedSoT : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.BLU_BuffedSoT;
+        protected internal override Preset Preset => Preset.BLU_NewMoonFluteOpener;
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is SongOfTorment)
+            if (actionID is not MoonFlute_Spell39) return actionID;
+
+            if (!HasStatusEffect(Buffs.MoonFlute))
             {
-                if (!HasStatusEffect(Buffs.Bristle) && IsSpellActive(Bristle))
-                    return Bristle;
-                if (IsSpellActive(SongOfTorment))
-                    return SongOfTorment;
+                if (IsSpellActive(Whistle_Spell64) &&
+                    !HasStatusEffect(Buffs.Whistle) &&
+                    !WasLastAction(Whistle_Spell64))
+                    return Whistle_Spell64;
+
+                if (IsSpellActive(Tingle_Spell82) &&
+                    !HasStatusEffect(Buffs.Tingle))
+                    return Tingle_Spell82;
+
+                if (IsSpellActive(RoseofDestruction_Spell90) &&
+                    GetCooldown(RoseofDestruction_Spell90)
+                        .CooldownRemaining < 1f)
+                    return RoseofDestruction_Spell90;
+
+                if (IsSpellActive(MoonFlute_Spell39))
+                    return MoonFlute_Spell39;
             }
 
-            return actionID;
-        }
-    }
+            if (IsSpellActive(JKick_Spell80) && IsOffCooldown(JKick_Spell80))
+                return JKick_Spell80;
 
-    internal class BLU_Opener : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.BLU_Opener;
+            if (IsSpellActive(TripleTrident_Spell81) &&
+                IsOffCooldown(TripleTrident_Spell81))
+                return TripleTrident_Spell81;
 
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is MoonFlute)
+            if (IsSpellActive(Nightbloom_Spell104) &&
+                IsOffCooldown(Nightbloom_Spell104))
+                return Nightbloom_Spell104;
+
+            if (IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
             {
-                //If Triple Trident is saved for Crit/Det builds
-                if (GetCooldownRemainingTime(TripleTrident) <= 3 && IsSpellActive(TripleTrident))
+                if ((!HasStatusEffect(Debuffs.BreathOfMagic, anyOwner: true) &&
+                     IsSpellActive(BreathofMagic_Spell109)) ||
+                    (!HasStatusEffect(Debuffs.MortalFlame, anyOwner: true) &&
+                     IsSpellActive(MortalFlame_Spell121)))
                 {
-                    if (!HasStatusEffect(Buffs.Whistle) && IsSpellActive(Whistle) && !WasLastSpell(Whistle) && IsOffCooldown(JKick))
-                        return Whistle;
-                    if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle) && IsOffCooldown(JKick))
-                        return Tingle;
-                    if (!HasStatusEffect(Buffs.MoonFlute) && !HasStatusEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute) && !WasLastSpell(MoonFlute) && !JustUsed(MoonFlute))
-                        return MoonFlute;
-                    if (IsOffCooldown(JKick) && IsSpellActive(JKick))
-                        return JKick;
-                    if (IsOffCooldown(TripleTrident))
-                        return TripleTrident;
-                }
+                    if (IsSpellActive(Bristle_Spell12) &&
+                        !HasStatusEffect(Buffs.Bristle))
+                        return Bristle_Spell12;
 
-                //If Triple Trident is used on CD for Crit/Sps builds or Triple Trident isn't active
-                if ((GetCooldownRemainingTime(TripleTrident) > 3 && IsSpellActive(TripleTrident)) || !IsSpellActive(TripleTrident))
-                {
-                    if (!HasStatusEffect(Buffs.Whistle) && IsOffCooldown(JKick) && !WasLastSpell(Whistle) && IsSpellActive(Whistle) && IsOffCooldown(JKick))
-                        return Whistle;
-                    if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle) && IsOffCooldown(JKick))
-                        return Tingle;
-                    if (!HasStatusEffect(Buffs.MoonFlute) && !HasStatusEffect(Buffs.WaningNocturne) && IsSpellActive(MoonFlute) && !JustUsed(MoonFlute))
-                        return MoonFlute;
-                    if (IsOffCooldown(JKick) && IsSpellActive(JKick))
-                        return JKick;
-                }
+                    if (IsSpellActive(FeatherRain_Spell44) &&
+                        IsOffCooldown(FeatherRain_Spell44))
+                        return FeatherRain_Spell44.Retarget(MoonFlute_Spell39,
+                            SimpleTarget.HardTarget.IfHostile() ??
+                            SimpleTarget.LastHostileHardTarget);
 
-                if (IsOffCooldown(Nightbloom) && IsSpellActive(Nightbloom))
-                    return Nightbloom;
-                if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction))
-                    return RoseOfDestruction;
-                if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain))
-                    return FeatherRain.Retarget(MoonFlute,
+                    if (IsSpellActive(SeaShanty_Spell122) &&
+                        IsOffCooldown(SeaShanty_Spell122))
+                        return SeaShanty_Spell122;
+
+                    if (IsSpellActive(BreathofMagic_Spell109) &&
+                        !HasStatusEffect(Debuffs.BreathOfMagic, anyOwner: true))
+                        return BreathofMagic_Spell109;
+                    if (IsSpellActive(MortalFlame_Spell121) &&
+                        !HasStatusEffect(Debuffs.MortalFlame, anyOwner: true))
+                        return MortalFlame_Spell121;
+                }
+            }
+            else
+            {
+                if (IsSpellActive(WingedReprobation_Spell118) &&
+                    IsOffCooldown(WingedReprobation_Spell118) &&
+                    !WasLastSpell(WingedReprobation_Spell118) &&
+                    !WasLastAbility(FeatherRain_Spell44) &&
+                    (!HasStatusEffect(Buffs.WingedReprobation) ||
+                     (GetStatusEffect(Buffs.WingedReprobation)?.Param ?? 0) < 2))
+                    return WingedReprobation_Spell118;
+
+                if (IsSpellActive(FeatherRain_Spell44) &&
+                    IsOffCooldown(FeatherRain_Spell44))
+                    return FeatherRain_Spell44.Retarget(MoonFlute_Spell39,
                         SimpleTarget.HardTarget.IfHostile() ??
                         SimpleTarget.LastHostileHardTarget);
-                if (IsOffCooldown(Eruption) && IsSpellActive(Eruption))
-                    return Eruption;
-                if (!HasStatusEffect(Buffs.Bristle) && IsOffCooldown(Role.Swiftcast) && IsSpellActive(Bristle))
-                    return Bristle;
-                if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
-                    return Role.Swiftcast;
-                if (IsOffCooldown(GlassDance) && IsSpellActive(GlassDance))
-                    return GlassDance;
-                if (GetCooldownRemainingTime(Surpanakha) < 95 && IsSpellActive(Surpanakha))
-                    return Surpanakha;
-                if (IsOffCooldown(MatraMagic) && HasStatusEffect(Buffs.DPSMimicry) && IsSpellActive(MatraMagic))
-                    return MatraMagic;
-                if (IsOffCooldown(ShockStrike) && IsSpellActive(ShockStrike))
-                    return ShockStrike;
-                if ((IsOffCooldown(PhantomFlurry) && IsSpellActive(PhantomFlurry)) || HasStatusEffect(Buffs.PhantomFlurry))
-                    return PhantomFlurry;
+
+                if (IsSpellActive(SeaShanty_Spell122) &&
+                    IsOffCooldown(SeaShanty_Spell122))
+                    return SeaShanty_Spell122;
             }
+
+            if (IsSpellActive(WingedReprobation_Spell118) &&
+                IsOffCooldown(WingedReprobation_Spell118) &&
+                !WasLastAbility(ShockStrike_Spell47) &&
+                (GetStatusEffect(Buffs.WingedReprobation)?.Param ?? 0) < 2)
+                return WingedReprobation_Spell118;
+
+            if (IsSpellActive(ShockStrike_Spell47) &&
+                IsOffCooldown(ShockStrike_Spell47))
+                return ShockStrike_Spell47;
+
+            if (IsSpellActive(BeingMortal_Spell124) &&
+                IsOffCooldown(BeingMortal_Spell124) &&
+                IsNotEnabled(Preset
+                    .BLU_NewMoonFluteOpener_DoTOpener))
+                return BeingMortal_Spell124;
+
+            if (IsSpellActive(Bristle_Spell12) &&
+                !HasStatusEffect(Buffs.Bristle) &&
+                IsOffCooldown(MatraMagic_Spell100) &&
+                IsSpellActive(MatraMagic_Spell100))
+                return Bristle_Spell12;
+
+            if (IsOffCooldown(Role.Swiftcast))
+                return Role.Swiftcast;
+
+            if (IsSpellActive(Surpanakha_Spell78) &&
+                GetRemainingCharges(Surpanakha_Spell78) > 0)
+                return Surpanakha_Spell78;
+
+            if (IsSpellActive(MatraMagic_Spell100) &&
+                HasStatusEffect(Role.Buffs.Swiftcast))
+                return MatraMagic_Spell100;
+
+            if (IsSpellActive(BeingMortal_Spell124) &&
+                IsOffCooldown(BeingMortal_Spell124) &&
+                IsEnabled(Preset
+                    .BLU_NewMoonFluteOpener_DoTOpener))
+                return BeingMortal_Spell124;
+
+            if (IsSpellActive(PhantomFlurry_Spell103) &&
+                IsOffCooldown(PhantomFlurry_Spell103))
+                return PhantomFlurry_Spell103;
+
+            if (HasStatusEffect(Buffs.PhantomFlurry) &&
+                GetStatusEffectRemainingTime(Buffs.PhantomFlurry) < 2)
+                return OriginalHook(PhantomFlurry_Spell103);
+
+            if (HasStatusEffect(Buffs.MoonFlute))
+                return All.SavageBlade;
 
             return actionID;
         }
     }
+
+    #endregion
+
+    #region Primal Combo
+
+    internal class BLU_PrimalCombo : CustomCombo
+    {
+        internal static bool surpanakhaReady;
+
+        protected internal override Preset Preset => Preset.BLU_PrimalCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (FeatherRain_Spell44 or Eruption_Spell45))
+                return actionID;
+
+            if (HasStatusEffect(Buffs.PhantomFlurry))
+                return OriginalHook(PhantomFlurry_Spell103);
+
+            if (HasStatusEffect(Buffs.PhantomFlurry)) return actionID;
+
+            if (IsEnabled(Preset
+                    .BLU_PrimalCombo_WingedReprobation) &&
+                (GetStatusEffect(Buffs.WingedReprobation)?.Param ?? 0) > 1 &&
+                IsOffCooldown(WingedReprobation_Spell118))
+                return OriginalHook(WingedReprobation_Spell118);
+
+            if (IsOffCooldown(FeatherRain_Spell44) &&
+                IsSpellActive(FeatherRain_Spell44) &&
+                (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
+                 (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
+                  (GetCooldownRemainingTime(Nightbloom_Spell104) > 30 ||
+                   IsOffCooldown(Nightbloom_Spell104)))))
+                return FeatherRain_Spell44.Retarget(Eruption_Spell45,
+                        SimpleTarget.HardTarget.IfHostile() ??
+                        SimpleTarget.LastHostileHardTarget);
+            if (IsOffCooldown(Eruption_Spell45) &&
+                IsSpellActive(Eruption_Spell45) &&
+                (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
+                 (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
+                  (GetCooldownRemainingTime(Nightbloom_Spell104) > 30 ||
+                   IsOffCooldown(Nightbloom_Spell104)))))
+                return Eruption_Spell45;
+            if (IsOffCooldown(ShockStrike_Spell47) &&
+                IsSpellActive(ShockStrike_Spell47) &&
+                (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
+                 (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
+                  (GetCooldownRemainingTime(Nightbloom_Spell104) > 60 ||
+                   IsOffCooldown(Nightbloom_Spell104)))))
+                return ShockStrike_Spell47;
+            if (IsOffCooldown(RoseofDestruction_Spell90) &&
+                IsSpellActive(RoseofDestruction_Spell90) &&
+                (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
+                 (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
+                  (GetCooldownRemainingTime(Nightbloom_Spell104) > 30 ||
+                   IsOffCooldown(Nightbloom_Spell104)))))
+                return RoseofDestruction_Spell90;
+            if (IsOffCooldown(GlassDance_Spell48) &&
+                IsSpellActive(GlassDance_Spell48) &&
+                (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
+                 (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
+                  (GetCooldownRemainingTime(Nightbloom_Spell104) > 90 ||
+                   IsOffCooldown(Nightbloom_Spell104)))))
+                return GlassDance_Spell48;
+            if (IsEnabled(Preset.BLU_PrimalCombo_JKick) &&
+                IsOffCooldown(JKick_Spell80) &&
+                IsSpellActive(JKick_Spell80) &&
+                (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) ||
+                 (IsEnabled(Preset.BLU_PrimalCombo_Pool) &&
+                  (GetCooldownRemainingTime(Nightbloom_Spell104) > 60 ||
+                   IsOffCooldown(Nightbloom_Spell104)))))
+                return JKick_Spell80;
+            if (IsEnabled(Preset
+                    .BLU_PrimalCombo_Nightbloom) &&
+                IsOffCooldown(Nightbloom_Spell104) &&
+                IsSpellActive(Nightbloom_Spell104))
+                return Nightbloom_Spell104;
+            if (IsEnabled(Preset.BLU_PrimalCombo_Matra) &&
+                IsOffCooldown(MatraMagic_Spell100) &&
+                IsSpellActive(MatraMagic_Spell100))
+                return MatraMagic_Spell100;
+            if (IsEnabled(Preset
+                    .BLU_PrimalCombo_Suparnakha) &&
+                IsSpellActive(Surpanakha_Spell78))
+            {
+                if (GetRemainingCharges(Surpanakha_Spell78) == 4)
+                    surpanakhaReady = true;
+                if (surpanakhaReady &&
+                    GetRemainingCharges(Surpanakha_Spell78) > 0)
+                    return Surpanakha_Spell78;
+                if (GetRemainingCharges(Surpanakha_Spell78) == 0)
+                    surpanakhaReady = false;
+            }
+
+            if (IsEnabled(Preset
+                    .BLU_PrimalCombo_WingedReprobation) &&
+                IsSpellActive(WingedReprobation_Spell118) &&
+                IsOffCooldown(WingedReprobation_Spell118))
+                return OriginalHook(WingedReprobation_Spell118);
+
+            if (IsEnabled(Preset.BLU_PrimalCombo_SeaShanty) &&
+                IsSpellActive(SeaShanty_Spell122) &&
+                IsOffCooldown(SeaShanty_Spell122))
+                return SeaShanty_Spell122;
+
+            if (IsEnabled(
+                    Preset.BLU_PrimalCombo_PhantomFlurry) &&
+                IsOffCooldown(PhantomFlurry_Spell103) &&
+                IsSpellActive(PhantomFlurry_Spell103))
+                return PhantomFlurry_Spell103;
+
+            return actionID;
+        }
+    }
+
+    #endregion
+
+    #region General Combos
 
     internal class BLU_FinalSting : CustomCombo
     {
@@ -171,39 +289,54 @@ internal partial class BLU : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is FinalSting)
-            {
-                if (IsEnabled(Preset.BLU_SoloMode) && HasCondition(ConditionFlag.BoundByDuty) && !HasStatusEffect(Buffs.BasicInstinct) && GetPartyMembers().Count == 0 && IsSpellActive(BasicInstinct))
-                    return BasicInstinct;
-                if (!HasStatusEffect(Buffs.Whistle) && IsSpellActive(Whistle) && !WasLastAction(Whistle))
-                    return Whistle;
-                if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle) && !WasLastSpell(Tingle))
-                    return Tingle;
-                if (!HasStatusEffect(Buffs.MoonFlute) && !WasLastSpell(MoonFlute) && IsSpellActive(MoonFlute))
-                    return MoonFlute;
-                if (IsEnabled(Preset.BLU_Primals))
-                {
-                    if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction))
-                        return RoseOfDestruction;
-                    if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain))
-                        return FeatherRain.Retarget(FinalSting,
-                            SimpleTarget.HardTarget.IfHostile() ??
-                            SimpleTarget.LastHostileHardTarget);
-                    if (IsOffCooldown(Eruption) && IsSpellActive(Eruption))
-                        return Eruption;
-                    if (IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
-                        return MatraMagic;
-                    if (IsOffCooldown(GlassDance) && IsSpellActive(GlassDance))
-                        return GlassDance;
-                    if (IsOffCooldown(ShockStrike) && IsSpellActive(ShockStrike))
-                        return ShockStrike;
-                }
+            if (actionID is not FinalSting_Spell8) return actionID;
 
-                if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
-                    return Role.Swiftcast;
-                if (IsSpellActive(FinalSting))
-                    return FinalSting;
+            if (IsEnabled(Preset.BLU_SoloMode) &&
+                HasCondition(ConditionFlag.BoundByDuty) &&
+                !HasStatusEffect(Buffs.BasicInstinct) &&
+                GetPartyMembers().Count == 0 &&
+                IsSpellActive(BasicInstinct_Spell91))
+                return BasicInstinct_Spell91;
+            if (!HasStatusEffect(Buffs.Whistle) &&
+                IsSpellActive(Whistle_Spell64) &&
+                !WasLastAction(Whistle_Spell64))
+                return Whistle_Spell64;
+            if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle_Spell82) &&
+                !WasLastSpell(Tingle_Spell82))
+                return Tingle_Spell82;
+            if (!HasStatusEffect(Buffs.MoonFlute) &&
+                !WasLastSpell(MoonFlute_Spell39) &&
+                IsSpellActive(MoonFlute_Spell39))
+                return MoonFlute_Spell39;
+
+            if (IsEnabled(Preset.BLU_Primals))
+            {
+                if (IsOffCooldown(RoseofDestruction_Spell90) &&
+                    IsSpellActive(RoseofDestruction_Spell90))
+                    return RoseofDestruction_Spell90;
+                if (IsOffCooldown(FeatherRain_Spell44) &&
+                    IsSpellActive(FeatherRain_Spell44))
+                    return FeatherRain_Spell44.Retarget(FinalSting_Spell8,
+                        SimpleTarget.HardTarget.IfHostile() ??
+                        SimpleTarget.LastHostileHardTarget);
+                if (IsOffCooldown(Eruption_Spell45) &&
+                    IsSpellActive(Eruption_Spell45))
+                    return Eruption_Spell45;
+                if (IsOffCooldown(MatraMagic_Spell100) &&
+                    IsSpellActive(MatraMagic_Spell100))
+                    return MatraMagic_Spell100;
+                if (IsOffCooldown(GlassDance_Spell48) &&
+                    IsSpellActive(GlassDance_Spell48))
+                    return GlassDance_Spell48;
+                if (IsOffCooldown(ShockStrike_Spell47) &&
+                    IsSpellActive(ShockStrike_Spell47))
+                    return ShockStrike_Spell47;
             }
+
+            if (IsOffCooldown(Role.Swiftcast) && LevelChecked(Role.Swiftcast))
+                return Role.Swiftcast;
+            if (IsSpellActive(FinalSting_Spell8))
+                return FinalSting_Spell8;
 
             return actionID;
         }
@@ -215,21 +348,214 @@ internal partial class BLU : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is Ultravibration)
-            {
-                if (IsEnabled(Preset.BLU_HydroPull) && !InMeleeRange() && IsSpellActive(HydroPull))
-                    return HydroPull;
-                if (!HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true) && IsOffCooldown(Ultravibration) && IsSpellActive(RamsVoice))
-                    return RamsVoice;
+            if (actionID is not Ultravibration_Spell92) return actionID;
 
-                if (HasStatusEffect(Debuffs.DeepFreeze, CurrentTarget, true))
-                {
-                    if (IsOffCooldown(Role.Swiftcast))
-                        return Role.Swiftcast;
-                    if (IsSpellActive(Ultravibration) && IsOffCooldown(Ultravibration))
-                        return Ultravibration;
-                }
+            // Setup for Ultravibration
+            if (IsEnabled(Preset.BLU_HydroPull) &&
+                !InMeleeRange() && IsSpellActive(HydroPull_Spell97))
+                return HydroPull_Spell97;
+            if (!HasStatusEffect(Debuffs.DeepFreeze, anyOwner: true) &&
+                IsOffCooldown(Ultravibration_Spell92) &&
+                IsSpellActive(RamsVoice_Spell33))
+                return RamsVoice_Spell33;
+
+            if (!HasStatusEffect(Debuffs.DeepFreeze, anyOwner: true)) return actionID;
+
+            // Ultravibration
+            if (IsOffCooldown(Role.Swiftcast))
+                return Role.Swiftcast;
+            if (IsSpellActive(Ultravibration_Spell92) &&
+                IsOffCooldown(Ultravibration_Spell92))
+                return Ultravibration_Spell92;
+
+            return actionID;
+        }
+    }
+
+    #endregion
+
+    #region DPS Combos
+
+    internal class BLU_TridentCombo : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_TridentCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not TripleTrident_Spell81) return actionID;
+
+            // Show cooldown
+            if (IsOnCooldown(TripleTrident_Spell81))
+                return TripleTrident_Spell81;
+
+            // Buff
+            if (!HasStatusEffect(Buffs.Whistle) && IsSpellActive(Whistle_Spell64))
+                return Whistle_Spell64;
+            if (!HasStatusEffect(Buffs.Tingle) && IsSpellActive(Tingle_Spell82) &&
+                HasStatusEffect(Buffs.Whistle))
+                return Tingle_Spell82;
+
+            // Triple Trident
+            if (IsSpellActive(TripleTrident_Spell81) &&
+                HasStatusEffect(Buffs.Tingle) && HasStatusEffect(Buffs.Whistle))
+                return TripleTrident_Spell81;
+
+            return actionID;
+        }
+    }
+
+    internal class BLU_DPS_DoT : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_DPS_DoT;
+
+        public bool TryGetDoT(out uint DoT)
+        {
+            DoT = BypassAction;
+            
+            var call = Invoke(BypassAction);
+            if (call == BypassAction) return false;
+            
+            DoT = call;
+            return true;
+
+        }
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (SongofTorment_Spell9 or BypassAction))
+                return actionID;
+
+            var dotHelper = new DoTs(
+                Config.BLU_DPS_DoT_WasteProtection_HP,
+                Config.BLU_DPS_DoT_WasteProtection_Time);
+
+            // Waste protection
+            if (IsEnabled(Preset.BLU_Tank_DoT_WasteProtection) &&
+                HasTarget() && !dotHelper.AnyDotsWanted() &&
+                actionID != BypassAction)
+                return All.SavageBlade;
+
+            // Use DoT
+            if (dotHelper.TryGet(out var dotAction))
+                return dotAction;
+
+            return actionID;
+        }
+    }
+
+    #endregion
+
+    #region Tank Combos
+
+    internal class BLU_Tank_Advanced : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_Tank_Advanced;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not GoblinPunch_Spell105) return actionID;
+
+            // Pre Pull
+            if (!InCombat() && HasTarget())
+            {
+                if (IsEnabled(Preset.BLU_Tank_Advanced_DoTs) &&
+                    IsEnabled(Preset.BLU_Tank_DoT_Torment))
+                    return SongofTorment_Spell9;
+
+                if (IsEnabled(Preset.BLU_Tank_Advanced_Uptime))
+                    return SonicBoom_Spell63;
             }
+
+            // Surpanakha dump
+            if (IsEnabled(Preset.BLU_Tank_Advanced_Surpanakha) &&
+                WasLastAction(Surpanakha_Spell78) &&
+                HasCharges(Surpanakha_Spell78))
+                return Surpanakha_Spell78;
+
+            #region oGCDs
+
+            if (CanWeave())
+            {
+                // J Kick
+                if (IsEnabled(Preset.BLU_Tank_Advanced_JKick) &&
+                    IsOffCooldown(JKick_Spell80) &&
+                    InMeleeRange() && IsSpellActive(JKick_Spell80))
+                    return JKick_Spell80;
+
+                // Surpanakha
+                if (IsEnabled(Preset.BLU_Tank_Advanced_Surpanakha) &&
+                    CanWeave() &&
+                    GetRemainingCharges(Surpanakha_Spell78) > 3)
+                    return Surpanakha_Spell78;
+
+                // Lucid Dreaming
+                if (Role.CanLucidDream(9000))
+                    return Role.LucidDreaming;
+            }
+
+            #endregion
+
+            // Uptime Sonic Boom
+            if (IsEnabled(Preset.BLU_Tank_Advanced_Uptime) &&
+                IsSpellActive(SonicBoom_Spell63) &&
+                IsOffCooldown(SonicBoom_Spell63) &&
+                !InMeleeRange())
+                return SonicBoom_Spell63;
+            
+            // Devour maintenance
+            if (IsEnabled(Preset.BLU_Tank_Advanced_Devour) &&
+                IsSpellActive(Devour_Spell75) &&
+                IsOffCooldown(Devour_Spell75) &&
+                InActionRange(Devour_Spell75) &&
+                !HasStatusEffect(0) &&
+                !JustUsed(Devour_Spell75) &&
+                HasStatusEffect(Buffs.TankMimicry))
+                return Devour_Spell75;
+
+            // Include DoTs
+            BLU_Tank_DoT DoTCombo = new();
+            if (IsEnabled(Preset.BLU_Tank_Advanced_DoTs) &&
+                DoTCombo.TryGetDoT(out var DoT))
+                return DoT.Retarget(GoblinPunch_Spell105, Target);
+
+            return actionID;
+        }
+    }
+
+    internal class BLU_Tank_DoT : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLU_Tank_DoT;
+
+        public bool TryGetDoT(out uint DoT)
+        {
+            DoT = BypassAction;
+            
+            var call = Invoke(BypassAction);
+            if (call == BypassAction) return false;
+            
+            DoT = call;
+            return true;
+
+        }
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (FeatherRain_Spell44 or BypassAction))
+                return actionID;
+
+            var dotHelper = new DoTs(
+                Config.BLU_Tank_DoT_WasteProtection_HP,
+                Config.BLU_Tank_DoT_WasteProtection_Time);
+
+            // Waste protection
+            if (IsEnabled(Preset.BLU_Tank_DoT_WasteProtection) &&
+                HasTarget() && !dotHelper.AnyDotsWanted() &&
+                actionID != BypassAction)
+                return All.SavageBlade;
+
+            // Use DoT
+            if (dotHelper.TryGet(out var dotAction))
+                return dotAction;
 
             return actionID;
         }
@@ -241,17 +567,27 @@ internal partial class BLU : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is Devour or Offguard or BadBreath)
-            {
-                if (!HasStatusEffect(Debuffs.Offguard, CurrentTarget, true) && IsOffCooldown(Offguard) && IsSpellActive(Offguard))
-                    return Offguard;
-                if (!HasStatusEffect(Debuffs.Malodorous, CurrentTarget, true) && HasStatusEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath))
-                    return BadBreath;
-                if (IsOffCooldown(Devour) && HasStatusEffect(Buffs.TankMimicry) && IsSpellActive(Devour))
-                    return Devour;
-                if (Role.CanLucidDream(9000))
-                    return Role.LucidDreaming;
-            }
+            if (actionID is not Devour_Spell75) return actionID;
+
+            // Offguard
+            if (!HasStatusEffect(Debuffs.Offguard, anyOwner: true) &&
+                IsOffCooldown(Offguard_Spell20) &&
+                IsSpellActive(Offguard_Spell20))
+                return Offguard_Spell20;
+
+            // Bad Breath
+            if (!HasStatusEffect(Debuffs.Malodorous, anyOwner: true) &&
+                HasStatusEffect(Buffs.TankMimicry) && IsSpellActive(BadBreath_Spell28))
+                return BadBreath_Spell28;
+
+            // Devour
+            if (IsOffCooldown(Devour_Spell75) && HasStatusEffect(Buffs.TankMimicry) &&
+                IsSpellActive(Devour_Spell75))
+                return Devour_Spell75;
+
+            // Lucid Dreaming
+            if (Role.CanLucidDream(9000))
+                return Role.LucidDreaming;
 
             return actionID;
         }
@@ -261,74 +597,28 @@ internal partial class BLU : Caster
     {
         protected internal override Preset Preset => Preset.BLU_Addle;
 
-        protected override uint Invoke(uint actionID) => (actionID is MagicHammer && IsOnCooldown(MagicHammer) && IsOffCooldown(Role.Addle) && !HasStatusEffect(Role.Debuffs.Addle, CurrentTarget) && !HasStatusEffect(Debuffs.Conked, CurrentTarget)) ? Role.Addle : actionID;
-    }
-
-    internal class BLU_PrimalCombo : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.BLU_PrimalCombo;
-        internal static bool surpanakhaReady = false;
-
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is FeatherRain or Eruption)
-            {
-                if (HasStatusEffect(Buffs.PhantomFlurry))
-                    return OriginalHook(PhantomFlurry);
+            if (actionID is not MagicHammer_Spell60) return actionID;
 
-                if (!HasStatusEffect(Buffs.PhantomFlurry))
-                {
-                    if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) && GetStatusEffect(Buffs.WingedReprobation)?.Param > 1 && IsOffCooldown(WingedReprobation))
-                        return OriginalHook(WingedReprobation);
-
-                    if (IsOffCooldown(FeatherRain) && IsSpellActive(FeatherRain) &&
-                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
-                        return FeatherRain.Retarget([FeatherRain, Eruption],
-                            SimpleTarget.HardTarget.IfHostile() ??
-                            SimpleTarget.LastHostileHardTarget);
-                    if (IsOffCooldown(Eruption) && IsSpellActive(Eruption) &&
-                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
-                        return Eruption;
-                    if (IsOffCooldown(ShockStrike) && IsSpellActive(ShockStrike) &&
-                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 60 || IsOffCooldown(Nightbloom)))))
-                        return ShockStrike;
-                    if (IsOffCooldown(RoseOfDestruction) && IsSpellActive(RoseOfDestruction) &&
-                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 30 || IsOffCooldown(Nightbloom)))))
-                        return RoseOfDestruction;
-                    if (IsOffCooldown(GlassDance) && IsSpellActive(GlassDance) &&
-                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 90 || IsOffCooldown(Nightbloom)))))
-                        return GlassDance;
-                    if (IsEnabled(Preset.BLU_PrimalCombo_JKick) && IsOffCooldown(JKick) && IsSpellActive(JKick) &&
-                        (IsNotEnabled(Preset.BLU_PrimalCombo_Pool) || (IsEnabled(Preset.BLU_PrimalCombo_Pool) && (GetCooldownRemainingTime(Nightbloom) > 60 || IsOffCooldown(Nightbloom)))))
-                        return JKick;
-                    if (IsEnabled(Preset.BLU_PrimalCombo_Nightbloom) && IsOffCooldown(Nightbloom) && IsSpellActive(Nightbloom))
-                        return Nightbloom;
-                    if (IsEnabled(Preset.BLU_PrimalCombo_Matra) && IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
-                        return MatraMagic;
-                    if (IsEnabled(Preset.BLU_PrimalCombo_Suparnakha) && IsSpellActive(Surpanakha))
-                    {
-                        if (GetRemainingCharges(Surpanakha) == 4)
-                            surpanakhaReady = true;
-                        if (surpanakhaReady && GetRemainingCharges(Surpanakha) > 0)
-                            return Surpanakha;
-                        if (GetRemainingCharges(Surpanakha) == 0)
-                            surpanakhaReady = false;
-                    }
-
-                    if (IsEnabled(Preset.BLU_PrimalCombo_WingedReprobation) && IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation))
-                        return OriginalHook(WingedReprobation);
-
-                    if (IsEnabled(Preset.BLU_PrimalCombo_SeaShanty) && IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
-                        return SeaShanty;
-
-                    if (IsEnabled(Preset.BLU_PrimalCombo_PhantomFlurry) && IsOffCooldown(PhantomFlurry) && IsSpellActive(PhantomFlurry))
-                        return PhantomFlurry;
-                }
-            }
-
-            return actionID;
+            return (IsOnCooldown(MagicHammer_Spell60) &&
+                    IsOffCooldown(Role.Addle) &&
+                    !HasStatusEffect(Role.Debuffs.Addle, Target) &&
+                    !HasStatusEffect(Debuffs.Conked, Target))
+                ? Role.Addle
+                : actionID;
         }
     }
+
+    #endregion
+
+    #region Healer Combos
+
+    //
+
+    #endregion
+
+    #region Unsorted Combos
 
     internal class BLU_KnightCombo : CustomCombo
     {
@@ -336,13 +626,16 @@ internal partial class BLU : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is WhiteKnightsTour or BlackKnightsTour)
-            {
-                if (HasStatusEffect(Debuffs.Slow, CurrentTarget) && IsSpellActive(BlackKnightsTour))
-                    return BlackKnightsTour;
-                if (HasStatusEffect(Debuffs.Bind, CurrentTarget) && IsSpellActive(WhiteKnightsTour))
-                    return WhiteKnightsTour;
-            }
+            if (actionID is not
+                (WhiteKnightsTour_Spell65 or BlackKnightsTour_Spell66))
+                return actionID;
+
+            if (HasStatusEffect(Debuffs.Slow, Target) &&
+                IsSpellActive(BlackKnightsTour_Spell66))
+                return BlackKnightsTour_Spell66;
+            if (HasStatusEffect(Debuffs.Bind, Target) &&
+                IsSpellActive(WhiteKnightsTour_Spell65))
+                return WhiteKnightsTour_Spell65;
 
             return actionID;
         }
@@ -354,13 +647,14 @@ internal partial class BLU : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is PeripheralSynthesis)
-            {
-                if (!HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) && IsSpellActive(PeripheralSynthesis))
-                    return PeripheralSynthesis;
-                if (HasStatusEffect(Debuffs.Lightheaded, CurrentTarget) && IsSpellActive(MustardBomb))
-                    return MustardBomb;
-            }
+            if (actionID is not PeripheralSynthesis_Spell101) return actionID;
+
+            if (!HasStatusEffect(Debuffs.Lightheaded, Target) &&
+                IsSpellActive(PeripheralSynthesis_Spell101))
+                return PeripheralSynthesis_Spell101;
+            if (HasStatusEffect(Debuffs.Lightheaded, Target) &&
+                IsSpellActive(MustardBomb_Spell94))
+                return MustardBomb_Spell94;
 
             return actionID;
         }
@@ -370,14 +664,31 @@ internal partial class BLU : Caster
     {
         protected internal override Preset Preset => Preset.BLU_PerpetualRayStunCombo;
 
-        protected override uint Invoke(uint actionID) => (actionID is PerpetualRay && (HasStatusEffect(Debuffs.Stun, CurrentTarget, true) || WasLastAction(PerpetualRay)) && IsSpellActive(SharpenedKnife) && InMeleeRange()) ? SharpenedKnife : actionID;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not PerpetualRay_Spell69) return actionID;
+
+            return ((HasStatusEffect(Debuffs.Stun, anyOwner: true) ||
+                     WasLastAction(PerpetualRay_Spell69)) &&
+                    IsSpellActive(SharpenedKnife_Spell15) && InMeleeRange())
+                ? SharpenedKnife_Spell15
+                : actionID;
+        }
     }
 
     internal class BLU_MeleeCombo : CustomCombo
     {
         protected internal override Preset Preset => Preset.BLU_MeleeCombo;
 
-        protected override uint Invoke(uint actionID) => (actionID is SonicBoom && GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife)) ? SharpenedKnife : actionID;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not SonicBoom_Spell63) return actionID;
+
+            return (IsSpellActive(SharpenedKnife_Spell15) &&
+                    GetTargetDistance() <= 3)
+                ? SharpenedKnife_Spell15
+                : actionID;
+        }
     }
 
     internal class BLU_PeatClean : CustomCombo
@@ -386,120 +697,15 @@ internal partial class BLU : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is DeepClean)
-            {
-                if (IsSpellActive(PeatPelt) && !HasStatusEffect(Debuffs.Begrimed, CurrentTarget))
-                    return PeatPelt;
-            }
+            if (actionID is not DeepClean_Spell112) return actionID;
+
+            if (IsSpellActive(PeatPelt_Spell111) &&
+                !HasStatusEffect(Debuffs.Begrimed, Target))
+                return PeatPelt_Spell111;
 
             return actionID;
         }
     }
-    internal class BLU_NewMoonFluteOpener : CustomCombo
-    {
-        protected internal override Preset Preset => Preset.BLU_NewMoonFluteOpener;
 
-        protected override uint Invoke(uint actionID)
-        {
-            if (actionID is MoonFlute)
-            {
-                if (!HasStatusEffect(Buffs.MoonFlute))
-                {
-                    if (IsSpellActive(Whistle) && !HasStatusEffect(Buffs.Whistle) && !WasLastAction(Whistle))
-                        return Whistle;
-
-                    if (IsSpellActive(Tingle) && !HasStatusEffect(Buffs.Tingle))
-                        return Tingle;
-
-                    if (IsSpellActive(RoseOfDestruction) && GetCooldown(RoseOfDestruction).CooldownRemaining < 1f)
-                        return RoseOfDestruction;
-
-                    if (IsSpellActive(MoonFlute) && !JustUsed(MoonFlute))
-                        return MoonFlute;
-                }
-
-                if (IsSpellActive(JKick) && IsOffCooldown(JKick))
-                    return JKick;
-
-                if (IsSpellActive(TripleTrident) && IsOffCooldown(TripleTrident))
-                    return TripleTrident;
-
-                if (IsSpellActive(Nightbloom) && IsOffCooldown(Nightbloom))
-                    return Nightbloom;
-
-                if (IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
-                {
-                    if ((!HasStatusEffect(Debuffs.BreathOfMagic, CurrentTarget, true) && IsSpellActive(BreathOfMagic)) || (!HasStatusEffect(Debuffs.MortalFlame, CurrentTarget, true) && IsSpellActive(MortalFlame)))
-                    {
-                        if (IsSpellActive(Bristle) && !HasStatusEffect(Buffs.Bristle))
-                            return Bristle;
-
-                        if (IsSpellActive(FeatherRain) && IsOffCooldown(FeatherRain))
-                            return FeatherRain.Retarget(MoonFlute,
-                                SimpleTarget.HardTarget.IfHostile() ??
-                                SimpleTarget.LastHostileHardTarget);
-
-                        if (IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
-                            return SeaShanty;
-
-                        if (IsSpellActive(BreathOfMagic) && !HasStatusEffect(Debuffs.BreathOfMagic, CurrentTarget, true))
-                            return BreathOfMagic;
-                        else if (IsSpellActive(MortalFlame) && !HasStatusEffect(Debuffs.MortalFlame, CurrentTarget, true))
-                            return MortalFlame;
-                    }
-                }
-                else
-                {
-                    if (IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation) && !WasLastSpell(WingedReprobation) && !WasLastAbility(FeatherRain) && (!HasStatusEffect(Buffs.WingedReprobation) || GetStatusEffect(Buffs.WingedReprobation)?.Param < 2))
-                        return WingedReprobation;
-
-                    if (IsSpellActive(FeatherRain) && IsOffCooldown(FeatherRain))
-                        return FeatherRain.Retarget(MoonFlute,
-                            SimpleTarget.HardTarget.IfHostile() ??
-                            SimpleTarget.LastHostileHardTarget);
-
-                    if (IsSpellActive(SeaShanty) && IsOffCooldown(SeaShanty))
-                        return SeaShanty;
-                }
-
-                if (IsSpellActive(WingedReprobation) && IsOffCooldown(WingedReprobation) && !WasLastAbility(ShockStrike) && GetStatusEffect(Buffs.WingedReprobation)?.Param < 2)
-                    return WingedReprobation;
-
-                if (IsSpellActive(ShockStrike) && IsOffCooldown(ShockStrike))
-                    return ShockStrike;
-
-                if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsNotEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
-                    return BeingMortal;
-
-                if (IsSpellActive(Bristle) && !HasStatusEffect(Buffs.Bristle) && IsOffCooldown(MatraMagic) && IsSpellActive(MatraMagic))
-                    return Bristle;
-
-                if (IsOffCooldown(Role.Swiftcast))
-                    return Role.Swiftcast;
-
-                if (IsSpellActive(Surpanakha))
-                {
-                    if (GetRemainingCharges(Surpanakha) > 0)
-                        return Surpanakha;
-                }
-
-                if (IsSpellActive(MatraMagic) && HasStatusEffect(Role.Buffs.Swiftcast))
-                    return MatraMagic;
-
-                if (IsSpellActive(BeingMortal) && IsOffCooldown(BeingMortal) && IsEnabled(Preset.BLU_NewMoonFluteOpener_DoTOpener))
-                    return BeingMortal;
-
-                if (IsSpellActive(PhantomFlurry) && IsOffCooldown(PhantomFlurry))
-                    return PhantomFlurry;
-
-                if (HasStatusEffect(Buffs.PhantomFlurry) && GetStatusEffect(Buffs.PhantomFlurry)?.RemainingTime < 2)
-                    return OriginalHook(PhantomFlurry);
-
-                if (HasStatusEffect(Buffs.MoonFlute))
-                    return All.SavageBlade;
-            }
-
-            return actionID;
-        }
-    }
+    #endregion
 }
