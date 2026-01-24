@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Extensions;
 using Status = Dalamud.Game.ClientState.Statuses.IStatus; // conflicts with structs if not defined
 namespace WrathCombo.Data;
 
@@ -15,14 +16,10 @@ internal partial class CustomComboCache : IDisposable
     //Invalidate this
     private readonly ConcurrentDictionary<(uint StatusID, ulong? TargetID, ulong? SourceID), Status?> statusCache = new();
 
-    /// <summary> Finds a status on the given object. </summary>
-    /// <param name="statusID"> Status effect ID. </param>
-    /// <param name="obj"> Object to look for effects on. </param>
-    /// <param name="sourceID"> Source object ID. </param>
-    /// <returns> Status object or null. </returns>
-    internal Status? GetStatus(uint statusID, IGameObject? obj, ulong? sourceID)
+
+    internal Status? GetStatus(uint statusID, ulong? gameObjectId, ulong? sourceID)
     {
-        if (obj is null)
+        if (gameObjectId.GetObject() is not { } obj)
             return null;
 
         var key = (statusID, obj.GameObjectId, sourceID);
@@ -47,6 +44,20 @@ internal partial class CustomComboCache : IDisposable
         }
 
         return statusCache[key] = null;
+    }
+
+    /// <summary> Finds a status on the given object. </summary>
+    /// <param name="statusID"> Status effect ID. </param>
+    /// <param name="obj"> Object to look for effects on. </param>
+    /// <param name="sourceID"> Source object ID. </param>
+    /// <returns> Status object or null. </returns>
+    internal Status? GetStatus(uint statusID, IGameObject? obj, ulong? sourceID)
+    {
+        var id = obj?.GameObjectId;
+        if (id is null or 0)
+            return null;
+
+        return GetStatus(statusID, id, sourceID);
     }
 }
 
@@ -200,7 +211,22 @@ internal class StatusCache
     /// <returns></returns>
     internal static bool HasStatusInCacheList(FrozenSet<uint> statusList, IGameObject? gameObject = null)
     {
-        if (gameObject is not IBattleChara chara)
+        var id = gameObject?.GameObjectId;
+        if (id is null or 0)
+            return false;
+
+        return HasStatusInCacheList(statusList, id);
+    }
+
+    /// <summary>
+    /// Checks a GameObject's Status list against a set of Status IDs
+    /// </summary>
+    /// <param name="statusList">Hashset of Status IDs to check</param>
+    /// <param name="gameObject">GameObjectID to check</param>
+    /// <returns></returns>
+    internal static bool HasStatusInCacheList(FrozenSet<uint> statusList, ulong? gameObject)
+    {
+        if (gameObject.GetObject() is not IBattleChara chara)
             return false;
 
         var statuses = chara.StatusList;
