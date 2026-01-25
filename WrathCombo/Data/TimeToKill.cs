@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Extensions;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Data
 {
@@ -20,6 +21,8 @@ namespace WrathCombo.Data
         public long LastTimeChecked;
 
         public DateTime TimeDead;
+
+        private bool FlagForRemoval;
 
         public TimeSpan TimeUntilDead => TimeDead - DateTime.Now;
 
@@ -40,7 +43,7 @@ namespace WrathCombo.Data
 
         public static List<TimeToKill> TimeToKills = [];
 
-        public static TimeToKill? GetTimeToKillByID(ulong id)
+        public static TimeToKill? GetTimeToKillByID(ulong? id)
         {
             if (TimeToKills.TryGetFirst(x => x.GameObjectID == id, out var val))
                 return val;
@@ -48,13 +51,25 @@ namespace WrathCombo.Data
             return null;
         }
 
+        public static TimeSpan EstimatedKillTime(IGameObject? target = null)
+        {
+            target ??= CurrentTarget;
+            if (target is null)
+                return TimeSpan.Zero;
+
+            if (GetTimeToKillByID(target?.SafeGameObjectId) is { } ttk)
+                return ttk.TimeUntilDead;
+
+            return TimeSpan.Zero;
+        }
+
         public static void UpdateTimeToKills()
         {
-            TimeToKills.RemoveAll(x => x.GameObjectID.GetObject() is not { } c || !c.IsInCombat());
+            TimeToKills.RemoveAll(x => x.FlagForRemoval || x.GameObjectID.GetObject() is not { } c || !c.IsInCombat());
 
             foreach (var ttk in TimeToKills)
             {
-                if (Environment.TickCount64 < ttk.LastTimeChecked + 1000)
+                if (Environment.TickCount64 < (ttk.LastTimeChecked + 1000))
                     continue;
 
                 var obj = ttk.GameObjectID.GetObject();
@@ -62,14 +77,23 @@ namespace WrathCombo.Data
                 {
                     var current = c.CurrentHp;
                     var last = ttk.CurrentHp;
+
+                    if (current > last) //Heal, dummy resets etc.
+                    {
+                        ttk.FlagForRemoval = true;
+                        continue;
+                    }
+
                     var diff = last - current;
 
                     ttk.Diffs.Add(diff);
-                    var secondsToKill = current / ttk.Diffs.Average(x => x);
-                    var ttd = TimeSpan.FromSeconds(secondsToKill);
-                    ttk.TimeDead = DateTime.Now + ttd;
-                    ttk.CurrentHp = current;
-
+                    if (ttk.AverageDPS > 0)
+                    {
+                        var secondsToKill = current / ttk.AverageDPS;
+                        var ttd = TimeSpan.FromSeconds(secondsToKill);
+                        ttk.TimeDead = DateTime.Now + ttd;
+                        ttk.CurrentHp = current;
+                    }
 
                     ttk.LastTimeChecked = Environment.TickCount64;
                 }
