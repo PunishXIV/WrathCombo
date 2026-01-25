@@ -310,6 +310,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
             TargetHelper.Draw();
 
             AutoRotationController.Run();
+            TimeToKill.Run();
 
             if (Player.IsDead)
                 ActionRetargeting.Retargets.Clear();
