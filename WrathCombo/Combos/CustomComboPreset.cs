@@ -6731,15 +6731,22 @@ public enum Preset
     [PossiblyRetargeted]
     SCH_Simple_ST_Heal = 16085,
 
+    [ParentCombo(SCH_Simple_ST_Heal)]
+    [CustomComboInfo("Disable Group Mitigation", "Removes Expedient and Sacred Soil from the simple healing rotation.", Job.SCH)]
+    SCH_Simple_ST_Heal_DisableGroupMit = 16090,
 
     [AutoAction(true, true)]
     [ReplaceSkill(SCH.Succor)]
     [ConflictingCombos(SCH_AoE_Heal)]
-    [CustomComboInfo("Simple Healing Mode - AoE", "Replaces Succor with a full one-button single target healing utility." +
+    [CustomComboInfo("Simple Healing Mode - AoE", "Replaces Succor with a full one-button AoE healing utility." +
                                                             "\nThis is the ideal option for newcomers to the job. Particularly with autorotation.", Job.SCH)]
     [SimpleCombo]
     [PossiblyRetargeted]
     SCH_Simple_AoE_Heal = 16084,
+
+    [ParentCombo(SCH_Simple_AoE_Heal)]
+    [CustomComboInfo("Disable Group Mitigation", "Removes Expedient and Sacred Soil from the simple healing rotation.", Job.SCH)]
+    SCH_Simple_AoE_Heal_DisableGroupMit = 16092,
 
     #endregion
 

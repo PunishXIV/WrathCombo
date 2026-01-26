@@ -168,7 +168,8 @@ internal partial class SCH : Healer
                 GetTargetHPPercent(healTarget) <= 50)
                 return Lustrate.RetargetIfEnabled(healTarget, Physick);
             
-            if (ActionReady(SacredSoil) && !InBossEncounter() &&
+            if (!IsEnabled(Preset.SCH_Simple_ST_Heal_DisableGroupMit) &&
+                ActionReady(SacredSoil) && !InBossEncounter() &&
                 TimeStoodStill >= TS.FromSeconds(5))
                 return SacredSoil.Retarget(Physick, SimpleTarget.Self);
             
@@ -196,7 +197,8 @@ internal partial class SCH : Healer
                     return Seraphism;
             }
 
-            if (ActionReady(Expedient) && !InBossEncounter())
+            if (!IsEnabled(Preset.SCH_Simple_ST_Heal_DisableGroupMit) &&
+                ActionReady(Expedient) && !InBossEncounter())
                 return Expedient;
             
             if (ActionReady(OriginalHook(Adloquium)))
@@ -220,10 +222,12 @@ internal partial class SCH : Healer
             if (EndAetherpact)
                 return DissolveUnion;
             
-            if (ActionReady(Expedient) && GroupDamageIncoming())
+            if (!IsEnabled(Preset.SCH_Simple_AoE_Heal_DisableGroupMit) &&
+                ActionReady(Expedient) && GroupDamageIncoming())
                 return Expedient;
-            
-            if (ActionReady(SacredSoil) && GroupDamageIncoming())
+
+            if (!IsEnabled(Preset.SCH_Simple_AoE_Heal_DisableGroupMit) &&
+                ActionReady(SacredSoil) && GroupDamageIncoming())
                 return SacredSoil.Retarget([Succor, Concitation], SimpleTarget.Self);
             
             if (ActionReady(Aetherflow) && !HasAetherflow &&
