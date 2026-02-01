@@ -62,21 +62,6 @@ internal partial class GNB : Tank
         LevelChecked(action) && //unlocked
         GetCooldownRemainingTime(action) < 0.5f && //off cooldown
         InActionRange(action); //enemy in range of the skill
-    private static bool MitigationRunning =>
-        HasStatusEffect(Role.Buffs.ArmsLength) ||
-        HasStatusEffect(Role.Buffs.Rampart) || 
-        HasStatusEffect(Buffs.Superbolide) ||
-        HasStatusEffect(Buffs.Camouflage) ||
-        HasStatusEffect(Buffs.Nebula) || 
-        HasStatusEffect(Buffs.GreatNebula);
-    
-    private static bool JustMitted =>
-        JustUsed(OriginalHook(Camouflage)) ||
-        JustUsed(OriginalHook(Nebula)) ||
-        JustUsed(OriginalHook(HeartOfStone)) ||
-        JustUsed(Role.ArmsLength) ||
-        JustUsed(Role.Rampart) ||
-        JustUsed(Superbolide);
 
     private static int HPThresholNM =>
         GNB_ST_NM_BossOption == 1 ||
@@ -95,6 +80,28 @@ internal partial class GNB : Tank
     
     private static bool CanUseNonBossMits(RotationMode rotationFlags, ref uint actionID)
     {
+        #region Variables
+        var mitigationRunning =
+            HasStatusEffect(Role.Buffs.ArmsLength) ||
+            HasStatusEffect(Role.Buffs.Rampart) || 
+            HasStatusEffect(Buffs.Superbolide) ||
+            HasStatusEffect(Buffs.Camouflage) ||
+            HasStatusEffect(Buffs.Nebula) || 
+            HasStatusEffect(Buffs.GreatNebula)||
+            HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+        
+        var justMitted =
+            JustUsed(OriginalHook(Camouflage)) ||
+            JustUsed(OriginalHook(Nebula)) ||
+            JustUsed(OriginalHook(HeartOfStone)) ||
+            JustUsed(Role.ArmsLength) ||
+            JustUsed(Role.Reprisal) ||
+            JustUsed(Role.Rampart) ||
+            JustUsed(Superbolide);
+        
+        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
+        #endregion
+        
         #region Initial Bailout
         if (!InCombat() || 
             InBossEncounter() || 
@@ -117,7 +124,7 @@ internal partial class GNB : Tank
         #region Heart Of Stone/Corundrum Use Always
         if (IsEnabled(Preset.GNB_Mitigation_NonBoss_HeartOfStone) && 
             ActionReady(OriginalHook(HeartOfStone)) && 
-            CanWeave() && !JustMitted &&
+            CanWeave() && !justMitted &&
             !HasStatusEffect(Buffs.Superbolide))
         {
             actionID = OriginalHook(HeartOfStone);
@@ -130,26 +137,15 @@ internal partial class GNB : Tank
             ? 10 
             : GNB_Mitigation_NonBoss_MitigationThreshold;
         
-        if (GetAvgEnemyHPPercentInRange(5f) <= mitigationThreshold || !CanWeave() || JustMitted) 
+        if (GetAvgEnemyHPPercentInRange(5f) <= mitigationThreshold || !CanWeave() || justMitted) 
             return false;
         #endregion
-        
-        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
         
         #region Heart of Light Overlapping 5+
         if (numberOfEnemies >= 5 && IsEnabled(Preset.GNB_Mitigation_NonBoss_HeartOfLight) && 
             ActionReady(HeartOfLight) && !HasStatusEffect(Buffs.Superbolide))
         {
             actionID = HeartOfLight;
-            return true;
-        }
-        #endregion
-        
-        #region Reprisal Overlapping 5+
-        if (numberOfEnemies >= 5 &&  IsEnabled(Preset.GNB_Mitigation_NonBoss_Reprisal) && 
-            ActionReady(Role.Reprisal) && !HasStatusEffect(Buffs.Superbolide))
-        {
-            actionID = Role.Reprisal;
             return true;
         }
         #endregion
@@ -163,7 +159,7 @@ internal partial class GNB : Tank
         }
         #endregion
         
-        if (MitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
+        if (mitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
         
         #region Mitigation 5+
         if (numberOfEnemies >= 5)
@@ -181,6 +177,11 @@ internal partial class GNB : Tank
             if (ActionReady(Role.ArmsLength) && IsEnabled(Preset.GNB_Mitigation_NonBoss_ArmsLength))
             {
                 actionID = Role.ArmsLength;
+                return true;
+            }
+            if (ActionReady(Role.Reprisal) && IsEnabled(Preset.GNB_Mitigation_NonBoss_Reprisal))
+            {
+                actionID = Role.Reprisal;
                 return true;
             }
         }

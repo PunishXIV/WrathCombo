@@ -692,11 +692,6 @@ internal partial class AST : Healer
                     return spell;
             }
 
-            //Hot Check for if you are in Aspected Helios Mode
-            IStatus? hotCheck = HeliosConjuction.LevelChecked() ? GetStatusEffect(Buffs.HeliosConjunction) : GetStatusEffect(Buffs.AspectedHelios);
-            if (!nonAspectedMode && hotCheck is not null && hotCheck.RemainingTime > GetActionCastTime(OriginalHook(AspectedHelios)) + 1f)
-                return Helios;
-
             return
                 actionID;
         }

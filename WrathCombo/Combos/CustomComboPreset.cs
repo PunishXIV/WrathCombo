@@ -3504,7 +3504,7 @@ public enum Preset
     GNB_Mitigation_NonBoss_ArmsLength = 7707,
     
     [ParentCombo(GNB_Mitigation_NonBoss)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets. Will overlap with others.", Job.GNB)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets.", Job.GNB)]
     GNB_Mitigation_NonBoss_Reprisal= 7708,
     
     [ParentCombo(GNB_Mitigation_NonBoss)]
@@ -5063,7 +5063,7 @@ public enum Preset
     PLD_Mitigation_NonBoss_ArmsLength = 11092,
     
     [ParentCombo(PLD_Mitigation_NonBoss)]
-    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets. Will overlap with others.", Job.PLD)]
+    [CustomComboInfo("Reprisal Option", "Adds Reprisal when 5 or more targets.", Job.PLD)]
     PLD_Mitigation_NonBoss_Reprisal= 11099,
     
     [ParentCombo(PLD_Mitigation_NonBoss)]

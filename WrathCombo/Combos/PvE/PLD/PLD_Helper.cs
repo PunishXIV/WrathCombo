@@ -71,14 +71,6 @@ internal partial class PLD
         HasStatusEffect(Buffs.SupplicationReady) && GetStatusEffectRemainingTime(Buffs.SupplicationReady) < 6 ||
         HasStatusEffect(Buffs.SepulchreReady) && GetStatusEffectRemainingTime(Buffs.SepulchreReady) < 6;
 
-    private static bool JustMitted =>
-        JustUsed(OriginalHook(Bulwark)) ||
-        JustUsed(OriginalHook(Sentinel)) ||
-        JustUsed(OriginalHook(Sheltron)) ||
-        JustUsed(Role.ArmsLength) ||
-        JustUsed(Role.Rampart) ||
-        JustUsed(HallowedGround);
-
     private static bool IsAboveMPReserveAoE =>
         IsNotEnabled(Preset.PLD_AoE_AdvancedMode_MP_Reserve) ||
         IsEnabled(Preset.PLD_AoE_AdvancedMode_MP_Reserve) && LocalPlayer.CurrentMp >= GetResourceCost(HolySpirit) + PLD_AoE_MP_Reserve;
@@ -90,14 +82,6 @@ internal partial class PLD
     private static int HPThresholdFoF =>
         PLD_ST_FoF_BossOption == 1 ||
         !TargetIsBoss() ? PLD_ST_FoF_HPOption : 0;
-    
-    private static bool MitigationRunning =>
-        HasStatusEffect(Role.Buffs.ArmsLength) ||
-        HasStatusEffect(Role.Buffs.Rampart) || 
-        HasStatusEffect(Buffs.HallowedGround) ||
-        HasStatusEffect(Buffs.Bulwark) ||
-        HasStatusEffect(Buffs.Sentinel) || 
-        HasStatusEffect(Buffs.Guardian);
 
     private static int RoyalAuthorityCount =>
         ActionWatching.CombatActions.Count(x => x == OriginalHook(RageOfHalone));
@@ -202,6 +186,29 @@ internal partial class PLD
     
     private static bool CanUseNonBossMits(RotationMode rotationFlags, ref uint actionID)
     {
+        #region Variables
+        var mitigationRunning =
+            HasStatusEffect(Role.Buffs.ArmsLength) ||
+            HasStatusEffect(Role.Buffs.Rampart) || 
+            HasStatusEffect(Buffs.HallowedGround) ||
+            HasStatusEffect(Buffs.Bulwark) ||
+            HasStatusEffect(Buffs.Sentinel) || 
+            HasStatusEffect(Buffs.Guardian) ||
+            HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+        
+        var justMitted =
+            JustUsed(OriginalHook(Bulwark)) ||
+            JustUsed(OriginalHook(Sentinel)) ||
+            JustUsed(OriginalHook(Sheltron)) ||
+            JustUsed(Role.ArmsLength) ||
+            JustUsed(Role.Rampart) ||
+            JustUsed(Role.Reprisal) ||
+            JustUsed(HallowedGround);
+        
+        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
+        
+        #endregion
+        
         #region Initial Bailout
         if (!InCombat() || 
             InBossEncounter() || 
@@ -223,7 +230,7 @@ internal partial class PLD
         
         #region Sheltron Use Always
         if (IsEnabled(Preset.PLD_Mitigation_NonBoss_Sheltron) && ActionReady(OriginalHook(Sheltron)) && 
-            CanWeave() && !JustMitted &&
+            CanWeave() && !justMitted &&
             !IsMoving() && CanWeave() && 
             !HasStatusEffect(Buffs.Sheltron) && !HasStatusEffect(Buffs.HallowedGround) && 
             Gauge.OathGauge >= 50)
@@ -238,7 +245,7 @@ internal partial class PLD
             ? 10 
             : PLD_Mitigation_NonBoss_MitigationThreshold;
         
-        if (GetAvgEnemyHPPercentInRange(5f) <= mitigationThreshold || !CanWeave() || JustMitted) return false;
+        if (GetAvgEnemyHPPercentInRange(5f) <= mitigationThreshold || !CanWeave() || justMitted) return false;
         #endregion
         
         #region Divine Veil Health Checked
@@ -254,19 +261,7 @@ internal partial class PLD
         }
         #endregion
         
-        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
-        
-        #region Reprisal 5+ Overlaps
-        if (IsEnabled(Preset.PLD_Mitigation_NonBoss_Reprisal) && ActionReady(Role.Reprisal) &&
-            numberOfEnemies >= 5 &&
-            !HasStatusEffect(Buffs.HallowedGround))
-        {
-            actionID = Role.Reprisal;
-            return true;
-        }
-        #endregion
-        
-        if (MitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
+        if (mitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
         
         #region Mitigation 5+
         if (numberOfEnemies >= 5)
@@ -284,6 +279,11 @@ internal partial class PLD
             if (ActionReady(Role.ArmsLength) && IsEnabled(Preset.PLD_Mitigation_NonBoss_ArmsLength))
             {
                 actionID = Role.ArmsLength;
+                return true;
+            }
+            if (IsEnabled(Preset.PLD_Mitigation_NonBoss_Reprisal) && ActionReady(Role.Reprisal))
+            {
+                actionID = Role.Reprisal;
                 return true;
             }
         }
