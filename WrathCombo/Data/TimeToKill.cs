@@ -25,6 +25,8 @@ namespace WrathCombo.Data
         private bool FlagForRemoval;
 
         public TimeSpan TimeUntilDead => TimeDead - DateTime.Now;
+        
+        public float SecondsUntilDead => (float)TimeUntilDead.TotalSeconds;
 
         public uint AverageDPS => Diffs.Count == 0 ? 0 : (uint)Diffs.Average(x => x);
 
@@ -51,16 +53,20 @@ namespace WrathCombo.Data
             return null;
         }
 
-        public static TimeSpan EstimatedKillTime(IGameObject? target = null)
+        /// <remarks>
+        ///     Returns <see cref="TimeSpan.MaxValue"/> if no target or no TTK
+        ///     can be determined.
+        /// </remarks>
+        public static TimeSpan EstimatedTimeToKill(IGameObject? target = null)
         {
             target ??= CurrentTarget;
             if (target is null)
-                return TimeSpan.Zero;
+                return TimeSpan.MaxValue;
 
             if (GetTimeToKillByID(target?.SafeGameObjectId) is { } ttk)
                 return ttk.TimeUntilDead;
 
-            return TimeSpan.Zero;
+            return TimeSpan.MaxValue;
         }
 
         public static void UpdateTimeToKills()
