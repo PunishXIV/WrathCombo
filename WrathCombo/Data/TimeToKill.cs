@@ -149,7 +149,7 @@ namespace WrathCombo.Data
                 if (TimeToKills.Any(x => x.GameObjectID == id))
                     continue;
 
-                new TimeToKill(id.Value);
+                _ = new TimeToKill(id.Value); // (adds itself in the list)
             }
         }
 
