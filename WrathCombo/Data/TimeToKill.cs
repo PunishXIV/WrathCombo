@@ -53,17 +53,25 @@ namespace WrathCombo.Data
             return null;
         }
 
-        /// <remarks>
-        ///     Returns <see cref="TimeSpan.MaxValue"/> if no target or no TTK
-        ///     can be determined.
-        /// </remarks>
+        /// <summary>
+        ///     Gets the Estimated Time To Kill for a given target.
+        /// </summary>
+        /// <param name="target">
+        ///     The target to get the Estimated Time To Kill for.<br/>
+        ///     If null, will use the current target.
+        /// </param>
+        /// <returns>
+        ///     The Estimated Time To Kill for the given target.<br/>
+        ///     If the target is null or not tracked, returns
+        ///     <see cref="TimeSpan.MaxValue"/>.
+        /// </returns>
         public static TimeSpan EstimatedTimeToKill(IGameObject? target = null)
         {
             target ??= CurrentTarget;
             if (target is null)
                 return TimeSpan.MaxValue;
 
-            if (GetTimeToKillByID(target?.SafeGameObjectId) is { } ttk)
+            if (GetTimeToKillByID(target.SafeGameObjectId) is { } ttk)
                 return ttk.TimeUntilDead;
 
             return TimeSpan.MaxValue;
