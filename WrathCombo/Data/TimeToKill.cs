@@ -130,30 +130,33 @@ namespace WrathCombo.Data
                     continue;
 
                 var obj = ttk.GameObjectID.GetObject();
-                if (obj is IBattleChara c)
+                if (obj is not IBattleChara c)
                 {
-                    var current = c.CurrentHp;
-                    var last = ttk.CurrentHp;
-
-                    if (current > last) //Heal, dummy resets etc.
-                    {
-                        ttk.FlagForRemoval = true;
-                        continue;
-                    }
-
-                    var diff = last - current;
-
-                    ttk.Diffs.Add(diff);
-                    if (ttk.AverageDPS > 0)
-                    {
-                        var secondsToKill = current / ttk.AverageDPS;
-                        var ttd = TimeSpan.FromSeconds(secondsToKill);
-                        ttk.TimeDead = DateTime.Now + ttd;
-                        ttk.CurrentHp = current;
-                    }
-
-                    ttk.LastTimeChecked = Environment.TickCount64;
+                    ttk.FlagForRemoval = true;
+                    continue;
                 }
+
+                var current = c.CurrentHp;
+                var last    = ttk.CurrentHp;
+
+                if (current > last) //Heal, dummy resets etc.
+                {
+                    ttk.FlagForRemoval = true;
+                    continue;
+                }
+
+                var diff = last - current;
+
+                ttk.Diffs.Add(diff);
+                if (ttk.AverageDPS > 0)
+                {
+                    var secondsToKill = current / ttk.AverageDPS;
+                    var ttd           = TimeSpan.FromSeconds(secondsToKill);
+                    ttk.TimeDead  = DateTime.Now + ttd;
+                    ttk.CurrentHp = current;
+                }
+
+                ttk.LastTimeChecked = Environment.TickCount64;
             }
         }
 
