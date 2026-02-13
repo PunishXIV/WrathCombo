@@ -16,6 +16,20 @@ namespace WrathCombo.Data
 
         public uint CurrentHp;
 
+        // todo: should probably be a tuple with a timestamp.
+        //       averaging over the entire fight is more prone to issues (mechs dropping huge chunks, LBs, deaths/low dmg times, etc):
+        //       it's (maybe) more accurate for depicting times further away, but
+        //       less accurate for near-term predictions (which we'll mostly use).
+        //
+        //       An improvement would be to get only the last 45s.
+        //       More ideal though would be to get the last 90s, get the last 60s 
+        //       if TTK<90, then 45 if TTK<60, then 30 if TTK<45; this would give
+        //       improving accuracy as the TTK approaches.
+        //       Most Ideal would be getting the last 120s with a moving average
+        //       with weight increasing in steps as we approach current damage.
+        //
+        //       (another improvement would be to do something like normalizing
+        //       >30% outlier diffs, to reduce the impact of recent LBs/Mechs)
         public List<uint> Diffs = [];
 
         public long LastTimeChecked;
