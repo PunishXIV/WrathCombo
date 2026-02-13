@@ -54,17 +54,22 @@ namespace WrathCombo.Data
         }
 
         /// <summary>
-        ///     Gets the Estimated Time To Kill for a given target.
+        ///     Gets the Estimated Timespan To Kill for a given target.
         /// </summary>
         /// <param name="target">
         ///     The target to get the Estimated Time To Kill for.<br/>
         ///     If null, will use the current target.
         /// </param>
         /// <returns>
-        ///     The Estimated Time To Kill for the given target.<br/>
+        ///     The Estimated Timespan To Kill for the given target.<br/>
         ///     If the target is null or not tracked, returns
         ///     <see cref="TimeSpan.MaxValue"/>.
         /// </returns>
+        /// <remarks>
+        ///     Recommend using <see cref="EstimatedSecondsToKill"/> instead:
+        ///     It gives <see cref="float.NaN"/>, failing comparisons
+        ///     (which is more definitive than <see cref="TimeSpan.MaxValue"/>).
+        /// </remarks>
         public static TimeSpan EstimatedTimeToKill(IGameObject? target = null)
         {
             target ??= CurrentTarget;
@@ -75,6 +80,25 @@ namespace WrathCombo.Data
                 return ttk.TimeUntilDead;
 
             return TimeSpan.MaxValue;
+        }
+
+        /// <summary>
+        ///     Gets the Estimated Seconds To Kill for a given target.
+        /// </summary>
+        /// <param name="target">
+        ///     The target to get the Estimated Time To Kill for.<br/>
+        ///     If null, will use the current target.
+        /// </param>
+        /// <returns>
+        ///     The Estimated Seconds To Kill for the given target.<br/>
+        ///     If the target is null or not tracked, returns
+        ///     <see cref="float.NaN"/>.
+        /// </returns>
+        /// <seealso cref="EstimatedTimeToKill"/>
+        public static float EstimatedSecondsToKill(IGameObject? target = null)
+        {
+            var ttd = EstimatedTimeToKill(target);
+            return ttd == TimeSpan.MaxValue ? float.NaN : (float)ttd.TotalSeconds;
         }
 
         public static void UpdateTimeToKills()
