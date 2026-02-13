@@ -176,11 +176,17 @@ namespace WrathCombo.Data
             }
         }
 
-        public static void Update(bool force = false)
+        public static void Update(bool force = false, bool clear = false)
         {
-            if (!force && !EzThrottler.Throttle("ttkUpdate", 150))
+            if (!force && !EzThrottler.Throttle("ttkUpdate", 105))
                 return;
-            
+
+            if (clear)
+            {
+                TimeToKills.Clear();
+                return;
+            }
+
             AddEnemiesToTimeToKill();
             UpdateTimeToKills();
         }
