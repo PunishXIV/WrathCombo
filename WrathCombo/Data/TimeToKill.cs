@@ -94,11 +94,16 @@ namespace WrathCombo.Data
         ///     If the target is null or not tracked, returns
         ///     <see cref="float.NaN"/>.
         /// </returns>
-        /// <seealso cref="EstimatedTimeToKill"/>
         public static float EstimatedSecondsToKill(IGameObject? target = null)
         {
-            var ttd = EstimatedTimeToKill(target);
-            return ttd == TimeSpan.MaxValue ? float.NaN : (float)ttd.TotalSeconds;
+            target ??= CurrentTarget;
+            if (target is null)
+                return float.NaN;
+
+            if (GetTimeToKillByID(target.SafeGameObjectId) is { } ttk)
+                return ttk.SecondsUntilDead;
+            
+            return float.NaN;
         }
 
         public static void UpdateTimeToKills()
