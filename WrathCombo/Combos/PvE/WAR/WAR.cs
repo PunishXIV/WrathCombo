@@ -85,10 +85,6 @@ internal partial class WAR
             #region Stuns
 
             if (IsEnabled(Preset.WAR_ST_Interrupt)
-                && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only interrupt circle adds in 7
-                    Preset.WAR_Hid_R7SCircleCastOnly,
-                    () => HiddenFeaturesData.Content.InR7S,
-                    () => HiddenFeaturesData.Targeting.R7SCircleCastingAdd)
                 && Role.CanInterject())
                 return Role.Interject;
             if (IsEnabled(Preset.WAR_ST_Stun)
@@ -110,7 +106,7 @@ internal partial class WAR
             if (IsEnabled(Preset.WAR_ST_BalanceOpener) && Opener().FullOpener(ref action))
                 return action;
             if (IsEnabled(Preset.WAR_ST_RangedUptime) && ShouldUseTomahawk)
-                return CanPRend(WAR_ST_PrimalRend_Distance, WAR_ST_PrimalRend_Movement == 1 || (WAR_ST_PrimalRend_Movement == 0 && !IsMoving())) ? PrimalRend : CanWeave() && CanOnslaught(WAR_ST_Onslaught_Charges, WAR_ST_Onslaught_Distance, WAR_ST_Onslaught_Movement == 1 || (WAR_ST_Onslaught_Movement == 0 && !IsMoving())) ? Onslaught : Tomahawk;
+                return ShouldUsePrimalRend(WAR_ST_PrimalRend_Distance, WAR_ST_PrimalRend_Movement == 1 || (WAR_ST_PrimalRend_Movement == 0 && !IsMoving())) ? PrimalRend : CanWeave() && ShouldUseOnslaught(WAR_ST_Onslaught_Charges, WAR_ST_Onslaught_Distance, WAR_ST_Onslaught_Movement == 1 || (WAR_ST_Onslaught_Movement == 0 && !IsMoving())) ? Onslaught : Tomahawk;
             if (IsEnabled(Preset.WAR_ST_InnerRelease) && ShouldUseInnerRelease(WAR_ST_IRStop))
                 return OriginalHook(Berserk);
             if (IsEnabled(Preset.WAR_ST_Infuriate) && ShouldUseInfuriate(WAR_ST_Infuriate_Gauge, WAR_ST_Infuriate_Charges))
@@ -202,19 +198,9 @@ internal partial class WAR
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            // If the Burst Holding for the Squirrels in 6 is enabled, check that
-            // we are either not targeting a squirrel or the fight is after 275s
-            bool r6SReady = !HiddenFeaturesData.IsEnabledWith(
-                Preset.WAR_Hid_R6SHoldSquirrelBurst,
-                () => HiddenFeaturesData.Targeting.R6SSquirrel &&
-                      CombatEngageDuration().TotalSeconds < 275);
-
             if (IsEnabled(Preset.WAR_AoE_Interrupt) && Role.CanInterject())
                 return Role.Interject;
-            if (IsEnabled(Preset.WAR_AoE_Stun) && Role.CanLowBlow() && HiddenFeaturesData.NonBlockingIsEnabledWith( // Only stun the jabber, if in 6
-                Preset.WAR_Hid_R6SStunJabberOnly,
-                () => HiddenFeaturesData.Content.InR6S,
-                () => HiddenFeaturesData.Targeting.R6SJabber))
+            if (IsEnabled(Preset.WAR_AoE_Stun) && Role.CanLowBlow())
                 return Role.LowBlow;
             
             if (WAR_AoE_Advanced_MitsOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
@@ -225,12 +211,15 @@ internal partial class WAR
                         : action;
             }
 
-            if (!r6SReady) return AOECombo;
-
             #region Rotation
 
             if (IsEnabled(Preset.WAR_AoE_RangedUptime) && ShouldUseTomahawk)
-                return CanPRend(WAR_AoE_PrimalRend_Distance, WAR_AoE_PrimalRend_Movement == 1 || (WAR_AoE_PrimalRend_Movement == 0 && !IsMoving())) ? PrimalRend : CanWeave() && CanOnslaught(WAR_AoE_Onslaught_Charges, WAR_AoE_Onslaught_Distance, WAR_AoE_Onslaught_Movement == 1 || (WAR_AoE_Onslaught_Movement == 0 && !IsMoving())) ? Onslaught : Tomahawk;
+                return ShouldUsePrimalRend(WAR_AoE_PrimalRend_Distance, WAR_AoE_PrimalRend_Movement == 1 || (WAR_AoE_PrimalRend_Movement == 0 && !IsMoving())) 
+                    ? PrimalRend 
+                    : CanWeave() && ShouldUseOnslaught(WAR_AoE_Onslaught_Charges, WAR_AoE_Onslaught_Distance, WAR_AoE_Onslaught_Movement == 1 || (WAR_AoE_Onslaught_Movement == 0 && !IsMoving())) 
+                        ? Onslaught 
+                        : Tomahawk;
+            
             if (IsEnabled(Preset.WAR_AoE_InnerRelease) && ShouldUseInnerRelease(WAR_AoE_IRStop))
                 return OriginalHook(Berserk);
             if (IsEnabled(Preset.WAR_AoE_Infuriate) && ShouldUseInfuriate(WAR_AoE_Infuriate_Gauge, WAR_AoE_Infuriate_Charges))
@@ -420,6 +409,7 @@ internal partial class WAR
 
     #endregion
     
+    #region Double Knockback Resist Protection
     internal class WAR_ArmsLengthLockout : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_ArmsLengthLockout;
@@ -436,7 +426,9 @@ internal partial class WAR
                 : actionID;
         }
     }
+    #endregion
     
+    #region Onslaught Retargeting
     internal class WAR_RetargetOnslaught : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_RetargetOnslaught;
@@ -463,7 +455,9 @@ internal partial class WAR
         }
     }
 
-    #region MyRegion
+    #endregion
+    
+    #region Holmgang Retargeting
 
     internal class WAR_RetargetHolmgang : CustomCombo
     {

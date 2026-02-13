@@ -11,20 +11,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class RPR
 {
-    #region Misc
-
-    //Auto Arcane Crest
-    private static bool CanUseArcaneCrest =>
-        ActionReady(ArcaneCrest) && InCombat() &&
-        (GroupDamageIncoming(3f) ||
-         !IsInParty() && IsPlayerTargeted());
-
-    private static int HPThresholdArcaneCircle =>
-        RPR_ST_ArcaneCircleBossOption == 1 ||
-        !InBossEncounter() ? RPR_ST_ArcaneCircleHPOption : 0;
-
-    #endregion
-
     #region Enshroud
 
     private static bool CanEnshroud()
@@ -109,6 +95,19 @@ internal partial class RPR
 
         return false;
     }
+
+    #endregion
+    #region Misc
+
+    //Auto Arcane Crest
+    private static bool CanUseArcaneCrest =>
+        ActionReady(ArcaneCrest) && InCombat() &&
+        (GroupDamageIncoming(3f) ||
+         !IsInParty() && IsPlayerTargeted());
+
+    private static int HPThresholdArcaneCircle =>
+        RPR_ST_ArcaneCircleBossOption == 1 ||
+        !InBossEncounter() ? RPR_ST_ArcaneCircleHPOption : 0;
 
     #endregion
 

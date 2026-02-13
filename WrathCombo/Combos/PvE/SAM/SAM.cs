@@ -867,9 +867,18 @@ internal partial class SAM : Melee
             if (actionID is not OgiNamikiri)
                 return actionID;
 
-            return LevelChecked(Shoha) && MeditationStacks is 3
-                ? Shoha
-                : actionID;
+            if (LevelChecked(Shoha) && MeditationStacks is 3)
+                return Shoha;
+
+            if (LevelChecked(OgiNamikiri) && 
+                (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
+                return OriginalHook(OgiNamikiri);
+
+            if (LevelChecked(Zanshin) && 
+                SAM_OgiShohaZanshin && HasStatusEffect(Buffs.ZanshinReady))
+                return Zanshin;
+
+            return actionID;
         }
     }
 }

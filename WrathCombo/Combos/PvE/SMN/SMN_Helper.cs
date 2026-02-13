@@ -217,7 +217,6 @@ internal partial class SMN
     #region Egi Priority
     public static int GetMatchingConfigST(
         int i,
-        IGameObject? optionalTarget,
         out uint action,
         out bool enabled)
     {      
@@ -250,7 +249,6 @@ internal partial class SMN
 
     public static int GetMatchingConfigAoE(
         int i,
-        IGameObject? optionalTarget,
         out uint action,
         out bool enabled)
     {       

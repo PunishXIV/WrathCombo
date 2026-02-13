@@ -22,10 +22,18 @@ internal partial class RDM
             RDM_ST_GapCloseCorpsacorps_Time = new("RDM_ST_GapCloseCorpsacorps_Time", 0),
             RDM_ST_VerCureThreshold = new("RDM_ST_VerCureThreshold", 40),
             RDM_ST_MeleeCombo_IncludeReprise_Distance = new("RDM_ST_MeleeCombo_IncludeReprise_Distance", 5),
+            RDM_ST_Embolden_Threshold = new("RDM_ST_Embolden_Threshold", 20),
+            RDM_ST_Embolden_SubOption = new("RDM_ST_Embolden_SubOption"),
+            RDM_ST_Manafication_Threshold = new("RDM_ST_Manafication_Threshold", 20),
+            RDM_ST_Manafication_SubOption = new("RDM_ST_Manafication_SubOption"),
             RDM_AoE_Corpsacorps_Distance = new("RDM_AoE_Corpsacorps_Distance", 25),
             RDM_AoE_Corpsacorps_Time = new("RDM_AoE_Corpsacorps_Time", 0),
             RDM_AoE_GapCloseCorpsacorps_Time = new("RDM_AoE_GapCloseCorpsacorps_Time", 0),
             RDM_AoE_VerCureThreshold = new("RDM_AoE_VerCureThreshold", 40),
+            RDM_AoE_Embolden_Threshold = new("RDM_AoE_Embolden_Threshold", 20),
+            RDM_AoE_Embolden_SubOption = new("RDM_AoE_Embolden_SubOption"),
+            RDM_AoE_Manafication_Threshold = new("RDM_AoE_Manafication_Threshold", 20),
+            RDM_AoE_Manafication_SubOption = new("RDM_AoE_Manafication_SubOption"),
             RDM_Opener_Selection = new("RDM_Opener_Selection", 0),
             RDM_Riposte_Weaves_Options_EngagementCharges = new("RDM_Riposte_Weaves_Options_EngagementCharges", 0),
             RDM_Riposte_Weaves_Options_CorpsCharges = new("RDM_Riposte_Weaves_Options_CorpsCharges", 0),
@@ -69,7 +77,30 @@ internal partial class RDM
                 case Preset.RDM_ST_VerCure:
                     DrawSliderInt(1, 100, RDM_ST_VerCureThreshold, "HP% to be at or under", 200);
                     break;
-
+                    
+                case Preset.RDM_ST_Embolden:
+                    DrawSliderInt(0, 100, RDM_ST_Embolden_Threshold,
+                        "Stop using Embolden on targets below this HP % (0% = always use, 100% = never use).");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    DrawHorizontalRadioButton(RDM_ST_Embolden_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                    DrawHorizontalRadioButton(RDM_ST_Embolden_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+                    ImGui.Unindent();
+                    break;
+                
+                case Preset.RDM_ST_Manafication:
+                    DrawSliderInt(0, 100, RDM_ST_Manafication_Threshold,
+                        "Stop using Manafication on targets below this HP % (0% = always use, 100% = never use).");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    DrawHorizontalRadioButton(RDM_ST_Manafication_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                    DrawHorizontalRadioButton(RDM_ST_Manafication_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+                    ImGui.Unindent();
+                    break;
 
                 case Preset.RDM_ST_MeleeCombo:
                     if (CustomComboFunctions.IsNotEnabled(Preset.RDM_ST_MeleeCombo_IncludeRiposte))
@@ -112,6 +143,30 @@ internal partial class RDM
                 case Preset.RDM_AoE_MeleeCombo_GapCloser:
                     DrawSliderInt(0, 5, RDM_AoE_GapCloseCorpsacorps_Time,
                         " How long you need to be stationary to use. Zero to disable");
+                    break;
+                    
+                case Preset.RDM_AoE_Embolden:
+                    DrawSliderInt(0, 100, RDM_AoE_Embolden_Threshold,
+                        $"Stop using Embolden on targets below this HP % (0% = always use, 100% = never use).");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    DrawHorizontalRadioButton(RDM_AoE_Embolden_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                    DrawHorizontalRadioButton(RDM_AoE_Embolden_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+                    ImGui.Unindent();
+                    break;
+                
+                case Preset.RDM_AoE_Manafication:
+                    DrawSliderInt(0, 100, RDM_AoE_Manafication_Threshold,
+                        $"Stop using Manafication on targets below this HP % (0% = always use, 100% = never use).");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    DrawHorizontalRadioButton(RDM_AoE_Manafication_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                    DrawHorizontalRadioButton(RDM_AoE_Manafication_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+                    ImGui.Unindent();
                     break;
                 
                 case Preset.RDM_AoE_VerCure:

@@ -100,6 +100,8 @@ internal partial class WAR
 
                 case Preset.WAR_ST_BalanceOpener:
                     DrawBossOnlyChoice(WAR_BalanceOpener_Content);
+                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice, "No Gapclosers", "Skips Onslaughts use in opener.", 0);
+                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice, "Use Gapclosers", "Uses Onslaughts use in opener.", 1);
                     break;
 
                 case Preset.WAR_ST_StormsEye:
@@ -452,6 +454,7 @@ internal partial class WAR
             
             WAR_AoE_IRStop = new("WAR_AoE_IRStop"),
             WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1),
+            WAR_ST_BalanceOpener_GapcloserChoice = new("WAR_ST_BalanceOpener_GapcloserChoice", 1),
             WAR_FC_IRStop = new("WAR_FC_IRStop"),
             WAR_FC_Infuriate_Charges = new("WAR_FC_Infuriate_Charges"),
             WAR_FC_Infuriate_Gauge = new("WAR_FC_Infuriate_Gauge", 40),

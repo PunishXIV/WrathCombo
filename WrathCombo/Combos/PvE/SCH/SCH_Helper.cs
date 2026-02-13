@@ -124,9 +124,9 @@ internal partial class SCH
     #endregion
     
     #region Get ST Heals
-    internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
+    internal static int GetMatchingConfigST(int i, IGameObject? target, out uint action, out bool enabled)
     {
-        IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
                            !HasStatusEffect(Buffs.Galvanize, healTarget, true) || 

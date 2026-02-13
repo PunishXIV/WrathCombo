@@ -374,7 +374,7 @@ internal partial class MNK : Melee
 
     internal class MNK_BeastChakras : CustomCombo
     {
-        protected internal override Preset Preset => Preset.MNK_ST_BeastChakras;
+        protected internal override Preset Preset => Preset.MNK_Basic_BeastChakras;
 
         protected override uint Invoke(uint actionID)
         {

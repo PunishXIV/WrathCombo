@@ -101,9 +101,9 @@ internal partial class AST
     #endregion
 
     #region Get ST Heals
-    internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
+    internal static int GetMatchingConfigST(int i, IGameObject? target, out uint action, out bool enabled)
     {
-        IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool stopHot = AST_ST_SimpleHeals_AspectedBeneficLow <= GetTargetHPPercent(healTarget, AST_ST_SimpleHeals_IncludeShields);
         int refreshTime = AST_ST_SimpleHeals_AspectedBeneficRefresh;
@@ -295,28 +295,45 @@ internal partial class AST
                 !LevelChecked(Play1) ||
                 !IsInParty())
                 return field = null;
+            var card = Gauge.DrawnCards[0];
 
             // Check if we have a target overriding any searching
-            if (AST_QuickTarget_Override != 0)
+            try
             {
-                var targetOverride =
-                    (int)AST_QuickTarget_Override switch
-                    {
-                        1 => SimpleTarget.HardTarget,
-                        2 => SimpleTarget.UIMouseOverTarget,
-                        _ => SimpleTarget.Stack.MouseOver,
-                    };
-                if (targetOverride is IBattleChara &&
-                    !targetOverride.IsDead &&
-                    targetOverride.IsFriendly() &&
-                    InCardRange(targetOverride) &&
-                    targetOverride.IsInParty() &&
-                    DamageDownFree(targetOverride) &&
-                    SicknessFree(targetOverride))
-                    return field = targetOverride;
+                if (AST_QuickTarget_Override != 0)
+                {
+                    var targetOverride =
+                        (int)AST_QuickTarget_Override switch
+                        {
+                            1 => SimpleTarget.HardTarget,
+                            2 => SimpleTarget.UIMouseOverTarget,
+                            3 => SimpleTarget.Stack.MouseOver,
+                            4 => SimpleTarget.FocusTarget,
+                            _ => null,
+                        };
+                    var battleTargetOverride = targetOverride as IBattleChara;
+
+                    var focusSatisfiedOrSkipped =
+                        (int)AST_QuickTarget_Override != 4 ||
+                        ((card is CardType.Balance && IsMeleeOrTank(battleTargetOverride.ClassJob.Value)) ||
+                         (card is CardType.Spear && IsRangedOrHealer(battleTargetOverride.ClassJob.Value)));
+
+                    if (targetOverride is IBattleChara &&
+                        !targetOverride.IsDead &&
+                        targetOverride.IsFriendly() &&
+                        InCardRange(targetOverride) &&
+                        targetOverride.IsInParty() &&
+                        DamageDownFree(targetOverride) &&
+                        SicknessFree(targetOverride) &&
+                        focusSatisfiedOrSkipped)
+                        return field = targetOverride;
+                }
+            }
+            catch
+            {
+                // Ignore errored target overrides
             }
 
-            var card = Gauge.DrawnCards[0];
             var party = GetPartyMembers(false)
                 .Select(member => new { member.BattleChara, member.RealJob })
                 .Where(member => member.BattleChara is not null && !member.BattleChara.IsDead && member.BattleChara.IsNotThePlayer())
@@ -507,6 +524,11 @@ internal partial class AST
         public override Preset Preset => Preset.AST_ST_DPS_Opener;
 
         internal override UserData? ContentCheckConfig => AST_ST_DPS_Balance_Content;
+        
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => AST_ST_DPS_Opener_SkipStar == 1)
+        ];
 
         public override bool HasCooldowns()
         {

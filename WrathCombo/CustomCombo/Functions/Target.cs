@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using ECommons.Throttlers;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Data;
@@ -437,7 +438,12 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Checks if an object is within line of sight of the player. </summary>
     internal static unsafe bool IsInLineOfSight(IGameObject? obj)
     {
-        if (LocalPlayer is not { } player || obj is null) return false;
+        var objID = obj.SafeGameObjectId;
+        if (LocalPlayer is not { } player || obj is null || objID is null)
+            return false;
+        
+        if (TryGetLineOfSightFromCache(objID, out var cachedResult))
+            return cachedResult;
 
         Vector3 sourcePos = player.Position with { Y = player.Position.Y + 2f };
         Vector3 targetPos = obj.Position with { Y = obj.Position.Y + 2f };
@@ -451,39 +457,77 @@ internal abstract partial class CustomComboFunctions
         RaycastHit hit;
         var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
 
-        return !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &sourcePos, &direction, distance, 1, flags);
-    }
+        var result = !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter
+            (&hit, &sourcePos, &direction, distance, 1, flags);
+        UpdateLineOfSightCache(objID, result);
 
-    /// <summary>
-    ///     Checks if an object is over the ground
-    /// </summary>
-    internal static unsafe bool IsOverGround(IGameObject? obj)
-    {
-        if (obj is null) return false;
-
-        var targetPos = obj.Position;
-        var down = new Vector3(0, -1, 0);
-        RaycastHit hit;
-        var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-
-        return Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &targetPos, &down, 5, 1, flags);
-    }
-
-    /// <summary>
-    ///     Checks if a point is over the ground.<br/>
-    ///     (and gives the ground point if it is)
-    /// </summary>
-    private static unsafe bool IsOverGround
-        (Vector3 pointToCheck, out Vector3 groundPoint)
-    {
-        var down = new Vector3(0, -1, 0);
-        RaycastHit hit;
-        var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-
-        var result = Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &pointToCheck, &down, 5, 1, flags);
-        groundPoint = hit.Point;
         return result;
     }
+
+    #region LoS Caching
+
+    /// <summary>Lifetime in milliseconds for cached <see cref="IsInLineOfSight"/> results.</summary>
+    private const long LineOfSightCacheDurationMs = 500;
+
+    /// <summary>Caches line-of-sight evaluations keyed by safe game object identifier.</summary>
+    private static readonly Dictionary<ulong, (bool Result, long Timestamp)> LineOfSightCache = new();
+
+    /// Attempts to retrieve a cached line-of-sight result for the provided key.
+    private static bool TryGetLineOfSightFromCache(ulong? cacheKey, out bool result)
+    {
+        result = false;
+        if (cacheKey is null)
+            return false;
+
+        lock (LineOfSightCache)
+        {
+            if (!LineOfSightCache.TryGetValue(cacheKey.Value, out var entry))
+                return false;
+
+            if (Environment.TickCount64 - entry.Timestamp <= LineOfSightCacheDurationMs)
+            {
+                result = entry.Result;
+                return true;
+            }
+
+            LineOfSightCache.Remove(cacheKey.Value);
+        }
+
+        return false;
+    }
+
+    /// Stores the latest line-of-sight result and trims stale cache entries.
+    private static void UpdateLineOfSightCache(ulong? cacheKey, bool result)
+    {
+        if (cacheKey is null)
+            return;
+        var now = Environment.TickCount64;
+
+        lock (LineOfSightCache)
+        {
+            LineOfSightCache[cacheKey.Value] = (result, now);
+        }
+
+        if (EzThrottler.Throttle("LoSCacheCleanup", 250))
+            CleanupExpiredLineOfSightCache(now);
+    }
+
+    /// Removes old line-of-sight cache entries.
+    internal static void CleanupExpiredLineOfSightCache(long? now = null)
+    {
+        now ??= Environment.TickCount64;
+
+        lock (LineOfSightCache)
+        {
+            foreach (var expiredKey in LineOfSightCache
+                         .Where(kvp => now - kvp.Value.Timestamp >
+                                       LineOfSightCacheDurationMs)
+                         .Select(kvp => kvp.Key).ToList())
+                LineOfSightCache.Remove(expiredKey);
+        }
+    }
+
+    #endregion
 
     /// <summary>
     ///     Tries to find the nearest point to the object that is in a line
@@ -496,7 +540,7 @@ internal abstract partial class CustomComboFunctions
     ///     The found nearest point.
     /// </param>
     /// <param name="maxRange">
-    ///     The maximum range from the the player.<br/>
+    ///     The maximum range from the player.<br/>
     ///     Starts the search closer to the player than just the object's position.
     /// </param>
     /// <returns>
@@ -539,6 +583,41 @@ internal abstract partial class CustomComboFunctions
         // Fail out if no suitable point was found
         return false;
     }
+
+    #region Ground-Point Helpers
+
+    /// <summary>
+    ///     Checks if an object is over the ground
+    /// </summary>
+    internal static unsafe bool IsOverGround(IGameObject? obj)
+    {
+        if (obj is null) return false;
+
+        var        targetPos = obj.Position;
+        var        down      = new Vector3(0, -1, 0);
+        RaycastHit hit;
+        var        flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
+
+        return Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &targetPos, &down, 5, 1, flags);
+    }
+
+    /// <summary>
+    ///     Checks if a point is over the ground.<br/>
+    ///     (and gives the ground point if it is)
+    /// </summary>
+    private static unsafe bool IsOverGround
+        (Vector3 pointToCheck, out Vector3 groundPoint)
+    {
+        var        down = new Vector3(0, -1, 0);
+        RaycastHit hit;
+        var        flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
+
+        var result = Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &pointToCheck, &down, 5, 1, flags);
+        groundPoint = hit.Point;
+        return result;
+    }
+
+    #endregion
 
     #endregion
 
@@ -709,7 +788,8 @@ internal abstract partial class CustomComboFunctions
                 return o is IBattleChara &&
                        o.IsTargetable &&
                        o.IsWithinRange(60f) &&
-                       o.IsFriendly();
+                       o.IsFriendly() &&
+                       IsInLineOfSight(o);
 
             return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
                    o.IsWithinRange(60f) &&
@@ -717,7 +797,8 @@ internal abstract partial class CustomComboFunctions
                    (!checkInvincible ||
                     !TargetIsInvincible(o)) &&
                    (!checkIgnoredList ||
-                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId));
+                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId)) &&
+                   IsInLineOfSight(o);
         }
     }
 

@@ -1,5 +1,5 @@
-﻿using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Game.ClientState.Conditions;
+﻿using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
@@ -57,8 +57,8 @@ internal abstract partial class CustomComboFunctions
         "vfx/lockon/eff/share_1",
         "vfx/lockon/eff/com_share",
         "vfx/lockon/eff/d1084_share_24m_s6_0k2",        // San d'Oria The Second Walk
-        // Won't work till Static VFX tracking is added
         "vfx/monster/gimmick2/eff/z3o7_b1_g06c0t",      // Puppet's Bunker, Superior Flight Unit.
+        "vfx/monster/gimmick3/eff/n4r1_b2_g06x",        // Vanguard, Protector
         "vfx/monster/gimmick4/eff/z5r1_b4_g09c0c"       // Aglaia, Nald'thal
     ], StringComparer.OrdinalIgnoreCase);
 

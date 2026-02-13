@@ -243,8 +243,8 @@ internal partial class MCH : PhysicalRanged
 
             if (ActionReady(BlazingShot) && IsOverheated)
                 return HasBattleTarget() &&
-                       (!LevelChecked(CheckMate) ||
-                        LevelChecked(CheckMate) &&
+                       (!LevelChecked(CheckMate) && LevelChecked(AutoCrossbow) ||
+                        LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
                         NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
                     ? AutoCrossbow
                     : BlazingShot;
@@ -550,8 +550,8 @@ internal partial class MCH : PhysicalRanged
 
             if (ActionReady(BlazingShot) && IsOverheated)
                 return HasBattleTarget() &&
-                       (!LevelChecked(CheckMate) ||
-                        LevelChecked(CheckMate) &&
+                       (!LevelChecked(CheckMate) && LevelChecked(AutoCrossbow) ||
+                        LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
                         NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
                         IsNotEnabled(Preset.MCH_AoE_Adv_GaussRicochet))
                     ? AutoCrossbow

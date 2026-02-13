@@ -34,36 +34,36 @@ internal partial class DRG : Melee
                     if (CanLifeSurge())
                         return LifeSurge;
 
-                    if (InActionRange(actionID))
-                    {
-                        //Mirage Feature
-                        if (CanMirageDive)
-                            return MirageDive;
+                    //Mirage Feature
+                    if (CanMirageDive)
+                        return MirageDive;
 
-                        //Geirskogul Feature
-                        if (CanUseGeirskogul())
-                            return Geirskogul;
+                    //Geirskogul Feature
+                    if (CanUseGeirskogul())
+                        return Geirskogul;
 
-                        //Wyrmwind Thrust Feature
-                        if (CanUseWyrmwind)
-                            return WyrmwindThrust;
+                    //Wyrmwind Thrust Feature
+                    if (CanUseWyrmwind)
+                        return WyrmwindThrust;
 
-                        //Starcross Feature
-                        if (ActionReady(Starcross) &&
-                            HasStatusEffect(Buffs.StarcrossReady))
-                            return Starcross;
+                    //Starcross Feature
+                    if (ActionReady(Starcross) &&
+                        HasStatusEffect(Buffs.StarcrossReady) &&
+                        InActionRange(Starcross))
+                        return Starcross;
 
-                        //Rise of the Dragon Feature
-                        if (ActionReady(RiseOfTheDragon) &&
-                            HasStatusEffect(Buffs.DragonsFlight))
-                            return RiseOfTheDragon;
+                    //Rise of the Dragon Feature
+                    if (ActionReady(RiseOfTheDragon) &&
+                        HasStatusEffect(Buffs.DragonsFlight) &&
+                        InActionRange(RiseOfTheDragon))
+                        return RiseOfTheDragon;
 
-                        //Nastrond Feature
-                        if (ActionReady(Nastrond) &&
-                            HasStatusEffect(Buffs.NastrondReady) &&
-                            LoTDActive)
-                            return Nastrond;
-                    }
+                    //Nastrond Feature
+                    if (ActionReady(Nastrond) &&
+                        HasStatusEffect(Buffs.NastrondReady) &&
+                        LoTDActive &&
+                        InActionRange(Nastrond))
+                        return Nastrond;
 
                     if (Role.CanFeint() &&
                         GroupDamageIncoming())
@@ -75,7 +75,6 @@ internal partial class DRG : Melee
 
                     if (Role.CanBloodBath(30))
                         return Role.Bloodbath;
-
 
                     if (RoleActions.Melee.CanLegSweep())
                         return Role.LegSweep;
@@ -153,48 +152,48 @@ internal partial class DRG : Melee
                          JustUsed(DoomSpike) && !LevelChecked(SonicThrust)))
                         return LifeSurge;
 
-                    if (InActionRange(actionID))
-                    {
-                        //Mirage Feature
-                        if (ActionReady(MirageDive) &&
-                            HasStatusEffect(Buffs.DiveReady) &&
-                            OriginalHook(Jump) is MirageDive)
-                            return MirageDive;
+                    //Mirage Feature
+                    if (ActionReady(MirageDive) &&
+                        HasStatusEffect(Buffs.DiveReady) &&
+                        OriginalHook(Jump) is MirageDive &&
+                        InActionRange(MirageDive))
+                        return MirageDive;
 
-                        //Geirskogul Feature
-                        if (ActionReady(Geirskogul) &&
-                            !LoTDActive)
-                            return Geirskogul;
+                    //Geirskogul Feature
+                    if (ActionReady(Geirskogul) &&
+                        !LoTDActive &&
+                        InActionRange(Geirskogul))
+                        return Geirskogul;
 
-                        //Wyrmwind Thrust Feature
-                        if (CanUseWyrmwind)
-                            return WyrmwindThrust;
+                    //Wyrmwind Thrust Feature
+                    if (CanUseWyrmwind)
+                        return WyrmwindThrust;
 
-                        //Starcross Feature
-                        if (ActionReady(Starcross) &&
-                            HasStatusEffect(Buffs.StarcrossReady))
-                            return Starcross;
+                    //Starcross Feature
+                    if (ActionReady(Starcross) &&
+                        HasStatusEffect(Buffs.StarcrossReady) &&
+                        InActionRange(Starcross))
+                        return Starcross;
 
-                        //Rise of the Dragon Feature
-                        if (ActionReady(RiseOfTheDragon) &&
-                            HasStatusEffect(Buffs.DragonsFlight))
-                            return RiseOfTheDragon;
+                    //Rise of the Dragon Feature
+                    if (ActionReady(RiseOfTheDragon) &&
+                        HasStatusEffect(Buffs.DragonsFlight) &&
+                        InActionRange(RiseOfTheDragon))
+                        return RiseOfTheDragon;
 
-                        //Nastrond Feature
-                        if (ActionReady(Nastrond) &&
-                            HasStatusEffect(Buffs.NastrondReady) &&
-                            LoTDActive)
-                            return Nastrond;
-                    }
+                    //Nastrond Feature
+                    if (ActionReady(Nastrond) &&
+                        HasStatusEffect(Buffs.NastrondReady) &&
+                        LoTDActive &&
+                        InActionRange(Nastrond))
+                        return Nastrond;
 
                     // healing
-
                     if (Role.CanSecondWind(40))
                         return Role.SecondWind;
 
                     if (Role.CanBloodBath(30))
                         return Role.Bloodbath;
-
 
                     if (RoleActions.Melee.CanLegSweep())
                         return Role.LegSweep;
@@ -274,7 +273,7 @@ internal partial class DRG : Melee
                             return LifeSurge;
                     }
 
-                    if (IsEnabled(Preset.DRG_ST_Damage) && InActionRange(actionID))
+                    if (IsEnabled(Preset.DRG_ST_Damage))
                     {
                         //Mirage Feature
                         if (IsEnabled(Preset.DRG_ST_Mirage) &&
@@ -294,20 +293,23 @@ internal partial class DRG : Melee
                         //Starcross Feature
                         if (IsEnabled(Preset.DRG_ST_Starcross) &&
                             ActionReady(Starcross) &&
-                            HasStatusEffect(Buffs.StarcrossReady))
+                            HasStatusEffect(Buffs.StarcrossReady) &&
+                            InActionRange(Starcross))
                             return Starcross;
 
                         //Rise of the Dragon Feature
                         if (IsEnabled(Preset.DRG_ST_RiseOfTheDragon) &&
                             ActionReady(RiseOfTheDragon) &&
-                            HasStatusEffect(Buffs.DragonsFlight))
+                            HasStatusEffect(Buffs.DragonsFlight) &&
+                            InActionRange(RiseOfTheDragon))
                             return RiseOfTheDragon;
 
                         //Nastrond Feature
                         if (IsEnabled(Preset.DRG_ST_Nastrond) &&
                             ActionReady(Nastrond) &&
                             HasStatusEffect(Buffs.NastrondReady) &&
-                            LoTDActive)
+                            LoTDActive &&
+                            InActionRange(Nastrond))
                             return Nastrond;
                     }
 
@@ -427,19 +429,21 @@ internal partial class DRG : Melee
                             return LifeSurge;
                     }
 
-                    if (IsEnabled(Preset.DRG_AoE_Damage) && InActionRange(actionID))
+                    if (IsEnabled(Preset.DRG_AoE_Damage))
                     {
                         //Mirage Feature
                         if (IsEnabled(Preset.DRG_AoE_Mirage) &&
                             ActionReady(MirageDive) &&
                             HasStatusEffect(Buffs.DiveReady) &&
-                            OriginalHook(Jump) is MirageDive)
+                            OriginalHook(Jump) is MirageDive &&
+                            InActionRange(MirageDive))
                             return MirageDive;
 
                         //Geirskogul Feature
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
                             ActionReady(Geirskogul) &&
-                            !LoTDActive)
+                            !LoTDActive &&
+                            InActionRange(Geirskogul))
                             return Geirskogul;
 
                         //Wyrmwind Thrust Feature
@@ -450,20 +454,23 @@ internal partial class DRG : Melee
                         //Starcross Feature
                         if (IsEnabled(Preset.DRG_AoE_Starcross) &&
                             ActionReady(Starcross) &&
-                            HasStatusEffect(Buffs.StarcrossReady))
+                            HasStatusEffect(Buffs.StarcrossReady) &&
+                            InActionRange(Starcross))
                             return Starcross;
 
                         //Rise of the Dragon Feature
                         if (IsEnabled(Preset.DRG_AoE_RiseOfTheDragon) &&
                             ActionReady(RiseOfTheDragon) &&
-                            HasStatusEffect(Buffs.DragonsFlight))
+                            HasStatusEffect(Buffs.DragonsFlight) &&
+                            InActionRange(RiseOfTheDragon))
                             return RiseOfTheDragon;
 
                         //Nastrond Feature
                         if (IsEnabled(Preset.DRG_AoE_Nastrond) &&
                             ActionReady(Nastrond) &&
                             HasStatusEffect(Buffs.NastrondReady) &&
-                            LoTDActive)
+                            LoTDActive &&
+                            InActionRange(Nastrond))
                             return Nastrond;
                     }
 

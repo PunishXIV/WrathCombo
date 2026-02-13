@@ -642,15 +642,15 @@ internal partial class BRD : PhysicalRanged
                     return OriginalHook(Bloodletter);
 
                 if (ActionReady(Troubadour) && !JustUsed(NaturesMinne) &&
-                    IsEnabled(Preset.BRD_Adv_Troubadour) && !GroupDamageIncoming() &&
+                    IsEnabled(Preset.BRD_Adv_Troubadour) && GroupDamageIncoming() &&
                     NumberOfAlliesInRange(Troubadour) >= GetPartyMembers().Count * .75 &&
-                    !HasAnyStatusEffects([Buffs.Troubadour, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician, Buffs.WanderersMinuet], anyOwner: true))
+                    !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, DNC.Buffs.ShieldSamba, MCH.Buffs.Tactician], anyOwner: true))
                     return Troubadour;
 
                 if (ActionReady(NaturesMinne) && !JustUsed(Troubadour) &&
-                   IsEnabled(Preset.BRD_Adv_NaturesMinne) && !GroupDamageIncoming() &&
+                   IsEnabled(Preset.BRD_Adv_NaturesMinne) && GroupDamageIncoming() &&
                    NumberOfAlliesInRange(NaturesMinne) >= GetPartyMembers().Count * .75 &&
-                   !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne, Buffs.WanderersMinuet], anyOwner: true))
+                   !HasAnyStatusEffects([Buffs.Troubadour, Buffs.NaturesMinne], anyOwner: true))
                     return NaturesMinne;
             }
             #endregion

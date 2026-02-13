@@ -3,8 +3,7 @@ using Dalamud.Utility;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-using ECommons.Throttlers;
-using FFXIVClientStructs.FFXIV.Client.Game;
+using System;
 using System.Collections.Generic;
 using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
@@ -24,8 +23,6 @@ internal abstract partial class CustomCombo : CustomComboFunctions
         CustomComboInfoAttribute? presetInfo = Preset.GetAttribute<CustomComboInfoAttribute>();
         Job = presetInfo.Job;
     }
-
-    protected IGameObject? OptionalTarget;
 
     /// <summary> Gets the preset associated with this combo. </summary>
     protected internal abstract Preset Preset { get; }
@@ -88,11 +85,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
             return true;
         }
 
-        if (targetOverride != null)
-            OptionalTarget = targetOverride;
         uint resultingActionID = Invoke(actionID);
-        if (OptionalTarget != null && EzThrottler.Throttle($"OptionalReset{this.Preset}", Service.Configuration.Throttle + 50))
-            OptionalTarget = null;
 
         var presetException = _presetsAllowedToReturnUnchanged
             .TryGetValue(Preset, out var actionException);

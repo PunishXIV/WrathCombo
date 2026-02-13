@@ -99,6 +99,23 @@ internal partial class MCH
                 case Preset.MCH_ST_Adv_TurretQueen:
                     DrawSliderInt(50, 100, MCH_ST_TurretUsage,
                         $"Use {AutomatonQueen.ActionName()} at this battery threshold outside of Boss encounter.");
+
+                    DrawSliderInt(0, 50, MCH_ST_QueenHPOption,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow,
+                        "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(MCH_ST_QueenBossOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+
+                    DrawHorizontalRadioButton(MCH_ST_QueenBossOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+
+                    ImGui.Unindent();
                     break;
 
                 case Preset.MCH_ST_Adv_GaussRicochet:
@@ -109,7 +126,7 @@ internal partial class MCH
                 case Preset.MCH_ST_Adv_Reassemble:
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_ReassembleChoice,
-                        "Save for 2 minute windows", "Saves Reassemble for 2 minute windows/nTHIS WILL OVERCAP UR REASSEMBLE.", 0);
+                        "Save for 2 minute windows", "Saves Reassemble for 2 minute windows\nTHIS WILL OVERCAP UR REASSEMBLE.", 0);
 
                     DrawHorizontalRadioButton(MCH_ST_Adv_ReassembleChoice,
                         "Use every minute", "Uses Reassemble every minute/whenever ur highest lvl tool is off cooldown.", 1);
@@ -232,6 +249,8 @@ internal partial class MCH
 
                 #endregion
 
+                #region Misc
+
                 case Preset.MCH_GaussRoundRicochet:
                     DrawHorizontalRadioButton(MCH_GaussRico,
                         $"Change {GaussRound.ActionName()} / {DoubleCheck.ActionName()}", $"Changes to {Ricochet.ActionName()} / {CheckMate.ActionName()} depending on charges and what was used last", 0);
@@ -239,12 +258,16 @@ internal partial class MCH
                     DrawHorizontalRadioButton(MCH_GaussRico,
                         $"Change {Ricochet.ActionName()} / {CheckMate.ActionName()}", $"Changes to {GaussRound.ActionName()} / {DoubleCheck.ActionName()} depending on charges and what was used last", 1);
                     break;
+
+                #endregion
             }
         }
 
         #region Variables
 
         public static UserInt
+
+            //ST
             MCH_Balance_Content = new("MCH_Balance_Content", 1),
             MCH_SelectedOpener = new("MCH_SelectedOpener"),
             MCH_ST_QueenOverDriveHPThreshold = new("MCH_ST_QueenOverDrive", 1),
@@ -252,30 +275,36 @@ internal partial class MCH
             MCH_ST_BarrelStabilizerHPOption = new("MCH_ST_BarrelStabilizerHPOption", 10),
             MCH_ST_BarrelStabilizerHPBossOption = new("MCH_ST_BarrelStabilizerHPBossOption"),
             MCH_ST_WildfireBossOption = new("MCH_ST_WildfireBossOption", 1),
-            MCH_ST_WildfireHPOption = new("MCH_ST_WildfireHPOption", 10),
+            MCH_ST_WildfireHPOption = new("MCH_ST_WildfireHPOption", 25),
             MCH_ST_WildfireBossHPOption = new("MCH_ST_WildfireBossHPOption"),
             MCH_ST_HyperchargeBossOption = new("MCH_ST_HyperchargeBossOption"),
-            MCH_ST_HyperchargeHPOption = new("MCH_ST_HyperchargeHPOption", 10),
+            MCH_ST_HyperchargeHPOption = new("MCH_ST_HyperchargeHPOption", 25),
             MCH_ST_ReassembleBossOption = new("MCH_ST_ReassembleBossOption"),
             MCH_ST_Adv_ReassembleChoice = new("MCH_ST_Adv_ReassembleChoice"),
-            MCH_ST_ReassembleHPOption = new("MCH_ST_ReassembleHPOption", 10),
+            MCH_ST_ReassembleHPOption = new("MCH_ST_ReassembleHPOption", 25),
             MCH_ST_ToolsBossOption = new("MCH_ST_ToolsBossOption"),
-            MCH_ST_ToolsHPOption = new("MCH_ST_ToolsHPOption", 10),
+            MCH_ST_ToolsHPOption = new("MCH_ST_ToolsHPOption", 25),
+            MCH_ST_QueenHPOption = new("MCH_ST_QueenHPOption", 25),
+            MCH_ST_QueenBossOption = new("MCH_ST_QueenBossOption"),
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
             MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool"),
             MCH_ST_GaussRicoPool = new("MCH_ST_GaussRicoPool"),
             MCH_ST_SecondWindHPThreshold = new("MCH_ST_SecondWindThreshold", 40),
+
+            //AoE
             MCH_AoE_ReassemblePool = new("MCH_AoE_ReassemblePool"),
             MCH_AoE_TurretBatteryUsage = new("MCH_AoE_TurretUsage", 100),
             MCH_AoE_FlamethrowerMovement = new("MCH_AoE_FlamethrowerMovement"),
-            MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 40),
-            MCH_AoE_HyperchargeHPThreshold = new("MCH_AoE_HyperchargeHPThreshold", 40),
-            MCH_AoE_ReassembleHPThreshold = new("MCH_AoE_ReassembleHPThreshold", 40),
-            MCH_AoE_ToolsHPThreshold = new("MCH_AoE_ToolsHPThreshold", 40),
-            MCH_AoE_QueenHpThreshold = new("MCH_AoE_QueenHpThreshold", 40),
-            MCH_AoE_BarrelStabilizerHPThreshold = new("MCH_AoE_BarrelStabilizerHPThreshold", 40),
-            MCH_AoE_QueenOverDriveHPThreshold = new("MCH_AoE_QueenOverDrive", 20),
+            MCH_AoE_FlamethrowerHPOption = new("MCH_AoE_FlamethrowerHPOption", 25),
+            MCH_AoE_HyperchargeHPThreshold = new("MCH_AoE_HyperchargeHPThreshold", 25),
+            MCH_AoE_ReassembleHPThreshold = new("MCH_AoE_ReassembleHPThreshold", 25),
+            MCH_AoE_ToolsHPThreshold = new("MCH_AoE_ToolsHPThreshold", 25),
+            MCH_AoE_QueenHpThreshold = new("MCH_AoE_QueenHpThreshold", 25),
+            MCH_AoE_BarrelStabilizerHPThreshold = new("MCH_AoE_BarrelStabilizerHPThreshold", 25),
+            MCH_AoE_QueenOverDriveHPThreshold = new("MCH_AoE_QueenOverDrive", 25),
             MCH_AoE_SecondWindHPThreshold = new("MCH_AoE_SecondWindThreshold", 40),
+
+            //Misc
             MCH_GaussRico = new("MCHGaussRico");
 
         public static UserFloat

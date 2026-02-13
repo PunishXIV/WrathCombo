@@ -420,9 +420,9 @@ internal partial class RPR : Melee
                     !HasStatusEffect(Buffs.EnhancedGallows))
                 {
                     return IsEnabled(Preset.RPR_ST_TrueNorthDynamic) &&
-                           (RPR_ST_TrueNorthDynamic_HoldCharge &&
+                           (RPR_ST_TrueNorthDynamicHoldCharge &&
                             GetRemainingCharges(Role.TrueNorth) is 2 ||
-                            !RPR_ST_TrueNorthDynamic_HoldCharge) &&
+                            !RPR_ST_TrueNorthDynamicHoldCharge) &&
                            Role.CanTrueNorth() && !OnTargetsFlank() &&
                            GetRemainingCharges(Role.TrueNorth) > RPR_ManualTN
                         ? Role.TrueNorth
@@ -435,9 +435,9 @@ internal partial class RPR : Melee
                     !HasStatusEffect(Buffs.EnhancedGallows))
                 {
                     return IsEnabled(Preset.RPR_ST_TrueNorthDynamic) &&
-                           (RPR_ST_TrueNorthDynamic_HoldCharge &&
+                           (RPR_ST_TrueNorthDynamicHoldCharge &&
                             GetRemainingCharges(Role.TrueNorth) is 2 ||
-                            !RPR_ST_TrueNorthDynamic_HoldCharge) &&
+                            !RPR_ST_TrueNorthDynamicHoldCharge) &&
                            Role.CanTrueNorth() && !OnTargetsRear() &&
                            GetRemainingCharges(Role.TrueNorth) > RPR_ManualTN
                         ? Role.TrueNorth
@@ -797,13 +797,13 @@ internal partial class RPR : Melee
             bool[] soulSowOptions = RPR_SoulsowOptions;
             bool soulsowReady = ActionReady(Soulsow) && !HasStatusEffect(Buffs.Soulsow);
 
-            return soulSowOptions.Length > 0 &&
+            return soulSowOptions.Length > 0 && soulsowReady &&
                    (actionID is Harpe && soulSowOptions[0] ||
                     actionID is Slice && soulSowOptions[1] ||
                     actionID is SpinningScythe && soulSowOptions[2] ||
                     actionID is ShadowOfDeath && soulSowOptions[3] ||
-                    actionID is BloodStalk && soulSowOptions[4]) && soulsowReady && !InCombat() ||
-                   IsEnabled(Preset.RPR_Soulsow_Combat) && actionID is Harpe && !HasBattleTarget()
+                    actionID is BloodStalk && soulSowOptions[4]) && !InCombat() ||
+                   IsEnabled(Preset.RPR_Soulsow_Combat) && actionID is Harpe && !HasBattleTarget() && soulsowReady
                 ? Soulsow
                 : actionID;
         }

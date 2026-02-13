@@ -7,6 +7,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.AutoRotation;
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -15,10 +16,25 @@ internal abstract partial class CustomComboFunctions
     private static DateTime partyCombat = DateTime.Now;
     private static DateTime? castFinishedAt;
     private static uint castId;
-    private static bool partyInCombat = false;
+    public static bool PartyInCombatCheck
+    {
+        get => field;
+        set
+        {
+            if (field != value)
+            {
+                Svc.Log.Verbose($"Party has {(value ? "entered" : "left")} combat");
+                OnPartyCombatChanged?.Invoke(value);
+                field = value;
+            }
+        }
+    }
 
     public delegate void OnCastInterruptedDelegate(uint interruptedAction);
     public static event OnCastInterruptedDelegate? OnCastInterrupted;
+
+    public delegate void OnPartyCombatChangedDelegate(bool state);
+    public static event OnPartyCombatChangedDelegate? OnPartyCombatChanged;
 
     public static Dictionary<ulong, long> Deadtionary { get; set; } = new();
 
@@ -26,7 +42,7 @@ internal abstract partial class CustomComboFunctions
     /// <returns> Combat time in seconds. </returns>
     public static TimeSpan CombatEngageDuration() => InCombat() ? DateTime.Now - combatStart : TimeSpan.Zero;
 
-    public static TimeSpan PartyEngageDuration() => partyInCombat ? DateTime.Now - partyCombat : TimeSpan.Zero;
+    public static TimeSpan PartyEngageDuration() => PartyInCombatCheck ? DateTime.Now - partyCombat : TimeSpan.Zero;
 
     public static TimeSpan TimeSpentDead(ulong partyMemberObjectId) => TimeSpentDead((uint)partyMemberObjectId);
 
@@ -89,14 +105,14 @@ internal abstract partial class CustomComboFunctions
     private static unsafe void UpdatePartyTimer(IFramework framework)
     {
         if (!Player.Available) return;
-        if (GetPartyMembers().Any(x => x.BattleChara is not null && x.BattleChara.Struct()->InCombat) && !partyInCombat)
+        if (GetPartyMembers().Any(x => x.BattleChara is not null && x.BattleChara.Struct()->InCombat) && !PartyInCombatCheck)
         {
-            partyInCombat = true;
+            PartyInCombatCheck = true;
             partyCombat = DateTime.Now;
         }
         else if (!GetPartyMembers().Any(x => x.BattleChara is not null && x.BattleChara.Struct()->InCombat))
         {
-            partyInCombat = false;
+            PartyInCombatCheck = false;
         }
     }
 
@@ -111,11 +127,12 @@ internal abstract partial class CustomComboFunctions
     internal static void OnCombat(ConditionFlag flag, bool value)
     {
         if (flag == ConditionFlag.InCombat && value)
+        {
             combatStart = DateTime.Now;
+        }
     }
 
     public static unsafe float CountdownRemaining => MathF.Max(0, AgentCountDownSettingDialog.Instance()->TimeRemaining);
 
     public static unsafe bool CountdownActive => AgentCountDownSettingDialog.Instance()->Active;
-       
 }

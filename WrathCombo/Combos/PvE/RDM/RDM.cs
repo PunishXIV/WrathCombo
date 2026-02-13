@@ -223,19 +223,26 @@ internal partial class RDM : Caster
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             #endregion
+            
+            #region Variables
+            int manaficationThreshold = RDM_ST_Manafication_SubOption == 1 || !InBossEncounter() ? RDM_ST_Manafication_Threshold : 0;
+            bool canUseManafication = GetTargetHPPercent() > manaficationThreshold;
+            int emboldenThreshold = RDM_ST_Embolden_SubOption == 1 || !InBossEncounter() ? RDM_ST_Embolden_Threshold : 0;
+            bool canUseEmbolden = GetTargetHPPercent() > emboldenThreshold;
+            #endregion
 
             #region OGCDs
-            if (CanWeave())
+            if (CanWeave() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.RDM_ST_MeleeCombo_GapCloser) && !InMeleeRange() && !HasManafication &&
                     ActionReady(Corpsacorps) && TimeStoodStill >= TimeSpan.FromSeconds(RDM_ST_GapCloseCorpsacorps_Time) &&
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return Corpsacorps;
 
-                if (IsEnabled(Preset.RDM_ST_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence)
+                if (IsEnabled(Preset.RDM_ST_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence && canUseManafication)
                     return Manafication;
 
-                if (IsEnabled(Preset.RDM_ST_Embolden) && ActionReady(Embolden) && !HasEmbolden)
+                if (IsEnabled(Preset.RDM_ST_Embolden) && ActionReady(Embolden) && !HasEmbolden && canUseEmbolden)
                     return Embolden;
 
                 if (IsEnabled(Preset.RDM_ST_ContreSixte) && ActionReady(ContreSixte))
@@ -244,7 +251,9 @@ internal partial class RDM : Caster
                 if (IsEnabled(Preset.RDM_ST_Fleche) && ActionReady(Fleche))
                     return Fleche;
 
-                if (IsEnabled(Preset.RDM_ST_Engagement) && CanEngagement && (IsNotEnabled(Preset.RDM_ST_Engagement_Pooling) || PoolEngagement))
+                if (IsEnabled(Preset.RDM_ST_Engagement) && CanEngagement && 
+                    (IsNotEnabled(Preset.RDM_ST_Engagement_Pooling) || PoolEngagement) &&
+                    (IsNotEnabled(Preset.RDM_ST_Engagement_Saving) || SaveEngagement))
                     return Engagement;
 
                 if (IsEnabled(Preset.RDM_ST_Corpsacorps) && CanCorps &&
@@ -320,7 +329,7 @@ internal partial class RDM : Caster
 
             #region GCD Casts
             
-            if (IsEnabled(Preset.RDM_ST_ThunderAero) && (CanInstantCast || !InCombat() && RDM_ST_ThunderAero_Pull))
+            if (IsEnabled(Preset.RDM_ST_ThunderAero) && (CanInstantCast || !PartyInCombat() && RDM_ST_ThunderAero_Pull))
                 return UseInstantCastST(actionID);
 
             if (CanGrandImpact)
@@ -357,9 +366,16 @@ internal partial class RDM : Caster
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             #endregion
+            
+            #region Variables
+            int manaficationThreshold = RDM_AoE_Manafication_SubOption == 1 || !InBossEncounter() ? RDM_AoE_Manafication_Threshold : 0;
+            bool canUseManafication = GetTargetHPPercent() > manaficationThreshold;
+            int emboldenThreshold = RDM_AoE_Embolden_SubOption == 1 || !InBossEncounter() ? RDM_AoE_Embolden_Threshold : 0;
+            bool canUseEmbolden = GetTargetHPPercent() > emboldenThreshold;
+            #endregion
 
             #region OGCDs
-            if (CanWeave())
+            if (CanWeave() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.RDM_AoE_MeleeCombo_GapCloser) &&
                     (LevelChecked(Moulinet) && GetTargetDistance() > 8 || !LevelChecked(Moulinet) && !InMeleeRange()) &&
@@ -367,10 +383,10 @@ internal partial class RDM : Caster
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return Corpsacorps;
 
-                if (IsEnabled(Preset.RDM_AoE_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence)
+                if (IsEnabled(Preset.RDM_AoE_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence && canUseManafication)
                     return Manafication;
 
-                if (IsEnabled(Preset.RDM_AoE_Embolden) && ActionReady(Embolden) && !HasEmbolden)
+                if (IsEnabled(Preset.RDM_AoE_Embolden) && ActionReady(Embolden) && !HasEmbolden && canUseEmbolden)
                     return Embolden;
 
                 if (IsEnabled(Preset.RDM_AoE_ContreSixte) && ActionReady(ContreSixte))
@@ -379,7 +395,9 @@ internal partial class RDM : Caster
                 if (IsEnabled(Preset.RDM_AoE_Fleche) && ActionReady(Fleche))
                     return Fleche;
 
-                if (IsEnabled(Preset.RDM_AoE_Engagement) && CanEngagement && (IsNotEnabled(Preset.RDM_AoE_Engagement_Pooling) || PoolEngagement))
+                if (IsEnabled(Preset.RDM_AoE_Engagement) && CanEngagement && 
+                    (IsNotEnabled(Preset.RDM_AoE_Engagement_Pooling) || PoolEngagement) &&
+                    (IsNotEnabled(Preset.RDM_AoE_Engagement_Saving) || SaveEngagement))
                     return Engagement;
 
                 if (IsEnabled(Preset.RDM_AoE_Corpsacorps) && CanCorps &&

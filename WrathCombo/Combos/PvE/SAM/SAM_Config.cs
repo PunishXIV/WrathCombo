@@ -14,6 +14,8 @@ internal partial class SAM
         {
             switch (preset)
             {
+                #region ST
+
                 case Preset.SAM_ST_Opener:
                     ImGui.Indent();
                     DrawBossOnlyChoice(SAM_Balance_Content);
@@ -141,6 +143,10 @@ internal partial class SAM
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
 
+                #endregion
+
+                #region AoE
+
                 case Preset.SAM_AoE_Kyuten:
                     DrawSliderInt(25, 85, SAM_AoE_KenkiOvercapAmount,
                         "Set the Kenki overcap amount for AOE combos.");
@@ -174,29 +180,46 @@ internal partial class SAM
                     DrawSliderInt(0, 100, SAM_AoEBloodbathHPThreshold,
                         $"{Role.Bloodbath.ActionName()} HP percentage threshold");
                     break;
+
+                #endregion
+
+                #region Misc
+
+                case Preset.SAM_OgiShoha:
+                    DrawAdditionalBoolChoice(SAM_OgiShohaZanshin,
+                        "Add Zanshin", "Add Zanshin when you ready.");
+                    break;
+
+                #endregion
             }
         }
 
         #region Variables
 
         public static UserInt
+
+            //ST
             SAM_Balance_Content = new("SAM_Balance_Content", 1),
             SAM_Opener_PrePullDelay = new("SAM_Opener_PrePullDelay", 13),
             SAM_Opener_IncludeGyoten = new("SAM_Opener_IncludeGyoten"),
             SAM_ST_HiganbanaBossOption = new("SAM_ST_HiganbanaBossOption"),
-            SAM_ST_HiganbanaBossAddsOption = new("SAM_ST_HiganbanaBossAddsOption", 50),
+            SAM_ST_HiganbanaBossAddsOption = new("SAM_ST_HiganbanaBossAddsOption", 25),
             SAM_ST_HiganbanaTrashOption = new("SAM_ST_HiganbanaTrashOption", 100),
             SAM_ST_HiganbanaRefresh = new("SAM_ST_Higanbana_Refresh", 15),
             SAM_ST_KenkiOvercapAmount = new("SAM_ST_KenkiOvercapAmount", 65),
             SAM_ST_YukikazeCombo_Prio = new("SAM_ST_YukikazeCombo_Prio", 1),
-            SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 1),
+            SAM_ST_ExecuteThreshold = new("SAM_ST_ExecuteThreshold", 5),
             SAM_ST_MeikyoExecuteThreshold = new("SAM_ST_MeikyoExecuteThreshold", 5),
             SAM_ST_ManualTN = new("SAM_ST_ManualTN"),
             SAM_STSecondWindHPThreshold = new("SAM_STSecondWindThreshold", 40),
             SAM_STBloodbathHPThreshold = new("SAM_STBloodbathThreshold", 30),
+
+            //AoE
             SAM_AoE_KenkiOvercapAmount = new("SAM_AoE_KenkiOvercapAmount", 50),
             SAM_AoESecondWindHPThreshold = new("SAM_AoESecondWindThreshold", 40),
             SAM_AoEBloodbathHPThreshold = new("SAM_AoEBloodbathThreshold", 30),
+
+            //Misc
             SAM_Gekko_KenkiOvercapAmount = new("SAM_Gekko_KenkiOvercapAmount", 65),
             SAM_Kasha_KenkiOvercapAmount = new("SAM_Kasha_KenkiOvercapAmount", 65),
             SAM_Yukaze_KenkiOvercapAmount = new("SAM_Yukaze_KenkiOvercapAmount", 65),
@@ -213,7 +236,8 @@ internal partial class SAM
             SAM_ST_CDs_Guren = new("SAM_ST_CDs_Guren"),
             SAM_ST_CDs_OgiNamikiri_Movement = new("SAM_ST_CDs_OgiNamikiri_Movement"),
             SAM_Oka_KenkiOvercap = new("SAM_Oka_KenkiOvercap"),
-            SAM_Mangetsu_KenkiOvercap = new("SAM_Mangetsu_KenkiOvercap");
+            SAM_Mangetsu_KenkiOvercap = new("SAM_Mangetsu_KenkiOvercap"),
+            SAM_OgiShohaZanshin = new("SAM_OgiShohaZanshin");
 
         public static UserFloat
             SAM_ST_MeditateTimeStill = new("SAM_ST_MeditateTimeStill", 2.5f);

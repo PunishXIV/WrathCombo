@@ -87,7 +87,7 @@ internal partial class PLD : Tank
                         switch (CooldownFightOrFlight)
                         {
                             // Circle of Scorn / Spirits Within
-                            case > 15 when ActionReady(CircleOfScorn):
+                            case > 15 when ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
                             case > 15 when ActionReady(SpiritsWithin):
@@ -231,7 +231,7 @@ internal partial class PLD : Tank
                         // Circle of Scorn / Spirits Within
                         switch (CooldownFightOrFlight)
                         {
-                            case > 15 when ActionReady(CircleOfScorn):
+                            case > 15 when ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
                             case > 15 when ActionReady(SpiritsWithin):
@@ -354,7 +354,7 @@ internal partial class PLD : Tank
                         {
                             // Circle of Scorn / Spirits Within
                             case > 15 when IsEnabled(Preset.PLD_ST_AdvancedMode_CircleOfScorn) &&
-                                           ActionReady(CircleOfScorn):
+                                           ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
                             case > 15 when IsEnabled(Preset.PLD_ST_AdvancedMode_SpiritsWithin) &&
@@ -516,7 +516,7 @@ internal partial class PLD : Tank
                         // Circle of Scorn / Spirits Within
                         switch (CooldownFightOrFlight)
                         {
-                            case > 15 when IsEnabled(Preset.PLD_AoE_AdvancedMode_CircleOfScorn) && ActionReady(CircleOfScorn):
+                            case > 15 when IsEnabled(Preset.PLD_AoE_AdvancedMode_CircleOfScorn) && ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
                             case > 15 when IsEnabled(Preset.PLD_AoE_AdvancedMode_SpiritsWithin) && ActionReady(SpiritsWithin):

@@ -2,6 +2,7 @@ using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using System.Linq;
+using WrathCombo.AutoRotation;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
@@ -44,7 +45,7 @@ internal partial class SGE : Healer
 
                 // Addersgall Protection
                 if (ActionReady(Druochole) && Addersgall >= 3)
-                    return Druochole.RetargetIfEnabled(null, DosisActions);
+                    return Druochole.RetargetIfEnabled(DosisActions);
 
                 // Psyche
                 if (ActionReady(Psyche) && InCombat())
@@ -63,7 +64,7 @@ internal partial class SGE : Healer
             DosisList.TryGetValue(dotAction, out var debuff);
             var target = SimpleTarget.DottableEnemy(dotAction, debuff.Debuff, 0, 3, 2);
 
-            if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(dotAction, target))
+            if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(dotAction, target) && LevelChecked(Eukrasia))
                 return HasStatusEffect(Buffs.Eukrasia)
                     ? dotAction.Retarget(DosisActions.ToArray(), target)
                     : Eukrasia;
@@ -129,7 +130,7 @@ internal partial class SGE : Healer
                 // Addersgall Protection
                 if (ActionReady(Druochole) && Addersgall >= 3)
                     return Druochole
-                        .RetargetIfEnabled(null, OriginalHook(Dyskrasia));
+                        .RetargetIfEnabled(OriginalHook(Dyskrasia));
 
                 // Psyche
                 if (ActionReady(Psyche) && HasBattleTarget() &&
@@ -240,7 +241,7 @@ internal partial class SGE : Healer
                 if (IsEnabled(Preset.SGE_ST_DPS_AddersgallProtect) &&
                     ActionReady(Druochole) && Addersgall >= SGE_ST_DPS_AddersgallProtect)
                     return Druochole
-                        .RetargetIfEnabled(null, dosisActions);
+                        .RetargetIfEnabled(dosisActions);
 
                 // Psyche
                 if (IsEnabled(Preset.SGE_ST_DPS_Psyche) &&
@@ -271,7 +272,7 @@ internal partial class SGE : Healer
                         : Eukrasia;
                 
                 //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
-                if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(dotAction, target) && SGE_ST_DPS_EDosis_TwoTarget)
+                if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(dotAction, target) && SGE_ST_DPS_EDosis_TwoTarget && LevelChecked(Eukrasia))
                     return HasStatusEffect(Buffs.Eukrasia)
                         ? dotAction.Retarget(dosisActions, target)
                         : Eukrasia;
@@ -357,7 +358,7 @@ internal partial class SGE : Healer
                 if (IsEnabled(Preset.SGE_AoE_DPS_AddersgallProtect) &&
                     ActionReady(Druochole) && Addersgall >= SGE_AoE_DPS_AddersgallProtect)
                     return Druochole
-                        .RetargetIfEnabled(null, OriginalHook(Dyskrasia));
+                        .RetargetIfEnabled(OriginalHook(Dyskrasia));
 
                 // Psyche
                 if (IsEnabled(Preset.SGE_AoE_DPS_Psyche))
@@ -424,7 +425,7 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+            IGameObject? healTarget = SimpleTarget.Stack.OneButtonHealLogic;
 
             if (actionID is not Diagnosis)
                 return actionID;
@@ -439,7 +440,7 @@ internal partial class SGE : Healer
             if (ActionReady(Role.Esuna) &&
                 GetTargetHPPercent(healTarget) >= 40 &&
                 cleansableTarget)
-                return Role.Esuna.RetargetIfEnabled(healTarget, Diagnosis);
+                return Role.Esuna.RetargetIfEnabled(Diagnosis);
 
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
@@ -465,15 +466,15 @@ internal partial class SGE : Healer
             if (healTarget.IsInParty() && healTarget.Role is CombatRole.Tank || !IsInParty())
             {
                 if (ActionReady(Krasis))
-                    return Krasis.RetargetIfEnabled(healTarget, Diagnosis);
+                    return Krasis.RetargetIfEnabled(Diagnosis);
                 if (ActionReady(Taurochole) && HasAddersgall())
-                    return Taurochole.RetargetIfEnabled(healTarget, Diagnosis);
+                    return Taurochole.RetargetIfEnabled(Diagnosis);
                 if (ActionReady(Haima) && !HasStatusEffect(Buffs.Panhaima, healTarget))
-                    return Haima.RetargetIfEnabled(healTarget, Diagnosis);
+                    return Haima.RetargetIfEnabled(Diagnosis);
             }
 
             if (ActionReady(Druochole) && HasAddersgall())
-                return Druochole.RetargetIfEnabled(healTarget, Diagnosis);
+                return Druochole.RetargetIfEnabled(Diagnosis);
 
             if (!InBossEncounter())
             {
@@ -493,7 +494,7 @@ internal partial class SGE : Healer
                     ? EukrasianDiagnosis
                     : Eukrasia;
 
-            return actionID.RetargetIfEnabled(healTarget, Diagnosis);
+            return actionID.RetargetIfEnabled(Diagnosis);
         }
     }
 
@@ -559,7 +560,7 @@ internal partial class SGE : Healer
 
         protected override uint Invoke(uint actionID)
         {
-            IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+            IGameObject? healTarget = SimpleTarget.Stack.OneButtonHealLogic;
 
             if (actionID is not Diagnosis)
                 return actionID;
@@ -587,11 +588,11 @@ internal partial class SGE : Healer
                 GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) >= SGE_ST_Heal_Esuna &&
                 cleansableTarget)
                 return Role.Esuna
-                    .RetargetIfEnabled(healTarget, Diagnosis);
+                    .RetargetIfEnabled(Diagnosis);
 
             if (HasStatusEffect(Buffs.Eukrasia))
                 return EukrasianDiagnosis
-                    .RetargetIfEnabled(healTarget, Diagnosis);
+                    .RetargetIfEnabled(Diagnosis);
 
             if (IsEnabled(Preset.SGE_ST_Heal_Rhizomata) &&
                 ActionReady(Rhizomata) && !HasAddersgall())
@@ -612,17 +613,17 @@ internal partial class SGE : Healer
             for(int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
             {
                 int index = SGE_ST_Heals_Priority.IndexOf(i + 1);
-                int config = GetMatchingConfigST(index, OptionalTarget, out uint spell, out bool enabled);
+                int config = GetMatchingConfigST(index, healTarget, out uint spell, out bool enabled);
 
                 if (enabled)
                     if (GetTargetHPPercent(healTarget, SGE_ST_Heal_IncludeShields) <= config &&
                         ActionReady(spell))
                         return spell
-                            .RetargetIfEnabled(healTarget, Diagnosis);
+                            .RetargetIfEnabled(Diagnosis);
             }
 
             return actionID
-                .RetargetIfEnabled(healTarget, Diagnosis);
+                .RetargetIfEnabled(Diagnosis);
         }
     }
 

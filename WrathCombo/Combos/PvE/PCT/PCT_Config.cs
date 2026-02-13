@@ -1,3 +1,4 @@
+using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
@@ -14,6 +15,10 @@ internal partial class PCT
             PCT_ST_AdvancedMode_LucidOption = new("PCT_ST_AdvancedMode_LucidOption", 6500),
             PCT_AoE_AdvancedMode_HolyinWhiteOption = new("PCT_AoE_AdvancedMode_HolyinWhiteOption", 2),
             PCT_AoE_AdvancedMode_LucidOption = new("PCT_AoE_AdvancedMode_LucidOption", 6500),
+            PCT_AoE_AdvancedMode_ScenicMuse_Threshold = new("PCT_AoE_AdvancedMode_ScenicMuse_Threshold", 20),
+            PCT_ST_AdvancedMode_ScenicMuse_Threshold = new("PCT_ST_AdvancedMode_ScenicMuse_Threshold", 20),
+            PCT_AoE_AdvancedMode_ScenicMuse_SubOption = new("PCT_AoE_AdvancedMode_ScenicMuse_SubOption"),
+            PCT_ST_AdvancedMode_ScenicMuse_SubOption = new("PCT_ST_AdvancedMode_ScenicMuse_SubOption"),
             PCT_ST_CreatureStop = new("PCT_ST_CreatureStop", 10),
             PCT_AoE_CreatureStop = new("PCT_AoE_CreatureStop", 10),
             PCT_ST_WeaponStop = new("PCT_ST_WeaponStop", 10),
@@ -55,9 +60,30 @@ internal partial class PCT
                 
                 case Preset.PCT_ST_AdvancedMode_ScenicMuse:
                     DrawAdditionalBoolChoice(PCT_ST_AdvancedMode_ScenicMuse_MovementOption, "Dont Use if Moving", "Will only use if not moving.");
+                
+                    DrawSliderInt(0, 100, PCT_ST_AdvancedMode_ScenicMuse_Threshold,
+                        "Stop using Scenic Muse on targets below this HP % (0% = always use, 100% = never use).");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    DrawHorizontalRadioButton(PCT_ST_AdvancedMode_ScenicMuse_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                    DrawHorizontalRadioButton(PCT_ST_AdvancedMode_ScenicMuse_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+                    ImGui.Unindent();
                     break;
+                
                 case Preset.PCT_AoE_AdvancedMode_ScenicMuse:
                     DrawAdditionalBoolChoice(PCT_AoE_AdvancedMode_ScenicMuse_MovementOption, "Dont Use if Moving", "Will only use if not moving.");
+                    
+                    DrawSliderInt(0, 100, PCT_AoE_AdvancedMode_ScenicMuse_Threshold,
+                        "Stop using Scenic Muse on targets below this HP % (0% = always use, 100% = never use).");
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    DrawHorizontalRadioButton(PCT_AoE_AdvancedMode_ScenicMuse_SubOption,
+                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                    DrawHorizontalRadioButton(PCT_AoE_AdvancedMode_ScenicMuse_SubOption,
+                        "All Content", $"Applies HP Check to All Content", 1);
+                    ImGui.Unindent();
                     break;
 
                 case Preset.PCT_ST_AdvancedMode_LandscapeMotif:

@@ -41,6 +41,7 @@ public static class ConflictingPluginsChecks
         MOAction.CheckForConflict(true);
         Wrath.CheckForConflict(true);
         XIV.CheckForConflict(true);
+        Dalamud.CheckForConflict(true);
     };
 
     private static readonly Action RunChecks = () =>
@@ -59,6 +60,7 @@ public static class ConflictingPluginsChecks
         MOAction.CheckForConflict();
         Wrath.CheckForConflict();
         XIV.CheckForConflict();
+        Dalamud.CheckForConflict();
 
         Svc.Framework.RunOnTick(RunChecks!, TS.FromSeconds(4.11));
     };
@@ -71,6 +73,7 @@ public static class ConflictingPluginsChecks
     internal static MOActionCheck MOAction { get; } = new();
     internal static WrathCheck Wrath { get; } = new();
     internal static XIVCheck XIV { get; } = new();
+    internal static DalamudCheck Dalamud { get; } = new();
 
     public static void Begin()
     {
@@ -93,6 +96,7 @@ public static class ConflictingPluginsChecks
         ReActionEx.Dispose();
         MOAction.Dispose();
         XIV.Dispose();
+        Dalamud.Dispose();
     }
 
     internal sealed class BossModCheck(bool reborn = false)
@@ -562,14 +566,33 @@ public static class ConflictingPluginsChecks
         }
     }
 
+    internal sealed class DalamudCheck() : ConflictCheck(dalamud: true)
+    {
+        protected override ReusableIPC IPC => null!;
+        public bool OpenerDTRDisabled;
+
+        public override void CheckForConflict(bool forceRefresh = false)
+        {
+            if (!ThrottlePassed(forceRefresh: forceRefresh))
+                return;
+
+            OpenerDTRDisabled = P.OpenerDtr.UserHidden && Service.Configuration.ShowOpenerDtr;
+
+            if (OpenerDTRDisabled)
+                MarkConflict();
+            else
+                Conflicted = false;
+        }
+    }
+
     internal abstract class ConflictCheck : IDisposable
     {
         // ReSharper disable once InconsistentNaming
         protected readonly ReusableIPC _ipc;
 
-        protected ConflictCheck(bool wrath = false)
+        protected ConflictCheck(bool wrath = false, bool dalamud = false)
         {
-            _ipc = wrath ? new WrathSettingsIPC() : new XIVSettingsIPC();
+            _ipc = wrath ? new WrathSettingsIPC() : dalamud ? new DalamudSettingsIPC() : new XIVSettingsIPC();
             PluginLog.Verbose(
                 $"[ConflictingPlugins] [{Name}] Setup for Checking");
         }
@@ -646,6 +669,10 @@ public static class ConflictingPluginsChecks
         }
 
         private class XIVSettingsIPC() : ReusableIPC("XIV", new Version(0, 0))
+        {
+        }
+
+        private class DalamudSettingsIPC() : ReusableIPC("Dalamud", new Version(0, 0))
         {
         }
     }

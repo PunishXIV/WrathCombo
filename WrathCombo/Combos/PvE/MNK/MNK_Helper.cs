@@ -504,7 +504,7 @@ internal partial class MNK
             IsOffCooldown(Brotherhood) &&
             IsOffCooldown(RiddleOfFire) &&
             IsOffCooldown(RiddleOfWind) &&
-            CountdownActive &&
+            (MNK_OpenerCountdown == 1 || CountdownActive) &&
             NadiFlag is Nadi.None &&
             OpoOpoStacks is 0 &&
             RaptorStacks is 0 &&
@@ -557,7 +557,7 @@ internal partial class MNK
             IsOffCooldown(Brotherhood) &&
             IsOffCooldown(RiddleOfFire) &&
             IsOffCooldown(RiddleOfWind) &&
-            CountdownActive &&
+            (MNK_OpenerCountdown == 1 || CountdownActive) &&
             NadiFlag is Nadi.None &&
             OpoOpoStacks is 0 &&
             RaptorStacks is 0 &&
@@ -609,7 +609,7 @@ internal partial class MNK
             IsOffCooldown(Brotherhood) &&
             IsOffCooldown(RiddleOfFire) &&
             IsOffCooldown(RiddleOfWind) &&
-            CountdownActive &&
+            (MNK_OpenerCountdown == 1 || CountdownActive) &&
             NadiFlag is Nadi.None &&
             OpoOpoStacks is 0 &&
             RaptorStacks is 0 &&
@@ -661,7 +661,7 @@ internal partial class MNK
             IsOffCooldown(Brotherhood) &&
             IsOffCooldown(RiddleOfFire) &&
             IsOffCooldown(RiddleOfWind) &&
-            CountdownActive &&
+            (MNK_OpenerCountdown == 1 || CountdownActive) &&
             NadiFlag is Nadi.None &&
             OpoOpoStacks is 0 &&
             RaptorStacks is 0 &&

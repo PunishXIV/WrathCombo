@@ -18,6 +18,7 @@ public enum ConflictType
     Settings,
     WrathSetting,
     GameSetting,
+    Dalamud,
 }
 
 /// <summary>
@@ -77,9 +78,11 @@ public class Conflict
             _xiv = true;
         if (conflictType is ConflictType.WrathSetting)
             _wrath = true;
+        if (conflictType is ConflictType.Dalamud)
+            _dalamud = true;
 
         _plugin = search ??
-                  (_xiv || _wrath
+                  (_xiv || _wrath || _dalamud
                       ? null!
                       : throw new KeyNotFoundException(
                           $"Plugin with internal name '{internalName}' not found."));
@@ -91,8 +94,10 @@ public class Conflict
 
     private readonly bool _xiv;
 
+    private readonly bool _dalamud;
+
     /// The display name of the plugin.
-    public string Name => _xiv || _wrath ? "XIV" : _plugin.Name;
+    public string Name => _xiv || _wrath ? "XIV" : _dalamud ? "Dalamud" : _plugin.Name;
 
     /// <summary>
     ///     The internal name of the plugin, which can be used for getting a
@@ -133,6 +138,7 @@ public class Conflict
             ConflictType.Settings => [SettingsConflictStart, SettingsConflictEnd],
             ConflictType.WrathSetting => [WrathConflictStart, WrathConflictEnd],
             ConflictType.GameSetting => [GameConflictStart, GameConflictEnd],
+            ConflictType.Dalamud => [DalamudConflictStart, DalamudConflictEnd],
             _ => throw new ArgumentOutOfRangeException(nameof(ConflictType),
                 $"Unknown conflict type: {ConflictType}"),
         };
@@ -153,6 +159,9 @@ public class Conflict
 
     private const string GameConflictStart = "Conflicting Game";
     private const string GameConflictEnd = "Setting(s) Detected!";
+
+    private const string DalamudConflictStart = "Dalamud Conflicts";
+    private const string DalamudConflictEnd = "Setting(s) Detected!";
 
     #endregion
 }

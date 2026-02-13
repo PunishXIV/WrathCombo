@@ -18,13 +18,8 @@ namespace WrathCombo.Combos.PvE;
 internal partial class WAR : Tank
 {
     #region Variables
-
     internal static WARGauge Gauge = GetJobGauge<WARGauge>(); //WAR gauge
     internal static int BeastGauge => Gauge.BeastGauge;
-    internal static int MaxDashCharges => TraitLevelChecked(Traits.EnhancedOnslaught) ? 3 : LevelChecked(Onslaught) ? 2 : 0;
-    internal static bool CanInfuriate(int gauge = 50, int charges = 0) => InCombat() && ActionReady(Infuriate) && !HasNC && GetRemainingCharges(Infuriate) > charges && BeastGauge <= gauge;
-    internal static bool CanOnslaught(int charges = 0, float distance = 20, bool movement = true) => ActionReady(Onslaught) && GetRemainingCharges(Onslaught) > charges && GetTargetDistance() <= distance && movement;
-    internal static bool CanPRend(float distance = 20, bool movement = true) => LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && GetTargetDistance() <= distance && movement;
     internal static bool CanSpendBeastGauge(int gauge = 50, bool pooling = false) => LevelChecked(OriginalHook(InnerBeast)) && (HasIR.Stacks || (BeastGauge >= gauge || pooling));
     internal static bool BurstPoolMinimum => BeastGauge >= 50 && IR.Cooldown is < 1 or > 40;
     internal static bool STBurstPooling => BurstPoolMinimum && (IsEnabled(Preset.WAR_ST_Simple) || (IsEnabled(Preset.WAR_ST_Advanced) && WAR_ST_FellCleave_BurstPooling == 0));
@@ -37,29 +32,6 @@ internal partial class WAR : Tank
     internal static bool HasNC => HasStatusEffect(Buffs.NascentChaos);
     internal static bool HasWrath => HasStatusEffect(Buffs.Wrathful);
     internal static bool Minimal => InCombat() && HasBattleTarget();
-
-    internal static bool SafeToShakeItOff => !HasAnyStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.Vengeance, Buffs.BloodwhettingDefenseLong]);
-    
-    
-    
-    private static bool JustMitted =>
-        JustUsed(OriginalHook(ThrillOfBattle)) ||
-        JustUsed(OriginalHook(Vengeance)) ||
-        JustUsed(OriginalHook(RawIntuition)) ||
-        JustUsed(Role.Reprisal) ||
-        JustUsed(Role.ArmsLength) ||
-        JustUsed(Role.Rampart) ||
-        JustUsed(Holmgang);
-    
-    internal static bool MitigationRunning =>
-        HasStatusEffect(Role.Buffs.ArmsLength) ||
-        HasStatusEffect(Role.Buffs.Rampart) || 
-        HasStatusEffect(Buffs.Holmgang) ||
-        HasStatusEffect(Buffs.ThrillOfBattle) ||
-        HasStatusEffect(Buffs.Vengeance) || 
-        HasStatusEffect(Buffs.Damnation) ||
-        HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
-
     #endregion
 
     #region Openers
@@ -90,7 +62,7 @@ internal partial class WAR : Tank
             FellCleave,
             Onslaught, //11
             FellCleave,
-            Onslaught,
+            Onslaught, //13
             FellCleave,
             PrimalWrath,
             Infuriate,
@@ -109,7 +81,7 @@ internal partial class WAR : Tank
 
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
-            ([9, 11], () => !HasCharges(Onslaught))
+            ([9, 11, 13], () => !HasCharges(Onslaught) || WAR_ST_BalanceOpener_GapcloserChoice == 0)
         ];
         public override Preset Preset => Preset.WAR_ST_BalanceOpener;
         internal override UserData ContentCheckConfig => WAR_BalanceOpener_Content;
@@ -119,30 +91,34 @@ internal partial class WAR : Tank
     #endregion
 
     #region Rotation
-
-    internal static bool ShouldUseInnerRelease(int targetHP = 0) => ActionReady(OriginalHook(Berserk)) && !HasWrath && CanWeave() && (HasST || !LevelChecked(StormsEye)) && Minimal && GetTargetHPPercent() >= targetHP;
-    internal static bool ShouldUseInfuriate(int gauge = 40, int charges = 0) => CanInfuriate() && CanWeave() && !HasNC && !HasIR.Stacks && BeastGauge <= gauge && GetRemainingCharges(Infuriate) > charges && Minimal;
     internal static bool ShouldUseUpheaval => ActionReady(Upheaval) && CanWeave() && HasST && InMeleeRange() && Minimal;
-    internal static bool ShouldUsePrimalWrath => LevelChecked(PrimalWrath) && CanWeave() && HasWrath && HasST && GetTargetDistance() <= 4.99f && Minimal;
-    internal static bool ShouldUseOnslaught(int charges = 0, float distance = 20, bool movement = true) => CanOnslaught(charges, distance, movement) && CanWeave() && HasST;
-    internal static bool ShouldUsePrimalRuination => LevelChecked(PrimalRuination) && HasStatusEffect(Buffs.PrimalRuinationReady) && HasST;
-    internal static bool ShouldUsePrimalRend(float distance = 20, bool movement = true) => CanPRend(distance, movement) && !JustUsed(InnerRelease) && HasST;
-    internal static bool ShouldUseFellCleave(int gauge = 90) => CanSpendBeastGauge(gauge, STBurstPooling) && HasST && InMeleeRange() && Minimal;
-    internal static bool ShouldUseDecimate(int gauge = 90) => CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && InMeleeRange() && Minimal && LevelChecked(SteelCyclone);
-
+    internal static bool ShouldUsePrimalWrath => LevelChecked(PrimalWrath) && CanWeave() && HasWrath && HasST && Minimal && GetTargetDistance() <= 4.99f;
+    internal static bool ShouldUsePrimalRuination => LevelChecked(PrimalRuination) && HasST && Minimal && HasStatusEffect(Buffs.PrimalRuinationReady);
     internal static bool ShouldUseTomahawk => LevelChecked(Tomahawk) && !InMeleeRange() && HasBattleTarget();
+    internal static bool ShouldUseInnerRelease(int targetHP = 0) => ActionReady(OriginalHook(Berserk)) && CanWeave() && !HasWrath && Minimal && GetTargetHPPercent() >= targetHP && (HasST || !LevelChecked(StormsEye));
+    internal static bool ShouldUseInfuriate(int gauge = 50, int charges = 0) => ActionReady(Infuriate) && CanWeave() && !HasNC && Minimal && !JustUsed(Infuriate) && !HasIR.Stacks && BeastGauge <= gauge && GetRemainingCharges(Infuriate) > charges;
+    internal static bool ShouldUseOnslaught(int charges = 0, float distance = 20, bool movement = true) => ActionReady(Onslaught) && GetRemainingCharges(Onslaught) > charges && GetTargetDistance() <= distance && movement && CanWeave() && HasST;
+    internal static bool ShouldUsePrimalRend(float distance = 20, bool movement = true) => LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && GetTargetDistance() <= distance && movement && !JustUsed(InnerRelease) && HasST;
+    internal static bool ShouldUseFellCleave(int gauge = 90) => CanSpendBeastGauge(gauge, STBurstPooling) && HasST && Minimal && InMeleeRange();
+    internal static bool ShouldUseDecimate(int gauge = 90) => LevelChecked(SteelCyclone) && CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && Minimal && GetTargetDistance() <= 4.99f;
     internal static uint STCombo
-        => ComboTimer > 0 ? LevelChecked(Maim) && ComboAction == HeavySwing
-            ? Maim
-            : LevelChecked(StormsPath) && ComboAction == Maim
-                ? (LevelChecked(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) || (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_SurgingRefreshRange))
-                    ? StormsEye : StormsPath)
-                : HeavySwing : HeavySwing;
-    internal static uint AOECombo => (ComboTimer > 0 && LevelChecked(MythrilTempest) && ComboAction == Overpower) ? MythrilTempest : Overpower;
-
+        => ComboTimer > 0 
+            ? LevelChecked(Maim) && ComboAction == HeavySwing // Logic for Combo 2
+                ? Maim
+                : LevelChecked(StormsPath) && ComboAction == Maim //Logic for Combos 3.1 and 3.2
+                    ? LevelChecked(StormsEye) && ((IsEnabled(Preset.WAR_ST_Simple) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= 29) || 
+                                                  (IsEnabled(Preset.WAR_ST_Advanced) && IsEnabled(Preset.WAR_ST_StormsEye) && GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_SurgingRefreshRange))
+                        ? StormsEye //return if ST is needed
+                        : StormsPath //return if ST is not needed
+                    : HeavySwing  //return if cant Storms Path
+                : HeavySwing; //Return of cant Maim
+    internal static uint AOECombo 
+        => ComboTimer > 0 && LevelChecked(MythrilTempest) && ComboAction == Overpower 
+            ? MythrilTempest 
+            : Overpower;
     #endregion
 
-    #region Mitigation Priorities
+    #region One-Button Mitigation Combo Priorities
 
     /// <summary>
     ///     The list of Mitigations to use in the One-Button Mitigation combo.<br />
@@ -225,6 +201,26 @@ internal partial class WAR : Tank
     
     private static bool CanUseNonBossMits(RotationMode rotationFlags, ref uint actionID)
     {
+        #region Variables
+        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
+        
+        var mitigationRunning = HasStatusEffect(Role.Buffs.ArmsLength) ||
+                                HasStatusEffect(Role.Buffs.Rampart) || 
+                                HasStatusEffect(Buffs.Holmgang) ||
+                                HasStatusEffect(Buffs.ThrillOfBattle) ||
+                                HasStatusEffect(Buffs.Vengeance) || 
+                                HasStatusEffect(Buffs.Damnation) ||
+                                HasStatusEffect(Role.Debuffs.Reprisal, CurrentTarget);
+        
+        var justMitted = JustUsed(OriginalHook(ThrillOfBattle)) ||
+                          JustUsed(OriginalHook(Vengeance)) ||
+                          JustUsed(OriginalHook(RawIntuition)) ||
+                          JustUsed(Role.Reprisal) ||
+                          JustUsed(Role.ArmsLength) ||
+                          JustUsed(Role.Rampart) ||
+                          JustUsed(Holmgang);
+        #endregion
+        
         #region Initial Bailout
         if (!InCombat() ||  
             InBossEncounter() || 
@@ -246,7 +242,7 @@ internal partial class WAR : Tank
         
         #region Raw Intuition/Bloodwhetting
         if (IsEnabled(Preset.WAR_Mitigation_NonBoss_RawIntuition) && 
-            ActionReady(OriginalHook(RawIntuition)) && CanWeave() && !JustMitted)
+            ActionReady(OriginalHook(RawIntuition)) && CanWeave() && !justMitted)
         {
             actionID = OriginalHook(RawIntuition);
             return true;
@@ -257,7 +253,7 @@ internal partial class WAR : Tank
         float mitigationThreshold = rotationFlags.HasFlag(RotationMode.simple) 
             ? 10 
             : WAR_Mitigation_NonBoss_MitigationThreshold;
-        if (GetAvgEnemyHPPercentInRange(10f) <= mitigationThreshold || !CanWeave() || JustMitted) 
+        if (GetAvgEnemyHPPercentInRange(10f) <= mitigationThreshold || !CanWeave() || justMitted) 
             return false;
         #endregion
         
@@ -275,9 +271,10 @@ internal partial class WAR : Tank
         
         #region Shake It Off
         var shakeItOffThreshold = rotationFlags.HasFlag(RotationMode.simple) ? 80 : WAR_Mitigation_NonBoss_ShakeItOff_Health;
+        var safeToShakeItOff = !HasAnyStatusEffects([Buffs.ThrillOfBattle, Buffs.Damnation, Buffs.Vengeance, Buffs.BloodwhettingDefenseLong]);
         
         if (IsEnabled(Preset.WAR_Mitigation_NonBoss_ShakeItOff) && 
-            ActionReady(ShakeItOff) && SafeToShakeItOff &&
+            ActionReady(ShakeItOff) && safeToShakeItOff &&
             PlayerHealthPercentageHp() <= shakeItOffThreshold)
         {
             actionID = ShakeItOff;
@@ -285,9 +282,7 @@ internal partial class WAR : Tank
         }
         #endregion
         
-        var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
-        
-        if (MitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
+        if (mitigationRunning || numberOfEnemies <= 2) return false; //Bail if already Mitted or too few enemies
         
         #region Mitigation 5+
         if (numberOfEnemies >= 5)

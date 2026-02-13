@@ -9,6 +9,7 @@ using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
 using WrathCombo.Attributes;
+using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Data;
@@ -81,6 +82,12 @@ internal static class SimpleTarget
         /// <seealso cref="DefaultHealStack" />
         /// <seealso cref="CustomHealStack" />
         public static IGameObject? AllyToHeal => GetStack();
+
+        /// <summary>
+        /// Used exclusively for one-button healing features where retargeting may be optional.
+        /// </summary>
+        /// <seealso cref="AllyToHeal"/>
+        public static IGameObject? OneButtonHealLogic => AutoRotationController.AutorotHealTarget ?? AllyToHeal;
 
         /// <summary>
         ///     The Default Heal Stack, with customization options.

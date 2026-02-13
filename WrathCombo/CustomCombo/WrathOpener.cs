@@ -148,6 +148,9 @@ public abstract class WrathOpener
 
     public unsafe bool FullOpener(ref uint actionID)
     {
+        if (IsOccupied())
+            return false;
+
         if (CurrentOpener != this)
             SelectOpener();
 
@@ -194,7 +197,16 @@ public abstract class WrathOpener
                 foreach (var (Step, Condition) in SkipSteps.Where(x => x.Steps.Any(y => y == OpenerStep)))
                 {
                     if (Condition())
+                    {
+                        Svc.Log.Debug($"Skipping from Opener Step {OpenerStep} to {OpenerStep + 1}");
                         OpenerStep++;
+                    }
+
+                    if (OpenerStep > OpenerActions.Count)
+                    {
+                        CurrentState = OpenerState.OpenerFinished;
+                        return false;
+                    }
                 }
 
                 actionID = CurrentOpenerAction = AllowUpgradeSteps.Any(x => x == OpenerStep) ? OriginalHook(OpenerActions[OpenerStep - 1]) : OpenerActions[OpenerStep - 1];
@@ -335,6 +347,22 @@ public abstract class WrathOpener
             if (CurrentOpener?.OpenerStep > 1 && interruptedAction == CurrentOpener.PreviousOpenerAction)
                 CurrentOpener.OpenerStep -= 1;
         }
+    }
+
+    public static string OpenerStatus()
+    {
+        if (CurrentOpener is null || CurrentOpener == Dummy || !CurrentOpener.Enabled)
+            return "No valid opener active.";
+
+        return CurrentOpener?.CurrentState switch
+        {
+            OpenerState.OpenerNotReady => $"Opener Not Ready Yet",
+            OpenerState.OpenerReady => "Opener Ready to Start",
+            OpenerState.InOpener => "Opener In Progress",
+            OpenerState.OpenerFinished => "Opener Finished",
+            OpenerState.FailedOpener => "Opener Failed",
+            _ => "Unknown"
+        };
     }
 
     public static WrathOpener Dummy = new DummyOpener();

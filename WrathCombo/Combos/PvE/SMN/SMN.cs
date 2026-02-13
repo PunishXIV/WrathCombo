@@ -704,8 +704,8 @@ internal partial class SMN : Caster
             foreach (var prio in SMN_ST_Egi_Priority.OrderBy(x => x))
             {
                 var index = SMN_ST_Egi_Priority.IndexOf(prio);
-                var config = GetMatchingConfigST(index, OptionalTarget,
-                    out var spell, out var enabled);
+                var config = GetMatchingConfigST(index, out var spell,
+                    out var enabled);
 
                 if (!enabled) continue;
 
@@ -911,8 +911,8 @@ internal partial class SMN : Caster
             foreach (var prio in SMN_AoE_Egi_Priority.OrderBy(x => x))
             {
                 var index = SMN_AoE_Egi_Priority.IndexOf(prio);
-                var config = GetMatchingConfigAoE(index, OptionalTarget,
-                    out var spell, out var enabled);
+                var config = GetMatchingConfigAoE(index, out var spell,
+                    out var enabled);
 
                 if (!enabled) continue;
 

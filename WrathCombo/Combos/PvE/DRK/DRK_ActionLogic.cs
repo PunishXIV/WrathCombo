@@ -330,7 +330,8 @@ internal partial class DRK
 
             // Bail if Mitigation is not enabled for this combo
             // (unless IPC-controlled)
-            if (config != 1 || P.UIHelper.PresetControlled(preset)?.enabled == true)
+            if (config != (int)SimpleMitigation.On &&
+                P.UIHelper.PresetControlled(preset)?.enabled != true)
                 return false;
 
             if (InBossEncounter())

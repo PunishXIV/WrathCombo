@@ -127,15 +127,7 @@ public partial class WrathCombo
         Svc.Log.Debug($"{WrathOpener.CurrentOpener.Enabled}");
         if (WrathOpener.CurrentOpener is not null && WrathOpener.CurrentOpener != WrathOpener.Dummy && WrathOpener.CurrentOpener.Enabled)
         {
-            string status = WrathOpener.CurrentOpener.CurrentState switch
-            {
-                Combos.PvE.Enums.OpenerState.OpenerNotReady => $"Opener Not Ready Yet",
-                Combos.PvE.Enums.OpenerState.OpenerReady => "Opener Ready to Start",
-                Combos.PvE.Enums.OpenerState.InOpener => "In Progress",
-                Combos.PvE.Enums.OpenerState.OpenerFinished => "Finished",
-                Combos.PvE.Enums.OpenerState.FailedOpener => "Failed",
-                _ => "Unknown"
-            };
+            var status = WrathOpener.OpenerStatus();
             DuoLog.Information($"Opener status: {status}");
         }
         else

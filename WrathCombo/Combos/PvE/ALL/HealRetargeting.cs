@@ -43,64 +43,52 @@ public static class HealRetargeting
     /// Just a shorter reference to
     /// <see cref="SimpleTarget.Stack.AllyToHeal" />
     /// .
-    private static IGameObject? HealStack => SimpleTarget.Stack.AllyToHeal;
+    private static IGameObject? HealStack => SimpleTarget.Stack.OneButtonHealLogic;
 
     /// <summary>
     ///     Retargets the action if the
     ///     <see cref="Configuration.RetargetHealingActionsToStack">
     ///         option to do so
     ///     </see>
-    ///     is enabled.
+    ///     is enabled, and there is no target override.
     /// </summary>
     /// <seealso cref="UIntExtensions.Retarget(uint,IGameObject?,bool)" />
     public static uint RetargetIfEnabled
-    (this uint actionID,
-        IGameObject? optionalTarget)
-    {
-        if (!RetargetSettingOn) return actionID;
-        if (optionalTarget is null)
-            return actionID.Retarget(actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack);
-        else
-            return actionID.Retarget(optionalTarget);
-    }
+    (this uint actionID) =>
+        RetargetSettingOn
+            ? actionID.Retarget(
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
+            : actionID;
 
     /// <summary>
     ///     Retargets the action if the
     ///     <see cref="Configuration.RetargetHealingActionsToStack">
     ///         option to do so
     ///     </see>
-    ///     is enabled.
+    ///     is enabled, and there is no target override.
     /// </summary>
     /// <seealso cref="UIntExtensions.Retarget(uint,uint,IGameObject?,bool)" />
     public static uint RetargetIfEnabled
     (this uint actionID,
-        IGameObject? optionalTarget,
-        uint replaced)
-    {
-        if (!RetargetSettingOn) return actionID;
-        if (optionalTarget is null)
-            return actionID.Retarget(replaced, actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack);
-        else
-            return actionID.Retarget(replaced, optionalTarget);
-    }
+        uint replaced) =>
+        RetargetSettingOn
+            ? actionID.Retarget(replaced,
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
+            : actionID;
 
     /// <summary>
     ///     Retargets the action if the
     ///     <see cref="Configuration.RetargetHealingActionsToStack">
     ///         option to do so
     ///     </see>
-    ///     is enabled.
+    ///     is enabled, and there is no target override.
     /// </summary>
     /// <seealso cref="UIntExtensions.Retarget(uint,uint[],IGameObject?,bool)" />
     public static uint RetargetIfEnabled
     (this uint actionID,
-        IGameObject? optionalTarget,
-        uint[] replaced)
-    {
-        if (!RetargetSettingOn) return actionID;
-        if (optionalTarget is null)
-            return actionID.Retarget(replaced, actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack);
-        else
-            return actionID.Retarget(replaced, optionalTarget);
-    }
+        uint[] replaced) =>
+        RetargetSettingOn
+            ? actionID.Retarget(replaced,
+                actionID == RoleActions.Healer.Esuna ? EsunaStack : HealStack)
+            : actionID;
 }

@@ -348,6 +348,7 @@ public static class ActionWatching
             SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
 
             OverrideTarget = null;
+            AutoRotationController.AutorotHealTarget = null;
             Service.ActionReplacer.EnableActionReplacingIfRequired();
         }
         catch (Exception ex)

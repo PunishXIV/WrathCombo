@@ -169,7 +169,7 @@ internal abstract partial class CustomComboFunctions
         return partyCount == 0 ? 0 : (float)buffCount / partyCount * 100f;
     }
 
-    public static bool PartyInCombat() => PartyEngageDuration().Ticks > 0;
+    public static bool PartyInCombat() => PartyInCombatCheck;
 }
 
 public enum AllianceGroup

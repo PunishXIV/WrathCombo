@@ -60,10 +60,10 @@ internal partial class WHM
 
     #region Get ST Heals
 
-    internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget,
+    internal static int GetMatchingConfigST(int i, IGameObject? target,
         out uint action, out bool enabled)
     {
-        IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
         bool stopHot = WHM_STHeals_RegenHPLower >=
                        GetTargetHPPercent(healTarget,
                            WHM_STHeals_IncludeShields);

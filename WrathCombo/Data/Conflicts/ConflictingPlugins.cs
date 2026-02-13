@@ -114,10 +114,21 @@ public static class ConflictingPlugins
         {
             PluginLog.Error(
                 "[ConflictingPlugins] Failed to check for wrath setting conflicts:" +
-                " " +
                 e.ToStringFull());
         }
 
+        try
+        {
+            if (TryGetDalamudConflicts(out var dalConflicts))
+                conflicts[ConflictType.Dalamud] = dalConflicts;
+        }
+        catch (Exception e)
+        {
+            PluginLog.Error(
+                "[ConflictingPlugins] Failed to check for Dalamud conflicts:" +
+                " " +
+                e.ToStringFull());
+        }
         _cachedConflicts = conflicts;
         return conflicts.ToArray().Length > 0;
     }
@@ -140,6 +151,7 @@ public static class ConflictingPlugins
         var hasWrathConflicts = conflicts[ConflictType.WrathSetting].Length > 0;
         var hasGameConflicts = conflicts[ConflictType.GameSetting].Length > 0;
         var hasTargetingConflicts = conflicts[ConflictType.Targeting].Length > 0;
+        var hasDalamudConflicts = conflicts[ConflictType.Dalamud].Length > 0;
 
         ImGui.Spacing();
         ImGui.Spacing();
@@ -254,6 +266,22 @@ public static class ConflictingPlugins
                 hasSettingsConflicts || hasGameConflicts || hasWrathConflicts);
         }
 
+        if (hasDalamudConflicts)
+        {
+            currentConflicts = conflicts[ConflictType.Dalamud];
+
+            var tooltipText = "You have conflict(s) in your Dalamud config:\n";
+
+            foreach (var conflict in conflicts[ConflictType.Dalamud])
+            {
+                tooltipText += $"{conflict.Name} {conflict.Reason}";
+            }
+
+            ShowWarning(ConflictType.Dalamud, tooltipText,
+                hasComboConflicts || hasTargetingConflicts ||
+                hasSettingsConflicts || hasGameConflicts || hasDalamudConflicts);
+        }
+
         return;
 
         void ShowWarning(ConflictType type, string tooltipText, bool hasWarningAbove)
@@ -265,6 +293,7 @@ public static class ConflictingPlugins
                 ConflictType.Settings     => ImGuiColors.DalamudOrange,
                 ConflictType.WrathSetting => ImGuiColors.DalamudYellow,
                 ConflictType.GameSetting  => ImGuiColors.DalamudOrange,
+                ConflictType.Dalamud      => ImGuiColors.DalamudYellow,
                 _ => throw new ArgumentOutOfRangeException(nameof(type),
                     $"Unknown conflict type: {type}"),
             };
@@ -640,6 +669,24 @@ public static class ConflictingPlugins
                 DuoLog.Debug($"Combos cannot run in this configuration! " +
                              $"Open the UI for Conflict details.");
 #endif
+        }
+
+        return conflicts.Length > 0;
+    }
+
+    private static bool TryGetDalamudConflicts(out Conflict[] conflicts)
+    {
+        conflicts = [];
+
+        if (ConflictingPluginsChecks.Dalamud.Conflicted)
+        {
+            if (ConflictingPluginsChecks.Dalamud.OpenerDTRDisabled)
+            {
+                conflicts = conflicts.Append(new Conflict(
+                    "Dalamud", ConflictType.Dalamud,
+                    $"Opener DTR Disabled\n\nYou have the Opener DTR hidden in Dalamud settings, this will not show."))
+                    .ToArray();
+            }
         }
 
         return conflicts.Length > 0;

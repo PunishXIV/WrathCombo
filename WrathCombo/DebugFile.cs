@@ -675,7 +675,7 @@ public static class DebugFile
                 33 => typeof(AST.Config),
                 34 => typeof(SAM.Config),
                 35 => typeof(RDM.Config),
-                //36 => typeof(BLU.Config),
+                36 => typeof(BLU.Config),
                 37 => typeof(GNB.Config),
                 38 => typeof(DNC.Config),
                 39 => typeof(RPR.Config),
