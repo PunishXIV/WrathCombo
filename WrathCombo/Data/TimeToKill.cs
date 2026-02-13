@@ -17,8 +17,7 @@ namespace WrathCombo.Data
 
         public uint CurrentHp;
 
-        // todo: should probably be a tuple with a timestamp.
-        //       averaging over the entire fight is more prone to issues (mechs dropping huge chunks, LBs, deaths/low dmg times, etc):
+        // todo: averaging over the entire fight is more prone to issues (mechs dropping huge chunks, LBs, deaths/low dmg times, etc):
         //       it's (maybe) more accurate for depicting times further away, but
         //       less accurate for near-term predictions (which we'll mostly use).
         //
@@ -31,7 +30,7 @@ namespace WrathCombo.Data
         //
         //       (another improvement would be to do something like normalizing
         //       >30% outlier diffs, to reduce the impact of recent LBs/Mechs)
-        public List<uint> Diffs = [];
+        public List<(uint Diff, long TickRecorded)> Diffs = [];
 
         public long LastTimeChecked;
 
@@ -43,7 +42,7 @@ namespace WrathCombo.Data
         
         public float SecondsUntilDead => (float)TimeUntilDead.TotalSeconds;
 
-        public uint AverageDPS => Diffs.Count == 0 ? 0 : (uint)Diffs.Average(x => x);
+        public uint AverageDPS => Diffs.Count == 0 ? 0 : (uint)Diffs.Average(x => x.Diff);
 
         public TimeToKill(ulong gameObjectId)
         {
@@ -149,7 +148,7 @@ namespace WrathCombo.Data
 
                 var diff = last - current;
 
-                ttk.Diffs.Add(diff);
+                ttk.Diffs.Add((diff, Environment.TickCount64));
                 if (ttk.AverageDPS > 0)
                 {
                     var secondsToKill = current / ttk.AverageDPS;
