@@ -139,6 +139,9 @@ public sealed partial class WrathCombo : IDalamudPlugin
             if (!Player.Available)
                 return false;
 
+            if (onJobChange || onTerritoryChange)
+                TimeToKill.Update(force: true, clear: true);
+
             WrathOpener.SelectOpener();
             P.ActionRetargeting.ClearCachedRetargets();
             if (onJobChange)
@@ -327,7 +330,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
             TargetHelper.Draw();
 
             AutoRotationController.Run();
-            TimeToKill.Run();
+            TimeToKill.Update();
 
             if (Player.IsDead)
             {
