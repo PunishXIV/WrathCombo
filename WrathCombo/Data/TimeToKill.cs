@@ -5,6 +5,7 @@ using ECommons.GameFunctions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ECommons.Throttlers;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -130,6 +131,7 @@ namespace WrathCombo.Data
                     continue;
 
                 var obj = ttk.GameObjectID.GetObject();
+                // Probably pretty rare, but may as well flag it since we need to check it anyway
                 if (obj is not IBattleChara c)
                 {
                     ttk.FlagForRemoval = true;
@@ -175,8 +177,11 @@ namespace WrathCombo.Data
             }
         }
 
-        public static void Run()
+        public static void Update(bool force = false)
         {
+            if (!force && !EzThrottler.Throttle("ttkUpdate", 150))
+                return;
+            
             AddEnemiesToTimeToKill();
             UpdateTimeToKills();
         }
