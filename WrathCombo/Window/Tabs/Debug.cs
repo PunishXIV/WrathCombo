@@ -1149,6 +1149,29 @@ internal class Debug : ConfigWindow, IDisposable
 
         ImGuiEx.Spacing(new Vector2(0, SpacingMedium));
 
+        #region Time To Kills
+
+        if (ImGui.CollapsingHeader("Time To Kills"))
+        {
+            foreach (var enemy in TimeToKill.TimeToKills)
+            {
+                var obj = enemy.GameObjectID.GetObject();
+                if (ImGui.TreeNode($"{obj?.Name} {obj?.GameObjectId}"))
+                {
+                    CustomStyleText($"Last HP Check:", $"{enemy.CurrentHp}");
+                    CustomStyleText($"Time To Kill:", $"{(enemy.TimeUntilDead).ToString(@"mm\:ss")}");
+                    CustomStyleText($"Average DPS:", $"{enemy.AverageDPS}");
+                    CustomStyleText($"Band:", $"{enemy.Band}");
+
+                    ImGui.TreePop();
+                }
+            }
+        }
+
+        #endregion
+
+        ImGuiEx.Spacing(new Vector2(0, SpacingMedium));
+
         #region Hidden Features
 
         if (ImGui.Checkbox("Show Hidden Features",
