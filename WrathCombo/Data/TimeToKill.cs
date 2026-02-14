@@ -45,16 +45,26 @@ namespace WrathCombo.Data
 
         public float SecondsUntilDead => (float)TimeUntilDead.TotalSeconds;
 
+        /// <summary>
+        /// This gives an indicator of how long the enemy has to live based based on how long estimated to live.<br />
+        /// Anything in the practically unharmed category means there's a pretty long time to live.<br />
+        /// Below that is when you'll realistically want to start winding things down.<br />
+        /// Very Healthy they have less than 2 minutes left<br />
+        /// Healthy they have less than 1 minute left<br />
+        /// Approaching Dead they have less than 30 seconds<br />
+        /// Almost Dead they have less than 15 seconds<br />
+        /// </summary>
         public TimeToKillBands Band
         {
             get  
             {
                 return SecondsUntilDead switch
                 {
-                    >= 90 => TimeToKillBands.VeryHealthy,
-                    >= 60 => TimeToKillBands.Healthy,
-                    >= 30 => TimeToKillBands.ApproachingDead,
-                    _ => TimeToKillBands.AlmostDead,
+                    <= 15 => TimeToKillBands.AlmostDead,
+                    <= 30 => TimeToKillBands.ApproachingDead,
+                    <= 60 => TimeToKillBands.Healthy,
+                    <= 120 => TimeToKillBands.VeryHealthy,
+                    _ => TimeToKillBands.PracticallyUnharmed,
                 };
             }
         }
@@ -137,6 +147,18 @@ namespace WrathCombo.Data
             return float.NaN;
         }
 
+        public static TimeToKillBands TimeToKillBand(IGameObject? target = null)
+        {
+            target ??= CurrentTarget;
+            if (target is null)
+                return TimeToKillBands.PracticallyUnharmed;
+
+            if (GetTimeToKillByID(target.SafeGameObjectId) is { } ttk)
+                return ttk.Band;
+
+            return TimeToKillBands.PracticallyUnharmed;
+        }
+
         public static void UpdateTimeToKills()
         {
             TimeToKills.RemoveAll(x => x.FlagForRemoval || x.GameObjectID.GetObject() is not { } c || !c.IsInCombat());
@@ -174,15 +196,16 @@ namespace WrathCombo.Data
                     ttk.TimeDead = DateTime.Now + ttd;
                     ttk.CurrentHp = current;
 
-                    ttk.AverageThreshold = ttk.TimeUntilDead.TotalSeconds switch
-                    {
-                        <= 15 => 30 * 1000,
-                        <= 30 => 45 * 1000,
-                        <= 45 => 60 * 1000,
-                        <= 60 => 75 * 1000,
-                        _ => 90 * 1000,
-
-                    };
+                    if (ttk.Band == TimeToKillBands.AlmostDead)
+                        ttk.AverageThreshold = 30 * 1000;
+                    if (ttk.Band == TimeToKillBands.ApproachingDead)
+                        ttk.AverageThreshold = 45 * 1000;
+                    if (ttk.Band == TimeToKillBands.Healthy)
+                        ttk.AverageThreshold = 60 * 1000;
+                    if (ttk.Band == TimeToKillBands.VeryHealthy)
+                        ttk.AverageThreshold = 75 * 1000;
+                    if (ttk.Band == TimeToKillBands.PracticallyUnharmed)
+                        ttk.AverageThreshold = 90 * 1000;
                 }
 
                 ttk.LastTimeChecked = Environment.TickCount64;
@@ -228,5 +251,6 @@ namespace WrathCombo.Data
         public static readonly TimeToKillBands ApproachingDead = new("Approaching Dead");
         public static readonly TimeToKillBands Healthy = new("Healthy");
         public static readonly TimeToKillBands VeryHealthy = new("Very Healthy");
+        public static readonly TimeToKillBands PracticallyUnharmed = new("Practically Unharmed");
     }
 }
