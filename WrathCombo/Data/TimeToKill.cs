@@ -2,10 +2,10 @@
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using ECommons.Throttlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ECommons.Throttlers;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -38,11 +38,13 @@ namespace WrathCombo.Data
 
         private bool FlagForRemoval;
 
+        public float AverageThreshold = 90 * 1000; // To be updated as per above comments
+
         public TimeSpan TimeUntilDead => TimeDead - DateTime.Now;
-        
+
         public float SecondsUntilDead => (float)TimeUntilDead.TotalSeconds;
 
-        public uint AverageDPS => Diffs.Count == 0 ? 0 : (uint)Diffs.Average(x => x.Diff);
+        public uint AverageDPS => Diffs.Count == 0 ? 0 : (uint)Diffs.Where(x => (Environment.TickCount64 - x.TickRecorded) <= AverageThreshold).Average(x => x.Diff);
 
         public TimeToKill(ulong gameObjectId)
         {
@@ -116,7 +118,7 @@ namespace WrathCombo.Data
 
             if (GetTimeToKillByID(target.SafeGameObjectId) is { } ttk)
                 return ttk.SecondsUntilDead;
-            
+
             return float.NaN;
         }
 
@@ -138,7 +140,7 @@ namespace WrathCombo.Data
                 }
 
                 var current = c.CurrentHp;
-                var last    = ttk.CurrentHp;
+                var last = ttk.CurrentHp;
 
                 if (current > last) //Heal, dummy resets etc.
                 {
@@ -152,9 +154,19 @@ namespace WrathCombo.Data
                 if (ttk.AverageDPS > 0)
                 {
                     var secondsToKill = current / ttk.AverageDPS;
-                    var ttd           = TimeSpan.FromSeconds(secondsToKill);
-                    ttk.TimeDead  = DateTime.Now + ttd;
+                    var ttd = TimeSpan.FromSeconds(secondsToKill);
+                    ttk.TimeDead = DateTime.Now + ttd;
                     ttk.CurrentHp = current;
+
+                    ttk.AverageThreshold = ttk.TimeUntilDead.TotalSeconds switch
+                    {
+                        <= 15 => 30 * 1000,
+                        <= 30 => 45 * 1000,
+                        <= 45 => 60 * 1000,
+                        <= 60 => 75 * 1000,
+                        _ => 90 * 1000,
+
+                    };
                 }
 
                 ttk.LastTimeChecked = Environment.TickCount64;
@@ -163,7 +175,7 @@ namespace WrathCombo.Data
 
         public static void AddEnemiesToTimeToKill()
         {
-            foreach (var e in Svc.Objects.Where(x => x.IsHostile() && !x.IsDead && x.IsInCombat()))
+            foreach (var e in Svc.Objects.Where(x => x.IsHostile() && !x.IsDead && x.IsInCombat() && x.IsTargetable))
             {
                 var id = e.SafeGameObjectId;
                 if (id == null)
