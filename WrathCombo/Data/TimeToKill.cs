@@ -142,7 +142,8 @@ namespace WrathCombo.Data
                 var current = c.CurrentHp;
                 var last = ttk.CurrentHp;
 
-                if (current > last) //Heal, dummy resets etc.
+                if (current > last ||                                                         //Heal, dummy resets etc.
+                    (ttk.Diffs.Count >= 15 && ttk.Diffs.TakeLast(15).All(x => x.Diff == 0)))  //or if the last 15 seconds have had no change, assume cutscene or something
                 {
                     ttk.FlagForRemoval = true;
                     continue;
