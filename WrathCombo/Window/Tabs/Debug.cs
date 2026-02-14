@@ -1159,6 +1159,7 @@ internal class Debug : ConfigWindow, IDisposable
                     CustomStyleText($"Last HP Check:", $"{enemy.CurrentHp}");
                     CustomStyleText($"Time To Kill:", $"{(enemy.TimeUntilDead).ToString(@"mm\:ss")}");
                     CustomStyleText($"Average DPS:", $"{enemy.AverageDPS}");
+                    CustomStyleText($"Band:", $"{enemy.Band}");
 
                     ImGui.TreePop();
                 }

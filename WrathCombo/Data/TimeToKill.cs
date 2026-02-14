@@ -6,6 +6,7 @@ using ECommons.Throttlers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -40,9 +41,23 @@ namespace WrathCombo.Data
 
         public float AverageThreshold = 90 * 1000; // To be updated as per above comments
 
-        public TimeSpan TimeUntilDead => TimeDead - DateTime.Now;
+        public TimeSpan TimeUntilDead => AverageDPS == 0 ? TimeSpan.MaxValue : TimeDead - DateTime.Now;
 
         public float SecondsUntilDead => (float)TimeUntilDead.TotalSeconds;
+
+        public TimeToKillBands Band
+        {
+            get  
+            {
+                return SecondsUntilDead switch
+                {
+                    >= 90 => TimeToKillBands.VeryHealthy,
+                    >= 60 => TimeToKillBands.Healthy,
+                    >= 30 => TimeToKillBands.ApproachingDead,
+                    _ => TimeToKillBands.AlmostDead,
+                };
+            }
+        }
 
         public uint AverageDPS => Diffs.Count == 0 ? 0 : (uint)Diffs.Where(x => (Environment.TickCount64 - x.TickRecorded) <= AverageThreshold).Average(x => x.Diff);
 
@@ -203,5 +218,15 @@ namespace WrathCombo.Data
             AddEnemiesToTimeToKill();
             UpdateTimeToKills();
         }
+    }
+
+    public sealed class TimeToKillBands : StringEnums
+    {
+        private TimeToKillBands(string value) : base(value) { }
+
+        public static readonly TimeToKillBands AlmostDead = new("Almost Dead");
+        public static readonly TimeToKillBands ApproachingDead = new("Approaching Dead");
+        public static readonly TimeToKillBands Healthy = new("Healthy");
+        public static readonly TimeToKillBands VeryHealthy = new("Very Healthy");
     }
 }
