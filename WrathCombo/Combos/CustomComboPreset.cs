@@ -36,7 +36,7 @@ public enum Preset
     [ConflictingCombos(PLD_RetargetShieldBash)]
     [ParentCombo(ALL_Tank_Menu)]
     [CustomComboInfo("Tank: Interrupt Feature",
-        "Replaces Low Blow (Stun) with Interject (Interrupt) when the target can be interrupted.\nFor PLDs this feature will add Shield Bash when Interject and Low Blow are on cooldown.",
+        "Replaces [Low Blow] (Stun) with Interject (Interrupt) when the target can be interrupted.\nFor PLDs this feature will add [Shield Bash] when [Interject] and [Low Blow] are on cooldown.",
         Job.ADV)]
     ALL_Tank_Interrupt = 100000,
 
@@ -48,29 +48,29 @@ public enum Preset
     [Role(JobRole.Tank)]
     [ReplaceSkill(RoleActions.Tank.Reprisal)]
     [ParentCombo(ALL_Tank_Menu)]
-    [CustomComboInfo("Tank: Double Reprisal Protection",
-        "Prevents the use of Reprisal when target already has the effect by replacing it with Savage Blade.", Job.ADV)]
+    [CustomComboInfo("Tank: Double [Reprisal] Protection",
+        "Prevents the use of [Reprisal] when target already has the effect by replacing it with Savage Blade.", Job.ADV)]
     ALL_Tank_Reprisal = 100001,
 
     [Role(JobRole.Tank)]
     [ReplaceSkill(RoleActions.Tank.Shirk)]
     [ParentCombo(ALL_Tank_Menu)]
-    [CustomComboInfo("Tank: Shirk Retargeting",
-        "Retargets Shirk to the other tank if there is one.", Job.ADV)]
+    [CustomComboInfo("Tank: [Shirk] Retargeting",
+        "Retargets [Shirk] to the other tank if there is one.", Job.ADV)]
     [Retargeted(RoleActions.Tank.Shirk)]
     ALL_Tank_ShirkRetargeting = 100002,
 
     [Role(JobRole.Tank)]
     [ParentCombo(ALL_Tank_ShirkRetargeting)]
     [CustomComboInfo("Use Healers instead",
-        "Will Retarget Shirk to healers, instead of the other tank.\nOnly recommended during some specific enrages.", Job.ADV)]
+        "Will Retarget [Shirk] to healers, instead of the other tank.\nOnly recommended during some specific enrages.", Job.ADV)]
     [Retargeted]
     ALL_Tank_ShirkRetargeting_Healer = 100003,
 
     [Role(JobRole.Tank)]
     [ParentCombo(ALL_Tank_ShirkRetargeting)]
     [CustomComboInfo("Fallback to Any Support",
-        "Will Retarget Shirk to tanks or healers, per your setting above, but will include a fallback to any tank OR healer if none of your setting is found.\nUseful to help your Shirk always go to *someone* even if your chosen players are not alive.", Job.ADV)]
+        "Will Retarget [Shirk] to tanks or healers, per your setting above, but will include a fallback to any tank OR healer if none of your setting is found.\nUseful to help your [Shirk] always go to *someone* even if your chosen players are not alive.", Job.ADV)]
     [Retargeted]
     ALL_Tank_ShirkRetargeting_Fallback = 100004,
 
@@ -88,26 +88,26 @@ public enum Preset
     [ReplaceSkill(AST.Ascend, WHM.Raise, SCH.Resurrection, SGE.Egeiro)]
     [ConflictingCombos(AST_Raise_Alternative, SCH_Raise, SGE_Raise, WHM_Raise)]
     [ParentCombo(ALL_Healer_Menu)]
-    [CustomComboInfo("Healer: Raise Feature", "Changes the class' Raise Ability into Swiftcast.", Job.ADV)]
+    [CustomComboInfo("Healer: [Raise] Feature", "Changes the class' [Raise] Ability into [Swiftcast].", Job.ADV)]
     ALL_Healer_Raise = 100010,
 
     [ParentCombo(ALL_Healer_Raise)]
-    [CustomComboInfo("Retarget Raises", "Will Retarget the Raises affected here to your Heal Stack.", Job.ADV)]
+    [CustomComboInfo("Retarget [Raise]", "Will Retarget the [Raise] affected here to your Heal Stack.", Job.ADV)]
     [Retargeted(WHM.Raise, AST.Ascend, SGE.Egeiro, SCH.Resurrection)]
     ALL_Healer_Raise_Retarget = 100011,
 
     [Role(JobRole.Healer)]
     [ReplaceSkill(RoleActions.Healer.Esuna)]
     [ParentCombo(ALL_Healer_Menu)]
-    [CustomComboInfo("Healer: Esuna Retargeting",
-        "Retargets Esuna (outside of combo usage) to your Heal Stack, checking if each potential target in the stack has a cleansable debuff.", Job.ADV)]
+    [CustomComboInfo("Healer: [Esuna] Retargeting",
+        "Retargets [Esuna] (outside of combo usage) to your Heal Stack, checking if each potential target in the stack has a cleansable debuff.", Job.ADV)]
     [Retargeted(RoleActions.Healer.Esuna)]
     ALL_Healer_EsunaRetargeting = 100012,
 
     [Role(JobRole.Healer)]
     [ReplaceSkill(RoleActions.Healer.Rescue)]
     [ParentCombo(ALL_Healer_Menu)]
-    [CustomComboInfo("Healer: Rescue Retargeting", "Retargets Rescue (outside of combo usage) to UI Mouseover and additional options.", Job.ADV)]
+    [CustomComboInfo("Healer: [Rescue] Retargeting", "Retargets [Rescue] (outside of combo usage) to UI Mouseover and additional options.", Job.ADV)]
     [Retargeted(RoleActions.Healer.Rescue)]
     ALL_Healer_RescueRetargeting = 100013,
     #endregion
@@ -123,21 +123,21 @@ public enum Preset
     [Role(JobRole.MagicalDPS)]
     [ReplaceSkill(RoleActions.Caster.Addle)]
     [ParentCombo(ALL_Caster_Menu)]
-    [CustomComboInfo("Magical Ranged DPS: Double Addle Protection",
-        "Prevents the use of Addle when target already has the effect by replacing it with Savage Blade.", Job.ADV)]
+    [CustomComboInfo("Magical Ranged DPS: Double [Addle] Protection",
+        "Prevents the use of [Addle] when target already has the effect by replacing it with [Savage Blade].", Job.ADV)]
     ALL_Caster_Addle = 100020,
 
     [Role(JobRole.MagicalDPS)]
     [ReplaceSkill(RDM.Verraise, SMN.Resurrection, BLU.AngelWhisper)]
     [ConflictingCombos(SMN_Raise, RDM_Raise)]
     [ParentCombo(ALL_Caster_Menu)]
-    [CustomComboInfo("Magical Ranged DPS: Raise Feature",
-        "Changes the class' Raise Ability into Swiftcast. Red Mage will also show VerCure if Swiftcast is on cooldown.",
+    [CustomComboInfo("Magical Ranged DPS: [Raise] Feature",
+        "Changes the class' [Raise] Ability into [Swiftcast]. Red Mage will also show [VerCure] if [Swiftcast] is on cooldown.",
         Job.ADV)]
     ALL_Caster_Raise = 100021,
 
     [ParentCombo(ALL_Caster_Raise)]
-    [CustomComboInfo("Retarget Raises", "Will Retarget the Raises affected here to your Heal Stack.", Job.ADV)]
+    [CustomComboInfo("Retarget [Raise]", "Will Retarget the [Raise] affected here to your Heal Stack.", Job.ADV)]
     [Retargeted(BLU.AngelWhisper, RDM.Verraise, SMN.Resurrection)]
     ALL_Caster_Raise_Retarget = 100022,
 
@@ -154,15 +154,15 @@ public enum Preset
     [Role(JobRole.MeleeDPS)]
     [ReplaceSkill(RoleActions.Melee.Feint)]
     [ParentCombo(ALL_Melee_Menu)]
-    [CustomComboInfo("Melee DPS: Double Feint Protection",
-        "Prevents the use of Feint when target already has the effect by replacing it with Savage Blade.", Job.ADV)]
+    [CustomComboInfo("Melee DPS: Double [Feint] Protection",
+        "Prevents the use of [Feint] when target already has the effect by replacing it with [Savage Blade].", Job.ADV)]
     ALL_Melee_Feint = 100030,
 
     [Role(JobRole.MeleeDPS)]
     [ReplaceSkill(RoleActions.Melee.TrueNorth)]
     [ParentCombo(ALL_Melee_Menu)]
-    [CustomComboInfo("Melee DPS: True North Protection",
-        "Prevents the use of True North when its buff is already active by replacing it with Savage Blade.", Job.ADV)]
+    [CustomComboInfo("Melee DPS: [True North] Protection",
+        "Prevents the use of [True North] when its buff is already active by replacing it with [Savage Blade].", Job.ADV)]
     ALL_Melee_TrueNorth = 100031,
 
     #endregion
@@ -179,7 +179,7 @@ public enum Preset
     [ReplaceSkill(MCH.Tactician, BRD.Troubadour, DNC.ShieldSamba)]
     [ParentCombo(ALL_Ranged_Menu)]
     [CustomComboInfo("Physical Ranged DPS: Double Mitigation Protection",
-        "Prevents the use of Tactician/Troubadour/Shield Samba when target already has one of those three effects by replacing them with Savage Blade.",
+        "Prevents the use of [Tactician]/[Troubadour]/[Shield Samba] when target already has one of those three effects by replacing them with [Savage Blade].",
         Job.ADV)]
     ALL_Ranged_Mitigation = 100040,
 
@@ -187,7 +187,7 @@ public enum Preset
     [ReplaceSkill(RoleActions.PhysRanged.FootGraze)]
     [ParentCombo(ALL_Ranged_Menu)]
     [CustomComboInfo("Physical Ranged DPS: Ranged Interrupt Feature",
-        "Replaces Foot Graze with Head Graze when target can be interrupted.", Job.ADV)]
+        "Replaces [Foot Graze] with [Head Graze] when target can be interrupted.", Job.ADV)]
     ALL_Ranged_Interrupt = 100041,
 
     #endregion
@@ -210,192 +210,192 @@ public enum Preset
     #region Tank
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Focus", "Use Lost Focus when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Focus]", "Use [Lost Focus] when available.", Job.ADV)]
     Bozja_Tank_LostFocus = 210001,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Font of Power", "Use Lost Font of Power when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Font of Power]", "Use [Lost Font of Power] when available.", Job.ADV)]
     Bozja_Tank_LostFontOfPower = 210002,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Slash", "Use Lost Slash when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Slash]", "Use [Lost Slash] when available.", Job.ADV)]
     Bozja_Tank_LostSlash = 210003,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Death", "Use Lost Death when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Death]", "Use [Lost Death] when available.", Job.ADV)]
     Bozja_Tank_LostDeath = 210004,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Banner of Noble Ends", "Use Banner of Noble Ends when available.", Job.ADV)]
+    [CustomComboInfo("[Banner of Noble Ends]", "Use [Banner of Noble Ends] when available.", Job.ADV)]
     Bozja_Tank_BannerOfNobleEnds = 210005,
 
     [Bozja]
     [ParentCombo(Bozja_Tank_BannerOfNobleEnds)]
-    [CustomComboInfo("Only with 'Lost Font of Power'", "Use Banner of Noble Ends only when under Lost Font of Power.", Job.ADV)]
+    [CustomComboInfo("Only with '[Lost Font of Power]'", "Use [Banner of Noble Ends] only when under [Lost Font of Power].", Job.ADV)]
     Bozja_Tank_PowerEnds = 210006,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Banner of Honored Sacrifice", "Use Banner of Honored Sacrifice when available.", Job.ADV)]
+    [CustomComboInfo("[Banner of Honored Sacrifice]", "Use [Banner of Honored Sacrifice] when available.", Job.ADV)]
     Bozja_Tank_BannerOfHonoredSacrifice = 210007,
 
     [Bozja]
     [ParentCombo(Bozja_Tank_BannerOfHonoredSacrifice)]
-    [CustomComboInfo("Only with 'Lost Font of Power'", "Use Banner of Honored Sacrifice only when under Lost Font of Power.", Job.ADV)]
+    [CustomComboInfo("Only with '[Lost Font of Power]'", "Use [Banner of Honored Sacrifice] only when under [Lost Font of Power].", Job.ADV)]
     Bozja_Tank_PowerSacrifice = 210008,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Banner of Honed Acuity", "Use Banner of Honed Acuity when available.", Job.ADV)]
+    [CustomComboInfo("[Banner of Honed Acuity]", "Use [Banner of Honed Acuity] when available.", Job.ADV)]
     Bozja_Tank_BannerOfHonedAcuity = 210009,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Fair Trade", "Use Lost Fair Trade when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Fair Trade]", "Use [Lost Fair Trade] when available.", Job.ADV)]
     Bozja_Tank_LostFairTrade = 210010,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Assassination", "Use Lost Assassination when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Assassination]", "Use [Lost Assassination] when available.", Job.ADV)]
     Bozja_Tank_LostAssassination = 210011,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Manawall", "Use Lost Manawall when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Manawall]", "Use [Lost Manawall] when available.", Job.ADV)]
     Bozja_Tank_LostManawall = 210012,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Banner of Tireless Conviction", "Use Banner of Tireless Conviction when available.", Job.ADV)]
+    [CustomComboInfo("[Banner of Tireless Conviction]", "Use [Banner of Tireless Conviction] when available.", Job.ADV)]
     Bozja_Tank_BannerOfTirelessConviction = 210013,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Blood Rage", "Use Lost Blood Rage when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Blood Rage]", "Use [Lost Blood Rage] when available.", Job.ADV)]
     Bozja_Tank_LostBloodRage = 210014,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Banner of Solemn Clarity", "Use Banner of Solemn Clarity when available.", Job.ADV)]
+    [CustomComboInfo("[Banner of Solemn Clarity]", "Use [Banner of Solemn Clarity] when available.", Job.ADV)]
     Bozja_Tank_BannerOfSolemnClarity = 210015,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Cure", "Use Lost Cure when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Cure]", "Use [Lost Cure] when available.", Job.ADV)]
     Bozja_Tank_LostCure = 210016,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Cure II", "Use Lost Cure II when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Cure II]", "Use [Lost Cure II] when available.", Job.ADV)]
     Bozja_Tank_LostCure2 = 210017,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Cure III", "Use Lost Cure III when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Cure III]", "Use [Lost Cure III] when available.", Job.ADV)]
     Bozja_Tank_LostCure3 = 210018,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Cure IV", "Use Lost Cure IV when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Cure IV]", "Use [Lost Cure IV] when available.", Job.ADV)]
     Bozja_Tank_LostCure4 = 210019,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Arise", "Use Lost Arise when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Arise]", "Use [Lost Arise] when available.", Job.ADV)]
     Bozja_Tank_LostArise = 210020,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Sacrifice", "Use Lost Sacrifice when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Sacrifice]", "Use [Lost Sacrifice] when available.", Job.ADV)]
     Bozja_Tank_LostSacrifice = 210021,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Reraise", "Use Lost Reraise when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Reraise]", "Use [Lost Reraise] when available.", Job.ADV)]
     Bozja_Tank_LostReraise = 210022,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Spellforge", "Use Lost Spellforge when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Spellforge]", "Use [Lost Spellforge] when available.", Job.ADV)]
     Bozja_Tank_LostSpellforge = 210023,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Steel Sting", "Use Lost Steel Sting when available.", Job.ADV)]
+    [CustomComboInfo("[Lost SteelSting]", "Use [Lost SteelSting] when available.", Job.ADV)]
     Bozja_Tank_LostSteelsting = 210024,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Protect", "Use Lost Protect when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Protect]", "Use [Lost Protect] when available.", Job.ADV)]
     Bozja_Tank_LostProtect = 210025,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Shell", "Use Lost Shell when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Shell]", "Use [Lost Shell] when available.", Job.ADV)]
     Bozja_Tank_LostShell = 210026,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Reflect", "Use Lost Reflect when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Reflect]", "Use [Lost Reflect] when available.", Job.ADV)]
     Bozja_Tank_LostReflect = 210027,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Bravery", "Use Lost Bravery when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Bravery]", "Use [Lost Bravery] when available.", Job.ADV)]
     Bozja_Tank_LostBravery = 210028,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Aethershield", "Use Lost Aether Shield when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Aethershield]", "Use [Lost AetherShield] when available.", Job.ADV)]
     Bozja_Tank_LostAethershield = 210029,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Protect II", "Use Lost Protect II when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Protect II]", "Use [Lost Protect II] when available.", Job.ADV)]
     Bozja_Tank_LostProtect2 = 210030,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Shell II", "Use Lost Shell II when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Shell II]", "Use [Lost Shell II] when available.", Job.ADV)]
     Bozja_Tank_LostShell2 = 210031,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Bubble", "Use Lost Bubble when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Bubble]", "Use [Lost Bubble] when available.", Job.ADV)]
     Bozja_Tank_LostBubble = 210032,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Stealth", "Use Lost Stealth when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Stealth]", "Use [Lost Stealth] when available.", Job.ADV)]
     Bozja_Tank_LostStealth = 210033,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Swift", "Use Lost Swift when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Swift]", "Use [Lost Swift] when available.", Job.ADV)]
     Bozja_Tank_LostSwift = 210034,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Font of Skill", "Use Lost Font of Skill when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Font of Skill]", "Use [Lost Font of Skill] when available.", Job.ADV)]
     Bozja_Tank_LostFontOfSkill = 210035,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Impetus", "Use Lost Impetus when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Impetus]", "Use [Lost Impetus] when available.", Job.ADV)]
     Bozja_Tank_LostImpetus = 210036,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Paralyze III", "Use Lost Paralyze III when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Paralyze III]", "Use [Lost Paralyze III] when available.", Job.ADV)]
     Bozja_Tank_LostParalyze3 = 210037,
 
     [Bozja]
     [ParentCombo(Bozja_Tank)]
-    [CustomComboInfo("Lost Rampage", "Use Lost Rampage when available.", Job.ADV)]
+    [CustomComboInfo("[Lost Rampage]", "Use [Lost Rampage] when available.", Job.ADV)]
     Bozja_Tank_LostRampage = 210038,
     #endregion
 
@@ -1502,14 +1502,14 @@ public enum Preset
     [AutoAction(false, false)]
     [ReplaceSkill(BLM.Fire)]
     [ConflictingCombos(BLM_ST_AdvancedMode, BLM_Fire1and3, BLM_F1toF4)]
-    [CustomComboInfo("Simple Mode - Single Target", "Replaces Fire with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", Job.BLM)]
+    [CustomComboInfo("Simple Mode - Single Target", "Replaces [Fire] with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", Job.BLM)]
     [SimpleCombo]
     BLM_ST_SimpleMode = 2001,
 
     [AutoAction(true, false)]
     [ReplaceSkill(BLM.Blizzard2, BLM.HighBlizzard2)]
     [ConflictingCombos(BLM_AoE_AdvancedMode)]
-    [CustomComboInfo("Simple Mode - AoE", "Replaces Blizzard II with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", Job.BLM)]
+    [CustomComboInfo("Simple Mode - AoE", "Replaces [Blizzard II] with a full one-button AoE rotation.\nThis is the ideal option for newcomers to the job.", Job.BLM)]
     [SimpleCombo]
     BLM_AoE_SimpleMode = 2002,
 

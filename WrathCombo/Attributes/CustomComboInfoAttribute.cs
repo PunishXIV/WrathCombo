@@ -1,7 +1,13 @@
+using ECommons.DalamudServices;
 using ECommons.ExcelServices;
+using Lumina.Excel.Sheets;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using WrathCombo.Extensions;
+using static FFXIVClientStructs.FFXIV.Client.Graphics.Kernel.VertexShader;
 using ECommonsJob = ECommons.ExcelServices.Job;
 
 namespace WrathCombo.Attributes;
@@ -19,8 +25,8 @@ internal class CustomComboInfoAttribute : Attribute
     //// <param name="memeDescription"> Meme description. </param>
     internal CustomComboInfoAttribute(string name, string description, Job job, [CallerLineNumber] int order = 0)
     {
-        Name = name;
-        Description = description;
+        Name = UpdateDescription(name);
+        Description = UpdateDescription(description);
         Job = job switch
         {
             Job.BTN or Job.MIN or Job.FSH => Job.MIN,
@@ -49,4 +55,32 @@ internal class CustomComboInfoAttribute : Attribute
 
     /// <summary> Gets the job shorthand. </summary>
     public string JobShorthand => Job.Shorthand();
+
+    private string UpdateDescription(string description)
+    {
+        if (!description.Contains("[") || !description.Contains("]"))
+            return description;
+
+        List<string> actions = new();
+        var matches = Regex.Matches(description, @"\[(.*?)\]");
+
+        foreach (Match match in matches)
+        {
+            actions.Add(match.Groups[1].Value);
+        }
+
+        foreach (var act in actions)
+        {
+            if (Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Action>(Dalamud.Game.ClientLanguage.English).FindFirst(x => x.Name.ExtractText().Equals(act, StringComparison.InvariantCultureIgnoreCase), out var a))
+            {
+                var translatedAct = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Action>(Svc.ClientState.ClientLanguage).GetRow(a.RowId).Name;
+                description = Regex.Replace(
+                    description,
+                    $@"\[{Regex.Escape(act)}\]",
+                    translatedAct.ExtractText());
+            }
+        }
+
+        return description;
+    }
 }
