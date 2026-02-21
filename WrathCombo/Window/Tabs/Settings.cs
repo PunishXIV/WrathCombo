@@ -17,6 +17,7 @@ using WrathCombo.Data.Conflicts;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using Setting = WrathCombo.Window.Functions.Setting;
+using static WrathCombo.Window.Text;
 
 #endregion
 
@@ -68,15 +69,15 @@ internal class Settings : ConfigWindow
         .ToList();
 
     #endregion
-    
+
     internal new static void Draw()
     {
         using (ImRaii.Child("main", new Vector2(0, 0), true))
         {
             ImGui.Text("This tab allows you to customise global settings for Wrath Combo.");
-            
+
             DrawSearchBar();
-            
+
             _currentCategory = null;
             _settingCount   = 0;
             _drawnCollapseGroups = [];
@@ -98,14 +99,14 @@ internal class Settings : ConfigWindow
                 // Draw collapsible group only once
                 if (setting.CollapsibleGroupName is not null)
                     DrawCollapseGroup(setting.CollapsibleGroupName);
-                
+
                 // Draw normally
                 else
                     DrawSetting(setting);
             }
 
             #region Debug File Button
-        
+
             if (!IsSearching)
             {
                 if (ImGui.Button("Create Debug File"))
@@ -396,7 +397,7 @@ internal class Settings : ConfigWindow
         #endregion
 
         #region Un-Disable
-        
+
         if (disabled)
             ImGui.EndDisabled();
 
@@ -494,14 +495,14 @@ internal class Settings : ConfigWindow
         #region Setup Collapse
 
         var collapsedHeight = ImGui.CalcTextSize("I").Y + 5f.Scale();
-        
+
         UnCollapsedGroup.TryAdd(groupName, false);
         UnCollapsedGroupHeight.TryAdd(groupName, collapsedHeight);
-        
+
         var dynamicHeight = UnCollapsedGroup[groupName]
             ? UnCollapsedGroupHeight[groupName]
             : ImGui.CalcTextSize("I").Y + 5f.Scale();
-        
+
         ImGui.BeginChild($"##{groupName}",
             new Vector2(ImGui.CalcTextSize(groupName).X * 2.2f, dynamicHeight),
             false,
@@ -515,13 +516,13 @@ internal class Settings : ConfigWindow
         if (UnCollapsedGroup[groupName])
         {
             ImGui.BeginGroup();
-            
+
             var settings = SettingsList
                 .Where(s => s.CollapsibleGroupName == groupName).ToList();
-            
+
             foreach (var setting in settings)
                 DrawSetting(setting);
-            
+
             ImGui.EndGroup();
             UnCollapsedGroupHeight[groupName] =
                 ImGui.GetItemRectSize().Y + collapsibleHeight + 5f.Scale();
@@ -548,8 +549,8 @@ internal class Settings : ConfigWindow
         if (!id)
             return;
 
-        var searchLabelText = "Search:";
-        var searchHintText = "Category name, Setting name, Internal Name, etc";
+        var searchLabelText = GetSettingsUIString("searchLabelText");
+        var searchHintText = GetSettingsUIString("searchHintText");
 
         var searchWidth = letterWidth * 30f + 4f.Scale();
 

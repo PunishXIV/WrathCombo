@@ -1,33 +1,43 @@
-using ECommons.ExcelServices;
+using ECommons.DalamudServices;
 using System;
 using System.Runtime.CompilerServices;
 using WrathCombo.Extensions;
+using static WrathCombo.Window.Text;
 using ECommonsJob = ECommons.ExcelServices.Job;
 
 namespace WrathCombo.Attributes;
 
-/// <summary> Attribute documenting additional information for each combo. </summary>
 [AttributeUsage(AttributeTargets.Field)]
 internal class CustomComboInfoAttribute : Attribute
 {
     /// <summary> Initializes a new instance of the <see cref="CustomComboInfoAttribute"/> class. </summary>
-    /// <param name="name"> Display name. </param>
-    /// <param name="description"> Combo description. </param>
     /// <param name="job"> Associated job ID. </param>
+    /// <param name="preset"> Preset enum value for localization keys. </param>
     /// <param name="order"> Display order. </param>
-    //// <param name="memeName"> Display meme name </param>
-    //// <param name="memeDescription"> Meme description. </param>
-    internal CustomComboInfoAttribute(string name, string description, Job job, [CallerLineNumber] int order = 0)
+    internal CustomComboInfoAttribute(
+        ECommonsJob job,
+        Preset preset,
+        [CallerLineNumber] int order = 0)
     {
-        Name = name;
-        Description = description;
+        _preset = preset;
+
+        Name = GetPresetString($"{_preset}_Name");
+        Description = GetPresetString($"{_preset}_Desc");
+
         Job = job switch
         {
-            Job.BTN or Job.MIN or Job.FSH => Job.MIN,
+            ECommonsJob.BTN or ECommonsJob.MIN or ECommonsJob.FSH => ECommonsJob.MIN,
             _ => job
         };
+
         Order = order;
+        Role = RoleAttribute.GetRoleFromJob(Job);
+        JobName = Job.Name();
+        JobShorthand = Job.Shorthand();
     }
+
+    // Preset enum value for localization keys
+    private readonly Preset _preset;
 
     /// <summary> Gets the display name. </summary>
     public string Name { get; }
@@ -35,18 +45,18 @@ internal class CustomComboInfoAttribute : Attribute
     /// <summary> Gets the description. </summary>
     public string Description { get; }
 
-    /// <summary> Gets the job enum. </summary>
+    /// <summary> Associated job ID (with gathering jobs mapped to MIN). </summary>
     public ECommonsJob Job { get; }
 
-    /// <summary> Gets the display order. </summary>
+    /// <summary> Display order (auto-filled via CallerLineNumber). </summary>
     public int Order { get; }
 
     /// <summary> Gets the job role. </summary>
-    public JobRole Role => RoleAttribute.GetRoleFromJob(Job);
+    public JobRole Role { get; }
 
     /// <summary> Gets the job name. </summary>
-    public string JobName => Job.Name();
+    public string JobName { get; }
 
     /// <summary> Gets the job shorthand. </summary>
-    public string JobShorthand => Job.Shorthand();
+    public string JobShorthand { get; }
 }

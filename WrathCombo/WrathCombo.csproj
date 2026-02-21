@@ -131,6 +131,28 @@
         </Reference>
 
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Resources\Localization\CustomComboPresets.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CustomComboPresets.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\Menu_Settings.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Menu_Settings.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Localization\CustomComboPresets.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CustomComboPresets.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\Menu_Settings.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Menu_Settings.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
 
     <!-- Release Manifest -->
     <ItemGroup>
