@@ -687,7 +687,7 @@ internal partial class OccultCrescent
             actionID = Finisher;
             return true;
         }
-        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Defend, Defend))
+        if (IsEnabledAndUsable(Preset.Phantom_Gladiator_Defend, Defend) && InCombat())
         {
             actionID = Defend;
             return true;

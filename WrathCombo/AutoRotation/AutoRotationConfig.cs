@@ -29,7 +29,7 @@ public class DPSSettings
     public bool PreferNonCombat = false;
     public bool OnlyAttackInCombat = false;
     public bool DPSAlwaysHardTarget = false;
-    public float MaxDistance = 25;
+    public float MaxDistance = 30;
     public bool IgnoreRangeInBoss = true;
     public bool AoEIgnoreManual = false;
     public bool UnTargetAndDisableForPenalty = false;

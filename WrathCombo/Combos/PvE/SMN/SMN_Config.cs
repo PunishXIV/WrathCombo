@@ -11,6 +11,7 @@ internal partial class SMN
         #region Options
         public static UserInt
             SMN_ST_Simple_Combo_Gapclose = new("SMN_ST_Simple_Combo_Gapclose"),
+            SMN_AoE_Simple_Combo_Gapclose = new("SMN_AoE_Simple_Combo_Gapclose"),
             
             SMN_ST_Advanced_Combo_AltMode = new("SMN_ST_Advanced_Combo_AltMode"),
             SMN_ST_Lucid = new("SMN_ST_Lucid", 8000),
@@ -40,6 +41,11 @@ internal partial class SMN
                 case Preset.SMN_ST_Simple_Combo:
                     DrawHorizontalRadioButton(SMN_ST_Simple_Combo_Gapclose, "Safe Mode (Will not gap close)", "Will only use Crimson Cyclone when in Melee Range", 0);
                     DrawHorizontalRadioButton(SMN_ST_Simple_Combo_Gapclose, "Standard Rotation", "Will gap close with Crimson Cyclone.", 1 );
+                    break;
+                
+                case Preset.SMN_AoE_Simple_Combo:
+                    DrawHorizontalRadioButton(SMN_AoE_Simple_Combo_Gapclose, "Safe Mode (Will not gap close)", "Will only use Crimson Cyclone when in Melee Range", 0);
+                    DrawHorizontalRadioButton(SMN_AoE_Simple_Combo_Gapclose, "Standard Rotation", "Will gap close with Crimson Cyclone.", 1 );
                     break;
                     
                 case Preset.SMN_ST_Advanced_Combo:

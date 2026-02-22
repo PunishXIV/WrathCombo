@@ -32,9 +32,9 @@ internal partial class MNK
                     DrawBossOnlyChoice(MNK_Balance_Content);
                     break;
 
-                case Preset.MNK_STUseBuffs:
+                case Preset.MNK_STUseBrotherhood:
 
-                    DrawSliderInt(0, 50, MNK_ST_BuffsHPThreshold,
+                    DrawSliderInt(0, 50, MNK_ST_BHHPThreshold,
                         "Stop using at Enemy HP %. Set to Zero to disable this check.");
 
                     ImGui.Indent();
@@ -42,10 +42,48 @@ internal partial class MNK
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         "Select what kind of enemies the HP check should be applied to:");
 
-                    DrawHorizontalRadioButton(MNK_ST_BuffsBossOption,
+                    DrawHorizontalRadioButton(MNK_ST_BHBossOption,
                         "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
 
-                    DrawHorizontalRadioButton(MNK_ST_BuffsBossOption,
+                    DrawHorizontalRadioButton(MNK_ST_BHBossOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+                    ImGui.Unindent();
+                    break;
+
+                case Preset.MNK_STUseROF:
+
+                    DrawSliderInt(0, 50, MNK_ST_RoFHPThreshold,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow,
+                        "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(MNK_ST_RoFBossOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+
+                    DrawHorizontalRadioButton(MNK_ST_RoFBossOption,
+                        "All Enemies", "Applies the HP check above to all enemies.", 1);
+
+                    ImGui.Unindent();
+                    break;
+
+                case Preset.MNK_STUseROW:
+
+                    DrawSliderInt(0, 50, MNK_ST_RoWHPThreshold,
+                        "Stop using at Enemy HP %. Set to Zero to disable this check.");
+
+                    ImGui.Indent();
+
+                    ImGui.TextColored(ImGuiColors.DalamudYellow,
+                        "Select what kind of enemies the HP check should be applied to:");
+
+                    DrawHorizontalRadioButton(MNK_ST_RoWBossOption,
+                        "Non-Bosses", "Only applies the HP check above to non-bosses.", 0);
+
+                    DrawHorizontalRadioButton(MNK_ST_RoWBossOption,
                         "All Enemies", "Applies the HP check above to all enemies.", 1);
 
                     ImGui.Unindent();
@@ -116,13 +154,13 @@ internal partial class MNK
 
                 case Preset.MNK_Basic_BeastChakras:
                     DrawHorizontalMultiChoice(MNK_BasicCombo,
-                        "Opo-opo Option", "Replace Bootshine / Leaping Opo with Dragon Kick.", 3, 0);
+                        "Opo-opo Option", "Replace Dragon Kick with Bootshine / Leaping Opo.", 3, 0);
 
                     DrawHorizontalMultiChoice(MNK_BasicCombo,
-                        "Raptor Option", "Replace True Strike/Rising Raptor with Twin Snakes.", 3, 1);
+                        "Raptor Option", "Replace Twin Snakes with True Strike/Rising Raptor.", 3, 1);
 
                     DrawHorizontalMultiChoice(MNK_BasicCombo,
-                        "Coeurl Option", "Replace Snap Punch/Pouncing Coeurl with Demolish.", 3, 2);
+                        "Coeurl Option", "Replace Demolish with Snap Punch/Pouncing Coeurl.", 3, 2);
                     break;
 
                   #endregion
@@ -137,8 +175,12 @@ internal partial class MNK
             MNK_SelectedOpener = new("MNK_SelectedOpener"),
             MNK_OpenerCountdown = new("MNK_OpenerCountdown"),
             MNK_Balance_Content = new("MNK_Balance_Content", 1),
-            MNK_ST_BuffsBossOption = new("MNK_ST_BuffsBossOption"),
-            MNK_ST_BuffsHPThreshold = new("MNK_ST_BuffsHPThreshold", 25),
+            MNK_ST_BHBossOption = new("MNK_ST_BHBossOption"),
+            MNK_ST_BHHPThreshold = new("MNK_ST_BHHPThreshold", 25),
+            MNK_ST_RoFBossOption = new("MNK_ST_RoFBossOption"),
+            MNK_ST_RoFHPThreshold = new("MNK_ST_RoFHPThreshold", 25),
+            MNK_ST_RoWBossOption = new("MNK_ST_RoWBossOption"),
+            MNK_ST_RoWHPThreshold = new("MNK_ST_RoWHPThreshold", 25),
             MNK_ManualTN = new("MNK_ManualTN"),
             MNK_ST_EarthsReplyHPThreshold = new("MNK_ST_EarthsReplyHPThreshold", 25),
             MNK_ST_SecondWindHPThreshold = new("MNK_ST_SecondWindHPThreshold", 40),

@@ -443,7 +443,6 @@ public static class DebugFile
 
                 var displayValue = property switch
                 {
-                    "InterruptDelay" => $"{(float)value * 100}",
                     "CustomHealStack" => Service.Configuration.UseCustomHealStack
                         .DisplayStack(separator: " > "),
                     "RaiseStack" => ((string[])value).StackString(" > ", true),

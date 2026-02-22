@@ -207,7 +207,7 @@ public class ContentCheck
     {
         get
         {
-            if (!EZ.Throttle("contentCheckInFieldOperations", TS.FromSeconds(5)))
+            if (!EZ.Throttle("contentCheckInFieldRaids", TS.FromSeconds(5)))
                 return field;
 
             field = Content.ContentType is ContentType.FieldRaid;

@@ -154,7 +154,7 @@ instead of requiring the player to stop before choosing to cast.
 2. Check "Enable Orbwalker Integration".
 3. Open Orbwalker and confirm your settings: `/orbwalker`.
 
-### [AutoDuty](https://github.com/ffxivcode/AutoDuty)
+### [AutoDuty](https://github.com/erdelf/AutoDuty)
 
 Wrath Combo can be used as the Rotation Engine for AutoDuty, such that Wrath Combo's
 Auto-Rotation will be used during duties.
@@ -165,7 +165,7 @@ To enable this:
 4. (Also check "> Wrath Config Options <" -> "Auto setup jobs for autorotation")\
    (if you already have your jobs setup, you can skip this step)
 
-### [Questionable](https://git.carvel.li/liza/Questionable)
+### [Questionable](https://puni.sh/plugin/questionable)
 
 Wrath Combo can be used as the Combat Module for Questionable, such that Wrath 
 Combo's Auto-Rotation will be employed during questing.

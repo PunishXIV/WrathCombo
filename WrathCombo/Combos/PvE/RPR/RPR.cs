@@ -267,7 +267,7 @@ internal partial class RPR : Melee
 
             //RPR Opener
             if (IsEnabled(Preset.RPR_ST_Opener) &&
-                Opener().FullOpener(ref actionID))
+                Opener().FullOpener(ref actionID) && HasBattleTarget())
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))

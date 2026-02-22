@@ -149,7 +149,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara { IsCasting: true } chara || !chara.IsCastInterruptible)
             return false;
 
-        float minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 1f);
+        float minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 100f) / 100f;
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }
@@ -216,7 +216,7 @@ internal abstract partial class CustomComboFunctions
             JustUsedOn(PLD.ShieldBash, target))
             return false;
 
-        var minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 1f);
+        var minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 100f) / 100f;
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }

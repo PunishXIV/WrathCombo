@@ -148,19 +148,19 @@ internal partial class BLM
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast)),
 
-        //Scathe
-        (Scathe, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[4] &&
-                  ActionReady(Scathe) &&
-                  !HasStatusEffect(Buffs.Triplecast) &&
-                  !HasStatusEffect(Role.Buffs.Swiftcast)),
-
         // Firestarter
         (Fire3, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[5] &&
+            () => BLM_ST_MovementOption[4] &&
                   ActionReady(Fire3) &&
                   FirePhase &&
                   HasStatusEffect(Buffs.Firestarter) &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+
+        //Scathe
+        (Scathe, Preset.BLM_ST_Movement,
+            () => BLM_ST_MovementOption[5] &&
+                  ActionReady(Scathe) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast))
     ];

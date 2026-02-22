@@ -627,10 +627,10 @@ public enum Preset
     [CustomComboInfo("Occult Resuscitation", "Adds Occult Resuscitation into the rotation.", Job.ADV)]
     Phantom_Freelancer_OccultResuscitation = 110001,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Freelancer)]
-    [CustomComboInfo("Occult Treasuresight", "Adds Occult Treasuresight into the rotation.", Job.ADV)]
-    Phantom_Freelancer_OccultTreasuresight = 110002,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Freelancer)]
+    //[CustomComboInfo("Occult Treasuresight", "Adds Occult Treasuresight into the rotation.", Job.ADV)]
+    //Phantom_Freelancer_OccultTreasuresight = 110002,
 
     [OccultCrescent(OccultCrescent.JobIDs.Knight)]
     [CustomComboInfo("Knight Job Actions", "Enable this to add Knight-specific actions into the rotation.", Job.ADV)]
@@ -699,10 +699,10 @@ public enum Preset
     [CustomComboInfo("Vigilance", "Adds Vigilance into the rotation.", Job.ADV)]
     Phantom_Thief_Vigilance = 110016,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Thief)]
-    [CustomComboInfo("Trap Detection", "Adds Trap Detection into the rotation.", Job.ADV)]
-    Phantom_Thief_TrapDetection = 110017,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Thief)]
+    //[CustomComboInfo("Trap Detection", "Adds Trap Detection into the rotation.", Job.ADV)]
+    //Phantom_Thief_TrapDetection = 110017,
 
     [OccultCrescent]
     [ParentCombo(Phantom_Thief)]
@@ -756,15 +756,15 @@ public enum Preset
     [CustomComboInfo("Phantom Aim", "Adds Phantom Aim into the rotation.", Job.ADV)]
     Phantom_Ranger_PhantomAim = 110023,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Ranger)]
-    [CustomComboInfo("Occult Featherfoot", "Adds Occult Featherfoot into the rotation.", Job.ADV)]
-    Phantom_Ranger_OccultFeatherfoot = 110024,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Ranger)]
+    //[CustomComboInfo("Occult Featherfoot", "Adds Occult Featherfoot into the rotation.", Job.ADV)]
+    //Phantom_Ranger_OccultFeatherfoot = 110024,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Ranger)]
-    [CustomComboInfo("Occult Falcon", "Adds Occult Falcon into the rotation.", Job.ADV)]
-    Phantom_Ranger_OccultFalcon = 110025,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Ranger)]
+    //[CustomComboInfo("Occult Falcon", "Adds Occult Falcon into the rotation.", Job.ADV)]
+    //Phantom_Ranger_OccultFalcon = 110025,
 
     [OccultCrescent]
     [ParentCombo(Phantom_Ranger)]
@@ -882,25 +882,25 @@ public enum Preset
     [CustomComboInfo("Starfall", "Adds Starfall into the rotation.", Job.ADV)]
     Phantom_Oracle_Starfall = 110048,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Oracle)]
-    [CustomComboInfo("Recuperation", "Adds Recuperation into the rotation.", Job.ADV)]
-    Phantom_Oracle_Recuperation = 110049,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Oracle)]
+    //[CustomComboInfo("Recuperation", "Adds Recuperation into the rotation.", Job.ADV)]
+    //Phantom_Oracle_Recuperation = 110049,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Oracle)]
-    [CustomComboInfo("Phantom Doom", "Adds Phantom Doom into the rotation.", Job.ADV)]
-    Phantom_Oracle_PhantomDoom = 110050,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Oracle)]
+    //[CustomComboInfo("Phantom Doom", "Adds Phantom Doom into the rotation.", Job.ADV)]
+    //Phantom_Oracle_PhantomDoom = 110050,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Oracle)]
-    [CustomComboInfo("Phantom Rejuvenation", "Adds Phantom Rejuvenation into the rotation.", Job.ADV)]
-    Phantom_Oracle_PhantomRejuvenation = 110051,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Oracle)]
+    //[CustomComboInfo("Phantom Rejuvenation", "Adds Phantom Rejuvenation into the rotation.", Job.ADV)]
+    //Phantom_Oracle_PhantomRejuvenation = 110051,
 
-    [OccultCrescent]
-    [ParentCombo(Phantom_Oracle)]
-    [CustomComboInfo("Invulnerability", "Adds Invulnerability into the rotation.", Job.ADV)]
-    Phantom_Oracle_Invulnerability = 110052,
+    //[OccultCrescent]
+    //[ParentCombo(Phantom_Oracle)]
+    //[CustomComboInfo("Invulnerability", "Adds Invulnerability into the rotation.", Job.ADV)]
+    //Phantom_Oracle_Invulnerability = 110052,
 
     [OccultCrescent(OccultCrescent.JobIDs.Cannoneer)]
     [CustomComboInfo("Cannoneer Job Actions", "Enable this to add Cannoneer-specific actions into the rotation.", Job.ADV)]
@@ -4045,7 +4045,7 @@ public enum Preset
 
     [AutoAction(false, false)]
     [ReplaceSkill(MNK.Bootshine, MNK.LeapingOpo)]
-    [ConflictingCombos(MNK_Basic_BeastChakras, MNK_ST_AdvancedMode)]
+    [ConflictingCombos(MNK_ST_AdvancedMode)]
     [CustomComboInfo("Simple Mode - Single Target", "Replaces Bootshine with a full one-button single target rotation.\nThis is the ideal option for newcomers to the job.", Job.MNK)]
     [SimpleCombo]
     MNK_ST_SimpleMode = 9004,
@@ -4063,7 +4063,7 @@ public enum Preset
 
     [AutoAction(false, false)]
     [ReplaceSkill(MNK.Bootshine, MNK.LeapingOpo)]
-    [ConflictingCombos(MNK_Basic_BeastChakras, MNK_ST_SimpleMode)]
+    [ConflictingCombos(MNK_ST_SimpleMode)]
     [CustomComboInfo("Advanced Mode - Single Target", "Replaces Bootshine with a full one-button single target rotation.\nThese features are ideal if you want to customize the rotation.", Job.MNK)]
     [AdvancedCombo]
     MNK_ST_AdvancedMode = 9005,
@@ -4207,7 +4207,6 @@ public enum Preset
 
     #region Basic Combo
 
-    [ConflictingCombos(MNK_ST_AdvancedMode, MNK_ST_SimpleMode)]
     [CustomComboInfo("Beast Chakra Handlers", "Merge single target GCDs which share the same beast chakra", Job.MNK)]
     MNK_Basic_BeastChakras = 9019,
 
@@ -7211,8 +7210,10 @@ public enum Preset
     SMN_ST_Advanced_Combo_EgiSummons_Attacks = 17004,
 
     [ParentCombo(SMN_ST_Advanced_Combo_EgiSummons_Attacks)]
-    [CustomComboInfo("Use Ruin III instead of Emerald Ruin III when standing still between the levels of 54 and 72",
-        "Replaces Emerald Ruin III with Ruin III in the rotation when standing still and Ruin Mastery III is not active.",
+    [CustomComboInfo("Emerald Ruin III to Ruin III Option",
+        "Replaces Emerald Ruin III with Ruin III in the rotation when standing still and Ruin Mastery III is not active (54-72)." +
+        "\nIt is best, when using this, to set your Garuda to call last during those levels or it will not do other summons until you spend all garuda charges. " +
+        "\nIntended Mainly for 70 Ultimates where it would matter. (Not worth it for average use)",
         Job.SMN)]
     SMN_ST_Ruin3_Emerald_Ruin3 = 17067,
 
