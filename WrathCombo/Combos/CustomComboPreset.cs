@@ -8009,6 +8009,16 @@ public enum Preset
     [ReplaceSkill(WAR.NascentFlash)]
     [CustomComboInfo("Nascent Flash Feature", "Replace Nascent Flash with Raw intuition when level synced below 76.", Job.WAR)]
     WAR_NascentFlash = 18017,
+    
+    [ParentCombo(WAR_NascentFlash)]
+    [CustomComboInfo("Include MouseOver Target", "If mousing over an ally in the UI, will Retarget Nascent Flash onto them.", Job.WAR)]
+    [Retargeted]
+    WAR_NascentFlash_MO = 18154,
+
+    [ParentCombo(WAR_NascentFlash)]
+    [CustomComboInfo("Include Target's Target", "If your target's target is not you or in your party, will Retarget Nascent Flash onto them.", Job.WAR)]
+    [Retargeted]
+    WAR_NascentFlash_TT = 18155,
 
     [ReplaceSkill(WAR.RawIntuition, WAR.Bloodwhetting)]
     [CustomComboInfo("Raw Intuition to Nascent Flash Retargeting Feature", "If available, will replace the Raw Intuition/Bloodwhetting with Nascent Flash if you are hard targeting an ally.", Job.WAR)]
@@ -8040,7 +8050,7 @@ public enum Preset
     WAR_RetargetHolmgang = 18130,
 
     #endregion
-    // Last value = 18153
+    // Last value = 18155
     #endregion
 
     #region WHITE MAGE

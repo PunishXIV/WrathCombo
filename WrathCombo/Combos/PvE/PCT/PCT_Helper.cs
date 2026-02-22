@@ -386,7 +386,7 @@ internal partial class PCT
         //Hammer Stamp Combo
         if (hammerStampComboEnabled && ActionReady(OriginalHook(HammerStamp)) &&
             !HasStatusEffect(Buffs.Hyperphantasia) && //Dont use until hyperfantasia is spent
-            ScenicCD >= 10 && 
+            (ScenicCD >= 10 || !LevelChecked(ScenicMuse)) &&  // Dont use if close to window. 
             (TargetIsBoss() && GetTargetHPPercent() < burnBossThreshold || //Burn Boss Threshold
              HasStatusEffect(Buffs.StarryMuse) || //Use in window
              GetStatusEffectRemainingTime(Buffs.HammerTime) <= TimeRemainingToUseHammer || //Use when time is almost up on Hammer time

@@ -1,16 +1,13 @@
 ﻿#region Dependencies
-
 using Dalamud.Game.ClientState.JobGauge.Types;
 using System;
 using System.Collections.Generic;
-using WrathCombo.Combos.PvE.Content;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.Combos.PvE.WAR.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
-
 #endregion
 
 namespace WrathCombo.Combos.PvE;
@@ -20,23 +17,18 @@ internal partial class WAR : Tank
     #region Variables
     internal static WARGauge Gauge = GetJobGauge<WARGauge>(); //WAR gauge
     internal static int BeastGauge => Gauge.BeastGauge;
-    internal static bool CanSpendBeastGauge(int gauge = 50, bool pooling = false) => LevelChecked(OriginalHook(InnerBeast)) && (HasIR.Stacks || (BeastGauge >= gauge || pooling));
-    internal static bool BurstPoolMinimum => BeastGauge >= 50 && IR.Cooldown is < 1 or > 40;
-    internal static bool STBurstPooling => BurstPoolMinimum && (IsEnabled(Preset.WAR_ST_Simple) || (IsEnabled(Preset.WAR_ST_Advanced) && WAR_ST_FellCleave_BurstPooling == 0));
-    internal static bool AoEBurstPooling => BurstPoolMinimum && (IsEnabled(Preset.WAR_AoE_Simple) || (IsEnabled(Preset.WAR_AoE_Advanced) && WAR_AoE_Decimate_BurstPooling == 0));
     internal static (float Cooldown, float Status, int Stacks) IR => (GetCooldownRemainingTime(OriginalHook(Berserk)), GetStatusEffectRemainingTime(Buffs.InnerReleaseBuff), GetStatusEffectStacks(Buffs.InnerReleaseStacks));
     internal static (float Status, int Stacks) BF => (GetStatusEffectRemainingTime(Buffs.BurgeoningFury), GetStatusEffectStacks(Buffs.BurgeoningFury));
     internal static (bool Status, bool Stacks) HasIR => (IR.Status > 0, IR.Stacks > 0 || HasStatusEffect(Buffs.InnerReleaseStacks));
     internal static (bool Status, bool Stacks) HasBF => (BF.Status > 0 || HasStatusEffect(Buffs.BurgeoningFury), (BF.Stacks > 0 || HasStatusEffect(Buffs.BurgeoningFury)));
-    internal static bool HasST => !LevelChecked(StormsEye) || HasStatusEffect(Buffs.SurgingTempest);
-    internal static bool HasNC => HasStatusEffect(Buffs.NascentChaos);
-    internal static bool HasWrath => HasStatusEffect(Buffs.Wrathful);
+    internal static bool HasSurgingTempest => !LevelChecked(StormsEye) || HasStatusEffect(Buffs.SurgingTempest);
+    internal static bool HasNascentChaos => HasStatusEffect(Buffs.NascentChaos);
+    internal static bool HasWrathful => HasStatusEffect(Buffs.Wrathful);
     internal static bool Minimal => InCombat() && HasBattleTarget();
     #endregion
 
     #region Openers
-
-    //TODO: add some stuff similar to GNB
+    
     internal static WAROpenerMaxLevel1 Opener1 = new();
     internal static WrathOpener Opener()
     {
@@ -89,18 +81,316 @@ internal partial class WAR : Tank
     }
 
     #endregion
-
+    
     #region Rotation
-    internal static bool ShouldUseUpheaval => ActionReady(Upheaval) && CanWeave() && HasST && InMeleeRange() && Minimal;
-    internal static bool ShouldUsePrimalWrath => LevelChecked(PrimalWrath) && CanWeave() && HasWrath && HasST && Minimal && GetTargetDistance() <= 4.99f;
-    internal static bool ShouldUsePrimalRuination => LevelChecked(PrimalRuination) && HasST && Minimal && HasStatusEffect(Buffs.PrimalRuinationReady);
-    internal static bool ShouldUseTomahawk => LevelChecked(Tomahawk) && !InMeleeRange() && HasBattleTarget();
-    internal static bool ShouldUseInnerRelease(int targetHP = 0) => ActionReady(OriginalHook(Berserk)) && CanWeave() && !HasWrath && Minimal && GetTargetHPPercent() >= targetHP && (HasST || !LevelChecked(StormsEye));
-    internal static bool ShouldUseInfuriate(int gauge = 50, int charges = 0) => ActionReady(Infuriate) && CanWeave() && !HasNC && Minimal && !JustUsed(Infuriate) && !HasIR.Stacks && BeastGauge <= gauge && GetRemainingCharges(Infuriate) > charges;
-    internal static bool ShouldUseOnslaught(int charges = 0, float distance = 20, bool movement = true) => ActionReady(Onslaught) && GetRemainingCharges(Onslaught) > charges && GetTargetDistance() <= distance && movement && CanWeave() && HasST;
-    internal static bool ShouldUsePrimalRend(float distance = 20, bool movement = true) => LevelChecked(PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && GetTargetDistance() <= distance && movement && !JustUsed(InnerRelease) && HasST;
-    internal static bool ShouldUseFellCleave(int gauge = 90) => CanSpendBeastGauge(gauge, STBurstPooling) && HasST && Minimal && InMeleeRange();
-    internal static bool ShouldUseDecimate(int gauge = 90) => LevelChecked(SteelCyclone) && CanSpendBeastGauge(gauge, AoEBurstPooling) && HasST && Minimal && GetTargetDistance() <= 4.99f;
+    
+    #region Flag Stuff
+    [Flags]
+    private enum Combo
+    {
+        // Target-type for combo
+        ST = 1 << 0, // 1
+        AoE = 1 << 1, // 2
+
+        // Complexity of combo
+        Adv = 1 << 2, // 4
+        Simple = 1 << 3, // 8
+        Basic = 1 << 4, // 16
+    }
+    
+    /// <summary>
+    ///     Checks whether a given preset is enabled, and the flags match it.
+    /// </summary>
+    private static bool IsSTEnabled(Combo flags, Preset preset) =>
+        flags.HasFlag(Combo.ST) && IsEnabled(preset);
+
+    /// <summary>
+    ///     Checks whether a given preset is enabled, and the flags match it.
+    /// </summary>
+    private static bool IsAoEEnabled(Combo flags, Preset preset) =>
+        flags.HasFlag(Combo.AoE) && IsEnabled(preset);
+    #endregion
+    
+    #region OGCD Attacks
+    private static bool TryOGCDAttacks(Combo flags, ref uint actionID)
+    {
+        #region Enables
+        bool interruptEnabled =
+             flags.HasFlag(Combo.Simple) ||
+             IsSTEnabled(flags, Preset.WAR_ST_Interrupt) ||
+             IsAoEEnabled(flags, Preset.WAR_AoE_Interrupt);
+        
+        bool lowBlowEnabled = 
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_Stun) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_Stun);
+        
+        bool innerReleaseEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_InnerRelease) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_InnerRelease);
+        
+        bool infuriateEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_Infuriate) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_Infuriate);
+        
+        bool onslaughtEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_Onslaught) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_Onslaught);
+        
+        bool upheavalEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_Upheaval) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_Orogeny);
+        
+        bool primalWrathEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_PrimalWrath) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_PrimalWrath);
+        
+        #endregion
+        
+        #region Configs
+        int innerReleaseThresholdST = WAR_ST_InnerRelease_Threshold_SubOption == 1 || !InBossEncounter() ? WAR_ST_InnerRelease_Threshold : 0; //Boss Check
+        int innerReleaseThresholdAoE = WAR_AoE_InnerRelease_Threshold_SubOption == 1 || !InBossEncounter() ? WAR_AoE_InnerRelease_Threshold : 0; //Boss Check
+        int innerReleaseStopThreshold = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? innerReleaseThresholdST : innerReleaseThresholdAoE;
+        
+        int infuriateGaugeThreshold = 
+            flags.HasFlag(Combo.Simple) ? 40 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_Infuriate_Gauge : WAR_AoE_Infuriate_Gauge;
+        
+        int infuriateChargeThreshold = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_Infuriate_Charges : WAR_AoE_Infuriate_Charges;
+        
+        int onslaughtChargeThreshold = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_Charges : WAR_AoE_Onslaught_Charges;
+        
+        float onslaughtDistanceThreshold = 
+            flags.HasFlag(Combo.Simple) ? 3 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_Distance : WAR_AoE_Onslaught_Distance;
+        
+        int onslaughtMovement = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_Movement : WAR_AoE_Onslaught_Movement;
+        
+        float onslaughtTimeStoodStill = 
+            flags.HasFlag(Combo.Simple) ? 2 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_Onslaught_TimeStill : WAR_AoE_Onslaught_TimeStill;
+        #endregion
+        
+        if (InCombat() && HasBattleTarget() && CanWeave())
+        {
+            if (interruptEnabled && Role.CanInterject())
+            {
+                actionID = Role.Interject;
+                return true;
+            }
+
+            if (lowBlowEnabled && Role.CanLowBlow())
+            {
+                actionID = Role.LowBlow;
+                return true;
+            }
+            
+            if (innerReleaseEnabled &&
+                ActionReady(OriginalHook(Berserk)) && HasSurgingTempest && !HasWrathful &&
+                GetTargetHPPercent() >= innerReleaseStopThreshold) //Health Threshold Check, boss check built into config
+            {
+                actionID = OriginalHook(Berserk);
+                return true;
+            }
+            
+            if (infuriateEnabled && 
+                ActionReady(Infuriate) && !HasNascentChaos && !JustUsed(Infuriate) && !HasIR.Stacks && 
+                BeastGauge <= infuriateGaugeThreshold && //Gauge slider check
+                GetRemainingCharges(Infuriate) > infuriateChargeThreshold) //Charge slider check
+            {
+                actionID = Infuriate;
+                return true;
+            }
+                
+            if (onslaughtEnabled && 
+                ActionReady(Onslaught) && HasSurgingTempest &&
+                (!innerReleaseEnabled || innerReleaseEnabled && IR.Cooldown > 40) && //Buff Window Check
+                GetRemainingCharges(Onslaught) > onslaughtChargeThreshold &&  //Charge Slider Check
+                GetTargetDistance() <= onslaughtDistanceThreshold && //Distance Check
+                (onslaughtMovement == 1 || //Any Movement
+                 onslaughtMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(onslaughtTimeStoodStill))) //How long standing still
+            {
+                actionID = Onslaught;
+                return true;
+            }
+
+            if (upheavalEnabled &&
+                ActionReady(Upheaval) && HasSurgingTempest && InActionRange(Upheaval))
+            {
+                if (flags.HasFlag(Combo.ST) || 
+                    flags.HasFlag(Combo.AoE) && !LevelChecked(Orogeny)) //Use Upheaval if too low level
+                {
+                    actionID = Upheaval;
+                    return true;
+                }
+                if (flags.HasFlag(Combo.AoE))
+                {
+                    actionID = Orogeny;
+                    return true;
+                }
+            }
+
+            if (primalWrathEnabled && 
+                LevelChecked(PrimalWrath)  && HasWrathful && HasSurgingTempest && GetTargetDistance() <= 4.99f)
+            {
+                actionID = PrimalWrath;
+                return true;
+            }
+        }
+        return false;
+    }
+    #endregion
+    
+    #region GCD Attacks
+    private static bool TryGCDAttacks(Combo flags, ref uint actionID)
+    {
+        #region Enables
+        bool primalRendEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_PrimalRend) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_PrimalRend);
+        
+        bool rangedUptimeEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_RangedUptime) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_RangedUptime);
+        
+        bool primalRuinationEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_PrimalRuination) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_PrimalRuination);
+        
+        bool fellCleaveEnabled =
+            flags.HasFlag(Combo.Simple) ||
+            IsSTEnabled(flags, Preset.WAR_ST_FellCleave) ||
+            IsAoEEnabled(flags, Preset.WAR_AoE_Decimate);
+        #endregion
+        
+        #region Configs
+        int fellCleaveGaugeThresholdST =
+            WAR_ST_FellCleave_Pooling //is pooling enabled
+                ? !WAR_ST_FellCleave_Pooling_BossOnly || InBossEncounter() //Is pooling not boss only or in a boss encounter
+                    ? !JustUsed(OriginalHook(Berserk), 20f) //not in Burst Window
+                        ? ComboAction is HeavySwing
+                            ? 100 //Use to prevent Overcap from Maim
+                            : ComboAction is Maim  
+                                ? 90 //Use to prevent Overcap
+                                : 110 //Dont use it
+                        : 50 // In Burst Window, Dump at 50
+                    : 50 //Option not selected and not in Boss encounter, dump at 50
+                : WAR_ST_FellCleave_Gauge; //Pooling not enabled, follow slider
+            
+        int decimateGaugeThresholdAoE = 
+            WAR_AoE_Decimate_Pooling //is pooling enabled
+                ? !WAR_AoE_Decimate_Pooling_BossOnly || InBossEncounter() //Is pooling not boss only or in a boss encounter
+                    ? !JustUsed(OriginalHook(Berserk), 20f) //not in Burst Window
+                        ?ComboAction is Overpower 
+                            ? 90 //Use to prevent Overcap
+                            : 110 //Dont use it
+                        : 50 // In Burst Window, Dump at 50
+                    : 50 //Option not selected and not in Boss encounter, dump at 50
+                : WAR_AoE_Decimate_Gauge; //Pooling not enabled, follow slider
+        
+        int spenderGaugeThreshold = 
+            flags.HasFlag(Combo.Simple) ? 50 : 
+            flags.HasFlag(Combo.ST) ? fellCleaveGaugeThresholdST : decimateGaugeThresholdAoE;
+        
+        float primalRendDistanceThreshold = 
+            flags.HasFlag(Combo.Simple) ? 3 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_Distance : WAR_AoE_PrimalRend_Distance;
+        
+        int primalRendMovement = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_Movement : WAR_AoE_PrimalRend_Movement;
+        
+        float primalRendTimeStoodStill = 
+            flags.HasFlag(Combo.Simple) ? 2 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_TimeStill : WAR_AoE_PrimalRend_TimeStill;
+        
+        int primalRendTiming = 
+            flags.HasFlag(Combo.Simple) ? 0 : 
+            flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_EarlyLate : WAR_AoE_PrimalRend_EarlyLate;
+
+            
+        #endregion
+        
+        if (HasBattleTarget())  
+        {
+            #region Primal Rend
+            if (primalRendEnabled && HasSurgingTempest && HasStatusEffect(Buffs.PrimalRendReady) && 
+                GetTargetDistance() <= primalRendDistanceThreshold && //Distance Slider Check
+                (primalRendMovement == 1 || //Any Movement
+                 primalRendMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(primalRendTimeStoodStill)) && //Time Stood Still Slider Check
+                (primalRendTiming == 0 || //Use Asap
+                 GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || //Use if buff gets below 15
+                 !HasIR.Stacks && !HasBF.Stacks && !HasWrathful)) //Use when all your other stuff is spent
+            {
+                actionID = PrimalRend;
+                return true;
+            }
+            #endregion
+
+            #region Primal Ruination
+            if (primalRuinationEnabled && HasSurgingTempest && HasStatusEffect(Buffs.PrimalRuinationReady))
+            {
+                actionID = PrimalRuination;
+                return true;
+            }
+            #endregion
+
+            #region Inner Beast/Fell Cleave/ Decimate
+            if (fellCleaveEnabled && HasSurgingTempest && LevelChecked(OriginalHook(InnerBeast)) &&
+                (HasStatusEffect(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
+                 BeastGauge >= spenderGaugeThreshold || //Use if you have enough gauge, See config
+                 HasNascentChaos)) //Use if you have Nascent Buff
+            {
+                int enemyCount = NumberOfEnemiesInRange(Decimate);
+                
+                if (InMeleeRange() && //Melee range check for single target
+                    (flags.HasFlag(Combo.ST) || //Fell Cleave in ST
+                     flags.HasFlag(Combo.AoE) && (!LevelChecked(Decimate) || //Fell Cleave in Aoe if Decimate too low level
+                                                  enemyCount < 4 && TraitLevelChecked(Traits.MeleeMastery2)))) //Fell Cleave in Aoe if decimate less than 4 targets
+                {
+                    actionID = FellCleave;
+                    return true;
+                }
+
+                if (flags.HasFlag(Combo.AoE) &&
+                    (enemyCount >= 3 && !TraitLevelChecked(Traits.MeleeMastery2) || //3 Targets without trait
+                     enemyCount >= 4)) //4 Targets
+                {
+                    actionID = Decimate;
+                    return true;
+                }
+            }
+            #endregion
+
+            #region Ranged Uptime
+            if (rangedUptimeEnabled && ActionReady(Tomahawk) && !InMeleeRange())
+            {
+                actionID = Tomahawk;
+                return true;
+            }
+            #endregion
+        }
+        return false;
+    }
+    #endregion
+    
+    #region Basic Combos
     internal static uint STCombo
         => ComboTimer > 0 
             ? LevelChecked(Maim) && ComboAction == HeavySwing // Logic for Combo 2
@@ -111,11 +401,14 @@ internal partial class WAR : Tank
                         ? StormsEye //return if ST is needed
                         : StormsPath //return if ST is not needed
                     : HeavySwing  //return if cant Storms Path
-                : HeavySwing; //Return of cant Maim
-    internal static uint AOECombo 
+            : HeavySwing; //Return of cant Maim
+    
+    internal static uint AoECombo 
         => ComboTimer > 0 && LevelChecked(MythrilTempest) && ComboAction == Overpower 
             ? MythrilTempest 
             : Overpower;
+    #endregion
+    
     #endregion
 
     #region One-Button Mitigation Combo Priorities
