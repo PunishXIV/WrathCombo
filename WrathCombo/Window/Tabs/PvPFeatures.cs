@@ -194,7 +194,7 @@ internal class PvPFeatures : FeaturesWindow
                 {
                     // Keep conflicted items in the counter
                     var parent = PresetStorage.GetParent(preset) ?? preset;
-                    CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent]);
+                    CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent].ToArray());
                 }
                 else
                 {
@@ -214,12 +214,12 @@ internal class PvPFeatures : FeaturesWindow
         {
             List<Preset> alreadyShown = [];
             foreach (var preset in PresetStorage.AllPresets!.Where(x =>
-                         PresetStorage.IsPvP(x) &&
-                         x.Attributes().CustomComboInfo.Job == job))
+                        x.Value.IsPvP &&
+                        x.Value.CustomComboInfo.Job == job))
             {
-                var attributes = preset.Attributes();
+                var attributes = preset.Value;
 
-                if (!PvEFeatures.PresetMatchesSearch(preset))
+                if (!PvEFeatures.PresetMatchesSearch(preset.Key))
                     continue;
                 // Don't show things that were already shown under another preset
                 if (alreadyShown.Any(y => y == attributes.Parent) ||
@@ -228,10 +228,10 @@ internal class PvPFeatures : FeaturesWindow
                     continue;
 
                 var info = attributes.CustomComboInfo;
-                InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info!); } };
+                InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset.Key, info!); } };
                 presetBox.Draw();
                 ImGuiEx.Spacing(new Vector2(0, 12));
-                alreadyShown.Add(preset);
+                alreadyShown.Add(preset.Key);
             }
 
             // Show error message if still nothing was found

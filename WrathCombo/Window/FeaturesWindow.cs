@@ -205,9 +205,9 @@ internal class FeaturesWindow : ConfigWindow
         if (PresetStorage.ShouldBeHidden(preset))
             return false;
 
-        if (!Presets.Attributes.TryGetValue(preset, out var attributes))
-            attributes = new Presets.PresetAttributes(preset);
-        
+        if (!PresetStorage.AllPresets.TryGetValue(preset, out var attributes))
+            attributes = new PresetStorage.PresetAttributes(preset);
+
         if (UsableSearch == "erp")
             return false;
 
@@ -359,7 +359,7 @@ internal class FeaturesWindow : ConfigWindow
     {
         if (CurrentPreset > 1 || !IsSearching)
             return;
-        
+
         if (UsableSearch == "erp")
         {
             ImGuiEx.LineCentered(() => { ImGui.Text("Behave!"); });

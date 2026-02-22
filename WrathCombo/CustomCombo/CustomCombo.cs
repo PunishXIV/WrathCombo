@@ -6,6 +6,7 @@ using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
 using WrathCombo.Attributes;
+using WrathCombo.Core;
 using WrathCombo.Combos.PvE;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Services;
@@ -20,7 +21,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
     /// <summary> Initializes a new instance of the <see cref="CustomCombo"/> class. </summary>
     protected CustomCombo()
     {
-        CustomComboInfoAttribute? presetInfo = Preset.GetAttribute<CustomComboInfoAttribute>();
+        CustomComboInfoAttribute? presetInfo = PresetStorage.AllPresets[Preset].CustomComboInfo;
         Job = presetInfo.Job;
     }
 
@@ -101,9 +102,6 @@ internal abstract partial class CustomCombo : CustomComboFunctions
 
     /// <summary> Invokes the combo. </summary>
     /// <param name="actionID"> Starting action ID. </param>
-    /// 
-    /// 
-    /// 
     /// <returns>The replacement action ID. </returns>
     protected abstract uint Invoke(uint actionID);
 }

@@ -2,8 +2,6 @@
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Utility;
-using ECommons;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
@@ -25,133 +23,30 @@ using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.Attributes.PossiblyRetargetedAttribute;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.Core.PresetStorage;
 namespace WrathCombo.Window.Functions;
 
 internal class Presets : ConfigWindow
 {
-    internal static Dictionary<Preset, PresetAttributes> Attributes = new();
+
     private static bool _animFrame = false;
-    internal class PresetAttributes
-    {
-        private Preset Preset;
-        public bool IsPvP;
-        public Preset[] Conflicts;
-        public Preset? Parent;
-        public Preset? GrandParent;
-        public Preset? GreatGrandParent;
-        public BlueInactiveAttribute? BlueInactive;
-        public VariantAttribute? Variant;
-        public PossiblyRetargetedAttribute? PossiblyRetargeted;
-        public RetargetedAttribute? RetargetedAttribute;
-        public uint[] RetargetedActions =>
-            GetRetargetedActions(Preset, RetargetedAttribute, PossiblyRetargeted, Parent);
-        public BozjaParentAttribute? BozjaParent;
-        public EurekaParentAttribute? EurekaParent;
-        public OccultCrescentAttribute? OccultCrescentJob;
-        public HoverInfoAttribute? HoverInfo;
-        public ReplaceSkillAttribute? ReplaceSkill;
-        public CustomComboInfoAttribute? CustomComboInfo;
-        public AutoActionAttribute? AutoAction;
-        public RoleAttribute? RoleAttribute;
-        public HiddenAttribute? Hidden;
-        public ComboType ComboType;
-
-        public PresetAttributes(Preset preset)
-        {
-            Preset = preset;
-            IsPvP = PresetStorage.IsPvP(preset);
-            Conflicts = PresetStorage.GetConflicts(preset);
-            Parent = PresetStorage.GetParent(preset);
-            BlueInactive = preset.GetAttribute<BlueInactiveAttribute>();
-            Variant = preset.GetAttribute<VariantAttribute>();
-            PossiblyRetargeted = preset.GetAttribute<PossiblyRetargetedAttribute>();
-            RetargetedAttribute = preset.GetAttribute<RetargetedAttribute>();
-            BozjaParent = preset.GetAttribute<BozjaParentAttribute>();
-            EurekaParent = preset.GetAttribute<EurekaParentAttribute>();
-            OccultCrescentJob = preset.GetAttribute<OccultCrescentAttribute>();
-            HoverInfo = preset.GetAttribute<HoverInfoAttribute>();
-            ReplaceSkill = preset.GetAttribute<ReplaceSkillAttribute>();
-            CustomComboInfo = preset.GetAttribute<CustomComboInfoAttribute>();
-            AutoAction = preset.GetAttribute<AutoActionAttribute>();
-            RoleAttribute = preset.GetAttribute<RoleAttribute>();
-            Hidden = preset.GetAttribute<HiddenAttribute>();
-            ComboType = PresetStorage.GetComboType(preset);
-
-            if (Parent is not null)
-                GrandParent = PresetStorage.GetParent(Parent.Value);
-            if (GrandParent is not null)
-                GreatGrandParent = PresetStorage.GetParent(GrandParent.Value);
-        }
-    }
-
-    private static uint[] GetRetargetedActions
-    (Preset preset,
-        RetargetedAttribute? retargetedAttribute,
-        PossiblyRetargetedAttribute? possiblyRetargeted,
-        Preset? parent)
-    {
-        // Pick whichever Retargeted attribute is available
-        RetargetedAttributeBase? retargetAttribute = null;
-        if (retargetedAttribute != null)
-            retargetAttribute = retargetedAttribute;
-        else if (possiblyRetargeted != null)
-            retargetAttribute = possiblyRetargeted;
-
-        // Bail if the Preset is not Retargeted
-        if (retargetAttribute == null)
-            return [];
-
-        try
-        {
-            // Bail if not actually enabled
-            if (!Service.Configuration.EnabledActions.Contains(preset))
-                return [];
-            // ReSharper disable once DuplicatedSequentialIfBodies
-            if (parent != null &&
-                !Service.Configuration.EnabledActions
-                    .Contains((Preset)parent))
-                return [];
-            if (parent?.Attributes()?.Parent is { } grandParent &&
-                !Service.Configuration.EnabledActions
-                    .Contains(grandParent))
-                return [];
-
-            // Bail if the Condition for PossiblyRetargeted is not satisfied
-            if (retargetAttribute is PossiblyRetargetedAttribute attribute
-                && IsConditionSatisfied(attribute.PossibleCondition) != true)
-                return [];
-        }
-        catch (Exception e)
-        {
-            PluginLog.Error($"Failed to check if Preset {preset} is enabled: {e.ToStringFull()}");
-            return [];
-        }
-
-        // Set the Retargeted Actions if all bails are passed
-        return retargetAttribute.RetargetedActions;
-    }
 
     internal static Dictionary<Preset, bool> GetJobAutorots => P
         .IPCSearch.AutoActions.Where(x => x.Key.Attributes().IsPvP == CustomComboFunctions.InPvP() && (Player.Job == x.Key.Attributes().CustomComboInfo.Job || Player.Job.GetUpgradedJob() == x.Key.Attributes().CustomComboInfo.Job) && x.Value && CustomComboFunctions.IsEnabled(x.Key) && x.Key.Attributes().Parent == null).ToDictionary();
 
     internal static void DrawPreset(Preset preset, CustomComboInfoAttribute info)
     {
-        if (!Attributes.ContainsKey(preset))
-        {
-            PresetAttributes attributes = new(preset);
-            Attributes[preset] = attributes;
-        }
         bool enabled = PresetStorage.IsEnabled(preset);
-        bool pvp = Attributes[preset].IsPvP;
-        var conflicts = Attributes[preset].Conflicts;
-        var parent = Attributes[preset].Parent;
-        var blueAttr = Attributes[preset].BlueInactive;
-        var bozjaParents = Attributes[preset].BozjaParent;
-        var eurekaParents = Attributes[preset].EurekaParent;
-        var auto = Attributes[preset].AutoAction;
-        var hidden = Attributes[preset].Hidden;
+        bool pvp = AllPresets[preset].IsPvP;
+        var conflicts = AllPresets[preset].Conflicts;
+        var parent = AllPresets[preset].Parent;
+        var blueAttr = AllPresets[preset].BlueInactive;
+        var bozjaParents = AllPresets[preset].BozjaParent;
+        var eurekaParents = AllPresets[preset].EurekaParent;
+        var auto = AllPresets[preset].AutoAction;
+        var hidden = AllPresets[preset].Hidden;
         var presetName = info.Name;
-        var currentJob = Attributes[preset].CustomComboInfo.Job;
+        var currentJob = AllPresets[preset].CustomComboInfo.Job;
 
         ImGui.Spacing();
 
@@ -221,12 +116,12 @@ internal class Presets : ConfigWindow
 
             ImGui.TextWrapped($"{info.Description}");
 
-            if (Attributes[preset].HoverInfo != null)
+            if (AllPresets[preset].HoverInfo != null)
             {
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.BeginTooltip();
-                    ImGui.TextUnformatted(Attributes[preset].HoverInfo.HoverText);
+                    ImGui.TextUnformatted(AllPresets[preset].HoverInfo.HoverText);
                     ImGui.EndTooltip();
                 }
             }
@@ -242,7 +137,7 @@ internal class Presets : ConfigWindow
             foreach (var conflict in conflicts)
                 ImGuiEx.Text(GradientColor.Get(
                         ImGuiColors.DalamudRed,
-                        IsEnabled(conflict)
+                        CustomComboFunctions.IsEnabled(conflict)
                             ? ImGuiColors.HealerGreen
                             : ImGuiColors.DalamudRed, 1500),
                     $"- {conflict.NameWithFullLineage(currentJob)}");
@@ -275,14 +170,14 @@ internal class Presets : ConfigWindow
             StringBuilder builder = new();
             foreach (var par in bozjaParents.ParentPresets)
             {
-                builder.Insert(0, $"{(Attributes.ContainsKey(par) ? Attributes[par].CustomComboInfo.Name : par.GetAttribute<CustomComboInfoAttribute>().Name)}");
+                builder.Insert(0, PresetStorage.AllPresets[par].CustomComboInfo.Name);
                 var par2 = par;
                 while (PresetStorage.GetParent(par2) != null)
                 {
                     var subpar = PresetStorage.GetParent(par2);
                     if (subpar != null)
                     {
-                        builder.Insert(0, $"{(Attributes.ContainsKey(subpar.Value) ? Attributes[subpar.Value].CustomComboInfo.Name : subpar?.GetAttribute<CustomComboInfoAttribute>().Name)} -> ");
+                        builder.Insert(0, PresetStorage.AllPresets[subpar.Value].CustomComboInfo.Name + " -> ");
                         par2 = subpar!.Value;
                     }
                 }
@@ -300,14 +195,19 @@ internal class Presets : ConfigWindow
             StringBuilder builder = new();
             foreach (var par in eurekaParents.ParentPresets)
             {
-                builder.Insert(0, $"{(Attributes.ContainsKey(par) ? Attributes[par].CustomComboInfo.Name : par.GetAttribute<CustomComboInfoAttribute>().Name)}");
+                builder.Insert(
+                    0,
+                    AllPresets.TryGetValue(par, out var attrs) &&
+                    attrs.CustomComboInfo is not null
+                        ? attrs.CustomComboInfo.Name
+                        : par.ToString());
                 var par2 = par;
                 while (PresetStorage.GetParent(par2) != null)
                 {
                     var subpar = PresetStorage.GetParent(par2);
                     if (subpar != null)
                     {
-                        builder.Insert(0, $"{(Attributes.ContainsKey(subpar.Value) ? Attributes[subpar.Value].CustomComboInfo.Name : subpar?.GetAttribute<CustomComboInfoAttribute>().Name)} -> ");
+                        builder.Insert(0, PresetStorage.AllPresets[subpar.Value].CustomComboInfo.Name + " -> ");
                         par2 = subpar!.Value;
                     }
 
@@ -409,7 +309,7 @@ internal class Presets : ConfigWindow
 
                     presetChildren.TryGetValue(childPreset, out var grandchildren);
                     InfoBox box = new() { HasMaxWidth = true, CurveRadius = 4f, ContentsAction = () => { DrawPreset(childPreset, childInfo); } };
-                    Action draw = grandchildren?.Count() > 0 && IsEnabled(childPreset) && Service.Configuration.ShowBorderAroundOptionsWithChildren
+                    Action draw = grandchildren.Count() > 0 && CustomComboFunctions.IsEnabled(childPreset) && Service.Configuration.ShowBorderAroundOptionsWithChildren
                         ? () => box.Draw()
                         : () => DrawPreset(childPreset, childInfo);
 
@@ -421,27 +321,27 @@ internal class Presets : ConfigWindow
                         if (!conflictsSource.Where(x => x == childPreset || x == preset).Any() || conflictOriginals.Length == 0)
                         {
                             draw();
-                            if (grandchildren?.Count() > 0)
+                            if (grandchildren.Count() > 0)
                                 ImGui.Spacing();
                             continue;
                         }
 
-                        if (conflictOriginals.Any(PresetStorage.IsEnabled))
+                        if (conflictOriginals.Any(CustomComboFunctions.IsEnabled))
                         {
                             // Keep conflicted items in the counter
-                            FeaturesWindow.CurrentPreset += 1 + AllChildren(presetChildren[childPreset]);
+                            FeaturesWindow.CurrentPreset += 1 + AllChildren(presetChildren[childPreset].ToArray());
                         }
                         else
                         {
                             draw();
-                            if (grandchildren?.Count() > 0)
+                            if (grandchildren.Count() > 0)
                                 ImGui.Spacing();
                         }
                     }
                     else
                     {
                         draw();
-                        if (grandchildren?.Count() > 0)
+                        if (grandchildren.Count() > 0)
                             ImGui.Spacing();
                     }
                 }
@@ -450,7 +350,7 @@ internal class Presets : ConfigWindow
             }
             else
             {
-                FeaturesWindow.CurrentPreset += AllChildren(presetChildren[preset]);
+                FeaturesWindow.CurrentPreset += AllChildren(presetChildren[preset].ToArray());
 
             }
         }
@@ -458,7 +358,7 @@ internal class Presets : ConfigWindow
 
     private static void DrawReplaceAttribute(Preset preset)
     {
-        var att = Attributes[preset].ReplaceSkill;
+        var att = AllPresets[preset].ReplaceSkill;
         if (att != null)
         {
             string skills = string.Join(", ", att.ActionNames);
@@ -500,16 +400,16 @@ internal class Presets : ConfigWindow
         else
         {
             possiblyRetargeted =
-                Attributes[preset.Value].PossiblyRetargeted != null;
+                AllPresets[preset.Value].PossiblyRetargeted != null;
             retargeted =
-                Attributes[preset.Value].RetargetedAttribute != null;
+                AllPresets[preset.Value].RetargetedAttribute != null;
         }
 
         if (!possiblyRetargeted && !retargeted) return;
 
         // Resolved the conditions if possibly retargeted
         if (possiblyRetargeted)
-            if (IsConditionSatisfied(Attributes[preset!.Value]
+            if (IsConditionSatisfied(AllPresets[preset!.Value]
                 .PossiblyRetargeted!.PossibleCondition) == true)
             {
                 retargeted = true;
@@ -559,9 +459,9 @@ internal class Presets : ConfigWindow
                     var settingInfo = "";
                     if (preset.HasValue)
                         settingInfo =
-                            Attributes[preset.Value].PossiblyRetargeted is not
+                            AllPresets[preset.Value].PossiblyRetargeted is not
                                 null
-                                ? Attributes[preset.Value].PossiblyRetargeted.SettingInfo
+                                ? AllPresets[preset.Value].PossiblyRetargeted.SettingInfo
                                 : "";
                     if (settingInfo != "")
                     {
@@ -654,7 +554,7 @@ internal class Presets : ConfigWindow
         foreach (var (Preset, Info) in children)
         {
             output++;
-            output += AllChildren(presetChildren[Preset]);
+            output += AllChildren(presetChildren[Preset].ToArray());
         }
 
         return output;

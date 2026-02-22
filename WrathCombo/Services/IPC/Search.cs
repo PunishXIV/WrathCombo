@@ -218,28 +218,6 @@ public class Search(Leasing leasing)
     private DateTime _lastCacheUpdateForPresetStates = DateTime.MinValue;
 
     /// <summary>
-    ///     Recursively finds the root parent of a given Preset.
-    /// </summary>
-    /// <param name="preset">The Preset to find the root parent for.</param>
-    /// <returns>The root parent Preset.</returns>
-    public Preset GetRootParent(Preset preset)
-    {
-        if (!Attribute.IsDefined(
-                typeof(Preset).GetField(preset.ToString())!,
-                typeof(ParentComboAttribute)))
-        {
-            return preset;
-        }
-
-        var parentAttribute = (ParentComboAttribute)Attribute.GetCustomAttribute(
-            typeof(Preset).GetField(preset.ToString())!,
-            typeof(ParentComboAttribute)
-        )!;
-
-        return GetRootParent(parentAttribute.ParentPreset);
-    }
-
-    /// <summary>
     ///     Cached list of <see cref="Preset">Presets</see>, and most of
     ///     their attribute-based information.
     /// </summary>
@@ -252,27 +230,32 @@ public class Search(Leasing leasing)
         get
         {
             return field ??= PresetStorage.AllPresets!
-                .Select(preset => new
-                {
-                    ID = preset,
-                    JobId = preset.Attributes().CustomComboInfo.Job,
-                    InternalName = preset.ToString(),
-                    Info = preset.Attributes().CustomComboInfo!,
-                    HasParentCombo = preset.Attributes().Parent != null,
-                    IsVariant = preset.Attributes().Variant != null,
-                    ParentComboName = preset.Attributes().Parent != null
-                        ? GetRootParent(preset).ToString()
-                        : string.Empty,
-                    preset.Attributes().ComboType,
-                })
-                .Where(combo =>
-                    !combo.InternalName.EndsWith("any", ToLower))
-                .ToDictionary(
-                    combo => combo.InternalName,
-                    combo => (combo.JobId, combo.ID, combo.Info,
-                        combo.HasParentCombo, combo.IsVariant,
-                        combo.ParentComboName, combo.ComboType)
-                );
+            .Select(preset => new
+            {
+                ID = preset.Key,
+                JobId = preset.Value.CustomComboInfo!.Job,
+                InternalName = preset.Key.ToString(),
+                Info = preset.Value.CustomComboInfo!,
+                HasParentCombo = preset.Value.Parent != null,
+                IsVariant = preset.Value.Variant != null,
+                ParentComboName = preset.Value.Parent != null
+                    ? preset.Value.RootParent.ToString()
+                    : string.Empty,
+                preset.Value.ComboType,
+            })
+            .Where(combo =>
+                !combo.InternalName.EndsWith("any", ToLower))
+            .ToDictionary(
+                combo => combo.InternalName,
+                combo => (
+                    combo.JobId,
+                    combo.ID,
+                    combo.Info,
+                    combo.HasParentCombo,
+                    combo.IsVariant,
+                    combo.ParentComboName,
+                    combo.ComboType)
+            );
         }
     }
 

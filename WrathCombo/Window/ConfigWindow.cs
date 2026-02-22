@@ -7,15 +7,12 @@ using ECommons.ExcelServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.Throttlers;
-using PunishLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.Attributes;
-using WrathCombo.Combos;
-using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Data.Conflicts;
 using WrathCombo.Services;
@@ -45,7 +42,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
         return Enum
             .GetValues<Preset>()
             .Where(preset => (int)preset > 100)
-            .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
+            .Select(preset => (Preset: preset, Info: PresetStorage.AllPresets[preset].CustomComboInfo))
             .Where(tpl => tpl.Info != null && PresetStorage.GetParent(tpl.Preset) == null)
             .OrderByDescending(tpl => tpl.Info.Role is JobRole.Tank)
             .ThenByDescending(tpl => tpl.Info.Role is JobRole.Healer)
@@ -65,22 +62,31 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 
     internal static Dictionary<Preset, (Preset Preset, CustomComboInfoAttribute Info)[]> GetPresetChildren()
     {
-        var childCombos = Enum.GetValues<Preset>().ToDictionary(
-            tpl => tpl,
-            tpl => new List<Preset>());
+        // Initialize dictionary with all presets as keys
+        var childCombos = PresetStorage.AllPresets.Keys
+            .ToDictionary(p => p, _ => new List<Preset>());
 
-        foreach (var preset in Enum.GetValues<Preset>())
+        // Build parent → children map using cached Parent
+        foreach (var (preset, attrs) in PresetStorage.AllPresets)
         {
-            var parent = preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
-            if (parent != null)
-                childCombos[parent.Value].Add(preset);
+            if (attrs.Parent is { } parent)
+            {
+                childCombos[parent].Add(preset);
+            }
         }
 
+        // Project to final structure using cached CustomComboInfo
         return childCombos.ToDictionary(
             kvp => kvp.Key,
             kvp => kvp.Value
-                .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
-                .OrderBy(tpl => tpl.Info.Order).ToArray())!;
+                .Select(child =>
+                {
+                    var info = PresetStorage.AllPresets[child].CustomComboInfo!;
+                    return (Preset: child, Info: info);
+                })
+                .OrderBy(tpl => tpl.Info.Order)
+                .ToArray()
+        );
     }
 
     public OpenWindow OpenWindow
@@ -138,7 +144,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 
         DrawCollapseButton();
     }
-    
+
     public static void ClearAnySearches()
     {
         Search = string.Empty;

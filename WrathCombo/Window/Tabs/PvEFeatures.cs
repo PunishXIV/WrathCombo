@@ -101,7 +101,7 @@ internal class PvEFeatures : FeaturesWindow
                 DrawHeader(id);
                 DrawSearchBar();
                 ImGuiEx.Spacing(new Vector2(0, 10));
-                
+
                 using var content = ImRaii.Child("Content", Vector2.Zero);
                 if (!content)
                     return;
@@ -197,12 +197,12 @@ internal class PvEFeatures : FeaturesWindow
 
         // Search for children if nothing was found at the root
         if (IsSearching)
-            SearchMorePresets(PresetStorage.AllPresets!
-                .Where(x =>
-                    PresetStorage.IsVariant(x) &&
-                    !PresetStorage.ShouldBeHidden(x) &&
-                    x.Attributes().CustomComboInfo.Job == job)
-                .ToArray(),
+            SearchMorePresets([.. PresetStorage.AllPresets!
+                .Where(kvp =>
+                    PresetStorage.IsVariant(kvp.Key) &&
+                    !PresetStorage.ShouldBeHidden(kvp.Key) &&
+                    kvp.Value.CustomComboInfo.Job == job)
+                .Select(x => x.Key)],
                 alreadyShown);
         ShowSearchErrorIfNoResults();
     }
@@ -225,12 +225,12 @@ internal class PvEFeatures : FeaturesWindow
 
         // Search for children if nothing was found at the root
         if (IsSearching)
-            SearchMorePresets(PresetStorage.AllPresets!
-                .Where(x =>
-                    PresetStorage.IsBozja(x) &&
-                    !PresetStorage.ShouldBeHidden(x) &&
-                    x.Attributes().CustomComboInfo.Job == job)
-                .ToArray(),
+            SearchMorePresets([.. PresetStorage.AllPresets!
+                .Where(kvp =>
+                    PresetStorage.IsBozja(kvp.Key) &&
+                    !PresetStorage.ShouldBeHidden(kvp.Key) &&
+                    kvp.Value.CustomComboInfo.Job == job)
+                .Select(kvp => kvp.Key)],
                 alreadyShown);
         ShowSearchErrorIfNoResults();
     }
@@ -253,12 +253,12 @@ internal class PvEFeatures : FeaturesWindow
 
         // Search for children if nothing was found at the root
         if (IsSearching)
-            SearchMorePresets(PresetStorage.AllPresets!
-                .Where(x =>
-                    PresetStorage.IsOccultCrescent(x) &&
-                    !PresetStorage.ShouldBeHidden(x) &&
-                    x.Attributes().CustomComboInfo.Job == job)
-                .ToArray(),
+            SearchMorePresets([.. PresetStorage.AllPresets!
+                .Where(kvp =>
+                    PresetStorage.IsOccultCrescent(kvp.Key) &&
+                    !PresetStorage.ShouldBeHidden(kvp.Key) &&
+                    kvp.Value.CustomComboInfo.Job == job)
+                .Select(kvp => kvp.Key)],
                 alreadyShown);
         ShowSearchErrorIfNoResults();
     }
@@ -284,7 +284,7 @@ internal class PvEFeatures : FeaturesWindow
             if (IsSearching && !PresetMatchesSearch(preset))
                 continue;
             alreadyShown.Add(preset);
-            
+
             InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info); } };
 
             if (Service.Configuration.HideConflictedCombos && !IsSearching)
@@ -303,7 +303,7 @@ internal class PvEFeatures : FeaturesWindow
                 {
                     // Keep conflicted items in the counter
                     var parent = PresetStorage.GetParent(preset) ?? preset;
-                    CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent]);
+                    CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent].ToArray());
                 }
                 else
                     presetBox.Draw();
@@ -318,11 +318,11 @@ internal class PvEFeatures : FeaturesWindow
 
         // Search for children if nothing was found at the root
         if (IsSearching)
-            SearchMorePresets(PresetStorage.AllPresets!
-                .Where(x =>
-                    IsPvECombo(x) &&
-                    x.Attributes().CustomComboInfo.Job == job)
-                .ToArray(),
+            SearchMorePresets([.. PresetStorage.AllPresets!
+                .Where(kvp =>
+                    IsPvECombo(kvp.Key) &&
+                    kvp.Value.CustomComboInfo.Job == job)
+                .Select(x => x.Key)],
                 alreadyShown);
         ShowSearchErrorIfNoResults();
     }

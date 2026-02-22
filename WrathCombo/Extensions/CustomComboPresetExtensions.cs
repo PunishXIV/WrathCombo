@@ -3,7 +3,6 @@
 using System.Text;
 using ECommons.ExcelServices;
 using WrathCombo.Core;
-using WrathCombo.Window.Functions;
 
 #endregion
 
@@ -11,9 +10,9 @@ namespace WrathCombo.Extensions;
 
 internal static partial class PresetExtensions
 {
-    public static Presets.PresetAttributes? Attributes(this Preset preset)
+    public static PresetStorage.PresetAttributes? Attributes(this Preset preset)
     {
-        if (Presets.Attributes.TryGetValue(preset, out var atts))
+        if (PresetStorage.AllPresets.TryGetValue(preset, out var atts))
             return atts;
 
         return null;
@@ -47,7 +46,7 @@ internal static partial class PresetExtensions
             Preset? inspectingPreset = preset;
             while (inspectingPreset is not null)
             {
-                var parent = Presets.Attributes[inspectingPreset.Value].Parent;
+                var parent = PresetStorage.AllPresets[inspectingPreset.Value].Parent;
                 if (parent is not null)
                 {
                     name.Insert(0, $"{parent.Name()} > ");
@@ -93,7 +92,7 @@ internal static partial class PresetExtensions
                 if (!PresetStorage.IsEnabled(inspectingPreset.Value))
                     return false;
 
-                var parent = Presets.Attributes[inspectingPreset.Value].Parent;
+                var parent = PresetStorage.AllPresets[inspectingPreset.Value].Parent;
                 inspectingPreset = parent;
             }
 
