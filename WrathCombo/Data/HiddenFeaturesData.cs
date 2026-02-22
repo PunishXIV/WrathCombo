@@ -18,7 +18,7 @@ internal static class HiddenFeaturesData
     private const StringComparison Lower =
         StringComparison.InvariantCultureIgnoreCase;
 
-    private static bool FeaturesEnabled
+    internal static bool FeaturesEnabled
     {
         get
         {
