@@ -428,7 +428,7 @@ internal partial class MNK
     private static bool CanWindsReply() =>
         HasStatusEffect(Buffs.WindsRumination) &&
         InActionRange(WindsReply) &&
-        (GetCooldownRemainingTime(RiddleOfFire) > 5 ||
+        (GetCooldownRemainingTime(RiddleOfFire) > 10 ||
          HasStatusEffect(Buffs.RiddleOfFire) ||
          GetStatusEffectRemainingTime(Buffs.WindsRumination) < GCD * 2 ||
          !InMeleeRange());

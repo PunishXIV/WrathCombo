@@ -373,6 +373,37 @@ internal partial class MNK : Melee
         }
     }
 
+    internal class MNK_ST_BasicCombo : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.MNK_ST_BasicCombo;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (SnapPunch or PouncingCoeurl))
+                return actionID;
+
+            if (!LevelChecked(TrueStrike))
+                return Bootshine;
+
+            if (HasStatusEffect(Buffs.OpoOpoForm) || HasStatusEffect(Buffs.FormlessFist))
+                return OpoOpoStacks is 0 && LevelChecked(DragonKick)
+                    ? DragonKick
+                    : OriginalHook(Bootshine);
+
+            if (HasStatusEffect(Buffs.RaptorForm))
+                return RaptorStacks is 0 && LevelChecked(TwinSnakes)
+                    ? TwinSnakes
+                    : OriginalHook(TrueStrike);
+
+            if (HasStatusEffect(Buffs.CoeurlForm))
+                return CoeurlStacks is 0 && LevelChecked(Demolish)
+                    ? Demolish
+                    : OriginalHook(SnapPunch);
+
+            return OriginalHook(Bootshine);
+        }
+    }
+
     internal class MNK_BeastChakras : CustomCombo
     {
         protected internal override Preset Preset => Preset.MNK_Basic_BeastChakras;

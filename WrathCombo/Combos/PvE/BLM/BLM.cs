@@ -41,7 +41,7 @@ internal partial class BLM : Caster
                     if (ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                         InActionRange(Fire) && HasBattleTarget() && !HasStatusEffect(Buffs.LeyLines) &&
-                        JustUsed(Despair) && GetCooldownRemainingTime(Manafont) > GCD * 3 && !JustUsed(Triplecast))
+                        JustUsed(Despair) && !JustUsed(Triplecast) && !JustUsed(Manafont))
                         return Triplecast;
 
                     if (ActionReady(Transpose) &&
@@ -338,7 +338,7 @@ internal partial class BLM : Caster
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                         (BLM_ST_Triplecast_WhenToUse == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
                         (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_TriplecastMovementCharges ||
-                         !BLM_ST_MovementOption[0]) && JustUsed(Despair) && GetCooldownRemainingTime(Manafont) > GCD * 3)
+                         !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !JustUsed(Manafont))
                         return Triplecast;
 
                     if (IsEnabled(Preset.BLM_ST_Transpose) &&
@@ -369,7 +369,7 @@ internal partial class BLM : Caster
                             !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                             (BLM_ST_Triplecast_WhenToUse == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
                             (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_TriplecastMovementCharges ||
-                             !BLM_ST_MovementOption[0]) && JustUsed(Despair) && GetCooldownRemainingTime(Manafont) > GCD * 3)
+                             !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !JustUsed(Manafont))
                             return Triplecast;
                     }
                 }

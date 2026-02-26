@@ -4206,7 +4206,12 @@ public enum Preset
     #endregion
 
     #region Basic Combo
-
+    
+    [ReplaceSkill(MNK.SnapPunch, MNK.PouncingCoeurl)]
+    [BasicCombo]
+    [CustomComboInfo("Basic Combo", "Replace Snap Punch with its combo chain.", Job.MNK)]
+    MNK_ST_BasicCombo = 9046,
+    
     [CustomComboInfo("Beast Chakra Handlers", "Merge single target GCDs which share the same beast chakra", Job.MNK)]
     MNK_Basic_BeastChakras = 9019,
 
@@ -4246,7 +4251,7 @@ public enum Preset
     
     #endregion
 
-    // Last value = 9045
+    // Last value = 9046
     // Hidden = 9300
 
     #endregion
