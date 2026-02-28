@@ -215,6 +215,20 @@ internal abstract partial class CustomComboFunctions
         // Turn Target's status to uint hashset
         var targetStatuses = statuses.Select(s => s.StatusId).ToHashSet();
         uint targetID = tar.BaseId;
+        
+        // Return true if TTK calculations are seeing no damage changes
+        var ttk = TimeToKill.GetTimeToKillByID(tar.SafeGameObjectId);
+        
+        // If we've recorded plenty of samples and the recent ones show zero damage, treat as invincible
+        if (ttk?.Diffs.Count > 10)
+        {
+            var now = Environment.TickCount64;
+            var recentDiffs = ttk.Diffs.Where(d => now - d.TickRecorded <= 1500)
+                .ToList();
+
+            if (recentDiffs.Count > 3 && recentDiffs.All(d => d.Diff == 0))
+                return true;
+        }
 
         // Returning False in each case because there should be no other General Invincibility Check needed
         // for specified areas

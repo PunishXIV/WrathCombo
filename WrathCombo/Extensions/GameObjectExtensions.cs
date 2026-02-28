@@ -13,6 +13,7 @@ using Dalamud.Game.ClientState.Statuses;
 using ECommons.Logging;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 #endregion
@@ -45,6 +46,13 @@ public static class GameObjectExtensions
                 return (float)battleChara.CurrentHp / battleChara.MaxHp * 100f;
             }
         }
+        
+        /// <summary>
+        ///    Gets the Estimated Time To Kill for the object.<br/>
+        ///    If the object is null, or cannot be found, or is untracked, returns NaN.
+        /// </summary>
+        public float TTK =>
+            obj != null ? TimeToKill.EstimatedSecondsToKill(obj) : float.NaN;
 
         /// <summary>
         ///     Checks if the object is dead, and should be raised.<br />
