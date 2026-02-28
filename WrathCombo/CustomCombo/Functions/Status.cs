@@ -392,7 +392,7 @@ internal abstract partial class CustomComboFunctions
 
                 if (targetID is 18576 or 18577 or 18578 or 18579 or 18642)
                 {
-                    if (HasStatusEffect(3065)) return targetID != 18642; // Hellmaker checking for fire floor debuff
+                    if (HasStatusEffect(3065)) return targetID != 18642 || GetTargetDistance(tar) > 20;  // Hellmaker checking for fire floor debuff
                     if (HasStatusEffect(4542)) return targetID != 18576; // Alpha
                     if (HasStatusEffect(4543)) return targetID != 18577; // Beta
                     if (HasStatusEffect(4544)) return targetID != 18578; // Gamma

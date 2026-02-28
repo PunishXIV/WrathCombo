@@ -1,5 +1,6 @@
 ﻿using Dalamud.Utility;
 using ECommons;
+using ECommons.DalamudServices;
 using ECommons.Logging;
 using System;
 using System.Collections.Generic;
@@ -182,11 +183,8 @@ internal static class PresetStorage
         return ctrlText;
     }
 
-    public static void HandleDuplicatePresets()
+    public static void RemoveRedundantPresets()
     {
-        if (!EZ.Throttle("PeriodicPresetDeDuplicating", TS.FromSeconds(15)))
-            return;
-
         var redundantIDs = Service.Configuration.EnabledActions.Where(x => int.TryParse(x.ToString(), out _)).OrderBy(x => x).Cast<int>().ToList();
         foreach (var id in redundantIDs)
             Service.Configuration.EnabledActions.RemoveWhere(x => (int)x == id);

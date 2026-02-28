@@ -141,21 +141,22 @@ internal class Presets : ConfigWindow
             PresetAttributes attributes = new(preset);
             Attributes[preset] = attributes;
         }
-        bool enabled = PresetStorage.IsEnabled(preset);
-        bool pvp = Attributes[preset].IsPvP;
-        var conflicts = Attributes[preset].Conflicts;
-        var parent = Attributes[preset].Parent;
-        var blueAttr = Attributes[preset].BlueInactive;
-        var bozjaParents = Attributes[preset].BozjaParent;
-        var eurekaParents = Attributes[preset].EurekaParent;
-        var auto = Attributes[preset].AutoAction;
-        var hidden = Attributes[preset].Hidden;
-        var presetName = info.Name;
-        var currentJob = Attributes[preset].CustomComboInfo.Job;
+        bool enabled       = PresetStorage.IsEnabled(preset);
+        bool pvp           = Attributes[preset].IsPvP;
+        var  conflicts     = Attributes[preset].Conflicts;
+        var  parent        = Attributes[preset].Parent;
+        var  blueAttr      = Attributes[preset].BlueInactive;
+        var  bozjaParents  = Attributes[preset].BozjaParent;
+        var  eurekaParents = Attributes[preset].EurekaParent;
+        var  auto          = Attributes[preset].AutoAction;
+        var  comboType     = Attributes[preset].ComboType;
+        var  hidden        = Attributes[preset].Hidden;
+        var  presetName    = info.Name;
+        var  currentJob    = Attributes[preset].CustomComboInfo.Job;
 
         ImGui.Spacing();
 
-        if (auto != null)
+        if (auto != null && (!pvp || HiddenFeaturesData.FeaturesEnabled))
         {
             Service.Configuration.AutoActions.TryAdd(preset, false);
 
@@ -177,7 +178,7 @@ internal class Presets : ConfigWindow
         if (ipcControl is not null)
             enabled = ipcControl.Value.enabled;
 
-        if (info.Name.Contains(" - AoE") || info.Name.Contains(" - Sin"))
+        if (comboType is (ComboType.Advanced or ComboType.Simple))
             if (ipcControl is not null)
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded(preset);
 
