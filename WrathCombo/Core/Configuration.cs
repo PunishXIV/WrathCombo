@@ -270,8 +270,8 @@ public partial class Configuration : IPluginConfiguration
         warningMark: "Setting this too low or to zero will make it really hard to manually queue.",
         unitLabel: "seconds",
         type: Setting.Type.Slider_Float,
-        sliderMin: 0f,
-        sliderMax: 2.5f)]
+        minFloat: 0f,
+        maxFloat: 2.5f)]
     public float QueueAdjustThreshold = 1.5f;
 
     [SettingCategory(Rotation_Behavior_Options)]
@@ -295,8 +295,8 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "50",
         unitLabel: "milliseconds",
         type: Setting.Type.Number_Int,
-        sliderMin: 0,
-        sliderMax: 500)]
+        minInt: 0,
+        maxInt: 500)]
     public int Throttle = 50;
 
     /// Delay before recognizing movement. Default: 0.
@@ -309,8 +309,8 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "0.0",
         unitLabel: "seconds",
         type: Setting.Type.Number_Float,
-        sliderMin: 0,
-        sliderMax: 10)]
+        minFloat: 0,
+        maxFloat: 10)]
     public float MovementLeeway = 0f;
 
     /// The timeout for opener failure. Default: 4.
@@ -323,8 +323,8 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "4.0",
         unitLabel: "seconds",
         type: Setting.Type.Number_Float,
-        sliderMin: 0,
-        sliderMax: 20)]
+        minFloat: 4f,
+        maxFloat: 20)]
     public float OpenerTimeout = 4f;
 
     /// The offset of the melee range check. Default: 0.
@@ -340,8 +340,8 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "0",
         unitLabel: "yalms",
         type: Setting.Type.Number_Float,
-        sliderMin: -3,
-        sliderMax: 30)]
+        minFloat: -3,
+        maxFloat: 30)]
     public float MeleeOffset = 0;
 
     /// The % through a cast before interrupting. Default: 0.
@@ -355,8 +355,8 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "0",
         unitLabel: "% of cast",
         type: Setting.Type.Slider_Int,
-        sliderMin: 0,
-        sliderMax: 100)]
+        minInt: 0,
+        maxInt: 100)]
     public float InterruptDelay = 0;
 
     /// The maximum allowable weaves between GCDs. Default: 2.
@@ -372,8 +372,8 @@ public partial class Configuration : IPluginConfiguration
         defaultValue: "2",
         unitLabel: "# of oGCDs",
         type: Setting.Type.Slider_Int,
-        sliderMin: 1,
-        sliderMax: 3)]
+        minInt: 1,
+        maxInt: 3)]
     public int MaximumWeavesPerWindow = 2;
 
     #endregion

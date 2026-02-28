@@ -56,8 +56,10 @@ public class Setting(
     string extraHelpMark = "DEFAULT",
     string warningMark = "DEFAULT",
     string extraText = "DEFAULT",
-    float sliderMin = float.NaN,
-    float sliderMax = float.NaN,
+    float minFloat = float.NaN,
+    float maxFloat = float.NaN,
+    int minInt = int.MinValue,
+    int maxInt = int.MaxValue,
     string[]? stackStringsToExclude = null) : Attribute
 {
     public enum Type
@@ -84,10 +86,15 @@ public class Setting(
         warningMark == "DEFAULT" ? null : warningMark;
     internal string? ExtraText { get; } = 
         extraText == "DEFAULT" ? null : extraText;
-    internal float? SliderMin { get; } = 
-        float.IsNaN(sliderMin) ? null : sliderMin;
-    internal float? SliderMax { get; } = 
-        float.IsNaN(sliderMax) ? null : sliderMax;
+    internal float? MinFloat { get; } = 
+        float.IsNaN(minFloat) ? null : minFloat;
+    internal float? MaxFloat { get; } = 
+        float.IsNaN(maxFloat) ? null : maxFloat;
+    internal int? MinInt { get; } =
+        minInt == int.MinValue ? null : minInt;
+    internal int? MaxInt { get; } =
+        maxInt == int.MaxValue ? null : maxInt;
+
     internal string[]? StackStringsToExclude { get; } = stackStringsToExclude;
 }
 

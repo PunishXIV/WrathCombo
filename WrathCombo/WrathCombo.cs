@@ -192,6 +192,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         ConflictingPluginsChecks.Begin();
 
         ConfigWindow = new ConfigWindow();
+        Settings.SanitiseSettings();
         _majorChangesWindow = new MajorChangesWindow();
         TargetHelper = new();
         ws = new();

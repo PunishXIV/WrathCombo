@@ -39,8 +39,10 @@ public class Setting
             ExtraHelpMark         = cachedSetting.ExtraHelpMark;
             WarningMark           = cachedSetting.WarningMark;
             ExtraText             = cachedSetting.ExtraText;
-            SliderMin             = cachedSetting.SliderMin;
-            SliderMax             = cachedSetting.SliderMax;
+            MinFLoat              = cachedSetting.MinFLoat;
+            MaxFloat              = cachedSetting.MaxFloat;
+            MinInt                = cachedSetting.MinInt;
+            MaxInt                = cachedSetting.MaxInt;
             StackStringsToExclude = cachedSetting.StackStringsToExclude;
             GroupName             = cachedSetting.GroupName;
             GroupNameSpace        = cachedSetting.GroupNameSpace;
@@ -74,8 +76,10 @@ public class Setting
         ExtraHelpMark         = setting.ExtraHelpMark;
         WarningMark           = setting.WarningMark;
         ExtraText             = setting.ExtraText;
-        SliderMin             = setting.SliderMin;
-        SliderMax             = setting.SliderMax;
+        MinFLoat              = setting.MinFloat;
+        MaxFloat              = setting.MaxFloat;
+        MinInt                = setting.MinInt;
+        MaxInt                = setting.MaxInt;
         StackStringsToExclude = setting.StackStringsToExclude;
 
         var group = _field.GetCustomAttribute<SettingGroup>();
@@ -150,8 +154,10 @@ public class Setting
     public string?     ExtraHelpMark;
     public string?     WarningMark;
     public string?     ExtraText;
-    public float?      SliderMin;
-    public float?      SliderMax;
+    public float?      MinFLoat;
+    public float?      MaxFloat;
+    public int?        MinInt;
+    public int?        MaxInt;
 
     #endregion
 
