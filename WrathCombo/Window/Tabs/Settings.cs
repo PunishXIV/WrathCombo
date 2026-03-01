@@ -159,7 +159,7 @@ internal class Settings : ConfigWindow
         bool changed;
         var disabled = false;
         var label = setting.Name;
-        float? cursorXAfterInput = null;
+        float cursorXAfterInput = 0;
 
         const string stackHelp =
             "The priority goes from top to bottom.\n" +
