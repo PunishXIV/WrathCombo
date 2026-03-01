@@ -124,7 +124,7 @@ internal partial class WAR
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             
-            const Combo comboFlags = Combo.AoE | Combo.Simple;
+            const Combo comboFlags = Combo.AoE | Combo.Adv;
             
             if (WAR_AoE_Advanced_MitsOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
             {

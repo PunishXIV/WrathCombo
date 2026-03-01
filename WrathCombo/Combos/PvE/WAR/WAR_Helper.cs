@@ -354,8 +354,7 @@ internal partial class WAR : Tank
             #region Inner Beast/Fell Cleave/ Decimate
             if (fellCleaveEnabled && HasSurgingTempest && LevelChecked(OriginalHook(InnerBeast)) &&
                 (HasStatusEffect(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
-                 BeastGauge >= spenderGaugeThreshold || //Use if you have enough gauge, See config
-                 HasNascentChaos)) //Use if you have Nascent Buff
+                 BeastGauge >= spenderGaugeThreshold)) //Use if you have Nascent Buff
             {
                 int enemyCount = NumberOfEnemiesInRange(Decimate);
                 
