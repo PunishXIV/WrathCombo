@@ -660,7 +660,7 @@ internal unsafe class AutoRotationController
                 if (!NIN.InMudra)
                 {
                     var st = GetSingleTarget(mode);
-                    var maxHit = NumberOfEnemiesInRange(OriginalHook(gameAct), target, true);
+                    var maxHit = NumberOfEnemiesInRange(DontChangeForAoe(gameAct) ? gameAct : OriginalHook(gameAct), target, true);
                     var singleTargetModeTarget = NumberOfEnemiesInRange(OriginalHook(gameAct), st, true);
 
                     if (singleTargetModeTarget >= maxHit)
@@ -739,6 +739,11 @@ internal unsafe class AutoRotationController
 
             }
             return false;
+        }
+
+        private static bool DontChangeForAoe(uint gameAct)
+        {
+            return gameAct is DNC.Windmill or DNC.Bladeshower or DNC.RisingWindmill or DNC.Bloodshower;
         }
 
         public static bool ExecuteST(Enum mode, Preset preset, PresetStorage.PresetData attributes, uint gameAct)
