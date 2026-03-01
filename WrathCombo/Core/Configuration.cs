@@ -354,9 +354,9 @@ public partial class Configuration : IPluginConfiguration
         recommendedValue: "below 40 (Above that and you start failing to interrupt many short casts)",
         defaultValue: "0",
         unitLabel: "% of cast",
-        type: Setting.Type.Slider_Int,
-        minInt: 0,
-        maxInt: 100)]
+        type: Setting.Type.Slider_Float,
+        minFloat: 0,
+        maxFloat: 100)]
     public float InterruptDelay = 0;
 
     /// The maximum allowable weaves between GCDs. Default: 2.

@@ -160,7 +160,7 @@ internal class Settings : ConfigWindow
         bool changed;
         var disabled = false;
         var label = setting.Name;
-        float? cursorXAfterInput = null;
+        float cursorXAfterInput = 0;
 
         const string stackHelp =
             "The priority goes from top to bottom.\n" +
@@ -454,7 +454,7 @@ internal class Settings : ConfigWindow
         if (setting.UnitLabel is not null)
         {
             ImGui.SameLine(
-                cursorXAfterInput!.Value +
+                cursorXAfterInput +
                 ImGui.CalcTextSize(_longestLabel!).X
             );
             ImGui.Text($"   -   {setting.Name}");
