@@ -184,6 +184,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
         PresetStorage.Init();
+        PresetStorage.RemoveRedundantPresets();
 
         Service.ComboCache = new CustomComboCache();
         Service.ActionReplacer = new ActionReplacer();
@@ -308,8 +309,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
             Service.Configuration.SetActionChanging();
             Configuration.ProcessSaveQueue();
-
-            PresetStorage.HandleDuplicatePresets();
 
             //Hacky workaround to ensure it's always running
             CustomComboFunctions.IsMoving();

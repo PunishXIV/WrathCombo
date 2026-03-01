@@ -62,12 +62,12 @@ internal partial class RDM
             {
                 #region Single Target
                 case Preset.RDM_Balance_Opener:
-                    DrawHorizontalRadioButton(RDM_Opener_Selection, "Standard Opener", "Balance Standard Opener", 0);
-                    DrawHorizontalRadioButton(RDM_Opener_Selection, "GapClosing Adjusted Standard Opener", "Shifts the melee a little bit to put a gapcloser in", 1);
-
-                    ImGui.Indent();
                     DrawBossOnlyChoice(RDM_BalanceOpener_Content);
-                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    DrawRadioButton(RDM_Opener_Selection, "Standard Opener", 
+                        "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(RDM_Opener_Selection, "GapClosing Adjusted Standard Opener", 
+                        "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 1, descriptionAsTooltip: true);
                     break;
                 
                 case Preset.RDM_ST_ThunderAero:

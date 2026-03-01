@@ -55,14 +55,12 @@ internal partial class PCT
                     break;
                 
                 case Preset.PCT_ST_Advanced_Openers:
-                    ImGui.Indent();
-                    DrawHorizontalRadioButton(PCT_Opener_Choice, $"2nd GCD {StarryMuse.ActionName()}", "",
-                        0);
-                    DrawHorizontalRadioButton(PCT_Opener_Choice, $"3rd GCD {StarryMuse.ActionName()}", "",
-                        1);
-                    ImGui.NewLine();
                     DrawBossOnlyChoice(PCT_Balance_Content);
-                    ImGui.Unindent();
+                    ImGui.NewLine();
+                    DrawRadioButton(PCT_Opener_Choice, $"2nd GCD {StarryMuse.ActionName()}", 
+                        "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 0, descriptionAsTooltip: true);
+                    DrawRadioButton(PCT_Opener_Choice, $"3rd GCD {StarryMuse.ActionName()}", 
+                        "Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.", 1, descriptionAsTooltip: true);
                     break;
 
                 case Preset.PCT_ST_AdvancedMode_LucidDreaming:

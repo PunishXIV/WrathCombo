@@ -51,6 +51,7 @@ internal partial class BRD
                     DrawRadioButton(BRD_Adv_Opener_Selection, "Standard Opener", "", 0);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.48 Adjusted Standard Opener", "", 1);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.49 Standard Comfy", "", 2);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, "Early Buff Window Opener", "Moves buff window forward about 1 GCD. Prepot with this.", 3, descriptionAsTooltip: true);
                     ImGui.Indent();
                     DrawBossOnlyChoice(BRD_Balance_Content);
                     ImGui.Unindent();
