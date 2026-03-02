@@ -309,7 +309,7 @@ internal class AutoRotationTab : ConfigWindow
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoCleanse");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-            Text.FormatAndCache(
+            	Text.FormatAndCache(
                     AutoRotationUI.Checkbox_AutoCleanse,
                     RoleActions.Healer.Esuna.ActionName()), 
                 ref cfg.HealerSettings.AutoCleanse, "AutoCleanse");
@@ -321,39 +321,68 @@ internal class AutoRotationTab : ConfigWindow
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("ManageKardia");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                $"[{Job.SGE.Shorthand()}] Automatically Manage Kardia", ref cfg.HealerSettings.ManageKardia, "ManageKardia");
-            ImGuiComponents.HelpMarker($"Switches {SGE.Kardia.ActionName()} to party members currently being targeted by enemies, prioritising tanks if multiple people are being targeted.");
+                Text.FormatAndCache(
+                    AutoRotationUI.Checkbox_ManageKardia,
+                    Job.SGE.Shorthand(),
+                    SGE.Kardia.ActionName()),
+                ref cfg.HealerSettings.ManageKardia, "ManageKardia");
+            ImGuiComponents.HelpMarker(
+                Text.FormatAndCache(
+                    AutoRotationUI.HelpText_ManageKardia,
+                    SGE.Kardia.ActionName()));
+            
             if (cfg.HealerSettings.ManageKardia)
             {
                 ImGuiExtensions.Prefix(cfg.HealerSettings.ManageKardia);
-                changed |= ImGui.Checkbox($"Limit {SGE.Kardia.ActionName()} swapping to tanks only", ref cfg.HealerSettings.KardiaTanksOnly);
+                changed |= ImGui.Checkbox(
+                    Text.FormatAndCache(
+                        AutoRotationUI.Checkbox_KardiaTanksOnly,
+                        SGE.Kardia.ActionName()),
+                    ref cfg.HealerSettings.KardiaTanksOnly);
             }
 
-            changed |= ImGui.Checkbox($"[{Job.WHM.Shorthand()}/{Job.AST.Shorthand()}/{Job.SCH.Shorthand()}/{Job.SGE.Shorthand()}] Pre-emptively apply Heal Over Time/Shields on focus target", ref cfg.HealerSettings.PreEmptiveHoT);
-            ImGuiComponents.HelpMarker($"Applies {WHM.Regen.ActionName()}/{AST.AspectedBenefic.ActionName()}/{SGE.EukrasianDiagnosis.ActionName()}/{SCH.Adloquium.ActionName()} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses \"Only in Combat\" setting)");
+            changed |= ImGui.Checkbox(
+                Text.FormatAndCache(
+                    AutoRotationUI.Checkbox_PreEmptiveHoT,
+                    Job.WHM.Shorthand(),
+                    Job.AST.Shorthand(),
+                    Job.SCH.Shorthand(),
+                    Job.SGE.Shorthand()),
+                ref cfg.HealerSettings.PreEmptiveHoT);
+            ImGuiComponents.HelpMarker(
+                Text.FormatAndCache(
+                    AutoRotationUI.HelpText_PreEmptiveHoT,
+                    WHM.Regen.ActionName(),
+                    AST.AspectedBenefic.ActionName(),
+                    SGE.EukrasianDiagnosis.ActionName(),
+                    SCH.Adloquium.ActionName()));
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("IncludeNPCs");
-            changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded("Heal Friendly NPCs", ref cfg.HealerSettings.IncludeNPCs);
-            ImGuiComponents.HelpMarker("Useful for healer quests where NPCs are expected to be healed but aren't added directly to your party.");
+            changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                AutoRotationUI.Checkbox_IncludeNPCs,
+                ref cfg.HealerSettings.IncludeNPCs);
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_IncludeNPCs);
 
-            changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded("Always Set Hard Target###HealerHardTarget", ref cfg.HealerSettings.HealerAlwaysHardTarget, "HealerAlwaysHardTarget");
-
-            ImGuiComponents.HelpMarker("Auto-rotation does not need to target allies to work, however with this setting enabled it will always set your hard target when it executes a heal.");
+            changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                AutoRotationUI.Checkbox_HealerAlwaysHardTarget,
+                ref cfg.HealerSettings.HealerAlwaysHardTarget,
+                "HealerAlwaysHardTarget");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_HealerAlwaysHardTarget);
 
         }
 
-        ImGuiEx.TextUnderlined("Advanced");
-        changed |= ImGui.InputInt("Throttle Delay (ms)", ref cfg.Throttler);
-        ImGuiComponents.HelpMarker("Auto-Rotation has a built in throttler to only run every so many milliseconds for performance reasons. If you experience issues with frame rate, try increasing this value. Do note this may have a side-effect of introducing clipping if set too high, so experiment with the value.");
+        ImGuiEx.TextUnderlined(AutoRotationUI.Label_Advanced);
+        changed |= ImGui.InputInt(AutoRotationUI.Input_ThrottleDelay, ref cfg.Throttler);
+        ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_ThrottleDelay);
 
         var orbwalker = OrbwalkerIPC.IsEnabled && OrbwalkerIPC.PluginEnabled();
         using (ImRaii.Disabled(!orbwalker))
         {
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("OrbwalkerIntegration");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                "Enable Orbwalker Integration", ref cfg.OrbwalkerIntegration, "OrbwalkerIntegration");
+                AutoRotationUI.Checkbox_Orbwalker, ref cfg.OrbwalkerIntegration, "OrbwalkerIntegration");
 
-            ImGuiComponents.HelpMarker($"This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast. You may need to enable \"Buffer Initial Cast\" setting in Orbwalker if not already enabled. Requires an Orbwalker plugin to be installed and enabled.");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_Orbwalker);
         }
 
         if (changed)

@@ -311,4 +311,46 @@ Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
   <data name="HelpText_AutoCleanse" xml:space="preserve">
     <value>Will {0} any cleansable debuffs (Healing takes priority).</value>
   </data>
+  <data name="Checkbox_ManageKardia" xml:space="preserve">
+    <value>[{0}] Automatically Manage {1}</value>
+  </data>
+  <data name="HelpText_ManageKardia" xml:space="preserve">
+    <value>Switches {0} to party members currently being targeted by enemies, prioritising tanks if multiple people are being targeted.</value>
+  </data>
+  <data name="Checkbox_KardiaTanksOnly" xml:space="preserve">
+    <value>Limit {0} swapping to tanks only</value>
+  </data>
+  <data name="Checkbox_PreEmptiveHoT" xml:space="preserve">
+    <value>[{0}/{1}/{2}/{3}] Pre-emptively apply Heal Over Time/Shields on focus target</value>
+  </data>
+  <data name="HelpText_PreEmptiveHoT" xml:space="preserve">
+    <value>Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses "Only in Combat" setting)</value>
+  </data>
+  <data name="Checkbox_IncludeNPCs" xml:space="preserve">
+    <value>Heal Friendly NPCs</value>
+  </data>
+  <data name="HelpText_IncludeNPCs" xml:space="preserve">
+    <value>Useful for healer quests where NPCs are expected to be healed but aren't added directly to your party.</value>
+  </data>
+  <data name="Checkbox_HealerAlwaysHardTarget" xml:space="preserve">
+    <value>Always Set Hard Target###HealerHardTarget</value>
+  </data>
+  <data name="HelpText_HealerAlwaysHardTarget" xml:space="preserve">
+    <value>Auto-rotation does not need to target allies to work, however with this setting enabled it will always set your hard target when it executes a heal.</value>
+  </data>
+  <data name="Label_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="Input_ThrottleDelay" xml:space="preserve">
+    <value>Throttle Delay (ms)</value>
+  </data>
+  <data name="HelpText_ThrottleDelay" xml:space="preserve">
+    <value>Auto-Rotation has a built in throttler to only run every so many milliseconds for performance reasons. If you experience issues with frame rate, try increasing this value. Do note this may have a side-effect of introducing clipping if set too high, so experiment with the value.</value>
+  </data>
+  <data name="Checkbox_Orbwalker" xml:space="preserve">
+    <value>Enable Orbwalker Integration</value>
+  </data>
+  <data name="HelpText_Orbwalker" xml:space="preserve">
+    <value>This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast. You may need to enable "Buffer Initial Cast" setting in Orbwalker if not already enabled. Requires an Orbwalker plugin to be installed and enabled.</value>
+  </data>
 </root>

@@ -204,6 +204,42 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Always Set Hard Target###HealerHardTarget.
+        /// </summary>
+        internal static string Checkbox_HealerAlwaysHardTarget {
+            get {
+                return ResourceManager.GetString("Checkbox_HealerAlwaysHardTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Heal Friendly NPCs.
+        /// </summary>
+        internal static string Checkbox_IncludeNPCs {
+            get {
+                return ResourceManager.GetString("Checkbox_IncludeNPCs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Limit {0} swapping to tanks only.
+        /// </summary>
+        internal static string Checkbox_KardiaTanksOnly {
+            get {
+                return ResourceManager.GetString("Checkbox_KardiaTanksOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}] Automatically Manage {1}.
+        /// </summary>
+        internal static string Checkbox_ManageKardia {
+            get {
+                return ResourceManager.GetString("Checkbox_ManageKardia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Only Attack Targets Already In Combat.
         /// </summary>
         internal static string Checkbox_OnlyAttackInCombat {
@@ -218,6 +254,24 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string Checkbox_OnlyInCombat {
             get {
                 return ResourceManager.GetString("Checkbox_OnlyInCombat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable Orbwalker Integration.
+        /// </summary>
+        internal static string Checkbox_Orbwalker {
+            get {
+                return ResourceManager.GetString("Checkbox_Orbwalker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [{0}/{1}/{2}/{3}] Pre-emptively apply Heal Over Time/Shields on focus target.
+        /// </summary>
+        internal static string Checkbox_PreEmptiveHoT {
+            get {
+                return ResourceManager.GetString("Checkbox_PreEmptiveHoT", resourceCulture);
             }
         }
         
@@ -401,6 +455,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto-rotation does not need to target allies to work, however with this setting enabled it will always set your hard target when it executes a heal..
+        /// </summary>
+        internal static string HelpText_HealerAlwaysHardTarget {
+            get {
+                return ResourceManager.GetString("HelpText_HealerAlwaysHardTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Manual - Will only heal a target if you select them manually. If the target does not meet the healing threshold settings criteria below it will skip healing in favour of DPSing (if also enabled).
         ///Highest Current - Prioritises the party member with the highest current HP%.
         ///Lowest Current - Prioritises the party member with the lowest current HP%..
@@ -433,6 +496,42 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Useful for healer quests where NPCs are expected to be healed but aren&apos;t added directly to your party..
+        /// </summary>
+        internal static string HelpText_IncludeNPCs {
+            get {
+                return ResourceManager.GetString("HelpText_IncludeNPCs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switches {0} to party members currently being targeted by enemies, prioritising tanks if multiple people are being targeted..
+        /// </summary>
+        internal static string HelpText_ManageKardia {
+            get {
+                return ResourceManager.GetString("HelpText_ManageKardia", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast. You may need to enable &quot;Buffer Initial Cast&quot; setting in Orbwalker if not already enabled. Requires an Orbwalker plugin to be installed and enabled..
+        /// </summary>
+        internal static string HelpText_Orbwalker {
+            get {
+                return ResourceManager.GetString("HelpText_Orbwalker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses &quot;Only in Combat&quot; setting).
+        /// </summary>
+        internal static string HelpText_PreEmptiveHoT {
+            get {
+                return ResourceManager.GetString("HelpText_PreEmptiveHoT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This will determine how soon before the GCD is finished to queue up the next weaponskill or spell. Your latency may have an effect on what actions are performed so please adjust this if you&apos;re noticing improper action use, i.e double Blizzard IV casts due to MP not updating in time..
         /// </summary>
         internal static string HelpText_QueueWindow {
@@ -456,6 +555,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string HelpText_SingleTargetRegenHPP {
             get {
                 return ResourceManager.GetString("HelpText_SingleTargetRegenHPP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto-Rotation has a built in throttler to only run every so many milliseconds for performance reasons. If you experience issues with frame rate, try increasing this value. Do note this may have a side-effect of introducing clipping if set too high, so experiment with the value..
+        /// </summary>
+        internal static string HelpText_ThrottleDelay {
+            get {
+                return ResourceManager.GetString("HelpText_ThrottleDelay", resourceCulture);
             }
         }
         
@@ -520,6 +628,24 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string Input_QueueWindow {
             get {
                 return ResourceManager.GetString("Input_QueueWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Throttle Delay (ms).
+        /// </summary>
+        internal static string Input_ThrottleDelay {
+            get {
+                return ResourceManager.GetString("Input_ThrottleDelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        internal static string Label_Advanced {
+            get {
+                return ResourceManager.GetString("Label_Advanced", resourceCulture);
             }
         }
         
