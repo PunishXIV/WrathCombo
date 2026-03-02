@@ -356,11 +356,11 @@ internal partial class WAR : Tank
                 (HasStatusEffect(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
                  BeastGauge >= spenderGaugeThreshold)) //Use if you have Nascent Buff
             {
-                int enemyCount = NumberOfEnemiesInRange(Decimate);
+                int enemyCount = NumberOfEnemiesInRange(Role.Reprisal);
                 
                 if (InMeleeRange() && //Melee range check for single target
                     (flags.HasFlag(Combo.ST) || //Fell Cleave in ST
-                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && (!LevelChecked(Decimate) || //Fell Cleave in Aoe if Decimate too low level
+                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && (!LevelChecked(Decimate) && enemyCount < 6 || //Fell Cleave in Aoe if Decimate too low level
                                                                               enemyCount < 4 && TraitLevelChecked(Traits.MeleeMastery2)))) //Fell Cleave in Aoe if decimate less than 4 targets
                 {
                     actionID = OriginalHook(InnerBeast);
