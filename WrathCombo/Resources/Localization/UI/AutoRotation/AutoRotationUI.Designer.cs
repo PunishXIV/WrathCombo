@@ -69,6 +69,60 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto-{0}.
+        /// </summary>
+        internal static string Checkbox_AutoCleanse {
+            get {
+                return ResourceManager.GetString("Checkbox_AutoCleanse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto-Resurrect.
+        /// </summary>
+        internal static string Checkbox_AutoRez {
+            get {
+                return ResourceManager.GetString("Checkbox_AutoRez", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply to {0} &amp; {1}.
+        /// </summary>
+        internal static string Checkbox_AutoRezDPSJobs {
+            get {
+                return ResourceManager.GetString("Checkbox_AutoRezDPSJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only Raise Raisers.
+        /// </summary>
+        internal static string Checkbox_AutoRezDPSJobsHealersOnly {
+            get {
+                return ResourceManager.GetString("Checkbox_AutoRezDPSJobsHealersOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply to Out of Party Members.
+        /// </summary>
+        internal static string Checkbox_AutoRezOutOfParty {
+            get {
+                return ResourceManager.GetString("Checkbox_AutoRezOutOfParty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Require {0}/{1}.
+        /// </summary>
+        internal static string Checkbox_AutoRezRequireSwift {
+            get {
+                return ResourceManager.GetString("Checkbox_AutoRezRequireSwift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bypass Only in Combat for FATE Targets.
         /// </summary>
         internal static string Checkbox_BypassFATETargets {
@@ -195,20 +249,20 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Damage Settings.
+        ///   Looks up a localized string similar to Healing Settings.
         /// </summary>
-        internal static string Header_DamageSettings {
+        internal static string Header_HealingSettings {
             get {
-                return ResourceManager.GetString("Header_DamageSettings", resourceCulture);
+                return ResourceManager.GetString("Header_HealingSettings", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to When in boss fights only, any target regardless of distance can be eligible to be attacked..
+        ///   Looks up a localized string similar to Disabling this will turn off AoE Healing features. Otherwise will require the amount of targets required to be in range of an AoE feature&apos;s heal to use..
         /// </summary>
-        internal static string HelpTest_IgnoreRangeInBoss {
+        internal static string HelpText_AoEHealTargetCount {
             get {
-                return ResourceManager.GetString("HelpTest_IgnoreRangeInBoss", resourceCulture);
+                return ResourceManager.GetString("HelpText_AoEHealTargetCount", resourceCulture);
             }
         }
         
@@ -218,6 +272,52 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string HelpText_AoETargetCount {
             get {
                 return ResourceManager.GetString("HelpText_AoETargetCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will {0} any cleansable debuffs (Healing takes priority)..
+        /// </summary>
+        internal static string HelpText_AutoCleanse {
+            get {
+                return ResourceManager.GetString("HelpText_AutoCleanse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will attempt to resurrect dead party members.
+        ///Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}.
+        /// </summary>
+        internal static string HelpText_AutoRez {
+            get {
+                return ResourceManager.GetString("HelpText_AutoRez", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When playing as {0} or {1}, also attempt to raise a dead party member. {2} will only resurrect with {3} or {4} active..
+        /// </summary>
+        internal static string HelpText_AutoRezDPSJobs {
+            get {
+                return ResourceManager.GetString("HelpText_AutoRezDPSJobs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When playing as {0} or {1}, Will only attempt to res Healers and Raisers.
+        /// </summary>
+        internal static string HelpText_AutoRezDPSJobsHealersOnly {
+            get {
+                return ResourceManager.GetString("HelpText_AutoRezDPSJobsHealersOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requires {0} or {1}&apos;s {2} to be available to resurrect a party member, to avoid hard-casting..
+        /// </summary>
+        internal static string HelpText_AutoRezRequireSwift {
+            get {
+                return ResourceManager.GetString("HelpText_AutoRezRequireSwift", resourceCulture);
             }
         }
         
@@ -292,6 +392,26 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t set this too high! 1-2 seconds is normally comfy enough to be considered a natural reaction..
+        /// </summary>
+        internal static string HelpText_HealDelay {
+            get {
+                return ResourceManager.GetString("HelpText_HealDelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manual - Will only heal a target if you select them manually. If the target does not meet the healing threshold settings criteria below it will skip healing in favour of DPSing (if also enabled).
+        ///Highest Current - Prioritises the party member with the highest current HP%.
+        ///Lowest Current - Prioritises the party member with the lowest current HP%..
+        /// </summary>
+        internal static string HelpText_HealerTargetingMode {
+            get {
+                return ResourceManager.GetString("HelpText_HealerTargetingMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to These NPCs will be ignored by Auto-Rotation.
         ///Every instance of this NPC will be excluded from automatic targeting (Manual will still work).
         ///To remove an NPC from this list, select it and press the Delete button below.
@@ -304,11 +424,38 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When in boss fights only, any target regardless of distance can be eligible to be attacked..
+        /// </summary>
+        internal static string HelpText_IgnoreRangeInBoss {
+            get {
+                return ResourceManager.GetString("HelpText_IgnoreRangeInBoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This will determine how soon before the GCD is finished to queue up the next weaponskill or spell. Your latency may have an effect on what actions are performed so please adjust this if you&apos;re noticing improper action use, i.e double Blizzard IV casts due to MP not updating in time..
         /// </summary>
         internal static string HelpText_QueueWindow {
             get {
                 return ResourceManager.GetString("HelpText_QueueWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You typically want to set this lower than the above setting..
+        /// </summary>
+        internal static string HelpText_SingleTargetExcogHPP {
+            get {
+                return ResourceManager.GetString("HelpText_SingleTargetExcogHPP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You typically want to set this lower than the above setting..
+        /// </summary>
+        internal static string HelpText_SingleTargetRegenHPP {
+            get {
+                return ResourceManager.GetString("HelpText_SingleTargetRegenHPP", resourceCulture);
             }
         }
         
@@ -332,6 +479,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Targets Required for AoE Healing Features.
+        /// </summary>
+        internal static string Input_AoEHealTargetCount {
+            get {
+                return ResourceManager.GetString("Input_AoEHealTargetCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Targets Required for AoE Damage Features.
         /// </summary>
         internal static string Input_AoETargetCount {
@@ -350,11 +506,29 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delay to start healing once above conditions are met (seconds).
+        /// </summary>
+        internal static string Input_HealDelay {
+            get {
+                return ResourceManager.GetString("Input_HealDelay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Queue Window (s).
         /// </summary>
         internal static string Input_QueueWindow {
             get {
                 return ResourceManager.GetString("Input_QueueWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damage Settings.
+        /// </summary>
+        internal static string Label_DamageSettings {
+            get {
+                return ResourceManager.GetString("Label_DamageSettings", resourceCulture);
             }
         }
         
@@ -377,6 +551,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Healer Targeting Mode.
+        /// </summary>
+        internal static string Label_HealingTargetingMode {
+            get {
+                return ResourceManager.GetString("Label_HealingTargetingMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignored NPCs.
         /// </summary>
         internal static string Label_IgnoredNPCs {
@@ -391,6 +574,42 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string Label_IgnoreRangeInBoss {
             get {
                 return ResourceManager.GetString("Label_IgnoreRangeInBoss", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AoE HP% Threshold.
+        /// </summary>
+        internal static string Slider_AoETargetHPP {
+            get {
+                return ResourceManager.GetString("Slider_AoETargetHPP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Target HP% Threshold (target has Excogitation).
+        /// </summary>
+        internal static string Slider_SingleTargetExcogHPP {
+            get {
+                return ResourceManager.GetString("Slider_SingleTargetExcogHPP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Target HP% Threshold.
+        /// </summary>
+        internal static string Slider_SingleTargetHPP {
+            get {
+                return ResourceManager.GetString("Slider_SingleTargetHPP", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Single Target HP% Threshold (target has Regen/Aspected Benefic).
+        /// </summary>
+        internal static string Slider_SingleTargetRegenHPP {
+            get {
+                return ResourceManager.GetString("Slider_SingleTargetRegenHPP", resourceCulture);
             }
         }
     }

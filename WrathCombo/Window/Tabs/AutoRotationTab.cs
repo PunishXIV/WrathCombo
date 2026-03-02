@@ -84,7 +84,7 @@ internal class AutoRotationTab : ConfigWindow
         if (cfg.QueueWindow < 0)
             cfg.QueueWindow = 0;
 
-        if (ImGui.CollapsingHeader(AutoRotationUI.Header_DamageSettings))
+        if (ImGui.CollapsingHeader(AutoRotationUI.Label_DamageSettings))
         {
             ImGuiEx.TextUnderlined(AutoRotationUI.Label_DPSTargetingMode);
 
@@ -125,7 +125,7 @@ internal class AutoRotationTab : ConfigWindow
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("IgnoreRangeInBoss");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(AutoRotationUI.Label_IgnoreRangeInBoss, ref cfg.DPSSettings.IgnoreRangeInBoss, "IgnoreRangeInBoss");
 
-            ImGuiComponents.HelpMarker(AutoRotationUI.HelpTest_IgnoreRangeInBoss);
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_IgnoreRangeInBoss);
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("FATEPriority");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
@@ -192,92 +192,132 @@ internal class AutoRotationTab : ConfigWindow
 
         }
         ImGui.Spacing();
-        if (ImGui.CollapsingHeader("Healing Settings"))
+        if (ImGui.CollapsingHeader(AutoRotationUI.Header_HealingSettings))
         {
-            ImGuiEx.TextUnderlined($"Healing Targeting Mode");
+            ImGuiEx.TextUnderlined(AutoRotationUI.Label_HealingTargetingMode);
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("HealerRotationMode");
             changed |= P.UIHelper.ShowIPCControlledComboIfNeeded(
                 "###HealerTargetingMode", false, ref cfg.DPSRotationMode,
                 ref cfg.HealerRotationMode, "HealerRotationMode");
-            ImGuiComponents.HelpMarker("Manual - Will only heal a target if you select them manually. If the target does not meet the healing threshold settings criteria below it will skip healing in favour of DPSing (if also enabled).\n" +
-                                       "Highest Current - Prioritises the party member with the highest current HP%.\n" +
-                                       "Lowest Current - Prioritises the party member with the lowest current HP%.");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_HealerTargetingMode);
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("SingleTargetHPP");
             changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
-                "Single Target HP% Threshold", ref cfg.HealerSettings.SingleTargetHPP, "SingleTargetHPP");
+                AutoRotationUI.Slider_SingleTargetHPP, ref cfg.HealerSettings.SingleTargetHPP, "SingleTargetHPP");
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("SingleTargetRegenHPP");
             changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
-                "Single Target HP% Threshold (target has Regen/Aspected Benefic)", ref cfg.HealerSettings.SingleTargetRegenHPP, "SingleTargetRegenHPP");
-            ImGuiComponents.HelpMarker("You typically want to set this lower than the above setting.");
+                AutoRotationUI.Slider_SingleTargetRegenHPP, ref cfg.HealerSettings.SingleTargetRegenHPP, "SingleTargetRegenHPP");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_SingleTargetRegenHPP);
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("SingleTargetExcogHPP");
             changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
-                "Single Target HP% Threshold (target has Excogitation)", ref cfg.HealerSettings.SingleTargetExcogHPP, "SingleTargetExcogHPP");
-            ImGuiComponents.HelpMarker("You typically want to set this lower than the above setting.");
+                AutoRotationUI.Slider_SingleTargetExcogHPP, ref cfg.HealerSettings.SingleTargetExcogHPP, "SingleTargetExcogHPP");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_SingleTargetExcogHPP);
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AoETargetHPP");
             changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
-                "AoE HP% Threshold", ref cfg.HealerSettings.AoETargetHPP, "AoETargetHPP");
+                AutoRotationUI.Slider_AoETargetHPP, ref cfg.HealerSettings.AoETargetHPP, "AoETargetHPP");
 
-            var input = ImGuiEx.InputInt(100f.Scale(), "Targets Required for AoE Healing Features", ref cfg.HealerSettings.AoEHealTargetCount);
+            var input = ImGuiEx.InputInt(100f.Scale(), AutoRotationUI.Input_AoEHealTargetCount, ref cfg.HealerSettings.AoEHealTargetCount);
             if (input)
             {
                 changed |= input;
                 if (cfg.HealerSettings.AoEHealTargetCount < 0)
                     cfg.HealerSettings.AoEHealTargetCount = 0;
             }
-            ImGuiComponents.HelpMarker($"Disabling this will turn off AoE Healing features. Otherwise will require the amount of targets required to be in range of an AoE feature's heal to use.");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_AoEHealTargetCount);
             ImGuiEx.SetNextItemWidthScaled(100);
-            changed |= ImGui.InputInt("Delay to start healing once above conditions are met (seconds)", ref cfg.HealerSettings.HealDelay);
+            changed |= ImGui.InputInt(AutoRotationUI.Input_HealDelay, ref cfg.HealerSettings.HealDelay);
 
             if (cfg.HealerSettings.HealDelay < 0)
                 cfg.HealerSettings.HealDelay = 0;
-            ImGuiComponents.HelpMarker("Don't set this too high! 1-2 seconds is normally comfy enough to be considered a natural reaction.");
+            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_HealDelay);
 
             ImGui.Spacing();
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRez");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                "Auto-Resurrect", ref cfg.HealerSettings.AutoRez, "AutoRez");
-            ImGuiComponents.HelpMarker($"Will attempt to resurrect dead party members. Applies to {Job.CNJ.Shorthand()}, {Job.WHM.Shorthand()}, {Job.SCH.Shorthand()}, {Job.AST.Shorthand()}, {Job.SGE.Shorthand()} and {OccultCrescent.ContentName} {Svc.Data.GetExcelSheet<MKDSupportJob>().GetRow(10).Name} {OccultCrescent.Revive.ActionName()}");
+                AutoRotationUI.Checkbox_AutoRez, ref cfg.HealerSettings.AutoRez, "AutoRez");
+            ImGuiComponents.HelpMarker(
+                Text.FormatAndCache(AutoRotationUI.HelpText_AutoRez,
+                    Job.CNJ.Shorthand(), 
+                    Job.WHM.Shorthand(),
+                    Job.SCH.Shorthand(),
+                    Job.AST.Shorthand(),
+                    Job.SGE.Shorthand(),
+                    // Occult Crescent Phantom Chemist Revive
+                    OccultCrescent.ContentName, Svc.Data.GetExcelSheet<MKDSupportJob>().GetRow(10).Name, OccultCrescent.Revive.ActionName()
+                )
+            );
             var autoRez = (bool)P.IPC.GetAutoRotationConfigState(AutoRotationConfigOption.AutoRez)!;
             if (autoRez)
             {
                 ImGuiExtensions.Prefix(false);
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezOutOfParty");
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                    "Apply to Out of Party Members", ref cfg.HealerSettings.AutoRezOutOfParty, "AutoRezOutOfParty");
+                    AutoRotationUI.Checkbox_AutoRezOutOfParty, ref cfg.HealerSettings.AutoRezOutOfParty, "AutoRezOutOfParty");
 
                 ImGuiExtensions.Prefix(false);
-                changed |= ImGui.Checkbox("Require Swiftcast/Dualcast", ref
-                    cfg.HealerSettings.AutoRezRequireSwift);
+                changed |= ImGui.Checkbox(
+                    Text.FormatAndCache(
+                                AutoRotationUI.Checkbox_AutoRezRequireSwift, 
+                                RoleActions.Magic.Swiftcast.ActionName(), 
+                                RDM.Buffs.Dualcast.StatusName()), 
+                    ref cfg.HealerSettings.AutoRezRequireSwift);
                 ImGuiComponents.HelpMarker(
-                    $"Requires {RoleActions.Magic.Swiftcast.ActionName()} " +
-                    $"(or {Job.RDM.Shorthand()}'s Dualcast) " +
-                    $"to be available to resurrect a party member, to avoid hard-casting.");
+                    Text.FormatAndCache(
+                        AutoRotationUI.HelpText_AutoRezRequireSwift,
+                        RoleActions.Magic.Swiftcast.ActionName(), Job.RDM.Shorthand(), RDM.Buffs.Dualcast.StatusName()
+                    )
+                );
 
                 ImGuiExtensions.Prefix(true);
                 P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezDPSJobs");
                 changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                    $"Apply to {Job.SMN.Shorthand()} & {Job.RDM.Shorthand()}", ref cfg.HealerSettings.AutoRezDPSJobs, "AutoRezDPSJobs");
-                ImGuiComponents.HelpMarker($"When playing as {Job.SMN.Shorthand()} or {Job.RDM.Shorthand()}, also attempt to raise a dead party member. {Job.RDM.Shorthand()} will only resurrect with {RoleActions.Magic.Buffs.Swiftcast.StatusName()} or {RDM.Buffs.Dualcast.StatusName()} active.");
+                    Text.FormatAndCache(
+                        AutoRotationUI.Checkbox_AutoRezDPSJobs,
+                        Job.SMN.Shorthand(),
+                        Job.RDM.Shorthand()
+                    ), ref cfg.HealerSettings.AutoRezDPSJobs, "AutoRezDPSJobs");
+                ImGuiComponents.HelpMarker(
+                    Text.FormatAndCache(
+                        AutoRotationUI.HelpText_AutoRezDPSJobs,
+                        Job.SMN.Shorthand(),
+                        Job.RDM.Shorthand(),
+                        Job.RDM.Shorthand(),
+                        RoleActions.Magic.Buffs.Swiftcast.StatusName(),
+                        RDM.Buffs.Dualcast.StatusName()
+                    )
+                );
 
                 if (cfg.HealerSettings.AutoRezDPSJobs)
                 {
                     ImGuiExtensions.Prefix(true);
                     P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoRezDPSJobsHealersOnly");
                     changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                        $"Only Raise Raisers", ref cfg.HealerSettings.AutoRezDPSJobsHealersOnly, "AutoRezDPSJobsHealersOnly");
-                    ImGuiComponents.HelpMarker($"When playing as {Job.SMN.Shorthand()} or {Job.RDM.Shorthand()}, Will only attempt to res Healers and Raisers");
+                        AutoRotationUI.Checkbox_AutoRezDPSJobsHealersOnly, ref cfg.HealerSettings.AutoRezDPSJobsHealersOnly, "AutoRezDPSJobsHealersOnly");
+                    ImGuiComponents.HelpMarker(
+                        Text.FormatAndCache(
+                            AutoRotationUI.HelpText_AutoRezDPSJobsHealersOnly,
+                            Job.SMN.Shorthand(),
+                            Job.RDM.Shorthand()
+                        )
+                    );
                 }
             }
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("AutoCleanse");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                $"Auto-{RoleActions.Healer.Esuna.ActionName()}", ref cfg.HealerSettings.AutoCleanse, "AutoCleanse");
-            ImGuiComponents.HelpMarker($"Will {RoleActions.Healer.Esuna.ActionName()} any cleansable debuffs (Healing takes priority).");
+            Text.FormatAndCache(
+                    AutoRotationUI.Checkbox_AutoCleanse,
+                    RoleActions.Healer.Esuna.ActionName()), 
+                ref cfg.HealerSettings.AutoCleanse, "AutoCleanse");
+            ImGuiComponents.HelpMarker(
+                Text.FormatAndCache(
+                    AutoRotationUI.HelpText_AutoCleanse,
+                    RoleActions.Healer.Esuna.ActionName())
+            );
 
             P.UIHelper.ShowIPCControlledIndicatorIfNeeded("ManageKardia");
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(

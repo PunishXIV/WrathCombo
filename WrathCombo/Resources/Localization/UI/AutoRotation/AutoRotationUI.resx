@@ -141,7 +141,7 @@
   <data name="Checkbox_OnlyInCombat" xml:space="preserve">
     <value>Only in Combat</value>
   </data>
-  <data name="Header_DamageSettings" xml:space="preserve">
+  <data name="Label_DamageSettings" xml:space="preserve">
     <value>Damage Settings</value>
   </data>
   <data name="HelpText_AoETargetCount" xml:space="preserve">
@@ -197,7 +197,7 @@ Features marked with an 'Auto-Mode' checkbox are able to be used with Auto-Rotat
   <data name="Label_IgnoreRangeInBoss" xml:space="preserve">
     <value>Ignore Max Target Distance In Boss Fights</value>
   </data>
-  <data name="HelpTest_IgnoreRangeInBoss" xml:space="preserve">
+  <data name="HelpText_IgnoreRangeInBoss" xml:space="preserve">
     <value>When in boss fights only, any target regardless of distance can be eligible to be attacked.</value>
   </data>
   <data name="Checkbox_FATEPriority" xml:space="preserve">
@@ -235,5 +235,80 @@ To add an NPC to this list, target the NPC and use the command: /wrath ignore</v
   </data>
   <data name="Button_DeleteFromIgnored" xml:space="preserve">
     <value>Delete From Ignored</value>
+  </data>
+  <data name="Header_HealingSettings" xml:space="preserve">
+    <value>Healing Settings</value>
+  </data>
+  <data name="Label_HealingTargetingMode" xml:space="preserve">
+    <value>Healer Targeting Mode</value>
+  </data>
+  <data name="HelpText_HealerTargetingMode" xml:space="preserve">
+    <value>Manual - Will only heal a target if you select them manually. If the target does not meet the healing threshold settings criteria below it will skip healing in favour of DPSing (if also enabled).
+Highest Current - Prioritises the party member with the highest current HP%.
+Lowest Current - Prioritises the party member with the lowest current HP%.</value>
+  </data>
+  <data name="Slider_SingleTargetHPP" xml:space="preserve">
+    <value>Single Target HP% Threshold</value>
+  </data>
+  <data name="Slider_SingleTargetRegenHPP" xml:space="preserve">
+    <value>Single Target HP% Threshold (target has Regen/Aspected Benefic)</value>
+  </data>
+  <data name="HelpText_SingleTargetRegenHPP" xml:space="preserve">
+    <value>You typically want to set this lower than the above setting.</value>
+  </data>
+  <data name="Slider_SingleTargetExcogHPP" xml:space="preserve">
+    <value>Single Target HP% Threshold (target has Excogitation)</value>
+  </data>
+  <data name="HelpText_SingleTargetExcogHPP" xml:space="preserve">
+    <value>You typically want to set this lower than the above setting.</value>
+  </data>
+  <data name="Slider_AoETargetHPP" xml:space="preserve">
+    <value>AoE HP% Threshold</value>
+  </data>
+  <data name="Input_AoEHealTargetCount" xml:space="preserve">
+    <value>Targets Required for AoE Healing Features</value>
+  </data>
+  <data name="HelpText_AoEHealTargetCount" xml:space="preserve">
+    <value>Disabling this will turn off AoE Healing features. Otherwise will require the amount of targets required to be in range of an AoE feature's heal to use.</value>
+  </data>
+  <data name="Input_HealDelay" xml:space="preserve">
+    <value>Delay to start healing once above conditions are met (seconds)</value>
+  </data>
+  <data name="HelpText_HealDelay" xml:space="preserve">
+    <value>Don't set this too high! 1-2 seconds is normally comfy enough to be considered a natural reaction.</value>
+  </data>
+  <data name="Checkbox_AutoRez" xml:space="preserve">
+    <value>Auto-Resurrect</value>
+  </data>
+  <data name="HelpText_AutoRez" xml:space="preserve">
+    <value>Will attempt to resurrect dead party members.
+Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
+  </data>
+  <data name="Checkbox_AutoRezOutOfParty" xml:space="preserve">
+    <value>Apply to Out of Party Members</value>
+  </data>
+  <data name="Checkbox_AutoRezRequireSwift" xml:space="preserve">
+    <value>Require {0}/{1}</value>
+  </data>
+  <data name="HelpText_AutoRezRequireSwift" xml:space="preserve">
+    <value>Requires {0} or {1}'s {2} to be available to resurrect a party member, to avoid hard-casting.</value>
+  </data>
+  <data name="Checkbox_AutoRezDPSJobs" xml:space="preserve">
+    <value>Apply to {0} &amp; {1}</value>
+  </data>
+  <data name="HelpText_AutoRezDPSJobs" xml:space="preserve">
+    <value>When playing as {0} or {1}, also attempt to raise a dead party member. {2} will only resurrect with {3} or {4} active.</value>
+  </data>
+  <data name="Checkbox_AutoRezDPSJobsHealersOnly" xml:space="preserve">
+    <value>Only Raise Raisers</value>
+  </data>
+  <data name="HelpText_AutoRezDPSJobsHealersOnly" xml:space="preserve">
+    <value>When playing as {0} or {1}, Will only attempt to res Healers and Raisers</value>
+  </data>
+  <data name="Checkbox_AutoCleanse" xml:space="preserve">
+    <value>Auto-{0}</value>
+  </data>
+  <data name="HelpText_AutoCleanse" xml:space="preserve">
+    <value>Will {0} any cleansable debuffs (Healing takes priority).</value>
   </data>
 </root>

@@ -179,4 +179,25 @@ to prevent unexpected behavior and bugs.</value>
     <value>Wrath Combo</value>
     <comment>Plugin Name</comment>
   </data>
+  <data name="Button_CollapseSidebar" xml:space="preserve">
+    <value>Collapse Sidebar</value>
+  </data>
+  <data name="Button_ExpandSidebar" xml:space="preserve">
+    <value>Expand Sidebar</value>
+  </data>
+  <data name="Button_PvEFeatures" xml:space="preserve">
+    <value>PvE Features</value>
+  </data>
+  <data name="Button_PvPFeatures" xml:space="preserve">
+    <value>PvP Features</value>
+  </data>
+  <data name="Button_AutoRotation" xml:space="preserve">
+    <value>Auto-Rotation</value>
+  </data>
+  <data name="Button_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Button_About" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>
