@@ -117,4 +117,87 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Tooltip_ConflictingPlugins" xml:space="preserve">
+    <value>The following plugins are known to conflict with {0}:
+
+{1}
+
+It is recommended you disable these plugins, or their rotation
+components, to prevent unexpected behavior and bugs.</value>
+  </data>
+  <data name="Tooltip_ConflictingPluginSettings" xml:space="preserve">
+    <value>The following plugins are known to conflict with
+{0}'s Settings, which you have enabled:
+{1}
+
+It is recommended you disable these plugins, or
+remove the conflicting setting in the plugins
+to prevent unexpected behavior and bugs.</value>
+  </data>
+  <data name="Tooltip_ConflictingWrathSettings" xml:space="preserve">
+    <value>The following Wrath settings are known to conflict with {0}'s Settings:
+{1}
+
+It is recommended you disable these settings to prevent unexpected behavior and bugs.</value>
+  </data>
+  <data name="Tooltip_Conflicts_Reason" xml:space="preserve">
+    <value>- Setting: {0}
+    Problem: {1}</value>
+  </data>
+  <data name="Tooltip_DalamudConfigConflicts" xml:space="preserve">
+    <value>You have conflict(s) in your Dalamud config:
+</value>
+  </data>
+  <data name="Tooltip_GameConflicts" xml:space="preserve">
+    <value>The following game settings are known to conflict with {0}'s Settings:
+{1}
+
+It is recommended you change these settings to prevent unexpected behavior and bugs.</value>
+  </data>
+  <data name="Tooltip_TargettingConflicts" xml:space="preserve">
+    <value>Your configuration in the following plugins will conflict
+with {0}'s enabled Action Retargeting:
+{1}
+
+It is recommended you disable these plugins, or
+remove the conflicting actions from their settings, or
+disable Retargeting for the action in {0},
+to prevent unexpected behavior and bugs.</value>
+  </data>
+  <data name="Tooltip_TargettingConflicts_Action" xml:space="preserve">
+    <value>        - {0}</value>
+  </data>
+  <data name="Tooltip_TargettingConflicts_Plugin" xml:space="preserve">
+    <value>- {0} {1}
+    Actions Retargeted there and in {2}:
+{3}</value>
+  </data>
+  <data name="Warning_UnknownConflictType" xml:space="preserve">
+    <value>Unknown conflict type:</value>
+  </data>
+  <data name="Wrath_Combo" xml:space="preserve">
+    <value>Wrath Combo</value>
+    <comment>Plugin Name</comment>
+  </data>
+  <data name="Button_CollapseSidebar" xml:space="preserve">
+    <value>Collapse Sidebar</value>
+  </data>
+  <data name="Button_ExpandSidebar" xml:space="preserve">
+    <value>Expand Sidebar</value>
+  </data>
+  <data name="Button_PvEFeatures" xml:space="preserve">
+    <value>PvE Features</value>
+  </data>
+  <data name="Button_PvPFeatures" xml:space="preserve">
+    <value>PvP Features</value>
+  </data>
+  <data name="Button_AutoRotation" xml:space="preserve">
+    <value>Auto-Rotation</value>
+  </data>
+  <data name="Button_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Button_About" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>

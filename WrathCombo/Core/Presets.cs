@@ -81,8 +81,8 @@ internal static class PresetStorage
     }
 
     // Override Dalamud's GetCustomAttribute
-    // It creates a new instance of every attribute every time, which is bad for performance when we want to cache them
-    // This returns strictly the one and only attribute we want, and we can cache it in our own structures
+    // Dalamud's creates a new instance of EVERY attribute when needing to just read one, which is bad for performance
+    // This version returns strictly the one and only attribute we want
     public static TAttribute? GetAttribute<TAttribute>(this Enum value)
     where TAttribute : Attribute
     {

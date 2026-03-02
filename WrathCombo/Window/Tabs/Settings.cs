@@ -615,8 +615,8 @@ internal class Settings : ConfigWindow
         if (!id)
             return;
 
-        var searchLabelText = SettingsUI.searchLabelText;
-        var searchHintText = SettingsUI.searchHintText;
+        var searchLabelText = SettingsUI.Label_searchLabelText;
+        var searchHintText = SettingsUI.Info_searchHintText;
 
         var searchWidth = letterWidth * 30f + 4f.Scale();
 

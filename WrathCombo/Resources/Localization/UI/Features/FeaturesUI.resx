@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,7 +117,62 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Wrath_Combo" xml:space="preserve">
-    <value>Wrath Combo (JA)</value>
+  <data name="Hover_AutoMode" xml:space="preserve">
+    <value>Add this feature to Auto-Rotation.
+Auto-Rotation will automatically use the actions selected within the feature, allowing you to focus on movement. Configure the settings in the 'Auto-Rotation' section.</value>
+  </data>
+  <data name="Hover_Retargetting_ControllingSetting" xml:space="preserve">
+    <value>The setting that controls if this action is retargeted is:</value>
+  </data>
+  <data name="Hover_Retargetting_IsRetargetted" xml:space="preserve">
+    <value>This Feature's actions are retargeted</value>
+  </data>
+  <data name="Hover_Retargetting_Line2" xml:space="preserve">
+    <value>The actions from this Feature will automatically be
+targeted onto what the developers feel is the best target
+(following The Balance where applicable).</value>
+  </data>
+  <data name="Hover_Retargetting_Line3" xml:space="preserve">
+    <value>Using plugins like Redirect or Reaction with configurations
+affecting this action will Conflict and may cause issues.</value>
+  </data>
+  <data name="Hover_Retargetting_MaybeRetargetted" xml:space="preserve">
+    <value>This Feature's actions may be retargeted.</value>
+  </data>
+  <data name="Info_BLUAllGoodSpells" xml:space="preserve">
+    <value>All required spells active!</value>
+  </data>
+  <data name="Label_AutoMode" xml:space="preserve">
+    <value>Auto-Mode</value>
+  </data>
+  <data name="Label_ConflictsWith" xml:space="preserve">
+    <value>Conflicts with:</value>
+  </data>
+  <data name="Info_pvpActionReplacingWarning" xml:space="preserve">
+    <value>Action Replacing is Disabled in Settings! PvP Combos will not work!</value>
+  </data>
+  <data name="Info_pvpAutoRotationWarning" xml:space="preserve">
+    <value>Auto-Rotation is unavailable for PvP.</value>
+  </data>
+  <data name="Info_pvpDesc" xml:space="preserve">
+    <value>These are PvP features. They will only work in PvP-enabled zones.</value>
+  </data>
+  <data name="Info_pvpNothing" xml:space="preserve">
+    <value>Nothing matched your search.</value>
+  </data>
+  <data name="Info_SelectAJob" xml:space="preserve">
+    <value>Select a job from below to enable and configure features for it.</value>
+  </data>
+  <data name="Warning_BLUMissingSpells" xml:space="preserve">
+    <value>Missing active spells:</value>
+  </data>
+  <data name="Warning_BLUNoSpells" xml:space="preserve">
+    <value>No Required Spells Active:</value>
+  </data>
+  <data name="Warning_DisabledDueToUpdate" xml:space="preserve">
+    <value>Disabled due to update</value>
+  </data>
+  <data name="Warning_EquipJobStone" xml:space="preserve">
+    <value>Equip your job stone to re-unlock features.</value>
   </data>
 </root>

@@ -30708,11 +30708,47 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If mousing over an ally in the UI, will Retarget Nascent Flash onto them..
+        /// </summary>
+        internal static string WAR_NascentFlash_MO_Desc {
+            get {
+                return ResourceManager.GetString("WAR_NascentFlash_MO_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include MouseOver Target.
+        /// </summary>
+        internal static string WAR_NascentFlash_MO_Name {
+            get {
+                return ResourceManager.GetString("WAR_NascentFlash_MO_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nascent Flash Feature.
         /// </summary>
         internal static string WAR_NascentFlash_Name {
             get {
                 return ResourceManager.GetString("WAR_NascentFlash_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If your target&apos;s target is not you or in your party, will Retarget Nascent Flash onto them..
+        /// </summary>
+        internal static string WAR_NascentFlash_TT_Desc {
+            get {
+                return ResourceManager.GetString("WAR_NascentFlash_TT_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include Target&apos;s Target.
+        /// </summary>
+        internal static string WAR_NascentFlash_TT_Name {
+            get {
+                return ResourceManager.GetString("WAR_NascentFlash_TT_Name", resourceCulture);
             }
         }
         

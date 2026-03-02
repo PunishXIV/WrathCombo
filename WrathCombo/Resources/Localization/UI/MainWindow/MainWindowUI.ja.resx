@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,16 +117,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Wrath_Combo" xml:space="preserve">
-    <value>Wrath Combo</value>
-    <comment>Plugin Name</comment>
-  </data>
-  <data name="Tooltip_ConflictingPlugins" xml:space="preserve">
-    <value>The following plugins are known to conflict with {0}:
-
-{1}
-
-It is recommended you disable these plugins, or their rotation
-components, to prevent unexpected behavior and bugs.</value>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Wrath_Combo" type="System.Resources.ResXNullRef, System.Windows.Forms">
+    <value />
   </data>
 </root>

@@ -137,10 +137,25 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>CustomComboPresets.resx</DependentUpon>
       </Compile>
-      <Compile Update="Resources\Localization\UI\MainWindow\MainWindow.Designer.cs">
+      <Compile Update="Resources\Localization\UI\AutoRotation\AutoRotationUI.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
-        <DependentUpon>MainWindow.resx</DependentUpon>
+        <DependentUpon>AutoRotationUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\Features\FeaturesUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>FeaturesUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\MainWindow\MainWindowUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MainWindowUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\Misc\MiscUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MiscUI.resx</DependentUpon>
       </Compile>
       <Compile Update="Resources\Localization\UI\Settings\SettingsUI.Designer.cs">
         <DesignTime>True</DesignTime>
@@ -153,9 +168,21 @@
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>CustomComboPresets.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Localization\UI\MainWindow\MainWindow.resx">
+      <EmbeddedResource Update="Resources\Localization\UI\AutoRotation\AutoRotationUI.resx">
         <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>MainWindow.Designer.cs</LastGenOutput>
+        <LastGenOutput>AutoRotationUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Features\FeaturesUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FeaturesUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\MainWindow\MainWindowUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MainWindowUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Misc\MiscUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MiscUI.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\Localization\UI\Settings\SettingsUI.resx">
         <Generator>ResXFileCodeGenerator</Generator>

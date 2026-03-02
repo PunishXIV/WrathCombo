@@ -117,10 +117,21 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="searchHintText" xml:space="preserve">
+  <data name="Hover_Retargetting1" xml:space="preserve">
+    <value>This Feature will involve retargeting actions if enabled.</value>
+  </data>
+  <data name="Hover_Retargetting2" xml:space="preserve">
+    <value>The actions this Feature affects will automatically be
+targeted onto the targets in the priority you have configured.</value>
+  </data>
+  <data name="Hover_Retargetting3" xml:space="preserve">
+    <value>Using plugins like Redirect or Reaction with configurations
+affecting the same actions will Conflict and may cause issues.</value>
+  </data>
+  <data name="Info_searchHintText" xml:space="preserve">
     <value>Category name, Setting name, Internal Name, etc</value>
   </data>
-  <data name="searchLabelText" xml:space="preserve">
+  <data name="Label_searchLabelText" xml:space="preserve">
     <value>Search:</value>
   </data>
 </root>

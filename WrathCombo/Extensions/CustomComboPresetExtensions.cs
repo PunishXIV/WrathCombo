@@ -4,6 +4,7 @@ using ECommons.ExcelServices;
 using System.Collections.Generic;
 using System.Text;
 using WrathCombo.Core;
+using WrathCombo.Resources.Localization.UI.Misc;
 
 #endregion
 
@@ -57,18 +58,18 @@ internal static partial class PresetExtensions
 
                 if (attr.JobInfo.Job == Job.ADV)
                 {
-                    var header = "[Roles And Content]";
+                    var header = MiscUI.Roles_and_Content;
 
                     if (attr.IsVariant)
-                        header += " Variant";
+                        header += $" {MiscUI.Variant}";
 
                     else if (attr.IsBozja)
-                        header += " Bozja";
+                        header += $" {MiscUI.Bozja}";
 
                     else if (attr.OccultCrescentJob is not null)
-                        header += " Occult Crescent";
+                        header += $" {MiscUI.Occult_Crescent}";
 
-                    else header += " Job Roles";
+                    else header += $" {MiscUI.Job_Roles}";
 
                     segments.Add(header);
                 }

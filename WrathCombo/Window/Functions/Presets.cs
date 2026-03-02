@@ -19,6 +19,9 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.UI.Features;
+using WrathCombo.Resources.Localization.UI.Misc;
+using WrathCombo.Resources.Localization.UI.Settings;
 using WrathCombo.Services;
 using static WrathCombo.Attributes.PossiblyRetargetedAttribute;
 using static WrathCombo.Core.PresetStorage;
@@ -90,8 +93,7 @@ internal class Presets : ConfigWindow
                 PresetStorage.ToggleAutoModeForPreset(preset);
             ImGui.SameLine();
             ImGui.Text(label);
-            ImGuiComponents.HelpMarker($"Add this feature to Auto-Rotation.\n" +
-                                       $"Auto-Rotation will automatically use the actions selected within the feature, allowing you to focus on movement. Configure the settings in the 'Auto-Rotation' section.");
+            ImGuiComponents.HelpMarker(FeaturesUI.Hover_AutoMode);
             ImGui.Separator();
         }
 
@@ -159,7 +161,7 @@ internal class Presets : ConfigWindow
 
         if (conflicts.Length > 0)
         {
-            ImGui.TextColored(ImGuiColors.DalamudRed, "Conflicts with:");
+            ImGui.TextColored(ImGuiColors.DalamudRed, FeaturesUI.Label_ConflictsWith);
             ImGui.Indent();
             foreach (var conflict in conflicts)
                 ImGuiEx.Text(GradientColor.Get(
@@ -178,14 +180,14 @@ internal class Presets : ConfigWindow
             if (blueAttr.Actions.Count > 0)
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, blueAttr.NoneSet ? ImGuiColors.DPSRed : ImGuiColors.DalamudOrange);
-                ImGui.Text($"{(blueAttr.NoneSet ? "No Required Spells Active:" : "Missing active spells:")} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + GetActionName(x)))}");
+                ImGui.Text($"{(blueAttr.NoneSet ? FeaturesUI.Warning_BLUNoSpells : FeaturesUI.Warning_BLUMissingSpells)} {string.Join(", ", blueAttr.Actions.Select(x => ActionWatching.GetBLUIndex(x) + GetActionName(x)))}");
                 ImGui.PopStyleColor();
             }
 
             else
             {
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.HealerGreen);
-                ImGui.Text("All required spells active!");
+                ImGui.Text(FeaturesUI.Info_BLUAllGoodSpells);
                 ImGui.PopStyleColor();
             }
         }
@@ -336,7 +338,7 @@ internal class Presets : ConfigWindow
         {
             string skills = string.Join(", ", att.ActionNames);
 
-            ImGuiComponents.HelpMarker($"Replaces: {skills}");
+            ImGuiComponents.HelpMarker($"{MiscUI.Replaces}: {skills}");
             if (ImGui.IsItemHovered())
             {
                 ImGui.BeginTooltip();
@@ -353,11 +355,9 @@ internal class Presets : ConfigWindow
 
     public static void DrawRetargetedSymbolForSettingsPage() =>
         DrawRetargetedAttribute(
-            firstLine: "This Feature will involve retargeting actions if enabled.",
-            secondLine: "The actions this Feature affects will automatically be\n" +
-                        "targeted onto the targets in the priority you have configured.",
-            thirdLine: "Using plugins like Redirect or Reaction with configurations\n" +
-                       "affecting the same actions will Conflict and may cause issues.");
+            firstLine: SettingsUI.Hover_Retargetting1,
+            secondLine: SettingsUI.Hover_Retargetting2,
+            thirdLine: SettingsUI.Hover_Retargetting3);
 
 
     private static void DrawRetargetedAttribute
@@ -410,22 +410,19 @@ internal class Presets : ConfigWindow
                 {
                     if (possiblyRetargeted)
                         ImGui.TextUnformatted(
-                            "This Feature's actions may be retargeted.");
+                            FeaturesUI.Hover_Retargetting_MaybeRetargetted);
                     if (retargeted)
                         ImGui.TextUnformatted(
                             firstLine ??
-                            "This Feature's actions are retargeted.");
+                            FeaturesUI.Hover_Retargetting_IsRetargetted);
 
                     ImGui.TextUnformatted(
                         secondLine ??
-                        "The actions from this Feature will automatically be\n" +
-                        "targeted onto what the developers feel is the best target\n" +
-                        "(following The Balance where applicable).");
+                        FeaturesUI.Hover_Retargetting_Line2);
 
                     ImGui.TextUnformatted(
                         thirdLine ??
-                        "Using plugins like Redirect or Reaction with configurations\n" +
-                        "affecting this action will Conflict and may cause issues.");
+                        FeaturesUI.Hover_Retargetting_Line3);
 
                     var settingInfo = "";
                     if (presetdata is not null)
@@ -438,7 +435,7 @@ internal class Presets : ConfigWindow
                     {
                         ImGui.NewLine();
                         ImGui.TextUnformatted(
-                            "The setting that controls if this action is retargeted is:\n" +
+                            $"{FeaturesUI.Hover_Retargetting_ControllingSetting}\n" +
                             settingInfo);
                     }
                 }

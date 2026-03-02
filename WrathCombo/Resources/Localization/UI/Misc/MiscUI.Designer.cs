@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WrathCombo.Resources.Localization.UI.Settings {
+namespace WrathCombo.Resources.Localization.UI.Misc {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SettingsUI {
+    internal class MiscUI {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SettingsUI() {
+        internal MiscUI() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WrathCombo.Resources.Localization.UI.Settings.SettingsUI", typeof(SettingsUI).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("WrathCombo.Resources.Localization.UI.Misc.MiscUI", typeof(MiscUI).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,49 +61,101 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This Feature will involve retargeting actions if enabled..
+        ///   Looks up a localized string similar to Bozja.
         /// </summary>
-        internal static string Hover_Retargetting1 {
+        internal static string Bozja {
             get {
-                return ResourceManager.GetString("Hover_Retargetting1", resourceCulture);
+                return ResourceManager.GetString("Bozja", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The actions this Feature affects will automatically be
-        ///targeted onto the targets in the priority you have configured..
+        ///   Looks up a localized string similar to Content.
         /// </summary>
-        internal static string Hover_Retargetting2 {
+        internal static string Content {
             get {
-                return ResourceManager.GetString("Hover_Retargetting2", resourceCulture);
+                return ResourceManager.GetString("Content", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Using plugins like Redirect or Reaction with configurations
-        ///affecting the same actions will Conflict and may cause issues..
+        ///   Looks up a localized string similar to DOL.
         /// </summary>
-        internal static string Hover_Retargetting3 {
+        internal static string DOL {
             get {
-                return ResourceManager.GetString("Hover_Retargetting3", resourceCulture);
+                return ResourceManager.GetString("DOL", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Category name, Setting name, Internal Name, etc.
+        ///   Looks up a localized string similar to Job Roles.
         /// </summary>
-        internal static string Info_searchHintText {
+        internal static string Job_Roles {
             get {
-                return ResourceManager.GetString("Info_searchHintText", resourceCulture);
+                return ResourceManager.GetString("Job Roles", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search:.
+        ///   Looks up a localized string similar to Normal.
         /// </summary>
-        internal static string Label_searchLabelText {
+        internal static string Normal {
             get {
-                return ResourceManager.GetString("Label_searchLabelText", resourceCulture);
+                return ResourceManager.GetString("Normal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occult Crescent.
+        /// </summary>
+        internal static string Occult_Crescent {
+            get {
+                return ResourceManager.GetString("Occult Crescent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces.
+        /// </summary>
+        internal static string Replaces {
+            get {
+                return ResourceManager.GetString("Replaces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roles and Content.
+        /// </summary>
+        internal static string Roles_and_Content {
+            get {
+                return ResourceManager.GetString("Roles and Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting.
+        /// </summary>
+        internal static string Setting {
+            get {
+                return ResourceManager.GetString("Setting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variant.
+        /// </summary>
+        internal static string Variant {
+            get {
+                return ResourceManager.GetString("Variant", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variant Dungeons.
+        /// </summary>
+        internal static string Variant_Dungeons {
+            get {
+                return ResourceManager.GetString("Variant Dungeons", resourceCulture);
             }
         }
     }

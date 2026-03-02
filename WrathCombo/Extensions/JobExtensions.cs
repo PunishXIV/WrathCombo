@@ -1,6 +1,7 @@
 ﻿using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using Lumina.Excel.Sheets;
+using WrathCombo.Resources.Localization.UI.Misc;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
 using static WrathCombo.Window.Text;
 
@@ -12,7 +13,7 @@ namespace WrathCombo.Extensions
         job switch
         {
             Job.ADV => string.Empty,
-            Job.MIN or Job.BTN or Job.FSH => "DOL",
+            Job.MIN or Job.BTN or Job.FSH => MiscUI.DOL,
             _ => job.GetData().Abbreviation.ToString()
         };
 
@@ -21,7 +22,7 @@ namespace WrathCombo.Extensions
         {
             string jobName = job switch
             {
-                Job.ADV => "Roles and Content",
+                Job.ADV => MiscUI.Roles_and_Content,
                 Job.MIN or Job.BTN or Job.FSH
                     => job.GetData().ClassJobCategory.Value.Name.ToString(),
                 _ => job.GetData().Name.ToString()
@@ -34,7 +35,7 @@ namespace WrathCombo.Extensions
         {
             string jobName = (Job)job.RowId switch
             {
-                Job.ADV => "Roles and Content",
+                Job.ADV => MiscUI.Roles_and_Content,
                 Job.MIN or Job.BTN or Job.FSH
                     => job.ClassJobCategory.Value.Name.ToString(),
                 _ => job.Name.ToString()

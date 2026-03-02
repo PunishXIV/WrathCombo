@@ -8,8 +8,10 @@ using ECommons.Logging;
 using System;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.Resources.Localization.UI.MainWindow;
+using System.Text;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.UI.MainWindowUI;
+using WrathCombo.Resources.Localization.UI.Misc;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -165,15 +167,10 @@ public static class ConflictingPlugins
                                  (string.IsNullOrEmpty(x.Reason)
                                      ? ""
                                      : $" ({x.Reason})")));
-            //var tooltipText =
-            //    "The following plugins are known to conflict " +
-            //    $"with {P.Name}:\n" +
-            //    conflictingPluginsText +
-            //    "\n\nIt is recommended you disable these plugins, or their " +
-            //    "rotation\ncomponents, to prevent unexpected behavior and bugs.";
+
             var tooltipText = string.Format(
-                MainWindow.Tooltip_ConflictingPlugins,
-                MainWindow.Wrath_Combo,
+                MainWindowUI.Tooltip_ConflictingPlugins,
+                MainWindowUI.Wrath_Combo,
                 conflictingPluginsText
             );
 
@@ -185,15 +182,13 @@ public static class ConflictingPlugins
             currentConflicts = conflicts[ConflictType.Settings];
             var conflictingSettingsText = "- " + string.Join("\n- ",
                 conflicts[ConflictType.Settings]
-                    .Select(x => $"{x.Name} {x.Version} (setting: {x.Reason})"));
+                    .Select(x => $"{x.Name} {x.Version} ({MiscUI.Setting}: {x.Reason})"));
 
-            var tooltipText =
-                "The following plugins are known to conflict with\n" +
-                $"{P.Name}'s Settings, which you have enabled:\n" +
-                conflictingSettingsText +
-                "\n\nIt is recommended you disable these plugins, or\n" +
-                "remove the conflicting setting in the plugins\n" +
-                "to prevent unexpected behavior and bugs.";
+            var tooltipText = string.Format(
+                MainWindowUI.Tooltip_ConflictingPluginSettings,
+                MainWindowUI.Wrath_Combo,
+                conflictingSettingsText
+            );
 
             ShowWarning(ConflictType.Settings, tooltipText,
                 hasComboConflicts || hasTargetingConflicts);
@@ -203,21 +198,22 @@ public static class ConflictingPlugins
         {
             currentConflicts = conflicts[ConflictType.GameSetting];
 
-            var tooltipText =
-                "The following game settings are known to conflict with " +
-                $"{P.Name}'s Settings:";
+            var conflictLines = new StringBuilder();
 
             foreach (var conflict in conflicts[ConflictType.GameSetting])
             {
                 var reasonSplit = conflict.Reason.Split("    ");
-                tooltipText +=
-                    $"\n- Setting: {reasonSplit[0]}" +
-                    $"\n    Problem: {reasonSplit[1]}";
+
+                conflictLines.AppendLine(string.Format(
+                    MainWindowUI.Tooltip_Conflicts_Reason,
+                    reasonSplit[0],
+                    reasonSplit[1]));
             }
 
-            tooltipText +=
-                "\n\nIt is recommended you change these settings, " +
-                "to prevent unexpected behavior and bugs.";
+            var tooltipText = string.Format(
+                MainWindowUI.Tooltip_GameConflicts,
+                MainWindowUI.Wrath_Combo,
+                conflictLines.ToString());
 
             ShowWarning(ConflictType.GameSetting, tooltipText,
                 hasComboConflicts || hasTargetingConflicts || hasSettingsConflicts);
@@ -227,20 +223,22 @@ public static class ConflictingPlugins
         {
             currentConflicts = conflicts[ConflictType.WrathSetting];
 
-            var tooltipText =
-                $"The following {P.Name} Settings might not make sense:";
+            var conflictLines = new StringBuilder();
 
             foreach (var conflict in conflicts[ConflictType.WrathSetting])
             {
                 var reasonSplit = conflict.Reason.Split("    ");
-                tooltipText +=
-                    $"\n- Setting: {reasonSplit[0]}" +
-                    $"\n    Problem: {reasonSplit[1]}";
+
+                conflictLines.AppendLine(string.Format(
+                    MainWindowUI.Tooltip_Conflicts_Reason,
+                    reasonSplit[0],
+                    reasonSplit[1]));
             }
 
-            tooltipText +=
-                "\n\nIt is recommended you change these settings, " +
-                "if you want Wrath to work.";
+            var tooltipText = string.Format(
+                MainWindowUI.Tooltip_ConflictingWrathSettings,
+                P.Name,
+                conflictLines.ToString());
 
             ShowWarning(ConflictType.WrathSetting, tooltipText,
                 hasComboConflicts || hasTargetingConflicts ||
@@ -250,21 +248,31 @@ public static class ConflictingPlugins
         if (hasTargetingConflicts)
         {
             currentConflicts = conflicts[ConflictType.Targeting];
-            var tooltipText =
-                "Your configuration in the following plugins will conflict\n" +
-                $"with {P.Name}'s enabled Action Retargeting:";
+            var pluginLines = new StringBuilder();
 
             foreach (var conflict in conflicts[ConflictType.Targeting])
-                tooltipText +=
-                    $"\n- {conflict.Name} {conflict.Version}" +
-                    $"\n    Actions Retargeted there and in {P.Name}:\n        - " +
-                    string.Join("\n        - ", conflict.Reason.Split(','));
+            {
+                var actionLines = new StringBuilder();
 
-            tooltipText +=
-                "\n\nIt is recommended you disable these plugins, or\n" +
-                "remove the conflicting actions from their settings, or\n" +
-                $"disable Retargeting for the action in {P.Name},\n" +
-                "to prevent unexpected behavior and bugs.";
+                foreach (var action in conflict.Reason.Split(','))
+                {
+                    actionLines.AppendLine(string.Format(
+                        MainWindowUI.Tooltip_TargettingConflicts_Action,
+                        action));
+                }
+
+                pluginLines.AppendLine(string.Format(
+                    MainWindowUI.Tooltip_TargettingConflicts_Plugin,
+                    conflict.Name,
+                    conflict.Version,
+                    P.Name,
+                    actionLines.ToString()));
+            }
+
+            var tooltipText = string.Format(
+                MainWindowUI.Tooltip_TargettingConflicts,
+                P.Name,
+                pluginLines.ToString());
 
             ShowWarning(ConflictType.Targeting, tooltipText,
                 hasComboConflicts || hasTargetingConflicts ||
@@ -275,7 +283,7 @@ public static class ConflictingPlugins
         {
             currentConflicts = conflicts[ConflictType.Dalamud];
 
-            var tooltipText = "You have conflict(s) in your Dalamud config:\n";
+            var tooltipText = MainWindowUI.Tooltip_DalamudConfigConflicts;
 
             foreach (var conflict in conflicts[ConflictType.Dalamud])
             {
@@ -300,7 +308,7 @@ public static class ConflictingPlugins
                 ConflictType.GameSetting  => ImGuiColors.DalamudOrange,
                 ConflictType.Dalamud      => ImGuiColors.DalamudYellow,
                 _ => throw new ArgumentOutOfRangeException(nameof(type),
-                    $"Unknown conflict type: {type}"),
+                    $"{MainWindowUI.Warning_UnknownConflictType} {type}"),
             };
 
             if (hasWarningAbove)

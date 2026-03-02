@@ -29,7 +29,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
-using WrathCombo.Resources.Localization.UI.MainWindow;
+using WrathCombo.Resources.Localization.UI.MainWindowUI;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
@@ -443,7 +443,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Used for non-static only window initialization")]
-    public string Name => MainWindow.Wrath_Combo;
+    public string Name => MainWindowUI.Wrath_Combo;
 
     /// <inheritdoc/>
     public void Dispose()

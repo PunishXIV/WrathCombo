@@ -117,4 +117,37 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Bozja" xml:space="preserve">
+    <value>Bozja</value>
+  </data>
+  <data name="Content" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="DOL" xml:space="preserve">
+    <value>DOL</value>
+  </data>
+  <data name="Job Roles" xml:space="preserve">
+    <value>Job Roles</value>
+  </data>
+  <data name="Normal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="Occult Crescent" xml:space="preserve">
+    <value>Occult Crescent</value>
+  </data>
+  <data name="Replaces" xml:space="preserve">
+    <value>Replaces</value>
+  </data>
+  <data name="Roles and Content" xml:space="preserve">
+    <value>Roles and Content</value>
+  </data>
+  <data name="Setting" xml:space="preserve">
+    <value>Setting</value>
+  </data>
+  <data name="Variant" xml:space="preserve">
+    <value>Variant</value>
+  </data>
+  <data name="Variant Dungeons" xml:space="preserve">
+    <value>Variant Dungeons</value>
+  </data>
 </root>

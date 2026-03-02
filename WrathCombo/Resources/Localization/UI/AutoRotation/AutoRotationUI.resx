@@ -1,0 +1,356 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Checkbox_BypassFATETargets" xml:space="preserve">
+    <value>Bypass Only in Combat for FATE Targets</value>
+  </data>
+  <data name="Checkbox_BypassQuestTargets" xml:space="preserve">
+    <value>Bypass Only in Combat for Quest Targets</value>
+  </data>
+  <data name="Checkbox_BypassSelfUse" xml:space="preserve">
+    <value>Bypass When Combo Suggests Self-Use Action</value>
+  </data>
+  <data name="Checkbox_DisableInstanceExit" xml:space="preserve">
+    <value>Disable After Leaving Instanced Content</value>
+  </data>
+  <data name="Checkbox_EnableAutoRotation" xml:space="preserve">
+    <value>Enable Auto-Rotation</value>
+  </data>
+  <data name="Checkbox_EnableInstancedEnter" xml:space="preserve">
+    <value>Enable Automatically in Instanced Content</value>
+  </data>
+  <data name="Checkbox_EnforceBestAoETarget" xml:space="preserve">
+    <value>Enforce Best AoE Target Selection</value>
+  </data>
+  <data name="Checkbox_OnlyInCombat" xml:space="preserve">
+    <value>Only in Combat</value>
+  </data>
+  <data name="Label_DamageSettings" xml:space="preserve">
+    <value>Damage Settings</value>
+  </data>
+  <data name="HelpText_AoETargetCount" xml:space="preserve">
+    <value>Disabling this will turn off AoE DPS features. Otherwise will require the amount of targets required to be in range of an AoE feature's attack to use. This applies to all 3 roles, and for any features that deal AoE damage.</value>
+  </data>
+  <data name="HelpText_BypassFATETargets" xml:space="preserve">
+    <value>Disables Auto-Mode outside of combat unless you're synced to a FATE.</value>
+  </data>
+  <data name="HelpText_BypassQuestTargets" xml:space="preserve">
+    <value>Disables Auto-Mode outside of combat unless you're within range of a quest target.</value>
+  </data>
+  <data name="HelpText_BypassSelfUse" xml:space="preserve">
+    <value>Many jobs have an out of combat action that can be used, for example, {0} or {1}. This will allow these to be used without being in combat.</value>
+  </data>
+  <data name="HelpText_DPSTargettingMode" xml:space="preserve">
+    <value>Manual - Leaves all targeting decisions to you.
+Highest Max - Prioritises enemies with the highest max HP.
+Lowest Max - Prioritises enemies with the lowest max HP.
+Highest Current - Prioritises the enemy with the highest current HP.
+Lowest Current - Prioritises the enemy with the lowest current HP.
+Tank Target - Prioritises the same target as the first tank in your group.
+Nearest - Prioritises the closest target to you.
+Furthest - Prioritises the furthest target from you.</value>
+  </data>
+  <data name="HelpText_EnforceBestAoETarget" xml:space="preserve">
+    <value>For all other targeting modes, AoE will target based on highest number of targets hit. In manual mode, it will only do this if you tick this box.</value>
+  </data>
+  <data name="HelpText_QueueWindow" xml:space="preserve">
+    <value>This will determine how soon before the GCD is finished to queue up the next weaponskill or spell. Your latency may have an effect on what actions are performed so please adjust this if you're noticing improper action use, i.e double Blizzard IV casts due to MP not updating in time.</value>
+  </data>
+  <data name="Info_Header" xml:space="preserve">
+    <value>This is where you can configure the parameters in which Auto-Rotation will operate.
+Features marked with an 'Auto-Mode' checkbox are able to be used with Auto-Rotation.</value>
+  </data>
+  <data name="Input_AoETargetCount" xml:space="preserve">
+    <value>Targets Required for AoE Damage Features</value>
+  </data>
+  <data name="Input_AutoRotationDelay" xml:space="preserve">
+    <value>Delay to activate Auto-Rotation once combat starts (seconds)</value>
+  </data>
+  <data name="Input_QueueWindow" xml:space="preserve">
+    <value>Queue Window (s)</value>
+  </data>
+  <data name="Label_DPSTargetingMode" xml:space="preserve">
+    <value>Targeting Mode</value>
+  </data>
+  <data name="Label_DPSMaxTargetDistance" xml:space="preserve">
+    <value>Max Target Distance</value>
+  </data>
+  <data name="HelpText_DPSMaxTargetDistance" xml:space="preserve">
+    <value>Max distance all targeting modes (except Manual) will look for a target. Values from 1 to 30 only.</value>
+  </data>
+  <data name="Label_IgnoreRangeInBoss" xml:space="preserve">
+    <value>Ignore Max Target Distance In Boss Fights</value>
+  </data>
+  <data name="HelpText_IgnoreRangeInBoss" xml:space="preserve">
+    <value>When in boss fights only, any target regardless of distance can be eligible to be attacked.</value>
+  </data>
+  <data name="Checkbox_FATEPriority" xml:space="preserve">
+    <value>Prioritise FATE Targets</value>
+  </data>
+  <data name="Checkbox_QuestPriority" xml:space="preserve">
+    <value>Prioritise Quest Targets</value>
+  </data>
+  <data name="Checkbox_PreferNonCombat" xml:space="preserve">
+    <value>Prioritise Targets Not in Combat</value>
+  </data>
+  <data name="Checkbox_OnlyAttackInCombat" xml:space="preserve">
+    <value>Only Attack Targets Already In Combat</value>
+  </data>
+  <data name="Checkbox_UnTargetAndDisableForPenalty" xml:space="preserve">
+    <value>Un-Target and Stop Actions for Pyretics</value>
+  </data>
+  <data name="Checkbox_DPSAlwaysHardTarget" xml:space="preserve">
+    <value>Always Set Hard Target</value>
+  </data>
+  <data name="Label_IgnoredNPCs" xml:space="preserve">
+    <value>Ignored NPCs</value>
+  </data>
+  <data name="HelpText_UnTargetAndDisableForPenalty" xml:space="preserve">
+    <value>This will un-set any current target and disable Auto-Rotation actions if there is a current detected Pyretic (or similar, like Acceleration Bomb) mechanic affecting the player, that would harm them if they took any action.</value>
+  </data>
+  <data name="HelpText_DPSAlwaysHardTarget" xml:space="preserve">
+    <value>Auto-rotation does not need to target enemies to work, however with this setting enabled it will always set your hard target when it executes an attack.</value>
+  </data>
+  <data name="HelpText_IgnoredNPCs" xml:space="preserve">
+    <value>These NPCs will be ignored by Auto-Rotation.
+Every instance of this NPC will be excluded from automatic targeting (Manual will still work).
+To remove an NPC from this list, select it and press the Delete button below.
+To add an NPC to this list, target the NPC and use the command: /wrath ignore</value>
+  </data>
+  <data name="Button_DeleteFromIgnored" xml:space="preserve">
+    <value>Delete From Ignored</value>
+  </data>
+  <data name="Header_HealingSettings" xml:space="preserve">
+    <value>Healing Settings</value>
+  </data>
+  <data name="Label_HealingTargetingMode" xml:space="preserve">
+    <value>Healer Targeting Mode</value>
+  </data>
+  <data name="HelpText_HealerTargetingMode" xml:space="preserve">
+    <value>Manual - Will only heal a target if you select them manually. If the target does not meet the healing threshold settings criteria below it will skip healing in favour of DPSing (if also enabled).
+Highest Current - Prioritises the party member with the highest current HP%.
+Lowest Current - Prioritises the party member with the lowest current HP%.</value>
+  </data>
+  <data name="Slider_SingleTargetHPP" xml:space="preserve">
+    <value>Single Target HP% Threshold</value>
+  </data>
+  <data name="Slider_SingleTargetRegenHPP" xml:space="preserve">
+    <value>Single Target HP% Threshold (target has Regen/Aspected Benefic)</value>
+  </data>
+  <data name="HelpText_SingleTargetRegenHPP" xml:space="preserve">
+    <value>You typically want to set this lower than the above setting.</value>
+  </data>
+  <data name="Slider_SingleTargetExcogHPP" xml:space="preserve">
+    <value>Single Target HP% Threshold (target has Excogitation)</value>
+  </data>
+  <data name="HelpText_SingleTargetExcogHPP" xml:space="preserve">
+    <value>You typically want to set this lower than the above setting.</value>
+  </data>
+  <data name="Slider_AoETargetHPP" xml:space="preserve">
+    <value>AoE HP% Threshold</value>
+  </data>
+  <data name="Input_AoEHealTargetCount" xml:space="preserve">
+    <value>Targets Required for AoE Healing Features</value>
+  </data>
+  <data name="HelpText_AoEHealTargetCount" xml:space="preserve">
+    <value>Disabling this will turn off AoE Healing features. Otherwise will require the amount of targets required to be in range of an AoE feature's heal to use.</value>
+  </data>
+  <data name="Input_HealDelay" xml:space="preserve">
+    <value>Delay to start healing once above conditions are met (seconds)</value>
+  </data>
+  <data name="HelpText_HealDelay" xml:space="preserve">
+    <value>Don't set this too high! 1-2 seconds is normally comfy enough to be considered a natural reaction.</value>
+  </data>
+  <data name="Checkbox_AutoRez" xml:space="preserve">
+    <value>Auto-Resurrect</value>
+  </data>
+  <data name="HelpText_AutoRez" xml:space="preserve">
+    <value>Will attempt to resurrect dead party members.
+Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
+  </data>
+  <data name="Checkbox_AutoRezOutOfParty" xml:space="preserve">
+    <value>Apply to Out of Party Members</value>
+  </data>
+  <data name="Checkbox_AutoRezRequireSwift" xml:space="preserve">
+    <value>Require {0}/{1}</value>
+  </data>
+  <data name="HelpText_AutoRezRequireSwift" xml:space="preserve">
+    <value>Requires {0} or {1}'s {2} to be available to resurrect a party member, to avoid hard-casting.</value>
+  </data>
+  <data name="Checkbox_AutoRezDPSJobs" xml:space="preserve">
+    <value>Apply to {0} &amp; {1}</value>
+  </data>
+  <data name="HelpText_AutoRezDPSJobs" xml:space="preserve">
+    <value>When playing as {0} or {1}, also attempt to raise a dead party member. {2} will only resurrect with {3} or {4} active.</value>
+  </data>
+  <data name="Checkbox_AutoRezDPSJobsHealersOnly" xml:space="preserve">
+    <value>Only Raise Raisers</value>
+  </data>
+  <data name="HelpText_AutoRezDPSJobsHealersOnly" xml:space="preserve">
+    <value>When playing as {0} or {1}, Will only attempt to res Healers and Raisers</value>
+  </data>
+  <data name="Checkbox_AutoCleanse" xml:space="preserve">
+    <value>Auto-{0}</value>
+  </data>
+  <data name="HelpText_AutoCleanse" xml:space="preserve">
+    <value>Will {0} any cleansable debuffs (Healing takes priority).</value>
+  </data>
+  <data name="Checkbox_ManageKardia" xml:space="preserve">
+    <value>[{0}] Automatically Manage {1}</value>
+  </data>
+  <data name="HelpText_ManageKardia" xml:space="preserve">
+    <value>Switches {0} to party members currently being targeted by enemies, prioritising tanks if multiple people are being targeted.</value>
+  </data>
+  <data name="Checkbox_KardiaTanksOnly" xml:space="preserve">
+    <value>Limit {0} swapping to tanks only</value>
+  </data>
+  <data name="Checkbox_PreEmptiveHoT" xml:space="preserve">
+    <value>[{0}/{1}/{2}/{3}] Pre-emptively apply Heal Over Time/Shields on focus target</value>
+  </data>
+  <data name="HelpText_PreEmptiveHoT" xml:space="preserve">
+    <value>Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses "Only in Combat" setting)</value>
+  </data>
+  <data name="Checkbox_IncludeNPCs" xml:space="preserve">
+    <value>Heal Friendly NPCs</value>
+  </data>
+  <data name="HelpText_IncludeNPCs" xml:space="preserve">
+    <value>Useful for healer quests where NPCs are expected to be healed but aren't added directly to your party.</value>
+  </data>
+  <data name="Checkbox_HealerAlwaysHardTarget" xml:space="preserve">
+    <value>Always Set Hard Target###HealerHardTarget</value>
+  </data>
+  <data name="HelpText_HealerAlwaysHardTarget" xml:space="preserve">
+    <value>Auto-rotation does not need to target allies to work, however with this setting enabled it will always set your hard target when it executes a heal.</value>
+  </data>
+  <data name="Label_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="Input_ThrottleDelay" xml:space="preserve">
+    <value>Throttle Delay (ms)</value>
+  </data>
+  <data name="HelpText_ThrottleDelay" xml:space="preserve">
+    <value>Auto-Rotation has a built in throttler to only run every so many milliseconds for performance reasons. If you experience issues with frame rate, try increasing this value. Do note this may have a side-effect of introducing clipping if set too high, so experiment with the value.</value>
+  </data>
+  <data name="Checkbox_Orbwalker" xml:space="preserve">
+    <value>Enable Orbwalker Integration</value>
+  </data>
+  <data name="HelpText_Orbwalker" xml:space="preserve">
+    <value>This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast. You may need to enable "Buffer Initial Cast" setting in Orbwalker if not already enabled. Requires an Orbwalker plugin to be installed and enabled.</value>
+  </data>
+</root>
