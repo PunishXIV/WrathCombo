@@ -339,6 +339,17 @@ internal abstract partial class CustomComboFunctions
                 }
 
                 return false;
+            
+            case 1241: // Cloud of Darkness Chaotic - Sphere of Naught
+                // Cloud of Darkness = 17950
+                // Stygian Shadow = 17951
+                // Inner Darkness = 4177
+                // Outer Darkness = 4178
+                if (targetID is 17950 && HasStatusEffect(4178, null, true)) return true; // If on the tiles
+                if (targetID is 17951 && HasStatusEffect(4177, null, true)) return true; // If on platforms
+
+                return false;
+            
             case 1248: // Jeuno 1 Ark Angels
                 // ArkAngel HM = 1804
                 // ArkAngel MR = 18051 (A)
