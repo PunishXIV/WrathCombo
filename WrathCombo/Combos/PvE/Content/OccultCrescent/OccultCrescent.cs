@@ -606,7 +606,8 @@ internal partial class OccultCrescent
       
         if (CanWeaveNow) return false;
         
-        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_BlazingSpellblade, BlazingSpellblade) && !HasStatusEffect(Buffs.BlazingSpellblade) && !CanWeave())
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_BlazingSpellblade, BlazingSpellblade) && !CanWeave() &&
+            (!HasStatusEffect(Buffs.BlazingSpellblade) || GetStatusEffectRemainingTime(Buffs. BlazingSpellblade) <= 15))
         {
             actionID = BlazingSpellblade;
             return true;
