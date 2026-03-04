@@ -22,7 +22,7 @@ internal static class MNKPvP
         EarthsReply = 29483,
         Meteordrive = 29485,
         WindsReply = 41509,
-        FlintsReply = 41447,
+        FiresReply = 41448,
         LeapingOpo = 41444,
         RisingRaptor = 41445,
         PouncingCoeurl = 41446;
@@ -76,13 +76,9 @@ internal static class MNKPvP
                     GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
                     return PvPMelee.Smite;
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix))
-                {
-                    if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
-                        return OriginalHook(RisingPhoenix);
-                    if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
-                        return actionID;
-                }
+                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && NumberOfEnemiesInRange(RisingPhoenix) >=1 && 
+                    (GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0))
+                    return OriginalHook(RisingPhoenix);
 
                 if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
                     return OriginalHook(RiddleOfEarth);
@@ -99,10 +95,10 @@ internal static class MNKPvP
                         return OriginalHook(EarthsReply);
                 }
 
-                if (IsEnabled(Preset.MNKPvP_Burst_FlintsReply))
+                if (IsEnabled(Preset.MNKPvP_Burst_FiresReply))
                 {
-                    if (GetRemainingCharges(FlintsReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)) || HasStatusEffect(Buffs.FiresRumination) && !WasLastAction(PouncingCoeurl))
-                        return OriginalHook(FlintsReply);
+                    if (GetRemainingCharges(FiresReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)))
+                        return OriginalHook(FiresReply);
                 }
             }
             return actionID;
