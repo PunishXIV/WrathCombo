@@ -200,6 +200,7 @@ internal partial class WAR
                         DrawSliderInt(50, 100, WAR_AoE_Decimate_Gauge,
                             " Minimum Beast Gauge required to spend:");
                     }
+                    DrawAdditionalBoolChoice(WAR_AoE_Decimate_Smart, "Smart Spender ", "Will use Fell Cleave in AoE when it would be a dps increase compared to Decimate.");
                     break;
                 
                 case Preset.WAR_AoE_InnerRelease:
@@ -516,7 +517,8 @@ internal partial class WAR
             WAR_ST_FellCleave_Pooling_BossOnly = new("WAR_ST_FellCleave_Pooling_BossOnly"),
 
             WAR_AoE_Decimate_Pooling = new("WAR_AoE_Decimate_Pooling"),
-            WAR_AoE_Decimate_Pooling_BossOnly = new("WAR_AoE_Decimate_Pooling_BossOnly");
+            WAR_AoE_Decimate_Pooling_BossOnly = new("WAR_AoE_Decimate_Pooling_BossOnly"),
+            WAR_AoE_Decimate_Smart = new("WAR_AoE_Decimate_Smart");
         public static UserIntArray
             WAR_Mit_Priorities = new("WAR_Mit_Priorities");
 

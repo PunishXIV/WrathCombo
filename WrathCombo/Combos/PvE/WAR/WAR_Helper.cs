@@ -323,6 +323,8 @@ internal partial class WAR : Tank
         int primalRendTiming = 
             flags.HasFlag(Combo.Simple) ? 0 : 
             flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_EarlyLate : WAR_AoE_PrimalRend_EarlyLate;
+        
+        bool useSmartAoE = flags.HasFlag(Combo.Simple) ? true : WAR_AoE_Decimate_Smart; 
 
             
         #endregion
@@ -360,16 +362,14 @@ internal partial class WAR : Tank
                 
                 if (InMeleeRange() && //Melee range check for single target
                     (flags.HasFlag(Combo.ST) || //Fell Cleave in ST
-                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && (!LevelChecked(Decimate) && enemyCount < 5 || //Fell Cleave in Aoe if Decimate too low level
+                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && useSmartAoE && (!LevelChecked(Decimate) && enemyCount < 5 || //Fell Cleave in Aoe if Decimate too low level
                                                                               enemyCount < 4 && TraitLevelChecked(Traits.MeleeMastery2)))) //Fell Cleave in Aoe if decimate less than 4 targets
                 {
                     actionID = OriginalHook(InnerBeast);
                     return true;
                 }
 
-                if (flags.HasFlag(Combo.AoE) && LevelChecked(Decimate) &&
-                    (enemyCount >= 3 && !TraitLevelChecked(Traits.MeleeMastery2) || //3 Targets without trait
-                     enemyCount >= 4)) //4 Targets
+                if (flags.HasFlag(Combo.AoE) && LevelChecked(Decimate))
                 {
                     actionID = Decimate;
                     return true;
