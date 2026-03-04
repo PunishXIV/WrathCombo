@@ -22,7 +22,7 @@ internal static class MNKPvP
         EarthsReply = 29483,
         Meteordrive = 29485,
         WindsReply = 41509,
-        FlintsReply = 41447,
+        FiresReply = 41447,
         LeapingOpo = 41444,
         RisingRaptor = 41445,
         PouncingCoeurl = 41446;
@@ -30,7 +30,6 @@ internal static class MNKPvP
     public static class Buffs
     {
         public const ushort
-            FiresRumination = 4301,
             FireResonance = 3170,
             EarthResonance = 3171;
     }
@@ -76,12 +75,17 @@ internal static class MNKPvP
                     GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
                     return PvPMelee.Smite;
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix))
+                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && HasTarget() && GetTargetDistance() <= 5)
                 {
-                    if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
+                    if (actionID == PhantomRush && !HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 0)
                         return OriginalHook(RisingPhoenix);
-                    if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
-                        return actionID;
+
+                    bool isStartingHit = actionID is DragonKick or LeapingOpo;
+                    if (GetRemainingCharges(RisingPhoenix) > 1 && !HasStatusEffect(Buffs.FireResonance) && !isStartingHit)
+                        return OriginalHook(RisingPhoenix);
+
+                    if (WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0 && !HasStatusEffect(Buffs.FireResonance))
+                        return OriginalHook(RisingPhoenix);
                 }
 
                 if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
@@ -99,10 +103,10 @@ internal static class MNKPvP
                         return OriginalHook(EarthsReply);
                 }
 
-                if (IsEnabled(Preset.MNKPvP_Burst_FlintsReply))
+                if (IsEnabled(Preset.MNKPvP_Burst_FiresReply))
                 {
-                    if (GetRemainingCharges(FlintsReply) > 0 && (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)) || HasStatusEffect(Buffs.FiresRumination) && !WasLastAction(PouncingCoeurl))
-                        return OriginalHook(FlintsReply);
+                    if (GetRemainingCharges(FiresReply) > 0)
+                        return OriginalHook(FiresReply);
                 }
             }
             return actionID;

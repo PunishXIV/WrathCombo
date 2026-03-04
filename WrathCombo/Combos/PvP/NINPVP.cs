@@ -182,14 +182,17 @@ internal static class NINPvP
 
                     if (IsEnabled(Preset.NINPvP_ST_MudraMode))
                     {
+                        // Priority 1: Huton
+                        if (!HasStatusEffect(Debuffs.SealedHuton))
+                            return OriginalHook(Huton);
+
+                        // Priority 2: Hyosho Ranryu
                         if (!HasStatusEffect(Debuffs.SealedHyoshoRanryu))
                             return OriginalHook(HyoshoRanryu);
 
+                        // Priority 3: Forked Raiju
                         if (!HasStatusEffect(Debuffs.SeakedForkedRaiju) && bunshinStacks > 0)
                             return OriginalHook(ForkedRaiju);
-
-                        if (!HasStatusEffect(Debuffs.SealedHuton))
-                            return OriginalHook(Huton);
                     }
                     else return actionID;
                 }
@@ -222,6 +225,7 @@ internal static class NINPvP
             var maxHPThreshold = jobMaxHp - 8000;
             var remainingPercentage = (float)LocalPlayer.CurrentHp / (float)maxHPThreshold;
             bool inMeisuiRange = threshold >= (remainingPercentage * 100);
+            bool hasBunshin = HasStatusEffect(Buffs.Bunshin);
 
             if (HasStatusEffect(Buffs.Hidden))
                 return OriginalHook(Assassinate);
@@ -234,16 +238,18 @@ internal static class NINPvP
 
                 if (canWeave)
                 {
-                    if (IsEnabled(Preset.NINPvP_AoE_Dokumori) && InMeleeRange() && !GetCooldown(Dokumori).IsCooldown)
-                        return OriginalHook(Dokumori);
-
+                    // Overarching Priority: Bunshin first
                     if (IsEnabled(Preset.NINPvP_AoE_Bunshin) && !GetCooldown(Bunshin).IsCooldown)
                         return OriginalHook(Bunshin);
 
-                    // Three Mudra
+                    // Dokumori requires Bunshin and range check (8y)
+                    if (IsEnabled(Preset.NINPvP_AoE_Dokumori) && hasBunshin && IsInRange(null, 8) && !GetCooldown(Dokumori).IsCooldown)
+                        return OriginalHook(Dokumori);
+
+                    // Three Mudra waits for Bunshin
                     if (IsEnabled(Preset.NINPvP_AoE_ThreeMudra) && threeMudrasCD.RemainingCharges > 0 && !mudraMode)
                     {
-                        if (!IsEnabled(Preset.NINPvP_AoE_ThreeMudraPool) || HasStatusEffect(Buffs.Bunshin))
+                        if (hasBunshin)
                             return OriginalHook(ThreeMudra);
                     }
                 }
@@ -255,10 +261,16 @@ internal static class NINPvP
                         if (IsEnabled(Preset.NINPvP_AoE_Meisui) && inMeisuiRange && !meisuiLocked)
                             return OriginalHook(Meisui);
 
-                        if (!dotonLocked)
+                        // Priority 1: Huton
+                        if (!HasStatusEffect(Debuffs.SealedHuton))
+                            return OriginalHook(Huton);
+
+                        // Priority 2: Doton with range check (8y)
+                        if (!dotonLocked && IsInRange(null, 8))
                             return OriginalHook(Doton);
 
-                        if (!gokaLocked)
+                        // Priority 3: Goka Mekkyaku with range check (20y)
+                        if (!gokaLocked && GetTargetDistance() <= 20)
                             return OriginalHook(GokaMekkyaku);
                     }
                     else return actionID;  // if automatic is not enabled and in mudra mode, ensures fuma shuriken is the option so mudras can be properly chosen

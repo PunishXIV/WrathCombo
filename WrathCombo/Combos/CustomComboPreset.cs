@@ -9108,8 +9108,8 @@ public enum Preset
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
-    [CustomComboInfo("Flints Reply Option", "Adds Flints Reply to Burst Mode.", Job.MNK)]
-    MNKPvP_Burst_FlintsReply = 119003,
+    [CustomComboInfo("Fire's Reply Option", "Adds Fire's Reply to Burst Mode.", Job.MNK)]
+    MNKPvP_Burst_FiresReply = 119003,
 
     [ParentCombo(MNKPvP_Burst)]
     [PvPCustomCombo]
