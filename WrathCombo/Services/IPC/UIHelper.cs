@@ -193,7 +193,9 @@ public class UIHelper(Leasing leasing)
     internal (string controllers, int state)? AutoRotationConfigControlled(
         string configName)
     {
-        var configOption = Enum.Parse<AutoRotationConfigOption>(configName);
+        if (!Enum.TryParse<AutoRotationConfigOption>(configName,
+                out var configOption))
+            return null;
 
         if (_autoRotationConfigsUpdated != _leasing.AutoRotationConfigsUpdated)
             AutoRotationConfigsControlled.Clear();
