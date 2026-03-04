@@ -360,7 +360,7 @@ internal partial class WAR : Tank
                 
                 if (InMeleeRange() && //Melee range check for single target
                     (flags.HasFlag(Combo.ST) || //Fell Cleave in ST
-                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && (!LevelChecked(Decimate) && enemyCount < 6 || //Fell Cleave in Aoe if Decimate too low level
+                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && (!LevelChecked(Decimate) && enemyCount < 5 || //Fell Cleave in Aoe if Decimate too low level
                                                                               enemyCount < 4 && TraitLevelChecked(Traits.MeleeMastery2)))) //Fell Cleave in Aoe if decimate less than 4 targets
                 {
                     actionID = OriginalHook(InnerBeast);
