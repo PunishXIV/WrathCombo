@@ -22,7 +22,7 @@ internal static class MNKPvP
         EarthsReply = 29483,
         Meteordrive = 29485,
         WindsReply = 41509,
-        FiresReply = 41447,
+        FiresReply = 41448,
         LeapingOpo = 41444,
         RisingRaptor = 41445,
         PouncingCoeurl = 41446;
