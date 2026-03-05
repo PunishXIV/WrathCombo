@@ -1,5 +1,4 @@
-﻿using System;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
@@ -10,7 +9,6 @@ using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using Lumina.Excel.Sheets;
 
 namespace WrathCombo.CustomComboNS.Functions;
 
@@ -88,7 +86,7 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     /// <param name="effect">Dalamud Status object</param>
     /// <returns>Float representing remaining status effect time</returns>
-    public unsafe static float GetStatusEffectRemainingTime(IStatus? effect)
+    public static unsafe float GetStatusEffectRemainingTime(IStatus? effect)
     {
         if (effect is null) return 0;
         if (effect.RemainingTime < 0) return (effect.RemainingTime * -1) + ActionManager.Instance()->AnimationLock;
@@ -102,7 +100,7 @@ internal abstract partial class CustomComboFunctions
     /// <param name="target">Optional Target</param>
     /// <param name="anyOwner">Check if the Player owns/created the status, true means anyone owns</param>
     /// <returns>Float representing remaining status effect time</returns>
-    public unsafe static float GetStatusEffectRemainingTime(ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
+    public static float GetStatusEffectRemainingTime(ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectRemainingTime(GetStatusEffect(effectId, target, anyOwner));
 
     /// <summary>
@@ -180,7 +178,7 @@ internal abstract partial class CustomComboFunctions
             Player.Status.Any(s =>
                 // Acceleration Bomb within Timeframe
                 (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                    GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+                 GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
 
                 // Pyretic
                 StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
@@ -188,7 +186,7 @@ internal abstract partial class CustomComboFunctions
                 // Others
                 StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
 
-            ) == true;
+            );
 
         if (hasActionPenalty)
         {
@@ -223,12 +221,12 @@ internal abstract partial class CustomComboFunctions
             case 174: // Labyrinth of the Ancients
                 // Thanatos, Spooky Ghosts Only
                 if (targetID is 2350) return !HasStatusEffect(398);
+                
                 // Allagan Bomb
                 if (targetID is 2407)
                     return NumberOfObjectsInRange<SelfCircle>(30,
                         target, // 30 yalms radius range of Allagan Bomb
                         checkInvincible: false) > 1;
-
                 return false;
 
             case 189: // Amdapor Keep (Hard), Ferdidad
@@ -236,6 +234,7 @@ internal abstract partial class CustomComboFunctions
                      // Stoneskins or multiple adds
                      HasStatusEffect(152, tar, true) || NumberOfObjectsInRange<SelfCircle>(30, checkInvincible: false) > 1))
                     return true;
+                
                 return false;
 
             case 281: //Whorleater (Hard)

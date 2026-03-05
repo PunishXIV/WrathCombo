@@ -140,9 +140,9 @@ internal class StatusCache
             .Where(row => row.Value.Icon == 215024)
             .Select(row => row.Key)
             .Concat(new uint[] {
-                151, 198, 469, 592, 1240, 1302, 1303,
+                151, 198, 325, 469, 592, 1240, 1302, 1303,
                 1567, 1936, 2413, 2654, 3012, 3039,
-                3052, 3054, 4175
+                3052, 3054, 4175, 4410
             })
             .ToFrozenSet();
 
