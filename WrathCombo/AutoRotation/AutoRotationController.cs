@@ -1,6 +1,5 @@
 ﻿#region
 
-using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
@@ -14,7 +13,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using WrathCombo.API.Enum;
-using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.Core;
@@ -25,6 +23,7 @@ using WrathCombo.Services;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 using static WrathCombo.Data.ActionWatching;
 using ActionType = FFXIVClientStructs.FFXIV.Client.Game.ActionType;
 
@@ -151,10 +150,10 @@ internal unsafe class AutoRotationController
 
         bool aoeheal = isHealer
                        && HealerTargeting.CanAoEHeal()
-                       && autoActions.Any(x => x.Key.Attributes()?.AutoAction?.IsHeal == true && x.Key.Attributes()?.AutoAction?.IsAoE == true);
+                       && autoActions.Any(x => x.Key.Attributes().AutoAction?.IsHeal == true && x.Key.Attributes().AutoAction?.IsAoE == true);
 
         bool needsHeal = ((healTarget != null
-                           && autoActions.Any(x => x.Key.Attributes()?.AutoAction?.IsHeal == true && x.Key.Attributes()?.AutoAction?.IsAoE != true))
+                           && autoActions.Any(x => x.Key.Attributes().AutoAction?.IsHeal == true && x.Key.Attributes().AutoAction?.IsAoE != true))
                           || aoeheal)
                          && isHealer;
 
@@ -167,7 +166,7 @@ internal unsafe class AutoRotationController
         bool actCheck = autoActions.Any(x =>
         {
             var attr = x.Key.Attributes();
-            return attr?.AutoAction?.IsHeal == true && ActionReady(AutoRotationHelper.InvokeCombo(x.Key, attr, ref _));
+            return attr.AutoAction?.IsHeal == true && ActionReady(AutoRotationHelper.InvokeCombo(x.Key, attr, ref _));
         });
 
         bool canHeal = TimeToHeal is not null
@@ -424,7 +423,7 @@ internal unsafe class AutoRotationController
                 if (resSpell is Variant.Raise)
                 {
                     //Try to Swiftcast if Magic DPS
-                    if (RoleAttribute.GetRoleFromJob(Player.Job) is JobRole.MagicalDPS)
+                    if (GetRoleFromJob(Player.Job) is JobRole.MagicalDPS)
                     {
                         if (ActionReady(RoleActions.Magic.Swiftcast) && !HasStatusEffect(RDM.Buffs.Dualcast))
                         {
@@ -519,7 +518,7 @@ internal unsafe class AutoRotationController
 
     }
 
-    private static bool AutomateDPS(Preset preset, Presets.PresetAttributes attributes, uint gameAct)
+    private static bool AutomateDPS(Preset preset, PresetStorage.PresetData attributes, uint gameAct)
     {
         var mode = cfg.DPSRotationMode;
         if (attributes.AutoAction!.IsAoE)
@@ -532,7 +531,7 @@ internal unsafe class AutoRotationController
         }
     }
 
-    private static bool AutomateTanking(Preset preset, Presets.PresetAttributes attributes, uint gameAct)
+    private static bool AutomateTanking(Preset preset, PresetStorage.PresetData attributes, uint gameAct)
     {
         var mode = cfg.DPSRotationMode;
         if (attributes.AutoAction!.IsAoE)
@@ -545,7 +544,7 @@ internal unsafe class AutoRotationController
         }
     }
 
-    private static bool AutomateHealing(Preset preset, Presets.PresetAttributes attributes, uint gameAct)
+    private static bool AutomateHealing(Preset preset, PresetStorage.PresetData attributes, uint gameAct)
     {
         var mode = cfg.HealerRotationMode;
         if (Player.Object?.IsCasting() is true) return false;
@@ -619,7 +618,7 @@ internal unsafe class AutoRotationController
             return null;
         }
 
-        public static bool ExecuteAoE(Enum mode, Preset preset, Presets.PresetAttributes attributes, uint gameAct)
+        public static bool ExecuteAoE(Enum mode, Preset preset, PresetStorage.PresetData attributes, uint gameAct)
         {
             if (LocalPlayer is not { } player)
                 return false;
@@ -661,7 +660,7 @@ internal unsafe class AutoRotationController
                 if (!NIN.InMudra)
                 {
                     var st = GetSingleTarget(mode);
-                    var maxHit = NumberOfEnemiesInRange(OriginalHook(gameAct), target, true);
+                    var maxHit = NumberOfEnemiesInRange(DontChangeForAoe(gameAct) ? gameAct : OriginalHook(gameAct), target, true);
                     var singleTargetModeTarget = NumberOfEnemiesInRange(OriginalHook(gameAct), st, true);
 
                     if (singleTargetModeTarget >= maxHit)
@@ -742,7 +741,12 @@ internal unsafe class AutoRotationController
             return false;
         }
 
-        public static bool ExecuteST(Enum mode, Preset preset, Presets.PresetAttributes attributes, uint gameAct)
+        private static bool DontChangeForAoe(uint gameAct)
+        {
+            return gameAct is DNC.Windmill or DNC.Bladeshower or DNC.RisingWindmill or DNC.Bloodshower;
+        }
+
+        public static bool ExecuteST(Enum mode, Preset preset, PresetStorage.PresetData attributes, uint gameAct)
         {
             if (LocalPlayer is not { } player)
                 return false;
@@ -816,7 +820,7 @@ internal unsafe class AutoRotationController
             return false;
         }
 
-        private static bool SwitchOnDChole(Presets.PresetAttributes attributes, uint outAct, ref IGameObject? newtarget)
+        private static bool SwitchOnDChole(PresetStorage.PresetData attributes, uint outAct, ref IGameObject? newtarget)
         {
             if (outAct is SGE.Druochole && !attributes.AutoAction!.IsHeal)
             {
@@ -836,7 +840,7 @@ internal unsafe class AutoRotationController
             return false;
         }
 
-        public static uint InvokeCombo(Preset preset, Presets.PresetAttributes attributes, ref uint originalAct, IGameObject? optionalTarget = null)
+        public static uint InvokeCombo(Preset preset, PresetStorage.PresetData attributes, ref uint originalAct, IGameObject? optionalTarget = null)
         {
             if (attributes.ReplaceSkill is null) return originalAct;
             var outAct = attributes.ReplaceSkill.ActionIDs.FirstOrDefault();

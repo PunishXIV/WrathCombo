@@ -1,5 +1,4 @@
 using System;
-using WrathCombo.Combos;
 
 namespace WrathCombo.Attributes;
 

@@ -1,12 +1,12 @@
 #region
 
+using Dalamud.Interface.Utility.Raii;
+using ECommons.ExcelServices;
+using ECommons.ImGuiMethods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using Dalamud.Interface.Utility.Raii;
-using ECommons.ExcelServices;
-using ECommons.ImGuiMethods;
 using WrathCombo.Attributes;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
@@ -24,7 +24,6 @@ internal class FeaturesWindow : ConfigWindow
         Normal,
         Variant,
         Bozja,
-        Eureka,
         OccultCrescent,
     }
 
@@ -202,12 +201,11 @@ internal class FeaturesWindow : ConfigWindow
         if (!IsSearching)
             return false;
 
-        if (PresetStorage.ShouldBeHidden(preset))
+        var presetData = PresetStorage.AllPresets[preset];
+
+        if (presetData.ShouldBeHidden)
             return false;
 
-        if (!Presets.Attributes.TryGetValue(preset, out var attributes))
-            attributes = new Presets.PresetAttributes(preset);
-        
         if (UsableSearch == "erp")
             return false;
 
@@ -231,16 +229,16 @@ internal class FeaturesWindow : ConfigWindow
             return true;
 
         // Title matching
-        if (attributes.CustomComboInfo.Name.Contains(UsableSearch, Lower))
+        if (presetData.Name.Contains(UsableSearch, Lower))
             return true;
 
         // Title matching (without spaces)
-        if (attributes.CustomComboInfo.Name.Replace(" ", "")
+        if (presetData.Name.Replace(" ", "")
             .Contains(UsableSearch.Replace(" ", ""), Lower))
             return true;
 
         // Title matching (without punctuation or spaces)
-        if (new string(attributes.CustomComboInfo.Name.Replace(" ", "")
+        if (new string(presetData.Name.Replace(" ", "")
                 .Where(c => c == '!' || !char.IsPunctuation(c))
                 .ToArray())
             .Contains(new string(UsableSearch.Replace(" ", "")
@@ -251,16 +249,16 @@ internal class FeaturesWindow : ConfigWindow
         if (SearchDescription)
         {
             // Description matching
-            if (attributes.CustomComboInfo.Description.Contains(UsableSearch, Lower))
+            if (presetData.Description.Contains(UsableSearch, Lower))
                 return true;
 
             // Description matching (without spaces)
-            if (attributes.CustomComboInfo.Description.Replace(" ", "")
+            if (presetData.Description.Replace(" ", "")
                 .Contains(UsableSearch.Replace(" ", ""), Lower))
                 return true;
 
             // Description matching (without punctuation or spaces)
-            if (new string(attributes.CustomComboInfo.Description.Replace(" ", "")
+            if (new string(presetData.Description.Replace(" ", "")
                     .Where(c => c == '!' || !char.IsPunctuation(c))
                     .ToArray())
                 .Contains(new string(UsableSearch.Replace(" ", "")
@@ -294,7 +292,7 @@ internal class FeaturesWindow : ConfigWindow
             case "!secret":
             case "!hidden":
                 matchesKeyWords = Service.Configuration.ShowHiddenFeatures &&
-                                  attributes.Hidden is not null;
+                                  attributes.IsHidden;
                 return true;
 
             case "!retargeting":
@@ -343,11 +341,10 @@ internal class FeaturesWindow : ConfigWindow
                 alreadyShown.Any(y => y == attributes.GreatGrandParent))
                 continue;
 
-            var info = attributes.CustomComboInfo;
             InfoBox presetBox = new()
             {
                 ContentsOffset = 5f.Scale(),
-                ContentsAction = () => { Presets.DrawPreset(preset, info!); }
+                ContentsAction = () => { Presets.DrawPreset(preset, attributes!); }
             };
             presetBox.Draw();
             ImGuiEx.Spacing(new Vector2(0, 12));
@@ -359,7 +356,7 @@ internal class FeaturesWindow : ConfigWindow
     {
         if (CurrentPreset > 1 || !IsSearching)
             return;
-        
+
         if (UsableSearch == "erp")
         {
             ImGuiEx.LineCentered(() => { ImGui.Text("Behave!"); });

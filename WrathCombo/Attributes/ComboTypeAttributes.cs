@@ -32,10 +32,10 @@ internal enum ComboType
     Simple = 0,
     Advanced = 1,
     Basic = 3,
-    
+
     Healing = 7,
     Mitigation = 8,
-    
+
     Feature = 11,
     Option = 12,
 }

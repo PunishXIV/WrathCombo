@@ -218,61 +218,44 @@ public class Search(Leasing leasing)
     private DateTime _lastCacheUpdateForPresetStates = DateTime.MinValue;
 
     /// <summary>
-    ///     Recursively finds the root parent of a given Preset.
-    /// </summary>
-    /// <param name="preset">The Preset to find the root parent for.</param>
-    /// <returns>The root parent Preset.</returns>
-    public Preset GetRootParent(Preset preset)
-    {
-        if (!Attribute.IsDefined(
-                typeof(Preset).GetField(preset.ToString())!,
-                typeof(ParentComboAttribute)))
-        {
-            return preset;
-        }
-
-        var parentAttribute = (ParentComboAttribute)Attribute.GetCustomAttribute(
-            typeof(Preset).GetField(preset.ToString())!,
-            typeof(ParentComboAttribute)
-        )!;
-
-        return GetRootParent(parentAttribute.ParentPreset);
-    }
-
-    /// <summary>
     ///     Cached list of <see cref="Preset">Presets</see>, and most of
     ///     their attribute-based information.
     /// </summary>
     [field: AllowNull, MaybeNull]
     // ReSharper disable once MemberCanBePrivate.Global
     internal Dictionary<string, (Job Job, Preset ID,
-        CustomComboInfoAttribute Info, bool HasParentCombo, bool IsVariant, string
+        PresetStorage.PresetData presetData, bool HasParentCombo, bool IsVariant, string
         ParentComboName, ComboType ComboType)> Presets
     {
         get
         {
             return field ??= PresetStorage.AllPresets!
-                .Select(preset => new
-                {
-                    ID = preset,
-                    JobId = preset.Attributes().CustomComboInfo.Job,
-                    InternalName = preset.ToString(),
-                    Info = preset.Attributes().CustomComboInfo!,
-                    HasParentCombo = preset.Attributes().Parent != null,
-                    IsVariant = preset.Attributes().Variant != null,
-                    ParentComboName = preset.Attributes().Parent != null
-                        ? GetRootParent(preset).ToString()
-                        : string.Empty,
-                    preset.Attributes().ComboType,
-                })
-                .Where(combo =>
-                    !combo.InternalName.EndsWith("any", ToLower))
-                .ToDictionary(
-                    combo => combo.InternalName,
-                    combo => (combo.JobId, combo.ID, combo.Info,
-                        combo.HasParentCombo, combo.IsVariant,
-                        combo.ParentComboName, combo.ComboType)
-                );
+            .Select(preset => new
+            {
+                ID = preset.Key,
+                JobId = preset.Value.JobInfo!.Job,
+                InternalName = preset.Key.ToString(),
+                presetData = preset.Value,
+                HasParentCombo = preset.Value.Parent != null,
+                IsVariant = preset.Value.IsVariant,
+                ParentComboName = preset.Value.Parent != null
+                    ? preset.Value.RootParent.ToString()
+                    : string.Empty,
+                preset.Value.ComboType,
+            })
+            .Where(combo =>
+                !combo.InternalName.EndsWith("any", ToLower))
+            .ToDictionary(
+                combo => combo.InternalName,
+                combo => (
+                    combo.JobId,
+                    combo.ID,
+                    combo.presetData,
+                    combo.HasParentCombo,
+                    combo.IsVariant,
+                    combo.ParentComboName,
+                    combo.ComboType)
+            );
         }
     }
 
@@ -423,9 +406,9 @@ public class Search(Leasing leasing)
                 {
                     new
                     {
-                        Job = preset.Value.Info.Job,
+                        Job = preset.Value.Job,
                         Combo = preset.Key,
-                        preset.Value.Info,
+                        preset.Value,
                         preset.Value.ComboType,
                     },
                 })
@@ -436,11 +419,11 @@ public class Search(Leasing leasing)
                             x.ComboType switch
                             {
                                 ComboType.Healing =>
-                                    x.Info.Name.Contains("single target", ToLower)
+                                    x.Value.presetData.Name.Contains("single target", ToLower)
                                         ? ComboTargetTypeKeys.HealST
                                         : ComboTargetTypeKeys.HealMT,
                                 ComboType.Advanced or ComboType.Simple =>
-                                    x.Info.Name.Contains("single target", ToLower)
+                                    x.Value.presetData.Name.Contains("single target", ToLower)
                                         ? ComboTargetTypeKeys.SingleTarget
                                         : ComboTargetTypeKeys.MultiTarget,
                                 _ => ComboTargetTypeKeys.Other,

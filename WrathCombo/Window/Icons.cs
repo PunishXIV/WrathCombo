@@ -7,15 +7,15 @@ using Lumina.Data.Files;
 using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
-using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 
 namespace WrathCombo.Window;
 
 internal static class Icons
 {
     public static Dictionary<uint, IDalamudTextureWrap> CachedModdedIcons = new();
-    
+
     public static class Occult
     {
         private static int MaxJobId = JobIDExtensions.GetHighestActiveOccultID();

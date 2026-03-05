@@ -1,7 +1,7 @@
 ﻿using ECommons.DalamudServices;
 using ECommons.GameHelpers;
-using WrathCombo.Attributes;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -20,7 +20,7 @@ internal static partial class Variant
     {
         if (!IsInVariantDungeon) return false;
 
-        switch (RoleAttribute.GetRoleFromJob(Player.Job))
+        switch (GetRoleFromJob(Player.Job))
         {
             case JobRole.Tank:
                 if (IsEnabled(Preset.Variant_Tank))
@@ -180,7 +180,7 @@ internal static partial class Variant
     public static bool CanRaise()
     {
         if (!IsInVariantDungeon) return false;
-        return RoleAttribute.GetRoleFromJob(Player.Job) switch
+        return GetRoleFromJob(Player.Job) switch
         {
             JobRole.Tank => IsEnabled(Preset.Variant_Tank) && CheckRaise(Preset.Variant_Tank_Raise),
             JobRole.RangedDPS => IsEnabled(Preset.Variant_PhysRanged) && CheckRaise(Preset.Variant_PhysRanged_Raise),

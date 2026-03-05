@@ -30,6 +30,7 @@ internal static class MNKPvP
     public static class Buffs
     {
         public const ushort
+            FiresRumination = 4301,
             FireResonance = 3170,
             EarthResonance = 3171;
     }
@@ -75,17 +76,12 @@ internal static class MNKPvP
                     GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
                     return PvPMelee.Smite;
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && HasTarget() && GetTargetDistance() <= 5)
+                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && NumberOfEnemiesInRange(RisingPhoenix) >= 1)
                 {
-                    if (actionID == PhantomRush && !HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 0)
+                    if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
                         return OriginalHook(RisingPhoenix);
-
-                    bool isStartingHit = actionID is DragonKick or LeapingOpo;
-                    if (GetRemainingCharges(RisingPhoenix) > 1 && !HasStatusEffect(Buffs.FireResonance) && !isStartingHit)
-                        return OriginalHook(RisingPhoenix);
-
-                    if (WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0 && !HasStatusEffect(Buffs.FireResonance))
-                        return OriginalHook(RisingPhoenix);
+                    if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
+                        return actionID;
                 }
 
                 if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
@@ -103,11 +99,10 @@ internal static class MNKPvP
                         return OriginalHook(EarthsReply);
                 }
 
-                if (IsEnabled(Preset.MNKPvP_Burst_FiresReply))
-                {
-                    if (GetRemainingCharges(FiresReply) > 0)
-                        return OriginalHook(FiresReply);
-                }
+                if (IsEnabled(Preset.MNKPvP_Burst_FiresReply) && GetRemainingCharges(FiresReply) > 0 &&
+                    (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)))
+                    return OriginalHook(FiresReply);
+
             }
             return actionID;
         }

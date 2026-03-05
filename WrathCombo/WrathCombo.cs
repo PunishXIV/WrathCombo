@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using PunishLib;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -28,6 +29,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
@@ -183,7 +185,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Address = new AddressResolver();
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
-        PresetStorage.Init();
         PresetStorage.RemoveRedundantPresets();
 
         Service.ComboCache = new CustomComboCache();
@@ -194,6 +195,17 @@ public sealed partial class WrathCombo : IDalamudPlugin
         IPC = Provider.Init();
         PingPluginIPC.Init();
         ConflictingPluginsChecks.Begin();
+
+        // Subscribe to language changes to update localized text if needed (Client != Selected UI)
+        Svc.PluginInterface.LanguageChanged += Text.OnLanguageChanged;
+
+        // Ensure startup culture matches Dalamud UI language
+        var dalamudCulture = Svc.PluginInterface.UiLanguage.ToCulture();
+
+        if (!Equals(CultureInfo.CurrentUICulture, dalamudCulture))
+        {
+            Text.OnLanguageChanged(Svc.PluginInterface.UiLanguage);
+        }
 
         ConfigWindow = new ConfigWindow();
         Settings.SanitiseSettings();
@@ -435,7 +447,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Used for non-static only window initialization")]
-    public string Name => "Wrath Combo";
+    public string Name => MainWindow.Wrath_Combo;
 
     /// <inheritdoc/>
     public void Dispose()

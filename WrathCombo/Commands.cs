@@ -261,7 +261,7 @@ public partial class WrathCombo
 
             if (!Service.Configuration.SuppressSetCommands && ctrlText == "")
                 DuoLog.Information(
-                    $"{usablePreset.Attributes().CustomComboInfo.Name} {action} {ctrlText}");
+                    $"{usablePreset.Attributes().Name} {action} {ctrlText}");
         }
     }
 
@@ -282,8 +282,9 @@ public partial class WrathCombo
     /// </param>
     private void HandleListCommands(string[] argument)
     {
-        IEnumerable<Preset> presets = Enum.GetValues<Preset>()
-            .Where(x => x.Attributes().Hidden is null);
+        IEnumerable<Preset> presets = PresetStorage.AllPresets
+            .Where(kvp => !kvp.Value.IsHidden)
+            .Select(kvp => kvp.Key);
         const StringComparison lower = StringComparison.InvariantCultureIgnoreCase;
         var filter =
             argument.Length > 1 && argument[0].Trim().Equals("list", lower)
@@ -366,7 +367,7 @@ public partial class WrathCombo
             if (jobShort is not null)
             {
                 presetsList = presetsList.Where(preset =>
-                    preset.Attributes().CustomComboInfo.JobShorthand
+                    preset.Attributes().JobInfo.JobShorthand
                         .Equals(jobShort, lower));
             }
 

@@ -1,14 +1,13 @@
 #region
 
-using System;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
-using WrathCombo.Attributes;
+using System;
+using System.Linq;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
@@ -16,8 +15,8 @@ using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 // ReSharper disable once RedundantUsingDirective
-using static WrathCombo.Data.ActionWatching;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -114,7 +113,7 @@ internal static class SimpleTarget
         ///     found in the stack.
         /// </summary>
         public static IGameObject? AllyToEsuna =>
-            GetStack(logicForEachEntryInStack: 
+            GetStack(logicForEachEntryInStack:
                 target => target.IfHasCleansable()) ??
             AnyCleansableAlly;
 
@@ -123,7 +122,7 @@ internal static class SimpleTarget
         /// </summary>
         public static IGameObject? AllyToRaise =>
             GetStack(StackOption.RaiseStack);
-        
+
         /// <summary>
         ///     The <see cref="AllyToHeal">Heal Stack</see>, but filtered to
         ///     those in Line of Sight.
@@ -348,7 +347,7 @@ internal static class SimpleTarget
             .Where(x => x.IsHostile() && x.IsTargetable && x.IsWithinRange() && x.IsInCombat() && x.IsNotInvincible())
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
-    
+
     public static IGameObject? NearestEnemyToTarget
         (IGameObject? target, float maximumRangeFromPlayer = 35f) =>
         Svc.Objects
@@ -419,7 +418,7 @@ internal static class SimpleTarget
         int minHPPercent = 10,
         float reapplyThreshold = 1,
         int maxNumberOfEnemiesInRange = 3) => DottableEnemy(dotAction, dotDebuff, _ => minHPPercent, reapplyThreshold, maxNumberOfEnemiesInRange);
-    
+
 
     public static IGameObject? DottableEnemy
     (uint dotAction,
@@ -431,8 +430,8 @@ internal static class SimpleTarget
         var range = dotAction.ActionRange();
         var nearbyEnemies = Svc.Objects
             .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && 
-                        x.IsTargetable && 
+            .Where(x => x.IsHostile() &&
+                        x.IsTargetable &&
                         x.IsInCombat() &&
                         x.IsNotInvincible() &&
                         x.IsWithinRange(range))
@@ -485,8 +484,8 @@ internal static class SimpleTarget
         int minHPPercent = 10,
         float minTime = 1,
         int maxNumberOfEnemiesInRange = 3) => BardRefreshableEnemy(refreshAction, dotDebuff1, dotDebuff2, _ => minHPPercent, minTime, maxNumberOfEnemiesInRange);
-    
-    
+
+
     public static IGameObject? BardRefreshableEnemy
     (uint refreshAction,
         ushort dotDebuff1,
@@ -498,8 +497,8 @@ internal static class SimpleTarget
         var range = refreshAction.ActionRange();
         var nearbyEnemies = Svc.Objects
             .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && 
-                        x.IsTargetable && 
+            .Where(x => x.IsHostile() &&
+                        x.IsTargetable &&
                         x.IsInCombat() &&
                         x.IsNotInvincible() &&
                         x.IsWithinRange(range))
@@ -703,7 +702,7 @@ internal static class SimpleTarget
         GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x.RealJob?.RowId ?? 0) is
+                GetRoleFromJob(x.RealJob?.RowId ?? 0) is
                     JobRole.RangedDPS)?.BattleChara;
 
     /// Gets any Magical DPS that is not the player.
@@ -711,7 +710,7 @@ internal static class SimpleTarget
         GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x.RealJob?.RowId ?? 0) is
+                GetRoleFromJob(x.RealJob?.RowId ?? 0) is
                     JobRole.MagicalDPS)?.BattleChara;
 
     #endregion

@@ -80,17 +80,17 @@ public partial class Helper(ref Leasing leasing)
     internal static Preset? GetOppositeModeCombo(Preset preset)
     {
         const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
-        var attr = preset.Attributes();
+        var presetData = preset.Attributes();
 
         // Bail if it is not one of the main combos
-        if (attr.ComboType is not (ComboType.Advanced or ComboType.Simple))
+        if (presetData.ComboType is not (ComboType.Advanced or ComboType.Simple))
             return null;
 
         // Detect the target type
         var targetType =
-            attr.CustomComboInfo.Name.Contains("single target", lower)
+            presetData.Name.Contains("single target", lower)
                 ? ComboTargetTypeKeys.SingleTarget
-                : (attr.CustomComboInfo.Name.Contains("- aoe", lower))
+                : (presetData.Name.Contains("- aoe", lower))
                     ? ComboTargetTypeKeys.MultiTarget
                     : ComboTargetTypeKeys.Other;
 
@@ -100,7 +100,7 @@ public partial class Helper(ref Leasing leasing)
 
         // Detect the simplicity level
         var simplicityLevel =
-            attr.ComboType is ComboType.Simple
+            presetData.ComboType is ComboType.Simple
                 ? ComboSimplicityLevelKeys.Simple
                 : ComboSimplicityLevelKeys.Advanced;
         // Flip the simplicity level
@@ -114,7 +114,7 @@ public partial class Helper(ref Leasing leasing)
             // Get the opposite mode
             var categorizedPreset =
                 P.IPCSearch.CurrentJobComboStatesCategorized
-                        [attr.CustomComboInfo.Job]
+                        [presetData.JobInfo.Job]
                     [targetType][simplicityLevelToSearchFor];
 
             // Return the opposite mode, as a proper preset

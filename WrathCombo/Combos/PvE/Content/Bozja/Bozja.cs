@@ -1,9 +1,9 @@
 ﻿using ECommons.GameHelpers;
-using WrathCombo.Attributes;
 using WrathCombo.Data;
+using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 using ContentHelper = ECommons.GameHelpers;
 using IntendedUse = ECommons.ExcelServices.TerritoryIntendedUseEnum;
-using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -18,7 +18,7 @@ internal static partial class Bozja
 
         bool CanUse(uint action) => HasActionEquipped(action) && IsOffCooldown(action);
         bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && CanUse(action);
-        switch (RoleAttribute.GetRoleFromJob(Player.Job))
+        switch (GetRoleFromJob(Player.Job))
         {
             case JobRole.Tank:
                 if (IsEnabled(Preset.Bozja_Tank))

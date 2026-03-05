@@ -323,8 +323,8 @@ internal partial class WAR : Tank
         int primalRendTiming = 
             flags.HasFlag(Combo.Simple) ? 0 : 
             flags.HasFlag(Combo.ST) ? WAR_ST_PrimalRend_EarlyLate : WAR_AoE_PrimalRend_EarlyLate;
-
-            
+        
+        bool useSmartAoE = flags.HasFlag(Combo.Simple) ? true : WAR_AoE_Decimate_Smart; 
         #endregion
         
         if (HasBattleTarget())  
@@ -356,20 +356,18 @@ internal partial class WAR : Tank
                 (HasStatusEffect(Buffs.InnerReleaseStacks) || //Use if you have IR stacks
                  BeastGauge >= spenderGaugeThreshold)) //Use if you have Nascent Buff
             {
-                int enemyCount = NumberOfEnemiesInRange(Decimate);
+                int enemyCount = NumberOfEnemiesInRange(Role.Reprisal);
                 
                 if (InMeleeRange() && //Melee range check for single target
                     (flags.HasFlag(Combo.ST) || //Fell Cleave in ST
-                     flags.HasFlag(Combo.AoE) && (!LevelChecked(Decimate) || //Fell Cleave in Aoe if Decimate too low level
-                                                  enemyCount < 4 && TraitLevelChecked(Traits.MeleeMastery2)))) //Fell Cleave in Aoe if decimate less than 4 targets
+                     flags.HasFlag(Combo.AoE) && LevelChecked(FellCleave) && useSmartAoE && (!LevelChecked(Decimate) && enemyCount < 5 || //Fell Cleave in Aoe if Decimate too low level
+                         enemyCount < 4 && TraitLevelChecked(Traits.MeleeMastery2)))) //Fell Cleave in Aoe if decimate less than 4 targets
                 {
-                    actionID = FellCleave;
+                    actionID = OriginalHook(InnerBeast);
                     return true;
                 }
 
-                if (flags.HasFlag(Combo.AoE) &&
-                    (enemyCount >= 3 && !TraitLevelChecked(Traits.MeleeMastery2) || //3 Targets without trait
-                     enemyCount >= 4)) //4 Targets
+                if (flags.HasFlag(Combo.AoE) && LevelChecked(Decimate))
                 {
                     actionID = Decimate;
                     return true;

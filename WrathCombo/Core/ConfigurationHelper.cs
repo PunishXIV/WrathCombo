@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using ECommons.DalamudServices;
 using ECommons.Logging;
 using Newtonsoft.Json;
-using WrathCombo.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using WrathCombo.Services;
 using Debug = WrathCombo.Window.Tabs.Debug;
 
@@ -160,29 +158,30 @@ public partial class Configuration
         {
             bool needToResetMessagePrinted = false;
 
-            var presets = Enum.GetValues<Preset>().Cast<int>();
-
             foreach (int value in values)
             {
                 Svc.Log.Debug(value.ToString());
-                if (presets.Contains(value))
+
+                var preset = (Preset)value;
+
+                if (!PresetStorage.AllPresets.TryGetValue(preset, out var presetData))
+                    continue;
+
+                // If not found, skip
+                if (!PresetStorage.AllPresets.ContainsKey(preset))
+                    continue;
+
+                if (!PresetStorage.IsEnabled(preset))
+                    continue;
+
+                if (!needToResetMessagePrinted)
                 {
-                    var preset = Enum.GetValues<Preset>()
-                        .Where(preset => (int)preset == value)
-                        .First();
-
-                    if (!PresetStorage.IsEnabled(preset)) continue;
-
-                    if (!needToResetMessagePrinted)
-                    {
-                        DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
-                        needToResetMessagePrinted = !needToResetMessagePrinted;
-                    }
-
-                    var info = preset.GetComboAttribute();
-                    DuoLog.Error($"- {info.JobName}: {info.Name}");
-                    EnabledActions.Remove(preset);
+                    DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
+                    needToResetMessagePrinted = !needToResetMessagePrinted;
                 }
+
+                DuoLog.Error($"- {presetData.JobInfo.JobName}: {presetData.Name}");
+                EnabledActions.Remove(preset);
             }
 
             if (needToResetMessagePrinted)

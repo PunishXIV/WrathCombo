@@ -1,5 +1,7 @@
 ﻿using ECommons.ExcelServices;
+using ECommons.GameHelpers;
 using Lumina.Excel.Sheets;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 using static WrathCombo.Window.Text;
 
 namespace WrathCombo.Extensions
@@ -25,7 +27,7 @@ namespace WrathCombo.Extensions
                 _ => job.GetData().Name.ToString()
             };
 
-            return GetTextInfo().ToTitleCase(jobName);
+            return TextFormatting.ToTitleCase(jobName);
         }
 
         public static string Name(this ClassJob job)
@@ -38,7 +40,15 @@ namespace WrathCombo.Extensions
                 _ => job.Name.ToString()
             };
 
-            return GetTextInfo().ToTitleCase(jobName);
+            return TextFormatting.ToTitleCase(jobName);
+        }
+
+        public static bool MatchesPlayerJob(this JobRole role)
+        {
+            if (role == JobRole.All)
+                return true;
+
+            return role == GetRoleFromJob(Player.Job);
         }
 
     }

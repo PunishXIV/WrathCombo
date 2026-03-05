@@ -19,6 +19,7 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 
 #endregion
 
@@ -212,13 +213,28 @@ internal sealed class ActionReplacer : IDisposable
 
     public void UpdateFilteredCombos()
     {
+        var playerJob = Player.Job;
+        var upgradedJob = playerJob.GetUpgradedJob();
+
         FilteredCombos = CustomCombos.Where(x =>
-            x.Preset.Attributes() is not null && x.Preset.Attributes().IsPvP == CustomComboFunctions.InPvP() &&
-            ((x.Preset.Attributes().RoleAttribute is not null && x.Preset.Attributes().RoleAttribute.PlayerIsRole()) ||
-             x.Preset.Attributes().CustomComboInfo.Job == Player.Job.GetUpgradedJob()));
+        {
+            var presetData = x.Preset.Attributes();
+            if (presetData is null)
+                return false;
+
+            if (presetData.IsPvP != CustomComboFunctions.InPvP()) // Are we in PvP?
+                return false;
+
+            return (presetData.JobInfo.Role is JobRole role &&
+                role.MatchesPlayerJob())
+                || presetData.JobInfo.Job == upgradedJob;
+        });
+
         var filteredCombos = FilteredCombos as CustomCombo[] ?? FilteredCombos.ToArray();
+
         Svc.Log.Debug(
-            $"Now running {filteredCombos.Count()} combos\n{string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().CustomComboInfo.Name))}");
+            $"Now running {filteredCombos.Length} combos\n" +
+            string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().Name)));
     }
 
     #endregion

@@ -23,7 +23,10 @@ internal class PvPFeatures : FeaturesWindow
     {
         using (ImRaii.Child("scrolling", new Vector2(ImGui.GetContentRegionAvail().X, ImGui.GetContentRegionAvail().Y), true))
         {
-            if (OpenPvPJob is null)
+            var openPvPJob = OpenPvPJob; // Cache because back button will set it to null while running
+
+            // The "Main Menu" of PvP features, showing each job to click on
+            if (openPvPJob is null)
             {
                 var userwarned = false;
 
@@ -93,15 +96,14 @@ internal class PvPFeatures : FeaturesWindow
                     if (!tab)
                         return;
 
-                    foreach (Job job in groupedPresets.Where(x =>
-                            x.Value.Any(y => PresetStorage.IsPvP(y.Preset) &&
-                                             !PresetStorage.ShouldBeHidden(y.Preset)))
-                        .Select(x => x.Key))
+                    foreach (var (job, presetData) in groupedPresets
+                        .Where(x => x.Value.Any(y => y.IsPvP && !y.ShouldBeHidden)))
                     {
-                        string jobName = groupedPresets[job].First().Info.JobName;
-                        string abbreviation = groupedPresets[job].First().Info.JobShorthand;
+                        var info = presetData[0].JobInfo;
+                        string jobName = info.JobName;
+                        string abbreviation = info.JobShorthand;
                         string header = string.IsNullOrEmpty(abbreviation) ? jobName : $"{jobName} - {abbreviation}";
-                        var id = groupedPresets[job].First().Info.Job;
+                        var id = info.Job;
                         IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
                         ImGuiEx.Spacing(new Vector2(0, 2f.Scale()));
                         using (var disabled = ImRaii.Disabled(DisabledJobsPVP.Any(x => x == id)))
@@ -135,9 +137,8 @@ internal class PvPFeatures : FeaturesWindow
             }
             else
             {
-                var id = groupedPresets[OpenPvPJob.Value].First().Info.Job;
-
-                DrawHeader(id, true);
+                // Draw Presets for a selected Job
+                DrawHeader(openPvPJob.Value, true);
                 DrawSearchBar();
                 ImGuiEx.Spacing(new Vector2(0, 10));
 
@@ -149,11 +150,11 @@ internal class PvPFeatures : FeaturesWindow
 
                 try
                 {
-                    if (ImGui.BeginTabBar($"subTab{OpenPvPJob.Value.Name()}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
+                    if (ImGui.BeginTabBar($"subTab{openPvPJob.Value.Name()}", ImGuiTabBarFlags.Reorderable | ImGuiTabBarFlags.AutoSelectNewTabs))
                     {
                         if (ImGui.BeginTabItem("Normal"))
                         {
-                            DrawHeadingContents(OpenPvPJob.Value);
+                            DrawHeadingContents(openPvPJob.Value);
                             ImGui.EndTabItem();
                         }
 
@@ -162,7 +163,7 @@ internal class PvPFeatures : FeaturesWindow
                 }
                 catch (Exception e)
                 {
-                    PluginLog.Error($"Error while drawing Job's PvP UI:\n{e.ToStringFull()}");
+                    PluginLog.Error($"Error while drawing {openPvPJob} PvP UI:\n{e.ToStringFull()}");
                 }
             }
 
@@ -171,19 +172,18 @@ internal class PvPFeatures : FeaturesWindow
 
     private static void DrawHeadingContents(Job job)
     {
-        foreach (var (preset, info) in groupedPresets[job].Where(x => PresetStorage.IsPvP(x.Preset)))
+        foreach (var presetData in groupedPresets[job].Where(x => x.IsPvP))
         {
-            InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info); } };
+            InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(presetData.Preset, presetData); } };
 
-            if (IsSearching && !PvEFeatures.PresetMatchesSearch(preset))
+            if (IsSearching && !PvEFeatures.PresetMatchesSearch(presetData.Preset))
                 continue;
 
             if (Service.Configuration.HideConflictedCombos && !IsSearching)
             {
-                var conflictOriginals = PresetStorage.GetConflicts(preset); // Presets that are contained within a ConflictedAttribute
-                var conflictsSource = PresetStorage.GetAllConflicts();      // Presets with the ConflictedAttribute
+                var conflictOriginals = presetData.Conflicts;                    // Presets that are contained within a ConflictedAttribute
 
-                if (conflictsSource.All(x => x != preset) || conflictOriginals.Length == 0)
+                if (PresetStorage.ConflictingCombos.All(x => x != presetData.Preset) || conflictOriginals.Length == 0)
                 {
                     presetBox.Draw();
                     ImGuiEx.Spacing(new Vector2(0, 12));
@@ -193,8 +193,8 @@ internal class PvPFeatures : FeaturesWindow
                 if (conflictOriginals.Any(PresetStorage.IsEnabled))
                 {
                     // Keep conflicted items in the counter
-                    var parent = PresetStorage.GetParent(preset) ?? preset;
-                    CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent]);
+                    var parent = presetData.Parent ?? presetData.Preset;
+                    CurrentPreset += 1 + Presets.AllChildren(presetChildren[parent].ToArray());
                 }
                 else
                 {
@@ -214,12 +214,12 @@ internal class PvPFeatures : FeaturesWindow
         {
             List<Preset> alreadyShown = [];
             foreach (var preset in PresetStorage.AllPresets!.Where(x =>
-                         PresetStorage.IsPvP(x) &&
-                         x.Attributes().CustomComboInfo.Job == job))
+                        x.Value.IsPvP &&
+                        x.Value.JobInfo.Job == job))
             {
-                var attributes = preset.Attributes();
+                var attributes = preset.Value;
 
-                if (!PvEFeatures.PresetMatchesSearch(preset))
+                if (!PvEFeatures.PresetMatchesSearch(preset.Key))
                     continue;
                 // Don't show things that were already shown under another preset
                 if (alreadyShown.Any(y => y == attributes.Parent) ||
@@ -227,15 +227,15 @@ internal class PvPFeatures : FeaturesWindow
                     alreadyShown.Any(y => y == attributes.GreatGrandParent))
                     continue;
 
-                var info = attributes.CustomComboInfo;
-                InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset, info!); } };
+                InfoBox presetBox = new() { ContentsOffset = 5f.Scale(), ContentsAction = () => { Presets.DrawPreset(preset.Key, attributes); } };
                 presetBox.Draw();
                 ImGuiEx.Spacing(new Vector2(0, 12));
-                alreadyShown.Add(preset);
+                alreadyShown.Add(preset.Key);
             }
 
             // Show error message if still nothing was found
-            if (CurrentPreset == 1) {
+            if (CurrentPreset == 1)
+            {
                 ImGuiEx.LineCentered(() =>
                 {
                     ImGui.TextUnformatted("Nothing matched your search.");

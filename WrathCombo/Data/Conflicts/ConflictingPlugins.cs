@@ -8,7 +8,7 @@ using ECommons.Logging;
 using System;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Extensions;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -165,12 +165,17 @@ public static class ConflictingPlugins
                                  (string.IsNullOrEmpty(x.Reason)
                                      ? ""
                                      : $" ({x.Reason})")));
-            var tooltipText =
-                "The following plugins are known to conflict " +
-                $"with {P.Name}:\n" +
-                conflictingPluginsText +
-                "\n\nIt is recommended you disable these plugins, or their " +
-                "rotation\ncomponents, to prevent unexpected behavior and bugs.";
+            //var tooltipText =
+            //    "The following plugins are known to conflict " +
+            //    $"with {P.Name}:\n" +
+            //    conflictingPluginsText +
+            //    "\n\nIt is recommended you disable these plugins, or their " +
+            //    "rotation\ncomponents, to prevent unexpected behavior and bugs.";
+            var tooltipText = string.Format(
+                MainWindow.Tooltip_ConflictingPlugins,
+                MainWindow.Wrath_Combo,
+                conflictingPluginsText
+            );
 
             ShowWarning(ConflictType.Combo, tooltipText, false);
         }
