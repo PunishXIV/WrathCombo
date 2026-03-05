@@ -96,7 +96,7 @@ internal class StatusCache
 
     public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
 
-    private static readonly FrozenSet<uint> evasionUpStatuses =
+    private static readonly FrozenSet<uint> EvasionUpStatuses =
         ENStatusSheet.TryGetValue(61, out var refRow)
             ? ENStatusSheet
                 .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
@@ -104,7 +104,7 @@ internal class StatusCache
                 .ToFrozenSet()
             : [];
 
-    public static bool HasEvasionUp(IGameObject? target) => HasStatusInCacheList(evasionUpStatuses, target);
+    public static bool HasEvasionUp(IGameObject? target) => HasStatusInCacheList(EvasionUpStatuses, target);
 
     /// <summary>
     /// A cached set of dispellable status IDs for quick lookup.
