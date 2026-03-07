@@ -1,101 +1,254 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ALL_Tank_Menu_Name" xml:space="preserve">
+    <value>Übergreifende Verteidiger Einstellungen</value>
+  </data>
+  <data name="ALL_Tank_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle Verteidiger beinhalten.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Name" xml:space="preserve">
+    <value>Verteidiger: Unterbrechen Eigenschaften</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Desc" xml:space="preserve">
+    <value>Ersetzt Tiefschlag (Betäuben) mit Zwischenruf (Unterbrechen) wenn das Ziel unterbrochen werden kann. 
+Für Paladine wird diese Fähigkeit zu Schildschlag, wenn Tiefschlag und Zwischenruf auf Abklingzeit sind.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Retarget_Name" xml:space="preserve">
+    <value>Umlenken von Zwischenruf</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Retarget_Desc" xml:space="preserve">
+    <value>Wird Zwischenruf umlenken, wenn der Zauberer nicht dein aktuelles Ziel ist.</value>
+  </data>
+  <data name="ALL_Tank_Reprisal_Name" xml:space="preserve">
+    <value>Verteidiger: Schutz vor doppelter Reflexion</value>
+  </data>
+  <data name="ALL_Tank_Reprisal_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Reflexion, wenn das Ziel schon selbigen Effekt hat. Ersetzt Reflexion mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Name" xml:space="preserve">
+    <value>Verteidiger: Umleiten von Geteiltes Leid</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Desc" xml:space="preserve">
+    <value>Leitet Geteiltes Leid auf den anderen Verteidiger um, wenn es einen gibt.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Healer_Name" xml:space="preserve">
+    <value>Nimmt ansonsten Heiler</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Healer_Desc" xml:space="preserve">
+    <value>Leitet Geteiltes Leid auf einen Heiler um, auch wenn ein anderer Verteidiger verfügbar ist. 
+Wird nur in speziellen Inhalten empfohlen.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Fallback_Name" xml:space="preserve">
+    <value>Greift auf irgendeinen Unterstützer zurück</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Fallback_Desc" xml:space="preserve">
+    <value>Lenkt Geteiltes Leid um auf Verteidiger oder Heiler wie in den oberen Einstellungen, aber greift zurück auf irgendeinen Verteidiger oder Heiler, wenn keine Einstellungen gefunden werden. Nützlich damit Geteiltes Leid immer benutzt wird, auch wenn der gewählte Partner tot ist.</value>
+  </data>
+  <data name="ALL_Healer_Menu_Name" xml:space="preserve">
+    <value>Übergreifende Heiler Einstellungen</value>
+  </data>
+  <data name="ALL_Healer_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle Heiler beinhalten.</value>
+  </data>
+  <data name="ALL_Healer_Raise_Name" xml:space="preserve">
+    <value>Heiler: Wiederbelebungseigenschaften</value>
+  </data>
+  <data name="ALL_Healer_Raise_Desc" xml:space="preserve">
+    <value>Tauscht die Klassenspezifische Wiederbelebungsfähigkeit zu Spontaneität.</value>
+  </data>
+  <data name="ALL_Healer_Raise_Retarget_Name" xml:space="preserve">
+    <value>Umleiten von Wiederbelebungen</value>
+  </data>
+  <data name="ALL_Healer_Raise_Retarget_Desc" xml:space="preserve">
+    <value>Leitet die Wiederbelebungen hier um aufgrund deiner Heiler Prioritätenliste.</value>
+  </data>
+  <data name="ALL_Healer_EsunaRetargeting_Name" xml:space="preserve">
+    <value>Heiler: Umleiten von Medica</value>
+  </data>
+  <data name="ALL_Healer_EsunaRetargeting_Desc" xml:space="preserve">
+    <value>Leitet Medica auf deine Heiler Prioritätenliste um und überprüft jedes potenzielle Ziel auf einen entfernbaren Zustand.</value>
+  </data>
+  <data name="ALL_Healer_RescueRetargeting_Name" xml:space="preserve">
+    <value>Heiler: Umleiten von Rettung</value>
+  </data>
+  <data name="ALL_Healer_RescueRetargeting_Desc" xml:space="preserve">
+    <value>Leitet Rettung auf dein mouseover Ui um und andere Einstellungen.</value>
+  </data>
+  <data name="ALL_Caster_Menu_Name" xml:space="preserve">
+    <value>Übergreifende magische Fernkämpfer Einstellungen</value>
+  </data>
+  <data name="ALL_Caster_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle magischen Fernkämpfer beinhalten.</value>
+  </data>
+  <data name="ALL_Caster_Addle_Name" xml:space="preserve">
+    <value>Magische Fernkämpfer: Schutz vor doppeltem Stumpfsinn</value>
+  </data>
+  <data name="ALL_Caster_Addle_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Stumpfsinn, wenn das Ziel schon selbigen Effekt hat. Ersetzt Stumpfsinn mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Caster_Raise_Name" xml:space="preserve">
+    <value>Magische Fernkämpfer: Wiederbelebungseigenschaft</value>
+  </data>
+  <data name="ALL_Caster_Raise_Desc" xml:space="preserve">
+    <value>Tauscht die Klassenspezifische Wiederbelebungsfähigkeit zu Spontaneität. Bei Rotmagiern wird zusätzlich Erzvita angezeigt, sollte Spontaneität noch Abklingzeit haben.</value>
+  </data>
+  <data name="ALL_Caster_Raise_Retarget_Name" xml:space="preserve">
+    <value>Umleiten von Wiederbelebungen</value>
+  </data>
+  <data name="ALL_Caster_Raise_Retarget_Desc" xml:space="preserve">
+    <value>Leitet Wiederbelebungen auf deine Heiler Prioritätenliste um.</value>
+  </data>
+  <data name="ALL_Melee_Menu_Name" xml:space="preserve">
+    <value>Übergreifende Nahkampf-Angreifer Eigenschaften</value>
+  </data>
+  <data name="ALL_Melee_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle Nahkampf-Angreifer beinhalten.</value>
+  </data>
+  <data name="ALL_Melee_Feint_Name" xml:space="preserve">
+    <value>Nahkampf-Angreifer: Schutz vor doppeltem Zermürben</value>
+  </data>
+  <data name="ALL_Melee_Feint_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Zermürben, wenn das Ziel schon selbigen Effekt hat. Ersetzt Zermürben mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Melee_TrueNorth_Name" xml:space="preserve">
+    <value>Nahkampf-Angreifer: Schutz vor doppeltem Neuausrichten</value>
+  </data>
+  <data name="ALL_Melee_TrueNorth_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Neuausrichten, wenn die Fähigkeit schon aktiv ist. Ersetzt Neuausrichten mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Ranged_Menu_Name" xml:space="preserve">
+    <value>Übergreifende physischer-Fernkämpfer Eigenschaften</value>
+  </data>
+  <data name="ALL_Ranged_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle physische Fernkampf-Angreifer beinhalten.</value>
+  </data>
+  <data name="ALL_Ranged_Mitigation_Name" xml:space="preserve">
+    <value>Physische Fernkampf-Angreifer: Schutz vor doppelter Mitigation</value>
+  </data>
+  <data name="ALL_Ranged_Mitigation_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Taktiker/Troubador/Schildsamba falls das Ziel schon einen der genannten Effekte aktiv hat. Die Fähigkeit wird mit Wilder Klinge ersetzt.</value>
+  </data>
+  <data name="ALL_Ranged_Interrupt_Name" xml:space="preserve">
+    <value>Physische Fernkampf-Angreifer: Unterbrechen Eigenschaft</value>
+  </data>
+  <data name="ALL_Ranged_Interrupt_Desc" xml:space="preserve">
+    <value>Ersetzt Stolperschuss mit Haarscharfer Schuss, falls das Ziel unterbrochen werden kann.</value>
+  </data>
 </root>
