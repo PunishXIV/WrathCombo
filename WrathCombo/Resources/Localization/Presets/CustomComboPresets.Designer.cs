@@ -11943,7 +11943,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Adds Bioblaster, Air Anchor, Chainsaw and Excavator to the rotation..
+        ///   Looks up a localized string similar to Adds Bioblaster, Chainsaw and Excavator to the rotation..
         /// </summary>
         internal static string MCH_AoE_Adv_Tools_Desc {
             get {

@@ -1,8 +1,10 @@
 using ECommons.ExcelServices;
 using System;
+using System.Runtime;
 using System.Runtime.CompilerServices;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.Jobs;
+using static WrathCombo.Window.Text;
 
 namespace WrathCombo.Attributes;
 
@@ -28,8 +30,6 @@ internal class JobInfoAttribute : Attribute
         Order = order;
         Role = GetRoleFromJob(Job);
         RoleForIcon = jobRoleIcon == JobRole.All ? null : jobRoleIcon;
-        JobName = Job.Name();
-        JobShorthand = Job.Shorthand();
     }
 
     /// <summary> Associated job ID (with gathering jobs mapped to MIN). </summary>
@@ -45,8 +45,8 @@ internal class JobInfoAttribute : Attribute
     public JobRole? RoleForIcon { get; }
 
     /// <summary> Gets the job name. </summary>
-    public string JobName { get; }
+    public string JobName => JobNameLocalization.GetJobName(Job);
 
     /// <summary> Gets the job shorthand. </summary>
-    public string JobShorthand { get; }
+    public string JobShorthand => JobNameLocalization.GetJobShortName(Job);
 }

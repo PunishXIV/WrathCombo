@@ -1,0 +1,669 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionChanging_defaultValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="ActionChanging_helpMark" xml:space="preserve">
+    <value>Controls whether Actions on your Hotbar will be Replaced with combos from the plugin.
+If disabled, your manual presses of abilities will no longer be affected by any Wrath settings.
+
+Auto-Rotation will work regardless of the setting.</value>
+  </data>
+  <data name="ActionChanging_Name" xml:space="preserve">
+    <value>Action Replacing</value>
+  </data>
+  <data name="ActionChanging_recommendedValue" xml:space="preserve">
+    <value>On (This is essentially turning OFF most of Wrath)</value>
+  </data>
+  <data name="ActionChanging_warningMark" xml:space="preserve">
+    <value>Wrath is largely designed with Action Replacing in mind.
+Only Auto-Rotation will work if this is disabled.
+Disabling it may also lead to unexpected behavior, such as regarding Retargeting.</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_helpMark" xml:space="preserve">
+    <value>This will add any NPCs that are not in your party to the retargeting logic for healing actions.
+
+Useful for healers who want to be able to target NPCs that are not in their party, such as quest NPCs.
+These NPCs will not generally work with any role-based custom Heal Stack entries
+(even if an NPC looks like a tank, they're not always classified as one)</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_Name" xml:space="preserve">
+    <value>Add Out-of-Party NPCs to Retargeting</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_recommendedValue" xml:space="preserve">
+    <value>On (If you use Retargeting at all)</value>
+  </data>
+  <data name="BlockSpellOnMove_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="BlockSpellOnMove_helpMark" xml:space="preserve">
+    <value>Will completely block actions while moving, by replacing Combo outputs with Savage Blade.
+This would supersede combo-specific movement options, which many jobs have.</value>
+  </data>
+  <data name="BlockSpellOnMove_Name" xml:space="preserve">
+    <value>Block Spells while Moving</value>
+  </data>
+  <data name="BlockSpellOnMove_recommendedValue" xml:space="preserve">
+    <value>Off (Most Jobs will handle this better with their Features)</value>
+  </data>
+  <data name="CustomHealStack_defaultValue" xml:space="preserve">
+    <value>Focus Target &gt; Hard Target &gt; Self</value>
+  </data>
+  <data name="CustomHealStack_helpMark" xml:space="preserve">
+    <value>If there are fewer than 4 items, and all return nothing when checked, will fall back to Self.
+
+These targets will only be considered valid if they are friendly and within 25y.
+
+When applied to something like Esuna, these targets will be checked for having a Cleansable Debuff, etc.
+So adding 'Any Cleansable Ally' or similar is not necessary.</value>
+  </data>
+  <data name="CustomHealStack_Name" xml:space="preserve">
+    <value>Custom Heal Stack</value>
+  </data>
+  <data name="CustomHealStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="EnabledOutputLog_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="EnabledOutputLog_helpMark" xml:space="preserve">
+    <value>Will print to chat every time you use an action provided by Wrath.</value>
+  </data>
+  <data name="EnabledOutputLog_Name" xml:space="preserve">
+    <value>Output Log to Chat</value>
+  </data>
+  <data name="EnabledOutputLog_recommendedValue" xml:space="preserve">
+    <value>On (IF trying to report an issue)</value>
+  </data>
+  <data name="HideChildren_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="HideChildren_helpMark" xml:space="preserve">
+    <value>Will hide the Features and Options under disabled Combos.</value>
+  </data>
+  <data name="HideChildren_Name" xml:space="preserve">
+    <value>Hide Sub-Combo Options</value>
+  </data>
+  <data name="HideChildren_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="HideConflictedCombos_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="HideConflictedCombos_helpMark" xml:space="preserve">
+    <value>Will hide Combos that conflict with Combos that you have enabled.</value>
+  </data>
+  <data name="HideConflictedCombos_Name" xml:space="preserve">
+    <value>Hide Conflicted Combos</value>
+  </data>
+  <data name="HideConflictedCombos_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="HideMessageOfTheDay_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="HideMessageOfTheDay_helpMark" xml:space="preserve">
+    <value>Will prevent the Message of the Day from being shown in your chat upon login.</value>
+  </data>
+  <data name="HideMessageOfTheDay_Name" xml:space="preserve">
+    <value>Hide Message of the Day</value>
+  </data>
+  <data name="HideMessageOfTheDay_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="InterruptDelay_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="InterruptDelay_helpMark" xml:space="preserve">
+    <value>Controls the percentage of a total cast time to wait before interrupting enemy casts.
+Applies to all interrupts (including stuns used to interrupt) in every Job's Combos.</value>
+  </data>
+  <data name="InterruptDelay_Name" xml:space="preserve">
+    <value>Interrupt Delay</value>
+  </data>
+  <data name="InterruptDelay_recommendedValue" xml:space="preserve">
+    <value>below 40 (Above that and you start failing to interrupt many short casts)</value>
+  </data>
+  <data name="InterruptDelay_unitLabel" xml:space="preserve">
+    <value>% of cast</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_defaultValue" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_helpMark" xml:space="preserve">
+    <value>Controls how many oGCDs are allowed between GCDs.
+The 'default' for the game is double weaving, but triple weaving is completely possible with low enough latency (of every kind);but if you struggle with latency of any sort then single weaving may even be a good answer to try for you.
+Triple weaving is already done in a manner where we try to avoid clipping GCDs, and as such doesn't happen particularly often even if you have good latency, and is a valid thing to do, so it is a safe option if you want.</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_Name" xml:space="preserve">
+    <value>Maximum Number of Weaves</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_recommendedValue" xml:space="preserve">
+    <value>46056</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_unitLabel" xml:space="preserve">
+    <value># of oGCDs</value>
+  </data>
+  <data name="MeleeOffset_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MeleeOffset_helpMark" xml:space="preserve">
+    <value>Controls what is considered to be in melee range.
+Mainly for those who don't want to switch to ranged attacks if the boss walks slightly outside of range.
+For example a value of -0.5 would make you have to be 0.5 yalms closer to the target,
+or a value of 2 would allow you to be 2 yalms further away and still be considered in melee range
+(melee actions wouldn't work, but it would give you some warning instead of just suddenly doing less optimal actions).</value>
+  </data>
+  <data name="MeleeOffset_Name" xml:space="preserve">
+    <value>Melee Distance Offset</value>
+  </data>
+  <data name="MeleeOffset_recommendedValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MeleeOffset_unitLabel" xml:space="preserve">
+    <value>yalms</value>
+  </data>
+  <data name="MovementLeeway_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MovementLeeway_helpMark" xml:space="preserve">
+    <value>This controls how long of a delay is needed before Wrath recognizes you as moving.
+This allows you to not have to worry about small movements affecting your rotation, primarily for casters.</value>
+  </data>
+  <data name="MovementLeeway_Name" xml:space="preserve">
+    <value>Movement Check Delay</value>
+  </data>
+  <data name="MovementLeeway_recommendedValue" xml:space="preserve">
+    <value>0.0-1.0 (Above that gets into the territory of breaking any Movement Options in your Job)</value>
+  </data>
+  <data name="MovementLeeway_unitLabel" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="OpenerTimeout_defaultValue" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="OpenerTimeout_helpMark" xml:space="preserve">
+    <value>Controls how long of a gap with no action is allowed in an Opener, before it is considered failed and normal rotation is resumed.
+Can be necessary for some casters to increase, particularly when the first action of an Opener is a hard-cast.</value>
+  </data>
+  <data name="OpenerTimeout_Name" xml:space="preserve">
+    <value>Opener Failure Timeout</value>
+  </data>
+  <data name="OpenerTimeout_recommendedValue" xml:space="preserve">
+    <value>4.0-7.0 (Above that can really screw Openers)</value>
+  </data>
+  <data name="OpenerTimeout_unitLabel" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_helpMark" xml:space="preserve">
+    <value>Will automatically switch the PvE Features tab to the job you are currently playing, when you switch jobs.</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_Name" xml:space="preserve">
+    <value>Open PvE Features Tab to Current Job on Switching Jobs</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="OpenToCurrentJob_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="OpenToCurrentJob_helpMark" xml:space="preserve">
+    <value>When the PvE Features tab is opened it will automatically open to your current Job.</value>
+  </data>
+  <data name="OpenToCurrentJob_Name" xml:space="preserve">
+    <value>Open PvE Features Tab to Current Job on Opening</value>
+  </data>
+  <data name="OpenToCurrentJob_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="OpenToPvE_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="OpenToPvE_helpMark" xml:space="preserve">
+    <value>When you open Wrath with `/wrath`, it will open to the PvE Features tab, instead of the last tab you were on.
+Same as always using the `/wrath pve` command to open Wrath.</value>
+  </data>
+  <data name="OpenToPvE_Name" xml:space="preserve">
+    <value>Open Wrath to the PvE Features Tab</value>
+  </data>
+  <data name="OpenToPvE_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="OpenToPvP_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="OpenToPvP_helpMark" xml:space="preserve">
+    <value>Same as above, when you open Wrath with `/wrath`, it will open to the PvP Features tab, instead of the last tab you were on, when in a PvP area.
+Similar to using the `/wrath pvp` command to open Wrath.</value>
+  </data>
+  <data name="OpenToPvP_Name" xml:space="preserve">
+    <value>Open Wrath to the PvP Features Tab in PvP areas</value>
+  </data>
+  <data name="OpenToPvP_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="OutputOpenerLogs_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="OutputOpenerLogs_helpMark" xml:space="preserve">
+    <value>Will print the status of your Job's Opener to chat.
+e.g. When it is Ready, Fails, or Finishes.</value>
+  </data>
+  <data name="OutputOpenerLogs_Name" xml:space="preserve">
+    <value>Output Opener Status to Chat</value>
+  </data>
+  <data name="OutputOpenerLogs_recommendedValue" xml:space="preserve">
+    <value>On (IF trying to troubleshoot an Opener)</value>
+  </data>
+  <data name="OverwriteQueue_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="OverwriteQueue_helpMark" xml:space="preserve">
+    <value>This will allow you to overwrite whatever is currently queued up with another action.</value>
+  </data>
+  <data name="OverwriteQueue_Name" xml:space="preserve">
+    <value>Overwrite Queue</value>
+  </data>
+  <data name="OverwriteQueue_recommendedValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="QueueAdjustThreshold_defaultValue" xml:space="preserve">
+    <value>1.5</value>
+  </data>
+  <data name="QueueAdjustThreshold_helpMark" xml:space="preserve">
+    <value>Will allow you to queue when the GCD is at this time or less.</value>
+  </data>
+  <data name="QueueAdjustThreshold_Name" xml:space="preserve">
+    <value>Allow Queueing At</value>
+  </data>
+  <data name="QueueAdjustThreshold_recommendedValue" xml:space="preserve">
+    <value>1.5-2.5</value>
+  </data>
+  <data name="QueueAdjustThreshold_unitLabel" xml:space="preserve">
+    <value>seconds</value>
+  </data>
+  <data name="QueueAdjustThreshold_warningMark" xml:space="preserve">
+    <value>Setting this too low or to zero will make it really hard to manually queue.</value>
+  </data>
+  <data name="QueueAdjust_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="QueueAdjust_helpMark" xml:space="preserve">
+    <value>Allows you to adjust your queue window to any time during the GCD rather than just within the last 0.3-0.5s. Useful if you're not mashing the key or using Auto-Rotation and wish to manually intervene.</value>
+  </data>
+  <data name="QueueAdjust_Name" xml:space="preserve">
+    <value>Custom Manual Queue Window</value>
+  </data>
+  <data name="QueueAdjust_recommendedValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="RaiseStack_defaultValue" xml:space="preserve">
+    <value>Any Healer &gt; Any Tank &gt; Any Raiser &gt; Any Dead Party Member</value>
+  </data>
+  <data name="RaiseStack_extraText" xml:space="preserve">
+    <value>(all targets are checked for rezz-ability)</value>
+  </data>
+  <data name="RaiseStack_helpMark" xml:space="preserve">
+    <value>This is the order in which Wrath will try to select a target to Raise,
+if Retargeting of any Raise Feature is enabled.
+
+You can find Raise Features under PvE&gt;General,
+or under each caster that has a Raise.
+
+If there are fewer than 5 items, and all return nothing when checked, will fall back to:
+your Hard Target if they're dead, or &lt;Any Dead Party Member&gt;.
+
+These targets will only be considered valid if they are friendly, dead, and within 30y.</value>
+  </data>
+  <data name="RaiseStack_Name" xml:space="preserve">
+    <value>Custom Raise Stack</value>
+  </data>
+  <data name="RaiseStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_helpMark" xml:space="preserve">
+    <value>Will Retarget all Single-Target Healing Actions to the Heal Stack as shown below,
+similarly to how Redirect or Reaction would.
+This ensures that the target used to check HP% threshold logic for healing actions is the same target that will receive that heal.</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_Name" xml:space="preserve">
+    <value>Retarget (Single Target) Healing Actions</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_recommendedValue" xml:space="preserve">
+    <value>On (If you customize the Heal Stack AT ALL)</value>
+  </data>
+  <data name="ShortDTRText_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="ShortDTRText_helpMark" xml:space="preserve">
+    <value>Will hide the number of active Auto-Mode Combos.
+By default the Server Info Bar shows:
+- Whether Auto-Rotation is on or off
+- (if on) The number of active Auto-Mode Combos
+- (if applicable) Whether another plugin is controlling the state of Auto-Rotation.</value>
+  </data>
+  <data name="ShortDTRText_Name" xml:space="preserve">
+    <value>Shorten Server Info Bar Text</value>
+  </data>
+  <data name="ShortDTRText_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_defaultValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_helpMark" xml:space="preserve">
+    <value>Will draw a border around Combos and Features that have Features and Options of their own.</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_Name" xml:space="preserve">
+    <value>Show Borders around Combos and Features with Options</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="ShowOpenerDtr_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="ShowOpenerDtr_helpMark" xml:space="preserve">
+    <value>Shows the status of your current opener, if enabled and applicable.</value>
+  </data>
+  <data name="ShowOpenerDtr_Name" xml:space="preserve">
+    <value>Opener Status in Server Info Bar</value>
+  </data>
+  <data name="ShowOpenerDtr_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="ShowTargetHighlight_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="ShowTargetHighlight_extraText" xml:space="preserve">
+    <value>(Only used by AST and DNC currently)</value>
+  </data>
+  <data name="ShowTargetHighlight_helpMark" xml:space="preserve">
+    <value>Draws a box around party members in the vanilla Party List, when targeted by certain Features.</value>
+  </data>
+  <data name="ShowTargetHighlight_Name" xml:space="preserve">
+    <value>Show Target Highlighter</value>
+  </data>
+  <data name="ShowTargetHighlight_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="SuppressAutorotCommand_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="SuppressAutorotCommand_helpMark" xml:space="preserve">
+    <value>Will hide chat feedback for /wrath auto commands</value>
+  </data>
+  <data name="SuppressAutorotCommand_Name" xml:space="preserve">
+    <value>Suppress Auto-Rotation commands feedback</value>
+  </data>
+  <data name="SuppressAutorotCommand_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="SuppressSetCommands_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="SuppressSetCommands_helpMark" xml:space="preserve">
+    <value>Will hide chat feedback for /wrath set and /wrath unset commands.
+(Will still show feedback if the command is being overriden by IPC, or fails)</value>
+  </data>
+  <data name="SuppressSetCommands_Name" xml:space="preserve">
+    <value>Suppress Set and Unset commands feedback</value>
+  </data>
+  <data name="SuppressSetCommands_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="TargetHighlightColor_defaultValue" xml:space="preserve">
+    <value>#808080FF</value>
+  </data>
+  <data name="TargetHighlightColor_helpMark" xml:space="preserve">
+    <value>Controls the color of the box drawn around party members.</value>
+  </data>
+  <data name="TargetHighlightColor_Name" xml:space="preserve">
+    <value>Target Highlighter Color</value>
+  </data>
+  <data name="TargetHighlightColor_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="Throttle_defaultValue" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="Throttle_helpMark" xml:space="preserve">
+    <value>Will restrict how often Combos will update the Action on your Hotbar.
+At 50ms it's not really restrictive, always giving you an up to date action.
+
+If you are looking for some (fairly minor) FPS gains then you can increase this value to make Combos run less often.
+This makes your combos less responsive, and perhaps even clips GCDs.
+At high values this will clip your GCDs by several seconds or break your rotation altogether.</value>
+  </data>
+  <data name="Throttle_Name" xml:space="preserve">
+    <value>Action Updater Throttle</value>
+  </data>
+  <data name="Throttle_recommendedValue" xml:space="preserve">
+    <value>20-200</value>
+  </data>
+  <data name="Throttle_unitLabel" xml:space="preserve">
+    <value>milliseconds</value>
+  </data>
+  <data name="UIShowPresetIDs_defaultValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="UIShowPresetIDs_helpMark" xml:space="preserve">
+    <value>Displays the Preset ID number next to the name of each Combo and Feature.
+These are the IDs used for commands like `/wrath toggle &lt;ID&gt;`.
+Pre-7.3 the behavior was to show a number here, but it was much shorter, and did not work in commands.</value>
+  </data>
+  <data name="UIShowPresetIDs_Name" xml:space="preserve">
+    <value>Show Preset IDs next to Combo Names</value>
+  </data>
+  <data name="UIShowPresetIDs_recommendedValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="UIShowSearchBar_defaultValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="UIShowSearchBar_helpMark" xml:space="preserve">
+    <value>Controls whether Search Bars should be shown in Settings, and PvE and PvP Jobs.</value>
+  </data>
+  <data name="UIShowSearchBar_Name" xml:space="preserve">
+    <value>Show Search Bars</value>
+  </data>
+  <data name="UIShowSearchBar_recommendedValue" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="UseCustomHealStack_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="UseCustomHealStack_helpMark" xml:space="preserve">
+    <value>Select this if you would rather make your own stack of target priorities for Heal Targets instead of using our default stack.
+
+It is recommended to use this to align with your Redirect/Reaction configuration IF you're not using the Retarget Healing Actions option above; otherwise it is preference.</value>
+  </data>
+  <data name="UseCustomHealStack_Name" xml:space="preserve">
+    <value>Use a Custom Heal Stack Instead</value>
+  </data>
+  <data name="UseCustomHealStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>Will add any MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI.
+
+It is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have UI MouseOver targets in your Redirect/Reaction configuration).</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve">
+    <value>Add Field MouseOver to the Default Healing Stack</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>This will add your focus target under your hard and soft targets in the Default Heal Stack, overriding the rest of the stack if you have a living focus target.</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_Name" xml:space="preserve">
+    <value>Add Focus Target to the Default Healing Stack</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>This will add a nearby party member with the lowest HP% to bottom of the Default Heal Stack, overriding only yourself.</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_Name" xml:space="preserve">
+    <value>Add Lowest HP% Ally to the Default Healing Stack</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_warningMark" xml:space="preserve">
+    <value>Unlike the other Default+ Options, this one is not an option in most other Retargeting Plugins.
+THIS SHOULD BE USED WITH THE 'RETARGET HEALING ACTIONS' SETTING ABOVE!</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>Will add any UI MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI.
+
+It is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have UI MouseOver targets in your Redirect/Reaction configuration).</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve">
+    <value>Add UI MouseOver to the Default Healing Stack</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>Preference</value>
+  </data>
+</root>

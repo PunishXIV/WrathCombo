@@ -240,6 +240,8 @@ internal partial class MCH
                 case Preset.MCH_AoE_Adv_Tools:
                     DrawSliderInt(0, 100, MCH_AoE_ToolsHPThreshold,
                         "Stop Using Tools When Target HP% is at or Below (Set to 0 to Disable This Check)");
+
+                    DrawAdditionalBoolChoice(MCH_AoE_AirAnchor, "Add Hotshot / Air Anchor to tools.", "Also use Hotshot / Air Anchor on cooldown.");
                     break;
 
                 case Preset.MCH_AoE_Adv_Stabilizer:
@@ -309,6 +311,9 @@ internal partial class MCH
 
         public static UserFloat
             MCH_AoE_FlamethrowerTimeStill = new("MCH_AoE_FlamethrowerTimeStill", 2.5f);
+
+        public static UserBool
+            MCH_AoE_AirAnchor = new("MCH_AoE_AirAnchor");
 
         #endregion
     }

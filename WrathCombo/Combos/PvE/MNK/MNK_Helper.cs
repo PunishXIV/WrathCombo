@@ -406,11 +406,10 @@ internal partial class MNK
     private static bool CanFiresReply() =>
         HasStatusEffect(Buffs.FiresRumination) &&
         !HasStatusEffect(Buffs.FormlessFist) &&
-        !HasStatusEffect(Buffs.PerfectBalance) &&
         IsOriginal(MasterfulBlitz) &&
         InActionRange(FiresReply) &&
-        (JustUsed(OriginalHook(Bootshine), GCD) ||
-         JustUsed(DragonKick, GCD) ||
+        (JustUsed(OriginalHook(Bootshine), GCD * 1.5f) ||
+         JustUsed(DragonKick, GCD * 1.5f) ||
          GetStatusEffectRemainingTime(Buffs.FiresRumination) < GCD * 2 ||
          !InMeleeRange());
 

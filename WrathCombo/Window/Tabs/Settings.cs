@@ -14,6 +14,7 @@ using System.Numerics;
 using WrathCombo.Attributes;
 using WrathCombo.Core;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Resources.Localization.UI.Settings;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
@@ -103,7 +104,7 @@ internal class Settings : ConfigWindow
     {
         using (ImRaii.Child("main", new Vector2(0, 0), true))
         {
-            ImGui.Text("This tab allows you to customise global settings for Wrath Combo.");
+            ImGui.Text(SettingsUI.Header_SettingsAbout);
 
             DrawSearchBar();
 
@@ -138,14 +139,14 @@ internal class Settings : ConfigWindow
 
             if (!IsSearching)
             {
-                if (ImGui.Button("Create Debug File"))
+                if (ImGui.Button(SettingsUI.Button_CreateDebug))
                     Svc.Framework.RunOnTick(ConflictingPluginsChecks.ForceRunChecks)
                         .ContinueWith(_ =>
                             Svc.Framework.RunOnTick(() =>
                                 DebugFile.MakeDebugFile()));
 
                 ImGuiComponents.HelpMarker(
-                    "Will generate a debug file on your desktop.\nUseful to give developers to help troubleshoot issues.\nThe same as using the following command: /wrath debug");
+                    SettingsUI.HelpText_CreateDebug);
             }
 
             #endregion
@@ -239,7 +240,7 @@ internal class Settings : ConfigWindow
         if (setting.ShowOr == true)
         {
             ImGuiEx.Spacing(new Vector2(5, 5));
-            ImGui.TextUnformatted("Or");
+            ImGui.TextUnformatted(MiscUI.Or);
             ImGuiEx.Spacing(new Vector2(0, 5));
         }
 
@@ -414,7 +415,7 @@ internal class Settings : ConfigWindow
                     ImGui.PushItemWidth(300);
                     // ReSharper disable once SuggestVarOrType_BuiltInTypes
                     ref string[] t = ref Service.Configuration.CustomHealStack;
-                    if (setting.Name.Contains("Raise"))
+                    if (setting.Name.Contains(MiscUI.Raise))
                         t = ref Service.Configuration.RaiseStack;
                     ImGui.Text($"{setting.Name}:");
                     if (setting.ExtraText is not null)
@@ -428,10 +429,10 @@ internal class Settings : ConfigWindow
                         ref t,
                         setting.StackStringsToExclude,
                         setting.HelpMark +
-                        $"\n\nRecommended Value: {setting.RecommendedValue}\n" +
-                        $"Default Value: {setting.DefaultValue}" +
+                        $"\n\n{SettingsUI.Text_RecommendedValue} {setting.RecommendedValue}\n" +
+                        $"{SettingsUI.Text_DefaultValue} {setting.DefaultValue}" +
                         $"\n\n{stackHelp}",
-                        setting.Name.Contains("Raise")
+                        setting.Name.Contains(MiscUI.Raise)
                     );
 
                     break;
@@ -474,8 +475,8 @@ internal class Settings : ConfigWindow
         if (setting.Type != Attributes.Setting.Type.Stack)
             ImGuiComponents.HelpMarker(
                 setting.HelpMark +
-                $"\n\nRecommended Value: {setting.RecommendedValue}\n" +
-                $"Default Value: {setting.DefaultValue}"
+                $"\n\n{SettingsUI.Text_RecommendedValue} {setting.RecommendedValue}\n" +
+                $"{SettingsUI.Text_DefaultValue} {setting.DefaultValue}"
             );
         if (setting.ExtraHelpMark is not null)
             ImGuiComponents.HelpMarker(setting.ExtraHelpMark);
@@ -523,19 +524,13 @@ internal class Settings : ConfigWindow
             if (groupName.Contains("Heal"))
             {
                 ImGuiEx.Spacing(new Vector2(0, 10));
-                ImGui.TextUnformatted("Current Heal Stack:");
+                ImGui.TextUnformatted(SettingsUI.Label_HealStack);
 
-                ImGuiComponents.HelpMarker(
-                    "This is the order in which Wrath will try to select a healing target.\n\n" +
-                    "If the 'Retarget Healing Actions' option is disabled, that is just the target that will be used for checking the HP threshold to trigger different healing actions to show up in their rotations.\n" +
-                    "That means that if your own retargeting solution (Redirect, Reaction, etc) does not match this then Wrath can stick you in a loop of healing the wrong target!!!\n\n" +
-                    "If the 'Retarget Healing Actions' option is enabled, that target is also the one that healing actions will be targeted onto (even when the action does not first check the HP of that target, like the combo's Replaced Action, for example).");
+                ImGuiComponents.HelpMarker(SettingsUI.HelpText_HealStack);
 
                 if (!Service.Configuration.RetargetHealingActionsToStack)
                 {
-                    WarningMarkerComponent.WarningMarker(
-                        "YOU are responsible for making sure your retargeting solution matches this heal stack!\n" +
-                        "If it does not then Wrath can get stuck in a loop where X player is checked and needs healing, but Y player is who gets healed!");
+                    WarningMarkerComponent.WarningMarker(SettingsUI.Warning_HealStack);
                 }
 
                 ImGuiEx.Spacing(new Vector2(10, 0));
@@ -545,10 +540,10 @@ internal class Settings : ConfigWindow
             if (groupName.Contains("Raise"))
             {
                 ImGuiEx.Spacing(new Vector2(0, 10));
-                ImGui.TextUnformatted("Current Raise Stack:");
+                ImGui.TextUnformatted(SettingsUI.Label_RaiseStack);
 
                 ImGuiComponents.HelpMarker(
-                    "This is the order in which Wrath will try to select a raise target,\nif Retargeting of any Raise Feature is enabled.");
+                    SettingsUI.HelpText_RaiseStack);
 
                 ImGuiEx.Spacing(new Vector2(10, 0));
                 ImGuiEx.TextWrapped(ImGuiColors.DalamudGrey,
@@ -615,8 +610,8 @@ internal class Settings : ConfigWindow
         if (!id)
             return;
 
-        var searchLabelText = SettingsUI.searchLabelText;
-        var searchHintText = SettingsUI.searchHintText;
+        var searchLabelText = SettingsUI.Label_searchLabelText;
+        var searchHintText = SettingsUI.Info_searchHintText;
 
         var searchWidth = letterWidth * 30f + 4f.Scale();
 

@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="searchHintText" xml:space="preserve">
+  <data name="Info_searchHintText" xml:space="preserve">
     <value>TestBox</value>
   </data>
-  <data name="searchLabelText" xml:space="preserve">
+  <data name="Label_searchLabelText" xml:space="preserve">
     <value>TestLabel</value>
   </data>
 </root>

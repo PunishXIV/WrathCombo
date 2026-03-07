@@ -14,6 +14,7 @@ using System.Linq;
 using System.Numerics;
 using WrathCombo.Core;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Resources.Localization.UI.MainWindowUI;
 using WrathCombo.Services;
 using WrathCombo.Window.Tabs;
 using static WrathCombo.Core.PresetStorage;
@@ -223,26 +224,26 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
         ImGui.Separator();
 
         ImGui.Spacing();
-        if (ImGui.Selectable("PvE Features", OpenWindow == OpenWindow.PvE))
+        if (ImGui.Selectable(MainWindowUI.Button_PvEFeatures, OpenWindow == OpenWindow.PvE))
             OpenWindow = OpenWindow.PvE;
 
         ImGui.Spacing();
-        if (ImGui.Selectable("PvP Features", OpenWindow == OpenWindow.PvP))
+        if (ImGui.Selectable(MainWindowUI.Button_PvPFeatures, OpenWindow == OpenWindow.PvP))
             OpenWindow = OpenWindow.PvP;
 
         ImGui.Spacing();
-        if (ImGui.Selectable("Auto-Rotation", OpenWindow == OpenWindow.AutoRotation))
+        if (ImGui.Selectable(MainWindowUI.Button_AutoRotation, OpenWindow == OpenWindow.AutoRotation))
             OpenWindow = OpenWindow.AutoRotation;
 
         ImGui.Spacing();
         ImGui.Spacing();
 
         ImGui.Spacing();
-        if (ImGui.Selectable("Settings", OpenWindow == OpenWindow.Settings))
+        if (ImGui.Selectable(MainWindowUI.Button_Settings, OpenWindow == OpenWindow.Settings))
             OpenWindow = OpenWindow.Settings;
 
         ImGui.Spacing();
-        if (ImGui.Selectable("About", OpenWindow == OpenWindow.About))
+        if (ImGui.Selectable(MainWindowUI.Button_About, OpenWindow == OpenWindow.About))
             OpenWindow = OpenWindow.About;
 
 #if DEBUG
@@ -321,12 +322,12 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 
         // Set up how the button should display
         var icon = FontAwesomeIcon.CaretLeft;
-        var hoverText = "Collapse Sidebar";
+        var hoverText = MainWindowUI.Button_CollapseSidebar;
         ImGui.SetWindowFontScale(1.5f.Scale());
         if (collapsed)
         {
             icon = FontAwesomeIcon.CaretRight;
-            hoverText = "Expand Sidebar";
+            hoverText = MainWindowUI.Button_ExpandSidebar;
         }
 
         // Draw the button

@@ -11,6 +11,8 @@ using System.Linq;
 using System.Numerics;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.UI.Features;
+using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 using WrathCombo.Window.MessagesNS;
@@ -24,7 +26,7 @@ internal class PvEFeatures : FeaturesWindow
         //#if !DEBUG
         if (ActionReplacer.ClassLocked())
         {
-            ImGui.TextWrapped("Equip your job stone to re-unlock features.");
+            ImGui.TextWrapped(FeaturesUI.Warning_EquipJobStone);
             return;
         }
         //#endif
@@ -38,7 +40,7 @@ internal class PvEFeatures : FeaturesWindow
                 ImGui.SameLine(IndentWidth);
                 ImGuiEx.LineCentered(() =>
                 {
-                    ImGuiEx.TextUnderlined("Select a job from below to enable and configure features for it.");
+                    ImGuiEx.TextUnderlined(FeaturesUI.Info_SelectAJob);
                 });
 
                 ColCount = Math.Max(1, (int)(AvailableWidth / 200f.Scale()));
@@ -81,7 +83,7 @@ internal class PvEFeatures : FeaturesWindow
                             }
                             ImGui.SameLine(LargerIndentWidth);
                             ImGuiEx.Spacing(new Vector2(0, VerticalCenteringPadding));
-                            ImGui.Text($"{header} {(disabled ? "(Disabled due to update)" : "")}");
+                            ImGui.Text($"{header} {(disabled ? FeaturesUI.Warning_DisabledDueToUpdate : "")}");
 
                             if (!string.IsNullOrEmpty(abbreviation) &&
                                 P.UIHelper.JobControlled(id) is not null)
@@ -103,7 +105,7 @@ internal class PvEFeatures : FeaturesWindow
                 DrawSearchBar();
                 ImGuiEx.Spacing(new Vector2(0, 10));
 
-                using var content = ImRaii.Child("Content", Vector2.Zero);
+                using var content = ImRaii.Child(MiscUI.Content, Vector2.Zero);
                 if (!content)
                     return;
 
@@ -116,7 +118,7 @@ internal class PvEFeatures : FeaturesWindow
                             ImGuiTabBarFlags.AutoSelectNewTabs))
                         return;
 
-                    string mainTabName = openJob.Value is Job.ADV ? "Job Roles" : "Normal";
+                    string mainTabName = openJob.Value is Job.ADV ? MiscUI.Job_Roles : MiscUI.Normal;
                     if (ImGui.BeginTabItem(mainTabName))
                     {
                         SetCurrentTab(FeatureTab.Normal);
@@ -128,7 +130,7 @@ internal class PvEFeatures : FeaturesWindow
                     {
                         if (groupedPresets[openJob.Value].Any(x => x.IsVariant))
                         {
-                            if (ImGui.BeginTabItem("Variant Dungeons"))
+                            if (ImGui.BeginTabItem(MiscUI.Variant_Dungeons))
                             {
                                 SetCurrentTab(FeatureTab.Variant);
                                 DrawVariantContents(openJob.Value);
@@ -138,7 +140,7 @@ internal class PvEFeatures : FeaturesWindow
 
                         if (groupedPresets[openJob.Value].Any(x => x.IsBozja))
                         {
-                            if (ImGui.BeginTabItem("Bozja"))
+                            if (ImGui.BeginTabItem(MiscUI.Bozja))
                             {
                                 SetCurrentTab(FeatureTab.Bozja);
                                 DrawBozjaContents(openJob.Value);
@@ -149,7 +151,7 @@ internal class PvEFeatures : FeaturesWindow
                         if (groupedPresets[openJob.Value].Any(x =>
                                 x.IsOccultCrescent))
                         {
-                            if (ImGui.BeginTabItem("Occult Crescent"))
+                            if (ImGui.BeginTabItem(MiscUI.Occult_Crescent))
                             {
                                 SetCurrentTab(FeatureTab.OccultCrescent);
                                 DrawOccultContents(openJob.Value);

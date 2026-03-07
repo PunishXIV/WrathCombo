@@ -215,6 +215,22 @@ public class ContentCheck
         }
     }
 
+    /// <summary>
+    ///     Check if the current instance is a Variant Dungeon.<br />
+    ///     (Aloalo Island, etc.)
+    /// </summary>
+    public static bool IsInVariantDungeon
+    {
+        get
+        {
+            if (!EZ.Throttle("contentCheckInVariants", TS.FromSeconds(5)))
+                return field;
+
+            field = Content.ContentType is ContentType.Variant;
+            return field;
+        }
+    }
+
     #region Halved Content Lists
 
 #pragma warning disable CS1574

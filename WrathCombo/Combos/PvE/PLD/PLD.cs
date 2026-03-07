@@ -1,12 +1,10 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using System;
-using ECommons.GameFunctions;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.PLD.Config;
-using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
 
 namespace WrathCombo.Combos.PvE;
 
@@ -45,7 +43,7 @@ internal partial class PLD : Tank
 
             if (PLD_ST_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
             {
-                if (TryUseMits(RotationMode.simple, ref actionID))
+                if (TryUseMits(RotationMode.Simple, ref actionID))
                     return actionID;
             }
 
@@ -208,7 +206,7 @@ internal partial class PLD : Tank
 
             if (PLD_AoE_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
             {
-                if (TryUseMits(RotationMode.simple, ref actionID))
+                if (TryUseMits(RotationMode.Simple, ref actionID))
                     return actionID;
             }
 
@@ -250,7 +248,6 @@ internal partial class PLD : Tank
                     // Blade of Honor
                     if (LevelChecked(BladeOfHonor) && OriginalHook(Requiescat) == BladeOfHonor)
                         return OriginalHook(Requiescat);
-                    
                 }
                 // Confiteor & Blades
                 if (HasDivineMagicMP && (HasStatusEffect(Buffs.ConfiteorReady) || LevelChecked(BladeOfFaith) && OriginalHook(Confiteor) != Confiteor))
@@ -311,7 +308,7 @@ internal partial class PLD : Tank
 
             if (PLD_ST_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
             {
-                if (TryUseMits(RotationMode.advanced, ref actionID))
+                if (TryUseMits(RotationMode.Advanced, ref actionID))
                     return actionID;
             }
 
@@ -382,7 +379,7 @@ internal partial class PLD : Tank
                 if (IsEnabled(Preset.PLD_ST_AdvancedMode_GoringBlade) &&
                     HasStatusEffect(Buffs.GoringBladeReady) && InMeleeRange() && PLD_ST_AdvancedMode_GoringBladePrioritize == 0)
                     return GoringBlade;
-                
+
                 // Requiescat Phase
                 switch (HasDivineMagicMP)
                 {
@@ -488,10 +485,10 @@ internal partial class PLD : Tank
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
-            
+
             if (PLD_AoE_Advanced_MitOptions != 1 || P.UIHelper.PresetControlled(Preset)?.enabled == true)
             {
-                if (TryUseMits(RotationMode.advanced, ref actionID))
+                if (TryUseMits(RotationMode.Advanced, ref actionID))
                     return actionID;
             }
 
@@ -578,13 +575,17 @@ internal partial class PLD : Tank
                     return RiotBlade;
 
                 if (ComboAction is RiotBlade && LevelChecked(RageOfHalone))
-                    return OriginalHook(RageOfHalone);
+                {
+                    return HasDivineMight && HasDivineMagicMP && PLD_HolySpirit_Standalone
+                        ? HolySpirit
+                        : OriginalHook(RageOfHalone);
+                }
             }
 
             return FastBlade;
         }
     }
-    
+
     internal class PLD_AoE_BasicCombo : CustomCombo
     {
         protected internal override Preset Preset => Preset.PLD_AoE_BasicCombo;
@@ -593,9 +594,11 @@ internal partial class PLD : Tank
         {
             if (actionID is not Prominence)
                 return actionID;
-            
+
             if (ComboAction is TotalEclipse && ComboTimer > 0 && LevelChecked(Prominence))
-                return Prominence;
+                return HasDivineMight && HasDivineMagicMP && PLD_HolyCircle_Standalone
+                    ? HolyCircle
+                    : OriginalHook(Prominence);
 
             return TotalEclipse;
         }
@@ -842,6 +845,7 @@ internal partial class PLD : Tank
                 : actionID;
         }
     }
+
     internal class PLD_RetargetIntervene : CustomCombo
     {
         protected internal override Preset Preset => Preset.PLD_RetargetIntervene;
@@ -850,7 +854,7 @@ internal partial class PLD : Tank
         {
             if (actionID is not Intervene)
                 return actionID;
-            
+
             IGameObject? target =
                 // Mouseover
                 SimpleTarget.Stack.MouseOver.IfHostile()
@@ -859,9 +863,8 @@ internal partial class PLD : Tank
                 // Nearest Enemy to Mouseover
                 SimpleTarget.NearestEnemyToTarget(SimpleTarget.Stack.MouseOver,
                     Intervene.ActionRange()) ??
-    
                 CurrentTarget.IfHostile().IfWithinRange(Intervene.ActionRange());
-            
+
             return target != null
                 ? actionID.Retarget(target)
                 : actionID;

@@ -4476,7 +4476,7 @@ Double Check / Checkmate option</value>
     <value>Tools</value>
   </data>
   <data name="MCH_AoE_Adv_Tools_Desc" xml:space="preserve">
-    <value>Adds Bioblaster, Air Anchor, Chainsaw and Excavator to the rotation.</value>
+    <value>Adds Bioblaster, Chainsaw and Excavator to the rotation.</value>
   </data>
   <data name="MCH_AoE_Adv_Interrupt_Name" xml:space="preserve">
     <value>Head Graze Option</value>

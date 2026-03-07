@@ -17,73 +17,74 @@ internal partial class PLD
             switch (preset)
             {
                 #region Combo Mitigations
+
                 case Preset.PLD_ST_SimpleMode:
                     DrawHorizontalRadioButton(PLD_ST_MitOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(PLD_ST_MitOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
                     break;
-               
+
                 case Preset.PLD_AoE_SimpleMode:
                     DrawHorizontalRadioButton(PLD_AoE_MitOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(PLD_AoE_MitOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
                     break;
-                
+
                 case Preset.PLD_ST_AdvancedMode:
                     DrawHorizontalRadioButton(PLD_ST_Advanced_MitOptions, "Include Advanced Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(PLD_ST_Advanced_MitOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
                     break;
-                
+
                 case Preset.PLD_AoE_AdvancedMode:
                     DrawHorizontalRadioButton(PLD_AoE_Advanced_MitOptions, "Include Advanced Mitigations", "Enables the use of mitigations.", 0);
                     DrawHorizontalRadioButton(PLD_AoE_Advanced_MitOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
                     break;
-                
+
                 case Preset.PLD_Mitigation_NonBoss:
                     DrawSliderFloat(0, 100, PLD_Mitigation_NonBoss_MitigationThreshold, "Stop using when average health percentage of nearby enemies is below set. \n(Set to 0 to disable this check) ", decimals: 0);
                     break;
                 case Preset.PLD_Mitigation_NonBoss_HallowedGroundEmergency:
-                    DrawSliderInt(1,100, PLD_Mitigation_NonBoss_HallowedGround_Health, "Player HP% to use Emergency Hallowed Ground at or below.");
+                    DrawSliderInt(1, 100, PLD_Mitigation_NonBoss_HallowedGround_Health, "Player HP% to use Emergency Hallowed Ground at or below.");
                     break;
                 case Preset.PLD_Mitigation_NonBoss_DivineVeil:
-                    DrawSliderInt(1,100, PLD_Mitigation_NonBoss_DivineVeil_Health, "Player HP% to use Divine Veil at or below (100 = Disable check)");
+                    DrawSliderInt(1, 100, PLD_Mitigation_NonBoss_DivineVeil_Health, "Player HP% to use Divine Veil at or below (100 = Disable check)");
                     break;
                 case Preset.PLD_Mitigation_Boss_SheltronOvercap:
                     DrawSliderInt(50, 100, PLD_Mitigation_Boss_SheltronOvercap_Threshold, "Oath Gauge required to Use Sheltron and prevent Overcap.");
                     break;
                 case Preset.PLD_Mitigation_Boss_SheltronTankbuster:
-                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_SheltronTankbuster_Difficulty, PLD_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_SheltronTankbuster_Difficulty, PLD_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                
+
                 case Preset.PLD_Mitigation_Boss_DivineVeil:
-                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_DivineVeil_Difficulty, PLD_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_DivineVeil_Difficulty, PLD_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                    
+
                 case Preset.PLD_Mitigation_Boss_Reprisal:
-                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Reprisal_Difficulty, PLD_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Reprisal_Difficulty, PLD_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                
+
                 case Preset.PLD_Mitigation_Boss_Rampart:
-                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Rampart_Difficulty, PLD_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Rampart_Difficulty, PLD_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     break;
-                
+
                 case Preset.PLD_Mitigation_Boss_Sentinel:
-                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Sentinel_Difficulty, PLD_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Sentinel_Difficulty, PLD_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     DrawAdditionalBoolChoice(PLD_Mitigation_Boss_Sentinel_First, "Use Sentinel First", "Uses Sentinel before Rampart");
                     break;
-                
+
                 case Preset.PLD_Mitigation_Boss_Bulwark:
-                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Bulwark_Difficulty, PLD_Boss_Mit_DifficultyListSet ,
+                    DrawDifficultyMultiChoice(PLD_Mitigation_Boss_Bulwark_Difficulty, PLD_Boss_Mit_DifficultyListSet,
                         "Select which difficulties the ability should be used in:");
                     DrawSliderFloat(1, 100, PLD_Mitigation_Boss_Bulwark_Threshold, "Will use Bulwark as extra tankbuster mitigation if under this HP%", decimals: 0);
                     DrawAdditionalBoolChoice(PLD_Mitigation_Boss_Bulwark_Align, "Align Bulwark", "Tries to align Bulwark with Rampart for tankbusters.");
                     break;
-                
+
                 #endregion
-                
+
                 #region ST
 
                 case Preset.PLD_ST_AdvancedMode_BalanceOpener:
@@ -92,7 +93,7 @@ internal partial class PLD
                     DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, "Use Gap Closers", "Does not skip Intervene in the Opener.", 0);
                     DrawHorizontalRadioButton(PLD_ST_AdvancedMode_BalanceOpener_Intervene, "Skip Gap Closers", "Skips Intervene in the Opener.", 1);
                     break;
-                
+
                 case Preset.PLD_ST_AdvancedMode_GoringBlade:
                     DrawHorizontalRadioButton(PLD_ST_AdvancedMode_GoringBladePrioritize, "Prioritize Goring Blade", "Prioritizes Goring Blade before Confiteor Combo is if Melee Range.", 0);
                     DrawHorizontalRadioButton(PLD_ST_AdvancedMode_GoringBladePrioritize, "Prioritize Confiteor Combo", "Will Goring Blade after Confiteor Combo.", 1);
@@ -115,7 +116,7 @@ internal partial class PLD
                         "All Enemies", "Apply the HP check above to all enemies.", 1);
                     ImGui.Unindent();
                     break;
-                
+
 
                 // Intervene
                 case Preset.PLD_ST_AdvancedMode_Intervene:
@@ -223,6 +224,13 @@ internal partial class PLD
                     DrawSliderInt(1, 100, PLD_RetargetCover_Health, "Ally HP%", 200);
                     break;
 
+                case Preset.PLD_ST_BasicCombo:
+                    DrawAdditionalBoolChoice(PLD_HolySpirit_Standalone, "Add Holy Spirit overwrite protection.", "Will use Holy Spirit before overwriting the buff.");
+                    break;
+
+                case Preset.PLD_AoE_BasicCombo:
+                    DrawAdditionalBoolChoice(PLD_HolyCircle_Standalone, "Add Holy Circle overwrite protection.", "Will use Holy Circle before overwriting the buff.");
+                    break;
 
                 case Preset.PLD_RetargetSheltron_TT:
                     ImGui.Indent();
@@ -349,7 +357,7 @@ internal partial class PLD
             PLD_Mitigation_NonBoss_HallowedGround_Health = new("PLD_Mitigation_NonBoss_HallowedGround_Health", 20),
             PLD_Mitigation_NonBoss_DivineVeil_Health = new("PLD_Mitigation_NonBoss_DivineVeil_Health", 80),
             PLD_Mitigation_Boss_SheltronOvercap_Threshold = new("PLD_Mitigation_Boss_SheltronOvercap_Threshold", 100),
-            
+
             //ST
             PLD_Balance_Content = new("PLD_Balance_Content", 1),
             PLD_ST_AdvancedMode_BalanceOpener_Intervene = new("PLD_ST_AdvancedMode_BalanceOpener_Intervene"),
@@ -361,7 +369,7 @@ internal partial class PLD
             PLD_ST_FoF_HPOption = new("PLD_ST_FoF_HPOption", 10),
             PLD_ST_ShieldLob_SubOption = new("PLD_ST_ShieldLob_SubOption"),
             PLD_ST_AdvancedMode_GoringBladePrioritize = new("PLD_ST_AdvancedMode_GoringBladePrioritize"),
-            
+
             //AoE
             PLD_AoE_FoF_Trigger = new("PLD_AoE_FoF_Trigger", 25),
             PLD_AoE_Intervene_Charges = new("PLD_AoE_Intervene_Charges"),
@@ -394,7 +402,9 @@ internal partial class PLD
         public static UserBool
             PLD_RetargetStunLockout = new("PLD_RetargetStunLockout"),
             PLD_Mitigation_Boss_Bulwark_Align = new("PLD_Mitigation_Boss_Bulwark_Align"),
-            PLD_Mitigation_Boss_Sentinel_First = new("PLD_Mitigation_Boss_Sentinel_First");
+            PLD_Mitigation_Boss_Sentinel_First = new("PLD_Mitigation_Boss_Sentinel_First"),
+            PLD_HolySpirit_Standalone = new("PLD_HolySpirit_Standalone"),
+            PLD_HolyCircle_Standalone = new("PLD_HolyCircle_Standalone");
 
         public static UserIntArray
             PLD_Mit_Priorities = new("PLD_Mit_Priorities");

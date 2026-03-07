@@ -10,6 +10,8 @@ using System.Numerics;
 using WrathCombo.Attributes;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.UI.Features;
+using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Services;
 using WrathCombo.Window.Functions;
 
@@ -75,7 +77,7 @@ internal class FeaturesWindow : ConfigWindow
 
         #region Back Button
 
-        if (ImGui.Button("Back", new Vector2(0, 24f.Scale())))
+        if (ImGui.Button(FeaturesUI.Button_Back, new Vector2(0, 24f.Scale())))
         {
             if (!pvp)
                 OpenJob = null;
@@ -158,9 +160,9 @@ internal class FeaturesWindow : ConfigWindow
         if (!id)
             return;
 
-        var searchLabelText = "Search:";
-        var searchHintText = "Option name, ID, Internal Name, Description, etc";
-        var searchDescriptionText = "Descriptions";
+        var searchLabelText = FeaturesUI.Label_searchLabelText;
+        var searchHintText = FeaturesUI.Search_searchHintText;
+        var searchDescriptionText = FeaturesUI.Checkbox_searchDescriptionText;
 
         var searchWidth = LetterWidth * 30f + 4f.Scale();
         // line width for the search bar

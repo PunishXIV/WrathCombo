@@ -1,0 +1,3 @@
+files:
+  - source: /WrathCombo/Resources/Localization/Presets/CustomComboPresets.resx
+    translation: /WrathCombo/Resources/Localization/Presets/CustomComboPresets.%two_letters_code%.resx

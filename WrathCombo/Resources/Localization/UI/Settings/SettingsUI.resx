@@ -117,10 +117,61 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="searchHintText" xml:space="preserve">
+  <data name="HelpText_Retargetting1" xml:space="preserve">
+    <value>This Feature will involve retargeting actions if enabled.</value>
+  </data>
+  <data name="HelpText_Retargetting2" xml:space="preserve">
+    <value>The actions this Feature affects will automatically be
+targeted onto the targets in the priority you have configured.</value>
+  </data>
+  <data name="HelpText_Retargetting3" xml:space="preserve">
+    <value>Using plugins like Redirect or Reaction with configurations
+affecting the same actions will Conflict and may cause issues.</value>
+  </data>
+  <data name="Info_searchHintText" xml:space="preserve">
     <value>Category name, Setting name, Internal Name, etc</value>
   </data>
-  <data name="searchLabelText" xml:space="preserve">
+  <data name="Label_searchLabelText" xml:space="preserve">
     <value>Search:</value>
+  </data>
+  <data name="Button_CreateDebug" xml:space="preserve">
+    <value>Create Debug File</value>
+  </data>
+  <data name="HelpText_CreateDebug" xml:space="preserve">
+    <value>Will generate a debug file on your desktop.
+U
+
+seful to give developers to help troubleshoot issues.
+T
+he same as using the following command: /wrath debug</value>
+  </data>
+  <data name="Header_SettingsAbout" xml:space="preserve">
+    <value>This tab allows you to customise global settings for Wrath Combo.</value>
+  </data>
+  <data name="Text_RecommendedValue" xml:space="preserve">
+    <value>Recommended Value:</value>
+  </data>
+  <data name="Text_DefaultValue" xml:space="preserve">
+    <value>Default Value:</value>
+  </data>
+  <data name="Label_HealStack" xml:space="preserve">
+    <value>Current Heal Stack:</value>
+  </data>
+  <data name="HelpText_HealStack" xml:space="preserve">
+    <value>This is the order in which Wrath will try to select a healing target. 
+If the 'Retarget Healing Actions' option is disabled, that is just the target that will be used for checking the HP threshold to trigger different healing actions to show up in their rotations. 
+That means that if your own retargeting solution (Redirect, Reaction, etc) does not match this then Wrath can stick you in a loop of healing the wrong target!!! 
+If the 'Retarget Healing Actions' option is enabled, that target is also the one that healing actions will be targeted onto (even when the action does not first check the HP of that target, like the combo's Replaced Action, for example).</value>
+  </data>
+  <data name="Warning_HealStack" xml:space="preserve">
+    <value>YOU are responsible for making sure your retargeting solution matches this heal stack!
+If it does not then Wrath can get stuck in a loop where X player is checked and needs healing, but Y player is who gets healed!</value>
+  </data>
+  <data name="Label_RaiseStack" xml:space="preserve">
+    <value>Current Raise Stack:</value>
+  </data>
+  <data name="HelpText_RaiseStack" xml:space="preserve">
+    <value>This is the order in which Wrath will try to select a raise target,
+if Retargeting of any Raise Feature is enabled.</value>
   </data>
 </root>

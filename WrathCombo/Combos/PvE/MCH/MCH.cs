@@ -184,7 +184,7 @@ internal partial class MCH : PhysicalRanged
                         (LevelChecked(Scattergun) ||
                          GetCooldownRemainingTime(AirAnchor) < GCD && LevelChecked(AirAnchor) ||
                          GetCooldownRemainingTime(Chainsaw) < GCD && LevelChecked(Chainsaw) ||
-                         GetCooldownRemainingTime(OriginalHook(Chainsaw)) < GCD && LevelChecked(Excavator)))
+                         HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Excavator)))
                         return Reassemble;
 
                     // Hypercharge
@@ -225,19 +225,15 @@ internal partial class MCH : PhysicalRanged
                     !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                     return OriginalHook(BioBlaster);
 
-                if (LevelChecked(Excavator) &&
-                    HasStatusEffect(Buffs.ExcavatorReady))
+                if (ActionReady(Excavator))
                     return Excavator;
 
                 if (ActionReady(Chainsaw) &&
                     !HasStatusEffect(Buffs.ExcavatorReady))
                     return Chainsaw;
 
-                if (LevelChecked(AirAnchor) &&
-                    IsOffCooldown(AirAnchor))
+                if (ActionReady(AirAnchor))
                     return AirAnchor;
-
-                return OriginalHook(Scattergun);
             }
 
             if (ActionReady(BlazingShot) && IsOverheated)
@@ -483,7 +479,7 @@ internal partial class MCH : PhysicalRanged
                         (LevelChecked(Scattergun) ||
                          GetCooldownRemainingTime(AirAnchor) < GCD && LevelChecked(AirAnchor) ||
                          GetCooldownRemainingTime(Chainsaw) < GCD && LevelChecked(Chainsaw) ||
-                         GetCooldownRemainingTime(OriginalHook(Chainsaw)) < GCD && LevelChecked(Excavator)))
+                         HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Excavator)))
                         return Reassemble;
 
                     // Hypercharge
@@ -535,13 +531,13 @@ internal partial class MCH : PhysicalRanged
                         !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
                         return OriginalHook(BioBlaster);
 
-                    if (LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+                    if (ActionReady(Excavator))
                         return Excavator;
 
                     if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
                         return Chainsaw;
 
-                    if (LevelChecked(AirAnchor) && IsOffCooldown(AirAnchor))
+                    if (ActionReady(AirAnchor) && MCH_AoE_AirAnchor)
                         return AirAnchor;
                 }
             }
