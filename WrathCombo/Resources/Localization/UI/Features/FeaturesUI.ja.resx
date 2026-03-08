@@ -117,42 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Tooltip_ConflictingPlugins" xml:space="preserve"><value>次のプラグインは {0} と競合することが知られています。
-
-{1}
-
-予期しない挙動や不具合を防ぐため、これらのプラグイン、またはそのローテーション機能を無効にすることを推奨します。</value></data>
-  <data name="Tooltip_ConflictingPluginSettings" xml:space="preserve"><value>次のプラグインは、現在有効になっている {0} の設定と競合することが知られています。
-{1}
-
-予期しない挙動や不具合を防ぐため、これらのプラグインを無効にするか、競合する設定を解除することを推奨します。</value></data>
-  <data name="Tooltip_ConflictingWrathSettings" xml:space="preserve"><value>次の Wrath の設定は {0} の設定と競合することが知られています:
-{1}
-
-予期しない挙動や不具合を防ぐため、これらの設定を無効にすることを推奨します。</value></data>
-  <data name="Tooltip_Conflicts_Reason" xml:space="preserve"><value>- 設定: {0}
-    問題: {1}</value></data>
-  <data name="Tooltip_DalamudConfigConflicts" xml:space="preserve"><value>Dalamud 設定に競合があります:
-</value></data>
-  <data name="Tooltip_GameConflicts" xml:space="preserve"><value>次のゲーム内設定は {0} の設定と競合することが知られています:
-{1}
-
-予期しない挙動や不具合を防ぐため、これらの設定を変更することを推奨します。</value></data>
-  <data name="Tooltip_TargettingConflicts" xml:space="preserve"><value>次のプラグインでの設定は、{0} の有効なアクション・リターゲット機能と競合します:
-{1}
-
-予期しない挙動や不具合を防ぐため、これらのプラグインを無効にするか、該当アクションを除外するか、{0} 側のリターゲットを無効にすることを推奨します。</value></data>
-  <data name="Tooltip_TargettingConflicts_Action" xml:space="preserve"><value>        - {0}</value></data>
-  <data name="Tooltip_TargettingConflicts_Plugin" xml:space="preserve"><value>- {0} {1}
-    そのプラグインと {2} の両方でリターゲットされるアクション:
-{3}</value></data>
-  <data name="Warning_UnknownConflictType" xml:space="preserve"><value>不明な競合タイプ:</value></data>
-  <data name="Wrath_Combo" xml:space="preserve"><value>Wrath Combo (JA)</value></data>
-  <data name="Button_CollapseSidebar" xml:space="preserve"><value>サイドバーを折りたたむ</value></data>
-  <data name="Button_ExpandSidebar" xml:space="preserve"><value>サイドバーを展開</value></data>
-  <data name="Button_PvEFeatures" xml:space="preserve"><value>PvE 機能</value></data>
-  <data name="Button_PvPFeatures" xml:space="preserve"><value>PvP 機能</value></data>
-  <data name="Button_AutoRotation" xml:space="preserve"><value>自動ローテーション</value></data>
-  <data name="Button_Settings" xml:space="preserve"><value>設定</value></data>
-  <data name="Button_About" xml:space="preserve"><value>概要</value></data>
+  <data name="Hover_AutoMode" xml:space="preserve"><value>この機能を自動ローテーションに追加します。
+この機能内で選択したアクションを自動で使用するため、移動やギミック処理に集中できます。設定は「自動ローテーション」タブで変更できます。</value></data>
+  <data name="Hover_Retargetting_ControllingSetting" xml:space="preserve"><value>このアクションのリターゲットを制御する設定:</value></data>
+  <data name="Hover_Retargetting_IsRetargetted" xml:space="preserve"><value>この機能のアクションはリターゲットされます</value></data>
+  <data name="Hover_Retargetting_Line2" xml:space="preserve"><value>この機能のアクションは、自動的に
+開発側が最適と判断した対象へ向けて実行されます。</value></data>
+  <data name="Hover_Retargetting_Line3" xml:space="preserve"><value>Redirect や Reaction などで
+同じアクションに影響する設定を使っている場合、
+競合して問題を引き起こす可能性があります。</value></data>
+  <data name="Hover_Retargetting_MaybeRetargetted" xml:space="preserve"><value>この機能のアクションはリターゲットされる場合があります。</value></data>
+  <data name="Info_BLUAllGoodSpells" xml:space="preserve"><value>必要な青魔法はすべて有効です。</value></data>
+  <data name="Label_AutoMode" xml:space="preserve"><value>自動モード</value></data>
+  <data name="Label_ConflictsWith" xml:space="preserve"><value>競合:</value></data>
+  <data name="Info_pvpActionReplacingWarning" xml:space="preserve"><value>設定でアクション置き換えが無効です。PvP コンボは動作しません。</value></data>
+  <data name="Info_pvpAutoRotationWarning" xml:space="preserve"><value>PvP では自動ローテーションは利用できません。</value></data>
+  <data name="Info_pvpDesc" xml:space="preserve"><value>これは PvP 用機能です。PvP が有効なエリアでのみ動作します。</value></data>
+  <data name="Info_pvpNothing" xml:space="preserve"><value>検索条件に一致する項目はありません。</value></data>
+  <data name="Info_SelectAJob" xml:space="preserve"><value>下のジョブから選択して、そのジョブの機能を有効化・設定できます。</value></data>
+  <data name="Warning_BLUMissingSpells" xml:space="preserve"><value>有効化されていない必要青魔法:</value></data>
+  <data name="Warning_BLUNoSpells" xml:space="preserve"><value>必要な青魔法が有効化されていません:</value></data>
+  <data name="Warning_DisabledDueToUpdate" xml:space="preserve"><value>アップデートにより無効</value></data>
+  <data name="Warning_EquipJobStone" xml:space="preserve"><value>ジョブストーンを装備すると機能が再び利用できます。</value></data>
+  <data name="Button_Back" xml:space="preserve"><value>戻る</value></data>
+  <data name="Checkbox_searchDescriptionText" xml:space="preserve"><value>説明文</value></data>
+  <data name="Search_searchHintText" xml:space="preserve"><value>項目名、ID、内部名、説明文など</value></data>
+  <data name="Label_searchLabelText" xml:space="preserve"><value>検索:</value></data>
 </root>

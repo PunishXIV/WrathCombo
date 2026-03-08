@@ -117,42 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Tooltip_ConflictingPlugins" xml:space="preserve"><value>次のプラグインは {0} と競合することが知られています。
-
-{1}
-
-予期しない挙動や不具合を防ぐため、これらのプラグイン、またはそのローテーション機能を無効にすることを推奨します。</value></data>
-  <data name="Tooltip_ConflictingPluginSettings" xml:space="preserve"><value>次のプラグインは、現在有効になっている {0} の設定と競合することが知られています。
-{1}
-
-予期しない挙動や不具合を防ぐため、これらのプラグインを無効にするか、競合する設定を解除することを推奨します。</value></data>
-  <data name="Tooltip_ConflictingWrathSettings" xml:space="preserve"><value>次の Wrath の設定は {0} の設定と競合することが知られています:
-{1}
-
-予期しない挙動や不具合を防ぐため、これらの設定を無効にすることを推奨します。</value></data>
-  <data name="Tooltip_Conflicts_Reason" xml:space="preserve"><value>- 設定: {0}
-    問題: {1}</value></data>
-  <data name="Tooltip_DalamudConfigConflicts" xml:space="preserve"><value>Dalamud 設定に競合があります:
-</value></data>
-  <data name="Tooltip_GameConflicts" xml:space="preserve"><value>次のゲーム内設定は {0} の設定と競合することが知られています:
-{1}
-
-予期しない挙動や不具合を防ぐため、これらの設定を変更することを推奨します。</value></data>
-  <data name="Tooltip_TargettingConflicts" xml:space="preserve"><value>次のプラグインでの設定は、{0} の有効なアクション・リターゲット機能と競合します:
-{1}
-
-予期しない挙動や不具合を防ぐため、これらのプラグインを無効にするか、該当アクションを除外するか、{0} 側のリターゲットを無効にすることを推奨します。</value></data>
-  <data name="Tooltip_TargettingConflicts_Action" xml:space="preserve"><value>        - {0}</value></data>
-  <data name="Tooltip_TargettingConflicts_Plugin" xml:space="preserve"><value>- {0} {1}
-    そのプラグインと {2} の両方でリターゲットされるアクション:
-{3}</value></data>
-  <data name="Warning_UnknownConflictType" xml:space="preserve"><value>不明な競合タイプ:</value></data>
-  <data name="Wrath_Combo" xml:space="preserve"><value>Wrath Combo (JA)</value></data>
-  <data name="Button_CollapseSidebar" xml:space="preserve"><value>サイドバーを折りたたむ</value></data>
-  <data name="Button_ExpandSidebar" xml:space="preserve"><value>サイドバーを展開</value></data>
-  <data name="Button_PvEFeatures" xml:space="preserve"><value>PvE 機能</value></data>
-  <data name="Button_PvPFeatures" xml:space="preserve"><value>PvP 機能</value></data>
-  <data name="Button_AutoRotation" xml:space="preserve"><value>自動ローテーション</value></data>
-  <data name="Button_Settings" xml:space="preserve"><value>設定</value></data>
-  <data name="Button_About" xml:space="preserve"><value>概要</value></data>
+  <data name="Bozja" xml:space="preserve"><value>ボズヤ</value></data>
+  <data name="Content" xml:space="preserve"><value>コンテンツ</value></data>
+  <data name="DOL" xml:space="preserve"><value>ギャザラー</value></data>
+  <data name="Job Roles" xml:space="preserve"><value>ジョブロール</value></data>
+  <data name="Normal" xml:space="preserve"><value>通常</value></data>
+  <data name="Occult Crescent" xml:space="preserve"><value>クレセントアイル</value></data>
+  <data name="Replaces" xml:space="preserve"><value>置き換え</value></data>
+  <data name="Roles and Content" xml:space="preserve"><value>ロールとコンテンツ</value></data>
+  <data name="Setting" xml:space="preserve"><value>設定</value></data>
+  <data name="Variant" xml:space="preserve"><value>ヴァリアント</value></data>
+  <data name="Variant Dungeons" xml:space="preserve"><value>ヴァリアントダンジョン</value></data>
+  <data name="Or" xml:space="preserve"><value>または</value></data>
+  <data name="Raise" xml:space="preserve"><value>蘇生</value></data>
 </root>

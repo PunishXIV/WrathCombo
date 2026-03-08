@@ -117,10 +117,28 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Info_searchHintText" xml:space="preserve">
-    <value>TestBox</value>
-  </data>
-  <data name="Label_searchLabelText" xml:space="preserve">
-    <value>TestLabel</value>
-  </data>
+  <data name="HelpText_Retargetting1" xml:space="preserve"><value>この機能を有効にすると、対象の切り替えを行います。</value></data>
+  <data name="HelpText_Retargetting2" xml:space="preserve"><value>この機能のアクションは、設定した優先順に従って
+自動的に対象へ向けて実行されます。</value></data>
+  <data name="HelpText_Retargetting3" xml:space="preserve"><value>同じアクションに影響する Redirect や Reaction などの設定は
+競合して問題を起こす可能性があります。</value></data>
+  <data name="Info_searchHintText" xml:space="preserve"><value>カテゴリ名、設定名、内部名など</value></data>
+  <data name="Label_searchLabelText" xml:space="preserve"><value>検索:</value></data>
+  <data name="Button_CreateDebug" xml:space="preserve"><value>デバッグファイルを作成</value></data>
+  <data name="HelpText_CreateDebug" xml:space="preserve"><value>デスクトップにデバッグファイルを生成します。
+問題調査のため開発者へ渡す際に使用できます。
+次のコマンドと同じです: /wrath debug</value></data>
+  <data name="Header_SettingsAbout" xml:space="preserve"><value>このタブでは Wrath Combo の全体設定を変更できます。</value></data>
+  <data name="Text_RecommendedValue" xml:space="preserve"><value>推奨値:</value></data>
+  <data name="Text_DefaultValue" xml:space="preserve"><value>既定値:</value></data>
+  <data name="Label_HealStack" xml:space="preserve"><value>現在の回復優先順:</value></data>
+  <data name="HelpText_HealStack" xml:space="preserve"><value>これは Wrath が回復対象を選ぶ優先順です。
+「単体回復をリターゲット」を無効にしている場合、この優先順は各回復アクションの HP 閾値判定に使う対象を決めるためだけに使われます。
+そのため、自分のリターゲット設定（Redirect、Reaction など）と一致していないと、誤った対象を回復し続けるループに入る可能性があります。
+「単体回復をリターゲット」を有効にしている場合は、ここで選ばれた対象が実際の回復先にもなります。</value></data>
+  <data name="Warning_HealStack" xml:space="preserve"><value>リターゲット設定は、この回復優先順と一致するようにしてください。
+一致していないと、X さんの HP を見て回復が必要と判断しつつ、実際には Y さんを回復し続ける状態になることがあります。</value></data>
+  <data name="Label_RaiseStack" xml:space="preserve"><value>現在の蘇生優先順:</value></data>
+  <data name="HelpText_RaiseStack" xml:space="preserve"><value>これは Wrath が蘇生対象を選ぶ優先順です。
+いずれかの蘇生機能でリターゲットが有効な場合に使用されます。</value></data>
 </root>

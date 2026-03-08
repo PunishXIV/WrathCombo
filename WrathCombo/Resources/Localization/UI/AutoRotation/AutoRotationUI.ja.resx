@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,4 +117,92 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Checkbox_BypassFATETargets" xml:space="preserve"><value>FATE 対象時は非戦闘時制限を解除</value></data>
+  <data name="Checkbox_BypassQuestTargets" xml:space="preserve"><value>クエスト対象時は非戦闘時制限を解除</value></data>
+  <data name="Checkbox_BypassSelfUse" xml:space="preserve"><value>自己対象アクション提案時は制限を解除</value></data>
+  <data name="Checkbox_DisableInstanceExit" xml:space="preserve"><value>インスタンス退出後に無効化</value></data>
+  <data name="Checkbox_EnableAutoRotation" xml:space="preserve"><value>自動ローテーションを有効化</value></data>
+  <data name="Checkbox_EnableInstancedEnter" xml:space="preserve"><value>インスタンスコンテンツで自動的に有効化</value></data>
+  <data name="Checkbox_EnforceBestAoETarget" xml:space="preserve"><value>最適な AoE 対象選択を強制</value></data>
+  <data name="Checkbox_OnlyInCombat" xml:space="preserve"><value>戦闘中のみ</value></data>
+  <data name="Label_DamageSettings" xml:space="preserve"><value>攻撃設定</value></data>
+  <data name="HelpText_AoETargetCount" xml:space="preserve"><value>これを無効にすると AoE 攻撃機能を使わなくなります。有効時は、AoE 攻撃を使うために必要な対象数が射程内にいることを要求します。全ロールの AoE ダメージ系機能に適用されます。</value></data>
+  <data name="HelpText_BypassFATETargets" xml:space="preserve"><value>FATE にレベルシンクしている場合を除き、非戦闘時は自動モードを無効にします。</value></data>
+  <data name="HelpText_BypassQuestTargets" xml:space="preserve"><value>クエスト対象が射程内にいる場合を除き、非戦闘時は自動モードを無効にします。</value></data>
+  <data name="HelpText_BypassSelfUse" xml:space="preserve"><value>一部ジョブには、{0} や {1} のように非戦闘時に使いたいアクションがあります。この設定を有効にすると、戦闘外でもそれらを使えるようになります。</value></data>
+  <data name="HelpText_DPSTargettingMode" xml:space="preserve"><value>手動 - 対象選択をすべて手動で行います。
+最大HPが高い対象 - 最大HPが最も高い敵を優先します。
+最大HPが低い対象 - 最大HPが最も低い敵を優先します。
+現在HPが高い対象 - 現在HPが最も高い敵を優先します。
+現在HPが低い対象 - 現在HPが最も低い敵を優先します。
+タンクの対象 - パーティ内先頭タンクと同じ対象を優先します。
+最も近い対象 - 自分に最も近い対象を優先します。
+最も遠い対象 - 自分から最も遠い対象を優先します。</value></data>
+  <data name="HelpText_EnforceBestAoETarget" xml:space="preserve"><value>ほかのターゲットモードでは、AoE は命中対象数が最も多い対象を優先します。手動では、このチェックを入れた場合のみ同じ挙動になります。</value></data>
+  <data name="HelpText_QueueWindow" xml:space="preserve"><value>次のウェポンスキルまたは魔法を、GCD 終了のどれだけ前からキューに入れるかを決めます。回線状況によって実行アクションが変わる場合があるため、例えば MP 更新が間に合わずブリザジャを二重に撃ってしまうような場合はこの値を調整してください。</value></data>
+  <data name="Info_Header" xml:space="preserve"><value>ここでは自動ローテーションの動作条件を設定できます。
+「自動モード」チェックのある機能は、自動ローテーションで使用できます。</value></data>
+  <data name="Input_AoETargetCount" xml:space="preserve"><value>AoE 攻撃機能に必要な対象数</value></data>
+  <data name="Input_AutoRotationDelay" xml:space="preserve"><value>戦闘開始後に自動ローテーションを開始するまでの遅延（秒）</value></data>
+  <data name="Input_QueueWindow" xml:space="preserve"><value>キュー受付時間（秒）</value></data>
+  <data name="Label_DPSTargetingMode" xml:space="preserve"><value>攻撃対象モード</value></data>
+  <data name="Label_DPSMaxTargetDistance" xml:space="preserve"><value>最大対象距離</value></data>
+  <data name="HelpText_DPSMaxTargetDistance" xml:space="preserve"><value>手動以外の各対象モードが探索する最大距離です。1〜30 の値のみ有効です。</value></data>
+  <data name="Label_IgnoreRangeInBoss" xml:space="preserve"><value>ボス戦では最大対象距離を無視</value></data>
+  <data name="HelpText_IgnoreRangeInBoss" xml:space="preserve"><value>ボス戦中のみ、距離に関係なく対象を攻撃候補にします。</value></data>
+  <data name="Checkbox_FATEPriority" xml:space="preserve"><value>FATE 対象を優先</value></data>
+  <data name="Checkbox_QuestPriority" xml:space="preserve"><value>クエスト対象を優先</value></data>
+  <data name="Checkbox_PreferNonCombat" xml:space="preserve"><value>非戦闘中の対象を優先</value></data>
+  <data name="Checkbox_OnlyAttackInCombat" xml:space="preserve"><value>すでに戦闘中の対象のみ攻撃</value></data>
+  <data name="Checkbox_UnTargetAndDisableForPenalty" xml:space="preserve"><value>行動ペナルティ系ギミック時はターゲット解除して停止</value></data>
+  <data name="Checkbox_DPSAlwaysHardTarget" xml:space="preserve"><value>常にハードターゲットを設定</value></data>
+  <data name="Label_IgnoredNPCs" xml:space="preserve"><value>無視する NPC</value></data>
+  <data name="HelpText_UnTargetAndDisableForPenalty" xml:space="preserve"><value>パイレティクスや加速度爆弾など、行動すると不利益を受けるギミックを検知した場合、現在のターゲットを解除し、自動ローテーションのアクション実行を停止します。</value></data>
+  <data name="HelpText_DPSAlwaysHardTarget" xml:space="preserve"><value>自動ローテーションは敵を明示的にターゲットしなくても動作しますが、この設定を有効にすると攻撃実行時に常にハードターゲットを設定します。</value></data>
+  <data name="HelpText_IgnoredNPCs" xml:space="preserve"><value>ここに登録した NPC は自動ローテーションの対象外になります。
+同じ NPC の全出現個体が自動ターゲットから除外されます（手動は引き続き利用可能です）。
+一覧から削除するには対象を選んで下の削除ボタンを押してください。
+追加するには NPC をターゲットした状態で /wrath ignore を実行します。</value></data>
+  <data name="Button_DeleteFromIgnored" xml:space="preserve"><value>無視リストから削除</value></data>
+  <data name="Header_HealingSettings" xml:space="preserve"><value>回復設定</value></data>
+  <data name="Label_HealingTargetingMode" xml:space="preserve"><value>回復対象モード</value></data>
+  <data name="HelpText_HealerTargetingMode" xml:space="preserve"><value>手動 - 手動で選択した対象のみ回復します。下の回復閾値を満たさない場合は、攻撃が有効なら回復せず攻撃を行います。
+現在HP%が高い対象 - 現在HP% が最も高いパーティメンバーを優先します。
+現在HP%が低い対象 - 現在HP% が最も低いパーティメンバーを優先します。</value></data>
+  <data name="Slider_SingleTargetHPP" xml:space="preserve"><value>単体回復 HP% 閾値</value></data>
+  <data name="Slider_SingleTargetRegenHPP" xml:space="preserve"><value>単体回復 HP% 閾値（対象にリジェネ / アスペクト・ベネフィクがある場合）</value></data>
+  <data name="HelpText_SingleTargetRegenHPP" xml:space="preserve"><value>通常は上の設定より低めにするのがおすすめです。</value></data>
+  <data name="Slider_SingleTargetExcogHPP" xml:space="preserve"><value>単体回復 HP% 閾値（対象に深謀遠慮の策がある場合）</value></data>
+  <data name="HelpText_SingleTargetExcogHPP" xml:space="preserve"><value>通常は上の設定より低めにするのがおすすめです。</value></data>
+  <data name="Slider_AoETargetHPP" xml:space="preserve"><value>AoE 回復 HP% 閾値</value></data>
+  <data name="Input_AoEHealTargetCount" xml:space="preserve"><value>AoE 回復機能に必要な対象数</value></data>
+  <data name="HelpText_AoEHealTargetCount" xml:space="preserve"><value>これを無効にすると AoE 回復機能を使わなくなります。有効時は、AoE 回復を使うために必要な対象数が範囲内にいることを要求します。</value></data>
+  <data name="Input_HealDelay" xml:space="preserve"><value>条件成立後に回復開始するまでの遅延（秒）</value></data>
+  <data name="HelpText_HealDelay" xml:space="preserve"><value>高くしすぎないでください。1〜2 秒程度なら自然な反応として扱いやすいです。</value></data>
+  <data name="Checkbox_AutoRez" xml:space="preserve"><value>自動蘇生</value></data>
+  <data name="HelpText_AutoRez" xml:space="preserve"><value>戦闘不能のパーティメンバーを蘇生しようとします。
+{0}、{1}、{2}、{3}、{4} に加え、{5} の {6} では {7} にも適用されます。</value></data>
+  <data name="Checkbox_AutoRezOutOfParty" xml:space="preserve"><value>パーティ外メンバーにも適用</value></data>
+  <data name="Checkbox_AutoRezRequireSwift" xml:space="preserve"><value>蘇生時に {0}/{1} を必須にする</value></data>
+  <data name="HelpText_AutoRezRequireSwift" xml:space="preserve"><value>パーティメンバーを蘇生する際、詠唱蘇生を避けるため {0} または {1} の {2} が使用可能であることを要求します。</value></data>
+  <data name="Checkbox_AutoRezDPSJobs" xml:space="preserve"><value>{0} と {1} にも適用</value></data>
+  <data name="HelpText_AutoRezDPSJobs" xml:space="preserve"><value>{0} または {1} のときも、戦闘不能のパーティメンバーを蘇生しようとします。{2} は {3} または {4} が有効なときのみ蘇生します。</value></data>
+  <data name="Checkbox_AutoRezDPSJobsHealersOnly" xml:space="preserve"><value>蘇生持ちのみを蘇生</value></data>
+  <data name="HelpText_AutoRezDPSJobsHealersOnly" xml:space="preserve"><value>{0} または {1} のとき、ヒーラーと蘇生持ちのみを蘇生対象にします。</value></data>
+  <data name="Checkbox_AutoCleanse" xml:space="preserve"><value>自動{0}</value></data>
+  <data name="HelpText_AutoCleanse" xml:space="preserve"><value>解除可能なデバフに {0} を使用します（回復を優先）。</value></data>
+  <data name="Checkbox_ManageKardia" xml:space="preserve"><value>[{0}] {1} を自動管理</value></data>
+  <data name="HelpText_ManageKardia" xml:space="preserve"><value>{0} を、敵に狙われているパーティメンバーへ付け替えます。複数いる場合はタンクを優先します。</value></data>
+  <data name="Checkbox_KardiaTanksOnly" xml:space="preserve"><value>{0} の付け替えをタンクのみに制限</value></data>
+  <data name="Checkbox_PreEmptiveHoT" xml:space="preserve"><value>[{0}/{1}/{2}/{3}] フォーカスターゲットへ事前に継続回復 / バリアを付与</value></data>
+  <data name="HelpText_PreEmptiveHoT" xml:space="preserve"><value>非戦闘時、フォーカスターゲットが敵から 30m 以内にいる場合に {0}/{1}/{2}/{3} を付与します（「戦闘中のみ」設定を無視します）。</value></data>
+  <data name="Checkbox_IncludeNPCs" xml:space="preserve"><value>友好的 NPC も回復対象にする</value></data>
+  <data name="HelpText_IncludeNPCs" xml:space="preserve"><value>ヒーラークエストのように、直接パーティへ入らない NPC を回復する必要がある場面で有効です。</value></data>
+  <data name="Checkbox_HealerAlwaysHardTarget" xml:space="preserve"><value>常にハードターゲットを設定###HealerHardTarget</value></data>
+  <data name="HelpText_HealerAlwaysHardTarget" xml:space="preserve"><value>自動ローテーションは味方を明示的にターゲットしなくても動作しますが、この設定を有効にすると回復実行時に常にハードターゲットを設定します。</value></data>
+  <data name="Label_Advanced" xml:space="preserve"><value>詳細設定</value></data>
+  <data name="Input_ThrottleDelay" xml:space="preserve"><value>スロットル間隔（ms）</value></data>
+  <data name="HelpText_ThrottleDelay" xml:space="preserve"><value>自動ローテーションはパフォーマンスのため、一定ミリ秒ごとにのみ実行するスロットルを内蔵しています。フレームレートに問題がある場合は値を上げてください。ただし高すぎると GCD が噛む副作用があるため、様子を見ながら調整してください。</value></data>
+  <data name="Checkbox_Orbwalker" xml:space="preserve"><value>Orbwalker 連携を有効化</value></data>
+  <data name="HelpText_Orbwalker" xml:space="preserve"><value>Orbwalker が詠唱中の移動をロックするため、移動中でも詠唱付きアクションを使用できるようになります。必要に応じて Orbwalker 側の「Buffer Initial Cast」を有効にしてください。Orbwalker 系プラグインの導入と有効化が必要です。</value></data>
 </root>
