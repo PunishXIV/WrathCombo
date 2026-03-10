@@ -1,5 +1,7 @@
 ﻿using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Resources.Localization.JobConfigs;
+using WrathCombo.Window;
 using static WrathCombo.Extensions.UIntExtensions;
 using static WrathCombo.Window.Functions.SliderIncrements;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -115,14 +117,14 @@ internal partial class AST
                 case Preset.AST_ST_DPS_Opener:
                     DrawBossOnlyChoice(AST_ST_DPS_Balance_Content);
                     ImGui.NewLine();
-                    DrawHorizontalRadioButton(AST_ST_DPS_Opener_SkipStar, "Use Earthly Star", "Places Earthly Star in the Opener.", 0);
-                    DrawHorizontalRadioButton(AST_ST_DPS_Opener_SkipStar, "Don't Use Earthly Star", "Does not use Earthly Star in the Opener.", 1);
+                    DrawHorizontalRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(AST_Config.UseEarthlyStar), Text.FormatAndCache(AST_Config.PlacesEarthlyStarInTheOpener), 0);
+                    DrawHorizontalRadioButton(AST_ST_DPS_Opener_SkipStar, Text.FormatAndCache(AST_Config.DonTUseEarthlyStar), Text.FormatAndCache(AST_Config.DoesNotUseEarthlyStarInTheOpener), 1);
                     break;
 
                 case Preset.AST_ST_DPS:
-                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, $"On {Malefic.ActionName()}", "Applies options to all Malefics.", 0);
-                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, $"On {Combust.ActionName()}", "Applies options to all Combusts.", 1);
-                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, $"On {Malefic2.ActionName()}", "Applies options to Malefic 2 only.", 2);
+                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, Text.FormatAndCache(Generics.On0, Malefic.ActionName()), AST_Config.AppliesOptionsToAllMalefics, 0);
+                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, Text.FormatAndCache(Generics.On0, Combust.ActionName()), AST_Config.AppliesOptionsToAllCombusts, 1);
+                    DrawHorizontalRadioButton(AST_ST_DPS_AltMode, Text.FormatAndCache(Generics.On0, Malefic2.ActionName()), AST_Config.AppliesOptionsToMalefic2Only, 2);
                     break;
 
                 case Preset.AST_DPS_Lucid:

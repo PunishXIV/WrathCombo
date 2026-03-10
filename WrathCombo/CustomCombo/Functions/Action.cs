@@ -13,6 +13,7 @@ using WrathCombo.Data;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using static WrathCombo.Data.ActionWatching;
+using static WrathCombo.Window.Text;
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -68,15 +69,11 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Gets the name of an action as a string. </summary>
     /// <param name="actionId"> The action ID. </param>
-    public static string GetActionName(uint actionId) => ActionSheet.TryGetValue(actionId, out var actionSheet)
-        ? actionSheet.Name.ToString()
-        : "Unknown Action";
+    public static string GetActionName(uint actionId) => ActionAndStatusLocalization.GetActionName(actionId);
 
     /// <summary> Gets the name of a trait as a string. </summary>
     /// <param name="traitId"> The trait ID. </param>
-    public static string GetTraitName(uint traitId) => TraitSheet.TryGetValue(traitId, out var traitSheet)
-        ? traitSheet.Name.ToString()
-        : "Unknown Trait";
+    public static string GetTraitName(uint traitId) => ActionAndStatusLocalization.GetTraitName(traitId);
 
     /// <summary> Gets the amount of time since an action was used, in seconds. </summary>
     /// <param name="actionId"> The action ID. </param>

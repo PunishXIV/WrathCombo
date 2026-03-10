@@ -40,10 +40,7 @@ public partial class Configuration : IPluginConfiguration
     /// Whether to hide the children of a feature if it is disabled. Default: false.
     /// <seealso cref="Presets.DrawPreset"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Hide Sub-Combo Options",
-        "Will hide the Features and Options under disabled Combos.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool HideChildren = false;
 
     /// Whether to hide combos which conflict with enabled presets. Default: false.
@@ -51,69 +48,42 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="PvEFeatures.DrawHeadingContents"/>
     /// <seealso cref="PvPFeatures.DrawHeadingContents"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Hide Conflicted Combos",
-        "Will hide Combos that conflict with Combos that you have enabled.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool HideConflictedCombos = false;
 
     /// If the DTR Bar text should be shortened. Default: false.
     /// <seealso cref="WrathCombo.OnFrameworkUpdate"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Shorten Server Info Bar Text",
-        "Will hide the number of active Auto-Mode Combos.\n" +
-        "By default the Server Info Bar shows:\n" +
-        "- Whether Auto-Rotation is on or off\n" +
-        "- (if on) The number of active Auto-Mode Combos\n" +
-        "- (if applicable) Whether another plugin is controlling the state of Auto-Rotation.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool ShortDTRText = false;
 
     [SettingCategory(Main_UI_Options)]
-    [Setting("Opener Status in Server Info Bar",
-        "Shows the status of your current opener, if enabled and applicable.",
-        recommendedValue: "Preference", 
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool ShowOpenerDtr = false;
 
     /// Hides the message of the day. Default: false.
     /// <seealso cref="WrathCombo.PrintLoginMessage"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Suppress Set and Unset commands feedback",
-        "Will hide chat feedback for /wrath set and /wrath unset commands.\n" +
-        "(Will still show feedback if the command is being overriden by IPC, or fails)",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool SuppressSetCommands = false;
 
     /// Hides the Autorot set message. Default: false.
     /// <seealso cref="WrathCombo.PrintLoginMessage"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Suppress Auto-Rotation commands feedback",
-        "Will hide chat feedback for /wrath auto commands",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool SuppressAutorotCommand = false;
 
     /// Hides the message of the day. Default: false.
     /// <seealso cref="WrathCombo.PrintLoginMessage"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Hide Message of the Day",
-        "Will prevent the Message of the Day from being shown in your chat upon login.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool HideMessageOfTheDay = false;
 
     /// Whether to draw a box around targeted party members. Default: false.
     /// <seealso cref="TargetHelper"/>
     /// <seealso cref="TargetHighlightColor"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Show Target Highlighter",
-        "Draws a box around party members in the vanilla Party List, when targeted by certain Features.",
-        recommendedValue: "Preference",
-        defaultValue: "Off",
-        extraText: "(Only used by AST and DNC currently)")]
+    [Setting(Setting.Type.Toggle)]
     public bool ShowTargetHighlight = false;
 
     /// The color of box to draw around targeted party members. Default: 808080FF.
@@ -121,11 +91,7 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="TargetHelper"/>
     [SettingParent(nameof(ShowTargetHighlight))]
     [SettingCategory(Main_UI_Options)]
-    [Setting("Target Highlighter Color",
-        "Controls the color of the box drawn around party members.",
-        recommendedValue: "Preference",
-        defaultValue: "#808080FF",
-        type: Setting.Type.Color)]
+    [Setting(type: Setting.Type.Color)]
     public Vector4 TargetHighlightColor =
         new() { W = 1, X = 0.5f, Y = 0.5f, Z = 0.5f };
 
@@ -133,31 +99,20 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="Presets.DrawPreset"/>
     /// <seealso cref="InfoBox"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Show Borders around Combos and Features with Options",
-        "Will draw a border around Combos and Features that have Features and Options of their own.",
-        recommendedValue: "Preference",
-        defaultValue: "On")]
+    [Setting(Setting.Type.Toggle)]
     public bool ShowBorderAroundOptionsWithChildren = true;
 
     /// Whether to label Presets with their ID. Default: true.
     /// <seealso cref="Presets.DrawPreset"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Show Preset IDs next to Combo Names",
-        "Displays the Preset ID number next to the name of each Combo and Feature.\n" +
-        "These are the IDs used for commands like `/wrath toggle <ID>`.\n" +
-        "Pre-7.3 the behavior was to show a number here, but it was much shorter, and did not work in commands.",
-        recommendedValue: "On",
-        defaultValue: "On")]
+    [Setting(Setting.Type.Toggle)]
     public bool UIShowPresetIDs = true;
 
     /// Whether to show search bars. Default: true.
     /// <seealso cref="FeaturesWindow.DrawSearchBar"/>
     /// <seealso cref="ConfigWindow.Search"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Show Search Bars",
-        "Controls whether Search Bars should be shown in Settings, and PvE and PvP Jobs.",
-        recommendedValue: "On",
-        defaultValue: "On")]
+    [Setting(Setting.Type.Toggle)]
     public bool UIShowSearchBar = true;
 
     #region Future Search Settings
@@ -188,39 +143,25 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="WrathCombo.HandleOpenCommand"/>
     [Space]
     [SettingCategory(Main_UI_Options)]
-    [Setting("Open Wrath to the PvE Features Tab",
-        "When you open Wrath with `/wrath`, it will open to the PvE Features tab, instead of the last tab you were on." +
-        "\nSame as always using the `/wrath pve` command to open Wrath.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool OpenToPvE = false;
 
     /// Whether, upon opening, it should go to the PvP tab in PvP zones. Default: false.
     /// <seealso cref="WrathCombo.HandleOpenCommand"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Open Wrath to the PvP Features Tab in PvP areas",
-        "Same as above, when you open Wrath with `/wrath`, it will open to the PvP Features tab, instead of the last tab you were on, when in a PvP area." +
-        "\nSimilar to using the `/wrath pvp` command to open Wrath.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool OpenToPvP = false;
 
     /// Whether the PvE Features tab should open to your current Job. Default: false.
     /// <seealso cref="PvEFeatures.OpenToCurrentJob"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Open PvE Features Tab to Current Job on Opening",
-        "When the PvE Features tab is opened it will automatically open to your current Job.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool OpenToCurrentJob = false;
 
     /// Whether the PvE Features tab, upon switching jobs, should open to your new Job. Default: false.
     /// <seealso cref="PvEFeatures.OpenToCurrentJob"/>
     [SettingCategory(Main_UI_Options)]
-    [Setting("Open PvE Features Tab to Current Job on Switching Jobs",
-        "Will automatically switch the PvE Features tab to the job you are currently playing, when you switch jobs.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool OpenToCurrentJobOnSwitch = false;
 
     #endregion
@@ -230,71 +171,36 @@ public partial class Configuration : IPluginConfiguration
     /// Whether all Combos should be <see cref="All.SavageBlade"/> when moving. Default: false.
     /// <seealso cref="ActionReplacer.GetAdjustedAction"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Block Spells while Moving",
-        "Will completely block actions while moving, by replacing Combo outputs with Savage Blade.\n" +
-        "This would supersede combo-specific movement options, which many jobs have.",
-        recommendedValue: "Off (Most Jobs will handle this better with their Features)",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool BlockSpellOnMove = false;
 
     /// Whether Hotbars will be walked, and matching actions updated. Default: true.
     /// <seealso cref="SetActionChanging" />
     /// <seealso cref="WrathCombo.HandleComboCommands" />
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Action Replacing",
-        "Controls whether Actions on your Hotbar will be Replaced with combos from the plugin.\n" +
-        "If disabled, your manual presses of abilities will no longer be affected by any Wrath settings.\n\n" +
-        "Auto-Rotation will work regardless of the setting.",
-        recommendedValue: "On (This is essentially turning OFF most of Wrath)",
-        defaultValue: "On",
-        warningMark: "Wrath is largely designed with Action Replacing in mind.\n" +
-                     "Only Auto-Rotation will work if this is disabled.\n" +
-                     "Disabling it may also lead to unexpected behavior, such as " +
-                     "regarding Retargeting.")]
+    [Setting(Setting.Type.Toggle)]
     public bool ActionChanging = true;
 
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Custom Manual Queue Window",
-    "Allows you to adjust your queue window to any time during the GCD rather than just within the last 0.3-0.5s. Useful if you're not mashing " +
-    "the key or using Auto-Rotation and wish to manually intervene.",
-    recommendedValue: "On",
-    defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool QueueAdjust = false;
 
     [SettingParent(nameof(QueueAdjust))]
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Allow Queueing At",
-        "Will allow you to queue when the GCD is at this time or less.",
-        recommendedValue: "1.5-2.5",
-        defaultValue: "1.5",
-        warningMark: "Setting this too low or to zero will make it really hard to manually queue.",
-        unitLabel: "seconds",
-        type: Setting.Type.Slider_Float,
+    [Setting(type: Setting.Type.Slider_Float,
         minFloat: 0f,
         maxFloat: 2.5f)]
     public float QueueAdjustThreshold = 1.5f;
 
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Overwrite Queue",
-        "This will allow you to overwrite whatever is currently queued up with another action.",
-        recommendedValue: "On",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool OverwriteQueue = false;
 
     /// The throttle for how often the hotbar gets walked. Default: 50.
     /// <seealso cref="ActionChanging"/>
     /// <seealso cref="ActionReplacer.GetAdjustedActionDetour"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Action Updater Throttle",
-        "Will restrict how often Combos will update the Action on your Hotbar.\n" +
-        "At 50ms it's not really restrictive, always giving you an up to date action.\n\n" +
-        "If you are looking for some (fairly minor) FPS gains then you can increase this value to make Combos run less often.\n" +
-        "This makes your combos less responsive, and perhaps even clips GCDs.\n" +
-        "At high values this will clip your GCDs by several seconds or break your rotation altogether.",
-        recommendedValue: "20-200",
-        defaultValue: "50",
-        unitLabel: "milliseconds",
-        type: Setting.Type.Number_Int,
+    [Setting(type: Setting.Type.Number_Int,
         minInt: 0,
         maxInt: 500)]
     public int Throttle = 50;
@@ -302,13 +208,7 @@ public partial class Configuration : IPluginConfiguration
     /// Delay before recognizing movement. Default: 0.
     /// <seealso cref="CustomComboFunctions.IsMoving"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Movement Check Delay",
-        "This controls how long of a delay is needed before Wrath recognizes you as moving.\n" +
-        "This allows you to not have to worry about small movements affecting your rotation, primarily for casters.",
-        recommendedValue: "0.0-1.0 (Above that gets into the territory of breaking any Movement Options in your Job)",
-        defaultValue: "0.0",
-        unitLabel: "seconds",
-        type: Setting.Type.Number_Float,
+    [Setting(type: Setting.Type.Number_Float,
         minFloat: 0,
         maxFloat: 10)]
     public float MovementLeeway = 0f;
@@ -316,13 +216,7 @@ public partial class Configuration : IPluginConfiguration
     /// The timeout for opener failure. Default: 4.
     /// <seealso cref="CustomComboNS.WrathOpener.FullOpener"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Opener Failure Timeout",
-        "Controls how long of a gap with no action is allowed in an Opener, before it is considered failed and normal rotation is resumed.\n" +
-        "Can be necessary for some casters to increase, particularly when the first action of an Opener is a hard-cast.",
-        recommendedValue: "4.0-7.0 (Above that can really screw Openers)",
-        defaultValue: "4.0",
-        unitLabel: "seconds",
-        type: Setting.Type.Number_Float,
+    [Setting(type: Setting.Type.Number_Float,
         minFloat: 4f,
         maxFloat: 20)]
     public float OpenerTimeout = 4f;
@@ -330,16 +224,7 @@ public partial class Configuration : IPluginConfiguration
     /// The offset of the melee range check. Default: 0.
     /// <seealso cref="InMeleeRange"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Melee Distance Offset",
-        "Controls what is considered to be in melee range.\n" +
-        "Mainly for those who don't want to switch to ranged attacks if the boss walks slightly outside of range.\n" +
-        "For example a value of -0.5 would make you have to be 0.5 yalms closer to the target,\n" +
-        "or a value of 2 would allow you to be 2 yalms further away and still be considered in melee range\n" +
-        "(melee actions wouldn't work, but it would give you some warning instead of just suddenly doing less optimal actions).",
-        recommendedValue: "0",
-        defaultValue: "0",
-        unitLabel: "yalms",
-        type: Setting.Type.Number_Float,
+    [Setting(type: Setting.Type.Number_Float,
         minFloat: -3,
         maxFloat: 30)]
     public float MeleeOffset = 0;
@@ -348,13 +233,7 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="CanInterruptEnemy"/>
     /// <seealso cref="CanStunToInterruptEnemy"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Interrupt Delay",
-        "Controls the percentage of a total cast time to wait before interrupting enemy casts.\n" +
-        "Applies to all interrupts (including stuns used to interrupt) in every Job's Combos.",
-        recommendedValue: "below 40 (Above that and you start failing to interrupt many short casts)",
-        defaultValue: "0",
-        unitLabel: "% of cast",
-        type: Setting.Type.Slider_Float,
+    [Setting(type: Setting.Type.Slider_Float,
         minFloat: 0,
         maxFloat: 100)]
     public float InterruptDelay = 0;
@@ -363,15 +242,7 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="CanWeave"/>
     /// <seealso cref="CanDelayedWeave"/>
     [SettingCategory(Rotation_Behavior_Options)]
-    [Setting("Maximum Number of Weaves",
-        "Controls how many oGCDs are allowed between GCDs.\n" +
-        "The 'default' for the game is double weaving, but triple weaving is completely possible with low enough latency (of every kind);" +
-        "but if you struggle with latency of any sort then single weaving may even be a good answer to try for you.\n" +
-        "Triple weaving is already done in a manner where we try to avoid clipping GCDs, and as such doesn't happen particularly often even if you have good latency, and is a valid thing to do, so it is a safe option if you want.",
-        recommendedValue: "2-3",
-        defaultValue: "2",
-        unitLabel: "# of oGCDs",
-        type: Setting.Type.Slider_Int,
+    [Setting(type: Setting.Type.Slider_Int,
         minInt: 1,
         maxInt: 3)]
     public int MaximumWeavesPerWindow = 2;
@@ -383,25 +254,14 @@ public partial class Configuration : IPluginConfiguration
     /// Whether to retarget heals to the Heal Stack. Default: false.
     /// <seealso cref="HealRetargeting"/>
     [SettingCategory(Targeting_Options)]
-    [Setting("Retarget (Single Target) Healing Actions",
-        "Will Retarget all Single-Target Healing Actions to the Heal Stack as shown below,\n" +
-        "similarly to how Redirect or Reaction would.\n" +
-        "This ensures that the target used to check HP% threshold logic for healing actions is the same target that will receive that heal.",
-        recommendedValue: "On (If you customize the Heal Stack AT ALL)",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     [Retarget]
     public bool RetargetHealingActionsToStack = false;
 
     /// Whether to include out-of-party NPCs to retargeting. Default: false.
     /// <seealso cref="GetPartyMembers"/>
     [SettingCategory(Targeting_Options)]
-    [Setting("Add Out-of-Party NPCs to Retargeting",
-        "This will add any NPCs that are not in your party to the retargeting logic for healing actions.\n\n" +
-        "Useful for healers who want to be able to target NPCs that are not in their party, such as quest NPCs.\n" +
-        "These NPCs will not generally work with any role-based custom Heal Stack entries\n" +
-        "(even if an NPC looks like a tank, they're not always classified as one)",
-        recommendedValue: "On (If you use Retargeting at all)",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool AddOutOfPartyNPCsToRetargeting = false;
 
     #region Default+ Heal Stack
@@ -412,11 +272,7 @@ public partial class Configuration : IPluginConfiguration
     // The spaces make it align better with the raise stack collapsible group
     [SettingCollapsibleGroup("Heal Stack Customization Options  ")]
     [SettingGroup("defaultPlus", "healStackPlus")]
-    [Setting("Add UI MouseOver to the Default Healing Stack",
-        "Will add any UI MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI.\n\n" +
-        "It is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have UI MouseOver targets in your Redirect/Reaction configuration).",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool UseUIMouseoverOverridesInDefaultHealStack = false;
     
     /// Whether to include UI Mouseover in 'default' Heal Stack. Default: false.
@@ -424,11 +280,7 @@ public partial class Configuration : IPluginConfiguration
     [SettingCategory(Targeting_Options)]
     [SettingCollapsibleGroup("Heal Stack Customization Options  ")]
     [SettingGroup("defaultPlus", "healStackPlus")]
-    [Setting("Add Field MouseOver to the Default Healing Stack",
-        "Will add any MouseOver targets to the top of the Default Heal Stack, overriding the rest of the stack if you are mousing over any party member UI.\n\n" +
-        "It is recommended to enable this if you are a keyboard+mouse user and enable Retarget Healing Actions (or have UI MouseOver targets in your Redirect/Reaction configuration).",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool UseFieldMouseoverOverridesInDefaultHealStack = false;
     
     /// Whether to include Focus Target in 'default' Heal Stack. Default: false.
@@ -436,10 +288,7 @@ public partial class Configuration : IPluginConfiguration
     [SettingCategory(Targeting_Options)]
     [SettingCollapsibleGroup("Heal Stack Customization Options  ")]
     [SettingGroup("defaultPlus", "healStackPlus")]
-    [Setting("Add Focus Target to the Default Healing Stack",
-        "This will add your focus target under your hard and soft targets in the Default Heal Stack, overriding the rest of the stack if you have a living focus target.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool UseFocusTargetOverrideInDefaultHealStack = false;
     
     /// Whether to include Lowest HP% in 'default' Heal Stack. Default: false.
@@ -447,13 +296,7 @@ public partial class Configuration : IPluginConfiguration
     [SettingCategory(Targeting_Options)]
     [SettingCollapsibleGroup("Heal Stack Customization Options  ")]
     [SettingGroup("defaultPlus", "healStackPlus")]
-    [Setting("Add Lowest HP% Ally to the Default Healing Stack",
-        "This will add a nearby party member with the lowest HP% to bottom of the Default Heal Stack, overriding only yourself.",
-        recommendedValue: "Preference",
-        defaultValue: "Off",
-        warningMark: "Unlike the other Default+ Options, " +
-                     "this one is not an option in most other Retargeting Plugins.\n" +
-                     "THIS SHOULD BE USED WITH THE 'RETARGET HEALING ACTIONS' SETTING ABOVE!")]
+    [Setting(Setting.Type.Toggle)]
     public bool UseLowestHPOverrideInDefaultHealStack = false;
 
     #endregion
@@ -467,11 +310,7 @@ public partial class Configuration : IPluginConfiguration
     [SettingCollapsibleGroup("Heal Stack Customization Options  ")]
     [SettingGroup("custom", "healStackPlus", false)]
     [SettingCategory(Targeting_Options)]
-    [Setting("Use a Custom Heal Stack Instead",
-        "Select this if you would rather make your own stack of target priorities for Heal Targets instead of using our default stack.\n\n" +
-        "It is recommended to use this to align with your Redirect/Reaction configuration IF you're not using the Retarget Healing Actions option above; otherwise it is preference.",
-        recommendedValue: "Preference",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool UseCustomHealStack = false;
 
     /// The Custom Heal Stack.
@@ -481,15 +320,7 @@ public partial class Configuration : IPluginConfiguration
     [SettingCollapsibleGroup("Heal Stack Customization Options  ")]
     [SettingParent(nameof(UseCustomHealStack))]
     [SettingCategory(Targeting_Options)]
-    [Setting("Custom Heal Stack",
-        "If there are fewer than 4 items, and all return nothing when checked, will fall back to Self.\n\n" +
-        "These targets will only be considered valid if they are friendly and within 25y.\n\n" +
-        "When applied to something like Esuna, " +
-        "these targets will be checked for having a Cleansable Debuff, etc.\n" +
-        "So adding 'Any Cleansable Ally' or similar is not necessary.",
-        recommendedValue: "Preference",
-        defaultValue: "Focus Target > Hard Target > Self",
-        type: Setting.Type.Stack,
+    [Setting(type: Setting.Type.Stack,
         stackStringsToExclude:
         ["Enemy", "Attack", "Dead", "Living"])]
     public string[] CustomHealStack =
@@ -506,18 +337,7 @@ public partial class Configuration : IPluginConfiguration
     /// <seealso cref="CustomComboNS.SimpleTarget.Stack.AllyToRaise"/>
     [SettingCollapsibleGroup("Raise Stack Customization Options")]
     [SettingCategory(Targeting_Options)]
-    [Setting("Custom Raise Stack",
-        "This is the order in which Wrath will try to select a " +
-        "target to Raise,\nif Retargeting of any Raise Feature is enabled.\n\n" +
-        "You can find Raise Features under PvE>General,\n" +
-        "or under each caster that has a Raise.\n\n" +
-        "If there are fewer than 5 items, and all return nothing when checked, will fall back to:\n" +
-        "your Hard Target if they're dead, or <Any Dead Party Member>.\n\n"+
-        "These targets will only be considered valid if they are friendly, dead, and within 30y.\n",
-        recommendedValue: "Preference",
-        defaultValue: "Any Healer > Any Tank > Any Raiser > Any Dead Party Member",
-        type: Setting.Type.Stack,
-        extraText: "(all targets are checked for rezz-ability)",
+    [Setting(type: Setting.Type.Stack,
         stackStringsToExclude:
         ["Enemy", "Attack", "MissingHP", "Lowest", "Chocobo", "Living"])]
     public string[] RaiseStack =
@@ -535,20 +355,13 @@ public partial class Configuration : IPluginConfiguration
     /// Whether to output Combo actions to the chatbox.
     /// <seealso cref="Data.ActionWatching.UpdateLastUsedAction"/>
     [SettingCategory(Troubleshooting_Options)]
-    [Setting("Output Log to Chat",
-        "Will print to chat every time you use an action provided by Wrath.",
-        recommendedValue: "On (IF trying to report an issue)",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool EnabledOutputLog = false;
 
     /// Whether to output Opener state to the chatbox.
     /// <seealso cref="CustomComboNS.WrathOpener.CurrentState"/>
     [SettingCategory(Troubleshooting_Options)]
-    [Setting("Output Opener Status to Chat",
-        "Will print the status of your Job's Opener to chat.\n" +
-        "e.g. When it is Ready, Fails, or Finishes.",
-        recommendedValue: "On (IF trying to troubleshoot an Opener)",
-        defaultValue: "Off")]
+    [Setting(Setting.Type.Toggle)]
     public bool OutputOpenerLogs;
 
     #endregion

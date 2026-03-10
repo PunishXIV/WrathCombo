@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using FFXIVClientStructs.FFXIV.Client.Game;
+﻿using FFXIVClientStructs.FFXIV.Client.Game;
+using System.Linq;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using static WrathCombo.Data.ActionWatching;
+using static WrathCombo.Window.Text;
 namespace WrathCombo.Extensions;
 
 internal static class UIntExtensions
@@ -30,5 +31,5 @@ internal static class UIntExtensions
 
 internal static class UShortExtensions
 {
-    internal static string StatusName(this ushort value) => StatusCache.GetStatusName(value);
+    internal static string StatusName(this ushort value) => ActionAndStatusLocalization.GetStatusName(value);
 }

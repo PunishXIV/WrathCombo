@@ -419,6 +419,15 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Main UI Options.
+        /// </summary>
+        internal static string MainUIOptions_Category {
+            get {
+                return ResourceManager.GetString("MainUIOptions_Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 2.
         /// </summary>
         internal static string MaximumWeavesPerWindow_defaultValue {
@@ -1008,6 +1017,15 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rotation Behaviour Options.
+        /// </summary>
+        internal static string RotationBehaviourOptions_Category {
+            get {
+                return ResourceManager.GetString("RotationBehaviourOptions_Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Off.
         /// </summary>
         internal static string ShortDTRText_defaultValue {
@@ -1274,6 +1292,15 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Targeting Options.
+        /// </summary>
+        internal static string TargetingOptions_Category {
+            get {
+                return ResourceManager.GetString("TargetingOptions_Category", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 50.
         /// </summary>
         internal static string Throttle_defaultValue {
@@ -1320,6 +1347,15 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         internal static string Throttle_unitLabel {
             get {
                 return ResourceManager.GetString("Throttle_unitLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Troubleshooting Options.
+        /// </summary>
+        internal static string TroubleshootingOptions_Category {
+            get {
+                return ResourceManager.GetString("TroubleshootingOptions_Category", resourceCulture);
             }
         }
         

@@ -6,6 +6,7 @@ using System.Reflection;
 using ECommons.Reflection;
 using WrathCombo.Attributes;
 using WrathCombo.Core;
+using WrathCombo.Resources.Localization.UI.Settings;
 using WrathCombo.Services;
 using SettingType = WrathCombo.Attributes.Setting.Type;
 using Category = WrathCombo.Attributes.SettingCategory.Category;
@@ -59,23 +60,27 @@ public class Setting
 
         #region Loading from Attributes
 
-        Category = _field.GetCustomAttribute<SettingCategory>()?.TheCategory ??
+        var catAtt = _field.GetCustomAttribute<SettingCategory>() ??
                    throw new ArgumentException(
                        $"Setting `{settingName}` is missing required " +
                        $"`SettingCategory` attribute.");
+        Category              = catAtt.TheCategory;
+        CategoryName          = catAtt.LocalizedCategoryName;
+
+
         var setting = _field.GetCustomAttribute<Attributes.Setting>() ??
                       throw new ArgumentException(
                           $"Setting `{settingName}` is missing required " +
                           $"`Setting` attribute.");
-        Name                  = setting.Name;
-        HelpMark              = setting.HelpMark;
-        RecommendedValue      = setting.RecommendedValue;
-        DefaultValue          = setting.DefaultValue;
+        Name                  = Text.GetLocalizedString($"{settingName}_Name", SettingsCfgUI.ResourceManager);
+        HelpMark              = Text.GetLocalizedString($"{settingName}_helpMark", SettingsCfgUI.ResourceManager);
+        RecommendedValue      = Text.GetLocalizedString($"{settingName}_recommendedValue", SettingsCfgUI.ResourceManager);
+        DefaultValue          = Text.GetLocalizedString($"{settingName}_defaultValue", SettingsCfgUI.ResourceManager);
         Type                  = setting.TheType;
-        UnitLabel             = setting.UnitLabel;
-        ExtraHelpMark         = setting.ExtraHelpMark;
-        WarningMark           = setting.WarningMark;
-        ExtraText             = setting.ExtraText;
+        UnitLabel             = setting.UnitLabel is null ? null : Text.GetLocalizedString($"{settingName}_unitLabel", SettingsCfgUI.ResourceManager);
+        ExtraHelpMark         = setting.ExtraHelpMark is null ? null : Text.GetLocalizedString($"{settingName}_extraHelpMark", SettingsCfgUI.ResourceManager);
+        WarningMark           = setting.WarningMark is null ? null : Text.GetLocalizedString($"{settingName}_warningMark", SettingsCfgUI.ResourceManager);
+        ExtraText             = setting.ExtraText is null ? null : Text.GetLocalizedString($"{settingName}_extraText", SettingsCfgUI.ResourceManager);
         MinFLoat              = setting.MinFloat;
         MaxFloat              = setting.MaxFloat;
         MinInt                = setting.MinInt;
@@ -83,9 +88,11 @@ public class Setting
         StackStringsToExclude = setting.StackStringsToExclude;
 
         var group = _field.GetCustomAttribute<SettingGroup>();
+
         GroupName             = group?.GroupName;
         GroupNameSpace        = group?.NameSpace;
         GroupShouldBeDisabled = group?.ShouldThisGroupGetDisabled;
+
 
         var collapsibleGroup = _field.GetCustomAttribute<SettingCollapsibleGroup>();
         CollapsibleGroupName = collapsibleGroup?.GroupName;
@@ -144,6 +151,7 @@ public class Setting
     #region Required Attribute Fields
 
     public Category    Category;
+    public string      CategoryName;
     public string      DefaultValue;
     public string      FieldName;
     public string      HelpMark;
@@ -178,7 +186,7 @@ public class Setting
     #region References
 
     private readonly        FieldInfo                   _field;
-    private static readonly Dictionary<string, Setting> CachedSettings = [];
+    public static readonly Dictionary<string, Setting>  CachedSettings = [];
 
     private static Type ConfigurationType => typeof(Configuration);
     private static Configuration ConfigurationValues => Service.Configuration;

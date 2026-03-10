@@ -666,4 +666,16 @@ It is recommended to enable this if you are a keyboard+mouse user and enable Ret
   <data name="UseUIMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
     <value>Preference</value>
   </data>
+  <data name="MainUIOptions_Category" xml:space="preserve">
+    <value>Main UI Options</value>
+  </data>
+  <data name="RotationBehaviourOptions_Category" xml:space="preserve">
+    <value>Rotation Behaviour Options</value>
+  </data>
+  <data name="TargetingOptions_Category" xml:space="preserve">
+    <value>Targeting Options</value>
+  </data>
+  <data name="TroubleshootingOptions_Category" xml:space="preserve">
+    <value>Troubleshooting Options</value>
+  </data>
 </root>

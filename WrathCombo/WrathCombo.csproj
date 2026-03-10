@@ -132,6 +132,16 @@
 
     </ItemGroup>
     <ItemGroup>
+      <Compile Update="Resources\Localization\JobConfigs\AST_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AST_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\Generics.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Generics.resx</DependentUpon>
+      </Compile>
       <Compile Update="Resources\Localization\Presets\CustomComboPresets.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -169,6 +179,14 @@
       </Compile>
     </ItemGroup>
     <ItemGroup>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\AST_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AST_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\Generics.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Generics.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
       <EmbeddedResource Update="Resources\Localization\Presets\CustomComboPresets.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>CustomComboPresets.Designer.cs</LastGenOutput>
