@@ -1,101 +1,701 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ALL_Tank_Menu_Name" xml:space="preserve">
+    <value>Options générales des tanks</value>
+  </data>
+  <data name="ALL_Tank_Menu_Desc" xml:space="preserve">
+    <value>Options des rôles partagés pour les tanks.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Name" xml:space="preserve">
+    <value>Option de l'interruption</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Desc" xml:space="preserve">
+    <value>Remplace Coup bas (étourdissement) par Interjection (interruption) quand la cible peut être interrompu.
+Pour les PLDs, cette option ajoutera Lancer de bouclier lorsque Interjection et Coup bas seront en temps de récupération.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Retarget_Name" xml:space="preserve">
+    <value>Reciblage de l'interruption.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Retarget_Desc" xml:space="preserve">
+    <value>Reciblera automatiquement vers le caster s'il n'est pas votre cible actuelle.</value>
+  </data>
+  <data name="ALL_Tank_Reprisal_Name" xml:space="preserve">
+    <value>Tanks : Protection contre la double rétorsion</value>
+  </data>
+  <data name="ALL_Tank_Reprisal_Desc" xml:space="preserve">
+    <value>Empêcheras l'utilisation de rétorsion si la cible as déjà cet effet, en remplaçant par un sort grisé.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Name" xml:space="preserve">
+    <value>Reciblage de Dérobade</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Desc" xml:space="preserve">
+    <value>Recible Dérobade sur l'autre tank s'il y en a un.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Healer_Name" xml:space="preserve">
+    <value>Viser les soigneurs à la place</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Healer_Desc" xml:space="preserve">
+    <value>Recible Dérobade sur les soigneurs, au lieu de l'autre tank.
+Recommandé seulement pour certaines enrages.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Fallback_Name" xml:space="preserve">
+    <value>Reciblage vers un autre support</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Fallback_Desc" xml:space="preserve">
+    <value>Redirige Dérobade au tank ou soigneur, en fonction de vos options précédentes, mais redirigeras à quelconque tank OU soigneur si aucune de vos options précédentes n'est trouvée.
+Utile pour trouver une cible si l'un des joueurs n'est pas en vie.</value>
+  </data>
+  <data name="ALL_Healer_Menu_Name" xml:space="preserve">
+    <value>Options des soigneurs</value>
+  </data>
+  <data name="ALL_Healer_Menu_Desc" xml:space="preserve">
+    <value>Options des rôles partagés pour les soigneurs.</value>
+  </data>
+  <data name="ALL_Healer_Raise_Name" xml:space="preserve">
+    <value>Soigneurs : Options de résurrection</value>
+  </data>
+  <data name="ALL_Healer_Raise_Desc" xml:space="preserve">
+    <value>Change la capacité de résurrection du job par Magie prompte.</value>
+  </data>
+  <data name="ALL_Healer_Raise_Retarget_Name" xml:space="preserve">
+    <value>Recible la résurrection</value>
+  </data>
+  <data name="ALL_Healer_Raise_Retarget_Desc" xml:space="preserve">
+    <value>Recible la résurrection en fonction de la priorité.</value>
+  </data>
+  <data name="ALL_Healer_EsunaRetargeting_Name" xml:space="preserve">
+    <value>Soigneurs : Ciblage d'Esuna</value>
+  </data>
+  <data name="ALL_Healer_EsunaRetargeting_Desc" xml:space="preserve">
+    <value>Recible Esuna (en dehors d'un combo) en fonction de la priorité, vérifiant si chaque potentielle cible de votre groupe as un débuff à purger.</value>
+  </data>
+  <data name="ALL_Healer_RescueRetargeting_Name" xml:space="preserve">
+    <value>Soigneurs : Reciblage de "Secours"</value>
+  </data>
+  <data name="ALL_Healer_RescueRetargeting_Desc" xml:space="preserve">
+    <value>Recible " Secours " (en dehors d'un combo) à votre ciblage de souris et d'autres options.</value>
+  </data>
+  <data name="ALL_Caster_Menu_Name" xml:space="preserve">
+    <value>Options globales des Magiques à distance</value>
+  </data>
+  <data name="ALL_Caster_Menu_Desc" xml:space="preserve">
+    <value>Options des rôles partagés pour les DPS magique.</value>
+  </data>
+  <data name="ALL_Caster_Addle_Name" xml:space="preserve">
+    <value>DPS magique : protection contre le double Embrouillement</value>
+  </data>
+  <data name="ALL_Caster_Addle_Desc" xml:space="preserve">
+    <value>Empêcheras l'utilisation d'Embrouillement si la cible as déjà cet effet, en remplaçant par un sort grisé.</value>
+  </data>
+  <data name="ALL_Caster_Raise_Name" xml:space="preserve">
+    <value>DPS magique : options de Résurrection</value>
+  </data>
+  <data name="ALL_Caster_Raise_Desc" xml:space="preserve">
+    <value>Change la capacité de Résurrection du job par Magie prompte. VerSoin remplaceras Magie prompte est en temps de rechargement.</value>
+  </data>
+  <data name="ALL_Caster_Raise_Retarget_Name" xml:space="preserve">
+    <value>Recible la résurrection</value>
+  </data>
+  <data name="ALL_Caster_Raise_Retarget_Desc" xml:space="preserve">
+    <value>Recible la résurrection par priorité.</value>
+  </data>
+  <data name="ALL_Melee_Menu_Name" xml:space="preserve">
+    <value>Options des DPS mêlée</value>
+  </data>
+  <data name="ALL_Melee_Menu_Desc" xml:space="preserve">
+    <value>Options des rôles partagés pour les mêlées.</value>
+  </data>
+  <data name="ALL_Melee_Feint_Name" xml:space="preserve">
+    <value>DPS mêlée : Protection contre la double Restreinte</value>
+  </data>
+  <data name="ALL_Melee_Feint_Desc" xml:space="preserve">
+    <value>Empêcheras l'utilisation de Restreinte si la cible as déjà cet effet, en remplaçant par un sort grisé.</value>
+  </data>
+  <data name="ALL_Melee_TrueNorth_Name" xml:space="preserve">
+    <value>DPS mêlée : Protection de Vrai Nord</value>
+  </data>
+  <data name="ALL_Melee_TrueNorth_Desc" xml:space="preserve">
+    <value>Empêcheras l'utilisation de Vrai Nord si le passif est déjà actif, en le remplaçant par un sort grisé.</value>
+  </data>
+  <data name="ALL_Ranged_Menu_Name" xml:space="preserve">
+    <value>Options globales des Physiques à distance</value>
+  </data>
+  <data name="ALL_Ranged_Menu_Desc" xml:space="preserve">
+    <value>Options des rôles partagés pour les DPS physiques.</value>
+  </data>
+  <data name="ALL_Ranged_Mitigation_Name" xml:space="preserve">
+    <value>DPS Physique à distance : protection contre la double mitigation</value>
+  </data>
+  <data name="ALL_Ranged_Mitigation_Desc" xml:space="preserve">
+    <value>Empêche l'utilisation de Tacticien/Troubadour/Samba protectrice quand la cible a déjà l'un de ces trois effets, remplaçant l'action par un sort grisé.</value>
+  </data>
+  <data name="ALL_Ranged_Interrupt_Name" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="ALL_Ranged_Interrupt_Desc" xml:space="preserve">
+    <value>Remplace écorche-pied par écorche-tête quand la cible peut être interrompue.</value>
+  </data>
+  <data name="Bozja_Tank_Name" xml:space="preserve">
+    <value>Bozja Tank</value>
+  </data>
+  <data name="Bozja_Tank_Desc" xml:space="preserve">
+    <value>Ajoute les actions de Tank relative à Bozja dans la rotation.</value>
+  </data>
+  <data name="Bozja_Tank_LostFocus_Name" xml:space="preserve">
+    <value>Focalisation oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostFocus_Desc" xml:space="preserve">
+    <value>Utilise Focalisation oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfPower_Name" xml:space="preserve">
+    <value>Fontaine de puissance oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfPower_Desc" xml:space="preserve">
+    <value>Utilise Fontaine de puissance oubliée quand dispobible.</value>
+  </data>
+  <data name="Bozja_Tank_LostSlash_Name" xml:space="preserve">
+    <value>Taillade oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostSlash_Desc" xml:space="preserve">
+    <value>Utilise Taillade oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostDeath_Name" xml:space="preserve">
+    <value>Mort oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostDeath_Desc" xml:space="preserve">
+    <value>Utilise Mort oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfNobleEnds_Name" xml:space="preserve">
+    <value>Seuil de la frénésie</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfNobleEnds_Desc" xml:space="preserve">
+    <value>Utilise Seuil de la frénésie quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_PowerEnds_Name" xml:space="preserve">
+    <value>Seulement avec "Fontaine de puissance oubliée"</value>
+  </data>
+  <data name="Bozja_Tank_PowerEnds_Desc" xml:space="preserve">
+    <value>Utilise Seuil de la frénésie seulement avec Fontaine de puissance oubliée.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonoredSacrifice_Name" xml:space="preserve">
+    <value>Seuil de l'abnégation</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonoredSacrifice_Desc" xml:space="preserve">
+    <value>Utilise Seuil de l'abnégation quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_PowerSacrifice_Name" xml:space="preserve">
+    <value>Seulement avec "Fontaine de puissance oubliée"</value>
+  </data>
+  <data name="Bozja_Tank_PowerSacrifice_Desc" xml:space="preserve">
+    <value>Utilise Seuil de l'abnégation seulement avec Fontaine de puissance oubliée.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonedAcuity_Name" xml:space="preserve">
+    <value>Seuil de la perception</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonedAcuity_Desc" xml:space="preserve">
+    <value>Utilise Seuil de la perception quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostFairTrade_Name" xml:space="preserve">
+    <value>Échange équitable oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostFairTrade_Desc" xml:space="preserve">
+    <value>Utilise Échange équitable oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostAssassination_Name" xml:space="preserve">
+    <value>Assassinat oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostAssassination_Desc" xml:space="preserve">
+    <value>Utilise Assassinat oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostManawall_Name" xml:space="preserve">
+    <value>Mur de mana oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostManawall_Desc" xml:space="preserve">
+    <value>Utilise Mur de mana oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfTirelessConviction_Name" xml:space="preserve">
+    <value>Seuil de patience</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfTirelessConviction_Desc" xml:space="preserve">
+    <value>Utilise Seuil de patience quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostBloodRage_Name" xml:space="preserve">
+    <value>Rage sanguinaire oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostBloodRage_Desc" xml:space="preserve">
+    <value>Utilise Rage sanguinaire oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfSolemnClarity_Name" xml:space="preserve">
+    <value>Seuil de la contemplation</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfSolemnClarity_Desc" xml:space="preserve">
+    <value>Utilise Seuil de la contemplation quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure_Name" xml:space="preserve">
+    <value>Soin oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostCure_Desc" xml:space="preserve">
+    <value>Utilise Soin oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure2_Name" xml:space="preserve">
+    <value>Extra Soin oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostCure2_Desc" xml:space="preserve">
+    <value>Utilise Extra Soin oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure3_Name" xml:space="preserve">
+    <value>Méga Soin oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostCure3_Desc" xml:space="preserve">
+    <value>Utilise Méga Soin oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure4_Name" xml:space="preserve">
+    <value>Giga Soin oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostCure4_Desc" xml:space="preserve">
+    <value>Utilise Giga Soin oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostArise_Name" xml:space="preserve">
+    <value>Maxi-Vie oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostArise_Desc" xml:space="preserve">
+    <value>Utilise Maxi-Vie oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostSacrifice_Name" xml:space="preserve">
+    <value>Sacrifice oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostSacrifice_Desc" xml:space="preserve">
+    <value>Utilise Sacrifice oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostReraise_Name" xml:space="preserve">
+    <value>Auréole oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostReraise_Desc" xml:space="preserve">
+    <value>Utilise Auréole oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostSpellforge_Name" xml:space="preserve">
+    <value>Forgesort oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostSpellforge_Desc" xml:space="preserve">
+    <value>Utilise Forgesort oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostSteelsting_Name" xml:space="preserve">
+    <value>Morsure de l'acier oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostSteelsting_Desc" xml:space="preserve">
+    <value>Utilise Morsure de l'acier oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect_Name" xml:space="preserve">
+    <value>Bouclier oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect_Desc" xml:space="preserve">
+    <value>Utilise Bouclier oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostShell_Name" xml:space="preserve">
+    <value>Barrière oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostShell_Desc" xml:space="preserve">
+    <value>Utilise Barrière oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostReflect_Name" xml:space="preserve">
+    <value>Miroir oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostReflect_Desc" xml:space="preserve">
+    <value>Utilise Miroir oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostBravery_Name" xml:space="preserve">
+    <value>Bravoure oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostBravery_Desc" xml:space="preserve">
+    <value>Utilise Bravoure oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostAethershield_Name" xml:space="preserve">
+    <value>Égide d'éther oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostAethershield_Desc" xml:space="preserve">
+    <value>Utilise Égide d'éther oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect2_Name" xml:space="preserve">
+    <value>Bouclier II oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect2_Desc" xml:space="preserve">
+    <value>Utilise Bouclier II oublié quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostShell2_Name" xml:space="preserve">
+    <value>Barrière II oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostShell2_Desc" xml:space="preserve">
+    <value>Utilise Barrière II oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostBubble_Name" xml:space="preserve">
+    <value>Vitalité oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostBubble_Desc" xml:space="preserve">
+    <value>Utilise Vitalité oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostStealth_Name" xml:space="preserve">
+    <value>Furtivité oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostStealth_Desc" xml:space="preserve">
+    <value>Utilise Furtivité oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostSwift_Name" xml:space="preserve">
+    <value>Vélocité oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostSwift_Desc" xml:space="preserve">
+    <value>Utilise Vélocité oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfSkill_Name" xml:space="preserve">
+    <value>Fontaine de technique oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfSkill_Desc" xml:space="preserve">
+    <value>Utilise Fontaine de technique oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostImpetus_Name" xml:space="preserve">
+    <value>Impulsion oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostImpetus_Desc" xml:space="preserve">
+    <value>Utilise Impulsion oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostParalyze3_Name" xml:space="preserve">
+    <value>Méga paralysie oubliée</value>
+  </data>
+  <data name="Bozja_Tank_LostParalyze3_Desc" xml:space="preserve">
+    <value>Utilise Méga paralysie oubliée quand disponible.</value>
+  </data>
+  <data name="Bozja_Tank_LostRampage_Name" xml:space="preserve">
+    <value>Ravage oublié</value>
+  </data>
+  <data name="Bozja_Tank_LostRampage_Desc" xml:space="preserve">
+    <value>Utilise Ravage oublié quand disponible.</value>
+  </data>
+  <data name="Variant_Tank_Name" xml:space="preserve">
+    <value>Tank Embranché</value>
+  </data>
+  <data name="Variant_Tank_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les Actions embranchées dans les Donjons à Embranchements. 
+Les actions embranchées seront utilisées par les combos à cible unique et les combos en zones. Lors des modes simplifié et avancé</value>
+  </data>
+  <data name="Variant_Tank_Cure_Name" xml:space="preserve">
+    <value>Soin Embranché</value>
+  </data>
+  <data name="Variant_Tank_Cure_Desc" xml:space="preserve">
+    <value>Utilise Soin Embranché quand les PV sont en dessous du seuil.</value>
+  </data>
+  <data name="Variant_Tank_Ultimatum_Name" xml:space="preserve">
+    <value>Ultimatum Embranché</value>
+  </data>
+  <data name="Variant_Tank_Ultimatum_Desc" xml:space="preserve">
+    <value>Utilise Ultimatum embranché dès que disponible.</value>
+  </data>
+  <data name="Variant_Tank_Raise_Name" xml:space="preserve">
+    <value>Vie embranchée</value>
+  </data>
+  <data name="Variant_Tank_Raise_Desc" xml:space="preserve">
+    <value>Utilise Vie embranchée sur les membres inapte de l'équipe.</value>
+  </data>
+  <data name="Variant_Tank_SpiritDart_Name" xml:space="preserve">
+    <value>Flèche spirituelle embranchée</value>
+  </data>
+  <data name="Variant_Tank_SpiritDart_Desc" xml:space="preserve">
+    <value>Utilise Fléchette spirituelle embranchée quand le débuff est absent ou en dessous de 3s</value>
+  </data>
+  <data name="Variant_Tank_EagleEyeShot_Name" xml:space="preserve">
+    <value>Œil d'aigle embranché</value>
+  </data>
+  <data name="Variant_Tank_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Utilise Œil d'aigle embranché dès que possible.</value>
+  </data>
+  <data name="Variant_Healer_Name" xml:space="preserve">
+    <value>Soigneur embranché</value>
+  </data>
+  <data name="Variant_Healer_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les Actions embranchées dans les Donjons à Embranchements. 
+Les actions embranchées seront utilisées par les combos à cible unique et les combos en zones. Lors des modes simplifié et avancé</value>
+  </data>
+  <data name="Variant_Healer_Ultimatum_Name" xml:space="preserve">
+    <value>Ultimatum Embranché</value>
+  </data>
+  <data name="Variant_Healer_Ultimatum_Desc" xml:space="preserve">
+    <value>Utilise Ultimatum Embranché dès que disponible.</value>
+  </data>
+  <data name="Variant_Healer_SpiritDart_Name" xml:space="preserve">
+    <value>Flèche spirituelle embranchée</value>
+  </data>
+  <data name="Variant_Healer_SpiritDart_Desc" xml:space="preserve">
+    <value>Utilise Fléchette spirituelle embranchée quand le débuff est absent ou en dessous de 3s</value>
+  </data>
+  <data name="Variant_Healer_Rampart_Name" xml:space="preserve">
+    <value>Rempart embranché</value>
+  </data>
+  <data name="Variant_Healer_Rampart_Desc" xml:space="preserve">
+    <value>Utilise Rempart embranché dès que possible.</value>
+  </data>
+  <data name="Variant_Healer_EagleEyeShot_Name" xml:space="preserve">
+    <value>Œil d'aigle embranché</value>
+  </data>
+  <data name="Variant_Healer_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Utilise Œil d'aigle embranché dès que possible.</value>
+  </data>
+  <data name="Variant_Melee_Name" xml:space="preserve">
+    <value>Mêlée embranché</value>
+  </data>
+  <data name="Variant_Melee_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les Actions embranchées dans les Donjons à Embranchements. 
+Les actions embranchées seront utilisées par les combos à cible unique et les combos en zones. Lors des modes simplifié et avancé</value>
+  </data>
+  <data name="Variant_Melee_Cure_Name" xml:space="preserve">
+    <value>Soin Embranché</value>
+  </data>
+  <data name="Variant_Melee_Cure_Desc" xml:space="preserve">
+    <value>Utilise Soin Embranché quand les PV sont en dessous du seuil.</value>
+  </data>
+  <data name="Variant_Melee_Ultimatum_Name" xml:space="preserve">
+    <value>Ultimatum Embranché</value>
+  </data>
+  <data name="Variant_Melee_Ultimatum_Desc" xml:space="preserve">
+    <value>Utilise Ultimatum Embranché dès que disponible.</value>
+  </data>
+  <data name="Variant_Melee_Raise_Name" xml:space="preserve">
+    <value>Vie Embranchée</value>
+  </data>
+  <data name="Variant_Melee_Raise_Desc" xml:space="preserve">
+    <value>Utilise Vie Embranchée sur les membres inapte de l'équipe.</value>
+  </data>
+  <data name="Variant_Melee_Rampart_Name" xml:space="preserve">
+    <value>Rempart embranché</value>
+  </data>
+  <data name="Variant_Melee_Rampart_Desc" xml:space="preserve">
+    <value>Utilise Rempart embranché dès que possible.</value>
+  </data>
+  <data name="Variant_Melee_EagleEyeShot_Name" xml:space="preserve">
+    <value>Œil d'aigle embranché</value>
+  </data>
+  <data name="Variant_Melee_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Utilise Œil d'aigle embranché dès que possible.</value>
+  </data>
+  <data name="Variant_PhysRanged_Name" xml:space="preserve">
+    <value>DPS Distance Physique embranché</value>
+  </data>
+  <data name="Variant_PhysRanged_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les Actions embranchées dans les Donjons à Embranchements. 
+Les actions embranchées seront utilisées par les combos à cible unique et les combos en zones. Lors des modes simplifié et avancé</value>
+  </data>
+  <data name="Variant_PhysRanged_Cure_Name" xml:space="preserve">
+    <value>Soin Embranché</value>
+  </data>
+  <data name="Variant_PhysRanged_Cure_Desc" xml:space="preserve">
+    <value>Utilise Soin Embranché quand les PV sont en dessous du seuil.</value>
+  </data>
+  <data name="Variant_PhysRanged_Ultimatum_Name" xml:space="preserve">
+    <value>Ultimatum Embranché</value>
+  </data>
+  <data name="Variant_PhysRanged_Ultimatum_Desc" xml:space="preserve">
+    <value>Utilise Ultimatum embranché dès que disponible.</value>
+  </data>
+  <data name="Variant_PhysRanged_Raise_Name" xml:space="preserve">
+    <value>Vie embranchée</value>
+  </data>
+  <data name="Variant_PhysRanged_Raise_Desc" xml:space="preserve">
+    <value>Utilise Vie embranchée sur les membres inapte de l'équipe.</value>
+  </data>
+  <data name="Variant_PhysRanged_Rampart_Name" xml:space="preserve">
+    <value>Rempart embranché</value>
+  </data>
+  <data name="Variant_PhysRanged_Rampart_Desc" xml:space="preserve">
+    <value>Utilise Rempart embranché dès que possible.</value>
+  </data>
+  <data name="Variant_PhysRanged_EagleEyeShot_Name" xml:space="preserve">
+    <value>Œil d'aigle embranché</value>
+  </data>
+  <data name="Variant_PhysRanged_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Utilise Œil d'aigle embranché dès que possible.</value>
+  </data>
+  <data name="Variant_Magic_Name" xml:space="preserve">
+    <value>DPS Magique embranché</value>
+  </data>
+  <data name="Variant_Magic_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les Actions embranchées dans les Donjons à Embranchements. 
+Les actions embranchées seront utilisées par les combos à cible unique et les combos en zones. Lors des modes simplifié et avancé</value>
+  </data>
+  <data name="Variant_Magic_Cure_Name" xml:space="preserve">
+    <value>Soin Embranché</value>
+  </data>
+  <data name="Variant_Magic_Cure_Desc" xml:space="preserve">
+    <value>Utilise Soin Embranché quand les PV sont en dessous du seuil.</value>
+  </data>
+  <data name="Variant_Magic_Ultimatum_Name" xml:space="preserve">
+    <value>Ultimatum Embranché</value>
+  </data>
+  <data name="Variant_Magic_Ultimatum_Desc" xml:space="preserve">
+    <value>Utilise Ultimatum embranché dès que disponible.</value>
+  </data>
+  <data name="Variant_Magic_Raise_Name" xml:space="preserve">
+    <value>Vie embranchée</value>
+  </data>
+  <data name="Variant_Magic_Raise_Desc" xml:space="preserve">
+    <value>Utilise Vie embranchée sur les membres inapte de l'équipe.</value>
+  </data>
+  <data name="Variant_Magic_Rampart_Name" xml:space="preserve">
+    <value>Rempart embranché</value>
+  </data>
+  <data name="Variant_Magic_Rampart_Desc" xml:space="preserve">
+    <value>Utilise Rempart embranché dès que possible.</value>
+  </data>
+  <data name="Variant_Magic_EagleEyeShot_Name" xml:space="preserve">
+    <value>Œil d'aigle embranché</value>
+  </data>
+  <data name="Variant_Magic_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Utilise Œil d'aigle embranché dès que possible.</value>
+  </data>
+  <data name="Phantom_Freelancer_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Freelance fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Knight_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Paladin fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Monk_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Moine fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Thief_Name" xml:space="preserve">
+    <value>Action du job Voleur</value>
+  </data>
+  <data name="Phantom_Thief_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Voleur fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Samurai_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Samouraï fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Berserker_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Berserker fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Ranger_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Rôdeur fantôme à la rotation.</value>
+  </data>
+  <data name="Phantom_Chemist_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Alchimiste à la rotation.</value>
+  </data>
+  <data name="Phantom_Geomancer_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Géomancien à la rotation.</value>
+  </data>
+  <data name="Phantom_Dancer_Desc" xml:space="preserve">
+    <value>Activer pour ajouter les actions spécifiques du Danseur à la rotation.</value>
+  </data>
 </root>

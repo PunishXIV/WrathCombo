@@ -1,101 +1,1551 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-	<!-- 
-		Microsoft ResX Schema
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
-	
-	<xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-		<xsd:element name="root" msdata:IsDataSet="true">
-			<xsd:complexType>
-				<xsd:choice maxOccurs="unbounded">
-					<xsd:element name="data">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-								<xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
-							<xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-							<xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-						</xsd:complexType>
-					</xsd:element>
-					<xsd:element name="resheader">
-						<xsd:complexType>
-							<xsd:sequence>
-								<xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-							</xsd:sequence>
-							<xsd:attribute name="name" type="xsd:string" use="required" />
-						</xsd:complexType>
-					</xsd:element>
-				</xsd:choice>
-			</xsd:complexType>
-		</xsd:element>
-	</xsd:schema>
-	<resheader name="resmimetype">
-		<value>text/microsoft-resx</value>
-	</resheader>
-	<resheader name="version">
-		<value>1.3</value>
-	</resheader>
-	<resheader name="reader">
-		<value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
-	<resheader name="writer">
-		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-	</resheader>
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ALL_Tank_Menu_Name" xml:space="preserve">
+    <value>Übergreifende Verteidiger Einstellungen</value>
+  </data>
+  <data name="ALL_Tank_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle Verteidiger beinhalten.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Name" xml:space="preserve">
+    <value>Verteidiger: Unterbrechen Eigenschaften</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Desc" xml:space="preserve">
+    <value>Ersetzt Tiefschlag (Betäuben) mit Zwischenruf (Unterbrechen) wenn das Ziel unterbrochen werden kann. 
+Für Paladine wird diese Fähigkeit zu Schildschlag, wenn Tiefschlag und Zwischenruf auf Abklingzeit sind.</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Retarget_Name" xml:space="preserve">
+    <value>Umlenken von Zwischenruf</value>
+  </data>
+  <data name="ALL_Tank_Interrupt_Retarget_Desc" xml:space="preserve">
+    <value>Wird Zwischenruf umlenken, wenn der Zauberer nicht dein aktuelles Ziel ist.</value>
+  </data>
+  <data name="ALL_Tank_Reprisal_Name" xml:space="preserve">
+    <value>Verteidiger: Schutz vor doppelter Reflexion</value>
+  </data>
+  <data name="ALL_Tank_Reprisal_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Reflexion, wenn das Ziel schon selbigen Effekt hat. Ersetzt Reflexion mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Name" xml:space="preserve">
+    <value>Verteidiger: Umleiten von Geteiltes Leid</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Desc" xml:space="preserve">
+    <value>Leitet Geteiltes Leid auf den anderen Verteidiger um, wenn es einen gibt.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Healer_Name" xml:space="preserve">
+    <value>Nimmt ansonsten Heiler</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Healer_Desc" xml:space="preserve">
+    <value>Leitet Geteiltes Leid auf einen Heiler um, auch wenn ein anderer Verteidiger verfügbar ist. 
+Wird nur in speziellen Inhalten empfohlen.</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Fallback_Name" xml:space="preserve">
+    <value>Greift auf irgendeinen Unterstützer zurück</value>
+  </data>
+  <data name="ALL_Tank_ShirkRetargeting_Fallback_Desc" xml:space="preserve">
+    <value>Lenkt Geteiltes Leid um auf Verteidiger oder Heiler wie in den oberen Einstellungen, aber greift zurück auf irgendeinen Verteidiger oder Heiler, wenn keine Einstellungen gefunden werden. Nützlich damit Geteiltes Leid immer benutzt wird, auch wenn der gewählte Partner tot ist.</value>
+  </data>
+  <data name="ALL_Healer_Menu_Name" xml:space="preserve">
+    <value>Übergreifende Heiler Einstellungen</value>
+  </data>
+  <data name="ALL_Healer_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle Heiler beinhalten.</value>
+  </data>
+  <data name="ALL_Healer_Raise_Name" xml:space="preserve">
+    <value>Heiler: Wiederbelebungseigenschaften</value>
+  </data>
+  <data name="ALL_Healer_Raise_Desc" xml:space="preserve">
+    <value>Tauscht die Klassenspezifische Wiederbelebungsfähigkeit zu Spontaneität.</value>
+  </data>
+  <data name="ALL_Healer_Raise_Retarget_Name" xml:space="preserve">
+    <value>Umleiten von Wiederbelebungen</value>
+  </data>
+  <data name="ALL_Healer_Raise_Retarget_Desc" xml:space="preserve">
+    <value>Leitet die Wiederbelebungen hier um aufgrund deiner Heiler Prioritätenliste.</value>
+  </data>
+  <data name="ALL_Healer_EsunaRetargeting_Name" xml:space="preserve">
+    <value>Heiler: Umleiten von Medica</value>
+  </data>
+  <data name="ALL_Healer_EsunaRetargeting_Desc" xml:space="preserve">
+    <value>Leitet Medica auf deine Heiler Prioritätenliste um und überprüft jedes potenzielle Ziel auf einen entfernbaren Zustand.</value>
+  </data>
+  <data name="ALL_Healer_RescueRetargeting_Name" xml:space="preserve">
+    <value>Heiler: Umleiten von Rettung</value>
+  </data>
+  <data name="ALL_Healer_RescueRetargeting_Desc" xml:space="preserve">
+    <value>Leitet Rettung auf dein mouseover Ui um und andere Einstellungen.</value>
+  </data>
+  <data name="ALL_Caster_Menu_Name" xml:space="preserve">
+    <value>Übergreifende magische Fernkämpfer Einstellungen</value>
+  </data>
+  <data name="ALL_Caster_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle magischen Fernkämpfer beinhalten.</value>
+  </data>
+  <data name="ALL_Caster_Addle_Name" xml:space="preserve">
+    <value>Magische Fernkämpfer: Schutz vor doppeltem Stumpfsinn</value>
+  </data>
+  <data name="ALL_Caster_Addle_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Stumpfsinn, wenn das Ziel schon selbigen Effekt hat. Ersetzt Stumpfsinn mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Caster_Raise_Name" xml:space="preserve">
+    <value>Magische Fernkämpfer: Wiederbelebungseigenschaft</value>
+  </data>
+  <data name="ALL_Caster_Raise_Desc" xml:space="preserve">
+    <value>Tauscht die Klassenspezifische Wiederbelebungsfähigkeit zu Spontaneität. Bei Rotmagiern wird zusätzlich Erzvita angezeigt, sollte Spontaneität noch Abklingzeit haben.</value>
+  </data>
+  <data name="ALL_Caster_Raise_Retarget_Name" xml:space="preserve">
+    <value>Umleiten von Wiederbelebungen</value>
+  </data>
+  <data name="ALL_Caster_Raise_Retarget_Desc" xml:space="preserve">
+    <value>Leitet Wiederbelebungen auf deine Heiler Prioritätenliste um.</value>
+  </data>
+  <data name="ALL_Melee_Menu_Name" xml:space="preserve">
+    <value>Übergreifende Nahkampf-Angreifer Eigenschaften</value>
+  </data>
+  <data name="ALL_Melee_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle Nahkampf-Angreifer beinhalten.</value>
+  </data>
+  <data name="ALL_Melee_Feint_Name" xml:space="preserve">
+    <value>Nahkampf-Angreifer: Schutz vor doppeltem Zermürben</value>
+  </data>
+  <data name="ALL_Melee_Feint_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Zermürben, wenn das Ziel schon selbigen Effekt hat. Ersetzt Zermürben mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Melee_TrueNorth_Name" xml:space="preserve">
+    <value>Nahkampf-Angreifer: Schutz vor doppeltem Neuausrichten</value>
+  </data>
+  <data name="ALL_Melee_TrueNorth_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Neuausrichten, wenn die Fähigkeit schon aktiv ist. Ersetzt Neuausrichten mit Wilde Klinge.</value>
+  </data>
+  <data name="ALL_Ranged_Menu_Name" xml:space="preserve">
+    <value>Übergreifende physischer-Fernkämpfer Eigenschaften</value>
+  </data>
+  <data name="ALL_Ranged_Menu_Desc" xml:space="preserve">
+    <value>Einstellungen und Eigenschaften, welche geteilte Rollenaktionen für alle physische Fernkampf-Angreifer beinhalten.</value>
+  </data>
+  <data name="ALL_Ranged_Mitigation_Name" xml:space="preserve">
+    <value>Physische Fernkampf-Angreifer: Schutz vor doppelter Mitigation</value>
+  </data>
+  <data name="ALL_Ranged_Mitigation_Desc" xml:space="preserve">
+    <value>Verhindert die Nutzung von Taktiker/Troubador/Schildsamba falls das Ziel schon einen der genannten Effekte aktiv hat. Die Fähigkeit wird mit Wilder Klinge ersetzt.</value>
+  </data>
+  <data name="ALL_Ranged_Interrupt_Name" xml:space="preserve">
+    <value>Physische Fernkampf-Angreifer: Unterbrechen Eigenschaft</value>
+  </data>
+  <data name="ALL_Ranged_Interrupt_Desc" xml:space="preserve">
+    <value>Ersetzt Stolperschuss mit Haarscharfer Schuss, falls das Ziel unterbrochen werden kann.</value>
+  </data>
+  <data name="Bozja_Tank_Name" xml:space="preserve">
+    <value>Bozja Verteidiger</value>
+  </data>
+  <data name="Bozja_Tank_Desc" xml:space="preserve">
+    <value>Fügt Verteidiger-Spezifische verschollene Bozja-Aktionen in die Rotation ein.</value>
+  </data>
+  <data name="Bozja_Tank_LostFocus_Name" xml:space="preserve">
+    <value>Verschollene Ladung</value>
+  </data>
+  <data name="Bozja_Tank_LostFocus_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Ladung, sobald sie verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfPower_Name" xml:space="preserve">
+    <value>Verschollene Machtfontäne</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfPower_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Machtfontäne, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostSlash_Name" xml:space="preserve">
+    <value>Verschollener Schlitzer</value>
+  </data>
+  <data name="Bozja_Tank_LostSlash_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Schlitzer, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostDeath_Name" xml:space="preserve">
+    <value>Verschollener Tod</value>
+  </data>
+  <data name="Bozja_Tank_LostDeath_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Tod, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfNobleEnds_Name" xml:space="preserve">
+    <value>Gemüt der Verdrossenheit</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfNobleEnds_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Verdrossenheit, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_PowerEnds_Name" xml:space="preserve">
+    <value>Nur zusammen mit 'Verschollene Machtfontäne'</value>
+  </data>
+  <data name="Bozja_Tank_PowerEnds_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Verdrossenheit nur unter dem Effekt von Verschollene Machtfontäne.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonoredSacrifice_Name" xml:space="preserve">
+    <value>Gemüt der Ungehaltenheit</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonoredSacrifice_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Ungehaltenheit, sobald sie verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_PowerSacrifice_Name" xml:space="preserve">
+    <value>Nur zusammen mit 'Verschollene Machtfontäne'</value>
+  </data>
+  <data name="Bozja_Tank_PowerSacrifice_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Ungehaltenheit nur unter dem Effekt von Verschollene Machtfontäne.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonedAcuity_Name" xml:space="preserve">
+    <value>Gemüt der Empfindsamkeit</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfHonedAcuity_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Empfindsamkeit, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostFairTrade_Name" xml:space="preserve">
+    <value>Verschollener Handel</value>
+  </data>
+  <data name="Bozja_Tank_LostFairTrade_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Handel, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostAssassination_Name" xml:space="preserve">
+    <value>Verschollener Meuchelmord</value>
+  </data>
+  <data name="Bozja_Tank_LostAssassination_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Meuchelmord, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostManawall_Name" xml:space="preserve">
+    <value>Verschollene Mana-Wand</value>
+  </data>
+  <data name="Bozja_Tank_LostManawall_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Mana-Wand, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfTirelessConviction_Name" xml:space="preserve">
+    <value>Gemüt der Beharrlichkeit</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfTirelessConviction_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Beharrlichkeit, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostBloodRage_Name" xml:space="preserve">
+    <value>Verschollener Blutzorn</value>
+  </data>
+  <data name="Bozja_Tank_LostBloodRage_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Blutzorn, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfSolemnClarity_Name" xml:space="preserve">
+    <value>Gemüt der Besinnlichkeit</value>
+  </data>
+  <data name="Bozja_Tank_BannerOfSolemnClarity_Desc" xml:space="preserve">
+    <value>Benutzt Gemüt der Besinnlichkeit, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure_Name" xml:space="preserve">
+    <value>Verschollene Vita</value>
+  </data>
+  <data name="Bozja_Tank_LostCure_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Vita, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure2_Name" xml:space="preserve">
+    <value>Verschollene Vitra</value>
+  </data>
+  <data name="Bozja_Tank_LostCure2_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Vitra, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure3_Name" xml:space="preserve">
+    <value>Verschollene Vitaga</value>
+  </data>
+  <data name="Bozja_Tank_LostCure3_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Vitaga, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostCure4_Name" xml:space="preserve">
+    <value>Verschollene Vitaka</value>
+  </data>
+  <data name="Bozja_Tank_LostCure4_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Vitaka, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostArise_Name" xml:space="preserve">
+    <value>Verschollene Erzengel</value>
+  </data>
+  <data name="Bozja_Tank_LostArise_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Erzengel, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostSacrifice_Name" xml:space="preserve">
+    <value>Verschollene Aufopferung</value>
+  </data>
+  <data name="Bozja_Tank_LostSacrifice_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Aufopferung, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostReraise_Name" xml:space="preserve">
+    <value>Verschollene Rückkehr aus dem Jenseits</value>
+  </data>
+  <data name="Bozja_Tank_LostReraise_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Rückkehr aus dem Jenseits, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostSpellforge_Name" xml:space="preserve">
+    <value>Verschollene Zauberschmiede</value>
+  </data>
+  <data name="Bozja_Tank_LostSpellforge_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Zauberschmiede, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostSteelsting_Name" xml:space="preserve">
+    <value>Verschollene Stahlstachel</value>
+  </data>
+  <data name="Bozja_Tank_LostSteelsting_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Stahlstachel, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect_Name" xml:space="preserve">
+    <value>Verschollenes Protes</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect_Desc" xml:space="preserve">
+    <value>Benutzt Verschollenes Protes, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostShell_Name" xml:space="preserve">
+    <value>Verschollenes Vallum</value>
+  </data>
+  <data name="Bozja_Tank_LostShell_Desc" xml:space="preserve">
+    <value>Benutzt Verschollenes Vallum, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostReflect_Name" xml:space="preserve">
+    <value>Verschollene Reflektion</value>
+  </data>
+  <data name="Bozja_Tank_LostReflect_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Reflektion, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostBravery_Name" xml:space="preserve">
+    <value>Verschollene Courage</value>
+  </data>
+  <data name="Bozja_Tank_LostBravery_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Courage, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostAethershield_Name" xml:space="preserve">
+    <value>Verschollener Ätherschild</value>
+  </data>
+  <data name="Bozja_Tank_LostAethershield_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Ätherschild, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect2_Name" xml:space="preserve">
+    <value>Verschollenes Protes II</value>
+  </data>
+  <data name="Bozja_Tank_LostProtect2_Desc" xml:space="preserve">
+    <value>Benutzt Verschollenes Protes II, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostShell2_Name" xml:space="preserve">
+    <value>Verschollenes Vallum II</value>
+  </data>
+  <data name="Bozja_Tank_LostShell2_Desc" xml:space="preserve">
+    <value>Benutzt Verschollenes Vallum II, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostBubble_Name" xml:space="preserve">
+    <value>Verschollenes Blase</value>
+  </data>
+  <data name="Bozja_Tank_LostBubble_Desc" xml:space="preserve">
+    <value>Benutzt Verschollenes Blase, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostStealth_Name" xml:space="preserve">
+    <value>Verschollene Coeurl-Pfoten</value>
+  </data>
+  <data name="Bozja_Tank_LostStealth_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Coeurl-Pfoten, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostSwift_Name" xml:space="preserve">
+    <value>Verscholllene Eile</value>
+  </data>
+  <data name="Bozja_Tank_LostSwift_Desc" xml:space="preserve">
+    <value>Benutzt Verscholllene Eile, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfSkill_Name" xml:space="preserve">
+    <value>Verschollene Technikfontäne</value>
+  </data>
+  <data name="Bozja_Tank_LostFontOfSkill_Desc" xml:space="preserve">
+    <value>Benutzt Verschollene Technikfontäne, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostImpetus_Name" xml:space="preserve">
+    <value>Verschollener Impuls</value>
+  </data>
+  <data name="Bozja_Tank_LostImpetus_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Impuls, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostParalyze3_Name" xml:space="preserve">
+    <value>Verschollenes Paralyga</value>
+  </data>
+  <data name="Bozja_Tank_LostParalyze3_Desc" xml:space="preserve">
+    <value>Benutzt Verschollenes Paralyga, sobald es verfügbar ist.</value>
+  </data>
+  <data name="Bozja_Tank_LostRampage_Name" xml:space="preserve">
+    <value>Verschollener Amok</value>
+  </data>
+  <data name="Bozja_Tank_LostRampage_Desc" xml:space="preserve">
+    <value>Benutzt Verschollener Amok, sobald sie verfügbar ist.</value>
+  </data>
+  <data name="Variant_Tank_Name" xml:space="preserve">
+    <value>Unstetes Gewölbe Verteidiger</value>
+  </data>
+  <data name="Variant_Tank_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Unstete Kommandos im Unsteten Gewölbe hinzuzufügen.
+ Unstete Kommandos werden in Einzelziel- und Flächenschaden Combos, sowohl im Einfachen als auch im Erweiterten Modus verwendet</value>
+  </data>
+  <data name="Variant_Tank_Cure_Name" xml:space="preserve">
+    <value>Unstetes Vita</value>
+  </data>
+  <data name="Variant_Tank_Cure_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Vita, wenn HP unterhalb des Schwellenwerts liegt.</value>
+  </data>
+  <data name="Variant_Tank_Ultimatum_Name" xml:space="preserve">
+    <value>Unstetes Ultimatum</value>
+  </data>
+  <data name="Variant_Tank_Ultimatum_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Ultimatum auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Tank_Raise_Name" xml:space="preserve">
+    <value>Unstetes Wiederbeleben</value>
+  </data>
+  <data name="Variant_Tank_Raise_Desc" xml:space="preserve">
+    <value>Benutzt Unstetes Wiederbeleben auf handlungsunfähigen Teammitglieder.</value>
+  </data>
+  <data name="Variant_Tank_SpiritDart_Name" xml:space="preserve">
+    <value>Unsteter Geistpfeil</value>
+  </data>
+  <data name="Variant_Tank_SpiritDart_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Geistpfeil, wenn der Effekt nicht vorhanden ist oder weniger als 3 s übrig bleiben</value>
+  </data>
+  <data name="Variant_Tank_EagleEyeShot_Name" xml:space="preserve">
+    <value>Unsteter Adlerauge</value>
+  </data>
+  <data name="Variant_Tank_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Adlerauge auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Healer_Name" xml:space="preserve">
+    <value>Unstetes Gewölbe Heiler</value>
+  </data>
+  <data name="Variant_Healer_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Unstete Kommandos im Unsteten Gewölbe hinzuzufügen.
+ Unstete Kommandos werden in Einzelziel- und Flächenschaden Combos, sowohl im Einfachen als auch im Erweiterten Modus verwendet</value>
+  </data>
+  <data name="Variant_Healer_Ultimatum_Name" xml:space="preserve">
+    <value>Unstetes Ultimatum</value>
+  </data>
+  <data name="Variant_Healer_Ultimatum_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Ultimatum auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Healer_SpiritDart_Name" xml:space="preserve">
+    <value>Unsteter Geistpfeil</value>
+  </data>
+  <data name="Variant_Healer_SpiritDart_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Geistpfeil, wenn der Effekt nicht vorhanden ist oder weniger als 3s übrig bleiben</value>
+  </data>
+  <data name="Variant_Healer_Rampart_Name" xml:space="preserve">
+    <value>Unsteter Schutzwall</value>
+  </data>
+  <data name="Variant_Healer_Rampart_Desc" xml:space="preserve">
+    <value>Unsteter Schutzwall auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Healer_EagleEyeShot_Name" xml:space="preserve">
+    <value>Unsteter Adlerauge</value>
+  </data>
+  <data name="Variant_Healer_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Adlerauge auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Melee_Name" xml:space="preserve">
+    <value>Unstetes Gewölbe Nahkämpfer</value>
+  </data>
+  <data name="Variant_Melee_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Unstete Kommandos im Unsteten Gewölbe hinzuzufügen.
+ Unstete Kommandos werden in Einzelziel- und Flächenschaden Combos, sowohl im Einfachen als auch im Erweiterten Modus verwendet</value>
+  </data>
+  <data name="Variant_Melee_Cure_Name" xml:space="preserve">
+    <value>Unstetes Vita</value>
+  </data>
+  <data name="Variant_Melee_Cure_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Vita, wenn HP unterhalb des Schwellenwerts liegt.</value>
+  </data>
+  <data name="Variant_Melee_Ultimatum_Name" xml:space="preserve">
+    <value>Unstetes Ultimatum</value>
+  </data>
+  <data name="Variant_Melee_Ultimatum_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Ultimatum auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Melee_Raise_Name" xml:space="preserve">
+    <value>Unstetes Wiederbeleben</value>
+  </data>
+  <data name="Variant_Melee_Raise_Desc" xml:space="preserve">
+    <value>Benutzt Unstetes Wiederbeleben auf handlungsunfähigen Teammitglieder.</value>
+  </data>
+  <data name="Variant_Melee_Rampart_Name" xml:space="preserve">
+    <value>Unsteter Schutzwall</value>
+  </data>
+  <data name="Variant_Melee_Rampart_Desc" xml:space="preserve">
+    <value>Unsteter Schutzwall auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Melee_EagleEyeShot_Name" xml:space="preserve">
+    <value>Unsteter Adlerauge</value>
+  </data>
+  <data name="Variant_Melee_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Adlerauge auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_PhysRanged_Name" xml:space="preserve">
+    <value>Unstetes Gewölbe physischer Fernkämpfer</value>
+  </data>
+  <data name="Variant_PhysRanged_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Unstete Kommandos im Unsteten Gewölbe hinzuzufügen.
+ Unstete Kommandos werden in Einzelziel- und Flächenschaden Combos, sowohl im Einfachen als auch im Erweiterten Modus verwendet</value>
+  </data>
+  <data name="Variant_PhysRanged_Cure_Name" xml:space="preserve">
+    <value>Unstetes Vita</value>
+  </data>
+  <data name="Variant_PhysRanged_Cure_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Vita, wenn HP unterhalb des Schwellenwerts liegt.</value>
+  </data>
+  <data name="Variant_PhysRanged_Ultimatum_Name" xml:space="preserve">
+    <value>Unstetes Ultimatum</value>
+  </data>
+  <data name="Variant_PhysRanged_Ultimatum_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Ultimatum auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_PhysRanged_Raise_Name" xml:space="preserve">
+    <value>Unstetes Wiederbeleben</value>
+  </data>
+  <data name="Variant_PhysRanged_Raise_Desc" xml:space="preserve">
+    <value>Benutzt Unstetes Wiederbeleben auf handlungsunfähigen Teammitglieder.</value>
+  </data>
+  <data name="Variant_PhysRanged_Rampart_Name" xml:space="preserve">
+    <value>Unsteter Schutzwall</value>
+  </data>
+  <data name="Variant_PhysRanged_Rampart_Desc" xml:space="preserve">
+    <value>Unsteter Schutzwall auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_PhysRanged_EagleEyeShot_Name" xml:space="preserve">
+    <value>Unsteter Adlerauge</value>
+  </data>
+  <data name="Variant_PhysRanged_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Adlerauge auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Magic_Name" xml:space="preserve">
+    <value>Unstetes Gewölbe magischer Fernkämpfer</value>
+  </data>
+  <data name="Variant_Magic_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Unstete Kommandos im Unsteten Gewölbe hinzuzufügen.
+ Unstete Kommandos werden in Einzelziel- und Flächenschaden Combos, sowohl im Einfachen als auch im Erweiterten Modus verwendet</value>
+  </data>
+  <data name="Variant_Magic_Cure_Name" xml:space="preserve">
+    <value>Unstetes Vita</value>
+  </data>
+  <data name="Variant_Magic_Cure_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Vita, wenn HP unterhalb des Schwellenwerts liegt.</value>
+  </data>
+  <data name="Variant_Magic_Ultimatum_Name" xml:space="preserve">
+    <value>Unstetes Ultimatum</value>
+  </data>
+  <data name="Variant_Magic_Ultimatum_Desc" xml:space="preserve">
+    <value>Verwendet Unstetes Ultimatum auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Magic_Raise_Name" xml:space="preserve">
+    <value>Unstetes Wiederbeleben</value>
+  </data>
+  <data name="Variant_Magic_Raise_Desc" xml:space="preserve">
+    <value>Benutzt Unstetes Wiederbeleben auf handlungsunfähigen Teammitglieder.</value>
+  </data>
+  <data name="Variant_Magic_Rampart_Name" xml:space="preserve">
+    <value>Unsteter Schutzwall</value>
+  </data>
+  <data name="Variant_Magic_Rampart_Desc" xml:space="preserve">
+    <value>Unsteter Schutzwall auf Abklingzeit.</value>
+  </data>
+  <data name="Variant_Magic_EagleEyeShot_Name" xml:space="preserve">
+    <value>Unsteter Adlerauge</value>
+  </data>
+  <data name="Variant_Magic_EagleEyeShot_Desc" xml:space="preserve">
+    <value>Verwendet Unsteter Adlerauge auf Abklingzeit.</value>
+  </data>
+  <data name="Phantom_Freelancer_Name" xml:space="preserve">
+    <value>Freiberufler Job Aktionen</value>
+  </data>
+  <data name="Phantom_Freelancer_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Freiberufler-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Freelancer_OccultResuscitation_Name" xml:space="preserve">
+    <value>Kreszente Erste Hilfe</value>
+  </data>
+  <data name="Phantom_Freelancer_OccultResuscitation_Desc" xml:space="preserve">
+    <value>Fügt Kreszente Erste Hilfe in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Knight_Name" xml:space="preserve">
+    <value>Ritter</value>
+  </data>
+  <data name="Phantom_Knight_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Ritter-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Knight_PhantomGuard_Name" xml:space="preserve">
+    <value>Phantom-Beschützen</value>
+  </data>
+  <data name="Phantom_Knight_PhantomGuard_Desc" xml:space="preserve">
+    <value>Fügt Phantom-Beschützen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Knight_Pray_Name" xml:space="preserve">
+    <value>Beten</value>
+  </data>
+  <data name="Phantom_Knight_Pray_Desc" xml:space="preserve">
+    <value>Fügt Beten in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Knight_OccultHeal_Name" xml:space="preserve">
+    <value>Kreszentes Heilen</value>
+  </data>
+  <data name="Phantom_Knight_OccultHeal_Desc" xml:space="preserve">
+    <value>Fügt Kreszentes Heilen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Knight_Pledge_Name" xml:space="preserve">
+    <value>Geloben</value>
+  </data>
+  <data name="Phantom_Knight_Pledge_Desc" xml:space="preserve">
+    <value>Fügt Geloben in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Monk_Name" xml:space="preserve">
+    <value>Mönch Job Aktionen</value>
+  </data>
+  <data name="Phantom_Monk_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Mönch-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Monk_PhantomKick_Name" xml:space="preserve">
+    <value>Treten</value>
+  </data>
+  <data name="Phantom_Monk_PhantomKick_Desc" xml:space="preserve">
+    <value>Fügt Phantom Treten in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Monk_OccultCounter_Name" xml:space="preserve">
+    <value>Kreszenter Konter</value>
+  </data>
+  <data name="Phantom_Monk_OccultCounter_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Konter in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Monk_Counterstance_Name" xml:space="preserve">
+    <value>Gegenzug</value>
+  </data>
+  <data name="Phantom_Monk_Counterstance_Desc" xml:space="preserve">
+    <value>Fügt Gegenzug in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Monk_OccultChakra_Name" xml:space="preserve">
+    <value>Kreszentes Chakra</value>
+  </data>
+  <data name="Phantom_Monk_OccultChakra_Desc" xml:space="preserve">
+    <value>Fügt Kreszentes Chakra in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Thief_Name" xml:space="preserve">
+    <value>Dieb</value>
+  </data>
+  <data name="Phantom_Thief_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Dieb-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Thief_OccultSprint_Name" xml:space="preserve">
+    <value>Kreszenter Sprint</value>
+  </data>
+  <data name="Phantom_Thief_OccultSprint_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Sprint in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Thief_Steal_Name" xml:space="preserve">
+    <value>Stehlen</value>
+  </data>
+  <data name="Phantom_Thief_Steal_Desc" xml:space="preserve">
+    <value>Fügt Stehlen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Thief_Vigilance_Name" xml:space="preserve">
+    <value>Wachsamkeit</value>
+  </data>
+  <data name="Phantom_Thief_Vigilance_Desc" xml:space="preserve">
+    <value>Fügt Wachsamkeit in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Thief_PilferWeapon_Name" xml:space="preserve">
+    <value>Waffe stehlen</value>
+  </data>
+  <data name="Phantom_Thief_PilferWeapon_Desc" xml:space="preserve">
+    <value>Fügt Waffe stehlen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Samurai_Name" xml:space="preserve">
+    <value>Samurai Job Aktionen</value>
+  </data>
+  <data name="Phantom_Samurai_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Samurai-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Samurai_Mineuchi_Name" xml:space="preserve">
+    <value>Mineuchi</value>
+  </data>
+  <data name="Phantom_Samurai_Mineuchi_Desc" xml:space="preserve">
+    <value>Fügt Mineuchi in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Samurai_Shirahadori_Name" xml:space="preserve">
+    <value>Shirahadori</value>
+  </data>
+  <data name="Phantom_Samurai_Shirahadori_Desc" xml:space="preserve">
+    <value>Fügt Shirahadori in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Samurai_Iainuki_Name" xml:space="preserve">
+    <value>Iainuki</value>
+  </data>
+  <data name="Phantom_Samurai_Iainuki_Desc" xml:space="preserve">
+    <value>Fügt Iainuki in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Samurai_Zeninage_Name" xml:space="preserve">
+    <value>Zeninage</value>
+  </data>
+  <data name="Phantom_Samurai_Zeninage_Desc" xml:space="preserve">
+    <value>Fügt Zeninage in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Berserker_Name" xml:space="preserve">
+    <value>Berserker Job Aktionen</value>
+  </data>
+  <data name="Phantom_Berserker_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Berserker-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Berserker_Rage_Name" xml:space="preserve">
+    <value>Wüten</value>
+  </data>
+  <data name="Phantom_Berserker_Rage_Desc" xml:space="preserve">
+    <value>Fügt Wüten in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Berserker_DeadlyBlow_Name" xml:space="preserve">
+    <value>Todesstoß</value>
+  </data>
+  <data name="Phantom_Berserker_DeadlyBlow_Desc" xml:space="preserve">
+    <value>Fügt Todesstoß in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Ranger_Name" xml:space="preserve">
+    <value>Jäger Job Aktionen</value>
+  </data>
+  <data name="Phantom_Ranger_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Jäger-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Ranger_PhantomAim_Name" xml:space="preserve">
+    <value>Phantom-Zielen</value>
+  </data>
+  <data name="Phantom_Ranger_PhantomAim_Desc" xml:space="preserve">
+    <value>Fügt Phantom-Zielen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Ranger_OccultUnicorn_Name" xml:space="preserve">
+    <value>Kreszentes Einhorn</value>
+  </data>
+  <data name="Phantom_Ranger_OccultUnicorn_Desc" xml:space="preserve">
+    <value>Fügt Kreszentes Einhorn in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_TimeMage_Name" xml:space="preserve">
+    <value>Zeitmagier</value>
+  </data>
+  <data name="Phantom_TimeMage_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Zeitmagier-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultSlowga_Name" xml:space="preserve">
+    <value>Kreszentes Gemachga</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultSlowga_Desc" xml:space="preserve">
+    <value>Fügt Kreszentes Gemachga in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultSlowga_Wait_Name" xml:space="preserve">
+    <value>Wartet auf vollen Effekt</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultSlowga_Wait_Desc" xml:space="preserve">
+    <value>Wird Kreszentes Gemachga nicht verwenden, wenn der Effekt aus wiederholten Gebrauch nicht erheblich genug wäre, oder es überhaupt keinen Effekt gäbe.</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultComet_Name" xml:space="preserve">
+    <value>Kreszenter Komet</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultComet_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Komet in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultMageMasher_Name" xml:space="preserve">
+    <value>Kreszenter Stummdolch</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultMageMasher_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Stummdolch in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultDispel_Name" xml:space="preserve">
+    <value>Kreszenter Bann</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultDispel_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Bann in die Rotation ein, wenn das Ziel einen entfernbaren Status hat.</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultQuick_Name" xml:space="preserve">
+    <value>Kreszentes Schnell</value>
+  </data>
+  <data name="Phantom_TimeMage_OccultQuick_Desc" xml:space="preserve">
+    <value>Fügt Kreszentes Schnell in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Chemist_Name" xml:space="preserve">
+    <value>Alchemisten Job Aktionen</value>
+  </data>
+  <data name="Phantom_Chemist_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Alchemisten-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Chemist_OccultPotion_Name" xml:space="preserve">
+    <value>Kreszenter Trank</value>
+  </data>
+  <data name="Phantom_Chemist_OccultPotion_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Trank in die Rotation ein.
+Benötigt Okkulten Trank im Inventar.</value>
+  </data>
+  <data name="Phantom_Chemist_OccultEther_Name" xml:space="preserve">
+    <value>Kreszenter Äther</value>
+  </data>
+  <data name="Phantom_Chemist_OccultEther_Desc" xml:space="preserve">
+    <value>Fügt Kreszenter Äther in die Drehung ein.
+Benötigt Okkulten Trank im Inventar.</value>
+  </data>
+  <data name="Phantom_Chemist_Revive_Name" xml:space="preserve">
+    <value>Wiederbeleben</value>
+  </data>
+  <data name="Phantom_Chemist_Revive_Desc" xml:space="preserve">
+    <value>Fügt Wiederbeleben in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_Chemist_OccultElixir_Name" xml:space="preserve">
+    <value>Kreszentes Elixier</value>
+  </data>
+  <data name="Phantom_Chemist_OccultElixir_Desc" xml:space="preserve">
+    <value>Fügt Kreszentes Elixier in die Drehung ein.
+Benötigt Okkultes Elixir im Inventar.</value>
+  </data>
+  <data name="Phantom_Bard_Name" xml:space="preserve">
+    <value>Barde Job Aktionen</value>
+  </data>
+  <data name="Phantom_Bard_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Barde-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Bard_MightyMarch_Name" xml:space="preserve">
+    <value>Kraft-Coral</value>
+  </data>
+  <data name="Phantom_Bard_MightyMarch_Desc" xml:space="preserve">
+    <value>Fügt Kraft-Coral in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Bard_OffensiveAria_Name" xml:space="preserve">
+    <value>Angriffs-Arie</value>
+  </data>
+  <data name="Phantom_Bard_OffensiveAria_Desc" xml:space="preserve">
+    <value>Fügt Angriffs-Arie in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
+    <value>Liebliche Klänge</value>
+  </data>
+  <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
+    <value>Fügt Liebliche Klänge in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
+    <value>Helden-Hymus</value>
+  </data>
+  <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
+    <value>Fügt Helden-Hymus in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_Oracle_Name" xml:space="preserve">
+    <value>Seher Job Aktionen</value>
+  </data>
+  <data name="Phantom_Oracle_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Seher-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Oracle_Predict_Name" xml:space="preserve">
+    <value>Prophezeien</value>
+  </data>
+  <data name="Phantom_Oracle_Predict_Desc" xml:space="preserve">
+    <value>Fügt Prophezeien in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Oracle_PhantomJudgment_Name" xml:space="preserve">
+    <value>Das Jüngste Gericht</value>
+  </data>
+  <data name="Phantom_Oracle_PhantomJudgment_Desc" xml:space="preserve">
+    <value>Fügt Das Jüngste Gericht in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Oracle_Cleansing_Name" xml:space="preserve">
+    <value>Kosmischer Kollaps</value>
+  </data>
+  <data name="Phantom_Oracle_Cleansing_Desc" xml:space="preserve">
+    <value>Fügt Kosmischer Kollaps in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Oracle_Blessing_Name" xml:space="preserve">
+    <value>Segen</value>
+  </data>
+  <data name="Phantom_Oracle_Blessing_Desc" xml:space="preserve">
+    <value>Fügt Segen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Oracle_Starfall_Name" xml:space="preserve">
+    <value>Sternenregen</value>
+  </data>
+  <data name="Phantom_Oracle_Starfall_Desc" xml:space="preserve">
+    <value>Fügt Sternenregen in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Cannoneer_Name" xml:space="preserve">
+    <value>Grenadier Job Aktionen</value>
+  </data>
+  <data name="Phantom_Cannoneer_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Grenadier-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Cannoneer_PhantomFire_Name" xml:space="preserve">
+    <value>Bombardieren</value>
+  </data>
+  <data name="Phantom_Cannoneer_PhantomFire_Desc" xml:space="preserve">
+    <value>Fügt Bombardieren in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Cannoneer_HolyCannon_Name" xml:space="preserve">
+    <value>Heilige Kanone</value>
+  </data>
+  <data name="Phantom_Cannoneer_HolyCannon_Desc" xml:space="preserve">
+    <value>Fügt Heilige Kanone in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Cannoneer_DarkCannon_Name" xml:space="preserve">
+    <value>Dunkle Kanone</value>
+  </data>
+  <data name="Phantom_Cannoneer_DarkCannon_Desc" xml:space="preserve">
+    <value>Fügt Dunkle Kanone in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Cannoneer_ShockCannon_Name" xml:space="preserve">
+    <value>Schockkanone</value>
+  </data>
+  <data name="Phantom_Cannoneer_ShockCannon_Desc" xml:space="preserve">
+    <value>Fügt Schockkanone in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Cannoneer_SilverCannon_Name" xml:space="preserve">
+    <value>Silberkanone</value>
+  </data>
+  <data name="Phantom_Cannoneer_SilverCannon_Desc" xml:space="preserve">
+    <value>Fügt Silberkanone in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_Name" xml:space="preserve">
+    <value>Geomant Job Aktionen</value>
+  </data>
+  <data name="Phantom_Geomancer_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Geomant-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Geomancer_BattleBell_Name" xml:space="preserve">
+    <value>Kampfesglocke</value>
+  </data>
+  <data name="Phantom_Geomancer_BattleBell_Desc" xml:space="preserve">
+    <value>Fügt Kampfesglocke in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_RingingRespite_Name" xml:space="preserve">
+    <value>Ruheglocke</value>
+  </data>
+  <data name="Phantom_Geomancer_RingingRespite_Desc" xml:space="preserve">
+    <value>Fügt Ruheglocke in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_Geomancer_Suspend_Name" xml:space="preserve">
+    <value>Schweben</value>
+  </data>
+  <data name="Phantom_Geomancer_Suspend_Desc" xml:space="preserve">
+    <value>Fügt Schweben in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_Weather_Name" xml:space="preserve">
+    <value>Wetter</value>
+  </data>
+  <data name="Phantom_Geomancer_Weather_Desc" xml:space="preserve">
+    <value>Fügt Wetter in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_Geomancer_Sunbath_Name" xml:space="preserve">
+    <value>Sonnenbrand</value>
+  </data>
+  <data name="Phantom_Geomancer_Sunbath_Desc" xml:space="preserve">
+    <value>Fügt Sonnenbrand in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_CloudyCaress_Name" xml:space="preserve">
+    <value>Abendkühle</value>
+  </data>
+  <data name="Phantom_Geomancer_CloudyCaress_Desc" xml:space="preserve">
+    <value>Fügt Abendkühle in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_BlessedRain_Name" xml:space="preserve">
+    <value>Segenschauer</value>
+  </data>
+  <data name="Phantom_Geomancer_BlessedRain_Desc" xml:space="preserve">
+    <value>Fügt Segenschauer in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_MistyMirage_Name" xml:space="preserve">
+    <value>Trugnebel</value>
+  </data>
+  <data name="Phantom_Geomancer_MistyMirage_Desc" xml:space="preserve">
+    <value>Fügt Trugnebel in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_HastyMirage_Name" xml:space="preserve">
+    <value>Trughast</value>
+  </data>
+  <data name="Phantom_Geomancer_HastyMirage_Desc" xml:space="preserve">
+    <value>Fügt Trughast in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Geomancer_AetherialGain_Name" xml:space="preserve">
+    <value>Ätherernte</value>
+  </data>
+  <data name="Phantom_Geomancer_AetherialGain_Desc" xml:space="preserve">
+    <value>Fügt Ätherernte in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Dancer_Name" xml:space="preserve">
+    <value>Tänzer Job Aktionen</value>
+  </data>
+  <data name="Phantom_Dancer_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Tänzer -spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Dancer_Dance_Name" xml:space="preserve">
+    <value>Tanzen</value>
+  </data>
+  <data name="Phantom_Dancer_Dance_Desc" xml:space="preserve">
+    <value>Fügt Tanzen und seine folgenden Attacken in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Dancer_QuickStep_Name" xml:space="preserve">
+    <value>Schneller Schritt</value>
+  </data>
+  <data name="Phantom_Dancer_QuickStep_Desc" xml:space="preserve">
+    <value>Fügt Schneller Schritt in die Rotation ein, wenn ein Gegner dich anvisiert.</value>
+  </data>
+  <data name="Phantom_Dancer_Mesmerize_Name" xml:space="preserve">
+    <value>Betörung</value>
+  </data>
+  <data name="Phantom_Dancer_Mesmerize_Desc" xml:space="preserve">
+    <value>Fügt Betörung in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_MysticKnight_Name" xml:space="preserve">
+    <value>Paladin</value>
+  </data>
+  <data name="Phantom_MysticKnight_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Paladin-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_MysticKnight_SunderingSpellblade_Name" xml:space="preserve">
+    <value>Magieklingen-Versteinerung</value>
+  </data>
+  <data name="Phantom_MysticKnight_SunderingSpellblade_Desc" xml:space="preserve">
+    <value>Fügt Magieklingen-Versteinerung in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_MysticKnight_HolySpellblade_Name" xml:space="preserve">
+    <value>Magieklingen-Sanctus</value>
+  </data>
+  <data name="Phantom_MysticKnight_HolySpellblade_Desc" xml:space="preserve">
+    <value>Fügt Magieklingen-Sanctus in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_MysticKnight_BlazingSpellblade_Name" xml:space="preserve">
+    <value>Magieklingen-Flare</value>
+  </data>
+  <data name="Phantom_MysticKnight_BlazingSpellblade_Desc" xml:space="preserve">
+    <value>Fügt Magieklingen-Flare in die Rotation ein, wenn der Effekt nicht vorhanden ist.</value>
+  </data>
+  <data name="Phantom_MysticKnight_MagicShell_Name" xml:space="preserve">
+    <value>Magie-Barriere</value>
+  </data>
+  <data name="Phantom_MysticKnight_MagicShell_Desc" xml:space="preserve">
+    <value>Fügt Magie-Barriere in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Gladiator_Name" xml:space="preserve">
+    <value>Gladiator</value>
+  </data>
+  <data name="Phantom_Gladiator_Desc" xml:space="preserve">
+    <value>Aktivieren Sie dies, um Gladiator-spezifische Aktionen in die Rotation einzufügen.</value>
+  </data>
+  <data name="Phantom_Gladiator_Finisher_Name" xml:space="preserve">
+    <value>Todesstoß</value>
+  </data>
+  <data name="Phantom_Gladiator_Finisher_Desc" xml:space="preserve">
+    <value>Fügt Todesstoß in die Rotation hinzu.</value>
+  </data>
+  <data name="Phantom_Gladiator_Defend_Name" xml:space="preserve">
+    <value>Abwehr</value>
+  </data>
+  <data name="Phantom_Gladiator_Defend_Desc" xml:space="preserve">
+    <value>Fügt Abwehr in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Gladiator_LongReach_Name" xml:space="preserve">
+    <value>Große Reichweite</value>
+  </data>
+  <data name="Phantom_Gladiator_LongReach_Desc" xml:space="preserve">
+    <value>Fügt Große Reichweite in die Rotation ein.</value>
+  </data>
+  <data name="Phantom_Gladiator_BladeBlitz_Name" xml:space="preserve">
+    <value>Klingenblitz</value>
+  </data>
+  <data name="Phantom_Gladiator_BladeBlitz_Desc" xml:space="preserve">
+    <value>Fügt Klingenblitz in die Rotation ein.</value>
+  </data>
+  <data name="AST_ST_Simple_DPS_Name" xml:space="preserve">
+    <value>Einfacher DPS Modus - Einzelziel</value>
+  </data>
+  <data name="AST_ST_Simple_DPS_Desc" xml:space="preserve">
+    <value>Ersetzt Spannungsaspekt mit einer vollen Ein-Tasten-Einzelziel-Rotation, einschließlich automatischer dps Kartenzuweisung.
+Dies ist die ideale Option für Neuankömmlinge des Jobs.</value>
+  </data>
+  <data name="AST_AOE_Simple_DPS_Name" xml:space="preserve">
+    <value>Einfacher DPS Modus - Flächenschaden (Simple DPS Mode - AoE)</value>
+  </data>
+  <data name="AST_AOE_Simple_DPS_Desc" xml:space="preserve">
+    <value>Ersetzt 	Gravitas mit einer vollen Ein-Tasten-Einzelziel-Rotation, einschließlich automatischer dps Kartenzuweisung.
+Dies ist die ideale Option für Neuankömmlinge des Jobs.</value>
+  </data>
+  <data name="AST_Simple_ST_Heals_Name" xml:space="preserve">
+    <value>Einfacher Heilmodus - Einzelziel (Simple Healing Mode - Single Target)</value>
+  </data>
+  <data name="AST_Simple_ST_Heals_Desc" xml:space="preserve">
+    <value>Ersetzt Harmonieaspekt mit einer vollen Ein-Tasten-Einzelziel-Rotation samt Heilung, einschließlich automatischer dps Kartenzuweisung.
+Dies ist die ideale Option für Neuankömmlinge des Jobs.</value>
+  </data>
+  <data name="AST_Simple_AoE_Heals_Name" xml:space="preserve">
+    <value>Einfacher Heilmodus - Flächenheilung (Simple Healing Mode - AoE)</value>
+  </data>
+  <data name="AST_Simple_AoE_Heals_Desc" xml:space="preserve">
+    <value>Ersetzt Helios mit einer vollen Ein-Tasten-Einzelziel-Rotation samt Heilung, einschließlich automatischer dps Kartenzuweisung.
+Dies ist die ideale Option für Neuankömmlinge des Jobs.</value>
+  </data>
+  <data name="AST_ST_DPS_Name" xml:space="preserve">
+    <value>Erweiterter DPS Modus - Einzelziel (Advanced DPS Mode - Single Target)</value>
+  </data>
+  <data name="AST_ST_DPS_Desc" xml:space="preserve">
+    <value>Ersetzt Spannungsaspekt oder Konjunktion durch folgende Optionen</value>
+  </data>
+  <data name="AST_ST_DPS_Opener_Name" xml:space="preserve">
+    <value>Balance Opener (Level 92)</value>
+  </data>
+  <data name="AST_ST_DPS_Opener_Desc" xml:space="preserve">
+    <value>Fügt den Balance opener für Stufe 92 hinzu.</value>
+  </data>
+  <data name="AST_ST_DPS_CombustUptime_Name" xml:space="preserve">
+    <value>Konjunktion uptime Option</value>
+  </data>
+  <data name="AST_ST_DPS_CombustUptime_Desc" xml:space="preserve">
+    <value>Fügt Konjunktion der DPS-Funktion hinzu, wenn sie nicht auf dem aktuellen Ziel vorhanden ist oder kurz vor dem Ablauf.</value>
+  </data>
+  <data name="AST_ST_DPS_Move_DoT_Name" xml:space="preserve">
+    <value>Konjunktion Bewegungs Option</value>
+  </data>
+  <data name="AST_ST_DPS_Move_DoT_Desc" xml:space="preserve">
+    <value>"Wird DoT frühzeitig auf alle Feinde innerhalb der Reichweite anwenden, während sie sich bewegen."</value>
+  </data>
+  <data name="AST_DPS_LightSpeed_Name" xml:space="preserve">
+    <value>Lichtgeschwindigkeit Weave Option</value>
+  </data>
+  <data name="AST_DPS_LightSpeed_Desc" xml:space="preserve">
+    <value>Fügt Lichtgeschwindigkeit der Rotation hinzu, sobald sie sich bewegen</value>
+  </data>
+  <data name="AST_DPS_LightSpeedHold_Name" xml:space="preserve">
+    <value>Lichtgeschwindigkeit Halten Option</value>
+  </data>
+  <data name="AST_DPS_LightSpeedHold_Desc" xml:space="preserve">
+    <value>Hält eine Lichtgeschwindigkeit Ladung über für manuelle Verwendung</value>
+  </data>
+  <data name="AST_DPS_Divination_Name" xml:space="preserve">
+    <value>Weissagung Weave Option</value>
+  </data>
+  <data name="AST_DPS_Divination_Desc" xml:space="preserve">
+    <value>Fügt Weissagung hinzu</value>
+  </data>
+  <data name="AST_DPS_LightspeedBurst_Name" xml:space="preserve">
+    <value>Lichtgeschwindigkeit Burst Option</value>
+  </data>
+  <data name="AST_DPS_LightspeedBurst_Desc" xml:space="preserve">
+    <value>Fügen Sie Lichtgeschwindigkeit vor der Weissagung 
+Kombinieren Sie mit Lichtgeschwindigkeit halten-Optionen, um sicherzustellen, dass Sie eine Ladung zum Verwenden haben</value>
+  </data>
+  <data name="AST_DPS_AutoDraw_Name" xml:space="preserve">
+    <value>Karten Ziehen Weave Option</value>
+  </data>
+  <data name="AST_DPS_AutoDraw_Desc" xml:space="preserve">
+    <value>Zieht deine Karten</value>
+  </data>
+  <data name="AST_DPS_AutoPlay_Name" xml:space="preserve">
+    <value>Karten spielen Weave Option</value>
+  </data>
+  <data name="AST_DPS_AutoPlay_Desc" xml:space="preserve">
+    <value>Benutzt deine Waage und Speer Karten (wird am besten mit schnellen Zielkarten verwendet)</value>
+  </data>
+  <data name="AST_DPS_CardPool_Name" xml:space="preserve">
+    <value>Karten aufhalten Option</value>
+  </data>
+  <data name="AST_DPS_CardPool_Desc" xml:space="preserve">
+    <value>Hält deine dps Karten für Weissagung auf</value>
+  </data>
+  <data name="AST_DPS_LazyLord_Name" xml:space="preserve">
+    <value>König der Kronen Weave Option</value>
+  </data>
+  <data name="AST_DPS_LazyLord_Desc" xml:space="preserve">
+    <value>Fügt König der Kronen hinzu</value>
+  </data>
+  <data name="AST_DPS_LordPool_Name" xml:space="preserve">
+    <value>König der Kronen aufhalten Option</value>
+  </data>
+  <data name="AST_DPS_LordPool_Desc" xml:space="preserve">
+    <value>Hält König der Kronen für deine Weissagung auf</value>
+  </data>
+  <data name="AST_DPS_Oracle_Name" xml:space="preserve">
+    <value>Orakel Option</value>
+  </data>
+  <data name="AST_DPS_Oracle_Desc" xml:space="preserve">
+    <value>Fügt Orakel nach der Weissagung hinzu</value>
+  </data>
+  <data name="AST_ST_DPS_EarthlyStar_Name" xml:space="preserve">
+    <value>Irdischer Stern Option</value>
+  </data>
+  <data name="AST_ST_DPS_EarthlyStar_Desc" xml:space="preserve">
+    <value>Fügt der Rotation die Platzierung des irdischen Sterns hinzu, aber nicht die Sprengung.
+Wird zuerst auf jeden Feind ausgerichtet werden, dann auf dein Fokus ziel, dann auf dein anvisiertes Ziel, bevor es auf dich zurückfällt, um es zu deinen Füßen zu platzieren.</value>
+  </data>
+  <data name="AST_ST_DPS_StellarDetonation_Name" xml:space="preserve">
+    <value>Stellare Detonation Option</value>
+  </data>
+  <data name="AST_ST_DPS_StellarDetonation_Desc" xml:space="preserve">
+    <value>Fügt eine frühe Stellare Detonation mit irdischer Herrschaft basierend auf den Lebenspunkten des Ziels, Prozentsatz oder Art der Begegnung hinzu</value>
+  </data>
+  <data name="AST_DPS_Lucid_Name" xml:space="preserve">
+    <value>Klartraum Weave Option</value>
+  </data>
+  <data name="AST_DPS_Lucid_Desc" xml:space="preserve">
+    <value>Fügt Klartraum hinzu, wenn MP unter den Schwellenwert fällt</value>
+  </data>
+  <data name="AST_AOE_DPS_Name" xml:space="preserve">
+    <value>Erweiterter DPS Modus - Flächenschaden (Advanced DPS Mode - AoE)</value>
+  </data>
+  <data name="AST_AOE_DPS_Desc" xml:space="preserve">
+    <value>Ersetzt Gravitas durch folgende Optionen</value>
+  </data>
+  <data name="AST_AOE_DPS_DoT_Name" xml:space="preserve">
+    <value>Multitarget Dot Option</value>
+  </data>
+  <data name="AST_AOE_DPS_DoT_Desc" xml:space="preserve">
+    <value>Hält Dots auf mehrere Ziele aufrecht.</value>
+  </data>
+  <data name="AST_AOE_LightSpeed_Name" xml:space="preserve">
+    <value>Lichtgeschwindigkeit Weave Option</value>
+  </data>
+  <data name="AST_AOE_LightSpeed_Desc" xml:space="preserve">
+    <value>Fügt Lichtgeschwindigkeit der Rotation hinzu, sobald sie sich bewegen</value>
+  </data>
+  <data name="AST_AOE_LightSpeedHold_Name" xml:space="preserve">
+    <value>Lichtgeschwindigkeit Halten Option</value>
+  </data>
+  <data name="AST_AOE_LightSpeedHold_Desc" xml:space="preserve">
+    <value>Hält eine Lichtgeschwindigkeit Ladung über für manuelle Verwendung</value>
+  </data>
+  <data name="AST_AOE_Divination_Name" xml:space="preserve">
+    <value>Weissagung Weave Option</value>
+  </data>
+  <data name="AST_AOE_Divination_Desc" xml:space="preserve">
+    <value>Fügt Weissagung hinzu</value>
+  </data>
+  <data name="AST_AOE_LightspeedBurst_Name" xml:space="preserve">
+    <value>Lichtgeschwindigkeit Burst Option</value>
+  </data>
+  <data name="AST_AOE_LightspeedBurst_Desc" xml:space="preserve">
+    <value>Fügen Sie Lichtgeschwindigkeit vor der Weissagung 
+Kombinieren Sie mit Lichtgeschwindigkeit halten-Optionen, um sicherzustellen, dass Sie eine Ladung zum Verwenden haben</value>
+  </data>
+  <data name="AST_AOE_AutoDraw_Name" xml:space="preserve">
+    <value>Karten Ziehen Weave Option</value>
+  </data>
+  <data name="AST_AOE_AutoDraw_Desc" xml:space="preserve">
+    <value>Zieht deine Karten</value>
+  </data>
+  <data name="AST_AOE_AutoPlay_Name" xml:space="preserve">
+    <value>Karten spielen Weave Option</value>
+  </data>
+  <data name="AST_AOE_AutoPlay_Desc" xml:space="preserve">
+    <value>Benutzt deine Waage und Speer Karten (wird am besten mit schnellen Zielkarten verwendet)</value>
+  </data>
+  <data name="AST_AOE_CardPool_Name" xml:space="preserve">
+    <value>Karten aufhalten Option</value>
+  </data>
+  <data name="AST_AOE_CardPool_Desc" xml:space="preserve">
+    <value>Hält deine dps Karten für Weissagung auf</value>
+  </data>
+  <data name="AST_AOE_LazyLord_Name" xml:space="preserve">
+    <value>König der Kronen Weave Option</value>
+  </data>
+  <data name="AST_AOE_LazyLord_Desc" xml:space="preserve">
+    <value>Fügt König der Kronen hinzu</value>
+  </data>
+  <data name="AST_AOE_LordPool_Name" xml:space="preserve">
+    <value>König der Kronen aufhalten Option</value>
+  </data>
+  <data name="AST_AOE_LordPool_Desc" xml:space="preserve">
+    <value>Hält König der Kronen für deine Weissagung auf</value>
+  </data>
+  <data name="AST_AOE_Oracle_Name" xml:space="preserve">
+    <value>Orakel Option</value>
+  </data>
+  <data name="AST_AOE_Oracle_Desc" xml:space="preserve">
+    <value>Fügt Orakel nach der Weissagung hinzu</value>
+  </data>
+  <data name="AST_AOE_DPS_EarthlyStar_Name" xml:space="preserve">
+    <value>Irdischer Stern Option</value>
+  </data>
+  <data name="AST_AOE_DPS_EarthlyStar_Desc" xml:space="preserve">
+    <value>Fügt der Rotation die Platzierung des irdischen Sterns hinzu, aber nicht die Sprengung.
+Wird zuerst auf jeden Feind ausgerichtet werden, dann auf dein Fokus ziel, dann auf dein anvisiertes Ziel, bevor es auf dich zurückfällt, um es zu deinen Füßen zu platzieren.</value>
+  </data>
+  <data name="AST_AOE_DPS_StellarDetonation_Name" xml:space="preserve">
+    <value>Stellare Detonation Option</value>
+  </data>
+  <data name="AST_AOE_DPS_StellarDetonation_Desc" xml:space="preserve">
+    <value>Fügt eine frühe Stellare Detonation mit irdischer Herrschaft basierend auf den Lebenspunkten des Ziels, Prozentsatz oder Art der Begegnung hinzu</value>
+  </data>
+  <data name="AST_AOE_DPS_MacroCosmos_Name" xml:space="preserve">
+    <value>Makrokosmos Option</value>
+  </data>
+  <data name="AST_AOE_DPS_MacroCosmos_Desc" xml:space="preserve">
+    <value>Fügt Makrokosmos nach 3 GCDs zur Flächenschaden-Rotation hinzu</value>
+  </data>
+  <data name="AST_AOE_Lucid_Name" xml:space="preserve">
+    <value>Klartraum Weave Option</value>
+  </data>
+  <data name="AST_AOE_Lucid_Desc" xml:space="preserve">
+    <value>Fügt Klartraum hinzu, wenn MP unter den Schwellenwert fällt</value>
+  </data>
+  <data name="AST_ST_Heals_Name" xml:space="preserve">
+    <value>Einfacher Heilmodus - Einzelziel (Advanced Healing Mode - Single Target)</value>
+  </data>
+  <data name="AST_ST_Heals_Desc" xml:space="preserve">
+    <value>Ersetzt Harmonieaspekt mit einer vollen Ein-Tasten-Einzelziel-Rotation.</value>
+  </data>
+  <data name="AST_ST_Heals_Esuna_Name" xml:space="preserve">
+    <value>Medica Option</value>
+  </data>
+  <data name="AST_ST_Heals_Esuna_Desc" xml:space="preserve">
+    <value>Wendet Medica auf Ihr Ziel an, wenn es einen entfernbaren Effekt gibt.</value>
+  </data>
+  <data name="AST_ST_Heals_AspectedBenefic_Name" xml:space="preserve">
+    <value>Harmonischer Orbis Option</value>
+  </data>
+  <data name="AST_ST_Heals_AspectedBenefic_Desc" xml:space="preserve">
+    <value>Fügt Harmonischer Orbis hinzu &amp; erneuert ihn, falls nötig.</value>
+  </data>
+  <data name="AST_ST_Heals_EssentialDignity_Name" xml:space="preserve">
+    <value>Essenzielle Würde Option</value>
+  </data>
+  <data name="AST_ST_Heals_EssentialDignity_Desc" xml:space="preserve">
+    <value>Essenzielle Würde wird hinzugefügt, wenn das Ziel bei oder unter dem Wert liegt.</value>
+  </data>
+  <data name="AST_ST_Heals_EssentialDignity_Emergency_Name" xml:space="preserve">
+    <value>Notfall Essenzielle Würde Option</value>
+  </data>
+  <data name="AST_ST_Heals_EssentialDignity_Emergency_Desc" xml:space="preserve">
+    <value>Behält eine Ladung von Essenzielle Würde, um sie für einen anderen Wert zu verwenden.</value>
+  </data>
+  <data name="AST_ST_Heals_CelestialIntersection_Name" xml:space="preserve">
+    <value>Kongruenz Option</value>
+  </data>
+  <data name="AST_ST_Heals_CelestialIntersection_Desc" xml:space="preserve">
+    <value>Fügt Kongruenz hinzu.</value>
+  </data>
+  <data name="AST_ST_Heals_Exaltation_Name" xml:space="preserve">
+    <value>Exaltation Option</value>
+  </data>
+  <data name="AST_ST_Heals_Exaltation_Desc" xml:space="preserve">
+    <value>Fügt Exaltation hinzu.</value>
+  </data>
+  <data name="AST_ST_Heals_Spire_Name" xml:space="preserve">
+    <value>Turm Option</value>
+  </data>
+  <data name="AST_ST_Heals_Spire_Desc" xml:space="preserve">
+    <value>Fügt den Turm (Schild) hinzu, wenn die Karte gezogen wurde.</value>
+  </data>
+  <data name="AST_ST_Heals_Ewer_Name" xml:space="preserve">
+    <value>Krug Option</value>
+  </data>
+  <data name="AST_ST_Heals_Ewer_Desc" xml:space="preserve">
+    <value>Fügt den Krug (Heilung über Zeit) hinzu, wenn die Karte gezogen wurde.</value>
+  </data>
+  <data name="AST_ST_Heals_Arrow_Name" xml:space="preserve">
+    <value>Pfeil Option</value>
+  </data>
+  <data name="AST_ST_Heals_Arrow_Desc" xml:space="preserve">
+    <value>Fügt den Pfeil (erhöhte Heilung) hinzu, wenn die Karte gezogen wurde.</value>
+  </data>
+  <data name="AST_ST_Heals_Bole_Name" xml:space="preserve">
+    <value>Eiche Option</value>
+  </data>
+  <data name="AST_ST_Heals_Bole_Desc" xml:space="preserve">
+    <value>Fügt die Eiche (Reduzierter Schaden) hinzu, wenn die Karte gezogen wurde.</value>
+  </data>
+  <data name="AST_ST_Heals_CelestialOpposition_Name" xml:space="preserve">
+    <value>Opposition Option</value>
+  </data>
+  <data name="AST_ST_Heals_CelestialOpposition_Desc" xml:space="preserve">
+    <value>Fügt Opposition hinzu.</value>
+  </data>
+  <data name="AST_ST_Heals_CollectiveUnconscious_Name" xml:space="preserve">
+    <value>Numinosum Option</value>
+  </data>
+  <data name="AST_ST_Heals_CollectiveUnconscious_Desc" xml:space="preserve">
+    <value>Fügt Numinosum hinzu (für Heilung über Zeit. Damit er nicht kanalisiert).</value>
+  </data>
+  <data name="AST_ST_Heals_SoloLady_Name" xml:space="preserve">
+    <value>Königin der Kronen Option</value>
+  </data>
+  <data name="AST_ST_Heals_SoloLady_Desc" xml:space="preserve">
+    <value>Fügt Königin der Kronen hinzu, wenn die Karte gezogen wird.</value>
+  </data>
+  <data name="AST_ST_Heals_NeutralSect_Name" xml:space="preserve">
+    <value>Neutral Option</value>
+  </data>
+  <data name="AST_ST_Heals_NeutralSect_Desc" xml:space="preserve">
+    <value>Fügt Neutral/Sonnenzeichen hinzu.</value>
+  </data>
+  <data name="AST_AoE_Heals_Name" xml:space="preserve">
+    <value>Erweiterter Heilmodus - Flächenheilung (Advanced Healing Mode - AoE)</value>
+  </data>
+  <data name="AST_AoE_Heals_Desc" xml:space="preserve">
+    <value>Ersetzt Aspektierter Helios/Helios in Konjunktion oder Helios durch einen Heilungseffekt auf einen Knopf. Der Zauber wird die unterste Priorität ohne Prüfungen haben, unabhängig von den unteren Einstellungen.</value>
+  </data>
+  <data name="AST_AoE_Heals_Aspected_Name" xml:space="preserve">
+    <value>Aspektierter Helios Option</value>
+  </data>
+  <data name="AST_AoE_Heals_Aspected_Desc" xml:space="preserve">
+    <value>Fügt eine Aspektierter Helios/Helios in Konjunktion hinzu.</value>
+  </data>
+  <data name="AST_AoE_Heals_Helios_Name" xml:space="preserve">
+    <value>Helios Option</value>
+  </data>
+  <data name="AST_AoE_Heals_Helios_Desc" xml:space="preserve">
+    <value>Fügt Helios hinzu.</value>
+  </data>
+  <data name="AST_AoE_Heals_CelestialOpposition_Name" xml:space="preserve">
+    <value>Opposition Option</value>
+  </data>
+  <data name="AST_AoE_Heals_CelestialOpposition_Desc" xml:space="preserve">
+    <value>Fügt Opposition hinzu.</value>
+  </data>
+  <data name="AST_AoE_Heals_LazyLady_Name" xml:space="preserve">
+    <value>Faule Königin der Kronen Option</value>
+  </data>
+  <data name="AST_AoE_Heals_LazyLady_Desc" xml:space="preserve">
+    <value>Fügt Königin der Kronen hinzu, wenn die Karte gezogen wird.</value>
+  </data>
+  <data name="AST_AoE_Heals_Horoscope_Name" xml:space="preserve">
+    <value>Horoskop Option</value>
+  </data>
+  <data name="AST_AoE_Heals_Horoscope_Desc" xml:space="preserve">
+    <value>Fügt Horoskop hinzu, gefolgt von Aspektierter Helios oder Helios.</value>
+  </data>
+  <data name="AST_AoE_Heals_HoroscopeHeal_Name" xml:space="preserve">
+    <value>Horoskop Helios Option</value>
+  </data>
+  <data name="AST_AoE_Heals_HoroscopeHeal_Desc" xml:space="preserve">
+    <value>Fügt Horoskop Helios hinzu.</value>
+  </data>
+  <data name="AST_AoE_Heals_NeutralSect_Name" xml:space="preserve">
+    <value>Neutral Option</value>
+  </data>
+  <data name="AST_AoE_Heals_NeutralSect_Desc" xml:space="preserve">
+    <value>Fügt Neutral und sein Nachfolger Sonnenzeichen hinzu.</value>
+  </data>
+  <data name="AST_AoE_Heals_StellarDetonation_Name" xml:space="preserve">
+    <value>Stellare Detonation Option</value>
+  </data>
+  <data name="AST_AoE_Heals_StellarDetonation_Desc" xml:space="preserve">
+    <value>Fügt Stellare Detonation hinzu, wenn unter dem Effekt von Irdische Herrschaft.</value>
+  </data>
+  <data name="AST_AoE_Heals_CollectiveUnconscious_Name" xml:space="preserve">
+    <value>Numinosum Option</value>
+  </data>
+  <data name="AST_AoE_Heals_CollectiveUnconscious_Desc" xml:space="preserve">
+    <value>Fügt Numinosum hinzu (für Heilung über Zeit. Damit er nicht kanalisiert).</value>
+  </data>
+  <data name="AST_Cards_QuickTargetCards_Name" xml:space="preserve">
+    <value>Vereinfachte Schadenskarten</value>
+  </data>
+  <data name="AST_Cards_QuickTargetCards_Desc" xml:space="preserve">
+    <value>Wenn du die Waage oder den Speer in einer Kombo spielst, wird dies automatisch auf ein Gruppenmitglied ausgerichtet.
+Es wird auf einen DPS geschaut zu dem die Karte am meisten passt, und folgt den Prioritäten des Balance (Balance Discord);, wenn keine gefundenen oder sie bereits selbigen Effekt haben, wird stattdessen auf die anderen DPS geschaut.
+Wird versuchen, Gruppenmitglieder zu überspringen, die Schaden - oder Schwäche haben.
+Standardeinstellung für Sie, wenn keine passenden Gruppenmitglieder gefunden wurden.</value>
+  </data>
 </root>
