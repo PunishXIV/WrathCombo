@@ -12,7 +12,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Fire)
+            if (actionID is not Blizzard)
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -48,6 +48,9 @@ internal partial class BLM : Caster
                         (HasStatusEffect(Role.Buffs.Swiftcast) ||
                          HasStatusEffect(Buffs.Triplecast)))
                         return Transpose;
+
+                    if (!ActionReady(Transpose))
+                        return Blizzard;
                 }
 
                 if (IcePhase)
@@ -181,12 +184,21 @@ internal partial class BLM : Caster
 
                 if (ActionReady(BlizzardSpam))
                     return BlizzardSpam;
+
+                if (!ActionReady(Transpose) &&
+                    ActionReady(Fire))
+                    return Fire;
             }
 
             if (ActionReady(Blizzard3))
                 return MP.Cur < 7500
                     ? Blizzard3
                     : Fire3;
+
+            if (ActionReady(Fire) &&
+                !ActionReady(Transpose) &&
+                MP.Cur > MP.FireI)
+                return Fire;
 
             return actionID;
         }
@@ -293,7 +305,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Fire)
+            if (actionID is not Blizzard)
                 return actionID;
 
             // Opener
@@ -346,6 +358,9 @@ internal partial class BLM : Caster
                         (HasStatusEffect(Role.Buffs.Swiftcast) ||
                          HasStatusEffect(Buffs.Triplecast)))
                         return Transpose;
+
+                    if (!ActionReady(Transpose))
+                        return Blizzard;
                 }
 
                 if (IcePhase)
@@ -476,6 +491,10 @@ internal partial class BLM : Caster
                         ActionReady(Transpose) &&
                         !ActionReady(Blizzard3))
                         return Transpose;
+
+                    if (!ActionReady(Transpose) &&
+                        ActionReady(Fire))
+                        return Fire;
                 }
 
                 if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
@@ -492,6 +511,11 @@ internal partial class BLM : Caster
                 return MP.Cur < 7500
                     ? Blizzard3
                     : Fire3;
+
+            if (ActionReady(Fire) &&
+                !ActionReady(Transpose) &&
+                MP.Cur > MP.FireI)
+                return Fire;
 
             return actionID;
         }

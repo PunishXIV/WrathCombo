@@ -1,0 +1,333 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionChanging_defaultValue" xml:space="preserve"><value>オン</value></data>
+  <data name="ActionChanging_helpMark" xml:space="preserve"><value>ホットバー上のアクションを、プラグインのコンボに置き換えるかを制御します。
+無効にすると、手動入力したアクションは Wrath の設定による影響を受けなくなります。
+
+自動ローテーションはこの設定に関係なく動作します。</value></data>
+  <data name="ActionChanging_Name" xml:space="preserve"><value>アクション置き換え</value></data>
+  <data name="ActionChanging_recommendedValue" xml:space="preserve"><value>オン（これをオフにすると、Wrath の大半が実質的に無効になります）</value></data>
+  <data name="ActionChanging_warningMark" xml:space="preserve"><value>Wrath は主にアクション置き換えを前提に設計されています。
+無効にすると、自動ローテーション以外はほとんど機能しません。
+また、リターゲットなどで想定外の挙動を起こす場合があります。</value></data>
+  <data name="AddOutOfPartyNPCsToRetargeting_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="AddOutOfPartyNPCsToRetargeting_helpMark" xml:space="preserve"><value>パーティ外の NPC も、回復アクションのリターゲット候補に含めます。
+
+クエスト NPC など、パーティに入っていない NPC を回復したいヒーラー向けです。
+これらの NPC はロール判定ベースの回復優先順項目では正しく扱えない場合があります。</value></data>
+  <data name="AddOutOfPartyNPCsToRetargeting_Name" xml:space="preserve"><value>パーティ外 NPC もリターゲット対象に含める</value></data>
+  <data name="AddOutOfPartyNPCsToRetargeting_recommendedValue" xml:space="preserve"><value>オン（リターゲットを使う場合）</value></data>
+  <data name="BlockSpellOnMove_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="BlockSpellOnMove_helpMark" xml:space="preserve"><value>移動中はコンボ出力をサベッジブレードに差し替えることで、アクション実行を完全に止めます。
+多くのジョブが持つ個別の移動オプションよりも優先されます。</value></data>
+  <data name="BlockSpellOnMove_Name" xml:space="preserve"><value>移動中は詠唱アクションを抑止</value></data>
+  <data name="BlockSpellOnMove_recommendedValue" xml:space="preserve"><value>オフ（多くのジョブは各機能側の設定でより適切に処理できます）</value></data>
+  <data name="CustomHealStack_defaultValue" xml:space="preserve"><value>フォーカスターゲット &gt; ハードターゲット &gt; 自分</value></data>
+  <data name="CustomHealStack_helpMark" xml:space="preserve"><value>4 項目未満で、すべての判定が空振りした場合は自分にフォールバックします。
+
+有効対象になるのは、味方かつ 25m 以内の対象だけです。</value></data>
+  <data name="CustomHealStack_Name" xml:space="preserve"><value>カスタム回復優先順</value></data>
+  <data name="CustomHealStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="EnabledOutputLog_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="EnabledOutputLog_helpMark" xml:space="preserve"><value>Wrath が実行したアクションを使うたびに、チャットへ出力します。</value></data>
+  <data name="EnabledOutputLog_Name" xml:space="preserve"><value>チャットに出力ログを表示</value></data>
+  <data name="EnabledOutputLog_recommendedValue" xml:space="preserve"><value>オン（不具合報告時）</value></data>
+  <data name="HideChildren_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="HideChildren_helpMark" xml:space="preserve"><value>無効なコンボの下にある機能・オプションを非表示にします。</value></data>
+  <data name="HideChildren_Name" xml:space="preserve"><value>サブコンボのオプションを隠す</value></data>
+  <data name="HideChildren_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="HideConflictedCombos_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="HideConflictedCombos_helpMark" xml:space="preserve"><value>現在有効なコンボと競合するコンボを非表示にします。</value></data>
+  <data name="HideConflictedCombos_Name" xml:space="preserve"><value>競合するコンボを隠す</value></data>
+  <data name="HideConflictedCombos_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="HideMessageOfTheDay_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="HideMessageOfTheDay_helpMark" xml:space="preserve"><value>ログイン時にチャットへ表示されるログインメッセージを非表示にします。</value></data>
+  <data name="HideMessageOfTheDay_Name" xml:space="preserve"><value>ログインメッセージを非表示</value></data>
+  <data name="HideMessageOfTheDay_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="InterruptDelay_defaultValue" xml:space="preserve"><value>0</value></data>
+  <data name="InterruptDelay_helpMark" xml:space="preserve"><value>敵の詠唱を中断するまでに待つ割合を制御します。
+各ジョブのコンボ内で使われるすべての中断手段（スタンによる中断を含む）に適用されます。</value></data>
+  <data name="InterruptDelay_Name" xml:space="preserve"><value>中断ディレイ</value></data>
+  <data name="InterruptDelay_recommendedValue" xml:space="preserve"><value>40 未満（それ以上だと短い詠唱を止め損ねやすくなります）</value></data>
+  <data name="InterruptDelay_unitLabel" xml:space="preserve"><value>詠唱割合 %</value></data>
+  <data name="MaximumWeavesPerWindow_defaultValue" xml:space="preserve"><value>2</value></data>
+  <data name="MaximumWeavesPerWindow_helpMark" xml:space="preserve"><value>GCD間に許可するアビリティ数を制御します。
+通常はダブルウィーブが基本ですが、十分に低遅延ならトリプルウィーブも可能です。
+遅延が気になる場合は 1 にするのも有効です。
+3 に設定していても、GCD をなるべく噛まないように制御されるため、常に多重で挟むわけではありません。</value></data>
+  <data name="MaximumWeavesPerWindow_Name" xml:space="preserve"><value>最大ウェーブ数</value></data>
+  <data name="MaximumWeavesPerWindow_recommendedValue" xml:space="preserve"><value>2-3</value></data>
+  <data name="MaximumWeavesPerWindow_unitLabel" xml:space="preserve"><value>アビリティ数</value></data>
+  <data name="MeleeOffset_defaultValue" xml:space="preserve"><value>0</value></data>
+  <data name="MeleeOffset_helpMark" xml:space="preserve"><value>近接距離と見なす範囲を調整します。
+ボスがわずかに離れたときに、すぐ遠隔アクションへ切り替わるのを避けたい場合に使います。
+たとえば -0.5 なら 0.5m 近づく必要があり、2 なら 2m 余分に離れていても近接距離扱いになります。</value></data>
+  <data name="MeleeOffset_Name" xml:space="preserve"><value>近接距離オフセット</value></data>
+  <data name="MeleeOffset_recommendedValue" xml:space="preserve"><value>0</value></data>
+  <data name="MeleeOffset_unitLabel" xml:space="preserve"><value>m</value></data>
+  <data name="MovementLeeway_defaultValue" xml:space="preserve"><value>0</value></data>
+  <data name="MovementLeeway_helpMark" xml:space="preserve"><value>Wrath が移動中と判定するまでの遅延です。
+主にキャスターで、細かな移動がローテーションに影響しにくくなります。</value></data>
+  <data name="MovementLeeway_Name" xml:space="preserve"><value>移動判定ディレイ</value></data>
+  <data name="MovementLeeway_recommendedValue" xml:space="preserve"><value>0.0-1.0（それ以上は各ジョブの移動オプションを壊しやすくなります）</value></data>
+  <data name="MovementLeeway_unitLabel" xml:space="preserve"><value>秒</value></data>
+  <data name="OpenerTimeout_defaultValue" xml:space="preserve"><value>4</value></data>
+  <data name="OpenerTimeout_helpMark" xml:space="preserve"><value>オープナー中、一定時間アクションがない状態をどれだけ許容するかを制御します。
+1 手目が詠唱のキャスターでは、値を少し大きくする必要がある場合があります。</value></data>
+  <data name="OpenerTimeout_Name" xml:space="preserve"><value>オープナー失敗タイムアウト</value></data>
+  <data name="OpenerTimeout_recommendedValue" xml:space="preserve"><value>4.0-7.0（それ以上はオープナーを大きく崩しやすいです）</value></data>
+  <data name="OpenerTimeout_unitLabel" xml:space="preserve"><value>秒</value></data>
+  <data name="OpenToCurrentJobOnSwitch_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="OpenToCurrentJobOnSwitch_helpMark" xml:space="preserve"><value>ジョブ変更時に、PvE 機能タブを現在のジョブへ自動で切り替えます。</value></data>
+  <data name="OpenToCurrentJobOnSwitch_Name" xml:space="preserve"><value>ジョブ変更時に現在ジョブの PvE 機能を開く</value></data>
+  <data name="OpenToCurrentJobOnSwitch_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="OpenToCurrentJob_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="OpenToCurrentJob_helpMark" xml:space="preserve"><value>PvE 機能タブを開いたとき、現在のジョブを自動で表示します。</value></data>
+  <data name="OpenToCurrentJob_Name" xml:space="preserve"><value>開いたときに現在ジョブの PvE 機能を表示</value></data>
+  <data name="OpenToCurrentJob_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="OpenToPvE_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="OpenToPvE_helpMark" xml:space="preserve"><value>/wrath で開いたとき、最後に開いていたタブではなく PvE 機能タブを表示します。
+常に /wrath pve を使うのと同じ動作です。</value></data>
+  <data name="OpenToPvE_Name" xml:space="preserve"><value>Wrath を PvE 機能タブで開く</value></data>
+  <data name="OpenToPvE_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="OpenToPvP_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="OpenToPvP_helpMark" xml:space="preserve"><value>PvP エリアで /wrath で開いたとき、最後に開いていたタブではなく PvP 機能タブを表示します。
+/wrath pvp を使う動作に近い設定です。</value></data>
+  <data name="OpenToPvP_Name" xml:space="preserve"><value>PvP エリアでは Wrath を PvP 機能タブで開く</value></data>
+  <data name="OpenToPvP_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="OutputOpenerLogs_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="OutputOpenerLogs_helpMark" xml:space="preserve"><value>ジョブのオープナー状態をチャットへ出力します。
+例: オープナーの準備完了時、失敗時、終了時。</value></data>
+  <data name="OutputOpenerLogs_Name" xml:space="preserve"><value>オープナー状況をチャットに出力</value></data>
+  <data name="OutputOpenerLogs_recommendedValue" xml:space="preserve"><value>オン（オープナー調査時）</value></data>
+  <data name="OverwriteQueue_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="OverwriteQueue_helpMark" xml:space="preserve"><value>現在キューに入っているアクションを、別のアクションで上書きできるようにします。</value></data>
+  <data name="OverwriteQueue_Name" xml:space="preserve"><value>キューを上書き</value></data>
+  <data name="OverwriteQueue_recommendedValue" xml:space="preserve"><value>オン</value></data>
+  <data name="QueueAdjustThreshold_defaultValue" xml:space="preserve"><value>1.5</value></data>
+  <data name="QueueAdjustThreshold_helpMark" xml:space="preserve"><value>GCD の残り時間がこの値以下になった時点でキュー入力を許可します。</value></data>
+  <data name="QueueAdjustThreshold_Name" xml:space="preserve"><value>キュー入力を許可する残り時間</value></data>
+  <data name="QueueAdjustThreshold_recommendedValue" xml:space="preserve"><value>1.5-2.5</value></data>
+  <data name="QueueAdjustThreshold_unitLabel" xml:space="preserve"><value>秒</value></data>
+  <data name="QueueAdjustThreshold_warningMark" xml:space="preserve"><value>この値を低くしすぎる、または 0 にすると、手動キュー入力がかなり難しくなります。</value></data>
+  <data name="QueueAdjust_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="QueueAdjust_helpMark" xml:space="preserve"><value>通常の 0.3〜0.5 秒だけでなく、GCD 中の任意のタイミングでキュー入力できるようにします。
+キー連打をしない場合や、自動ローテーション中に手動介入したい場合に有効です。</value></data>
+  <data name="QueueAdjust_Name" xml:space="preserve"><value>手動キュー猶予を拡張</value></data>
+  <data name="QueueAdjust_recommendedValue" xml:space="preserve"><value>オン</value></data>
+  <data name="RaiseStack_defaultValue" xml:space="preserve"><value>いずれかのヒーラー &gt; いずれかのタンク &gt; いずれかの蘇生持ち &gt; 戦闘不能のパーティメンバー</value></data>
+  <data name="RaiseStack_extraText" xml:space="preserve"><value>（すべての対象で蘇生可否を確認します）</value></data>
+  <data name="RaiseStack_helpMark" xml:space="preserve"><value>これは Wrath が蘇生対象を選ぶ優先順です。
+いずれかの蘇生機能でリターゲットが有効な場合に使用されます。
+
+蘇生機能は PvE &gt; General または蘇生を持つ各キャスター配下にあります。
+
+5 項目未満で、すべての判定が空振りした場合は、死亡しているハードターゲット、または &lt;いずれかのパーティメンバー&gt; にフォールバックします。
+
+有効対象になるのは、味方かつ戦闘不能で、30y 以内の対象だけです。</value></data>
+  <data name="RaiseStack_Name" xml:space="preserve"><value>カスタム蘇生優先順</value></data>
+  <data name="RaiseStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="RetargetHealingActionsToStack_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="RetargetHealingActionsToStack_helpMark" xml:space="preserve"><value>単体回復アクションを、下に表示される回復優先順へリターゲットします。
+Redirect や Reaction と同じような挙動です。
+これにより、HP% 判定に使った対象と、実際に回復を飛ばす対象が一致します。</value></data>
+  <data name="RetargetHealingActionsToStack_Name" xml:space="preserve"><value>単体回復をリターゲット</value></data>
+  <data name="RetargetHealingActionsToStack_recommendedValue" xml:space="preserve"><value>オン（回復優先順を少しでも変更する場合）</value></data>
+  <data name="ShortDTRText_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="ShortDTRText_helpMark" xml:space="preserve"><value>自動モードの有効数を非表示にします。
+既定のサーバー情報バーには以下が表示されます:
+- 自動ローテーションのオン/オフ
+- （オン時）有効な自動モード数
+- （該当時）他プラグインが自動ローテーション状態を制御しているか</value></data>
+  <data name="ShortDTRText_Name" xml:space="preserve"><value>サーバー情報バーの表示を短縮</value></data>
+  <data name="ShortDTRText_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="ShowBorderAroundOptionsWithChildren_defaultValue" xml:space="preserve"><value>オン</value></data>
+  <data name="ShowBorderAroundOptionsWithChildren_helpMark" xml:space="preserve"><value>子機能や子オプションを持つコンボ・機能の周囲に枠を表示します。</value></data>
+  <data name="ShowBorderAroundOptionsWithChildren_Name" xml:space="preserve"><value>オプション付き項目に枠を表示</value></data>
+  <data name="ShowBorderAroundOptionsWithChildren_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="ShowOpenerDtr_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="ShowOpenerDtr_helpMark" xml:space="preserve"><value>有効かつ該当する場合、現在のオープナー状態を表示します。</value></data>
+  <data name="ShowOpenerDtr_Name" xml:space="preserve"><value>サーバー情報バーにオープナー状況を表示</value></data>
+  <data name="ShowOpenerDtr_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="ShowTargetHighlight_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="ShowTargetHighlight_extraText" xml:space="preserve"><value>（現状は占星術師と踊り子のみで使用）</value></data>
+  <data name="ShowTargetHighlight_helpMark" xml:space="preserve"><value>特定の機能で対象になっているパーティメンバーを、通常のパーティリスト上で枠表示します。</value></data>
+  <data name="ShowTargetHighlight_Name" xml:space="preserve"><value>対象ハイライトを表示</value></data>
+  <data name="ShowTargetHighlight_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="SuppressAutorotCommand_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="SuppressAutorotCommand_helpMark" xml:space="preserve"><value>`/wrath auto` 系コマンドのチャットフィードバックを非表示にします。</value></data>
+  <data name="SuppressAutorotCommand_Name" xml:space="preserve"><value>自動ローテーション関連コマンドのフィードバックを抑制</value></data>
+  <data name="SuppressAutorotCommand_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="SuppressSetCommands_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="SuppressSetCommands_helpMark" xml:space="preserve"><value>/wrath set と /wrath unset のチャットフィードバックを非表示にします。
+ただし IPC により上書きされている場合や、コマンド失敗時は表示されます。</value></data>
+  <data name="SuppressSetCommands_Name" xml:space="preserve"><value>設定/解除コマンドのフィードバックを抑制</value></data>
+  <data name="SuppressSetCommands_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="TargetHighlightColor_defaultValue" xml:space="preserve"><value>#808080FF</value></data>
+  <data name="TargetHighlightColor_helpMark" xml:space="preserve"><value>パーティメンバーの周囲に描画される枠の色を制御します。</value></data>
+  <data name="TargetHighlightColor_Name" xml:space="preserve"><value>対象ハイライトの色</value></data>
+  <data name="TargetHighlightColor_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="Throttle_defaultValue" xml:space="preserve"><value>50</value></data>
+  <data name="Throttle_helpMark" xml:space="preserve"><value>ホットバーのアクション更新頻度を制限します。
+50ms ならほぼ制限なしで、常に最新のアクションを表示できます。
+
+わずかな FPS 改善を狙うなら値を上げられますが、その分コンボの追従性は落ち、GCD が噛むことがあります。
+高すぎる値ではローテーションが崩れる原因になります。</value></data>
+  <data name="Throttle_Name" xml:space="preserve"><value>アクション更新間隔</value></data>
+  <data name="Throttle_recommendedValue" xml:space="preserve"><value>20-200</value></data>
+  <data name="Throttle_unitLabel" xml:space="preserve"><value>ミリ秒</value></data>
+  <data name="UIShowPresetIDs_defaultValue" xml:space="preserve"><value>オン</value></data>
+  <data name="UIShowPresetIDs_helpMark" xml:space="preserve"><value>各コンボ・機能名の横にプリセットIDを表示します。
+/wrath toggle &lt;ID&gt; などのコマンドで使うIDです。</value></data>
+  <data name="UIShowPresetIDs_Name" xml:space="preserve"><value>コンボ名の横にプリセットIDを表示</value></data>
+  <data name="UIShowPresetIDs_recommendedValue" xml:space="preserve"><value>オン</value></data>
+  <data name="UIShowSearchBar_defaultValue" xml:space="preserve"><value>オン</value></data>
+  <data name="UIShowSearchBar_helpMark" xml:space="preserve"><value>設定、PvE、PvP の各画面で検索バーを表示するかを制御します。</value></data>
+  <data name="UIShowSearchBar_Name" xml:space="preserve"><value>検索バーを表示</value></data>
+  <data name="UIShowSearchBar_recommendedValue" xml:space="preserve"><value>オン</value></data>
+  <data name="UseCustomHealStack_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="UseCustomHealStack_helpMark" xml:space="preserve"><value>既定の回復優先順ではなく、自分で作成した優先順を使いたい場合に有効にします。
+
+上の「単体回復をリターゲット」を使わない場合は、Redirect / Reaction 側の設定に合わせる目的で使うのがおすすめです。</value></data>
+  <data name="UseCustomHealStack_Name" xml:space="preserve"><value>独自の回復優先順を使う</value></data>
+  <data name="UseCustomHealStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve"><value>フィールド上でマウスオーバーしている対象を、既定の回復優先順の最上位に追加します。
+
+キーボード＋マウス操作で、上の「単体回復をリターゲット」または Redirect / Reaction のマウスオーバー設定を使う場合に有効です。</value></data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve"><value>既定の回復優先順にフィールドマウスオーバーを追加</value></data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_helpMark" xml:space="preserve"><value>生存中のフォーカスターゲットがいる場合、既定の回復優先順にフォーカスターゲットを追加します。ハードターゲットとソフトターゲットの下に入ります。</value></data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_Name" xml:space="preserve"><value>既定の回復優先順にフォーカスターゲットを追加</value></data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_helpMark" xml:space="preserve"><value>近くのパーティメンバーのうち HP% が最も低い対象を、既定の回復優先順の末尾に追加し、自分のみを上書きします。</value></data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_Name" xml:space="preserve"><value>既定の回復優先順に HP% 最低の味方を追加</value></data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_warningMark" xml:space="preserve"><value>ほかの Default+ 項目と違い、これは多くのリターゲット系プラグインにない機能です。
+上の「単体回復をリターゲット」と一緒に使うことを推奨します。</value></data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve"><value>オフ</value></data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve"><value>パーティ UI 上でマウスオーバーしている対象を、既定の回復優先順の最上位に追加します。
+
+キーボード＋マウス操作で、上の「単体回復をリターゲット」または Redirect / Reaction の UIマウスオーバー設定を使う場合に有効です。</value></data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve"><value>既定の回復優先順に UIマウスオーバーを追加</value></data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve"><value>任意</value></data>
+</root>

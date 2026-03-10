@@ -927,16 +927,16 @@ Requires Occult Elixir in inventory.</value>
     <value>Adds Offensive Aria into the rotation.</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
-    <value>Romeoâ€™s Ballad</value>
+    <value>Romeo's Ballad</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
-    <value>Adds Romeoâ€™s Ballad into the rotation.</value>
+    <value>Adds Romeo's Ballad into the rotation.</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
-    <value>Heroâ€™s Rime</value>
+    <value>Hero's Rime</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
-    <value>Adds Heroâ€™s Rime into the rotation.</value>
+    <value>Adds Hero's Rime into the rotation.</value>
   </data>
   <data name="Phantom_Oracle_Name" xml:space="preserve">
     <value>Oracle Job Actions</value>
@@ -1672,7 +1672,7 @@ Will be used in all 4 main combos.</value>
     <value>Simple Mode - Single Target</value>
   </data>
   <data name="BLM_ST_SimpleMode_Desc" xml:space="preserve">
-    <value>Replaces Fire with a full one-button single target rotation.
+    <value>Replaces Blizzard I with a full one-button single target rotation.
 This is the ideal option for newcomers to the job.</value>
   </data>
   <data name="BLM_AoE_SimpleMode_Name" xml:space="preserve">
@@ -1686,7 +1686,7 @@ This is the ideal option for newcomers to the job.</value>
     <value>Advanced Mode - Single Target</value>
   </data>
   <data name="BLM_ST_AdvancedMode_Desc" xml:space="preserve">
-    <value>Replaces Fire with a full one-button single target rotation.
+    <value>Replaces Blizzard I with a full one-button single target rotation.
 These features are ideal if you want to customize the rotation.</value>
   </data>
   <data name="BLM_ST_Opener_Name" xml:space="preserve">

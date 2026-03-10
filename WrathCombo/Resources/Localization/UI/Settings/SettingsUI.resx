@@ -139,11 +139,8 @@ affecting the same actions will Conflict and may cause issues.</value>
   </data>
   <data name="HelpText_CreateDebug" xml:space="preserve">
     <value>Will generate a debug file on your desktop.
-U
-
-seful to give developers to help troubleshoot issues.
-T
-he same as using the following command: /wrath debug</value>
+Useful to give developers to help troubleshoot issues.
+The same as using the following command: /wrath debug</value>
   </data>
   <data name="Header_SettingsAbout" xml:space="preserve">
     <value>This tab allows you to customise global settings for Wrath Combo.</value>

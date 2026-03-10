@@ -1394,8 +1394,8 @@ public enum Preset
     #region Simple Mode
 
     [AutoAction(false, false)]
-    [ReplaceSkill(BLM.Fire)]
-    [ConflictingCombos(BLM_ST_AdvancedMode, BLM_Fire1and3, BLM_F1toF4)]
+    [ReplaceSkill(BLM.Blizzard)]
+    [ConflictingCombos(BLM_ST_AdvancedMode, BLM_Blizzard1and3, BLM_B1toB4)]
     [JobInfo(Job.BLM)]
     [SimpleCombo]
     BLM_ST_SimpleMode = 2001,
@@ -1412,8 +1412,8 @@ public enum Preset
     #region Single Target - Advanced
 
     [AutoAction(false, false)]
-    [ReplaceSkill(BLM.Fire)]
-    [ConflictingCombos(BLM_ST_SimpleMode, BLM_Fire1and3, BLM_F1toF4)]
+    [ReplaceSkill(BLM.Blizzard)]
+    [ConflictingCombos(BLM_ST_SimpleMode, BLM_Blizzard1and3, BLM_B1toB4)]
     [JobInfo(Job.BLM)]
     [AdvancedCombo]
     BLM_ST_AdvancedMode = 2100,
@@ -1543,12 +1543,12 @@ public enum Preset
     BLM_TriplecastProtection = 2056,
 
     [ReplaceSkill(BLM.Fire, BLM.Fire3)]
-    [ConflictingCombos(BLM_ST_AdvancedMode, BLM_ST_SimpleMode, BLM_F1toF4)]
+    [ConflictingCombos(BLM_F1toF4)]
     [JobInfo(Job.BLM)]
     BLM_Fire1and3 = 2054,
 
     [ReplaceSkill(BLM.Fire)]
-    [ConflictingCombos(BLM_ST_AdvancedMode, BLM_ST_SimpleMode, BLM_Fire1and3)]
+    [ConflictingCombos(BLM_Fire1and3)]
     [JobInfo(Job.BLM)]
     BLM_F1toF4 = 2070,
 
@@ -1561,12 +1561,12 @@ public enum Preset
     BLM_Flare = 2069,
 
     [ReplaceSkill(BLM.Blizzard, BLM.Blizzard3)]
-    [ConflictingCombos(BLM_B1toB4)]
+    [ConflictingCombos(BLM_ST_SimpleMode, BLM_ST_AdvancedMode, BLM_B1toB4)]
     [JobInfo(Job.BLM)]
     BLM_Blizzard1and3 = 2052,
 
     [ReplaceSkill(BLM.Blizzard)]
-    [ConflictingCombos(BLM_Blizzard1and3)]
+    [ConflictingCombos(BLM_ST_SimpleMode, BLM_ST_AdvancedMode, BLM_Blizzard1and3)]
     [JobInfo(Job.BLM)]
     BLM_B1toB4 = 2071,
 

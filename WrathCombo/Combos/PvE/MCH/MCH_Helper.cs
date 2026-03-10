@@ -32,11 +32,8 @@ internal partial class MCH
 
             case true when
                 (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                LevelChecked(AutoCrossbow) &&
-                (LevelChecked(BioBlaster) && GetCooldownRemainingTime(BioBlaster) > 10 ||
-                 !LevelChecked(BioBlaster) || IsNotEnabled(Preset.MCH_AoE_Adv_Tools)) &&
-                (LevelChecked(Flamethrower) && GetCooldownRemainingTime(Flamethrower) > 10 ||
-                 !LevelChecked(Flamethrower) || IsNotEnabled(Preset.MCH_AoE_Adv_FlameThrower)):
+                !IsOverheated && LevelChecked(Heatblast) &&
+                BioBlasterCD && ChainSawCD && FlamethrowerCD:
                 return true;
         }
 
@@ -223,17 +220,26 @@ internal partial class MCH
     #region Tools
 
     private static bool DrillCD =>
-        !LevelChecked(Drill) ||
+        !ActionReady(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= 9 ||
         TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) < GetMaxCharges(Drill) && GetCooldownChargeRemainingTime(Drill) >= 9;
 
     private static bool AirAnchorCD =>
-        !LevelChecked(OriginalHook(AirAnchor)) ||
-        LevelChecked(OriginalHook(AirAnchor)) && GetCooldownRemainingTime(OriginalHook(AirAnchor)) >= 9;
+        !LevelChecked(OriginalHook(HotShot)) ||
+        LevelChecked(OriginalHook(HotShot)) && GetCooldownRemainingTime(OriginalHook(HotShot)) >= 9;
 
     private static bool ChainSawCD =>
         !LevelChecked(Chainsaw) ||
         LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) >= 9;
+
+    private static bool BioBlasterCD =>
+        !ActionReady(BioBlaster) ||
+        !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(BioBlaster) >= 9 ||
+        TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(BioBlaster) < GetMaxCharges(BioBlaster) && GetCooldownChargeRemainingTime(BioBlaster) >= 9;
+
+    private static bool FlamethrowerCD =>
+        !ActionReady(Flamethrower) ||
+        LevelChecked(Flamethrower) && GetCooldownRemainingTime(Flamethrower) >= 9;
 
     private static bool CanUseTools(ref uint actionID)
     {
