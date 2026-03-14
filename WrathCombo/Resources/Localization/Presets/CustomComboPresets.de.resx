@@ -926,16 +926,16 @@ Benötigt Okkultes Elixir im Inventar.</value>
     <value>Fügt Angriffs-Arie in die Rotation hinzu.</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
-    <value>Liebliche Klänge</value>
+    <value>Romeoâ€™s Ballad</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
-    <value>Fügt Liebliche Klänge in die Rotation ein.</value>
+    <value>Adds Romeoâ€™s Ballad into the rotation.</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
-    <value>Helden-Hymus</value>
+    <value>Heroâ€™s Rime</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
-    <value>Fügt Helden-Hymus in die Rotation hinzu.</value>
+    <value>Adds Heroâ€™s Rime into the rotation.</value>
   </data>
   <data name="Phantom_Oracle_Name" xml:space="preserve">
     <value>Seher Job Aktionen</value>
