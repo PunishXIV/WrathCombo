@@ -120,4 +120,16 @@
   <data name="ALL_Healer_Raise_Retarget_Desc" xml:space="preserve">
     <value>。</value>
   </data>
+  <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
+    <value>Romeoâ€™s Ballad</value>
+  </data>
+  <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
+    <value>Adds Romeoâ€™s Ballad into the rotation.</value>
+  </data>
+  <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
+    <value>Heroâ€™s Rime</value>
+  </data>
+  <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
+    <value>Adds Heroâ€™s Rime into the rotation.</value>
+  </data>
 </root>
