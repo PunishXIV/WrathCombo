@@ -8821,6 +8821,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="VPR_Retarget_Slither_Desc" xml:space="preserve">
     <value>'뱀걸음' 사용 시, 파티원 리스트나 필드 위의 마우스오버 대상을 향해 이동합니다.</value>
   </data>
+  <data name="VPR_VicewinderCoils_Name" xml:space="preserve">
+    <value>뱀 하나: 분쇄 - 후속기 통합</value>
+  </data>
   <data name="VPR_VicewinderCoils_Desc" xml:space="preserve">
     <value>'뱀 하나: 분쇄' 버튼이 기술 사용 후 자동으로 '뱀 둘: 맹습/질주'로 바뀝니다.</value>
   </data>
@@ -8975,6 +8978,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   </data>
   <data name="WAR_ST_Interrupt_Name" xml:space="preserve">
     <value>차단 옵션</value>
+  </data>
+  <data name="WAR_ST_Interrupt_Desc" xml:space="preserve">
+    <value>대상의 캐스팅이 차단 가능할 때 '말참견'를 사용합니다.</value>
   </data>
   <data name="WAR_ST_Stun_Name" xml:space="preserve">
     <value>기절 옵션</value>
@@ -9131,6 +9137,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="WAR_Mitigation_Boss_Desc" xml:space="preserve">
     <value>보스전에서 딜사이클에 방어 기술을 추가합니다. 별도 언급이 없으면 방어 기술이 중첩되지 않게 사용합니다.</value>
   </data>
+  <data name="WAR_Mitigation_Boss_Equilibrium_Name" xml:space="preserve">
+    <value>평정심 옵션</value>
+  </data>
   <data name="WAR_Mitigation_Boss_Equilibrium_Desc" xml:space="preserve">
     <value>회복 용도로 '평정심'을 추가합니다.</value>
   </data>
@@ -9283,6 +9292,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   </data>
   <data name="WAR_FC_PrimalWrath_Name" xml:space="preserve">
     <value>원초의 격진 옵션</value>
+  </data>
+  <data name="WAR_FC_PrimalWrath_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '원초의 격진'을 추가합니다.</value>
   </data>
   <data name="WAR_FC_PrimalRuination_Name" xml:space="preserve">
     <value>원초적 파멸 옵션</value>
@@ -9439,6 +9451,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="WHM_ST_MainCombo_Assize_Desc" xml:space="preserve">
     <value>단일 콤보에 심판을 추가합니다.</value>
   </data>
+  <data name="WHM_ST_MainCombo_GlareIV_Name" xml:space="preserve">
+    <value>글레어쟈 옵션</value>
+  </data>
   <data name="WHM_ST_MainCombo_GlareIV_Desc" xml:space="preserve">
     <value>신성한 시선 버프 중일 때 단일 콤보에 글레어쟈를 추가합니다.</value>
   </data>
@@ -9589,6 +9604,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   </data>
   <data name="WHM_STHeals_Asylum_Name" xml:space="preserve">
     <value>성소 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Asylum_Desc" xml:space="preserve">
+    <value>발밑에 성소를 추가합니다.</value>
   </data>
   <data name="WHM_STHeals_LiturgyOfTheBell_Name" xml:space="preserve">
     <value>예배종 옵션</value>
@@ -9746,6 +9764,12 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="WHM_Re_Solace_Desc" xml:space="preserve">
     <value>위로의 마음 대상을 치유 우선순위으로 다시 지정합니다 (위의 위로-참담 콤보 기능 포함).</value>
   </data>
+  <data name="WHM_Re_Aquaveil_Name" xml:space="preserve">
+    <value>물의 장막 옵션</value>
+  </data>
+  <data name="WHM_Re_Aquaveil_Desc" xml:space="preserve">
+    <value>물의 장막 대상을 힐 우선순위로 다시 지정합니다 (위의 뎀감기 기능 포함).</value>
+  </data>
   <data name="WHM_Re_Asylum_Name" xml:space="preserve">
     <value>성소 옵션</value>
   </data>
@@ -9901,6 +9925,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="PvP_EmergencyHeals_Desc" xml:space="preserve">
     <value>HP가 설정된 값 미만이고 MP가 충분할 때 '활기'를 사용합니다.</value>
   </data>
+  <data name="PvP_EmergencyGuard_Name" xml:space="preserve">
+    <value>긴급 방어 기능</value>
+  </data>
   <data name="PvP_EmergencyGuard_Desc" xml:space="preserve">
     <value>HP가 설정된 임계값 미만으로 떨어지면 '방어'를 사용합니다.</value>
   </data>
@@ -9992,16 +10019,1237 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="BLMPvP_BurstMode_Name" xml:space="preserve">
     <value>버스트 모드</value>
   </data>
+  <data name="BLMPvP_BurstMode_Desc" xml:space="preserve">
+    <value>파이어를 원버튼 통합 기술로 변경합니다.
+- 이동 중에는 냉기 계열 마법을 사용합니다 (원버튼 모드 전용).
+- 상황에 맞춰 파라독스를 사용합니다.</value>
+  </data>
+  <data name="BLMPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 옵션</value>
+  </data>
+  <data name="BLMPvP_Burst_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '버스트'를 사용합니다.
+- 대상이 사거리 내에 있어야 합니다.</value>
+  </data>
+  <data name="BLMPvP_Xenoglossy_Name" xml:space="preserve">
+    <value>미지의 언어 옵션</value>
+  </data>
+  <data name="BLMPvP_Xenoglossy_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '미지의 언어'를 사용합니다.
+- 대상의 HP가 다음 수치 미만일 때:</value>
+  </data>
+  <data name="BLMPvP_Lethargy_Name" xml:space="preserve">
+    <value>무력화 옵션</value>
+  </data>
+  <data name="BLMPvP_Lethargy_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '무력화'을 사용합니다.
+- 플레이어가 아닌 대상에게는 사용하지 않습니다.
+- 대상의 HP가 다음 수치 미만일 때:</value>
+  </data>
+  <data name="BLMPvP_ElementalWeave_Name" xml:space="preserve">
+    <value>원소의 선물 옵션</value>
+  </data>
+  <data name="BLMPvP_ElementalWeave_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '화염 왕관'를 사용합니다.
+- 본인의 HP가 다음 수치 이상일 때:</value>
+  </data>
+  <data name="BLMPvP_ElementalStar_Name" xml:space="preserve">
+    <value>원소의 별 옵션</value>
+  </data>
+  <data name="BLMPvP_ElementalStar_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '원소의 별'을 사용합니다.
+- 지속 시간이 끝나가는 상황이 아니라면 '타오르는 별'를 우선적으로 사용합니다.</value>
+  </data>
+  <data name="BLMPvP_PhantomDart_Name" xml:space="preserve">
+    <value>유령 쐐기 옵션</value>
+  </data>
+  <data name="BLMPvP_PhantomDart_Desc" xml:space="preserve">
+    <value>유량 쐐기가 활성화되어 있고, 대상의 체력이 설정된 임계값 이하일 때 사용합니다.</value>
+  </data>
+  <data name="BLMPvP_Manipulation_Feature_Name" xml:space="preserve">
+    <value>에테르 촉진 기능</value>
+  </data>
+  <data name="BLMPvP_Manipulation_Feature_Desc" xml:space="preserve">
+    <value>군중 제어기(CC)에 걸렸을 때 '정화'를 함께 사용합니다.
+- '정화'가 사용 가능한 상태여야 합니다.</value>
+  </data>
+  <data name="BRDPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="BRDPvP_BurstMode_Desc" xml:space="preserve">
+    <value>강력한 사격을 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="BRDPvP_SilentNocturne_Name" xml:space="preserve">
+    <value>침묵의 야상곡 옵션</value>
+  </data>
+  <data name="BRDPvP_SilentNocturne_Desc" xml:space="preserve">
+    <value>버스트 모드에 침묵의 야상곡을 추가합니다.</value>
+  </data>
+  <data name="BRDPvP_ApexArrow_Name" xml:space="preserve">
+    <value>정점의 화살 옵션</value>
+  </data>
+  <data name="BRDPvP_ApexArrow_Desc" xml:space="preserve">
+    <value>버스트 모드에 정점의 화살을 추가합니다.</value>
+  </data>
+  <data name="BRDPvP_BlastArrow_Name" xml:space="preserve">
+    <value>돌풍 화살 옵션</value>
+  </data>
+  <data name="BRDPvP_BlastArrow_Desc" xml:space="preserve">
+    <value>버스트 모드에 돌풍 화살을 추가합니다.</value>
+  </data>
+  <data name="BRDPvP_HarmonicArrow_Name" xml:space="preserve">
+    <value>조화의 화살 옵션</value>
+  </data>
+  <data name="BRDPvP_HarmonicArrow_Desc" xml:space="preserve">
+    <value>버스트 모드에 조화의 화살을 추가합니다. 설정된 스택 수에 도달하거나, 대상의 HP가 마무리 임계값 이하일 때 사용합니다.</value>
+  </data>
+  <data name="BRDPvP_EncoreOfLight_Name" xml:space="preserve">
+    <value>영웅의 앙코르 옵션</value>
+  </data>
+  <data name="BRDPvP_EncoreOfLight_Desc" xml:space="preserve">
+    <value>버스트 모드에 영웅의 앙코르를 추가합니다.</value>
+  </data>
+  <data name="BRDPvP_Wardens_Name" xml:space="preserve">
+    <value>시간신의 찬미가 옵션</value>
+  </data>
+  <data name="BRDPvP_Wardens_Desc" xml:space="preserve">
+    <value>가벼운 군중 제어기(수면 전조, 과중력, 속박)를
+ 자동으로 즉시 해제합니다.</value>
+  </data>
+  <data name="BRDPvP_Eagle_Name" xml:space="preserve">
+    <value>역할 기술: 독수리 눈 사격 옵션</value>
+  </data>
+  <data name="BRDPvP_Eagle_Desc" xml:space="preserve">
+    <value>대상이 '방어' 중이거나 체력이 설정된 비율 이하일 때 자동으로 독수리 눈 사격을 사용합니다.
+(전장 등 대규모 PvP에서만 작동합니다)</value>
+  </data>
+  <data name="DNCPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="DNCPvP_BurstMode_Desc" xml:space="preserve">
+    <value>분수 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="DNCPvP_BurstMode_HoningDance_Name" xml:space="preserve">
+    <value>기교 넘치는 춤 옵션</value>
+  </data>
+  <data name="DNCPvP_BurstMode_HoningDance_Desc" xml:space="preserve">
+    <value>근접 범위 내에 있을 때 메인 콤보에 '기교 넘치는 춤'을 추가합니다.
+이 옵션은 '기교 넘치는 갈채'가 너무 일찍 발동되는 것을 방지합니다!
+춤을 도중에 끊고 싶다면 다른 키에 '기교 넘치는 춤'을 따로 등록해 두세요.</value>
+  </data>
+  <data name="DNCPvP_BurstMode_CuringWaltz_Name" xml:space="preserve">
+    <value>치유의 왈츠 옵션</value>
+  </data>
+  <data name="DNCPvP_BurstMode_CuringWaltz_Desc" xml:space="preserve">
+    <value>HP가 설정된 비율 이하일 때 사용 가능한 '치유의 왈츠'를 콤보에 추가합니다.</value>
+  </data>
+  <data name="DNCPvP_BurstMode_Partner_Name" xml:space="preserve">
+    <value>무도 파트너 알림 옵션</value>
+  </data>
+  <data name="DNCPvP_BurstMode_Partner_Desc" xml:space="preserve">
+    <value>마주서기 상태가 아닐 때 파트너 설정을 제안합니다.</value>
+  </data>
+  <data name="DNCPvP_BurstMode_Dash_Name" xml:space="preserve">
+    <value>앞걸음 옵션</value>
+  </data>
   <data name="DNCPvP_BurstMode_Dash_Desc" xml:space="preserve">
     <value>1-2번 콤보 위력을 강화하는 버프가 없을 때, 사용 가능한 '앞걸음'을 사용하여 대미지를 보강합니다.</value>
   </data>
+  <data name="DNCPvP_Eagle_Name" xml:space="preserve">
+    <value>역할 기술: 독수리 눈 사격 옵션</value>
+  </data>
+  <data name="DNCPvP_Eagle_Desc" xml:space="preserve">
+    <value>대상이 '방어' 중이거나 체력이 설정된 비율 이하일 때 자동으로 독수리 눈 사격을 사용합니다. 
+(전장 등 대규모 PvP에서만 작동합니다)</value>
+  </data>
+  <data name="DRKPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="DRKPvP_Burst_Desc" xml:space="preserve">
+    <value>흡혼검 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="DRKPvP_Plunge_Name" xml:space="preserve">
+    <value>돌진 옵션</value>
+  </data>
+  <data name="DRKPvP_Plunge_Desc" xml:space="preserve">
+    <value>버스트 모드에 돌진을 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_PlungeMelee_Name" xml:space="preserve">
+    <value>근접 돌진 옵션</value>
+  </data>
+  <data name="DRKPvP_PlungeMelee_Desc" xml:space="preserve">
+    <value>돌진을 단순히 접근기가 아닌, 근접 범위 내에서 공격 기술로 사용합니다.</value>
+  </data>
+  <data name="DRKPvP_SaltedEarth_Name" xml:space="preserve">
+    <value>감염 지대 옵션</value>
+  </data>
+  <data name="DRKPvP_SaltedEarth_Desc" xml:space="preserve">
+    <value>버스트 모드에 감염 지대를 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_SaltAndDarkness_Name" xml:space="preserve">
+    <value>어둠 감염 옵션</value>
+  </data>
+  <data name="DRKPvP_SaltAndDarkness_Desc" xml:space="preserve">
+    <value>버스트 모드에 어둠 감염을 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_Impalement_Name" xml:space="preserve">
+    <value>관통형 옵션</value>
+  </data>
+  <data name="DRKPvP_Impalement_Desc" xml:space="preserve">
+    <value>버스트 모드에 관통형을 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_Shadowbringer_Name" xml:space="preserve">
+    <value>칠흑 도래 옵션</value>
+  </data>
+  <data name="DRKPvP_Shadowbringer_Desc" xml:space="preserve">
+    <value>버스트 모드에 칠흑 도래를 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_BlackestNight_Name" xml:space="preserve">
+    <value>흑야 옵션</value>
+  </data>
+  <data name="DRKPvP_BlackestNight_Desc" xml:space="preserve">
+    <value>버스트 모드에 흑야를 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_Scorn_Name" xml:space="preserve">
+    <value>경멸 옵션</value>
+  </data>
+  <data name="DRKPvP_Scorn_Desc" xml:space="preserve">
+    <value>버스트 모드에 경멸을 추가합니다.</value>
+  </data>
+  <data name="DRKPvP_Rampart_Name" xml:space="preserve">
+    <value>역할 기술: 철벽 방어 옵션</value>
+  </data>
+  <data name="DRKPvP_Rampart_Desc" xml:space="preserve">
+    <value>HP가 설정된 수치 이하일 때 방어용 역할 기술인 '철벽 방어'를 사용합니다.</value>
+  </data>
+  <data name="DRGPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="DRGPvP_Burst_Desc" xml:space="preserve">
+    <value>운증용변 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="DRGPvP_Geirskogul_Name" xml:space="preserve">
+    <value>게이르스코굴 옵션</value>
+  </data>
+  <data name="DRGPvP_Geirskogul_Desc" xml:space="preserve">
+    <value>버스트 모드에 게이르스코굴을 추가합니다.</value>
+  </data>
+  <data name="DRGPvP_Nastrond_Name" xml:space="preserve">
+    <value>나스트론드 옵션</value>
+  </data>
+  <data name="DRGPvP_Nastrond_Desc" xml:space="preserve">
+    <value>버스트 모드에 나스트론드를 추가합니다.</value>
+  </data>
+  <data name="DRGPvP_HorridRoar_Name" xml:space="preserve">
+    <value>소름 끼치는 포효 옵션</value>
+  </data>
+  <data name="DRGPvP_HorridRoar_Desc" xml:space="preserve">
+    <value>버스트 모드에 소름 끼치는 포효를 추가합니다.</value>
+  </data>
+  <data name="DRGPvP_ChaoticSpringSustain_Name" xml:space="preserve">
+    <value>꽃잎 만발 옵션</value>
+  </data>
+  <data name="DRGPvP_ChaoticSpringSustain_Desc" xml:space="preserve">
+    <value>본인의 HP가 설정된 비율 이하일 때 버스트 모드에 꽃잎 만발을 추가합니다.</value>
+  </data>
+  <data name="DRGPvP_ChaoticSpringExecute_Name" xml:space="preserve">
+    <value>꽃잎 만발 마무리 옵션</value>
+  </data>
+  <data name="DRGPvP_ChaoticSpringExecute_Desc" xml:space="preserve">
+    <value>대상의 HP가 8,000 이하일 때 꽃잎 만발을 사용하여 '방어'를 관통하고 처치합니다.</value>
+  </data>
+  <data name="DRGPvP_WyrmwindThrust_Name" xml:space="preserve">
+    <value>천룡점정 옵션</value>
+  </data>
+  <data name="DRGPvP_WyrmwindThrust_Desc" xml:space="preserve">
+    <value>버스트 모드에 천룡점정을 추가합니다.</value>
+  </data>
+  <data name="DRGPvP_HighJump_Name" xml:space="preserve">
+    <value>하이 점프 연계 옵션</value>
+  </data>
+  <data name="DRGPvP_HighJump_Desc" xml:space="preserve">
+    <value>버스트 모드에 하이 점프를 추가합니다.</value>
+  </data>
+  <data name="DRGPvP_BurstProtection_Name" xml:space="preserve">
+    <value>교묘한 점프 버스트 옵션</value>
+  </data>
+  <data name="DRGPvP_BurstProtection_Desc" xml:space="preserve">
+    <value>모든 쿨타임이 준비되었을 때 교묘한 점프를 사용하면 운증용변 콤보를 원버튼 폭딜 모드로 전환합니다.
+버스트가 준비되지 않았다면 교묘한 점프를 비활성화합니다.</value>
+  </data>
+  <data name="DRGPvP_Smite_Name" xml:space="preserve">
+    <value>역할 기술: 강타 옵션</value>
+  </data>
+  <data name="DRGPvP_Smite_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 수치 이하일 때 역할 기술인 '강타'을 버스트 모드에 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="GNBPvP_Burst_Desc" xml:space="preserve">
+    <value>곧은 총열 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="GNBPvP_FatedCircle_Name" xml:space="preserve">
+    <value>운명의 고리 옵션</value>
+  </data>
+  <data name="GNBPvP_FatedCircle_Desc" xml:space="preserve">
+    <value>'무자비' 상태일 때 로테이션에 운명의 고리를 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_ST_GnashingFang_Name" xml:space="preserve">
+    <value>난폭한 송곳니 옵션</value>
+  </data>
+  <data name="GNBPvP_ST_GnashingFang_Desc" xml:space="preserve">
+    <value>버스트 모드에 난폭한 송곳니를 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_ST_Continuation_Name" xml:space="preserve">
+    <value>연속기 옵션</value>
+  </data>
+  <data name="GNBPvP_ST_Continuation_Desc" xml:space="preserve">
+    <value>버스트 모드에 연속기를 추가합니다.</value>
+  </data>
   <data name="GNBPvP_RoughDivide_Name" xml:space="preserve">
     <value>대분할 옵션</value>
+  </data>
+  <data name="GNBPvP_RoughDivide_Desc" xml:space="preserve">
+    <value>상황에 맞춰 로테이션에 대분할를 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_BlastingZone_Name" xml:space="preserve">
+    <value>발파 지대 옵션</value>
+  </data>
+  <data name="GNBPvP_BlastingZone_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 임계값 이하일 때 버스트 모드에 발파 지대를 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_Corundum_Name" xml:space="preserve">
+    <value>강옥의 심장 옵션</value>
+  </data>
+  <data name="GNBPvP_Corundum_Desc" xml:space="preserve">
+    <value>본인의 HP가 설정된 비율 이하일 때 버스트 모드에 강옥의 심장을 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_Rampart_Name" xml:space="preserve">
+    <value>역할 기술: 철벽 방어 옵션</value>
+  </data>
+  <data name="GNBPvP_Rampart_Desc" xml:space="preserve">
+    <value>본인의 HP가 설정된 수치 이하일 때 방어용 역할 기술인 '철벽 방어'를 버스트 모드에 추가합니다.</value>
+  </data>
+  <data name="GNBPvP_GnashingFang_Name" xml:space="preserve">
+    <value>연속기 기능</value>
+  </data>
+  <data name="GNBPvP_GnashingFang_Desc" xml:space="preserve">
+    <value>폭발 유도에 연속기를 연계하여 사용합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Desc" xml:space="preserve">
+    <value>충전 분사를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_AirAnchor_Name" xml:space="preserve">
+    <value>슬 닻 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_AirAnchor_Desc" xml:space="preserve">
+    <value>버스트 모드에 사슬 닻을 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Analysis_Name" xml:space="preserve">
+    <value>분석 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Analysis_Desc" xml:space="preserve">
+    <value>버스트 모드에 분석을 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_AltAnalysis_Name" xml:space="preserve">
+    <value>분석 대상 변경 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_AltAnalysis_Desc" xml:space="preserve">
+    <value>분석 버프를 회전 톱 대신 사슬 닻에 우선적으로 사용합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Drill_Name" xml:space="preserve">
+    <value>드릴 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Drill_Desc" xml:space="preserve">
+    <value>버스트 모드에 드릴을 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_AltDrill_Name" xml:space="preserve">
+    <value>드릴 연계 변경 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_AltDrill_Desc" xml:space="preserve">
+    <value>드릴을 아껴두었다가 와일드파이어 사용 직후에 연계합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_BioBlaster_Name" xml:space="preserve">
+    <value>생화학 무기 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_BioBlaster_Desc" xml:space="preserve">
+    <value>버스트 모드에 생화학 무기를 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_ChainSaw_Name" xml:space="preserve">
+    <value>회전 톱 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_ChainSaw_Desc" xml:space="preserve">
+    <value>버스트 모드에 회전 톱을 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_FullMetalField_Name" xml:space="preserve">
+    <value>전탄발사 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_FullMetalField_Desc" xml:space="preserve">
+    <value>버스트 모드에 전탄발사를 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Wildfire_Name" xml:space="preserve">
+    <value>소이탄 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_Wildfire_Desc" xml:space="preserve">
+    <value>버스트 모드에 소이탄을 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_BurstMode_MarksmanSpite_Name" xml:space="preserve">
+    <value>마탄의 사수 옵션</value>
+  </data>
+  <data name="MCHPvP_BurstMode_MarksmanSpite_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 수치 이하일 때 버스트 모드에 마탄의 사수를 추가합니다.</value>
+  </data>
+  <data name="MCHPvP_Eagle_Name" xml:space="preserve">
+    <value>역할 기술: 독수리 눈 사격 옵션</value>
+  </data>
+  <data name="MCHPvP_Eagle_Desc" xml:space="preserve">
+    <value>대상이 '방어' 중이거나 체력이 설정된 비율 이하일 때 자동으로 독수리 눈 사격을 사용합니다.
+(전장 등 대규모 PvP에서만 작동합니다)</value>
+  </data>
+  <data name="MNKPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="MNKPvP_Burst_Desc" xml:space="preserve">
+    <value>몽환투무 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="MNKPvP_Burst_Meteodrive_Name" xml:space="preserve">
+    <value>메테오 드라이브 옵션</value>
+  </data>
+  <data name="MNKPvP_Burst_Meteodrive_Desc" xml:space="preserve">
+    <value>대상의 HP가 20,000 이하이면서 '방어' 중일 때 리미트 브레이크인 '메테오 드라이브'를 사용합니다.</value>
+  </data>
+  <data name="MNKPvP_Burst_Thunderclap_Name" xml:space="preserve">
+    <value>발중보법 옵션</value>
+  </data>
+  <data name="MNKPvP_Burst_Thunderclap_Desc" xml:space="preserve">
+    <value>'바람의 공명' 버프가 없을 때 버스트 모드에 발중보법을 추가합니다.</value>
+  </data>
+  <data name="MNKPvP_Burst_RiddleOfEarth_Name" xml:space="preserve">
+    <value>금강의 극의 옵션</value>
+  </data>
+  <data name="MNKPvP_Burst_RiddleOfEarth_Desc" xml:space="preserve">
+    <value>전투 중일 때 버스트 모드에 금강의 극의와 금강전륜을 추가합니다.</value>
+  </data>
+  <data name="MNKPvP_Burst_FiresReply_Name" xml:space="preserve">
+    <value>건곤투기탄 옵션</value>
+  </data>
+  <data name="MNKPvP_Burst_FiresReply_Desc" xml:space="preserve">
+    <value>버스트 모드에 ‘건곤투기탄’을 추가합니다.</value>
+  </data>
+  <data name="MNKPvP_Burst_RisingPhoenix_Name" xml:space="preserve">
+    <value>봉황의 춤 옵션</value>
+  </data>
+  <data name="MNKPvP_Burst_RisingPhoenix_Desc" xml:space="preserve">
+    <value>버스트 모드에 봉황의 춤을 추가합니다.</value>
+  </data>
+  <data name="MNKPvP_Burst_WindsReply_Name" xml:space="preserve">
+    <value>절공권 옵션</value>
+  </data>
+  <data name="MNKPvP_Burst_WindsReply_Desc" xml:space="preserve">
+    <value>버스트 모드에 절공권을 추가합니다.</value>
+  </data>
+  <data name="MNKPvP_Smite_Name" xml:space="preserve">
+    <value>역할 기술: 강타 옵션</value>
+  </data>
+  <data name="MNKPvP_Smite_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 수치 이하일 때 역할 기술인 '강타'을 버스트 모드에 추가합니다.</value>
   </data>
   <data name="NINPvP_ST_BurstMode_Name" xml:space="preserve">
     <value>단일 버스트 모드</value>
   </data>
   <data name="NINPvP_ST_BurstMode_Desc" xml:space="preserve">
     <value>칼날 선풍 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_BurstMode_Name" xml:space="preserve">
+    <value>광역 버스트 모드</value>
+  </data>
+  <data name="NINPvP_AoE_BurstMode_Desc" xml:space="preserve">
+    <value>풍마 수리검을 원버튼 통합 광역 공격기로 변경합니다.</value>
+  </data>
+  <data name="NINPvP_ST_Meisui_Name" xml:space="preserve">
+    <value>생명의 물 옵션</value>
+  </data>
+  <data name="NINPvP_ST_Meisui_Desc" xml:space="preserve">
+    <value>HP가 설정된 임계값 미만일 때 삼인술을 '생명의 물'에 사용합니다.</value>
+  </data>
+  <data name="NINPvP_ST_MudraMode_Name" xml:space="preserve">
+    <value>자동 인술 모드</value>
+  </data>
+  <data name="NINPvP_ST_MudraMode_Desc" xml:space="preserve">
+    <value>단일 버스트 모드에서 삼인술을 자동으로 사용합니다.
+빙쇼란류 &gt; (분신술 스택이 있을 경우) 뇌구 초래 &gt; 풍둔 순으로 우선 사용합니다.</value>
+  </data>
+  <data name="NINPvP_ST_FumaShuriken_Name" xml:space="preserve">
+    <value>풍마의 수리검 옵션</value>
+  </data>
+  <data name="NINPvP_ST_FumaShuriken_Desc" xml:space="preserve">
+    <value>버스트 모드에 풍마의 수리검을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_ST_ThreeMudra_Name" xml:space="preserve">
+    <value>삼인술 옵션</value>
+  </data>
+  <data name="NINPvP_ST_ThreeMudra_Desc" xml:space="preserve">
+    <value>버스트 모드에 삼인술을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_ST_ThreeMudraPool_Name" xml:space="preserve">
+    <value>삼인술 비축 옵션</value>
+  </data>
+  <data name="NINPvP_ST_ThreeMudraPool_Desc" xml:space="preserve">
+    <value>분신술 버스트 타이밍을 위해 삼인술 스택 2개를 모두 아껴둡니다.</value>
+  </data>
+  <data name="NINPvP_ST_Dokumori_Name" xml:space="preserve">
+    <value>강탈 옵션</value>
+  </data>
+  <data name="NINPvP_ST_Dokumori_Desc" xml:space="preserve">
+    <value>버스트 모드에 강탈을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_ST_Bunshin_Name" xml:space="preserve">
+    <value>분신술 옵션</value>
+  </data>
+  <data name="NINPvP_ST_Bunshin_Desc" xml:space="preserve">
+    <value>버스트 모드에 분신술을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_ST_SeitonTenchu_Name" xml:space="preserve">
+    <value>성둔천주 옵션</value>
+  </data>
+  <data name="NINPvP_ST_SeitonTenchu_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 임계값 미만일 때 버스트 모드에 성둔천주을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_Meisui_Name" xml:space="preserve">
+    <value>생명의 물 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_Meisui_Desc" xml:space="preserve">
+    <value>체력이 설정된 % 이하일 때, 생명의 물을 발동하기 위해 세 번째 인술로 사용합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_MudraMode_Name" xml:space="preserve">
+    <value>자동 인술 모드 (광역)</value>
+  </data>
+  <data name="NINPvP_AoE_MudraMode_Desc" xml:space="preserve">
+    <value>광역 버스트 모드에서 삼인술을 자동으로 사용합니다.
+토둔 &gt; 겁화멸각 순으로 우선 사용합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_FumaShuriken_Name" xml:space="preserve">
+    <value>풍마 수리검 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_FumaShuriken_Desc" xml:space="preserve">
+    <value>버스트 모드에 풍마 수리검을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_ThreeMudra_Name" xml:space="preserve">
+    <value>삼인술 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_ThreeMudra_Desc" xml:space="preserve">
+    <value>버스트 모드에 삼인술을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_ThreeMudraPool_Name" xml:space="preserve">
+    <value>삼인술 비축 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_ThreeMudraPool_Desc" xml:space="preserve">
+    <value>분신술 버스트 타이밍을 위해 삼인술 스택 2개를 모두 아껴둡니다.</value>
+  </data>
+  <data name="NINPvP_AoE_Dokumori_Name" xml:space="preserve">
+    <value>강탈 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_Dokumori_Desc" xml:space="preserve">
+    <value>버스트 모드에 강탈을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_Bunshin_Name" xml:space="preserve">
+    <value>분신술 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_Bunshin_Desc" xml:space="preserve">
+    <value>버스트 모드에 분신술을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_AoE_SeitonTenchu_Name" xml:space="preserve">
+    <value>성둔천주 옵션</value>
+  </data>
+  <data name="NINPvP_AoE_SeitonTenchu_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 임계값 미만일 때 버스트 모드에 성둔천주을 추가합니다.</value>
+  </data>
+  <data name="NINPvP_Smite_Name" xml:space="preserve">
+    <value>역할 기술: 강타 옵션</value>
+  </data>
+  <data name="NINPvP_Smite_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 수치 이하일 때 역할 기술인 '강'을 버스트 모드에 추가합니다.</value>
+  </data>
+  <data name="PLDPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="PLDPvP_Burst_Desc" xml:space="preserve">
+    <value>제왕의 권위 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="PLDPvP_ShieldSmite_Name" xml:space="preserve">
+    <value>방패 강타 옵션</value>
+  </data>
+  <data name="PLDPvP_ShieldSmite_Desc" xml:space="preserve">
+    <value>버스트 모드에 방패 강타를 추가합니다. (받는 피해량 증가 및 방어 효과 감쇄)</value>
+  </data>
+  <data name="PLDPvP_Imperator_Name" xml:space="preserve">
+    <value>제왕의 명령 옵션</value>
+  </data>
+  <data name="PLDPvP_Imperator_Desc" xml:space="preserve">
+    <value>버스트 모드에 제왕의 명령을 추가합니다. (신성 각인 부여 및 회한의 검 콤보 활성화)</value>
+  </data>
+  <data name="PLDPvP_Confiteor_Name" xml:space="preserve">
+    <value>고백 기도 옵션</value>
+  </data>
+  <data name="PLDPvP_Confiteor_Desc" xml:space="preserve">
+    <value>버스트 모드에 고백 기도를 추가합니다. (광역 마법 공격 및 HP 회복)</value>
+  </data>
+  <data name="PLDPvP_HolySpirit_Name" xml:space="preserve">
+    <value>성령의 권능 옵션</value>
+  </data>
+  <data name="PLDPvP_HolySpirit_Desc" xml:space="preserve">
+    <value>버스트 모드에 성령의 권능을 추가합니다. (원거리 마법 공격 및 HP 회복)</value>
+  </data>
+  <data name="PLDPvP_Intervene_Name" xml:space="preserve">
+    <value>개입 옵션</value>
+  </data>
+  <data name="PLDPvP_Intervene_Desc" xml:space="preserve">
+    <value>버스트 모드에 개입을 추가합니다. (대상 접근 및 기절 효과)</value>
+  </data>
+  <data name="PLDPvP_Intervene_Melee_Name" xml:space="preserve">
+    <value>근접 개입 옵션</value>
+  </data>
+  <data name="PLDPvP_Intervene_Melee_Desc" xml:space="preserve">
+    <value>근접 범위 내에 있을 때 버스트 모드에 개입을 추가합니다.</value>
+  </data>
+  <data name="PLDPvP_PhalanxCombo_Name" xml:space="preserve">
+    <value>방진 콤보 옵션</value>
+  </data>
+  <data name="PLDPvP_PhalanxCombo_Desc" xml:space="preserve">
+    <value>버스트 모드에 리미트 브레이크 후속기인 신의의 검-진실의 검-용맹의 검 콤보를 추가합니다.</value>
+  </data>
+  <data name="PLDPvP_Sheltron_Name" xml:space="preserve">
+    <value>신성한 방벽 옵션</value>
+  </data>
+  <data name="PLDPvP_Sheltron_Desc" xml:space="preserve">
+    <value>근접 범위 내에 있을 때 버스트 모드에 신성한 방벽을 추가합니다. (보호막 및 충의의 검/방패 획득)</value>
+  </data>
+  <data name="PLDPvP_Rampart_Name" xml:space="preserve">
+    <value>역할 기술: 철벽 방어 옵션</value>
+  </data>
+  <data name="PLDPvP_Rampart_Desc" xml:space="preserve">
+    <value>본인의 HP가 설정된 수치 이하일 때 전장 전용 기술인 '철벽 방어'를 버스트 모드에 추가합니다.</value>
+  </data>
+  <data name="PCTPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="PCTPvP_Burst_Desc" xml:space="preserve">
+    <value>레드 파이어-그린 에어로-블루 워터로 이어지는 색마법 콤보를 원버튼 통합 공격기로 변경합니다.</value>
+  </data>
+  <data name="PCTPvP_BurstControl_Name" xml:space="preserve">
+    <value>버스트 조절 옵션</value>
+  </data>
+  <data name="PCTPvP_BurstControl_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정된 임계값 이하로 떨어질 때까지 위력이 높은 기술(모그리 격류, 별무리 프리즘 등)을 아껴둡니다.</value>
+  </data>
+  <data name="PCTPvP_TemperaCoat_Name" xml:space="preserve">
+    <value>템페라 밑칠 옵션</value>
+  </data>
+  <data name="PCTPvP_TemperaCoat_Desc" xml:space="preserve">
+    <value>전투 중 HP가 설정된 임계값 이하로 떨어지면 템페라 밑칠을 사용합니다. (피해 흡수 보호막 생성)</value>
+  </data>
+  <data name="PCTPvP_SubtractivePalette_Name" xml:space="preserve">
+    <value>스마트 팔레트 옵션</value>
+  </data>
+  <data name="PCTPvP_SubtractivePalette_Desc" xml:space="preserve">
+    <value>정지 상태에서 색빼기를 활성화하여 마법을 강화하고, 이동 시 이를 해제합니다.</value>
+  </data>
+  <data name="PCTPvP_CreatureMotif_Name" xml:space="preserve">
+    <value>동물 구상 옵션</value>
+  </data>
+  <data name="PCTPvP_CreatureMotif_Desc" xml:space="preserve">
+    <value>버스트 모드에 동물 그림(폼폼, 날개, 발톱, 송곳니)을 그리는 기능을 추가합니다.</value>
+  </data>
+  <data name="PCTPvP_LivingMuse_Name" xml:space="preserve">
+    <value>동물 구현 옵션</value>
+  </data>
+  <data name="PCTPvP_LivingMuse_Desc" xml:space="preserve">
+    <value>버스트 모드에 동물 구현(폼폼, 날개, 발톱, 송곳니)을 추가하여 범위 공격 및 버프를 발동합니다.</value>
+  </data>
+  <data name="PCTPvP_MogOfTheAges_Name" xml:space="preserve">
+    <value>모그리 격류 옵션</value>
+  </data>
+  <data name="PCTPvP_MogOfTheAges_Desc" xml:space="preserve">
+    <value>버스트 모드에 모그리 격류(또는 마딘의 응징)를 추가합니다. (직선 범위 마법 공격 및 침묵/기절)</value>
+  </data>
+  <data name="PCTPvP_HolyInWhite_Name" xml:space="preserve">
+    <value>화이트 홀리 옵션</value>
+  </data>
+  <data name="PCTPvP_HolyInWhite_Desc" xml:space="preserve">
+    <value>버스트 모드에 화이트 홀리(또는 블랙 코멧)를 추가합니다. (범위 공격 및 HP 회복)</value>
+  </data>
+  <data name="PCTPvP_StarPrism_Name" xml:space="preserve">
+    <value>별무리 프리즘 옵션</value>
+  </data>
+  <data name="PCTPvP_StarPrism_Desc" xml:space="preserve">
+    <value>버스트 모드에 별무리 프리즘을 추가합니다. (광역 공격, 파티원 HP 회복 및 피해량 증가)</value>
+  </data>
+  <data name="PCTPvP_PhantomDart_Name" xml:space="preserve">
+    <value>유령 쐐기 옵션</value>
+  </data>
+  <data name="PCTPvP_PhantomDart_Desc" xml:space="preserve">
+    <value>설정된 HP 임계값 이하일 때 역할 기술인 '유령 쐐기'를 사용합니다. (받는 피해량 증가 부여)</value>
+  </data>
+  <data name="PCTPvP_OneButtonMotifs_Name" xml:space="preserve">
+    <value>원버튼 구상 기능</value>
+  </data>
+  <data name="PCTPvP_OneButtonMotifs_Desc" xml:space="preserve">
+    <value>동물 구현 기능을 원버튼 구상 기능으로 대체하여 효율적으로 사용합니다.</value>
+  </data>
+  <data name="PCTPvP_StarPrismOneButtonMotifs_Name" xml:space="preserve">
+    <value>별무리 프리즘 활성화</value>
+  </data>
+  <data name="PCTPvP_StarPrismOneButtonMotifs_Desc" xml:space="preserve">
+    <value>리미트 브레이크 사용 후 별무리 프리즘을 즉시 사용할 수 있도록 추가합니다.</value>
+  </data>
+  <data name="RPRPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="RPRPvP_Burst_Desc" xml:space="preserve">
+    <value>낫질-반달 낫질-지옥 낫질 콤보를 원버튼 통합 공격기로 변경하며, 영혼 절단을 메인 콤보에 추가합니다.</value>
+  </data>
+  <data name="RPRPvP_Burst_GrimSwathe_Name" xml:space="preserve">
+    <value>음산한 할퀴기 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_GrimSwathe_Desc" xml:space="preserve">
+    <value>음산한 할퀴기를 쿨타임마다 메인 콤보에 추가합니다. (참수형 집행 활성화 및 과중력 부여)</value>
+  </data>
+  <data name="RPRPvP_Burst_DeathWarrant_Name" xml:space="preserve">
+    <value>사형 예고 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_DeathWarrant_Desc" xml:space="preserve">
+    <value>풍성한 수확이 준비되었거나 쿨타임이 사형 예고보다 길 때 메인 콤보에 사형 예고를 추가합니다. (피해 축적 후 운명 봉인 발동)</value>
+  </data>
+  <data name="RPRPvP_Burst_ImmortalPooling_Name" xml:space="preserve">
+    <value>풍성한 수확 + 죽음의 공물 비축 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_ImmortalPooling_Desc" xml:space="preserve">
+    <value>풍성한 수확을 사용하기 전에 죽음의 공물 스택을 비축합니다. 사형 예고가 쿨타임 중일 때도 수확을 아껴둡니다. (3 이하 설정 시 즉시 사용)</value>
+  </data>
+  <data name="RPRPvP_Burst_Enshrouded_Name" xml:space="preserve">
+    <value>레무르 버스트 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_Enshrouded_Desc" xml:space="preserve">
+    <value>레무르(빙의) 상태에서 레무르의 낫을 메인 콤보에 추가합니다. 보이드/크로스 리퍼 연계가 포함됩니다.</value>
+  </data>
+  <data name="RPRPvP_Burst_Enshrouded_DeathWarrant_Name" xml:space="preserve">
+    <value>레무르 중 사형 예고 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_Enshrouded_DeathWarrant_Desc" xml:space="preserve">
+    <value>레무르 상태에서 사형 예고가 가능해지면 메인 콤보에 즉시 추가하여 피해 축적량을 극대화합니다.</value>
+  </data>
+  <data name="RPRPvP_Burst_Enshrouded_Communio_Name" xml:space="preserve">
+    <value>합일 마무리 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_Enshrouded_Communio_Desc" xml:space="preserve">
+    <value>레무르 스택이 1개 남았을 때 합일을 사용하여 강력한 범위 마법 공격을 가합니다. (이동 중에는 발동하지 않음)</value>
+  </data>
+  <data name="RPRPvP_Burst_RangedHarvest_Name" xml:space="preserve">
+    <value>원거리 수확의 달 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_RangedHarvest_Desc" xml:space="preserve">
+    <value>근접 범위 밖이거나 글쿨이 놀고 있을 때 수확의 달을 사용합니다. 대상 HP가 12,000 이하일 때 처형용으로 우선 사용합니다.</value>
+  </data>
+  <data name="RPRPvP_Burst_ArcaneCircle_Name" xml:space="preserve">
+    <value>신비의 문장 옵션</value>
+  </data>
+  <data name="RPRPvP_Burst_ArcaneCircle_Desc" xml:space="preserve">
+    <value>본인의 HP가 설정된 비율 이하일 때 신비의 문장을 사용하여 보호막을 치고 파티원을 회복시킵니다.</value>
+  </data>
+  <data name="RPRPvP_Smite_Name" xml:space="preserve">
+    <value>역할 기술: 강타 옵션</value>
+  </data>
+  <data name="RPRPvP_Smite_Desc" xml:space="preserve">
+    <value>대상의 HP가 낮을 때 역할 기술인 '강타'를 사용합니다. 처치나 도움 기록 시 재사용 대기 시간이 초기화됩니다.</value>
+  </data>
+  <data name="RDMPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="RDMPvP_BurstMode_Desc" xml:space="preserve">
+    <value>졸트가와 노블 임팩트를 원버튼 통합 공격기로 변경합니다.
+- 이동 중에는 졸트가를 시전하지 않으며, 대신 야만적인 검격으로 대체합니다.</value>
+  </data>
+  <data name="RDMPvP_Riposte_Name" xml:space="preserve">
+    <value>마법 검 콤보 옵션</value>
+  </data>
+  <data name="RDMPvP_Riposte_Desc" xml:space="preserve">
+    <value>인리포스트-인츠베르크하우-인르두블망-작열화 콤보를 사용합니다.
+- 마법 검 기술은 대상의 방어 효과를 무시하며, 자신에게 보호막을 부여합니다.</value>
+  </data>
+  <data name="RDMPvP_Resolution_Name" xml:space="preserve">
+    <value>단호한 결단 옵션</value>
+  </data>
+  <data name="RDMPvP_Resolution_Desc" xml:space="preserve">
+    <value>사용 가능할 때 단호한 결단을 사용합니다. (직선 범위 마법 공격 및 침묵 부여)
+- 플레이어가 아닌 대상에게는 사용하지 않으며, 대상의 HP 설정값에 따라 발동합니다.</value>
+  </data>
+  <data name="RDMPvP_Embolden_Name" xml:space="preserve">
+    <value>성원 옵션</value>
+  </data>
+  <data name="RDMPvP_Embolden_Desc" xml:space="preserve">
+    <value>사용 가능할 때 성원을 사용합니다. (주는 피해 증가 및 받는 피해 감소)
+- 적색 광채(범위 공격 및 파티원 회복) 시전 가능 상태를 활용합니다.</value>
+  </data>
+  <data name="RDMPvP_Corps_Name" xml:space="preserve">
+    <value>코르 아 코르 옵션</value>
+  </data>
+  <data name="RDMPvP_Corps_Desc" xml:space="preserve">
+    <value>사용 가능할 때 코르 아 코르를 사용합니다. (대상 접근 및 겨루기 부여)
+- 인리포스트 콤보가 준비된 상태에서 거리 유지 시 발동합니다.</value>
+  </data>
+  <data name="RDMPvP_Displacement_Name" xml:space="preserve">
+    <value>데플라스망 옵션</value>
+  </data>
+  <data name="RDMPvP_Displacement_Desc" xml:space="preserve">
+    <value>사용 가능할 때 데플라스망을 사용합니다. (후방 도약 및 마법 위력/회복량 증가)
+- 콤보 마무리인 작열화가 준비되면 근접 범위 내에서 발동합니다.</value>
+  </data>
+  <data name="RDMPvP_Forte_Name" xml:space="preserve">
+    <value>포르테 옵션</value>
+  </data>
+  <data name="RDMPvP_Forte_Desc" xml:space="preserve">
+    <value>사용 가능할 때 포르테를 사용합니다. (받는 피해 감소 및 보호막)
+- 보호막 흡수 성공 시 회오리 찔레(범위 공격 및 기절)를 연계합니다.</value>
+  </data>
+  <data name="RDMPvP_Dash_Feature_Name" xml:space="preserve">
+    <value>이동기 정화 연계 기능</value>
+  </data>
+  <data name="RDMPvP_Dash_Feature_Desc" xml:space="preserve">
+    <value>코르 아 코르 또는 데플라스망 사용 시 상태 이상에 걸려 있다면 정화를 우선 사용합니다.</value>
+  </data>
+  <data name="RDMPvP_PhantomDart_Name" xml:space="preserve">
+    <value>유령 쐐기 옵션</value>
+  </data>
+  <data name="RDMPvP_PhantomDart_Desc" xml:space="preserve">
+    <value>설정된 HP 임계값 이하일 때 역할 기술인 '유령 쐐기'를 사용하여 대상이 받는 피해량을 증가시킵니다.</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Desc" xml:space="preserve">
+    <value>도시스 3을 원버튼 통합 공격기로 변경하며, 심각인[회복] 대상의 HP를 자동으로 회복합니다.</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Pneuma_Name" xml:space="preserve">
+    <value>프네우마 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Pneuma_Desc" xml:space="preserve">
+    <value>버스트 모드에 프네우마를 추가합니다. (직선 범위 공격 및 파티원 보호막/혈액 각인 부여)</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Eukrasia_Name" xml:space="preserve">
+    <value>정상건강 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Eukrasia_Desc" xml:space="preserve">
+    <value>버스트 모드에 정상건강을 추가합니다. (정상건강: 도시스 3으로 강화하여 지속 피해 및 아군 보호막 부여)</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Phlegma_Name" xml:space="preserve">
+    <value>플레그마 3 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Phlegma_Desc" xml:space="preserve">
+    <value>버스트 모드에 플레그마 3을 추가합니다. (주위 적을 끌어오며 범위 공격 및 속박 부여)</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Psyche_Name" xml:space="preserve">
+    <value>프시케 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Psyche_Desc" xml:space="preserve">
+    <value>플레그마 3 사용 후 연계되는 프시케를 버스트 모드에 추가합니다. (대상 주위 범위 마법 공격)</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Toxikon_Name" xml:space="preserve">
+    <value>톡시콘 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Toxikon_Desc" xml:space="preserve">
+    <value>버스트 모드에 톡시콘을 추가합니다. (범위 공격 및 대상이 받는 피해량 증가 부여)</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Toxikon2_Name" xml:space="preserve">
+    <value>톡시콘 2 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_Toxikon2_Desc" xml:space="preserve">
+    <value>의술침 효과가 있을 때 강화된 톡시콘 2를 버스트 모드에 추가합니다.</value>
+  </data>
+  <data name="SGEPvP_BurstMode_KardiaReminder_Name" xml:space="preserve">
+    <value>심각인 알림 옵션</value>
+  </data>
+  <data name="SGEPvP_BurstMode_KardiaReminder_Desc" xml:space="preserve">
+    <value>자신이나 파티원에게 심각인[회복] 버프가 없을 경우 버스트 모드 중에 자동으로 부여합니다.</value>
+  </data>
+  <data name="SGEPvP_Diabrosis_Name" xml:space="preserve">
+    <value>역할 기술: 부식증 옵션</value>
+  </data>
+  <data name="SGEPvP_Diabrosis_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정값 이하일 때 역할 기술인 '부식증'을 사용합니다. (범위 마법 공격 및 대상의 받는 회복 효과 감소)</value>
+  </data>
+  <data name="SGEPvP_RetargetKardia_Name" xml:space="preserve">
+    <value>심각인 대상 자동 전환</value>
+  </data>
+  <data name="SGEPvP_RetargetKardia_Desc" xml:space="preserve">
+    <value>버스트 기능 외에, 설정된 힐 대상에게 심각인[회복]을 자동으로 다시 부여합니다.</value>
+  </data>
+  <data name="SAMPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="SAMPvP_Burst_Desc" xml:space="preserve">
+    <value>설풍-월광-화차로 이어지는 콤보를 원버튼 통합 공격기로 변경합니다.
+- 이동 중에는 오의파절이나 천도설월화처럼 시전 시간이 필요한 기술을 사용하지 않습니다.</value>
+  </data>
+  <data name="SAMPvP_Meikyo_Name" xml:space="preserve">
+    <value>명경지수 옵션</value>
+  </data>
+  <data name="SAMPvP_Meikyo_Desc" xml:space="preserve">
+    <value>사용 가능할 때 명경지수를 사용합니다. (상태 이상 무효화 및 천도설월화 활성화)
+- 대상이 근접 범위 내에 있을 때 발동합니다.</value>
+  </data>
+  <data name="SAMPvP_Chiten_Name" xml:space="preserve">
+    <value>필살검: 지천 옵션</value>
+  </data>
+  <data name="SAMPvP_Chiten_Desc" xml:space="preserve">
+    <value>사용 가능할 때 지천을 사용합니다. (피해 감소 및 반격 시 대상에게 '무너짐' 부여)
+- 비전투 시에는 사용하지 않으며, 본인의 HP 설정값에 따라 발동합니다.</value>
+  </data>
+  <data name="SAMPvP_Mineuchi_Name" xml:space="preserve">
+    <value>칼등치기 옵션</value>
+  </data>
+  <data name="SAMPvP_Mineuchi_Desc" xml:space="preserve">
+    <value>사용 가능할 때 칼등치기를 사용합니다. (대상 기절 및 '무너짐[약]' 부여)
+- 플레이어 대상 전용이며, 대상의 HP가 설정값 이하일 때 사용합니다.</value>
+  </data>
+  <data name="SAMPvP_Soten_Name" xml:space="preserve">
+    <value>필살검: 조천 옵션</value>
+  </data>
+  <data name="SAMPvP_Soten_Desc" xml:space="preserve">
+    <value>사용 가능할 때 조천을 사용합니다. (대상 추월 및 '회천' 부여)
+- 최대 거리 이내에서 발동하며, 이미 회천 효과로 기술이 변화된 상태라면 아껴둡니다.</value>
+  </data>
+  <data name="SAMPvP_Zantetsuken_Name" xml:space="preserve">
+    <value>참철검 옵션</value>
+  </data>
+  <data name="SAMPvP_Zantetsuken_Desc" xml:space="preserve">
+    <value>리미트 게이지가 가득 차면 참철검을 사용합니다.
+- 대상에게 본인이 부여한 '무너짐'이 있을 경우 방어를 무시하고 즉사(100% 피해)시킵니다. 무적 대상은 제외합니다.</value>
+  </data>
+  <data name="SAMPvP_Smite_Name" xml:space="preserve">
+    <value>역할 기술: 강타 옵션</value>
+  </data>
+  <data name="SAMPvP_Smite_Desc" xml:space="preserve">
+    <value>대상의 HP가 낮을 때 역할 기술인 '강타'를 사용합니다. 처치/도움 기록 시 재사용 대기 시간이 초기화됩니다.</value>
+  </data>
+  <data name="SCHPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="SCHPvP_Burst_Desc" xml:space="preserve">
+    <value>극염법을 원버튼 통합 공격기로 변경합니다. 세라피즘 상태에서는 세라핌의 광환으로 자동 전환됩니다.</value>
+  </data>
+  <data name="SCHPvP_Expedient_Name" xml:space="preserve">
+    <value>질풍노도계 옵션</value>
+  </data>
+  <data name="SCHPvP_Expedient_Desc" xml:space="preserve">
+    <value>버스트 모드에 질풍노도계를 추가합니다. (이동 속도 및 피해량 증가 부여)
+- 사용 시 자신에게 부여되는 '비책' 효과로 고독법과 고무격려책을 강화합니다.</value>
+  </data>
+  <data name="SCHPvP_Biolysis_Name" xml:space="preserve">
+    <value>고독법 옵션</value>
+  </data>
+  <data name="SCHPvP_Biolysis_Desc" xml:space="preserve">
+    <value>버스트 모드에 고독법을 추가합니다. (지속 피해 및 대상의 받는 회복 효과 감소 부여)
+- '비책' 상태일 때 강화된 위력으로 사용합니다.</value>
+  </data>
+  <data name="SCHPvP_DeploymentTactics_Name" xml:space="preserve">
+    <value>전개전술 옵션</value>
+  </data>
+  <data name="SCHPvP_DeploymentTactics_Desc" xml:space="preserve">
+    <value>용 가능할 때 전개전술을 버스트 모드에 추가합니다.
+- 적에게는 고독법 효과를, 아군에게는 고무와 격려 효과를 광역으로 확산시킵니다.</value>
+  </data>
+  <data name="SCHPvP_ChainStratagem_Name" xml:space="preserve">
+    <value>연환계 옵션</value>
+  </data>
+  <data name="SCHPvP_ChainStratagem_Desc" xml:space="preserve">
+    <value>사용 가능할 때 연환계를 버스트 모드에 추가합니다. (대상 피격 피해량 증가)
+- 방어 중인 적에게 사용 시 방어의 피해 감소 효과를 절반으로 약화시킵니다.</value>
+  </data>
+  <data name="SCHPvP_Diabrosis_Name" xml:space="preserve">
+    <value>역할 기술: 부식증 옵션</value>
+  </data>
+  <data name="SCHPvP_Diabrosis_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정값 이하일 때 역할 기술인 '부식증'을 사용합니다. (범위 공격 및 대상의 받는 회복 효과 감소)</value>
+  </data>
+  <data name="SCHPvP_Adlo_Name" xml:space="preserve">
+    <value>고무격려책 옵션</value>
+  </data>
+  <data name="SCHPvP_Adlo_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정값 이하일 때 고무격려책을 사용합니다. (HP 회복 및 보호막/피해 감소 부여)
+- '비책' 상태일 때 보호막 효과가 2배로 증가합니다.</value>
+  </data>
+  <data name="SCHPvP_RetargetAdlo_Name" xml:space="preserve">
+    <value>고무격려책 대상 자동 전환</value>
+  </data>
+  <data name="SCHPvP_RetargetAdlo_Desc" xml:space="preserve">
+    <value>버스트 기능 외에, 설정된 힐 우선순위에게 고무격려책을 자동으로 다시 부여합니다</value>
+  </data>
+  <data name="SMNPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="SMNPvP_BurstMode_Desc" xml:space="preserve">
+    <value>루인가를 원버튼 통합 공격기로 변경합니다. 
+- 바하무트 빙의 시 '천상의 충격', 피닉스 빙의 시 '영검의 불꽃'으로 자동 전환됩니다.
+- 진홍 회오리는 근접 범위 내에 있을 때만 사용합니다.</value>
+  </data>
+  <data name="SMNPvP_BurstMode_RadiantAegis_Name" xml:space="preserve">
+    <value>수호의 빛 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_RadiantAegis_Desc" xml:space="preserve">
+    <value>사용 가능할 때 수호의 빛을 버스트 모드에 추가합니다. (피해 감소 및 보호막 부여)
+- 본인의 HP가 설정된 백분율 이하일 때 발동합니다.</value>
+  </data>
+  <data name="SMNPvP_BurstMode_CrimsonCyclone_Name" xml:space="preserve">
+    <value>진홍 회오리 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_CrimsonCyclone_Desc" xml:space="preserve">
+    <value>버스트 모드에 진홍 회오리를 추가합니다. (대상에게 접근하며 주위 범위 공격)
+- 사용 후 진홍빛 일격으로 연계됩니다.</value>
+  </data>
+  <data name="SMNPvP_BurstMode_CrimsonStrike_Name" xml:space="preserve">
+    <value>진홍빛 일격 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_CrimsonStrike_Desc" xml:space="preserve">
+    <value>진홍 회오리 사용 후 활성화되는 진홍빛 일격을 버스트 모드에 추가합니다. (범위 공격 및 적 밀쳐내기)</value>
+  </data>
+  <data name="SMNPvP_BurstMode_MountainBuster_Name" xml:space="preserve">
+    <value>산 쪼개기 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_MountainBuster_Desc" xml:space="preserve">
+    <value>버스트 모드에 산 쪼개기를 추가합니다. (전방 범위 마법 공격 및 2초 기절 부여)</value>
+  </data>
+  <data name="SMNPvP_BurstMode_Slipstream_Name" xml:space="preserve">
+    <value>반동 기류 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_Slipstream_Desc" xml:space="preserve">
+    <value>버스트 모드에 반동 기류를 추가합니다. (범위 마법 공격 및 적 지속 피해 부여, 아군 이동 속도 향상)</value>
+  </data>
+  <data name="SMNPvP_BurstMode_Necrotize_Name" xml:space="preserve">
+    <value>미아즈마 노바 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_Necrotize_Desc" xml:space="preserve">
+    <value>버스트 모드에 미아즈마 노바를 추가합니다. (마법 공격 및 루인쟈 시전 가능 효과 부여)</value>
+  </data>
+  <data name="SMNPvP_BurstMode_DeathFlare_Name" xml:space="preserve">
+    <value>데스플레어 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_DeathFlare_Desc" xml:space="preserve">
+    <value>바하무트 빙의 중 사용 가능한 데스플레어를 버스트 모드에 추가합니다. (대상 주위 범위 공격)</value>
+  </data>
+  <data name="SMNPvP_BurstMode_BrandofPurgatory_Name" xml:space="preserve">
+    <value>연옥의 불꽃 옵션</value>
+  </data>
+  <data name="SMNPvP_BurstMode_BrandofPurgatory_Desc" xml:space="preserve">
+    <value>피닉스 빙의 중 사용 가능한 연옥의 불꽃을 버스트 모드에 추가합니다. (범위 공격 및 대상의 주는 피해량 감소)</value>
+  </data>
+  <data name="SMNPvP_PhantomDart_Name" xml:space="preserve">
+    <value>역할 기술: 유령 쐐기 옵션</value>
+  </data>
+  <data name="SMNPvP_PhantomDart_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정값 이하일 때 역할 기술인 '유령 쐐기'를 사용하여 대상이 받는 피해량을 증가시킵니다.</value>
+  </data>
+  <data name="VPRPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="VPRPvP_Burst_Desc" xml:space="preserve">
+    <value>송곳니 콤보(교상/맹습/교격 등)를 원버튼 통합 공격기로 변경합니다. 
+- 조상령 빙의 시 '조상령의 송곳니' 콤보로 자동 전환됩니다.</value>
+  </data>
+  <data name="VPRPvP_Bloodcoil_Name" xml:space="preserve">
+    <value>뱀 하나/둘: 흡혈 옵션</value>
+  </data>
+  <data name="VPRPvP_Bloodcoil_Desc" xml:space="preserve">
+    <value>사용 가능할 때 뱀 하나: 흡혈 콤보를 사용합니다. (HP 회복 및 방어 무시 추가타 연계)
+- 대상 또는 본인의 HP가 설정값 이하일 때 발동합니다.</value>
+  </data>
+  <data name="VPRPvP_UncoiledFury_Name" xml:space="preserve">
+    <value>날뱀의 꼬리 옵션</value>
+  </data>
+  <data name="VPRPvP_UncoiledFury_Desc" xml:space="preserve">
+    <value>용 가능할 때 날뱀의 꼬리를 사용합니다. (원거리 범위 공격 및 방어 무시 추가타 연계)
+- 대상의 HP가 설정값 이하일 때 발동합니다.</value>
+  </data>
+  <data name="VPRPvP_Backlash_Name" xml:space="preserve">
+    <value>뱀비늘 공격 옵션</value>
+  </data>
+  <data name="VPRPvP_Backlash_Desc" xml:space="preserve">
+    <value>사용 가능할 때 뱀비늘 공격을 사용합니다. (뱀비늘 중 또는 종료 시 발동하는 범위 반격기)
+- 뱀의 피 효과가 있을 경우 범위와 위력이 강화됩니다.</value>
+  </data>
+  <data name="VPRPvP_RattlingCoil_Name" xml:space="preserve">
+    <value>날뱀의 영혼 옵션</value>
+  </data>
+  <data name="VPRPvP_RattlingCoil_Desc" xml:space="preserve">
+    <value>설정된 조건 충족 시 날뱀의 영혼을 사용하여 '날뱀의 꼬리' 및 '뱀비늘'의 재사용 대기 시간을 초기화합니다.</value>
+  </data>
+  <data name="VPRPvP_Slither_Name" xml:space="preserve">
+    <value>뱀걸음 옵션</value>
+  </data>
+  <data name="VPRPvP_Slither_Desc" xml:space="preserve">
+    <value>근접 범위 밖일 때 뱀걸음을 사용하여 대상에게 접근합니다. 
+- 최대 거리 이내에서 발동하며, 이동 속도 향상 효과를 부여합니다.</value>
+  </data>
+  <data name="VPRPvP_SnakeScales_Feature_Name" xml:space="preserve">
+    <value>뱀비늘 초기화 기능</value>
+  </data>
+  <data name="VPRPvP_SnakeScales_Feature_Desc" xml:space="preserve">
+    <value>뱀비늘이 재사용 대기 중일 때 날뱀의 영혼을 사용하여 즉시 초기화합니다.</value>
+  </data>
+  <data name="VPRPvP_Smite_Name" xml:space="preserve">
+    <value>역할 기술: 강타 옵션</value>
+  </data>
+  <data name="VPRPvP_Smite_Desc" xml:space="preserve">
+    <value>대상의 HP가 낮을 때 역할 기술인 '강타'를 사용합니다. 처치나 도움 기록 시 재사용 대기 시간이 초기화됩니다.</value>
+  </data>
+  <data name="WARPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="WARPvP_BurstMode_Desc" xml:space="preserve">
+    <value>육중한 일격 콤보(육중한 일격/관절 파괴/폭풍 쐐기)를 원버튼 통합 공격기로 변경합니다.
+- 원초의 해방 상태에서는 폭풍 쐐기 콤보가 '참수'로 자동 전환됩니다.</value>
+  </data>
+  <data name="WARPvP_BurstMode_Bloodwhetting_Name" xml:space="preserve">
+    <value>원초의 혈기 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_Bloodwhetting_Desc" xml:space="preserve">
+    <value>원초의 혈기를 버스트 모드에 추가합니다. (피해량만큼 HP 회복 및 보호막 부여)
+- 사용 시 '혼돈 회오리' 시전 가능 상태가 됩니다.</value>
+  </data>
+  <data name="WARPvP_BurstMode_Blota_Name" xml:space="preserve">
+    <value>희생양 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_Blota_Desc" xml:space="preserve">
+    <value>근접 범위 밖일 때 희생양을 사용하여 대상을 끌어당깁니다.
+- 사용 시 '내면의 혼돈' 시전 가능 상태가 됩니다.</value>
+  </data>
+  <data name="WARPvP_BurstMode_PrimalRend_Name" xml:space="preserve">
+    <value>원초적 분쇄 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_PrimalRend_Desc" xml:space="preserve">
+    <value>버스트 모드에 원초적 분쇄를 추가합니다. (대상에게 도약하며 범위 공격 및 기절 부여)
+- 사용 시 '원초적 파멸' 시전 가능 상태가 됩니다.</value>
+  </data>
+  <data name="WARPvP_BurstMode_InnerChaos_Name" xml:space="preserve">
+    <value>내면의 혼돈 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_InnerChaos_Desc" xml:space="preserve">
+    <value>희생양 사용 후 활성화되는 내면의 혼돈을 버스트 모드에 추가합니다. (강력한 물리 공격)</value>
+  </data>
+  <data name="WARPvP_BurstMode_Orogeny_Name" xml:space="preserve">
+    <value>대지 융기 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_Orogeny_Desc" xml:space="preserve">
+    <value>버스트 모드에 대지 융기를 추가합니다. (주위 범위 공격 및 대상의 주는 피해량 감소)</value>
+  </data>
+  <data name="WARPvP_BurstMode_Onslaught_Name" xml:space="preserve">
+    <value>맹공격 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_Onslaught_Desc" xml:space="preserve">
+    <value>버스트 모드에 맹공격을 추가합니다. (대상에게 돌진하며 대상이 받는 피해량 증가)</value>
+  </data>
+  <data name="WARPvP_BurstMode_PrimalScream_Name" xml:space="preserve">
+    <value>리미트 브레이크: 원초의 노호 옵션</value>
+  </data>
+  <data name="WARPvP_BurstMode_PrimalScream_Desc" xml:space="preserve">
+    <value>버스트 모드에 원초의 노호를 추가합니다. (범위 내 적을 '방어 불가' 상태로 만듦)
+- 자신에게 '원초의 해방' 및 '전투의 짜릿함'을 부여하여 기술을 강화합니다.</value>
+  </data>
+  <data name="WARPvP_Rampart_Name" xml:space="preserve">
+    <value>역할 기술: 철벽 방어 옵션</value>
+  </data>
+  <data name="WARPvP_Rampart_Desc" xml:space="preserve">
+    <value>본인의 HP가 설정값 이하일 때 역할 기술인 '철벽 방어'를 사용합니다. (받는 피해 감소 및 받는 회복 효과 증가)</value>
+  </data>
+  <data name="WHMPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="WHMPvP_Burst_Desc" xml:space="preserve">
+    <value>글레어가를 원버튼 통합 공격기로 변경합니다.
+- '글레어쟈 시전 가능' 상태일 경우 글레어쟈로 자동 전환됩니다.</value>
+  </data>
+  <data name="WHMPvP_Afflatus_Misery_Name" xml:space="preserve">
+    <value>참담한 마음 옵션</value>
+  </data>
+  <data name="WHMPvP_Afflatus_Misery_Desc" xml:space="preserve">
+    <value>버스트 모드에 참담한 마음을 추가합니다. (대상 주위 범위 마법 공격)</value>
+  </data>
+  <data name="WHMPvP_Mirace_of_Nature_Name" xml:space="preserve">
+    <value>자연의 기적 옵션</value>
+  </data>
+  <data name="WHMPvP_Mirace_of_Nature_Desc" xml:space="preserve">
+    <value>버스트 모드에 자연의 기적을 추가합니다. (대상을 2초 동안 물요정/아기돼지로 변신시켜 기술 실행 차단 및 MP 감소)</value>
+  </data>
+  <data name="WHMPvP_Seraph_Strike_Name" xml:space="preserve">
+    <value>치천사의 일격 옵션</value>
+  </data>
+  <data name="WHMPvP_Seraph_Strike_Desc" xml:space="preserve">
+    <value>버스트 모드에 치천사의 일격을 추가합니다. (대상에게 도약하며 범위 공격 및 파티원 보호/강화)
+- 사용 시 '글레어쟈' 및 '케알가' 시전 가능 상태가 됩니다.</value>
+  </data>
+  <data name="WHMPvP_AfflatusPurgation_Name" xml:space="preserve">
+    <value>리미트 브레이크: 정죄의 마음 옵션</value>
+  </data>
+  <data name="WHMPvP_AfflatusPurgation_Desc" xml:space="preserve">
+    <value>버스트 모드에 정죄의 마음을 추가합니다. (직선 범위 공격 및 기절 부여)
+- 자신에게 '절제'를 부여하여 파티원의 HP를 지속 회복합니다.</value>
+  </data>
+  <data name="WHMPvP_Diabrosis_Name" xml:space="preserve">
+    <value>역할 기술: 부식증 옵션</value>
+  </data>
+  <data name="WHMPvP_Diabrosis_Desc" xml:space="preserve">
+    <value>대상의 HP가 설정값 이하일 때 역할 기술인 '부식증'을 사용합니다. (범위 마법 공격 및 대상의 받는 회복 효과 감소)</value>
+  </data>
+  <data name="WHMPvP_Burst_Heals_Name" xml:space="preserve">
+    <value>버스트 모드 내 회복 포함</value>
+  </data>
+  <data name="WHMPvP_Burst_Heals_Desc" xml:space="preserve">
+    <value>공격 우선순위 아래에 케알라/케알가 및 물의 장막을 추가하여 버스트 중 아군을 보호합니다.</value>
+  </data>
+  <data name="WHMPvP_Heals_Name" xml:space="preserve">
+    <value>회복 기능 설정</value>
+  </data>
+  <data name="WHMPvP_Heals_Desc" xml:space="preserve">
+    <value>케알라 사용 시 아래의 추가 옵션들을 함께 적용합니다.</value>
+  </data>
+  <data name="WHMPvP_Cure3_Name" xml:space="preserve">
+    <value>케알가 우선 사용 옵션</value>
+  </data>
+  <data name="WHMPvP_Cure3_Desc" xml:space="preserve">
+    <value>물의 장막보다 케알가를 우선적으로 사용하도록 설정합니다.
+- '케알가 시전 가능' 시 케알라가 케알가로 변화하며 주위 파티원까지 회복합니다.</value>
+  </data>
+  <data name="WHMPvP_Aquaveil_Name" xml:space="preserve">
+    <value>물의 장막 옵션</value>
+  </data>
+  <data name="WHMPvP_Aquaveil_Desc" xml:space="preserve">
+    <value>사용 가능할 때 케알라와 함께 물의 장막을 사용합니다. (상태 이상 해제 및 보호막 부여)</value>
+  </data>
+  <data name="WHMPvP_Seraphstrike_Name" xml:space="preserve">
+    <value>치천사의 일격 후 글레어쟈 연계</value>
+  </data>
+  <data name="WHMPvP_Seraphstrike_Desc" xml:space="preserve">
+    <value>치천사의 일격 사용 후 활성화되는 글레어쟈를 우선적으로 사용합니다.</value>
+  </data>
+  <data name="MNK_ST_BasicCombo_Name" xml:space="preserve">
+    <value>기본 콤보</value>
+  </data>
+  <data name="MNK_ST_BasicCombo_Desc" xml:space="preserve">
+    <value>파쇄권(또는 붕권)을 해당 콤보 연계기로 대체하여 원버튼으로 변경합니다.</value>
+  </data>
+  <data name="WAR_NascentFlash_MO_Name" xml:space="preserve">
+    <value>마우스오버 대상 포함</value>
+  </data>
+  <data name="WAR_NascentFlash_MO_Desc" xml:space="preserve">
+    <value>UI상에서 아군에게 마우스 커서를 올리고 있을 경우, 해당 대상에게 '원초의 용맹'을 사용합니다.</value>
+  </data>
+  <data name="WAR_NascentFlash_TT_Name" xml:space="preserve">
+    <value>대상의 대상 포함</value>
+  </data>
+  <data name="WAR_NascentFlash_TT_Desc" xml:space="preserve">
+    <value>현재 적 대상이 노리고 있는 대상이 본인이나 파티원이 아닐 경우, 그 대상에게 '원초의 용맹'을 사용합니다.</value>
   </data>
 </root>
