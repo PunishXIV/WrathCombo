@@ -6196,6 +6196,10 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="RPR_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>고급 모드 - 광역</value>
   </data>
+  <data name="RPR_AoE_AdvancedMode_Desc" xml:space="preserve">
+    <value>'회전 낫' 버튼 하나로 광역 딜사이클 전체를 수행합니다.
+딜사이클을 세부적으로 사용자화하고 싶을 때 적합합니다.</value>
+  </data>
   <data name="RPR_AoE_ArcaneCircle_Name" xml:space="preserve">
     <value>신비의 원 옵션</value>
   </data>
@@ -6217,25 +6221,2470 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="RPR_AoE_SoulSow_Name" xml:space="preserve">
     <value>영혼 심기</value>
   </data>
+  <data name="RPR_AoE_SoulSow_Desc" xml:space="preserve">
+    <value>비전투 중일 때 '영혼 심기' 강화 효과가 없다면 광역 딜사이클에 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_SoulScythe_Name" xml:space="preserve">
+    <value>영혼의 낫 옵션</value>
+  </data>
+  <data name="RPR_AoE_SoulScythe_Desc" xml:space="preserve">
+    <value>딜사이클에 '영혼의 낫'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_GrimSwathe_Name" xml:space="preserve">
+    <value>음산한 할퀴기 옵션</value>
+  </data>
+  <data name="RPR_AoE_GrimSwathe_Desc" xml:space="preserve">
+    <value>딜사이클에 '음산한 할퀴기'를 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Gluttony_Name" xml:space="preserve">
+    <value>탐식 옵션</value>
+  </data>
+  <data name="RPR_AoE_Gluttony_Desc" xml:space="preserve">
+    <value>딜사이클에 '탐식'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Guillotine_Name" xml:space="preserve">
+    <value>참수형 옵션</value>
+  </data>
+  <data name="RPR_AoE_Guillotine_Desc" xml:space="preserve">
+    <value>딜사이클에 '참수형'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Enshroud_Name" xml:space="preserve">
+    <value>레무르 수의 옵션</value>
+  </data>
+  <data name="RPR_AoE_Enshroud_Desc" xml:space="preserve">
+    <value>딜사이클에 '레무르 수의'를 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Reaping_Name" xml:space="preserve">
+    <value>그림 리퍼 옵션</value>
+  </data>
+  <data name="RPR_AoE_Reaping_Desc" xml:space="preserve">
+    <value>딜사이클에 '그림 리퍼'를 추가합니다.
+(비활성화 시 레무르 상태에서 원버튼 콤보가 작동하지 않을 수 있습니다.)</value>
+  </data>
+  <data name="RPR_AoE_Lemure_Name" xml:space="preserve">
+    <value>레무르의 낫 옵션</value>
+  </data>
+  <data name="RPR_AoE_Lemure_Desc" xml:space="preserve">
+    <value>딜사이클에 '레무르의 낫'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Communio_Name" xml:space="preserve">
+    <value>합일 마무리 옵션</value>
+  </data>
+  <data name="RPR_AoE_Communio_Desc" xml:space="preserve">
+    <value>딜사이클에 '합일'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Sacrificium_Name" xml:space="preserve">
+    <value>제물 희생 옵션</value>
+  </data>
+  <data name="RPR_AoE_Sacrificium_Desc" xml:space="preserve">
+    <value>딜사이클에 '제물 희생'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_Perfectio_Name" xml:space="preserve">
+    <value>완전체 옵션</value>
+  </data>
+  <data name="RPR_AoE_Perfectio_Desc" xml:space="preserve">
+    <value>딜사이클에 '완전체'를 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_StunInterupt_Name" xml:space="preserve">
+    <value>다리 휩쓸기 옵션</value>
+  </data>
+  <data name="RPR_AoE_StunInterupt_Desc" xml:space="preserve">
+    <value>보스가 아닌 대상이 기술 시전 중일 때 '다리 휩쓸기'를 사용합니다.</value>
+  </data>
+  <data name="RPR_AoE_ComboHeals_Name" xml:space="preserve">
+    <value>생존기 옵션</value>
+  </data>
+  <data name="RPR_AoE_ComboHeals_Desc" xml:space="preserve">
+    <value>HP가 설정된 임계치 미만일 때 '피의 갈증'과 '내단'을 콤보에 추가하여 사용합니다.</value>
+  </data>
+  <data name="RPR_ST_BasicCombo_Name" xml:space="preserve">
+    <value>기본 콤보</value>
+  </data>
+  <data name="RPR_ST_BasicCombo_Desc" xml:space="preserve">
+    <value>'지옥 낫질'을 해당 기술의 콤보 체인으로 대체합니다.</value>
+  </data>
+  <data name="RPR_ST_BasicCombo_SoD_Name" xml:space="preserve">
+    <value>죽음의 그림자 옵션</value>
+  </data>
+  <data name="RPR_ST_BasicCombo_SoD_Desc" xml:space="preserve">
+    <value>기본 딜사이클에 '죽음의 그림자'를 추가합니다.</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_Name" xml:space="preserve">
+    <value>할퀴기 시 탐식 전환 기능</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '핏빛 할퀴기'와 '음산한 할퀴기'가 '탐식'으로 변합니다.</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_BloodSwatheCombo_Name" xml:space="preserve">
+    <value>할퀴기 시 집행 기술 전환 기능</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_BloodSwatheCombo_Desc" xml:space="preserve">
+    <value>'핏빛 할퀴기'에 '(효수형/교수형) 집행'을 추가합니다. 
+'음산한 할퀴기'에 '참수형 집행'을 추가합니다.</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_Enshroud_Name" xml:space="preserve">
+    <value>레무르 수의 콤보 옵션</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_Enshroud_Desc" xml:space="preserve">
+    <value>'핏빛 할퀴기'와 '음산한 할퀴기' 버튼에 레무르 콤보(보이드/크로스 리퍼, 합일, 레무르 낫질, 제물 희생, 완전체)를 추가합니다.</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_OGCD_Name" xml:space="preserve">
+    <value>oGCD 기술 옵션</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_OGCD_Desc" xml:space="preserve">
+    <value>'레무르 수의', '레무르 낫질', '제물 희생'을 추가합니다.</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_Sacrificium_Name" xml:space="preserve">
+    <value>제물 희생 전용 옵션</value>
+  </data>
+  <data name="RPR_GluttonyBloodSwathe_Sacrificium_Desc" xml:space="preserve">
+    <value>레무르 수의 상태일 때 '핏빛 할퀴기'와 '음산한 할퀴기'에 '제물 희생'만 추가합니다.</value>
+  </data>
+  <data name="RPR_TrueNorthGluttony_Name" xml:space="preserve">
+    <value>진북 기능</value>
+  </data>
+  <data name="RPR_TrueNorthGluttony_Desc" xml:space="preserve">
+    <value>'탐식' 효과 중이며 효수형/교수형 대체 옵션이 선택된 경우 트루 노스를 자동으로 사용합니다.</value>
+  </data>
+  <data name="RPR_Soulsow_Name" xml:space="preserve">
+    <value>영혼 심기 알림 기능</value>
+  </data>
+  <data name="RPR_Soulsow_Desc" xml:space="preserve">
+    <value>비전투 중일 때 아래에서 선택한 기술들에 '영혼 심기'를 추가합니다.
+전투 중 대상이 없을 때는 '갈고리낫'을 '영혼 심기'로 바꿉니다.</value>
+  </data>
+  <data name="RPR_Soulsow_Combat_Name" xml:space="preserve">
+    <value>전투 중 영혼 심기 알림</value>
+  </data>
+  <data name="RPR_Soulsow_Combat_Desc" xml:space="preserve">
+    <value>전투 중 대상이 없을 때 '갈고리낫'에 '영혼 심기'를 추가합니다.</value>
+  </data>
+  <data name="RPR_ArcaneCirclePlentifulHarvest_Name" xml:space="preserve">
+    <value>신비의 원 수확 전환 기능</value>
+  </data>
+  <data name="RPR_ArcaneCirclePlentifulHarvest_Desc" xml:space="preserve">
+    <value>'죽음의 공물' 중첩이 있을 때 '신비의 원'을 '풍성한 수확'으로 대체합니다.</value>
+  </data>
+  <data name="RPR_Regress_Name" xml:space="preserve">
+    <value>회귀 기능</value>
+  </data>
   <data name="RPR_Regress_Desc" xml:space="preserve">
     <value>'회귀 시전 가능' 상태가 활성화되면 '지옥 입장'과 '지옥 퇴장'을 '회귀'로 바꿉니다.</value>
+  </data>
+  <data name="RPR_EnshroudProtection_Name" xml:space="preserve">
+    <value>레무르 수의 보호 기능</value>
+  </data>
+  <data name="RPR_EnshroudProtection_Desc" xml:space="preserve">
+    <value>'요마의 낫' 효과를 낭비하지 않도록 '레무르 수의' 버튼을 '효수형/교수형'으로 바꿉니다.</value>
+  </data>
+  <data name="RPR_TrueNorthEnshroud_Name" xml:space="preserve">
+    <value>진북 기능</value>
+  </data>
+  <data name="RPR_TrueNorthEnshroud_Desc" xml:space="preserve">
+    <value>'탐식' 효과 중일 때 트루 노스를 사용합니다.</value>
+  </data>
+  <data name="RPR_EnshroudCommunio_Name" xml:space="preserve">
+    <value>레무르-합일-완전체 전환 기능</value>
+  </data>
+  <data name="RPR_EnshroudCommunio_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '레무르 수의' 버튼을 '합일'과 '완전체'로 바꿉니다.</value>
+  </data>
+  <data name="RPR_CommunioOnGGG_Name" xml:space="preserve">
+    <value>효수/교수/참수 시 합일 전환 기능</value>
+  </data>
+  <data name="RPR_CommunioOnGGG_Desc" xml:space="preserve">
+    <value>'효수형/교수형' 및 '참수형' 버튼에 '합일'을 추가합니다.</value>
+  </data>
+  <data name="RPR_LemureOnGGG_Name" xml:space="preserve">
+    <value>레무르 낫질/의 낫 옵션</value>
+  </data>
+  <data name="RPR_LemureOnGGG_Desc" xml:space="preserve">
+    <value>'효수형/교수형'에 '레무르 낫질'을, '참수형'에 '레무르의 낫'을 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 단일 대상</value>
+  </data>
+  <data name="RDM_ST_SimpleMode_Desc" xml:space="preserve">
+    <value>'졸트' 하나로 단일 대상 딜사이클을 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.
+근접 콤보를 시작하려면 반드시 근접 범위 내에 있어야 합니다.</value>
+  </data>
+  <data name="RDM_AoE_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 광역</value>
+  </data>
+  <data name="RDM_AoE_SimpleMode_Desc" xml:space="preserve">
+    <value>'흩뿌리기' 하나로 광역 딜사이클을 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.
+근접 콤보를 시작하려면 반드시 근접 범위 내에 있어야 합니다.</value>
+  </data>
+  <data name="RDM_ST_DPS_Name" xml:space="preserve">
+    <value>고급 모드 - 단일 대상</value>
+  </data>
+  <data name="RDM_ST_DPS_Desc" xml:space="preserve">
+    <value>'졸트' 하나로 단일 대상 딜사이클을 수행합니다.
+딜사이클을 사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="RDM_Balance_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (100레벨)</value>
+  </data>
+  <data name="RDM_Balance_Opener_Desc" xml:space="preserve">
+    <value>100레벨 기준 Balance 최적화 오프너를 추가합니다.
+오프너 제한 시간 설정이 '버에어로가' 시전 시간보다 길어야 합니다!
+**표준 오프너는 코르 아 코르/앙가주망 사용을 위해 근접 범위로 이동해야 합니다.**</value>
+  </data>
+  <data name="RDM_ST_ThunderAero_Name" xml:space="preserve">
+    <value>버썬더 / 버에어로 옵션</value>
+  </data>
+  <data name="RDM_ST_ThunderAero_Desc" xml:space="preserve">
+    <value>딜사이클에 '버썬더' 및 '버에어로'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_FireStone_Name" xml:space="preserve">
+    <value>버파이어 / 버스톤 옵션</value>
+  </data>
+  <data name="RDM_ST_FireStone_Desc" xml:space="preserve">
+    <value>딜사이클에 '버파이어' 및 '버스톤'을 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_HolyFlare_Name" xml:space="preserve">
+    <value>버플레어 / 버홀리 옵션</value>
+  </data>
+  <data name="RDM_ST_HolyFlare_Desc" xml:space="preserve">
+    <value>사용 가능 시 딜사이클에 '버플레어' 및 '버홀리'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_Name" xml:space="preserve">
+    <value>근접 콤보 옵션</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_Desc" xml:space="preserve">
+    <value>'츠베르크하우' 및 '르두블망'을 추가합니다.
+**근접 범위 내에 있거나 '코르 아 코르' 돌진 기능이 활성화되어야 합니다.**</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_IncludeRiposte_Name" xml:space="preserve">
+    <value>리포스트 포함</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_IncludeRiposte_Desc" xml:space="preserve">
+    <value>콤보 시작 기술로 '리포스트'를 추가합니다. 자동 회전에 권장됩니다.
+**근접 범위 내에 있거나 '코르 아 코르' 돌진 기능이 활성화되어야 합니다.**</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_IncludeReprise_Name" xml:space="preserve">
+    <value>르프리즈 포함</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_IncludeReprise_Desc" xml:space="preserve">
+    <value>근접 콤보 중 범위를 벗어났을 때 '르프리즈'를 사용합니다. 현재 콤보를 마칠 수 있는 마나는 유지합니다.</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_GapCloser_Name" xml:space="preserve">
+    <value>코르 아 코르 돌진 옵션</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_GapCloser_Desc" xml:space="preserve">
+    <value>근접 범위를 벗어났을 때 근접 콤보를 시작할 마나가 충분하다면 '코르 아 코르'를 사용합니다.</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_MeleeCheck_Name" xml:space="preserve">
+    <value>근접 상태 강제 체크</value>
+  </data>
+  <data name="RDM_ST_MeleeCombo_MeleeCheck_Desc" xml:space="preserve">
+    <value>근접 콤보가 시작되면 대상이 범위를 벗어나더라도 기술 회전을 전환하지 않습니다.</value>
+  </data>
+  <data name="RDM_ST_Embolden_Name" xml:space="preserve">
+    <value>성원 옵션</value>
+  </data>
+  <data name="RDM_ST_Embolden_Desc" xml:space="preserve">
+    <value>사용 가능 시 '성원'을 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_Manafication_Name" xml:space="preserve">
+    <value>마나 증량 사용</value>
+  </data>
+  <data name="RDM_ST_Manafication_Desc" xml:space="preserve">
+    <value>버스트를 위해 '성원' 사용 전 '마나 증량'을 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_ViceOfThorns_Name" xml:space="preserve">
+    <value>회오리 찔레 옵션</value>
+  </data>
+  <data name="RDM_ST_ViceOfThorns_Desc" xml:space="preserve">
+    <value>사용 가능 시 '회오리 찔레'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_Prefulgence_Name" xml:space="preserve">
+    <value>적색 광채 옵션</value>
+  </data>
+  <data name="RDM_ST_Prefulgence_Desc" xml:space="preserve">
+    <value>사용 가능 시 '적색 광채'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_Fleche_Name" xml:space="preserve">
+    <value>플레슈 옵션</value>
+  </data>
+  <data name="RDM_ST_Fleche_Desc" xml:space="preserve">
+    <value>사용 가능 시 '플레슈'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_ContreSixte_Name" xml:space="preserve">
+    <value>콩트르 식스트 옵션</value>
+  </data>
+  <data name="RDM_ST_ContreSixte_Desc" xml:space="preserve">
+    <value>사용 가능 시 '콩트르 식스트'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_Engagement_Name" xml:space="preserve">
+    <value>앙가주망 옵션</value>
+  </data>
+  <data name="RDM_ST_Engagement_Desc" xml:space="preserve">
+    <value>사용 가능 시 '앙가주망'을 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_Engagement_Pooling_Name" xml:space="preserve">
+    <value>앙가주망 축적 옵션</value>
+  </data>
+  <data name="RDM_ST_Engagement_Pooling_Desc" xml:space="preserve">
+    <value>넘치지 않게 사용하되, 시너지 구간을 위해 최소 1회분은 남겨둡니다.</value>
   </data>
   <data name="RDM_ST_Engagement_Saving_Name" xml:space="preserve">
     <value>앙가주망 보존 옵션</value>
   </data>
+  <data name="RDM_ST_Engagement_Saving_Desc" xml:space="preserve">
+    <value>수동 '데플라스망' 사용을 위해 충전 횟수 1회를 남겨둡니다.</value>
+  </data>
+  <data name="RDM_ST_Corpsacorps_Name" xml:space="preserve">
+    <value>코르 아 코르 옵션</value>
+  </data>
+  <data name="RDM_ST_Corpsacorps_Desc" xml:space="preserve">
+    <value>딜링용으로 '코르 아 코르'를 추가합니다. 돌진용 충전 횟수 1회를 남겨둡니다.</value>
+  </data>
+  <data name="RDM_ST_Acceleration_Name" xml:space="preserve">
+    <value>가속화 옵션</value>
+  </data>
+  <data name="RDM_ST_Acceleration_Desc" xml:space="preserve">
+    <value>사용 가능 시 '가속화'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_Acceleration_Movement_Name" xml:space="preserve">
+    <value>이동 중 가속화 옵션</value>
+  </data>
+  <data name="RDM_ST_Acceleration_Movement_Desc" xml:space="preserve">
+    <value>이동 시에 '가속화'를 사용합니다.</value>
+  </data>
+  <data name="RDM_ST_Swiftcast_Name" xml:space="preserve">
+    <value>신속한 마법 옵션</value>
+  </data>
+  <data name="RDM_ST_Swiftcast_Desc" xml:space="preserve">
+    <value>사용 가능 시 '신속한 마법'을 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_SwiftcastMovement_Name" xml:space="preserve">
+    <value>이동 전용 신속한 마법</value>
+  </data>
+  <data name="RDM_ST_SwiftcastMovement_Desc" xml:space="preserve">
+    <value>이동 시에만 '신속한 마법'을 사용합니다.</value>
+  </data>
+  <data name="RDM_ST_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="RDM_ST_Lucid_Desc" xml:space="preserve">
+    <value>MP가 지정된 수치 미만일 때 '자각몽'을 끼워 넣습니다.</value>
+  </data>
+  <data name="RDM_ST_Addle_Name" xml:space="preserve">
+    <value>광역 시 견제 옵션</value>
+  </data>
+  <data name="RDM_ST_Addle_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전 감지 시 '견제'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_MagickBarrier_Name" xml:space="preserve">
+    <value>광역 시 바매직 옵션</value>
+  </data>
+  <data name="RDM_ST_MagickBarrier_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전 감지 시 '바매직'를 추가합니다.</value>
+  </data>
+  <data name="RDM_ST_VerCure_Name" xml:space="preserve">
+    <value>버케알 단독 옵션</value>
+  </data>
+  <data name="RDM_ST_VerCure_Desc" xml:space="preserve">
+    <value>솔플 중이거나 파티에 힐러가 없을 때 자신에게 '버케알'을 사용합니다.</value>
+  </data>
+  <data name="RDM_AoE_DPS_Name" xml:space="preserve">
+    <value>고급 모드 - 광역</value>
+  </data>
+  <data name="RDM_AoE_DPS_Desc" xml:space="preserve">
+    <value>'흩뿌리기' 하나로 광역 딜사이클을 수행합니다.
+딜사이클을 사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="RDM_AoE_ThunderAero_Name" xml:space="preserve">
+    <value>버썬더라 / 버에어로라 옵션</value>
+  </data>
+  <data name="RDM_AoE_ThunderAero_Desc" xml:space="preserve">
+    <value>딜사이클에 '버썬더라' 및 '버에어로라'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_HolyFlare_Name" xml:space="preserve">
+    <value>버플레어 / 버홀리 옵션 (광역)</value>
+  </data>
+  <data name="RDM_AoE_HolyFlare_Desc" xml:space="preserve">
+    <value>딜사이클에 '버플레어' 및 '버홀리'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_MeleeCombo_Name" xml:space="preserve">
+    <value>물리네 근접 콤보 옵션</value>
+  </data>
+  <data name="RDM_AoE_MeleeCombo_Desc" xml:space="preserve">
+    <value>딜사이클에 '물리네' 연계를 추가합니다. 
+52레벨 미만에서는 단일 대상 근접 콤보를 사용합니다.</value>
+  </data>
+  <data name="RDM_AoE_MeleeCombo_Target_Name" xml:space="preserve">
+    <value>대상 확인 옵션</value>
+  </data>
+  <data name="RDM_AoE_MeleeCombo_Target_Desc" xml:space="preserve">
+    <value>8m 이내에 대상이 있을 때만 사용합니다. 
+거리 체크를 위한 설정입니다.</value>
+  </data>
+  <data name="RDM_AoE_MeleeCombo_GapCloser_Name" xml:space="preserve">
+    <value>코르 아 코르 돌진 옵션 (광역)</value>
+  </data>
+  <data name="RDM_AoE_MeleeCombo_GapCloser_Desc" xml:space="preserve">
+    <value>범위를 벗어났을 때 근접 콤보 시작 마나가 충분하다면 '코르 아 코르'를 사용합니다.</value>
+  </data>
+  <data name="RDM_AoE_Embolden_Name" xml:space="preserve">
+    <value>성원 옵션</value>
+  </data>
+  <data name="RDM_AoE_Embolden_Desc" xml:space="preserve">
+    <value>사용 가능 시 '성원'을 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_Manafication_Name" xml:space="preserve">
+    <value>마나 증량 사용</value>
+  </data>
+  <data name="RDM_AoE_Manafication_Desc" xml:space="preserve">
+    <value>버스트를 위해 '성원' 사용 전 '마나 증량'을 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_ViceOfThorns_Name" xml:space="preserve">
+    <value>회오리 찔레 옵션</value>
+  </data>
+  <data name="RDM_AoE_ViceOfThorns_Desc" xml:space="preserve">
+    <value>사용 가능 시 '회오리 찔레'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_Prefulgence_Name" xml:space="preserve">
+    <value>적색 광채 옵션</value>
+  </data>
+  <data name="RDM_AoE_Prefulgence_Desc" xml:space="preserve">
+    <value>사용 가능 시 '적색 광채'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_Fleche_Name" xml:space="preserve">
+    <value>플레슈 옵션</value>
+  </data>
+  <data name="RDM_AoE_Fleche_Desc" xml:space="preserve">
+    <value>사용 가능 시 '플레슈'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_ContreSixte_Name" xml:space="preserve">
+    <value>콩트르 식스트 옵션</value>
+  </data>
+  <data name="RDM_AoE_ContreSixte_Desc" xml:space="preserve">
+    <value>사용 가능 시 '콩트르 식스트'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_Engagement_Name" xml:space="preserve">
+    <value>앙가주망 옵션</value>
+  </data>
+  <data name="RDM_AoE_Engagement_Desc" xml:space="preserve">
+    <value>사용 가능 시 '앙가주망'을 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_Engagement_Pooling_Name" xml:space="preserve">
+    <value>앙가주망 축적 옵션</value>
+  </data>
+  <data name="RDM_AoE_Engagement_Pooling_Desc" xml:space="preserve">
+    <value>넘치지 않게 사용하되, 시너지 구간을 위해 최소 1회분은 남겨둡니다.</value>
+  </data>
+  <data name="RDM_AoE_Engagement_Saving_Name" xml:space="preserve">
+    <value>앙가주망 보존 옵션</value>
+  </data>
+  <data name="RDM_AoE_Engagement_Saving_Desc" xml:space="preserve">
+    <value>수동 '데플라스망' 사용을 위해 충전 횟수 1회를 남겨둡니다.</value>
+  </data>
+  <data name="RDM_AoE_Corpsacorps_Name" xml:space="preserve">
+    <value>코르 아 코르 옵션</value>
+  </data>
   <data name="RDM_AoE_Corpsacorps_Desc" xml:space="preserve">
     <value>딜링용으로 '코르 아 코르'를 추가합니다. 돌진용 충전 횟수 1회를 남겨둡니다.</value>
+  </data>
+  <data name="RDM_AoE_Acceleration_Name" xml:space="preserve">
+    <value>가속화 옵션</value>
+  </data>
+  <data name="RDM_AoE_Acceleration_Desc" xml:space="preserve">
+    <value>사용 가능 시 '가속화'를 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_Acceleration_Movement_Name" xml:space="preserve">
+    <value>이동 중 가속화 옵션</value>
+  </data>
+  <data name="RDM_AoE_Acceleration_Movement_Desc" xml:space="preserve">
+    <value>이동 시에 '가속화'를 사용합니다.</value>
+  </data>
+  <data name="RDM_AoE_Swiftcast_Name" xml:space="preserve">
+    <value>신속한 마법 옵션</value>
+  </data>
+  <data name="RDM_AoE_Swiftcast_Desc" xml:space="preserve">
+    <value>사용 가능 시 '신속한 마법'을 추가합니다.</value>
+  </data>
+  <data name="RDM_AoE_SwiftcastMovement_Name" xml:space="preserve">
+    <value>이동 전용 신속한 마법</value>
+  </data>
+  <data name="RDM_AoE_SwiftcastMovement_Desc" xml:space="preserve">
+    <value>이동 시에만 '신속한 마법'을 사용합니다.</value>
+  </data>
+  <data name="RDM_AoE_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="RDM_AoE_Lucid_Desc" xml:space="preserve">
+    <value>MP가 지정된 수치 미만일 때 '자각몽'을 끼워 넣습니다.</value>
+  </data>
+  <data name="RDM_AoE_VerCure_Name" xml:space="preserve">
+    <value>버케알 단독 옵션</value>
+  </data>
+  <data name="RDM_AoE_VerCure_Desc" xml:space="preserve">
+    <value>솔플 중이거나 파티에 힐러가 없을 때 자신에게 '버케알'을 사용합니다.</value>
+  </data>
+  <data name="RDM_VerAero_Name" xml:space="preserve">
+    <value>버에어로 기반 주문 콤보</value>
+  </data>
+  <data name="RDM_VerAero_Desc" xml:space="preserve">
+    <value>'버에어로' 버튼을 설정된 옵션들로 교체합니다.</value>
+  </data>
+  <data name="RDM_VerThunder_Name" xml:space="preserve">
+    <value>버썬더 기반 주문 콤보</value>
+  </data>
+  <data name="RDM_VerThunder_Desc" xml:space="preserve">
+    <value>'버썬더' 버튼을 설정된 옵션들로 교체합니다.</value>
+  </data>
+  <data name="RDM_VerAero2_Name" xml:space="preserve">
+    <value>버에어로라 기반 주문 콤보</value>
+  </data>
+  <data name="RDM_VerAero2_Desc" xml:space="preserve">
+    <value>'버에어로라' 버튼을 설정된 옵션들로 교체합니다.</value>
+  </data>
+  <data name="RDM_VerThunder2_Name" xml:space="preserve">
+    <value>버썬더라 기반 주문 콤보</value>
+  </data>
+  <data name="RDM_VerThunder2_Desc" xml:space="preserve">
+    <value>'버썬더라' 버튼을 설정된 옵션들로 교체합니다.</value>
+  </data>
+  <data name="RDM_Riposte_Name" xml:space="preserve">
+    <value>리포스트 근접 콤보 통합</value>
+  </data>
+  <data name="RDM_Riposte_Desc" xml:space="preserve">
+    <value>'리포스트' 버튼 하나로 기본 근접 콤보 연계를 수행합니다.</value>
+  </data>
+  <data name="RDM_Riposte_Weaves_Name" xml:space="preserve">
+    <value>근접 콤보 중 oGCD 끼워 넣기</value>
+  </data>
+  <data name="RDM_Riposte_Weaves_Desc" xml:space="preserve">
+    <value>근접 콤보 도중에 아래 oGCD 기술들을 함께 사용합니다.</value>
+  </data>
+  <data name="RDM_Riposte_GapCloser_Name" xml:space="preserve">
+    <value>코르 아 코르 돌진 옵션 (리포스트)</value>
+  </data>
+  <data name="RDM_Riposte_GapCloser_Desc" xml:space="preserve">
+    <value>범위를 벗어났을 때 근접 콤보를 시작할 마나나 '마법검' 중첩이 충분하다면 '코르 아 코르'를 사용합니다.</value>
+  </data>
+  <data name="RDM_Riposte_Finisher_Name" xml:space="preserve">
+    <value>근접 피니시 옵션</value>
+  </data>
+  <data name="RDM_Riposte_Finisher_Desc" xml:space="preserve">
+    <value>콤보에 '버홀리/버플레어', '작열화', '단호한 결단'을 추가합니다.</value>
+  </data>
+  <data name="RDM_Riposte_NoWaste_Name" xml:space="preserve">
+    <value>리포스트 자원 낭비 방지</value>
+  </data>
+  <data name="RDM_Riposte_NoWaste_Desc" xml:space="preserve">
+    <value>콤보를 완료할 자원이 부족하면 '인리포스트' 대신 일반 '리포스트'를 사용합니다.</value>
+  </data>
+  <data name="RDM_Moulinet_Name" xml:space="preserve">
+    <value>물리네 근접 콤보 통합</value>
+  </data>
+  <data name="RDM_Moulinet_Desc" xml:space="preserve">
+    <value>'물리네' 버튼 하나로 기본 광역 근접 콤보 연계를 수행합니다.</value>
+  </data>
+  <data name="RDM_Moulinet_Weaves_Name" xml:space="preserve">
+    <value>물리네 콤보 중 oGCD 끼워 넣기</value>
+  </data>
+  <data name="RDM_Moulinet_Weaves_Desc" xml:space="preserve">
+    <value>물리네 콤보 도중에 아래 oGCD 기술들을 함께 사용합니다.</value>
+  </data>
+  <data name="RDM_Moulinet_GapCloser_Name" xml:space="preserve">
+    <value>코르 아 코르 돌진 옵션 (물리네)</value>
+  </data>
+  <data name="RDM_Moulinet_GapCloser_Desc" xml:space="preserve">
+    <value>범위를 벗어났을 때 근접 콤보를 시작할 마나나 '마법검' 중첩이 충분하다면 '코르 아 코르'를 사용합니다.</value>
+  </data>
+  <data name="RDM_Moulinet_Finisher_Name" xml:space="preserve">
+    <value>물리네 피니시 옵션</value>
+  </data>
+  <data name="RDM_Moulinet_Finisher_Desc" xml:space="preserve">
+    <value>콤보에 '버홀리/버플레어', '작열화', '단호한 결단'을 추가합니다.</value>
+  </data>
+  <data name="RDM_Moulinet_NoWaste_Name" xml:space="preserve">
+    <value>물리네 자원 낭비 방지</value>
+  </data>
+  <data name="RDM_Moulinet_NoWaste_Desc" xml:space="preserve">
+    <value>콤보를 완료할 자원이 부족하면 '인물리네' 대신 일반 '물리네'를 사용합니다.</value>
+  </data>
+  <data name="RDM_Raise_Name" xml:space="preserve">
+    <value>버레이즈 편의 기능</value>
+  </data>
+  <data name="RDM_Raise_Desc" xml:space="preserve">
+    <value>'신속한 마법' 또는 '연속 마법' 효과가 있을 때 해당 버튼을 '버레이즈'로 변경합니다.</value>
+  </data>
+  <data name="RDM_Raise_Vercure_Name" xml:space="preserve">
+    <value>버케알 연계 옵션</value>
+  </data>
+  <data name="RDM_Raise_Vercure_Desc" xml:space="preserve">
+    <value>'신속한 마법'이 쿨타임 중이면 '연속 마법'을 띄우기 위해 '버케알'을 먼저 사용하도록 변경합니다.</value>
+  </data>
+  <data name="RDM_Raise_Retarget_Name" xml:space="preserve">
+    <value>부활/치료 대상 자동 전환</value>
+  </data>
+  <data name="RDM_Raise_Retarget_Desc" xml:space="preserve">
+    <value>'버레이즈' 및 '버케알' 사용 시 대상을 자동으로 파티원에게 전환합니다.</value>
+  </data>
+  <data name="RDM_CorpsDisplacement_Name" xml:space="preserve">
+    <value>데플라스망 &lt;&gt; 코르 아 코르 전환</value>
+  </data>
+  <data name="RDM_CorpsDisplacement_Desc" xml:space="preserve">
+    <value>대상과 거리가 멀어지면 '데플라스망'을 '코르 아 코르'로 교체하여 표시합니다.</value>
+  </data>
+  <data name="RDM_EmboldenProtection_Name" xml:space="preserve">
+    <value>성원 중복 사용 방지</value>
+  </data>
+  <data name="RDM_EmboldenProtection_Desc" xml:space="preserve">
+    <value>다른 적마도사의 '성원' 버프를 받고 있다면 자원 낭비를 방지하기 위해 사용을 제한합니다.</value>
   </data>
   <data name="RDM_EmboldenManafication_Name" xml:space="preserve">
     <value>성원을 마나 증량으로 전환</value>
   </data>
+  <data name="RDM_EmboldenManafication_Desc" xml:space="preserve">
+    <value>'성원'이 쿨타임 중이거나 이미 버프를 받고 있을 때 버튼을 '마나 증량'으로 변경합니다.</value>
+  </data>
+  <data name="RDM_MagickBarrierAddle_Name" xml:space="preserve">
+    <value>버마지크를 견제로 전환</value>
+  </data>
+  <data name="RDM_MagickBarrierAddle_Desc" xml:space="preserve">
+    <value>'버마지크'가 쿨타임 중이면 버튼을 '견제'로 변경합니다. 
+둘 다 쿨타임이면 남은 시간이 적은 것을 표시합니다.</value>
+  </data>
+  <data name="RDM_MagickProtection_Name" xml:space="preserve">
+    <value>바매직 중복 사용 방지</value>
+  </data>
+  <data name="RDM_MagickProtection_Desc" xml:space="preserve">
+    <value>다른 적마도사의 '바매직' 버프를 받고 있다면 사용을 방지합니다. 견제 서브 옵션에도 적용됩니다.</value>
+  </data>
+  <data name="RDM_OGCDs_Name" xml:space="preserve">
+    <value>oGCD 기술 원버튼 통합</value>
+  </data>
+  <data name="RDM_OGCDs_Desc" xml:space="preserve">
+    <value>'플레슈' 버튼 하나로 콩트르 식스트, 회오리 찔레, 적색 광채, 앙가주망, 그리고 코르 아 코르(1회분)를 통합 관리합니다.</value>
+  </data>
+  <data name="SGE_ST_Simple_DPS_Name" xml:space="preserve">
+    <value>단순 공격 모드 - 단일 대상</value>
+  </data>
+  <data name="SGE_ST_Simple_DPS_Desc" xml:space="preserve">
+    <value>'도시스' 버튼 하나로 단일 대상 딜사이클 전체를 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SGE_AoE_Simple_DPS_Name" xml:space="preserve">
+    <value>단순 공격 모드 - 광역</value>
+  </data>
+  <data name="SGE_AoE_Simple_DPS_Desc" xml:space="preserve">
+    <value>'위험질환' 버튼 하나로 광역 딜사이클 전체를 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SGE_Simple_ST_Heal_Name" xml:space="preserve">
+    <value>단순 치유 모드 - 단일 대상</value>
+  </data>
+  <data name="SGE_Simple_ST_Heal_Desc" xml:space="preserve">
+    <value>'진단치료' 버튼 하나로 단일 대상 치유 유틸리티 전체를 수행합니다.
+입문자에게 이상적이며, 특히 자동 사이클 기능을 사용할 때 유용합니다.</value>
+  </data>
+  <data name="SGE_Simple_AoE_Heal_Name" xml:space="preserve">
+    <value>단순 치유 모드 - 광역</value>
+  </data>
+  <data name="SGE_Simple_AoE_Heal_Desc" xml:space="preserve">
+    <value>'예후' 버튼 하나로 광역 치유 유틸리티 전체를 수행합니다.
+입문자에게 이상적이며, 특히 자동 사이클 기능을 사용할 때 유용합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Name" xml:space="preserve">
+    <value>고급 공격 모드 - 단일 대상</value>
+  </data>
+  <data name="SGE_ST_DPS_Desc" xml:space="preserve">
+    <value>'도시스/2/3'에 다양한 부가 옵션을 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (92레벨)</value>
+  </data>
+  <data name="SGE_ST_DPS_Opener_Desc" xml:space="preserve">
+    <value>92레벨 이후부터 최적화된 오프너를 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_EDosis_Name" xml:space="preserve">
+    <value>정상건강: 도시스 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_EDosis_Desc" xml:space="preserve">
+    <value>지속 피해(DoT) 기술인 '정상건강: 도시스'의 가동률을 자동으로 유지합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_AddersgallProtect_Name" xml:space="preserve">
+    <value>의술석 넘침 방지</value>
+  </data>
+  <data name="SGE_ST_DPS_AddersgallProtect_Desc" xml:space="preserve">
+    <value>의술석 게이지가 설정값 이상일 때 '드루오콜레'를 끼워 넣어 자원 낭비를 막습니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Rhizo_Name" xml:space="preserve">
+    <value>만물의 근원 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Rhizo_Desc" xml:space="preserve">
+    <value>의술석 게이지가 설정값 미만일 때 '만물의 근원'을 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Phlegma_Name" xml:space="preserve">
+    <value>플레그마 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Phlegma_Desc" xml:space="preserve">
+    <value>사용 가능하고 사거리 내에 있을 때 '플레그마'를 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Psyche_Name" xml:space="preserve">
+    <value>프시케 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Psyche_Desc" xml:space="preserve">
+    <value>사용 가능 시 '프시케'를 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Movement_Name" xml:space="preserve">
+    <value>이동 중 기술 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Movement_Desc" xml:space="preserve">
+    <value>이동 중에 선택한 즉시 발동 기술들을 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Kardia_Name" xml:space="preserve">
+    <value>심각인 알림 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Kardia_Desc" xml:space="preserve">
+    <value>효과가 적용되어 있지 않을 때 '심각인'을 부여합니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Soteria_Name" xml:space="preserve">
+    <value>구조 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Soteria_Desc" xml:space="preserve">
+    <value>심각인 버프를 가지고 있을 때 '구조'를 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_ST_DPS_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="SGE_ST_DPS_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정값 미만일 때 '자각몽'을 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Name" xml:space="preserve">
+    <value>고급 공격 모드 - 광역</value>
+  </data>
+  <data name="SGE_AoE_DPS_Desc" xml:space="preserve">
+    <value>'위험질환/2'에 다양한 옵션을 추가합니다. 대상이 필요합니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_EDyskrasia_Name" xml:space="preserve">
+    <value>정상건강 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_EDyskrasia_Desc" xml:space="preserve">
+    <value>'정상건강: 위험질환' 사용을 위해 정상건강을 활성화합니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_AddersgallProtect_Name" xml:space="preserve">
+    <value>의술석 넘침 방지</value>
+  </data>
+  <data name="SGE_AoE_DPS_AddersgallProtect_Desc" xml:space="preserve">
+    <value>의술석 게이지가 설정값 이상일 때 '드루오콜레'를 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Rhizo_Name" xml:space="preserve">
+    <value>만물의 근원 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_Rhizo_Desc" xml:space="preserve">
+    <value>의술석 게이지가 설정값 미만일 때 '만물의 근원'을 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Phlegma_Name" xml:space="preserve">
+    <value>플레그마 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_Phlegma_Desc" xml:space="preserve">
+    <value>사용 가능 시 '플레그마'를 사용합니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Psyche_Name" xml:space="preserve">
+    <value>프시케 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_Psyche_Desc" xml:space="preserve">
+    <value>사용 가능 시 '프시케'를 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Toxikon_Name" xml:space="preserve">
+    <value>톡시콘 옵션</value>
+  </data>
   <data name="SGE_AoE_DPS_Toxikon_Desc" xml:space="preserve">
     <value>의술침이 있을 때 '톡시콘'을 사용합니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Pneuma_Name" xml:space="preserve">
+    <value>프네우마 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_Pneuma_Desc" xml:space="preserve">
+    <value>사용 가능 시 '프네우마'를 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Soteria_Name" xml:space="preserve">
+    <value>구조 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_Soteria_Desc" xml:space="preserve">
+    <value>심각인 버프를 가지고 있을 때 '구조'를 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_AoE_DPS_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="SGE_AoE_DPS_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정값 미만일 때 '자각몽'을 끼워 넣습니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Name" xml:space="preserve">
+    <value>고급 치유 모드 - 단일 대상</value>
+  </data>
+  <data name="SGE_ST_Heal_Desc" xml:space="preserve">
+    <value>'진단치료'를 다양한 치유 옵션으로 변경합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Lucid_Name" xml:space="preserve">
+    <value>자각몽 끼워 넣기</value>
+  </data>
+  <data name="SGE_ST_Heal_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정값 미만일 때 '자각몽'을 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Rhizomata_Name" xml:space="preserve">
+    <value>만물의 근원 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Rhizomata_Desc" xml:space="preserve">
+    <value>의술석이 0일 때 '만물의 근원'을 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Kardia_Name" xml:space="preserve">
+    <value>심각인 부여 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Kardia_Desc" xml:space="preserve">
+    <value>아무에게도 적용되어 있지 않다면 '심각인'을 부여합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Esuna_Name" xml:space="preserve">
+    <value>에스나 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Esuna_Desc" xml:space="preserve">
+    <value>해제 가능한 디버프가 있다면 '에스나'를 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_EDiagnosis_Name" xml:space="preserve">
+    <value>정상건강: 진단치료 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_EDiagnosis_Desc" xml:space="preserve">
+    <value>대상에게 보호막이 없다면 '진단치료'가 '정상건강: 진단치료'로 변경됩니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Druochole_Name" xml:space="preserve">
+    <value>드루오콜레 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Druochole_Desc" xml:space="preserve">
+    <value>'드루오콜레'를 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Taurochole_Name" xml:space="preserve">
+    <value>타우로콜레 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Taurochole_Desc" xml:space="preserve">
+    <value>'타우로콜레'를 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Haima_Name" xml:space="preserve">
+    <value>혈액 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Haima_Desc" xml:space="preserve">
+    <value>'혈액(하이마)'을 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Soteria_Name" xml:space="preserve">
+    <value>구조 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Soteria_Desc" xml:space="preserve">
+    <value>'구조'를 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Zoe_Name" xml:space="preserve">
+    <value>생명력 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Zoe_Desc" xml:space="preserve">
+    <value>'생명력'을 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Krasis_Name" xml:space="preserve">
+    <value>체액 혼화 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Krasis_Desc" xml:space="preserve">
+    <value>'체액 혼화'를 사용합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Pepsis_Name" xml:space="preserve">
+    <value>소화 작용 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Pepsis_Desc" xml:space="preserve">
+    <value>보호막이 존재할 때 '소화 작용'을 발동합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Physis_Name" xml:space="preserve">
+    <value>퓌시스 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Physis_Desc" xml:space="preserve">
+    <value>'퓌시스'를 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Kerachole_Name" xml:space="preserve">
+    <value>케이라콜레 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Kerachole_Desc" xml:space="preserve">
+    <value>'케이라콜레'를 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Holos_Name" xml:space="preserve">
+    <value>전체론 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Holos_Desc" xml:space="preserve">
+    <value>'전체론'을 추가합니다.</value>
+  </data>
+  <data name="SGE_ST_Heal_Panhaima_Name" xml:space="preserve">
+    <value>온혈액 옵션</value>
+  </data>
+  <data name="SGE_ST_Heal_Panhaima_Desc" xml:space="preserve">
+    <value>'온혈액'을 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Name" xml:space="preserve">
+    <value>고급 치유 모드 - 광역</value>
+  </data>
+  <data name="SGE_AoE_Heal_Desc" xml:space="preserve">
+    <value>'예후'를 다양한 치유 옵션으로 변경합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정값 미만일 때 '자각몽'을 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Rhizomata_Name" xml:space="preserve">
+    <value>만물의 근원 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Rhizomata_Desc" xml:space="preserve">
+    <value>의술석이 0일 때 '만물의 근원'을 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_EPrognosis_Name" xml:space="preserve">
+    <value>정상건강: 예후 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_EPrognosis_Desc" xml:space="preserve">
+    <value>'정상건강: 예후'를 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Ixochole_Name" xml:space="preserve">
+    <value>익소콜레 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Ixochole_Desc" xml:space="preserve">
+    <value>'익소콜레'를 추가합니다.</value>
   </data>
   <data name="SGE_AoE_Heal_Kerachole_Name" xml:space="preserve">
     <value>케이라콜레 옵션</value>
   </data>
+  <data name="SGE_AoE_Heal_Kerachole_Desc" xml:space="preserve">
+    <value>'케이라콜레'를 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Holos_Name" xml:space="preserve">
+    <value>전체론 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Holos_Desc" xml:space="preserve">
+    <value>'전체론'을 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Physis_Name" xml:space="preserve">
+    <value>퓌시스 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Physis_Desc" xml:space="preserve">
+    <value>'퓌시스'를 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Panhaima_Name" xml:space="preserve">
+    <value>온혈액 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Panhaima_Desc" xml:space="preserve">
+    <value>'온혈액'을 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Zoe_Name" xml:space="preserve">
+    <value>생명력 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Zoe_Desc" xml:space="preserve">
+    <value>'생명력'을 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Philosophia_Name" xml:space="preserve">
+    <value>필로소피아 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Philosophia_Desc" xml:space="preserve">
+    <value>'필로소피아'를 추가합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Pepsis_Name" xml:space="preserve">
+    <value>소화 작용 옵션</value>
+  </data>
+  <data name="SGE_AoE_Heal_Pepsis_Desc" xml:space="preserve">
+    <value>보호막이 존재할 때 '소화 작용'을 발동합니다.</value>
+  </data>
+  <data name="SGE_OverProtect_Name" xml:space="preserve">
+    <value>기술 중복 방지</value>
+  </data>
+  <data name="SGE_OverProtect_Desc" xml:space="preserve">
+    <value>다른 파티원의 기술 효과를 받고 있을 때 자원 낭비를 방지합니다.</value>
+  </data>
+  <data name="SGE_OverProtect_Kerachole_Name" xml:space="preserve">
+    <value>케이라콜레 중복 방지</value>
+  </data>
+  <data name="SGE_OverProtect_Kerachole_Desc" xml:space="preserve">
+    <value>이미 다른 현자의 '케이라콜레' 효과 중이라면 사용하지 않습니다.</value>
+  </data>
+  <data name="SGE_OverProtect_SacredSoil_Name" xml:space="preserve">
+    <value>야전치유진 중복 방지</value>
+  </data>
+  <data name="SGE_OverProtect_SacredSoil_Desc" xml:space="preserve">
+    <value>학자의 '야전치유진' 효과 범위 내에 있다면 '케이라콜레'를 사용하지 않습니다.</value>
+  </data>
+  <data name="SGE_OverProtect_Panhaima_Name" xml:space="preserve">
+    <value>온혈액 중복 방지</value>
+  </data>
+  <data name="SGE_OverProtect_Panhaima_Desc" xml:space="preserve">
+    <value>이미 다른 현자의 '온혈액' 효과 중이라면 사용하지 않습니다.</value>
+  </data>
+  <data name="SGE_OverProtect_Philosophia_Name" xml:space="preserve">
+    <value>필로소피아 중복 방지</value>
+  </data>
+  <data name="SGE_OverProtect_Philosophia_Desc" xml:space="preserve">
+    <value>이미 다른 현자의 '필로소피아' 효과 중이라면 사용하지 않습니다.</value>
+  </data>
+  <data name="SGE_Rhizo_Name" xml:space="preserve">
+    <value>만물의 근원 편의 기능</value>
+  </data>
+  <data name="SGE_Rhizo_Desc" xml:space="preserve">
+    <value>의술석이 없을 때 의술석 소비 기술을 '만물의 근원'으로 교체합니다.</value>
+  </data>
+  <data name="SGE_Raise_Name" xml:space="preserve">
+    <value>신속한 마법 소생술 기능</value>
+  </data>
+  <data name="SGE_Raise_Desc" xml:space="preserve">
+    <value>'신속한 마법'이 쿨타임 중일 때 해당 버튼을 '소생술'로 변경합니다.</value>
+  </data>
+  <data name="SGE_Raise_Retarget_Name" xml:space="preserve">
+    <value>부활 대상 자동 전환</value>
+  </data>
+  <data name="SGE_Raise_Retarget_Desc" xml:space="preserve">
+    <value>부활 대상을 치유 우선순위 명단에 맞춰 자동으로 전환합니다.</value>
+  </data>
+  <data name="SGE_ZoePneuma_Name" xml:space="preserve">
+    <value>생명력-프네우마 연계 기능</value>
+  </data>
+  <data name="SGE_ZoePneuma_Desc" xml:space="preserve">
+    <value>두 기술이 모두 준비되었을 때 '프네우마' 버튼 위치에 '생명력'을 표시합니다.</value>
+  </data>
+  <data name="SGE_Kardia_Name" xml:space="preserve">
+    <value>구조-심각인 전환 기능</value>
+  </data>
+  <data name="SGE_Kardia_Desc" xml:space="preserve">
+    <value>심각인이 비활성이거나 구조가 쿨타임 중일 때 '구조'를 '심각인'으로 변경합니다.</value>
+  </data>
+  <data name="SGE_Eukrasia_Name" xml:space="preserve">
+    <value>정상건강 통합 기능</value>
+  </data>
+  <data name="SGE_Eukrasia_Desc" xml:space="preserve">
+    <value>정상건강이 활성화되면 버튼을 선택한 정상건강류 기술로 변경합니다.</value>
+  </data>
+  <data name="SGE_TauroDruo_Name" xml:space="preserve">
+    <value>타우로콜레-드루오콜레 전환</value>
+  </data>
+  <data name="SGE_TauroDruo_Desc" xml:space="preserve">
+    <value>'타우로콜레'가 쿨타임 중일 때 버튼을 '드루오콜레'로 변경합니다.</value>
+  </data>
+  <data name="SGE_Mit_ST_Name" xml:space="preserve">
+    <value>경감 기능 - 단일 대상</value>
+  </data>
+  <data name="SGE_Mit_ST_Desc" xml:space="preserve">
+    <value>'체액 혼화' 사용 후 버튼을 정상건강: 진단치료, 타우로콜레, 혈액 등으로 순차 변경합니다. 
+각 기술은 아래의 자동 전환 옵션과 연동됩니다.</value>
+  </data>
+  <data name="SGE_Mit_AoE_Name" xml:space="preserve">
+    <value>경감 기능 - 광역</value>
+  </data>
+  <data name="SGE_Mit_AoE_Desc" xml:space="preserve">
+    <value>보호막 부여를 위해 '전체론'을 '정상건강: 예후'로 변경합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Name" xml:space="preserve">
+    <value>대상 자동 전환 옵션</value>
+  </data>
+  <data name="SGE_Retarget_Desc" xml:space="preserve">
+    <value>단일 대상 치유 기술들의 대상을 자동으로 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Diagnosis_Name" xml:space="preserve">
+    <value>진단치료 대상 전환</value>
+  </data>
+  <data name="SGE_Retarget_Diagnosis_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '진단치료'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_EukrasianDiagnosis_Name" xml:space="preserve">
+    <value>정상건강: 진단치료 대상 전환</value>
+  </data>
+  <data name="SGE_Retarget_EukrasianDiagnosis_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '정상건강: 진단치료'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Haima_Name" xml:space="preserve">
+    <value>혈액 대상 전환</value>
+  </data>
+  <data name="SGE_Retarget_Haima_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '혈액'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Druochole_Name" xml:space="preserve">
+    <value>드루오콜레 대상 전환</value>
+  </data>
   <data name="SGE_Retarget_Druochole_Desc" xml:space="preserve">
     <value>치유 우선순위에 따라 '드루오콜레'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Taurochole_Name" xml:space="preserve">
+    <value>타우로콜레 대상 전환</value>
+  </data>
+  <data name="SGE_Retarget_Taurochole_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '타우로콜레'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Krasis_Name" xml:space="preserve">
+    <value>체액 혼화 대상 전환</value>
+  </data>
+  <data name="SGE_Retarget_Krasis_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '체액 혼화'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Kardia_Name" xml:space="preserve">
+    <value>심각인 대상 전환</value>
+  </data>
+  <data name="SGE_Retarget_Kardia_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '심각인'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SGE_Retarget_Icarus_Name" xml:space="preserve">
+    <value>이카로스 이동 옵션</value>
+  </data>
+  <data name="SGE_Retarget_Icarus_Desc" xml:space="preserve">
+    <value>'이카로스'의 대상을 마우스오버(UI) 대상으로 전환합니다.</value>
+  </data>
+  <data name="SGE_Raidwide_Name" xml:space="preserve">
+    <value>광역 공격 대응 옵션</value>
+  </data>
+  <data name="SGE_Raidwide_Desc" xml:space="preserve">
+    <value>광역 공격이 감지될 때 자동으로 대응 기술을 시전하는 도구 모음입니다.
+대부분의 광역 공격에 작동하지만, 기믹 숙지를 대신할 수는 없습니다.</value>
+  </data>
+  <data name="SGE_Raidwide_EPrognosis_Name" xml:space="preserve">
+    <value>정상건강: 예후 옵션</value>
+  </data>
+  <data name="SGE_Raidwide_EPrognosis_Desc" xml:space="preserve">
+    <value>광역 공격 감지 시 보호막 여부를 확인하여 시전합니다. 
+모든 주요 콤보에서 작동합니다.</value>
+  </data>
+  <data name="SGE_Raidwide_Kerachole_Name" xml:space="preserve">
+    <value>케이라콜레 옵션</value>
+  </data>
+  <data name="SGE_Raidwide_Kerachole_Desc" xml:space="preserve">
+    <value>광역 공격 감지 시 '케이라콜레'를 시전합니다. 
+모든 주요 콤보에서 작동합니다.</value>
+  </data>
+  <data name="SGE_Raidwide_Holos_Name" xml:space="preserve">
+    <value>전체론 옵션</value>
+  </data>
+  <data name="SGE_Raidwide_Holos_Desc" xml:space="preserve">
+    <value>광역 공격 감지 시 '전체론'을 시전합니다.
+모든 주요 콤보에서 작동합니다.</value>
+  </data>
+  <data name="SAM_ST_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 단일 대상</value>
+  </data>
+  <data name="SAM_ST_SimpleMode_Desc" xml:space="preserve">
+    <value>'검풍' 하나로 모든 단일 대상 딜사이클을 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SAM_AoE_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 광역 공격</value>
+  </data>
+  <data name="SAM_AoE_SimpleMode_Desc" xml:space="preserve">
+    <value>'풍아' 하나로 모든 광역 딜사이클을 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SAM_ST_AdvancedMode_Name" xml:space="preserve">
+    <value>고급 모드 - 단일 대상</value>
+  </data>
+  <data name="SAM_ST_AdvancedMode_Desc" xml:space="preserve">
+    <value>'검풍'을 단일 대상 원버튼 딜사이클로 대체합니다.
+딜사이클을 사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="SAM_ST_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (70/80/90/100레벨)</value>
+  </data>
+  <data name="SAM_ST_Opener_Desc" xml:space="preserve">
+    <value>각 레벨별 Balance 추천 오프너를 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_Yukikaze_Name" xml:space="preserve">
+    <value>설풍 콤보</value>
+  </data>
+  <data name="SAM_ST_Yukikaze_Desc" xml:space="preserve">
+    <value>딜사이클에 설풍 콤보를 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_Kasha_Name" xml:space="preserve">
+    <value>화차 콤보</value>
+  </data>
+  <data name="SAM_ST_Kasha_Desc" xml:space="preserve">
+    <value>딜사이클에 화차 콤보를 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_Gekko_Name" xml:space="preserve">
+    <value>월광 콤보</value>
+  </data>
+  <data name="SAM_ST_Gekko_Desc" xml:space="preserve">
+    <value>딜사이클에 월광 콤보를 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Name" xml:space="preserve">
+    <value>주요 콤보 내 논글로벌(oGCD) 기술</value>
+  </data>
+  <data name="SAM_ST_CDs_Desc" xml:space="preserve">
+    <value>주요 콤보 중에 사용할 논글로벌 기술 설정 모음입니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_MeikyoShisui_Name" xml:space="preserve">
+    <value>명경지수 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_MeikyoShisui_Desc" xml:space="preserve">
+    <value>딜사이클에 '명경지수'를 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Ikishoten_Name" xml:space="preserve">
+    <value>의기충천 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_Ikishoten_Desc" xml:space="preserve">
+    <value>검기가 50 이하일 때 '의기충천'을 사용합니다.
+94레벨 미만: 의기충천 사용을 위해 쿨타임 10초 전부터 검기를 소모합니다.
+94레벨 이상: 버스트 구간에 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_Damage_Name" xml:space="preserve">
+    <value>주요 콤보 내 공격 기술</value>
+  </data>
+  <data name="SAM_ST_Damage_Desc" xml:space="preserve">
+    <value>주요 콤보 중에 시전할 추가 공격 기술 설정입니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Iaijutsu_Name" xml:space="preserve">
+    <value>거합술 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_Iaijutsu_Desc" xml:space="preserve">
+    <value>딜사이클에 '난설월화', '피안화', '반전설월화'를 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_UseHiganbana_Name" xml:space="preserve">
+    <value>피안화 추가</value>
+  </data>
+  <data name="SAM_ST_CDs_UseHiganbana_Desc" xml:space="preserve">
+    <value>세부 설정에 따라 '피안화'를 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_UseTenkaGoken_Name" xml:space="preserve">
+    <value>천하오검 추가</value>
+  </data>
+  <data name="SAM_ST_CDs_UseTenkaGoken_Desc" xml:space="preserve">
+    <value>50레벨 미만으로 레벨 조율 시 '천하오검'을 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_UseMidare_Name" xml:space="preserve">
+    <value>난설월화 추가</value>
+  </data>
+  <data name="SAM_ST_CDs_UseMidare_Desc" xml:space="preserve">
+    <value>'난설월화' 및 '천도설월화'를 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_UseTsubame_Name" xml:space="preserve">
+    <value>제비반전 추가</value>
+  </data>
+  <data name="SAM_ST_CDs_UseTsubame_Desc" xml:space="preserve">
+    <value>'제비반전' 및 '천도반전설월화'를 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Iaijutsu_Movement_Name" xml:space="preserve">
+    <value>이동 중 거합술 제한</value>
+  </data>
+  <data name="SAM_ST_CDs_Iaijutsu_Movement_Desc" xml:space="preserve">
+    <value>움직이지 않을 때만 '난설월화'와 '피안화'를 시전합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Senei_Name" xml:space="preserve">
+    <value>섬영 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_Senei_Desc" xml:space="preserve">
+    <value>딜사이클에 '필살검: 섬영'을 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_OgiNamikiri_Name" xml:space="preserve">
+    <value>오의파절 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_OgiNamikiri_Desc" xml:space="preserve">
+    <value>딜사이클에 '오의파절'과 '반전파절'을 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Zanshin_Name" xml:space="preserve">
+    <value>잔심 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_Zanshin_Desc" xml:space="preserve">
+    <value>사용 가능 시 딜사이클에 '잔심'을 추가합니다.</value>
+  </data>
+  <data name="SAM_ST_CDs_Shoha_Name" xml:space="preserve">
+    <value>조파 옵션</value>
+  </data>
+  <data name="SAM_ST_CDs_Shoha_Desc" xml:space="preserve">
+    <value>검압 스택이 3개일 때 '조파'를 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_Shinten_Name" xml:space="preserve">
+    <value>진천 옵션</value>
+  </data>
+  <data name="SAM_ST_Shinten_Desc" xml:space="preserve">
+    <value>딜사이클에 '필살검: 진천'을 추가합니다. 버스트를 위해 검기를 비축합니다.</value>
+  </data>
+  <data name="SAM_ST_RangedUptime_Name" xml:space="preserve">
+    <value>원거리 공격 기능</value>
+  </data>
+  <data name="SAM_ST_RangedUptime_Desc" xml:space="preserve">
+    <value>대상이 사거리 밖에 있을 때 '제비오름'을 사용합니다.
+가능할 경우 오의파절이나 거합술을 우선합니다.</value>
+  </data>
+  <data name="SAM_ST_TrueNorth_Name" xml:space="preserve">
+    <value>진북 기능</value>
+  </data>
+  <data name="SAM_ST_TrueNorth_Desc" xml:space="preserve">
+    <value>방향 보너스를 받기 어려운 위치일 때 자동으로 '진북'을 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_StunInterupt_Name" xml:space="preserve">
+    <value>다리 쳐내기 옵션</value>
+  </data>
+  <data name="SAM_ST_StunInterupt_Desc" xml:space="preserve">
+    <value>적이 기술을 시전할 때 '다리 쳐내기'로 차단합니다.</value>
+  </data>
+  <data name="SAM_ST_ComboHeals_Name" xml:space="preserve">
+    <value>생존기 자동 사용</value>
+  </data>
+  <data name="SAM_ST_ComboHeals_Desc" xml:space="preserve">
+    <value>HP가 설정값 이하일 때 '피의 목욕'과 '내단'을 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_Feint_Name" xml:space="preserve">
+    <value>견제 옵션</value>
+  </data>
+  <data name="SAM_ST_Feint_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전이 감지되면 '견제'를 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_ThirdEye_Name" xml:space="preserve">
+    <value>심안 옵션</value>
+  </data>
+  <data name="SAM_ST_ThirdEye_Desc" xml:space="preserve">
+    <value>광역 공격 시전이 감지되면 '심안'을 사용합니다.
+솔로 플레이 시에는 대기 시간이 끝날 때마다 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_Meditate_Name" xml:space="preserve">
+    <value>묵상 옵션</value>
+  </data>
+  <data name="SAM_ST_Meditate_Desc" xml:space="preserve">
+    <value>전투 중 이동하지 않고 대상이 없을 때 자동으로 '묵상'을 시전합니다.</value>
+  </data>
+  <data name="SAM_AoE_AdvancedMode_Name" xml:space="preserve">
+    <value>고급 모드 - 광역 공격</value>
+  </data>
+  <data name="SAM_AoE_AdvancedMode_Desc" xml:space="preserve">
+    <value>'풍아'를 광역 원버튼 딜사이클로 대체합니다.
+사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="SAM_AoE_Oka_Name" xml:space="preserve">
+    <value>앵화 콤보</value>
+  </data>
+  <data name="SAM_AoE_Oka_Desc" xml:space="preserve">
+    <value>딜사이클에 앵화 콤보를 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_Hagakure_Name" xml:space="preserve">
+    <value>무사도 옵션</value>
+  </data>
+  <data name="SAM_AoE_Hagakure_Desc" xml:space="preserve">
+    <value>3섬 상태일 때 딜사이클에 '무사도'를 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_CDs_Name" xml:space="preserve">
+    <value>광역 논글로벌(oGCD) 기술</value>
+  </data>
+  <data name="SAM_AoE_CDs_Desc" xml:space="preserve">
+    <value>광역 콤보 중에 사용할 논글로벌 기술 설정 모음입니다.</value>
+  </data>
+  <data name="SAM_AoE_MeikyoShisui_Name" xml:space="preserve">
+    <value>명경지수 옵션</value>
+  </data>
+  <data name="SAM_AoE_MeikyoShisui_Desc" xml:space="preserve">
+    <value>딜사이클에 '명경지수'를 추가합니다.</value>
+  </data>
+  <data name="SAM_AOE_CDs_Ikishoten_Name" xml:space="preserve">
+    <value>의기충천 옵션</value>
+  </data>
+  <data name="SAM_AOE_CDs_Ikishoten_Desc" xml:space="preserve">
+    <value>검기가 50 이하일 때 '의기충천'을 사용합니다.
+사용 가능 10초 전부터 검기를 소모하여 사용 공간을 확보합니다.</value>
+  </data>
+  <data name="SAM_AoE_Damage_Name" xml:space="preserve">
+    <value>광역 공격 기술</value>
+  </data>
+  <data name="SAM_AoE_Damage_Desc" xml:space="preserve">
+    <value>광역 콤보 중에 시전할 추가 공격 기술 설정입니다.</value>
+  </data>
+  <data name="SAM_AoE_TenkaGoken_Name" xml:space="preserve">
+    <value>거합술 옵션</value>
+  </data>
+  <data name="SAM_AoE_TenkaGoken_Desc" xml:space="preserve">
+    <value>움직이지 않을 때 '천하오검', '난설월화', '반전오검'을 기술 회전에 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_Guren_Name" xml:space="preserve">
+    <value>홍련 옵션</value>
+  </data>
+  <data name="SAM_AoE_Guren_Desc" xml:space="preserve">
+    <value>기술 회전에 '필살검: 홍련'을 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_OgiNamikiri_Name" xml:space="preserve">
+    <value>오의파절 옵션</value>
+  </data>
+  <data name="SAM_AoE_OgiNamikiri_Desc" xml:space="preserve">
+    <value>움직이지 않을 때 '오의파절'과 '반전파절'을 기술 회전에 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_Zanshin_Name" xml:space="preserve">
+    <value>잔심 옵션</value>
+  </data>
+  <data name="SAM_AoE_Zanshin_Desc" xml:space="preserve">
+    <value>딜사이클에 '잔심'을 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_Shoha_Name" xml:space="preserve">
+    <value>조파 옵션</value>
+  </data>
+  <data name="SAM_AoE_Shoha_Desc" xml:space="preserve">
+    <value>검압 스택이 3개일 때 '조파'를 사용합니다.</value>
+  </data>
+  <data name="SAM_AoE_Kyuten_Name" xml:space="preserve">
+    <value>구천 옵션</value>
+  </data>
+  <data name="SAM_AoE_Kyuten_Desc" xml:space="preserve">
+    <value>딜사이클에 '필살검: 구천'을 추가합니다.</value>
+  </data>
+  <data name="SAM_AoE_StunInterupt_Name" xml:space="preserve">
+    <value>다리 쳐내기 옵션</value>
+  </data>
+  <data name="SAM_AoE_StunInterupt_Desc" xml:space="preserve">
+    <value>적이 기술을 시전할 때 '다리 쳐내기'로 차단합니다.</value>
+  </data>
+  <data name="SAM_AoE_ComboHeals_Name" xml:space="preserve">
+    <value>생존기 옵션</value>
+  </data>
+  <data name="SAM_AoE_ComboHeals_Desc" xml:space="preserve">
+    <value>HP가 설정값 이하일 때 '피의 갈증'과 '내단'을 사용합니다.</value>
+  </data>
+  <data name="SAM_ST_YukikazeCombo_Name" xml:space="preserve">
+    <value>설풍 콤보 대체</value>
+  </data>
+  <data name="SAM_ST_YukikazeCombo_Desc" xml:space="preserve">
+    <value>'설풍'를 설풍 콤보 연쇄로 대체합니다.
+월광/화차 옵션과 병행 시 기본 콤보를 원버튼으로 수행합니다.</value>
+  </data>
+  <data name="SAM_ST_KashaCombo_Name" xml:space="preserve">
+    <value>화차 콤보 대체</value>
+  </data>
+  <data name="SAM_ST_KashaCombo_Desc" xml:space="preserve">
+    <value>'화차'를 화차 콤보 연쇄로 대체합니다.</value>
+  </data>
+  <data name="SAM_ST_GekkoCombo_Name" xml:space="preserve">
+    <value>월광 콤보 대체</value>
+  </data>
+  <data name="SAM_ST_GekkoCombo_Desc" xml:space="preserve">
+    <value>'월광'을 월광 콤보 연쇄로 대체합니다.</value>
+  </data>
+  <data name="SAM_AoE_OkaCombo_Name" xml:space="preserve">
+    <value>앵화 콤보 대체</value>
+  </data>
+  <data name="SAM_AoE_OkaCombo_Desc" xml:space="preserve">
+    <value>'앵화'를 앵화 콤보 연쇄로 대체합니다.</value>
+  </data>
+  <data name="SAM_AoE_MangetsuCombo_Name" xml:space="preserve">
+    <value>만월 콤보 대체</value>
+  </data>
+  <data name="SAM_AoE_MangetsuCombo_Desc" xml:space="preserve">
+    <value>'만월'을 만월 콤보 연쇄로 대체합니다.
+앵화 옵션과 병행 시 원버튼 광역 콤보가 됩니다.</value>
+  </data>
+  <data name="SAM_MeikyoSens_Name" xml:space="preserve">
+    <value>섬 획득 최적화 기능</value>
+  </data>
+  <data name="SAM_MeikyoSens_Desc" xml:space="preserve">
+    <value>'명경지수'를 현재 필요한 섬에 맞춰 월광, 화차, 설풍으로 자동 변경합니다.</value>
+  </data>
+  <data name="SAM_MeikyoShisuiProtection_Name" xml:space="preserve">
+    <value>명경지수 중복 방지</value>
+  </data>
+  <data name="SAM_MeikyoShisuiProtection_Desc" xml:space="preserve">
+    <value>명경지수 버프가 이미 활성화된 경우 '야성의 검격' 아이콘으로 고정하여 중복 사용을 차단합니다.</value>
+  </data>
+  <data name="SAM_Iaijutsu_Name" xml:space="preserve">
+    <value>거합술 편의 기능</value>
+  </data>
+  <data name="SAM_Iaijutsu_Desc" xml:space="preserve">
+    <value>거합술과 관련된 다양한 통합 설정입니다.</value>
+  </data>
+  <data name="SAM_Iaijutsu_TsubameGaeshi_Name" xml:space="preserve">
+    <value>거합술에서 제비반전으로 전환</value>
+  </data>
+  <data name="SAM_Iaijutsu_TsubameGaeshi_Desc" xml:space="preserve">
+    <value>거합술 시전 직후 버튼을 '제비반전'으로 변경합니다.</value>
+  </data>
+  <data name="SAM_Iaijutsu_Shoha_Name" xml:space="preserve">
+    <value>거합술에서 조파로 전환</value>
+  </data>
+  <data name="SAM_Iaijutsu_Shoha_Desc" xml:space="preserve">
+    <value>검압 스택이 3개일 때 거합술 버튼을 '조파'로 변경합니다.</value>
+  </data>
+  <data name="SAM_Iaijutsu_OgiNamikiri_Name" xml:space="preserve">
+    <value>거합술에서 오의파절로 전환</value>
+  </data>
+  <data name="SAM_Iaijutsu_OgiNamikiri_Desc" xml:space="preserve">
+    <value>'오의파절 가능' 버프가 있을 때 거합술 버튼을 '오의파절' 및 '반전파절'로 변경합니다.</value>
+  </data>
+  <data name="SAM_Shinten_Name" xml:space="preserve">
+    <value>진천 통합 설정</value>
+  </data>
+  <data name="SAM_Shinten_Desc" xml:space="preserve">
+    <value>'필살검: 진천' 버튼과 관련된 통합 기능입니다.</value>
+  </data>
+  <data name="SAM_Shinten_Shoha_Name" xml:space="preserve">
+    <value>진천에서 조파로 전환</value>
+  </data>
+  <data name="SAM_Shinten_Shoha_Desc" xml:space="preserve">
+    <value>검압 스택이 가득 차면 '필살검: 진천'을 '조파'로 변경합니다.</value>
+  </data>
+  <data name="SAM_Shinten_Senei_Name" xml:space="preserve">
+    <value>진천에서 섬영으로 전환</value>
+  </data>
+  <data name="SAM_Shinten_Senei_Desc" xml:space="preserve">
+    <value>'필살검: 섬영'의 재사용 대기 시간이 끝나면 '필살검: 진천' 대신 표시합니다.</value>
+  </data>
+  <data name="SAM_Shinten_Zanshin_Name" xml:space="preserve">
+    <value>진천에서 잔심으로 전환</value>
+  </data>
+  <data name="SAM_Shinten_Zanshin_Desc" xml:space="preserve">
+    <value>사용 가능 시 '필살검: 진천'을 '잔심'으로 변경합니다.</value>
+  </data>
+  <data name="SAM_Shinten_Ikishoten_Name" xml:space="preserve">
+    <value>진천에서 의기충천으로 전환</value>
+  </data>
+  <data name="SAM_Shinten_Ikishoten_Desc" xml:space="preserve">
+    <value>'의기충천'의 대기 시간이 끝나고 검기가 50 이하일 때 진천 버튼을 '의기충천'으로 변경합니다.</value>
+  </data>
+  <data name="SAM_Kyuten_Name" xml:space="preserve">
+    <value>구천 통합 설정</value>
+  </data>
+  <data name="SAM_Kyuten_Desc" xml:space="preserve">
+    <value>'필살검: 구천' 버튼과 관련된 통합 기능입니다.</value>
+  </data>
+  <data name="SAM_Kyuten_Shoha_Name" xml:space="preserve">
+    <value>구천에서 조파로 전환</value>
+  </data>
+  <data name="SAM_Kyuten_Shoha_Desc" xml:space="preserve">
+    <value>검압 스택이 가득 차면 '필살검: 구천'을 '조파'로 변경합니다.</value>
+  </data>
+  <data name="SAM_Kyuten_Guren_Name" xml:space="preserve">
+    <value>구천에서 홍련으로 전환</value>
+  </data>
+  <data name="SAM_Kyuten_Guren_Desc" xml:space="preserve">
+    <value>'필살검: 홍련'의 재사용 대기 시간이 끝나면 '필살검: 구천' 대신 표시합니다.</value>
+  </data>
+  <data name="SAM_Kyuten_Zanshin_Name" xml:space="preserve">
+    <value>구천에서 잔심으로 전환</value>
+  </data>
+  <data name="SAM_Kyuten_Zanshin_Desc" xml:space="preserve">
+    <value>사용 가능 시 '필살검: 구천'을 '잔심'으로 변경합니다.</value>
+  </data>
+  <data name="SAM_Kyuten_Ikishoten_Name" xml:space="preserve">
+    <value>구천에서 의기충천으로 전환</value>
+  </data>
+  <data name="SAM_Kyuten_Ikishoten_Desc" xml:space="preserve">
+    <value>'의기충천'의 대기 시간이 끝나고 검기가 50 이하일 때 구천 버튼을 '의기충천'으로 변경합니다.</value>
+  </data>
+  <data name="SAM_Ikishoten_Name" xml:space="preserve">
+    <value>의기충천 통합 설정</value>
+  </data>
+  <data name="SAM_Ikishoten_Desc" xml:space="preserve">
+    <value>'의기충천'과 관련된 통합 기능입니다.</value>
+  </data>
+  <data name="SAM_Ikishoten_Namikiri_Name" xml:space="preserve">
+    <value>의기충천에서 오의파절로 전환</value>
+  </data>
+  <data name="SAM_Ikishoten_Namikiri_Desc" xml:space="preserve">
+    <value>사용 가능 시 의기충천 버튼을 '오의파절' 및 '반전파절'로 변경합니다.</value>
+  </data>
+  <data name="SAM_Ikishoten_Shoha_Name" xml:space="preserve">
+    <value>의기충천에서 조파로 전환</value>
+  </data>
+  <data name="SAM_Ikishoten_Shoha_Desc" xml:space="preserve">
+    <value>오의파절 시전 전, 검압 스택이 가득 차면 의기충천 버튼을 '조파'로 변경합니다.</value>
+  </data>
+  <data name="SAM_GyotenYaten_Name" xml:space="preserve">
+    <value>효천에서 야천으로 거리 대응</value>
+  </data>
+  <data name="SAM_GyotenYaten_Desc" xml:space="preserve">
+    <value>대상과의 거리에 따라 '필살검: 효천' 버튼이 돌진(효천) 또는 물러나기(야천)로 자동 전환됩니다.</value>
+  </data>
+  <data name="SAM_SeneiGuren_Name" xml:space="preserve">
+    <value>섬영에서 홍련으로 자동 조율</value>
+  </data>
+  <data name="SAM_SeneiGuren_Desc" xml:space="preserve">
+    <value>72레벨 미만으로 레벨 조율 시 '필살검: 섬영'이 자동으로 '필살검: 홍련'으로 바뀝니다.</value>
+  </data>
+  <data name="SAM_OgiShoha_Name" xml:space="preserve">
+    <value>오의파절에서 조파로 통합</value>
+  </data>
+  <data name="SAM_OgiShoha_Desc" xml:space="preserve">
+    <value>검압 스택이 3개일 때 '오의파절' 버튼을 '조파'로 변경합니다.</value>
+  </data>
+  <data name="SAM_Hidden_Name" xml:space="preserve">
+    <value>숨겨진 옵션</value>
+  </data>
+  <data name="SAM_Hidden_Desc" xml:space="preserve">
+    <value>특정 기믹 대응용이나 실험적인 추가 기능들입니다.
+상시 유지되지 않을 수 있으며, 현재 시즌이 지나면 삭제될 수 있습니다.</value>
+  </data>
+  <data name="SCH_ST_Simple_DPS_Name" xml:space="preserve">
+    <value>단순 공격 모드 - 단일 대상</value>
+  </data>
+  <data name="SCH_ST_Simple_DPS_Desc" xml:space="preserve">
+    <value>루인/기염법을 원버튼 단일 대상 딜사이클로 대체합니다. 
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SCH_AoE_Simple_DPS_Name" xml:space="preserve">
+    <value>단순 공격 모드 - 광역</value>
+  </data>
+  <data name="SCH_AoE_Simple_DPS_Desc" xml:space="preserve">
+    <value>파진법을 원버튼 광역 딜사이클로 대체합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SCH_Simple_ST_Heal_Name" xml:space="preserve">
+    <value>단순 치유 모드 - 단일 대상</value>
+  </data>
+  <data name="SCH_Simple_ST_Heal_Desc" xml:space="preserve">
+    <value>'치유술' 버튼 하나로 단일 대상 치유 유틸리티 전체를 수행합니다.
+입문자에게 이상적이며, 특히 자동 사이클 기능과 함께 사용하기 좋습니다.</value>
+  </data>
+  <data name="SCH_Simple_AoE_Heal_Name" xml:space="preserve">
+    <value>단순 치유 모드 - 광역</value>
+  </data>
+  <data name="SCH_Simple_AoE_Heal_Desc" xml:space="preserve">
+    <value>'사기고양책(의기왕성책)' 버튼 하나로 광역 치유 유틸리티 전체를 수행합니다.
+입문자에게 이상적이며, 특히 자동 사이클 기능과 함께 사용하기 좋습니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Name" xml:space="preserve">
+    <value>고급 공격 모드 - 단일 대상</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Desc" xml:space="preserve">
+    <value>루인/기염법을 아래의 옵션들이 적용된 최적화 기술로 대체합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Balance_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (100레벨)</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Balance_Opener_Desc" xml:space="preserve">
+    <value>100레벨 Balance 오프너를 수행합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Bio_Name" xml:space="preserve">
+    <value>바이오 / 고독법 옵션</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Bio_Desc" xml:space="preserve">
+    <value>지속 피해(DoT) 기술을 자동으로 유지합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Aetherflow_Name" xml:space="preserve">
+    <value>에테르 순환 끼워 넣기</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Aetherflow_Desc" xml:space="preserve">
+    <value>에테르 순환 스택을 모두 소모하면 즉시 '에테르 순환'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_EnergyDrain_Name" xml:space="preserve">
+    <value>생명력 흡수 끼워 넣기</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_EnergyDrain_Desc" xml:space="preserve">
+    <value>에테르 순환의 재사용 대기 시간이 거의 끝나갈 때, '생명력 흡수'로 남은 스택을 모두 소모합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_ChainStrat_Name" xml:space="preserve">
+    <value>연환계 옵션</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_ChainStrat_Desc" xml:space="preserve">
+    <value>재사용 대기 시간마다 '연환계'를 사용하며, 다른 파티원과의 중복 적용을 방지합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_BanefulImpact_Name" xml:space="preserve">
+    <value>매복지독 옵션</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_BanefulImpact_Desc" xml:space="preserve">
+    <value>사용 가능할 때 '매복지독'을 끼워 넣습니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Ruin2Movement_Name" xml:space="preserve">
+    <value>루인라 이동 옵션</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Ruin2Movement_Desc" xml:space="preserve">
+    <value>이동 중일 때 끊김 없는 딜링을 위해 '루인라'를 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_FairyReminder_Name" xml:space="preserve">
+    <value>요정 소환 알림</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_FairyReminder_Desc" xml:space="preserve">
+    <value>요정을 소환하지 않았을 경우 자동으로 '에오스 소환'을 추가합니다.</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Lucid_Name" xml:space="preserve">
+    <value>자각몽 끼워 넣기</value>
+  </data>
+  <data name="SCH_ST_ADV_DPS_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정값 미만으로 떨어지면 '자각몽'을 추가합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_Name" xml:space="preserve">
+    <value>고급 공격 모드 - 광역</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_Desc" xml:space="preserve">
+    <value>파진법을 아래의 옵션들이 적용된 최적화 기술로 대체합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_DoT_Name" xml:space="preserve">
+    <value>다중 대상 지속 피해 옵션</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_DoT_Desc" xml:space="preserve">
+    <value>주변의 여러 대상에게 지속 피해(DoT)를 유지합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_EnergyDrain_Name" xml:space="preserve">
+    <value>생명력 흡수 끼워 넣기</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_EnergyDrain_Desc" xml:space="preserve">
+    <value>에테르 순환 쿨타임이 돌아오기 전 남은 스택을 '생명력 흡수'로 소모합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_ChainStrat_Name" xml:space="preserve">
+    <value>연환계 옵션</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_ChainStrat_Desc" xml:space="preserve">
+    <value>재사용 대기 시간마다 '연환계'를 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_BanefulImpact_Name" xml:space="preserve">
+    <value>매복지독 옵션</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_BanefulImpact_Desc" xml:space="preserve">
+    <value>사용 가능 시 '매복지독'을 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_FairyReminder_Name" xml:space="preserve">
+    <value>요정 소환 알림</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_FairyReminder_Desc" xml:space="preserve">
+    <value>요정이 없을 때 '에오스 소환'을 시전합니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_Lucid_Name" xml:space="preserve">
+    <value>자각몽 끼워 넣기</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_Lucid_Desc" xml:space="preserve">
+    <value>MP 부족 시 '자각몽'을 끼워 넣습니다.</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_Aetherflow_Name" xml:space="preserve">
+    <value>에테르 순환 끼워 넣기</value>
+  </data>
+  <data name="SCH_AoE_ADV_DPS_Aetherflow_Desc" xml:space="preserve">
+    <value>자원 소모 후 즉시 '에테르 순환'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Name" xml:space="preserve">
+    <value>고급 치유 모드 - 단일 대상</value>
+  </data>
+  <data name="SCH_ST_Heal_Desc" xml:space="preserve">
+    <value>'치유술'을 상황에 맞는 다양한 치유 옵션으로 변경합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Lucid_Name" xml:space="preserve">
+    <value>자각몽 끼워 넣기</value>
+  </data>
+  <data name="SCH_ST_Heal_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정값 미만일 때 '자각몽'을 추가합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Aetherflow_Name" xml:space="preserve">
+    <value>에테르 순환 끼워 넣기</value>
+  </data>
+  <data name="SCH_ST_Heal_Aetherflow_Desc" xml:space="preserve">
+    <value>에테르 순환 스택 소모 시 '에테르 순환'을 시전합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Dissipation_Name" xml:space="preserve">
+    <value>에테르 전환 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Dissipation_Desc" xml:space="preserve">
+    <value>급박한 상황에서 에테르 순환 스택이 없을 때 '에테르 전환'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Esuna_Name" xml:space="preserve">
+    <value>에스나 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Esuna_Desc" xml:space="preserve">
+    <value>대상에게 해제 가능한 디버프가 있다면 '에스나'를 우선 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Adloquium_Name" xml:space="preserve">
+    <value>고무격려책 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Adloquium_Desc" xml:space="preserve">
+    <value>'고무격려책'을 시전합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Lustrate_Name" xml:space="preserve">
+    <value>생명활성술 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Lustrate_Desc" xml:space="preserve">
+    <value>'생명활성술'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Excogitation_Name" xml:space="preserve">
+    <value>심모원려책 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Excogitation_Desc" xml:space="preserve">
+    <value>'심모원려책'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Protraction_Name" xml:space="preserve">
+    <value>생명회생술 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Protraction_Desc" xml:space="preserve">
+    <value>'생명회생술'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Aetherpact_Name" xml:space="preserve">
+    <value>에테르 서약 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Aetherpact_Desc" xml:space="preserve">
+    <value>'에테르 서약'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_WhisperingDawn_Name" xml:space="preserve">
+    <value>빛의 속삭임 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_WhisperingDawn_Desc" xml:space="preserve">
+    <value>'빛의 속삭임'을 시전합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_FeyIllumination_Name" xml:space="preserve">
+    <value>요정의 광휘 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_FeyIllumination_Desc" xml:space="preserve">
+    <value>'요정의 광휘'를 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_FeyBlessing_Name" xml:space="preserve">
+    <value>요정의 축복 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_FeyBlessing_Desc" xml:space="preserve">
+    <value>'요정의 축복'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Seraphism_Name" xml:space="preserve">
+    <value>세라피즘 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Seraphism_Desc" xml:space="preserve">
+    <value>'세라피즘'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Expedient_Name" xml:space="preserve">
+    <value>질풍노도계 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Expedient_Desc" xml:space="preserve">
+    <value>'질풍노도계'를 시전합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_SummonSeraph_Name" xml:space="preserve">
+    <value>세라핌 소환 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_SummonSeraph_Desc" xml:space="preserve">
+    <value>'세라핌 소환'을 사용합니다.</value>
+  </data>
+  <data name="SCH_ST_Heal_Consolation_Name" xml:space="preserve">
+    <value>위안 옵션</value>
+  </data>
+  <data name="SCH_ST_Heal_Consolation_Desc" xml:space="preserve">
+    <value>'위안'을 시전합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Name" xml:space="preserve">
+    <value>고급 치유 모드 - 광역</value>
+  </data>
+  <data name="SCH_AoE_Heal_Desc" xml:space="preserve">
+    <value>'사기고양책(의기왕성책)'을 상황에 맞는 광역 치유 기술로 대체합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Indomitability_Name" xml:space="preserve">
+    <value>불요불굴책 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_Indomitability_Desc" xml:space="preserve">
+    <value>'불요불굴책'을 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_WhisperingDawn_Name" xml:space="preserve">
+    <value>빛의 속삭임 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_WhisperingDawn_Desc" xml:space="preserve">
+    <value>'빛의 속삭임'을 시전합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_FeyIllumination_Name" xml:space="preserve">
+    <value>요정의 광휘 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_FeyIllumination_Desc" xml:space="preserve">
+    <value>'요정의 광휘'를 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_FeyBlessing_Name" xml:space="preserve">
+    <value>요정의 축복 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_FeyBlessing_Desc" xml:space="preserve">
+    <value>'요정의 축복'을 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Seraphism_Name" xml:space="preserve">
+    <value>세라피즘 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_Seraphism_Desc" xml:space="preserve">
+    <value>'세라피즘'을 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_SummonSeraph_Name" xml:space="preserve">
+    <value>세라핌 소환 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_SummonSeraph_Desc" xml:space="preserve">
+    <value>'세라핌 소환'을 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Consolation_Name" xml:space="preserve">
+    <value>위안 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_Consolation_Desc" xml:space="preserve">
+    <value>'위안'을 사용합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Aetherflow_Name" xml:space="preserve">
+    <value>에테르 순환 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_Aetherflow_Desc" xml:space="preserve">
+    <value>에테르 순환 스택 소모 시 '에테르 순환'을 시전합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Dissipation_Name" xml:space="preserve">
+    <value>에테르 전환 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_Dissipation_Desc" xml:space="preserve">
+    <value>에테르 순환 스택 소모 시 '에테르 전환'을 시전합니다.</value>
+  </data>
+  <data name="SCH_AoE_Heal_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="SCH_AoE_Heal_Lucid_Desc" xml:space="preserve">
+    <value>MP가 부족할 때 '자각몽'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SCH_Aetherflow_Name" xml:space="preserve">
+    <value>에테르 순환 도우미 기능</value>
+  </data>
+  <data name="SCH_Aetherflow_Desc" xml:space="preserve">
+    <value>에테르 순환 사용 상황에 따라 해당 버튼을 '에테르 순환', '비책', 또는 '에테르 전환'으로 자동 변경합니다.</value>
+  </data>
+  <data name="SCH_Aetherflow_Dissipation_Name" xml:space="preserve">
+    <value>에테르 전환 옵션</value>
+  </data>
+  <data name="SCH_Aetherflow_Dissipation_Desc" xml:space="preserve">
+    <value>에테르 순환이 쿨타임 중일 때 버튼을 '에테르 전환'으로 표시합니다.</value>
+  </data>
+  <data name="SCH_Aetherflow_Recite_Name" xml:space="preserve">
+    <value>비책 옵션</value>
+  </data>
+  <data name="SCH_Aetherflow_Recite_Desc" xml:space="preserve">
+    <value>'심모원려책'이나 '불요불굴책' 시전 시 '비책' 사용을 우선시합니다.</value>
+  </data>
+  <data name="SCH_Lustrate_Name" xml:space="preserve">
+    <value>생명활성술-심모원려책 전환</value>
+  </data>
+  <data name="SCH_Lustrate_Desc" xml:space="preserve">
+    <value>'심모원려책' 사용이 가능할 때 '생명활성술' 버튼을 '심모원려책'으로 변경합니다.</value>
+  </data>
+  <data name="SCH_Recitation_Name" xml:space="preserve">
+    <value>비책 콤보 기능</value>
+  </data>
+  <data name="SCH_Recitation_Desc" xml:space="preserve">
+    <value>'비책' 사용 시 다음 기술을 극대화 치유 기술들 중 하나로 변경합니다.</value>
+  </data>
+  <data name="SCH_DeploymentTactics_Name" xml:space="preserve">
+    <value>전개전술 편의 기능</value>
+  </data>
+  <data name="SCH_DeploymentTactics_Desc" xml:space="preserve">
+    <value>파티원에게 고무 효과가 적용될 때까지 '전개전술' 버튼을 '고무격려책'으로 유지합니다.</value>
+  </data>
+  <data name="SCH_DeploymentTactics_Recitation_Name" xml:space="preserve">
+    <value>비책 연계 옵션</value>
+  </data>
+  <data name="SCH_DeploymentTactics_Recitation_Desc" xml:space="preserve">
+    <value>확정 극대화 고무 전개를 위해 '비책'을 자동으로 연계합니다.</value>
+  </data>
+  <data name="SCH_FairyReminder_Name" xml:space="preserve">
+    <value>요정 소환 알림 기능</value>
+  </data>
+  <data name="SCH_FairyReminder_Desc" xml:space="preserve">
+    <value>요정이 소환되어 있지 않을 때 모든 요정 관련 기술 버튼을 '에오스 소환'으로 변경합니다.</value>
+  </data>
+  <data name="SCH_Consolation_Name" xml:space="preserve">
+    <value>요정의 축복-위안 전환</value>
+  </data>
+  <data name="SCH_Consolation_Desc" xml:space="preserve">
+    <value>'세라핌' 소환 중에 '요정의 축복' 버튼을 '위안'으로 변경합니다.</value>
+  </data>
+  <data name="SCH_Fairy_Combo_Name" xml:space="preserve">
+    <value>요정 치유 콤보 기능</value>
+  </data>
+  <data name="SCH_Fairy_Combo_Desc" xml:space="preserve">
+    <value>'빛의 속삭임' 시전 시 버튼을 요정의 광휘, 요정의 축복, 빛의 속삭임 순으로 순차 변경합니다.</value>
+  </data>
+  <data name="SCH_Fairy_Combo_Consolation_Name" xml:space="preserve">
+    <value>세라핌 위안 연계 옵션</value>
+  </data>
+  <data name="SCH_Fairy_Combo_Consolation_Desc" xml:space="preserve">
+    <value>세라핌 유지 기간 중 콤보에 '위안'을 추가합니다.</value>
+  </data>
+  <data name="SCH_Raise_Name" xml:space="preserve">
+    <value>신속한 마법 부활 콤보</value>
+  </data>
+  <data name="SCH_Raise_Desc" xml:space="preserve">
+    <value>'신속한 마법'이 쿨타임 중일 때 해당 버튼을 부활 기술로 변경합니다.</value>
+  </data>
+  <data name="SCH_Raise_Retarget_Name" xml:space="preserve">
+    <value>부활 대상 자동 전환</value>
+  </data>
+  <data name="SCH_Raise_Retarget_Desc" xml:space="preserve">
+    <value>부활 대상을 치유 우선순위 명단에 맞춰 자동으로 전환합니다.</value>
+  </data>
+  <data name="SCH_Mit_ST_Name" xml:space="preserve">
+    <value>경감 기능 - 단일 대상</value>
+  </data>
+  <data name="SCH_Mit_ST_Desc" xml:space="preserve">
+    <value>'생명회생술' 사용 후 (비책)고무격려책, (전개전술/심모원려책)으로 이어지는 경감 사이클을 수행합니다.</value>
+  </data>
+  <data name="SCH_Mit_AoE_Name" xml:space="preserve">
+    <value>경감 기능 - 광역</value>
+  </data>
+  <data name="SCH_Mit_AoE_Desc" xml:space="preserve">
+    <value>'야전치유진' 이후 요정 기술 및 전개전술, 질풍노도계 등을 연계하여 광역 피해에 대응합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Name" xml:space="preserve">
+    <value>대상 자동 전환 옵션</value>
+  </data>
+  <data name="SCH_Retarget_Desc" xml:space="preserve">
+    <value>단일 대상 치유 기술들의 대상을 자동으로 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Physick_Name" xml:space="preserve">
+    <value>치유술 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_Physick_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '치유술'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Adloquium_Name" xml:space="preserve">
+    <value>고무격려책 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_Adloquium_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '고무격려책'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Lustrate_Name" xml:space="preserve">
+    <value>생명활성술 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_Lustrate_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '생명활성술'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Protraction_Name" xml:space="preserve">
+    <value>생명회생술 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_Protraction_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '생명회생술'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_DeploymentTactics_Name" xml:space="preserve">
+    <value>전개전술 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_DeploymentTactics_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '전개전술'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Excogitation_Name" xml:space="preserve">
+    <value>심모원려책 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_Excogitation_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '심모원려책'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_Aetherpact_Name" xml:space="preserve">
+    <value>에테르 서약 대상 전환</value>
+  </data>
+  <data name="SCH_Retarget_Aetherpact_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '에테르 서약'의 대상을 자동 전환합니다.</value>
+  </data>
+  <data name="SCH_Retarget_SacredSoil_Name" xml:space="preserve">
+    <value>야전치유진 위치 설정</value>
+  </data>
+  <data name="SCH_Retarget_SacredSoil_Desc" xml:space="preserve">
+    <value>'야전치유진'의 시전 위치를 자신을 기준으로 자동 지정합니다.</value>
+  </data>
+  <data name="SCH_Raidwide_Name" xml:space="preserve">
+    <value>광역 공격 대응 옵션</value>
+  </data>
+  <data name="SCH_Raidwide_Desc" xml:space="preserve">
+    <value>광역 공격이 감지될 때 자동으로 대응 기술을 시전하는 도구 모음입니다. 보스 기믹 숙지를 대신할 수는 없습니다.</value>
+  </data>
+  <data name="SCH_Raidwide_Succor_Name" xml:space="preserve">
+    <value>광역 대응 사기고양책</value>
+  </data>
+  <data name="SCH_Raidwide_Succor_Desc" xml:space="preserve">
+    <value>광역 공격 감지 시 파티의 보호막 상태를 확인하여 '사기고양책' 시전을 시도합니다.</value>
+  </data>
+  <data name="SCH_Raidwide_SacredSoil_Name" xml:space="preserve">
+    <value>광역 대응 야전치유진</value>
+  </data>
+  <data name="SCH_Raidwide_SacredSoil_Desc" xml:space="preserve">
+    <value>광역 공격 감지 시 자신을 중심으로 '야전치유진' 사용을 시도합니다.</value>
+  </data>
+  <data name="SCH_Raidwide_Expedient_Name" xml:space="preserve">
+    <value>광역 대응 질풍노도계</value>
+  </data>
+  <data name="SCH_Raidwide_Expedient_Desc" xml:space="preserve">
+    <value>광역 공격 감지 시 기믹 회피를 돕기 위해 '질풍노도계' 사용을 시도합니다.</value>
+  </data>
+  <data name="SMN_ST_Simple_Combo_Name" xml:space="preserve">
+    <value>단순 모드 - 단일 대상</value>
+  </data>
+  <data name="SMN_ST_Simple_Combo_Desc" xml:space="preserve">
+    <value>'루인' 버튼 하나로 모든 단일 대상 사이클을 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SMN_AoE_Simple_Combo_Name" xml:space="preserve">
+    <value>단순 모드 - 광역 공격</value>
+  </data>
+  <data name="SMN_AoE_Simple_Combo_Desc" xml:space="preserve">
+    <value>'발산' 버튼 하나로 모든 광역 사이클을 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Name" xml:space="preserve">
+    <value>고급 모드 - 단일 대상</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Desc" xml:space="preserve">
+    <value>'루인' 버튼을 단일 대상 원버튼 사이클로 대체합니다.
+딜사이클을 사용자의 취향에 맞게 세부 조정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Balance_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (100레벨)</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Balance_Opener_Desc" xml:space="preserve">
+    <value>100레벨 기준 'The Balance' 커뮤니티 추천 오프너 로직을 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Name" xml:space="preserve">
+    <value>데미 소환수 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 바하무트/피닉스 등 데미 소환수 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Attacks_Name" xml:space="preserve">
+    <value>데미 공격 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Attacks_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 데미 소환수의 논글로벌(oGCD) 기술들을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Rekindle_Name" xml:space="preserve">
+    <value>재생의 불꽃 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Rekindle_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '재생의 불꽃'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Rekindle_Retarget_Name" xml:space="preserve">
+    <value>재생의 불꽃 대상 자동 지정</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_Rekindle_Retarget_Desc" xml:space="preserve">
+    <value>'재생의 불꽃' 사용 시 치유가 필요한 탱커나 파티원을 우선 지정하며, 대상이 없으면 자신에게 사용합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Titan_Name" xml:space="preserve">
+    <value>타이탄 소환 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Titan_Desc" xml:space="preserve">
+    <value>단일 대상 사이클에 타이탄 소환 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Garuda_Name" xml:space="preserve">
+    <value>가루다 소환 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Garuda_Desc" xml:space="preserve">
+    <value>단일 대상 사이클에 가루다 소환 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Ifrit_Name" xml:space="preserve">
+    <value>이프리트 소환 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Ifrit_Desc" xml:space="preserve">
+    <value>단일 대상 사이클에 이프리트 소환 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_EgiSummons_Attacks_Name" xml:space="preserve">
+    <value>에기 공격 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_EgiSummons_Attacks_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '보석의 빛'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Ruin3_Emerald_Ruin3_Name" xml:space="preserve">
+    <value>에메랄드 루인가에서 루인가로 전환</value>
+  </data>
+  <data name="SMN_ST_Ruin3_Emerald_Ruin3_Desc" xml:space="preserve">
+    <value>54~72레벨 구간에서 제자리에 서 있을 때 '에메랄드 루인가'를 '루인가'로 대체합니다. 주로 70레벨 절 토벌전 최적화용 옵션입니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Egi_AstralFlow_Name" xml:space="preserve">
+    <value>에기 천상의 흐름 추가</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Egi_AstralFlow_Desc" xml:space="preserve">
+    <value>사이클에 포함할 소환수별 '천상의 흐름' 기술들을 선택합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi_Name" xml:space="preserve">
+    <value>신속한 마법 소환수 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi_Desc" xml:space="preserve">
+    <value>선택한 소환수 단계에서 '신속한 마법'을 자동으로 연계합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_EDFester_Name" xml:space="preserve">
+    <value>에테르 공격 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_EDFester_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '생명력 흡수'와 '미아즈마 버스트'를 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_oGCDPooling_Name" xml:space="preserve">
+    <value>시너지 비축 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_oGCDPooling_Desc" xml:space="preserve">
+    <value>공격용 논글쿨 기술들을 '타오르는 빛' 버프 지속 시간 동안 사용하도록 아껴둡니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_SearingLight_Name" xml:space="preserve">
+    <value>타오르는 빛 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_SearingLight_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '타오르는 빛'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_SearingLight_Burst_Name" xml:space="preserve">
+    <value>타오르는 빛 버스트 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_SearingLight_Burst_Desc" xml:space="preserve">
+    <value>'타오르는 빛'을 데미 소환수 단계에서만 시전합니다. 극신속 세팅 시에는 이 옵션을 끄는 것을 권장합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_SearingFlash_Name" xml:space="preserve">
+    <value>타오르는 불꽃 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_SearingFlash_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '타오르는 불꽃'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Ruin4_Name" xml:space="preserve">
+    <value>루인쟈 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Ruin4_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '루인쟈'를 추가합니다. 무빙이 필요하거나 소환수가 없을 때 유용합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris_Name" xml:space="preserve">
+    <value>태양의 빛 콤보 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_DemiSummons_LuxSolaris_Desc" xml:space="preserve">
+    <value>단일 대상 콤보에 '태양의 빛'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Radiant_Name" xml:space="preserve">
+    <value>수호의 빛 자동 사용</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Radiant_Desc" xml:space="preserve">
+    <value>'수호의 빛' 충전량이 가득 찼을 때 자원 낭비를 막기 위해 자동으로 방어막을 사용합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Lucid_Desc" xml:space="preserve">
+    <value>MP가 부족할 때 사이클 도중 '자각몽'을 자동으로 시전합니다.</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Addle_Name" xml:space="preserve">
+    <value>정신 교란 광역 대응</value>
+  </data>
+  <data name="SMN_ST_Advanced_Combo_Addle_Desc" xml:space="preserve">
+    <value>적의 광역 공격 영창이 감지되면 '정신 교란'을 자동으로 사용합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Name" xml:space="preserve">
+    <value>고급 모드 - 광역 공격</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Desc" xml:space="preserve">
+    <value>'발산' 버튼을 광역 원버튼 사이클로 대체합니다. 
+딜사이클을 세부 조정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Name" xml:space="preserve">
+    <value>광역 데미 소환수 콤보</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Desc" xml:space="preserve">
+    <value>광역 콤보에 데미 소환수 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Attacks_Name" xml:space="preserve">
+    <value>광역 데미 공격 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Attacks_Desc" xml:space="preserve">
+    <value>광역 콤보에 데미 소환수의 논글쿨 기술들을 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Rekindle_Name" xml:space="preserve">
+    <value>광역 재생의 불꽃 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Rekindle_Desc" xml:space="preserve">
+    <value>광역 콤보에 '재생의 불꽃'을 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Rekindle_Retarget_Name" xml:space="preserve">
+    <value>광역 재생의 불꽃 대상 지정</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_Rekindle_Retarget_Desc" xml:space="preserve">
+    <value>치유가 필요한 파티원에게 '재생의 불꽃' 대상을 자동으로 맞춥니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Titan_Name" xml:space="preserve">
+    <value>광역 타이탄 소환</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Titan_Desc" xml:space="preserve">
+    <value>광역 사이클에 타이탄 소환 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Garuda_Name" xml:space="preserve">
+    <value>광역 가루다 소환</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Garuda_Desc" xml:space="preserve">
+    <value>광역 사이클에 가루다 소환 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Ifrit_Name" xml:space="preserve">
+    <value>광역 이프리트 소환</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Ifrit_Desc" xml:space="preserve">
+    <value>광역 사이클에 이프리트 소환 단계를 포함합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_EgiSummons_Attacks_Name" xml:space="preserve">
+    <value>광역 에기 공격 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_EgiSummons_Attacks_Desc" xml:space="preserve">
+    <value>광역 콤보에 '보석의 광휘'를 자동으로 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Egi_AstralFlow_Name" xml:space="preserve">
+    <value>광역 에기 천상의 흐름 추가</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Egi_AstralFlow_Desc" xml:space="preserve">
+    <value>광역 사이클에 포함할 에기 천상의 흐름 기술들을 선택합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi_Name" xml:space="preserve">
+    <value>광역 신속한 마법 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi_Desc" xml:space="preserve">
+    <value>소환수 단계에서 '신속한 마법'을 자동으로 연계합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_ESPainflare_Name" xml:space="preserve">
+    <value>광역 에테르 공격 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_ESPainflare_Desc" xml:space="preserve">
+    <value>광역 콤보에 '생명력 흡입'과 '고통의 불길'을 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_oGCDPooling_Name" xml:space="preserve">
+    <value>광역 시너지 정렬 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_oGCDPooling_Desc" xml:space="preserve">
+    <value>광역 공격용 논글쿨들을 '타오르는 빛' 버프 지속 시간 내에 사용하도록 정렬합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_SearingLight_Name" xml:space="preserve">
+    <value>광역 타오르는 빛 콤보</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_SearingLight_Desc" xml:space="preserve">
+    <value>광역 콤보에 '타오르는 빛'을 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_SearingLight_Burst_Desc" xml:space="preserve">
+    <value>'타오르는 빛'을 데미 단계에서만 시전하도록 설정합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_SearingFlash_Name" xml:space="preserve">
+    <value>광역 타오르는 불꽃 콤보</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_SearingFlash_Desc" xml:space="preserve">
+    <value>광역 콤보에 '타오르는 불꽃'을 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Ruin4_Name" xml:space="preserve">
+    <value>광역 루인쟈 콤보</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Ruin4_Desc" xml:space="preserve">
+    <value>광역 콤보에 '루인쟈'를 추가하여 무빙이나 소환수가 없는 구간을 보완합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_LuxSolaris_Name" xml:space="preserve">
+    <value>광역 태양의 빛 콤보</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_DemiSummons_LuxSolaris_Desc" xml:space="preserve">
+    <value>광역 콤보에 '태양의 빛'을 추가합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Radiant_Name" xml:space="preserve">
+    <value>광역 중 수호의 빛</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Radiant_Desc" xml:space="preserve">
+    <value>스택 낭비를 막기 위해 광역 사이클 중에도 '수호의 빛'을 자동으로 사용합니다.</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Lucid_Name" xml:space="preserve">
+    <value>광역 자각몽 옵션</value>
+  </data>
+  <data name="SMN_AoE_Advanced_Combo_Lucid_Desc" xml:space="preserve">
+    <value>MP 부족 시 광역 콤보 중 '자각몽'을 자동으로 시전합니다.</value>
+  </data>
+  <data name="SMN_EDFester_Name" xml:space="preserve">
+    <value>버스트에서 생명력 흡수로 자동 전환</value>
+  </data>
+  <data name="SMN_EDFester_Desc" xml:space="preserve">
+    <value>에테르 순환 스택이 없을 때 '미아즈마 버스트'를 '생명력 흡수'로 자동 변경합니다.</value>
+  </data>
+  <data name="SMN_EDFester_Ruin4_Name" xml:space="preserve">
+    <value>미아즈마 버스트에서 루인쟈로 전환</value>
+  </data>
+  <data name="SMN_EDFester_Ruin4_Desc" xml:space="preserve">
+    <value>에테르 순환 스택이 없고 생명력 흡수가 쿨타임일 때, 루인쟈가 사용 가능하면 버튼을 교체합니다.</value>
+  </data>
+  <data name="SMN_ESPainflare_Name" xml:space="preserve">
+    <value>고통의 불길에서 생명력 흡입으로 전환</value>
+  </data>
+  <data name="SMN_ESPainflare_Desc" xml:space="preserve">
+    <value>에테르 순환 스택이 없을 때 '고통의 불길'을 '생명력 흡입'으로 변경합니다.</value>
+  </data>
+  <data name="SMN_CarbuncleReminder_Name" xml:space="preserve">
+    <value>카벙클 소환 알림 기능</value>
+  </data>
+  <data name="SMN_CarbuncleReminder_Desc" xml:space="preserve">
+    <value>카벙클이 소환되지 않았을 때 주요 공격 버튼을 '카벙클 소환'으로 대체하여 알려줍니다.</value>
+  </data>
+  <data name="SMN_DemiAbilities_Name" xml:space="preserve">
+    <value>데미 소환수 전용 기술 통합</value>
+  </data>
+  <data name="SMN_DemiAbilities_Desc" xml:space="preserve">
+    <value>'바하무트/피닉스 점화' 및 '천상의 흐름'을 해당 소환수 소환 시의 관련 버튼에 통합합니다.</value>
+  </data>
+  <data name="SMN_Raise_Name" xml:space="preserve">
+    <value>대체 부활 편의 기능</value>
+  </data>
+  <data name="SMN_Raise_Desc" xml:space="preserve">
+    <value>'신속한 마법'이 쿨타임일 때 해당 버튼을 '부활'로 변경합니다.</value>
+  </data>
+  <data name="SMN_Raise_Retarget_Name" xml:space="preserve">
+    <value>부활 대상 자동 지정</value>
+  </data>
+  <data name="SMN_Raise_Retarget_Desc" xml:space="preserve">
+    <value>부활 대상을 파티 내 사망한 파티원 중 치유 우선 순위에 따라 자동으로 전환합니다.</value>
+  </data>
+  <data name="SMN_RuinMobility_Name" xml:space="preserve">
+    <value>루인가 기동성 강화 기능</value>
+  </data>
+  <data name="SMN_RuinMobility_Desc" xml:space="preserve">
+    <value>'루인 강화'가 없을 때 '루인쟈' 버튼 위치에 '루인가'를 배치하여 무빙 딜링을 돕습니다.</value>
+  </data>
+  <data name="SMN_Egi_AstralFlow_Name" xml:space="preserve">
+    <value>에기 전용 기술 통합</value>
+  </data>
+  <data name="SMN_Egi_AstralFlow_Desc" xml:space="preserve">
+    <value>각 소환수 소환 시, 해당 에기의 '천상의 흐름' 기술들을 소환수 버튼에 통합합니다.</value>
+  </data>
+  <data name="SMN_ESPainflare_Ruin4_Name" xml:space="preserve">
+    <value>고통의 불길에서 루인쟈로 전환</value>
+  </data>
+  <data name="SMN_ESPainflare_Ruin4_Desc" xml:space="preserve">
+    <value>에테르 순환 스택과 생명력 흡입이 모두 불가능할 때, 루인쟈로 버튼을 교체합니다.</value>
+  </data>
+  <data name="SMN_Searing_Name" xml:space="preserve">
+    <value>타오르는 빛 중복 방지</value>
+  </data>
+  <data name="SMN_Searing_Desc" xml:space="preserve">
+    <value>다른 소환사의 버프가 이미 적용 중이라면 기술 낭비를 막기 위해 시전을 방지하거나 버튼을 대체합니다.</value>
+  </data>
+  <data name="VPR_ST_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 단일 대상</value>
+  </data>
+  <data name="VPR_ST_SimpleMode_Desc" xml:space="preserve">
+    <value>'송곳니 하나: 교상'을 원버튼 단일 대상 딜사이클로 대체합니다.
+질주와 민첩한 맹습 버프를 자동으로 유지하며, 방향 지정 기술을 포함합니다.</value>
+  </data>
+  <data name="VPR_AoE_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 광역 공격</value>
+  </data>
+  <data name="VPR_AoE_SimpleMode_Desc" xml:space="preserve">
+    <value>'큰송곳니 하나: 교상'을 원버튼 광역 딜사이클로 대체합니다.
+입문자에게 가장 적합하며 복잡한 광역 연계를 자동으로 처리합니다.</value>
+  </data>
+  <data name="VPR_ST_AdvancedMode_Name" xml:space="preserve">
+    <value>고급 모드 - 단일 대상</value>
+  </data>
+  <data name="VPR_ST_AdvancedMode_Desc" xml:space="preserve">
+    <value>'송곳니 하나: 교상'을 원버튼 단일 대상 딜사이클로 대체합니다.
+딜사이클을 사용자의 입맛에 맞게 세부 조정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="VPR_ST_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (100레벨)</value>
+  </data>
+  <data name="VPR_ST_Opener_Desc" xml:space="preserve">
+    <value>100레벨 기준 'The Balance' 커뮤니티 추천 오프너를 사용합니다.
+첫 '뱀 하나: 분쇄' 연계 시 반드시 '측면' 방향 기술을 우선적으로 사용합니다.</value>
+  </data>
+  <data name="VPR_ST_SerpentsIre_Name" xml:space="preserve">
+    <value>뱀의 영기 옵션</value>
+  </data>
+  <data name="VPR_ST_SerpentsIre_Desc" xml:space="preserve">
+    <value>딜사이클에 '뱀의 영기'를 추가합니다. 
+사용 시 즉시 '뱀의 예기' 버프를 얻고 '영력' 게이지를 충전합니다.</value>
+  </data>
+  <data name="VPR_ST_Vicewinder_Name" xml:space="preserve">
+    <value>뱀 하나: 분쇄 옵션</value>
+  </data>
+  <data name="VPR_ST_Vicewinder_Desc" xml:space="preserve">
+    <value>딜사이클에 '뱀 하나: 분쇄'를 추가합니다. (충전형 스택 기술)</value>
+  </data>
+  <data name="VPR_ST_VicewinderCombo_Name" xml:space="preserve">
+    <value>분쇄 연계 콤보</value>
+  </data>
+  <data name="VPR_ST_VicewinderCombo_Desc" xml:space="preserve">
+    <value>분쇄 이후 '뱀 둘: 맹습'과 '뱀 둘: 질주'를 딜사이클에 추가합니다.
+캐릭터의 현재 위치에 맞춰 방향 보너스를 받을 수 있는 기술을 자동으로 선택합니다.</value>
+  </data>
+  <data name="VPR_ST_VicewinderWeaves_Name" xml:space="preserve">
+    <value>분쇄 추격 연계기(oGCD)</value>
+  </data>
+  <data name="VPR_ST_VicewinderWeaves_Desc" xml:space="preserve">
+    <value>분쇄 연계 중 '쌍아연격'과 '쌍아난격'을 자동으로 끼워 넣습니다.</value>
+  </data>
+  <data name="VPR_ST_SerpentsTail_Name" xml:space="preserve">
+    <value>뱀꼬리 기술 옵션</value>
+  </data>
+  <data name="VPR_Retarget_Slither_Desc" xml:space="preserve">
+    <value>'뱀걸음' 사용 시, 파티원 리스트나 필드 위의 마우스오버 대상을 향해 이동합니다.</value>
+  </data>
+  <data name="WAR_ST_Interrupt_Name" xml:space="preserve">
+    <value>차단 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Desc" xml:space="preserve">
+    <value>보스전에서 딜사이클에 방어 기술을 추가합니다. 별도 언급이 없으면 방어 기술이 중첩되지 않게 사용합니다.</value>
+  </data>
+  <data name="WAR_FC_PrimalWrath_Name" xml:space="preserve">
+    <value>원초의 격진 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Assize_Desc" xml:space="preserve">
+    <value>단일 콤보에 심판을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Asylum_Name" xml:space="preserve">
+    <value>성소 옵션</value>
   </data>
 </root>
