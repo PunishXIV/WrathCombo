@@ -924,16 +924,16 @@
     <value>딜사이클에 공격의 노래를 추가합니다.</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
-    <value>사랑의 노래</value>
+    <value>Romeoâ€™s Ballad</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
-    <value>딜사이클에 사랑의 노래를 추가합니다.</value>
+    <value>Adds Romeoâ€™s Ballad into the rotation.</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
-    <value>영웅의 노래</value>
+    <value>Heroâ€™s Rime</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
-    <value>딜사이클에 영웅의 노래를 추가합니다.</value>
+    <value>Adds Heroâ€™s Rime into the rotation.</value>
   </data>
   <data name="Phantom_Oracle_Name" xml:space="preserve">
     <value>서포트 예언가 직업 스킬</value>
@@ -5706,7 +5706,536 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="PLD_AoE_AdvancedMode_Intervene_Name" xml:space="preserve">
     <value>광역 개입 옵션</value>
   </data>
+  <data name="PLD_AoE_AdvancedMode_Intervene_Desc" xml:space="preserve">
+    <value>광역 모드에 '개입'을 추가합니다.</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_HolyCircle_Name" xml:space="preserve">
+    <value>신성한 원 옵션</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_HolyCircle_Desc" xml:space="preserve">
+    <value>광역 모드에 '신성한 원'을 추가합니다.
+- '신성 마법 효과 향상' 버프가 있을 때 사용합니다.</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_Confiteor_Name" xml:space="preserve">
+    <value>광역 고백 기도 옵션</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_Confiteor_Desc" xml:space="preserve">
+    <value>광역 모드에 '고백 기도'를 추가합니다.
+- 습득 전에는 대신 '신성한 원'을 사용합니다.</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_Blades_Name" xml:space="preserve">
+    <value>광역 검 콤보 옵션</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_Blades_Desc" xml:space="preserve">
+    <value>광역 모드에 '신의의 검 - 진실의 검 - 용맹의 검' 콤보를 추가합니다.
+- 습득 전에는 대신 '신성한 원'을 사용합니다.</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_BladeOfHonor_Name" xml:space="preserve">
+    <value>광역 명예의 검 옵션</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_BladeOfHonor_Desc" xml:space="preserve">
+    <value>광역 모드에 '명예의 검'을 추가합니다.</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_MP_Reserve_Name" xml:space="preserve">
+    <value>광역 MP 보존 옵션</value>
+  </data>
+  <data name="PLD_AoE_AdvancedMode_MP_Reserve_Desc" xml:space="preserve">
+    <value>광역 모드에서의 최소 MP 제한을 설정합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Name" xml:space="preserve">
+    <value>고급 방어 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_Desc" xml:space="preserve">
+    <value>고급 콤보 내에서 자동으로 사용될 방어 기술 설정입니다.
+(단순 모드는 이 설정 대신 권장값을 기반으로 동작합니다)</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Name" xml:space="preserve">
+    <value>일반 적(쫄) 조우 시 방어</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Desc" xml:space="preserve">
+    <value>보스가 아닌 적들과 교전 시 방어 기술을 추가합니다.
+풀링 후 처음 15초 동안은 이동 중이 아닐 때만 사용됩니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Rampart_Name" xml:space="preserve">
+    <value>철벽 방어 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Rampart_Desc" xml:space="preserve">
+    <value>적이 3명 이상일 때 '철벽 방어'를 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Sentinel_Name" xml:space="preserve">
+    <value>경계/극한 방어 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Sentinel_Desc" xml:space="preserve">
+    <value>적이 5명 이상일 때 '경계' 또는 '극한 방어'를 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Bulwark_Name" xml:space="preserve">
+    <value>방패 각성 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Bulwark_Desc" xml:space="preserve">
+    <value>적이 3명 이상일 때 '방패 각성'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_HallowedGround_Name" xml:space="preserve">
+    <value>천하무적 순환 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_HallowedGround_Desc" xml:space="preserve">
+    <value>적이 5명 이상일 때 방어 순환의 일부로 '천하무적'을 사용합니다.
+(권장)</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_HallowedGroundEmergency_Name" xml:space="preserve">
+    <value>천하무적 긴급 사용 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_HallowedGroundEmergency_Desc" xml:space="preserve">
+    <value>HP가 위험 수치일 때 '천하무적'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_ArmsLength_Name" xml:space="preserve">
+    <value>거리 유지 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_ArmsLength_Desc" xml:space="preserve">
+    <value>적이 5명 이상일 때 '거리 유지'를 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Reprisal_Name" xml:space="preserve">
+    <value>앙갚음 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Reprisal_Desc" xml:space="preserve">
+    <value>적이 5명 이상일 때 '앙갚음'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Sheltron_Name" xml:space="preserve">
+    <value>방벽/신성한 방벽 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_Sheltron_Desc" xml:space="preserve">
+    <value>충의 게이지가 있을 때 사용합니다. 다른 방어 기술과 중첩될 수 있습니다.</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_DivineVeil_Name" xml:space="preserve">
+    <value>신성한 보호막 옵션 (회복용)</value>
+  </data>
+  <data name="PLD_Mitigation_NonBoss_DivineVeil_Desc" xml:space="preserve">
+    <value>치유 효과를 위해 '신성한 보호막'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Name" xml:space="preserve">
+    <value>보스전 방어 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Desc" xml:space="preserve">
+    <value>보스 조우 시의 방어 기술 설정입니다. 탱크버스터 감지 기능은 실험적입니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_SheltronOvercap_Name" xml:space="preserve">
+    <value>신성한 방벽 게이지 보존 옵션</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_SheltronOvercap_Desc" xml:space="preserve">
+    <value>충의 게이지가 넘치려 할 때 자동으로 '신성한 방벽'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_SheltronTankbuster_Name" xml:space="preserve">
+    <value>신성한 방벽 - 탱크버스터 대응</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_SheltronTankbuster_Desc" xml:space="preserve">
+    <value>탱크버스터 공격 감지 시 '신성한 방벽'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Rampart_Name" xml:space="preserve">
+    <value>철벽 방어 - 탱크버스터 대응</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Rampart_Desc" xml:space="preserve">
+    <value>탱크버스터 감지 시 '철벽 방어'를 사용합니다. '경계/극한 방어'와는 중첩하지 않습니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Sentinel_Name" xml:space="preserve">
+    <value>경계/극한 방어 - 탱크버스터 대응</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Sentinel_Desc" xml:space="preserve">
+    <value>탱크버스터 감지 시 '경계(또는 극한 방어)'를 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Bulwark_Name" xml:space="preserve">
+    <value>방패 각성 - 탱크버스터 대응</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Bulwark_Desc" xml:space="preserve">
+    <value>탱크버스터 감지 시 '방패 각성'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Reprisal_Name" xml:space="preserve">
+    <value>앙갚음 - 광역기 대응</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_Reprisal_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전 감지 시 '앙갚음'을 사용합니다.</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_DivineVeil_Name" xml:space="preserve">
+    <value>신성한 보호막 - 광역기 대응</value>
+  </data>
+  <data name="PLD_Mitigation_Boss_DivineVeil_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전 감지 시 '신성한 보호막'을 사용합니다.</value>
+  </data>
   <data name="PLD_BlockForWings_Name" xml:space="preserve">
     <value>결연한 수호자 유지 기능</value>
+  </data>
+  <data name="PLD_BlockForWings_Desc" xml:space="preserve">
+    <value>'결연한 수호자' 사용 중 콤보 기술로 효과가 취소되는 것을 방지하기 위해 자동 공격 및 콤보를 일시 차단합니다. 
+취소는 이동이나 다른 행동으로 직접 해야 합니다.</value>
+  </data>
+  <data name="PLD_ST_BasicCombo_Name" xml:space="preserve">
+    <value>단일 기본 콤보</value>
+  </data>
+  <data name="PLD_ST_BasicCombo_Desc" xml:space="preserve">
+    <value>'할로네의 분노' 혹은 '제왕의 권위'를 콤보 체인으로 대체합니다.</value>
+  </data>
+  <data name="PLD_AoE_BasicCombo_Name" xml:space="preserve">
+    <value>광역 기본 콤보</value>
+  </data>
+  <data name="PLD_AoE_BasicCombo_Desc" xml:space="preserve">
+    <value>'홍염'을 광역 콤보 체인으로 대체합니다.</value>
+  </data>
+  <data name="PLD_Mit_OneButton_Name" xml:space="preserve">
+    <value>방어 기술 원버튼 통합</value>
+  </data>
+  <data name="PLD_Mit_OneButton_Desc" xml:space="preserve">
+    <value>'방패 각성' 버튼을 상황에 맞는 모든 방어 기술 통합 버튼으로 대체합니다.</value>
+  </data>
+  <data name="PLD_Mit_HallowedGround_Max_Name" xml:space="preserve">
+    <value>천하무적 긴급 사용 옵션</value>
+  </data>
+  <data name="PLD_Mit_HallowedGround_Max_Desc" xml:space="preserve">
+    <value>설정된 HP 이하일 때 '천하무적'에 최우선 순위를 부여합니다.</value>
+  </data>
+  <data name="PLD_Mit_Sheltron_Name" xml:space="preserve">
+    <value>방벽/신성한 방벽 통합</value>
+  </data>
+  <data name="PLD_Mit_Sheltron_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '신성한 방벽'을 포함합니다.</value>
+  </data>
+  <data name="PLD_Mit_Reprisal_Name" xml:space="preserve">
+    <value>앙갚음 통합</value>
+  </data>
+  <data name="PLD_Mit_Reprisal_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '앙갚음'을 포함합니다. 
+참괴: 사거리 내 적이 있을 때만 발동</value>
+  </data>
+  <data name="PLD_Mit_DivineVeil_Name" xml:space="preserve">
+    <value>신성한 보호막 통합</value>
+  </data>
+  <data name="PLD_Mit_DivineVeil_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '신성한 보호막'을 포함합니다.</value>
+  </data>
+  <data name="PLD_Mit_Rampart_Name" xml:space="preserve">
+    <value>철벽 방어 통합</value>
+  </data>
+  <data name="PLD_Mit_Rampart_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '철벽 방어'를 포함합니다.</value>
+  </data>
+  <data name="PLD_Mit_Bulwark_Name" xml:space="preserve">
+    <value>방패 각성 통합</value>
+  </data>
+  <data name="PLD_Mit_Bulwark_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '방패 각성'을 포함합니다.
+참고: 비활성화 시에도 '방패 각성'을 가장 낮은 순위로 시도합니다.</value>
+  </data>
+  <data name="PLD_Mit_ArmsLength_Name" xml:space="preserve">
+    <value>거리 유지 통합</value>
+  </data>
+  <data name="PLD_Mit_ArmsLength_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '거리 유지'를 포함합니다.</value>
+  </data>
+  <data name="PLD_Mit_Sentinel_Name" xml:space="preserve">
+    <value>경계/극한 방어 통합</value>
+  </data>
+  <data name="PLD_Mit_Sentinel_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '경계(또는 극한 방어)'를 포함합니다.</value>
+  </data>
+  <data name="PLD_Mit_Clemency_Name" xml:space="preserve">
+    <value>관용 통합</value>
+  </data>
+  <data name="PLD_Mit_Clemency_Desc" xml:space="preserve">
+    <value>원버튼 방어기에 '관용'을 포함합니다.</value>
+  </data>
+  <data name="PLD_Mit_Party_Name" xml:space="preserve">
+    <value>파티 방어 원버튼 통합</value>
+  </data>
+  <data name="PLD_Mit_Party_Desc" xml:space="preserve">
+    <value>'신성한 보호막' 버튼을 '보복'이 가능할 때 보복으로 대체합니다.</value>
+  </data>
+  <data name="PLD_Mit_Party_Wings_Name" xml:space="preserve">
+    <value>결연한 수호자 포함</value>
+  </data>
+  <data name="PLD_Mit_Party_Wings_Desc" xml:space="preserve">
+    <value>'신성한 보호막'과 '보복'이 모두 쿨타임일 때 '결연한 수호자'를 사용합니다.</value>
+  </data>
+  <data name="PLD_Requiescat_Options_Name" xml:space="preserve">
+    <value>제왕의 명령 소모기 통합</value>
+  </data>
+  <data name="PLD_Requiescat_Options_Desc" xml:space="preserve">
+    <value>'제왕의 명령(안식 기도)' 버튼을 후속 마법 기술로 자동 대체합니다.
+- '고백 기도' 및 검 콤보를 최우선으로 사용합니다.
+- 상황에 따라 '성령의 권능' 또는 '신성한 원'을 사용합니다.</value>
+  </data>
+  <data name="PLD_SpiritsWithin_Name" xml:space="preserve">
+    <value>내면의 기개 / 파멸의 진 전환</value>
+  </data>
+  <data name="PLD_SpiritsWithin_Desc" xml:space="preserve">
+    <value>'내면의 기개(속죄)' 버튼을 사용 가능 시 '파멸의 진'으로 대체합니다.</value>
+  </data>
+  <data name="PLD_ShieldLob_Feature_Name" xml:space="preserve">
+    <value>방패 던지기 / 성령의 권능 전환</value>
+  </data>
+  <data name="PLD_ShieldLob_Feature_Desc" xml:space="preserve">
+    <value>'신성 마법 효과 향상' 상태거나 제자리 시전이 가능할 때 '방패 던지기'를 '성령의 권능'으로 대체합니다.</value>
+  </data>
+  <data name="PLD_RetargetClemency_Name" xml:space="preserve">
+    <value>관용 스마트 타겟 기능</value>
+  </data>
+  <data name="PLD_RetargetClemency_Desc" xml:space="preserve">
+    <value>다음 하위 옵션에 따라 '관용' 대상을 자동으로 지정합니다.</value>
+  </data>
+  <data name="PLD_RetargetClemency_MO_Name" xml:space="preserve">
+    <value>마우스오버 관용 옵션</value>
+  </data>
+  <data name="PLD_RetargetClemency_MO_Desc" xml:space="preserve">
+    <value>UI 마우스오버 대상을 치료 우선순위에 추가합니다.</value>
+  </data>
+  <data name="PLD_RetargetClemency_LowHP_Name" xml:space="preserve">
+    <value>낮은 HP 대상 관용 옵션</value>
+  </data>
+  <data name="PLD_RetargetClemency_LowHP_Desc" xml:space="preserve">
+    <value>플레이어 HP가 설정 수치 이하가 될 때까지 가장 HP가 낮은 파티원을 치료합니다.</value>
+  </data>
+  <data name="PLD_RetargetSheltron_Name" xml:space="preserve">
+    <value>방벽/신성한 방벽 - 중재 전환</value>
+  </data>
+  <data name="PLD_RetargetSheltron_Desc" xml:space="preserve">
+    <value>대상이 아군 파티원이면 '중재'를 사용하고, 그렇지 않으면 '신성한 방벽'을 사용합니다.
+- 우선순위: 마우스오버  &gt;  현재 대상  &gt;  대상의 대상 &gt;  자신</value>
+  </data>
+  <data name="PLD_RetargetSheltron_MO_Name" xml:space="preserve">
+    <value>마우스오버 중재 옵션</value>
+  </data>
+  <data name="PLD_RetargetSheltron_MO_Desc" xml:space="preserve">
+    <value>마우스오버한 파티원에게 '중재'를 사용하는 우선순위를 추가합니다.</value>
+  </data>
+  <data name="PLD_RetargetSheltron_TT_Name" xml:space="preserve">
+    <value>대상의 대상 중재 옵션</value>
+  </data>
+  <data name="PLD_RetargetSheltron_TT_Desc" xml:space="preserve">
+    <value>본인이 어그로를 잡고 있지 않을 때, 보스가 노리는 대상에게 '중재'를 사용합니다.</value>
+  </data>
+  <data name="PLD_RetargetShieldBash_Name" xml:space="preserve">
+    <value>방패 가격 스마트 타겟</value>
+  </data>
+  <data name="PLD_RetargetShieldBash_Desc" xml:space="preserve">
+    <value>현재 대상이 기절 면역이면 주변의 기절 가능한 적에게 '방패 가격'을 사용합니다.</value>
+  </data>
+  <data name="PLD_RetargetCover_Name" xml:space="preserve">
+    <value>감싸기 스마트 타겟 기능</value>
+  </data>
+  <data name="PLD_RetargetCover_Desc" xml:space="preserve">
+    <value>다음 설정에 따라 '감싸기' 대상을 자동 지정합니다.</value>
+  </data>
+  <data name="PLD_RetargetCover_MO_Name" xml:space="preserve">
+    <value>마우스오버 감싸기 옵션</value>
+  </data>
+  <data name="PLD_RetargetCover_MO_Desc" xml:space="preserve">
+    <value>마우스오버한 파티원을 '감싸기' 우선순위로 설정합니다.</value>
+  </data>
+  <data name="PLD_RetargetCover_LowHP_Name" xml:space="preserve">
+    <value>위험 대상 감싸기 옵션</value>
+  </data>
+  <data name="PLD_RetargetCover_LowHP_Desc" xml:space="preserve">
+    <value>HP 백분율이 설정값 이하인 가장 위험한 파티원을 '감싸기'합니다.</value>
+  </data>
+  <data name="PLD_RetargetIntervene_Name" xml:space="preserve">
+    <value>마우스오버 개입 옵션</value>
+  </data>
+  <data name="PLD_RetargetIntervene_Desc" xml:space="preserve">
+    <value>마우스오버 위치의 적 혹은 아군 근처의 적을 '개입' 대상으로 지정합니다.</value>
+  </data>
+  <data name="RPR_ST_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 단일 대상</value>
+  </data>
+  <data name="RPR_ST_SimpleMode_Desc" xml:space="preserve">
+    <value>'낫질' 버튼 하나로 단일 대상 딜사이클 전체를 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="RPR_AoE_SimpleMode_Name" xml:space="preserve">
+    <value>단순 모드 - 광역</value>
+  </data>
+  <data name="RPR_AoE_SimpleMode_Desc" xml:space="preserve">
+    <value>'회전 낫' 버튼 하나로 광역 딜사이클 전체를 수행합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="RPR_ST_AdvancedMode_Name" xml:space="preserve">
+    <value>고급 모드 - 단일 대상</value>
+  </data>
+  <data name="RPR_ST_AdvancedMode_Desc" xml:space="preserve">
+    <value>'낫질' 버튼 하나로 단일 대상 딜사이클 전체를 수행합니다.
+딜사이클을 세부적으로 사용자화하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="RPR_ST_Opener_Name" xml:space="preserve">
+    <value>The Balance 오프너 (90/100레벨)</value>
+  </data>
+  <data name="RPR_ST_Opener_Desc" xml:space="preserve">
+    <value>90/100레벨 기준 Balance 오프너를 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_ArcaneCircle_Name" xml:space="preserve">
+    <value>신비의 원 옵션</value>
+  </data>
+  <data name="RPR_ST_ArcaneCircle_Desc" xml:space="preserve">
+    <value>딜사이클에 '신비의 원'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_PlentifulHarvest_Name" xml:space="preserve">
+    <value>풍성한 수확 옵션</value>
+  </data>
+  <data name="RPR_ST_PlentifulHarvest_Desc" xml:space="preserve">
+    <value>딜사이클에 '풍성한 수확'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_SoD_Name" xml:space="preserve">
+    <value>죽음의 그림자 옵션</value>
+  </data>
+  <data name="RPR_ST_SoD_Desc" xml:space="preserve">
+    <value>딜사이클에 '죽음의 그림자'를 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_SoulSow_Name" xml:space="preserve">
+    <value>영혼 심기</value>
+  </data>
+  <data name="RPR_ST_SoulSow_Desc" xml:space="preserve">
+    <value>비전투 중일 때 '영혼 심기' 강화 효과가 없다면 딜사이클에 추가하여 자동으로 사용합니다.</value>
+  </data>
+  <data name="RPR_ST_SoulSlice_Name" xml:space="preserve">
+    <value>영혼 낫질 옵션</value>
+  </data>
+  <data name="RPR_ST_SoulSlice_Desc" xml:space="preserve">
+    <value>딜사이클에 '영혼 낫질'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Bloodstalk_Name" xml:space="preserve">
+    <value>핏빛 할퀴기 옵션</value>
+  </data>
+  <data name="RPR_ST_Bloodstalk_Desc" xml:space="preserve">
+    <value>딜사이클에 '핏빛 할퀴기'를 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Gluttony_Name" xml:space="preserve">
+    <value>탐식 옵션</value>
+  </data>
+  <data name="RPR_ST_Gluttony_Desc" xml:space="preserve">
+    <value>딜사이클에 '탐식'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_GibbetGallows_Name" xml:space="preserve">
+    <value>효수형 및 교수형 옵션</value>
+  </data>
+  <data name="RPR_ST_GibbetGallows_Desc" xml:space="preserve">
+    <value>딜사이클에 '효수형'과 '교수형'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Enshroud_Name" xml:space="preserve">
+    <value>레무르 수의 옵션</value>
+  </data>
+  <data name="RPR_ST_Enshroud_Desc" xml:space="preserve">
+    <value>딜사이클에 '레무르 수의'를 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Reaping_Name" xml:space="preserve">
+    <value>보이드/크로스 리퍼 옵션</value>
+  </data>
+  <data name="RPR_ST_Reaping_Desc" xml:space="preserve">
+    <value>딜사이클에 '보이드 리퍼'와 '크로스 리퍼'를 추가합니다.
+(비활성화 시 레무르 상태에서 원버튼 콤보가 작동하지 않을 수 있습니다.)</value>
+  </data>
+  <data name="RPR_ST_Lemure_Name" xml:space="preserve">
+    <value>레무르 낫질 옵션</value>
+  </data>
+  <data name="RPR_ST_Lemure_Desc" xml:space="preserve">
+    <value>딜사이클에 '레무르 낫질'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Communio_Name" xml:space="preserve">
+    <value>합일 마무리 옵션</value>
+  </data>
+  <data name="RPR_ST_Communio_Desc" xml:space="preserve">
+    <value>딜사이클에 '합일'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Sacrificium_Name" xml:space="preserve">
+    <value>제물 희생 옵션</value>
+  </data>
+  <data name="RPR_ST_Sacrificium_Desc" xml:space="preserve">
+    <value>딜사이클에 '제물 희생'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_Perfectio_Name" xml:space="preserve">
+    <value>완전체 옵션</value>
+  </data>
+  <data name="RPR_ST_Perfectio_Desc" xml:space="preserve">
+    <value>딜사이클에 '완전체'를 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_TrueNorthDynamic_Name" xml:space="preserve">
+    <value>유동적 진북 기능</value>
+  </data>
+  <data name="RPR_ST_TrueNorthDynamic_Desc" xml:space="preserve">
+    <value>방향 조건에 맞지 않을 때 '효수형' 또는 '교수형' 사용 전 '진북'을 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_StunInterupt_Name" xml:space="preserve">
+    <value>다리 쳐내기 옵션</value>
+  </data>
+  <data name="RPR_ST_StunInterupt_Desc" xml:space="preserve">
+    <value>보스가 아닌 대상이 기술 시전 중일 때 '다리 쳐내기'를 사용합니다.</value>
+  </data>
+  <data name="RPR_ST_RangedFiller_Name" xml:space="preserve">
+    <value>갈고리낫 옵션</value>
+  </data>
+  <data name="RPR_ST_RangedFiller_Desc" xml:space="preserve">
+    <value>근접 범위를 벗어났을 때 콤보 체인 대신 '갈고리낫'을 사용합니다. '합일'은 덮어쓰지 않습니다.</value>
+  </data>
+  <data name="RPR_ST_RangedFillerHarvestMoon_Name" xml:space="preserve">
+    <value>수확의 달 옵션</value>
+  </data>
+  <data name="RPR_ST_RangedFillerHarvestMoon_Desc" xml:space="preserve">
+    <value>근접 범위를 벗어났을 때 콤보 체인 대신 '수확의 달'을 사용합니다.</value>
+  </data>
+  <data name="RPR_ST_ComboHeals_Name" xml:space="preserve">
+    <value>생존기 옵션</value>
+  </data>
+  <data name="RPR_ST_ComboHeals_Desc" xml:space="preserve">
+    <value>HP가 설정된 임계치 미만일 때 '피의 갈증'과 '내단'을 콤보에 추가하여 사용합니다.</value>
+  </data>
+  <data name="RPR_ST_Feint_Name" xml:space="preserve">
+    <value>광역 시 견제 사용 옵션</value>
+  </data>
+  <data name="RPR_ST_Feint_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전이 감지되면 '견제'를 추가합니다.</value>
+  </data>
+  <data name="RPR_ST_ArcaneCrest_Name" xml:space="preserve">
+    <value>광역 시 신비의 문장 사용 옵션</value>
+  </data>
+  <data name="RPR_ST_ArcaneCrest_Desc" xml:space="preserve">
+    <value>적의 광역 공격 시전이 감지되면 '신비의 문장'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_AdvancedMode_Name" xml:space="preserve">
+    <value>고급 모드 - 광역</value>
+  </data>
+  <data name="RPR_AoE_ArcaneCircle_Name" xml:space="preserve">
+    <value>신비의 원 옵션</value>
+  </data>
+  <data name="RPR_AoE_ArcaneCircle_Desc" xml:space="preserve">
+    <value>광역 딜사이클에 '신비의 원'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_PlentifulHarvest_Name" xml:space="preserve">
+    <value>풍성한 수확 옵션</value>
+  </data>
+  <data name="RPR_AoE_PlentifulHarvest_Desc" xml:space="preserve">
+    <value>광역 딜사이클에 '풍성한 수확'을 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_WoD_Name" xml:space="preserve">
+    <value>죽음의 회오리 옵션</value>
+  </data>
+  <data name="RPR_AoE_WoD_Desc" xml:space="preserve">
+    <value>딜사이클에 '죽음의 회오리'를 추가합니다.</value>
+  </data>
+  <data name="RPR_AoE_SoulSow_Name" xml:space="preserve">
+    <value>영혼 심기</value>
+  </data>
+  <data name="RPR_Regress_Desc" xml:space="preserve">
+    <value>'회귀 시전 가능' 상태가 활성화되면 '지옥 입장'과 '지옥 퇴장'을 '회귀'로 바꿉니다.</value>
+  </data>
+  <data name="RDM_ST_Engagement_Saving_Name" xml:space="preserve">
+    <value>앙가주망 보존 옵션</value>
+  </data>
+  <data name="RDM_AoE_Corpsacorps_Desc" xml:space="preserve">
+    <value>딜링용으로 '코르 아 코르'를 추가합니다. 돌진용 충전 횟수 1회를 남겨둡니다.</value>
+  </data>
+  <data name="RDM_EmboldenManafication_Name" xml:space="preserve">
+    <value>성원을 마나 증량으로 전환</value>
+  </data>
+  <data name="SGE_AoE_DPS_Toxikon_Desc" xml:space="preserve">
+    <value>의술침이 있을 때 '톡시콘'을 사용합니다.</value>
+  </data>
+  <data name="SGE_AoE_Heal_Kerachole_Name" xml:space="preserve">
+    <value>케이라콜레 옵션</value>
+  </data>
+  <data name="SGE_Retarget_Druochole_Desc" xml:space="preserve">
+    <value>치유 우선순위에 따라 '드루오콜레'의 대상을 자동 전환합니다.</value>
   </data>
 </root>
