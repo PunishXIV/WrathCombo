@@ -927,16 +927,16 @@
     <value>こうげきのうたをローテーションに追加します。</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
-    <value>ロミオのバラード</value>
+    <value>Romeoâ€™s Ballad</value>
   </data>
   <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
-    <value>ロミオのバラードをローテーションに追加します。</value>
+    <value>Adds Romeoâ€™s Ballad into the rotation.</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
-    <value>英雄の樹氷</value>
+    <value>Heroâ€™s Rime</value>
   </data>
   <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
-    <value>ヒーローのライムをローテーションに追加します。</value>
+    <value>Adds Heroâ€™s Rime into the rotation.</value>
   </data>
   <data name="Phantom_Oracle_Name" xml:space="preserve">
     <value>オラクル ジョブのアクション</value>
