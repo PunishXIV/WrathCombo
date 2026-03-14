@@ -117,4 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Phantom_Bard_RomeosBallad_Name" xml:space="preserve">
+    <value>Romeoâ€™s Ballad</value>
+  </data>
+  <data name="Phantom_Bard_RomeosBallad_Desc" xml:space="preserve">
+    <value>Adds Romeoâ€™s Ballad into the rotation.</value>
+  </data>
+  <data name="Phantom_Bard_HerosRime_Name" xml:space="preserve">
+    <value>Heroâ€™s Rime</value>
+  </data>
+  <data name="Phantom_Bard_HerosRime_Desc" xml:space="preserve">
+    <value>Adds Heroâ€™s Rime into the rotation.</value>
+  </data>
 </root>
