@@ -8513,6 +8513,9 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="SMN_AoE_Advanced_Combo_SearingLight_Desc" xml:space="preserve">
     <value>광역 콤보에 '타오르는 빛'을 추가합니다.</value>
   </data>
+  <data name="SMN_AoE_Advanced_Combo_SearingLight_Burst_Name" xml:space="preserve">
+    <value>광역 타오르는 빛 집중</value>
+  </data>
   <data name="SMN_AoE_Advanced_Combo_SearingLight_Burst_Desc" xml:space="preserve">
     <value>'타오르는 빛'을 데미 단계에서만 시전하도록 설정합니다.</value>
   </data>
@@ -8669,22 +8672,1336 @@ GCD를 소모하며 기절 면역 적에게 무의미할 수 있습니다.
   <data name="VPR_ST_SerpentsTail_Name" xml:space="preserve">
     <value>뱀꼬리 기술 옵션</value>
   </data>
+  <data name="VPR_ST_SerpentsTail_Desc" xml:space="preserve">
+    <value>딜사이클에 '뱀꼬리 기술'을 추가합니다. 
+기본 콤보나 조상령의 큰송곳니 이후 발동하는 추격타를 자동으로 사용합니다.</value>
+  </data>
+  <data name="VPR_ST_UncoiledFury_Name" xml:space="preserve">
+    <value>날뱀의 꼬리 옵션</value>
+  </data>
+  <data name="VPR_ST_UncoiledFury_Desc" xml:space="preserve">
+    <value>딜사이클에 원거리 공격인 '날뱀의 꼬리'를 추가합니다. (날뱀의 갈망 버프 소모)</value>
+  </data>
+  <data name="VPR_ST_UncoiledFuryCombo_Name" xml:space="preserve">
+    <value>날뱀 연미격/난미격 연계</value>
+  </data>
+  <data name="VPR_ST_UncoiledFuryCombo_Desc" xml:space="preserve">
+    <value>날뱀의 꼬리 사용 후 이어지는 '날뱀 연미격'과 '날뱀 난미격' 연계를 추가합니다.</value>
+  </data>
+  <data name="VPR_ST_Reawaken_Name" xml:space="preserve">
+    <value>조상령 빙의 옵션</value>
+  </data>
+  <data name="VPR_ST_Reawaken_Desc" xml:space="preserve">
+    <value>딜사이클에 '조상령 빙의'를 추가합니다. (영력 50 소모 버스트)</value>
+  </data>
+  <data name="VPR_ST_GenerationCombo_Name" xml:space="preserve">
+    <value>조상령의 송곳니 연계</value>
+  </data>
+  <data name="VPR_ST_GenerationCombo_Desc" xml:space="preserve">
+    <value>빙의 중 '조상령의 송곳니 1~4단'과 '조상령의 큰송곳니'를 순차적으로 사용합니다.</value>
+  </data>
+  <data name="VPR_ST_LegacyWeaves_Name" xml:space="preserve">
+    <value>조상령의 뱀 연계(oGCD)</value>
+  </data>
+  <data name="VPR_ST_LegacyWeaves_Desc" xml:space="preserve">
+    <value>빙의 공격 사이에 '조상령의 뱀 1~4단' 추격 연계기를 자동으로 끼워 넣습니다.</value>
+  </data>
+  <data name="VPR_TrueNorthDynamic_Name" xml:space="preserve">
+    <value>유동적 교묘한 몸놀림 옵션</value>
+  </data>
+  <data name="VPR_TrueNorthDynamic_Desc" xml:space="preserve">
+    <value>타겟 서클 내에서 방향 지정 보너스를 받을 수 없는 상황일 때만 '교묘한 몸놀림'을 자동으로 활성화합니다.</value>
+  </data>
+  <data name="VPR_ST_StunInterupt_Name" xml:space="preserve">
+    <value>다리 쳐내기 옵션</value>
+  </data>
+  <data name="VPR_ST_StunInterupt_Desc" xml:space="preserve">
+    <value>기절이 가능한 적의 기술 캐스팅을 감지하면 즉시 '다리 쳐내기'를 사용합니다.</value>
+  </data>
+  <data name="VPR_ST_RangedUptime_Name" xml:space="preserve">
+    <value>원거리 거리 유지 옵션</value>
+  </data>
+  <data name="VPR_ST_RangedUptime_Desc" xml:space="preserve">
+    <value>대상이 근접 공격 사거리 밖일 때 '날뱀의 송곳니'를 사용하여 콤보 끊김을 방지합니다.</value>
+  </data>
+  <data name="VPR_ST_ComboHeals_Name" xml:space="preserve">
+    <value>생존기 사용 옵션</value>
+  </data>
+  <data name="VPR_ST_ComboHeals_Desc" xml:space="preserve">
+    <value>체력이 일정 수준 이하로 떨어질 경우 '피의 갈증'과 '내단'을 사용합니다.</value>
+  </data>
+  <data name="VPR_ST_Feint_Name" xml:space="preserve">
+    <value>광역기 견제 옵션</value>
+  </data>
+  <data name="VPR_ST_Feint_Desc" xml:space="preserve">
+    <value>적의 전체 광역 공격 캐스팅 시 '견제'를 사용하여 파티 데미지를 경감합니다.</value>
+  </data>
+  <data name="VPR_AoE_AdvancedMode_Name" xml:space="preserve">
+    <value>고급 모드 - 광역 공격</value>
+  </data>
+  <data name="VPR_AoE_AdvancedMode_Desc" xml:space="preserve">
+    <value>'큰송곳니 하나: 교상'을 원버튼 광역 딜사이클로 대체하며,
+딜사이클을 사용자의 입맛에 맞게 세부 조정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="VPR_AoE_SerpentsIre_Name" xml:space="preserve">
+    <value>광역 뱀의 영기</value>
+  </data>
+  <data name="VPR_AoE_SerpentsIre_Desc" xml:space="preserve">
+    <value>광역 딜사이클 중 '뱀의 영기'를 사용하여 게이지를 충전합니다.</value>
+  </data>
+  <data name="VPR_AoE_Vicepit_Name" xml:space="preserve">
+    <value>큰뱀 하나: 분쇄 옵션</value>
+  </data>
+  <data name="VPR_AoE_Vicepit_Desc" xml:space="preserve">
+    <value>광역 딜사이클에 충전식 광역기인 '큰뱀 하나: 분쇄'를 추가합니다.</value>
+  </data>
+  <data name="VPR_AoE_VicepitCombo_Name" xml:space="preserve">
+    <value>큰뱀 분쇄 연계 콤보</value>
+  </data>
+  <data name="VPR_AoE_VicepitCombo_Desc" xml:space="preserve">
+    <value>분쇄 이후 '큰뱀 둘: 맹습'과 '큰뱀 둘: 질주' 연계를 수행합니다.</value>
+  </data>
+  <data name="VPR_AoE_VicepitWeaves_Name" xml:space="preserve">
+    <value>큰뱀 추격 연계기(oGCD)</value>
+  </data>
+  <data name="VPR_AoE_VicepitWeaves_Desc" xml:space="preserve">
+    <value>큰뱀 연계 중 '쌍아연섬'과 '쌍아난섬'을 자동으로 끼워 넣습니다.</value>
+  </data>
+  <data name="VPR_AoE_SerpentsTail_Name" xml:space="preserve">
+    <value>광역 뱀꼬리 기술</value>
+  </data>
+  <data name="VPR_AoE_SerpentsTail_Desc" xml:space="preserve">
+    <value>광역 콤보 마무리 단계에서 발동하는 '뱀꼬리 섬격' 등을 자동으로 사용합니다.</value>
+  </data>
+  <data name="VPR_AoE_UncoiledFury_Name" xml:space="preserve">
+    <value>광역 날뱀의 꼬리</value>
+  </data>
+  <data name="VPR_AoE_UncoiledFury_Desc" xml:space="preserve">
+    <value>광역 딜사이클 중 '날뱀의 꼬리'를 사용합니다.</value>
+  </data>
+  <data name="VPR_AoE_UncoiledFuryCombo_Name" xml:space="preserve">
+    <value>광역 날뱀 연계</value>
+  </data>
+  <data name="VPR_AoE_UncoiledFuryCombo_Desc" xml:space="preserve">
+    <value>날뱀의 꼬리 이후 '날뱀 연미격/난미격' 연계를 사용합니다.</value>
+  </data>
+  <data name="VPR_AoE_Reawaken_Name" xml:space="preserve">
+    <value>광역 조상령 빙의</value>
+  </data>
+  <data name="VPR_AoE_Reawaken_Desc" xml:space="preserve">
+    <value>광역 딜사이클 중 '조상령 빙의' 버스트를 사용합니다.</value>
+  </data>
+  <data name="VPR_AoE_ReawakenCombo_Name" xml:space="preserve">
+    <value>광역 조상령 연계</value>
+  </data>
+  <data name="VPR_AoE_ReawakenCombo_Desc" xml:space="preserve">
+    <value>광역 빙의 중 조상령의 송곳니/뱀 연계를 자동으로 수행합니다.</value>
+  </data>
+  <data name="VPR_AoE_StunInterupt_Name" xml:space="preserve">
+    <value>다리 쳐내기 옵션</value>
+  </data>
+  <data name="VPR_AoE_StunInterupt_Desc" xml:space="preserve">
+    <value>보스가 아닌 대상이 영창 중일 때 다리 쳐내기를 사용합니다.</value>
+  </data>
+  <data name="VPR_AoE_ComboHeals_Name" xml:space="preserve">
+    <value>생존기 옵션</value>
+  </data>
+  <data name="VPR_AoE_ComboHeals_Desc" xml:space="preserve">
+    <value>딜사이클에 피의 갈증과 내단을 추가합니다.</value>
+  </data>
+  <data name="VPR_ST_BasicCombo_Name" xml:space="preserve">
+    <value>기본 콤보 자동 전환</value>
+  </data>
+  <data name="VPR_ST_BasicCombo_Desc" xml:space="preserve">
+    <value>'송곳니 하나: 열상' 버튼 하나로 1-2-3단계 단일 콤보 전체를 수행하도록 변경합니다.</value>
+  </data>
+  <data name="VPR_Retarget_Slither_Name" xml:space="preserve">
+    <value>뱀걸음 대상 변경</value>
+  </data>
   <data name="VPR_Retarget_Slither_Desc" xml:space="preserve">
     <value>'뱀걸음' 사용 시, 파티원 리스트나 필드 위의 마우스오버 대상을 향해 이동합니다.</value>
+  </data>
+  <data name="VPR_VicewinderCoils_Desc" xml:space="preserve">
+    <value>'뱀 하나: 분쇄' 버튼이 기술 사용 후 자동으로 '뱀 둘: 맹습/질주'로 바뀝니다.</value>
+  </data>
+  <data name="VPR_VicewinderCoils_oGCDs_Name" xml:space="preserve">
+    <value>쌍아 연계술 포함</value>
+  </data>
+  <data name="VPR_VicewinderCoils_oGCDs_Desc" xml:space="preserve">
+    <value>위 통합 버튼에 '쌍아연격' 및 '쌍아난격'을 함께 배치하여 연타만으로 처리가 가능하게 합니다.</value>
+  </data>
+  <data name="VPR_VicepitDens_Name" xml:space="preserve">
+    <value>큰뱀 하나: 분쇄 - 후속기 통합</value>
+  </data>
+  <data name="VPR_VicepitDens_Desc" xml:space="preserve">
+    <value>'큰뱀 하나: 분쇄' 버튼이 사용 후 자동으로 '큰뱀 둘: 맹습/질주'로 바뀝니다.</value>
+  </data>
+  <data name="VPR_VicepitDens_oGCDs_Name" xml:space="preserve">
+    <value>쌍아 연섬술 포함</value>
+  </data>
+  <data name="VPR_VicepitDens_oGCDs_Desc" xml:space="preserve">
+    <value>위 통합 버튼에 '쌍아연섬' 및 '쌍아난섬'을 함께 배치합니다.</value>
+  </data>
+  <data name="VPR_UncoiledTwins_Name" xml:space="preserve">
+    <value>날뱀의 꼬리 연계 통합</value>
+  </data>
+  <data name="VPR_UncoiledTwins_Desc" xml:space="preserve">
+    <value>'날뱀의 꼬리' 버튼이 사용 후 '날뱀 연미격' 및 '날뱀 난미격'으로 자동 전환됩니다.</value>
+  </data>
+  <data name="VPR_ReawakenLegacy_Name" xml:space="preserve">
+    <value>빙의 - 조상령의 송곳니 통합</value>
+  </data>
+  <data name="VPR_ReawakenLegacy_Desc" xml:space="preserve">
+    <value>조상령 빙의 관련 버튼이 현재 순서에 맞는 '조상령의 송곳니 1~4단'으로 바뀝니다.</value>
+  </data>
+  <data name="VPR_ReawakenLegacyWeaves_Name" xml:space="preserve">
+    <value>빙의 - 조상령의 뱀 통합</value>
+  </data>
+  <data name="VPR_ReawakenLegacyWeaves_Desc" xml:space="preserve">
+    <value>조상령 빙의 관련 버튼이 현재 순서에 맞는 '조상령의 뱀 1~4단' 연계기로 바뀝니다.</value>
+  </data>
+  <data name="VPR_TwinTails_Name" xml:space="preserve">
+    <value>추격 연계 통합 (oGCD)</value>
+  </data>
+  <data name="VPR_TwinTails_Desc" xml:space="preserve">
+    <value>'뱀꼬리 기술', '쌍아연술', '쌍아난술'을 하나의 버튼으로 통합하여 상황에 맞춰 가장 우선순위가 높은 기술이 나가도록 합니다.</value>
+  </data>
+  <data name="VPR_Legacies_Name" xml:space="preserve">
+    <value>조상령의 뱀 버튼 대체</value>
+  </data>
+  <data name="VPR_Legacies_Desc" xml:space="preserve">
+    <value>'조상령의 송곳니' 버튼을 해당 단계의 '조상령의 뱀' 연계기로 대체하여 보여줍니다.</value>
+  </data>
+  <data name="VPR_SerpentsTail_Name" xml:space="preserve">
+    <value>뱀꼬리 기술 자동 전환</value>
+  </data>
+  <data name="VPR_SerpentsTail_Desc" xml:space="preserve">
+    <value>기본 콤보 3단계 직후, 해당 버튼을 '뱀꼬리 일격' 또는 '뱀꼬리 섬격'으로 임시 변경합니다.</value>
+  </data>
+  <data name="VPR_VicewinderProtection_Name" xml:space="preserve">
+    <value>분쇄 중복 방지 (보호)</value>
+  </data>
+  <data name="VPR_VicewinderProtection_Desc" xml:space="preserve">
+    <value>'뱀 하나: 분쇄' 충전량이 남아있는데 이미 분쇄 연계 버프가 활성화된 경우, 실수를 방지하기 위해 해당 버튼을 기본 시작기인 '송곳니 하나: 교상' 등으로 대체합니다.</value>
+  </data>
+  <data name="WAR_ST_Simple_Name" xml:space="preserve">
+    <value>단순 모드 - 단일 대상</value>
+  </data>
+  <data name="WAR_ST_Simple_Desc" xml:space="preserve">
+    <value>'육중한 일격'을 단일 대상 딜사이클로 대체합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="WAR_AoE_Simple_Name" xml:space="preserve">
+    <value>단순 모드 - 광역 공격</value>
+  </data>
+  <data name="WAR_AoE_Simple_Desc" xml:space="preserve">
+    <value>'압도'를 광역 딜사이클로 대체합니다.
+입문자에게 가장 이상적인 옵션입니다.</value>
+  </data>
+  <data name="WAR_ST_Advanced_Name" xml:space="preserve">
+    <value>고급 모드 - 단일 대상</value>
+  </data>
+  <data name="WAR_ST_Advanced_Desc" xml:space="preserve">
+    <value>'육중한 일격'을 단일 대상 딜사이클로 대체합니다.
+딜사이클을 사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="WAR_ST_BalanceOpener_Name" xml:space="preserve">
+    <value>Balance 오프너 (100레벨)</value>
+  </data>
+  <data name="WAR_ST_BalanceOpener_Desc" xml:space="preserve">
+    <value>100레벨 기준 Balance 오프너 기능을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_StormsEye_Name" xml:space="preserve">
+    <value>폭풍의 눈 옵션</value>
+  </data>
+  <data name="WAR_ST_StormsEye_Desc" xml:space="preserve">
+    <value>딜사이클에 '폭풍의 눈'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_InnerRelease_Name" xml:space="preserve">
+    <value>원초의 해방 옵션</value>
+  </data>
+  <data name="WAR_ST_InnerRelease_Desc" xml:space="preserve">
+    <value>딜사이클에 '광폭화' / '원초의 해방'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_FellCleave_Name" xml:space="preserve">
+    <value>참수 옵션</value>
+  </data>
+  <data name="WAR_ST_FellCleave_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초의 혼' / '참수'를 추가합니다.
+- 설정된 최소 원초 게이지 값 이상이거나 원초의 해방 스택을 소모할 때 사용합니다.
+- 사용 가능 시 '내면의 혼돈'도 포함합니다.</value>
+  </data>
+  <data name="WAR_ST_Infuriate_Name" xml:space="preserve">
+    <value>전장의 함성 옵션</value>
+  </data>
+  <data name="WAR_ST_Infuriate_Desc" xml:space="preserve">
+    <value>딜사이클에 '전장의 함성'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_Onslaught_Name" xml:space="preserve">
+    <value>맹공격 옵션</value>
+  </data>
+  <data name="WAR_ST_Onslaught_Desc" xml:space="preserve">
+    <value>딜사이클에 '맹공격'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_Upheaval_Name" xml:space="preserve">
+    <value>격변 옵션</value>
+  </data>
+  <data name="WAR_ST_Upheaval_Desc" xml:space="preserve">
+    <value>딜사이클에 '격변'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_PrimalRend_Name" xml:space="preserve">
+    <value>원초적 분쇄 옵션</value>
+  </data>
+  <data name="WAR_ST_PrimalRend_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초적 분쇄'를 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_PrimalWrath_Name" xml:space="preserve">
+    <value>원초의 격진 옵션</value>
+  </data>
+  <data name="WAR_ST_PrimalWrath_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초의 격진'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_PrimalRuination_Name" xml:space="preserve">
+    <value>원초적 파멸 옵션</value>
+  </data>
+  <data name="WAR_ST_PrimalRuination_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초적 파멸'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_RangedUptime_Name" xml:space="preserve">
+    <value>도끼 던지기 옵션</value>
+  </data>
+  <data name="WAR_ST_RangedUptime_Desc" xml:space="preserve">
+    <value>대상이 사거리 밖에 있을 때 딜사이클에 '도끼 던지기'를 추가합니다.</value>
   </data>
   <data name="WAR_ST_Interrupt_Name" xml:space="preserve">
     <value>차단 옵션</value>
   </data>
+  <data name="WAR_ST_Stun_Name" xml:space="preserve">
+    <value>기절 옵션</value>
+  </data>
+  <data name="WAR_ST_Stun_Desc" xml:space="preserve">
+    <value>대상이 캐스팅 중일 때 사이클에 '비열한 기습'을 추가합니다.
+오버월드 외의 콘텐츠에서는 기절 면역 적에게 기술을 낭비할 수 있으므로 권장되지 않습니다. 보스전에서는 사용을 피합니다.</value>
+  </data>
+  <data name="WAR_AoE_Advanced_Name" xml:space="preserve">
+    <value>고급 모드 - 광역 공격</value>
+  </data>
+  <data name="WAR_AoE_Advanced_Desc" xml:space="preserve">
+    <value>'압도'를 광역 사이클로 대체합니다.
+딜사이클을 사용자에 맞게 세부 설정하고 싶을 때 적합합니다.</value>
+  </data>
+  <data name="WAR_AoE_InnerRelease_Name" xml:space="preserve">
+    <value>광폭화 / 원초의 해방 옵션</value>
+  </data>
+  <data name="WAR_AoE_InnerRelease_Desc" xml:space="preserve">
+    <value>딜사이클에 '광폭화' / '원초의 해방'을 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_Decimate_Name" xml:space="preserve">
+    <value>강철 회오리 / 섬멸 옵션</value>
+  </data>
+  <data name="WAR_AoE_Decimate_Desc" xml:space="preserve">
+    <value>딜사이클에 '강철 회오리' / '섬멸'을 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_Infuriate_Name" xml:space="preserve">
+    <value>전장의 함성 옵션</value>
+  </data>
+  <data name="WAR_AoE_Infuriate_Desc" xml:space="preserve">
+    <value>딜사이클에 '전장의 함성'을 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_Onslaught_Name" xml:space="preserve">
+    <value>맹공격 옵션</value>
+  </data>
+  <data name="WAR_AoE_Onslaught_Desc" xml:space="preserve">
+    <value>딜사이클에 '맹공격'을 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_Orogeny_Name" xml:space="preserve">
+    <value>대지 융기 옵션</value>
+  </data>
+  <data name="WAR_AoE_Orogeny_Desc" xml:space="preserve">
+    <value>딜사이클에 '대지 융기'를 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_PrimalRend_Name" xml:space="preserve">
+    <value>원초적 분쇄 옵션</value>
+  </data>
+  <data name="WAR_AoE_PrimalRend_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초적 분쇄'를 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_PrimalWrath_Name" xml:space="preserve">
+    <value>원초의 격진 옵션</value>
+  </data>
+  <data name="WAR_AoE_PrimalWrath_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초의 격진'을 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_PrimalRuination_Name" xml:space="preserve">
+    <value>원초적 파멸 옵션</value>
+  </data>
+  <data name="WAR_AoE_PrimalRuination_Desc" xml:space="preserve">
+    <value>딜사이클에 '원초적 파멸'을 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_RangedUptime_Name" xml:space="preserve">
+    <value>도끼 던지기 옵션</value>
+  </data>
+  <data name="WAR_AoE_RangedUptime_Desc" xml:space="preserve">
+    <value>사거리 밖에 있을 때 사이클에 '도끼 던지기'를 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_Interrupt_Name" xml:space="preserve">
+    <value>차단 옵션</value>
+  </data>
+  <data name="WAR_AoE_Interrupt_Desc" xml:space="preserve">
+    <value>대상의 캐스팅이 차단 가능할 때 광역 사이클에 '말참견'를 추가합니다.</value>
+  </data>
+  <data name="WAR_AoE_Stun_Name" xml:space="preserve">
+    <value>기절 옵션</value>
+  </data>
+  <data name="WAR_AoE_Stun_Desc" xml:space="preserve">
+    <value>대상이 캐스팅 중일 때 광역 사이클에 '비열한 기습'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Name" xml:space="preserve">
+    <value>고급 방어 기술 설정</value>
+  </data>
+  <data name="WAR_Mitigation_Desc" xml:space="preserve">
+    <value>고급 방어 기술 설정입니다.
+딜사이클 내에서 사용하려면 각 방어 기술을 활성화하세요.
+(단순 모드는 이 옵션을 무시하고 권장값을 사용합니다)</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Name" xml:space="preserve">
+    <value>일반 적 방어 기술</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Desc" xml:space="preserve">
+    <value>보스전이 아닐 때 방어 기술을 추가합니다. 별도 언급이 없으면 방어 기술이 중첩되지 않게 사용합니다.
+전투 시작 후 처음 15초 동안은 이동 중인 경우 방어 기술을 사용하지 않습니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Rampart_Name" xml:space="preserve">
+    <value>철벽 방어 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Rampart_Desc" xml:space="preserve">
+    <value>대상이 3명 이상일 때 '철벽 방어'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_ThrillOfBattle_Name" xml:space="preserve">
+    <value>전투의 짜릿함 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_ThrillOfBattle_Desc" xml:space="preserve">
+    <value>대상이 3명 이상일 때 '전투의 짜릿함'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Vengeance_Name" xml:space="preserve">
+    <value>보복 / 지옥행 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Vengeance_Desc" xml:space="preserve">
+    <value>대상이 5명 이상일 때 '보복' / '지옥행'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_ArmsLength_Name" xml:space="preserve">
+    <value>거리 유지 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_ArmsLength_Desc" xml:space="preserve">
+    <value>대상이 5명 이상일 때 '거리 유지'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Reprisal_Name" xml:space="preserve">
+    <value>앙갚음(역할 기술) 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Reprisal_Desc" xml:space="preserve">
+    <value>대상이 5명 이상일 때 '앙갚음'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_RawIntuition_Name" xml:space="preserve">
+    <value>원초의 직감 / 원초의 혈기 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_RawIntuition_Desc" xml:space="preserve">
+    <value>사용 가능 시 '원초의 직감' / '원초의 혈기'를 사용합니다. 다른 방어 기술과 중첩될 수 있습니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_ShakeItOff_Name" xml:space="preserve">
+    <value>뿌리치기 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_ShakeItOff_Desc" xml:space="preserve">
+    <value>회복 용도로 '뿌리치기'를 사용합니다. 방어 버프 손실이 발생하는 경우에는 사용하지 않습니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Equilibrium_Name" xml:space="preserve">
+    <value>평정심 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Equilibrium_Desc" xml:space="preserve">
+    <value>회복 용도로 '평정심'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Holmgang_Name" xml:space="preserve">
+    <value>일대일 결투 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_NonBoss_Holmgang_Desc" xml:space="preserve">
+    <value>비상 무적용으로 '일대일 결투'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Name" xml:space="preserve">
+    <value>보스전 방어 기술</value>
+  </data>
   <data name="WAR_Mitigation_Boss_Desc" xml:space="preserve">
     <value>보스전에서 딜사이클에 방어 기술을 추가합니다. 별도 언급이 없으면 방어 기술이 중첩되지 않게 사용합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Equilibrium_Desc" xml:space="preserve">
+    <value>회복 용도로 '평정심'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_RawIntuition_OnCD_Name" xml:space="preserve">
+    <value>원초의 직감 / 원초의 혈기 즉시 사용 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_RawIntuition_OnCD_Desc" xml:space="preserve">
+    <value>대상이 자신일 때 '원초의 직감' / '원초의 혈기'를 쿨마다 사용합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_RawIntuition_TankBuster_Name" xml:space="preserve">
+    <value>탱버 시 원초의 직감 / 원초의 혈기 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_RawIntuition_TankBuster_Desc" xml:space="preserve">
+    <value>탱버 감지 시 '원초의 직감' / '원초의 혈기'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Rampart_Name" xml:space="preserve">
+    <value>탱버 시 철벽 방어 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Rampart_Desc" xml:space="preserve">
+    <value>탱버 감지 시 '철벽 방어'를 사용합니다. '보복' / '지옥행'과는 중첩되지 않습니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Vengeance_Name" xml:space="preserve">
+    <value>탱버 시 보복 / 지옥행 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Vengeance_Desc" xml:space="preserve">
+    <value>탱버 감지 시 '보복' / '지옥행'을 사용합니다. '철벽 방어'와는 중첩되지 않습니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_ThrillOfBattle_Name" xml:space="preserve">
+    <value>탱버 시 전투의 짜릿함 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_ThrillOfBattle_Desc" xml:space="preserve">
+    <value>탱버 감지 시 '전투의 짜릿함'을 사용합니다. 특정 임계값 미만이거나 철벽 방어와 연계되는 상황이 아니면 중첩되지 않습니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Reprisal_Name" xml:space="preserve">
+    <value>광역기 앙갚음 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_Reprisal_Desc" xml:space="preserve">
+    <value>광역 공격 캐스팅 감지 시 '앙갚음'을 사용합니다.</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_ShakeItOff_Name" xml:space="preserve">
+    <value>광역기 뿌리치기 옵션</value>
+  </data>
+  <data name="WAR_Mitigation_Boss_ShakeItOff_Desc" xml:space="preserve">
+    <value>광역 공격 캐스팅 감지 시 '뿌리치기'를 사용합니다.</value>
+  </data>
+  <data name="WAR_Mit_OneButton_Name" xml:space="preserve">
+    <value>원버튼 방어 기능</value>
+  </data>
+  <data name="WAR_Mit_OneButton_Desc" xml:space="preserve">
+    <value>'전투의 짜릿함'을 올인원 방어 버튼으로 대체합니다.</value>
+  </data>
+  <data name="WAR_Mit_Holmgang_Max_Name" xml:space="preserve">
+    <value>일대일 결투 비상 옵션</value>
+  </data>
+  <data name="WAR_Mit_Holmgang_Max_Desc" xml:space="preserve">
+    <value>HP 임계값 도달 시 '일대일 결투'를 최우선 순위로 사용합니다.</value>
+  </data>
+  <data name="WAR_Mit_Bloodwhetting_Name" xml:space="preserve">
+    <value>원초의 혈기 옵션</value>
+  </data>
+  <data name="WAR_Mit_Bloodwhetting_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '원초의 직감' / '원초의 혈기'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mit_Equilibrium_Name" xml:space="preserve">
+    <value>평정심 옵션</value>
+  </data>
+  <data name="WAR_Mit_Equilibrium_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '평정심'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mit_Reprisal_Name" xml:space="preserve">
+    <value>앙갚음 옵션</value>
+  </data>
+  <data name="WAR_Mit_Reprisal_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '보복'을 추가합니다. 
+참고: 낭비를 막기 위해 사거리 내에 대상이 있을 때만 사용합니다.</value>
+  </data>
+  <data name="WAR_Mit_ThrillOfBattle_Name" xml:space="preserve">
+    <value>전투의 짜릿함 우선 사용 옵션</value>
+  </data>
+  <data name="WAR_Mit_ThrillOfBattle_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '전투의 짜릿함'을 추가합니다. 
+참고: 비활성화해도 최하위 순위로 사용을 시도합니다.</value>
+  </data>
+  <data name="WAR_Mit_Rampart_Name" xml:space="preserve">
+    <value>철벽 방어 옵션</value>
+  </data>
+  <data name="WAR_Mit_Rampart_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '철벽 방어'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mit_ShakeItOff_Name" xml:space="preserve">
+    <value>뿌리치기 옵션</value>
+  </data>
+  <data name="WAR_Mit_ShakeItOff_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '뿌리치기'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mit_ArmsLength_Name" xml:space="preserve">
+    <value>거리 유지 옵션</value>
+  </data>
+  <data name="WAR_Mit_ArmsLength_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '거리 유지'를 추가합니다.</value>
+  </data>
+  <data name="WAR_Mit_Vengeance_Name" xml:space="preserve">
+    <value>보복 옵션</value>
+  </data>
+  <data name="WAR_Mit_Vengeance_Desc" xml:space="preserve">
+    <value>원버튼 방어 기능에 '보복'을 추가합니다.</value>
+  </data>
+  <data name="WAR_Mit_Party_Name" xml:space="preserve">
+    <value>원버튼 파티 방어 기능</value>
+  </data>
+  <data name="WAR_Mit_Party_Desc" xml:space="preserve">
+    <value>'뿌리치기'를 준비된 '앙갚음'으로 대체합니다.</value>
+  </data>
+  <data name="WAR_FC_Features_Name" xml:space="preserve">
+    <value>참수 기능</value>
+  </data>
+  <data name="WAR_FC_Features_Desc" xml:space="preserve">
+    <value>참수 관련 기능 모음입니다. 
+전부 활성화 시 올인원 단일 대상 버스트 버튼으로 작동합니다.</value>
+  </data>
+  <data name="WAR_FC_InnerRelease_Name" xml:space="preserve">
+    <value>원초의 해방 옵션</value>
+  </data>
+  <data name="WAR_FC_InnerRelease_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '광폭화' / '원초의 해방'을 추가합니다.</value>
+  </data>
+  <data name="WAR_FC_Infuriate_Name" xml:space="preserve">
+    <value>전장의 함성 옵션</value>
+  </data>
+  <data name="WAR_FC_Infuriate_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '전장의 함성'을 추가합니다.</value>
+  </data>
+  <data name="WAR_FC_Onslaught_Name" xml:space="preserve">
+    <value>맹공격 옵션</value>
+  </data>
+  <data name="WAR_FC_Onslaught_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '맹공격'을 추가합니다.</value>
+  </data>
+  <data name="WAR_FC_Upheaval_Name" xml:space="preserve">
+    <value>격변 옵션</value>
+  </data>
+  <data name="WAR_FC_Upheaval_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '격변'을 추가합니다.</value>
+  </data>
+  <data name="WAR_FC_PrimalRend_Name" xml:space="preserve">
+    <value>원초적 분쇄 옵션</value>
+  </data>
+  <data name="WAR_FC_PrimalRend_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '원초적 분쇄'를 추가합니다.</value>
   </data>
   <data name="WAR_FC_PrimalWrath_Name" xml:space="preserve">
     <value>원초의 격진 옵션</value>
   </data>
+  <data name="WAR_FC_PrimalRuination_Name" xml:space="preserve">
+    <value>원초적 파멸 옵션</value>
+  </data>
+  <data name="WAR_FC_PrimalRuination_Desc" xml:space="preserve">
+    <value>사용 가능 시 참수에 '원초적 파멸'을 추가합니다.</value>
+  </data>
+  <data name="WAR_ST_StormsPathCombo_Name" xml:space="preserve">
+    <value>폭풍 쐐기 콤보</value>
+  </data>
+  <data name="WAR_ST_StormsPathCombo_Desc" xml:space="preserve">
+    <value>'폭풍 쐐기'를 해당 콤보 연계로 대체합니다.</value>
+  </data>
+  <data name="WAR_ST_StormsEyeCombo_Name" xml:space="preserve">
+    <value>폭풍의 눈 콤보</value>
+  </data>
+  <data name="WAR_ST_StormsEyeCombo_Desc" xml:space="preserve">
+    <value>'폭풍의 눈'을 해당 콤보 연계로 대체합니다.</value>
+  </data>
+  <data name="WAR_AoE_BasicCombo_Name" xml:space="preserve">
+    <value>미스릴 폭풍 콤보</value>
+  </data>
+  <data name="WAR_AoE_BasicCombo_Desc" xml:space="preserve">
+    <value>'미스릴 폭풍'을 해당 콤보 연계로 대체합니다.</value>
+  </data>
+  <data name="WAR_InfuriateFellCleave_Name" xml:space="preserve">
+    <value>참수 / 섬멸 시 전장의 함성 기능</value>
+  </data>
+  <data name="WAR_InfuriateFellCleave_Desc" xml:space="preserve">
+    <value>원초 게이지가 설정값 이하일 때 참수와 섬멸을 '전장의 함성'으로 변경합니다.</value>
+  </data>
+  <data name="WAR_InfuriateFellCleave_IRFirst_Name" xml:space="preserve">
+    <value>원초의 해방 우선 순위 옵션</value>
+  </data>
+  <data name="WAR_InfuriateFellCleave_IRFirst_Desc" xml:space="preserve">
+    <value>원초의 해방 스택이 있는 동안에는 '전장의 함성' 사용을 방지합니다.</value>
+  </data>
+  <data name="WAR_EyePath_Name" xml:space="preserve">
+    <value>폭풍의 눈 기능</value>
+  </data>
+  <data name="WAR_EyePath_Desc" xml:space="preserve">
+    <value>'휘몰아치는 폭풍' 버프 갱신이 필요할 때 '폭풍 쐐기'를 '폭풍의 눈'으로 대체합니다.</value>
+  </data>
+  <data name="WAR_PrimalCombo_InnerRelease_Name" xml:space="preserve">
+    <value>원초 콤보 기능</value>
+  </data>
+  <data name="WAR_PrimalCombo_InnerRelease_Desc" xml:space="preserve">
+    <value>'광폭화' / '원초의 해방' 사용 시 해당 버튼을 원초 콤보(원초적 분쇄 -&gt; 원초적 파멸)로 변경합니다.</value>
+  </data>
+  <data name="WAR_ThrillEquilibrium_Name" xml:space="preserve">
+    <value>평정심을 전투의 짜릿함으로 변경</value>
+  </data>
+  <data name="WAR_ThrillEquilibrium_Desc" xml:space="preserve">
+    <value>사용 가능 시 '평정심'을 '전투의 짜릿함'으로 대체합니다.</value>
+  </data>
+  <data name="WAR_NascentFlash_Name" xml:space="preserve">
+    <value>원초의 분노 기능</value>
+  </data>
+  <data name="WAR_NascentFlash_Desc" xml:space="preserve">
+    <value>76레벨 미만 동기화 시 '원초의 분노'를 '원초의 직감'으로 대체합니다.</value>
+  </data>
+  <data name="WAR_RawIntuition_Targeting_Name" xml:space="preserve">
+    <value>원초의 직감에서 원초의 분노로 대상 변경 기능</value>
+  </data>
+  <data name="WAR_RawIntuition_Targeting_Desc" xml:space="preserve">
+    <value>아군을 직접 타겟팅 중일 때 '원초의 직감' / '원초의 혈기'를 '원초의 분노'로 대체합니다.</value>
+  </data>
+  <data name="WAR_RawIntuition_Targeting_MO_Name" xml:space="preserve">
+    <value>마우스오버 대상 포함</value>
+  </data>
+  <data name="WAR_RawIntuition_Targeting_MO_Desc" xml:space="preserve">
+    <value>UI에서 아군에게 마우스오버 중일 때 '원초의 분노' 대상을 해당 아군으로 변경합니다.</value>
+  </data>
+  <data name="WAR_RawIntuition_Targeting_TT_Name" xml:space="preserve">
+    <value>대상의 대상 포함</value>
+  </data>
+  <data name="WAR_RawIntuition_Targeting_TT_Desc" xml:space="preserve">
+    <value>대상의 대상이 본인이 아닐 경우(적 어그로가 다른 파티원에게 있을 때),
+'원초의 분노' 대상을 해당 파티원으로 변경합니다.</value>
+  </data>
+  <data name="WAR_RetargetOnslaught_Name" xml:space="preserve">
+    <value>마우스오버 맹공격 옵션</value>
+  </data>
+  <data name="WAR_RetargetOnslaught_Desc" xml:space="preserve">
+    <value>필드나 UI의 마우스오버 대상(적일 경우) 혹은 마우스오버 대상과 가장 가까운 적(아군일 경우)에게 '맹공격'을 사용하도록 변경합니다.</value>
+  </data>
+  <data name="WAR_ArmsLengthLockout_Name" xml:space="preserve">
+    <value>넉백 방지 중복 보호</value>
+  </data>
+  <data name="WAR_ArmsLengthLockout_Desc" xml:space="preserve">
+    <value>보스전에서 '원초의 해방'으로 이미 넉백 면역인 경우 '거리 유지' 사용을 잠급니다.</value>
+  </data>
+  <data name="WAR_RetargetHolmgang_Name" xml:space="preserve">
+    <value>일대일 결투 대상 변경 기능</value>
+  </data>
+  <data name="WAR_RetargetHolmgang_Desc" xml:space="preserve">
+    <value>'일대일 결투'가 적이 아닌 자신에게 사용되도록 대상을 변경합니다.</value>
+  </data>
+  <data name="WHM_ST_Simple_DPS_Name" xml:space="preserve">
+    <value>단순 공격 모드 - 단일 대상</value>
+  </data>
+  <data name="WHM_ST_Simple_DPS_Desc" xml:space="preserve">
+    <value>스톤을 원버튼 단일 대상 딜사이클로 대체합니다. 
+입문자에게 이상적인 옵션입니다.</value>
+  </data>
+  <data name="WHM_AoE_Simple_DPS_Name" xml:space="preserve">
+    <value>단순 공격 모드 - 광역 공격</value>
+  </data>
+  <data name="WHM_AoE_Simple_DPS_Desc" xml:space="preserve">
+    <value>홀리를 원버튼 광역 딜사이클로 대체합니다. 
+입문자에게 이상적인 옵션입니다.</value>
+  </data>
+  <data name="WHM_SimpleSTHeals_Name" xml:space="preserve">
+    <value>단순 치유 모드 - 단일 대상</value>
+  </data>
+  <data name="WHM_SimpleSTHeals_Desc" xml:space="preserve">
+    <value>케알을 원버튼 단일 힐 유틸리티로 대체합니다.
+입문자에게 이상적인 옵션입니다. 특히 자동 딜사이클에 적합합니다.</value>
+  </data>
+  <data name="WHM_Simple_AoEHeals_Name" xml:space="preserve">
+    <value>단순 치유 모드 - 광역 공격</value>
+  </data>
+  <data name="WHM_Simple_AoEHeals_Desc" xml:space="preserve">
+    <value>메디카를 원버튼 광역 힐 유틸리티로 대체합니다.
+입문자에게 이상적인 옵션입니다. 특히 자동 딜사이클에 적합합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Name" xml:space="preserve">
+    <value>고급 공격 모드 - 단일 대상</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Desc" xml:space="preserve">
+    <value>글레어/스톤/에어로/디아에 재사용 대기시간 및 주문 기능을 모아놓았습니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Opener_Name" xml:space="preserve">
+    <value>Balance 오프너 (92레벨)</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Opener_Desc" xml:space="preserve">
+    <value>92레벨 이상부터 Balance(밸런스) 오프너를 추가합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Move_DoT_Name" xml:space="preserve">
+    <value>이동 중 도트 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Move_DoT_Desc" xml:space="preserve">
+    <value>이동 중 사거리 내의 모든 적에게 도트를 일찍 다시 적용합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_DoT_Name" xml:space="preserve">
+    <value>에어로/디아 유지 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_DoT_Desc" xml:space="preserve">
+    <value>현재 대상에게 디버프가 없거나 만료 직전일 때 단일 콤보에 에어로/디아를 추가합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Assize_Name" xml:space="preserve">
+    <value>심판 옵션</value>
+  </data>
   <data name="WHM_ST_MainCombo_Assize_Desc" xml:space="preserve">
     <value>단일 콤보에 심판을 추가합니다.</value>
   </data>
+  <data name="WHM_ST_MainCombo_GlareIV_Desc" xml:space="preserve">
+    <value>신성한 시선 버프 중일 때 단일 콤보에 글레어쟈를 추가합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Misery_Name" xml:space="preserve">
+    <value>참담한 마음 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Misery_Desc" xml:space="preserve">
+    <value>사용 가능할 때 단일 콤보에 참담한 마음을 추가합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_LilyOvercap_Name" xml:space="preserve">
+    <value>백합 초과 방지 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_LilyOvercap_Desc" xml:space="preserve">
+    <value>백합이 3개일 때 단일 콤보에 황홀한 마음을 추가합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_PresenceOfMind_Name" xml:space="preserve">
+    <value>쾌속의 마법 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_PresenceOfMind_Desc" xml:space="preserve">
+    <value>단일 콤보에 쾌속의 마법을 추가합니다.</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="WHM_ST_MainCombo_Lucid_Desc" xml:space="preserve">
+    <value>MP가 설정 값 미만일 때 단일 콤보에 자각몽을 추가합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_Name" xml:space="preserve">
+    <value>고급 공격 모드 - 광역 공격</value>
+  </data>
+  <data name="WHM_AoE_DPS_Desc" xml:space="preserve">
+    <value>홀리/홀리가에 재사용 대기시간 및 주문 기능을 모아놓았습니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_SwiftHoly_Name" xml:space="preserve">
+    <value>신속마 홀리 풀링 '오프너' 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_SwiftHoly_Desc" xml:space="preserve">
+    <value>광역 딜사이클 시작 시 신속한 마법-&gt;홀리를 추가합니다.
+전투 중이고, 이동을 멈췄으며, 심판을 아직 사용하지 않았어야 합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_Assize_Name" xml:space="preserve">
+    <value>심판 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_Assize_Desc" xml:space="preserve">
+    <value>광역 콤보에 심판을 추가합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_GlareIV_Name" xml:space="preserve">
+    <value>글레어쟈 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_GlareIV_Desc" xml:space="preserve">
+    <value>신성한 시선 버프 중일 때 광역 콤보에 글레어쟈를 추가합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_Misery_Name" xml:space="preserve">
+    <value>참담한 마음 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_Misery_Desc" xml:space="preserve">
+    <value>사용 가능할 때 광역 콤보에 참담한 마음을 추가합니다.</value>
+  </data>
+  <data name="WHM_AoE_MainCombo_DoT_Name" xml:space="preserve">
+    <value>다중 대상 도트 옵션</value>
+  </data>
+  <data name="WHM_AoE_MainCombo_DoT_Desc" xml:space="preserve">
+    <value>다수의 대상에게 도트를 유지합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_LilyOvercap_Name" xml:space="preserve">
+    <value>백합 초과 방지 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_LilyOvercap_Desc" xml:space="preserve">
+    <value>백합이 3개일 때 광역 콤보에 황홀한 마음을 추가합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_PresenceOfMind_Name" xml:space="preserve">
+    <value>쾌속의 마법 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_PresenceOfMind_Desc" xml:space="preserve">
+    <value>광역 콤보에 쾌속의 마법을 추가합니다.</value>
+  </data>
+  <data name="WHM_AoE_DPS_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="WHM_AoE_DPS_Lucid_Desc" xml:space="preserve">
+    <value>설정된 MP 값 미만이고 이동 중이거나 글쿨 지연 없이 사용할 수 있을 때 광역 콤보에 자각몽을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Name" xml:space="preserve">
+    <value>고급 치유 모드 - 단일 대상</value>
+  </data>
+  <data name="WHM_STHeals_Desc" xml:space="preserve">
+    <value>케알을 원버튼 단일 힐 설정으로 대체합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Esuna_Name" xml:space="preserve">
+    <value>에스나 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Esuna_Desc" xml:space="preserve">
+    <value>정화 가능한 디버프가 있을 경우 대상에게 에스나를 시전합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Lucid_Desc" xml:space="preserve">
+    <value>자각몽을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_ThinAir_Name" xml:space="preserve">
+    <value>실바람 옵션</value>
+  </data>
+  <data name="WHM_STHeals_ThinAir_Desc" xml:space="preserve">
+    <value>실바람을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Regen_Name" xml:space="preserve">
+    <value>리제네 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Regen_Desc" xml:space="preserve">
+    <value>리제네를 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Solace_Name" xml:space="preserve">
+    <value>위로의 마음 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Solace_Desc" xml:space="preserve">
+    <value>위로의 마음을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Tetragrammaton_Name" xml:space="preserve">
+    <value>신의 이름 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Tetragrammaton_Desc" xml:space="preserve">
+    <value>신의 이름을 추가합니다</value>
+  </data>
+  <data name="WHM_STHeals_Benison_Name" xml:space="preserve">
+    <value>신성한 축복 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Benison_Desc" xml:space="preserve">
+    <value>신성한 축복을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Aquaveil_Name" xml:space="preserve">
+    <value>물의 장막 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Aquaveil_Desc" xml:space="preserve">
+    <value>물의 장막을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Benediction_Name" xml:space="preserve">
+    <value>거룩한 축복 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Benediction_Desc" xml:space="preserve">
+    <value>거룩한 축복을 추가합니다.</value>
+  </data>
+  <data name="WHM_STHeals_Temperance_Name" xml:space="preserve">
+    <value>절제 옵션</value>
+  </data>
+  <data name="WHM_STHeals_Temperance_Desc" xml:space="preserve">
+    <value>절제 및 후속기인 신성한 손길을 추가합니다.</value>
+  </data>
   <data name="WHM_STHeals_Asylum_Name" xml:space="preserve">
     <value>성소 옵션</value>
+  </data>
+  <data name="WHM_STHeals_LiturgyOfTheBell_Name" xml:space="preserve">
+    <value>예배종 옵션</value>
+  </data>
+  <data name="WHM_STHeals_LiturgyOfTheBell_Desc" xml:space="preserve">
+    <value>예배종을 추가합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Name" xml:space="preserve">
+    <value>고급 치유 모드 - 광역 공격</value>
+  </data>
+  <data name="WHM_AoEHeals_Desc" xml:space="preserve">
+    <value>메디카를 원버튼 광역 힐 설정으로 대체합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Lucid_Name" xml:space="preserve">
+    <value>자각몽 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Lucid_Desc" xml:space="preserve">
+    <value>사용 가능할 때 자각몽을 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_ThinAir_Name" xml:space="preserve">
+    <value>실바람 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_ThinAir_Desc" xml:space="preserve">
+    <value>사용 가능할 때 실바람을 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Medica2_Name" xml:space="preserve">
+    <value>메디카라 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Medica2_Desc" xml:space="preserve">
+    <value>치유 대상에게 메디카라 버프가 없을 때 메디카라를 사용합니다.
+레벨 조건 충족 시 메디카가로 업그레이드됩니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Rapture_Name" xml:space="preserve">
+    <value>황홀한 마음 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Rapture_Desc" xml:space="preserve">
+    <value>사용 가능할 때 황홀한 마음을 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Cure3_Name" xml:space="preserve">
+    <value>케알가 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Cure3_Desc" xml:space="preserve">
+    <value>사용 가능할 때 메디카를 케알가로 대체합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Assize_Name" xml:space="preserve">
+    <value>심판 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Assize_Desc" xml:space="preserve">
+    <value>사용 가능할 때 심판을 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Plenary_Name" xml:space="preserve">
+    <value>대사면 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Plenary_Desc" xml:space="preserve">
+    <value>사용 가능할 때 대사면을 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Asylum_Name" xml:space="preserve">
+    <value>성소 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Asylum_Desc" xml:space="preserve">
+    <value>가만히 서 있을 때 딜사이클에 성소 배치를 추가합니다.
+자신을 대상으로 지정하여 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_Temperance_Name" xml:space="preserve">
+    <value>절제 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_Temperance_Desc" xml:space="preserve">
+    <value>파티 평균 HP가 설정된 임계값 아래로 떨어질 때 치유량 증가를 위해 사용 가능하면 절제를 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_DivineCaress_Name" xml:space="preserve">
+    <value>신성한 손길</value>
+  </data>
+  <data name="WHM_AoEHeals_DivineCaress_Desc" xml:space="preserve">
+    <value>절제로 인한 '신성한 손길'이 활성화되었을 때 신성한 손길을 사용합니다.</value>
+  </data>
+  <data name="WHM_AoEHeals_LiturgyOfTheBell_Name" xml:space="preserve">
+    <value>예배종 옵션</value>
+  </data>
+  <data name="WHM_AoEHeals_LiturgyOfTheBell_Desc" xml:space="preserve">
+    <value>딜사이클에 예배종 배치를 추가합니다.</value>
+  </data>
+  <data name="WHM_Raise_Name" xml:space="preserve">
+    <value>대체 레이즈 기능</value>
+  </data>
+  <data name="WHM_Raise_Desc" xml:space="preserve">
+    <value>신속한 마법을 레이즈로 변경합니다.</value>
+  </data>
+  <data name="WHM_Raise_Retarget_Name" xml:space="preserve">
+    <value>레이즈 대상 우선순위</value>
+  </data>
+  <data name="WHM_Raise_Retarget_Desc" xml:space="preserve">
+    <value>영향을 받는 레이즈를 부활 우선순위의 대상으로 다시 지정합니다.</value>
+  </data>
+  <data name="WHM_ThinAirRaise_Name" xml:space="preserve">
+    <value>실바람 레이즈 기능</value>
+  </data>
+  <data name="WHM_ThinAirRaise_Desc" xml:space="preserve">
+    <value>전체적인 레이즈 기능/대체 레이즈 기능에 실바람을 추가합니다.</value>
+  </data>
+  <data name="WHM_RaptureMisery_Name" xml:space="preserve">
+    <value>황홀-참담 콤보 기능</value>
+  </data>
+  <data name="WHM_RaptureMisery_Desc" xml:space="preserve">
+    <value>사용 가능할 때 황홀한 마음을 참담한 마음으로 대체합니다.</value>
+  </data>
+  <data name="WHM_SolaceMisery_Name" xml:space="preserve">
+    <value>위로-참담 콤보 기능</value>
+  </data>
+  <data name="WHM_SolaceMisery_Desc" xml:space="preserve">
+    <value>사용 가능할 때 위로의 마음을 참담한 마음으로 대체합니다.
+위로의 마음은 아래의 대상 지정 기능으로 대상을 다시 지정할 수 있습니다.</value>
+  </data>
+  <data name="WHM_CureSync_Name" xml:space="preserve">
+    <value>케알라 조율 기능</value>
+  </data>
+  <data name="WHM_CureSync_Desc" xml:space="preserve">
+    <value>레벨 30 미만으로 조율되었을 때 케알라를 케알로 변경합니다.
+아래의 대상 지정(Retargeting) 기능으로 대상을 다시 지정할 수 있습니다.</value>
+  </data>
+  <data name="WHM_Mit_ST_Name" xml:space="preserve">
+    <value>뎀감기 기능 - 단일 대상</value>
+  </data>
+  <data name="WHM_Mit_ST_Desc" xml:space="preserve">
+    <value>사용 후 물의 장막을 신의 이름 및/또는 신성한 축복으로 변경합니다.
+각 액션은 아래의 대상 지정 기능으로 대상을 다시 지정할 수 있습니다.</value>
+  </data>
+  <data name="WHM_Mit_AoE_Name" xml:space="preserve">
+    <value>뎀감기 기능 - 광역 공격</value>
+  </data>
+  <data name="WHM_Mit_AoE_Desc" xml:space="preserve">
+    <value>사용 후 성소를 절제로, 그다음 신성한 손길로 변경합니다.
+아래의 대상 지정 기능으로 대상을 다시 지정할 수 있습니다.</value>
+  </data>
+  <data name="WHM_Retargets_Name" xml:space="preserve">
+    <value>대상 지정(우선순위) 기능</value>
+  </data>
+  <data name="WHM_Retargets_Desc" xml:space="preserve">
+    <value>수동으로 사용하는 단일 치유 대상을 다시 지정하는 옵션 모음입니다</value>
+  </data>
+  <data name="WHM_Re_Cure_Name" xml:space="preserve">
+    <value>케알 옵션</value>
+  </data>
+  <data name="WHM_Re_Cure_Desc" xml:space="preserve">
+    <value>케알의 대상을 힐 스택으로 다시 지정합니다 (위의 케알라 조율 기능 포함).</value>
+  </data>
+  <data name="WHM_Re_Cure2_Name" xml:space="preserve">
+    <value>케알라 옵션</value>
+  </data>
+  <data name="WHM_Re_Cure2_Desc" xml:space="preserve">
+    <value>케알라의 대상을 치유 우선순위로 다시 지정합니다.</value>
+  </data>
+  <data name="WHM_Re_Solace_Name" xml:space="preserve">
+    <value>위로의 마음 옵션</value>
+  </data>
+  <data name="WHM_Re_Solace_Desc" xml:space="preserve">
+    <value>위로의 마음 대상을 치유 우선순위으로 다시 지정합니다 (위의 위로-참담 콤보 기능 포함).</value>
+  </data>
+  <data name="WHM_Re_Asylum_Name" xml:space="preserve">
+    <value>성소 옵션</value>
+  </data>
+  <data name="WHM_Re_Asylum_Desc" xml:space="preserve">
+    <value>성소를 자신에게 다시 지정합니다 (위의 뎀감기 기능 포함).</value>
+  </data>
+  <data name="WHM_Re_LiturgyOfTheBell_Name" xml:space="preserve">
+    <value>예배종 옵션</value>
+  </data>
+  <data name="WHM_Re_LiturgyOfTheBell_Desc" xml:space="preserve">
+    <value>예배종을 자신에게 다시 지정합니다.</value>
+  </data>
+  <data name="WHM_Re_Cure3_Name" xml:space="preserve">
+    <value>케알가 대상 지정 옵션</value>
+  </data>
+  <data name="WHM_Re_Cure3_Desc" xml:space="preserve">
+    <value>케알가의 대상을 힐 우선순위로 다시 지정합니다</value>
+  </data>
+  <data name="WHM_Re_Benediction_Name" xml:space="preserve">
+    <value>거룩한 축복 옵션</value>
+  </data>
+  <data name="WHM_Re_Benediction_Desc" xml:space="preserve">
+    <value>거룩한 축복 대상을 힐 우선순위로 다시 지정합니다.</value>
+  </data>
+  <data name="WHM_Re_Tetragrammaton_Name" xml:space="preserve">
+    <value>신의 이름 옵션</value>
+  </data>
+  <data name="WHM_Re_Tetragrammaton_Desc" xml:space="preserve">
+    <value>신의 이름 대상을 힐 우선순위로 다시 지정합니다 (위의 뎀감기 기능 포함).</value>
+  </data>
+  <data name="WHM_Re_Regen_Name" xml:space="preserve">
+    <value>리제네 옵션</value>
+  </data>
+  <data name="WHM_Re_Regen_Desc" xml:space="preserve">
+    <value>리제네 대상을 힐 우선순위로 다시 지정합니다.</value>
+  </data>
+  <data name="WHM_Re_DivineBenison_Name" xml:space="preserve">
+    <value>신성한 축복 옵션</value>
+  </data>
+  <data name="WHM_Re_DivineBenison_Desc" xml:space="preserve">
+    <value>신성한 축복 대상을 힐 우선선위로 다시 지정합니다 (위의 뎀감기 기능 포함).</value>
+  </data>
+  <data name="WHM_Raidwide_Name" xml:space="preserve">
+    <value>보스 광역기 옵션</value>
+  </data>
+  <data name="WHM_Raidwide_Desc" xml:space="preserve">
+    <value>광역 공격이 감지되었을 때 시전하도록 설계된 툴 모음입니다.
+대부분의 광역 공격에 작동하지만 전부는 아니며, 기믹 숙지를 완벽히 대체할 수는 없습니다.</value>
+  </data>
+  <data name="WHM_Raidwide_Asylum_Name" xml:space="preserve">
+    <value>광역기 성소 옵션</value>
+  </data>
+  <data name="WHM_Raidwide_Asylum_Desc" xml:space="preserve">
+    <value>광역기 캐스팅 시 성소를 논글쿨로 사용하도록 시도합니다. 
+4가지 메인 콤보 모두에서 사용됩니다.</value>
+  </data>
+  <data name="WHM_Raidwide_Temperance_Name" xml:space="preserve">
+    <value>광역기 절제 콤보 옵션</value>
+  </data>
+  <data name="WHM_Raidwide_Temperance_Desc" xml:space="preserve">
+    <value>광역기 캐스팅 시 절제와 신성한 손길을 논글쿨로 사용하도록 시도합니다. 
+4가지 메인 콤보 모두에서 사용됩니다.</value>
+  </data>
+  <data name="WHM_Raidwide_LiturgyOfTheBell_Name" xml:space="preserve">
+    <value>광역기 예배종 옵션</value>
+  </data>
+  <data name="WHM_Raidwide_LiturgyOfTheBell_Desc" xml:space="preserve">
+    <value>광역기 캐스팅 시 예배종을 논글쿨로 사용하도록 시도합니다. 
+4가지 메인 콤보 모두에서 사용됩니다.</value>
+  </data>
+  <data name="WHM_Raidwide_PlenaryIndulgence_Name" xml:space="preserve">
+    <value>광역기 대사면 옵션</value>
+  </data>
+  <data name="WHM_Raidwide_PlenaryIndulgence_Desc" xml:space="preserve">
+    <value>광역기 캐스팅 시 대사면을 논글쿨로 사용하도록 시도합니다. 
+4가지 메인 콤보 모두에서 사용됩니다.</value>
+  </data>
+  <data name="DOL_Eureka_Name" xml:space="preserve">
+    <value>[원예가/광부] 샘솟는 지혜 기능</value>
+  </data>
+  <data name="DOL_Eureka_Desc" xml:space="preserve">
+    <value>사용 가능 시 농부의 지혜 및 석공의 이론을 샘솟는 지혜로 대체하여 사용합니다</value>
+  </data>
+  <data name="DOL_NodeSearchingBuffs_Name" xml:space="preserve">
+    <value>[원예가/광부] 위치 찾기 및 탐구자 기능</value>
+  </data>
+  <data name="DOL_NodeSearchingBuffs_Desc" xml:space="preserve">
+    <value>광산의 탐구자(혹은 숲의 탐구자)'와 원예가/광부의 눈이 비활성 상태라면, 바위/숲의 부름(혹은  바위의 부름 2)'을 해당 기술들로 대체하여 사용합니다.</value>
+  </data>
+  <data name="FSH_CastHook_Name" xml:space="preserve">
+    <value>[어부] 낚싯대 던지기 및 낚아채기 기능</value>
+  </data>
+  <data name="FSH_CastHook_Desc" xml:space="preserve">
+    <value>낚시 중일 때 낚싯대 던지기를 낚아채기로 교체합니다.</value>
+  </data>
+  <data name="FSH_Swim_Name" xml:space="preserve">
+    <value>[어부] 잠수 및 작살질 기능</value>
+  </data>
+  <data name="FSH_Swim_Desc" xml:space="preserve">
+    <value>물속(잠수 중)일 때 낚시 기술을 작살질 기술로 교체합니다.</value>
+  </data>
+  <data name="FSH_CastGig_Name" xml:space="preserve">
+    <value>[어부] 낚싯대 던지기를 작살질로 전환 옵션</value>
+  </data>
+  <data name="FSH_CastGig_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 낚싯대 던지기를 작살질로 교체합니다.</value>
+  </data>
+  <data name="FSH_SurfaceTrade_Name" xml:space="preserve">
+    <value>교환 방생을 노련한 교환으로 전환 옵션</value>
+  </data>
+  <data name="FSH_SurfaceTrade_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 교환 방생을 노련한 교환으로 교체합니다.</value>
+  </data>
+  <data name="FSH_PrizeBounty_Name" xml:space="preserve">
+    <value>대물 낚시를 자연의 은총으로 전환 옵션</value>
+  </data>
+  <data name="FSH_PrizeBounty_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 대물 낚시를 자연의 은총으로 교체합니다.</value>
+  </data>
+  <data name="FSH_SnaggingSalvage_Name" xml:space="preserve">
+    <value>갈고리 낚시를 인양으로 전환 옵션</value>
+  </data>
+  <data name="FSH_SnaggingSalvage_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 갈고리 낚시를 인양으로 교체합니다.</value>
+  </data>
+  <data name="FSH_CastLight_ElectricCurrent_Name" xml:space="preserve">
+    <value>밑밥을 전기 작살로 전환 옵션</value>
+  </data>
+  <data name="FSH_CastLight_ElectricCurrent_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 밑밥을 전기 작살로 교체합니다.</value>
+  </data>
+  <data name="FSH_Mooch_SharkEye_Name" xml:space="preserve">
+    <value>생미끼 낚시를 상어의 눈으로 전환 옵션</value>
+  </data>
+  <data name="FSH_Mooch_SharkEye_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 생미끼 낚시를 상어의 눈으로 교체합니다.</value>
+  </data>
+  <data name="FSH_FishEyes_VitalSight_Name" xml:space="preserve">
+    <value>물고기의 눈을 선어안으로 전환 옵션</value>
+  </data>
+  <data name="FSH_FishEyes_VitalSight_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 물고기의 눈을 선어안으로 교체합니다.</value>
+  </data>
+  <data name="FSH_Chum_BaitedBreath_Name" xml:space="preserve">
+    <value>밑밥을 숨 참기로 전환 옵션</value>
+  </data>
+  <data name="FSH_Chum_BaitedBreath_Desc" xml:space="preserve">
+    <value>잠수(작살질) 중일 때 밑밥을 숨 참기로 교체합니다.</value>
+  </data>
+  <data name="PvP_EmergencyHeals_Name" xml:space="preserve">
+    <value>긴급 회복 기능</value>
+  </data>
+  <data name="PvP_EmergencyHeals_Desc" xml:space="preserve">
+    <value>HP가 설정된 값 미만이고 MP가 충분할 때 '활기'를 사용합니다.</value>
+  </data>
+  <data name="PvP_EmergencyGuard_Desc" xml:space="preserve">
+    <value>HP가 설정된 임계값 미만으로 떨어지면 '방어'를 사용합니다.</value>
+  </data>
+  <data name="PvP_QuickPurify_Name" xml:space="preserve">
+    <value>빠른 정화 기능</value>
+  </data>
+  <data name="PvP_QuickPurify_Desc" xml:space="preserve">
+    <value>선택한 약화 효과(디버프)에 걸렸을 때 '정화'를 사용합니다.</value>
+  </data>
+  <data name="PvP_MashCancel_Name" xml:space="preserve">
+    <value>연타 시 방어 취소 방지 기능</value>
+  </data>
+  <data name="PvP_MashCancel_Desc" xml:space="preserve">
+    <value>버튼을 빠르게 연타하는 도중 실수로 '방어'가 해제되는 것을 방지하기 위해, 기술 버튼을 야성의 검격로 대체합니다.</value>
+  </data>
+  <data name="PvP_MashCancelRecup_Name" xml:space="preserve">
+    <value>활기 허용 옵션</value>
+  </data>
+  <data name="PvP_MashCancelRecup_Desc" xml:space="preserve">
+    <value>HP가 낮을 때 '방어' 버튼 위치에서 '활기'를 사용하여 방어를 해제하고 즉시 회복하는 것을 허용합니다.</value>
+  </data>
+  <data name="ASTPvP_Burst_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="ASTPvP_Burst_Desc" xml:space="preserve">
+    <value>폴 말레피크를 하나의 버튼으로 변경합니다.</value>
+  </data>
+  <data name="ASTPvP_Burst_DrawCard_Name" xml:space="preserve">
+    <value>카드 뽑기 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_DrawCard_Desc" xml:space="preserve">
+    <value>버스트 모드 시 카드 뽑기 추가</value>
+  </data>
+  <data name="ASTPvP_Burst_PlayCard_Name" xml:space="preserve">
+    <value>카드 사용 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_PlayCard_Desc" xml:space="preserve">
+    <value>버스트 모드에서 카드 자동 사용 추가</value>
+  </data>
+  <data name="ASTPvP_Burst_DoubleMalefic_Name" xml:space="preserve">
+    <value>더블 말레피크 시전 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_DoubleMalefic_Desc" xml:space="preserve">
+    <value>버스트 모드 시 더블 말레피크 시전 추가</value>
+  </data>
+  <data name="ASTPvP_Burst_DoubleGravity_Name" xml:space="preserve">
+    <value>더블 그라비데 시전 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_DoubleGravity_Desc" xml:space="preserve">
+    <value>버스트 모드 중 더블 그라비데 시전 기능이 추가됩니다.</value>
+  </data>
+  <data name="ASTPvP_Burst_Gravity_Name" xml:space="preserve">
+    <value>그라비데 버스트 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_Gravity_Desc" xml:space="preserve">
+    <value>버스트 모드 시 그라비데 시전 추가</value>
+  </data>
+  <data name="ASTPvP_Burst_Macrocosmos_Name" xml:space="preserve">
+    <value>대우주 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_Macrocosmos_Desc" xml:space="preserve">
+    <value>버스트 모드에 대우주 시전을 추가합니다.
+만약 '더블 그라비데' 옵션이 활성화되어 있다면, 해당 버스트 구간을 위해 대우주 사용을 대기합니다.</value>
+  </data>
+  <data name="ASTPvP_Diabrosis_Name" xml:space="preserve">
+    <value>역할 기술 부식증 옵션</value>
+  </data>
+  <data name="ASTPvP_Diabrosis_Desc" xml:space="preserve">
+    <value>설정된 체력 이하일 때 버스트 모드에 부식증 추가</value>
+  </data>
+  <data name="ASTPvP_Burst_Heal_Name" xml:space="preserve">
+    <value>별읽기: 베네피크 옵션</value>
+  </data>
+  <data name="ASTPvP_Burst_Heal_Desc" xml:space="preserve">
+    <value>대상 체력이 설정값 이하일 때 별읽기: 베네피크 시전을 추가합니다.</value>
+  </data>
+  <data name="ASTPvP_Epicycle_Name" xml:space="preserve">
+    <value>주전원 버스트 설정</value>
+  </data>
+  <data name="ASTPvP_Epicycle_Desc" xml:space="preserve">
+    <value>주전원을 버스트 콤보로 전환</value>
+  </data>
+  <data name="ASTPvP_Heal_Name" xml:space="preserve">
+    <value>별읽기: 베네피크 치유 설정</value>
+  </data>
+  <data name="ASTPvP_Heal_Desc" xml:space="preserve">
+    <value>별읽기: 베네피크 옵션 추가</value>
+  </data>
+  <data name="BLMPvP_BurstMode_Name" xml:space="preserve">
+    <value>버스트 모드</value>
+  </data>
+  <data name="DNCPvP_BurstMode_Dash_Desc" xml:space="preserve">
+    <value>1-2번 콤보 위력을 강화하는 버프가 없을 때, 사용 가능한 '앞걸음'을 사용하여 대미지를 보강합니다.</value>
+  </data>
+  <data name="GNBPvP_RoughDivide_Name" xml:space="preserve">
+    <value>대분할 옵션</value>
+  </data>
+  <data name="NINPvP_ST_BurstMode_Name" xml:space="preserve">
+    <value>단일 버스트 모드</value>
+  </data>
+  <data name="NINPvP_ST_BurstMode_Desc" xml:space="preserve">
+    <value>칼날 선풍 콤보를 원버튼 통합 공격기로 변경합니다.</value>
   </data>
 </root>
