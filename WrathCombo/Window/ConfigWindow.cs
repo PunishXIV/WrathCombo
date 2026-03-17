@@ -14,7 +14,7 @@ using System.Linq;
 using System.Numerics;
 using WrathCombo.Core;
 using WrathCombo.Data.Conflicts;
-using WrathCombo.Resources.Localization.UI.MainWindowUI;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
 using WrathCombo.Window.Tabs;
 using static WrathCombo.Core.PresetStorage;

@@ -11,7 +11,7 @@ using System.Numerics;
 using System.Text;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
-using WrathCombo.Resources.Localization.UI.MainWindowUI;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Resources.Localization.UI.Misc;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;

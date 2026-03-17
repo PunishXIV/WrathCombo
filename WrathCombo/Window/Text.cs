@@ -13,7 +13,7 @@ using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.Presets;
 using WrathCombo.Resources.Localization.UI.AutoRotation;
 using WrathCombo.Resources.Localization.UI.Features;
-using WrathCombo.Resources.Localization.UI.MainWindowUI;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Resources.Localization.UI.Settings;
 using WrathCombo.Window.Tabs;
