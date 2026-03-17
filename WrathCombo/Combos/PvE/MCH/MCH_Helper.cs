@@ -205,7 +205,7 @@ internal partial class MCH
 
     private static int HPThresholdTools =>
         MCH_ST_ToolsBossOption == 1 ||
-        !TargetIsBoss() ? MCH_ST_ToolsBossOption : 0;
+        !TargetIsBoss() ? MCH_ST_ToolsHPOption : 0;
 
     private static int HPThresholdBarrelStabilizer =>
         MCH_ST_BarrelStabilizerHPBossOption == 1 ||

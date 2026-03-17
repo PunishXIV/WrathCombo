@@ -665,6 +665,9 @@ Les actions embranchées seront utilisées par les combos à cible unique et les
   <data name="Variant_Magic_EagleEyeShot_Desc" xml:space="preserve">
     <value>Utilise Œil d'aigle embranché dès que possible.</value>
   </data>
+  <data name="Phantom_Freelancer_Name" xml:space="preserve">
+    <value></value>
+  </data>
   <data name="Phantom_Freelancer_Desc" xml:space="preserve">
     <value>Activer pour ajouter les actions spécifiques du Freelance fantôme à la rotation.</value>
   </data>

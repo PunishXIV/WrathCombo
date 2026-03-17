@@ -522,6 +522,8 @@ internal partial class SGE
     internal static class Traits
     {
         internal const ushort
+            Addersgall = 370,
+            Addersting = 373,
             EnhancedKerachole = 375,
             OffensiveMagicMasteryII = 376;
     }

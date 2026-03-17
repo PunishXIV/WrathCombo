@@ -30,7 +30,6 @@
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
-
     <!-- Styling Rules -->
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -142,6 +141,11 @@
         <AutoGen>True</AutoGen>
         <DependentUpon>Generics.resx</DependentUpon>
       </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\SGE_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SGE_Config.resx</DependentUpon>
+      </Compile>
       <Compile Update="Resources\Localization\Presets\CustomComboPresets.Designer.cs">
         <DesignTime>True</DesignTime>
         <AutoGen>True</AutoGen>
@@ -186,6 +190,10 @@
       <EmbeddedResource Update="Resources\Localization\JobConfigs\Generics.resx">
         <Generator>ResXFileCodeGenerator</Generator>
         <LastGenOutput>Generics.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\SGE_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SGE_Config.Designer.cs</LastGenOutput>
       </EmbeddedResource>
       <EmbeddedResource Update="Resources\Localization\Presets\CustomComboPresets.resx">
         <Generator>ResXFileCodeGenerator</Generator>

@@ -217,6 +217,12 @@ internal partial class DRG
                     if ((simpleMode || IsEnabled(Preset.DRG_ST_RangedUptime)) &&
                         ActionReady(PiercingTalon))
                         return PiercingTalon;
+
+                    return simpleMode switch
+                    {
+                        true => BasicCombo(actionId, true),
+                        false => BasicCombo(actionId, IsEnabled(Preset.DRG_TrueNorthDynamic))
+                    };
                 }
                 break;
             }
@@ -270,6 +276,12 @@ internal partial class DRG
                     if ((simpleMode || IsEnabled(Preset.DRG_AoE_RangedUptime)) &&
                         ActionReady(PiercingTalon) && !CanDRGWeave())
                         return PiercingTalon;
+
+                    return simpleMode switch
+                    {
+                        true => BasicCombo(actionId, isAoE: true, simpleAoE: true),
+                        false => BasicCombo(actionId, isAoE: true)
+                    };
                 }
                 break;
             }

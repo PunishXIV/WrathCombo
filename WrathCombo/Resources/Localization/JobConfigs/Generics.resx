@@ -1,76 +1,96 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
-		Microsoft ResX Schema
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
 
-		Version 1.3
-
-		The primary goals of this format is to allow a simple XML format 
-		that is mostly human readable. The generation and parsing of the 
-		various data types are done through the TypeConverter classes 
-		associated with the data types.
-
-		Example:
-
-		... ado.net/XML headers & schema ...
-		<resheader name="resmimetype">text/microsoft-resx</resheader>
-		<resheader name="version">1.3</resheader>
-		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-		<data name="Name1">this is my long string</data>
-		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-			[base64 mime encoded serialized .NET Framework object]
-		</data>
-		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-			[base64 mime encoded string representing a byte array form of the .NET Framework object]
-		</data>
-
-		There are any number of "resheader" rows that contain simple 
-		name/value pairs.
-
-		Each data row contains a name, and value. The row also contains a 
-		type or mimetype. Type corresponds to a .NET class that support 
-		text/value conversion through the TypeConverter architecture. 
-		Classes that don't support this are serialized and stored with the 
-		mimetype set.
-
-		The mimetype is used for serialized objects, and tells the 
-		ResXResourceReader how to depersist the object. This is currently not 
-		extensible. For a given mimetype the value must be set accordingly:
-
-		Note - application/x-microsoft.net.object.binary.base64 is the format 
-		that the ResXResourceWriter will generate, however the reader can 
-		read any of the formats listed below.
-
-		mimetype: application/x-microsoft.net.object.binary.base64
-		value   : The object must be serialized with 
-			: System.Serialization.Formatters.Binary.BinaryFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.soap.base64
-		value   : The object must be serialized with 
-			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-			: and then encoded with base64 encoding.
-
-		mimetype: application/x-microsoft.net.object.bytearray.base64
-		value   : The object must be serialized into a byte array 
-			: using a System.ComponentModel.TypeConverter
-			: and then encoded with base64 encoding.
-	-->
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
           <xsd:element name="data">
             <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -89,16 +109,182 @@
     <value>text/microsoft-resx</value>
   </resheader>
   <resheader name="version">
-    <value>1.3</value>
+    <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="On0" xml:space="preserve">
     <value>On {0}</value>
     <comment>Used for simple "On {Action}" strings</comment>
+  </data>
+  <data name="LucidMP" xml:space="preserve">
+    <value>Set value for your MP to be at or under for this feature to work</value>
+  </data>
+  <data name="BossOnlyHpPercent" xml:space="preserve">
+    <value>Bosses Only. Stop using at Enemy HP %.</value>
+  </data>
+  <data name="BossEncounterNonBossHpPercent" xml:space="preserve">
+    <value>Boss Encounter Non Bosses. Stop using at Enemy HP %.</value>
+  </data>
+  <data name="NonBossHpPercent" xml:space="preserve">
+    <value>Non boss encounter. Stop using at Enemy HP %.</value>
+  </data>
+  <data name="DoTSecondsRemainingZeroDisable" xml:space="preserve">
+    <value>Seconds remaining before reapplying the DoT. Set to Zero to disable this check.</value>
+  </data>
+  <data name="TwoTargetDotting" xml:space="preserve">
+    <value>Two target dotting</value>
+  </data>
+  <data name="TwoTargetDottingDescription" xml:space="preserve">
+    <value>Will maintain Damage over time spells on two targets if applicable.</value>
+  </data>
+  <data name="StopEnemyHpPercent" xml:space="preserve">
+    <value>Stop using at Enemy HP %. Set to Zero to disable this check.</value>
+  </data>
+  <data name="EnemyTypeCheck" xml:space="preserve">
+    <value>Select what kind of enemies the HP check should be applied to:</value>
+  </data>
+  <data name="NonBosses" xml:space="preserve">
+    <value>Non-Bosses</value>
+  </data>
+  <data name="AllEnemies" xml:space="preserve">
+    <value>All Enemies</value>
+  </data>
+  <data name="HPCheckNonBosses" xml:space="preserve">
+    <value>Only applies the HP check above to non-bosses.</value>
+  </data>
+  <data name="HPCheckAllEnemies" xml:space="preserve">
+    <value>Applies the HP check above to all enemies.</value>
+  </data>
+  <data name="NormalTargeting" xml:space="preserve">
+    <value>Normal Targeting</value>
+  </data>
+  <data name="SelfOnly" xml:space="preserve">
+    <value>Self Only</value>
+  </data>
+  <data name="NonBossEncountersOnly" xml:space="preserve">
+    <value>Non-boss Encounters Only</value>
+  </data>
+  <data name="AllContent" xml:space="preserve">
+    <value>All Content</value>
+  </data>
+  <data name="StopSeconds" xml:space="preserve">
+    <value>Seconds remaining before reapplying (0 = Do not reapply early)</value>
+  </data>
+  <data name="MaxTargetsMultiDot" xml:space="preserve">
+    <value>Maximum number of targets to employ multi-dotting </value>
+  </data>
+  <data name="IncludeShields" xml:space="preserve">
+    <value>Include Shields in HP Percent Sliders</value>
+  </data>
+  <data name="StopFriendlyHpPercentZero" xml:space="preserve">
+    <value>Stop using when below HP %. Set to Zero to disable this check</value>
+  </data>
+  <data name="StopFriendlyHpPercent100" xml:space="preserve">
+    <value>Start using when below HP %. Set to 100 to disable this check</value>
+  </data>
+  <data name="ChargePool" xml:space="preserve">
+    <value>How many charges to retain for manual use. Set to 0 to disable this check.</value>
+  </data>
+  <data name="OnlyWeave" xml:space="preserve">
+    <value>Only Weave</value>
+  </data>
+  <data name="Action_Priority" xml:space="preserve">
+    <value>{0} Priority: </value>
+  </data>
+  <data name="Use0" xml:space="preserve">
+    <value>Use {0}</value>
+  </data>
+  <data name="DontUse0" xml:space="preserve">
+    <value>Don't Use {0}</value>
+  </data>
+  <data name="SelectWhatKindOfContentThisOptionAppliesTo" xml:space="preserve">
+    <value>Select what kind of content this option applies to:</value>
+  </data>
+  <data name="AllContentDescription" xml:space="preserve">
+    <value>Applies to all content in the game.</value>
+  </data>
+  <data name="BossOnlyContent" xml:space="preserve">
+    <value>Boss Only Content</value>
+  </data>
+  <data name="BossOnlyDescription" xml:space="preserve">
+    <value>Only applies in instances where you directly fight a boss. Excludes many A Realm Reborn &amp; Heavensward raids that include trash.</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>Priority: </value>
+  </data>
+  <data name="ApplyToAll0" xml:space="preserve">
+    <value>Applies options to all of these:
+{0}</value>
+  </data>
+  <data name="ApplyOnlyTo0" xml:space="preserve">
+    <value>Applies options to {0} only.</value>
+  </data>
+  <data name="WillOnlyWeaveThisAction" xml:space="preserve">
+    <value>Will only weave this action.</value>
+  </data>
+  <data name="NotInBossEncounters" xml:space="preserve">
+    <value>Not In Boss Encounters</value>
+  </data>
+  <data name="WillNotUseInBossEncounters" xml:space="preserve">
+    <value>Will not use in Boss encounters.</value>
+  </data>
+  <data name="TanksOnly" xml:space="preserve">
+    <value>Tanks Only</value>
+  </data>
+  <data name="WillOnlyUseOnTanks" xml:space="preserve">
+    <value>Will only use on Tanks</value>
+  </data>
+  <data name="StopUsingWhenBelowSetPercentage" xml:space="preserve">
+    <value>Stop using when below set percentage</value>
+  </data>
+  <data name="StartUsingWhenBelowPartyAverageHPSetTo100ToDisableThisCheck" xml:space="preserve">
+    <value>Start using when below party average HP %. Set to 100 to disable this check</value>
+  </data>
+  <data name="EnemyHardTarget" xml:space="preserve">
+    <value>Enemy Hard Target</value>
+  </data>
+  <data name="AllyHardTarget" xml:space="preserve">
+    <value>Ally Hard Target</value>
+  </data>
+  <data name="Include0" xml:space="preserve">
+    <value>Include {0}</value>
+  </data>
+  <data name="ShieldCheckPartyMemberNeedPercent" xml:space="preserve">
+    <value>Shield Check: Percentage of Party Members without shields to check for.</value>
+  </data>
+  <data name="Action_Threshold" xml:space="preserve">
+    <value>{0} Threshold</value>
+  </data>
+  <data name="Action_Opener" xml:space="preserve">
+    <value>{0} Opener</value>
+  </data>
+  <data name="Use_0_Opener" xml:space="preserve">
+    <value>Use {0} Opener</value>
+  </data>
+  <data name="BurstOption" xml:space="preserve">
+    <value>BurstOption</value>
+  </data>
+  <data name="Save0ChargesForBurst" xml:space="preserve">
+    <value>Save {0} charges for burst.</value>
+  </data>
+  <data name="Use0When1ChargesAreAvailable" xml:space="preserve">
+    <value>Use {0} when {1} charges are available.</value>
+  </data>
+  <data name="Use0WhenInRangeOfEnemy" xml:space="preserve">
+    <value>Use {0} when in range of a selected enemy target.</value>
+  </data>
+  <data name="Job0ShieldCheck" xml:space="preserve">
+    <value>{0} Shield Check</value>
+  </data>
+  <data name="Job0ShieldCheckDesc" xml:space="preserve">
+    <value>Enable to not override an existing {0}'s shield.</value>
+  </data>
+  <data name="TargetHPUse0AtOrBelow" xml:space="preserve">
+    <value>Target HP% to use {0} at or below. Set to 100 to disable this check.</value>
   </data>
 </root>

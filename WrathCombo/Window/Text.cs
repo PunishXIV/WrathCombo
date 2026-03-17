@@ -10,6 +10,7 @@ using System.Resources;
 using System.Threading;
 using WrathCombo.Core;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.JobConfigs;
 using WrathCombo.Resources.Localization.Presets;
 using WrathCombo.Resources.Localization.UI.AutoRotation;
 using WrathCombo.Resources.Localization.UI.Features;
@@ -76,12 +77,41 @@ namespace WrathCombo.Window
             _gameCulture = newLang.ToCulture();
 
             // Update cultures in resource managers
+            // UI
             AutoRotationUI.Culture = _gameCulture;
             FeaturesUI.Culture = _gameCulture;
             MainWindowUI.Culture = _gameCulture;
             MiscUI.Culture = _gameCulture;
             SettingsUI.Culture = _gameCulture;
             SettingsCfgUI.Culture = _gameCulture;
+            Generics.Culture = _gameCulture;
+            AST_Config.Culture = _gameCulture;
+
+            // Job Configs
+            Generics.Culture = _gameCulture;
+            AST_Config.Culture = _gameCulture;
+            //BLM_Config.Culture = _gameCulture;
+            //BLU_Config.Culture = _gameCulture;
+            //BRD_Config.Culture = _gameCulture;
+            //DNC_Config.Culture = _gameCulture;
+            //DOL_Config.Culture = _gameCulture;
+            //DRG_Config.Culture = _gameCulture;
+            //DRK_Config.Culture = _gameCulture;
+            //GNB_Config.Culture = _gameCulture;
+            //MCH_Config.Culture = _gameCulture;
+            //MNK_Config.Culture = _gameCulture;
+            //NIN_Config.Culture = _gameCulture;
+            //PCT_Config.Culture = _gameCulture;
+            //PLD_Config.Culture = _gameCulture;
+            //RPR_Config.Culture = _gameCulture;
+            //RDM_Config.Culture = _gameCulture;
+            //SAM_Config.Culture = _gameCulture;
+            //SCH_Config.Culture = _gameCulture;
+            SGE_Config.Culture = _gameCulture;
+            //SMN_Config.Culture = _gameCulture;
+            //VPR_Config.Culture = _gameCulture;
+            //WAR_Config.Culture = _gameCulture;
+            //WHM_Config.Culture = _gameCulture;
 
             LangFromCulture = _gameCulture.TwoLetterISOLanguageName switch
             {
@@ -181,10 +211,27 @@ namespace WrathCombo.Window
 
             private static LocalizedJobInfo BuildEntry(Job job)
             {
-                var name = job.Name();
-                var shortName = job.Shorthand();
+                // Name
+                var sheet = Svc.Data.GetExcelSheet<ClassJob>(LangFromCulture).GetRow((uint)job);
+                string jobName = job switch
+                {
+                    Job.ADV => MiscUI.Roles_and_Content,
+                    Job.MIN or Job.BTN or Job.FSH
+                        => sheet.ClassJobCategory.Value.Name.ToString(),
+                    _ => sheet.Name.ToString()
+                };
 
-                return new LocalizedJobInfo(name, shortName);
+                jobName = TextFormatting.ToTitleCase(jobName);
+
+                // Abbreviation / Short Name
+                string shortName = job switch
+                {
+                    Job.ADV => string.Empty,
+                    Job.MIN or Job.BTN or Job.FSH => MiscUI.DOL,
+                    _ => sheet.Abbreviation.ToString()
+                };
+
+                return new LocalizedJobInfo(jobName, shortName);
             }
         }
 
