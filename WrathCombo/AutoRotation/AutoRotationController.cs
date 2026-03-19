@@ -870,7 +870,7 @@ internal unsafe class AutoRotationController
             !chara.IsDead &&
             chara.IsTargetable &&
             chara.IsHostile() &&
-            IsInRange(chara, InBossEncounter() && cfg.DPSSettings.IgnoreRangeInBoss ? 100f : cfg.DPSSettings.MaxDistance) &&
+            IsInRange(chara, InBossEncounter() && cfg.DPSSettings.IgnoreRangeInBoss ? 50f : cfg.DPSSettings.MaxDistance) &&
             GetTargetHeightDifference(chara) <= (InBossEncounter() && cfg.DPSSettings.IgnoreRangeInBoss ? 100f : cfg.DPSSettings.MaxDistance) &&
             !TargetIsInvincible(chara) &&
             !Service.Configuration.IgnoredNPCs.ContainsKey(chara.BaseId) &&
