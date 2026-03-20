@@ -294,16 +294,34 @@ internal partial class DRG
 
     #region Misc
 
+    private static float GCD =>
+        GetCooldown(OriginalHook(TrueThrust)).CooldownTotal;
+
     private static IStatus? ChaosDebuff =>
         GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
 
-    private static int HPThresholdBattleLitany =>
+    private static bool CanLanceCharge =>
+        ActionReady(LanceCharge) &&
+        HasBattleTarget() &&
+        (JustUsed(BattleLitany, GCD * 1.5f) ||
+         GetCooldownRemainingTime(BattleLitany) is > 50 and < 65 ||
+         !LevelChecked(BattleLitany));
+
+    #endregion
+
+    #region HP Thresholds
+
+    private static int HPThresholdSTBattleLitany =>
         DRG_ST_BattleLitanyBossOption == 1 ||
         !InBossEncounter() ? DRG_ST_BattleLitanyHPOption : 0;
 
-    private static int HPThresholdLanceCharge =>
+    private static int HPThresholdSTLanceCharge =>
         DRG_ST_LanceChargeBossOption == 1 ||
         !InBossEncounter() ? DRG_ST_LanceChargeHPOption : 0;
+
+    private static int HPThresholdSTDragonfireDive =>
+        DRG_ST_DragonfireDiveBossOption == 1 ||
+        !InBossEncounter() ? DRG_ST_DragonfireDiveHPOption : 0;
 
     #endregion
 
@@ -361,7 +379,7 @@ internal partial class DRG
 
         public override Preset Preset => Preset.DRG_ST_Opener;
 
-        internal override UserData ContentCheckConfig => DRG_Balance_Content;
+        internal override UserData ContentCheckConfig => DRG_BalanceContent;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(LifeSurge) is 2 &&
@@ -406,7 +424,7 @@ internal partial class DRG
         ];
 
         public override Preset Preset => Preset.DRG_ST_Opener;
-        internal override UserData ContentCheckConfig => DRG_Balance_Content;
+        internal override UserData ContentCheckConfig => DRG_BalanceContent;
 
         public override bool HasCooldowns() =>
             GetRemainingCharges(LifeSurge) is 2 &&

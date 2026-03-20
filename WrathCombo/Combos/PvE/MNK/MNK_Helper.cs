@@ -77,7 +77,7 @@ internal partial class MNK
 
                 // Even window second use
                 if ((JustUsed(OriginalHook(Bootshine), GCD) || JustUsed(DragonKick, GCD)) &&
-                    HasStatusEffect(Buffs.Brotherhood) && HasStatusEffect(Buffs.RiddleOfFire) && !HasStatusEffect(Buffs.FiresRumination))
+                    HasStatusEffect(Buffs.Brotherhood) && HasStatusEffect(Buffs.RiddleOfFire) && (!HasStatusEffect(Buffs.FiresRumination) || IsNotEnabled(Preset.MNK_STUseFiresReply)))
                     return true;
 
                 // Low level
@@ -408,7 +408,7 @@ internal partial class MNK
         !HasStatusEffect(Buffs.FormlessFist) &&
         IsOriginal(MasterfulBlitz) &&
         InActionRange(FiresReply) &&
-        !JustUsed(RiddleOfFire, GCD * 3) && 
+        !JustUsed(RiddleOfFire, GCD * 3) &&
         !HasStatusEffect(Buffs.PerfectBalance) &&
         (JustUsed(OriginalHook(Bootshine), GCD * 1.5f) ||
          JustUsed(DragonKick, GCD * 1.5f) ||
