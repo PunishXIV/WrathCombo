@@ -6,6 +6,7 @@ namespace WrathCombo.Combos.PvE;
 internal static partial class RoleActions
 {
         #region Action-Specific Interfaces
+
     // Action-specific interfaces
     internal interface ILucidDreaming
     {
@@ -154,9 +155,11 @@ internal static partial class RoleActions
         uint Shirk { get; }
         bool CanShirk();
     }
+
         #endregion
 
         #region Status Effect Interfaces
+
     // Buff and Debuff interfaces
     internal interface IMagicBuffs
     {
@@ -208,9 +211,11 @@ internal static partial class RoleActions
     {
         ushort Reprisal { get; }
     }
+
         #endregion
 
         #region Role Interfaces
+
     // Base interface for shared functionality / lists/ idfk
     public interface IRoleAction
     {
@@ -263,5 +268,6 @@ internal static partial class RoleActions
         ITankBuffs Buffs { get; }
         ITankDebuffs Debuffs { get; }
     }
+
         #endregion
 }

@@ -155,7 +155,7 @@ internal partial class DRG
         return ActionReady(Geirskogul) &&
                InActionRange(Geirskogul) &&
                HasBattleTarget() &&
-               !LoTDActive &&
+               !LoTDTimerActive &&
                GetTargetHPPercent() > hpThreshold;
     }
 
@@ -441,7 +441,11 @@ internal partial class DRG
 
     private static bool LoTDActive => Gauge.IsLOTDActive;
 
+    private static short LoTDTimer => Gauge.LOTDTimer;
+
     private static byte FirstmindsFocus => Gauge.FirstmindsFocusCount;
+
+    private static bool LoTDTimerActive => LoTDTimer > 0;
 
     private static readonly FrozenDictionary<uint, ushort> ChaoticList = new Dictionary<uint, ushort>
     {

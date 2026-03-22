@@ -261,6 +261,11 @@ internal partial class MCH
                         $"Change {Ricochet.ActionName()} / {CheckMate.ActionName()}", $"Changes to {GaussRound.ActionName()} / {DoubleCheck.ActionName()} depending on charges and what was used last", 1);
                     break;
 
+                case Preset.MCH_ST_Dismantle:
+                    DrawSliderInt(0, 5, MCH_DismantledDuration,
+                        "Time Remaining on Dismantled to allow within\n(0 = Dismantled must not be on the target)");
+                    break;
+
                 #endregion
             }
         }
@@ -307,7 +312,8 @@ internal partial class MCH
             MCH_AoE_SecondWindHPThreshold = new("MCH_AoE_SecondWindThreshold", 40),
 
             //Misc
-            MCH_GaussRico = new("MCHGaussRico");
+            MCH_GaussRico = new("MCHGaussRico"),
+            MCH_DismantledDuration = new("MCH_DismantledDuration");
 
         public static UserFloat
             MCH_AoE_FlamethrowerTimeStill = new("MCH_AoE_FlamethrowerTimeStill", 2.5f);

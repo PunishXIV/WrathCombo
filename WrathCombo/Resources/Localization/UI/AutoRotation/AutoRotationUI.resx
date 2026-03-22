@@ -353,4 +353,10 @@ Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
   <data name="HelpText_Orbwalker" xml:space="preserve">
     <value>This will make Auto-Rotation use actions with cast times even whilst moving, as Orbwalker will lock movement during the cast. You may need to enable "Buffer Initial Cast" setting in Orbwalker if not already enabled. Requires an Orbwalker plugin to be installed and enabled.</value>
   </data>
+  <data name="Checkbox_HandleRaidwides" xml:space="preserve">
+    <value>Handle Detected Raidwides</value>
+  </data>
+  <data name="HelpText_HandleRaidwides" xml:space="preserve">
+    <value>Will try to use actions before detected raidwides or group damage to either mitigate or top-off party members. Max 2 actions (excluding {0} for setup)</value>
+  </data>
 </root>

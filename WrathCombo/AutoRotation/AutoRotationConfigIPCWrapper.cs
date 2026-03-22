@@ -305,5 +305,6 @@ public class HealerSettingsIPCWrapper(HealerSettings settings)
     
     public bool AutoRezDPSJobsHealersOnly => settings.AutoRezDPSJobsHealersOnly;
 
+    public bool HandleRaidwides => settings.HandleRaidwides;
     #endregion
 }

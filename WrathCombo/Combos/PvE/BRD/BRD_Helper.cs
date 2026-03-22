@@ -69,7 +69,7 @@ internal partial class BRD
 
     // Charge Tracking
     internal static uint RainOfDeathCharges => LevelChecked(RainOfDeath) ? GetRemainingCharges(RainOfDeath) : 0;
-    internal static uint BloodletterCharges => GetRemainingCharges(Bloodletter);
+    internal static uint BloodletterCharges => GetRemainingCharges(OriginalHook(Bloodletter));
     #endregion
 
     #region Functions

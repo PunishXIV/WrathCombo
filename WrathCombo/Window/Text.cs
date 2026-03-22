@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Resources;
 using System.Threading;
 using WrathCombo.Core;
-using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.JobConfigs;
 using WrathCombo.Resources.Localization.Presets;
 using WrathCombo.Resources.Localization.UI.AutoRotation;
@@ -17,6 +16,7 @@ using WrathCombo.Resources.Localization.UI.Features;
 using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Resources.Localization.UI.Misc;
 using WrathCombo.Resources.Localization.UI.Settings;
+using WrathCombo.Window.Functions;
 using WrathCombo.Window.Tabs;
 
 namespace WrathCombo.Window
@@ -136,6 +136,7 @@ namespace WrathCombo.Window
             TraitNameCache.Clear();
             StatusNameCache.Clear();
             Settings.SettingsList.Clear();
+            Setting.CachedSettings.Clear();
         }
 
         /// <summary>
@@ -263,12 +264,15 @@ namespace WrathCombo.Window
         /// Core localized string resolver.
         /// Lets ResourceManager handle fallback chain.
         /// </summary>
-        public static string GetLocalizedString(string key, ResourceManager rm)
+        public static string? GetLocalizedString(string key, ResourceManager rm, bool returnNull = false)
         {
             var value = rm.GetString(key, _gameCulture);
 
             // If missing entirely, return key (debug-friendly)
-            return value ?? key;
+            if (!returnNull)
+                return value ?? key;
+            else
+                return value ?? null;
         }
 
         /// <summary>

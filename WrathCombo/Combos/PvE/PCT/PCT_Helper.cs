@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.PCT.Config;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 #endregion
@@ -112,10 +111,10 @@ internal partial class PCT
             flags.HasFlag(Combo.Simple) ? 0 : 
             flags.HasFlag(Combo.ST) ? PCT_ST_AdvancedMode_BurnBoss : PCT_AoE_AdvancedMode_BurnBoss;
         
-        bool scenicMuseReady = ActionReady(ScenicMuse) && gauge.LandscapeMotifDrawn; 
-        bool livingMuseReady = ActionReady(LivingMuse) && gauge.CreatureMotifDrawn;
-        bool steelMuseReady = ActionReady(SteelMuse)  && gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime);
-        bool portraitReady = ActionReady(MogoftheAges) && (gauge.MooglePortraitReady || gauge.MadeenPortraitReady); //Check for either portrait being ready
+        bool scenicMuseReady = ActionReady(OriginalHook(ScenicMuse)) && gauge.LandscapeMotifDrawn; 
+        bool livingMuseReady = ActionReady(OriginalHook(LivingMuse)) && gauge.CreatureMotifDrawn;
+        bool steelMuseReady = ActionReady(OriginalHook(SteelMuse))  && gauge.WeaponMotifDrawn && !HasStatusEffect(Buffs.HammerTime);
+        bool portraitReady = ActionReady(OriginalHook(MogoftheAges)) && (gauge.MooglePortraitReady || gauge.MadeenPortraitReady); //Check for either portrait being ready
         bool paletteReady = LevelChecked(SubtractivePalette) && 
                             !HasStatusEffect(Buffs.SubtractivePalette) && !HasStatusEffect(Buffs.MonochromeTones) && //Don't overwrite self of comet in black
                                          (HasStatusEffect(Buffs.SubtractiveSpectrum) || //Free use from Starry Muse
@@ -202,8 +201,8 @@ internal partial class PCT
         bool addleEnabled =
             flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.PCT_ST_AdvancedMode_Addle);
 
-        bool tempuraEnabled =
-            flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.PCT_ST_AdvancedMode_Tempura);
+        bool temperaEnabled =
+            flags.HasFlag(Combo.Simple) || IsSTEnabled(flags, Preset.PCT_ST_AdvancedMode_Tempera);
         #endregion
 
         if (addleEnabled && Role.CanAddle() && CanWeave() && GroupDamageIncoming() && HasBattleTarget())
@@ -212,19 +211,19 @@ internal partial class PCT
             return true;
         }
 
-        if (tempuraEnabled && CanWeave() && GroupDamageIncoming() && !JustUsed(Role.Addle, 6))
+        if (temperaEnabled && CanWeave() && GroupDamageIncoming() && !JustUsed(Role.Addle, 6))
         {
-            if (LevelChecked(TempuraCoat) && IsOffCooldown(TempuraCoat))
+            if (LevelChecked(TemperaCoat) && IsOffCooldown(TemperaCoat))
             {
-                actionID = TempuraCoat;
+                actionID = TemperaCoat;
                 return true;
             }
                     
-            if (LevelChecked(TempuraGrassa) && IsInParty() &&
-                NumberOfAlliesInRange(TempuraGrassa) >= GetPartyMembers().Count * .75 && //75% of group in range for Spreading your Tempura
+            if (LevelChecked(TemperaGrassa) && IsInParty() &&
+                NumberOfAlliesInRange(TemperaGrassa) >= GetPartyMembers().Count * .75 && //75% of group in range for Spreading your Tempura
                 HasStatusEffect(Buffs.TempuraCoat))
             {
-                actionID = TempuraGrassa;
+                actionID = TemperaGrassa;
                 return true;
             }
         }
@@ -600,8 +599,8 @@ internal partial class PCT
         SteelMuse = 35348,
         SubtractivePalette = 34683,
         StoneIIinYellow = 34660,
-        TempuraCoat = 34685,
-        TempuraGrassa = 34686,
+        TemperaCoat = 34685,
+        TemperaGrassa = 34686,
         ThunderIIinMagenta = 34661,
         ThunderinMagenta = 34655,
         WaterinBlue = 34652,

@@ -73,7 +73,7 @@ internal partial class SGE : Healer
             {
                 // Phlegma
                 if (InCombat() && InActionRange(OriginalHook(Phlegma)) &&
-                    ActionReady(Phlegma))
+                    ActionReady(OriginalHook(Phlegma)))
                 {
                     //If not enabled or not high enough level, follow slider
                     if (!LevelChecked(Psyche) &&
@@ -91,7 +91,7 @@ internal partial class SGE : Healer
                 if (InCombat() && IsMoving() && HasBattleTarget())
                 {
                     //Toxikon
-                    if (ActionReady(Toxikon) && HasAddersting())
+                    if (ActionReady(OriginalHook(Toxikon)) && HasAddersting())
                         return OriginalHook(Toxikon);
 
                     // Dyskrasia
@@ -159,13 +159,13 @@ internal partial class SGE : Healer
                 return Eukrasia;
 
             //Phlegma
-            if (ActionReady(Phlegma) &&
+            if (ActionReady(OriginalHook(Phlegma)) &&
                 HasBattleTarget() &&
                 InActionRange(OriginalHook(Phlegma)))
                 return OriginalHook(Phlegma);
 
             //Toxikon
-            if (ActionReady(Toxikon) &&
+            if (ActionReady(OriginalHook(Toxikon)) &&
                 HasBattleTarget() && HasAddersting() &&
                 InActionRange(OriginalHook(Toxikon)))
                 return OriginalHook(Toxikon);
@@ -286,7 +286,7 @@ internal partial class SGE : Healer
                 // Phlegma
                 if (IsEnabled(Preset.SGE_ST_DPS_Phlegma) &&
                     InCombat() && InActionRange(OriginalHook(Phlegma)) &&
-                    ActionReady(Phlegma))
+                    ActionReady(OriginalHook(Phlegma)))
                 {
                     //If not enabled or not high enough level, follow slider
                     if ((!SGE_ST_DPS_Phlegma_Burst || !LevelChecked(Psyche)) &&
@@ -392,14 +392,14 @@ internal partial class SGE : Healer
 
             //Phlegma
             if (IsEnabled(Preset.SGE_AoE_DPS_Phlegma) &&
-                ActionReady(Phlegma) &&
+                ActionReady(OriginalHook(Phlegma)) &&
                 HasBattleTarget() &&
                 InActionRange(OriginalHook(Phlegma)))
                 return OriginalHook(Phlegma);
 
             //Toxikon
             if (IsEnabled(Preset.SGE_AoE_DPS_Toxikon) &&
-                ActionReady(Toxikon) &&
+                ActionReady(OriginalHook(Toxikon)) &&
                 HasBattleTarget() && HasAddersting() &&
                 InActionRange(OriginalHook(Toxikon)))
                 return OriginalHook(Toxikon);

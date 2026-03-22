@@ -161,15 +161,13 @@ internal abstract partial class CustomComboFunctions
     /// <param name="actionId"> The action ID. </param>
     public static unsafe bool ActionReady(uint actionId, bool recastCheck = false, bool castCheck = false)
     {
-        uint hookedId = OriginalHook(actionId);
-
-        if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, hookedId) > 0)
+        if (ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, actionId) > 0)
         {
             return false;
         }
 
-        return (HasCharges(hookedId) || (GetAttackType(hookedId) != ActionAttackType.Ability && GetCooldownRemainingTime(hookedId) <= RemainingGCD + BaseActionQueue)) &&
-            ActionManager.Instance()->GetActionStatus(ActionType.Action, hookedId, checkRecastActive: recastCheck, checkCastingActive: castCheck) is 0 or 582 or 580;
+        return (HasCharges(actionId) || (GetAttackType(actionId) != ActionAttackType.Ability && GetCooldownRemainingTime(actionId) <= RemainingGCD + BaseActionQueue)) &&
+            ActionManager.Instance()->GetActionStatus(ActionType.Action, actionId, checkRecastActive: recastCheck, checkCastingActive: castCheck) is 0 or 582 or 580;
     }
 
     /// <summary> Checks if all passed actions are ready to be used. </summary>

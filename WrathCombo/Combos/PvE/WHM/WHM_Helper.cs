@@ -257,7 +257,7 @@ internal partial class WHM
     internal static bool RaidwideTemperance()
     {
         return IsEnabled(Preset.WHM_Raidwide_Temperance) &&
-               ActionReady(OriginalHook(Temperance)) &&
+               ActionReady(Temperance) &&
                CanWeave() && GroupDamageIncoming();
     }
 

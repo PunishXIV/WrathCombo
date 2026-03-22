@@ -160,7 +160,7 @@ internal partial class SAM : Melee
                     return Role.Bloodbath;
             }
 
-            if (ActionReady(OgiNamikiri) &&
+            if (ActionReady(OriginalHook(OgiNamikiri)) &&
                 !IsMoving() && (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
@@ -421,7 +421,7 @@ internal partial class SAM : Melee
             if (IsEnabled(Preset.SAM_AoE_Damage))
             {
                 if (IsEnabled(Preset.SAM_AoE_OgiNamikiri) &&
-                    ActionReady(OgiNamikiri) &&
+                    ActionReady(OriginalHook(OgiNamikiri)) &&
                     (!IsMoving() && HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                     return OriginalHook(OgiNamikiri);
 
@@ -510,16 +510,16 @@ internal partial class SAM : Melee
 
                     if (SAM_Yukaze_Gekko &&
                         LevelChecked(Jinpu) &&
-                        ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
-                         HasKa && !HasGetsu ||
+                        ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu && LevelChecked(Gekko) ||
+                         HasKa && !HasGetsu && LevelChecked(Gekko) ||
                          SAM_ST_YukikazeCombo_Prio == 1 && !HasStatusEffect(Buffs.Fugetsu) ||
                          SenCount is 3 && RefreshFugetsu))
                         return Jinpu;
 
                     if (SAM_Yukaze_Kasha &&
                         LevelChecked(Shifu) &&
-                        ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
-                         HasGetsu && !HasKa ||
+                        ((OnTargetsFlank() || OnTargetsFront()) && !HasKa && LevelChecked(Kasha) ||
+                         HasGetsu && !HasKa && LevelChecked(Kasha) ||
                          SAM_ST_YukikazeCombo_Prio == 1 && !HasStatusEffect(Buffs.Fuka) ||
                          SenCount is 3 && RefreshFuka))
                         return Shifu;
@@ -711,7 +711,7 @@ internal partial class SAM : Melee
                 return Shoha;
 
             if (IsEnabled(Preset.SAM_Iaijutsu_OgiNamikiri) &&
-                (ActionReady(OgiNamikiri) && HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
+                (ActionReady(OriginalHook(OgiNamikiri)) && HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
             if (IsEnabled(Preset.SAM_Iaijutsu_TsubameGaeshi) &&
@@ -813,7 +813,7 @@ internal partial class SAM : Melee
                 return Shoha;
 
             if (IsEnabled(Preset.SAM_Ikishoten_Namikiri) &&
-                ActionReady(OgiNamikiri) &&
+                ActionReady(OriginalHook(OgiNamikiri)) &&
                 (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
@@ -870,11 +870,11 @@ internal partial class SAM : Melee
             if (LevelChecked(Shoha) && MeditationStacks is 3)
                 return Shoha;
 
-            if (LevelChecked(OgiNamikiri) && 
+            if (LevelChecked(OgiNamikiri) &&
                 (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady))
                 return OriginalHook(OgiNamikiri);
 
-            if (LevelChecked(Zanshin) && 
+            if (LevelChecked(Zanshin) &&
                 SAM_OgiShohaZanshin && HasStatusEffect(Buffs.ZanshinReady))
                 return Zanshin;
 

@@ -296,6 +296,13 @@ public static class ActionWatching
         if (Service.Configuration.EnabledOutputLog)
             OutputLog();
 
+        if (AutoRotationController.AutorotRaidwiding && AutoRotationController.RaidwideActions.Any(x => x == actionId))
+        {
+            AutoRotationController.BlacklistedRaidwides.Add(actionId);
+            if (actionId != SGE.Eukrasia)
+                AutoRotationController.AutorotRaidwides++;
+        }
+
         UpdatingActions = false;
     }
 
@@ -428,20 +435,26 @@ public static class ActionWatching
         {
             if (actionType is ActionType.Action)
             {
-                if (mode == ActionManager.UseActionMode.Queue) // This is so we can remove queue suppression
+                var disablingReplacingTemp = mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding;
+                if (disablingReplacingTemp) // This is so we can remove queue suppression
                     Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 
 
                 var original = actionId; //Save the original action, do not modify
                 var originalTargetId = targetId; //Save the original target, do not modify
                 var changedTargetId = targetId; //This will get modified and used elsewhere
 
-                var modifiedAction = Service.ActionReplacer.LastActionInvokeFor.ContainsKey(actionId) ? Service.ActionReplacer.LastActionInvokeFor[actionId] : actionId;
                 var changed = CheckForChangedTarget(original, ref changedTargetId,
                     out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
                 // If retargeting kicks in, update target ID
                 if (changed)
-                    targetId = changedTargetId;
+                {
+                    var targObj = changedTargetId.GetObject();
+                    if (targObj == null || !targObj.IsTargetable || (targObj.IsHostile() && targObj.IsDead))
+                        targetId = originalTargetId;
+                    else
+                        targetId = changedTargetId;
+                }
 
                 // Clear any dodgy leftover targets
                 if (!Svc.Objects.Any(x => x.GameObjectId == actionManager->QueuedTargetId.Id))
@@ -452,6 +465,10 @@ public static class ActionWatching
                     targetId = actionManager->QueuedTargetId.Id;
 
                 var areaTargeted = ActionSheet[replacedWith].TargetArea;
+
+                if (areaTargeted && disablingReplacingTemp) //Ground targets don't hit the send method, so it has to be re-enabled here. Could be re-enabled further down the line if it causes output issues.
+                    Service.ActionReplacer.EnableActionReplacingIfRequired();
+
                 var targetObject = targetId.GetObject();
 
                 if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
@@ -491,7 +508,7 @@ public static class ActionWatching
 
                     // Only sets the queued target once if overwrite is not enabled, otherwise will update each button press
                     if (actionManager->QueuedTargetId.Id == 0 || Service.Configuration.OverwriteQueue)
-                    actionManager->QueuedTargetId = changedTargetId;
+                        actionManager->QueuedTargetId = changedTargetId;
                 }
 
                 Svc.Log.Verbose($"[QueuedTargetUpdate] A:{actionManager->QueuedActionId.ActionName()} Q:{Svc.Objects.SearchById(actionManager->QueuedTargetId)?.Name} T:{Svc.Objects.SearchById(targetId)?.Name} M:{mode} W:{willQueue}");

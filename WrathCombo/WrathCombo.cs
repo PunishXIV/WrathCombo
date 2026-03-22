@@ -319,7 +319,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
         {
             #region Checks that don't require the Player to be loaded
 
-            Service.Configuration.SetActionChanging();
             Configuration.ProcessSaveQueue();
 
             //Hacky workaround to ensure it's always running

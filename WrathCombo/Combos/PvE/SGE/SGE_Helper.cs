@@ -306,7 +306,7 @@ internal partial class SGE
         //Toxikon
         (OriginalHook(Toxikon), Preset.SGE_ST_DPS_Movement,
             () => SGE_ST_DPS_Movement[0] &&
-                  ActionReady(Toxikon) &&
+                  ActionReady(OriginalHook(Toxikon)) &&
                   HasAddersting()),
         // Dyskrasia
         (OriginalHook(Dyskrasia), Preset.SGE_ST_DPS_Movement,
@@ -453,6 +453,7 @@ internal partial class SGE
         Holos = 24310,
         EukrasianDiagnosis = 24291,
         EukrasianPrognosis = 24292,
+        EukrasianPrognosis2 = 37034,
         Egeiro = 24287,
 
         // DPS

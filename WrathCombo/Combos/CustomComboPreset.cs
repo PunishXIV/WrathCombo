@@ -4396,7 +4396,7 @@ public enum Preset
 
     [ParentCombo(PCT_ST_AdvancedMode)]
     [JobInfo(Job.PCT)]
-    PCT_ST_AdvancedMode_Tempura = 20071,
+    PCT_ST_AdvancedMode_Tempera = 20071,
 
     #endregion
 

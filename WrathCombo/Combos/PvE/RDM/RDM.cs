@@ -761,10 +761,10 @@ internal partial class RDM : Caster
             {
                 if (Role.CanAddle() && CanNotMagickBarrier ||
                     GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
-                    return HasStatusEffect(Debuffs.Addle, CurrentTarget, anyOwner: true) ? All.SavageBlade : Role.Addle;
+                    return GetStatusEffectRemainingTime(Debuffs.Addle, CurrentTarget, anyOwner: true) > RDM_AddleDuration ? All.SavageBlade : Role.Addle;
             }
 
-            if (ActionReady(MagickBarrier) && HasStatusEffect(Buffs.MagickBarrier, anyOwner: true))
+            if (ActionReady(MagickBarrier) && GetStatusEffectRemainingTime(Buffs.MagickBarrier, anyOwner: true) > RDM_MagickProtectionDuration)
                 return All.SavageBlade;
 
             if (IsEnabled(Preset.RDM_MagickBarrierAddle) && GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))

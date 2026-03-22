@@ -48,6 +48,8 @@ internal unsafe class AutoRotationController
     public static bool PausedForError;
 
     public static IGameObject? AutorotHealTarget;
+    public static bool AutorotRaidwiding;
+    public static int AutorotRaidwides = 0;
 
     public AutoRotationController()
     {
@@ -146,6 +148,26 @@ internal unsafe class AutoRotationController
 
         // Healer logic
         bool isHealer = Player.Object?.Role is CombatRole.Healer;
+
+        if (cfg.HealerSettings.HandleRaidwides)
+        {
+            if (isHealer && GroupDamageIncoming())
+            {
+                AutorotRaidwiding = true;
+                HandleRaidwide();
+            }
+            else
+            {
+                if (AutorotRaidwides > 0)
+                {
+                    Svc.Log.Debug($"Used {AutorotRaidwides} raidwides {string.Join(", ", BlacklistedRaidwides.Select(x => x.ActionName()))}");
+                    BlacklistedRaidwides.Clear();
+                }
+                AutorotRaidwides = 0;
+                AutorotRaidwiding = false;
+            }
+        }
+
         var healTarget = isHealer ? AutoRotationHelper.GetSingleTarget(cfg.HealerRotationMode) : null;
 
         bool aoeheal = isHealer
@@ -205,6 +227,56 @@ internal unsafe class AutoRotationController
         }
 
         ProcessAutoActions(autoActions, ref _, canHeal, false);
+    }
+
+    public static IEnumerable<uint> RaidwideActions =
+    [
+        WHM.PlenaryIndulgence,
+        WHM.LiturgyOfTheBell.Retarget(SimpleTarget.Self),
+        WHM.Temperance,
+        WHM.DivineCaress,
+        WHM.Asylum.Retarget(SimpleTarget.Self),
+        WHM.Medica2,
+        WHM.Medica3,
+        SCH.Protraction,
+        SCH.Expedient,
+        SCH.Seraphism,
+        SCH.Succor,
+        SCH.Concitation,
+        AST.CollectiveUnconscious,
+        AST.SunSign,
+        AST.CelestialOpposition,
+        AST.AspectedHelios,
+        AST.HeliosConjuction,
+        SGE.Kerachole,
+        SGE.Physis,
+        SGE.Physis2,
+        SGE.Holos,
+        SGE.Panhaima,
+        SGE.Eukrasia,
+        SGE.EukrasianPrognosis,
+        SGE.EukrasianPrognosis2
+    ];
+
+    public static List<uint> BlacklistedRaidwides = [];
+    private static void HandleRaidwide()
+    {
+        foreach (var spell in RaidwideActions)
+        {
+            if (BlacklistedRaidwides.Contains(spell))
+                continue;
+
+            if (ActionReady(spell) && !JustUsed(spell, 5) && LocalPlayer.CastActionId != spell && (!IsMoving(true) || ActionManager.GetAdjustedCastTime(ActionType.Action, spell) == 0))
+            {
+                if (AutorotRaidwides >= 2)
+                    return;
+
+                WouldLikeToGroundTarget = ActionSheet[spell].TargetArea;
+                ActionManager.Instance()->UseAction(ActionType.Action, spell);
+                WouldLikeToGroundTarget = false;
+                return;
+            }
+        }
     }
 
     private static bool ProcessAutoActions(Dictionary<Preset, bool> autoActions, ref uint _, bool canHeal, bool stOnly)
@@ -294,7 +366,7 @@ internal unsafe class AutoRotationController
 
                 if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
                 {
-                    ActionManager.Instance()->UseAction(ActionType.Action, regenSpell);
+                    ActionManager.Instance()->UseAction(ActionType.Action, regenSpell, SimpleTarget.FocusTarget.GameObjectId);
                     return;
                 }
             }
@@ -359,7 +431,7 @@ internal unsafe class AutoRotationController
 
                 if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
                 {
-                    ActionManager.Instance()->UseAction(ActionType.Action, shieldSpell);
+                    ActionManager.Instance()->UseAction(ActionType.Action, shieldSpell, SimpleTarget.FocusTarget.GameObjectId);
                     return;
                 }
             }

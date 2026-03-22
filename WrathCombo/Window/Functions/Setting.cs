@@ -10,6 +10,7 @@ using WrathCombo.Resources.Localization.UI.Settings;
 using WrathCombo.Services;
 using SettingType = WrathCombo.Attributes.Setting.Type;
 using Category = WrathCombo.Attributes.SettingCategory.Category;
+using ECommons.DalamudServices;
 
 #endregion
 
@@ -27,7 +28,6 @@ public class Setting
         FieldName = settingName;
 
         #region Loading from Cache
-
         if (CachedSettings.TryGetValue(settingName, out var cachedSetting))
         {
             Category              = cachedSetting.Category;
@@ -72,15 +72,15 @@ public class Setting
                       throw new ArgumentException(
                           $"Setting `{settingName}` is missing required " +
                           $"`Setting` attribute.");
-        Name                  = Text.GetLocalizedString($"{settingName}_Name", SettingsCfgUI.ResourceManager);
-        HelpMark              = Text.GetLocalizedString($"{settingName}_helpMark", SettingsCfgUI.ResourceManager);
-        RecommendedValue      = Text.GetLocalizedString($"{settingName}_recommendedValue", SettingsCfgUI.ResourceManager);
-        DefaultValue          = Text.GetLocalizedString($"{settingName}_defaultValue", SettingsCfgUI.ResourceManager);
+        Name                  = Text.GetLocalizedString($"{settingName}_Name", SettingsCfgUI.ResourceManager)!;
+        HelpMark              = Text.GetLocalizedString($"{settingName}_helpMark", SettingsCfgUI.ResourceManager)!;
+        RecommendedValue      = Text.GetLocalizedString($"{settingName}_recommendedValue", SettingsCfgUI.ResourceManager)!;
+        DefaultValue          = Text.GetLocalizedString($"{settingName}_defaultValue", SettingsCfgUI.ResourceManager)!;
         Type                  = setting.TheType;
-        UnitLabel             = setting.UnitLabel is null ? null : Text.GetLocalizedString($"{settingName}_unitLabel", SettingsCfgUI.ResourceManager);
-        ExtraHelpMark         = setting.ExtraHelpMark is null ? null : Text.GetLocalizedString($"{settingName}_extraHelpMark", SettingsCfgUI.ResourceManager);
-        WarningMark           = setting.WarningMark is null ? null : Text.GetLocalizedString($"{settingName}_warningMark", SettingsCfgUI.ResourceManager);
-        ExtraText             = setting.ExtraText is null ? null : Text.GetLocalizedString($"{settingName}_extraText", SettingsCfgUI.ResourceManager);
+        UnitLabel             = Text.GetLocalizedString($"{settingName}_unitLabel", SettingsCfgUI.ResourceManager, true);
+        ExtraHelpMark         = Text.GetLocalizedString($"{settingName}_extraHelpMark", SettingsCfgUI.ResourceManager, true);
+        WarningMark           = Text.GetLocalizedString($"{settingName}_warningMark", SettingsCfgUI.ResourceManager, true);
+        ExtraText             = Text.GetLocalizedString($"{settingName}_extraText", SettingsCfgUI.ResourceManager, true);
         MinFLoat              = setting.MinFloat;
         MaxFloat              = setting.MaxFloat;
         MinInt                = setting.MinInt;

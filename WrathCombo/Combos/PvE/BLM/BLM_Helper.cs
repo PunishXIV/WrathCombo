@@ -124,7 +124,7 @@ internal partial class BLM
         // Paradox
         (OriginalHook(Fire), Preset.BLM_ST_Movement,
             () => BLM_ST_MovementOption[1] &&
-                  ActionReady(Paradox) &&
+                  ActionReady(OriginalHook(Paradox)) &&
                   FirePhase && ActiveParadox &&
                   MP.Cur >= MP.FireParadox &&
                   !HasStatusEffect(Buffs.Firestarter) &&

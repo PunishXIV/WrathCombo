@@ -19,7 +19,9 @@ internal partial class RPR : Melee
                 !PartyInCombat())
                 return Soulsow;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (!HasStatusEffect(Buffs.Executioner) &&
+                !HasStatusEffect(Buffs.SoulReaver) &&
+                ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             //All Weaves
@@ -50,7 +52,7 @@ internal partial class RPR : Melee
                         return Gluttony;
 
                     //Bloodstalk
-                    if (ActionReady(BloodStalk) &&
+                    if (ActionReady(OriginalHook(BloodStalk)) &&
                         (!LevelChecked(Gluttony) ||
                          LevelChecked(Gluttony) && IsOnCooldown(Gluttony) &&
                          (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 4)))
@@ -270,7 +272,9 @@ internal partial class RPR : Melee
                 Opener().FullOpener(ref actionID) && HasBattleTarget())
                 return actionID;
 
-            if (ContentSpecificActions.TryGet(out uint contentAction))
+            if (!HasStatusEffect(Buffs.Executioner) &&
+                !HasStatusEffect(Buffs.SoulReaver) &&
+                ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
             //All Weaves
@@ -308,7 +312,7 @@ internal partial class RPR : Melee
 
                     //Bloodstalk
                     if (IsEnabled(Preset.RPR_ST_Bloodstalk) &&
-                        ActionReady(BloodStalk) &&
+                        ActionReady(OriginalHook(BloodStalk)) &&
                         (LevelChecked(Gluttony) &&
                          (IsEnabled(Preset.RPR_ST_Gluttony) &&
                           (Soul is 100 && IsOnCooldown(Gluttony) ||
@@ -498,7 +502,7 @@ internal partial class RPR : Melee
                     !HasStatusEffect(Buffs.ImmortalSacrifice) &&
                     (!LevelChecked(Gluttony) ||
                      LevelChecked(Gluttony) && (Soul is 100 || GetCooldownRemainingTime(Gluttony) > GCD * 5)))
-                    return OriginalHook(GrimSwathe);
+                    return GrimSwathe;
 
                 if (HasStatusEffect(Buffs.Enshrouded))
                 {

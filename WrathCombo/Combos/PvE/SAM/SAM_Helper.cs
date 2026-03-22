@@ -31,16 +31,16 @@ internal partial class SAM
 
                 if ((simpleMode || IsEnabled(Preset.SAM_ST_Kasha)) &&
                     LevelChecked(Shifu) &&
-                    ((OnTargetsFlank() || OnTargetsFront()) && !HasKa ||
-                     OnTargetsRear() && HasGetsu ||
+                    ((OnTargetsFlank() || OnTargetsFront()) && !HasKa && LevelChecked(Kasha) ||
+                     OnTargetsRear() && HasGetsu && LevelChecked(Kasha) ||
                      !HasStatusEffect(Buffs.Fuka) ||
                      SenCount is 3 && RefreshFuka))
                     return Shifu;
 
                 if ((simpleMode || IsEnabled(Preset.SAM_ST_Gekko)) &&
                     LevelChecked(Jinpu) &&
-                    ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu ||
-                     OnTargetsFlank() && HasKa ||
+                    ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu && LevelChecked(Gekko) ||
+                     OnTargetsFlank() && HasKa && LevelChecked(Gekko) ||
                      !HasStatusEffect(Buffs.Fugetsu) ||
                      SenCount is 3 && RefreshFugetsu))
                     return Jinpu;
@@ -266,7 +266,7 @@ internal partial class SAM
          !LevelChecked(TendoKaeshiSetsugekka));
 
     private static bool CanTsubame() =>
-        ActionReady(TsubameGaeshi) &&
+        ActionReady(OriginalHook(TsubameGaeshi)) &&
         (HasStatusEffect(Buffs.TendoKaeshiSetsugekkaReady) ||
          HasStatusEffect(Buffs.TsubameReady)) &&
         (SenCount is 3 ||
@@ -347,7 +347,7 @@ internal partial class SAM
         if (NamikiriReady)
             return true;
 
-        if (ActionReady(OgiNamikiri) && InActionRange(OriginalHook(OgiNamikiri)) &&
+        if (ActionReady(OriginalHook(OgiNamikiri)) && InActionRange(OriginalHook(OgiNamikiri)) &&
             HasStatusEffect(Buffs.OgiNamikiriReady) && NumberOfGcdsUsed >= 5 &&
             (!SAM_ST_CDs_OgiNamikiri_Movement || !IsMoving() || simpleMode && !IsMoving()))
         {

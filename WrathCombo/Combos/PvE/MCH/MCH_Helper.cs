@@ -47,7 +47,7 @@ internal partial class MCH
     private static bool CanQueen()
     {
         if (!HasStatusEffect(Buffs.Wildfire) &&
-            ActionReady(RookAutoturret) &&
+            ActionReady(OriginalHook(RookAutoturret)) &&
             !RobotActive &&
             GetTargetHPPercent() > HPThresholdQueen)
         {
@@ -116,7 +116,7 @@ internal partial class MCH
                 numberOfReadyTools++;
         }
 
-        if (ActionReady(AirAnchor))
+        if (ActionReady(OriginalHook(AirAnchor)))
             numberOfReadyTools++;
 
         return numberOfReadyTools;
@@ -173,22 +173,22 @@ internal partial class MCH
     #region Gauss and Rico
 
     private static bool OvercapGaussRound =>
-        ActionReady(GaussRound) && ((!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(GaussRound)) is 1 ||
-                                     LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(GaussRound)) is 2) &&
-                                    GetCooldownChargeRemainingTime(OriginalHook(GaussRound)) < 25 ||
-                                    !LevelChecked(Hypercharge) && GetRemainingCharges(OriginalHook(GaussRound)) is 2);
+        ActionReady(OriginalHook(GaussRound)) && ((!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(GaussRound)) is 1 ||
+                                                   LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(GaussRound)) is 2) &&
+                                                  GetCooldownChargeRemainingTime(OriginalHook(GaussRound)) < 25 ||
+                                                  !LevelChecked(Hypercharge) && GetRemainingCharges(OriginalHook(GaussRound)) is 2);
 
     private static bool OvercapRicochet =>
-        ActionReady(Ricochet) && (!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(Ricochet)) is 1 ||
-                                  LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(Ricochet)) is 2) &&
+        ActionReady(OriginalHook(Ricochet)) && (!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(Ricochet)) is 1 ||
+                                                LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(Ricochet)) is 2) &&
         GetCooldownChargeRemainingTime(OriginalHook(Ricochet)) < 25;
 
     private static bool CanGaussRound =>
-        ActionReady(GaussRound) &&
+        ActionReady(OriginalHook(GaussRound)) &&
         GetRemainingCharges(OriginalHook(GaussRound)) >= GetRemainingCharges(OriginalHook(Ricochet));
 
     private static bool CanRicochet =>
-        ActionReady(Ricochet) &&
+        ActionReady(OriginalHook(Ricochet)) &&
         GetRemainingCharges(OriginalHook(Ricochet)) > GetRemainingCharges(OriginalHook(GaussRound));
 
     #endregion
@@ -255,7 +255,7 @@ internal partial class MCH
             return true;
         }
 
-        if (ActionReady(AirAnchor) && LevelChecked(AirAnchor))
+        if (ActionReady(AirAnchor))
         {
             actionID = AirAnchor;
             return true;

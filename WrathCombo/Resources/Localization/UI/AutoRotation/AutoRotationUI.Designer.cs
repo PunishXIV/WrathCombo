@@ -205,6 +205,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Handle Detected Raidwides.
+        /// </summary>
+        internal static string Checkbox_HandleRaidwides {
+            get {
+                return ResourceManager.GetString("Checkbox_HandleRaidwides", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Always Set Hard Target###HealerHardTarget.
         /// </summary>
         internal static string Checkbox_HealerAlwaysHardTarget {
@@ -443,6 +452,15 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         internal static string HelpText_EnforceBestAoETarget {
             get {
                 return ResourceManager.GetString("HelpText_EnforceBestAoETarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Will try to use actions before detected raidwides or group damage to either mitigate or top-off party members. Max 2 actions (excluding {0} for setup).
+        /// </summary>
+        internal static string HelpText_HandleRaidwides {
+            get {
+                return ResourceManager.GetString("HelpText_HandleRaidwides", resourceCulture);
             }
         }
         

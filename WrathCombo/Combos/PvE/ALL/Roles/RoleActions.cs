@@ -1,5 +1,4 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
-using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 namespace WrathCombo.Combos.PvE;
 
@@ -12,14 +11,6 @@ internal static partial class RoleActions
             Swiftcast = 7561,
             Surecast = 7559;
 
-        public static class Buffs
-        {
-            public const ushort
-                Raise = 148,
-                Swiftcast = 167,
-                Surecast = 160;
-        }
-
         public static bool CanLucidDream(int MPThreshold, bool weave = true) =>
             ActionReady(LucidDreaming) &&
             LocalPlayer.CurrentMp <= MPThreshold &&
@@ -30,6 +21,14 @@ internal static partial class RoleActions
 
         public static bool CanSurecast() =>
             ActionReady(Surecast);
+
+        public static class Buffs
+        {
+            public const ushort
+                Raise = 148,
+                Swiftcast = 167,
+                Surecast = 160;
+        }
     }
 
     public static class Caster
@@ -40,18 +39,18 @@ internal static partial class RoleActions
             Addle = 7560,
             Sleep = 25880;
 
-        public static class Debuffs
-        {
-            public const ushort
-                Addle = 1203;
-        }
-
         public static bool CanAddle() =>
             ActionReady(Addle) && !HasStatusEffect(Debuffs.Addle, CurrentTarget, true) &&
             CanApplyStatus(CurrentTarget, Debuffs.Addle);
 
         public static bool CanSleep() =>
             ActionReady(Sleep);
+
+        public static class Debuffs
+        {
+            public const ushort
+                Addle = 1203;
+        }
     }
 
     public static class Healer
@@ -79,12 +78,6 @@ internal static partial class RoleActions
             SecondWind = 7541,
             ArmsLength = 7548;
 
-        public static class Buffs
-        {
-            public const ushort
-                ArmsLength = 1209;
-        }
-
         public static bool CanSecondWind(int healthPercent) =>
             ActionReady(SecondWind) && PlayerHealthPercentageHp() <= healthPercent;
 
@@ -92,6 +85,12 @@ internal static partial class RoleActions
             ActionReady(ArmsLength) &&
             NumberOfEnemiesInRange(Tank.Reprisal) >= enemyCount &&
             ((int)avoidanceSetting == (int)All.Enums.BossAvoidance.Off || !InBossEncounter());
+
+        public static class Buffs
+        {
+            public const ushort
+                ArmsLength = 1209;
+        }
     }
 
     public static class PhysRanged
@@ -103,12 +102,6 @@ internal static partial class RoleActions
             FootGraze = 7553,
             Peloton = 7557,
             HeadGraze = 7551;
-
-        public static class Buffs
-        {
-            public const ushort
-                Peloton = 1199;
-        }
 
         public static bool CanLegGraze() =>
             ActionReady(LegGraze);
@@ -124,6 +117,12 @@ internal static partial class RoleActions
 
         public static bool CanHeadGraze(bool simpleMode, WeaveTypes weave = WeaveTypes.None) =>
             simpleMode && CanInterruptEnemy() && ActionReady(HeadGraze) && CheckWeave(weave);
+
+        public static class Buffs
+        {
+            public const ushort
+                Peloton = 1199;
+        }
     }
 
     public static class Melee
@@ -135,19 +134,6 @@ internal static partial class RoleActions
             Bloodbath = 7542,
             Feint = 7549,
             TrueNorth = 7546;
-
-        public static class Buffs
-        {
-            public const ushort
-                BloodBath = 84,
-                TrueNorth = 1250;
-        }
-
-        public static class Debuffs
-        {
-            public const ushort
-                Feint = 1195;
-        }
 
         public static bool CanLegSweep() =>
             ActionReady(LegSweep) && CanStunToInterruptEnemy();
@@ -161,6 +147,19 @@ internal static partial class RoleActions
 
         public static bool CanTrueNorth() =>
             ActionReady(TrueNorth) && TargetNeedsPositionals() && !HasStatusEffect(Buffs.TrueNorth) && CanDelayedWeave();
+
+        public static class Buffs
+        {
+            public const ushort
+                BloodBath = 84,
+                TrueNorth = 1250;
+        }
+
+        public static class Debuffs
+        {
+            public const ushort
+                Feint = 1195;
+        }
     }
 
     public static class Tank
@@ -174,17 +173,6 @@ internal static partial class RoleActions
             Interject = 7538,
             Reprisal = 7535,
             Shirk = 7537;
-
-        public static class Buffs
-        {
-            public const ushort
-            Rampart = 1191;
-        }
-        public static class Debuffs
-        {
-            public const ushort
-                Reprisal = 1193;
-        }
 
         public static bool CanRampart(int healthPercent = 100) =>
             ActionReady(Rampart) && PlayerHealthPercentageHp() <= healthPercent;
@@ -205,5 +193,17 @@ internal static partial class RoleActions
 
         public static bool CanShirk() =>
             ActionReady(Shirk);
+
+        public static class Buffs
+        {
+            public const ushort
+                Rampart = 1191;
+        }
+
+        public static class Debuffs
+        {
+            public const ushort
+                Reprisal = 1193;
+        }
     }
 }

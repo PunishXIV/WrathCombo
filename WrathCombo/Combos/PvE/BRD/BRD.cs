@@ -252,7 +252,7 @@ internal partial class BRD : PhysicalRanged
                 if (Role.CanHeadGraze(true, WeaveTypes.DelayWeave))
                     return Role.HeadGraze;
 
-                if (ActionReady(Bloodletter) && UsePooledBloodRain())
+                if (ActionReady(OriginalHook(Bloodletter)) && UsePooledBloodRain())
                     return OriginalHook(Bloodletter);
 
                 if (Role.CanSecondWind(40))
@@ -637,7 +637,7 @@ internal partial class BRD : PhysicalRanged
                 if (Role.CanHeadGraze(Preset.BRD_Adv_Interrupt, WeaveTypes.DelayWeave))
                     return Role.HeadGraze;
 
-                if (ActionReady(Bloodletter) &&
+                if (ActionReady(OriginalHook(Bloodletter)) &&
                     (IsEnabled(Preset.BRD_Adv_Pooling) && UsePooledBloodRain() || !IsEnabled(Preset.BRD_Adv_Pooling)))
                     return OriginalHook(Bloodletter);
 
@@ -766,7 +766,7 @@ internal partial class BRD : PhysicalRanged
                 if (ActionReady(Sidewinder) && BRD_StraightShotUpgrade_OGCDs_Options[3])
                     return Sidewinder;
 
-                if (ActionReady(Bloodletter) && BRD_StraightShotUpgrade_OGCDs_Options[2] &&
+                if (ActionReady(OriginalHook(Bloodletter)) && BRD_StraightShotUpgrade_OGCDs_Options[2] &&
                     (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) ||
                     BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter)))
                     return OriginalHook(Bloodletter);
@@ -976,7 +976,7 @@ internal partial class BRD : PhysicalRanged
             if (ActionReady(Sidewinder))
                 return Sidewinder;
 
-            if (ActionReady(Bloodletter))
+            if (ActionReady(OriginalHook(Bloodletter)))
                 return OriginalHook(Bloodletter);
 
             return actionID;
@@ -1002,7 +1002,7 @@ internal partial class BRD : PhysicalRanged
                 if (ActionReady(Sidewinder) && BRD_WideVolleyUpgrade_OGCDs_Options[3])
                     return Sidewinder;
 
-                if (ActionReady(Bloodletter) && BRD_WideVolleyUpgrade_OGCDs_Options[2] &&
+                if (ActionReady(OriginalHook(Bloodletter)) && BRD_WideVolleyUpgrade_OGCDs_Options[2] &&
                     (BloodletterCharges == 3 && TraitLevelChecked(Traits.EnhancedBloodletter) ||
                      BloodletterCharges == 2 && !TraitLevelChecked(Traits.EnhancedBloodletter)))
                     return LevelChecked(RainOfDeath)

@@ -461,6 +461,11 @@ internal partial class DRK
                     ImGui.Unindent(34f.Scale());
                     break;
 
+                case Preset.DRK_Retarget_Oblation_DoubleProtection:
+                    UserConfig.DrawSliderInt(0, 5, DRK_RetargetOblationDuration,
+                        "Time Remaining on Oblation to allow within\n(0 = Oblation must not be on the target)");
+                    break;
+
                     #endregion
             }
         }
@@ -1003,6 +1008,13 @@ internal partial class DRK
         /// <seealso cref="Preset.DRK_Mit_Oblation" />
         public static UserInt DRK_Mit_Oblation_Charges =
             new("DRK_Mit_Oblation_Charges", 0);
+
+        #endregion
+        
+        #region Standalones
+
+        public static readonly UserInt
+            DRK_RetargetOblationDuration = new("DRK_RetargetOblationDuration");
 
         #endregion
 

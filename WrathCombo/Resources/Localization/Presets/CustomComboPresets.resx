@@ -5357,12 +5357,12 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="PCT_ST_AdvancedMode_Addle_Desc" xml:space="preserve">
     <value>Adds Addle when Raidwide is detected casting.</value>
   </data>
-  <data name="PCT_ST_AdvancedMode_Tempura_Name" xml:space="preserve">
-    <value>Tempura Raidwide Option</value>
+  <data name="PCT_ST_AdvancedMode_Tempera_Name" xml:space="preserve">
+    <value>Tempera Raidwide Option</value>
   </data>
-  <data name="PCT_ST_AdvancedMode_Tempura_Desc" xml:space="preserve">
-    <value>Adds Tempura Coat when Raidwide is detected casting. 
-Spreads it with Tempura Grassa if enough party members are in range. More than 75%</value>
+  <data name="PCT_ST_AdvancedMode_Tempera_Desc" xml:space="preserve">
+    <value>Adds Tempera Coat when Raidwide is detected casting. 
+Spreads it with Tempera Grassa if enough party members are in range. More than 75%</value>
   </data>
   <data name="PCT_AoE_AdvancedMode_Name" xml:space="preserve">
     <value>Advanced Mode - AoE</value>

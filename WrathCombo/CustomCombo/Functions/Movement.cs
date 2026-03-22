@@ -16,7 +16,7 @@ internal abstract partial class CustomComboFunctions
     private static DateTime? movementStopped;
 
     /// <summary> Checks if the player is moving. </summary>
-    public static unsafe bool IsMoving()
+    public static unsafe bool IsMoving(bool ignoreConfig = false)
     {
         if (Player.Object is null)
             return false;
@@ -41,7 +41,7 @@ internal abstract partial class CustomComboFunctions
             movementStarted = null;
         }
 
-        return isMoving && TimeMoving.TotalSeconds >= Service.Configuration.MovementLeeway;
+        return isMoving && (ignoreConfig ? true : TimeMoving.TotalSeconds >= Service.Configuration.MovementLeeway);
     }
 
     public unsafe static bool IsDashing() => MovementHook.Instance != null && MovementHook.Instance->Dashing == 1;

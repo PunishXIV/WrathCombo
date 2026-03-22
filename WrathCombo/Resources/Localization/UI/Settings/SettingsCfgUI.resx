@@ -259,7 +259,7 @@ Triple weaving is already done in a manner where we try to avoid clipping GCDs, 
     <value>Maximum Number of Weaves</value>
   </data>
   <data name="MaximumWeavesPerWindow_recommendedValue" xml:space="preserve">
-    <value>46056</value>
+    <value>2-3</value>
   </data>
   <data name="MaximumWeavesPerWindow_unitLabel" xml:space="preserve">
     <value># of oGCDs</value>

@@ -54,5 +54,6 @@ public class HealerSettings
     public bool PreEmptiveHoT = false;
     public bool IncludeNPCs = false;
     public bool HealerAlwaysHardTarget = false;
+    public bool HandleRaidwides = false;
 
 }

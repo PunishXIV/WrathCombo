@@ -411,7 +411,7 @@ internal partial class DRK : Tank
 
             var checkTarget = target ?? SimpleTarget.Self;
             if (IsEnabled(Preset.DRK_Retarget_Oblation_DoubleProtection) &&
-                (HasStatusEffect(Buffs.Oblation, checkTarget, anyOwner: true) ||
+                (GetStatusEffectRemainingTime(Buffs.Oblation, checkTarget, anyOwner: true) > DRK_RetargetOblationDuration ||
                  JustUsedOn(Oblation, checkTarget)) &&
                 CanApplyStatus(checkTarget, Buffs.Oblation))
                 return All.SavageBlade;

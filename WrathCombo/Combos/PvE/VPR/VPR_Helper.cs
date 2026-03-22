@@ -1,5 +1,8 @@
 ﻿using Dalamud.Game.ClientState.JobGauge.Enums;
 using Dalamud.Game.ClientState.JobGauge.Types;
+using ECommons.DalamudServices;
+using ECommons.Reflection;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using System;
 using System.Collections.Generic;
 using WrathCombo.CustomComboNS;
@@ -232,43 +235,21 @@ internal partial class VPR
         return false;
     }
 
-    private static uint ReawakenCombo(uint actionId)
+    private unsafe static uint ReawakenCombo(uint actionId)
     {
-        #region Pre Ouroboros
-
-        if (!TraitLevelChecked(Traits.EnhancedSerpentsLineage) &&
-            NoSTComboWeaves && NoAoEComboWeaves)
+        switch (Gauge.DreadCombo)
         {
-            return AnguineTribute switch
-            {
-                4 => OriginalHook(SteelFangs),
-                3 => OriginalHook(ReavingFangs),
-                2 => OriginalHook(HuntersCoil),
-                1 => OriginalHook(SwiftskinsCoil),
-                var _ => actionId
-            };
+            case (DreadCombo)7:
+                return FirstGeneration;
+            case (DreadCombo)8:
+                return SecondGeneration;
+            case (DreadCombo)9:
+                return ThirdGeneration;
+            case (DreadCombo)10:
+                return FourthGeneration;
+            case 0:
+                return Ouroboros;
         }
-
-        #endregion
-
-        #region With Ouroboros
-
-        if (TraitLevelChecked(Traits.EnhancedSerpentsLineage) &&
-            NoSTComboWeaves && NoAoEComboWeaves)
-        {
-            return AnguineTribute switch
-            {
-                5 => OriginalHook(SteelFangs),
-                4 => OriginalHook(ReavingFangs),
-                3 => OriginalHook(HuntersCoil),
-                2 => OriginalHook(SwiftskinsCoil),
-                1 => OriginalHook(Reawaken),
-                var _ => actionId
-            };
-        }
-
-        #endregion
-
         return actionId;
     }
 

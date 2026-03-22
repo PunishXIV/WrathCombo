@@ -53,7 +53,7 @@ internal partial class PLD : Tank
                 if (CanWeave())
                 {
                     // Requiescat
-                    if (ActionReady(Requiescat) && CooldownFightOrFlight > 50 &&
+                    if (ActionReady(OriginalHook(Requiescat)) && CooldownFightOrFlight > 50 &&
                         InActionRange(OriginalHook(Requiescat)))
                         return OriginalHook(Requiescat);
 
@@ -88,7 +88,7 @@ internal partial class PLD : Tank
                             case > 15 when ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
-                            case > 15 when ActionReady(SpiritsWithin):
+                            case > 15 when ActionReady(OriginalHook(SpiritsWithin)):
                                 return OriginalHook(SpiritsWithin);
                         }
                     }
@@ -216,7 +216,7 @@ internal partial class PLD : Tank
                 if (CanWeave())
                 {
                     // Requiescat
-                    if (ActionReady(Requiescat) && CooldownFightOrFlight > 50 && InActionRange(OriginalHook(Requiescat)))
+                    if (ActionReady(OriginalHook(Requiescat)) && CooldownFightOrFlight > 50 && InActionRange(OriginalHook(Requiescat)))
                         return OriginalHook(Requiescat);
 
                     if (InMeleeRange())
@@ -232,7 +232,7 @@ internal partial class PLD : Tank
                             case > 15 when ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
-                            case > 15 when ActionReady(SpiritsWithin):
+                            case > 15 when ActionReady(OriginalHook(SpiritsWithin)):
                                 return OriginalHook(SpiritsWithin);
                         }
                     }
@@ -319,7 +319,7 @@ internal partial class PLD : Tank
                 {
                     // Requiescat
                     if (IsEnabled(Preset.PLD_ST_AdvancedMode_Requiescat) &&
-                        ActionReady(Requiescat) && CooldownFightOrFlight > 50 && InActionRange(OriginalHook(Requiescat)))
+                        ActionReady(OriginalHook(Requiescat)) && CooldownFightOrFlight > 50 && InActionRange(OriginalHook(Requiescat)))
                         return OriginalHook(Requiescat);
                     if (InMeleeRange())
                     {
@@ -355,7 +355,7 @@ internal partial class PLD : Tank
                                 return CircleOfScorn;
 
                             case > 15 when IsEnabled(Preset.PLD_ST_AdvancedMode_SpiritsWithin) &&
-                                           ActionReady(SpiritsWithin):
+                                           ActionReady(OriginalHook(SpiritsWithin)):
                                 return OriginalHook(SpiritsWithin);
                         }
                     }
@@ -499,7 +499,7 @@ internal partial class PLD : Tank
                 {
                     // Requiescat
                     if (IsEnabled(Preset.PLD_AoE_AdvancedMode_Requiescat) &&
-                        ActionReady(Requiescat) && CooldownFightOrFlight > 50 && InActionRange(OriginalHook(Requiescat)))
+                        ActionReady(OriginalHook(Requiescat)) && CooldownFightOrFlight > 50 && InActionRange(OriginalHook(Requiescat)))
                         return OriginalHook(Requiescat);
 
                     if (InMeleeRange())
@@ -516,7 +516,7 @@ internal partial class PLD : Tank
                             case > 15 when IsEnabled(Preset.PLD_AoE_AdvancedMode_CircleOfScorn) && ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0:
                                 return CircleOfScorn;
 
-                            case > 15 when IsEnabled(Preset.PLD_AoE_AdvancedMode_SpiritsWithin) && ActionReady(SpiritsWithin):
+                            case > 15 when IsEnabled(Preset.PLD_AoE_AdvancedMode_SpiritsWithin) && ActionReady(OriginalHook(SpiritsWithin)):
                                 return OriginalHook(SpiritsWithin);
                         }
                     }
@@ -616,7 +616,7 @@ internal partial class PLD : Tank
             bool canFightOrFlight = OriginalHook(FightOrFlight) is FightOrFlight && ActionReady(FightOrFlight);
 
             // Fight or Flight
-            if (PLD_Requiescat_SubOption == 2 && (!LevelChecked(Requiescat) || canFightOrFlight && ActionReady(Requiescat)))
+            if (PLD_Requiescat_SubOption == 2 && (!LevelChecked(Requiescat) || canFightOrFlight && ActionReady(OriginalHook(Requiescat))))
                 return OriginalHook(FightOrFlight);
 
             // Confiteor & Blades

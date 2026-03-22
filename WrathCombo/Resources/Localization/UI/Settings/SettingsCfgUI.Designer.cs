@@ -457,7 +457,7 @@ namespace WrathCombo.Resources.Localization.UI.Settings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 46056.
+        ///   Looks up a localized string similar to 2-3.
         /// </summary>
         internal static string MaximumWeavesPerWindow_recommendedValue {
             get {

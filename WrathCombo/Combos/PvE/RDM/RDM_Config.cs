@@ -43,7 +43,9 @@ internal partial class RDM
             RDM_Moulinet_Weaves_Options_Corpsacorps_Distance = new("RDM_Moulinet_Weaves_Options_Corpsacorps_Distance", 25),
             RDM_OGCDs_Options_CorpsCharges = new("RDM_OGCDs_Options_CorpsCharges", 0),
             RDM_OGCDs_Options_EngagementCharges = new("RDM_OGCDs_Options_EngagementCharges", 0),
-            RDM_OGCDs_Options_Corpsacorps_Distance = new("RDM_OGCDs_Options_Corpsacorps_Distance", 25);
+            RDM_OGCDs_Options_Corpsacorps_Distance = new("RDM_OGCDs_Options_Corpsacorps_Distance", 25),
+            RDM_MagickProtectionDuration = new("RDM_MagickProtectionDuration"),
+            RDM_AddleDuration = new("RDM_AddleDuration");
 
         internal static UserBoolArray
             RDM_OGCDs_Options = new("RDM_OGCDs_Options"),
@@ -229,6 +231,16 @@ internal partial class RDM
                         DrawSliderInt(0, 1, RDM_Moulinet_Weaves_Options_CorpsCharges, "How many charges of Corps to keep for manual use");
                         DrawSliderInt(0, 25, RDM_Moulinet_Weaves_Options_Corpsacorps_Distance, "Use Corps when distance is less than or equal to:");
                     }
+                    break;
+                
+                case Preset.RDM_MagickBarrierAddle:
+                    DrawSliderInt(0, 5, RDM_AddleDuration,
+                        "Time Remaining on others Addle to allow within\n(0 = Addle must not be on the target)");
+                    break;
+
+                case Preset.RDM_MagickProtection:
+                    DrawSliderInt(0, 5, RDM_MagickProtectionDuration,
+                        "Time Remaining on others Magick Barrier to allow within\n(0 = Magick Barrier must not be on the target)");
                     break;
 
                 case Preset.RDM_OGCDs:

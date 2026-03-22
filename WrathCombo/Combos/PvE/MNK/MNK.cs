@@ -477,7 +477,7 @@ internal partial class MNK : Melee
 
             return actionID switch
             {
-                Brotherhood when MNK_BH_RoF == 0 && ActionReady(RiddleOfFire) && IsOnCooldown(Brotherhood) => OriginalHook(RiddleOfFire),
+                Brotherhood when MNK_BH_RoF == 0 && ActionReady(OriginalHook(RiddleOfFire)) && IsOnCooldown(Brotherhood) => OriginalHook(RiddleOfFire),
                 RiddleOfFire when MNK_BH_RoF == 1 && ActionReady(Brotherhood) && IsOnCooldown(RiddleOfFire) => Brotherhood,
                 var _ => actionID
             };

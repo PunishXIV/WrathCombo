@@ -370,7 +370,7 @@ internal partial class SMN
                 return true;
             }
 
-            if (ActionReady(AstralFlow) && DemiNotPheonix)
+            if (ActionReady(OriginalHook(AstralFlow)) && DemiNotPheonix)
             {
                 actionID = OriginalHook(AstralFlow);
                 return true;
@@ -434,13 +434,13 @@ internal partial class SMN
                     return true;
                 }
 
-                if (ActionReady(AstralFlow) && DemiNotPheonix)
+                if (ActionReady(OriginalHook(AstralFlow)) && DemiNotPheonix)
                 {
                     actionID = OriginalHook(AstralFlow);
                     return true;
                 }
                 
-                if (rekindleEnabled && ActionReady(AstralFlow) && DemiPheonix)
+                if (rekindleEnabled && ActionReady(OriginalHook(AstralFlow)) && DemiPheonix)
                 {
                     actionID = Rekindle;
                     return true;
@@ -449,7 +449,7 @@ internal partial class SMN
             #endregion
             
             #region Fester and Painflare
-            if (energyDrainEnabled && ActionReady(Fester) && !HasStatusEffect(Buffs.TitansFavor))
+            if (energyDrainEnabled && ActionReady(OriginalHook(Fester)) && !HasStatusEffect(Buffs.TitansFavor))
             {
                 //Fire asap without pooling
                 //Too low level for Searing Light
@@ -630,7 +630,7 @@ internal partial class SMN
         #region Titan Phase
         if (IsTitanAttuned || OriginalHook(AstralFlow) is MountainBuster) //Titan attunement ends before last mountain buster
         {
-            if (egiAstralFlowEnabled && mountainBusterEnabled && ActionReady(AstralFlow) && SummonerWeave)
+            if (egiAstralFlowEnabled && mountainBusterEnabled && ActionReady(OriginalHook(AstralFlow)) && SummonerWeave)
             {
                 actionID = OriginalHook(AstralFlow);
                 return true;

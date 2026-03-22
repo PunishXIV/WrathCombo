@@ -275,7 +275,7 @@ internal partial class MNK
         GroupDamageIncoming(3f);
 
     private static bool CanRoE() =>
-        ActionReady(RiddleOfEarth) &&
+        ActionReady(OriginalHook(RiddleOfEarth)) &&
         GroupDamageIncoming(2f) &&
         !HasStatusEffect(Buffs.RiddleOfEarth) &&
         !HasStatusEffect(Buffs.EarthsRumination);

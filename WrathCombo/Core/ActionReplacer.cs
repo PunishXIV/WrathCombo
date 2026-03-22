@@ -78,16 +78,14 @@ internal sealed class ActionReplacer : IDisposable
     internal uint OriginalHook(uint actionID) =>
         getActionHook.Original(_actionManager, actionID);
 
-    private bool actionReplacementEnabled;
     public void EnableActionReplacingIfRequired()
     {
-        if (actionReplacementEnabled)
+        if (Service.Configuration.ActionChanging)
             Service.ActionReplacer.getActionHook.Enable();
     }
 
     public void DisableActionReplacingIfRequired()
     {
-        actionReplacementEnabled = Service.ActionReplacer.getActionHook.IsEnabled;
         Service.ActionReplacer.getActionHook.Disable();
     }
 

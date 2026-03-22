@@ -93,7 +93,7 @@ internal partial class DRG : Melee
                     //Dragonfire Dive Feature
                     if (ActionReady(DragonfireDive) &&
                         !HasStatusEffect(Buffs.DragonsFlight) &&
-                        (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
+                        (LoTDTimerActive || !LevelChecked(Geirskogul)))
                         return DragonfireDive;
                 }
 
@@ -131,7 +131,7 @@ internal partial class DRG : Melee
                         return BattleLitany;
 
                     //Lance Charge Feature
-                    if (CanLanceCharge)
+                    if (ActionReady(LanceCharge))
                         return LanceCharge;
 
                     //Life Surge Feature
@@ -152,7 +152,7 @@ internal partial class DRG : Melee
 
                     //Geirskogul Feature
                     if (ActionReady(Geirskogul) &&
-                        !LoTDActive && InActionRange(Geirskogul))
+                        !LoTDTimerActive && InActionRange(Geirskogul))
                         return Geirskogul;
 
                     //Wyrmwind Thrust Feature
@@ -200,7 +200,7 @@ internal partial class DRG : Melee
                     //Dragonfire Dive Feature
                     if (ActionReady(DragonfireDive) &&
                         !HasStatusEffect(Buffs.DragonsFlight) &&
-                        (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
+                        (LoTDTimerActive || !LevelChecked(Geirskogul)))
                         return DragonfireDive;
                 }
 
@@ -333,7 +333,7 @@ internal partial class DRG : Melee
 
                             if (LevelChecked(HighJump) &&
                                 IsOriginal(HighJump) &&
-                                (DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDActive) ||
+                                (DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDTimerActive) ||
                                  !DRG_ST_DoubleMirage))
                                 return HighJump;
                         }
@@ -345,7 +345,7 @@ internal partial class DRG : Melee
                             (!DRG_ST_DragonfireDiveMovingOrInRanged[1] || InMeleeRange()) &&
                             !HasStatusEffect(Buffs.DragonsFlight) &&
                             GetTargetHPPercent() > HPThresholdSTDragonfireDive &&
-                            (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
+                            (LoTDTimerActive || !LevelChecked(Geirskogul)))
                             return DragonfireDive;
                     }
 
@@ -392,7 +392,7 @@ internal partial class DRG : Melee
 
                         //Lance Charge Feature
                         if (IsEnabled(Preset.DRG_AoE_LanceCharge) &&
-                            CanLanceCharge &&
+                            ActionReady(LanceCharge) &&
                             GetTargetHPPercent() > DRG_AoE_LanceChargeHPTreshold)
                             return LanceCharge;
 
@@ -420,8 +420,7 @@ internal partial class DRG : Melee
                         //Geirskogul Feature
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
                             ActionReady(Geirskogul) &&
-                            !LoTDActive &&
-                            InActionRange(Geirskogul) &&
+                            !LoTDTimerActive && InActionRange(Geirskogul) &&
                             GetTargetHPPercent() > DRG_AoE_GeirskogulHPTreshold)
                             return Geirskogul;
 
@@ -488,7 +487,7 @@ internal partial class DRG : Melee
                             (!DRG_AoE_DragonfireDiveMovingOrInRanged[1] || InMeleeRange()) &&
                             !HasStatusEffect(Buffs.DragonsFlight) &&
                             GetTargetHPPercent() > DRG_AoE_DragonfireDiveHPTreshold &&
-                            (LoTDActive || !TraitLevelChecked(Traits.LifeOfTheDragon)))
+                            (LoTDTimerActive || !LevelChecked(Geirskogul)))
                             return DragonfireDive;
                     }
 
