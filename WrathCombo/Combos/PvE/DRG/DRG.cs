@@ -79,16 +79,10 @@ internal partial class DRG : Melee
                 if (CanDRGWeave(0.8f))
                 {
                     //(High) Jump Feature   
-                    if (ActionReady(Jump))
-                    {
-                        if (!LevelChecked(HighJump) &&
-                            IsOriginal(Jump))
-                            return Jump;
-
-                        if (LevelChecked(HighJump) &&
-                            IsOriginal(HighJump))
-                            return HighJump;
-                    }
+                    if (ActionReady(OriginalHook(Jump)) &&
+                        (!LevelChecked(HighJump) && IsOriginal(Jump) ||
+                         LevelChecked(HighJump) && IsOriginal(HighJump)))
+                        return OriginalHook(Jump);
 
                     //Dragonfire Dive Feature
                     if (ActionReady(DragonfireDive) &&
@@ -191,11 +185,9 @@ internal partial class DRG : Melee
                 if (CanDRGWeave(0.8f))
                 {
                     //(High) Jump Feature   
-                    if (ActionReady(Jump))
-                        return LevelChecked(HighJump) &&
-                               (IsOriginal(Jump) || IsOriginal(HighJump))
-                            ? HighJump
-                            : Jump;
+                    if (ActionReady(OriginalHook(Jump)) &&
+                        (IsOriginal(Jump) || IsOriginal(HighJump)))
+                        return OriginalHook(Jump);
 
                     //Dragonfire Dive Feature
                     if (ActionReady(DragonfireDive) &&
@@ -323,20 +315,13 @@ internal partial class DRG : Melee
                     {
                         //(High) Jump Feature   
                         if (IsEnabled(Preset.DRG_ST_HighJump) &&
-                            ActionReady(Jump) &&
+                            ActionReady(OriginalHook(Jump)) &&
                             (!DRG_ST_JumpMovingOrInRanged[0] || !IsMoving()) &&
-                            (!DRG_ST_JumpMovingOrInRanged[1] || InMeleeRange()))
-                        {
-                            if (!LevelChecked(HighJump) &&
-                                IsOriginal(Jump))
-                                return Jump;
-
-                            if (LevelChecked(HighJump) &&
-                                IsOriginal(HighJump) &&
-                                (DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDTimerActive) ||
-                                 !DRG_ST_DoubleMirage))
-                                return HighJump;
-                        }
+                            (!DRG_ST_JumpMovingOrInRanged[1] || InMeleeRange()) &&
+                            (!LevelChecked(HighJump) && IsOriginal(Jump) ||
+                             LevelChecked(HighJump) && IsOriginal(HighJump) &&
+                             (DRG_ST_DoubleMirage && (GetCooldownRemainingTime(Geirskogul) < 13 || LoTDTimerActive) || !DRG_ST_DoubleMirage)))
+                            return OriginalHook(Jump);
 
                         //Dragonfire Dive Feature
                         if (IsEnabled(Preset.DRG_ST_DragonfireDive) &&
@@ -472,13 +457,11 @@ internal partial class DRG : Melee
                     {
                         //(High) Jump Feature   
                         if (IsEnabled(Preset.DRG_AoE_HighJump) &&
-                            ActionReady(Jump) &&
+                            ActionReady(OriginalHook(Jump)) &&
                             (!DRG_AoE_JumpMovingOrInRanged[0] || !IsMoving()) &&
-                            (!DRG_AoE_JumpMovingOrInRanged[1] || InMeleeRange()))
-                            return LevelChecked(HighJump) &&
-                                   (IsOriginal(Jump) || IsOriginal(HighJump))
-                                ? HighJump
-                                : Jump;
+                            (!DRG_AoE_JumpMovingOrInRanged[1] || InMeleeRange()) &&
+                            (IsOriginal(Jump) || IsOriginal(HighJump)))
+                            return OriginalHook(Jump);
 
                         //Dragonfire Dive Feature
                         if (IsEnabled(Preset.DRG_AoE_DragonfireDive) &&

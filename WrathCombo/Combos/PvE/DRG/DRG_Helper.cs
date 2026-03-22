@@ -301,11 +301,8 @@ internal partial class DRG
         GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
 
     private static bool CanLanceCharge =>
-        ActionReady(LanceCharge) &&
-        HasBattleTarget() &&
-        (JustUsed(BattleLitany, GCD * 1.5f) ||
-         GetCooldownRemainingTime(BattleLitany) is > 50 and < 65 ||
-         !LevelChecked(BattleLitany));
+        ActionReady(LanceCharge) && HasBattleTarget() &&
+        (IsOnCooldown(BattleLitany) || !LevelChecked(BattleLitany));
 
     #endregion
 
