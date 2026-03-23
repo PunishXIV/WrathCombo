@@ -779,11 +779,11 @@ internal partial class BRD : PhysicalRanged
                     (PurpleRemaining < 4 || BlueRemaining < 4))
                     return IronJaws;
                 
-                if (ActionReady(Windbite) && DebuffCapCanBlue && 
+                if (ActionReady(OriginalHook(Windbite)) && DebuffCapCanBlue && 
                     (Blue is null || !CanIronJaws && BlueRemaining < 4))
                     return OriginalHook(Windbite);
                 
-                if (ActionReady(VenomousBite) && DebuffCapCanPurple &&
+                if (ActionReady(OriginalHook(VenomousBite)) && DebuffCapCanPurple &&
                     (Purple is null || !CanIronJaws && PurpleRemaining < 4))
                     return OriginalHook(VenomousBite);
             }
@@ -806,11 +806,11 @@ internal partial class BRD : PhysicalRanged
                 (PurpleRemaining < 4 || BlueRemaining < 4))
                 return IronJaws;
             
-            if (ActionReady(Windbite) && DebuffCapCanBlue && 
+            if (ActionReady(OriginalHook(Windbite)) && DebuffCapCanBlue && 
                 (Blue is null || !CanIronJaws && BlueRemaining < 4))
                 return OriginalHook(Windbite);
             
-            if (ActionReady(VenomousBite) && DebuffCapCanPurple &&
+            if (ActionReady(OriginalHook(VenomousBite)) && DebuffCapCanPurple &&
                 (Purple is null || !CanIronJaws && PurpleRemaining < 4))
                 return OriginalHook(VenomousBite);
 

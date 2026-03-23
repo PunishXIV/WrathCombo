@@ -516,6 +516,9 @@ public static class ActionWatching
                 var hookResult = changed ? UseActionHook.Original(actionManager, actionType, replacedWith, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
                     UseActionHook.Original(actionManager, actionType, replacedWith, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
+                if (!hookResult) //If the hookresult fails, turn back on action replacing if required as the action can't be sent
+                    Service.ActionReplacer.EnableActionReplacingIfRequired();
+
                 // Fallback if the Retargeted ground action couldn't be placed smartly
                 if (changed && areaTargeted)
                     ActionManager.Instance()->AreaTargetingExecuteAtObject =
