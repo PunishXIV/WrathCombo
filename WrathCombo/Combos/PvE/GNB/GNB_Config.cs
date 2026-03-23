@@ -21,7 +21,6 @@ internal partial class GNB
             GNB_Mitigation_NonBoss_SuperBolide_Health = new("GNB_Mitigation_NonBoss_SuperBolide_Health", 20),
             GNB_Mitigation_Boss_Aurora_Health = new("GNB_Mitigation_Boss_Aurora_Health", 99),
             GNB_Mitigation_Boss_HeartOfStone_Health = new("GNB_Mitigation_Boss_HeartOfStone_Health", 80),
-            GNB_Opener_StartChoice = new("GNB_Opener_StartChoice"),
             GNB_Opener_NM = new("GNB_Opener_NM"),
             GNB_ST_NM_BossOption = new("GNB_ST_NM_BossOption"),
             GNB_ST_NM_HPOption = new("GNB_ST_NM_HPOption", 10),
@@ -158,16 +157,6 @@ internal partial class GNB
                         $"Normal {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} normally in all openers", 0);
                     DrawHorizontalRadioButton(GNB_Opener_NM,
                         $"Early {NoMercy.ActionName()}", $"Uses {NoMercy.ActionName()} as soon as possible in all openers", 1);
-                    ImGui.Spacing();
-                    if (DrawHorizontalRadioButton(GNB_Opener_StartChoice,
-                        "Normal Opener", $"Starts opener with {LightningShot.ActionName()}", 0))
-                    {
-                        if (!CustomComboFunctions.InCombat())
-                            Opener().OpenerStep = 1;
-                    }
-                    DrawHorizontalRadioButton(GNB_Opener_StartChoice,
-                        "Early Opener", $"Starts opener with {KeenEdge.ActionName()} instead, skipping {LightningShot.ActionName()}", 1);
-                    ImGui.Spacing();
                     DrawBossOnlyChoice(GNB_ST_Balance_Content);
                     break;
 

@@ -359,18 +359,18 @@ internal partial class GNB : Tank
     public static Lv90SlowEarlyNM GNBLv90SlowEarlyNM = new();
     public static Lv100SlowEarlyNM GNBLv100SlowEarlyNM = new();
 
-    public static WrathOpener Opener() => (!IsEnabled(Preset.GNB_ST_Opener) || !LevelChecked(DoubleDown)) ? WrathOpener.Dummy : GetOpener(GNB_Opener_NM == 0);
+    public static WrathOpener Opener() => !IsEnabled(Preset.GNB_ST_Opener) || !LevelChecked(DoubleDown) ? WrathOpener.Dummy : GetOpener(GNB_Opener_NM == 0);
     private static WrathOpener GetOpener(bool isNormal)
     {
         if (Fast)
             return isNormal
-                ? (LevelChecked(ReignOfBeasts) ? GNBLv100FastNormalNM : GNBLv90FastNormalNM)
-                : (LevelChecked(ReignOfBeasts) ? GNBLv100FastEarlyNM : GNBLv90FastEarlyNM);
+                ? LevelChecked(ReignOfBeasts) ? GNBLv100FastNormalNM : GNBLv90FastNormalNM
+                : LevelChecked(ReignOfBeasts) ? GNBLv100FastEarlyNM : GNBLv90FastEarlyNM;
 
         if (Slow)
             return isNormal
-                ? (LevelChecked(ReignOfBeasts) ? GNBLv100SlowNormalNM : GNBLv90SlowNormalNM)
-                : (LevelChecked(ReignOfBeasts) ? GNBLv100SlowEarlyNM : GNBLv90SlowEarlyNM);
+                ? LevelChecked(ReignOfBeasts) ? GNBLv100SlowNormalNM : GNBLv90SlowNormalNM
+                : LevelChecked(ReignOfBeasts) ? GNBLv100SlowEarlyNM : GNBLv90SlowEarlyNM;
 
         return WrathOpener.Dummy;
     }
@@ -382,8 +382,7 @@ internal partial class GNB : Tank
         public override int MaxOpenerLevel => 99;
         internal override UserData ContentCheckConfig => GNB_ST_Balance_Content;
         public override bool HasCooldowns() => IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(BowShock) && IsOffCooldown(Bloodfest) && IsOffCooldown(DoubleDown) && Ammo == 0;
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => GNB_Opener_StartChoice == 1)];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => InMeleeRange())];
     }
     internal class Lv90FastNormalNM : GNBOpenerLv90Base
     {
@@ -413,7 +412,7 @@ internal partial class GNB : Tank
             EyeGouge
         ];
         public override Preset Preset => Preset.GNB_ST_Opener;
-        public override List<int> VeryDelayedWeaveSteps { get; set; } = [5];
+       
     }
     internal class Lv90SlowNormalNM : GNBOpenerLv90Base
     {
@@ -512,8 +511,7 @@ internal partial class GNB : Tank
         public override int MaxOpenerLevel => 109;
         internal override UserData ContentCheckConfig => GNB_ST_Balance_Content;
         public override bool HasCooldowns() => IsOffCooldown(Bloodfest) && IsOffCooldown(NoMercy) && IsOffCooldown(GnashingFang) && IsOffCooldown(DoubleDown) && IsOffCooldown(BowShock) && Ammo == 0;
-
-        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => GNB_Opener_StartChoice == 1)];
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = [([1], () => InMeleeRange())];
     }
     internal class Lv100FastNormalNM : GNBOpenerLv100Base
     {
