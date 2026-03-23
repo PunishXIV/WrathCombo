@@ -67,7 +67,7 @@ internal partial class MNK
             {
                 // Odd window
                 if ((JustUsed(OriginalHook(Bootshine), GCD) || JustUsed(DragonKick, GCD)) &&
-                    !JustUsed(PerfectBalance, 20) && HasStatusEffect(Buffs.RiddleOfFire) && !HasStatusEffect(Buffs.Brotherhood))
+                    !JustUsed(PerfectBalance, 20) && GetCooldownRemainingTime(RiddleOfFire) <= GCD * 2 && !HasStatusEffect(Buffs.Brotherhood))
                     return true;
 
                 // Even window first use
@@ -408,7 +408,7 @@ internal partial class MNK
         !HasStatusEffect(Buffs.FormlessFist) &&
         IsOriginal(MasterfulBlitz) &&
         InActionRange(FiresReply) &&
-        !JustUsed(RiddleOfFire, GCD * 3) &&
+        !JustUsed(RiddleOfFire, GCD) &&
         !HasStatusEffect(Buffs.PerfectBalance) &&
         (JustUsed(OriginalHook(Bootshine), GCD * 1.5f) ||
          JustUsed(DragonKick, GCD * 1.5f) ||

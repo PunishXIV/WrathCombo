@@ -920,7 +920,7 @@ internal class Debug : ConfigWindow, IDisposable
         {
             CustomStyleText("Countdown Active:", $"{CountdownActive}");
             CustomStyleText("Countdown Remaining:", $"{CountdownRemaining}");
-            CustomStyleText("Raidwide Incoming:", $"{GroupDamageIncoming()}");
+            CustomStyleText("Raidwide Incoming:", $"{GroupDamageIncoming()} {(GroupDamageIncoming(out var multi) ? $"Multi: {multi}" : "")}");
 
             ImGui.Indent();
             if (ImGui.CollapsingHeader("Occult Crescent Job Icons"))

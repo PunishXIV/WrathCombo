@@ -416,18 +416,7 @@ public class Search(Leasing leasing)
                 .ToDictionary(
                     g => g.Key,
                     g => g.GroupBy(x =>
-                            x.ComboType switch
-                            {
-                                ComboType.Healing =>
-                                    x.Value.presetData.Name.Contains("single target", ToLower)
-                                        ? ComboTargetTypeKeys.HealST
-                                        : ComboTargetTypeKeys.HealMT,
-                                ComboType.Advanced or ComboType.Simple =>
-                                    x.Value.presetData.Name.Contains("single target", ToLower)
-                                        ? ComboTargetTypeKeys.SingleTarget
-                                        : ComboTargetTypeKeys.MultiTarget,
-                                _ => ComboTargetTypeKeys.Other,
-                            }
+                            x.Value.presetData.TargetType
                         )
                         .ToDictionary(
                             g2 => g2.Key,

@@ -87,12 +87,7 @@ public partial class Helper(ref Leasing leasing)
             return null;
 
         // Detect the target type
-        var targetType =
-            presetData.Name.Contains("single target", lower)
-                ? ComboTargetTypeKeys.SingleTarget
-                : (presetData.Name.Contains("- aoe", lower))
-                    ? ComboTargetTypeKeys.MultiTarget
-                    : ComboTargetTypeKeys.Other;
+        var targetType = presetData.TargetType;
 
         // Bail if it is not a Single-Target or Multi-Target primary preset
         if (targetType == ComboTargetTypeKeys.Other)

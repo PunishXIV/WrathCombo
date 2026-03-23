@@ -229,40 +229,43 @@ internal unsafe class AutoRotationController
         ProcessAutoActions(autoActions, ref _, canHeal, false);
     }
 
-    public static IEnumerable<uint> RaidwideActions =
+    public static IEnumerable<(uint Action, bool MultiHitOnly)> RaidwideActions =
     [
-        WHM.PlenaryIndulgence,
-        WHM.LiturgyOfTheBell.Retarget(SimpleTarget.Self),
-        WHM.Temperance,
-        WHM.DivineCaress,
-        WHM.Asylum.Retarget(SimpleTarget.Self),
-        WHM.Medica2,
-        WHM.Medica3,
-        SCH.Protraction,
-        SCH.Expedient,
-        SCH.Seraphism,
-        SCH.Succor,
-        SCH.Concitation,
-        AST.CollectiveUnconscious,
-        AST.SunSign,
-        AST.CelestialOpposition,
-        AST.AspectedHelios,
-        AST.HeliosConjuction,
-        SGE.Kerachole,
-        SGE.Physis,
-        SGE.Physis2,
-        SGE.Holos,
-        SGE.Panhaima,
-        SGE.Eukrasia,
-        SGE.EukrasianPrognosis,
-        SGE.EukrasianPrognosis2
+        (WHM.PlenaryIndulgence, false),
+        (WHM.LiturgyOfTheBell.Retarget(SimpleTarget.Self), true),
+        (WHM.Temperance, false),
+        (WHM.DivineCaress, false),
+        (WHM.Asylum.Retarget(SimpleTarget.Self), false),
+        (WHM.Medica2, false),
+        (WHM.Medica3, false),
+        (SCH.Expedient, false),
+        (SCH.Seraphism, false),
+        (SCH.Succor, false),
+        (SCH.Concitation, false),
+        (AST.CollectiveUnconscious, false),
+        (AST.SunSign, false),
+        (AST.CelestialOpposition, false),
+        (AST.AspectedHelios, false),
+        (AST.HeliosConjuction, false),
+        (SGE.Kerachole, false),
+        (SGE.Physis, false),
+        (SGE.Physis2, false),
+        (SGE.Holos, false),
+        (SGE.Panhaima, true),
+        (SGE.Eukrasia, false),
+        (SGE.EukrasianPrognosis, false),
+        (SGE.EukrasianPrognosis2, false),
     ];
 
     public static List<uint> BlacklistedRaidwides = [];
     private static void HandleRaidwide()
     {
-        foreach (var spell in RaidwideActions)
+        GroupDamageIncoming(out bool isMultiHit);
+        foreach (var (spell, multihitter) in RaidwideActions)
         {
+            if (!isMultiHit && multihitter)
+                continue;
+
             if (BlacklistedRaidwides.Contains(spell))
                 continue;
 

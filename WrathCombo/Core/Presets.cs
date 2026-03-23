@@ -5,6 +5,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using WrathCombo.API.Enum;
 using WrathCombo.Attributes;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
@@ -56,6 +57,7 @@ internal static class PresetStorage
         public bool IsHidden { get; }
         public bool ShouldBeHidden => (IsHidden && !Service.Configuration.ShowHiddenFeatures);
         public ComboType ComboType;
+        public ComboTargetTypeKeys TargetType;
 
         public PresetData(Preset preset)
         {
@@ -77,6 +79,25 @@ internal static class PresetStorage
                 ?? preset.ToString().Contains("_AoE_", StringComparison.OrdinalIgnoreCase);
             IsHidden = preset.GetAttribute<HiddenAttribute>() != null;
             ComboType = GetComboType(preset);
+            if (AutoAction != null)
+            {
+                if (AutoAction.IsHeal)
+                {
+                    if (AutoAction.IsAoE)
+                        TargetType = ComboTargetTypeKeys.HealMT;
+                    else
+                        TargetType = ComboTargetTypeKeys.HealST;
+                }
+                else
+                {
+                    if (AutoAction.IsAoE)
+                        TargetType = ComboTargetTypeKeys.MultiTarget;
+                    else
+                        TargetType = ComboTargetTypeKeys.SingleTarget;
+                }
+            }
+            else
+                TargetType = ComboTargetTypeKeys.Other;
         }
     }
 

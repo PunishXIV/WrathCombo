@@ -296,7 +296,7 @@ public static class ActionWatching
         if (Service.Configuration.EnabledOutputLog)
             OutputLog();
 
-        if (AutoRotationController.AutorotRaidwiding && AutoRotationController.RaidwideActions.Any(x => x == actionId))
+        if (AutoRotationController.AutorotRaidwiding && AutoRotationController.RaidwideActions.Any(x => x.Action == actionId))
         {
             AutoRotationController.BlacklistedRaidwides.Add(actionId);
             if (actionId != SGE.Eukrasia)
@@ -470,9 +470,11 @@ public static class ActionWatching
                     Service.ActionReplacer.EnableActionReplacingIfRequired();
 
                 var targetObject = targetId.GetObject();
+                if (targetObject is null)
+                    return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
 
-                if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
-                    if (!ActionManager.CanUseActionOnTarget(replacedWith,
+                //if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
+                if (!ActionManager.CanUseActionOnTarget(replacedWith,
                         targetObject.Struct()))
                         targetId = originalTargetId;
 
