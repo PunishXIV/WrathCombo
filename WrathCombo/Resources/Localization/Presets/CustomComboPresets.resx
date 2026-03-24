@@ -10539,11 +10539,16 @@ Keep Honing Dance bound to another key if you want to end early.</value>
     <value>Uses Three Mudra on Meisui when HP is under the set threshold.</value>
   </data>
   <data name="NINPvP_ST_MudraMode_Name" xml:space="preserve">
-    <value>Automatic Mudra Mode</value>
+    <value>Customizable Mudra Mode</value>
   </data>
   <data name="NINPvP_ST_MudraMode_Desc" xml:space="preserve">
-    <value>Uses the mudra from three mudra, automatically on ST burst mode. 
- Will use Hyosho Ranryu &gt; Forked Raiju IF YOU HAVE BUNSHIN STACKS &gt; Huton</value>
+    <value>Allows for a custom priority and selection of mudras when under the Three Mudra effect.</value>
+  </data>
+  <data name="NINPvP_AoE_MudraMode_Name" xml:space="preserve">
+    <value>Customizable Mudra Mode</value>
+  </data>
+  <data name="NINPvP_AoE_MudraMode_Desc" xml:space="preserve">
+    <value>Allows for a custom priority and selection of mudras when under the Three Mudra effect.</value>
   </data>
   <data name="NINPvP_ST_FumaShuriken_Name" xml:space="preserve">
     <value>Fuma Shuriken Option</value>
