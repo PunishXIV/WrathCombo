@@ -1,4 +1,5 @@
-﻿using ECommons.GameHelpers;
+﻿using System;
+using ECommons.GameHelpers;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Window.Functions.UserConfig;
@@ -48,7 +49,7 @@ internal static class NINPvP
             SealedGokaMekkyaku = 3193,
             SealedHuton = 3196,
             SealedDoton = 3197,
-            SeakedForkedRaiju = 3195,
+            SealedForkedRaiju = 3195,
             SealedMeisui = 3198,                
             Dokumori = 4303;
     }
@@ -64,10 +65,35 @@ internal static class NINPvP
             NINPVP_SeitonTenchuAoE = new("NINPVP_SeitonTenchuAoE"),
             NINPvP_SmiteThreshold = new("NINPvP_SmiteThreshold");
 
+        public static UserBoolArray
+            NINPvP_ST_MudraOption = new("NINPvP_ST_MudraOption", [true, true, true]),
+            NINPvP_AoE_MudraOption = new("NINPvP_AoE_MudraOption", [true, true, true]);
+
+        public static UserIntArray
+            NINPvP_ST_MudraPriority = new("NINPvP_ST_MudraPriority", [1, 2, 3]),
+            NINPvP_AoE_MudraPriority = new("NINPvP_AoE_MudraPriority", [1, 2, 3]);
+
         internal static void Draw(Preset preset)
         {
             switch (preset)
             {
+                case Preset.NINPvP_ST_MudraMode:
+                    DrawHorizontalMultiChoice(NINPvP_ST_MudraOption, "Huton", "Use Huton in the Mudra sequence.", 3, 0);
+                    DrawPriorityInput(NINPvP_ST_MudraPriority, 3, 0, "Huton Priority");
+                    DrawHorizontalMultiChoice(NINPvP_ST_MudraOption, "Hyosho Ranryu", "Use Hyosho Ranryu in the Mudra sequence.", 3, 1);
+                    DrawPriorityInput(NINPvP_ST_MudraPriority, 3, 1, "Hyosho Ranryu Priority");
+                    DrawHorizontalMultiChoice(NINPvP_ST_MudraOption, "Forked Raiju", "Use Forked Raiju in the Mudra sequence.", 3, 2);
+                    DrawPriorityInput(NINPvP_ST_MudraPriority, 3, 2, "Forked Raiju Priority");
+                    break;
+
+                case Preset.NINPvP_AoE_MudraMode:
+                    DrawHorizontalMultiChoice(NINPvP_AoE_MudraOption, "Huton", "Use Huton in the Mudra sequence.", 3, 0);
+                    DrawPriorityInput(NINPvP_AoE_MudraPriority, 3, 0, "Huton Priority");
+                    DrawHorizontalMultiChoice(NINPvP_AoE_MudraOption, "Doton", "Use Doton in the Mudra sequence.", 3, 1);
+                    DrawPriorityInput(NINPvP_AoE_MudraPriority, 3, 1, "Doton Priority");
+                    DrawHorizontalMultiChoice(NINPvP_AoE_MudraOption, "Goka Mekkyaku", "Use Goka Mekkyaku in the Mudra sequence.", 3, 2);
+                    DrawPriorityInput(NINPvP_AoE_MudraPriority, 3, 2, "Goka Mekkyaku Priority");
+                    break;
                 case Preset.NINPvP_ST_SeitonTenchu:
                     DrawSliderInt(1, 50, NINPVP_SeitonTenchu, "Target's HP% to be at or under", 200);
                     break;
@@ -182,17 +208,23 @@ internal static class NINPvP
 
                     if (IsEnabled(Preset.NINPvP_ST_MudraMode))
                     {
-                        // Priority 1: Huton
-                        if (!HasStatusEffect(Debuffs.SealedHuton))
-                            return OriginalHook(Huton);
+                        (uint Action, ushort SealedDebuff, Func<bool> Logic)[] PrioritizedMudras =
+                        [
+                            (Huton, Debuffs.SealedHuton, () => true),
+                            (HyoshoRanryu, Debuffs.SealedHyoshoRanryu, () => true),
+                            (ForkedRaiju, Debuffs.SealedForkedRaiju, () => bunshinStacks > 0)
+                        ];
 
-                        // Priority 2: Hyosho Ranryu
-                        if (!HasStatusEffect(Debuffs.SealedHyoshoRanryu))
-                            return OriginalHook(HyoshoRanryu);
-
-                        // Priority 3: Forked Raiju
-                        if (!HasStatusEffect(Debuffs.SeakedForkedRaiju) && bunshinStacks > 0)
-                            return OriginalHook(ForkedRaiju);
+                        foreach (int priority in NINPvP_ST_MudraPriority.OrderBy(x => x))
+                        {
+                            int index = NINPvP_ST_MudraPriority.IndexOf(priority);
+                            if (index >= 0 && index < PrioritizedMudras.Length)
+                            {
+                                var mudra = PrioritizedMudras[index];
+                                if (NINPvP_ST_MudraOption[index] && !HasStatusEffect(mudra.SealedDebuff) && mudra.Logic())
+                                    return OriginalHook(mudra.Action);
+                            }
+                        }
                     }
                     else return actionID;
                 }
@@ -261,17 +293,23 @@ internal static class NINPvP
                         if (IsEnabled(Preset.NINPvP_AoE_Meisui) && inMeisuiRange && !meisuiLocked)
                             return OriginalHook(Meisui);
 
-                        // Priority 1: Huton
-                        if (!HasStatusEffect(Debuffs.SealedHuton))
-                            return OriginalHook(Huton);
+                        (uint Action, ushort SealedDebuff, Func<bool> Logic)[] PrioritizedMudras =
+                        [
+                            (Huton, Debuffs.SealedHuton, () => true),
+                            (Doton, Debuffs.SealedDoton, () => IsInRange(null, 8)),
+                            (GokaMekkyaku, Debuffs.SealedGokaMekkyaku, () => GetTargetDistance() <= 20)
+                        ];
 
-                        // Priority 2: Doton with range check (8y)
-                        if (!dotonLocked && IsInRange(null, 8))
-                            return OriginalHook(Doton);
-
-                        // Priority 3: Goka Mekkyaku with range check (20y)
-                        if (!gokaLocked && GetTargetDistance() <= 20)
-                            return OriginalHook(GokaMekkyaku);
+                        foreach (int priority in NINPvP_AoE_MudraPriority.OrderBy(x => x))
+                        {
+                            int index = NINPvP_AoE_MudraPriority.IndexOf(priority);
+                            if (index >= 0 && index < PrioritizedMudras.Length)
+                            {
+                                var mudra = PrioritizedMudras[index];
+                                if (NINPvP_AoE_MudraOption[index] && !HasStatusEffect(mudra.SealedDebuff) && mudra.Logic())
+                                    return OriginalHook(mudra.Action);
+                            }
+                        }
                     }
                     else return actionID;  // if automatic is not enabled and in mudra mode, ensures fuma shuriken is the option so mudras can be properly chosen
                 }
