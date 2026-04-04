@@ -204,5 +204,7 @@
   <data name="Input_ThrottleDelay" xml:space="preserve"><value>スロットル間隔（ms）</value></data>
   <data name="HelpText_ThrottleDelay" xml:space="preserve"><value>自動ローテーションはパフォーマンスのため、一定ミリ秒ごとにのみ実行するスロットルを内蔵しています。フレームレートに問題がある場合は値を上げてください。ただし高すぎると GCD が噛む副作用があるため、様子を見ながら調整してください。</value></data>
   <data name="Checkbox_Orbwalker" xml:space="preserve"><value>Orbwalker 連携を有効化</value></data>
-  <data name="HelpText_Orbwalker" xml:space="preserve"><value>Orbwalker が詠唱中の移動をロックするため、移動中でも詠唱付きアクションを使用できるようになります。必要に応じて Orbwalker 側の「Buffer Initial Cast」を有効にしてください。Orbwalker 系プラグインの導入と有効化が必要です。</value></data>
+  <data name="HelpText_Orbwalker" xml:space="preserve"><value>Orbwalker が詠唱中の移動をロックするため、移動中でも詠唱アクションを使えるようになります。必要に応じて Orbwalker 側の「Buffer Initial Cast」を有効にしてください。Orbwalker系プラグインの導入と有効化が必要です。</value></data>
+  <data name="Checkbox_HandleRaidwides" xml:space="preserve"><value>検知した全体攻撃に対応</value></data>
+  <data name="HelpText_HandleRaidwides" xml:space="preserve"><value>検知した全体攻撃や全体ダメージの前に、軽減や戻しのためのアクションを使おうとします。セットアップ用の {0} を除き、最大 2 アクションまで使用します。</value></data>
 </root>

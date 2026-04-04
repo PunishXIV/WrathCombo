@@ -123,9 +123,9 @@
   <data name="Hover_Retargetting_IsRetargetted" xml:space="preserve"><value>この機能のアクションはリターゲットされます</value></data>
   <data name="Hover_Retargetting_Line2" xml:space="preserve"><value>この機能のアクションは、自動的に
 開発側が最適と判断した対象へ向けて実行されます。</value></data>
-  <data name="Hover_Retargetting_Line3" xml:space="preserve"><value>Redirect や Reaction などで
-同じアクションに影響する設定を使っている場合、
-競合して問題を引き起こす可能性があります。</value></data>
+  <data name="Hover_Retargetting_Line3" xml:space="preserve"><value>Redirect や Reaction など、
+同じアクションに影響する設定を使っている場合は
+競合して問題が起きる可能性があります。</value></data>
   <data name="Hover_Retargetting_MaybeRetargetted" xml:space="preserve"><value>この機能のアクションはリターゲットされる場合があります。</value></data>
   <data name="Info_BLUAllGoodSpells" xml:space="preserve"><value>必要な青魔法はすべて有効です。</value></data>
   <data name="Label_AutoMode" xml:space="preserve"><value>自動モード</value></data>

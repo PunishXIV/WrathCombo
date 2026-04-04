@@ -144,7 +144,7 @@
 予期しない挙動や不具合を防ぐため、これらのプラグインを無効にするか、該当アクションを除外するか、{0} 側のリターゲットを無効にすることを推奨します。</value></data>
   <data name="Tooltip_TargettingConflicts_Action" xml:space="preserve"><value>        - {0}</value></data>
   <data name="Tooltip_TargettingConflicts_Plugin" xml:space="preserve"><value>- {0} {1}
-    そのプラグインと {2} の両方でリターゲットされるアクション:
+    そのプラグインと {2} の両方でリターゲットされているアクション:
 {3}</value></data>
   <data name="Warning_UnknownConflictType" xml:space="preserve"><value>不明な競合タイプ:</value></data>
   <data name="Wrath_Combo" xml:space="preserve"><value>Wrath Combo (JA)</value></data>
