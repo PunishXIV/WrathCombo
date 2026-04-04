@@ -1095,10 +1095,10 @@
     <value>敵にターゲットされた場合にクイックステップをローテーションに追加します。</value>
   </data>
   <data name="Phantom_Dancer_Mesmerize_Name" xml:space="preserve">
-    <value>メズマライズ</value>
+    <value>みりょう</value>
   </data>
   <data name="Phantom_Dancer_Mesmerize_Desc" xml:space="preserve">
-    <value>メズマライズをローテーションに追加します。</value>
+    <value>みりょうをローテーションに追加します。</value>
   </data>
   <data name="Phantom_MysticKnight_Name" xml:space="preserve">
     <value>魔法剣士のジョブアクション</value>
