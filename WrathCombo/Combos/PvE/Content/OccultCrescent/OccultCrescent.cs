@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ECommons.DalamudServices;
+using Lumina.Excel.Sheets;
+using System;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -10,9 +12,19 @@ namespace WrathCombo.Combos.PvE;
 internal partial class OccultCrescent
 {
     /// In Occult Crescent (in the field or a field raid).
-    public static bool IsInOccult =>
-        ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Occult_Crescent &&
-        (ContentCheck.IsInFieldOperations || ContentCheck.IsInFieldRaids);
+    public static bool IsInOccult => ContentHelper.Content.TerritoryIntendedUse == IntendedUse.Occult_Crescent && (ContentCheck.IsInFieldOperations || ContentCheck.IsInFieldRaids);
+
+    #region Shorter variables
+
+    private static bool IsMovingNow => IsMoving();
+    private static bool InCombatNow => InCombat();
+    private static bool CanWeaveNow => CanWeave();
+    private static bool HasTargetNow => HasBattleTarget();
+    private static float TargetHP => GetTargetHPPercent();
+    private static float PlayerHP => PlayerHealthPercentageHp();
+    private static uint PlayerMP => LocalPlayer.CurrentMp;
+
+    #endregion
 
     internal static bool TryGetPhantomAction(ref uint actionID)
     {
@@ -229,7 +241,7 @@ internal partial class OccultCrescent
         }
 
         if (IsEnabledAndUsable(Preset.Phantom_Berserker_DeadlyBlow, DeadlyBlow) &&
-            GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f && HasStatusEffect(Buffs.PentupRage) && InActionRange(DeadlyBlow) && !CanWeaveNow)
+            GetStatusEffectRemainingTime(Buffs.PentupRage) <= 3f && InActionRange(DeadlyBlow) && !CanWeaveNow)
         {
             actionID = DeadlyBlow; // better when buff timer is low
             return true;
@@ -474,21 +486,21 @@ internal partial class OccultCrescent
         if (CanWeaveNow || !HasTargetNow) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_Cannoneer_SilverCannon, SilverCannon) &&
-            ((!HasStatusEffect(Debuffs.SilverSickness, CurrentTarget, true) ||
-              GetStatusEffectRemainingTime(Debuffs.SilverSickness, CurrentTarget, true) < 30f) ||
+            ((!HasStatusEffect(Debuffs.SilverSickness, CurrentTarget, anyOwner: true) ||
+              GetStatusEffectRemainingTime(Debuffs.SilverSickness, CurrentTarget, anyOwner: true) < 30f) ||
              IsNotEnabled(Preset.Phantom_Cannoneer_HolyCannon)))
         {
             actionID = SilverCannon; // debuff
             return true;
         }
 
-        foreach((Preset preset, uint action) in new[]
-        {
-            (Preset.Phantom_Cannoneer_PhantomFire, PhantomFire),
-            (Preset.Phantom_Cannoneer_HolyCannon, HolyCannon),
-            (Preset.Phantom_Cannoneer_DarkCannon, DarkCannon),
-            (Preset.Phantom_Cannoneer_ShockCannon, ShockCannon)
-        })
+        foreach ((Preset preset, uint action) in new[]
+                 {
+                     (Preset.Phantom_Cannoneer_PhantomFire, PhantomFire),
+                     (Preset.Phantom_Cannoneer_HolyCannon, HolyCannon),
+                     (Preset.Phantom_Cannoneer_DarkCannon, DarkCannon),
+                     (Preset.Phantom_Cannoneer_ShockCannon, ShockCannon)
+                 })
         {
             if (IsEnabledAndUsable(preset, action))
             {
@@ -593,19 +605,22 @@ internal partial class OccultCrescent
         if (CanWeaveNow) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_BlazingSpellblade, BlazingSpellblade) && !CanWeave() &&
+            HasBattleTarget() && InActionRange(BlazingSpellblade) &&
             (!HasStatusEffect(Buffs.BlazingSpellblade) || GetStatusEffectRemainingTime(Buffs.BlazingSpellblade) <= 15))
         {
             actionID = BlazingSpellblade;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_HolySpellblade, HolySpellblade) && !CanWeave())
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_HolySpellblade, HolySpellblade) && !CanWeave() &&
+            HasBattleTarget() && InActionRange(HolySpellblade))
         {
             actionID = HolySpellblade;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_SunderingSpellblade, SunderingSpellblade) && !CanWeave())
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_SunderingSpellblade, SunderingSpellblade) && !CanWeave() &&
+            HasBattleTarget() && InActionRange(SunderingSpellblade))
         {
             actionID = SunderingSpellblade;
             return true;
@@ -634,7 +649,6 @@ internal partial class OccultCrescent
         if (CanWeaveNow) return false;
 
         #region Dances
-
         if (IsEnabled(Preset.Phantom_Dancer_Dance) && HasStatusEffect(Buffs.PoisedToSwordDance))
         {
             actionID = PoisedToSwordDance;
@@ -655,7 +669,6 @@ internal partial class OccultCrescent
             actionID = WillingToWaltz;
             return true;
         }
-
         #endregion
 
         if (IsEnabledAndUsable(Preset.Phantom_Dancer_QuickStep, Quickstep) && !HasStatusEffect(Buffs.Quickstep))
@@ -694,16 +707,4 @@ internal partial class OccultCrescent
 
         return false;
     }
-
-    #region Shorter variables
-
-    private static bool IsMovingNow => IsMoving();
-    private static bool InCombatNow => InCombat();
-    private static bool CanWeaveNow => CanWeave();
-    private static bool HasTargetNow => HasBattleTarget();
-    private static float TargetHP => GetTargetHPPercent();
-    private static float PlayerHP => PlayerHealthPercentageHp();
-    private static uint PlayerMP => LocalPlayer.CurrentMp;
-
-    #endregion
 }
