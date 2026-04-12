@@ -593,19 +593,22 @@ internal partial class OccultCrescent
         if (CanWeaveNow) return false;
 
         if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_BlazingSpellblade, BlazingSpellblade) && !CanWeave() &&
+            HasBattleTarget() && InActionRange(BlazingSpellblade) &&
             (!HasStatusEffect(Buffs.BlazingSpellblade) || GetStatusEffectRemainingTime(Buffs.BlazingSpellblade) <= 15))
         {
             actionID = BlazingSpellblade;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_HolySpellblade, HolySpellblade) && !CanWeave())
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_HolySpellblade, HolySpellblade) && !CanWeave() &&
+            HasBattleTarget() && InActionRange(HolySpellblade))
         {
             actionID = HolySpellblade;
             return true;
         }
 
-        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_SunderingSpellblade, SunderingSpellblade) && !CanWeave())
+        if (IsEnabledAndUsable(Preset.Phantom_MysticKnight_SunderingSpellblade, SunderingSpellblade) && !CanWeave() &&
+            HasBattleTarget() && InActionRange(SunderingSpellblade))
         {
             actionID = SunderingSpellblade;
             return true;
