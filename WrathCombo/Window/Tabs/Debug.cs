@@ -1182,16 +1182,16 @@ internal class Debug : ConfigWindow, IDisposable
                     Dupes.Add((s, replace.Conflicts));
             }
 
-            foreach (var d in Dupes.GroupBy(x => x.Item1).OrderByDescending(x => x.Count()).Select(x => x))
+            foreach (var d in Dupes.GroupBy(x => x.Item1).OrderBy(x => x.Key.ActionName()).Select(x => x))
             {
                 var actName = d.Select(x => x.Item1.ActionName()).First();
                 var id = d.Select(x => x.Item1).First();
                 var presets = d.SelectMany(x => x.Item2);
 
                 var maxCount = presets.Count() == 0 ? 0 : presets.GroupBy(x => x).Max(x => x.Count());
-                var evenPresets = maxCount == 0 ? true : presets.Any(x => presets.Count(y => y == x) % 2 == 0);
+                var matchingReplaces = presets.Distinct().Count() != 1;
 
-                ImGuiEx.Text(evenPresets ? EzColor.Green : EzColor.RedBright, $"{actName}");
+                ImGuiEx.Text(matchingReplaces ? EzColor.Green : EzColor.RedBright, $"{actName} ({id}){(!matchingReplaces ? " (Missing at least one other replace skill)": "")}");
                 ImGui.Indent();
                 foreach (var pre in presets.Distinct())
                 {
