@@ -12093,7 +12093,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replace Hot Shot, Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown..
+        ///   Looks up a localized string similar to Replace Hot Shot with Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown..
         /// </summary>
         internal static string MCH_BigHitter_Desc {
             get {
