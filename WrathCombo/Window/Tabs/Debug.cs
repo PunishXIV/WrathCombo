@@ -1189,7 +1189,7 @@ internal class Debug : ConfigWindow, IDisposable
                 var presets = d.SelectMany(x => x.Item2);
 
                 var maxCount = presets.Count() == 0 ? 0 : presets.GroupBy(x => x).Max(x => x.Count());
-                var evenPresets = presets.Distinct().Count() % 2 == 0;
+                var evenPresets = maxCount == 0 ? true : presets.Any(x => presets.Count(y => y == x) % 2 == 0);
 
                 ImGuiEx.Text(evenPresets ? EzColor.Green : EzColor.RedBright, $"{actName}");
                 ImGui.Indent();
