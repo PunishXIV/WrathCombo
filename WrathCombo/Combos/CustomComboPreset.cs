@@ -101,7 +101,6 @@ public enum Preset
     [JobInfo(Job.ADV)]
     ALL_Caster_Addle = 100020,
 
-    [ReplaceSkill(RDM.Verraise, SMN.Resurrection, BLU.AngelWhisper)]
     [ConflictingCombos(SMN_Raise, RDM_Raise)]
     [ParentCombo(ALL_Caster_Menu)]
     [JobInfo(Job.ADV)]
@@ -2003,7 +2002,7 @@ public enum Preset
 
     [AutoAction(true, false)]
     [ReplaceSkill(DNC.Windmill)]
-    [ConflictingCombos(DNC_AoE_MultiButton, DNC_AoE_AdvancedMode)]
+    [ConflictingCombos(DNC_AoE_MultiButton, DNC_AoE_AdvancedMode, DNC_Procc_Windmill)]
     [JobInfo(Job.DNC)]
     [SimpleCombo]
     DNC_AoE_SimpleMode = 4002,
@@ -2125,7 +2124,7 @@ public enum Preset
 
     [AutoAction(true, false)]
     [ReplaceSkill(DNC.Windmill)]
-    [ConflictingCombos(DNC_AoE_MultiButton, DNC_AoE_SimpleMode)]
+    [ConflictingCombos(DNC_AoE_MultiButton, DNC_AoE_SimpleMode, DNC_Procc_Windmill)]
     [JobInfo(Job.DNC)]
     [AdvancedCombo]
     DNC_AoE_AdvancedMode = 4040,
@@ -2240,7 +2239,7 @@ public enum Preset
 
     [AutoAction(true, false)]
     [ReplaceSkill(DNC.Windmill)]
-    [ConflictingCombos(DNC_AoE_AdvancedMode, DNC_AoE_SimpleMode)]
+    [ConflictingCombos(DNC_AoE_AdvancedMode, DNC_AoE_SimpleMode, DNC_Procc_Windmill)]
     [JobInfo(Job.DNC)]
     DNC_AoE_MultiButton = 4090,
 
@@ -2351,6 +2350,7 @@ public enum Preset
 
     // Windmill --> Rising Windmill
     [ReplaceSkill(DNC.Windmill)]
+    [ConflictingCombos(DNC_AoE_MultiButton, DNC_AoE_AdvancedMode, DNC_AoE_SimpleMode)]
     [JobInfo(Job.DNC)]
     DNC_Procc_Windmill = 4170,
 
@@ -5507,7 +5507,6 @@ public enum Preset
     RDM_Moulinet_NoWaste = 13428,
 
     [ReplaceSkill(RoleActions.Magic.Swiftcast)]
-    [ConflictingCombos(ALL_Caster_Raise)]
     [JobInfo(Job.RDM)]
     RDM_Raise = 13406,
 
@@ -6962,7 +6961,7 @@ public enum Preset
     [JobInfo(Job.SMN)]
     SMN_DemiAbilities = 17024,
 
-    [ConflictingCombos(ALL_Caster_Raise)]
+    [ReplaceSkill(RoleActions.Magic.Swiftcast)]
     [JobInfo(Job.SMN)]
     SMN_Raise = 17027,
 

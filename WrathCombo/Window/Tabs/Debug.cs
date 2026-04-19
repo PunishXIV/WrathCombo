@@ -18,6 +18,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -75,6 +76,7 @@ internal class Debug : ConfigWindow, IDisposable
     private const string SymbolDuration = "";
     private const string SymbolParameter = "";
 
+    private static List<(uint, Preset[])> Dupes = [];
     internal new static unsafe void Draw()
     {
         ImGui.Text("This is where you can figure out where it all went wrong.");
@@ -1167,6 +1169,40 @@ internal class Debug : ConfigWindow, IDisposable
         }
 
         #endregion
+
+        ImGuiEx.Spacing(new Vector2(0, SpacingMedium));
+
+        if (ImGui.CollapsingHeader("Presets"))
+        {
+            Dupes.Clear();
+            foreach (var replace in PresetStorage.AllPresets.Values)
+            {
+                if (replace.ReplaceSkill is null) continue;
+                foreach (var s in replace?.ReplaceSkill?.ActionIDs)
+                    Dupes.Add((s, replace.Conflicts));
+            }
+
+            foreach (var d in Dupes.GroupBy(x => x.Item1).OrderByDescending(x => x.Count()).Select(x => x))
+            {
+                var actName = d.Select(x => x.Item1.ActionName()).First();
+                var id = d.Select(x => x.Item1).First();
+                var presets = d.SelectMany(x => x.Item2);
+
+                var maxCount = presets.Count() == 0 ? 0 : presets.GroupBy(x => x).Max(x => x.Count());
+                var evenPresets = presets.Distinct().Count() % 2 == 0;
+
+                ImGuiEx.Text(evenPresets ? EzColor.Green : EzColor.RedBright, $"{actName}");
+                ImGui.Indent();
+                foreach (var pre in presets.Distinct())
+                {
+                    var count = presets.Count(x => x == pre);
+                    ImGuiEx.Text(count == maxCount ? EzColor.Green : EzColor.RedBright, $"{pre} {count}");
+                }
+                ImGui.Unindent();
+
+            }
+        }
+
 
         ImGuiEx.Spacing(new Vector2(0, SpacingMedium));
 
