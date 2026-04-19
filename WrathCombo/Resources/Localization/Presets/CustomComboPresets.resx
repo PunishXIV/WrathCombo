@@ -4292,7 +4292,7 @@ Will lock out input to keep Flamethrower going by replacing Spreadshot with Sava
     <value>Single Button Auto Crossbow Feature</value>
   </data>
   <data name="MCH_BigHitter_Desc" xml:space="preserve">
-    <value>Replace Hot Shot, Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown.</value>
+    <value>Replace Hot Shot with Drill, Air Anchor, Chainsaw and Excavator depending on which is on cooldown.</value>
   </data>
   <data name="MCH_BigHitter_Name" xml:space="preserve">
     <value>Big Hitter Feature</value>
