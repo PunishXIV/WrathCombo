@@ -1527,6 +1527,7 @@ public enum Preset
     #region Movement
 
     [ConflictingCombos(BLM_Aetherial_Manipulation)]
+    [ReplaceSkill(BLM.AetherialManipulation)]
     [JobInfo(Job.BLM)]
     [Retargeted(BLM.AetherialManipulation)]
     BLM_Retargetting_Aetherial_Manipulation = 2066,

@@ -1190,8 +1190,19 @@ internal class Debug : ConfigWindow, IDisposable
 
                 var maxCount = presets.Count() == 0 ? 0 : presets.GroupBy(x => x).Max(x => x.Count());
                 var matchingReplaces = presets.Distinct().Count() != 1;
+                var nonMatchingPresets = new List<Preset>();
 
-                ImGuiEx.Text(matchingReplaces ? EzColor.Green : EzColor.RedBright, $"{actName} ({id}){(!matchingReplaces ? " (Missing at least one other replace skill)": "")}");
+                foreach (var pre in presets.Distinct())
+                {
+                    var atts = pre.Attributes().ReplaceSkill;
+                    if (atts == null || !atts.ActionIDs.Any(x => x == id))
+                    {
+                        nonMatchingPresets.Add(pre);
+                        matchingReplaces = false;
+                    }
+                }
+
+                ImGuiEx.Text(matchingReplaces ? EzColor.Green : EzColor.RedBright, $"{actName} ({id}){(!matchingReplaces ? $" (Possibly missing from {string.Join(" - ", nonMatchingPresets)})": "")}");
                 ImGui.Indent();
                 foreach (var pre in presets.Distinct())
                 {
