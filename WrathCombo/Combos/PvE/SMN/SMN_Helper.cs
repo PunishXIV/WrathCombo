@@ -409,12 +409,12 @@ internal partial class SMN
                 //Searing light is active
                 if (!ogcdPoolingEnabled || !LevelChecked(SearingLight) || SearingCD > 30 || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
                 {
-                    if (flags.HasFlag(Combo.ST))
+                    if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !LevelChecked(EnergySiphon))
                     {
                         actionID = OriginalHook(EnergyDrain);
                         return true;
                     }
-                    if (flags.HasFlag(Combo.AoE))
+                    if (flags.HasFlag(Combo.AoE) && LevelChecked(EnergySiphon))
                     {
                         actionID = OriginalHook(EnergySiphon);
                         return true;
@@ -457,12 +457,12 @@ internal partial class SMN
                 //You have Searing Light
                 if (!ogcdPoolingEnabled || !LevelChecked(SearingLight) || HasStatusEffect(Buffs.SearingLight, anyOwner: true))
                 {
-                    if (flags.HasFlag(Combo.ST))
+                    if (flags.HasFlag(Combo.ST) || flags.HasFlag(Combo.AoE) && !LevelChecked(Painflare))
                     {
                         actionID = OriginalHook(Fester);
                         return true;
                     }
-                    if (flags.HasFlag(Combo.AoE))
+                    if (flags.HasFlag(Combo.AoE) && LevelChecked(Painflare))
                     {
                         actionID = OriginalHook(Painflare);
                         return true;

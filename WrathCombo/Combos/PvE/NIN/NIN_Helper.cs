@@ -18,7 +18,7 @@ internal partial class NIN
     public static FrozenSet<uint> NormalJutsus = [FumaShuriken, Raiton, Katon, Doton, Suiton, Hyoton, HyoshoRanryu, GokaMekkyaku];
     internal static bool STSimpleMode => IsEnabled(Preset.NIN_ST_SimpleMode);
     internal static bool AoESimpleMode => IsEnabled(Preset.NIN_AoE_SimpleMode);
-    internal static bool NinjaWeave => CanWeave(.6f, 10);
+    internal static bool NinjaWeave => CanWeave(.3f, 10);
 
     #region Mudra Logic
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
