@@ -116,13 +116,20 @@ internal abstract partial class CustomComboFunctions
         get
         {
             field ??= new();
-            foreach (var pc in Svc.Objects
-                         .Where(x => x is IBattleChara && x.CanUseOn(WHM.Raise))
-                         .Cast<IBattleChara>().ToList())
+            foreach (var obj in Svc.Objects)
             {
+                if (obj is not IBattleChara pc || !obj.CanUseOn(WHM.Raise))
+                    continue;
+
                 if (pc.IsDead && !pc.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
                 {
-                    if (!field.Any(x => x.GameObjectId == pc.GameObjectId))
+                    bool alreadyTracked = false;
+                    for (int i = 0; i < field.Count; i++)
+                    {
+                        if (field[i].GameObjectId == pc.GameObjectId)
+                        { alreadyTracked = true; break; }
+                    }
+                    if (!alreadyTracked)
                         field.Add(new WrathPartyMember
                         {
                             GameObjectId = pc.GameObjectId,

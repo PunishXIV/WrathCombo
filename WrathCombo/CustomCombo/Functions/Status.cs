@@ -8,6 +8,7 @@ using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -265,9 +266,10 @@ internal abstract partial class CustomComboFunctions
         if (statuses is null)
             return false;
 
-        // Turn Target's status to uint hashset
-        var targetStatuses = statuses.Select(s => s.StatusId).ToHashSet();
         uint targetID = tar.BaseId;
+        // Built lazily — most switch cases early-return without needing it.
+        HashSet<uint>? targetStatuses = null;
+        HashSet<uint> GetTargetStatuses() => targetStatuses ??= statuses.Select(s => s.StatusId).ToHashSet();
 
         // Returning False in each case because there should be no other General Invincibility Check needed
         // for specified areas
@@ -292,16 +294,16 @@ internal abstract partial class CustomComboFunctions
                 return false;
 
             case 281: //Whorleater (Hard)
-                if ((targetID is 2663 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478)) ||
-                    (targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477)))
+                if ((targetID is 2663 && Player.Job.IsPhysicalRangedDps() && GetTargetStatuses().Contains(478)) ||
+                    (targetID is 2694 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && GetTargetStatuses().Contains(477)))
                     return true;
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, GetTargetStatuses());
 
             case 359: //Whorleater (Extreme)
-                if (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && targetStatuses.Contains(478) ||
-                    targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && targetStatuses.Contains(477))
+                if (targetID is 2802 && Player.Job.IsPhysicalRangedDps() && GetTargetStatuses().Contains(478) ||
+                    targetID is 2803 && (Player.Job.IsMagicalRangedDps() || Player.Job.IsHealer()) && GetTargetStatuses().Contains(477))
                     return true;
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, GetTargetStatuses());
 
             case 508: // The Void Ark
                 // Sawtooth 5103
@@ -331,12 +333,12 @@ internal abstract partial class CustomComboFunctions
                 }
 
                 //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
-                if ((tar.SafeStatusList?.Any(x => x.StatusId == 3454) is true && HasStatusEffect(3499)) ||
-                    (tar.SafeStatusList?.Any(x => x.StatusId == 1675) is true && HasStatusEffect(3500)))
+                if ((GetTargetStatuses().Contains(3454) && HasStatusEffect(3499)) ||
+                    (GetTargetStatuses().Contains(1675) && HasStatusEffect(3500)))
                     return true;
 
                 //Check for any ol invincibility
-                if (StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses)) return true;
+                if (StatusCache.CompareLists(StatusCache.InvincibleStatuses, GetTargetStatuses())) return true;
 
                 return false;
 
@@ -478,7 +480,7 @@ internal abstract partial class CustomComboFunctions
             default:
                 // General invincibility check
                 // Due to large size of InvincibleStatuses, best to check process this way
-                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, GetTargetStatuses());
         }
     }
 

@@ -263,19 +263,20 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Gets the average HP percentage of all enemies within a specified range. </summary>
     public static float GetAvgEnemyHPPercentInRange(float range)
     {
-        var enemies = Svc.Objects
-            .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && !x.IsDead && x.IsTargetable &&
-                        IsInRange(x, range))
-            .ToList();
+        float totalHpPercent = 0f;
+        int count = 0;
 
-        if (enemies.Count == 0)
-            return float.NaN;
+        foreach (var obj in Svc.Objects)
+        {
+            if (obj is not IBattleChara chara) continue;
+            if (!chara.IsHostile() || chara.IsDead || !chara.IsTargetable) continue;
+            if (!IsInRange(chara, range)) continue;
 
-        var totalHpPercent = enemies
-            .Sum(enemy => enemy.CurrentHp * 100f / enemy.MaxHp);
+            totalHpPercent += chara.CurrentHp * 100f / chara.MaxHp;
+            count++;
+        }
 
-        return totalHpPercent / enemies.Count;
+        return count == 0 ? float.NaN : totalHpPercent / count;
     }
 
     #endregion
@@ -525,6 +526,8 @@ internal abstract partial class CustomComboFunctions
             CleanupExpiredLineOfSightCache(now);
     }
 
+    private static readonly List<ulong> _losCacheRemovalScratch = new();
+
     /// Removes old line-of-sight cache entries.
     internal static void CleanupExpiredLineOfSightCache(long? now = null)
     {
@@ -532,11 +535,14 @@ internal abstract partial class CustomComboFunctions
 
         lock (LineOfSightCache)
         {
-            foreach (var expiredKey in LineOfSightCache
-                         .Where(kvp => now - kvp.Value.Timestamp >
-                                       LineOfSightCacheDurationMs)
-                         .Select(kvp => kvp.Key).ToList())
-                LineOfSightCache.Remove(expiredKey);
+            _losCacheRemovalScratch.Clear();
+            foreach (var kvp in LineOfSightCache)
+            {
+                if (now - kvp.Value.Timestamp > LineOfSightCacheDurationMs)
+                    _losCacheRemovalScratch.Add(kvp.Key);
+            }
+            for (int i = 0; i < _losCacheRemovalScratch.Count; i++)
+                LineOfSightCache.Remove(_losCacheRemovalScratch[i]);
         }
     }
 
@@ -829,53 +835,49 @@ internal abstract partial class CustomComboFunctions
 
     public static bool TargetInSelfCircle(IGameObject? target, float size)
     {
-        if (target is null)
+        if (target is null || LocalPlayer is not { } player)
             return false;
 
         if (!IsInLineOfSight(target))
             return false;
 
-        return Svc.Objects.Any(o => o.GameObjectId == target.GameObjectId && PointInCircle(o.Position - LocalPlayer.Position, size + o.HitboxRadius));
+        return PointInCircle(target.Position - player.Position, size + target.HitboxRadius);
     }
 
-    public static bool TargetInTargetedCircle(IGameObject? target, float size)
+    public static bool TargetInTargetedCircle(IGameObject? origin, IGameObject? target, float size)
     {
-        if (target is null)
+        if (origin is null || target is null)
             return false;
 
-        return Svc.Objects.Any(o => o.GameObjectId == target.GameObjectId && PointInCircle(o.Position - target.Position, size + o.HitboxRadius));
+        return PointInCircle(target.Position - origin.Position, size + target.HitboxRadius);
     }
 
     public static bool TargetInCone(IGameObject? target, float size)
     {
-        if (target is null)
+        if (target is null || LocalPlayer is not { } player)
             return false;
 
         if (!IsInLineOfSight(target))
             return false;
 
-        return Svc.Objects.Any(o =>
-                 o.GameObjectId == target.GameObjectId &&
-                 GetTargetDistance(o) <= size &&
-                 PointInCone(o.Position - LocalPlayer.Position,
-                     PositionalMath.GetDirection(LocalPlayer.Position, target.Position),
-                     45f));
+        return GetTargetDistance(target) <= size &&
+               PointInCone(target.Position - player.Position,
+                   PositionalMath.GetDirection(player.Position, target.Position),
+                   45f);
     }
 
     public static bool TargetInLine(IGameObject? target, float size, float width)
     {
-        if (target is null)
+        if (target is null || LocalPlayer is not { } player)
             return false;
 
         if (!IsInLineOfSight(target))
             return false;
 
-        return Svc.Objects.Any(o =>
-                o.GameObjectId == target.GameObjectId &&
-                GetTargetDistance(o) <= size &&
-                HitboxInRect(o,
-                    PositionalMath.GetRotation(LocalPlayer.Position, target.Position),
-                    size * 0.5f, width * 0.5f));
+        return GetTargetDistance(target) <= size &&
+               HitboxInRect(target,
+                   PositionalMath.GetRotation(player.Position, target.Position),
+                   size * 0.5f, width * 0.5f);
     }
 
     #region Shape Helpers
