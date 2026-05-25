@@ -52,7 +52,7 @@ internal abstract partial class CustomComboFunctions
     {
         foreach (var dps in EnmityDictParty?.OrderByDescending(x => x.Value))
         {
-            var obj = Svc.Objects.First(x => x.GameObjectId == dps.Key) as IBattleChara;
+            var obj = Svc.Objects.SearchById(dps.Key) as IBattleChara;
             if (obj?.GetRole() is CombatRole.DPS)
                 return obj;
 

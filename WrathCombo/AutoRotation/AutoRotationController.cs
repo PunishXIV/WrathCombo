@@ -48,7 +48,8 @@ internal unsafe class AutoRotationController
 
     public static bool WouldLikeToGroundTarget;
     public static bool Paused;
-    public static int UnpauseSeconds;
+    // Placeholder for the unimplemented territory-warning auto-pause feature in ScanForWarnings.
+    public static int UnpauseSeconds = 0;
 
     public static IGameObject? AutorotHealTarget;
     public static bool AutorotRaidwiding;
@@ -73,7 +74,6 @@ internal unsafe class AutoRotationController
             return;
 
         bool pauseWarningFound = false;
-        bool raidwideWarningFound = false;
         var logMessages = Svc.Data.Excel.GetSheet<LogMessage>();
         switch (Content.TerritoryID)
         {
@@ -136,6 +136,18 @@ internal unsafe class AutoRotationController
 
     static bool CombatBypass => DPSTargeting.BaseSelection.Any(x => (cfg.BypassQuest && IsQuestMob(x)) || (cfg.BypassFATE && x.Struct()->FateId != 0 && InFATE()));
     static bool NotInCombat => !GetPartyMembers().Any(x => x.BattleChara is not null && x.BattleChara.Struct()->InCombat && !x.IsOutOfPartyNPC) || PartyEngageDuration().TotalSeconds < cfg.CombatDelay;
+
+    private static bool AnyHostileWithinRangeOf(IGameObject? referenceTarget, float range)
+    {
+        if (referenceTarget is null) return false;
+        foreach (var x in Svc.Objects)
+        {
+            if (x.IsDead || !x.IsTargetable || !x.IsHostile()) continue;
+            if (GetTargetDistance(x, referenceTarget) <= range)
+                return true;
+        }
+        return false;
+    }
 
     private static bool ShouldSkipAutorotation()
     {
@@ -371,19 +383,43 @@ internal unsafe class AutoRotationController
         }
     }
 
+    private static readonly List<PresetStorage.PresetData> _processAoEScratch = new();
+    private static readonly List<PresetStorage.PresetData> _processSTScratch = new();
+
     private static bool ProcessAutoActions(Dictionary<Preset, bool> autoActions, ref uint _, bool canHeal, bool stOnly)
     {
-        // Pre-filter and cache attributes to avoid repeated lookups
-        var filteredActions = autoActions
-            .Select(x => new { Preset = x.Key, Attributes = x.Key.Attributes() })
-            .Where(x => x.Attributes is { AutoAction: not null, ReplaceSkill: not null })
-            .Where(x => x.Attributes.AutoAction.IsHeal == canHeal)
-            .Where(x => !stOnly || x.Attributes.AutoAction.IsAoE == false)
-            .OrderByDescending(x => x.Attributes.AutoAction.IsAoE);
+        _processAoEScratch.Clear();
+        _processSTScratch.Clear();
 
-        foreach (var entry in filteredActions)
+        // Single-pass filter + partition into AoE-first / ST-after (mirrors OrderByDescending(IsAoE))
+        foreach (var preset in autoActions.Keys)
         {
-            var attributes = entry.Attributes;
+            var attr = preset.Attributes();
+            if (attr is not { AutoAction: not null, ReplaceSkill: not null })
+                continue;
+            if (attr.AutoAction.IsHeal != canHeal)
+                continue;
+
+            if (attr.AutoAction.IsAoE)
+            {
+                if (stOnly) continue;
+                _processAoEScratch.Add(attr);
+            }
+            else
+            {
+                _processSTScratch.Add(attr);
+            }
+        }
+
+        if (ProcessPartition(_processAoEScratch)) return false;
+        ProcessPartition(_processSTScratch);
+        return false;
+    }
+
+    private static bool ProcessPartition(List<PresetStorage.PresetData> list)
+    {
+        foreach (var attributes in list)
+        {
             var action = attributes.AutoAction!;
 
             // Skip if locked
@@ -402,20 +438,20 @@ internal unsafe class AutoRotationController
 
             if (action.IsHeal)
             {
-                AutomateHealing(entry.Preset, attributes, gameAct);
+                AutomateHealing(attributes.Preset, attributes, gameAct);
                 continue;
             }
 
             // Tank logic
             if (Player.Object?.GetRole() is CombatRole.Tank)
             {
-                AutomateTanking(entry.Preset, attributes, gameAct);
+                AutomateTanking(attributes.Preset, attributes, gameAct);
                 continue;
             }
 
             // DPS logic
-            if (!action.IsHeal && AutomateDPS(entry.Preset, attributes, gameAct))
-                return false;
+            if (AutomateDPS(attributes.Preset, attributes, gameAct))
+                return true;
         }
 
         return false;
@@ -442,11 +478,9 @@ internal unsafe class AutoRotationController
 
         if (regenSpell != 0 && !JustUsed(regenSpell, 4) && SimpleTarget.FocusTarget != null && (!HasStatusEffect(regenBuff, out var regen, SimpleTarget.FocusTarget) || regen?.RemainingTime <= 5f))
         {
-            var query = Svc.Objects.Where(x => !x.IsDead && x.IsTargetable && x.IsHostile());
-            if (!query.Any())
+            if (!AnyHostileWithinRangeOf(SimpleTarget.FocusTarget, QueryRange))
                 return;
 
-            if (query.Min(x => GetTargetDistance(x, SimpleTarget.FocusTarget)) <= QueryRange)
             {
                 var spell = ActionManager.Instance()->GetAdjustedActionId(regenSpell).Retarget(SimpleTarget.FocusTarget);
 
@@ -506,11 +540,9 @@ internal unsafe class AutoRotationController
                 }
             }
 
-            var query = Svc.Objects.Where(x => !x.IsDead && x.IsTargetable && x.IsHostile());
-            if (!query.Any())
+            if (!AnyHostileWithinRangeOf(SimpleTarget.FocusTarget, QueryRange))
                 return;
 
-            if (query.Min(x => GetTargetDistance(x, SimpleTarget.FocusTarget)) <= QueryRange)
             {
                 var spell = ActionManager.Instance()->GetAdjustedActionId(shieldSpell).Retarget(SimpleTarget.FocusTarget);
 
@@ -661,25 +693,48 @@ internal unsafe class AutoRotationController
 
     // Note: Not entirely sure what to do when the Kardia standalone retargeting is on since it doesn't follow this ruleset so this will be untouched for now but
     // it is known if it acts funny with the standalone retarget then that's what causes it.
+    private static readonly HashSet<ulong> _kardiaTargetedScratch = new();
+
     private static void UpdateKardiaTarget()
     {
         if (HasStatusEffect(418)) return;
         if (!LevelChecked(SGE.Kardia)) return;
         if (CombatEngageDuration().TotalSeconds < 3) return;
 
-        foreach (var member in GetPartyMembers().Where(x => !x.BattleChara.IsDead).OrderByDescending(x => x.BattleChara?.GetRole() is CombatRole.Tank))
+        // Single pass: which game-object IDs are being targeted by a hostile?
+        _kardiaTargetedScratch.Clear();
+        foreach (var x in Svc.Objects)
         {
-            if (cfg.HealerSettings.KardiaTanksOnly && member.BattleChara?.GetRole() is not CombatRole.Tank &&
-                !HasStatusEffect(3615, member.BattleChara, true)) continue;
-
-            var enemiesTargeting = Svc.Objects.Count(x => x.IsTargetable && x.IsHostile() && x.TargetObjectId == member.BattleChara.GameObjectId);
-            if (enemiesTargeting > 0 && !HasStatusEffect(SGE.Buffs.Kardion, member.BattleChara))
-            {
-                ActionManager.Instance()->UseAction(ActionType.Action, SGE.Kardia.Retarget(member.BattleChara), member.BattleChara.GameObjectId);
-                return;
-            }
+            if (!x.IsTargetable || !x.IsHostile()) continue;
+            var tid = x.TargetObjectId;
+            if (tid != 0) _kardiaTargetedScratch.Add(tid);
         }
 
+        var party = GetPartyMembers();
+
+        // Tanks first, then everyone else (mirrors the old OrderByDescending(role is Tank))
+        for (int pass = 0; pass < 2; pass++)
+        {
+            bool tankPass = pass == 0;
+            for (int i = 0; i < party.Count; i++)
+            {
+                var member = party[i];
+                var bc = member.BattleChara;
+                if (bc is null || bc.IsDead) continue;
+
+                bool isTank = bc.GetRole() is CombatRole.Tank;
+                if (isTank != tankPass) continue;
+
+                if (cfg.HealerSettings.KardiaTanksOnly && !isTank && !HasStatusEffect(3615, bc, true))
+                    continue;
+
+                if (_kardiaTargetedScratch.Contains(bc.GameObjectId) && !HasStatusEffect(SGE.Buffs.Kardion, bc))
+                {
+                    ActionManager.Instance()->UseAction(ActionType.Action, SGE.Kardia.Retarget(bc), bc.GameObjectId);
+                    return;
+                }
+            }
+        }
     }
 
     private static bool AutomateDPS(Preset preset, PresetStorage.PresetData attributes, uint gameAct)
@@ -1041,9 +1096,39 @@ internal unsafe class AutoRotationController
             ((cfg.DPSSettings.OnlyAttackInCombat && chara.Struct()->InCombat) || !cfg.DPSSettings.OnlyAttackInCombat) &&
             IsInLineOfSight(chara);
 
-        public static IEnumerable<IGameObject> BaseSelection => Svc.Objects.Any(x => Query(x) && IsPriority(x))
-            ? Svc.Objects.Where(x => Query(x) && IsPriority(x))
-            : Svc.Objects.Where(x => Query(x));
+        private static long _baseSelectionTick = -1;
+        private static readonly List<IGameObject> _baseSelectionCache = new();
+        private static readonly List<IGameObject> _baseSelectionPriorityScratch = new();
+
+        public static List<IGameObject> BaseSelection
+        {
+            get
+            {
+                var tick = Environment.TickCount64;
+                if (_baseSelectionTick == tick)
+                    return _baseSelectionCache;
+
+                _baseSelectionTick = tick;
+                _baseSelectionCache.Clear();
+                _baseSelectionPriorityScratch.Clear();
+
+                foreach (var x in Svc.Objects)
+                {
+                    if (!Query(x)) continue;
+                    _baseSelectionCache.Add(x);
+                    if (IsPriority(x))
+                        _baseSelectionPriorityScratch.Add(x);
+                }
+
+                if (_baseSelectionPriorityScratch.Count > 0)
+                {
+                    _baseSelectionCache.Clear();
+                    _baseSelectionCache.AddRange(_baseSelectionPriorityScratch);
+                }
+
+                return _baseSelectionCache;
+            }
+        }
 
         private static bool IsPriority(IGameObject x)
         {

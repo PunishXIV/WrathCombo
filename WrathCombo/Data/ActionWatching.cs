@@ -48,9 +48,9 @@ public static class ActionWatching
     internal static readonly Dictionary<(uint, ulong), long> UsedOnDict = [];
 
     // Lists
-    internal readonly static List<uint> WeaveActions = [];
-    internal readonly static List<uint> CombatActions = [];
-    internal readonly static HashSet<uint> BossesBaseIds = [.. Svc.Data.GetExcelSheet<BNpcBase>().Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId)];
+    internal static readonly List<uint> WeaveActions = [];
+    internal static readonly List<uint> CombatActions = [];
+    internal static readonly HashSet<uint> BossesBaseIds = [.. Svc.Data.GetExcelSheet<BNpcBase>().Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId)];
 
     // Delegates
     public delegate void LastActionChangeDelegate();
@@ -60,10 +60,10 @@ public static class ActionWatching
     public static event ActionSendDelegate? OnActionSend;
 
     private unsafe delegate void ReceiveActionEffectDelegate(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds);
-    private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
+    private static readonly Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
 
     private unsafe delegate bool UseActionDelegate(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted);
-    private readonly static Hook<UseActionDelegate>? UseActionHook;
+    private static readonly Hook<UseActionDelegate>? UseActionHook;
 
     private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
@@ -119,7 +119,7 @@ public static class ActionWatching
             var actionType = header->ActionType;
             var currentTick = Environment.TickCount64;
             var playerObjectId = LocalPlayer.GameObjectId;
-            var partyMembers = GetPartyMembers().ToDictionary(x => x.GameObjectId);
+            var partyMembers = GetPartyMembers();
 #if DEBUG
             var debugObjectTable = Svc.Objects;
             var debugActionName = actionId.ActionName();
@@ -149,7 +149,7 @@ public static class ActionWatching
                     var effType = eff.Type;
                     var effValue = eff.Value;
                     var effObjectId = eff.AtSource ? casterEntityId : targetId;
-                    var dataId = Svc.Objects.FirstOrDefault(x => x.GameObjectId == effObjectId)?.BaseId;
+                    var dataId = Svc.Objects.SearchById(effObjectId)?.BaseId;
 
 #if DEBUG
                     Svc.Log.Verbose(
@@ -166,7 +166,7 @@ public static class ActionWatching
                     // Event: Heal or Damage
                     if (effType is ActionEffectType.Heal or ActionEffectType.Damage)
                     {
-                        if (partyMembers.TryGetValue(targetId, out var member))
+                        if (FindPartyMember(partyMembers, targetId) is { } member)
                         {
                             member.CurrentHP = effType == ActionEffectType.Damage
                                 ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - effValue)
@@ -180,7 +180,7 @@ public static class ActionWatching
                     // Event: MP Gain or MP Loss
                     if (effType is ActionEffectType.MpGain or ActionEffectType.MpLoss)
                     {
-                        if (partyMembers.TryGetValue(effObjectId, out var member))
+                        if (FindPartyMember(partyMembers, effObjectId) is { } member)
                         {
                             member.CurrentMP = effType == ActionEffectType.MpLoss
                                 ? Math.Min(member.BattleChara.MaxMp, member.CurrentMP - effValue)
@@ -194,7 +194,7 @@ public static class ActionWatching
                     // Event: Status Gain (Source)
                     if (effType is ActionEffectType.ApplyStatusEffectSource)
                     {
-                        if (partyMembers.TryGetValue(effObjectId, out var member))
+                        if (FindPartyMember(partyMembers, effObjectId) is { } member)
                         {
                             member.BuffsGainedAt[effValue] = currentTick;
                         }
@@ -206,10 +206,8 @@ public static class ActionWatching
                         if (ICDTracker.Trackers.TryGetFirst(x => x.StatusID == effValue && x.GameObjectId == effObjectId, out var icd))
                         {
                             //This section here is just to clear out any erroneous times a status was added to the blacklist when it shouldn't have due to potential timings
-                            if (dataId is uint val && Service.Configuration.StatusBlacklist.Any(x => x.Status == effValue && x.BaseId == dataId))
+                            if (dataId is uint val && Service.Configuration.StatusBlacklist.Remove((effValue, val)))
                             {
-                                var p = Service.Configuration.StatusBlacklist.First(x => x.Status == effValue && x.BaseId == dataId);
-                                Service.Configuration.StatusBlacklist.Remove(p);
                                 Service.Configuration.Save();
                             }
                             icd.ICDClearedTime = dateNow + TimeSpan.FromSeconds(60);
@@ -242,6 +240,16 @@ public static class ActionWatching
         {
             Svc.Log.Error(ex, "ReceiveActionEffectDetour");
         }
+    }
+
+    private static WrathPartyMember? FindPartyMember(List<WrathPartyMember> members, ulong gameObjectId)
+    {
+        for (int i = 0; i < members.Count; i++)
+        {
+            if (members[i].GameObjectId == gameObjectId)
+                return members[i];
+        }
+        return null;
     }
 
     private static unsafe void UpdateLastUsedAction(uint actionId, byte actionType, ulong targetObjectId, int castTime)
@@ -457,7 +465,7 @@ public static class ActionWatching
                 }
 
                 // Clear any dodgy leftover targets
-                if (!Svc.Objects.Any(x => x.GameObjectId == actionManager->QueuedTargetId.Id))
+                if (Svc.Objects.SearchById(actionManager->QueuedTargetId.Id) is null)
                     actionManager->QueuedTargetId = 0;
 
                 // However, if we have a queued target ID assume that's what we want and not whatever current retargeting is. TODO: Setting?

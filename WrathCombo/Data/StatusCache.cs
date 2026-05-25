@@ -96,6 +96,10 @@ internal class StatusCache
 
     public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
 
+    // TODO: this is a copy-paste of DamageUpStatuses — both reference status ID 61 ("Damage Up")
+    // and match by name. HasEvasionUp is therefore identical to HasDamageUp, making the
+    // `HasDamageUp(target) || HasEvasionUp(target)` check in HasPhantomDispelStatus redundant.
+    // Replace 61 with the correct Evasion Up reference status ID (or change the name match).
     private static readonly FrozenSet<uint> evasionUpStatuses =
         ENStatusSheet.TryGetValue(61, out var refRow)
             ? ENStatusSheet
@@ -206,28 +210,31 @@ internal class StatusCache
     /// <returns></returns>
     internal static bool HasStatusInCacheList(FrozenSet<uint> statusList, IGameObject? gameObject = null)
     {
-        if (gameObject is not IBattleChara chara)
+        if (statusList.Count == 0 || gameObject is not IBattleChara chara)
             return false;
 
         var statuses = chara.SafeStatusList;
-
         if (statuses is null)
             return false;
 
-        var targetStatuses = statuses.Select(s => s.StatusId).ToHashSet();
-        return statusList.Count switch
+        foreach (var status in statuses)
         {
-            0 => false,
-            _ => CompareLists(statusList, targetStatuses)
-        };
+            if (statusList.Contains(status.StatusId))
+                return true;
+        }
+        return false;
     }
 
     /// <summary>
     /// Compares two hashsets, in this case, used to compare a cached set of status IDs against a character's StatusID list
     /// </summary>
-    /// <param name="statusList"></param>
-    /// <param name="charaStatusList"></param>
-    /// <returns></returns>
-    internal static bool CompareLists(FrozenSet<uint> statusList, HashSet<uint> charaStatusList) =>
-        charaStatusList.Any(id => statusList.Contains(id));
+    internal static bool CompareLists(FrozenSet<uint> statusList, HashSet<uint> charaStatusList)
+    {
+        foreach (var id in charaStatusList)
+        {
+            if (statusList.Contains(id))
+                return true;
+        }
+        return false;
+    }
 }

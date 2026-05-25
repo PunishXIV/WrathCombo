@@ -193,8 +193,38 @@ public class WrathPartyMember
         ? realJob
         : BattleChara?.ClassJob.Value ?? ExcelJobHelper.GetJobById(0);
 
-    public IBattleChara? BattleChara => Svc.Objects.SearchById(GameObjectId) as IBattleChara;
-    public IGameObject? GameObject => Svc.Objects.SearchById(GameObjectId);
+    private long _objCacheTick = -1;
+    private IGameObject? _gameObjCache;
+    private IBattleChara? _battleCharaCache;
+
+    public IBattleChara? BattleChara
+    {
+        get
+        {
+            RefreshObjectCache();
+            return _battleCharaCache;
+        }
+    }
+
+    public IGameObject? GameObject
+    {
+        get
+        {
+            RefreshObjectCache();
+            return _gameObjCache;
+        }
+    }
+
+    private void RefreshObjectCache()
+    {
+        var tick = Environment.TickCount64;
+        if (_objCacheTick == tick)
+            return;
+
+        _objCacheTick = tick;
+        _gameObjCache = Svc.Objects.SearchById(GameObjectId);
+        _battleCharaCache = _gameObjCache as IBattleChara;
+    }
     public Dictionary<ushort, long> BuffsGainedAt = new();
 
     private uint _currentHP;

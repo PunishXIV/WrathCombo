@@ -51,9 +51,9 @@ public class AutoRotationConfigIPCWrapper(AutoRotationConfig? config)
         }
     }
 
-    public DPSSettingsIPCWrapper DPSSettings => new(config.DPSSettings);
+    public DPSSettingsIPCWrapper DPSSettings => field ??= new(config.DPSSettings);
 
-    public HealerSettingsIPCWrapper HealerSettings => new(config.HealerSettings);
+    public HealerSettingsIPCWrapper HealerSettings => field ??= new(config.HealerSettings);
 
     public bool OrbwalkerIntegration
     {

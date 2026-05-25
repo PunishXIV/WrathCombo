@@ -353,31 +353,17 @@ public sealed partial class WrathCombo : IDalamudPlugin
             // Skip the IPC checking if hidden
             if (!DtrBarEntry.UserHidden)
             {
-                #region DTR Bar Updating
-
-                var autoOn = IPC.GetAutoRotationState();
-                var icon = new IconPayload(autoOn
-                    ? BitmapFontIcon.SwordUnsheathed
-                    : BitmapFontIcon.SwordSheathed);
-
-                var text = autoOn ? ": On" : ": Off";
-                if (!Service.Configuration.ShortDTRText && autoOn)
-                    text += $" ({P.IPCSearch.ActiveJobPresets} active)";
-                var ipcControlledText =
-                    P.UIHelper.AutoRotationStateControlled() is not null
-                        ? " (Locked)"
-                        : "";
-
-                var payloadText = new TextPayload(text + ipcControlledText);
-                DtrBarEntry.Text = new SeString(icon, payloadText);
-
-                #endregion
+                UpdateAutoRotDtr();
             }
 
             if (Service.Configuration.ShowOpenerDtr)
             {
-                var status = new TextPayload(WrathOpener.OpenerStatus());
-                OpenerDtr.Text = new SeString(status);
+                var status = WrathOpener.OpenerStatus();
+                if (status != _lastOpenerStatus)
+                {
+                    _lastOpenerStatus = status;
+                    OpenerDtr.Text = new SeString(new TextPayload(status));
+                }
                 OpenerDtr.Shown = true;
             }
             else
@@ -393,6 +379,47 @@ public sealed partial class WrathCombo : IDalamudPlugin
         {
             ex.Log("Pls no crash game ty");
         }
+    }
+
+    // Cached DTR state — only rebuild SeStrings on actual change.
+    private bool _dtrInitialized;
+    private bool _lastAutoOn;
+    private bool _lastShortDtrText;
+    private int _lastActiveJobPresets;
+    private bool _lastDtrLocked;
+    private string? _lastOpenerStatus;
+
+    private void UpdateAutoRotDtr()
+    {
+        var autoOn = IPC.GetAutoRotationState();
+        var shortText = Service.Configuration.ShortDTRText;
+        var activePresets = P.IPCSearch.ActiveJobPresets;
+        var locked = P.UIHelper.AutoRotationStateControlled() is not null;
+
+        if (_dtrInitialized &&
+            _lastAutoOn == autoOn &&
+            _lastShortDtrText == shortText &&
+            _lastActiveJobPresets == activePresets &&
+            _lastDtrLocked == locked)
+            return;
+
+        _dtrInitialized = true;
+        _lastAutoOn = autoOn;
+        _lastShortDtrText = shortText;
+        _lastActiveJobPresets = activePresets;
+        _lastDtrLocked = locked;
+
+        var icon = new IconPayload(autoOn
+            ? BitmapFontIcon.SwordUnsheathed
+            : BitmapFontIcon.SwordSheathed);
+
+        var text = autoOn ? ": On" : ": Off";
+        if (!shortText && autoOn)
+            text += $" ({activePresets} active)";
+        if (locked)
+            text += " (Locked)";
+
+        DtrBarEntry.Text = new SeString(icon, new TextPayload(text));
     }
 
     private static void ResetFeatures()

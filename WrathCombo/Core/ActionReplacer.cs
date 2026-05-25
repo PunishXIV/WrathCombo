@@ -37,6 +37,8 @@ internal sealed class ActionReplacer : IDisposable
 
     public readonly Dictionary<uint, uint> LastActionInvokeFor = [];
 
+    private readonly Dictionary<uint, long> _actionThrottleExpiry = [];
+
     /// <summary>
     ///     Critical for the hook, do not remove or modify.
     /// </summary>
@@ -115,9 +117,11 @@ internal sealed class ActionReplacer : IDisposable
                 return OriginalHook(actionID);
 
             // Only refresh every so often
-            if (!EzThrottler.Throttle("Actions" + actionID,
-                    Service.Configuration.Throttle))
+            var now = Environment.TickCount64;
+            if (_actionThrottleExpiry.TryGetValue(actionID, out var expiresAt) && now < expiresAt)
                 return LastActionInvokeFor[actionID];
+
+            _actionThrottleExpiry[actionID] = now + Service.Configuration.Throttle;
 
             // Actually get the action
             LastActionInvokeFor[actionID] = GetAdjustedAction(actionID);
@@ -144,8 +148,8 @@ internal sealed class ActionReplacer : IDisposable
                 Player.Object is null ||
                 !GenericHelpers.IsScreenReady() ||
                 !Svc.ClientState.IsLoggedIn ||
-                (DisabledJobsPVE.Any(x => x == Player.Job) && !Svc.ClientState.IsPvP) ||
-                (DisabledJobsPVP.Any(x => x == Player.Job) && Svc.ClientState.IsPvP))
+                (DisabledJobsPVE.Contains(Player.Job) && !Svc.ClientState.IsPvP) ||
+                (DisabledJobsPVP.Contains(Player.Job) && Svc.ClientState.IsPvP))
                 return OriginalHook(actionID);
 
             foreach (CustomCombo? combo in FilteredCombos)
@@ -210,7 +214,7 @@ internal sealed class ActionReplacer : IDisposable
 
     #region Restrict combos to current job
 
-    public static IEnumerable<CustomCombo>? FilteredCombos;
+    public static CustomCombo[]? FilteredCombos;
 
     public void UpdateFilteredCombos()
     {
@@ -229,13 +233,11 @@ internal sealed class ActionReplacer : IDisposable
             return (presetData.JobInfo.Role is JobRole role &&
                 role.MatchesPlayerJob())
                 || presetData.JobInfo.Job == upgradedJob;
-        });
-
-        var filteredCombos = FilteredCombos as CustomCombo[] ?? FilteredCombos.ToArray();
+        }).ToArray();
 
         Svc.Log.Debug(
-            $"Now running {filteredCombos.Length} combos\n" +
-            string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().Name)));
+            $"Now running {FilteredCombos.Length} combos\n" +
+            string.Join("\n", FilteredCombos.Select(x => x.Preset.Attributes().Name)));
     }
 
     #endregion

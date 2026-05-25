@@ -38,7 +38,17 @@ internal abstract partial class CustomComboFunctions
     public static bool HasTarget() => CurrentTarget is not null;
 
     /// <summary> Checks if the player is being targeted by a hostile, targetable object. </summary>
-    public static bool IsPlayerTargeted() => Svc.Objects.Any(x => x.IsTargetable && x.IsHostile() && x.TargetObjectId == LocalPlayer?.GameObjectId);
+    public static bool IsPlayerTargeted()
+    {
+        if (LocalPlayer is not { } player) return false;
+        var playerId = player.GameObjectId;
+        foreach (var x in Svc.Objects)
+        {
+            if (x.IsTargetable && x.IsHostile() && x.TargetObjectId == playerId)
+                return true;
+        }
+        return false;
+    }
 
     /// <summary> Checks if an object is dead. Defaults to CurrentTarget unless specified. </summary>
     internal static bool TargetIsDead(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara && chara.IsDead;

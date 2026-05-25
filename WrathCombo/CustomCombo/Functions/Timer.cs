@@ -63,31 +63,38 @@ internal abstract partial class CustomComboFunctions
         Svc.Framework.Update += CheckStatuses;
     }
 
+    private static readonly HashSet<uint> _currentStatusScratch = new();
+    private static readonly List<uint> _removedStatusScratch = new();
+
     private static void CheckStatuses(IFramework framework)
     {
         if (!Player.Available) return;
+
+        _currentStatusScratch.Clear();
         foreach (var status in LocalPlayer.StatusList)
         {
-            if (status.StatusId == 0)
-                continue;
+            if (status.StatusId == 0) continue;
+            _currentStatusScratch.Add(status.StatusId);
 
-            if (!onPlayerStatuses.Contains(status.StatusId))
-                OnStatusChanged.Invoke(status.StatusId, true);
-
-            onPlayerStatuses.Add(status.StatusId);
+            if (onPlayerStatuses.Add(status.StatusId))
+                OnStatusChanged?.Invoke(status.StatusId, true);
         }
 
         if (onPlayerStatuses.Count == 0)
             return;
 
-        var clonedList = onPlayerStatuses.ToList();
-        foreach (var status in clonedList)
+        _removedStatusScratch.Clear();
+        foreach (var statusId in onPlayerStatuses)
         {
-            if (!LocalPlayer.StatusList.Any(x => x.StatusId == status))
-            {
-                OnStatusChanged.Invoke(status, false);
-                onPlayerStatuses.Remove(status);
-            }
+            if (!_currentStatusScratch.Contains(statusId))
+                _removedStatusScratch.Add(statusId);
+        }
+
+        for (int i = 0; i < _removedStatusScratch.Count; i++)
+        {
+            var id = _removedStatusScratch[i];
+            OnStatusChanged?.Invoke(id, false);
+            onPlayerStatuses.Remove(id);
         }
     }
 
@@ -118,35 +125,55 @@ internal abstract partial class CustomComboFunctions
         }
     }
 
+    private static readonly List<ulong> _deadtionaryRemovalScratch = new();
+
     private static void UpdateDeadtionary(IFramework framework)
     {
         if (!Player.Available) return;
-        foreach (var member in DeadPeople.Where(x => x.BattleChara is not null && x.BattleChara.IsDead))
+
+        var dead = DeadPeople;
+        for (int i = 0; i < dead.Count; i++)
         {
-            if (!Deadtionary.ContainsKey(member.BattleChara.GameObjectId))
-                Deadtionary[member.BattleChara.GameObjectId] = Environment.TickCount64;
+            var bc = dead[i].BattleChara;
+            if (bc is null || !bc.IsDead) continue;
+            var id = bc.GameObjectId;
+            if (!Deadtionary.ContainsKey(id))
+                Deadtionary[id] = Environment.TickCount64;
         }
 
-        var deadCopy = Deadtionary.ToList();
-        foreach (var member in deadCopy)
+        _deadtionaryRemovalScratch.Clear();
+        foreach (var kvp in Deadtionary)
         {
-            var obj = Svc.Objects.SearchById(member.Key);
-            if (obj == null || !obj.IsDead)  // Not found OR no longer dead
-            {
-                Deadtionary.Remove(member.Key);
-            }
+            var obj = Svc.Objects.SearchById(kvp.Key);
+            if (obj == null || !obj.IsDead)
+                _deadtionaryRemovalScratch.Add(kvp.Key);
         }
+        for (int i = 0; i < _deadtionaryRemovalScratch.Count; i++)
+            Deadtionary.Remove(_deadtionaryRemovalScratch[i]);
     }
 
     private static unsafe void UpdatePartyTimer(IFramework framework)
     {
         if (!Player.Available) return;
-        if (GetPartyMembers().Any(x => x.BattleChara is not null && x.BattleChara.Struct()->InCombat) && !PartyInCombatCheck)
+
+        var members = GetPartyMembers();
+        bool anyInCombat = false;
+        for (int i = 0; i < members.Count; i++)
+        {
+            var bc = members[i].BattleChara;
+            if (bc is not null && bc.Struct()->InCombat)
+            {
+                anyInCombat = true;
+                break;
+            }
+        }
+
+        if (anyInCombat && !PartyInCombatCheck)
         {
             PartyInCombatCheck = true;
             partyCombat = DateTime.Now;
         }
-        else if (!GetPartyMembers().Any(x => x.BattleChara is not null && x.BattleChara.Struct()->InCombat))
+        else if (!anyInCombat)
         {
             PartyInCombatCheck = false;
         }

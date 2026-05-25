@@ -79,7 +79,6 @@ public partial class Helper(ref Leasing leasing)
     /// <returns>The Opposite-mode preset.</returns>
     internal static Preset? GetOppositeModeCombo(Preset preset)
     {
-        const StringComparison lower = StringComparison.CurrentCultureIgnoreCase;
         var presetData = preset.Attributes();
 
         // Bail if it is not one of the main combos

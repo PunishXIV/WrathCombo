@@ -46,7 +46,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
     ///     Without the action also being checked, the preset would block all
     ///     other presets.
     /// </remarks>
-    private readonly Dictionary<Preset, uint>
+    private static readonly Dictionary<Preset, uint>
         _presetsAllowedToReturnUnchanged = new()
         {
             { Preset.DNC_DesirablePartner, DNC.ClosedPosition },
