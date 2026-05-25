@@ -481,20 +481,18 @@ internal unsafe class AutoRotationController
             if (!AnyHostileWithinRangeOf(SimpleTarget.FocusTarget, QueryRange))
                 return;
 
+            var spell = ActionManager.Instance()->GetAdjustedActionId(regenSpell).Retarget(SimpleTarget.FocusTarget);
+
+            if (SimpleTarget.FocusTarget.IsDead)
+                return;
+
+            if (!ActionReady(spell))
+                return;
+
+            if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
             {
-                var spell = ActionManager.Instance()->GetAdjustedActionId(regenSpell).Retarget(SimpleTarget.FocusTarget);
-
-                if (SimpleTarget.FocusTarget.IsDead)
-                    return;
-
-                if (!ActionReady(spell))
-                    return;
-
-                if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
-                {
-                    ActionManager.Instance()->UseAction(ActionType.Action, regenSpell, SimpleTarget.FocusTarget.GameObjectId);
-                    return;
-                }
+                ActionManager.Instance()->UseAction(ActionType.Action, regenSpell, SimpleTarget.FocusTarget.GameObjectId);
+                return;
             }
         }
     }
@@ -528,12 +526,12 @@ internal unsafe class AutoRotationController
         {
             if (prepSpell != 0 && !JustUsed(prepSpell, 4) && !HasStatusEffect(SGE.Buffs.Eukrasia))
             {
-                var spell = ActionManager.Instance()->GetAdjustedActionId(prepSpell).Retarget(SimpleTarget.FocusTarget);
+                var prepAction = ActionManager.Instance()->GetAdjustedActionId(prepSpell).Retarget(SimpleTarget.FocusTarget);
 
                 if (!ActionReady(prepSpell))
                     return;
 
-                if (ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
+                if (ActionManager.Instance()->GetActionStatus(ActionType.Action, prepAction) == 0)
                 {
                     ActionManager.Instance()->UseAction(ActionType.Action, prepSpell);
                     return;
@@ -543,21 +541,19 @@ internal unsafe class AutoRotationController
             if (!AnyHostileWithinRangeOf(SimpleTarget.FocusTarget, QueryRange))
                 return;
 
+            var spell = ActionManager.Instance()->GetAdjustedActionId(shieldSpell).Retarget(SimpleTarget.FocusTarget);
+
+            if (SimpleTarget.FocusTarget.IsDead)
+                return;
+
+            if (!ActionReady(spell) ||
+                ActionManager.GetAdjustedCastTime(ActionType.Action, spell) > 0 && TimeStoodStill < TimeSpan.FromSeconds(1))
+                return;
+
+            if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
             {
-                var spell = ActionManager.Instance()->GetAdjustedActionId(shieldSpell).Retarget(SimpleTarget.FocusTarget);
-
-                if (SimpleTarget.FocusTarget.IsDead)
-                    return;
-
-                if (!ActionReady(spell) ||
-                    ActionManager.GetAdjustedCastTime(ActionType.Action, spell) > 0 && TimeStoodStill < TimeSpan.FromSeconds(1))
-                    return;
-
-                if (Player.Object is not null && ActionManager.CanUseActionOnTarget(spell, SimpleTarget.FocusTarget.Struct()) && !OutOfRange(spell, Player.Object, SimpleTarget.FocusTarget) && ActionManager.Instance()->GetActionStatus(ActionType.Action, spell) == 0)
-                {
-                    ActionManager.Instance()->UseAction(ActionType.Action, spell, SimpleTarget.FocusTarget.GameObjectId);
-                    return;
-                }
+                ActionManager.Instance()->UseAction(ActionType.Action, spell, SimpleTarget.FocusTarget.GameObjectId);
+                return;
             }
         }
     }
@@ -1100,7 +1096,7 @@ internal unsafe class AutoRotationController
         private static readonly List<IGameObject> _baseSelectionCache = new();
         private static readonly List<IGameObject> _baseSelectionPriorityScratch = new();
 
-        public static List<IGameObject> BaseSelection
+        public static IReadOnlyList<IGameObject> BaseSelection
         {
             get
             {

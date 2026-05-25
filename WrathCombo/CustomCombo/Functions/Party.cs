@@ -225,6 +225,7 @@ public class WrathPartyMember
         _gameObjCache = Svc.Objects.SearchById(GameObjectId);
         _battleCharaCache = _gameObjCache as IBattleChara;
     }
+
     public Dictionary<ushort, long> BuffsGainedAt = new();
 
     private uint _currentHP;
