@@ -844,14 +844,6 @@ internal abstract partial class CustomComboFunctions
         return PointInCircle(target.Position - player.Position, size + target.HitboxRadius);
     }
 
-    public static bool TargetInTargetedCircle(IGameObject? origin, IGameObject? target, float size)
-    {
-        if (origin is null || target is null)
-            return false;
-
-        return PointInCircle(target.Position - origin.Position, size + target.HitboxRadius);
-    }
-
     public static bool TargetInCone(IGameObject? target, float size)
     {
         if (target is null || LocalPlayer is not { } player)

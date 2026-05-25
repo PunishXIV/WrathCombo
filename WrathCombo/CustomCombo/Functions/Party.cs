@@ -109,6 +109,7 @@ internal abstract partial class CustomComboFunctions
     }
 
     private static List<WrathPartyMember> _partyList = new();
+    private static readonly HashSet<ulong> _deadPeopleTrackedScratch = new();
 
     [field: MaybeNull]
     public static List<WrathPartyMember> DeadPeople
@@ -116,26 +117,24 @@ internal abstract partial class CustomComboFunctions
         get
         {
             field ??= new();
+            _deadPeopleTrackedScratch.Clear();
+            for (int i = 0; i < field.Count; i++)
+                _deadPeopleTrackedScratch.Add(field[i].GameObjectId);
+
             foreach (var obj in Svc.Objects)
             {
                 if (obj is not IBattleChara pc || !obj.CanUseOn(WHM.Raise))
                     continue;
 
-                if (pc.IsDead && !pc.StatusList.Any(x => x.StatusId == All.Buffs.Raised))
+                if (pc.IsDead && !pc.StatusList.Any(x => x.StatusId == All.Buffs.Raised) &&
+                    _deadPeopleTrackedScratch.Add(pc.GameObjectId))
                 {
-                    bool alreadyTracked = false;
-                    for (int i = 0; i < field.Count; i++)
+                    field.Add(new WrathPartyMember
                     {
-                        if (field[i].GameObjectId == pc.GameObjectId)
-                        { alreadyTracked = true; break; }
-                    }
-                    if (!alreadyTracked)
-                        field.Add(new WrathPartyMember
-                        {
-                            GameObjectId = pc.GameObjectId,
-                            CurrentHP = pc.CurrentHp,
-                            NPCClassJob = pc.ClassJob.RowId
-                        });
+                        GameObjectId = pc.GameObjectId,
+                        CurrentHP = pc.CurrentHp,
+                        NPCClassJob = pc.ClassJob.RowId
+                    });
                 }
             }
             field.RemoveAll(x => x.BattleChara is null || !x.BattleChara.IsDead);

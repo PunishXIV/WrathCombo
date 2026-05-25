@@ -218,6 +218,8 @@ internal sealed class ActionReplacer : IDisposable
 
     public void UpdateFilteredCombos()
     {
+        _actionThrottleExpiry.Clear();
+
         var playerJob = Player.Job;
         var upgradedJob = playerJob.GetUpgradedJob();
 

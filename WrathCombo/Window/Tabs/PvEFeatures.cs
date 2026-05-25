@@ -70,7 +70,7 @@ internal class PvEFeatures : FeaturesWindow
                         }
                         IDalamudTextureWrap? icon = Icons.GetJobIcon(id);
                         ImGuiEx.Spacing(new Vector2(0, 2f.Scale()));
-                        using (var disabled = ImRaii.Disabled(DisabledJobsPVE.Any(x => x == id)))
+                        using (var disabled = ImRaii.Disabled(DisabledJobsPVE.Contains(id)))
                         {
                             if (ImGui.Selectable($"###{header}{info.Job}", OpenJob == job, ImGuiSelectableFlags.None, new Vector2(0, IconMaxSize)))
                             {

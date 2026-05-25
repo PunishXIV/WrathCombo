@@ -96,12 +96,8 @@ internal class StatusCache
 
     public static bool HasDamageUp(IGameObject? target) => HasStatusInCacheList(DamageUpStatuses, target);
 
-    // TODO: this is a copy-paste of DamageUpStatuses — both reference status ID 61 ("Damage Up")
-    // and match by name. HasEvasionUp is therefore identical to HasDamageUp, making the
-    // `HasDamageUp(target) || HasEvasionUp(target)` check in HasPhantomDispelStatus redundant.
-    // Replace 61 with the correct Evasion Up reference status ID (or change the name match).
     private static readonly FrozenSet<uint> evasionUpStatuses =
-        ENStatusSheet.TryGetValue(61, out var refRow)
+        ENStatusSheet.TryGetValue(31, out var refRow)
             ? ENStatusSheet
                 .Where(x => x.Value.Name.ToString().Contains(refRow.Name.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 .Select(x => x.Key)

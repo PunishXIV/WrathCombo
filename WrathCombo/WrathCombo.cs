@@ -88,7 +88,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         }
     }
 
-    public static readonly List<Job> DisabledJobsPVE =
+    public static readonly HashSet<Job> DisabledJobsPVE =
     [
         //Job.ADV,
         //Job.AST,
@@ -116,7 +116,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         //Job.WHM
     ];
 
-    public static readonly List<Job> DisabledJobsPVP = [];
+    public static readonly HashSet<Job> DisabledJobsPVP = [];
 
     public static Job? JobID
     {

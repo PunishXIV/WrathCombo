@@ -411,8 +411,8 @@ internal unsafe class AutoRotationController
             }
         }
 
-        if (ProcessPartition(_processAoEScratch)) return false;
-        ProcessPartition(_processSTScratch);
+        if (ProcessPartition(_processAoEScratch)) return true;
+        if (ProcessPartition(_processSTScratch)) return true;
         return false;
     }
 
