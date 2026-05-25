@@ -32,7 +32,7 @@ internal partial class SGE
         SimpleTarget.Stack.AllyToHeal;
 
     private static bool HasAddersgall() => Addersgall > 0;
-    
+
     private static bool AdvancedHasAddersgall() => Addersgall > SGE_Heal_HoldAddersgall;
 
     private static bool HasAddersting() =>
@@ -79,7 +79,7 @@ internal partial class SGE
     internal static bool NeedsDoT()
     {
         uint dotAction = OriginalHook(Dosis);
-        int hpThreshold = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? ComputeHpThreshold() : 0;
+        int hpThreshold = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? ComputeHpThreshold(CurrentTarget) : 0;
         EukrasianDosisList.TryGetValue(dotAction, out ushort dotDebuffID);
         double dotRefresh = IsNotEnabled(Preset.SGE_ST_Simple_DPS) ? SGE_ST_DPS_EukrasianDosisUptime_Threshold : 2.5;
         float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
@@ -91,10 +91,13 @@ internal partial class SGE
                dotRemaining <= dotRefresh;
     }
 
-    internal static int ComputeHpThreshold()
+    internal static int ComputeHpThreshold(IGameObject? x)
     {
+        if (x is null)
+            return 0;
+
         if (InBossEncounter())
-            return TargetIsBoss() ? SGE_ST_DPS_EukrasianDosisBossOption : SGE_ST_DPS_EukrasianDosisBossAddsOption;
+            return x.IsBoss() ? SGE_ST_DPS_EukrasianDosisBossOption : SGE_ST_DPS_EukrasianDosisBossAddsOption;
 
         return SGE_ST_DPS_EukrasianDosisTrashOption;
     }
@@ -120,16 +123,16 @@ internal partial class SGE
         bool shieldCheck = GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= SGE_AoE_Heal_EPrognosisOption &&
                            GetPartyBuffPercent(SCH.Buffs.Galvanize) <= SGE_AoE_Heal_EPrognosisOption;
 
-        return IsEnabled(Preset.SGE_Raidwide_EPrognosis) && shieldCheck && GroupDamageIncoming();
+        return IsEnabled(Preset.SGE_Raidwide_EPrognosis) && shieldCheck && GroupDamageIncoming() && LevelChecked(Eukrasia);
     }
 
     #endregion
 
     #region ST
 
-    private static int GetMatchingConfigST(int i, IGameObject? optionalTarget, out uint action, out bool enabled)
+    private static int GetMatchingConfigST(int i, IGameObject? target, out uint action, out bool enabled)
     {
-        IGameObject? healTarget = optionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
 
         bool shieldCheck = !SGE_ST_Heal_EDiagnosisOpts[0] ||
                            !HasStatusEffect(Buffs.EukrasianDiagnosis, healTarget, true) &&
@@ -297,13 +300,13 @@ internal partial class SGE
 
     #region Movement Prio
 
-    private static (uint Action, Preset Preset, Func<bool> Logic)[]
+    private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
         PrioritizedMovement =>
     [
         //Toxikon
         (OriginalHook(Toxikon), Preset.SGE_ST_DPS_Movement,
             () => SGE_ST_DPS_Movement[0] &&
-                  ActionReady(Toxikon) &&
+                  ActionReady(OriginalHook(Toxikon)) &&
                   HasAddersting()),
         // Dyskrasia
         (OriginalHook(Dyskrasia), Preset.SGE_ST_DPS_Movement,
@@ -450,6 +453,7 @@ internal partial class SGE
         Holos = 24310,
         EukrasianDiagnosis = 24291,
         EukrasianPrognosis = 24292,
+        EukrasianPrognosis2 = 37034,
         Egeiro = 24287,
 
         // DPS
@@ -519,6 +523,8 @@ internal partial class SGE
     internal static class Traits
     {
         internal const ushort
+            Addersgall = 370,
+            Addersting = 373,
             EnhancedKerachole = 375,
             OffensiveMagicMasteryII = 376;
     }

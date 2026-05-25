@@ -1,4 +1,5 @@
 ﻿using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Resources.Localization.JobConfigs;
 using static WrathCombo.Window.Functions.UserConfig;
 
 namespace WrathCombo.Combos.PvE;
@@ -21,32 +22,32 @@ internal static partial class Bozja
             {
                 case Preset.Bozja_Tank_LostCure:
                     DrawSliderInt(1, 100, Bozja_Tank_LostCure_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        Generics.StopFriendlyHpPercent100, 200);
                     break;
 
                 case Preset.Bozja_Tank_LostCure2:
                     DrawSliderInt(1, 100, Bozja_Tank_LostCure2_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        Generics.StopFriendlyHpPercent100, 200);
                     break;
 
                 case Preset.Bozja_Tank_LostCure3:
                     DrawSliderInt(1, 100, Bozja_Tank_LostCure3_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        Generics.StopFriendlyHpPercent100, 200);
                     break;
 
                 case Preset.Bozja_Tank_LostCure4:
                     DrawSliderInt(1, 100, Bozja_Tank_LostCure4_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        Generics.StopFriendlyHpPercent100, 200);
                     break;
 
                 case Preset.Bozja_Tank_LostAethershield:
                     DrawSliderInt(1, 100, Bozja_Tank_LostAethershield_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        Generics.StopFriendlyHpPercent100, 200);
                     break;
 
                 case Preset.Bozja_Tank_LostReraise:
                     DrawSliderInt(1, 100, Bozja_Tank_LostReraise_Health,
-                        "Player HP% to be \nless than or equal to:", 200);
+                        Generics.StopFriendlyHpPercent100, 200);
                     break;
             }
         }

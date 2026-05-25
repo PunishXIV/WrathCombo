@@ -139,7 +139,7 @@ internal static class MCHPvP
                     if (IsEnabled(Preset.MCHPvP_BurstMode_Drill) && HasStatusEffect(Buffs.DrillPrimed))
                         return OriginalHook(Drill);
 
-                    if (IsEnabled(Preset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && GetTargetDistance() <= 12)
+                    if (IsEnabled(Preset.MCHPvP_BurstMode_BioBlaster) && HasStatusEffect(Buffs.BioblasterPrimed) && HasBattleTarget() && InActionRange(BioBlaster))
                         return OriginalHook(BioBlaster);
 
                     if (IsEnabled(Preset.MCHPvP_BurstMode_AirAnchor) && HasStatusEffect(Buffs.AirAnchorPrimed))

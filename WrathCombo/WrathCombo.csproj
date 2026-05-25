@@ -5,7 +5,7 @@
     <PropertyGroup>
         <Authors>Team Wrath</Authors>
         <Company>-</Company>
-        <Version>1.0.3.5</Version>
+        <Version>1.0.4.7</Version>
         <!-- This is the version that will be used when pushing to the repo.-->
         <Description>XIVCombo for very lazy players</Description>
         <Copyright>Copyleft attick 2021 thanks attick UwU</Copyright>
@@ -22,7 +22,7 @@
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
         <NoWarn>CS1591</NoWarn>
         <LangVersion>preview</LangVersion>
-        
+
         <Platforms>x64</Platforms>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -30,7 +30,6 @@
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     </PropertyGroup>
-
     <!-- Styling Rules -->
     <ItemGroup>
         <None Include="..\.editorconfig" Link=".editorconfig" />
@@ -65,11 +64,6 @@
         <OutputPath>bin\Release</OutputPath>
     </PropertyGroup>
 
-    <!-- Build Parameter Overrides for Optimization even in Debug -->
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-        <Optimize>True</Optimize>
-    </PropertyGroup>
-
     <!-- Logo -->
     <ItemGroup>
         <Content Include="..\res\plugin\wrathcombo.png" Link="images\wrathcombo.png" CopyToOutputDirectory="PreserveNewest" Visible="false" />
@@ -78,6 +72,7 @@
     <!-- Dalamud Packaging -->
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="14.0.1" />
+        <PackageReference Include="System.Speech" Version="10.0.5" />
     </ItemGroup>
 
     <!-- Dependencies -->
@@ -135,6 +130,298 @@
             <Private>false</Private>
         </Reference>
 
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Resources\Localization\JobConfigs\AST_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AST_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\BLM_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>BLM_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\BLU_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>BLU_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\BRD_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>BRD_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\DNC_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>DNC_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\DOL_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>DOL_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\DRK_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>DRK_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\Generics.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Generics.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\GNB_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>GNB_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\NIN_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>NIN_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\PCT_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PCT_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\PLD_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>PLD_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\RDM_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>RDM_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\SCH_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SCH_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\SGE_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SGE_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\SMN_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SMN_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\WAR_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>WAR_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\WHM_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>WHM_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\Presets\CustomComboPresets.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>CustomComboPresets.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\AutoRotation\AutoRotationUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>AutoRotationUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\Features\FeaturesUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>FeaturesUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\MainWindow\MainWindowUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MainWindowUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\Misc\MiscUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MiscUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\Settings\SettingsCfgUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SettingsCfgUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\UI\Settings\SettingsUI.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SettingsUI.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\DRG_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>DRG_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\MCH_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MCH_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\MNK_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>MNK_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\RPR_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>RPR_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\SAM_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SAM_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\JobConfigs\VPR_Config.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>VPR_Config.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Localization\Content\OccultCrescent.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>OccultCrescent.resx</DependentUpon>
+      </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\AST_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AST_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\BLM_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>BLM_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\BLU_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>BLU_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\BRD_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>BRD_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\DNC_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DNC_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\DOL_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DOL_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\DRK_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DRK_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\Generics.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Generics.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\GNB_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>GNB_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\NIN_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>NIN_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\PCT_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>PCT_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\PLD_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>PLD_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\RDM_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>RDM_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\SCH_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SCH_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\SGE_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SGE_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\SMN_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SMN_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\WAR_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>WAR_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\WHM_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>WHM_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\Presets\CustomComboPresets.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>CustomComboPresets.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\AutoRotation\AutoRotationUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>AutoRotationUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Features\FeaturesUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FeaturesUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\MainWindow\MainWindowUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MainWindowUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Misc\MiscUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MiscUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Settings\SettingsCfgUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SettingsCfgUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\UI\Settings\SettingsUI.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SettingsUI.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\DRG_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>DRG_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\MCH_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MCH_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\MNK_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>MNK_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\RPR_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>RPR_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\SAM_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SAM_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\JobConfigs\VPR_Config.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>VPR_Config.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Localization\Content\OccultCrescent.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>OccultCrescent.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
     <!-- Release Manifest -->

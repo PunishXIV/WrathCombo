@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="HelpText_Retargetting1" xml:space="preserve">
+    <value>이 기능을 활성화하면, 스킬 사용 시 대상 재지정(리타겟팅)이 적용됩니다.</value>
+  </data>
+  <data name="HelpText_Retargetting2" xml:space="preserve">
+    <value>이 기능의 영향을 받는 스킬들은, 사용자가 설정한 우선순위에 따라 해당 대상에게 자동으로 타겟팅됩니다.</value>
+  </data>
+  <data name="HelpText_Retargetting3" xml:space="preserve">
+    <value>Redirect나 Reaction과 같이 동일한 스킬에 영향을 주는 설정을 사용하는 플러그인과 함께 사용할 경우, 서로 충돌하여 문제가 발생할 수 있습니다.</value>
+  </data>
+  <data name="Info_searchHintText" xml:space="preserve">
+    <value>카테고리 이름, 설정 이름, 내부 이름 등</value>
+  </data>
+  <data name="Label_searchLabelText" xml:space="preserve">
+    <value>검색:</value>
+  </data>
+  <data name="Button_CreateDebug" xml:space="preserve">
+    <value>디버그 파일 만들기</value>
+  </data>
+  <data name="HelpText_CreateDebug" xml:space="preserve">
+    <value>바탕화면에 디버그 파일을 생성합니다.
+개발자가 문제를 해결하는 데 도움을 줄 수 있도록 세심하게 제공합니다.
+다음 명령을 사용하는 것과 동일합니다: /wrath debug</value>
+  </data>
+  <data name="Header_SettingsAbout" xml:space="preserve">
+    <value>이 탭을 사용하면 Wrath Combo의 전체 설정을 사용자 지정할 수 있습니다</value>
+  </data>
+  <data name="Text_RecommendedValue" xml:space="preserve">
+    <value>권장값:</value>
+  </data>
+  <data name="Text_DefaultValue" xml:space="preserve">
+    <value>기본값:</value>
+  </data>
+  <data name="Label_HealStack" xml:space="preserve">
+    <value>현재 힐 우선순위:</value>
+  </data>
+  <data name="HelpText_HealStack" xml:space="preserve">
+    <value>다음은 Wrath가 치유 대상을 선택하려고 시도하는 순서입니다.
+‘치유 스킬 리타겟팅’ 옵션이 비활성화되어 있는 경우, 이 대상은 단지 다양한 치유 행동이 순환에 나타나도록 HP%를 확인하는 기준 대상으로만 사용됩니다.
+즉, 여러분이 사용하는 자체 리타겟팅 방식(Redirect, Reaction 등)이 이 기준과 일치하지 않으면, Wrath가 잘못된 대상을 계속 치유하는 루프에 빠질 수 있습니다!!!
+‘치유 스킬 리타겟팅’ 옵션이 활성화되어 있는 경우에는, 해당 대상이 실제로 치유 행동이 적용되는 대상이 되기도 합니다(예를 들어 콤보의 Replaced Action처럼, 해당 대상의 HP를 먼저 확인하지 않는 행동이라도 그 대상에게 시전됩니다).</value>
+  </data>
+  <data name="Warning_HealStack" xml:space="preserve">
+    <value>이 힐 스택과 여러분의 리타겟팅 설정이 일치하도록 만드는 책임은 전적으로 여러분에게 있습니다!
+일치하지 않을 경우, Wrath가 X 플레이어를 치유가 필요한 대상으로 판단해 확인하지만, 실제로는 Y 플레이어를 치유하는 상황이 반복되는 루프에 빠질 수 있습니다!</value>
+  </data>
+  <data name="Label_RaiseStack" xml:space="preserve">
+    <value>현재 부활 우선순위:</value>
+  </data>
+  <data name="HelpText_RaiseStack" xml:space="preserve">
+    <value>다음은 부활 관련 기능에서 리타겟팅이 활성화되어 있을 경우, Wrath가 레이즈(부활) 대상을 선택하려고 시도하는 순서입니다.</value>
+  </data>
+</root>

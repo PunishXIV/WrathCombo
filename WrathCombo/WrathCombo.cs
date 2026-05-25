@@ -6,17 +6,17 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Networking.Http;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
-using Dalamud.Utility;
 using ECommons;
 using ECommons.Automation.LegacyTaskManager;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-using ECommons.Logging;
+using Lumina.Excel.Sheets;
 using Newtonsoft.Json.Linq;
 using PunishLib;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -32,12 +32,13 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
-using WrathCombo.Services.IPC_Subscriber;
+using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
+using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window;
 using WrathCombo.Window.Tabs;
-using WrathCombo.Services.ActionRequestIPC;
 using GenericHelpers = ECommons.GenericHelpers;
 
 namespace WrathCombo;
@@ -58,11 +59,14 @@ public sealed partial class WrathCombo : IDalamudPlugin
     };
     private readonly HttpClient httpClient = new(httpHandler) { Timeout = TimeSpan.FromSeconds(5) };
     private readonly IDtrBarEntry DtrBarEntry;
+    public readonly IDtrBarEntry OpenerDtr;
     internal Provider IPC;
     internal Search IPCSearch = null!;
     internal UIHelper UIHelper = null!;
     internal ActionRetargeting ActionRetargeting = null!;
     internal MovementHook MoveHook;
+
+    internal static bool IsAprilFools => DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 4;
 
     private readonly TextPayload starterMotd = new("[Wrath Message of the Day] ");
     private static Job? jobID;
@@ -135,6 +139,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         WrathOpener.CurrentOpener?.ResetOpener(); //Clears opener values, just in case
         ActionRequestIPCProvider.ResetAllBlacklist();
         ActionRequestIPCProvider.ResetAllRequests();
+        CustomComboFunctions.CleanupExpiredLineOfSightCache();
         TM.DelayNext(1000);
         TM.Enqueue(() =>
         {
@@ -177,29 +182,43 @@ public sealed partial class WrathCombo : IDalamudPlugin
         ActionRequestIPCProvider.Initialize();
 
         TM = new();
-        RemoveNullAutos(); 
+        RemoveNullAutos();
         Service.Configuration = pluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
         Service.Address = new AddressResolver();
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
-        PresetStorage.Init();
+        PresetStorage.RemoveRedundantPresets();
 
         Service.ComboCache = new CustomComboCache();
         Service.ActionReplacer = new ActionReplacer();
+        Service.AutoRotationController = new AutoRotationController();
         ActionRetargeting = new ActionRetargeting();
         Service.Inventory = new Inventory();
         ActionWatching.Enable();
         IPC = Provider.Init();
+        PingPluginIPC.Init();
         ConflictingPluginsChecks.Begin();
 
+        // Subscribe to language changes to update localized text if needed (Client != Selected UI)
+        Svc.PluginInterface.LanguageChanged += Text.OnLanguageChanged;
+
+        // Ensure startup culture matches Dalamud UI language
+        var dalamudCulture = Svc.PluginInterface.UiLanguage.ToCulture();
+
+        if (!Equals(CultureInfo.CurrentUICulture, dalamudCulture))
+        {
+            Text.OnLanguageChanged(Svc.PluginInterface.UiLanguage);
+        }
+
         ConfigWindow = new ConfigWindow();
+        Settings.SanitiseSettings();
         _majorChangesWindow = new MajorChangesWindow();
         TargetHelper = new();
         ws = new();
         ws.AddWindow(ConfigWindow);
         ws.AddWindow(_majorChangesWindow);
         ws.AddWindow(TargetHelper);
-        
+
         Configuration.ConfigChanged += DebugFile.LoggingConfigChanges;
 
         Svc.PluginInterface.UiBuilder.Draw += ws.Draw;
@@ -217,6 +236,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         new TextPayload("Click to toggle Wrath Combo's Auto-Rotation.\n"),
         new TextPayload("Disable this icon in /xlsettings -> Server Info Bar"));
 
+        OpenerDtr ??= Svc.DtrBar.Get("Wrath Combo Opener");
+
         Svc.ClientState.Login += ClientState_Login;
         if (Svc.ClientState.IsLoggedIn)
         {
@@ -226,9 +247,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         Svc.Framework.Update += OnFrameworkUpdate;
         Svc.ClientState.TerritoryChanged += ClientState_TerritoryChanged;
-        
-        PresetStorage.HandleDuplicatePresets();
-        PresetStorage.HandleCurrentConflicts();
+        Svc.Toasts.ErrorToast += OnErrorToast;
+
         CustomComboFunctions.TimerSetup();
 
         // Starts Retarget list cleaning process after a delay
@@ -236,13 +256,25 @@ public sealed partial class WrathCombo : IDalamudPlugin
             TimeSpan.FromSeconds(60));
 
 #if DEBUG
+        VfxManager.Logging = true;
         ConfigWindow.IsOpen = true;
+        VfxManager.Logging = true;
         Svc.Framework.RunOnTick(() =>
         {
             if (Service.Configuration.OpenToCurrentJob && Player.Available)
-                HandleOpenCommand([""], forceOpen:true);
+                HandleOpenCommand([""], forceOpen: true);
         });
 #endif
+    }
+
+    private void OnErrorToast(ref SeString message, ref bool isHandled)
+    {
+        var txt = message.TextValue;
+        if (Svc.Data.GetExcelSheet<LogMessage>().TryGetFirst(x => x.Text == txt, out var row))
+        {
+            if (row.RowId == 2288) //Aetherial Interference
+                AutoRotationController.Paused = true;
+        }
     }
 
     private void RemoveNullAutos()
@@ -278,7 +310,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         }
     }
 
-    private void ClientState_TerritoryChanged(ushort obj)
+    private void ClientState_TerritoryChanged(uint obj)
     {
         UpdateCaches(false, true, false);
 
@@ -295,11 +327,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         {
             #region Checks that don't require the Player to be loaded
 
-            Service.Configuration.SetActionChanging();
             Configuration.ProcessSaveQueue();
-
-            PresetStorage.HandleDuplicatePresets();
-            PresetStorage.HandleCurrentConflicts();
 
             //Hacky workaround to ensure it's always running
             CustomComboFunctions.IsMoving();
@@ -316,6 +344,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
             JobID = Player.Job;
 
+            PresetStorage.HandleCurrentConflicts();
+
             BlueMageService.PopulateBLUSpells();
             TargetHelper.Draw();
 
@@ -329,32 +359,51 @@ public sealed partial class WrathCombo : IDalamudPlugin
                 Task.Run(Service.Inventory.RefreshInventory);
 
             if (Player.Available && Player.IsDead)
+            {
                 ActionRetargeting.Retargets.Clear();
+                CustomComboFunctions.CleanupExpiredLineOfSightCache();
+            }
 
             #endregion
 
             // Skip the IPC checking if hidden
-            if (DtrBarEntry.UserHidden) return;
+            if (!DtrBarEntry.UserHidden)
+            {
+                #region DTR Bar Updating
 
-            #region DTR Bar Updating
+                var autoOn = IPC.GetAutoRotationState();
+                var icon = new IconPayload(autoOn
+                    ? BitmapFontIcon.SwordUnsheathed
+                    : BitmapFontIcon.SwordSheathed);
 
-            var autoOn = IPC.GetAutoRotationState();
-            var icon = new IconPayload(autoOn
-                ? BitmapFontIcon.SwordUnsheathed
-                : BitmapFontIcon.SwordSheathed);
+                var text = autoOn ? ": On" : ": Off";
+                if (!Service.Configuration.ShortDTRText && autoOn)
+                    text += $" ({P.IPCSearch.ActiveJobPresets} active)";
+                var ipcControlledText =
+                    P.UIHelper.AutoRotationStateControlled() is not null
+                        ? " (Locked)"
+                        : "";
 
-            var text = autoOn ? ": On" : ": Off";
-            if (!Service.Configuration.ShortDTRText && autoOn)
-                text += $" ({P.IPCSearch.ActiveJobPresets} active)";
-            var ipcControlledText =
-                P.UIHelper.AutoRotationStateControlled() is not null
-                    ? " (Locked)"
-                    : "";
+                var payloadText = new TextPayload(text + ipcControlledText);
+                DtrBarEntry.Text = new SeString(icon, payloadText);
 
-            var payloadText = new TextPayload(text + ipcControlledText);
-            DtrBarEntry.Text = new SeString(icon, payloadText);
+                #endregion
+            }
 
-            #endregion
+            if (Service.Configuration.ShowOpenerDtr)
+            {
+                var status = new TextPayload(WrathOpener.OpenerStatus());
+                OpenerDtr.Text = new SeString(status);
+                OpenerDtr.Shown = true;
+            }
+            else
+                OpenerDtr.Shown = false;
+
+            if (Service.Configuration.TankbusterTTS || Service.Configuration.TankbusterToast)
+                CustomComboFunctions.PlayTankbusterAlert();
+
+            if (Service.Configuration.AoEDamageTTS || Service.Configuration.AoEDamageToast)
+                CustomComboFunctions.PlayGroupwideAlert();
         }
         catch (Exception ex)
         {
@@ -367,7 +416,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         // Enumerable.Range is a start and count, not a start and end.
         // Enumerable.Range(Start, Count)
         Service.Configuration.ResetFeatures("1.0.0.6_DNCRework", Enumerable.Range(4000, 150).ToArray());
-        Service.Configuration.ResetFeatures("1.0.0.11_DRKRework", Enumerable.Range(5000, 200).ToArray()); 
+        Service.Configuration.ResetFeatures("1.0.0.11_DRKRework", Enumerable.Range(5000, 200).ToArray());
         Service.Configuration.ResetFeatures("1.0.1.11_RDMRework", Enumerable.Range(13000, 999).ToArray());
         Service.Configuration.ResetFeatures("1.0.2.3_NINRework", Enumerable.Range(10000, 100).ToArray());
     }
@@ -392,7 +441,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     {
         try
         {
-            var basicMessage = $"Welcome to WrathCombo v{this.GetType().Assembly
+            var basicMessage = $"Welcome to WrathCombo v{GetType().Assembly
                 .GetName().Version}!";
             using var motd =
                 httpClient.GetAsync("https://raw.githubusercontent.com/PunishXIV/WrathCombo/main/res/motd.txt").Result;
@@ -420,7 +469,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Used for non-static only window initialization")]
-    public string Name => "Wrath Combo";
+    public string Name => MainWindowUI.Wrath_Combo;
 
     /// <inheritdoc/>
     public void Dispose()
@@ -440,19 +489,21 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
         ws.RemoveAllWindows();
         Svc.DtrBar.Remove("Wrath Combo");
+        Svc.DtrBar.Remove("Wrath Combo Opener");
         Configuration.ConfigChanged -= DebugFile.LoggingConfigChanges;
         Svc.Framework.Update -= OnFrameworkUpdate;
         Svc.ClientState.TerritoryChanged -= ClientState_TerritoryChanged;
         Svc.PluginInterface.UiBuilder.OpenConfigUi -= OnOpenConfigUi;
         Svc.PluginInterface.UiBuilder.Draw -= DrawUI;
-        
+
         Service.ActionReplacer.Dispose();
         Service.ComboCache.Dispose();
+        Service.AutoRotationController.Dispose();
         Service.Inventory.Dispose();
         ActionWatching.Dispose();
         CustomComboFunctions.TimerDispose();
         IPC.Dispose();
-        MoveHook?.Dispose();
+        MoveHook.Dispose();
 
         ConflictingPluginsChecks.Dispose();
         AllStaticIPCSubscriptions.Dispose();

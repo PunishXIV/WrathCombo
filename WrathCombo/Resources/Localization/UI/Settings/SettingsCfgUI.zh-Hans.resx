@@ -1,0 +1,741 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionChanging_defaultValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="ActionChanging_helpMark" xml:space="preserve">
+    <value>控制热键栏上的技能是否会被插件连击替换。
+若禁用，你手动按下的技能将不再受任何 Wrath 设置影响。
+
+无论此设置如何，自动循环都可正常工作。</value>
+  </data>
+  <data name="ActionChanging_Name" xml:space="preserve">
+    <value>技能替换</value>
+  </data>
+  <data name="ActionChanging_recommendedValue" xml:space="preserve">
+    <value>开（这基本等同于关闭 Wrath 的大部分功能）</value>
+  </data>
+  <data name="ActionChanging_warningMark" xml:space="preserve">
+    <value>Wrath 的设计在很大程度上以技能替换为前提。
+若禁用，仅自动循环可用。
+禁用后也可能导致意外行为，例如重定向相关问题。</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_helpMark" xml:space="preserve">
+    <value>将不在你队伍中的 NPC 也加入治疗技能的重定向逻辑。
+
+适合希望治疗队外 NPC（如任务 NPC）的治疗职业玩家。
+这些 NPC 通常无法与基于职能的自定义治疗队列条目良好配合
+（即使 NPC 看起来像坦克，也不一定会被归类为坦克）</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_Name" xml:space="preserve">
+    <value>将队外 NPC 加入重定向</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_recommendedValue" xml:space="preserve">
+    <value>开（若你使用任何重定向功能）</value>
+  </data>
+  <data name="BlockSpellOnMove_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="BlockSpellOnMove_helpMark" xml:space="preserve">
+    <value>移动时将通过输出“狂怒剑”完全阻止技能动作。
+这会覆盖许多职业已有的连击内移动选项。</value>
+  </data>
+  <data name="BlockSpellOnMove_Name" xml:space="preserve">
+    <value>移动时阻止读条技能</value>
+  </data>
+  <data name="BlockSpellOnMove_recommendedValue" xml:space="preserve">
+    <value>关（多数职业用自身功能处理得更好）</value>
+  </data>
+  <data name="CustomHealStack_defaultValue" xml:space="preserve">
+    <value>焦点目标 &gt; 固定目标 &gt; 自身</value>
+  </data>
+  <data name="CustomHealStack_helpMark" xml:space="preserve">
+    <value>若条目少于 4 项，且全部检查均无结果，将回退到自身。
+
+这些目标仅在其为友方且距离 25y 内时才会视为有效。
+
+例如应用到康复类技能时，会先检查目标是否存在可驱散减益等条件。
+因此无需额外添加“任意可驱散队友”等条目。</value>
+  </data>
+  <data name="CustomHealStack_Name" xml:space="preserve">
+    <value>自定义治疗队列</value>
+  </data>
+  <data name="CustomHealStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="EnabledOutputLog_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="EnabledOutputLog_helpMark" xml:space="preserve">
+    <value>每次使用 Wrath 提供的技能时，都会在聊天框输出日志。</value>
+  </data>
+  <data name="EnabledOutputLog_Name" xml:space="preserve">
+    <value>输出日志到聊天</value>
+  </data>
+  <data name="EnabledOutputLog_recommendedValue" xml:space="preserve">
+    <value>开（若你在反馈问题）</value>
+  </data>
+  <data name="HideChildren_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="HideChildren_helpMark" xml:space="preserve">
+    <value>隐藏已禁用连击下方的功能与选项。</value>
+  </data>
+  <data name="HideChildren_Name" xml:space="preserve">
+    <value>隐藏子连击选项</value>
+  </data>
+  <data name="HideChildren_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="HideConflictedCombos_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="HideConflictedCombos_helpMark" xml:space="preserve">
+    <value>隐藏与已启用连击冲突的连击。</value>
+  </data>
+  <data name="HideConflictedCombos_Name" xml:space="preserve">
+    <value>隐藏冲突连击</value>
+  </data>
+  <data name="HideConflictedCombos_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="HideMessageOfTheDay_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="HideMessageOfTheDay_helpMark" xml:space="preserve">
+    <value>阻止每日消息在登录时显示到聊天框。</value>
+  </data>
+  <data name="HideMessageOfTheDay_Name" xml:space="preserve">
+    <value>隐藏每日消息</value>
+  </data>
+  <data name="HideMessageOfTheDay_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="InterruptDelay_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="InterruptDelay_helpMark" xml:space="preserve">
+    <value>控制在敌方读条达到总施法时长百分之多少后再进行打断。
+适用于所有职业连击中的打断行为（包括用于打断的眩晕）。</value>
+  </data>
+  <data name="InterruptDelay_Name" xml:space="preserve">
+    <value>打断延迟</value>
+  </data>
+  <data name="InterruptDelay_recommendedValue" xml:space="preserve">
+    <value>低于 40（高于此值会开始频繁错过短读条打断）</value>
+  </data>
+  <data name="InterruptDelay_unitLabel" xml:space="preserve">
+    <value>% 施法进度</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_defaultValue" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_helpMark" xml:space="preserve">
+    <value>控制两个 GCD 间允许插入多少个 oGCD。
+游戏的“默认”是双插，但在足够低延迟下三插也完全可行；若你存在任何形式的延迟问题，单插反而可能更适合。
+三插已按尽量避免压 GCD 的方式处理，因此即便你延迟很好也不会经常触发；这是合理可用的行为，如你希望可安全启用。</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_Name" xml:space="preserve">
+    <value>最大插技数量</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_recommendedValue" xml:space="preserve">
+    <value>46056</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_unitLabel" xml:space="preserve">
+    <value>oGCD 数量</value>
+  </data>
+  <data name="MeleeOffset_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MeleeOffset_helpMark" xml:space="preserve">
+    <value>控制“近战范围内”的判定。
+主要用于不希望 Boss 稍微走出范围就切换远程攻击的情况。
+例如设为 -0.5 表示你需再靠近目标 0.5 米才算近战；
+设为 2 则允许你离目标远 2 米仍视为近战
+（近战技能依然打不到，但会给你提前预警，而非突然改用更差动作）。</value>
+  </data>
+  <data name="MeleeOffset_Name" xml:space="preserve">
+    <value>近战距离偏移</value>
+  </data>
+  <data name="MeleeOffset_recommendedValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MeleeOffset_unitLabel" xml:space="preserve">
+    <value>米</value>
+  </data>
+  <data name="MovementLeeway_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MovementLeeway_helpMark" xml:space="preserve">
+    <value>控制 Wrath 识别你为“正在移动”前所需的延迟时间。
+这可减少小幅位移对循环的影响，尤其适合法系职业。</value>
+  </data>
+  <data name="MovementLeeway_Name" xml:space="preserve">
+    <value>移动检测延迟</value>
+  </data>
+  <data name="MovementLeeway_recommendedValue" xml:space="preserve">
+    <value>0.0-1.0（超过该范围可能会破坏职业内的移动选项）</value>
+  </data>
+  <data name="MovementLeeway_unitLabel" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="OpenerTimeout_defaultValue" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="OpenerTimeout_helpMark" xml:space="preserve">
+    <value>控制起手中允许多久没有动作；超过则判定起手失败并恢复常规循环。
+对部分法系可能需要提高，尤其当起手第一招是长读条时。</value>
+  </data>
+  <data name="OpenerTimeout_Name" xml:space="preserve">
+    <value>起手失败超时</value>
+  </data>
+  <data name="OpenerTimeout_recommendedValue" xml:space="preserve">
+    <value>4.0-7.0（过高会严重影响起手）</value>
+  </data>
+  <data name="OpenerTimeout_unitLabel" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_helpMark" xml:space="preserve">
+    <value>切换职业时，自动将 PvE 功能页切换到你当前职业。</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_Name" xml:space="preserve">
+    <value>切换职业时打开 PvE 功能页到当前职业</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="OpenToCurrentJob_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="OpenToCurrentJob_helpMark" xml:space="preserve">
+    <value>打开 PvE 功能页时，自动定位到你当前职业。</value>
+  </data>
+  <data name="OpenToCurrentJob_Name" xml:space="preserve">
+    <value>打开时将 PvE 功能页定位到当前职业</value>
+  </data>
+  <data name="OpenToCurrentJob_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="OpenToPvE_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="OpenToPvE_helpMark" xml:space="preserve">
+    <value>使用 `/wrath` 打开 Wrath 时，将进入 PvE 功能页，而不是你上次停留页签。
+等同于始终使用 `/wrath pve` 命令打开 Wrath。</value>
+  </data>
+  <data name="OpenToPvE_Name" xml:space="preserve">
+    <value>打开 Wrath 时进入 PvE 功能页</value>
+  </data>
+  <data name="OpenToPvE_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="OpenToPvP_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="OpenToPvP_helpMark" xml:space="preserve">
+    <value>与上方类似：在 PvP 区域中使用 `/wrath` 打开 Wrath 时，将进入 PvP 功能页，而非上次停留页签。
+类似于使用 `/wrath pvp` 命令打开 Wrath。</value>
+  </data>
+  <data name="OpenToPvP_Name" xml:space="preserve">
+    <value>在 PvP 区域打开 Wrath 时进入 PvP 功能页</value>
+  </data>
+  <data name="OpenToPvP_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="OutputOpenerLogs_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="OutputOpenerLogs_helpMark" xml:space="preserve">
+    <value>在聊天框输出你当前职业起手状态。
+例如：就绪、失败或完成。</value>
+  </data>
+  <data name="OutputOpenerLogs_Name" xml:space="preserve">
+    <value>在聊天输出起手状态</value>
+  </data>
+  <data name="OutputOpenerLogs_recommendedValue" xml:space="preserve">
+    <value>开（若你在排查起手问题）</value>
+  </data>
+  <data name="OverwriteQueue_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="OverwriteQueue_helpMark" xml:space="preserve">
+    <value>允许你用另一个技能覆盖当前已排队技能。</value>
+  </data>
+  <data name="OverwriteQueue_Name" xml:space="preserve">
+    <value>覆盖队列</value>
+  </data>
+  <data name="OverwriteQueue_recommendedValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="QueueAdjustThreshold_defaultValue" xml:space="preserve">
+    <value>1.5</value>
+  </data>
+  <data name="QueueAdjustThreshold_helpMark" xml:space="preserve">
+    <value>当 GCD 剩余时间小于等于该值时允许排队。</value>
+  </data>
+  <data name="QueueAdjustThreshold_Name" xml:space="preserve">
+    <value>允许排队于</value>
+  </data>
+  <data name="QueueAdjustThreshold_recommendedValue" xml:space="preserve">
+    <value>1.5-2.5</value>
+  </data>
+  <data name="QueueAdjustThreshold_unitLabel" xml:space="preserve">
+    <value>秒</value>
+  </data>
+  <data name="QueueAdjustThreshold_warningMark" xml:space="preserve">
+    <value>设置过低或为 0 会让手动排队变得非常困难。</value>
+  </data>
+  <data name="QueueAdjust_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="QueueAdjust_helpMark" xml:space="preserve">
+    <value>允许你在整个 GCD 期间自定义排队窗口，而非仅最后 0.3-0.5 秒。若你不连按按键或使用自动循环，并希望手动干预时，这很有用。</value>
+  </data>
+  <data name="QueueAdjust_Name" xml:space="preserve">
+    <value>自定义手动排队窗口</value>
+  </data>
+  <data name="QueueAdjust_recommendedValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="RaiseStack_defaultValue" xml:space="preserve">
+    <value>任意治疗 &gt; 任意坦克 &gt; 任意可复活职业 &gt; 任意死亡队友</value>
+  </data>
+  <data name="RaiseStack_extraText" xml:space="preserve">
+    <value>（所有目标都会检查是否可复活）</value>
+  </data>
+  <data name="RaiseStack_helpMark" xml:space="preserve">
+    <value>若启用了任一复活功能的重定向，
+这是 Wrath 尝试选择复活目标的顺序。
+
+复活功能可在 PvE&gt;通用 中找到，
+也可在拥有复活技能的各法系职业下找到。
+
+若条目少于 5 项且全部检查无结果，将回退到：
+若你的固定目标已死亡则选固定目标，否则选 &lt;任意死亡队友&gt;。
+
+这些目标仅在其为友方、已死亡且位于 30y 内时才会视为有效。</value>
+  </data>
+  <data name="RaiseStack_Name" xml:space="preserve">
+    <value>自定义复活队列</value>
+  </data>
+  <data name="RaiseStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_helpMark" xml:space="preserve">
+    <value>将如下所示，把所有单体治疗技能重定向到治疗队列，
+行为类似 Redirect 或 Reaction。
+这可确保用于检查治疗技能 HP% 阈值逻辑的目标，与最终实际受治疗目标一致。</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_Name" xml:space="preserve">
+    <value>重定向（单体）治疗技能</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_recommendedValue" xml:space="preserve">
+    <value>开（若你有任何自定义治疗队列）</value>
+  </data>
+  <data name="ShortDTRText_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="ShortDTRText_helpMark" xml:space="preserve">
+    <value>隐藏已启用自动模式连击数量。
+默认情况下，服务器信息栏会显示：
+- 自动循环是否开启
+- （若已开启）已启用自动模式连击数量
+- （若适用）是否有其他插件在控制自动循环状态。</value>
+  </data>
+  <data name="ShortDTRText_Name" xml:space="preserve">
+    <value>缩短服务器信息栏文本</value>
+  </data>
+  <data name="ShortDTRText_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_defaultValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_helpMark" xml:space="preserve">
+    <value>为拥有子功能/子选项的连击与功能绘制边框。</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_Name" xml:space="preserve">
+    <value>为含子选项的连击与功能显示边框</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="ShowOpenerDtr_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="ShowOpenerDtr_helpMark" xml:space="preserve">
+    <value>在启用且适用时，显示当前起手状态。</value>
+  </data>
+  <data name="ShowOpenerDtr_Name" xml:space="preserve">
+    <value>在服务器信息栏显示起手状态</value>
+  </data>
+  <data name="ShowOpenerDtr_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="ShowTargetHighlight_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="ShowTargetHighlight_extraText" xml:space="preserve">
+    <value>（目前仅 AST 与 DNC 使用）</value>
+  </data>
+  <data name="ShowTargetHighlight_helpMark" xml:space="preserve">
+    <value>当特定功能选中队友时，在原版队伍列表中为其绘制高亮框。</value>
+  </data>
+  <data name="ShowTargetHighlight_Name" xml:space="preserve">
+    <value>显示目标高亮</value>
+  </data>
+  <data name="ShowTargetHighlight_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="SuppressAutorotCommand_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="SuppressAutorotCommand_helpMark" xml:space="preserve">
+    <value>隐藏 /wrath auto 命令的聊天反馈</value>
+  </data>
+  <data name="SuppressAutorotCommand_Name" xml:space="preserve">
+    <value>隐藏自动循环命令反馈</value>
+  </data>
+  <data name="SuppressAutorotCommand_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="SuppressSetCommands_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="SuppressSetCommands_helpMark" xml:space="preserve">
+    <value>隐藏 /wrath set 与 /wrath unset 命令的聊天反馈。
+（若命令被 IPC 覆盖或执行失败，仍会显示反馈）</value>
+  </data>
+  <data name="SuppressSetCommands_Name" xml:space="preserve">
+    <value>隐藏 Set/Unset 命令反馈</value>
+  </data>
+  <data name="SuppressSetCommands_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="TargetHighlightColor_defaultValue" xml:space="preserve">
+    <value>#808080FF</value>
+  </data>
+  <data name="TargetHighlightColor_helpMark" xml:space="preserve">
+    <value>控制队友高亮框的颜色。</value>
+  </data>
+  <data name="TargetHighlightColor_Name" xml:space="preserve">
+    <value>目标高亮颜色</value>
+  </data>
+  <data name="TargetHighlightColor_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="Throttle_defaultValue" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="Throttle_helpMark" xml:space="preserve">
+    <value>限制连击更新热键栏技能的频率。
+50ms 时几乎不限制，通常能保持动作实时更新。
+
+若你希望获得一些（相对较小的）FPS 提升，可提高该值以降低连击运行频率。
+这会降低连击响应速度，甚至导致压 GCD。
+在高数值下可能会把 GCD 压慢数秒，甚至彻底破坏循环。</value>
+  </data>
+  <data name="Throttle_Name" xml:space="preserve">
+    <value>动作更新器节流</value>
+  </data>
+  <data name="Throttle_recommendedValue" xml:space="preserve">
+    <value>20-200</value>
+  </data>
+  <data name="Throttle_unitLabel" xml:space="preserve">
+    <value>毫秒</value>
+  </data>
+  <data name="UIShowPresetIDs_defaultValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="UIShowPresetIDs_helpMark" xml:space="preserve">
+    <value>在每个连击与功能名称旁显示预设 ID 编号。
+这些 ID 可用于 `/wrath toggle &lt;ID&gt;` 等命令。
+7.3 之前这里显示的是更短的编号，但无法用于命令。</value>
+  </data>
+  <data name="UIShowPresetIDs_Name" xml:space="preserve">
+    <value>在连击名称旁显示预设 ID</value>
+  </data>
+  <data name="UIShowPresetIDs_recommendedValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="UIShowSearchBar_defaultValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="UIShowSearchBar_helpMark" xml:space="preserve">
+    <value>控制设置页、PvE 职业页与 PvP 职业页中是否显示搜索栏。</value>
+  </data>
+  <data name="UIShowSearchBar_Name" xml:space="preserve">
+    <value>显示搜索栏</value>
+  </data>
+  <data name="UIShowSearchBar_recommendedValue" xml:space="preserve">
+    <value>开</value>
+  </data>
+  <data name="UseCustomHealStack_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="UseCustomHealStack_helpMark" xml:space="preserve">
+    <value>若你希望自行定义治疗目标优先级队列，而非使用默认队列，请启用此项。
+
+若你未启用上方“重定向治疗技能”选项，建议启用以对齐 Redirect/Reaction 配置；否则按个人偏好即可。</value>
+  </data>
+  <data name="UseCustomHealStack_Name" xml:space="preserve">
+    <value>改用自定义治疗队列</value>
+  </data>
+  <data name="UseCustomHealStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>将场景鼠标悬停目标加入默认治疗队列顶部；当你悬停任意队伍成员 UI 时，会覆盖其余队列。
+
+若你使用键鼠并启用了“重定向治疗技能”（或在 Redirect/Reaction 中配置了 UI 鼠标悬停目标），建议启用。</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve">
+    <value>将场景鼠标悬停加入默认治疗队列</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>在默认治疗队列中，将焦点目标加入到固定目标与软目标之后；若存在存活焦点目标，将覆盖队列其余部分。</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_Name" xml:space="preserve">
+    <value>将焦点目标加入默认治疗队列</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>将附近 HP% 最低的队友加入默认治疗队列底部，仅覆盖“自身”条目。</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_Name" xml:space="preserve">
+    <value>将最低 HP% 队友加入默认治疗队列</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_warningMark" xml:space="preserve">
+    <value>与其他 Default+ 选项不同，此项在多数其他重定向插件中并不存在。
+应与上方“重定向治疗技能”设置配合使用！</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>将 UI 鼠标悬停目标加入默认治疗队列顶部；当你悬停任意队伍成员 UI 时，会覆盖其余队列。
+
+若你使用键鼠并启用了“重定向治疗技能”（或在 Redirect/Reaction 中配置了 UI 鼠标悬停目标），建议启用。</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve">
+    <value>将 UI 鼠标悬停加入默认治疗队列</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="AoEDamageToast_defaultValue" xml:space="preserve">
+    <value>关闭</value>
+  </data>
+  <data name="MainUIOptions_Category" xml:space="preserve">
+    <value>主用户界面选项</value>
+  </data>
+  <data name="RotationBehaviourOptions_Category" xml:space="preserve">
+    <value>循环行为选项</value>
+  </data>
+  <data name="TargetingOptions_Category" xml:space="preserve">
+    <value>目标选择选项</value>
+  </data>
+  <data name="TroubleshootingOptions_Category" xml:space="preserve">
+    <value>故障排除选项</value>
+  </data>
+  <data name="AprilFools2026_Name" xml:space="preserve">
+    <value>2026 年愚人节专题</value>
+  </data>
+  <data name="AprilFools2026_helpMark" xml:space="preserve">
+    <value>当你在插件中无法获得足够的 MNK 时。</value>
+  </data>
+  <data name="AprilFools2026_recommendedValue" xml:space="preserve">
+    <value>关闭，除非您的名字以 Beep 开头</value>
+  </data>
+  <data name="AprilFools2026_defaultValue" xml:space="preserve">
+    <value>继续，因为这是你知道的那种日子</value>
+  </data>
+  <data name="TankbusterTTS_Name" xml:space="preserve">
+    <value>受检测到死刑时播放 TTS</value>
+  </data>
+  <data name="TankbusterTTS_helpMark" xml:space="preserve">
+    <value>将会在检测到死刑时播放语音提醒，内容中包含死刑目标。</value>
+  </data>
+  <data name="TankbusterTTS_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="TankbusterTTS_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="AoEDamageTTS_Name" xml:space="preserve">
+    <value>在检测到到全屏攻击时播放 TTS</value>
+  </data>
+  <data name="AoEDamageTTS_helpMark" xml:space="preserve">
+    <value>每当检测到分摊伤害/群体伤害施放时，就会进行语音提醒，内容包含目标名称（如果适用）。</value>
+  </data>
+  <data name="AoEDamageTTS_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="AoEDamageTTS_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="TankbusterToast_Name" xml:space="preserve">
+    <value>在检测到死刑时显示弹出消息</value>
+  </data>
+  <data name="TankbusterToast_helpMark" xml:space="preserve">
+    <value>每当检测到死刑时，就会在屏幕上显示一条消息，包括它的目标名称。</value>
+  </data>
+  <data name="TankbusterToast_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+  <data name="TankbusterToast_defaultValue" xml:space="preserve">
+    <value>关</value>
+  </data>
+  <data name="AoEDamageToast_Name" xml:space="preserve">
+    <value>在检测到群体伤害时显示弹出消息</value>
+  </data>
+  <data name="AoEDamageToast_helpMark" xml:space="preserve">
+    <value>每当检测到分摊伤害/群体伤害时，都会在屏幕上显示一条消息，包括目标名称（如果适用）。</value>
+  </data>
+  <data name="AoEDamageToast_recommendedValue" xml:space="preserve">
+    <value>按偏好</value>
+  </data>
+</root>

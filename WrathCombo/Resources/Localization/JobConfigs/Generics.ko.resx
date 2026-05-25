@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Action_Priority" xml:space="preserve">
+    <value>{0} 우선순위: </value>
+  </data>
+  <data name="Action_Threshold" xml:space="preserve">
+    <value>{0} 임계값</value>
+  </data>
+  <data name="AddFieldMouseoverTargetting" xml:space="preserve">
+    <value>필드 캐릭터 마우스 오버 타겟팅 추가</value>
+  </data>
+  <data name="AllContent" xml:space="preserve">
+    <value>모든 콘텐츠</value>
+  </data>
+  <data name="AllContentDescription" xml:space="preserve">
+    <value>게임 내 모든 콘텐츠에 적용됩니다.</value>
+  </data>
+  <data name="AllEnemies" xml:space="preserve">
+    <value>모든 적</value>
+  </data>
+  <data name="AllHealerRetargetting" xml:space="preserve">
+    <value>UI 마우스 오버 &gt; 필드 마우스 오버 &gt; 주시 대상 &gt; 임시 대상 &gt; 고정 대상</value>
+  </data>
+  <data name="AllyHardTarget" xml:space="preserve">
+    <value>아군 고정 대상</value>
+  </data>
+  <data name="Always" xml:space="preserve">
+    <value>항상</value>
+  </data>
+  <data name="AnyMovement" xml:space="preserve">
+    <value>이동 중일 때</value>
+  </data>
+  <data name="ApplyOnlyTo0" xml:space="preserve">
+    <value>{0}에만 옵션을 적용합니다.</value>
+  </data>
+  <data name="ApplyToAll0" xml:space="preserve">
+    <value>다음 항목 모두에 옵션을 적용합니다:
+{0}</value>
+  </data>
+  <data name="BossEncounterNonBossHpPercent" xml:space="preserve">
+    <value>보스전 내 일반 몬스터.
+적 체력 % 도달 시 중단.</value>
+  </data>
+  <data name="BossOnlyContent" xml:space="preserve">
+    <value>보스 전용 콘텐츠</value>
+  </data>
+  <data name="BossOnlyDescription" xml:space="preserve">
+    <value>보스와 직접 전투하는 던전에서만 적용됩니다. 일반 몬스터(쫄몹) 구간이 포함된 '신생 에오르제아' 및 '창천의 이슈가르드'의 여러 레이드는 제외됩니다.</value>
+  </data>
+  <data name="BossOnlyHpPercent" xml:space="preserve">
+    <value>보스전 전용. 적 체력 % 도달 시 정지.</value>
+  </data>
+  <data name="BurstOption" xml:space="preserve">
+    <value>버스트 옵션</value>
+  </data>
+  <data name="ChargePool" xml:space="preserve">
+    <value>수동 사용을 위해 남겨둘 충전 횟수입니다. 0으로 설정하면 이 체크를 비활성화합니다.</value>
+  </data>
+  <data name="DisablesTheUseOfMitigations" xml:space="preserve">
+    <value>경감기 사용 비활성화</value>
+  </data>
+  <data name="DontUse0" xml:space="preserve">
+    <value>{0} 사용 안 함</value>
+  </data>
+  <data name="DoTSecondsRemainingZeroDisable" xml:space="preserve">
+    <value>지속 피해 재적용 전 남은 시간(초)입니다. 0으로 설정하면 이 체크를 비활성화합니다.</value>
+  </data>
+  <data name="EnablesTheUseOfMitigations" xml:space="preserve">
+    <value>경감기 사용 활성화</value>
+  </data>
+  <data name="EnemyHardTarget" xml:space="preserve">
+    <value>적 고정 대상</value>
+  </data>
+  <data name="EnemyTypeCheck" xml:space="preserve">
+    <value>HP 체크를 적용할 적의 종류를 선택하세요:</value>
+  </data>
+  <data name="ExcludeAdvancedMitigations" xml:space="preserve">
+    <value>고급 모드 경감기 제외</value>
+  </data>
+  <data name="ExcludeSimpleMitigations" xml:space="preserve">
+    <value>단순 모드 경감기 제외</value>
+  </data>
+  <data name="FieldMouseover" xml:space="preserve">
+    <value>필드 마우스 오버</value>
+  </data>
+  <data name="FocusTarget" xml:space="preserve">
+    <value>주시 대상</value>
+  </data>
+  <data name="HowManyChargesToKeepReady" xml:space="preserve">
+    <value>보관할 충전 횟수를 몇 개 남겨둘까요?
+(0 = 모두 사용)</value>
+  </data>
+  <data name="HPCheckAllContent" xml:space="preserve">
+    <value>모든 콘텐츠에서 HP 상태 확인</value>
+  </data>
+  <data name="HPCheckAllEnemies" xml:space="preserve">
+    <value>위의 HP 체크 설정을 모든 적에게 적용합니다.</value>
+  </data>
+  <data name="HPCheckNonBossEncountersOnly" xml:space="preserve">
+    <value>보스 이외의 전투에서만 HP 확인 적용</value>
+  </data>
+  <data name="HPCheckNonBosses" xml:space="preserve">
+    <value>위의 HP 체크 설정을 보스가 아닌 대상에게만 적용합니다.</value>
+  </data>
+  <data name="Include0" xml:space="preserve">
+    <value>{0} 포함</value>
+  </data>
+  <data name="IncludeAdvancedMitigations" xml:space="preserve">
+    <value>고급 모드 경감기 포함</value>
+  </data>
+  <data name="IncludeShields" xml:space="preserve">
+    <value>HP % 슬라이더에 보호막 포함</value>
+  </data>
+  <data name="IncludeSimpleMitigations" xml:space="preserve">
+    <value>단순 모드 경감기 포함</value>
+  </data>
+  <data name="InMeleeRange" xml:space="preserve">
+    <value>근접 범위 내에 있을 때</value>
+  </data>
+  <data name="Job0ShieldCheck" xml:space="preserve">
+    <value>{0} 보호막 확인</value>
+  </data>
+  <data name="Job0ShieldCheckDesc" xml:space="preserve">
+    <value>활성화 시 기존 {0}의 보호막을 덮어쓰지 않습니다.</value>
+  </data>
+  <data name="LucidMP" xml:space="preserve">
+    <value>이 기능이 작동하기 위해 유지해야 할 MP의 상한치를 설정하세요. (MP가 설정값 이하일 때만 작동)</value>
+  </data>
+  <data name="MaxTargetsMultiDot" xml:space="preserve">
+    <value>주변의 여러 적에게 순차적으로 지속 피해 기술을 적용할 최대 대상 수</value>
+  </data>
+  <data name="NoMovement" xml:space="preserve">
+    <value>이동하지 않을 때</value>
+  </data>
+  <data name="NonBossEncountersOnly" xml:space="preserve">
+    <value>보스 제외 전투에서만 적용"</value>
+  </data>
+  <data name="NonBosses" xml:space="preserve">
+    <value>보스 제외</value>
+  </data>
+  <data name="NonBossHpPercent" xml:space="preserve">
+    <value>일반 몹 전투용. 적 HP % 도달 시 사용 중단.</value>
+  </data>
+  <data name="NormalTargeting" xml:space="preserve">
+    <value>일반 타겟팅</value>
+  </data>
+  <data name="NotInBossEncounters" xml:space="preserve">
+    <value>보스 전투 중이 아닐 때</value>
+  </data>
+  <data name="On0" xml:space="preserve">
+    <value>{0} 시</value>
+    <comment>"단순 '{Action} 시' 형태의 문자열에 사용됩니다."</comment>
+  </data>
+  <data name="OnlyWeave" xml:space="preserve">
+    <value>끼워넣기에만 사용</value>
+  </data>
+  <data name="PlayerHPToUseAction" xml:space="preserve">
+    <value>플레이어의 HP가 몇% 이하일 때 {0}을(를) 사용할까요? (이 기능을 끄려면 100으로 설정하세요)</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>우선순위:</value>
+  </data>
+  <data name="Replaces0" xml:space="preserve">
+    <value>{0} 교체</value>
+  </data>
+  <data name="Save0ChargesForBurst" xml:space="preserve">
+    <value>시너지 타임을 위해 {0} 아끼기</value>
+  </data>
+  <data name="SelectWhatKindOfContentThisOptionAppliesTo" xml:space="preserve">
+    <value>이 옵션을 적용할 콘텐츠 종류를 선택하세요:</value>
+  </data>
+  <data name="SelfOnly" xml:space="preserve">
+    <value>자신에게만 적용</value>
+  </data>
+  <data name="ShieldCheckPartyMemberNeedPercent" xml:space="preserve">
+    <value>보호막 확인: 보호막이 없는 파티원 비율(%) 조건</value>
+  </data>
+  <data name="SoftTarget" xml:space="preserve">
+    <value>임시 대상</value>
+  </data>
+  <data name="StandardOpener" xml:space="preserve">
+    <value>표준 오프너</value>
+  </data>
+  <data name="StartUsingWhenBelowPartyAverageHPSetTo100ToDisableThisCheck" xml:space="preserve">
+    <value>파티 평균 HP % 미만 시 사용 시작. 이 체크를 비활성화하려면 100으로 설정하세요.</value>
+  </data>
+  <data name="StationaryDelayCheck" xml:space="preserve">
+    <value>정지 상태 대기 시간 (초):</value>
+  </data>
+  <data name="StationaryOnly" xml:space="preserve">
+    <value>정지 상태에서만</value>
+  </data>
+  <data name="StopBelowAverageEnemyHP" xml:space="preserve">
+    <value>주변 적들의 평균 HP%가 설정값 미만이면 사용 중단합니다.
+(0으로 설정 시 이 기능을 끕니다)</value>
+  </data>
+  <data name="StopEnemyHpPercent" xml:space="preserve">
+    <value>적 HP % 이하 시 사용 중단. 이 체크를 비활성화하려면 0으로 설정하세요.</value>
+  </data>
+  <data name="StopFriendlyHpPercent100" xml:space="preserve">
+    <value>HP 설정 %보다 낮아지면 사용 시작. 이 체크를 비활성화하려면 100으로 설정하세요.</value>
+  </data>
+  <data name="StopFriendlyHpPercentZero" xml:space="preserve">
+    <value>HP 설정 %보다 낮아지면 사용 중단. 이 체크를 비활성화하려면 0으로 설정하세요.</value>
+  </data>
+  <data name="StopSeconds" xml:space="preserve">
+    <value>재적용 전 남은 시간(초) (0 = 미리 재적용하지 않음)</value>
+  </data>
+  <data name="StopUsingWhenBelowSetPercentage" xml:space="preserve">
+    <value>설정된 % 미만 시 사용 중단</value>
+  </data>
+  <data name="TanksOnly" xml:space="preserve">
+    <value>탱커 전용</value>
+  </data>
+  <data name="TargetHPUse0AtOrBelow" xml:space="preserve">
+    <value>{0} 시전을 위한 대상 HP % 기준 (설정값 이하 시 사용). 100으로 설정하면 이 체크를 비활성화합니다.</value>
+  </data>
+  <data name="TimeRemainingOnOthers" xml:space="preserve">
+    <value>대상에게 걸린 {0}의 허용 잔여 시간
+(0 = 대상에게 {0} 효과가 없을 때만 사용)</value>
+  </data>
+  <data name="TimeRemainingOnOthers3" xml:space="preserve">
+    <value>대상에게 걸린 {0} / {1} / {2}의 허용 잔여 시간
+(0 = 대상에게 {0} / {1} / {2} 효과가 없을 때만)</value>
+  </data>
+  <data name="TwoTargetDotting" xml:space="preserve">
+    <value>대상(2명) 지속 피해 적용</value>
+  </data>
+  <data name="TwoTargetDottingDescription" xml:space="preserve">
+    <value>가능한 경우, 두 명의 대상에게 지속 피해 기술을 유지합니다.</value>
+  </data>
+  <data name="Use0" xml:space="preserve">
+    <value>{0} 사용</value>
+  </data>
+  <data name="Use0In1" xml:space="preserve">
+    <value>{1} 시 {0} 사용</value>
+  </data>
+  <data name="Use0Or1" xml:space="preserve">
+    <value>{0} / {1} 사용</value>
+  </data>
+  <data name="Use0When1ChargesAreAvailable" xml:space="preserve">
+    <value>{1} 회 충전 횟수 이상일 때 {0} 사용</value>
+  </data>
+  <data name="Use0WhenInRangeOfEnemy" xml:space="preserve">
+    <value>선택한 적이 사거리 내에 있을 때 {0} 사용</value>
+  </data>
+  <data name="UseActionOnlyWhileStationary" xml:space="preserve">
+    <value>정지 상태에서만 {0} 사용</value>
+  </data>
+  <data name="UseAlways" xml:space="preserve">
+    <value>항상 사용</value>
+  </data>
+  <data name="Uses0RegardlessOfAnyMovementConditions" xml:space="preserve">
+    <value>이동 상태와 상관없이 {0} 사용
+참고: 캐릭터가 사망할 가능성이 있습니다.</value>
+  </data>
+  <data name="UsesStandardOpener" xml:space="preserve">
+    <value>표준 오프너 사용</value>
+  </data>
+  <data name="UseWhenDistanceFromTargetIsLessThanOrEqualTo" xml:space="preserve">
+    <value>대상과의 거리가 다음 값 이하일 때 사용:</value>
+  </data>
+  <data name="Use_0_Opener" xml:space="preserve">
+    <value>{0} 오프너 사용</value>
+  </data>
+  <data name="WillAdd_0_ToThePriorityStack" xml:space="preserve">
+    <value>우선순위 스택에 {0} 추가</value>
+  </data>
+  <data name="WillNotUseInBossEncounters" xml:space="preserve">
+    <value>보스전에서는 사용하지 않습니다.</value>
+  </data>
+  <data name="WillOnlyUseOnTanks" xml:space="preserve">
+    <value>탱커에게만 사용합니다.</value>
+  </data>
+  <data name="WillOnlyWeaveThisAction" xml:space="preserve">
+    <value>이 기술은 끼워넣기 타이밍에만 사용합니다.</value>
+  </data>
+  <data name="Action_Opener" xml:space="preserve">
+    <value>{0} 오프너</value>
+  </data>
+</root>

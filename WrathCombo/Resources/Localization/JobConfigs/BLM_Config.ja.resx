@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+  -->
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add0or1or2or3DependingonStackAndLevel" xml:space="preserve">
+    <value>スタック数とレベルに応じて、{3} 中に {0} / {1} / {2} を追加します</value>
+  </data>
+  <data name="Add0Or1WhenIn2" xml:space="preserve">
+    <value>{2} 中かつスタックが3未満のとき、{0} / {1} を追加します</value>
+  </data>
+  <data name="Add0WhenBelow2400MP" xml:space="preserve">
+    <value>{1} 中かつMPが2400未満のとき、{0} を追加します。</value>
+  </data>
+  <data name="Add0WhenIn1AndAbove800MP" xml:space="preserve">
+    <value>{1} 中かつMPが800を超えているとき、{0} を追加します。</value>
+  </data>
+  <data name="AddFlarestarinAF" xml:space="preserve">
+    <value>使用可能なとき、{1} 中に {0} を追加します。</value>
+  </data>
+  <data name="DoNotUseUnderLeylines" xml:space="preserve">
+    <value>{0} の効果中は使用しません。
+この挙動を推奨します。</value>
+  </data>
+  <data name="DontChangeFireInUmbralIce" xml:space="preserve">
+    <value>{2} 中は {0} のままにします。
+上で選択している場合は {0} / {1} を使用します。</value>
+  </data>
+  <data name="NotUnderLeylines" xml:space="preserve">
+    <value>{0} の効果中ではない</value>
+  </data>
+  <data name="ReplaceBlizzard3WithBlizzardWhenInUI3" xml:space="preserve">
+    <value>{2} 中は {0} を {1} に置き換えます。</value>
+  </data>
+  <data name="ReplaceBlizzardWithBlizzard3WhenNotInUI3" xml:space="preserve">
+    <value>{2} 中ではないとき、{0} を {1} に置き換えます。</value>
+  </data>
+  <data name="ReplaceFire3WithFireWhenInAF3" xml:space="preserve">
+    <value>{2} 中は {0} を {1} に置き換えます。</value>
+  </data>
+  <data name="ReplaceFireWithFire3WhenNotInAF3OrCombat" xml:space="preserve">
+    <value>{2} 中ではない、または非戦闘中のとき、{0} を {1} に置き換えます。</value>
+  </data>
+  <data name="ShowXenoglossyWhenAmplifierIsOnCooldown" xml:space="preserve">
+    <value>{1} がリキャスト中のときも {0} を表示します。</value>
+  </data>
+  <data name="ShowXenoglossyWhenAmplifierOnCD" xml:space="preserve">
+    <value>{1} がリキャスト中のとき {0} を表示</value>
+  </data>
+  <data name="UseDespairWhenBelow1500MP" xml:space="preserve">
+    <value>MPが1500未満、かつ無詠唱で使えるときに {0} を使用します（レベル100のみ）。</value>
+  </data>
+  <data name="UseFire3WhenYouHaveFirestarterProc" xml:space="preserve">
+    <value>{1} が付与されているときに {0} を使用します。</value>
+  </data>
+  <data name="UseParadoxWhenInAF3" xml:space="preserve">
+    <value>{1} 中に {0} を使用します。</value>
+  </data>
+  <data name="UseSwiftcastWhenNoTriplecast" xml:space="preserve">
+    <value>{1} がないときに {0} を使用します。</value>
+  </data>
+  <data name="UseTriplecastWhenNoSwiftcast" xml:space="preserve">
+    <value>{1} が有効でないときに {0} を使用します。</value>
+  </data>
+  <data name="RequireHPandGroupwide" xml:space="preserve">
+    <value>HP判定と全体攻撃の検知を両方要求</value>
+  </data>
+  <data name="ManawardHPThresholdAndGroupwideDesc" xml:space="preserve">
+    <value>HPがスライダー閾値未満、かつ全体攻撃を検知している場合のみ {0} を使用します</value>
+  </data>
+  <data name="OnlySolo" xml:space="preserve">
+    <value>ソロ時はHP閾値のみ要求</value>
+  </data>
+  <data name="OnlySoloDesc" xml:space="preserve">
+    <value>ソロ時（チョコボは含みません）はHP閾値のみを要求します。パーティ時はHP閾値と全体攻撃の検知を両方要求します。</value>
+  </data>
+  <data name="OnlyTriggerGroupwide" xml:space="preserve">
+    <value>全体攻撃の検知時のみ発動</value>
+  </data>
+  <data name="OnlyTriggerHP" xml:space="preserve">
+    <value>HP閾値のみで発動</value>
+  </data>
+  <data name="OnlyTriggerHPDesc" xml:space="preserve">
+    <value>HPがスライダー閾値未満のときのみ {0} を使用し、全体攻撃の検知は待ちません（主にソロ向け）。</value>
+  </data>
+  <data name="OnlyTriggerGroupwideDesc" xml:space="preserve">
+    <value>全体攻撃を検知しているときのみ {0} を使用します</value>
+  </data>
+</root>

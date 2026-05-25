@@ -1,0 +1,717 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="ActionChanging_defaultValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="ActionChanging_helpMark" xml:space="preserve">
+    <value>이 설정은 단축바의 스킬이 플러그인의 콤보로 대체될지 여부를 결정합니다.
+비활성화하면, 수동으로 스킬을 눌러 사용할 때 Wrath 설정의 영향을 받지 않습니다.
+자동 순환은 이 설정과 관계없이 계속 작동합니다.</value>
+  </data>
+  <data name="ActionChanging_Name" xml:space="preserve">
+    <value>기술 교체</value>
+  </data>
+  <data name="ActionChanging_recommendedValue" xml:space="preserve">
+    <value>켜기 (사실상 Wrath의 대부분 기능을 끄는 설정입니다)</value>
+  </data>
+  <data name="ActionChanging_warningMark" xml:space="preserve">
+    <value>Wrath는 주로 기술 교체를 염두에 두고 설계되었습니다. 이 기능이 비활성화되면 자동 순환만 작동합니다. 비활성화하면 리타겟팅 등에서 예상치 못한 동작이 발생할 수 있습니다.</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_helpMark" xml:space="preserve">
+    <value>이 설정을 활성화하면, 파티에 속해 있지 않은 NPC도 힐 스킬의 재타겟팅 로직에 포함됩니다.
+
+파티원이 아닌 NPC(예: 퀘스트 NPC)를 대상으로 치유해야 하는 힐러에게 유용합니다.
+다만 이러한 NPC들은 역할 기반 커스텀 힐 스택 항목과는 일반적으로 정상적으로 작동하지 않습니다.
+(NPC가 탱커처럼 보이더라도, 실제로는 해당 역할로 분류되지 않는 경우가 많습니다.)</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_Name" xml:space="preserve">
+    <value>파티 외 NPC를 재타겟팅에 추가</value>
+  </data>
+  <data name="AddOutOfPartyNPCsToRetargeting_recommendedValue" xml:space="preserve">
+    <value>켜기 (재타겟팅을 사용하는 경우에만 적용)</value>
+  </data>
+  <data name="BlockSpellOnMove_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="BlockSpellOnMove_helpMark" xml:space="preserve">
+    <value>이 설정을 활성화하면 이동 중에는 모든 기술이 완전히 차단되며, 콤보 출력이 야성의 검격으로 대체됩니다.
+
+이 기능은 여러 직업이 보유한 콤보 전용 이동 옵션보다 우선 적용됩니다.</value>
+  </data>
+  <data name="BlockSpellOnMove_Name" xml:space="preserve">
+    <value>이동 중 마법 시전 사용 차단</value>
+  </data>
+  <data name="BlockSpellOnMove_recommendedValue" xml:space="preserve">
+    <value>끄기 (대부분의 직업은 자체 기능으로 더 잘 처리합니다)</value>
+  </data>
+  <data name="CustomHealStack_defaultValue" xml:space="preserve">
+    <value>주시 대상 &gt; 고정 대상 &gt; 자신</value>
+  </data>
+  <data name="CustomHealStack_helpMark" xml:space="preserve">
+    <value>항목이 4개 미만이고, 모두 체크해도 아무것도 반환되지 않으면, 기본적으로 자신을 대상으로 설정합니다.
+
+이 대상은 우호적이고 25야드 이내에 있을 때만 유효한 대상으로 간주됩니다.
+
+에스나와 같은 기술에 적용되면, 이 대상들은 치유 가능한 디버프를 가지고 있는지 등을 확인합니다.
+따라서 '치유 가능한 아군' 같은 추가 설정은 필요하지 않습니다.</value>
+  </data>
+  <data name="CustomHealStack_Name" xml:space="preserve">
+    <value>사용자 정의 힐 스택</value>
+  </data>
+  <data name="CustomHealStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="EnabledOutputLog_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="EnabledOutputLog_helpMark" xml:space="preserve">
+    <value>Wrath에서 제공하는 기술을 사용할 때마다 채팅에 출력됩니다.</value>
+  </data>
+  <data name="EnabledOutputLog_Name" xml:space="preserve">
+    <value>로그를 채팅에 출력</value>
+  </data>
+  <data name="EnabledOutputLog_recommendedValue" xml:space="preserve">
+    <value>켜기 (문제를 신고하려는 경우)</value>
+  </data>
+  <data name="HideChildren_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="HideChildren_helpMark" xml:space="preserve">
+    <value>비활성화된 콤보 아래의 기능과 옵션을 숨깁니다.</value>
+  </data>
+  <data name="HideChildren_Name" xml:space="preserve">
+    <value>서브 콤보 옵션 숨기기</value>
+  </data>
+  <data name="HideChildren_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="HideConflictedCombos_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="HideConflictedCombos_helpMark" xml:space="preserve">
+    <value>활성화한 콤보와 충돌하는 콤보를 숨깁니다.</value>
+  </data>
+  <data name="HideConflictedCombos_Name" xml:space="preserve">
+    <value>충돌하는 콤보 숨기기</value>
+  </data>
+  <data name="HideConflictedCombos_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="HideMessageOfTheDay_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="HideMessageOfTheDay_helpMark" xml:space="preserve">
+    <value>로그인 시 채팅에 오늘의 메시지가 표시되지 않도록 방지합니다.</value>
+  </data>
+  <data name="HideMessageOfTheDay_Name" xml:space="preserve">
+    <value>오늘의 메시지 숨기기</value>
+  </data>
+  <data name="HideMessageOfTheDay_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="InterruptDelay_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="InterruptDelay_helpMark" xml:space="preserve">
+    <value>적의 시전 중단을 위해 기다릴 총 시전 시간의 비율을 조절합니다.
+이 설정은 모든 직업의 콤보에서 사용되는 모든 중단(스턴을 포함한 중단)에 적용됩니다.</value>
+  </data>
+  <data name="InterruptDelay_Name" xml:space="preserve">
+    <value>(적 기술)중단 지연</value>
+  </data>
+  <data name="InterruptDelay_recommendedValue" xml:space="preserve">
+    <value>40 이하 (그 이상이면 짧은 시전 시간을 가진 기술들을 중단하지 못하는 경우가 많아집니다)</value>
+  </data>
+  <data name="InterruptDelay_unitLabel" xml:space="preserve">
+    <value>시전 비율</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_defaultValue" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_helpMark" xml:space="preserve">
+    <value>GCD 사이에 허용되는 oGCD의 개수를 조정합니다.
+게임의 기본 설정은 더블 위빙이지만, 충분히 낮은 지연 시간(모든 종류의 지연 시간)에서는 트리플 위빙도 가능합니다. 하지만 어떤 종류의 지연 시간이라도 어려움을 겪고 있다면 싱글 위빙이 더 좋은 선택이 될 수도 있습니다.
+트리플 위빙은 GCD의 클리핑을 피하려고 이미 조정된 방식으로 이루어지며, 좋은 지연 시간을 가지고 있어도 자주 발생하지 않습니다. 트리플 위빙은 유효한 방식이므로, 원하시면 안전하게 선택하실 수 있습니다.</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_Name" xml:space="preserve">
+    <value>최대 위빙 수</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_recommendedValue" xml:space="preserve">
+    <value>2-3</value>
+  </data>
+  <data name="MaximumWeavesPerWindow_unitLabel" xml:space="preserve">
+    <value># oGCD의 수</value>
+  </data>
+  <data name="MeleeOffset_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MeleeOffset_helpMark" xml:space="preserve">
+    <value>근접 범위에 포함되는 거리를 조정합니다.
+주로 보스가 약간 멀어져도 원거리 공격으로 자동 전환되기를 원하지 않는 사람들을 위한 설정입니다.
+예를 들어, 값이 -0.5이면 대상에게 0.5 야르 가까워져야 근접 범위로 간주되고,
+값이 2이면 2 야르 더 멀어져도 여전히 근접 범위로 간주됩니다.
+(근접 기술은 작동하지 않지만, 최적화되지 않은 행동을 갑자기 하지 않도록 경고를 받을 수 있습니다).
+
+이 설정은 근접 범위가 무엇인지 정의하는 값으로, 원거리 공격으로의 자동 전환을 방지하고, 조금 더 여유 있게 근접 범위를 조정할 수 있게 해줍니다.</value>
+  </data>
+  <data name="MeleeOffset_Name" xml:space="preserve">
+    <value>근접 거리 오프셋</value>
+  </data>
+  <data name="MeleeOffset_recommendedValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MeleeOffset_unitLabel" xml:space="preserve">
+    <value>얄름</value>
+  </data>
+  <data name="MovementLeeway_defaultValue" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="MovementLeeway_helpMark" xml:space="preserve">
+    <value>이 설정은 Wrath가 당신을 이동 중으로 인식하기 전에 필요한 지연 시간을 조절합니다.
+주로 마법사 직업을 위한 설정으로, 작은 움직임이 순환에 영향을 미치지 않도록 할 수 있습니다.</value>
+  </data>
+  <data name="MovementLeeway_Name" xml:space="preserve">
+    <value>이동 확인 지연</value>
+  </data>
+  <data name="MovementLeeway_recommendedValue" xml:space="preserve">
+    <value>0.0-1.0 (그 이상으로 설정하면 직업의 이동 옵션이 제대로 작동하지 않을 수 있습니다)</value>
+  </data>
+  <data name="MovementLeeway_unitLabel" xml:space="preserve">
+    <value>초</value>
+  </data>
+  <data name="OpenerTimeout_defaultValue" xml:space="preserve">
+    <value>4</value>
+  </data>
+  <data name="OpenerTimeout_helpMark" xml:space="preserve">
+    <value>오프너에서 기술이 없어진 간격이 어느 정도까지 허용되는지 설정합니다. 일정 시간 동안 기술이 없으면 오프너가 실패한 것으로 간주되고, 정상적인 순환으로 전환됩니다.
+특히 첫 번째 오프너 기술이 하드캐스트인 경우, 일부 마법 직업은 이 시간을 늘릴 필요가 있을 수 있습니다.</value>
+  </data>
+  <data name="OpenerTimeout_Name" xml:space="preserve">
+    <value>오프너 실패 타임아웃</value>
+  </data>
+  <data name="OpenerTimeout_recommendedValue" xml:space="preserve">
+    <value>4.0-7.0 (그 이상으로 설정하면 오프너에 심각한 문제가 생길 수 있습니다)</value>
+  </data>
+  <data name="OpenerTimeout_unitLabel" xml:space="preserve">
+    <value>초</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_helpMark" xml:space="preserve">
+    <value>직업을 변경할 때 자동으로 PvE 기능 탭을 현재 플레이 중인 직업으로 전환합니다.</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_Name" xml:space="preserve">
+    <value>직업 변경 시 현재 직업에 맞는 PvE 기능 탭 열기</value>
+  </data>
+  <data name="OpenToCurrentJobOnSwitch_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="OpenToCurrentJob_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="OpenToCurrentJob_helpMark" xml:space="preserve">
+    <value>PvE 기능 탭을 열 때, 자동으로 현재 직업에 맞는 탭이 열립니다.</value>
+  </data>
+  <data name="OpenToCurrentJob_Name" xml:space="preserve">
+    <value>PvE 기능 탭을 열 때 현재 직업에 맞는 탭 열기</value>
+  </data>
+  <data name="OpenToCurrentJob_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="OpenToPvE_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="OpenToPvE_helpMark" xml:space="preserve">
+    <value>`/wrath` 명령어로 Wrath를 열 때, 마지막으로 있던 탭이 아니라 PvE 기능 탭으로 열립니다.
+이는 항상 `/wrath pve` 명령어를 사용하여 Wrath를 열 때와 동일합니다.</value>
+  </data>
+  <data name="OpenToPvE_Name" xml:space="preserve">
+    <value>Wrath를 PvE 기능 탭으로 열기</value>
+  </data>
+  <data name="OpenToPvE_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="OpenToPvP_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="OpenToPvP_helpMark" xml:space="preserve">
+    <value>위와 동일하게, PvP 지역에 있을 때 `/wrath` 명령어로 Wrath를 열면 마지막으로 있던 탭이 아니라 PvP 기능 탭으로 열립니다.
+이는 항상 `/wrath pvp` 명령어를 사용하여 Wrath를 열 때와 동일합니다.</value>
+  </data>
+  <data name="OpenToPvP_Name" xml:space="preserve">
+    <value>PvP 지역에서 Wrath를 PvP 기능 탭으로 열기</value>
+  </data>
+  <data name="OpenToPvP_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="OutputOpenerLogs_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="OutputOpenerLogs_helpMark" xml:space="preserve">
+    <value>당신의 직업 오프너 상태를 채팅에 출력합니다.
+예: 준비 완료, 실패, 또는 완료 시.</value>
+  </data>
+  <data name="OutputOpenerLogs_Name" xml:space="preserve">
+    <value>오프너 상태를 채팅에 출력</value>
+  </data>
+  <data name="OutputOpenerLogs_recommendedValue" xml:space="preserve">
+    <value>켜기 (오프너 문제를 해결하려는 경우)</value>
+  </data>
+  <data name="OverwriteQueue_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="OverwriteQueue_helpMark" xml:space="preserve">
+    <value>이 설정은 현재 대기 중인 기술을 다른 기술로 덮어쓸 수 있도록 합니다.</value>
+  </data>
+  <data name="OverwriteQueue_Name" xml:space="preserve">
+    <value>대기열 덮어쓰기</value>
+  </data>
+  <data name="OverwriteQueue_recommendedValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="QueueAdjustThreshold_defaultValue" xml:space="preserve">
+    <value>1.5</value>
+  </data>
+  <data name="QueueAdjustThreshold_helpMark" xml:space="preserve">
+    <value>이 설정은 GCD가 특정 시간 이하일 때, 다음 기술을 대기열에 추가할 수 있게 해주는 기능입니다.</value>
+  </data>
+  <data name="QueueAdjustThreshold_Name" xml:space="preserve">
+    <value>대기열 추가 허용 시간</value>
+  </data>
+  <data name="QueueAdjustThreshold_recommendedValue" xml:space="preserve">
+    <value>1.5-2.5</value>
+  </data>
+  <data name="QueueAdjustThreshold_unitLabel" xml:space="preserve">
+    <value>초</value>
+  </data>
+  <data name="QueueAdjustThreshold_warningMark" xml:space="preserve">
+    <value>이 값을 너무 낮거나 0으로 설정하면 수동으로 대기열에 추가하는 것이 매우 어려워집니다.</value>
+  </data>
+  <data name="QueueAdjust_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="QueueAdjust_helpMark" xml:space="preserve">
+    <value>GCD 동안 원하는 시간에 대기열을 추가할 수 있도록 조정할 수 있습니다. 기본적으로 마지막 0.3-0.5초에만 대기열에 추가할 수 있는 것과 달리, 키를 연타하지 않거나 자동 순환을 사용하지 않고 수동으로 개입하고 싶을 때 유용합니다.</value>
+  </data>
+  <data name="QueueAdjust_Name" xml:space="preserve">
+    <value>사용자 정의 수동 대기열 창</value>
+  </data>
+  <data name="QueueAdjust_recommendedValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="RaiseStack_defaultValue" xml:space="preserve">
+    <value>모든 힐러 &gt; 모든 탱커 &gt; 모든 부활자 &gt; 모든 죽은 파티원</value>
+  </data>
+  <data name="RaiseStack_extraText" xml:space="preserve">
+    <value>(모든 대상은 부활 가능 여부가 확인됩니다)</value>
+  </data>
+  <data name="RaiseStack_helpMark" xml:space="preserve">
+    <value>이 설정은 Wrath가 부활 대상을 선택하려고 시도하는 순서입니다.
+만약 부활 관련 기능의 리타겟팅이 활성화된 경우에 적용됩니다.
+
+부활 기능은 PvE &gt; 일반 설정에서 찾을 수 있거나, 부활 능력을 가진 각 마법사의 설정에서 찾을 수 있습니다.
+
+5개 미만의 항목이 있고, 모두 체크해도 아무것도 반환되지 않으면 다음으로 대체됩니다:
+죽은 경우 하드 타겟 또는 &lt;죽은 파티원&gt;으로 전환됩니다.
+
+이 대상들은 우호적이고, 죽어 있으며, 30야드 이내에 있을 때만 유효한 대상으로 간주됩니다.</value>
+  </data>
+  <data name="RaiseStack_Name" xml:space="preserve">
+    <value>사용자 정의 부활 스택</value>
+  </data>
+  <data name="RaiseStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_helpMark" xml:space="preserve">
+    <value>모든 단일 타겟 치유 스킬을 아래에 표시된 힐 스택으로 리타겟팅합니다.
+이 방식은 Redirect나 Reaction과 비슷하게 작동합니다.
+이 설정은 치유 스킬이 적용될 대상을 선택할 때, HP% 값을 확인하는 대상과 실제로 치유를 받을 대상이 일치하도록 보장합니다.</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_Name" xml:space="preserve">
+    <value>(단일 대상)치유 스킬 재타겟팅</value>
+  </data>
+  <data name="RetargetHealingActionsToStack_recommendedValue" xml:space="preserve">
+    <value>켜기 (힐 스택을 일부라도 사용자 정의하는 경우)</value>
+  </data>
+  <data name="ShortDTRText_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="ShortDTRText_helpMark" xml:space="preserve">
+    <value>활성화된 자동 모드 콤보의 수를 숨깁니다.
+기본적으로 서버 정보 바에는 다음 정보가 표시됩니다:
+- 자동 순환이 켜져 있는지 꺼져 있는지
+- (켜져 있을 경우) 활성화된 자동 모드 콤보의 수
+- (적용 가능한 경우) 다른 플러그인이 자동 순환 상태를 제어하는지 여부</value>
+  </data>
+  <data name="ShortDTRText_Name" xml:space="preserve">
+    <value>서버 정보 바 텍스트 줄이기</value>
+  </data>
+  <data name="ShortDTRText_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_defaultValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_helpMark" xml:space="preserve">
+    <value>자신만의 기능과 옵션이 있는 콤보와 기능 주위에 테두리를 그립니다.</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_Name" xml:space="preserve">
+    <value>옵션이 있는 콤보와 기능 주위에 테두리 표시</value>
+  </data>
+  <data name="ShowBorderAroundOptionsWithChildren_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="ShowOpenerDtr_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="ShowOpenerDtr_helpMark" xml:space="preserve">
+    <value>현재 오프너의 상태를 표시합니다. 활성화되어 있고 적용 가능한 경우에만 표시됩니다.</value>
+  </data>
+  <data name="ShowOpenerDtr_Name" xml:space="preserve">
+    <value>서버 정보 바에 오프너 상태 표시</value>
+  </data>
+  <data name="ShowOpenerDtr_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="ShowTargetHighlight_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="ShowTargetHighlight_extraText" xml:space="preserve">
+    <value>(현재 점성술사와 무도가에서만 사용됨)</value>
+  </data>
+  <data name="ShowTargetHighlight_helpMark" xml:space="preserve">
+    <value>특정 기능에 의해 타겟팅된 파티원 주위에 기본 파티 리스트에서 상자를 그립니다.</value>
+  </data>
+  <data name="ShowTargetHighlight_Name" xml:space="preserve">
+    <value>대상 하이라이터 표시</value>
+  </data>
+  <data name="ShowTargetHighlight_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="SuppressAutorotCommand_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="SuppressAutorotCommand_helpMark" xml:space="preserve">
+    <value>/wrath auto 명령어의 채팅 피드백을 숨깁니다</value>
+  </data>
+  <data name="SuppressAutorotCommand_Name" xml:space="preserve">
+    <value>자동 순환 명령어 피드백 숨기기</value>
+  </data>
+  <data name="SuppressAutorotCommand_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="SuppressSetCommands_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="SuppressSetCommands_helpMark" xml:space="preserve">
+    <value>/wrath set 및 /wrath unset 명령어의 채팅 피드백을 숨깁니다.
+(단, IPC에 의해 명령이 덮어쓰여지거나 실패하는 경우에는 여전히 피드백이 표시됩니다)</value>
+  </data>
+  <data name="SuppressSetCommands_Name" xml:space="preserve">
+    <value>Set 및 Unset 명령어 피드백 숨기기</value>
+  </data>
+  <data name="SuppressSetCommands_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="TargetHighlightColor_defaultValue" xml:space="preserve">
+    <value>#808080FF</value>
+  </data>
+  <data name="TargetHighlightColor_helpMark" xml:space="preserve">
+    <value>파티원 주변에 표시되는 박스의 색상을 설정합니다.</value>
+  </data>
+  <data name="TargetHighlightColor_Name" xml:space="preserve">
+    <value>대상 하이라이터 색상</value>
+  </data>
+  <data name="TargetHighlightColor_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="Throttle_defaultValue" xml:space="preserve">
+    <value>50</value>
+  </data>
+  <data name="Throttle_helpMark" xml:space="preserve">
+    <value>콤보가 여러분의 단축바 액션을 업데이트하는 빈도를 제한합니다.
+50밀리초로 설정하면 사실상 제한이 거의 없으며, 항상 최신 액션을 제공합니다.
+
+약간의 FPS 향상을 원한다면 이 값을 늘려 콤보 실행 빈도를 줄일 수 있습니다.
+하지만 이렇게 하면 콤보 반응 속도가 느려지고, GCD를 일부 끊어버릴 수도 있습니다.
+값을 너무 높게 설정하면 GCD가 몇 초씩 끊기거나, 순환 전체가 깨질 위험도 있습니다.</value>
+  </data>
+  <data name="Throttle_Name" xml:space="preserve">
+    <value>액션 업데이트 제한 속도</value>
+  </data>
+  <data name="Throttle_recommendedValue" xml:space="preserve">
+    <value>20-200</value>
+  </data>
+  <data name="Throttle_unitLabel" xml:space="preserve">
+    <value>밀리초</value>
+  </data>
+  <data name="UIShowPresetIDs_defaultValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="UIShowPresetIDs_helpMark" xml:space="preserve">
+    <value>각 콤보와 기능 이름 옆에 프리셋 ID 번호를 표시합니다.
+이 번호는 `/wrath toggle &lt;ID&gt;`와 같은 명령어에서 사용됩니다.
+버전 7.3 이전에는 여기에 숫자가 표시되긴 했지만, 훨씬 짧았고 명령어에서는 작동하지 않았습니다.</value>
+  </data>
+  <data name="UIShowPresetIDs_Name" xml:space="preserve">
+    <value>콤보 이름 옆에 프리셋 ID 표시</value>
+  </data>
+  <data name="UIShowPresetIDs_recommendedValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="UIShowSearchBar_defaultValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="UIShowSearchBar_helpMark" xml:space="preserve">
+    <value>설정 화면과 PvE, PvP 직업 메뉴에서 검색창을 표시할지 여부를 설정합니다.</value>
+  </data>
+  <data name="UIShowSearchBar_Name" xml:space="preserve">
+    <value>검색창 표시</value>
+  </data>
+  <data name="UIShowSearchBar_recommendedValue" xml:space="preserve">
+    <value>켜기</value>
+  </data>
+  <data name="UseCustomHealStack_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="UseCustomHealStack_helpMark" xml:space="preserve">
+    <value>기본 힐 스택 대신, 여러분만의 힐 대상 선호 스택을 만들고 싶다면 이 옵션을 선택하세요.
+
+만약 위의 치유 스킬 리타겟팅 옵션을 사용하지 않는다면, Redirect/Reaction 설정과 맞추기 위해 이 옵션을 사용하는 것이 권장됩니다.
+그 외의 경우에는 개인 취향에 따라 선택하면 됩니다.</value>
+  </data>
+  <data name="UseCustomHealStack_Name" xml:space="preserve">
+    <value>사용자 지정 힐 스택 사용</value>
+  </data>
+  <data name="UseCustomHealStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>마우스 오버한 대상이 기본 힐 스택 상단에 추가되며, 파티원 UI 위에 마우스를 올린 경우 나머지 스택은 무시됩니다.
+
+키보드+마우스를 사용하는 사용자이며 치유 스킬 리타겟팅을 활성화했거나, Redirect/Reaction 설정에서 UI 마우스 오버 대상을 사용하는 경우 이 옵션을 켜는 것이 권장됩니다.</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve">
+    <value>필드 마우스 오버 대상을 기본 힐 스택에 추가</value>
+  </data>
+  <data name="UseFieldMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>살아있는 주시 대상이 있는 경우, 기본 힐 스택에서 하드 및 소프트 대상 아래에 주시 대상을 추가하며, 나머지 스택은 무시됩니다.</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_Name" xml:space="preserve">
+    <value>주시 대상을 기본 힐 스택에 추가</value>
+  </data>
+  <data name="UseFocusTargetOverrideInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>가장 가까운 파티원 중 HP%가 가장 낮은 대상을 기본 힐 스택 하단에 추가하며, 자신은 제외하고 적용됩니다.</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_Name" xml:space="preserve">
+    <value>HP% 최저 파티원을 기본 힐 스택에 추가</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="UseLowestHPOverrideInDefaultHealStack_warningMark" xml:space="preserve">
+    <value>다른 기본 옵션과 달리, 이 옵션은 대부분의 다른 리타겟팅 플러그인에서는 제공되지 않습니다.
+반드시 위의 ‘치유 스킬 리타겟팅’ 설정과 함께 사용해야 합니다!</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_helpMark" xml:space="preserve">
+    <value>파티원 UI 위에 마우스를 올린 경우, UI 마우스 오버 대상을 기본 힐 스택 상단에 추가하며, 나머지 스택은 무시됩니다.
+
+키보드+마우스를 사용하는 사용자이며 치유 스킬 리타겟팅을 활성화했거나, Redirect/Reaction 설정에서 UI 마우스 오버 대상을 사용하는 경우 이 옵션을 켜는 것이 권장됩니다.</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_Name" xml:space="preserve">
+    <value>UI 마우스 오버 대상을 기본 힐 스택에 추가</value>
+  </data>
+  <data name="UseUIMouseoverOverridesInDefaultHealStack_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="MainUIOptions_Category" xml:space="preserve">
+    <value>기본 화면 옵션</value>
+  </data>
+  <data name="RotationBehaviourOptions_Category" xml:space="preserve">
+    <value>순환 동작 옵션</value>
+  </data>
+  <data name="TargetingOptions_Category" xml:space="preserve">
+    <value>대상 지정 옵션</value>
+  </data>
+  <data name="TroubleshootingOptions_Category" xml:space="preserve">
+    <value>문제 해결 옵션</value>
+  </data>
+  <data name="AprilFools2026_Name" xml:space="preserve">
+    <value>2026년 만우절 기념 기능</value>
+  </data>
+  <data name="AprilFools2026_helpMark" xml:space="preserve">
+    <value>플러그인 내 몽크의 비중을 더욱 높이고 싶은 분들을 위한 설정</value>
+  </data>
+  <data name="AprilFools2026_recommendedValue" xml:space="preserve">
+    <value>끄기, 이름이 Beep로 시작하는 경우는 제외</value>
+  </data>
+  <data name="AprilFools2026_defaultValue" xml:space="preserve">
+    <value>켜기, 오늘은 그냥 그런 날이잖아.</value>
+  </data>
+  <data name="TankbusterTTS_Name" xml:space="preserve">
+    <value>탱커 버스터 감지 시 TTS 재생</value>
+  </data>
+  <data name="TankbusterTTS_helpMark" xml:space="preserve">
+    <value>탱커 버스터 감지 시, 대상자를 포함한 TTS 안내를 재생합니다.</value>
+  </data>
+  <data name="TankbusterTTS_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="TankbusterTTS_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+  <data name="AoEDamageTTS_Name" xml:space="preserve">
+    <value>파티 데미지(전체공격/쉐어) 감지 시 음성 안내(TTS) 재생</value>
+  </data>
+  <data name="AoEDamageTTS_helpMark" xml:space="preserve">
+    <value>쉐어 또는 전체공격 캐스팅 감지 시, 대상자를 포함한 TTS 안내를 재생합니다.</value>
+  </data>
+  <data name="AoEDamageTTS_recommendedValue" xml:space="preserve">
+    <value>선호</value>
+  </data>
+  <data name="AoEDamageTTS_defaultValue" xml:space="preserve">
+    <value>끄기</value>
+  </data>
+</root>

@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using ECommons.DalamudServices;
 using ECommons.Logging;
 using Newtonsoft.Json;
-using WrathCombo.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using WrathCombo.Services;
 using Debug = WrathCombo.Window.Tabs.Debug;
 
@@ -52,10 +50,21 @@ public partial class Configuration
         _isSaving = true;
         var (config, trace) = SaveQueue.Dequeue();
 
+        if (Debug.DebugConfig)
+        {
+            PluginLog.Warning(
+                $"[Saving] Saving attempted when we shouldn't!\n{trace}");
+            return;
+        }
+
         try
         {
+            PluginLog.Verbose(
+                "[Saving] Attempting to save ...");
             Svc.PluginInterface.SavePluginConfig(config);
             _isSaving = false;
+            PluginLog.Verbose(
+                $"[Saving] Saved (queue size now: {SaveQueue.Count})");
         }
         catch (Exception)
         {
@@ -69,12 +78,23 @@ public partial class Configuration
         var success = false;
         var retryCount = 0;
 
+        if (Debug.DebugConfig)
+        {
+            PluginLog.Warning(
+                $"[Saving] Saving attempted when we shouldn't!\n{trace}");
+            return;
+        }
+
         while (!success)
         {
             try
             {
+                PluginLog.Verbose(
+                    $"[Saving] Retrying save ... (attempt {retryCount})");
                 Svc.PluginInterface.SavePluginConfig(config);
                 success = true;
+                PluginLog.Verbose(
+                    $"[Saving] Saved (queue size now: {SaveQueue.Count})");
             }
             catch (Exception e)
             {
@@ -86,7 +106,7 @@ public partial class Configuration
                 }
 
                 PluginLog.Error(
-                    "Failed to save configuration after 3 retries.\n" +
+                    "[Saving] Failed to save configuration after 3 retries.\n" +
                     e.Message + "\n" + trace);
                 _isSaving = false;
                 return;
@@ -108,6 +128,8 @@ public partial class Configuration
             return;
 
         SaveQueue.Enqueue((this, new StackTrace()));
+        PluginLog.Verbose(
+            $"[Saving] Save queued (queue size: {SaveQueue.Count})");
     }
 
     #endregion
@@ -136,29 +158,30 @@ public partial class Configuration
         {
             bool needToResetMessagePrinted = false;
 
-            var presets = Enum.GetValues<Preset>().Cast<int>();
-
             foreach (int value in values)
             {
                 Svc.Log.Debug(value.ToString());
-                if (presets.Contains(value))
+
+                var preset = (Preset)value;
+
+                if (!PresetStorage.AllPresets.TryGetValue(preset, out var presetData))
+                    continue;
+
+                // If not found, skip
+                if (!PresetStorage.AllPresets.ContainsKey(preset))
+                    continue;
+
+                if (!PresetStorage.IsEnabled(preset))
+                    continue;
+
+                if (!needToResetMessagePrinted)
                 {
-                    var preset = Enum.GetValues<Preset>()
-                        .Where(preset => (int)preset == value)
-                        .First();
-
-                    if (!PresetStorage.IsEnabled(preset)) continue;
-
-                    if (!needToResetMessagePrinted)
-                    {
-                        DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
-                        needToResetMessagePrinted = !needToResetMessagePrinted;
-                    }
-
-                    var info = preset.GetComboAttribute();
-                    DuoLog.Error($"- {info.JobName}: {info.Name}");
-                    EnabledActions.Remove(preset);
+                    DuoLog.Error($"Some features have been disabled due to an internal configuration update:");
+                    needToResetMessagePrinted = !needToResetMessagePrinted;
                 }
+
+                DuoLog.Error($"- {presetData.JobInfo.JobName}: {presetData.Name}");
+                EnabledActions.Remove(preset);
             }
 
             if (needToResetMessagePrinted)

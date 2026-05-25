@@ -1,6 +1,8 @@
 ﻿#region Dependencies
 
+using FFXIVClientStructs.FFXIV.Client.Game.InstanceContent;
 using System;
+using System.Reflection;
 using static WrathCombo.Combos.PvE.JobIDExtensions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
@@ -98,13 +100,13 @@ internal partial class OccultCrescent
         AetherialGain = 41618,
         RingingRespite = 41619,
         Suspend = 41620,
-        
+
         //Mystic Knight
         MagicShell = 46590,
         SunderingSpellblade = 46591,
         HolySpellblade = 46592,
         BlazingSpellblade = 46593,
-        
+
         //Dancer
         Dance = 46598,
         PoisedToSwordDance = 46599,
@@ -114,27 +116,28 @@ internal partial class OccultCrescent
         Quickstep = 46603,
         SteadfastStance = 46604,
         Mesmerize = 46605,
-    
+
         //Gladiator
         Finisher = 46594,
         Defend = 46595,
         LongReach = 46596,
         BladeBlitz = 46597;
-            
-        
-    internal static bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && HasActionEquipped(action) && ActionReady(action);
 
+    internal static unsafe int CurrentJobLevel => (nint)PublicContentOccultCrescent.GetInstance() == nint.Zero ? 0 : PublicContentOccultCrescent.GetInstance()->State.SupportJobLevels[PublicContentOccultCrescent.GetInstance()->State.CurrentSupportJob];
+
+
+    internal static bool IsEnabledAndUsable(Preset preset, uint action) => IsEnabled(preset) && HasActionEquipped(action) && ActionReady(action);
 
     /// <summary>
     ///     Job identifiers and which Icon is their own. <br />
     ///     Matched to their Icon via FFV Job Sprites: <br />
     ///     https://finalfantasy.fandom.com/wiki/Final_Fantasy_V_jobs
     /// </summary>
-    /// <seealso cref="Window.Icons.Occult.JobSprites"/>
+    /// <seealso cref="Window.Icons.Occult.JobSprites" />
     /// <seealso cref="Window.Functions.Presets.DrawOccultJobIcon(int)">
     ///     Window.Functions.Presets.DrawOccultJobIcon()
     /// </seealso>
-    /// <seealso cref="JobIDExtensions"/>
+    /// <seealso cref="JobIDExtensions" />
     internal enum JobIDs
     {
         // 7.25
@@ -170,9 +173,9 @@ internal partial class OccultCrescent
         [NotYetImplemented] BeastMaster = 23,
         [NotYetImplemented] Necromancer = 24,
         [NotYetImplemented] Mime = 25,
-        
+
         // N/A
-        N_A = -1,
+        N_A = -1
     }
 
     public static class Buffs
@@ -217,6 +220,10 @@ internal partial class OccultCrescent
             Vigilance = 4277,
             CloudyCaress = 4280,
             BlazingSpellblade = 4790,
+            PoisedToSwordDance = 4794,
+            TemptedToTango = 4795,
+            Jitterbugged = 4796,
+            WillingToWaltz = 4797,
             Quickstep = 4798;
     }
 
@@ -256,39 +263,29 @@ internal partial class OccultCrescent
 }
 
 /// <summary>
-/// Provides helper methods for working with <see cref="OccultCrescent.JobIDs"/>.
+///     Provides helper methods for working with <see cref="OccultCrescent.JobIDs" />.
 /// </summary>
 internal static class JobIDExtensions
 {
     /// <summary>
-    /// Marks job identifiers that are not yet implemented.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Field)]
-    internal sealed class NotYetImplemented : Attribute
-    {
-    }
-
-    /// <summary>
-    /// Determines whether the specified job identifier represents an active job.
+    ///     Determines whether the specified job identifier represents an active job.
     /// </summary>
     public static bool IsActive(this OccultCrescent.JobIDs jobID)
     {
-        var member = typeof(OccultCrescent.JobIDs).GetField(jobID.ToString()!);
+        FieldInfo? member = typeof(OccultCrescent.JobIDs).GetField(jobID.ToString()!);
         return member is not null && !Attribute.IsDefined(member, typeof(NotYetImplemented));
     }
 
     /// <summary>
-    /// Gets the name of the job associated with the provided numeric value.
+    ///     Gets the name of the job associated with the provided numeric value.
     /// </summary>
-    public static string? GetNameFromValue(int value)
-    {
-        return Enum.IsDefined(typeof(OccultCrescent.JobIDs), value)
+    public static string? GetNameFromValue(int value) =>
+        Enum.IsDefined(typeof(OccultCrescent.JobIDs), value)
             ? Enum.GetName(typeof(OccultCrescent.JobIDs), value)
             : null;
-    }
 
     /// <summary>
-    /// Determines whether the specified numeric value corresponds to an active <see cref="OccultCrescent.JobIDs"/> entry.
+    ///     Determines whether the specified numeric value corresponds to an active <see cref="OccultCrescent.JobIDs" /> entry.
     /// </summary>
     public static bool GetActiveFromValue(int value)
     {
@@ -297,26 +294,26 @@ internal static class JobIDExtensions
             return false;
         }
 
-        var jobID = (OccultCrescent.JobIDs)value;
+        OccultCrescent.JobIDs jobID = (OccultCrescent.JobIDs)value;
         return jobID.IsActive();
     }
 
     /// <summary>
-    /// Gets the highest numeric value among active job identifiers.
+    ///     Gets the highest numeric value among active job identifiers.
     /// </summary>
     public static int GetHighestActiveOccultID()
     {
         // Iterate through defined jobs, tracking the highest active numeric value.
-        var highest = -1;
-        foreach (OccultCrescent.JobIDs job in
-                 Enum.GetValues(typeof(OccultCrescent.JobIDs)))
+        int highest = -1;
+        foreach(OccultCrescent.JobIDs job in
+            Enum.GetValues(typeof(OccultCrescent.JobIDs)))
         {
             if (!job.IsActive())
             {
                 continue;
             }
 
-            var value = (int)job;
+            int value = (int)job;
             if (value > highest)
             {
                 highest = value;
@@ -324,5 +321,13 @@ internal static class JobIDExtensions
         }
 
         return highest;
+    }
+
+    /// <summary>
+    ///     Marks job identifiers that are not yet implemented.
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Field)]
+    internal sealed class NotYetImplemented : Attribute
+    {
     }
 }

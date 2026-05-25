@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
+using ECommons.Throttlers;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Common.Component.BGCollision;
@@ -42,14 +43,24 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Checks if an object is dead. Defaults to CurrentTarget unless specified. </summary>
     internal static bool TargetIsDead(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara && chara.IsDead;
 
+    /// Enemies that are definitely not bosses and should not be considered as such.
+    private static readonly uint[] EnemiesThatShouldNotBeConsideredBosses =
+    [
+        19169, //M9S Fatal Flail
+        19170, //M9S Deadly Doornail
+        //16841, //testing dummy for Edewen's yard
+    ];
+
     /// <summary> Checks if an object is a boss. Defaults to CurrentTarget unless specified. </summary>
     internal static bool TargetIsBoss(IGameObject? optionalTarget = null)
     {
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara chara)
             return false;
 
-        return chara.NameId == 541 //541	striking dummy	0	striking dummies	0	0	1	0	0
-            || ActionWatching.BossesBaseIds.Contains(chara.BaseId);
+        if (EnemiesThatShouldNotBeConsideredBosses.Contains(chara.BaseId))
+            return false;
+
+        return chara.NameId == 541 || ActionWatching.BossesBaseIds.Contains(chara.BaseId);
     }
 
     /// <summary> Checks if an object is quest-related. Defaults to CurrentTarget unless specified. </summary>
@@ -138,7 +149,7 @@ internal abstract partial class CustomComboFunctions
         if ((optionalTarget ?? CurrentTarget) is not IBattleChara { IsCasting: true } chara || !chara.IsCastInterruptible)
             return false;
 
-        float minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 1f);
+        float minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 100f) / 100f;
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }
@@ -205,7 +216,7 @@ internal abstract partial class CustomComboFunctions
             JustUsedOn(PLD.ShieldBash, target))
             return false;
 
-        var minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 1f);
+        var minThreshold = Math.Clamp(minCastPercent ?? Service.Configuration.InterruptDelay, 0f, 100f) / 100f;
 
         return chara.CurrentCastTime >= chara.TotalCastTime * minThreshold;
     }
@@ -238,7 +249,7 @@ internal abstract partial class CustomComboFunctions
 
     /// <summary> Gets an object's current HP. Defaults to CurrentTarget unless specified. </summary>
     public static uint GetTargetCurrentHP(IGameObject? optionalTarget = null) => (optionalTarget ?? CurrentTarget) is IBattleChara chara ? chara.CurrentHp : 0;
-    
+
     /// <summary> Gets the average HP percentage of all enemies within a specified range. </summary>
     public static float GetAvgEnemyHPPercentInRange(float range)
     {
@@ -285,7 +296,7 @@ internal abstract partial class CustomComboFunctions
             return false;
 
         var distance = GetTargetDistance(chara);
-        var height   = GetTargetHeightDifference(optionalTarget);
+        var height = GetTargetHeightDifference(optionalTarget);
         var largest = Math.Max(distance, height);
 
         return largest <= range;
@@ -353,30 +364,33 @@ internal abstract partial class CustomComboFunctions
     public static int NumberOfEnemiesInRange
         (uint aoeSpell, IGameObject? target = null, bool checkIgnoredList = false)
     {
+        return EnemiesInRange(aoeSpell, target, checkIgnoredList).Count();
+    }
+
+    public static IEnumerable<IGameObject> EnemiesInRange(uint aoeSpell, IGameObject? target = null, bool checkIgnoredList = false)
+    {
         if (!ActionWatching.ActionSheet.TryGetValue(aoeSpell, out var sheetSpell))
-            return 0;
+            return Enumerable.Empty<IGameObject>();
 
-        if (sheetSpell.CanTargetHostile &&
-            ((target ??= CurrentTarget) is null ||
-             GetTargetDistance(target) > GetActionRange(sheetSpell.RowId)))
-            return 0;
-
-        var count = sheetSpell.CastType switch
+        if (sheetSpell.CanTargetHostile && sheetSpell.CastType == 1)
         {
-            1 => 1,
-            2 => sheetSpell.CanTargetSelf
-                ? NumberOfObjectsInRange<SelfCircle>(sheetSpell.EffectRange,
-                    checkIgnoredList: checkIgnoredList)
-                : NumberOfObjectsInRange<Circle>(sheetSpell.EffectRange, target,
-                    checkIgnoredList: checkIgnoredList),
-            3 => NumberOfObjectsInRange<Cone>(sheetSpell.Range, target,
-                checkIgnoredList: checkIgnoredList),
-            4 => NumberOfObjectsInRange<Line>(sheetSpell.Range, target,
-                sheetSpell.XAxisModifier, checkIgnoredList: checkIgnoredList),
-            _ => 0,
-        };
+            return Svc.Objects.Where(x => x.IsHostile() && GetTargetDistance(x) <= GetActionRange(aoeSpell) && (!checkIgnoredList || !Service.Configuration.IgnoredNPCs.ContainsKey(x.BaseId)));
+        }
 
-        return count;
+        return sheetSpell.CastType switch
+        {
+            1 => Enumerable.Empty<IGameObject>(),
+            2 => sheetSpell.CanTargetSelf
+                ? ObjectsInRange<SelfCircle>(sheetSpell.EffectRange,
+                    checkIgnoredList: checkIgnoredList)
+                : ObjectsInRange<Circle>(sheetSpell.EffectRange, target,
+                    checkIgnoredList: checkIgnoredList),
+            3 => ObjectsInRange<Cone>(sheetSpell.Range, target,
+                checkIgnoredList: checkIgnoredList),
+            4 => ObjectsInRange<Line>(sheetSpell.Range, target,
+                sheetSpell.XAxisModifier, checkIgnoredList: checkIgnoredList),
+            _ => Enumerable.Empty<IGameObject>(),
+        };
     }
 
     /// <summary>
@@ -427,7 +441,12 @@ internal abstract partial class CustomComboFunctions
     /// <summary> Checks if an object is within line of sight of the player. </summary>
     internal static unsafe bool IsInLineOfSight(IGameObject? obj)
     {
-        if (LocalPlayer is not { } player || obj is null) return false;
+        var objID = obj.SafeGameObjectId;
+        if (LocalPlayer is not { } player || obj is null || objID is null)
+            return false;
+
+        if (TryGetLineOfSightFromCache(objID, out var cachedResult))
+            return cachedResult;
 
         Vector3 sourcePos = player.Position with { Y = player.Position.Y + 2f };
         Vector3 targetPos = obj.Position with { Y = obj.Position.Y + 2f };
@@ -441,39 +460,77 @@ internal abstract partial class CustomComboFunctions
         RaycastHit hit;
         var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
 
-        return !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &sourcePos, &direction, distance, 1, flags);
-    }
+        var result = !Framework.Instance()->BGCollisionModule->RaycastMaterialFilter
+            (&hit, &sourcePos, &direction, distance, 1, flags);
+        UpdateLineOfSightCache(objID, result);
 
-    /// <summary>
-    ///     Checks if an object is over the ground
-    /// </summary>
-    internal static unsafe bool IsOverGround(IGameObject? obj)
-    {
-        if (obj is null) return false;
-
-        var targetPos = obj.Position;
-        var down = new Vector3(0, -1, 0);
-        RaycastHit hit;
-        var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-
-        return Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &targetPos, &down, 5, 1, flags);
-    }
-
-    /// <summary>
-    ///     Checks if a point is over the ground.<br/>
-    ///     (and gives the ground point if it is)
-    /// </summary>
-    private static unsafe bool IsOverGround
-        (Vector3 pointToCheck, out Vector3 groundPoint)
-    {
-        var down = new Vector3(0, -1, 0);
-        RaycastHit hit;
-        var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
-
-        var result = Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &pointToCheck, &down, 5, 1, flags);
-        groundPoint = hit.Point;
         return result;
     }
+
+    #region LoS Caching
+
+    /// <summary>Lifetime in milliseconds for cached <see cref="IsInLineOfSight"/> results.</summary>
+    private const long LineOfSightCacheDurationMs = 500;
+
+    /// <summary>Caches line-of-sight evaluations keyed by safe game object identifier.</summary>
+    private static readonly Dictionary<ulong, (bool Result, long Timestamp)> LineOfSightCache = new();
+
+    /// Attempts to retrieve a cached line-of-sight result for the provided key.
+    private static bool TryGetLineOfSightFromCache(ulong? cacheKey, out bool result)
+    {
+        result = false;
+        if (cacheKey is null)
+            return false;
+
+        lock (LineOfSightCache)
+        {
+            if (!LineOfSightCache.TryGetValue(cacheKey.Value, out var entry))
+                return false;
+
+            if (Environment.TickCount64 - entry.Timestamp <= LineOfSightCacheDurationMs)
+            {
+                result = entry.Result;
+                return true;
+            }
+
+            LineOfSightCache.Remove(cacheKey.Value);
+        }
+
+        return false;
+    }
+
+    /// Stores the latest line-of-sight result and trims stale cache entries.
+    private static void UpdateLineOfSightCache(ulong? cacheKey, bool result)
+    {
+        if (cacheKey is null)
+            return;
+        var now = Environment.TickCount64;
+
+        lock (LineOfSightCache)
+        {
+            LineOfSightCache[cacheKey.Value] = (result, now);
+        }
+
+        if (EzThrottler.Throttle("LoSCacheCleanup", 250))
+            CleanupExpiredLineOfSightCache(now);
+    }
+
+    /// Removes old line-of-sight cache entries.
+    internal static void CleanupExpiredLineOfSightCache(long? now = null)
+    {
+        now ??= Environment.TickCount64;
+
+        lock (LineOfSightCache)
+        {
+            foreach (var expiredKey in LineOfSightCache
+                         .Where(kvp => now - kvp.Value.Timestamp >
+                                       LineOfSightCacheDurationMs)
+                         .Select(kvp => kvp.Key).ToList())
+                LineOfSightCache.Remove(expiredKey);
+        }
+    }
+
+    #endregion
 
     /// <summary>
     ///     Tries to find the nearest point to the object that is in a line
@@ -486,7 +543,7 @@ internal abstract partial class CustomComboFunctions
     ///     The found nearest point.
     /// </param>
     /// <param name="maxRange">
-    ///     The maximum range from the the player.<br/>
+    ///     The maximum range from the player.<br/>
     ///     Starts the search closer to the player than just the object's position.
     /// </param>
     /// <returns>
@@ -529,6 +586,41 @@ internal abstract partial class CustomComboFunctions
         // Fail out if no suitable point was found
         return false;
     }
+
+    #region Ground-Point Helpers
+
+    /// <summary>
+    ///     Checks if an object is over the ground
+    /// </summary>
+    internal static unsafe bool IsOverGround(IGameObject? obj)
+    {
+        if (obj is null) return false;
+
+        var targetPos = obj.Position;
+        var down = new Vector3(0, -1, 0);
+        RaycastHit hit;
+        var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
+
+        return Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &targetPos, &down, 5, 1, flags);
+    }
+
+    /// <summary>
+    ///     Checks if a point is over the ground.<br/>
+    ///     (and gives the ground point if it is)
+    /// </summary>
+    private static unsafe bool IsOverGround
+        (Vector3 pointToCheck, out Vector3 groundPoint)
+    {
+        var down = new Vector3(0, -1, 0);
+        RaycastHit hit;
+        var flags = stackalloc int[] { 0x4000, 0, 0x4000, 0 };
+
+        var result = Framework.Instance()->BGCollisionModule->RaycastMaterialFilter(&hit, &pointToCheck, &down, 5, 1, flags);
+        groundPoint = hit.Point;
+        return result;
+    }
+
+    #endregion
 
     #endregion
 
@@ -651,32 +743,44 @@ internal abstract partial class CustomComboFunctions
         bool checkInvincible = true)
         where T : IAoeShape
     {
+        return ObjectsInRange<T>(size, target, width, checkIgnoredList, enemies, checkInvincible).Count();
+    }
+
+    internal static IEnumerable<IGameObject> ObjectsInRange<T>
+    (float size,
+        IGameObject? target = null,
+        float width = 0f,
+        bool checkIgnoredList = false,
+        bool enemies = true,
+        bool checkInvincible = true)
+        where T : IAoeShape
+    {
         // Bail if the player is not available
         if (LocalPlayer is not { } player)
-            return 0;
+            return Enumerable.Empty<IGameObject>();
 
         // Bail if the target is required and not available
         if (typeof(T) != typeof(SelfCircle) && (target ??= CurrentTarget) is null)
-            return 0;
+            return Enumerable.Empty<IGameObject>();
 
         // Get all possible enemies to search for the positions of
-        var targets = Svc.Objects.Where(IsValidTarget);
+        var targets = Svc.Objects.Where(x => IsValidTarget(x, enemies, checkInvincible, checkIgnoredList));
 
         // Circle AoEs positioned on self
         if (typeof(T) == typeof(SelfCircle))
-            return targets.Count(o =>
+            return targets.Where(o =>
                 PointInCircle(o.Position - player.Position,
                     size + o.HitboxRadius));
 
         // Circle AoEs centered on a target
         if (typeof(T) == typeof(Circle))
-            return targets.Count(o =>
+            return targets.Where(o =>
                 PointInCircle(o.Position - target.Position,
                     size + o.HitboxRadius));
 
         // Cone AoEs
         if (typeof(T) == typeof(Cone))
-            return targets.Count(o =>
+            return targets.Where(o =>
                 GetTargetDistance(o) <= size &&
                 PointInCone(o.Position - player.Position,
                     PositionalMath.GetDirection(player.Position, target.Position),
@@ -684,31 +788,84 @@ internal abstract partial class CustomComboFunctions
 
         // Line AoEs
         if (typeof(T) == typeof(Line))
-            return targets.Count(o =>
+            return targets.Where(o =>
                 GetTargetDistance(o) <= size &&
                 HitboxInRect(o,
                     PositionalMath.GetRotation(player.Position, target.Position),
                     size * 0.5f, width * 0.5f));
 
         // If it was not a supported type
-        return 0;
+        return Enumerable.Empty<IGameObject>();
+    }
 
-        bool IsValidTarget(IGameObject o)
-        {
-            if (!enemies)
-                return o is IBattleChara &&
-                       o.IsTargetable &&
-                       o.IsWithinRange(60f) &&
-                       o.IsFriendly();
-
-            return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
+    static bool IsValidTarget(IGameObject o, bool enemies, bool checkInvincible, bool checkIgnoredList)
+    {
+        if (!enemies)
+            return o is IBattleChara &&
+                   o.IsTargetable &&
                    o.IsWithinRange(60f) &&
-                   o.IsHostile() &&
-                   (!checkInvincible ||
-                    !TargetIsInvincible(o)) &&
-                   (!checkIgnoredList ||
-                    !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId));
-        }
+                   o.IsFriendly() &&
+                   IsInLineOfSight(o);
+
+        return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
+               o.IsWithinRange(60f) &&
+               o.IsHostile() &&
+               (!checkInvincible ||
+                !TargetIsInvincible(o)) &&
+               (!checkIgnoredList ||
+                !Service.Configuration.IgnoredNPCs.ContainsKey(o.BaseId)) &&
+               IsInLineOfSight(o);
+    }
+
+    public static bool TargetInSelfCircle(IGameObject? target, float size)
+    {
+        if (target is null)
+            return false;
+
+        if (!IsInLineOfSight(target))
+            return false;
+
+        return Svc.Objects.Any(o => o.GameObjectId == target.GameObjectId && PointInCircle(o.Position - LocalPlayer.Position, size + o.HitboxRadius));
+    }
+
+    public static bool TargetInTargetedCircle(IGameObject? target, float size)
+    {
+        if (target is null)
+            return false;
+
+        return Svc.Objects.Any(o => o.GameObjectId == target.GameObjectId && PointInCircle(o.Position - target.Position, size + o.HitboxRadius));
+    }
+
+    public static bool TargetInCone(IGameObject? target, float size)
+    {
+        if (target is null)
+            return false;
+
+        if (!IsInLineOfSight(target))
+            return false;
+
+        return Svc.Objects.Any(o =>
+                 o.GameObjectId == target.GameObjectId &&
+                 GetTargetDistance(o) <= size &&
+                 PointInCone(o.Position - LocalPlayer.Position,
+                     PositionalMath.GetDirection(LocalPlayer.Position, target.Position),
+                     45f));
+    }
+
+    public static bool TargetInLine(IGameObject? target, float size, float width)
+    {
+        if (target is null)
+            return false;
+
+        if (!IsInLineOfSight(target))
+            return false;
+
+        return Svc.Objects.Any(o =>
+                o.GameObjectId == target.GameObjectId &&
+                GetTargetDistance(o) <= size &&
+                HitboxInRect(o,
+                    PositionalMath.GetRotation(LocalPlayer.Position, target.Position),
+                    size * 0.5f, width * 0.5f));
     }
 
     #region Shape Helpers

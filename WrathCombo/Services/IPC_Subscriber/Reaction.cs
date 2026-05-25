@@ -96,15 +96,6 @@ public class ReActionIPC(
         }
     }
 
-    public bool IsAutoTargetingEnabled()
-    {
-        PluginLog.Verbose(
-            $"[ConflictingPlugins] [{PluginName}] " +
-            $"Has `AutoTarget`: {AutoTarget}");
-
-        return AutoTarget;
-    }
-
     private bool IsMetaActionRetargeted
         (uint metaAction, string actionType, out string stackName)
     {

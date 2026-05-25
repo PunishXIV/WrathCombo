@@ -19,12 +19,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
-using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
-using WrathCombo.Services.ActionRequestIPC;
 using static FFXIVClientStructs.FFXIV.Client.Game.Character.ActionEffectHandler;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 using Action = Lumina.Excel.Sheets.Action;
@@ -70,11 +68,43 @@ public static class ActionWatching
     private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
 
+    public unsafe delegate bool CanQueueActionDelegate(ActionManager* actionManager, uint actionType, uint actionID);
+    public static readonly Hook<CanQueueActionDelegate> CanQueueAction;
+
     private static Task UpdateActionTask = null!;
     private static CancellationTokenSource source = new CancellationTokenSource();
     private static CancellationToken token;
 
     public static bool UpdatingActions;
+
+    static unsafe ActionWatching()
+    {
+        ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<ReceiveActionEffectDelegate>(Addresses.Receive.Value, ReceiveActionEffectDetour);
+        SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
+        UseActionHook ??= Svc.Hook.HookFromAddress<UseActionDelegate>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
+        OnCastInterrupted += CancelPendingLastActionUpdate;
+        CanQueueAction ??= Svc.Hook.HookFromAddress<CanQueueActionDelegate>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
+    }
+
+    public static void Enable()
+    {
+        ReceiveActionEffectHook?.Enable();
+        SendActionHook?.Enable();
+        UseActionHook?.Enable();
+        Svc.Condition.ConditionChange += ResetActions;
+        CanQueueAction?.Enable();
+    }
+
+
+    public static void Dispose()
+    {
+        Disable();
+        ReceiveActionEffectHook?.Dispose();
+        SendActionHook?.Dispose();
+        UseActionHook?.Dispose();
+        OnCastInterrupted -= CancelPendingLastActionUpdate;
+        CanQueueAction?.Dispose();
+    }
 
     /// <summary> Handles logic when an action causes an effect. </summary>
     private unsafe static void ReceiveActionEffectDetour(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds)
@@ -266,6 +296,13 @@ public static class ActionWatching
         if (Service.Configuration.EnabledOutputLog)
             OutputLog();
 
+        if (AutoRotationController.AutorotRaidwiding && AutoRotationController.RaidwideActions.Any(x => x.Action == actionId))
+        {
+            AutoRotationController.BlacklistedRaidwides.Add(actionId);
+            if (actionId != SGE.Eukrasia)
+                AutoRotationController.AutorotRaidwides++;
+        }
+
         UpdatingActions = false;
     }
 
@@ -274,7 +311,7 @@ public static class ActionWatching
     {
         try
         {
-            if(P.IPC.OnActionUsedProvider.SubscriptionCount > 0)
+            if (P.IPC.OnActionUsedProvider.SubscriptionCount > 0)
             {
                 P.IPC.OnActionUsedProvider.SendMessage((ActionType)actionType, actionId);
             }
@@ -292,8 +329,8 @@ public static class ActionWatching
                 token = source.Token;
                 UpdatingActions = true;
                 UpdateActionTask = Svc.Framework.RunOnTick(() =>
-                UpdateLastUsedAction(actionId, actionType, targetObjectId, castTime),
-                TimeSpan.FromMilliseconds(castTime), cancellationToken: token);
+                UpdateLastUsedAction(actionId, actionType, targetObjectId, Math.Max(castTime - 480, 0)),
+                TimeSpan.FromMilliseconds(Math.Max(castTime - 480, 0)), cancellationToken: token);
 
                 // Update Helpers
                 NIN.InMudra = NIN.MudraSigns.Contains(actionId);
@@ -316,11 +353,40 @@ public static class ActionWatching
 #endif
             }
             SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
+
+            OverrideTarget = null;
+            AutoRotationController.AutorotHealTarget = null;
+            Service.ActionReplacer.EnableActionReplacingIfRequired();
         }
         catch (Exception ex)
         {
+            Service.ActionReplacer.EnableActionReplacingIfRequired();
             Svc.Log.Error(ex, "SendActionDetour");
             SendActionHook!.Original(targetObjectId, actionType, actionId, sequence, a5, a6, a7, a8, a9);
+        }
+    }
+
+    public unsafe static bool CanQueueCS(uint actionId) => CanQueueActionDetour(ActionManager.Instance(), 1, actionId);
+
+    private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, uint actionType, uint actionID)
+    {
+        float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
+
+        return GetRemainingActionRecast(actionManager, actionType, actionID) is { } remaining && remaining <= threshold;
+
+        unsafe float? GetRemainingActionRecast(ActionManager* actionManager, uint actionType, uint actionID)
+        {
+            var recastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetRecastGroup((int)actionType, actionID));
+            if (recastGroupDetail == null) return null;
+
+            var additionalRecastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetAdditionalRecastGroup((ActionType)actionType, actionID));
+            var additionalRecastRemaining = additionalRecastGroupDetail != null && additionalRecastGroupDetail->IsActive ? additionalRecastGroupDetail->Total - additionalRecastGroupDetail->Elapsed : 0;
+
+            if (!recastGroupDetail->IsActive) return additionalRecastRemaining;
+
+            var charges = actionType == 1 ? ActionManager.GetMaxCharges(actionID, Player.MaxLevel) : 1;
+            var recastRemaining = recastGroupDetail->Total / charges - recastGroupDetail->Elapsed;
+            return recastRemaining > additionalRecastRemaining ? recastRemaining : additionalRecastRemaining;
         }
     }
 
@@ -354,22 +420,6 @@ public static class ActionWatching
         DuoLog.Information($"You just used: {CombatActions.LastOrDefault().ActionName()} x{LastActionUseCount}");
     }
 
-    public static void Dispose()
-    {
-        Disable();
-        ReceiveActionEffectHook?.Dispose();
-        SendActionHook?.Dispose();
-        UseActionHook?.Dispose();
-        OnCastInterrupted -= CancelPendingLastActionUpdate;
-    }
-
-    static unsafe ActionWatching()
-    {
-        ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<ReceiveActionEffectDelegate>(Addresses.Receive.Value, ReceiveActionEffectDetour);
-        SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
-        UseActionHook ??= Svc.Hook.HookFromAddress<UseActionDelegate>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
-        OnCastInterrupted += CancelPendingLastActionUpdate;
-    }
 
     private static void CancelPendingLastActionUpdate(uint interruptedAction)
     {
@@ -383,94 +433,112 @@ public static class ActionWatching
     {
         try
         {
-            if (actionType is not ActionType.Action)
-                return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+            if (actionType is ActionType.Action)
+            {
+                var disablingReplacingTemp = mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding;
+                if (disablingReplacingTemp) // This is so we can remove queue suppression
+                    Service.ActionReplacer.DisableActionReplacingIfRequired(); // It gets re-enabled at the end of sending. 
 
-            //Save the original action and target, do not modify
-            var original = actionId;
-            var originalTargetId = targetId;
+                var original = actionId; //Save the original action, do not modify
+                var originalTargetId = targetId; //Save the original target, do not modify
+                var changedTargetId = targetId; //This will get modified and used elsewhere
 
-            #region Performance Mode Logic
+                var changed = CheckForChangedTarget(original, ref changedTargetId,
+                    out var replacedWith); //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
 
-            // Updates the action ID
-            if (Service.Configuration.ActionChanging &&
-                Service.Configuration.PerformanceMode)
-                foreach (var combo in ActionReplacer.FilteredCombos)
+                // If retargeting kicks in, update target ID
+                if (changed)
                 {
-                    if (!combo.TryInvoke(actionId, out var result)) continue;
-                
-                    //Sets actionId and the LastActionInvokeFor dictionary entry to the result of the combo
-                    Service.ActionReplacer.LastPresetInvokeFor[actionId] =
-                        combo.Preset;
-                    actionId = Service.ActionReplacer
-                            .LastActionInvokeFor[actionId] =
-                        result;
-                    break;
+                    var targObj = changedTargetId.GetObject();
+                    if (targObj == null || !targObj.IsTargetable || (targObj.IsHostile() && targObj.IsDead))
+                        targetId = originalTargetId;
+                    else
+                        targetId = changedTargetId;
                 }
 
-            #endregion
+                // Clear any dodgy leftover targets
+                if (!Svc.Objects.Any(x => x.GameObjectId == actionManager->QueuedTargetId.Id))
+                    actionManager->QueuedTargetId = 0;
 
-            #region Combo Information
+                // However, if we have a queued target ID assume that's what we want and not whatever current retargeting is. TODO: Setting?
+                if (actionManager->QueuedTargetId.Id != 0)
+                    targetId = actionManager->QueuedTargetId.Id;
 
-            uint? combosActionID = null;
-            if (Service.ActionReplacer.LastActionInvokeFor.TryGetValue(actionId, out var cA))
-                combosActionID = cA;
-            Preset? combosPreset = null;
-            if (Service.ActionReplacer.LastPresetInvokeFor.TryGetValue(actionId, out var cP))
-                combosPreset = cP;
+                var areaTargeted = ActionSheet[replacedWith].TargetArea;
 
-            #endregion
+                if (areaTargeted && disablingReplacingTemp) //Ground targets don't hit the send method, so it has to be re-enabled here. Could be re-enabled further down the line if it causes output issues.
+                    Service.ActionReplacer.EnableActionReplacingIfRequired();
 
-            #region Retargeting Logic
+                var targetObject = targetId.GetObject();
+                if (targetObject is null && targetId != 0xE000_0000)
+                {
+                    Service.ActionReplacer.EnableActionReplacingIfRequired();
+                    return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+                }
 
-            //Passes the original action to the retargeting framework, outputs a targetId and a replaced action
-            var changed = CheckForChangedTarget(original, ref targetId,
-                out var replacedWith);
-            var targetObject = targetId.GetObject();
+                if (changed && !areaTargeted) //Check if the action can be used on the target, and if not revert to original
+                    if (!ActionManager.CanUseActionOnTarget(replacedWith,
+                            targetObject.Struct()))
+                        targetId = originalTargetId;
 
-            //Check if the action can be used on the target, and if not revert to original
-            if (changed && !replacedWith.IsGroundTargeted())
-                if (targetObject is null ||
-                    !ActionManager.CanUseActionOnTarget(replacedWith,
-                        targetObject.Struct()))
-                    targetId = originalTargetId;
+                // Support Retargeted ground actions
+                if ((areaTargeted && changed) || AutoRotationController.WouldLikeToGroundTarget)
+                {
+                    var location = Player.Position;
+                    replacedWith = Service.ActionReplacer.LastActionInvokeFor.TryGetValue(actionId, out var replacedGT) ? replacedGT : replacedWith;
 
-            // Support Retargeted ground actions intelligently
-            if ((changed && replacedWith.IsGroundTargeted()) || AutoRotationController.WouldLikeToGroundTarget)
-            {
-                var location = Player.Position;
+                    if (IsOverGround(targetObject) &&
+                        Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
+                        location = targetObject.Position;
+                    else if (TryGetNearestGroundPointWithinRange(
+                                 targetObject, out var newLoc,
+                                 replacedWith.ActionRange()) &&
+                             newLoc is not null)
+                        location = (Vector3)newLoc;
 
-                if (IsOverGround(targetObject) &&
-                    Vector3.Distance(Player.Position, targetObject.Position) <= replacedWith.ActionRange()) // not GetTargetDistance or something, as hitboxes should not count here
-                    location = targetObject.Position;
-                else if (TryGetNearestGroundPointWithinRange(
-                             targetObject, out var newLoc,
-                             replacedWith.ActionRange()) &&
-                         newLoc is not null)
-                    location = (Vector3)newLoc;
+                    var ret = ActionManager.Instance()->UseActionLocation
+                        (actionType, replacedWith, location: &location);
 
-                return ActionManager.Instance()->UseActionLocation
-                    (actionType, replacedWith, location: &location);
+                    Service.ActionReplacer.EnableActionReplacingIfRequired();
+
+                    return ret;
+                }
+
+                if (Service.Configuration.OverwriteQueue && actionManager->QueuedActionId != 0 && CanQueueCS(replacedWith))
+                    actionManager->QueuedActionId = replacedWith;
+
+                // Determine if the action will queue according to user settings
+                bool willQueue = CanQueueCS(replacedWith) && RemainingGCD > 0;
+
+                // If the action is going to queue, and we've retargeted, update the queued target to match the retargeted target at time of queue
+                if (willQueue && changed)
+                {
+                    Svc.Log.Verbose($"[QueuedTargetUpdate] Updating queued target ID to {Svc.Objects.SearchById(changedTargetId)?.Name}");
+
+                    // Only sets the queued target once if overwrite is not enabled, otherwise will update each button press
+                    if (actionManager->QueuedTargetId.Id == 0 || Service.Configuration.OverwriteQueue)
+                        actionManager->QueuedTargetId = changedTargetId;
+                }
+
+                Svc.Log.Verbose($"[QueuedTargetUpdate] A:{actionManager->QueuedActionId.ActionName()} Q:{Svc.Objects.SearchById(actionManager->QueuedTargetId)?.Name} T:{Svc.Objects.SearchById(targetId)?.Name} M:{mode} W:{willQueue}");
+
+                Svc.Log.Verbose($"[FinalUse] Target changed is {changed}. Using {replacedWith.ActionName()} on {(changed ? targetId.GetObject()?.Name : originalTargetId.GetObject()?.Name)}");
+                var hookResult = changed ? UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted) :
+                    UseActionHook.Original(actionManager, actionType, actionId, originalTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+
+                Service.ActionReplacer.EnableActionReplacingIfRequired();
+
+                // Fallback if the Retargeted ground action couldn't be placed smartly
+                if (changed && areaTargeted)
+                    ActionManager.Instance()->AreaTargetingExecuteAtObject =
+                        targetId;
+
+                return hookResult;
             }
-
-            #endregion
-
-            //Important to pass actionId here and not replaced. Performance mode = result from earlier, which could be modified. Non-performance mode = original action, which gets modified by the hook. Same result.
-            var hookRunTargetId = changed
-                ? originalTargetId
-                : targetId;
-            var hookResult = UseActionHook.Original(actionManager, actionType, actionId, hookRunTargetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
-
-            #region Extra Retargeting Logic
-
-            // Fallback if the Retargeted ground action couldn't be placed intelligently
-            if (changed && replacedWith.IsGroundTargeted())
-                ActionManager.Instance()->AreaTargetingExecuteAtObject =
-                    targetId;
-
-            #endregion
-
-            return hookResult;
+            else
+            {
+                return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
+            }
         }
         catch (Exception ex)
         {
@@ -498,14 +566,6 @@ public static class ActionWatching
         return true;
     }
 
-    public static void Enable()
-    {
-        ReceiveActionEffectHook?.Enable();
-        SendActionHook?.Enable();
-        UseActionHook?.Enable();
-        Svc.Condition.ConditionChange += ResetActions;
-    }
-
     private static void ResetActions(ConditionFlag flag, bool value)
     {
         if (flag == ConditionFlag.InCombat && !value)
@@ -527,6 +587,7 @@ public static class ActionWatching
         SendActionHook?.Disable();
         UseActionHook?.Disable();
         Svc.Condition.ConditionChange -= ResetActions;
+        CanQueueAction?.Disable();
     }
 
     [Obsolete("Use CustomComboFunctions.GetActionName instead. This method will be removed in a future update.")]

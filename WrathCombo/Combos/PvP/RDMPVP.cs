@@ -121,7 +121,6 @@ internal static class RDMPvP
             if (actionID is not Jolt3) return actionID;
 
             #region Variables
-            float targetDistance = GetTargetDistance();
             float targetCurrentPercentHp = GetTargetHPPercent();
             float playerCurrentPercentHp = PlayerHealthPercentageHp();
             uint chargesCorps = HasCharges(CorpsACorps) ? GetCooldown(CorpsACorps).RemainingCharges : 0;
@@ -130,7 +129,6 @@ internal static class RDMPvP
             bool inCombat = InCombat();
             bool hasTarget = HasTarget();
             bool isTargetNPC = CurrentTarget is IBattleNpc && CurrentTarget.BaseId != 8016;
-            bool inMeleeRange = targetDistance <= 5;
             bool hasBind = HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true);
             bool isCorpsAvailable = chargesCorps > 0 && !hasBind;
             bool hasScorch = OriginalHook(EnchantedRiposte) is Scorch;
@@ -149,8 +147,8 @@ internal static class RDMPvP
             bool isPrefulgenceExpiring = HasStatusEffect(Buffs.PrefulgenceReady) && GetStatusEffectRemainingTime(Buffs.PrefulgenceReady) <= 3;
             bool isMovementDependant = !RDMPvP_Displacement_SubOption || (RDMPvP_Displacement_SubOption && !isMoving);
             bool targetHasImmunity = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
-            bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !HasStatusEffect(Buffs.Displacement) && hasScorch && inMeleeRange;
-            bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > RDMPvP_Corps_Charges && targetDistance <= RDMPvP_Corps_Range;
+            bool isDisplacementPrimed = !hasBind && !JustUsed(Displacement, 8f) && !HasStatusEffect(Buffs.Displacement) && hasScorch && InActionRange(Displacement);
+            bool isCorpsPrimed = !hasBind && !JustUsed(CorpsACorps, 8f) && chargesCorps > RDMPvP_Corps_Charges && GetTargetDistance() <= RDMPvP_Corps_Range;
             #endregion
 
             // Forte
@@ -181,11 +179,11 @@ internal static class RDMPvP
                     if (IsEnabled(Preset.RDMPvP_Embolden) && hasEmbolden)
                     {
                         // Combo Setting
-                        if (IsEnabled(Preset.RDMPvP_Corps) && (isCorpsPrimed || (!isCorpsPrimed && inMeleeRange)))
+                        if (IsEnabled(Preset.RDMPvP_Corps) && (isCorpsPrimed || (!isCorpsPrimed && InActionRange(EnchantedRiposte))))
                             return OriginalHook(Embolden);
 
                         // Solo Setting
-                        if (IsNotEnabled(Preset.RDMPvP_Corps) && (inMeleeRange || (inCombat && isCorpsAvailable)))
+                        if (IsNotEnabled(Preset.RDMPvP_Corps) && (InActionRange(EnchantedRiposte) || (inCombat && isCorpsAvailable)))
                             return OriginalHook(Embolden);
                     }
 
@@ -195,7 +193,7 @@ internal static class RDMPvP
                 }
 
                 // Riposte Combo
-                if (IsEnabled(Preset.RDMPvP_Riposte) && inMeleeRange && (hasEnchantedRiposte || hasMeleeCombo))
+                if (IsEnabled(Preset.RDMPvP_Riposte) && InActionRange(EnchantedRiposte) && (hasEnchantedRiposte || hasMeleeCombo))
                     return OriginalHook(EnchantedRiposte);
 
                 // Prefulgence
@@ -224,8 +222,7 @@ internal static class RDMPvP
             }
 
             // Grand Impact / Jolt III
-            return hasGrandImpact || !isMoving ? OriginalHook(actionID) : All.SavageBlade;
-
+            return OriginalHook(actionID);
         }
     }
     internal class RDMPvP_Dash_Feature : CustomCombo

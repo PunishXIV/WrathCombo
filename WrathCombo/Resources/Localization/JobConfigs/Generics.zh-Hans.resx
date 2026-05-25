@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="_0Option" xml:space="preserve">
+    <value>{0} 选项</value>
+  </data>
+  <data name="Action_Priority" xml:space="preserve">
+    <value>{0} 优先级:</value>
+  </data>
+  <data name="Action_Threshold" xml:space="preserve">
+    <value>{0} 阈值</value>
+  </data>
+  <data name="Add0" xml:space="preserve">
+    <value>添加 {0}</value>
+  </data>
+  <data name="Add0Combo" xml:space="preserve">
+    <value>添加 {0} 连击</value>
+  </data>
+  <data name="Add0ComboWhenApplicable" xml:space="preserve">
+    <value>当适用时添加 {0} 连击。</value>
+  </data>
+  <data name="Add0Or1" xml:space="preserve">
+    <value>添加 {0} / {1}。</value>
+  </data>
+  <data name="Add0ToTheRotation" xml:space="preserve">
+    <value>将 {0} 添加到循环中。</value>
+  </data>
+  <data name="Add0WhenAverageHpPercentofPartyIsAtOrBelow" xml:space="preserve">
+    <value>当队伍平均HP%低于或等于指定值时，添加 {0}</value>
+  </data>
+  <data name="AddFieldMouseoverTargetting" xml:space="preserve">
+    <value>添加野外鼠标悬停目标选择</value>
+  </data>
+  <data name="Adds0To1" xml:space="preserve">
+    <value>将 {0} 添加到 {1}。</value>
+  </data>
+  <data name="AllContent" xml:space="preserve">
+    <value>全部内容</value>
+  </data>
+  <data name="AllContentDescription" xml:space="preserve">
+    <value>适用于游戏中的所有内容。</value>
+  </data>
+  <data name="AllEnemies" xml:space="preserve">
+    <value>所有敌人</value>
+  </data>
+  <data name="AllHealerRetargetting" xml:space="preserve">
+    <value>UI鼠标悬停 &gt; 野外鼠标悬停 &gt; 焦点目标 &gt; 软目标 &gt; 硬目标</value>
+  </data>
+  <data name="AllyHardTarget" xml:space="preserve">
+    <value>友方硬目标</value>
+  </data>
+  <data name="Always" xml:space="preserve">
+    <value>总是</value>
+  </data>
+  <data name="AnyMovement" xml:space="preserve">
+    <value>移动时</value>
+  </data>
+  <data name="ApplyOnlyTo0" xml:space="preserve">
+    <value>仅对 {0} 应用选项。</value>
+  </data>
+  <data name="ApplyToAll0" xml:space="preserve">
+    <value>将选项应用于所有这些：
+{0}</value>
+  </data>
+  <data name="BossEncounterNonBossHpPercent" xml:space="preserve">
+    <value>首领战中的非首领敌人。在敌人 HP% 低于此值时停止使用。</value>
+  </data>
+  <data name="BossOnlyContent" xml:space="preserve">
+    <value>仅限首领战</value>
+  </data>
+  <data name="BossOnlyDescription" xml:space="preserve">
+    <value>仅适用于直接与首领战斗的场景。排除包含小怪的「重生之境」与「苍穹之禁城」的多个团队副本。</value>
+  </data>
+  <data name="BossOnlyHpPercent" xml:space="preserve">
+    <value>仅首领。在敌人 HP% 低于此值时停止使用。</value>
+  </data>
+  <data name="BurstOption" xml:space="preserve">
+    <value>爆发选项</value>
+  </data>
+  <data name="Change0Or1" xml:space="preserve">
+    <value>更改 {0} / {1}</value>
+  </data>
+  <data name="ChargePool" xml:space="preserve">
+    <value>手动使用保留的充能次数。设置为0以禁用此检查。</value>
+  </data>
+  <data name="DelayMit" xml:space="preserve">
+    <value>检测到死刑后，延迟多长时间使用 {0}。设为 0 以禁用此检查。</value>
+  </data>
+  <data name="DisableRangeCheck" xml:space="preserve">
+    <value>禁用距离检查</value>
+  </data>
+  <data name="DisablesTheUseOfMitigations" xml:space="preserve">
+    <value>禁用减伤技能的使用</value>
+  </data>
+  <data name="DontUse0" xml:space="preserve">
+    <value>不要使用 {0}</value>
+  </data>
+  <data name="DoTSecondsRemainingZeroDisable" xml:space="preserve">
+    <value>重新施加 DoT 前的剩余秒数。设置为 0 以禁用此检查。</value>
+  </data>
+  <data name="EnablesTheUseOfMitigations" xml:space="preserve">
+    <value>启用减伤技能的使用</value>
+  </data>
+  <data name="EnemyHardTarget" xml:space="preserve">
+    <value>敌人硬目标</value>
+  </data>
+  <data name="EnemyTypeCheck" xml:space="preserve">
+    <value>选择 HP 检查应应用于哪种类型的敌人：</value>
+  </data>
+  <data name="Exclude0" xml:space="preserve">
+    <value>排除 {0}</value>
+  </data>
+  <data name="ExcludeAdvancedMitigations" xml:space="preserve">
+    <value>排除高级减伤</value>
+  </data>
+  <data name="ExcludeSimpleMitigations" xml:space="preserve">
+    <value>排除简易减伤</value>
+  </data>
+  <data name="FieldMouseover" xml:space="preserve">
+    <value>场地鼠标悬停</value>
+  </data>
+  <data name="FocusTarget" xml:space="preserve">
+    <value>焦点目标</value>
+  </data>
+  <data name="Hold0For1" xml:space="preserve">
+    <value>为 {1} 保留 {0}</value>
+  </data>
+  <data name="HowManyChargesForMovement" xml:space="preserve">
+    <value>为移动保留的充能次数</value>
+  </data>
+  <data name="HowManyChargesToKeepReady" xml:space="preserve">
+    <value>要保留多少层充能？
+（0 = 全部使用）</value>
+  </data>
+  <data name="HPCheckAllContent" xml:space="preserve">
+    <value>对所有内容应用 HP 检测</value>
+  </data>
+  <data name="HPCheckAllEnemies" xml:space="preserve">
+    <value>将上述 HP 检查应用于所有敌人。</value>
+  </data>
+  <data name="HPCheckNonBossEncountersOnly" xml:space="preserve">
+    <value>仅对非首领敌人应用 HP 检查</value>
+  </data>
+  <data name="HPCheckNonBosses" xml:space="preserve">
+    <value>仅对非首领敌人应用上述 HP 检查。</value>
+  </data>
+  <data name="HPPercentageFor0NotBeApplied" xml:space="preserve">
+    <value>设置一个 HP% 阈值，用于指定何时 {0} 不会自动施加到敌人上。</value>
+  </data>
+  <data name="HPPercentageThreshold" xml:space="preserve">
+    <value>{0} 的 HP% 阈值</value>
+  </data>
+  <data name="HPPercentThresholdUseAllCharges0" xml:space="preserve">
+    <value>使用 {0} 所有充能的 HP% 阈值。</value>
+  </data>
+  <data name="Include0" xml:space="preserve">
+    <value>包含 {0}</value>
+  </data>
+  <data name="IncludeAdvancedMitigations" xml:space="preserve">
+    <value>包含高级减伤</value>
+  </data>
+  <data name="IncludeShields" xml:space="preserve">
+    <value>在 HP% 滑块中包括护盾</value>
+  </data>
+  <data name="IncludeSimpleMitigations" xml:space="preserve">
+    <value>包含简易减伤</value>
+  </data>
+  <data name="InMeleeRange" xml:space="preserve">
+    <value>近战范围内</value>
+  </data>
+  <data name="InRange" xml:space="preserve">
+    <value>在射程内</value>
+  </data>
+  <data name="Job0ShieldCheck" xml:space="preserve">
+    <value>{0} 护盾检查</value>
+  </data>
+  <data name="Job0ShieldCheckDesc" xml:space="preserve">
+    <value>启用后不覆盖已有的 {0} 的护盾。</value>
+  </data>
+  <data name="LucidMP" xml:space="preserve">
+    <value>设置 MP 低于或等于此值时此功能生效</value>
+  </data>
+  <data name="MaxTargetsMultiDot" xml:space="preserve">
+    <value>多目标DOT的最大目标数</value>
+  </data>
+  <data name="MinimumGauge" xml:space="preserve">
+    <value>使用 {0} 所需的最低量表</value>
+  </data>
+  <data name="MovementOption" xml:space="preserve">
+    <value>移动选项</value>
+  </data>
+  <data name="MPLessOrEqual" xml:space="preserve">
+    <value>玩家 MP 低于或等于：</value>
+  </data>
+  <data name="NoMovement" xml:space="preserve">
+    <value>不移动</value>
+  </data>
+  <data name="NonBossEncountersOnly" xml:space="preserve">
+    <value>仅限非首领战</value>
+  </data>
+  <data name="NonBosses" xml:space="preserve">
+    <value>小怪</value>
+  </data>
+  <data name="NonBossHpPercent" xml:space="preserve">
+    <value>非首领战。在敌人 HP% 低于此值时停止使用。</value>
+  </data>
+  <data name="NormalTargeting" xml:space="preserve">
+    <value>普通目标</value>
+  </data>
+  <data name="NotInBossEncounters" xml:space="preserve">
+    <value>不在首领战</value>
+  </data>
+  <data name="On0" xml:space="preserve">
+    <value>在 {0} 时</value>
+  </data>
+  <data name="OnlyUseWhenTargetIsBoss" xml:space="preserve">
+    <value>仅在目标敌人是首领时使用 {0}</value>
+  </data>
+  <data name="OnlyUseWith0" xml:space="preserve">
+    <value>仅与 {0} 一同使用</value>
+  </data>
+  <data name="OnlyWeave" xml:space="preserve">
+    <value>仅插入</value>
+  </data>
+  <data name="PlayerHPGreaterOrEqual" xml:space="preserve">
+    <value>玩家 HP% 大于或等于：</value>
+  </data>
+  <data name="PlayerHPToUseAction" xml:space="preserve">
+    <value>当玩家 HP% 低于或等于此值时使用 {0}。设为 100 可禁用此检查。</value>
+  </data>
+  <data name="PrioBuffUpkeep" xml:space="preserve">
+    <value>优先维持增益</value>
+  </data>
+  <data name="Priority" xml:space="preserve">
+    <value>优先级：</value>
+  </data>
+  <data name="Replace0With1Or2" xml:space="preserve">
+    <value>将 {0} 替换为 {1} / {2}。</value>
+  </data>
+  <data name="Replaces0" xml:space="preserve">
+    <value>替换 {0}</value>
+  </data>
+  <data name="Save0ChargesForBurst" xml:space="preserve">
+    <value>为爆发保留 {0} 层充能</value>
+  </data>
+  <data name="SelectWhatKindOfContentThisOptionAppliesTo" xml:space="preserve">
+    <value>选择此选项适用的内容类型：</value>
+  </data>
+  <data name="SelfOnly" xml:space="preserve">
+    <value>仅自身</value>
+  </data>
+  <data name="ShieldCheckPartyMemberNeedPercent" xml:space="preserve">
+    <value>护盾检查：无护盾队员百分比阈值</value>
+  </data>
+  <data name="SoftTarget" xml:space="preserve">
+    <value>软目标</value>
+  </data>
+  <data name="StandardOpener" xml:space="preserve">
+    <value>标准起手循环</value>
+  </data>
+  <data name="StartUsingWhenBelowPartyAverageHPSetTo100ToDisableThisCheck" xml:space="preserve">
+    <value>当队伍平均 HP% 低于此值时开始使用。设为 100 可禁用此检查。</value>
+  </data>
+  <data name="StationaryDelayCheck" xml:space="preserve">
+    <value>静止判定延迟时间（秒）：</value>
+  </data>
+  <data name="StationaryOnly" xml:space="preserve">
+    <value>仅静止时</value>
+  </data>
+  <data name="StopBelowAverageEnemyHP" xml:space="preserve">
+    <value>当附近敌人的平均 HP% 低于此值时停止使用。（设为 0 以禁用此检查）</value>
+  </data>
+  <data name="StopEnemyHpPercent" xml:space="preserve">
+    <value>当敌人 HP% 低于此值时停止使用。设为 0 以禁用此检查。</value>
+  </data>
+  <data name="StopFriendlyHpPercent100" xml:space="preserve">
+    <value>HP% 低于此值时开始使用。设为 100 可禁用此检查。</value>
+  </data>
+  <data name="StopFriendlyHpPercentZero" xml:space="preserve">
+    <value>当 HP 低于此值时停止使用。设为 0 可禁用此检查。</value>
+  </data>
+  <data name="StopSeconds" xml:space="preserve">
+    <value>重新施加前剩余秒数（0 = 不提前重新施加）</value>
+  </data>
+  <data name="StopUsing0WhenBelowTargetHPPercentage" xml:space="preserve">
+    <value>当目标 HP% 低于或等于 {0} 时停止使用（设为 0 以禁用此检查）</value>
+  </data>
+  <data name="StopUsingWhenBelowSetPercentage" xml:space="preserve">
+    <value>当低于设定 HP% 停止使用</value>
+  </data>
+  <data name="StopUsingWhenBelowTargetHPPercent" xml:space="preserve">
+    <value>当目标 HP% 低于或等于此值时停止使用（设为 0 以禁用此检查）</value>
+  </data>
+  <data name="TanksOnly" xml:space="preserve">
+    <value>仅坦克</value>
+  </data>
+  <data name="TargetHPUse0AtOrBelow" xml:space="preserve">
+    <value>目标 HP% 低于或等于此值时使用 {0}。设为 100 以禁用此检查。</value>
+  </data>
+  <data name="TimeRemainingOn0" xml:space="preserve">
+    <value>允许 {0} 剩余时间在以内  
+（0 = 目标身上不能有瓦解状态）</value>
+  </data>
+  <data name="TimeRemainingOnOthers" xml:space="preserve">
+    <value>他人身上 {0} 的剩余时间以允许使用（0 = 目标身上没有 {0} 效果时）</value>
+  </data>
+  <data name="TimeRemainingOnOthers3" xml:space="preserve">
+    <value>允许的其他目标上的 {0} / {1} / {2} 剩余时间 (0 = 目标上不得有 {0} / {1} / {2})</value>
+  </data>
+  <data name="TwoTargetDotting" xml:space="preserve">
+    <value>双目标持续伤害</value>
+  </data>
+  <data name="TwoTargetDottingDescription" xml:space="preserve">
+    <value>如果可能，将对两个目标维持持续伤害技能。</value>
+  </data>
+  <data name="Use0" xml:space="preserve">
+    <value>使用 {0}</value>
+  </data>
+  <data name="Use0In1" xml:space="preserve">
+    <value>在 {1} 中使用 {0}</value>
+  </data>
+  <data name="Use0Or1" xml:space="preserve">
+    <value>使用 {0} / {1}</value>
+  </data>
+  <data name="Use0RegardlessOfContent" xml:space="preserve">
+    <value>无论内容如何，都使用 {0}。</value>
+  </data>
+  <data name="Use0When1ChargesAreAvailable" xml:space="preserve">
+    <value>当 {1} 层充能可用时使用 {0}。</value>
+  </data>
+  <data name="Use0WhenInRangeOfEnemy" xml:space="preserve">
+    <value>当在选定敌人目标的射程内时，使用 {0}。</value>
+  </data>
+  <data name="UseActionOnlyWhileStationary" xml:space="preserve">
+    <value>仅在静止时使用 {0}</value>
+  </data>
+  <data name="UseAlways" xml:space="preserve">
+    <value>始终使用</value>
+  </data>
+  <data name="Uses0RegardlessOfAnyMovementConditions" xml:space="preserve">
+    <value>无视任何移动条件使用 {0} 。注意：这可能会导致你死亡。</value>
+  </data>
+  <data name="UsesStandardOpener" xml:space="preserve">
+    <value>使用标准起手循环</value>
+  </data>
+  <data name="UseWhenDistanceFromTargetIsLessThanOrEqualTo" xml:space="preserve">
+    <value>当与目标的距离小于或等于时使用：</value>
+  </data>
+  <data name="Use_0_Opener" xml:space="preserve">
+    <value>使用 {0} 起手循环</value>
+  </data>
+  <data name="WillAdd_0_ToThePriorityStack" xml:space="preserve">
+    <value>将 {0} 添加到优先级堆栈</value>
+  </data>
+  <data name="WillNotUseInBossEncounters" xml:space="preserve">
+    <value>不会在首领战中使用。</value>
+  </data>
+  <data name="WillOnlyUseOnTanks" xml:space="preserve">
+    <value>仅对坦克使用</value>
+  </data>
+  <data name="WillOnlyWeaveThisAction" xml:space="preserve">
+    <value>仅会在插入能力技时使用此技能。</value>
+  </data>
+  <data name="OnlyUse0WhenInMeleeRange" xml:space="preserve">
+    <value>仅在近战范围内使用 {0}。</value>
+  </data>
+  <data name="OnlyUse0WhenNotMoving" xml:space="preserve">
+    <value>仅在未移动时使用 {0}。</value>
+  </data>
+  <data name="OnlyWithCountdown" xml:space="preserve">
+    <value>仅在倒数时使用</value>
+  </data>
+  <data name="OnlyUseOpenerWhenCountdownActive" xml:space="preserve">
+    <value>仅在倒计激活时使用起手循环。</value>
+  </data>
+  <data name="Action_Opener" xml:space="preserve">
+    <value>{0} 起手循环</value>
+  </data>
+</root>

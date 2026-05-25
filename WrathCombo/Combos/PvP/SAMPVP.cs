@@ -101,14 +101,12 @@ internal static class SAMPvP
             if (actionID is not (Yukikaze or Gekko or Kasha)) return actionID;
 
             #region Variables
-            float targetDistance = GetTargetDistance();
             float targetCurrentPercentHp = GetTargetHPPercent();
             float playerCurrentPercentHp = PlayerHealthPercentageHp();
             uint chargesSoten = HasCharges(Soten) ? GetCooldown(Soten).RemainingCharges : 0;
             bool isMoving = IsMoving();
             bool inCombat = InCombat();
             bool hasTarget = HasTarget();
-            bool inMeleeRange = targetDistance <= 5;
             bool hasKaiten = HasStatusEffect(Buffs.Kaiten);
             bool hasZanshin = OriginalHook(Chiten) is Zanshin;
             bool hasBind = HasStatusEffect(PvPCommon.Debuffs.Bind, anyOwner: true);
@@ -121,7 +119,7 @@ internal static class SAMPvP
             bool hasTendoKaeshi = OriginalHook(MeikyoShisui) is TendoKaeshiSetsugekka;
             bool hasPrioWeaponskill = hasTendo || hasTendoKaeshi || hasKaeshiNamikiri;
             bool isMeikyoPrimed = IsOnCooldown(OgiNamikiri) && !hasKaeshiNamikiri && !hasKaiten && !isMoving;
-            bool isZantetsukenPrimed = IsLB1Ready && !hasBind && hasTarget && targetHasKuzushi && targetDistance <= 20;
+            bool isZantetsukenPrimed = IsLB1Ready && !hasBind && hasTarget && targetHasKuzushi && InActionRange(Zantetsuken);
             bool isSotenPrimed = chargesSoten > SAMPvP_Soten_Charges && !hasKaiten && !hasBind && !hasPrioWeaponskill;
             bool isTargetInvincible = HasStatusEffect(PLDPvP.Buffs.HallowedGround, CurrentTarget, true) || HasStatusEffect(DRKPvP.Buffs.UndeadRedemption, CurrentTarget, true);
             #endregion
@@ -131,7 +129,7 @@ internal static class SAMPvP
                 return OriginalHook(Zantetsuken);
 
             //Smite
-            if (IsEnabled(Preset.SAMPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && GetTargetDistance() <= 10 && HasTarget() &&
+            if (IsEnabled(Preset.SAMPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && InActionRange(PvPMelee.Smite) && HasTarget() &&
                 GetTargetHPPercent() <= SAMPvP_SmiteThreshold)
                 return PvPMelee.Smite;
 
@@ -142,15 +140,15 @@ internal static class SAMPvP
             if (isTargetPrimed)
             {
                 // Zanshin
-                if (hasZanshin && targetDistance <= 8)
-                    return OriginalHook(Chiten);
+                if (hasZanshin && InActionRange(Zanshin))
+                    return Zanshin;
 
                 // Soten
-                if (IsEnabled(Preset.SAMPvP_Soten) && isSotenPrimed && targetDistance <= SAMPvP_Soten_Range &&
+                if (IsEnabled(Preset.SAMPvP_Soten) && isSotenPrimed && GetTargetDistance() <= SAMPvP_Soten_Range &&
                     (!SAMPvP_Soten_SubOption || (SAMPvP_Soten_SubOption && isYukikazePrimed)))
                     return OriginalHook(Soten);
 
-                if (inMeleeRange)
+                if (InActionRange(Mineuchi))
                 {
                     // Meikyo Shisui
                     if (IsEnabled(Preset.SAMPvP_Meikyo) && IsOffCooldown(MeikyoShisui) && isMeikyoPrimed)

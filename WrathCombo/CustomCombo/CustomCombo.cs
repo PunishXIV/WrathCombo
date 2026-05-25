@@ -1,15 +1,11 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
-using Dalamud.Utility;
-using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
-using ECommons.Throttlers;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using System.Collections.Generic;
 using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Core;
 using WrathCombo.CustomComboNS.Functions;
-using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using ECommonsJob = ECommons.ExcelServices.Job;
 
@@ -21,11 +17,9 @@ internal abstract partial class CustomCombo : CustomComboFunctions
     /// <summary> Initializes a new instance of the <see cref="CustomCombo"/> class. </summary>
     protected CustomCombo()
     {
-        CustomComboInfoAttribute? presetInfo = Preset.GetAttribute<CustomComboInfoAttribute>();
+        JobInfoAttribute? presetInfo = PresetStorage.AllPresets[Preset].JobInfo;
         Job = presetInfo.Job;
     }
-
-    protected IGameObject? OptionalTarget;
 
     /// <summary> Gets the preset associated with this combo. </summary>
     protected internal abstract Preset Preset { get; }
@@ -88,11 +82,7 @@ internal abstract partial class CustomCombo : CustomComboFunctions
             return true;
         }
 
-        if (targetOverride != null)
-            OptionalTarget = targetOverride;
         uint resultingActionID = Invoke(actionID);
-        if (OptionalTarget != null && EzThrottler.Throttle($"OptionalReset{this.Preset}", Service.Configuration.Throttle + 50))
-            OptionalTarget = null;
 
         var presetException = _presetsAllowedToReturnUnchanged
             .TryGetValue(Preset, out var actionException);
@@ -101,13 +91,6 @@ internal abstract partial class CustomCombo : CustomComboFunctions
             (actionID == resultingActionID && !hasException))
             return false;
 
-        if (Service.Configuration.SuppressQueuedActions && !Svc.ClientState.IsPvP && ActionManager.Instance()->QueuedActionType == ActionType.Action && ActionManager.Instance()->QueuedActionId != actionID)
-        {
-            // todo: tauren: remember why this condition was in the if below:
-            //      `&& WrathOpener.CurrentOpener?.OpenerStep <= 1`
-            if (resultingActionID != All.SavageBlade)
-                return false;
-        }
         newActionID = resultingActionID;
 
         return true;
@@ -115,9 +98,6 @@ internal abstract partial class CustomCombo : CustomComboFunctions
 
     /// <summary> Invokes the combo. </summary>
     /// <param name="actionID"> Starting action ID. </param>
-    /// 
-    /// 
-    /// 
     /// <returns>The replacement action ID. </returns>
     protected abstract uint Invoke(uint actionID);
 }

@@ -1,26 +1,36 @@
 ﻿using ECommons.DalamudServices;
 using ECommons.GameHelpers;
 using WrathCombo.Attributes;
+using WrathCombo.Data;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
+using EZ = ECommons.Throttlers.EzThrottler;
+using TS = System.TimeSpan;
 
 namespace WrathCombo.Combos.PvE;
 
 // Static utility class for shared logic
 internal static partial class Variant
 {
-    /// <summary>
-    ///     Checks if the player is in a variant dungeon.<br/><br/>
-    ///     <c>1069</c> - The Sil'dihn Subterrane<br/>
-    ///     <c>1137</c> - Mount Rokkon<br/>
-    ///     <c>1176</c> - Aloalo Island
-    /// </summary>
-    public static bool IsInVariantDungeon => Svc.ClientState.TerritoryType is (1069 or 1137 or 1176);
+    public static bool IsInVariantDungeon => ContentCheck.IsInVariantDungeon;
+
+    private static ushort TerritoryID
+    {
+        get
+        {
+            if (!EZ.Throttle("variantTerritory", TS.FromSeconds(4)))
+                return field;
+
+            field = (ushort)Svc.ClientState.TerritoryType;
+            return field;
+        }
+    }
 
     public static bool TryGetVariantAction(ref uint actionID)
     {
         if (!IsInVariantDungeon) return false;
 
-        switch (RoleAttribute.GetRoleFromJob(Player.Job))
+        switch (GetRoleFromJob(Player.Job))
         {
             case JobRole.Tank:
                 if (IsEnabled(Preset.Variant_Tank))
@@ -180,7 +190,7 @@ internal static partial class Variant
     public static bool CanRaise()
     {
         if (!IsInVariantDungeon) return false;
-        return RoleAttribute.GetRoleFromJob(Player.Job) switch
+        return GetRoleFromJob(Player.Job) switch
         {
             JobRole.Tank => IsEnabled(Preset.Variant_Tank) && CheckRaise(Preset.Variant_Tank_Raise),
             JobRole.RangedDPS => IsEnabled(Preset.Variant_PhysRanged) && CheckRaise(Preset.Variant_PhysRanged_Raise),

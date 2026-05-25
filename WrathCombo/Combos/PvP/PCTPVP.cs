@@ -33,7 +33,8 @@ internal static class PCTPvP
             Starstruck = 4118,
             MooglePortrait = 4103,
             MadeenPortrait = 4104,
-            SubtractivePalette = 4102;
+            SubtractivePalette = 4102,
+            QuickSketch = 4324;
     }
     #endregion
 
@@ -44,6 +45,9 @@ internal static class PCTPvP
             PCTPvP_BurstHP = new("PCTPvP_BurstHP", 100),
             PCTPvP_TemperaHP = new("PCTPvP_TemperaHP", 50),
             PCTPvP_PhantomDartThreshold = new("PCTPvP_PhantomDartThreshold", 50);
+        
+        public static UserBool
+            PCTPvP_CreatureMotifEnforceNotMoving = new("PCTPvP_CreatureMotifEnforceNotMoving", true);
 
         internal static void Draw(Preset preset)
         {
@@ -58,6 +62,10 @@ internal static class PCTPvP
                     break;
 
                 case Preset.PCTPvP_TemperaCoat: DrawSliderInt(1, 100, PCTPvP_TemperaHP, "Player HP%", 200);
+                    break;
+                
+                case Preset.PCTPvP_CreatureMotif: DrawAdditionalBoolChoice(PCTPvP_CreatureMotifEnforceNotMoving, 
+                    "Enforce No Movement", "Will not attempt to use Creature Motif when moving unless you have Quick Sketch buff from Smudge.");
                     break;
             }
         }            
@@ -88,8 +96,8 @@ internal static class PCTPvP
             // Tempera Coat / Tempera Grassa
             if (IsEnabled(Preset.PCTPvP_TemperaCoat))
             {
-                if ((IsOffCooldown(TemperaCoat) &&
-                     InCombat() && PlayerHealthPercentageHp() < PCTPvP_TemperaHP) || isTemperaCoatExpiring)
+                if (IsOffCooldown(TemperaCoat) &&
+                    InCombat() && PlayerHealthPercentageHp() < PCTPvP_TemperaHP || isTemperaCoatExpiring)
                     return OriginalHook(TemperaCoat);
             }
             if (hasTarget && !PvPCommon.TargetImmuneToDamage())
@@ -116,7 +124,8 @@ internal static class PCTPvP
                     return OriginalHook(HolyInWhite);
             }
             // Creature Motif
-            if (IsEnabled(Preset.PCTPvP_CreatureMotif) && !hasMotifDrawn && !isMoving)
+            if (IsEnabled(Preset.PCTPvP_CreatureMotif) && !hasMotifDrawn && 
+                (HasStatusEffect(Buffs.QuickSketch) || !isMoving || !PCTPvP_CreatureMotifEnforceNotMoving))
                 return OriginalHook(CreatureMotif);
 
             // Subtractive Palette
@@ -127,6 +136,48 @@ internal static class PCTPvP
                     return OriginalHook(SubtractivePalette);
             }
             return actionID;
+        }
+        internal class PCTPvP_OneButtonMotifs : CustomCombo
+        {
+            protected internal override Preset Preset => Preset.PCTPvP_OneButtonMotifs;
+
+            protected override uint Invoke(uint actionID)
+            {
+                #region Variables
+                
+                bool hasTarget = HasTarget();
+                bool hasStarPrism = HasStatusEffect(Buffs.Starstruck);
+                bool hasPortrait = HasStatusEffect(Buffs.MooglePortrait) || HasStatusEffect(Buffs.MadeenPortrait);
+                bool isStarPrismExpiring = HasStatusEffect(Buffs.Starstruck) && GetStatusEffectRemainingTime(Buffs.Starstruck) <= 3;
+                bool hasMotifDrawn = HasStatusEffect(Buffs.PomMotif) || HasStatusEffect(Buffs.WingMotif) || HasStatusEffect(Buffs.ClawMotif) || HasStatusEffect(Buffs.MawMotif);
+                
+                #endregion
+                
+                if (actionID is LivingMuse)
+                {
+                    if (hasTarget && !PvPCommon.TargetImmuneToDamage())
+                    {
+                        // Star Prism
+                        if (IsEnabled(Preset.PCTPvP_StarPrismOneButtonMotifs) && 
+                            hasStarPrism && isStarPrismExpiring)
+                            return StarPrism;
+
+                        // Moogle / Madeen Portrait
+                        if (hasPortrait)
+                            return OriginalHook(MogOfTheAges);
+
+                        // Living Muse
+                        if (hasMotifDrawn && HasCharges(OriginalHook(LivingMuse)))
+                            return OriginalHook(LivingMuse);
+                    }
+
+                    // Creature Motif
+                    if (!hasMotifDrawn)
+                        return OriginalHook(CreatureMotif);
+                }
+                
+                return actionID;
+            }
         }
     }
 }

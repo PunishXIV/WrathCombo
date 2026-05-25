@@ -1,4 +1,5 @@
-﻿using ECommons.ExcelServices;
+﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons.ExcelServices;
 using ECommons.GameHelpers;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +34,7 @@ internal partial class All
         internal enum BossAvoidance
         {
             Off = 1,
-            On = 2,
+            On = 2
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ internal partial class All
         internal enum PartyRequirement
         {
             No,
-            Yes,
+            Yes
         }
     }
 
@@ -64,7 +65,10 @@ internal partial class All
             if (actionID is not (RoleActions.Tank.Interject or RoleActions.Tank.LowBlow or PLD.ShieldBash))
                 return actionID;
 
-            var tar = IsEnabled(Preset.ALL_Tank_Interrupt_Retarget) ? SimpleTarget.InterruptableEnemy : CurrentTarget;
+            IGameObject? tar = IsEnabled(Preset.ALL_Tank_Interrupt_Retarget)
+                ? SimpleTarget.InterruptableEnemy
+                : CurrentTarget;
+
             switch (actionID)
             {
                 case RoleActions.Tank.LowBlow or PLD.ShieldBash
@@ -94,7 +98,8 @@ internal partial class All
         protected internal override Preset Preset => Preset.ALL_Tank_Reprisal;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is RoleActions.Tank.Reprisal && GetStatusEffectRemainingTime(RoleActions.Tank.Debuffs.Reprisal, CurrentTarget, true) > Config.ALL_Tank_Reprisal_Threshold && IsOffCooldown(RoleActions.Tank.Reprisal)
+            actionID is RoleActions.Tank.Reprisal &&
+            GetStatusEffectRemainingTime(RoleActions.Tank.Debuffs.Reprisal, CurrentTarget, true) > Config.AllTankReprisalThreshold
                 ? SavageBlade
                 : actionID;
     }
@@ -108,7 +113,7 @@ internal partial class All
             if (actionID is not RoleActions.Tank.Shirk)
                 return actionID;
 
-            var target =
+            IGameObject? target =
                 IsNotEnabled(Preset.ALL_Tank_ShirkRetargeting_Healer)
                     ? SimpleTarget.AnyLivingTank
                     : SimpleTarget.AnyLivingHealer;
@@ -129,18 +134,16 @@ internal partial class All
 
         protected override uint Invoke(uint actionID)
         {
-            List<uint> replacedActions =
-                [WHM.Raise, AST.Ascend, SGE.Egeiro, SCH.Resurrection];
-            if (!replacedActions.Contains(actionID))
-                return actionID;
-            if (actionID is SCH.Resurrection &&
-                Player.Job is not Job.SCH)
+            List<uint> replacedActions = [WHM.Raise, AST.Ascend, SGE.Egeiro, SCH.Resurrection];
+
+            if (!replacedActions.Contains(actionID) ||
+                actionID is SCH.Resurrection && Player.Job is not Job.SCH)
                 return actionID;
 
             if (ActionReady(RoleActions.Magic.Swiftcast))
                 return RoleActions.Magic.Swiftcast;
 
-            if (actionID == WHM.Raise &&
+            if (actionID is WHM.Raise &&
                 IsEnabled(Preset.WHM_ThinAirRaise) &&
                 ActionReady(WHM.ThinAir) &&
                 !HasStatusEffect(WHM.Buffs.ThinAir))
@@ -163,10 +166,10 @@ internal partial class All
             if (actionID is not RoleActions.Healer.Esuna)
                 return actionID;
 
-            var target = SimpleTarget.UIMouseOverTarget.IfHasCleansable() ??
-                         SimpleTarget.ModelMouseOverTarget.IfHasCleansable() ??
-                         SimpleTarget.HardTarget.IfHasCleansable() ??
-                         GetPartyMembers().FirstOrDefault(x => x.BattleChara.IfHasCleansable() != null)?.BattleChara;
+            IGameObject? target = SimpleTarget.UIMouseOverTarget.IfHasCleansable() ??
+                                  SimpleTarget.ModelMouseOverTarget.IfHasCleansable() ??
+                                  SimpleTarget.HardTarget.IfHasCleansable() ??
+                                  GetPartyMembers().FirstOrDefault(x => x.BattleChara.IfHasCleansable() != null)?.BattleChara;
 
             return RoleActions.Healer.Esuna.Retarget(target);
         }
@@ -181,24 +184,23 @@ internal partial class All
             if (actionID is not RoleActions.Healer.Rescue)
                 return actionID;
 
-            var target =
+            IGameObject? target =
                 SimpleTarget.UIMouseOverTarget.IfNotThePlayer().IfInParty() ??
 
                 //Field Mouseover
-                (Config.ALL_Healer_RescueRetargetingOptions[0]
+                (Config.AllHealerRescueRetargetingOptions[0]
                     ? SimpleTarget.ModelMouseOverTarget.IfNotThePlayer().IfInParty()
                     : null) ??
 
                 //Focus target retarget
-                (Config.ALL_Healer_RescueRetargetingOptions[1]
+                (Config.AllHealerRescueRetargetingOptions[1]
                     ? SimpleTarget.FocusTarget.IfNotThePlayer().IfInParty()
                     : null) ??
 
                 //Focus target retarget
-                (Config.ALL_Healer_RescueRetargetingOptions[2]
+                (Config.AllHealerRescueRetargetingOptions[2]
                     ? SimpleTarget.SoftTarget.IfNotThePlayer().IfInParty()
                     : null) ??
-
                 SimpleTarget.HardTarget.IfNotThePlayer().IfInParty();
 
             return actionID.Retarget(target);
@@ -211,7 +213,8 @@ internal partial class All
         protected internal override Preset Preset => Preset.ALL_Caster_Addle;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is RoleActions.Caster.Addle && HasStatusEffect(RoleActions.Caster.Debuffs.Addle, CurrentTarget, true) && IsOffCooldown(RoleActions.Caster.Addle)
+            actionID is RoleActions.Caster.Addle &&
+            GetStatusEffectRemainingTime(RoleActions.Caster.Debuffs.Addle, CurrentTarget, true) > Config.AllCasterAddleThreshold
                 ? SavageBlade
                 : actionID;
     }
@@ -222,16 +225,15 @@ internal partial class All
 
         protected override uint Invoke(uint actionID)
         {
-            List<uint> replacedActions =
-                [BLU.AngelWhisper, RDM.Verraise, SMN.Resurrection];
-            if (!replacedActions.Contains(actionID))
-                return actionID;
-            if (actionID is SMN.Resurrection &&
-                Player.Job is not Job.SMN)
+            List<uint> replacedActions = [BLU.AngelWhisper, RDM.Verraise, SMN.Resurrection];
+
+            if (!replacedActions.Contains(actionID) ||
+                actionID is SMN.Resurrection && Player.Job is not Job.SMN)
                 return actionID;
 
             if (HasStatusEffect(RoleActions.Magic.Buffs.Swiftcast) ||
                 HasStatusEffect(RDM.Buffs.Dualcast))
+
                 if (IsEnabled(Preset.ALL_Caster_Raise_Retarget))
                     return actionID.Retarget(replacedActions.ToArray(),
                         SimpleTarget.Stack.AllyToRaise);
@@ -259,7 +261,8 @@ internal partial class All
         protected internal override Preset Preset => Preset.ALL_Melee_Feint;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is RoleActions.Melee.Feint && HasStatusEffect(RoleActions.Melee.Debuffs.Feint, CurrentTarget, true) && IsOffCooldown(RoleActions.Melee.Feint)
+            actionID is RoleActions.Melee.Feint &&
+            GetStatusEffectRemainingTime(RoleActions.Melee.Debuffs.Feint, CurrentTarget, true) > Config.AllMeleeFeintThreshold
                 ? SavageBlade
                 : actionID;
     }
@@ -281,8 +284,9 @@ internal partial class All
 
         protected override uint Invoke(uint actionID) =>
             actionID is BRD.Troubadour or MCH.Tactician or DNC.ShieldSamba &&
-            (HasStatusEffect(BRD.Buffs.Troubadour, anyOwner: true) || HasStatusEffect(MCH.Buffs.Tactician, anyOwner: true) ||
-             HasStatusEffect(DNC.Buffs.ShieldSamba, anyOwner: true)) &&
+            (GetStatusEffectRemainingTime(BRD.Buffs.Troubadour, anyOwner: true) > Config.AllRangedMitigationThreshold ||
+             GetStatusEffectRemainingTime(MCH.Buffs.Tactician, anyOwner: true) > Config.AllRangedMitigationThreshold ||
+             GetStatusEffectRemainingTime(DNC.Buffs.ShieldSamba, anyOwner: true) > Config.AllRangedMitigationThreshold) &&
             IsOffCooldown(actionID)
                 ? SavageBlade
                 : actionID;
@@ -293,7 +297,8 @@ internal partial class All
         protected internal override Preset Preset => Preset.ALL_Ranged_Interrupt;
 
         protected override uint Invoke(uint actionID) =>
-            actionID is RoleActions.PhysRanged.FootGraze && CanInterruptEnemy() && ActionReady(RoleActions.PhysRanged.HeadGraze)
+            actionID is RoleActions.PhysRanged.FootGraze &&
+            CanInterruptEnemy() && PhysicalRanged.Role.CanHeadGraze(true)
                 ? RoleActions.PhysRanged.HeadGraze
                 : actionID;
     }

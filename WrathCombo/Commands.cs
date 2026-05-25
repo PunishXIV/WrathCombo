@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using WrathCombo.API.Enum;
+using WrathCombo.Attributes;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -30,6 +31,31 @@ public partial class WrathCombo
 {
     private const string Command = "/wrath";
     private const string OldCommand = "/scombo";
+
+    private static readonly Dictionary<Job, Preset[]> BurstPresetMap = new()
+    {
+        { Job.PLD, [Preset.PLD_ST_AdvancedMode_FoF, Preset.PLD_AoE_AdvancedMode_FoF, Preset.PLD_ST_AdvancedMode_Requiescat, Preset.PLD_AoE_AdvancedMode_Requiescat] }, // PLD
+        { Job.WAR, [Preset.WAR_ST_InnerRelease, Preset.WAR_AoE_InnerRelease, Preset.WAR_ST_Infuriate, Preset.WAR_AoE_Infuriate] }, // WAR
+        { Job.DRK, [Preset.DRK_ST_CD_Delirium, Preset.DRK_AoE_CD_Delirium, Preset.DRK_ST_CD_Shadow, Preset.DRK_AoE_CD_Shadow, Preset.DRK_ST_CD_Bringer, Preset.DRK_AoE_CD_Bringer] }, // DRK
+        { Job.GNB, [Preset.GNB_ST_NoMercy, Preset.GNB_AoE_NoMercy, Preset.GNB_ST_Bloodfest, Preset.GNB_AoE_Bloodfest] }, // GNB
+        { Job.WHM, [Preset.WHM_ST_MainCombo_PresenceOfMind, Preset.WHM_AoE_DPS_PresenceOfMind] }, // WHM
+        { Job.SCH, [Preset.SCH_ST_ADV_DPS_ChainStrat, Preset.SCH_AoE_ADV_DPS_ChainStrat] }, // SCH
+        { Job.AST, [Preset.AST_AOE_Divination, Preset.AST_DPS_Divination] }, // AST
+        { Job.SGE, [Preset.SGE_AoE_DPS_Psyche, Preset.SGE_AoE_DPS_Phlegma, Preset.SGE_ST_DPS_Psyche, Preset.SGE_ST_DPS_Phlegma] }, // SGE
+        { Job.DRG, [Preset.DRG_ST_BattleLitany, Preset.DRG_ST_LanceCharge, Preset.DRG_AoE_BattleLitany, Preset.DRG_AoE_LanceCharge, Preset.DRG_ST_DragonfireDive, Preset.DRG_AoE_DragonfireDive, Preset.DRG_ST_LifeSurge, Preset.DRG_AoE_LifeSurge] }, // DRG
+        { Job.MNK, [Preset.MNK_STUseBrotherhood, Preset.MNK_AoEUseBrotherhood, Preset.MNK_AoEUseROF, Preset.MNK_STUseROF] }, // MNK
+        { Job.NIN, [Preset.NIN_ST_AdvancedMode_TrickAttack, Preset.NIN_ST_AdvancedMode_Mug, Preset.NIN_AoE_AdvancedMode_TrickAttack, Preset.NIN_AoE_AdvancedMode_Mug] }, // NIN
+        { Job.SAM, [Preset.SAM_ST_CDs_Ikishoten, Preset.SAM_AOE_CDs_Ikishoten, Preset.SAM_ST_CDs_MeikyoShisui, Preset.SAM_AoE_MeikyoShisui] }, // SAM
+        { Job.RPR, [Preset.RPR_ST_Gluttony, Preset.RPR_AoE_Gluttony, Preset.RPR_ST_ArcaneCircle, Preset.RPR_AoE_ArcaneCircle] }, // RPR
+        { Job.VPR, [Preset.VPR_ST_SerpentsIre, Preset.VPR_ST_Reawaken, Preset.VPR_AoE_SerpentsIre, Preset.VPR_AoE_Reawaken, Preset.VPR_AoE_ReawakenCombo] }, // VPR
+        { Job.BRD, [Preset.BRD_Adv_Buffs, Preset.BRD_AoE_Adv_Buffs] }, // BRD
+        { Job.MCH, [Preset.MCH_ST_Adv_Stabilizer, Preset.MCH_ST_Adv_WildFire, Preset.MCH_ST_Adv_TurretQueen, Preset.MCH_ST_Adv_Reassemble, Preset.MCH_ST_Adv_Tools, Preset.MCH_AoE_Adv_Reassemble, Preset.MCH_AoE_Adv_Queen, Preset.MCH_AoE_Adv_Stabilizer, Preset.MCH_AoE_Adv_Tools] }, // MCH
+        { Job.DNC, [Preset.DNC_ST_Adv_TS, Preset.DNC_ST_Adv_SS, Preset.DNC_ST_Adv_FanProccs, Preset.DNC_ST_Adv_Feathers, Preset.DNC_AoE_Adv_Devilment, Preset.DNC_AoE_Adv_Flourish, Preset.DNC_AoE_Adv_SS, Preset.DNC_AoE_Adv_FanProccs, Preset.DNC_AoE_Adv_Feathers, Preset.DNC_AoE_Adv_DawnDance] }, // DNC
+        { Job.BLM, [Preset.BLM_ST_LeyLines, Preset.BLM_AoE_LeyLines, Preset.BLM_ST_Amplifier, Preset.BLM_AoE_Amplifier] }, // BLM
+        { Job.SMN, [Preset.SMN_AoE_Advanced_Combo_SearingLight, Preset.SMN_ST_Advanced_Combo_SearingLight, Preset.SMN_ST_Advanced_Combo_DemiSummons, Preset.SMN_AoE_Advanced_Combo_DemiSummons] }, // SMN
+        { Job.RDM, [Preset.RDM_ST_Embolden, Preset.RDM_AoE_Embolden, Preset.RDM_ST_Manafication, Preset.RDM_AoE_Manafication] }, // RDM
+        { Job.PCT, [Preset.PCT_ST_AdvancedMode_ScenicMuse, Preset.PCT_AoE_AdvancedMode_ScenicMuse, Preset.PCT_ST_AdvancedMode_HammerStampCombo, Preset.PCT_AoE_AdvancedMode_HammerStampCombo] }, // PCT
+    };
 
     /// <summary>
     ///     Registers the base commands for the plugin.<br />
@@ -66,6 +92,9 @@ public partial class WrathCombo
         var argumentParts = arguments.ToLowerInvariant().Split();
         switch (argumentParts[0])
         {
+            case "burst":
+                HandleBurstControl(argumentParts); break;
+
             case "unsetall":
             case "set":
             case "toggle":
@@ -127,15 +156,7 @@ public partial class WrathCombo
         Svc.Log.Debug($"{WrathOpener.CurrentOpener.Enabled}");
         if (WrathOpener.CurrentOpener is not null && WrathOpener.CurrentOpener != WrathOpener.Dummy && WrathOpener.CurrentOpener.Enabled)
         {
-            string status = WrathOpener.CurrentOpener.CurrentState switch
-            {
-                Combos.PvE.Enums.OpenerState.OpenerNotReady => $"Opener Not Ready Yet",
-                Combos.PvE.Enums.OpenerState.OpenerReady => "Opener Ready to Start",
-                Combos.PvE.Enums.OpenerState.InOpener => "In Progress",
-                Combos.PvE.Enums.OpenerState.OpenerFinished => "Finished",
-                Combos.PvE.Enums.OpenerState.FailedOpener => "Failed",
-                _ => "Unknown"
-            };
+            var status = WrathOpener.OpenerStatus();
             DuoLog.Information($"Opener status: {status}");
         }
         else
@@ -269,7 +290,7 @@ public partial class WrathCombo
 
             if (!Service.Configuration.SuppressSetCommands && ctrlText == "")
                 DuoLog.Information(
-                    $"{usablePreset.Attributes().CustomComboInfo.Name} {action} {ctrlText}");
+                    $"{usablePreset.Attributes().Name} {action} {ctrlText}");
         }
     }
 
@@ -290,8 +311,9 @@ public partial class WrathCombo
     /// </param>
     private void HandleListCommands(string[] argument)
     {
-        IEnumerable<Preset> presets = Enum.GetValues<Preset>()
-            .Where(x => x.Attributes().Hidden is null);
+        IEnumerable<Preset> presets = PresetStorage.AllPresets
+            .Where(kvp => !kvp.Value.IsHidden)
+            .Select(kvp => kvp.Key);
         const StringComparison lower = StringComparison.InvariantCultureIgnoreCase;
         var filter =
             argument.Length > 1 && argument[0].Trim().Equals("list", lower)
@@ -374,7 +396,7 @@ public partial class WrathCombo
             if (jobShort is not null)
             {
                 presetsList = presetsList.Where(preset =>
-                    preset.Attributes().CustomComboInfo.JobShorthand
+                    preset.Attributes().JobInfo.JobShorthand
                         .Equals(jobShort, lower));
             }
 
@@ -792,5 +814,46 @@ public partial class WrathCombo
         DuoLog.Warning("Please do not play Classes with other people, " +
                        "it is objectively worse in every way, and you will lack " +
                        "a significant amount of functionality anyway.");
+    }
+
+    /// <summary>
+    ///     Handles the burst control command, toggling, holding, or resuming all burst presets for the current job.
+    /// </summary>
+    /// <param name="argument">
+    ///     The subcommand: <c>hold</c>, <c>resume</c>, or blank to toggle based on current state.
+    /// </param>
+    private void HandleBurstControl(string[] argument)
+    {
+        if (!PresetStorage.AllPresets.Any(p => p.Value.JobInfo?.Job == Player.Job && p.Value.ComboType == ComboType.Advanced && PresetStorage.IsEnabled(p.Key)))
+        {
+            DuoLog.Error("This feature is for Advanced Mode Combos.");
+            return;
+        }
+
+        if (!BurstPresetMap.TryGetValue(Player.Job, out var presets))
+        {
+            DuoLog.Error("No burst presets defined for your current job.");
+            return;
+        }
+
+        var sub = argument.Length > 1 ? argument[1] : "";
+        var enable = sub switch
+        {
+            "hold" => false,
+            "disable" => false,
+            "resume" => true,
+            "enable" => true,
+            _ => !PresetStorage.IsEnabled(presets[0]),
+        };
+
+        foreach (var preset in presets)
+        {
+            if (enable)
+                PresetStorage.EnablePreset(preset, ConfigChangeSource.Command);
+            else
+                PresetStorage.DisablePreset(preset, ConfigChangeSource.Command);
+        }
+
+        DuoLog.Information($"{Player.Job} Burst {(enable ? "RESUMED" : "HELD")}");
     }
 }

@@ -19,7 +19,8 @@ internal static class WHMPvP
         Aquaveil = 29227,
         MiracleOfNature = 29228,
         SeraphStrike = 29229,
-        AfflatusPurgation = 29230;
+        AfflatusPurgation = 29230,
+        Glare4 = 41499;
 
     internal class Buffs
     {
@@ -154,6 +155,22 @@ internal static class WHMPvP
             return WHMPvP_Heals_Options[2]
                 ? actionID.Retarget(Cure2, SimpleTarget.Stack.AllyToHealPVP)
                 : actionID;
+        }
+
+        internal class WHMPvP_Seraphstrike : CustomCombo
+        {
+            protected internal override Preset Preset => Preset.WHMPvP_Seraphstrike;
+
+            protected override uint Invoke(uint actionID)
+            {
+                if (actionID is SeraphStrike)
+                {
+                    if (IsEnabled(Preset.WHMPvP_Seraphstrike) && HasStatusEffect(Buffs.SacredSight))
+                        return Glare4;
+                }
+
+                return actionID;
+            }
         }
     }
 }

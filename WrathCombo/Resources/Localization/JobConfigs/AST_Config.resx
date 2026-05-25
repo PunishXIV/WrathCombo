@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PlacesEarthlyStarInTheOpener" xml:space="preserve">
+    <value>Places {0} in the Opener.</value>
+  </data>
+  <data name="DoesNotUseEarthlyStarInTheOpener" xml:space="preserve">
+    <value>Does not use {0} in the Opener.</value>
+  </data>
+  <data name="OverwriteNonDPSCards" xml:space="preserve">
+    <value>Overwrite Non-DPS Cards</value>
+  </data>
+  <data name="WillDrawEvenIfYouHaveHealingCardsRemaining" xml:space="preserve">
+    <value>Will draw even if you have healing cards remaining.</value>
+  </data>
+  <data name="FollowsNormalTargetingPlan" xml:space="preserve">
+    <value>Follows normal targeting plan</value>
+  </data>
+  <data name="PlacesAtOwnFeetOnly" xml:space="preserve">
+    <value>Places at own feet only</value>
+  </data>
+  <data name="UseWhenTargetIsAtOrBelowHP0NeverDetonateEarly100DetonateASAP" xml:space="preserve">
+    <value>Use when Target is at or below HP% (0% = Never Detonate Early, 100% = Detonate ASAP).</value>
+  </data>
+  <data name="Standard0Priority" xml:space="preserve">
+    <value>Standard {0} Priority: </value>
+  </data>
+  <data name="Emergency0Priority" xml:space="preserve">
+    <value>Emergency {0} Priority:</value>
+  </data>
+  <data name="AlternativeAoEModeLeaves0AloneForManualHoTs" xml:space="preserve">
+    <value>Alternative AoE Mode. Leaves {0} alone for manual HoTs</value>
+  </data>
+  <data name="AlsoRetargetManuallyUsedCards" xml:space="preserve">
+    <value>Also Retarget manually-used Cards</value>
+  </data>
+  <data name="WillAlsoAutomaticallyTargetCardsThatYouManuallyUseAsInThoseOutsideOfYourDamageRotations" xml:space="preserve">
+    <value>Will also automatically target cards that you manually use, as in, those outside of your damage rotations.</value>
+  </data>
+  <data name="TargetOverrides" xml:space="preserve">
+    <value>Target Overrides:</value>
+  </data>
+  <data name="NoOverride" xml:space="preserve">
+    <value>No Override</value>
+  </data>
+  <data name="HardTargetOverride" xml:space="preserve">
+    <value>Hard Target Override</value>
+  </data>
+  <data name="UIMouseOverOverride" xml:space="preserve">
+    <value>UI MouseOver Override</value>
+  </data>
+  <data name="AnyMouseoverOverride" xml:space="preserve">
+    <value>Any Mouseover Override</value>
+  </data>
+  <data name="FocusTargetOverrideWhenCorrectRole" xml:space="preserve">
+    <value>Focus Target Override (when correct role)</value>
+  </data>
+  <data name="NoOverrideDesc" xml:space="preserve">
+    <value>Will not override the automatic party target viability checking with any manual input.\nThe cards will be targeted according to The Balance's priorities and status checking\n(like not doubling up on cards, and no damage down, etc.).</value>
+  </data>
+  <data name="HardTargetOverrideDesc" xml:space="preserve">
+    <value>Overrides selection with hard target, if you have one that is in range and does not have damage down or rez sickness.</value>
+  </data>
+  <data name="UIMouseOverOverrideDesc" xml:space="preserve">
+    <value>Overrides selection with UI MouseOver target, if you have one that is in range and does not have damage down or rez sickness.</value>
+  </data>
+  <data name="AnyMouseoverOverrideDesc" xml:space="preserve">
+    <value>Overrides selection with UI or Nameplate or Model MouseOver target (in that order), if you have one that is in range and does not have damage down or rez sickness.</value>
+  </data>
+  <data name="FocusTargetOverrideWhenCorrectRoleDesc" xml:space="preserve">
+    <value>Overrides selection with your Focus Target, if they are within range and do not have damage down or rez sickness, and are melee for Balance or ranged for Spear (including supports).</value>
+  </data>
+  <data name="OptionsToTryToRetarget0ToBeforeSelf" xml:space="preserve">
+    <value>Options to try to Retarget {0} to before Self:</value>
+  </data>
+  <data name="WillPlaceAtHardTargetIfEnemy" xml:space="preserve">
+    <value>Will place at hard target if enemy</value>
+  </data>
+  <data name="WillPlaceAtHardTargetIfAlly" xml:space="preserve">
+    <value>Will place at hard target if ally</value>
+  </data>
+  <data name="WillAdd0ForMoreMitigation" xml:space="preserve">
+    <value>Will add {0} for more mitigation.</value>
+  </data>
+  <data name="WillAdd0ToTopOffTargetsHealth" xml:space="preserve">
+    <value>Will add {0} to top off targets health.</value>
+  </data>
+  <data name="TargetHPToUse0Below" xml:space="preserve">
+    <value>Target HP% to use {0} below</value>
+  </data>
+</root>

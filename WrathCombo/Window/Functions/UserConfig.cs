@@ -14,6 +14,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
+using WrathCombo.Resources.Localization.JobConfigs;
 using WrathCombo.Services;
 namespace WrathCombo.Window.Functions;
 
@@ -765,7 +766,7 @@ public static class UserConfig
         }
 
         DrawHorizontalBoolRadioButton(
-            config, "All Content",
+            config, Generics.AllContent,
             "Applies to all content in the game.",
             choice: 0,
             descriptionColor: ImGuiColors.DalamudYellow
@@ -805,19 +806,19 @@ public static class UserConfig
         {
 
             ImGui.TextUnformatted(overrideText.IsNullOrEmpty()
-                ? "Select what kind of content this option applies to:"
+                ? Generics.SelectWhatKindOfContentThisOptionAppliesTo
                 : overrideText);
         }
 
         DrawHorizontalRadioButton(
-            config, "All Content",
-            "Applies to all content in the game.",
+            config, Generics.AllContent,
+            Generics.AllContentDescription,
             outputValue: 0,
             descriptionColor: ImGuiColors.DalamudYellow
         );
         DrawHorizontalRadioButton(
-            config, "Boss Only Content",
-            "Only applies in instances where you directly fight a boss. Excludes many A Realm Reborn & Heavensward raids that include trash.",
+            config, Generics.BossOnlyContent,
+            Generics.BossOnlyDescription,
             outputValue: 1,
             descriptionColor: ImGuiColors.DalamudYellow
         );
@@ -850,7 +851,7 @@ public static class UserConfig
             {
                 if (customLabel.IsNullOrEmpty())
                 {
-                    ImGui.TextUnformatted($"Priority: ");
+                    ImGui.TextUnformatted(Generics.Priority);
                 }
                 else
                 {

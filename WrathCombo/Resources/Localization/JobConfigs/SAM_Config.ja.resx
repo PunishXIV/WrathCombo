@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+  -->
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add0IfSeneiNotUnlocked" xml:space="preserve">
+    <value>{1} を未修得の場合、{0} をローテーションに追加します。</value>
+  </data>
+  <data name="DelaySavageBlade" xml:space="preserve">
+    <value>ボタンを {0} に置き換えることで遅延を強制します。</value>
+  </data>
+  <data name="HPPercentKenki" xml:space="preserve">
+    <value>剣気を温存しないHP%閾値</value>
+  </data>
+  <data name="HPPercentMeikyo" xml:space="preserve">
+    <value>{0} をリキャストごとに使用するHP%閾値。</value>
+  </data>
+  <data name="Include2x0" xml:space="preserve">
+    <value>{0} 2回分を含める</value>
+  </data>
+  <data name="IncludeBoth0" xml:space="preserve">
+    <value>{0} の両方の使用を含めます</value>
+  </data>
+  <data name="KenkiAmount" xml:space="preserve">
+    <value>剣気量</value>
+  </data>
+  <data name="KenkiOvercapAmount" xml:space="preserve">
+    <value>剣気が設定値以上のときに消費します。</value>
+  </data>
+  <data name="KenkiOvercapProtection" xml:space="preserve">
+    <value>剣気オーバーキャップ防止</value>
+  </data>
+  <data name="PrioBuffUpkeepDesc" xml:space="preserve">
+    <value>閃を消費する前に、両方のバフを維持することを優先します。</value>
+  </data>
+  <data name="PrioSenGen" xml:space="preserve">
+    <value>閃の付与を優先</value>
+  </data>
+  <data name="PrioSenGenDesc" xml:space="preserve">
+    <value>バフ確認より先に、3つの閃を付与することを優先します。</value>
+  </data>
+  <data name="SecondsDelayFromFirstStep" xml:space="preserve">
+    <value>最初の {0} から次のステップまで遅延する秒数（詳細はマウスオーバー）</value>
+  </data>
+  <data name="SkipBoth" xml:space="preserve">
+    <value>両方スキップ</value>
+  </data>
+  <data name="SkipBothUsageOf0" xml:space="preserve">
+    <value>オープナー中の {0} の使用を両方スキップします。</value>
+  </data>
+  <data name="SkipFirst" xml:space="preserve">
+    <value>1回目をスキップ</value>
+  </data>
+  <data name="SkipFirstUseOf0" xml:space="preserve">
+    <value>オープナー中の {0} の1回目をスキップし、2回目は残します。</value>
+  </data>
+  <data name="SkipSecond" xml:space="preserve">
+    <value>2回目をスキップ</value>
+  </data>
+  <data name="SkipSecondUseOf0" xml:space="preserve">
+    <value>オープナー中の {0} の2回目をスキップし、1回目は残します。</value>
+  </data>
+  <data name="Add0And1WhenNotMoving" xml:space="preserve">
+    <value>移動していないときに {0} と {1} を追加します。</value>
+  </data>
+</root>

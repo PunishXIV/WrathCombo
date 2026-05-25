@@ -25,7 +25,8 @@ internal static class ASTPvP
         Microcosmos = 29254,
         MinorArcana = 41503,
         Epicycle = 41506,
-        Retrograde = 41507;
+        Retrograde = 41507,
+        Oracle = 41508;
 
     internal class Buffs
     {
@@ -33,7 +34,8 @@ internal static class ASTPvP
             DiurnalBenefic = 3099, 
             LadyOfCrowns = 4328,
             LordOfCrowns = 4329,
-            RetrogradeReady = 4331;
+            RetrogradeReady = 4331,
+            Divining = 4332;
     }
     #endregion
 
@@ -114,6 +116,9 @@ internal static class ASTPvP
 
             if (!PvPCommon.TargetImmuneToDamage())
             {
+                if (IsEnabled(Preset.ASTPvP_Burst_Oracle) && HasStatusEffect(Buffs.Divining) && HasBattleTarget())
+                    return Oracle;
+                
                 if (IsEnabled(Preset.ASTPvP_Diabrosis) && PvPHealer.CanDiabrosis() && HasTarget() &&
                     GetTargetHPPercent() <= ASTPvP_DiabrosisThreshold)
                     return PvPHealer.Diabrosis;

@@ -1,33 +1,40 @@
 using Dalamud.Interface;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility.Raii;
+using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.ImGuiMethods;
 using ECommons.Logging;
 using ECommons.Throttlers;
-using PunishLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using WrathCombo.Attributes;
-using WrathCombo.Combos;
-using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
 using WrathCombo.Window.Tabs;
+using static WrathCombo.Core.PresetStorage;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 using PunishGui = PunishLib.ImGuiMethods;
 namespace WrathCombo.Window;
 
 /// <summary> Plugin configuration window. </summary>
 internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 {
-    internal static readonly Dictionary<Job, List<(Preset Preset, CustomComboInfoAttribute Info)>> groupedPresets = GetGroupedPresets();
-    internal static readonly Dictionary<Preset, (Preset Preset, CustomComboInfoAttribute Info)[]> presetChildren = GetPresetChildren();
+    /// <summary>
+    /// Dictionary of top level presets grouped by job, ordered by role and then job order, with their preset data pre-cached for quick access.
+    /// </summary>
+    internal static readonly Dictionary<Job, List<PresetData>> groupedPresets = GetGroupedPresets();
+
+    /// <summary>
+    ///  Dictionary of a preset and an array of it's children, with their preset data pre-cached for quick access.
+    /// </summary>
+    internal static readonly Dictionary<Preset, (Preset Preset, PresetData Attr)[]> presetChildren = GetPresetChildren();
 
     internal static float lastLeftColumnWidth;
 
@@ -40,47 +47,61 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
                                         UsableSearch.Length > 2;
     #endregion
 
-    internal static Dictionary<Job, List<(Preset Preset, CustomComboInfoAttribute Info)>> GetGroupedPresets()
+    private static int GetRoleOrder(JobRole role) => role switch
     {
-        return Enum
-            .GetValues<Preset>()
-            .Where(preset => (int)preset > 100)
-            .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
-            .Where(tpl => tpl.Info != null && PresetStorage.GetParent(tpl.Preset) == null)
-            .OrderByDescending(tpl => tpl.Info.Role is JobRole.Tank)
-            .ThenByDescending(tpl => tpl.Info.Role is JobRole.Healer)
-            .ThenByDescending(tpl => tpl.Info.Role is JobRole.MeleeDPS)
-            .ThenByDescending(tpl => tpl.Info.Role is JobRole.RangedDPS)
-            .ThenByDescending(tpl => tpl.Info.Role is JobRole.MagicalDPS)
-            .ThenByDescending(tpl => tpl.Info.Job is Job.ADV)
-            .ThenByDescending(tpl => tpl.Info.Job is Job.MIN)
-            //.ThenBy(tpl => tpl.Info.ClassJobCategory)
-            .ThenBy(tpl => tpl.Info.Job)
-            .ThenBy(tpl => tpl.Info.Order)
-            .GroupBy(tpl => tpl.Info.Job)
+        JobRole.Tank => 0,
+        JobRole.Healer => 1,
+        JobRole.MeleeDPS => 2,
+        JobRole.RangedDPS => 3,
+        JobRole.MagicalDPS => 4,
+        _ => 5
+    };
+
+    internal static Dictionary<Job, List<PresetData>> GetGroupedPresets()
+    {
+        return AllPresets
+            .Where(kvp => (int)kvp.Key > 100)
+            .Where(kvp => kvp.Value.Parent == null)
+            .Where(kvp => kvp.Value.JobInfo != null)
+            .OrderBy(kvp => GetRoleOrder(kvp.Value.JobInfo.Role))
+            .ThenByDescending(kvp => kvp.Value.JobInfo.Job is Job.ADV)
+            .ThenByDescending(kvp => kvp.Value.JobInfo.Job is Job.MIN)
+            .ThenBy(kvp => kvp.Value.JobInfo.Job)
+            .ThenBy(kvp => kvp.Value.JobInfo.Order)
+            .GroupBy(kvp => kvp.Value.JobInfo.Job)
             .ToDictionary(
-                tpl => tpl.Key,
-                tpl => tpl.ToList())!;
+                g => g.Key,
+                g => g.Select(kvp => kvp.Value).ToList()
+            );
     }
 
-    internal static Dictionary<Preset, (Preset Preset, CustomComboInfoAttribute Info)[]> GetPresetChildren()
+    internal static Dictionary<Preset, (Preset Preset, PresetData Info)[]> GetPresetChildren()
     {
-        var childCombos = Enum.GetValues<Preset>().ToDictionary(
-            tpl => tpl,
-            tpl => new List<Preset>());
+        // Initialize dictionary with all presets as keys
+        var childCombos = AllPresets.Keys
+            .ToDictionary(p => p, _ => new List<Preset>());
 
-        foreach (var preset in Enum.GetValues<Preset>())
+        // Build parent → children map using cached Parent
+        foreach (var (preset, attrs) in AllPresets)
         {
-            var parent = preset.GetAttribute<ParentComboAttribute>()?.ParentPreset;
-            if (parent != null)
-                childCombos[parent.Value].Add(preset);
+            if (attrs.Parent is { } parent)
+            {
+                childCombos[parent].Add(preset);
+            }
         }
 
+        // Project to final structure using cached CustomComboInfo
         return childCombos.ToDictionary(
             kvp => kvp.Key,
             kvp => kvp.Value
-                .Select(preset => (Preset: preset, Info: preset.GetAttribute<CustomComboInfoAttribute>()))
-                .OrderBy(tpl => tpl.Info.Order).ToArray())!;
+                .Select(child =>
+                {
+                    var info = PresetStorage.AllPresets[child]!;
+                    return (Preset: child, Info: info);
+                })
+                .OrderBy(tpl => tpl.Info.JobInfo.Order)
+                .ToArray()
+        );
     }
 
     public OpenWindow OpenWindow
@@ -98,8 +119,6 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
     {
         RespectCloseHotkey = true;
 
-        SizeCondition = ImGuiCond.FirstUseEver;
-        Size = new Vector2(800, 650).Scale();
         SetMinSize();
 
         Svc.PluginInterface.UiBuilder.DefaultFontHandle.ImFontChanged += SetMinSize;
@@ -108,7 +127,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
     private void SetMinSize(IFontHandle? fontHandle = null, ILockedImFont? lockedFont = null) =>
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(700, 100).Scale(),
+            MinimumSize = new Vector2(700, 100),
         };
 
     public override void Draw()
@@ -138,7 +157,7 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 
         DrawCollapseButton();
     }
-    
+
     public static void ClearAnySearches()
     {
         Search = string.Empty;
@@ -204,26 +223,26 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
         ImGui.Separator();
 
         ImGui.Spacing();
-        if (ImGui.Selectable("PvE Features", OpenWindow == OpenWindow.PvE))
+        if (ImGui.Selectable(MainWindowUI.Button_PvEFeatures, OpenWindow == OpenWindow.PvE))
             OpenWindow = OpenWindow.PvE;
 
         ImGui.Spacing();
-        if (ImGui.Selectable("PvP Features", OpenWindow == OpenWindow.PvP))
+        if (ImGui.Selectable(MainWindowUI.Button_PvPFeatures, OpenWindow == OpenWindow.PvP))
             OpenWindow = OpenWindow.PvP;
 
         ImGui.Spacing();
-        if (ImGui.Selectable("Auto-Rotation", OpenWindow == OpenWindow.AutoRotation))
+        if (ImGui.Selectable(MainWindowUI.Button_AutoRotation, OpenWindow == OpenWindow.AutoRotation))
             OpenWindow = OpenWindow.AutoRotation;
 
         ImGui.Spacing();
         ImGui.Spacing();
 
         ImGui.Spacing();
-        if (ImGui.Selectable("Settings", OpenWindow == OpenWindow.Settings))
+        if (ImGui.Selectable(MainWindowUI.Button_Settings, OpenWindow == OpenWindow.Settings))
             OpenWindow = OpenWindow.Settings;
 
         ImGui.Spacing();
-        if (ImGui.Selectable("About", OpenWindow == OpenWindow.About))
+        if (ImGui.Selectable(MainWindowUI.Button_About, OpenWindow == OpenWindow.About))
             OpenWindow = OpenWindow.About;
 
 #if DEBUG
@@ -302,12 +321,12 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
 
         // Set up how the button should display
         var icon = FontAwesomeIcon.CaretLeft;
-        var hoverText = "Collapse Sidebar";
+        var hoverText = MainWindowUI.Button_CollapseSidebar;
         ImGui.SetWindowFontScale(1.5f.Scale());
         if (collapsed)
         {
             icon = FontAwesomeIcon.CaretRight;
-            hoverText = "Expand Sidebar";
+            hoverText = MainWindowUI.Button_ExpandSidebar;
         }
 
         // Draw the button

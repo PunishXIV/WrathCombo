@@ -97,7 +97,7 @@ internal partial class SCH
     internal static bool NeedsDoT()
     {
         var dotAction = OriginalHook(Bio);
-        var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? computeHpThreshold() : 0;
+        var hpThreshold = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? ComputeHpThreshold(CurrentTarget) : 0;
         BioList.TryGetValue(dotAction, out var dotDebuffID);
         var dotRefresh = IsNotEnabled(Preset.SCH_ST_Simple_DPS) ? SCH_ST_DPS_BioUptime_Threshold : 2.5;
         var dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
@@ -110,20 +110,23 @@ internal partial class SCH
                dotRemaining <= dotRefresh;
     }
     
-    internal static int computeHpThreshold()
+    internal static int ComputeHpThreshold(IGameObject? x)
     {
+        if (x is null)
+            return 0;
+        
         if (InBossEncounter())
         {
-            return TargetIsBoss() ? SCH_ST_DPS_BioBossOption : SCH_ST_DPS_BioBossAddsOption;
+            return x.IsBoss() ? SCH_ST_DPS_BioBossOption : SCH_ST_DPS_BioBossAddsOption;
         }
         return SCH_ST_DPS_BioTrashOption;
     }
     #endregion
     
     #region Get ST Heals
-    internal static int GetMatchingConfigST(int i, IGameObject? OptionalTarget, out uint action, out bool enabled)
+    internal static int GetMatchingConfigST(int i, IGameObject? target, out uint action, out bool enabled)
     {
-        IGameObject? healTarget = OptionalTarget ?? SimpleTarget.Stack.AllyToHeal;
+        IGameObject? healTarget = target ?? SimpleTarget.Stack.AllyToHeal;
         bool tankCheck = healTarget.IsInParty() && healTarget.Role is CombatRole.Tank;
         bool ShieldCheck = !SCH_ST_Heal_AldoquimOpts[0] || 
                            !HasStatusEffect(Buffs.Galvanize, healTarget, true) || 

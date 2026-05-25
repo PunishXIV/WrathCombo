@@ -239,6 +239,10 @@ public partial class Leasing
             return null;
         }
 
+        // Don't create a new lease if the plugin is already in the registration list
+        if (Registrations.FindFirst(x => x.Value.PluginName == internalPluginName, out var existingLease))
+            return existingLease.Key;
+
         // Make sure the lease ID is unique
         // (unnecessary, but could save a big headache)
         Lease lease;
@@ -363,7 +367,8 @@ public partial class Leasing
     /// <seealso cref="Provider.SetCurrentJobAutoRotationReady" />
     internal SetResult AddRegistrationForCurrentJob(Guid lease, Job? jobOverride = null)
     {
-        var registration = Registrations[lease];
+        if (!Registrations.TryGetValue(lease, out var registration))
+            return SetResult.InvalidLease;
 
         if (CustomComboFunctions.LocalPlayer is null)
         {
@@ -400,13 +405,13 @@ public partial class Leasing
             locking = true;
             stringKeys = [];
             combos = P.IPCSearch.EnabledActions
-                .Where(a => a.Attributes().CustomComboInfo.Job
+                .Where(a => a.Attributes().JobInfo.Job
                            == job)
                 .Where(a => a.Attributes().Parent is null)
                 .Select(a => a.ToString())
                 .ToList();
             options = P.IPCSearch.EnabledActions
-                .Where(a => a.Attributes().CustomComboInfo.Job
+                .Where(a => a.Attributes().JobInfo.Job
                            == job)
                 .Where(a => a.Attributes().Parent is not null)
                 .Select(a => a.ToString())

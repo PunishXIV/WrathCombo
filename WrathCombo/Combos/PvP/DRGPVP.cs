@@ -84,7 +84,7 @@ internal static class DRGPvP
             
             if (!HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true))
             {
-                if (IsEnabled(Preset.DRGPvP_Smite) && PvPMelee.CanSmite() && GetTargetDistance() <= 10 && HasTarget() &&
+                if (IsEnabled(Preset.DRGPvP_Smite) && PvPMelee.CanSmite() && InActionRange(PvPMelee.Smite) && HasTarget() &&
                     GetTargetHPPercent() <= DRGPvP_SmiteThreshold)
                     return PvPMelee.Smite;
 
@@ -99,7 +99,7 @@ internal static class DRGPvP
                             || HasStatusEffect(Buffs.LifeOfTheDragon) && GetStatusEffectRemainingTime(Buffs.LifeOfTheDragon) < DRGPvP_LOTD_Duration)
                             return Nastrond;
                     }
-                    if (IsEnabled(Preset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && GetTargetDistance() <= 10) // HorridRoar Roar on cd
+                    if (IsEnabled(Preset.DRGPvP_HorridRoar) && IsOffCooldown(HorridRoar) && InActionRange(HorridRoar)) // HorridRoar Roar on cd
                         return HorridRoar;
                 }
                        
@@ -111,7 +111,7 @@ internal static class DRGPvP
                         return Geirskogul;
                 }                       
                                                    
-                if (IsEnabled(Preset.DRGPvP_WyrmwindThrust) && HasStatusEffect(Buffs.FirstmindsFocus) && GetTargetDistance() >= DRGPvP_Distance_Threshold)
+                if (IsEnabled(Preset.DRGPvP_WyrmwindThrust) && HasStatusEffect(Buffs.FirstmindsFocus) && InActionRange(WyrmwindThrust) && GetTargetDistance() >= DRGPvP_Distance_Threshold)
                     return WyrmwindThrust;
 
                 if (IsEnabled(Preset.DRGPvP_Geirskogul) && HasStatusEffect(Buffs.StarCrossReady))

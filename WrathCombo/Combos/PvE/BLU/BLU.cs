@@ -377,7 +377,7 @@ internal partial class BLU : Caster
     {
         protected internal override Preset Preset => Preset.BLU_MeleeCombo;
 
-        protected override uint Invoke(uint actionID) => (actionID is SonicBoom && GetTargetDistance() <= 3 && IsSpellActive(SharpenedKnife)) ? SharpenedKnife : actionID;
+        protected override uint Invoke(uint actionID) => (actionID is SonicBoom && InActionRange(SharpenedKnife) && IsSpellActive(SharpenedKnife)) ? SharpenedKnife : actionID;
     }
 
     internal class BLU_PeatClean : CustomCombo

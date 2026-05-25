@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="KerecholeTraitCheck" xml:space="preserve">
+    <value>{0} 特性（継続回復）を確認</value>
+  </data>
+  <data name="KerecholeTraitCheckDesc" xml:space="preserve">
+    <value>有効にすると、継続回復特性が未習得の間は {0} を使用しません。</value>
+  </data>
+  <data name="AnyPanhaimaCheck" xml:space="preserve">
+    <value>{0} 上書き防止</value>
+  </data>
+  <data name="AnyPanhaimaCheckDesc" xml:space="preserve">
+    <value>有効にすると、既に付与されている {0} を上書きしません。</value>
+  </data>
+  <data name="SGE_Mit_ST_Haima_Help" xml:space="preserve">
+    <value>軽減を厚くするために {0} を追加します。</value>
+  </data>
+  <data name="SGE_Mit_ST_Taurochole_Help" xml:space="preserve">
+    <value>対象の HP を戻しつつ被ダメージ軽減を付与するために {0} を追加します。</value>
+  </data>
+  <data name="SGE_Mit_AoE_PrognosisOption_Name" xml:space="preserve">
+    <value>バリア判定: {0} のバリアが必要なパーティメンバー割合。
+0 = 使用しない/ 100 = 全員にバリアが必要</value>
+  </data>
+  <data name="SGE_Mit_AoE_Philosophia_Help" xml:space="preserve">
+      <value>回復量アップのため、{1} の前に {0} を追加します。</value>
+    </data>
+  <data name="SGE_Mit_AoE_Kerachole_Help" xml:space="preserve">
+    <value>最初に {0} を追加します。</value>
+  </data>
+  <data name="SGE_Mit_AoE_Panhaima_Help" xml:space="preserve">
+    <value>最後に {0} を追加します。</value>
+  </data>
+</root>

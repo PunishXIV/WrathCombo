@@ -1,3 +1,4 @@
+using Dalamud.Game.ClientState.JobGauge.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using static WrathCombo.Combos.PvE.MNK.Config;
@@ -39,7 +40,10 @@ internal partial class MNK : Melee
                     return RiddleOfWind;
 
                 if (CanUseChakra())
-                    return OriginalHook(SteeledMeditation);
+                    return OriginalHook(SteelPeak);
+
+                if (Role.CanFeint() && GroupDamageIncoming())
+                    return Role.Feint;
 
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -105,7 +109,7 @@ internal partial class MNK : Melee
                     return RiddleOfWind;
 
                 if (CanUseChakra(true))
-                    return OriginalHook(InspiritedMeditation);
+                    return OriginalHook(HowlingFist);
 
                 if (Role.CanSecondWind(25))
                     return Role.SecondWind;
@@ -184,14 +188,15 @@ internal partial class MNK : Melee
             // OGCDs
             if (CanWeave() && InCombat())
             {
-                if (IsEnabled(Preset.MNK_STUseBuffs) &&
-                    GetTargetHPPercent() > HPThresholdBuffs)
+                if (IsEnabled(Preset.MNK_STUseBuffs))
                 {
                     if (IsEnabled(Preset.MNK_STUseBrotherhood) &&
+                        GetTargetHPPercent() > HPThresholdBH &&
                         CanBrotherhood())
                         return Brotherhood;
 
                     if (IsEnabled(Preset.MNK_STUseROF) &&
+                        GetTargetHPPercent() > HPThresholdRoF &&
                         CanRoF())
                         return RiddleOfFire;
                 }
@@ -202,13 +207,13 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(Preset.MNK_STUseBuffs) &&
                     IsEnabled(Preset.MNK_STUseROW) &&
-                    GetTargetHPPercent() > HPThresholdBuffs &&
+                    GetTargetHPPercent() > HPThresholdRoW &&
                     CanRoW())
                     return RiddleOfWind;
 
                 if (IsEnabled(Preset.MNK_STUseTheForbiddenChakra) &&
                     CanUseChakra())
-                    return OriginalHook(SteeledMeditation);
+                    return OriginalHook(SteelPeak);
 
                 if (IsEnabled(Preset.MNK_ST_UseMantra) &&
                     CanMantra())
@@ -310,7 +315,7 @@ internal partial class MNK : Melee
 
                 if (IsEnabled(Preset.MNK_AoEUseHowlingFist) &&
                     CanUseChakra(true))
-                    return OriginalHook(InspiritedMeditation);
+                    return OriginalHook(HowlingFist);
 
                 if (IsEnabled(Preset.MNK_AoE_ComboHeals))
                 {
@@ -369,29 +374,137 @@ internal partial class MNK : Melee
         }
     }
 
-    internal class MNK_BeastChakras : CustomCombo
+    internal class MNK_ST_BasicCombo : CustomCombo
     {
-        protected internal override Preset Preset => Preset.MNK_ST_BeastChakras;
+        protected internal override Preset Preset => Preset.MNK_ST_BasicCombo;
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (Bootshine or LeapingOpo or TrueStrike or RisingRaptor or SnapPunch or PouncingCoeurl))
+            if (actionID is not (SnapPunch or PouncingCoeurl))
+                return actionID;
+
+            if (MNK_BasicCombo_Chakra &&
+                Chakra >= 5 && LevelChecked(SteeledMeditation) && CanWeave() &&
+                InActionRange(OriginalHook(SteeledMeditation)))
+                return OriginalHook(SteelPeak);
+
+            if (HasStatusEffect(Buffs.PerfectBalance))
+            {
+                #region Open Lunar
+
+                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
+                {
+                    switch (OpoOpoStacks)
+                    {
+                        case 0:
+                            return DragonKick;
+
+
+                        case > 0:
+                            return OriginalHook(Bootshine);
+                    }
+                }
+
+                #endregion
+
+                #region Open Solar
+
+                if (!SolarNadi && LunarNadi)
+                {
+                    if (Gauge.BeastChakra[0] is BeastChakra.None)
+                    {
+                        switch (CoeurlStacks)
+                        {
+                            case 0:
+                                return Demolish;
+
+                            case > 0:
+                                return OriginalHook(SnapPunch);
+                        }
+                    }
+
+                    if (Gauge.BeastChakra[1] is BeastChakra.None)
+                    {
+                        switch (RaptorStacks)
+                        {
+                            case 0:
+                                return TwinSnakes;
+
+                            case > 0:
+                                return OriginalHook(TrueStrike);
+                        }
+                    }
+
+                    if (Gauge.BeastChakra[2] is BeastChakra.None)
+                    {
+                        switch (OpoOpoStacks)
+                        {
+                            case 0:
+                                return DragonKick;
+
+                            case > 0:
+                                return OriginalHook(Bootshine);
+                        }
+                    }
+                }
+
+                    #endregion
+            }
+
+            if (!HasStatusEffect(Buffs.PerfectBalance))
+            {
+                if (MNK_BasicCombo_MasterfulBlitz &&
+                    LevelChecked(MasterfulBlitz) &&
+                    !HasStatusEffect(Buffs.PerfectBalance) &&
+                    !IsOriginal(MasterfulBlitz))
+                    return OriginalHook(MasterfulBlitz);
+
+                if (!LevelChecked(TrueStrike))
+                    return Bootshine;
+
+                if (HasStatusEffect(Buffs.OpoOpoForm) || HasStatusEffect(Buffs.FormlessFist))
+                    return OpoOpoStacks is 0 && LevelChecked(DragonKick)
+                        ? DragonKick
+                        : OriginalHook(Bootshine);
+
+                if (HasStatusEffect(Buffs.RaptorForm))
+                    return RaptorStacks is 0 && LevelChecked(TwinSnakes)
+                        ? TwinSnakes
+                        : OriginalHook(TrueStrike);
+
+                if (HasStatusEffect(Buffs.CoeurlForm))
+                    return CoeurlStacks is 0 && LevelChecked(Demolish)
+                        ? Demolish
+                        : OriginalHook(SnapPunch);
+            }
+
+            return OriginalHook(Bootshine);
+        }
+    }
+
+    internal class MNK_BeastChakras : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.MNK_Basic_BeastChakras;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (DragonKick or TwinSnakes or Demolish))
                 return actionID;
 
             if (MNK_BasicCombo[0] &&
-                actionID is Bootshine or LeapingOpo)
+                actionID is DragonKick)
                 return OpoOpoStacks is 0 && LevelChecked(DragonKick)
                     ? DragonKick
                     : OriginalHook(Bootshine);
 
             if (MNK_BasicCombo[1] &&
-                actionID is TrueStrike or RisingRaptor)
+                actionID is TwinSnakes)
                 return RaptorStacks is 0 && LevelChecked(TwinSnakes)
                     ? TwinSnakes
                     : OriginalHook(TrueStrike);
 
             if (MNK_BasicCombo[2] &&
-                actionID is SnapPunch or PouncingCoeurl)
+                actionID is Demolish)
                 return CoeurlStacks is 0 && LevelChecked(Demolish)
                     ? Demolish
                     : OriginalHook(SnapPunch);
@@ -442,7 +555,7 @@ internal partial class MNK : Melee
 
             return actionID switch
             {
-                Brotherhood when MNK_BH_RoF == 0 && ActionReady(RiddleOfFire) && IsOnCooldown(Brotherhood) => OriginalHook(RiddleOfFire),
+                Brotherhood when MNK_BH_RoF == 0 && ActionReady(OriginalHook(RiddleOfFire)) && IsOnCooldown(Brotherhood) => OriginalHook(RiddleOfFire),
                 RiddleOfFire when MNK_BH_RoF == 1 && ActionReady(Brotherhood) && IsOnCooldown(RiddleOfFire) => Brotherhood,
                 var _ => actionID
             };

@@ -151,7 +151,7 @@ internal static class VPRPvP
             #endregion
             
             // Smite
-            if (IsEnabled(Preset.VPRPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && GetTargetDistance() <= 10 && HasTarget() &&
+            if (IsEnabled(Preset.VPRPvP_Smite) && PvPMelee.CanSmite() && !PvPCommon.TargetImmuneToDamage() && InActionRange(PvPMelee.Smite) && HasTarget() &&
                 GetTargetHPPercent() <= VPRPvP_SmiteThreshold)
                 return PvPMelee.Smite;
 

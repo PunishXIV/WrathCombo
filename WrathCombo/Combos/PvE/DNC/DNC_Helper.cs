@@ -366,7 +366,19 @@ internal partial class DNC
 
             switch (Svc.PlayerState.EffectiveLevel)
             {
-                case < 100 and >= 90:
+                case < 80:
+                    orderedFilter = orderedFilter
+                        .ThenBy(x =>
+                            PartnerPriority.Job070Prio.GetValueOrDefault(
+                                (Job)x.ClassJob.RowId, int.MaxValue));
+                    break;
+                case < 90:
+                    orderedFilter = orderedFilter
+                        .ThenBy(x =>
+                            PartnerPriority.Job080Prio.GetValueOrDefault(
+                                (Job)x.ClassJob.RowId, int.MaxValue));
+                    break;
+                case < 100:
                     orderedFilter = orderedFilter
                         .ThenBy(x =>
                             PartnerPriority.Job090Prio.GetValueOrDefault(
@@ -381,7 +393,7 @@ internal partial class DNC
             }
 
             // Simple ilvl tie-breaker
-            orderedFilter = orderedFilter.ThenBy(x => x.MaxHp);
+            orderedFilter = orderedFilter.ThenByDescending(x => x.MaxHp);
 
             filter = orderedFilter.ToList();
 
@@ -429,21 +441,55 @@ internal partial class DNC
             { Job.DNC, 8 },
         };
 
+        internal static readonly Dictionary<Job, int> Job070Prio = new()
+        {
+            { Job.SMN, 1 },
+            { Job.MNK, 2 },
+            { Job.BLM, 3 },
+            { Job.DRG, 4 },
+            { Job.VPR, 4 },
+            { Job.PCT, 4 },
+            { Job.SAM, 4 },
+            { Job.RPR, 4 },
+            { Job.NIN, 4 },
+            { Job.RDM, 4 },
+            { Job.MCH, 4 },
+            { Job.BRD, 5 },
+            { Job.DNC, 6 },
+        };
+
+        internal static readonly Dictionary<Job, int> Job080Prio = new()
+        {
+            { Job.SAM, 1 },
+            { Job.BLM, 2 },
+            { Job.DRG, 3 },
+            { Job.MNK, 3 },
+            { Job.PCT, 4 },
+            { Job.MCH, 5 },
+            { Job.NIN, 6 },
+            { Job.RDM, 6 },
+            { Job.RPR, 6 },
+            { Job.VPR, 6 },
+            { Job.SMN, 6 },
+            { Job.BRD, 7 },
+            { Job.DNC, 8 },
+        };
+
         internal static readonly Dictionary<Job, int> Job090Prio = new()
         {
-            { Job.PCT, 1 },
             { Job.SAM, 1 },
-            { Job.NIN, 2 },
+            { Job.PCT, 1 },
+            { Job.BLM, 2 },
             { Job.MNK, 3 },
+            { Job.VPR, 3 },
+            { Job.DRG, 3 },
+            { Job.MCH, 4 },
             { Job.RPR, 4 },
-            { Job.BLM, 5 },
-            { Job.DRG, 6 },
-            { Job.VPR, 7 },
-            { Job.SMN, 8 },
-            { Job.RDM, 9 },
-            { Job.MCH, 10 },
-            { Job.BRD, 11 },
-            { Job.DNC, 12 },
+            { Job.NIN, 4 },
+            { Job.SMN, 5 },
+            { Job.RDM, 5 },
+            { Job.BRD, 6 },
+            { Job.DNC, 7 },
         };
 
         internal static readonly Restrictions[] RestrictionSteps =
@@ -594,7 +640,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 7),
-            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 12 : 5)),
+            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 13 : 6)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -696,7 +742,7 @@ internal partial class DNC
         } =
         [
             ([4], () => 2),
-            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 4 : 2)),
+            ([5], () => (!DNC_ST_OpenerOption_Peloton ? 5 : 3)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -801,7 +847,7 @@ internal partial class DNC
         } =
         [
             ([5], () => 1),
-            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 7 : 6)),
+            ([6], () => (!DNC_ST_OpenerOption_Peloton ? 8 : 7)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps
@@ -979,7 +1025,7 @@ internal partial class DNC
             set;
         } =
         [
-            ([7], () => 2),
+            ([7], () => (!DNC_ST_OpenerOption_Peloton ? 3 : 2)),
         ];
 
         public override List<(int[], uint, Func<bool>)> SubstitutionSteps

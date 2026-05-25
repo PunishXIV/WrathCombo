@@ -21,9 +21,10 @@ internal partial class VPR : Melee
             //oGCDs
             if (CanWeave())
             {
-               // Legacy Weaves
-                if (LevelChecked(SerpentsTail) &&
-                    (Legacyweaves || DeathRattleWeave) && InRange())
+                // Death Rattle / Legacy Weaves
+                if ((DeathRattleWeave && InActionRange(DeathRattle) ||
+                     Legacyweaves && InActionRange(FirstLegacy)) &&
+                    LevelChecked(SerpentsTail))
                     return OriginalHook(SerpentsTail);
 
                 // Fury Twin Weaves
@@ -33,138 +34,72 @@ internal partial class VPR : Melee
                 if (HasStatusEffect(Buffs.PoisedForTwinblood))
                     return OriginalHook(Twinblood);
 
+
                 //Vice Twin Weaves
-                if (!HasStatusEffect(Buffs.Reawakened) && InRange())
+                if (!HasStatusEffect(Buffs.Reawakened) && InMeleeRange())
                 {
                     if (HasStatusEffect(Buffs.HuntersVenom))
                         return OriginalHook(Twinfang);
 
                     if (HasStatusEffect(Buffs.SwiftskinsVenom))
                         return OriginalHook(Twinblood);
-                    
-                    //Serpents Ire
-                    if (InCombat() && !MaxCoils() &&
-                        ActionReady(SerpentsIre))
-                        return SerpentsIre;
                 }
-                
+
+                //Serpents Ire
+                if (InCombat() &&
+                    !MaxCoils && ActionReady(SerpentsIre))
+                    return SerpentsIre;
+
+                if (Role.CanFeint() &&
+                    GroupDamageIncoming())
+                    return Role.Feint;
+
                 // healing
                 if (Role.CanSecondWind(40))
                     return Role.SecondWind;
 
                 if (Role.CanBloodBath(30))
                     return Role.Bloodbath;
-            }
 
-            //Ranged
-            if (LevelChecked(WrithingSnap) && !InMeleeRange() && HasBattleTarget())
-                return HasRattlingCoilStack()
-                    ? UncoiledFury
-                    : WrithingSnap;
+                if (RoleActions.Melee.CanLegSweep())
+                    return Role.LegSweep;
+            }
 
             //Vicewinder Combo
-            if (!HasStatusEffect(Buffs.Reawakened) &&
-                LevelChecked(Vicewinder) && InMeleeRange())
-            {
-                // Swiftskin's Coil
-                if (VicewinderReady &&
-                    (!OnTargetsFlank() ||
-                     !TargetNeedsPositionals()) ||
-                    HuntersCoilReady)
-                    return SwiftskinsCoil;
-
-                // Hunter's Coil
-                if (VicewinderReady &&
-                    (!OnTargetsRear() ||
-                     !TargetNeedsPositionals()) ||
-                    SwiftskinsCoilReady)
-                    return HuntersCoil;
-            }
+            if (CanVicewinderCombo(ref actionID))
+                return actionID;
 
             //Reawakend Usage
-            if (CanReawaken(true))
+            if (CanReawaken())
                 return Reawaken;
 
             //Overcap protection
-            if (MaxCoils() &&
-                (HasCharges(Vicewinder) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
-                 !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
-                 IreCD <= GCD * 5)) //spend in case under Reawaken right as Ire comes up
+            if (MaxCoils &&
+                (HasCharges(Vicewinder) && NoSTComboWeaves &&
+                 !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
+                 IreCD <= GCD * 3)) //spend in case under Reawaken right as Ire comes up
                 return UncoiledFury;
 
-            //Vicewinder Usage
-            if (HasStatusEffect(Buffs.Swiftscaled) && !IsComboExpiring(3) &&
-                ActionReady(Vicewinder) && !HasStatusEffect(Buffs.Reawakened) &&
-                InMeleeRange() &&
-                (IreCD >= GCD * 5 || !LevelChecked(SerpentsIre)) &&
-                !IsVenomExpiring(3) && !IsHoningExpiring(3))
+            //Vicewinder
+            if (CanUseVicewinder)
                 return Role.CanTrueNorth()
                     ? Role.TrueNorth
                     : Vicewinder;
 
-            // Uncoiled Fury usage
-            if (ActionReady(UncoiledFury) &&
-                HasStatusEffect(Buffs.Swiftscaled) &&
-                HasStatusEffect(Buffs.HuntersInstinct) &&
-                !IsComboExpiring(2) &&
-                RattlingCoilStacks > 1 &&
-                !VicewinderReady && !HuntersCoilReady && !SwiftskinsCoilReady &&
-                !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) &&
-                !WasLastWeaponskill(Ouroboros) &&
-                !IsEmpowermentExpiring(6) && !IsVenomExpiring(3) &&
-                !IsHoningExpiring(3))
+            // Uncoiled Fury
+            if (CanUseUncoiledFury())
                 return UncoiledFury;
 
-            //Reawaken combo
-            if (ReawakenCombo(ref actionID))
-                return actionID;
+            //Ranged
+            if (ActionReady(WrithingSnap) &&
+                !InMeleeRange() && HasBattleTarget() &&
+                !HasRattlingCoilStacks)
+                return WrithingSnap;
 
-            //1-2-3 (4-5-6) Combo
-            if (ComboTimer > 0 && !HasStatusEffect(Buffs.Reawakened))
-            {
-                if (ComboAction is ReavingFangs or SteelFangs)
-                {
-                    if (LevelChecked(SwiftskinsSting) &&
-                        (HasHindVenom() || NoSwiftscaled() || NoVenom()))
-                        return OriginalHook(ReavingFangs);
-
-                    if (LevelChecked(HuntersSting) && (HasFlankVenom() || NoHuntersInstinct()))
-                        return OriginalHook(SteelFangs);
-                }
-
-                if (ComboAction is HuntersSting or SwiftskinsSting)
-                {
-                    if ((HasStatusEffect(Buffs.FlankstungVenom) || HasStatusEffect(Buffs.HindstungVenom)) &&
-                        LevelChecked(FlanksbaneFang))
-                        return Role.CanTrueNorth() &&
-                               (!OnTargetsRear() && HasStatusEffect(Buffs.HindstungVenom) ||
-                                !OnTargetsFlank() && HasStatusEffect(Buffs.FlankstungVenom))
-                            ? Role.TrueNorth
-                            : OriginalHook(SteelFangs);
-
-
-                    if ((HasStatusEffect(Buffs.FlanksbaneVenom) || HasStatusEffect(Buffs.HindsbaneVenom)) &&
-                        LevelChecked(HindstingStrike))
-                        return Role.CanTrueNorth() &&
-                               (!OnTargetsRear() && HasStatusEffect(Buffs.HindsbaneVenom) ||
-                                OnTargetsFlank() && HasStatusEffect(Buffs.FlanksbaneVenom))
-                            ? Role.TrueNorth
-                            : OriginalHook(ReavingFangs);
-                }
-
-                if (ComboAction is HindstingStrike or HindsbaneFang or FlankstingStrike or FlanksbaneFang)
-                    return LevelChecked(ReavingFangs) && HasStatusEffect(Buffs.HonedReavers)
-                        ? OriginalHook(ReavingFangs)
-                        : OriginalHook(SteelFangs);
-            }
-
-            //LowLevels
-            if (LevelChecked(ReavingFangs) &&
-                (HasStatusEffect(Buffs.HonedReavers) ||
-                 !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
-                return OriginalHook(ReavingFangs);
-
-            return actionID;
+            //Reawaken combo / 1-2-3 (4-5-6) Combo
+            return HasStatusEffect(Buffs.Reawakened)
+                ? ReawakenCombo(actionID)
+                : DoBasicCombo(actionID, true);
         }
     }
 
@@ -183,8 +118,9 @@ internal partial class VPR : Melee
             if (CanWeave())
             {
                 // Death Rattle / Legacy Weaves
-                if (LevelChecked(SerpentsTail) &&
-                    (Legacyweaves || LastLashWeave))
+                if ((LastLashWeave && InActionRange(LastLash) ||
+                     Legacyweaves && InActionRange(FirstLegacy)) &&
+                    LevelChecked(SerpentsTail))
                     return OriginalHook(SerpentsTail);
 
                 // Uncoiled combo
@@ -206,102 +142,58 @@ internal partial class VPR : Melee
                         return OriginalHook(Twinblood);
 
                     //Serpents Ire usage
-                    if (!MaxCoils() && ActionReady(SerpentsIre))
+                    if (!MaxCoils && ActionReady(SerpentsIre) &&
+                        GetTargetHPPercent() > 25)
                         return SerpentsIre;
-
-                    // healing
-                    if (Role.CanSecondWind(40))
-                        return Role.SecondWind;
-
-                    if (Role.CanBloodBath(30))
-                        return Role.Bloodbath;
                 }
+
+                // healing
+                if (Role.CanSecondWind(40))
+                    return Role.SecondWind;
+
+                if (Role.CanBloodBath(30))
+                    return Role.Bloodbath;
+
+                if (RoleActions.Melee.CanLegSweep())
+                    return Role.LegSweep;
             }
 
             //Vicepit combo
             if (!HasStatusEffect(Buffs.Reawakened))
             {
-                if (SwiftskinsDenReady &&
+                if (UsedSwiftskinsDen &&
                     InActionRange(HuntersDen))
                     return HuntersDen;
 
-                if (VicepitReady &&
+                if (UsedVicepit &&
                     InActionRange(SwiftskinsDen))
                     return SwiftskinsDen;
             }
 
             //Reawakend Usage
-            if ((HasStatusEffect(Buffs.ReadyToReawaken) || SerpentOffering >= 50) &&
-                LevelChecked(Reawaken) && InActionRange(Reawaken) &&
-                HasStatusEffect(Buffs.Swiftscaled) && HasStatusEffect(Buffs.HuntersInstinct) &&
-                !HasStatusEffect(Buffs.Reawakened) &&
-                !HasStatusEffect(Buffs.FellhuntersVenom) && !HasStatusEffect(Buffs.FellskinsVenom) &&
-                !HasStatusEffect(Buffs.PoisedForTwinblood) && !HasStatusEffect(Buffs.PoisedForTwinfang))
+            if (CanReawaken(true) &&
+                InActionRange(Reawaken))
                 return Reawaken;
 
             //Overcap protection
-            if ((HasCharges(Vicepit) && !HasStatusEffect(Buffs.FellskinsVenom) && !HasStatusEffect(Buffs.FellhuntersVenom) ||
-                 IreCD <= GCD * 2) && !HasStatusEffect(Buffs.Reawakened) && MaxCoils())
+            if ((HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCD * 2) &&
+                !HasStatusEffect(Buffs.Reawakened) && MaxCoils)
                 return UncoiledFury;
 
             //Vicepit Usage
-            if (ActionReady(Vicepit) &&
-                !HasStatusEffect(Buffs.Reawakened) &&
-                InActionRange(Vicepit) &&
-                (IreCD >= GCD * 5 || !LevelChecked(SerpentsIre)))
+            if (ActionReady(Vicepit) && !HasStatusEffect(Buffs.Reawakened) &&
+                InActionRange(Vicepit) && !JustUsed(Vicepit) &&
+                (IreCD >= GCD * 4 || !LevelChecked(SerpentsIre)))
                 return Vicepit;
 
             // Uncoiled Fury usage
-            if (ActionReady(UncoiledFury) &&
-                HasRattlingCoilStack() &&
-                HasStatusEffect(Buffs.Swiftscaled) && HasStatusEffect(Buffs.HuntersInstinct) &&
-                !VicepitReady && !HuntersDenReady && !SwiftskinsDenReady &&
-                !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.FellskinsVenom) &&
-                !HasStatusEffect(Buffs.FellhuntersVenom) &&
-                !WasLastWeaponskill(JaggedMaw) && !WasLastWeaponskill(BloodiedMaw) && !WasLastAbility(SerpentsIre))
+            if (CanUseUncoiledFury(true))
                 return UncoiledFury;
 
-            //Reawaken combo
-            if (ReawakenCombo(ref actionID, true))
-                return actionID;
-
-            //1-2-3 (4-5-6) Combo
-            if (ComboTimer > 0 && !HasStatusEffect(Buffs.Reawakened))
-            {
-                if (ComboAction is ReavingMaw or SteelMaw)
-                {
-                    if (LevelChecked(HuntersBite) &&
-                        HasStatusEffect(Buffs.GrimhuntersVenom))
-                        return OriginalHook(SteelMaw);
-
-                    if (LevelChecked(SwiftskinsBite) &&
-                        (HasStatusEffect(Buffs.GrimskinsVenom) ||
-                         !HasStatusEffect(Buffs.Swiftscaled) && !HasStatusEffect(Buffs.HuntersInstinct)))
-                        return OriginalHook(ReavingMaw);
-                }
-
-                if (ComboAction is HuntersBite or SwiftskinsBite)
-                {
-                    if (HasStatusEffect(Buffs.GrimhuntersVenom) && LevelChecked(JaggedMaw))
-                        return OriginalHook(SteelMaw);
-
-                    if (HasStatusEffect(Buffs.GrimskinsVenom) && LevelChecked(BloodiedMaw))
-                        return OriginalHook(ReavingMaw);
-                }
-
-                if (ComboAction is BloodiedMaw or JaggedMaw)
-                    return LevelChecked(ReavingMaw) && HasStatusEffect(Buffs.HonedReavers)
-                        ? OriginalHook(ReavingMaw)
-                        : OriginalHook(SteelMaw);
-            }
-
-            //for lower lvls
-            if (LevelChecked(ReavingMaw) &&
-                (HasStatusEffect(Buffs.HonedReavers) ||
-                 !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
-                return OriginalHook(ReavingMaw);
-
-            return actionID;
+            //Reawaken combo / 1-2-3 combo
+            return HasStatusEffect(Buffs.Reawakened)
+                ? ReawakenCombo(actionID)
+                : DoBasicCombo(actionID, isAoE: true);
         }
     }
 
@@ -326,11 +218,11 @@ internal partial class VPR : Melee
             if (CanWeave())
             {
                 // Death Rattle / Legacy Weaves
-                if ((IsEnabled(Preset.VPR_ST_SerpentsTail) && DeathRattleWeave ||
-                     IsEnabled(Preset.VPR_ST_LegacyWeaves) && Legacyweaves) &&
-                    LevelChecked(SerpentsTail) && InRange())
+                if ((IsEnabled(Preset.VPR_ST_SerpentsTail) && DeathRattleWeave && InActionRange(DeathRattle) ||
+                     IsEnabled(Preset.VPR_ST_LegacyWeaves) && Legacyweaves && InActionRange(FirstLegacy)) &&
+                    LevelChecked(SerpentsTail))
                     return OriginalHook(SerpentsTail);
-                
+
                 // Fury Twin Weaves
                 if (IsEnabled(Preset.VPR_ST_UncoiledFuryCombo))
                 {
@@ -351,13 +243,13 @@ internal partial class VPR : Melee
                     if (HasStatusEffect(Buffs.SwiftskinsVenom))
                         return OriginalHook(Twinblood);
                 }
-                
+
                 //Serpents Ire
                 if (IsEnabled(Preset.VPR_ST_SerpentsIre) && InCombat() &&
-                    !MaxCoils() && ActionReady(SerpentsIre) &&
-                    (VPR_ST_SerpentsIre_SubOption == 0 || InBossEncounter()))
+                    !MaxCoils && ActionReady(SerpentsIre) &&
+                    GetTargetHPPercent() > HPThresholdSerpentsIre)
                     return SerpentsIre;
-                
+
                 if (IsEnabled(Preset.VPR_ST_Feint) &&
                     Role.CanFeint() &&
                     GroupDamageIncoming())
@@ -366,10 +258,10 @@ internal partial class VPR : Melee
                 // healing
                 if (IsEnabled(Preset.VPR_ST_ComboHeals))
                 {
-                    if (Role.CanSecondWind(VPR_ST_SecondWind_Threshold))
+                    if (Role.CanSecondWind(VPR_ST_SecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(VPR_ST_Bloodbath_Threshold))
+                    if (Role.CanBloodBath(VPR_ST_BloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
 
@@ -378,121 +270,52 @@ internal partial class VPR : Melee
                     return Role.LegSweep;
             }
 
-            //Ranged
-            if (IsEnabled(Preset.VPR_ST_RangedUptime) &&
-                LevelChecked(WrithingSnap) && !InMeleeRange() && HasBattleTarget())
-                return VPR_ST_RangedUptimeUncoiledFury &&
-                       HasRattlingCoilStack()
-                    ? UncoiledFury
-                    : WrithingSnap;
-
             //Vicewinder Combo
             if (IsEnabled(Preset.VPR_ST_VicewinderCombo) &&
-                !HasStatusEffect(Buffs.Reawakened) &&
-                LevelChecked(Vicewinder) && InMeleeRange())
-            {
-                // Swiftskin's Coil
-                if (VicewinderReady &&
-                    (!OnTargetsFlank() ||
-                     !TargetNeedsPositionals()) ||
-                    HuntersCoilReady)
-                    return SwiftskinsCoil;
-
-                // Hunter's Coil
-                if (VicewinderReady &&
-                    (!OnTargetsRear() ||
-                     !TargetNeedsPositionals()) ||
-                    SwiftskinsCoilReady)
-                    return HuntersCoil;
-            }
+                CanVicewinderCombo(ref actionID))
+                return actionID;
 
             //Reawakend Usage
             if (IsEnabled(Preset.VPR_ST_Reawaken) &&
-                CanReawaken() &&
-                (VPR_ST_ReAwaken_SubOption == 0 || InBossEncounter()))
+                CanReawaken())
                 return Reawaken;
 
             //Overcap protection
-            if (IsEnabled(Preset.VPR_ST_UncoiledFury) && MaxCoils() &&
-                (HasCharges(Vicewinder) && !HasStatusEffect(Buffs.SwiftskinsVenom) &&
-                 !HasStatusEffect(Buffs.HuntersVenom) && !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
-                 IreCD <= GCD * 5)) //spend in case under Reawaken right as Ire comes up
+            if (IsEnabled(Preset.VPR_ST_UncoiledFury) && MaxCoils &&
+                (HasCharges(Vicewinder) && NoSTComboWeaves &&
+                 !HasStatusEffect(Buffs.Reawakened) || //spend if Vicewinder is up, after Reawaken
+                 IreCD <= GCD * 3)) //spend in case under Reawaken right as Ire comes up
                 return UncoiledFury;
 
-            //Vicewinder Usage
+            //Vicewinder
             if (IsEnabled(Preset.VPR_ST_Vicewinder) &&
-                HasStatusEffect(Buffs.Swiftscaled) && !IsComboExpiring(3) &&
-                ActionReady(Vicewinder) && !HasStatusEffect(Buffs.Reawakened) && InMeleeRange() &&
-                (IreCD >= GCD * 5 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre)) &&
-                !IsVenomExpiring(3) && !IsHoningExpiring(3))
-                return VPR_TrueNortVicewinder &&
+                CanUseVicewinder)
+                return VPR_TrueNorthVicewinder &&
+                       (IsEnabled(Preset.VPR_TrueNorthDynamic) &&
+                        GetRemainingCharges(Role.TrueNorth) > TnCharges ||
+                        HasCharges(Role.TrueNorth)) &&
                        Role.CanTrueNorth()
                     ? Role.TrueNorth
                     : Vicewinder;
 
-            // Uncoiled Fury usage
-            if (IsEnabled(Preset.VPR_ST_UncoiledFury) && !IsComboExpiring(2) &&
-                ActionReady(UncoiledFury) && HasStatusEffect(Buffs.Swiftscaled) && HasStatusEffect(Buffs.HuntersInstinct) &&
-                (RattlingCoilStacks > VPR_ST_UncoiledFury_HoldCharges ||
-                 GetTargetHPPercent() < VPR_ST_UncoiledFury_Threshold && HasRattlingCoilStack()) &&
-                !VicewinderReady && !HuntersCoilReady && !SwiftskinsCoilReady &&
-                !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.ReadyToReawaken) &&
-                !WasLastWeaponskill(Ouroboros) && !IsEmpowermentExpiring(3))
+            // Uncoiled Fury
+            if (IsEnabled(Preset.VPR_ST_UncoiledFury) &&
+                CanUseUncoiledFury())
                 return UncoiledFury;
 
-            //Reawaken combo
-            if (IsEnabled(Preset.VPR_ST_GenerationCombo) &&
-                ReawakenCombo(ref actionID))
-                return actionID;
+            //Ranged
+            if (!InMeleeRange() && HasBattleTarget() &&
+                IsEnabled(Preset.VPR_ST_RangedUptime) &&
+                ActionReady(WrithingSnap) &&
+                (IsEnabled(Preset.VPR_ST_UncoiledFury) && !HasRattlingCoilStacks ||
+                 IsNotEnabled(Preset.VPR_ST_UncoiledFury)))
+                return WrithingSnap;
 
-            //1-2-3 (4-5-6) Combo
-            if (ComboTimer > 0 && !HasStatusEffect(Buffs.Reawakened))
-            {
-                if (ComboAction is ReavingFangs or SteelFangs)
-                {
-                    if (LevelChecked(SwiftskinsSting) &&
-                        (HasHindVenom() || NoSwiftscaled() || NoVenom()))
-                        return OriginalHook(ReavingFangs);
-
-                    if (LevelChecked(HuntersSting) && (HasFlankVenom() || NoHuntersInstinct()))
-                        return OriginalHook(SteelFangs);
-                }
-
-
-                if (ComboAction is HuntersSting or SwiftskinsSting)
-                {
-                    if ((HasStatusEffect(Buffs.FlanksbaneVenom) || HasStatusEffect(Buffs.HindsbaneVenom)) &&
-                        LevelChecked(HindstingStrike))
-                        return IsEnabled(Preset.VPR_TrueNorthDynamic) &&
-                               Role.CanTrueNorth() &&
-                               (!OnTargetsRear() && HasStatusEffect(Buffs.HindsbaneVenom) ||
-                                !OnTargetsFlank() && HasStatusEffect(Buffs.FlanksbaneVenom))
-                            ? Role.TrueNorth
-                            : OriginalHook(ReavingFangs);
-
-                    if ((HasStatusEffect(Buffs.FlankstungVenom) || HasStatusEffect(Buffs.HindstungVenom)) &&
-                        LevelChecked(FlanksbaneFang))
-                        return IsEnabled(Preset.VPR_TrueNorthDynamic) &&
-                               Role.CanTrueNorth() &&
-                               (!OnTargetsRear() && HasStatusEffect(Buffs.HindstungVenom) ||
-                                !OnTargetsFlank() && HasStatusEffect(Buffs.FlankstungVenom))
-                            ? Role.TrueNorth
-                            : OriginalHook(SteelFangs);
-                }
-
-                if (ComboAction is HindstingStrike or HindsbaneFang or FlankstingStrike or FlanksbaneFang)
-                    return LevelChecked(ReavingFangs) && HasStatusEffect(Buffs.HonedReavers)
-                        ? OriginalHook(ReavingFangs)
-                        : OriginalHook(SteelFangs);
-            }
-
-            //LowLevels
-            if (LevelChecked(ReavingFangs) &&
-                (HasStatusEffect(Buffs.HonedReavers) ||
-                 !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
-                return OriginalHook(ReavingFangs);
-
-            return actionID;
+            //Reawaken combo / 1-2-3 (4-5-6) Combo
+            return IsEnabled(Preset.VPR_ST_GenerationCombo) &&
+                   HasStatusEffect(Buffs.Reawakened)
+                ? ReawakenCombo(actionID)
+                : DoBasicCombo(actionID, IsEnabled(Preset.VPR_TrueNorthDynamic));
         }
     }
 
@@ -511,8 +334,8 @@ internal partial class VPR : Melee
             if (CanWeave())
             {
                 // Death Rattle / Legacy Weaves
-                if ((IsEnabled(Preset.VPR_AoE_SerpentsTail) && LastLashWeave ||
-                     IsEnabled(Preset.VPR_AoE_ReawakenCombo) && Legacyweaves) &&
+                if ((IsEnabled(Preset.VPR_AoE_SerpentsTail) && LastLashWeave && InActionRange(LastLash) ||
+                     IsEnabled(Preset.VPR_AoE_ReawakenCombo) && Legacyweaves && InActionRange(FirstLegacy)) &&
                     LevelChecked(SerpentsTail))
                     return OriginalHook(SerpentsTail);
 
@@ -532,27 +355,28 @@ internal partial class VPR : Melee
                     if (IsEnabled(Preset.VPR_AoE_VicepitWeaves))
                     {
                         if (HasStatusEffect(Buffs.FellhuntersVenom) &&
-                            (InActionRange(TwinfangThresh) || VPR_AoE_VicepitCombo_SubOption == 1))
+                            (InActionRange(TwinfangThresh) || VPR_AoE_VicepitComboRangeCheck == 1))
                             return OriginalHook(Twinfang);
 
                         if (HasStatusEffect(Buffs.FellskinsVenom) &&
-                            (InActionRange(TwinbloodThresh) || VPR_AoE_VicepitCombo_SubOption == 1))
+                            (InActionRange(TwinbloodThresh) || VPR_AoE_VicepitComboRangeCheck == 1))
                             return OriginalHook(Twinblood);
                     }
 
                     //Serpents Ire usage
                     if (IsEnabled(Preset.VPR_AoE_SerpentsIre) &&
-                        !MaxCoils() && ActionReady(SerpentsIre))
+                        !MaxCoils && ActionReady(SerpentsIre) &&
+                        GetTargetHPPercent() > VPR_AoE_SerpentsIreHPThreshold)
                         return SerpentsIre;
                 }
 
                 // healing
                 if (IsEnabled(Preset.VPR_AoE_ComboHeals))
                 {
-                    if (Role.CanSecondWind(VPR_AoE_SecondWind_Threshold))
+                    if (Role.CanSecondWind(VPR_AoE_SecondWindHPThreshold))
                         return Role.SecondWind;
 
-                    if (Role.CanBloodBath(VPR_AoE_Bloodbath_Threshold))
+                    if (Role.CanBloodBath(VPR_AoE_BloodbathHPThreshold))
                         return Role.Bloodbath;
                 }
 
@@ -565,95 +389,45 @@ internal partial class VPR : Melee
             if (IsEnabled(Preset.VPR_AoE_VicepitCombo) &&
                 !HasStatusEffect(Buffs.Reawakened))
             {
-                if (SwiftskinsDenReady &&
-                    (InActionRange(HuntersDen) || VPR_AoE_VicepitCombo_SubOption == 1))
+                if (UsedSwiftskinsDen &&
+                    (InActionRange(HuntersDen) || VPR_AoE_VicepitComboRangeCheck == 1))
                     return HuntersDen;
 
-                if (VicepitReady &&
-                    (InActionRange(SwiftskinsDen) || VPR_AoE_VicepitCombo_SubOption == 1))
+                if (UsedVicepit &&
+                    (InActionRange(SwiftskinsDen) || VPR_AoE_VicepitComboRangeCheck == 1))
                     return SwiftskinsDen;
             }
 
             //Reawakend Usage
             if (IsEnabled(Preset.VPR_AoE_Reawaken) &&
-                GetTargetHPPercent() > VPR_AoE_Reawaken_Usage &&
-                (HasStatusEffect(Buffs.ReadyToReawaken) || SerpentOffering >= 50) &&
-                LevelChecked(Reawaken) &&
-                HasStatusEffect(Buffs.Swiftscaled) && HasStatusEffect(Buffs.HuntersInstinct) &&
-                !HasStatusEffect(Buffs.Reawakened) &&
-                (InActionRange(Reawaken) || VPR_AoE_Reawaken_SubOption == 1) &&
-                !HasStatusEffect(Buffs.FellhuntersVenom) && !HasStatusEffect(Buffs.FellskinsVenom) &&
-                !HasStatusEffect(Buffs.PoisedForTwinblood) && !HasStatusEffect(Buffs.PoisedForTwinfang))
+                CanReawaken(true) &&
+                (InActionRange(Reawaken) || VPR_AoE_ReawakenRangecheck == 1))
                 return Reawaken;
 
             //Overcap protection
             if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
-                (HasCharges(Vicepit) && !HasStatusEffect(Buffs.FellskinsVenom) && !HasStatusEffect(Buffs.FellhuntersVenom) ||
-                 IreCD <= GCD * 2) && !HasStatusEffect(Buffs.Reawakened) && MaxCoils())
+                (HasCharges(Vicepit) && NoAoEComboWeaves || IreCD <= GCD * 2) &&
+                !HasStatusEffect(Buffs.Reawakened) && MaxCoils)
                 return UncoiledFury;
 
             //Vicepit Usage
             if (IsEnabled(Preset.VPR_AoE_Vicepit) &&
                 ActionReady(Vicepit) && !HasStatusEffect(Buffs.Reawakened) &&
-                (InActionRange(Vicepit) || VPR_AoE_Vicepit_SubOption == 1) &&
-                (IreCD >= GCD * 5 || !LevelChecked(SerpentsIre)))
+                !JustUsed(Vicepit) &&
+                (InActionRange(Vicepit) || VPR_AoE_VicepitRangeCheck == 1) &&
+                (IreCD >= GCD * 4 || !LevelChecked(SerpentsIre)))
                 return Vicepit;
 
             // Uncoiled Fury usage
             if (IsEnabled(Preset.VPR_AoE_UncoiledFury) &&
-                ActionReady(UncoiledFury) &&
-                (RattlingCoilStacks > VPR_AoE_UncoiledFury_HoldCharges ||
-                 GetTargetHPPercent() < VPR_AoE_UncoiledFury_Threshold &&
-                 HasRattlingCoilStack()) &&
-                HasStatusEffect(Buffs.Swiftscaled) && HasStatusEffect(Buffs.HuntersInstinct) &&
-                !VicepitReady && !HuntersDenReady && !SwiftskinsDenReady &&
-                !HasStatusEffect(Buffs.Reawakened) && !HasStatusEffect(Buffs.FellskinsVenom) &&
-                !HasStatusEffect(Buffs.FellhuntersVenom) &&
-                !WasLastWeaponskill(JaggedMaw) && !WasLastWeaponskill(BloodiedMaw) && !WasLastAbility(SerpentsIre))
+                CanUseUncoiledFury(true))
                 return UncoiledFury;
 
-            //Reawaken combo
-            if (IsEnabled(Preset.VPR_AoE_ReawakenCombo) &&
-                ReawakenCombo(ref actionID, true))
-                return actionID;
-
-            //1-2-3 (4-5-6) Combo
-            if (ComboTimer > 0 && !HasStatusEffect(Buffs.Reawakened))
-            {
-                if (ComboAction is ReavingMaw or SteelMaw)
-                {
-                    if (LevelChecked(HuntersBite) &&
-                        HasStatusEffect(Buffs.GrimhuntersVenom))
-                        return OriginalHook(SteelMaw);
-
-                    if (LevelChecked(SwiftskinsBite) &&
-                        (HasStatusEffect(Buffs.GrimskinsVenom) ||
-                         !HasStatusEffect(Buffs.Swiftscaled) && !HasStatusEffect(Buffs.HuntersInstinct)))
-                        return OriginalHook(ReavingMaw);
-                }
-
-                if (ComboAction is HuntersBite or SwiftskinsBite)
-                {
-                    if (HasStatusEffect(Buffs.GrimhuntersVenom) && LevelChecked(JaggedMaw))
-                        return OriginalHook(SteelMaw);
-
-                    if (HasStatusEffect(Buffs.GrimskinsVenom) && LevelChecked(BloodiedMaw))
-                        return OriginalHook(ReavingMaw);
-                }
-
-                if (ComboAction is BloodiedMaw or JaggedMaw)
-                    return LevelChecked(ReavingMaw) && HasStatusEffect(Buffs.HonedReavers)
-                        ? OriginalHook(ReavingMaw)
-                        : OriginalHook(SteelMaw);
-            }
-
-            //for lower lvls
-            if (LevelChecked(ReavingMaw) &&
-                (HasStatusEffect(Buffs.HonedReavers) ||
-                 !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
-                return OriginalHook(ReavingMaw);
-
-            return actionID;
+            //Reawaken combo / 1-2-3 combo
+            return IsEnabled(Preset.VPR_AoE_ReawakenCombo) &&
+                   HasStatusEffect(Buffs.Reawakened)
+                ? ReawakenCombo(actionID)
+                : DoBasicCombo(actionID, false, true);
         }
     }
 
@@ -667,44 +441,10 @@ internal partial class VPR : Melee
                 return actionID;
 
             if (DeathRattleWeave &&
-                LevelChecked(SerpentsTail) && InRange())
+                LevelChecked(SerpentsTail) && InActionRange(DeathRattle))
                 return OriginalHook(SerpentsTail);
 
-            if (ComboTimer > 0 && !HasStatusEffect(Buffs.Reawakened))
-            {
-                if (ComboAction is ReavingFangs or SteelFangs)
-                {
-                    if (LevelChecked(SwiftskinsSting) &&
-                        (HasHindVenom() || NoSwiftscaled() || NoVenom()))
-                        return OriginalHook(ReavingFangs);
-
-                    if (LevelChecked(HuntersSting) && (HasFlankVenom() || NoHuntersInstinct()))
-                        return OriginalHook(SteelFangs);
-                }
-
-                if (ComboAction is HuntersSting or SwiftskinsSting)
-                {
-                    if ((HasStatusEffect(Buffs.FlankstungVenom) || HasStatusEffect(Buffs.HindstungVenom)) &&
-                        LevelChecked(FlanksbaneFang))
-                        return OriginalHook(SteelFangs);
-
-                    if ((HasStatusEffect(Buffs.FlanksbaneVenom) || HasStatusEffect(Buffs.HindsbaneVenom)) &&
-                        LevelChecked(HindstingStrike))
-                        return OriginalHook(ReavingFangs);
-                }
-
-                if (ComboAction is HindstingStrike or HindsbaneFang or FlankstingStrike or FlanksbaneFang)
-                    return LevelChecked(ReavingFangs) && HasStatusEffect(Buffs.HonedReavers)
-                        ? OriginalHook(ReavingFangs)
-                        : OriginalHook(SteelFangs);
-            }
-
-            //LowLevels
-            if (LevelChecked(ReavingFangs) &&
-                (HasStatusEffect(Buffs.HonedReavers) ||
-                 !HasStatusEffect(Buffs.HonedReavers) && !HasStatusEffect(Buffs.HonedSteel)))
-                return OriginalHook(ReavingFangs);
-            return actionID;
+            return DoBasicCombo(actionID);
         }
     }
 
@@ -742,11 +482,11 @@ internal partial class VPR : Melee
             }
 
             // Swiftskin's Coil
-            if (VicewinderReady && (!OnTargetsFlank() || !TargetNeedsPositionals()) || HuntersCoilReady)
+            if (UsedVicewinder && (!OnTargetsFlank() || !TargetNeedsPositionals()) || UsedHuntersCoil)
                 return SwiftskinsCoil;
 
             // Hunter's Coil
-            if (VicewinderReady && (!OnTargetsRear() || !TargetNeedsPositionals()) || SwiftskinsCoilReady)
+            if (UsedVicewinder && (!OnTargetsRear() || !TargetNeedsPositionals()) || UsedSwiftskinsCoil)
                 return HuntersCoil;
 
             return actionID;
@@ -771,10 +511,10 @@ internal partial class VPR : Melee
                     return OriginalHook(Twinblood);
             }
 
-            if (SwiftskinsDenReady)
+            if (UsedSwiftskinsDen)
                 return HuntersDen;
 
-            if (VicepitReady)
+            if (UsedVicepit)
                 return SwiftskinsDen;
 
             return actionID;
@@ -815,14 +555,11 @@ internal partial class VPR : Melee
                 case ReavingFangs when VPR_ReawakenLegacyButton == 1 && HasStatusEffect(Buffs.Reawakened):
                 {
                     // Legacy Weaves
-                    if (IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
-                        TraitLevelChecked(Traits.SerpentsLegacy) &&
-                        HasStatusEffect(Buffs.Reawakened) && Legacyweaves)
-                        return OriginalHook(SerpentsTail);
-
-                    if (ReawakenCombo(ref actionID))
-                        return actionID;
-                    break;
+                    return IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
+                           TraitLevelChecked(Traits.SerpentsLegacy) &&
+                           HasStatusEffect(Buffs.Reawakened) && Legacyweaves
+                        ? OriginalHook(SerpentsTail)
+                        : ReawakenCombo(actionID);
                 }
             }
 
@@ -892,6 +629,23 @@ internal partial class VPR : Melee
                 SteelMaw or ReavingMaw when LastLashWeave => OriginalHook(SerpentsTail),
                 var _ => actionID
             };
+        }
+    }
+
+    internal class VPR_VicewinderProtection : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.VPR_VicewinderProtection;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not (Vicewinder or Vicepit))
+                return actionID;
+
+            return (UsedVicewinder || UsedHuntersCoil || UsedSwiftskinsCoil ||
+                    UsedVicepit || UsedHuntersDen || UsedSwiftskinsDen) &&
+                   LevelChecked(Vicewinder)
+                ? All.SavageBlade
+                : actionID;
         }
     }
 }

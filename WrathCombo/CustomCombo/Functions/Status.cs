@@ -1,12 +1,13 @@
-﻿using System;
-using Dalamud.Game.ClientState.Objects.Types;
+﻿using Dalamud.Game.ClientState.Objects.Types;
 using Dalamud.Game.ClientState.Statuses;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
+using ECommons.MathHelpers;
 using FFXIVClientStructs.FFXIV.Client.Game;
-using System.Collections.Generic;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using System;
 using System.Linq;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -104,7 +105,7 @@ internal abstract partial class CustomComboFunctions
     /// <returns>Float representing remaining status effect time</returns>
     public unsafe static float GetStatusEffectRemainingTime(ushort effectId, IGameObject? target = null, bool anyOwner = false) =>
         GetStatusEffectRemainingTime(GetStatusEffect(effectId, target, anyOwner));
-    
+
     /// <summary>
     ///     Same as <see cref="GetStatusEffectRemainingTime(ushort, IGameObject?, bool)"/>,
     ///     but returns NaN if the status effect is not found, failing
@@ -173,7 +174,7 @@ internal abstract partial class CustomComboFunctions
     /// Checks to see if the player has a status that should stop all actions and unselect targets
     /// Acceleration bombs and Pyretics
     /// </summary>
-    public static bool PlayerHasActionPenalty()
+    public static unsafe bool PlayerHasActionPenalty()
     {
         bool hasActionPenalty =
             //Player.IsInDuty &&  <-?
@@ -190,10 +191,62 @@ internal abstract partial class CustomComboFunctions
 
             ) == true;
 
+        if (!hasActionPenalty)
+        {
+            // The Clyteum
+            if (Content.TerritoryID is 1345)
+            {
+                // The Eye of the Scorpion
+                // This finds the helper
+                var MotionScannerHelper = Svc.Objects.FirstOrDefault(x =>
+                  x.BaseId == 0x4C2D &&
+                  x.Address != 0 &&
+                  (int)(x.Struct()->RenderFlags) == 0 // There can be two of these objects, only one appears to be active.
+                );
+                if (MotionScannerHelper is IGameObject scanner)
+                {
+                    var facingdirection = MathHelper.GetCardinalDirection(MathHelper.RadToDeg(scanner.Rotation));
+
+                    // Scans seem to be West<->East, but added North<->South just incase
+                    float signedDistance = facingdirection switch
+                    {
+                        CardinalDirection.East => (Player.Position.X - scanner.Position.X),        // +X
+                        CardinalDirection.West => (scanner.Position.X - Player.Position.X),        // -X
+                        CardinalDirection.North => (Player.Position.Z - scanner.Position.Z),        // +Z
+                        CardinalDirection.South => (scanner.Position.Z - Player.Position.Z),        // -Z
+                        _ => (Player.Position.X - scanner.Position.X) // East, just to have a default
+                    };
+
+                    // Positive Distance = Incoming
+                    // Negative Distance = Moving Away
+                    // Distance will go from positive, to 0 when it fully overtakes the player,
+                    // then negative as it moves away, with the status dropping off at around -8y,
+                    // but added a buffer just in case.
+
+                    // Too far away
+                    if (signedDistance > 12f)
+                        hasActionPenalty = false;
+
+                    // 12y to -8y (about to be overtaken by the field to almost about to clear)
+                    else if (signedDistance > -8f)
+                        hasActionPenalty = true;
+
+                    // -8y to -12y, waiting for status to clear, should happen close to -8y but added a buffer just in case
+                    else if (signedDistance > -12f)
+                        hasActionPenalty = HasStatusEffect(5191, anyOwner: true);
+
+                    // -12y and beyond should be decently away from the player
+                    else
+                        hasActionPenalty = false;
+                }
+            }
+        }
+
         if (hasActionPenalty)
         {
             Svc.Targets.Target = null;
             OverrideTarget = null;
+            UIState.Instance()->Hotbar.CancelCast();
         }
 
         return hasActionPenalty;
@@ -208,14 +261,17 @@ internal abstract partial class CustomComboFunctions
     {
         if (target is not IBattleChara tar)
             return false;
+        var statuses = tar.SafeStatusList;
+        if (statuses is null)
+            return false;
 
         // Turn Target's status to uint hashset
-        var targetStatuses = tar.StatusList.Select(s => s.StatusId).ToHashSet();
+        var targetStatuses = statuses.Select(s => s.StatusId).ToHashSet();
         uint targetID = tar.BaseId;
 
         // Returning False in each case because there should be no other General Invincibility Check needed
         // for specified areas
-        switch (Svc.ClientState.TerritoryType)
+        switch (Content.TerritoryID)
         {
             case 174: // Labyrinth of the Ancients
                 // Thanatos, Spooky Ghosts Only
@@ -274,11 +330,9 @@ internal abstract partial class CustomComboFunctions
                     if (targetID is 9340) return HasStatusEffect(671, tar, true); // F being covered by M
                 }
 
-                //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500.
-                //Also, SE, why use a new Omega-M status and reuse the old Omega-F? -_-'
-                //Wonder if targetIDs are the same......
-                if ((tar.StatusList.Any(x => x.StatusId == 3454) && HasStatusEffect(3499)) ||
-                    (tar.StatusList.Any(x => x.StatusId == 1675) && HasStatusEffect(3500)))
+                //Savage/Ultimate? Not sure which omega fight uses 3499 and 3500
+                if ((tar.SafeStatusList?.Any(x => x.StatusId == 3454) is true && HasStatusEffect(3499)) ||
+                    (tar.SafeStatusList?.Any(x => x.StatusId == 1675) is true && HasStatusEffect(3500)))
                     return true;
 
                 //Check for any ol invincibility
@@ -338,6 +392,18 @@ internal abstract partial class CustomComboFunctions
                 }
 
                 return false;
+
+            case 1241: // Cloud of Darkness Chaotic - Sphere of Naught
+                // Cloud of Darkness = 17950
+                // Stygian Shadow = 17951
+                // Atomos = 17952
+                // Inner Darkness = 4177
+                // Outer Darkness = 4178
+                if (targetID is 17950 && HasStatusEffect(4178, null, true)) return true; // If on the platforms
+                if (targetID is 17951 or 17952 && HasStatusEffect(4177, null, true)) return true; // If on tiles
+
+                return false;
+
             case 1248: // Jeuno 1 Ark Angels
                 // ArkAngel HM = 1804
                 // ArkAngel MR = 18051 (A)
@@ -391,13 +457,23 @@ internal abstract partial class CustomComboFunctions
 
                 if (targetID is 18576 or 18577 or 18578 or 18579 or 18642)
                 {
-                    if (HasStatusEffect(3065)) return targetID != 18642; // Hellmaker checking for fire floor debuff
+                    if (HasStatusEffect(3065)) return targetID != 18642 || GetTargetDistance(tar) > 20;  // Hellmaker checking for fire floor debuff
                     if (HasStatusEffect(4542)) return targetID != 18576; // Alpha
                     if (HasStatusEffect(4543)) return targetID != 18577; // Beta
                     if (HasStatusEffect(4544)) return targetID != 18578; // Gamma
                     if (HasStatusEffect(4545)) return targetID != 18579; // Delta
                 }
                 return false;
+
+            case 1323: //M10S
+                // 19287 Red Hot
+                // 19288 Deep Blue
+                return targetID is 19287 or 19288 && GetTargetCurrentHP(target) <= 1;
+
+            case 1368: // Windurst The Third Walk
+                // Alexander Battle
+                // 19805 Gordius System's Perfect Defense
+                return targetID is 19805 && HasStatusEffect(5377, tar, true);
 
             default:
                 // General invincibility check
@@ -442,6 +518,14 @@ internal abstract partial class CustomComboFunctions
     public static bool CanApplyStatus(IGameObject? target, ushort statusId)
     {
         target ??= LocalPlayer;
+        if (target is null)
+            return false;
+
+        //Check to see if it's a buff or debuff and therefore if the target is suitable for the status
+        var status = Svc.Data.GetExcelSheet<Lumina.Excel.Sheets.Status>().GetRow(statusId);
+        if ((target.IsHostile() && status.StatusCategory != 2) || (target.IsFriendly() && status.StatusCategory != 1))
+            return false;
+
         if (!TargetIsStatusCapped(target) || HasStatusEffect(statusId, target))
             return true;
 
@@ -455,144 +539,6 @@ internal abstract partial class CustomComboFunctions
     public static bool CanApplyStatus(IGameObject? target, ushort[] status) =>
         status.Any(statusId => CanApplyStatus(target, statusId));
 
-    private const StringComparison Lower = StringComparison.OrdinalIgnoreCase;
-
-    /// <summary>
-    /// Text Comparison for Tank Buster VFX Paths
-    /// </summary>
-    /// <param name="vfx">The VFX to check the Path of</param>
-    /// <returns>Bool if vfx path matches</returns>
-    public static bool IsTankBusterEffectPath(VfxInfo vfx)
-    {
-        return TankbusterPaths.Any(x => vfx.Path.StartsWith(x, Lower));
-    }
-
-    private static List<string> TankbusterPaths =
-    [
-        "vfx/lockon/eff/tank", //Generic TB check
-        "vfx/lockon/eff/x6fe_fan100_50_0t1", //Necron Blue Shockwave - Cone Tankbuster
-        "vfx/common/eff/mon_eisyo03t", //M10 Deep Impact AoE TB (also generic?)
-        "vfx/lockon/eff/m0676trg_tw_d0t1p", //M10 Hot Impact shared TB
-        "vfx/lockon/eff/m0676trg_tw_s6_d0t1p", //M11 Raw Steel
-        "vfx/lockon/eff/z6r2b3_8sec_lockon_c0a1", //Kam'lanaut Princely Blow
-        "vfx/lockon/eff/m0742trg_b1t1", //M7 Abominable Blink
-        "vfx/lockon/eff/x6r9_tank_lockonae" //M9 Hardcore Large TB
-    ];
-
-    /// <summary>
-    /// Text Comparison for Shared Damage Effect VFX Paths
-    /// </summary>
-    /// <param name="vfx">The VFX to check the Path of</param>
-    /// <returns></returns>
-    private static bool IsShareDamageEffectPath(VfxInfo vfx)
-    {
-        return vfx.Path.StartsWith("vfx/lockon/eff/coshare", Lower) ||
-               vfx.Path.StartsWith("vfx/lockon/eff/share_laser", Lower) ||
-               vfx.Path.StartsWith("vfx/lockon/eff/com_share", Lower);
-    }
-
-    private static bool IsMultiHitSharedDamageEffectPath(VfxInfo vfx)
-    {
-        return vfx.Path.StartsWith("vfx/lockon/eff/com_share5a1", Lower) ||
-            vfx.Path.StartsWith("vfx/lockon/eff/m0922trg_t2w", Lower);
-    }
-
-    /// <summary>
-    /// Checks for the presence of a shared damage effect on any party member and identifies the target and whether the
-    /// effect is multi-hit.
-    /// </summary>
-    /// <remarks>Only effects targeting party members are considered.</remarks>
-    /// <param name="target">When this method returns, contains the party member affected by the shared damage effect, or null if no such
-    /// effect is found.</param>
-    /// <param name="isMultiHit">When this method returns, contains a value indicating whether the detected shared damage effect is a multi-hit
-    /// effect.</param>
-    /// <returns>true if a shared damage effect is detected on a party member; otherwise, false.</returns>
-    public static bool CheckForSharedDamageEffect(out IBattleChara? target, out bool isMultiHit)
-    {
-        target = null;
-        isMultiHit = false;
-
-        var AoEEffects = VfxManager.TrackedEffects
-            .FilterToTargeted()
-            .Where(x => x.TargetID.GetObject().IsInParty())
-            .ToList();
-
-        if (AoEEffects.Count == 0)
-            return false;
-
-        // First: Check for multi-hit specific paths (vfx path is more specific so higher priority)
-        VfxInfo multiHitVfx = AoEEffects.FirstOrDefault(IsMultiHitSharedDamageEffectPath);
-        if (multiHitVfx.VfxID != 0)
-        {
-            target = multiHitVfx.TargetID.GetObject() as IBattleChara;
-            if (target != null)
-            {
-                isMultiHit = true;
-                return true;
-            }
-        }
-
-        // Then: Check for regular shared damage
-        VfxInfo regularVfx = AoEEffects.FirstOrDefault(IsShareDamageEffectPath);
-        if (regularVfx.VfxID != 0)
-        {
-            target = regularVfx.TargetID.GetObject() as IBattleChara;
-            return target != null;
-        }
-
-        return false;
-    }
-
-    /// <summary>
-    /// Attempts to retrieve the current target of a detected tank buster visual effect.
-    /// </summary>
-    /// <remarks>This method searches for an active tank buster visual effect and attempts to resolve its
-    /// target to a battle character. If no such effect is present or the target cannot be resolved, target is set to
-    /// null and the method returns false. Probably won't work in dual tank situation.</remarks>
-    /// <param name="target">When this method returns, contains the battle character targeted by the tank buster effect, if found; otherwise,
-    /// null. This parameter is passed uninitialized.</param>
-    /// <returns>true if a tank buster target is found and assigned to target; otherwise, false.</returns>
-    public static bool TryGetTankBusterTarget(out IBattleChara target)
-    {
-        target = null!;
-
-        var tankBusterVfx = VfxManager.TrackedEffects
-            .FilterToTargeted()
-            .FilterToTargetRole(CombatRole.Tank)
-            .Where(x => x.TargetID.GetObject().IsInParty())
-            .FirstOrDefault(IsTankBusterEffectPath);
-
-        if (tankBusterVfx.VfxID == 0)
-            return false;
-
-        if (tankBusterVfx.TargetID.GetObject() is not IBattleChara battleChara)
-            return false;
-
-        target = battleChara;
-        return true;
-    }
-
-    /// <summary>
-    /// Checks if the specified character has an active tank buster marker on them.
-    /// </summary>
-    /// <param name="targetObject">The character to check. Defaults to the local player.</param>
-    /// <returns>true if the target has an active tank buster effect, false otherwise.</returns>
-    public static bool HasIncomingTankBusterEffect(
-        IGameObject? targetObject = null)
-    {
-        // Default to local player if none provided
-        targetObject ??= Player.Object;
-
-        if (targetObject == null)
-            return false;
-
-        ulong targetId = targetObject.GameObjectId;
-
-        return VfxManager.TrackedEffects
-            .FilterToTarget(targetId)
-            .Any(IsTankBusterEffectPath);
-    }
-
     public static bool HasCleansableDoom(IGameObject? target = null)
     {
         target ??= CurrentTarget;
@@ -603,4 +549,5 @@ internal abstract partial class CustomComboFunctions
 
         return StatusCache.HasCleansableDoom(target);
     }
+
 }

@@ -1,22 +1,22 @@
 #region
 
-using System;
-using System.Linq;
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
 using ECommons.Logging;
-using WrathCombo.Attributes;
+using System;
+using System.Linq;
+using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 // ReSharper disable once RedundantUsingDirective
-using static WrathCombo.Data.ActionWatching;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
 
@@ -83,6 +83,12 @@ internal static class SimpleTarget
         public static IGameObject? AllyToHeal => GetStack();
 
         /// <summary>
+        /// Used exclusively for one-button healing features where retargeting may be optional.
+        /// </summary>
+        /// <seealso cref="AllyToHeal"/>
+        public static IGameObject? OneButtonHealLogic => AutoRotationController.AutorotHealTarget ?? AllyToHeal;
+
+        /// <summary>
         ///     The Default Heal Stack, with customization options.
         /// </summary>
         /// <remarks>
@@ -107,7 +113,7 @@ internal static class SimpleTarget
         ///     found in the stack.
         /// </summary>
         public static IGameObject? AllyToEsuna =>
-            GetStack(logicForEachEntryInStack: 
+            GetStack(logicForEachEntryInStack:
                 target => target.IfHasCleansable()) ??
             AnyCleansableAlly;
 
@@ -116,7 +122,7 @@ internal static class SimpleTarget
         /// </summary>
         public static IGameObject? AllyToRaise =>
             GetStack(StackOption.RaiseStack);
-        
+
         /// <summary>
         ///     The <see cref="AllyToHeal">Heal Stack</see>, but filtered to
         ///     those in Line of Sight.
@@ -342,6 +348,15 @@ internal static class SimpleTarget
             .OrderBy(x => GetTargetDistance(x))
             .FirstOrDefault();
 
+    public static IGameObject? NearestEnemyToTarget
+        (IGameObject? target, float maximumRangeFromPlayer = 35f) =>
+        Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() && x.IsTargetable && x.IsNotInvincible() &&
+                        x.IsWithinRange(maximumRangeFromPlayer))
+            .OrderBy(x => GetTargetDistance(x, target ?? CurrentTarget))
+            .FirstOrDefault();
+
     public static IGameObject? LowestHPEnemy =>
         Svc.Objects
             .OfType<IBattleChara>()
@@ -402,13 +417,21 @@ internal static class SimpleTarget
         ushort dotDebuff,
         int minHPPercent = 10,
         float reapplyThreshold = 1,
+        int maxNumberOfEnemiesInRange = 3) => DottableEnemy(dotAction, dotDebuff, _ => minHPPercent, reapplyThreshold, maxNumberOfEnemiesInRange);
+
+
+    public static IGameObject? DottableEnemy
+    (uint dotAction,
+        ushort dotDebuff,
+        Func<IGameObject?, int> minHPPercent,
+        float reapplyThreshold = 1,
         int maxNumberOfEnemiesInRange = 3)
     {
         var range = dotAction.ActionRange();
         var nearbyEnemies = Svc.Objects
             .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && 
-                        x.IsTargetable && 
+            .Where(x => x.IsHostile() &&
+                        x.IsTargetable &&
                         x.IsInCombat() &&
                         x.IsNotInvincible() &&
                         x.IsWithinRange(range))
@@ -419,7 +442,7 @@ internal static class SimpleTarget
 
         return nearbyEnemies
             .Where(x => x.CanUseOn(dotAction) &&
-                        (float)x.CurrentHp / x.MaxHp * 100f > minHPPercent &&
+                        (float)x.CurrentHp / x.MaxHp * 100f > minHPPercent(x) &&
                         !JustUsedOn(dotAction, x) &&
                         IsInLineOfSight(x) &&
                         GetStatusEffectRemainingTime
@@ -429,19 +452,53 @@ internal static class SimpleTarget
             .ThenByDescending(x => (float)x.CurrentHp / x.MaxHp)
             .FirstOrDefault();
     }
+
+    public static IGameObject? TargetWithDoTLowestRemainingTimer
+        (uint dotAction,
+        ushort dotDebuff)
+    {
+        var range = dotAction.ActionRange();
+        var nearbyEnemies = Svc.Objects
+            .OfType<IBattleChara>()
+            .Where(x => x.IsHostile() &&
+                        x.IsTargetable &&
+                        x.IsInCombat() &&
+                        x.IsNotInvincible() &&
+                        x.IsWithinRange(range))
+            .ToArray();
+
+        return nearbyEnemies
+            .Where(x => x.CanUseOn(dotAction) &&
+                        IsInLineOfSight(x) &&
+                        GetStatusEffectRemainingTime
+                            (dotDebuff, x) > 0 &&
+                        CanApplyStatus(x, dotDebuff))
+            .OrderBy(x => GetStatusEffectRemainingTime(dotDebuff, x))
+            .FirstOrDefault();
+    }
+
     public static IGameObject? BardRefreshableEnemy
     (uint refreshAction,
         ushort dotDebuff1,
         ushort dotDebuff2,
         int minHPPercent = 10,
         float minTime = 1,
+        int maxNumberOfEnemiesInRange = 3) => BardRefreshableEnemy(refreshAction, dotDebuff1, dotDebuff2, _ => minHPPercent, minTime, maxNumberOfEnemiesInRange);
+
+
+    public static IGameObject? BardRefreshableEnemy
+    (uint refreshAction,
+        ushort dotDebuff1,
+        ushort dotDebuff2,
+        Func<IGameObject?, int> minHPPercent,
+        float minTime = 1,
         int maxNumberOfEnemiesInRange = 3)
     {
         var range = refreshAction.ActionRange();
         var nearbyEnemies = Svc.Objects
             .OfType<IBattleChara>()
-            .Where(x => x.IsHostile() && 
-                        x.IsTargetable && 
+            .Where(x => x.IsHostile() &&
+                        x.IsTargetable &&
                         x.IsInCombat() &&
                         x.IsNotInvincible() &&
                         x.IsWithinRange(range))
@@ -452,7 +509,7 @@ internal static class SimpleTarget
 
         return nearbyEnemies
             .Where(x => x.CanUseOn(refreshAction) &&
-                        (float)x.CurrentHp / x.MaxHp * 100f > minHPPercent &&
+                        (float)x.CurrentHp / x.MaxHp * 100f > minHPPercent(x) &&
                         IsInLineOfSight(x) &&
                         !JustUsedOn(refreshAction, x) &&
                         HasStatusEffect(dotDebuff1, x) &&
@@ -645,7 +702,7 @@ internal static class SimpleTarget
         GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x.RealJob?.RowId ?? 0) is
+                GetRoleFromJob(x.RealJob?.RowId ?? 0) is
                     JobRole.RangedDPS)?.BattleChara;
 
     /// Gets any Magical DPS that is not the player.
@@ -653,7 +710,7 @@ internal static class SimpleTarget
         GetPartyMembers()
             .Where(x => x.BattleChara.IsNotThePlayer())
             .FirstOrDefault(x =>
-                RoleAttribute.GetRoleFromJob(x.RealJob?.RowId ?? 0) is
+                GetRoleFromJob(x.RealJob?.RowId ?? 0) is
                     JobRole.MagicalDPS)?.BattleChara;
 
     #endregion

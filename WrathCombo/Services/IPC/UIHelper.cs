@@ -460,7 +460,7 @@ public class UIHelper(Leasing leasing)
         ImGui.SameLine();
 
         if (forPreset is null)
-            ImGui.TextColoredWrapped(ImGuiColors.DalamudGrey, label);
+            ImGui.TextColoredWrapped(ImGuiColors.DalamudGrey, label.Split('#')[0]);
         else
             ImGui.TextColoredWrapped(ImGuiColors.DalamudGrey,
                 label.Contains("Auto") ? "" : label.Split('#')[0]);

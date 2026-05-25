@@ -18,39 +18,8 @@ internal partial class BLM
         TraitLevelChecked(Traits.EnhancedPolyglotII) ? 3 :
         TraitLevelChecked(Traits.EnhancedPolyglot) ? 2 : 1;
 
-    private static bool EndOfFirePhase =>
-        FirePhase && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
-
-    private static bool EndOfIcePhaseAoE =>
-        IcePhase && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
-
-    private static bool CanFlarestar =>
-        LevelChecked(FlareStar) && AstralSoulStacks is 6;
-
-    private static IStatus? ThunderDebuffST =>
-        GetStatusEffect(ThunderList[OriginalHook(Thunder)],CurrentTarget);
-
-    private static IStatus? ThunderDebuffAoE =>
-        GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
-
-    private static float TimeSinceFirestarterBuff =>
-        HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
-
     private static bool HasMaxPolyglotStacks =>
         PolyglotStacks == MaxPolyglot;
-
-    private static uint FireSpam =>
-        ActionReady(Fire4)
-            ? Fire4
-            : Fire;
-
-    private static uint BlizzardSpam =>
-        ActionReady(Blizzard4)
-            ? Blizzard4
-            : Blizzard;
-
-    private static bool HasMaxUmbralHeartStacks =>
-        UmbralHearts is 3;
 
     private static int HPThresholdLeylines =>
         BLM_ST_LeyLinesBossOption == 1 || !InBossEncounter()
@@ -61,14 +30,63 @@ internal partial class BLM
 
     #endregion
 
+    #region Fire Phase
+
+    private static bool CanFlarestar =>
+        LevelChecked(FlareStar) && AstralSoulStacks is 6;
+
+    private static float TimeSinceFirestarterBuff =>
+        HasStatusEffect(Buffs.Firestarter) ? GetPartyMembers().First().TimeSinceBuffApplied(Buffs.Firestarter) : 0;
+
+    private static uint FireSpam =>
+        ActionReady(Fire4)
+            ? Fire4
+            : Fire;
+
+    private static bool CanFire3 =>
+        LevelChecked(Fire3) && HasStatusEffect(Buffs.Firestarter) &&
+        (AstralFireStacks < 3 || !LevelChecked(Fire4) && TimeSinceFirestarterBuff >= GCD * 3);
+
+    private static bool CanFireParadox =>
+        ActiveParadox && MP.Cur >= MP.FireParadox &&
+        (!HasStatusEffect(Buffs.Firestarter) && AstralFireStacks < 3 ||
+         JustUsed(FlareStar, GCD * 4) ||
+         !LevelChecked(FlareStar) && ActionReady(Despair));
+
+    private static bool EndOfFirePhase =>
+        FirePhase && !ActionReady(Despair) && !ActionReady(FireSpam) && !ActionReady(FlareStar);
+
+    #endregion
+
+    #region Ice Phase
+
+    private static uint BlizzardSpam =>
+        ActionReady(Blizzard4)
+            ? Blizzard4
+            : Blizzard;
+
+    private static bool HasMaxUmbralHeartStacks =>
+        UmbralHearts is 3;
+
+    private static bool EndOfIcePhaseAoE =>
+        IcePhase && HasMaxUmbralHeartStacks && TraitLevelChecked(Traits.EnhancedAstralFire);
+
+    #endregion
+
     #region Thunder
+
+    private static IStatus? ThunderDebuffST =>
+        GetStatusEffect(ThunderList[OriginalHook(Thunder)], CurrentTarget);
+
+    private static IStatus? ThunderDebuffAoE =>
+        GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
     internal static bool CanUseThunder()
     {
         uint dotAction = OriginalHook(Thunder);
         int hpThreshold = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? ComputeHpThreshold() : 0;
         ThunderList.TryGetValue(dotAction, out ushort dotDebuffID);
-        int dotRefresh = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? BLM_ST_ThunderRefresh : 5;
+        float dotRefresh = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? BLM_ST_ThunderRefresh : 5;
         float dotRemaining = GetStatusEffectRemainingTime(dotDebuffID, CurrentTarget);
 
         return ActionReady(dotAction) &&
@@ -94,39 +112,60 @@ internal partial class BLM
     private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
         PrioritizedMovement =>
     [
+        //Despair at lvl 100
+        (Despair, Preset.BLM_ST_Movement,
+            () => BLM_ST_MovementOption[0] &&
+                  ActionReady(Despair) &&
+                  TraitLevelChecked(Traits.EnhancedAstralFire) &&
+                  FirePhase && MP.Cur is >= 800 and < 1500 &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+
         //Triplecast
         (Triplecast, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[0] &&
+            () => BLM_ST_MovementOption[1] &&
                   ActionReady(Triplecast) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast) &&
-                  !HasStatusEffect(Buffs.LeyLines)),
+                  !HasStatusEffect(Buffs.LeyLines) &&
+                  !JustUsed(Triplecast)),
 
         // Paradox
-        (OriginalHook(Paradox), Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[1] &&
-                  ActionReady(Paradox) &&
+        (OriginalHook(Fire), Preset.BLM_ST_Movement,
+            () => BLM_ST_MovementOption[2] &&
+                  ActionReady(OriginalHook(Paradox)) &&
                   FirePhase && ActiveParadox &&
+                  MP.Cur >= MP.FireParadox &&
                   !HasStatusEffect(Buffs.Firestarter) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast)),
 
         //Swiftcast
         (Role.Swiftcast, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[2] &&
+            () => BLM_ST_MovementOption[3] &&
                   ActionReady(Role.Swiftcast) &&
                   !HasStatusEffect(Buffs.Triplecast)),
 
         //Xeno
         (Xenoglossy, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[3] &&
+            () => BLM_ST_MovementOption[4] &&
+                  ActionReady(Xenoglossy) &&
                   HasPolyglotStacks() &&
+                  !HasStatusEffect(Buffs.Triplecast) &&
+                  !HasStatusEffect(Role.Buffs.Swiftcast)),
+
+        // Firestarter
+        (Fire3, Preset.BLM_ST_Movement,
+            () => BLM_ST_MovementOption[5] &&
+                  ActionReady(Fire3) &&
+                  FirePhase &&
+                  HasStatusEffect(Buffs.Firestarter) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast)),
 
         //Scathe
         (Scathe, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[4] &&
+            () => BLM_ST_MovementOption[6] &&
                   ActionReady(Scathe) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast))
@@ -307,6 +346,8 @@ internal partial class BLM
         internal static int FireI => GetResourceCost(OriginalHook(Fire));
 
         internal static int FireAoE => GetResourceCost(OriginalHook(Fire2));
+
+        internal static int FireParadox => GetResourceCost(Paradox);
     }
 
     private static readonly FrozenDictionary<uint, ushort> ThunderList = new Dictionary<uint, ushort>
@@ -318,6 +359,8 @@ internal partial class BLM
         { HighThunder, Debuffs.HighThunder },
         { HighThunder2, Debuffs.HighThunder2 }
     }.ToFrozenDictionary();
+
+    private static float GCD = GetCooldown(OriginalHook(Fire)).CooldownTotal;
 
     #endregion
 
@@ -366,6 +409,12 @@ internal partial class BLM
             LeyLines = 737,
             CircleOfPower = 738,
             Triplecast = 1211,
+            AstralFire = 173, // Do not use, for translation only
+            AstralFire2 = 174, // Do not use, for translation only
+            AstralFire3 = 175, // Do not use, for translation only
+            UmbralIce = 176, // Do not use, for translation only
+            UmbralIce2 = 177, // Do not use, for translation only
+            UmbralIce3 = 178, // Do not use, for translation only
             Thunderhead = 3870;
     }
 

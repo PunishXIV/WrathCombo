@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PlacesEarthlyStarInTheOpener" xml:space="preserve">
+    <value>오프너에서 {0}을(를) 사용합니다.</value>
+  </data>
+  <data name="DoesNotUseEarthlyStarInTheOpener" xml:space="preserve">
+    <value>오프너에서 {0}을(를) 사용하지 않습니다.</value>
+  </data>
+  <data name="OverwriteNonDPSCards" xml:space="preserve">
+    <value>주피감/보호막 카드 덮어쓰기</value>
+  </data>
+  <data name="WillDrawEvenIfYouHaveHealingCardsRemaining" xml:space="preserve">
+    <value>남은 회복용 카드가 있어도 카드뽑기를 실행합니다.</value>
+  </data>
+  <data name="FollowsNormalTargetingPlan" xml:space="preserve">
+    <value>기본 타겟팅 계획을 따릅니다.</value>
+  </data>
+  <data name="PlacesAtOwnFeetOnly" xml:space="preserve">
+    <value>자신의 발밑에만 설치</value>
+  </data>
+  <data name="UseWhenTargetIsAtOrBelowHP0NeverDetonateEarly100DetonateASAP" xml:space="preserve">
+    <value>대상의 HP%가 설정값 이하일 때 사용 (0% = 조기 폭발 안 함, 100% = 즉시 폭발)</value>
+  </data>
+  <data name="Standard0Priority" xml:space="preserve">
+    <value>기본 {0} 사용 우선순위:</value>
+  </data>
+  <data name="Emergency0Priority" xml:space="preserve">
+    <value>긴급 {0} 사용 우선순위:</value>
+  </data>
+  <data name="AlternativeAoEModeLeaves0AloneForManualHoTs" xml:space="preserve">
+    <value>대체 광역 공격 모드. 수동 지속 회복 관리를 위해 {0}은 그대로 둡니다.</value>
+  </data>
+  <data name="AlsoRetargetManuallyUsedCards" xml:space="preserve">
+    <value>수동으로 사용한 카드도 재대상 지정</value>
+  </data>
+  <data name="WillAlsoAutomaticallyTargetCardsThatYouManuallyUseAsInThoseOutsideOfYourDamageRotations" xml:space="preserve">
+    <value>딜 사이클 외에 수동으로 사용하는 카드도 최적의 대상에게 자동으로 타겟팅합니다.</value>
+  </data>
+  <data name="TargetOverrides" xml:space="preserve">
+    <value>대상 선택 우선순위</value>
+  </data>
+  <data name="NoOverride" xml:space="preserve">
+    <value>우선 순위 실행 안 함</value>
+  </data>
+  <data name="HardTargetOverride" xml:space="preserve">
+    <value>수동 선택 대상 우선 실행</value>
+  </data>
+  <data name="UIMouseOverOverride" xml:space="preserve">
+    <value>UI 마우스오버 우선 실행</value>
+  </data>
+  <data name="AnyMouseoverOverride" xml:space="preserve">
+    <value>마우스 오버 시 우선 실행</value>
+  </data>
+  <data name="FocusTargetOverrideWhenCorrectRole" xml:space="preserve">
+    <value>주시 대상 우선 실행 (적절한 역할일 때만)</value>
+  </data>
+  <data name="NoOverrideDesc" xml:space="preserve">
+    <value>수동 입력(마우스 오버 등)을 무시하고 파티원 상태를 자동으로 체크하여 카드를 배분합니다.
+카드는 'The Balance(더 밸런스)'의 가이드라인과 상태 체크(카드 효과 중복 방지, 피해량 감소 확인 등)에 따라 최적의 대상에게 지급됩니다.</value>
+  </data>
+  <data name="HardTargetOverrideDesc" xml:space="preserve">
+    <value>수동 선택 대상을 현재 선택보다 우선합니다. (단, 사거리 내에 있고 '피해량 감소'나 '쇠약' 디버프가 없는 대상만 해당)</value>
+  </data>
+  <data name="UIMouseOverOverrideDesc" xml:space="preserve">
+    <value>UI 마우스오버 대상을 현재 선택보다 우선합니다. (단, 사거리 내에 있고 '피해량 감소'나 '쇠약' 디버프가 없는 대상만 해당)</value>
+  </data>
+  <data name="AnyMouseoverOverrideDesc" xml:space="preserve">
+    <value>UI, 이름표, 캐릭터 순으로 마우스 오버한 대상을 현재 선택보다 우선합니다. (단, 사거리 내에 있고 '피해량 감소'나 '쇠약' 디버프가 없는 대상만 해당)</value>
+  </data>
+  <data name="FocusTargetOverrideWhenCorrectRoleDesc" xml:space="preserve">
+    <value>주시 대상을 현재 선택한 대상 보다 우선합니다. (단, 사거리 내에 있고 '피해량 감소'나 '쇠약'이 없어야 하며, '아제마의 균형'은 근거리, '할로네의 창'은 원거리 대상일 때만 해당)</value>
+  </data>
+  <data name="OptionsToTryToRetarget0ToBeforeSelf" xml:space="preserve">
+    <value>자신에게 {0}을(를) 사용하기 전, 대상 재지정 시도 옵션:</value>
+  </data>
+  <data name="WillPlaceAtHardTargetIfEnemy" xml:space="preserve">
+    <value>선택한 대상이 적일 경우, 해당 대상의 발밑에 설치합니다.</value>
+  </data>
+  <data name="WillPlaceAtHardTargetIfAlly" xml:space="preserve">
+    <value>선택한 대상이 아군일 경우, 해당 대상의 발밑에 설치합니다.</value>
+  </data>
+  <data name="WillAdd0ForMoreMitigation" xml:space="preserve">
+    <value>생존력 강화를 위해 {0}을(를) 추가로 사용합니다.</value>
+  </data>
+  <data name="WillAdd0ToTopOffTargetsHealth" xml:space="preserve">
+    <value>대상의 체력을 가득 채우기 위해 {0}을(를) 추가로 사용합니다.</value>
+  </data>
+  <data name="TargetHPToUse0Below" xml:space="preserve">
+    <value>{0} 사용을 위한 대상 HP% 임계값:</value>
+  </data>
+</root>

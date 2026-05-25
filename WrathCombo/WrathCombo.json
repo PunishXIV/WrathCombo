@@ -2,7 +2,7 @@
   "Author": "Team Wrath",
   "Name": "Wrath Combo",
   "InternalName": "WrathCombo",
-  "DalamudApiLevel": 14,
+  "DalamudApiLevel": 15,
   "Punchline": "Condenses combos and mutually exclusive abilities onto a single button - and then some.",
   "Description": "Condenses combos and mutually exclusive abilities onto a single button - and then some.",
   "RepoUrl": "https://github.com/PunishXIV/WrathCombo",

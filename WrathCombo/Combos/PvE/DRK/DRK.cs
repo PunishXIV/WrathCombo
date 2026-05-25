@@ -1,5 +1,6 @@
 #region
 
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Data;
@@ -286,7 +287,7 @@ internal partial class DRK : Tank
                 return Role.Interject;
 
             if (IsEnabled(Preset.DRK_oGCD_Delirium) &&
-                ActionReady(BloodWeapon))
+                ActionReady(OriginalHook(BloodWeapon)))
                 return OriginalHook(Delirium);
 
             if (IsEnabled(Preset.DRK_oGCD_Shadow) &&
@@ -410,7 +411,7 @@ internal partial class DRK : Tank
 
             var checkTarget = target ?? SimpleTarget.Self;
             if (IsEnabled(Preset.DRK_Retarget_Oblation_DoubleProtection) &&
-                (HasStatusEffect(Buffs.Oblation, checkTarget, anyOwner: true) ||
+                (GetStatusEffectRemainingTime(Buffs.Oblation, checkTarget, anyOwner: true) > DRK_RetargetOblationDuration ||
                  JustUsedOn(Oblation, checkTarget)) &&
                 CanApplyStatus(checkTarget, Buffs.Oblation))
                 return All.SavageBlade;
@@ -420,6 +421,31 @@ internal partial class DRK : Tank
                 return actionID.Retarget(target);
 
             return actionID;
+        }
+    }
+    internal class DRK_RetargetShadowstride: CustomCombo
+    {
+        protected internal override Preset Preset => Preset.DRK_RetargetShadowstride;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Shadowstride)
+                return actionID;
+            
+            IGameObject? target =
+                // Mouseover
+                SimpleTarget.Stack.MouseOver.IfHostile()
+                    .IfWithinRange(Shadowstride.ActionRange()) ??
+
+                // Nearest Enemy to Mouseover
+                SimpleTarget.NearestEnemyToTarget(SimpleTarget.Stack.MouseOver,
+                    Shadowstride.ActionRange()) ??
+    
+                CurrentTarget.IfHostile().IfWithinRange(Shadowstride.ActionRange());
+            
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
         }
     }
 

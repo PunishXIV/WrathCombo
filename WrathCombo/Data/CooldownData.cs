@@ -25,10 +25,13 @@ internal class CooldownData
     public unsafe float CooldownElapsed => ActionManager.Instance()->GetRecastTimeElapsed(ActionType.Action, ActionID);
 
     /// <summary> Gets the total cooldown time. </summary>
-    public unsafe float CooldownTotal => Math.Max(ActionManager.Instance()->GetRecastTime(ActionType.Action, ActionID), (BaseCooldownTotal) * MaxCharges);
+    public unsafe float CooldownTotal => BaseCooldownTotal * MaxCharges;
 
     /// <summary> Includes Skill/Spell Speed modifiers along with any job trait modifiers </summary>
     public unsafe float BaseCooldownTotal => ActionManager.GetAdjustedRecastTime(ActionType.Action, ActionID) / 1000f;
+
+    /// <summary> Current total recast for an action, affected by other actions. </summary>
+    public unsafe float CurrentRecast => ActionManager.Instance()->GetRecastTime(ActionType.Action, ActionID);
 
     /// <summary> Gets the cooldown time remaining. </summary>
     public unsafe float CooldownRemaining
@@ -36,7 +39,7 @@ internal class CooldownData
         get
         {
             var a = ActionRequestIPCProvider.GetArtificialCooldown(ActionType.Action, this.ActionID);
-            var ret = CooldownElapsed == 0 ? 0 : Math.Max(0, CooldownTotal - CooldownElapsed);
+            var ret = CurrentRecast - CooldownElapsed;
             return Math.Max(a, ret);
         }
     }
@@ -54,7 +57,7 @@ internal class CooldownData
         get
         {
             if (MaxCharges == 1)
-                return CooldownRemaining == 0 ? 1 : 0u;
+                return ActionManager.Instance()->GetActionStatus(ActionType.Action, ActionID) == 0 || CooldownRemaining == 0 ? 1 : 0u;
 
             return ActionManager.Instance()->GetCurrentCharges(ActionID);
         }

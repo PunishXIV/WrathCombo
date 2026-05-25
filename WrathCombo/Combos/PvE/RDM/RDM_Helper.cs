@@ -153,6 +153,7 @@ internal partial class RDM
     internal static bool CanInstantCD => !InCombo && !HasSwiftcast && !CanGrandImpact && !HasEmbolden && !HasDualcast && !HasAccelerate && !InCombo;
     internal static bool CanEngagement => InMeleeRange() && HasCharges(Engagement) && LevelChecked(Engagement);
     internal static bool PoolEngagement => !LevelChecked(Embolden) || HasEmbolden || GetRemainingCharges(Engagement) >= 1 && GetCooldownChargeRemainingTime(Engagement) < 3;
+    internal static bool SaveEngagement => GetRemainingCharges(Engagement) >= 2;
     internal static bool CanCorps => LevelChecked(Corpsacorps) && GetRemainingCharges(Corpsacorps) >= 1 && GetCooldownChargeRemainingTime(Corpsacorps) < 1;
     internal static bool CanInstantCast => HasDualcast || HasAccelerate || HasSwiftcast;
     internal static bool CanNotMagickBarrier => !ActionReady(MagickBarrier) || HasStatusEffect(Buffs.MagickBarrier, anyOwner: true);
@@ -316,7 +317,7 @@ internal partial class RDM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
         [
             ([13, 15, 19, 20], () => !InMeleeRange()),
-            ([35],() => !HasStatusEffect(Buffs.Swiftcast))
+            ([35],() => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
@@ -384,7 +385,7 @@ internal partial class RDM
         public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } = 
         [
             ([15, 20], () => !InMeleeRange()),
-            ([35], () => !HasStatusEffect(Buffs.Swiftcast))
+            ([35], () => !HasStatusEffect(Buffs.Swiftcast) && !JustUsed(Role.Swiftcast))
         ];
 
         internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;

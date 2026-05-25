@@ -202,8 +202,8 @@ internal partial class DRK
             #region Salt and Darkness
 
             if ((flags.HasFlag(Combo.Simple) ||
-                 flags.HasFlag(Combo.AoE) ||
-                 IsEnabled(Preset.DRK_ST_CD_Darkness)) &&
+                 IsAoEEnabled(flags, Preset.DRK_AoE_CD_Darkness) ||
+                 IsSTEnabled(flags, Preset.DRK_ST_CD_Darkness)) &&
                 LevelChecked(SaltAndDarkness) &&
                 IsOffCooldown(SaltAndDarkness) &&
                 HasStatusEffect(Buffs.SaltedEarth) &&
@@ -217,11 +217,18 @@ internal partial class DRK
             #region Variables
 
             var bringerInBurst =
-                flags.HasFlag(Combo.Simple) || flags.HasFlag(Combo.AoE) ||
+                flags.HasFlag(Combo.Simple) ||
+                // ST without pooling
                 (flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST) &&
                  !IsEnabled(Preset.DRK_ST_CD_BringerBurst)) ||
-                (flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.ST) &&
-                 IsEnabled(Preset.DRK_ST_CD_BringerBurst) &&
+                // AoE without pooling
+                (flags.HasFlag(Combo.Adv) && flags.HasFlag(Combo.AoE) &&
+                 !IsEnabled(Preset.DRK_AoE_CD_BringerBurst)) ||
+                // Advanced, with pooling
+                (flags.HasFlag(Combo.Adv) &&
+                 (IsSTEnabled(flags, Preset.DRK_ST_CD_BringerBurst) ||
+                  IsAoEEnabled(flags, Preset.DRK_AoE_CD_BringerBurst)) &&
+                 // Burst, to send the pooled ShB's
                  GetCooldownRemainingTime(LivingShadow) >= 90 &&
                  !HasStatusEffect(Buffs.Scorn));
 
@@ -244,7 +251,9 @@ internal partial class DRK
                 ActionReady(CarveAndSpit) &&
                 (int)LocalPlayer.CurrentMp <= 9400 &&
                 (!LevelChecked(LivingShadow) ||
-                 GetCooldownRemainingTime(LivingShadow) > 20))
+                 GetCooldownRemainingTime(LivingShadow) > 20) &&
+                (!LevelChecked(BloodWeapon) ||
+                 GetCooldownRemainingTime(BloodWeapon) > 10))
                 return (action = CarveAndSpit) != 0;
 
             #endregion
@@ -263,7 +272,11 @@ internal partial class DRK
                 (flags.HasFlag(Combo.Simple) ||
                  IsEnabled(Preset.DRK_AoE_CD_Drain)) &&
                 ActionReady(AbyssalDrain) &&
-                PlayerHealthPercentageHp() <= drainHPThreshold)
+                PlayerHealthPercentageHp() <= drainHPThreshold &&
+                // Trying to die (unless it's the final moments)
+                GetStatusEffectRemainingTime(Buffs.LivingDead) < 1 &&
+                // Has better healing
+                !HasStatusEffect(Buffs.WalkingDead))
                 return (action = AbyssalDrain) != 0;
 
             #endregion
@@ -330,7 +343,8 @@ internal partial class DRK
 
             // Bail if Mitigation is not enabled for this combo
             // (unless IPC-controlled)
-            if (config != 1 || P.UIHelper.PresetControlled(preset)?.enabled == true)
+            if (config != (int)SimpleMitigation.On &&
+                P.UIHelper.PresetControlled(preset)?.enabled != true)
                 return false;
 
             if (InBossEncounter())
@@ -348,6 +362,9 @@ internal partial class DRK
         {
             // Bail if non-boss mitigation is not enabled
             if (!IsEnabled(Preset.DRK_Mitigation_NonBoss))
+                return false;
+            //Bail if we haven't been in combat long enough and are moving (Still Pulling)
+            if (CombatEngageDuration().TotalSeconds <= 15 && IsMoving()) 
                 return false;
 
             #region Living Dead
@@ -373,6 +390,7 @@ internal partial class DRK
             if (JustUsedMitigation) return false;
 
             var numberOfEnemies = NumberOfEnemiesInRange(Role.Reprisal);
+            var pre70Mitigation = !LevelChecked(BlackestNight) && numberOfEnemies >= 3;
 
             #region TBN
 
@@ -388,7 +406,7 @@ internal partial class DRK
 
             if (IsEnabled(Preset.DRK_Mitigation_NonBoss_DarkMissionary) &&
                 ActionReady(DarkMissionary) &&
-                numberOfEnemies > 4 &&
+                (numberOfEnemies >= 5 || pre70Mitigation) &&
                 !JustUsed(OriginalHook(ShadowWall), 15f))
                 return (action = DarkMissionary) != 0;
 
@@ -415,7 +433,7 @@ internal partial class DRK
 
             #region Mitigation 5+
 
-            if (numberOfEnemies >= 5)
+            if (numberOfEnemies >= 5 || pre70Mitigation)
             {
                 if (IsEnabled(Preset.DRK_Mitigation_NonBoss_ShadowWall) &&
                     ActionReady(OriginalHook(ShadowWall)))
@@ -468,11 +486,15 @@ internal partial class DRK
                     DRK_Mit_Boss_BlackestNight_TankBuster_Difficulty,
                     DRK_Boss_Mit_DifficultyListSet);
 
+            var blackestNightDelay = flags.HasFlag(Combo.Simple)
+                ? 0
+                : DRK_Mitigation_Boss_BlackestNightDelay;
+
             #endregion
 
             if (ActionReady(BlackestNight) &&
                 IsEnabled(Preset.DRK_Mitigation_Boss_BlackestNight_TB) &&
-                HasIncomingTankBusterEffect() &&
+                HasIncomingTankBusterEffect(out var incomingBusterAge) && incomingBusterAge >= blackestNightDelay &&
                 blackestNightInMitigationContent)
                 return (action = BlackestNight) != 0;
 

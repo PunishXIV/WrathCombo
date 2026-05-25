@@ -1,0 +1,203 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add0or1or2or3DependingonStackAndLevel" xml:space="preserve">
+    <value>Adds {0} / {1} / {2} in {3} depending on stacks and level</value>
+  </data>
+  <data name="Add0Or1WhenIn2" xml:space="preserve">
+    <value>Adds {0} / {1} when in {2} and stack is less than 3</value>
+  </data>
+  <data name="Add0WhenBelow2400MP" xml:space="preserve">
+    <value>Adds {0} when in {1} and below 2400 MP.</value>
+  </data>
+  <data name="Add0WhenIn1AndAbove800MP" xml:space="preserve">
+    <value>Adds {0} when in {1} and above 800 MP.</value>
+  </data>
+  <data name="AddFlarestarinAF" xml:space="preserve">
+    <value>Adds {0} in {1} when ready.</value>
+  </data>
+  <data name="DoNotUseUnderLeylines" xml:space="preserve">
+    <value>Do not use while under the effect of {0}.
+This is the recommended behaviour.</value>
+  </data>
+  <data name="DontChangeFireInUmbralIce" xml:space="preserve">
+    <value>Leaves {0} in {2} 
+Will Use {0} / {1} if selected above.</value>
+  </data>
+  <data name="NotUnderLeylines" xml:space="preserve">
+    <value>Not under {0}</value>
+  </data>
+  <data name="ReplaceBlizzard3WithBlizzardWhenInUI3" xml:space="preserve">
+    <value>Replaces {0} with {1} when in {2}.</value>
+  </data>
+  <data name="ReplaceBlizzardWithBlizzard3WhenNotInUI3" xml:space="preserve">
+    <value>Replaces {0} with {1} when out of {2}.</value>
+  </data>
+  <data name="ReplaceFire3WithFireWhenInAF3" xml:space="preserve">
+    <value>Replaces {0} with {1} when in {2}.</value>
+  </data>
+  <data name="ReplaceFireWithFire3WhenNotInAF3OrCombat" xml:space="preserve">
+    <value>Replaces {0} with {1} when out of {2} or not in combat.</value>
+  </data>
+  <data name="ShowXenoglossyWhenAmplifierIsOnCooldown" xml:space="preserve">
+    <value>Makes it so that {0} also shows when {1} is on cooldown.</value>
+  </data>
+  <data name="ShowXenoglossyWhenAmplifierOnCD" xml:space="preserve">
+    <value>Show {0} when {1} is on cooldown</value>
+  </data>
+  <data name="UseDespairWhenBelow1500MP" xml:space="preserve">
+    <value>Use {0} when below 1500 MP and when it is an instant cast (level 100 only).</value>
+  </data>
+  <data name="UseFire3WhenYouHaveFirestarterProc" xml:space="preserve">
+    <value>Use {0} when you have {1} proc.</value>
+  </data>
+  <data name="UseParadoxWhenInAF3" xml:space="preserve">
+    <value>Use {0} when in {1}.</value>
+  </data>
+  <data name="UseSwiftcastWhenNoTriplecast" xml:space="preserve">
+    <value>Use {0} when you don't have {1}.</value>
+  </data>
+  <data name="UseTriplecastWhenNoSwiftcast" xml:space="preserve">
+    <value>Use {0} when you don't have {1} active.</value>
+  </data>
+  <data name="RequireHPandGroupwide" xml:space="preserve">
+    <value>Require both HP check and groupwide damage incoming</value>
+  </data>
+  <data name="ManawardHPThresholdAndGroupwideDesc" xml:space="preserve">
+    <value>Will only use {0} when both HP is under the slider threshold, and when groupwide damage is incoming</value>
+  </data>
+  <data name="OnlySolo" xml:space="preserve">
+    <value>Only require HP threshold for solo play</value>
+  </data>
+  <data name="OnlySoloDesc" xml:space="preserve">
+    <value>When solo (Chocobos do not count), will only require to meet the HP threshold. In a party, it will require both the HP threshold and groupwide damage incoming.</value>
+  </data>
+  <data name="OnlyTriggerGroupwide" xml:space="preserve">
+    <value>Trigger only on groupwide damage incoming</value>
+  </data>
+  <data name="OnlyTriggerHP" xml:space="preserve">
+    <value>Trigger only on HP threshold</value>
+  </data>
+  <data name="OnlyTriggerHPDesc" xml:space="preserve">
+    <value>Will only use {0} when HP is under the slider threshold, and will not wait for any groupwide damage to be detected (mostly for solo-play)</value>
+  </data>
+  <data name="OnlyTriggerGroupwideDesc" xml:space="preserve">
+    <value>Will only use {0} when groupwide damage is incoming</value>
+  </data>
+</root>

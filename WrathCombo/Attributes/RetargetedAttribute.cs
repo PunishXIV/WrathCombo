@@ -2,7 +2,6 @@
 
 using ECommons.Logging;
 using System;
-using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.Services;
@@ -44,7 +43,7 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
         "Settings Tab > Retarget (Single Target) Healing Actions";
     private const Condition DefaultCondition =
         Condition.RetargetHealingActionsEnabled;
-    
+
     /// <summary>
     ///     Designates a Preset as one that may be Retargeted.
     /// </summary>
@@ -71,7 +70,7 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
         PossibleCondition = condition;
         RetargetedActions = retargetedActions;
     }
-    
+
     /// <seealso cref="PossiblyRetargetedAttribute(string, Condition, uint[])"/>
     internal PossiblyRetargetedAttribute(params uint[] retargetedActions)
         : this(DefaultSettingInfo, DefaultCondition, retargetedActions)
@@ -105,7 +104,7 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
         SCHRetargetingFeaturesEnabledForSTMit,
         SCHRetargetingFeaturesEnabledForAoEMit
     }
-    
+
     /// <summary>
     ///     Checks if a given <see cref="Condition" />
     ///     (for a <see cref="PossiblyRetargetedAttribute" />)
@@ -193,7 +192,7 @@ internal class PossiblyRetargetedAttribute : RetargetedAttributeBase
             case Condition.SCHRetargetingFeaturesEnabledForAoEMit:
                 return IsEnabled(Preset.SCH_Retarget) &&
                        IsEnabled(Preset.SCH_Retarget_SacredSoil);
-            
+
             default:
                 PluginLog.Error($"Unknown PossiblyRetargeted Condition: {condition}");
                 return null;

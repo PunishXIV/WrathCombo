@@ -434,6 +434,12 @@ resources below, or the first several sections of this guide.
 
 ## Changelog
 
+- PunishXIV/WrathCombo#1172 - Exposed existing `SetAutoRotationConfigState` value 
+  `UnTargetAndDisableForPenalty`, to handle Pyretic-like mechanics,
+  `1.0.4.6`.
+- PunishXIV/WrathCombo#1020 - Exposed existing `SetAutoRotationConfigState` values 
+  `BypassQuest` and `BypassFATE`, to get around `InCombatOnly`,
+  `1.0.3.9`.
 - [9d80540](https://github.com/PunishXIV/WrathCombo/commit/9d80540) - Added `SetAutoRotationConfigState` values 
   `DPSAlwaysHardTarget` and `HealerAlwaysHardTarget` now that Auto
   Rotation does not change the target by default, `1.0.3.4`.

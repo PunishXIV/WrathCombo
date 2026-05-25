@@ -18,6 +18,7 @@ public class AutoRotationConfig
     public DPSSettings DPSSettings = new();
     public int Throttler = 50;
     public bool OrbwalkerIntegration;
+    public float QueueWindow = 0.3f;
 }
 
 public class DPSSettings
@@ -28,7 +29,8 @@ public class DPSSettings
     public bool PreferNonCombat = false;
     public bool OnlyAttackInCombat = false;
     public bool DPSAlwaysHardTarget = false;
-    public float MaxDistance = 25;
+    public float MaxDistance = 30;
+    public bool IgnoreRangeInBoss = true;
     public bool AoEIgnoreManual = false;
     public bool UnTargetAndDisableForPenalty = false;
 }
@@ -52,5 +54,7 @@ public class HealerSettings
     public bool PreEmptiveHoT = false;
     public bool IncludeNPCs = false;
     public bool HealerAlwaysHardTarget = false;
+    public bool HandleRaidwides = false;
+    public bool HandleTankbusters = false;
 
 }

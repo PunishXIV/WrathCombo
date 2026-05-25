@@ -18,7 +18,7 @@ internal partial class NIN
     public static FrozenSet<uint> NormalJutsus = [FumaShuriken, Raiton, Katon, Doton, Suiton, Hyoton, HyoshoRanryu, GokaMekkyaku];
     internal static bool STSimpleMode => IsEnabled(Preset.NIN_ST_SimpleMode);
     internal static bool AoESimpleMode => IsEnabled(Preset.NIN_AoE_SimpleMode);
-    internal static bool NinjaWeave => CanWeave(.6f, 10);
+    internal static bool NinjaWeave => CanWeave(.3f, 10);
 
     #region Mudra Logic
     public static uint CurrentNinjutsu => OriginalHook(Ninjutsu);
@@ -42,7 +42,7 @@ internal partial class NIN
                                           (!HasKassatsu || IsNotEnabled(Preset.NIN_ST_AdvancedMode_Ninjitsus_Hyosho) && !STSimpleMode || !LevelChecked(HyoshoRanryu)) && //Use kassatsu on it if Hyosho isn't selected. 
                                            (TrickDebuff || // Buff Window
                                            !LevelChecked(Suiton) || //Dont Pool because of Suiton not learned yet
-                                           GetCooldownChargeRemainingTime(Ten) < 1 || // Spend to avoid cap
+                                           GetCooldownChargeRemainingTime(Ten) < 1 && TrickCD > 18|| // Spend to avoid cap
                                            !NIN_ST_AdvancedMode_Ninjitsus_Raiton_Pooling && !STSimpleMode || //Dont Pool because of Raiton Option
                                            NIN_ST_AdvancedMode_Ninjitsus_Raiton_Uptime && !InMeleeRange() && GetCooldownChargeRemainingTime(Ten) <= TrickCD - 10); //Uptime option
 
@@ -78,7 +78,7 @@ internal partial class NIN
                                                   !TrickDebuff);
     internal static bool CanThrowingDaggers => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && !InMeleeRange() &&
                                                !HasStatusEffect(Buffs.RaijuReady);
-    internal static bool CanThrowingDaggersAoE => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && GetTargetDistance() >= 4.5 &&
+    internal static bool CanThrowingDaggersAoE => !MudraPhase && ActionReady(ThrowingDaggers) && HasTarget() && GetTargetDistance() >= 4.5 && InActionRange(ThrowingDaggers) &&
                                                   !HasStatusEffect(Buffs.RaijuReady);
     internal static bool CanRaiju => !MudraPhase && HasStatusEffect(Buffs.RaijuReady);
     #endregion
@@ -103,10 +103,10 @@ internal partial class NIN
 
     internal static bool CanMugST => ActionReady(OriginalHook(Mug)) && CanApplyStatus(CurrentTarget, [Debuffs.Mug, Debuffs.Dokumori]) && CanDelayedWeave(1.25f, .6f, 10) && !MudraPhase &&
                                    (TrickCD <= 6 || TrickDisabledST) &&
-                                   (LevelChecked(Dokumori) && GetTargetDistance() <= 8 || InMeleeRange());
+                                   (LevelChecked(Dokumori) && InActionRange(Dokumori) || InMeleeRange());
     internal static bool CanMugAoE => ActionReady(OriginalHook(Mug)) && CanApplyStatus(CurrentTarget, [Debuffs.Mug, Debuffs.Dokumori]) && CanDelayedWeave(1.25f, .6f, 10) && !MudraPhase &&
                                    (TrickCD <= 6 || TrickDisabledAoE) &&
-                                   (LevelChecked(Dokumori) && GetTargetDistance() <= 8 || InMeleeRange());
+                                   (LevelChecked(Dokumori) && InActionRange(Dokumori) || InMeleeRange());
 
     internal static bool TrickDebuff => HasStatusEffect(Debuffs.TrickAttack, CurrentTarget) || HasStatusEffect(Debuffs.KunaisBane, CurrentTarget) || JustUsed(OriginalHook(TrickAttack));
     internal static bool MugDebuff => HasStatusEffect(Debuffs.Mug, CurrentTarget) || HasStatusEffect(Debuffs.Dokumori, CurrentTarget) || JustUsed(OriginalHook(Mug));
@@ -154,9 +154,9 @@ internal partial class NIN
                                       (BuffWindow || TrickDisabledAoE);
 
     internal static bool CanAssassinate => !MudraPhase && ActionReady(OriginalHook(Assassinate)) && NinjaWeave &&
-                                           (BuffWindow || TrickDisabledST);
+                                           (BuffWindow || TrickDisabledST || !LevelChecked(Suiton));
     internal static bool CanAssassinateAoE => !MudraPhase && ActionReady(OriginalHook(Assassinate)) && NinjaWeave &&
-                                           (BuffWindow || TrickDisabledAoE);
+                                           (BuffWindow || TrickDisabledAoE || !LevelChecked(Huton));
 
     internal static bool CanTenChiJin => !MudraPhase && !MudraAlmostReady && IsOffCooldown(TenChiJin) && LevelChecked(TenChiJin) && NinjaWeave &&
                                          (BuffWindow || TrickDisabledST);

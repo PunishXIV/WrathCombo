@@ -1,6 +1,7 @@
 using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.JobConfigs;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -54,7 +55,7 @@ internal partial class NIN
 
         internal static UserBoolArray
             NIN_MudraProtection_Options = new("NIN_MudraProtection_Options");
-        
+
         internal static UserFloat
             NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill = new("NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill", 3f);
         #endregion
@@ -82,11 +83,11 @@ internal partial class NIN
                     DrawSliderInt(0, 100, NIN_ST_AdvancedMode_Mug_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(NIN_ST_AdvancedMode_Mug_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
                     DrawHorizontalRadioButton(NIN_ST_AdvancedMode_Mug_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
                     ImGui.Unindent();
                     break;
 
@@ -94,11 +95,11 @@ internal partial class NIN
                     DrawSliderInt(0, 100, NIN_ST_AdvancedMode_TrickAttack_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(NIN_ST_AdvancedMode_TrickAttack_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
                     DrawHorizontalRadioButton(NIN_ST_AdvancedMode_TrickAttack_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
                     ImGui.Unindent();
                     break;
 
@@ -109,7 +110,7 @@ internal partial class NIN
                         "Will Use Raiton when out of Melee range of the target, " +
                         "\nThis can negatively affect your burst windows");
                     break;
-                    
+
                 case Preset.NIN_ST_AdvancedMode_Ninjitsus_Suiton:
                     DrawSliderInt(0, 21, NIN_ST_AdvancedMode_Ninjitsus_Suiton_Setup,
                         "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Suiton.");
@@ -146,9 +147,9 @@ internal partial class NIN
 
                 #region AoE
                 case Preset.NIN_AoE_AdvancedMode_Ninjitsus_Katon:
-                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling, "Katon Pooling", 
+                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Pooling, "Katon Pooling",
                         "Will Pool the charges, saving them for Trick Window");
-                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime, "Katon Uptime", 
+                    DrawAdditionalBoolChoice(NIN_AoE_AdvancedMode_Ninjitsus_Katon_Uptime, "Katon Uptime",
                         "Will Use Katon when out of Melee range of the target, " +
                         "\nThis can negatively affect your burst windows");
                     break;
@@ -156,24 +157,24 @@ internal partial class NIN
                     DrawSliderInt(0, 21, NIN_AoE_AdvancedMode_Ninjitsus_Huton_Setup,
                         "Set the amount of time remaining on Trick Attack cooldown before trying to set up with Huton.");
                     break;
-                  
+
                 case Preset.NIN_AoE_AdvancedMode_Ninjitsus_Doton:
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Ninjitsus_Doton_Threshold,
                         "Sets the max remaining HP percentage of the current target to cast Doton.");
-                    ImGui.Indent(); 
+                    ImGui.Indent();
                     DrawSliderFloat(0, 3, NIN_AoE_AdvancedMode_Ninjitsus_Doton_TimeStill,"How Long Standing still before using Doton (in seconds):", decimals: 1);
-                    ImGui.Unindent(); 
+                    ImGui.Unindent();
                     break;
 
                 case Preset.NIN_AoE_AdvancedMode_Mug:
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_Mug_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(NIN_AoE_AdvancedMode_Mug_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
                     DrawHorizontalRadioButton(NIN_AoE_AdvancedMode_Mug_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
                     ImGui.Unindent();
                     break;
 
@@ -181,11 +182,11 @@ internal partial class NIN
                     DrawSliderInt(0, 100, NIN_AoE_AdvancedMode_TrickAttack_Threshold,
                         $"Stop using on targets below this HP % (0% = always use, 100% = never use).");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(NIN_AoE_AdvancedMode_TrickAttack_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
                     DrawHorizontalRadioButton(NIN_AoE_AdvancedMode_TrickAttack_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
                     ImGui.Unindent();
                     break;
 
@@ -249,16 +250,16 @@ internal partial class NIN
                     ImGui.Unindent();
                     break;
 
-                
+
                 case Preset.NIN_MudraProtection:
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Shade Shift", "Replaces with Savage Blade while in Mudra.", 6, 0);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Shukuchi", "Replaces with Savage Blade while in Mudra.", 6, 1);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Feint", "Replaces with Savage Blade while in Mudra or Current Target already has Feint", 6, 2);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Bloodbath", "Replaces with Savage Blade while in Mudra.", 6, 3);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Second Wind", "Replaces with Savage Blade while in Mudra.", 6, 4);
-                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, "Leg Sweep", "Replaces with Savage Blade while in Mudra.", 6, 5);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, ShadeShift.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 0);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Shukuchi.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 1);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.Feint.ActionName(), "Replaces with Savage Blade while in Mudra or Current Target already has Feint", 6, 2);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.Bloodbath.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 3);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.SecondWind.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 4);
+                    DrawHorizontalMultiChoice(NIN_MudraProtection_Options, Role.LegSweep.ActionName(), "Replaces with Savage Blade while in Mudra.", 6, 5);
                     break;
-                    
+
                 #endregion
 
             }

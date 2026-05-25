@@ -9,6 +9,8 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using System;
 using System.Linq;
+using Dalamud.Game.ClientState.Statuses;
+using ECommons.Logging;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
@@ -319,6 +321,64 @@ public static class GameObjectExtensions
         // `IsHostile` already exists, and works the exact same as we would write here
 
         #endregion
+
+        #region Safe Access to Members
+        
+        public ulong? SafeGameObjectId
+        {
+            get
+            {
+                try
+                {
+                    var safeObj = obj.Address.GetObject();
+                    if (safeObj is null)
+                    {
+                        PluginLog.Verbose("[ObjectSafety] Would have failed " +
+                                          "accessing any member, object gone");
+                        return null;
+                    }
+
+                    var id = safeObj.GameObjectId;
+                    if (id is 0)
+                        return null;
+
+                    return id;
+                }
+                catch
+                {
+                    PluginLog.Verbose("[ObjectSafety] Would have failed " +
+                                      "doing SafeGameObjectId");
+                }
+                return null;
+            }
+        }
+
+        public StatusList? SafeStatusList
+        {
+            get
+            {
+                try
+                {
+                    var safeObj = obj.Address.GetObject();
+                    if (safeObj is null)
+                    {
+                        PluginLog.Verbose("[ObjectSafety] Would have failed " +
+                                          "accessing any member, object gone");
+                        return null;
+                    }
+                    if (safeObj is IBattleChara battleChara)
+                        return battleChara.StatusList;
+                }
+                catch
+                {
+                    PluginLog.Verbose("[ObjectSafety] Would have failed " +
+                                      "doing SafeStatusList");
+                }
+                return null;
+            }
+        }
+
+        #endregion
     }
 
     #region Get Objects more conveniently
@@ -357,6 +417,16 @@ public static class GameObjectExtensions
     /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
     public static IGameObject? GetObject(this ulong? id) =>
         id == null ? null : GetObjectFrom((ulong)id);
+    
+    /// <summary>
+    ///     Converts a GameObject pointer to an IGameObject from the object table.<br />
+    ///     Primarily for safely accessing object members, since the address is
+    ///     always set.
+    /// </summary>
+    /// <param name="address">The GameObject pointer to convert.</param>
+    /// <returns>An IGameObject if found in the object table; otherwise, null.</returns>
+    public static IGameObject? GetObject(this IntPtr address) =>
+        address != IntPtr.Zero ? Svc.Objects.FirstOrDefault(x => x.Address == address) : null;
 
     #endregion
 }

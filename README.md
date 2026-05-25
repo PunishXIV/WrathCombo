@@ -154,7 +154,7 @@ instead of requiring the player to stop before choosing to cast.
 2. Check "Enable Orbwalker Integration".
 3. Open Orbwalker and confirm your settings: `/orbwalker`.
 
-### [AutoDuty](https://github.com/ffxivcode/AutoDuty)
+### [AutoDuty](https://github.com/erdelf/AutoDuty)
 
 Wrath Combo can be used as the Rotation Engine for AutoDuty, such that Wrath Combo's
 Auto-Rotation will be used during duties.
@@ -165,7 +165,7 @@ To enable this:
 4. (Also check "> Wrath Config Options <" -> "Auto setup jobs for autorotation")\
    (if you already have your jobs setup, you can skip this step)
 
-### [Questionable](https://git.carvel.li/liza/Questionable)
+### [Questionable](https://puni.sh/plugin/questionable)
 
 Wrath Combo can be used as the Combat Module for Questionable, such that Wrath 
 Combo's Auto-Rotation will be employed during questing.
@@ -209,6 +209,7 @@ ensure that the rotation will run.
 | `/wrath list unset`                    | Prints a list of all currently disabled features & options in the game chat.                                                                                                   |
 | `/wrath list all`                      | Prints a list of every feature & option in the game chat, regardless of state.                                                                                                 |
 | `/wrath list ... <X>`                  | All list commands can also optionally accept a job parameter, to filter the list down to a specific job.<br>Replace `<X>` with the jobs abbreviation.                          |
+| `/wrath opener`                        | Outputs your current openers status to chat.                                                                                                                                   |
 | `/wrath debug`                         | Outputs a debug file to your desktop containing only relevant features/options for your current job.<br>To be sent to developers, to help in bug-fixing. Completely anonymous. |
 | `/wrath debug <X>`                     | Outputs a debug file containing only job-relevant features/options.<br>Replace `<X>` with the jobs abbreviation.                                                               |
 | `/wrath debug all`                     | Outputs a debug file containing all features/options.                                                                                                                          |

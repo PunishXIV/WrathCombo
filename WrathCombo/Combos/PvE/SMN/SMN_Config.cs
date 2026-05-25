@@ -1,7 +1,9 @@
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Functions;
+using WrathCombo.Resources.Localization.JobConfigs;
 using static WrathCombo.Window.Functions.UserConfig;
+using static WrathCombo.Window.Text;
 namespace WrathCombo.Combos.PvE;
 
 internal partial class SMN
@@ -11,6 +13,7 @@ internal partial class SMN
         #region Options
         public static UserInt
             SMN_ST_Simple_Combo_Gapclose = new("SMN_ST_Simple_Combo_Gapclose"),
+            SMN_AoE_Simple_Combo_Gapclose = new("SMN_AoE_Simple_Combo_Gapclose"),
             
             SMN_ST_Advanced_Combo_AltMode = new("SMN_ST_Advanced_Combo_AltMode"),
             SMN_ST_Lucid = new("SMN_ST_Lucid", 8000),
@@ -41,6 +44,11 @@ internal partial class SMN
                     DrawHorizontalRadioButton(SMN_ST_Simple_Combo_Gapclose, "Safe Mode (Will not gap close)", "Will only use Crimson Cyclone when in Melee Range", 0);
                     DrawHorizontalRadioButton(SMN_ST_Simple_Combo_Gapclose, "Standard Rotation", "Will gap close with Crimson Cyclone.", 1 );
                     break;
+                
+                case Preset.SMN_AoE_Simple_Combo:
+                    DrawHorizontalRadioButton(SMN_AoE_Simple_Combo_Gapclose, "Safe Mode (Will not gap close)", "Will only use Crimson Cyclone when in Melee Range", 0);
+                    DrawHorizontalRadioButton(SMN_AoE_Simple_Combo_Gapclose, "Standard Rotation", "Will gap close with Crimson Cyclone.", 1 );
+                    break;
                     
                 case Preset.SMN_ST_Advanced_Combo:
                     DrawRadioButton(SMN_ST_Advanced_Combo_AltMode, "On Ruin 1, 2, and 3", "", 0);
@@ -58,17 +66,17 @@ internal partial class SMN
 
                 case Preset.SMN_ST_Advanced_Combo_Titan:
                     DrawPriorityInput(SMN_ST_Egi_Priority, 3, 0,
-                        $"{SummonTopaz.ActionName()} Priority: ");
+                        FormatAndCache(Generics.Action_Priority, SummonTopaz.ActionName()));
                     break;
 
                 case Preset.SMN_ST_Advanced_Combo_Garuda:
                     DrawPriorityInput(SMN_ST_Egi_Priority, 3, 1,
-                        $"{SummonEmerald.ActionName()} Priority: ");
+                        FormatAndCache(Generics.Action_Priority, SummonEmerald.ActionName()));
                     break;
 
                 case Preset.SMN_ST_Advanced_Combo_Ifrit:
                     DrawPriorityInput(SMN_ST_Egi_Priority, 3, 2,
-                        $"{SummonRuby.ActionName()} Priority: ");
+                        FormatAndCache(Generics.Action_Priority, SummonRuby.ActionName()));
                     break;
 
                 case Preset.SMN_ST_Advanced_Combo_DemiEgiMenu_SwiftcastEgi:
@@ -79,7 +87,7 @@ internal partial class SMN
                     break;
 
                 case Preset.SMN_ST_Advanced_Combo_Lucid:
-                    DrawSliderInt(4000, 9500, SMN_ST_Lucid, "Set value for your MP to be at or under for this feature to take effect.", 150,
+                    DrawSliderInt(4000, 9500, SMN_ST_Lucid, Generics.LucidMP, 150,
                         SliderIncrements.Hundreds);
                     break;
 
@@ -99,17 +107,17 @@ internal partial class SMN
                 #region AoE
                 case Preset.SMN_AoE_Advanced_Combo_Titan:
                     DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 0,
-                        $"{SummonTopaz.ActionName()} Priority: ");
+                        FormatAndCache(Generics.Action_Priority, SummonTopaz.ActionName()));
                     break;
 
                 case Preset.SMN_AoE_Advanced_Combo_Garuda:
                     DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 1,
-                        $"{SummonEmerald.ActionName()} Priority: ");
+                        FormatAndCache(Generics.Action_Priority, SummonEmerald.ActionName()));
                     break;
 
                 case Preset.SMN_AoE_Advanced_Combo_Ifrit:
                     DrawPriorityInput(SMN_AoE_Egi_Priority, 3, 2,
-                        $"{SummonRuby.ActionName()} Priority: ");
+                        FormatAndCache(Generics.Action_Priority, SummonRuby.ActionName()));
                     break;
 
                 case Preset.SMN_AoE_Advanced_Combo_DemiEgiMenu_SwiftcastEgi:
@@ -120,7 +128,7 @@ internal partial class SMN
                     break;
 
                 case Preset.SMN_AoE_Advanced_Combo_Lucid:
-                    DrawSliderInt(4000, 9500, SMN_AoE_Lucid, "Set value for your MP to be at or under for this feature to take effect.", 150,
+                    DrawSliderInt(4000, 9500, SMN_AoE_Lucid, Generics.LucidMP, 150,
                         SliderIncrements.Hundreds);
                     break;
 

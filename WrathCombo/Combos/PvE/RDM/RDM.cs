@@ -1,6 +1,7 @@
 using ECommons.GameFunctions;
 using System;
 using System.Linq;
+using Dalamud.Game.ClientState.Objects.Types;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.Extensions;
@@ -59,6 +60,14 @@ internal partial class RDM : Caster
 
                 if (CanSwiftcast || CanSwiftcastMovement)
                     return Role.Swiftcast;
+                
+                if (Role.CanAddle() && GroupDamageIncoming())
+                    return Role.Addle;
+
+                if (NumberOfAlliesInRange(MagickBarrier) >= GetPartyMembers().Count * .75 &&
+                    !HasStatusEffect(Buffs.MagickBarrier, anyOwner: true) && !JustUsed(Role.Addle, 6) &&
+                    ActionReady(MagickBarrier) && GroupDamageIncoming())
+                    return MagickBarrier;
             }
             #endregion
 
@@ -77,7 +86,7 @@ internal partial class RDM : Caster
                 if (ComboAction is Riposte or EnchantedRiposte && LevelChecked(Zwerchhau))
                     return OriginalHook(Zwerchhau);
 
-                if (ActionReady(EnchantedRiposte) && InMeleeRange() && !HasDualcast && !HasAccelerate && !HasSwiftcast &&
+                if (ActionReady(EnchantedRiposte) && !HasDualcast && !HasAccelerate && !HasSwiftcast &&
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return OriginalHook(Riposte);
             }
@@ -166,7 +175,9 @@ internal partial class RDM : Caster
             if (HasManaStacks)
                 return UseHolyFlare(actionID);
 
-            if (ActionReady(Moulinet) && HasBattleTarget() && GetTargetDistance() < 8 &&
+            if (ActionReady(OriginalHook(Moulinet)) && 
+                !HasDualcast && !HasAccelerate && !HasSwiftcast &&
+                HasBattleTarget() && InActionRange(OriginalHook(Moulinet)) &&
                 (CanMagickedSwordplay || HasEnoughManaToStart || ComboAction is EnchantedMoulinet or Moulinet or EnchantedMoulinetDeux && HasEnoughManaForCombo))
                 return OriginalHook(Moulinet);
 
@@ -215,19 +226,26 @@ internal partial class RDM : Caster
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             #endregion
+            
+            #region Variables
+            int manaficationThreshold = RDM_ST_Manafication_SubOption == 1 || !InBossEncounter() ? RDM_ST_Manafication_Threshold : 0;
+            bool canUseManafication = GetTargetHPPercent() > manaficationThreshold;
+            int emboldenThreshold = RDM_ST_Embolden_SubOption == 1 || !InBossEncounter() ? RDM_ST_Embolden_Threshold : 0;
+            bool canUseEmbolden = GetTargetHPPercent() > emboldenThreshold;
+            #endregion
 
             #region OGCDs
-            if (CanWeave())
+            if (CanWeave() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.RDM_ST_MeleeCombo_GapCloser) && !InMeleeRange() && !HasManafication &&
                     ActionReady(Corpsacorps) && TimeStoodStill >= TimeSpan.FromSeconds(RDM_ST_GapCloseCorpsacorps_Time) &&
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return Corpsacorps;
 
-                if (IsEnabled(Preset.RDM_ST_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence)
+                if (IsEnabled(Preset.RDM_ST_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence && canUseManafication)
                     return Manafication;
 
-                if (IsEnabled(Preset.RDM_ST_Embolden) && ActionReady(Embolden) && !HasEmbolden)
+                if (IsEnabled(Preset.RDM_ST_Embolden) && ActionReady(Embolden) && !HasEmbolden && canUseEmbolden)
                     return Embolden;
 
                 if (IsEnabled(Preset.RDM_ST_ContreSixte) && ActionReady(ContreSixte))
@@ -236,7 +254,9 @@ internal partial class RDM : Caster
                 if (IsEnabled(Preset.RDM_ST_Fleche) && ActionReady(Fleche))
                     return Fleche;
 
-                if (IsEnabled(Preset.RDM_ST_Engagement) && CanEngagement && (IsNotEnabled(Preset.RDM_ST_Engagement_Pooling) || PoolEngagement))
+                if (IsEnabled(Preset.RDM_ST_Engagement) && CanEngagement && 
+                    (IsNotEnabled(Preset.RDM_ST_Engagement_Pooling) || PoolEngagement) &&
+                    (IsNotEnabled(Preset.RDM_ST_Engagement_Saving) || SaveEngagement))
                     return Engagement;
 
                 if (IsEnabled(Preset.RDM_ST_Corpsacorps) && CanCorps &&
@@ -311,7 +331,8 @@ internal partial class RDM : Caster
             #endregion
 
             #region GCD Casts
-            if (IsEnabled(Preset.RDM_ST_ThunderAero) && CanInstantCast)
+            
+            if (IsEnabled(Preset.RDM_ST_ThunderAero) && (CanInstantCast || !PartyInCombat() && RDM_ST_ThunderAero_Pull))
                 return UseInstantCastST(actionID);
 
             if (CanGrandImpact)
@@ -348,9 +369,16 @@ internal partial class RDM : Caster
             if (ContentSpecificActions.TryGet(out var contentAction))
                 return contentAction;
             #endregion
+            
+            #region Variables
+            int manaficationThreshold = RDM_AoE_Manafication_SubOption == 1 || !InBossEncounter() ? RDM_AoE_Manafication_Threshold : 0;
+            bool canUseManafication = GetTargetHPPercent() > manaficationThreshold;
+            int emboldenThreshold = RDM_AoE_Embolden_SubOption == 1 || !InBossEncounter() ? RDM_AoE_Embolden_Threshold : 0;
+            bool canUseEmbolden = GetTargetHPPercent() > emboldenThreshold;
+            #endregion
 
             #region OGCDs
-            if (CanWeave())
+            if (CanWeave() && HasBattleTarget())
             {
                 if (IsEnabled(Preset.RDM_AoE_MeleeCombo_GapCloser) &&
                     (LevelChecked(Moulinet) && GetTargetDistance() > 8 || !LevelChecked(Moulinet) && !InMeleeRange()) &&
@@ -358,10 +386,10 @@ internal partial class RDM : Caster
                     (HasEnoughManaToStart || CanMagickedSwordplay))
                     return Corpsacorps;
 
-                if (IsEnabled(Preset.RDM_AoE_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence)
+                if (IsEnabled(Preset.RDM_AoE_Manafication) && ActionReady(Manafication) && (EmboldenCD <= 5 || HasEmbolden) && !CanPrefulgence && canUseManafication)
                     return Manafication;
 
-                if (IsEnabled(Preset.RDM_AoE_Embolden) && ActionReady(Embolden) && !HasEmbolden)
+                if (IsEnabled(Preset.RDM_AoE_Embolden) && ActionReady(Embolden) && !HasEmbolden && canUseEmbolden)
                     return Embolden;
 
                 if (IsEnabled(Preset.RDM_AoE_ContreSixte) && ActionReady(ContreSixte))
@@ -370,7 +398,9 @@ internal partial class RDM : Caster
                 if (IsEnabled(Preset.RDM_AoE_Fleche) && ActionReady(Fleche))
                     return Fleche;
 
-                if (IsEnabled(Preset.RDM_AoE_Engagement) && CanEngagement && (IsNotEnabled(Preset.RDM_AoE_Engagement_Pooling) || PoolEngagement))
+                if (IsEnabled(Preset.RDM_AoE_Engagement) && CanEngagement && 
+                    (IsNotEnabled(Preset.RDM_AoE_Engagement_Pooling) || PoolEngagement) &&
+                    (IsNotEnabled(Preset.RDM_AoE_Engagement_Saving) || SaveEngagement))
                     return Engagement;
 
                 if (IsEnabled(Preset.RDM_AoE_Corpsacorps) && CanCorps &&
@@ -408,9 +438,10 @@ internal partial class RDM : Caster
 
             if (IsEnabled(Preset.RDM_AoE_MeleeCombo))
             {
-                if (ActionReady(Moulinet) &&
-                    (IsNotEnabled(Preset.RDM_AoE_MeleeCombo_Target) && !HasBattleTarget() || HasBattleTarget() && GetTargetDistance() < 8) &&
-                    (CanMagickedSwordplay || HasEnoughManaToStart || ComboAction is EnchantedMoulinet or Moulinet or EnchantedMoulinetDeux && HasEnoughManaForCombo))
+                if (ActionReady(OriginalHook(Moulinet)) &&
+                    !HasDualcast && !HasAccelerate && !HasSwiftcast &&
+                    (IsNotEnabled(Preset.RDM_AoE_MeleeCombo_Target) && !HasBattleTarget() || HasBattleTarget() && InActionRange(OriginalHook(Moulinet)) &&
+                    (CanMagickedSwordplay || HasEnoughManaToStart || ComboAction is EnchantedMoulinet or Moulinet or EnchantedMoulinetDeux && HasEnoughManaForCombo)))
                     return OriginalHook(Moulinet);
 
                 if (!LevelChecked(Moulinet) && InMeleeRange() && HasEnoughManaForCombo)
@@ -444,6 +475,38 @@ internal partial class RDM : Caster
     #endregion
 
     #region Standalone Features
+    
+    internal class RDM_RetargetVercure : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.RDM_RetargetVercure;
+
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID != Vercure)
+                return actionID;
+
+            int healthThreshold = RDM_RetargetVercure_Health;
+
+            IGameObject? target =
+                //Mouseover retarget option
+                (IsEnabled(Preset.RDM_RetargetVercure_MO)
+                    ? SimpleTarget.UIMouseOverTarget.IfAlive()
+                    : null) ??
+
+                //Hard target
+                SimpleTarget.HardTarget.IfFriendly().IfAlive() ??
+
+                //Lowest HP option
+                (IsEnabled(Preset.RDM_RetargetVercure_LowHP)
+                 && PlayerHealthPercentageHp() >= healthThreshold
+                    ? SimpleTarget.LowestHPPAllyIfMissingHP.IfAlive()
+                    : null);
+
+            return target != null
+                ? actionID.Retarget(target)
+                : actionID;
+        }
+    }
 
     internal class RDM_Verraise : CustomCombo
     {
@@ -495,11 +558,22 @@ internal partial class RDM : Caster
             if (actionID is not (Veraero or Veraero3))
                 return actionID;
 
-            if (RDM_VerAero_Options[2] && ComboAction is Scorch or Verholy or Verflare)
-                return OriginalHook(Jolt);
+            if (RDM_VerAero_Options[2])
+            {
+                if (ActionReady(Scorch))
+                    return Scorch;
 
-            if (RDM_VerAero_Options[0] && HasManaStacks)
-                return UseHolyFlare(actionID);
+                if (ActionReady(Resolution))
+                    return Resolution;
+            }
+
+            if (RDM_VerAero_Options[0] && ActionReady(Verholy))
+            {
+                if (RDM_VerAero_Dynamic)
+                    return UseHolyFlare(actionID);
+
+                return Verholy;
+            }
 
             if (RDM_VerAero_Options[1] && CanVerStone && !HasDualcast && !HasSwiftcast)
                 return Verstone;
@@ -521,11 +595,22 @@ internal partial class RDM : Caster
             if (actionID is not (Verthunder or Verthunder3))
                 return actionID;
 
-            if (RDM_VerThunder_Options[2] && ComboAction is Scorch or Verholy or Verflare)
-                return OriginalHook(Jolt);
+            if (RDM_VerThunder_Options[2])
+            {
+                if (ActionReady(Scorch))
+                    return Scorch;
 
-            if (RDM_VerThunder_Options[0] && HasManaStacks)
-                return UseHolyFlare(actionID);
+                if (ActionReady(Resolution))
+                    return Resolution;
+            }
+
+            if (RDM_VerThunder_Options[0] && ActionReady(Verflare))
+            {
+                if (RDM_VerThunder_Dynamic)
+                    return UseHolyFlare(actionID);
+
+                return Verflare;
+            }
 
             if (RDM_VerThunder_Options[1] && CanVerFire && !HasDualcast && !HasSwiftcast)
                 return Verfire;
@@ -547,11 +632,22 @@ internal partial class RDM : Caster
             if (actionID is not Veraero2)
                 return actionID;
 
-            if (RDM_VerAero2_Options[1] && ComboAction is Scorch or Verholy or Verflare)
-                return OriginalHook(Impact);
+            if (RDM_VerAero2_Options[0] && ActionReady(Verholy))
+            {
+                if (RDM_VerAero2_Dynamic)
+                    return UseHolyFlare(actionID);
 
-            if (RDM_VerAero2_Options[0] && HasManaStacks)
-                return UseHolyFlare(actionID);
+                return Verholy;
+            }
+
+            if (RDM_VerAero2_Options[1])
+            {
+                if (ActionReady(Scorch))
+                    return Scorch;
+
+                if (ActionReady(Resolution))
+                    return Resolution;
+            }
 
             if (RDM_VerAero2_Options[2] && (HasDualcast || HasSwiftcast) && !HasManaStacks &&
                 ComboAction is not (Scorch or Verholy or Verflare))
@@ -570,11 +666,22 @@ internal partial class RDM : Caster
             if (actionID is not Verthunder2)
                 return actionID;
 
-            if (RDM_VerThunder2_Options[1] && ComboAction is Scorch or Verholy or Verflare)
-                return OriginalHook(Impact);
+            if (RDM_VerThunder2_Options[0] && ActionReady(Verflare))
+            {
+                if (RDM_VerThunder2_Dynamic)
+                    return UseHolyFlare(actionID);
 
-            if (RDM_VerThunder2_Options[0] && HasManaStacks)
-                return UseHolyFlare(actionID);
+                return Verflare;
+            }
+
+            if (RDM_VerThunder2_Options[1] && ComboAction is Scorch or Verholy or Verflare)
+            {
+                if (ActionReady(Scorch))
+                    return Scorch;
+
+                if (ActionReady(Resolution))
+                    return Resolution;
+            }
 
             if (RDM_VerThunder2_Options[2] && (HasDualcast || HasSwiftcast) && !HasManaStacks &&
                 ComboAction is not (Scorch or Verholy or Verflare))
@@ -695,7 +802,7 @@ internal partial class RDM : Caster
             actionID is Displacement
             && LevelChecked(Displacement)
             && HasTarget()
-            && GetTargetDistance() >= 5 ? Corpsacorps : actionID;
+            && GetTargetDistance() >= 5 && InActionRange(Corpsacorps) ? Corpsacorps : actionID;
     }
 
     internal class RDM_EmboldenProtection : CustomCombo
@@ -734,10 +841,10 @@ internal partial class RDM : Caster
             {
                 if (Role.CanAddle() && CanNotMagickBarrier ||
                     GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
-                    return HasStatusEffect(Debuffs.Addle, CurrentTarget, anyOwner: true) ? All.SavageBlade : Role.Addle;
+                    return GetStatusEffectRemainingTime(Debuffs.Addle, CurrentTarget, anyOwner: true) > RDM_AddleDuration ? All.SavageBlade : Role.Addle;
             }
 
-            if (ActionReady(MagickBarrier) && HasStatusEffect(Buffs.MagickBarrier, anyOwner: true))
+            if (ActionReady(MagickBarrier) && GetStatusEffectRemainingTime(Buffs.MagickBarrier, anyOwner: true) > RDM_MagickProtectionDuration)
                 return All.SavageBlade;
 
             if (IsEnabled(Preset.RDM_MagickBarrierAddle) && GetCooldownRemainingTime(Role.Addle) < GetCooldownRemainingTime(MagickBarrier))
@@ -778,7 +885,7 @@ internal partial class RDM : Caster
 
             if (RDM_OGCDs_Options[4] &&
                 GetRemainingCharges(Corpsacorps) > RDM_OGCDs_Options_CorpsCharges &&
-                (InMeleeRange() || GetTargetDistance() <= RDM_OGCDs_Options_Corpsacorps_Distance))
+                (InMeleeRange() || GetTargetDistance() <= RDM_OGCDs_Options_Corpsacorps_Distance) && InActionRange(Corpsacorps))
                 return Corpsacorps;
 
             return RDM_OGCDs_Options[0] && GetCooldownRemainingTime(ContreSixte) < GetCooldownRemainingTime(Fleche) ? ContreSixte : actionID;

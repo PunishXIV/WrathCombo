@@ -1,4 +1,5 @@
 ﻿using ECommons.DalamudServices;
+using System.Linq;
 using static WrathCombo.CustomComboNS.Functions.CustomComboFunctions;
 
 namespace WrathCombo.Combos.PvE
@@ -12,25 +13,28 @@ namespace WrathCombo.Combos.PvE
             Raise2 = 29734,
             EagleEyeShot = 46942;
 
-        public static uint Cure => Svc.ClientState.TerritoryType switch
+        public static uint Cure => TerritoryID switch
         {
             1069 => 29729,
             1137 or 1176 => 33862,
-            var _ => 0
+            1315 or 1316 => 46939,
+            _ => 0,
         };
 
-        public static uint SpiritDart => Svc.ClientState.TerritoryType switch
+        public static uint SpiritDart => TerritoryID switch
         {
             1069 => 29732,
             1137 or 1176 => 33863,
-            var _ => 0
+            1315 or 1316 => 46940,
+            _ => 0,
         };
 
-        public static uint Rampart => Svc.ClientState.TerritoryType switch
+        public static uint Rampart => TerritoryID switch
         {
             1069 => 29733,
             1137 or 1176 => 33864,
-            var _ => 0
+            1315 or 1316 => 46941,
+            _ => 0,
         };
 
         public static class Buffs
@@ -57,7 +61,7 @@ namespace WrathCombo.Combos.PvE
 
         private static bool CheckSpiritDart(Preset preset) =>
             IsEnabled(preset) && ActionReady(SpiritDart) &&
-            HasBattleTarget() && GetStatusEffectRemainingTime(Debuffs.SustainedDamage, CurrentTarget) <= 3;
+            HasBattleTarget() && EnemiesInRange(SpiritDart).Any(x => GetStatusEffectRemainingTime(Debuffs.SustainedDamage, x) <= 3);
 
         private static bool CheckCure(Preset preset, int healthpercent) =>
             IsEnabled(preset) && ActionReady(Cure) &&

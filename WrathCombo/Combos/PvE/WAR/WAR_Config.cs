@@ -3,7 +3,9 @@ using ECommons.ImGuiMethods;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.JobConfigs;
 using WrathCombo.Window.Functions;
+using static WrathCombo.Window.Text;
 using static WrathCombo.Window.Functions.UserConfig;
 using BossAvoidance = WrathCombo.Combos.PvE.All.Enums.BossAvoidance;
 using PartyRequirement = WrathCombo.Combos.PvE.All.Enums.PartyRequirement;
@@ -19,86 +21,93 @@ internal partial class WAR
             {
                 #region Combo Mitigations
                 case Preset.WAR_ST_Simple:
-                    DrawHorizontalRadioButton(WAR_ST_MitsOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
-                    DrawHorizontalRadioButton(WAR_ST_MitsOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
+                    DrawHorizontalRadioButton(WAR_ST_MitsOptions, Generics.IncludeSimpleMitigations, Generics.EnablesTheUseOfMitigations, 0);
+                    DrawHorizontalRadioButton(WAR_ST_MitsOptions, Generics.ExcludeSimpleMitigations, Generics.DisablesTheUseOfMitigations, 1);
                     break;
 
                 case Preset.WAR_AoE_Simple:
-                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions, "Include Simple Mitigations", "Enables the use of mitigations.", 0);
-                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions, "Exclude Simple Mitigations", "Disables the use of mitigations.", 1);
+                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions, Generics.IncludeSimpleMitigations, Generics.EnablesTheUseOfMitigations, 0);
+                    DrawHorizontalRadioButton(WAR_AoE_MitsOptions, Generics.ExcludeSimpleMitigations, Generics.DisablesTheUseOfMitigations, 1);
                     break;
+
                 case Preset.WAR_ST_Advanced:
-                    DrawHorizontalRadioButton(WAR_ST_Advanced_MitsOptions, "Include Advanced Mitigations", "Enables the use of mitigations.", 0);
-                    DrawHorizontalRadioButton(WAR_ST_Advanced_MitsOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
+                    DrawHorizontalRadioButton(WAR_ST_Advanced_MitsOptions, Generics.IncludeAdvancedMitigations , Generics.EnablesTheUseOfMitigations, 0);
+                    DrawHorizontalRadioButton(WAR_ST_Advanced_MitsOptions, Generics.ExcludeAdvancedMitigations, Generics.DisablesTheUseOfMitigations, 1);
                     break;
 
                 case Preset.WAR_AoE_Advanced:
-                    DrawHorizontalRadioButton(WAR_AoE_Advanced_MitsOptions, "Include Advanced Mitigations", "Enables the use of advanced mitigations.", 0);
-                    DrawHorizontalRadioButton(WAR_AoE_Advanced_MitsOptions, "Exclude Advanced Mitigations", "Disables the use of mitigations.", 1);
+                    DrawHorizontalRadioButton(WAR_AoE_Advanced_MitsOptions, Generics.IncludeAdvancedMitigations , Generics.EnablesTheUseOfMitigations, 0);
+                    DrawHorizontalRadioButton(WAR_AoE_Advanced_MitsOptions, Generics.ExcludeAdvancedMitigations, Generics.DisablesTheUseOfMitigations, 1);
                     break;
+
                 case Preset.WAR_Mitigation_NonBoss:
-                    DrawSliderFloat(0, 100, WAR_Mitigation_NonBoss_MitigationThreshold, "Stop using when average health percentage of nearby enemies is below set. \n(Set to 0 to disable this check) ", decimals: 0);
+                    DrawSliderFloat(0, 100, WAR_Mitigation_NonBoss_MitigationThreshold, Generics.StopBelowAverageEnemyHP, decimals: 0);
                     break;
+
                 case Preset.WAR_Mitigation_NonBoss_ShakeItOff:
-                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_ShakeItOff_Health, "Player HP% to use Shake It Off at or below (100 = Disable check)");
+                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_ShakeItOff_Health, FormatAndCache(Generics.PlayerHPToUseAction, ShakeItOff.ActionName()));
                     break;
+
                 case Preset.WAR_Mitigation_NonBoss_Equilibrium:
-                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_Equilibrium_Health, "Player HP% to use Equilibrium at or below (100 = Disable check)");
+                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_Equilibrium_Health, FormatAndCache(Generics.PlayerHPToUseAction, Equilibrium.ActionName()));
                     break;
+
                 case Preset.WAR_Mitigation_NonBoss_Holmgang:
-                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_Holmgang_Health, "Player HP% to use Holmgang at or below (100 = Disable check)");
+                    DrawSliderInt(1, 100, WAR_Mitigation_NonBoss_Holmgang_Health, FormatAndCache(Generics.PlayerHPToUseAction, Holmgang.ActionName()));
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_Equilibrium:
-                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_Equilibrium_Health, "Player HP% to use Equilibrium at or below (100 = Disable check)");
+                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_Equilibrium_Health, FormatAndCache(Generics.PlayerHPToUseAction, Equilibrium.ActionName()));
+                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_Tankbuster_Equilibrium_Health, "Player HP% to use Equilibrium at or below when incoming tankbuster is detected.");
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_RawIntuition_OnCD:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_RawIntuition_OnCD_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
-                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_RawIntuition_Health, "Player HP% to use Raw Intuition/Bloodwhetting at or below (100 = Disable check)");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
+                    DrawSliderInt(1, 100, WAR_Mitigation_Boss_RawIntuition_Health, FormatAndCache(Generics.PlayerHPToUseAction, $"{RawIntuition.ActionName()}/{Bloodwhetting.ActionName()}"));
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_RawIntuition_TankBuster:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_RawIntuition_TankBuster_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
+                    DrawSliderInt(0, 4, WAR_Mitigation_Boss_RawIntuitionDelay, FormatAndCache(Generics.DelayMit, RawIntuition.ActionName()), sliderIncrement: 1);
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_Rampart:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_Rampart_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_Vengeance:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_Vengeance_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     DrawAdditionalBoolChoice(WAR_Mitigation_Boss_Vengeance_First, "Use Vengeance First", "Uses Vengeance before Rampart");
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_ThrillOfBattle:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_ThrillOfBattle_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     DrawSliderFloat(1, 100, WAR_Mitigation_Boss_ThrillOfBattle_Threshold, "Will use Thrill Of Battle as extra tankbuster mitigation if under this HP%", decimals: 0);
                     DrawAdditionalBoolChoice(WAR_Mitigation_Boss_ThrillOfBattle_Align, "Align Thrill Of Battle", "Tries to align Thrill Of Battle with Rampart for tankbusters.");
                     break;
-                
+
                 case Preset.WAR_Mitigation_Boss_ShakeItOff:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_ShakeItOff_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     break;
-                    
+
                 case Preset.WAR_Mitigation_Boss_Reprisal:
                     DrawDifficultyMultiChoice(WAR_Mitigation_Boss_Reprisal_Difficulty, WAR_Boss_Mit_DifficultyListSet ,
-                        "Select which difficulties the ability should be used in:");
+                        Generics.SelectWhatKindOfContentThisOptionAppliesTo);
                     break;
-                
-                
                 #endregion
-                
-                #region Single-Target
 
+                #region Single-Target
                 case Preset.WAR_ST_BalanceOpener:
                     DrawBossOnlyChoice(WAR_BalanceOpener_Content);
+                    ImGui.NewLine();
+                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice, "No Gapclosers", "Skips Onslaughts use in opener.", 0);
+                    DrawHorizontalRadioButton(WAR_ST_BalanceOpener_GapcloserChoice, "Use Gapclosers", "Uses Onslaughts use in opener.", 1);
                     break;
 
                 case Preset.WAR_ST_StormsEye:
@@ -107,45 +116,56 @@ internal partial class WAR
                     break;
 
                 case Preset.WAR_ST_InnerRelease:
-                    DrawSliderInt(0, 75, WAR_ST_IRStop,
-                        " Stop usage if Target HP% is below set value.\n To disable this, set value to 0");
+                    DrawSliderInt(0, 75, WAR_ST_InnerRelease_Threshold,
+                        Generics.StopEnemyHpPercent);
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
+                    ImGui.NewLine();
+                    DrawHorizontalRadioButton(WAR_ST_InnerRelease_Threshold_SubOption,
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
+                    DrawHorizontalRadioButton(WAR_ST_InnerRelease_Threshold_SubOption,
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
+                    ImGui.Unindent();
                     break;
 
                 case Preset.WAR_ST_Onslaught:
                     DrawHorizontalRadioButton(WAR_ST_Onslaught_Movement,
-                        "Stationary Only", "Uses Onslaught only while stationary", 0);
+                        Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, Onslaught.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_ST_Onslaught_Movement,
-                        "Any Movement", "Uses Onslaught regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+                        Generics.AnyMovement, FormatAndCache(Generics.Uses0RegardlessOfAnyMovementConditions, Onslaught.ActionName()), 1);
                     ImGui.Spacing();
                     if (WAR_ST_Onslaught_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_ST_Onslaught_TimeStill,
-                            " Stationary Delay Check (in seconds):", decimals: 1);
+                            Generics.StationaryDelayCheck, decimals: 1);
                     }
                     ImGui.SetCursorPosX(48);
                     DrawSliderInt(0, 2, WAR_ST_Onslaught_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     ImGui.SetCursorPosX(48);
                     DrawSliderFloat(1, 20, WAR_ST_Onslaught_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+                        Generics.UseWhenDistanceFromTargetIsLessThanOrEqualTo, decimals: 1);
                     break;
 
                 case Preset.WAR_ST_Infuriate:
                     DrawSliderInt(0, 2, WAR_ST_Infuriate_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     DrawSliderInt(0, 50, WAR_ST_Infuriate_Gauge,
                         " Use when Beast Gauge is less than or equal to:");
                     break;
 
                 case Preset.WAR_ST_FellCleave:
-                    DrawHorizontalRadioButton(WAR_ST_FellCleave_BurstPooling,
-                        "Burst Pooling", "Allow Fell Cleave for extra use during burst windows\nNOTE: This ignores the gauge slider below when ready for or already in burst", 0);
-                    DrawHorizontalRadioButton(WAR_ST_FellCleave_BurstPooling,
-                        "No Burst Pooling", "Forbid Fell Cleave for extra use during burst windows\nNOTE: This fully honors the value set on the gauge slider below", 1);
-                    ImGui.Spacing();
-                    DrawSliderInt(50, 100, WAR_ST_FellCleave_Gauge,
-                        " Minimum Beast Gauge required to spend:");
+                    DrawAdditionalBoolChoice(WAR_ST_FellCleave_Pooling, "Burst Pooling ", "Pools gauge for use in burst windows. Will spend to prevent overcap, and dump after Berserk/Inner Release");
+                    if (WAR_ST_FellCleave_Pooling)
+                    {
+                        DrawAdditionalBoolChoice(WAR_ST_FellCleave_Pooling_BossOnly, "Pool in boss encounter Only", "Will spend at 50 Gauge outside of Boss encounter");
+                    }
+                    if (!WAR_ST_FellCleave_Pooling)
+                    {
+                        DrawSliderInt(50, 100, WAR_ST_FellCleave_Gauge,
+                            " Minimum Beast Gauge required to spend:");
+                    }
                     break;
 
                 case Preset.WAR_ST_PrimalRend:
@@ -155,65 +175,74 @@ internal partial class WAR
                         "Late", "Uses Primal Rend after consumption of all Inner Release stacks", 1);
                     ImGui.NewLine();
                     DrawHorizontalRadioButton(WAR_ST_PrimalRend_Movement,
-                        "Stationary Only", "Uses Primal Rend only while stationary", 0);
+                        Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, PrimalRend.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_ST_PrimalRend_Movement,
-                        "Any Movement", "Uses Primal Rend regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+                        Generics.AnyMovement, FormatAndCache(Generics.Uses0RegardlessOfAnyMovementConditions, PrimalRend.ActionName()), 1);
                     ImGui.Spacing();
                     if (WAR_ST_PrimalRend_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_ST_PrimalRend_TimeStill,
-                            " Stationary Delay Check (in seconds):", decimals: 1);
+                            Generics.StationaryDelayCheck, decimals: 1);
                     }
                     ImGui.SetCursorPosX(48);
                     DrawSliderFloat(1, 20, WAR_ST_PrimalRend_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+                        Generics.UseWhenDistanceFromTargetIsLessThanOrEqualTo, decimals: 1);
                     break;
-
                 #endregion
 
                 #region AoE
-
                 case Preset.WAR_AoE_Decimate:
-                    DrawHorizontalRadioButton(WAR_AoE_Decimate_BurstPooling,
-                        "Burst Pooling", "Allow Decimate for extra use during burst windows\nNOTE: This ignores the gauge slider below when ready for or already in burst", 0);
-                    DrawHorizontalRadioButton(WAR_AoE_Decimate_BurstPooling,
-                        "No Burst Pooling", "Forbid Decimate for extra use during burst windows\nNOTE: This fully honors the value set on the gauge slider below", 1);
-                    ImGui.Spacing();
-                    DrawSliderInt(50, 100, WAR_AoE_Decimate_Gauge,
-                        "Minimum gauge required to spend:");
+                    DrawAdditionalBoolChoice(WAR_AoE_Decimate_Pooling, "Burst Pooling ", "Pools gauge for use in burst windows. Will spend to prevent overcap, and dump after Berserk/Inner Release");
+                    if (WAR_AoE_Decimate_Pooling)
+                    {
+                        DrawAdditionalBoolChoice(WAR_AoE_Decimate_Pooling_BossOnly, "Pool in boss encounter Only", "Will spend at 50 Gauge outside of Boss encounter");
+                    }
+                    if (!WAR_AoE_Decimate_Pooling)
+                    {
+                        DrawSliderInt(50, 100, WAR_AoE_Decimate_Gauge,
+                            " Minimum Beast Gauge required to spend:");
+                    }
+                    DrawAdditionalBoolChoice(WAR_AoE_Decimate_Smart, "Smart Spender ", "Will use Fell Cleave in AoE when it would be a dps increase compared to Decimate.");
                     break;
 
                 case Preset.WAR_AoE_InnerRelease:
-                    DrawSliderInt(0, 75, WAR_AoE_IRStop,
-                        " Stop usage if Target HP% is below set value.\n To disable this, set value to 0");
+                    DrawSliderInt(0, 75, WAR_AoE_InnerRelease_Threshold,
+                        Generics.StopEnemyHpPercent);
+                    ImGui.Indent();
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
+                    ImGui.NewLine();
+                    DrawHorizontalRadioButton(WAR_AoE_InnerRelease_Threshold_SubOption,
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
+                    DrawHorizontalRadioButton(WAR_AoE_InnerRelease_Threshold_SubOption,
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
+                    ImGui.Unindent();
                     break;
-
 
                 case Preset.WAR_AoE_Infuriate:
                     DrawSliderInt(0, 2, WAR_AoE_Infuriate_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     DrawSliderInt(0, 50, WAR_AoE_Infuriate_Gauge,
                         "Use when gauge is under or equal to");
                     break;
 
                 case Preset.WAR_AoE_Onslaught:
                     DrawHorizontalRadioButton(WAR_AoE_Onslaught_Movement,
-                        "Stationary Only", "Uses Onslaught only while stationary", 0);
+                        Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, Onslaught.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_AoE_Onslaught_Movement,
-                        "Any Movement", "Uses Onslaught regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+                        Generics.AnyMovement, FormatAndCache(Generics.Uses0RegardlessOfAnyMovementConditions, Onslaught.ActionName()), 1);
                     ImGui.Spacing();
                     if (WAR_AoE_Onslaught_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_AoE_Onslaught_TimeStill,
-                            " Stationary Delay Check (in seconds):", decimals: 1);
+                            Generics.StationaryDelayCheck, decimals: 1);
                     }
                     DrawSliderInt(0, 2, WAR_AoE_Onslaught_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     ImGui.SetCursorPosX(48);
                     DrawSliderFloat(1, 20, WAR_AoE_Onslaught_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+                        Generics.UseWhenDistanceFromTargetIsLessThanOrEqualTo, decimals: 1);
                     break;
 
                 case Preset.WAR_AoE_PrimalRend:
@@ -223,28 +252,20 @@ internal partial class WAR
                         "Late", "Uses Primal Rend after consumption of all Inner Release stacks", 1);
                     ImGui.NewLine();
                     DrawHorizontalRadioButton(WAR_AoE_PrimalRend_Movement,
-                        "Stationary Only", "Uses Primal Rend only while stationary", 0);
+                        Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, PrimalRend.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_AoE_PrimalRend_Movement,
-                        "Any Movement", "Uses Primal Rend regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+                        Generics.AnyMovement, FormatAndCache(Generics.Uses0RegardlessOfAnyMovementConditions, PrimalRend.ActionName()), 1);
                     ImGui.Spacing();
                     if (WAR_AoE_PrimalRend_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_AoE_PrimalRend_TimeStill,
-                            " Stationary Delay Check (in seconds):", decimals: 1);
+                            Generics.StationaryDelayCheck, decimals: 1);
                     }
                     ImGui.SetCursorPosX(48);
                     DrawSliderFloat(1, 20, WAR_AoE_PrimalRend_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+                        Generics.UseWhenDistanceFromTargetIsLessThanOrEqualTo, decimals: 1);
                     break;
-
-                case Preset.WAR_AoE_Orogeny:
-                    DrawHorizontalRadioButton(WAR_AoE_OrogenyUpheaval,
-                        "Include Upheaval", "Enables the use of Upheaval in AoE rotation if Orogeny is unavailable", 0);
-                    DrawHorizontalRadioButton(WAR_AoE_OrogenyUpheaval,
-                        "Exclude Upheaval", "Disables the use of Upheaval in AoE rotation", 1);
-                    break;
-
                 #endregion
 
                 #region One-Button Mitigation
@@ -254,7 +275,7 @@ internal partial class WAR
                         "Select what difficulties Holmgang should be used in:");
 
                     DrawSliderInt(1, 100, WAR_Mit_Holmgang_Health,
-                        "Player HP% to be \nless than or equal to:", 200, SliderIncrements.Fives);
+                        Generics.StopFriendlyHpPercent100, 200, SliderIncrements.Fives);
                     break;
 
                 case Preset.WAR_Mit_Bloodwhetting:
@@ -280,7 +301,7 @@ internal partial class WAR
 
                 case Preset.WAR_Mit_ThrillOfBattle:
                     DrawSliderInt(1, 100, WAR_Mit_ThrillOfBattle_Health,
-                        "HP% to use at or below (100 = Disable check)", sliderIncrement: SliderIncrements.Ones);
+                        Generics.StopFriendlyHpPercent100, sliderIncrement: SliderIncrements.Ones);
 
                     DrawPriorityInput(WAR_Mit_Priorities, NumMitigationOptions, 3,
                         "Thrill Of Battle Priority:");
@@ -307,7 +328,7 @@ internal partial class WAR
                 case Preset.WAR_Mit_ArmsLength:
                     ImGui.Indent();
                     DrawHorizontalRadioButton(WAR_Mit_ArmsLength_Boss,
-                        "All Enemies", "Will use Arm's Length regardless of the type of enemy.",
+                        Generics.AllEnemies, "Will use Arm's Length regardless of the type of enemy.",
                         (int)BossAvoidance.Off, 125f);
                     DrawHorizontalRadioButton(WAR_Mit_ArmsLength_Boss,
                         "Avoid Bosses", "Will try not to use Arm's Length when in a boss fight.",
@@ -325,7 +346,6 @@ internal partial class WAR
                 #endregion
 
                 #region Other
-
                 case Preset.WAR_FC_InnerRelease:
                     DrawSliderInt(0, 75, WAR_FC_IRStop,
                         " Stop usage if Target HP% is below set value.\n To disable this, set value to 0");
@@ -333,26 +353,26 @@ internal partial class WAR
 
                 case Preset.WAR_FC_Onslaught:
                     DrawHorizontalRadioButton(WAR_FC_Onslaught_Movement,
-                        "Stationary Only", "Uses Onslaught only while stationary", 0);
+                        Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, Onslaught.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_FC_Onslaught_Movement,
-                        "Any Movement", "Uses Onslaught regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+                        Generics.AnyMovement, FormatAndCache(Generics.Uses0RegardlessOfAnyMovementConditions, Onslaught.ActionName()), 1);
                     ImGui.Spacing();
                     if (WAR_FC_Onslaught_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_FC_Onslaught_TimeStill,
-                            " Stationary Delay Check (in seconds):", decimals: 1);
+                            Generics.StationaryDelayCheck, decimals: 1);
                     }
                     DrawSliderInt(0, 2, WAR_FC_Onslaught_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     ImGui.SetCursorPosX(48);
                     DrawSliderFloat(1, 20, WAR_FC_Onslaught_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+                        Generics.UseWhenDistanceFromTargetIsLessThanOrEqualTo, decimals: 1);
                     break;
 
                 case Preset.WAR_FC_Infuriate:
                     DrawSliderInt(0, 2, WAR_FC_Infuriate_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     DrawSliderInt(0, 50, WAR_FC_Infuriate_Gauge,
                         " Use when Beast Gauge is less than or equal to:");
                     break;
@@ -364,26 +384,24 @@ internal partial class WAR
                         "Late", "Uses Primal Rend after consumption of all Inner Release stacks", 1);
                     ImGui.NewLine();
                     DrawHorizontalRadioButton(WAR_FC_PrimalRend_Movement,
-                        "Stationary Only", "Uses Primal Rend only while stationary", 0);
+                        Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, PrimalRend.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_FC_PrimalRend_Movement,
-                        "Any Movement", "Uses Primal Rend regardless of any movement conditions.\nNOTE: This could possibly get you killed", 1);
+                        Generics.AnyMovement, FormatAndCache(Generics.Uses0RegardlessOfAnyMovementConditions, PrimalRend.ActionName()), 1);
                     ImGui.Spacing();
                     if (WAR_FC_PrimalRend_Movement == 0)
                     {
                         ImGui.SetCursorPosX(48);
                         DrawSliderFloat(0, 3, WAR_FC_PrimalRend_TimeStill,
-                            " Stationary Delay Check (in seconds):", decimals: 1);
+                            Generics.StationaryDelayCheck, decimals: 1);
                     }
                     ImGui.SetCursorPosX(48);
                     DrawSliderFloat(1, 20, WAR_FC_PrimalRend_Distance,
-                        " Use when Distance from target is less than or equal to:", decimals: 1);
+                        Generics.UseWhenDistanceFromTargetIsLessThanOrEqualTo, decimals: 1);
                     break;
-
-                
 
                 case Preset.WAR_InfuriateFellCleave:
                     DrawSliderInt(0, 2, WAR_Infuriate_Charges,
-                        " How many charges to keep ready?\n (0 = Use All)");
+                        Generics.HowManyChargesToKeepReady);
                     DrawSliderInt(0, 50, WAR_Infuriate_Range,
                         " Use when Beast Gauge is\n less than or equal to:");
                     break;
@@ -403,14 +421,19 @@ internal partial class WAR
                     ImGui.Unindent();
                     break;
 
+                case Preset.WAR_ArmsLengthLockout:
+                    DrawSliderInt(0, 5, WAR_ArmsLengthLockout_Time, "Time (In Seconds) remaining on Inner Strength to Lock out Arm's Length until.");
+                    break;
+
                     #endregion
             }
         }
-
         #region Variables
 
         private const int NumMitigationOptions = 8;
+
         public static UserInt
+            //Auto Mitigation
             WAR_ST_MitsOptions = new("WAR_ST_MitsOptions"),
             WAR_AoE_MitsOptions = new("WAR_AoE_MitsOptions"),
             WAR_ST_Advanced_MitsOptions = new("WAR_ST_Advanced_MitsOptions"),
@@ -419,33 +442,39 @@ internal partial class WAR
             WAR_Mitigation_NonBoss_Equilibrium_Health = new("WAR_Mitigation_NonBoss_Equilibrium_Health", 50),
             WAR_Mitigation_NonBoss_Holmgang_Health = new("WAR_Mitigation_NonBoss_Holmgang_Health", 20),
             WAR_Mitigation_Boss_RawIntuition_Health = new("WAR_Mitigation_Boss_RawIntuition_Health", 99),
+            WAR_Mitigation_Boss_RawIntuitionDelay = new("WAR_Mitigation_Boss_RawIntuitionDelay"),
             WAR_Mitigation_Boss_Equilibrium_Health = new("WAR_Mitigation_Boss_Equilibrium_Health", 30),
+            WAR_Mitigation_Boss_Tankbuster_Equilibrium_Health = new("WAR_Mitigation_Boss_Tankbuster_Equilibrium_Health", 80),
+
+            //ST Rotation
+            WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1),
+            WAR_ST_BalanceOpener_GapcloserChoice = new("WAR_ST_BalanceOpener_GapcloserChoice", 1),
+            WAR_ST_InnerRelease_Threshold = new("WAR_ST_InnerRelease_Threshold", 10),
+            WAR_ST_InnerRelease_Threshold_SubOption = new("WAR_ST_InnerRelease_Threshold_SubOption"),
+            WAR_ST_Infuriate_Charges = new("WAR_ST_Infuriate_Charges"),
+            WAR_ST_Infuriate_Gauge = new("WAR_ST_Infuriate_Gauge", 40),
+            WAR_ST_Onslaught_Charges = new("WAR_ST_Onslaught_Charges"),
+            WAR_ST_Onslaught_Movement = new("WAR_ST_Onslaught_Movement"),
+            WAR_ST_FellCleave_Gauge = new("WAR_ST_FellCleave_Gauge", 50),
+            WAR_ST_PrimalRend_Movement = new("WAR_ST_PrimalRend_Movement"),
+            WAR_ST_PrimalRend_EarlyLate = new("WAR_ST_PrimalRend_EarlyLate"),
+
+            //AoE Rotation
+            WAR_AoE_InnerRelease_Threshold = new("WAR_AoE_InnerRelease_Threshold", 10),
+            WAR_AoE_InnerRelease_Threshold_SubOption = new("WAR_AoE_InnerRelease_Threshold_SubOption"),
+            WAR_AoE_Infuriate_Charges = new("WAR_AoE_Infuriate_Charges"),
+            WAR_AoE_Infuriate_Gauge = new("WAR_AoE_Infuriate_Gauge", 40),
+            WAR_AoE_Onslaught_Charges = new("WAR_AoE_Onslaught_Charges"),
+            WAR_AoE_Onslaught_Movement = new("WAR_AoE_Onslaught_Movement"),
+            WAR_AoE_Decimate_Gauge = new("WAR_AoE_Decimate_Gauge", 50),
+            WAR_AoE_PrimalRend_Movement = new("WAR_AoE_PrimalRend_Movement"),
+            WAR_AoE_PrimalRend_EarlyLate = new("WAR_AoE_PrimalRend_EarlyLate"),
+
+            //Standalone Configs
             WAR_Infuriate_Charges = new("WAR_Infuriate_Charges"),
             WAR_Infuriate_Range = new("WAR_Infuriate_Range"),
             WAR_SurgingRefreshRange = new("WAR_SurgingRefreshRange", 10),
             WAR_EyePath_Refresh = new("WAR_EyePath", 10),
-            WAR_ST_Infuriate_Charges = new("WAR_ST_Infuriate_Charges"),
-            WAR_ST_Infuriate_Gauge = new("WAR_ST_Infuriate_Gauge", 40),
-            WAR_ST_FellCleave_Gauge = new("WAR_ST_FellCleave_Gauge", 90),
-            WAR_ST_FellCleave_BurstPooling = new("WAR_ST_FellCleave_BurstPooling"),
-            WAR_ST_Onslaught_Charges = new("WAR_ST_Onslaught_Charges"),
-            WAR_ST_Onslaught_Movement = new("WAR_ST_Onslaught_Movement"),
-            WAR_ST_PrimalRend_Movement = new("WAR_ST_PrimalRend_Movement"),
-            WAR_ST_PrimalRend_EarlyLate = new("WAR_ST_PrimalRend_EarlyLate"),
-            
-            WAR_ST_IRStop = new("WAR_ST_IRStop"),
-            WAR_AoE_Infuriate_Charges = new("WAR_AoE_Infuriate_Charges"),
-            WAR_AoE_Infuriate_Gauge = new("WAR_AoE_Infuriate_Gauge", 40),
-            WAR_AoE_Decimate_Gauge = new("WAR_AoE_Decimate_Gauge", 90),
-            WAR_AoE_Decimate_BurstPooling = new("WAR_AoE_Decimate_BurstPooling"),
-            WAR_AoE_Onslaught_Charges = new("WAR_AoE_Onslaught_Charges"),
-            WAR_AoE_Onslaught_Movement = new("WAR_AoE_Onslaught_Movement"),
-            WAR_AoE_PrimalRend_Movement = new("WAR_AoE_PrimalRend_Movement"),
-            WAR_AoE_PrimalRend_EarlyLate = new("WAR_AoE_PrimalRend_EarlyLate"),
-            WAR_AoE_OrogenyUpheaval = new("WAR_AoE_OrogenyUpheaval"),
-            
-            WAR_AoE_IRStop = new("WAR_AoE_IRStop"),
-            WAR_BalanceOpener_Content = new("WAR_BalanceOpener_Content", 1),
             WAR_FC_IRStop = new("WAR_FC_IRStop"),
             WAR_FC_Infuriate_Charges = new("WAR_FC_Infuriate_Charges"),
             WAR_FC_Infuriate_Gauge = new("WAR_FC_Infuriate_Gauge", 40),
@@ -453,36 +482,47 @@ internal partial class WAR
             WAR_FC_Onslaught_Movement = new("WAR_FC_Onslaught_Movement"),
             WAR_FC_PrimalRend_Movement = new("WAR_FC_PrimalRend_Movement"),
             WAR_FC_PrimalRend_EarlyLate = new("WAR_FC_PrimalRend_EarlyLate"),
+            WAR_ArmsLengthLockout_Time = new("WAR_ArmsLengthLockout_Time", 3),
+
+            //One Button Mitigation
             WAR_Mit_Holmgang_Health = new("WAR_Mit_Holmgang_Health", 20),
             WAR_Mit_Bloodwhetting_Health = new("WAR_Mit_Bloodwhetting_Health", 70),
             WAR_Mit_Equilibrium_Health = new("WAR_Mit_Equilibrium_Health", 45),
             WAR_Mit_ThrillOfBattle_Health = new("WAR_Mit_ThrillOfBattle_Health", 60),
             WAR_Mit_ShakeItOff_PartyRequirement = new("WAR_Mit_ShakeItOff_PartyRequirement", (int)PartyRequirement.Yes),
             WAR_Mit_ArmsLength_Boss = new("WAR_Mit_ArmsLength_Boss", (int)BossAvoidance.On),
-            WAR_Mit_ArmsLength_EnemyCount = new("WAR_Mit_ArmsLength_EnemyCount"),
-            WAR_Bozja_LostCure_Health = new("WAR_Bozja_LostCure_Health", 50),
-            WAR_Bozja_LostReraise_Health = new("WAR_Bozja_LostReraise_Health", 10);
+            WAR_Mit_ArmsLength_EnemyCount = new("WAR_Mit_ArmsLength_EnemyCount");
+
 
         public static UserFloat
             WAR_Mitigation_NonBoss_MitigationThreshold = new("WAR_Mitigation_NonBoss_MitigationThreshold", 20f),
             WAR_Mitigation_Boss_ThrillOfBattle_Threshold = new("WAR_Mitigation_Boss_ThrillOfBattle_Threshold", 20f),
+
             WAR_ST_Onslaught_Distance = new("WAR_ST_Ons_Distance", 3.0f),
             WAR_ST_PrimalRend_Distance = new("WAR_ST_PR_Distance", 3.0f),
-            WAR_AoE_Onslaught_Distance = new("WAR_AoE_Ons_Distance", 3.0f),
-            WAR_AoE_PrimalRend_Distance = new("WAR_AoE_PR_Distance", 3.0f),
-            WAR_FC_Onslaught_Distance = new("WAR_FC_Ons_Distance", 3.0f),
-            WAR_FC_PrimalRend_Distance = new("WAR_FC_PR_Distance", 3.0f),
             WAR_ST_Onslaught_TimeStill = new("WAR_ST_Onslaught_TimeStill"),
             WAR_ST_PrimalRend_TimeStill = new("WAR_ST_PrimalRend_TimeStill"),
+
+            WAR_AoE_Onslaught_Distance = new("WAR_AoE_Ons_Distance", 3.0f),
+            WAR_AoE_PrimalRend_Distance = new("WAR_AoE_PR_Distance", 3.0f),
             WAR_AoE_Onslaught_TimeStill = new("WAR_AoE_Onslaught_TimeStill"),
             WAR_AoE_PrimalRend_TimeStill = new("WAR_AoE_PrimalRend_TimeStill"),
+
+            WAR_FC_Onslaught_Distance = new("WAR_FC_Ons_Distance", 3.0f),
+            WAR_FC_PrimalRend_Distance = new("WAR_FC_PR_Distance", 3.0f),
             WAR_FC_Onslaught_TimeStill = new("WAR_FC_Onslaught_TimeStill"),
             WAR_FC_PrimalRend_TimeStill = new("WAR_FC_PrimalRend_TimeStill");
 
         public static UserBool
             WAR_Mitigation_Boss_ThrillOfBattle_Align = new("WAR_Mitigation_Boss_ThrillOfBattle_Align", true),
-            WAR_Mitigation_Boss_Vengeance_First = new("WAR_Mitigation_Boss_Vengeance_First", true);
+            WAR_Mitigation_Boss_Vengeance_First = new("WAR_Mitigation_Boss_Vengeance_First", true),
 
+            WAR_ST_FellCleave_Pooling = new("WAR_ST_FellCleave_Pooling"),
+            WAR_ST_FellCleave_Pooling_BossOnly = new("WAR_ST_FellCleave_Pooling_BossOnly"),
+
+            WAR_AoE_Decimate_Pooling = new("WAR_AoE_Decimate_Pooling"),
+            WAR_AoE_Decimate_Pooling_BossOnly = new("WAR_AoE_Decimate_Pooling_BossOnly"),
+            WAR_AoE_Decimate_Smart = new("WAR_AoE_Decimate_Smart");
         public static UserIntArray
             WAR_Mit_Priorities = new("WAR_Mit_Priorities");
 
@@ -499,7 +539,6 @@ internal partial class WAR
         public static readonly ContentCheck.ListSet
             WAR_Mit_Holmgang_Max_DifficultyListSet = ContentCheck.ListSet.CasualVSHard,
             WAR_Boss_Mit_DifficultyListSet = ContentCheck.ListSet.CasualVSHard;
-
         #endregion
     }
 }

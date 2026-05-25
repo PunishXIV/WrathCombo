@@ -156,7 +156,6 @@ internal static class BLMPvP
                 return actionID;
 
             #region Variables
-            float targetDistance = GetTargetDistance();
             float targetCurrentPercentHp = GetTargetHPPercent();
             float playerCurrentPercentHp = PlayerHealthPercentageHp();
             uint chargesXenoglossy = HasCharges(Xenoglossy) ? GetCooldown(Xenoglossy).RemainingCharges : 0;
@@ -197,7 +196,7 @@ internal static class BLMPvP
             {
                 // Elemental Weave (Offensive)
                 if (IsEnabled(Preset.BLMPvP_ElementalWeave) && IsOffCooldown(ElementalWeave) && hasAstralFire &&
-                    targetDistance <= 25 && playerCurrentPercentHp >= BLMPvP_ElementalWeave_PlayerHP)
+                    playerCurrentPercentHp >= BLMPvP_ElementalWeave_PlayerHP)
                     return OriginalHook(ElementalWeave);
 
                 if (!targetHasGuard)
@@ -218,7 +217,7 @@ internal static class BLMPvP
                         return Role.PhantomDart;
 
                     // Burst (Offensive)
-                    if (IsEnabled(Preset.BLMPvP_Burst) && IsOffCooldown(Burst) && targetDistance <= 4)
+                    if (IsEnabled(Preset.BLMPvP_Burst) && IsOffCooldown(Burst) && InActionRange(Burst))
                         return OriginalHook(Burst);
 
                     // Flare Star / Frost Star

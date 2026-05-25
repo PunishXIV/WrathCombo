@@ -19,6 +19,7 @@ using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 
 #endregion
 
@@ -58,8 +59,11 @@ internal sealed class ActionReplacer : IDisposable
         getActionHook = Svc.Hook.HookFromAddress<GetActionDelegate>((nint)ActionManager.Addresses.GetAdjustedActionId.Value, GetAdjustedActionDetour);
         isActionReplaceableHook = Svc.Hook.HookFromAddress<IsActionReplaceableDelegate>(Service.Address.IsActionIdReplaceable, IsActionReplaceableDetour);
 
-        getActionHook.Enable();
-        isActionReplaceableHook.Enable();
+        if (Service.Configuration.ActionChanging)
+        {
+            getActionHook.Enable();
+            isActionReplaceableHook.Enable();
+        }
     }
 
     public void Dispose()
@@ -78,16 +82,14 @@ internal sealed class ActionReplacer : IDisposable
     internal uint OriginalHook(uint actionID) =>
         getActionHook.Original(_actionManager, actionID);
 
-    private bool actionReplacementEnabled;
     public void EnableActionReplacingIfRequired()
     {
-        if (actionReplacementEnabled)
+        if (Service.Configuration.ActionChanging)
             Service.ActionReplacer.getActionHook.Enable();
     }
 
     public void DisableActionReplacingIfRequired()
     {
-        actionReplacementEnabled = Service.ActionReplacer.getActionHook.IsEnabled;
         Service.ActionReplacer.getActionHook.Disable();
     }
 
@@ -110,8 +112,6 @@ internal sealed class ActionReplacer : IDisposable
                 UpdateFilteredCombos();
 
             // Bail if not wanting to replace actions in this manner
-            if (Service.Configuration.PerformanceMode)
-                return OriginalHook(actionID);
             if (!Player.Available)
                 return OriginalHook(actionID);
 
@@ -220,13 +220,28 @@ internal sealed class ActionReplacer : IDisposable
 
     public void UpdateFilteredCombos()
     {
+        var playerJob = Player.Job;
+        var upgradedJob = playerJob.GetUpgradedJob();
+
         FilteredCombos = CustomCombos.Where(x =>
-            x.Preset.Attributes() is not null && x.Preset.Attributes().IsPvP == CustomComboFunctions.InPvP() &&
-            ((x.Preset.Attributes().RoleAttribute is not null && x.Preset.Attributes().RoleAttribute.PlayerIsRole()) ||
-             x.Preset.Attributes().CustomComboInfo.Job == Player.Job.GetUpgradedJob()));
+        {
+            var presetData = x.Preset.Attributes();
+            if (presetData is null)
+                return false;
+
+            if (presetData.IsPvP != CustomComboFunctions.InPvP()) // Are we in PvP?
+                return false;
+
+            return (presetData.JobInfo.Role is JobRole role &&
+                role.MatchesPlayerJob())
+                || presetData.JobInfo.Job == upgradedJob;
+        });
+
         var filteredCombos = FilteredCombos as CustomCombo[] ?? FilteredCombos.ToArray();
+
         Svc.Log.Debug(
-            $"Now running {filteredCombos.Count()} combos\n{string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().CustomComboInfo.Name))}");
+            $"Now running {filteredCombos.Length} combos\n" +
+            string.Join("\n", filteredCombos.Select(x => x.Preset.Attributes().Name)));
     }
 
     #endregion

@@ -1,6 +1,7 @@
 using System;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Extensions;
 using static WrathCombo.Combos.PvE.BLM.Config;
 namespace WrathCombo.Combos.PvE;
 
@@ -12,7 +13,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Fire)
+            if (actionID is not Blizzard)
                 return actionID;
 
             if (ContentSpecificActions.TryGet(out uint contentAction))
@@ -24,7 +25,7 @@ internal partial class BLM : Caster
                     return Amplifier;
 
                 if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
-                    GetRemainingCharges(LeyLines) > 1 &&
+                    GetRemainingCharges(LeyLines) > 1 && !JustUsed(LeyLines) &&
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(2.5f))
                     return LeyLines;
 
@@ -34,20 +35,24 @@ internal partial class BLM : Caster
                         return Manafont;
 
                     if (ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
-                        !ActionReady(Manafont) && !HasStatusEffect(Buffs.Triplecast) &&
+                        GetCooldownRemainingTime(Manafont) > GCD &&
+                        !HasStatusEffect(Buffs.Triplecast) &&
                         InActionRange(Fire) && HasBattleTarget())
                         return Role.Swiftcast;
 
                     if (ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                         InActionRange(Fire) && HasBattleTarget() && !HasStatusEffect(Buffs.LeyLines) &&
-                        JustUsed(Despair) && !ActionReady(Manafont))
+                        JustUsed(Despair) && !JustUsed(Triplecast) && !JustUsed(Manafont))
                         return Triplecast;
 
                     if (ActionReady(Transpose) &&
                         (HasStatusEffect(Role.Buffs.Swiftcast) ||
                          HasStatusEffect(Buffs.Triplecast)))
                         return Transpose;
+
+                    if (!ActionReady(Transpose))
+                        return Blizzard;
                 }
 
                 if (IcePhase)
@@ -58,13 +63,17 @@ internal partial class BLM : Caster
 
                     if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
                         ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
-                        HasBattleTarget() && InActionRange(Fire))
+                        HasBattleTarget() && InActionRange(Blizzard))
                         return Role.Swiftcast;
                 }
 
-                if (ActionReady(Manaward) &&
-                    PlayerHealthPercentageHp() < 40 && GroupDamageIncoming())
+                if (ActionReady(Manaward) && !LocalPlayer!.HasShield() &&
+                    (PlayerHealthPercentageHp() < 60 && !IsInParty() ||
+                     GroupDamageIncoming()))
                     return Manaward;
+
+                if (Role.CanAddle() && GroupDamageIncoming())
+                    return Role.Addle;
             }
 
             if (IsMoving() && !LevelChecked(Triplecast) &&
@@ -91,23 +100,26 @@ internal partial class BLM : Caster
                 if (ActionReady(Triplecast) &&
                     !HasStatusEffect(Buffs.Triplecast) &&
                     !HasStatusEffect(Role.Buffs.Swiftcast) &&
-                    !HasStatusEffect(Buffs.LeyLines))
+                    !HasStatusEffect(Buffs.LeyLines) &&
+                    !JustUsed(Triplecast))
                     return Triplecast;
 
                 if (LevelChecked(Paradox) &&
                     FirePhase && ActiveParadox &&
+                    MP.Cur >= MP.FireParadox &&
                     !HasStatusEffect(Buffs.Firestarter) &&
                     !HasStatusEffect(Buffs.Triplecast) &&
                     !HasStatusEffect(Role.Buffs.Swiftcast))
-                    return Paradox;
+                    return OriginalHook(Fire);
 
-                if (ActionReady(Role.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
+                if (ActionReady(Role.Swiftcast) &&
+                    !HasStatusEffect(Buffs.Triplecast))
                     return Role.Swiftcast;
 
                 if (HasPolyglotStacks() &&
                     !HasStatusEffect(Buffs.Triplecast) &&
                     !HasStatusEffect(Role.Buffs.Swiftcast))
-                    return LevelChecked(Xenoglossy)
+                    return ActionReady(Xenoglossy)
                         ? Xenoglossy
                         : Foul;
             }
@@ -116,21 +128,15 @@ internal partial class BLM : Caster
             {
                 // TODO: Revisit when Raid Buff checks are in place
                 if (HasPolyglotStacks())
-                    return LevelChecked(Xenoglossy)
+                    return ActionReady(Xenoglossy)
                         ? Xenoglossy
                         : Foul;
 
-                if ((LevelChecked(Paradox) && HasStatusEffect(Buffs.Firestarter) ||
-                     TimeSinceFirestarterBuff >= 2) && AstralFireStacks < 3 ||
-                    !ActionReady(Fire4) && TimeSinceFirestarterBuff >= 2 && LevelChecked(Fire3))
-                    return Fire3;
+                if (CanFireParadox)
+                    return OriginalHook(Fire);
 
-                if (ActiveParadox &&
-                    MP.Cur > 1600 &&
-                    (AstralFireStacks < 3 ||
-                     JustUsed(FlareStar, 5) ||
-                     !LevelChecked(FlareStar) && ActionReady(Despair)))
-                    return Paradox;
+                if (CanFire3)
+                    return Fire3;
 
                 if (CanFlarestar)
                     return FlareStar;
@@ -140,17 +146,19 @@ internal partial class BLM : Caster
                      !LevelChecked(Despair)))
                     return FireSpam;
 
+                if (ActionReady(Flare) &&
+                    !LevelChecked(Fire4) && MP.Cur <= 800)
+                    return Flare;
+
                 if (ActionReady(Despair))
                     return Despair;
 
                 if (ActionReady(Blizzard3) &&
-                    !HasStatusEffect(Role.Buffs.Swiftcast) &&
-                    !HasStatusEffect(Buffs.Triplecast))
+                    EndOfFirePhase)
                     return Blizzard3;
 
                 if (ActionReady(Transpose) &&
-                    !LevelChecked(Fire3) &&
-                    MP.Cur < MP.FireI)
+                    !LevelChecked(Fire3) && MP.Cur < MP.FireI)
                     return Transpose;
             }
 
@@ -159,7 +167,7 @@ internal partial class BLM : Caster
                 if (UmbralHearts is 3 &&
                     UmbralIceStacks is 3 &&
                     ActiveParadox)
-                    return Paradox;
+                    return OriginalHook(Blizzard);
 
                 if (MP.Full || JustUsed(Blizzard4))
                 {
@@ -167,8 +175,12 @@ internal partial class BLM : Caster
                         return Fire3;
 
                     if (ActionReady(Transpose) &&
-                        !LevelChecked(Fire3))
+                        !ActionReady(Blizzard3))
                         return Transpose;
+
+                    if (!ActionReady(Transpose) &&
+                        LevelChecked(Fire))
+                        return Fire;
                 }
 
                 if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
@@ -181,10 +193,15 @@ internal partial class BLM : Caster
                     return BlizzardSpam;
             }
 
-            if (ActionReady(Blizzard3))
+            if (LevelChecked(Blizzard3))
                 return MP.Cur < 7500
                     ? Blizzard3
                     : Fire3;
+
+            if (LevelChecked(Fire) &&
+                !ActionReady(Transpose) &&
+                MP.Cur > MP.FireI)
+                return Fire;
 
             return actionID;
         }
@@ -204,8 +221,11 @@ internal partial class BLM : Caster
 
             if (CanWeave())
             {
-                if (IsMoving() && InCombat() && InActionRange(Fire2) && HasBattleTarget() &&
-                    ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
+                if (IsMoving() && InCombat() &&
+                    InActionRange(Fire2) && HasBattleTarget() &&
+                    ActionReady(Triplecast) &&
+                    !HasStatusEffect(Buffs.Triplecast) &&
+                    !JustUsed(Triplecast))
                     return Triplecast;
 
                 if (ActionReady(Manafont) &&
@@ -221,7 +241,7 @@ internal partial class BLM : Caster
 
                 if (ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_AoE_LeyLinesTimeStill) &&
-                    GetTargetHPPercent() > 40)
+                    GetTargetHPPercent() > 40 && !JustUsed(LeyLines))
                     return LeyLines;
             }
 
@@ -237,7 +257,7 @@ internal partial class BLM : Caster
                 return OriginalHook(Thunder2);
 
             if (ActiveParadox && EndOfIcePhaseAoE)
-                return Paradox;
+                return OriginalHook(Blizzard);
 
             if (FirePhase)
             {
@@ -249,7 +269,8 @@ internal partial class BLM : Caster
 
                 if (!HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
                     HasBattleTarget() && InActionRange(Fire2) &&
-                    HasMaxUmbralHeartStacks && !ActionReady(Manafont))
+                    HasMaxUmbralHeartStacks && GetCooldownRemainingTime(Manafont) > GCD * 3 &&
+                    !JustUsed(Triplecast))
                     return Triplecast;
 
                 if (ActionReady(Flare))
@@ -262,8 +283,8 @@ internal partial class BLM : Caster
             if (IcePhase)
             {
                 if ((HasMaxUmbralHeartStacks ||
-                     MP.Full && !ActionReady(Flare) ||
-                     MP.Cur >= 5000 && ActionReady(Flare)) &&
+                     MP.Cur >= 5000 && LevelChecked(Flare) ||
+                     MP.Full && !LevelChecked(Flare)) &&
                     ActionReady(Transpose))
                     return Transpose;
 
@@ -287,7 +308,7 @@ internal partial class BLM : Caster
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not Fire)
+            if (actionID is not Blizzard)
                 return actionID;
 
             // Opener
@@ -298,6 +319,12 @@ internal partial class BLM : Caster
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
+            if (IsEnabled(Preset.BLM_ST_Manaward) && !LocalPlayer!.HasShield() &&
+                ((BLM_ST_ManawardTrigger == 0 && PlayerHealthPercentageHp() <= BLM_ST_ManawardHPThreshold && GroupDamageIncoming()) ||
+                ((BLM_ST_ManawardTrigger == 1 || (BLM_ST_ManawardTrigger == 0 && BLM_ST_ManawardSolo && !IsInParty())) && PlayerHealthPercentageHp() <= BLM_ST_ManawardHPThreshold) ||
+                (BLM_ST_ManawardTrigger == 2 && GroupDamageIncoming())))
+                return Manaward;
+
             if (CanWeave())
             {
                 if (IsEnabled(Preset.BLM_ST_Amplifier) &&
@@ -306,6 +333,7 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(Preset.BLM_ST_LeyLines) &&
                     ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
+                    !JustUsed(LeyLines) &&
                     GetRemainingCharges(LeyLines) > BLM_ST_LeyLinesCharges &&
                     (BLM_ST_LeyLinesMovement == 1 ||
                      BLM_ST_LeyLinesMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_ST_LeyLinesTimeStill)) &&
@@ -321,24 +349,28 @@ internal partial class BLM : Caster
                     if (IsEnabled(Preset.BLM_ST_Swiftcast) &&
                         ActionReady(Role.Swiftcast) && JustUsed(Despair) &&
                         HasBattleTarget() && InActionRange(Fire) &&
-                        !ActionReady(Manafont) &&
+                        GetCooldownRemainingTime(Manafont) > GCD &&
                         !HasStatusEffect(Buffs.Triplecast))
                         return Role.Swiftcast;
 
                     if (IsEnabled(Preset.BLM_ST_Triplecast) &&
                         ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
-                        HasBattleTarget() && InActionRange(Fire) &&
+                        HasBattleTarget() && InActionRange(Fire) && !JustUsed(Triplecast) &&
                         !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                         (BLM_ST_Triplecast_WhenToUse == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
-                        (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_MovementCharges ||
-                         !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !ActionReady(Manafont))
+                        (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_TriplecastMovementCharges ||
+                         !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !JustUsed(Manafont))
                         return Triplecast;
 
                     if (IsEnabled(Preset.BLM_ST_Transpose) &&
                         ActionReady(Transpose) &&
                         (HasStatusEffect(Role.Buffs.Swiftcast) ||
-                         HasStatusEffect(Buffs.Triplecast)))
+                         HasStatusEffect(Buffs.Triplecast) ||
+                         !LevelChecked(Fire3) && MP.Cur < MP.FireI))
                         return Transpose;
+
+                    if (!ActionReady(Transpose))
+                        return Blizzard;
                 }
 
                 if (IcePhase)
@@ -353,24 +385,19 @@ internal partial class BLM : Caster
                         if (IsEnabled(Preset.BLM_ST_Swiftcast) &&
                             ActionReady(Role.Swiftcast) &&
                             !HasStatusEffect(Buffs.Triplecast) &&
-                            HasBattleTarget() && InActionRange(Fire))
+                            HasBattleTarget() && InActionRange(Blizzard))
                             return Role.Swiftcast;
 
                         if (IsEnabled(Preset.BLM_ST_Triplecast) &&
                             ActionReady(Triplecast) && IsOnCooldown(Role.Swiftcast) &&
-                            HasBattleTarget() && InActionRange(Fire) &&
+                            HasBattleTarget() && InActionRange(Blizzard) && !JustUsed(Triplecast) &&
                             !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast) &&
                             (BLM_ST_Triplecast_WhenToUse == 0 || !HasStatusEffect(Buffs.LeyLines)) &&
-                            (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_Triplecast_MovementCharges ||
-                             !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !ActionReady(Manafont))
+                            (BLM_ST_MovementOption[0] && GetRemainingCharges(Triplecast) > BLM_ST_TriplecastMovementCharges ||
+                             !BLM_ST_MovementOption[0]) && JustUsed(Despair) && !JustUsed(Manafont))
                             return Triplecast;
                     }
                 }
-
-                if (IsEnabled(Preset.BLM_ST_Manaward) &&
-                    ActionReady(Manaward) &&
-                    PlayerHealthPercentageHp() < BLM_ST_Manaward_Threshold && GroupDamageIncoming())
-                    return Manaward;
 
                 if (IsEnabled(Preset.BLM_ST_Addle) &&
                     Role.CanAddle() && GroupDamageIncoming())
@@ -398,9 +425,9 @@ internal partial class BLM : Caster
             if (IsMoving() && InCombat() &&
                 HasBattleTarget() && InActionRange(Fire))
             {
-                foreach(int priority in BLM_ST_Movement_Priority.OrderBy(x => x))
+                foreach(int priority in BLM_ST_MovementPriority.OrderBy(x => x))
                 {
-                    int index = BLM_ST_Movement_Priority.IndexOf(priority);
+                    int index = BLM_ST_MovementPriority.IndexOf(priority);
                     if (CheckMovementConfigMeetsRequirements(index, out uint action))
                         return action;
                 }
@@ -411,25 +438,19 @@ internal partial class BLM : Caster
                 // TODO: Revisit when Raid Buff checks are in place
                 if (IsEnabled(Preset.BLM_ST_UsePolyglot) &&
                     (BLM_ST_MovementOption[3] &&
-                     PolyglotStacks > BLM_ST_Polyglot_Movement &&
-                     PolyglotStacks > BLM_ST_Polyglot_Save ||
+                     PolyglotStacks > BLM_ST_PolyglotMovement &&
+                     PolyglotStacks > BLM_ST_PolyglotSaveUsage ||
                      !BLM_ST_MovementOption[3] &&
-                     PolyglotStacks > BLM_ST_Polyglot_Save))
+                     PolyglotStacks > BLM_ST_PolyglotSaveUsage))
                     return LevelChecked(Xenoglossy)
                         ? Xenoglossy
                         : Foul;
 
-                if ((LevelChecked(Paradox) && HasStatusEffect(Buffs.Firestarter) ||
-                     TimeSinceFirestarterBuff >= 2) && AstralFireStacks < 3 ||
-                    !ActionReady(Fire4) && TimeSinceFirestarterBuff >= 2 && LevelChecked(Fire3))
-                    return Fire3;
+                if (CanFireParadox)
+                    return OriginalHook(Fire);
 
-                if (ActiveParadox &&
-                    MP.Cur > 1600 &&
-                    (AstralFireStacks < 3 ||
-                     JustUsed(FlareStar, 5) ||
-                     !LevelChecked(FlareStar) && ActionReady(Despair)))
-                    return Paradox;
+                if (CanFire3)
+                    return Fire3;
 
                 if (IsEnabled(Preset.BLM_ST_FlareStar) &&
                     CanFlarestar)
@@ -440,18 +461,21 @@ internal partial class BLM : Caster
                      !LevelChecked(Despair)))
                     return FireSpam;
 
+                if (ActionReady(Flare) &&
+                    !LevelChecked(Fire4) && MP.Cur <= 800)
+                    return Flare;
+
                 if (IsEnabled(Preset.BLM_ST_Despair) &&
                     ActionReady(Despair))
                     return Despair;
 
-                if (ActionReady(Blizzard3) &&
-                    !HasStatusEffect(Role.Buffs.Swiftcast) && !HasStatusEffect(Buffs.Triplecast))
+                if (LevelChecked(Blizzard3) &&
+                    EndOfFirePhase)
                     return Blizzard3;
 
                 if (IsEnabled(Preset.BLM_ST_Transpose) &&
                     ActionReady(Transpose) &&
-                    !LevelChecked(Fire3) &&
-                    MP.Cur < MP.FireI)
+                    !LevelChecked(Fire3) && MP.Cur < MP.FireI)
                     return Transpose;
             }
 
@@ -460,7 +484,7 @@ internal partial class BLM : Caster
                 if (UmbralHearts is 3 &&
                     UmbralIceStacks is 3 &&
                     ActiveParadox)
-                    return Paradox;
+                    return OriginalHook(Blizzard);
 
                 if (MP.Full || JustUsed(Blizzard4))
                 {
@@ -471,6 +495,10 @@ internal partial class BLM : Caster
                         ActionReady(Transpose) &&
                         !ActionReady(Blizzard3))
                         return Transpose;
+
+                    if (!ActionReady(Transpose) &&
+                        LevelChecked(Fire))
+                        return Fire;
                 }
 
                 if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
@@ -483,10 +511,15 @@ internal partial class BLM : Caster
                     return BlizzardSpam;
             }
 
-            if (ActionReady(Blizzard3))
+            if (LevelChecked(Blizzard3))
                 return MP.Cur < 7500
                     ? Blizzard3
                     : Fire3;
+
+            if (LevelChecked(Fire) &&
+                !ActionReady(Transpose) &&
+                MP.Cur > MP.FireI)
+                return Fire;
 
             return actionID;
         }
@@ -509,7 +542,9 @@ internal partial class BLM : Caster
                 if (IsEnabled(Preset.BLM_AoE_Movement) &&
                     IsMoving() && InCombat() &&
                     HasBattleTarget() && InActionRange(Fire2) &&
-                    ActionReady(Triplecast) && !HasStatusEffect(Buffs.Triplecast))
+                    ActionReady(Triplecast) &&
+                    !HasStatusEffect(Buffs.Triplecast) &&
+                    !JustUsed(Triplecast))
                     return Triplecast;
 
                 if (IsEnabled(Preset.BLM_AoE_Manafont) &&
@@ -528,6 +563,7 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(Preset.BLM_AoE_LeyLines) &&
                     ActionReady(LeyLines) && !HasStatusEffect(Buffs.LeyLines) &&
+                    !JustUsed(LeyLines) &&
                     GetRemainingCharges(LeyLines) > BLM_AoE_LeyLinesCharges &&
                     (BLM_AoE_LeyLinesMovement == 1 ||
                      BLM_AoE_LeyLinesMovement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(BLM_AoE_LeyLinesTimeStill)) &&
@@ -551,7 +587,7 @@ internal partial class BLM : Caster
 
             if (IsEnabled(Preset.BLM_AoE_ParadoxFiller) &&
                 ActiveParadox && EndOfIcePhaseAoE)
-                return Paradox;
+                return OriginalHook(Blizzard);
 
             if (FirePhase)
             {
@@ -563,16 +599,18 @@ internal partial class BLM : Caster
 
                 if (IsEnabled(Preset.BLM_AoE_Triplecast) &&
                     !HasStatusEffect(Buffs.Triplecast) && ActionReady(Triplecast) &&
-                    HasBattleTarget() && InActionRange(Fire2) &&
-                    GetRemainingCharges(Triplecast) > BLM_AoE_Triplecast_HoldCharges && HasMaxUmbralHeartStacks &&
-                    !ActionReady(Manafont))
+                    HasBattleTarget() && InActionRange(Fire2) && !JustUsed(Triplecast) &&
+                    GetRemainingCharges(Triplecast) > BLM_AoE_TriplecastHoldCharges &&
+                    HasMaxUmbralHeartStacks && GetCooldownRemainingTime(Manafont) > GCD * 3)
                     return Triplecast;
 
                 if (ActionReady(Flare))
                     return Flare;
 
                 if (IsNotEnabled(Preset.BLM_AoE_Transpose) &&
-                    LevelChecked(Blizzard2) && TraitLevelChecked(Traits.AspectMasteryIII) && !TraitLevelChecked(Traits.UmbralHeart))
+                    LevelChecked(Blizzard2) &&
+                    TraitLevelChecked(Traits.AspectMasteryIII) &&
+                    !TraitLevelChecked(Traits.UmbralHeart))
                     return OriginalHook(Blizzard2);
 
                 if (IsEnabled(Preset.BLM_AoE_Transpose) &&
@@ -583,16 +621,17 @@ internal partial class BLM : Caster
             if (IcePhase)
             {
                 if (HasMaxUmbralHeartStacks ||
-                    MP.Full && !ActionReady(Flare) ||
-                    MP.Cur >= 5000 && ActionReady(Flare))
+                    MP.Cur >= 5000 && LevelChecked(Flare) && !TraitLevelChecked(Traits.UmbralHeart) ||
+                    MP.Full && !LevelChecked(Flare))
                 {
-                    if (IsNotEnabled(Preset.BLM_AoE_Transpose) &&
-                        LevelChecked(Fire2) && TraitLevelChecked(Traits.AspectMasteryIII))
-                        return OriginalHook(Fire2);
-
                     if (IsEnabled(Preset.BLM_AoE_Transpose) &&
                         ActionReady(Transpose))
                         return Transpose;
+
+                    if (IsNotEnabled(Preset.BLM_AoE_Transpose) &&
+                        LevelChecked(Fire2) &&
+                        TraitLevelChecked(Traits.AspectMasteryIII))
+                        return OriginalHook(Fire2);
                 }
 
                 if (ActionReady(Freeze))
@@ -671,6 +710,22 @@ internal partial class BLM : Caster
         }
     }
 
+    internal class BLM_F1toF4 : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLM_F1toF4;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Fire)
+                return actionID;
+
+            return ActiveParadox && IcePhase
+                ? OriginalHook(Blizzard)
+                : ActionReady(Fire4)
+                    ? Fire4
+                    : actionID;
+        }
+    }
+
     internal class BLM_Fire4 : CustomCombo
     {
         protected internal override Preset Preset => Preset.BLM_Fire4;
@@ -742,6 +797,22 @@ internal partial class BLM : Caster
 
                 var _ => actionID
             };
+        }
+    }
+
+    internal class BLM_B1toB4 : CustomCombo
+    {
+        protected internal override Preset Preset => Preset.BLM_B1toB4;
+        protected override uint Invoke(uint actionID)
+        {
+            if (actionID is not Blizzard)
+                return actionID;
+
+            return ActiveParadox && FirePhase
+                ? OriginalHook(Fire)
+                : ActionReady(Blizzard4)
+                    ? Blizzard4
+                    : actionID;
         }
     }
 

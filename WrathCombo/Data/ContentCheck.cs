@@ -124,7 +124,7 @@ public class ContentCheck
 
         return false;
     }
-    
+
     public static bool IsInPOTD
     {
         get
@@ -148,9 +148,7 @@ public class ContentCheck
             if (!EZ.Throttle("contentCheckInPVP", TS.FromSeconds(5)))
                 return field;
 
-            field = (Content.ContentType is ContentType.OverWorld &&
-                     Content.TerritoryName == "Wolves' Den Pier") ||
-                    Content.ContentType is ContentType.PVP;
+            field = Content.ContentType is ContentType.PVP;
             if (field) return field;
 
             bool CSPvpCheck;
@@ -186,7 +184,7 @@ public class ContentCheck
 
     /// <summary>
     ///     Check if the current instance is a Field Operation.<br />
-    ///     (Bozja, Eureka, Occult Crescent, etc.)
+    ///     (Bozja, Occult Crescent, etc.)
     /// </summary>
     /// South Horn, Southern Front, etc.
     public static bool IsInFieldOperations
@@ -209,10 +207,26 @@ public class ContentCheck
     {
         get
         {
-            if (!EZ.Throttle("contentCheckInFieldOperations", TS.FromSeconds(5)))
+            if (!EZ.Throttle("contentCheckInFieldRaids", TS.FromSeconds(5)))
                 return field;
 
             field = Content.ContentType is ContentType.FieldRaid;
+            return field;
+        }
+    }
+
+    /// <summary>
+    ///     Check if the current instance is a Variant Dungeon.<br />
+    ///     (Aloalo Island, etc.)
+    /// </summary>
+    public static bool IsInVariantDungeon
+    {
+        get
+        {
+            if (!EZ.Throttle("contentCheckInVariants", TS.FromSeconds(5)))
+                return field;
+
+            field = Content.ContentType is ContentType.Variant;
             return field;
         }
     }
@@ -553,7 +567,7 @@ public class ContentCheck
 
         if (Content.ContentType is ContentType.Raid)
         {
-            if (Content.ContentFinderConditionRowId is 93 or 94 or 95 or 96 or 97 
+            if (Content.ContentFinderConditionRowId is 93 or 94 or 95 or 96 or 97
                 or 98 or 99 or 100 or 103 or 104 or 105 or 107 or 108 or 113 or 114
                 or 137 or 138 or 186 or 187 or 188)
                 return false;

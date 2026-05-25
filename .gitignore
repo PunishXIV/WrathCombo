@@ -8,3 +8,4 @@ WrathCombo/bin/
 .vs/
 *.v2
 /WrathCombo/packages.lock.json
+*.csproj.user

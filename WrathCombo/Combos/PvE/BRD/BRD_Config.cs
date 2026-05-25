@@ -1,5 +1,7 @@
 using Dalamud.Interface.Colors;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Extensions;
+using WrathCombo.Resources.Localization.JobConfigs;
 using static WrathCombo.Window.Functions.UserConfig;
 namespace WrathCombo.Combos.PvE;
 
@@ -21,13 +23,18 @@ internal partial class BRD
             BRD_AoESecondWindThreshold = new("BRD_AoESecondWindThreshold", 40),
             BRD_Adv_Opener_Selection = new("BRD_Adv_Opener_Selection", 0),
             BRD_Balance_Content = new("BRD_Balance_Content", 1),
-            BRD_Adv_DoT_Threshold = new("BRD_Adv_DoT_Threshold", 30),
-            BRD_Adv_DoT_SubOption = new("BRD_Adv_DoT_SubOption", 0),
+            BRD_Adv_DoT_Refresh = new("BRD_Adv_DoT_Refresh", 4),
+            BRD_ST_DPS_DotBossOption = new("BRD_ST_DPS_DotBossOption", 0),
+            BRD_ST_DPS_DotBossAddsOption = new("BRD_ST_DPS_DotBossAddsOption", 100),
+            BRD_ST_DPS_DotTrashOption = new("BRD_ST_DPS_DotTrashOption", 30),
             BRD_Adv_Buffs_Threshold = new("BRD_Adv_Buffs_Threshold", 30),
             BRD_Adv_Buffs_SubOption = new("BRD_Adv_Buffs_SubOption", 0),
+            BRD_AoE_Adv_MultidotBossOption = new("BRD_AoE_Adv_MultidotBossOption", 0),
+            BRD_AoE_Adv_MultidotBossAddsOption = new("BRD_AoE_Adv_MultidotBossAddsOption", 100),
+            BRD_AoE_Adv_MultidotTrashOption = new("BRD_AoE_Adv_MultidotTrashOption", 30),
+            BRD_AoE_Adv_Multidot_Refresh = new("BRD_AoE_Adv_Multidot_Refresh", 4),
             BRD_AoE_Adv_Buffs_Threshold = new("BRD_AoE_Adv_Buffs_Threshold", 30),
-            BRD_AoE_Adv_Buffs_SubOption = new("BRD_AoE_Adv_Buffs_SubOption", 0),
-            BRD_AoE_Adv_Multidot_HPThreshold = new("BRD_AoE_Adv_Multidot_HPThreshold", 40);
+            BRD_AoE_Adv_Buffs_SubOption = new("BRD_AoE_Adv_Buffs_SubOption", 0);
 
         public static UserBoolArray
             BRD_AoE_Adv_Buffs_Options = new("BRD_AoE_Adv_Buffs_Options"),
@@ -43,27 +50,23 @@ internal partial class BRD
             {
                 #region Single Target
                 case Preset.BRD_ST_Adv_Balance_Standard:
-                    DrawRadioButton(BRD_Adv_Opener_Selection, "Standard Opener", "", 0);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, Generics.StandardOpener, "", 0);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.48 Adjusted Standard Opener", "", 1);
                     DrawRadioButton(BRD_Adv_Opener_Selection, "2.49 Standard Comfy", "", 2);
+                    DrawRadioButton(BRD_Adv_Opener_Selection, "Early Buff Window Opener", "Moves buff window forward about 1 GCD. Prepot with this.", 3, descriptionAsTooltip: true);
                     ImGui.Indent();
                     DrawBossOnlyChoice(BRD_Balance_Content);
                     ImGui.Unindent();
                     break;
 
                 case Preset.BRD_Adv_DoT:
-                    DrawSliderInt(0, 100, BRD_Adv_DoT_Threshold,
-                        $"Stop using Dots on targets below this HP % (0% = always use, 100% = never use).");
-                    ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
-                    DrawHorizontalRadioButton(BRD_Adv_DoT_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
-                    DrawHorizontalRadioButton(BRD_Adv_DoT_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
-                    ImGui.Unindent();
+                    DrawSliderInt(0, 100, BRD_ST_DPS_DotBossOption, Generics.BossOnlyHpPercent);
+                    DrawSliderInt(0, 100, BRD_ST_DPS_DotBossAddsOption, Generics.BossEncounterNonBossHpPercent);
+                    DrawSliderInt(0, 100, BRD_ST_DPS_DotTrashOption, Generics.NonBossHpPercent);
+                    DrawSliderInt(3, 10, BRD_Adv_DoT_Refresh, "Renew time for dots (In seconds).");
                     DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Iron Jaws Option", "Enable the refreshing of dots with Ironjaws", 4, 0);
                     DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Dot Application Option", "Enable the application of dots outside of the opener", 4, 1);
-                    DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Raging Jaws Optionn", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes", 4, 2);
+                    DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "Raging Jaws Option", "Enable the snapshotting of DoTs, within the remaining time of Raging Strikes", 4, 2);
                     DrawHorizontalMultiChoice(BRD_Adv_DoT_Options, "MultiDot Option", "Will maintain dots on up to 3 targets.", 4, 3);
 
                     if (BRD_Adv_DoT_Options[2])
@@ -76,11 +79,11 @@ internal partial class BRD
                     DrawSliderInt(0, 100, BRD_Adv_Buffs_Threshold,
                        $"Stop using Buffs on targets below this HP % (0% = always use, 100% = never use).");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(BRD_Adv_Buffs_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
                     DrawHorizontalRadioButton(BRD_Adv_Buffs_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
                     ImGui.Unindent();
                     DrawHorizontalMultiChoice(BRD_Adv_Buffs_Options, "Raging Strikes Option", "Adds Raging Strikes", 4, 0);
                     DrawHorizontalMultiChoice(BRD_Adv_Buffs_Options, "Battlevoice Option", "Adds Battle Voice", 4, 1);
@@ -103,11 +106,11 @@ internal partial class BRD
                     DrawSliderInt(0, 100, BRD_AoE_Adv_Buffs_Threshold,
                         $"Stop using Buffs on targets below this HP % (0 = always use, 100 = never use).");
                     ImGui.Indent();
-                    ImGui.TextColored(ImGuiColors.DalamudYellow, "Select what kind of enemies the HP check should be applied to:");
+                    ImGui.TextColored(ImGuiColors.DalamudYellow, Generics.EnemyTypeCheck);
                     DrawHorizontalRadioButton(BRD_AoE_Adv_Buffs_SubOption,
-                        "Non-boss Encounters Only", $"Applies HP check to Non-Boss Encounters only", 0);
+                        Generics.NonBossEncountersOnly, Generics.HPCheckNonBossEncountersOnly, 0);
                     DrawHorizontalRadioButton(BRD_AoE_Adv_Buffs_SubOption,
-                        "All Content", $"Applies HP Check to All Content", 1);
+                        Generics.AllContent, Generics.HPCheckAllContent, 1);
                     ImGui.Unindent();
                     DrawHorizontalMultiChoice(BRD_AoE_Adv_Buffs_Options, "Raging Strikes Option", "Adds Raging Strikes", 4, 0);
                     DrawHorizontalMultiChoice(BRD_AoE_Adv_Buffs_Options, "Battlevoice Option", "Adds Battle Voice", 4, 1);
@@ -121,34 +124,37 @@ internal partial class BRD
                     break;
 
                 case Preset.BRD_AoE_Adv_Multidot:
-                    DrawSliderInt(0, 100, BRD_AoE_Adv_Multidot_HPThreshold, "Target HP% to stop using (0 = Use Always, 100 = Never)");
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_MultidotBossOption, Generics.BossOnlyHpPercent);
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_MultidotBossAddsOption, Generics.BossEncounterNonBossHpPercent);
+                    DrawSliderInt(0, 100, BRD_AoE_Adv_MultidotTrashOption, Generics.NonBossHpPercent);
+                    DrawSliderInt(3, 10, BRD_AoE_Adv_Multidot_Refresh, "Renew time for dots (In seconds).");
                     break;
 
                 case Preset.BRD_AoE_Wardens:
                     DrawAdditionalBoolChoice(BRD_AoE_Wardens_Auto, "Party Cleanse Option", "Uses Wardens Paeon when someone in the party has a cleansable debuff using the Retargeting Function following party list.");
                     break;
                 #endregion
-                
+
                 #region Standalone
                 case Preset.BRD_StraightShotUpgrade_OGCDs:
-                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, "Empyreal Arrow", "Adds Empyreal Arrow", 4, 0);
-                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, "Pitch Perfect", "Adds Pitch Perfect", 4, 1);
-                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, "Bloodletter", "Adds Bloodletter when at max charges", 4, 2);
-                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, "Sidewinder", "Adds Sidewinder", 4, 3);
+                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, EmpyrealArrow.ActionName(), "Adds Empyreal Arrow", 4, 0);
+                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, PitchPerfect.ActionName(), "Adds Pitch Perfect", 4, 1);
+                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, Bloodletter.ActionName(), "Adds Bloodletter when at max charges", 4, 2);
+                    DrawHorizontalMultiChoice(BRD_StraightShotUpgrade_OGCDs_Options, Sidewinder.ActionName(), "Adds Sidewinder", 4, 3);
                     break;
-                
+
                 case Preset.BRD_WideVolleyUpgrade_OGCDs:
-                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, "Empyreal Arrow", "Adds Empyreal Arrow", 4, 0);
-                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, "Pitch Perfect", "Adds Pitch Perfect", 4, 1);
-                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, "Rain Of Death", "Adds Rain of Death when at max charges, or bloodletter below level.", 4, 2);
-                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, "Sidewinder", "Adds Sidewinder", 4, 3);
+                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, EmpyrealArrow.ActionName(), "Adds Empyreal Arrow", 4, 0);
+                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, PitchPerfect.ActionName(), "Adds Pitch Perfect", 4, 1);
+                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, RainOfDeath.ActionName(), "Adds Rain of Death when at max charges, or bloodletter below level.", 4, 2);
+                    DrawHorizontalMultiChoice(BRD_WideVolleyUpgrade_OGCDs_Options, Sidewinder.ActionName(), "Adds Sidewinder", 4, 3);
                     break;
-                
+
                 case Preset.BRD_IronJaws:
                     DrawAdditionalBoolChoice(BRD_IronJaws_Alternate, "Iron Jaws Alternate", "Iron Jaws will only show up when debuffs are about to expire.", 0);
                     DrawAdditionalBoolChoice(BRD_IronJaws_Apex, "Apex Option", "Adds Apex and Blast Arrow to Iron Jaws when available.", 0);
                     break;
-                
+
                 #endregion
             }
         }

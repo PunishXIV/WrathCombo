@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="HelpText_Retargetting1" xml:space="preserve">
+    <value>启用后，此功能将涉及技能重定向。</value>
+  </data>
+  <data name="HelpText_Retargetting2" xml:space="preserve">
+    <value>此功能影响的技能将自动
+按你配置的优先级重定向到对应目标。</value>
+  </data>
+  <data name="HelpText_Retargetting3" xml:space="preserve">
+    <value>若使用 Redirect、Reaction 等插件并配置了
+相同技能，可能会产生冲突并导致问题。</value>
+  </data>
+  <data name="Info_searchHintText" xml:space="preserve">
+    <value>分类名称、设置名称、内部名称等</value>
+  </data>
+  <data name="Label_searchLabelText" xml:space="preserve">
+    <value>搜索：</value>
+  </data>
+  <data name="Button_CreateDebug" xml:space="preserve">
+    <value>创建调试文件</value>
+  </data>
+  <data name="HelpText_CreateDebug" xml:space="preserve">
+    <value>将在你的桌面生成一个调试文件。
+可提供给开发者以协助排查问题。
+等同于使用以下命令：/wrath debug</value>
+  </data>
+  <data name="Header_SettingsAbout" xml:space="preserve">
+    <value>此页签用于自定义 Wrath Combo 的全局设置。</value>
+  </data>
+  <data name="Text_RecommendedValue" xml:space="preserve">
+    <value>推荐值：</value>
+  </data>
+  <data name="Text_DefaultValue" xml:space="preserve">
+    <value>默认值：</value>
+  </data>
+  <data name="Label_HealStack" xml:space="preserve">
+    <value>当前治疗队列：</value>
+  </data>
+  <data name="HelpText_HealStack" xml:space="preserve">
+    <value>这是 Wrath 尝试选择治疗目标的顺序。
+若关闭“重定向治疗技能”选项，该目标仅用于血量阈值判定，以触发不同治疗技能显示在循环中。
+这意味着如果你自己的重定向方案（Redirect、Reaction 等）与此不一致，Wrath 可能会陷入给错误目标治疗的循环！
+若启用“重定向治疗技能”选项，该目标也会成为治疗技能的实际施放目标（即便该技能本身不会先检查该目标 HP，例如连击中的替换技能）。</value>
+  </data>
+  <data name="Warning_HealStack" xml:space="preserve">
+    <value>请务必确保你的重定向方案与此治疗队列一致，这由你自行负责！
+否则 Wrath 可能会陷入循环：检查到 X 玩家需要治疗，但实际却治疗了 Y 玩家！</value>
+  </data>
+  <data name="Label_RaiseStack" xml:space="preserve">
+    <value>当前复活队列：</value>
+  </data>
+  <data name="HelpText_RaiseStack" xml:space="preserve">
+    <value>若启用了任一复活功能的重定向，
+这是 Wrath 尝试选择复活目标的顺序。</value>
+  </data>
+</root>

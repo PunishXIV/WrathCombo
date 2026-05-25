@@ -84,7 +84,6 @@ internal static class DNCPvP
             bool honingDanceReady = !GetCooldown(HoningDance).IsCooldown;
             var acclaimStacks = GetStatusEffectStacks(Buffs.Acclaim);
             bool canWeave = CanWeave();
-            var distance = GetTargetDistance();
             var HP = PlayerHealthPercentageHp();
             bool enemyGuarded = HasStatusEffect(PvPCommon.Buffs.Guard, CurrentTarget, true);
             #endregion
@@ -96,10 +95,10 @@ internal static class DNCPvP
             if (IsEnabled(Preset.DNCPvP_Eagle) && PvPPhysRanged.CanEagleEyeShot() && (PvPCommon.TargetImmuneToDamage() || GetTargetHPPercent() <= DNCPvP_EagleThreshold))
                 return PvPPhysRanged.EagleEyeShot;
 
-            if (IsEnabled(Preset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && distance <= 5 && !enemyGuarded)
+            if (IsEnabled(Preset.DNCPvP_BurstMode_HoningDance) && honingDanceReady && HasTarget() && GetTargetDistance() <= 5 && !enemyGuarded)
             {
                 if (HasStatusEffect(Buffs.Acclaim) && acclaimStacks < 4)
-                    return WHM.Assize;
+                    return All.SavageBlade;
 
                 return HoningDance;
             }
@@ -111,7 +110,7 @@ internal static class DNCPvP
                     return OriginalHook(CuringWaltz);
 
                 // Fan Dance weave
-                if (IsOffCooldown(FanDance) && distance < 13 && !enemyGuarded) // 2y below max to avoid waste
+                if (IsOffCooldown(FanDance) && InActionRange(FanDance) && !enemyGuarded) // 2y below max to avoid waste
                     return OriginalHook(FanDance);
 
                 if (IsEnabled(Preset.DNCPvP_BurstMode_Dash) && !HasStatusEffect(Buffs.EnAvant) && GetRemainingCharges(EnAvant) > DNCPvP_EnAvantCharges)
@@ -119,7 +118,7 @@ internal static class DNCPvP
             }
 
             // Starfall Dance
-            if (!starfallDance && starfallDanceReady && distance < 20 && !enemyGuarded) // 5y below max to avoid waste
+            if (!starfallDance && starfallDanceReady && InActionRange(StarfallDance) && !enemyGuarded) // 5y below max to avoid waste
                 return OriginalHook(StarfallDance);
 
             return actionID;

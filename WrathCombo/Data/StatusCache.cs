@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
+using WrathCombo.Extensions;
 using Status = Dalamud.Game.ClientState.Statuses.IStatus; // conflicts with structs if not defined
 namespace WrathCombo.Data;
 
@@ -33,7 +34,11 @@ internal partial class CustomComboCache : IDisposable
         if (obj is not IBattleChara chara)
             return statusCache[key] = null;
 
-        var statuses = chara.StatusList;
+        var statuses = chara.SafeStatusList;
+
+        if (statuses is null)
+            return statusCache[key] = null;
+
         foreach (var status in statuses)
         {
             if (status.StatusId == InvalidStatusID)
@@ -164,7 +169,8 @@ internal class StatusCache
             }.ToFrozenSet();
 
         internal static readonly FrozenSet<uint> Misc = new uint[] {
-            1735 // The Orbonne Monastary - Heavenly Shield
+            1735, // The Orbonne Monastary - Heavenly Shield
+            5191  // The Clyteum - Motion Tracker
         }.ToFrozenSet();
 
     }
@@ -203,7 +209,11 @@ internal class StatusCache
         if (gameObject is not IBattleChara chara)
             return false;
 
-        var statuses = chara.StatusList;
+        var statuses = chara.SafeStatusList;
+
+        if (statuses is null)
+            return false;
+
         var targetStatuses = statuses.Select(s => s.StatusId).ToHashSet();
         return statusList.Count switch
         {

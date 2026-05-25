@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--
+    Microsoft ResX Schema
+
+    Version 2.0
+
+    The primary goals of this format is to allow a simple XML format
+    that is mostly human readable. The generation and parsing of the
+    various data types are done through the TypeConverter classes
+    associated with the data types.
+  -->
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Add0Or1PriorUsing2" xml:space="preserve">
+    <value>{2} を使う前に {0} または {1} を追加</value>
+  </data>
+  <data name="AtLeast1PartyMember" xml:space="preserve">
+    <value>パーティメンバーが1人以上いる場合のみ</value>
+  </data>
+  <data name="AveragePartyHPLessOrEqual" xml:space="preserve">
+    <value>パーティ平均HP%が次以下:</value>
+  </data>
+  <data name="NotAdvised" xml:space="preserve">
+    <value>ほとんどの状況では非推奨です！</value>
+  </data>
+  <data name="Requires0Or1ToUse2" xml:space="preserve">
+    <value>{2} の使用に {0} または {1} が必要</value>
+  </data>
+  <data name="SliderShouldBeLow" xml:space="preserve">
+    <value>使用する場合、スライダー値はかなり低めにしてください！</value>
+  </data>
+  <data name="VeryCostly" xml:space="preserve">
+    <value>コストが非常に重い機能です！</value>
+  </data>
+</root>

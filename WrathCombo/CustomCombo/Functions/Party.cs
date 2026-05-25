@@ -17,6 +17,7 @@ using WrathCombo.AutoRotation;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Extensions;
 using WrathCombo.Services;
+using BattleNpcSubKindCS = FFXIVClientStructs.FFXIV.Client.Game.Object.BattleNpcSubKind;
 namespace WrathCombo.CustomComboNS.Functions;
 
 internal abstract partial class CustomComboFunctions
@@ -50,7 +51,7 @@ internal abstract partial class CustomComboFunctions
                     {
                         foreach (var p in InfoProxyPartyMember.Instance()->CharDataSpan)
                         {
-                            var contentId = chara.Character()->ContentId;
+                            var contentId = chara.EntityId;
                             if (p.ContentId == contentId)
                                 existingMember.NPCClassJob = p.Job;
                         }
@@ -67,9 +68,9 @@ internal abstract partial class CustomComboFunctions
                     {
                         foreach (var p in InfoProxyPartyMember.Instance()->CharDataSpan)
                         {
-                            var contentId = chara.Character()->ContentId;
+                            var contentId = chara.EntityId;
                             if (p.ContentId == contentId)
-                                existingMember.NPCClassJob = p.Job;
+                                wmember.NPCClassJob = p.Job;
                         }
                     }
                     _partyList.Add(wmember);
@@ -83,7 +84,7 @@ internal abstract partial class CustomComboFunctions
             foreach (var npc in Svc.Objects.OfType<IBattleNpc>().Where(x => !existingIds.Contains(x.GameObjectId)))
             {
                 if (npc.BattleNpcKind is BattleNpcSubKind.Pet) continue; // Skips carbuncles, fairies etc.
-                if (npc.BattleNpcKind is BattleNpcSubKind.Chocobo && npc.OwnerId != Player.GameObject->GetGameObjectId()) continue; // Skips other players' chocobos
+                if (npc.Struct()->BattleNpcSubKind is BattleNpcSubKindCS.Buddy  && npc.OwnerId != Player.GameObject->GetGameObjectId()) continue; // Skips other players' chocobos
 
                 if (ActionManager.CanUseActionOnTarget(RoleActions.Healer.Esuna, npc.GameObject()))
                 {
@@ -169,7 +170,7 @@ internal abstract partial class CustomComboFunctions
         return partyCount == 0 ? 0 : (float)buffCount / partyCount * 100f;
     }
 
-    public static bool PartyInCombat() => PartyEngageDuration().Ticks > 0;
+    public static bool PartyInCombat() => PartyInCombatCheck;
 }
 
 public enum AllianceGroup
