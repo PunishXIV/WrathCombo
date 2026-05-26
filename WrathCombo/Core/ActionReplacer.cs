@@ -37,8 +37,6 @@ internal sealed class ActionReplacer : IDisposable
 
     public readonly Dictionary<uint, uint> LastActionInvokeFor = [];
 
-    private readonly Dictionary<uint, long> _actionThrottleExpiry = [];
-
     /// <summary>
     ///     Critical for the hook, do not remove or modify.
     /// </summary>
@@ -216,8 +214,6 @@ internal sealed class ActionReplacer : IDisposable
 
     public void UpdateFilteredCombos()
     {
-        _actionThrottleExpiry.Clear();
-
         var playerJob = Player.Job;
         var upgradedJob = playerJob.GetUpgradedJob();
 
