@@ -81,6 +81,10 @@ public class Setting(
         Stack,
     }
     
+    internal string Name { get; }
+    internal string HelpMark { get; } 
+    internal string RecommendedValue { get; } 
+    internal string DefaultValue { get; } 
     internal string? UnitLabel { get; }
     internal Type TheType { get; } = type;
     internal string? ExtraHelpMark { get; }

@@ -844,6 +844,20 @@ internal abstract partial class CustomComboFunctions
         return PointInCircle(target.Position - player.Position, size + target.HitboxRadius);
     }
 
+    public static bool TargetInTargetedCircle(IGameObject? target, float size)
+    {
+        if (target is null)
+            return false;
+
+        foreach (var o in Svc.Objects)
+        {
+            if (o.GameObjectId == target.GameObjectId)
+                return PointInCircle(o.Position - target.Position, size + o.HitboxRadius);
+        }
+
+        return false;
+    }
+
     public static bool TargetInCone(IGameObject? target, float size)
     {
         if (target is null || LocalPlayer is not { } player)

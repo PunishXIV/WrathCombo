@@ -117,12 +117,10 @@ internal sealed class ActionReplacer : IDisposable
                 return OriginalHook(actionID);
 
             // Only refresh every so often
-            var now = Environment.TickCount64;
-            if (_actionThrottleExpiry.TryGetValue(actionID, out var expiresAt) && now < expiresAt)
+            if (!EzThrottler.Throttle("Actions" + actionID,
+                Service.Configuration.Throttle))
                 return LastActionInvokeFor[actionID];
-
-            _actionThrottleExpiry[actionID] = now + Service.Configuration.Throttle;
-
+            
             // Actually get the action
             LastActionInvokeFor[actionID] = GetAdjustedAction(actionID);
             return LastActionInvokeFor[actionID];
