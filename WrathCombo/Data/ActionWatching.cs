@@ -433,6 +433,10 @@ public static class ActionWatching
     {
         try
         {
+            if (P.CustomActions.Manager.Actions.Any(x => x.Id == actionId))
+            {
+                return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);   
+            }
             if (actionType is ActionType.Action)
             {
                 var disablingReplacingTemp = mode == ActionManager.UseActionMode.Queue || AutoRotationController.AutorotRaidwiding;

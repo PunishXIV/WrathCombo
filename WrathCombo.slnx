@@ -20,7 +20,10 @@
     <File Path="README.md" />
   </Folder>
   <Project Path="ECommons/ECommons/ECommons.csproj">
-  	<Platform Project="x64" />
+    <Platform Project="x64" />
+  </Project>
+  <Project Path="KamiToolKit/KamiToolKit.csproj">
+    <Platform Project="x64" />
   </Project>
   <Project Path="PunishLib/PunishLib/PunishLib.csproj">
     <Platform Project="x64" />
@@ -29,6 +32,6 @@
     <Platform Project="x64" />
   </Project>
   <Project Path="WrathCombo/WrathCombo.csproj">
-  	<Platform Project="x64" />
+    <Platform Project="x64" />
   </Project>
 </Solution>

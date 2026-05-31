@@ -78,6 +78,7 @@
     <!-- Dependencies -->
     <ItemGroup>
         <ProjectReference Include="..\ECommons\ECommons\ECommons.csproj" />
+        <ProjectReference Include="..\KamiToolKit\KamiToolKit.csproj" />
         <ProjectReference Include="..\PunishLib\PunishLib\PunishLib.csproj" />
         <ProjectReference Include="..\WrathCombo.API\WrathCombo.API.csproj" />
     </ItemGroup>

@@ -11,6 +11,7 @@ using ECommons.Automation.LegacyTaskManager;
 using ECommons.DalamudServices;
 using ECommons.ExcelServices;
 using ECommons.GameHelpers;
+using KamiToolKit;
 using Lumina.Excel.Sheets;
 using Newtonsoft.Json.Linq;
 using PunishLib;
@@ -29,6 +30,7 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Native;
 using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
@@ -62,6 +64,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
     internal UIHelper UIHelper = null!;
     internal ActionRetargeting ActionRetargeting = null!;
     internal MovementHook MoveHook;
+    internal CustomActionSetup CustomActions;
+    private readonly CustomActionListAddon _listAddon;
 
     internal static bool IsAprilFools => DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 4;
 
@@ -175,7 +179,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
         pluginInterface.Create<Service>();
         ECommonsMain.Init(pluginInterface, this, Module.All);
         PunishLibMain.Init(pluginInterface, "Wrath Combo");
-
+        KamiToolKitLibrary.Initialize(pluginInterface);
         ActionRequestIPCProvider.Initialize();
 
         TM = new();
@@ -184,6 +188,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Address = new AddressResolver();
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
+        CustomActions = new();
+        _listAddon = new(CustomActions.Manager);
         PresetStorage.RemoveRedundantPresets();
 
         Service.ComboCache = new CustomComboCache();
@@ -485,11 +491,14 @@ public sealed partial class WrathCombo : IDalamudPlugin
         CustomComboFunctions.TimerDispose();
         IPC.Dispose();
         MoveHook.Dispose();
+        CustomActions.Dispose();
+        _listAddon.Dispose();
 
         ConflictingPluginsChecks.Dispose();
         AllStaticIPCSubscriptions.Dispose();
         Svc.ClientState.Login -= PrintLoginMessage;
         ECommonsMain.Dispose();
+        KamiToolKitLibrary.Dispose();
         P = null;
     }
 

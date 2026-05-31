@@ -15,3 +15,6 @@
 [submodule "WrathCombo.API"]
 	path = WrathCombo.API
 	url = https://github.com/PunishXIV/WrathCombo.API.git
+[submodule "KamiToolKit"]
+	path = KamiToolKit
+	url = https://github.com/Taurenkey/KamiToolKit
