@@ -433,8 +433,11 @@ public static class ActionWatching
     {
         try
         {
-            if (P.CustomActions.Manager.Actions.Any(x => x.Id == actionId))
+            if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == actionId, out var customAct))
             {
+                if (customAct.OnClick != null)
+                    customAct.OnClick();
+
                 return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);   
             }
             if (actionType is ActionType.Action)

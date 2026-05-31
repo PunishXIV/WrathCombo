@@ -3,6 +3,7 @@ using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Plugin.Services;
 using ECommons.DalamudServices;
+using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -288,10 +289,10 @@ public sealed unsafe class CustomActionSetup : IDisposable
     public CustomActionSetup()
     {
         Manager = new(Svc.SigScanner, Svc.Hook, Svc.Texture, Svc.Framework);
-        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos", 126);
-        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos", 127);
-        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos", 128);
-        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE combos", 129);
+        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos", 126, () => DuoLog.Debug($"This is the single target DPS button!"));
+        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos", 127, () => DuoLog.Debug($"This is the AoE DPS button!"));
+        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos", 128, () => DuoLog.Debug($"This is the single target heals button!"));
+        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE combos", 129, () => DuoLog.Debug($"This is the aoe heals button!"));
 
         Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
     }
