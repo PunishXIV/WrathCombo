@@ -175,7 +175,7 @@ internal static class PresetStorage
             var result = AllPresets.Values
                 .SelectMany(attr => attr.RetargetedActions ?? [])
                 .ToHashSet();
-            PluginLog.Verbose($"Retrieved {result.Count} retargeted actions");
+            PluginLog.Verbose($"[Presets] Retrieved {result.Count} retargeted actions");
             field = result;
             return result;
         }
