@@ -8,6 +8,7 @@ namespace WrathCombo.Window.Tabs
     internal class CustomActions : ConfigWindow
     {
         private static CustomAction? SelectedAction;
+        private static bool DragDropMode;
         internal unsafe static new void Draw()
         {
             ImGuiEx.Text($"{P.CustomActions.HoveredSlot}");
@@ -16,6 +17,9 @@ namespace WrathCombo.Window.Tabs
                 DrawAction(act);
                 ImGui.SameLine();
             }
+
+            if (ImGui.GetIO().MouseDownDuration[0] > 0.5f)
+                DragDropMode = true;
 
             if (SelectedAction != null && ThreadLoadImageHandler.TryGetIconTextureWrap(SelectedAction.IconId, false, out var texture))
             {
@@ -34,7 +38,7 @@ namespace WrathCombo.Window.Tabs
                 ImGui.Image(texture.Handle, new(50));
                 ImGui.End();
 
-                if (ImGui.IsMouseClicked(ImGuiMouseButton.Left))
+                if (ImGui.IsMouseClicked(ImGuiMouseButton.Left) || (ImGui.IsMouseReleased(ImGuiMouseButton.Left) && DragDropMode))
                 {
                     if (P.CustomActions.HoveredSlot != null)
                     {
@@ -42,6 +46,7 @@ namespace WrathCombo.Window.Tabs
                         
                     }
                     SelectedAction = null;
+                    DragDropMode = false;
                 }
 
             }
