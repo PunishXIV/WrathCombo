@@ -11,7 +11,7 @@ internal partial class MCH : PhysicalRanged
 
         protected override uint Invoke(uint actionID)
         {
-            if (actionID is not (SplitShot or HeatedSplitShot))
+            if (actionID is not All.SingleTargetDPS)
                 return actionID;
 
             //Reassemble to start before combat/after downtime
@@ -128,7 +128,7 @@ internal partial class MCH : PhysicalRanged
                 if (ComboAction is SlugShot && ActionReady(OriginalHook(CleanShot)))
                     return OriginalHook(CleanShot);
             }
-            return actionID;
+            return OriginalHook(SplitShot);
         }
     }
 

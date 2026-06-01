@@ -235,6 +235,10 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             OpenWindow = OpenWindow.AutoRotation;
 
         ImGui.Spacing();
+        if (ImGui.Selectable("Custom Actions", OpenWindow == OpenWindow.CustomActions))
+            OpenWindow = OpenWindow.CustomActions;
+
+        ImGui.Spacing();
         ImGui.Spacing();
 
         ImGui.Spacing();
@@ -290,7 +294,11 @@ internal class ConfigWindow : Dalamud.Interface.Windowing.Window
             case OpenWindow.AutoRotation:
                 AutoRotationTab.Draw();
                 break;
-        };
+            case OpenWindow.CustomActions:
+                CustomActions.Draw();
+                break;
+        }
+        ;
     }
 
     private static void DrawCollapseButton()
@@ -358,4 +366,5 @@ public enum OpenWindow
     AutoRotation = 4,
     About = 5,
     Debug = 6,
+    CustomActions = 7,
 }

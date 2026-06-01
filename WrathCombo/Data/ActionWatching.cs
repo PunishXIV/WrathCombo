@@ -438,7 +438,6 @@ public static class ActionWatching
                 if (customAct.OnClick != null)
                     customAct.OnClick();
 
-                return UseActionHook.Original(actionManager, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);   
             }
             if (actionType is ActionType.Action)
             {
@@ -471,7 +470,7 @@ public static class ActionWatching
                 if (actionManager->QueuedTargetId.Id != 0)
                     targetId = actionManager->QueuedTargetId.Id;
 
-                var areaTargeted = ActionSheet[replacedWith].TargetArea;
+                var areaTargeted = replacedWith >= 1_000_000 ? false : ActionSheet[replacedWith].TargetArea;
 
                 if (areaTargeted && disablingReplacingTemp) //Ground targets don't hit the send method, so it has to be re-enabled here. Could be re-enabled further down the line if it causes output issues.
                     Service.ActionReplacer.EnableActionReplacingIfRequired();

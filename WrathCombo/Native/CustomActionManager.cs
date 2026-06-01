@@ -2,9 +2,12 @@
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Plugin.Services;
+using ECommons;
 using ECommons.DalamudServices;
+using ECommons.EzHookManager;
 using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using KamiToolKit.Extensions;
@@ -286,18 +289,47 @@ public sealed unsafe class CustomActionSetup : IDisposable
     private readonly CustomAction _aoeDPS;
     private readonly CustomAction _singleTargeHeals;
     private readonly CustomAction _aoeHeals;
+    public (int Hotbar, int Slot)? HoveredSlot = null;
+
+    [EzHook("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC 20 48 8B 7C 24 ?? 48 8B D9", false)]
+    private EzHook<AddonActionBarBase.Delegates.ReceiveEvent> AddonActionBarBase_ReceiveEventHook;
+
+    private unsafe void AddonActionBarBase_ReceiveEventDetour(AddonActionBarBase* thisPtr, AtkEventType eventType, int eventParam, AtkEvent* atkEvent, AtkEventData* atkEventData)
+    {
+        try
+        {
+            if (eventType == AtkEventType.DragDropRollOver)
+            {
+                HoveredSlot = ((int Hotbar, int Slot)?)(thisPtr->RaptureHotbarId, eventParam);
+            }
+            if (eventType == AtkEventType.DragDropRollOut)
+            {
+                HoveredSlot = null;
+            }
+        }
+        catch (Exception e)
+        {
+            e.Log();
+        }
+        AddonActionBarBase_ReceiveEventHook.Original(thisPtr, eventType, eventParam, atkEvent, atkEventData);
+    }
+
     public CustomActionSetup()
     {
+        EzSignatureHelper.Initialize(this);
+        AddonActionBarBase_ReceiveEventHook?.Enable();
         Manager = new(Svc.SigScanner, Svc.Hook, Svc.Texture, Svc.Framework);
-        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos", 126, () => DuoLog.Debug($"This is the single target DPS button!"));
-        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos", 127, () => DuoLog.Debug($"This is the AoE DPS button!"));
-        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos", 128, () => DuoLog.Debug($"This is the single target heals button!"));
-        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE combos", 129, () => DuoLog.Debug($"This is the aoe heals button!"));
+        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos", 126);
+        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos", 127);
+        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos", 128);
+        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE combos", 129);
 
         Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
     }
     public void Dispose()
     {
         Manager.Dispose();
+        AddonActionBarBase_ReceiveEventHook?.Disable();
     }
+
 }
