@@ -5,7 +5,6 @@ using Dalamud.Plugin.Services;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.EzHookManager;
-using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
@@ -16,6 +15,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using WrathCombo.Combos.PvE;
+using WrathCombo.Extensions;
+using WrathCombo.Services;
 
 namespace WrathCombo.Native;
 
@@ -39,6 +40,7 @@ public sealed unsafe class CustomAction : IDisposable
         IconId = iconId;
         CustomIconPath = customIconPath;
         OnClick = onClick;
+        Description = description;
 
         byte[] nameUtf8 = Encoding.UTF8.GetBytes(name);
         UIntPtr rowSize = (nuint)sizeof(CustomActionManager.CustomActionRow);
@@ -73,6 +75,7 @@ public sealed unsafe class CustomAction : IDisposable
     public uint IconId { get; }
     public string? CustomIconPath { get; }
     public Action? OnClick { get; }
+    public string Description { get; }
 
     internal nint ActionRowPtr { get; }
     internal nint TransientRowPtr { get; }
@@ -121,6 +124,7 @@ public sealed unsafe class CustomActionManager : IDisposable
     }
 
     public IReadOnlyCollection<CustomAction> Actions => _actions.Values;
+    public IReadOnlyDictionary<uint, ISharedImmediateTexture> IconTextures => _iconTextures;
 
     public void Dispose()
     {
@@ -145,7 +149,13 @@ public sealed unsafe class CustomActionManager : IDisposable
         _actions[action.Id] = action;
         if (action.CustomIconPath != null)
         {
+            Svc.Log.Debug($"Registering {action.Id} from path {action.CustomIconPath}");
             _iconTextures[action.IconId] = _texProv.GetFromFileAbsolute(action.CustomIconPath);
+        }
+        else
+        {
+            if (_texProv.TryGetFromGameIcon(new GameIconLookup() { IconId = action.IconId, ItemHq = false }, out var tex))
+                _iconTextures[action.IconId] = tex;
         }
     }
 
@@ -153,6 +163,9 @@ public sealed unsafe class CustomActionManager : IDisposable
     {
         foreach (CustomAction action in actions)
         {
+            if (action == null)
+                continue;
+
             Register(action);
         }
     }
@@ -184,6 +197,7 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private bool LoadIconDetour(AtkComponentIcon* self, uint iconId)
     {
+        Svc.Log.Debug($"LoadIcon called with iconId {iconId}");
         bool result = _loadIconHook.Original(self, iconId);
         if (_iconTextures.ContainsKey(iconId) && self->Texture != null)
         {
@@ -292,7 +306,7 @@ public sealed unsafe class CustomActionSetup : IDisposable
     public (int Hotbar, int Slot)? HoveredSlot = null;
 
     [EzHook("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC 20 48 8B 7C 24 ?? 48 8B D9", false)]
-    private EzHook<AddonActionBarBase.Delegates.ReceiveEvent> AddonActionBarBase_ReceiveEventHook;
+    private EzHook<AddonActionBarBase.Delegates.ReceiveEvent>? AddonActionBarBase_ReceiveEventHook;
 
     private unsafe void AddonActionBarBase_ReceiveEventDetour(AddonActionBarBase* thisPtr, AtkEventType eventType, int eventParam, AtkEvent* atkEvent, AtkEventData* atkEventData)
     {
@@ -319,10 +333,10 @@ public sealed unsafe class CustomActionSetup : IDisposable
         EzSignatureHelper.Initialize(this);
         AddonActionBarBase_ReceiveEventHook?.Enable();
         Manager = new(Svc.SigScanner, Svc.Hook, Svc.Texture, Svc.Framework);
-        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos", 126);
-        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos", 127);
-        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos", 128);
-        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE combos", 129);
+        _singleTargetDPS = new(All.SingleTargetDPS, "Single Target DPS", "This is for the Single Target DPS combos.", 1504);
+        _aoeDPS = new(All.AoEDPS, "AoE DPS", "This is for the AoE DPS combos.", 1505);
+        _singleTargeHeals = new(All.SingleTargetHeals, "Single Target Heals", "This is for the Single Target Heal combos.", 1508);
+        _aoeHeals = new(All.AoeHeals, "AoE Heals", "This is for the AoE Heal combos.", 1510);
 
         Manager.Register(_singleTargetDPS, _aoeDPS, _singleTargeHeals, _aoeHeals);
     }
@@ -332,4 +346,82 @@ public sealed unsafe class CustomActionSetup : IDisposable
         AddonActionBarBase_ReceiveEventHook?.Disable();
     }
 
+}
+
+public class CustomActionSettings()
+{
+    public bool SingleTargetDPS = false;
+    public bool AoEDPS = false;
+    public bool SingleTargetHeals = false;
+    public bool AoEHeals = false;
+}
+
+public enum CustomActionType
+{
+    SingleTargetDPS = 1,
+    AoEDPS = 2,
+    SingleTargetHeals = 3,
+    AoEHeals = 4
+}
+
+public class CustomActionHelper()
+{
+    /// <summary>
+    /// Gets the custom action type for the given action ID, or null if the action ID is not a custom action.
+    /// </summary>
+    /// <param name="actionId"></param>
+    /// <returns></returns>
+    public static CustomActionType? GetCustomActionType(uint actionId)
+    {
+        return actionId switch
+        {
+            All.SingleTargetDPS => CustomActionType.SingleTargetDPS,
+            All.AoEDPS => CustomActionType.AoEDPS,
+            All.SingleTargetHeals => CustomActionType.SingleTargetHeals,
+            All.AoeHeals => CustomActionType.AoEHeals,
+            _ => null
+        };
+    }
+
+    /// <summary>
+    /// Gets the custom action ID for the given custom action type.
+    /// </summary>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    /// <exception cref="NotImplementedException"></exception>
+    public static uint GetActionId(CustomActionType type)
+    {
+        return type switch
+        {
+            CustomActionType.SingleTargetDPS => All.SingleTargetDPS,
+            CustomActionType.AoEDPS => All.AoEDPS,
+            CustomActionType.SingleTargetHeals => All.SingleTargetHeals,
+            CustomActionType.AoEHeals => All.AoEDPS,
+            _ => throw new NotImplementedException(),
+        };
+    }
+
+    /// <summary>
+    /// Used for all auto-rotation compatible presets, aka the full one button rotations. 
+    /// </summary>
+    /// <param name="actionId"></param>
+    /// <param name="type"></param>
+    /// <param name="originals"></param>
+    /// <returns></returns>
+    public static bool OneButtonRotationChecker(uint actionId, CustomActionType type, params uint[] originals)
+    {
+        bool enabled = type switch
+        {
+            CustomActionType.SingleTargetDPS => Service.Configuration.CustomActionSettings.SingleTargetDPS,
+            CustomActionType.AoEDPS => Service.Configuration.CustomActionSettings.AoEDPS,
+            CustomActionType.SingleTargetHeals => Service.Configuration.CustomActionSettings.SingleTargetHeals,
+            CustomActionType.AoEHeals => Service.Configuration.CustomActionSettings.AoEHeals,
+            _ => false
+        };
+
+        if (enabled)
+            return actionId == GetActionId(type);
+
+        return originals.Contains(actionId);
+    }
 }

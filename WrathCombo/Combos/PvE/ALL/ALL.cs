@@ -14,7 +14,7 @@ internal partial class All
         SingleTargetDPS = 1_000_000, // These next 4 are for native actions, if SE ever adds values up to these we would have to adjust but it's unlikely.
         AoEDPS = 1_000_001,
         SingleTargetHeals = 1_000_002,
-        AoeHeals = 1_000_0003;
+        AoeHeals = 1_000_003;
 
     public static class Buffs
     {

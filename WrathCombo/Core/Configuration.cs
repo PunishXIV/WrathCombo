@@ -19,6 +19,7 @@ using Setting = WrathCombo.Attributes.Setting;
 using Space = WrathCombo.Attributes.SettingUI_Space;
 using Or = WrathCombo.Attributes.SettingUI_Or;
 using Retarget = WrathCombo.Attributes.SettingUI_RetargetIcon;
+using WrathCombo.Native;
 
 #endregion
 
@@ -426,6 +427,8 @@ public partial class Configuration : IPluginConfiguration
     public Dictionary<uint, uint> IgnoredNPCs { get; set; } = new();
 
     #endregion
+
+    public CustomActionSettings CustomActionSettings { get; set; } = new();
 
     #region Job-specific
 
