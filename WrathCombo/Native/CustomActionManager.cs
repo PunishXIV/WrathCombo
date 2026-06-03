@@ -197,7 +197,6 @@ public sealed unsafe class CustomActionManager : IDisposable
 
     private bool LoadIconDetour(AtkComponentIcon* self, uint iconId)
     {
-        Svc.Log.Debug($"LoadIcon called with iconId {iconId}");
         bool result = _loadIconHook.Original(self, iconId);
         if (_iconTextures.ContainsKey(iconId) && self->Texture != null)
         {
