@@ -254,7 +254,7 @@ internal partial class MCH
 
                     DrawSliderInt(0, 50, MCH_AoE_FlamethrowerHPOption,
                         Generics.StopEnemyHpPercent);
-                    ImGui.Indent();
+
                     break;
 
                 case Preset.MCH_AoE_Adv_Hypercharge:
