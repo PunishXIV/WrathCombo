@@ -24,7 +24,6 @@ internal partial class WAR : Tank
     internal static bool HasSurgingTempest => !LevelChecked(StormsEye) || HasStatusEffect(Buffs.SurgingTempest);
     internal static bool HasNascentChaos => HasStatusEffect(Buffs.NascentChaos);
     internal static bool HasWrathful => HasStatusEffect(Buffs.Wrathful);
-    internal static bool Minimal => InCombat() && HasBattleTarget();
     #endregion
 
     #region Openers
