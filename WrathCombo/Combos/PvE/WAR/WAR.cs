@@ -196,10 +196,14 @@ internal partial class WAR
                 ActionReady(Onslaught) && GetRemainingCharges(Onslaught) > WAR_FC_Onslaught_Charges && GetTargetDistance() <= WAR_FC_Onslaught_Distance && 
                 WAR_FC_Onslaught_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(WAR_FC_Onslaught_TimeStill) && CanWeave() && HasSurgingTempest)
                 return Onslaught;
-            if (IsEnabled(Preset.WAR_FC_PrimalRend) && HasStatusEffect(Buffs.PrimalRendReady) && HasSurgingTempest &&
+            if (IsEnabled(Preset.WAR_FC_PrimalRend) && 
+                HasStatusEffect(Buffs.PrimalRendReady) && 
+                HasSurgingTempest &&
                 GetTargetDistance() <= WAR_FC_PrimalRend_Distance && 
-                WAR_FC_PrimalRend_Movement == 1 || (WAR_FC_PrimalRend_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(WAR_FC_PrimalRend_TimeStill) && 
-                (WAR_FC_PrimalRend_EarlyLate == 0 || (WAR_FC_PrimalRend_EarlyLate == 1 && (GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || (!HasIR.Stacks && !HasBF.Stacks && !HasWrathful))))))
+                (WAR_FC_PrimalRend_Movement == 1 || 
+                 WAR_FC_PrimalRend_Movement == 0 && !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(WAR_FC_PrimalRend_TimeStill)) && 
+                (WAR_FC_PrimalRend_EarlyLate == 0 || 
+                 WAR_FC_PrimalRend_EarlyLate == 1 && (GetStatusEffectRemainingTime(Buffs.PrimalRendReady) <= 15 || !HasIR.Stacks && !HasBF.Stacks && !HasWrathful)))
                 return PrimalRend;
             if (IsEnabled(Preset.WAR_FC_PrimalRuination) && LevelChecked(PrimalRuination) && HasSurgingTempest && Minimal && HasStatusEffect(Buffs.PrimalRuinationReady))
                 return PrimalRuination;
