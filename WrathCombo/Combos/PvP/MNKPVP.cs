@@ -75,16 +75,17 @@ internal static class MNKPvP
                 if (IsEnabled(Preset.MNKPvP_Smite) && PvPMelee.CanSmite() && InActionRange(PvPMelee.Smite) && HasTarget() &&
                     GetTargetHPPercent() <= MNKPvP_SmiteThreshold)
                     return PvPMelee.Smite;
+                
+                if (HasStatusEffect(Buffs.FireResonance) && ComboAction is PouncingCoeurl)
+                    return actionID;
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && NumberOfEnemiesInRange(RisingPhoenix) >= 1)
-                {
-                    if (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || WasLastWeaponskill(PouncingCoeurl) && GetRemainingCharges(RisingPhoenix) > 0)
-                        return OriginalHook(RisingPhoenix);
-                    if (HasStatusEffect(Buffs.FireResonance) && WasLastWeaponskill(PouncingCoeurl))
-                        return actionID;
-                }
+                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && HasBattleTarget() && InActionRange(DragonKick) &&
+                    (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || // capped on charges
+                     ComboAction is PouncingCoeurl && GetRemainingCharges(RisingPhoenix) > 0)) // use last charge to buff phantom rush
+                    return OriginalHook(RisingPhoenix);
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95)
+                if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && !HasStatusEffect(Buffs.EarthResonance) && IsOffCooldown(RiddleOfEarth) && PlayerHealthPercentageHp() <= 95 || //Pop Riddle of earth
+                    HasStatusEffect(Buffs.EarthResonance) && GetStatusEffectRemainingTime(Buffs.EarthResonance) <= 2) //Fire earths reply before it expires
                     return OriginalHook(RiddleOfEarth);
 
                 if (IsEnabled(Preset.MNKPvP_Burst_Thunderclap) && GetRemainingCharges(Thunderclap) > 0 && !InMeleeRange())
@@ -93,14 +94,7 @@ internal static class MNKPvP
                 if (IsEnabled(Preset.MNKPvP_Burst_WindsReply) && InActionRange(WindsReply) && IsOffCooldown(WindsReply))
                     return WindsReply;
 
-                if (CanWeave())
-                {
-                    if (IsEnabled(Preset.MNKPvP_Burst_RiddleOfEarth) && HasStatusEffect(Buffs.EarthResonance) && GetStatusEffectRemainingTime(Buffs.EarthResonance) < 6)
-                        return OriginalHook(EarthsReply);
-                }
-
-                if (IsEnabled(Preset.MNKPvP_Burst_FiresReply) && GetRemainingCharges(FiresReply) > 0 &&
-                    (!WasLastAction(LeapingOpo) || !WasLastAction(RisingRaptor) || !WasLastAction(PouncingCoeurl)))
+                if (IsEnabled(Preset.MNKPvP_Burst_FiresReply) && GetRemainingCharges(FiresReply) > 0 && ComboAction is not (PouncingCoeurl or LeapingOpo or RisingRaptor))
                     return OriginalHook(FiresReply);
 
             }
