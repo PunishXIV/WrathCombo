@@ -372,7 +372,7 @@ internal partial class WAR : Tank
 
                 if (flags.HasFlag(Combo.AoE) && LevelChecked(Decimate))
                 {
-                    actionID = Decimate;
+                    actionID = OriginalHook(Decimate);
                     return true;
                 }
             }
