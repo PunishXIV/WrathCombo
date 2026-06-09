@@ -528,8 +528,8 @@ internal partial class MCH : PhysicalRanged
                     GetTargetHPPercent() > MCH_AoE_FlamethrowerHPOption)
                     return Flamethrower;
 
-                if ((!IsEnabled(Preset.MCH_AoE_Adv_Tools) ||
-                     GetTargetHPPercent() >= MCH_AoE_ToolsHPThreshold) &&
+                if (IsEnabled(Preset.MCH_AoE_Adv_Tools) &&
+                    GetTargetHPPercent() >= MCH_AoE_ToolsHPThreshold &&
                     CanUseAoETools(ref actionID, MCH_AoE_AirAnchor))
                     return actionID;
             }
