@@ -9,13 +9,13 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using InteropGenerator.Runtime;
 using KamiToolKit.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using WrathCombo.Combos.PvE;
-using WrathCombo.Extensions;
 using WrathCombo.Services;
 
 namespace WrathCombo.Native;
@@ -29,10 +29,10 @@ public sealed unsafe class CustomAction : IDisposable
                         Action? onClick = null,
                         string? customIconPath = null,
                         ushort cast100ms = 0,
-                        ushort recast100ms = 250,
+                        ushort recast100ms = 0,
                         byte cooldownGroup = 58,
                         byte maxCharges = 1,
-                        sbyte range = -1,
+                        sbyte range = 0,
                         byte castType = 1)
     {
         Id = id;
@@ -92,6 +92,8 @@ public sealed unsafe class CustomActionManager : IDisposable
 {
     private const string SigGetActionRow = "48 83 EC 28 48 8B 05 ?? ?? ?? ?? 44 8B C1 BA 04 00 00 00";
     private const string SigIsSlotUsable = "48 89 5C 24 08 48 89 74 24 10 57 48 83 EC 20 0F B6 F2 48 8B D9 41 8B F8 8D 46 FF 83 F8 22";
+    private const string SigGetActionTransient = "E8 ?? ?? ?? ?? 4C 8B E0 48 85 FF 0F 84";
+    private const string SigFormatName = "48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 48 89 7C 24 ?? 41 56 48 83 EC ?? 8B D9 41 8B E9";
 
     private readonly Dictionary<uint, CustomAction> _actions = new();
     private readonly IFramework _framework;
@@ -100,6 +102,8 @@ public sealed unsafe class CustomActionManager : IDisposable
     private readonly Dictionary<uint, ISharedImmediateTexture> _iconTextures = new();
     private readonly Hook<IsSlotUsableDelegate> _isSlotUsableHook;
     private readonly Hook<LoadIconDelegate> _loadIconHook;
+    private readonly Hook<GetActionRowTransientDelegate> _updateTooltipHook;
+    private readonly Hook<FormatNameDelegate> _updateNameHook;
     private readonly List<IconInjectEntry> _pendingInjects = new();
 
     private readonly ITextureProvider _texProv;
@@ -115,12 +119,35 @@ public sealed unsafe class CustomActionManager : IDisposable
         _getActionRowHook = hooks.HookFromAddress<GetActionRowDelegate>(sig.ScanText(SigGetActionRow), GetActionRowDetour);
         _isSlotUsableHook = hooks.HookFromAddress<IsSlotUsableDelegate>(sig.ScanText(SigIsSlotUsable), IsSlotUsableDetour);
         _loadIconHook = hooks.HookFromAddress<LoadIconDelegate>(AtkComponentIcon.Addresses.LoadIcon.Value, LoadIconDetour);
+        _updateTooltipHook = hooks.HookFromAddress<GetActionRowTransientDelegate>(sig.ScanText(SigGetActionTransient), UpdateTooltipDetour);
+        _updateNameHook = hooks.HookFromAddress<FormatNameDelegate>(sig.ScanText(SigFormatName), FormatNameDetour);
 
         _getActionRowHook.Enable();
         _isSlotUsableHook.Enable();
         _loadIconHook.Enable();
+        _updateTooltipHook.Enable();
+        _updateNameHook.Enable();
 
         framework.Update += OnFrameworkUpdate;
+    }
+
+    private byte* FormatNameDetour(int nameType, uint rowId, uint detailType, uint parameter)
+    {
+        if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == rowId, out var act))
+        {
+            return (byte*)act.NamePtr;
+        }
+        return _updateNameHook.Original(nameType, rowId, detailType, parameter);
+    }
+
+    private void* UpdateTooltipDetour(uint rowId)
+    {
+        if (P.CustomActions.Manager.Actions.TryGetFirst(x => x.Id == rowId, out var act))
+        {
+            return (void*)act.TransientRowPtr;
+        }
+
+        return _updateTooltipHook.Original(rowId);
     }
 
     public IReadOnlyCollection<CustomAction> Actions => _actions.Values;
@@ -133,6 +160,8 @@ public sealed unsafe class CustomActionManager : IDisposable
         _getActionRowHook.Dispose();
         _isSlotUsableHook.Dispose();
         _loadIconHook.Dispose();
+        _updateTooltipHook.Dispose();
+        _updateNameHook.Dispose();
 
         foreach (CustomAction action in _actions.Values)
         {
@@ -291,6 +320,13 @@ public sealed unsafe class CustomActionManager : IDisposable
                                             bool* outOptAreaTargeted);
 
     private delegate bool LoadIconDelegate(AtkComponentIcon* self, uint iconId);
+
+    private delegate void* GetActionRowTransientDelegate(uint rowId);
+
+    private delegate byte* FormatNameDelegate(int nameType,
+        uint rowId,
+        uint detailType,
+        uint parameter);
 
     private record struct IconInjectEntry(nint ComponentPtr, ISharedImmediateTexture Tex, int FramesLeft);
 }
