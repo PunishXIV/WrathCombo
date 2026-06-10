@@ -18,6 +18,13 @@ internal partial class VPR
 
                 case Preset.VPR_ST_Opener:
                     DrawBossOnlyChoice(VPR_Balance_Content);
+                    ImGui.NewLine();
+
+                    DrawRadioButton(VPR_OpenerSelection, Generics.StandardOpener,
+                        Generics.StandardOpener, 0, descriptionAsTooltip: true);
+                    DrawRadioButton(VPR_OpenerSelection, VPR_Config.EarlyBuffOpener,
+                        VPR_Config.UseEarlyBuffOpener, 1, descriptionAsTooltip: true);
+                    ImGui.NewLine();
 
                     DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
                         FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
@@ -181,6 +188,7 @@ internal partial class VPR
 
             //ST
             VPR_Balance_Content = new("VPR_Balance_Content", 1),
+            VPR_OpenerSelection = new("VPR_OpenerSelection"),
             VPR_ST_UncoiledFuryHoldCharges = new("VPR_ST_UncoiledFuryHoldCharges", 1),
             VPR_ST_UncoiledFuryAlwaysUse = new("VPR_ST_UncoiledFuryAlwaysUse", 5),
             VPR_ST_ReawakenBossOption = new("VPR_ST_ReawakenBossOption"),
