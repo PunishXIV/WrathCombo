@@ -427,6 +427,9 @@
 
     <!-- Release Manifest -->
     <ItemGroup>
+        <None Update="Resources\AoEDPS.png">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
         <None Update="Resources\SingleTargetDPS.png">
           <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </None>

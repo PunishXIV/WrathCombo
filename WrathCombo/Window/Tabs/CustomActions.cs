@@ -1,6 +1,7 @@
 ﻿using Dalamud.Game.Config;
 using Dalamud.Interface.Utility.Raii;
 using ECommons.DalamudServices;
+using ECommons.GameHelpers;
 using ECommons.ImGuiMethods;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using WrathCombo.Native;
@@ -62,7 +63,10 @@ namespace WrathCombo.Window.Tabs
                 {
                     if (P.CustomActions.HoveredSlot != null)
                     {
-                        RaptureHotbarModule.Instance()->Hotbars[P.CustomActions.HoveredSlot.Value.Hotbar].Slots[P.CustomActions.HoveredSlot.Value.Slot].Set(RaptureHotbarModule.HotbarSlotType.Action, SelectedAction.Id);
+                        var val = P.CustomActions.HoveredSlot.Value;
+                        RaptureHotbarModule.Instance()->Hotbars[val.Hotbar].Slots[val.Slot].Set(RaptureHotbarModule.HotbarSlotType.Action, SelectedAction.Id);
+                        var actualSlot = RaptureHotbarModule.Instance()->Hotbars[val.Hotbar].Slots[val.Slot];
+                        RaptureHotbarModule.Instance()->WriteSavedSlot(Player.ClassJob.RowId, (uint)val.Hotbar, (uint)val.Slot, &actualSlot, true, false);
                     }
                     SelectedAction = null;
                     DragDropMode = false;
