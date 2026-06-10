@@ -137,7 +137,7 @@
     <value>Disables the range check for {0} and {1}, so it will be used even without a target selected.</value>
   </data>
   <data name="EarlyBuffOpener" xml:space="preserve">
-    <value>Early Buff opener.</value>
+    <value>Early buff opener.</value>
   </data>
   <data name="Forces0Or1ForBuffs" xml:space="preserve">
     <value>Forces {0} or {1} if buff needs to be reapplied.</value>
@@ -149,7 +149,7 @@
     <value>Replaces {0} with Full Generation - Legacy combo.</value>
   </data>
   <data name="UseEarlyBuffOpener" xml:space="preserve">
-    <value>Uses 1st GCD Buffs opener.</value>
+    <value>Uses 1st GCD buffs opener.</value>
   </data>
   <data name="WillHoldLastChargeOf0For1" xml:space="preserve">
     <value>Will hold the last charge of {0} for use with {1}, even when out of position for normal GCD.

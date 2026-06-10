@@ -17,18 +17,16 @@ internal partial class VPR
                 #region ST
 
                 case Preset.VPR_ST_Opener:
-                    DrawBossOnlyChoice(VPR_Balance_Content);
-                    ImGui.NewLine();
-
                     DrawRadioButton(VPR_OpenerSelection, Generics.StandardOpener,
                         Generics.StandardOpener, 0, descriptionAsTooltip: true);
                     DrawRadioButton(VPR_OpenerSelection, VPR_Config.EarlyBuffOpener,
                         VPR_Config.UseEarlyBuffOpener, 1, descriptionAsTooltip: true);
-                    ImGui.NewLine();
-
+                    
                     DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
                         FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
                         "");
+
+                    DrawBossOnlyChoice(VPR_Balance_Content);
                     break;
 
                 case Preset.VPR_ST_SerpentsIre:
