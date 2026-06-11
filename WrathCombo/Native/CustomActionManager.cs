@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using WrathCombo.Attributes;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Services;
 
@@ -446,7 +447,17 @@ public class CustomActionHelper()
     /// <returns></returns>
     public static bool OneButtonRotationChecker(uint actionId, CustomActionType type, params uint[] originals)
     {
-        bool enabled = type switch
+        bool enabled = CustomActionEnabled(type);
+
+        if (enabled)
+            return actionId == GetActionId(type);
+
+        return originals.Contains(actionId);
+    }
+
+    public static bool CustomActionEnabled(CustomActionType type)
+    {
+        return type switch
         {
             CustomActionType.SingleTargetDPS => Service.Configuration.CustomActionSettings.SingleTargetDPS,
             CustomActionType.AoEDPS => Service.Configuration.CustomActionSettings.AoEDPS,
@@ -454,10 +465,16 @@ public class CustomActionHelper()
             CustomActionType.AoEHeals => Service.Configuration.CustomActionSettings.AoEHeals,
             _ => false
         };
+    }
 
-        if (enabled)
-            return actionId == GetActionId(type);
-
-        return originals.Contains(actionId);
+    internal static CustomActionType GetTypeByAttribute(AutoActionAttribute attribute)
+    {
+        return (attribute.IsAoE, attribute.IsHeal) switch
+        {
+            (true, true) => CustomActionType.AoEHeals,
+            (true, false) => CustomActionType.AoEDPS,
+            (false, true) => CustomActionType.SingleTargetHeals,
+            (false, false) => CustomActionType.SingleTargetDPS,
+        };
     }
 }

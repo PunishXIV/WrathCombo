@@ -21,6 +21,7 @@ using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
+using WrathCombo.Native;
 using WrathCombo.Services;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window.Functions;
@@ -1008,9 +1009,13 @@ internal unsafe class AutoRotationController
         {
             if (attributes.ReplaceSkill is null) return originalAct;
             var outAct = attributes.ReplaceSkill.ActionIDs.FirstOrDefault();
-            foreach (var actToCheck in attributes.ReplaceSkill.ActionIDs)
+            foreach (var act in attributes.ReplaceSkill.ActionIDs)
             {
+                var customReplaceType = CustomActionHelper.GetTypeByAttribute(attributes.AutoAction!);
+                var customReplaced = CustomActionHelper.CustomActionEnabled(customReplaceType);
                 var customCombo = Service.ActionReplacer.CustomCombos.FirstOrDefault(x => x.Preset == preset);
+                var actToCheck = customReplaced ? CustomActionHelper.GetActionId(customReplaceType) : act;
+
                 if (customCombo != null)
                 {
                     if (customCombo.TryInvoke(actToCheck, out var changedAct, optionalTarget))
