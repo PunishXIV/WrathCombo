@@ -365,7 +365,53 @@ public partial class Leasing
     /// </param>
     /// <param name="jobOverride">A manual override, only used in testing</param>
     /// <seealso cref="Provider.SetCurrentJobAutoRotationReady" />
-    internal SetResult AddRegistrationForCurrentJob(Guid lease, Job? jobOverride = null)
+    internal SetResult AddRegistrationForVariant(Guid lease, uint jobID, bool enabled)
+    {
+        if (!Registrations.TryGetValue(lease, out var registration))
+            return SetResult.InvalidLease;
+
+        if (!P.IPCSearch.TryGetVariantJobRole(jobID, out var jobRole))
+            return SetResult.InvalidValue;
+
+        var parent = P.IPCSearch.GetVariantParentComboName(jobRole);
+        if (parent is null)
+            return SetResult.InvalidConfiguration;
+
+        var ready = true;
+        var lastResult = SetResult.OkayWorking;
+
+        var setParent = AddRegistrationForCombo(lease, parent, enabled, false);
+        if (setParent is SetResult.BlacklistedLease or SetResult.InvalidLease)
+            return setParent;
+
+        if (setParent is not SetResult.Okay)
+        {
+            ready = false;
+            lastResult = setParent;
+        }
+
+        foreach (var option in P.IPCSearch.GetVariantOptionNames(jobRole))
+        {
+            var setOption = AddRegistrationForOption(lease, option, enabled);
+            if (setOption is SetResult.BlacklistedLease or SetResult.InvalidLease)
+                return setOption;
+
+            if (setOption is not SetResult.Okay)
+            {
+                ready = false;
+                lastResult = setOption;
+            }
+        }
+
+        registration.LastUpdated = DateTime.Now;
+        CombosUpdated = DateTime.Now;
+        OptionsUpdated = DateTime.Now;
+
+        return ready ? SetResult.OkayWorking : lastResult;
+    }
+
+    internal SetResult AddRegistrationForCurrentJob
+        (Guid lease, Job? jobOverride = null)
     {
         if (!Registrations.TryGetValue(lease, out var registration))
             return SetResult.InvalidLease;

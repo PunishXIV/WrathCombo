@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Checkbox_BypassFATETargets" xml:space="preserve">
-    <value>Bypass Only in Combat for FATE Targets</value>
+    <value>Bypass for FATE Targets</value>
   </data>
   <data name="Checkbox_BypassQuestTargets" xml:space="preserve">
-    <value>Bypass Only in Combat for Quest Targets</value>
+    <value>Bypass for Quest Targets</value>
   </data>
   <data name="Checkbox_BypassSelfUse" xml:space="preserve">
     <value>Bypass When Combo Suggests Self-Use Action</value>
@@ -139,7 +139,7 @@
     <value>Enforce Best AoE Target Selection</value>
   </data>
   <data name="Checkbox_OnlyInCombat" xml:space="preserve">
-    <value>Only in Combat</value>
+    <value>Restrict to Combat Only</value>
   </data>
   <data name="Label_DamageSettings" xml:space="preserve">
     <value>Damage Settings</value>
@@ -324,7 +324,7 @@ Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
     <value>[{0}/{1}/{2}/{3}] Pre-emptively apply Heal Over Time/Shields on focus target</value>
   </data>
   <data name="HelpText_PreEmptiveHoT" xml:space="preserve">
-    <value>Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses "Only in Combat" setting)</value>
+    <value>Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses "Restrict to Combat Only" setting)</value>
   </data>
   <data name="Checkbox_IncludeNPCs" xml:space="preserve">
     <value>Heal Friendly NPCs</value>
@@ -357,7 +357,7 @@ Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
     <value>Handle Detected Raidwides</value>
   </data>
   <data name="HelpText_HandleRaidwides" xml:space="preserve">
-    <value>Will try to use actions before detected raidwides or group damage to either mitigate or top-off party members. Max 2 actions (excluding {0} for setup)</value>
+    <value>Will try to use actions before detected raidwides or group damage to either mitigate or top-off party members. Max 3 actions (excluding {0} for setup)</value>
   </data>
   <data name="Checkbox_HandleTankbusters" xml:space="preserve">
     <value>Handle Detected Tankbusters</value>

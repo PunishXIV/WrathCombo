@@ -86,7 +86,7 @@ internal partial class MNK
 
                 // Low level
                 if ((JustUsed(OriginalHook(Bootshine), GCD * 3) || JustUsed(DragonKick, GCD * 3)) &&
-                    (HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood) ||
+                    ((HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood)) ||
                      !LevelChecked(RiddleOfFire)))
                     return true;
                 break;
@@ -111,7 +111,7 @@ internal partial class MNK
                     return true;
 
                 // Low level
-                if (HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood) ||
+                if ((HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood)) ||
                     !LevelChecked(RiddleOfFire))
                     return true;
                 break;

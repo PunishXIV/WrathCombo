@@ -1,5 +1,6 @@
 using Dalamud.Interface.Colors;
 using ECommons.ImGuiMethods;
+using FFXIVClientStructs.FFXIV.Client.System.Input.SoftKeyboards;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Extensions;
@@ -106,7 +107,8 @@ internal partial class PLD
                         FormatAndCache(Generics.Use0Before1, GoringBlade.ActionName(), Confiteor.ActionName()), 1);
                     break;
                 
-                case Preset.PLD_ST_AdvancedMode_FoF: DrawSliderInt(0, 50, PLD_ST_FoF_HPOption, Generics.StopEnemyHpPercent);
+                case Preset.PLD_ST_AdvancedMode_FoF: 
+                    DrawSliderInt(0, 50, PLD_ST_FoF_HPOption, Generics.StopEnemyHpPercent);
                     ImGui.Indent();
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         Generics.EnemyTypeCheck);
@@ -114,8 +116,20 @@ internal partial class PLD
                     DrawHorizontalRadioButton(PLD_ST_FoF_BossOption, Generics.AllEnemies, Generics.HPCheckAllEnemies, 1);
                     ImGui.Unindent();
                     break;
+                
+                case Preset.PLD_ST_AdvancedMode_CircleOfScorn:
+                    DrawAdditionalBoolChoice(PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, CircleOfScorn.ActionName(), FightOrFlight.ActionName()), "");
+                    break;
+                
+                case Preset.PLD_ST_AdvancedMode_SpiritsWithin:
+                    DrawAdditionalBoolChoice(PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, SpiritsWithin.ActionName(), FightOrFlight.ActionName()), "");
+                    break;
 
                 case Preset.PLD_ST_AdvancedMode_Intervene:
+                    DrawAdditionalBoolChoice(PLD_ST_AdvancedMode_Intervene_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, Intervene.ActionName(), FightOrFlight.ActionName()), "");
                     DrawHorizontalRadioButton(PLD_ST_Intervene_Movement, Generics.StationaryOnly, 
                         FormatAndCache(Generics.UseActionOnlyWhileStationary, Intervene.ActionName()), 0);
                     DrawHorizontalRadioButton(PLD_ST_Intervene_Movement, Generics.AnyMovement, 
@@ -153,6 +167,16 @@ internal partial class PLD
                     ImGui.Unindent();
                     break;
                 
+                case Preset.PLD_AoE_AdvancedMode_CircleOfScorn:
+                    DrawAdditionalBoolChoice(PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, CircleOfScorn.ActionName(), FightOrFlight.ActionName()), "");
+                    break;
+                
+                case Preset.PLD_AoE_AdvancedMode_SpiritsWithin:
+                    DrawAdditionalBoolChoice(PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, SpiritsWithin.ActionName(), FightOrFlight.ActionName()), "");
+                    break;
+                
                 case Preset.PLD_AoE_AdvancedMode_GoringBlade:
                     DrawHorizontalRadioButton(PLD_AoE_AdvancedMode_GoringBladePrioritize, FormatAndCache(Generics.Prioritize, Confiteor.ActionName()), 
                         FormatAndCache(Generics.Use0Before1, Confiteor.ActionName(), GoringBlade.ActionName()), 0);
@@ -161,6 +185,8 @@ internal partial class PLD
                     break;
 
                 case Preset.PLD_AoE_AdvancedMode_Intervene:
+                    DrawAdditionalBoolChoice(PLD_AoE_AdvancedMode_Intervene_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, Intervene.ActionName(), FightOrFlight.ActionName()), "");
                     DrawHorizontalRadioButton(PLD_AoE_Intervene_Movement, Generics.StationaryOnly, 
                         FormatAndCache(Generics.UseActionOnlyWhileStationary, Intervene.ActionName()), 0);
                     DrawHorizontalRadioButton(PLD_AoE_Intervene_Movement, Generics.AnyMovement, 
@@ -342,6 +368,12 @@ internal partial class PLD
             PLD_AoE_InterveneTimeStill = new("PLD_AoE_InterveneTimeStill", 2.5f);
 
         public static UserBool
+            PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling = new ("PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling"),
+            PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling = new ("PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling"),
+            PLD_ST_AdvancedMode_Intervene_ManualPooling = new ("PLD_ST_AdvancedMode_Intervene_ManualPooling"),
+            PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling = new ("PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling"),
+            PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling = new ("PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling"),
+            PLD_AoE_AdvancedMode_Intervene_ManualPooling = new ("PLD_AoE_AdvancedMode_Intervene_ManualPooling"),
             PLD_RetargetStunLockout = new("PLD_RetargetStunLockout"),
             PLD_Mitigation_Boss_Bulwark_Align = new("PLD_Mitigation_Boss_Bulwark_Align"),
             PLD_Mitigation_Boss_Sentinel_First = new("PLD_Mitigation_Boss_Sentinel_First"),

@@ -19,6 +19,7 @@ using WrathCombo.Combos.PvE.Enums;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
 using WrathCombo.Native;
 using WrathCombo.Services;
@@ -352,7 +353,14 @@ internal unsafe class AutoRotationController
     {
         foreach (var (spell, multihitter) in RaidwideActions)
         {
-            if (AutorotRaidwides >= 2)
+            int numberOfCasts = GetPartyAvgHPPercent() switch
+            {
+                <= 30 => 3,
+                <= 60 => 2,
+                _ => 1
+            };
+
+            if (AutorotRaidwides >= numberOfCasts)
                 return;
 
             if (!multihit && multihitter)
@@ -868,7 +876,7 @@ internal unsafe class AutoRotationController
                     return false;
                 }
 
-                if (cfg.DPSSettings.DPSAlwaysHardTarget && target != null)
+                if (cfg.DPSSettings.DPSAlwaysHardTarget && target is not null)
                     Svc.Targets.Target = target;
 
                 var canUseSelf = sheet.CanTargetSelf;
@@ -918,7 +926,7 @@ internal unsafe class AutoRotationController
             var target = GetSingleTarget(mode);
             OverrideTarget = target;
             var outAct = OriginalHook(InvokeCombo(preset, attributes, ref gameAct, target));
-            if (!CanQueue(outAct))
+            if (!ActionReady(outAct))
             {
                 return false;
             }
@@ -951,11 +959,14 @@ internal unsafe class AutoRotationController
             var acRangeCheck = ActionManager.GetActionInRangeOrLoS(outAct, player.GameObject(), target is null ? player.GameObject() : target.Struct());
             var inRange = acRangeCheck is 0 or 565 || canUseSelf;
 
-            var canUse = (canUseSelf || canUseTarget || areaTargeted) && outAct.ActionAttackType() is { } type && ((type is ActionAttackType.Ability && AnimationLock == 0) || (type is not ActionAttackType.Ability && RemainingGCD <= cfg.QueueWindow));
+            var canUse = (canUseSelf || canUseTarget || areaTargeted) && outAct.ActionAttackType() is { } type && ((type is ActionAttackType.Ability && AnimationLock <= cfg.QueueWindow) || (type is not ActionAttackType.Ability && RemainingGCD <= cfg.QueueWindow));
             var isHeal = attributes.AutoAction!.IsHeal;
 
-            if ((!isHeal && cfg.DPSSettings.DPSAlwaysHardTarget && mode is not DPSRotationMode.Manual) || (isHeal && cfg.HealerSettings.HealerAlwaysHardTarget && mode is not HealerRotationMode.Manual) && target != null)
-                Svc.Targets.Target = target;
+            if (target is not null)
+            {
+                if ((!isHeal && cfg.DPSSettings.DPSAlwaysHardTarget && mode is not DPSRotationMode.Manual) || (isHeal && cfg.HealerSettings.HealerAlwaysHardTarget && mode is not HealerRotationMode.Manual))
+                    Svc.Targets.Target = target;
+            }
 
             var castTime = ActionManager.GetAdjustedCastTime(ActionType.Action, outAct);
             bool orbwalking = cfg.OrbwalkerIntegration && OrbwalkerIPC.CanOrbwalk;
@@ -1120,6 +1131,7 @@ internal unsafe class AutoRotationController
                 .OrderByDescending(x => IsCombatPriority(x))
                 .ThenBy(x => GetTargetMaxHP(x))
                 .ThenBy(x => GetTargetHPPercent(x))
+                .ThenBy(x => GetTargetDistance(x))
                 .FirstOrDefault();
         }
 
@@ -1129,6 +1141,7 @@ internal unsafe class AutoRotationController
                 .OrderByDescending(x => IsCombatPriority(x))
                 .ThenByDescending(x => GetTargetMaxHP(x))
                 .ThenBy(x => GetTargetHPPercent(x))
+                .ThenBy(x => GetTargetDistance(x))
                 .FirstOrDefault();
         }
     }
@@ -1154,39 +1167,30 @@ internal unsafe class AutoRotationController
         internal static IGameObject? GetHighestCurrent()
         {
             if (GetPartyMembers().Count == 0) return Player.Object;
-            var target = GetPartyMembers()
-                .Where(x => !x.BattleChara.IsDead &&
-                            x.BattleChara.IsTargetable &&
-                            GetTargetDistance(x.BattleChara) <= QueryRange &&
-                            !TargetHasImmortality(x.BattleChara) &&
-                            GetTargetHPPercent(x.BattleChara) <=
-                            (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
-                                TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :
-                                cfg.HealerSettings.SingleTargetHPP) &&
-                            IsInLineOfSight(x.BattleChara))
-                .OrderBy(x => TargetHasTrueInvuln(x.BattleChara))
-                .ThenByDescending(x => GetTargetHPPercent(x.BattleChara))
-                .FirstOrDefault();
-            return target?.BattleChara;
+            return HealTargets().ThenByDescending(x => GetTargetHPPercent(x)).FirstOrDefault();
         }
 
         internal static IGameObject? GetLowestCurrent()
         {
             if (GetPartyMembers().Count == 0) return Player.Object;
-            var target = GetPartyMembers()
+            return HealTargets().ThenBy(x => GetTargetHPPercent(x)).FirstOrDefault();
+        }
+
+        internal static IOrderedEnumerable<IGameObject?> HealTargets()
+        {
+            return GetPartyMembers()
                 .Where(x => !x.BattleChara.IsDead &&
                             x.BattleChara.IsTargetable &&
                             GetTargetDistance(x.BattleChara) <= QueryRange &&
                             !TargetHasImmortality(x.BattleChara) &&
+                            !x.BattleChara.StatusList.Any(x => StatusCache.DoNotHealStatuses.Contains(x.StatusId)) &&
                             GetTargetHPPercent(x.BattleChara) <=
                             (TargetHasExcog(x.BattleChara) ? cfg.HealerSettings.SingleTargetExcogHPP :
                                 TargetHasRegen(x.BattleChara) ? cfg.HealerSettings.SingleTargetRegenHPP :
                                 cfg.HealerSettings.SingleTargetHPP) &&
                             IsInLineOfSight(x.BattleChara))
-                .OrderBy(x => TargetHasTrueInvuln(x.BattleChara))
-                .ThenBy(x => GetTargetHPPercent(x.BattleChara))
-                .FirstOrDefault();
-            return target?.BattleChara;
+                .Select(x => x.BattleChara)
+                .OrderBy(x => TargetHasTrueInvuln(x));
         }
 
         internal static bool CanAoEHeal(uint outAct = 0)
@@ -1199,6 +1203,7 @@ internal unsafe class AutoRotationController
                                 !x.BattleChara.IsDead &&
                                 x.BattleChara.IsTargetable &&
                                 !x.IsOutOfPartyNPC &&
+                                !x.BattleChara.StatusList.Any(x => StatusCache.DoNotHealStatuses.Contains(x.StatusId)) &&
                                 (outAct == 0
                                     ? GetTargetDistance(x.BattleChara) <= 20f
                                     : InActionRange(outAct, x.BattleChara)) &&

@@ -138,17 +138,17 @@ internal partial class DRG
                     break;
 
                 case Preset.DRG_AoE_BattleLitany:
-                    DrawSliderInt(0, 100, DRG_AoE_BattleLitanyHPTreshold,
+                    DrawSliderInt(0, 100, DRG_AoE_BattleLitanyHPThreshold,
                         Generics.StopEnemyHpPercent);
                     break;
 
                 case Preset.DRG_AoE_LanceCharge:
-                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHPTreshold,
+                    DrawSliderInt(0, 100, DRG_AoE_LanceChargeHPThreshold,
                         Generics.StopEnemyHpPercent);
                     break;
 
                 case Preset.DRG_AoE_Geirskogul:
-                    DrawSliderInt(0, 100, DRG_AoE_GeirskogulHPTreshold,
+                    DrawSliderInt(0, 100, DRG_AoE_GeirskogulHPThreshold,
                         Generics.StopEnemyHpPercent);
                     break;
 
@@ -163,7 +163,7 @@ internal partial class DRG
                     break;
 
                 case Preset.DRG_AoE_DragonfireDive:
-                    DrawSliderInt(0, 100, DRG_AoE_DragonfireDiveHPTreshold,
+                    DrawSliderInt(0, 100, DRG_AoE_DragonfireDiveHPThreshold,
                         Generics.StopEnemyHpPercent);
 
                     DrawHorizontalMultiChoice(DRG_AoE_DragonfireDiveMovingOrInRanged,
@@ -218,10 +218,10 @@ internal partial class DRG
             DRG_ManualTN = new("DRG_ManualTN"),
             DRG_ST_SecondWindHPThreshold = new("DRG_ST_SecondWindHPThreshold", 40),
             DRG_ST_BloodbathHPThreshold = new("DRG_ST_BloodbathHPThreshold", 30),
-            DRG_AoE_BattleLitanyHPTreshold = new("DRG_AoE_BattleLitanyHPTreshold", 25),
-            DRG_AoE_LanceChargeHPTreshold = new("DRG_AoE_LanceChargeHPTreshold", 25),
-            DRG_AoE_GeirskogulHPTreshold = new("DRG_AoE_GeirskogulHPTreshold", 25),
-            DRG_AoE_DragonfireDiveHPTreshold = new("DRG_AoE_DragonfireDiveHPTreshold", 25),
+            DRG_AoE_BattleLitanyHPThreshold = new("DRG_AoE_BattleLitanyHPThreshold", 25),
+            DRG_AoE_LanceChargeHPThreshold = new("DRG_AoE_LanceChargeHPThreshold", 25),
+            DRG_AoE_GeirskogulHPThreshold = new("DRG_AoE_GeirskogulHPThreshold", 25),
+            DRG_AoE_DragonfireDiveHPThreshold = new("DRG_AoE_DragonfireDiveHPThreshold", 25),
             DRG_AoE_SecondWindHPThreshold = new("DRG_AoE_SecondWindHPThreshold", 40),
             DRG_AoE_BloodbathHPThreshold = new("DRG_AoE_BloodbathHPThreshold", 30);
 

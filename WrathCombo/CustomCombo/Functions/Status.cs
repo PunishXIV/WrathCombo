@@ -273,6 +273,12 @@ internal abstract partial class CustomComboFunctions
         // for specified areas
         switch (Content.TerritoryID)
         {
+            case 1045: // Ifrit Normal
+                return targetID == 207 && Svc.Objects.Any(x => x.BaseId == 208 && !x.IsDead);
+            case 292: // Ifrit Hard
+                return targetID == 209 && Svc.Objects.Any(x => x.BaseId == 210 && !x.IsDead);
+            case 295: // Ifrit Extreme
+                return targetID == 211 && Svc.Objects.Any(x => x.BaseId == 212 && !x.IsDead);
             case 174: // Labyrinth of the Ancients
                 // Thanatos, Spooky Ghosts Only
                 if (targetID is 2350) return !HasStatusEffect(398);

@@ -162,6 +162,9 @@
   <data name="Align0With1" xml:space="preserve">
     <value>Aligns {0} with {1}.</value>
   </data>
+  <data name="Align0WithManual1" xml:space="preserve">
+    <value>Keep {0} aligned with manual use of {1}.</value>
+  </data>  
   <data name="AllContent" xml:space="preserve">
     <value>All Content</value>
   </data>
@@ -195,7 +198,7 @@
   </data>
   <data name="BlockStun" xml:space="preserve">
     <value>Block {0} when with Savage Blade when no stunnable targets are found.</value>
-  </data> 
+  </data>
   <data name="BossEncounterNonBossHpPercent" xml:space="preserve">
     <value>Boss Encounter Non Bosses. Stop using at Enemy HP %.</value>
   </data>
@@ -259,13 +262,16 @@ Set to Zero to disable this check.</value>
   </data>
   <data name="FocusTarget" xml:space="preserve">
     <value>Focus Target</value>
-  </data>  
+  </data>
   <data name="GapcloserUse" xml:space="preserve">
     <value>Use {0} in Opener</value>
   </data>
   <data name="GapcloseSkip" xml:space="preserve">
     <value>Skip {0} in Opener</value>
-  </data>  
+  </data>
+  <data name="HaveBattleTarget" xml:space="preserve">
+    <value>Require a battle target.</value>
+  </data>
   <data name="Hold0For1" xml:space="preserve">
     <value>Hold {0} for {1}</value>
   </data>
@@ -342,11 +348,11 @@ Set to Zero to disable this check.</value>
   <data name="MovementOption" xml:space="preserve">
     <value>Movement Option</value>
   </data>
-  <data name="MPLessOrEqual" xml:space="preserve">
-    <value>Player MP to be less than or equal to:</value>
-  </data>
   <data name="MPGreaterOrEqual" xml:space="preserve">
     <value>Player MP to be greater than or equal to:</value>
+  </data>
+  <data name="MPLessOrEqual" xml:space="preserve">
+    <value>Player MP to be less than or equal to:</value>
   </data>
   <data name="NoMovement" xml:space="preserve">
     <value>No Movement</value>
@@ -360,8 +366,14 @@ Set to Zero to disable this check.</value>
   <data name="NonBossHpPercent" xml:space="preserve">
     <value>Non boss encounter. Stop using at Enemy HP %.</value>
   </data>
+  <data name="NoRequireTarget" xml:space="preserve">
+    <value>Will start the opener regardless of having a target.</value>
+  </data>
   <data name="NormalTargeting" xml:space="preserve">
     <value>Normal Targeting</value>
+  </data>
+  <data name="NoTarget" xml:space="preserve">
+    <value>Don't require a battle target.</value>
   </data>
   <data name="NotInBossEncounters" xml:space="preserve">
     <value>Not In Boss Encounters</value>
@@ -369,6 +381,9 @@ Set to Zero to disable this check.</value>
   <data name="On0" xml:space="preserve">
     <value>On {0}</value>
     <comment>Used for simple "On {Action}" strings</comment>
+  </data>
+  <data name="OnlyBoss" xml:space="preserve">
+    <value>Boss Only</value>
   </data>
   <data name="OnlyUse0" xml:space="preserve">
     <value>Only use {0}</value>
@@ -413,14 +428,13 @@ Set to 100 to disable this check.</value>
         - You could also mouseover yourself in the party to use Sheltron in this case.
         - If you don't, intervention would replace the combo, and it would go to the main tank.
         - If you don't use those Features for your personal mitigation, you may not want to enable this.</value>
-  </data>  
+  </data>
   <data name="PrioBuffUpkeep" xml:space="preserve">
     <value>Prio buff upkeep</value>
   </data>
   <data name="Prioritize" xml:space="preserve">
     <value>Prioritize {0} </value>
   </data>
-    
   <data name="Priority" xml:space="preserve">
     <value>Priority: </value>
   </data>
@@ -432,6 +446,9 @@ Set to 100 to disable this check.</value>
   </data>
   <data name="RequireParty" xml:space="preserve">
     <value>Requires a Party to use.</value>
+  </data>
+  <data name="RequireTarget" xml:space="preserve">
+    <value>Requires a battle target to start the opener.</value>
   </data>
   <data name="SavageBladeWaste" xml:space="preserve">
     <value>Replaces {0} with {1} to disable and prevent wasted use.</value>
@@ -526,17 +543,20 @@ Set to 100 to disable this check.</value>
   <data name="Use0And1" xml:space="preserve">
     <value>Use {0} and {1}.</value>
   </data>
+  <data name="Use0Before1" xml:space="preserve">
+    <value>Use {0} before {1}</value>
+  </data>
   <data name="Use0In1" xml:space="preserve">
     <value>Use {0} in {1}</value>
-  </data>
-    <data name="Use0Before1" xml:space="preserve">
-    <value>Use {0} before {1}</value>
   </data>
   <data name="Use0Or1" xml:space="preserve">
     <value>Use {0} / {1}</value>
   </data>
   <data name="Use0RegardlessOfContent" xml:space="preserve">
     <value>Use {0} regardless of content.</value>
+  </data>
+  <data name="Use0RegardlessOfTarget" xml:space="preserve">
+    <value>Use {0} regardless of target.</value>
   </data>
   <data name="Use0When1ChargesAreAvailable" xml:space="preserve">
     <value>Use {0} when {1} charges are available.</value>

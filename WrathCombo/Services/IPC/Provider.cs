@@ -721,5 +721,43 @@ public partial class Provider : IDisposable
         return Leasing.AddRegistrationForOption(lease, optionName, state);
     }
 
+    /// <summary>
+    ///     Gets the internal name of the Variant Dungeon parent combo for a job's
+    ///     combat role (e.g. <c>Variant_PhysRanged</c> for MCH). Use the same
+    ///     <paramref name="jobID" /> values as <see cref="GetComboNamesForJob" />.
+    /// </summary>
+    [EzIPC]
+    [SuppressMessage("Performance", "CA1822:Mark members as static")]
+    public string? GetVariantParentComboName(uint jobID) =>
+        P.IPCSearch.TryGetVariantJobRole(jobID, out var jobRole)
+            ? P.IPCSearch.GetVariantParentComboName(jobRole)
+            : null;
+
+    /// <summary>
+    ///     Gets the internal names of all Variant Dungeon options for a job's combat
+    ///     role. Names are valid for <see cref="SetComboOptionState" />.
+    /// </summary>
+    [EzIPC]
+    [SuppressMessage("Performance", "CA1822:Mark members as static")]
+    public List<string>? GetVariantOptionNames(uint jobID) =>
+        P.IPCSearch.TryGetVariantJobRole(jobID, out var jobRole)
+            ? P.IPCSearch.GetVariantOptionNames(jobRole)
+            : null;
+
+    /// <summary>
+    ///     Enables or disables the Variant parent combo and all of its options for the
+    ///     job's combat role under your lease. Does not change Cure HP sliders.
+    ///     Returns <see cref="SetResult.OkayWorking" /> when all sets succeed.
+    /// </summary>
+    [EzIPC]
+    public SetResult SetVariantReadyForJob
+        (Guid lease, uint jobID, bool enabled = true)
+    {
+        if (Helper.CheckForBailConditionsAtSetTime(out var result, lease))
+            return result;
+
+        return Leasing.AddRegistrationForVariant(lease, jobID, enabled);
+    }
+
     #endregion
 }

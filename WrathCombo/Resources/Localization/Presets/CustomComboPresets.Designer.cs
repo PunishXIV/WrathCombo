@@ -12412,6 +12412,24 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Allow Automaton Queen to be used while in Hypercharge.
+        /// </summary>
+        internal static string MCH_ST_Adv_QueenInHypercharge_Desc {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_QueenInHypercharge_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Queen use in Hypercharge.
+        /// </summary>
+        internal static string MCH_ST_Adv_QueenInHypercharge_Name {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_QueenInHypercharge_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Rook or Queen Overdrive to the rotation..
         /// </summary>
         internal static string MCH_ST_Adv_QueenOverdrive_Desc {
@@ -12523,6 +12541,42 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to When enabled, if Chainsaw, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Chainsaw after it. .
+        /// </summary>
+        internal static string MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Desc {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow using Chainsaw after Wildfire.
+        /// </summary>
+        internal static string MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Name {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When enabled, if Excavator, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Excavator after it. .
+        /// </summary>
+        internal static string MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Desc {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow using Excavator after Wildfire.
+        /// </summary>
+        internal static string MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Name {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Adds Hotshot, Drill, Air Anchor, Chainsaw and Excavator to the rotation..
         /// </summary>
         internal static string MCH_ST_Adv_Tools_Desc {
@@ -12573,6 +12627,15 @@ namespace WrathCombo.Resources.Localization.Presets {
         internal static string MCH_ST_Adv_WildFire_Name {
             get {
                 return ResourceManager.GetString("MCH_ST_Adv_WildFire_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to s, drift Wildfire over Tools if tools cooldowns are less than this value.
+        /// </summary>
+        internal static string MCH_ST_Adv_WildfireHyperchargeCutoffThreshold {
+            get {
+                return ResourceManager.GetString("MCH_ST_Adv_WildfireHyperchargeCutoffThreshold", resourceCulture);
             }
         }
         
@@ -30189,7 +30252,7 @@ namespace WrathCombo.Resources.Localization.Presets {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Storm&apos;s Eye Feature.
+        ///   Looks up a localized string similar to Storm&apos;s Path to Eye Feature.
         /// </summary>
         internal static string WAR_EyePath_Name {
             get {

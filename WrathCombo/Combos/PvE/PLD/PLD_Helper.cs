@@ -493,6 +493,18 @@ internal partial class PLD
             flags.HasFlag(Combo.ST) ? fightOrFlightThresholdST : fightOrFlightThresholdAoE;
         
         bool hasRequiescatMPSimple = LocalPlayer.CurrentMp >= GetResourceCost(HolySpirit) * 3.6;
+
+        bool poolCircleForManual = !flags.HasFlag(Combo.Simple) && 
+                                (flags.HasFlag(Combo.ST) && PLD_ST_AdvancedMode_CircleOfScorn_ManualPooling ||
+                                flags.HasFlag(Combo.AoE) && PLD_AoE_AdvancedMode_CircleOfScorn_ManualPooling);
+        
+        bool poolSpiritsForManual = !flags.HasFlag(Combo.Simple) && 
+                                   (flags.HasFlag(Combo.ST) && PLD_ST_AdvancedMode_SpiritsWithin_ManualPooling ||
+                                    flags.HasFlag(Combo.AoE) && PLD_AoE_AdvancedMode_SpiritsWithin_ManualPooling);
+        
+        bool poolInterveneForManual = !flags.HasFlag(Combo.Simple) && 
+                                    (flags.HasFlag(Combo.ST) && PLD_ST_AdvancedMode_Intervene_ManualPooling ||
+                                     flags.HasFlag(Combo.AoE) && PLD_AoE_AdvancedMode_Intervene_ManualPooling);
         
         bool hasRequiescatMpST =
             IsNotEnabled(Preset.PLD_ST_AdvancedMode_MP_Reserve) && hasRequiescatMPSimple ||
@@ -555,7 +567,7 @@ internal partial class PLD
             }
                 
             if (interveneEnabled && ActionReady(Intervene) && !JustUsed(Intervene, 2f) && 
-                (!fightOrFlightEnabled || GetCooldownRemainingTime(FightOrFlight) > 40) && //Buff Window Check
+                (!fightOrFlightEnabled && !poolInterveneForManual || GetCooldownRemainingTime(FightOrFlight) > 40) && //Buff Window Check
                 GetRemainingCharges(Intervene) > interveneChargeThreshold && //Charge Check
                 GetTargetDistance() <= interveneDistanceThreshold && //Distance Check
                 (interveneMovement == 1 || //Time Standing Still Check
@@ -566,14 +578,14 @@ internal partial class PLD
             }
 
             if (circleOfScornEnabled && ActionReady(CircleOfScorn) && NumberOfEnemiesInRange(CircleOfScorn) > 0 && //Enemy Check as it requires no target to fire
-                (!fightOrFlightEnabled || GetCooldownRemainingTime(FightOrFlight) > 15))
+                (!fightOrFlightEnabled && !poolCircleForManual || GetCooldownRemainingTime(FightOrFlight) > 15))
             {
                 actionID = CircleOfScorn;
                 return true;
             }
             
             if (spiritsWithinEnabled && ActionReady(OriginalHook(SpiritsWithin)) && 
-                (!fightOrFlightEnabled || GetCooldownRemainingTime(FightOrFlight) > 15))
+                (!fightOrFlightEnabled && !poolSpiritsForManual || GetCooldownRemainingTime(FightOrFlight) > 15))
             {
                 actionID = OriginalHook(SpiritsWithin);
                 return true;

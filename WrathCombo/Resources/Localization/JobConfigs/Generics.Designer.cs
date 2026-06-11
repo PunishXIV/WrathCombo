@@ -158,6 +158,7 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
             }
         }
         
+        /// <summary>
         ///   Looks up a localized string similar to Add {0} when applicable..
         /// </summary>
         internal static string Add0WhenApplicable {
@@ -201,7 +202,18 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
                 return ResourceManager.GetString("Align0With1", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Keep {0} aligned with manual use of {1}..
+        /// </summary>
+        internal static string Align0WithManual1
+        {
+            get
+            {
+                return ResourceManager.GetString("Align0WithManual1", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to All Content.
         /// </summary>
@@ -505,6 +517,15 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Require a battle target..
+        /// </summary>
+        internal static string HaveBattleTarget {
+            get {
+                return ResourceManager.GetString("HaveBattleTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hold {0} for {1}.
         /// </summary>
         internal static string Hold0For1 {
@@ -785,11 +806,29 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Will start the opener regardless of having a target..
+        /// </summary>
+        internal static string NoRequireTarget {
+            get {
+                return ResourceManager.GetString("NoRequireTarget", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Normal Targeting.
         /// </summary>
         internal static string NormalTargeting {
             get {
                 return ResourceManager.GetString("NormalTargeting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t require a battle target..
+        /// </summary>
+        internal static string NoTarget {
+            get {
+                return ResourceManager.GetString("NoTarget", resourceCulture);
             }
         }
         
@@ -808,6 +847,15 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string On0 {
             get {
                 return ResourceManager.GetString("On0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Boss Only.
+        /// </summary>
+        internal static string OnlyBoss {
+            get {
+                return ResourceManager.GetString("OnlyBoss", resourceCulture);
             }
         }
         
@@ -987,7 +1035,16 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Requires a battle target to start the opener..
+        /// </summary>
+        internal static string RequireTarget {
+            get {
+                return ResourceManager.GetString("RequireTarget", resourceCulture);
+            }
+        }
         
+        /// <summary>
         ///   Looks up a localized string similar to Replaces {0} with {1} to disable and prevent wasted use..
         /// </summary>
         internal static string SavageBladeWaste {
@@ -1243,19 +1300,20 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use {0} before {1}.
-        /// </summary>
-        internal static string Use0Before1 {
-            get {
-                return ResourceManager.GetString("Use0Before1", resourceCulture);
-            }
-        }
-        
         ///   Looks up a localized string similar to Use {0} and {1}..
         /// </summary>
         internal static string Use0And1 {
             get {
                 return ResourceManager.GetString("Use0And1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use {0} before {1}.
+        /// </summary>
+        internal static string Use0Before1 {
+            get {
+                return ResourceManager.GetString("Use0Before1", resourceCulture);
             }
         }
         
@@ -1283,6 +1341,15 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         internal static string Use0RegardlessOfContent {
             get {
                 return ResourceManager.GetString("Use0RegardlessOfContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use {0} regardless of target..
+        /// </summary>
+        internal static string Use0RegardlessOfTarget {
+            get {
+                return ResourceManager.GetString("Use0RegardlessOfTarget", resourceCulture);
             }
         }
         

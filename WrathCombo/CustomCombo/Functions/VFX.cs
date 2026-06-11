@@ -38,8 +38,9 @@ internal abstract partial class CustomComboFunctions
 
     private static uint? CurrentCFC => Content.ContentFinderConditionRowId;
 
-    private static List<TTSData> TTSTankbusters = [];
-    private static List<TTSData> TTSGroupwides = [];
+    public static List<TTSData> TTSTankbusters = [];
+    public static List<TTSData> TTSGroupwides = [];
+    public static HashSet<long> HandledVFXIDs = [];
     private static bool CurrentRaidwideHandled = false;
 
     /// <summary>
@@ -255,7 +256,7 @@ internal abstract partial class CustomComboFunctions
         QuestToastOptions opts = new() { Position = QuestToastPosition.Centre, DisplayCheckmark = false };
         foreach (var vfx in VfxManager.TrackedEffects.FilterToTargeted().Where(x => IsTankBusterEffectPath(x) && x.TargetID.GetObject().IsInParty()))
         {
-            if (!TTSTankbusters.Any(x => x.VFX == vfx))
+            if (!HandledVFXIDs.Any(x => x == vfx.VfxID))
                 TTSTankbusters.Add(new TTSData() { VFX = vfx });
         }
 
@@ -267,10 +268,13 @@ internal abstract partial class CustomComboFunctions
             if (Service.Configuration.TankbusterToast)
                 Svc.Toasts.ShowQuest(string.Format(MiscStrings.TankbusterTTS, JoinNaturally(targets)), opts);
 
-            TTSTankbusters.ForEach(x => x.TTSHandled = true);
+            TTSTankbusters.ForEach(x =>
+            {
+                x.TTSHandled = true;
+                HandledVFXIDs.Add(x.VFX.VfxID);
+                Svc.Framework.RunOnTick(() => ClearTTSLists(x.VFX.VfxID), TimeSpan.FromMinutes(1));
+            });
         }
-
-        TTSTankbusters.RemoveAll(x => x.VFX.AgeSeconds >= 10);
     }
 
     public static void PlayGroupwideAlert()
@@ -281,11 +285,11 @@ internal abstract partial class CustomComboFunctions
         QuestToastOptions opts = new() { Position = QuestToastPosition.Centre, DisplayCheckmark = false };
         foreach (var vfx in VfxManager.TrackedEffects.Where(v => v.VfxID != 0 && (CheckPath(MHSharedDmgPaths, v.Path)) || CheckPath(SharedDmgPaths, v.Path)))
         {
-            if (!TTSGroupwides.Any(x => x.VFX == vfx))
+            if (!HandledVFXIDs.Any(x => x == vfx.VfxID))
                 TTSGroupwides.Add(new TTSData() { VFX = vfx });
         }
 
-        if (TTSGroupwides.Any(x => !x.TTSHandled))
+        if (TTSGroupwides.Count > 0 && TTSGroupwides.Any(x => !x.TTSHandled))
         {
             var multiHit = TTSGroupwides.Any(x => CheckPath(MHSharedDmgPaths, x.VFX.Path));
             var targets = TTSGroupwides.Where(x => !x.TTSHandled).Select(x => x.VFX.TargetID == Player.Object.GameObjectId ? "You" : x.VFX.TargetID.GetObject()?.Name.ToString()).ToList();
@@ -294,10 +298,12 @@ internal abstract partial class CustomComboFunctions
             if (Service.Configuration.AoEDamageToast)
                 Svc.Toasts.ShowQuest(string.Format(MiscStrings.StackTTS, (multiHit ? MiscStrings.MultiHit : ""), JoinNaturally(targets)), opts);
 
-            TTSGroupwides.ForEach(x => x.TTSHandled = true);
+            TTSGroupwides.ForEach(x => {
+                x.TTSHandled = true;
+                HandledVFXIDs.Add(x.VFX.VfxID);
+                Svc.Framework.RunOnTick(() => ClearTTSLists(x.VFX.VfxID), TimeSpan.FromMinutes(1));
+            });
         }
-
-        TTSGroupwides.RemoveAll(x => x.VFX.AgeSeconds >= 10);
 
         if (RaidwideCasting())
         {
@@ -315,6 +321,21 @@ internal abstract partial class CustomComboFunctions
             CurrentRaidwideHandled = false;
     }   
 
+    private static void ClearTTSLists(long vfxId)
+    {
+        try
+        {
+            TTSGroupwides.RemoveAll(x => x.VFX.VfxID == vfxId);
+            TTSTankbusters.RemoveAll(x => x.VFX.VfxID == vfxId);
+        }
+        catch (Exception ex)
+        {
+            Svc.Log.Error($"Error clearing TTS lists: {ex}");
+            TTSGroupwides.Clear();
+            TTSTankbusters.Clear();
+        }
+    }
+
     public static string JoinNaturally(IList<string?> items)
     {
         if (items == null || items.Count == 0)
@@ -330,7 +351,7 @@ internal abstract partial class CustomComboFunctions
                + " and " + items.Last();
     }
 
-    private class TTSData
+    public class TTSData
     {
         public VfxInfo VFX;
         public bool TTSHandled;

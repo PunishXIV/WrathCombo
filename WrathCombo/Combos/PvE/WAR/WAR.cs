@@ -212,7 +212,10 @@ internal partial class WAR
     internal class WAR_EyePath : CustomCombo
     {
         protected internal override Preset Preset => Preset.WAR_EyePath;
-        protected override uint Invoke(uint action) => action != StormsPath ? action : GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_EyePath_Refresh ? StormsEye : action;
+        protected override uint Invoke(uint actionID) => actionID != StormsPath ? actionID
+            : GetStatusEffectRemainingTime(Buffs.SurgingTempest) <= WAR_EyePath_Refresh && LevelChecked(StormsEye) 
+                ? StormsEye 
+                : actionID;
     }
     #endregion
 

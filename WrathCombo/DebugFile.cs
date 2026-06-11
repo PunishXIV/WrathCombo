@@ -121,6 +121,10 @@ public static class DebugFile
             job = Player.Object.ClassJob.Value;
         }
 
+        var role = Jobs.GetRoleFromJob((Job) (job?.RowId ?? 0));
+        if (role is Jobs.JobRole.All or Jobs.JobRole.DoH or Jobs.JobRole.DoL)
+            job = null;
+
         using (_file = new StreamWriter(GetDebugFilePath(), append: false))
         {
             AddLine("START DEBUG LOG");
@@ -134,6 +138,8 @@ public static class DebugFile
             AddIPCInfo();
             AddConflictingInfo();
 
+            AddDebugCode();
+
             AddPlayerInfo();
             AddTargetInfo();
 
@@ -144,13 +150,21 @@ public static class DebugFile
             AddSettingsInfo();
             AddAutoRotationInfo();
 
-            AddFeatures(job);
-            AddConfigs(job);
+            try
+            {
+                AddFeatures(job);
+                AddConfigs(job);
+            }
+            catch
+            {
+                AddLine("!! Failed to get Job configs/features");
+                AddLine();
+            }
+
             AddStatusEffects();
 
             AddRedundantIDs();
 
-            AddDebugCode();
             AddSettingsHistory();
             AddPluginList();
             AddDalamudLog();
@@ -271,7 +285,7 @@ public static class DebugFile
             foreach (var a in actions)
             {
                 if (a.ClassJobLevel <= player.Level)
-                AddLine($"Lv.{a.ClassJobLevel} {a.Name} - {Svc.Data.GetExcelSheet<Quest>().GetRow(a.UnlockLink.RowId).Name} ({a.UnlockLink.RowId}) - {IsActionUnlocked(a.RowId)}");
+                    AddLine($"Lv.{a.ClassJobLevel} {a.Name} - {Svc.Data.GetExcelSheet<Quest>().GetRow(a.UnlockLink.RowId).Name} ({a.UnlockLink.RowId}) - {IsActionUnlocked(a.RowId)}");
             }
         }
         catch(Exception ex)
@@ -390,15 +404,17 @@ public static class DebugFile
                 ["Rotation Behavior"] = new Dictionary<object, object>
                 {
                     // Key in Settings           Alias for Setting
-                    ["BlockSpellOnMove"]        = "Block Spell on Move",
-                    ["ActionChanging"]          = "Action Replacing",
-                    ["SuppressQueuedActions"]   = "Queued Action Suppression",
-                    ["Throttle"]                = "Throttle (ms)",
-                    ["MovementLeeway"]          = "Movement Delay (s)",
-                    ["OpenerTimeout"]           = "Opener Timeout (s)",
-                    ["MeleeOffset"]             = "Melee Offset (y)",
-                    ["InterruptDelay"]          = "Interrupt/Stun Delay (%)",
-                    ["MaximumWeavesPerWindow"]  = "Maximum Weaves Per Window",
+                    ["BlockSpellOnMove"]       = "Block Spell on Move",
+                    ["ActionChanging"]         = "Action Replacing",
+                    ["QueueAdjust"]            = "Custom Queuing",
+                    ["QueueAdjustThreshold"]   = "Custom Window (s)",
+                    ["OverwriteQueue"]         = "Overwrite Custom Queue",
+                    ["Throttle"]               = "Throttle (ms)",
+                    ["MovementLeeway"]         = "Movement Delay (s)",
+                    ["OpenerTimeout"]          = "Opener Timeout (s)",
+                    ["MeleeOffset"]            = "Melee Offset (y)",
+                    ["InterruptDelay"]         = "Interrupt/Stun Delay (%)",
+                    ["MaximumWeavesPerWindow"] = "Maximum Weaves Per Window",
                 },
                 ["Targeting"] = new Dictionary<object, object>
                 {
@@ -610,32 +626,67 @@ public static class DebugFile
         if (job is null)
         {
             AddLine("---INT VALUES---");
-            foreach (var config in Configuration.CustomIntValues)
-                AddLine($"{config.Key.Trim()}: {config.Value}");
+            try
+            {
+                foreach (var config in Configuration.CustomIntValues)
+                    AddLine($"{config.Key.Trim()}: {config.Value}");
+            }
+            catch
+            {
+                AddLine("?");
+            }
 
             AddLine();
 
             AddLine("---INT ARRAY VALUES---");
-            foreach (var config in Configuration.CustomIntArrayValues)
-                AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
+            try
+            {
+                foreach (var config in Configuration.CustomIntArrayValues)
+                    AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
+            }
+            catch
+            {
+                AddLine("?");
+            }
 
             AddLine();
 
             AddLine("---FLOAT VALUES---");
-            foreach (var config in Configuration.CustomFloatValues)
-                AddLine($"{config.Key.Trim()}: {config.Value}");
+            try
+            {
+                foreach (var config in Configuration.CustomFloatValues)
+                    AddLine($"{config.Key.Trim()}: {config.Value}");
+            }
+            catch
+            {
+                AddLine("?");
+            }
 
             AddLine();
 
             AddLine("---BOOL VALUES---");
-            foreach (var config in Configuration.CustomBoolValues)
-                AddLine($"{config.Key.Trim()}: {config.Value}");
+            try
+            {
+                foreach (var config in Configuration.CustomBoolValues)
+                    AddLine($"{config.Key.Trim()}: {config.Value}");
+            }
+            catch
+            {
+                AddLine("?");
+            }
 
             AddLine();
 
             AddLine("---BOOL ARRAY VALUES---");
-            foreach (var config in Configuration.CustomBoolArrayValues)
-                AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
+            try
+            {
+                foreach (var config in Configuration.CustomBoolArrayValues)
+                    AddLine($"{config.Key.Trim()}: {string.Join(", ", config.Value)}");
+            }
+            catch
+            {
+                AddLine("?");
+            }
         }
         else
         {
@@ -724,7 +775,16 @@ public static class DebugFile
                          .Concat(typeof(PvPCommon.Config).GetMembers())
                          .Where(x => x.MemberType is
                              MemberTypes.Field or MemberTypes.Property))
-                PrintConfig(config);
+            {
+                try
+                {
+                    PrintConfig(config);
+                }
+                catch
+                {
+                    AddLine($"{config.Name}?");
+                }
+            }
         }
 
         AddLine("END CONFIG SETTINGS");

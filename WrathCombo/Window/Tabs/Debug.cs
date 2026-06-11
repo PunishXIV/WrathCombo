@@ -25,6 +25,7 @@ using System.Numerics;
 using System.Text;
 using WrathCombo.API.Enum;
 using WrathCombo.AutoRotation;
+using WrathCombo.Combos;
 using WrathCombo.Combos.PvE;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
@@ -73,6 +74,29 @@ internal class Debug : ConfigWindow, IDisposable
     private const string UnknownName = "???";
     private const string SymbolDuration = "";
     private const string SymbolParameter = "";
+    private const string VariantPresetPrefix = "Variant_";
+
+    private static int CountLeaseJobCombos(Lease lease) =>
+        lease.CombosControlled.Keys.Count(p =>
+            !p.ToString().StartsWith(VariantPresetPrefix, StringComparison.Ordinal));
+
+    private static string FormatLeaseVariantStatus(Lease lease)
+    {
+        var variantParents = lease.CombosControlled
+            .Where(kvp => kvp.Key is Preset.Variant_Tank or Preset.Variant_Healer
+                or Preset.Variant_Melee or Preset.Variant_PhysRanged or Preset.Variant_Magic)
+            .ToList();
+        var variantOptionCount = lease.OptionsControlled.Keys.Count(p =>
+            p.ToString().StartsWith(VariantPresetPrefix, StringComparison.Ordinal));
+
+        var variantControlled = variantParents.Count + variantOptionCount;
+        if (variantControlled == 0)
+            return "off";
+
+        var parentEnabled = variantParents.Any(kvp => kvp.Value.enabled);
+        var status = parentEnabled ? "on" : "partial";
+        return $"{status} ({variantControlled})";
+    }
 
     internal new static unsafe void Draw()
     {
@@ -1003,6 +1027,22 @@ internal class Debug : ConfigWindow, IDisposable
             ImGui.Unindent();
         }
 
+        if (ImGui.CollapsingHeader("Auto-Rotation Info"))
+        {
+            ImGui.Indent();
+            if (ImGui.CollapsingHeader("Heal Targets"))
+            {
+                ImGui.Indent();
+                foreach (var t in AutoRotationController.HealerTargeting.HealTargets())
+                {
+                    if (ImGui.CollapsingHeader($"{t.Name}###{t.SafeGameObjectId}"))
+                    DrawTargetInfo(t);
+                }
+                ImGui.Unindent();
+            }
+            ImGui.Unindent();
+        }
+
         #endregion
 
         ImGuiEx.Spacing(new Vector2(0f, SpacingSmall));
@@ -1032,8 +1072,13 @@ internal class Debug : ConfigWindow, IDisposable
 
             if (_wrathLease is not null)
             {
+                var wrathRegistration = P.IPC.Leasing.Registrations[_wrathLease!.Value];
                 CustomStyleText("Lease GUID", $"{_wrathLease}");
-                CustomStyleText("Configurations: ", $"{P.IPC.Leasing.Registrations[_wrathLease!.Value].SetsLeased}");
+                CustomStyleText("Configurations: ", $"{wrathRegistration.SetsLeased}");
+                CustomStyleText(
+                    "Lease combos",
+                    $"Combos: {CountLeaseJobCombos(wrathRegistration),-3}; " +
+                    $"Variants: {FormatLeaseVariantStatus(wrathRegistration)}");
 
                 ImGuiEx.Spacing(new Vector2(20, 20));
 
@@ -1051,7 +1096,24 @@ internal class Debug : ConfigWindow, IDisposable
                 ImGui.SameLine();
                 if (ImGui.Button("Set Autorot For WHM"))
                 {
-                    P.IPC.Leasing.AddRegistrationForCurrentJob(_wrathLease!.Value, Job.WHM);
+                    P.IPC.Leasing.AddRegistrationForCurrentJob(_wrathLease!.Value, jobOverride: Job.WHM);
+                }
+
+                ImGuiEx.Spacing(new Vector2(10, 10));
+
+                if (ImGui.Button("Set Variant (current job)"))
+                {
+                    var result = P.IPC.SetVariantReadyForJob(
+                        _wrathLease!.Value, (uint)Player.Job.GetUpgradedJob(), true);
+                    Svc.Chat.Print($"SetVariantReadyForJob: {result}");
+                }
+
+                ImGui.SameLine();
+                if (ImGui.Button("Clear Variant (current job)"))
+                {
+                    var result = P.IPC.SetVariantReadyForJob(
+                        _wrathLease!.Value, (uint)Player.Job.GetUpgradedJob(), false);
+                    Svc.Chat.Print($"SetVariantReadyForJob: {result}");
                 }
 
                 ImGuiEx.Spacing(new Vector2(20, 20));
@@ -1100,9 +1162,8 @@ internal class Debug : ConfigWindow, IDisposable
                     var jobs = registration.Value.JobsControlled.Count > 0
                         ? string.Join(",", registration.Value.JobsControlled.Keys)
                         : "0";
-                    var combos = registration.Value.CombosControlled.Count > 0
-                        ? registration.Value.CombosControlled.Count.ToString()
-                        : "0";
+                    var combos = CountLeaseJobCombos(registration.Value);
+                    var variants = FormatLeaseVariantStatus(registration.Value);
 
                     CustomStyleText(
                         $"{registration.Value.PluginName}",
@@ -1118,7 +1179,8 @@ internal class Debug : ConfigWindow, IDisposable
                     }
                     ImGui.SameLine();
 
-                    CustomStyleText("", $"Jobs: {jobs,-30} " + $"Combos: {combos,-6}");
+                    CustomStyleText("",
+                        $"Jobs: {jobs,-30} Combos: {combos,-3}; Variants: {variants}");
                     CustomStyleText("", $"Created: {" ",-24} {registration.Value.Created:yyyy-MM-ddTHH:mm:ss}");
                 }
             }

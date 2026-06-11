@@ -3,6 +3,7 @@ using Dalamud.Game.ClientState.JobGauge.Types;
 using ECommons.GameHelpers;
 using System;
 using System.Collections.Generic;
+using FFXIVClientStructs.FFXIV.Client.Game;
 using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using static WrathCombo.Combos.PvE.RDM.Config;
@@ -258,11 +259,14 @@ internal partial class RDM
     #region Opener
     internal static Standard Opener1 = new();
     internal static GapClosing Opener2 = new();
+    internal static FirstGCD Opener3 = new();
+    
     internal static WrathOpener Opener()
     {
         if (RDM_Opener_Selection == 0 && Opener1.LevelChecked) return Opener1;
         if (RDM_Opener_Selection == 1 && Opener2.LevelChecked) return Opener2;
-
+        if (RDM_Opener_Selection == 2 && Opener2.LevelChecked) return Opener3;
+        
         return (Opener1.LevelChecked) ? Opener1 : WrathOpener.Dummy;
     }
     internal class Standard : WrathOpener
@@ -398,6 +402,89 @@ internal partial class RDM
                 GetRemainingCharges(Corpsacorps) < 2)
                 return false;
 
+            return true;
+        }
+    }
+     internal class FirstGCD : WrathOpener
+    {
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Acceleration,
+            Veraero3,
+            Veraero3,
+            Embolden,
+            GrandImpact, //5
+            Fleche, 
+            Manafication,
+            EnchantedRiposteManafication,
+            Corpsacorps,
+            EnchantedZwerchhauManafication, //10
+            Engagement,
+            EnchantedRedoublementManafication,
+            ContreSixte,
+            Verflare,
+            Engagement, //15
+            Corpsacorps,
+            Scorch,
+            Acceleration,
+            Role.Swiftcast,
+            Resolution, //20
+            Veraero3,
+            ViceOfThorns,
+            Prefulgence,
+            GrandImpact,
+            Verthunder3, //25
+            Verfire,
+            Verthunder3,
+            Fleche
+        ];
+        public override int MinOpenerLevel => 100;
+        public override int MaxOpenerLevel => 109;
+
+        public override List<(int[] Steps, uint NewAction, Func<bool> Condition)> SubstitutionSteps { get; set; } =
+        [
+            ([2], Jolt3, () => PartyInCombat() && !Player.Object.IsCasting)
+        ];
+        
+        public override List<(int[] Steps, Func<int> HoldDelay)> PrepullDelays
+        {
+            get;
+            set;
+        } =
+        [
+            ([2], () => RDMFirstGCDOpenerAccelerationTime - 6)
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([11, 15], () => !InMeleeRange())
+        ];
+
+        internal override UserData? ContentCheckConfig => RDM_BalanceOpener_Content;
+        public override Preset Preset => Preset.RDM_Balance_Opener;
+        public override bool HasCooldowns()
+        {
+            if (!ActionsReady([Role.Swiftcast, Fleche, Embolden, ContreSixte]))
+                return false;
+
+            if (!IsOffCooldown(Manafication))
+                return false;
+
+            if (GetRemainingCharges(Corpsacorps) < 2 || GetRemainingCharges(Engagement) < 2)
+                return false;
+            
+            if (GetRemainingCharges(Acceleration) < 2)
+                return false;
+
+            if (InCombat())
+                return false;
+
+            if (!CountdownActive)
+                return false;
+            
+            if (CountdownRemaining > 25)
+                return false;
+            
             return true;
         }
     }

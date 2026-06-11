@@ -25,7 +25,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCDs
-            if (CanWeave() && InCombat())
+            if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 if (CanBrotherhood())
                     return Brotherhood;
@@ -94,7 +94,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCD's
-            if (CanWeave() && InCombat())
+            if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 if (CanBrotherhood())
                     return Brotherhood;
@@ -186,7 +186,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCDs
-            if (CanWeave() && InCombat())
+            if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 if (IsEnabled(Preset.MNK_STUseBuffs))
                 {
@@ -289,7 +289,7 @@ internal partial class MNK : Melee
                 return contentAction;
 
             // OGCD's
-            if (CanWeave() && InCombat())
+            if (CanWeave() && (InCombat() || ComboAction > 0))
             {
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&
                     GetTargetHPPercent() >= MNK_AoE_BuffsHPThreshold)

@@ -124,7 +124,7 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bypass Only in Combat for FATE Targets.
+        ///   Looks up a localized string similar to Bypass for FATE Targets.
         /// </summary>
         internal static string Checkbox_BypassFATETargets {
             get {
@@ -133,7 +133,7 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bypass Only in Combat for Quest Targets.
+        ///   Looks up a localized string similar to Bypass for Quest Targets.
         /// </summary>
         internal static string Checkbox_BypassQuestTargets {
             get {
@@ -268,7 +268,7 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only in Combat.
+        ///   Looks up a localized string similar to Restrict to Combat Only.
         /// </summary>
         internal static string Checkbox_OnlyInCombat {
             get {
@@ -465,7 +465,7 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Will try to use actions before detected raidwides or group damage to either mitigate or top-off party members. Max 2 actions (excluding {0} for setup).
+        ///   Looks up a localized string similar to Will try to use actions before detected raidwides or group damage to either mitigate or top-off party members. Max 3 actions (excluding {0} for setup).
         /// </summary>
         internal static string HelpText_HandleRaidwides {
             get {
@@ -560,7 +560,7 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses &quot;Only in Combat&quot; setting).
+        ///   Looks up a localized string similar to Applies {0}/{1}/{2}/{3} to your focus target when out of combat and they are 30y or less away from an enemy. (Bypasses &quot;Restrict to Combat Only&quot; setting).
         /// </summary>
         internal static string HelpText_PreEmptiveHoT {
             get {

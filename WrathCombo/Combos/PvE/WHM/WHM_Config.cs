@@ -31,11 +31,11 @@ internal partial class WHM
 
                 case Preset.WHM_ST_MainCombo:
                     DrawHorizontalRadioButton(WHM_ST_MainCombo_Actions, "On Stones/Glares", "Apply options to all Stones and Glares.", 0,
-                        descriptionColor:ImGuiColors.DalamudWhite);
+                        descriptionColor: ImGuiColors.DalamudWhite);
                     DrawHorizontalRadioButton(WHM_ST_MainCombo_Actions, "On Aeros/Dia", "Apply options to all Aeros And Dia.", 1,
-                        descriptionColor:ImGuiColors.DalamudWhite);
+                        descriptionColor: ImGuiColors.DalamudWhite);
                     DrawHorizontalRadioButton(WHM_ST_MainCombo_Actions, "On Stone II", "Apply options to Stone II.", 2,
-                        descriptionColor:ImGuiColors.DalamudWhite);
+                        descriptionColor: ImGuiColors.DalamudWhite);
                     break;
 
                 case Preset.WHM_ST_MainCombo_Opener:
@@ -90,8 +90,8 @@ internal partial class WHM
                     break;
 
                 case Preset.WHM_AoE_DPS_Misery:
-                    DrawHorizontalRadioButton(WHM_AoE_DPS_Misery_Option, "Hold for Burst", "Will attempt to hold for burst as long as possible without overcapping. \nWill prevent afflatus heals from being possible when at full Blood Lily stacks.", 0 ,descriptionColor: ImGuiColors.DalamudWhite);
-                    DrawHorizontalRadioButton(WHM_AoE_DPS_Misery_Option, "Use Immediately", "Will Use Immediately to make sure you are free to use Afflatus heals. ", 1 ,descriptionColor: ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(WHM_AoE_DPS_Misery_Option, "Hold for Burst", "Will attempt to hold for burst as long as possible without overcapping. \nWill prevent afflatus heals from being possible when at full Blood Lily stacks.", 0, descriptionColor: ImGuiColors.DalamudWhite);
+                    DrawHorizontalRadioButton(WHM_AoE_DPS_Misery_Option, "Use Immediately", "Will Use Immediately to make sure you are free to use Afflatus heals. ", 1, descriptionColor: ImGuiColors.DalamudWhite);
                     break;
 
                 case Preset.WHM_AoE_DPS_LilyOvercap:
@@ -142,9 +142,9 @@ internal partial class WHM
                     break;
 
                 case Preset.WHM_STHeals_Aquaveil:
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.OnlyWeave, Generics.OnlyWeave, 3, 0);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.NonBosses, Generics.NonBosses, 3, 1);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.TanksOnly, Generics.NonBosses, 3, 2);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions, Generics.OnlyWeave, Generics.OnlyWeave, 3, 0);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions, Generics.NonBosses, Generics.NonBosses, 3, 1);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AquaveilOptions, Generics.TanksOnly, Generics.TanksOnly, 3, 2);
                     DrawSliderInt(1, 100, WHM_STHeals_AquaveilHP,
                         Generics.StopFriendlyHpPercent100);
                     DrawPriorityInput(WHM_ST_Heals_Priority, 9, 3,
@@ -175,8 +175,8 @@ internal partial class WHM
                 case Preset.WHM_STHeals_Temperance:
                     DrawSliderInt(1, 100, WHM_STHeals_TemperanceHP,
                         Generics.StopFriendlyHpPercent100);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.OnlyWeave, Generics.OnlyWeave, 2, 0);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.NonBosses, Generics.NonBosses, 2, 1);
+                    DrawHorizontalMultiChoice(WHM_STHeals_TemperanceOptions, Generics.OnlyWeave, Generics.OnlyWeave, 2, 0);
+                    DrawHorizontalMultiChoice(WHM_STHeals_TemperanceOptions, Generics.NonBosses, Generics.NonBosses, 2, 1);
                     DrawPriorityInput(WHM_ST_Heals_Priority, 9, 6,
                         FormatAndCache(Generics.Action_Priority, Temperance.ActionName()));
                     break;
@@ -184,8 +184,8 @@ internal partial class WHM
                 case Preset.WHM_STHeals_Asylum:
                     DrawSliderInt(1, 100, WHM_STHeals_AsylumHP,
                         Generics.StopFriendlyHpPercent100);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.OnlyWeave, Generics.OnlyWeave, 2, 0);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.NonBosses, Generics.NonBosses, 2, 1);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AsylumOptions, Generics.OnlyWeave, Generics.OnlyWeave, 2, 0);
+                    DrawHorizontalMultiChoice(WHM_STHeals_AsylumOptions, Generics.NonBosses, Generics.NonBosses, 2, 1);
                     DrawPriorityInput(WHM_ST_Heals_Priority, 9, 7,
                         FormatAndCache(Generics.Action_Priority, Asylum.ActionName()));
                     break;
@@ -193,8 +193,8 @@ internal partial class WHM
                 case Preset.WHM_STHeals_LiturgyOfTheBell:
                     DrawSliderInt(1, 100, WHM_STHeals_LiturgyOfTheBellHP,
                         Generics.StopFriendlyHpPercent100);
-                    DrawHorizontalMultiChoice(Generics.NonBosses,Generics.OnlyWeave, Generics.OnlyWeave, 2, 0);
-                    DrawHorizontalMultiChoice(Generics.NonBosses, Generics.NonBosses, Generics.NonBosses, 2, 1);
+                    DrawHorizontalMultiChoice(WHM_STHeals_LiturgyOfTheBellOptions, Generics.OnlyWeave, Generics.OnlyWeave, 2, 0);
+                    DrawHorizontalMultiChoice(WHM_STHeals_LiturgyOfTheBellOptions, Generics.NonBosses, Generics.NonBosses, 2, 1);
                     DrawPriorityInput(WHM_ST_Heals_Priority, 9, 8,
                         FormatAndCache(Generics.Action_Priority, LiturgyOfTheBell.ActionName()));
                     break;
@@ -334,11 +334,11 @@ internal partial class WHM
 
                 case Preset.WHM_Mit_ST:
                     DrawHorizontalMultiChoice(WHM_AquaveilOptions,
-                        FormatAndCache(Generics.Add0, DivineBenison.ActionName()), 
+                        FormatAndCache(Generics.Add0, DivineBenison.ActionName()),
                         FormatAndCache(Generics.Add0, DivineBenison.ActionName()), 2, 0);
                     ImGui.NewLine();
                     DrawHorizontalMultiChoice(WHM_AquaveilOptions,
-                        FormatAndCache(Generics.Add0, Tetragrammaton.ActionName()), 
+                        FormatAndCache(Generics.Add0, Tetragrammaton.ActionName()),
                         FormatAndCache(Generics.Add0, Tetragrammaton.ActionName()), 2, 1);
                     if (WHM_AquaveilOptions[1])
                     {
@@ -358,9 +358,9 @@ internal partial class WHM
                     ImGui.TextColored(ImGuiColors.DalamudGrey, "Options to try to Retarget Asylum to before Self:");
                     ImGui.Unindent();
                     DrawHorizontalMultiChoice(WHM_AsylumOptions,
-                        Generics.EnemyHardTarget,Generics.EnemyHardTarget, 3, 0);
+                        Generics.EnemyHardTarget, Generics.EnemyHardTarget, 3, 0);
                     DrawHorizontalMultiChoice(WHM_AsylumOptions,
-                        Generics.AllyHardTarget,Generics.AllyHardTarget, 3, 1);
+                        Generics.AllyHardTarget, Generics.AllyHardTarget, 3, 1);
                     break;
 
                 case Preset.WHM_Re_LiturgyOfTheBell:
@@ -368,9 +368,9 @@ internal partial class WHM
                     ImGui.TextColored(ImGuiColors.DalamudGrey, "Options to try to Retarget Liturgy of the Bell to before Self:");
                     ImGui.Unindent();
                     DrawHorizontalMultiChoice(WHM_LiturgyOfTheBellOptions,
-                        Generics.EnemyHardTarget,Generics.EnemyHardTarget, 2, 0);
+                        Generics.EnemyHardTarget, Generics.EnemyHardTarget, 2, 0);
                     DrawHorizontalMultiChoice(WHM_LiturgyOfTheBellOptions,
-                        Generics.AllyHardTarget,Generics.AllyHardTarget,  2, 1);
+                        Generics.AllyHardTarget, Generics.AllyHardTarget, 2, 1);
                     break;
 
 
@@ -611,7 +611,7 @@ internal partial class WHM
         ///     Priority order for single target healing abilities.
         /// </summary>
         public static UserIntArray WHM_ST_Heals_Priority =
-            new("WHM_ST_Heals_Priority", [1,7,6,5,9,8,2,3,4]);
+            new("WHM_ST_Heals_Priority", [1, 7, 6, 5, 9, 8, 2, 3, 4]);
 
         /// <summary>
         ///     Time threshold in seconds before refreshing Regen.
@@ -892,7 +892,7 @@ internal partial class WHM
         ///     Priority order for AoE healing abilities.
         /// </summary>
         public static UserIntArray WHM_AoE_Heals_Priority =
-            new("WHM_AoE_Heals_Priority",[9,8,6,5,3,4,7,2,1]);
+            new("WHM_AoE_Heals_Priority", [9, 8, 6, 5, 3, 4, 7, 2, 1]);
 
         /// <summary>
         ///     Number of Thin Air charges to reserve in AoE healing.
@@ -1216,7 +1216,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_Re_LiturgyOfTheBell" />
         public static UserBoolArray WHM_LiturgyOfTheBellOptions =
-            new ("WHM_LiturgyOfTheBellOptions", [true, true]);
+            new("WHM_LiturgyOfTheBellOptions", [true, true]);
 
         /// <summary>
         ///     Options for Aquaveil Standalone Feature
@@ -1226,7 +1226,7 @@ internal partial class WHM
         /// </value>
         /// <seealso cref="Preset.WHM_Mit_ST" />
         public static UserBoolArray WHM_AquaveilOptions =
-            new ("WHM_AquaveilOptions", [true, true]);
+            new("WHM_AquaveilOptions", [true, true]);
 
         /// <summary>
         ///     Tetra threshold for Aquaveil standalone feature

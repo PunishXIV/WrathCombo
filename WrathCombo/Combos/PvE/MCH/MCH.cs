@@ -62,18 +62,18 @@ internal partial class MCH : PhysicalRanged
                     // Reassemble
                     if (CanReassemble())
                         return Reassemble;
-                    
+
                     // BarrelStabilizer
                     if (ActionReady(BarrelStabilizer) &&
                         TargetIsBoss() &&
                         GetCooldownRemainingTime(Wildfire) <= 20 &&
                         !HasStatusEffect(Buffs.FullMetalMachinist))
                         return BarrelStabilizer;
-                    
+
                     // Queen
                     if (CanQueen())
                         return OriginalHook(RookAutoturret);
-                    
+
                     // Gauss Round and Ricochet outside HC
                     if (JustUsed(OriginalHook(AirAnchor), 2f) ||
                         JustUsed(Chainsaw, 2f) ||
@@ -175,6 +175,11 @@ internal partial class MCH : PhysicalRanged
 
                 if (!IsOverheated)
                 {
+                    if (ActionReady(Reassemble) &&
+                        !HasStatusEffect(Buffs.Reassembled) &&
+                        CanUseReassembleAoE())
+                        return Reassemble;
+
                     // BarrelStabilizer
                     if (ActionReady(BarrelStabilizer) &&
                         !HasStatusEffect(Buffs.FullMetalMachinist))
@@ -182,15 +187,6 @@ internal partial class MCH : PhysicalRanged
 
                     if (ActionReady(OriginalHook(RookAutoturret)) && Battery is 100)
                         return OriginalHook(RookAutoturret);
-
-                    if (ActionReady(Reassemble) && !HasStatusEffect(Buffs.Wildfire) &&
-                        !HasStatusEffect(Buffs.Reassembled) && !JustUsed(Flamethrower, 10f) &&
-                        GetRemainingCharges(Reassemble) > MCH_AoE_ReassemblePool &&
-                        (LevelChecked(Scattergun) ||
-                         GetCooldownRemainingTime(AirAnchor) < GCD && LevelChecked(AirAnchor) ||
-                         GetCooldownRemainingTime(Chainsaw) < GCD && LevelChecked(Chainsaw) ||
-                         HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Excavator)))
-                        return Reassemble;
 
                     //gauss and ricochet outside HC
                     if (CanGaussRound &&
@@ -222,19 +218,8 @@ internal partial class MCH : PhysicalRanged
                     !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(3))
                     return Flamethrower;
 
-                if (ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-                    !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
-                    return BioBlaster;
-
-                if (ActionReady(Excavator))
-                    return Excavator;
-
-                if (ActionReady(Chainsaw) &&
-                    !HasStatusEffect(Buffs.ExcavatorReady))
-                    return Chainsaw;
-
-                if (ActionReady(OriginalHook(AirAnchor)))
-                    return OriginalHook(AirAnchor);
+                if (CanUseAoETools(ref actionID))
+                    return actionID;
             }
 
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
@@ -260,7 +245,7 @@ internal partial class MCH : PhysicalRanged
 
             // Opener
             if (IsEnabled(Preset.MCH_ST_Adv_Opener) &&
-                HasBattleTarget() &&
+                (MCH_HaveTarget == 1 || HasBattleTarget()) &&
                 Opener().FullOpener(ref actionID))
                 return actionID;
 
@@ -353,7 +338,7 @@ internal partial class MCH : PhysicalRanged
                     if (IsEnabled(Preset.MCH_ST_Adv_GaussRicochet) &&
                         (JustUsed(Drill, 2f) ||
                          JustUsed(OriginalHook(AirAnchor), 2f) ||
-                         JustUsed(Chainsaw, 2f)||
+                         JustUsed(Chainsaw, 2f) ||
                          JustUsed(Excavator, 2f)))
                     {
                         if (MCH_ST_GaussOnlyOrBoth == 0)
@@ -392,6 +377,14 @@ internal partial class MCH : PhysicalRanged
                     // Interrupt
                     if (Role.CanHeadGraze(Preset.MCH_ST_Adv_Interrupt))
                         return Role.HeadGraze;
+                }
+                else
+                {
+                    // Queen in hypercharge
+                    if (IsEnabled(Preset.MCH_ST_Adv_TurretQueen) &&
+                        IsEnabled(Preset.MCH_ST_Adv_QueenInHypercharge) &&
+                        CanQueen())
+                        return OriginalHook(RookAutoturret);
                 }
             }
 
@@ -481,6 +474,13 @@ internal partial class MCH : PhysicalRanged
 
                 if (!IsOverheated)
                 {
+                    if (IsEnabled(Preset.MCH_AoE_Adv_Reassemble) &&
+                        GetTargetHPPercent() > MCH_AoE_ReassembleHPThreshold &&
+                        ActionReady(Reassemble) && !HasStatusEffect(Buffs.Reassembled) &&
+                        GetRemainingCharges(Reassemble) > MCH_AoE_ReassemblePool &&
+                        CanUseReassembleAoE())
+                        return Reassemble;
+
                     // BarrelStabilizer
                     if (IsEnabled(Preset.MCH_AoE_Adv_Stabilizer) &&
                         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
@@ -492,17 +492,6 @@ internal partial class MCH : PhysicalRanged
                         Battery >= MCH_AoE_TurretBatteryUsage &&
                         GetTargetHPPercent() > MCH_AoE_QueenHpThreshold)
                         return OriginalHook(RookAutoturret);
-
-                    if (IsEnabled(Preset.MCH_AoE_Adv_Reassemble) &&
-                        GetTargetHPPercent() > MCH_AoE_ReassembleHPThreshold &&
-                        ActionReady(Reassemble) && !HasStatusEffect(Buffs.Reassembled) &&
-                        !JustUsed(Flamethrower, 10f) &&
-                        GetRemainingCharges(Reassemble) > MCH_AoE_ReassemblePool &&
-                        (LevelChecked(Scattergun) ||
-                         GetCooldownRemainingTime(AirAnchor) < GCD && LevelChecked(AirAnchor) ||
-                         GetCooldownRemainingTime(Chainsaw) < GCD && LevelChecked(Chainsaw) ||
-                         HasStatusEffect(Buffs.ExcavatorReady) && LevelChecked(Excavator)))
-                        return Reassemble;
 
                     //gauss and ricochet outside HC
                     if (IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet))
@@ -540,22 +529,10 @@ internal partial class MCH : PhysicalRanged
                     GetTargetHPPercent() > MCH_AoE_FlamethrowerHPOption)
                     return Flamethrower;
 
-                if (IsEnabled(Preset.MCH_AoE_Adv_Tools) &&
-                    GetTargetHPPercent() >= MCH_AoE_ToolsHPThreshold)
-                {
-                    if (ActionReady(BioBlaster) && !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
-                        !HasStatusEffect(Buffs.Reassembled) && CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
-                        return BioBlaster;
-
-                    if (ActionReady(Excavator))
-                        return Excavator;
-
-                    if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
-                        return Chainsaw;
-
-                    if (ActionReady(OriginalHook(AirAnchor)) && MCH_AoE_AirAnchor)
-                        return OriginalHook(AirAnchor);
-                }
+                if ((!IsEnabled(Preset.MCH_AoE_Adv_Tools) ||
+                     GetTargetHPPercent() >= MCH_AoE_ToolsHPThreshold) &&
+                    CanUseAoETools(ref actionID, MCH_AoE_AirAnchor))
+                    return actionID;
             }
 
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
@@ -690,7 +667,7 @@ internal partial class MCH : PhysicalRanged
                 CanWeave() && JustUsed(OriginalHook(AutoCrossbow), 1f) && !HasWeaved())
             {
                 if (ActionReady(OriginalHook(GaussRound)) &&
-                    CanGaussRound || !LevelChecked(Ricochet))
+                    (CanGaussRound || !LevelChecked(Ricochet)))
                     return OriginalHook(GaussRound);
 
                 if (ActionReady(OriginalHook(Ricochet)) && CanRicochet)

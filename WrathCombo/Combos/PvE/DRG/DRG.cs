@@ -372,13 +372,13 @@ internal partial class DRG : Melee
                     {
                         if (IsEnabled(Preset.DRG_AoE_BattleLitany) &&
                             ActionReady(BattleLitany) &&
-                            GetTargetHPPercent() > DRG_AoE_BattleLitanyHPTreshold)
+                            GetTargetHPPercent() > DRG_AoE_BattleLitanyHPThreshold)
                             return BattleLitany;
 
                         //Lance Charge Feature
                         if (IsEnabled(Preset.DRG_AoE_LanceCharge) &&
                             ActionReady(LanceCharge) &&
-                            GetTargetHPPercent() > DRG_AoE_LanceChargeHPTreshold)
+                            GetTargetHPPercent() > DRG_AoE_LanceChargeHPThreshold)
                             return LanceCharge;
 
                         //Life Surge Feature
@@ -406,7 +406,7 @@ internal partial class DRG : Melee
                         if (IsEnabled(Preset.DRG_AoE_Geirskogul) &&
                             ActionReady(Geirskogul) &&
                             !LoTDTimerActive && InActionRange(Geirskogul) &&
-                            GetTargetHPPercent() > DRG_AoE_GeirskogulHPTreshold)
+                            GetTargetHPPercent() > DRG_AoE_GeirskogulHPThreshold)
                             return Geirskogul;
 
                         //Wyrmwind Thrust Feature
@@ -469,7 +469,7 @@ internal partial class DRG : Melee
                             (!DRG_AoE_DragonfireDiveMovingOrInRanged[0] || !IsMoving()) &&
                             (!DRG_AoE_DragonfireDiveMovingOrInRanged[1] || InMeleeRange()) &&
                             !HasStatusEffect(Buffs.DragonsFlight) &&
-                            GetTargetHPPercent() > DRG_AoE_DragonfireDiveHPTreshold &&
+                            GetTargetHPPercent() > DRG_AoE_DragonfireDiveHPThreshold &&
                             (LoTDTimerActive || !LevelChecked(Geirskogul)))
                             return DragonfireDive;
                     }

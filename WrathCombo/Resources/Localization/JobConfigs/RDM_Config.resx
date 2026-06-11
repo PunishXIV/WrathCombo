@@ -100,6 +100,15 @@
   <data name="Add0/1Finishers" xml:space="preserve">
 		<value>Add {0}/{1} Finishers</value>
 	</data>
+  <data name="RDMFirstGCDOpener" xml:space="preserve">
+	  <value>Early Buff Opener</value>
+  </data>
+  <data name="RDMFirstGCDOpenerWarning" xml:space="preserve">
+	  <value>Countdown must be used. Set below at what time you plan to push {0}. {1} will be blocked until 6 seconds on countdown.</value>
+  </data>
+  <data name="RDMFirstGCDOpenerWarningTimer" xml:space="preserve">
+	  <value>Countdown time to start opener</value>
+  </data>
   <data name="RDMOpenerTimeoutWarning" xml:space="preserve">
     <value>Opener Failure Timeout (in Settings Tab) Must be set to 5+ seconds for opener to function due to long initial spell cast.</value>
   </data>

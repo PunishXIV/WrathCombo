@@ -146,6 +146,11 @@ internal class StatusCache
             })
             .ToFrozenSet();
 
+    internal static readonly FrozenSet<uint> DoNotHealStatuses = new uint[]
+    {
+        2852,
+    }.ToFrozenSet();
+
     public static class PausingStatuses
     {
         internal static readonly FrozenSet<uint> AccelerationBombs =

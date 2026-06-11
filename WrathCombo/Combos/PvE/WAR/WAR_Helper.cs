@@ -159,6 +159,10 @@ internal partial class WAR : Tank
             flags.HasFlag(Combo.Simple) ? 0 : 
             flags.HasFlag(Combo.ST) ? innerReleaseThresholdST : innerReleaseThresholdAoE;
         
+        bool poolOnslaughtForManual = !flags.HasFlag(Combo.Simple) && 
+                                      (flags.HasFlag(Combo.ST) && WAR_ST_Onslaught_ManualPooling ||
+                                       flags.HasFlag(Combo.AoE) && WAR_AoE_Onslaught_ManualPooling);
+        
         int infuriateGaugeThreshold = 
             flags.HasFlag(Combo.Simple) ? 40 : 
             flags.HasFlag(Combo.ST) ? WAR_ST_Infuriate_Gauge : WAR_AoE_Infuriate_Gauge;
@@ -217,7 +221,7 @@ internal partial class WAR : Tank
                 
             if (onslaughtEnabled && 
                 ActionReady(Onslaught) && HasSurgingTempest &&
-                (!innerReleaseEnabled || innerReleaseEnabled && IR.Cooldown > 40) && //Buff Window Check
+                (!innerReleaseEnabled && !poolOnslaughtForManual || IR.Cooldown > 40) && //Buff Window Check
                 GetRemainingCharges(Onslaught) > onslaughtChargeThreshold &&  //Charge Slider Check
                 GetTargetDistance() <= onslaughtDistanceThreshold && //Distance Check
                 (onslaughtMovement == 1 || //Any Movement

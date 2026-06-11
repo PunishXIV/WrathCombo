@@ -9,7 +9,9 @@ using System.IO;
 using System.Linq;
 using WrathCombo.API.Enum;
 using WrathCombo.Attributes;
+using WrathCombo.Combos;
 using WrathCombo.Core;
+using static WrathCombo.CustomComboNS.Functions.Jobs;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Extensions;
 using WrathCombo.Window.Tabs;
@@ -507,6 +509,43 @@ public class Search(Leasing leasing)
                             )
                     )
             );
+
+    #endregion
+
+    #region Variant Dungeons
+
+    private static readonly Dictionary<JobRole, string> VariantParentNames = new()
+    {
+        { JobRole.Tank, nameof(Preset.Variant_Tank) },
+        { JobRole.Healer, nameof(Preset.Variant_Healer) },
+        { JobRole.MeleeDPS, nameof(Preset.Variant_Melee) },
+        { JobRole.RangedDPS, nameof(Preset.Variant_PhysRanged) },
+        { JobRole.MagicalDPS, nameof(Preset.Variant_Magic) },
+    };
+
+    internal bool TryGetVariantJobRole(uint jobID, out JobRole jobRole)
+    {
+        jobRole = GetRoleFromJob(jobID);
+
+        return jobRole is JobRole.Tank or JobRole.Healer or JobRole.MeleeDPS
+            or JobRole.RangedDPS or JobRole.MagicalDPS;
+    }
+
+    internal string? GetVariantParentComboName(JobRole role) =>
+        VariantParentNames.GetValueOrDefault(role);
+
+    internal List<string> GetVariantOptionNames(JobRole role)
+    {
+        if (!VariantParentNames.TryGetValue(role, out var parent))
+            return [];
+
+        return Presets
+            .Where(preset =>
+                preset.Value is { IsVariant: true, HasParentCombo: true } &&
+                preset.Value.ParentComboName == parent)
+            .Select(preset => preset.Key)
+            .ToList();
+    }
 
     #endregion
 

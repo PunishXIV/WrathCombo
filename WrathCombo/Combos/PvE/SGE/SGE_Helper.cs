@@ -310,9 +310,9 @@ internal partial class SGE
                   HasAddersting()),
         // Dyskrasia
         (OriginalHook(Dyskrasia), Preset.SGE_ST_DPS_Movement,
-            () => SGE_ST_DPS_Movement[1] &&
-                  ActionReady(Dyskrasia) &&
-                  InActionRange(Dyskrasia)),
+            () => SGE_ST_DPS_Movement[1] && 
+                  ActionReady(OriginalHook(Dyskrasia)) && 
+                  InActionRange(OriginalHook(Dyskrasia))),
         //Eukrasia
         (Eukrasia, Preset.SGE_ST_DPS_Movement,
             () => SGE_ST_DPS_Movement[2] &&

@@ -129,6 +129,8 @@ internal partial class WAR
                     break;
 
                 case Preset.WAR_ST_Onslaught:
+                    DrawAdditionalBoolChoice(WAR_ST_Onslaught_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, Onslaught.ActionName(), InnerRelease.ActionName()), "");
                     DrawHorizontalRadioButton(WAR_ST_Onslaught_Movement,
                         Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, Onslaught.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_ST_Onslaught_Movement,
@@ -227,6 +229,8 @@ internal partial class WAR
                     break;
 
                 case Preset.WAR_AoE_Onslaught:
+                    DrawAdditionalBoolChoice(WAR_AoE_Onslaught_ManualPooling, 
+                        FormatAndCache(Generics.Align0WithManual1, Onslaught.ActionName(), InnerRelease.ActionName()), "");
                     DrawHorizontalRadioButton(WAR_AoE_Onslaught_Movement,
                         Generics.StationaryOnly, FormatAndCache(Generics.UseActionOnlyWhileStationary, Onslaught.ActionName()), 0);
                     DrawHorizontalRadioButton(WAR_AoE_Onslaught_Movement,
@@ -519,10 +523,12 @@ internal partial class WAR
 
             WAR_ST_FellCleave_Pooling = new("WAR_ST_FellCleave_Pooling"),
             WAR_ST_FellCleave_Pooling_BossOnly = new("WAR_ST_FellCleave_Pooling_BossOnly"),
+            WAR_ST_Onslaught_ManualPooling = new("WAR_ST_Onslaught_ManualPooling"),
 
             WAR_AoE_Decimate_Pooling = new("WAR_AoE_Decimate_Pooling"),
             WAR_AoE_Decimate_Pooling_BossOnly = new("WAR_AoE_Decimate_Pooling_BossOnly"),
-            WAR_AoE_Decimate_Smart = new("WAR_AoE_Decimate_Smart");
+            WAR_AoE_Decimate_Smart = new("WAR_AoE_Decimate_Smart"),
+            WAR_AoE_Onslaught_ManualPooling = new("WAR_AoE_Onslaught_ManualPooling");
         public static UserIntArray
             WAR_Mit_Priorities = new("WAR_Mit_Priorities");
 

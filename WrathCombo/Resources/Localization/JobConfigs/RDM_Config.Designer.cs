@@ -105,6 +105,33 @@ namespace WrathCombo.Resources.Localization.JobConfigs {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Early Buff Opener.
+        /// </summary>
+        internal static string RDMFirstGCDOpener {
+            get {
+                return ResourceManager.GetString("RDMFirstGCDOpener", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Countdown must be used. Set below at what time you plan to push {0}. {1} will be blocked until 6 seconds on countdown..
+        /// </summary>
+        internal static string RDMFirstGCDOpenerWarning {
+            get {
+                return ResourceManager.GetString("RDMFirstGCDOpenerWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Countdown time to start opener.
+        /// </summary>
+        internal static string RDMFirstGCDOpenerWarningTimer {
+            get {
+                return ResourceManager.GetString("RDMFirstGCDOpenerWarningTimer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gap-Closing Adjusted Standard Opener.
         /// </summary>
         internal static string RDMGapCloserOpener {

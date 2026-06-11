@@ -358,7 +358,7 @@
     <value>감지된 광역 공격 처리</value>
   </data>
   <data name="HelpText_HandleRaidwides" xml:space="preserve">
-    <value>감지된 광역 공격이나 파티 전체 피해 전에 기술을 사용해 피해를 완화하거나 파티원의 체력을 회복(최대치로 보충) 합니다. 준비용 {0}을 제외하고 최대 2개의 기술을 사용합니다.</value>
+    <value>감지된 광역 공격이나 파티 전체 피해 전에 기술을 사용해 피해를 완화하거나 파티원의 체력을 회복(최대치로 보충) 합니다. 준비용 {0}을 제외하고 최대 3개의 기술을 사용합니다.</value>
   </data>
   <data name="Checkbox_HandleTankbusters" xml:space="preserve">
     <value>감지된 탱커 버스터 대응</value>

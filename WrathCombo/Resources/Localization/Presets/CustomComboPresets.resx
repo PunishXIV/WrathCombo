@@ -10444,7 +10444,7 @@ This is the ideal option for newcomers to the job.</value>
     <value>Replaces Storm's Path with Storm's Eye when Surging Tempest buff needs refreshing.</value>
   </data>
   <data name="WAR_EyePath_Name" xml:space="preserve">
-    <value>Storm's Eye Feature</value>
+    <value>Storm's Path to Eye Feature</value>
   </data>
   <data name="WAR_FC_Features_Desc" xml:space="preserve">
     <value>Collection of Fell Cleave related features.
@@ -11400,5 +11400,26 @@ This is the ideal option for newcomers to the job.</value>
       <value>Will restrict damaging Phantom Abilities to when you or your party have damage buffs (including minor ones on yourself, like Paladin's Fight or Flight).
 
 NOT RECOMMENDED!</value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Name" xml:space="preserve">
+    <value>Allow using Excavator after Wildfire</value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowExcavatorPostWildfire_Desc" xml:space="preserve">
+    <value>When enabled, if Excavator, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Excavator after it. </value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Name" xml:space="preserve">
+    <value>Allow using Chainsaw after Wildfire</value>
+  </data>
+  <data name="MCH_ST_Adv_Tools_AllowClainsawPostWildfire_Desc" xml:space="preserve">
+    <value>When enabled, if Chainsaw, Wildfire and Hypercharge are ready, will use Wildfire+Hypercharge first, Chainsaw after it. </value>
+  </data>
+  <data name="MCH_ST_Adv_QueenInHypercharge_Name" xml:space="preserve">
+    <value>Queen use in Hypercharge</value>
+  </data>
+  <data name="MCH_ST_Adv_WildfireHyperchargeCutoffThreshold" xml:space="preserve">
+    <value>s, drift Wildfire over Tools if tools cooldowns are less than this value</value>
+  </data>
+  <data name="MCH_ST_Adv_QueenInHypercharge_Desc" xml:space="preserve">
+    <value>Allow Automaton Queen to be used while in Hypercharge</value>
   </data>
 </root>
