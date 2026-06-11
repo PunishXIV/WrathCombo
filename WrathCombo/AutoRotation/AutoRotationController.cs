@@ -3,7 +3,6 @@
 using Dalamud.Game.ClientState.Objects.Types;
 using ECommons;
 using ECommons.DalamudServices;
-using ECommons.DalamudServices.Legacy;
 using ECommons.ExcelServices;
 using ECommons.GameFunctions;
 using ECommons.GameHelpers;
@@ -1009,11 +1008,11 @@ internal unsafe class AutoRotationController
         {
             if (attributes.ReplaceSkill is null) return originalAct;
             var outAct = attributes.ReplaceSkill.ActionIDs.FirstOrDefault();
+            var customReplaceType = CustomActionHelper.GetTypeByAttribute(attributes.AutoAction!);
+            var customReplaced = CustomActionHelper.CustomActionEnabled(customReplaceType);
+            var customCombo = Service.ActionReplacer.CustomCombos.FirstOrDefault(x => x.Preset == preset);
             foreach (var act in attributes.ReplaceSkill.ActionIDs)
             {
-                var customReplaceType = CustomActionHelper.GetTypeByAttribute(attributes.AutoAction!);
-                var customReplaced = CustomActionHelper.CustomActionEnabled(customReplaceType);
-                var customCombo = Service.ActionReplacer.CustomCombos.FirstOrDefault(x => x.Preset == preset);
                 var actToCheck = customReplaced ? CustomActionHelper.GetActionId(customReplaceType) : act;
 
                 if (customCombo != null)
