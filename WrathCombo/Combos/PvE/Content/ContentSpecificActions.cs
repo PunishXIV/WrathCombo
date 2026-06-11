@@ -35,6 +35,9 @@ public static class ContentSpecificActions
         // Skip checking for Combat Actions if this is a Healing Combo
         if (healing) return false;
 
+        if (EncounterSafety.TryGetTEADollBlock(ref actionID))
+            return true;
+
         if (OccultCrescent.TryGetPhantomAction(ref actionID))
             return true;
 
