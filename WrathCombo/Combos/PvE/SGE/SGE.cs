@@ -61,17 +61,17 @@ internal partial class SGE : Healer
 
             uint dotAction = OriginalHook(Dosis);
             DosisList.TryGetValue(dotAction, out (ushort Debuff, uint Eukrasian) debuff);
-            IGameObject? target = SimpleTarget.DottableEnemy(dotAction, debuff.Debuff, 0, 3, 2);
+            IGameObject? target = SimpleTarget.DottableEnemy(debuff.Eukrasian, debuff.Debuff, 0, 3, 2);
 
-            if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(dotAction, target) && LevelChecked(Eukrasia))
+            if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(debuff.Eukrasian, target) && LevelChecked(Eukrasia))
                 return HasStatusEffect(Buffs.Eukrasia)
                     ? dotAction.Retarget(DosisActions.ToArray(), target)
                     : Eukrasia;
 
-            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia))
+            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia) && InCombat())
             {
                 // Phlegma
-                if (InCombat() && InActionRange(OriginalHook(Phlegma)) &&
+                if (InActionRange(OriginalHook(Phlegma)) &&
                     ActionReady(OriginalHook(Phlegma)))
                 {
                     //If not enabled or not high enough level, follow slider
@@ -87,7 +87,7 @@ internal partial class SGE : Healer
                 }
 
                 // Movement Options
-                if (InCombat() && IsMoving() && HasBattleTarget())
+                if (IsMoving())
                 {
                     //Toxikon
                     if (ActionReady(OriginalHook(Toxikon)) && HasAddersting())
@@ -96,9 +96,6 @@ internal partial class SGE : Healer
                     // Dyskrasia
                     if (ActionReady(Dyskrasia) && InActionRange(Dyskrasia))
                         return OriginalHook(Dyskrasia);
-                    //Eukrasia
-                    if (ActionReady(Eukrasia) && !HasStatusEffect(Buffs.Eukrasia))
-                        return Eukrasia;
                 }
             }
 
@@ -262,7 +259,7 @@ internal partial class SGE : Healer
                 uint dotAction = OriginalHook(Dosis);
                 ;
                 DosisList.TryGetValue(dotAction, out (ushort Debuff, uint Eukrasian) debuff);
-                IGameObject? target = SimpleTarget.DottableEnemy(dotAction, debuff.Debuff, ComputeHpThreshold, SGE_ST_DPS_EukrasianDosisUptime_Threshold, 2);
+                IGameObject? target = SimpleTarget.DottableEnemy(debuff.Eukrasian, debuff.Debuff, ComputeHpThreshold, SGE_ST_DPS_EukrasianDosisUptime_Threshold, 2);
 
                 //Single Target Dotting, needed because dottableenemy will not maintain single dot on main target of more than one target exists. 
                 if (NeedsDoT())
@@ -271,17 +268,17 @@ internal partial class SGE : Healer
                         : Eukrasia;
 
                 //2 target Dotting System to maintain dots on 2 enemies. Works with the same sliders and one target
-                if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(dotAction, target) && SGE_ST_DPS_EDosis_TwoTarget && LevelChecked(Eukrasia))
+                if (target is not null && CanApplyStatus(target, debuff.Debuff) && !JustUsedOn(debuff.Eukrasian, target) && SGE_ST_DPS_EDosis_TwoTarget && LevelChecked(Eukrasia))
                     return HasStatusEffect(Buffs.Eukrasia)
                         ? dotAction.Retarget(dosisActions, target)
                         : Eukrasia;
             }
 
-            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia))
+            if (HasBattleTarget() && !HasStatusEffect(Buffs.Eukrasia) && InCombat())
             {
                 // Phlegma
                 if (IsEnabled(Preset.SGE_ST_DPS_Phlegma) &&
-                    InCombat() && InActionRange(OriginalHook(Phlegma)) &&
+                    InActionRange(OriginalHook(Phlegma)) &&
                     ActionReady(OriginalHook(Phlegma)))
                 {
                     //If not enabled or not high enough level, follow slider
@@ -299,7 +296,7 @@ internal partial class SGE : Healer
 
                 // Movement Options
                 if (IsEnabled(Preset.SGE_ST_DPS_Movement) &&
-                    InCombat() && IsMoving())
+                    IsMoving())
                 {
                     foreach(int priority in SGE_ST_DPS_Movement_Priority.OrderBy(x => x))
                     {
