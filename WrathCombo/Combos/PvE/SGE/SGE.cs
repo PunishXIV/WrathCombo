@@ -4,7 +4,9 @@ using ECommons.GameFunctions;
 using System.Linq;
 using WrathCombo.Core;
 using WrathCombo.CustomComboNS;
+using WrathCombo.Data;
 using WrathCombo.Extensions;
+using WrathCombo.Services;
 using static WrathCombo.Combos.PvE.SGE.Config;
 using EZ = ECommons.Throttlers.EzThrottler;
 using TS = System.TimeSpan;
@@ -143,11 +145,11 @@ internal partial class SGE : Healer
             }
 
             var hasDotTarget = EnemiesInRange(EukrasianDyskrasia).Count(x => (GetPossessedStatusRemainingTime(Debuffs.EukrasianDyskrasia, x) is <= 4 or float.NaN &&
-                                                                           GetPossessedStatusRemainingTime(DosisList[OriginalHook(Dosis)].Debuff,x) is <= 4 or float.NaN) &&
+                                                                           GetPossessedStatusRemainingTime(DosisList[OriginalHook(Dosis)].Debuff, x) is <= 4 or float.NaN) &&
                                                                            GetTargetHPPercent(x) > 25) >= 4;
 
             //Eukrasia for DoT
-            if (hasDotTarget && 
+            if (hasDotTarget &&
                 IsOffCooldown(Eukrasia) &&
                 !JustUsed(EukrasianDyskrasia) && //AoE DoT can be slow to take affect, doesn't apply to target first before others
                 TraitLevelChecked(Traits.OffensiveMagicMasteryII))
@@ -298,7 +300,7 @@ internal partial class SGE : Healer
                 if (IsEnabled(Preset.SGE_ST_DPS_Movement) &&
                     IsMoving())
                 {
-                    foreach(int priority in SGE_ST_DPS_Movement_Priority.OrderBy(x => x))
+                    foreach (int priority in SGE_ST_DPS_Movement_Priority.OrderBy(x => x))
                     {
                         int index = SGE_ST_DPS_Movement_Priority.IndexOf(priority);
                         if (CheckMovementConfigMeetsRequirements(index, out uint action))
@@ -502,41 +504,45 @@ internal partial class SGE : Healer
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
 
-            if (ActionReady(Rhizomata) && !HasAddersgall() &&
-                CanWeave())
-                return Rhizomata;
+            if (HasStatusEffect(Buffs.Eukrasia) || GetPartyAvgHPPercent() <= 50)
+                return OriginalHook(Prognosis);
 
-            if (ActionReady(OriginalHook(Physis)))
-                return OriginalHook(Physis);
+            if (ActionWatching.WeaveActions.Count < Service.Configuration.MaximumWeavesPerWindow)
+            {
+                if (ActionReady(Rhizomata) && !HasAddersgall() &&
+                    CanWeave())
+                    return Rhizomata;
 
-            if (ActionReady(Kerachole) &&
-                TraitLevelChecked(Traits.EnhancedKerachole) &&
-                HasAddersgall())
-                return Kerachole;
+                if (ActionReady(OriginalHook(Physis)))
+                    return OriginalHook(Physis);
 
-            if (ActionReady(Holos))
-                return Holos;
+                if (ActionReady(Kerachole) &&
+                    TraitLevelChecked(Traits.EnhancedKerachole) &&
+                    HasAddersgall())
+                    return Kerachole;
 
-            if (ActionReady(Ixochole) && HasAddersgall())
-                return Ixochole;
+                if (ActionReady(Holos))
+                    return Holos;
 
-            if (ActionReady(Philosophia) && !HasStatusEffect(Buffs.Panhaima))
-                return Philosophia;
+                if (ActionReady(Ixochole) && HasAddersgall())
+                    return Ixochole;
 
-            if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia))
-                return Panhaima;
+                if (ActionReady(Philosophia) && !HasStatusEffect(Buffs.Panhaima))
+                    return Philosophia;
 
-            if (ActionReady(Zoe) && (ActionReady(Pneuma) || !LevelChecked(Pneuma)))
-                return Zoe;
+                if (ActionReady(Panhaima) && !HasStatusEffect(Buffs.Eudaimonia))
+                    return Panhaima;
 
-            if (ActionReady(Pepsis) &&
-                HasStatusEffect(Buffs.EukrasianPrognosis))
-                return Pepsis;
+                if (ActionReady(Zoe) && (ActionReady(Pneuma) || !LevelChecked(Pneuma)))
+                    return Zoe;
 
-            if (ActionReady(Eukrasia) && GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 && GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50)
-                return HasStatusEffect(Buffs.Eukrasia)
-                    ? EukrasianPrognosis
-                    : Eukrasia;
+                if (ActionReady(Pepsis) &&
+                    HasStatusEffect(Buffs.EukrasianPrognosis))
+                    return Pepsis;
+            }
+
+            if (ActionReady(Eukrasia) && GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 && GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50 && !HasStatusEffect(Buffs.Eukrasia) && GetPartyAvgHPPercent() > 50)
+                return Eukrasia;
 
             return actionID;
         }
@@ -602,7 +608,7 @@ internal partial class SGE : Healer
                 Role.CanLucidDream(SGE_ST_Heal_LucidOption))
                 return Role.LucidDreaming;
 
-            for(int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
+            for (int i = 0; i < SGE_ST_Heals_Priority.Count; i++)
             {
                 int index = SGE_ST_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigST(index, healTarget, out uint spell, out bool enabled);
@@ -656,7 +662,7 @@ internal partial class SGE : Healer
                 return Role.LucidDreaming;
 
             float averagePartyHP = GetPartyAvgHPPercent();
-            for(int i = 0; i < SGE_AoE_Heals_Priority.Count; i++)
+            for (int i = 0; i < SGE_AoE_Heals_Priority.Count; i++)
             {
                 int index = SGE_AoE_Heals_Priority.IndexOf(i + 1);
                 int config = GetMatchingConfigAoE(index, out uint spell, out bool enabled);
