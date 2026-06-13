@@ -29,12 +29,14 @@ using WrathCombo.CustomComboNS;
 using WrathCombo.CustomComboNS.Functions;
 using WrathCombo.Data;
 using WrathCombo.Data.Conflicts;
+using WrathCombo.Extensions;
 using WrathCombo.Resources.Localization.UI.MainWindow;
 using WrathCombo.Services;
 using WrathCombo.Services.ActionRequestIPC;
 using WrathCombo.Services.IPC;
 using WrathCombo.Services.IPC_Subscriber;
 using WrathCombo.Window;
+using WrathCombo.Window.Functions;
 using WrathCombo.Window.Tabs;
 using GenericHelpers = ECommons.GenericHelpers;
 
@@ -233,6 +235,19 @@ public sealed partial class WrathCombo : IDalamudPlugin
         new TextPayload("Disable this icon in /xlsettings -> Server Info Bar"));
 
         OpenerDtr ??= Svc.DtrBar.Get("Wrath Combo Opener");
+
+        OpenerDtr.OnClick += (_) =>
+        {
+            var preset = WrathOpener.CurrentOpener?.Preset;
+            if (preset is not { } pre)
+                return;
+
+            PresetStorage.TogglePreset(pre);
+        };
+
+        OpenerDtr.Tooltip = new SeString(
+        new TextPayload("Click to toggle Opener Preset.\n"),
+        new TextPayload("Disable this icon in /xlsettings -> Server Info Bar"));
 
         Svc.ClientState.Login += PrintLoginMessage;
         if (Svc.ClientState.IsLoggedIn) ResetFeatures();

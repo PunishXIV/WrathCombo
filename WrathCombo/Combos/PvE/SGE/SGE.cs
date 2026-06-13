@@ -504,7 +504,7 @@ internal partial class SGE : Healer
             if (Role.CanLucidDream(6500))
                 return Role.LucidDreaming;
 
-            if (HasStatusEffect(Buffs.Eukrasia) || GetPartyAvgHPPercent() <= 50)
+            if (HasStatusEffect(Buffs.Eukrasia))
                 return OriginalHook(Prognosis);
 
             if (ActionWatching.WeaveActions.Count < Service.Configuration.MaximumWeavesPerWindow)
@@ -541,7 +541,7 @@ internal partial class SGE : Healer
                     return Pepsis;
             }
 
-            if (ActionReady(Eukrasia) && GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 && GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50 && !HasStatusEffect(Buffs.Eukrasia) && GetPartyAvgHPPercent() > 50)
+            if (ActionReady(Eukrasia) && GetPartyBuffPercent(Buffs.EukrasianPrognosis) <= 50 && GetPartyBuffPercent(SCH.Buffs.Galvanize) <= 50 && !HasStatusEffect(Buffs.Eukrasia))
                 return Eukrasia;
 
             return actionID;
