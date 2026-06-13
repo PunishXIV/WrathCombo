@@ -58,29 +58,36 @@ internal partial class MCH
     {
         switch (onAoE)
         {
-            case false when
-                (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                (!IsComboExpiring(6) || ShouldSkipHyperchargeHold()) &&
-                !IsOverheated &&
-                LevelChecked(Heatblast) &&
-                IsDrillCD(CustomCooldownForHyperHold) && IsAirAnchorCD(CustomCooldownForHyperHold) &&
-                (IsChainSawCD(CustomCooldownForHyperHold) || ShouldSkipHyperchargeHold()) &&
-                (!HasStatusEffect(Buffs.ExcavatorReady) || ShouldSkipExcavatorHold()) &&
-                !HasStatusEffect(Buffs.FullMetalMachinist) &&
-                (ActionReady(Wildfire) ||
-                 JustUsed(FullMetalField, GCD / 2) ||
-                 (MCH_ST_WildfireBossOption == 1 && !TargetIsBoss()) ||
-                 GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
-                 (Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10) ||
-                 !LevelChecked(Wildfire)):
+            case true when GetTargetHPPercent() <= HyperchargeHPThresholdAoE:
 
-            case true when
-                (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                !IsOverheated && LevelChecked(Heatblast):
-                return true;
+            case false when GetTargetHPPercent() <= HyperchargeHPThresholdST:
+                return false;
+
+            default:
+                switch (onAoE)
+                {
+                    case false when
+                        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
+                        (!IsComboExpiring(6) || ShouldSkipHyperchargeHold()) && !IsOverheated &&
+                        IsDrillCD(CustomCooldownForHyperHold) && IsAirAnchorCD(CustomCooldownForHyperHold) &&
+                        (IsChainSawCD(CustomCooldownForHyperHold) || ShouldSkipHyperchargeHold()) &&
+                        (!HasStatusEffect(Buffs.ExcavatorReady) || ShouldSkipExcavatorHold()) &&
+                        !HasStatusEffect(Buffs.FullMetalMachinist) &&
+                        (ActionReady(Wildfire) ||
+                         JustUsed(FullMetalField, GCD / 2) ||
+                         (MCH_ST_WildfireBossOption == 1 && !TargetIsBoss()) ||
+                         GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
+                         (Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10) ||
+                         !LevelChecked(Wildfire)):
+
+                    case true when
+                        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
+                        !IsOverheated:
+                        return true;
+                }
+
+                return false;
         }
-
-        return false;
     }
 
     public static bool IsWildfireAboutToBeUsed() =>
@@ -122,10 +129,6 @@ internal partial class MCH
          GetCooldownRemainingTime(Wildfire) > 90 ||
          GetCooldownRemainingTime(Wildfire) <= GCD ||
          GetStatusEffectRemainingTime(Buffs.FullMetalMachinist) <= 6);
-
-    private static int HPThresholdQueen =>
-        MCH_ST_QueenBossOption == 1 ||
-        !InBossEncounter() ? MCH_ST_QueenHPOption : 0;
 
     private static float CustomCooldownForHyperHold =>
         IsWildfireAboutToBeUsed() ? MCH_ST_WildfireHyperchargeCutoffThreshold : 9f;
@@ -192,16 +195,35 @@ internal partial class MCH
         if (ActionReady(OriginalHook(AirAnchor)))
             numberOfReadyTools++;
 
+        if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot &&
+            LevelChecked(CleanShot))
+            numberOfReadyTools++;
+
         return numberOfReadyTools;
     }
 
-    private static bool CanUseReassembleAoE() =>
+    private static bool HasAoEReassembleTarget() =>
         LevelChecked(Drill) && GetCooldownRemainingTime(Drill) < GCD ||
         LevelChecked(AirAnchor) && GetCooldownRemainingTime(AirAnchor) < GCD ||
         LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) < GCD ||
         LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) ||
         LevelChecked(Scattergun) && ActionReady(Scattergun) ||
         ActionReady(OriginalHook(SpreadShot));
+
+    private static bool CanReassembleAoE()
+    {
+        uint remainingCharges = GetRemainingCharges(Reassemble);
+
+        if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) ||
+            !HasBattleTarget() || GetTargetHPPercent() <= AoEReassembleHPThreshold ||
+            !InReassembleRange() || JustUsed(Reassemble, 2f))
+            return false;
+
+        if (remainingCharges == 0 || remainingCharges <= AoEReassembleChargePool)
+            return false;
+
+        return HasAoEReassembleTarget();
+    }
 
     private static bool InReassembleRange() =>
         LevelChecked(Drill) && InActionRange(Drill) ||
@@ -210,26 +232,27 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
-    private static bool CanReassemble()
+    private static bool CanReassembleST()
     {
         UpdateReassembleChargeTracking();
 
         uint remainingCharges = GetRemainingCharges(Reassemble);
 
-        if (HasStatusEffect(Buffs.Reassembled) || IsWildfireActive || !HasBattleTarget() ||
+        if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) || IsWildfireActive || !HasBattleTarget() ||
+            GetTargetHPPercent() <= ReassembleHPThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
 
-        if (remainingCharges == 0 || !ShouldReassemble())
+        if (remainingCharges == 0 || remainingCharges <= ReassembleChargePool || !ShouldReassemble())
             return false;
 
-        if (MCH_ST_Adv_ReassembleChoice == 0)
+        if (!IsEnabled(Preset.MCH_ST_SimpleMode) && MCH_ST_Adv_ReassembleChoice == 0)
         {
             int numberOfReadyTools = ReadyTools();
             return numberOfReadyTools >= remainingCharges;
         }
 
-        if (MCH_ST_Adv_ReassembleChoice == 1)
+        if (IsEnabled(Preset.MCH_ST_SimpleMode) || MCH_ST_Adv_ReassembleChoice == 1)
         {
             if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
                 return true;
@@ -241,6 +264,9 @@ internal partial class MCH
                 return true;
 
             if (ActionReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2))
+                return true;
+
+            if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot))
                 return true;
         }
 
@@ -273,6 +299,28 @@ internal partial class MCH
     #endregion
 
     #region HP Treshold
+
+    private static int ReassembleHPThreshold =>
+        IsEnabled(Preset.MCH_ST_SimpleMode) ? 25 : HPThresholdReassemble;
+
+    private static int ReassembleChargePool =>
+        IsEnabled(Preset.MCH_ST_SimpleMode) ? 0 : MCH_ST_ReassemblePool;
+
+    private static int AoEReassembleHPThreshold =>
+        IsEnabled(Preset.MCH_AoE_SimpleMode) ? 25 : MCH_AoE_ReassembleHPThreshold;
+
+    private static int AoEReassembleChargePool =>
+        IsEnabled(Preset.MCH_AoE_SimpleMode) ? 0 : MCH_AoE_ReassemblePool;
+
+    private static int HyperchargeHPThresholdST =>
+        IsEnabled(Preset.MCH_ST_SimpleMode) ? 25 : HPThresholdHypercharge;
+
+    private static int HyperchargeHPThresholdAoE =>
+        IsEnabled(Preset.MCH_AoE_SimpleMode) ? 25 : MCH_AoE_HyperchargeHPThreshold;
+
+    private static int HPThresholdQueen =>
+        MCH_ST_QueenBossOption == 1 ||
+        !InBossEncounter() ? MCH_ST_QueenHPOption : 0;
 
     private static int HPThresholdHypercharge =>
         MCH_ST_HyperchargeBossOption == 1 ||
