@@ -365,4 +365,10 @@ Applies to {0}, {1}, {2}, {3}, {4}, and {5} {6} {7}</value>
   <data name="HelpText_HandleTankbusters" xml:space="preserve">
     <value>Will try to use actions before detected tankbusters to mitigate damage on targeted member. Max 1 action (excluding {0} for setup)</value>
   </data>
+  <data name="Include_Shields" xml:space="preserve">
+    <value>Include Shields</value>
+  </data>
+  <data name="Include_Shields_Helptext" xml:space="preserve">
+    <value>Includes shield% in all HP checks.</value>
+  </data>
 </root>

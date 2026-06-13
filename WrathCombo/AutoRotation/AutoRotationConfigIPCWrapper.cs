@@ -319,5 +319,7 @@ public class HealerSettingsIPCWrapper(HealerSettings settings)
     public bool HandleRaidwides => settings.HandleRaidwides;
 
     public bool HandleTankbusters => settings.HandleTankbusters;
+
+    public bool IncludeShields => settings.IncludeShields;
     #endregion
 }

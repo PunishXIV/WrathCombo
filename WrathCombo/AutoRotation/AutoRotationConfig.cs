@@ -41,6 +41,7 @@ public class HealerSettings
     public int AoETargetHPP = 80;
     public int SingleTargetRegenHPP = 60;
     public int SingleTargetExcogHPP = 50;
+    public bool IncludeShields = false;
     public int? AoEHealTargetCount = 2;
     public int HealDelay = 1;
     public bool ManageKardia = false;
