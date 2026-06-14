@@ -363,6 +363,14 @@ internal abstract partial class CustomComboFunctions
                     return true; //Unfooled means you can attack the Lyre
                 return false;
 
+            case 887: // The Epic of Alexander (Ultimate)
+                // Jagd Doll = NameId 3759
+                // Technically not invincible, but killing one wipes the raid;
+                // ignore them once below the 25% HP feed threshold
+                if (tar.GetNameId() is 3759)
+                    return GetTargetHPPercent(tar) < 25;
+                return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
+
             case 917: //Puppet's Bunker, Flight Mechs
                 // 724P Alpha = 11792 (A)
                 // 767P Beta  = 11793 (B)
