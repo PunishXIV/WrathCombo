@@ -16,10 +16,8 @@ namespace WrathCombo.Combos.PvE.Content;
 /// </summary>
 public static class EncounterSafety
 {
-    /// <summary>Jagd Doll's BNpcName ID.</summary>
-    private const uint JagdDoll = 3759;
-
-    private static IGameObject? Target => SimpleTarget.HardTarget;
+    /// <summary>Jagd Doll's Base ID.</summary>
+    private const uint JagdDoll = 11338;
 
     /// <summary>
     ///     Blocks combat actions against The Epic of Alexander (Ultimate)'s
@@ -35,8 +33,8 @@ public static class EncounterSafety
         if (ContentInfo.TerritoryID != 887) // The Epic of Alexander (Ultimate)
             return false;
 
-        return Target is not null &&
-               Target.GetNameId() is JagdDoll &&
-               GetTargetHPPercent(Target) < 25;
+        return CurrentTarget is not null &&
+               CurrentTarget.BaseId is JagdDoll &&
+               GetTargetHPPercent() < 25;
     }
 }

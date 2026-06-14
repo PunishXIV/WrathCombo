@@ -367,7 +367,7 @@ internal abstract partial class CustomComboFunctions
                 // Jagd Doll = NameId 3759
                 // Technically not invincible, but killing one wipes the raid;
                 // ignore them once below the 25% HP feed threshold
-                if (tar.GetNameId() is 3759)
+                if (tar.BaseId is 11338)
                     return GetTargetHPPercent(tar) < 25;
                 return StatusCache.CompareLists(StatusCache.InvincibleStatuses, targetStatuses);
 
