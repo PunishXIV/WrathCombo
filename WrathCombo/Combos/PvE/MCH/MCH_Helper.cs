@@ -415,17 +415,17 @@ internal partial class MCH
             return true;
         }
 
-        if (ActionReady(Drill))
-        {
-            actionID = Drill;
-            return true;
-        }
-
-        if (LevelChecked(BioBlaster) && ActionReady(BioBlaster) &&
+        if (ActionReady(BioBlaster) &&
             !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
             CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
         {
             actionID = BioBlaster;
+            return true;
+        }
+
+        if (ActionReady(Drill))
+        {
+            actionID = Drill;
             return true;
         }
 
