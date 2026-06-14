@@ -82,7 +82,8 @@ internal partial class MCH
 
                     case true when
                         (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                        (IsDrillCD() || IsBioBlasterCD()) && IsAirAnchorCD() && IsChainSawCD() && !IsOverheated:
+                        (IsDrillCD() || IsBioBlasterCD()) && IsAirAnchorCD() &&
+                        IsChainSawCD() && !HasStatusEffect(Buffs.ExcavatorReady) && !IsOverheated:
                         return true;
                 }
 
