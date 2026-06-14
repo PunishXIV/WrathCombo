@@ -79,7 +79,7 @@ internal static class MNKPvP
                 if (HasStatusEffect(Buffs.FireResonance) && ComboAction is PouncingCoeurl)
                     return actionID;
 
-                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && HasBattleTarget() && InActionRange(DragonKick) &&
+                if (IsEnabled(Preset.MNKPvP_Burst_RisingPhoenix) && NumberOfEnemiesInRange(RisingPhoenix) >= 1 &&
                     (!HasStatusEffect(Buffs.FireResonance) && GetRemainingCharges(RisingPhoenix) > 1 || // capped on charges
                      ComboAction is PouncingCoeurl && GetRemainingCharges(RisingPhoenix) > 0)) // use last charge to buff phantom rush
                     return OriginalHook(RisingPhoenix);
