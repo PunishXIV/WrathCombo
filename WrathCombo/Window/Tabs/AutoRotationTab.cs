@@ -81,6 +81,12 @@ internal class AutoRotationTab : ConfigWindow
         if (cfg.QueueWindow < 0)
             cfg.QueueWindow = 0;
 
+        changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+    AutoRotationUI.Checkbox_UnTargetAndDisableForPenalty, ref cfg.DPSSettings.UnTargetAndDisableForPenalty,
+    "UnTargetAndDisableForPenalty");
+
+        ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_UnTargetAndDisableForPenalty);
+
         ImGuiEx.TextUnderlined("Automatic Activation Settings");
 
         changed |= ImGui.Checkbox(AutoRotationUI.Checkbox_EnableInstancedEnter, ref cfg.EnableInInstance);
@@ -146,12 +152,6 @@ internal class AutoRotationTab : ConfigWindow
 
             if (cfg.DPSSettings.OnlyAttackInCombat && changed)
                 cfg.DPSSettings.PreferNonCombat = false;
-
-            changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
-                AutoRotationUI.Checkbox_UnTargetAndDisableForPenalty, ref cfg.DPSSettings.UnTargetAndDisableForPenalty,
-                "UnTargetAndDisableForPenalty");
-
-            ImGuiComponents.HelpMarker(AutoRotationUI.HelpText_UnTargetAndDisableForPenalty);
 
             changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(AutoRotationUI.Checkbox_DPSAlwaysHardTarget, ref cfg.DPSSettings.DPSAlwaysHardTarget, "DPSAlwaysHardTarget");
 
