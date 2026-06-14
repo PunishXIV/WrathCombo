@@ -379,13 +379,18 @@ internal partial class VPR
 
     internal static WrathOpener Opener()
     {
-        if (StandardOpener.LevelChecked)
+        if (StandardOpener.LevelChecked && VPR_OpenerSelection == 0)
             return StandardOpener;
+
+        if (EarlyBuffOpener.LevelChecked && VPR_OpenerSelection == 1)
+            return EarlyBuffOpener;
+
 
         return WrathOpener.Dummy;
     }
 
     internal static VPRStandardOpener StandardOpener = new();
+    internal static VPREarlyBuffOpener EarlyBuffOpener = new();
 
     internal class VPRStandardOpener : WrathOpener
     {
@@ -447,6 +452,73 @@ internal partial class VPR
             ([21, 22, 23, 24, 25, 26], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil)),
             ([27], () => ComboAction is not SwiftskinsSting),
             ([28], () => !DeathRattleWeave && !JustUsed(HindstingStrike))
+        ];
+
+        internal override UserData ContentCheckConfig => VPR_Balance_Content;
+        public override Preset Preset => Preset.VPR_ST_Opener;
+        public override bool HasCooldowns() =>
+            IsOriginal(ReavingFangs) &&
+            GetRemainingCharges(Vicewinder) is 2 &&
+            IsOffCooldown(SerpentsIre);
+    }
+
+    internal class VPREarlyBuffOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 109;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            Vicewinder,
+            SerpentsIre,
+            HuntersCoil,
+            TwinfangBite,
+            TwinbloodBite,
+            SwiftskinsCoil,
+            TwinbloodBite,
+            TwinfangBite,
+            Reawaken,
+            FirstGeneration,
+            FirstLegacy,
+            SecondGeneration,
+            SecondLegacy,
+            ThirdGeneration,
+            ThirdLegacy,
+            FourthGeneration,
+            FourthLegacy,
+            Ouroboros,
+            UncoiledFury, //19
+            UncoiledTwinfang, //20
+            UncoiledTwinblood, //21
+            Vicewinder,
+            HuntersCoil, //23
+            TwinfangBite, //24
+            TwinbloodBite, //25
+            SwiftskinsCoil, //26
+            TwinbloodBite, //27
+            TwinfangBite, //28
+            UncoiledFury, //29
+            UncoiledTwinfang, //30
+            UncoiledTwinblood, //31
+            UncoiledFury, //32
+            UncoiledTwinfang, //33
+            UncoiledTwinblood //34
+        ];
+
+        public override List<(int[], uint, Func<bool>)> SubstitutionSteps { get; set; } =
+        [
+            ([23], SwiftskinsCoil, OnTargetsRear),
+            ([24], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom)),
+            ([25], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([26], HuntersCoil, () => UsedSwiftskinsCoil),
+            ([27], TwinfangBite, () => HasStatusEffect(Buffs.HuntersVenom)),
+            ([28], TwinbloodBite, () => HasStatusEffect(Buffs.SwiftskinsVenom))
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([19, 20, 21, 29, 30, 31, 32, 33, 34], () => VPR_Opener_ExcludeUF || !HasCharges(RattlingCoil))
         ];
 
         internal override UserData ContentCheckConfig => VPR_Balance_Content;
