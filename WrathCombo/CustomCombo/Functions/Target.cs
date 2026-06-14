@@ -807,7 +807,7 @@ internal abstract partial class CustomComboFunctions
                    o.IsFriendly() &&
                    IsInLineOfSight(o);
 
-        return o is { ObjectKind: ObjectKind.BattleNpc, IsTargetable: true } &&
+        return o is { IsTargetable: true } &&
                o.IsWithinRange(60f) &&
                o.IsHostile() &&
                (!checkInvincible ||
