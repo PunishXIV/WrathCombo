@@ -245,18 +245,19 @@ internal partial class BLM : Caster
                     return LeyLines;
             }
 
-            if ((EndOfFirePhase || EndOfIcePhaseAoE) &&
+            if ((EndOfFirePhase || EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard) &&
                 HasPolyglotStacks() && ActionReady(Foul))
                 return Foul;
 
             if (LevelChecked(OriginalHook(Thunder2)) && HasStatusEffect(Buffs.Thunderhead) &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
+                (!IcePhase || JustUsedFreezeOrBlizzard || EndOfIcePhaseAoE || !ActionReady(Freeze)) &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
                  ThunderDebuffST?.RemainingTime <= 3))
                 return OriginalHook(Thunder2);
 
-            if (ActiveParadox && EndOfIcePhaseAoE)
+            if (ActiveParadox && (EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard))
                 return OriginalHook(Blizzard);
 
             if (FirePhase)
@@ -321,8 +322,8 @@ internal partial class BLM : Caster
 
             if (IsEnabled(Preset.BLM_ST_Manaward) && !LocalPlayer!.HasShield() &&
                 ((BLM_ST_ManawardTrigger == 0 && PlayerHealthPercentageHp() <= BLM_ST_ManawardHPThreshold && GroupDamageIncoming()) ||
-                ((BLM_ST_ManawardTrigger == 1 || (BLM_ST_ManawardTrigger == 0 && BLM_ST_ManawardSolo && !IsInParty())) && PlayerHealthPercentageHp() <= BLM_ST_ManawardHPThreshold) ||
-                (BLM_ST_ManawardTrigger == 2 && GroupDamageIncoming())))
+                 ((BLM_ST_ManawardTrigger == 1 || (BLM_ST_ManawardTrigger == 0 && BLM_ST_ManawardSolo && !IsInParty())) && PlayerHealthPercentageHp() <= BLM_ST_ManawardHPThreshold) ||
+                 (BLM_ST_ManawardTrigger == 2 && GroupDamageIncoming())))
                 return Manaward;
 
             if (CanWeave())
@@ -572,7 +573,7 @@ internal partial class BLM : Caster
             }
 
             if (IsEnabled(Preset.BLM_AoE_UsePolyglot) &&
-                (EndOfFirePhase || EndOfIcePhaseAoE) &&
+                (EndOfFirePhase || EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard) &&
                 HasPolyglotStacks() && ActionReady(Foul))
                 return Foul;
 
@@ -580,13 +581,14 @@ internal partial class BLM : Caster
                 ActionReady(OriginalHook(Thunder2)) && HasStatusEffect(Buffs.Thunderhead) &&
                 CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
                 GetTargetHPPercent() > BLM_AoE_ThunderHP &&
+                (!IcePhase || JustUsedFreezeOrBlizzard || EndOfIcePhaseAoE || !ActionReady(Freeze)) &&
                 (ThunderDebuffAoE is null && ThunderDebuffST is null ||
                  ThunderDebuffAoE?.RemainingTime <= 3 ||
                  ThunderDebuffST?.RemainingTime <= 3))
                 return OriginalHook(Thunder2);
 
             if (IsEnabled(Preset.BLM_AoE_ParadoxFiller) &&
-                ActiveParadox && EndOfIcePhaseAoE)
+                ActiveParadox && (EndOfIcePhaseAoE || IcePhase && JustUsedFreezeOrBlizzard))
                 return OriginalHook(Blizzard);
 
             if (FirePhase)

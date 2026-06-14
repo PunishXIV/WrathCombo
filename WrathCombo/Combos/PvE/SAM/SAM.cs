@@ -182,15 +182,16 @@ internal partial class SAM : Melee
             if (ComboTimer > 0 && ComboAction is Fuko or Fuga ||
                 HasStatusEffect(Buffs.MeikyoShisui))
             {
-                if (LevelChecked(Mangetsu) &&
-                    (!HasGetsu ||
-                     !HasStatusEffect(Buffs.Fugetsu)))
-                    return Mangetsu;
-
                 if (LevelChecked(Oka) &&
                     (!HasKa ||
                      !HasStatusEffect(Buffs.Fuka)))
                     return Oka;
+
+                if (LevelChecked(Mangetsu) &&
+                    (!HasGetsu ||
+                     !HasStatusEffect(Buffs.Fugetsu) ||
+                     !LevelChecked(Oka)))
+                    return Mangetsu;
             }
 
             return actionID;
@@ -445,17 +446,18 @@ internal partial class SAM : Melee
             if (ComboTimer > 0 && ComboAction is Fuko or Fuga ||
                 HasStatusEffect(Buffs.MeikyoShisui))
             {
-                if (LevelChecked(Mangetsu) &&
-                    (!HasGetsu ||
-                     IsNotEnabled(Preset.SAM_AoE_Oka) ||
-                     !HasStatusEffect(Buffs.Fugetsu)))
-                    return Mangetsu;
-
                 if (IsEnabled(Preset.SAM_AoE_Oka) &&
                     LevelChecked(Oka) &&
                     (!HasKa ||
                      !HasStatusEffect(Buffs.Fuka)))
                     return Oka;
+
+                if (LevelChecked(Mangetsu) &&
+                    (!HasGetsu ||
+                     !HasStatusEffect(Buffs.Fugetsu) ||
+                     !LevelChecked(Oka) ||
+                     IsNotEnabled(Preset.SAM_AoE_Oka)))
+                    return Mangetsu;
             }
 
             return actionID;
@@ -510,7 +512,8 @@ internal partial class SAM : Melee
 
                     if (SAM_Yukaze_Gekko &&
                         LevelChecked(Jinpu) &&
-                        ((OnTargetsRear() || OnTargetsFront()) && !HasGetsu && LevelChecked(Gekko) ||
+                        (!LevelChecked(Kasha) && LevelChecked(Gekko) ||
+                         (OnTargetsRear() || OnTargetsFront()) && !HasGetsu && LevelChecked(Gekko) ||
                          HasKa && !HasGetsu && LevelChecked(Gekko) ||
                          SAM_ST_YukikazeCombo_Prio == 1 && !HasStatusEffect(Buffs.Fugetsu) ||
                          SenCount is 3 && RefreshFugetsu))
@@ -635,19 +638,20 @@ internal partial class SAM : Melee
             if (ComboTimer > 0 && ComboAction is Fuko or Fuga ||
                 HasStatusEffect(Buffs.MeikyoShisui))
             {
-                if (LevelChecked(Mangetsu) &&
-                    (!HasGetsu ||
-                     !SAM_Mangetsu_Oka ||
-                     !HasStatusEffect(Buffs.Fugetsu) ||
-                     SenCount is 2 or 3 && RefreshFugetsu))
-                    return Mangetsu;
-
                 if (SAM_Mangetsu_Oka &&
                     LevelChecked(Oka) &&
                     (!HasKa ||
                      !HasStatusEffect(Buffs.Fuka) ||
                      SenCount is 2 or 3 && RefreshFuka))
                     return Oka;
+
+                if (LevelChecked(Mangetsu) &&
+                    (!HasGetsu ||
+                     !SAM_Mangetsu_Oka ||
+                     !HasStatusEffect(Buffs.Fugetsu) ||
+                     !LevelChecked(Oka) ||
+                     SenCount is 2 or 3 && RefreshFugetsu))
+                    return Mangetsu;
             }
 
             return OriginalHook(Fuko);
