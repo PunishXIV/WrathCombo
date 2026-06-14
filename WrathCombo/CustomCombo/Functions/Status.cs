@@ -423,7 +423,7 @@ internal abstract partial class CustomComboFunctions
                 return false;
 
             case 1248: // Jeuno 1 Ark Angels
-                // ArkAngel HM = 1804
+                // ArkAngel HM = 18049
                 // ArkAngel MR = 18051 (A)
                 // ArkAngel GK = 18053 (B)
                 // ArkAngel TT = 18052 (C)
@@ -434,6 +434,16 @@ internal abstract partial class CustomComboFunctions
                     if (HasStatusEffect(4192)) return targetID != 18051; // Alliance A Red Epic
                     if (HasStatusEffect(4194)) return targetID != 18053; // Alliance B Yellow Fated
                     if (HasStatusEffect(4196)) return targetID != 18052; // Alliance C Blue Vaunted
+                }
+                return false;
+
+            case 1363: // Dancing Mad (Ultimate)
+                // Chaos = 19508
+                // Exdeath = 19509
+                if (targetID is 19508 or 19509)
+                {
+                    if (HasStatusEffect(4192)) return targetID != 19508; // Epic Hero (α) — Chaos
+                    if (HasStatusEffect(4194)) return targetID != 19509; // Fated Hero (β) — Exdeath
                 }
                 return false;
 
