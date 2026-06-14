@@ -222,7 +222,7 @@ internal partial class MCH : PhysicalRanged
                 return HasBattleTarget() &&
                        (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
                         LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
-                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5)
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 6)
                     ? AutoCrossbow
                     : OriginalHook(Heatblast);
 
@@ -527,7 +527,7 @@ internal partial class MCH : PhysicalRanged
                 return HasBattleTarget() &&
                        (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
                         LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
-                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
+                        NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 6 ||
                         IsNotEnabled(Preset.MCH_AoE_Adv_GaussRicochet))
                     ? AutoCrossbow
                     : OriginalHook(Heatblast);
