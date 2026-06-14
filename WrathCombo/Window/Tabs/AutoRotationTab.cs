@@ -223,6 +223,11 @@ internal class AutoRotationTab : ConfigWindow
             changed |= P.UIHelper.ShowIPCControlledSliderIfNeeded(
                 AutoRotationUI.Slider_AoETargetHPP, ref cfg.HealerSettings.AoETargetHPP, "AoETargetHPP");
 
+            changed |= P.UIHelper.ShowIPCControlledCheckboxIfNeeded(
+                AutoRotationUI.Include_Shields, ref cfg.HealerSettings.IncludeShields, "IncludeShields");
+
+            ImGuiComponents.HelpMarker(AutoRotationUI.Include_Shields_Helptext);
+
             var input = ImGuiEx.InputInt(100f.Scale(), AutoRotationUI.Input_AoEHealTargetCount, ref cfg.HealerSettings.AoEHealTargetCount);
             if (input)
             {

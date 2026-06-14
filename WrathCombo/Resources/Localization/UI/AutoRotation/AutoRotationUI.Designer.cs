@@ -614,6 +614,24 @@ namespace WrathCombo.Resources.Localization.UI.AutoRotation {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Include Shields.
+        /// </summary>
+        internal static string Include_Shields {
+            get {
+                return ResourceManager.GetString("Include_Shields", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Includes shield% in all HP checks..
+        /// </summary>
+        internal static string Include_Shields_Helptext {
+            get {
+                return ResourceManager.GetString("Include_Shields_Helptext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This is where you can configure the parameters in which Auto-Rotation will operate.
         ///Features marked with an &apos;Auto-Mode&apos; checkbox are able to be used with Auto-Rotation..
         /// </summary>
