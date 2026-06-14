@@ -82,7 +82,7 @@ internal partial class MCH
 
                     case true when
                         (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                        !IsOverheated:
+                        (IsDrillCD() || IsBioBlasterCD()) && IsAirAnchorCD() && IsChainSawCD() && !IsOverheated:
                         return true;
                 }
 
@@ -350,6 +350,11 @@ internal partial class MCH
         !ActionReady(Drill) ||
         !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(Drill) >= time ||
         TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(Drill) < GetMaxCharges(Drill) && GetCooldownChargeRemainingTime(Drill) >= time;
+
+    private static bool IsBioBlasterCD(float time = 9f) =>
+        !ActionReady(BioBlaster) ||
+        !TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetCooldownRemainingTime(BioBlaster) >= time ||
+        TraitLevelChecked(Traits.EnhancedMultiWeapon) && GetRemainingCharges(BioBlaster) < GetMaxCharges(BioBlaster) && GetCooldownChargeRemainingTime(BioBlaster) >= time;
 
     private static bool IsAirAnchorCD(float time = 9f) =>
         !LevelChecked(OriginalHook(HotShot)) ||
