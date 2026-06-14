@@ -176,32 +176,18 @@ internal abstract partial class CustomComboFunctions
     /// </summary>
     public static unsafe bool PlayerHasActionPenalty()
     {
-        bool hasActionPenalty =
-            //Player.IsInDuty &&  <-?
-            Player.Status.Any(s =>
-                // Acceleration Bomb within Timeframe
-                (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
-                    GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+        bool hasActionPenalty = false;
 
-                // Pyretic
-                StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
-
-                // Others
-                StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
-
-            ) == true;
-
-        if (!hasActionPenalty)
+        // Quick Content Check First
+        switch (Content.TerritoryID)
         {
-            // The Clyteum
-            if (Content.TerritoryID is 1345)
-            {
+            case 1345: // The Clyteum
                 // The Eye of the Scorpion
                 // This finds the helper
                 var MotionScannerHelper = Svc.Objects.FirstOrDefault(x =>
-                  x.BaseId == 0x4C2D &&
-                  x.Address != 0 &&
-                  (int)(x.Struct()->RenderFlags) == 0 // There can be two of these objects, only one appears to be active.
+                    x.BaseId == 0x4C2D &&
+                    x.Address != 0 &&
+                    (int)(x.Struct()->RenderFlags) == 0 // There can be two of these objects, only one appears to be active.
                 );
                 if (MotionScannerHelper is IGameObject scanner)
                 {
@@ -223,23 +209,49 @@ internal abstract partial class CustomComboFunctions
                     // then negative as it moves away, with the status dropping off at around -8y,
                     // but added a buffer just in case.
 
-                    // Too far away
-                    if (signedDistance > 12f)
-                        hasActionPenalty = false;
-
-                    // 12y to -8y (about to be overtaken by the field to almost about to clear)
-                    else if (signedDistance > -8f)
-                        hasActionPenalty = true;
-
-                    // -8y to -12y, waiting for status to clear, should happen close to -8y but added a buffer just in case
-                    else if (signedDistance > -12f)
-                        hasActionPenalty = HasStatusEffect(5191, anyOwner: true);
-
-                    // -12y and beyond should be decently away from the player
-                    else
-                        hasActionPenalty = false;
+                    hasActionPenalty = signedDistance switch
+                    {
+                        // Too far away
+                        > 12f => false,
+                        // 12y to -8y (about to be overtaken by the field to almost about to clear)
+                        > -8f => true,
+                        // -8y to -12y, waiting for status to clear, should happen close to -8y but added a buffer just in case
+                        > -12f => HasStatusEffect(5191, anyOwner: true),
+                        _ => false,
+                    };
                 }
-            }
+                break;
+
+            case 1368: // Windurst
+                if (Svc.Objects.Any(x => x.BaseId == 0x4D92 || x.BaseId == 0x4D96)) // Shinryu Paradox / Hollow King
+                {
+                    // Find VFX
+                    var effects = VfxManager.TrackedEffects
+                        .FilterToTarget(Player.Object.GameObjectId)
+                        .Where(x =>
+                            x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_mv_7s_c0k2.avfx" ||  // Don't Move
+                            x.Path == "vfx/lockon/eff/z6r3_b4_lock_no_lk_7s_c0k2.avfx")    // Don't Look
+                        .ToList();
+
+                    if (effects.Count == 1) hasActionPenalty = MathHelper.InRange(effects[0].AgeSeconds, 4, 8);
+                }
+                break;
+
+            default:
+                hasActionPenalty =
+                    Player.Status.Any(s =>
+                        // Acceleration Bomb within Timeframe
+                        (StatusCache.PausingStatuses.AccelerationBombs.Contains(s.StatusId) &&
+                            GetStatusEffectRemainingTime(s) is > 0f and < 1.5f) ||
+
+                        // Pyretic
+                        StatusCache.PausingStatuses.Pyretics.Contains(s.StatusId) ||
+
+                        // Others
+                        StatusCache.PausingStatuses.Misc.Contains(s.StatusId)
+
+                    ) == true;
+                break;
         }
 
         if (hasActionPenalty)

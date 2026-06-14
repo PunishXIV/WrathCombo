@@ -250,7 +250,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
 #if DEBUG
         VfxManager.Logging = true;
         ConfigWindow.IsOpen = true;
-        VfxManager.Logging = true;
         Svc.Framework.RunOnTick(() =>
         {
             if (Service.Configuration.OpenToCurrentJob && Player.Available)

@@ -146,7 +146,6 @@ internal unsafe class AutoRotationController
                || IsOccupied()
                || Player.Mounted
                || !EzThrottler.Throttle("Autorot", cfg.Throttler)
-               || (cfg.DPSSettings.UnTargetAndDisableForPenalty && PlayerHasActionPenalty())
                || (ActionManager.Instance()->QueuedActionId > 0)
                || Paused;
     }
@@ -178,6 +177,10 @@ internal unsafe class AutoRotationController
 
         // Only run in combat if required
         if (cfg.InCombatOnly && NotInCombat && !CombatBypass)
+            return;
+
+        // Check for Pyretic / Reasons to stop
+        if (cfg.DPSSettings.UnTargetAndDisableForPenalty && PlayerHasActionPenalty())
             return;
 
         // Healer logic
