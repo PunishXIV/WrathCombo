@@ -472,30 +472,16 @@ internal partial class MNK
 
     private static bool CanMeditate(bool onAoE = false)
     {
-        switch (onAoE)
-        {
-            case false when
-                LevelChecked(SteeledMeditation) &&
-                (!InCombat() || NumberOfEnemiesInRange(Bootshine) < 1) &&
-                Chakra < 5 &&
-                IsOriginal(MasterfulBlitz) &&
-                !HasStatusEffect(Buffs.RiddleOfFire) &&
-                !HasStatusEffect(Buffs.WindsRumination) &&
-                !HasStatusEffect(Buffs.FiresRumination):
+        uint meditation = onAoE ? InspiritedMeditation : SteeledMeditation;
+        uint rangeCheck = onAoE ? ArmOfTheDestroyer : Bootshine;
 
-            case true when
-                LevelChecked(InspiritedMeditation) &&
-                (!InCombat() || NumberOfEnemiesInRange(ArmOfTheDestroyer) < 1) &&
-                Chakra < 5 &&
-                IsOriginal(MasterfulBlitz) &&
-                !HasStatusEffect(Buffs.RiddleOfFire) &&
-                !HasStatusEffect(Buffs.WindsRumination) &&
-                !HasStatusEffect(Buffs.FiresRumination):
-                return true;
-
-            default:
-                return false;
-        }
+        return LevelChecked(meditation) &&
+               (!InCombat() || NumberOfEnemiesInRange(rangeCheck) < 1) &&
+               Chakra < 5 &&
+               IsOriginal(MasterfulBlitz) &&
+               !HasStatusEffect(Buffs.RiddleOfFire) &&
+               !HasStatusEffect(Buffs.WindsRumination) &&
+               !HasStatusEffect(Buffs.FiresRumination);
     }
 
     private static bool CanUseChakra(bool onAoE = false)
@@ -503,23 +489,13 @@ internal partial class MNK
         if (CanBrotherhood() || CanRoF())
             return false;
 
-        switch (onAoE)
-        {
-            case false when
-                Chakra >= 5 &&
-                !JustUsed(Brotherhood) && !JustUsed(RiddleOfFire) &&
-                InActionRange(OriginalHook(SteeledMeditation)):
+        uint meditation = onAoE ? InspiritedMeditation : SteeledMeditation;
 
-            case true when
-                Chakra >= 5 &&
-                HasBattleTarget() && !JustUsed(Brotherhood) &&
-                !JustUsed(RiddleOfFire) &&
-                InActionRange(OriginalHook(InspiritedMeditation)):
-                return true;
-
-            default:
-                return false;
-        }
+        return Chakra >= 5 &&
+               (!onAoE || HasBattleTarget()) &&
+               !JustUsed(Brotherhood) &&
+               !JustUsed(RiddleOfFire) &&
+               InActionRange(OriginalHook(meditation));
     }
 
     #endregion
