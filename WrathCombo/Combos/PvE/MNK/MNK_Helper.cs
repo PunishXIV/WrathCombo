@@ -57,66 +57,68 @@ internal partial class MNK
 
     #region PB
 
-    private static bool CanPerfectBalance(bool onAoE = false)
+    private static bool JustUsedOpoGCD(float window) =>
+        JustUsed(OriginalHook(Bootshine), window) ||
+        JustUsed(DragonKick, window);
+
+    private static bool JustUsedAoEOpoGCD(float window) =>
+        JustUsed(ShadowOfTheDestroyer, window) ||
+        JustUsed(OriginalHook(ArmOfTheDestroyer), window) ||
+        !LevelChecked(ShadowOfTheDestroyer) && JustUsed(Rockbreaker, window);
+
+    private static bool IsRoFCDInPerfectBalanceWindow() =>
+        GetCooldownRemainingTime(RiddleOfFire) is >= 2 and <= 7;
+
+    private static bool CanPerfectBalanceST()
     {
-        bool targetCheck = onAoE || HasBattleTarget();
-        switch (onAoE)
-        {
-            case false when
-                ActionReady(PerfectBalance) && !HasStatusEffect(Buffs.PerfectBalance) &&
-                !HasStatusEffect(Buffs.FormlessFist) && IsOriginal(MasterfulBlitz) &&
-                HasBattleTarget() && !JustUsed(PerfectBalance):
-            {
-                // Odd window
-                if ((JustUsed(OriginalHook(Bootshine), GCD) || JustUsed(DragonKick, GCD)) &&
-                    !JustUsed(PerfectBalance, 20 + GCD * 5) && !HasStatusEffect(Buffs.Brotherhood) &&
-                    (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3 || HasStatusEffect(Buffs.RiddleOfFire)))
-                    return true;
+        if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
+            HasStatusEffect(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
+            !HasBattleTarget() || JustUsed(PerfectBalance) || !JustUsedOpoGCD(GCD))
+            return false;
 
-                // Even window first use
-                if ((JustUsed(OriginalHook(Bootshine), GCD * 3) || JustUsed(DragonKick, GCD * 3)) &&
-                    GetCooldownRemainingTime(Brotherhood) <= GCD * 3 && GetCooldownRemainingTime(RiddleOfFire) <= GCD * 3)
-                    return true;
+        // First PB - use after Opo GCD when RoF CD is 2-7s (odd window or even window first charge)
+        if (!JustUsed(PerfectBalance, 20 + GCD * 5) && IsRoFCDInPerfectBalanceWindow())
+            return true;
 
-                // Even window second use
-                if ((JustUsed(OriginalHook(Bootshine), GCD) || JustUsed(DragonKick, GCD)) &&
-                    HasStatusEffect(Buffs.Brotherhood) && HasStatusEffect(Buffs.RiddleOfFire) &&
-                    (!HasStatusEffect(Buffs.FiresRumination) || IsNotEnabled(Preset.MNK_STUseFiresReply)))
-                    return true;
+        // Second PB - even window only, during Brotherhood + Riddle of Fire
+        if (LevelChecked(Brotherhood) &&
+            HasStatusEffect(Buffs.Brotherhood) && HasStatusEffect(Buffs.RiddleOfFire) &&
+            (!HasStatusEffect(Buffs.FiresRumination) || IsNotEnabled(Preset.MNK_STUseFiresReply)))
+            return true;
 
-                // Low level
-                if ((JustUsed(OriginalHook(Bootshine), GCD * 3) || JustUsed(DragonKick, GCD * 3)) &&
-                    ((HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood)) ||
-                     !LevelChecked(RiddleOfFire)))
-                    return true;
-                break;
-            }
+        // Low level
+        if (!LevelChecked(RiddleOfFire) ||
+            HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood))
+            return JustUsedOpoGCD(GCD * 3);
 
-            case true when
-                ActionReady(PerfectBalance) && !HasStatusEffect(Buffs.PerfectBalance) && !JustUsed(PerfectBalance) &&
-                !HasStatusEffect(Buffs.FormlessFist) && targetCheck && IsOriginal(MasterfulBlitz) &&
-                GetTargetHPPercent() >= MNK_AoE_PerfectBalanceHPThreshold:
-            {
-                //Initial/Failsafe
-                if (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance))
-                    return true;
+        return false;
+    }
 
-                // Odd window
-                if (HasStatusEffect(Buffs.RiddleOfFire) && !HasStatusEffect(Buffs.Brotherhood))
-                    return true;
+    private static bool CanPerfectBalanceAoE()
+    {
+        if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
+            HasStatusEffect(Buffs.FormlessFist) || !IsOriginal(MasterfulBlitz) ||
+            !HasBattleTarget() || JustUsed(PerfectBalance) ||
+            GetTargetHPPercent() < MNK_AoE_PerfectBalanceHPThreshold || !JustUsedAoEOpoGCD(GCD))
+            return false;
 
-                // Even window
-                if ((GetCooldownRemainingTime(Brotherhood) <= GCD * 2 || HasStatusEffect(Buffs.Brotherhood)) &&
-                    (GetCooldownRemainingTime(RiddleOfFire) <= GCD * 2 || HasStatusEffect(Buffs.RiddleOfFire)))
-                    return true;
+        if (GetRemainingCharges(PerfectBalance) == GetMaxCharges(PerfectBalance))
+            return true;
 
-                // Low level
-                if ((HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood)) ||
-                    !LevelChecked(RiddleOfFire))
-                    return true;
-                break;
-            }
-        }
+        // First PB - use after Opo GCD when RoF CD is 2-7s
+        if (!JustUsed(PerfectBalance, 20 + GCD * 5) && IsRoFCDInPerfectBalanceWindow())
+            return true;
+
+        // Second PB - even window only, during Brotherhood + Riddle of Fire
+        if (LevelChecked(Brotherhood) &&
+            HasStatusEffect(Buffs.Brotherhood) && HasStatusEffect(Buffs.RiddleOfFire) &&
+            (!HasStatusEffect(Buffs.FiresRumination) || IsNotEnabled(Preset.MNK_AoEUseFiresReply)))
+            return true;
+
+        // Low level
+        if (!LevelChecked(RiddleOfFire) ||
+            HasStatusEffect(Buffs.RiddleOfFire) && !LevelChecked(Brotherhood))
+            return JustUsedAoEOpoGCD(GCD * 3);
 
         return false;
     }

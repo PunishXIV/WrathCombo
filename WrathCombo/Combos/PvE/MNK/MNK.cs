@@ -33,7 +33,7 @@ internal partial class MNK : Melee
                 if (CanRoF())
                     return RiddleOfFire;
 
-                if (CanPerfectBalance())
+                if (CanPerfectBalanceST())
                     return PerfectBalance;
 
                 if (CanRoW())
@@ -102,7 +102,7 @@ internal partial class MNK : Melee
                 if (CanRoF())
                     return RiddleOfFire;
 
-                if (CanPerfectBalance(true))
+                if (CanPerfectBalanceAoE())
                     return PerfectBalance;
 
                 if (CanRoW())
@@ -202,7 +202,7 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_STUsePerfectBalance) &&
-                    CanPerfectBalance())
+                    CanPerfectBalanceST())
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_STUseBuffs) &&
@@ -304,7 +304,7 @@ internal partial class MNK : Melee
                 }
 
                 if (IsEnabled(Preset.MNK_AoEUsePerfectBalance) &&
-                    CanPerfectBalance(true))
+                    CanPerfectBalanceAoE())
                     return PerfectBalance;
 
                 if (IsEnabled(Preset.MNK_AoEUseBuffs) &&
