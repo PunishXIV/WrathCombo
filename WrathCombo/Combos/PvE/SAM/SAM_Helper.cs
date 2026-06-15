@@ -17,7 +17,7 @@ internal partial class SAM
 
     private static uint DoBasicCombo(uint actionId, bool useTrueNorth = true, bool simpleMode = false)
     {
-        int tnCharges = IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_ManualTN : 0;
+        int trueNorthCharges = IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_ManualTN : 0;
 
         if (ComboTimer > 0)
         {
@@ -50,7 +50,7 @@ internal partial class SAM
             if (ComboAction is Jinpu && LevelChecked(Gekko))
                 return !OnTargetsRear() &&
                        Role.CanTrueNorth() &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        useTrueNorth
                     ? Role.TrueNorth
                     : Gekko;
@@ -58,7 +58,7 @@ internal partial class SAM
             if (ComboAction is Shifu && LevelChecked(Kasha))
                 return !OnTargetsFlank() &&
                        Role.CanTrueNorth() &&
-                       GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                       GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                        useTrueNorth
                     ? Role.TrueNorth
                     : Kasha;
@@ -70,14 +70,14 @@ internal partial class SAM
 
     #region Iaijutsu
 
-    private static bool CanUseIaijutsu(bool useHiganbana, bool useTenkaGoken, bool useMidare)
+    private static bool CanIaijutsu(bool useHiganbana, bool useTenkaGoken, bool useMidare)
     {
         if (LevelChecked(Iaijutsu) && InActionRange(OriginalHook(Iaijutsu)))
         {
             //Higanbana
             if (useHiganbana &&
                 SenCount is 1 &&
-                CanUseHiganbana())
+                CanHiganbana())
                 return true;
 
             //Tenka Goken
@@ -99,7 +99,7 @@ internal partial class SAM
 
     #region Higanbana
 
-    private static bool CanUseHiganbana()
+    private static bool CanHiganbana()
     {
         int hpThreshold = IsNotEnabled(Preset.SAM_ST_SimpleMode) ? ComputeHpThresholdHiganbana() : 0;
         float dotRemaining = GetStatusEffectRemainingTime(Debuffs.Higanbana, CurrentTarget);
@@ -140,17 +140,16 @@ internal partial class SAM
     private static int SenCount =>
         GetSenCount();
 
-    private static bool CanUseThirdEye =>
+    private static bool CanThirdEye() =>
         ActionReady(OriginalHook(ThirdEye)) &&
         (GroupDamageIncoming(2f) || !IsInParty());
 
-    //Auto Meditate
-    private static bool CanUseMeditate =>
+    private static bool CanMeditate() =>
         ActionReady(Meditate) &&
         !IsMoving() && TimeStoodStill > TimeSpan.FromSeconds(SAM_ST_MeditateTimeStill) &&
         InCombat() && !HasBattleTarget();
 
-    private static int ShintenTreshhold =>
+    private static int ShintenThreshold =>
         IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_ExecuteThreshold : 1;
 
     private static float GCD =>
@@ -161,58 +160,152 @@ internal partial class SAM
 
     #endregion
 
+    #region Combo Resolution
+
+    private static uint ResolveStCombo(uint actionId, bool useTrueNorth, bool simpleMode) =>
+        HasStatusEffect(Buffs.MeikyoShisui)
+            ? DoMeikyoCombo(actionId, useTrueNorth, simpleMode)
+            : DoBasicCombo(actionId, useTrueNorth, simpleMode);
+
+    private static uint DoAoECombo(uint actionId, bool useOka = true)
+    {
+        if (ComboTimer is 0 && !HasStatusEffect(Buffs.MeikyoShisui))
+            return actionId;
+
+        if (useOka && LevelChecked(Oka) && (!HasKa || !HasStatusEffect(Buffs.Fuka)))
+            return Oka;
+
+        if (LevelChecked(Mangetsu) &&
+            (!HasGetsu || !HasStatusEffect(Buffs.Fugetsu) || !LevelChecked(Oka) || !useOka))
+            return Mangetsu;
+
+        return actionId;
+    }
+
+    private static bool CanAoESenGcd(
+        out uint action,
+        bool allowTsubame = true,
+        bool allowIaijutsu = true,
+        bool onlyWhenStationary = false)
+    {
+        action = 0;
+
+        if (allowTsubame && LevelChecked(TenkaGoken) && LevelChecked(TsubameGaeshi) &&
+            (HasStatusEffect(Buffs.KaeshiGokenReady) ||
+             HasStatusEffect(Buffs.TsubameReady) ||
+             HasStatusEffect(Buffs.TendoKaeshiGokenReady)))
+        {
+            action = OriginalHook(TsubameGaeshi);
+            return true;
+        }
+
+        if (allowIaijutsu && LevelChecked(TenkaGoken) &&
+            (!onlyWhenStationary || !IsMoving()) &&
+            (OriginalHook(Iaijutsu) is TenkaGoken or MidareSetsugekka or TendoGoken))
+        {
+            action = OriginalHook(Iaijutsu);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool CanStIaijutsu(
+        bool useHiganbana,
+        bool useTenkaGoken,
+        bool useMidare,
+        bool onlyWhenStationary = false) =>
+        (!onlyWhenStationary || !IsMoving()) &&
+        CanIaijutsu(useHiganbana, useTenkaGoken, useMidare);
+
+    #endregion
+
+    #region AoE Weaves
+
+    private static bool CanAoEHagakure() =>
+        OriginalHook(Iaijutsu) is MidareSetsugekka && LevelChecked(Hagakure);
+
+    private static bool CanAoEMeikyo() =>
+        ActionReady(MeikyoShisui) && !HasStatusEffect(Buffs.MeikyoShisui) &&
+        !JustUsed(MeikyoShisui) && ComboTimer is 0;
+
+    private static bool CanAoEIkishotenKenki(out uint action)
+    {
+        action = 0;
+
+        if (!ActionReady(Ikishoten) || HasStatusEffect(Buffs.ZanshinReady))
+            return false;
+
+        action = Kenki >= 50 ? Kyuten : Ikishoten;
+        return true;
+    }
+
+    private static bool CanAoEZanshin() =>
+        ActionReady(Zanshin) && HasStatusEffect(Buffs.ZanshinReady);
+
+    private static bool CanAoEGuren() => ActionReady(Guren);
+
+    private static bool CanAoEShoha() =>
+        ActionReady(Shoha) && MeditationStacks is 3;
+
+    private static bool CanAoEKyuten(float kenkiThreshold = 50) =>
+        ActionReady(Kyuten) && Kenki >= kenkiThreshold && !ActionReady(Guren);
+
+    private static bool CanAoEOgiNamikiri(bool simpleMode = false) =>
+        ActionReady(OriginalHook(OgiNamikiri)) &&
+        (simpleMode
+            ? !IsMoving() && (HasStatusEffect(Buffs.OgiNamikiriReady) || NamikiriReady)
+            : NamikiriReady || HasStatusEffect(Buffs.OgiNamikiriReady) && !IsMoving());
+
+    #endregion
+
     #region Meikyo
 
     private static bool CanMeikyo()
     {
-        if (ActionReady(MeikyoShisui) &&
-            !HasStatusEffect(Buffs.Tendo) &&
-            !HasStatusEffect(Buffs.MeikyoShisui) &&
-            !JustUsed(MeikyoShisui) &&
-            TargetIsBoss() && GetTargetHPPercent() < SAM_ST_MeikyoExecuteThreshold &&
+        if (!ActionReady(MeikyoShisui) || HasStatusEffect(Buffs.Tendo) ||
+            HasStatusEffect(Buffs.MeikyoShisui) || JustUsed(MeikyoShisui))
+            return false;
+
+        if (TargetIsBoss() && GetTargetHPPercent() < SAM_ST_MeikyoExecuteThreshold &&
             (JustUsed(Yukikaze, 2f) || JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f)))
             return true;
 
-        if (ActionReady(MeikyoShisui) &&
-            !HasStatusEffect(Buffs.Tendo) &&
-            !HasStatusEffect(Buffs.MeikyoShisui) &&
-            !JustUsed(MeikyoShisui) &&
-            (JustUsed(Yukikaze, 2f) ||
-             HasSetsu && (JustUsed(Gekko, 2f) ||
-                          JustUsed(Kasha, 2f) ||
-                          JustUsed(KaeshiSetsugekka, 2f) && SenCount is 3)))
+        if (!(JustUsed(Yukikaze, 2f) ||
+              HasSetsu && (JustUsed(Gekko, 2f) || JustUsed(Kasha, 2f) ||
+                           JustUsed(KaeshiSetsugekka, 2f) && SenCount is 3)))
+            return false;
+
+        if (InBossEncounter())
         {
-            if (InBossEncounter())
+            if (EnhancedSenei)
             {
-                switch (EnhancedSenei)
-                {
-                    case true when GetRemainingCharges(MeikyoShisui) >= 1 && JustUsed(KaeshiNamikiri, 10f) &&
-                                   GetCooldownChargeRemainingTime(MeikyoShisui) is >= 35 and <= 43:
+                // ~6:00 even-burst Meikyo reset after Kaeshi: Namikiri (Icy Veins 2.14 drift recovery)
+                if (GetRemainingCharges(MeikyoShisui) >= 1 &&
+                    JustUsed(KaeshiNamikiri, 10f) &&
+                    GetCooldownChargeRemainingTime(MeikyoShisui) is >= 35 and <= 43)
+                    return true;
 
-                    case true when SenCount is 0 && GetCooldownRemainingTime(Senei) <= 14 && JustUsed(MidareSetsugekka, 5f) ||
-                                   SenCount is 0 && GetCooldownRemainingTime(Senei) <= 11 && JustUsed(Higanbana, 5f) ||
-                                   SenCount is 1 && GetCooldownRemainingTime(Senei) <= 9 ||
-                                   SenCount is 2 && GetCooldownRemainingTime(Senei) <= 7 ||
-                                   SenCount is 3 && GetCooldownRemainingTime(Senei) <= 5:
-
-                    // Pre 94
-                    case false when
-                        GetCooldownRemainingTime(Senei) <= GCD ||
-                        GetCooldownRemainingTime(Senei) is > 50 and < 65:
-                        return true;
-                }
+                if ((SenCount is 0 && GetCooldownRemainingTime(Senei) <= 14 && JustUsed(MidareSetsugekka, 5f)) ||
+                    (SenCount is 0 && GetCooldownRemainingTime(Senei) <= 11 && JustUsed(Higanbana, 5f)) ||
+                    SenCount is 1 && GetCooldownRemainingTime(Senei) <= 9 ||
+                    SenCount is 2 && GetCooldownRemainingTime(Senei) <= 7 ||
+                    SenCount is 3 && GetCooldownRemainingTime(Senei) <= 5)
+                    return true;
             }
-
-            if (!InBossEncounter() && SenCount is 3)
+            else if (GetCooldownRemainingTime(Senei) <= GCD ||
+                     GetCooldownRemainingTime(Senei) is > 50 and < 65)
                 return true;
         }
+        else if (SenCount is 3)
+            return true;
 
         return false;
     }
 
     private static uint DoMeikyoCombo(uint actionId, bool useTrueNorth = true, bool simpleMode = false)
     {
-        int tnCharges = IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_ManualTN : 0;
+        int trueNorthCharges = IsNotEnabled(Preset.SAM_ST_SimpleMode) ? SAM_ST_ManualTN : 0;
 
         if ((simpleMode || IsEnabled(Preset.SAM_ST_Yukikaze)) &&
             LevelChecked(Yukikaze) && !HasSetsu &&
@@ -228,7 +321,7 @@ internal partial class SAM
              OnTargetsFlank() && HasKa))
             return !OnTargetsRear() &&
                    Role.CanTrueNorth() &&
-                   GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                   GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                    useTrueNorth
                 ? Role.TrueNorth
                 : Gekko;
@@ -240,7 +333,7 @@ internal partial class SAM
              OnTargetsRear() && HasGetsu))
             return !OnTargetsFlank() &&
                    Role.CanTrueNorth() &&
-                   GetRemainingCharges(Role.TrueNorth) > tnCharges &&
+                   GetRemainingCharges(Role.TrueNorth) > trueNorthCharges &&
                    useTrueNorth
                 ? Role.TrueNorth
                 : Kasha;
@@ -285,7 +378,6 @@ internal partial class SAM
          EnhancedSenei && JustUsed(Senei, 30f) ||
          !EnhancedSenei && JustUsed(KaeshiSetsugekka, 20f));
 
-    //TODO Buffcheck
     private static bool CanZanshin() =>
         ActionReady(Zanshin) &&
         InActionRange(Zanshin) &&
@@ -299,7 +391,7 @@ internal partial class SAM
 
         if (ActionReady(Shinten) && InActionRange(Shinten))
         {
-            if (GetTargetHPPercent() < ShintenTreshhold)
+            if (GetTargetHPPercent() < ShintenThreshold)
                 return true;
 
             if (Kenki is 100 && ComboAction == OriginalHook(Gyofu) ||
@@ -344,7 +436,7 @@ internal partial class SAM
         return false;
     }
 
-    private static bool CanOgi(bool simpleMode = false)
+    private static bool CanOgiNamikiri(bool simpleMode = false)
     {
         if (NamikiriReady)
             return true;
@@ -371,7 +463,7 @@ internal partial class SAM
         return false;
     }
 
-    private static uint ExecuteKenkiSpender(uint actionId, bool simpleMode = false)
+    private static uint UseKenkiSpender(uint actionId, bool simpleMode = false)
     {
         if ((simpleMode || IsEnabled(Preset.SAM_ST_CDs_Zanshin)) &&
             ActionReady(Zanshin) && HasStatusEffect(Buffs.ZanshinReady))

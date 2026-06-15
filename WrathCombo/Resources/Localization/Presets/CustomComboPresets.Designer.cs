@@ -22636,18 +22636,18 @@ namespace WrathCombo.Resources.Localization.Presets {
         ///   Looks up a localized string similar to Adds Ikishoten when at or below 50 Kenki.
         ///Will dump Kenki at 10 seconds left to allow Ikishoten to be used..
         /// </summary>
-        internal static string SAM_AOE_CDs_Ikishoten_Desc {
+        internal static string SAM_AoE_CDs_Ikishoten_Desc {
             get {
-                return ResourceManager.GetString("SAM_AOE_CDs_Ikishoten_Desc", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_CDs_Ikishoten_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Ikishoten Option.
         /// </summary>
-        internal static string SAM_AOE_CDs_Ikishoten_Name {
+        internal static string SAM_AoE_CDs_Ikishoten_Name {
             get {
-                return ResourceManager.GetString("SAM_AOE_CDs_Ikishoten_Name", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_CDs_Ikishoten_Name", resourceCulture);
             }
         }
         
@@ -22881,18 +22881,18 @@ namespace WrathCombo.Resources.Localization.Presets {
         /// <summary>
         ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
         /// </summary>
-        internal static string SAM_AoE_StunInterupt_Desc {
+        internal static string SAM_AoE_StunInterrupt_Desc {
             get {
-                return ResourceManager.GetString("SAM_AoE_StunInterupt_Desc", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_StunInterrupt_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Leg Sweep Option.
         /// </summary>
-        internal static string SAM_AoE_StunInterupt_Name {
+        internal static string SAM_AoE_StunInterrupt_Name {
             get {
-                return ResourceManager.GetString("SAM_AoE_StunInterupt_Name", resourceCulture);
+                return ResourceManager.GetString("SAM_AoE_StunInterrupt_Name", resourceCulture);
             }
         }
         
@@ -23824,18 +23824,18 @@ namespace WrathCombo.Resources.Localization.Presets {
         /// <summary>
         ///   Looks up a localized string similar to Adds Leg Sweep when target non-boss is casting..
         /// </summary>
-        internal static string SAM_ST_StunInterupt_Desc {
+        internal static string SAM_ST_StunInterrupt_Desc {
             get {
-                return ResourceManager.GetString("SAM_ST_StunInterupt_Desc", resourceCulture);
+                return ResourceManager.GetString("SAM_ST_StunInterrupt_Desc", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Leg Sweep Option.
         /// </summary>
-        internal static string SAM_ST_StunInterupt_Name {
+        internal static string SAM_ST_StunInterrupt_Name {
             get {
-                return ResourceManager.GetString("SAM_ST_StunInterupt_Name", resourceCulture);
+                return ResourceManager.GetString("SAM_ST_StunInterrupt_Name", resourceCulture);
             }
         }
         

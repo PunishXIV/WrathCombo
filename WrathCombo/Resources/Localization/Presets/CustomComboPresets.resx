@@ -7886,11 +7886,11 @@ These features are ideal if you want to customize the rotation.</value>
   <data name="SAM_AoE_CDs_Desc" xml:space="preserve">
     <value>Collection of Cooldown features on main combo.</value>
   </data>
-  <data name="SAM_AOE_CDs_Ikishoten_Desc" xml:space="preserve">
+  <data name="SAM_AoE_CDs_Ikishoten_Desc" xml:space="preserve">
     <value>Adds Ikishoten when at or below 50 Kenki.
 Will dump Kenki at 10 seconds left to allow Ikishoten to be used.</value>
   </data>
-  <data name="SAM_AOE_CDs_Ikishoten_Name" xml:space="preserve">
+  <data name="SAM_AoE_CDs_Ikishoten_Name" xml:space="preserve">
     <value>Ikishoten Option</value>
   </data>
   <data name="SAM_AoE_CDs_Name" xml:space="preserve">
@@ -7970,10 +7970,10 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_AoE_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - AoE</value>
   </data>
-  <data name="SAM_AoE_StunInterupt_Desc" xml:space="preserve">
+  <data name="SAM_AoE_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_AoE_StunInterupt_Name" xml:space="preserve">
+  <data name="SAM_AoE_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
   <data name="SAM_AoE_TenkaGoken_Desc" xml:space="preserve">
@@ -8289,10 +8289,10 @@ This is the ideal option for newcomers to the job.</value>
   <data name="SAM_ST_SimpleMode_Name" xml:space="preserve">
     <value>Simple Mode - Single Target</value>
   </data>
-  <data name="SAM_ST_StunInterupt_Desc" xml:space="preserve">
+  <data name="SAM_ST_StunInterrupt_Desc" xml:space="preserve">
     <value>Adds Leg Sweep when target non-boss is casting.</value>
   </data>
-  <data name="SAM_ST_StunInterupt_Name" xml:space="preserve">
+  <data name="SAM_ST_StunInterrupt_Name" xml:space="preserve">
     <value>Leg Sweep Option</value>
   </data>
   <data name="SAM_ST_ThirdEye_Desc" xml:space="preserve">
