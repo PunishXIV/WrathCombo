@@ -21,7 +21,7 @@ internal partial class VPR
                         Generics.StandardOpener, 0, descriptionAsTooltip: true);
                     DrawRadioButton(VPR_OpenerSelection, VPR_Config.EarlyBuffOpener,
                         VPR_Config.UseEarlyBuffOpener, 1, descriptionAsTooltip: true);
-                    
+
                     DrawAdditionalBoolChoice(VPR_Opener_ExcludeUF,
                         FormatAndCache(Generics.Exclude0, UncoiledFury.ActionName()),
                         "");
