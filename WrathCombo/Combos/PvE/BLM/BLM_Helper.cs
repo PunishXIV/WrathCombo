@@ -12,18 +12,6 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
 {
-    #region AoE Thunder
-
-    private static bool CanAoEThunder(int hpThreshold = 0, float dotRefresh = 3f) =>
-        LevelChecked(OriginalHook(Thunder2)) && HasStatusEffect(Buffs.Thunderhead) &&
-        CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
-        GetTargetHPPercent() > hpThreshold &&
-        (!IcePhase || JustUsedFreezeOrBlizzard || EndOfIcePhaseAoE || !ActionReady(Freeze)) &&
-        (ThunderDebuffAoE is null && ThunderDebuffST is null ||
-         ThunderDebuffAoE?.RemainingTime <= dotRefresh ||
-         ThunderDebuffST?.RemainingTime <= dotRefresh);
-
-    #endregion
     #region Misc
 
     private static int MaxPolyglot =>
@@ -150,6 +138,15 @@ internal partial class BLM
 
         return BLM_ST_ThunderTrashOption;
     }
+
+    private static bool CanAoEThunder(int hpThreshold = 0, float dotRefresh = 3f) =>
+        LevelChecked(OriginalHook(Thunder2)) && HasStatusEffect(Buffs.Thunderhead) &&
+        CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
+        GetTargetHPPercent() > hpThreshold &&
+        (!IcePhase || JustUsedFreezeOrBlizzard || EndOfIcePhaseAoE || !ActionReady(Freeze)) &&
+        (ThunderDebuffAoE is null && ThunderDebuffST is null ||
+         ThunderDebuffAoE?.RemainingTime <= dotRefresh ||
+         ThunderDebuffST?.RemainingTime <= dotRefresh);
 
     #endregion
 
