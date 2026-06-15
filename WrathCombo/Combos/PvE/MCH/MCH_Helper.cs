@@ -270,6 +270,9 @@ internal partial class MCH
 
             if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot))
                 return true;
+
+            if (!LevelChecked(CleanShot) && ActionReady(HotShot))
+                return true;
         }
 
         return false;
@@ -393,7 +396,7 @@ internal partial class MCH
             return true;
         }
 
-        if (ActionReady(HotShot) && !LevelChecked(AirAnchor) && !HasStatusEffect(Buffs.Reassembled))
+        if (ActionReady(HotShot) && (!HasStatusEffect(Buffs.Reassembled) || !LevelChecked(CleanShot)))
         {
             actionID = HotShot;
             return true;
