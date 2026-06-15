@@ -100,8 +100,7 @@ internal partial class DRG
         {
             if (!InActionRange(DoomSpike))
                 return false;
-
-            // Icy Veins: on 3+ targets, Life Surge is reserved for Coerthan Torment after Sonic Thrust.
+            
             if (LevelChecked(CoerthanTorment))
             {
                 if (!JustUsed(SonicThrust))
@@ -151,19 +150,16 @@ internal partial class DRG
 
     private const int HoldOnlyWhenStationary = 0;
     private const int HoldOnlyInMeleeRange = 1;
-
-    // Config bool[2] from *MovingOrInRanged settings (see DRG_Config DrawHorizontalMultiChoice):
-    // [HoldOnlyWhenStationary] checked = only use when stationary (skip while moving)
-    // [HoldOnlyInMeleeRange] checked = only use in melee range (skip while at range)
-    private static bool CanUseWithHoldOptions(bool[]? movingOrInRangedOptions)
+    
+    private static bool CanUseWithHoldOptions(UserBoolArray? movingOrInRangedOptions)
     {
-        if (movingOrInRangedOptions is not { Length: > 0 })
+        if (movingOrInRangedOptions is null || movingOrInRangedOptions.Count == 0)
             return true;
 
         if (movingOrInRangedOptions[HoldOnlyWhenStationary] && IsMoving())
             return false;
 
-        if (movingOrInRangedOptions.Length > HoldOnlyInMeleeRange &&
+        if (movingOrInRangedOptions.Count > HoldOnlyInMeleeRange &&
             movingOrInRangedOptions[HoldOnlyInMeleeRange] && !InMeleeRange())
             return false;
 
@@ -250,14 +246,12 @@ internal partial class DRG
     private static bool CanDragonfireDive(bool onAoE = false, bool simpleMode = true, int hpThreshold = 0) =>
         ActionReady(DragonfireDive) && !HasStatusEffect(Buffs.DragonsFlight) &&
         GetTargetHPPercent() > hpThreshold &&
-        CanUseWithHoldOptions(simpleMode ? null :
-            onAoE ? DRG_AoE_DragonfireDiveMovingOrInRanged : DRG_ST_DragonfireDiveMovingOrInRanged) &&
+        CanUseWithHoldOptions(simpleMode ? null : onAoE ? DRG_AoE_DragonfireDiveMovingOrInRanged : DRG_ST_DragonfireDiveMovingOrInRanged) &&
         (LoTDTimerActive || !LevelChecked(Geirskogul));
 
     private static bool CanStardiver(bool onAoE = false, bool simpleMode = true) =>
         ActionReady(Stardiver) && LoTDActive && !HasStatusEffect(Buffs.StarcrossReady) &&
-        CanUseWithHoldOptions(simpleMode ? null :
-            onAoE ? DRG_AoE_StardiverMovingOrInRanged : DRG_ST_StardiverMovingOrInRanged);
+        CanUseWithHoldOptions(simpleMode ? null : onAoE ? DRG_AoE_StardiverMovingOrInRanged : DRG_ST_StardiverMovingOrInRanged);
 
     private static uint OutsideOfMelee(uint actionId, bool simpleMode = false, bool onAoE = false)
     {
