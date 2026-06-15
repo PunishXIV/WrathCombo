@@ -12,6 +12,18 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class BLM
 {
+    #region AoE Thunder
+
+    private static bool CanAoEThunder(int hpThreshold = 0, float dotRefresh = 3f) =>
+        LevelChecked(OriginalHook(Thunder2)) && HasStatusEffect(Buffs.Thunderhead) &&
+        CanApplyStatus(CurrentTarget, ThunderList[OriginalHook(Thunder2)]) &&
+        GetTargetHPPercent() > hpThreshold &&
+        (!IcePhase || JustUsedFreezeOrBlizzard || EndOfIcePhaseAoE || !ActionReady(Freeze)) &&
+        (ThunderDebuffAoE is null && ThunderDebuffST is null ||
+         ThunderDebuffAoE?.RemainingTime <= dotRefresh ||
+         ThunderDebuffST?.RemainingTime <= dotRefresh);
+
+    #endregion
     #region Misc
 
     private static int MaxPolyglot =>
@@ -25,14 +37,45 @@ internal partial class BLM
         BLM_ST_LeyLinesBossOption == 1 || !InBossEncounter()
             ? BLM_ST_LeyLinesHPOption : 0;
 
-    private static bool HasPolyglotStacks() =>
+    private static bool HasPolyglot =>
         PolyglotStacks > 0;
+
+    #endregion
+
+    #region Polyglot
+
+    private static uint PolyglotSpell =>
+        LevelChecked(Xenoglossy) ? Xenoglossy : Foul;
+
+    private static bool PolyglotOvercapProtection() =>
+        HasMaxPolyglotStacks && PolyglotTimer <= 5;
+
+    private static bool ShouldSpendPolyglotInFire(bool simpleMode)
+    {
+        if (!HasPolyglot)
+            return false;
+
+        if (simpleMode)
+            return true;
+
+        if (!IsEnabled(Preset.BLM_ST_UsePolyglot))
+            return false;
+
+        // When Swiftcast movement is enabled, keep extra charges for movement windows.
+        if (BLM_ST_MovementOption[MovementSwiftcast] &&
+            PolyglotStacks > BLM_ST_PolyglotMovement &&
+            PolyglotStacks > BLM_ST_PolyglotSaveUsage)
+            return true;
+
+        return !BLM_ST_MovementOption[MovementSwiftcast] &&
+               PolyglotStacks > BLM_ST_PolyglotSaveUsage;
+    }
 
     #endregion
 
     #region Fire Phase
 
-    private static bool CanFlarestar =>
+    private static bool CanFlareStar() =>
         LevelChecked(FlareStar) && AstralSoulStacks is 6;
 
     private static float TimeSinceFirestarterBuff =>
@@ -84,7 +127,7 @@ internal partial class BLM
     private static IStatus? ThunderDebuffAoE =>
         GetStatusEffect(ThunderList[OriginalHook(Thunder2)], CurrentTarget);
 
-    internal static bool CanUseThunder()
+    internal static bool CanThunder()
     {
         uint dotAction = OriginalHook(Thunder);
         int hpThreshold = IsNotEnabled(Preset.BLM_ST_SimpleMode) ? ComputeHpThreshold() : 0;
@@ -110,14 +153,109 @@ internal partial class BLM
 
     #endregion
 
+    #region Phase GCDs
+
+    private static uint UseFirePhaseGcd(
+        bool simpleMode,
+        bool useFlareStar = true,
+        bool useDespair = true,
+        bool useTranspose = true,
+        bool usePolyglot = true)
+    {
+        if (usePolyglot && ShouldSpendPolyglotInFire(simpleMode))
+            return PolyglotSpell;
+
+        if (CanFireParadox)
+            return OriginalHook(Fire);
+
+        if (CanFire3)
+            return Fire3;
+
+        if (useFlareStar && CanFlareStar())
+            return FlareStar;
+
+        if (ActionReady(FireSpam) &&
+            (LevelChecked(Despair) && MP.Cur - MP.FireI >= 800 || !LevelChecked(Despair)))
+            return FireSpam;
+
+        if (ActionReady(Flare) && !LevelChecked(Fire4) && MP.Cur <= 800)
+            return Flare;
+
+        if (useDespair && ActionReady(Despair))
+            return Despair;
+
+        if (ActionReady(Blizzard3) && EndOfFirePhase)
+            return Blizzard3;
+
+        if (useTranspose && ActionReady(Transpose) &&
+            !LevelChecked(Fire3) && MP.Cur < MP.FireI)
+            return Transpose;
+
+        return 0;
+    }
+
+    private static uint UseIcePhaseGcd(bool useTranspose = true)
+    {
+        if (UmbralHearts is 3 && UmbralIceStacks is 3 && ActiveParadox)
+            return OriginalHook(Blizzard);
+
+        if (MP.Full || JustUsed(Blizzard4))
+        {
+            if (LevelChecked(Fire3))
+                return Fire3;
+
+            if (useTranspose && ActionReady(Transpose) && !ActionReady(Blizzard3))
+                return Transpose;
+
+            if (!ActionReady(Transpose) && LevelChecked(Fire))
+                return Fire;
+        }
+
+        if (ActionReady(Blizzard3) && UmbralIceStacks < 3 &&
+            (HasStatusEffect(Role.Buffs.Swiftcast) ||
+             HasStatusEffect(Buffs.Triplecast) ||
+             JustUsed(Freeze, 10f)))
+            return Blizzard3;
+
+        if (ActionReady(BlizzardSpam))
+            return BlizzardSpam;
+
+        return 0;
+    }
+
+    private static uint UseOutOfPhaseGcd()
+    {
+        if (LevelChecked(Blizzard3))
+            return MP.Cur < 7500 ? Blizzard3 : Fire3;
+
+        if (LevelChecked(Fire) && !ActionReady(Transpose) && MP.Cur > MP.FireI)
+            return Fire;
+
+        return 0;
+    }
+
+    #endregion
+
     #region Movement Prio
+
+    private const int MovementDespair = 0;
+    private const int MovementTriplecast = 1;
+    private const int MovementParadox = 2;
+    private const int MovementSwiftcast = 3;
+    private const int MovementXenoglossy = 4;
+    private const int MovementFire3 = 5;
+    private const int MovementScathe = 6;
+
+    private static bool HasTriplecastChargesForMovement() =>
+        !BLM_ST_MovementOption[MovementDespair] ||
+        GetRemainingCharges(Triplecast) > BLM_ST_TriplecastMovementCharges;
 
     private static (uint Action, Preset Preset, System.Func<bool> Logic)[]
         PrioritizedMovement =>
     [
         //Despair at lvl 100
         (Despair, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[0] &&
+            () => BLM_ST_MovementOption[MovementDespair] &&
                   ActionReady(Despair) &&
                   TraitLevelChecked(Traits.EnhancedAstralFire) &&
                   FirePhase && MP.Cur is >= 800 and < 1500 &&
@@ -126,7 +264,7 @@ internal partial class BLM
 
         //Triplecast
         (Triplecast, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[1] &&
+            () => BLM_ST_MovementOption[MovementTriplecast] &&
                   ActionReady(Triplecast) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast) &&
@@ -135,7 +273,7 @@ internal partial class BLM
 
         // Paradox
         (OriginalHook(Fire), Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[2] &&
+            () => BLM_ST_MovementOption[MovementParadox] &&
                   ActionReady(OriginalHook(Paradox)) &&
                   FirePhase && ActiveParadox &&
                   MP.Cur >= MP.FireParadox &&
@@ -145,21 +283,21 @@ internal partial class BLM
 
         //Swiftcast
         (Role.Swiftcast, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[3] &&
+            () => BLM_ST_MovementOption[MovementSwiftcast] &&
                   ActionReady(Role.Swiftcast) &&
                   !HasStatusEffect(Buffs.Triplecast)),
 
         //Xeno
         (Xenoglossy, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[4] &&
+            () => BLM_ST_MovementOption[MovementXenoglossy] &&
                   ActionReady(Xenoglossy) &&
-                  HasPolyglotStacks() &&
+                  HasPolyglot &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast)),
 
         // Firestarter
         (Fire3, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[5] &&
+            () => BLM_ST_MovementOption[MovementFire3] &&
                   ActionReady(Fire3) &&
                   FirePhase &&
                   HasStatusEffect(Buffs.Firestarter) &&
@@ -168,14 +306,13 @@ internal partial class BLM
 
         //Scathe
         (Scathe, Preset.BLM_ST_Movement,
-            () => BLM_ST_MovementOption[6] &&
+            () => BLM_ST_MovementOption[MovementScathe] &&
                   ActionReady(Scathe) &&
                   !HasStatusEffect(Buffs.Triplecast) &&
                   !HasStatusEffect(Role.Buffs.Swiftcast))
     ];
 
-    private static bool CheckMovementConfigMeetsRequirements
-        (int index, out uint action)
+    private static bool TryMovementAction(int index, out uint action)
     {
         action = PrioritizedMovement[index].Action;
         return ActionReady(action) && LevelChecked(action) &&
