@@ -12,7 +12,7 @@ internal partial class DRG
 {
     #region Basic Combo
 
-    private static uint BasicCombo(uint actionId, bool useTrueNorth = false, bool isAoE = false, bool simpleAoE = false)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool isAoE = false, bool simpleAoE = false)
     {
         int tnCharges = IsNotEnabled(Preset.DRG_ST_SimpleMode) ? DRG_ManualTN : 0;
 
@@ -146,24 +146,25 @@ internal partial class DRG
     private static bool CanDRGWeave(float weaveTime = BaseAnimationLock, bool forceFirst = false) =>
         !HasWeavedAction(Stardiver) && (!forceFirst || !HasWeaved()) && CanWeave(weaveTime);
 
-    private static bool CanBuffWeave() =>
+    private static bool CanWeaveOgcds() =>
         HasStatusEffect(Buffs.PowerSurge) || !LevelChecked(Disembowel);
 
+    private const int HoldOnlyWhenStationary = 0;
+    private const int HoldOnlyInMeleeRange = 1;
+
     // Config bool[2] from *MovingOrInRanged settings (see DRG_Config DrawHorizontalMultiChoice):
-    // [0] checked = only use when stationary (skip while moving)
-    // [1] checked = only use in melee range (skip while at range)
+    // [HoldOnlyWhenStationary] checked = only use when stationary (skip while moving)
+    // [HoldOnlyInMeleeRange] checked = only use in melee range (skip while at range)
     private static bool CanUseWithHoldOptions(bool[]? movingOrInRangedOptions)
     {
         if (movingOrInRangedOptions is not { Length: > 0 })
             return true;
 
-        bool onlyWhenNotMoving = movingOrInRangedOptions[0];
-        
-        if (onlyWhenNotMoving && IsMoving())
+        if (movingOrInRangedOptions[HoldOnlyWhenStationary] && IsMoving())
             return false;
 
-        if (movingOrInRangedOptions.Length > 1 &&
-            movingOrInRangedOptions[1] && !InMeleeRange())
+        if (movingOrInRangedOptions.Length > HoldOnlyInMeleeRange &&
+            movingOrInRangedOptions[HoldOnlyInMeleeRange] && !InMeleeRange())
             return false;
 
         return true;
@@ -180,7 +181,7 @@ internal partial class DRG
         ActionReady(LanceCharge) && HasBattleTarget() && GetTargetHPPercent() > hpThreshold &&
         (IsOnCooldown(BattleLitany) || !LevelChecked(BattleLitany));
 
-    private static bool CanUseWyrmwind =>
+    private static bool CanUseWyrmwind() =>
         ActionReady(WyrmwindThrust) &&
         FirstmindsFocus is 2 &&
         InActionRange(WyrmwindThrust) &&
@@ -203,7 +204,7 @@ internal partial class DRG
     private static int GeirskogulHpThreshold(bool onAoE) =>
         onAoE
             ? IsNotEnabled(Preset.DRG_AoE_SimpleMode) ? DRG_AoE_GeirskogulHPThreshold : 0
-            : IsNotEnabled(Preset.DRG_ST_SimpleMode) ? ComputeHpThresholGeirskogul() : 0;
+            : IsNotEnabled(Preset.DRG_ST_SimpleMode) ? ComputeHpThresholdGeirskogul() : 0;
 
     private static bool CanUseGeirskogul(bool onAoE = false, int hpThreshold = int.MinValue)
     {
@@ -216,7 +217,7 @@ internal partial class DRG
                GetTargetHPPercent() > threshold;
     }
 
-    private static int ComputeHpThresholGeirskogul()
+    private static int ComputeHpThresholdGeirskogul()
     {
         if (InBossEncounter())
             return TargetIsBoss() ? DRG_ST_GeirskogulBossOption : DRG_ST_GeirskogulBossAddsOption;
@@ -265,7 +266,7 @@ internal partial class DRG
                     return MirageDive;
 
                 if ((simpleMode || IsEnabled(Preset.DRG_AoE_Wyrmwind)) &&
-                    CanUseWyrmwind && InCombat())
+                    CanUseWyrmwind() && InCombat())
                     return WyrmwindThrust;
 
                 if ((simpleMode || IsEnabled(Preset.DRG_AoE_Starcross)) &&
@@ -289,8 +290,8 @@ internal partial class DRG
                     return PiercingTalon;
 
                 return simpleMode
-                    ? BasicCombo(actionId, isAoE: true, simpleAoE: true)
-                    : BasicCombo(actionId, isAoE: true);
+                    ? DoBasicCombo(actionId, isAoE: true, simpleAoE: true)
+                    : DoBasicCombo(actionId, isAoE: true);
             }
 
             return actionId;
@@ -303,7 +304,7 @@ internal partial class DRG
                 return MirageDive;
 
             if ((simpleMode || IsEnabled(Preset.DRG_ST_Wyrmwind)) &&
-                CanUseWyrmwind && InCombat())
+                CanUseWyrmwind() && InCombat())
                 return WyrmwindThrust;
 
             if ((simpleMode || IsEnabled(Preset.DRG_ST_Starcross)) &&
@@ -327,8 +328,8 @@ internal partial class DRG
                 return PiercingTalon;
 
             return simpleMode
-                ? BasicCombo(actionId, true)
-                : BasicCombo(actionId, IsEnabled(Preset.DRG_TrueNorthDynamic));
+                ? DoBasicCombo(actionId, true)
+                : DoBasicCombo(actionId, IsEnabled(Preset.DRG_TrueNorthDynamic));
         }
 
         return actionId;

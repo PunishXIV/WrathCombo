@@ -321,7 +321,7 @@ internal partial class VPR
           (onAoE
               ? LastLashWeave && InActionRange(LastLash)
               : DeathRattleWeave && InActionRange(DeathRattle))) ||
-         allowLegacy && Legacyweaves && InActionRange(FirstLegacy));
+         allowLegacy && LegacyWeaves && InActionRange(FirstLegacy));
 
     private static bool UsePoisedTwinWeaves(out uint action, bool enabled = true)
     {
@@ -704,7 +704,7 @@ internal partial class VPR
 
     private static SerpentCombo SerpentCombo => Gauge.SerpentCombo;
 
-    private static bool Legacyweaves =>
+    private static bool LegacyWeaves =>
         HasStatusEffect(Buffs.Reawakened) &&
         (SerpentCombo.HasFlag(SerpentCombo.FirstLegacy) ||
          SerpentCombo.HasFlag(SerpentCombo.SecondLegacy) ||

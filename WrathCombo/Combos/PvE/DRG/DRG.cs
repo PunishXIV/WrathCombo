@@ -16,7 +16,7 @@ internal partial class DRG : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            if (CanBuffWeave())
+            if (CanWeaveOgcds())
             {
                 if (CanDRGWeave())
                 {
@@ -35,7 +35,7 @@ internal partial class DRG : Melee
                     if (CanUseGeirskogul())
                         return Geirskogul;
 
-                    if (CanUseWyrmwind)
+                    if (CanUseWyrmwind())
                         return WyrmwindThrust;
 
                     if (CanStarcross())
@@ -75,7 +75,7 @@ internal partial class DRG : Melee
 
             return !InMeleeRange() && HasBattleTarget()
                 ? OutsideOfMelee(actionID, true)
-                : BasicCombo(actionID, true);
+                : DoBasicCombo(actionID, true);
         }
     }
 
@@ -91,7 +91,7 @@ internal partial class DRG : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            if (CanBuffWeave())
+            if (CanWeaveOgcds())
             {
                 if (CanDRGWeave())
                 {
@@ -110,7 +110,7 @@ internal partial class DRG : Melee
                     if (CanUseGeirskogul(true))
                         return Geirskogul;
 
-                    if (CanUseWyrmwind)
+                    if (CanUseWyrmwind())
                         return WyrmwindThrust;
 
                     if (CanStarcross())
@@ -147,7 +147,7 @@ internal partial class DRG : Melee
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
                 ? OutsideOfMelee(actionID, simpleMode: true, onAoE: true)
-                : BasicCombo(actionID, isAoE: true, simpleAoE: true);
+                : DoBasicCombo(actionID, isAoE: true, simpleAoE: true);
         }
     }
 
@@ -167,7 +167,7 @@ internal partial class DRG : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            if (CanBuffWeave())
+            if (CanWeaveOgcds())
             {
                 if (CanDRGWeave())
                 {
@@ -197,7 +197,7 @@ internal partial class DRG : Melee
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_ST_Wyrmwind) &&
-                            CanUseWyrmwind)
+                            CanUseWyrmwind())
                             return WyrmwindThrust;
 
                         if (IsEnabled(Preset.DRG_ST_Starcross) &&
@@ -254,7 +254,7 @@ internal partial class DRG : Melee
 
             return !InMeleeRange() && HasBattleTarget()
                 ? OutsideOfMelee(actionID)
-                : BasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic));
+                : DoBasicCombo(actionID, IsEnabled(Preset.DRG_TrueNorthDynamic));
         }
     }
 
@@ -270,7 +270,7 @@ internal partial class DRG : Melee
             if (ContentSpecificActions.TryGet(out uint contentAction))
                 return contentAction;
 
-            if (CanBuffWeave())
+            if (CanWeaveOgcds())
             {
                 if (CanDRGWeave())
                 {
@@ -300,7 +300,7 @@ internal partial class DRG : Melee
                             return Geirskogul;
 
                         if (IsEnabled(Preset.DRG_AoE_Wyrmwind) &&
-                            CanUseWyrmwind)
+                            CanUseWyrmwind())
                             return WyrmwindThrust;
 
                         if (IsEnabled(Preset.DRG_AoE_Starcross) &&
@@ -352,7 +352,7 @@ internal partial class DRG : Melee
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
                 ? OutsideOfMelee(actionID, onAoE: true)
-                : BasicCombo(actionID, isAoE: true);
+                : DoBasicCombo(actionID, isAoE: true);
         }
     }
 

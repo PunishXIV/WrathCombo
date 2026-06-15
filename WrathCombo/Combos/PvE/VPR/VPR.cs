@@ -67,7 +67,7 @@ internal partial class VPR : Melee
         }
     }
 
-    internal class VPR_AoE_Simplemode : CustomCombo
+    internal class VPR_AoE_SimpleMode : CustomCombo
     {
         protected internal override Preset Preset => Preset.VPR_AoE_SimpleMode;
 
@@ -376,7 +376,7 @@ internal partial class VPR : Melee
                 {
                     return IsEnabled(Preset.VPR_ReawakenLegacyWeaves) &&
                            TraitLevelChecked(Traits.SerpentsLegacy) &&
-                           HasStatusEffect(Buffs.Reawakened) && Legacyweaves
+                           HasStatusEffect(Buffs.Reawakened) && LegacyWeaves
                         ? OriginalHook(SerpentsTail)
                         : ReawakenCombo(actionID);
                 }

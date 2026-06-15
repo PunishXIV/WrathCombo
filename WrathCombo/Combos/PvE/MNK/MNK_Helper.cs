@@ -304,7 +304,7 @@ internal partial class MNK
               !IsEnabled(Preset.MNK_STUseROF);
 
     // Both burst buffs are ready but PB must weave first (burst-hold release / drift recovery).
-    private static bool AfterBurstHoldingMacro()
+    private static bool IsBurstHoldReleaseReady()
     {
         if (!ActionReady(PerfectBalance) || HasStatusEffect(Buffs.PerfectBalance) ||
             HasStatusEffect(Buffs.FormlessFist) || JustUsed(PerfectBalance))
@@ -325,7 +325,7 @@ internal partial class MNK
 
     private static bool UsePBAfterBurstHolding(bool onAoE)
     {
-        if (IsBurstHolding(onAoE) || !AfterBurstHoldingMacro())
+        if (IsBurstHolding(onAoE) || !IsBurstHoldReleaseReady())
             return false;
 
         if (!HasBattleTarget() || !JustUsedOpoGCD(GCD, onAoE))
@@ -386,7 +386,7 @@ internal partial class MNK
         if (GetRemainingCharges(PerfectBalance) != GetMaxCharges(PerfectBalance))
             return false;
 
-        if (AfterBurstHoldingMacro())
+        if (IsBurstHoldReleaseReady())
             return false;
 
         if (IsRoFCDInPerfectBalanceWindow())
@@ -436,7 +436,7 @@ internal partial class MNK
 
     private static bool CanMasterfulBlitz(bool onAoE)
     {
-        if (AfterBurstHoldingMacro())
+        if (IsBurstHoldReleaseReady())
             return false;
 
         if (!LevelChecked(MasterfulBlitz) || HasStatusEffect(Buffs.PerfectBalance) ||
@@ -504,7 +504,7 @@ internal partial class MNK
 
     //RoF
     private static bool CanRoF() =>
-        !AfterBurstHoldingMacro() &&
+        !IsBurstHoldReleaseReady() &&
         ActionReady(RiddleOfFire) &&
         !HasStatusEffect(Buffs.FiresRumination) &&
         !HasStatusEffect(Buffs.RiddleOfFire) &&
@@ -527,7 +527,7 @@ internal partial class MNK
 
     //Brotherhood
     private static bool CanBrotherhood() =>
-        !AfterBurstHoldingMacro() &&
+        !IsBurstHoldReleaseReady() &&
         ActionReady(Brotherhood) &&
         ActionReady(RiddleOfFire) &&
         !HasStatusEffect(Buffs.Brotherhood) &&

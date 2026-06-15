@@ -97,7 +97,7 @@ internal partial class RPR
 
     #region Basic Combo
 
-    private static uint BasicCombo(uint actionId, bool onAoE = false)
+    private static uint DoBasicCombo(uint actionId, bool onAoE = false)
     {
         if (onAoE)
         {
@@ -317,7 +317,7 @@ internal partial class RPR
     private static uint UsePostPerfectioGCD(uint actionId, bool onAoE)
     {
         if (ShouldContinueComboAfterPerfectio())
-            return BasicCombo(actionId, onAoE);
+            return DoBasicCombo(actionId, onAoE);
 
         if (CanPostPerfectioSoulSlice(onAoE))
             return onAoE ? SoulScythe : SoulSlice;
@@ -421,6 +421,33 @@ internal partial class RPR
         (onAoE
             ? ActionReady(SoulScythe) && InActionRange(SoulScythe)
             : ActionReady(SoulSlice) && InActionRange(SoulSlice));
+
+    #endregion
+
+    #region Soulsow
+
+    private const int SoulsowOnHarpe = 0;
+    private const int SoulsowOnSlice = 1;
+    private const int SoulsowOnSpinningScythe = 2;
+    private const int SoulsowOnShadowOfDeath = 3;
+    private const int SoulsowOnBloodStalk = 4;
+
+    private static bool IsSoulsowEnabledForAction(uint actionId)
+    {
+        bool[] options = RPR_SoulsowOptions;
+        if (options.Length == 0)
+            return false;
+
+        return actionId switch
+        {
+            Harpe => options.Length > SoulsowOnHarpe && options[SoulsowOnHarpe],
+            Slice => options.Length > SoulsowOnSlice && options[SoulsowOnSlice],
+            SpinningScythe => options.Length > SoulsowOnSpinningScythe && options[SoulsowOnSpinningScythe],
+            ShadowOfDeath => options.Length > SoulsowOnShadowOfDeath && options[SoulsowOnShadowOfDeath],
+            BloodStalk => options.Length > SoulsowOnBloodStalk && options[SoulsowOnBloodStalk],
+            _ => false
+        };
+    }
 
     #endregion
 

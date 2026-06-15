@@ -89,7 +89,7 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID, true)
-                : BasicCombo(actionID);
+                : DoBasicCombo(actionID);
         }
     }
 
@@ -158,7 +158,7 @@ internal partial class RPR : Melee
             if (CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return BasicCombo(actionID, true);
+            return DoBasicCombo(actionID, true);
         }
     }
 
@@ -275,7 +275,7 @@ internal partial class RPR : Melee
             return !InMeleeRange() && HasBattleTarget() &&
                    !HasStatusEffect(Buffs.Executioner) && !HasStatusEffect(Buffs.SoulReaver)
                 ? RangedAttack(actionID)
-                : BasicCombo(actionID);
+                : DoBasicCombo(actionID);
         }
     }
 
@@ -360,7 +360,7 @@ internal partial class RPR : Melee
                 CanSoulSliceScythe(true))
                 return SoulScythe;
 
-            return BasicCombo(actionID, true);
+            return DoBasicCombo(actionID, true);
         }
     }
 
@@ -570,18 +570,16 @@ internal partial class RPR : Melee
                 actionID is not (ShadowOfDeath or BloodStalk))
                 return actionID;
 
-            bool[] soulSowOptions = RPR_SoulsowOptions;
             bool soulsowReady = ActionReady(Soulsow) && !HasStatusEffect(Buffs.Soulsow);
 
-            return soulSowOptions.Length > 0 && soulsowReady &&
-                   (actionID is Harpe && soulSowOptions[0] ||
-                    actionID is Slice && soulSowOptions[1] ||
-                    actionID is SpinningScythe && soulSowOptions[2] ||
-                    actionID is ShadowOfDeath && soulSowOptions[3] ||
-                    actionID is BloodStalk && soulSowOptions[4]) && !InCombat() ||
-                   IsEnabled(Preset.RPR_Soulsow_Combat) && actionID is Harpe && !HasBattleTarget() && soulsowReady
-                ? Soulsow
-                : actionID;
+            if (soulsowReady && !InCombat() && IsSoulsowEnabledForAction(actionID))
+                return Soulsow;
+
+            if (IsEnabled(Preset.RPR_Soulsow_Combat) &&
+                actionID is Harpe && !HasBattleTarget() && soulsowReady)
+                return Soulsow;
+
+            return actionID;
         }
     }
 

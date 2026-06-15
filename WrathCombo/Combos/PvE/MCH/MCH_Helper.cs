@@ -393,9 +393,9 @@ internal partial class MCH
 
     #endregion
 
-    #region HP Treshold
+    #region HP Threshold
 
-    // bossOption == 1 means "also gate on non-bosses"; otherwise only HP-gate bosses.
+    // bossOption == 1 applies the HP threshold to non-bosses too; otherwise only bosses are checked.
     private static int BossHpThreshold(int bossOption, int hpOption, bool isBoss) =>
         bossOption == 1 || !isBoss ? hpOption : 0;
 
@@ -531,7 +531,7 @@ internal partial class MCH
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-    private static bool BasicCombo(ref uint actionID, bool allowReassembleOnClean = false)
+    private static bool DoBasicCombo(ref uint actionID, bool allowReassembleOnClean = false)
     {
         if (ComboTimer == 0)
             return false;
