@@ -59,31 +59,53 @@ public static class ActionWatching
     public delegate void ActionSendDelegate();
     public static event ActionSendDelegate? OnActionSend;
 
-    private unsafe delegate void ReceiveActionEffectDelegate(uint casterEntityId, Character* casterPtr, Vector3* targetPos, Header* header, TargetEffects* effects, GameObjectId* targetEntityIds);
-    private readonly static Hook<ReceiveActionEffectDelegate>? ReceiveActionEffectHook;
-
-    private unsafe delegate bool UseActionDelegate(ActionManager* actionManager, ActionType actionType, uint actionId, ulong targetId, uint extraParam, ActionManager.UseActionMode mode, uint comboRouteId, bool* outOptAreaTargeted);
-    private readonly static Hook<UseActionDelegate>? UseActionHook;
+    private readonly static Hook<Delegates.Receive>? ReceiveActionEffectHook;
+    private readonly static Hook<ActionManager.Delegates.UseAction>? UseActionHook;
+    private readonly static Hook<ActionManager.Delegates.UseActionLocation>? UseActionLocHook;
 
     private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
-
-    public unsafe delegate bool CanQueueActionDelegate(ActionManager* actionManager, uint actionType, uint actionID);
-    public static readonly Hook<CanQueueActionDelegate> CanQueueAction;
+    public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
 
     private static Task UpdateActionTask = null!;
     private static CancellationTokenSource source = new CancellationTokenSource();
     private static CancellationToken token;
 
     public static bool UpdatingActions;
+    private static bool _tainted;
 
     static unsafe ActionWatching()
     {
-        ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<ReceiveActionEffectDelegate>(Addresses.Receive.Value, ReceiveActionEffectDetour);
+        ReceiveActionEffectHook ??= Svc.Hook.HookFromAddress<Delegates.Receive>(Addresses.Receive.Value, ReceiveActionEffectDetour);
         SendActionHook ??= Svc.Hook.HookFromSignature<SendActionDelegate>("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B E9 41 0F B7 D9", SendActionDetour);
-        UseActionHook ??= Svc.Hook.HookFromAddress<UseActionDelegate>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
+        UseActionHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseAction>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
+        UseActionLocHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseActionLocation>(ActionManager.Addresses.UseActionLocation.Value, UseActionLocationDetour);
+        CanQueueAction ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.IsActionOffCooldown>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
         OnCastInterrupted += CancelPendingLastActionUpdate;
-        CanQueueAction ??= Svc.Hook.HookFromAddress<CanQueueActionDelegate>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
+    }
+
+    private static unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
+    {
+        if (actionType == ActionType.Action && !_tainted)
+        {
+            var obj = targetId.GetObject();
+            if (!obj.CanUseOn(actionId))
+            {
+                _tainted = true;
+                if (CurrentTarget?.CanUseOn(actionId) == true)
+                    targetId = CurrentTarget.ObjectId;
+                else if (Player.Object?.CanUseOn(actionId) == true)
+                    targetId = Player.Object.ObjectId;
+
+                if (targetId.GetObject() is { } validObj)
+                    DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We have updated the target to {validObj.Name} which it can be used on. Please ensure you are only using one rotation plugin for correct behaviour.");
+                else
+                    DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We are unable to redirect this to a valid target. Please ensure you are only using one rotation plugin for correct behaviour.");
+
+                Svc.Framework.RunOnTick(() => _tainted = false, TimeSpan.FromSeconds(2));
+            }
+        }
+        return UseActionLocHook.Original(thisPtr, actionType, actionId, targetId, location, extraParam, a7);
     }
 
     public static void Enable()
@@ -91,8 +113,9 @@ public static class ActionWatching
         ReceiveActionEffectHook?.Enable();
         SendActionHook?.Enable();
         UseActionHook?.Enable();
-        Svc.Condition.ConditionChange += ResetActions;
+        UseActionLocHook?.Enable();
         CanQueueAction?.Enable();
+        Svc.Condition.ConditionChange += ResetActions;
     }
 
 
@@ -102,8 +125,9 @@ public static class ActionWatching
         ReceiveActionEffectHook?.Dispose();
         SendActionHook?.Dispose();
         UseActionHook?.Dispose();
-        OnCastInterrupted -= CancelPendingLastActionUpdate;
+        UseActionLocHook?.Dispose();
         CanQueueAction?.Dispose();
+        OnCastInterrupted -= CancelPendingLastActionUpdate;
     }
 
     /// <summary> Handles logic when an action causes an effect. </summary>
@@ -366,25 +390,25 @@ public static class ActionWatching
         }
     }
 
-    public unsafe static bool CanQueueCS(uint actionId) => CanQueueActionDetour(ActionManager.Instance(), 1, actionId);
+    public unsafe static bool CanQueueCS(uint actionId) => CanQueueActionDetour(ActionManager.Instance(), ActionType.Action, actionId);
 
-    private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, uint actionType, uint actionID)
+    private static unsafe bool CanQueueActionDetour(ActionManager* actionManager, ActionType actionType, uint actionID)
     {
         float threshold = Service.Configuration.QueueAdjust ? Service.Configuration.QueueAdjustThreshold : 0.5f;
 
         return GetRemainingActionRecast(actionManager, actionType, actionID) is { } remaining && remaining <= threshold;
 
-        unsafe float? GetRemainingActionRecast(ActionManager* actionManager, uint actionType, uint actionID)
+        unsafe float? GetRemainingActionRecast(ActionManager* actionManager, ActionType actionType, uint actionID)
         {
             var recastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetRecastGroup((int)actionType, actionID));
             if (recastGroupDetail == null) return null;
 
-            var additionalRecastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetAdditionalRecastGroup((ActionType)actionType, actionID));
+            var additionalRecastGroupDetail = actionManager->GetRecastGroupDetail(actionManager->GetAdditionalRecastGroup(actionType, actionID));
             var additionalRecastRemaining = additionalRecastGroupDetail != null && additionalRecastGroupDetail->IsActive ? additionalRecastGroupDetail->Total - additionalRecastGroupDetail->Elapsed : 0;
 
             if (!recastGroupDetail->IsActive) return additionalRecastRemaining;
 
-            var charges = actionType == 1 ? ActionManager.GetMaxCharges(actionID, Player.MaxLevel) : 1;
+            var charges = actionType == ActionType.Action ? ActionManager.GetMaxCharges(actionID, Player.MaxLevel) : 1;
             var recastRemaining = recastGroupDetail->Total / charges - recastGroupDetail->Elapsed;
             return recastRemaining > additionalRecastRemaining ? recastRemaining : additionalRecastRemaining;
         }
@@ -584,8 +608,9 @@ public static class ActionWatching
         ReceiveActionEffectHook.Disable();
         SendActionHook?.Disable();
         UseActionHook?.Disable();
-        Svc.Condition.ConditionChange -= ResetActions;
+        UseActionLocHook?.Disable();
         CanQueueAction?.Disable();
+        Svc.Condition.ConditionChange -= ResetActions;
     }
 
     [Obsolete("Use CustomComboFunctions.GetActionName instead. This method will be removed in a future update.")]
