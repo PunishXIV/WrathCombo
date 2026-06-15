@@ -97,38 +97,31 @@ internal partial class RPR
 
     #region Basic Combo
 
-    private static uint BasicCombo(uint actionId, bool isAoE = false)
+    private static uint BasicCombo(uint actionId, bool onAoE = false)
     {
-        switch (isAoE)
+        if (onAoE)
         {
-            case false:
-            {
-                if (ComboTimer > 0)
-                {
-                    if (ComboAction == OriginalHook(Slice) && LevelChecked(WaxingSlice))
-                        return OriginalHook(WaxingSlice);
+            if (ComboTimer > 0 &&
+                ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
+                return OriginalHook(NightmareScythe);
 
-                    if (ComboAction == OriginalHook(WaxingSlice) && LevelChecked(InfernalSlice))
-                        return OriginalHook(InfernalSlice);
-                }
-                break;
-            }
+            return actionId;
+        }
 
-            case true:
-            {
-                if (ComboTimer > 0)
-                {
-                    if (ComboAction == OriginalHook(SpinningScythe) && LevelChecked(NightmareScythe))
-                        return OriginalHook(NightmareScythe);
-                }
-                break;
-            }
+        if (ComboTimer > 0)
+        {
+            if (ComboAction == OriginalHook(Slice) && LevelChecked(WaxingSlice))
+                return OriginalHook(WaxingSlice);
+
+            if (ComboAction == OriginalHook(WaxingSlice) && LevelChecked(InfernalSlice))
+                return OriginalHook(InfernalSlice);
         }
 
         return actionId;
     }
 
     #endregion
+
     #region Enshroud
 
     private static float AcCD =>

@@ -483,7 +483,6 @@ internal partial class RPR : Melee
                     break;
                 }
 
-
                 case BloodStalk:
                 {
                     if (IsEnabled(Preset.RPR_TrueNorthGluttony) && Role.CanTrueNorth() &&
