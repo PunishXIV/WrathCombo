@@ -146,8 +146,6 @@ public partial class WrathCombo
 
             case "opener":
                 OutputOpenerStatus(); break;
-            case "actions":
-                _listAddon.Toggle(); break;
             default:
                 HandleOpenCommand(argumentParts); break;
         }

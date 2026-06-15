@@ -65,7 +65,7 @@ public sealed partial class WrathCombo : IDalamudPlugin
     internal ActionRetargeting ActionRetargeting = null!;
     internal MovementHook MoveHook;
     internal CustomActionSetup CustomActions;
-    private readonly CustomActionListAddon _listAddon;
+    //private readonly CustomActionListAddon _listAddon;
 
     internal static bool IsAprilFools => DateTime.UtcNow.Day == 1 && DateTime.UtcNow.Month == 4;
 
@@ -189,7 +189,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
         Service.Address.Setup(Svc.SigScanner);
         MoveHook = new();
         CustomActions = new();
-        _listAddon = new(CustomActions.Manager);
         PresetStorage.RemoveRedundantPresets();
 
         Service.ComboCache = new CustomComboCache();
@@ -492,7 +491,6 @@ public sealed partial class WrathCombo : IDalamudPlugin
         IPC.Dispose();
         MoveHook.Dispose();
         CustomActions.Dispose();
-        _listAddon.Dispose();
 
         ConflictingPluginsChecks.Dispose();
         AllStaticIPCSubscriptions.Dispose();
