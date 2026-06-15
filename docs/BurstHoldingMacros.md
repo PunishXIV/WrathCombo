@@ -4,6 +4,8 @@ Per [Issue #99](https://github.com/PunishXIV/WrathCombo/issues/99), Burst Holdin
 
 As a workaround until such time though, you can create a macro to toggle off the burst parts of Jobs within Wrath, to achieve a similar result.
 
+You can also use `/wrath burst` (or `/wrath burst hold` / `/wrath burst resume`) to toggle each job's default burst presets in one step. The per-job lists below use individual `/wrath toggle` lines so you can add or remove entries if you only want part of the burst held.
+
 You can toggle off these options with `/wrath toggle <x>` in game.
 You can find the ID or internal name to provide as `<x>` by using `/wrath list set <y>` (replace `<y>` with your current job, like `/wrath list set DRK`), or by looking at the [`Preset` File](https://github.com/PunishXIV/WrathCombo/blob/main/WrathCombo/Combos/CustomComboPreset.cs) (see [this image](https://i.imgur.com/LsJ06DW.png) for how to read this)
 
@@ -119,9 +121,13 @@ Below is a community-provided list of basic burst-holding macros for each job.
 
 ```
 /wrath toggle 9009
+/wrath toggle 9011
+/wrath toggle 9016
+/wrath toggle 9039
 /wrath toggle 9030
 /wrath toggle 9032
-/wrath toggle 9011
+/wrath toggle 9036
+/wrath toggle 9040
 ```
 
 </details>

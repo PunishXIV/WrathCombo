@@ -43,7 +43,7 @@ public partial class WrathCombo
         { Job.AST, [Preset.AST_AOE_Divination, Preset.AST_DPS_Divination] }, // AST
         { Job.SGE, [Preset.SGE_AoE_DPS_Psyche, Preset.SGE_AoE_DPS_Phlegma, Preset.SGE_ST_DPS_Psyche, Preset.SGE_ST_DPS_Phlegma] }, // SGE
         { Job.DRG, [Preset.DRG_ST_BattleLitany, Preset.DRG_ST_LanceCharge, Preset.DRG_AoE_BattleLitany, Preset.DRG_AoE_LanceCharge, Preset.DRG_ST_DragonfireDive, Preset.DRG_AoE_DragonfireDive, Preset.DRG_ST_LifeSurge, Preset.DRG_AoE_LifeSurge] }, // DRG
-        { Job.MNK, [Preset.MNK_STUseBrotherhood, Preset.MNK_AoEUseBrotherhood, Preset.MNK_AoEUseROF, Preset.MNK_STUseROF] }, // MNK
+        { Job.MNK, [Preset.MNK_STUseBrotherhood, Preset.MNK_STUseROF, Preset.MNK_STUseFiresReply, Preset.MNK_STUseMasterfulBlitz, Preset.MNK_AoEUseBrotherhood, Preset.MNK_AoEUseROF, Preset.MNK_AoEUseFiresReply, Preset.MNK_AoEUseMasterfulBlitz] }, // MNK
         { Job.NIN, [Preset.NIN_ST_AdvancedMode_TrickAttack, Preset.NIN_ST_AdvancedMode_Mug, Preset.NIN_AoE_AdvancedMode_TrickAttack, Preset.NIN_AoE_AdvancedMode_Mug] }, // NIN
         { Job.SAM, [Preset.SAM_ST_CDs_Ikishoten, Preset.SAM_AOE_CDs_Ikishoten, Preset.SAM_ST_CDs_MeikyoShisui, Preset.SAM_AoE_MeikyoShisui] }, // SAM
         { Job.RPR, [Preset.RPR_ST_Gluttony, Preset.RPR_AoE_Gluttony, Preset.RPR_ST_ArcaneCircle, Preset.RPR_AoE_ArcaneCircle] }, // RPR
