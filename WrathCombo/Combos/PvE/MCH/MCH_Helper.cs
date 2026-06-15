@@ -12,8 +12,19 @@ internal partial class MCH
 {
     #region Queen
 
-    private static bool CanQueen()
+    private static bool CanQueen(bool onAoE = false, bool simpleBatteryOnly = false)
     {
+        if (onAoE)
+        {
+            if (!ActionReady(OriginalHook(RookAutoturret)))
+                return false;
+
+            return simpleBatteryOnly
+                ? Battery is 100
+                : Battery >= MCH_AoE_TurretBatteryUsage &&
+                  GetTargetHPPercent() > MCH_AoE_QueenHpThreshold;
+        }
+
         if (!HasStatusEffect(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
             !RobotActive &&
@@ -23,20 +34,14 @@ internal partial class MCH
             {
                 if (MCH_ST_WildfireBossOption == 0 || TargetIsBoss())
                 {
-                    switch (Battery)
-                    {
-                        //Always use on 100
-                        case 100:
-
-                        //Failsafe
-                        case > 80 when
-                            HasStatusEffect(Buffs.ExcavatorReady) ||
-                            ActionReady(Chainsaw) ||
-                            ActionReady(OriginalHook(AirAnchor)):
-
-                        case > 90 when ComboAction == OriginalHook(SlugShot):
-                            return true;
-                    }
+                    //Always use at 100, as a failsafe above 80 with a tool ready, or above 90 mid-combo
+                    if (Battery is 100 ||
+                        Battery > 80 &&
+                        (HasStatusEffect(Buffs.ExcavatorReady) ||
+                         ActionReady(Chainsaw) ||
+                         ActionReady(OriginalHook(AirAnchor))) ||
+                        Battery > 90 && ComboAction == OriginalHook(SlugShot))
+                        return true;
                 }
 
                 if (MCH_ST_WildfireBossOption == 1 && !TargetIsBoss() && Battery >= MCH_ST_TurretUsage)
@@ -53,6 +58,9 @@ internal partial class MCH
     #endregion
 
     #region Hypercharge
+
+    private static bool CanHypercharge(bool onAoE, bool useAirAnchor = true) =>
+        onAoE ? CanHyperchargeAoE(useAirAnchor) : CanHyperchargeST();
 
     private static bool CanHyperchargeST()
     {
@@ -91,27 +99,13 @@ internal partial class MCH
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire);
 
-    public static bool ShouldSkipExcavatorHold()
-    {
-        if (!IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire))
-            return false;
+    public static bool ShouldSkipExcavatorHold() =>
+        IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) &&
+        IsWildfireAboutToBeUsed();
 
-        if (IsWildfireAboutToBeUsed())
-            return true;
-
-        return false;
-    }
-
-    public static bool ShouldSkipHyperchargeHold()
-    {
-        if (!IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire))
-            return false;
-
-        if (IsWildfireAboutToBeUsed())
-            return true;
-
-        return false;
-    }
+    public static bool ShouldSkipHyperchargeHold() =>
+        IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire) &&
+        IsWildfireAboutToBeUsed();
 
     #endregion
 
@@ -127,6 +121,45 @@ internal partial class MCH
 
     private static float CustomCooldownForHyperHold =>
         IsWildfireAboutToBeUsed() ? MCH_ST_WildfireHyperchargeCutoffThreshold : 9f;
+
+    private static bool JustUsedOverheatGCD(float window, bool onAoE) =>
+        onAoE
+            ? JustUsed(OriginalHook(AutoCrossbow), window) ||
+              JustUsed(OriginalHook(Heatblast), window)
+              
+            : JustUsed(OriginalHook(Heatblast), window);
+
+    private static bool ShouldUseAoEAutoCrossbow(bool requireGaussEnabled = false) =>
+        HasBattleTarget() &&
+        (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
+         LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
+         NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 6 ||
+         requireGaussEnabled && IsNotEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
+
+    private static uint OverheatGCD(bool onAoE, bool requireGaussEnabled = false) =>
+        onAoE && ShouldUseAoEAutoCrossbow(requireGaussEnabled)
+            ? AutoCrossbow
+            : OriginalHook(Heatblast);
+
+    private static bool CanBarrelStabilizer(bool onAoE, bool simpleMode = false) =>
+        ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
+        (onAoE
+            ? simpleMode || GetTargetHPPercent() > MCH_AoE_BarrelStabilizerHPThreshold
+            : ((simpleMode
+                   ? TargetIsBoss()
+                   : (MCH_ST_BarrelStabilizerBossOption == 0 &&
+                      GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss())) &&
+               GetCooldownRemainingTime(Wildfire) <= 20));
+
+    private static bool CanWildfireWeave(bool simpleMode = false, bool requireBoss = true, float? hyperchargeWindow = null) =>
+        CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
+        ActionReady(Wildfire) &&
+        JustUsed(Hypercharge, hyperchargeWindow ?? GCD + 0.9f) &&
+        !HasStatusEffect(Buffs.Wildfire) &&
+        (simpleMode
+            ? !requireBoss || TargetIsBoss()
+            : (MCH_ST_WildfireBossOption == 0 &&
+               GetTargetHPPercent() > HPThresholdWildFire || TargetIsBoss()));
 
     #endregion
 
@@ -147,18 +180,10 @@ internal partial class MCH
 
         if (TwoChargesUnlocked)
         {
-            switch (charges)
-            {
-                case 2 when CurrentReassembleCharges != 2:
-                    UseBothCharges = true;
-                    break;
-
-                case 0:
-
-                case 1 when CurrentReassembleCharges == 0:
-                    UseBothCharges = false;
-                    break;
-            }
+            if (charges == 2 && CurrentReassembleCharges != 2)
+                UseBothCharges = true;
+            else if (charges == 0 || charges == 1 && CurrentReassembleCharges == 0)
+                UseBothCharges = false;
         }
         else
             UseBothCharges = false;
@@ -227,6 +252,9 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
+    private static bool CanReassemble(bool onAoE) =>
+        onAoE ? CanReassembleAoE() : CanReassembleST();
+
     private static bool CanReassembleST()
     {
         UpdateReassembleChargeTracking();
@@ -275,16 +303,20 @@ internal partial class MCH
 
     #region Gauss and Rico
 
+    private static bool IsOvercapping(uint action) =>
+        ActionReady(action) &&
+        (!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(action) is 1 ||
+         LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(action) is 2) &&
+        GetCooldownChargeRemainingTime(action) < 25;
+
     private static bool OvercapGaussRound =>
-        ActionReady(OriginalHook(GaussRound)) && ((!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(GaussRound)) is 1 ||
-                                                   LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(GaussRound)) is 2) &&
-                                                  GetCooldownChargeRemainingTime(OriginalHook(GaussRound)) < 25 ||
-                                                  !LevelChecked(Hypercharge) && GetRemainingCharges(OriginalHook(GaussRound)) is 2);
+        IsOvercapping(OriginalHook(GaussRound)) ||
+        ActionReady(OriginalHook(GaussRound)) &&
+        !LevelChecked(Hypercharge) &&
+        GetRemainingCharges(OriginalHook(GaussRound)) is 2;
 
     private static bool OvercapRicochet =>
-        ActionReady(OriginalHook(Ricochet)) && (!LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(Ricochet)) is 1 ||
-                                                LevelChecked(Traits.ChargedActionMastery) && GetRemainingCharges(OriginalHook(Ricochet)) is 2) &&
-        GetCooldownChargeRemainingTime(OriginalHook(Ricochet)) < 25;
+        IsOvercapping(OriginalHook(Ricochet));
 
     private static bool CanGaussRound =>
         ActionReady(OriginalHook(GaussRound)) &&
@@ -293,6 +325,72 @@ internal partial class MCH
     private static bool CanRicochet =>
         ActionReady(OriginalHook(Ricochet)) &&
         GetRemainingCharges(OriginalHook(Ricochet)) > GetRemainingCharges(OriginalHook(GaussRound));
+
+    private static bool OvercapGaussRicochetProtection(out uint action, bool allowRicochet = true)
+    {
+        action = 0;
+
+        if (OvercapGaussRound)
+        {
+            action = OriginalHook(GaussRound);
+            return true;
+        }
+
+        if (allowRicochet && OvercapRicochet)
+        {
+            action = OriginalHook(Ricochet);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool GaussRicochetWeaves(out uint action, bool onAoE, bool duringHypercharge,
+        bool enabled = true, int gaussOnlyOrBoth = 0, int chargePool = 0)
+    {
+        action = 0;
+
+        if (!enabled)
+            return false;
+
+        if (duringHypercharge)
+        {
+            if (!JustUsedOverheatGCD(1f, onAoE) || HasWeaved())
+                return false;
+        }
+        else if (!onAoE && !JustUsedTool(2f))
+            return false;
+
+        float spacing = onAoE ? 2.5f : 2f;
+
+        if (gaussOnlyOrBoth == 1)
+        {
+            if (HasCharges(GaussRound) && !LevelChecked(DoubleCheck))
+            {
+                action = GaussRound;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (GetRemainingCharges(OriginalHook(GaussRound)) > chargePool &&
+            (CanGaussRound || !LevelChecked(Ricochet)) &&
+            (duringHypercharge || !JustUsed(OriginalHook(GaussRound), spacing) || !LevelChecked(Ricochet)))
+        {
+            action = OriginalHook(GaussRound);
+            return true;
+        }
+
+        if (GetRemainingCharges(OriginalHook(Ricochet)) > chargePool &&
+            CanRicochet && (duringHypercharge || !JustUsed(OriginalHook(Ricochet), spacing)))
+        {
+            action = OriginalHook(Ricochet);
+            return true;
+        }
+
+        return false;
+    }
 
     #endregion
 
@@ -356,13 +454,19 @@ internal partial class MCH
 
     private static bool IsAirAnchorCD(float time = 9f) =>
         !LevelChecked(OriginalHook(HotShot)) ||
-        LevelChecked(OriginalHook(HotShot)) && GetCooldownRemainingTime(OriginalHook(HotShot)) >= time;
+        GetCooldownRemainingTime(OriginalHook(HotShot)) >= time;
 
     private static bool IsChainSawCD(float time = 9f) =>
         !LevelChecked(Chainsaw) ||
-        LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) >= time;
+        GetCooldownRemainingTime(Chainsaw) >= time;
 
-    private static bool CanUseTools(ref uint actionID)
+    private static bool JustUsedTool(float window) =>
+        JustUsed(OriginalHook(AirAnchor), window) ||
+        JustUsed(Chainsaw, window) ||
+        JustUsed(Drill, window) ||
+        JustUsed(Excavator, window);
+
+    private static bool CanUseTools(ref uint actionID, bool onAoE, bool useAirAnchor = true)
     {
         if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
         {
@@ -371,54 +475,22 @@ internal partial class MCH
         }
 
         if (ActionReady(Excavator) &&
-            (!IsEnabled(Preset.MCH_ST_Adv_Tools_AllowClainsawPostWildfire) || !ShouldSkipHyperchargeHold()))
+            (onAoE ||
+             !IsEnabled(Preset.MCH_ST_Adv_Tools_AllowExcavatorPostWildfire) ||
+             !ShouldSkipExcavatorHold()))
         {
             actionID = Excavator;
             return true;
         }
 
-        if (ActionReady(AirAnchor))
-        {
-            actionID = AirAnchor;
-            return true;
-        }
-
-        if (ActionReady(Drill))
-        {
-            actionID = Drill;
-            return true;
-        }
-
-        if (ActionReady(HotShot) && (!HasStatusEffect(Buffs.Reassembled) || !LevelChecked(CleanShot)))
-        {
-            actionID = HotShot;
-            return true;
-        }
-
-        return false;
-    }
-
-    private static bool CanUseAoETools(ref uint actionID, bool useAirAnchor = true)
-    {
-        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
-        {
-            actionID = Chainsaw;
-            return true;
-        }
-
-        if (ActionReady(Excavator))
-        {
-            actionID = Excavator;
-            return true;
-        }
-
-        if (useAirAnchor && ActionReady(OriginalHook(AirAnchor)))
+        if ((!onAoE || useAirAnchor) && ActionReady(OriginalHook(AirAnchor)))
         {
             actionID = OriginalHook(AirAnchor);
             return true;
         }
 
-        if (ActionReady(BioBlaster) &&
+        if (onAoE &&
+            ActionReady(BioBlaster) &&
             !HasStatusEffect(Debuffs.Bioblaster, CurrentTarget) &&
             CanApplyStatus(CurrentTarget, Debuffs.Bioblaster))
         {
@@ -432,9 +504,19 @@ internal partial class MCH
             return true;
         }
 
-        if (HasStatusEffect(Buffs.Reassembled) && ActionReady(OriginalHook(SpreadShot)))
+        if (onAoE &&
+            HasStatusEffect(Buffs.Reassembled) &&
+            ActionReady(OriginalHook(SpreadShot)))
         {
             actionID = OriginalHook(SpreadShot);
+            return true;
+        }
+
+        if (!onAoE &&
+            ActionReady(HotShot) &&
+            (!HasStatusEffect(Buffs.Reassembled) || !LevelChecked(CleanShot)))
+        {
+            actionID = HotShot;
             return true;
         }
 
@@ -452,6 +534,32 @@ internal partial class MCH
         float gcd = GCD * times;
 
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
+    }
+
+    private static bool BasicCombo(ref uint actionID, bool allowReassembleOnClean = false)
+    {
+        if (ComboTimer == 0)
+            return false;
+
+        if (ComboAction == OriginalHook(SplitShot) && ActionReady(OriginalHook(SlugShot)))
+        {
+            actionID = OriginalHook(SlugShot);
+            return true;
+        }
+
+        if (ComboAction == OriginalHook(SlugShot) && ActionReady(OriginalHook(CleanShot)))
+        {
+            if (allowReassembleOnClean && ComboAction is SlugShot && CanReassemble(false))
+            {
+                actionID = Reassemble;
+                return true;
+            }
+
+            actionID = OriginalHook(CleanShot);
+            return true;
+        }
+
+        return false;
     }
 
     #endregion
