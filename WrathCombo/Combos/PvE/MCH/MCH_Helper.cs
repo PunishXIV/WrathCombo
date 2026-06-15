@@ -144,11 +144,11 @@ internal partial class MCH
         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
         (onAoE
             ? simpleMode || GetTargetHPPercent() > MCH_AoE_BarrelStabilizerHPThreshold
-            : ((simpleMode
-                   ? TargetIsBoss()
-                   : (MCH_ST_BarrelStabilizerBossOption == 0 &&
-                       GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss())) &&
-               GetCooldownRemainingTime(Wildfire) <= 20));
+            : (simpleMode
+                  ? TargetIsBoss()
+                  : MCH_ST_BarrelStabilizerBossOption == 0 &&
+                  GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss()) &&
+              GetCooldownRemainingTime(Wildfire) <= 20);
 
     private static bool CanWildfireWeave(bool simpleMode = false, bool requireBoss = true, float? hyperchargeWindow = null) =>
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
@@ -157,8 +157,8 @@ internal partial class MCH
         !HasStatusEffect(Buffs.Wildfire) &&
         (simpleMode
             ? !requireBoss || TargetIsBoss()
-            : (MCH_ST_WildfireBossOption == 0 &&
-                GetTargetHPPercent() > HPThresholdWildFire || TargetIsBoss()));
+            : MCH_ST_WildfireBossOption == 0 &&
+            GetTargetHPPercent() > HPThresholdWildFire || TargetIsBoss());
 
     #endregion
 
@@ -395,8 +395,14 @@ internal partial class MCH
 
     #region HP Treshold
 
+    // bossOption == 1 means "also gate on non-bosses"; otherwise only HP-gate bosses.
+    private static int BossHpThreshold(int bossOption, int hpOption, bool isBoss) =>
+        bossOption == 1 || !isBoss ? hpOption : 0;
+
     private static int ReassembleHPThreshold =>
-        IsEnabled(Preset.MCH_ST_SimpleMode) ? 25 : HPThresholdReassemble;
+        IsEnabled(Preset.MCH_ST_SimpleMode)
+            ? 25
+            : BossHpThreshold(MCH_ST_ReassembleBossOption, MCH_ST_ReassembleHPOption, TargetIsBoss());
 
     private static int ReassembleChargePool =>
         IsEnabled(Preset.MCH_ST_SimpleMode) ? 0 : MCH_ST_ReassemblePool;
@@ -408,34 +414,24 @@ internal partial class MCH
         IsEnabled(Preset.MCH_AoE_SimpleMode) ? 0 : MCH_AoE_ReassemblePool;
 
     private static int HyperchargeHPThresholdST =>
-        IsEnabled(Preset.MCH_ST_SimpleMode) ? 25 : HPThresholdHypercharge;
+        IsEnabled(Preset.MCH_ST_SimpleMode)
+            ? 25
+            : BossHpThreshold(MCH_ST_HyperchargeBossOption, MCH_ST_HyperchargeHPOption, TargetIsBoss());
 
     private static int HyperchargeHPThresholdAoE =>
         IsEnabled(Preset.MCH_AoE_SimpleMode) ? 25 : MCH_AoE_HyperchargeHPThreshold;
 
     private static int HPThresholdQueen =>
-        MCH_ST_QueenBossOption == 1 ||
-        !InBossEncounter() ? MCH_ST_QueenHPOption : 0;
-
-    private static int HPThresholdHypercharge =>
-        MCH_ST_HyperchargeBossOption == 1 ||
-        !TargetIsBoss() ? MCH_ST_HyperchargeHPOption : 0;
-
-    private static int HPThresholdReassemble =>
-        MCH_ST_ReassembleBossOption == 1 ||
-        !TargetIsBoss() ? MCH_ST_ReassembleHPOption : 0;
+        BossHpThreshold(MCH_ST_QueenBossOption, MCH_ST_QueenHPOption, InBossEncounter());
 
     private static int HPThresholdTools =>
-        MCH_ST_ToolsBossOption == 1 ||
-        !TargetIsBoss() ? MCH_ST_ToolsHPOption : 0;
+        BossHpThreshold(MCH_ST_ToolsBossOption, MCH_ST_ToolsHPOption, TargetIsBoss());
 
     private static int HPThresholdBarrelStabilizer =>
-        MCH_ST_BarrelStabilizerHPBossOption == 1 ||
-        !TargetIsBoss() ? MCH_ST_BarrelStabilizerHPOption : 0;
+        BossHpThreshold(MCH_ST_BarrelStabilizerHPBossOption, MCH_ST_BarrelStabilizerHPOption, TargetIsBoss());
 
     private static int HPThresholdWildFire =>
-        MCH_ST_WildfireBossHPOption == 1 ||
-        !TargetIsBoss() ? MCH_ST_WildfireHPOption : 0;
+        BossHpThreshold(MCH_ST_WildfireBossHPOption, MCH_ST_WildfireHPOption, TargetIsBoss());
 
     #endregion
 

@@ -304,7 +304,7 @@ internal partial class MCH : PhysicalRanged
                     return gaussRico;
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_QueenOverdrive) &&
-                    Gauge.IsRobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
+                    RobotActive && ActionReady(OriginalHook(RookOverdrive)) &&
                     GetTargetHPPercent() <= MCH_AoE_QueenOverDriveHPThreshold)
                     return OriginalHook(RookOverdrive);
 
