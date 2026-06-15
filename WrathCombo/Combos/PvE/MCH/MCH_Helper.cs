@@ -126,7 +126,6 @@ internal partial class MCH
         onAoE
             ? JustUsed(OriginalHook(AutoCrossbow), window) ||
               JustUsed(OriginalHook(Heatblast), window)
-              
             : JustUsed(OriginalHook(Heatblast), window);
 
     private static bool ShouldUseAoEAutoCrossbow(bool requireGaussEnabled = false) =>
@@ -148,7 +147,7 @@ internal partial class MCH
             : ((simpleMode
                    ? TargetIsBoss()
                    : (MCH_ST_BarrelStabilizerBossOption == 0 &&
-                      GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss())) &&
+                       GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss())) &&
                GetCooldownRemainingTime(Wildfire) <= 20));
 
     private static bool CanWildfireWeave(bool simpleMode = false, bool requireBoss = true, float? hyperchargeWindow = null) =>
@@ -159,7 +158,7 @@ internal partial class MCH
         (simpleMode
             ? !requireBoss || TargetIsBoss()
             : (MCH_ST_WildfireBossOption == 0 &&
-               GetTargetHPPercent() > HPThresholdWildFire || TargetIsBoss()));
+                GetTargetHPPercent() > HPThresholdWildFire || TargetIsBoss()));
 
     #endregion
 

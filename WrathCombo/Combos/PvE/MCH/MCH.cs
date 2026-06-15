@@ -83,7 +83,7 @@ internal partial class MCH : PhysicalRanged
             if (IsOverheated && ActionReady(OriginalHook(Heatblast)))
                 return OverheatGCD(onAoE: false);
 
-            BasicCombo(ref actionID, allowReassembleOnClean: true);
+            BasicCombo(ref actionID, true);
             return actionID;
         }
     }
