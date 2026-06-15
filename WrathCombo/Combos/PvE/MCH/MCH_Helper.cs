@@ -54,42 +54,35 @@ internal partial class MCH
 
     #region Hypercharge
 
-    private static bool CanHypercharge(bool onAoE = false)
+    private static bool CanHyperchargeST()
     {
-        switch (onAoE)
-        {
-            case true when GetTargetHPPercent() <= HyperchargeHPThresholdAoE:
+        if (GetTargetHPPercent() <= HyperchargeHPThresholdST)
+            return false;
 
-            case false when GetTargetHPPercent() <= HyperchargeHPThresholdST:
-                return false;
+        return (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
+               (!IsComboExpiring(6) || ShouldSkipHyperchargeHold()) && !IsOverheated &&
+               IsDrillCD(CustomCooldownForHyperHold) && IsAirAnchorCD(CustomCooldownForHyperHold) &&
+               (IsChainSawCD(CustomCooldownForHyperHold) || ShouldSkipHyperchargeHold()) &&
+               (!HasStatusEffect(Buffs.ExcavatorReady) || ShouldSkipExcavatorHold()) &&
+               !HasStatusEffect(Buffs.FullMetalMachinist) &&
+               (ActionReady(Wildfire) ||
+                JustUsed(FullMetalField, GCD / 2) ||
+                MCH_ST_WildfireBossOption == 1 && !TargetIsBoss() ||
+                GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
+                Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
+                !LevelChecked(Wildfire));
+    }
 
-            default:
-                switch (onAoE)
-                {
-                    case false when
-                        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                        (!IsComboExpiring(6) || ShouldSkipHyperchargeHold()) && !IsOverheated &&
-                        IsDrillCD(CustomCooldownForHyperHold) && IsAirAnchorCD(CustomCooldownForHyperHold) &&
-                        (IsChainSawCD(CustomCooldownForHyperHold) || ShouldSkipHyperchargeHold()) &&
-                        (!HasStatusEffect(Buffs.ExcavatorReady) || ShouldSkipExcavatorHold()) &&
-                        !HasStatusEffect(Buffs.FullMetalMachinist) &&
-                        (ActionReady(Wildfire) ||
-                         JustUsed(FullMetalField, GCD / 2) ||
-                         (MCH_ST_WildfireBossOption == 1 && !TargetIsBoss()) ||
-                         GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
-                         (Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10) ||
-                         !LevelChecked(Wildfire)):
+    private static bool CanHyperchargeAoE(bool useAirAnchor = true)
+    {
+        if (GetTargetHPPercent() <= HyperchargeHPThresholdAoE)
+            return false;
 
-                    case true when
-                        (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-                        (IsDrillCD() || IsBioBlasterCD()) &&
-                        (IsEnabled(Preset.MCH_AoE_SimpleMode) || MCH_AoE_AirAnchor) && IsAirAnchorCD() &&
-                        IsChainSawCD() && !HasStatusEffect(Buffs.ExcavatorReady) && !IsOverheated:
-                        return true;
-                }
-
-                return false;
-        }
+        return (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
+               !IsOverheated &&
+               (IsDrillCD() || IsBioBlasterCD()) &&
+               IsChainSawCD() && !HasStatusEffect(Buffs.ExcavatorReady) &&
+               (!useAirAnchor || IsAirAnchorCD());
     }
 
     public static bool IsWildfireAboutToBeUsed() =>

@@ -43,7 +43,7 @@ internal partial class MCH : PhysicalRanged
                     return Wildfire;
 
                 // Hypercharge
-                if (CanHypercharge())
+                if (CanHyperchargeST())
                     return Hypercharge;
 
                 // Gauss Round and Ricochet during HC
@@ -156,7 +156,7 @@ internal partial class MCH : PhysicalRanged
                     return OriginalHook(Ricochet);
 
                 // Hypercharge
-                if (CanHypercharge(true))
+                if (CanHyperchargeAoE())
                     return Hypercharge;
 
                 //Gauss, Rico during HC
@@ -282,7 +282,7 @@ internal partial class MCH : PhysicalRanged
 
                 // Hypercharge
                 if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&
-                    CanHypercharge())
+                    CanHyperchargeST())
                     return Hypercharge;
 
                 // Gauss Round and Ricochet during HC
@@ -448,7 +448,7 @@ internal partial class MCH : PhysicalRanged
 
                 // Hypercharge
                 if (IsEnabled(Preset.MCH_AoE_Adv_Hypercharge) &&
-                    CanHypercharge(true))
+                    CanHyperchargeAoE(MCH_AoE_AirAnchor))
                     return Hypercharge;
 
                 //Gauss & Rico outside HC
