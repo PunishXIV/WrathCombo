@@ -190,16 +190,20 @@ internal partial class DRG
          HasStatusEffect(Buffs.RaidenThrustReady) ||
          NumberOfEnemiesInRange(WyrmwindThrust, CurrentTarget) >= 2);
 
-    private static bool CanMirageDive(bool onAoE = false) =>
-        ActionReady(MirageDive) &&
-        HasStatusEffect(Buffs.DiveReady) &&
-        OriginalHook(Jump) is MirageDive &&
-        InActionRange(MirageDive) &&
-        (onAoE ||
-         IsEnabled(Preset.DRG_ST_SimpleMode) ||
-         LoTDActive ||
-         GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f && GetCooldownRemainingTime(Geirskogul) > 3 ||
-         !DRG_ST_DoubleMirage);
+    private static bool CanMirageDive(bool onAoE = false)
+    {
+        if (!ActionReady(MirageDive) || !HasStatusEffect(Buffs.DiveReady) ||
+            OriginalHook(Jump) is not MirageDive || !InActionRange(MirageDive))
+            return false;
+
+        if (onAoE || IsEnabled(Preset.DRG_ST_SimpleMode) || LoTDActive)
+            return true;
+
+        bool diveExpiring = GetStatusEffectRemainingTime(Buffs.DiveReady) <= 1.2f &&
+                            GetCooldownRemainingTime(Geirskogul) > 3;
+
+        return diveExpiring || !DRG_ST_DoubleMirage;
+    }
 
     private static int GeirskogulHpThreshold(bool onAoE) =>
         onAoE

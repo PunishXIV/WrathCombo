@@ -245,23 +245,21 @@ internal partial class VPR
         return false;
     }
 
-    private static uint ReawakenCombo(uint actionId)
-    {
-        switch (Gauge.DreadCombo)
+    private const DreadCombo ReawakenFirstGeneration = (DreadCombo)7;
+    private const DreadCombo ReawakenSecondGeneration = (DreadCombo)8;
+    private const DreadCombo ReawakenThirdGeneration = (DreadCombo)9;
+    private const DreadCombo ReawakenFourthGeneration = (DreadCombo)10;
+
+    private static uint ReawakenCombo(uint actionId) =>
+        DreadCombo switch
         {
-            case (DreadCombo)7:
-                return FirstGeneration;
-            case (DreadCombo)8:
-                return SecondGeneration;
-            case (DreadCombo)9:
-                return ThirdGeneration;
-            case (DreadCombo)10:
-                return FourthGeneration;
-            case 0:
-                return Ouroboros;
-        }
-        return actionId;
-    }
+            ReawakenFirstGeneration => FirstGeneration,
+            ReawakenSecondGeneration => SecondGeneration,
+            ReawakenThirdGeneration => ThirdGeneration,
+            ReawakenFourthGeneration => FourthGeneration,
+            (DreadCombo)0 => Ouroboros,
+            _ => actionId
+        };
 
     private static int ComputeHpThresholdReawaken()
     {
