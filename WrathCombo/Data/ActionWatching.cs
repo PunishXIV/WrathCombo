@@ -69,6 +69,7 @@ public static class ActionWatching
     private static readonly Hook<SendActionDelegate>? SendActionHook;
     public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
     public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
+    public static readonly Hook<PacketDispatcher.Delegates.OnReceivePacket> OnRecievePacketHook;
 
     private static Task UpdateActionTask = null!;
     private static CancellationTokenSource source = new CancellationTokenSource();
@@ -85,8 +86,23 @@ public static class ActionWatching
         UseActionLocHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseActionLocation>(ActionManager.Addresses.UseActionLocation.Value, UseActionLocationDetour);
         CanQueueAction ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.IsActionOffCooldown>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
         ActorControlPacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.HandleActorControlPacket>(PacketDispatcher.Addresses.HandleActorControlPacket.Value, ActorControlDetour);
+        OnRecievePacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.OnReceivePacket>((nint)PacketDispatcher.StaticVirtualTablePointer->OnReceivePacket, OnReceivePacketDetour);
         OnCastInterrupted += CancelPendingLastActionUpdate;
 
+    }
+
+    private static unsafe void OnReceivePacketDetour(PacketDispatcher* thisPtr, uint targetId, nint packet)
+    {
+        var opCode = *(ushort*)(packet + 2);
+        if (opCode == 916)
+        {
+            var newHealth = *(uint*)(packet + 16);
+            var tar = ((ulong)targetId).GetObject();
+            Svc.Log.Verbose($"[OpCode] Natty Regen on {tar?.Name} with new health {newHealth}");
+            SimpleTargetState.UpdateNaturalRegenTick(targetId, newHealth);
+        }
+
+        OnRecievePacketHook.Original(thisPtr, targetId, packet);
     }
 
     private static void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)
@@ -102,7 +118,7 @@ public static class ActionWatching
 
         if (category == 4 && arg1 == 0)
             SimpleTargetState.RemoveDueToDroppedCombat(entityId);
-        
+
     }
 
     private static unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
@@ -138,6 +154,7 @@ public static class ActionWatching
         UseActionLocHook?.Enable();
         CanQueueAction?.Enable();
         ActorControlPacketHook?.Enable();
+        OnRecievePacketHook?.Enable();
         Svc.Condition.ConditionChange += ResetActions;
     }
 
@@ -151,6 +168,7 @@ public static class ActionWatching
         UseActionLocHook?.Dispose();
         CanQueueAction?.Dispose();
         ActorControlPacketHook?.Dispose();
+        OnRecievePacketHook?.Dispose();
         OnCastInterrupted -= CancelPendingLastActionUpdate;
     }
 
@@ -638,6 +656,7 @@ public static class ActionWatching
         UseActionLocHook?.Disable();
         CanQueueAction?.Disable();
         ActorControlPacketHook?.Disable();
+        OnRecievePacketHook?.Disable();
         Svc.Condition.ConditionChange -= ResetActions;
     }
 

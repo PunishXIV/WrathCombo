@@ -507,6 +507,7 @@ internal class Debug : ConfigWindow, IDisposable
                 if (ImGui.TreeNode($"{member?.BattleChara?.Name}###{member.GameObjectId}"))
                 {
                     CustomStyleText("Health:", $"{GetTargetCurrentHP(member.BattleChara):N0} / {member.BattleChara.MaxHp:N0} ({GetTargetHPPercent(member.BattleChara)}%)");
+                    CustomStyleText("Regen Tick:", $"{member.BattleChara.MaxHp / 100}");
                     CustomStyleText("MP:", $"{member.CurrentMP:N0} / {member.BattleChara.MaxMp:N0}");
                     CustomStyleText("Job:", $"{member.RealJob?.NameEnglish} (ID: {member.RealJob?.RowId})");
                     CustomStyleText("Dead Timer:", TimeSpentDead(member.BattleChara.GameObjectId));

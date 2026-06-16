@@ -40,22 +40,16 @@ namespace WrathCombo.Data
 
                 SimpleTargetState target = new(o.CurrentHp, o.MaxHp, o.GameObjectId);
                 TargetStates.Add(target);
-
-                UpdateNaturalRegenTick(o.GameObjectId);
             }
 
             UpdatePendingHP();
         }
 
-        private static void UpdateNaturalRegenTick(ulong gameObjectId)
+        public static void UpdateNaturalRegenTick(ulong gameObjectId, uint newHealth)
         {
             if (TargetStates.TryGetFirst(x => x.GameObjectID == gameObjectId, out var p))
             {
-                var onePercent = p.MaxHP / 100;
-                if (gameObjectId.GetObject() is { } t && !t.IsHostile() && (t.IsAPlayer() || t.IsInParty()))
-                    p.CurrentHP = Math.Min(p.CurrentHP + onePercent, p.MaxHP);
-
-                Svc.Framework.RunOnTick(() => UpdateNaturalRegenTick(gameObjectId), TimeSpan.FromSeconds(3));
+                p.CurrentHP = newHealth;
             }
 
         }
