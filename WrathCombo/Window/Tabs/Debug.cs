@@ -1274,7 +1274,8 @@ internal class Debug : ConfigWindow, IDisposable
             CustomStyleText("Name:", target?.Name);
             CustomStyleText("Nameplate:", target?.GetNameplateKind().ToString());
             CustomStyleText("Rank:", $"{battleNPCRow?.Rank.ToString() ?? "null"} (found sheet: {(foundSheet is true ? "yes" : "no")})");
-            CustomStyleText("Health:", $"{GetTargetCurrentHP():N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(), 2)}%)");
+            CustomStyleText("Health:", $"{GetTargetCurrentHP(usePendingHP: false):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(usePendingHp: false), 2)}%)");
+            CustomStyleText("Health (with pending):", $"{GetTargetCurrentHP(usePendingHP: true):N0} / {GetTargetMaxHP():N0} ({MathF.Round(GetTargetHPPercent(usePendingHp: true), 2)}%)");
             CustomStyleText("Distance:", $"{MathF.Round(GetTargetDistance(), 2)}y");
             CustomStyleText("Hitbox Radius:", target?.HitboxRadius);
             CustomStyleText("In Melee Range:", InMeleeRange());

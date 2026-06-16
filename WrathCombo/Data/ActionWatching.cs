@@ -51,6 +51,7 @@ public static class ActionWatching
     internal readonly static List<uint> WeaveActions = [];
     internal readonly static List<uint> CombatActions = [];
     internal readonly static HashSet<uint> BossesBaseIds = [.. Svc.Data.GetExcelSheet<BNpcBase>().Where(charaSheet => charaSheet.Rank is 2 or 6).Select(charaSheet => charaSheet.RowId)];
+    internal readonly static List<PendingHPChange> PendingHPChanges = [];
 
     // Delegates
     public delegate void LastActionChangeDelegate();
@@ -86,10 +87,10 @@ public static class ActionWatching
 
     private static unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
     {
-        if (actionType == ActionType.Action && !_tainted)
+        if (actionType == ActionType.Action && !_tainted && (location->X != 0 || location->Y != 0 || location->Z != 0))
         {
             var obj = targetId.GetObject();
-            if (!obj.CanUseOn(actionId))
+            if (!obj.CanUseOn(actionId) && !Svc.Data.GetExcelSheet<Action>().GetRow(actionId).CanTargetSelf)
             {
                 _tainted = true;
                 if (CurrentTarget?.CanUseOn(actionId) == true)
@@ -199,6 +200,8 @@ public static class ActionWatching
                             member.HPUpdatePending = true;
                             Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
                         }
+
+                        PendingHPChanges.Add(new PendingHPChange(targetId, effValue, effType == ActionEffectType.Heal));
                     }
 
                     // Event: MP Gain or MP Loss
@@ -646,4 +649,6 @@ public static class ActionWatching
         Weaponskill = 3,
         Ability = 4,
     }
+
+    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange);
 }

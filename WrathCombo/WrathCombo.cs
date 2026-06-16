@@ -398,6 +398,8 @@ public sealed partial class WrathCombo : IDalamudPlugin
 
             if (Service.Configuration.AoEDamageTTS || Service.Configuration.AoEDamageToast)
                 CustomComboFunctions.PlayGroupwideAlert();
+
+            SimpleTargetState.ManageStateList();
         }
         catch (Exception ex)
         {
