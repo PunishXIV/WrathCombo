@@ -3,6 +3,7 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.Components;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
+using ECommons.DalamudServices;
 using ECommons.ImGuiMethods;
 using System;
 using System.Linq;
@@ -34,7 +35,10 @@ public static class UserConfig
         ImGui.Indent();
         int output = Configuration.GetCustomIntValue(config, minValue);
         if (output < minValue)
-            output = Configuration.SetCustomIntValue(config, output);
+        {
+            Svc.Log.Debug($"{config} has {output} less than {minValue}");
+            output = Configuration.SetCustomIntValue(config, minValue);
+        }
 
         float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
         float wrapPos = ImGui.GetContentRegionMax().X - 35f;
