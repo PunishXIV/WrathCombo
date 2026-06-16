@@ -390,6 +390,7 @@ internal partial class VPR
 
     private static bool CanSerpentsIre(int hpThreshold = 0) =>
         InCombat() && !MaxCoils && ActionReady(SerpentsIre) &&
+        HasBothBuffs &&
         GetTargetHPPercent() > hpThreshold;
 
     private static bool UncoiledFuryOvercapProtection(bool onAoE) =>
@@ -426,7 +427,7 @@ internal partial class VPR
         ActionReady(Vicepit) && !HasStatusEffect(Buffs.Reawakened) && !JustUsed(Vicepit) &&
         !ShouldDeferNewTwinblade &&
         (ignoreRange || InActionRange(Vicepit)) &&
-        (IreCD >= GCD * 4 || !LevelChecked(SerpentsIre));
+        (!HasBothBuffs || IreCD >= GCD * 4 || !LevelChecked(SerpentsIre));
 
     private static uint UseVicewinder(bool advancedTrueNorth = false)
     {
@@ -458,7 +459,8 @@ internal partial class VPR
         !UsedVicewinder && !UsedHuntersCoil && !UsedSwiftskinsCoil &&
         !JustUsed(SerpentsIre, GCD * 4) && !JustUsed(Vicewinder) &&
         !JustUsed(Ouroboros) && !HasStatusEffect(Buffs.Reawakened) &&
-        (IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
+        (!HasBothBuffs ||
+         IreCD >= GCD * 3 && InBossEncounter() || !InBossEncounter() || !LevelChecked(SerpentsIre));
 
     private static bool CanUseUncoiledFury(bool onAoE = false)
     {
