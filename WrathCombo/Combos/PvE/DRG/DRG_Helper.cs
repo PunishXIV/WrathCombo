@@ -12,11 +12,11 @@ internal partial class DRG
 {
     #region Basic Combo
 
-    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool isAoE = false, bool simpleAoE = false)
+    private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, bool simpleAoE = false)
     {
         int tnCharges = IsNotEnabled(Preset.DRG_ST_SimpleMode) ? DRG_ManualTN : 0;
 
-        if (isAoE)
+        if (onAoE)
         {
             if (ComboTimer > 0)
             {
@@ -288,8 +288,8 @@ internal partial class DRG
                     return PiercingTalon;
 
                 return simpleMode
-                    ? DoBasicCombo(actionId, isAoE: true, simpleAoE: true)
-                    : DoBasicCombo(actionId, isAoE: true);
+                    ? DoBasicCombo(actionId, onAoE: true, simpleAoE: true)
+                    : DoBasicCombo(actionId, onAoE: true);
             }
 
             return actionId;

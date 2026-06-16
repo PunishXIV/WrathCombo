@@ -16,95 +16,69 @@ internal partial class MNK
 
     private static bool DoPerfectBalanceCombo(ref uint actionID, bool onAoE = false)
     {
-        switch (onAoE)
-        {
-            case false when HasStatusEffect(Buffs.PerfectBalance):
-            {
-                #region Open Lunar
+        if (!HasStatusEffect(Buffs.PerfectBalance))
+            return false;
 
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
+        if (onAoE)
+        {
+            // Open Lunar
+            if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
+            {
+                actionID = LevelChecked(ShadowOfTheDestroyer) ? ShadowOfTheDestroyer : Rockbreaker;
+                return true;
+            }
+
+            // Open Solar
+            if (!SolarNadi && LunarNadi)
+            {
+                if (Gauge.BeastChakra[0] is BeastChakra.None)
                 {
-                    actionID = OpoFormGCD();
+                    actionID = OriginalHook(ArmOfTheDestroyer);
                     return true;
                 }
 
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && LunarNadi)
+                if (Gauge.BeastChakra[1] is BeastChakra.None)
                 {
-                    if (Gauge.BeastChakra[0] is BeastChakra.None)
-                    {
-                        actionID = CoeurlFormGCD();
-                        return true;
-                    }
-
-                    if (Gauge.BeastChakra[1] is BeastChakra.None)
-                    {
-                        actionID = RaptorFormGCD();
-                        return true;
-                    }
-
-                    if (Gauge.BeastChakra[2] is BeastChakra.None)
-                    {
-                        actionID = OpoFormGCD();
-                        return true;
-                    }
+                    actionID = FourPointFury;
+                    return true;
                 }
 
-                #endregion
-
-                break;
+                if (Gauge.BeastChakra[2] is BeastChakra.None)
+                {
+                    actionID = Rockbreaker;
+                    return true;
+                }
             }
 
-            case true when HasStatusEffect(Buffs.PerfectBalance):
+            return false;
+        }
+
+        // Open Lunar
+        if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
+        {
+            actionID = OpoFormGCD();
+            return true;
+        }
+
+        // Open Solar
+        if (!SolarNadi && LunarNadi)
+        {
+            if (Gauge.BeastChakra[0] is BeastChakra.None)
             {
-                #region Open Lunar
+                actionID = CoeurlFormGCD();
+                return true;
+            }
 
-                if (!LunarNadi || BothNadisOpen || !SolarNadi && !LunarNadi)
-                {
-                    if (LevelChecked(ShadowOfTheDestroyer))
-                    {
-                        actionID = ShadowOfTheDestroyer;
-                        return true;
-                    }
+            if (Gauge.BeastChakra[1] is BeastChakra.None)
+            {
+                actionID = RaptorFormGCD();
+                return true;
+            }
 
-                    if (!LevelChecked(ShadowOfTheDestroyer))
-                    {
-                        actionID = Rockbreaker;
-                        return true;
-                    }
-                }
-
-                #endregion
-
-                #region Open Solar
-
-                if (!SolarNadi && LunarNadi)
-                {
-                    if (Gauge.BeastChakra[0] is BeastChakra.None)
-                    {
-                        actionID = OriginalHook(ArmOfTheDestroyer);
-                        return true;
-                    }
-
-                    if (Gauge.BeastChakra[1] is BeastChakra.None)
-                    {
-                        actionID = FourPointFury;
-                        return true;
-                    }
-
-                    if (Gauge.BeastChakra[2] is BeastChakra.None)
-                    {
-                        actionID = Rockbreaker;
-                        return true;
-                    }
-                }
-
-                #endregion
-
-                break;
+            if (Gauge.BeastChakra[2] is BeastChakra.None)
+            {
+                actionID = OpoFormGCD();
+                return true;
             }
         }
 

@@ -147,7 +147,7 @@ internal partial class DRG : Melee
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
                 ? OutsideOfMelee(actionID, simpleMode: true, onAoE: true)
-                : DoBasicCombo(actionID, isAoE: true, simpleAoE: true);
+                : DoBasicCombo(actionID, onAoE: true, simpleAoE: true);
         }
     }
 
@@ -352,7 +352,7 @@ internal partial class DRG : Melee
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
                 ? OutsideOfMelee(actionID, onAoE: true)
-                : DoBasicCombo(actionID, isAoE: true);
+                : DoBasicCombo(actionID, onAoE: true);
         }
     }
 

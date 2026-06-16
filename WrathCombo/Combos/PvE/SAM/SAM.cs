@@ -705,8 +705,6 @@ internal partial class SAM : Melee
                 HasStatusEffect(Buffs.ZanshinReady))
                 return Zanshin;
 
-
-
             return actionID;
         }
     }
