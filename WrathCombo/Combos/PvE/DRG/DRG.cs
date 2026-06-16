@@ -146,7 +146,7 @@ internal partial class DRG : Melee
             }
 
             return !InActionRange(DoomSpike) && HasBattleTarget()
-                ? OutsideOfMelee(actionID, simpleMode: true, onAoE: true)
+                ? OutsideOfMelee(actionID, true, true)
                 : DoBasicCombo(actionID, onAoE: true, simpleAoE: true);
         }
     }
@@ -335,16 +335,16 @@ internal partial class DRG : Melee
                     if (CanDRGWeave(0.8f))
                     {
                         if (IsEnabled(Preset.DRG_AoE_HighJump) &&
-                            CanHighJump(true, simpleMode: false))
+                            CanHighJump(true, false))
                             return OriginalHook(Jump);
 
                         if (IsEnabled(Preset.DRG_AoE_DragonfireDive) &&
-                            CanDragonfireDive(true, simpleMode: false, DRG_AoE_DragonfireDiveHPThreshold))
+                            CanDragonfireDive(true, false, DRG_AoE_DragonfireDiveHPThreshold))
                             return DragonfireDive;
                     }
 
                     if (IsEnabled(Preset.DRG_AoE_Stardiver) &&
-                        CanStardiver(true, simpleMode: false) &&
+                        CanStardiver(true, false) &&
                         CanDRGWeave(1.5f, true))
                         return Stardiver;
                 }

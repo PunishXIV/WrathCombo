@@ -257,8 +257,8 @@ internal partial class VPR
             ReawakenSecondGeneration => SecondGeneration,
             ReawakenThirdGeneration => ThirdGeneration,
             ReawakenFourthGeneration => FourthGeneration,
-            (DreadCombo)0 => Ouroboros,
-            _ => actionId
+            0 => Ouroboros,
+            var _ => actionId
         };
 
     private static int ComputeHpThresholdReawaken()

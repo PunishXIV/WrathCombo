@@ -445,7 +445,7 @@ internal partial class RPR
             SpinningScythe => options.Length > SoulsowOnSpinningScythe && options[SoulsowOnSpinningScythe],
             ShadowOfDeath => options.Length > SoulsowOnShadowOfDeath && options[SoulsowOnShadowOfDeath],
             BloodStalk => options.Length > SoulsowOnBloodStalk && options[SoulsowOnBloodStalk],
-            _ => false
+            var _ => false
         };
     }
 

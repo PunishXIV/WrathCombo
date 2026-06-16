@@ -21,7 +21,7 @@ internal partial class DRG
                     DrawHorizontalRadioButton(DRG_SelectedOpener,
                         FormatAndCache(Generics.Action_Opener, PiercingTalon.ActionName()),
                         FormatAndCache(Generics.Use_0_Opener, PiercingTalon.ActionName()), 1);
-               
+
                     DrawBossOnlyChoice(DRG_BalanceContent);
                     break;
 

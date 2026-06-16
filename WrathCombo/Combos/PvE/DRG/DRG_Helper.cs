@@ -10,6 +10,12 @@ namespace WrathCombo.Combos.PvE;
 
 internal partial class DRG
 {
+    #region Misc
+
+    private static IStatus? ChaosDebuff =>
+        GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
+
+    #endregion
     #region Basic Combo
 
     private static uint DoBasicCombo(uint actionId, bool useTrueNorth = false, bool onAoE = false, bool simpleAoE = false)
@@ -100,7 +106,7 @@ internal partial class DRG
         {
             if (!InActionRange(DoomSpike))
                 return false;
-            
+
             if (LevelChecked(CoerthanTorment))
             {
                 if (!JustUsed(SonicThrust))
@@ -150,7 +156,7 @@ internal partial class DRG
 
     private const int HoldOnlyWhenStationary = 0;
     private const int HoldOnlyInMeleeRange = 1;
-    
+
     private static bool CanUseWithHoldOptions(UserBoolArray? movingOrInRangedOptions)
     {
         if (movingOrInRangedOptions is null || movingOrInRangedOptions.Count == 0)
@@ -204,7 +210,9 @@ internal partial class DRG
     private static int GeirskogulHpThreshold(bool onAoE) =>
         onAoE
             ? IsNotEnabled(Preset.DRG_AoE_SimpleMode) ? DRG_AoE_GeirskogulHPThreshold : 0
-            : IsNotEnabled(Preset.DRG_ST_SimpleMode) ? ComputeHpThresholdGeirskogul() : 0;
+            : IsNotEnabled(Preset.DRG_ST_SimpleMode)
+                ? ComputeHpThresholdGeirskogul()
+                : 0;
 
     private static bool CanUseGeirskogul(bool onAoE = false, int hpThreshold = int.MinValue)
     {
@@ -332,13 +340,6 @@ internal partial class DRG
 
         return actionId;
     }
-
-    #endregion
-
-    #region Misc
-
-    private static IStatus? ChaosDebuff =>
-        GetStatusEffect(ChaoticList[OriginalHook(ChaosThrust)], CurrentTarget);
 
     #endregion
 
