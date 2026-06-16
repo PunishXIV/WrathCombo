@@ -531,30 +531,23 @@ internal partial class MCH
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-    private static bool DoBasicCombo(ref uint actionID, bool allowReassembleOnClean = false)
+    private static uint DoBasicCombo(uint actionId, bool allowReassembleOnClean = false)
     {
-        if (ComboTimer == 0)
-            return false;
-
-        if (ComboAction == OriginalHook(SplitShot) && ActionReady(OriginalHook(SlugShot)))
+        if (ComboTimer > 0)
         {
-            actionID = OriginalHook(SlugShot);
-            return true;
-        }
+            if (ComboAction is SplitShot && ActionReady(OriginalHook(SlugShot)))
+                return OriginalHook(SlugShot);
 
-        if (ComboAction == OriginalHook(SlugShot) && ActionReady(OriginalHook(CleanShot)))
-        {
-            if (allowReassembleOnClean && ComboAction is SlugShot && CanReassemble(false))
+            if (ComboAction is SlugShot && ActionReady(OriginalHook(CleanShot)))
             {
-                actionID = Reassemble;
-                return true;
-            }
+                if (allowReassembleOnClean && CanReassemble(false))
+                    return Reassemble;
 
-            actionID = OriginalHook(CleanShot);
-            return true;
+                return OriginalHook(CleanShot);
+            }
         }
 
-        return false;
+        return actionId;
     }
 
     #endregion

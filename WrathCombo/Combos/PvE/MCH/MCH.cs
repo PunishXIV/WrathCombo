@@ -83,8 +83,7 @@ internal partial class MCH : PhysicalRanged
             if (IsOverheated && ActionReady(OriginalHook(Heatblast)))
                 return OverheatGCD(onAoE: false);
 
-            DoBasicCombo(ref actionID, true);
-            return actionID;
+            return DoBasicCombo(actionID, true);
         }
     }
 
@@ -276,8 +275,7 @@ internal partial class MCH : PhysicalRanged
                 ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(onAoE: false);
 
-            DoBasicCombo(ref actionID, IsEnabled(Preset.MCH_ST_Adv_Reassemble));
-            return actionID;
+            return DoBasicCombo(actionID, IsEnabled(Preset.MCH_ST_Adv_Reassemble));
         }
     }
 
@@ -382,10 +380,7 @@ internal partial class MCH : PhysicalRanged
             if (actionID is not (CleanShot or HeatedCleanShot))
                 return actionID;
 
-            if (DoBasicCombo(ref actionID))
-                return actionID;
-
-            return OriginalHook(SplitShot);
+            return DoBasicCombo(OriginalHook(SplitShot));
         }
     }
 
