@@ -36,7 +36,7 @@ public static class UserConfig
         int output = Configuration.GetCustomIntValue(config, minValue);
         if (output < minValue)
         {
-            Svc.Log.Debug($"{config} has {output} less than {minValue}");
+            Svc.Log.Warning($"{config} has a value {output} less than {minValue}");
             output = Configuration.SetCustomIntValue(config, minValue);
         }
 
@@ -155,7 +155,10 @@ public static class UserConfig
     {
         float output = Configuration.GetCustomFloatValue(config, minValue);
         if (output < minValue)
-            output = Configuration.SetCustomFloatValue(config, output);
+        {
+            Svc.Log.Warning($"{config} has a value {output} less than {minValue}");
+            output = Configuration.SetCustomFloatValue(config, minValue);
+        }
 
         float contentRegionMin = ImGui.GetItemRectMax().Y - ImGui.GetItemRectMin().Y;
         float wrapPos = ImGui.GetContentRegionMax().X - 35f;
