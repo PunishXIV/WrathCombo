@@ -1,14 +1,12 @@
 ﻿using Dalamud.Game.ClientState.Objects.Types;
+using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Channels;
 using WrathCombo.Extensions;
-using static FFXIVClientStructs.FFXIV.Client.UI.AddonJobHudMNK1.ChakraGauge;
 
 namespace WrathCombo.Data
 {
@@ -34,31 +32,88 @@ namespace WrathCombo.Data
                 if (!o.Struct()->InCombat)
                 {
                     TargetStates.RemoveAll(x => x.GameObjectID == o.GameObjectId);
+                    continue;
                 }
 
                 if (TargetStates.Any(x => x.GameObjectID == o.GameObjectId))
                     continue;
 
                 SimpleTargetState target = new(o.CurrentHp, o.MaxHp, o.GameObjectId);
-
                 TargetStates.Add(target);
+
+                UpdateNaturalRegenTick(o.GameObjectId);
             }
 
             UpdatePendingHP();
         }
 
-        public unsafe static void UpdatePendingHP() 
-        { 
+        private static void UpdateNaturalRegenTick(ulong gameObjectId)
+        {
+            if (TargetStates.TryGetFirst(x => x.GameObjectID == gameObjectId, out var p))
+            {
+                var onePercent = p.MaxHP / 100;
+                if (gameObjectId.GetObject() is { } t && !t.IsHostile() && (t.IsAPlayer() || t.IsInParty()))
+                    p.CurrentHP = Math.Min(p.CurrentHP + onePercent, p.MaxHP);
+
+                Svc.Framework.RunOnTick(() => UpdateNaturalRegenTick(gameObjectId), TimeSpan.FromSeconds(3));
+            }
+
+        }
+
+        public unsafe static void UpdatePendingHP()
+        {
             foreach (var o in TargetStates)
             {
-                BattleChara* b = (BattleChara*)o.GameObjectID.GetObject().Address;
-                if (!b->InCombat)
-                    continue;
-                foreach (var p in ActionWatching.PendingHPChanges.Where(x => x.gameObjectId == o.GameObjectID))
+                if (o.GameObjectID.GetObject() is { } t)
                 {
-                    o.CurrentHP = (uint)Math.Clamp(o.CurrentHP + (p.positiveChange ? p.value : -p.value), 0, o.MaxHP);
+                    var b = (BattleChara*)t.Address;
+                    if (!b->InCombat)
+                        continue;
                 }
-                ActionWatching.PendingHPChanges.RemoveAll(x => x.gameObjectId == o.GameObjectID);
+
+                var copy = ActionWatching.PendingHPChanges;
+                for (int i = 0; i < ActionWatching.PendingHPChanges.Count; i++)
+                {
+                    var p = ActionWatching.PendingHPChanges[i];
+                    if (p.gameObjectId != o.GameObjectID)
+                        continue;
+
+                    o.CurrentHP = (uint)Math.Clamp(o.CurrentHP + (p.positiveChange ? p.value : -p.value), 0, o.MaxHP);
+                    p.processed = true;
+                    ActionWatching.PendingHPChanges[i] = p;
+                }
+            }
+            ActionWatching.PendingHPChanges.RemoveAll(x => x.processed);
+        }
+
+        internal static void UpdateDotDamage(uint entityId, uint diff)
+        {
+            if (TargetStates.TryGetFirst(x => x.GameObjectID == entityId, out var p))
+            {
+                if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
+                {
+                    p.CurrentHP = Math.Min(p.CurrentHP - diff, 0);
+                }
+            }
+        }
+
+        internal static void RemoveDueToDroppedCombat(uint entityId)
+        {
+            Svc.Framework.RunOnTick(() =>
+            {
+                TargetStates.ForEach(x => { if (x.GameObjectID == entityId) x.CurrentHP = x.MaxHP; });
+                ActionWatching.PendingHPChanges.RemoveAll(x => x.gameObjectId == entityId);
+            }, TimeSpan.FromTicks(100));
+        }
+
+        internal static void UpdateHotHeal(uint entityId, uint diff)
+        {
+            if (TargetStates.TryGetFirst(x => x.GameObjectID == entityId, out var p))
+            {
+                if (Svc.Objects.Where(x => x.EntityId == entityId).Cast<IBattleChara>().First() is { } t)
+                {
+                    p.CurrentHP = Math.Min(p.CurrentHP + diff, p.MaxHP);
+                }
             }
         }
     }

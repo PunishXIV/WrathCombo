@@ -9,6 +9,7 @@ using ECommons.Logging;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Network;
 using Lumina.Excel.Sheets;
 using System;
 using System.Collections.Frozen;
@@ -67,6 +68,7 @@ public static class ActionWatching
     private delegate void SendActionDelegate(ulong targetObjectId, byte actionType, uint actionId, ushort sequence, long a5, long a6, long a7, long a8, long a9);
     private static readonly Hook<SendActionDelegate>? SendActionHook;
     public static readonly Hook<ActionManager.Delegates.IsActionOffCooldown> CanQueueAction;
+    public static readonly Hook<PacketDispatcher.Delegates.HandleActorControlPacket> ActorControlPacketHook;
 
     private static Task UpdateActionTask = null!;
     private static CancellationTokenSource source = new CancellationTokenSource();
@@ -82,30 +84,49 @@ public static class ActionWatching
         UseActionHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseAction>(ActionManager.Addresses.UseAction.Value, UseActionDetour);
         UseActionLocHook ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.UseActionLocation>(ActionManager.Addresses.UseActionLocation.Value, UseActionLocationDetour);
         CanQueueAction ??= Svc.Hook.HookFromAddress<ActionManager.Delegates.IsActionOffCooldown>(ActionManager.Addresses.IsActionOffCooldown.Value, CanQueueActionDetour);
+        ActorControlPacketHook ??= Svc.Hook.HookFromAddress<PacketDispatcher.Delegates.HandleActorControlPacket>(PacketDispatcher.Addresses.HandleActorControlPacket.Value, ActorControlDetour);
         OnCastInterrupted += CancelPendingLastActionUpdate;
+
+    }
+
+    private static void ActorControlDetour(uint entityId, uint category, uint arg1, uint arg2, uint arg3, uint arg4, uint arg5, uint arg6, uint arg7, uint arg8, GameObjectId targetId, bool isRecorded)
+    {
+        Svc.Log.Debug($"[ActorControl] {entityId} {category} {arg1} {arg2} {arg3} {arg4} {arg5} {arg6} {arg7} {arg8} {targetId.Id} {isRecorded}");
+        ActorControlPacketHook.Original(entityId, category, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, targetId, isRecorded);
+
+        if (category == 1541)
+            SimpleTargetState.UpdateDotDamage(entityId, arg2);
+
+        if (category == 1540)
+            SimpleTargetState.UpdateHotHeal(entityId, arg2);
+
+        if (category == 4 && arg1 == 0)
+            SimpleTargetState.RemoveDueToDroppedCombat(entityId);
+        
     }
 
     private static unsafe bool UseActionLocationDetour(ActionManager* thisPtr, ActionType actionType, uint actionId, ulong targetId, Vector3* location, uint extraParam, byte a7)
     {
-        if (actionType == ActionType.Action && !_tainted && (location->X != 0 || location->Y != 0 || location->Z != 0))
-        {
-            var obj = targetId.GetObject();
-            if (!obj.CanUseOn(actionId) && !Svc.Data.GetExcelSheet<Action>().GetRow(actionId).CanTargetSelf)
-            {
-                _tainted = true;
-                if (CurrentTarget?.CanUseOn(actionId) == true)
-                    targetId = CurrentTarget.ObjectId;
-                else if (Player.Object?.CanUseOn(actionId) == true)
-                    targetId = Player.Object.ObjectId;
+        // TODO Revisit maybe
+        //if (actionType == ActionType.Action && !_tainted && !(location->X != 0 || location->Y != 0 || location->Z != 0))
+        //{
+        //    var obj = targetId.GetObject();
+        //    if (!obj.CanUseOn(actionId) && !Svc.Data.GetExcelSheet<Action>().GetRow(actionId).CanTargetSelf)
+        //    {
+        //        _tainted = true;
+        //        if (CurrentTarget?.CanUseOn(actionId) == true)
+        //            targetId = CurrentTarget.ObjectId;
+        //        else if (Player.Object?.CanUseOn(actionId) == true)
+        //            targetId = Player.Object.ObjectId;
 
-                if (targetId.GetObject() is { } validObj)
-                    DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We have updated the target to {validObj.Name} which it can be used on. Please ensure you are only using one rotation plugin for correct behaviour.");
-                else
-                    DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We are unable to redirect this to a valid target. Please ensure you are only using one rotation plugin for correct behaviour.");
+        //        if (targetId.GetObject() is { } validObj)
+        //            DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We have updated the target to {validObj.Name} which it can be used on. Please ensure you are only using one rotation plugin for correct behaviour.");
+        //        else
+        //            DuoLog.Error($"{actionId.ActionName()} has been attempted to be used on an invalid target, likely due to using another rotation plugin. We are unable to redirect this to a valid target. Please ensure you are only using one rotation plugin for correct behaviour.");
 
-                Svc.Framework.RunOnTick(() => _tainted = false, TimeSpan.FromSeconds(2));
-            }
-        }
+        //        Svc.Framework.RunOnTick(() => _tainted = false, TimeSpan.FromSeconds(2));
+        //    }
+        //}
         return UseActionLocHook.Original(thisPtr, actionType, actionId, targetId, location, extraParam, a7);
     }
 
@@ -116,6 +137,7 @@ public static class ActionWatching
         UseActionHook?.Enable();
         UseActionLocHook?.Enable();
         CanQueueAction?.Enable();
+        ActorControlPacketHook?.Enable();
         Svc.Condition.ConditionChange += ResetActions;
     }
 
@@ -128,6 +150,7 @@ public static class ActionWatching
         UseActionHook?.Dispose();
         UseActionLocHook?.Dispose();
         CanQueueAction?.Dispose();
+        ActorControlPacketHook?.Dispose();
         OnCastInterrupted -= CancelPendingLastActionUpdate;
     }
 
@@ -182,6 +205,7 @@ public static class ActionWatching
                         $"Type: {effType} | " +
                         $"Value: {effValue} | " +
                         $"Params: [{eff.Param0}, {eff.Param1}, {eff.Param2}, {eff.Param3}, {eff.Param4}] | " +
+                        $"Damage HealValue: {eff.DamageHealValue} | " +
                         $"Action: {debugActionName} (ID: {actionId}) → " +
                         $"Target: {debugTargetName} | " +
                         $"Flags: [AtSource: {eff.AtSource}, FromTarget: {eff.FromTarget}]"
@@ -193,15 +217,15 @@ public static class ActionWatching
                     {
                         if (partyMembers.TryGetValue(targetId, out var member))
                         {
-                            member.CurrentHP = effType == ActionEffectType.Damage
-                                ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - effValue)
-                                : Math.Min(member.BattleChara.MaxHp, member.CurrentHP + effValue);
+                            member.CurrentHP = (uint)(effType == ActionEffectType.Damage
+                                ? Math.Min(member.BattleChara.MaxHp, member.CurrentHP - eff.DamageHealValue)
+                                : Math.Min(member.BattleChara.MaxHp, member.CurrentHP + eff.DamageHealValue));
 
                             member.HPUpdatePending = true;
                             Svc.Framework.RunOnTick(() => member.HPUpdatePending = false, TimeSpan.FromSeconds(1.5));
                         }
 
-                        PendingHPChanges.Add(new PendingHPChange(targetId, effValue, effType == ActionEffectType.Heal));
+                        PendingHPChanges.Add(new PendingHPChange(effObjectId, eff.DamageHealValue, effType == ActionEffectType.Heal));
                     }
 
                     // Event: MP Gain or MP Loss
@@ -613,6 +637,7 @@ public static class ActionWatching
         UseActionHook?.Disable();
         UseActionLocHook?.Disable();
         CanQueueAction?.Disable();
+        ActorControlPacketHook?.Disable();
         Svc.Condition.ConditionChange -= ResetActions;
     }
 
@@ -650,5 +675,5 @@ public static class ActionWatching
         Ability = 4,
     }
 
-    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange);
+    public record struct PendingHPChange(ulong gameObjectId, int value, bool positiveChange, bool processed = false);
 }
