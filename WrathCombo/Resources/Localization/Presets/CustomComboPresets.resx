@@ -4242,6 +4242,9 @@ Double Check / Checkmate option</value>
   <data name="MCH_AoE_Adv_Hypercharge_Name" xml:space="preserve">
     <value>Hypercharge Option</value>
   </data>
+  <data name="MCH_AoE_Adv_HyperchargeToolHold" xml:space="preserve">
+    <value>s, wait to Hypercharge until Tool cooldowns are at least this value</value>
+  </data>
   <data name="MCH_AoE_Adv_Interrupt_Desc" xml:space="preserve">
     <value>Uses Head Graze to interrupt during the rotation, where applicable.</value>
   </data>

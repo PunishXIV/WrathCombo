@@ -273,6 +273,9 @@ internal partial class MCH
                 case Preset.MCH_AoE_Adv_Hypercharge:
                     DrawSliderInt(0, 100, MCH_AoE_HyperchargeHPThreshold,
                         FormatAndCache(Generics.StopUsing0WhenBelowTargetHPPercentage, Hypercharge.ActionName()));
+
+                    DrawSliderFloat(5, 9, MCH_AoE_HyperchargeToolHold,
+                        CustomComboPresets.MCH_AoE_Adv_HyperchargeToolHold, decimals: 1);
                     break;
 
                 case Preset.MCH_AoE_Adv_Tools:
@@ -361,6 +364,7 @@ internal partial class MCH
 
         public static UserFloat
             MCH_AoE_FlamethrowerTimeStill = new("MCH_AoE_FlamethrowerTimeStill", 2.5f),
+            MCH_AoE_HyperchargeToolHold = new("MCH_AoE_HyperchargeToolHold", 8f),
             MCH_ST_WildfireHyperchargeCutoffThreshold = new("MCH_ST_WildfireHyperchargeCutoffThreshold", 9f);
 
         public static UserBool

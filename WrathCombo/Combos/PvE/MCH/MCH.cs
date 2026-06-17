@@ -175,7 +175,8 @@ internal partial class MCH : PhysicalRanged
 
             //Reassemble to start before combat/after downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                CanReassemble(false) && !IsOverheated && !HasWeaved())
+                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThresholdST) &&
+                !IsOverheated && !HasWeaved())
                 return Reassemble;
 
             if (!IsOverheated &&
@@ -199,7 +200,7 @@ internal partial class MCH : PhysicalRanged
                     return Wildfire;
 
                 if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&
-                    CanHypercharge(false))
+                    CanHypercharge(false, hpThreshold: HyperchargeHPThresholdST))
                     return Hypercharge;
 
                 if (IsEnabled(Preset.MCH_ST_Adv_GaussRicochet) &&
@@ -211,7 +212,7 @@ internal partial class MCH : PhysicalRanged
                 if (!IsOverheated)
                 {
                     if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                        CanReassemble(false))
+                        CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThresholdST))
                         return Reassemble;
 
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
@@ -275,7 +276,8 @@ internal partial class MCH : PhysicalRanged
                 ActionReady(OriginalHook(Heatblast)) && IsOverheated)
                 return OverheatGCD(onAoE: false);
 
-            return DoBasicCombo(actionID, IsEnabled(Preset.MCH_ST_Adv_Reassemble));
+            return DoBasicCombo(actionID, IsEnabled(Preset.MCH_ST_Adv_Reassemble),
+                MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThresholdST);
         }
     }
 
@@ -307,7 +309,7 @@ internal partial class MCH : PhysicalRanged
                     return OriginalHook(RookOverdrive);
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_Hypercharge) &&
-                    CanHypercharge(true, MCH_AoE_AirAnchor))
+                    CanHypercharge(true, MCH_AoE_AirAnchor, MCH_AoE_HyperchargeToolHold, MCH_AoE_HyperchargeHPThreshold))
                     return Hypercharge;
 
                 if (IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet) &&
@@ -317,7 +319,7 @@ internal partial class MCH : PhysicalRanged
                 if (!IsOverheated)
                 {
                     if (IsEnabled(Preset.MCH_AoE_Adv_Reassemble) &&
-                        CanReassemble(true))
+                        CanReassemble(true, chargePool: MCH_AoE_ReassemblePool, hpThreshold: MCH_AoE_ReassembleHPThreshold))
                         return Reassemble;
 
                     if (IsEnabled(Preset.MCH_AoE_Adv_Stabilizer) &&
@@ -365,7 +367,7 @@ internal partial class MCH : PhysicalRanged
             }
 
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
-                return OverheatGCD(true, true);
+                return OverheatGCD(onAoE: true, gaussRicoEnabled: IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
 
             return actionID;
         }
@@ -475,7 +477,7 @@ internal partial class MCH : PhysicalRanged
                 return gaussRico;
 
             if (IsOverheated && ActionReady(AutoCrossbow))
-                return OverheatGCD(onAoE: true);
+                return OverheatGCD(onAoE: true, alwaysAutoCrossbow: true);
 
             return actionID;
         }

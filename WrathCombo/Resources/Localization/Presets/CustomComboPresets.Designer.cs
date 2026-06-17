@@ -11914,7 +11914,16 @@ namespace WrathCombo.Resources.Localization.Presets {
                 return ResourceManager.GetString("MCH_AoE_Adv_Hypercharge_Name", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to s, wait to Hypercharge until Tool cooldowns are at least this value.
+        /// </summary>
+        internal static string MCH_AoE_Adv_HyperchargeToolHold {
+            get {
+                return ResourceManager.GetString("MCH_AoE_Adv_HyperchargeToolHold", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Uses Head Graze to interrupt during the rotation, where applicable..
         /// </summary>

@@ -59,12 +59,12 @@ internal partial class MCH
 
     #region Hypercharge
 
-    private static bool CanHypercharge(bool onAoE, bool useAirAnchor = true) =>
-        onAoE ? CanHyperchargeAoE(useAirAnchor) : CanHyperchargeST();
+    private static bool CanHypercharge(bool onAoE, bool useAirAnchor = true, float toolHoldThreshold = 8f, int hpThreshold = 25) =>
+        onAoE ? CanHyperchargeAoE(useAirAnchor, toolHoldThreshold, hpThreshold) : CanHyperchargeST(hpThreshold);
 
-    private static bool CanHyperchargeST()
+    private static bool CanHyperchargeST(int hpThreshold = 25)
     {
-        if (GetTargetHPPercent() <= HyperchargeHPThresholdST)
+        if (GetTargetHPPercent() <= hpThreshold)
             return false;
 
         return (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
@@ -81,16 +81,32 @@ internal partial class MCH
                 !LevelChecked(Wildfire));
     }
 
-    private static bool CanHyperchargeAoE(bool useAirAnchor = true)
+    private static bool UsedBioBlaster(float time = 9f) =>
+        !LevelChecked(BioBlaster) ||
+        IsBioBlasterCD(time) ||
+        HasStatusEffect(Debuffs.Bioblaster, CurrentTarget, true);
+
+    private static bool UsedDrill(float time = 9f) =>
+        !LevelChecked(Drill) || IsDrillCD(time);
+
+    private static bool CanHyperchargeAoE(bool useAirAnchor = true, float toolHoldThreshold = 8f, int hpThreshold = 25)
     {
-        if (GetTargetHPPercent() <= HyperchargeHPThresholdAoE)
+        if (GetTargetHPPercent() <= hpThreshold)
             return false;
 
-        return (ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) &&
-               !IsOverheated &&
-               (IsDrillCD() || IsBioBlasterCD()) &&
-               IsChainSawCD() && !HasStatusEffect(Buffs.ExcavatorReady) &&
-               (!useAirAnchor || IsAirAnchorCD());
+        if (!(ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) || IsOverheated)
+            return false;
+
+        float hold = toolHoldThreshold;
+
+        // At least one of Drill / Bio Blaster must be spent (Bio Blaster counts if DoT is already up).
+        if (!UsedDrill(hold) && !UsedBioBlaster(hold))
+            return false;
+
+        if (!IsChainSawCD(hold) || HasStatusEffect(Buffs.ExcavatorReady))
+            return false;
+
+        return !useAirAnchor || IsAirAnchorCD(hold);
     }
 
     public static bool IsWildfireAboutToBeUsed() =>
@@ -128,17 +144,23 @@ internal partial class MCH
               JustUsed(OriginalHook(Heatblast), window)
             : JustUsed(OriginalHook(Heatblast), window);
 
-    private static bool ShouldUseAoEAutoCrossbow(bool requireGaussEnabled = false) =>
-        HasBattleTarget() &&
-        (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
-         LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
-         NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 6 ||
-         requireGaussEnabled && IsNotEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
+    private static uint OverheatGCD(bool onAoE, bool gaussRicoEnabled = true, bool alwaysAutoCrossbow = false)
+    {
+        if (!onAoE)
+            return OriginalHook(Heatblast);
 
-    private static uint OverheatGCD(bool onAoE, bool requireGaussEnabled = false) =>
-        onAoE && ShouldUseAoEAutoCrossbow(requireGaussEnabled)
-            ? AutoCrossbow
-            : OriginalHook(Heatblast);
+        if (alwaysAutoCrossbow)
+            return AutoCrossbow;
+
+        if (HasBattleTarget() &&
+            (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
+             LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
+             NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
+             !gaussRicoEnabled))
+            return AutoCrossbow;
+
+        return OriginalHook(Heatblast);
+    }
 
     private static bool CanBarrelStabilizer(bool onAoE, bool simpleMode = false) =>
         ActionReady(BarrelStabilizer) && !HasStatusEffect(Buffs.FullMetalMachinist) &&
@@ -221,27 +243,36 @@ internal partial class MCH
         return numberOfReadyTools;
     }
 
-    private static bool HasAoEReassembleTarget() =>
-        LevelChecked(Drill) && GetCooldownRemainingTime(Drill) < GCD ||
-        LevelChecked(AirAnchor) && GetCooldownRemainingTime(AirAnchor) < GCD ||
-        LevelChecked(Chainsaw) && GetCooldownRemainingTime(Chainsaw) < GCD ||
-        LevelChecked(Excavator) && HasStatusEffect(Buffs.ExcavatorReady) ||
-        LevelChecked(Scattergun) && ActionReady(Scattergun) ||
-        ActionReady(OriginalHook(SpreadShot));
-
-    private static bool CanReassembleAoE()
+    private static bool CanReassembleAoE(int chargePool = 0, int hpThreshold = 25)
     {
         uint remainingCharges = GetRemainingCharges(Reassemble);
 
         if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) ||
-            !HasBattleTarget() || GetTargetHPPercent() <= AoEReassembleHPThreshold ||
+            !HasBattleTarget() || GetTargetHPPercent() <= hpThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
 
-        if (remainingCharges == 0 || remainingCharges <= AoEReassembleChargePool)
+        if (remainingCharges == 0 || remainingCharges <= chargePool)
             return false;
 
-        return HasAoEReassembleTarget();
+        if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
+            return true;
+
+        if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
+            return true;
+
+        if (ActionReady(OriginalHook(AirAnchor)) &&
+            (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
+            return true;
+
+        if (ActionReady(Drill) &&
+            (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2))
+            return true;
+
+        if (LevelChecked(Scattergun) && ActionReady(Scattergun))
+            return true;
+
+        return ActionReady(OriginalHook(SpreadShot));
     }
 
     private static bool InReassembleRange() =>
@@ -251,51 +282,41 @@ internal partial class MCH
         LevelChecked(Scattergun) && InActionRange(OriginalHook(SpreadShot)) ||
         !LevelChecked(Drill) && InActionRange(OriginalHook(SpreadShot));
 
-    private static bool CanReassemble(bool onAoE) =>
-        onAoE ? CanReassembleAoE() : CanReassembleST();
+    private static bool CanReassemble(bool onAoE, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25) =>
+        onAoE ? CanReassembleAoE(chargePool, hpThreshold) : CanReassembleST(reassembleChoice, chargePool, hpThreshold);
 
-    private static bool CanReassembleST()
+    private static bool CanReassembleST(int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
     {
         UpdateReassembleChargeTracking();
 
         uint remainingCharges = GetRemainingCharges(Reassemble);
 
         if (!ActionReady(Reassemble) || HasStatusEffect(Buffs.Reassembled) || IsWildfireActive || !HasBattleTarget() ||
-            GetTargetHPPercent() <= ReassembleHPThreshold ||
+            GetTargetHPPercent() <= hpThreshold ||
             !InReassembleRange() || JustUsed(Reassemble, 2f))
             return false;
 
-        if (remainingCharges == 0 || remainingCharges <= ReassembleChargePool || !ShouldReassemble())
+        if (remainingCharges == 0 || remainingCharges <= chargePool || !ShouldReassemble())
             return false;
 
-        if (!IsEnabled(Preset.MCH_ST_SimpleMode) && MCH_ST_Adv_ReassembleChoice == 0)
+        switch (reassembleChoice)
         {
-            int numberOfReadyTools = ReadyTools();
-            return numberOfReadyTools >= remainingCharges;
+            case 0:
+            {
+                int numberOfReadyTools = ReadyTools();
+                return numberOfReadyTools >= remainingCharges;
+            }
+            
+            case 1 when ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
+            case 1 when ActionReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2):
+            case 1 when ActionReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2):
+            case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
+            case 1 when !LevelChecked(CleanShot) && ActionReady(HotShot):
+                return true;
+            default:
+                return false;
         }
-
-        if (IsEnabled(Preset.MCH_ST_SimpleMode) || MCH_ST_Adv_ReassembleChoice == 1)
-        {
-            if (ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady))
-                return true;
-
-            if (ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady))
-                return true;
-
-            if (ActionReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2))
-                return true;
-
-            if (ActionReady(Drill) && (!LevelChecked(AirAnchor) || GetCooldownRemainingTime(AirAnchor) > GCD * 2))
-                return true;
-
-            if (!LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot))
-                return true;
-
-            if (!LevelChecked(CleanShot) && ActionReady(HotShot))
-                return true;
-        }
-
-        return false;
     }
 
     #endregion
@@ -360,7 +381,7 @@ internal partial class MCH
         else if (!onAoE && !JustUsedTool(2f))
             return false;
 
-        float spacing = onAoE ? 2.5f : 2f;
+        const float spacing = 2f;
 
         if (gaussOnlyOrBoth == 1)
         {
@@ -399,27 +420,11 @@ internal partial class MCH
     private static int BossHpThreshold(int bossOption, int hpOption, bool isBoss) =>
         bossOption == 1 || !isBoss ? hpOption : 0;
 
-    private static int ReassembleHPThreshold =>
-        IsEnabled(Preset.MCH_ST_SimpleMode)
-            ? 25
-            : BossHpThreshold(MCH_ST_ReassembleBossOption, MCH_ST_ReassembleHPOption, TargetIsBoss());
-
-    private static int ReassembleChargePool =>
-        IsEnabled(Preset.MCH_ST_SimpleMode) ? 0 : MCH_ST_ReassemblePool;
-
-    private static int AoEReassembleHPThreshold =>
-        IsEnabled(Preset.MCH_AoE_SimpleMode) ? 25 : MCH_AoE_ReassembleHPThreshold;
-
-    private static int AoEReassembleChargePool =>
-        IsEnabled(Preset.MCH_AoE_SimpleMode) ? 0 : MCH_AoE_ReassemblePool;
+    private static int ReassembleHPThresholdST =>
+        BossHpThreshold(MCH_ST_ReassembleBossOption, MCH_ST_ReassembleHPOption, TargetIsBoss());
 
     private static int HyperchargeHPThresholdST =>
-        IsEnabled(Preset.MCH_ST_SimpleMode)
-            ? 25
-            : BossHpThreshold(MCH_ST_HyperchargeBossOption, MCH_ST_HyperchargeHPOption, TargetIsBoss());
-
-    private static int HyperchargeHPThresholdAoE =>
-        IsEnabled(Preset.MCH_AoE_SimpleMode) ? 25 : MCH_AoE_HyperchargeHPThreshold;
+        BossHpThreshold(MCH_ST_HyperchargeBossOption, MCH_ST_HyperchargeHPOption, TargetIsBoss());
 
     private static int HPThresholdQueen =>
         BossHpThreshold(MCH_ST_QueenBossOption, MCH_ST_QueenHPOption, InBossEncounter());
@@ -531,7 +536,7 @@ internal partial class MCH
         return ActionManager.Instance()->Combo.Timer != 0 && ActionManager.Instance()->Combo.Timer < gcd;
     }
 
-    private static uint DoBasicCombo(uint actionId, bool allowReassembleOnClean = false)
+    private static uint DoBasicCombo(uint actionId, bool allowReassembleOnClean = false, int reassembleChoice = 1, int chargePool = 0, int hpThreshold = 25)
     {
         if (ComboTimer > 0)
         {
@@ -540,7 +545,7 @@ internal partial class MCH
 
             if (ComboAction is SlugShot && ActionReady(OriginalHook(CleanShot)))
             {
-                if (allowReassembleOnClean && CanReassemble(false))
+                if (allowReassembleOnClean && CanReassemble(false, reassembleChoice, chargePool, hpThreshold))
                     return Reassemble;
 
                 return OriginalHook(CleanShot);
