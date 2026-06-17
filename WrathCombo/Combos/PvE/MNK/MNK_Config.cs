@@ -24,6 +24,10 @@ internal partial class MNK
                     DrawHorizontalRadioButton(MNK_SelectedOpener,
                         MNK_Config.SolarLunarOpener,
                         MNK_Config.SolarLunarOpenerDesc, 1);
+
+                    DrawHorizontalRadioButton(MNK_SelectedOpener,
+                        MNK_Config.BrotherhoodFirstOpener,
+                        MNK_Config.BrotherhoodFirstOpenerDesc, 2);
                     ImGui.NewLine();
 
                     DrawHorizontalRadioButton(MNK_OpenerCountdown,

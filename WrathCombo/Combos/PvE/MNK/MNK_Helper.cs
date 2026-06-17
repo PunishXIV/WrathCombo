@@ -160,7 +160,7 @@ internal partial class MNK
         IsBrotherhoodCDInPerfectBalanceWindow();
 
     private static bool IsDoubleLunarOpener(bool useOpenerBalance) =>
-        useOpenerBalance && MNK_SelectedOpener == 0;
+        useOpenerBalance && (MNK_SelectedOpener == 0 || MNK_SelectedOpener == 2);
 
     private static bool ShouldUsePreRoFPerfectBalance(bool useOpenerBalance)
     {
@@ -532,6 +532,9 @@ internal partial class MNK
                 return Lvl90SLOpener;
         }
 
+        if (MNK_SelectedOpener == 2 && Lvl100BHFirstOpener.LevelChecked)
+            return Lvl100BHFirstOpener;
+
         return WrathOpener.Dummy;
     }
 
@@ -539,7 +542,8 @@ internal partial class MNK
     internal static MNKLvl100LLOpener Lvl100LLOpener = new();
     internal static MNKLvl90SLOpener Lvl90SLOpener = new();
     internal static MNKLvl100SLOpener Lvl100SLOpener = new();
-
+    internal static MNKLvl100BHFirstOpener Lvl100BHFirstOpener = new();
+    
     internal class MNKLvl90LLOpener : WrathOpener
     {
         public override int MinOpenerLevel => 90;
@@ -586,8 +590,7 @@ internal partial class MNK
             RaptorStacks is 0 &&
             CoeurlStacks is 0;
     }
-
-
+    
     internal class MNKLvl90SLOpener : WrathOpener
     {
         public override int MinOpenerLevel => 90;
@@ -639,7 +642,7 @@ internal partial class MNK
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -691,7 +694,7 @@ internal partial class MNK
     {
         public override int MinOpenerLevel => 100;
 
-        public override int MaxOpenerLevel => 109;
+        public override int MaxOpenerLevel => 100;
 
         public override List<uint> OpenerActions { get; set; } =
         [
@@ -707,6 +710,58 @@ internal partial class MNK
             TheForbiddenChakra,
             RiddleOfWind,
             RisingPhoenix,
+            DragonKick,
+            WindsReply,
+            FiresReply,
+            LeapingOpo,
+            PerfectBalance,
+            DragonKick,
+            LeapingOpo,
+            DragonKick,
+            ElixirBurst,
+            LeapingOpo
+        ];
+
+        public override List<(int[] Steps, Func<bool> Condition)> SkipSteps { get; set; } =
+        [
+            ([1], () => Chakra >= 5),
+            ([2], () => JustUsed(FormShift, 30f))
+        ];
+
+        internal override UserData ContentCheckConfig => MNK_Balance_Content;
+        public override Preset Preset => Preset.MNK_STUseOpener;
+        public override bool HasCooldowns() =>
+            GetRemainingCharges(PerfectBalance) is 2 &&
+            IsOffCooldown(Brotherhood) &&
+            IsOffCooldown(RiddleOfFire) &&
+            IsOffCooldown(RiddleOfWind) &&
+            (MNK_OpenerCountdown == 1 || CountdownActive) &&
+            NadiFlag is None &&
+            OpoOpoStacks is 0 &&
+            RaptorStacks is 0 &&
+            CoeurlStacks is 0;
+    }
+
+    internal class MNKLvl100BHFirstOpener : WrathOpener
+    {
+        public override int MinOpenerLevel => 100;
+
+        public override int MaxOpenerLevel => 100;
+
+        public override List<uint> OpenerActions { get; set; } =
+        [
+            ForbiddenMeditation,
+            FormShift,
+            DragonKick,
+            Brotherhood,
+            RiddleOfFire,
+            LeapingOpo,
+            DragonKick,
+            PerfectBalance,
+            LeapingOpo,
+            TheForbiddenChakra,
+            RiddleOfWind,
+            ElixirBurst,
             DragonKick,
             WindsReply,
             FiresReply,
