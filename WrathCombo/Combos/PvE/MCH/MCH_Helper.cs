@@ -28,11 +28,11 @@ internal partial class MCH
         if (!HasStatusEffect(Buffs.Wildfire) &&
             ActionReady(OriginalHook(RookAutoturret)) &&
             !RobotActive &&
-            GetTargetHPPercent() > HPThresholdQueen)
+            GetTargetHPPercent() > QueenHPThreshold)
         {
             if (LevelChecked(Wildfire))
             {
-                if (MCH_ST_WildfireBossOption == 0 || TargetIsBoss())
+                if (MCH_ST_WildfireBossOnlyOption == 0 || TargetIsBoss())
                 {
                     //Always use at 100, as a failsafe above 80 with a tool ready, or above 90 mid-combo
                     if (Battery is 100 ||
@@ -44,7 +44,7 @@ internal partial class MCH
                         return true;
                 }
 
-                if (MCH_ST_WildfireBossOption == 1 && !TargetIsBoss() && Battery >= MCH_ST_TurretUsage)
+                if (MCH_ST_WildfireBossOnlyOption == 1 && !TargetIsBoss() && Battery >= MCH_ST_TurretUsage)
                     return true;
             }
 
@@ -75,7 +75,7 @@ internal partial class MCH
                !HasStatusEffect(Buffs.FullMetalMachinist) &&
                (ActionReady(Wildfire) ||
                 JustUsed(FullMetalField, GCD / 2) ||
-                MCH_ST_WildfireBossOption == 1 && !TargetIsBoss() ||
+                MCH_ST_WildfireBossOnlyOption == 1 && !TargetIsBoss() ||
                 GetCooldownRemainingTime(Wildfire) > GCD * 15 ||
                 Heat is 100 && GetCooldownRemainingTime(Wildfire) > 10 ||
                 !LevelChecked(Wildfire));
@@ -97,21 +97,19 @@ internal partial class MCH
         if (!(ActionReady(Hypercharge) || HasStatusEffect(Buffs.Hypercharged)) || IsOverheated)
             return false;
 
-        float hold = toolHoldThreshold;
-
         // At least one of Drill / Bio Blaster must be spent (Bio Blaster counts if DoT is already up).
-        if (!UsedDrill(hold) && !UsedBioBlaster(hold))
+        if (!UsedDrill(toolHoldThreshold) && !UsedBioBlaster(toolHoldThreshold))
             return false;
 
-        if (!IsChainSawCD(hold) || HasStatusEffect(Buffs.ExcavatorReady))
+        if (!IsChainSawCD(toolHoldThreshold) || HasStatusEffect(Buffs.ExcavatorReady))
             return false;
 
-        return !useAirAnchor || IsAirAnchorCD(hold);
+        return !useAirAnchor || IsAirAnchorCD(toolHoldThreshold);
     }
 
     public static bool IsWildfireAboutToBeUsed() =>
         IsEnabled(Preset.MCH_ST_Adv_WildFire) &&
-        ((MCH_ST_WildfireBossOption == 0 && GetTargetHPPercent() > HPThresholdWildFire) || TargetIsBoss()) &&
+        ((MCH_ST_WildfireBossOnlyOption == 0 && GetTargetHPPercent() > WildfireHPThreshold) || TargetIsBoss()) &&
         CanApplyStatus(CurrentTarget, Debuffs.Wildfire) &&
         ActionReady(Wildfire);
 
@@ -149,10 +147,7 @@ internal partial class MCH
         if (!onAoE)
             return OriginalHook(Heatblast);
 
-        if (alwaysAutoCrossbow)
-            return AutoCrossbow;
-
-        if (HasBattleTarget() &&
+        if (alwaysAutoCrossbow || HasBattleTarget() &&
             (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
              LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
              NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
@@ -168,8 +163,8 @@ internal partial class MCH
             ? simpleMode || GetTargetHPPercent() > MCH_AoE_BarrelStabilizerHPThreshold
             : (simpleMode
                   ? TargetIsBoss()
-                  : MCH_ST_BarrelStabilizerBossOption == 0 &&
-                  GetTargetHPPercent() > HPThresholdBarrelStabilizer || TargetIsBoss()) &&
+                  : MCH_ST_BarrelStabilizerBossOnlyOption == 0 &&
+                  GetTargetHPPercent() > BarrelStabilizerHPThreshold || TargetIsBoss()) &&
               GetCooldownRemainingTime(Wildfire) <= 20);
 
     private static bool CanWildfireWeave(bool simpleMode = false, bool requireBoss = true, float? hyperchargeWindow = null) =>
@@ -179,8 +174,8 @@ internal partial class MCH
         !HasStatusEffect(Buffs.Wildfire) &&
         (simpleMode
             ? !requireBoss || TargetIsBoss()
-            : MCH_ST_WildfireBossOption == 0 &&
-            GetTargetHPPercent() > HPThresholdWildFire || TargetIsBoss());
+            : MCH_ST_WildfireBossOnlyOption == 0 &&
+            GetTargetHPPercent() > WildfireHPThreshold || TargetIsBoss());
 
     #endregion
 
@@ -199,15 +194,27 @@ internal partial class MCH
         if (charges == CurrentReassembleCharges)
             return;
 
-        if (TwoChargesUnlocked)
+        switch (TwoChargesUnlocked)
         {
-            if (charges == 2 && CurrentReassembleCharges != 2)
-                UseBothCharges = true;
-            else if (charges == 0 || charges == 1 && CurrentReassembleCharges == 0)
+            case true:
+                switch (charges)
+                {
+                    case 2 when CurrentReassembleCharges != 2:
+                        UseBothCharges = true;
+                        break;
+
+                    case 0:
+
+                    case 1 when CurrentReassembleCharges == 0:
+                        UseBothCharges = false;
+                        break;
+                }
+                break;
+
+            default:
                 UseBothCharges = false;
+                break;
         }
-        else
-            UseBothCharges = false;
 
         CurrentReassembleCharges = charges;
     }
@@ -228,6 +235,7 @@ internal partial class MCH
             if (LevelChecked(Excavator))
                 numberOfReadyTools++;
         }
+
         else if (HasStatusEffect(Buffs.ExcavatorReady))
         {
             numberOfReadyTools++;
@@ -306,7 +314,7 @@ internal partial class MCH
                 int numberOfReadyTools = ReadyTools();
                 return numberOfReadyTools >= remainingCharges;
             }
-            
+
             case 1 when ActionReady(Excavator) && HasStatusEffect(Buffs.ExcavatorReady):
             case 1 when ActionReady(Chainsaw) && !HasStatusEffect(Buffs.ExcavatorReady):
             case 1 when ActionReady(AirAnchor) && (!LevelChecked(Chainsaw) || GetCooldownRemainingTime(Chainsaw) > GCD * 2):
@@ -314,6 +322,7 @@ internal partial class MCH
             case 1 when !LevelChecked(Drill) && ComboTimer > 0 && ComboAction is SlugShot && LevelChecked(CleanShot):
             case 1 when !LevelChecked(CleanShot) && ActionReady(HotShot):
                 return true;
+
             default:
                 return false;
         }
@@ -415,28 +424,27 @@ internal partial class MCH
     #endregion
 
     #region HP Threshold
+    
+    private static int BossHpThreshold(int hpBossOption, int hpOption, bool isBoss) =>
+        hpBossOption == 1 || !isBoss ? hpOption : 0;
 
-    // bossOption == 1 applies the HP threshold to non-bosses too; otherwise only bosses are checked.
-    private static int BossHpThreshold(int bossOption, int hpOption, bool isBoss) =>
-        bossOption == 1 || !isBoss ? hpOption : 0;
+    private static int ReassembleHPThreshold =>
+        BossHpThreshold(MCH_ST_ReassembleHPBossOption, MCH_ST_ReassembleHPOption, TargetIsBoss());
 
-    private static int ReassembleHPThresholdST =>
-        BossHpThreshold(MCH_ST_ReassembleBossOption, MCH_ST_ReassembleHPOption, TargetIsBoss());
+    private static int HyperchargeHPThreshold =>
+        BossHpThreshold(MCH_ST_HyperchargeHPBossOption, MCH_ST_HyperchargeHPOption, TargetIsBoss());
 
-    private static int HyperchargeHPThresholdST =>
-        BossHpThreshold(MCH_ST_HyperchargeBossOption, MCH_ST_HyperchargeHPOption, TargetIsBoss());
+    private static int QueenHPThreshold =>
+        BossHpThreshold(MCH_ST_QueenHPBossOption, MCH_ST_QueenHPOption, InBossEncounter());
 
-    private static int HPThresholdQueen =>
-        BossHpThreshold(MCH_ST_QueenBossOption, MCH_ST_QueenHPOption, InBossEncounter());
+    private static int ToolsHPThreshold =>
+        BossHpThreshold(MCH_ST_ToolsHPBossOption, MCH_ST_ToolsHPOption, TargetIsBoss());
 
-    private static int HPThresholdTools =>
-        BossHpThreshold(MCH_ST_ToolsBossOption, MCH_ST_ToolsHPOption, TargetIsBoss());
-
-    private static int HPThresholdBarrelStabilizer =>
+    private static int BarrelStabilizerHPThreshold =>
         BossHpThreshold(MCH_ST_BarrelStabilizerHPBossOption, MCH_ST_BarrelStabilizerHPOption, TargetIsBoss());
 
-    private static int HPThresholdWildFire =>
-        BossHpThreshold(MCH_ST_WildfireBossHPOption, MCH_ST_WildfireHPOption, TargetIsBoss());
+    private static int WildfireHPThreshold =>
+        BossHpThreshold(MCH_ST_WildfireHPBossOption, MCH_ST_WildfireHPOption, TargetIsBoss());
 
     #endregion
 

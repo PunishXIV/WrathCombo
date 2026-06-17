@@ -175,7 +175,7 @@ internal partial class MCH : PhysicalRanged
 
             //Reassemble to start before combat/after downtime
             if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThresholdST) &&
+                CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold) &&
                 !IsOverheated && !HasWeaved())
                 return Reassemble;
 
@@ -200,7 +200,7 @@ internal partial class MCH : PhysicalRanged
                     return Wildfire;
 
                 if (IsEnabled(Preset.MCH_ST_Adv_Hypercharge) &&
-                    CanHypercharge(false, hpThreshold: HyperchargeHPThresholdST))
+                    CanHypercharge(false, hpThreshold: HyperchargeHPThreshold))
                     return Hypercharge;
 
                 if (IsEnabled(Preset.MCH_ST_Adv_GaussRicochet) &&
@@ -212,7 +212,7 @@ internal partial class MCH : PhysicalRanged
                 if (!IsOverheated)
                 {
                     if (IsEnabled(Preset.MCH_ST_Adv_Reassemble) &&
-                        CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThresholdST))
+                        CanReassemble(false, MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold))
                         return Reassemble;
 
                     if (IsEnabled(Preset.MCH_ST_Adv_Stabilizer) &&
@@ -267,7 +267,7 @@ internal partial class MCH : PhysicalRanged
 
             //Tools
             if (IsEnabled(Preset.MCH_ST_Adv_Tools) &&
-                GetTargetHPPercent() > HPThresholdTools &&
+                GetTargetHPPercent() > ToolsHPThreshold &&
                 CanUseTools(ref actionID, false) && !IsOverheated)
                 return actionID;
 
@@ -277,7 +277,7 @@ internal partial class MCH : PhysicalRanged
                 return OverheatGCD(onAoE: false);
 
             return DoBasicCombo(actionID, IsEnabled(Preset.MCH_ST_Adv_Reassemble),
-                MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThresholdST);
+                MCH_ST_Adv_ReassembleChoice, MCH_ST_ReassemblePool, ReassembleHPThreshold);
         }
     }
 
@@ -367,7 +367,7 @@ internal partial class MCH : PhysicalRanged
             }
 
             if (ActionReady(OriginalHook(Heatblast)) && IsOverheated)
-                return OverheatGCD(onAoE: true, gaussRicoEnabled: IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
+                return OverheatGCD(true, IsEnabled(Preset.MCH_AoE_Adv_GaussRicochet));
 
             return actionID;
         }
@@ -477,7 +477,7 @@ internal partial class MCH : PhysicalRanged
                 return gaussRico;
 
             if (IsOverheated && ActionReady(AutoCrossbow))
-                return OverheatGCD(onAoE: true, alwaysAutoCrossbow: true);
+                return OverheatGCD(true, alwaysAutoCrossbow: true);
 
             return actionID;
         }

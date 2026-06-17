@@ -40,15 +40,15 @@ internal partial class MCH
                     break;
 
                 case Preset.MCH_ST_Adv_WildFire:
-                    DrawHorizontalRadioButton(MCH_ST_WildfireBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_WildfireBossOnlyOption,
                         Generics.AllEnemies,
                         FormatAndCache(Generics.Use0RegardlessOfTarget, Wildfire.ActionName()), 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_WildfireBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_WildfireBossOnlyOption,
                         Generics.OnlyBoss,
                         FormatAndCache(Generics.OnlyUseWhenTargetIsBoss, Wildfire.ActionName()), 1);
 
-                    if (MCH_ST_WildfireBossOption == 0)
+                    if (MCH_ST_WildfireBossOnlyOption == 0)
                     {
                         DrawSliderInt(0, 50, MCH_ST_WildfireHPOption,
                             Generics.StopEnemyHpPercent);
@@ -57,11 +57,11 @@ internal partial class MCH
                         ImGui.TextColored(ImGuiColors.DalamudYellow,
                             Generics.EnemyTypeCheck);
 
-                        DrawHorizontalRadioButton(MCH_ST_WildfireBossHPOption,
+                        DrawHorizontalRadioButton(MCH_ST_WildfireHPBossOption,
                             Generics.NonBosses,
                             Generics.HPCheckNonBosses, 0);
 
-                        DrawHorizontalRadioButton(MCH_ST_WildfireBossHPOption,
+                        DrawHorizontalRadioButton(MCH_ST_WildfireHPBossOption,
                             Generics.AllEnemies,
                             Generics.HPCheckAllEnemies, 1);
                         ImGui.Unindent();
@@ -69,15 +69,15 @@ internal partial class MCH
                     break;
 
                 case Preset.MCH_ST_Adv_Stabilizer:
-                    DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerBossOnlyOption,
                         Generics.AllEnemies,
                         FormatAndCache(Generics.Use0RegardlessOfTarget, BarrelStabilizer.ActionName()), 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_BarrelStabilizerBossOnlyOption,
                         Generics.OnlyBoss,
                         FormatAndCache(Generics.OnlyUseWhenTargetIsBoss, BarrelStabilizer.ActionName()), 1);
 
-                    if (MCH_ST_BarrelStabilizerBossOption == 0)
+                    if (MCH_ST_BarrelStabilizerBossOnlyOption == 0)
                     {
                         DrawSliderInt(0, 50, MCH_ST_BarrelStabilizerHPOption,
                             Generics.StopEnemyHpPercent);
@@ -105,11 +105,11 @@ internal partial class MCH
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         Generics.EnemyTypeCheck);
 
-                    DrawHorizontalRadioButton(MCH_ST_HyperchargeBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_HyperchargeHPBossOption,
                         Generics.NonBosses,
                         Generics.HPCheckNonBosses, 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_HyperchargeBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_HyperchargeHPBossOption,
                         Generics.AllEnemies,
                         Generics.HPCheckAllEnemies, 1);
                     ImGui.Unindent();
@@ -127,11 +127,11 @@ internal partial class MCH
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         Generics.EnemyTypeCheck);
 
-                    DrawHorizontalRadioButton(MCH_ST_QueenBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_QueenHPBossOption,
                         Generics.NonBosses,
                         Generics.HPCheckNonBosses, 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_QueenBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_QueenHPBossOption,
                         Generics.AllEnemies,
                         Generics.HPCheckAllEnemies, 1);
 
@@ -171,11 +171,11 @@ internal partial class MCH
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         Generics.EnemyTypeCheck);
 
-                    DrawHorizontalRadioButton(MCH_ST_ReassembleBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_ReassembleHPBossOption,
                         Generics.NonBosses,
                         Generics.HPCheckNonBosses, 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_ReassembleBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_ReassembleHPBossOption,
                         Generics.AllEnemies,
                         Generics.HPCheckAllEnemies, 1);
 
@@ -195,11 +195,11 @@ internal partial class MCH
                     ImGui.TextColored(ImGuiColors.DalamudYellow,
                         Generics.EnemyTypeCheck);
 
-                    DrawHorizontalRadioButton(MCH_ST_ToolsBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_ToolsHPBossOption,
                         Generics.NonBosses,
                         Generics.HPCheckNonBosses, 0);
 
-                    DrawHorizontalRadioButton(MCH_ST_ToolsBossOption,
+                    DrawHorizontalRadioButton(MCH_ST_ToolsHPBossOption,
                         Generics.AllEnemies,
                         Generics.HPCheckAllEnemies, 1);
 
@@ -324,21 +324,21 @@ internal partial class MCH
             MCH_SelectedOpener = new("MCH_SelectedOpener"),
             MCH_HaveTarget = new("MCH_HaveTarget"),
             MCH_ST_QueenOverDriveHPThreshold = new("MCH_ST_QueenOverDrive", 1),
-            MCH_ST_BarrelStabilizerBossOption = new("MCH_ST_BarrelStabilizerBossOption", 1),
+            MCH_ST_BarrelStabilizerBossOnlyOption = new("MCH_ST_BarrelStabilizerBossOption", 1),
             MCH_ST_BarrelStabilizerHPOption = new("MCH_ST_BarrelStabilizerHPOption", 10),
             MCH_ST_BarrelStabilizerHPBossOption = new("MCH_ST_BarrelStabilizerHPBossOption"),
-            MCH_ST_WildfireBossOption = new("MCH_ST_WildfireBossOption", 1),
+            MCH_ST_WildfireBossOnlyOption = new("MCH_ST_WildfireBossOption", 1),
             MCH_ST_WildfireHPOption = new("MCH_ST_WildfireHPOption", 25),
-            MCH_ST_WildfireBossHPOption = new("MCH_ST_WildfireBossHPOption"),
-            MCH_ST_HyperchargeBossOption = new("MCH_ST_HyperchargeBossOption"),
+            MCH_ST_WildfireHPBossOption = new("MCH_ST_WildfireBossHPOption"),
+            MCH_ST_HyperchargeHPBossOption = new("MCH_ST_HyperchargeBossOption"),
             MCH_ST_HyperchargeHPOption = new("MCH_ST_HyperchargeHPOption", 25),
-            MCH_ST_ReassembleBossOption = new("MCH_ST_ReassembleBossOption"),
+            MCH_ST_ReassembleHPBossOption = new("MCH_ST_ReassembleBossOption"),
             MCH_ST_Adv_ReassembleChoice = new("MCH_ST_Adv_ReassembleChoice"),
             MCH_ST_ReassembleHPOption = new("MCH_ST_ReassembleHPOption", 25),
-            MCH_ST_ToolsBossOption = new("MCH_ST_ToolsBossOption"),
+            MCH_ST_ToolsHPBossOption = new("MCH_ST_ToolsBossOption"),
             MCH_ST_ToolsHPOption = new("MCH_ST_ToolsHPOption", 25),
             MCH_ST_QueenHPOption = new("MCH_ST_QueenHPOption", 25),
-            MCH_ST_QueenBossOption = new("MCH_ST_QueenBossOption"),
+            MCH_ST_QueenHPBossOption = new("MCH_ST_QueenBossOption"),
             MCH_ST_TurretUsage = new("MCH_ST_TurretUsage", 100),
             MCH_ST_ReassemblePool = new("MCH_ST_ReassemblePool"),
             MCH_ST_GaussRicoManualUse = new("MCH_ST_GaussRicoPool"),
