@@ -157,11 +157,11 @@ internal partial class MCH
         if (!onAoE)
             return OriginalHook(Heatblast);
 
-        if (alwaysAutoCrossbow || HasBattleTarget() &&
-            (!LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
-             LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
-             NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
-             !gaussRicoEnabled))
+        if (alwaysAutoCrossbow || 
+            !LevelChecked(CheckMate) && ActionReady(AutoCrossbow) ||
+            LevelChecked(CheckMate) && LevelChecked(BlazingShot) &&
+            NumberOfEnemiesInRange(AutoCrossbow, CurrentTarget) >= 5 ||
+            !gaussRicoEnabled)
             return AutoCrossbow;
 
         return OriginalHook(Heatblast);
